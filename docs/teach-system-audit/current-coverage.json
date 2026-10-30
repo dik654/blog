@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 715,
-    "pending": 292,
+    "reviewed": 716,
+    "pending": 291,
     "untracked": 0,
-    "assignedPending": 250,
+    "assignedPending": 249,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5423,9 +5423,9 @@
       "publicPath": "cs/blockchain/dydx",
       "title": "dYdX v4: order gossip에서 deterministic settlement까지",
       "catalogIndex": 539,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

@@ -1851,39 +1851,76 @@
     {
       "route": "blockchain/dydx",
       "title": "dYdX v4: order gossip에서 deterministic settlement까지",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/dydx.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/dydx.tsx",
-        "src/pages/articles/blockchain/dydx/ModernArticle.tsx"
+        "src/pages/articles/blockchain/dydx/ModernArticle.tsx",
+        "src/pages/articles/blockchain/dydx/DefiDexLocator.tsx",
+        "src/pages/articles/blockchain/dydx/viz/ModernDydxViz.tsx",
+        "src/pages/articles/blockchain/dydx/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/dydx/fileTrees.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 8,
+        "assumptionMarkers": 4,
+        "sourceButtons": 5,
         "headings": [
-          "dYdX에서 order receipt, proposed match, committed settlement은 서로 다른 사실이다",
-          "Short-term order는 node memory에, long-term·conditional order는 chain state에 더 길게 남는다",
-          "Price가 cross했다고 바로 fill하지 않고 잔량·collateral·position transition을 함께 검증한다",
-          "Block은 order intent 자체보다 검증 가능한 operation과 state transition을 확정한다",
-          "Indexer와 frontend는 chain event를 읽기 좋은 view로 재구성하지만 settlement owner가 아니다"
+          "주문을 받았다는 응답과 돈·포지션이 바뀐 settlement 사이에는 무엇이 있습니까",
+          "OrderId flag는 주문을 어느 상태에 얼마나 오래 보관할지 고릅니다",
+          "가격이 교차해도 잔량의 최솟값은 체결 확정값이 아니라 후보 상한입니다",
+          "제안 검증과 체결 상태 실행은 다른 단계입니다",
+          "조회 화면은 확정 상태를 다시 펼친 파생 장부입니다",
+          "릴리스 source와 이 글의 축소 예시를 구분해서 읽습니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 주문 접수·proposal ACCEPT·확정 체결·indexer 조회를 구분했지만 Alice와 Bob의 주문 한 건이 각 상태를 통과하는 전체 추적이 없었습니다.",
+        "이전 설명은 ProcessProposal이 전체 risk settlement를 다시 실행하는 것처럼 읽힐 수 있었습니다. v9.7.1 source에서는 proposal 형식 검증과 FinalizeBlock의 ProposedOperations 실행이 분리됩니다.",
+        "근거가 protocol/v9.6.3에 고정되어 최신 검토 시점의 v9.7.1 CheckTx equity-tier 수정과 맞지 않았습니다."
+      ],
+      "fixture": {
+        "case": "Alice bid 101·10계약과 Bob ask 100·6계약 한 건",
+        "schema": "Alice filled 2, Bob filled 1이므로 잔량 8과 5 가운데 candidate 상한은 5",
+        "path": "서명→CheckTx·MemClob→local match candidate→PrepareProposal→ProcessProposal→FinalizeBlock state transition→commit→indexer projection",
+        "output": "proposal ACCEPT와 committed fill을 분리하고, 실행이 성공한 뒤에만 Alice 누적 fill 7·Bob 6이 chain state가 됨",
+        "boundary": "node-local order view, proposer candidate, committed application state, rebuildable indexer view의 owner를 분리"
+      },
+      "stageEvidence": {
+        "parent": "탈중앙화 거래소 묶음의 첫 글로 표시하고 다음 Hyperliquid·Uniswap 글과 같은 비교 축을 제공합니다.",
+        "0": "Alice와 Bob이 각각 bid 10·ask 6 intent에 서명합니다.",
+        "1": "short-term order가 CheckTx를 통과한 노드의 MemClob에 들어가며 접수와 commit을 구분합니다.",
+        "2": "가격 101≥100과 잔량 min(8,5)=5로 체결 후보 상한을 계산합니다.",
+        "3": "proposer가 local operations queue를 MsgProposedOperations로 block candidate에 넣습니다.",
+        "4": "ProcessProposal이 decode·transaction 순서·필수 message·ValidateBasic을 검사해 ACCEPT 또는 REJECT합니다.",
+        "5": "FinalizeBlock의 ProposedOperations handler가 담보·position·remaining fill을 application state에 적용합니다.",
+        "6": "block commit 뒤에만 balances·positions·fills가 권위 있는 체결 상태가 됩니다.",
+        "7": "versioned event를 indexer query projection으로 만들되 chain settlement owner와 분리합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "dydxprotocol/v4-chain protocol/v9.7.1 commit 5935cb7c5dd684b17836e75093fc5c3ca5019ea3",
+          "application": "OrderId flags, PrepareProposal·ProcessProposal, ProposedOperations 실행과 versioned indexer event 경계를 pinned source에서 읽어 CodeSidebar의 한국어 주석과 연결했습니다."
+        },
+        {
+          "source": "protocol/v9.7.1 x/clob/types·app/process 공식 Go tests",
+          "application": "macOS arm64·Go 1.26.2에서 GOMAXPROCS=2와 -p 1로 실행해 두 package가 통과함을 확인하고 실제 validator network·거래 성능으로 확대하지 않았습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 ModernArticle·시각화와 v9.7.1 OrderId, PrepareProposal, ProcessProposal, transaction validation, ProposedOperations, indexer event source를 읽고 proposal 검증과 상태 실행의 책임 경계를 교정했습니다.",
+        "arithmetic": "101≥100, Alice 잔량 10−2=8, Bob 잔량 6−1=5, candidate=min(8,5)=5를 계산하고 실행 성공과 risk failure의 결과를 분리했습니다.",
+        "source": "공식 x/clob/types와 app/process tests가 188.26초에 통과했고 최대 RSS 1,619,886,080 bytes, swap 0이었습니다.",
+        "humanize": "Alice와 Bob의 주문 한 건을 8장면으로 추적하고 영어 층 이름은 바로 아래 한국어 설명과 owner 표로 연결했습니다.",
+        "build": "전체 TypeScript와 production build를 통과했습니다. 8GB heap 상한의 단독 빌드는 129.06초, 최대 RSS 6,489,473,024 bytes, swap 0이었고 정적 public route 2,120개와 no-script article 372편을 생성했습니다.",
+        "browser390": "390×844에서 document overflow 0, ArrowRight로 0→7 이동, 두 내부 strip scrollLeft=max, reduced-motion의 재생 비활성·수동 장면 이동, CodeSidebar 폭 390·가로 넘침 0을 확인했습니다. JavaScript 비활성 production preview에서는 전체 본문과 8개 장면이 정적 읽기 순서로 표시됐습니다.",
+        "browser1440": "1440×900에서 document overflow 0, 5.6초 뒤에도 scene 0 유지, 명시적 재생 뒤 scene 1 이동, console 오류 0건을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 경로를 확인한 뒤 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-order-from-local-receipt-to-committed-settlement-and-query-projection-trace"
     },
     {
       "route": "blockchain/eip4844-blob-fee",
