@@ -4695,3 +4695,13 @@
 - 1,440×900과 390×844에서 무자동재생, 키보드 장면 이동, 모바일 활성 tab 자동 이동, 49.5px 조작부와 실제 코드 사이드바를 확인했습니다. 모바일의 여덟 장면은 높이 518.78px로 고정되고 잘린 요소와 문서 가로 넘침, console 오류·경고는 없습니다. Reduced-motion에서는 실행 중 animation 0개와 재생 비활성화를 확인했습니다.
 - JavaScript 비활성 390×844 production 경로에는 제목·직속 부모·정적 여덟 장면·7,087자 본문·공식 근거·부모 지도 반환이 남습니다. Live 장면과 visible button은 0개이고 문서 폭은 390px로 맞습니다.
 - Node heap 8GB의 전체 build가 8,161개 module, 정적 public route 2,120개와 no-script 본문 375편을 생성했습니다. 129.69초, 최대 RSS 6,069,551,104 bytes, swap 0이었습니다. 공개 배포와 공개 URL 재검증 뒤 production 상태로 전환합니다.
+
+# Curve StableSwap 출력 계산 개념 글 로컬 검증 완료 (2026-10-31)
+
+- `blockchain/curve-stable`을 공식 StableSwap-NG plain-token fixture의 한 교환으로 다시 썼습니다. 각 자산 1,500,000개, A=2000, fee 0.01%인 균형 pool에 token0 1,000개를 넣고 raw balance가 rate 정규화, D와 y 반복 계산, fee와 `min_dy` 검사를 거쳐 약 999.899666 token1 출력으로 바뀌는 과정을 여덟 장면으로 추적합니다.
+- StableSwap whitepaper와 StableSwap-NG commit `2abe778f40206a6c0fd108a0a53ad3266cbedeee`를 고정했습니다. `_stored_rates`, `_xp_mem`, `_exchange`, `__exchange`, `get_D`, `get_y`, `_A`와 공식 `test_min_dy` fixture를 여섯 코드 근거로 연결했습니다.
+- 고정 source의 정수식을 독립 실행해 D가 1회, y가 8회에 수렴하고 fee 전 약 999.9996668332, fee 약 0.0999999667, 최종 약 999.8996668665가 되는 경로를 확인했습니다. 이 환경에서는 Titanoboa contract test를 새로 실행하지 않았으므로 측정 결과로 표현하지 않았습니다.
+- 기존 글에 섞여 있던 token·rate·A 배포 gate는 개념 글에서 제거했습니다. 본문은 StableSwap이 균형 부근 slippage를 줄이는 곡선이지만 peg·issuer solvency·depeg 손실을 보장하지 않는다는 경계에서 끝납니다.
+- 1,440×900과 390×844 production 경로에서 문서 가로 넘침이 없고, 모바일 여덟 장면 높이는 모두 623px입니다. 첫 장면은 5.4초 뒤에도 유지되며 visual focus 뒤 키보드 0→1 이동, 49.5px 조작부, 390px 코드 사이드바와 한국어 주석, console 오류·경고 0건을 확인했습니다.
+- Reduced-motion에서는 실행 중 animation 0개와 재생 비활성화를 확인했습니다. JavaScript 비활성 390×844 경로에는 직속 부모, 정적 여덟 장면, 7,629자 본문, 고정 source와 부모 지도 반환이 남고 보이는 live element와 button은 없습니다.
+- Node heap 8GB의 전체 build가 통과했습니다. 8,163개 module, 정적 public route 2,120개와 no-script 본문 376편을 생성했고 154.09초, 최대 RSS 5,772,050,432 bytes, swap 0이었습니다. 공개 배포와 공개 URL 재검증 뒤 production 상태로 전환합니다.

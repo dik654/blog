@@ -413,6 +413,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/uniswap-v2",
   "blockchain/uniswap-v3",
   "blockchain/uniswap-v4",
+  "blockchain/curve-stable",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

@@ -1504,39 +1504,81 @@
     },
     {
       "route": "blockchain/curve-stable",
-      "title": "Curve — StableSwap AMM",
-      "status": "unreviewed",
+      "title": "Curve StableSwap: 1,000 → 999.899666",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/curve-stable.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/curve-stable.tsx",
-        "src/pages/articles/blockchain/curve-stable/ModernArticle.tsx"
+        "src/pages/articles/blockchain/curve-stable/ModernArticle.tsx",
+        "src/pages/articles/blockchain/curve-stable/viz/ModernCurveStableViz.tsx",
+        "src/pages/articles/blockchain/curve-stable/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/curve-stable/fileTrees.ts",
+        "src/pages/articles/blockchain/DefiDexLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 8,
+        "assumptionMarkers": 4,
+        "sourceButtons": 6,
         "headings": [
-          "\n            StableSwap은 peg를 만드는 장치가 아니라, 이미 비슷한 가치인 자산을\n            균형 부근에서 덜 미끄럽게 교환하는 invariant다\n          ",
-          "\n            Token raw balance를 precision·rate로 정규화한 뒤 D를 풀고, swap 동안\n            같은 D의 새 y를 찾는다\n          ",
-          "\n            A를 높이면 균형 부근 가격은 평평해지지만 depeg 손실과 parameter\n            risk가 사라지지 않는다\n          ",
-          "\n            Invariant parity보다 먼저 token·rate·A artifact를 고정하고\n            depeg·rounding·reentrancy를 실패시킨다\n          "
+          "Raw 잔액은 어떻게 D와 y를 거쳐 실제 출력 금액이 됩니까",
+          "먼저 계산 조건을 한 transaction의 입력으로 고정합니다",
+          "Token 개수보다 먼저 같은 가치 단위의 xp를 만듭니다",
+          "기존 D를 유지하는 새 y를 찾은 뒤 fee를 뺍니다",
+          "A는 곡선을 바꾸지만 peg와 손실 위험을 없애지는 않습니다",
+          "최소 출력이나 계산 전제가 깨지면 입력 전송까지 함께 되돌아갑니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 StableSwap·xp·A·depeg·release validation을 절별로 설명했지만 한 교환의 입력부터 실제 출력까지 같은 상태로 추적하지 않았습니다.",
+        "기존 검증 절은 token·rate·A artifact와 배포 gate를 함께 다뤄 개념 메커니즘과 환경별 운영 결정을 섞었습니다.",
+        "D와 y 반복식은 있었지만 공식 fixture의 실제 balance·A·fee를 대입한 수렴 횟수·fee·min_dy 실패 경로가 연결되지 않았습니다."
+      ],
+      "fixture": {
+        "case": "StableSwap-NG commit 2abe778f의 plain-token fixture에서 token0·token1을 각각 1,500,000개 예치하고 token0 1,000개를 정확입력합니다.",
+        "parameters": "사용자 표시 A=2000, 내부 amp=200000(A_PRECISION 100), 기본 fee=0.01%, 두 rate=1입니다.",
+        "invariant": "D=3,000,000은 균형 시작값에서 1회에 수렴하고 새 x=1,501,000에서 y는 8회 반복 뒤 약 1,499,000.0003331668이 됩니다.",
+        "output": "1 wei 보수 반올림 뒤 fee 전 출력 약 999.9996668332, fee 약 0.0999999667, 최종 출력 약 999.8996668665입니다.",
+        "boundary": "고정 source의 정수식을 독립 실행한 trace이며 이 환경에서 Titanoboa contract test를 새로 실행한 측정값은 아닙니다."
+      },
+      "stageEvidence": {
+        "parent": "탈중앙화 거래소 지도에서 Uniswap V4 다음의 StableSwap 출력 계산 위치를 표시합니다.",
+        "0": "공식 plain-token fixture의 균형 balance·A·fee를 고정합니다.",
+        "1": "Raw balance와 rate를 공통 단위 xp로 정규화합니다.",
+        "2": "현재 A와 xp에서 D=3,000,000을 계산합니다.",
+        "3": "실제 받은 token0 1,000을 정규화한 새 x=1,501,000을 만듭니다.",
+        "4": "같은 D를 만족하는 출력 쪽 y를 8회 정수 반복으로 찾습니다.",
+        "5": "1 wei와 0.01% fee를 빼 최종 dy 약 999.8996668665를 구합니다.",
+        "6": "Execution dy와 사용자가 정한 min_dy를 비교해 부족하면 transaction 전체를 되돌립니다.",
+        "7": "검사를 통과한 dy를 receiver에게 전송하고 TokenExchange event를 남깁니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Curve StableSwap whitepaper",
+          "application": "Amplification invariant의 설계식과 균형 부근 곡선의 목적을 사용하되 peg·solvency·현재 pool parameter 보장으로 확대하지 않았습니다."
+        },
+        {
+          "source": "Curve StableSwap-NG commit 2abe778f40206a6c0fd108a0a53ad3266cbedeee",
+          "application": "_stored_rates·_xp_mem·_exchange·__exchange·get_D·get_y·_A의 실제 Vyper source를 여섯 CodeSidebar 근거로 연결했습니다."
+        },
+        {
+          "source": "StableSwap-NG test_min_dy · same commit",
+          "application": "1,500,000/1,500,000 balance, A=2000, fee=0.01%, 1,000-token 입력과 quote·실제 수령량 대조를 본문 fixture로 사용했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 StableSwap whitepaper, StableSwap-NG commit 2abe778f의 pool source·fixture·exchange test를 읽고 한 정확입력 교환의 상태 전이로 전면 재작성했습니다.",
+        "arithmetic": "공식 fixture 값으로 get_D와 get_y의 integer recurrence를 독립 실행해 D 1회·y 8회 수렴, fee 전·fee·최종 출력 값을 대조했습니다. Contract test를 새로 실행한 측정값으로 표현하지 않습니다.",
+        "source": "Pinned commit의 _stored_rates·_xp_mem·_exchange·__exchange·get_D·get_y·_A와 test_min_dy를 대조하고 실제 코드 6개에 한국어 주석을 붙였습니다.",
+        "humanize": "한 질문→8장면 교환→fixture→정규화→D/y→A/depeg 경계→실패·source→부모 지도 반환 순서로 통일하고 운영 release gate를 개념 글에서 제거했습니다.",
+        "build": "Node heap 8GB에서 전체 TypeScript와 production build가 통과했습니다. 154.09초, 최대 RSS 5,772,050,432 bytes, swap 0이었고 8,163개 module, 정적 public route 2,120개와 no-script 본문 376편을 생성했습니다.",
+        "browser390": "390×844 production 경로에서 document 폭 390=390, 여덟 live stage 높이 623px 고정, 의도한 tab strip 밖의 잘린 요소 0, 49.5px 조작부와 390px CodeSidebar를 확인했습니다. JavaScript 비활성 경로에는 H1·직속 부모·8개 정적 장면·7,629자 본문·pinned source·부모 지도 반환이 남고 visible live element와 button은 0개였습니다.",
+        "browser1440": "1440×900 production 경로에서 document 폭 1440=1440, 5.4초 무자동재생, visual focus 뒤 키보드 0→1 이동과 console 오류·경고 0을 확인했습니다. Reduced-motion 새로고침에서는 실행 중 animation 0개와 재생 비활성화를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 뒤 공개 URL을 다시 확인하고 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-official-plain-token-swap-from-normalized-balance-through-invariant-fee-and-min-dy"
     },
     {
       "route": "blockchain/da-theory",
