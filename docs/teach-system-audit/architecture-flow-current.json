@@ -7,9 +7,9 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 552,
+    "animatedMechanisms": 553,
     "architectureWithoutAnimation": 77,
-    "recursiveLocators": 379,
+    "recursiveLocators": 380,
     "codeEvidenceLinked": 239,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
@@ -6521,11 +6521,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/cometbft-p2p",
