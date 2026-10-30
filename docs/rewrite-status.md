@@ -4353,3 +4353,24 @@
   GitHub Pages run `40901121815`가 성공한 뒤 공개 390×844 경로에서 제목·시각화·문서 폭
   390=390과 console 오류·경고 0건을 다시 확인했습니다. 현재 상태는
   `rewritten-production-verified`입니다.
+
+### Reth와 MEV 개념 글 로컬 검증 완료 (2026-10-30)
+
+- Parent P 위에 local L(value 4)과 external Bid A(value 5·parent P), Bid B(value 9·parent Q),
+  Bid C(value 7·parent P)가 준비되는 한 slot을 기준으로 글을 다시 구성했습니다. 숫자는 선택
+  순서를 설명하는 임의 단위이며 대상 환경의 수익이나 실제 bid 분포가 아닙니다.
+- Reth local payload job, external builder, relay, mev-boost와 consensus client의 상태 소유권을
+  분리했습니다. Local·external 병렬 준비에서 Builder API의 header 선택·blinded 서명·body
+  전달, 문맥 검증, deadline 선택과 실패 경계까지 여덟 장면으로 추적합니다. Private bundle
+  제출은 proposer-side Builder API와 별도 경로로 표시했습니다.
+- 근거는 Ethereum Builder Specifications commit `78a5546d`, Flashbots mev-boost commit
+  `203bb965`, rbuilder commit `6037fa72`에 고정했습니다. Relay latency, bid 분포, realized
+  value, cutoff와 proposal success는 측정하지 않았습니다.
+- 1,440×1,000에서 문서 폭 1,440px, 시각화 711×808.4px이고 11초 동안 첫 장면을 유지했습니다.
+  390×844에서는 문서 폭 390px, 시각화 354×697.8px와 약 49.5px 조작부가 화면 안에 들어갑니다.
+  키보드 0→1 이동, reduced-motion의 재생 비활성·수동 이동과 console 오류·경고 0건을
+  확인했습니다.
+- JavaScript 비활성 390×844 경로에는 live 조작부 대신 정적 여덟 장면, 본문 9,004자와 결론이
+  남고 가로 넘침이 없습니다. TypeScript와 production build를 통과했으며 8,090개 module,
+  정적 public route 2,120개와 no-script 본문 347편을 생성했습니다. 최대 RSS는 약 6.09GB,
+  swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 다음 단계입니다.

@@ -737,6 +737,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Reth v2.8.1 commit d763342f에서 확인한 ExEx source 경계만 설명합니다. Node-level delivered를 extension durable commit으로 확대하지 않고, 외부 효과·대상 환경 queue 임계값·배포·장애 대응·release 판단은 별도 실무 범위로 남깁니다.",
   },
+  "blockchain/reth-mev": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Parent P 위의 local payload L과 설명용 external bids 5·9·7이 준비되는 한 slot을 역할 분리, 병렬 readiness, Builder API header/body exchange, context validation, deadline-aware selection, blinded 서명과 non-delivery까지 이어서 추적합니다. 모두 같은 proposal decision을 서로 다른 owner가 통과시키는 연속 메커니즘이므로 한 개념 글에서 설명합니다.",
+    sharedGate:
+      "Builder specifications 78a5546d, mev-boost 203bb965, rbuilder 6037fa72에서 확인한 규격·source 경계만 설명합니다. 설명용 value를 실측 수익으로 확대하지 않고 relay 선택·cutoff·수익·배포·release 판단은 별도 실무 범위로 남깁니다.",
+  },
   "blockchain/reth-sync": {
     action: "keep",
     status: "implemented",
@@ -4271,6 +4280,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-precompiles": "f27b784b8a338965",
   "blockchain/reth-precompiles-validation": "56f82c70dcacdd46",
   "blockchain/reth-exex": "85ec25b4d31fa35b",
+  "blockchain/reth-mev": "451829cbf8db588d",
   "blockchain/reth-rpc": "4d28589b778ec919",
   "blockchain/reth-sync": "877c7118aea7b085",
   "blockchain/reth-txpool": "17e22144298ab69e",

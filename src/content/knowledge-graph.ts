@@ -10191,7 +10191,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "mev-role-trust-boundary", kind: "concept", domain: "distributed-systems",
     label: "MEV proposer·builder·relay trust boundary",
     definition: "Searcher orderflow, external builder construction, relay mediation, proposer-side bid selection과 execution-client local payload를 별도 caller·authority·failure owner로 유지하는 역할 경계입니다.",
-    canonicalHref: "/cs/blockchain/reth-mev#overview",
+    canonicalHref: "/cs/blockchain/reth-mev#roles",
   },
   "mev-local-external-payload-race": {
     id: "mev-local-external-payload-race", kind: "concept", domain: "distributed-systems",
@@ -10209,25 +10209,25 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "mev-bid-validation-context", kind: "method", domain: "distributed-systems",
     label: "MEV bid context validation",
     definition: "Bid signature·slot·parent hash·proposer pubkey·fork schema·block hash/value policy를 request context와 대조해 advertised value 비교 전에 invalid 후보를 제거하는 방법입니다.",
-    canonicalHref: "/cs/blockchain/reth-mev#flashbots",
+    canonicalHref: "/cs/blockchain/reth-mev#validation",
   },
   "mev-deadline-aware-selection": {
     id: "mev-deadline-aware-selection", kind: "method", domain: "distributed-systems",
     label: "MEV deadline-aware bid selection",
     definition: "Validation과 payload-delivery·proposal 여유가 남은 후보 집합에서 value를 비교하고 cutoff에는 local payload fallback을 선택하는 proposer-side 결정 규칙입니다.",
-    canonicalHref: "/cs/blockchain/reth-mev#overview",
+    canonicalHref: "/cs/blockchain/reth-mev#selection",
   },
   "mev-private-orderflow-surface": {
     id: "mev-private-orderflow-surface", kind: "concept", domain: "computer-science",
     label: "MEV private-orderflow API surface",
     definition: "Searcher의 bundle submission·simulation·privacy policy를 proposer-side Builder API와 별도 authentication·rate·confidentiality·inclusion contract로 운영하는 경계입니다.",
-    canonicalHref: "/cs/blockchain/reth-mev#flashbots",
+    canonicalHref: "/cs/blockchain/reth-mev#private-orderflow",
   },
   "reth-mev-release-gate": {
     id: "reth-mev-release-gate", kind: "method", domain: "distributed-systems",
     label: "Reth·MEV integration release gate",
     definition: "No bid·wrong context/signature·late high bid·relay disagreement·payload non-delivery·local fallback·reorg에서 selection·proposal outcome parity 뒤 value·latency를 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/blockchain/reth-mev#flashbots",
+    canonicalHref: "/cs/blockchain/reth-mev#failure-boundary",
   },
   "evm-precompile-fork-registry": {
     id: "evm-precompile-fork-registry",

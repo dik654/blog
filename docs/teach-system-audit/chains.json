@@ -6192,44 +6192,67 @@
     },
     {
       "route": "blockchain/reth-mev",
-      "title": "Reth Payload Builder와 MEV-Boost 경계",
-      "status": "unreviewed",
+      "title": "Reth와 MEV: local payload에서 external bid까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-mev.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-mev.tsx",
-        "src/pages/articles/ethereum/reth-mev/BuilderApi.tsx",
-        "src/pages/articles/ethereum/reth-mev/BuilderApiData.ts",
-        "src/pages/articles/ethereum/reth-mev/Flashbots.tsx",
-        "src/pages/articles/ethereum/reth-mev/FlashbotsData.ts",
-        "src/pages/articles/ethereum/reth-mev/Overview.tsx",
-        "src/pages/articles/ethereum/reth-mev/OverviewData.ts",
-        "src/pages/articles/ethereum/reth-mev/fileTree.ts"
+        "src/pages/articles/ethereum/reth-mev/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-mev/RethMevLocator.tsx",
+        "src/pages/articles/ethereum/reth-mev/viz/RethMevFlowViz.tsx",
+        "src/pages/articles/ethereum/reth-mev/codeRefs.ts",
+        "src/pages/articles/ethereum/reth-mev/fileTree.ts",
+        "src/content/reth-mev-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 8,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "assumptionMarkers": 3,
+        "sourceButtons": 3,
         "headings": [
-          "\n        Local payload와 external builder는 병렬이지만 다른 주체다\n      ",
-          "\n        Builder API와 private bundle API를 구분하기\n      ",
-          "\n        MEV 시장을 Reth 내부 기능으로 합치지 않기\n      "
+          "Reth가 block을 만들면 mev-boost가 그 안에서 더 비싼 block을 고릅니까?",
+          "연결 사례",
+          "역할",
+          "병렬 준비",
+          "Builder API",
+          "후보 검증",
+          "선택 경계",
+          "실패 경계",
+          "Private orderflow",
+          "구현 근거"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 Reth local builder, external builder, relay, mev-boost와 consensus client를 나열했지만 한 slot에서 후보가 언제 만나고 갈라지는지 추적하기 어려웠습니다.",
+        "Header bid 선택과 full payload 전달, private bundle 제출과 proposer Builder API가 같은 MEV 경로처럼 보였습니다."
+      ],
+      "fixture": "Parent P 위에 local L(value 4), Bid A(value 5·parent P), Bid B(value 9·parent Q), Bid C(value 7·parent P)가 준비되는 한 slot을 따라 유효 집합, deadline 선택, blinded 서명과 body 전달까지 추적합니다. 숫자는 설명용 임의 단위이며 측정값이 아닙니다.",
+      "stageEvidence": {
+        "roles": "Reth local builder, external builder, relay, mev-boost와 consensus client가 소유하는 상태를 분리합니다.",
+        "parallel": "Local payload job과 external orderflow·bid build가 cutoff 전까지 병렬로 준비되고 서로를 대체하지 않는 이유를 확인합니다.",
+        "builderApi": "Validator registration, getHeader, blinded block 서명과 getPayload를 서로 다른 성공 단계로 둡니다.",
+        "validation": "Slot·parent·proposer·signature·fork schema를 통과한 집합에서만 value를 비교해 parent Q인 value 9를 제외합니다.",
+        "selection": "제시간인 value 5와 7 가운데 7을 고르되 blinded 서명 전과 뒤의 대체 가능성을 구분합니다.",
+        "failure": "No bid·invalid/late bid·payload non-delivery가 서로 다른 terminal state와 복구 경계를 가짐을 확인합니다.",
+        "privateOrderflow": "Searcher의 private bundle 제출과 proposer-side Builder API exchange를 caller·인증·실패 의미로 분리합니다."
+      },
+      "sourceEvidence": [
+        "Ethereum Builder Specifications commit 78a5546d9d8253beabf7db8baf988a58abdec87f의 proposer-builder message surface",
+        "Flashbots mev-boost commit 203bb9659eea613caefd198c67df4c6a8e6bf5d6의 bid 검증·최댓값 선택·payload 회수 구현",
+        "Flashbots rbuilder commit 6037fa728b13bf1806e16fff2586414216f6b8fa의 Reth provider 재사용과 external builder 경계"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 고정한 Builder Specifications·mev-boost·rbuilder source를 다시 읽어 제품 나열을 한 slot의 병렬 준비·검증·선택·서명·body 전달 경로로 교체했습니다.",
+        "arithmetic": "Parent P 조건에서 value 9인 Bid B를 먼저 제외하고 max(5, 7)=7을 계산했습니다. Advertised value와 full payload delivery 성공은 별도 단계로 유지했습니다.",
+        "humanize": "직속 부모, 질문 하나, 연결 사례, 역할·프로토콜·실패 경계와 부모 지도 반환으로 재구성했습니다. 학습 계약·지식 그래프·topology·읽기 순서·한국어·용어·runtime과 TypeScript 검사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 354×697.8px가 화면 안에 들어가고 약 49.5px 조작부, 무자동재생과 키보드 이동을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건과 수동 이동을 확인했습니다. JavaScript 비활성 경로는 live 영역을 숨기고 본문 9,004자, 정적 8장면과 결론을 폭 390 안에 표시합니다.",
+        "browser1440": "1440×1000에서 문서 폭 1440=1440, 시각화 711×808.4px, 11초 무자동재생, ArrowRight 0→1 이동과 console 오류·경고 0건을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,090개 module과 정적 public route 2,120개를 만들었습니다. 최대 RSS는 약 6.09GB, swap은 0입니다. Route 등록 뒤 no-script 본문은 347편입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-slot-local-external-validation-delivery-boundary"
     },
     {
       "route": "blockchain/reth-net",

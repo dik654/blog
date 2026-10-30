@@ -379,6 +379,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-sync",
   "blockchain/reth-rpc",
   "blockchain/reth-exex",
+  "blockchain/reth-mev",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",
