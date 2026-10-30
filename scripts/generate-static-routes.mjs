@@ -403,6 +403,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/commonware-simplex",
   "blockchain/commonware-broadcast",
   "blockchain/commonware-storage",
+  "blockchain/commonware-crypto-p2p",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

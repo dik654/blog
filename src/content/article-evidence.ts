@@ -7961,9 +7961,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "rqbit v8.1.1 streaming and initialization", href: "https://github.com/ikatson/rqbit/blob/v8.1.1/crates/librqbit/src/torrent_state/streaming.rs", note: "Range-to-piece readiness와 restart path의 pinned implementation이며 HTTP authorization·disk durability는 별도" },
   ],
   "blockchain/commonware-crypto-p2p": [
-    { kind: "공식 코드", label: "Commonware v2026.7.0 cryptographic handshake", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/cryptography/src/handshake.rs", note: "Syn·SynAck·Ack, timestamp·signature·confirmation과 directional AEAD의 pinned implementation이며 application authorization은 별도" },
-    { kind: "공식 코드", label: "Commonware v2026.7.0 authenticated lookup P2P", href: "https://github.com/commonwarexyz/monorepo/tree/v2026.7.0/p2p/src/authenticated/lookup", note: "Known peer set의 channel registration·quota·backlog·message limit 구현이며 consensus order나 payload correctness는 보장하지 않음" },
-    { kind: "공식 코드", label: "Commonware v2026.7.0 mux and relay", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/p2p/src/utils/mux.rs", note: "Bounded subchannel route와 priority local admission feedback 구현이며 remote durable acceptance는 별도" },
+    { kind: "공식 코드", label: "Commonware v2026.9.0 cryptographic handshake · d476a236", href: "https://github.com/commonwarexyz/monorepo/blob/d476a2361ce6840d2b9d0aa6fb30a924429046d4/cryptography/src/handshake.rs", note: "Syn·SynAck·Ack, timestamp·signature·confirmation과 directional AEAD의 exact implementation이며 application authorization은 별도" },
+    { kind: "공식 코드", label: "Commonware v2026.9.0 encrypted stream · d476a236", href: "https://github.com/commonwarexyz/monorepo/blob/d476a2361ce6840d2b9d0aa6fb30a924429046d4/stream/src/encrypted.rs", note: "Static-key bouncer, handshake timeout·clock range와 encrypted sender·receiver 생성 경로이며 identity hiding·0-RTT 근거는 아님" },
+    { kind: "공식 코드", label: "Commonware v2026.9.0 authenticated P2P · d476a236", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/p2p/src/authenticated", note: "Channel registration, router·relay, peer rate limit과 bounded inbox 구현이며 remote acknowledgement·consensus order·durable acceptance는 별도" },
   ],
   "gpu/hw-server-vs-desktop": [
     { kind: "공식 규격", label: "DMTF Redfish DSP0266 1.23.1 · 2026-01-16", href: "https://www.dmtf.org/standards/redfish", note: "Pinned server management protocol·resource-model 범위이며 hardware redundancy·application availability 보장은 아님" },

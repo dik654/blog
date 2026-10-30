@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 709,
-    "pending": 298,
+    "reviewed": 710,
+    "pending": 297,
     "untracked": 0,
-    "assignedPending": 256,
+    "assignedPending": 255,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5361,11 +5361,11 @@
     {
       "route": "blockchain/commonware-crypto-p2p",
       "publicPath": "cs/blockchain/commonware-crypto-p2p",
-      "title": "Commonware authenticated P2P: handshake·channel·quota",
+      "title": "Commonware authenticated P2P: handshake · channel · quota",
       "catalogIndex": 533,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

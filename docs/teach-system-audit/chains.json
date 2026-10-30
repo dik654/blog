@@ -934,39 +934,78 @@
     },
     {
       "route": "blockchain/commonware-crypto-p2p",
-      "title": "Commonware authenticated P2P: handshake·channel·quota",
-      "status": "unreviewed",
+      "title": "Commonware authenticated P2P: handshake · channel · quota",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-crypto-p2p.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-crypto-p2p.tsx",
-        "src/pages/articles/blockchain/commonware-crypto-p2p/ModernArticle.tsx"
+        "src/pages/articles/blockchain/commonware-crypto-p2p/CommonwareP2PLocator.tsx",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/ModernArticle.tsx",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/viz/ModernCommonwareP2PViz.tsx",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/codeRefs.ts",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/fileTrees.ts",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/codebase/commonware/handshake_flow.rs",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/codebase/commonware/encrypted_connection.rs",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/codebase/commonware/channel_registration.rs",
+        "src/pages/articles/blockchain/commonware-crypto-p2p/codebase/commonware/delivery_path.rs",
+        "src/content/commonware-p2p-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 6,
         "headings": [
-          "Commonware P2P는 known peer를 인증한 뒤 channel별 bounded message 경로를 연다",
-          "Signature·timestamp·confirmation이 같은 transcript와 두 방향 cipher를 묶는다",
-          "Authenticated peer의 모든 message를 같은 권한·queue로 취급하지 않는다",
-          "Handshake failure, queue rejection과 payload rejection을 다른 retry class로 둔다"
+          "Alice가 보낸 bytes는 언제 Bob의 Application이 받은 message가 됩니까",
+          "Bob은 허용한 identity와 같은 session key를 확인한 뒤에만 연결을 엽니다",
+          "Alice의 send는 local queue에 넣는 단계까지만 확인합니다",
+          "Bob의 channel inbox는 모든 peer의 burst를 합친 bounded queue입니다",
+          "Receiver가 Alice의 key와 bytes를 함께 반환할 때 Bob receipt가 생깁니다",
+          "실패는 멈춘 경계에 따라 서로 다른 상태를 남깁니다",
+          "근거와 버전 경계",
+          "한 payload의 경계를 다시 말해 보기",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 P2P·handshake·channel·quota를 기능별로 나열해 Alice의 local send와 Bob Application의 receipt를 한 message의 시간선에서 구분하기 어려웠습니다.",
+        "이전 설명은 Rejected를 Feedback variant처럼 읽힐 수 있었지만 v2026.9.0에서 Rejected는 bounded mailbox의 Unreliable 결과이고 Feedback은 Ok·Backoff·Closed입니다.",
+        "Known peer 인증, encrypted session, local router admission, node-local receiver를 하나의 성공으로 묶으면 retry·acknowledgement·durable commit의 책임 경계가 흐려집니다."
+      ],
+      "fixture": {
+        "case": "Alice가 channel 7의 설명용 payload m7을 Bob에게 보내고 Bob Application Receiver가 (Alice public key, m7 bytes)를 반환하는 한 건",
+        "path": "channel 등록→static identity bouncer→Syn·SynAck·Ack→Alice local router admission→connected relay·encrypted stream→Bob decode·channel·rate 검사→bounded inbox→Receiver 반환",
+        "boundary": "authenticated session, local submission, node-local application receipt와 durable application acceptance를 서로 다른 증거로 유지"
+      },
+      "stageEvidence": {
+        "parent": "Commonware 전체 구조에서 storage·consensus와 별개로 known peer 사이의 encrypted message path를 표시합니다.",
+        "0": "양쪽 Application이 channel 7을 등록하고 Bob의 bounded inbound mailbox를 만듭니다.",
+        "1": "Alice의 static public key를 Bob listener bouncer가 허용한 peer인지 먼저 판정합니다.",
+        "2": "Bob이 namespace·역할·identity·시각·ephemeral key를 같은 transcript로 구성해 Syn signature를 검증합니다.",
+        "3": "SynAck와 Ack confirmation이 맞으면 방향별 ChaCha20-Poly1305 cipher와 counter를 엽니다.",
+        "4": "Alice Sender의 rate check와 router mailbox가 m7을 받지만 이 결과는 Alice 노드의 local submission입니다.",
+        "5": "Router가 현재 연결된 Bob relay를 찾아 bounded high·low queue와 encrypted stream으로 frame을 보냅니다.",
+        "6": "Bob peer actor가 decrypt·decode, channel 등록과 peer별 rate limit을 확인한 뒤 inbound mailbox에 non-blocking enqueue합니다.",
+        "7": "Bob Receiver가 (Alice public key, m7 bytes)를 반환해 node-local receipt를 만들지만 durable commit과 업무 승인은 별도입니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Commonware monorepo v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4",
+          "application": "cryptography handshake, encrypted stream listener, authenticated router·relay·peer actor·channel register와 official overflow test를 실제 Rust source와 대조했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 Commonware v2026.9.0 handshake·encrypted stream·authenticated P2P source를 다시 읽고 Alice의 m7 한 건을 channel 등록에서 Bob Receiver까지 추적하는 글로 교체했습니다.",
+        "arithmetic": "현재 시각 100,000ms, max age 5,000ms, synchrony bound 2,000ms일 때 timestamp 범위 [95,000, 102,000)ms와 max_peers 2×burst_size 2=inbox capacity 4를 확인했습니다. 지연·처리량은 측정하지 않았습니다.",
+        "humanize": "직속 부모 지도, 질문 하나, m7 한 사례, 내부 상태 전이·실제 source·실패 경계와 부모 지도 반환으로 구성했습니다. 제품 선택과 운영 Runbook은 개념 글에서 제외했습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px이고 가로 넘침이 없습니다. Actor 지도를 2열로 배치해 698.4px 높이의 장면·상태·설명·조작부가 한 viewport에 들어오게 했습니다. Reduced-motion에서 재생은 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활 trailing-slash 경로는 live 조작부 없이 정적 여덟 장면, 전체 본문·확인 질문·부모 지도 반환을 순서대로 표시합니다.",
+        "browser1440": "1440×900에서 document 폭 1440=scroll 폭 1440이고 가로 넘침이 없습니다. 자동 재생의 session 확정 중간 장면과 마지막 Application 수신 장면, group focus 후 ArrowLeft 8→7을 확인했습니다. CodeSidebar의 고정 source·한국어 주석·닫기와 console 오류·경고 0건을 확인했습니다.",
+        "static": "학습·시각화·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사와 ESLint, TypeScript, production build를 통과했습니다. 최종 build 최대 RSS는 6,039,961,600 bytes, 정적 경로 생성 최대 RSS는 1,582,120,960 bytes이고 swap은 모두 0입니다. 공개 route 2,120개와 no-script 본문 366편을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-payload-session-local-submission-node-local-receipt-application-boundary"
     },
     {
       "route": "blockchain/commonware-deep-dive",

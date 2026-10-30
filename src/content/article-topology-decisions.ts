@@ -555,6 +555,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Commonware v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. n=4, f=1과 validator D의 지연, A·B·C의 certify=true는 설명용 가정입니다. Finalization을 Application state commit·외부 저장 성공·client success로 확대하지 않고, certify=false와 channel RecvError를 같은 실패로 합치지 않습니다.",
   },
+  "blockchain/commonware-crypto-p2p": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Channel 7의 payload m7 하나를 static-key bouncer, Syn·SynAck·Ack, Alice local router admission, connected relay, encrypted stream, Bob peer actor와 bounded channel inbox를 거쳐 Receiver 반환까지 추적합니다. Session, local submission, node-local receipt와 Application acceptance는 다른 상태지만 같은 payload의 한 전달 수명주기입니다. 이를 나누면 최초 send 결과와 최종 receipt의 차이를 다시 조립해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Commonware v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. Alice·Bob, channel 7과 m7은 설명용 식별자입니다. Handshake 성공을 payload authorization으로, local mailbox admission을 remote acknowledgement로, Bob Receiver 반환을 consensus order·disk durability·업무 side effect 성공으로 확대하지 않습니다.",
+  },
   "blockchain/commonware-broadcast": {
     action: "keep",
     status: "implemented",
