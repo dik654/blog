@@ -4620,7 +4620,7 @@
     {
       "route": "blockchain/prysm-beacon-state",
       "title": "Prysm BeaconState: Copy에서 State Root까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-beacon-state.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-beacon-state.tsx",
@@ -4677,11 +4677,10 @@
         "humanize": "직속 부모, 질문 하나, A→B balance 변경 한 건, value owner→dirty receipt→두 Merkle path→fork 경계와 부모 지도 반환으로 다시 구성했습니다. 개념 글에서 배포 SLO·운영 롤백 판단은 분리했습니다. 학습 계약·지식 그래프·수식·계산·본문·읽기·한국어·용어·runtime 감사를 통과했습니다.",
         "browser390": "390×844에서 문서 폭 390=390, live 시각화 폭 334px이며 장면별 높이는 691.7~709.7px입니다. 여덟 장면 모두 가로·내부 오버플로가 없고 이전·재생·다음 조작부는 각각 49.5px입니다. 장면 0은 11초 동안 유지되고 ArrowRight로 0→1 이동합니다. JavaScript 비활성 정적 경로는 live 조작부를 숨기고 부모 지도·정적 여덟 장면·전체 본문·확인 질문·부모 지도 반환을 354px 본문 폭 안에 순서대로 표시합니다.",
         "browser1440": "1440×1000에서 문서 폭 1440=1440, live 시각화 664×876.2px이고 화면 안에 들어옵니다. 가로·내부 오버플로와 console 오류는 0건입니다. Reduced-motion에서는 11초 동안 장면 0 유지, 실행 중 animation 0건, 재생 비활성·수동 이동을 확인했습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,087개 module과 정적 public route 2,120개를 만들었습니다. 최대 RSS는 6,775,111,680 bytes(약 6.31GiB)이고 swap은 0입니다. BeaconState를 정적 registry에 넣고 생성기를 다시 실행해 no-script 본문은 350편이 됐습니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,087개 module과 정적 public route 2,120개를 만들었습니다. 최대 RSS는 6,775,111,680 bytes(약 6.31GiB)이고 swap은 0입니다. BeaconState를 정적 registry에 넣고 생성기를 다시 실행해 no-script 본문은 350편이 됐습니다.",
+        "production": "Commit 310c63b9의 GitHub Pages run 40990076524가 전체 정적 감사, production build, 공개 아티클 실브라우저 검사와 배포를 통과했습니다. 공개 경로는 1,440×1,000과 390×844에서 문서 가로 넘침 0, 여덟 장면의 내부 잘림 0, 키보드 장면 이동과 console 오류 0건을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건, 재생 비활성·수동 이동을 유지했습니다. JavaScript 비활성 390×844 경로에는 live 조작부 대신 직속 부모, 질문, 정적 여덟 장면과 전체 본문이 표시됐습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-parent-copy-state-id-value-dirty-chunk-field-root-state-root-fork-boundary"
     },
     {
