@@ -7,9 +7,9 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 548,
-    "architectureWithoutAnimation": 79,
-    "recursiveLocators": 375,
+    "animatedMechanisms": 549,
+    "architectureWithoutAnimation": 78,
+    "recursiveLocators": 376,
     "codeEvidenceLinked": 239,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
@@ -6473,11 +6473,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/cometbft-crypto",

@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import CometBFTCoreViz from "../cometbft-core-viz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -11,18 +10,17 @@ export default function Timeout({
 }) {
   return (
     <section id="timeout" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Timeout은 실패 판결이 아니라 더 높은 round로 넘어갈 조건이다</h2>
+      <h2 className="mb-6 text-2xl font-bold">Timeout은 block 결정이 아니라 기다림의 상한을 정합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Proposal이나 quorum이 제때 도착하지 않으면 node는 해당 step의 timeout event를 예약합니다. Event에는 H/R/S가 들어 있어야 하며 처리 시점의
-          current state와 맞지 않는 오래된 timer는 무시합니다. 그렇지 않으면 이미 precommit이나 다음 round에 간 node가 늦은 timer 때문에 뒤로
-          이동합니다.
+          Round 0의 proposer A가 늦으면 Propose timeout이 Prevote 진입을 유발합니다. 그러나 timer가 B41을 선택하거나 Commit을 만드는 것은
+          아닙니다. 이후 어떤 block에 signed power가 모이는지는 VoteSet이 결정합니다. Timer에는 H/R/S가 들어가며, 처리 시점에 node가 이미 앞선
+          좌표라면 버립니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
         <CodeViewButton label="handleTimeout()" onClick={() => onCodeRef("handle-timeout", codeRefs["handle-timeout"])} />
       </div>
-      <CometBFTCoreViz mode="timeout" />
       <ExplainedFormula
         question="Round가 반복될수록 정상 message를 기다릴 예산을 어떻게 늘릴까요?"
         idea={<>초기 timeout에 round별 delta를 더하는 단순 schedule은 network delay가 안정된 뒤 언젠가 기다림이 실제 delay를 넘도록 만듭니다. Step별 base와 delta는 따로 둡니다.</>}
@@ -39,14 +37,13 @@ export default function Timeout({
           { symbol: String.raw`\Delta_s`, name: "Round delta", description: "Round가 하나 늘 때 추가하는 waiting budget입니다." },
         ]}
         assumptions={["Event는 예약한 height·round·step과 처리 시 current state를 다시 대조합니다.", "Partial synchrony에서 GST 이후 message·processing delay에 상한이 생긴다고 가정합니다.", "실제 config 함수와 단위는 배포한 release·configuration에서 확인합니다."]}
-        interpretation="T가 결국 안정된 delay보다 커지면 honest proposer와 vote가 같은 round에 모일 기회가 생깁니다. GST 이전 halt나 특정 p95 latency를 이 식만으로 실패·성능 보장이라 판단할 수는 없습니다."
+        interpretation="T가 결국 안정된 delay보다 커지면 honest proposer와 vote가 같은 round에 모일 기회가 생깁니다. 이 식은 liveness를 위한 대기 정책이지 block safety나 특정 p95 latency를 단독으로 보장하는 식이 아닙니다."
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>운영에서는 너무 짧음과 너무 김을 같은 실험에서 봅니다</h3>
+        <h3>이 글에서는 식의 의미까지만 확인합니다</h3>
         <p>
-          Timeout이 너무 짧으면 정상 message도 놓쳐 round churn과 vote traffic이 늘고 너무 길면 faulty proposer를 오래 기다립니다. 같은
-          validator set·latency/loss schedule에서 commit latency, rounds per height, nil vote power, stale
-          timeout count, message bytes를 paired 측정하고 safety hard gate를 먼저 통과시킵니다.
+          Timeout이 짧으면 정상 message도 늦었다고 보고 round가 자주 바뀌고, 너무 길면 faulty proposer를 오래 기다립니다. 실제 배포값을
+          선택하려면 network delay와 round churn을 측정해야 하지만, 그 비교와 운영 기준은 별도 실무 글에서 다룹니다.
         </p>
       </div>
     </section>

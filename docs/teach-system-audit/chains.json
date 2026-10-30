@@ -628,7 +628,7 @@
     {
       "route": "blockchain/cometbft-consensus",
       "title": "CometBFT 합의 엔진: receiveRoutine → 라운드 상태 머신",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-consensus.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-consensus.tsx",
@@ -638,35 +638,58 @@
         "src/pages/articles/blockchain/cometbft-consensus/RoundState.tsx",
         "src/pages/articles/blockchain/cometbft-consensus/Timeout.tsx",
         "src/pages/articles/blockchain/cometbft-consensus/VoteHandling.tsx",
-        "src/pages/articles/blockchain/cometbft-core-viz.tsx"
+        "src/pages/articles/blockchain/cometbft-consensus/viz/CometBFTConsensusTraceViz.tsx",
+        "src/pages/articles/blockchain/cometbft-consensus/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 15,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 10,
         "headings": [
-          "Consensus가 탐지한 equivocation과 application의 처벌은 같은 동작이 아니다",
-          "CometBFT consensus는 proposal을 고르는 함수가 아니라 증거를 보존하는 H/R/S 상태 머신이다",
-          "receive routine은 여러 producer를 한 state owner에게 직렬화한다",
-          "Prevote는 후보를 관찰한 증거이고 Precommit은 lock을 갱신한 증거다",
-          "Timeout은 실패 판결이 아니라 더 높은 round로 넘어갈 조건이다"
+          "실패한 round 0부터 B41을 결정하는 round 1까지 한 번에 추적합니다",
+          "Peer message와 local vote와 timeout은 한 loop에서 차례로 상태를 바꿉니다",
+          "Round 0의 nil과 round 1의 B41은 같은 VoteSet에 섞이지 않습니다",
+          "Vote power가 문턱을 넘는 순간 다음 state 함수가 호출됩니다",
+          "Timeout은 block 결정이 아니라 기다림의 상한을 정합니다",
+          "상충 vote는 Commit을 덮어쓰지 않고 Evidence 경로로 분리합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 H/R/S·queue·timeout·lock을 각각 설명했지만 한 height의 동일한 validator power와 block을 끝까지 따라가지 않아 transition 관계를 다시 조립해야 했습니다.",
+        "기존 코드 패널은 실제 state.go 원문이 아니라 학습용으로 다시 쓴 축약 구현이어서 공식 코드처럼 읽힐 수 있었습니다.",
+        "기존 공통 시각화는 이 글의 round 0 실패와 round 1 복구에서 VoteSet·lock·Commit이 실제로 어떻게 달라지는지 보여 주지 않았습니다."
+      ],
+      "fixture": "높이 41의 ValidatorSet A 40·B 35·C 25에서 round 0 proposer A의 제안이 늦어 A+B가 nil prevote·precommit한 뒤, round 1 proposer B의 B41에 A+B가 prevote·precommit해 75/100 Commit을 만들고 A의 상충 vote가 Evidence로 분리되는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "h41/r0/NewRound에서 A가 proposer이고 receiveRoutine 한 곳이 peer·internal·timeout 입력을 차례로 처리합니다.",
+        "1": "A의 proposal이 완성되지 않아 h41/r0/Propose timeout이 stale 여부를 통과한 뒤 Prevote로 이동시킵니다.",
+        "2": "A 40+B 35의 nil prevote가 75/100이 되어 +2/3 nil이 되지만 특정 block lock은 만들지 않습니다.",
+        "3": "Nil precommit 75/100과 timeout 뒤 round 1로 이동하며 proposer priority가 바뀌고 이전 proposal state를 비웁니다.",
+        "4": "Round 1 proposer B의 B41과 block parts가 모이고 consensus validation과 ProcessProposal을 통과합니다.",
+        "5": "A+B의 B41 prevote 75/100이 POL을 만들고 LockedRound=1·LockedBlock=B41로 갱신한 뒤 B41에 precommit합니다.",
+        "6": "A+B의 B41 precommit 75/100이 enterCommit을 호출하며 block bytes도 있으면 tryFinalizeCommit으로 진행합니다.",
+        "7": "같은 h41/r1/type에서 A의 다른 BlockID 서명은 기존 vote를 덮어쓰지 않고 두 signed vote가 Evidence pool로 분리됩니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 consensus/state.go receiveRoutine·handleTimeout·enterNewRound·defaultDoPrevote·enterPrecommit·enterCommit·addVote·tryAddVote",
+        "같은 commit의 spec/consensus/consensus.md와 앞 글에서 검증한 Vote·Commit·DuplicateVoteEvidence 데이터 구조"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 commit의 queue·timeout·round·prevote·precommit·commit·conflicting-vote 분기를 읽고 손으로 만든 축약 code snapshot을 실제 원문 발췌로 교체했습니다.",
+        "arithmetic": "A 40+B 35=75, total 100, 75>66⅔를 nil prevote·nil precommit·B41 prevote·B41 precommit에 같은 fixture로 적용하고 round와 BlockID가 다른 power는 합치지 않았습니다.",
+        "humanize": "한 질문과 한 B41 사례를 먼저 보여 준 뒤 queue owner→round 전환→lock→Commit→Evidence 순서로 설명하고 부모 지도 위치와 반환 사실을 추가했습니다. 한국어 strict 오류는 0건입니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 첫 장면 live UI는 715px, 가장 긴 Evidence 장면은 751px로 조작부까지 한 화면에 들어오며 6.2초 동안 자동 진행하지 않았습니다. 탭·group focus 뒤 ArrowRight·Space 재생과 고정 source code panel을 확인했습니다.",
+        "browser1440": "1440×900에서 document 폭과 scroll 폭이 모두 1440px이고 live UI 높이는 651px입니다. 질문·8개 장면·H/R/S·VoteSet·RoundState가 함께 보이고 code sidebar와 console 오류 0건을 확인했습니다.",
+        "reducedMotion": "390×844에서 재생 버튼이 비활성화되고 첫 장면이 유지됩니다.",
+        "resource": "TypeScript 최대 RSS 6,608,207,872 bytes, Vite build 최대 RSS 4,261,642,240 bytes, 최종 정적 생성 최대 RSS 1,601,503,232 bytes였으며 모두 swap 0으로 직렬 실행했습니다.",
+        "static": "검토 완료 목록에 route를 등록해 no-script 본문 380편을 재생성했습니다. JavaScript를 끈 390×844 브라우저에서 HTTP 200, document 폭 390px, 정적 장면 8개, live UI·버튼 0개, 질문·부모 지도 반환·고정 commit 근거 노출을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-height-through-timeout-round-lock-commit-and-evidence-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-crypto",

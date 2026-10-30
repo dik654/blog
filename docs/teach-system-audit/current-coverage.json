@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 722,
-    "pending": 285,
+    "reviewed": 723,
+    "pending": 284,
     "untracked": 0,
-    "assignedPending": 243,
+    "assignedPending": 242,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4623,9 +4623,9 @@
       "publicPath": "cs/blockchain/cometbft-consensus",
       "title": "CometBFT 합의 엔진: receiveRoutine → 라운드 상태 머신",
       "catalogIndex": 459,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
