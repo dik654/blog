@@ -4649,3 +4649,11 @@
 - `p=13`, `R=16`, `n′=11`에서 `5→2`, `9→1`, `T=2`, `m=6`, 내부 결과 `5`, 공개 결과 `6`을 독립 계산했습니다. 이는 내부 경계를 손으로 확인하기 위한 축소 사례이며 성능·timing·배포 결과는 아닙니다.
 - 1,440×900과 390×844에서 가로 넘침이 없습니다. 모바일에서는 단계 최소 너비를 유지하고 선택 장면으로 가로 탐색 영역이 이동합니다. 첫 장면은 자동으로 바뀌지 않으며 키보드 이동, reduced-motion, CodeSidebar와 console 오류·경고 0건을 확인했습니다.
 - JavaScript 비활성 trailing-slash 경로에는 live 조작부 없이 정적 일곱 장면, 전체 수식·본문, 직속 부모와 다음 타원곡선 글이 남습니다. 공개 배포 검증 뒤 production 상태로 올립니다.
+
+# Rust 타원곡선 점 경로 로컬 검증 완료 (2026-10-31)
+
+- `blockchain/impl-elliptic-curve`를 설명용 곡선 `E: y²=x³+2x+2 mod17`의 압축 입력 `0x03 0x05` 한 건으로 다시 썼습니다. `x=5`, 두 제곱근 `1·16`, 홀수 `y=1`, `P=(5,1)`, `[19]P=O`, `2P=(6,3)`, 출력 `0x03 0x06`을 여덟 장면에서 추적합니다.
+- Node로 affine point 18개와 무한원점, `P`의 차수 19, 두 배 결과를 독립 계산했습니다. 이 숫자와 두-byte 형식은 입력·연산 경계를 손으로 확인하는 축소 사례이며 BN254의 실제 parameter나 encoding이 아닙니다.
+- arkworks algebra commit `6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5`의 compressed decode·`Valid::check`·Jacobian double과 curves commit `e2d16a27e2cfa9f972ae9772df827a22730011b4`의 BN254 `BnConfig`를 pinned source로 연결했습니다.
+- 1,440×900과 390×844에서 document 가로 넘침이 없습니다. 첫 장면은 4.2초 뒤에도 유지됐고, 키보드 0→1, 마지막 장면의 두 내부 strip 자동 이동, reduced-motion 재생 비활성·수동 이동과 한국어 CodeSidebar를 확인했습니다.
+- JavaScript 비활성 390×844 경로에는 live 조작부 대신 정적 여덟 장면, 전체 본문·수식·직속 부모와 다음 글이 남습니다. Production build와 모든 관련 감사가 통과했으며 공개 배포 검증 뒤 production 상태로 올립니다.

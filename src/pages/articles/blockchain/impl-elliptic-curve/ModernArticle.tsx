@@ -1,81 +1,250 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CurveImplementationViz } from "./CurveImplementationViz";
+import {
+  CurveImplementationViz,
+  CurveProfileViz,
+  PairingBoundaryViz,
+} from "./CurveImplementationViz";
+import ZkFromScratchLocator, {
+  ZkFromScratchMapReturn,
+} from "../impl-field-arithmetic/ZkFromScratchLocator";
+import { zkCurveTree } from "./fileTrees";
+import { officialCurveCodeRefs } from "./officialCodeRefs";
 
 const ARK_SW = "https://github.com/arkworks-rs/algebra/tree/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/ec/src/models/short_weierstrass";
 const ARK_BN = "https://github.com/arkworks-rs/curves/tree/e2d16a27e2cfa9f972ae9772df827a22730011b4/bn254";
 
 export default function ModernCurveImplementationArticle() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Bytes를 G1/G2와 pairing receipt로 안전하게 승격하기</p><h2 className="text-3xl font-bold tracking-tight">타원곡선 구현은 점 공식을 옮기는 일보다 curve profile과 admission 순서를 지키는 일이 먼저다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">증명 파일에서 읽은 좌표 두 개를 곧바로 G1으로 다루면 안 됩니다. Encoding을 canonical하게 해석하고 curve equation과 subgroup을 확인한 뒤에야 typed point가 됩니다. <a className="text-primary hover:underline" href="/cs/crypto/elliptic-curves">곡선군·Jacobian·pairing 정본</a>이 수학을 소유하며, 이 글은 BN254를 예로 Rust artifact, 좌표 연산 profile과 release gate를 설명합니다.</p>
-      <p>
-            고정 workload는 compressed point를 읽어 G1 scalar multiplication과 G2 pairing product를 수행하고 검증 receipt를
-            만드는 흐름입니다. G1과 G2는 서로 바꿀 수 없고 infinity·twist·subgroup·encoding rules도 같은 profile revision에 묶습니다.
+  const sidebar = useCodeSidebar();
+
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-5 scroll-mt-20">
+        <ZkFromScratchLocator
+          currentSlug="impl-elliptic-curve"
+          region="점 입력·그룹 연산·pairing 경계"
+          question="압축된 두 byte는 어떤 검사를 거쳐 타원곡선 점이 되고, 두 배 연산 뒤 어떤 byte로 돌아옵니까?"
+        />
+
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 max-w-4xl break-keep text-3xl font-bold">
+            bytes를 언제부터 안전한 곡선점으로 다룰 수 있습니까
+          </h2>
+          <p className="mt-3 max-w-3xl break-keep text-base leading-7 text-muted-foreground">
+            설명용 곡선 <code>y²=x³+2x+2 mod17</code>에서 입력 <code>0x03 0x05</code>를 추적합니다.
+            이 bytes는 <code>P=(5,1)</code>로 승인되고, 두 배 연산을 거쳐 <code>2P=(6,3)</code>,
+            다시 <code>0x03 0x06</code>이 됩니다.
           </p>
-      <CurveImplementationViz />
-      <ContentBoundary article="impl-elliptic-curve" />
-    </section>
+        </div>
 
-    <section id="curve-profile" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Curve profile artifact</p><h2 className="mt-2 text-2xl font-bold">field id부터 generator·order·twist·pairing constants까지 하나의 digest로 고정한다</h2></header>
-      <p>Profile은 base/scalar field artifact ids, curve coefficients a,b, G1/G2 generators, subgroup order r와 cofactors, G2 twist embedding, Miller loop parameter, final exponent strategy, point encoding schema와 source revision을 포함합니다. “BN254”라는 이름만으로는 구현 artifact를 식별하기에 부족합니다.</p>
-      <ExplainedFormula question="Curve profile이 어떤 객체를 구현하는지 최소한 어떻게 확인할까?" idea={<>Generator가 equation 위에 있고 subgroup order를 곱하면 identity가 되는지 artifact 생성 단계에서 확인합니다.</>} formula={String.raw`G=(x_G,y_G):\ y_G^2=x_G^3+ax_G+b\pmod p,\qquad [r]G=\mathcal O`}
-      annotatedFormula={String.raw`G=(x_G,y_G):\ \underbrace{y_G^2=x_G^3+ax_G+b\pmod p}_{\text{curve equation 위}},\qquad \underbrace{[r]G=\mathcal O}_{\text{order r subgroup}}`}
-      operations={[
-          { expression: String.raw`y_G^2=x_G^3+ax_G+b\pmod p`, annotation: ["generator 좌표를 equation에 대입해","parameter typo를 artifact 단계에서 탐지"] },
-          { expression: String.raw`[r]G=\mathcal O`, annotation: ["G를 r번 더하면 point at infinity","on-curve만으론 작은 subgroup일 수 있음"] },
-        ]} terms={[
-        {symbol:"G",name:"Generator",description:"Profile이 지정한 subgroup generator입니다."},{symbol:"x_G,y_G",name:"Coordinates",description:"Base field 또는 G2 twist field의 coordinates입니다."},{symbol:"a,b",name:"Curve coefficients",description:"Short-Weierstrass equation의 constants입니다."},{symbol:"p",name:"Base modulus",description:"Coordinates가 속한 field의 modulus입니다."},{symbol:"r",name:"Subgroup order",description:"Scalar field modulus이자 G가 생성하는 subgroup의 order입니다."},{symbol:String.raw`\mathcal O`,name:"Identity",description:"Point at infinity입니다."},{symbol:"[r]G",name:"Scalar multiplication",description:"G를 r번 더한 group operation입니다."},
-      ]} assumptions={["Discriminant가 0이 아니며 G1/G2 profile은 각자의 field·twist equation을 사용합니다.","두 검사는 parameter typo를 찾지만 secure curve selection이나 pairing construction 전체의 proof는 아닙니다."]} interpretation="On-curve만 통과한 점은 더 큰 group의 작은 subgroup에 있을 수 있습니다. [r]P=O 또는 profile-specific subgroup check가 admission에 추가로 필요합니다." />
-      <div id="paper-arkworks-bn254"><CitationBlock type="code" citeKey={1} source="arkworks curves · BN254 parameters · commit e2d16a2" href={ARK_BN}><p><strong>문제:</strong> BN254의 fields, G1/G2, twist와 pairing parameters를 Rust types로 일관되게 제공해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned source는 BN254-specific configuration과 generators를 generic algebra traits에 연결합니다.</p><p><strong>중요 가정:</strong> commit e2d16a2와 의존 algebra revision, feature flags를 함께 고정합니다.</p><p><strong>근거 범위:</strong> 해당 arkworks revision의 BN254 parameter implementation입니다.</p><p><strong>일반화 금지:</strong> 다른 BN curve·encoding·security target 또는 사용자 정의 constants의 안전성을 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
+        <CurveImplementationViz />
 
-    <section id="point-encoding" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Point encoding admission</p><h2 className="mt-2 text-2xl font-bold">tag→canonical coordinate→equation→subgroup 순서가 끝나기 전에는 point 타입을 만들지 않는다</h2></header>
-      <p>
-            Decoder는 compression/infinity/sign flags와 고정 길이를 먼저 확인합니다. x나 y가 field modulus 이상이면 거절하고 압축 형식이면
-            equation에서 y를 복구해 sign rule을 적용합니다. Infinity encoding은 profile이 허용한 단 하나의 형태만 받고, on-curve와
-            subgroup check를 통과한 뒤 G1/G2 타입을 반환합니다.
-          </p>
-      <ExplainedFormula question="Compressed x에서 y 후보를 복구한 뒤 왜 검사가 더 필요한가?" idea={<>Equation의 square root는 두 후보를 만들며 sign bit가 하나를 고릅니다. 그러나 subgroup membership은 equation만으로 결정되지 않습니다.</>} formula={String.raw`y^2=x^3+ax+b\pmod p,\qquad y\in\{y_0,\ p-y_0\},\qquad [r]P=\mathcal O`}
-      annotatedFormula={String.raw`\underbrace{y^2=x^3+ax+b\pmod p}_{\text{x로 구한 우변}},\qquad \underbrace{y\in\{y_0,\ p-y_0\}}_{\text{sign bit로 선택}},\qquad \underbrace{[r]P=\mathcal O}_{\text{subgroup admission}}`}
-      operations={[
-          { expression: String.raw`y\in\{y_0,\ p-y_0\}`, annotation: ["square root는 y0와 p−y0 두 후보","compressed sign bit가 하나를 고름"] },
-          { expression: String.raw`[r]P=\mathcal O`, annotation: ["equation을 만족해도 [r]P≠O면","원하는 subgroup 점이 아님","pairing verifier에 넣기 전에 거절"] },
-        ]} terms={[
-        {symbol:"x",name:"Decoded x",description:"Canonical range를 통과한 coordinate입니다."},{symbol:"y_0",name:"Square-root candidate",description:"Right-hand side의 한 modular square root입니다."},{symbol:"p-y_0",name:"Second root",description:"y0와 반대 부호인 다른 curve point입니다."},{symbol:"a,b",name:"Curve coefficients",description:"Pinned profile의 equation constants입니다."},{symbol:"P",name:"Decoded point",description:"Sign rule까지 적용한 candidate point입니다."},{symbol:"r",name:"Subgroup order",description:"Typed group이 허용하는 prime-order subgroup 크기입니다."},{symbol:String.raw`\mathcal O`,name:"Identity",description:"Subgroup check의 결과 identity입니다."},
-      ]} assumptions={["Square-root algorithm과 sign convention, flag bit placement가 encoding profile에 고정됩니다.","Cofactor clearing을 admission 대신 쓸지는 protocol이 명시해야 하며 attacker bytes를 조용히 다른 point로 바꾸면 안 됩니다."]} interpretation="x가 equation 위의 y를 만들더라도 [r]P≠O이면 원하는 subgroup 점이 아닙니다. Pairing verifier에 넣기 전에 거절해야 합니다." />
-    </section>
+        <p className="text-lg leading-8">
+          <strong>역직렬화에 성공했다는 말과 안전한 점이라는 말은 다릅니다.</strong>{" "}
+          표식과 좌표를 읽은 뒤 제곱근을 복원하고, 곡선식과 부분군을 모두 확인해야 연산에 넣을 수 있습니다.
+          이 순서가 끝나기 전의 값은 점이 아니라 점 후보입니다.
+        </p>
+        <p>
+          타원곡선군과 Jacobian 좌표, pairing의 수학은{" "}
+          <Link to="/cs/crypto/elliptic-curves" className="font-bold text-primary hover:underline">
+            타원곡선 정본
+          </Link>
+          이 설명합니다. 이 글은 그 수학이 Rust의 입력 승인, 점 타입, 그룹 연산과 BN254 pairing config에
+          어떻게 이어지는지만 다룹니다.
+        </p>
+        <ContentBoundary article="impl-elliptic-curve" />
+      </section>
 
-    <section id="coordinate-ops" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Coordinate operation profile</p><h2 className="mt-2 text-2xl font-bold">저장은 affine, 반복 연산은 Jacobian으로 하되 exceptional branch와 normalization 비용을 숨기지 않는다</h2></header>
-      <p>Affine addition은 inversion을 요구하므로 MSM처럼 덧셈이 많은 경로에서는 Jacobian (X:Y:Z)을 씁니다. Z=0을 identity로 정하고 mixed-add, double, full-add의 formula family와 a=0 같은 전제를 profile에 적습니다. “complete formula”가 아닌 구현이라면 P=Q, P=−Q, infinity branches를 명시적으로 검사합니다.</p>
-      <ExplainedFormula question="Jacobian coordinates가 affine point를 어떻게 나타내며 무엇을 아끼는가?" idea={<>Z의 역원을 매 덧셈마다 계산하지 않고 projective coordinates로 누적한 뒤 경계에서 한 번 normalization합니다.</>} formula={String.raw`(x,y)=\left(\frac{X}{Z^2},\frac{Y}{Z^3}\right),\qquad Z\ne0`}
-      annotatedFormula={String.raw`\underbrace{(x,y)}_{\text{affine 경계 표현}}=\left(\frac{X}{\underbrace{Z^2}_{\text{x scale}}},\frac{Y}{\underbrace{Z^3}_{\text{y scale}}}\right),\qquad \underbrace{Z\ne0}_{\text{Z=0은 identity}}`}
-      operations={[
-          { expression: String.raw`\left(\frac{X}{Z^2},\frac{Y}{Z^3}\right)`, annotation: ["덧셈 중엔 X,Y,Z를 곱셈으로만 갱신","Z 역원은 serialize·pairing 경계에서","inversion을 없애지 않고 뒤로 미룸"] },
-          { expression: String.raw`Z\ne0`, annotation: ["Z=0은 identity라 별도 branch","batch inversion 전 zero Z를 분리"] },
-        ]} terms={[
-        {symbol:"X,Y,Z",name:"Jacobian coordinates",description:"같은 affine point의 projective representation입니다."},{symbol:"x,y",name:"Affine coordinates",description:"Serialization과 pairing input 경계의 normalized point입니다."},{symbol:"Z^2,Z^3",name:"Projective scale",description:"Field multiplications로 갱신하는 scale powers입니다."},{symbol:"Z\\ne0",name:"Finite-point condition",description:"Z=0은 implementation convention상 identity입니다."},
-      ]} assumptions={["Field inversion은 Z≠0에서만 수행하고 identity는 별도 branch로 처리합니다.","사용한 add/double formula의 curve coefficient·exception assumptions를 source revision에 고정합니다."]} interpretation="Projective coordinates는 inversion을 없애는 것이 아니라 뒤로 미룹니다. 여러 점은 batch inversion으로 normalize할 수 있지만 zero Z를 분리해야 합니다." />
-      <div id="paper-arkworks-sw"><CitationBlock type="code" citeKey={2} source="arkworks algebra · short-Weierstrass model · commit 6a28df5" href={ARK_SW}><p><strong>문제:</strong> Affine/projective points와 add/double/scalar multiplication을 curve-specific configuration 위에 구현해야 합니다.</p><p><strong>핵심 기여:</strong> Generic short-Weierstrass types, serialization hooks와 group operations의 concrete Rust implementation을 제공합니다.</p><p><strong>중요 가정:</strong> Exact curve config, field backend와 commit 6a28df5의 formula branches를 함께 읽습니다.</p><p><strong>근거 범위:</strong> Pinned ark-ec implementation structure와 operation behavior입니다.</p><p><strong>일반화 금지:</strong> 모든 공식이 모든 curve에서 complete하거나 fixed operation count·constant-time을 가진다는 뜻은 아닙니다.</p></CitationBlock></div>
-    </section>
+      <section id="curve-profile" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          BN254 하나에도 서로 다른 field와 group 타입이 있습니다
+        </h2>
+        <CurveProfileViz />
+        <p>
+          좌표 <code>x,y</code>는 base field <code>Fq</code>에서 계산하고, 점에 곱하는 scalar는{" "}
+          <code>Fr</code>에서 계산합니다. G1과 G2는 서로 다른 곡선 위의 점이고, pairing 결과 GT는 또 다른
+          부분군입니다. 같은 크기의 limb를 쓴다는 이유로 이 타입들을 바꾸어 쓰면 안 됩니다.
+        </p>
+        <ExplainedFormula
+          question="Curve profile이 generator와 부분군을 연결하는 최소 조건은 무엇입니까?"
+          idea={<>Generator는 곡선식 위에 있어야 하고, 부분군 차수 r을 곱하면 무한원점으로 돌아가야 합니다.</>}
+          formula={String.raw`y_G^2=x_G^3+ax_G+b\pmod p,\qquad [r]G=\mathcal O`}
+          annotatedFormula={String.raw`\underbrace{y_G^2=x_G^3+ax_G+b\pmod p}_{\text{곡선식}},\qquad \underbrace{[r]G=\mathcal O}_{\text{부분군}}`}
+          operations={[
+            { expression: String.raw`G=(x_G,y_G)`, annotation: ["profile에 고정된 generator 좌표입니다."] },
+            { expression: String.raw`[r]G=\mathcal O`, annotation: ["r은 scalar field의 크기이자 원하는 부분군의 차수입니다."] },
+          ]}
+          terms={[
+            { symbol: "p", name: "base modulus", description: "좌표가 속한 field의 범위입니다." },
+            { symbol: "a,b", name: "curve coefficients", description: "short-Weierstrass 곡선식을 정합니다." },
+            { symbol: "G", name: "generator", description: "원하는 부분군을 생성하는 점입니다." },
+            { symbol: "r", name: "subgroup order", description: "scalar field의 크기입니다." },
+            { symbol: String.raw`\mathcal O`, name: "무한원점", description: "점 덧셈의 항등원입니다." },
+          ]}
+          assumptions={[
+            "G1과 G2는 각각 자신의 field와 곡선식을 사용합니다.",
+            "이 검사는 parameter 연결을 확인하지만 곡선 선택 자체의 보안 증명을 대신하지 않습니다.",
+          ]}
+          interpretation="곡선식만 맞는 점과 원하는 prime-order 부분군의 점은 같은 조건이 아닙니다."
+        />
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="BN254 pairing config" onClick={() => sidebar.open("ark-bn254-config", officialCurveCodeRefs["ark-bn254-config"])} />
+        </div>
+        <div id="paper-arkworks-bn254">
+          <CitationBlock type="code" citeKey={1} source="arkworks curves · BN254 · commit e2d16a2" href={ARK_BN}>
+            <p><strong>확인한 범위:</strong> G1/G2 config, extension fields, twist와 Ate loop 상수를 generic BN pairing engine에 연결합니다.</p>
+            <p><strong>한계:</strong> 이 pinned 구현은 다른 curve나 별도 encoding profile의 안전성을 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
 
-    <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Pairing and release gate</p><h2 className="mt-2 text-2xl font-bold">공식 vectors와 negative encodings를 통과한 뒤 pairing product와 end-to-end verifier를 비교한다</h2></header>
-      <p>Identity, generator, P+O, P+(−P), P+P, random scalar, invalid flags, x≥p, off-curve, wrong subgroup와 G1/G2 type confusion을 포함합니다. Pairing은 bilinearity와 non-degeneracy vectors, product equation, independent library parity를 검사합니다. Benchmark는 deserialize·subgroup check·Miller loop·final exponentiation을 나눠 기록하고 binary/profile digest가 바뀌면 rollback 가능한 receipt를 만듭니다.</p>
-      <ExplainedFormula question="Pairing implementation의 핵심 동작을 어떤 equality로 검증할까?" idea={<>Scalar multiplication을 pairing 전후 어느 쪽에 적용해도 같은 target-group 값이 나와야 합니다.</>} formula={String.raw`e([a]P,[b]Q)=e(P,Q)^{ab},\qquad e(P,Q)\ne1`}
-      annotatedFormula={String.raw`\underbrace{e([a]P,[b]Q)}_{\text{scalar 먼저 곱함}}=\underbrace{e(P,Q)^{ab}}_{\text{pairing 뒤 거듭제곱}},\qquad \underbrace{e(P,Q)\ne1}_{\text{비자명 결과}}`}
-      operations={[
-          { expression: String.raw`e([a]P,[b]Q)=e(P,Q)^{ab}`, annotation: ["scalar를 pairing 전후 어디에 적용해도","같은 GT 값이어야 bilinearity 통과","실패면 Miller loop·final exp를 의심"] },
-          { expression: String.raw`e(P,Q)\ne1`, annotation: ["GT identity인 trivial fixture 배제"] },
-        ]} terms={[
-        {symbol:"e",name:"Pairing",description:"G1×G2에서 target group GT로 가는 bilinear map입니다."},{symbol:"P",name:"G1 point",description:"Admission을 통과한 G1 subgroup point입니다."},{symbol:"Q",name:"G2 point",description:"Admission을 통과한 G2 subgroup point입니다."},{symbol:"a,b",name:"Scalars",description:"Scalar field의 test values입니다."},{symbol:"[a]P,[b]Q",name:"Scalar multiples",description:"각 group에서 수행한 scalar multiplication입니다."},{symbol:"e(P,Q)^{ab}",name:"Target exponentiation",description:"GT에서 pairing value를 ab만큼 거듭제곱한 값입니다."},{symbol:"1",name:"GT identity",description:"Non-degeneracy fixture가 피해야 할 trivial result입니다."},
-      ]} assumptions={["P,Q는 올바른 prime-order subgroups에 있고 pairing parameters와 final exponent가 같은 curve profile에 속합니다.","몇 개 vector의 bilinearity는 security proof나 모든 input correctness를 대신하지 않습니다."]} interpretation="Bilinearity가 실패하면 Miller loop, line function, Frobenius 또는 final exponent profile 중 하나가 어긋난 것입니다. 어느 stage가 틀렸는지 intermediate fixture로 좁힙니다." />
-      <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 10/10:</strong> curve artifact, G/r checks, decoding 순서, compressed root 반례, subgroup, Jacobian 의미, exceptional cases, pairing equality, negative suite, stage measurement·rollback을 이 글만으로 답할 수 있습니다.</aside>
-    </section>
-  </article>;
+      <section id="point-encoding" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          x에서 y를 복원한 뒤에도 두 검사가 남습니다
+        </h2>
+        <p>
+          설명용 입력의 <code>x=5</code>를 곡선식에 넣으면 우변은 <code>1</code>입니다. F₁₇에서 제곱근은
+          <code>1</code>과 <code>16</code> 두 개이고, 홀수 표식이 <code>y=1</code>을 선택합니다. 그 뒤
+          곡선식과 <code>[19]P=O</code>를 각각 확인합니다.
+        </p>
+        <ExplainedFormula
+          question="0x03 0x05에서 P=(5,1)을 어떻게 얻습니까?"
+          idea={<>x로 두 y 후보를 만든 뒤 표식이 하나를 고르고, 곡선식과 부분군을 차례로 확인합니다.</>}
+          formula={String.raw`5^3+2\cdot5+2\equiv1,\quad y\in\{1,16\},\quad [19](5,1)=\mathcal O`}
+          annotatedFormula={String.raw`\underbrace{5^3+2\cdot5+2\equiv1}_{\text{y²의 값}},\quad \underbrace{y\in\{1,16\}}_{\text{두 제곱근}},\quad \underbrace{[19](5,1)=\mathcal O}_{\text{부분군 검사}}`}
+          operations={[
+            { expression: String.raw`5^3+2\cdot5+2=137\equiv1\pmod{17}`, annotation: ["x=5를 곡선식의 우변에 넣습니다.", "137=17×8+1입니다."] },
+            { expression: String.raw`1^2\equiv16^2\equiv1\pmod{17}`, annotation: ["0x03의 홀수 표식이 y=1을 고릅니다."] },
+            { expression: String.raw`[19]P=\mathcal O`, annotation: ["이 곡선의 19개 점 전체가 하나의 prime-order group입니다."] },
+          ]}
+          terms={[
+            { symbol: "0x03", name: "설명용 표식", description: "홀수 y를 선택한다는 이 글의 축소 encoding입니다." },
+            { symbol: "x=5", name: "공개 x", description: "F₁₇의 canonical 범위를 통과한 좌표입니다." },
+            { symbol: "y=1,16", name: "제곱근 후보", description: "같은 x에 대응하는 서로 반대인 두 점입니다." },
+            { symbol: "19", name: "group order", description: "무한원점을 포함한 설명용 곡선의 점 개수입니다." },
+          ]}
+          assumptions={[
+            "0x03/0x02 표식은 손계산을 위한 축소 형식이며 arkworks의 실제 SWFlags byte layout이 아닙니다.",
+            "실제 protocol은 infinity와 canonical coordinate 규칙까지 고정해야 합니다.",
+          ]}
+          interpretation="표식, 좌표 복원, 곡선식, 부분군이 모두 맞아야 bytes가 typed point가 됩니다."
+        />
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="압축 점 decode 코드" onClick={() => sidebar.open("ark-point-admission", officialCurveCodeRefs["ark-point-admission"])} />
+          <CodeViewButton label="곡선·부분군 검사 코드" onClick={() => sidebar.open("ark-point-validity", officialCurveCodeRefs["ark-point-validity"])} />
+        </div>
+        <aside className="border-l-2 border-destructive/70 pl-4 text-sm leading-6 text-muted-foreground">
+          <strong className="text-foreground">실패 동작:</strong> 길이가 다르거나, x가 field 범위를 벗어나거나,
+          제곱근이 없거나, 곡선식·부분군 중 하나라도 실패하면 점으로 보정하지 않고 입력 오류로 끝냅니다.
+        </aside>
+      </section>
+
+      <section id="coordinate-ops" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          P를 두 배로 만들면 (5,1)이 (6,3)이 됩니다
+        </h2>
+        <p>
+          작은 곡선에서는 affine 기울기로 결과를 손으로 확인할 수 있습니다. 실제 반복 연산에서는 매 덧셈마다
+          field inverse를 구하지 않도록 Jacobian <code>(X:Y:Z)</code>를 사용하고, 출력 경계에서 affine으로 돌아옵니다.
+        </p>
+        <ExplainedFormula
+          question="P=(5,1)의 두 배 2P를 어떻게 계산합니까?"
+          idea={<>접선의 기울기를 field에서 구한 뒤 새 x와 y를 계산합니다.</>}
+          formula={String.raw`\lambda=\frac{3x^2+a}{2y}=13,\quad x_2=\lambda^2-2x=6,\quad y_2=\lambda(x-x_2)-y=3`}
+          annotatedFormula={String.raw`\lambda=\underbrace{(3\cdot5^2+2)}_{77\equiv9}\underbrace{(2\cdot1)^{-1}}_{2^{-1}=9}=13,\quad x_2=6,\quad y_2=3`}
+          operations={[
+            { expression: String.raw`77\bmod17=9,\quad2^{-1}\bmod17=9`, annotation: ["9×9=81≡13이므로 λ=13입니다."] },
+            { expression: String.raw`13^2-10=159\equiv6`, annotation: ["새 x 좌표입니다."] },
+            { expression: String.raw`13(5-6)-1=-14\equiv3`, annotation: ["새 y 좌표입니다."] },
+          ]}
+          terms={[
+            { symbol: String.raw`\lambda`, name: "접선 기울기", description: "P=P인 double에서 사용하는 field 값입니다." },
+            { symbol: "a=2", name: "곡선 계수", description: "설명용 곡선의 x 항 계수입니다." },
+            { symbol: "2P", name: "점 두 배", description: "P와 P의 group addition 결과입니다." },
+          ]}
+          assumptions={["분모 2y가 0이면 별도 identity 경로가 필요합니다.", "모든 나눗셈은 F₁₇의 역원을 곱하는 연산입니다."]}
+          interpretation="연산 결과 2P=(6,3)은 다시 곡선식을 만족하며 홀수 y 표식으로 0x03 0x06이 됩니다."
+        />
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="Jacobian double 코드" onClick={() => sidebar.open("ark-projective-double", officialCurveCodeRefs["ark-projective-double"])} />
+        </div>
+        <div id="paper-arkworks-sw">
+          <CitationBlock type="code" citeKey={2} source="arkworks algebra · short-Weierstrass · commit 6a28df5" href={ARK_SW}>
+            <p><strong>확인한 범위:</strong> Affine 입력 검사, 압축 좌표 복원, Jacobian group operation을 generic curve config 위에 구현합니다.</p>
+            <p><strong>한계:</strong> 모든 곡선의 공식이 같은 branch와 비용을 가진다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="pairing-boundary" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          Pairing은 점 두 배와 같은 연산이 아니라 G1·G2를 GT로 보내는 다음 계층입니다
+        </h2>
+        <PairingBoundaryViz />
+        <p>
+          G1 점과 G2 점의 입력 승인이 끝나면 pairing engine이 Miller loop 중간값을 만들고 final exponentiation으로
+          GT 부분군에 보냅니다. 그래서 pairing이 틀렸을 때 점 decode, Miller loop, final exponentiation을 한 덩어리로
+          보지 않고 경계별 값으로 좁혀야 합니다.
+        </p>
+        <ExplainedFormula
+          question="Pairing의 입력군과 출력군이 올바르게 연결됐는지 어떤 등식으로 확인합니까?"
+          idea={<>Scalar multiplication을 pairing 앞에서 하든 GT에서 거듭제곱하든 같은 결과가 나와야 합니다.</>}
+          formula={String.raw`e([a]P,[b]Q)=e(P,Q)^{ab},\qquad e(P,Q)\ne1`}
+          annotatedFormula={String.raw`\underbrace{e([a]P,[b]Q)}_{\text{G1·G2에서 scalar 곱}}=\underbrace{e(P,Q)^{ab}}_{\text{GT에서 거듭제곱}},\qquad \underbrace{e(P,Q)\ne1}_{\text{비자명 입력}}`}
+          operations={[
+            { expression: String.raw`P\in G_1,\ Q\in G_2`, annotation: ["두 입력은 각자의 곡선식과 부분군을 통과해야 합니다."] },
+            { expression: String.raw`e(P,Q)\in G_T`, annotation: ["Miller loop 중간값과 final exponent 결과를 구분합니다."] },
+          ]}
+          terms={[
+            { symbol: "e", name: "pairing", description: "G1×G2에서 GT로 가는 bilinear map입니다." },
+            { symbol: "a,b", name: "scalars", description: "Fr의 값입니다." },
+            { symbol: "GT", name: "target group", description: "final exponentiation 결과가 속하는 부분군입니다." },
+          ]}
+          assumptions={["P와 Q가 올바른 prime-order 부분군에 있습니다.", "loop와 final exponent 상수가 같은 BN254 profile에 속합니다."]}
+          interpretation="등식이 깨지면 입력 타입, loop 상수, line 함수, final exponent 순서로 경계를 나누어 확인합니다."
+        />
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="BN254 pairing config 다시 보기" onClick={() => sidebar.open("ark-bn254-config", officialCurveCodeRefs["ark-bn254-config"])} />
+        </div>
+      </section>
+
+      <section id="evidence" className="space-y-4 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">이 글에서 확인한 사실</h2>
+        <ol className="space-y-3 text-sm leading-6">
+          <li><strong>1.</strong> 압축 x는 두 y 후보를 만들며 표식이 한 점을 고릅니다.</li>
+          <li><strong>2.</strong> on-curve와 subgroup은 서로 다른 승인 조건입니다.</li>
+          <li><strong>3.</strong> affine 손계산과 Jacobian 구현은 같은 group result를 나타냅니다.</li>
+          <li><strong>4.</strong> G1·G2 점 연산 다음에 Miller loop와 final exponentiation이라는 pairing 경계가 있습니다.</li>
+        </ol>
+        <p className="text-sm text-muted-foreground">
+          성능 측정, constant-time 검증, 배포와 rollback은 대상 환경이 필요한 실무 판단이므로 이 개념 글에 섞지 않습니다.
+        </p>
+      </section>
+
+      <ZkFromScratchMapReturn
+        currentSlug="impl-elliptic-curve"
+        closure="Rust 타원곡선 구현에서 bytes는 좌표 복원·곡선식·부분군을 통과해야 typed point가 되며, 점 연산과 G1×G2→GT pairing은 서로 다른 타입과 실행 경계를 가집니다."
+      />
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={officialCurveCodeRefs}
+        fileTrees={{ arkworks: zkCurveTree }}
+        projectMetas={{
+          arkworks: {
+            id: "arkworks",
+            label: "arkworks · algebra 6a28df5 · curves e2d16a2",
+            badgeClass: "border-violet-500 bg-violet-500/10 text-violet-700",
+          },
+        }}
+      />
+    </article>
+  );
 }
