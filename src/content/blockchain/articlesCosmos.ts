@@ -56,16 +56,16 @@ export const cosmosArticles: Article[] = [
     sections: [
       {
         id: "overview",
-        title:
-          "Consensus state machine은 proposal·prevote·precommit을 round마다 진행한다",
+        title: "제안 지연부터 다음 round의 Commit까지",
       },
-      { id: "receive-routine", title: "receiveRoutine & handleMsg 디스패치" },
+      { id: "receive-routine", title: "입력 queue와 단일 상태 갱신 경로" },
       {
         id: "round-state",
-        title: "enterPropose → enterPrevote → enterPrecommit → enterCommit",
+        title: "Nil·POL·lock의 round state",
       },
-      { id: "timeout", title: "타임아웃 전략 & 장애 복구" },
-      { id: "byzantine", title: "비잔틴 탐지 & 증거 수집" },
+      { id: "vote-handling", title: "Vote power에서 Commit 전이까지" },
+      { id: "timeout", title: "Timeout과 stale event" },
+      { id: "byzantine", title: "상충 vote와 Evidence 분리" },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-consensus"),
   },

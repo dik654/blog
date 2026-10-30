@@ -1,4 +1,4 @@
-import { EvidenceLedgerViz } from "../cometbft-core-viz";
+import { Link } from "react-router-dom";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -10,31 +10,29 @@ export default function Byzantine({
 }) {
   return (
     <section id="byzantine" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Consensus가 탐지한 equivocation과 application의 처벌은 같은 동작이 아니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">상충 vote는 Commit을 덮어쓰지 않고 Evidence 경로로 분리합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Duplicate vote는 같은 validator가 같은 height·round·type에서 서로 다른 BlockID에 서명한 객관적 conflict입니다. Consensus
-          node는 두 signed object를 보존하고 historical validator set과 signature를 검증해 evidence pool에 넣습니다. 이후
-          gossip·block inclusion·FinalizeBlock misbehavior 전달을 거쳐야 application이 penalty 정책을 적용합니다.
+          A가 h41/r1/precommit에서 B41과 다른 BlockID에 모두 서명했다면 <code>addVote</code>는
+          <code>ErrVoteConflictingVotes</code>를 돌려줍니다. <code>tryAddVote</code>는 두 signed vote를 evidence pool로 보내고 기존
+          VoteSet 항목을 다른 값으로 교체하지 않습니다. Evidence의 두 signature와 historical validator set을 다시 검증하는 구조는
+          <Link to="/cs/blockchain/cometbft-types#evidence"> CometBFT 데이터 구조</Link>에서 이어집니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
         <CodeViewButton label="tryAddVote()" onClick={() => onCodeRef("try-add-vote", codeRefs["try-add-vote"])} />
       </div>
-      <EvidenceLedgerViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>놓치면 안 되는 반례</h3>
+        <h3>다른 round의 vote가 다르다는 사실만으로 이중 서명은 아닙니다</h3>
         <p>
-          같은 validator가 round 2와 round 3에 다른 block을 vote한 것만으로 duplicate vote는 아닙니다. Lock-change rule에 맞는
-          higher-round evidence가 있을 수 있기 때문입니다. 반대로 signature가 유효해도 다른 ChainID라면 이 chain의 evidence가 아닙니다.
-          Evidence age나 이미 포함된 hash를 확인하지 않으면 stale·duplicate submission으로 resource를 소모합니다.
+          Validator는 더 높은 round에서 적법한 POL을 보고 lock을 바꿀 수 있습니다. Duplicate vote의 좌표에는 height뿐 아니라 round와 type도
+          들어갑니다. 반대로 signature가 유효해도 다른 ChainID의 canonical bytes에 대한 서명이면 이 chain의 evidence가 아닙니다.
         </p>
-        <h3>Release gate는 공격뿐 아니라 복구도 포함합니다</h3>
+        <h3>Consensus가 증거를 발견하는 일과 application이 처벌하는 일도 분리됩니다</h3>
         <p>
-          Equivocating proposer, duplicate prevote/precommit, vote omission, delayed parts, stale timeout,
-          crash와 WAL replay를 같은 seed로 주입합니다. 같은 height의 conflicting committed block은 0건이어야 하고 honest node의
-          evidence identity·committed height·AppHash가 수렴해야 합니다. Detection count만 높고 progress가 멈추는 candidate도
-          채택할 수 없습니다.
+          Consensus node는 상충 서명을 보존하고 gossip과 block inclusion 경로로 넘깁니다. 실제 slashing이나 jailing 정책은
+          <code>FinalizeBlock</code>에서 misbehavior를 받은 application이 정합니다. 따라서 evidence 탐지 수와 처벌 결과를 같은 metric으로 보면
+          어느 단계에서 누락됐는지 알 수 없습니다.
         </p>
       </div>
     </section>

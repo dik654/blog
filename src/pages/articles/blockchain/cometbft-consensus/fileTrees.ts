@@ -14,15 +14,13 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 
 export const cometbftConsensusTree: FileNode = d("cometbft", [
   d("consensus", [
-    f("state.go — receiveRoutine()", "consensus/state.go", "receive-routine"),
-    f("state.go — handleMsg()", "consensus/state.go", "handle-msg"),
-    f("state.go — handleTimeout()", "consensus/state.go", "handle-timeout"),
-    f("state.go — enterNewRound()", "consensus/state.go", "enter-new-round"),
-    f("state.go — enterPropose()", "consensus/state.go", "enter-propose"),
-    f("state.go — enterPrevote()", "consensus/state.go", "enter-prevote"),
-    f("state.go — enterPrecommit()", "consensus/state.go", "enter-precommit"),
-    f("state.go — enterCommit()", "consensus/state.go", "enter-commit"),
-    f("state.go — tryAddVote()", "consensus/state.go", "try-add-vote"),
-    f("state.go — addVote()", "consensus/state.go", "add-vote"),
+    f("state.go — queue owner · receiveRoutine", "consensus/state.go @ 0880b4d3", "receive-routine"),
+    f("state.go — stale timeout · handleTimeout", "consensus/state.go @ 0880b4d3", "handle-timeout"),
+    f("state.go — round · proposer 교체", "consensus/state.go @ 0880b4d3", "enter-new-round"),
+    f("state.go — block 또는 nil prevote", "consensus/state.go @ 0880b4d3", "enter-prevote"),
+    f("state.go — POL · lock · precommit", "consensus/state.go @ 0880b4d3", "enter-precommit"),
+    f("state.go — commit · block parts", "consensus/state.go @ 0880b4d3", "enter-commit"),
+    f("state.go — vote power와 state transition", "consensus/state.go @ 0880b4d3", "add-vote"),
+    f("state.go — conflicting vote evidence", "consensus/state.go @ 0880b4d3", "try-add-vote"),
   ]),
 ]);

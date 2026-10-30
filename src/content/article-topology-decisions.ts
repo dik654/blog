@@ -343,6 +343,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "ai/xml-prompting": KEEP("Role framing→serialization→parser/schema/security validation→format evaluation이 한 XML prompt contract입니다."),
   "blockchain/cometbft-abci": KEEP("PrepareProposal→ProcessProposal→FinalizeBlock→Commit이 ABCI state transition 순서와 일치합니다."),
+  "blockchain/cometbft": KEEP("한 transaction이 RPC admission에서 mempool·proposal·prevote·precommit·FinalizeBlock·application Commit까지 이동하는 동안 상태를 쓰는 주체와 남는 영수증을 하나의 부모 지도에서 연결합니다."),
   "blockchain/cometbft-consensus": KEEP("Height/round/step 입력에서 safety·liveness·accountability까지 한 consensus state machine입니다."),
   "blockchain/da-theory": {
     action: "split",
@@ -4397,7 +4398,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/model-vram-budgeting": "c6b1e28dd71284c2",
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "e01d405674622a43",
-  "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",
+  "blockchain/cometbft": "2f7df3d82d082d38",
+  "blockchain/cometbft-consensus": "2df72b80a2ae2b63",
   "blockchain/da-theory": "960f47b88c2342b7",
   "blockchain/da-validation": "e38d59ace70ff117",
   "blockchain/railgun": "2c7b61b18f7dbd43",
