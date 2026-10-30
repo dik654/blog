@@ -613,9 +613,8 @@ figure[data-viz="modern"][data-viz-document-flow="true"]:has([data-viz-controls]
 
   /*
    * JavaScript가 켜진 앱에서는 조작 가능한 장면을 사용하고, 정적 route의
-   * noscript 본문에서는 모든 장면의 순서와 결론을 한꺼번에 보여준다.
-   * 컴포넌트 안에 noscript를 중첩하면 정적 fallback HTML이 깨지므로,
-   * root 안에서만 정적 목록을 감춘다.
+   * fallback 본문에서는 모든 장면의 순서와 결론을 한꺼번에 보여준다.
+   * 앱 root 안에서만 정적 목록을 감추고, 빌드가 넣은 정적 본문에서는 보인다.
    */
   #root .static-reading-only {
     display: none !important;

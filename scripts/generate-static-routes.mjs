@@ -55,6 +55,11 @@ for (const route of [...routes].sort()) {
 // 이 저장소는 client-side SPA라 JavaScript가 꺼지면 #root가 비어 있습니다.
 // 검토를 마친 학습 묶음은 같은 절 순서와 결론을 읽을 수 있도록 각 글의
 // 실제 React 본문을 build 시점에 정적 markup으로 한 번 더 넣습니다.
+//
+// Chrome은 사이트별 JavaScript 차단을 script execution policy로 적용하면서도
+// HTML parser의 <noscript> 분기를 열지 않을 수 있습니다. 따라서 fallback을
+// <noscript> 안에 가두지 않습니다. React가 실제 DOM을 만든 경우에만
+// html.js-enabled가 붙고, 그때 정적 본문을 숨깁니다.
 // 새 글은 모바일·키보드·reduced-motion·정적 읽기 검증을 모두 마친 뒤에만
 // 이 목록에 넣습니다. 개별 파일이 아니라 함께 검증한 학습 묶음을 완성 단위로 봅니다.
 const noScriptArticleRoutes = new Set([
@@ -395,6 +400,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/prysm-beacon-api",
   "blockchain/prysm-engine-api",
   "blockchain/commonware-deep-dive",
+  "blockchain/commonware-simplex",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",
@@ -432,7 +438,8 @@ try {
         createElement(module.default),
       ),
     );
-    const fallback = `<noscript><style>#noscript-article{overflow-x:hidden}#noscript-article [data-viz-live-only],#noscript-article button{display:none!important}#noscript-article .katex-display{max-width:100%;overflow-x:auto;overflow-y:hidden}#noscript-article .katex svg{overflow:hidden!important}</style><main id="noscript-article" style="max-width:52rem;margin:0 auto;padding:2rem 1rem 5rem"><article><p style="margin:0 0 .75rem;color:#64748b;font:600 12px/1.5 system-ui,sans-serif">정적 읽기 모드 · 장면 조작 없이 모든 절을 순서대로 표시합니다.</p><h1 style="margin:0 0 2rem;font:700 clamp(1.75rem,5vw,2.5rem)/1.25 system-ui,sans-serif">${article.title}</h1>${body}</article></main></noscript>`;
+    const fallbackTitle = article.title.replaceAll("·", "·<wbr>");
+    const fallback = `<style>html.js-enabled #noscript-article{display:none!important}#noscript-article{overflow-x:hidden}#noscript-article [data-viz-live-only],#noscript-article button{display:none!important}#noscript-article .katex-display{max-width:100%;overflow-x:auto;overflow-y:hidden}#noscript-article .katex svg{overflow:hidden!important}</style><main id="noscript-article" data-static-article-fallback="true" style="max-width:52rem;margin:0 auto;padding:2rem 1rem 5rem"><article><p style="margin:0 0 .75rem;color:#64748b;font:600 12px/1.5 system-ui,sans-serif">정적 읽기 모드 · 장면 조작 없이 모든 절을 순서대로 표시합니다.</p><h1 style="margin:0 0 2rem;font:700 clamp(1.75rem,5vw,2.5rem)/1.25 system-ui,sans-serif;word-break:keep-all;overflow-wrap:normal">${fallbackTitle}</h1>${body}</article></main>`;
 
     for (const route of [article.publicPath, article.route]) {
       const outputPath = path.join(distRoot, ...route.split("/"), "index.html");

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 706,
-    "pending": 301,
+    "reviewed": 707,
+    "pending": 300,
     "untracked": 0,
-    "assignedPending": 259,
+    "assignedPending": 258,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5333,9 +5333,9 @@
       "publicPath": "cs/blockchain/commonware-simplex",
       "title": "Commonware Simplex: 인증·certification·finalization",
       "catalogIndex": 530,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "locally-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
