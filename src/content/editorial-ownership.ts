@@ -9664,10 +9664,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "DSS behavior는 commit fa4f6630, Lite PSM은 dbf00222에 귀속하고 current deployment parameter를 별도 pin한다." }, { kind: "project-measurement", rule: "Vat/Spot/Jug/Dog/Clip/PSM state를 같은 block·deployment manifest에서 failure replay한다." }, { kind: "project-claim", rule: "Historical Maker naming·example threshold·PSM presence를 current Sky 전체·fiat backing·무위험 상환으로 확대하지 않는다." }],
   },
   "uniswap-v4": {
-    title: "Uniswap V4 singleton·hook·unlock settlement 글이 소유하는 범위",
-    owns: ["PoolManager singleton과 PoolKey identity", "Hook address permission·custom-accounting boundary", "Unlock currency-delta zero settlement와 core/hook/router release gate"],
+    title: "Uniswap V4 PoolManager·hook·unlock 정산 글이 소유하는 범위",
+    owns: ["PoolManager singleton과 PoolKey별 state isolation", "Hook 주소 permission과 core 보장 범위", "Router callback의 currency debt·credit과 settle/take zero invariant"],
     reuses: [{ label: "V3 concentrated-liquidity math", href: "/cs/blockchain/uniswap-v3#overview" }, { label: "V2 atomic settlement", href: "/cs/blockchain/uniswap-v2#flash-swap" }],
-    evidence: [{ kind: "primary-source", rule: "Runtime semantics는 v4-core v4.0.0 commit e50237c4와 whitepaper에 귀속한다." }, { kind: "project-measurement", rule: "Exact PoolKey·hook codehash/flags·router generation에서 delta/revert/event/gas fixtures를 재생한다." }, { kind: "project-claim", rule: "Valid hook flag·delta zero·singleton을 arbitrary hook safety·price quality·LP return·fixed gas saving으로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Runtime semantics와 -100/+98 fixture는 v4-core v4.0.0 commit e50237c4, 설계 동기는 whitepaper에 귀속한다." }, { kind: "project-measurement", rule: "현재 환경에는 forge가 없어 pinned source와 official expected event만 대조했으며 실행 측정으로 표현하지 않는다." }, { kind: "project-claim", rule: "Valid hook flag·delta zero·singleton을 arbitrary hook safety·price quality·LP return·fixed gas saving으로 확대하지 않는다." }],
   },
   "pbft-hotstuff-lineage": {
     title: "PBFT·HotStuff·HotStuff-2·Jolteon/Ditto protocol-specific ownership",

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 717,
-    "pending": 290,
+    "reviewed": 718,
+    "pending": 289,
     "untracked": 0,
-    "assignedPending": 248,
+    "assignedPending": 247,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5461,11 +5461,11 @@
     {
       "route": "blockchain/uniswap-v4",
       "publicPath": "cs/blockchain/uniswap-v4",
-      "title": "Uniswap V4 — Hooks & Singleton",
+      "title": "Uniswap V4: Unlock과 정산",
       "catalogIndex": 543,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

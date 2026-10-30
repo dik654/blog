@@ -8447,40 +8447,81 @@
     },
     {
       "route": "blockchain/uniswap-v4",
-      "title": "Uniswap V4 — Hooks & Singleton",
-      "status": "unreviewed",
+      "title": "Uniswap V4: Unlock과 정산",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/uniswap-v4.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/uniswap-v4.tsx",
-        "src/pages/articles/blockchain/uniswap-v4/ModernArticle.tsx"
+        "src/pages/articles/blockchain/uniswap-v4/ModernArticle.tsx",
+        "src/pages/articles/blockchain/uniswap-v4/viz/UniswapV4FlowViz.tsx",
+        "src/pages/articles/blockchain/uniswap-v4/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/uniswap-v4/fileTrees.ts",
+        "src/pages/articles/blockchain/DefiDexLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 8,
+        "assumptionMarkers": 3,
+        "sourceButtons": 7,
         "headings": [
-          "V4는 AMM 곡선을 폐기한 버전이 아니라 여러 pool state와 net settlement를 한 PoolManager에 모은 core다",
-          "Pool identity는 token pair만이 아니라 currencies·fee·tickSpacing·hooks 전체다",
-          "Hook address bits는 호출 가능한 callback surface를 고정하지만 hook code를 신뢰할 수 있게 만들지는 않는다",
-          "KYC boolean 하나가 아니라 underlying token·adapter currency·action permission·LP lifecycle을 연결한다",
-          "Flash accounting의 invariant는 각 중간 transfer가 아니라 unlock 종료 시 모든 nonzero currency delta가 사라지는 것이다"
+          "PoolManager가 계산한 -100과 +98을 누가 어떻게 0으로 만듭니까",
+          "Singleton은 여러 pool의 가격과 유동성을 한 장부로 섞는다는 뜻이 아닙니다",
+          "PoolManager는 router에게 실행 순서를 맡기고 마지막 잔액만 강제합니다",
+          "Hook 주소는 실행 지점을 표시하지만 그 코드가 안전하다는 인증서는 아닙니다",
+          "음수는 낼 돈, 양수는 받을 돈이며 두 값을 실제 token 이동으로 없앱니다",
+          "정산이 끝나지 않으면 pool 상태와 전송도 함께 되돌아갑니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글의 pool A swap·pool B liquidity·token0 +30·token1 -20 예시는 pinned source의 한 요청에서 나온 값이 아니어서 실제 부호와 정산 순서를 따라가기 어려웠습니다.",
+        "V4 core의 singleton·hook·unlock 설명 중간에 2026 Permissioned Pools 제품 구조가 큰 절로 들어가 메커니즘과 응용·운영 판단이 섞였습니다.",
+        "PoolKey 선택부터 router callback·swap delta·settle/take·zero 검사까지 한 거래의 실행 주체와 실제 token 이동이 연결돼 있지 않았습니다."
+      ],
+      "fixture": {
+        "case": "v4-core v4.0.0 공식 PoolManagerTest의 initialized pool에서 zeroForOne exact-input 100을 실행합니다.",
+        "pool": "PoolKey는 currency0·currency1·fee 3000·tickSpacing·hooks 전체로 PoolId와 독립 Pool.State를 고릅니다.",
+        "swap": "공식 기대 이벤트의 BalanceDelta는 amount0 -100, amount1 +98입니다.",
+        "settlement": "Router는 token0을 sync·transfer·settle해 -100→0, token1을 take 98해 +98→0으로 만듭니다.",
+        "boundary": "Callback 반환 시 NonzeroDeltaCount가 0이 아니면 CurrencyNotSettled로 pool state와 token transfer 전체가 revert됩니다."
+      },
+      "stageEvidence": {
+        "parent": "탈중앙화 거래소 지도에서 V3의 가격 구간 계산 다음에 V4의 실행·정산 위치를 표시합니다.",
+        "0": "PoolKey 다섯 필드 전체에서 PoolId를 계산해 독립 pool state를 고릅니다.",
+        "1": "Router가 unlock(data)을 호출하고 PoolManager의 transient lock이 열립니다.",
+        "2": "PoolManager가 호출자인 router의 unlockCallback으로 제어권을 돌려줍니다.",
+        "3": "BeforeSwap과 afterSwap hook 경계를 거쳐 exact-input swap을 실행합니다.",
+        "4": "결과 -100/+98을 router 주소의 currency별 transient delta로 기록하고 nonzero count를 2로 만듭니다.",
+        "5": "Sync 뒤 실제 token0 잔액 증가 100을 settle해 delta0와 count 하나를 없앱니다.",
+        "6": "Take 98로 token1 credit을 사용자에게 전송하고 delta1과 count를 0으로 만듭니다.",
+        "7": "Callback 반환 뒤 zero invariant를 확인해 잠그거나 전체 transaction을 revert합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Uniswap/v4-core lightweight tag v4.0.0 · commit e50237c43811bd9b526eff40f26772152a42daba",
+          "application": "PoolKey/PoolId, PoolManager.unlock·swap·sync·settle·take·delta counter, Hooks flag와 PoolSwapTest callback을 여섯 실제 code reference로 연결했습니다."
+        },
+        {
+          "source": "PoolManagerTest.test_swap_succeedsIfInitialized · same commit",
+          "application": "amount0 -100, amount1 +98, sqrtPriceX96 79228162514264329749955861424, liquidity 1e18, tick -1, fee 3000의 공식 기대 이벤트를 본문 fixture로 사용했습니다."
+        },
+        {
+          "source": "Uniswap v4 Core whitepaper",
+          "application": "Singleton·hooks·flash accounting의 설계 동기를 사용하되 임의 hook 안전성·고정 gas 절감·가격 품질을 source가 보장한다고 확대하지 않았습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문, v4-core v4.0.0의 PoolManager·PoolKey·PoolId·Hooks·CurrencyDelta·NonzeroDeltaCount·Lock·CurrencyReserves와 공식 PoolSwapTest fixture를 읽고 한 정확입력 거래로 전면 재작성했습니다.",
+        "arithmetic": "공식 기대값 -100/+98에 settle +100과 take -98을 적용해 두 delta와 nonzero count가 0이 되는 부호·상태 전이를 대조했습니다. 이 환경에는 forge가 없어 공식 Solidity test를 새로 실행한 측정값으로 주장하지 않습니다.",
+        "source": "git ls-remote로 lightweight tag v4.0.0과 commit e50237c가 일치함을 확인하고 고정 source의 test expectation과 implementation을 대조했습니다.",
+        "humanize": "한 질문→8장면 거래→Pool identity→unlock owner→hook boundary→delta 정산→실패→부모 지도 반환 순서로 통일하고 Permissioned Pools는 hook 응용 경계로 축소했습니다.",
+        "build": "Node heap 8GB에서 전체 TypeScript와 production build가 통과했습니다. 129.69초, 최대 RSS 6,069,551,104 bytes, swap 0이었고 8,161개 module, 정적 public route 2,120개와 no-script 본문 375편을 생성했습니다.",
+        "browser390": "390×844에서 document 폭 390=390, 8개 live stage 높이 518.78px 고정, 잘린 요소 0, 49.5px 조작부, 키보드 0→7, 활성 tab 자동 이동과 실제 code sidebar를 확인했습니다. JavaScript 비활성 production 경로에는 H1·직속 부모·8개 정적 장면·7,087자 본문·부모 지도 반환이 남고 visible button과 live scene은 0개입니다.",
+        "browser1440": "1440×900 production 경로에서 document 폭 1440=1440, 5.3초 무자동재생, 키보드 0→1과 console 오류·경고 0을 확인했습니다. Reduced-motion 새로고침에서는 실행 중 animation 0개와 재생 비활성화를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 뒤 공개 URL을 다시 확인하고 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-official-exact-input-unlock-delta-settlement-trace"
     },
     {
       "route": "blockchain/usdc-circle",

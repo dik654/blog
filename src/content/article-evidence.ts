@@ -8116,11 +8116,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Sky ecosystem · Lite PSM · dbf0022", href: "https://github.com/sky-ecosystem/dss-lite-psm/tree/dbf0022225f645f5697e5517d0cf00810471bccf", note: "PSM·Pocket·Mom·fees·capacity pinned source이며 collateral issuer 무위험·unlimited redemption을 뜻하지 않음" },
   ],
   "blockchain/uniswap-v4": [
-    { kind: "공식 코드", label: "Uniswap v4-core v4.0.0 · e50237c", href: "https://github.com/Uniswap/v4-core/tree/e50237c43811bd9b526eff40f26772152a42daba", note: "PoolManager·PoolKey·unlock·delta·hook executable source이며 arbitrary hook/router safety 보장은 아님" },
-    { kind: "공식 코드", label: "Uniswap v4 Hooks.sol · e50237c", href: "https://github.com/Uniswap/v4-core/blob/e50237c43811bd9b526eff40f26772152a42daba/src/libraries/Hooks.sol", note: "Hook address flags·callback validation source이며 hook economic·upgrade·access-control safety 보장은 아님" },
-    { kind: "핵심 논문", label: "Uniswap v4 Core whitepaper", href: "https://app.uniswap.org/whitepaper-v4.pdf", note: "Singleton·hooks·flash accounting architecture 원문이며 fixed gas saving·liquidity·price execution 보장은 아님" },
-    { kind: "공식 문서", label: "Uniswap · Permissioned Pools architecture", href: "https://developers.uniswap.org/docs/protocols/v4-hooks/permissioned-pools/architecture", note: "Adapter·permissioned hook·position manager·router 책임과 action flags의 current 공식 구조이며 개별 시장 법률 적합성 보장은 아님" },
-    { kind: "공식 프로젝트 기록", label: "Uniswap Labs · Introducing Permissioned Pools", href: "https://blog.uniswap.org/es-ES/introducing-permissioned-pools-on-uniswap-v4", note: "2026 공개 방향과 named integrations 근거이며 planned authorization·deployment를 완료 상태로 확대하지 않음" },
+    { kind: "공식 코드", label: "Uniswap v4-core v4.0.0 · e50237c", href: "https://github.com/Uniswap/v4-core/tree/e50237c43811bd9b526eff40f26772152a42daba", note: "PoolManager·PoolKey·unlock·delta·hook와 -100/+98 공식 test fixture의 고정 source이며 임의 hook/router 안전 보장은 아님" },
+    { kind: "공식 코드", label: "Uniswap v4 Hooks.sol · e50237c", href: "https://github.com/Uniswap/v4-core/blob/e50237c43811bd9b526eff40f26772152a42daba/src/libraries/Hooks.sol", note: "Hook 주소 하위 14비트·callback 검증 source이며 hook의 경제 정책·upgrade·access-control 안전 보장은 아님" },
+    { kind: "핵심 논문", label: "Uniswap v4 Core whitepaper", href: "https://app.uniswap.org/whitepaper-v4.pdf", note: "Singleton·hooks·flash accounting 설계 원문이며 고정 gas 절감·liquidity·price execution 보장은 아님" },
   ],
   "blockchain/pbft-deep": [
     { kind: "핵심 논문", label: "Practical Byzantine Fault Tolerance · OSDI 1999", href: "https://www.usenix.org/conference/osdi-99/presentation/practical-byzantine-fault-tolerance", note: "PBFT normal case·view change·checkpoint·client protocol의 원문이며 당시 crypto·NFS 수치를 current deployment 상수로 일반화하지 않음" },
