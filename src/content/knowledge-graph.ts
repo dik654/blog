@@ -10881,7 +10881,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "distributed-systems",
     label: "Casper supermajority justification",
-    definition: "같은 source→target link를 지지한 eligible effective balance W가 total active balance T에 대해 3W≥2T를 만족할 때 target을 justified checkpoint로 갱신하는 정수 quorum 판정입니다.",
+    definition: "해당 epoch boundary target root를 맞힌 unique unslashed validator의 effective balance W가 total active balance T에 대해 3W≥2T를 만족할 때 그 epoch의 justification bit와 current justified checkpoint를 갱신하는 정수 quorum 판정입니다.",
     canonicalHref: "/cs/blockchain/prysm-finality#checkpoint-management",
   },
   "casper-finalization-pattern": {
@@ -10905,7 +10905,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "distributed-systems",
     label: "Prysm finalized fork-choice prune boundary",
-    definition: "새 finalized checkpoint를 crash-safe marker로 고정한 뒤 충돌 fork-choice node와 derived cache를 제거하되 block archive·historical state·slashing evidence의 별도 retention owner를 보존하는 수명 계약입니다.",
+    definition: "더 높은 finalized checkpoint가 fork-choice store에 들어오면 해당 root를 새 tree root로 만들고 충돌하는 후보 node와 derived index를 제거하되 block archive·historical state·slashing evidence의 retention 책임과 구분하는 경계입니다.",
     canonicalHref: "/cs/blockchain/prysm-finality#finalization-pruning",
   },
   "weak-subjectivity-checkpoint-anchor": {
@@ -10915,14 +10915,6 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Weak-subjectivity checkpoint anchor",
     definition: "오래 offline이던 Proof-of-Stake node가 network·epoch·block/state root와 확인 시각이 검증된 recent checkpoint를 외부 신뢰 anchor로 받아 장거리 대체 history를 구분하는 시작점입니다.",
     canonicalHref: "/cs/blockchain/prysm-finality#weak-subjectivity",
-  },
-  "prysm-finality-recovery-gate": {
-    id: "prysm-finality-recovery-gate",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Prysm finality·prune recovery gate",
-    definition: "2/3 경계·중복 vote·skipped epoch·충돌 root·prune crash·expired checkpoint를 재생해 justified/finalized tuple, bits, retained tree와 restart head parity를 먼저 검사하는 채택 절차입니다.",
-    canonicalHref: "/cs/blockchain/prysm-finality#finalization-pruning",
   },
   "validator-duty-deadline-loop": {
     id: "validator-duty-deadline-loop",
@@ -47956,24 +47948,6 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "prysm-forkchoice-store-events",
     relation: "prerequisite",
     reason: "오래 offline이던 node는 검증한 recent state·block root를 rollback하지 않을 fork-choice anchor로 초기화합니다.",
-  },
-  {
-    from: "casper-supermajority-justification",
-    to: "prysm-finality-recovery-gate",
-    relation: "evaluates",
-    reason: "Exact threshold·중복 validator·competing root fixture에서 justified tuple과 bit update parity를 검사합니다.",
-  },
-  {
-    from: "prysm-finalized-prune-boundary",
-    to: "prysm-finality-recovery-gate",
-    relation: "evaluates",
-    reason: "Prune 중 crash·restart에서 finalized root, retained tree와 historical evidence owner가 보존되는지 검사합니다.",
-  },
-  {
-    from: "weak-subjectivity-checkpoint-anchor",
-    to: "prysm-finality-recovery-gate",
-    relation: "evaluates",
-    reason: "Wrong-network·expired·root-mismatch checkpoint를 fail-closed하고 검증된 anchor만 bootstrap하는지 확인합니다.",
   },
   {
     from: "prysm-validator-duty-signing-boundary",

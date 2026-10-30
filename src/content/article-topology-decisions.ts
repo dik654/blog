@@ -530,6 +530,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c와 Prysm v7.3.1 commit 96d418cd를 고정합니다. J320·A353·B353과 96·80·3,200 weight unit은 설명용 fixture이며 처리 지연은 미측정입니다. Fulu pre-Gloas 흐름만 추적하고 Gloas payload-content 선택, crash recovery·release 검증과 finality는 별도 글이 소유합니다.",
   },
+  "blockchain/prysm-finality": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Epoch 11 target participation 64/96을 입력으로 unique effective-balance 합산, 3W≥2T 판정, 0001→0011 justification history, update 전 epoch 10 checkpoint finalization, fork-choice prune와 weak-subjectivity local verification까지 추적하는 한 finality 경로입니다. Threshold·bits·checkpoint를 나누면 같은 old/new BeaconState를 각 글에서 다시 세워야 하므로 한 개념 글로 유지합니다. 환경별 release gate·rollback·checkpoint-provider 운영은 이 글에 섞지 않습니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c와 Prysm v7.3.1 commit 96d418cd를 고정합니다. Epoch 10·11, 0001과 64/96은 설명용 fixture이며 finalization latency는 미측정입니다. Finality를 block archive·data availability·application success로 확대하지 않고, weak-subjectivity verifier의 local canonical 확인과 checkpoint provider trust를 구분합니다.",
+  },
   "blockchain/reth-alloy-primitives": KEEP("Semantic type→canonical encode/decode→hash/address derivation이 한 Alloy codec 경계입니다."),
   "blockchain/lsm-tree": {
     action: "split",
@@ -4322,6 +4331,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",
   "blockchain/prysm-forkchoice": "59b37f81aedba324",
+  "blockchain/prysm-finality": "1ad0fbccb44a1b0d",
   "blockchain/reth-alloy-primitives": "e8b0d939eba9a639",
   "blockchain/lsm-tree": "9aecdf800aab56ed",
   "blockchain/lsm-engine-validation": "47d5cc0e46151e22",

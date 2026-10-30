@@ -4994,48 +4994,82 @@
     },
     {
       "route": "blockchain/prysm-finality",
-      "title": "Prysm Casper FFG & Finality",
-      "status": "unreviewed",
+      "title": "Prysm 최종성",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-finality.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/prysm-consensus-viz.tsx",
         "src/pages/articles/ethereum/prysm-finality.tsx",
-        "src/pages/articles/ethereum/prysm-finality/CheckpointManagement.tsx",
-        "src/pages/articles/ethereum/prysm-finality/FinalizationPruning.tsx",
-        "src/pages/articles/ethereum/prysm-finality/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-finality/WeakSubjectivity.tsx"
+        "src/pages/articles/ethereum/prysm-finality/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-finality/PrysmFinalityLocator.tsx",
+        "src/pages/articles/ethereum/prysm-finality/viz/PrysmFinalityFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-finality/codeRefs.ts",
+        "src/pages/articles/ethereum/prysm-finality/codeRefsFinality.ts",
+        "src/pages/articles/ethereum/prysm-finality/fileTrees.ts",
+        "src/content/prysm-finality-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 4,
+        "sourceButtons": 9,
         "headings": [
-          "Justification은 2/3 effective balance가 같은 checkpoint link를 지지했다는 기록이다",
-          "Finalization은 accountable safety를 만들고 prune의 하한을 제공한다",
-          "Finality는 현재 head가 아니라 되돌리려면 slashable evidence가 필요한 checkpoint를 만든다",
-          "오래 offline이던 node는 recent trusted checkpoint에서 다시 시작한다"
+          "전체 active balance 96 중 64가 epoch 11 경계를 지지했을 때 Prysm은 왜 epoch 11이 아니라 epoch 10 checkpoint를 finalized로 기록합니까?",
+          "입력",
+          "Checkpoint",
+          "Balance",
+          "Bits",
+          "Finalized",
+          "Safety",
+          "Prune",
+          "Weak Subjectivity",
+          "실패 경계",
+          "근거",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 checkpoint·justification·finalization·weak subjectivity를 별도 절로 나열해 한 epoch target vote가 어떤 상태를 차례대로 바꾸는지 추적하기 어려웠습니다.",
+        "기존 단순화 코드는 현재 Prysm source가 아니었고, target participation의 unique effective balance와 four-bit update 순서를 실제 구현과 직접 대조할 수 없었습니다.",
+        "Fork-choice prune와 archive retention, weak-subjectivity local verification과 checkpoint provider trust, 개념과 운영 release gate가 한 설명에 섞여 있었습니다."
+      ],
+      "fixture": "Current epoch 11, update 전 current justified checkpoint epoch 10, old justification bits 0001, current target participation 64/96을 사용합니다. Epoch 번호와 balance는 상태 전이를 추적하기 위한 설명용 값이며 실제 chain block이나 처리 성능 측정값이 아닙니다.",
+      "stageEvidence": {
+        "whole": "현재 head, BeaconState의 justified/finalized checkpoint, fork-choice 후보 tree와 오래 offline인 node의 trust anchor를 서로 다른 상태로 먼저 구분합니다.",
+        "participation": "검증된 target participation flag에서 unique unslashed validator의 effective balance를 한 번씩 더해 current target 64와 active 96을 만듭니다.",
+        "threshold": "정수식 3×64=2×96=192로 current target이 정확히 2/3 경계를 통과함을 확인하고, 63이면 189<192라 실패합니다.",
+        "bits": "Old bits 0001을 한 칸 옮겨 0010으로 만든 뒤 current target bit 0을 켜 0011로 갱신합니다.",
+        "finality": "0011 pattern과 update 전 current justified epoch 10+1=current epoch 11 조건을 함께 확인해 old current checkpoint epoch 10을 finalized로 고르고, 새 current justified는 epoch 11로 따로 기록합니다.",
+        "prune": "더 높은 finalized checkpoint를 fork-choice store에 반영할 때만 prune을 호출하고, known root를 새 tree root로 만든 뒤 충돌 후보와 derived index를 제거합니다. Archive와 historical state retention은 별도 owner입니다.",
+        "stall": "Current target 63/96이면 새 bit와 checkpoint가 생기지 않아 finality liveness는 멈추지만 fork-choice head는 계속 바뀔 수 있습니다.",
+        "recovery": "오래 offline인 node는 recent checkpoint를 외부 trust 경로로 받은 뒤 local finalized chain에서 block 존재, canonical finality와 epoch slot 범위를 확인합니다. Local verifier는 provider trust를 만들지 않습니다."
+      },
+      "sourceEvidence": [
+        "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c156184e9548a997d53efaf2a228a6304의 process_justification_and_finalization, four-bit pattern과 Weak Subjectivity Guide",
+        "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db의 target participation balance, processJustificationBits, computeCheckpoints, state write 구현",
+        "같은 Prysm commit의 fork-choice updateCheckpoints·prune와 WeakSubjectivityVerifier local canonical check"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 고정한 consensus-specs·Prysm release를 다시 읽어 target vote→unique balance→integer threshold→bit shift→checkpoint selection→fork-choice prune→weak-subjectivity local verification의 한 사례로 전면 재작성했습니다.",
+        "arithmetic": "3×64=2×96=192, 3×63=189<192, 0001→0010→0011, old current epoch 10+1=current epoch 11, 충돌 quorum 64+64−96=32를 확인했습니다. 처리 시간·throughput은 측정하지 않았습니다.",
+        "humanize": "직속 부모와 현재 영역, 질문 하나, epoch 11 fixture, 여덟 장면, 정수식·상태 전이·실제 source·실패 경계, 확인 질문과 부모 지도 반환으로 구성했습니다. 개념 글에서 환경별 release gate·rollback·checkpoint provider 운영 판단은 분리했습니다. ko-natural은 error 0이고 한국어·용어·읽기 순서 감사를 통과했습니다.",
+        "browser390": "390×844 local production 렌더에서 문서 폭 390=390, 전체·확정·정지·복귀 장면의 state cell·receipt·설명·조작부가 세로 흐름 안에 들어오며 가로 넘침과 console 오류·경고가 없음을 확인했습니다.",
+        "browser1024": "1,024×768 local production 렌더에서 시각화와 본문이 문서 폭 안에 들어오고 가로 넘침이 없음을 확인했습니다.",
+        "browser1440": "1,440×1,000 local production 렌더에서 locator·핵심 답·목차가 함께 보이며 문서 가로 넘침과 console 오류·경고가 없음을 확인했습니다.",
+        "interaction": "12초 동안 장면 0이 자동 진행되지 않았고 키보드 ArrowRight로 0→4→6→7 이동했습니다. 각 장면에서 bits·checkpoint·participation·fork-choice·offline-node 상태와 설명이 함께 바뀌었습니다. Reduced-motion으로 새로 로드하면 장면 0이 유지되고 transition·animation duration은 0.000001초였습니다.",
+        "codeSidebar": "390×844 local production 렌더에서 Bits 계산 근거를 열어 실제 Prysm source path·설명·강조 line이 보이고 문서 가로 넘침이 없음을 확인했습니다. 닫기 버튼으로 panel과 source path가 함께 사라지는 것도 확인했습니다.",
+        "noJavaScript": "JavaScript 비활성 390×844 정적 경로에서 HTTP 200, 정적 여덟 장면, 전체 본문과 근거·확인 질문·부모 지도 반환이 순서대로 남고 live 장면은 숨겨짐을 확인했습니다. 문서 가로 넘침은 없습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 /usr/bin/time -l npm run build를 통과해 8,094개 module과 정적 public route 2,120개를 만들었습니다. Finality route를 정적 읽기 목록에 등록한 뒤 no-script 본문은 356편이고 최대 RSS는 6,749,650,944 bytes, swap은 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-epoch11-target-balance-bit-history-finalized10-prune-weak-subjectivity-boundary"
     },
     {
       "route": "blockchain/prysm-forkchoice",
       "title": "Prysm 가지 선택",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-forkchoice.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-forkchoice.tsx",
@@ -5094,11 +5128,10 @@
         "interaction": "3.5초 동안 장면 0이 자동 진행되지 않았고 ArrowRight 0→1, ArrowLeft 1→0이 동작했습니다. 장면 버튼으로 4·6·7을 선택했을 때 실제 score와 head가 바뀌었습니다. Reduced-motion으로 새로 로드하면 실행 중 animation은 0건이고 재생은 비활성화되지만 수동 이동은 유지됩니다.",
         "noJavaScript": "JavaScript 비활성 390×844 정적 경로에서 HTTP 200, 질문·정적 여덟 장면·두 공식 근거·확인 질문·부모 지도 반환과 전체 본문이 순서대로 남음을 확인했습니다.",
         "codeSidebar": "ForkChoice·Store 실제 소스 버튼을 열어 고정한 v7.3.1 코드 30줄과 외부 한글 해설이 viewport 안에서 표시되고 닫기 조작이 동작함을 확인했습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192에서 tsc -b와 production build를 통과했습니다. TypeScript 최대 RSS는 6,469,894,144 bytes, build 최대 RSS는 6,737,870,848 bytes이고 둘 다 swap은 0입니다. 정적 public route는 2,120개, no-script 본문은 355편입니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192에서 tsc -b와 production build를 통과했습니다. TypeScript 최대 RSS는 6,469,894,144 bytes, build 최대 RSS는 6,737,870,848 bytes이고 둘 다 swap은 0입니다. 정적 public route는 2,120개, no-script 본문은 355편입니다.",
+        "production": "Commit f2c5da18의 GitHub Pages run 41012220043에서 정적 감사, production build, 공개 1,007편의 데스크톱·모바일 브라우저 전수 검사와 배포가 모두 통과했습니다. 공개 경로를 1,440×1,000과 390×844에서 다시 열어 HTTP 200, 장면 0·4·6·7, 12초 무자동재생, 키보드 이동, 가로 넘침 0과 console 오류 0을 확인했습니다. reduced-motion에서는 장면 0과 0.000001초 duration을 확인했고 JavaScript 비활성 공개 경로에는 정적 여덟 장면과 가로 넘침 없는 본문이 표시됐습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-fulu-slot353-latest-vote-balance-boost-weight-head-slot-reset-boundary"
     },
     {
