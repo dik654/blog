@@ -5683,11 +5683,18 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "blockchain/prysm-engine-api": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
-    source(
-      "공식 규격",
-      OFFICIAL_SOURCES.ethereum.engineApi,
-      "consensus client와 execution client 사이의 Engine API",
-    ),
+    {
+      kind: "공식 구현",
+      label: "OffchainLabs Prysm v7.3.1 @ 96d418cd — Engine integration",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain",
+      note: "Proposal payloadId cache·FCU·GetPayload, method dispatch, PayloadStatus와 invalid pruning을 확인한 release",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Execution APIs v1.0.0-beta.7 @ 5aebdfdd — Engine namespace",
+      href: "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85/src/engine",
+      note: "Independent method versioning, FCU ordering, PayloadStatus, payloadId, error와 JWT authentication 계약",
+    },
   ),
   "blockchain/prysm-epoch-processing": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,

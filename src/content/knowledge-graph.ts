@@ -10978,7 +10978,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Engine API versioned-method contract",
     definition: "Engine API의 newPayload·forkchoiceUpdated·getPayload method와 structure가 parameter·response·behavior·field 변경에 따라 각각 독립된 Vn suffix를 가지며 active fork와 capability intersection으로 호출 조합을 선택하는 계약입니다.",
-    canonicalHref: "/cs/blockchain/prysm-engine-api#overview",
+    canonicalHref: "/cs/blockchain/prysm-engine-api#versioning",
   },
   "engine-payload-status-lattice": {
     id: "engine-payload-status-lattice",
@@ -10986,7 +10986,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Engine payload-status state space",
     definition: "VALID·INVALID 같은 확정 실행 판정과 SYNCING·ACCEPTED 같은 미완료 판정을 boolean으로 합치지 않고 method version·payload identity와 함께 추적하는 상태 계약입니다.",
-    canonicalHref: "/cs/blockchain/prysm-engine-api#new-payload",
+    canonicalHref: "/cs/blockchain/prysm-engine-api#status",
   },
   "engine-latest-valid-hash-recovery": {
     id: "engine-latest-valid-hash-recovery",
@@ -10994,7 +10994,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Engine latestValidHash recovery",
     definition: "INVALID payload branch에서 execution client가 확인한 가장 최신 fully-valid ancestor hash를 사용해 invalid suffix와 descendant를 조정하되 null·zero의 versioned 의미를 임의 hash로 치환하지 않는 복구 방법입니다.",
-    canonicalHref: "/cs/blockchain/prysm-engine-api#new-payload",
+    canonicalHref: "/cs/blockchain/prysm-engine-api#status",
   },
   "engine-forkchoice-state-atomicity": {
     id: "engine-forkchoice-state-atomicity",
@@ -11018,7 +11018,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Engine JWT authentication·transport boundary",
     definition: "별도 Engine endpoint에서 256-bit shared secret·HS256·iat clock window로 caller를 인증하되 payload validity·confidentiality·network replay protection과 구분하는 배포 경계입니다.",
-    canonicalHref: "/cs/blockchain/prysm-engine-api#overview",
+    canonicalHref: "/cs/blockchain/prysm-engine-api#transport",
   },
   "prysm-engine-api-release-gate": {
     id: "prysm-engine-api-release-gate",
@@ -11026,7 +11026,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Prysm Engine API release gate",
     definition: "고정한 CL/EL·execution-api commit·fork·payload tree·clock/JWT fixture에서 method support, status/latestValidHash, pointer, payloadId와 restart outcome parity를 성능 전에 검사하는 채택 계약입니다.",
-    canonicalHref: "/cs/blockchain/prysm-engine-api#payload-retrieval",
+    canonicalHref: "/cs/blockchain/prysm-engine-api#failure",
   },
   "beacon-block-pre-post-state-contract": {
     id: "beacon-block-pre-post-state-contract",
