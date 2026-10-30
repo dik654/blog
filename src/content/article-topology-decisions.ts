@@ -4403,7 +4403,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-engine-api": "97fc3e69823881f9",
   "blockchain/commonware-deep-dive": "e52779a7bbd2cc35",
   "blockchain/commonware-simplex": "6648846c934c07c9",
-  "blockchain/commonware-storage": "f562329856e608d5",
+  "blockchain/commonware-storage": "7a6433f3d1a008ad",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",
