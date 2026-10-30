@@ -12,28 +12,13 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const zkHashTree: FileNode = d("zk_from_scratch", [
-  d("crates/primitives/src/hash", [
-    f("mod.rs — re-export", "hash/mod.rs", "poseidon-hash"),
-    f(
-      "poseidon.rs — Poseidon 해시 함수",
-      "hash/poseidon.rs",
-      "poseidon-permutation",
-    ),
+export const zkHashTree: FileNode = d("arkworks · crypto-primitives · 7816710", [
+  d("crypto-primitives/src/merkle_tree", [
+    f("mod.rs — Config", "merkle_tree/mod.rs", "ark-merkle-config"),
+    f("mod.rs — Path::verify", "merkle_tree/mod.rs", "ark-merkle-verify"),
+    f("mod.rs — child order", "merkle_tree/mod.rs", "ark-merkle-order"),
   ]),
-  f("merkle.rs — Sparse Merkle Tree", "merkle.rs", "merkle-tree"),
-  f("commitment.rs — 해시 기반 커밋먼트", "commitment.rs", "commitment"),
-  d("crates/primitives/src/circuits", [
-    f("mod.rs — 회로 가젯 모듈", "circuits/mod.rs", "circuit-mod"),
-    f(
-      "poseidon.rs — Poseidon R1CS 회로",
-      "circuits/poseidon.rs",
-      "poseidon-circuit",
-    ),
-    f(
-      "merkle.rs — Merkle proof 검증 회로",
-      "circuits/merkle.rs",
-      "merkle-circuit",
-    ),
+  d("crypto-primitives/src/sponge/poseidon", [
+    f("mod.rs — permutation", "sponge/poseidon/mod.rs", "ark-poseidon-permute"),
   ]),
 ]);

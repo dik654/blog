@@ -3638,40 +3638,82 @@
     {
       "route": "blockchain/impl-hash-commitment",
       "title": "Hash·Poseidon·Merkle 구현 경계 (Rust)",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/impl-hash-commitment.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/impl-hash-commitment.tsx",
         "src/pages/articles/blockchain/impl-hash-commitment/HashMerkleImplementationViz.tsx",
-        "src/pages/articles/blockchain/impl-hash-commitment/ModernArticle.tsx"
+        "src/pages/articles/blockchain/impl-hash-commitment/ModernArticle.tsx",
+        "src/pages/articles/blockchain/impl-hash-commitment/fileTrees.ts",
+        "src/pages/articles/blockchain/impl-hash-commitment/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/impl-field-arithmetic/ZkFromScratchLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 8,
+        "assumptionMarkers": 3,
+        "sourceButtons": 4,
         "headings": [
-          "Hash 구현의 실패는 primitive 내부보다 serialization 경계에서 시작한다",
-          "Chunk는 전송 경계이지 message 의미가 아니다",
-          "Poseidon 입력 packing은 hash 바깥의 protocol이다",
-          "Leaf/node tag와 index bit가 root의 일부다",
-          "Negative fixtures와 reference differential 뒤 benchmark한다"
+          "index 2의 c와 sibling 둘은 어떤 byte 순서로 root를 다시 계산합니까",
+          "Hash는 chunk가 아니라 한 메시지의 byte열을 처리합니다",
+          "Poseidon은 같은 hash의 다음 단계가 아니라 다른 입력 타입을 받는 대안입니다",
+          "proof는 sibling 값만이 아니라 각 높이의 왼쪽·오른쪽 순서를 포함합니다",
+          "commitment라는 이름만으로 숨김까지 보장되지는 않습니다",
+          "구현의 증거는 공개 경계에서 확인합니다",
+          "c의 proof를 처음부터 다시 말해 보기",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 streaming hash·Poseidon packing·Merkle proof·commitment 성질·benchmark와 release 판단을 한 글에 병렬 나열해 하나의 입력이 어떻게 root가 되는지 추적하기 어려웠습니다.",
+        "이전 시각화는 구성요소 이름을 보여 줬지만 leaf domain tag, 길이 prefix, sibling 방향 bit가 실제 hash 입력 byte열을 어떻게 바꾸는지 보여 주지 못했습니다.",
+        "Poseidon을 SHA-256 처리 뒤에 이어지는 단계처럼 읽을 수 있었고, inclusion·binding·hiding을 모두 commitment라는 한 단어로 묶을 위험이 있었습니다."
+      ],
+      "fixture": {
+        "case": "네 leaf a·b·c·d 가운데 index 2의 c가 root에 포함됐음을 SHA-256으로 다시 계산하는 한 건",
+        "schema": "leaf=SHA256(0x00 || u32be(length) || data), inner=SHA256(0x01 || left || right)",
+        "path": "c의 leaf hash→오른쪽 sibling d와 parent H(c,d)→왼쪽 sibling H(a,b)와 root→기대 root 비교",
+        "output": "004b7b719bdb2e0a807314e3e0feda3d35104dc788d6939b1d58c8d44455d9c3",
+        "boundary": "SHA-256 byte hash, field element를 받는 Poseidon 대안, Merkle inclusion proof와 commitment 성질을 분리"
+      },
+      "stageEvidence": {
+        "parent": "ZK 구현 Rust 묶음의 세 번째 글로 표시하고 field·curve 구현 뒤에 오는 hash·Merkle 경계를 정합니다.",
+        "0": "네 leaf a·b·c·d와 검증 대상 index 2의 c를 둡니다.",
+        "1": "0x00 domain tag와 4-byte 길이, byte c를 이어 leaf hash를 만듭니다.",
+        "2": "첫 proof sibling으로 d의 leaf hash를 가져옵니다.",
+        "3": "index bit가 0이므로 current c를 왼쪽, sibling d를 오른쪽에 두고 H(c,d)를 계산합니다.",
+        "4": "둘째 proof sibling으로 왼쪽 subtree H(a,b)를 가져옵니다.",
+        "5": "다음 index bit가 1이므로 sibling H(a,b)를 왼쪽, current H(c,d)를 오른쪽에 둡니다.",
+        "6": "domain tag 0x01과 두 child hash를 이어 최종 root를 다시 계산합니다.",
+        "7": "재계산 root와 기대 root가 같은지 비교해 포함 여부를 결정합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "NIST FIPS 180-4 Secure Hash Standard",
+          "application": "SHA-256이 임의 길이 메시지를 처리하는 표준 hash라는 근거로 사용하고, leaf·inner encoding은 이 글의 protocol schema임을 분리했습니다."
+        },
+        {
+          "source": "arkworks crypto-primitives commit 7816710fc19cd4d18d6239785dac8937d7b9b3ce, merkle_tree/mod.rs",
+          "application": "Config의 LeafHash·TwoToOneHash 경계와 Path::verify의 index bit별 left/right 선택을 pinned Rust source와 대조했습니다."
+        },
+        {
+          "source": "arkworks crypto-primitives commit 7816710fc19cd4d18d6239785dac8937d7b9b3ce, sponge/poseidon/mod.rs",
+          "application": "Poseidon permutation이 field state에 round constants와 MDS matrix를 적용한다는 입력 타입·상태 전이의 근거로 사용했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 ModernArticle·HashMerkleImplementationViz와 arkworks Merkle·Poseidon source를 읽고 운영 release·benchmark 판단을 개념 글에서 분리했습니다.",
+        "arithmetic": "Node crypto로 a·b·c·d의 leaf hash, H(a,b), H(c,d), index 2 proof 순서와 최종 root 004b7b…d9c3을 독립 계산했습니다.",
+        "source": "FIPS 180-4와 pinned arkworks commit의 Config, Path::verify, Poseidon permutation 경계를 CodeSidebar의 한국어 주석과 함께 연결했습니다.",
+        "humanize": "질문 하나와 c 한 건을 기준으로 byte encoding, 두 sibling 방향, root 비교까지 추적하고 Poseidon·commitment는 별도 경계로 설명했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build 통과; 2,120 static public routes와 no-script article 369편을 생성했습니다.",
+        "browser390": "390×844에서 document overflow 0, 초기 장면 유지, ArrowRight 이동, 마지막 장면 선택 시 두 내부 strip의 자동 이동, reduced-motion의 수동 조작, CodeSidebar 주석을 확인했습니다. JavaScript 비활성 경로에는 정적 본문과 8개 장면이 모두 남고 React root는 비어 있습니다.",
+        "browser1440": "1440×900에서 document overflow 0, 자동 재생 없음, 명시적 재생 뒤 4.7초 간격 이동, 마지막 root 비교 장면과 source panel을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 경로를 확인한 뒤 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-merkle-proof-trace-with-typed-hash-and-commitment-boundaries"
     },
     {
       "route": "blockchain/impl-plonk",

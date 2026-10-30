@@ -8384,9 +8384,9 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "impl-hash-commitment": {
     title: "Hash·Poseidon·Merkle 구현 경계 글이 소유하는 범위",
-    owns: ["Rust streaming update/finalize contract", "Byte-to-field serialization boundary", "Merkle leaf/node prefix·index/direction implementation release gate"],
+    owns: ["Rust streaming update/finalize contract", "Byte-to-field serialization boundary", "Merkle leaf/node prefix·index/direction과 commitment 의미"],
     reuses: [{ label: "Hash construction", href: "/cs/crypto/hash-theory" }, { label: "Poseidon profile", href: "/cs/crypto/poseidon-hash" }, { label: "Merkle selective opening", href: "/cs/crypto/merkle-tree" }],
-    evidence: [{ kind: "standard", rule: "SHA-2 semantics는 FIPS 180-4에 한정한다." }, { kind: "primary-source", rule: "구현 claim은 pinned arkworks source에 한정한다." }, { kind: "project-measurement", rule: "Malformed encoding/path parity와 reference differential 뒤 비용을 비교한다." }],
+    evidence: [{ kind: "standard", rule: "SHA-2 semantics는 FIPS 180-4에 한정한다." }, { kind: "primary-source", rule: "Merkle와 Poseidon 구현 claim은 pinned arkworks source에 한정한다." }, { kind: "project-measurement", rule: "설명용 tree v1의 c→root 값은 독립 계산한 SHA-256 결과에 한정한다." }],
   },
   proofofsql: {
     title: "SQL relation·snapshot·opening·transcript 글이 소유하는 범위",
