@@ -1014,7 +1014,7 @@
     {
       "route": "blockchain/commonware-simplex",
       "title": "Commonware Simplex: 인증·certification·finalization",
-      "status": "locally-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-simplex.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-simplex.tsx",
@@ -1071,17 +1071,16 @@
         "humanize": "직속 부모 지도, 질문 하나, 같은 digest 한 사례, 내부 동작·수식·source·실패 분기와 부모 지도 반환으로 구성했습니다. 제품 선택과 운영 Runbook은 개념 글에서 제외했습니다.",
         "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px이고 live 시각화는 가로 넘침이 없습니다. 내부 장면 scroll과 하단 아이콘 조작부를 확인했습니다. Reduced-motion은 재생을 비활성화하고 수동 이동을 유지합니다. JavaScript 비활성 trailing-slash 경로에는 조작 버튼 없이 정적 8장면·수식·전체 본문·부모 지도 반환이 남습니다.",
         "browser1440": "1440×1000에서 장면 2와 7을 시각 확인했습니다. ArrowLeft 7→6, ArrowRight 6→7, Space 재생·일시정지와 상태 유지가 동작하며 문서 가로 넘침이 없습니다.",
-        "static": "관련 strict 감사, 선택 ESLint, 전체 TypeScript와 production build를 통과했습니다. TypeScript 최대 RSS는 5,975,064,576 bytes, Vite는 4,245,323,776 bytes, 정적 생성기는 1,535,393,792 bytes이고 swap은 모두 0입니다. 정적 public route 2,120개와 no-script 본문 363편을 생성했습니다. 정적 fallback은 React가 실제 DOM을 만든 뒤에만 숨고, 사이트별 스크립트 차단이나 첫 render 이전 실패에서는 본문을 유지합니다."
+        "static": "관련 strict 감사, 선택 ESLint, 전체 TypeScript와 production build를 통과했습니다. TypeScript 최대 RSS는 5,975,064,576 bytes, Vite는 4,245,323,776 bytes, 정적 생성기는 1,535,393,792 bytes이고 swap은 모두 0입니다. 정적 public route 2,120개와 no-script 본문 363편을 생성했습니다. 정적 fallback은 React가 실제 DOM을 만든 뒤에만 숨고, 사이트별 스크립트 차단이나 첫 render 이전 실패에서는 본문을 유지합니다.",
+        "production": "Commit e001b0cd3ae51e218d1742d53f9261229194d291의 GitHub Pages run 41065417427에서 전체 strict 감사, build, 공개 1,007편 브라우저 검사와 배포가 통과했습니다. 공개 1,440×1,000·390×844 경로는 가로 넘침 0이며 이전 전체 구조·다음 buffered broadcast 링크가 맞습니다. Reduced-motion에서는 보이는 Simplex 재생 버튼이 비활성화되고 JavaScript 비활성 경로에는 정적 8장면·전체 본문·부모 지도 반환이 남습니다."
       },
-      "remaining": [
-        "공개 배포 후 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-digest-notarization-local-certification-journal-finalization-boundary"
     },
     {
       "route": "blockchain/commonware-storage",
       "title": "Commonware Storage: MMR · Any · Current · QMDB",
-      "status": "locally-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-storage.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-storage.tsx",
@@ -1145,11 +1144,10 @@
         "humanize": "직속 부모 지도, 질문 하나, Alice·Bob 두 update와 batch-7 한 사례, 내부 동작·수식·source·실패 경계와 부모 지도 반환으로 구성했습니다. 제품 선택·백업·운영 Runbook은 개념 글에서 제외했습니다.",
         "browser390": "390×844에서 여덟 장면을 모두 선택해 0→7 상태 변화와 문서 가로 넘침 0을 확인했습니다. 좁은 탭에는 외부·batch·write·root·검사·apply·sync·proof를 표시하고 긴 제목은 QMDB 중간에서 끊기지 않습니다. Reduced-motion은 재생을 비활성화하고 수동 이동을 유지합니다. JavaScript 비활성 trailing-slash 경로에는 정적 여덟 장면·전체 본문·부모 지도 반환이 남습니다.",
         "browser1440": "1440×1000에서 여덟 장면을 모두 선택해 active state와 page overflow 0을 확인했습니다. Group ArrowLeft, Space 재생·일시정지와 상태 유지가 동작하며 console 오류·경고는 0건입니다.",
-        "static": "NODE_OPTIONS=--max-old-space-size=8192에서 전체 build가 통과했고 최대 RSS는 6,593,150,976 bytes, swap은 0이었습니다. public route 2,120개와 no-script 본문 364편을 만들었습니다."
+        "static": "NODE_OPTIONS=--max-old-space-size=8192에서 전체 build가 통과했고 최대 RSS는 6,593,150,976 bytes, swap은 0이었습니다. public route 2,120개와 no-script 본문 364편을 만들었습니다.",
+        "production": "Commit e001b0cd3ae51e218d1742d53f9261229194d291의 GitHub Pages run 41065417427에서 전체 strict 감사, build, 공개 1,007편 브라우저 검사와 배포가 통과했습니다. 공개 1,440×1,000·390×844 경로는 가로 넘침 0이며 제목·이전 buffered broadcast·다음 authenticated P2P 링크가 맞습니다. Reduced-motion에서는 보이는 Storage 재생 버튼이 비활성화되고 JavaScript 비활성 경로에는 정적 8장면·전체 본문·부모 지도 반환이 남습니다."
       },
-      "remaining": [
-        "공개 배포 후 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-batch-candidate-visible-durable-current-proof-boundary"
     },
     {

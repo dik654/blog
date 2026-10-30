@@ -3,7 +3,7 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Commonware Storage 로컬 검증 완료 (2026-10-30)
+### Commonware Storage 공개 검증 완료 (2026-10-30)
 
 - `blockchain/commonware-storage`를 Alice=10·Bob=15 두 update와 `batch-7` 한 건이 stage, merkleize, ancestry 확인, apply, sync와 Current proof로 이어지는 흐름으로 다시 썼습니다. Candidate root, visible DB state, durable state와 proof를 같은 완료 상태로 합치지 않았습니다.
 - Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. QMDB·Current 문서와 실제 Rust source에서 branch-scoped batch, stale sibling, MMR location, activity bitmap, `commit()`과 `sync()`의 recovery 차이를 대조했습니다. 이전 버전의 공통 `Persistable` trait 설명은 현재 근거로 사용하지 않았습니다.
@@ -13,9 +13,9 @@
 - 모바일 제목은 `QMDB` 중간에서 끊기지 않도록 구분자 주변에 줄바꿈 지점을 만들었습니다. Reduced-motion에서는 재생 버튼이 비활성화되고 수동 이동은 유지됩니다.
 - JavaScript 비활성 390×844 trailing-slash 경로에는 live 조작부 대신 정적 여덟 장면, 전체 본문, 이전·다음 글과 부모 지도 반환이 남습니다. 정적 읽기 목록에 이 글을 추가해 public route 2,120개와 no-script 본문 364편을 생성했습니다.
 - 전체 build는 Node heap 8GB에서 통과했고 최대 RSS는 6,593,150,976 bytes, swap은 0이었습니다. 큰 build 구간만 고메모리 모드로 전환한 뒤 다시 저메모리 모드로 돌아왔습니다.
-- 공개 배포와 공개 경로 재검증은 아직 남아 있으며 현재 상태는 `locally-verified`입니다.
+- Commit `e001b0cd3ae51e218d1742d53f9261229194d291`의 GitHub Pages run `41065417427`에서 전체 감사, build, 공개 1,007편 브라우저 검사와 배포가 통과했습니다. 공개 Storage 경로는 1,440×1,000과 390×844에서 가로 넘침이 없고 제목·이전 Broadcast·다음 P2P 경로가 맞습니다. Reduced-motion에서는 재생이 비활성화되고, JavaScript 비활성 경로에는 정적 8장면과 전체 본문이 남습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
-### Commonware Simplex 로컬 검증 완료 (2026-10-30)
+### Commonware Simplex 공개 검증 완료 (2026-10-30)
 
 - `blockchain/commonware-simplex`를 부모 글의 `hash(encode(Random(42)))` 한 건이 proposal, 세 notarize vote, notarization, validator별 Application certification, local journal sync, 세 finalize vote와 finalization certificate로 이어지는 흐름으로 다시 썼습니다.
 - Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. `N3f1` quorum, certificate 조립, certification request/result, finalize gate, journal-before-notify와 channel 오류 replay 경로를 실제 Rust source와 대조했습니다.
@@ -25,7 +25,7 @@
 - Reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 trailing-slash 경로에는 조작 버튼 없이 정적 여덟 장면, 수식, 전체 본문과 부모 지도 반환이 남습니다.
 - 정적 fallback을 `<noscript>`에만 의존하지 않도록 바꿨습니다. JavaScript가 실제 실행될 때만 `js-enabled` class로 정적 본문을 숨기므로, Chrome의 사이트별 스크립트 차단에서도 빈 화면 대신 읽을 수 있는 본문이 남습니다.
 - 전체 TypeScript·Vite production build·정적 경로 생성을 순차 실행했습니다. 최대 RSS는 각각 5,975,064,576 bytes, 4,245,323,776 bytes, 1,535,393,792 bytes이고 swap은 모두 0입니다. 정적 public route 2,120개와 no-script 본문 363편을 생성했습니다.
-- 공개 배포와 공개 경로 재검증은 아직 남아 있으며 현재 상태는 `locally-verified`입니다.
+- Commit `e001b0cd3ae51e218d1742d53f9261229194d291`의 GitHub Pages run `41065417427`에서 전체 감사, build, 공개 1,007편 브라우저 검사와 배포가 통과했습니다. 공개 Simplex 경로는 1,440×1,000과 390×844에서 가로 넘침이 없고 이전 전체 구조·다음 Broadcast 경로가 맞습니다. Reduced-motion에서는 재생이 비활성화되고, JavaScript 비활성 경로에는 정적 8장면과 전체 본문이 남습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Commonware 전체 구조 공개 검증 완료 (2026-10-30)
 
