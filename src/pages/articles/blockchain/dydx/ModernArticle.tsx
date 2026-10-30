@@ -3,7 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import DefiDexLocator, { DefiDexMapReturn } from "./DefiDexLocator";
+import DefiDexLocator, { DefiDexMapReturn } from "../DefiDexLocator";
 import { AuthorityViz, DydxOrderLifecycleViz, OrderPathViz } from "./viz/ModernDydxViz";
 import { officialDydxCodeRefs } from "./officialCodeRefs";
 import { dydxTree } from "./fileTrees";

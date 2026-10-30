@@ -6566,7 +6566,8 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "blockchain/uniswap-v3": [
     { kind: "핵심 논문", label: "Uniswap v3 Core whitepaper", href: "https://uniswap.org/whitepaper-v3.pdf", note: "Concentrated liquidity·ticks·fee growth·oracle의 공식 설계" },
-    { kind: "공식 코드", label: "Uniswap v3-core v1.0.0 @ ef64f51d0f0d", href: "https://github.com/Uniswap/v3-core/tree/ef64f51d0f0dca5346c903484f3e6a771dd69d59/contracts", note: "Pool·TickMath·SqrtPriceMath·SwapMath의 exact rounding·transition snapshot" },
+    { kind: "공식 코드", label: "Uniswap v3-core v1.0.0 commit e3589b192d0b", href: "https://github.com/Uniswap/v3-core/tree/e3589b192d0be27e100cd0daaf6c97204fdb1899/contracts", note: "annotated tag object ef64f51이 가리키는 실제 commit입니다. Pool·SwapMath·Tick·Position의 정수 반올림과 상태 전이를 고정합니다." },
+    { kind: "보충 읽기", label: "Uniswap v3-core v1.0.0 annotated tag", href: "https://github.com/Uniswap/v3-core/releases/tag/v1.0.0", note: "tag object와 source commit을 구분해 릴리스 계보를 확인합니다." },
   ],
   "blockchain/aave-v3": [
     { kind: "공식 코드", label: "Aave DAO aave-v3-origin @ cff15de6d127", href: "https://github.com/aave-dao/aave-v3-origin/tree/cff15de6d1271b0c800fc001f4aea4c263e8a597", note: "V3.1–3.x Pool·reserve index·rate·HF·liquidation·mode source snapshot" },

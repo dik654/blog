@@ -1856,7 +1856,7 @@
       "bodyFiles": [
         "src/pages/articles/blockchain/dydx.tsx",
         "src/pages/articles/blockchain/dydx/ModernArticle.tsx",
-        "src/pages/articles/blockchain/dydx/DefiDexLocator.tsx",
+        "src/pages/articles/blockchain/DefiDexLocator.tsx",
         "src/pages/articles/blockchain/dydx/viz/ModernDydxViz.tsx",
         "src/pages/articles/blockchain/dydx/officialCodeRefs.ts",
         "src/pages/articles/blockchain/dydx/fileTrees.ts"
@@ -8368,42 +8368,82 @@
     },
     {
       "route": "blockchain/uniswap-v3",
-      "title": "Uniswap V3: range·tick·fee-growth·swap-step",
-      "status": "unreviewed",
+      "title": "Uniswap V3: 가격 구간을 지나는 교환",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/uniswap-v3.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/uniswap-v3.tsx",
-        "src/pages/articles/blockchain/uniswap-v3/Overview.tsx",
-        "src/pages/articles/blockchain/uniswap-v3/PositionNft.tsx",
-        "src/pages/articles/blockchain/uniswap-v3/SwapAlgorithm.tsx",
-        "src/pages/articles/blockchain/uniswap-v3/TickMath.tsx"
+        "src/pages/articles/blockchain/uniswap-v3/ModernArticle.tsx",
+        "src/pages/articles/blockchain/uniswap-v3/viz/UniswapV3LifecycleViz.tsx",
+        "src/pages/articles/blockchain/uniswap-v3/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/uniswap-v3/fileTrees.ts",
+        "src/pages/articles/blockchain/DefiDexLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 8,
+        "assumptionMarkers": 6,
+        "sourceButtons": 5,
         "headings": [
-          "V3는 V2 곡선을 버린 것이 아니라 position별 가격 구간으로 옮겼다",
-          "Position fee는 global counter에서 구간 밖 성장을 뺀 차이다",
-          "Swap은 다음 initialized tick까지 같은 liquidity로 한 step씩 이동한다",
-          "Tick은 가격 index이고 sqrtPriceX96은 계산 상태다"
+          "가격이 경계를 지날 때 교환 계산과 수수료 주인이 어떻게 바뀝니까",
+          "같은 가격을 사람과 코드가 서로 다른 형태로 적습니다",
+          "Pool은 다음 유동성 경계까지만 계산하고 남은 입력을 다시 돌립니다",
+          "경계를 넘으면 활성 유동성과 수수료 구간이 함께 바뀝니다",
+          "대금을 덜 내면 앞선 계산도 모두 사라집니다",
+          "설계식과 실행 코드를 같은 증거로 취급하지 않습니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 tick·position·swap·수수료를 절별로 설명했지만 입력 40이 두 가격 구간을 통과하는 한 교환의 전체 상태 전이가 없었습니다.",
+        "기존 근거는 annotated tag object ef64f51d를 source commit으로 잘못 표시했습니다. tag가 가리키는 실제 commit e3589b19를 따로 고정했습니다.",
+        "모든 유동성이 한 번에 쓰이는 것처럼 읽힐 수 있어 현재 가격을 덮는 active liquidity, tick crossing과 callback settlement의 원자적 경계를 한 경로로 다시 연결했습니다."
+      ],
+      "fixture": {
+        "case": "Alice는 √P 1~3에 L=60, Bob은 2.5~3.5에 L=40을 두고 현재 √P=2에서 token1 정확입력 40을 보냅니다.",
+        "step1": "L=60에서 순입력 30, 총입력 약 30.0903, token0 출력 6으로 √P 2→2.5를 이동합니다.",
+        "cross": "Bob lower tick의 liquidityNet +40을 적용해 active liquidity가 60→100으로 바뀝니다.",
+        "step2": "남은 총입력 약 9.9097의 순입력 9.88로 √P 2.5→2.5988을 이동하고 token0 약 1.5207을 더 출력합니다.",
+        "output": "총 token0 출력 약 7.5207, LP 수수료 0.12이며 callback에서 token1 40을 실제로 납부해야 최종 상태가 남습니다.",
+        "boundary": "연속값 설명용 계산이며 실제 Q64.96·Q128 정수 반올림 결과나 mainnet 성능 측정값이 아닙니다."
+      },
+      "stageEvidence": {
+        "parent": "탈중앙화 거래소 지도에서 Uniswap V2 다음의 가격 구간 교환으로 현재 위치와 다음 V4 글을 함께 표시합니다.",
+        "0": "Alice와 Bob의 서로 다른 가격 구간과 현재 √P=2를 고정합니다.",
+        "1": "Alice position의 token0 10·token1 60을 range 식으로 계산합니다.",
+        "2": "정확입력 token1 40에서 다음 initialized tick √P=2.5를 첫 목표로 정합니다.",
+        "3": "활성 유동성 60으로 첫 swap step의 입력·출력·수수료를 계산합니다.",
+        "4": "경계를 통과하며 outside 누적값을 뒤집고 liquidityNet +40을 적용합니다.",
+        "5": "활성 유동성 100으로 남은 입력을 계산해 √P=2.5988과 총출력 약 7.5207을 얻습니다.",
+        "6": "Pool이 출력한 뒤 callback에서 token1 40의 실제 잔액 증가를 검사합니다.",
+        "7": "성공한 가격·tick·fee growth와 position별 수수료 몫을 최종 장부로 돌려놓습니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Uniswap/v3-core v1.0.0 annotated tag object ef64f51d0f0dca5346c903484f3e6a771dd69d59 → commit e3589b192d0be27e100cd0daaf6c97204fdb1899",
+          "application": "UniswapV3Pool swap loop·callback settlement, SwapMath step, Tick crossing과 Position fee update를 pinned source에서 읽어 다섯 CodeSidebar 근거로 연결했습니다."
+        },
+        {
+          "source": "Uniswap v3 Core whitepaper",
+          "application": "집중 유동성의 range amount와 inside fee-growth 설계식을 사용하되 실제 정수 실행·반올림과 분리했습니다."
+        },
+        {
+          "source": "v3-core commit e3589b19 공식 Hardhat tests",
+          "application": "Node 24.13.0에서 Solidity 0.7.6 계약 62개를 컴파일하고 TS_NODE_TRANSPILE_ONLY=true로 SwapMath·Tick·Pool swap 공식 테스트 283개를 통과시켰습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 네 module과 whitepaper, v3-core v1.0.0의 Pool·SwapMath·Tick·Position source를 읽고 한 정확입력 교환의 상태 전이로 전면 재작성했습니다.",
+        "arithmetic": "첫 step의 순입력 30·총입력 약 30.0903·출력 6, 둘째 step의 순입력 9.88·최종 √P=2.5988·총출력 약 7.5207·수수료 0.12를 독립 계산했습니다.",
+        "source": "공식 테스트 283개가 29.22초에 통과했고 최대 RSS 1,112,539,136 bytes, swap 0이었습니다. 현재 TypeScript와 2021 TypeChain 선언의 호환 문제 때문에 테스트 실행에는 transpile-only를 사용했습니다.",
+        "humanize": "한 교환의 질문→가격 표현→두 swap step→tick crossing→position fee→callback 실패→부모 지도 반환 순서로 연결하고 전역 문장·한국어·용어·수식·계산 감사를 통과했습니다.",
+        "build": "Node heap 8GB에서 전체 TypeScript와 production build가 통과했습니다. 130.72초, 최대 RSS 6,629,933,056 bytes, swap 0이었고 8,160개 module, 정적 public route 2,120개와 no-script 본문 374편을 생성했습니다.",
+        "browser390": "390×844에서 document overflow 0, live stage 339px와 내부 overflow 0, 49.5px 조작부, 키보드 0→7 이동과 활성 tab 자동 이동, CodeSidebar 폭 390과 console 오류 0을 확인했습니다. JavaScript 비활성 production 경로에는 제목·직속 부모·8개 정적 장면·전체 본문·부모 지도 반환이 남고 visible button은 0개였습니다.",
+        "browser1440": "1440×900에서 document overflow 0, 5.6초 무자동재생, 키보드 0→1 이동, live stage 664×469와 console 오류·경고 0을 확인했습니다. Reduced-motion 새로고침에서는 실행 중 animation 0개와 재생 비활성화를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "JavaScript 비활성 정적 경로와 공개 배포 경로를 확인한 뒤 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-exact-input-across-two-price-ranges-and-atomic-callback-settlement-trace"
     },
     {
       "route": "blockchain/uniswap-v4",

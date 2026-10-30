@@ -410,6 +410,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/impl-groth16",
   "blockchain/impl-plonk",
   "blockchain/dydx",
+  "blockchain/uniswap-v2",
+  "blockchain/uniswap-v3",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

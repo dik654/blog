@@ -4642,6 +4642,34 @@
   `AutoencoderRoundTripViz.tsx`의 SHA-256은
   `a76cf06f9042fb7785f152b52d19da42989af146054685063aff41dfe7e29ad9`로 유지됩니다.
   공개 배포와 공개 경로 재검증은 다음 단계입니다.
+
+# Uniswap V3 가격 구간 교환 개념 글 로컬 검증 완료 (2026-10-31)
+
+- Alice가 √P 1~3에 L=60, Bob이 2.5~3.5에 L=40을 둔 상태에서 token1 40을 정확입력하는
+  한 교환으로 글을 다시 구성했습니다. 첫 구간에서는 Alice의 유동성 60만 사용하고, √P=2.5의
+  경계를 지난 뒤 Bob의 `liquidityNet +40`을 반영해 유동성 100으로 남은 입력을 처리합니다.
+- 설명용 연속값에서 첫 단계의 순입력은 30, 총입력은 약 30.0903, token0 출력은 6입니다.
+  둘째 단계는 순입력 9.88로 √P를 2.5에서 2.5988로 옮기며 총출력은 약 7.5207, 수수료는
+  0.12가 됩니다. 실제 core의 Q64.96·Q128 정수 반올림 결과나 mainnet 성능으로 일반화하지
+  않았습니다.
+- 기존 글이 source commit으로 적었던 `ef64f51d`는 annotated tag object였습니다. 이 tag가
+  가리키는 실제 v1.0.0 commit `e3589b192d0be27e100cd0daaf6c97204fdb1899`를 고정하고,
+  Pool swap loop·SwapMath·Tick crossing·Position update·callback 잔액 확인을 다섯 코드 근거로
+  연결했습니다.
+- 격리한 공식 저장소에서 Solidity 0.7.6 계약 62개를 컴파일하고 `SwapMath`, `Tick`, Pool swap
+  테스트 283개를 실행했습니다. 29.22초, 최대 RSS 1,112,539,136 bytes, swap 0이었습니다.
+  2021년 TypeChain 선언과 현재 TypeScript 실행기의 호환 문제는 transpile-only로 우회했으며,
+  이 결과를 본문의 연속값 fixture 실행으로 확대하지 않았습니다.
+- 1,440×900과 390×844에서 무자동재생, 키보드 0→7 이동, 모바일 활성 탭 자동 이동, 49.5px
+  조작부, CodeSidebar와 문서 가로 넘침 0을 확인했습니다. 장식용 선택점 무한 pulse를 공통
+  개념 지도에서 제거해 reduced-motion 새로고침의 실행 중 animation도 0개가 되었습니다.
+- JavaScript 비활성 390×844 production 경로에는 제목·직속 부모·8개 정적 장면·전체 본문과
+  부모 지도 반환이 남고 visible button은 0개입니다. 같은 조건을 이미 검증한 Uniswap V2도
+  정적 본문 생성 목록에 함께 등록했습니다.
+- Node heap 8GB에서 전체 TypeScript와 production build가 통과했습니다. 8,160개 module,
+  정적 public route 2,120개와 no-script 본문 374편을 생성했고 130.72초, 최대 RSS
+  6,629,933,056 bytes, swap 0이었습니다. 현재 전수 장부는 1,007편 중 717편 검토,
+  290편 미검토이며 공개 배포와 공개 경로 재검증이 남아 있습니다.
 # Rust 유한체 값 경로 로컬 검증 완료 (2026-10-31)
 
 - `blockchain/impl-field-arithmetic`를 설명용 소수체 `F13`에서 `0x05 × 0x09 → 0x06` 한 건으로 다시 썼습니다. 공개 bytes, canonical 정수와 Montgomery residue를 서로 다른 표현으로 분리하고 일곱 장면에서 같은 값의 뜻이 보존되는 과정을 추적합니다.
