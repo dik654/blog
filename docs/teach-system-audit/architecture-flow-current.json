@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 540,
+    "animatedMechanisms": 541,
     "architectureWithoutAnimation": 80,
-    "recursiveLocators": 366,
-    "codeEvidenceLinked": 231,
+    "recursiveLocators": 367,
+    "codeEvidenceLinked": 232,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -7385,11 +7385,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/impl-hash-commitment",

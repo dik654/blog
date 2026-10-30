@@ -3600,40 +3600,76 @@
     {
       "route": "blockchain/impl-groth16",
       "title": "Groth16 증명 시스템 구현 (Rust)",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/impl-groth16.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/impl-groth16.tsx",
         "src/pages/articles/blockchain/impl-groth16/Groth16ImplementationViz.tsx",
-        "src/pages/articles/blockchain/impl-groth16/ModernArticle.tsx"
+        "src/pages/articles/blockchain/impl-groth16/ModernArticle.tsx",
+        "src/pages/articles/blockchain/impl-groth16/fileTrees.ts",
+        "src/pages/articles/blockchain/impl-groth16/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/impl-field-arithmetic/ZkFromScratchLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 8,
+        "assumptionMarkers": 4,
+        "sourceButtons": 4,
         "headings": [
-          "Groth16 구현의 핵심은 세 점을 계산하는 코드가 아니라 circuit·witness·key·domain이 같은 relation을 가리키게 하는 것이다",
-          "relation digest·field/curve·public schema·domain·keys를 하나의 profile로 봉인한다",
-          "key를 mmap한 뒤 query length와 모든 encoded point를 검증하고 relation profile과 맞지 않으면 실패한다",
-          "witness parity 뒤 quotient FFT와 독립 MSMs를 병렬화하되 dependency와 buffer lifetime을 receipt에 남긴다",
-          "positive proof 하나보다 mismatch fixtures와 independent verifier가 먼저다"
+          "비공개 x=3, y=5는 어떻게 proof 세 점이 되고, verifier는 공개 z=15만으로 무엇을 확인합니까",
+          "Circuit은 값 3과 5가 아니라 x·y=z라는 관계를 고정합니다",
+          "한 제약식은 세 선형결합의 곱으로 바뀌고, QAP는 여러 행을 polynomial로 묶습니다",
+          "Prover는 witness와 key query를 결합해 G1·G2·G1의 세 점을 만듭니다",
+          "Verifier는 공개값 15를 key point와 결합한 뒤 proof의 pairing 식을 검사합니다",
+          "공식 구현에서 확인한 경계",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 artifact digest, key admission, 병렬 QAP·MSM, 성능과 rollback을 병렬로 나열해 circuit 한 건이 proof와 verifier 판정으로 이어지는 기본 경로를 보기 어려웠습니다.",
+        "기존 시각화는 artifact profile→witness→QAP→MSM→receipt 카드만 보여 주고 public input과 private witness가 어느 단계에서 갈라지는지 표현하지 못했습니다.",
+        "QAP polynomial A·B·C와 proof point A·B·C, setup용 circuit shape와 prove용 assignment가 같은 이름 아래 섞여 있었습니다."
+      ],
+      "fixture": {
+        "case": "비공개 x=3·y=5와 공개 z=15가 x·y=z 한 줄을 만족한다는 Groth16 proof 한 건",
+        "assignment": "전체 w=[1,15,3,5], instance=[1,15], witness=[3,5]",
+        "path": "circuit relation→R1CS 3×5=15→QAP quotient H→proof A∈G1·B∈G2·C∈G1→g_ic(z)→multi-pairing→true",
+        "boundary": "설명용 field 값과 실제 cryptographic group points를 구분하고, proof에 private witness가 직접 포함된다고 설명하지 않음"
+      },
+      "stageEvidence": {
+        "parent": "ZK 구현 Rust 묶음의 네 번째 글로 표시하고 앞선 field·curve·hash 구현 위에 proof system 경계를 연결합니다.",
+        "0": "Public claim z=15와 prover만 아는 x=3·y=5를 분리합니다.",
+        "1": "Instance [1,15]와 witness [3,5]를 circuit의 변수 순서에 맞춰 할당합니다.",
+        "2": "R1CS 한 행이 3×5=15인지 확인합니다.",
+        "3": "R1CS 위반 polynomial을 QAP quotient H(X)로 옮깁니다.",
+        "4": "Proving key queries와 assignment·H·randomness로 A·B·C 세 점을 만듭니다.",
+        "5": "Verifier가 public z=15를 gamma_abc points와 결합해 g_ic를 만듭니다.",
+        "6": "Proof points, g_ic와 prepared verifying key를 multi-pairing 식에 넣습니다.",
+        "7": "Final exponentiation 결과가 기준 pairing과 같으면 true를 반환합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Groth · On the Size of Pairing-based Non-interactive Arguments · ePrint 2016/260",
+          "application": "Relation-specific setup, 세 group-element proof와 pairing verification construction의 protocol 근거로 사용했습니다."
+        },
+        {
+          "source": "arkworks groth16 commit 8f0904a7d7a2c8945bf770bdd3c2081e0be1941a, tests/mimc.rs·src/prover.rs·data_structures.rs·verifier.rs",
+          "application": "Public/witness allocation, circuit synthesis, R1CS→QAP witness map, proof struct와 public-input pairing verifier의 실제 Rust 경로를 대조했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 ModernArticle과 5-card 시각화, Groth16 논문, pinned arkworks circuit/prover/proof/verifier source를 읽고 운영 artifact·성능·rollback 판단을 개념 글에서 분리했습니다.",
+        "arithmetic": "w=[1,15,3,5]와 coefficient vectors의 내적으로 3×5=15를 확인하고, z=14일 때 public-input combination이 달라지는 경계를 식으로 추적했습니다. 실제 cryptographic proof point 수치는 생성했다고 주장하지 않습니다.",
+        "source": "arkworks commit 8f0904a의 witness/new_input allocation, instance/witness split, Proof G1·G2·G1와 prepare_inputs/multi_miller_loop를 CodeSidebar의 한국어 주석과 연결했습니다.",
+        "humanize": "질문 하나와 x=3·y=5·z=15 한 건을 기준으로 circuit, assignment, R1CS, QAP, proof와 pairing 판정까지 구성했습니다.",
+        "build": "전체 TypeScript와 production build를 통과했습니다. 8GB heap 상한의 단독 빌드는 122.34초, 최대 RSS 6,552,911,872 bytes, swap 0이었고 정적 public route 2,120개와 no-script article 370편을 생성했습니다.",
+        "browser390": "390×844에서 document overflow 0, ArrowRight 0→1, 마지막 장면에서 두 내부 strip의 scrollLeft=max, reduced-motion의 재생 비활성·수동 장면 선택, CodeSidebar 한국어 주석을 확인했습니다. JavaScript 비활성 경로에는 정적 본문과 8개 장면이 모두 남고 React root는 비어 있습니다.",
+        "browser1440": "1440×900에서 document overflow 0, 5초 뒤에도 scene 0 유지, 명시적 재생 후 4.7초 간격으로 scene 1 이동, console 오류 0건을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 경로를 확인한 뒤 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-private-witness-to-public-pairing-verification-trace"
     },
     {
       "route": "blockchain/impl-hash-commitment",
