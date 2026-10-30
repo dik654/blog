@@ -6795,12 +6795,13 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "prysm-slot-processing": {
-    title: "Prysm slot processing ordered replay 글이 소유하는 범위",
+    title: "Prysm slot processing 순서와 cache 경계 글이 소유하는 범위",
     owns: [
       "현재 slot에서 target slot까지 빈 slot도 빠뜨리지 않는 ordered replay",
-      "Per-slot root backfill과 epoch-boundary trigger의 정확한 실행 순서",
+      "Per-slot root backfill과 state·block root 기록 순서",
+      "Epoch processing·slot 증가·fork upgrade의 정확한 실행 순서",
       "Historical-root ring index와 slot generation을 함께 확인하는 조회 경계",
-      "Replay receipt·full-transition oracle·fork/restart를 포함한 release gate",
+      "시작 slot·latest header root 기반 SkipSlotCache identity와 process-local lifetime",
     ],
     reuses: [
       { label: "BeaconState value·root·fork schema", href: "/cs/blockchain/prysm-beacon-state" },
@@ -6809,9 +6810,9 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "standard", rule: "Slot·epoch 순서는 고정한 Ethereum consensus-spec release/commit·fork·network preset에 귀속한다." },
-      { kind: "primary-source", rule: "Loop·cache·error path는 표시한 Prysm release/SHA의 source snapshot에만 귀속한다." },
-      { kind: "project-measurement", rule: "Empty slot·epoch/fork boundary·reorg·restart에서 full transition의 post-state/root와 일치한 뒤 latency를 비교한다." },
-      { kind: "project-claim", rule: "Target slot 도달을 block validity·canonical head·finality로, ring entry를 영구 archive로 확대하지 않는다." },
+      { kind: "primary-source", rule: "Loop·cache·error path와 repository test는 표시한 Prysm v7.3.1 commit에만 귀속한다." },
+      { kind: "project-measurement", rule: "이 글은 production cache hit rate·latency·장애율을 직접 측정했다고 주장하지 않는다." },
+      { kind: "project-claim", rule: "Target slot 도달을 block validity·canonical head·finality로, ring entry를 영구 archive로, SkipSlotCache를 재시작 가능한 장부로 확대하지 않는다." },
     ],
   },
   "prysm-beacon-db": {
