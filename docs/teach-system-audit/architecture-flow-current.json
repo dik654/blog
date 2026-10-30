@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 722,
+    "dedicatedVisuals": 723,
     "inlineVisuals": 524,
-    "customVisuals": 905,
-    "animatedMechanisms": 525,
+    "customVisuals": 906,
+    "animatedMechanisms": 526,
     "architectureWithoutAnimation": 82,
     "recursiveLocators": 355,
     "codeEvidenceLinked": 223,
@@ -8018,18 +8018,18 @@
     {
       "route": "blockchain/prysm-forkchoice",
       "publicPath": "cs/blockchain/prysm-forkchoice",
-      "title": "Prysm Fork Choice (LMD-GHOST)",
+      "title": "Prysm 가지 선택",
       "sourcePath": "src/pages/articles/ethereum/prysm-forkchoice.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-gossipsub",

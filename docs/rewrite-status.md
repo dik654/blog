@@ -4482,3 +4482,34 @@
   부모 지도 반환이 남습니다. Production build는 8,086개 module, 정적 public route
   2,120개와 no-script 본문 349편을 생성했고 최대 RSS는 약 6.37GB, swap은 0이었습니다.
   공개 배포와 공개 경로 재검증은 다음 단계입니다.
+
+### Prysm 가지 선택 개념 글 로컬 검증 완료 (2026-10-30)
+
+- Fulu slot 353의 justified root J320 아래 A353·B353이 모두 유효한 한 사례를 기준으로 글을
+  다시 구성했습니다. Latest-vote weight A=96·B=80에서 active balance 3,200÷32=100,
+  proposer score 40%인 임시 40이 B에 더해져 B=120이 되고, slot 354에서 boost가 사라지면
+  A=96>B=80으로 head가 다시 바뀌는 순서를 여덟 장면으로 추적합니다. Root와 수치는
+  설명용이며 실제 chain block이나 성능 측정값이 아닙니다.
+- ForkChoice·Store·Node·Vote의 상태 소유권, `ProcessAttestation`의 current·next vote,
+  `updateBalances`의 old/new delta와 회전, timely boost gate, subtree weight, viable
+  best-descendant, `Head`와 `NewSlot`의 호출 순서를 분리했습니다. Head reorg와 finalized
+  checkpoint 이동·prune·Engine VALID 판정도 서로 다른 상태로 표시했습니다.
+- 근거는 Ethereum consensus-specs v1.7.0-beta.4 commit
+  `aa16bb4c156184e9548a997d53efaf2a228a6304`와 OffchainLabs Prysm v7.3.1 commit
+  `96d418cd964b083e37519a9df274030a1beac7db`에 고정했습니다. 본문에서 여는 11개 코드
+  근거는 한국어 의사 코드가 아니라 해당 릴리스의 실제 source이며, 생략 구간만 `// ...`로
+  표시했습니다.
+- 1,440×1,000에서 문서 폭 1,440px, live 시각화 664×753px이고, 390×844에서는 문서 폭
+  390px와 시각화 334×726px입니다. 전체·Boost·Head·Tick 장면에서 상태 숫자와 선택선,
+  설명과 조작부가 겹치지 않았습니다. 모바일 장면 탭의 의도된 8px 내부 스크롤 외 문서
+  가로 넘침과 텍스트 잘림은 없으며 console 오류·경고는 0건입니다.
+- 3.5초 동안 첫 장면이 유지되고 키보드 `ArrowRight` 0→1, `ArrowLeft` 1→0이
+  동작했습니다. Reduced-motion으로 새로 로드하면 실행 중 animation은 0건이고 재생은
+  비활성화되지만 수동 이동은 유지됩니다. JavaScript 비활성 390×844 경로에는 질문,
+  정적 여덟 장면, 전체 본문, 두 공식 근거, 확인 질문과 부모 지도 반환이 남습니다.
+- TypeScript와 production build를 통과했습니다. Build는 8,093개 module, 정적 public
+  route 2,120개와 no-script 본문 355편을 생성했고 최대 RSS는 6,737,870,848 bytes,
+  swap은 0이었습니다. Playwright 세션과 preview 서버는 검증 직후 종료했으며 보호 대상
+  `AutoencoderRoundTripViz.tsx`의 SHA-256은
+  `a76cf06f9042fb7785f152b52d19da42989af146054685063aff41dfe7e29ad9`로 유지됩니다.
+  공개 배포와 공개 경로 재검증은 다음 단계입니다.
