@@ -9540,10 +9540,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Current behavior는 iden3 rapidsnark commit 81eddf1 source에 귀속하며 CUDA backend가 없음을 명시한다." }, { kind: "project-measurement", rule: "Same WTNS/zkey에서 CPU/GPU stage parity·independent verify 뒤 transfer/queue/kernel/sync/end-to-end를 비교한다." }, { kind: "project-claim", rule: "GPU adapter는 desired hardening이며 current rapidsnark feature·fixed speedup으로 표현하지 않는다." }],
   },
   "impl-plonk": {
-    title: "Rust PLONK compiler·transcript·receipt 글이 소유하는 범위",
-    owns: ["Circuit row/key compiler artifact와 prover transcript execution plan", "Proof/key serialization receipt와 implementation release gate"],
+    title: "Rust PLONK Composer·transcript·KZG verifier 글이 소유하는 범위",
+    owns: ["x·y=z를 width-4 Composer rows와 selector·sigma preprocess로 내리는 경로", "v0.22.1 V3 wire·permutation·quotient·opening rounds와 public-input KZG pairing 검증"],
     reuses: [{ label: "PLONK protocol", href: "/cs/crypto/plonk" }, { label: "Polynomial commitment", href: "/cs/crypto/kzg" }],
-    evidence: [{ kind: "primary-source", rule: "Protocol은 ePrint 2019/953, 구현은 dusk-network/plonk commit 768cf84에 귀속한다." }, { kind: "project-measurement", rule: "같은 artifact/key/witness에서 independent verify와 stage/end-to-end를 측정한다." }, { kind: "project-claim", rule: "Pinned implementation을 모든 PLONK 변형·lookup·production security로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Protocol은 ePrint 2019/953, 구현은 dusk-network/plonk v0.22.1 commit b83aba4에 귀속한다." }, { kind: "project-measurement", rule: "3·4=12, 잘못된 z=11과 wrong-public verify 결과는 해당 fixture·Rust 1.93.0·arm64 실행에만 귀속한다." }, { kind: "project-claim", rule: "4-wire·4-quotient·1008-byte proof와 오류 유형을 모든 PLONKish 구현·회로·production security로 확대하지 않는다." }],
   },
   "proofs-snark": {
     title: "Bellperson assignment·dispatch·SupraSeal receipt 글이 소유하는 범위",

@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 541,
+    "animatedMechanisms": 542,
     "architectureWithoutAnimation": 80,
-    "recursiveLocators": 367,
-    "codeEvidenceLinked": 232,
+    "recursiveLocators": 368,
+    "codeEvidenceLinked": 233,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -7417,11 +7417,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/initia-evm",

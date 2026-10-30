@@ -8034,8 +8034,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices · Timing", href: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#timing", note: "Async CUDA timing과 synchronization 방법이며 rapidsnark GPU implementation·speedup 보장은 아님" },
   ],
   "blockchain/impl-plonk": [
-    { kind: "핵심 논문", label: "PLONK · ePrint 2019/953", href: "https://eprint.iacr.org/2019/953", note: "Selector·permutation·polynomial commitment protocol의 원문이며 Rust artifact·lookup·고정 성능 보장은 아님" },
-    { kind: "공식 코드", label: "dusk-network/plonk · commit 768cf84", href: "https://github.com/dusk-network/plonk/tree/768cf849826c85441fdb2346c4640239e7b476f5/src", note: "Compiler/prover/key source snapshot이며 모든 PLONK variant·production security를 대표하지 않음" },
+    { kind: "핵심 논문", label: "PLONK · ePrint 2019/953", href: "https://eprint.iacr.org/2019/953", note: "Selector·permutation·polynomial commitment protocol의 원문이며 Dusk의 4-wire layout·V3 transcript·proof 크기를 규정하지 않음" },
+    { kind: "공식 코드", label: "dusk-network/plonk v0.22.1 · commit b83aba4", href: "https://github.com/dusk-network/plonk/tree/b83aba4fb8a1a86fdff3f5f9e1b71e072260a4bf", note: "Composer·compiler·V3 prover·proof·KZG verifier의 고정 source이며 모든 PLONKish variant·production security를 대표하지 않음" },
   ],
   "crypto/risc0": [
     { kind: "공식 문서", label: "RISC Zero zkVM lifecycle · v3.0.6", href: "https://github.com/risc0/risc0/blob/1cc70cf05033a79ebc90f07c679cb4bd1cd301b9/website/api/zkvm/zkvm-overview.md", note: "Guest ELF→session→receipt→ImageID/journal lifecycle의 pinned 설명이며 고정 성능 보장은 아님" },
