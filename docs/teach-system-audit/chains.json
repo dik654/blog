@@ -749,38 +749,63 @@
     {
       "route": "blockchain/cometbft-execution",
       "title": "CometBFT BlockExecutor: 검증·실행·영속화와 replay",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-execution.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-execution.tsx",
-        "src/pages/articles/blockchain/cometbft-execution/ModernArticle.tsx"
+        "src/pages/articles/blockchain/cometbft-execution/ModernArticle.tsx",
+        "src/pages/articles/blockchain/cometbft-execution/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/cometbft-execution/viz/BlockExecutorTraceViz.tsx",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "stageMarkers": 9,
+        "predictionPointers": 4,
+        "assumptionMarkers": 2,
+        "sourceButtons": 5,
         "headings": [
-          "ApplyBlock은 결정된 block을 검증·실행·영속화하는 orchestration 경계다",
-          "실행 전에 block이 바로 다음 state transition인지 증명한다",
-          "같은 ordered input은 같은 result·validator update·AppHash를 내야 한다",
-          "result를 먼저 저장하고 Commit 뒤 State를 저장해 crash 위치를 판별한다"
+          "결정된 B41을 세 저장 위치에 같은 높이로 남기는 과정을 추적합니다",
+          "B41이 C40 바로 다음에 붙는 block인지 먼저 확인합니다",
+          "Finalize 결과를 먼저 저장하고 다음 State 후보를 계산합니다",
+          "Commit 뒤 crash가 나면 남은 높이 조합으로 재실행 대상을 고릅니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 검증·실행·영속화를 나눠 설명했지만 같은 B41이 block store·Finalize response·node State·application durable state에 어떤 순서로 남는지 한 흐름으로 보여 주지 않았습니다.",
+        "기존 코드 패널은 CometBFT v0.40.0의 실제 source가 아니라 손으로 만든 교육용 state/execution.go와 state/validation.go여서 실제 분기와 저장 순서의 근거로 사용할 수 없었습니다.",
+        "기존 정적 설명은 crash 위치별로 real application replay와 saved-response mock application replay가 갈리는 조건을 상태 변화로 보여 주지 않았습니다."
+      ],
+      "fixture": "높이 40의 CometBFT State C40·application state X40·AppHash A40에서 Alice가 Bob에게 10을 보내는 transaction이 든 결정된 B41을 검증하고, Finalize response R41과 A41을 계산·저장한 뒤 application X41과 node State C41을 영속화하며 crash 뒤 남은 높이 조합으로 replay 대상을 고르는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "합의가 결정한 B41은 block store에 있지만 CometBFT State와 application durable state는 아직 C40·X40·A40입니다.",
+        "1": "Block.ValidateBasic이 B41 내부 형식과 hash 관계를 먼저 검사합니다.",
+        "2": "validateBlock이 C40을 기준으로 version·chain·height·LastBlockID·AppHash·validator commitment·commit·time·evidence를 대조합니다.",
+        "3": "FinalizeBlock이 B41을 X40 위에 실행해 transaction별 결과와 update, A41을 포함한 R41을 memory에 계산합니다.",
+        "4": "CometBFT가 R41을 application Commit 전에 StateStore에 저장해 재시작 때 결과를 복구할 durable receipt를 남깁니다.",
+        "5": "updateState가 C41 후보를 계산하지만 AppHash는 비워 두며 validator update h+2와 consensus parameter update h+1 적용 높이를 기록합니다.",
+        "6": "Mempool connection을 잠그고 flush한 뒤 application Commit이 X41·A41을 영속화하고 비동기 mempool Update를 시작합니다.",
+        "7": "R41.AppHash를 C41 후보에 넣어 node State C41을 저장한 뒤 pruning과 event 발행을 시도합니다.",
+        "8": "재시작 handshake가 block·response·node State·application height를 비교해 실제 application replay, saved-response mock replay 또는 정상 진행을 선택합니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 state/validation.go validateBlock과 BlockExecutor validation 경로",
+        "같은 commit의 state/execution.go ApplyBlock·FinalizeBlock response 저장·updateState·Commit·mempool Update·StateStore 저장 구현",
+        "같은 commit의 consensus/replay.go BlockStore·StateStore·application height와 AppHash 조합별 real/mock replay 분기"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 commit의 block validation, ApplyBlock, Commit, updateState, replay 분기를 읽고 손으로 만든 축약 code snapshot을 실제 원문의 제어 흐름 발췌로 교체했습니다. 긴 오류 문구·로그와 주변 분기를 생략했다는 범위도 각 코드 패널에 명시했습니다.",
+        "arithmetic": "B41 Header가 실행 결과 A41이 아니라 이전 A40을 가져야 하는 한 높이 지연, validator update h+2, consensus parameter update h+1, C41 후보의 nil AppHash와 Commit 뒤 A41 대입을 두 수식과 같은 fixture로 맞췄습니다. 성능 수치는 측정하지 않았습니다.",
+        "humanize": "한 질문과 C40·X40·A40·B41·R41 사례를 먼저 보여 준 뒤 구조 검사→연속성 검사→결과 계산→response 저장→State 계산→application Commit→node State 저장→replay 순서로 설명했습니다. 한국어·문장 호흡·용어 strict 감사가 통과했습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 첫 장면과 가장 긴 재시작 판정 장면의 live UI 높이는 각각 약 732px·755px이고 하단 조작 아이콘까지 한 화면에 보이며 console 오류는 0건입니다.",
+        "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 7.2초 동안 첫 장면이 유지됐고 장면 2 클릭 뒤 group focus와 ArrowRight로 장면 3에 이동했습니다. 고정 source code sidebar 열기·닫기와 console 오류 0건을 확인했습니다.",
+        "reducedMotion": "Reduced-motion을 켜면 재생 버튼이 비활성화되고 7.2초 뒤에도 첫 장면이 유지됩니다.",
+        "resource": "TypeScript 검사는 8GB heap에서 최대 RSS 6,315,524,096 bytes, 최종 production build는 최대 RSS 6,342,180,864 bytes였으며 둘 다 swap 0으로 직렬 실행했습니다. Playwright 세션과 preview는 이름과 session ID로만 종료했습니다.",
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 382편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 질문·고정 commit 근거·부모 지도 반환이 남고 live 조작 UI는 없는 것을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-decided-block-through-validation-finalize-persistence-and-height-based-crash-replay-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-mempool",

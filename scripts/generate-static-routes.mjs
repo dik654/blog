@@ -419,6 +419,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/cometbft-types",
   "blockchain/cometbft-consensus",
   "blockchain/cometbft-abci",
+  "blockchain/cometbft-execution",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",
