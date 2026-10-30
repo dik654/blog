@@ -4397,7 +4397,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/graphrag-community-and-multihop-search": "bd317ddb459c472d",
   "ai/model-vram-budgeting": "c6b1e28dd71284c2",
   "ai/xml-prompting": "b85fd33e70670be0",
-  "blockchain/cometbft-abci": "e01d405674622a43",
+  "blockchain/cometbft-abci": "403ed94492c92ae4",
   "blockchain/cometbft": "a65dbaeed4fb45a2",
   "blockchain/cometbft-consensus": "2df72b80a2ae2b63",
   "blockchain/da-theory": "960f47b88c2342b7",

@@ -78,11 +78,11 @@ export const cosmosArticles: Article[] = [
     sections: [
       {
         id: "overview",
-        title: "ABCI++는 합의 엔진과 애플리케이션의 상태 전이를 분리한다",
+        title: "B41 후보에서 durable h41까지",
       },
-      { id: "abci-client", title: "ABCI 클라이언트 (gRPC · 소켓 · 로컬)" },
-      { id: "prepare-process", title: "PrepareProposal & ProcessProposal" },
-      { id: "finalize-commit", title: "FinalizeBlock & Commit" },
+      { id: "abci-client", title: "네 논리 연결과 상태 view" },
+      { id: "prepare-process", title: "후보 구성과 판정" },
+      { id: "finalize-commit", title: "결정 실행·영속화·replay" },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-abci"),
   },

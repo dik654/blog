@@ -13,20 +13,15 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 });
 
 export const cometbftAbciTree: FileNode = d("cometbft", [
-  d("internal/state", [
+  d("state", [
     f(
       "execution.go — BlockExecutor",
-      "internal/state/execution.go",
+      "state/execution.go",
       "create-proposal-block",
     ),
   ]),
   d("proxy", [
-    f("app_conn.go — AppConns (4개 연결)", "proxy/app_conn.go", "app-conns"),
-    f(
-      "app_conn_consensus.go — 합의 프록시",
-      "proxy/app_conn_consensus.go",
-      "proxy-prepare",
-    ),
+    f("multi_app_conn.go — 4개 연결", "proxy/multi_app_conn.go", "app-conns"),
   ]),
   d("abci", [
     d("types", [

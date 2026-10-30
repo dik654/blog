@@ -587,7 +587,7 @@
     {
       "route": "blockchain/cometbft-abci",
       "title": "CometBFT ABCI: PrepareProposal → FinalizeBlock → Commit",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-abci.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-abci.tsx",
@@ -595,34 +595,56 @@
         "src/pages/articles/blockchain/cometbft-abci/FinalizeCommit.tsx",
         "src/pages/articles/blockchain/cometbft-abci/Overview.tsx",
         "src/pages/articles/blockchain/cometbft-abci/PrepareProcess.tsx",
-        "src/pages/articles/blockchain/cometbft-core-viz.tsx"
+        "src/pages/articles/blockchain/cometbft-abci/viz/CometBFTAbciLifecycleViz.tsx",
+        "src/pages/articles/blockchain/cometbft-abci/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 18,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 7,
         "headings": [
-          "ABCI client는 transport adapter이면서 연결별 state ordering의 경계다",
-          "FinalizeBlock은 결정된 state를 계산하고 Commit은 그 state를 durable하게 만든다",
-          "ABCI++는 합의 엔진과 application이 후보·결정·영속화를 구분하는 protocol이다",
-          "PrepareProposal은 선택하고 ProcessProposal은 모든 correct node가 같은 후보를 판정한다"
+          "B41이 후보에서 durable state가 되는 한 높이를 추적합니다",
+          "네 연결은 같은 application을 보지만 맡은 상태가 다릅니다",
+          "Prepare는 후보를 만들고 Process는 같은 후보를 판정합니다",
+          "Finalize는 S41을 계산하고 Commit은 S41을 영속화합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 ABCI method를 나눠 설명했지만 같은 B41의 block store·Finalize response·node State와 candidate·ExecuteTx·durable state가 언제 어긋나고 다시 맞는지 이어 주지 않았습니다.",
+        "기존 코드 패널은 실제 v0.40.0 source처럼 보이는 손수 만든 축약 snapshot이어서 연결별 client와 BlockExecutor 저장 순서의 근거가 불명확했습니다.",
+        "기존 공통 시각화는 ACCEPT·AppHash·Commit이 서로 다른 완료 증거라는 점과 crash 뒤 남은 기록에 따른 replay 분기를 보여 주지 않았습니다."
+      ],
+      "fixture": "높이 40의 S40·A40과 mempool transaction 세 건에서 proposer가 만료 건을 빼고 두 건을 재배열해 B41을 만들고, validator가 ACCEPT한 뒤 합의가 B41을 결정하며, FinalizeBlock의 S41·A41 계산과 response 저장·Commit·재시작 대조까지 이어지는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "Block store·Finalize response·node State와 application ExecuteTx·durable state가 모두 h40에서 일치합니다.",
+        "1": "PrepareProposal이 세 transaction 중 만료 건을 빼고 두 건을 재배열해 B41 후보와 격리된 candidate C(B41)를 만듭니다.",
+        "2": "각 validator의 ProcessProposal이 같은 S40과 B41로 결정적인 ACCEPT를 반환하지만 정본 S40은 바꾸지 않습니다.",
+        "3": "+2/3 precommit으로 B41이 결정되고 block store에 남지만 application의 실행·영속 상태는 아직 h40입니다.",
+        "4": "FinalizeBlock이 결정된 B41을 권위 있게 실행해 S41·TxResults·validator/parameter updates·A41을 계산합니다.",
+        "5": "CometBFT가 FinalizeBlock response를 application Commit보다 먼저 저장해 crash 뒤 재실행 결과를 대조할 기록을 남깁니다.",
+        "6": "Commit이 application S41을 먼저 영속화하고 반환 뒤 CometBFT가 A41을 포함한 node State h41을 저장합니다.",
+        "7": "재시작 handshake가 application Info와 block·response·node State 높이를 비교해 다음 높이로 가거나 FinalizeBlock·Commit을 재생합니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 spec/abci/abci++_methods.md와 abci++_app_requirements.md",
+        "같은 commit의 proxy/multi_app_conn.go·proxy/app_conn.go·abci/types/application.go·abci/client/local_client.go·state/execution.go 실제 구현"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 commit의 PrepareProposal·ProcessProposal·FinalizeBlock·Commit 요구사항과 BlockExecutor 저장 순서·네 logical connection·local client locking을 읽고 손으로 만든 code snapshot을 실제 원문 발췌로 교체했습니다.",
+        "arithmetic": "상태 첨자를 S_h=F(S_{h-1},B_h), A_h=C(S_h)로 바로잡고 B41 실행 결과 A41이 B42 header에 들어가는 한 높이 지연을 본문·수식·연습문제에서 같은 표기로 맞췄습니다.",
+        "humanize": "한 질문과 한 B41 사례를 먼저 보여 준 뒤 여섯 상태 owner→후보 구성·판정→결정 실행→저장·영속화→replay 순서로 설명했습니다. 길었던 8개 문단을 의미 단위로 나눠 한국어·문장 호흡 strict 오류를 0건으로 만들었습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 첫 장면과 가장 긴 재시작 장면 모두 하단 제어 아이콘까지 한 화면에 들어오며 7초 동안 자동 진행하지 않았습니다.",
+        "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 수동 장면 1→2, group focus 뒤 ArrowRight로 2→3, 고정 source code sidebar와 Escape 닫기, console 오류 0건을 확인했습니다.",
+        "reducedMotion": "390×844에서 reduced-motion을 켜면 재생 버튼이 비활성화되고 7초 뒤에도 첫 장면이 유지됩니다.",
+        "resource": "기본 4GB Node heap TypeScript 검사는 최대 RSS 약 4.48GB에서 OOM이 났고, 8GB heap으로 직렬 재실행해 최대 RSS 약 6.46GB로 통과했습니다. Vite build 최대 RSS 약 4.52GB, 정적 생성 약 1.60GB였으며 다른 고부하 단계를 겹치지 않았습니다.",
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 381편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 8개, live UI·버튼 0개, 질문·부모 지도 반환·고정 commit 근거 노출을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-block-from-candidate-through-finalize-commit-and-crash-replay-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-consensus",

@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import CometBFTCoreViz from "../cometbft-core-viz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -11,13 +10,29 @@ export default function PrepareProcess({
 }) {
   return (
     <section id="prepare-process" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">PrepareProposal은 선택하고 ProcessProposal은 모든 correct node가 같은 후보를 판정한다</h2>
+      <h2 className="mb-6 text-2xl font-bold">Prepare는 후보를 만들고 Process는 같은 후보를 판정합니다</h2>
+      <div className="not-prose mb-6 grid gap-px bg-border p-px sm:grid-cols-2" aria-label="PrepareProposal과 ProcessProposal의 입력과 출력 비교">
+        <div className="bg-background p-4">
+          <span className="text-[9px] font-black text-primary">PROPOSER · PREPARE</span>
+          <p className="mt-2 break-keep text-sm font-bold leading-6">raw [T지급, T만료, T스테이킹]</p>
+          <p className="mt-2 text-xs leading-5 text-muted-foreground">필터·추가·재배열 가능 → [T스테이킹, T지급]</p>
+          <p className="mt-3 border-t border-border pt-3 text-xs font-bold">출력: B41에 넣을 transaction bytes</p>
+        </div>
+        <div className="bg-background p-4">
+          <span className="text-[9px] font-black text-primary">ALL VALIDATORS · PROCESS</span>
+          <p className="mt-2 break-keep text-sm font-bold leading-6">같은 S40 + 같은 B41</p>
+          <p className="mt-2 text-xs leading-5 text-muted-foreground">node-local clock·randomness·remote API 제외</p>
+          <p className="mt-3 border-t border-border pt-3 text-xs font-bold">출력: 모두 같은 ACCEPT 또는 REJECT</p>
+        </div>
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Proposer application은 mempool candidate에서 transaction을 제거·재배치하거나 새 bytes를 넣을 수 있지만 응답의
-          총 transaction bytes가 request의 <code>max_tx_bytes</code>를 넘지 않게 해야 합니다. 이 구성은 local state나
-          policy에 따라 달라질 수 있어 deterministic일 필요가 없습니다. 반면 다른 validator가 같은 proposal bytes와
-          같은 committed state를 검사하는 ProcessProposal은 ACCEPT/REJECT가 갈리지 않도록 deterministic해야 합니다.
+          Proposer application은 raw proposal에서 T만료를 빼고 T스테이킹을 앞으로 옮기거나 새로운 transaction을 추가할 수 있습니다.
+          이 선택은 node-local policy를 사용할 수 있어 결정적일 필요가 없습니다. 다만 반환한 transaction bytes의 합은
+          <code>max_tx_bytes</code>를 넘으면 안 됩니다.
+        </p>
+        <p>
+          반대로 validator들이 같은 B41과 S40을 검사하는 ProcessProposal은 ACCEPT와 REJECT가 갈리지 않도록 결정적이어야 합니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -25,16 +40,7 @@ export default function PrepareProcess({
           label="CreateProposalBlock"
           onClick={() => onCodeRef("create-proposal-block", codeRefs["create-proposal-block"])}
         />
-        <CodeViewButton
-          label="proxy · PrepareProposal"
-          onClick={() => onCodeRef("proxy-prepare", codeRefs["proxy-prepare"])}
-        />
-        <CodeViewButton
-          label="localClient · PrepareProposal"
-          onClick={() => onCodeRef("local-prepare", codeRefs["local-prepare"])}
-        />
       </div>
-      <CometBFTCoreViz mode="abci" />
       <ExplainedFormula
         question="Correct validator 둘이 같은 proposal을 받았을 때 왜 같은 판정을 내야 할까요?"
         idea={<>판정 함수의 입력을 committed state, proposal bytes, protocol context로 닫고 local clock·randomness·remote API처럼 node마다 달라지는 값을 제거합니다.</>}
@@ -57,27 +63,30 @@ export default function PrepareProcess({
           label="ProcessProposal"
           onClick={() => onCodeRef("process-proposal", codeRefs["process-proposal"])}
         />
-        <CodeViewButton
-          label="proxy · ProcessProposal"
-          onClick={() => onCodeRef("proxy-process", codeRefs["proxy-process"])}
-        />
-        <CodeViewButton
-          label="localClient · ProcessProposal"
-          onClick={() => onCodeRef("local-process", codeRefs["local-process"])}
-        />
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Coherence는 proposer 자신도 검사 대상이라는 뜻입니다</h3>
+        <h3>정상 proposer가 만든 B41은 정상 validator가 받아들여야 합니다</h3>
         <p>
-          정상 proposer가 PrepareProposal로 만든 candidate는 correct validator의 ProcessProposal에서 ACCEPT돼야
-          progress합니다. Proposer에서도 ProcessProposal이 호출될 수 있고 failure 상황에서는 이전 invocation의 candidate가 도착하거나 호출이
-          아예 없기도 합니다. “Prepare 직후 Process가 정확히 한 번 이어진다”는 local call sequence에 state correctness를 의존하면 안 됩니다.
+          공식 요구사항은 correct proposer가 준비한 proposal을 correct receiver가 ProcessProposal에서 ACCEPT하도록 요구합니다. 같은 버그를
+          많은 validator가 공유하면 모두 nil에 prevote해 liveness가 깨질 수 있기 때문입니다.
         </p>
-        <h3>Candidate execution은 cache이지 commit이 아닙니다</h3>
         <p>
-          Prepare/Process에서 block을 미리 실행해 FinalizeBlock을 빠르게 만들 수 있지만 각 candidate state는 block hash로 격리합니다. 여러
-          round candidate를 덮어쓰지 않고 decided block과 일치하는 결과만 FinalizeBlock에서 승격하며 나머지는 안전하게 폐기합니다. External side
-          effect는 candidate path에서 실행하지 않습니다.
+          Proposer 자신도 ProcessProposal을 호출할 수 있지만, failure 상황에서는 이전 Prepare 결과가 도착하거나 Process가 호출되지 않을 수도
+          있습니다. 따라서 “Prepare 직후 Process가 정확히 한 번 온다”는 순서에 correctness를 의존하면 안 됩니다.
+        </p>
+        <h3>Candidate state는 block hash로 격리한 cache입니다</h3>
+        <p>
+          Prepare나 Process에서 B41을 미리 실행하면 FinalizeBlock을 빠르게 끝낼 수 있습니다. 그러나 한 height에서 여러 round와 proposal이 생길 수
+          있으므로 각 candidate를 block hash로 격리하고 메모리 상한을 둬야 합니다.
+        </p>
+        <p>
+          결정된 block과 같은 candidate만 FinalizeBlock에서 ExecuteTxState로 승격하며, 이미 버렸다면 다시 실행합니다. Candidate path는
+          durable S40을 덮어쓰거나 외부 side effect를 실행하면 안 됩니다.
+        </p>
+        <h3>REJECT는 단순한 validation 오류가 아니라 합의 입력입니다</h3>
+        <p>
+          Validator가 REJECT를 반환하면 CometBFT는 그 proposal 대신 nil에 prevote합니다. 일부 node만 다른 값을 반환하면 quorum 형성이 늦어지거나
+          멈출 수 있습니다. 판정 함수에서 wall clock, 순서가 고정되지 않은 iteration, node별 configuration, remote service 응답을 빼야 하는 이유입니다.
         </p>
       </div>
     </section>

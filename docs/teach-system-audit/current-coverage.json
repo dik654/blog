@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 723,
-    "pending": 284,
+    "reviewed": 724,
+    "pending": 283,
     "untracked": 0,
-    "assignedPending": 242,
+    "assignedPending": 241,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4633,9 +4633,9 @@
       "publicPath": "cs/blockchain/cometbft-abci",
       "title": "CometBFT ABCI: PrepareProposal → FinalizeBlock → Commit",
       "catalogIndex": 460,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
