@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { cosmosArticles } from "@/content/blockchain/articlesCosmos";
+import { sortArticlesForReading } from "@/content/subcategory-navigation";
 
 const PARENT_HREF = "/cs/blockchain?sub=cosmos-core";
-const coreArticles = cosmosArticles.filter((article) => article.subcategory === "cosmos-core");
+const coreArticles = sortArticlesForReading(
+  { slug: "blockchain" },
+  cosmosArticles.filter((article) => article.subcategory === "cosmos-core"),
+);
 
 export default function CosmosCoreLocator({
   currentSlug,

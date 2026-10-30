@@ -12,20 +12,17 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const cometbftP2PTree: FileNode = d("cometbft", [
+export const cometbftP2PTree: FileNode = d("cometbft @ 0880b4d3", [
   d("p2p", [
     d("conn", [
-      f(
-        "connection.go — MConnection · sendRoutine · recvRoutine",
-        "p2p/conn/connection.go",
-        "mconn-struct",
-      ),
+      f("connection.go — queue · scheduler · framing", "p2p/conn/connection.go", "send-queue"),
     ]),
-    f(
-      "switch.go — Switch · AddReactor · DialPeersAsync",
-      "p2p/switch.go",
-      "switch-struct",
-    ),
-    f("peer.go — Peer · Send · TrySend", "p2p/peer.go", "peer-struct"),
+    f("transport.go — SecretConnection · NodeInfo handshake", "p2p/transport.go", "transport-handshake"),
+    f("switch.go — channel owner · peer lifecycle", "p2p/switch.go", "channel-owner"),
+    f("peer.go — Envelope marshal · Reactor dispatch", "p2p/peer.go", "receive-dispatch"),
+    f("base_reactor.go — Reactor interface", "p2p/base_reactor.go", "channel-owner"),
+  ]),
+  d("mempool", [
+    f("reactor.go — channel 0x30 · Receive · CheckTx", "mempool/reactor.go", "mempool-receive"),
   ]),
 ]);
