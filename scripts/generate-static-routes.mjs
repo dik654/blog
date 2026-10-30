@@ -409,6 +409,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/impl-hash-commitment",
   "blockchain/impl-groth16",
   "blockchain/impl-plonk",
+  "blockchain/dydx",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

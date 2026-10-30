@@ -9270,10 +9270,10 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "dydx": {
-    title: "dYdX protocol/v9.6.3 CLOB·settlement 글이 소유하는 범위",
+    title: "dYdX protocol/v9.7.1 CLOB·settlement 글이 소유하는 범위",
     owns: ["Short-term/stateful order persistence와 proposer match validation", "Risk settlement와 rebuildable indexer projection 경계"],
     reuses: [{ label: "CometBFT proposal authority", href: "/cs/blockchain/cometbft-abci#prepare-process" }, { label: "Cosmos SDK state branch", href: "/cs/blockchain/cosmos-sdk#baseapp" }],
-    evidence: [{ kind: "primary-source", rule: "Order flag·MemClob·match/risk·indexer semantics는 dYdX protocol/v9.6.3 source에 귀속한다." }, { kind: "project-measurement", rule: "같은 orders·oracle·subaccounts에서 operations/state/events parity와 duplicate/out-of-order indexer replay를 검사한다." }, { kind: "project-claim", rule: "Local book·proposer operation·indexer API를 global fairness·committed fill·consensus receipt로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Order flag·Prepare/ProcessProposal·FinalizeBlock operation·indexer semantics는 dYdX protocol/v9.7.1 source에 귀속한다." }, { kind: "project-measurement", rule: "공식 x/clob/types와 app/process test 통과만 측정 사실로 기록하고 실제 validator settlement 성능으로 확대하지 않는다." }, { kind: "project-claim", rule: "Local book·proposal ACCEPT·indexer API를 global fairness·committed fill·consensus receipt로 확대하지 않는다." }],
   },
   "iroh": {
     title: "Iroh endpoint·ALPN·path selection 글이 소유하는 범위",

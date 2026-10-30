@@ -5961,9 +5961,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "blockchain/dydx": [
-    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — OrderId", href: "https://github.com/dydxprotocol/v4-chain/blob/protocol/v9.6.3/protocol/x/clob/types/order_id.go", note: "Short-term·stateful·conditional/TWAP flags, state key와 deterministic sort contract" },
-    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — CLOB", href: "https://github.com/dydxprotocol/v4-chain/tree/protocol/v9.6.3/protocol/x/clob", note: "MemClob·proposed operations·match/risk processing의 pinned implementation" },
-    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — Indexer", href: "https://github.com/dydxprotocol/v4-chain/tree/protocol/v9.6.3/indexer", note: "Versioned chain event에서 rebuildable query projection으로 이어지는 source boundary" },
+    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.7.1 — OrderId", href: "https://github.com/dydxprotocol/v4-chain/blob/5935cb7c5dd684b17836e75093fc5c3ca5019ea3/protocol/x/clob/types/order_id.go", note: "Short-term·stateful·conditional·TWAP flags와 deterministic sort contract" },
+    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.7.1 — proposal·CLOB", href: "https://github.com/dydxprotocol/v4-chain/tree/5935cb7c5dd684b17836e75093fc5c3ca5019ea3/protocol", note: "PrepareProposal·ProcessProposal·ProposedOperations 실행을 분리한 pinned implementation" },
+    { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.7.1 — Indexer events", href: "https://github.com/dydxprotocol/v4-chain/tree/5935cb7c5dd684b17836e75093fc5c3ca5019ea3/protocol/indexer", note: "Versioned chain event에서 rebuildable query projection으로 이어지는 source boundary" },
   ],
   "blockchain/cometbft-execution": [
     { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/execution.go", note: "ApplyBlock·FinalizeBlock·result 저장·Commit·mempool Update·State 저장의 pinned 순서" },
