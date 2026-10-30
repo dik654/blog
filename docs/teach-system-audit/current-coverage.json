@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 702,
-    "pending": 305,
+    "reviewed": 703,
+    "pending": 304,
     "untracked": 0,
-    "assignedPending": 263,
+    "assignedPending": 262,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5291,11 +5291,11 @@
     {
       "route": "blockchain/prysm-state-cache",
       "publicPath": "cs/blockchain/prysm-state-cache",
-      "title": "Prysm 상태 캐시: Hot/Cold 전략",
+      "title": "Prysm 상태 재구성",
       "catalogIndex": 526,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

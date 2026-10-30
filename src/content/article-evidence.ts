@@ -5773,15 +5773,15 @@ export const ARTICLE_EVIDENCE: Readonly<
     PRYSM_SERIES_EVIDENCE,
     {
       kind: "공식 구현",
-      label: "OffchainLabs/prysm — beacon-chain/state/stategen",
-      href: "https://github.com/OffchainLabs/prysm/tree/develop/beacon-chain/state/stategen",
-      note: "선택한 source snapshot의 state lookup·summary·ordered replay seam",
+      label: "OffchainLabs Prysm v7.3.1 — state generation",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/state/stategen",
+      note: "고정 release의 cache 크기·copy, block-root 조회, summary·ancestor 탐색, replay·저장 경계",
     },
     {
       kind: "공식 규격",
-      label: "Ethereum Consensus Specifications",
-      href: "https://ethereum.github.io/consensus-specs/",
-      note: "Fork별 BeaconState·slot/block/epoch transition과 state-root postcondition",
+      label: "Ethereum consensus-specs @ aa16bb4c — state transition",
+      href: "https://github.com/ethereum/consensus-specs/tree/aa16bb4c156184e9548a997d53efaf2a228a6304/specs",
+      note: "Fork별 BeaconState의 per-slot·epoch·block transition과 일반 검증 계약",
     },
   ),
   "blockchain/prysm-sync": withSeriesEvidence(

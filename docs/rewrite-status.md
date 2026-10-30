@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Prysm 상태 재구성 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-state-cache`를 target block root `0x105…`의 post-state를 찾는 한 호출로 다시 썼습니다. Hot LRU 32·epoch-boundary FIFO 8·DB full-state 조회, target summary, 같은 branch의 ancestor state 100, block `[102, 105]` replay와 신뢰 경계를 여덟 장면으로 연결했습니다.
+- OffchainLabs Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 Ethereum consensus-specs commit `aa16bb4c156184e9548a997d53efaf2a228a6304`를 고정했습니다. `StateSummary`에는 target slot·root만 있고 anchor나 replay path가 없으며, `blocksAncestryQuery`가 descendant→parent로 모은 배열을 reverse해 과거→현재 순서로 반환함을 source로 대조했습니다.
+- State 100→102의 per-slot 2회와 102→105의 3회로 slot step은 5회, stored block transition은 2회입니다. 이는 호출 횟수이지 latency·I/O 측정값이 아닙니다. 일반 cache get은 Copy를 반환하지만 NoCopy는 read-only shared object이며, initial sync의 mutable 경로는 별도 예외입니다.
+- `SaveState`는 epoch-start state를 epoch FIFO에 먼저, persistent summary를 다음, hot cache를 마지막에 넣습니다. State-generation replay는 이미 검증되어 저장된 block을 전제로 signature와 post-state root 비교를 반복하지 않습니다. Cache hit를 canonicality·head·finality로 확대하지 않았습니다.
+- 1,440×1,000에서 document 폭 1,440=1,440, article 711px, live 시각화 664×743px이며 가로 넘침과 console 오류가 없습니다. 390×844에서는 document/body 폭 390=390, figure 354×808px, live 시각화 338.5×531.5px이며 전체 상태 지도와 조작부가 한 화면 높이에 들어옵니다.
+- 6초 동안 장면 0이 유지되고 ArrowRight로 0→1, 수동으로 순서·Replay·신뢰 경계 장면을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건입니다. Source dialog의 첫 초점, body scroll lock, Tab trap, Escape 닫기와 opener focus 반환도 확인했습니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사, ESLint와 `git diff --check`를 통과했습니다. Production build는 8,103개 module, 정적 public route 2,120개와 no-script 본문 359편을 만들었고 최대 RSS는 6,600,998,912 bytes, swap은 0입니다. JavaScript 비활성 390×844 경로도 HTTP 200, 가로 넘침 0, live 영역 숨김, 정적 8장면·전체 본문·확인 질문·부모 지도 반환을 확인했습니다. 전수 장부는 검토 703편·미검토 304편이며 공개 배포 검증만 남아 있습니다.
+
 ### Prysm BeaconDB 로컬 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-beacon-db`를 설명용 slot 64의 경쟁 Block A `0x8a…31`과 Block B `0x2f…b9`가 저장·조회·정리되는 한 사례로 다시 썼습니다. 입력, transaction 밖 준비, block·index commit, root/slot 조회, 별도 state/checkpoint commit, cache 경계와 historical pruning을 여덟 장면으로 연결했습니다.

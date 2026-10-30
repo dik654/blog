@@ -32,7 +32,7 @@ export default function VizFrame({
     >
       <figcaption className="mb-5 px-1">
         <p className="text-xs font-bold text-primary">{eyebrow}</p>
-        <h3 className="mt-2 text-lg font-bold leading-7 text-foreground">{title}</h3>
+        <h3 data-toc-ignore className="mt-2 text-lg font-bold leading-7 text-foreground">{title}</h3>
         {description && (
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
             {description}

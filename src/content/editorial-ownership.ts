@@ -6837,13 +6837,14 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "prysm-state-cache": {
-    title: "Prysm state retrieval·cache 글이 소유하는 범위",
+    title: "Prysm state retrieval·replay 글이 소유하는 범위",
     owns: [
-      "Root·slot·fork/schema를 함께 고정하는 state identity와 cache-generation receipt",
-      "Hot state의 immutable return·copy boundary와 cache/DB/replay lookup order",
-      "State summary에서 anchor와 ordered slot/block replay plan을 만드는 경계",
-      "Replay distance·transition cost와 cold-state retention trade-off",
-      "Reorg·corruption·restart를 포함한 state-cache parity release gate",
+      "Block root가 그 block의 post-state를 식별하는 StateByRoot 계약",
+      "Hot LRU·epoch-boundary FIFO·DB·replay의 실제 lookup 순서",
+      "일반 Copy 반환과 read-only NoCopy 공유의 state 소유권 경계",
+      "StateSummary의 목표 metadata와 parent-root 기반 ancestor 탐색의 분리",
+      "Ancestry block의 역방향 수집·reverse·slot/block transition 순서",
+      "Epoch cache·summary DB·hot cache 저장 순서와 stored-block replay의 검증 생략 경계",
     ],
     reuses: [
       { label: "BeaconState value·Copy-on-Write·incremental root", href: "/cs/blockchain/prysm-beacon-state" },
@@ -6852,10 +6853,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Finalized checkpoint와 weak-subjectivity anchor", href: "/cs/blockchain/prysm-finality" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Cache·stategen·DB path와 copy/replay behavior는 표시한 Prysm release 또는 git SHA에만 귀속한다." },
-      { kind: "standard", rule: "State transition·root·finality 전제는 고정한 consensus-spec commit·fork·network preset에 귀속한다." },
-      { kind: "project-measurement", rule: "같은 root/slot/fork fixture에서 full transition oracle과 bytes/root parity를 먼저 확인한 뒤 hit rate·replay p95·memory를 비교한다." },
-      { kind: "project-claim", rule: "Cache hit를 canonical head·finality로, pruning을 historical evidence 전체 삭제로, 평균 hit rate를 모든 workload의 지연으로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Cache 크기·copy·lookup·summary·ancestor·replay·save 동작은 Prysm v7.3.1 commit 96d418cd에만 귀속한다." },
+      { kind: "standard", rule: "Per-slot·epoch·block transition 전제는 consensus-spec commit aa16bb4c에 귀속한다." },
+      { kind: "project-measurement", rule: "실제 cache alias, DB corruption, replay latency와 장애 빈도는 이 글에서 측정하지 않았다." },
+      { kind: "project-claim", rule: "Cache hit를 canonical head·finality로, StateSummary를 anchor/path로, state-generation replay를 새 block validator로 확대하지 않는다." },
     ],
   },
   "prysm-beacon-api": {

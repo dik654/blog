@@ -42,7 +42,7 @@ function extractSections(root: HTMLElement): Section[] {
       if (!id) return;
 
       const subs: { id: string; title: string }[] = [];
-      sec.querySelectorAll<HTMLElement>("h3").forEach((h3) => {
+      sec.querySelectorAll<HTMLElement>("h3:not([data-toc-ignore])").forEach((h3) => {
         const text = h3.textContent?.trim();
         if (!text) return;
         const headingId = assignUniqueId(h3, `${id}-${toSlug(text)}`);
@@ -56,7 +56,7 @@ function extractSections(root: HTMLElement): Section[] {
       });
     });
   } else {
-    const headings = root.querySelectorAll<HTMLElement>("h2, h3");
+    const headings = root.querySelectorAll<HTMLElement>("h2, h3:not([data-toc-ignore])");
     let current: Section | null = null;
     headings.forEach((el) => {
       const title = el.textContent?.trim() ?? "";

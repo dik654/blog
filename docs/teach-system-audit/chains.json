@@ -5377,43 +5377,70 @@
     },
     {
       "route": "blockchain/prysm-state-cache",
-      "title": "Prysm 상태 캐시: Hot/Cold 전략",
-      "status": "unreviewed",
+      "title": "Prysm 상태 재구성",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-state-cache.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/prysm-data-api-viz.tsx",
         "src/pages/articles/ethereum/prysm-state-cache.tsx",
-        "src/pages/articles/ethereum/prysm-state-cache/ColdArchive.tsx",
-        "src/pages/articles/ethereum/prysm-state-cache/HotState.tsx",
-        "src/pages/articles/ethereum/prysm-state-cache/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-state-cache/StateSummary.tsx"
+        "src/pages/articles/ethereum/prysm-state-cache/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-state-cache/PrysmStateCacheLocator.tsx",
+        "src/pages/articles/ethereum/prysm-state-cache/viz/PrysmStateCacheFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-state-cache/codeRefsStateCache.ts",
+        "src/pages/articles/ethereum/prysm-state-cache/fileTrees.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 5,
+        "stageMarkers": 8,
+        "predictionPointers": 7,
+        "assumptionMarkers": 3,
+        "sourceButtons": 9,
         "headings": [
-          "Retention은 cache eviction이 아니라 복구 가능성을 설계하는 일이다",
-          "Hot state는 immutable view 또는 소유권이 분리된 clone으로 반환합니다",
-          "State cache는 state를 빨리 찾는 장치이지, state의 정당성을 결정하는 장치가 아니다",
-          "Summary는 state가 아니라 anchor와 replay path를 찾는 metadata다"
+          "없는 state를 어디서부터 다시 만드는가",
+          "조회 순서",
+          "누가 state를 소유하는가",
+          "Summary는 경로가 아니다",
+          "같은 branch의 시작 state",
+          "Block 순서",
+          "Replay",
+          "다음 조회를 위한 저장",
+          "검증을 반복하지 않는 이유",
+          "실패하면 어디서 멈추는가"
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "case": "target block root 0x105(slot105), parent blocks 102/100, stored post-state100; hot32 miss, epoch8 miss, DB full-state miss; replay [102,105] with 5 slot steps and 2 block transitions"
+      },
+      "stageEvidence": {
+        "parent": "locator: Prysm node map에서 BeaconDB 다음, Beacon API 이전의 state generation 위치를 표시",
+        "question": "overview: block root만 있을 때 대응 post-state를 어디서부터 다시 만드는가",
+        "case": "case: target105→parent102→stored state100 한 branch를 끝까지 고정",
+        "picture": "8장면: 전체→조회→Copy→Summary→Ancestor→순서→Replay→신뢰 경계",
+        "mechanism": "lookup/copy/summary/ancestor/order/replay/save/trust/failure를 실제 함수 경계로 추적",
+        "evidence": "Prysm v7.3.1 commit 96d418cd와 consensus-specs aa16bb4c에 고정",
+        "return": "state generation의 입력 identity·copy 경계·replay 비용·신뢰 전제를 부모 지도와 Beacon API 선수 지식으로 반환"
+      },
+      "sourceEvidence": [
+        {
+          "source": "OffchainLabs Prysm v7.3.1 @ 96d418cd: stategen cache/getter/setter/replay, DB block ancestry, transition without signature verification",
+          "application": "hot32·epoch8 조회, Copy/NoCopy, summary와 ancestor 분리, reverse된 block 순서, SaveState 호출 순서, stored-block replay trust boundary"
+        },
+        {
+          "source": "Ethereum consensus-specs @ aa16bb4c",
+          "application": "per-slot·epoch·block transition의 프로토콜 기준과 구현 전용 fast path의 경계를 구분"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Prysm v7.3.1의 StateByRoot, latestAncestor, blocksAncestryQuery, replayBlocks, SaveState, ProcessBlockForStateRoot를 고정 commit에서 대조했습니다. Summary에 anchor/path가 없고, replay.go의 descending 주석과 실제 reverse 반환 순서가 다르며, cache generation field가 없음을 확인했습니다.",
+        "arithmetic": "State100→slot102의 per-slot 2회와 slot102→105의 3회로 slot step 5회, stored block102·105 적용 2회입니다. Hot LRU 최대 32, epoch-boundary FIFO 최대 8은 고정 source 상수입니다.",
+        "humanize": "직속 부모 지도, 질문 하나, target105 한 사례, 조회→소유권→metadata→ancestor→순서→replay→저장→신뢰→실패와 부모 지도 반환으로 다시 구성했습니다. 영문 직역 대신 state·block처럼 코드 식별에 필요한 용어만 유지했습니다.",
+        "browser390": "390×844에서 document/body 폭 390=390, figure 354×808px, live 시각화 338.5×531.5px이며 가로 넘침이 없습니다. 6초 동안 장면 0 유지, ArrowRight 0→1, 수동 장면 5·7, reduced-motion에서 실행 animation 0건을 확인했습니다. JavaScript 비활성 production 경로는 HTTP 200, 폭 390=390이며 live 영역을 숨기고 정적 8장면·전체 본문·확인 질문·부모 지도 반환을 표시합니다.",
+        "browser1440": "1440×1000에서 document 폭 1440=1440, article 711px, live 시각화 664×743px이며 가로 넘침이 없습니다. 코드 대화상자의 초기 초점·body scroll lock·Tab trap·Escape 닫기·opener focus 반환과 console 오류 0건을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,103개 module, 정적 public route 2,120개와 no-script 본문 359편을 만들었습니다. 최대 RSS는 6,600,998,912 bytes이며 swap은 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-block-root-cache-miss-ancestor-replay-trust-boundary"
     },
     {
       "route": "blockchain/prysm-sync",
