@@ -1,41 +1,26 @@
-// beacon-chain/rpc/service.go — Start + registerServices (prysm v5.x)
-
-// Start initializes the gRPC server and REST gateway.
-// gRPC 서버를 시작하고 Beacon API 서비스들을 등록한다.
-func (s *Service) Start() {
-	address := fmt.Sprintf("%s:%d", s.cfg.Host, s.cfg.Port)
-	lis, err := net.Listen("tcp", address)
-	if err != nil {
-		log.WithError(err).Fatal("Could not listen")
+// Prysm v7.3.1 commit 96d418cd의 구조를 보존한 학습용 핵심 발췌입니다.
+// REST endpoint 목록을 Go ServeMux에 직접 등록합니다.
+endpoints := s.endpoints(
+	s.cfg.EnableDebugRPCEndpoints,
+	blocker,
+	stater,
+	rewardFetcher,
+	validatorServer,
+	coreService,
+	ch,
+)
+for _, e := range endpoints {
+	for i := range e.methods {
+		s.cfg.Router.HandleFunc(
+			fmt.Sprintf("%s %s", e.methods[i], e.template),
+			e.handlerWithMiddleware(),
+		)
 	}
-	// gRPC 서버 옵션: 인터셉터, 최대 메시지 크기
-	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(s.unaryInterceptor),
-		grpc.StreamInterceptor(s.streamInterceptor),
-		grpc.MaxRecvMsgSize(s.cfg.MaxMsgSize),
-	}
-	s.grpcServer = grpc.NewServer(opts...)
-	// 각 도메인별 gRPC 서비스 등록
-	s.registerServices()
-	// gRPC-gateway: HTTP REST → gRPC 자동 변환
-	if s.cfg.EnableHTTPApi {
-		go s.startHTTPServer(address)
-	}
-	// gRPC 서버 시작
-	go func() {
-		if err := s.grpcServer.Serve(lis); err != nil {
-			log.WithError(err).Error("gRPC server failed")
-		}
-	}()
 }
 
-// registerServices registers all gRPC service implementations.
-// 비콘 체인, 검증자, 노드, 디버그 등 도메인별 핸들러 등록
-func (s *Service) registerServices() {
-	ethpb.RegisterBeaconChainServer(s.grpcServer, s.beaconChainServer)
-	ethpb.RegisterNodeServer(s.grpcServer, s.nodeServer)
-	ethpb.RegisterValidatorServer(s.grpcServer, s.validatorServer)
-	ethpb.RegisterBeaconDebugServer(s.grpcServer, s.debugServer)
-	// 헬스체크 서비스
-	grpc_health.RegisterHealthServer(s.grpcServer, s.healthServer)
-}
+// gRPC service는 같은 process 안에 있지만 별도로 등록합니다.
+ethpbv1alpha1.RegisterNodeServer(s.grpcServer, nodeServer)
+ethpbv1alpha1.RegisterHealthServer(s.grpcServer, nodeServer)
+ethpbv1alpha1.RegisterBeaconChainServer(s.grpcServer, beaconChainServer)
+ethpbv1alpha1.RegisterBeaconNodeValidatorServer(s.grpcServer, validatorServer)
+reflection.Register(s.grpcServer)

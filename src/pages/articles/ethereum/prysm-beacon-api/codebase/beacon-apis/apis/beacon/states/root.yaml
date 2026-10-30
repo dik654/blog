@@ -1,0 +1,30 @@
+# Ethereum Beacon APIs v4.0.0 commit 88fc9402의 핵심 발췌입니다.
+get:
+  operationId: getStateRoot
+  summary: Get state SSZ HashTreeRoot
+  parameters:
+    - name: state_id
+      in: path
+      required: true
+  responses:
+    "200":
+      content:
+        application/json:
+          schema:
+            required: [execution_optimistic, finalized, data]
+            properties:
+              data:
+                required: [root]
+                properties:
+                  root:
+                    description: HashTreeRoot of BeaconState object
+              execution_optimistic:
+                type: boolean
+              finalized:
+                type: boolean
+    "400":
+      description: Invalid state ID
+    "404":
+      description: State not found
+    "500":
+      description: Internal error
