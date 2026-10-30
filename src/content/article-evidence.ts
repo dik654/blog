@@ -5626,9 +5626,21 @@ export const ARTICLE_EVIDENCE: Readonly<
     PRYSM_SERIES_EVIDENCE,
     {
       kind: "공식 규격",
-      label: "Ethereum Consensus Specifications — BeaconState",
-      href: "https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/beacon-chain.md",
-      note: "fork별 protocol state schema·transition과 hash-tree-root의 정본",
+      label: "Ethereum consensus-specs v1.6.1 — BeaconState",
+      href: "https://github.com/ethereum/consensus-specs/tree/5fa6edcca8ab4cf548653e6680b17b9d3e04d225",
+      note: "고정한 release의 fork별 state schema·transition·upgrade와 SSZ root 규칙",
+    },
+    {
+      kind: "공식 구현",
+      label: "OffchainLabs Prysm v7.3.1 — native state",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/state",
+      note: "Copy·multi-value balance·dirty index·FieldTrie·HashTreeRoot를 확인한 release",
+    },
+    {
+      kind: "공식 구현",
+      label: "OffchainLabs Prysm v7.3.1 — state tests",
+      href: "https://github.com/OffchainLabs/prysm/blob/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/state/state-native/state_test.go",
+      note: "Incremental balance root와 full list root parity를 확인하는 source test",
     },
   ),
   "blockchain/prysm-block-processing": withSeriesEvidence(

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 693,
-    "pending": 314,
+    "reviewed": 694,
+    "pending": 313,
     "untracked": 0,
-    "assignedPending": 272,
+    "assignedPending": 271,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5135,7 +5135,7 @@
       "catalogIndex": 510,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5145,17 +5145,17 @@
       "catalogIndex": 511,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/prysm-beacon-state",
       "publicPath": "cs/blockchain/prysm-beacon-state",
-      "title": "Prysm BeaconState 구조 & 상태 접근",
+      "title": "Prysm BeaconState: Copy에서 State Root까지",
       "catalogIndex": 512,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

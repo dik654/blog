@@ -482,6 +482,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Ethereum consensus-specs v1.6.1 commit 5fa6edcc, Prysm v7.3.1 commit 96d418cd와 BLST v0.3.16 commit e7f90de5를 고정합니다. Zero domain·scalar 42·산출 bytes는 설명용 fixture이며 BLS PASS를 consensus state validity나 대상 환경 처리량으로 확대하지 않습니다.",
   },
+  "blockchain/prysm-beacon-state": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Parent state A를 B로 복사하고 balance index 5 하나를 바꾸는 같은 사례가 state ID별 값 격리, dirty field·element, SSZ chunk, field root와 state root로 이어집니다. Fork upgrade는 같은 root를 해석하는 schema 경계를 닫습니다. 절은 11개지만 이 경로를 나누면 값 소유권과 commitment parity의 관계를 반복해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.6.1 commit 5fa6edcc와 Prysm v7.3.1 commit 96d418cd를 고정합니다. 32 ETH→31 ETH와 R₀·R₁은 설명용 fixture이며 incremental root의 처리량·메모리 절감이나 대상 환경 배포 판단으로 확대하지 않습니다.",
+  },
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
@@ -4269,6 +4278,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/webcat-frontend-integrity": "cc3625638a4e0c2b",
   "blockchain/prysm-ssz": "c2a4f98ee687d361",
   "blockchain/prysm-bls": "c3786ab1bbf27a0c",
+  "blockchain/prysm-beacon-state": "8ac0ebe70f904cca",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "f9d422015c3b8c7a",

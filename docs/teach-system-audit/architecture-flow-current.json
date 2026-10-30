@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 720,
+    "dedicatedVisuals": 721,
     "inlineVisuals": 525,
-    "customVisuals": 903,
-    "animatedMechanisms": 521,
+    "customVisuals": 904,
+    "animatedMechanisms": 522,
     "architectureWithoutAnimation": 82,
-    "recursiveLocators": 350,
+    "recursiveLocators": 351,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 16
@@ -7906,18 +7906,18 @@
     {
       "route": "blockchain/prysm-beacon-state",
       "publicPath": "cs/blockchain/prysm-beacon-state",
-      "title": "Prysm BeaconState 구조 & 상태 접근",
+      "title": "Prysm BeaconState: Copy에서 State Root까지",
       "sourcePath": "src/pages/articles/ethereum/prysm-beacon-state.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-block-processing",
