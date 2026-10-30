@@ -935,38 +935,60 @@
     {
       "route": "blockchain/cometbft-state",
       "title": "CometBFT state: State · BlockStore · state sync · replay",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-state.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-state.tsx",
-        "src/pages/articles/blockchain/cometbft-state/ModernArticle.tsx"
+        "src/pages/articles/blockchain/cometbft-state/ModernArticle.tsx",
+        "src/pages/articles/blockchain/cometbft-state/viz/ModernStateViz.tsx",
+        "src/pages/articles/blockchain/cometbft-state/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 8,
+        "stageMarkers": 9,
+        "predictionPointers": 5,
+        "assumptionMarkers": 4,
+        "sourceButtons": 6,
         "headings": [
-          "‘state’ 하나가 아니라 다음 block을 검증할 여러 durable receipt가 있다",
-          "현재 결과와 다음 height의 검증 입력을 한 snapshot에 연결한다",
-          "block 원본, part와 commit index는 replay와 증거 보존의 재료다",
-          "snapshot 복원과 trusted header 검증, local crash replay를 섞지 않는다"
+          "높이 42의 잔액 변경을 한 번만 반영하며 재시작합니다",
+          "저장 순서가 복구 가능한 한 칸 차이를 만듭니다",
+          "Handshaker는 높이 조합마다 replay owner를 바꿉니다",
+          "새 node의 state sync는 로컬 crash replay와 다른 문제입니다"
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "fixture": "B42에 alice→bob 10 transaction T1이 들어 있고 BlockStore B42·Finalize response F42·State S41·application A42가 남은 Commit 뒤 State 저장 전 crash를 추적합니다.",
+      "stageEvidence": {
+        "B42 저장": "BlockStore.SaveBlock으로 block bytes·parts·seen commit을 먼저 동기 저장합니다.",
+        "F42 저장": "SaveFinalizeBlockResponse가 application Commit 전에 height 42 response를 State Store DB에 남깁니다.",
+        "A42 Commit": "Application이 T1 effect와 AppHash X42를 자체 DB에 영속화합니다.",
+        "State 저장 전 종료": "S41만 뒤에 남아 B=S+1, A=B인 허용 crash cut을 만듭니다.",
+        "ABCI Info": "Handshaker가 application height 42와 AppHash X42를 별도로 읽습니다.",
+        "높이 분류": "app≤block과 state≤block≤state+1 guard로 recovery case를 고릅니다.",
+        "F42 복구": "LoadLastFinalizeBlockResponse가 저장된 receipt height 42를 확인합니다.",
+        "State만 재구성": "newMockProxyApp(F42)로 application을 다시 mutate하지 않고 S42를 저장합니다.",
+        "높이 43 재개": "S42와 A42의 AppHash가 X42로 같을 때만 handshake를 완료합니다."
+      },
+      "sourceEvidence": [
+        "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/consensus/replay.go",
+        "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/execution.go",
+        "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/store.go",
+        "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/statesync/syncer.go"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 content commit에서 block 저장→Finalize response 저장→application Commit→State 저장 순서, ReplayBlocksWithContext guard·branch, State Sync의 AppHash·height·version 검증과 Bootstrap을 직접 읽고 손으로 만든 snapshot 코드를 실제 제어 흐름 발췌로 교체했습니다.",
+        "arithmetic": "(Hb,Hs,Ha)=(42,41,42)에서 gs=1, ga=0을 계산하고 app≤block·state≤block≤state+1 guard와 B=S+1·A=B mock replay branch에 연결했습니다. 성능 수치는 측정하지 않았습니다.",
+        "humanize": "B42의 alice→bob 10 한 건을 BlockStore·F42·S41·A42로 먼저 보여 준 뒤 저장 owner, height guard, mock replay, state sync 순서로 설명했습니다. 기존 release gate와 pruning 운영 과제는 개념 글에서 제거했습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 가장 긴 9번 장면의 live UI는 top을 맞춘 뒤 하단 조작부까지 844px 안에 들어오고, ArrowLeft로 8번 장면으로 이동하며 console 오류는 0건입니다.",
+        "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지되었고 group focus와 ArrowRight로 2번 장면에 이동했습니다. 고정 source code sidebar를 열고 Escape로 닫았으며 console 오류는 0건입니다.",
+        "reducedMotion": "390×844 reduced-motion 환경에서 재생 버튼이 disabled이고 aria-label이 'State 복구 단계 재생 꺼짐'으로 남습니다. 8초 뒤에도 첫 장면이 유지되고 console 오류는 0건입니다.",
+        "resource": "Production build는 Node heap을 해당 command에만 8GB로 제한해 직렬 실행했고 최대 RSS는 6,747,848,704 bytes, swap은 0이었습니다. Playwright는 한 번에 이름 붙은 세션 하나만 열고 각 검증 뒤 정확한 세션을 닫았습니다.",
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 385편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 B42·F42·S41·A42, 정적 장면 9개, 수식, 부모 지도 반환이 남고 console 오류는 0건임을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-crash-cut-through-durable-receipts-height-guards-mock-replay-and-state-sync-trust-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-types",
