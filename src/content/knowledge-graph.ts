@@ -11052,13 +11052,21 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition: "Parent와 정렬된 fork-specific pre-state에 signed beacon block을 deterministic하게 적용해 post-state를 만들고 block의 state_root commitment와 SSZ hash-tree-root가 같은지 확인하는 전이 계약입니다.",
     canonicalHref: "/cs/blockchain/prysm-block-processing#overview",
   },
+  "prysm-block-parallel-validation-boundary": {
+    id: "prysm-block-parallel-validation-boundary",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Prysm block parallel validation boundary",
+    definition: "같은 received block에 대해 consensus state transition과 Engine payload 판정을 서로 다른 goroutine에서 실행하되, 두 결과가 모두 끝난 뒤 post-state와 execution-validity 상태를 함께 다음 단계로 넘기는 Prysm의 검증 경계입니다.",
+    canonicalHref: "/cs/blockchain/prysm-block-processing#parallel-validation",
+  },
   "beacon-block-processing-order": {
     id: "beacon-block-processing-order",
     kind: "concept",
     domain: "distributed-systems",
     label: "Fork-specific beacon block processing order",
     definition: "Block header·withdrawals/execution·RANDAO·operations·sync aggregate 같은 handler가 앞 단계에서 갱신한 candidate state를 다음 단계가 소비하도록 활성 consensus fork의 executable-spec 순서를 보존하는 계약입니다.",
-    canonicalHref: "/cs/blockchain/prysm-block-processing#overview",
+    canonicalHref: "/cs/blockchain/prysm-block-processing#consensus-transition",
   },
   "beacon-block-header-randao-transition": {
     id: "beacon-block-header-randao-transition",
@@ -11066,7 +11074,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Beacon header·RANDAO transition",
     definition: "Slot·parent root·expected proposer와 domain-separated RANDAO reveal을 검증한 뒤 reveal hash를 epoch mix에 XOR해 block identity와 randomness contribution을 state에 결합하는 전이입니다.",
-    canonicalHref: "/cs/blockchain/prysm-block-processing#process-block",
+    canonicalHref: "/cs/blockchain/prysm-block-processing#consensus-transition",
   },
   "beacon-operation-bounded-sequence": {
     id: "beacon-operation-bounded-sequence",
@@ -11082,7 +11090,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Beacon execution-payload consistency",
     definition: "Execution payload의 parent·timestamp·prevRandao·withdrawals/blob/request commitment를 consensus state와 대조하고 Engine payload status를 별도 evidence로 연결하는 fork-specific 검증 경계입니다.",
-    canonicalHref: "/cs/blockchain/prysm-block-processing#execution-payload",
+    canonicalHref: "/cs/blockchain/prysm-block-processing#engine-status",
   },
   "beacon-block-state-root-postcondition": {
     id: "beacon-block-state-root-postcondition",
@@ -11090,7 +11098,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Beacon block state-root postcondition",
     definition: "모든 block handler가 끝난 candidate BeaconState의 full SSZ hash-tree-root가 signed block message에 commitment된 state_root와 정확히 같아야 transition을 accept하는 postcondition입니다.",
-    canonicalHref: "/cs/blockchain/prysm-block-processing#overview",
+    canonicalHref: "/cs/blockchain/prysm-block-processing#proof",
+  },
+  "prysm-block-optimistic-admission": {
+    id: "prysm-block-optimistic-admission",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Prysm execution-optimistic block admission",
+    definition: "Consensus transition과 data availability를 통과했지만 Engine이 SYNCING 또는 ACCEPTED를 반환한 block을 optimistic fork-choice 후보로 보존하고, 후속 VALID면 표시를 해제하며 INVALID면 latestValidHash 뒤의 suffix를 제거하는 수렴 과정입니다.",
+    canonicalHref: "/cs/blockchain/prysm-block-processing#admission",
   },
   "prysm-block-transition-release-gate": {
     id: "prysm-block-transition-release-gate",
@@ -11098,7 +11114,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Prysm block-transition release gate",
     definition: "고정한 spec fork·pre-state·signed block·Engine response에서 invalid header/signature/operation/payload, root mismatch와 crash를 주입하고 reject·post-state/root·optimistic marker parity 뒤 성능을 비교하는 채택 계약입니다.",
-    canonicalHref: "/cs/blockchain/prysm-block-processing#execution-payload",
+    canonicalHref: "/cs/blockchain/prysm-block-processing#admission",
   },
   "beacon-epoch-boundary-trigger": {
     id: "beacon-epoch-boundary-trigger",
@@ -47276,6 +47292,18 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason: "Deterministic post-state를 만들려면 활성 fork가 정의한 handler order를 보존해야 합니다.",
   },
   {
+    from: "beacon-block-pre-post-state-contract",
+    to: "prysm-block-parallel-validation-boundary",
+    relation: "extends",
+    reason: "Prysm은 consensus post-state 계산과 같은 block의 Engine payload 판정을 병렬 경로로 나눈 뒤 합칩니다.",
+  },
+  {
+    from: "prysm-block-parallel-validation-boundary",
+    to: "beacon-block-processing-order",
+    relation: "constrains",
+    reason: "외부 판정 경로는 병렬화해도 consensus working state 안의 handler mutation 순서는 그대로 보존합니다.",
+  },
+  {
     from: "bls-signing-root-domain-separation",
     to: "beacon-block-header-randao-transition",
     relation: "prerequisite",
@@ -47328,6 +47356,18 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "prysm-block-transition-release-gate",
     relation: "evaluates",
     reason: "VALID·SYNCING·INVALID와 optimistic descendant reconciliation을 paired fixture로 검사합니다.",
+  },
+  {
+    from: "beacon-execution-payload-consistency",
+    to: "prysm-block-optimistic-admission",
+    relation: "produces",
+    reason: "Engine의 SYNCING·ACCEPTED 결과는 consensus-valid block을 execution-optimistic 후보로 남기는 근거가 됩니다.",
+  },
+  {
+    from: "prysm-block-optimistic-admission",
+    to: "prysm-block-transition-release-gate",
+    relation: "evaluates",
+    reason: "후속 VALID 표시 해제와 INVALID suffix 제거가 같은 payload identity에서 수렴하는지 release fixture로 검사합니다.",
   },
   {
     from: "beacon-epoch-boundary-trigger",

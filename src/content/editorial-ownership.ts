@@ -6615,7 +6615,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Prysm consensus/execution owner 경계", href: "/cs/blockchain/prysm" },
       { label: "Reth execution client의 Engine owner", href: "/cs/blockchain/reth" },
-      { label: "Beacon block의 execution payload 적용", href: "/cs/blockchain/prysm-block-processing#execution-payload" },
+      { label: "Beacon block의 execution payload 적용", href: "/cs/blockchain/prysm-block-processing#engine-status" },
     ],
     evidence: [
       { kind: "standard", rule: "Method version·status·latestValidHash·payloadId·JWT claim은 고정한 execution-apis commit과 active execution fork에 귀속한다." },

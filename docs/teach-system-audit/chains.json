@@ -4686,41 +4686,71 @@
     {
       "route": "blockchain/prysm-block-processing",
       "title": "Prysm 블록 처리 & 상태 전환",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-block-processing.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-block-processing.tsx",
-        "src/pages/articles/ethereum/prysm-block-processing/ExecutionPayload.tsx",
-        "src/pages/articles/ethereum/prysm-block-processing/Operations.tsx",
-        "src/pages/articles/ethereum/prysm-block-processing/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-block-processing/ProcessBlock.tsx"
+        "src/pages/articles/ethereum/prysm-block-processing/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-block-processing/PrysmBlockProcessingLocator.tsx",
+        "src/pages/articles/ethereum/prysm-block-processing/viz/PrysmBlockProcessingFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-block-processing/codeRefs.ts",
+        "src/pages/articles/ethereum/prysm-block-processing/fileTrees.ts",
+        "src/content/prysm-block-processing-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 7,
         "headings": [
-          "Execution payload handler는 consensus state와 EL 판정을 같은 block에 결합한다",
-          "Operations는 각기 다른 권한과 상한을 가진 순서 있는 list다",
-          "Block processing은 signed block을 parent state에 적용해 하나의 post-state를 만드는 함수다",
-          "Header와 RANDAO는 block을 parent·proposer·epoch randomness에 묶는다"
+          "Slot 352의 Fulu 블록은 어떻게 검증되어 optimistic 후보가 됩니까?",
+          "입력",
+          "병렬 검증",
+          "Consensus Transition",
+          "Operations",
+          "Proof",
+          "Engine Status",
+          "후보 등록",
+          "근거",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 header·operation·execution payload를 별도 절로 설명해 같은 signed block이 consensus·execution·data availability 경계를 지나 fork-choice 후보가 되는 한 흐름을 추적하기 어려웠습니다.",
+        "CL의 local payload 문맥 검사와 EL의 transaction·EVM 실행 판정, 후보 등록과 head 선택이 구분되지 않았습니다.",
+        "Prysm v7.3.1의 consensus·Engine 병렬 경계, Fulu handler 순서, optimistic 등록과 INVALID 후손 제거를 실제 release 코드로 바로 확인할 수 없었습니다."
+      ],
+      "fixture": "Slot processing을 마친 Fulu state.slot=352와 parent header 351, proposer 17인 signed block 352를 설명용 입력으로 둡니다. Consensus와 data availability는 통과하고 Engine은 SYNCING을 반환합니다. 번호와 status 조합은 흐름을 추적하기 위한 fixture이며 실제 chain block이나 지연 측정값이 아닙니다.",
+      "stageEvidence": {
+        "input": "Block processing은 state를 다시 slot 352로 전진시키지 않고 이미 준비된 pre-state와 같은 slot의 signed block을 받습니다.",
+        "parallel": "Prysm v7.3.1 validateExecutionAndConsensus가 consensus transition과 engine_newPayloadV4를 errgroup의 독립 goroutine으로 실행한 뒤 둘의 결과를 합칩니다.",
+        "consensus": "Fulu의 pre-Gloas 경로는 header, withdrawals·payload 문맥, RANDAO, Eth1 data, fork별 operations, sync aggregate 순서로 같은 working state를 바꿉니다.",
+        "operations": "Fulu는 Electra operation 경로를 재사용하며 slashings·attestations·deposits·exits·BLS change 뒤 execution requests를 deposit→withdrawal→consolidation 순서로 적용합니다.",
+        "proof": "HTR(T_Fulu(S_352,B_352))를 block.state_root와 비교하고 BLS signature batch와 data availability를 별도 경계로 확인합니다.",
+        "engine": "Deneb payload와 execution requests가 있는 Fulu block은 engine_newPayloadV4로 전달됩니다. VALID만 확정 성공이며 SYNCING·ACCEPTED는 아직 판정하지 못한 상태입니다.",
+        "admission": "SYNCING 사례는 execution-optimistic fork-choice 후보로 InsertNode됩니다. 이후 VALID면 optimistic 표시를 해제하고 INVALID면 latestValidHash를 기준으로 block과 영향을 받은 후손을 제거합니다.",
+        "boundary": "후보 등록은 head 선택이나 finality가 아닙니다. Fork-choice와 Engine API 전체 계약은 각각 다음 전용 글이 소유합니다."
+      },
+      "sourceEvidence": [
+        "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c156184e9548a997d53efaf2a228a6304의 Fulu block transition, operation 순서와 SSZ state-root commitment",
+        "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db의 ReceiveBlock 병렬 경계, ordered handlers, signature batch, InsertNode·optimistic·invalid pruning 구현",
+        "Ethereum Execution APIs v1.0.0-beta.7 commit 5aebdfdd45cadeb723be4bd45b4611b71c8b1c85의 engine_newPayloadV4 입력과 VALID·SYNCING·ACCEPTED·INVALID status 계약"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 consensus-specs·Prysm·Execution APIs의 고정 release를 다시 읽어 input→병렬 검증→ordered transition→operations→root·signature·DA→Engine status→optimistic 후보 등록의 한 사례로 전면 재작성했습니다.",
+        "arithmetic": "설명용 slot 352와 32-slot epoch의 경계 관계, HTR(post-state)=block.state_root의 비교 입력, SYNCING→isValidPayload=false→optimistic 후보라는 상태 전이를 확인했습니다. 처리 시간·throughput은 측정하지 않았습니다.",
+        "humanize": "직속 부모와 현재 영역, 질문 하나, 한 fixture, 여덟 장면, 실제 함수·수식·실패 경계, 확인 질문과 부모 지도 반환으로 구성했습니다. 긴 문단 세 곳을 문맥 단위로 나눠 prose 신규 재검토 0건이 됐고 한국어·용어·읽기 순서 감사를 통과했습니다.",
+        "browser390": "390×844 production 렌더에서 여덟 장면의 고정 frame·control 위치, 문서와 시각화 가로 넘침 0, 장면 끝 도달 가능, console 오류 0을 확인했습니다. 중간 병렬 장면과 마지막 등록 장면을 별도로 캡처해 글자 겹침과 상태 흐름을 확인했습니다.",
+        "browser1440": "1,440×1,000 production 렌더에서 여덟 장면 버튼, 입력·병렬 검증·output, 네 consensus 단계, 상태 변화·설명·조작부가 한 frame에 들어오며 가로·세로 잘림과 console 오류가 없음을 확인했습니다.",
+        "interaction": "첫 장면이 1.8초 동안 자동 진행되지 않고 ArrowRight 0→1, ArrowLeft 1→0으로 이동했습니다. reduced-motion에서도 첫 장면이 유지됐습니다.",
+        "noJavaScript": "JavaScript 비활성 390×844 정적 경로에서 정적 읽기 본문과 여덟 장면 label이 모두 보이고 문서 가로 넘침이 없음을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192에서 tsc -b와 production build를 통과했습니다. TypeScript 최대 RSS는 6,238,142,464 bytes, build 최대 RSS는 6,363,807,744 bytes이며 둘 다 swap은 0입니다. 정적 public route는 2,120개, no-script 본문은 353편입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-slot352-parallel-consensus-engine-da-optimistic-admission-boundary"
     },
     {
       "route": "blockchain/prysm-block-proposal",
@@ -4869,7 +4899,7 @@
     {
       "route": "blockchain/prysm-epoch-processing",
       "title": "Prysm 에폭 처리: 보상, 패널티, 레지스트리",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-epoch-processing.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-epoch-processing.tsx",
@@ -4926,11 +4956,10 @@
         "humanize": "직속 부모, 질문 하나, slot 351 fixture, 여덟 장면, 실제 함수 순서·수식·queue·실패 경계, 확인 질문과 부모 지도 반환으로 다시 구성했습니다. 설명용 한글 주석 pseudocode와 v7.3.1 실제 source excerpt를 분리했고 ko-natural·한국어·용어·읽기 순서 감사를 통과했습니다.",
         "browser390": "390×844 production 렌더에서 모바일 장면 하나만 표시하고 문서 가로 넘침 0, 장면별 고정 높이, 44px 이상 조작부, 무자동재생과 키보드 이동을 확인했습니다. 상단 내비게이션을 포함해 설명·상태 변화·조작부가 첫 화면 안에 들어오도록 장면 영역의 빈 높이를 줄였습니다.",
         "browser1440": "1440×1000 production 렌더에서 문서 폭과 8개 장면 버튼, 입력·dispatch·출력 경계, 5단계 pipeline, 상태 변화·설명·조작부가 한 화면 안에 들어옵니다. Finality 장면과 source sidebar, 가로 넘침 0, console 오류·경고 0을 확인했습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 /usr/bin/time -l npm run build를 통과해 8,090개 module과 정적 public route 2,120개를 만들었습니다. no-script 본문은 352편이고 최대 RSS는 5,740,363,776 bytes, swap은 0입니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 /usr/bin/time -l npm run build를 통과해 8,090개 module과 정적 public route 2,120개를 만들었습니다. no-script 본문은 352편이고 최대 RSS는 5,740,363,776 bytes, swap은 0입니다.",
+        "production": "Commit e6fd6013의 GitHub Pages run 41003092025에서 정적 감사, production build, 공개 1,007편의 데스크톱·모바일 브라우저 전수 검사와 배포가 모두 통과했습니다. 공개 경로를 1,440×1,000과 390×844에서 다시 열어 HTTP 200, 장면 렌더, 가로 넘침 0, console 오류 0을 확인했습니다. reduced-motion에서는 첫 장면이 유지됐고 JavaScript 비활성 공개 경로에는 정적 읽기 본문이 표시됐습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-slot351-fork-finality-accounting-queue-rotation-boundary"
     },
     {
