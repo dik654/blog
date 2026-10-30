@@ -12,20 +12,16 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const prysmTree: FileNode = d("prysm", [
-  d("beacon-chain/forkchoice/doubly-linked-tree", [
-    f(
-      "store.go — UpdateJustifiedCheckpoint()",
-      "forkchoice/store.go",
-      "update-justified",
-    ),
-    f("store.go — Prune()", "forkchoice/store.go", "prune-finalized"),
+export const prysmTree: FileNode = d("prysm v7.3.1 · 96d418cd", [
+  d("beacon-chain/core/epoch/precompute", [
+    f("justification_finalization.go — bits", "core/epoch/precompute/justification_finalization.go", "finality-bits"),
+    f("justification_finalization.go — checkpoints", "core/epoch/precompute/justification_finalization.go", "finality-checkpoints"),
+    f("justification_finalization.go — state write", "core/epoch/precompute/justification_finalization.go", "finality-state-write"),
   ]),
-  d("beacon-chain/core/epoch", [
-    f(
-      "epoch_processing.go — ProcessJustificationAndFinalization()",
-      "core/epoch/epoch_processing.go",
-      "weak-subjectivity",
-    ),
+  d("beacon-chain/forkchoice/doubly-linked-tree", [
+    f("forkchoice.go + store.go — finalized prune", "forkchoice/doubly-linked-tree/finality", "forkchoice-finality-prune"),
+  ]),
+  d("beacon-chain/blockchain", [
+    f("weak_subjectivity_checks.go — verifier", "blockchain/weak_subjectivity_checks.go", "weak-subjectivity-verifier"),
   ]),
 ]);

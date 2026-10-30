@@ -6566,7 +6566,7 @@ export const EDITORIAL_BOUNDARIES = {
       "3W≥2T 정수 supermajority 판정과 justification-bit update",
       "Epoch-gap finalization pattern과 1/3 accountable-safety overlap bound",
       "Finalized fork-choice prune와 historical evidence retention의 owner 분리",
-      "Weak-subjectivity checkpoint 신뢰·만료·bootstrap과 crash-safe release gate",
+      "Weak-subjectivity checkpoint의 외부 trust와 Prysm local finalized-chain 검증 분리",
     ],
     reuses: [
       { label: "Prysm state·head·finality evidence 분리", href: "/cs/blockchain/prysm" },
@@ -6577,7 +6577,6 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "standard", rule: "Checkpoint·attestation·justification/finalization·weak-subjectivity 규칙은 고정한 Ethereum consensus-spec commit·fork·preset에 귀속한다." },
       { kind: "primary-source", rule: "Prysm epoch/fork-choice/prune 구현과 storage 동작은 표시한 release·SHA 범위에만 귀속한다." },
-      { kind: "project-measurement", rule: "Exact-threshold·duplicate·skipped epoch·conflict·prune crash·expired checkpoint fixture의 state/head parity를 먼저 검사한다." },
       { kind: "project-claim", rule: "Finality를 data availability·영구 archive·application success로 확대하거나 예시 weak-subjectivity 기간을 protocol 상수로 쓰지 않는다." },
     ],
   },

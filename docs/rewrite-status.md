@@ -3,6 +3,21 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Prysm Finality 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-finality`를 current epoch 11, 갱신 전 current justified checkpoint epoch 10, old bits `0001`, current target participation 64/96 한 사례로 다시 썼습니다. Unique effective balance, 정수 2/3 경계, `0001→0010→0011`, epoch 10 finalization, fork-choice prune와 weak-subjectivity local verification을 여덟 장면으로 연결했습니다.
+- Ethereum consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. 기존의 합성 구현 코드를 없애고 target participation balance, bit shift, checkpoint 선택, state write, fork-choice prune와 verifier의 실제 source excerpt를 분리했습니다.
+- `3×64=2×96=192`, `3×63=189<192`, 충돌 quorum의 `64+64−96=32`를 확인했습니다. 새 current justified checkpoint는 epoch 11이지만 finalization pattern이 고르는 값은 갱신 전 epoch 10 checkpoint라는 상태 순서를 시각화했습니다.
+- 1,440×1,000, 1,024×768, 390×844 production 렌더에서 가로 넘침과 console 오류·경고가 없습니다. 12초 동안 장면 0이 유지됐고 키보드로 0→4→6→7을 이동했습니다. Reduced-motion에서는 장면 0과 0.000001초 duration을 확인했습니다.
+- JavaScript 비활성 390×844 정적 경로에는 live 장면과 조작부 없이 정적 여덟 장면, 전체 본문, 근거·확인 질문과 부모 지도 반환이 남습니다. Finality route를 정적 읽기 목록에 등록해 no-script 본문은 356편입니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. 전체 build는 8,094개 module과 정적 public route 2,120개를 만들었고 최대 RSS는 6,749,650,944 bytes, swap은 0입니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
+### Prysm Fork Choice 공개 검증 완료 (2026-10-30)
+
+- Commit `f2c5da18`의 GitHub Pages run `41012220043`이 전체 정적 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포를 통과했습니다.
+- 공개 `blockchain/prysm-forkchoice`를 1,440×1,000과 390×844에서 다시 열어 가로 넘침과 console 오류가 없음을 확인했습니다. 12초 동안 장면 0이 유지됐고 키보드로 0→4→6→7을 이동했을 때 boost, subtree weight와 head가 함께 바뀌었습니다.
+- Reduced-motion에서는 장면 0과 0.000001초 duration을 확인했습니다. JavaScript 비활성 390×844 경로에는 live 영역 없이 정적 여덟 장면과 전체 본문이 남습니다. 현재 상태는 `rewritten-production-verified`입니다.
+
 ### Prysm Block 제안 로컬 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-block-proposal`을 Fulu slot 353의 제안자 17이 duty를 확인하고 RANDAO를 보내 parent `P352` 위에 후보를 조립한 뒤, state root 계산·서명·slashing protection·전파까지 넘기는 한 흐름으로 다시 썼습니다. 번호와 root·payload 이름은 설명용 fixture이며 실제 chain과 측정값이 아닙니다.

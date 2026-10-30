@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 699,
-    "pending": 308,
+    "reviewed": 700,
+    "pending": 307,
     "untracked": 0,
-    "assignedPending": 266,
+    "assignedPending": 265,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5205,17 +5205,17 @@
       "catalogIndex": 517,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/prysm-finality",
       "publicPath": "cs/blockchain/prysm-finality",
-      "title": "Prysm Casper FFG & Finality",
+      "title": "Prysm 최종성",
       "catalogIndex": 518,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
