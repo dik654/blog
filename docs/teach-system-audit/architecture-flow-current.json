@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 534,
-    "architectureWithoutAnimation": 81,
-    "recursiveLocators": 360,
-    "codeEvidenceLinked": 225,
+    "animatedMechanisms": 535,
+    "architectureWithoutAnimation": 80,
+    "recursiveLocators": 361,
+    "codeEvidenceLinked": 226,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -6642,18 +6642,18 @@
     {
       "route": "blockchain/commonware-storage",
       "publicPath": "cs/blockchain/commonware-storage",
-      "title": "Commonware Storage: MMR·Any·Current·QMDB",
+      "title": "Commonware Storage: MMR · Any · Current · QMDB",
       "sourcePath": "src/pages/articles/blockchain/commonware-storage.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/compound-v3",

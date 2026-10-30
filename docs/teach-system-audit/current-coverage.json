@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 707,
-    "pending": 300,
+    "reviewed": 708,
+    "pending": 299,
     "untracked": 0,
-    "assignedPending": 258,
+    "assignedPending": 257,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5351,11 +5351,11 @@
     {
       "route": "blockchain/commonware-storage",
       "publicPath": "cs/blockchain/commonware-storage",
-      "title": "Commonware Storage: MMR·Any·Current·QMDB",
+      "title": "Commonware Storage: MMR · Any · Current · QMDB",
       "catalogIndex": 532,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "locally-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

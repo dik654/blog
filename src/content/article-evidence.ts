@@ -8150,8 +8150,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Commonware Simplex source · v2026.9.0 commit d476a236", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/consensus/src/simplex", note: "N3f1 quorum, certificate assembly, certify dispatch, finalize gate, journal-before-notify와 channel error branch를 확인한 exact source이며 실제 배포 성능은 미측정" },
   ],
   "blockchain/commonware-storage": [
-    { kind: "공식 코드", label: "Commonware MMR · v2026.7.0", href: "https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/storage/src/merkle/mmr/mod.rs", note: "Location/position·peaks·proof·bagging의 pinned source이며 inclusion이 current value·finality·durability를 보장하지 않음" },
-    { kind: "공식 코드", label: "Commonware QMDB · v2026.7.0", href: "https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/storage/src/qmdb/mod.rs", note: "Any·Current variants와 batch→merkleize→apply→sync/prune lifecycle source이며 candidate root를 durable commit으로 확대하지 않음" },
+    { kind: "공식 문서", label: "commonware-storage QMDB · v2026.9.0", href: "https://docs.rs/commonware-storage/2026.9.0/commonware_storage/qmdb/index.html", note: "Batch 생성·mutation·merkleize·apply와 commit/start_sync/sync의 durability 경계를 고정한 문서이며 candidate root를 durable state나 client success로 확대하지 않음" },
+    { kind: "공식 문서", label: "commonware-storage Current QMDB · v2026.9.0", href: "https://docs.rs/commonware-storage/2026.9.0/commonware_storage/qmdb/current/index.html", note: "Any·Current proof 경계, activity bitmap grafting, branch-scoped batch와 prune recovery의 고정 문서이며 모든 backend 성능을 증명하지 않음" },
+    { kind: "공식 코드", label: "Commonware storage source · v2026.9.0 commit d476a236", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/storage/src", note: "MMR location 변환, OperationProof activity 검사, stale batch 거절과 apply·commit·sync 구현을 확인한 exact source이며 consensus finality나 실제 배포 성능은 별도" },
   ],
   "blockchain/tusk": [
     { kind: "핵심 논문", label: "Narwhal and Tusk · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827", note: "Certified DAG와 asynchronous shared-coin ordering 원문이며 historical evaluation 수치를 current chain SLA로 일반화하지 않음" },
