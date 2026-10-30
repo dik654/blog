@@ -4685,3 +4685,13 @@
 - arkworks algebra commit `6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5`의 compressed decode·`Valid::check`·Jacobian double과 curves commit `e2d16a27e2cfa9f972ae9772df827a22730011b4`의 BN254 `BnConfig`를 pinned source로 연결했습니다.
 - 1,440×900과 390×844에서 document 가로 넘침이 없습니다. 첫 장면은 4.2초 뒤에도 유지됐고, 키보드 0→1, 마지막 장면의 두 내부 strip 자동 이동, reduced-motion 재생 비활성·수동 이동과 한국어 CodeSidebar를 확인했습니다.
 - JavaScript 비활성 390×844 경로에는 live 조작부 대신 정적 여덟 장면, 전체 본문·수식·직속 부모와 다음 글이 남습니다. Production build와 모든 관련 감사가 통과했으며 공개 배포 검증 뒤 production 상태로 올립니다.
+
+# Uniswap V4 unlock 정산 개념 글 로컬 검증 완료 (2026-10-31)
+
+- 기존의 임의 pool A·B와 `+30/-20` 예시를 v4-core v4.0.0 공식 테스트의 한 거래로 교체했습니다. Router가 token0 100을 정확입력하면 공식 기대 이벤트는 amount0 -100, amount1 +98입니다. 이 부호를 router의 debt·credit으로 읽고 `sync·transfer·settle`과 `take`로 모두 0으로 만드는 과정을 여덟 장면으로 추적합니다.
+- Singleton을 하나의 공통 가격 장부로 오해하지 않도록 PoolManager 계약 하나와 PoolKey 전체를 해시한 PoolId별 가격·tick·liquidity state를 분리했습니다. Hook 주소의 하위 14비트가 callback surface와 delta 반환 권한을 표시하지만 hook의 경제 정책·권한·업그레이드 안전을 보장하지 않는다는 경계를 같은 흐름에 연결했습니다.
+- Permissioned Pools의 제품·운영 구조는 core 메커니즘을 설명하는 큰 절에서 제거하고 hook 응용이라는 짧은 경계로 축소했습니다. 특정 제품 채택·감사·배포 롤백은 개념 글이 아니라 별도 실무 글의 책임으로 남겼습니다.
+- GitHub의 lightweight tag `v4.0.0`이 commit `e50237c43811bd9b526eff40f26772152a42daba`를 직접 가리키는 것을 확인했습니다. PoolManager, PoolKey/PoolId, Hooks와 공식 PoolSwapTest를 여섯 code reference로 연결했습니다. 현재 환경에는 Foundry가 없어 official test를 다시 실행하지 않았으며 source 대조를 측정 결과로 표현하지 않았습니다.
+- 1,440×900과 390×844에서 무자동재생, 키보드 장면 이동, 모바일 활성 tab 자동 이동, 49.5px 조작부와 실제 코드 사이드바를 확인했습니다. 모바일의 여덟 장면은 높이 518.78px로 고정되고 잘린 요소와 문서 가로 넘침, console 오류·경고는 없습니다. Reduced-motion에서는 실행 중 animation 0개와 재생 비활성화를 확인했습니다.
+- JavaScript 비활성 390×844 production 경로에는 제목·직속 부모·정적 여덟 장면·7,087자 본문·공식 근거·부모 지도 반환이 남습니다. Live 장면과 visible button은 0개이고 문서 폭은 390px로 맞습니다.
+- Node heap 8GB의 전체 build가 8,161개 module, 정적 public route 2,120개와 no-script 본문 375편을 생성했습니다. 129.69초, 최대 RSS 6,069,551,104 bytes, swap 0이었습니다. 공개 배포와 공개 URL 재검증 뒤 production 상태로 전환합니다.

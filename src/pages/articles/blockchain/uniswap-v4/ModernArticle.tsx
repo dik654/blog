@@ -1,60 +1,271 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation-block";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import DefiDexLocator, { DefiDexMapReturn } from "../DefiDexLocator";
+import { uniswapV4Tree } from "./fileTrees";
+import { officialUniswapV4CodeRefs } from "./officialCodeRefs";
 import UniswapV4FlowViz from "./viz/UniswapV4FlowViz";
-import PermissionedPoolFlowViz from "./viz/PermissionedPoolFlowViz";
+
+const COMMIT = "e50237c43811bd9b526eff40f26772152a42daba";
+const SOURCE = `https://github.com/Uniswap/v4-core/tree/${COMMIT}`;
 
 export default function ModernUniswapV4Article() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Uniswap v4 · singleton settlement</p><h2 className="text-3xl font-bold tracking-tight">V4는 AMM 곡선을 폐기한 버전이 아니라 여러 pool state와 net settlement를 한 PoolManager에 모은 core다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90"><Link className="text-primary underline-offset-4 hover:underline" to="/cs/blockchain/uniswap-v3#overview">V3의 concentrated liquidity·tick·swap step</Link>을 재사용하면서 배치 방식을 바꿉니다. Pool마다 contract를 배포하는 대신 하나의 <code>PoolManager</code>가 <code>PoolKey</code>로 pool state를 구분합니다. 고정 사례는 같은 unlock callback 안에서 pool A swap과 pool B liquidity action을 실행한 뒤 token0 delta +30, token1 delta -20을 각각 settle해 둘 다 0으로 만드는 transaction입니다.</p>
-      <ContentBoundary article="uniswap-v4" />
-      <UniswapV4FlowViz />
-      <div id="paper-uniswap-v4-core"><CitationBlock source="Uniswap v4-core v4.0.0 (pinned)" citeKey={1} type="code" href="https://github.com/Uniswap/v4-core/tree/e50237c43811bd9b526eff40f26772152a42daba"><p><strong>문제:</strong> 여러 pools·hooks·native currency 작업을 한 core에서 조합하면서 마지막 token obligations를 강제해야 합니다.</p><p><strong>기여:</strong> PoolManager singleton, PoolKey/PoolId, unlock callback, delta accounting, hook flags와 pool actions의 executable source를 제공합니다.</p><p><strong>전제:</strong> v4.0.0 tag commit e50237c4와 해당 Solidity/EVM semantics를 고정합니다.</p><p><strong>근거 범위:</strong> Pinned v4 core contract의 state·callback·settlement behavior입니다.</p><p><strong>말하지 않는 것:</strong> 임의 router·hook의 안전성, LP 수익, 현재 deployment 주소·fee나 front-end quote를 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
+  const sidebar = useCodeSidebar();
 
-    <section id="singleton-pool-key" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · PoolKey</p><h2 className="mt-2 text-2xl font-bold">Pool identity는 token pair만이 아니라 currencies·fee·tickSpacing·hooks 전체다</h2></header>
-      <p><code>PoolKey</code>의 currency0·currency1은 정렬돼야 하며 fee, tick spacing과 hook address까지 같아야 같은 PoolId가 나옵니다. Initialize는 initial sqrt price와 hook validation을 거쳐 state를 만들지만, swap·modifyLiquidity·donate·take·settle 같은 delta-changing action은 보통 unlock context 안에서 수행합니다. V3의 tick math를 알더라도 다른 hook address를 같은 pool로 cache하면 안 됩니다.</p>
-      <p>PoolManager는 여러 pools를 한 contract에 담지만 회계 isolation을 없애지 않습니다. PoolId별 price·liquidity·ticks와 caller별 currency delta가 서로 다른 key space에 있습니다.</p>
-    </section>
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-5 scroll-mt-20">
+        <DefiDexLocator
+          currentSlug="uniswap-v4"
+          region="PoolManager singleton·hook·unlock 정산"
+          question="Router가 100 token0을 넣고 98 token1을 받을 때, 계산 결과는 어떻게 실제 송금으로 바뀝니까?"
+        />
 
-    <section id="hook-permission-boundary" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · hooks</p><h2 className="mt-2 text-2xl font-bold">Hook address bits는 호출 가능한 callback surface를 고정하지만 hook code를 신뢰할 수 있게 만들지는 않는다</h2></header>
-      <p>Hook는 initialize, add/remove liquidity, swap, donate 전후 callback 일부를 구현합니다. Permission flags는 hook address의 bit pattern과 일치해야 하며 pool initialization 뒤 어떤 callbacks가 실행될지는 바뀌지 않습니다. 일부 flags는 hook-returned delta까지 허용합니다. 하지만 올바른 selector와 flag는 business logic·access control·oracle·upgrade 안전성의 인증서가 아닙니다.</p>
-      <p>Integration은 hook codehash/version, permissions, dynamic fee, returned delta bound, revert behavior와 caller identity를 검증합니다. 특히 hook이 보는 <code>sender</code>가 end user가 아니라 router일 수 있는 boundary를 application policy에 반영합니다.</p>
-      <div id="paper-uniswap-v4-hooks"><CitationBlock source="Uniswap v4 · Hooks concept and Hooks.sol" citeKey={2} type="code" href="https://github.com/Uniswap/v4-core/blob/e50237c43811bd9b526eff40f26772152a42daba/src/libraries/Hooks.sol"><p><strong>문제:</strong> Pool lifecycle 확장을 허용하되 어떤 callback·return-delta surface가 활성화되는지 pool identity에 고정해야 합니다.</p><p><strong>기여:</strong> Hook permission flags, address validation, callback dispatch와 response validation을 구현합니다.</p><p><strong>전제:</strong> Pinned v4.0.0 flag layout·IHooks interface·PoolKey를 사용합니다.</p><p><strong>근거 범위:</strong> Hook 호출 여부와 core-level validation surface입니다.</p><p><strong>말하지 않는 것:</strong> Hook code의 경제적 안전성·upgrade governance·router user attribution·감사 완료를 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
-
-    <section id="permissioned-pools" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Permissioned Pools</p><h2 className="mt-2 text-2xl font-bold">KYC boolean 하나가 아니라 underlying token·adapter currency·action permission·LP lifecycle을 연결한다</h2></header>
-      <p><strong>Permissioned Pool</strong>은 permissionless V4 core 위에 issuer가 선택한 compliance policy를 붙인 특정 pool입니다. Uniswap이 기관을 승인하는 것이 아니라 issuer의 <strong>AllowListChecker</strong>가 wallet별 권한을 결정합니다.</p>
-      <div className="space-y-3">{[["Permissions Adapter","Issuer의 underlying RWA token을 보관하고 PoolManager가 다룰 wrapped pool currency를 mint/burn합니다."],["Permissioned Hook","beforeSwap·beforeAddLiquidity에서 trader/LP의 action flag를 검사합니다."],["Permissioned Position Manager","LP position NFT를 non-transferable하게 유지하고 승인 상실 뒤 reduce/burn 또는 issuer unwind 경계를 집행합니다."],["Universal Router integration","Swap 앞뒤 wrap/unwrap와 user identity 전달을 수행하고 direct bypass를 줄입니다."]].map(([term,desc]) => <div key={term} className="grid gap-1 rounded-lg border border-border p-4 md:grid-cols-[12rem_1fr]"><p className="font-semibold">{term}</p><p className="text-sm leading-6 text-muted-foreground">{desc}</p></div>)}</div>
-      <PermissionedPoolFlowViz />
-      <p><code>SWAP_ALLOWED</code>와 <code>LIQUIDITY_ALLOWED</code>는 별도입니다. 따라서 기관 A는 거래만, 기관 B는 거래와 LP 모두 가능할 수 있습니다. LP 권한을 별도로 보는 이유는 position이 시장조성 권리와 fee claim을 담고, 승인받은 NFT를 미승인 주소로 넘기는 우회도 막아야 하기 때문입니다.</p>
-      <div id="paper-uniswap-permissioned-architecture"><CitationBlock source="Uniswap · Permissioned Pools architecture" citeKey={4} href="https://developers.uniswap.org/docs/protocols/v4-hooks/permissioned-pools/architecture"><p><strong>문제:</strong> Singleton PoolManager에서 issuer-specific token policy와 swap·LP permission을 우회 없이 집행해야 합니다.</p><p><strong>기여:</strong> Adapter, hook, position manager와 Universal Router integration의 책임을 정의합니다.</p><p><strong>전제:</strong> 문서가 명시한 contract·router revision과 token integration profile을 확인합니다.</p><p><strong>근거 범위:</strong> 공식 permissioned-pool component architecture입니다.</p><p><strong>말하지 않는 것:</strong> 개별 pool의 법률 적합성·asset ownership·liquidity·가격을 보장하지 않습니다.</p></CitationBlock></div>
-      <div id="paper-uniswap-permissioned-launch"><CitationBlock source="Uniswap Labs · Introducing Permissioned Pools" citeKey={5} href="https://blog.uniswap.org/es-ES/introducing-permissioned-pools-on-uniswap-v4"><p><strong>문제:</strong> Regulated assets가 V4 liquidity·settlement를 쓰면서 issuer policy를 유지해야 합니다.</p><p><strong>기여:</strong> 2026년 공개 구조, issuer-managed permissions와 ecosystem 사례를 설명합니다.</p><p><strong>전제:</strong> 발표 시점·planned deployment·authorization 조건을 구분합니다.</p><p><strong>근거 범위:</strong> 공식 공개 방향과 named integrations입니다.</p><p><strong>말하지 않는 것:</strong> 계획이 완료됐거나 token holder가 자동으로 법적 주주가 된다는 뜻은 아닙니다.</p></CitationBlock></div>
-    </section>
-
-    <section id="flash-accounting-release" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · unlock and release</p><h2 className="mt-2 text-2xl font-bold">Flash accounting의 invariant는 각 중간 transfer가 아니라 unlock 종료 시 모든 nonzero currency delta가 사라지는 것이다</h2></header>
-      <p>Caller가 <code>unlock</code>을 호출하면 PoolManager는 caller의 <code>unlockCallback</code>으로 제어를 넘깁니다. Callback은 여러 actions를 조합하며 caller가 받을 금액은 positive delta, pool에 낼 금액은 negative delta로 netting합니다. <code>take</code>, <code>sync</code>·<code>settle</code>, ERC-6909 claims 등을 올바른 방향으로 적용하고 callback 반환 시 nonzero delta count가 0이 아니면 transaction 전체가 revert합니다.</p>
-      <ExplainedFormula question="여러 V4 actions를 마친 뒤 unlock이 성공하려면 currency별 무엇이 0이어야 하나요?" idea="각 currency의 받을 권리에서 낼 의무를 빼 net delta를 만들고, callback 반환 전에 모든 currency를 settle합니다." formula={String.raw`\begin{aligned}C_c&=\underbrace{\sum_k credit_{c,k}}_{\text{caller가 받을 권리}}\\D_c&=\underbrace{\sum_k debit_{c,k}}_{\text{caller가 낼 의무}}\\\Delta_c&=\underbrace{C_c-D_c}_{\text{남은 순 obligation}}\\\mathrm{unlock}&:\;\underbrace{\forall c,\;\Delta_c=0}_{\text{모든 currency 정산}}\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}C_c&=\underbrace{\sum_k credit_{c,k}}_{\text{caller가 받을 권리}}\\D_c&=\underbrace{\sum_k debit_{c,k}}_{\text{caller가 낼 의무}}\\\Delta_c&=\underbrace{C_c-D_c}_{\text{남은 순 obligation}}\\\mathrm{unlock}&:\;\underbrace{\forall c,\;\Delta_c=0}_{\text{모든 currency 정산}}\end{aligned}`}
-      operations={[
-  { expression: String.raw`\sum_k credit_{c,k}`, annotation: ["callback 안 action들이 caller에게","만든 받을 금액을 currency별로 합칩니다","예: token0 credit 50"] },
-  { expression: String.raw`\sum_k debit_{c,k}`, annotation: ["caller가 PoolManager에 낼 금액을","같은 currency 단위로 합칩니다","token0 debit 20, token1 debit 20"] },
-  { expression: String.raw`C_c-D_c`, annotation: ["받을 권리에서 낼 의무를 빼","transfer 대신 순 obligation만 남깁니다","token0는 50-20=+30 → take 30"] },
-  { expression: String.raw`\forall c,\;\Delta_c=0`, annotation: ["callback 반환 시 모든 currency가","0이어야 unlock이 성공합니다","token1 -20이 남으면 전체 revert"] },
-]} terms={[{symbol:"c",name:"currency identity",description:"Native currency 또는 token address로 구분한 회계 단위입니다."},{symbol:"credit_c,k",name:"caller credit",description:"Action k가 caller에게 받을 권리를 만든 amount입니다."},{symbol:"debit_c,k",name:"caller debt",description:"Action k가 caller가 PoolManager에 낼 의무를 만든 amount입니다."},{symbol:"Δ_c",name:"net currency delta",description:"Unlock context에서 caller와 PoolManager 사이에 남은 currency별 순 obligation입니다."}]} assumptions={["같은 caller unlock context와 exact currency identity를 사용합니다.","Signed delta direction을 integration contract에서 한 번 고정합니다.","ERC20 settle 전 sync와 actual received balance를 검증합니다.","Delta zero는 AMM price quality·hook safety·external transfer finality를 보장하지 않습니다."]} interpretation="Token0 credit 50과 debit 20이면 Δ0=+30이므로 take 30이 필요합니다. Token1 debit 20이면 settle 20이 필요합니다. 둘 중 하나라도 남으면 unlock 전체가 revert합니다." />
-      <div id="paper-uniswap-v4-whitepaper"><CitationBlock source="Uniswap v4 Core whitepaper" citeKey={3} href="https://app.uniswap.org/whitepaper-v4.pdf"><p><strong>문제:</strong> AMM customization과 multi-pool routing의 deployment·transfer 비용을 줄이면서 atomic settlement를 유지해야 합니다.</p><p><strong>기여:</strong> Singleton, hooks, flash accounting, native ETH와 custom accounting architecture를 제안합니다.</p><p><strong>전제:</strong> Whitepaper의 EVM transient-storage·singleton execution model과 V4 design scope입니다.</p><p><strong>근거 범위:</strong> V4 architectural motivation과 accounting design입니다.</p><p><strong>말하지 않는 것:</strong> 모든 hook·router의 안전성, gas 절감 폭, liquidity·price execution을 보장하지 않습니다.</p></CitationBlock></div>
-      <p>
-            Release fixture는 wrong PoolKey, invalid hook flag, hook revert, malicious returned delta, unsynced
-            ERC20, under-settlement와 nested unlock을 주입합니다. Pinned core tag·hook codehash·router version·pool
-            key·events/reverts·gas를 함께 비교하고 실패 시 기존 router로 되돌리되 이미 finalized transaction을 되감는다고 표현하지 않습니다.
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 max-w-4xl break-keep text-3xl font-bold">
+            PoolManager가 계산한 -100과 +98을 누가 어떻게 0으로 만듭니까
+          </h2>
+          <p className="mt-3 max-w-3xl break-keep text-base leading-7 text-muted-foreground">
+            공식 v4.0.0 테스트의 정확입력 교환 한 건을 따라갑니다. Router는 token0 100을 내야 하는
+            음수 delta와 token1 98을 받을 수 있는 양수 delta를 얻습니다. 이 두 값이 실제 token 이동을
+            거쳐 모두 0이 되어야 transaction이 성공합니다.
           </p>
-    </section>
-  </article>;
+        </div>
+
+        <UniswapV4FlowViz />
+
+        <p className="text-lg leading-8">
+          <strong>V4가 V3의 교환 수학을 버린 것은 아닙니다.</strong> 가격 구간과 활성 유동성을 계산하는
+          pool logic은 이어집니다. 달라진 핵심은 여러 pool의 상태를 하나의 <code>PoolManager</code>에
+          두고, action 결과를 즉시 송금하는 대신 router별 임시 장부에 기록한 뒤 한 번에 정산한다는 점입니다.
+        </p>
+        <p>
+          앞선 <Link to="/cs/blockchain/uniswap-v3#overview" className="font-bold text-primary hover:underline">Uniswap V3</Link> 글은
+          pool 안에서 가격이 tick 경계를 지나는 계산을 다뤘습니다. 이 글은 그 계산을 다시 설명하지 않고,
+          <strong> 어떤 pool state를 고르고, hook를 거쳐, 계산 결과를 실제 token 이동으로 확정하는지</strong>를
+          소유합니다.
+        </p>
+        <ContentBoundary article="uniswap-v4" />
+      </section>
+
+      <section id="singleton-pool-key" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">Singleton은 여러 pool의 가격과 유동성을 한 장부로 섞는다는 뜻이 아닙니다</h2>
+        <p>
+          PoolManager 계약은 하나지만 pool state는 <code>PoolId</code>별로 나뉩니다. PoolId는
+          <code>currency0</code>, <code>currency1</code>, <code>fee</code>, <code>tickSpacing</code>,
+          <code>hooks</code>를 담은 PoolKey 전체를 해시해 만듭니다. 같은 token pair라도 수수료나 hook
+          주소가 다르면 다른 pool입니다.
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3">
+          {[
+            ["계약 주소", "PoolManager 하나", "모든 pool action의 공통 진입점"],
+            ["상태 주소", "PoolId마다 별도", "가격·tick·liquidity는 서로 분리"],
+            ["호출 자료", "PoolKey를 매번 전달", "Key를 잘못 보내면 다른 pool을 가리킴"],
+          ].map(([label, value, detail]) => (
+            <div key={label} className="min-w-0 bg-background p-4">
+              <span className="text-[10px] font-bold text-primary">{label}</span>
+              <strong className="mt-2 block break-keep text-sm">{value}</strong>
+              <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="PoolKey에서 PoolId 만들기" onClick={() => sidebar.open("v4-pool-key", officialUniswapV4CodeRefs["v4-pool-key"])} />
+        </div>
+        <aside className="border-l-2 border-primary/60 pl-4 text-sm leading-6 text-muted-foreground">
+          <strong className="text-foreground">같이 보아야 할 경계:</strong> PoolKey는 storage에 원본 그대로 저장되지
+          않으므로 caller가 맞는 값을 제공해야 합니다. Hook 주소도 pool identity의 일부라서 hook를 바꾸면 기존
+          pool의 설정 변경이 아니라 다른 PoolId가 됩니다.
+        </aside>
+      </section>
+
+      <section id="unlock-callback" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">PoolManager는 router에게 실행 순서를 맡기고 마지막 잔액만 강제합니다</h2>
+        <p>
+          사용자가 PoolManager의 <code>swap</code>을 직접 호출하면 잠겨 있어서 실패합니다. 먼저 router가
+          <code>unlock(data)</code>을 호출해야 합니다. PoolManager는 잠금을 열고 그 router의
+          <code>unlockCallback(data)</code>을 호출합니다. Callback 안에서만 router가 swap, 정산, 인출을
+          이어서 실행합니다.
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-5">
+          {[
+            ["1", "Router", "unlock(data)"],
+            ["2", "PoolManager", "lock 열기"],
+            ["3", "Router callback", "swap·settle·take"],
+            ["4", "PoolManager", "delta count 확인"],
+            ["5", "Transaction", "성공 또는 전체 revert"],
+          ].map(([order, owner, action]) => (
+            <div key={order} className="relative min-w-0 bg-background p-4">
+              <span className="font-mono text-[9px] font-black text-primary">{order}</span>
+              <strong className="mt-2 block break-keep text-xs leading-5">{owner}</strong>
+              <p className="mt-1 break-keep text-[10px] leading-5 text-muted-foreground">{action}</p>
+            </div>
+          ))}
+        </div>
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="Unlock의 마지막 검사" onClick={() => sidebar.open("v4-unlock", officialUniswapV4CodeRefs["v4-unlock"])} />
+          <CodeViewButton label="공식 테스트 router의 callback" onClick={() => sidebar.open("v4-router-settlement", officialUniswapV4CodeRefs["v4-router-settlement"])} />
+        </div>
+        <p>
+          Router가 실행 순서를 정한다는 말은 마음대로 잔액을 남겨도 된다는 뜻이 아닙니다. PoolManager는
+          caller와 currency마다 transient delta를 소유하고, callback이 돌아온 순간 nonzero delta의 개수가
+          0이 아니면 <code>CurrencyNotSettled</code>로 전체 transaction을 거절합니다.
+        </p>
+      </section>
+
+      <section id="hook-permission-boundary" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">Hook 주소는 실행 지점을 표시하지만 그 코드가 안전하다는 인증서는 아닙니다</h2>
+        <p>
+          Hook 주소의 하위 14비트는 initialize, 유동성 변경, swap, donate 전후의 어느 callback을 호출할지
+          나타냅니다. 별도 flag가 있으면 hook가 swap이나 유동성 변경의 delta를 보완해 반환할 수도 있습니다.
+          PoolManager는 flag 조합과 callback selector를 확인하지만, hook의 가격 정책·접근 권한·업그레이드가
+          사용자에게 안전한지는 판정하지 않습니다.
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3">
+          {[
+            ["Core가 확인", "주소 flag와 callback 조합", "예정된 함수가 올바른 selector를 반환하는지"],
+            ["Hook가 결정", "수수료·접근 정책·추가 회계", "허용된 callback 안의 실제 business logic"],
+            ["통합자가 확인", "codehash·권한·업그레이드", "사용자 identity와 불리한 delta 가능성"],
+          ].map(([owner, subject, detail]) => (
+            <div key={owner} className="min-w-0 bg-background p-4">
+              <span className="text-[10px] font-bold text-primary">{owner}</span>
+              <strong className="mt-2 block break-keep text-xs leading-5">{subject}</strong>
+              <p className="mt-1 break-keep text-[10px] leading-5 text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="Hook 주소의 14개 flag" onClick={() => sidebar.open("v4-hook-flags", officialUniswapV4CodeRefs["v4-hook-flags"])} />
+          <CodeViewButton label="Swap과 hook 호출 순서" onClick={() => sidebar.open("v4-swap-account", officialUniswapV4CodeRefs["v4-swap-account"])} />
+        </div>
+        <aside className="border-l-2 border-primary/60 pl-4 text-sm leading-6 text-muted-foreground">
+          Permissioned Pools처럼 wallet 권한을 검사하는 구조도 hook의 한 응용입니다. 이는 Uniswap V4 core가 모든
+          pool에 신원 확인을 제공한다는 뜻이 아닙니다. 어떤 주소를 최종 사용자로 볼지, 우회 가능한 router가
+          있는지, 권한 변경 뒤 LP position을 어떻게 처리할지는 해당 응용 계약의 별도 책임입니다.
+        </aside>
+      </section>
+
+      <section id="flash-accounting-settlement" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">음수는 낼 돈, 양수는 받을 돈이며 두 값을 실제 token 이동으로 없앱니다</h2>
+        <p>
+          공식 fixture에서 <code>zeroForOne=true</code>, <code>amountSpecified=-100</code>은 token0 100을
+          정확입력한다는 뜻입니다. Swap 결과는 <code>amount0=-100</code>, <code>amount1=+98</code>입니다.
+          이 부호는 pool reserve가 아니라 router의 장부 관점입니다. Router는 token0 100을 내야 하고 token1
+          98을 받을 수 있습니다.
+        </p>
+        <ExplainedFormula
+          question="Router의 두 currency delta가 어떻게 0이 됩니까?"
+          idea="Swap이 만든 debt에는 실제 입금을 더하고, credit에는 실제 인출을 빼서 callback 끝의 잔액을 0으로 만듭니다."
+          formula={String.raw`\Delta_0=-100+100=0,\qquad \Delta_1=+98-98=0`}
+          annotatedFormula={String.raw`\Delta_0=\underbrace{-100}_{\text{swap debt}}+\underbrace{100}_{\text{sync·transfer·settle}}=0,\qquad \Delta_1=\underbrace{+98}_{\text{swap credit}}-\underbrace{98}_{\text{take}}=0`}
+          operations={[
+            { expression: String.raw`\Delta_0=-100`, annotation: ["Router가 PoolManager에 token0 100을 내야 합니다."] },
+            { expression: String.raw`-100+100=0`, annotation: ["Sync 뒤 실제 잔액이 100 늘어난 것을 settle이 확인합니다."] },
+            { expression: String.raw`\Delta_1=+98`, annotation: ["Router가 token1 98을 꺼낼 수 있는 권리를 가집니다."] },
+            { expression: String.raw`+98-98=0`, annotation: ["Take가 credit을 줄이고 사용자에게 token1을 보냅니다."] },
+          ]}
+          terms={[
+            { symbol: String.raw`\Delta_0`, name: "Router의 token0 delta", description: "음수이면 PoolManager에 내야 하는 debt입니다." },
+            { symbol: String.raw`\Delta_1`, name: "Router의 token1 delta", description: "양수이면 PoolManager에서 꺼낼 수 있는 credit입니다." },
+            { symbol: "NonzeroDeltaCount", name: "미정산 currency 수", description: "Delta가 0에서 nonzero 또는 반대로 바뀔 때만 증감하는 transient counter입니다." },
+          ]}
+          assumptions={[
+            "공식 v4.0.0 fixture의 initialized pool, liquidity 1e18, fee 3000과 price limit를 사용합니다.",
+            "Hook가 swap delta를 추가로 바꾸지 않는 fixture입니다.",
+            "ERC-20 지급은 sync 뒤 PoolManager의 실제 잔액 증가로 확인합니다.",
+          ]}
+          interpretation="Swap 직후에는 미정산 currency가 두 개입니다. Token0을 settle하면 하나, token1을 take하면 0이 됩니다. 금액이 부족하거나 한 단계를 빼면 callback의 다른 작업까지 모두 revert됩니다."
+        />
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton label="Sync·settle·take의 장부 변화" onClick={() => sidebar.open("v4-settle-take", officialUniswapV4CodeRefs["v4-settle-take"])} />
+          <CodeViewButton label="Swap 결과를 router에 기록" onClick={() => sidebar.open("v4-swap-account", officialUniswapV4CodeRefs["v4-swap-account"])} />
+        </div>
+        <p>
+          Flash accounting의 장점은 callback 안에서 여러 action의 중간 전송을 줄이고 currency별 순액만 마지막에
+          처리할 수 있다는 점입니다. 그러나 이 글의 한 교환에서는 상계 구조 자체만 확인합니다. 여러 pool을
+          거치는 route의 gas 절감 폭이나 특정 hook의 가격 품질은 별도 측정 없이 단정하지 않습니다.
+        </p>
+      </section>
+
+      <section id="failure-source" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">정산이 끝나지 않으면 pool 상태와 전송도 함께 되돌아갑니다</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["잠긴 상태에서 swap", "ManagerLocked", "unlock callback 전에 거절"],
+            ["중첩 unlock", "AlreadyUnlocked", "열린 회계 구간 안에서 재진입 거절"],
+            ["Token0 99만 입금", "delta0=-1", "CurrencyNotSettled로 전체 revert"],
+            ["Token1 take 생략", "delta1=+98", "Pool 가격 변화와 지급도 복원"],
+          ].map(([cause, result, effect]) => (
+            <div key={cause} className="min-w-0 bg-background p-4">
+              <strong className="break-keep text-xs leading-5">{cause}</strong>
+              <p className="mt-2 text-[10px] font-bold leading-5 text-destructive">{result}</p>
+              <p className="mt-1 break-keep text-[10px] leading-5 text-muted-foreground">{effect}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-sm leading-6 text-muted-foreground">
+          여기서 설명하는 것은 protocol transaction의 실패 동작입니다. Router 배포 롤백, hook 감사, gas 기준,
+          mainnet 주소 교체와 장애 대응 Runbook은 특정 운영 환경의 실무 글에서 다뤄야 합니다.
+        </p>
+
+        <div id="paper-uniswap-v4-core" className="scroll-mt-24">
+          <CitationBlock type="code" citeKey={1} source="Uniswap/v4-core · v4.0.0 · commit e50237c" href={SOURCE}>
+            <p><strong>문제:</strong> 여러 pool action과 hook 결과를 한 singleton에서 실행하면서 마지막 token 의무를 원자적으로 강제해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> PoolManager, PoolKey/PoolId, unlock callback, transient delta와 hook flag의 실행 코드를 제공합니다.</p>
+            <p><strong>고정한 버전:</strong> lightweight tag <code>v4.0.0</code>이 직접 가리키는 commit <code>{COMMIT.slice(0, 12)}</code>입니다.</p>
+            <p><strong>일반화 금지:</strong> 임의 router·hook의 안전성, 현재 배포 주소, LP 수익, 특정 route의 gas 절감을 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+
+        <div id="paper-uniswap-v4-hooks" className="scroll-mt-24">
+          <CitationBlock type="code" citeKey={2} source="Uniswap/v4-core · Hooks.sol · commit e50237c" href={`https://github.com/Uniswap/v4-core/blob/${COMMIT}/src/libraries/Hooks.sol`}>
+            <p><strong>문제:</strong> 어떤 lifecycle callback과 return-delta 권한이 활성화됐는지 pool identity에 고정해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> 하위 14비트 flag, permission/address 검증, callback 응답 검사를 구현합니다.</p>
+            <p><strong>근거 범위:</strong> Core가 어느 hook 함수를 언제 부르고 어떤 형태를 거절하는지입니다.</p>
+            <p><strong>일반화 금지:</strong> Hook의 경제 정책·접근 제어·업그레이드·oracle이 안전하다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+
+        <div id="paper-uniswap-v4-whitepaper" className="scroll-mt-24">
+          <CitationBlock type="paper" citeKey={3} source="Adams et al. · Uniswap v4 Core whitepaper" href="https://app.uniswap.org/whitepaper-v4.pdf">
+            <p><strong>문제:</strong> AMM 확장과 여러 action의 조합에서 반복 배포·중간 전송 비용을 줄여야 합니다.</p>
+            <p><strong>핵심 기여:</strong> Singleton, hooks, flash accounting, custom accounting의 설계를 제시합니다.</p>
+            <p><strong>근거 범위:</strong> V4 architecture의 동기와 개념적 accounting model입니다.</p>
+            <p><strong>일반화 금지:</strong> 모든 hook·route가 싸거나 안전하고 좋은 가격을 제공한다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+
+        <aside className="border-l-2 border-primary/60 pl-4 text-sm leading-6 text-muted-foreground">
+          <strong className="text-foreground">[O] 확인한 범위:</strong> GitHub의 <code>v4.0.0</code> tag와 commit
+          <code> e50237c</code>가 일치함을 확인했습니다. <code>PoolManagerTest.test_swap_succeedsIfInitialized</code>의
+          기대 이벤트는 amount0 -100, amount1 +98, fee 3000입니다. 이 환경에는 <code>forge</code>가 없어
+          공식 테스트를 다시 실행하지 않았으므로 [M] 측정 결과로 표현하지 않습니다.
+        </aside>
+      </section>
+
+      <DefiDexMapReturn
+        currentSlug="uniswap-v4"
+        closure="Uniswap V4는 여러 pool을 하나의 PoolManager에 두되 PoolKey 전체로 상태를 분리합니다. Router가 unlock callback 안에서 swap을 실행하면 결과는 caller별 currency debt·credit으로 기록되고, settle과 take로 모두 0이 되어야 가격 변화와 token 이동이 한 transaction의 최종 상태로 남습니다. Hook 주소 flag는 이 경로의 확장 지점을 정하지만 hook 코드의 안전성까지 보장하지는 않습니다."
+      />
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={officialUniswapV4CodeRefs}
+        fileTrees={{ "uniswap-v4": uniswapV4Tree }}
+        projectMetas={{
+          "uniswap-v4": {
+            id: "uniswap-v4",
+            label: "Uniswap v4-core · v4.0.0 · e50237c",
+            badgeClass: "border-pink-500 bg-pink-500/10 text-pink-700",
+          },
+        }}
+      />
+    </article>
+  );
 }

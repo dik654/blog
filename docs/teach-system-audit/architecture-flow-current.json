@@ -9,8 +9,8 @@
     "customVisuals": 911,
     "animatedMechanisms": 544,
     "architectureWithoutAnimation": 80,
-    "recursiveLocators": 370,
-    "codeEvidenceLinked": 235,
+    "recursiveLocators": 371,
+    "codeEvidenceLinked": 236,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -8850,7 +8850,7 @@
     {
       "route": "blockchain/uniswap-v4",
       "publicPath": "cs/blockchain/uniswap-v4",
-      "title": "Uniswap V4 — Hooks & Singleton",
+      "title": "Uniswap V4: Unlock과 정산",
       "sourcePath": "src/pages/articles/blockchain/uniswap-v4.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -8858,8 +8858,8 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
     },
