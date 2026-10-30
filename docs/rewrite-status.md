@@ -3,14 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Prysm BeaconState 로컬 검증 완료 (2026-10-30)
+### Prysm BeaconState 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-beacon-state`를 parent state A를 B로 복사하고 validator index 5 balance만 32 ETH에서 31 ETH로 바꾸는 한 사례로 다시 썼습니다. State ID별 multi-value 값, dirty field·element, element 5→chunk 1, Balances field root와 top-level state root를 여덟 장면으로 연결했습니다.
 - Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 consensus-specs v1.6.1 commit `5fa6edcca8ab4cf548653e6680b17b9d3e04d225`를 고정했습니다. 기존의 ‘첫 write에 balances 전체를 복사하는 COW’ 설명은 현재 `MultiValueBalances` 구현과 맞지 않아 state ID별 값 분리 설명으로 교체했습니다.
 - 390×844에서 문서 폭 390=390, live 시각화 폭 334px, 장면별 높이 691.7~709.7px입니다. 여덟 장면 모두 가로·내부 오버플로가 없고 조작부는 49.5px입니다. 11초 무자동재생과 ArrowRight 0→1 이동을 확인했습니다.
 - 1,440×1,000에서는 live 시각화 664×876.2px가 화면 안에 들어오며 가로·내부 오버플로와 console 오류가 없습니다. Reduced-motion에서는 실행 중 animation 0건, 재생 비활성·수동 이동을 확인했습니다.
 - JavaScript 비활성 390×844 정적 경로에는 조작부 없이 부모 지도, 정적 여덟 장면, 전체 본문, 확인 질문과 부모 지도 반환이 남습니다. Static registry를 갱신해 no-script 본문은 350편입니다.
-- 선택 ESLint, TypeScript, 학습 계약·지식 그래프·수식·계산·본문·읽기·문장 호흡·한국어·용어·읽기 순서·runtime 감사와 production build를 통과했습니다. Build는 8,087개 module과 정적 public route 2,120개를 생성했고 최대 RSS는 약 6.31GiB, swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+- 선택 ESLint, TypeScript, 학습 계약·지식 그래프·수식·계산·본문·읽기·문장 호흡·한국어·용어·읽기 순서·runtime 감사와 production build를 통과했습니다. Build는 8,087개 module과 정적 public route 2,120개를 생성했고 최대 RSS는 약 6.31GiB, swap은 0이었습니다.
+- Commit `310c63b9`의 GitHub Pages run `40990076524`가 전체 감사·build·공개 아티클 실브라우저 검사·배포를 통과했습니다. 공개 1,440×1,000과 390×844 경로에서 가로 넘침·장면 내부 잘림·console 오류가 없고 키보드 이동이 동작합니다. Reduced-motion은 실행 중 animation 0건과 수동 이동을 유지하며, JavaScript 비활성 모바일 경로에는 직속 부모·질문·정적 여덟 장면·전체 본문이 남습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Prysm SSZ·BLS 공개 검증 완료 (2026-10-30)
 
