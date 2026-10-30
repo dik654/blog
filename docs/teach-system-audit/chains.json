@@ -1407,39 +1407,59 @@
     {
       "route": "blockchain/cosmos-sdk",
       "title": "Cosmos SDK v0.55: transaction에서 committed state까지",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cosmos-sdk.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cosmos-sdk.tsx",
-        "src/pages/articles/blockchain/cosmos-sdk/ModernArticle.tsx"
+        "src/pages/articles/blockchain/cosmos-sdk/ModernArticle.tsx",
+        "src/pages/articles/blockchain/cosmos-sdk/viz/ModernCosmosSDKViz.tsx",
+        "src/pages/articles/blockchain/cosmos-sdk/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 7,
+        "sourceButtons": 5,
         "headings": [
-          "Cosmos SDK는 ordered transaction bytes를 모듈 상태 전이와 committed version으로 바꾸는 application framework다",
-          "같은 handler도 어떤 branch에서 실행되는지에 따라 권위가 다르다",
-          "AnteHandler는 transaction envelope를, MsgServer는 business transition을 검증한다",
-          "Module은 API와 lifecycle을 드러내고 keeper가 state capability를 제한한다",
-          "Child branch의 Write와 root store Commit은 다른 durability 경계다"
+          "CheckTx OK와 송금 성공, durable Commit은 왜 서로 다른 영수증입니까",
+          "같은 transaction을 실행해도 mode마다 쓰는 장부가 다릅니다",
+          "Ante와 message는 한 transaction 안에서도 서로 다른 child branch를 씁니다",
+          "MsgServiceRouter는 요청을 찾고 keeper가 state 수정 권한을 가집니다",
+          "Child Write, Working AppHash와 root Commit은 세 가지 다른 경계입니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 CheckTx를 즉시 폐기되는 branch로 설명해 연속 CheckTx가 읽는 node-local ante state를 놓쳤습니다.",
+        "Ante 성공·message 실패에서 fee·sequence와 balance write가 다르게 남는 두 cache branch의 merge 시점을 실제 테스트와 연결하지 않았습니다.",
+        "Working AppHash 계산과 root multistore Commit을 하나의 저장 단계로 읽을 여지가 있었습니다."
+      ],
+      "fixture": "높이 40에서 Alice 100, Bob 20, sequence 7로 시작해 fee 1과 송금 10을 CheckTx→Finalize ante→MsgSend→Working AppHash→Commit으로 추적합니다.",
+      "stageEvidence": {
+        "committed": "v40의 Alice 100·Bob 20·sequence 7을 query가 읽는 정본으로 고정합니다.",
+        "bytes": "CometBFT가 transaction bytes의 순서를 정하고 SDK가 MsgSend의 의미를 해석하는 경계를 나눕니다.",
+        "check": "CheckTx ante가 fee 1·sequence 8을 node-local check state에 남기지만 MsgSend와 committed query는 바꾸지 않습니다.",
+        "ante": "FinalizeBlock ante 성공 뒤 fee·sequence를 message보다 먼저 finalize parent에 합칩니다.",
+        "message": "Bank MsgServer가 정책·잔액을 검사하고 별도 message child에서 Alice 89·Bob 30을 계산합니다.",
+        "merge": "Message와 post-handler가 성공한 때만 child를 parent에 합치며 ExecTxResult OK와 durability를 구분합니다.",
+        "hash": "FinalizeBlock branch를 root multistore에 합쳐 Working AppHash를 계산하되 durable version은 아직 아님을 확인합니다.",
+        "commit": "Commit이 version 41을 저장하고 check state를 최신 root에서 다시 만드는 마지막 경계를 지도에 돌려줍니다."
+      },
+      "sourceEvidence": [
+        "Cosmos SDK v0.55.0이 가리키는 commit 64fd208a11fb54f7ffdca1a1290c2cfbbc254e49의 baseapp·auth ante·bank MsgServer source",
+        "같은 commit의 TestBaseAppAnteHandler와 TestABCI_CheckTx를 직접 재실행한 결과"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "v0.55.0 tag와 commit 64fd208a의 BaseApp·ABCI·ante·bank MsgServer source를 다시 읽어 CheckTx를 discarded branch로 부른 기존 오류를 바로잡았습니다.",
+        "arithmetic": "Alice 100−fee 1−send 10=89, Bob 20+10=30, sequence 7→8을 각 branch의 merge 시점과 함께 확인했습니다. Gas 30·50·5는 설명용 가정값으로 표시했습니다.",
+        "humanize": "ko-natural 경로 검사는 오류 0·문맥 검토 0이며 ESLint·TypeScript·production build가 통과했습니다.",
+        "browser390": "390×844에서 문서 390=390, 가로 넘침 0, 가장 긴 live 본체 768px로 고정 헤더 아래 조작부까지 한 화면에 들어옴을 확인했습니다.",
+        "browser1440": "1440×900에서 8개 장면의 높이·상태 전환, 5.2초 무자동재생, 키보드 이동과 실제 코드 패널의 한국어 주석을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-transaction-through-check-finalize-and-commit"
     },
     {
       "route": "blockchain/crypto-theory",

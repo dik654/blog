@@ -4705,3 +4705,12 @@
 - 1,440×900과 390×844 production 경로에서 문서 가로 넘침이 없고, 모바일 여덟 장면 높이는 모두 623px입니다. 첫 장면은 5.4초 뒤에도 유지되며 visual focus 뒤 키보드 0→1 이동, 49.5px 조작부, 390px 코드 사이드바와 한국어 주석, console 오류·경고 0건을 확인했습니다.
 - Reduced-motion에서는 실행 중 animation 0개와 재생 비활성화를 확인했습니다. JavaScript 비활성 390×844 경로에는 직속 부모, 정적 여덟 장면, 7,629자 본문, 고정 source와 부모 지도 반환이 남고 보이는 live element와 button은 없습니다.
 - Node heap 8GB의 전체 build가 통과했습니다. 8,163개 module, 정적 public route 2,120개와 no-script 본문 376편을 생성했고 154.09초, 최대 RSS 5,772,050,432 bytes, swap 0이었습니다. 공개 배포와 공개 URL 재검증 뒤 production 상태로 전환합니다.
+
+# Cosmos SDK transaction 상태 경계 개념 글 로컬 검증 완료 (2026-10-31)
+
+- `blockchain/cosmos-sdk`를 Alice 100·Bob 20·sequence 7에서 fee 1과 송금 10을 처리하는 transaction 한 건으로 다시 썼습니다. CheckTx·Finalize ante·MsgSend child·Working AppHash·Commit을 여덟 장면에서 추적합니다.
+- Cosmos SDK v0.55.0 tag가 가리키는 commit `64fd208a11fb54f7ffdca1a1290c2cfbbc254e49`의 BaseApp·ABCI·auth ante·bank MsgServer를 다시 읽었습니다. CheckTx를 즉시 폐기 branch로 설명한 기존 오류를 고쳐, ante state는 node-local check state에 누적되지만 committed query는 바꾸지 않는다는 경계를 반영했습니다.
+- 고정 commit의 `TestBaseAppAnteHandler`와 `TestABCI_CheckTx`를 직접 재실행했습니다. 45.59초, 최대 RSS 1,342,226,432 bytes, swap 0이었으며 전체 SDK 성능 측정으로 읽지 않도록 범위를 표시했습니다.
+- 1,440×900에서 여덟 장면의 상태 전환·고정 높이·키보드 이동을 확인했습니다. 첫 장면은 5.2초 뒤에도 유지됐고 reduced-motion에서도 자동 재생되지 않았습니다. 코드 패널은 코드 영역에 focus를 두고 node-local·committed 경계의 한국어 주석을 보여 줍니다.
+- 390×844에서 문서 폭은 390px로 맞고, 가장 긴 장면은 768px로 고정 헤더 아래의 조작부까지 한 화면에 들어옵니다. 상태 카드를 2×2로 유지하고 장면 설명을 상태 변화 중심으로 줄여 본문과 시각화의 역할을 나눐습니다.
+- Node heap 8GB의 최종 production build는 8,166개 module, 정적 public route 2,120개와 no-script 본문 377편을 생성했습니다. 150.93초, 최대 RSS 6,386,286,592 bytes, swap 0이었습니다. 공개 배포와 공개 URL 재검증이 남아 있습니다.

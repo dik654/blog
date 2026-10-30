@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 545,
+    "animatedMechanisms": 546,
     "architectureWithoutAnimation": 80,
-    "recursiveLocators": 372,
-    "codeEvidenceLinked": 237,
+    "recursiveLocators": 373,
+    "codeEvidenceLinked": 238,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -6713,11 +6713,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/crypto-theory",

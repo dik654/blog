@@ -5857,9 +5857,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "CometBFT v0.40.0 — crypto/tmhash", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/crypto/tmhash/hash.go", note: "32-byte full hash와 20-byte truncated address hash 경계" },
   ],
   "blockchain/cosmos-sdk": [
-    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — BaseApp", href: "https://github.com/cosmos/cosmos-sdk/tree/v0.55.0/baseapp", note: "ABCI mode·context·block/transaction execution의 pinned implementation" },
-    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — auth ante · bank MsgServer", href: "https://github.com/cosmos/cosmos-sdk/blob/v0.55.0/x/auth/ante/ante.go", note: "Envelope authorization과 MsgSend business validation의 separation" },
-    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — CacheMultiStore", href: "https://github.com/cosmos/cosmos-sdk/blob/v0.55.0/store/cachemulti/store.go", note: "Nested cache branch와 Write merge semantics; durable root Commit은 별도" },
+    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — BaseApp · commit 64fd208a", href: "https://github.com/cosmos/cosmos-sdk/tree/64fd208a11fb54f7ffdca1a1290c2cfbbc254e49/baseapp", note: "CheckTx·FinalizeBlock mode state와 ante/message cache branch, working AppHash·Commit 경계" },
+    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — auth ante · bank MsgServer", href: "https://github.com/cosmos/cosmos-sdk/blob/64fd208a11fb54f7ffdca1a1290c2cfbbc254e49/x/bank/keeper/msg_server.go", note: "Transaction 봉투 검사와 MsgSend의 주소·amount·send policy·balance 변경 분리" },
+    { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — BaseApp branch tests", href: "https://github.com/cosmos/cosmos-sdk/blob/64fd208a11fb54f7ffdca1a1290c2cfbbc254e49/baseapp/baseapp_test.go", note: "Ante 실패·message 실패·전체 성공과 CheckTx state reset 동작을 고정" },
   ],
   "blockchain/evmos": [
     { kind: "공식 코드", label: "Evmos v20.0.0 — Ethereum ante", href: "https://github.com/evmos/evmos/tree/v20.0.0/app/ante/evm", note: "Sender recovery·fee·nonce·gas·sequence decorator ordering의 historical pinned source" },
