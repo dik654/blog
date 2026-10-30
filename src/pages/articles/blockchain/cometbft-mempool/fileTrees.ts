@@ -12,12 +12,14 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const cometbftMempoolTree: FileNode = d("cometbft", [
+export const cometbftMempoolTree: FileNode = d("cometbft @ 0880b4d3", [
   d("mempool", [
-    f("CListMempool struct", "mempool/clist_mempool.go", "clist-struct"),
-    f("CheckTx()", "mempool/clist_mempool.go", "clist-checktx"),
-    f("reqResCb + addTx()", "mempool/clist_mempool.go", "clist-addtx"),
-    f("Update()", "mempool/clist_mempool.go", "clist-update"),
-    f("recheckTxs()", "mempool/clist_mempool.go", "clist-recheck"),
+    f("clist_mempool.go — CheckTx gates", "mempool/clist_mempool.go", "checktx-gates"),
+    f("clist_mempool.go — callback admission", "mempool/clist_mempool.go", "callback-admission"),
+    f("clist_mempool.go — reap · signal", "mempool/clist_mempool.go", "reap-signal"),
+    f("clist_mempool.go — Update · recheck", "mempool/clist_mempool.go", "update-recheck"),
+  ]),
+  d("state", [
+    f("execution.go — Commit · async Update", "state/execution.go", "commit-update"),
   ]),
 ]);

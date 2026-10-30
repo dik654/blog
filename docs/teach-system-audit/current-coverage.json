@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 726,
-    "pending": 281,
+    "reviewed": 727,
+    "pending": 280,
     "untracked": 0,
-    "assignedPending": 239,
+    "assignedPending": 238,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4645,7 +4645,7 @@
       "catalogIndex": 461,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4663,9 +4663,9 @@
       "publicPath": "cs/blockchain/cometbft-mempool",
       "title": "CometBFT mempool: admission · reap · recheck",
       "catalogIndex": 463,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

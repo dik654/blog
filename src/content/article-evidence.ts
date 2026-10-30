@@ -5977,9 +5977,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "CometBFT v0.40.0 — consensus/replay.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/consensus/replay.go", note: "BlockStore·StateStore·application height와 AppHash 조합별 real application·mock application replay 구현" },
   ],
   "blockchain/cometbft-mempool": [
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/clist_mempool.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/mempool/clist_mempool.go", note: "Capacity·cache·CheckTx·reap·Update·recheck의 pinned 구현" },
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/mempool.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/mempool/mempool.go", note: "Mempool interface와 Lock·Update·TxsAvailable contract" },
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/execution.go", note: "Application Commit과 mempool flush/Update 사이 동시성 경계" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/clist_mempool.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/mempool/clist_mempool.go", note: "두 차례의 관찰형 capacity check, cache·비동기 CheckTx·CList 삽입·reap·Update·recheck를 content commit으로 고정한 기준" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/mempool.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/mempool/mempool.go", note: "Lock·Update·FlushAppConn·TxsAvailable의 interface contract와 pre/postCheck 정의" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/execution.go", note: "Application Commit 전 pending CheckTx flush와 asynchronous mempool Update가 같은 write-lock 구간에 놓이는 실제 구현" },
   ],
   "blockchain/cometbft-p2p": [
     { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/conn/connection.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/p2p/conn/connection.go", note: "MConnection의 bounded channel queue·weighted packet scheduler·분할·재조립·같은 recvRoutine dispatch를 content commit으로 고정한 기준" },

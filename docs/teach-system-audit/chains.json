@@ -810,38 +810,64 @@
     {
       "route": "blockchain/cometbft-mempool",
       "title": "CometBFT mempool: admission · reap · recheck",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-mempool.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-mempool.tsx",
-        "src/pages/articles/blockchain/cometbft-mempool/ModernArticle.tsx"
+        "src/pages/articles/blockchain/cometbft-mempool/ModernArticle.tsx",
+        "src/pages/articles/blockchain/cometbft-mempool/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/cometbft-mempool/viz/MempoolLifecycleViz.tsx",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "stageMarkers": 9,
+        "predictionPointers": 5,
+        "assumptionMarkers": 4,
+        "sourceButtons": 7,
         "headings": [
-          "Mempool은 미확정 transaction의 local 대기실이지 공유 원장이 아니다",
-          "list 순서는 proposal 후보를 읽기 위한 local snapshot이다",
-          "capacity → 단건 크기 → preCheck → cache → async CheckTx 순서로 좁힌다",
-          "새 committed state에서 남은 후보를 다시 검사할 때까지 admission view를 섞지 않는다"
+          "두 transaction으로 local 후보 집합의 한 세대를 추적합니다",
+          "Admission은 두 번 관찰하지만 엄격한 byte ceiling은 아닙니다",
+          "Reap은 local list를 proposal 입력으로 읽는 순간의 snapshot입니다",
+          "Commit과 Update가 끝날 때까지 old-state admission을 끼워 넣지 않습니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 capacity·cache·CheckTx·reap·Update를 각각 설명했지만 같은 T1·T2가 cache·active pool·proposal snapshot·committed state를 이동하는 상태 변화를 한 흐름으로 보여 주지 않았습니다.",
+        "기존 코드 패널은 CometBFT v0.40.0의 실제 source가 아니라 손으로 만든 historical snapshot이어서 현재 CListMempool의 read lock·recheck state·async Update 순서를 근거로 사용할 수 없었습니다.",
+        "기존 capacity 설명은 callback의 두 번째 isFull을 strict ceiling처럼 읽히게 했지만 공식 코드는 검사와 addTx를 원자적으로 묶지 않고 초과 가능성을 줄인다고만 명시합니다.",
+        "기존 글의 release gate는 개념 글에서 제품 운영 판단을 섞었고 recheck timeout·late response라는 시스템 자체의 실패 의미보다 배포 체크리스트를 앞세웠습니다."
+      ],
+      "fixture": "Height 40의 node N에서 active pool이 900/1,000 bytes일 때 80-byte T1(alice→bob 10)과 T2(carol→dave 5)가 동시에 CheckTx callback을 통과해 1,060 bytes가 되고, proposer는 T1만 reap하며 B41 Commit·Update가 T1을 제거한 뒤 X41 recheck가 T2를 invalid로 제거하는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "Height 40·application X40·active pool 900/1,000 bytes에 T1·T2가 도착하지만 cache와 pool은 아직 변하지 않습니다.",
+        "1": "각 CheckTx가 count·pool bytes·MaxTxBytes·preCheck를 보고 900+80≤1,000을 관찰합니다.",
+        "2": "TxCache가 T1·T2 key를 먼저 선점해 duplicate application request를 막지만 active pool membership은 아직 아닙니다.",
+        "3": "CheckTxAsync가 X40에서 T1·T2의 Code와 GasWanted를 반환하며 request별 callback이 first-time admission을 이어갑니다.",
+        "4": "두 callback이 모두 900을 읽은 뒤 addTx하면 CList와 TxKey map에 T1·T2가 들어가고 raw byte counter는 1,060이 됩니다.",
+        "5": "ReapMaxBytesMaxGas가 local list의 protobuf size와 GasWanted를 누적해 T1을 proposal input으로 읽고 T2는 잔류합니다.",
+        "6": "BlockExecutor가 mempool을 잠그고 pending CheckTx를 flush한 뒤 T1과 Carol 상태를 바꾸는 transaction이 든 B41을 application X41로 Commit합니다.",
+        "7": "Update(41)가 committed T1을 active pool에서 제거하고 valid key는 cache에 남기며 height별 availability 표식을 다시 시작합니다.",
+        "8": "남은 T2를 CheckTxType_Recheck로 X41에서 판정해 invalid이면 pool에서 제거하고, timeout은 모두 valid하다는 receipt가 아님을 남깁니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 mempool/clist_mempool.go CheckTx·resCbFirstTime·addTx·reap·Update·recheck 구현",
+        "같은 commit의 mempool/mempool.go Lock·Update·FlushAppConn·TxsAvailable interface contract와 pre/postCheck 정의",
+        "같은 commit의 state/execution.go mempool write lock·pending CheckTx flush·application Commit·asynchronous Update·unlock 순서"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 commit의 CheckTx, first-time callback, cache/pool membership, reap, Commit·async Update와 recheck state machine을 읽고 손으로 만든 legacy snapshot을 실제 제어 흐름 발췌로 교체했습니다.",
+        "arithmetic": "900+80=980≤1,000을 두 callback이 각각 관찰한 뒤 atomic add 결과가 1,060이 되는 가능한 interleaving을 공식 주석의 best-effort 의미와 맞췄습니다. 성능 수치는 측정하지 않았습니다.",
+        "humanize": "T1·T2 한 사례를 먼저 보여 준 뒤 local gate→cache→CheckTx→callback race→reap→Commit→Update→recheck 순서로 설명하고 release gate 운영 항목을 개념 글에서 제거했습니다.",
+        "browser390": "390×844에서 document 폭과 viewport 폭이 모두 390px입니다. 가장 긴 마지막 장면을 선택했을 때 시각화와 조작부가 693.44px 높이 안에 함께 들어왔고 ArrowLeft로 장면 8에서 7로 이동했습니다. console 오류는 0건입니다.",
+        "browser1440": "1440×1000에서 document 폭과 viewport 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지됐고 group focus 뒤 ArrowRight로 장면 1에서 2로 이동했습니다. Callback admission 고정 source code sidebar의 열기·닫기와 console 오류 0건을 확인했습니다.",
+        "reducedMotion": "390×844에서 prefers-reduced-motion: reduce를 적용하면 재생 버튼이 비활성화되고 8초 뒤에도 첫 장면이 유지됩니다. console 오류는 0건입니다.",
+        "resource": "Strict 감사와 production build를 직렬 실행했습니다. 최종 build 최대 RSS는 6,367,576,064 bytes, swap은 0이었으며 Playwright는 한 세션씩 열고 이름으로 종료했습니다.",
+        "static": "2,120개 정적 public route와 no-script 본문 384편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 900/1,000 bytes callback race 수식, 실패 동작과 부모 지도 반환이 모두 남고 console 오류는 0건임을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-two-concurrent-checktx-callbacks-through-cache-pool-reap-commit-update-and-recheck-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-p2p",
