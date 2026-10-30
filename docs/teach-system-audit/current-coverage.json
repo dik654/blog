@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 711,
-    "pending": 296,
+    "reviewed": 712,
+    "pending": 295,
     "untracked": 0,
-    "assignedPending": 254,
+    "assignedPending": 253,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5383,9 +5383,9 @@
       "publicPath": "cs/blockchain/impl-elliptic-curve",
       "title": "타원곡선 & 페어링 구현 (Rust)",
       "catalogIndex": 535,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

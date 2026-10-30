@@ -9522,10 +9522,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Fp 저장·MontConfig 상수·range admission·Montgomery reduction·canonical serialization은 arkworks algebra commit 6a28df5 source에 귀속한다." }, { kind: "project-claim", rule: "p=13 예시는 공식 구현을 설명하기 위해 독립 계산한 축소 사례이며 arkworks의 production parameter가 아니다." }, { kind: "project-claim", rule: "Source-level branchless 표현과 한 arithmetic trace를 production constant-time·성능·배포 승인으로 확대하지 않는다." }],
   },
   "impl-elliptic-curve": {
-    title: "Rust curve profile·point admission·pairing release 글이 소유하는 범위",
-    owns: ["Curve/pairing profile artifact와 untrusted point admission", "Coordinate operation profile과 negative-vector pairing release gate"],
+    title: "Rust curve point lifecycle·pairing boundary 글이 소유하는 범위",
+    owns: ["Curve/pairing profile의 타입 관계와 untrusted point admission", "한 점의 decode·부분군 승인·double·serialize 경로와 G1×G2→GT pairing 경계"],
     reuses: [{ label: "Elliptic-curve group", href: "/cs/crypto/elliptic-curves" }, { label: "Field implementation", href: "/cs/blockchain/impl-field-arithmetic" }],
-    evidence: [{ kind: "primary-source", rule: "BN254와 point operation facts는 arkworks commits e2d16a2·6a28df5에 귀속한다." }, { kind: "project-measurement", rule: "Official/reference vectors와 malformed/off-curve/subgroup failures 뒤 stage timings를 비교한다." }, { kind: "project-claim", rule: "On-curve·formula 이름·bilinearity 몇 건을 complete formula·security audit로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "BN254와 point operation facts는 arkworks commits e2d16a2·6a28df5에 귀속한다." }, { kind: "project-claim", rule: "F17의 19개 점과 P=(5,1)의 double은 공식 구현을 설명하기 위해 독립 계산한 축소 사례입니다." }, { kind: "project-claim", rule: "On-curve·formula 이름·bilinearity 등식을 complete formula·security audit·production 승인으로 확대하지 않는다." }],
   },
   "impl-groth16": {
     title: "Rust Groth16 artifact·prover plan·release 글이 소유하는 범위",
