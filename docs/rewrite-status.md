@@ -4723,4 +4723,13 @@
 - 고정 commit의 `TestBaseAppAnteHandler`와 `TestABCI_CheckTx`를 직접 재실행했습니다. 45.59초, 최대 RSS 1,342,226,432 bytes, swap 0이었으며 전체 SDK 성능 측정으로 읽지 않도록 범위를 표시했습니다.
 - 1,440×900에서 여덟 장면의 상태 전환·고정 높이·키보드 이동을 확인했습니다. 첫 장면은 5.2초 뒤에도 유지됐고 reduced-motion에서도 자동 재생되지 않았습니다. 코드 패널은 코드 영역에 focus를 두고 node-local·committed 경계의 한국어 주석을 보여 줍니다.
 - 390×844에서 문서 폭은 390px로 맞고, 가장 긴 장면은 768px로 고정 헤더 아래의 조작부까지 한 화면에 들어옵니다. 상태 카드를 2×2로 유지하고 장면 설명을 상태 변화 중심으로 줄여 본문과 시각화의 역할을 나눐습니다.
-- Node heap 8GB의 최종 production build는 8,166개 module, 정적 public route 2,120개와 no-script 본문 377편을 생성했습니다. 150.93초, 최대 RSS 6,386,286,592 bytes, swap 0이었습니다. 공개 배포와 공개 URL 재검증이 남아 있습니다.
+- Node heap 8GB의 최종 production build는 8,166개 module, 정적 public route 2,120개와 no-script 본문 377편을 생성했습니다. 150.93초, 최대 RSS 6,386,286,592 bytes, swap 0이었습니다.
+- GitHub Pages run `41115651921`가 성공한 뒤 공개 390×844 경로에서 제목·질문·문서 폭 390=390, 첫 장면과 5.2초 무자동재생, console 오류·경고 0건을 확인했습니다. JavaScript 비활성 공개 경로도 HTTP 200, 폭 390=390, 정적 여덟 장면과 부모 지도 반환이 남아 현재 상태는 `rewritten-production-verified`입니다.
+
+# CometBFT 결정 증거 타입 개념 글 로컬 검증 완료 (2026-10-31)
+
+- `blockchain/cometbft-types`를 높이 41의 historical ValidatorSet A 40·B 35·C 25와 Block B41 한 건으로 다시 구성했습니다. Header hash HB41, canonical precommit, A+B의 75/100 Commit과 A의 상충 서명이 Evidence 후보로 갈라지는 과정을 여덟 장면으로 추적합니다.
+- 기존 코드 패널은 v0.40.0 실제 source처럼 보이지만 손으로 단순화한 snapshot이었습니다. CometBFT v0.40.0 content commit `0880b4d378f347ab16e54ec677ff50d803f37d62`의 `types/block.go`, `vote.go`, `canonical.go`, `validation.go`, `validator_set.go`, `evidence.go`와 `evidence/verify.go`의 실제 연속 구간으로 교체했습니다. 특히 `MakePartSet`의 실제 `ToProto`·`proto.Marshal`, proposer priority의 rescale·centering, duplicate vote의 historical membership·power·두 signature 검증을 반영했습니다.
+- A 40+B 35=75, total 100, 75>66⅔을 장면·수식·연습문제에서 같은 fixture로 확인했습니다. C의 absent는 HB41의 signed power에 더하지 않고, proposer priority는 Commit certificate가 아니라 다음 proposer를 고르는 실행 상태로 분리했습니다.
+- 1,440×900에서 문서 폭 1,440=1,440, 390×844에서 390=390이며 모바일 live 시각화는 첫 장면 약 668px, 가장 긴 Evidence 장면 약 680px로 조작부까지 한 화면에 들어옵니다. 6초 무자동재생, 장면 버튼, visual focus 뒤 ArrowRight, Space 재생, reduced-motion의 재생 비활성·수동 이동과 실제 코드 패널을 확인했습니다.
+- JavaScript 비활성 390×844 정적 경로는 HTTP 200, 정적 여덟 장면, live UI 0개, visible button 0개이며 질문·직속 부모·반환 사실·고정 commit 근거가 남습니다. TypeScript, Vite production build, 정적 경로 생성과 관련 strict 감사를 통과했습니다. Vite 최대 RSS 4,363,173,888 bytes, 정적 생성 최대 RSS 1,633,681,408 bytes, swap 0이었고 no-script 본문은 379편으로 늘었습니다. 공개 배포와 공개 URL 재검증이 남아 있습니다.

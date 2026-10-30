@@ -39,11 +39,11 @@ export const cosmosArticles: Article[] = [
     sections: [
       {
         id: "overview",
-        title: "핵심 type은 block·vote·commit의 합의 증거를 보존한다",
+        title: "B41의 결정 증거를 끝까지 추적하기",
       },
-      { id: "block-header", title: "Block & Header 구조체" },
-      { id: "vote-commit", title: "Vote · Commit · VoteSet" },
-      { id: "validator-set", title: "ValidatorSet & 가중 추첨" },
+      { id: "block-header", title: "Block에서 Header hash까지" },
+      { id: "vote-commit", title: "Canonical vote에서 75/100 Commit까지" },
+      { id: "validator-set", title: "Historical power·proposer·evidence" },
     ],
     component: () => import("@/pages/articles/blockchain/cometbft-types"),
   },

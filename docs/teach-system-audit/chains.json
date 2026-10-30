@@ -26,7 +26,11 @@
           "좋은 AA 기능은 실행 가능한 최소 권한 policy와 복구 절차로 정의합니다"
         ]
       },
-      "issues": [],
+      "issues": [
+        "기존 글은 Block·Vote·Validator를 각각 설명했지만 하나의 BlockID가 서명과 historical power를 거쳐 Commit이 되는 과정을 같은 fixture로 이어 주지 않았습니다.",
+        "기존 CodeSidebar는 실제 v0.40.0 source처럼 보이는 손수 만든 축약 snapshot을 열었고 MakePartSet·proposer priority·evidence 검증의 실제 구현과 달랐습니다.",
+        "Commit power와 proposer priority가 모두 voting power를 사용한다는 이유로 결정 증거와 local scheduler state를 혼동할 여지가 있었습니다."
+      ],
       "fixture": {
         "case": "USDC200→160/B0→40;session30mincap100,spent40/rem60;key0nonce7→8;paymaster.01reserve.003charge.001refund.002final.009"
       },
@@ -847,15 +851,17 @@
     {
       "route": "blockchain/cometbft-types",
       "title": "CometBFT 타입: Block · Vote · Validator",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-types.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/cometbft-core-viz.tsx",
         "src/pages/articles/blockchain/cometbft-types.tsx",
         "src/pages/articles/blockchain/cometbft-types/BlockHeader.tsx",
         "src/pages/articles/blockchain/cometbft-types/Overview.tsx",
         "src/pages/articles/blockchain/cometbft-types/ValidatorSet.tsx",
-        "src/pages/articles/blockchain/cometbft-types/VoteCommit.tsx"
+        "src/pages/articles/blockchain/cometbft-types/VoteCommit.tsx",
+        "src/pages/articles/blockchain/cometbft-types/viz/CometBFTTypesEvidenceViz.tsx",
+        "src/pages/articles/blockchain/cometbft-types/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -870,19 +876,34 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "fixture": "높이 41의 ValidatorSet A 40·B 35·C 25에서 제안된 B41의 Header hash HB41에 A와 B가 precommit해 75/100 Commit이 되고, A의 다른 BlockID 서명이 DuplicateVoteEvidence 후보로 갈라지는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "높이 41의 historical ValidatorSet A 40·B 35·C 25와 공개키를 이후 검증 기준으로 고정합니다.",
+        "1": "Transaction·Evidence·LastCommit을 포함한 Block B41이 아직 결정되지 않은 payload로 만들어집니다.",
+        "2": "정해진 Header field 순서의 Merkle commitment가 BlockID HB41을 만듭니다.",
+        "3": "demo-1·height 41·round 0·PRECOMMIT·HB41을 CanonicalVote로 바꿔 서명 입력을 고정합니다.",
+        "4": "A의 signature를 historical public key로 검증하고 같은 HB41 묶음에 power 40을 한 번 더합니다.",
+        "5": "B의 같은 좌표 precommit을 더해 75/100이 되며 C absent는 0으로 남습니다.",
+        "6": "VerifyCommit이 좌표·BlockID·signature·historical power를 검증하고 75가 2/3보다 커 B41 Commit을 성립시킵니다.",
+        "7": "A의 같은 H/R/type·다른 BlockID 서명은 Commit power가 아니라 historical membership·두 signature·age를 확인할 Evidence 후보가 됩니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 types/block.go, types/vote.go, types/canonical.go, types/validation.go, types/validator.go, types/validator_set.go, types/evidence.go",
+        "같은 commit의 evidence/verify.go와 spec/core/data_structures.md, spec/consensus/evidence.md"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 commit의 실제 구조체·canonical sign bytes·VerifyCommit·priority rescale·VerifyDuplicateVote를 읽고, 손으로 만든 축약 code snapshot을 공식 원문 발췌로 교체했습니다.",
+        "arithmetic": "A 40+B 35=75, total 100, 75>66⅔를 장면·수식·연습문제에서 같은 fixture로 확인했습니다. Absent C 25는 HB41의 signed power에 더하지 않습니다.",
+        "humanize": "한 질문과 한 B41 사례를 중심으로 Header hash→canonical vote→Commit→Evidence 순서로 고쳤고, 부모 지도 위치와 반환 사실을 추가했습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 첫 장면 668px, 가장 긴 Evidence 장면 약 680px로 조작부까지 한 화면에 들어오며 8개 탭은 자체 가로 스크롤을 사용합니다. 실제 Header.Hash 코드 패널도 문서 가로 넘침 없이 열립니다.",
+        "browser1440": "1440×900에서 document 폭과 scroll 폭이 모두 1440px이고 8개 장면·두 상태 카드·validator 표·Commit power·receipt가 보입니다. 6초 무자동재생, 장면 버튼, group focus 뒤 ArrowRight, Space 재생, CodeSidebar와 Escape 닫기를 확인했습니다.",
+        "reducedMotion": "390×844에서 재생 버튼이 비활성화되고 ArrowRight 수동 이동으로 마지막 Evidence 장면까지 확인했습니다.",
+        "static": "TypeScript·Vite production build·정적 경로 생성을 통과했습니다. JavaScript 비활성 390×844 경로는 HTTP 200, 폭 390=390, 정적 8장면, live UI 0개, visible button 0개이며 질문·부모 지도 반환·고정 commit 근거가 남습니다. Vite 최대 RSS 4,363,173,888 bytes, 정적 생성 최대 RSS 1,633,681,408 bytes, swap 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-block-through-header-vote-commit-and-evidence-with-pinned-source"
     },
     {
       "route": "blockchain/commonware-broadcast",
@@ -1433,7 +1454,7 @@
     {
       "route": "blockchain/cosmos-sdk",
       "title": "Cosmos SDK v0.55: transaction에서 committed state까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/cosmos-sdk.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cosmos-sdk.tsx",
@@ -1480,11 +1501,10 @@
         "arithmetic": "Alice 100−fee 1−send 10=89, Bob 20+10=30, sequence 7→8을 각 branch의 merge 시점과 함께 확인했습니다. Gas 30·50·5는 설명용 가정값으로 표시했습니다.",
         "humanize": "ko-natural 경로 검사는 오류 0·문맥 검토 0이며 ESLint·TypeScript·production build가 통과했습니다.",
         "browser390": "390×844에서 문서 390=390, 가로 넘침 0, 가장 긴 live 본체 768px로 고정 헤더 아래 조작부까지 한 화면에 들어옴을 확인했습니다.",
-        "browser1440": "1440×900에서 8개 장면의 높이·상태 전환, 5.2초 무자동재생, 키보드 이동과 실제 코드 패널의 한국어 주석을 확인했습니다."
+        "browser1440": "1440×900에서 8개 장면의 높이·상태 전환, 5.2초 무자동재생, 키보드 이동과 실제 코드 패널의 한국어 주석을 확인했습니다.",
+        "production": "GitHub Pages run 41115651921 성공 뒤 공개 390×844 경로에서 제목·질문·문서 폭 390=390과 첫 장면을 확인했고, 5.2초 무자동재생과 console 오류·경고 0건을 확인했습니다. JavaScript 비활성 공개 경로도 HTTP 200, 폭 390=390, 정적 8장면과 부모 지도 반환이 남습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-one-transaction-through-check-finalize-and-commit"
     },
     {

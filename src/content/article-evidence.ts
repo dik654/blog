@@ -5989,20 +5989,20 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "공식 규격",
       label: "CometBFT v0.40.0 — Data Structures",
-      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/core/data_structures.md",
-      note: "Block·Header·Vote·Commit·ValidatorSet·Evidence field와 validation rule의 pinned 기준",
+      href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/core/data_structures.md",
+      note: "Block·Header·Vote·Commit·ValidatorSet·Evidence field와 validation rule을 content commit으로 고정한 기준",
     },
     {
       kind: "공식 규격",
       label: "CometBFT v0.40.0 — Evidence",
-      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/evidence.md",
+      href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/consensus/evidence.md",
       note: "Duplicate vote·light-client attack evidence의 검증·gossip·commit 경계",
     },
     {
       kind: "공식 코드",
       label: "CometBFT v0.40.0 — types source snapshot",
-      href: "https://github.com/cometbft/cometbft/tree/v0.40.0/types",
-      note: "Canonical sign bytes와 validation implementation을 확인하는 pinned source",
+      href: "https://github.com/cometbft/cometbft/tree/0880b4d378f347ab16e54ec677ff50d803f37d62/types",
+      note: "Canonical sign bytes와 validation implementation을 확인하는 content commit source",
     },
   ],
   "blockchain/filecoin-f3": [
