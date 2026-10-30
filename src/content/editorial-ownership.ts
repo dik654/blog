@@ -9528,10 +9528,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "BN254와 point operation facts는 arkworks commits e2d16a2·6a28df5에 귀속한다." }, { kind: "project-claim", rule: "F17의 19개 점과 P=(5,1)의 double은 공식 구현을 설명하기 위해 독립 계산한 축소 사례입니다." }, { kind: "project-claim", rule: "On-curve·formula 이름·bilinearity 등식을 complete formula·security audit·production 승인으로 확대하지 않는다." }],
   },
   "impl-groth16": {
-    title: "Rust Groth16 artifact·prover plan·release 글이 소유하는 범위",
-    owns: ["Relation/witness/domain/key artifact profile과 setup-key admission", "Dependency-aware QAP/MSM execution과 independent-verifier release gate"],
-    reuses: [{ label: "Groth16 protocol", href: "/cs/crypto/groth16" }, { label: "R1CS", href: "/cs/crypto/r1cs" }],
-    evidence: [{ kind: "primary-source", rule: "Protocol은 ePrint 2016/260, Rust layout/prover는 ark-groth16 commit 8f0904a에 귀속한다." }, { kind: "project-measurement", rule: "Same circuit/key/witness에서 negative fixtures·independent verification 뒤 stage/end-to-end·RSS를 측정한다." }, { kind: "project-claim", rule: "Deserialize·proof 생성·MSM speed를 setup provenance·valid proof·end-to-end improvement로 확대하지 않는다." }],
+    title: "Rust Groth16 circuit·proof·verification 경계 글이 소유하는 범위",
+    owns: ["Circuit relation과 public instance·private witness의 assignment 경계", "R1CS→QAP→A·B·C proof와 public-input pairing 검증 경로"],
+    reuses: [{ label: "Groth16 protocol", href: "/cs/crypto/groth16" }, { label: "R1CS", href: "/cs/crypto/r1cs" }, { label: "Curve·pairing implementation", href: "/cs/blockchain/impl-elliptic-curve" }],
+    evidence: [{ kind: "primary-source", rule: "Protocol은 ePrint 2016/260, circuit/prover/proof/verifier 경로는 ark-groth16 commit 8f0904a에 귀속한다." }, { kind: "project-claim", rule: "x=3·y=5·z=15는 assignment와 검증 경계를 설명하는 축소 사례이며 실제 proof point 수치가 아니다." }, { kind: "project-claim", rule: "Proof 세 점과 verifier true를 setup ceremony·circuit 업무 의미·production readiness 전체로 확대하지 않는다." }],
   },
   "rapidsnark-gpu": {
     title: "rapidsnark CPU 사실·proposed GPU adapter 글이 소유하는 범위",

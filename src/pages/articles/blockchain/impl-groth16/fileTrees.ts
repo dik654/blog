@@ -12,14 +12,13 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const zkGroth16Tree: FileNode = d("zk_from_scratch", [
-  d("crates/primitives/src", [
-    f(
-      "r1cs.rs — Variable, LinearCombination, ConstraintSystem, Circuit",
-      "r1cs.rs",
-      "r1cs-types",
-    ),
-    f("qap.rs — Polynomial, QAP, Lagrange 보간", "qap.rs", "qap-convert"),
-    f("groth16.rs — setup, prove, verify", "groth16.rs", "groth16-setup"),
+export const groth16Tree: FileNode = d("arkworks · groth16 · 8f0904a", [
+  d("groth16/tests", [
+    f("mimc.rs — circuit", "tests/mimc.rs", "ark-groth16-circuit"),
+  ]),
+  d("groth16/src", [
+    f("prover.rs", "src/prover.rs", "ark-groth16-prover"),
+    f("data_structures.rs", "src/data_structures.rs", "ark-groth16-proof"),
+    f("verifier.rs", "src/verifier.rs", "ark-groth16-verifier"),
   ]),
 ]);

@@ -407,6 +407,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/impl-field-arithmetic",
   "blockchain/impl-elliptic-curve",
   "blockchain/impl-hash-commitment",
+  "blockchain/impl-groth16",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

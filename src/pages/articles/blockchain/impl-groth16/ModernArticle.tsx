@@ -1,82 +1,361 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { Groth16ImplementationViz } from "./Groth16ImplementationViz";
+import Groth16ImplementationViz, {
+  Groth16VerifierViz,
+  Groth16VisibilityViz,
+} from "./Groth16ImplementationViz";
+import ZkFromScratchLocator, {
+  ZkFromScratchMapReturn,
+} from "../impl-field-arithmetic/ZkFromScratchLocator";
+import { groth16Tree } from "./fileTrees";
+import { officialGroth16CodeRefs } from "./officialCodeRefs";
 
-const GROTH16 = "https://eprint.iacr.org/2016/260";
-const ARK_PROVER = "https://github.com/arkworks-rs/groth16/blob/8f0904a7d7a2c8945bf770bdd3c2081e0be1941a/src/prover.rs";
-const ARK_DATA = "https://github.com/arkworks-rs/groth16/blob/8f0904a7d7a2c8945bf770bdd3c2081e0be1941a/src/data_structures.rs";
+const GROTH16_PAPER = "https://eprint.iacr.org/2016/260";
+const ARK_SOURCE =
+  "https://github.com/arkworks-rs/groth16/tree/8f0904a7d7a2c8945bf770bdd3c2081e0be1941a";
 
 export default function ModernGroth16ImplementationArticle() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">한 circuit artifact에서 검증 가능한 proof receipt까지</p><h2 className="text-3xl font-bold tracking-tight">Groth16 구현의 핵심은 세 점을 계산하는 코드가 아니라 circuit·witness·key·domain이 같은 relation을 가리키게 하는 것이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Groth16 proof는 작지만 prover의 입력은 작지 않습니다. Circuit에서 나온 R1CS, witness layout, QAP evaluation domain, proving key queries와 public input order가 모두 같아야 합니다. <a className="text-primary hover:underline" href="/cs/crypto/groth16">Groth16 수학 정본</a>이 R1CS→QAP와 pairing equation을 소유하므로, 이 글은 Rust artifact/profile, key admission, parallel execution과 release gate를 맡습니다.</p>
-      <p>고정 workload는 같은 circuit digest의 witness를 읽고 quotient polynomial을 계산한 뒤 A·B·C proof를 serialize하고 independent verifier가 승인하는 흐름입니다. Setup key가 크기만 맞는다고 재사용하지 않으며, circuit revision이나 public input order가 바뀌면 다른 artifact입니다.</p>
-      <Groth16ImplementationViz />
-      <ContentBoundary article="impl-groth16" />
-    </section>
+  const sidebar = useCodeSidebar();
 
-    <section id="artifact-profile" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Artifact profile</p><h2 className="mt-2 text-2xl font-bold">relation digest·field/curve·public schema·domain·keys를 하나의 profile로 봉인한다</h2></header>
-      <p>Profile에는 source/compiler/R1CS digests, constraint·variable·public counts, witness symbol/order, scalar field와 curve ids, QAP domain size와 root order, proving/verifying key digests, serialization version과 generator revision을 넣습니다. Proof에도 직접 또는 receipt를 통해 profile id를 결속합니다.</p>
-      <ExplainedFormula question="서로 다른 circuit과 key가 조용히 섞이지 않게 어떤 identity를 만들까?" idea={<>모든 protocol-critical artifact를 length-delimited canonical encoding으로 digest합니다.</>} formula={String.raw`A_G=H(d_R\|d_W\|p\|E\|n\|\omega\|d_{pk}\|d_{vk}\|s\|v)`}
-      annotatedFormula={String.raw`\underbrace{A_G}_{\text{artifact ID}}=H(\underbrace{d_R\|d_W}_{\text{circuit·witness 순서}}\|\underbrace{p\|E}_{\text{field·curve}}\|\underbrace{n\|\omega}_{\text{QAP domain}}\|\underbrace{d_{pk}\|d_{vk}}_{\text{key bytes}}\|\underbrace{s\|v}_{\text{schema·revision}})`}
-      operations={[
-          { expression: String.raw`H(d_R\|d_W\|p\|E\|n\|\omega\|d_{pk}\|d_{vk}\|s\|v)`, annotation: ["protocol-critical artifact 전부를","length-delimited encoding으로 digest","input order나 ω만 달라도 A_G가 다름"] },
-        ]} terms={[
-        {symbol:"A_G",name:"Groth16 artifact id",description:"한 구현 profile을 식별하는 digest입니다."},{symbol:"H",name:"Pinned digest",description:"Canonical encoded fields를 묶는 hash입니다."},{symbol:"d_R",name:"Relation digest",description:"R1CS/circuit artifact의 digest입니다."},{symbol:"d_W",name:"Witness schema digest",description:"Signal order와 public/private layout을 식별합니다."},{symbol:"p",name:"Scalar field modulus",description:"R1CS와 polynomial coefficients가 속한 field입니다."},{symbol:"E",name:"Curve profile",description:"G1/G2/pairing implementation artifact id입니다."},{symbol:"n,\\omega",name:"QAP domain",description:"Domain size와 pinned primitive root입니다."},{symbol:"d_{pk},d_{vk}",name:"Key digests",description:"Proving/verifying key bytes의 identities입니다."},{symbol:"s,v",name:"Schema and revision",description:"Serialization schema와 implementation revision입니다."},
-      ]} assumptions={["각 field는 type·length가 분명한 canonical encoding이며 단순 문자열 이어붙이기를 쓰지 않습니다.","Digest는 혼합을 탐지할 뿐 trusted setup의 정직성이나 relation soundness를 증명하지 않습니다."]} interpretation="Constraint 수가 같아도 public input order나 root ω가 다르면 AG가 달라져야 합니다. 파일명만 같은 key cache는 admission 근거가 아닙니다." />
-      <div id="paper-groth16"><CitationBlock type="paper" citeKey={1} source="Groth · On the Size of Pairing-based Non-interactive Arguments · 2016/260" href={GROTH16}><p><strong>문제:</strong> Pairing 기반 preprocessing SNARK의 proof와 verifier를 매우 작고 빠르게 구성해야 합니다.</p><p><strong>핵심 기여:</strong> Relation-specific setup 아래 세 group elements의 proof와 pairing-based verification construction을 제시합니다.</p><p><strong>중요 가정:</strong> 논문의 algebraic groups, knowledge/soundness model, trusted setup와 randomness assumptions를 사용합니다.</p><p><strong>근거 범위:</strong> Groth16 protocol construction과 분석입니다.</p><p><strong>일반화 금지:</strong> 특정 Rust serialization·ceremony 운영·fixed proving speed나 구현 side-channel 안전성을 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-5 scroll-mt-20">
+        <ZkFromScratchLocator
+          currentSlug="impl-groth16"
+          region="Circuit·witness·proof·verifier 경계"
+          question="비공개 x=3, y=5는 어떻게 proof 세 점이 되고, verifier는 공개 z=15만으로 무엇을 확인합니까?"
+        />
 
-    <section id="setup-key" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Setup key admission</p><h2 className="mt-2 text-2xl font-bold">key를 mmap한 뒤 query length와 모든 encoded point를 검증하고 relation profile과 맞지 않으면 실패한다</h2></header>
-      <p>
-            Loader는 magic/schema/version, curve id, relation digest, domain size, public count와 query lengths를
-            먼저 검사합니다. Point bytes는 canonical decode, on-curve와 subgroup validation을 거칩니다. Setup transcript나
-            ceremony provenance가 필요하면 별도 attestation을 profile에 연결하며 key 파일을 성공적으로 읽었다는 사실을 toxic waste 폐기 증명으로
-            바꾸지 않습니다.
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 max-w-4xl break-keep text-3xl font-bold">
+            3과 5를 보내지 않고도 곱이 15라는 주장을 어떻게 검증합니까
+          </h2>
+          <p className="mt-3 max-w-3xl break-keep text-base leading-7 text-muted-foreground">
+            설명용 회로는 <code>x·y=z</code> 한 줄입니다. Prover는 비공개 witness <code>x=3</code>,
+            <code>y=5</code>를 사용하고, verifier는 공개 입력 <code>z=15</code>와 proof의 세 점만 받습니다.
+            이 한 건을 circuit 합성부터 pairing 판정까지 따라갑니다.
           </p>
-      <ExplainedFormula question="Proving key query 길이가 witness와 domain에 맞는지 어떤 bounds로 검사할까?" idea={<>A/B queries는 전체 variables, L query는 private variables, H query는 quotient domain에 맞아야 합니다.</>} formula={String.raw`|A|,|B_1|,|B_2|\ge N_v,\qquad |L|=N_v-N_{pub}-1,\qquad |H|\ge n-1`}
-      annotatedFormula={String.raw`\underbrace{|A|,|B_1|,|B_2|\ge N_v}_{\text{전체 변수만큼 point}},\qquad \underbrace{|L|=N_v-N_{pub}-1}_{\text{private 변수 수}},\qquad \underbrace{|H|\ge n-1}_{\text{quotient 계수 수}}`}
-      operations={[
-          { expression: String.raw`|A|,|B_1|,|B_2|\ge N_v`, annotation: ["상수 1 포함 witness 길이만큼 query","N_v=16이면 각 16개 이상"] },
-          { expression: String.raw`|L|=N_v-N_{pub}-1`, annotation: ["public과 상수 1을 뺀 private 몫","16−3−1=12개, 11·13 모두 거절"] },
-          { expression: String.raw`|H|\ge n-1`, annotation: ["quotient domain 크기에 맞는 point 수"] },
-        ]} terms={[
-        {symbol:"|A|,|B_1|,|B_2|",name:"Variable query lengths",description:"Witness scalars와 결합할 proving-key point counts입니다."},{symbol:"N_v",name:"Variable count",description:"상수 1을 포함한 witness vector 길이입니다."},{symbol:"|L|",name:"Private query length",description:"Public과 constant를 뺀 private witness용 G1 points입니다."},{symbol:"N_{pub}",name:"Public input count",description:"Verifier가 직접 결속하는 inputs 수입니다."},{symbol:"|H|",name:"Quotient query length",description:"QAP quotient coefficients와 결합할 points 수입니다."},{symbol:"n",name:"Domain size",description:"Pinned evaluation domain 크기입니다."},
-      ]} assumptions={["Exact inequalities와 indexing은 pinned implementation/key format에 귀속하며 loader와 generator가 같은 schema를 사용합니다.","길이 검사는 필요조건일 뿐 point validity·relation digest·ceremony provenance를 대신하지 않습니다."]} interpretation="N_v=16,N_pub=3이면 L은 12 points가 필요합니다. 11이면 out-of-bounds, 13이면 schema drift를 숨길 수 있으므로 exact profile rule로 거절합니다." />
-      <div id="paper-ark-groth16-data"><CitationBlock type="code" citeKey={2} source="arkworks Groth16 data structures · commit 8f0904a" href={ARK_DATA}><p><strong>문제:</strong> Proving/verifying keys와 proof의 curve-typed fields를 Rust에서 직렬화 가능한 구조로 나타내야 합니다.</p><p><strong>핵심 기여:</strong> Pinned source는 ProvingKey, VerifyingKey, PreparedVerifyingKey와 Proof structures를 정의합니다.</p><p><strong>중요 가정:</strong> commit 8f0904a와 동일한 arkworks algebra/serialization types와 curve configuration을 사용합니다.</p><p><strong>근거 범위:</strong> 해당 revision의 in-memory artifact layout과 trait surface입니다.</p><p><strong>일반화 금지:</strong> Deserialize 성공이 key provenance·subgroup admission·cross-version schema compatibility를 자동 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
+        </div>
 
-    <section id="prover-plan" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Prover execution plan</p><h2 className="mt-2 text-2xl font-bold">witness parity 뒤 quotient FFT와 독립 MSMs를 병렬화하되 dependency와 buffer lifetime을 receipt에 남긴다</h2></header>
-      <p>먼저 R1CS evaluator가 witness를 다시 검사합니다. 이어 A(X),B(X),C(X)를 domain에서 만들고 H(X)=(AB−C)/Z를 계산합니다. Query와 scalars가 준비된 MSM은 서로 병렬화할 수 있지만 H MSM은 quotient 완료 전 시작할 수 없습니다. Thread pool 수, FFT order, MSM window, scratch ownership과 peak RSS를 profile로 기록합니다.</p>
-      <ExplainedFormula question="왜 quotient 계산은 witness가 relation을 만족하는지 확인하는 구현 checkpoint가 될까?" idea={<>모든 constraints가 domain에서 0이면 AB−C는 vanishing polynomial Z로 나누어떨어집니다.</>} formula={String.raw`H(X)=\frac{A(X)B(X)-C(X)}{Z(X)},\qquad Z(X)=X^n-1`}
-      annotatedFormula={String.raw`\underbrace{H(X)}_{\text{prover quotient}}=\frac{\underbrace{A(X)B(X)-C(X)}_{\text{constraint 위반량}}}{\underbrace{Z(X)}_{\text{domain에서 0}}},\qquad Z(X)=X^n-1`}
-      operations={[
-          { expression: String.raw`A(X)B(X)-C(X)`, annotation: ["모든 R1CS row가 만족되면","domain의 모든 점에서 0"] },
-          { expression: String.raw`\frac{A(X)B(X)-C(X)}{Z(X)}`, annotation: ["0이면 Z로 나누어떨어져 H가 존재","n=4면 Z=X⁴−1","나머지≠0이면 MSM 전에 즉시 실패"] },
-        ]} terms={[
-        {symbol:"A(X),B(X),C(X)",name:"QAP polynomials",description:"R1CS rows와 witness를 결합한 polynomials입니다."},{symbol:"Z(X)",name:"Vanishing polynomial",description:"n-th root domain의 모든 points에서 0인 polynomial입니다."},{symbol:"n",name:"Domain size",description:"FFT/QAP profile이 정한 power-of-two 등 exact size입니다."},{symbol:"H(X)",name:"Quotient",description:"나머지가 0일 때 존재하는 prover polynomial입니다."},{symbol:"X",name:"Formal variable",description:"Polynomial indeterminate입니다."},
-      ]} assumptions={["Domain points와 interpolation order가 R1CS→QAP generator와 동일합니다.","나머지 0은 pinned witness/relation의 만족을 나타내지만 proof soundness 전체나 setup 정직성을 대신하지 않습니다."]} interpretation="n=4이면 Z=X⁴−1입니다. AB−C를 나눈 나머지가 0이 아니면 MSM을 계속해도 valid proof가 되지 않으므로 즉시 실패해야 합니다." />
-      <div id="paper-ark-groth16-prover"><CitationBlock type="code" citeKey={3} source="arkworks Groth16 prover · commit 8f0904a" href={ARK_PROVER}><p><strong>문제:</strong> Witness assignments, randomness와 proving-key queries에서 Groth16 A·B·C를 계산해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned source는 quotient witness map, scalar-query MSMs와 proof assembly의 concrete Rust path를 제공합니다.</p><p><strong>중요 가정:</strong> commit 8f0904a의 reduction trait, curve engine, key generation과 serialization revision을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 ark-groth16 prover implementation입니다.</p><p><strong>일반화 금지:</strong> 모든 stages가 자동 병렬화되거나 fixed memory/speed, production readiness·constant-time을 보장한다는 뜻은 아닙니다.</p></CitationBlock></div>
-    </section>
+        <Groth16ImplementationViz />
 
-    <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">positive proof 하나보다 mismatch fixtures와 independent verifier가 먼저다</h2></header>
-      <p>Valid witness와 함께 wrong public order, unsatisfied constraint, relation/key digest mismatch, truncated query, noncanonical/wrong-subgroup point, wrong domain root, corrupted proof와 swapped A/B/C를 넣습니다. Independent implementation verifier와 결과를 비교하고 stage timings, peak RSS, proof bytes, verifier time을 기록합니다. 실패하거나 p95/RSS budget을 넘으면 이전 binary·key artifact로 rollback합니다.</p>
-      <ExplainedFormula question="병렬 prover 성능을 어떤 end-to-end 경계에서 비교할까?" idea={<>Setup cache 조건을 고정하고 artifact admission부터 independent verification까지의 wall time을 합칩니다.</>} formula={String.raw`T_{e2e}=T_{admit}+T_{witness}+T_{QAP}+T_{MSM}+T_{serialize}+T_{verify}`}
-      annotatedFormula={String.raw`T_{e2e}=\underbrace{T_{admit}+T_{witness}}_{\text{입력 검증}}+\underbrace{T_{QAP}+T_{MSM}}_{\text{proof 생성}}+\underbrace{T_{serialize}+T_{verify}}_{\text{출력·독립 검증}}`}
-      operations={[
-          { expression: String.raw`T_{admit}+T_{witness}`, annotation: ["profile·key 검증과 R1CS 만족 검사"] },
-          { expression: String.raw`T_{QAP}+T_{MSM}`, annotation: ["FFT·quotient와 MSM critical path","MSM만 2배 빨라도 전체는 2배 아님"] },
-          { expression: String.raw`T_{serialize}+T_{verify}`, annotation: ["canonical 출력과 분리된 verifier receipt","겹친 stage는 trace critical path로"] },
-        ]} terms={[
-        {symbol:"T_{e2e}",name:"End-to-end latency",description:"한 proof가 release receipt를 얻는 전체 시간입니다."},{symbol:"T_{admit}",name:"Admission",description:"Profile·key·encoding 검증 시간입니다."},{symbol:"T_{witness}",name:"Witness parity",description:"Witness load와 R1CS satisfaction 검사 시간입니다."},{symbol:"T_{QAP}",name:"QAP time",description:"FFT, quotient와 divisibility 확인 시간입니다."},{symbol:"T_{MSM}",name:"MSM time",description:"All proof query MSMs의 critical-path 시간입니다."},{symbol:"T_{serialize}",name:"Serialization",description:"Canonical proof/public output 생성 시간입니다."},{symbol:"T_{verify}",name:"Independent verification",description:"분리된 verifier가 receipt를 만드는 시간입니다."},
-      ]} assumptions={["Same circuit/key/profile/input, thread affinity와 cold/warm cache condition을 고정합니다.","겹쳐 실행된 stages는 단순 합산하지 말고 trace의 wall-clock critical path와 stage durations를 함께 보고합니다."]} interpretation="MSM만 2배 빨라져도 admission·QAP·verify가 지배하면 end-to-end는 2배가 아닙니다. 고정 배속 대신 측정 receipt를 남깁니다." />
-      <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 10/10:</strong> profile identity, public order, key admission, query lengths, quotient 식, n=4 예, parallel dependency, proof structure, negative suite, end-to-end·rollback을 이 글만으로 답할 수 있습니다.</aside>
-    </section>
-  </article>;
+        <p className="text-lg leading-8">
+          <strong>Groth16의 입력은 proof 하나가 아닙니다.</strong> 같은 circuit에서 만든 proving key와
+          verifying key, 공개 입력의 순서, 비공개 witness, proof의 세 group point가 서로 맞아야 합니다.
+        </p>
+        <p>
+          R1CS·QAP와 Groth16의 수학적 구성은{" "}
+          <Link to="/cs/crypto/groth16" className="font-bold text-primary hover:underline">
+            Groth16 정본
+          </Link>
+          이 설명합니다. 이 글은 그 수학적 객체가 arkworks의 circuit, assignment, proving key, proof struct와
+          verifier 함수에서 어떤 값으로 나타나는지만 추적합니다.
+        </p>
+        <ContentBoundary article="impl-groth16" />
+      </section>
+
+      <section id="circuit-witness" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          Circuit은 값 3과 5가 아니라 x·y=z라는 관계를 고정합니다
+        </h2>
+        <Groth16VisibilityViz />
+        <p>
+          Setup 때는 같은 circuit의 변수와 제약식 모양만 필요하므로 witness 값을 비워 둘 수 있습니다. Proof를
+          만들 때는 같은 모양의 circuit에 실제 값 <code>x=3</code>, <code>y=5</code>, <code>z=15</code>를
+          넣습니다. 따라서 key는 특정 숫자 3과 5가 아니라 <strong>관계의 모양</strong>에 묶입니다.
+        </p>
+
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3">
+          {[
+            ["Circuit", "x·y=z", "변수의 공개 여부와 제약식"],
+            ["Witness", "x=3 · y=5", "prover만 사용하는 비공개 할당"],
+            ["Instance", "z=15", "verifier도 알고 있는 공개 할당"],
+          ].map(([title, value, role]) => (
+            <div key={title} className="bg-background p-4">
+              <span className="font-mono text-[9px] font-black text-primary">{title}</span>
+              <strong className="mt-2 block font-mono text-sm">{value}</strong>
+              <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{role}</p>
+            </div>
+          ))}
+        </div>
+
+        <p>
+          arkworks의 공개 입력 할당에는 상수항을 위한 <code>1</code>이 맨 앞에 자동으로 들어갑니다. 이 사례의
+          전체 변수 벡터를 설명용으로 쓰면 <code>w=[1,15,3,5]</code>이고, API는 이를 instance
+          <code>[1,15]</code>와 witness <code>[3,5]</code>로 나누어 보관합니다.
+        </p>
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton
+            label="공개·비공개 변수 할당"
+            onClick={() => sidebar.open("ark-groth16-circuit", officialGroth16CodeRefs["ark-groth16-circuit"])}
+          />
+        </div>
+        <aside className="border-l-2 border-destructive/70 pl-4 text-sm leading-6 text-muted-foreground">
+          <strong className="text-foreground">실패 동작:</strong> <code>z=14</code>를 공개 입력으로 두고
+          <code>x=3</code>, <code>y=5</code>를 넣으면 circuit이 만족되지 않습니다. Witness 누락도 proof 생성에
+          필요한 assignment가 없다는 오류로 끝나야 합니다.
+        </aside>
+      </section>
+
+      <section id="r1cs-qap" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          한 제약식은 세 선형결합의 곱으로 바뀌고, QAP는 여러 행을 polynomial로 묶습니다
+        </h2>
+        <ExplainedFormula
+          question="w=[1,15,3,5]에서 x·y=z 한 행은 어떻게 3×5=15가 됩니까?"
+          idea={<>A는 x만, B는 y만, C는 z만 고르는 coefficient vector를 사용합니다.</>}
+          formula={String.raw`\langle A,w\rangle\cdot\langle B,w\rangle=\langle C,w\rangle`}
+          annotatedFormula={String.raw`\underbrace{\langle(0,0,1,0),w\rangle}_{x=3}\cdot\underbrace{\langle(0,0,0,1),w\rangle}_{y=5}=\underbrace{\langle(0,1,0,0),w\rangle}_{z=15}`}
+          operations={[
+            {
+              expression: String.raw`\langle(0,0,1,0),[1,15,3,5]\rangle=3`,
+              annotation: ["A row는 x 위치만 선택합니다."],
+            },
+            {
+              expression: String.raw`\langle(0,0,0,1),[1,15,3,5]\rangle=5`,
+              annotation: ["B row는 y 위치만 선택합니다."],
+            },
+            {
+              expression: String.raw`3\cdot5=15`,
+              annotation: ["C row가 선택한 public z와 같으므로 이 행은 만족합니다."],
+            },
+          ]}
+          terms={[
+            { symbol: "w", name: "전체 할당", description: "상수 1, 공개 입력, 비공개 witness를 정해진 순서로 둔 vector입니다." },
+            { symbol: "A,B,C", name: "R1CS 행", description: "각 변수의 선형결합을 만드는 coefficient vectors입니다." },
+            { symbol: String.raw`\langle\cdot,\cdot\rangle`, name: "내적", description: "Coefficient와 변수 값을 곱해 더한 선형결합입니다." },
+          ]}
+          assumptions={[
+            "모든 계산은 선택한 pairing curve의 scalar field 안에서 이루어집니다.",
+            "Public input과 witness의 순서는 setup과 prove에서 같은 circuit synthesis를 따라야 합니다.",
+            "이 한 행은 설명용이며 실제 circuit은 많은 행과 중간 변수를 가질 수 있습니다.",
+          ]}
+          interpretation="R1CS는 3과 5를 특별 취급하지 않습니다. 같은 circuit에 다른 만족하는 witness를 넣어도 같은 행 구조를 사용합니다."
+        />
+
+        <ExplainedFormula
+          question="여러 R1CS 행이 만족됐다는 사실을 QAP에서는 어떻게 한 식으로 나타냅니까?"
+          idea={<>각 행의 값을 polynomial로 보간하고, 위반량 A(X)B(X)−C(X)가 domain의 모든 점에서 0인지 봅니다.</>}
+          formula={String.raw`A(X)B(X)-C(X)=H(X)Z(X)`}
+          annotatedFormula={String.raw`\underbrace{A(X)B(X)-C(X)}_{\text{제약 위반량}}=\underbrace{H(X)}_{\text{몫}}\underbrace{Z(X)}_{\text{domain에서 0}}`}
+          operations={[
+            {
+              expression: String.raw`Z(X)=\prod_{i=1}^{n}(X-r_i)`,
+              annotation: ["각 R1CS 행에 대응하는 domain point rᵢ에서 0입니다."],
+            },
+            {
+              expression: String.raw`A(r_i)B(r_i)-C(r_i)=0`,
+              annotation: ["모든 행이 만족되면 위반량은 모든 domain point에서 0입니다."],
+            },
+            {
+              expression: String.raw`H(X)=(A(X)B(X)-C(X))/Z(X)`,
+              annotation: ["나머지 없이 나누어진 quotient coefficients를 prover가 사용합니다."],
+            },
+          ]}
+          terms={[
+            { symbol: "A(X),B(X),C(X)", name: "QAP polynomials", description: "R1CS의 여러 행을 같은 domain 위에서 보간한 polynomial입니다." },
+            { symbol: "Z(X)", name: "소거 polynomial", description: "선택한 evaluation domain의 모든 점에서 0입니다." },
+            { symbol: "H(X)", name: "몫 polynomial", description: "제약식이 모두 만족됐을 때 나머지 없이 얻는 quotient입니다." },
+          ]}
+          assumptions={[
+            "R1CS와 QAP가 같은 변수 순서와 evaluation domain을 사용합니다.",
+            "여기서 A(X), B(X), C(X)는 다음 절 proof.a, proof.b, proof.c의 group point와 다른 객체입니다.",
+          ]}
+          interpretation="arkworks의 witness_map은 이 quotient의 계수를 만들고, prover는 h_query와 함께 MSM에 사용합니다."
+        />
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton
+            label="R1CS→QAP→proof 경로"
+            onClick={() => sidebar.open("ark-groth16-prover", officialGroth16CodeRefs["ark-groth16-prover"])}
+          />
+        </div>
+      </section>
+
+      <section id="proof-structure" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          Prover는 witness와 key query를 결합해 G1·G2·G1의 세 점을 만듭니다
+        </h2>
+        <p>
+          arkworks prover는 새 randomness <code>r</code>과 <code>s</code>를 뽑고, proving key의 query points에
+          public·private assignment와 QAP quotient coefficients를 다중 스칼라 곱(MSM)으로 결합합니다. 결과는
+          <code>proof.a∈G1</code>, <code>proof.b∈G2</code>, <code>proof.c∈G1</code>입니다.
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-stretch">
+          {[
+            ["proof.a", "G1", "assignment + α + rδ"],
+            ["proof.b", "G2", "assignment + β + sδ"],
+            ["proof.c", "G1", "private + H + r·s 보정"],
+          ].map(([name, group, role], index) => (
+            <div key={name} className="contents">
+              <div className="bg-background p-4 text-center">
+                <span className="font-mono text-[9px] font-black text-primary">{name}</span>
+                <strong className="mt-2 block font-mono text-sm">{group}</strong>
+                <p className="mt-2 break-keep text-[10px] leading-5 text-muted-foreground">{role}</p>
+              </div>
+              {index < 2 ? <span aria-hidden className="hidden items-center bg-background px-3 text-primary sm:flex">+</span> : null}
+            </div>
+          ))}
+        </div>
+        <p>
+          세 점만 전송한다는 사실만으로 zero knowledge가 자동 증명되는 것은 아닙니다. 올바른 setup, randomness,
+          group과 protocol 가정 아래에서 Groth16의 zero-knowledge 성질을 사용합니다. 구현이 randomness를 0으로 둔
+          별도 API를 제공한다면 그 경로는 이름 그대로 zero-knowledge proof 생성 경로가 아닙니다.
+        </p>
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton
+            label="Proof 세 점 구조"
+            onClick={() => sidebar.open("ark-groth16-proof", officialGroth16CodeRefs["ark-groth16-proof"])}
+          />
+          <CodeViewButton
+            label="Prover 내부 경로"
+            onClick={() => sidebar.open("ark-groth16-prover", officialGroth16CodeRefs["ark-groth16-prover"])}
+          />
+        </div>
+      </section>
+
+      <section id="verification" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          Verifier는 공개값 15를 key point와 결합한 뒤 proof의 pairing 식을 검사합니다
+        </h2>
+        <Groth16VerifierViz />
+
+        <ExplainedFormula
+          question="Public input z=15는 verifier 계산에서 어디에 들어갑니까?"
+          idea={<>Verifying key의 첫 point에 각 public input과 대응 point의 스칼라 곱을 더합니다.</>}
+          formula={String.raw`g_{ic}=\gamma_{abc,0}+z\,\gamma_{abc,1}`}
+          annotatedFormula={String.raw`\underbrace{g_{ic}}_{\text{prepared public input}}=\underbrace{\gamma_{abc,0}}_{\text{constant}}+\underbrace{15\,\gamma_{abc,1}}_{\text{public }z}`}
+          operations={[
+            {
+              expression: String.raw`z=15`,
+              annotation: ["Verifier가 API로 받은 한 개의 public input입니다."],
+            },
+            {
+              expression: String.raw`g_{ic}=\gamma_{abc,0}+15\gamma_{abc,1}`,
+              annotation: ["Circuit-specific verifying key와 공개 주장 15를 한 G1 point로 결합합니다."],
+            },
+            {
+              expression: String.raw`z=14\Rightarrow g_{ic}'\ne g_{ic}`,
+              annotation: ["같은 proof를 다른 공개 주장에 재사용하면 pairing 식이 달라집니다."],
+            },
+          ]}
+          terms={[
+            { symbol: String.raw`\gamma_{abc,0}`, name: "상수 point", description: "Verifying key의 gamma_abc_g1 첫 원소입니다." },
+            { symbol: String.raw`\gamma_{abc,1}`, name: "첫 public-input point", description: "Public z와 곱해지는 circuit-specific G1 point입니다." },
+            { symbol: String.raw`g_{ic}`, name: "공개 입력 결합", description: "Pairing 검증에 넣는 prepared G1 point입니다." },
+          ]}
+          assumptions={[
+            "Verifier가 기대한 public input 개수와 순서를 사용합니다.",
+            "Proof와 verifying key가 같은 circuit-specific setup에서 나왔습니다.",
+            "모든 point는 선택한 curve의 올바른 group element로 decode됐습니다.",
+          ]}
+          interpretation="Verifier는 x=3과 y=5를 복원하지 않습니다. 공개 z와 proof가 같은 relation을 만족한다는 pairing 식만 확인합니다."
+        />
+
+        <ExplainedFormula
+          question="arkworks verifier의 세 pairing 항은 어떤 등식을 확인합니까?"
+          idea={<>Proof A·B·C와 public-input point를 prepared verifying key의 α·β 기준값과 비교합니다.</>}
+          formula={String.raw`e(A,B)\,e(g_{ic},-\gamma)\,e(C,-\delta)=e(\alpha,\beta)`}
+          annotatedFormula={String.raw`\underbrace{e(A,B)}_{\text{proof A·B}}\underbrace{e(g_{ic},-\gamma)}_{\text{public input}}\underbrace{e(C,-\delta)}_{\text{proof C}}=\underbrace{e(\alpha,\beta)}_{\text{prepared VK}}`}
+          operations={[
+            {
+              expression: String.raw`\operatorname{multi\_miller\_loop}((A,B),(g_{ic},-\gamma),(C,-\delta))`,
+              annotation: ["세 pair를 한 번에 Miller loop로 누적합니다."],
+            },
+            {
+              expression: String.raw`\operatorname{final\_exp}(\cdot)`,
+              annotation: ["누적값을 target group의 최종 pairing 값으로 보냅니다."],
+            },
+            {
+              expression: String.raw`\text{result}=e(\alpha,\beta)`,
+              annotation: ["Prepared verifying key의 기준값과 같을 때 true입니다."],
+            },
+          ]}
+          terms={[
+            { symbol: "A,B,C", name: "Proof points", description: "각각 G1, G2, G1에 속하는 proof의 세 점입니다." },
+            { symbol: String.raw`\gamma,\delta`, name: "Verifying-key points", description: "Prepared key가 음수 G2 형태로 보관하는 setup points입니다." },
+            { symbol: "e", name: "Pairing", description: "G1×G2를 target group으로 보내는 bilinear map입니다." },
+          ]}
+          assumptions={[
+            "Pairing-friendly curve와 subgroup 검증, canonical decoding이 올바르게 적용됩니다.",
+            "논문의 soundness와 setup 가정을 충족한다고 전제합니다.",
+          ]}
+          interpretation="Proof bytes 하나, public input 하나 또는 verifying key 하나만 바뀌어도 같은 식이 성립하지 않아야 합니다."
+        />
+
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton
+            label="Verifier의 public input·pairing 코드"
+            onClick={() => sidebar.open("ark-groth16-verifier", officialGroth16CodeRefs["ark-groth16-verifier"])}
+          />
+        </div>
+
+        <aside className="border-l-2 border-destructive/70 pl-4 text-sm leading-6 text-muted-foreground">
+          <strong className="text-foreground">실패 동작:</strong> Wrong public input, 다른 circuit의 verifying key,
+          손상된 A·B·C 또는 잘못된 group encoding은 false나 decode 오류로 끝나야 합니다. Verifier가 true를
+          돌려줬다고 setup ceremony의 정직성이나 circuit이 의도한 업무 규칙까지 자동으로 증명되는 것은 아닙니다.
+        </aside>
+      </section>
+
+      <section id="evidence" className="space-y-4 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">공식 구현에서 확인한 경계</h2>
+        <div id="paper-groth16">
+          <CitationBlock
+            type="paper"
+            citeKey={1}
+            source="Jens Groth · On the Size of Pairing-based Non-interactive Arguments · 2016/260"
+            href={GROTH16_PAPER}
+          >
+            <p><strong>확인한 범위:</strong> Relation-specific setup, 세 group element proof와 pairing verification construction을 제시합니다.</p>
+            <p><strong>한계:</strong> 특정 Rust API, serialization과 production 운영 안전성을 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-arkworks-groth16">
+          <CitationBlock
+            type="code"
+            citeKey={2}
+            source="arkworks groth16 · commit 8f0904a"
+            href={ARK_SOURCE}
+          >
+            <p><strong>확인한 범위:</strong> Circuit synthesis, R1CS→QAP witness map, proof A·B·C struct와 public-input pairing verifier의 실제 Rust 경로입니다.</p>
+            <p><strong>한계:</strong> 저장소 README는 이 구현을 academic proof-of-concept이며 production ready가 아니라고 명시합니다. 이 글은 API 경계를 배우는 근거로만 사용합니다.</p>
+          </CitationBlock>
+        </div>
+        <ol className="space-y-3 text-sm leading-6">
+          <li><strong>1.</strong> Circuit은 관계를, witness와 instance는 그 관계에 넣을 비공개·공개 값을 소유합니다.</li>
+          <li><strong>2.</strong> R1CS 만족 여부는 QAP의 나눗셈 가능성과 proof MSM 입력으로 이어집니다.</li>
+          <li><strong>3.</strong> Proof는 A∈G1, B∈G2, C∈G1 세 점이며 verifier는 private witness를 입력받지 않습니다.</li>
+          <li><strong>4.</strong> Public input은 verifying key point와 결합되어 pairing equation에 직접 묶입니다.</li>
+        </ol>
+        <p className="text-sm text-muted-foreground">
+          Crate 선택, trusted setup ceremony 운영, 성능·메모리 측정, key 보관과 배포·rollback은 실제 환경의 요구가
+          필요한 실무 판단이므로 이 개념 글에 섞지 않습니다.
+        </p>
+      </section>
+
+      <ZkFromScratchMapReturn
+        currentSlug="impl-groth16"
+        closure="Groth16 구현에서 circuit은 관계를, witness와 instance는 비공개·공개 값을, proving key는 proof 생성을, verifying key와 public input은 pairing 판정을 맡습니다. Verifier는 witness를 받지 않고 proof의 A·B·C와 공개 입력이 같은 circuit-specific relation에 맞는지 확인합니다."
+      />
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={officialGroth16CodeRefs}
+        fileTrees={{ arkworks: groth16Tree }}
+        projectMetas={{
+          arkworks: {
+            id: "arkworks",
+            label: "arkworks · groth16 8f0904a",
+            badgeClass: "border-violet-500 bg-violet-500/10 text-violet-700",
+          },
+        }}
+      />
+    </article>
+  );
 }

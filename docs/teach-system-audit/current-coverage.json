@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 713,
-    "pending": 294,
+    "reviewed": 714,
+    "pending": 293,
     "untracked": 0,
-    "assignedPending": 252,
+    "assignedPending": 251,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5403,9 +5403,9 @@
       "publicPath": "cs/blockchain/impl-groth16",
       "title": "Groth16 증명 시스템 구현 (Rust)",
       "catalogIndex": 537,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
