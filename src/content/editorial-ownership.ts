@@ -9677,9 +9677,9 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "commonware-primitives-simplex-storage": {
     title: "Commonware primitives·Simplex·storage route-specific ownership",
-    owns: ["Commonware runtime context·trait composition과 bridge certificate/application receipt boundary", "Commonware Simplex notarize/nullify/finalize·certification·resolver/journal lifecycle", "Commonware MMR bagging과 QMDB Any/Current·batch/prune recovery boundary"],
+    owns: ["Commonware runtime context·trait composition과 bridge의 block 원문·digest·indexer 응답 경계", "Commonware Simplex notarize/nullify/finalize·certification·resolver/journal lifecycle", "Commonware MMR bagging과 QMDB Any/Current·batch/prune recovery boundary"],
     reuses: [{ label: "Generic BFT quorum and partial synchrony", href: "/cs/blockchain/bft-comparison#quorum-safety" }, { label: "State machine replication", href: "/cs/blockchain/consensus-comparison#smr" }, { label: "Existing Commonware crypto P2P", href: "/cs/blockchain/commonware-crypto-p2p" }, { label: "Existing Commonware broadcast", href: "/cs/blockchain/commonware-broadcast" }],
-    evidence: [{ kind: "primary-source", rule: "Current implementation facts는 Commonware tag v2026.7.0 commit 5950bf7과 matching docs.rs source에만 귀속한다." }, { kind: "project-measurement", rule: "동일 request·version·config에서 component receipts, deterministic replay, crash/root/proof parity를 비교한다." }, { kind: "project-claim", rule: "Composable primitive·example bridge·candidate root를 completed framework·production safety·durable client effect로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Overview와 bridge 구현 사실은 Commonware tag v2026.9.0 commit d476a236에, 다른 세부 글의 구현 사실은 각 글이 고정한 release에 귀속한다." }, { kind: "project-measurement", rule: "동일 request·version·config에서 component 응답, deterministic replay와 crash·root·proof parity를 비교한다." }, { kind: "project-claim", rule: "조립 가능한 primitive·ALPHA example bridge·candidate root를 완성된 framework·production safety·durable client effect로 확대하지 않는다." }],
   },
   "tusk-paper-ordering": {
     title: "Tusk paper asynchronous DAG ordering ownership",

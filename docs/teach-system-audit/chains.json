@@ -932,39 +932,85 @@
     },
     {
       "route": "blockchain/commonware-deep-dive",
-      "title": "Commonware 개요: 조합형 분산 시스템 프리미티브",
-      "status": "unreviewed",
+      "title": "Commonware 전체 구조: 블록 원문에서 최종 확정 기록까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-deep-dive.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-deep-dive.tsx",
-        "src/pages/articles/blockchain/commonware-deep-dive/ModernArticle.tsx"
+        "src/pages/articles/blockchain/commonware-deep-dive/ModernArticle.tsx",
+        "src/pages/articles/blockchain/commonware-deep-dive/CommonwareOverviewLocator.tsx",
+        "src/pages/articles/blockchain/commonware-deep-dive/viz/ModernCommonwareOverviewViz.tsx",
+        "src/pages/articles/blockchain/commonware-deep-dive/codeRefs.ts",
+        "src/pages/articles/blockchain/commonware-deep-dive/fileTrees.ts",
+        "src/content/commonware-overview-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 3,
+        "assumptionMarkers": 3,
+        "sourceButtons": 3,
         "headings": [
-          "Commonware는 완성된 blockchain 하나가 아니라, 필요한 runtime·network·consensus·storage를 조립하는 부품 모음이다",
-          "Runtime Context가 자원을 주고, actor와 trait가 소유권을 드러낸다",
-          "Bridge validator는 wiring의 예시이지 모든 deployment의 표준 구성이 아니다",
-          "Fault를 seed에 넣고 component receipt가 끊기는 지점을 재현한다"
+          "블록 원문과 digest, finalization은 어디에서 만나는가",
+          "숫자 42가 든 블록 하나",
+          "다섯 책임은 같은 상태를 쓰지 않는다",
+          "Runtime Context 안에서 실행 주체를 조립한다",
+          "블록 원문을 먼저 보관하고 digest를 넘긴다",
+          "검증할 때 블록 원문을 다시 읽는다",
+          "Finalization도 별도 기록이다",
+          "실패한 경계만 말한다",
+          "근거와 적용 범위",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 runtime·network·consensus·storage를 나열한 뒤 설명용 송금, release parity와 운영 장애 fixture로 이동해 한 객체가 실제 코드 경계를 어떻게 통과하는지 추적하기 어려웠습니다.",
+        "기존 글은 bridge 예제에 없는 Application state root와 client success를 일반 구조처럼 설명해 Simplex finalization과 indexer 기록 응답의 근거 범위를 넘어섰습니다."
+      ],
+      "fixture": {
+        "case": "Application이 설명용 Random(42) 블록을 만들고 indexer의 PutBlock 성공을 확인한 뒤 digest를 Simplex에 넘기며, GetBlock 검증과 PutFinalization 응답까지 추적",
+        "identities": {
+          "block": "Random(42)의 encode된 원문",
+          "payload": "hash(encode(Random(42))) digest",
+          "finalization": "같은 digest를 가리키는 Simplex certificate"
+        },
+        "execution": "Commonware v2026.9.0 고정 source 추적과 결정론적 브라우저 상호작용이며 indexer durability, 네트워크 성능과 장애 복구 시간은 측정하지 않았습니다."
+      },
+      "stageEvidence": {
+        "parent": "블록체인 학습 지도에서 Filecoin 다음의 Commonware 기본 부품 영역과 다섯 글의 순서를 표시",
+        "question": "블록 원문과 digest, finalization은 어디에서 만나며 어느 응답이 다음 상태를 여는가",
+        "case": "Random(42) 원문·digest·certificate 세 객체를 모든 장면과 본문에서 유지",
+        "picture": "전체→조립→블록 생성→저장 확인→합의 전달→내용 검증→최종 확정→확정 기록",
+        "mechanism": "Runtime child context와 Application mailbox wiring, PutBlock·GetBlock·PutFinalization 응답을 실제 source 순서로 추적",
+        "evidence": "Commonware v2026.9.0 commit d476a236과 같은 commit의 examples/bridge를 고정",
+        "return": "블록 원문 저장, digest 합의와 certificate 기록이 서로 다른 상태이며 Application이 응답 경계를 연결한다는 사실을 부모 지도에 반환"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Commonware monorepo v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4",
+          "section": "runtime·consensus·p2p·storage 공개 기본 부품과 repository stability 범위",
+          "application": "Runtime Context, actor lifecycle, 공개 primitive와 ALPHA 경계",
+          "original": "고정 release의 공개 source이며 조립한 Application의 정확성·성능·SLA를 입증하지 않음"
+        },
+        {
+          "source": "Commonware examples/bridge at commit d476a2361ce6840d2b9d0aa6fb30a924429046d4",
+          "section": "src/bin/validator.rs와 src/application.rs의 wiring·propose·verify·report 분기",
+          "application": "indexer stream, 인증 P2P channel 0·1·2, Application mailbox, PutBlock·GetBlock·PutFinalization 응답 순서",
+          "original": "실제 함수와 분기를 보존한 발췌이며 모든 Commonware 배포의 표준 구조나 운영 복구 정책이 아님"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 Commonware v2026.9.0 source를 다시 읽어 Runtime·Application·Indexer·Simplex·인증 P2P를 한 Random 블록의 원문→digest→certificate 기록 경로로 재구성했습니다.",
+        "arithmetic": "not-applicable · 성능이나 확률 수치를 계산하지 않습니다. 숫자 42와 P2P channel 0·1·2는 각각 설명용 블록 값과 고정 source의 wiring을 구분해 표시했습니다.",
+        "humanize": "직속 부모 지도, 질문 하나, Random(42) 한 사례, 상태 소유권·응답 경계·실패 경계와 부모 지도 반환으로 다시 구성했습니다. 제품 선택·복구 절차는 개념 글에서 제외했습니다.",
+        "browser390": "390×844에서 document 폭 390=390, live 시각화 338.5×787.5px이고 8개 장면 탭과 이전·재생·다음 버튼은 각각 49.5px입니다. 4.5초 동안 장면 0이 유지되고 장면 8을 수동으로 선택했습니다. Reduced-motion에서는 재생이 비활성화되고 실행 중 animation 0건이며 ArrowRight 수동 이동은 유지됩니다. JavaScript 비활성 경로는 HTTP 200, live 영역 0개, 정적 8장면·11개 본문 section과 부모 지도 반환을 표시합니다.",
+        "browser1440": "1440×1000에서 document 폭 1440=1440, live 시각화 664×582.2px입니다. 장면 4·6·8의 상태와 설명을 확인했고, group ArrowLeft 7→6, control focus에서 ArrowLeft 무시, Enter 6→7이 동작했습니다. 재생은 3.5초 뒤 0→1로 진행하고 일시정지 뒤 유지됩니다. CodeSidebar는 1100×1000px, focus trap과 Escape 닫기·opener focus 복귀·body scroll 복구를 확인했으며 console 오류·경고는 0건입니다.",
+        "build": "관련 strict 감사와 선택 ESLint, 전체 TypeScript, production build를 통과했습니다. Build는 정적 public route 2,120개와 no-script 본문 362편을 생성했고 최대 RSS는 6,605,864,960 bytes, swap은 0이었습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-random-block-bytes-digest-certificate-receipt-boundary"
     },
     {
       "route": "blockchain/commonware-simplex",
