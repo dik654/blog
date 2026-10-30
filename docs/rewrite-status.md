@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Prysm Slot 처리 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-slot-processing`을 Block 30 적용 뒤의 state가 빈 Slot 31·32를 지나 Block 33 직전 state가 되는 한 사례로 다시 썼습니다. Target guard, per-slot state·block root, zero header backfill, epoch 경계, slot 증가, fork upgrade와 SkipSlotCache를 아홉 장면으로 연결했습니다.
+- consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. 기존 메타데이터의 restart-capable replay receipt는 실제 구현에 없으므로 제거했습니다. SkipSlotCache는 시작 slot과 latest header root를 key로 쓰는 process-local LRU 8이며 재시작 뒤 남는 protocol 장부가 아닙니다.
+- c=30, t=33, E=32에서 per-slot step은 3번, epoch transition은 1번입니다. H=8,192에서 slot 30 root는 index 30에 기록됩니다. Target 도달은 Block 33을 적용할 pre-state일 뿐 block validity·head·finality를 뜻하지 않습니다.
+- 390×844에서 문서 폭 390=390, live 시각화 폭 334px, 장면별 높이 545.7~577px입니다. 아홉 장면 모두 가로·내부 오버플로가 없고 조작부는 50px입니다. 11초 무자동 재생과 ArrowRight 0→1 이동을 확인했습니다.
+- 1,440×1,000에서는 live 시각화 폭 664px, 장면별 높이 703~748px이며 가로·내부 오버플로와 console 오류·경고가 없습니다. 실제 ProcessSlotsCore·ProcessEpoch source sidebar도 열어 경로와 줄 주석을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건, 재생 비활성·수동 이동을 확인했습니다.
+- JavaScript 비활성 390×844 정적 경로에는 조작부 없이 부모 지도, 정적 아홉 장면, 전체 본문, 확인 질문과 부모 지도 반환이 남습니다. Static registry를 갱신해 no-script 본문은 351편입니다.
+- 학습 계약·지식 그래프·수식·계산·본문·읽기·문장 호흡·한국어·읽기 순서 검사와 production build를 통과했습니다. Build는 8,090개 module과 정적 public route 2,120개를 생성했고 최대 RSS는 6,339,280,896 bytes, swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### Prysm BeaconState 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-beacon-state`를 parent state A를 B로 복사하고 validator index 5 balance만 32 ETH에서 31 ETH로 바꾸는 한 사례로 다시 썼습니다. State ID별 multi-value 값, dirty field·element, element 5→chunk 1, Balances field root와 top-level state root를 여덟 장면으로 연결했습니다.

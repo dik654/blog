@@ -5707,9 +5707,21 @@ export const ARTICLE_EVIDENCE: Readonly<
     PRYSM_SERIES_EVIDENCE,
     {
       kind: "공식 규격",
-      label: "Ethereum Consensus Specifications v1.6.1 — slot processing",
-      href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/phase0/beacon-chain.md",
-      note: "process_slots·process_slot·process_epoch 실행 순서의 정본",
+      label: "Ethereum Consensus Specifications v1.7.0-beta.4 @ aa16bb4c — slot processing",
+      href: "https://github.com/ethereum/consensus-specs/tree/aa16bb4c156184e9548a997d53efaf2a228a6304",
+      note: "process_slots·process_slot의 순서와 Gloas의 payload-availability 초기화를 확인한 고정 규격",
+    },
+    {
+      kind: "공식 코드",
+      label: "OffchainLabs Prysm v7.3.1 @ 96d418cd — transition.go",
+      href: "https://github.com/OffchainLabs/prysm/blob/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/core/transition/transition.go",
+      note: "ProcessSlot·ProcessSlots·ProcessSlotsCore·ProcessEpoch·UpgradeState 호출 경계의 실제 구현",
+    },
+    {
+      kind: "공식 코드",
+      label: "OffchainLabs Prysm v7.3.1 @ 96d418cd — SkipSlotCache source and tests",
+      href: "https://github.com/OffchainLabs/prysm/blob/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/core/transition/skip_slot_cache_test.go",
+      note: "Process-local LRU·copy-on-read/write·cached transition parity·동일 slot의 fork 격리를 확인한 source와 repository test",
     },
   ),
   "blockchain/prysm-ssz": withSeriesEvidence(

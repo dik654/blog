@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 721,
+    "dedicatedVisuals": 722,
     "inlineVisuals": 525,
-    "customVisuals": 904,
-    "animatedMechanisms": 522,
+    "customVisuals": 905,
+    "animatedMechanisms": 523,
     "architectureWithoutAnimation": 82,
-    "recursiveLocators": 351,
+    "recursiveLocators": 352,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 16
@@ -8066,18 +8066,18 @@
     {
       "route": "blockchain/prysm-slot-processing",
       "publicPath": "cs/blockchain/prysm-slot-processing",
-      "title": "Prysm 슬롯 처리 & 상태 루트",
+      "title": "Prysm 슬롯 처리: 빈 Slot과 Epoch 경계",
       "sourcePath": "src/pages/articles/ethereum/prysm-slot-processing.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-ssz",
