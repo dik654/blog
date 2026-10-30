@@ -539,6 +539,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c와 Prysm v7.3.1 commit 96d418cd를 고정합니다. Epoch 10·11, 0001과 64/96은 설명용 fixture이며 finalization latency는 미측정입니다. Finality를 block archive·data availability·application success로 확대하지 않고, weak-subjectivity verifier의 local canonical 확인과 checkpoint provider trust를 구분합니다.",
   },
+  "blockchain/prysm-sync": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Checkpoint origin slot 96, local HeadSlot 100, finalized target 128, current slot 140인 한 사례에서 state·block pairing, finalized·non-finalized 두 phase, BlocksByRange와 네 lookahead FSM, ordered fetchedData, blockchain receiver, markSynced와 gossip gate까지 추적하는 단일 동기화 경로입니다. Queue와 receiver를 나누어 별도 글로 만들면 같은 range identity와 HeadSlot 소유권을 다시 세워야 하므로 한 개념 글로 유지합니다. 환경별 batch·timeout·peer 수·release·rollback 판단은 이 글에 섞지 않습니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c와 Prysm v7.3.1 commit 96d418cd를 고정합니다. Slot 96·100·128·140과 4-slot batch는 설명용 fixture이며 처리량·동기화 시간은 미측정입니다. Queue stateSent를 chain commit으로, internal state·block pairing을 checkpoint provider 신뢰로, initial sync와 live gossip을 동시에 쓰는 경로로 확대하지 않습니다.",
+  },
   "blockchain/reth-alloy-primitives": KEEP("Semantic type→canonical encode/decode→hash/address derivation이 한 Alloy codec 경계입니다."),
   "blockchain/lsm-tree": {
     action: "split",
@@ -4332,6 +4341,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",
   "blockchain/prysm-forkchoice": "59b37f81aedba324",
   "blockchain/prysm-finality": "1ad0fbccb44a1b0d",
+  "blockchain/prysm-sync": "69c53dbac4cd0fcf",
   "blockchain/reth-alloy-primitives": "e8b0d939eba9a639",
   "blockchain/lsm-tree": "9aecdf800aab56ed",
   "blockchain/lsm-engine-validation": "47d5cc0e46151e22",

@@ -4,15 +4,15 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 724,
+    "dedicatedVisuals": 725,
     "inlineVisuals": 524,
-    "customVisuals": 907,
-    "animatedMechanisms": 527,
-    "architectureWithoutAnimation": 82,
+    "customVisuals": 908,
+    "animatedMechanisms": 528,
+    "architectureWithoutAnimation": 81,
     "recursiveLocators": 355,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
-    "architectureWithoutCustomVisual": 16
+    "architectureWithoutCustomVisual": 15
   },
   "articles": [
     {
@@ -8114,18 +8114,18 @@
     {
       "route": "blockchain/prysm-sync",
       "publicPath": "cs/blockchain/prysm-sync",
-      "title": "Prysm 초기 동기화 & 체크포인트 싱크",
+      "title": "Prysm 동기화",
       "sourcePath": "src/pages/articles/ethereum/prysm-sync.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-sync-committee",

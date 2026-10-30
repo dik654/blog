@@ -34,6 +34,7 @@ export default function CodeSidebar({
   const [descOpen, setDescOpen] = useState(true);
   const [codeOpen, setCodeOpen] = useState(true);
   const [flowOpen, setFlowOpen] = useState(false);
+  const panelRef = useRef<HTMLElement | null>(null);
   const hlRef = useRef<HTMLTableRowElement | null>(null);
   const codeScroll = useRef<HTMLDivElement>(null);
   const annotRefs = useRef<Map<number, HTMLTableRowElement>>(new Map());
@@ -42,6 +43,56 @@ export default function CodeSidebar({
     if (initialRef && hlRef.current)
       hlRef.current.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [initialRef]);
+
+  useEffect(() => {
+    if (!initialRef) return;
+
+    const previousFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const focusCloseButton = window.requestAnimationFrame(() => {
+      panelRef.current
+        ?.querySelector<HTMLButtonElement>("[data-code-sidebar-close]")
+        ?.focus();
+    });
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab" || !panelRef.current) return;
+      const focusable = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => !element.hasAttribute("hidden"));
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusCloseButton);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
+    };
+  }, [initialRef, onClose]);
 
   const codeRef = initialRef;
   const projectId = codeRef?.path.split("/")[0] ?? "";
@@ -81,6 +132,7 @@ export default function CodeSidebar({
         <>
           <motion.div
             key="bd"
+            aria-hidden="true"
             className="fixed inset-0 z-40 bg-black/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -89,6 +141,10 @@ export default function CodeSidebar({
           />
           <motion.aside
             key="panel"
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${codeRef?.path ?? "소스 코드"} 코드 패널`}
             className="fixed top-0 right-0 z-50 h-full w-full max-w-[1100px] flex flex-col bg-white dark:bg-[#0d1117] border-l border-[#d0d7de] dark:border-[#30363d] shadow-2xl"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 700,
-    "pending": 307,
+    "reviewed": 701,
+    "pending": 306,
     "untracked": 0,
-    "assignedPending": 265,
+    "assignedPending": 264,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5215,7 +5215,7 @@
       "catalogIndex": 518,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5271,11 +5271,11 @@
     {
       "route": "blockchain/prysm-sync",
       "publicPath": "cs/blockchain/prysm-sync",
-      "title": "Prysm 초기 동기화 & 체크포인트 싱크",
+      "title": "Prysm 동기화",
       "catalogIndex": 524,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

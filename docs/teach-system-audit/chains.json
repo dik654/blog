@@ -4995,7 +4995,7 @@
     {
       "route": "blockchain/prysm-finality",
       "title": "Prysm 최종성",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-finality.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-finality.tsx",
@@ -5059,11 +5059,10 @@
         "interaction": "12초 동안 장면 0이 자동 진행되지 않았고 키보드 ArrowRight로 0→4→6→7 이동했습니다. 각 장면에서 bits·checkpoint·participation·fork-choice·offline-node 상태와 설명이 함께 바뀌었습니다. Reduced-motion으로 새로 로드하면 장면 0이 유지되고 transition·animation duration은 0.000001초였습니다.",
         "codeSidebar": "390×844 local production 렌더에서 Bits 계산 근거를 열어 실제 Prysm source path·설명·강조 line이 보이고 문서 가로 넘침이 없음을 확인했습니다. 닫기 버튼으로 panel과 source path가 함께 사라지는 것도 확인했습니다.",
         "noJavaScript": "JavaScript 비활성 390×844 정적 경로에서 HTTP 200, 정적 여덟 장면, 전체 본문과 근거·확인 질문·부모 지도 반환이 순서대로 남고 live 장면은 숨겨짐을 확인했습니다. 문서 가로 넘침은 없습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 /usr/bin/time -l npm run build를 통과해 8,094개 module과 정적 public route 2,120개를 만들었습니다. Finality route를 정적 읽기 목록에 등록한 뒤 no-script 본문은 356편이고 최대 RSS는 6,749,650,944 bytes, swap은 0입니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 /usr/bin/time -l npm run build를 통과해 8,094개 module과 정적 public route 2,120개를 만들었습니다. Finality route를 정적 읽기 목록에 등록한 뒤 no-script 본문은 356편이고 최대 RSS는 6,749,650,944 bytes, swap은 0입니다.",
+        "production": "Commit be6a2a00의 GitHub Pages run 41017052676에서 정적 감사, production build, 공개 1,007편의 데스크톱·모바일 브라우저 전수 검사와 배포가 모두 통과했습니다. 공개 경로를 1,440×1,000과 390×844에서 다시 열어 HTTP 200, 장면 0 유지, 12.5초 무자동재생, 가로 넘침 0과 console 오류 0을 확인했습니다. reduced-motion에서도 장면 0이 유지됐고 JavaScript 비활성 공개 경로에는 정적 여덟 장면·전체 본문·부모 지도 반환이 표시됐습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-epoch11-target-balance-bit-history-finalized10-prune-weak-subjectivity-boundary"
     },
     {
@@ -5387,43 +5386,74 @@
     },
     {
       "route": "blockchain/prysm-sync",
-      "title": "Prysm 초기 동기화 & 체크포인트 싱크",
-      "status": "unreviewed",
+      "title": "Prysm 동기화",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-sync.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/prysm-network-viz.tsx",
         "src/pages/articles/ethereum/prysm-sync.tsx",
-        "src/pages/articles/ethereum/prysm-sync/CheckpointSync.tsx",
-        "src/pages/articles/ethereum/prysm-sync/InitialSync.tsx",
-        "src/pages/articles/ethereum/prysm-sync/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-sync/RegularSync.tsx"
+        "src/pages/articles/ethereum/prysm-sync/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-sync/PrysmSyncLocator.tsx",
+        "src/pages/articles/ethereum/prysm-sync/viz/PrysmSyncFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-sync/codeRefsSync.ts",
+        "src/pages/articles/ethereum/prysm-sync/fileTrees.ts",
+        "src/content/prysm-sync-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 5,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 5,
+        "sourceButtons": 10,
         "headings": [
-          "Checkpoint sync는 계산을 생략하는 대신 recent root에 대한 trust를 명시한다",
-          "Initial sync는 parallel fetch와 sequential state transition을 분리한다",
-          "Prysm sync는 block을 많이 받는 작업이 아니라 검증된 연속 state cursor를 head까지 옮기는 작업이다",
-          "Regular sync handoff는 range와 gossip이 같은 block을 처리해도 한 번만 commit하게 한다"
+          "뒤 range가 먼저 와도 앞 구간부터 처리하는 이유",
+          "입력",
+          "Anchor",
+          "두 구간",
+          "Range",
+          "Lookahead",
+          "Owner",
+          "전환",
+          "실패 경계",
+          "근거",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 checkpoint·initial sync·regular sync를 별도 절로 나열해 하나의 node가 신뢰 anchor에서 current slot까지 따라가며 처리 권한을 넘기는 순서를 추적하기 어려웠습니다.",
+        "Parallel fetch 뒤에 durable commit cursor가 따로 있고 range와 gossip이 결과를 공유한다는 설명은 고정한 Prysm v7.3.1 source에서 확인되지 않았습니다.",
+        "Queue의 stateSent, blockchain receiver가 바꾸는 HeadSlot, initial-sync 완료 신호와 live gossip validation을 같은 진척 상태처럼 설명해 상태 owner가 흐려졌습니다."
+      ],
+      "fixture": "Checkpoint origin slot 96에서 시작해 local HeadSlot 100, peer finalized target 128, local current slot 140을 따라갑니다. 네 lookahead range는 101–104, 105–108, 109–112, 113–116으로 줄였습니다. Slot과 4-slot batch는 순서를 설명하기 위한 값이며 mainnet 처리량 측정값이 아닙니다.",
+      "stageEvidence": {
+        "whole": "Checkpoint origin, local chain head, finalized target, current target, 네 lookahead range, blockchain receiver와 gossip gate를 한 지도에서 서로 다른 상태로 먼저 구분합니다.",
+        "anchor": "Remote finalized state를 fork에 맞게 decode하고 latest header slot의 block을 받은 뒤 body root를 맞춰 SaveOrigin합니다. 이 내부 짝 확인은 checkpoint provider 신뢰를 대신하지 않습니다.",
+        "phases": "roundRobinSync는 HeadSlot 100에서 peer finalized target 128까지 먼저 따라간 뒤 local current slot 140까지 non-finalized phase를 별도 queue로 엽니다.",
+        "range": "BeaconBlocksByRange의 start=101, count=4, step=1은 101·102·103·104 위치를 요청하며 empty slot은 response에서 빠질 수 있습니다.",
+        "lookahead": "네 range를 미리 요청해도 뒤 machine은 dataParsed에 머물고 더 이른 machine이 처리 가능한 상태를 벗어난 순서로만 fetchedData channel에 전달됩니다.",
+        "owner": "Queue stateSent는 consumer 전달 상태입니다. Parent 검증·state transition·저장과 HeadSlot 변경은 ReceiveBlockBatch 또는 ReceiveBlock을 실행하는 blockchain receiver가 소유합니다.",
+        "handoff": "두 sync phase가 current slot까지 끝나 markSynced가 true가 되기 전 remote gossip block은 ValidationIgnore이고, 완료 뒤 regular validator의 정상 검증 경로가 열립니다.",
+        "failure": "뒤 range 조기 도착, empty response, invalid fetched data, missing parent와 local current-slot 전진을 서로 다른 실패·재평가 경로로 구분하며 이때 HeadSlot과 조기 synced 선언은 전진하지 않습니다."
+      },
+      "sourceEvidence": [
+        "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c156184e9548a997d53efaf2a228a6304의 Status·BeaconBlocksByRange wire semantics와 Weak Subjectivity Guide",
+        "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db의 checkpoint API initializer, two-phase roundRobinSync, blocks queue lookahead FSM·ordered send 구현",
+        "같은 Prysm commit의 blockchain ReceiveBlockBatch·ReceiveBlock handoff, markSynced와 live beacon block validator의 Syncing gate"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 고정한 consensus-specs·Prysm release를 다시 읽어 checkpoint origin→finalized phase→current phase→range request→lookahead ordering→blockchain receiver→live gossip handoff의 한 사례로 전면 재작성했습니다.",
+        "arithmetic": "start 101+step 1×i, 0≤i<4로 요청 위치 101·102·103·104를 확인하고 local HeadSlot 100→finalized target 128→current target 140의 두 phase를 구분했습니다. 처리 시간·throughput은 측정하지 않았습니다.",
+        "humanize": "직속 부모와 현재 영역, 질문 하나, slot 96·100·128·140 fixture, 여덟 장면, 실제 owner·state machine·source·실패 경계, 확인 질문과 부모 지도 반환으로 구성했습니다. 환경별 peer 수·timeout·batch tuning과 release 판단은 실무 글로 분리했습니다. 한국어·용어·읽기 순서 감사를 통과했습니다.",
+        "browser390": "390×844 local production 렌더에서 문서와 body의 가로 넘침이 0이고 전체·순서·전환·실패 장면의 state cell·receipt·설명·조작부가 세로 흐름 안에 들어오며 console 오류가 없음을 확인했습니다. 첫 검사에서 live 장면 높이가 883px로 viewport를 넘은 문제를 찾아 장면 내용은 628px 내부 스크롤로 바꾸고 55px 조작부를 화면 아래에 유지했습니다. 내부 scroll 191px 끝에서 설명 마지막 줄과 조작부를 함께 확인했습니다.",
+        "browser1440": "1,440×1,000 local production 렌더에서 locator·핵심 답·동기화 상태 지도가 문서 폭 안에 들어오고 가로 넘침과 console 오류가 없음을 확인했습니다.",
+        "interaction": "12.5초 동안 장면 0이 자동 진행되지 않았고 키보드 ArrowRight와 장면 선택으로 0→1→4→6→7을 확인했습니다. 각 장면에서 range FSM·HeadSlot·synced flag·gossip decision이 함께 바뀌었습니다. Reduced-motion에서도 장면 0이 유지되고 수동 선택은 동작했습니다.",
+        "codeSidebar": "390×844 local production 렌더에서 Checkpoint origin 근거를 열어 beacon-chain/sync/checkpoint/api.go의 실제 path·69줄 excerpt·한글 해설·강조 구간이 패널 안에 들어오고 가로 넘침이 없음을 확인했습니다. 공통 패널에는 dialog 의미, 첫 초점, Escape 닫기, 초점 복귀와 body scroll lock을 보강했습니다.",
+        "noJavaScript": "JavaScript 비활성 390×844 정적 경로에서 HTTP 200, 정적 여덟 장면, 전체 본문·공식 근거·확인 질문·부모 지도 반환이 순서대로 남고 live 장면은 숨겨짐을 확인했습니다. 문서와 body의 가로 넘침은 0입니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 /usr/bin/time -l npm run build를 통과해 8,098개 module과 정적 public route 2,120개를 만들었습니다. Sync route를 정적 읽기 목록에 등록한 뒤 no-script 본문은 357편이고 최대 RSS는 6,616,989,696 bytes, swap은 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-checkpoint-origin-two-phase-range-lookahead-chain-owner-gossip-handoff-boundary"
     },
     {
       "route": "blockchain/prysm-sync-committee",

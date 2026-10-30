@@ -12063,14 +12063,23 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Wrong fork/topic·oversized Snappy·malformed SSZ·duplicate·bad signature·queue saturation을 같은 schedule로 재생해 decision·score·memory parity 뒤 최적화를 채택하는 절차입니다.",
     canonicalHref: "/cs/blockchain/prysm-gossipsub#snappy-encoding",
   },
-  "prysm-sync-mode-anchor-boundary": {
-    id: "prysm-sync-mode-anchor-boundary",
+  "prysm-checkpoint-origin-pair": {
+    id: "prysm-checkpoint-origin-pair",
     kind: "concept",
     domain: "distributed-systems",
-    label: "Prysm sync mode · anchor boundary",
+    label: "Prysm checkpoint origin pair",
     definition:
-      "Genesis·trusted weak-subjectivity checkpoint·local finalized state 중 무엇을 신뢰 시작점으로 삼는지 고정하고 initial·checkpoint·regular sync의 권한을 구분하는 경계입니다.",
+      "Remote finalized state를 fork에 맞게 decode하고 latest header slot의 block을 받아 두 body root가 같은지 확인한 뒤 state·block bytes를 origin으로 저장하는 내부 일관성 경계입니다.",
     canonicalHref: "/cs/blockchain/prysm-sync#checkpoint-sync",
+  },
+  "prysm-sync-two-phase-targets": {
+    id: "prysm-sync-two-phase-targets",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Prysm two-phase sync targets",
+    definition:
+      "Prysm initial sync가 peer의 finalized epoch 시작 slot을 먼저 따라간 뒤 local current slot까지 non-finalized path로 따라가는 두 단계 목표 경계입니다.",
+    canonicalHref: "/cs/blockchain/prysm-sync#phases",
   },
   "beacon-blocks-by-range-semantics": {
     id: "beacon-blocks-by-range-semantics",
@@ -12081,40 +12090,31 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Start slot·count·step으로 요청 범위를 만들되 empty slot은 응답에서 생략될 수 있고 server가 canonical branch를 선택하므로 response를 단순 배열 위치로 확정하지 않는 req/resp 계약입니다.",
     canonicalHref: "/cs/blockchain/prysm-sync#initial-sync",
   },
-  "prysm-sync-parallel-fetch-ordered-apply": {
-    id: "prysm-sync-parallel-fetch-ordered-apply",
+  "prysm-sync-lookahead-fsm-order": {
+    id: "prysm-sync-lookahead-fsm-order",
     kind: "method",
     domain: "distributed-systems",
-    label: "Prysm parallel fetch · ordered apply",
+    label: "Prysm lookahead range ordering",
     definition:
-      "서로 다른 range를 여러 peer에서 병렬로 받되 parent·slot·state transition 의존성이 이어지는 순서로만 검증·commit하는 sync pipeline입니다.",
+      "네 range state machine을 미리 fetch하되 앞 machine이 new·scheduled·dataParsed 상태를 벗어나기 전에는 뒤 response를 fetchedData consumer로 보내지 않는 queue 규칙입니다.",
     canonicalHref: "/cs/blockchain/prysm-sync#initial-sync",
   },
-  "prysm-sync-contiguous-commit-cursor": {
-    id: "prysm-sync-contiguous-commit-cursor",
+  "prysm-sync-chain-receiver-ownership": {
+    id: "prysm-sync-chain-receiver-ownership",
     kind: "concept",
     domain: "distributed-systems",
-    label: "Prysm contiguous sync commit cursor",
+    label: "Prysm sync chain receiver ownership",
     definition:
-      "다운로드 완료 지점이 아니라 genesis 또는 trusted anchor부터 끊김 없이 검증·저장된 마지막 slot/root만 진척으로 공개하는 durable cursor입니다.",
-    canonicalHref: "/cs/blockchain/prysm-sync#initial-sync",
+      "Queue의 stateSent는 consumer 전달만 뜻하고 block 검증·state transition·저장과 HeadSlot 변경은 blockchain receiver가 소유한다는 상태 소유권 경계입니다.",
+    canonicalHref: "/cs/blockchain/prysm-sync#owner",
   },
-  "prysm-sync-range-gossip-handoff": {
-    id: "prysm-sync-range-gossip-handoff",
+  "prysm-initial-sync-completion-gate": {
+    id: "prysm-initial-sync-completion-gate",
     kind: "method",
     domain: "distributed-systems",
-    label: "Prysm range · gossip handoff",
+    label: "Prysm initial-sync completion gate",
     definition:
-      "Historical range catch-up과 live gossip이 겹치는 구간을 block root로 dedupe하고 missing parent·reorg를 조정한 뒤 regular sync로 전환하는 handoff입니다.",
-    canonicalHref: "/cs/blockchain/prysm-sync#regular-sync",
-  },
-  "prysm-sync-release-gate": {
-    id: "prysm-sync-release-gate",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Prysm sync recovery release gate",
-    definition:
-      "Empty slot·omitted block·wrong branch·lying peer·reorg·crash를 고정 fixture로 주입해 committed root·state·head와 restart cursor parity를 통과한 뒤 throughput을 비교하는 채택 절차입니다.",
+      "Round-robin catch-up이 끝나 markSynced가 완료 신호를 내기 전에는 remote gossip block을 ValidationIgnore로 돌려보내고 이후 regular validation을 여는 처리 권한 전환입니다.",
     canonicalHref: "/cs/blockchain/prysm-sync#regular-sync",
   },
   "alloy-fixed-width-semantic-types": {
@@ -34085,15 +34085,15 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "prysm-gossip-decision-semantics", to: "prysm-peer-outcome-score-decay", relation: "produces", reason: "Peer fault가 확인된 reject만 reputation evidence가 되고 ignore는 별도 이유로 보존됩니다." },
   { from: "prysm-gossip-backpressure-isolation", to: "prysm-gossip-release-gate", relation: "evaluates", reason: "Queue saturation에서도 bounded memory와 다른 topic의 진척을 확인합니다." },
   { from: "prysm-spec-code-version-receipt", to: "prysm-gossip-release-gate", relation: "constrains", reason: "Fork digest·topic schema·Gossipsub/Prysm implementation을 같은 snapshot에 고정합니다." },
-  { from: "weak-subjectivity-checkpoint-anchor", to: "prysm-sync-mode-anchor-boundary", relation: "prerequisite", reason: "Checkpoint sync의 신뢰 시작점과 만료 판단은 weak-subjectivity anchor에서 옵니다." },
+  { from: "weak-subjectivity-checkpoint-anchor", to: "prysm-checkpoint-origin-pair", relation: "constrains", reason: "State·block 내부 짝 확인과 별개로 어떤 recent checkpoint를 신뢰할지는 weak-subjectivity anchor가 정합니다." },
+  { from: "prysm-checkpoint-origin-pair", to: "prysm-sync-two-phase-targets", relation: "prerequisite", reason: "저장한 origin과 blockchain HeadSlot에서 finalized target·current slot을 차례로 따라갑니다." },
   { from: "prysm-peer-candidate-active-lifecycle", to: "beacon-blocks-by-range-semantics", relation: "prerequisite", reason: "Status-compatible active peer에게만 consensus req/resp range를 요청합니다." },
-  { from: "beacon-blocks-by-range-semantics", to: "prysm-sync-parallel-fetch-ordered-apply", relation: "constrains", reason: "Empty-slot omission과 server branch 선택을 고려하며 range 응답을 병합합니다." },
-  { from: "prysm-sync-parallel-fetch-ordered-apply", to: "prysm-sync-contiguous-commit-cursor", relation: "produces", reason: "병렬 download와 무관하게 parent 순서로 검증·저장된 prefix만 durable cursor를 전진시킵니다." },
-  { from: "prysm-sync-contiguous-commit-cursor", to: "prysm-sync-range-gossip-handoff", relation: "prerequisite", reason: "Range의 연속 commit root가 live gossip overlap의 dedupe·gap 기준이 됩니다." },
-  { from: "prysm-gossip-decision-semantics", to: "prysm-sync-range-gossip-handoff", relation: "prerequisite", reason: "Live block이 validation을 통과한 뒤에만 range 결과와 같은 block-root namespace에서 조정됩니다." },
-  { from: "prysm-sync-mode-anchor-boundary", to: "prysm-sync-release-gate", relation: "evaluates", reason: "Genesis·checkpoint·local-finalized mode마다 신뢰 anchor와 recovery parity를 검사합니다." },
-  { from: "prysm-sync-range-gossip-handoff", to: "prysm-sync-release-gate", relation: "evaluates", reason: "Overlap·missing parent·reorg·restart에서 duplicate effect와 gap 없는 전환을 검사합니다." },
-  { from: "prysm-spec-code-version-receipt", to: "prysm-sync-release-gate", relation: "constrains", reason: "Req/resp limit·fork·Prysm source·database schema를 같은 release receipt에 고정합니다." },
+  { from: "prysm-sync-two-phase-targets", to: "beacon-blocks-by-range-semantics", relation: "prerequisite", reason: "Finalized target과 current-slot target을 향한 두 phase가 BlocksByRange 요청 구간을 만듭니다." },
+  { from: "beacon-blocks-by-range-semantics", to: "prysm-sync-lookahead-fsm-order", relation: "constrains", reason: "Empty-slot omission과 response slot 범위를 보존하며 lookahead machine을 전진시킵니다." },
+  { from: "prysm-sync-lookahead-fsm-order", to: "prysm-sync-chain-receiver-ownership", relation: "produces", reason: "앞 machine 순서로 보낸 fetchedData만 blockchain receiver의 검증·transition 입력이 됩니다." },
+  { from: "prysm-sync-chain-receiver-ownership", to: "prysm-initial-sync-completion-gate", relation: "prerequisite", reason: "Blockchain receiver가 HeadSlot을 current slot까지 전진시킨 뒤에만 initial sync 완료 신호를 냅니다." },
+  { from: "prysm-initial-sync-completion-gate", to: "prysm-gossip-decision-semantics", relation: "constrains", reason: "Syncing 중 remote block은 Ignore되고 완료 뒤 regular gossip validation이 열립니다." },
+  { from: "prysm-spec-code-version-receipt", to: "prysm-sync-lookahead-fsm-order", relation: "constrains", reason: "Lookahead 수·state machine·receiver 호출은 표시한 Prysm v7.3.1 source snapshot에만 귀속합니다." },
   { from: "validator-duty-deadline-loop", to: "beacon-proposer-duty-identity", relation: "prerequisite", reason: "Validator slot loop가 제안 duty를 시간 경계 안에서 실행하되 dependent root identity를 함께 확인합니다." },
   { from: "beacon-proposer-effective-balance-sampling", to: "beacon-proposer-duty-identity", relation: "produces", reason: "Epoch 처리에서 weighted sampling으로 채운 proposer lookahead를 proposal slot이 index로 조회합니다." },
   { from: "beacon-proposer-duty-identity", to: "prysm-proposal-owner-handoff", relation: "prerequisite", reason: "현재 slot의 proposer key를 확인한 validator client만 RANDAO와 block signature를 만듭니다." },

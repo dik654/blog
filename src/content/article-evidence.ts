@@ -5780,16 +5780,23 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "blockchain/prysm-sync": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
-    source(
-      "공식 규격",
-      OFFICIAL_SOURCES.ethereum.p2p,
-      "BeaconBlocksByRange·Status·response chunk의 sync wire contract",
-    ),
     {
       kind: "공식 규격",
-      label: "Ethereum Consensus Specifications — weak subjectivity",
-      href: "https://github.com/ethereum/consensus-specs/blob/master/specs/phase0/weak-subjectivity.md",
-      note: "Checkpoint sync의 trust anchor·freshness 경계",
+      label: "Ethereum consensus-specs v1.7.0-beta.4 — P2P interface",
+      href: "https://github.com/ethereum/consensus-specs/blob/aa16bb4c156184e9548a997d53efaf2a228a6304/specs/phase0/p2p-interface.md",
+      note: "BeaconBlocksByRange·Status·empty-slot omission의 wire contract. Prysm queue FSM과 receiver 구현은 별도 근거가 필요함",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum consensus-specs v1.7.0-beta.4 — Weak Subjectivity",
+      href: "https://github.com/ethereum/consensus-specs/blob/aa16bb4c156184e9548a997d53efaf2a228a6304/specs/phase0/weak-subjectivity.md",
+      note: "Checkpoint sync의 외부 trust anchor·freshness 경계. State·block 내부 짝 검사만으로 provider 신뢰가 생기지 않음",
+    },
+    {
+      kind: "공식 코드",
+      label: "OffchainLabs Prysm v7.3.1 — checkpoint and initial sync",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/sync",
+      note: "Checkpoint initializer, two-phase round-robin sync, range queue FSM, blockchain receiver와 gossip completion gate의 고정 구현",
     },
   ),
   "blockchain/prysm-sync-committee": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),

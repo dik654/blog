@@ -3,14 +3,26 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Prysm Finality 로컬 검증 완료 (2026-10-30)
+### Prysm 동기화 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-sync`를 checkpoint origin slot 96, local HeadSlot 100, peer finalized target 128, local current slot 140 한 사례로 다시 썼습니다. Checkpoint anchor, finalized 구간, current 구간, 네 lookahead range, blockchain receiver와 live gossip 전환을 여덟 장면에서 같은 식별자로 추적합니다.
+- Ethereum consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. Checkpoint state·block의 내부 짝 확인은 provider 신뢰와 다르고, queue의 `stateSent`는 blockchain service의 HeadSlot 변경과 다르다는 경계를 실제 source excerpt로 대조했습니다.
+- 설명용 range 101–104, 105–108, 109–112, 113–116을 사용했습니다. 109–112가 먼저 도착해도 앞 range가 처리될 때까지 `dataParsed`에 머물며, 앞 range가 invalid이면 HeadSlot 100과 live gossip의 `ValidationIgnore`를 유지한 채 peer evidence를 남기고 재시도합니다. 처리 시간과 throughput은 측정하지 않았습니다.
+- 1,440×1,000 production 렌더에서 12.5초 동안 장면 0이 유지됐고, 키보드로 0→1을 이동했습니다. 390×844에서는 순서·전환·실패 장면의 HeadSlot·range FSM·gossip 상태가 함께 바뀌며 문서 가로 넘침과 console 오류가 없습니다.
+- 첫 모바일 검사에서 live 장면 높이가 883px로 viewport보다 길어 조작부가 아래로 밀렸습니다. 장면 내용만 628px 내부 영역에서 스크롤하고 조작부는 화면 아래에 고정되도록 고쳤습니다. 내부 scroll 191px 끝에서 설명 마지막 줄까지 보이고, 조작부 bottom은 844.5px로 유지됩니다.
+- Reduced-motion에서는 장면 0, 실행 중 animation 0건과 재생 비활성화를 확인했습니다. JavaScript 비활성 390×844 정적 경로는 HTTP 200이며 live 영역 없이 정적 여덟 장면, 전체 본문, 근거와 부모 지도 반환을 표시합니다.
+- 공통 `CodeSidebar`에는 dialog 의미, 첫 초점, Tab 초점 순환, `Escape` 닫기, 본문 스크롤 잠금과 원래 버튼으로의 초점 복귀를 추가했습니다. Checkpoint origin source에서 패널 가로 넘침 0과 실제 v7.3.1 경로를 확인했습니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. 최종 build는 8,098개 module과 정적 public route 2,120개, no-script 본문 357편을 만들었고 최대 RSS는 6,616,989,696 bytes, swap은 0입니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
+### Prysm Finality 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-finality`를 current epoch 11, 갱신 전 current justified checkpoint epoch 10, old bits `0001`, current target participation 64/96 한 사례로 다시 썼습니다. Unique effective balance, 정수 2/3 경계, `0001→0010→0011`, epoch 10 finalization, fork-choice prune와 weak-subjectivity local verification을 여덟 장면으로 연결했습니다.
 - Ethereum consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. 기존의 합성 구현 코드를 없애고 target participation balance, bit shift, checkpoint 선택, state write, fork-choice prune와 verifier의 실제 source excerpt를 분리했습니다.
 - `3×64=2×96=192`, `3×63=189<192`, 충돌 quorum의 `64+64−96=32`를 확인했습니다. 새 current justified checkpoint는 epoch 11이지만 finalization pattern이 고르는 값은 갱신 전 epoch 10 checkpoint라는 상태 순서를 시각화했습니다.
 - 1,440×1,000, 1,024×768, 390×844 production 렌더에서 가로 넘침과 console 오류·경고가 없습니다. 12초 동안 장면 0이 유지됐고 키보드로 0→4→6→7을 이동했습니다. Reduced-motion에서는 장면 0과 0.000001초 duration을 확인했습니다.
 - JavaScript 비활성 390×844 정적 경로에는 live 장면과 조작부 없이 정적 여덟 장면, 전체 본문, 근거·확인 질문과 부모 지도 반환이 남습니다. Finality route를 정적 읽기 목록에 등록해 no-script 본문은 356편입니다.
-- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. 전체 build는 8,094개 module과 정적 public route 2,120개를 만들었고 최대 RSS는 6,749,650,944 bytes, swap은 0입니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. 전체 build는 8,094개 module과 정적 public route 2,120개를 만들었고 최대 RSS는 6,749,650,944 bytes, swap은 0입니다.
+- Commit `be6a2a00`의 GitHub Pages run `41017052676`이 정적 감사, production build, 공개 1,007편의 데스크톱·모바일 브라우저 전수 검사와 배포를 통과했습니다. 공개 경로에서 HTTP 200, 12.5초 무자동재생, 가로 넘침 0, console 오류 0, reduced-motion 첫 장면 유지와 JavaScript 비활성 정적 여덟 장면을 다시 확인했습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Prysm Fork Choice 공개 검증 완료 (2026-10-30)
 

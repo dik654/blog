@@ -6518,11 +6518,12 @@ export const EDITORIAL_BOUNDARIES = {
   "prysm-sync": {
     title: "Prysm beacon sync 글이 소유하는 범위",
     owns: [
-      "Genesis·weak-subjectivity checkpoint·local-finalized anchor와 sync mode 경계",
+      "Checkpoint finalized state·latest block의 fork-aware decode와 body-root pairing",
+      "Finalized epoch boundary와 current slot을 차례로 따라가는 two-phase target",
       "BlocksByRange의 start/count/step·empty-slot omission·server branch semantics",
-      "병렬 range fetch·ordered transition과 contiguous durable commit cursor",
-      "Range와 live gossip의 block-root dedupe·gap·reorg handoff",
-      "Prysm/spec/database provenance와 fault·crash recovery release gate",
+      "네 lookahead range FSM의 fetch와 앞 machine 기준 ordered fetchedData 전달",
+      "Queue stateSent와 blockchain receiver의 검증·transition·HeadSlot 소유권 분리",
+      "Initial sync 완료 전 gossip ValidationIgnore와 markSynced 이후 regular validation 전환",
     ],
     reuses: [
       { label: "Prysm peer lifecycle·req/resp transport", href: "/cs/blockchain/prysm-p2p-libp2p" },
@@ -6532,9 +6533,9 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "standard", rule: "Req/resp·checkpoint·state-transition semantics는 고정한 Ethereum consensus spec commit·fork·network에 귀속한다." },
-      { kind: "primary-source", rule: "Range scheduler·peer selection·DB commit·handoff 동작은 표시한 Prysm release/SHA 범위에만 귀속한다." },
-      { kind: "project-measurement", rule: "같은 anchor·peer·clock·range·reorg·crash fixture에서 cursor root·state/head·restart parity 뒤 성능을 비교한다." },
-      { kind: "project-claim", rule: "Highest downloaded/seen slot을 committed progress로, download endpoint를 checkpoint trust source로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Checkpoint initializer·two-phase sync·queue FSM·receiver·gossip gate는 Prysm v7.3.1 commit 96d418cd 범위에만 귀속한다." },
+      { kind: "project-measurement", rule: "Slot 96·100·128·140과 4-slot range는 동작 순서를 설명하는 fixture이며 처리 성능 측정값이 아니다." },
+      { kind: "project-claim", rule: "Queue stateSent나 highest downloaded slot을 durable chain progress로, state·block 내부 짝 확인을 checkpoint provider 신뢰로 일반화하지 않는다." },
     ],
   },
   "prysm-forkchoice": {
