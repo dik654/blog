@@ -512,6 +512,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c, Prysm v7.3.1 commit 96d418cd와 Execution APIs v1.0.0-beta.7 commit 5aebdfdd를 고정합니다. Slot 352·proposer 17·SYNCING은 설명용 fixture이며 후보 등록을 head 선택이나 finality로 확대하지 않습니다. Fork-choice 알고리즘과 Engine API 전체 계약은 각각 별도 글이 소유합니다.",
   },
+  "blockchain/prysm-block-proposal": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Fulu slot 353 proposal 하나를 proposer lookahead 조회, validator client의 RANDAO request, beacon node의 parent·consensus pool·execution payload 조립, state-root backfill, proposer signature·local slashing gate와 block·sidecar publish까지 추적하는 단일 owner-handoff 경로입니다. Duty·assembly·signing을 나누면 같은 candidate identity가 프로세스 사이를 어떻게 이동하는지 다시 조립해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c와 Prysm v7.3.1 commit 96d418cd를 고정합니다. Slot 353·lookahead[1]=17·parent P352·local payload L353은 설명용 fixture이고 proposal 지연은 미측정입니다. Gloas v4 proposal, 운영 failover·retry·release 판단, fork-choice head와 finality는 이 글의 범위가 아닙니다.",
+  },
   "blockchain/reth-alloy-primitives": KEEP("Semantic type→canonical encode/decode→hash/address derivation이 한 Alloy codec 경계입니다."),
   "blockchain/lsm-tree": {
     action: "split",
@@ -4302,6 +4311,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
+  "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",
   "blockchain/reth-alloy-primitives": "e8b0d939eba9a639",
   "blockchain/lsm-tree": "9aecdf800aab56ed",
   "blockchain/lsm-engine-validation": "47d5cc0e46151e22",

@@ -4755,41 +4755,71 @@
     {
       "route": "blockchain/prysm-block-proposal",
       "title": "Prysm 블록 제안 & 조립",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-block-proposal.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-block-proposal.tsx",
-        "src/pages/articles/ethereum/prysm-block-proposal/BlockConstruction.tsx",
-        "src/pages/articles/ethereum/prysm-block-proposal/GraffitiRandao.tsx",
-        "src/pages/articles/ethereum/prysm-block-proposal/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-block-proposal/ProposerSelection.tsx"
+        "src/pages/articles/ethereum/prysm-block-proposal/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-block-proposal/PrysmBlockProposalLocator.tsx",
+        "src/pages/articles/ethereum/prysm-block-proposal/viz/PrysmBlockProposalFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-block-proposal/codeRefs.ts",
+        "src/pages/articles/ethereum/prysm-block-proposal/fileTrees.ts",
+        "src/content/prysm-block-proposal-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 4,
+        "sourceButtons": 8,
         "headings": [
-          "블록 조립",
-          "RANDAO Reveal & Graffiti",
-          "Block proposal은 duty부터 payload 조립과 서명까지 이어진다",
-          "Proposer 선정"
+          "Slot 353의 제안자는 어떻게 블록 하나를 조립하고 한 번만 서명해 전파합니까?",
+          "입력",
+          "Duty",
+          "요청",
+          "Parent",
+          "조립",
+          "State Root",
+          "서명과 전파",
+          "실패 경계",
+          "근거",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 proposer 선정·RANDAO·조립을 분리해 validator client와 beacon node 사이에서 하나의 candidate identity가 이동하는 순서를 추적하기 어려웠습니다.",
+        "기존 proposer 설명은 Phase 0의 8-bit 255 식을 사용했지만 Prysm v7.3.1 Fulu hot path는 proposer_lookahead를 읽고 lookahead precomputation은 Electra식 16-bit random value를 사용합니다.",
+        "기존 글은 block signature와 local slashing check의 실제 호출 순서, local payload와 builder bid의 경계, state-root 재계산의 최대 3회 제한을 직접 보여 주지 않았습니다."
+      ],
+      "fixture": "Fulu slot 353, epoch 11, proposer_lookahead[1]=validator 17, proposer parent P352와 선택된 local execution payload L353을 설명용 입력으로 둡니다. 번호·root·payload 이름은 실제 chain이나 지연 측정값이 아닙니다.",
+      "stageEvidence": {
+        "duty": "Fulu current·next epoch proposer는 state.proposer_lookahead에서 slot modulo 32로 조회합니다. Lookahead precomputation의 Electra 경로는 16-bit random value를 effective balance와 비교합니다.",
+        "request": "Validator client가 epoch 11 RANDAO reveal과 graffiti·builder config를 Fulu의 GET /eth/v3/validator/blocks/353 요청으로 보냅니다.",
+        "parent": "Beacon node는 syncing·execution-optimistic 상태를 거절하고 fork choice를 갱신한 뒤 GetProposerHead의 P352와 slot 353 state를 조립 기준으로 사용합니다.",
+        "assembly": "Prysm은 consensus body 수집을 local payload·선택적 builder bid 경로와 겹쳐 실행합니다. Local payload를 얻지 못하면 이 Fulu 경로는 실패하고 builder 오류만으로는 항상 실패하지 않습니다.",
+        "root": "Candidate를 parent state에 적용한 post-state hash-tree-root를 block.state_root에 채웁니다. 일부 pool operation 오류만 제거 후 재시도하며 최대 시도 횟수는 3회입니다.",
+        "sign": "Validator client는 완성 block을 먼저 서명한 뒤 SlashableProposalCheck로 EIP-3076 proposal history를 확인·갱신하고 통과한 signed bytes만 제출합니다.",
+        "publish": "Beacon node는 signed block을 local receive와 gossip으로 보내고 Fulu sidecar도 전파합니다. 반환 block root는 제출 identity이며 head·채택·finality가 아닙니다.",
+        "boundary": "다중 beacon node failover, 원격 signer의 전역 slashing protection과 운영 retry는 별도 실무 판단입니다. 이 개념 글은 한 Prysm proposal 호출이 소유하는 실패까지만 다룹니다."
+      },
+      "sourceEvidence": [
+        "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c156184e9548a997d53efaf2a228a6304의 Fulu proposer lookahead, Electra proposer sampling, validator proposal과 fork별 block transition 규칙",
+        "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db의 validator client lock·RANDAO·signing·slashing check, v3 production request, proposer parent, Fulu 조립·state-root·publish 구현"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 고정한 consensus-specs·Prysm release를 다시 읽어 duty→RANDAO request→parent→consensus·execution 조립→state root→signature·slashing protection→publish의 owner handoff 하나로 전면 재작성했습니다.",
+        "arithmetic": "353 mod 32=1이므로 설명용 proposer_lookahead[1]=17을 읽습니다. Electra acceptance 식의 random value가 2-byte 0..65535 범위임을 확인했고 state-root 재계산은 context counter로 최대 3회임을 실제 source와 대조했습니다. Proposal 지연·throughput은 측정하지 않았습니다.",
+        "humanize": "직속 부모, 현재 영역, 질문 하나, slot 353 fixture, 여덟 장면, 실제 코드·수식·실패 경계와 부모 지도 반환으로 구성했습니다. 개념 글에서 운영 failover·release gate를 분리했고 근거 카드는 JavaScript 없이도 읽히게 했습니다.",
+        "browser390": "390×844 production 렌더에서 문서 폭 390=390, live 시각화 폭 334px·높이 약 674px, 모바일 조작부 49.5px를 확인했습니다. 전체·조립 중간 장면에서 글자 겹침과 문서 overflow가 없고 console 오류·경고도 0건입니다.",
+        "browser1440": "1,440×1,000 production 렌더에서 문서 폭 1,440=1,440, 일곱 실제 단계와 병렬 조립 lane, 상태 변화와 설명이 겹치지 않으며 console 오류·경고가 0건입니다.",
+        "interaction": "2.5초 동안 장면 0이 유지되고 ArrowRight로 0→1이 이동했습니다. Reduced-motion에서는 실행 중 animation 0건이며 수동 이동은 유지됩니다.",
+        "noJavaScript": "JavaScript 비활성 390×844 정적 경로에서 HTTP 200, 문서 폭 390=390, 질문·정적 여덟 장면·두 공식 근거·최종 결론과 전체 본문이 남습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,090여 module, 정적 public route 2,120개와 no-script 본문 354편을 만들었습니다. 최대 RSS는 6,736,756,736 bytes이고 swap은 0입니다. Node 기본 4GB heap에서는 tsc가 약 4.55GB RSS에서 OOM이 나므로 이 저장소의 full build에는 명시적 heap 상한이 필요합니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-fulu-slot353-validator-beacon-owner-handoff-sign-publish-boundary"
     },
     {
       "route": "blockchain/prysm-bls",

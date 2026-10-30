@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Prysm Block 제안 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-block-proposal`을 Fulu slot 353의 제안자 17이 duty를 확인하고 RANDAO를 보내 parent `P352` 위에 후보를 조립한 뒤, state root 계산·서명·slashing protection·전파까지 넘기는 한 흐름으로 다시 썼습니다. 번호와 root·payload 이름은 설명용 fixture이며 실제 chain과 측정값이 아닙니다.
+- consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. 기존 Phase 0의 8-bit `255` proposer 식을 제거하고, Fulu hot path의 `proposer_lookahead`와 Electra식 16-bit random value 사전 계산을 실제 코드와 대조했습니다.
+- Validator client가 완성 block을 먼저 서명한 뒤 `SlashableProposalCheck`로 EIP-3076 history를 확인·갱신하는 순서, local payload와 선택적 builder bid의 경계, pool operation을 선택적으로 제거하는 state-root 재계산의 최대 3회 제한을 코드 패널에서 확인할 수 있게 했습니다.
+- 1,440×1,000과 390×844 production 렌더에서 문서 폭과 시각화 폭, 조립 중간 장면, 조작부와 내부 글자 겹침을 확인했습니다. 두 화면 모두 가로 넘침과 console 오류·경고가 없습니다. 2.5초 동안 자동 진행하지 않고 ArrowRight로 장면 0→1이 이동합니다.
+- Reduced-motion에서는 실행 중 animation이 0건이고 수동 이동은 유지됩니다. JavaScript 비활성 390×844 정적 경로에도 질문, 정적 여덟 장면, 공식 근거 두 개, 결론과 전체 본문이 남습니다.
+- 관련 학습 계약·지식 그래프·수식·계산·본문·읽기 순서·문장 호흡·한국어·용어·topology·runtime 감사를 통과했습니다. `NODE_OPTIONS=--max-old-space-size=8192 npm run build`는 정적 public route 2,120개와 no-script 본문 354편을 만들었고 최대 RSS는 6,736,756,736 bytes, swap은 0입니다. 기본 4GB heap에서는 TypeScript가 약 4.55GB RSS에서 OOM이 발생했습니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### Prysm Block 처리 로컬 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-block-processing`을 slot processing이 만든 Fulu pre-state 352에 signed block 352 하나를 적용하는 사례로 다시 썼습니다. 입력, consensus·Engine 병렬 검증, ordered transition, operations, state root·BLS·data availability, Engine status, optimistic 후보 등록을 여덟 장면으로 연결했습니다.
