@@ -14,21 +14,14 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 
 export const prysmTree: FileNode = d("prysm", [
   d("encoding/ssz", [
-    f("htrutils.go — PackByChunk()", "encoding/ssz/htrutils.go", "ssz-pack"),
-    f(
-      "htrutils.go — BitwiseMerkleize()",
-      "encoding/ssz/htrutils.go",
-      "ssz-merkleize",
-    ),
-    f(
-      "merkleize.go — HashTreeRoot()",
-      "encoding/ssz/merkleize.go",
-      "ssz-hash-tree-root",
-    ),
-    f(
-      "merkleize.go — MixInLength()",
-      "encoding/ssz/merkleize.go",
-      "ssz-mix-in-length",
-    ),
+    f("merkleize.go — MerkleizeListSSZ()", "encoding/ssz/merkleize.go", "ssz-list-root"),
+    d("query", [
+      f("generalized_index.go", "encoding/ssz/query/generalized_index.go", "ssz-gindex"),
+    ]),
+  ]),
+  d("methodical-ssz@932cc738", [
+    d("ssz", [
+      f("marshal.go · unmarshal.go — offset", "ssz/marshal.go", "ssz-offset"),
+    ]),
   ]),
 ]);

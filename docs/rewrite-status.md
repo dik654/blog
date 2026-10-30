@@ -4374,3 +4374,27 @@
   남고 가로 넘침이 없습니다. TypeScript와 production build를 통과했으며 8,090개 module,
   정적 public route 2,120개와 no-script 본문 347편을 생성했습니다. 최대 RSS는 약 6.09GB,
   swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 다음 단계입니다.
+
+### Prysm SSZ 개념 글 로컬 검증 완료 (2026-10-30)
+
+- 설명용 `DemoRecord {slot:1, validators:[10,20], epoch:3}` 하나가 schema에서 canonical
+  wire bytes, bounded decode, 32-byte chunk, Merkle root와 field proof로 이어지는 경로를
+  여덟 장면으로 다시 구성했습니다. DemoRecord와 hash 값은 설명용 fixture이며 실제 protocol
+  object나 대상 환경 측정값이 아닙니다.
+- Fixed part `8+4+4=16 B`와 variable part `2×8=16 B`를 이어 32 B payload를 만들고,
+  validators gindex 5의 sibling payload를 `2×32=64 B`로 계산했습니다. Validators root는
+  `96477593…e8c266`, container root는 `9dfd6779…410832cc`입니다.
+- 근거는 Ethereum consensus-specs v1.6.1 commit `5fa6edcca8ab4cf548653e6680b17b9d3e04d225`,
+  Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`, methodical-ssz
+  commit `932cc7380128`에 고정했습니다. SSZ 표현 검증과 signature·state transition·fork choice·
+  finalized chain 판단을 서로 다른 경계로 표시했습니다.
+- 1,440×1,000에서 문서 폭 1,440px와 article 711px, 390×844에서 문서 폭 390px와 article
+  354px, live 시각화 334×682.9px를 확인했습니다. 두 화면 모두 무자동재생이며 키보드
+  `ArrowRight`로 장면 0→1이 이동합니다. Reduced-motion에서는 실행 중 animation 0건과 재생
+  비활성·수동 이동을 확인했습니다.
+- JavaScript 비활성 390×844 경로에는 live 영역 대신 정적 여덟 장면, 글의 질문과 부모 지도
+  반환이 남고 가로 넘침이 없습니다. 학습 계약·지식 그래프·수식·계산·시각화·글 구조·
+  topology·읽기 순서·한국어·용어·architecture-flow·runtime·pseudocode 검사, 선택 ESLint,
+  TypeScript와 production build를 통과했습니다. Build는 8,086개 module, 정적 public route
+  2,120개와 no-script 본문 348편을 생성했고 최대 RSS는 약 6.11GiB, swap은 0이었습니다.
+  공개 배포와 공개 경로 재검증은 다음 단계입니다.
