@@ -420,6 +420,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/cometbft-consensus",
   "blockchain/cometbft-abci",
   "blockchain/cometbft-execution",
+  "blockchain/cometbft-p2p",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

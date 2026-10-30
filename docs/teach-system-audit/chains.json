@@ -846,38 +846,65 @@
     {
       "route": "blockchain/cometbft-p2p",
       "title": "CometBFT P2P: MConnection · Switch · Reactor",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-p2p.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-p2p.tsx",
-        "src/pages/articles/blockchain/cometbft-p2p/ModernArticle.tsx"
+        "src/pages/articles/blockchain/cometbft-p2p/ModernArticle.tsx",
+        "src/pages/articles/blockchain/cometbft-p2p/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/cometbft-p2p/viz/P2PTransactionTraceViz.tsx",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 14,
+        "stageMarkers": 9,
+        "predictionPointers": 4,
+        "assumptionMarkers": 4,
+        "sourceButtons": 7,
         "headings": [
-          "P2P는 message를 옮기고, protocol reactor가 그 의미를 판단한다",
-          "한 TCP connection 안에서도 channel마다 queue와 priority가 따로 있다",
-          "Switch는 peer 집합과 channel ownership을 한곳에서 관리한다",
-          "Envelope dispatch 뒤에는 protocol별 검증과 backpressure 정책이 남는다"
+          "한 transaction을 socket에서 remote CheckTx까지 따라갑니다",
+          "Send가 true여도 remote node는 아직 아무것도 확인하지 않았습니다",
+          "Channel ID 하나에는 protocol owner가 하나만 있습니다",
+          "Mempool Reactor에서 처음 transaction의 의미를 판단합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 P2P 계층을 각각 설명했지만 alice→bob transaction 하나가 handshake·local queue·packet·Reactor·CheckTx를 지나는 상태 변화를 한 흐름으로 보여 주지 않았습니다.",
+        "기존 코드 패널은 CometBFT v0.40.0의 실제 source가 아니라 손으로 만든 legacy snapshot이어서 queue admission·packet selection·receive dispatch의 근거로 사용할 수 없었습니다.",
+        "Send 성공, EOF=true, Reactor.Receive와 CheckTx 성공을 구분하지 않아 각각이 remote acknowledgement·transaction admission·block inclusion 중 무엇을 뜻하는지 경계가 흐렸습니다.",
+        "Reactor.Receive가 MConnection의 같은 recvRoutine에서 동기 실행되어 느린 Reactor가 같은 peer connection의 다른 channel 수신까지 막을 수 있다는 호출 경로가 빠져 있었습니다."
+      ],
+      "fixture": "보내는 node의 mempool에 있는 alice→bob 10 transaction을 channel 0x30의 Txs message로 감싸 local bounded queue에 넣고 PacketMsg로 나눈 뒤, 다른 node가 EOF까지 재조립·filter·decode해 mempool Reactor의 CheckTx에 전달하는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "Switch가 mempool Reactor의 ChannelDescriptor를 읽어 channel 0x30의 유일한 owner와 protobuf message type을 등록합니다.",
+        "1": "Transport가 TCP를 SecretConnection으로 올리고 remote public key와 NodeInfo ID·self connection·network compatibility를 확인합니다.",
+        "2": "Peer.Send가 transaction을 Txs Envelope와 channel 0x30으로 묶고 상대가 해당 channel을 지원하는지 확인해 protobuf bytes로 직렬화합니다.",
+        "3": "MConnection.Send가 bytes를 local bounded queue에 넣으며 true는 socket write나 remote acknowledgement가 아닌 local admission만 뜻합니다.",
+        "4": "sendRoutine이 pending channel의 recentlySent/priority를 비교해 다음 channel을 고르고 payload ceiling만큼 PacketMsg를 만듭니다.",
+        "5": "Remote recvRoutine이 channel별 buffer에 조각을 붙여 EOF=true에서 message를 완성하며 receive capacity 초과는 connection 오류가 됩니다.",
+        "6": "같은 recvRoutine의 onReceive가 raw-byte filter·protobuf unmarshal·wrapper 해제 뒤 유일한 owner인 mempool Reactor.Receive를 동기 호출합니다.",
+        "7": "Mempool Reactor가 sender 정보를 붙여 transaction마다 CheckTx를 호출하며 성공해도 remote node의 local mempool admission일 뿐입니다.",
+        "8": "수용 transaction은 sender를 제외한 peer로 재전파할 수 있고 queue full·protocol decode 오류·invalid CheckTx는 서로 다른 실패 경로로 남습니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 p2p/transport.go SecretConnection·NodeInfo handshake",
+        "같은 commit의 p2p/peer.go·p2p/switch.go channel owner 등록, peer send·filter·decode·Reactor dispatch와 lifecycle",
+        "같은 commit의 p2p/conn/connection.go bounded queue, recentlySent/priority scheduler, packet 분할·재조립과 synchronous receive callback",
+        "같은 commit의 mempool/reactor.go channel 0x30 Receive·CheckTx·sender 제외 재전파 경로"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 commit의 transport handshake, Peer.Send, Switch channel owner, MConnection queue·packet·recvRoutine과 Mempool Reactor Receive를 읽고 손으로 만든 code snapshot을 실제 원문의 제어 흐름 발췌로 교체했습니다. 긴 오류 문구·로그와 주변 분기를 생략했다는 범위도 각 코드 패널에 명시했습니다.",
+        "arithmetic": "Consensus recentlySent 2000/priority 10=200과 mempool 600/5=120을 비교해 mempool channel을 고르고 400 framing bytes 뒤 ratio가 200이 되는 계산, 주기적 0.8 감쇠를 official scheduler 구현과 맞췄습니다. 성능 수치는 측정하지 않았습니다.",
+        "humanize": "한 질문과 alice→bob 10 사례를 먼저 보여 준 뒤 channel 등록→연결 인증→Envelope→local queue→packet 선택→재조립→Reactor→CheckTx→재전파·실패 순서로 설명했습니다. 예전의 release gate 실무 항목은 개념 글에서 제거했습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 가장 긴 마지막 장면의 live UI 높이는 약 800px이고 scene top을 맞췄을 때 하단 조작부가 745~800px에 있어 한 화면 안에 보이며 console 오류는 0건입니다.",
+        "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지됐고 group focus와 ArrowRight로 장면 2, 직접 선택으로 Packet 장면 5에 이동했습니다. 고정 source code sidebar 열기·닫기와 console 오류 0건을 확인했습니다.",
+        "reducedMotion": "390×844 reduced-motion 환경에서 재생 조작부가 표시되지 않고 8초 뒤에도 첫 장면이 유지되며 console 오류는 0건입니다.",
+        "resource": "TypeScript 검사는 8GB heap에서 최대 RSS 6,617,219,072 bytes, 공통 curriculum 순서 수정까지 포함한 최종 production build는 최대 RSS 6,316,376,064 bytes였으며 둘 다 swap 0으로 직렬 실행했습니다. 모든 Playwright 세션과 preview를 이름과 session ID로만 종료했습니다.",
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 383편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 질문·고정 commit 근거·부모 지도 반환이 남고 console 오류는 0건임을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-transaction-through-peer-handshake-bounded-channel-packet-reassembly-synchronous-reactor-and-checktx-receipts-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-state",

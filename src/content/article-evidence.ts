@@ -5982,9 +5982,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/execution.go", note: "Application Commit과 mempool flush/Update 사이 동시성 경계" },
   ],
   "blockchain/cometbft-p2p": [
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/conn/connection.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/p2p/conn/connection.go", note: "MConnection channel queue·priority scheduler·packet framing의 pinned 구현" },
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/switch.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/p2p/switch.go", note: "Unique channel owner, peer add/remove와 persistent reconnect lifecycle" },
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/base_reactor.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/p2p/base_reactor.go", note: "Reactor GetChannels·Receive·peer callback interface" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/conn/connection.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/p2p/conn/connection.go", note: "MConnection의 bounded channel queue·weighted packet scheduler·분할·재조립·같은 recvRoutine dispatch를 content commit으로 고정한 기준" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/transport.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/p2p/transport.go", note: "SecretConnection, remote public key와 NodeInfo 교환·검증으로 peer identity와 capability를 확인하는 handshake 구현" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — p2p/peer.go · switch.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/p2p/peer.go", note: "Channel별 유일한 Reactor owner, peer send·filter·decode·dispatch와 lifecycle 경계" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/reactor.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/mempool/reactor.go", note: "Channel 0x30 message를 transaction별 CheckTx로 넘기고 sender 제외 재전파하는 구현이며 block 포함·Commit의 근거는 아님" },
   ],
   "blockchain/cometbft-state": [
     { kind: "공식 코드", label: "CometBFT v0.40.0 — state/state.go · store.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/state.go", note: "State field·validator snapshots·AppHash와 synchronous persistence schema" },

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 725,
-    "pending": 282,
+    "reviewed": 726,
+    "pending": 281,
     "untracked": 0,
-    "assignedPending": 240,
+    "assignedPending": 239,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4653,9 +4653,9 @@
       "publicPath": "cs/blockchain/cometbft-p2p",
       "title": "CometBFT P2P: MConnection · Switch · Reactor",
       "catalogIndex": 462,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
