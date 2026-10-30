@@ -5638,10 +5638,28 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/prysm-bls": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
     {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications v1.6.1 — BLS와 signing root",
+      href: "https://github.com/ethereum/consensus-specs/tree/5fa6edcca8ab4cf548653e6680b17b9d3e04d225",
+      note: "Consensus object root·domain·SigningData와 Ethereum BLS interface의 고정 규칙",
+    },
+    {
       kind: "핵심 연구",
       label: "CFRG Internet-Draft — BLS Signatures draft-06",
       href: "https://datatracker.ietf.org/doc/draft-irtf-cfrg-bls-signature/06/",
       note: "BLS core·aggregate·Proof-of-Possession API와 key-validation 전제; RFC가 아닌 revision 고정 draft",
+    },
+    {
+      kind: "공식 구현",
+      label: "OffchainLabs Prysm v7.3.1 — BLS wrapper",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/crypto/bls",
+      note: "POP DST·point validation·single/aggregate/batch verification과 verbose fallback을 확인한 release",
+    },
+    {
+      kind: "공식 구현",
+      label: "Supranational BLST v0.3.16",
+      href: "https://github.com/supranational/blst/tree/e7f90de551e8df682f3cc99067d204d8b90d27ad",
+      note: "Prysm v7.3.1이 고정한 BLS12-381 point·pairing implementation과 binding contract",
     },
   ),
   "blockchain/prysm-engine-api": withSeriesEvidence(

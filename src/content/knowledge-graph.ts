@@ -11373,8 +11373,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "computer-science",
     label: "BLS point serialization validation",
-    definition: "48-byte public key와 96-byte signature를 native point로 사용하기 전에 canonical field encoding·curve·prime-order subgroup·non-identity 조건을 확인하는 입력 검증입니다.",
-    canonicalHref: "/cs/blockchain/prysm-bls#blst-binding",
+    definition: "48-byte public key와 96-byte signature를 native point로 사용하기 전에 canonical field encoding·curve·prime-order subgroup과 public-key non-infinity 등 역할별 identity 규칙을 확인하는 입력 검증입니다.",
+    canonicalHref: "/cs/blockchain/prysm-bls#point-boundary",
   },
   "bls-signing-root-domain-separation": {
     id: "bls-signing-root-domain-separation",
@@ -11382,7 +11382,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "BLS signing-root domain separation",
     definition: "SSZ object root에 duty domain type·fork version·genesis validators root를 묶고 BLS DST와 구분해 chain·fork·서명 목적 사이 replay를 막는 Ethereum 서명 문맥입니다.",
-    canonicalHref: "/cs/blockchain/prysm-bls#sign-verify",
+    canonicalHref: "/cs/blockchain/prysm-bls#signing-root",
   },
   "bls-pairing-verification": {
     id: "bls-pairing-verification",
@@ -11398,7 +11398,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "mathematics",
     label: "BLS signature aggregation",
     definition: "여러 G2 signature point를 더해 하나의 96-byte aggregate point로 표현하면서 검증에는 정확한 public-key·message 집합을 별도로 보존하는 방법입니다.",
-    canonicalHref: "/cs/blockchain/prysm-bls#sign-verify",
+    canonicalHref: "/cs/blockchain/prysm-bls#aggregation",
   },
   "bls-proof-of-possession-rogue-key": {
     id: "bls-proof-of-possession-rogue-key",
@@ -11406,7 +11406,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "BLS Proof-of-Possession·rogue-key boundary",
     definition: "Public-key aggregation 전에 각 key에 대응하는 secret을 소유함을 별도 proof로 확인해 다른 key의 합을 상쇄하는 rogue-key 공격을 막는 등록 전제입니다.",
-    canonicalHref: "/cs/blockchain/prysm-bls#sign-verify",
+    canonicalHref: "/cs/blockchain/prysm-bls#aggregation",
   },
   "bls-api-message-cardinality": {
     id: "bls-api-message-cardinality",
@@ -11414,14 +11414,14 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "BLS verification API message cardinality",
     definition: "단일 Verify, 동일 message의 FastAggregateVerify, 서로 다른 message tuple의 AggregateVerify를 message equality와 PoP 전제에 따라 구분하는 API 계약입니다.",
-    canonicalHref: "/cs/blockchain/prysm-bls#sign-verify",
+    canonicalHref: "/cs/blockchain/prysm-bls#aggregation",
   },
-  "bls-batch-verification-release-gate": {
-    id: "bls-batch-verification-release-gate",
+  "bls-randomized-batch-verification": {
+    id: "bls-randomized-batch-verification",
     kind: "method",
     domain: "computer-science",
-    label: "BLS batch-verification release gate",
-    definition: "Randomized batch equation의 accept/reject parity·malformed input·failure isolation·deadline을 hard gate로 확인한 뒤 throughput·tail latency·fallback cost를 비교하는 채택 절차입니다.",
+    label: "BLS randomized batch verification",
+    definition: "서로 다른 public-key·message·signature 식마다 새 nonzero random coefficient를 곱해 하나의 pairing 관계로 묶고, 전체 실패 시 별도 검증으로 잘못된 item을 찾는 방법입니다.",
     canonicalHref: "/cs/blockchain/prysm-bls#batch-verification",
   },
   "beacon-state-protocol-snapshot": {
@@ -47692,10 +47692,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason: "Message가 같은지 다른지에 따라 FastAggregateVerify와 tuple-preserving AggregateVerify를 선택합니다.",
   },
   {
-    from: "bls-signature-aggregation",
-    to: "bls-batch-verification-release-gate",
-    relation: "evaluates",
-    reason: "Single·aggregate·batch input의 validity parity와 failure isolation을 성능보다 먼저 검사합니다.",
+    from: "bls-pairing-verification",
+    to: "bls-randomized-batch-verification",
+    relation: "extends",
+    reason: "서로 다른 독립 pairing 식을 새 random coefficient로 묶어 한 번에 판정하되 aggregate signature와는 다른 입력 계약을 유지합니다.",
   },
   {
     from: "prysm-state-head-finality-separation",

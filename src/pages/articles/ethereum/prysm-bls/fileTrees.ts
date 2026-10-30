@@ -14,17 +14,29 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 
 export const prysmTree: FileNode = d("prysm", [
   d("crypto/bls/blst", [
-    f("secret_key.go — Sign()", "crypto/bls/blst/secret_key.go", "bls-sign"),
-    f("signature.go — Verify()", "crypto/bls/blst/signature.go", "bls-verify"),
+    f(
+      "public_key.go — PublicKeyFromBytes()",
+      "crypto/bls/blst/public_key.go",
+      "bls-point-validation",
+    ),
+    f("secret_key.go — Sign()", "crypto/bls/blst/secret_key.go", "bls-sign-verify"),
+    f("signature.go — Verify()", "crypto/bls/blst/signature.go", "bls-sign-verify"),
     f(
       "signature.go — FastAggregateVerify()",
       "crypto/bls/blst/signature.go",
-      "bls-fast-agg-verify",
+      "bls-fast-aggregate",
     ),
     f(
-      "signature.go — AggregateVerify()",
+      "signature.go — VerifyMultipleSignatures()",
       "crypto/bls/blst/signature.go",
-      "bls-batch",
+      "bls-multiple-verify",
+    ),
+  ]),
+  d("crypto/bls", [
+    f(
+      "signature_batch.go — VerifyVerbosely()",
+      "crypto/bls/signature_batch.go",
+      "bls-verbose-fallback",
     ),
   ]),
 ]);

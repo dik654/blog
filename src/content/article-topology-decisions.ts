@@ -464,6 +464,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "2026-10-29에 확인한 WEBCAT 공식 concepts·preload·user·threat-model 문서와 2026-03-03 alpha 발표에만 사실을 귀속합니다. HTTPS 성공을 developer-approved bytes로, 프로젝트 threat model을 독립 audit 결과나 production 안정성으로 확대하지 않습니다.",
   },
+  "blockchain/prysm-ssz": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "DemoRecord 하나가 schema에서 canonical bytes, bounded decode, chunk와 list root, container root, generalized index와 proof로 이어지는 단일 표현 경로입니다. 절 수는 많지만 직렬화와 commitment를 나누면 같은 field order·limit·offset을 다시 설명해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.6.1 commit 5fa6edcc, Prysm v7.3.1 commit 96d418cd와 methodical-ssz commit 932cc738을 고정합니다. DemoRecord·hash는 설명용 fixture이며 SSZ root 검증을 signature·state transition·canonical chain 판정으로 확대하지 않습니다.",
+  },
+  "blockchain/prysm-bls": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "직전 SSZ object root 하나가 consensus domain, point validation, Sign·Verify, 같은-root aggregate와 서로 다른-root randomized batch로 이어지는 단일 서명 경로입니다. Aggregate와 batch의 차이는 이 경로 안에서 나란히 봐야 입력과 실패 의미가 분명해지므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.6.1 commit 5fa6edcc, Prysm v7.3.1 commit 96d418cd와 BLST v0.3.16 commit e7f90de5를 고정합니다. Zero domain·scalar 42·산출 bytes는 설명용 fixture이며 BLS PASS를 consensus state validity나 대상 환경 처리량으로 확대하지 않습니다.",
+  },
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
@@ -4249,6 +4267,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/kohaku-provider": "45293bde30e8f34c",
   "blockchain/kohaku-provider-validation": "a650c8c45407202a",
   "blockchain/webcat-frontend-integrity": "cc3625638a4e0c2b",
+  "blockchain/prysm-ssz": "c2a4f98ee687d361",
+  "blockchain/prysm-bls": "c3786ab1bbf27a0c",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "f9d422015c3b8c7a",
