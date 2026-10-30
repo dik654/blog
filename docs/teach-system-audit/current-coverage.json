@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 705,
-    "pending": 302,
+    "reviewed": 706,
+    "pending": 301,
     "untracked": 0,
-    "assignedPending": 260,
+    "assignedPending": 259,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5321,11 +5321,11 @@
     {
       "route": "blockchain/commonware-deep-dive",
       "publicPath": "cs/blockchain/commonware-deep-dive",
-      "title": "Commonware 개요: 조합형 분산 시스템 프리미티브",
+      "title": "Commonware 전체 구조: 블록 원문에서 최종 확정 기록까지",
       "catalogIndex": 529,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

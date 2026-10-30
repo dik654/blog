@@ -1,53 +1,221 @@
-import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation-block";
-import { PrimitiveCompositionViz, ReleaseParityViz } from "./viz/ModernCommonwareOverviewViz";
+import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import { commonwareTree } from "./fileTrees";
+import CommonwareOverviewLocator, { CommonwareOverviewMapReturn } from "./CommonwareOverviewLocator";
+import CommonwareOverviewFlowViz from "./viz/ModernCommonwareOverviewViz";
 
-export default function ModernCommonwareOverviewArticle(){return <article className="space-y-14">
-  <section id="overview" className="space-y-6">
-    <header className="space-y-3"><p className="text-sm font-semibold text-primary">Commonware · composable Rust primitives</p><h2 className="text-3xl font-bold tracking-tight">Commonware는 완성된 blockchain 하나가 아니라, 필요한 runtime·network·consensus·storage를 조립하는 부품 모음이다</h2></header>
-    <p className="text-lg leading-8 text-foreground/90">Alice가 Bob에게 10을 보내는 <code>pay(Alice,Bob,10)</code> 요청을 생각해 보겠습니다. Application은 payload bytes를 만들고, P2P는 known peer에게 전달하며, Simplex는 payload digest의 순서를 합의하고, storage는 실행 결과를 authenticated root에 남깁니다. Commonware가 제공하는 것은 이 책임들을 한 framework가 숨기는 방식이 아니라 trait와 actor boundary로 이어 붙일 수 있는 primitives입니다.</p>
-    <p>따라서 “Commonware를 사용했다”는 말만으로 합의 알고리즘, signature scheme, database variant, timeout과 durability가 정해지지는 않습니다. 실제 안전성은 선택한 primitive의 안정성 등급, exact crate version, application의 deterministic validation, 그리고 component 사이 receipt contract를 함께 봐야 합니다.</p>
-    <PrimitiveCompositionViz />
-    <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>먼저 기억할 경계:</strong> Network가 bytes를 받았다는 사실, consensus가 digest를 finalization했다는 사실, application이 bytes를 실행하고 durable state를 만든 사실은 서로 다른 완료 상태입니다.</aside>
-  </section>
-  <section id="composition" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">01 · primitive composition</p><h2 className="mt-2 text-2xl font-bold">Runtime Context가 자원을 주고, actor와 trait가 소유권을 드러낸다</h2></header>
-    <p>Runtime은 task spawn, clock, random source, network와 storage 같은 실행 능력을 <code>Context</code>로 제공합니다. Application actor는 child context로 namespace를 나누고, consensus의 <code>Automaton</code>은 propose·verify를, <code>Relay</code>는 payload broadcast를, storage batch는 state mutation을 담당합니다. 인터페이스를 바꿔 끼울 수 있다는 말은 의미 계약까지 자동 호환된다는 뜻이 아닙니다.</p>
-    <p>예를 들어 consensus는 payload digest만 알고 full bytes의 전달은 Relay가 맡습니다. Notarization을 보았더라도 node가 bytes를 복구하지 못했다면 application validation이나 execution은 아직 끝나지 않았습니다. 반대로 local DB에 payload가 있다고 해서 committee ordering evidence가 생기지도 않습니다.</p>
-    <ExplainedFormula question="조립한 node가 같은 입력에 같은 결과를 냈다고 언제 말할 수 있는가?" idea={<>Seed 하나만 같다고 충분하지 않습니다. Pinned code·config에서 외부 event 순서까지 같게 재생하고 observable digest들을 모두 비교합니다.</>} formula={String.raw`\begin{aligned}I&=(v,c,s,E)\\D&=H(M\parallel S\parallel R)\\release&=[D_1=D_2]\end{aligned}`}
-    annotatedFormula={String.raw`\begin{aligned}I&=\underbrace{(v,c,s,E)}_{\text{재생 입력 전부 고정}}\\D&=\underbrace{H(M\parallel S\parallel R)}_{\text{관측 결과 digest}}\\release&=\underbrace{[D_1=D_2]}_{\text{두 run 일치 시 통과}}\end{aligned}`}
-    operations={[
-      { expression: String.raw`(v,c,s,E)`, annotation: ["version·config·seed에 더해","packet·timer·crash event 순서까지 고정","예: v2026.7.0, seed 7, event 40개"] },
-      { expression: String.raw`H(M\parallel S\parallel R)`, annotation: ["message log·state root·receipt를","모두 이어 하나의 digest로 만듭니다"] },
-      { expression: String.raw`[D_1=D_2]`, annotation: ["두 번 재생한 digest가 같아야 release","state만 같고 receipt가 다르면 실패"] },
-    ]} terms={[{symbol:"v",name:"version",description:"Commonware exact tag와 application revision입니다."},{symbol:"c",name:"configuration",description:"Committee·timeouts·storage·crypto profile입니다."},{symbol:"s",name:"seed",description:"결정론적 scheduler와 random source의 seed입니다."},{symbol:"E",name:"event trace",description:"Packet·timer·crash·restart 입력의 순서입니다."},{symbol:"M,S,R",name:"observables",description:"Message log, state root와 client receipt입니다."}]} assumptions={["Task가 외부 wall clock·OS randomness를 몰래 읽지 않습니다.","Serialization과 digest domain이 version에 고정됩니다.","같은 fault schedule을 두 run에 적용합니다.","Digest 일치는 protocol correctness proof를 대신하지 않습니다."]} interpretation="v2026.7.0, 같은 config·seed 7·event 40개를 두 번 재생해 message/state/receipt digest가 모두 같으면 parity gate를 통과합니다. State만 같고 receipt가 다르면 통과시키지 않습니다." />
-    <div id="paper-commonware-runtime"><CitationBlock source="Commonware monorepo · v2026.7.0 runtime and primitives" citeKey={1} type="code" href="https://github.com/commonwarexyz/monorepo/tree/5950bf7179bb0650a57ed58b9e0478822944b335"><p><strong>문제:</strong> Adversarial distributed system을 구성하면서 runtime·crypto·P2P·consensus·storage 책임을 교체 가능하게 유지해야 합니다.</p><p><strong>기여:</strong> Rust primitives, shared runtime traits와 crate별 stability scope를 제공합니다.</p><p><strong>전제:</strong> 2026-08-14 확인한 tag v2026.7.0, commit 5950bf7과 선택한 feature·configuration을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 snapshot의 public crate interfaces, source와 repository stability 표시에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 조립된 application의 합의 안전성·운영 readiness·고정 성능을 Commonware가 자동 보장한다는 뜻은 아닙니다.</p></CitationBlock></div>
-  </section>
-  <section id="bridge-boundary" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">02 · bridge assembly boundary</p><h2 className="mt-2 text-2xl font-bold">Bridge validator는 wiring의 예시이지 모든 deployment의 표준 구성이 아니다</h2></header>
-    <p>
-            Pinned bridge validator source는 runtime context를 만들고 authenticated networking·crypto
-            scheme·Simplex engine과 application logic을 조립하는 concrete example입니다. Alice의 payload는 network
-            admission 뒤 digest로 합의에 들어가고 application은 ordered digest에 맞는 bytes를 확보해 검증·실행해야 합니다. 이 예는 trait들이
-            어디서 만나는지 보여 주지만 production key custody, external effect, operator policy까지 대신 결정하지 않습니다.
+const owners = [
+  ["Runtime Context", "작업과 자원의 생애", "하위 context, 연결, 난수 공급원과 각 실행 주체의 범위를 만듭니다."],
+  ["Application actor", "블록 원문과 유효성", "블록을 만들고 hash하며, indexer에서 원문을 읽어 true 또는 false를 반환합니다."],
+  ["Indexer", "블록·인증서 조회", "PutBlock·GetBlock·PutFinalization 요청에 각각 응답합니다."],
+  ["Simplex", "Digest 순서와 최종 확정", "Application이 건넨 digest를 proposal payload로 사용합니다."],
+  ["Authenticated P2P", "합의 메시지 전달", "Vote·certificate·resolver 메시지를 인증된 peer 사이에 전달합니다."],
+] as const;
+
+const failures = [
+  ["PutBlock → Success(false)", "Block 보관 확인 실패", "Digest를 Simplex proposal로 반환하지 않음"],
+  ["GetBlock → Success(false)", "Digest에 해당하는 원문 없음", "Application이 verify=false 반환"],
+  ["Indexer stream send·recv 실패", "외부 보관 서비스 연결", "예제는 expect로 중단하며 복구 정책을 제공하지 않음"],
+  ["PutFinalization → Success(false)", "Certificate 기록 확인 실패", "예제는 false를 log하지만 retry·보상은 구현하지 않음"],
+  ["Simplex finalization 생성", "Consensus 순서 확정", "별도 application state 실행·client success까지 증명하지 않음"],
+] as const;
+
+export default function ModernArticle() {
+  const sidebar = useCodeSidebar();
+
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-5 scroll-mt-20">
+        <CommonwareOverviewLocator />
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 break-keep text-3xl font-bold">블록 원문과 digest, finalization은 어디에서 만나는가</h2>
+          <p className="mt-3 max-w-3xl break-keep text-base leading-7 text-muted-foreground">
+            분산 시스템의 모든 기능을 한 프레임워크가 소유하면 시작은 쉽지만, 합의·통신·저장 방식을 바꿀 때 경계가 흐려질 수 있습니다. Commonware는 여러 기본 부품을 조립하는 방식을 택합니다. 그렇다면 실제 프로그램에서는 누가 블록 원문을 보관하고, 누가 digest에 합의하며, 두 상태가 연결됐다는 사실을 무엇으로 확인합니까?
           </p>
-    <p>
-            특히 certificate를 application commit과 혼동하면 안 됩니다. Consensus finalization은 committee가 같은 payload
-            digest에 합의했다는 evidence이고 durable state root는 storage commit 뒤 얻습니다. Bob에게 보낼 client success는 state
-            root와 request id가 crash recovery 뒤에도 재생되는지 확인한 다음 내보냅니다.
-          </p>
-    <div id="paper-commonware-bridge"><CitationBlock source="commonware-bridge validator source · v2026.7.0" citeKey={2} type="code" href="https://docs.rs/crate/commonware-bridge/2026.7.0/source/src/bin/validator.rs"><p><strong>문제:</strong> Commonware primitives로 실행 가능한 validator를 어떻게 조립하는지 concrete wiring이 필요합니다.</p><p><strong>기여:</strong> Runtime, authenticated P2P, cryptography, Simplex와 application components의 construction path를 보여 줍니다.</p><p><strong>전제:</strong> commonware-bridge 2026.7.0 source와 그 dependency versions·example configuration을 사용합니다.</p><p><strong>근거 범위:</strong> Example validator의 component assembly와 startup boundary에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 이 예시가 모든 Commonware deployment의 architecture이거나 운영 key·durability·SLA를 완성한다는 뜻은 아닙니다.</p></CitationBlock></div>
-  </section>
-  <section id="release" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">03 · failure, replay, release</p><h2 className="mt-2 text-2xl font-bold">Fault를 seed에 넣고 component receipt가 끊기는 지점을 재현한다</h2></header>
-    <p>
-            Release fixture는 proposal 전 packet drop, notarization 뒤 payload loss, storage apply 뒤 commit 전
-            crash, restart 뒤 duplicate request를 따로 넣습니다. 각 실패에서 network receipt, consensus certificate,
-            storage root와 client reply가 어느 단계까지 만들어졌는지 기록해야 합니다. 재시도는 같은 request id를 사용하고 이미 durable한 state
-            transition은 다시 적용하지 않습니다.
-          </p>
-    <ReleaseParityViz />
-    <p>Rollback은 client effect가 외부로 나가기 전 candidate artifact를 이전 version으로 되돌리는 절차입니다. 이미 Bob에게 성공을 알렸다면 database를 조용히 되감는 대신 idempotent replay나 명시적 보상 절차가 필요합니다. Commonware deterministic runtime은 재현 도구이며 real network의 모든 timing을 증명하는 모델은 아닙니다.</p>
-    <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 primitive 구분, fixed request trace, digest와 bytes, certificate와 state, version pin, parity input을 묻습니다. 심화 4문제는 missing payload, crash window, duplicate replay와 release rollback을 설계하게 합니다.</p>
-  </section>
-</article>}
+        </div>
+        <CommonwareOverviewFlowViz />
+        <p className="text-lg leading-8">
+          Commonware v2026.9.0의 bridge 예제에서는 <strong>Application이 블록 원문을 indexer에 먼저 보내고 Success(true)를 받은 뒤에만 digest를 Simplex에 넘깁니다.</strong> 검증할 때는 digest로 블록 원문을 다시 읽으며, finalization certificate도 별도 요청으로 indexer에 기록합니다. 합의 engine이 블록 원문과 저장 상태까지 자동으로 소유하는 구조가 아닙니다.
+        </p>
+        <p>
+          이 글은 Commonware 전체 crate를 하나씩 소개하지 않습니다. Runtime·Application·Indexer·Simplex·인증 P2P가 만나는 bridge 예제 한 경로만 추적합니다. Simplex 내부의 vote와 certificate는 <Link to="/cs/blockchain/commonware-simplex#overview">다음 글</Link>에서 확대합니다.
+        </p>
+        <ContentBoundary article="commonware-primitives-simplex-storage" />
+      </section>
+
+      <section id="case" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">숫자 42가 든 블록 하나</h2>
+        <p>
+          Application이 임의 숫자를 담는 분기를 골랐고 그 값이 42였다고 가정하겠습니다. 이 값은 설명을 위한 가정이며, 실제 코드는 Runtime Context의 난수 공급원에서 값을 얻습니다. Application은 <code>Random(42)</code>를 encode한 뒤 그 byte 배열의 hash를 계산합니다.
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3" aria-label="설명용 Random 블록과 실제 코드 필드의 대응">
+          <div className="min-w-0 bg-background p-4">
+            <span className="font-mono text-[9px] font-black text-muted-foreground">블록 원문</span>
+            <strong className="mt-2 block break-keep text-sm">Random(42)</strong>
+            <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">Indexer가 보관하고 GetBlock이 돌려주는 원문입니다.</p>
+          </div>
+          <div className="min-w-0 bg-background p-4 ring-2 ring-inset ring-primary">
+            <span className="font-mono text-[9px] font-black text-primary">PAYLOAD</span>
+            <strong className="mt-2 block break-keep text-sm">hash(encode(Random(42)))</strong>
+            <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">Simplex proposal에 들어가는 고정 길이 digest입니다.</p>
+          </div>
+          <div className="min-w-0 bg-background p-4">
+            <span className="font-mono text-[9px] font-black text-muted-foreground">FINALIZATION</span>
+            <strong className="mt-2 block break-keep text-sm">Digest를 가리키는 certificate</strong>
+            <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">Simplex가 만든 뒤 Application reporter가 받습니다.</p>
+          </div>
+        </div>
+        <p>
+          세 객체를 모두 “블록”이라고 부르면 완료 상태를 구분할 수 없습니다. 블록 원문이 있다는 사실, digest가 proposal에 들어갔다는 사실, certificate가 생겼다는 사실은 서로 다른 시점에 확인됩니다.
+        </p>
+      </section>
+
+      <section id="owners" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">다섯 책임은 같은 상태를 쓰지 않는다</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-2 lg:grid-cols-3" aria-label="Commonware bridge 예제의 상태 소유권">
+          {owners.map(([name, role, detail], index) => (
+            <div key={name} className={`min-w-0 bg-background p-4 ${index === 1 ? "ring-2 ring-inset ring-primary" : ""}`}>
+              <span className={`text-[9px] font-bold ${index === 1 ? "text-primary" : "text-muted-foreground"}`}>{name}</span>
+              <strong className="mt-2 block break-keep text-sm leading-6">{role}</strong>
+              <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <p>
+          여기서 “조립한다”는 말은 한 실행 주체가 모든 상태를 대신 관리한다는 뜻이 아닙니다. Runtime Context는 실행 자원을 제공하고, Application은 Simplex가 요구하는 propose·verify·report 인터페이스를 mailbox로 구현합니다. Indexer는 별도 stream 뒤에 있으며, 인증 P2P는 합의 메시지만 전달합니다.
+        </p>
+      </section>
+
+      <section id="assembly" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">Runtime Context 안에서 실행 주체를 조립한다</h2>
+        <p>
+          Validator는 먼저 indexer에 연결하고 인증 P2P network를 만듭니다. 이어서 channel 0에는 vote, 1에는 certificate, 2에는 resolver 메시지를 등록합니다. Application을 만들 때 받은 mailbox는 Simplex 설정의 <code>automaton</code>·<code>relay</code>·<code>reporter</code> 세 자리에 함께 들어갑니다.
+        </p>
+        <p>
+          같은 mailbox를 쓴다고 세 역할이 같은 일은 아닙니다. Propose는 새 digest를 제공하고, verify는 digest에 대응하는 블록을 확인하며, report는 notarization·finalization 같은 합의 활동을 Application에 알립니다. Runtime의 하위 context는 각 실행 주체의 namespace와 생애를 나누는 경계입니다.
+        </p>
+        <div className="not-prose flex flex-wrap items-center gap-2">
+          <CodeViewButton label="Bridge 조립 코드" onClick={() => sidebar.open("bridge-wiring", codeRefs["bridge-wiring"])} />
+        </div>
+      </section>
+
+      <section id="proposal" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">블록 원문을 먼저 보관하고 digest를 넘긴다</h2>
+        <p>
+          Application은 <code>Random(42)</code>를 encode해 digest를 계산합니다. 하지만 digest를 곧바로 Simplex에 반환하지 않습니다. 먼저 <code>PutBlock</code>에 network identity와 블록 원문을 담아 indexer로 보내고, 응답을 decode합니다.
+        </p>
+        <div className="not-prose grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-px bg-border p-px" aria-label="PutBlock 확인 뒤 digest가 consensus로 넘어가는 순서">
+          <div className="min-w-0 bg-background p-3"><span className="text-[9px] font-bold text-muted-foreground">APPLICATION</span><strong className="mt-2 block break-keep text-xs leading-5">PutBlock(Random(42))</strong></div>
+          <div className="flex items-center justify-center bg-background px-1 text-primary" aria-hidden>→</div>
+          <div className="min-w-0 bg-background p-3 ring-2 ring-inset ring-primary"><span className="text-[9px] font-bold text-primary">INDEXER</span><strong className="mt-2 block break-keep text-xs leading-5">Success(true)</strong></div>
+          <div className="flex items-center justify-center bg-background px-1 text-primary" aria-hidden>→</div>
+          <div className="min-w-0 bg-background p-3"><span className="text-[9px] font-bold text-muted-foreground">SIMPLEX</span><strong className="mt-2 block break-keep text-xs leading-5">digest 수신</strong></div>
+        </div>
+        <p>
+          응답이 <code>Success(false)</code>이면 코드는 <code>continue</code>로 현재 proposal을 끝냅니다. 따라서 이 예제에서 Simplex가 digest를 받았다는 사실은 적어도 Application이 PutBlock의 true 응답을 앞에서 관찰했다는 뜻입니다. 다만 그 응답이 디스크에 어느 수준으로 기록됐음을 보장하는지는 indexer 구현 계약을 더 확인해야 합니다.
+        </p>
+        <div className="not-prose flex flex-wrap items-center gap-2">
+          <CodeViewButton label="Propose·PutBlock 코드" onClick={() => sidebar.open("bridge-propose", codeRefs["bridge-propose"])} />
+        </div>
+      </section>
+
+      <section id="verification" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">검증할 때 블록 원문을 다시 읽는다</h2>
+        <p>
+          다른 validator가 받은 proposal에는 digest만 있습니다. Application의 verify 경로는 <code>GetBlock(digest)</code>를 indexer에 보내 원문을 되찾습니다. 블록이 없으면 false를 반환하고, <code>Random</code> 블록이면 true를 반환합니다.
+        </p>
+        <p>
+          Bridge 분기에서는 원문 안에 다른 network의 finalization certificate가 들어 있습니다. 이 경우 블록이 존재한다는 사실만으로 true가 되지 않으며, 다른 network의 scheme으로 certificate를 검증한 결과를 반환합니다. 즉 digest 조회와 Application의 유효성 판정은 한 단계가 아닙니다.
+        </p>
+        <div className="not-prose flex flex-wrap items-center gap-2">
+          <CodeViewButton label="GetBlock·검증 코드" onClick={() => sidebar.open("bridge-verify-report", codeRefs["bridge-verify-report"])} />
+        </div>
+      </section>
+
+      <section id="finalization" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">Finalization도 별도 기록이다</h2>
+        <p>
+          Simplex가 payload digest를 finalization하면 reporter로 연결된 Application mailbox에 <code>Activity::Finalization</code>이 도착합니다. Application은 certificate를 <code>PutFinalization</code>으로 indexer에 보내고 <code>Success</code> 응답을 decode합니다.
+        </p>
+        <p>
+          이 certificate는 committee가 digest를 확정한 합의 근거입니다. Bridge 예제 코드에는 Alice와 Bob의 잔액을 실행하거나 Application state root를 commit하는 부분이 없습니다. 따라서 finalization을 일반 Application 상태 반영이나 client success로 확대하면 안 됩니다.
+        </p>
+        <p>
+          더구나 예제는 <code>Success(false)</code>를 log할 뿐 retry·재조정·보상 절차를 구현하지 않습니다. “Finalization이 생김”과 “외부 indexer가 certificate를 보관했다고 확인함”도 분리해서 관찰해야 합니다.
+        </p>
+      </section>
+
+      <section id="failure" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">실패한 경계만 말한다</h2>
+        <div className="not-prose overflow-x-auto">
+          <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+            <thead><tr className="border-b border-border"><th className="p-3">관찰값</th><th className="p-3">확인한 실패</th><th className="p-3">다음 동작 또는 한계</th></tr></thead>
+            <tbody>
+              {failures.map(([observation, boundary, consequence]) => (
+                <tr key={observation} className="border-b border-border/70">
+                  <td className="p-3 font-mono text-xs text-primary">{observation}</td>
+                  <td className="p-3">{boundary}</td>
+                  <td className="p-3 text-muted-foreground">{consequence}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p>
+          이 글은 장애 복구 설계나 제품 채택을 결정하지 않습니다. 실제 운영 글에서는 indexer가 응답 전에 보장하는 저장 수준, stream 재연결, proposal 재시도, certificate 기록 재조정, key 보관과 version migration을 별도 실험으로 확인해야 합니다.
+        </p>
+      </section>
+
+      <section id="evidence" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">근거와 적용 범위</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-2">
+          <a id="paper-commonware-runtime" href="https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4" target="_blank" rel="noreferrer" className="min-w-0 bg-background p-4 hover:bg-muted/30">
+            <span className="font-mono text-[10px] font-black text-primary">O · 공식 코드</span>
+            <strong className="mt-2 block break-keep text-sm leading-6">Commonware v2026.9.0 · d476a236</strong>
+            <p className="mt-3 break-keep text-xs leading-5 text-muted-foreground">공개된 기본 부품 목록, 안정성 단계, 플랫폼 지원 범위와 bridge 예제 코드를 고정했습니다.</p>
+            <p className="mt-2 break-keep text-xs leading-5"><strong>범위:</strong> 이 릴리스의 저장소와 코드 동작입니다. 조립한 Application의 안전성·성능을 보장하지 않습니다.</p>
+          </a>
+          <a id="paper-commonware-bridge" href="https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/examples/bridge" target="_blank" rel="noreferrer" className="min-w-0 bg-background p-4 hover:bg-muted/30">
+            <span className="font-mono text-[10px] font-black text-primary">O · ALPHA EXAMPLE</span>
+            <strong className="mt-2 block break-keep text-sm leading-6">Bridge validator·Application actor</strong>
+            <p className="mt-3 break-keep text-xs leading-5 text-muted-foreground">Runtime, 인증 P2P, Simplex, Application과 indexer가 실제로 연결되는 지점과 메시지 경계를 확인했습니다.</p>
+            <p className="mt-2 break-keep text-xs leading-5"><strong>범위:</strong> 공식 README는 모든 예제를 ALPHA로 분류하고 운영 환경에 직접 쓰지 말라고 밝힙니다.</p>
+          </a>
+        </div>
+        <p>
+          Commonware는 actor·broadcast·codec·consensus·cryptography·P2P·runtime·storage 등 여러 기본 부품을 제공합니다. 하지만 이 목록이 한 Application의 필수 배치도는 아닙니다. 각 부품의 안정성 단계와 실제 연결을 릴리스별로 확인해야 합니다. v2026.9.0에서 ALPHA는 호환성을 깨는 변경과 migration 경로 부재를 허용하며, 모든 예제도 ALPHA로 분류됩니다.
+        </p>
+      </section>
+
+      <section id="self-check" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">확인 질문</h2>
+        <ol className="space-y-4 pl-5 text-sm leading-7">
+          <li>왜 <code>hash(encode(Random(42)))</code>를 계산한 직후 Simplex에 보내지 않습니까? <strong>(답: PutBlock의 Success(true)를 먼저 받아 블록 원문을 조회할 경로가 있다는 사실을 확인하기 위해서입니다.)</strong></li>
+          <li><code>GetBlock</code>이 블록을 돌려주면 모든 블록이 곧바로 유효합니까? <strong>(답: Random 블록은 true지만 Bridge 블록은 포함한 외부 finalization certificate를 별도로 검증합니다.)</strong></li>
+          <li>Simplex finalization이 생겼는데도 Application 상태 반영을 주장할 수 없는 이유는 무엇입니까? <strong>(답: 이 예제는 digest certificate와 indexer 기록을 다루며 별도 state transition·state root·client success를 구현하지 않기 때문입니다.)</strong></li>
+        </ol>
+      </section>
+
+      <CommonwareOverviewMapReturn />
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ commonware: commonwareTree }}
+        projectMetas={{
+          commonware: {
+            id: "commonware",
+            label: "Commonware v2026.9.0 · Rust",
+            badgeClass: "border-violet-500 bg-violet-500/10 text-violet-700",
+          },
+        }}
+      />
+    </article>
+  );
+}

@@ -528,6 +528,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "OffchainLabs Prysm v7.3.1 commit 96d418cd와 Ethereum Beacon APIs v4.0.0 commit 88fc9402를 고정합니다. Head A·B와 Sₐ·Bₐ는 설명용 표기입니다. 분리된 head lookup은 source fact지만 요청 중 reorg 혼합 response의 실제 발생과 빈도는 측정하지 않았습니다. REST와 gRPC registration, state root와 block root, optimistic과 finalized의 입력을 합치지 않습니다.",
   },
+  "blockchain/prysm-engine-api": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "설명용 parent H₀에서 execution payload E₁을 만들고 beacon block B₁에 넣는 한 수명주기를 forkchoiceUpdated, getPayload, newPayload와 선택된 execution head까지 추적합니다. 절은 14개지만 같은 payload identity와 build handle을 공유합니다. 메서드별로 나누면 payload build·회수·실행 판정과 consensus head 반영의 경계가 끊기므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "OffchainLabs Prysm v7.3.1 commit 96d418cd와 Ethereum Execution APIs v1.0.0-beta.7 commit 5aebdfdd를 고정합니다. H₀·P₁·E₁·B₁은 설명용 식별자이며 실제 hash나 block height가 아닙니다. ACCEPTED·SYNCING·INVALID·VALID을 같은 완료 상태로 합치지 않고, version·capability·JWT·restart parity를 확인하기 전 성능 우위를 주장하지 않습니다.",
+  },
+  "blockchain/commonware-deep-dive": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Commonware bridge 예제의 Random(42) 블록 하나가 PutBlock 성공 확인, digest 제안, GetBlock 검증, Simplex finalization과 PutFinalization 응답으로 이어지는 단일 경로입니다. Runtime·Application·Indexer·Simplex·인증 P2P의 책임을 같은 객체 이동 안에서 비교하므로 이를 나누면 블록 원문·digest·certificate의 서로 다른 완료 상태를 다시 조립해야 합니다.",
+    sharedGate:
+      "Commonware v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. 숫자 42는 설명용 가정이고 공식 bridge 예제는 ALPHA입니다. PutBlock·GetBlock·PutFinalization 응답을 disk durability, Application 상태 실행이나 client success로 확대하지 않으며, Simplex 내부 vote·certificate와 운영 복구·제품 선택은 별도 글이 소유합니다.",
+  },
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
   "blockchain/prysm-block-processing": {
     action: "keep",
@@ -4364,6 +4382,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-beacon-db": "e7a033ea06ded488",
   "blockchain/prysm-state-cache": "050305e343ed018b",
   "blockchain/prysm-beacon-api": "97588793938e2aa3",
+  "blockchain/prysm-engine-api": "97fc3e69823881f9",
+  "blockchain/commonware-deep-dive": "e52779a7bbd2cc35",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",

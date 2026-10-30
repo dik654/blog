@@ -8142,8 +8142,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Aptos round manager · aptos-node-v1.48.6", href: "https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs", note: "2026-08-14 pinned Proposal·Vote·QC·TwoChainTimeoutCertificate integration이며 paper Ditto MVBA 구현과 동일시하지 않음" },
   ],
   "blockchain/commonware-deep-dive": [
-    { kind: "공식 코드", label: "Commonware monorepo · v2026.7.0 commit 5950bf7", href: "https://github.com/commonwarexyz/monorepo/tree/5950bf7179bb0650a57ed58b9e0478822944b335", note: "2026-08-14 pinned runtime·crypto·P2P·consensus·storage primitives와 stability scope이며 assembled application correctness·fixed SLA 보장은 아님" },
-    { kind: "공식 코드", label: "commonware-bridge validator · v2026.7.0", href: "https://docs.rs/crate/commonware-bridge/2026.7.0/source/src/bin/validator.rs", note: "Runtime·network·Simplex·application의 concrete example wiring이며 모든 Commonware deployment의 표준 architecture·운영 policy는 아님" },
+    { kind: "공식 코드", label: "Commonware monorepo · v2026.9.0 commit d476a236", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4", note: "2026-10-30 고정. 공개된 기본 부품·안정성 단계·플랫폼 지원 범위이며 조립한 Application의 정확성이나 고정 SLA를 보장하지 않음" },
+    { kind: "공식 코드", label: "Commonware bridge example · v2026.9.0", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/examples/bridge", note: "Runtime·인증 P2P·Simplex·Application·indexer의 실제 연결과 PutBlock/GetBlock/PutFinalization 경계이며 모든 Commonware 배포의 표준 구조나 운영 정책은 아님" },
   ],
   "blockchain/commonware-simplex": [
     { kind: "공식 문서", label: "commonware-consensus Simplex · v2026.7.0", href: "https://docs.rs/commonware-consensus/2026.7.0/commonware_consensus/simplex/index.html", note: "Notarize·nullify·finalize, certification, recovery와 stated latency의 pinned 설명이며 arbitrary network의 wall-clock SLA는 아님" },

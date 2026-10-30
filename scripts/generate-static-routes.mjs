@@ -394,6 +394,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/prysm-state-cache",
   "blockchain/prysm-beacon-api",
   "blockchain/prysm-engine-api",
+  "blockchain/commonware-deep-dive",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",
