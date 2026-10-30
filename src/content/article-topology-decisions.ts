@@ -501,7 +501,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c와 Prysm v7.3.1 commit 96d418cd를 고정합니다. Slot 30→33은 설명용 fixture이며 SkipSlotCache는 크기 8의 process-local 최적화일 뿐 재시작 가능한 저장소나 consensus state로 확대하지 않습니다.",
   },
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
-  "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
+  "blockchain/prysm-beacon-db": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "같은 slot 64의 경쟁 block 두 개를 root 원본과 slot·parent index에 저장하는 사례가 transaction 밖 batch 준비, SaveROBlocks의 block 전용 atomic 범위, slot read view, 별도 state/checkpoint transaction, cache error 경계와 historical pruning으로 이어집니다. 이를 나누면 같은 root·slot identity와 함수별 원자성 차이를 반복해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "OffchainLabs Prysm v7.3.1 commit 96d418cd와 bbolt v1.4.3을 고정합니다. Slot 64와 축약 root는 설명용 fixture입니다. Cache-only visibility와 pruning context 취소는 source에서 도출한 검증 질문이며 실제 장애 재현 결과가 아닙니다.",
+  },
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
   "blockchain/prysm-block-processing": {
     action: "keep",
@@ -4335,7 +4343,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-beacon-state": "8ac0ebe70f904cca",
   "blockchain/prysm-slot-processing": "ed9932be6d4a9016",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
-  "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
+  "blockchain/prysm-beacon-db": "e7a033ea06ded488",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",

@@ -5616,6 +5616,12 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/prysm-beacon-db": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
     {
+      kind: "공식 구현",
+      label: "OffchainLabs Prysm v7.3.1 — Beacon DB",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/db/kv",
+      note: "SaveROBlocks·BlockRootsBySlot·SaveStates·SaveFinalizedCheckpoint·historical pruning의 실제 transaction 경계",
+    },
+    {
       kind: "공식 문서",
       label: "etcd-io/bbolt v1.4.3 — official repository and documentation",
       href: "https://github.com/etcd-io/bbolt/tree/v1.4.3",

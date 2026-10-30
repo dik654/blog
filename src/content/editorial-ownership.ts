@@ -6816,12 +6816,13 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "prysm-beacon-db": {
-    title: "Prysm Beacon DB schema·atomicity·pruning 글이 소유하는 범위",
+    title: "Prysm BeaconDB 함수별 transaction·조회·pruning 글이 소유하는 범위",
     owns: [
-      "Root-addressed primary record와 slot·parent 등 secondary index의 cardinality",
-      "Primary·index·checkpoint를 함께 공개하는 atomic write와 consistent read snapshot",
-      "Commit 전후 crash를 구분하는 idempotent recovery receipt",
-      "Finality fence·logical delete·compaction·retention replay budget과 release gate",
+      "같은 slot의 경쟁 block을 root primary와 slot·parent index로 보존하는 schema",
+      "SaveROBlocks의 block primary·index transaction과 SaveStates·SaveFinalizedCheckpoint의 별도 transaction 경계",
+      "BlockRootsBySlot의 read view와 fork-choice canonical 선택의 구분",
+      "DB callback·updated flag·block cache publication 사이의 오류 경계",
+      "DeleteHistoricalDataBeforeSlot의 실제 삭제 범위와 payload-envelope TODO",
     ],
     reuses: [
       { label: "SSZ canonical bytes와 root", href: "/cs/blockchain/prysm-ssz" },
@@ -6831,8 +6832,8 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Bucket·transaction·cache·migration·pruning 동작은 표시한 Prysm release/SHA에만 귀속한다." },
       { kind: "standard", rule: "bbolt transaction·single-writer·page lifecycle은 고정한 official release/documentation에 귀속한다." },
-      { kind: "project-measurement", rule: "Commit 전후 crash injection, reopen, index/primary/root parity와 backup reader를 통과한 뒤 bytes·latency를 비교한다." },
-      { kind: "project-claim", rule: "Transaction commit을 remote replica의 exactly-once나 disk 물리 overwrite로, finality를 모든 historical evidence 삭제 허가로 읽지 않는다." },
+      { kind: "project-measurement", rule: "Cache-only visibility와 pruning 중 context 취소는 source에서 확인한 위험 경계이며 실제 재현 결과로 쓰지 않는다." },
+      { kind: "project-claim", rule: "Block transaction을 state·checkpoint까지 포함하는 전역 commit으로, slot index를 canonical head 판정으로, historical pruning을 모든 object 삭제로 확대하지 않는다." },
     ],
   },
   "prysm-state-cache": {

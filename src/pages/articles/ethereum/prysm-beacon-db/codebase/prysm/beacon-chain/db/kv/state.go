@@ -1,33 +1,36 @@
-// beacon-chain/db/kv/state.go — Prysm v5.x
+// OffchainLabs Prysm v7.3.1 @ 96d418cd964b083e37519a9df274030a1beac7db
+// beacon-chain/db/kv/state.go — focused source excerpt
 
-// SaveState saves a beacon state to the DB.
-func (s *Store) SaveState(ctx context.Context, st state.ReadOnlyBeaconState, root [32]byte) error {
-	enc, err := st.MarshalSSZ()
-	if err != nil {
-		return err
+// SaveStates stores multiple states to the db using the provided corresponding roots.
+func (s *Store) SaveStates(ctx context.Context, states []state.ReadOnlyBeaconState, blockRoots [][32]byte) error {
+	ctx, span := trace.StartSpan(ctx, "BeaconDB.SaveStates")
+	defer span.End()
+	if states == nil {
+		return errors.New("nil state")
 	}
-	return s.db.Update(func(tx *bolt.Tx) error {
-		return tx.Bucket(stateBucket).Put(root[:], enc)
-	})
-}
-
-// State retrieves a beacon state by block root.
-func (s *Store) State(ctx context.Context, root [32]byte) (state.ReadOnlyBeaconState, error) {
-	// Check cache first
-	if v, ok := s.stateCache.Get(root); ok {
-		return v.(state.ReadOnlyBeaconState), nil
-	}
-	var st state.ReadOnlyBeaconState
-	if err := s.db.View(func(tx *bolt.Tx) error {
-		enc := tx.Bucket(stateBucket).Get(root[:])
-		if enc == nil {
-			return nil
+	multipleEncs := make([][]byte, len(states))
+	for i, st := range states {
+		stateBytes, err := marshalState(st)
+		if err != nil {
+			return err
 		}
-		var err error
-		st, err = unmarshalState(enc)
-		return err
-	}); err != nil {
-		return nil, err
+		multipleEncs[i] = stateBytes
 	}
-	return st, nil
+
+	if err := s.db.Update(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket(stateBucket)
+		for i, rt := range blockRoots {
+			indicesByBucket := createStateIndicesFromStateSlot(ctx, states[i].Slot())
+			if err := updateValueForIndices(ctx, indicesByBucket, rt[:], tx); err != nil {
+				return errors.Wrap(err, "could not update DB indices")
+			}
+			if err := bucket.Put(rt[:], multipleEncs[i]); err != nil {
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	return nil
 }
