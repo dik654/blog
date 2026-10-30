@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 726,
+    "dedicatedVisuals": 727,
     "inlineVisuals": 524,
-    "customVisuals": 909,
-    "animatedMechanisms": 529,
+    "customVisuals": 910,
+    "animatedMechanisms": 530,
     "architectureWithoutAnimation": 81,
-    "recursiveLocators": 356,
+    "recursiveLocators": 357,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
@@ -8098,18 +8098,18 @@
     {
       "route": "blockchain/prysm-state-cache",
       "publicPath": "cs/blockchain/prysm-state-cache",
-      "title": "Prysm 상태 캐시: Hot/Cold 전략",
+      "title": "Prysm 상태 재구성",
       "sourcePath": "src/pages/articles/ethereum/prysm-state-cache.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-sync",

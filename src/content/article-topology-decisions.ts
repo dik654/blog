@@ -510,6 +510,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "OffchainLabs Prysm v7.3.1 commit 96d418cd와 bbolt v1.4.3을 고정합니다. Slot 64와 축약 root는 설명용 fixture입니다. Cache-only visibility와 pruning context 취소는 source에서 도출한 검증 질문이며 실제 장애 재현 결과가 아닙니다.",
   },
+  "blockchain/prysm-state-cache": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Target block root 0x105의 post-state를 hot LRU·epoch FIFO·DB에서 찾고, miss 뒤 같은 branch의 저장 state 100부터 block 102·105를 replay하는 한 재구성 경로입니다. Copy 소유권, summary와 ancestor 탐색, block 순서, replay 비용, 저장 순서와 stored-block 신뢰 경계는 모두 같은 StateByRoot 호출을 설명합니다. 이를 나누면 같은 block-root identity와 branch fixture를 반복해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "OffchainLabs Prysm v7.3.1 commit 96d418cd와 Ethereum consensus-specs commit aa16bb4c를 고정합니다. Slot 100·102·105와 축약 root는 설명용 fixture이고 5 slot step·2 block transition은 호출 횟수이지 latency 측정값이 아닙니다. Cache hit를 canonicality나 finality로, state-generation fast path를 미검증 network block validator로 확대하지 않습니다.",
+  },
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
   "blockchain/prysm-block-processing": {
     action: "keep",
@@ -4344,6 +4353,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-slot-processing": "ed9932be6d4a9016",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "e7a033ea06ded488",
+  "blockchain/prysm-state-cache": "050305e343ed018b",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",
