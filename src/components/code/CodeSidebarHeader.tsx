@@ -29,6 +29,9 @@ export default function CodeSidebarHeader({
       </span>
       <button
         onClick={onClose}
+        type="button"
+        aria-label="코드 패널 닫기"
+        data-code-sidebar-close
         className="shrink-0 ml-2 rounded-md px-2 py-0.5 text-xs border border-[#d0d7de] dark:border-[#30363d] text-[#24292f] dark:text-[#e6edf3] hover:bg-[#f3f4f6] dark:hover:bg-[#21262d] cursor-pointer transition-colors"
       >
         ✕

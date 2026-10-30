@@ -13,18 +13,47 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 });
 
 export const prysmTree: FileNode = d("prysm", [
-  d("beacon-chain/sync", [
-    d("initial-sync", [
+  d("beacon-chain", [
+    d("sync", [
+      d("checkpoint", [
+        f(
+          "api.go · checkpoint origin",
+          "beacon-chain/sync/checkpoint/api.go",
+          "checkpoint-origin",
+        ),
+      ]),
+      d("initial-sync", [
+        f(
+          "round_robin.go · two phases",
+          "beacon-chain/sync/initial-sync/round_robin.go",
+          "two-phase-sync",
+        ),
+        f(
+          "blocks_queue.go · range FSM",
+          "beacon-chain/sync/initial-sync/blocks_queue.go",
+          "queue-state-machine",
+        ),
+        f(
+          "blocks_queue.go · ordered send",
+          "beacon-chain/sync/initial-sync/blocks_queue.go",
+          "ordered-range-send",
+        ),
+        f(
+          "round_robin.go · receiver owner",
+          "beacon-chain/sync/initial-sync/round_robin.go",
+          "receiver-owner",
+        ),
+        f(
+          "service.go · completion gate",
+          "beacon-chain/sync/initial-sync/service.go",
+          "initial-sync-handoff",
+        ),
+      ]),
       f(
-        "round_robin.go — roundRobinSync()",
-        "beacon-chain/sync/initial-sync/round_robin.go",
-        "round-robin-sync",
+        "validate_beacon_blocks.go · sync gate",
+        "beacon-chain/sync/validate_beacon_blocks.go",
+        "gossip-sync-gate",
       ),
     ]),
-    f(
-      "rpc_beacon_blocks_by_range.go",
-      "beacon-chain/sync/rpc_beacon_blocks_by_range.go",
-      "blocks-by-range-handler",
-    ),
   ]),
 ]);
