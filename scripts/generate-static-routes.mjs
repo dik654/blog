@@ -414,6 +414,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/uniswap-v3",
   "blockchain/uniswap-v4",
   "blockchain/curve-stable",
+  "blockchain/cosmos-sdk",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",
@@ -459,7 +460,10 @@ try {
       const html = await fs.readFile(outputPath, "utf8");
       await fs.writeFile(
         outputPath,
-        html.replace("</body>", `${fallback}</body>`),
+        // Replacement strings treat $&, $` and $' as special tokens. Article
+        // prose and code can legitimately contain those sequences, so return
+        // the fallback from a callback to preserve it byte-for-byte.
+        html.replace("</body>", () => `${fallback}</body>`),
       );
     }
   }

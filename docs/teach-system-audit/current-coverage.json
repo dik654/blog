@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 719,
-    "pending": 288,
+    "reviewed": 720,
+    "pending": 287,
     "untracked": 0,
-    "assignedPending": 246,
+    "assignedPending": 245,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4593,9 +4593,9 @@
       "publicPath": "cs/blockchain/cosmos-sdk",
       "title": "Cosmos SDK v0.55: transaction에서 committed state까지",
       "catalogIndex": 456,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
