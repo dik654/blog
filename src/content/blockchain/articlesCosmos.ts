@@ -21,7 +21,13 @@ export const cosmosArticles: Article[] = [
     slug: "cometbft",
     title: "CometBFT 아키텍처 개요",
     subcategory: "cosmos-core",
-    sections: [{ id: "overview", title: "개요" }],
+    sections: [
+      { id: "overview", title: "Transaction 전체 경로" },
+      { id: "owners", title: "다섯 상태 소유자" },
+      { id: "lifecycle", title: "Admission·결정·영속화" },
+      { id: "failure", title: "중간 실패와 재개" },
+      { id: "source", title: "v0.40.0 코드 근거" },
+    ],
     component: () => import("@/pages/articles/blockchain/cometbft"),
   },
 

@@ -415,6 +415,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/uniswap-v4",
   "blockchain/curve-stable",
   "blockchain/cosmos-sdk",
+  "blockchain/cometbft",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

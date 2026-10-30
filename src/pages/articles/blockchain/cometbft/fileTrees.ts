@@ -13,6 +13,23 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 });
 
 export const cometbftTree: FileNode = d("cometbft", [
+  d("v0.40.0 전체 경로", [
+    f(
+      "mempool/clist_mempool.go — CheckTx()",
+      "cometbft/mempool/clist_mempool.go — CheckTx()",
+      "cometbft-checktx-v040",
+    ),
+    f(
+      "consensus/state.go — enterCommit()",
+      "cometbft/consensus/state.go — enterCommit()",
+      "cometbft-entercommit-v040",
+    ),
+    f(
+      "state/execution.go — applyBlock()",
+      "cometbft/state/execution.go — applyBlock()",
+      "cometbft-applycommit-v040",
+    ),
+  ]),
   d("consensus", [
     f(
       "state.go — enterPropose()",

@@ -62022,7 +62022,7 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       {
         title: "cometbft/cometbft source repository",
-        href: "https://github.com/cometbft/cometbft",
+        href: "https://github.com/cometbft/cometbft/tree/0880b4d378f347ab16e54ec677ff50d803f37d62",
         problem:
           "Consensus·mempool·state·P2P 책임을 실제 release source에서 확인",
         contribution: "공식 implementation과 release·upgrade history 제공",
@@ -62034,7 +62034,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         title: "CometBFT ABCI++ Specification",
-        href: "https://docs.cosmos.network/cometbft/latest/spec/abci/Overview",
+        href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/abci/abci%2B%2B_methods.md",
         problem:
           "SMR engine과 application 사이 request·response·state lifecycle 정의",
         contribution:
@@ -62048,7 +62048,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         title: "CometBFT Byzantine Consensus Algorithm",
-        href: "https://docs.cosmos.network/cometbft/latest/spec/consensus/Byzantine-Consensus-Algorithm.md",
+        href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/consensus/consensus.md",
         problem: "Byzantine validator와 network delay에서 block order 합의",
         contribution:
           "Proposal·prevote·precommit·round change의 protocol 동작 설명",
