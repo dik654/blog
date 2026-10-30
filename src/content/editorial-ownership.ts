@@ -5633,10 +5633,10 @@ export const EDITORIAL_BOUNDARIES = {
   "reth-exex": {
     title: "Reth Execution Extensions 글이 소유하는 범위",
     owns: [
-      "Canonical commit·revert·reorg notification consumer lifecycle",
-      "Derived-state transaction·checkpoint·WAL replay와 external-effect idempotency",
-      "Finished-height aggregation·bounded backpressure·pruning coordination",
-      "Reorg·crash·slow consumer·external ambiguity release gate",
+      "Canonical commit·revert·reorg notification의 old/new branch 정보",
+      "Manager channel 전달과 extension 파생 DB·ExExHead 확정의 경계",
+      "FinishedHeight aggregation·canonical hash·finalized header 기반 WAL 정리",
+      "느린 ExEx의 bounded backpressure와 persisted-head restart·backfill",
     ],
     reuses: [
       { label: "Reth live-sync·ExEx producer boundary", href: "/cs/blockchain/reth-sync#live-sync" },
@@ -5644,10 +5644,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Reth reorg·unwind reconciliation", href: "/cs/blockchain/reth#overview" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Notification·WAL·finished-height claim은 pinned Reth SHA와 ExEx documentation에 귀속한다." },
-      { kind: "standard", rule: "Canonical notification과 derived DB/external effect commit을 하나의 exactly-once transaction으로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Duplicate·gap·reorg·crash·slow consumer·restart에서 derived state와 receipt parity 뒤 throughput을 비교한다." },
-      { kind: "project-claim", rule: "In-process access를 무손실 event·낮은 latency·node failure isolation의 자동 보장으로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Notification·channel capacity·manager buffer·WAL·FinishedHeight·with-head stream claim은 Reth v2.8.1 commit d763342f에 귀속한다." },
+      { kind: "standard", rule: "Node-level delivered를 extension DB commit이나 external effect exactly-once로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경의 processing lag·buffer 점유·WAL 증가·restart 시간은 이 개념 글에서 측정하지 않는다." },
+      { kind: "project-claim", rule: "FinishedExExHeight number 최솟값과 canonical hash·finalized header를 확인한 WAL finalization을 같은 상태로 합치지 않는다." },
     ],
   },
   "reth-mev": {

@@ -728,6 +728,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Reth v2.8.1 commit d763342f와 Execution APIs commit 03911ffc에서 확인한 protocol·source 경계만 설명합니다. Rate limit·방화벽·SLO·release gate는 대상 환경의 실무 판단으로 분리합니다.",
   },
+  "blockchain/reth-exex": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "103~105가 103′~105′로 바뀌는 한 reorg를 notification old/new branch, manager channel delivery, 파생 DB·ExExHead 확정, FinishedHeight, WAL finalization, slow-consumer backpressure와 persisted-head catch-up까지 이어서 추적합니다. 모두 같은 canonical 변화가 서로 다른 상태 owner를 통과하는 연속 메커니즘이므로 한 개념 글에서 설명합니다.",
+    sharedGate:
+      "Reth v2.8.1 commit d763342f에서 확인한 ExEx source 경계만 설명합니다. Node-level delivered를 extension durable commit으로 확대하지 않고, 외부 효과·대상 환경 queue 임계값·배포·장애 대응·release 판단은 별도 실무 범위로 남깁니다.",
+  },
   "blockchain/reth-sync": {
     action: "keep",
     status: "implemented",
@@ -4261,6 +4270,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-net-validation": "8b641d3851c2f976",
   "blockchain/reth-precompiles": "f27b784b8a338965",
   "blockchain/reth-precompiles-validation": "56f82c70dcacdd46",
+  "blockchain/reth-exex": "85ec25b4d31fa35b",
   "blockchain/reth-rpc": "4d28589b778ec919",
   "blockchain/reth-sync": "877c7118aea7b085",
   "blockchain/reth-txpool": "17e22144298ab69e",

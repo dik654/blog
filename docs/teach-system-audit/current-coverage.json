@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 689,
-    "pending": 318,
+    "reviewed": 690,
+    "pending": 317,
     "untracked": 0,
-    "assignedPending": 276,
+    "assignedPending": 275,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4571,11 +4571,11 @@
     {
       "route": "blockchain/reth-exex",
       "publicPath": "cs/blockchain/reth-exex",
-      "title": "Reth ExEx (Execution Extensions)",
+      "title": "Reth ExEx: canonical 변화와 파생 상태",
       "catalogIndex": 454,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

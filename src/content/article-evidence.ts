@@ -5320,17 +5320,21 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Reth v2.8.1이 고정한 v0 sidecar 구조, versioned hash 결속과 KZG proof validation",
     },
   ),
-  "blockchain/reth-exex": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
-    kind: "공식 구현",
-    label: "Reth ExEx source @ 4cf0face",
-    href: "https://github.com/paradigmxyz/reth/tree/4cf0facecda7b4d474c739acef1c0fc2c69a122c/crates/exex",
-    note: "Notification·WAL·finished-height 구현을 고정한 source snapshot",
-  }, {
-    kind: "공식 문서",
-    label: "Reth Execution Extensions documentation",
-    href: "https://reth.rs/exex/overview/",
-    note: "ExEx role·notification·use-case의 공식 안내이며 external exactly-once 보장은 아님",
-  }),
+  "blockchain/reth-exex": withSeriesEvidence(
+    RETH_SERIES_EVIDENCE,
+    {
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — ExEx notification·manager·WAL",
+      href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/exex",
+      note: "Commit·reorg·revert, channel delivery, bounded buffer, FinishedHeight와 WAL finalization의 고정 source",
+    },
+    {
+      kind: "공식 문서",
+      label: "Reth v2.8.1 — Execution Extensions documentation",
+      href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/docs/vocs/docs/pages/exex",
+      note: "Long-lived extension·notification·state tracking·pruning의 동일 release 안내",
+    },
+  ),
   "blockchain/reth-mev": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 규격",
     label: "Ethereum Builder Specifications @ 78a5546d",
