@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 691,
-    "pending": 316,
+    "reviewed": 692,
+    "pending": 315,
     "untracked": 0,
-    "assignedPending": 274,
+    "assignedPending": 273,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5131,11 +5131,11 @@
     {
       "route": "blockchain/prysm-ssz",
       "publicPath": "cs/blockchain/prysm-ssz",
-      "title": "Prysm SSZ 직렬화 & Merkleization",
+      "title": "Prysm SSZ: 값 하나에서 Bytes·Root·Proof까지",
       "catalogIndex": 510,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

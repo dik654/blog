@@ -11302,7 +11302,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "SSZ schema·type contract",
     definition: "Field order·static/dynamic shape·collection limit을 미리 정해 같은 typed value의 wire encoding과 hash-tree-root 위치를 결정하는 Ethereum consensus serialization 계약입니다.",
-    canonicalHref: "/cs/blockchain/prysm-ssz#overview",
+    canonicalHref: "/cs/blockchain/prysm-ssz#schema",
   },
   "ssz-static-dynamic-offset-layout": {
     id: "ssz-static-dynamic-offset-layout",

@@ -5684,16 +5684,23 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "blockchain/prysm-ssz": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
-    source(
-      "공식 규격",
-      OFFICIAL_SOURCES.ethereum.ssz,
-      "serialization과 hash-tree-root의 공식 규칙",
-    ),
     {
       kind: "공식 규격",
-      label: "Ethereum Consensus Specifications — Merkle proof formats",
-      href: "https://github.com/ethereum/consensus-specs/blob/master/ssz/merkle-proofs.md",
+      label: "Ethereum Consensus Specifications v1.6.1 — Simple Serialize",
+      href: "https://github.com/ethereum/consensus-specs/blob/5fa6edcca8ab4cf548653e6680b17b9d3e04d225/ssz/simple-serialize.md",
+      note: "type·serialization·hash-tree-root·generalized-index의 안정판 규칙",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications v1.6.1 — Merkle proof formats",
+      href: "https://github.com/ethereum/consensus-specs/blob/5fa6edcca8ab4cf548653e6680b17b9d3e04d225/ssz/merkle-proofs.md",
       note: "generalized index와 single/multiproof helper-node 계산 형식",
+    },
+    {
+      kind: "공식 구현",
+      label: "OffchainLabs Prysm v7.3.1 — SSZ implementation",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/encoding/ssz",
+      note: "list root·query·proof 구현과 methodical-ssz dependency를 확인한 release",
     },
   ),
   "blockchain/prysm-state-cache": withSeriesEvidence(

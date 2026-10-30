@@ -5053,43 +5053,68 @@
     },
     {
       "route": "blockchain/prysm-ssz",
-      "title": "Prysm SSZ 직렬화 & Merkleization",
-      "status": "unreviewed",
+      "title": "Prysm SSZ: 값 하나에서 Bytes·Root·Proof까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-ssz.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/prysm-foundation-viz.tsx",
         "src/pages/articles/ethereum/prysm-ssz.tsx",
-        "src/pages/articles/ethereum/prysm-ssz/EncodeDecode.tsx",
-        "src/pages/articles/ethereum/prysm-ssz/Merkleize.tsx",
-        "src/pages/articles/ethereum/prysm-ssz/Multiproof.tsx",
-        "src/pages/articles/ethereum/prysm-ssz/Overview.tsx"
+        "src/pages/articles/ethereum/prysm-ssz/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-ssz/PrysmSszLocator.tsx",
+        "src/pages/articles/ethereum/prysm-ssz/viz/PrysmSszFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-ssz/codeRefs.ts",
+        "src/pages/articles/ethereum/prysm-ssz/fileTrees.ts",
+        "src/content/prysm-ssz-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 2,
         "sourceButtons": 3,
         "headings": [
-          "\n        Offset은 길이를 적는 칸이 아니라 dynamic value가 시작되는 위치다\n      ",
-          "\n        Merkleization은 값의 32-byte chunk와 type capacity를 root 하나에\n        고정한다\n      ",
-          "\n        Generalized index는 field 경로를 정수로 만들고 multiproof는 겹친\n        sibling을 한 번만 보낸다\n      ",
-          "\n        SSZ는 한 schema에서 전송 바이트와 검증 가능한 state root를 함께 만든다\n      "
+          "Prysm이 받은 값 하나는 어떻게 전송 바이트와 검증 가능한 Root가 됩니까?",
+          "설명용 DemoRecord 하나를 끝까지 사용합니다",
+          "Schema는 바이트 위치와 Tree 위치를 함께 정합니다",
+          "Fixed part 16 Bytes 뒤에 List 내용 16 Bytes를 둡니다",
+          "List 길이와 Container Field 순서를 Root에 함께 넣습니다",
+          "Validators Field는 Gindex 5와 Sibling 두 개로 증명합니다",
+          "현재 Prysm은 Protocol 규칙과 생성기·Query 구현을 나눕니다",
+          "SSZ가 통과해도 Consensus 검증은 끝나지 않습니다",
+          "고정한 규격과 Release에서 확인한 범위만 사용합니다",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 offset·Merkleization·multiproof를 각각 설명했지만 같은 typed value가 wire bytes와 root·proof로 갈라지는 전체 경로를 한 사례로 추적하기 어려웠습니다.",
+        "과거 합성 source와 고정 릴리스의 실제 구현, SSZ 표현 검증과 consensus 정당성이 한 흐름에서 구분되지 않았습니다."
+      ],
+      "fixture": "설명용 DemoRecord {slot:1, validators:[10,20], epoch:3}을 canonical 32-byte payload로 직렬화하고, validators list root와 container root, gindex 5의 sibling proof까지 계산합니다. DemoRecord와 hash 값은 설명용 fixture이며 실제 protocol object나 대상 환경 측정값이 아닙니다.",
+      "stageEvidence": {
+        "schema": "Field 순서, uint 폭, dynamic offset과 List limit 4가 wire layout과 Merkle tree 위치를 함께 결정합니다.",
+        "bytes": "Fixed part 16 B와 validators variable part 16 B를 little-endian으로 이어 canonical 32 B를 만듭니다.",
+        "decode": "First offset 16, 남은 길이 16 mod 8=0, element count 2≤4를 순서대로 확인한 뒤에만 값을 할당합니다.",
+        "chunk": "slot·epoch는 각각 32-byte chunk, validators 10·20은 한 data chunk, 실제 길이 2는 별도 length chunk가 됩니다.",
+        "root": "Validators root 96477593…e8c266과 field root 셋을 폭 4 tree에 놓아 container root 9dfd6779…410832cc를 계산합니다.",
+        "proof": "Validators field의 gindex 5=101₂와 sibling 두 개, 64 B payload로 같은 container root를 재계산합니다.",
+        "boundary": "Canonical bytes·root·proof 성공과 signature·state transition·fork choice·finalized chain 판단을 분리합니다."
+      },
+      "sourceEvidence": [
+        "Ethereum consensus-specs v1.6.1 commit 5fa6edcca8ab4cf548653e6680b17b9d3e04d225의 simple-serialize와 Merkle proof 규칙",
+        "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db의 encoding/ssz 구현과 호출 경계",
+        "Prysm이 고정한 methodical-ssz commit 932cc7380128의 query·proof 구현"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 고정한 consensus-specs·Prysm·methodical-ssz source를 다시 읽어 schema, wire bytes, bounded decode, chunks, root, proof와 consensus 경계를 한 DemoRecord 경로로 교체했습니다.",
+        "arithmetic": "8+4+4=16 B fixed part와 2×8=16 B variable part로 32 B payload를 만들고, validators gindex 5의 depth 2 sibling payload를 2×32=64 B로 확인했습니다. Validators root는 96477593198d273c24027092372db20b1534b0018ea559d2a1119ecdd0e8c266, final root는 9dfd6779b1e33a1a16a8cc4ed8094d0ef5529b63c45bffc39afe8d79410832cc입니다.",
+        "humanize": "직속 부모, 질문 하나, DemoRecord 한 건, schema→bytes→검사→chunk→root→proof→경계와 부모 지도 반환으로 다시 구성했습니다. 한국어·용어·읽기 순서·학습 계약·지식 그래프·runtime·pseudocode 감사를 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, article 354px, live 시각화 334×682.9px이며 가로 넘침과 글자 잘림이 없습니다. 장면은 11초 동안 0에 머물고, 키보드 ArrowRight로 0→1 이동합니다. Reduced-motion에서는 실행 중 animation 0건, 재생 비활성·수동 이동을 확인했습니다. JavaScript 비활성 경로는 live 영역을 숨기고 정적 8장면, 질문과 부모 지도 반환을 폭 390 안에 표시합니다.",
+        "browser1440": "1440×1000에서 문서 폭 1440=1440, article 711px이고 무자동재생, ArrowRight 0→1 이동, 모든 장면 탭의 글자 폭과 상자 폭 일치, console 오류·경고 0건을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,086개 module, 정적 public route 2,120개와 no-script 본문 348편을 만들었습니다. 최대 RSS는 약 6.11GiB이며 swap은 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-typed-value-schema-bytes-root-proof-boundary"
     },
     {
       "route": "blockchain/prysm-state-cache",

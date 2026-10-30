@@ -380,6 +380,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-rpc",
   "blockchain/reth-exex",
   "blockchain/reth-mev",
+  "blockchain/prysm-ssz",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",
