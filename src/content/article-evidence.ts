@@ -7983,9 +7983,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "The Green Grid · Power Usage Effectiveness", href: "https://www.thegreengrid.org/node/372", note: "Facility/IT energy ratio 정의이며 server compute efficiency·carbon·reliability 지표는 아님" },
   ],
   "blockchain/commonware-broadcast": [
-    { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 Broadcaster", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/lib.rs", note: "Typed broadcast와 local Feedback 성공 경계의 pinned trait이며 recipient receipt·total order·durability는 제공하지 않음" },
-    { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 buffered ingress", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/buffered/ingress.rs", note: "Bounded mailbox·digest waiter·cancel lifecycle의 pinned implementation이며 network acknowledgement는 별도" },
-    { kind: "공식 코드", label: "commonware-broadcast v2026.7.0 buffered engine", href: "https://github.com/commonwarexyz/monorepo/blob/v2026.7.0/broadcast/src/buffered/engine.rs", note: "Peer deque·digest refcount·primary eligibility cache의 pinned implementation이며 global reliable broadcast는 아님" },
+    { kind: "공식 코드", label: "commonware-broadcast v2026.9.0 Broadcaster", href: "https://github.com/commonwarexyz/monorepo/blob/d476a2361ce6840d2b9d0aa6fb30a924429046d4/broadcast/src/lib.rs", note: "Typed broadcast와 local Feedback 성공 경계의 pinned trait이며 recipient receipt·total order·durability는 제공하지 않음" },
+    { kind: "공식 코드", label: "commonware-broadcast v2026.9.0 buffered ingress", href: "https://github.com/commonwarexyz/monorepo/blob/d476a2361ce6840d2b9d0aa6fb30a924429046d4/broadcast/src/buffered/ingress.rs", note: "Mailbox·digest waiter·cancel lifecycle의 pinned implementation이며 network acknowledgement는 별도" },
+    { kind: "공식 코드", label: "commonware-broadcast v2026.9.0 buffered engine", href: "https://github.com/commonwarexyz/monorepo/blob/d476a2361ce6840d2b9d0aa6fb30a924429046d4/broadcast/src/buffered/engine.rs", note: "Peer deque·digest refcount·latest-primary eligibility cache의 pinned implementation이며 global reliable broadcast는 아님" },
   ],
   "blockchain/avalanche-consensus": [
     { kind: "핵심 논문", label: "Snowflake to Avalanche · arXiv 1906.08936", href: "https://arxiv.org/abs/1906.08936", note: "Repeated random subsampling과 metastable consensus family의 원문이며 특정 chain TPS·고정 finality SLA는 아님" },

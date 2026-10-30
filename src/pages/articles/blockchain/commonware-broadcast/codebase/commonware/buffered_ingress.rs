@@ -1,45 +1,26 @@
-// broadcast/src/buffered/ingress.rs — Mailbox API
-
-/// Message types that can be sent to the Engine.
-pub enum Message<P: PublicKey, M: Digestible> {
-    /// Broadcast a message to the network.
-    /// Responder receives list of peers that got the message.
-    Broadcast {
-        recipients: Recipients<P>,
-        message: M,
-        responder: oneshot::Sender<Vec<P>>,
-    },
-    /// Subscribe to a message by digest.
-    /// Resolves instantly if cached, otherwise waits for network.
-    Subscribe {
-        digest: M::Digest,
-        responder: oneshot::Sender<M>,
-    },
-    /// Get a cached message by digest.
-    Get {
-        digest: M::Digest,
-        responder: oneshot::Sender<Option<M>>,
-    },
-}
-
-/// Ingress mailbox for Engine. Implements Broadcaster trait.
-#[derive(Clone)]
-pub struct Mailbox<P: PublicKey, M: Digestible + Codec> {
-    sender: mpsc::Sender<Message<P, M>>,
-}
-
-impl<P, M> Broadcaster for Mailbox<P, M> {
-    type Recipients = Recipients<P>;
-    type Message = M;
-    type Response = Vec<P>;
-
-    async fn broadcast(
-        &self, recipients: Self::Recipients, message: Self::Message,
-    ) -> oneshot::Receiver<Self::Response> {
-        let (sender, receiver) = oneshot::channel();
-        self.sender.send_lossy(Message::Broadcast {
-            recipients, message, responder: sender,
-        }).await;
+// broadcast/src/buffered/ingress.rs · v2026.9.0
+impl<P: PublicKey, M: Digestible + Codec> Mailbox<P, M> {
+    // 한국어 설명: Cache에 있으면 즉시, 없으면 같은 digest가 도착할 때 응답합니다.
+    pub fn subscribe(&self, digest: M::Digest) -> oneshot::Receiver<Arc<M>> {
+        let (responder, receiver) = oneshot::channel();
+        let _ = self
+            .sender
+            .enqueue(Message::Subscribe { digest, responder });
         receiver
+    }
+
+    // 한국어 설명: 현재 node-local cache만 한 번 조회합니다.
+    pub async fn get(&self, digest: M::Digest) -> Option<Arc<M>> {
+        let (responder, receiver) = oneshot::channel();
+        let _ = self.sender.enqueue(Message::Get { digest, responder });
+        receiver.await.unwrap_or_default()
+    }
+
+    // 한국어 설명: Broadcast command를 bounded local mailbox에 넣습니다.
+    pub fn broadcast_shared(&self, recipients: Recipients<P>, message: Arc<M>) -> Feedback {
+        self.sender.enqueue(Message::Broadcast {
+            recipients,
+            message,
+        })
     }
 }

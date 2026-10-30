@@ -861,38 +861,76 @@
     {
       "route": "blockchain/commonware-broadcast",
       "title": "Commonware buffered broadcast: digest·cache·delivery receipt",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-broadcast.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-broadcast.tsx",
-        "src/pages/articles/blockchain/commonware-broadcast/ModernArticle.tsx"
+        "src/pages/articles/blockchain/commonware-broadcast/CommonwareBroadcastLocator.tsx",
+        "src/pages/articles/blockchain/commonware-broadcast/ModernArticle.tsx",
+        "src/pages/articles/blockchain/commonware-broadcast/viz/ModernCommonwareBroadcastViz.tsx",
+        "src/pages/articles/blockchain/commonware-broadcast/codeRefs.ts",
+        "src/pages/articles/blockchain/commonware-broadcast/fileTrees.ts",
+        "src/pages/articles/blockchain/commonware-broadcast/codebase/commonware/broadcast_traits.rs",
+        "src/pages/articles/blockchain/commonware-broadcast/codebase/commonware/buffered_ingress.rs",
+        "src/pages/articles/blockchain/commonware-broadcast/codebase/commonware/buffered_engine.rs",
+        "src/pages/articles/blockchain/commonware-broadcast/codebase/commonware/buffered_cache.rs",
+        "src/content/commonware-broadcast-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 4,
         "headings": [
-          "Broadcast 요청이 local queue에 들어간 것과 recipient가 검증한 것은 같은 성공이 아니다",
-          "Broadcaster는 전송을 시도하고, digest subscriber는 local item receipt를 기다린다",
-          "같은 digest를 여러 peer가 보냈어도 item은 하나만 저장하고 reference를 센다",
-          "Mailbox·network·decode·cache·application failure를 같은 retry로 묶지 않는다"
+          "로컬 broadcast 요청이 접수된 뒤 Bob이 같은 digest의 item을 얻기까지 무엇이 따로 바뀌는가",
+          "Feedback은 local endpoint의 접수 결과입니다",
+          "Engine 하나가 세 입력을 같은 event loop에서 처리합니다",
+          "Waiter 응답과 cache 잔류도 서로 다른 결정입니다",
+          "어디까지 진행됐는지 알아야 실패를 설명할 수 있습니다",
+          "근거와 버전 경계",
+          "흐름을 다시 말해 보기",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 Broadcaster·Mailbox·DSMR·Ordered·ZODA를 나열해 현재 buffered broadcast 경로와 별도 abstraction을 한 요청에서 구분하기 어려웠습니다.",
+        "이전 예제는 현재 v2026.9.0 Broadcaster contract와 다른 Response peer 목록을 보여 주었고 local Feedback을 recipient receipt처럼 읽을 여지가 있었습니다.",
+        "Waiter 응답, latest-primary cache eligibility, peer deque reference와 application sender 검증이 한 성공 상태처럼 읽힐 수 있었습니다."
+      ],
+      "fixture": {
+        "case": "Bob이 descriptor digest d7을 먼저 subscribe하고 Alice가 같은 descriptor를 Bob에게 broadcast하는 한 건",
+        "path": "digest 구독→broadcast 호출→local Feedback→network send·receive→decode→waiter 응답→eligible cache 잔류→application acceptance",
+        "boundary": "local request admission, node-local typed item receipt, resident cache와 application acceptance를 서로 다른 증거로 유지"
+      },
+      "stageEvidence": {
+        "parent": "Commonware 전체 구조의 인증 P2P와 Simplex 사이에서 broadcast crate가 맡는 node-local 전달 경계를 표시합니다.",
+        "0": "Bob이 d7을 subscribe하고 cache miss 때문에 oneshot waiter를 남깁니다.",
+        "1": "Alice Application이 recipients와 typed descriptor를 Broadcaster에 넘깁니다.",
+        "2": "Ok·Backoff·Closed를 local bounded endpoint 상태로만 판정합니다.",
+        "3": "Alice Engine이 local message를 처리하고 send_ref로 encoded bytes 전송을 시도합니다.",
+        "4": "Bob Engine이 frame을 decode하고 descriptor bytes에서 digest를 다시 계산합니다.",
+        "5": "같은 digest의 existing waiter에게 Arc<Message>를 응답해 node-local receipt를 만듭니다.",
+        "6": "Sender가 latest.primary에 있을 때만 peer deque와 global items·counts에 resident cache reference를 남깁니다.",
+        "7": "Bob Application이 expected digest, sender identity, schema와 업무 규칙을 별도로 판정합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Commonware monorepo v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4",
+          "application": "actor Feedback, Broadcaster trait, buffered ingress Mailbox와 Engine의 peer update·network receive·waiter·eligible cache·refcount 경로를 실제 Rust source와 대조했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 Commonware v2026.9.0 broadcast·actor source를 다시 읽고 여러 abstraction의 기능 목록을 같은 d7의 subscribe→application acceptance 추적으로 교체했습니다.",
+        "arithmetic": "A와 B peer deque가 d7을 함께 참조하면 count 2, A eviction 뒤 1, B eviction 뒤 0에서 shared item을 제거하는 reference-count 불변식을 식과 상태 그림으로 확인했습니다. 처리량이나 지연은 측정하지 않았습니다.",
+        "humanize": "직속 부모 지도, 질문 하나, d7 한 사례, 내부 동작·source·실패 경계와 부모 지도 반환으로 구성했습니다. 제품 선택과 운영 Runbook은 개념 글에서 제외했습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px이고 가로 넘침이 없습니다. 전체 8장면, 하단 조작부와 본문을 시각 확인했습니다. Reduced-motion에서는 보이는 재생 버튼이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 trailing-slash 경로에는 live 조작부 없이 정적 8장면·전체 본문·이전 Simplex·다음 Storage가 남습니다.",
+        "browser1440": "1440×900에서 document 폭 1440=1440이고 가로 넘침이 없습니다. 재생 중 중간 network 장면과 마지막 application 장면을 확인했습니다. 일시정지 뒤 group focus에서 ArrowRight로 6→7→8이 이동했습니다. CodeSidebar의 한국어 주석과 닫기, console 오류·경고 0건을 확인했습니다.",
+        "static": "학습·시각화·수식·글 구조·문장·한국어·용어·topology·읽기 순서 감사, 전체 TypeScript와 production build를 통과했습니다. TypeScript 최대 RSS는 5,920,096,256 bytes, build 최대 RSS는 6,006,718,464 bytes이고 swap은 0입니다. 정적 public route 2,120개와 no-script 본문 365편을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-digest-local-admission-network-receipt-cache-application-boundary"
     },
     {
       "route": "blockchain/commonware-crypto-p2p",

@@ -1,23 +1,28 @@
-// broadcast/src/lib.rs — Broadcaster Trait
+// actor/src/lib.rs · v2026.9.0
+/// Feedback from submitting work to a bounded endpoint.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Feedback {
+    /// The work was accepted within the configured capacity.
+    Ok,
+    /// The submission exceeded configured capacity but was handled by the overflow policy.
+    Backoff,
+    /// The endpoint is closed.
+    Closed,
+}
 
-/// Broadcaster is the interface responsible for
-/// attempting replication of messages across a network.
+impl Feedback {
+    // 한국어 설명: Ok와 Backoff는 모두 local endpoint가 요청을 처리한 상태입니다.
+    pub const fn accepted(self) -> bool {
+        matches!(self, Self::Ok | Self::Backoff)
+    }
+}
+
+// broadcast/src/lib.rs · v2026.9.0
+/// Broadcaster is the interface responsible for attempting replication of messages across a network.
 pub trait Broadcaster: Clone + Send + 'static {
-    /// The type of recipients that can receive messages.
     type Recipients;
-
-    /// Message is the type of data that can be broadcasted.
-    /// Must implement Codec for serialize/deserialize.
     type Message: Codec + Clone + Send + 'static;
 
-    /// The type of data returned once the message is broadcasted.
-    /// May also indicate success or failure.
-    type Response: Clone + Send + 'static;
-
-    /// Attempt to broadcast a message to the associated recipients.
-    fn broadcast(
-        &self,
-        recipients: Self::Recipients,
-        message: Self::Message,
-    ) -> impl Future<Output = oneshot::Receiver<Self::Response>> + Send;
+    // 한국어 설명: Feedback은 local 접수 결과이며 recipient 수신 확인이 아닙니다.
+    fn broadcast(&self, recipients: Self::Recipients, message: Self::Message) -> Feedback;
 }

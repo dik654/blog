@@ -9681,6 +9681,12 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Generic BFT quorum and partial synchrony", href: "/cs/blockchain/bft-comparison#quorum-safety" }, { label: "State machine replication", href: "/cs/blockchain/consensus-comparison#smr" }, { label: "Existing Commonware crypto P2P", href: "/cs/blockchain/commonware-crypto-p2p" }, { label: "Existing Commonware broadcast", href: "/cs/blockchain/commonware-broadcast" }],
     evidence: [{ kind: "primary-source", rule: "Overview와 bridge 구현 사실은 Commonware tag v2026.9.0 commit d476a236에, 다른 세부 글의 구현 사실은 각 글이 고정한 release에 귀속한다." }, { kind: "project-measurement", rule: "동일 request·version·config에서 component 응답, deterministic replay와 crash·root·proof parity를 비교한다." }, { kind: "project-claim", rule: "조립 가능한 primitive·ALPHA example bridge·candidate root를 완성된 framework·production safety·durable client effect로 확대하지 않는다." }],
   },
+  "commonware-buffered-broadcast": {
+    title: "Commonware buffered broadcast 글이 소유하는 범위",
+    owns: ["Broadcaster Feedback의 로컬 접수 경계", "Digest subscribe·get과 node-local item receipt", "Latest-primary eligibility, peer별 deque와 shared item refcount cache"],
+    reuses: [{ label: "Commonware 전체 지도", href: "/cs/blockchain/commonware-deep-dive#overview" }, { label: "Commonware Simplex order·finality", href: "/cs/blockchain/commonware-simplex#overview" }, { label: "Commonware Storage durability·proof", href: "/cs/blockchain/commonware-storage#overview" }],
+    evidence: [{ kind: "primary-source", rule: "구현 사실은 Commonware tag v2026.9.0 commit d476a236의 actor·broadcast source와 matching docs.rs에 귀속한다." }, { kind: "project-measurement", rule: "이 글에는 latency·throughput·cache hit 실측을 싣지 않으며 동작 경계만 source로 확인한다." }, { kind: "project-claim", rule: "Local Feedback·subscribe completion·cache residence를 remote acknowledgement·total order·durable application effect로 확대하지 않는다." }],
+  },
   "tusk-paper-ordering": {
     title: "Tusk paper asynchronous DAG ordering ownership",
     owns: ["Tusk shared-coin leader와 f+1 causal support", "Tusk leader-history traversal, asynchronous randomized liveness와 release boundary"],
