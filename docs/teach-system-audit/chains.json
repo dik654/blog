@@ -4580,7 +4580,7 @@
     {
       "route": "blockchain/prysm-beacon-db",
       "title": "Prysm BeaconDB (BoltDB/KV)",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-beacon-db.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-beacon-db.tsx",
@@ -4641,11 +4641,10 @@
         "interaction": "5.5초 동안 장면 0이 자동 진행되지 않았고 ArrowRight와 장면 선택으로 0→1→4→5→7을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건이며 수동 이동은 유지됩니다.",
         "codeSidebar": "390×844에서 Batch 준비 source panel을 열어 실제 path·한글 설명·강조 줄을 확인했습니다. Dialog 첫 초점, body scroll lock, Tab 순환, Escape 닫기와 원래 버튼 초점 복귀가 동작합니다.",
         "noJavaScript": "JavaScript 비활성 390×844 production 경로에서 HTTP 200, visible live 영역·button 0개, 정적 여덟 장면, 전체 본문·근거·확인 질문·부모 지도 반환과 가로 넘침 0을 확인했습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,098개 module과 정적 public route 2,120개를 만들었습니다. BeaconDB를 정적 읽기 목록에 등록한 뒤 no-script 본문은 358편이며 최대 RSS는 6,442,795,008 bytes, swap은 0입니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,098개 module과 정적 public route 2,120개를 만들었습니다. BeaconDB를 정적 읽기 목록에 등록한 뒤 no-script 본문은 358편이며 최대 RSS는 6,442,795,008 bytes, swap은 0입니다.",
+        "production": "Commit a6ab8d27의 GitHub Pages run 41027456743이 모든 정적 감사, production build와 공개 1,007편 데스크톱·모바일 브라우저 검사를 통과했습니다. 공개 BeaconDB 경로에서 6초 무자동 재생, ArrowRight 0→1, 390×844 가로 넘침 0, reduced-motion 실행 animation 0건, console 오류·경고 0건과 JavaScript 비활성 정적 8장면·전체 본문을 다시 확인했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-competing-block-primary-index-transaction-cache-pruning-boundary"
     },
     {
