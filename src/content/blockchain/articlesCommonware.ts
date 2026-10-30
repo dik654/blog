@@ -57,7 +57,7 @@ export const commonwareArticles: Article[] = [
   },
   {
     slug: "commonware-crypto-p2p",
-    title: "Commonware authenticated P2P: handshake·channel·quota",
+    title: "Commonware authenticated P2P: handshake · channel · quota",
     subcategory: "commonware",
     sections: [
       { id: "overview", title: "known peer에서 authenticated channel까지" },

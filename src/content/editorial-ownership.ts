@@ -9432,10 +9432,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Scheduling·hash·streaming behavior는 rqbit stable v8.1.1 exact source revision에만 귀속한다." }, { kind: "project-measurement", rule: "Steal race·mismatch·restart·multi-file range에서 owner generation·digest·released bytes를 검증한다." }, { kind: "project-claim", rule: "Peer candidate를 possession proof로, resume bitfield를 absolute integrity proof로, SHA-1을 신규 설계 권고로 확대하지 않는다." }],
   },
   "commonware-crypto-p2p": {
-    title: "Commonware authenticated handshake·channel quota 글이 소유하는 범위",
-    owns: ["v2026.7.0 Syn·SynAck·Ack transcript와 directional AEAD counter", "Authenticated channel quota·bounded mux·priority mailbox local admission"],
-    reuses: [{ label: "Authenticated Diffie–Hellman", href: "/cs/crypto/diffie-hellman" }, { label: "Commonware consensus", href: "/cs/blockchain/commonware-consensus" }],
-    evidence: [{ kind: "primary-source", rule: "Handshake·lookup·mux·relay 구현 사실은 Commonware monorepo v2026.7.0 source에만 귀속한다." }, { kind: "project-measurement", rule: "Replay·counter rollback·oversize·slow channel·overflow에서 session·local feedback·application receipt를 분리 측정한다." }, { kind: "project-claim", rule: "Authenticated peer·priority·Feedback::Ok를 payload correctness·remote receipt·consensus ordering으로 확대하지 않는다." }],
+    title: "Commonware authenticated session·local submission·Bob receipt 글이 소유하는 범위",
+    owns: ["v2026.9.0 static-key bouncer와 Syn·SynAck·Ack transcript", "Router·relay·peer actor·bounded channel inbox를 거치는 한 payload의 전달 경계"],
+    reuses: [{ label: "Authenticated Diffie–Hellman", href: "/cs/crypto/diffie-hellman" }, { label: "Commonware Broadcast", href: "/cs/blockchain/commonware-broadcast" }],
+    evidence: [{ kind: "primary-source", rule: "Handshake·encrypted stream·authenticated P2P 구현 사실은 Commonware tag v2026.9.0 commit d476a236에만 귀속한다." }, { kind: "project-measurement", rule: "공식 max_peers=2·burst=2 overflow test와 source state transition을 추적하며 환경 성능값은 측정값으로 만들지 않는다." }, { kind: "project-claim", rule: "Authenticated session·local admission·priority를 Bob receipt·payload validity·consensus order·durability로 확대하지 않는다." }],
   },
   "hw-server-vs-desktop": {
     title: "서버·데스크톱 platform 선택 글이 소유하는 범위",

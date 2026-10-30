@@ -3,6 +3,17 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Commonware P2P 로컬 검증 진행 (2026-10-31)
+
+- `blockchain/commonware-crypto-p2p`를 Alice가 channel 7의 설명용 payload `m7`을 보내고 Bob Receiver가 `(Alice public key, m7 bytes)`를 반환하는 한 건으로 다시 썼습니다. Authenticated session, Alice local submission, Bob의 node-local receipt와 durable application acceptance를 서로 다른 상태로 분리했습니다.
+- Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. `cryptography` handshake, encrypted stream listener, authenticated router·relay·peer actor·channel register와 official overflow test를 실제 Rust source와 대조했습니다. 이전 글의 `Rejected`를 `Feedback` variant처럼 읽히게 할 수 있던 설명도 현재 계약에 맞게 바로잡았습니다.
+- 현재 시각 100,000ms, max age 5,000ms, synchrony bound 2,000ms에서 timestamp 허용 범위는 `[95,000, 102,000)ms`입니다. `max_peers=2`와 `burst_size=2`에서 channel inbox capacity는 4이고, 다섯 번째 새 enqueue는 `Rejected`입니다. 처리량과 지연은 측정하지 않았습니다.
+- 1,440×900에서 중간 session 확정 장면, 마지막 Application 수신 장면과 ArrowLeft 8→7을 확인했습니다. CodeSidebar의 고정 source·한국어 주석·닫기가 정상이고 console 오류·경고는 0건입니다.
+- 390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 제목은 `handshake · channel · quota` 단위로만 줄이 바뀌고, actor 지도를 2열로 배치해 698.4px 높이의 장면·상태·설명·조작부가 한 viewport에 들어옵니다. Reduced-motion에서 재생은 비활성화되고 수동 이동은 유지됩니다.
+- JavaScript 비활 390×844 trailing-slash 경로는 live 조작부 없이 정적 여덟 장면, 전체 본문·확인 질문·부모 지도 반환을 순서대로 표시합니다. 첫 화면과 마지막 결론을 실제 브라우저에서 확인했고 console 오류·경고는 0건입니다.
+- TypeScript·production build와 학습·시각화·수식·계산·의사코드·본문·topology·읽기 순서·문장·한국어·용어 감사를 통과했습니다. Production build 최대 RSS는 6,039,961,600 bytes, 정적 경로 생성 최대 RSS는 1,582,120,960 bytes이고 swap은 모두 0입니다. 공개 route 2,120개와 no-script 본문 366편을 생성했습니다.
+- 현재 상태는 `rewritten-local-verified`입니다. 전수 장부는 공개 1,007편 중 검토 710편, 미검토 297편입니다. GitHub Pages 배포와 공개 경로 검증을 이어갑니다.
+
 ### Commonware Broadcast 로컬 검증 완료 (2026-10-30)
 
 - `blockchain/commonware-broadcast`를 설명용 digest `d7`을 따라가는 글로 다시 썼습니다. Bob이 먼저 구독하고 Alice가 같은 descriptor를 보내는 한 사례입니다. 로컬 접수, 네트워크 전송, typed item 수신, cache 잔류와 업무 승인을 서로 다른 상태로 구분했습니다.
