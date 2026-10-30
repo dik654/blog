@@ -1,37 +1,74 @@
-// crypto/bls/blst/signature.go — Verify + Aggregate (prysm v5.x)
+// OffchainLabs Prysm v7.3.1 @ 96d418cd
+// crypto/bls/blst/signature.go — focused source excerpts
 
-// Verify checks a single BLS signature against a public key and message.
-// e(sig, G2) == e(H(msg), pk) 패어링 검증
+var dst = []byte("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_")
+
+const scalarBytes = 32
+const randBitsEntropy = 64
+
+// SignatureFromBytes creates a BLS signature from a LittleEndian byte slice.
+func SignatureFromBytes(sig []byte) (common.Signature, error) {
+	signature, err := signatureFromBytesNoValidation(sig)
+	if err != nil {
+		return nil, errors.Wrap(err, "could not create signature from byte slice")
+	}
+	// Group check signature. Do not check for infinity since an aggregated signature
+	// could be infinite.
+	if !signature.SigValidate(false) {
+		return nil, errors.New("signature not in group")
+	}
+	return &Signature{s: signature}, nil
+}
+
+// Verify a bls signature given a public key, a message.
 func (s *Signature) Verify(pubKey common.PublicKey, msg []byte) bool {
-	return s.s.Verify(
-		false,              // compress: false
-		pubKey.(*PublicKey).p, // *blst.P1Affine
-		false,              // hash: false (already in G2)
-		msg,                // 메시지
-		dst,                // Domain Separation Tag
-	)
+	// Signature and PKs are assumed to have been validated upon decompression!
+	return s.s.Verify(false, pubKey.(*PublicKey).p, false, msg, dst)
 }
 
-// AggregateVerify verifies multiple (pk, msg) pairs against one aggregate sig.
-// 서로 다른 메시지에 대한 집계 서명 검증
-func (s *Signature) AggregateVerify(
-	pubKeys []common.PublicKey, msgs [][32]byte,
-) bool {
-	pks := make([]*blstPublicKey, len(pubKeys))
-	for i, pk := range pubKeys {
-		pks[i] = pk.(*PublicKey).p
+// FastAggregateVerify verifies all the provided public keys with their aggregated signature.
+func (s *Signature) FastAggregateVerify(pubKeys []common.PublicKey, msg [32]byte) bool {
+	if len(pubKeys) == 0 {
+		return false
 	}
-	return s.s.AggregateVerify(false, pks, false, msgs, dst)
+	rawKeys := make([]*blstPublicKey, len(pubKeys))
+	for i := range pubKeys {
+		rawKeys[i] = pubKeys[i].(*PublicKey).p
+	}
+	return s.s.FastAggregateVerify(true, rawKeys, msg[:], dst)
 }
 
-// FastAggregateVerify — 동일 메시지, 다수 서명자 (어테스테이션 최적화)
-// 모든 pk를 먼저 집계한 뒤 단일 패어링만 수행 → O(1) 패어링
-func (s *Signature) FastAggregateVerify(
-	pubKeys []common.PublicKey, msg [32]byte,
-) bool {
-	pks := make([]*blstPublicKey, len(pubKeys))
-	for i, pk := range pubKeys {
-		pks[i] = pk.(*PublicKey).p
+// VerifyMultipleSignatures verifies a non-singular set of signatures and its respective pubkeys and messages.
+func VerifyMultipleSignatures(sigs [][]byte, msgs [][32]byte, pubKeys []common.PublicKey) (bool, error) {
+	if len(sigs) == 0 || len(pubKeys) == 0 {
+		return false, nil
 	}
-	return s.s.FastAggregateVerify(true, pks, msg, dst)
+	rawSigs := new(blstSignature).BatchUncompress(sigs)
+
+	length := len(sigs)
+	if length != len(pubKeys) || length != len(msgs) {
+		return false, errors.Errorf("provided signatures, pubkeys and messages have differing lengths. S: %d, P: %d,M %d",
+			length, len(pubKeys), len(msgs))
+	}
+	mulP1Aff := make([]*blstPublicKey, length)
+	rawMsgs := make([]blst.Message, length)
+
+	for i := range length {
+		mulP1Aff[i] = pubKeys[i].(*PublicKey).p
+		rawMsgs[i] = msgs[i][:]
+	}
+	randGen := rand.NewGenerator()
+	randLock := new(sync.Mutex)
+
+	randFunc := func(scalar *blst.Scalar) {
+		var rbytes [scalarBytes]byte
+		randLock.Lock()
+		randGen.Read(rbytes[:]) // #nosec G104 -- Error will always be nil in `read` in math/rand
+		randLock.Unlock()
+		rbytes[len(rbytes)-1] |= 0x01
+		scalar.FromBEndian(rbytes[:])
+	}
+	dummySig := new(blstSignature)
+
+	return dummySig.MultipleAggregateVerify(rawSigs, true, mulP1Aff, false, rawMsgs, dst, randFunc, randBitsEntropy), nil
 }

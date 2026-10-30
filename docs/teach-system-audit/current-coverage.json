@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 692,
-    "pending": 315,
+    "reviewed": 693,
+    "pending": 314,
     "untracked": 0,
-    "assignedPending": 273,
+    "assignedPending": 272,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5141,11 +5141,11 @@
     {
       "route": "blockchain/prysm-bls",
       "publicPath": "cs/blockchain/prysm-bls",
-      "title": "Prysm BLS 서명 (BLST 바인딩)",
+      "title": "Prysm BLS: Root에서 서명·Aggregate·Batch까지",
       "catalogIndex": 511,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

@@ -4398,3 +4398,32 @@
   TypeScript와 production build를 통과했습니다. Build는 8,086개 module, 정적 public route
   2,120개와 no-script 본문 348편을 생성했고 최대 RSS는 약 6.11GiB, swap은 0이었습니다.
   공개 배포와 공개 경로 재검증은 다음 단계입니다.
+
+### Prysm BLS 개념 글 로컬 검증 완료 (2026-10-30)
+
+- 직전 SSZ 글의 DemoRecord object root `9dfd6779…410832cc` 한 건이 설명용 zero
+  domain과 다시 SSZ로 묶여 signing root `740450ab…05ae86`이 되고, point validation,
+  pairing, aggregate 또는 batch 경계로 이어지는 순서를 여덟 장면으로 다시 구성했습니다.
+- Public key 48 bytes는 `KeyValidate()`로 subgroup과 infinity를, signature 96 bytes는
+  `SigValidate(false)`로 group을 확인한 뒤에만 BLST 연산으로 넘어갑니다. 같은 signing
+  root의 서명 세 개는 288 bytes에서 aggregate point 하나 96 bytes로 표현되지만 참여자
+  목록은 별도 consensus 자료에 남습니다.
+- 서로 다른 signing root의 독립 signature 식은 무작위 가중 batch로 함께 판정합니다.
+  Batch 실패만으로 잘못된 item은 드러나지 않으며, Prysm v7.3.1의
+  `VerifyVerbosely()`는 각 signature를 다시 단일 Verify합니다. BLS PASS와 state
+  transition·fork choice·slashing 판정을 분리했습니다.
+- 근거는 Ethereum consensus-specs v1.6.1 commit
+  `5fa6edcca8ab4cf548653e6680b17b9d3e04d225`, Prysm v7.3.1 commit
+  `96d418cd964b083e37519a9df274030a1beac7db`, BLST v0.3.16 commit
+  `e7f90de551e8df682f3cc99067d204d8b90d27ad`와 만료된 CFRG BLS draft-06의
+  범위에 고정했습니다. 실제 validator key·duty domain, 처리량과 latency는 측정하지
+  않았습니다.
+- 1,440×1,000에서 문서 폭 1,440px, live 시각화 664×901.3px이고, 390×844에서는
+  문서 폭 390px와 시각화 334×752.8px입니다. 모든 여덟 장면에서 가로 넘침과 보이는
+  자식 요소 탈출이 없고, 조작부는 약 49.5px입니다. 무자동재생, 키보드 0→7 이동,
+  포인터 재생·일시정지와 console 오류·경고 0건을 확인했습니다.
+- Reduced-motion에서는 실행 중 animation 0건과 재생 비활성·수동 이동을 확인했습니다.
+  JavaScript 비활성 390×844 경로에는 live 조작부 대신 정적 여덟 장면, 질문·확인 질문,
+  부모 지도 반환이 남습니다. Production build는 8,086개 module, 정적 public route
+  2,120개와 no-script 본문 349편을 생성했고 최대 RSS는 약 6.37GB, swap은 0이었습니다.
+  공개 배포와 공개 경로 재검증은 다음 단계입니다.

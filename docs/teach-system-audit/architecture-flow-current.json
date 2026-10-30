@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 719,
+    "dedicatedVisuals": 720,
     "inlineVisuals": 525,
-    "customVisuals": 902,
-    "animatedMechanisms": 520,
+    "customVisuals": 903,
+    "animatedMechanisms": 521,
     "architectureWithoutAnimation": 82,
-    "recursiveLocators": 349,
+    "recursiveLocators": 350,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 16
@@ -7954,18 +7954,18 @@
     {
       "route": "blockchain/prysm-bls",
       "publicPath": "cs/blockchain/prysm-bls",
-      "title": "Prysm BLS 서명 (BLST 바인딩)",
+      "title": "Prysm BLS: Root에서 서명·Aggregate·Batch까지",
       "sourcePath": "src/pages/articles/ethereum/prysm-bls.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-engine-api",
