@@ -1080,39 +1080,77 @@
     },
     {
       "route": "blockchain/commonware-storage",
-      "title": "Commonware Storage: MMR·Any·Current·QMDB",
-      "status": "unreviewed",
+      "title": "Commonware Storage: MMR · Any · Current · QMDB",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-storage.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-storage.tsx",
-        "src/pages/articles/blockchain/commonware-storage/ModernArticle.tsx"
+        "src/pages/articles/blockchain/commonware-storage/CommonwareStorageLocator.tsx",
+        "src/pages/articles/blockchain/commonware-storage/ModernArticle.tsx",
+        "src/pages/articles/blockchain/commonware-storage/viz/ModernCommonwareStorageViz.tsx",
+        "src/pages/articles/blockchain/commonware-storage/codeRefs.ts",
+        "src/pages/articles/blockchain/commonware-storage/fileTrees.ts",
+        "src/content/commonware-storage-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 3,
+        "assumptionMarkers": 4,
+        "sourceButtons": 6,
         "headings": [
-          "저장 완료는 root를 계산한 순간이 아니라 winning batch를 적용하고 crash 뒤 복구한 순간까지 나눠 봐야 한다",
-          "MMR은 append할 때 기존 node 위치를 바꾸지 않고 여러 perfect-tree peaks를 bagging한다",
-          "Any는 과거 value를, Current는 그 value가 아직 active인지까지 증명한다",
-          "Root·floor·batch ancestry를 함께 복구하고 proof를 다시 검증한다"
+          "두 key update는 언제 복구하고 검증할 수 있는 저장 상태가 되는가",
+          "Batch는 DB 복사본이 아니라 이기는 branch에 붙어 있는 작업 공간입니다",
+          "MMR은 append해도 기존 node position을 바꾸지 않습니다",
+          "Any와 Current는 같은 operation에 다른 질문을 합니다",
+          "Stale batch와 미완료 durability를 같은 실패로 보지 않습니다",
+          "근거와 버전 경계",
+          "흐름을 다시 말해 보기",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 MMR·Any·Current·QMDB를 기능별로 나열해 candidate root, visible state와 durable state가 한 update에서 언제 달라지는지 추적하기 어려웠습니다.",
+        "v2026.7.0의 공통 Persistable trait 설명이 v2026.9.0에는 그대로 존재하지 않았고, MMR inclusion·Current proof·disk durability가 같은 완료 증거처럼 읽힐 수 있었습니다.",
+        "같은 base에서 만든 sibling batch의 stale 경로와 apply 뒤 commit·sync의 durability 차이가 한 실패 경계 안에서 구분되지 않았습니다."
+      ],
+      "fixture": {
+        "case": "Application이 만든 Alice=10·Bob=15 두 update를 batch-7에 stage하고 candidate root R7, visible apply, sync와 Current proof까지 같은 식별자로 추적",
+        "path": "외부 update→batch 생성→두 write→merkleize→ancestry 확인→apply→sync→Current proof 확인",
+        "boundary": "MMR inclusion, Any의 과거 value, Current의 active value, commit·sync의 disk durability와 외부 client success를 서로 다른 상태로 유지"
+      },
+      "stageEvidence": {
+        "parent": "Commonware 글 묶음에서 buffered broadcast 다음, authenticated P2P 이전의 Storage 위치를 표시합니다.",
+        "0": "Application이 이미 계산한 두 key update를 입력으로 고정하며 QMDB가 송금 규칙을 실행하지 않음을 밝힙니다.",
+        "1": "현재 root R6을 부모로 하는 branch-scoped batch-7을 만듭니다.",
+        "2": "Alice와 Bob update를 batch에만 stage하고 visible DB와 disk가 아직 R6임을 표시합니다.",
+        "3": "merkleize가 candidate root R7을 계산하지만 apply·durability는 아직 아님을 표시합니다.",
+        "4": "validate_batch가 현재 prefix와 ancestry를 확인하고 sibling 선적용 시 StaleBatch가 됨을 표시합니다.",
+        "5": "apply_batch가 operation log와 Current view를 R7로 바꾸지만 durable 완료는 아님을 표시합니다.",
+        "6": "sync가 state와 bitmap metadata를 기록해 시작 복구가 필요 없는 durability 경계를 만듭니다.",
+        "7": "Verifier가 operation과 activity bitmap으로 canonical root를 재구성해 최신 operation bit를 확인합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "commonware-storage v2026.9.0 QMDB·Current module docs",
+          "application": "Batch mutation·merkleize·ancestry·apply와 commit·start_sync·sync, Any·Current proof와 activity bitmap의 public 계약을 고정했습니다."
+        },
+        {
+          "source": "Commonware monorepo v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4",
+          "application": "MMR location 변환, OperationProof activity 검사, stale batch 거절과 Current apply·commit·sync 구현을 실제 Rust source와 대조했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글, Commonware v2026.9.0 QMDB·Current 문서와 고정 commit source를 다시 읽고 기능 목록을 같은 batch의 stage→proof 경로로 교체했습니다.",
+        "arithmetic": "N=11의 이진수 1011에서 popcount=3 peaks, nodes=2N-popcount(N)=19를 계산하고 8·2·1 leaf mountain으로 시각화했습니다. 성능 수치는 측정하지 않았습니다.",
+        "humanize": "직속 부모 지도, 질문 하나, Alice·Bob 두 update와 batch-7 한 사례, 내부 동작·수식·source·실패 경계와 부모 지도 반환으로 구성했습니다. 제품 선택·백업·운영 Runbook은 개념 글에서 제외했습니다.",
+        "browser390": "390×844에서 여덟 장면을 모두 선택해 0→7 상태 변화와 문서 가로 넘침 0을 확인했습니다. 좁은 탭에는 외부·batch·write·root·검사·apply·sync·proof를 표시하고 긴 제목은 QMDB 중간에서 끊기지 않습니다. Reduced-motion은 재생을 비활성화하고 수동 이동을 유지합니다. JavaScript 비활성 trailing-slash 경로에는 정적 여덟 장면·전체 본문·부모 지도 반환이 남습니다.",
+        "browser1440": "1440×1000에서 여덟 장면을 모두 선택해 active state와 page overflow 0을 확인했습니다. Group ArrowLeft, Space 재생·일시정지와 상태 유지가 동작하며 console 오류·경고는 0건입니다.",
+        "static": "NODE_OPTIONS=--max-old-space-size=8192에서 전체 build가 통과했고 최대 RSS는 6,593,150,976 bytes, swap은 0이었습니다. public route 2,120개와 no-script 본문 364편을 만들었습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 후 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-batch-candidate-visible-durable-current-proof-boundary"
     },
     {
       "route": "blockchain/compound-v3",

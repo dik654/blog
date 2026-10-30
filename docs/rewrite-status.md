@@ -3,6 +3,18 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Commonware Storage 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/commonware-storage`를 Alice=10·Bob=15 두 update와 `batch-7` 한 건이 stage, merkleize, ancestry 확인, apply, sync와 Current proof로 이어지는 흐름으로 다시 썼습니다. Candidate root, visible DB state, durable state와 proof를 같은 완료 상태로 합치지 않았습니다.
+- Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. QMDB·Current 문서와 실제 Rust source에서 branch-scoped batch, stale sibling, MMR location, activity bitmap, `commit()`과 `sync()`의 recovery 차이를 대조했습니다. 이전 버전의 공통 `Persistable` trait 설명은 현재 근거로 사용하지 않았습니다.
+- 11 leaves를 `1011₂=8+2+1`로 나눠 peak 3개와 node `2×11−3=19`개를 계산했습니다. MMR inclusion은 과거 operation 포함, Any는 과거 value, Current는 activity bit가 1인 현재 value를 묻는 서로 다른 증거입니다.
+- 실제 커리큘럼 순서가 `전체 구조 → Simplex → Broadcast → Storage → 인증 P2P`인데 locator가 Broadcast를 건너뛰고 Tusk로 나가던 문제를 고쳤습니다. Simplex의 다음 글, Storage의 이전·다음 글과 본문 링크를 공개 사이드바 순서에 맞췄습니다.
+- 1,440×1,000에서 여덟 장면을 모두 선택하고 ArrowLeft와 Space 재생·일시정지, 문서 가로 넘침 0과 console 오류·경고 0을 확인했습니다. 390×844에서도 여덟 장면 모두 가로 넘침이 없고 좁은 탭에 외부·batch·write·root·검사·apply·sync·proof 이름을 표시합니다.
+- 모바일 제목은 `QMDB` 중간에서 끊기지 않도록 구분자 주변에 줄바꿈 지점을 만들었습니다. Reduced-motion에서는 재생 버튼이 비활성화되고 수동 이동은 유지됩니다.
+- JavaScript 비활성 390×844 trailing-slash 경로에는 live 조작부 대신 정적 여덟 장면, 전체 본문, 이전·다음 글과 부모 지도 반환이 남습니다. 정적 읽기 목록에 이 글을 추가해 public route 2,120개와 no-script 본문 364편을 생성했습니다.
+- 전체 build는 Node heap 8GB에서 통과했고 최대 RSS는 6,593,150,976 bytes, swap은 0이었습니다. 큰 build 구간만 고메모리 모드로 전환한 뒤 다시 저메모리 모드로 돌아왔습니다.
+- 공개 배포와 공개 경로 재검증은 아직 남아 있으며 현재 상태는 `locally-verified`입니다.
+
 ### Commonware Simplex 로컬 검증 완료 (2026-10-30)
 
 - `blockchain/commonware-simplex`를 부모 글의 `hash(encode(Random(42)))` 한 건이 proposal, 세 notarize vote, notarization, validator별 Application certification, local journal sync, 세 finalize vote와 finalization certificate로 이어지는 흐름으로 다시 썼습니다.

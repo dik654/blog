@@ -45,7 +45,7 @@ export const commonwareArticles: Article[] = [
   },
   {
     slug: "commonware-storage",
-    title: "Commonware Storage: MMR·Any·Current·QMDB",
+    title: "Commonware Storage: MMR · Any · Current · QMDB",
     subcategory: "commonware",
     sections: [
       { id: "overview", title: "Operation log에서 authenticated root까지" },

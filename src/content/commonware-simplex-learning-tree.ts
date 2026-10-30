@@ -17,7 +17,7 @@ export const COMMONWARE_SIMPLEX_NODE = {
     label: "Commonware 전체 구조",
   },
   curriculumNext: {
-    href: "/cs/blockchain/commonware-storage#overview",
-    label: "Commonware 저장 구조",
+    href: "/cs/blockchain/commonware-broadcast#overview",
+    label: "Commonware buffered broadcast",
   },
 } as const;

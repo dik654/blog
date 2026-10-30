@@ -555,6 +555,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Commonware v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. n=4, f=1과 validator D의 지연, A·B·C의 certify=true는 설명용 가정입니다. Finalization을 Application state commit·외부 저장 성공·client success로 확대하지 않고, certify=false와 channel RecvError를 같은 실패로 합치지 않습니다.",
   },
+  "blockchain/commonware-storage": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "외부 Application이 만든 Alice·Bob update 두 개를 batch-7이라는 한 식별자로 고정해 stage, merkleize, ancestry 검사, apply, sync와 Current proof까지 추적합니다. MMR layout과 Any·Current proof, stale sibling, durability가 서로 다른 개념이지만 모두 candidate root R7이 언제 visible·durable·verifiable state가 되는지 답하는 같은 수명주기입니다. 이를 나누면 candidate·canonical·durable root의 경계를 여러 글에서 다시 조립해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Commonware storage v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. Alice=10·Bob=15, batch-7과 R6·R7은 설명용 식별자이며 실제 protocol field나 측정값이 아닙니다. MMR inclusion을 Current value·consensus finality·disk durability로 확대하지 않고, merkleize·apply·commit·sync와 외부 client success를 같은 완료 상태로 합치지 않습니다.",
+  },
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
   "blockchain/prysm-block-processing": {
     action: "keep",
@@ -4394,6 +4403,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-engine-api": "97fc3e69823881f9",
   "blockchain/commonware-deep-dive": "e52779a7bbd2cc35",
   "blockchain/commonware-simplex": "6648846c934c07c9",
+  "blockchain/commonware-storage": "f562329856e608d5",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",

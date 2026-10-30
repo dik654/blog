@@ -178,7 +178,7 @@ export default function ModernCommonwareSimplexArticle() {
           <li>Finalization certificate가 생겼을 때 아직 말할 수 없는 것은 무엇입니까? <strong>(답: Application state 실행, 외부 저장 성공, client success는 별도 경계입니다.)</strong></li>
         </ol>
         <p className="text-sm text-muted-foreground">
-          다음 글에서는 <Link to="/cs/blockchain/commonware-storage#overview" className="font-bold text-primary hover:underline">Commonware 저장 구조</Link>로 이동해 digest와 proof가 실제 저장 계층에서 무엇을 증명하는지 확인합니다.
+          다음 글에서는 <Link to="/cs/blockchain/commonware-broadcast#overview" className="font-bold text-primary hover:underline">Commonware buffered broadcast</Link>로 이동해 local 요청 수락과 상대가 검증한 수신을 구분합니다.
         </p>
       </section>
 
