@@ -3,7 +3,7 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Commonware P2P 로컬 검증 진행 (2026-10-31)
+### Commonware P2P 공개 검증 완료 (2026-10-31)
 
 - `blockchain/commonware-crypto-p2p`를 Alice가 channel 7의 설명용 payload `m7`을 보내고 Bob Receiver가 `(Alice public key, m7 bytes)`를 반환하는 한 건으로 다시 썼습니다. Authenticated session, Alice local submission, Bob의 node-local receipt와 durable application acceptance를 서로 다른 상태로 분리했습니다.
 - Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. `cryptography` handshake, encrypted stream listener, authenticated router·relay·peer actor·channel register와 official overflow test를 실제 Rust source와 대조했습니다. 이전 글의 `Rejected`를 `Feedback` variant처럼 읽히게 할 수 있던 설명도 현재 계약에 맞게 바로잡았습니다.
@@ -12,9 +12,9 @@
 - 390×844에서 document 폭과 scroll 폭이 모두 390px입니다. 제목은 `handshake · channel · quota` 단위로만 줄이 바뀌고, actor 지도를 2열로 배치해 698.4px 높이의 장면·상태·설명·조작부가 한 viewport에 들어옵니다. Reduced-motion에서 재생은 비활성화되고 수동 이동은 유지됩니다.
 - JavaScript 비활 390×844 trailing-slash 경로는 live 조작부 없이 정적 여덟 장면, 전체 본문·확인 질문·부모 지도 반환을 순서대로 표시합니다. 첫 화면과 마지막 결론을 실제 브라우저에서 확인했고 console 오류·경고는 0건입니다.
 - TypeScript·production build와 학습·시각화·수식·계산·의사코드·본문·topology·읽기 순서·문장·한국어·용어 감사를 통과했습니다. Production build 최대 RSS는 6,039,961,600 bytes, 정적 경로 생성 최대 RSS는 1,582,120,960 bytes이고 swap은 모두 0입니다. 공개 route 2,120개와 no-script 본문 366편을 생성했습니다.
-- 현재 상태는 `rewritten-local-verified`입니다. 전수 장부는 공개 1,007편 중 검토 710편, 미검토 297편입니다. GitHub Pages 배포와 공개 경로 검증을 이어갑니다.
+- Commit `62791dc2edd8a34493ceb7ea0777caa65fe338e0`의 GitHub Pages run `41080463264`에서 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포가 통과했습니다. 공개 경로는 1,440×900과 390×844에서 가로 넘침이 없고 첫 장면이 자동으로 바뀌지 않았습니다. 키보드로 중간 로컬 접수와 마지막 Application 수신 장면까지 이동했습니다. Reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됐습니다. JavaScript 비활성 경로에는 정적 여덟 장면과 전체 본문이 남았습니다. 현재 상태는 `rewritten-production-verified`이며, 전수 장부는 공개 1,007편 중 검토 710편, 미검토 297편입니다.
 
-### Commonware Broadcast 로컬 검증 완료 (2026-10-30)
+### Commonware Broadcast 공개 검증 완료 (2026-10-31)
 
 - `blockchain/commonware-broadcast`를 설명용 digest `d7`을 따라가는 글로 다시 썼습니다. Bob이 먼저 구독하고 Alice가 같은 descriptor를 보내는 한 사례입니다. 로컬 접수, 네트워크 전송, typed item 수신, cache 잔류와 업무 승인을 서로 다른 상태로 구분했습니다.
 - Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. Actor의 `Feedback`과 `Broadcaster` trait을 확인했습니다. Buffered ingress와 Engine의 peer update·decode 경로를 실제 Rust source와 대조했습니다. Waiter·cache 경로도 확인했습니다. 현재 계약과 맞지 않던 `Response` peer 목록 예제는 제거했습니다.
@@ -23,7 +23,7 @@
 - 390×844에서도 문서 폭과 scroll 폭이 모두 390px입니다. 시각화와 조작부가 본문 폭 안에 들어오며, reduced-motion에서는 보이는 재생 버튼이 비활성화되고 수동 이동은 유지됩니다.
 - JavaScript 비활성 trailing-slash 경로에는 조작 버튼 없이 정적 여덟 장면과 전체 본문이 남습니다. 이전 Simplex와 다음 Storage도 표시합니다. 정적 public route는 2,120개, no-script 본문은 365편입니다.
 - TypeScript는 작업 단위 Node heap 6GB에서 최대 RSS 5,920,096,256 bytes를 썼습니다. Production build의 최대 RSS는 6,006,718,464 bytes이며 swap은 0입니다. 기본 힙에서 TypeScript가 약 4.5GB에 V8 OOM으로 끝난 기록도 남겼습니다. 전역 heap 설정은 바꾸지 않았습니다.
-- 현재 상태는 `rewritten-local-verified`입니다. 전수 장부는 공개 1,007편 중 검토 709편, 미검토 298편입니다. GitHub Pages 배포와 공개 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증이 남았습니다.
+- 같은 GitHub Pages run `41080463264`에서 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포가 통과했습니다. 공개 경로는 1,440×900과 390×844에서 가로 넘침이 없고 첫 장면이 자동으로 바뀌지 않았습니다. 키보드로 마지막 업무 판단 장면까지 이동했습니다. Reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됐습니다. JavaScript 비활성 경로에는 정적 여덟 장면과 전체 본문이 남았습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Commonware Storage 공개 검증 완료 (2026-10-30)
 
