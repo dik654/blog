@@ -3,7 +3,7 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Commonware 전체 구조 로컬 검증 완료 (2026-10-30)
+### Commonware 전체 구조 공개 검증 완료 (2026-10-30)
 
 - `blockchain/commonware-deep-dive`를 설명용 `Random(42)` 블록 원문 한 건이 indexer 보관 확인, digest 제안, 원문 재조회·검증, Simplex finalization과 certificate 기록 응답으로 이어지는 흐름으로 다시 썼습니다. Runtime·Application·Indexer·Simplex·인증 P2P의 책임을 여덟 장면에서 같은 객체로 추적합니다.
 - Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`와 같은 commit의 `examples/bridge`를 고정했습니다. Validator wiring, indexer stream, P2P channel 0·1·2, Application mailbox와 `PutBlock`·`GetBlock`·`PutFinalization` 분기를 실제 source와 대조했습니다.
@@ -11,16 +11,18 @@
 - 1,440×1,000에서 문서 폭 1,440=1,440, live 시각화 664×582.2px이고 장면 4·6·8을 수동으로 확인했습니다. Group 키보드는 7→6, 조작 버튼에 초점이 있을 때 ArrowLeft는 장면을 바꾸지 않고 Enter는 6→7로 이동했습니다. 재생은 3.5초 뒤 0→1로 진행하고 일시정지 뒤 같은 상태를 유지했습니다.
 - 390×844에서 문서 폭 390=390, live 시각화 338.5×787.5px이며 여덟 장면 탭과 세 조작 버튼은 모두 49.5px입니다. 4.5초 동안 첫 장면이 유지되고 장면 8을 수동으로 선택했으며 가로 넘침과 console 오류·경고는 없습니다.
 - Reduced-motion에서는 재생이 비활성화되고 실행 중 animation은 0건이며 수동 이동은 유지됩니다. JavaScript 비활성 390×844 경로는 HTTP 200, live 영역 0개, 정적 여덟 장면, 11개 본문 section과 부모 지도 반환을 표시합니다.
-- CodeSidebar는 1,100×1,000px 안에 표시되고 첫 초점, 세 조작점 focus trap, Escape 닫기, opener focus 반환과 body scroll 복구를 확인했습니다. 관련 strict 감사와 선택 ESLint, 전체 TypeScript, production build를 통과했습니다. Build는 정적 public route 2,120개와 no-script 본문 362편을 만들었고 최대 RSS는 6,605,864,960 bytes, swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+- CodeSidebar는 1,100×1,000px 안에 표시되고 첫 초점, 세 조작점 focus trap, Escape 닫기, opener focus 반환과 body scroll 복구를 확인했습니다. 관련 strict 감사와 선택 ESLint, 전체 TypeScript, production build를 통과했습니다. Build는 정적 public route 2,120개와 no-script 본문 362편을 만들었고 최대 RSS는 6,605,864,960 bytes, swap은 0이었습니다.
+- Commit `bd8b9a35`의 GitHub Pages run `41044404433`이 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포를 통과했습니다. 공개 경로에서 1,440×1,000과 390×844의 문서 폭 일치, 장면 탭 클릭·ArrowRight 이동, console 오류·경고 0건을 확인했습니다. Reduced-motion은 실행 중 animation 0건과 수동 장면 이동을 유지하고, JavaScript 비활성 공개 경로에는 정적 흐름·전체 본문·부모 지도 반환이 남습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
-### Prysm Engine API 로컬 검증 완료 (2026-10-30)
+### Prysm Engine API 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-engine-api`를 설명용 parent `H₀`, 8-byte build handle `P₁`, execution payload `E₁`, beacon block `B₁` 한 건으로 다시 썼습니다. `forkchoiceUpdated` build 요청, `getPayload` 회수, block 포함, `newPayload` 실행 판정과 선택된 execution head 반영을 여덟 장면에서 끝까지 추적합니다.
 - OffchainLabs Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 Ethereum Execution APIs v1.0.0-beta.7 commit `5aebdfdd45cadeb723be4bd45b4611b71c8b1c85`를 고정했습니다. Proposal payload ID cache, method version 선택, PayloadStatus와 optimistic·invalid 처리, FCU pointer ordering과 JWT `iat` 경계를 실제 source와 대조했습니다.
 - JSON-RPC 전송 성공, execution `VALID`, consensus의 canonical block 선택과 finality를 서로 다른 상태로 분리했습니다. `SYNCING`·`ACCEPTED`는 확정 전 상태이고, `INVALID`는 `latestValidHash`를 기준으로 branch를 정리합니다. Timeout·401·unknown payload ID는 PayloadStatus가 아니라 transport·Engine error 경계입니다.
 - 390×844에서 document 폭 390=390, 8개 장면 버튼은 각각 49.5px이고 가로 넘침이 없습니다. `forkchoiceUpdated`는 임의 글자 위치가 아니라 camelCase 경계에서만 줄을 바꿉니다. 장면 8 선택, 키보드 ArrowLeft로 8→7 이동, 2.5초 무자동 재생을 확인했습니다.
 - Reduced-motion에서는 실행 중 animation 0건이고 수동 장면 선택은 유지됩니다. 1,440×1,000에서도 장면 0이 자동으로 바뀌지 않으며, CodeSidebar의 최종 폭·본문 scroll 복구와 console 오류·경고 0건을 확인했습니다.
-- JavaScript 비활성 390×844 production preview에서 live 조작부 대신 정적 여덟 장면, 전체 본문, 확인 질문과 부모 지도 반환이 보입니다. ESLint와 production build를 통과했고, Engine API를 정적 본문 목록에 추가한 뒤 no-script 본문은 361편이 됐습니다. 공개 GitHub Pages 경로 검증만 남아 있습니다.
+- JavaScript 비활성 390×844 production preview에서 live 조작부 대신 정적 여덟 장면, 전체 본문, 확인 질문과 부모 지도 반환이 보입니다. ESLint와 production build를 통과했고, Engine API를 정적 본문 목록에 추가한 뒤 no-script 본문은 361편이 됐습니다.
+- Commit `bd8b9a35`의 GitHub Pages run `41044404433`이 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포를 통과했습니다. 공개 Engine API 경로의 HTTP 200, 1,440×1,000 문서 폭 일치와 전체 본문을 다시 확인했습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Prysm Beacon API 공개 검증 완료 (2026-10-30)
 
