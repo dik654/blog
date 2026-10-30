@@ -5988,9 +5988,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/reactor.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/mempool/reactor.go", note: "Channel 0x30 message를 transaction별 CheckTx로 넘기고 sender 제외 재전파하는 구현이며 block 포함·Commit의 근거는 아님" },
   ],
   "blockchain/cometbft-state": [
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/state.go · store.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/state.go", note: "State field·validator snapshots·AppHash와 synchronous persistence schema" },
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — store/store.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/store/store.go", note: "BlockStore Base·Height·parts·commit·evidence-aware pruning 구현" },
-    { kind: "공식 문서", label: "CometBFT v0.40.0 — State Sync", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/docs/core/state-sync.md", note: "Snapshot 지원과 trust height/hash/period를 포함한 bootstrap 기준" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — consensus/state.go · state/execution.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/execution.go", note: "Block 원본→FinalizeBlock response→application Commit→State의 실제 영속화 순서를 content commit으로 고정한 기준" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — consensus/replay.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/consensus/replay.go", note: "BlockStore·State·application 높이 guard와 real application replay·saved-response mock replay·AppHash assertion 구현" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/store.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/store.go", note: "Height별 응답 보관 설정과 별개로 crash recovery용 마지막 FinalizeBlock response를 height와 함께 SetSync하는 구현" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — statesync/syncer.go · stateprovider.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/statesync/syncer.go", note: "Trusted AppHash·light-client State와 snapshot 적용 결과의 height·hash·version을 검증한 뒤 bootstrap하는 경계" },
   ],
   "blockchain/cometbft-types": [
     {

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 727,
-    "pending": 280,
+    "reviewed": 728,
+    "pending": 279,
     "untracked": 0,
-    "assignedPending": 238,
+    "assignedPending": 237,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4673,9 +4673,9 @@
       "publicPath": "cs/blockchain/cometbft-state",
       "title": "CometBFT state: State · BlockStore · state sync · replay",
       "catalogIndex": 464,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
