@@ -5972,9 +5972,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.7.1 — Indexer events", href: "https://github.com/dydxprotocol/v4-chain/tree/5935cb7c5dd684b17836e75093fc5c3ca5019ea3/protocol/indexer", note: "Versioned chain event에서 rebuildable query projection으로 이어지는 source boundary" },
   ],
   "blockchain/cometbft-execution": [
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/execution.go", note: "ApplyBlock·FinalizeBlock·result 저장·Commit·mempool Update·State 저장의 pinned 순서" },
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/validation.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/state/validation.go", note: "Block height·history·commitment·LastCommit·time·evidence 검증 기준" },
-    { kind: "공식 코드", label: "CometBFT v0.40.0 — consensus/replay.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/consensus/replay.go", note: "BlockStore·State·application height/AppHash 조합별 restart replay 구현" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/execution.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/execution.go", note: "ApplyBlock·FinalizeBlock·response 저장·Commit·비동기 mempool Update·State 저장 순서를 content commit으로 고정한 기준" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — state/validation.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/validation.go", note: "Block 구조·height·history·commitment·LastCommit·time·evidence size 검증 기준" },
+    { kind: "공식 코드", label: "CometBFT v0.40.0 — consensus/replay.go", href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/consensus/replay.go", note: "BlockStore·StateStore·application height와 AppHash 조합별 real application·mock application replay 구현" },
   ],
   "blockchain/cometbft-mempool": [
     { kind: "공식 코드", label: "CometBFT v0.40.0 — mempool/clist_mempool.go", href: "https://github.com/cometbft/cometbft/blob/v0.40.0/mempool/clist_mempool.go", note: "Capacity·cache·CheckTx·reap·Update·recheck의 pinned 구현" },

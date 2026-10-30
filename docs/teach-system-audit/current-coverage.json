@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 724,
-    "pending": 283,
+    "reviewed": 725,
+    "pending": 282,
     "untracked": 0,
-    "assignedPending": 241,
+    "assignedPending": 240,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4643,9 +4643,9 @@
       "publicPath": "cs/blockchain/cometbft-execution",
       "title": "CometBFT BlockExecutor: 검증·실행·영속화와 replay",
       "catalogIndex": 461,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
