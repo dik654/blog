@@ -519,6 +519,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "OffchainLabs Prysm v7.3.1 commit 96d418cd와 Ethereum consensus-specs commit aa16bb4c를 고정합니다. Slot 100·102·105와 축약 root는 설명용 fixture이고 5 slot step·2 block transition은 호출 횟수이지 latency 측정값이 아닙니다. Cache hit를 canonicality나 finality로, state-generation fast path를 미검증 network block validator로 확대하지 않습니다.",
   },
+  "blockchain/prysm-beacon-api": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "GET /eth/v1/beacon/states/head/root 한 요청이 REST route registration, state ID 해석, HeadBlock의 state root, HeadState와 optimistic·finality metadata, JSON response와 오류 mapping으로 이어집니다. 모두 같은 handler 호출을 설명하므로 나누면 symbolic head와 root identity를 반복해야 합니다. Validator duty·SSE·API 노출 정책은 이 개념 글에서 제외합니다.",
+    sharedGate:
+      "OffchainLabs Prysm v7.3.1 commit 96d418cd와 Ethereum Beacon APIs v4.0.0 commit 88fc9402를 고정합니다. Head A·B와 Sₐ·Bₐ는 설명용 표기입니다. 분리된 head lookup은 source fact지만 요청 중 reorg 혼합 response의 실제 발생과 빈도는 측정하지 않았습니다. REST와 gRPC registration, state root와 block root, optimistic과 finalized의 입력을 합치지 않습니다.",
+  },
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
   "blockchain/prysm-block-processing": {
     action: "keep",
@@ -4354,6 +4363,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "e7a033ea06ded488",
   "blockchain/prysm-state-cache": "050305e343ed018b",
+  "blockchain/prysm-beacon-api": "97588793938e2aa3",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",

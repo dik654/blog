@@ -3,6 +3,17 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Prysm Beacon API 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-beacon-api`를 `GET /eth/v1/beacon/states/head/root` 한 요청으로 다시 썼습니다. Go ServeMux의 직접 REST 등록, JSON middleware, `StateRoot(head)`, `State(head)`, optimistic mode, state-derived block root, finality와 JSON 응답을 여덟 장면에서 같은 설명용 A·Sₐ·Bₐ로 추적합니다.
+- OffchainLabs Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 Ethereum Beacon APIs v4.0.0 commit `88fc9402c6a1821b6e9ae4e3b8ae0a22f1141203`을 고정했습니다. 기존 글의 REST→gRPC gateway 설명과 validator duty 혼합 구조를 제거하고, REST route와 gRPC service가 각각 `http.ServeMux`와 `grpc.Server`에 등록되는 실제 경계를 source로 대조했습니다.
+- `StateRoot(head)`는 `HeadBlock().StateRoot()`를, `State(head)`는 `HeadState()`를 읽습니다. `execution_optimistic`은 현재 head mode를 다시 묻고, `finalized`는 state의 latest block header에서 만든 block root를 기준으로 판정합니다. 같은 `head`를 묶는 snapshot token이 전달되지 않는다는 사실은 source에서 확인했지만 A→B reorg 중 혼합 응답은 아직 재현하지 않았으므로 `[A]` 검증 대상으로 남겼습니다.
+- 학습용 source excerpt에서 실제 구현에 없던 축약 helper 이름을 제거했습니다. 생략한 genesis·checkpoint·root·slot 분기는 명시하고, head 경로와 400·404·500 error mapping은 고정 commit의 실제 분기와 같은 순서로 보존했습니다.
+- 390×844에서 document 폭 390=390, figure 354×829.6px이며 8번 reorg 장면의 `HeadState B`와 미측정 표시가 보입니다. 조작 버튼은 49.5px이고 reduced-motion의 실행 중 animation은 0건입니다. 코드 패널의 첫 초점, 본문 스크롤 잠금, Tab trap, Escape 닫기와 opener focus 반환도 확인했습니다.
+- 1,440×1,000에서 document 폭 1,440=1,440, figure 711×978.7px이며 6.2초 동안 장면 0이 유지되고 console 오류는 0건입니다. Production build는 8,106개 module, 정적 public route 2,120개와 no-script 본문 360편을 만들었고 최대 RSS는 6,056,099,840 bytes, swap은 0입니다.
+- JavaScript 비활성 390×844 production preview에서 trailing slash 공개 경로가 HTTP 200으로 열리고, live 조작부 대신 정적 여덟 장면·전체 본문·확인 질문·부모 지도 반환이 순서대로 보이는 것을 확인했습니다. 공개 GitHub Pages 경로 검증만 남아 있습니다.
+- 직전 `b34fc978`의 Pages run `41031126431`은 `teach-coverage` 장부가 최신 상태와 어긋나 build 전에 중단됐습니다. 이번 Beacon API 장부와 함께 coverage를 다시 생성한 뒤 상태 재구성 변경도 함께 재배포합니다.
+
 ### Prysm 상태 재구성 로컬 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-state-cache`를 target block root `0x105…`의 post-state를 찾는 한 호출로 다시 썼습니다. Hot LRU 32·epoch-boundary FIFO 8·DB full-state 조회, target summary, 같은 branch의 ancestor state 100, block `[102, 105]` replay와 신뢰 경계를 여덟 장면으로 연결했습니다.

@@ -5601,16 +5601,17 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/prysm-attestation": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
   "blockchain/prysm-beacon-api": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
-    source(
-      "공식 규격",
-      OFFICIAL_SOURCES.ethereum.beaconApi,
-      "beacon node REST endpoint와 request·response schema",
-    ),
     {
       kind: "공식 구현",
-      label: "OffchainLabs/prysm — beacon-chain/rpc",
-      href: "https://github.com/OffchainLabs/prysm/tree/develop/beacon-chain/rpc",
-      note: "선택한 source snapshot의 gRPC·REST service wiring과 handler seam",
+      label: "OffchainLabs Prysm v7.3.1 — Beacon RPC",
+      href: "https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/rpc",
+      note: "REST·gRPC registration, GetStateRoot 호출 순서, state ID lookup과 metadata·error mapping의 실제 구현",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Beacon APIs v4.0.0 — GetStateRoot",
+      href: "https://github.com/ethereum/beacon-APIs/tree/88fc9402c6a1821b6e9ae4e3b8ae0a22f1141203",
+      note: "StateId parameter와 JSON response field, 400·404·500 wire contract",
     },
   ),
   "blockchain/prysm-beacon-db": withSeriesEvidence(

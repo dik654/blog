@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 703,
-    "pending": 304,
+    "reviewed": 704,
+    "pending": 303,
     "untracked": 0,
-    "assignedPending": 262,
+    "assignedPending": 261,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5285,7 +5285,7 @@
       "catalogIndex": 525,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5301,11 +5301,11 @@
     {
       "route": "blockchain/prysm-beacon-api",
       "publicPath": "cs/blockchain/prysm-beacon-api",
-      "title": "Prysm Beacon API (REST & gRPC)",
+      "title": "Prysm Beacon API",
       "catalogIndex": 527,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

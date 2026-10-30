@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 727,
+    "dedicatedVisuals": 728,
     "inlineVisuals": 524,
-    "customVisuals": 910,
-    "animatedMechanisms": 530,
+    "customVisuals": 911,
+    "animatedMechanisms": 531,
     "architectureWithoutAnimation": 81,
-    "recursiveLocators": 357,
+    "recursiveLocators": 358,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
@@ -7874,18 +7874,18 @@
     {
       "route": "blockchain/prysm-beacon-api",
       "publicPath": "cs/blockchain/prysm-beacon-api",
-      "title": "Prysm Beacon API (REST & gRPC)",
+      "title": "Prysm Beacon API",
       "sourcePath": "src/pages/articles/ethereum/prysm-beacon-api.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-beacon-db",

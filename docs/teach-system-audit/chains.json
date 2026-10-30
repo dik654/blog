@@ -4539,42 +4539,88 @@
     },
     {
       "route": "blockchain/prysm-beacon-api",
-      "title": "Prysm Beacon API (REST & gRPC)",
-      "status": "unreviewed",
+      "title": "Prysm Beacon API",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-beacon-api.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-beacon-api.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-api/GrpcServer.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-api/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-api/RestGateway.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-api/ValidatorApi.tsx",
-        "src/pages/articles/ethereum/prysm-data-api-viz.tsx"
+        "src/pages/articles/ethereum/prysm-beacon-api/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-api/PrysmBeaconAPILocator.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-api/viz/PrysmBeaconAPIFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-api/codeRefs.ts",
+        "src/pages/articles/ethereum/prysm-beacon-api/fileTrees.ts",
+        "src/content/prysm-beacon-api-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 5,
+        "stageMarkers": 8,
+        "predictionPointers": 5,
+        "assumptionMarkers": 6,
+        "sourceButtons": 7,
         "headings": [
-          "서버 초기화보다 먼저 exposure와 authority를 정합니다",
-          "Beacon API는 URL 목록이 아니라 transport와 consensus effect 사이의 계약이다",
-          "REST compatibility는 path 변환이 아니라 schema·media·snapshot parity다",
-          "Duty API는 조회→서명→publish effect를 하나의 deadline 있는 lifecycle로 묶는다"
+          "state root 하나를 응답하려면 무엇을 몇 번 읽는가",
+          "입력",
+          "REST와 gRPC는 같은 입구가 아니다",
+          "State ID를 실제 조회 대상으로 바꾼다",
+          "첫 조회는 BeaconState의 root다",
+          "두 번째 조회는 BeaconState object다",
+          "두 boolean은 서로 다른 질문이다",
+          "JSON으로 묶는다",
+          "head는 한 번만 고정되지 않는다",
+          "실패는 어느 status가 되는가",
+          "근거",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 REST gateway가 gRPC mapping을 거치는 구조와 validator duty를 한 글에서 함께 설명했지만 고정한 Prysm v7.3.1 source에서 GetStateRoot REST route는 Go ServeMux에 직접 등록되고 gRPC service는 별도 grpc.Server에 등록됩니다.",
+        "기존 transport·exposure·duty 목록은 한 state-root 요청의 root·state·metadata 다중 조회와 symbolic head consistency 경계를 보여주지 못했습니다."
+      ],
+      "fixture": {
+        "request": "GET /eth/v1/beacon/states/head/root",
+        "accept": "application/json",
+        "startView": "설명용 head block A at slot 105",
+        "identities": {
+          "stateRoot": "Sₐ",
+          "blockRoot": "Bₐ"
+        },
+        "execution": "Pinned source reading and deterministic browser interaction only; reorg mixing is unmeasured"
+      },
+      "stageEvidence": {
+        "S": "overview",
+        "B": "route",
+        "0": "case",
+        "1": "state-id",
+        "2": "root",
+        "3": "state",
+        "4": "metadata",
+        "5": "response",
+        "6": "consistency;failure",
+        "7": "evidence;self-check;prysm-beacon-api-release-gate"
+      },
+      "sourceEvidence": [
+        {
+          "source": "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db",
+          "section": "beacon-chain/rpc/service.go,endpoints.go,eth/beacon/handlers_state.go,lookup/stater.go,eth/helpers/sync.go,eth/helpers/block_root.go,eth/shared/errors.go",
+          "application": "REST and gRPC registration, GetStateRoot call order, symbolic head resolution, metadata roots and HTTP error mapping",
+          "original": "Pinned source excerpts with Korean teaching comments; omitted branches are explicitly marked and no invented helper calls remain"
+        },
+        {
+          "source": "Ethereum Beacon APIs v4.0.0 commit 88fc9402c6a1821b6e9ae4e3b8ae0a22f1141203",
+          "section": "apis/beacon/states/root.yaml and StateId parameter schema",
+          "application": "Required JSON fields, state_id path contract and 400/404/500 response boundary",
+          "original": "Wire contract only; does not prove Prysm internal snapshot behavior"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Original article and pinned Prysm/OpenAPI sources read; old REST-gRPC gateway claim replaced with the actual direct ServeMux path and one request is traced to JSON completion",
+        "arithmetic": "No latency or throughput arithmetic claimed; literal call sequence and three response fields are source-derived, while A-to-B reorg mixing remains explicitly unmeasured",
+        "humanize": "Korean prose and all visible technical labels manually reread; example aliases A, Sₐ and Bₐ are defined before the first visualization",
+        "browser390": "390x844 document width 390=390, figure 354x829.6 fits the viewport, scene 8 shows HeadState B and the unmeasured boundary, controls are 49.5px, reduced-motion has 0 running animations, CodeSidebar focus lock/Escape return pass, and the production no-JavaScript route exposes all 8 static scenes plus the full article and map return",
+        "browser1440": "1440x1000 document width 1440=1440, figure 711x978.7 fits the viewport, scene remains 0 after 6.2 seconds, console errors 0; production build completed with 8,106 modules, 2,120 static public routes and 360 no-script bodies"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "GitHub Pages 공개 경로 재검증"
       ]
     },
     {
