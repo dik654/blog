@@ -7,9 +7,9 @@
     "dedicatedVisuals": 722,
     "inlineVisuals": 525,
     "customVisuals": 905,
-    "animatedMechanisms": 523,
+    "animatedMechanisms": 524,
     "architectureWithoutAnimation": 82,
-    "recursiveLocators": 352,
+    "recursiveLocators": 353,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 16
@@ -7993,11 +7993,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-finality",

@@ -5684,6 +5684,24 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "blockchain/prysm-epoch-processing": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,
+    {
+      kind: "공식 규격",
+      label: "Ethereum Consensus Specifications v1.7.0-beta.4 @ aa16bb4c — Fulu epoch processing",
+      href: "https://github.com/ethereum/consensus-specs/tree/aa16bb4c156184e9548a997d53efaf2a228a6304/specs/fulu",
+      note: "Fulu의 ordered process_epoch, pending-deposit queue, proposer lookahead를 확인한 고정 규격",
+    },
+    {
+      kind: "공식 코드",
+      label: "OffchainLabs Prysm v7.3.1 @ 96d418cd — epoch fork dispatch",
+      href: "https://github.com/OffchainLabs/prysm/blob/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/core/transition/transition.go",
+      note: "State version에 따른 Gloas·Fulu·Electra·Altair·Phase 0 dispatch와 error return 경계",
+    },
+    {
+      kind: "공식 코드",
+      label: "OffchainLabs Prysm v7.3.1 @ 96d418cd — Electra/Fulu epoch pipeline",
+      href: "https://github.com/OffchainLabs/prysm/blob/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain/core/electra/transition.go",
+      note: "Participation precompute부터 finality·보상·패널티·queue·rotation까지의 순서와 Fulu lookahead 추가",
+    },
   ),
   "blockchain/prysm-finality": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
   "blockchain/prysm-forkchoice": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),

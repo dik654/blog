@@ -6651,9 +6651,9 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Epoch-boundary trigger와 fork별 process_epoch ordered dependency",
       "Target effective-balance threshold·justification bits·finalization pattern",
-      "Participation flag·base reward·network share의 validator 회계",
+      "Participation flag·base reward·network share의 validator 보상·패널티 계산",
       "Inactivity leak과 validator registry·pending queue·churn lifecycle",
-      "Correlation slashing penalty와 epoch-transition release gate",
+      "Correlation slashing penalty와 in-memory mutation의 오류 경계",
     ],
     reuses: [
       { label: "PoS attestation·slashing evidence", href: "/cs/blockchain/consensus-mechanisms" },
@@ -6662,9 +6662,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Validator duty·slashing protection", href: "/cs/blockchain/prysm-validator-client" },
     ],
     evidence: [
-      { kind: "standard", rule: "Threshold·integer reward·queue·slashing rule은 consensus-spec v1.6.1의 fork·network preset에 귀속한다." },
-      { kind: "primary-source", rule: "Prysm precompute·mutation·cache behavior는 표시한 release/SHA source에만 귀속한다." },
-      { kind: "project-measurement", rule: "같은 participation·queue·slashing·fork-boundary fixture에서 checkpoint·delta·post-root parity 뒤 p99를 비교한다." },
+      { kind: "standard", rule: "Threshold·integer reward·queue·rotation rule은 consensus-spec v1.7.0-beta.4 commit aa16bb4c의 Fulu·mainnet preset에 귀속한다." },
+      { kind: "primary-source", rule: "Prysm precompute·mutation·fork dispatch는 v7.3.1 commit 96d418cd source에만 귀속한다." },
+      { kind: "project-claim", rule: "96·64·40·32는 순서를 추적하는 설명용 입력이며 운영 측정값이 아니다." },
       { kind: "project-claim", rule: "Toy reward를 APR로, 2/3 justification을 즉시 finalization으로, slashed flag를 최종 손실 전체로 일반화하지 않는다." },
     ],
   },
