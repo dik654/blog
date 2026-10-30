@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 696,
-    "pending": 311,
+    "reviewed": 697,
+    "pending": 310,
     "untracked": 0,
-    "assignedPending": 269,
+    "assignedPending": 268,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5175,7 +5175,7 @@
       "catalogIndex": 514,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5183,9 +5183,9 @@
       "publicPath": "cs/blockchain/prysm-block-processing",
       "title": "Prysm 블록 처리 & 상태 전환",
       "catalogIndex": 515,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

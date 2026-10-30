@@ -503,6 +503,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
+  "blockchain/prysm-block-processing": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Slot 352의 Fulu block 하나를 consensus와 Engine의 병렬 검증에서 시작해 ordered state transition, operation 적용, state-root·signature·data availability 검증, optimistic 후보 등록까지 추적하는 단일 block 처리 경로입니다. Concept 수는 9개지만 모두 같은 pre-state·block·Engine 응답을 공유합니다. 이를 나누면 VALID와 SYNCING의 차이, 후보 등록과 head 선택의 차이를 각 글에서 다시 세워야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c, Prysm v7.3.1 commit 96d418cd와 Execution APIs v1.0.0-beta.7 commit 5aebdfdd를 고정합니다. Slot 352·proposer 17·SYNCING은 설명용 fixture이며 후보 등록을 head 선택이나 finality로 확대하지 않습니다. Fork-choice 알고리즘과 Engine API 전체 계약은 각각 별도 글이 소유합니다.",
+  },
   "blockchain/reth-alloy-primitives": KEEP("Semantic type→canonical encode/decode→hash/address derivation이 한 Alloy codec 경계입니다."),
   "blockchain/lsm-tree": {
     action: "split",
@@ -4292,6 +4301,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
+  "blockchain/prysm-block-processing": "ca4684e1646441f4",
   "blockchain/reth-alloy-primitives": "e8b0d939eba9a639",
   "blockchain/lsm-tree": "9aecdf800aab56ed",
   "blockchain/lsm-engine-validation": "47d5cc0e46151e22",

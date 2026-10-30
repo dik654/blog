@@ -3,14 +3,24 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Prysm Epoch 처리 로컬 검증 완료 (2026-10-30)
+### Prysm Block 처리 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-block-processing`을 slot processing이 만든 Fulu pre-state 352에 signed block 352 하나를 적용하는 사례로 다시 썼습니다. 입력, consensus·Engine 병렬 검증, ordered transition, operations, state root·BLS·data availability, Engine status, optimistic 후보 등록을 여덟 장면으로 연결했습니다.
+- consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`, Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`, Execution APIs v1.0.0-beta.7 commit `5aebdfdd45cadeb723be4bd45b4611b71c8b1c85`를 고정했습니다. CL의 payload 문맥 검사와 EL의 EVM 실행 판정, 후보 등록과 head 선택을 분리했습니다.
+- 실제 Prysm 코드에서 `validateExecutionAndConsensus`의 errgroup 경계, Fulu pre-Gloas handler 순서, Electra operations, `engine_newPayloadV4`, `InsertNode`, optimistic 해제와 INVALID 후손 제거를 바로 열어 볼 수 있게 했습니다. Slot 352·proposer 17·SYNCING은 설명용 fixture이며 처리 시간은 미측정입니다.
+- 1,440×1,000과 390×844 production 렌더에서 여덟 장면을 모두 전환해 frame·control 흔들림, 문서·시각화 가로 넘침, 내부 잘림과 console 오류가 없음을 확인했습니다. 첫 모바일 검사에서 장면별 높이가 27px 움직이는 문제를 찾아 장면·상태·설명 영역의 높이를 고정한 뒤 재검사를 통과했습니다.
+- 첫 장면은 사용자 입력 전 자동 재생되지 않고 좌우 키로 0→1→0 이동합니다. reduced-motion에서도 첫 장면이 유지됩니다. JavaScript 비활성 390×844 정적 경로에는 여덟 장면 label과 전체 본문이 남고 가로 넘침이 없습니다.
+- 전체 TypeScript와 production build, 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·runtime 감사를 통과했습니다. TypeScript 최대 RSS는 6,238,142,464 bytes, build 최대 RSS는 6,363,807,744 bytes이며 swap은 0입니다. 정적 public route는 2,120개, no-script 본문은 353편입니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
+### Prysm Epoch 처리 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-epoch-processing`을 slot 351의 Fulu state가 epoch 경계를 지나 slot 352 직전 state가 되는 한 사례로 다시 썼습니다. Fork dispatch, finality, 보상·패널티, validator queue, rotation, output과 실패 경계를 여덟 장면으로 연결했습니다.
 - consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. Fulu는 Electra pipeline을 먼저 실행한 뒤 proposer lookahead를 추가하며, 다른 fork의 단계는 섞지 않았습니다.
 - 설명용 active 96·target 64에서 `3×64=2×96=192`이므로 justification threshold를 통과합니다. 다만 finalization은 기존 justification bits와 checkpoint 간격을 더 확인합니다. Base reward 100·source weight 14/64·participation 64/96의 실수식은 14.58…이고, 실제 정수 연산 결과는 14입니다. Churn 64에서 deposit 40을 처리하면 24가 남아 다음 32는 queue에 유지됩니다.
 - 1,440×1,000 production 렌더에서 여덟 장면 버튼, 세 경계, 다섯 pipeline stage, 상태 변화·설명·조작부가 한 화면에 들어옵니다. Finality 장면과 실제 source sidebar를 확인했고 문서 가로 넘침과 console 오류·경고는 없습니다.
 - 390×844에서는 현재 장면 하나만 중앙에 표시합니다. Production의 64px 상단 내비게이션까지 포함하면 조작부가 화면 아래로 밀리는 문제를 발견해 모바일 장면 영역의 빈 높이를 48px 줄였습니다. 글자 크기와 설명은 유지했습니다.
-- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 검사를 통과했습니다. Production build는 8,090개 module과 정적 public route 2,120개, no-script 본문 352편을 만들었고 최대 RSS는 5,740,363,776 bytes, swap은 0이었습니다. 최종 모바일·reduced-motion·JavaScript 비활성 재검증과 공개 배포가 남아 있습니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 검사를 통과했습니다. Production build는 8,090개 module과 정적 public route 2,120개, no-script 본문 352편을 만들었고 최대 RSS는 5,740,363,776 bytes, swap은 0이었습니다.
+- Commit `e6fd6013`의 GitHub Pages run `41003092025`가 모든 정적 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포를 통과했습니다. 공개 경로를 다시 열어 HTTP 200, 가로 넘침 0, console 오류 0, reduced-motion 첫 장면 유지와 JavaScript 비활성 정적 본문을 확인했습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Prysm Slot 처리 로컬 검증 완료 (2026-10-30)
 
