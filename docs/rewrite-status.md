@@ -3,6 +3,18 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Commonware Simplex 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/commonware-simplex`를 부모 글의 `hash(encode(Random(42)))` 한 건이 proposal, 세 notarize vote, notarization, validator별 Application certification, local journal sync, 세 finalize vote와 finalization certificate로 이어지는 흐름으로 다시 썼습니다.
+- Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. `N3f1` quorum, certificate 조립, certification request/result, finalize gate, journal-before-notify와 channel 오류 replay 경로를 실제 Rust source와 대조했습니다.
+- `n=4, f=1`에서 `q=2f+1=3`, 두 3인 quorum의 교집합 하한 `2q-n=2`를 계산했습니다. Notarization, validator-local certification, journal durability, finalization과 Application state commit을 서로 다른 상태로 분리했습니다.
+- `certify=false` 또는 timeout은 nullify quorum과 `next_term_start(v)`로 이어집니다. `RecvError`는 false로 바뀌지 않으며 restart/replay 뒤 certification을 다시 요청합니다. 실제 source가 구분하는 두 실패 경로를 하나의 거절로 합치지 않았습니다.
+- 1,440×1,000에서 장면 2·7, ArrowLeft 7→6, ArrowRight 6→7, Space 재생·일시정지와 상태 유지를 확인했습니다. 390×844에서는 문서 폭과 scroll 폭이 모두 390px이고 live 시각화의 내부 scroll과 하단 아이콘 조작부에 가로 넘침이 없습니다.
+- Reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 trailing-slash 경로에는 조작 버튼 없이 정적 여덟 장면, 수식, 전체 본문과 부모 지도 반환이 남습니다.
+- 정적 fallback을 `<noscript>`에만 의존하지 않도록 바꿨습니다. JavaScript가 실제 실행될 때만 `js-enabled` class로 정적 본문을 숨기므로, Chrome의 사이트별 스크립트 차단에서도 빈 화면 대신 읽을 수 있는 본문이 남습니다.
+- 전체 TypeScript·Vite production build·정적 경로 생성을 순차 실행했습니다. 최대 RSS는 각각 5,975,064,576 bytes, 4,245,323,776 bytes, 1,535,393,792 bytes이고 swap은 모두 0입니다. 정적 public route 2,120개와 no-script 본문 363편을 생성했습니다.
+- 공개 배포와 공개 경로 재검증은 아직 남아 있으며 현재 상태는 `locally-verified`입니다.
+
 ### Commonware 전체 구조 공개 검증 완료 (2026-10-30)
 
 - `blockchain/commonware-deep-dive`를 설명용 `Random(42)` 블록 원문 한 건이 indexer 보관 확인, digest 제안, 원문 재조회·검증, Simplex finalization과 certificate 기록 응답으로 이어지는 흐름으로 다시 썼습니다. Runtime·Application·Indexer·Simplex·인증 P2P의 책임을 여덟 장면에서 같은 객체로 추적합니다.

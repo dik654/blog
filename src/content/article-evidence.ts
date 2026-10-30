@@ -8146,8 +8146,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Commonware bridge example · v2026.9.0", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/examples/bridge", note: "Runtime·인증 P2P·Simplex·Application·indexer의 실제 연결과 PutBlock/GetBlock/PutFinalization 경계이며 모든 Commonware 배포의 표준 구조나 운영 정책은 아님" },
   ],
   "blockchain/commonware-simplex": [
-    { kind: "공식 문서", label: "commonware-consensus Simplex · v2026.7.0", href: "https://docs.rs/commonware-consensus/2026.7.0/commonware_consensus/simplex/index.html", note: "Notarize·nullify·finalize, certification, recovery와 stated latency의 pinned 설명이며 arbitrary network의 wall-clock SLA는 아님" },
-    { kind: "공식 코드", label: "Commonware Simplex source · commit 5950bf7", href: "https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/consensus/src/simplex/mod.rs", note: "Batcher·Voter·Resolver·Application, lazy verification과 certificate recovery source이며 original Simplex paper와 완전 동일하다는 주장은 아님" },
+    { kind: "공식 문서", label: "commonware-consensus Simplex · v2026.9.0", href: "https://docs.rs/commonware-consensus/2026.9.0/commonware_consensus/simplex/index.html", note: "Notarize·nullify·finalize, validator별 Application certification과 recovery 계약의 pinned 설명이며 arbitrary network의 wall-clock SLA나 Application state commit 보장은 아님" },
+    { kind: "공식 코드", label: "Commonware Simplex source · v2026.9.0 commit d476a236", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/consensus/src/simplex", note: "N3f1 quorum, certificate assembly, certify dispatch, finalize gate, journal-before-notify와 channel error branch를 확인한 exact source이며 실제 배포 성능은 미측정" },
   ],
   "blockchain/commonware-storage": [
     { kind: "공식 코드", label: "Commonware MMR · v2026.7.0", href: "https://github.com/commonwarexyz/monorepo/blob/5950bf7179bb0650a57ed58b9e0478822944b335/storage/src/merkle/mmr/mod.rs", note: "Location/position·peaks·proof·bagging의 pinned source이며 inclusion이 current value·finality·durability를 보장하지 않음" },

@@ -37,11 +37,17 @@ const checks = {
   articleErrorBoundary:
     articlePage.includes("<ArticleLoadBoundary") &&
     boundary.includes("getDerivedStateFromError"),
+  staticFallbackHiddenAfterFirstRender:
+    main.includes('document.documentElement.classList.add("js-enabled")') &&
+    main.includes("rootElement.firstElementChild") &&
+    main.includes("new MutationObserver(revealInteractiveApp)"),
   static404Fallback: staticRoutes.includes('"404.html"'),
   kubernetesNoScriptFallback:
     staticRoutes.includes("renderToStaticMarkup") &&
     staticRoutes.includes('startsWith("cloud-kubernetes")') &&
-    staticRoutes.includes('id="noscript-article"'),
+    staticRoutes.includes('id="noscript-article"') &&
+    staticRoutes.includes('data-static-article-fallback="true"') &&
+    staticRoutes.includes("html.js-enabled #noscript-article{display:none!important}"),
   reviewedArticleNoScriptRegistry:
     staticRoutes.includes("noScriptArticleRoutes") &&
     [
@@ -49,6 +55,7 @@ const checks = {
       "ai/linear-autoencoder-pca",
       "ai/denoising-masked-autoencoders",
       "ai/reconstruction-anomaly-detection",
+      "blockchain/commonware-simplex",
     ].every((route) => staticRoutes.includes(`"${route}"`)) &&
     staticRoutes.includes("noScriptArticleRoutes.has(article.route)"),
   katexCssLoaded: main.includes('katex/dist/katex.min.css'),

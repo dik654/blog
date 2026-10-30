@@ -546,6 +546,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Commonware v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. 숫자 42는 설명용 가정이고 공식 bridge 예제는 ALPHA입니다. PutBlock·GetBlock·PutFinalization 응답을 disk durability, Application 상태 실행이나 client success로 확대하지 않으며, Simplex 내부 vote·certificate와 운영 복구·제품 선택은 별도 글이 소유합니다.",
   },
+  "blockchain/commonware-simplex": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "부모 Commonware 전체 구조 글이 indexer 저장 확인 뒤 넘긴 Random(42) digest를 그대로 이어받아 proposal, 세 notarize vote, notarization, validator별 local certification, journal sync, 세 finalize vote와 finalization certificate까지 한 객체로 추적합니다. 이를 certificate 종류나 component별로 나누면 notarization과 local verdict, finalization의 서로 다른 완료 상태를 다시 조립해야 합니다.",
+    sharedGate:
+      "Commonware v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. n=4, f=1과 validator D의 지연, A·B·C의 certify=true는 설명용 가정입니다. Finalization을 Application state commit·외부 저장 성공·client success로 확대하지 않고, certify=false와 channel RecvError를 같은 실패로 합치지 않습니다.",
+  },
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
   "blockchain/prysm-block-processing": {
     action: "keep",
