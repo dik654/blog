@@ -861,7 +861,7 @@
     {
       "route": "blockchain/commonware-broadcast",
       "title": "Commonware buffered broadcast: digest·cache·delivery receipt",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-broadcast.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-broadcast.tsx",
@@ -925,17 +925,16 @@
         "humanize": "직속 부모 지도, 질문 하나, d7 한 사례, 내부 동작·source·실패 경계와 부모 지도 반환으로 구성했습니다. 제품 선택과 운영 Runbook은 개념 글에서 제외했습니다.",
         "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px이고 가로 넘침이 없습니다. 전체 8장면, 하단 조작부와 본문을 시각 확인했습니다. Reduced-motion에서는 보이는 재생 버튼이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 trailing-slash 경로에는 live 조작부 없이 정적 8장면·전체 본문·이전 Simplex·다음 Storage가 남습니다.",
         "browser1440": "1440×900에서 document 폭 1440=1440이고 가로 넘침이 없습니다. 재생 중 중간 network 장면과 마지막 application 장면을 확인했습니다. 일시정지 뒤 group focus에서 ArrowRight로 6→7→8이 이동했습니다. CodeSidebar의 한국어 주석과 닫기, console 오류·경고 0건을 확인했습니다.",
-        "static": "학습·시각화·수식·글 구조·문장·한국어·용어·topology·읽기 순서 감사, 전체 TypeScript와 production build를 통과했습니다. TypeScript 최대 RSS는 5,920,096,256 bytes, build 최대 RSS는 6,006,718,464 bytes이고 swap은 0입니다. 정적 public route 2,120개와 no-script 본문 365편을 생성했습니다."
+        "static": "학습·시각화·수식·글 구조·문장·한국어·용어·topology·읽기 순서 감사, 전체 TypeScript와 production build를 통과했습니다. TypeScript 최대 RSS는 5,920,096,256 bytes, build 최대 RSS는 6,006,718,464 bytes이고 swap은 0입니다. 정적 public route 2,120개와 no-script 본문 365편을 생성했습니다.",
+        "production": "Commit 62791dc2edd8a34493ceb7ea0777caa65fe338e0의 GitHub Pages run 41080463264에서 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포가 통과했습니다. 공개 Broadcast 경로는 1,440×900과 390×844에서 가로 넘침이 없고 첫 장면이 자동으로 바뀌지 않았으며 키보드로 마지막 업무 판단 장면까지 이동했습니다. 공개 reduced-motion 경로에서는 재생 버튼이 비활성화되고 수동 이동은 유지됐습니다. JavaScript 비활성 경로에는 정적 여덟 장면과 전체 본문이 남았고 console 오류·경고는 0건입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-digest-local-admission-network-receipt-cache-application-boundary"
     },
     {
       "route": "blockchain/commonware-crypto-p2p",
       "title": "Commonware authenticated P2P: handshake · channel · quota",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-crypto-p2p.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-crypto-p2p.tsx",
@@ -1000,11 +999,10 @@
         "humanize": "직속 부모 지도, 질문 하나, m7 한 사례, 내부 상태 전이·실제 source·실패 경계와 부모 지도 반환으로 구성했습니다. 제품 선택과 운영 Runbook은 개념 글에서 제외했습니다.",
         "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px이고 가로 넘침이 없습니다. Actor 지도를 2열로 배치해 698.4px 높이의 장면·상태·설명·조작부가 한 viewport에 들어오게 했습니다. Reduced-motion에서 재생은 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활 trailing-slash 경로는 live 조작부 없이 정적 여덟 장면, 전체 본문·확인 질문·부모 지도 반환을 순서대로 표시합니다.",
         "browser1440": "1440×900에서 document 폭 1440=scroll 폭 1440이고 가로 넘침이 없습니다. 자동 재생의 session 확정 중간 장면과 마지막 Application 수신 장면, group focus 후 ArrowLeft 8→7을 확인했습니다. CodeSidebar의 고정 source·한국어 주석·닫기와 console 오류·경고 0건을 확인했습니다.",
-        "static": "학습·시각화·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사와 ESLint, TypeScript, production build를 통과했습니다. 최종 build 최대 RSS는 6,039,961,600 bytes, 정적 경로 생성 최대 RSS는 1,582,120,960 bytes이고 swap은 모두 0입니다. 공개 route 2,120개와 no-script 본문 366편을 생성했습니다."
+        "static": "학습·시각화·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사와 ESLint, TypeScript, production build를 통과했습니다. 최종 build 최대 RSS는 6,039,961,600 bytes, 정적 경로 생성 최대 RSS는 1,582,120,960 bytes이고 swap은 모두 0입니다. 공개 route 2,120개와 no-script 본문 366편을 생성했습니다.",
+        "production": "Commit 62791dc2edd8a34493ceb7ea0777caa65fe338e0의 GitHub Pages run 41080463264에서 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포가 통과했습니다. 공개 P2P 경로는 1,440×900과 390×844에서 가로 넘침이 없고 첫 장면이 자동으로 바뀌지 않았으며 키보드로 중간 로컬 접수와 마지막 Application 수신 장면까지 이동했습니다. 모바일 장면은 최대 738.9px로 viewport 안에 들어왔습니다. 공개 reduced-motion 경로에서는 재생 버튼이 비활성화되고 수동 이동은 유지됐습니다. JavaScript 비활성 경로에는 정적 여덟 장면과 전체 본문이 남았고 console 오류·경고는 0건입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-payload-session-local-submission-node-local-receipt-application-boundary"
     },
     {
