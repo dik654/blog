@@ -933,7 +933,7 @@
     {
       "route": "blockchain/commonware-deep-dive",
       "title": "Commonware 전체 구조: 블록 원문에서 최종 확정 기록까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/commonware-deep-dive.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/commonware-deep-dive.tsx",
@@ -1005,11 +1005,10 @@
         "humanize": "직속 부모 지도, 질문 하나, Random(42) 한 사례, 상태 소유권·응답 경계·실패 경계와 부모 지도 반환으로 다시 구성했습니다. 제품 선택·복구 절차는 개념 글에서 제외했습니다.",
         "browser390": "390×844에서 document 폭 390=390, live 시각화 338.5×787.5px이고 8개 장면 탭과 이전·재생·다음 버튼은 각각 49.5px입니다. 4.5초 동안 장면 0이 유지되고 장면 8을 수동으로 선택했습니다. Reduced-motion에서는 재생이 비활성화되고 실행 중 animation 0건이며 ArrowRight 수동 이동은 유지됩니다. JavaScript 비활성 경로는 HTTP 200, live 영역 0개, 정적 8장면·11개 본문 section과 부모 지도 반환을 표시합니다.",
         "browser1440": "1440×1000에서 document 폭 1440=1440, live 시각화 664×582.2px입니다. 장면 4·6·8의 상태와 설명을 확인했고, group ArrowLeft 7→6, control focus에서 ArrowLeft 무시, Enter 6→7이 동작했습니다. 재생은 3.5초 뒤 0→1로 진행하고 일시정지 뒤 유지됩니다. CodeSidebar는 1100×1000px, focus trap과 Escape 닫기·opener focus 복귀·body scroll 복구를 확인했으며 console 오류·경고는 0건입니다.",
-        "build": "관련 strict 감사와 선택 ESLint, 전체 TypeScript, production build를 통과했습니다. Build는 정적 public route 2,120개와 no-script 본문 362편을 생성했고 최대 RSS는 6,605,864,960 bytes, swap은 0이었습니다."
+        "build": "관련 strict 감사와 선택 ESLint, 전체 TypeScript, production build를 통과했습니다. Build는 정적 public route 2,120개와 no-script 본문 362편을 생성했고 최대 RSS는 6,605,864,960 bytes, swap은 0이었습니다.",
+        "production": "Commit bd8b9a359351b3404c5ddec99c121a03b4ec448b의 GitHub Pages run 41044404433에서 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포가 통과했습니다. 공개 Commonware 경로는 1,440×1,000과 390×844에서 문서 폭이 viewport와 같고, 장면 탭 클릭과 ArrowRight 이동, console 오류·경고 0건을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건과 수동 장면 이동을 유지했습니다. JavaScript 비활성 공개 경로에는 정적 읽기 안내, 블록 원문→digest→finalization 기록의 정적 흐름, 전체 본문과 부모 지도 반환이 남았습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-random-block-bytes-digest-certificate-receipt-boundary"
     },
     {
@@ -5011,7 +5010,7 @@
     {
       "route": "blockchain/prysm-engine-api",
       "title": "Prysm Engine API",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-engine-api.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-engine-api.tsx",
@@ -5086,11 +5085,10 @@
         "humanize": "직속 부모 지도, 질문 하나, H₀·P₁·E₁·B₁ 한 사례, 세 Engine 호출과 상태 경계, 부모 지도 반환으로 다시 구성했습니다. 코드 식별자를 제외한 설명은 자연스러운 한국어로 다시 읽었습니다.",
         "browser390": "390×844에서 document 폭 390=390, 8개 장면 버튼은 각각 49.5px이며 시각화가 가로로 넘치지 않습니다. forkchoiceUpdated는 camelCase 경계에서만 줄을 바꾸고, 장면 7→키보드 ArrowLeft→6 이동과 2.5초 무자동 재생을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건이고 수동으로 장면 8을 선택할 수 있습니다. JavaScript 비활성 production preview는 정적 8장면·전체 본문·확인 질문·부모 지도 반환을 표시합니다.",
         "browser1440": "1440×1000에서 document 폭 1440=1440, 장면 0이 3초 뒤에도 유지되고 장면 8을 수동으로 선택했습니다. CodeSidebar는 최종 위치에서 viewport 오른쪽에 맞고 내부 가로 넘침이 없으며 닫은 뒤 body scroll이 복구됩니다. Console 오류·경고는 0건입니다.",
-        "build": "ESLint를 통과했습니다. NODE_OPTIONS=--max-old-space-size=8192 npm run build는 8,105개 module과 정적 public route 2,120개를 만들었고 최대 RSS 6,281,297,920 bytes, swap 0이었습니다. Engine API를 no-script 등록한 뒤 static route 생성만 다시 실행해 no-script 본문 361편을 만들었고 최대 RSS 1,533,689,856 bytes, swap 0이었습니다."
+        "build": "ESLint를 통과했습니다. NODE_OPTIONS=--max-old-space-size=8192 npm run build는 8,105개 module과 정적 public route 2,120개를 만들었고 최대 RSS 6,281,297,920 bytes, swap 0이었습니다. Engine API를 no-script 등록한 뒤 static route 생성만 다시 실행해 no-script 본문 361편을 만들었고 최대 RSS 1,533,689,856 bytes, swap 0이었습니다.",
+        "production": "Commit bd8b9a359351b3404c5ddec99c121a03b4ec448b의 GitHub Pages run 41044404433에서 전체 strict 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포가 통과했습니다. 공개 Engine API 경로는 1,440×1,000에서 문서 폭 1,440=1,440, 전체 본문과 7개 학습 탭을 표시했습니다. 배포 전 로컬 production 검증의 모바일·키보드·reduced-motion·JavaScript 비활성 결과와 함께 공개 경로 HTTP 200을 다시 확인했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-payload-build-validate-canonicalize-boundary"
     },
     {
