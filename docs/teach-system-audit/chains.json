@@ -525,35 +525,61 @@
     {
       "route": "blockchain/cometbft",
       "title": "CometBFT 아키텍처 개요",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft.tsx",
-        "src/pages/articles/blockchain/cometbft/Overview.tsx"
+        "src/pages/articles/blockchain/cometbft/Overview.tsx",
+        "src/pages/articles/blockchain/cometbft/viz/CometBFTArchFlowViz.tsx",
+        "src/pages/articles/blockchain/cometbft/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 3,
         "headings": [
-          "\n        CometBFT는 transaction을 실행하는 앱이 아니라 순서를 복제하는 엔진이다\n      "
+          "CheckTx OK와 block commit, application Commit은 왜 서로 다른 영수증입니까",
+          "한 경로지만 상태를 쓰는 주체는 다섯 곳입니다",
+          "공식 코드는 admission·결정·영속화를 세 경계로 나눕니다",
+          "중간에 멈추면 마지막으로 남은 receipt에서 다시 시작합니다",
+          "이 글은 CometBFT v0.40.0 한 snapshot에 고정합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 P2P·mempool·consensus·ABCI·state를 나열했지만 같은 transaction 한 건의 상태가 각 owner에서 어떻게 달라지는지 보여 주지 않았습니다.",
+        "CheckTx OK, +2/3 precommit, FinalizeBlock result와 application Commit을 하나의 성공 상태로 읽을 수 있었습니다.",
+        "움직이는 공식 문서 latest와 repository main을 사용해 실제 binary의 persistence 순서와 다른 revision을 섞을 위험이 있었습니다."
+      ],
+      "fixture": "높이 40의 block·CometBFT State·application state가 맞는 node에 Alice→Bob 10 transaction bytes가 도착해 RPC→CheckTx→proposal→prevote→precommit→FinalizeBlock→Commit h41로 바뀌는 한 건입니다.",
+      "stageEvidence": {
+        "0": "높이 40의 block·State·application AppHash가 맞고 transaction은 아직 어느 node에도 없는 시작 상태입니다.",
+        "1": "한 RPC가 bytes와 추적용 tx hash를 만들지만 다른 validator의 수신이나 inclusion은 보장하지 않습니다.",
+        "2": "CheckTx OK가 이 node의 mempool 후보를 만들되 committed h40은 바꾸지 않습니다.",
+        "3": "Proposer가 PrepareProposal을 거친 B41 초안을 제안하지만 아직 결정 증거는 없습니다.",
+        "4": "같은 round의 +2/3 prevote가 lock 근거를 만들지만 commit receipt는 아닙니다.",
+        "5": "같은 BlockID의 +2/3 precommit이 order를 결정하고, block bytes가 없으면 parts 수신을 기다립니다.",
+        "6": "BlockExecutor가 결정된 B41을 FinalizeBlock에 넘겨 tx result와 AppHash A41을 계산합니다.",
+        "7": "Application Commit과 CometBFT State 저장 뒤 block·State·application 높이 41이 durable 정본이 됩니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 annotated tag가 가리키는 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 mempool/clist_mempool.go, consensus/state.go, state/execution.go",
+        "같은 commit의 spec/abci/abci++_methods.md와 spec/consensus/consensus.md"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "v0.40.0 source와 ABCI++·consensus 규격을 읽고 구성요소 목록을 같은 bytes의 admission→decision→application durability 추적으로 교체했습니다.",
+        "arithmetic": "수치 성능을 주장하지 않았습니다. +2/3는 validator 수가 아니라 같은 round의 voting power certificate라는 경계만 원문과 대조했습니다.",
+        "humanize": "한국어 경로 strict 오류 0건이며 한 질문·한 사례·owner·source·실패 동작·부모 지도 반환 순서로 다시 썼습니다.",
+        "browser390": "390×844에서 document 폭과 scroll 폭이 모두 390px이고, live 시각화 본체 약 716px·8개 장면·하단 조작부가 가로 clipping 없이 보입니다. JavaScript 비활성 경로도 폭 390px, 정적 8장면과 전체 본문·고정 source가 남고 live UI는 숨습니다.",
+        "browser1440": "1440×900에서 document 폭과 scroll 폭이 모두 1440px이고 8개 탭·owner marker·네 receipt가 보입니다. 장면 5에서 6초 대기해 자동 진행하지 않았고 ArrowRight·ArrowLeft, 명시적 재생, CodeSidebar·Escape 닫기를 확인했습니다.",
+        "reducedMotion": "재생 버튼이 비활성화되고 첫 장면이 유지되며 수동 장면 선택은 남습니다.",
+        "static": "관련 strict 감사, 전체 TypeScript와 production build를 통과했습니다. TypeScript 최대 RSS 6,552,649,728 bytes, Vite build 최대 RSS 4,431,609,856 bytes, 정적 경로 생성 최대 RSS 약 1.60GB이고 swap은 0입니다. 2,120개 public route와 no-script 본문 378편을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-transaction-across-admission-consensus-application-and-durability"
     },
     {
       "route": "blockchain/cometbft-abci",

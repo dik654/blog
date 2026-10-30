@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### CometBFT 전체 구조 로컬 검증 완료 (2026-10-31)
+
+- `blockchain/cometbft`를 높이 40의 node에 도착한 Alice→Bob 10 transaction 한 건으로 다시 썼습니다. RPC 수신, CheckTx, proposal, prevote, precommit, FinalizeBlock과 Commit h41을 여덟 장면에서 추적합니다.
+- CheckTx OK, +2/3 precommit, application result와 durable state를 서로 다른 receipt로 분리했습니다. P2P·mempool·consensus·ABCI application·BlockExecutor와 stores 중 누가 각 상태를 쓰는지도 함께 표시했습니다.
+- CometBFT v0.40.0의 content commit `0880b4d378f347ab16e54ec677ff50d803f37d62`를 고정했습니다. `mempool/clist_mempool.go`, `consensus/state.go`, `state/execution.go`와 같은 commit의 ABCI++·consensus 규격을 대조했습니다. 코드 패널은 원문에서 핵심 분기만 줄여 옮긴 발췌라고 명시했습니다.
+- 1,440×900에서 8개 장면, owner marker와 네 receipt를 확인했습니다. 6초 동안 장면 5가 자동으로 바뀌지 않았고, 좌우 키·명시적 재생·코드 패널과 `Escape` 닫기가 동작합니다.
+- 390×844에서 document 폭과 scroll 폭은 모두 390px이고 live 본체는 약 716px입니다. JavaScript 비활성 경로에는 live UI 대신 정적 여덟 장면, 전체 본문, 고정 source와 부모 지도 반환이 남습니다. Reduced-motion에서는 재생이 비활성화되고 수동 선택은 유지됩니다.
+- 관련 strict 감사와 전체 TypeScript·production build를 통과했습니다. TypeScript 최대 RSS는 6,552,649,728 bytes, Vite build는 4,431,609,856 bytes, 정적 경로 생성은 약 1.60GB이며 swap은 0입니다. 정적 public route 2,120개와 no-script 본문 378편을 생성했습니다.
+- 현재 상태는 `rewritten-local-verified`입니다. 전수 장부는 공개 1,007편 중 검토 721편, 미검토 286편입니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### Commonware P2P 공개 검증 완료 (2026-10-31)
 
 - `blockchain/commonware-crypto-p2p`를 Alice가 channel 7의 설명용 payload `m7`을 보내고 Bob Receiver가 `(Alice public key, m7 bytes)`를 반환하는 한 건으로 다시 썼습니다. Authenticated session, Alice local submission, Bob의 node-local receipt와 durable application acceptance를 서로 다른 상태로 분리했습니다.
