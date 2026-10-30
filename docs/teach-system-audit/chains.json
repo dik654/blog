@@ -4619,43 +4619,70 @@
     },
     {
       "route": "blockchain/prysm-beacon-state",
-      "title": "Prysm BeaconState 구조 & 상태 접근",
-      "status": "unreviewed",
+      "title": "Prysm BeaconState: Copy에서 State Root까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-beacon-state.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-beacon-state.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-state/FieldTrie.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-state/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-state/StateFork.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-state/StateInterface.tsx",
-        "src/pages/articles/ethereum/prysm-foundation-viz.tsx"
+        "src/pages/articles/ethereum/prysm-beacon-state/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-state/PrysmBeaconStateLocator.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-state/viz/PrysmBeaconStateFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-state/codeRefs.ts",
+        "src/pages/articles/ethereum/prysm-beacon-state/codeRefsBeaconState.ts",
+        "src/pages/articles/ethereum/prysm-beacon-state/fileTrees.ts",
+        "src/content/prysm-beacon-state-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 2,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 2,
+        "sourceButtons": 4,
         "headings": [
-          "\n        FieldTrie는 바뀐 leaf에서 root까지의 path만 다시 계산한다\n      ",
-          "\n        BeaconState는 다음 block을 계산하는 protocol snapshot이고 state root는\n        그 값의 identity다\n      ",
-          "\n        Fork upgrade는 같은 struct에 field를 덧붙이는 일이 아니라 consensus\n        state의 versioned 전이다\n      ",
-          "\n        Copy-on-Write는 branch를 싸게 만들되 첫 mutation에서 backing data를\n        분리한다\n      "
+          "복사한 BeaconState의 Balance 하나를 바꾸면 왜 원본은 그대로이고 새 State Root만 바뀝니까?",
+          "원본 A와 후보 B가 같은 Balance를 읽는 상태에서 시작합니다",
+          "Copy는 전체 Slice를 복제하지 않고 새 State ID를 등록합니다",
+          "Setter는 B의 값과 Dirty 영수증을 함께 바꿉니다",
+          "Element Index 5는 SSZ Chunk Index 1로 바뀝니다",
+          "두 Merkle Path를 차례로 올려 B의 Root만 바꿉니다",
+          "Fork가 바뀌면 같은 State에 Field를 덧붙이는 것이 아닙니다",
+          "값·Dirty Receipt·Cache 가운데 하나라도 어긋나면 실패해야 합니다",
+          "고정한 Spec과 Release에서 확인한 범위만 사용합니다",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 BeaconState·Copy-on-Write·FieldTrie·fork를 따로 설명해 같은 parent state의 balance 하나가 값 격리와 두 Merkle path를 거쳐 새 state root로 이어지는 경로를 추적하기 어려웠습니다.",
+        "기존 설명은 balance write에서 field 전체를 복사하는 일반적인 Copy-on-Write처럼 읽혔지만, Prysm v7.3.1은 state ID별 multi-value 값을 저장합니다. 고정한 release의 실제 구현에 맞춰 교체했습니다."
+      ],
+      "fixture": "Parent state A를 새 state ID의 B로 복사한 뒤 B의 validator index 5 balance만 32 ETH에서 31 ETH로 바꿉니다. A와 B의 R₀·R₁은 invariant를 설명하는 기호이며 실제 mainnet state hash나 대상 환경 측정값이 아닙니다.",
+      "stageEvidence": {
+        "copy": "Copy는 A와 B에 다른 state ID를 부여하고 multi-value field에 두 view를 등록하며 dirty map과 FieldTrie view를 분리합니다.",
+        "value": "UpdateBalancesAtIndex는 index 5에 B 전용 31 ETH 값을 만들고 A는 32 ETH를 계속 읽습니다.",
+        "dirty": "Setter는 Balances top-level field와 element index 5를 B의 dirty receipt에 함께 기록합니다.",
+        "chunk": "uint64 네 개가 32-byte SSZ chunk 하나에 들어가므로 element 5는 floor(5/4)=1인 chunk로 변환됩니다.",
+        "fieldRoot": "B용 Balances FieldTrie overlay에서 chunk 1과 조상만 다시 계산하고 A의 field root는 유지합니다.",
+        "stateRoot": "새 Balances field root를 top-level state tree에 넣어 B root R₁만 만들고 A root R₀를 유지합니다.",
+        "fork": "Phase0→Altair upgrade는 공통 field를 보존하고 participation을 변환하며 sync committee를 계산해 새 schema와 root를 만듭니다.",
+        "boundary": "Value owner·dirty receipt·cache generation·fork schema 가운데 하나라도 어긋나면 stale root를 정상 결과로 반환하지 않아야 합니다."
+      },
+      "sourceEvidence": [
+        "Ethereum consensus-specs v1.6.1 commit 5fa6edcca8ab4cf548653e6680b17b9d3e04d225의 fork별 BeaconState container·SSZ root·upgrade 규칙",
+        "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db의 Copy·MultiValueBalances·UpdateBalancesAtIndex·FieldTrie·HashTreeRoot 구현",
+        "같은 Prysm commit의 state-native tests가 명시한 cached balance root·full list root parity와 copy 원본 보존 invariant"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 고정한 consensus-specs·Prysm v7.3.1 source·test를 다시 읽어 protocol snapshot→state ID copy→B 전용 값→dirty field·element→SSZ chunk→field root→state root→fork schema 경계를 한 balance 변경 사례로 다시 구성했습니다.",
+        "arithmetic": "Balance는 uint64 8 bytes이고 SSZ chunk는 32 bytes이므로 chunk당 네 값입니다. Zero-based element index 5는 floor(5/4)=1이며 index 4~7과 같은 두 번째 chunk에 들어갑니다.",
+        "humanize": "직속 부모, 질문 하나, A→B balance 변경 한 건, value owner→dirty receipt→두 Merkle path→fork 경계와 부모 지도 반환으로 다시 구성했습니다. 개념 글에서 배포 SLO·운영 롤백 판단은 분리했습니다. 학습 계약·지식 그래프·수식·계산·본문·읽기·한국어·용어·runtime 감사를 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, live 시각화 폭 334px이며 장면별 높이는 691.7~709.7px입니다. 여덟 장면 모두 가로·내부 오버플로가 없고 이전·재생·다음 조작부는 각각 49.5px입니다. 장면 0은 11초 동안 유지되고 ArrowRight로 0→1 이동합니다. JavaScript 비활성 정적 경로는 live 조작부를 숨기고 부모 지도·정적 여덟 장면·전체 본문·확인 질문·부모 지도 반환을 354px 본문 폭 안에 순서대로 표시합니다.",
+        "browser1440": "1440×1000에서 문서 폭 1440=1440, live 시각화 664×876.2px이고 화면 안에 들어옵니다. 가로·내부 오버플로와 console 오류는 0건입니다. Reduced-motion에서는 11초 동안 장면 0 유지, 실행 중 animation 0건, 재생 비활성·수동 이동을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,087개 module과 정적 public route 2,120개를 만들었습니다. 최대 RSS는 6,775,111,680 bytes(약 6.31GiB)이고 swap은 0입니다. BeaconState를 정적 registry에 넣고 생성기를 다시 실행해 no-script 본문은 350편이 됐습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-parent-copy-state-id-value-dirty-chunk-field-root-state-root-fork-boundary"
     },
     {
       "route": "blockchain/prysm-block-processing",
@@ -4738,7 +4765,7 @@
     {
       "route": "blockchain/prysm-bls",
       "title": "Prysm BLS: Root에서 서명·Aggregate·Batch까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-bls.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-bls.tsx",
@@ -4795,11 +4822,10 @@
         "humanize": "직속 부모, 질문 하나, 직전 SSZ root 한 건, domain→point→sign·verify→aggregate→batch→wrapper 경계와 부모 지도 반환으로 다시 구성했습니다. 한국어·용어·읽기 순서·학습 계약·지식 그래프·runtime·pseudocode 감사를 통과했습니다.",
         "browser390": "390×844에서 문서 폭 390=390, live 시각화 334×752.8px이고 모든 8장면에서 가로 넘침·보이는 자식 요소 탈출이 없습니다. 이전·재생·다음 조작부는 각각 약 49.5px입니다. 11초 동안 선택 장면을 유지하고, ArrowRight로 0→7을 이동하며, 재생을 누른 경우에만 다음 장면으로 넘어갑니다. Reduced-motion에서는 실행 중 animation 0건, 재생 비활성·수동 이동을 확인했습니다. JavaScript 비활성 경로는 live 조작부 대신 정적 8장면, 질문·확인 질문과 부모 지도 반환을 표시합니다.",
         "browser1440": "1440×1000에서 문서 폭 1440=1440, live 시각화 664×901.3px이며 보이는 자식 요소 탈출이 없습니다. 장면 탭·요약·제어가 겹치지 않고 console 오류·경고 0건을 확인했습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,086개 module, 정적 public route 2,120개와 no-script 본문 349편을 만들었습니다. 최대 RSS는 약 6.37GB이며 swap은 0입니다. 마지막 모바일 CSS 조정 뒤 Vite build와 static route 생성도 다시 통과했습니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,086개 module, 정적 public route 2,120개와 no-script 본문 349편을 만들었습니다. 최대 RSS는 약 6.37GB이며 swap은 0입니다. 마지막 모바일 CSS 조정 뒤 Vite build와 static route 생성도 다시 통과했습니다.",
+        "production": "Commit d8697992의 GitHub Pages run 40985847333이 전체 감사·production build·실브라우저 검사·배포를 통과했습니다. 공개 390×844 경로에서 문서 폭 390=390, live 시각화 334×752.8px, 11초 무자동 재생과 ArrowRight 0→1 이동을 확인했습니다. 공개 1,440×1,000 reduced-motion 경로에서는 실행 중 animation 0건, 수동 이동 유지, 문서 폭 1,440=1,440과 console 오류·경고 0건을 확인했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-object-root-signing-root-point-pairing-aggregate-batch-boundary"
     },
     {
@@ -5081,7 +5107,7 @@
     {
       "route": "blockchain/prysm-ssz",
       "title": "Prysm SSZ: 값 하나에서 Bytes·Root·Proof까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-ssz.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-ssz.tsx",
@@ -5136,11 +5162,10 @@
         "humanize": "직속 부모, 질문 하나, DemoRecord 한 건, schema→bytes→검사→chunk→root→proof→경계와 부모 지도 반환으로 다시 구성했습니다. 한국어·용어·읽기 순서·학습 계약·지식 그래프·runtime·pseudocode 감사를 통과했습니다.",
         "browser390": "390×844에서 문서 폭 390=390, article 354px, live 시각화 334×682.9px이며 가로 넘침과 글자 잘림이 없습니다. 장면은 11초 동안 0에 머물고, 키보드 ArrowRight로 0→1 이동합니다. Reduced-motion에서는 실행 중 animation 0건, 재생 비활성·수동 이동을 확인했습니다. JavaScript 비활성 경로는 live 영역을 숨기고 정적 8장면, 질문과 부모 지도 반환을 폭 390 안에 표시합니다.",
         "browser1440": "1440×1000에서 문서 폭 1440=1440, article 711px이고 무자동재생, ArrowRight 0→1 이동, 모든 장면 탭의 글자 폭과 상자 폭 일치, console 오류·경고 0건을 확인했습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,086개 module, 정적 public route 2,120개와 no-script 본문 348편을 만들었습니다. 최대 RSS는 약 6.11GiB이며 swap은 0입니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,086개 module, 정적 public route 2,120개와 no-script 본문 348편을 만들었습니다. 최대 RSS는 약 6.11GiB이며 swap은 0입니다.",
+        "production": "Commit d8697992의 GitHub Pages run 40985847333이 전체 감사·production build·실브라우저 검사·배포를 통과했습니다. 공개 경로에서 제목과 본문을 다시 확인했고 1,280px 화면에서 문서 폭 1,280=1,280, console 오류·경고 0건을 확인했습니다. 같은 배포의 BLS 공개 모바일·reduced-motion 검사로 공통 시각화 런타임과 내비게이션 동작도 함께 재검증했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-typed-value-schema-bytes-root-proof-boundary"
     },
     {
