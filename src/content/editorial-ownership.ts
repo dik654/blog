@@ -7298,7 +7298,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Router min/max·deadline 실행 경계", href: "/cs/blockchain/uniswap-v2#router-swap" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Range·tick·rounding·fee·swap claim은 V3 whitepaper와 v3-core v1.0.0 commit ef64f51d0f0d에 귀속한다." },
+      { kind: "primary-source", rule: "Range·tick·rounding·fee·swap claim은 V3 whitepaper와 v3-core v1.0.0 commit e3589b192d0b에 귀속한다. ef64f51d0f0d는 annotated tag object다." },
       { kind: "project-measurement", rule: "Capital efficiency·gas는 같은 pool state·range·fee·path·token decimals에서 amounts/state parity 뒤 비교한다." },
     ],
   },

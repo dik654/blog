@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 716,
-    "pending": 291,
+    "reviewed": 717,
+    "pending": 290,
     "untracked": 0,
-    "assignedPending": 249,
+    "assignedPending": 248,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5451,11 +5451,11 @@
     {
       "route": "blockchain/uniswap-v3",
       "publicPath": "cs/blockchain/uniswap-v3",
-      "title": "Uniswap V3: range·tick·fee-growth·swap-step",
+      "title": "Uniswap V3: 가격 구간을 지나는 교환",
       "catalogIndex": 542,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

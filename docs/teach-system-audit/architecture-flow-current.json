@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 543,
+    "animatedMechanisms": 544,
     "architectureWithoutAnimation": 80,
-    "recursiveLocators": 369,
-    "codeEvidenceLinked": 234,
+    "recursiveLocators": 370,
+    "codeEvidenceLinked": 235,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -8834,18 +8834,18 @@
     {
       "route": "blockchain/uniswap-v3",
       "publicPath": "cs/blockchain/uniswap-v3",
-      "title": "Uniswap V3: range·tick·fee-growth·swap-step",
+      "title": "Uniswap V3: 가격 구간을 지나는 교환",
       "sourcePath": "src/pages/articles/blockchain/uniswap-v3.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/uniswap-v4",

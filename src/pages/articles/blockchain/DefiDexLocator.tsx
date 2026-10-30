@@ -18,7 +18,7 @@ export default function DefiDexLocator({
   return (
     <aside
       className="not-prose mb-8 border-y border-border py-4 sm:py-5"
-      aria-label="DEX 학습 지도에서 현재 글의 위치"
+      aria-label="탈중앙화 거래소 학습 지도에서 현재 글의 위치"
       data-learning-track="concept"
     >
       <nav className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-5 text-muted-foreground">
@@ -51,7 +51,7 @@ export default function DefiDexLocator({
         <ol
           className="grid gap-px bg-border p-px"
           style={{ width: `max(100%, ${dexArticles.length * 180}px)`, gridTemplateColumns: `repeat(${dexArticles.length}, minmax(0, 1fr))` }}
-          aria-label="DEX 글 순서"
+          aria-label="탈중앙화 거래소 글 순서"
         >
           {dexArticles.map((article, index) => {
             const active = article.slug === currentSlug;
