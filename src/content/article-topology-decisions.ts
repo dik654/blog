@@ -491,6 +491,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Ethereum consensus-specs v1.6.1 commit 5fa6edcc와 Prysm v7.3.1 commit 96d418cd를 고정합니다. 32 ETH→31 ETH와 R₀·R₁은 설명용 fixture이며 incremental root의 처리량·메모리 절감이나 대상 환경 배포 판단으로 확대하지 않습니다.",
   },
+  "blockchain/prysm-slot-processing": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Slot 30 상태를 빈 Slot 31·32를 거쳐 block 33의 pre-state로 전진시키는 한 사례가 state root 기록, header 보완, epoch 경계, slot 증가, fork upgrade와 process-local cache 재사용으로 이어집니다. 절은 11개지만 이 순서를 나누면 같은 시작 상태와 목표 Slot을 반복해야 하고, protocol state transition과 구현 cache의 경계도 흐려지므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Ethereum consensus-specs v1.7.0-beta.4 commit aa16bb4c와 Prysm v7.3.1 commit 96d418cd를 고정합니다. Slot 30→33은 설명용 fixture이며 SkipSlotCache는 크기 8의 process-local 최적화일 뿐 재시작 가능한 저장소나 consensus state로 확대하지 않습니다.",
+  },
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
@@ -4279,6 +4288,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-ssz": "c2a4f98ee687d361",
   "blockchain/prysm-bls": "c3786ab1bbf27a0c",
   "blockchain/prysm-beacon-state": "8ac0ebe70f904cca",
+  "blockchain/prysm-slot-processing": "ed9932be6d4a9016",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "f9d422015c3b8c7a",
