@@ -26,3 +26,18 @@ export const zkFieldTree: FileNode = d("zk_from_scratch", [
     f("fp12.rs — Fp12 타워 최상층", "field/fp12.rs", "fp12-struct"),
   ]),
 ]);
+
+export const arkworksFieldTree: FileNode = d("arkworks-algebra@6a28df5", [
+  d("ff/src/fields/models/fp", [
+    f(
+      "mod.rs — FpConfig, Fp, serialization",
+      "ff/src/fields/models/fp/mod.rs",
+      "ark-fp-type",
+    ),
+    f(
+      "montgomery_backend.rs — constants, CIOS, conversion",
+      "ff/src/fields/models/fp/montgomery_backend.rs",
+      "ark-montgomery-constants",
+    ),
+  ]),
+]);

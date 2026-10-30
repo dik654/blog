@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 537,
+    "animatedMechanisms": 538,
     "architectureWithoutAnimation": 80,
-    "recursiveLocators": 363,
-    "codeEvidenceLinked": 228,
+    "recursiveLocators": 364,
+    "codeEvidenceLinked": 229,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -7369,11 +7369,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/impl-groth16",

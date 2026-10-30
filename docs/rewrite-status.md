@@ -4642,3 +4642,10 @@
   `AutoencoderRoundTripViz.tsx`의 SHA-256은
   `a76cf06f9042fb7785f152b52d19da42989af146054685063aff41dfe7e29ad9`로 유지됩니다.
   공개 배포와 공개 경로 재검증은 다음 단계입니다.
+# Rust 유한체 값 경로 로컬 검증 완료 (2026-10-31)
+
+- `blockchain/impl-field-arithmetic`를 설명용 소수체 `F13`에서 `0x05 × 0x09 → 0x06` 한 건으로 다시 썼습니다. 공개 bytes, canonical 정수와 Montgomery residue를 서로 다른 표현으로 분리하고 일곱 장면에서 같은 값의 뜻이 보존되는 과정을 추적합니다.
+- arkworks algebra commit `6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5`를 고정했습니다. `Fp` 저장 형태, `MontConfig`, `from_bigint`, CIOS reduction과 canonical serialization을 실제 Rust source와 대조했습니다.
+- `p=13`, `R=16`, `n′=11`에서 `5→2`, `9→1`, `T=2`, `m=6`, 내부 결과 `5`, 공개 결과 `6`을 독립 계산했습니다. 이는 내부 경계를 손으로 확인하기 위한 축소 사례이며 성능·timing·배포 결과는 아닙니다.
+- 1,440×900과 390×844에서 가로 넘침이 없습니다. 모바일에서는 단계 최소 너비를 유지하고 선택 장면으로 가로 탐색 영역이 이동합니다. 첫 장면은 자동으로 바뀌지 않으며 키보드 이동, reduced-motion, CodeSidebar와 console 오류·경고 0건을 확인했습니다.
+- JavaScript 비활성 trailing-slash 경로에는 live 조작부 없이 정적 일곱 장면, 전체 수식·본문, 직속 부모와 다음 타원곡선 글이 남습니다. 공개 배포 검증 뒤 production 상태로 올립니다.

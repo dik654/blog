@@ -10,7 +10,7 @@ export const zkFromScratchArticles: Article[] = [
       { id: "parameter-artifact", title: "Field parameter artifact" },
       { id: "serialization", title: "Canonical serialization" },
       { id: "execution-profile", title: "Arithmetic execution profile" },
-      { id: "release-gate", title: "Field release gate" },
+      { id: "release-gate", title: "구현 증거와 경계" },
     ],
     component: () =>
       import("@/pages/articles/blockchain/impl-field-arithmetic"),

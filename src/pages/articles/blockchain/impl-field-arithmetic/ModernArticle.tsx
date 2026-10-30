@@ -1,81 +1,507 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { FieldImplementationViz } from "./FieldImplementationViz";
+import {
+  FieldAdmissionViz,
+  FieldEvidenceViz,
+  FieldImplementationViz,
+  FieldParameterViz,
+  MontgomeryLedgerViz,
+} from "./FieldImplementationViz";
+import ZkFromScratchLocator, {
+  ZkFromScratchMapReturn,
+} from "./ZkFromScratchLocator";
+import { arkworksFieldTree } from "./fileTrees";
+import { officialCodeRefs } from "./officialCodeRefs";
 
-const ARK_FP = "https://github.com/arkworks-rs/algebra/tree/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/ff/src/fields/models/fp";
-const ARK_SERIALIZE = "https://github.com/arkworks-rs/algebra/blob/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/serialize/src/lib.rs";
+const ARK_FP =
+  "https://github.com/arkworks-rs/algebra/tree/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/ff/src/fields/models/fp";
+const ARK_SERIALIZE =
+  "https://github.com/arkworks-rs/algebra/blob/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/serialize/src/lib.rs";
 
 export default function ModernFieldImplementationArticle() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">수학의 field element를 검증 가능한 Rust artifact로 내리기</p><h2 className="text-3xl font-bold tracking-tight">유한체 구현은 큰 정수 연산 하나가 아니라 parameter·내부 표현·직렬화 경계를 함께 고정하는 일이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">증명기는 같은 수를 세 모습으로 다룹니다. 파일과 네트워크에서는 canonical bytes, 함수 안에서는 여러 machine-word limbs, 곱셈이 반복될 때는 Montgomery domain을 씁니다. <a href="/cs/crypto/field-arithmetic" className="text-primary hover:underline">소수체와 Montgomery reduction 정본</a>이 수학을 소유하므로, 이 글은 그 수학을 Rust 타입과 artifact로 구현하고 잘못된 bytes를 거절하는 경계만 설명합니다.</p>
-      <p>
-            고정 예시는 BN254 scalar field의 element 하나가 proof input에서 들어와 곱셈을 거쳐 다시 canonical bytes로 나가는 흐름입니다.
-            Base field와 scalar field는 비트 길이가 비슷해도 서로 다른 타입이며 modulus·encoding·domain digest가 맞지 않으면 계산을 시작하지
-            않습니다.
+  const sidebar = useCodeSidebar();
+
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-5 scroll-mt-20">
+        <ZkFromScratchLocator
+          currentSlug="impl-field-arithmetic"
+          region="유한체 값과 계산 경계"
+          question="파일의 0x05와 0x09가 Rust의 유한체 곱셈을 거쳐 왜 0x06으로 돌아옵니까?"
+        />
+
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 max-w-4xl break-keep text-3xl font-bold">
+            같은 수를 세 가지 모습으로 바꿔도 뜻은 어떻게 보존됩니까
+          </h2>
+          <p className="mt-3 max-w-3xl break-keep text-base leading-7 text-muted-foreground">
+            두 공개 입력 <code>0x05</code>와 <code>0x09</code>를 소수체{" "}
+            <code>F₁₃</code>에서 곱하겠습니다. 공개 bytes, 범위를 검사한 정수,
+            계산용 Montgomery residue를 차례로 따라가면 답은 <code>0x06</code>
+            입니다. 작은 수를 쓰는 이유는 실제 구현의 경계를 손으로 확인하기
+            위해서입니다.
           </p>
-      <FieldImplementationViz />
-      <ContentBoundary article="impl-field-arithmetic" />
-    </section>
+        </div>
 
-    <section id="parameter-artifact" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Parameter artifact</p><h2 className="mt-2 text-2xl font-bold">modulus만 하드코딩하지 말고 limb layout과 Montgomery constants를 같은 revision으로 봉인한다</h2></header>
-      <p>Artifact에는 field id, prime modulus, word width, limb count와 order, R·R²·inv, two-adicity와 root of unity, extension을 쓴다면 non-residue와 Frobenius table, generator/compiler revision을 넣습니다. 코드 생성 결과와 test vector에도 같은 digest를 남겨야 “상수 한 줄만 바뀐 binary”를 구분할 수 있습니다.</p>
-      <ExplainedFormula question="Prime p를 L개 limbs와 Montgomery constants로 옮길 때 무엇을 계산할까?" idea={<>Word width에 맞춰 R을 p보다 큰 2의 거듭제곱으로 잡고, 입력 x를 xR mod p로 저장합니다.</>} formula={String.raw`L=\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil,\quad R=2^{wL},\quad R_2=R^2\bmod p,\quad n'=-p_0^{-1}\bmod 2^w`}
-      annotatedFormula={String.raw`L=\underbrace{\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil}_{\text{p를 담는 word 수}},\quad R=\underbrace{2^{wL}}_{\text{p보다 큰 radix}},\quad R_2=\underbrace{R^2\bmod p}_{\text{변환 상수}},\quad n'=\underbrace{-p_0^{-1}\bmod 2^w}_{\text{하위 word 소거 상수}}`}
-      operations={[
-          { expression: String.raw`\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil`, annotation: ["p의 bit 길이를 word 폭으로 나눠 올림","254 bit, w=64면 L=4입니다"] },
-          { expression: String.raw`2^{wL}`, annotation: ["limb 전체 폭의 2의 거듭제곱이라","R로 나누기가 shift가 됩니다: 2^256"] },
-          { expression: String.raw`R^2\bmod p`, annotation: ["입력 x를 Montgomery 표현 xR mod p로","옮길 때 쓰는 상수입니다"] },
-          { expression: String.raw`-p_0^{-1}\bmod 2^w`, annotation: ["p의 첫 limb 역원의 음수로","reduction에서 하위 word를 0으로 만듭니다","p나 w가 바뀌면 R2와 함께 재생성합니다"] },
-        ]} terms={[
-        {symbol:"p",name:"Prime modulus",description:"Field Fp를 정의하는 소수입니다."},{symbol:"w",name:"Word width",description:"한 limb의 bit 수입니다."},{symbol:"L",name:"Limb count",description:"p를 담는 word 개수입니다."},{symbol:"R",name:"Montgomery radix",description:"p보다 크고 p와 서로소인 2의 거듭제곱입니다."},{symbol:"R_2",name:"Conversion constant",description:"Canonical x를 Montgomery xR mod p로 옮길 때 쓰는 상수입니다."},{symbol:"p_0",name:"Least-significant limb",description:"Little-endian limb 배열에서 p의 첫 word입니다."},{symbol:"n'",name:"Reduction inverse",description:"낮은 word를 소거하는 modular inverse 상수입니다."},
-      ]} assumptions={["p는 홀수 prime이고 limb order·w·L이 artifact와 일치합니다.","이 식은 상수의 의미를 보여 주며 실제 carry schedule과 constant-time 성질은 compiler·ISA까지 별도 검사합니다."]} interpretation="bitlen(p)=254, w=64이면 L=4이고 R=2^256입니다. p나 w가 달라지면 R2와 n'도 함께 다시 생성해야 합니다." />
-      <div id="paper-arkworks-field"><CitationBlock type="code" citeKey={1} source="arkworks algebra · prime-field model · commit 6a28df5" href={ARK_FP}><p><strong>문제:</strong> 여러 prime fields를 같은 Rust API로 구현하면서 modulus별 constants와 arithmetic backend를 결속해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned source는 prime-field configuration, big-integer representation과 field operations의 구현 경계를 제공합니다.</p><p><strong>중요 가정:</strong> commit 6a28df5의 trait·macro·backend와 선택한 field configuration을 함께 고정합니다.</p><p><strong>근거 범위:</strong> 해당 revision의 ark-ff 코드 구조와 구현입니다.</p><p><strong>일반화 금지:</strong> 이 source가 임의의 custom constants, side-channel resistance나 production audit를 자동 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
+        <FieldImplementationViz />
 
-    <section id="serialization" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Serialization boundary</p><h2 className="mt-2 text-2xl font-bold">internal limbs를 그대로 내보내지 않고 canonical integer를 하나의 byte string으로만 허용한다</h2></header>
-      <p>Deserialize는 길이와 endianness를 확인하고 정수 x를 복원한 뒤 x&lt;p인지 검사합니다. 그 다음에만 Montgomery domain으로 변환합니다. p와 같은 bytes, 불필요한 leading padding, 다른 field type tag, truncated input은 typed error로 끝내며 “일단 mod p”로 줄여 받지 않습니다.</p>
-      <ExplainedFormula question="같은 field element에 여러 byte 표현이 생기지 않게 하려면?" idea={<>정해진 길이와 byte order로 정수 x를 복원하고 canonical range에 들어온 경우만 승인합니다.</>} formula={String.raw`x=\sum_{i=0}^{B-1} b_i2^{8i},\qquad \operatorname{admit}(b)\iff |b|=B\ \land\ 0\le x<p`}
-      annotatedFormula={String.raw`x=\underbrace{\sum_{i=0}^{B-1} b_i2^{8i}}_{\text{byte를 정수로}},\qquad \operatorname{admit}(b)\iff \underbrace{|b|=B}_{\text{고정 길이}}\ \land\ \underbrace{0\le x<p}_{\text{canonical 범위}}`}
-      operations={[
-          { expression: String.raw`\sum_{i=0}^{B-1} b_i2^{8i}`, annotation: ["i번째 byte에 256^i를 곱해 더하는","little-endian 해석입니다"] },
-          { expression: String.raw`|b|=B\ \land\ 0\le x<p`, annotation: ["길이가 정확히 B이고 x가 p 미만일 때만","field element로 승인합니다","p=17: x=16 승인, x=17 거절"] },
-        ]} terms={[
-        {symbol:"b_i",name:"Byte",description:"Little-endian encoding의 i번째 byte입니다."},{symbol:"B",name:"Encoded length",description:"Profile이 정한 고정 byte 수입니다."},{symbol:"x",name:"Decoded integer",description:"Domain 변환 전 canonical 정수입니다."},{symbol:"p",name:"Prime modulus",description:"x가 반드시 작아야 하는 field modulus입니다."},{symbol:String.raw`\operatorname{admit}`,name:"Admission predicate",description:"Bytes를 typed field element로 승격할 조건입니다."},
-      ]} assumptions={["예시는 little-endian입니다. Protocol이 big-endian이면 index 식과 artifact를 함께 바꿉니다.","Compression flag가 좌표 high bits를 공유하는 point encoding은 별도의 schema가 필요합니다."]} interpretation="B=2,p=17에서 0x1000은 x=16이라 승인하지만 0x1100은 x=17이라 거절합니다. 둘을 mod 17로 0에 합치면 malleability가 생깁니다." />
-      <div id="paper-arkworks-serialize"><CitationBlock type="code" citeKey={2} source="arkworks canonical serialization traits · commit 6a28df5" href={ARK_SERIALIZE}><p><strong>문제:</strong> Cryptographic objects의 encoding과 validation mode를 일관된 API로 노출해야 합니다.</p><p><strong>핵심 기여:</strong> CanonicalSerialize·CanonicalDeserialize와 validation/compression modes를 정의합니다.</p><p><strong>중요 가정:</strong> Exact type implementation과 protocol schema가 같은 commit·version에 맞아야 합니다.</p><p><strong>근거 범위:</strong> arkworks serialization interface와 error boundary입니다.</p><p><strong>일반화 금지:</strong> Trait 사용만으로 cross-language compatibility·canonical field range·point subgroup 검사가 자동 증명되지는 않습니다.</p></CitationBlock></div>
-    </section>
+        <p className="text-lg leading-8">
+          <strong>Rust의 field element는 공개 정수 그 자체가 아닙니다.</strong>{" "}
+          입력에서는 한 가지 canonical encoding만 승인하고, 함수 안에서는 곱셈에
+          유리한 표현을 사용하며, 출력할 때 다시 공개 정수로 돌아옵니다. 세
+          경계가 모두 같은 <code>p</code>와 같은 표현 상수를 사용해야{" "}
+          <code>5 × 9 mod 13 = 6</code>이라는 뜻이 보존됩니다.
+        </p>
+        <p>
+          유한체와 Montgomery reduction의 수학은{" "}
+          <Link
+            to="/cs/crypto/field-arithmetic"
+            className="font-bold text-primary hover:underline"
+          >
+            유한체 산술 정본
+          </Link>
+          이 설명합니다. 이 글은 그 수학이 arkworks의 Rust 타입, 입력 검사, 곱셈
+          코드와 출력 경계에 어떻게 놓이는지만 다룹니다. BN254의 실제 254-bit
+          값은 64-bit limb 네 개를 사용하지만 경계의 순서는 같습니다.
+        </p>
+        <ContentBoundary article="impl-field-arithmetic" />
+      </section>
 
-    <section id="execution-profile" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Execution profile</p><h2 className="mt-2 text-2xl font-bold">adc·sbb·mac의 carry schedule과 최종 subtraction을 입력값과 무관한 경로로 검토한다</h2></header>
-      <p>덧셈은 carry, 뺄셈은 borrow, 곱셈은 full-width partial products를 전파합니다. Montgomery reduction은 낮은 limbs를 차례로 소거하고 마지막 후보가 p 이상이면 p를 뺍니다. Source가 branchless처럼 보여도 compiler가 secret-dependent branch나 table lookup을 만들 수 있으므로 target binary의 codegen과 timing 분포를 함께 검사합니다.</p>
-      <ExplainedFormula question="Montgomery reduction이 2L-limb 곱 T를 다시 L limbs로 만드는 핵심은?" idea={<>T의 낮은 R 영역을 전체 폭 상수 N′로 상쇄하는 m을 고른 뒤 p의 배수를 더하고 R로 나눕니다.</>} formula={String.raw`m=(T\bmod R)N'\bmod R,\qquad u=\frac{T+mp}{R},\qquad z=u\ge p\ ?\ u-p:u`}
-      annotatedFormula={String.raw`m=\underbrace{(T\bmod R)N'\bmod R}_{\text{하위 limb 소거 배수}},\qquad u=\underbrace{\frac{T+mp}{R}}_{\text{p 배수 더해 shift}},\qquad z=\underbrace{u\ge p\ ?\ u-p:u}_{\text{[0,p)로 정규화}}`}
-      operations={[
-          { expression: String.raw`(T\bmod R)N'\bmod R`, annotation: ["T의 하위 L limb에 N′를 곱해","T+mp의 하위 limb가 0이 될 m을 구합니다"] },
-          { expression: String.raw`\frac{T+mp}{R}`, annotation: ["p의 배수를 더해 mod p 값은 그대로이고","R로 정확히 나뉘어 2L limb가","L limb 후보 u로 줄어듭니다"] },
-          { expression: String.raw`u\ge p\ ?\ u-p:u`, annotation: ["bounded된 u에서 p를 한 번 빼 [0,p)로","맞춥니다; 생략하면 직렬화와 비교가","달라질 수 있습니다"] },
-        ]} terms={[
-        {symbol:"T",name:"Wide product",description:"두 Montgomery residues를 곱한 최대 2L-limb 값입니다."},{symbol:"R",name:"Radix",description:"2^(wL)인 limb base입니다."},{symbol:"N'",name:"Full-width inverse",description:"-p^(-1) mod R인 전체 폭 상수입니다. 첫 식의 word 상수 n′=-p₀^(-1) mod 2^w는 N′ mod 2^w와 같고, word implementation은 N′ 대신 n′를 낮은 words부터 한 word씩 적용합니다."},{symbol:"m",name:"Cancellation factor",description:"T+mp의 낮은 L limbs를 0으로 만듭니다."},{symbol:"u",name:"Reduced candidate",description:"R로 정확히 나눈 뒤의 bounded candidate입니다."},{symbol:"z",name:"Canonical residue",description:"Conditional subtraction 뒤 [0,p) 범위 값입니다."},
-      ]} assumptions={["T<pR입니다. 그러면 m<R이므로 u=(T+mp)/R<2p가 되어 마지막 조건부 뺄셈 한 번으로 [0,p)에 들어옵니다. 두 residue가 [0,p)이면 T<p²<pR로 성립합니다.","입력 bounds가 implementation proof가 요구하는 범위에 있고 N′(word 단위 n′)와 p가 같은 artifact에 속합니다.","삼항 표기는 개념식이며 실제 구현은 constant-time select와 target codegen audit가 필요합니다."]} interpretation="마지막 subtraction을 생략하면 값이 field와 동치여도 [0,p) canonical invariant가 깨져 serialization과 비교가 달라질 수 있습니다." />
-    </section>
+      <section id="parameter-artifact" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          계산 상수는 modulus와 따로 움직일 수 없습니다
+        </h2>
+        <FieldParameterViz />
+        <p>
+          field를 정하는 소수 <code>p</code>만 바꾸고 예전 <code>R²</code>나{" "}
+          <code>INV</code>를 남겨 두면 타입은 컴파일돼도 다른 계산 공간이
+          섞입니다. 그래서 limb 수와 순서, radix, 변환 상수와 소거 상수를 한
+          configuration이 소유해야 합니다.
+        </p>
 
-    <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">경계값·reference parity·round-trip·codegen을 모두 통과한 artifact만 배포한다</h2></header>
-      <p>0,1,p−1,p,p+1, maximal limbs와 carry chain을 길게 만드는 vectors를 넣습니다. Big-int reference와 add/sub/mul/inverse parity, field laws, serialize-deserialize round trip, noncanonical rejection, base/scalar type mismatch, extension/Frobenius identities를 확인합니다. Compiler·target flags가 바뀌면 binary digest와 timing audit를 다시 만들고 실패하면 이전 artifact로 rollback합니다.</p>
-      <ExplainedFormula question="성능 수치가 correctness 실패를 숨기지 않게 어떤 비율을 보고할까?" idea={<>검증을 통과한 operations만 wall-clock 시간의 분자에 넣고 실패를 별도 count로 남깁니다.</>} formula={String.raw`R_{valid}=\frac{N_{total}-N_{failed}}{T_{setup}+T_{ops}+T_{check}}`}
-      annotatedFormula={String.raw`R_{valid}=\frac{\underbrace{N_{total}-N_{failed}}_{\text{검증 통과 연산 수}}}{\underbrace{T_{setup}+T_{ops}+T_{check}}_{\text{준비·실행·검증 시간}}}`}
-      operations={[
-          { expression: String.raw`N_{total}-N_{failed}`, annotation: ["값·encoding·invariant 검사를 통과한","연산만 분자에 넣습니다"] },
-          { expression: String.raw`T_{setup}+T_{ops}+T_{check}`, annotation: ["artifact load부터 검증 완료까지","wall-clock 전부를 분모에 둡니다","실패 수는 따로 남겨 gate가 막습니다"] },
-        ]} terms={[
-        {symbol:"R_{valid}",name:"Verified operation rate",description:"초당 reference parity를 통과한 operations입니다."},{symbol:"N_{total}",name:"Attempted operations",description:"측정 구간의 전체 field operations 수입니다."},{symbol:"N_{failed}",name:"Failed operations",description:"값·encoding·invariant 검사를 통과하지 못한 수입니다."},{symbol:"T_{setup}",name:"Setup time",description:"Artifact load와 buffer 준비 시간입니다."},{symbol:"T_{ops}",name:"Arithmetic time",description:"Warmup 뒤 연산 실행 시간입니다."},{symbol:"T_{check}",name:"Validation time",description:"Reference와 serialization 검사를 완료한 시간입니다."},
-      ]} assumptions={["같은 artifact digest·compiler·target·input corpus를 비교합니다.","Microbenchmark와 proof end-to-end 결과를 분리하고 median·p95·RSS를 함께 기록합니다."]} interpretation="100만 회 중 2회가 틀렸다면 raw ops/s가 높아도 release 후보가 아닙니다. 실패를 분자에서 빼는 것만으로 충분하지 않고 gate 자체가 fail closed여야 합니다." />
-      <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 10/10:</strong> parameter artifact, limb 계산, canonical admission, p 반례, Montgomery reduction, carry 경계, constant-time 범위, base/scalar 분리, release vectors, 측정·rollback을 이 글만으로 답할 수 있습니다.</aside>
-    </section>
-  </article>;
+        <ExplainedFormula
+          question="p를 limb와 Montgomery 상수로 옮길 때 어떤 값이 함께 정해집니까?"
+          idea={
+            <>
+              p를 담을 word 수를 먼저 정하고, 그 전체 폭의 2의 거듭제곱을
+              radix로 사용합니다.
+            </>
+          }
+          formula={
+            "L=\\left\\lceil\\frac{\\operatorname{bitlen}(p)}{w}\\right\\rceil,\\quad R=2^{wL},\\quad R_2=R^2\\bmod p,\\quad n'=-p_0^{-1}\\bmod 2^w"
+          }
+          annotatedFormula={
+            "L=\\underbrace{\\left\\lceil\\frac{\\operatorname{bitlen}(p)}{w}\\right\\rceil}_{\\text{p를 담는 word 수}},\\quad R=\\underbrace{2^{wL}}_{\\text{전체 limb 폭}},\\quad R_2=\\underbrace{R^2\\bmod p}_{\\text{입력 변환 상수}},\\quad n'=\\underbrace{-p_0^{-1}\\bmod 2^w}_{\\text{낮은 word 소거 상수}}"
+          }
+          operations={[
+            {
+              expression: "p=13,\\ w=4\\Rightarrow L=1,\\ R=16",
+              annotation: [
+                "13은 4 bit에 들어가므로 설명용 limb는 하나입니다.",
+                "실제 arkworks word는 64 bit입니다.",
+              ],
+            },
+            {
+              expression: "R_2=16^2\\bmod13=9",
+              annotation: [
+                "canonical 정수에 R²를 곱한 뒤 reduction하면",
+                "xR mod p인 내부 표현이 됩니다.",
+              ],
+            },
+            {
+              expression: "n'=-13^{-1}\\bmod16=11",
+              annotation: [
+                "13×5=65≡1 mod16이므로 역원은 5입니다.",
+                "그 음수 −5는 mod16에서 11입니다.",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: "p",
+              name: "modulus",
+              description: "공개 값이 0부터 p−1까지인 소수입니다.",
+            },
+            {
+              symbol: "w",
+              name: "word 폭",
+              description: "한 limb가 담는 bit 수입니다.",
+            },
+            {
+              symbol: "L",
+              name: "limb 수",
+              description: "p를 담는 word 개수입니다.",
+            },
+            {
+              symbol: "R",
+              name: "radix",
+              description: "p보다 크고 p와 서로소인 2의 거듭제곱입니다.",
+            },
+            {
+              symbol: "R₂",
+              name: "변환 상수",
+              description: "canonical 정수를 Montgomery domain으로 옮깁니다.",
+            },
+            {
+              symbol: "p₀",
+              name: "modulus의 낮은 word",
+              description: "word 단위 CIOS가 매 단계 소거할 부분입니다.",
+            },
+            {
+              symbol: "n′",
+              name: "소거 상수",
+              description: "낮은 word가 0이 되도록 p의 배수를 고릅니다.",
+            },
+          ]}
+          assumptions={[
+            "p는 홀수 소수라 2의 거듭제곱 R과 서로소입니다.",
+            "설명용 계산은 w=4이고, 실제 arkworks backend의 w=64와 혼동하지 않습니다.",
+            "p, w, L이 달라지면 R²와 n′도 같은 configuration에서 다시 계산합니다.",
+          ]}
+          interpretation="p=13, w=4에서는 L=1, R=16, R² mod13=9, n′=11입니다. 이 네 값은 뒤의 5×9 계산에서 하나의 묶음으로 사용됩니다."
+        />
+
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton
+            label="Fp 타입과 설정 코드"
+            onClick={() =>
+              sidebar.open("ark-fp-type", officialCodeRefs["ark-fp-type"])
+            }
+          />
+          <CodeViewButton
+            label="R·R²·INV 코드"
+            onClick={() =>
+              sidebar.open(
+                "ark-montgomery-constants",
+                officialCodeRefs["ark-montgomery-constants"],
+              )
+            }
+          />
+        </div>
+      </section>
+
+      <section id="serialization" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          bytes는 범위를 통과한 뒤에만 field element가 됩니다
+        </h2>
+        <FieldAdmissionViz />
+        <p>
+          <code>0x0d</code>를 13으로 읽은 뒤 mod 13으로 줄이면 0이 됩니다.
+          그러면 <code>0x00</code>과 <code>0x0d</code>라는 서로 다른 입력이 같은
+          field element로 승인됩니다. Canonical encoding은 이 모호함을 허용하지
+          않고, 길이와 범위를 먼저 검사합니다.
+        </p>
+
+        <ExplainedFormula
+          question="bytes 하나를 field element로 승인하는 최소 조건은 무엇입니까?"
+          idea={
+            <>
+              정해진 byte order로 정수를 복원한 뒤 길이와 범위를 함께
+              확인합니다.
+            </>
+          }
+          formula={
+            "x=\\sum_{i=0}^{B-1}b_i2^{8i},\\qquad \\operatorname{admit}(b)\\iff |b|=B\\ \\land\\ 0\\le x<p"
+          }
+          annotatedFormula={
+            "x=\\underbrace{\\sum_{i=0}^{B-1}b_i2^{8i}}_{\\text{little-endian 정수 복원}},\\qquad \\operatorname{admit}(b)\\iff\\underbrace{|b|=B}_{\\text{정확한 길이}}\\ \\land\\ \\underbrace{0\\le x<p}_{\\text{canonical 범위}}"
+          }
+          operations={[
+            {
+              expression: "B=1,\\ b_0=0x05\\Rightarrow x=5",
+              annotation: ["길이가 한 byte이고 5<13이므로 승인합니다."],
+            },
+            {
+              expression: "B=1,\\ b_0=0x0d\\Rightarrow x=13",
+              annotation: [
+                "길이는 맞지만 x<p가 거짓이므로 거절합니다.",
+                "mod 13으로 0을 만들지 않습니다.",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: "bᵢ",
+              name: "i번째 byte",
+              description: "예시는 little-endian 순서를 사용합니다.",
+            },
+            {
+              symbol: "B",
+              name: "고정 길이",
+              description: "field profile이 정한 encoded byte 수입니다.",
+            },
+            {
+              symbol: "x",
+              name: "canonical 정수 후보",
+              description: "Montgomery 변환 전의 공개 값입니다.",
+            },
+            {
+              symbol: "admit",
+              name: "승인 조건",
+              description:
+                "두 조건을 모두 통과한 bytes만 typed value가 됩니다.",
+            },
+          ]}
+          assumptions={[
+            "예시는 flag가 없는 한 byte little-endian encoding입니다.",
+            "곡선점처럼 상위 bit에 flag를 넣는 형식은 별도의 schema 검사가 필요합니다.",
+            "압축 여부가 field value의 범위 검사를 대신하지 않습니다.",
+          ]}
+          interpretation="0x05는 5로 승인되지만 0x0d는 13이라 거절됩니다. 같은 field value에 공개 byte 표현을 하나만 남기는 경계입니다."
+        />
+
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton
+            label="입력 승인 코드"
+            onClick={() =>
+              sidebar.open(
+                "ark-field-admission",
+                officialCodeRefs["ark-field-admission"],
+              )
+            }
+          />
+        </div>
+      </section>
+
+      <section id="execution-profile" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          곱셈은 p의 배수를 더해 낮은 word를 없앱니다
+        </h2>
+        <MontgomeryLedgerViz />
+        <p>
+          내부 값 <code>2</code>와 <code>1</code>의 곱 <code>T=2</code>에{" "}
+          <code>6p</code>를 더해도 mod 13 값은 바뀌지 않습니다. 그런데 합계 80은
+          radix 16으로 정확히 나뉩니다. 그래서 비싼 일반 나눗셈으로 나머지를
+          구하는 대신, 낮은 word를 소거하고 shift하는 계산으로 내부 결과를
+          얻습니다.
+        </p>
+
+        <ExplainedFormula
+          question="Montgomery reduction은 왜 값의 뜻을 보존하면서 R 배율 하나를 없앱니까?"
+          idea={
+            <>
+              T의 낮은 R 영역을 상쇄할 p의 배수 m을 고른 뒤, 정확히 R로
+              나눕니다.
+            </>
+          }
+          formula={
+            "m=(T\\bmod R)N'\\bmod R,\\qquad u=\\frac{T+mp}{R},\\qquad z=u\\ge p\\ ?\\ u-p:u"
+          }
+          annotatedFormula={
+            "m=\\underbrace{(T\\bmod R)N'\\bmod R}_{\\text{R로 나뉘게 할 p의 배수}},\\qquad u=\\underbrace{\\frac{T+mp}{R}}_{\\text{낮은 word를 버린 후보}},\\qquad z=\\underbrace{u\\ge p\\ ?\\ u-p:u}_{\\text{[0,p) 정규화}}"
+          }
+          operations={[
+            {
+              expression: "m=(2\\times11)\\bmod16=6",
+              annotation: [
+                "T=2의 낮은 word에 N′=11을 곱합니다.",
+                "2+6×13=80은 16으로 나뉩니다.",
+              ],
+            },
+            {
+              expression: "u=80/16=5<p",
+              annotation: [
+                "5는 6의 Montgomery 표현입니다.",
+                "6R mod13=6×16 mod13=5입니다.",
+              ],
+            },
+            {
+              expression: "\\operatorname{REDC}(5)=(5+7\\times13)/16=6",
+              annotation: [
+                "출력할 때 reduction을 한 번 더 적용해",
+                "R 배율을 완전히 제거합니다.",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: "T",
+              name: "넓은 곱",
+              description: "두 내부 residue를 곱한 중간값입니다.",
+            },
+            {
+              symbol: "N′",
+              name: "전체 폭 inverse",
+              description:
+                "−p⁻¹ mod R입니다. 한 word 사례에서는 n′와 같습니다.",
+            },
+            {
+              symbol: "m",
+              name: "소거 배수",
+              description: "T+mp가 R로 나뉘게 만듭니다.",
+            },
+            {
+              symbol: "u",
+              name: "reduced 후보",
+              description: "R로 나눈 뒤의 내부 결과 후보입니다.",
+            },
+            {
+              symbol: "z",
+              name: "정규화된 residue",
+              description: "필요하면 p를 한 번 빼 [0,p)에 둡니다.",
+            },
+          ]}
+          assumptions={[
+            "T<pR이어서 u<2p이고 마지막 p subtraction 한 번이면 충분합니다.",
+            "T, p, R, N′는 같은 field configuration에 속합니다.",
+            "실제 CIOS 구현은 이 관계를 64-bit word마다 carry와 함께 반복합니다.",
+          ]}
+          interpretation="내부 계산은 2×1→5로 끝나지만 공개 의미는 5×9 mod13=6입니다. into_bigint가 마지막 R 배율을 없앤 뒤에만 6을 출력합니다."
+        />
+
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeViewButton
+            label="CIOS 곱셈 코드"
+            onClick={() =>
+              sidebar.open(
+                "ark-field-multiply",
+                officialCodeRefs["ark-field-multiply"],
+              )
+            }
+          />
+          <CodeViewButton
+            label="canonical 출력 코드"
+            onClick={() =>
+              sidebar.open(
+                "ark-field-output",
+                officialCodeRefs["ark-field-output"],
+              )
+            }
+          />
+        </div>
+      </section>
+
+      <section id="release-gate" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          구현의 증거는 공개 경계에서 확인합니다
+        </h2>
+        <FieldEvidenceViz />
+        <p>
+          내부 limb 배열은 backend가 바뀌면 달라질 수 있습니다. 그래서 구현의
+          계약은 <code>0</code>, <code>1</code>, <code>p−1</code>을 승인하고{" "}
+          <code>p</code>를 거절하는지, 연산 결과가 작은 정수 reference와 같은지,
+          직렬화 왕복이 같은 bytes로 닫히는지에서 확인합니다.
+        </p>
+        <p>
+          시스템이 스스로 드러내는 실패도 이 경계에 붙어 있습니다. 범위 밖
+          정수는 <code>from_bigint</code>에서 <code>None</code>이 되고
+          deserialize는 <code>InvalidData</code>를 반환합니다. 0의 역원은
+          존재하지 않으므로 inverse도 <code>None</code>입니다. Base field와
+          scalar field는 비트 수가 비슷해도 modulus가 다르므로 같은 타입으로
+          합쳐서는 안 됩니다.
+        </p>
+        <p>
+          반대로 source에 분기가 적어 보인다는 사실만으로 constant-time 실행을
+          증명할 수는 없습니다. 컴파일러와 target ISA까지 포함한 timing 검증,
+          성능 비교, 배포 승인과 rollback은 환경에 따라 달라지는 별도 실무
+          판단입니다. 이 글의 결론은 공개 값과 내부 표현 사이의 의미
+          보존까지입니다.
+        </p>
+
+        <div className="not-prose grid gap-px bg-border p-px lg:grid-cols-2">
+          <div id="paper-arkworks-field">
+            <CitationBlock
+              type="code"
+              citeKey={1}
+              source="arkworks algebra · prime-field model · commit 6a28df5"
+              href={ARK_FP}
+            >
+              <p>
+                <strong>확인한 것:</strong> <code>FpConfig</code>, 내부
+                Montgomery form, <code>R·R²·INV</code>, canonical integer 변환과
+                CIOS 곱셈 경계입니다.
+              </p>
+              <p>
+                <strong>말하지 않는 것:</strong> 임의의 custom constants, 모든
+                target에서의 constant-time 성질과 production 보안 감사를
+                자동으로 보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+          <div id="paper-arkworks-serialize">
+            <CitationBlock
+              type="code"
+              citeKey={2}
+              source="arkworks canonical serialization · commit 6a28df5"
+              href={ARK_SERIALIZE}
+            >
+              <p>
+                <strong>확인한 것:</strong> little-endian serializer, checked와
+                unchecked deserialize API, compression·validation mode의 trait
+                경계입니다.
+              </p>
+              <p>
+                <strong>말하지 않는 것:</strong> trait 사용만으로 다른 언어의
+                schema 일치, 곡선점 flag·subgroup 검사와 protocol 호환성이
+                증명되지는 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </div>
+      </section>
+
+      <section id="self-check" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">
+          0x05 × 0x09의 경로를 다시 말해 보기
+        </h2>
+        <ol className="space-y-4 pl-5 text-sm leading-7">
+          <li>
+            <code>0x0d</code>를 0으로 줄이지 않고 거절하는 이유는 무엇입니까?{" "}
+            <strong>
+              서로 다른 bytes가 같은 field value로 승인되는 일을 막아 canonical
+              encoding을 유지하기 위해서입니다.
+            </strong>
+          </li>
+          <li>
+            5와 9가 내부에서 2와 1로 저장돼도 같은 값인 이유는 무엇입니까?{" "}
+            <strong>
+              내부 표현이 xR mod p이고 모든 연산과 복원이 같은 R을 사용하기
+              때문입니다.
+            </strong>
+          </li>
+          <li>
+            <code>T+mp</code>에 p의 배수를 더해도 답이 바뀌지 않는 이유는
+            무엇입니까? <strong>mod p에서는 mp가 0과 같기 때문입니다.</strong>
+          </li>
+          <li>
+            내부 결과 5를 바로 출력하지 않는 이유는 무엇입니까?{" "}
+            <strong>
+              5는 공개 값 6의 Montgomery residue이므로 reduction을 한 번 더 해 R
+              배율을 제거해야 합니다.
+            </strong>
+          </li>
+        </ol>
+        <p className="text-sm text-muted-foreground">
+          다음 글에서는 이 field value 두 개를 좌표로 쓰는 점이 bytes에서 들어와
+          on-curve·subgroup 검사를 통과하고 pairing으로 이어지는 경로를
+          추적합니다.
+        </p>
+      </section>
+
+      <ZkFromScratchMapReturn
+        currentSlug="impl-field-arithmetic"
+        closure="Rust 유한체 구현은 공개 bytes를 canonical 정수로 승인하고, 같은 field configuration의 Montgomery 표현으로 계산한 뒤, R 배율을 제거한 canonical bytes로 돌아올 때 한 값의 뜻을 보존합니다."
+      />
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={officialCodeRefs}
+        fileTrees={{ arkworks: arkworksFieldTree }}
+        projectMetas={{
+          arkworks: {
+            id: "arkworks",
+            label: "arkworks algebra · 6a28df5 · Rust",
+            badgeClass: "border-violet-500 bg-violet-500/10 text-violet-700",
+          },
+        }}
+      />
+    </article>
+  );
 }

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 710,
-    "pending": 297,
+    "reviewed": 711,
+    "pending": 296,
     "untracked": 0,
-    "assignedPending": 255,
+    "assignedPending": 254,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5373,9 +5373,9 @@
       "publicPath": "cs/blockchain/impl-field-arithmetic",
       "title": "유한체 산술 구현 (Rust)",
       "catalogIndex": 534,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

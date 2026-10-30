@@ -3502,40 +3502,68 @@
     {
       "route": "blockchain/impl-field-arithmetic",
       "title": "유한체 산술 구현 (Rust)",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/impl-field-arithmetic.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/impl-field-arithmetic.tsx",
+        "src/pages/articles/blockchain/impl-field-arithmetic/ZkFromScratchLocator.tsx",
         "src/pages/articles/blockchain/impl-field-arithmetic/FieldImplementationViz.tsx",
-        "src/pages/articles/blockchain/impl-field-arithmetic/ModernArticle.tsx"
+        "src/pages/articles/blockchain/impl-field-arithmetic/ModernArticle.tsx",
+        "src/pages/articles/blockchain/impl-field-arithmetic/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/impl-field-arithmetic/fileTrees.ts",
+        "src/content/blockchain/articlesZkFromScratch.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 7,
+        "predictionPointers": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 5,
         "headings": [
-          "유한체 구현은 큰 정수 연산 하나가 아니라 parameter·내부 표현·직렬화 경계를 함께 고정하는 일이다",
-          "modulus만 하드코딩하지 말고 limb layout과 Montgomery constants를 같은 revision으로 봉인한다",
-          "internal limbs를 그대로 내보내지 않고 canonical integer를 하나의 byte string으로만 허용한다",
-          "adc·sbb·mac의 carry schedule과 최종 subtraction을 입력값과 무관한 경로로 검토한다",
-          "경계값·reference parity·round-trip·codegen을 모두 통과한 artifact만 배포한다"
+          "같은 수를 세 가지 모습으로 바꿔도 뜻은 어떻게 보존됩니까",
+          "계산 상수는 modulus와 따로 움직일 수 없습니다",
+          "bytes는 범위를 통과한 뒤에만 field element가 됩니다",
+          "곱셈은 p의 배수를 더해 낮은 word를 없앱니다",
+          "구현의 증거는 공개 경계에서 확인합니다",
+          "0x05 × 0x09의 경로를 다시 말해 보기",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 parameter artifact·serialization·carry schedule·constant-time·benchmark·rollback을 한 글에 묶어 개념 메커니즘과 환경별 운영 판단의 경계가 흐렸습니다.",
+        "이전 시각화는 구현 계층을 카드로 나열했지만 공개 bytes 한 건이 내부 residue를 거쳐 다시 공개 bytes가 되는 시간선을 보여 주지 못했습니다.",
+        "범위 검사, Montgomery 저장값, 내부 곱 결과와 canonical 출력이 서로 다른 숫자로 보이는 이유를 한 사례에서 손으로 검산하기 어려웠습니다."
+      ],
+      "fixture": {
+        "case": "설명용 소수체 F13에서 공개 bytes 0x05와 0x09를 곱해 공개 bytes 0x06으로 돌려보내는 한 건",
+        "path": "bytes 입력→canonical 범위 검사→Montgomery residue 2·1→wide product T=2→보정값 m=6과 내부 결과 5→정수 6 복원→0x06 직렬화",
+        "boundary": "공개 canonical encoding, 계산용 내부 표현과 환경별 constant-time·성능·배포 판단을 분리"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "parent": "ZK 구현 Rust 묶음의 첫 글로 표시하고 다음 타원곡선 글이 재사용할 field value 경계를 정합니다.",
+        "0": "0x05와 0x09를 아직 검증되지 않은 한-byte 입력으로 둡니다.",
+        "1": "정수 5와 9를 복원하고 둘 다 p=13보다 작은지 확인합니다.",
+        "2": "R=16을 사용해 공개 값 5·9를 내부 residue 2·1로 옮깁니다.",
+        "3": "두 내부 residue를 곱해 넓은 중간값 T=2를 만듭니다.",
+        "4": "m=6을 골라 T+mp=80의 낮은 word를 없애고 내부 결과 5를 얻습니다.",
+        "5": "reduction을 한 번 더 적용해 R 배율을 제거하고 canonical 정수 6을 복원합니다.",
+        "6": "정수 6을 한 byte 0x06으로 직렬화해 공개 경계에서 같은 값을 확인합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "arkworks algebra commit 6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5",
+          "application": "Fp의 Montgomery 저장 형태, MontConfig의 MODULUS·R·R2·INV, from_bigint의 범위 검사, CIOS reduction과 into_bigint 뒤 canonical serialization을 실제 Rust source와 대조했습니다."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "기존 글과 arkworks의 fp/mod.rs·montgomery_backend.rs·serialize/lib.rs를 다시 읽고 기능별 설명을 0x05·0x09 한 건의 공개 입력부터 출력까지 추적으로 교체했습니다.",
+        "arithmetic": "p=13,R=16,n′=11에서 5→2, 9→1, T=2, m=6, (2+6×13)/16=5, REDC(5)=6을 독립 계산했습니다. 이 값은 설명용이며 production 성능이나 timing은 측정하지 않았습니다.",
+        "humanize": "직속 부모 지도, 질문 하나, 한 값의 일곱 상태, 공식 source, 실패 경계와 부모 지도 반환 순서로 구성했습니다. Benchmark·배포·rollback은 별도 실무 판단으로 분리했습니다.",
+        "browser390": "390×844에서 문서 폭과 scroll 폭이 모두 390px입니다. 일곱 단계는 최소 너비를 가진 가로 탐색 영역에서 읽히며 마지막 장면 선택 시 두 strip이 끝까지 이동합니다. Figure 높이는 약 783px입니다. Reduced-motion에서는 재생이 비활성화되고 Enter로 다음 장면 이동은 유지됩니다. JavaScript 비활성 경로에는 조작부 없이 정적 일곱 장면과 전체 본문·부모·다음 글이 남습니다.",
+        "browser1440": "1440×900에서 가로 넘침이 0이고 첫 장면이 3.5초 뒤에도 유지됩니다. 중간 곱셈과 마지막 출력 장면, 키보드 Enter 이동을 확인했습니다. CodeSidebar의 고정 source·한국어 주석·닫기가 정상이고 console 오류·경고는 0건입니다.",
+        "static": "학습·시각화·수식·계산·본문·topology·읽기 순서·문장·한국어·용어·architecture-flow·coverage·runtime 감사, ESLint, 전체 TypeScript와 production build를 통과했습니다. 정적 public route 2,120개와 no-script 본문 367편을 생성했습니다."
+      },
+      "remaining": ["공개 배포 경로와 GitHub Pages 실행 결과 재검증"],
+      "reviewDisposition": "rewrite-as-one-canonical-value-montgomery-lifecycle-and-evidence-boundary"
     },
     {
       "route": "blockchain/impl-groth16",
