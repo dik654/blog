@@ -749,7 +749,7 @@
     {
       "route": "blockchain/cometbft-execution",
       "title": "CometBFT BlockExecutor: 검증·실행·영속화와 replay",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-execution.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-execution.tsx",
@@ -800,11 +800,11 @@
         "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 7.2초 동안 첫 장면이 유지됐고 장면 2 클릭 뒤 group focus와 ArrowRight로 장면 3에 이동했습니다. 고정 source code sidebar 열기·닫기와 console 오류 0건을 확인했습니다.",
         "reducedMotion": "Reduced-motion을 켜면 재생 버튼이 비활성화되고 7.2초 뒤에도 첫 장면이 유지됩니다.",
         "resource": "TypeScript 검사는 8GB heap에서 최대 RSS 6,315,524,096 bytes, 최종 production build는 최대 RSS 6,342,180,864 bytes였으며 둘 다 swap 0으로 직렬 실행했습니다. Playwright 세션과 preview는 이름과 session ID로만 종료했습니다.",
-        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 382편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 질문·고정 commit 근거·부모 지도 반환이 남고 live 조작 UI는 없는 것을 확인했습니다."
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 382편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 질문·고정 commit 근거·부모 지도 반환이 남고 live 조작 UI는 없는 것을 확인했습니다.",
+        "production": "GitHub Pages run 41138563666이 build·1,007개 공개 route의 desktop/mobile entry audit·deploy까지 모두 통과했습니다.",
+        "public": "공개 /blog/cs/blockchain/cometbft-execution/에서 1440×1000과 390×844의 document overflow 0, console error/warning 0을 확인했습니다. Reduced-motion은 8초 뒤에도 장면 0을 유지했고 JavaScript 비활성 상태에서도 구조 검사부터 replay와 부모 지도 반환까지 정적 순서가 남았습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-one-decided-block-through-validation-finalize-persistence-and-height-based-crash-replay-with-pinned-source"
     },
     {
