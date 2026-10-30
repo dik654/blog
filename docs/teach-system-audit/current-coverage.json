@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 708,
-    "pending": 299,
+    "reviewed": 709,
+    "pending": 298,
     "untracked": 0,
-    "assignedPending": 257,
+    "assignedPending": 256,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5343,9 +5343,9 @@
       "publicPath": "cs/blockchain/commonware-broadcast",
       "title": "Commonware buffered broadcast: digest·cache·delivery receipt",
       "catalogIndex": 531,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

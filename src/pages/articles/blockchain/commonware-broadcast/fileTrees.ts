@@ -6,51 +6,23 @@ const f = (name: string, path: string, codeKey?: string): FileNode => ({
   path,
   codeKey,
 });
+
 const d = (name: string, children: FileNode[]): FileNode => ({
   name,
   type: "dir",
   children,
 });
 
-export const commonwareTree: FileNode = d("commonware", [
+export const commonwareBroadcastTree: FileNode = d("commonware v2026.9.0", [
+  d("actor/src", [
+    f("lib.rs — Feedback", "actor/src/lib.rs", "broadcast-contract"),
+  ]),
   d("broadcast/src", [
-    f(
-      "lib.rs — Broadcaster trait",
-      "broadcast/src/lib.rs",
-      "broadcaster-trait",
-    ),
+    f("lib.rs — Broadcaster", "broadcast/src/lib.rs", "broadcast-contract"),
     d("buffered", [
-      f(
-        "engine.rs — Engine run loop",
-        "broadcast/src/buffered/engine.rs",
-        "buffered-engine",
-      ),
-      f(
-        "ingress.rs — Mailbox API",
-        "broadcast/src/buffered/ingress.rs",
-        "buffered-ingress",
-      ),
+      f("ingress.rs — Mailbox", "broadcast/src/buffered/ingress.rs", "buffered-ingress"),
+      f("engine.rs — event loop", "broadcast/src/buffered/engine.rs", "buffered-engine"),
+      f("engine.rs — cache", "broadcast/src/buffered/engine.rs", "buffered-cache"),
     ]),
-  ]),
-  d("consensus/src/ordered_broadcast", [
-    f(
-      "types.rs — Chunk · Parent · Node",
-      "consensus/ordered_broadcast/types.rs",
-      "ordered-types",
-    ),
-    f(
-      "engine.rs — select_loop!",
-      "consensus/ordered_broadcast/engine.rs",
-      "ordered-engine",
-    ),
-    f(
-      "ack_manager.rs — 서명 수집",
-      "consensus/ordered_broadcast/ack_manager.rs",
-      "ordered-ack-mgr",
-    ),
-  ]),
-  d("coding/src", [
-    f("lib.rs — Scheme · PhasedScheme", "coding/src/lib.rs", "coding-scheme"),
-    f("zoda/mod.rs — ZODA 구현", "coding/src/zoda/mod.rs", "zoda-impl"),
   ]),
 ]);

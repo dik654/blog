@@ -3,6 +3,17 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Commonware Broadcast 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/commonware-broadcast`를 설명용 digest `d7`을 따라가는 글로 다시 썼습니다. Bob이 먼저 구독하고 Alice가 같은 descriptor를 보내는 한 사례입니다. 로컬 접수, 네트워크 전송, typed item 수신, cache 잔류와 업무 승인을 서로 다른 상태로 구분했습니다.
+- Commonware v2026.9.0 commit `d476a2361ce6840d2b9d0aa6fb30a924429046d4`를 고정했습니다. Actor의 `Feedback`과 `Broadcaster` trait을 확인했습니다. Buffered ingress와 Engine의 peer update·decode 경로를 실제 Rust source와 대조했습니다. Waiter·cache 경로도 확인했습니다. 현재 계약과 맞지 않던 `Response` peer 목록 예제는 제거했습니다.
+- A와 B의 peer deque가 `d7`을 함께 참조하면 count는 2입니다. A에서 밀려난 뒤에는 1이어서 item을 유지하고, B에서도 밀려 0이 될 때 shared item을 제거합니다. 이 값은 cache reference 수이지 quorum이나 durable replica 수가 아닙니다.
+- 1,440×900에서 문서 가로 넘침이 없고, 재생 중 중간 network 장면과 마지막 업무 판단 장면을 확인했습니다. 일시정지 뒤 그림에 초점을 두고 오른쪽 화살표를 눌러 6→7→8 장면으로 이동했습니다. 코드 패널에는 고정한 source와 한국어 주석이 함께 보이며 console 오류·경고는 0건입니다.
+- 390×844에서도 문서 폭과 scroll 폭이 모두 390px입니다. 시각화와 조작부가 본문 폭 안에 들어오며, reduced-motion에서는 보이는 재생 버튼이 비활성화되고 수동 이동은 유지됩니다.
+- JavaScript 비활성 trailing-slash 경로에는 조작 버튼 없이 정적 여덟 장면과 전체 본문이 남습니다. 이전 Simplex와 다음 Storage도 표시합니다. 정적 public route는 2,120개, no-script 본문은 365편입니다.
+- TypeScript는 작업 단위 Node heap 6GB에서 최대 RSS 5,920,096,256 bytes를 썼습니다. Production build의 최대 RSS는 6,006,718,464 bytes이며 swap은 0입니다. 기본 힙에서 TypeScript가 약 4.5GB에 V8 OOM으로 끝난 기록도 남겼습니다. 전역 heap 설정은 바꾸지 않았습니다.
+- 현재 상태는 `rewritten-local-verified`입니다. 전수 장부는 공개 1,007편 중 검토 709편, 미검토 298편입니다. GitHub Pages 배포와 공개 데스크톱·모바일·reduced-motion·JavaScript 비활성 경로 재검증이 남았습니다.
+
 ### Commonware Storage 공개 검증 완료 (2026-10-30)
 
 - `blockchain/commonware-storage`를 Alice=10·Bob=15 두 update와 `batch-7` 한 건이 stage, merkleize, ancestry 확인, apply, sync와 Current proof로 이어지는 흐름으로 다시 썼습니다. Candidate root, visible DB state, durable state와 proof를 같은 완료 상태로 합치지 않았습니다.

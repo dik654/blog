@@ -555,6 +555,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Commonware v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. n=4, f=1과 validator D의 지연, A·B·C의 certify=true는 설명용 가정입니다. Finalization을 Application state commit·외부 저장 성공·client success로 확대하지 않고, certify=false와 channel RecvError를 같은 실패로 합치지 않습니다.",
   },
+  "blockchain/commonware-broadcast": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-30",
+    rationale:
+      "Descriptor digest d7 하나를 Bob의 subscribe, Alice의 broadcast와 local Feedback, Engine send·decode, waiter 응답, latest-primary eligibility와 peer별 cache eviction까지 추적합니다. Local admission, node-local typed item receipt와 cache residence가 다른 상태이지만 모두 같은 digest의 전달 수명주기를 설명합니다. 이를 나누면 sender·waiter·shared item의 관계를 다시 조립해야 하므로 한 개념 글로 유지합니다.",
+    sharedGate:
+      "Commonware broadcast v2026.9.0 commit d476a2361ce6840d2b9d0aa6fb30a924429046d4를 고정합니다. Descriptor·d7·Alice·Bob은 설명용 식별자입니다. Feedback을 recipient acknowledgement로, subscribe completion을 sender authorization·total order·disk durability·application acceptance로, cache reference count를 quorum이나 durable replica 수로 확대하지 않습니다.",
+  },
   "blockchain/commonware-storage": {
     action: "keep",
     status: "implemented",
@@ -4403,6 +4412,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-engine-api": "97fc3e69823881f9",
   "blockchain/commonware-deep-dive": "e52779a7bbd2cc35",
   "blockchain/commonware-simplex": "6648846c934c07c9",
+  "blockchain/commonware-broadcast": "fb43bccdacf88df0",
   "blockchain/commonware-storage": "7a6433f3d1a008ad",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
