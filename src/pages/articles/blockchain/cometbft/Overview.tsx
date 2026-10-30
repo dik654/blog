@@ -35,7 +35,7 @@ export default function Overview() {
         <div>
           <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
           <h2 className="mt-2 max-w-4xl break-keep text-3xl font-bold">
-            CheckTx OK와 block commit, application Commit은 왜 서로 다른 영수증입니까
+            세 단계의 성공은 각각 무엇을 증명합니까
           </h2>
           <p className="mt-3 max-w-3xl break-keep text-base leading-7 text-muted-foreground">
             높이 40까지 저장된 node에 Alice→Bob 10이라는 transaction bytes가 도착했다고 가정합니다.
@@ -88,9 +88,12 @@ export default function Overview() {
         <h2 className="break-keep text-2xl font-bold">공식 코드는 admission·결정·영속화를 세 경계로 나눕니다</h2>
         <p>
           v0.40.0에서 <code>CListMempool.CheckTx</code>는 local capacity와 duplicate를 확인하고 application의
-          CheckTx를 비동기로 호출합니다. Consensus의 <code>enterCommit</code>은 같은 round에 +2/3 precommit이 있는지 확인하고,
-          그 hash의 block bytes까지 있을 때 <code>finalizeCommit</code>으로 넘어갑니다. 마지막으로 BlockExecutor가
-          FinalizeBlock response, application Commit과 CometBFT State를 차례로 저장합니다.
+          CheckTx를 비동기로 호출합니다. 이 결과는 local node가 transaction을 후보로 보관했다는 뜻입니다.
+        </p>
+        <p>
+          Consensus의 <code>enterCommit</code>은 같은 round에 +2/3 precommit이 있는지 확인합니다. 그 hash의 block bytes까지
+          있어야 <code>finalizeCommit</code>으로 넘어갑니다. 마지막으로 BlockExecutor가 FinalizeBlock response,
+          application Commit과 CometBFT State를 차례로 저장합니다.
         </p>
 
         <div className="not-prose flex flex-wrap gap-2">
@@ -122,10 +125,12 @@ export default function Overview() {
           받을 때까지 application 실행으로 넘어가지 않습니다.
         </p>
         <p>
-          Application Commit 뒤 CometBFT State 저장 전에 멈춘 경우는 더 조심해야 합니다. Restart handshake는 BlockStore,
-          저장한 FinalizeBlock response, application height·AppHash와 CometBFT State를 비교해 빠진 단계를 재생해야 합니다.
-          이때 email·결제 API 같은 외부 효과를 FinalizeBlock 안에서 무조건 다시 호출하면 중복될 수 있으므로 합의 state의 outbox와
-          stable transaction ID로 별도 조정해야 합니다.
+          Application Commit 뒤 CometBFT State를 저장하기 전에 멈춘 경우는 더 조심해야 합니다. Restart handshake는 BlockStore와
+          저장된 FinalizeBlock response, application height·AppHash, CometBFT State를 비교해 빠진 단계를 재생합니다.
+        </p>
+        <p>
+          이때 email이나 결제 API 같은 외부 효과를 FinalizeBlock 안에서 무조건 다시 호출하면 중복될 수 있습니다. 합의 state의
+          outbox와 stable transaction ID를 이용해 별도로 조정해야 합니다.
         </p>
 
         <div className="not-prose overflow-x-auto">
