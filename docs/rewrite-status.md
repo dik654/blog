@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Reth ExEx canonical 변화·파생 상태 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/reth-exex`를 old canonical 103~105가 common ancestor 102 뒤의 new 103′~105′로 바뀌는 reorg 하나로 다시 썼습니다. Notification, WAL, manager 전달, extension rollback·apply, FinishedHeight, retention, backpressure와 재시작까지 아홉 장면으로 연결했습니다.
+- Reth v2.8.1 commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`을 고정했습니다. `ExExNotification`, `ExExContext`, manager buffer, `FinishedHeight`, WAL finalization과 with-head restart stream을 실제 source excerpt로 대조했습니다.
+- Manager의 `delivered`는 per-ExEx channel에 notification을 넣었다는 뜻입니다. 파생 데이터와 `ExExHead`의 durable commit은 extension이 소유합니다. A가 new 105′, B가 102까지 완료했다면 common FinishedHeight는 102이며, WAL 정리는 모든 head hash의 canonicality를 확인하고 finalized header 104와 다시 최솟값을 취합니다.
+- 느린 extension은 용량 1인 channel부터 막습니다. Manager의 기본 1,024-item buffer가 차면 capacity가 0이 되고 upstream `send_async`도 기다립니다. 재시작은 저장한 `ExExHead` hash의 canonicality를 확인하고 필요한 inverse notification과 canonical backfill을 적용한 뒤, 그동안 보관한 live reorg를 순서대로 이어서 전달합니다.
+- Production 390×844에서 문서 폭은 390px이고 시각화 334×743.6px 전체가 고정 header 아래 화면 안에 들어옵니다. 1,440×1,000에서는 시각화가 664×752.5px이며 두 화면 모두 가로 넘침과 console 오류·경고가 없습니다. 11초 동안 자동 재생하지 않았고 키보드로 장면 0→1이 이동했습니다.
+- Reduced-motion에서는 재생이 비활성화되고 실행 중 animation은 0건이며 수동 이동은 유지됩니다. JavaScript 비활성 390×844 경로는 live 영역을 숨기고 정적 아홉 장면, 재시작 결론과 9,273자의 전체 본문을 폭 390 안에 표시합니다.
+- 전체 TypeScript와 production build를 통과했습니다. Build는 8,100개 module과 정적 public route 2,120개를 생성했고 최대 RSS는 약 6.28GB, swap은 0이었습니다. 정적 registry에 경로를 추가한 뒤 no-script 본문은 346편입니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### Reth RPC 경계 공개 검증 완료 (2026-10-30)
 
 - `blockchain/reth-rpc`를 공개 `eth_getBalance(A, latest)` 요청과 JWT 인증 `engine_newPayloadV4` 요청이 같은 실행 클라이언트의 서로 다른 입구로 들어가는 한 사례로 다시 썼습니다. 공개 조회, 후보 검증, `forkchoiceUpdated`, 후속 공개 조회까지 아홉 장면으로 연결했습니다.

@@ -6119,43 +6119,76 @@
     },
     {
       "route": "blockchain/reth-exex",
-      "title": "Reth ExEx (Execution Extensions)",
-      "status": "unreviewed",
+      "title": "Reth ExEx: canonical 변화와 파생 상태",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-exex.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-exex.tsx",
-        "src/pages/articles/ethereum/reth-exex/Notification.tsx",
-        "src/pages/articles/ethereum/reth-exex/NotificationData.ts",
-        "src/pages/articles/ethereum/reth-exex/Overview.tsx",
-        "src/pages/articles/ethereum/reth-exex/OverviewData.ts",
-        "src/pages/articles/ethereum/reth-exex/UseCases.tsx",
-        "src/pages/articles/ethereum/reth-exex/UseCasesData.ts"
+        "src/pages/articles/ethereum/reth-exex/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-exex/RethExExLocator.tsx",
+        "src/pages/articles/ethereum/reth-exex/viz/RethExExFlowViz.tsx",
+        "src/pages/articles/ethereum/reth-exex/modernCodeRefs.ts",
+        "src/pages/articles/ethereum/reth-exex/modernFileTree.ts",
+        "src/pages/articles/ethereum/reth-exex/codebase/reth-v2.8.1/notification.rs",
+        "src/pages/articles/ethereum/reth-exex/codebase/reth-v2.8.1/manager-delivery.rs",
+        "src/pages/articles/ethereum/reth-exex/codebase/reth-v2.8.1/finished-height.rs",
+        "src/pages/articles/ethereum/reth-exex/codebase/reth-v2.8.1/restart-catchup.rs",
+        "src/content/reth-exex-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 9,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "assumptionMarkers": 4,
+        "sourceButtons": 4,
         "headings": [
-          "\n        Notification: reorg를 rollback + apply로 표현하기\n      ",
-          "\n        ExEx: canonical chain의 파생 상태를 함께 운용하기\n      ",
-          "\n        활용 판단: 빠른 접근보다 state machine이 먼저\n      "
+          "Reth ExEx는 reorg를 어떻게 파생 상태에 반영합니까?",
+          "높이가 같아도 branch가 바뀌면 파생 행도 바뀌어야 합니다",
+          "ChainReorged는 old와 new 구간을 한 notification에 보존합니다",
+          "Manager의 delivered는 channel에 넣었다는 뜻입니다",
+          "파생 데이터와 ExExHead를 한 로컬 확정 단위로 묶어야 합니다",
+          "FinishedHeight는 처리 완료와 과거 block 불필요를 함께 선언합니다",
+          "공통 완료 높이와 WAL 정리 경계는 같은 계산이 아닙니다",
+          "느린 ExEx는 자신의 channel에서 시작해 upstream까지 멈춥니다",
+          "재시작은 저장한 ExExHead의 branch부터 다시 확인합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 notification·context·활용 사례를 따로 나열해 canonical reorg 하나가 extension의 파생 상태와 완료 경계까지 어떻게 전파되는지 추적하기 어려웠습니다.",
+        "Manager가 channel에 notification을 넣은 delivered 시점과 extension이 파생 DB·ExExHead를 durable하게 확정한 시점이 구분되지 않았습니다.",
+        "FinishedHeight를 단순 처리 진척도로 설명해 reorg 때 낮아질 수 있는 점, 공통 완료 높이와 WAL finalization의 hash canonicality 검사가 빠져 있었습니다.",
+        "재시작 때 저장한 ExExHead의 canonicality 확인, 역 notification, backfill 중 live event 보관 경로가 설명되지 않았습니다."
+      ],
+      "fixture": "Canonical old branch 103~105가 common ancestor 102 뒤의 new branch 103′~105′로 바뀝니다. Extension A는 new 105′까지 durable하게 적용했고 Extension B는 102까지만 완료했으며 finalized header는 104입니다.",
+      "stageEvidence": {
+        "reorg": "ChainReorged가 old 103~105와 new 103′~105′를 같은 notification에 담아 rollback 대상과 apply 대상을 보존합니다.",
+        "wal": "BlockchainTree에서 온 notification은 WAL에 남고 이미 finalized된 pipeline notification은 WAL을 건너뜁니다.",
+        "delivery": "Manager buffer의 item은 모든 ExEx channel에 전송될 때까지 남지만 channel 전달은 extension의 로컬 durable commit을 증명하지 않습니다.",
+        "rollback": "Extension은 old branch 파생 행을 common ancestor 102까지 되돌립니다.",
+        "apply": "New 103′~105′ 파생 행과 ExExHead 105′를 같은 로컬 transaction에 확정해야 crash 뒤 중복·누락을 막을 수 있습니다.",
+        "finished": "A=105′, B=102에서 공통 FinishedHeight는 최솟값 102이며 reorg 때 각 extension의 값이 낮아질 수 있습니다.",
+        "retention": "WAL 정리 경계는 모든 ExEx head hash가 canonical인지 확인한 뒤 공통 FinishedHeight와 finalized header의 최솟값으로 정합니다.",
+        "backpressure": "용량 1인 per-ExEx channel이 막히면 manager의 기본 1024 buffer가 차고, 남은 capacity가 0이면 upstream send_async도 기다립니다.",
+        "restart": "With-head stream이 저장한 head hash의 canonicality를 확인하고 필요하면 inverse notification을 적용한 뒤 빠진 canonical range를 backfill하며 live reorg를 별도 보관합니다.",
+        "fallback": "JavaScript 비활성 화면에서도 live 장면은 숨기고 같은 아홉 장면과 결론을 정적 목록으로 제공합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185e4e90ee79dc65f6a5706168b0bcb의 ExExNotification에서 committed·reorged·reverted가 new·old chain을 어떻게 보존하는지 확인했습니다.",
+        "같은 release의 ExExContext와 ExExManager에서 per-ExEx channel capacity 1, manager 기본 buffer 1024, 모든 ExEx에 전송될 때까지 item을 보존하는 경계를 확인했습니다.",
+        "FinishedHeight와 manager WAL finalization source에서 reorg 때 높이 감소, common minimum, canonical hash 검사와 finalized header 제한을 확인했습니다.",
+        "With-head notification stream source에서 저장 head canonicality 확인, inverse notification, backfill 중 live channel drain과 이후 replay 순서를 확인했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 Reth v2.8.1 고정 source를 다시 읽어 활용 사례 나열을 한 reorg의 전달·로컬 확정·완료·retention·backpressure·restart 경로로 교체했습니다.",
+        "arithmetic": "old·new branch 103~105, common ancestor 102, A FinishedHeight 105′, B 102, finalized 104에서 common과 WAL 경계가 모두 102가 되는 설명용 fixture를 독립 확인했습니다.",
+        "humanize": "학습 계약, article, knowledge graph, topology, 읽기 순서, 한국어, 용어, runtime, 시각화와 architecture-flow strict 검사가 통과했습니다.",
+        "browser390": "프로덕션 390×844에서 문서 폭 390=390, 시각화 334×743.6px가 고정 header 아래 화면 안에 들어가고 49.5px 조작부, 무자동재생, 키보드 이동을 확인했습니다. Reduced-motion에서는 재생이 비활성이고 수동 이동이 유지되며 실행 중 animation은 0건입니다. JavaScript 비활성 경로는 HTTP 200, 본문 9,273자, live 영역 display none, 정적 9장면과 재시작 결론을 폭 390 안에 표시합니다.",
+        "browser1440": "프로덕션 1440×1000에서 문서 폭 1440=1440, 시각화 664×752.5px, 11초 무자동재생, ArrowRight 0→1 이동과 console 오류·경고 0건을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,100개 module과 정적 public route 2,120개를 만들었습니다. 최대 RSS는 약 6.28GB, swap은 0입니다. Route 등록 뒤 no-script 본문은 346편입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-reorg-delivery-durability-recovery-mechanism"
     },
     {
       "route": "blockchain/reth-mev",
