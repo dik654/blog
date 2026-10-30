@@ -46,20 +46,28 @@ export default function ValidatorSet({
         <h3>Validator update에는 높이 지연이 있습니다</h3>
         <p>
           Application이 FinalizeBlock에서 반환한 update가 어느 height의 block validation과 last-commit 정보에 반영되는지는
-          protocol lifecycle이 정합니다. 그래서 운영 로그에는 “현재 set”, “다음 set”, “commit을 검증한 historical set”을 구분해 적고
-          height와 hash를 나란히 남겨 둡니다. 최신 set으로 과거 commit을 검증하면 정상 서명을 잘못 거부할 수 있습니다.
+          protocol lifecycle이 정합니다. 반환 시점과 실제 적용 높이는 같다고 가정할 수 없습니다.
         </p>
         <p>
-          숫자를 작게 잡아 보겠습니다. power가 3과 1이고 priority는 둘 다 0입니다. 첫 round에 power를 더하면 3과 1이므로 첫 validator를 고르고
-          total power 4를 빼 priority는 -1과 1이 됩니다. 다음 round에 다시 power를 더하면 2와 2가 되므로 pinned implementation의
-          deterministic tie-break가 proposer를 정합니다. 이 예는 scheduling 계산이지 proposal validity나 commit certificate가
-          아닙니다.
+          운영 로그에는 “현재 set”, “다음 set”, “commit을 검증한 historical set”을 구분해 적고 height와 hash를 함께 남깁니다.
+          최신 set으로 과거 commit을 검증하면 정상 서명을 잘못 거부할 수 있습니다.
         </p>
-        <h3>Evidence는 signed conflict에서 application policy까지 이어지는 pipeline입니다</h3>
         <p>
-          DuplicateVoteEvidence는 같은 validator·height·round·vote type인데 BlockID가 다른 두 signed vote를 묶습니다. 하지만 두
-          bytes를 찾았다는 사실만으로 처벌이 끝나지는 않습니다. 당시 membership·power와 signature를 봐야 하고 chain ID와 age, 이미 commit됐는지도
-          함께 검증합니다. 그렇게 통과한 evidence를 block에 포함한 뒤 FinalizeBlock의 misbehavior 입력으로 application에 전달합니다.
+          숫자를 작게 잡아 보겠습니다. power가 3과 1이고 priority는 둘 다 0입니다. 첫 round에 power를 더하면 3과 1이 됩니다.
+          첫 validator를 고른 뒤 total power 4를 빼면 priority는 -1과 1이 됩니다.
+        </p>
+        <p>
+          다음 round에 다시 power를 더하면 2와 2가 됩니다. 이때 고정한 implementation의 deterministic tie-break가 proposer를
+          정합니다. 이 계산은 scheduling을 설명할 뿐 proposal validity나 commit certificate를 증명하지 않습니다.
+        </p>
+        <h3>Evidence는 conflict를 증명한 뒤 application으로 넘어갑니다</h3>
+        <p>
+          DuplicateVoteEvidence는 validator·height·round·vote type이 같고 BlockID가 다른 두 signed vote를 묶습니다. 두 bytes를
+          찾았다는 사실만으로 처벌이 끝나지는 않습니다.
+        </p>
+        <p>
+          당시 membership·power와 signature를 확인하고 chain ID와 age, 이미 commit됐는지도 함께 검증합니다. 이 검사를 통과한
+          evidence를 block에 포함한 뒤 FinalizeBlock의 misbehavior 입력으로 application에 전달합니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
