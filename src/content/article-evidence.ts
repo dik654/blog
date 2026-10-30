@@ -5821,20 +5821,26 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "공식 규격",
       label: "CometBFT v0.40.0 — ABCI++ Methods",
-      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_methods.md",
+      href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/abci/abci%2B%2B_methods.md",
       note: "PrepareProposal·ProcessProposal·FinalizeBlock·Commit의 field와 호출·authority 기준",
     },
     {
       kind: "공식 규격",
       label: "CometBFT v0.40.0 — ABCI Application Requirements",
-      href: "https://github.com/cometbft/cometbft/blob/v0.40.0/spec/abci/abci%2B%2B_app_requirements.md",
+      href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/abci/abci%2B%2B_app_requirements.md",
       note: "Determinism·candidate state·connection ordering·crash recovery에 대한 application 의무",
     },
     {
       kind: "공식 코드",
       label: "CometBFT v0.40.0 — ABCI source snapshot",
-      href: "https://github.com/cometbft/cometbft/tree/v0.40.0/abci",
-      note: "실제 protobuf type과 client/server adapter를 확인하는 pinned source",
+      href: "https://github.com/cometbft/cometbft/tree/0880b4d378f347ab16e54ec677ff50d803f37d62/abci",
+      note: "실제 Application interface와 local/socket/gRPC client adapter를 확인하는 content commit",
+    },
+    {
+      kind: "공식 코드",
+      label: "CometBFT v0.40.0 — BlockExecutor source snapshot",
+      href: "https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/state/execution.go",
+      note: "Prepare·Process·Finalize response 저장·Commit·CometBFT State 저장 순서의 고정 구현",
     },
   ],
   "blockchain/cometbft-consensus": [
