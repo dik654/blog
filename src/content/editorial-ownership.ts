@@ -9718,10 +9718,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Legacy paths는 Lotus v1.36.0 commit 154c0c3, current task design은 Curio official docs에 따로 귀속한다." }, { kind: "project-measurement", rule: "Same sector/profile/deadline에서 artifact parity·lease/retry·independent proof verify·chain inclusion과 slack을 측정한다." }, { kind: "project-claim", rule: "Proof generation·worker health·평균 stage time을 active sector·block/message inclusion·deadline success로 확대하지 않는다." }],
   },
   "curve-stable": {
-    title: "Curve StableSwap invariant·risk 글이 소유하는 범위",
-    owns: ["정규화 balances와 amplification invariant", "A ramp·depeg inventory 경계와 StableSwap release gate"],
+    title: "Curve StableSwap 한 교환의 정규화·계산·전송 글이 소유하는 범위",
+    owns: ["Raw balance→rate→xp와 A·D·y의 정수 계산", "Fee·min_dy·transfer failure와 A ramp·depeg inventory 경계"],
     reuses: [{ label: "Constant-product AMM invariant", href: "/cs/blockchain/uniswap-v2#constant-product" }, { label: "Stablecoin target·redemption 경계", href: "/cs/blockchain/stablecoin-overview#overview" }],
-    evidence: [{ kind: "primary-source", rule: "Invariant와 A의 주장은 StableSwap whitepaper, 구현 주장은 pinned stableswap-ng commit 2abe778f에 귀속한다." }, { kind: "project-measurement", rule: "같은 token/rate/A generation에서 integer D·output·fee·LP supply와 depeg stress를 paired 비교한다." }, { kind: "project-claim", rule: "낮은 slippage를 peg·issuer solvency·LP 무손실 또는 고정 current parameter로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Invariant와 A의 주장은 StableSwap whitepaper, 구현과 fixture는 pinned stableswap-ng commit 2abe778f에 귀속한다." }, { kind: "primary-source", rule: "1,500,000/1,500,000·A 2000·fee 0.01%·dx 1,000의 integer D·y·dy를 source 식과 공식 test expectation에 연결한다." }, { kind: "project-claim", rule: "Source trace를 Titanoboa contract 측정으로, 낮은 slippage를 peg·issuer solvency·LP 무손실 또는 고정 current parameter로 확대하지 않는다." }],
   },
   "rwa-composition": {
     "title": "기관 토큰의 가치는 발행된 권리, 같은 시각의 자산과 부채, 이전 자격, 실제 매매·상환 경로를 함께 읽어야 설명됩니다.",

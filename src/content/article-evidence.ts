@@ -8176,6 +8176,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/curve-stable": [
     { kind: "핵심 논문", label: "Curve StableSwap whitepaper", href: "https://curve.fi/files/stableswap-paper.pdf", note: "Amplification invariant와 balanced-region slippage의 원 설계이며 peg·solvency·current parameter 보장은 아님" },
     { kind: "공식 코드", label: "Curve StableSwap-NG · commit 2abe778f", href: "https://github.com/curvefi/stableswap-ng/tree/2abe778f40206a6c0fd108a0a53ad3266cbedeee", note: "Pinned pool/factory·rate·fee implementation이며 모든 historical pool/deployment와 동일하다는 뜻은 아님" },
+    { kind: "공식 예제", label: "StableSwap-NG · test_min_dy · commit 2abe778f", href: "https://github.com/curvefi/stableswap-ng/blob/2abe778f40206a6c0fd108a0a53ad3266cbedeee/tests/pools/exchange/test_exchange.py", note: "1,000-token quote와 실제 balance 증가량을 token profile별로 대조하는 fixture이며 quote 이후 상태 고정이나 모든 token의 1 wei 일치를 뜻하지 않음" },
   ],
   "blockchain/rwa-composition": [
     {
