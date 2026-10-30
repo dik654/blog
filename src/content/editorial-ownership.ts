@@ -9516,10 +9516,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Protocol은 Mysticeti paper, current behavior는 Sui mainnet-v1.77.2 exact source에 귀속한다." }, { kind: "project-measurement", rule: "Equivocation·undecided barrier·partition/GST·restart와 feature config를 고정해 재생한다." }, { kind: "project-claim", rule: "Uncertified를 unvalidated로, FPC execution을 checkpoint finality로 표현하지 않는다." }],
   },
   "impl-field-arithmetic": {
-    title: "Rust field parameter·serialization·execution 글이 소유하는 범위",
-    owns: ["Versioned field parameter artifact와 canonical/internal serialization boundary", "Carry/reduction execution profile과 parity/codegen release gate"],
+    title: "Rust field value lifecycle 글이 소유하는 범위",
+    owns: ["Field parameter bundle과 canonical/internal serialization boundary", "한 값의 Montgomery 곱셈·복원 경로와 공개 경계의 correctness evidence"],
     reuses: [{ label: "Prime field·Montgomery", href: "/cs/crypto/field-arithmetic" }, { label: "Extension field implementation", href: "/cs/crypto/extension-fields" }],
-    evidence: [{ kind: "primary-source", rule: "Implementation 사실은 arkworks algebra commit 6a28df5 source에 귀속한다." }, { kind: "project-measurement", rule: "Exact artifact/compiler/target에서 reference parity·boundary vectors·timing/RSS를 비교한다." }, { kind: "project-claim", rule: "Source-level branchless·microbenchmark를 production constant-time·proof speed로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Fp 저장·MontConfig 상수·range admission·Montgomery reduction·canonical serialization은 arkworks algebra commit 6a28df5 source에 귀속한다." }, { kind: "project-claim", rule: "p=13 예시는 공식 구현을 설명하기 위해 독립 계산한 축소 사례이며 arkworks의 production parameter가 아니다." }, { kind: "project-claim", rule: "Source-level branchless 표현과 한 arithmetic trace를 production constant-time·성능·배포 승인으로 확대하지 않는다." }],
   },
   "impl-elliptic-curve": {
     title: "Rust curve profile·point admission·pairing release 글이 소유하는 범위",
