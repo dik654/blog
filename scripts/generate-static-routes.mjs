@@ -387,6 +387,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/prysm-epoch-processing",
   "blockchain/prysm-block-processing",
   "blockchain/prysm-block-proposal",
+  "blockchain/prysm-forkchoice",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

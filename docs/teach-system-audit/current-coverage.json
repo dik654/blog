@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 698,
-    "pending": 309,
+    "reviewed": 699,
+    "pending": 308,
     "untracked": 0,
-    "assignedPending": 267,
+    "assignedPending": 266,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5201,11 +5201,11 @@
     {
       "route": "blockchain/prysm-forkchoice",
       "publicPath": "cs/blockchain/prysm-forkchoice",
-      "title": "Prysm Fork Choice (LMD-GHOST)",
+      "title": "Prysm 가지 선택",
       "catalogIndex": 517,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
