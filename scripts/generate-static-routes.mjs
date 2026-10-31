@@ -424,6 +424,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/cometbft-mempool",
   "blockchain/cometbft-state",
   "blockchain/cometbft-crypto",
+  "blockchain/omni-octane",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

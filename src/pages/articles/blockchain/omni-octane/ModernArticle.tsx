@@ -1,10 +1,12 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import {
-  OctaneBoundaryViz,
-  OctanePayloadLifecycleViz,
-} from "./viz/ModernOctaneViz";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import CosmosEvmLocator, { CosmosEvmMapReturn } from "../CosmosEvmLocator";
+import { codeRefs } from "./codeRefs";
+import { omniTree } from "./fileTrees";
+import { OctaneEvidenceBoundaryViz, OctanePayloadTraceViz } from "./viz/ModernOctaneViz";
 
 const SHA = "9864f25fa9bcb473ee34d2442012fc5fbd2683ea";
 const REPO = `https://github.com/omni-network/omni/tree/${SHA}`;
@@ -15,217 +17,287 @@ const EVENTS = `https://github.com/omni-network/omni/blob/${SHA}/octane/evmengin
 const ENGINE = `https://github.com/omni-network/omni/blob/${SHA}/lib/ethclient/engineclient.go`;
 const ENGINE_SPEC = "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85";
 
-export default function ModernArticle() {
+export default function ModernOctaneArticle() {
+  const sidebar = useCodeSidebar();
+
   return (
-    <article className="space-y-16">
-      <section id="overview" className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">CometBFT height 101과 EVM payload P101을 한 trace로 읽기</p>
-          <h2 className="text-3xl font-bold tracking-tight">
-            Octane은 EVM을 CometBFT 안에 다시 구현하지 않고 ABCI와 Engine API 사이에서 payload의 생명주기를 번역한다
-          </h2>
-        </header>
-        <p className="text-lg leading-8 text-foreground/90">
-          합의 엔진은 누가 어떤 proposal을 확정했는지 결정하고 execution client는 transaction을 실행해 payload가 유효한지 판단합니다. Halo
-          application의 Octane module은 이 둘 사이에서 payload를 Cosmos transaction message로 포장하고 Engine API status와
-          committed execution head를 조정합니다. 따라서 “CometBFT가 EVM을 실행한다”거나 “Engine API가 consensus finality를 만든다”는
-          설명은 책임 경계를 뒤섞습니다.
-        </p>
-        <p className="leading-7 text-muted-foreground">
-          이 글은 현재 moving main이 아니라 commit <code>9864f25</code> snapshot을 설명합니다. 이 snapshot은
-          CometBFT 0.38.19, Cosmos SDK 0.50.14, go-ethereum 1.15.7과 V3 Engine methods를 사용합니다.
-          Octane README 자체도 work in progress라고 밝히므로 “어떤 Engine client든 무수정 호환”이나 고정
-          처리량을 구현 사실로 확대하지 않습니다.
-        </p>
-        <OctaneBoundaryViz />
-        <ContentBoundary article="omni-octane" />
-        <div id="paper-octane-snapshot">
-          <CitationBlock type="code" citeKey={1} source="Omni Octane repository snapshot · 9864f25" href={REPO}>
-            <p><strong>문제:</strong> CometBFT consensus와 EVM execution client를 모듈 경계로 연결해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> Pinned monorepo는 Halo application, Octane evmengine module과 authenticated Engine client의 실제 조합을 제공합니다.</p>
-            <p><strong>중요 가정:</strong> Commit, go.mod dependency versions, genesis·fork configuration과 execution client를 함께 고정합니다.</p>
-            <p><strong>근거 범위:</strong> commit {SHA.slice(0, 8)}의 공개 source snapshot에 한정합니다.</p>
-            <p><strong>일반화 금지:</strong> Moving main, 모든 Engine client 호환, production readiness 또는 고정 finality latency를 보장하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-        <div id="paper-octane-readme">
-          <CitationBlock type="code" citeKey={2} source="Octane README · modular framework status" href={README}>
-            <p><strong>문제:</strong> ABCI 2.0 consensus application과 Engine API execution client의 목표 범위를 밝혀야 합니다.</p>
-            <p><strong>핵심 기여:</strong> README는 framework goal, Halo example과 work-in-progress status를 명시합니다.</p>
-            <p><strong>중요 가정:</strong> 문서와 같은 commit의 실제 source·tests를 함께 읽습니다.</p>
-            <p><strong>근거 범위:</strong> Project가 선언한 architecture goal과 status에 한정합니다.</p>
-            <p><strong>일반화 금지:</strong> 목표 문장을 client parity·security audit 통과·성능 결과로 취급하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
+    <>
+      <article>
+        <section id="overview" className="mb-16 scroll-mt-20">
+          <CosmosEvmLocator
+            currentSlug="omni-octane"
+            region="ABCI proposal·finalization과 Engine API payload의 상태 연결"
+            question="Execution client가 P101을 VALID로 판정하면 CometBFT 높이 101과 EVM canonical head도 곧바로 확정될까요?"
+          />
+          <h2 className="mb-6 text-2xl font-bold">P101이 확정되기까지 세 상태가 차례로 바뀝니다</h2>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p className="text-lg leading-8">
+              CometBFT는 높이 101의 proposal·vote·commit 순서를 결정합니다. Execution client는 H100 위에서 EVM payload P101을
+              만들고 실행 가능 여부와 canonical head를 관리합니다. Halo application의 Octane module은 ABCI와 authenticated Engine API
+              사이에서 두 상태를 연결합니다.
+            </p>
+            <p className="text-lg leading-8">
+              아래 추적은 committed application <code>AppHash A100</code>과 execution head <code>H100</code>에서 시작합니다.
+              Proposer가 <code>P101</code>을 만들고 proposal <code>C101</code>로 제출한 뒤, CometBFT가 <code>B101</code>을 확정하고
+              각 node가 local execution head를 <code>EP101</code>로 옮기는 과정까지 같은 사례로 따라갑니다.
+            </p>
+          </div>
+          <ContentBoundary article="omni-octane" />
+          <OctanePayloadTraceViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <h3>세 구성요소가 소유하는 정본은 다릅니다</h3>
+            <ul>
+              <li><strong>CometBFT</strong>는 어느 proposal이 높이 101의 block으로 commit됐는지 소유합니다.</li>
+              <li><strong>Halo·Octane</strong>은 payload message, keeper execution head와 EVM log가 바꾸는 Cosmos state를 소유합니다.</li>
+              <li><strong>Execution client</strong>는 payload build cache, EVM 실행 판정과 local canonical chain을 소유합니다.</li>
+            </ul>
+            <p>
+              따라서 <code>payloadId</code>, <code>newPayloadV3 VALID</code>, CometBFT Commit, <code>forkchoiceUpdatedV3</code> 성공은
+              같은 완료 신호가 아닙니다. 앞의 성공을 뒤의 성공으로 확대하면 node가 멈춘 지점을 구분할 수 없습니다.
+            </p>
+            <p>
+              CometBFT ABCI++ 실행 순서가 낯설다면 <Link to="/cs/blockchain/cometbft-abci#overview">ABCI++ 한 요청 추적</Link>과
+              <Link to="/cs/blockchain/cometbft-execution#overview"> BlockExecutor 저장 순서</Link>를 먼저 보면 이 글의 두 경계가 이어집니다.
+            </p>
+          </div>
 
-      <section id="proposal-build" className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">PrepareProposal · candidate build</p>
-          <h2 className="text-2xl font-bold">Payload ID는 block이 아니라 제한된 build attempt의 영수증이다</h2>
-        </header>
-        <p className="leading-7">
-          Height 101 proposer는 local execution head H100과 current AppHash A100을 읽습니다. 다음 proposer라고
-          미리 추정해 둔 optimistic payload가 같은 height면 재사용하고, 아니면
-          <code>forkchoiceUpdatedV3</code>에 head=safe=finalized=H100과 payload attributes를 보내 build를
-          시작합니다. 반환된 payload ID로 <code>getPayloadV3</code>를 호출한 뒤, vote-extension messages와
-          execution payload message를 한 unsigned Cosmos transaction으로 묶습니다. Payload ID는 consensus
-          commit도, 다른 node에서 재사용 가능한 block ID도 아닙니다.
-        </p>
-        <ExplainedFormula
-          question="PrepareProposal의 10초 context 안에서 어디에 시간이 쓰이는가?"
-          idea={<>Build start, configured delay, payload retrieval과 encoding을 같은 monotonic trace에 더하고 timeout과 비교합니다.</>}
-          formula={String.raw`\begin{aligned}T_{build}&=T_{FCU}+d_{build}\\T_{prepare}&=T_{build}+T_{get}+T_{encode}\\T_{prepare}&<10\ \mathrm{s}\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}\underbrace{T_{build}}_{\text{build 단계}}&=\underbrace{T_{FCU}}_{\text{build 시작 요청}}+\underbrace{d_{build}}_{\text{설정된 대기}}\\\underbrace{T_{prepare}}_{\text{proposal 준비 전체}}&=T_{build}+\underbrace{T_{get}}_{\text{payload 수신}}+\underbrace{T_{encode}}_{\text{tx로 encode}}\\T_{prepare}&<\underbrace{10\ \mathrm{s}}_{\text{context timeout}}\end{aligned}`}
-          operations={[
-          { expression: String.raw`T_{FCU}+d_{build}`, annotation: ["forkchoiceUpdatedV3 응답 후","설정된 build delay만큼 기다림","FCU가 빨라도 delay가 budget을 씀"] },
-          { expression: String.raw`T_{build}+T_{get}+T_{encode}`, annotation: ["getPayloadV3 수신과 encode를 더함","retry도 같은 attempt 시간에 합산"] },
-          { expression: String.raw`10\ \mathrm{s}`, annotation: ["abci.go PrepareProposal context 한도","generic CometBFT SLA는 아님","넘으면 empty proposal 경로 가능"] },
-        ]}
-          terms={[
-            { symbol: "T_{FCU}", name: "Build-start latency", description: "forkchoiceUpdatedV3 request와 typed response 시간입니다." },
-            { symbol: "d_{build}", name: "Configured build delay", description: "Payload를 가져오기 전 기다리는 node configuration 값입니다." },
-            { symbol: "T_{build}", name: "Build phase", description: "Build start request와 configured delay를 합한 시간입니다." },
-            { symbol: "T_{get}", name: "Payload retrieval latency", description: "payload ID로 getPayloadV3 envelope를 받는 시간입니다." },
-            { symbol: "T_{encode}", name: "Proposal encoding time", description: "Commitments·vote messages·payload를 한 transaction으로 encode하는 시간입니다." },
-          ]}
-          assumptions={[
-            "10초는 pinned abci.go의 PrepareProposal context timeout이며 generic CometBFT SLA가 아닙니다.",
-            "Network retry와 build delay를 monotonic clock으로 같은 attempt 안에서 측정합니다.",
-            "Timeout이면 source comment처럼 empty proposal 경로가 가능하며 candidate commit을 뜻하지 않습니다.",
-          ]}
-          interpretation="FCU가 빨라도 build delay나 getPayload retry가 budget을 소진할 수 있습니다. 한 평균만으로 release하지 말고 cold build, optimistic hit, unknown payload와 timeout을 각각 측정합니다."
-        />
-        <OctanePayloadLifecycleViz />
-        <div id="paper-octane-abci">
-          <CitationBlock type="code" citeKey={3} source="Octane ABCI proposal bridge · 9864f25" href={ABCI}>
-            <p><strong>문제:</strong> CometBFT proposer가 execution payload를 제한 시간 안에 만들고 deterministic message로 제출해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> PrepareProposal의 timeout, optimistic build, V3 build/get, blob commitment와 single-transaction packaging 경계를 구현합니다.</p>
-            <p><strong>중요 가정:</strong> Pinned dependencies, local execution head, fee recipient, withdrawal provider와 vote provider를 고정합니다.</p>
-            <p><strong>근거 범위:</strong> Pinned <code>octane/evmengine/keeper/abci.go</code>의 proposal-build path입니다.</p>
-            <p><strong>일반화 금지:</strong> Payload ID를 commit·durability receipt로 보거나 10초를 모든 deployment의 latency 보장으로 확대하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
+          <div id="paper-octane-snapshot" className="scroll-mt-24">
+            <CitationBlock type="code" citeKey={1} source="Omni Octane repository snapshot · 9864f25" href={REPO}>
+              <p><strong>문제:</strong> CometBFT application과 EVM execution client의 실제 연결 지점을 확인해야 합니다.</p>
+              <p><strong>기여:</strong> 고정한 monorepo는 Halo application, Octane evmengine module과 Engine client adapter를 함께 보여 줍니다.</p>
+              <p><strong>전제:</strong> Commit, Go dependencies, genesis·fork 설정과 execution client profile을 함께 고정합니다.</p>
+              <p><strong>근거 범위:</strong> Commit {SHA.slice(0, 8)}의 공개 source에 한정합니다.</p>
+              <p><strong>말하지 않는 것:</strong> Moving main, 모든 Engine client 호환성, 보안 감사 완료나 고정 처리량을 보장하지 않습니다.</p>
+            </CitationBlock>
+          </div>
+          <div id="paper-octane-readme" className="scroll-mt-24">
+            <CitationBlock type="code" citeKey={2} source="Octane README · work-in-progress status" href={README}>
+              <p><strong>문제:</strong> 프로젝트의 목표와 현재 구현 완료 범위를 구분해야 합니다.</p>
+              <p><strong>기여:</strong> README는 ABCI 2.0·Engine API framework 목표, Halo example과 work-in-progress 상태를 명시합니다.</p>
+              <p><strong>전제:</strong> 같은 commit의 코드와 tests를 함께 읽습니다.</p>
+              <p><strong>근거 범위:</strong> 프로젝트가 선언한 architecture goal과 공개 상태입니다.</p>
+              <p><strong>말하지 않는 것:</strong> README의 목표 문장은 client parity·production readiness·성능 결과가 아닙니다.</p>
+            </CitationBlock>
+          </div>
+        </section>
 
-      <section id="validate-finalize" className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">ProcessProposal · FinalizeBlock</p>
-          <h2 className="text-2xl font-bold">Candidate validity와 committed execution head는 두 번의 다른 판단이다</h2>
-        </header>
-        <p className="leading-7">
-          Validator는 module authority, payload decoding, ordered withdrawals, fee recipient, no-witness rule,
-          parent hash, block number와 timestamp range를 먼저 확인합니다. 그다음 <code>newPayloadV3</code> 결과가
-          INVALID면 proposal을 거절합니다. SYNCING·ACCEPTED는 local execution client가 아직 충분히 검증하지
-          못했다는 상태이지 VALID의 다른 표기가 아닙니다. Commit된 block을 finalize할 때 payload를 다시 push한
-          뒤 <code>forkchoiceUpdatedV3</code>로 그 hash를 head·safe·finalized에 놓고서야 local execution head를
-          갱신합니다.
-        </p>
-        <ExplainedFormula
-          question="어떤 증거가 candidate P101을 committed execution head로 승격하는가?"
-          idea={<>Payload status와 CometBFT commit을 분리하고, 둘이 맞는 height·hash에서 만날 때만 local canonical pointers를 전진시킵니다.</>}
-          formula={String.raw`\begin{aligned}v&=NP_3(P_{101})\\c&=commit_{101}\\H&=hash(P_{101})\\c\land(v=VALID)&\Rightarrow FCU_3\\(h,s,f)&\leftarrow(H,H,H)\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}\underbrace{v}_{\text{EL 실행 판정}}&=NP_3(P_{101})\\\underbrace{c}_{\text{CometBFT 확정}}&=commit_{101}\\\underbrace{H}_{\text{payload hash}}&=hash(P_{101})\\\underbrace{c\land(v=VALID)}_{\text{두 증거 모두 참}}&\Rightarrow FCU_3\\\underbrace{(h,s,f)}_{\text{head·safe·finalized}}&\leftarrow(H,H,H)\end{aligned}`}
-          operations={[
-          { expression: String.raw`NP_3(P_{101})`, annotation: ["P_101을 newPayloadV3로 실행 검증","VALID·INVALID·SYNCING을 따로 기록"] },
-          { expression: String.raw`commit_{101}`, annotation: ["CometBFT가 height 101을 확정한 증거","commit만으론 EVM validity 대체 불가"] },
-          { expression: String.raw`c\land(v=VALID)`, annotation: ["같은 height·hash에서 둘 다 참일 때만","FCU_3로 세 pointer를 H로 전진"] },
-        ]}
-          terms={[
-            { symbol: "P_{101}", name: "Candidate payload", description: "Height 101 proposal transaction 안의 decoded execution payload입니다." },
-            { symbol: "v", name: "Execution verdict", description: "VALID·INVALID·SYNCING·ACCEPTED 중 execution client가 돌려준 status입니다." },
-            { symbol: "NP_3", name: "newPayload V3", description: "Candidate payload를 실행 client에 검증 요청하는 versioned call입니다." },
-            { symbol: "c", name: "Consensus commit", description: "CometBFT가 height 101 proposal을 확정했다는 별도 evidence입니다." },
-            { symbol: "H", name: "Committed payload hash", description: "같은 payload P101의 execution block hash입니다." },
-            { symbol: "FCU_3", name: "forkchoiceUpdated V3", description: "Committed hash를 local canonical pointers에 반영하는 versioned call입니다." },
-            { symbol: "h,s,f", name: "Head·safe·finalized", description: "Pinned Octane policy에서 모두 H로 전진시키는 execution-client pointers입니다." },
-          ]}
-          assumptions={[
-            "같은 height, parent hash, payload bytes와 active fork/profile을 비교합니다.",
-            "표시한 implication은 안전한 release 판단을 위한 계약이며 source의 SYNCING retry/continue 세부를 VALID와 동일시하지 않습니다.",
-            "CometBFT instant finality 문구는 pinned integration의 pointer policy이며 generic Ethereum finality rule이 아닙니다.",
-          ]}
-          interpretation="newPayload VALID만으로 consensus commit은 생기지 않고, commit만으로 EVM validity를 대체할 수도 없습니다. INVALID·SYNCING·network error를 같은 retry bucket에 넣으면 safety와 liveness 원인을 잃습니다."
-        />
-        <div id="paper-octane-finalize">
-          <CitationBlock type="code" citeKey={4} source="Octane finalized payload handler · 9864f25" href={MSG}>
-            <p><strong>문제:</strong> Consensus에 포함된 payload를 execution client의 canonical head와 application state에 일관되게 반영해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> Finalize-only guard, payload revalidation, newPayload status, head/safe/finalized FCU와 execution-head update 순서를 구현합니다.</p>
-            <p><strong>중요 가정:</strong> Same payload/commit context, reachable authenticated client, matching V3 schema와 local store를 사용합니다.</p>
-            <p><strong>근거 범위:</strong> Pinned msg server의 finalized execution path에 한정합니다.</p>
-            <p><strong>일반화 금지:</strong> 모든 retry가 안전하거나 bounded하다는 주장, cross-node durability나 external effect 완료를 뜻하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-        <div id="paper-engine-api-contract">
-          <CitationBlock type="paper" citeKey={5} source="Ethereum execution-apis snapshot · 5aebdfdd" href={ENGINE_SPEC}>
-            <p><strong>문제:</strong> Consensus와 execution client가 payload build·validation·fork choice를 typed JSON-RPC로 교환해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> Versioned Engine methods, payload status와 authenticated API schema의 표준 근거를 제공합니다.</p>
-            <p><strong>중요 가정:</strong> Active fork, negotiated capability와 exact method/structure version을 함께 고정합니다.</p>
-            <p><strong>근거 범위:</strong> 표시한 execution-apis repository snapshot의 protocol surface입니다.</p>
-            <p><strong>일반화 금지:</strong> Octane의 ABCI packaging·retry·event processing이나 특정 client compatibility를 표준이 보장하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
+        <section id="proposal-build" className="mb-16 scroll-mt-20">
+          <h2 className="mb-6 text-2xl font-bold">Payload ID는 build를 다시 찾는 표식이지 block 영수증이 아닙니다</h2>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p>
+              Height 101 proposer는 keeper의 execution head H100과 현재 block header의 AppHash A100을 읽습니다. 다음 proposer라고
+              미리 판단해 둔 optimistic payload의 height가 101이면 그 ID를 재사용하고, 다르면
+              <code>forkchoiceUpdatedV3</code>에 H100과 payload attributes를 보내 새 build를 시작합니다.
+            </p>
+            <p>
+              설정된 build delay 뒤 <code>getPayloadV3(id101)</code>로 P101을 받습니다. P101과 blob commitments, 이전 height의 vote
+              messages는 한 unsigned Cosmos transaction으로 encode되어 C101에 들어갑니다. 이 ID는 execution client의 local cache에
+              속하므로 restart·expiry·unknown payload를 넘는 durable identifier가 아닙니다.
+            </p>
+          </div>
+          <div className="not-prose my-6 flex flex-wrap gap-3">
+            <CodeViewButton label="PrepareProposal 원문" onClick={() => sidebar.open("prepare-payload", codeRefs["prepare-payload"])} />
+            <CodeViewButton label="Engine status 원문" onClick={() => sidebar.open("engine-status", codeRefs["engine-status"])} />
+          </div>
 
-      <section id="event-release" className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">EVM log bridge · release evidence</p>
-          <h2 className="text-2xl font-bold">Finalized payload 뒤의 log effect는 별도 transaction boundary와 실패 장부가 필요하다</h2>
-        </header>
-        <p className="leading-7">
-          Pinned source는 registered processors별로 finalized block logs를 가져와 log index 순으로 정렬하고
-          address·topics·data를 검증합니다. 각 event는 별도 cached multistore branch에서 처리되며 성공한 branch만 write됩니다.
-          Processor panic이나 error는 해당 event write를 버리고 다음 event를 계속하므로 한 block의 모든 event가 원자적으로 적용된다고 말할 수
-          없습니다. 이 경계는 cross-chain 성공 증명도 아닙니다.
-        </p>
-        <ExplainedFormula
-          question="한 block의 event bridge가 완전 적용됐는지 어떻게 측정하는가?"
-          idea={<>관찰한 registered events 수와 성공적으로 commit된 event branches 수를 비교하고 실패 identity를 별도 ledger에 남깁니다.</>}
-          formula={String.raw`\begin{aligned}C_{event}&={N_{committed}\over N_{observed}}\\N_{failed}&=N_{observed}-N_{committed}\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}\underbrace{C_{event}}_{\text{event 적용 비율}}&={\underbrace{N_{committed}}_{\text{write된 branch}}\over \underbrace{N_{observed}}_{\text{관찰한 event}}}\\\underbrace{N_{failed}}_{\text{재조정 대상}}&=N_{observed}-N_{committed}\end{aligned}`}
-          operations={[
-          { expression: String.raw`{N_{committed}\over N_{observed}}`, annotation: ["같은 block hash에서 관찰한 event 중","state에 write된 branch의 비율","5개 중 4개면 0.8, 분모 0은 별도 표시"] },
-          { expression: String.raw`N_{observed}-N_{committed}`, annotation: ["error·panic으로 write 안 된 event","5−4=1개를 block/log identity로 재조정"] },
-        ]}
-          terms={[
-            { symbol: "N_{observed}", name: "Observed events", description: "Registered address/topic filters로 얻고 index 순으로 검증한 event 수입니다." },
-            { symbol: "N_{committed}", name: "Committed event branches", description: "Processor가 성공해 cached multistore branch가 write된 event 수입니다." },
-            { symbol: "N_{failed}", name: "Failed events", description: "Error 또는 recovered panic 때문에 state write가 되지 않은 event 수입니다." },
-            { symbol: "C_{event}", name: "Event application coverage", description: "같은 block hash에서 관찰된 events 중 state에 적용된 비율입니다." },
-          ]}
-          assumptions={[
-            "같은 block hash, processor generation, address/topic filters와 sorted log index를 사용합니다.",
-            "분모 0은 no-event case로 별도 표시하고 100%로 꾸미지 않습니다.",
-            "Coverage는 semantic correctness·destination effect·cross-chain delivery 성공률이 아닙니다.",
-          ]}
-          interpretation="예를 들어 5개 중 4개 branch만 commit되면 coverage는 0.8이고 failed event 1개를 block/log/processor identity로 재조정해야 합니다. Head update 성공만 기록하면 이 부분 적용을 놓칩니다."
+          <ExplainedFormula
+            question="예시 build가 10초 PrepareProposal 한도 안에 끝나는지 어떻게 계산합니까?"
+            idea={<>같은 attempt에서 FCU, configured delay, payload retrieval과 transaction encoding 시간을 더합니다. 아래 네 수치는 설명용 가정이며 실제 배포의 측정값이 아닙니다.</>}
+            formula={String.raw`T_{prepare}=0.15+0.40+0.20+0.05=0.80\ \mathrm{s}<10\ \mathrm{s}`}
+            annotatedFormula={String.raw`\underbrace{T_{prepare}}_{\text{proposal 준비}}=\underbrace{0.15}_{\text{FCU}}+\underbrace{0.40}_{\text{build delay}}+\underbrace{0.20}_{\text{getPayload}}+\underbrace{0.05}_{\text{encode}}=\underbrace{0.80\ \mathrm{s}}_{\text{가정한 한 attempt}}<\underbrace{10\ \mathrm{s}}_{\text{고정 코드의 context 한도}}`}
+            operations={[
+              { expression: String.raw`0.15+0.40`, annotation: ["FCU 응답과 설정한 대기", "0.55초까지 사용"] },
+              { expression: String.raw`+0.20+0.05`, annotation: ["Payload 수신과 tx encoding", "합계 0.80초"] },
+              { expression: String.raw`0.80<10`, annotation: ["이 가정에서는 한도 안", "Tail retry는 따로 측정"] },
+            ]}
+            terms={[
+              { symbol: "T_{prepare}", name: "Proposal 준비 시간", description: "한 PrepareProposal attempt에서 build 시작부터 encoded transaction 반환까지의 시간입니다." },
+              { symbol: "0.15", name: "FCU 가정", description: "forkchoiceUpdatedV3 요청·응답에 사용한 설명용 시간입니다." },
+              { symbol: "0.40", name: "Build delay 가정", description: "Payload를 가져오기 전 기다리는 설명용 설정값입니다." },
+              { symbol: "0.20", name: "GetPayload 가정", description: "id101로 P101 envelope를 받는 설명용 시간입니다." },
+              { symbol: "0.05", name: "Encode 가정", description: "Vote messages와 payload를 transaction으로 만드는 설명용 시간입니다." },
+            ]}
+            assumptions={[
+              "네 수치는 동작을 설명하기 위한 가정이며 실제 측정값이 아닙니다.",
+              "10초는 pinned abci.go의 context timeout이며 일반적인 CometBFT SLA가 아닙니다.",
+              "Network retry와 unknown payload, optimistic cache miss는 별도 경로로 측정해야 합니다.",
+            ]}
+            interpretation="평균 0.80초만 보고 충분하다고 판단할 수는 없습니다. Retry가 context를 소진하면 source 주석처럼 빈 proposal 경로가 가능하므로 cold build·optimistic hit·unknown payload·timeout을 각각 구분해야 합니다."
+          />
+
+          <div id="paper-octane-abci" className="scroll-mt-24">
+            <CitationBlock type="code" citeKey={3} source="Octane ABCI proposal bridge · 9864f25" href={ABCI}>
+              <p><strong>문제:</strong> Proposal budget 안에서 execution payload를 만들고 deterministic message로 제출해야 합니다.</p>
+              <p><strong>기여:</strong> PrepareProposal timeout, optimistic build, V3 build/get, blob commitments와 single transaction packaging을 구현합니다.</p>
+              <p><strong>전제:</strong> 고정 dependencies, local execution head, fee recipient·withdrawal·vote providers와 build 설정을 사용합니다.</p>
+              <p><strong>근거 범위:</strong> 고정한 <code>octane/evmengine/keeper/abci.go</code>의 proposal-build 경로입니다.</p>
+              <p><strong>말하지 않는 것:</strong> Payload ID durability, consensus commit이나 모든 배포의 10초 latency 보장이 아닙니다.</p>
+            </CitationBlock>
+          </div>
+        </section>
+
+        <section id="validate-finalize" className="mb-16 scroll-mt-20">
+          <h2 className="mb-6 text-2xl font-bold">Candidate 검증과 canonical head 전진은 서로 다른 단계입니다</h2>
+          <OctaneEvidenceBoundaryViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p>
+              ProcessProposal 경로는 module authority, ordered withdrawals, no-witness rule, fee recipient, parent H100, block number,
+              timestamp 범위와 Random 값을 먼저 검사합니다. 그다음 <code>newPayloadV3</code>가 INVALID를 반환하면 proposal을 거절합니다.
+              SYNCING·ACCEPTED는 VALID와 같은 판정이 아니지만 initial sync가 target head를 받을 수 있도록 이 고정 구현은 후보 경로를 계속합니다.
+            </p>
+            <p>
+              CometBFT가 C101을 B101로 commit한 뒤 Finalize mode가 같은 payload를 다시 <code>newPayloadV3</code>에 넣습니다.
+              이어서 <code>forkchoiceUpdatedV3</code>가 VALID를 반환할 때까지 SYNCING·transport error를 retry하고, 성공하면 local
+              head·safe·finalized를 모두 EP101로 전진시킵니다. ProcessProposal의 VALID만으로는 이 pointer 변경이 일어나지 않습니다.
+            </p>
+          </div>
+          <div className="not-prose my-6 flex flex-wrap gap-3">
+            <CodeViewButton label="Envelope 검사 원문" onClick={() => sidebar.open("verify-payload-envelope", codeRefs["verify-payload-envelope"])} />
+            <CodeViewButton label="ProcessProposal 원문" onClick={() => sidebar.open("process-candidate", codeRefs["process-candidate"])} />
+            <CodeViewButton label="Finalize 원문" onClick={() => sidebar.open("finalize-payload", codeRefs["finalize-payload"])} />
+          </div>
+
+          <ExplainedFormula
+            question="어떤 증거가 P101을 local canonical execution head로 전진시킵니까?"
+            idea={<>Candidate verdict와 consensus commit을 각각 기록하고, committed P101에 대한 Finalize FCU가 VALID일 때 local canonical pointers를 바꿉니다.</>}
+            formula={String.raw`Commit(B_{101})\land FCU_3(EP_{101})=VALID\Rightarrow(head,safe,finalized)=(EP_{101},EP_{101},EP_{101})`}
+            annotatedFormula={String.raw`\underbrace{Commit(B_{101})}_{\text{consensus order 확정}}\land\underbrace{FCU_3(EP_{101})=VALID}_{\text{local canonical update 성공}}\Rightarrow\underbrace{(head,safe,finalized)}_{\text{세 local pointer}}=\underbrace{(EP_{101},EP_{101},EP_{101})}_{\text{같은 payload hash}}`}
+            operations={[
+              { expression: String.raw`Commit(B_{101})`, annotation: ["Validator quorum의 consensus receipt", "EVM 실행 판정을 대신하지 않음"] },
+              { expression: String.raw`FCU_3(EP_{101})=VALID`, annotation: ["Finalize path의 local Engine receipt", "SYNCING이면 retry"] },
+              { expression: String.raw`(head,safe,finalized)`, annotation: ["고정 구현의 instant-finality 정책", "세 pointer를 EP101로 전진"] },
+            ]}
+            terms={[
+              { symbol: "B_{101}", name: "Committed CometBFT block", description: "C101이 validator quorum의 합의 순서에 들어갔다는 block입니다." },
+              { symbol: "EP_{101}", name: "Execution payload hash", description: "P101의 execution block hash이며 local Engine pointers가 가리킬 값입니다." },
+              { symbol: "FCU_3", name: "ForkchoiceUpdated V3", description: "Execution client의 canonical pointers를 바꾸는 versioned Engine API call입니다." },
+            ]}
+            assumptions={[
+              "같은 P101 bytes, height 101, parent H100과 fork configuration을 사용합니다.",
+              "VALID·INVALID·SYNCING·ACCEPTED와 transport error를 서로 다른 결과로 기록합니다.",
+              "세 pointer를 같은 hash에 두는 것은 이 고정 Octane 구현의 정책이며 일반 Ethereum finality 규칙이 아닙니다.",
+            ]}
+            interpretation="newPayloadV3 VALID만으로 consensus가 생기지 않고 B101 Commit만으로 local EVM head가 바뀌지도 않습니다. 두 상태가 어디까지 전진했는지 각각 관측해야 node stall을 합의 문제와 Engine sync 문제로 나눌 수 있습니다."
+          />
+
+          <div id="paper-octane-finalize" className="scroll-mt-24">
+            <CitationBlock type="code" citeKey={4} source="Octane finalized payload handler · 9864f25" href={MSG}>
+              <p><strong>문제:</strong> Committed payload를 local canonical execution head와 application state에 순서대로 반영해야 합니다.</p>
+              <p><strong>기여:</strong> Finalize-only guard, payload 재검사, newPayload, FCU, event delivery와 execution-head update 순서를 구현합니다.</p>
+              <p><strong>전제:</strong> 같은 payload·commit context, 도달 가능한 matching Engine client와 local store를 사용합니다.</p>
+              <p><strong>근거 범위:</strong> 고정한 msg server의 finalized execution 경로입니다.</p>
+              <p><strong>말하지 않는 것:</strong> Retry 종료 시간, cross-node durability나 외부 effect 완료를 보장하지 않습니다.</p>
+            </CitationBlock>
+          </div>
+          <div id="paper-engine-api-contract" className="scroll-mt-24">
+            <CitationBlock type="paper" citeKey={5} source="Ethereum execution-apis snapshot · 5aebdfdd" href={ENGINE_SPEC}>
+              <p><strong>문제:</strong> Consensus와 execution client가 payload build·validation·fork choice를 typed JSON-RPC로 교환해야 합니다.</p>
+              <p><strong>기여:</strong> Versioned Engine methods, payload status와 schema의 protocol 근거를 제공합니다.</p>
+              <p><strong>전제:</strong> Active fork, capability와 exact method·structure version을 고정합니다.</p>
+              <p><strong>근거 범위:</strong> 표시한 execution-apis snapshot의 protocol surface입니다.</p>
+              <p><strong>말하지 않는 것:</strong> Octane의 ABCI packaging·retry·event 처리나 모든 client 호환성을 표준이 보장하지 않습니다.</p>
+            </CitationBlock>
+          </div>
+        </section>
+
+        <section id="event-release" className="mb-16 scroll-mt-20">
+          <h2 className="mb-6 text-2xl font-bold">Finalized log는 event마다 별도 branch에서 적용됩니다</h2>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p>
+              FCU가 성공하면 Octane은 등록된 processor의 address·topics로 EP101 logs를 가져와 log index 순으로 정렬합니다. 각 event는
+              <code>CacheMultiStore</code> branch에서 실행됩니다. Processor가 성공하면 branch를 parent state에 쓰고, error나 panic이면 그
+              branch를 버린 채 다음 event로 이동합니다.
+            </p>
+            <p>
+              따라서 execution head가 EP101이라는 사실과 모든 EVM log effect가 application state에 들어갔다는 사실은 다릅니다.
+              실패한 event identity와 성공한 branch 수를 별도로 남기지 않으면 부분 적용을 찾을 수 없습니다. 이 경로는 외부 chain에 message가
+              도착했다는 증거도 아닙니다.
+            </p>
+          </div>
+          <div className="not-prose my-6 flex flex-wrap gap-3">
+            <CodeViewButton label="Event branch 원문" onClick={() => sidebar.open("deliver-events", codeRefs["deliver-events"])} />
+            <CodeViewButton label="Engine adapter 원문" onClick={() => sidebar.open("engine-status", codeRefs["engine-status"])} />
+          </div>
+
+          <ExplainedFormula
+            question="관찰한 event 5개 중 branch 4개만 state에 쓰였다면 무엇을 기록합니까?"
+            idea={<>같은 block hash와 processor generation에서 관찰한 event 수, 실제로 parent state에 합친 branch 수와 실패 identity를 함께 남깁니다.</>}
+            formula={String.raw`C_{event}={4\over5}=0.8,\qquad N_{failed}=5-4=1`}
+            annotatedFormula={String.raw`\underbrace{C_{event}}_{\text{event 적용 비율}}={\underbrace{4}_{\text{Write된 branch}}\over\underbrace{5}_{\text{관찰한 event}}}=\underbrace{0.8}_{\text{부분 적용}},\qquad\underbrace{N_{failed}}_{\text{재조정 대상}}=5-4=\underbrace{1}_{\text{실패 event}}`}
+            operations={[
+              { expression: String.raw`4/5`, annotation: ["같은 block의 observed events", "성공 branch 비율 0.8"] },
+              { expression: String.raw`5-4`, annotation: ["Write되지 않은 event 1개", "block·log index·processor로 식별"] },
+            ]}
+            terms={[
+              { symbol: "C_{event}", name: "Event 적용 비율", description: "관찰한 events 중 parent state에 branch를 합친 비율입니다." },
+              { symbol: "N_{failed}", name: "실패 event 수", description: "Error나 panic으로 branch를 쓰지 않은 event 수입니다." },
+            ]}
+            assumptions={[
+              "5와 4는 partial-failure 동작을 설명하는 가정이며 측정 결과가 아닙니다.",
+              "같은 execution block hash, processor registry와 log index 순서를 사용합니다.",
+              "적용 비율은 semantic correctness, cross-chain delivery나 exactly-once를 뜻하지 않습니다.",
+            ]}
+            interpretation="0.8을 block 성공률로 바꾸어 부르면 안 됩니다. B101과 EP101은 확정됐지만 특정 event 하나의 Cosmos state effect는 빠졌다는 별도 결과입니다."
+          />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <h3>실패한 위치에 따라 결과가 달라집니다</h3>
+            <ul>
+              <li>Payload ID를 찾지 못하면 새 build를 시작해야 하며 기존 ID를 commit 영수증처럼 복원할 수 없습니다.</li>
+              <li>Envelope의 parent·height·withdrawals·timestamp가 다르면 Engine 실행 전에 proposal 검증이 중단됩니다.</li>
+              <li><code>newPayloadV3 INVALID</code>는 candidate 거절이고, SYNCING과 network error는 liveness 경로입니다.</li>
+              <li>Finalize FCU가 계속 SYNCING이면 B101은 commit됐어도 그 node의 execution head는 아직 따라오지 못했습니다.</li>
+              <li>Event processor 하나가 실패하면 그 branch만 빠지고 다른 event는 적용될 수 있습니다.</li>
+            </ul>
+            <h3>이 글만으로 확인할 질문</h3>
+            <ol>
+              <li>Payload ID와 P101 block hash, B101 Commit의 차이는 무엇입니까?</li>
+              <li>ProcessProposal의 VALID 뒤에도 Finalize FCU가 필요한 이유는 무엇입니까?</li>
+              <li>CometBFT Commit과 local execution head 중 어느 상태가 어느 구성요소의 정본입니까?</li>
+              <li>Event 하나가 panic해도 나머지 event가 적용될 수 있는 이유는 무엇입니까?</li>
+              <li>Engine head 성공만 보고 application effect 전체 성공을 단정하면 어떤 실패를 놓칩니까?</li>
+            </ol>
+            <p>
+              이 설명은 commit <code>{SHA.slice(0, 8)}</code>, 해당 dependencies와 V3 method 조합에 한정됩니다. 다른 Octane commit이나
+              execution client를 판단하려면 같은 실패 경로와 status 변환을 새로 확인해야 합니다.
+            </p>
+          </div>
+
+          <div id="paper-octane-events" className="scroll-mt-24">
+            <CitationBlock type="code" citeKey={6} source="Octane EVM event bridge · 9864f25" href={EVENTS}>
+              <p><strong>문제:</strong> Finalized EVM logs를 deterministic order로 application processors에 전달해야 합니다.</p>
+              <p><strong>기여:</strong> Processor filters, log-index sorting, event verification과 per-event cache branch를 구현합니다.</p>
+              <p><strong>전제:</strong> Processor registry, 같은 block hash, 도달 가능한 execution RPC와 Cosmos store semantics를 고정합니다.</p>
+              <p><strong>근거 범위:</strong> 고정한 events.go와 msg_server.go의 fetch·deliver 동작입니다.</p>
+              <p><strong>말하지 않는 것:</strong> All-events atomicity, cross-chain delivery나 exactly-once external effect를 보장하지 않습니다.</p>
+            </CitationBlock>
+          </div>
+          <div id="paper-octane-engine-client" className="scroll-mt-24">
+            <CitationBlock type="code" citeKey={7} source="Omni Engine client V3 adapter · 9864f25" href={ENGINE}>
+              <p><strong>문제:</strong> Authenticated JSON-RPC transport와 typed payload status를 구분해야 합니다.</p>
+              <p><strong>기여:</strong> V3 method names, JWT transport, HTTP timeout과 response·RPC error 변환을 구현합니다.</p>
+              <p><strong>전제:</strong> Exact geth-compatible schema, endpoint, JWT secret와 고정한 client profile을 사용합니다.</p>
+              <p><strong>근거 범위:</strong> 고정한 <code>lib/ethclient/engineclient.go</code> 동작입니다.</p>
+              <p><strong>말하지 않는 것:</strong> Capability negotiation, 모든 versions·clients, network availability나 error 분류의 완전성을 보장하지 않습니다.</p>
+            </CitationBlock>
+          </div>
+        </section>
+
+        <CosmosEvmMapReturn
+          currentSlug="omni-octane"
+          closure="Octane은 payloadId·candidate execution verdict·CometBFT Commit·finalized FCU·event branch 적용을 서로 다른 영수증으로 연결합니다. 합의가 정한 B101과 local Engine의 EP101, Cosmos application effect는 같은 순간에 같은 구성요소가 소유하는 상태가 아닙니다."
         />
-        <p className="leading-7 text-muted-foreground">
-          Release candidate에는 Octane·Halo commit, CometBFT/Cosmos SDK/go-ethereum versions, execution client
-          binary와 capabilities, JWT/config, genesis·fork schedule, build delay, processor registry를 묶습니다.
-          Cold/optimistic build, empty first block, invalid parent/timestamp/withdrawal/blob, INVALID·SYNCING,
-          unknown payload, timeout·restart, event panic·partial application을 재생하고 이전 binary/config와
-          processor generation으로 되돌리는 절차까지 있어야 합니다.
-        </p>
-        <div id="paper-octane-events">
-          <CitationBlock type="code" citeKey={6} source="Octane EVM event bridge · 9864f25" href={EVENTS}>
-            <p><strong>문제:</strong> Finalized EVM logs를 deterministic order로 Cosmos application processors에 전달해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> Processor filters, log-index sorting, event verification과 per-event cached-store delivery 경계를 구현합니다.</p>
-            <p><strong>중요 가정:</strong> Registered processor names/addresses, same block hash, reachable execution RPC와 local multistore semantics를 고정합니다.</p>
-            <p><strong>근거 범위:</strong> Pinned events.go와 msg_server.go의 fetch/deliver source behavior입니다.</p>
-            <p><strong>일반화 금지:</strong> Per-event branch success를 all-events atomicity, cross-chain delivery 또는 exactly-once external effect로 확대하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-        <div id="paper-octane-engine-client">
-          <CitationBlock type="code" citeKey={7} source="Omni Engine client V3 adapter · 9864f25" href={ENGINE}>
-            <p><strong>문제:</strong> Authenticated JSON-RPC transport와 typed payload statuses를 application errors와 구분해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> V3 method names, JWT transport, HTTP timeout과 response/error conversion의 pinned 구현을 제공합니다.</p>
-            <p><strong>중요 가정:</strong> Exact geth-compatible schema, endpoint, JWT secret와 30-second HTTP timeout을 사용합니다.</p>
-            <p><strong>근거 범위:</strong> Pinned <code>lib/ethclient/engineclient.go</code> behavior에 한정합니다.</p>
-            <p><strong>일반화 금지:</strong> Capability negotiation, 모든 Engine versions/clients, network availability 또는 error classification 완전성을 보장하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
-    </article>
+      </article>
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ omni: omniTree }}
+        projectMetas={{ omni: { id: "omni", label: "Omni Octane · Go · 9864f25", badgeClass: "border-violet-500 bg-violet-500/10 text-violet-700" } }}
+      />
+    </>
   );
 }

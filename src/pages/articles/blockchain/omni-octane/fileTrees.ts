@@ -13,14 +13,14 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 });
 
 export const omniTree: FileNode = d("omni", [
-  d("octane/evmengine", [
-    f("abci.go", "omni/octane/evmengine/abci.go", "octane-abci"),
-    f("enginecl.go", "omni/octane/evmengine/enginecl.go", "octane-enginecl"),
+  d("octane/evmengine/keeper", [
+    f("abci.go", "octane/evmengine/keeper/abci.go", "prepare-payload"),
+    f("keeper.go", "octane/evmengine/keeper/keeper.go", "verify-payload-envelope"),
+    f("proposal_server.go", "octane/evmengine/keeper/proposal_server.go", "process-candidate"),
+    f("msg_server.go", "octane/evmengine/keeper/msg_server.go", "finalize-payload"),
+    f("events.go", "octane/evmengine/keeper/events.go"),
   ]),
-  d("halo/attest", [
-    f("keeper.go", "omni/halo/attest/keeper.go", "octane-xmsg"),
-  ]),
-  d("halo/valsync", [
-    f("keeper.go", "omni/halo/valsync/keeper.go", "octane-dual-staking"),
+  d("lib/ethclient", [
+    f("engineclient.go", "lib/ethclient/engineclient.go", "engine-status"),
   ]),
 ]);

@@ -4848,38 +4848,65 @@
     {
       "route": "blockchain/omni-octane",
       "title": "Omni Octane — ABCI와 Engine API payload 경계",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/omni-octane.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/omni-octane.tsx",
-        "src/pages/articles/blockchain/omni-octane/ModernArticle.tsx"
+        "src/pages/articles/blockchain/omni-octane/ModernArticle.tsx",
+        "src/pages/articles/blockchain/omni-octane/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/omni-octane/viz/ModernOctaneViz.tsx",
+        "src/pages/articles/blockchain/CosmosEvmLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 9,
+        "predictionPointers": 3,
+        "assumptionMarkers": 3,
+        "sourceButtons": 6,
         "headings": [
-          "\n            Octane은 EVM을 CometBFT 안에 다시 구현하지 않고 ABCI와 Engine API 사이에서 payload의 생명주기를 번역한다\n          ",
-          "Payload ID는 block이 아니라 제한된 build attempt의 영수증이다",
-          "Candidate validity와 committed execution head는 두 번의 다른 판단이다",
-          "Finalized payload 뒤의 log effect는 별도 transaction boundary와 실패 장부가 필요하다"
+          "P101이 확정되기까지 세 상태가 차례로 바뀝니다",
+          "Payload ID는 build를 다시 찾는 표식이지 block 영수증이 아닙니다",
+          "Candidate 검증과 canonical head 전진은 서로 다른 단계입니다",
+          "Finalized log는 event마다 별도 branch에서 적용됩니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 static 카드로 owner 이름과 네 단계를 나열해 payloadId·candidate verdict·CometBFT Commit·canonical execution head가 실제로 어느 순서에서 바뀌는지 한 사례로 추적하기 어려웠습니다.",
+        "기존 code sidebar는 omni/octane/evmengine/abci.go와 enginecl.go처럼 고정 commit에 없는 경로와 손으로 만든 ProcessProposal·FCU 코드를 보여 실제 제어 흐름 근거로 사용할 수 없었습니다.",
+        "ProcessProposal newPayload의 VALID와 Finalize FCU 성공이 다른 receipt인데도 candidate validation 뒤 local canonical pointer가 언제 바뀌는지 시각적으로 드러나지 않았습니다.",
+        "Event processor가 실패하면 해당 CacheMultiStore branch만 버리고 다음 event를 계속하는 부분 적용 동작이 top-level architecture와 연결되지 않았습니다."
+      ],
+      "fixture": "Committed application AppHash A100과 local execution head H100에서 height 101을 시작해 payloadId id101, candidate P101/EP101, proposal C101, committed block B101을 거쳐 세 EVM log L0·L1·L2 중 L1 processor가 panic하고 L0·L2만 state에 합쳐지는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "CometBFT next height 101, application A100과 execution client head=safe=finalized=H100을 다음 build의 분리된 출발점으로 읽습니다.",
+        "1": "PrepareProposal이 H100과 timestamp·fee recipient·withdrawals·A100 attributes로 forkchoiceUpdatedV3를 호출해 local payloadId id101을 받습니다.",
+        "2": "Configured build delay 뒤 getPayloadV3(id101)가 P101 bytes·EP101 hash·blob commitments를 반환하지만 아직 proposal inclusion이나 commit은 없습니다.",
+        "3": "Octane이 vote messages와 MsgExecutionPayload(P101)를 한 unsigned Cosmos transaction으로 encode해 proposal C101에 넣습니다.",
+        "4": "ProcessProposal service가 authority·withdrawals·parent·height·time·fee recipient를 검사한 뒤 newPayloadV3 verdict를 보며 VALID여도 canonical pointer는 H100에 남습니다.",
+        "5": "CometBFT quorum이 C101을 B101로 commit하지만 각 node의 Engine client는 P101을 아직 모르는 상태나 SYNCING일 수 있습니다.",
+        "6": "Finalize handler가 P101을 다시 push하고 forkchoiceUpdatedV3가 VALID일 때 local head·safe·finalized를 모두 EP101로 전진시킵니다.",
+        "7": "EP101 logs L0·L1·L2를 index 순으로 처리해 L0 branch는 Write, L1 panic branch는 폐기, L2 branch는 Write합니다.",
+        "8": "B101 Commit, EP101 canonical head, keeper execution head와 event별 application receipt를 따로 확인하며 외부 cross-chain delivery는 확인 범위 밖에 남깁니다."
+      },
+      "sourceEvidence": [
+        "Omni commit 9864f25fa9bcb473ee34d2442012fc5fbd2683ea의 octane/evmengine/keeper/abci.go PrepareProposal timeout·optimistic build·FCU/getPayload·single transaction path",
+        "같은 commit의 keeper.go parseAndVerifyProposedPayload와 proposal_server.go ExecutionPayload의 authority·withdrawals·parent·height·timestamp 검사 및 INVALID·SYNCING 분기",
+        "같은 commit의 msg_server.go finalized ExecutionPayload·forkchoice retry·event delivery·execution head·withdrawal update 순서와 event별 CacheMultiStore branch",
+        "같은 commit의 lib/ethclient/engineclient.go authenticated V3 JSON-RPC·typed status와 RPC error conversion, Octane README의 work-in-progress 범위"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 commit의 abci.go·keeper.go·proposal_server.go·msg_server.go·events.go·engineclient.go와 README를 직접 읽고 fabricated legacy snapshot을 실제 경로의 제어 흐름 발췌로 교체했습니다.",
+        "arithmetic": "설명용 build 시간 0.15+0.40+0.20+0.05=0.80초와 event branch 4/5=0.8·실패 1개를 계산했습니다. 두 예시는 가정이며 실제 성능·장애 측정값으로 쓰지 않았습니다.",
+        "humanize": "세 구성요소를 기술 이름으로 나열하지 않고 P101 한 건이 H100 기준점에서 build·proposal·candidate verdict·commit·FCU·event branches로 이동하는 상태 변화와 각 영수증의 한계를 연결했습니다.",
+        "browser390": "390×844에서 document와 viewport 폭이 모두 390px이고 가장 긴 live UI 높이는 615px입니다. 선택 lane은 선으로 표시해 글자가 가려지지 않으며 scene 8 탭은 화면 폭 변경 뒤에도 visible입니다. console 오류는 0건입니다.",
+        "browser1440": "1440×1000에서 document와 viewport 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지됐고 8번 장면 선택 뒤 ArrowLeft로 7번 장면에 이동했으며 실제 msg_server.go code panel을 열었습니다. console 오류는 0건입니다.",
+        "reducedMotion": "390×844에서 prefers-reduced-motion: reduce를 적용하면 'Octane payload 단계 재생 꺼짐' 버튼이 disabled이고 8초 뒤에도 첫 장면을 유지합니다. console 오류는 0건입니다.",
+      "resource": "TypeScript 검사와 production build는 Node heap을 각 command에만 8GB로 제한해 직렬 실행했습니다. TypeScript 최대 RSS는 6,131,662,848 bytes, build 최대 RSS는 6,598,836,224 bytes였고 두 작업 모두 swap 0이었습니다. Playwright는 이름 붙은 세션 하나만 사용하고 검증 뒤 종료했습니다.",
+      "static": "production build에서 public static route 2,120개와 reviewed no-script body 387개가 생성됐습니다. JavaScript를 끈 390×844 화면에서 9개 정적 단계와 부모 지도 반환이 보이고 재생 컨트롤은 숨겨졌으며 console 오류는 0건입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-p101-from-build-handle-through-candidate-verdict-commit-finalized-head-and-per-event-branches-with-pinned-source"
     },
     {
       "route": "blockchain/pbft-deep",
