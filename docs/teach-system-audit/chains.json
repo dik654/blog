@@ -810,7 +810,7 @@
     {
       "route": "blockchain/cometbft-mempool",
       "title": "CometBFT mempool: admission · reap · recheck",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-mempool.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-mempool.tsx",
@@ -862,17 +862,16 @@
         "browser1440": "1440×1000에서 document 폭과 viewport 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지됐고 group focus 뒤 ArrowRight로 장면 1에서 2로 이동했습니다. Callback admission 고정 source code sidebar의 열기·닫기와 console 오류 0건을 확인했습니다.",
         "reducedMotion": "390×844에서 prefers-reduced-motion: reduce를 적용하면 재생 버튼이 비활성화되고 8초 뒤에도 첫 장면이 유지됩니다. console 오류는 0건입니다.",
         "resource": "Strict 감사와 production build를 직렬 실행했습니다. 최종 build 최대 RSS는 6,367,576,064 bytes, swap은 0이었으며 Playwright는 한 세션씩 열고 이름으로 종료했습니다.",
-        "static": "2,120개 정적 public route와 no-script 본문 384편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 900/1,000 bytes callback race 수식, 실패 동작과 부모 지도 반환이 모두 남고 console 오류는 0건임을 확인했습니다."
+        "static": "2,120개 정적 public route와 no-script 본문 384편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 900/1,000 bytes callback race 수식, 실패 동작과 부모 지도 반환이 모두 남고 console 오류는 0건임을 확인했습니다.",
+        "production": "GitHub Pages run 41144251022의 전체 감사·production build·1,007개 공개 글 실제 브라우저 검사·deploy가 성공했습니다. 공개 경로에서 새 T1·T2 admission·reap·recheck 본문을 확인했고, 1440px에서 document 폭과 viewport 폭이 1440px로 같으며 console 오류는 0건입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-two-concurrent-checktx-callbacks-through-cache-pool-reap-commit-update-and-recheck-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-p2p",
       "title": "CometBFT P2P: MConnection · Switch · Reactor",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-p2p.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-p2p.tsx",
@@ -925,17 +924,16 @@
         "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지됐고 group focus와 ArrowRight로 장면 2, 직접 선택으로 Packet 장면 5에 이동했습니다. 고정 source code sidebar 열기·닫기와 console 오류 0건을 확인했습니다.",
         "reducedMotion": "390×844 reduced-motion 환경에서 재생 조작부가 표시되지 않고 8초 뒤에도 첫 장면이 유지되며 console 오류는 0건입니다.",
         "resource": "TypeScript 검사는 8GB heap에서 최대 RSS 6,617,219,072 bytes, 공통 curriculum 순서 수정까지 포함한 최종 production build는 최대 RSS 6,316,376,064 bytes였으며 둘 다 swap 0으로 직렬 실행했습니다. 모든 Playwright 세션과 preview를 이름과 session ID로만 종료했습니다.",
-        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 383편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 질문·고정 commit 근거·부모 지도 반환이 남고 console 오류는 0건임을 확인했습니다."
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 383편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 9개, 질문·고정 commit 근거·부모 지도 반환이 남고 console 오류는 0건임을 확인했습니다.",
+        "production": "GitHub Pages run 41144251022의 전체 감사·production build·1,007개 공개 글 실제 브라우저 검사·deploy가 성공했습니다. 공개 경로에서 새 alice→bob 10·MConnection·Reactor·CheckTx 본문을 확인했고, 1440px에서 document 폭과 viewport 폭이 1440px로 같으며 console 오류는 0건입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-one-transaction-through-peer-handshake-bounded-channel-packet-reassembly-synchronous-reactor-and-checktx-receipts-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-state",
       "title": "CometBFT state: State · BlockStore · state sync · replay",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-state.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-state.tsx",
@@ -983,11 +981,10 @@
         "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지되었고 group focus와 ArrowRight로 2번 장면에 이동했습니다. 고정 source code sidebar를 열고 Escape로 닫았으며 console 오류는 0건입니다.",
         "reducedMotion": "390×844 reduced-motion 환경에서 재생 버튼이 disabled이고 aria-label이 'State 복구 단계 재생 꺼짐'으로 남습니다. 8초 뒤에도 첫 장면이 유지되고 console 오류는 0건입니다.",
         "resource": "Production build는 Node heap을 해당 command에만 8GB로 제한해 직렬 실행했고 최대 RSS는 6,747,848,704 bytes, swap은 0이었습니다. Playwright는 한 번에 이름 붙은 세션 하나만 열고 각 검증 뒤 정확한 세션을 닫았습니다.",
-        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 385편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 B42·F42·S41·A42, 정적 장면 9개, 수식, 부모 지도 반환이 남고 console 오류는 0건임을 확인했습니다."
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 385편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 B42·F42·S41·A42, 정적 장면 9개, 수식, 부모 지도 반환이 남고 console 오류는 0건임을 확인했습니다.",
+        "production": "GitHub Pages run 41144251022의 전체 감사·production build·1,007개 공개 글 실제 브라우저 검사·deploy가 성공했습니다. 공개 경로에서 B42·F42·S41·A42·ABCI Info·높이 43을 확인했습니다. 1440px과 390×844에서 document 폭과 viewport 폭이 같고 console 오류는 0건입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-one-crash-cut-through-durable-receipts-height-guards-mock-replay-and-state-sync-trust-with-pinned-source"
     },
     {
