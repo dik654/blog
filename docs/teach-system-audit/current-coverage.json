@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 728,
-    "pending": 279,
+    "reviewed": 729,
+    "pending": 278,
     "untracked": 0,
-    "assignedPending": 237,
+    "assignedPending": 236,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4683,9 +4683,9 @@
       "publicPath": "cs/blockchain/cometbft-crypto",
       "title": "CometBFT v0.40 crypto: vote signature·Merkle·TMHash",
       "catalogIndex": 465,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
