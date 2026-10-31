@@ -713,7 +713,7 @@
     {
       "route": "blockchain/cometbft-crypto",
       "title": "CometBFT v0.40 crypto: vote signature·Merkle·TMHash",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-crypto.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-crypto.tsx",
@@ -766,11 +766,10 @@
         "browser1440": "1440×1000에서 document 폭과 viewport 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지됐고 9번 장면 선택 뒤 group focus와 ArrowLeft로 8번 장면에 이동했습니다. Canonical vote 고정 source code sidebar와 console 오류 0건을 확인했습니다.",
         "reducedMotion": "390×844에서 prefers-reduced-motion: reduce를 적용하면 재생 버튼이 비활성화되고 aria-label이 'Crypto 검증 단계 재생 꺼짐'으로 남습니다. 8초 뒤에도 첫 장면이 유지되고 console 오류는 0건입니다.",
         "resource": "TypeScript 검사는 Node heap을 해당 command에만 8GB로 제한해 단독 실행했고 최대 RSS는 5,967,822,848 bytes였습니다. production build 최대 RSS는 6,452,592,640 bytes, no-script 재생성 최대 RSS는 3,221,291,008 bytes였으며 모두 swap 0으로 직렬 실행했습니다. Playwright는 이름 붙은 세션 하나만 사용하고 검증 뒤 종료했습니다.",
-        "static": "production build에서 공개 route 2,120개와 no-script 본문 386편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 HTTP 200, T1→TxHash→Merkle→DataHash→Header와 canonical vote→signature→proof의 정적 장면 9개, 질문·수식·부모 지도 반환이 남고 live 재생 컨트롤은 숨겨지는 것을 확인했습니다. console 오류는 0건입니다."
+        "static": "production build에서 공개 route 2,120개와 no-script 본문 386편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 HTTP 200, T1→TxHash→Merkle→DataHash→Header와 canonical vote→signature→proof의 정적 장면 9개, 질문·수식·부모 지도 반환이 남고 live 재생 컨트롤은 숨겨지는 것을 확인했습니다. console 오류는 0건입니다.",
+        "production": "GitHub Pages run 41189571408이 전체 감사·build·1,007개 공개 글 브라우저 검사와 deploy를 모두 통과했습니다. 공개 경로는 1440px·390px에서 가로 넘침 0, 8초 후 첫 장면 유지, 9번 장면 선택과 ArrowLeft 이동, console 오류 0건입니다. JavaScript 비활성 공개 경로에서도 정적 9장면과 부모 지도 반환이 남고 재생 컨트롤은 보이지 않습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-one-b41-evidence-package-through-txhash-merkle-datahash-header-canonical-vote-signature-and-txproof-with-pinned-source"
     },
     {
