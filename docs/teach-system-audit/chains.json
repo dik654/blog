@@ -713,38 +713,65 @@
     {
       "route": "blockchain/cometbft-crypto",
       "title": "CometBFT v0.40 crypto: vote signature·Merkle·TMHash",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-crypto.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-crypto.tsx",
-        "src/pages/articles/blockchain/cometbft-crypto/ModernArticle.tsx"
+        "src/pages/articles/blockchain/cometbft-crypto/ModernArticle.tsx",
+        "src/pages/articles/blockchain/cometbft-crypto/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/cometbft-crypto/viz/ModernCryptoViz.tsx",
+        "src/pages/articles/blockchain/CosmosCoreLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
+        "stageMarkers": 9,
+        "predictionPointers": 4,
+        "assumptionMarkers": 4,
         "sourceButtons": 8,
         "headings": [
-          "Crypto layer는 transaction을 실행하지 않고 consensus evidence의 bytes와 key를 검증한다",
-          "Signature는 의미가 아니라 정확한 message bytes에 귀속된다",
-          "Leaf와 inner node의 prefix를 달리해 구조적 혼동을 막는다",
-          "32-byte commitment와 20-byte address를 같은 보안 증거로 취급하지 않는다"
+          "B41의 서명과 T1 포함 증명을 하나의 검증 경로로 연결합니다",
+          "Transaction bytes를 두 번 해시해 ordered DataHash에 연결합니다",
+          "Validator는 transaction이 아니라 canonical vote bytes에 서명합니다",
+          "Commit과 proof를 같은 Header에서 만날 때 포함 결론이 완성됩니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 user key·validator key, signature, Merkle와 TMHash를 각각 설명했지만 확정된 block의 transaction inclusion을 확인하려면 어떤 증거를 어떤 순서로 합쳐야 하는지 한 흐름으로 보여 주지 않았습니다.",
+        "기존 code sidebar는 공식 v0.40.0 source가 아니라 손으로 만든 축약 사본이었고 crypto/tmhash/tmhash.go처럼 실제 고정 commit의 경로와도 달라 line 근거로 사용할 수 없었습니다.",
+        "기존 Merkle 수식은 임의 item bytes를 leaf로 설명해 CometBFT TxProof가 raw transaction을 먼저 TxHash로 만들고 그 TxHash를 다시 prefix leaf로 해시하는 두 단계를 드러내지 못했습니다.",
+        "Validator address 일치·signature 성공·Commit quorum·transaction inclusion·application validity가 각각 닫는 질문이 달랐지만 결과의 한계가 하나의 evidence composition으로 연결되지 않았습니다."
+      ],
+      "fixture": "Chain demo-1의 B41에 ASCII bytes T1=alice>bob:10, T2=carol>dave:5, T3=erin>frank:7이 순서대로 들어 있고, 앞 글에서 A 40+B 35의 75/100 Commit이 Header hash HB41을 확정했다는 전제에서 A의 vote signature와 T1 TxProof를 검증하는 한 사례입니다.",
+      "stageEvidence": {
+        "0": "CometBFT가 의미를 해석하지 않은 T1·T2·T3 byte arrays를 Block.Data.Txs 입력으로 받습니다.",
+        "1": "Tx.Hash가 T1 raw bytes를 32-byte H1=5c41bd…4a06으로 바꿉니다.",
+        "2": "Merkle leaf가 H1 앞에 0x00을 붙여 L1=642302…60e2를 만들고 H2·H3도 같은 영역에서 해시합니다.",
+        "3": "0x01 || L1 || L2로 P12를 만들고 P12와 L3를 결합해 Header.DataHash D41=8b7610…f65f를 만듭니다.",
+        "4": "Header.Hash가 D41을 포함한 ordered Header fields를 HB41로 commitment해 vote.BlockID.Hash와 연결합니다.",
+        "5": "CanonicalizeVote가 PRECOMMIT·height 41·round 0·HB41·demo-1을 length-delimited protobuf bytes로 고정합니다.",
+        "6": "Vote.Verify가 SHA256(pubA)[:20]과 ValidatorAddress를 대조한 뒤 32-byte public key로 canonical bytes와 64-byte signature를 검증합니다.",
+        "7": "TxProof.Validate(D41)가 T1 bytes에서 H1·L1을 다시 만들고 index 0·total 3·aunts L2·L3로 expected D41을 복원합니다.",
+        "8": "Commit이 HB41을 신뢰하게 하고 proof가 T1을 HB41의 DataHash에 연결하지만 Alice authorization·잔액·실행 성공은 application 경계에 남깁니다."
+      },
+      "sourceEvidence": [
+        "CometBFT v0.40.0 content commit 0880b4d378f347ab16e54ec677ff50d803f37d62의 types/tx.go Tx.Hash·Txs.Hash·Txs.Proof·TxProof.Validate와 types/block.go Data.Hash·Header.Hash",
+        "같은 commit의 crypto/merkle/tree.go·hash.go·proof.go ordered split, 0x00/0x01 domain과 index·total·aunts 기반 root verification",
+        "같은 commit의 types/canonical.go·types/vote.go CanonicalizeVote·VoteSignBytes·verifyAndReturnProto와 crypto/ed25519/ed25519.go address·signature contract",
+        "같은 commit의 crypto/tmhash/hash.go 32-byte Sum과 20-byte SumTruncated 경계"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 content commit에서 raw TxHash→prefix Merkle leaf→DataHash→Header hash, canonical vote→address lookup→Ed25519 verify와 TxProof expected-root 검사를 직접 읽고 legacy code snapshot을 실제 제어 흐름 발췌로 교체했습니다.",
+        "arithmetic": "ASCII T1·T2·T3를 직접 SHA-256해 H1=5c41bd…4a06, L1=642302…60e2, P12=f26d10…55cf, D41=8b7610…f65f를 계산하고 proof index 0·total 3·aunts [L2,L3]로 같은 root가 복원되는 순서를 본문·장면·수식에 맞췄습니다. 성능 수치는 측정하지 않았습니다.",
+        "humanize": "서명·Merkle·TMHash를 따로 나열하지 않고 B41 한 사례에서 transaction path와 validator path를 병렬로 추적한 뒤 각 receipt가 확인하지 못한 사실을 표로 분리했습니다. 기존 #ed25519·#merkle·#hash와 근거 anchor는 유지했습니다.",
+        "browser390": "390×844에서 document 폭과 viewport 폭이 모두 390px입니다. 가장 긴 9번 장면의 live UI 높이는 723.28px이고 top을 맞추면 조작부까지 844px 안에 들어옵니다. console 오류는 0건입니다.",
+        "browser1440": "1440×1000에서 document 폭과 viewport 폭이 모두 1440px입니다. 8초 동안 첫 장면이 유지됐고 9번 장면 선택 뒤 group focus와 ArrowLeft로 8번 장면에 이동했습니다. Canonical vote 고정 source code sidebar와 console 오류 0건을 확인했습니다.",
+        "reducedMotion": "390×844에서 prefers-reduced-motion: reduce를 적용하면 재생 버튼이 비활성화되고 aria-label이 'Crypto 검증 단계 재생 꺼짐'으로 남습니다. 8초 뒤에도 첫 장면이 유지되고 console 오류는 0건입니다.",
+        "resource": "TypeScript 검사는 Node heap을 해당 command에만 8GB로 제한해 단독 실행했고 최대 RSS는 5,967,822,848 bytes였습니다. production build 최대 RSS는 6,452,592,640 bytes, no-script 재생성 최대 RSS는 3,221,291,008 bytes였으며 모두 swap 0으로 직렬 실행했습니다. Playwright는 이름 붙은 세션 하나만 사용하고 검증 뒤 종료했습니다.",
+        "static": "production build에서 공개 route 2,120개와 no-script 본문 386편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 HTTP 200, T1→TxHash→Merkle→DataHash→Header와 canonical vote→signature→proof의 정적 장면 9개, 질문·수식·부모 지도 반환이 남고 live 재생 컨트롤은 숨겨지는 것을 확인했습니다. console 오류는 0건입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-one-b41-evidence-package-through-txhash-merkle-datahash-header-canonical-vote-signature-and-txproof-with-pinned-source"
     },
     {
       "route": "blockchain/cometbft-execution",
