@@ -170,6 +170,7 @@ const noScriptArticleRoutes = new Set([
   "business/franchise-incentives",
   "business/supply-chain-bargaining",
   "property/commercial-lease-and-rent",
+  "property/shop-transfer-and-goodwill",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

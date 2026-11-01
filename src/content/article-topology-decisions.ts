@@ -1594,9 +1594,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "property/shop-transfer-and-goodwill": {
     "action": "keep",
     "status": "reviewed",
-    "rationale": "점포 양도 대금은 시설·재고·고객 관계의 가치와 임대차 지위, 영업 허가·채무 인수 여부가 섞여 보이므로 각각의 소유자와 동의권자, 인도 시점을 분리해야 합니다.",
-    "reviewedAt": "2026-10-04",
-    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다."
+    "rationale": "점포 양도 대금은 시설·재고·영업상 이점과 장소 사용, 영업 절차, 남는 책임이 섞여 보입니다. 첫 그림은 3천300만 원의 가격을 나눈 뒤 실사·조건·선지급·재고 조정·인도·양도 뒤 책임·가치 민감도까지 여덟 장면으로 연결합니다.",
+    "reviewedAt": "2026-11-01",
+    "sharedGate": "첫 그림과 3·4·7·10절의 금액이 일치해야 합니다. 시설 2천만 원, 재고 300만 원, 영업상 이점 1천만 원에서 인수일 재고가 250만 원이면 총액은 3천250만 원이고, 먼저 낸 300만 원을 빼면 잔금은 2천950만 원입니다. 자산 인도와 고객정보·임대차·행정 책임을 같은 완료 조건으로 합치지 않습니다."
   },
   "property/shop-closure-and-restoration": {
     "action": "keep",
