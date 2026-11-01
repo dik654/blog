@@ -3292,9 +3292,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/cross-border-netting-enforceability-and-regulatory-recognition": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "종료 일괄상계의 위험 감소는 관련 관할의 도산법에서 집행될 때 성립하며, 관할별 법률의견과 감독 규칙의 상호인정을 별도로 관리해야 합니다.",
-    "sharedGate": "+12−7−2=3과 담보 4 뒤 0 대 8을 검산하고 규제 상호인정을 사법상 집행가능성으로 읽지 않습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "+12·−7·−2인 세 거래를 순액 3으로 만드는 계약·부도 절차, 상계 인정 여부에 따른 담보 뒤 노출 0 대 8, 규제 인정과 법률의견 범위, 총액 기준 전환을 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "+12−7−2=3, max(3−4,0)=0과 max(12−4,0)=8을 검산하고 본국·현지국 증거금 규칙의 상호인정을 도산법상 상계 집행가능성으로 읽지 않으며 당사자·지점·상품·문서·법·검토일의 범위를 보존합니다."
   },
   "markets/bank-irrbb-alm-and-derivatives-hedging": {
     "action": "keep",
@@ -4180,7 +4180,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "philosophy-history/medieval-translation-reason-and-revelation": "a8642dd35b4deed2",
   "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology": "80edf0ce0db7744c",
   "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action": "287c7be8714df3ab",
-  "markets/cross-border-netting-enforceability-and-regulatory-recognition": "4dc9258b37d3e5f7",
+  "markets/cross-border-netting-enforceability-and-regulatory-recognition": "a916ac633dc98ec3",
   "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": "8aeac780ee5fea31",
   "markets/japan-australia-retail-leverage-and-product-governance": "1577959c26eee21d",
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": "2c3853099c942095",
