@@ -9688,10 +9688,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "구현 사실은 Commonware tag v2026.9.0 commit d476a236의 actor·broadcast source와 matching docs.rs에 귀속한다." }, { kind: "project-measurement", rule: "이 글에는 latency·throughput·cache hit 실측을 싣지 않으며 동작 경계만 source로 확인한다." }, { kind: "project-claim", rule: "Local Feedback·subscribe completion·cache residence를 remote acknowledgement·total order·durable application effect로 확대하지 않는다." }],
   },
   "tusk-paper-ordering": {
-    title: "Tusk paper asynchronous DAG ordering ownership",
-    owns: ["Tusk shared-coin leader와 f+1 causal support", "Tusk leader-history traversal, asynchronous randomized liveness와 release boundary"],
+    title: "Tusk 논문 알고리즘과 후속 검증 범위",
+    owns: ["Tusk 공통 동전 지도자·f+1 직접 지지와 이전 지도자 복구", "원 논문의 진행성 주장·고정 프로토타입 차이·2024년 강한 진행성 반론"],
     reuses: [{ label: "Narwhal certified DAG", href: "/cs/blockchain/narwhal-deep" }, { label: "Generic DAG linearization", href: "/cs/blockchain/dag-consensus#linearization" }, { label: "Ordering·execution separation", href: "/cs/blockchain/consensus-comparison#smr" }],
-    evidence: [{ kind: "primary-source", rule: "Tusk message model·threshold·liveness·evaluation은 Narwhal and Tusk arXiv 2105.11827에만 귀속한다." }, { kind: "project-measurement", rule: "동일 certified DAG에서 coin/support, arrival permutation, missing payload, partition/restart와 order/state receipt를 재생한다." }, { kind: "project-claim", rule: "Zero-message overhead·expected rounds·historical TPS를 zero network traffic·deterministic SLA·current implementation으로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "원 알고리즘·기대 라운드는 EuroSys 2022 논문에, prototype 동작은 commit 70dc862에, 강한 진행성 반론은 ePrint 2024/1235에 각각 귀속한다." }, { kind: "project-measurement", rule: "이 개념 글에는 대상 환경의 성능·진행성 실측이 없으며 n=4,f=1 사례는 상태 전이를 보여 주는 설명용 DAG다." }, { kind: "project-claim", rule: "추가 메시지 0개·기대 라운드·공개 prototype·현재 Sui를 zero network traffic·deterministic SLA·완성된 공통 동전·현재 제품 배치로 확대하지 않는다." }],
   },
   "filecoin-lotus": {
     title: "Lotus suite process·artifact handoff 글이 소유하는 범위",

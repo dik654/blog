@@ -8174,8 +8174,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Commonware storage source · v2026.9.0 commit d476a236", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4/storage/src", note: "MMR location 변환, OperationProof activity 검사, stale batch 거절과 apply·commit·sync 구현을 확인한 exact source이며 consensus finality나 실제 배포 성능은 별도" },
   ],
   "blockchain/tusk": [
-    { kind: "핵심 논문", label: "Narwhal and Tusk · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827", note: "Certified DAG와 asynchronous shared-coin ordering 원문이며 historical evaluation 수치를 current chain SLA로 일반화하지 않음" },
-    { kind: "핵심 논문", label: "Narwhal and Tusk · Tusk protocol", href: "https://arxiv.org/pdf/2105.11827#page=10", note: "Coin-selected leader·f+1 support·causal history ordering의 근거이며 local arrival order나 deterministic latency bound를 뜻하지 않음" },
+    { kind: "핵심 논문", label: "Narwhal and Tusk · EuroSys 2022", href: "https://arxiv.org/abs/2105.11827v4", note: "인증된 DAG와 공통 동전·f+1 지지·이전 지도자 복구의 원문이며 기대 라운드와 당시 평가를 현재 제품 SLA로 일반화하지 않음" },
+    { kind: "공식 코드", label: "facebookresearch/narwhal · commit 70dc862", href: "https://github.com/facebookresearch/narwhal/blob/70dc862db090260dc77acdaa807b4584475bafc2/consensus/src/lib.rs#L119-L300", note: "f+1 지지와 인과 순서 구현을 확인한 논문 artifact이며 공통 동전은 TODO이고 실제 지도자 선택은 라운드 로빈임" },
+    { kind: "핵심 논문", label: "Blue fish, red fish, live fish, dead fish · 2024", href: "https://eprint.iacr.org/2024/1235", note: "Tusk의 강한 진행성에 대한 후속 반론이며 지도자 순서 안전성 전체를 반박하는 자료로 확대하지 않음" },
+    { kind: "공식 문서", label: "Sui Consensus · Mysticeti", href: "https://www.docs.sui.io/develop/sui-architecture/consensus", note: "현재 Sui가 Mysticeti를 사용한다는 제품 경계이며 Tusk와 같은 규칙을 실행한다는 뜻은 아님" },
   ],
   "blockchain/evm-fundamentals": [
     { kind: "공식 규격", label: "Ethereum Yellow Paper · Shanghai version", href: "https://ethereum.github.io/yellowpaper/paper.pdf", note: "256-bit stack machine·execution environment·gas·halt의 형식 정본이며 Shanghai 이후 fork 변화와 client 구현 내부를 고정하지 않음" },
