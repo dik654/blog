@@ -3516,9 +3516,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/credit-tranche-base-correlation-and-default-auction": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "신용 트랜치는 포트폴리오 손실을 시작점과 끝점 사이에 배분하고 베이스 상관으로 구간 호가를 맞추며, 신용사건 뒤에는 계약상 경매 최종가격을 현금결제에 적용하되 모형 상관과 실제 공동부도 확률을 구분합니다.",
-    "sharedGate": "포트폴리오 손실 7을 3·4·0으로 배분하고 명목 1,000만 달러에 경매 최종가격 35를 적용해 단순 보호 지급 650만 달러를 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "명목 100의 포트폴리오 손실 7에서 0~3·3~7·7~10 구간과 3·4·0 배분, 0~10 가상 구간의 베이스 상관 가격 맞춤, 끝점별 곡선, 별도 단일 CDS의 신용사건 판단·경매·최종가격 35·650만 달러 결제, 두 장부의 경계까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "max(min(L,D)−A,0)으로 3·4·0을 검산하고 $10m×(1−0.35)=$6.5m을 계산하며 포트폴리오 트랜치의 모형 보정값과 특정 신용사건의 경매 회수가격을 구분합니다."
   },
   "markets/commodity-grades-location-basis-and-physical-delivery": {
     "action": "keep",
@@ -4673,7 +4673,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/swaption-annuity-volatility-quotes-and-cube":"cfefb2d036fad186",
 "markets/derivatives-sales-records-access-retention-and-deletion":"8d2d990bb78147db",
 "markets/equity-dispersion-implied-correlation-and-variance":"7211e5f64264551b",
-"markets/credit-tranche-base-correlation-and-default-auction":"69d67fe0bb57d7a0",
+"markets/credit-tranche-base-correlation-and-default-auction":"8e55428f11e7a728",
 "markets/commodity-grades-location-basis-and-physical-delivery":"844b02bac84bad7e",
 "markets/derivatives-investigation-audit-trail-and-legal-hold":"1dca848f5cd377c4",
 "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link":"581239a972d966b2",

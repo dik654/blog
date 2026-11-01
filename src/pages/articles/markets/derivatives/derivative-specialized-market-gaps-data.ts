@@ -130,8 +130,8 @@ export const creditTrancheAuctionData: DerivativeDeepArticleData = {
     { term: "경매 최종가격", description: "신용사건 뒤 표준 경매로 정해 현금결제의 회수 기준으로 쓰는 가격입니다.", example: "35이면 단순 손실률은 65%입니다.", boundary: "모든 채권의 장기 회수액과 같다고 보지 않습니다." },
   ] },
   sources: [
-    { source: "BIS · CDS index tranches", excerpt: "base correlation against the upper bound", application: "0~3·3~7·7~10의 합과 0~10 가상 구간을 맞추는 베이스 상관의 뜻을 확인합니다.", citation: "BIS Quarterly Review, CDS index tranches and the pricing of credit risk correlations", href: "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf", note: "2005년 시장과 모형을 분석한 자료이며 현재 호가 수준으로 사용하지 않습니다." },
-    { source: "ISDA · Big Bang Protocol", excerpt: "auction settlement", application: "신용사건 판단 뒤 경매 최종가격을 계약 결제에 넣는 표준 흐름을 확인합니다.", citation: "ISDA, Big Bang Protocol", href: "https://www.isda.org/traditional-protocol/big-bang-protocol/", note: "프로토콜 구조를 설명하며 실제 사건은 해당 경매 조건과 계약 문서를 다시 확인합니다." },
+    { source: "BIS · CDS index tranches", excerpt: "base correlation against the upper bound", application: "0~3·3~7·7~10의 시장가치 합과 0~10 가상 첫손실 구간의 모형가를 맞추는 베이스 상관의 뜻을 확인합니다.", citation: "BIS Quarterly Review, CDS index tranches and the pricing of credit risk correlations", href: "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf", note: "2005년 당시 시장과 1요인 모형을 분석한 자료입니다. 현재 호가나 최선의 가격모형으로 사용하지 않습니다(2026-11-02 확인)." },
+    { source: "ISDA · Big Bang Protocol", excerpt: "auction settlement", application: "결정위원회의 신용사건·경매 판단과 사건별 조건, 경매 최종가격을 계약 결제에 넣는 경로를 확인합니다.", citation: "ISDA, Big Bang Protocol", href: "https://www.isda.org/traditional-protocol/big-bang-protocol/", note: "2009년 프로토콜은 종료됐지만 경매 결제를 표준 문서에 넣은 역사적 구조를 설명합니다. 실제 사건은 적용 계약과 현재 결정위원회 문서·경매 조건을 다시 확인합니다(2026-11-02 확인)." },
   ],
   review: [
     "손실 7을 0~3·3~7·7~10 구간에 나눠 보세요. (답: 1·3절)",

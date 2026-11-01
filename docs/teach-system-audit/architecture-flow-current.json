@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 810,
+    "dedicatedVisuals": 811,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 664,
+    "animatedMechanisms": 665,
     "architectureWithoutAnimation": 63,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -13622,14 +13622,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/credit-tranche-base-correlation-and-default-auction.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/cross-border-netting-enforceability-and-regulatory-recognition",
