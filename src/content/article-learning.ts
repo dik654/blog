@@ -129848,6 +129848,16 @@ export const ARTICLE_LEARNING: Readonly<
         "assumptions": "미국 importer of record의 책임을 설명하는 안내이며 가정 세율·가격은 실제 품목 조건이 아닙니다.",
         "evidenceScope": "공식 페이지 실제 HTML에서 통관업자를 쓰더라도 신고 정확성과 관세·세금·수수료 책임이 남는 문장을 읽었습니다.",
         "notClaim": "개별 품목의 과세가격·세율·면세 여부나 실제 관세 전가율을 판정한 것은 아닙니다."
+      },
+      {
+        "title": "WTO · Customs Valuation Agreement, Article 8.2",
+        "href": "https://www.wto.org/english/docs_e/legal_e/cv_e.htm",
+        "sectionId": "comparison",
+        "problem": "국제 운송비 10달러가 언제나 과세가격에 포함되거나 언제나 제외된다고 단정하는 문제입니다.",
+        "contribution": "운송·적재·하역·취급·보험 비용의 포함 여부를 회원국 법에서 정하는 공식 경계를 확인합니다.",
+        "assumptions": "본문의 60달러 과세가격과 10% 세율은 설명용 가정이며 실제 국가·품목의 규칙이 아닙니다.",
+        "evidenceScope": "2026-11-01 Article 8.2 공식 조문을 확인했습니다.",
+        "notClaim": "이 조문만으로 특정 국가에서 물류 10달러가 과세가격에 포함되는지 확정하지 않습니다."
       }
     ]
   },

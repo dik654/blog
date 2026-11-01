@@ -12008,6 +12008,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "US CBP · Tips for New Importers and Exporters",
       "href": "https://www.cbp.gov/trade/basic-import-export/importer-exporter-tips",
       "note": "공식 페이지 실제 HTML에서 통관업자를 쓰더라도 신고 정확성과 관세·세금·수수료 책임이 남는 문장을 읽었습니다. 개별 품목의 과세가격·세율·면세 여부나 실제 관세 전가율을 판정한 것은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "WTO · Customs Valuation Agreement, Article 8.2",
+      "href": "https://www.wto.org/english/docs_e/legal_e/cv_e.htm",
+      "note": "2026-11-01 공식 조문을 확인했습니다. 수입항까지의 운송비, 적재·하역·취급비, 보험료를 과세가격에 전부 또는 일부 포함하거나 제외하는 선택을 회원국 법에 두는 내용입니다. 사례의 60달러 과세가격과 10% 세율은 WTO 자료의 실측값이 아닙니다."
     }
   ],
   "markets/funds-etfs-and-etns": [
