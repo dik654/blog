@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 766,
+    "dedicatedVisuals": 767,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 620,
+    "animatedMechanisms": 621,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -13542,14 +13542,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/commodity-carry-convenience-yield-and-roll.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/commodity-grades-location-basis-and-physical-delivery",

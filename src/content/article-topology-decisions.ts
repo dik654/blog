@@ -3138,9 +3138,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/commodity-carry-convenience-yield-and-roll": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "원자재 선물곡선은 자금·보관비와 실물을 지금 보유하는 편의수익, 품질·장소·인도 조건이 만들며, 투자 결과는 현물 변화와 계약을 바꾸는 롤수익을 나누어 봐야 합니다.",
-    "sharedGate": "75+0.75+1−2=74.75를 검산하고 편의수익·롤수익·현물 수익과 실물 인도를 서로 다른 장부로 유지합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "8장면 지도에서 오늘 쓸 원유 재고와 석 달 뒤 인도를 구분하고, 현물 75달러의 보유비용 장부가 선물곡선·롤·재고 부족·WTI 실물 인도·전체 투자수익으로 이어지는 과정을 한 사례로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "75+0.75+1−2=74.75, 1,000배럴의 현금비용 1,750달러와 비현금 편익 2,000달러, 75달러 계약을 팔고 78달러 계약을 사는 롤 비용 3달러를 같은 조건으로 유지하고 편의수익·롤수익·현물 변화·실물 인도를 서로 다른 장부로 구분합니다."
   },
   "markets/option-strategies-and-structured-notes": {
     "action": "keep",
@@ -4636,7 +4636,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/no-arbitrage-cost-of-carry-and-basis":"8a85e9f19b7b1b6f",
 "markets/option-greeks-volatility-and-dynamic-hedging":"bee28d2ce626059b",
 "markets/option-replication-and-put-call-parity":"39b4be384f5e5bb5",
-"markets/commodity-carry-convenience-yield-and-roll":"3e8f0433956f4cd5",
+"markets/commodity-carry-convenience-yield-and-roll":"b3fb6fe209a496cc",
 "markets/credit-derivatives-default-risk-and-tranches":"9988dd9bb2ab3cca",
 "markets/currency-hedging-forward-points-and-cross-currency-basis":"2087a7e1b609e874",
 "markets/option-strategies-and-structured-notes":"5e440805f5fc03c5",
