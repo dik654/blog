@@ -269,13 +269,13 @@ export const bftArticles: Article[] = [
   },
   {
     slug: "narwhal-deep",
-    title: "Narwhal DAG 멤풀 심층",
+    title: "Narwhal: 거래 바이트가 인증서가 되는 과정",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "Bytes와 ordering metadata" },
-      { id: "worker-header", title: "Worker와 primary" },
-      { id: "certificate-dag", title: "Certificate DAG" },
-      { id: "release", title: "복구와 release" },
+      { id: "overview", title: "한 배치의 전체 흐름" },
+      { id: "worker-header", title: "바이트와 헤더" },
+      { id: "certificate-dag", title: "투표와 인증서" },
+      { id: "release", title: "누락과 상태 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/narwhal-deep"),
   },

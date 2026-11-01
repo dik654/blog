@@ -150,6 +150,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/jolteon-ditto",
   "blockchain/bft-comparison",
   "blockchain/dag-consensus",
+  "blockchain/narwhal-deep",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

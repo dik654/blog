@@ -7,7 +7,7 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 565,
+    "animatedMechanisms": 566,
     "architectureWithoutAnimation": 74,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 243,
@@ -7698,18 +7698,18 @@
     {
       "route": "blockchain/narwhal-deep",
       "publicPath": "cs/blockchain/narwhal-deep",
-      "title": "Narwhal DAG 멤풀 심층",
+      "title": "Narwhal: 거래 바이트가 인증서가 되는 과정",
       "sourcePath": "src/pages/articles/blockchain/narwhal-deep.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/node-architecture",

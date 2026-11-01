@@ -8010,9 +8010,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "go-f3 v0.8.14 quorum validation", href: "https://github.com/filecoin-project/go-f3/tree/v0.8.14/gpbft", note: "Historical weighted quorum·message validation의 pinned source이며 certificate catch-up 전체는 아님" },
   ],
   "blockchain/narwhal-deep": [
-    { kind: "핵심 논문", label: "Narwhal and Tusk · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827", note: "Worker/primary 분리와 availability-certificate DAG의 원문이며 논문 TPS·latency를 current Sui 값으로 일반화하지 않음" },
+    { kind: "핵심 논문", label: "Narwhal and Tusk v4 · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827v4", note: "Worker/primary 분리와 availability-certificate DAG의 원문이며 논문 TPS·latency를 current Sui 값으로 일반화하지 않음" },
     { kind: "공식 코드", label: "Archived Narwhal primary types · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/types/src/primary.rs", note: "Header·vote·certificate validation의 pinned historical source이며 maintained current Sui consensus는 아님" },
-    { kind: "공식 코드", label: "Archived Narwhal worker · commit e67f915", href: "https://github.com/MystenLabs/narwhal/tree/e67f91530e6bd4ef7808e42f548f07e58764ec5b/worker/src", note: "Batch dissemination·retrieval implementation이며 permanent retention·total order·execution receipt를 보장하지 않음" },
+    { kind: "공식 코드", label: "Archived Narwhal worker quorum · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/worker/src/quorum_waiter.rs", note: "Batch dissemination 뒤 acknowledgement power를 모으는 pinned 구현이며 primary certificate와는 다른 정족수" },
+    { kind: "공식 코드", label: "Archived Narwhal synchronizer · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/primary/src/synchronizer.rs", note: "Missing parents와 (digest, worker id) payload 동기화 구현이며 즉시 fetch·영구 보관을 보장하지 않음" },
   ],
   "blockchain/bullshark-deep": [
     { kind: "핵심 논문", label: "Bullshark · arXiv 2201.05677", href: "https://arxiv.org/abs/2201.05677", note: "Wave·leader DAG ordering variants의 원문이며 partial-synchrony와 asynchronous-coin 전제를 서로 바꾸어 쓰지 않음" },
