@@ -191,6 +191,7 @@ const noScriptArticleRoutes = new Set([
   "infrastructure/climate-risk-and-exposure",
   "banking/repo-and-collateral-funding",
   "markets/bond-pricing-and-yield-curve",
+  "markets/equity-claims-and-valuation",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

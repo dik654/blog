@@ -39,6 +39,7 @@ export default function ClaimLadderViz() {
       title="앞 순위가 먼저 받고, 주주는 남는 것을 받습니다"
       description="같은 회사 가치 변화가 주주 몫에서 훨씬 크게 나타나는 이유가 이 순서에 있습니다."
       note="단위는 억 원이고 선순위 청구액 60은 구조를 보이기 위한 예시입니다. 실제로는 세금·임금 등 더 앞선 순위가 있습니다."
+      documentFlow
     >
       <div
         data-viz-canvas
@@ -46,7 +47,7 @@ export default function ClaimLadderViz() {
         role="group"
         aria-label="청구권 순위와 주주 몫"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-auto min-h-0 min-w-0 flex-col overflow-visible outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem] sm:overflow-y-auto"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
@@ -54,7 +55,34 @@ export default function ClaimLadderViz() {
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
+          {step <= 2 ? (
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:hidden" aria-label="회사 가치와 청구권별 지급액">
+              <div className="border border-border p-3 text-center">
+                <p className="text-[8px] font-black text-muted-foreground">회사 가치</p>
+                <p className="mt-1 font-mono text-sm font-black">{firmValue}</p>
+              </div>
+              <div className="border border-border p-3 text-center">
+                <p className="text-[8px] font-black text-muted-foreground">지급 순서</p>
+                <p className="mt-1 font-mono text-[10px] font-black">앞 순위 {seniorPaid}</p>
+                <p className={`mt-1 font-mono text-[10px] font-black ${equityPaid === 0 ? "text-destructive" : "text-primary"}`}>주주 {equityPaid}</p>
+              </div>
+              <p className="col-span-2 border-l border-primary pl-3 text-[10px] font-bold leading-5 text-muted-foreground">
+                회사 가치 {FIRM_VALUES[0]}→{firmValue} · 주주 몫 {FIRM_VALUES[0] - SENIOR_CLAIM}→{equityPaid}
+              </p>
+            </div>
+          ) : (
+            <div className="mt-4 grid grid-cols-3 gap-1.5 sm:hidden" aria-label="회사 가치가 부채를 넘을 때만 생기는 주주 몫">
+              {[[40, 0], [60, 0], [100, 40]].map(([firm, equity]) => (
+                <div key={firm} className="border border-border px-1.5 py-3 text-center">
+                  <p className="text-[8px] font-black text-muted-foreground">회사 {firm}</p>
+                  <p className={`mt-1 font-mono text-[10px] font-black ${equity === 0 ? "text-destructive" : "text-primary"}`}>주주 {equity}</p>
+                </div>
+              ))}
+              <p className="col-span-3 border-l border-primary pl-3 text-[10px] font-bold leading-5 text-muted-foreground">60까지는 0 · 60을 넘은 몫은 모두 주주에게</p>
+            </div>
+          )}
+
+          <div className="mt-4 hidden w-full min-w-0 overflow-x-auto sm:block">
             <svg
               viewBox="0 0 480 200"
               role="img"
