@@ -1742,9 +1742,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "institutions/education-skills-and-signals": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "교육비 지출은 학습자의 실제 능력 향상, 고용주가 믿는 자격 신호, 직업 연결과 기회 접근에 서로 다른 경로로 영향을 줍니다.",
-    "sharedGate": "교육비가 1천만 원이고 취업을 1년 늦추며 그동안 받을 수 있었던 소득이 2천만 원이라고 놓습니다(가정). 교육 뒤 연 임금이 200만 원 높아진다면 학비만 나눠 얻은 5년은 비용의 일부만 회수하는 계산입니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "reviewedAt": "2026-11-01",
+    "rationale": "교육 선택은 학교에 낸 돈뿐 아니라 포기한 소득, 실제 능력 변화, 자격이 전하는 정보, 재원 출처와 상환 조건을 나눠야 판단할 수 있습니다. 첫 그림은 학습자·교육기관·고용주의 경로에서 초기 비용 3천만 원, 단순 회수 15년, 능력·신호·연결망, 정부·가계 재원, 소득 연계 상환, 개인 판단의 한계까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 금액과 인과 경계가 일치해야 합니다. 학비 1천만 원과 포기 소득 2천만 원을 더하면 초기 비용은 3천만 원이고, 연 추가 임금 200만 원으로 나눈 단순 회수 기간은 15년입니다. 정부 장학금 400만 원과 가계 자금 600만 원을 가정하면 학교 수입은 1천만 원이지만 가계의 직접 부담과는 다릅니다. 평균 임금 차이를 개인에게 보장된 수익이나 능력 축적만의 결과로 읽지 않습니다."
   },
   "institutions/media-attention-and-public-belief": {
     "action": "keep",
@@ -4297,7 +4297,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/discrete-log": "3a45605b7fb5946c",
   "institutions/public-budget-and-taxes": "d20475b0f1195c69",
   "institutions/media-attention-and-public-belief": "6bdcaf0879fe12b7",
-  "institutions/education-skills-and-signals": "d63d99bb5b957bb3",
+  "institutions/education-skills-and-signals": "6a6d17faed7d55b1",
   "infrastructure/water-utility-and-tariffs": "574f8404067226e8",
   "infrastructure/transport-access-and-land-value": "b4cdbe939dab95f4",
   "infrastructure/housing-land-and-supply": "d9a214167861d0d6",

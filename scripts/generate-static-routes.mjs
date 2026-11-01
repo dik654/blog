@@ -175,6 +175,7 @@ const noScriptArticleRoutes = new Set([
   "property/land-development-residual",
   "institutions/insurance-risk-pooling",
   "institutions/healthcare-payment-systems",
+  "institutions/education-skills-and-signals",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
