@@ -4,11 +4,11 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 798,
+    "dedicatedVisuals": 799,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 652,
-    "architectureWithoutAnimation": 64,
+    "animatedMechanisms": 653,
+    "architectureWithoutAnimation": 63,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
     "sourceCitationLinked": 998,
@@ -13798,14 +13798,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/equity-claims-and-valuation",

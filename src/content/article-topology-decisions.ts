@@ -3348,9 +3348,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 거래는 체결 뒤 경제·법률조건을 확인하고 평가·담보·지급을 처리하며 상대방 장부와 주기적으로 대사해 수정·결제·보고 예외를 만기까지 해결해야 완전한 운영 기록이 됩니다.",
-    "sharedGate": "명목 100에서 3.00%와 3.05%를 각각 계산해 연 지급액 3.00과 3.05, 차이 0.05를 찾습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "명목 100·고정금리 3.00% 스왑이 상대 장부의 3.05% 오류로 갈라진 뒤 현금 차이 0.05, 거래 확인, 재평가·증거금 전파, 결제 도착, 포트폴리오 대사와 별도 완료 상태까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "100×3.00%=3.00과 100×3.05%=3.05, 차이 0.05를 검산하고 체결·확인·평가·담보·결제·대사·보고의 상태와 소유자, 지급 지시와 실제 입금 완료를 구분합니다."
   },
   "markets/collateral-operations-margin-calls-disputes-and-substitution": {
     "action": "keep",
@@ -4661,7 +4661,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"f9d6deb10fa6f125",
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"d23f172695692391",
 "markets/uncleared-initial-margin-simm-and-model-governance":"941f21bff7ae1dad",
-"markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"85a2a973129c6f80",
+"markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"bcddcd2ba09014de",
 "markets/collateral-operations-margin-calls-disputes-and-substitution":"8be8a0574eed18c7",
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"8c605652f58d653a",
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"fc0b347a31fcd02f",

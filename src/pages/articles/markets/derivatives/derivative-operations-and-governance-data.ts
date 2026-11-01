@@ -130,7 +130,7 @@ export const tradeLifecycleData: DerivativeDeepArticleData = {
     { term: "포트폴리오 대사", description: "살아 있는 거래의 목록·조건·평가를 상대방 장부와 맞추는 통제입니다.", example: "100건 중 두 건의 차이를 찾아 원인을 고칩니다.", boundary: "차이 발견만으로 해결이 끝나지 않습니다." },
   ] },
   sources: [
-    { source: "CFTC · 스왑 운영 규칙", excerpt: "Confirmation, Portfolio Reconciliation, Portfolio Compression", application: "확인·대사·압축·거래관계 문서가 연결된 통제임을 확인합니다.", citation: "17 CFR Part 23 Final Rule, 2012-21414", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414", note: "미국 스왑 딜러·주요 스왑 참가자 규칙의 범위입니다." },
+    { source: "CFTC · 스왑 운영 규칙", excerpt: "Confirmation, Portfolio Reconciliation, Portfolio Compression", application: "확인·대사·압축·거래관계 문서가 연결된 통제임을 확인합니다.", citation: "17 CFR Part 23 Final Rule, 2012-21414", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414", note: "미국 스왑 딜러·주요 스왑 참가자에 대한 2012년 원 규칙입니다. 이후 확인·문서 규칙의 개정이 있었으므로 실제 적용에는 현재 17 CFR과 최신 개정 내용을 다시 확인해야 합니다(2026-11-02 확인)." },
     { source: "BIS · OTC 결제 절차", excerpt: "data capture through to confirmation and settlement", application: "체결 뒤 데이터 입력·확인·결제와 복잡한 거래의 수동 예외를 구분합니다.", citation: "Report on OTC Derivatives: Settlement procedures and counterparty risk management", href: "https://www.bis.org/publications/report-otc-derivatives-settlement-procedures-and-counterparty-risk-management", note: "1998년 운영 조사이므로 현재 규칙의 기한을 정하는 자료로 쓰지 않습니다." },
   ],
   review: [
