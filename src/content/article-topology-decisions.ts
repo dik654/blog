@@ -3250,9 +3250,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/hazard-rate-curve-recovery-and-credit-correlation": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "신용 가격은 만기별 생존과 부도 도착 세기, 회수 뒤 손실과 동시부도를 따로 계산하며 시장가격용 확률과 실제 부도 추정을 분리해 단일기업·포트폴리오 꼬리위험을 관리합니다.",
-    "sharedGate": "1.2%/(1−40%)=2%, 1−e^(−0.02)≈1.98%, 두 회사 기대손실 12와 동시부도 1%·10%를 검산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "연 보호료 1.2%와 회수 40%에서 손실률 60%, 연 도착 세기 2%, 1년 부도확률 1.98%를 차례로 계산하고, 생존·부도 지급과 만기별 곡선, 두 회사의 동시부도 1%·10%, 가격용·실제 장부의 경계를 여덟 장면으로 추적합니다.",
+    "sharedGate": "1.2%÷(1−40%)=2%, 1−e^(−0.02)≈1.98%, 회사별 기대손실 100×10%×60%=6과 합 12, 동시부도 1%·10%를 검산하고 도착 세기와 기간 확률, 가격용 확률과 실제 부도 추정을 구분합니다."
   },
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": {
     "action": "keep",
@@ -4650,7 +4650,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/market-risk-backtesting-pnl-attribution-and-model-governance":"a7159bf1a579c78e",
 "markets/black-scholes-pde-finite-difference-and-numerical-error":"eedd210ad42edda2",
 "markets/brownian-motion-ito-and-risk-neutral-pricing":"2a0f49691cce1e3c",
-"markets/hazard-rate-curve-recovery-and-credit-correlation":"78d8e8ed48ee2aa1",
+"markets/hazard-rate-curve-recovery-and-credit-correlation":"77a17dab367993b1",
 "markets/local-stochastic-volatility-jumps-and-calibration":"4954b39933cb2683",
 "markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"9d050c6730161317",
 "markets/short-rate-hjm-and-interest-rate-model-risk":"a96f30b96476b3df",
