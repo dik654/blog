@@ -3159,9 +3159,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/otc-master-agreement-collateral-netting-and-cva": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "장외파생의 상대방 위험은 기본계약과 확인서가 정한 상계집합, CSA 담보와 운영 절차를 거쳐 줄어들며, 남은 미래 양의 노출과 상대 신용을 CVA로 가격에 반영합니다.",
-    "sharedGate": "+9−7=2와 담보 뒤 0.5, 10×2%×60%=0.12를 검산하고 법률상계·담보·가격조정을 다른 층으로 유지합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "+5·+4·−2·−5의 네 거래를 상계 전 총 절대금액 16에서 종료 순액 2로 줄이고 담보 1.5 뒤 잔여노출 0.5를 계산한 뒤, 문서·매일 운영·변동·개시증거금과 미래 양의 노출의 단순 CVA 0.12까지 여덟 장면으로 추적합니다.",
+    "sharedGate": "+5+4−2−5=2, 2−1.5=0.5와 10×2%×60%=0.12를 검산하고 법률상계, 담보, 운영 상태와 가격조정의 소유권을 다른 층으로 유지합니다."
   },
   "markets/var-expected-shortfall-stress-and-model-risk": {
     "action": "keep",
@@ -4640,7 +4640,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/credit-derivatives-default-risk-and-tranches":"53381e47bfb2fef7",
 "markets/currency-hedging-forward-points-and-cross-currency-basis":"2087a7e1b609e874",
 "markets/option-strategies-and-structured-notes":"5e440805f5fc03c5",
-"markets/otc-master-agreement-collateral-netting-and-cva":"14e9b3b5e52c1b75",
+"markets/otc-master-agreement-collateral-netting-and-cva":"c9c4e1ce6901b22e",
 "markets/var-expected-shortfall-stress-and-model-risk":"b0ceb8cf324687cf",
 "markets/minimum-variance-hedge-ratio-and-basis-risk":"86f50c4f552be7a6",
 "markets/binomial-black-scholes-and-early-exercise":"6429e7751ab87616",

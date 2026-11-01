@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 782,
+    "dedicatedVisuals": 783,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 636,
+    "animatedMechanisms": 637,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14262,14 +14262,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/otc-master-agreement-collateral-netting-and-cva.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/portfolio-compression-risk-tolerances-and-records",
