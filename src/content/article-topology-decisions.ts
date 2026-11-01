@@ -1824,10 +1824,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep"
   },
   "banking/repo-and-collateral-funding": {
-    "rationale": "하나의 수치 사례에서 레포는 증권을 맡겨 짧은 돈을 구하고 만기마다 다시 연결한다의 지급·조건·한계를 순서대로 추적합니다.",
-    "reviewedAt": "2026-10-04",
+    "rationale": "은행 장부의 현금 부족에서 시작해 오늘과 만기의 증권·현금 교환, 100억·95억·95만 원 계산, 헤어컷 분모, 담보 보충, 중앙은행 거래 방향과 만기 연장 실패를 같은 사례로 추적합니다.",
+    "reviewedAt": "2026-11-02",
     "status": "implemented",
-    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "sharedGate": "시각화와 본문에서 100억 원 증권·5% 헤어컷·95억 원 현금·연 3.65%·하루 이자 95만 원을 동일하게 유지하고, 현금과 증권의 방향·헤어컷 분모·설명용 가정과 실제 계약 조건을 구분합니다.",
     "action": "keep"
   },
   "markets/covered-calls-and-income-funds": {
@@ -4556,7 +4556,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "ai/flash-attention-io-aware-kernel":"6358bc6072ecfe8f",
 "ai/reward-design-for-verifiable-rl":"0f1307d7f3825ece",
 "ai/world-model-latent-planning":"347bf691b2210b88",
-"banking/repo-and-collateral-funding":"8b5c5b3336427561",
+"banking/repo-and-collateral-funding":"0e074341edca175e",
 "blockchain/ethereum-future-roadmap":"5a7d76a6c5c062c7",
 "blockchain/glamsterdam-block-execution":"31ca197e74a5e91a",
 "blockchain/hyperliquid":"19e22f5f577fc95f",

@@ -2,11 +2,13 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import RepoCollateralFundingViz from "./RepoCollateralFundingViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
   return (
     <div className="space-y-16">
+      <RepoCollateralFundingViz />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 오래 보유할 자산도 오늘 결제할 돈이 필요합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
