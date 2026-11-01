@@ -25,6 +25,7 @@ const KIND_STYLE: Record<ArticleEvidenceItem["kind"], string> = {
   "공식 연구": "bg-blue-500/10 text-blue-700 dark:text-blue-300",
   "공식 예제": "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
   "공식 프로젝트 기록": "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
+  "공식 릴리스": "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
   "구현 이슈": "bg-orange-500/10 text-orange-700 dark:text-orange-300",
   "프로젝트 실측": "bg-amber-500/10 text-amber-700 dark:text-amber-300",
   "보충 읽기": "bg-slate-500/10 text-slate-700 dark:text-slate-300",
