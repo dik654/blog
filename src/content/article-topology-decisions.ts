@@ -3509,9 +3509,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/equity-dispersion-implied-correlation-and-variance": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "옵션 디스퍼전은 구성 종목과 지수의 분산 차이를 거래하되 비중·변동성·내재상관·베가와 헤지비용을 같은 만기 장부에서 맞춰야 하며, 평균상관을 모든 종목 쌍과 위기 꼬리의 직접 관측값으로 읽지 않습니다.",
-    "sharedGate": "20%인 두 종목의 비중을 0.5씩 두고 상관 0에서 14.14%, 상관 0.5에서 17.32%, 분산 차이 0.01을 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "20%·비중 50%인 두 종목의 입력에서 상관 0과 0.5의 지수 분산·변동성, 지수 옵션에서 내재 평균상관 역산, 디스퍼전 0.01, 종목 옵션 매수·지수 옵션 매도의 베가 맞춤, 델타 헤지와 비용 대사, 평균상관의 한계까지 같은 숫자를 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "0.5²×0.2² 두 항=0.02, 교차항 0.01, √0.02=14.14%, √0.03=17.32%, (0.03−0.02)÷0.02=0.5, 0.5×0.04+0.5×0.04−0.03=0.01을 검산하고 내재상관 역산의 비중 제곱과 디스퍼전의 비중가중 평균을 구분합니다."
   },
   "markets/credit-tranche-base-correlation-and-default-auction": {
     "action": "keep",
@@ -4672,7 +4672,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/ccp-default-management-hedging-auction-and-porting":"40b7aa88ea82fa5f",
 "markets/swaption-annuity-volatility-quotes-and-cube":"cfefb2d036fad186",
 "markets/derivatives-sales-records-access-retention-and-deletion":"8d2d990bb78147db",
-"markets/equity-dispersion-implied-correlation-and-variance":"dc637f6b4f965461",
+"markets/equity-dispersion-implied-correlation-and-variance":"7211e5f64264551b",
 "markets/credit-tranche-base-correlation-and-default-auction":"69d67fe0bb57d7a0",
 "markets/commodity-grades-location-basis-and-physical-delivery":"844b02bac84bad7e",
 "markets/derivatives-investigation-audit-trail-and-legal-hold":"1dca848f5cd377c4",

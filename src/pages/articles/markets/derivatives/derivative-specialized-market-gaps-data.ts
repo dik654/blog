@@ -60,8 +60,8 @@ export const equityDispersionData: DerivativeDeepArticleData = {
     { term: "상관 표면", description: "만기와 행사가에 따라 달라지는 내재 상관을 좌표별로 모은 표입니다.", example: "1개월 등가격과 1년 하락 구간을 다른 점으로 둡니다.", boundary: "빈 좌표를 채우는 방법과 모형에 따라 값이 달라집니다." },
   ] },
   sources: [
-    { source: "Cboe · Implied Correlation Index 백서", excerpt: "The implied correlation is a measure of the average correlation between SPX index components", application: "지수 분산 0.03과 개별 기여 0.02를 식에 넣어 상관 0.5를 풉니다.", citation: "Cboe, Implied Correlation Index White Paper", href: "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf", note: "평균상관 식과 지수 산출 구조를 확인했으며 두 종목 수치는 설명용 가정입니다." },
-    { source: "Cboe · Implied Correlation Indices", excerpt: "spread between average component variance and portfolio variance", application: "개별 분산 0.04와 지수 분산 0.03의 차이를 디스퍼전의 출발점으로 읽습니다.", citation: "Cboe, Implied Correlation Indices", href: "https://www.cboe.com/us/indices/implied/", note: "현재 지수 설명과 구성 원리를 확인하며 실제 전략의 수수료·헤지 손익은 별도입니다." },
+    { source: "Cboe · Implied Correlation Index 계산 백서", excerpt: "The implied correlation is a measure of the average correlation between SPX index components", application: "지수 분산 0.03과 개별 기여 0.02를 식에 넣어 상관 0.5를 풉니다.", citation: "Cboe, The Implied Correlation Index Calculation: Step-by-Step", href: "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf", note: "평균상관 식과 지수 산출 구조를 확인했습니다. 백서의 2021년 표본과 본문의 두 종목 가정은 현재 지수 수준이 아닙니다(2026-11-02 확인)." },
+    { source: "Cboe · Implied Correlation", excerpt: "spread between the average variance of component securities and portfolio variance", application: "종목 분산의 비중가중 평균 0.04와 지수 분산 0.03의 차이를 디스퍼전의 출발점으로 읽습니다.", citation: "Cboe, Implied Correlation", href: "https://www.cboe.com/us/indices/implied/", note: "현재 페이지의 COR3M 설명과 디스퍼전 정의를 확인했습니다. 실시간 지수값과 실제 전략의 수수료·헤지 손익은 인용하지 않습니다(2026-11-02 확인)." },
   ],
   review: [
     "20%인 두 종목의 비중이 같을 때 상관 0과 0.5의 지수 변동성을 계산해 보세요. (답: 3절)",
