@@ -3271,9 +3271,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/japan-australia-retail-leverage-and-product-governance": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "레버리지 한도는 고객 유형과 기초자산에 붙여 읽어야 하며, 상품 조건 통제와 목표시장·유통 관리는 함께 확인해야 합니다.",
-    "sharedGate": "4%의 역수 25와 현금 100의 1% 손실 25·30·2를 검산하고 배수를 국가 전체의 안전 순위로 쓰지 않습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "현금 100을 일본 개인 장외 FX와 호주 소매 CFD에 넣어 허용 노출과 1% 손실을 계산한 뒤, 호주의 목표시장 결정이 상품 설계·가입·판매 결과·재검토로 이어지는 과정을 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "100÷4%=2,500과 1÷4%=25배, 100×25×1%=25·100×30×1%=30·100×2×1%=2를 검산하고 고객 지위·기초자산별 한도와 목표시장·유통 통제를 구분하며 현재 규칙과 연장 제안을 나눠 확인합니다."
   },
   "markets/us-derivatives-regulatory-map-and-customer-segregation": {
     "action": "keep",
@@ -4182,7 +4182,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action": "287c7be8714df3ab",
   "markets/cross-border-netting-enforceability-and-regulatory-recognition": "4dc9258b37d3e5f7",
   "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": "8aeac780ee5fea31",
-  "markets/japan-australia-retail-leverage-and-product-governance": "af6b0f537743c99b",
+  "markets/japan-australia-retail-leverage-and-product-governance": "1577959c26eee21d",
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": "2c3853099c942095",
   "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": "332534b527713afc",
   "markets/us-derivatives-regulatory-map-and-customer-segregation": "89ec2a31d97827e3",

@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 787,
+    "dedicatedVisuals": 788,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 641,
+    "animatedMechanisms": 642,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14006,14 +14006,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/japan-australia-retail-leverage-and-product-governance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests",

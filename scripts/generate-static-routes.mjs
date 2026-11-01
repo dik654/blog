@@ -221,6 +221,7 @@ const noScriptArticleRoutes = new Set([
   "markets/derivatives-suitability-disclosure-and-sales-practice",
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests",
   "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance",
+  "markets/japan-australia-retail-leverage-and-product-governance",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
