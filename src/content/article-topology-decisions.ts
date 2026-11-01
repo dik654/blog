@@ -3180,9 +3180,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/binomial-black-scholes-and-early-exercise": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "이항모형은 실제 예측확률이 아닌 복제용 위험중립 가중치로 만기 지급을 역진하고, 미국형 옵션은 각 노드에서 계속 보유가치와 즉시 행사가치를 비교합니다.",
-    "sharedGate": "q=0.625, 하락 노드 보유 15.24·행사 20, 미국형 약 7.99·유럽형 약 6.29를 독립 검산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "두 기간 나무의 만기 풋 지급 0·4·36에서 시작해 위험중립 가중치, 하락 노드의 보유가치와 즉시 행사, 오늘 미국형 가격, 유럽형 비교와 CRR 수렴 경계까지 여덟 장면으로 역진합니다.",
+    "sharedGate": "q=0.625, 하락 노드 보유 15.24와 행사 20, 미국형 약 7.99와 유럽형 약 6.29를 검산하고 손계산용 1.2·0.8 나무를 변동성 기반 CRR 수렴 수열과 구분합니다."
   },
   "markets/implied-volatility-surface-skew-and-smile": {
     "action": "keep",
@@ -4643,7 +4643,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/otc-master-agreement-collateral-netting-and-cva":"14e9b3b5e52c1b75",
 "markets/var-expected-shortfall-stress-and-model-risk":"b0ceb8cf324687cf",
 "markets/minimum-variance-hedge-ratio-and-basis-risk":"86f50c4f552be7a6",
-"markets/binomial-black-scholes-and-early-exercise":"6a63ef76400b9d29",
+"markets/binomial-black-scholes-and-early-exercise":"6429e7751ab87616",
 "markets/implied-volatility-surface-skew-and-smile":"48ac524d9f1bda29",
 "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"72599372e1d4728e",
 "markets/xva-funding-margin-and-wrong-way-risk":"f00134405cf50c68",

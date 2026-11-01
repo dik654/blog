@@ -203,6 +203,7 @@ const noScriptArticleRoutes = new Set([
   "markets/minimum-variance-hedge-ratio-and-basis-risk",
   "markets/options-and-asymmetric-payoffs",
   "markets/option-replication-and-put-call-parity",
+  "markets/binomial-black-scholes-and-early-exercise",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
