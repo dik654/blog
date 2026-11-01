@@ -3,13 +3,13 @@ import type { Article } from "../types";
 export const bftNewArticles: Article[] = [
   {
     slug: "longest-chain",
-    title: "Nakamoto 최장 체인 합의",
+    title: "Nakamoto: 누적 work와 재조직",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "최장 체인 개요" },
-      { id: "chain-selection", title: "체인 선택 규칙" },
-      { id: "finality", title: "확률적 최종성" },
-      { id: "comparison", title: "BFT와의 비교" },
+      { id: "overview", title: "한 분기의 전체 흐름" },
+      { id: "chain-selection", title: "누적 work와 재조직" },
+      { id: "finality", title: "확인 깊이와 따라잡기" },
+      { id: "release", title: "공통 접두사와 실패" },
     ],
     component: () => import("@/pages/articles/blockchain/longest-chain"),
   },

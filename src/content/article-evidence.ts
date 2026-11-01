@@ -7141,7 +7141,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Celestia App v10.5.0 · Data square layout", href: "https://github.com/celestiaorg/celestia-app/blob/v10.5.0/specs/src/data_square_layout.md", note: "2D layout 비교를 해당 release에 고정하는 source" },
   ],
   "blockchain/longest-chain": [
-    { kind: "공식 코드", label: "Bitcoin Core · chainwork implementation", href: "https://github.com/bitcoin/bitcoin/blob/master/src/chain.cpp", note: "Compact target를 integer block work로 바꾸고 CBlockIndex에 누적하는 current 구현이며 재현 시 commit pin 필요" },
+    { kind: "공식 릴리스", label: "Bitcoin Core v32.1 · release와 source tag", href: "https://bitcoincore.org/en/releases/32.1/", note: "2026-10-27 공개된 고정 릴리스이며 구현 추적은 v32.1 tag와 commit f0de87f040621468b956f01f526a43a010310501에 한정" },
+    { kind: "공식 코드", label: "Bitcoin Core v32.1 · chainwork와 후보 정렬", href: "https://github.com/bitcoin/bitcoin/tree/v32.1", note: "GetBitsProof·nChainWork 누적·CBlockIndexWorkComparator를 고정된 tag에서 확인" },
+    { kind: "공식 코드", label: "Bitcoin Core v32.1 · active chain 재조직", href: "https://github.com/bitcoin/bitcoin/blob/v32.1/src/validation.cpp#L3122-L3264", note: "FindMostWorkChain 뒤 common ancestor까지 disconnect하고 새 branch를 connect하는 상태 전이" },
     { kind: "핵심 논문", label: "Bitcoin: A Peer-to-Peer Electronic Cash System", href: "https://bitcoin.org/bitcoin.pdf", note: "Cumulative-work chain과 attacker catch-up의 random-walk·Poisson confirmation 모델 원문" },
     { kind: "핵심 논문", label: "The Bitcoin Backbone Protocol", href: "https://eprint.iacr.org/2014/765.pdf", note: "Common prefix·chain growth·chain quality의 명시적 theorem과 network·honest-power assumptions" },
   ],

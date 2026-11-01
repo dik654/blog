@@ -13413,7 +13413,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "nakamoto-common-prefix-confirmation-contract", kind: "theorem", domain: "distributed-systems",
     label: "Nakamoto common-prefix confirmation contract",
     definition: "정직한 node의 chain에서 최근 k blocks를 제거하면 더 오래된 prefix가 높은 확률로 일치한다는 성질을 hash-power·timing·random-oracle·execution-horizon 전제와 함께 해석하는 정리입니다.",
-    canonicalHref: "/cs/blockchain/longest-chain#common-prefix",
+    canonicalHref: "/cs/blockchain/longest-chain#release",
   },
   "pow-catch-up-probability-model": {
     id: "pow-catch-up-probability-model", kind: "method", domain: "mathematics",

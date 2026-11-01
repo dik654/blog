@@ -4831,7 +4831,7 @@
     {
       "route": "blockchain/longest-chain",
       "publicPath": "cs/blockchain/longest-chain",
-      "title": "Nakamoto 최장 체인 합의",
+      "title": "Nakamoto: 누적 work와 재조직",
       "catalogIndex": 480,
       "status": "pending",
       "provenance": "assignment:chains",

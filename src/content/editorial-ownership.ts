@@ -8021,7 +8021,7 @@ export const EDITORIAL_BOUNDARIES = {
   "longest-chain": {
     title: "PoW longest-chain 글이 소유하는 범위",
     owns: [
-      "Valid branch의 target-derived block work와 cumulative chainwork 선택",
+      "Bitcoin Core v32.1의 target-derived chainwork·후보 정렬과 공통 조상 기반 chainstate 재조직",
       "Deficit·hash share 기반 catch-up 확률과 whitepaper 모델의 차이",
       "Common prefix theorem의 proof idea·timing assumptions·failure counterexample",
     ],
@@ -8031,7 +8031,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Safety·liveness와 quorum 기초", href: "/cs/blockchain/smr-theory" },
     ],
     evidence: [
-      { kind: "standard", rule: "Chainwork 구현식은 Bitcoin Core의 exact commit·target encoding·difficulty rule을 함께 pin한다." },
+      { kind: "standard", rule: "Chainwork·재조직 구현은 Bitcoin Core v32.1 tag와 commit f0de87f040621468b956f01f526a43a010310501, target encoding·difficulty rule에 함께 고정한다." },
       { kind: "primary-source", rule: "Catch-up·common-prefix bound는 whitepaper와 Backbone 논문의 서로 다른 시작 상태·network model에 귀속한다." },
       { kind: "project-claim", rule: "고정 confirmation 수를 모든 hash share·partition·eclipse·금액에서 deterministic finality로 표현하지 않는다." },
     ],
