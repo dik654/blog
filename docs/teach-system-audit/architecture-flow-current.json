@@ -7,7 +7,7 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 525,
     "customVisuals": 911,
-    "animatedMechanisms": 581,
+    "animatedMechanisms": 582,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 244,
@@ -7001,11 +7001,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/filecoin-ipc",

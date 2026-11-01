@@ -14,6 +14,15 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 
 export const fvmTree: FileNode = d("ref-fvm", [
   d("fvm/src", [
-    f("fvm.rs — FVM 머신 + Actor 실행", "fvm/src/fvm.rs", "fvm-machine"),
+    f(
+      "executor/default.rs — message 적용·receipt·gas",
+      "fvm/src/executor/default.rs",
+      "fvm-machine",
+    ),
+    f(
+      "executor/mod.rs — execute_message와 flush",
+      "fvm/src/executor/mod.rs",
+      "fvm-flush",
+    ),
   ]),
 ]);

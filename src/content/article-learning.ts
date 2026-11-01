@@ -84877,44 +84877,312 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "blockchain/filecoin-fvm": {
     entryLevel: true,
-    entryNote: "WASM·actor·state root를 안다고 가정하지 않고 한 message가 receipt와 다음 state를 만드는 흐름부터 시작합니다.",
-    coreIdea: "FVM 실행은 message·base state·network version·actor manifest를 고정하고 transactional actor calls에서 state·gas receipt를 만든 뒤 deterministic replay로 release하는 과정입니다.",
+    entryNote:
+      "Wasm·actor·state root를 안다고 가정하지 않고 Machine 하나에 message 두 건을 적용한 뒤 마지막에 flush하는 흐름부터 시작합니다.",
+    coreIdea:
+      "FVM은 초기 state와 chain context를 고정한 Machine에서 message를 순서대로 적용해 각각의 receipt를 만들고, 호출자가 적용을 마친 뒤 한 번 flush해 final state root를 계산합니다.",
     assumedKnowledge: [],
     introducedHere: [
-      { id: "fvm-message-execution-envelope", role: "Message와 실행 context를 한 재현 가능한 identity로 묶습니다." },
-      { id: "fvm-transactional-state-root-receipt", role: "Nested calls의 commit/revert와 post-state·receipt를 연결합니다." },
-      { id: "fvm-network-version-actor-manifest-binding", role: "Protocol semantics와 built-in actor code generation을 고정합니다." },
-      { id: "fvm-execution-release-gate", role: "Negative parity와 crash replay 뒤 runtime을 채택합니다." },
+      {
+        id: "fvm-machine-execution-context",
+        role: "초기 state·epoch·fees·network version·blockstore·actor manifest가 Machine 실행 문맥을 이룹니다.",
+      },
+      {
+        id: "fvm-actor-call-transaction-receipt",
+        role: "Actor-call revert와 message-level sequence·gas 효과, receipt를 구분합니다.",
+      },
+      {
+        id: "fvm-network-version-actor-manifest-binding",
+        role: "Manifest 판본과 root가 built-in actor 이름을 code CID에 연결합니다.",
+      },
+      {
+        id: "fvm-message-sequence-flush-boundary",
+        role: "각 message의 receipt 생성과 전체 message 뒤 final root flush를 분리합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "fvm-message-execution-envelope", sectionId: "message-envelope", intuition: "같은 요청서라도 어느 장부와 프로그램 버전에서 처리했는지를 적어야 같은 실행입니다.", workedExample: "Alice message CID와 base root, epoch, network version, actor manifest CID를 digest 하나에 묶습니다.", boundary: "Message bytes만 같다고 다른 state·bundle의 receipt를 재사용하지 않습니다." },
-      { id: "fvm-transactional-state-root-receipt", sectionId: "state-commit", intuition: "Nested actor 작업 묶음을 성공 시 함께 반영하고 abort 시 해당 scope만 되돌리는 영수증입니다.", workedExample: "Actor A가 B를 부른 뒤 abort하면 staged state·events를 revert하고 exit·gas receipt를 남깁니다.", boundary: "Actor-call revert를 fee·nonce를 포함한 chain 전체 무변화로 확대하지 않습니다." },
-      { id: "fvm-network-version-actor-manifest-binding", sectionId: "actor-bundle", intuition: "실행 규칙 책과 actor code 목록의 판본을 한 세트로 봉인하는 과정입니다.", workedExample: "Manifest root에서 required account/system actor code CIDs를 읽고 network version fixture와 replay합니다.", boundary: "Manifest load 성공이 actor source security나 arbitrary WASM compatibility를 증명하지 않습니다." },
-      { id: "fvm-execution-release-gate", sectionId: "release-gate", intuition: "정답뿐 아니라 abort·out-of-gas·restart가 같은 결과인지 확인하는 마지막 배포 문입니다.", workedExample: "Wrong nonce·missing block·nested abort·flush crash 뒤 state root와 receipt digest를 독립 oracle과 비교합니다.", boundary: "한 hardware의 처리량을 모든 network version의 성능으로 일반화하지 않습니다." },
+      {
+        id: "fvm-machine-execution-context",
+        sectionId: "machine-context",
+        intuition:
+          "같은 요청도 어느 장부와 어느 규칙에서 처리했는지를 함께 적어야 같은 실행입니다.",
+        workedExample:
+          "초기 state root S₀, epoch, base fee, circulating supply, network version, blockstore와 actor manifest를 고정한 뒤 m₁을 적용합니다.",
+        boundary:
+          "학습용 context tuple을 chain에 저장되는 공식 단일 digest로 오해하지 않습니다.",
+      },
+      {
+        id: "fvm-actor-call-transaction-receipt",
+        sectionId: "actor-transaction",
+        intuition:
+          "Actor가 실패하면 actor-call 안의 임시 변경은 되돌리지만 message 바깥 효과까지 모두 사라지지는 않습니다.",
+        workedExample:
+          "Preflight가 Alice의 sequence와 gas를 먼저 반영하고, A가 B를 부른 뒤 abort하면 A·B의 staged state·events만 되돌린 뒤 실패 receipt를 만듭니다.",
+        boundary:
+          "Receipt에 final state root가 들어 있다고 설명하지 않습니다.",
+      },
+      {
+        id: "fvm-network-version-actor-manifest-binding",
+        sectionId: "actor-bundle",
+        intuition:
+          "실행 규칙의 판본과 actor 이름표가 실제 program CID를 함께 정합니다.",
+        workedExample:
+          "Manifest version 1과 root를 읽어 system·account·init 같은 required names를 code CIDs에 연결합니다.",
+        boundary:
+          "Built-in Wasm actor와 FEVM을 통한 custom EVM contract, 배포할 수 없는 native user-defined Wasm actor를 구분합니다.",
+      },
+      {
+        id: "fvm-message-sequence-flush-boundary",
+        sectionId: "machine-flush",
+        intuition:
+          "각 요청은 자기 영수증을 남기고, 모든 요청을 끝낸 뒤에야 장부의 최종 표지를 한 번 계산합니다.",
+        workedExample:
+          "m₁에서 R₁, m₂에서 R₂를 얻고 working state Σ₂를 flush해 Sfinal을 얻습니다.",
+        boundary:
+          "Flush가 만든 state root를 chain finality나 fork choice 결과로 확대하지 않습니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 envelope", relation: "Message와 state·version·bundle을 고정합니다.", concepts: ["fvm-message-execution-envelope"] },
-      { label: "01 transaction", relation: "Actor calls에서 state·receipt를 만듭니다.", concepts: ["fvm-transactional-state-root-receipt"] },
-      { label: "02 program", relation: "Network rules와 actor manifest를 결속합니다.", concepts: ["fvm-network-version-actor-manifest-binding"] },
-      { label: "03 release", relation: "Parity·recovery 뒤 runtime을 채택합니다.", concepts: ["fvm-execution-release-gate"] },
+      {
+        label: "00 Machine",
+        relation: "초기 state와 chain·program context를 고정합니다.",
+        concepts: ["fvm-machine-execution-context"],
+      },
+      {
+        label: "01 Message",
+        relation: "Preflight·actor transaction·gas 정산 뒤 receipt를 만듭니다.",
+        concepts: ["fvm-actor-call-transaction-receipt"],
+      },
+      {
+        label: "02 Program",
+        relation: "Network rules와 actor manifest가 실행할 code를 정합니다.",
+        concepts: ["fvm-network-version-actor-manifest-binding"],
+      },
+      {
+        label: "03 Final root",
+        relation: "Message별 receipts와 마지막 flush의 root를 분리합니다.",
+        concepts: ["fvm-message-sequence-flush-boundary"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "FVM message execution envelope에 들어가는 항목과 필요한 이유를 설명하세요.", answerChecklist: ["message CID", "base root", "epoch/network version", "bundle CID", "canonical digest"], requiredConcepts: ["fvm-message-execution-envelope"], sectionId: "message-envelope" },
-      { level: "basic", question: "WASM actor, syscall과 nested send가 한 message 실행에서 맡는 역할을 구분하세요.", answerChecklist: ["actor code", "kernel/syscall", "nested send", "gas"], requiredConcepts: ["fvm-message-execution-envelope"], sectionId: "message-envelope" },
-      { level: "basic", question: "Nested actor call 성공과 abort에서 state·events가 어떻게 달라지는지 설명하세요.", answerChecklist: ["begin transaction", "commit/revert", "events", "receipt"], requiredConcepts: ["fvm-transactional-state-root-receipt"], sectionId: "state-commit" },
-      { level: "basic", question: "Post-state root와 execution receipt를 함께 보존해야 하는 이유를 설명하세요.", answerChecklist: ["exit code", "return", "gas", "state root", "same execution"], requiredConcepts: ["fvm-transactional-state-root-receipt"], sectionId: "state-commit" },
-      { level: "basic", question: "Network version과 actor manifest CID가 execution semantics를 어떻게 제한하는지 설명하세요.", answerChecklist: ["protocol version", "manifest root", "actor code CID", "required entries"], requiredConcepts: ["fvm-network-version-actor-manifest-binding"], sectionId: "actor-bundle" },
-      { level: "basic", question: "FVM release gate에서 correctness와 performance 측정 순서를 설명하세요.", answerChecklist: ["negative fixtures", "state parity", "crash replay", "then timing"], requiredConcepts: ["fvm-execution-release-gate"], sectionId: "release-gate" },
-      { level: "advanced", question: "같은 message에 base state만 바꾼 stale receipt 재사용 공격을 탐지하세요.", answerChecklist: ["same message CID", "different base root", "envelope digest mismatch", "reject"], requiredConcepts: ["fvm-message-execution-envelope"], sectionId: "message-envelope" },
-      { level: "advanced", question: "Actor A가 B를 호출한 뒤 abort하는 state·event negative fixture를 설계하세요.", answerChecklist: ["nested writes", "nested events", "abort", "no staged effects", "gas receipt"], requiredConcepts: ["fvm-transactional-state-root-receipt"], sectionId: "state-commit" },
-      { level: "advanced", question: "Actor bundle upgrade의 intentional change와 unexplained divergence를 분리하세요.", answerChecklist: ["versioned oracle", "fixture digest", "expected allowlist", "unknown mismatch rollback"], requiredConcepts: ["fvm-network-version-actor-manifest-binding", "fvm-execution-release-gate"], sectionId: "actor-bundle" },
-      { level: "advanced", question: "State flush 직전·직후 crash의 replay와 rollback plan을 설계하세요.", answerChecklist: ["durable cursor", "same state root", "no duplicate effect", "previous runtime/bundle"], requiredConcepts: ["fvm-execution-release-gate", "fvm-transactional-state-root-receipt"], sectionId: "release-gate" },
+      {
+        level: "basic",
+        question:
+          "FVM Machine을 재현할 때 message 외에 고정할 context를 설명하세요.",
+        answerChecklist: [
+          "initial state root",
+          "epoch/base fee/supply",
+          "network version",
+          "blockstore",
+          "actor manifest",
+        ],
+        requiredConcepts: ["fvm-machine-execution-context"],
+        sectionId: "machine-context",
+      },
+      {
+        level: "basic",
+        question:
+          "Explicit message와 implicit message가 sender·sequence·gas에서 어떻게 다른지 설명하세요.",
+        answerChecklist: [
+          "explicit sender",
+          "signature/on-chain",
+          "implicit system",
+          "sequence",
+          "gas payment",
+        ],
+        requiredConcepts: ["fvm-machine-execution-context"],
+        sectionId: "machine-context",
+      },
+      {
+        level: "basic",
+        question:
+          "Preflight가 actor 호출보다 먼저 sender state에 반영하는 두 가지를 설명하세요.",
+        answerChecklist: [
+          "sender validation",
+          "sequence increment",
+          "maximum gas cost",
+          "state update",
+        ],
+        requiredConcepts: ["fvm-actor-call-transaction-receipt"],
+        sectionId: "actor-transaction",
+      },
+      {
+        level: "basic",
+        question:
+          "Actor A가 B를 부른 뒤 non-success exit code를 반환할 때 무엇이 revert되고 무엇이 남을 수 있는지 설명하세요.",
+        answerChecklist: [
+          "actor state",
+          "events/access records",
+          "sender sequence",
+          "gas settlement",
+        ],
+        requiredConcepts: ["fvm-actor-call-transaction-receipt"],
+        sectionId: "actor-transaction",
+      },
+      {
+        level: "basic",
+        question:
+          "Message receipt의 네 필드와 포함되지 않는 final state root를 구분하세요.",
+        answerChecklist: [
+          "exit code",
+          "return data",
+          "gas used",
+          "events root",
+          "no final state root field",
+        ],
+        requiredConcepts: ["fvm-actor-call-transaction-receipt"],
+        sectionId: "actor-transaction",
+      },
+      {
+        level: "basic",
+        question:
+          "Network version과 actor manifest가 실제 code CID 선택을 어떻게 제한하는지 설명하세요.",
+        answerChecklist: [
+          "manifest version",
+          "manifest root",
+          "required actor name",
+          "code CID",
+        ],
+        requiredConcepts: ["fvm-network-version-actor-manifest-binding"],
+        sectionId: "actor-bundle",
+      },
+      {
+        level: "advanced",
+        question:
+          "Built-in Wasm actor, native user-defined Wasm actor와 FEVM contract의 현재 경계를 설명하세요.",
+        answerChecklist: [
+          "built-in bundle",
+          "native deployment unavailable",
+          "foreign runtime",
+          "custom EVM contract",
+        ],
+        requiredConcepts: ["fvm-network-version-actor-manifest-binding"],
+        sectionId: "actor-bundle",
+      },
+      {
+        level: "advanced",
+        question:
+          "m₁과 m₂를 적용할 때 R₁·R₂와 Sfinal이 각각 언제 생기는지 순서대로 설명하세요.",
+        answerChecklist: [
+          "Apply m1",
+          "R1 and Σ1",
+          "Apply m2",
+          "R2 and Σ2",
+          "Flush to Sfinal",
+        ],
+        requiredConcepts: ["fvm-message-sequence-flush-boundary"],
+        sectionId: "machine-flush",
+      },
+      {
+        level: "advanced",
+        question:
+          "Prevalidation failure, actor non-success와 flush failure의 산출물이 어떻게 다른지 구분하세요.",
+        answerChecklist: [
+          "early ApplyRet",
+          "no actor call",
+          "reverted actor transaction",
+          "failure receipt",
+          "no final root on flush error",
+        ],
+        requiredConcepts: [
+          "fvm-actor-call-transaction-receipt",
+          "fvm-message-sequence-flush-boundary",
+        ],
+        sectionId: "machine-flush",
+      },
+      {
+        level: "advanced",
+        question:
+          "독립 FVM 실행 두 개가 같은 결과인지 확인할 때 비교할 입력과 출력을 설명하세요.",
+        answerChecklist: [
+          "same Machine context",
+          "same ordered messages",
+          "same receipts",
+          "same final state root",
+          "consensus separate",
+        ],
+        requiredConcepts: [
+          "fvm-machine-execution-context",
+          "fvm-message-sequence-flush-boundary",
+        ],
+        sectionId: "machine-flush",
+      },
     ],
     papers: [
-      { title: "FIP-0030 · Final revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0030.md", problem: "Filecoin state 위에서 user-programmable actors를 결정론적으로 실행할 runtime이 필요합니다.", contribution: "WASM-based FVM 도입과 actor execution protocol integration을 정의합니다.", assumptions: "Final FIP revision과 실제 활성 network version·actor bundle을 함께 확인합니다.", evidenceScope: "FVM 도입의 protocol motivation과 specified boundary에 한정합니다.", notClaim: "현재 모든 actor method·gas schedule·application security 또는 처리량을 보장하지 않습니다.", sectionId: "paper-fvm-fip30" },
-      { title: "ref-fvm default executor · ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/executor/default.rs", problem: "Message를 검증하고 actor result를 canonical receipt와 state flush로 바꿔야 합니다.", contribution: "execute_message, gas charging, receipt construction과 flush 구현을 제공합니다.", assumptions: "Pinned Machine·blockstore·message types와 network configuration을 고정합니다.", evidenceScope: "해당 reference executor snapshot의 control flow에 한정합니다.", notClaim: "모든 deployment·actor correctness·fixed gas cost 또는 throughput을 뜻하지 않습니다.", sectionId: "paper-fvm-executor" },
-      { title: "ref-fvm call manager · ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/call_manager/default.rs", problem: "Nested calls의 state·events·access를 같은 transaction scope로 처리해야 합니다.", contribution: "begin/end transaction과 revert behavior의 pinned implementation을 제공합니다.", assumptions: "Exact call manager, kernel/syscall과 executor error mapping을 사용합니다.", evidenceScope: "Actor-call transactional scope 구현 snapshot에 한정합니다.", notClaim: "Chain message 전체의 fee·nonce·inclusion effects가 모두 사라진다는 뜻은 아닙니다.", sectionId: "paper-fvm-transaction" },
-      { title: "ref-fvm actor manifest · ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/machine/manifest.rs", problem: "Manifest version과 required actor names를 exact code CIDs에 연결해야 합니다.", contribution: "Manifest root loading, version check와 required actor lookup을 구현합니다.", assumptions: "Pinned manifest schema, bundle root와 network config를 함께 사용합니다.", evidenceScope: "Manifest load·lookup source snapshot에 한정합니다.", notClaim: "Actor audit·upgrade safety 또는 arbitrary user code 보안을 자동 증명하지 않습니다.", sectionId: "paper-fvm-manifest" },
+      {
+        title: "FIP-0030 · Final revision 56863b1",
+        href: "https://github.com/filecoin-project/FIPs/blob/56863b13e62685f8e8e6b2b2f5048ba142263031/FIPS/fip-0030.md",
+        problem:
+          "Filecoin state tree에 message를 적용할 결정론적 Wasm 실행 계층이 필요합니다.",
+        contribution:
+          "Machine·Call Manager·syscall·actor 책임과 per-message apply·final flush 경계를 정의합니다.",
+        assumptions:
+          "2024-09-18 Final revision과 실제 활성 network version을 함께 확인합니다.",
+        evidenceScope:
+          "FVM protocol 설계와 책임 경계에 한정합니다.",
+        notClaim:
+          "Native user-defined Wasm actor의 mainnet 배포나 current gas schedule·application security를 보장하지 않습니다.",
+        sectionId: "paper-fvm-fip30",
+      },
+      {
+        title: "ref-fvm default executor · fvm@v4.8.4 · 8fbafbf",
+        href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/executor/default.rs",
+        problem:
+          "Message를 사전 검사하고 actor result를 ApplyRet과 gas 정산으로 바꿔야 합니다.",
+        contribution:
+          "Preflight, actor-call transaction, receipt와 finish_message 흐름을 제공합니다.",
+        assumptions:
+          "fvm@v4.8.4 tag의 Machine·types·price list와 network configuration을 사용합니다.",
+        evidenceScope:
+          "고정 reference executor의 message-level control flow에 한정합니다.",
+        notClaim:
+          "모든 client의 내부 구조·actor correctness·fixed performance를 뜻하지 않습니다.",
+        sectionId: "paper-fvm-executor",
+      },
+      {
+        title: "ref-fvm call manager · fvm@v4.8.4 · 8fbafbf",
+        href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/call_manager/default.rs",
+        problem:
+          "Nested calls의 state·events·access를 같은 transaction scope로 처리해야 합니다.",
+        contribution:
+          "begin/end transaction과 revert behavior의 pinned implementation을 제공합니다.",
+        assumptions:
+          "fvm@v4.8.4 call manager, gas tracker와 state tree 구현을 함께 봅니다.",
+        evidenceScope:
+          "Actor-call transaction scope에 한정합니다.",
+        notClaim:
+          "Sender sequence·fee·block inclusion까지 모두 revert된다는 뜻은 아닙니다.",
+        sectionId: "paper-fvm-transaction",
+      },
+      {
+        title: "ref-fvm actor manifest · fvm@v4.8.4 · 8fbafbf",
+        href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/machine/manifest.rs",
+        problem:
+          "Manifest version과 required actor names를 exact code CIDs에 연결해야 합니다.",
+        contribution:
+          "Manifest root loading, version check와 required actor lookup을 구현합니다.",
+        assumptions:
+          "fvm@v4.8.4 manifest schema, root와 network config를 함께 사용합니다.",
+        evidenceScope: "Manifest load·lookup 구현에 한정합니다.",
+        notClaim:
+          "Actor audit·upgrade safety 또는 arbitrary user code 보안을 자동 증명하지 않습니다.",
+        sectionId: "paper-fvm-manifest",
+      },
+      {
+        title: "ref-fvm Executor trait · fvm@v4.8.4 · 8fbafbf",
+        href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/executor/mod.rs",
+        problem:
+          "Message별 ApplyRet과 전체 state-tree flush의 API 경계를 분리해야 합니다.",
+        contribution:
+          "execute_message와 flush를 별도 methods로 정의하고 flush가 새 root CID를 반환합니다.",
+        assumptions:
+          "fvm@v4.8.4 Executor interface와 caller가 정한 message 순서를 함께 봅니다.",
+        evidenceScope:
+          "Reference FVM의 message/flush API 경계에 한정합니다.",
+        notClaim:
+          "Flush 성공이 chain finality·fork choice·block inclusion을 보장하지 않습니다.",
+        sectionId: "paper-fvm-flush",
+      },
     ],
   },
   "blockchain/filecoin-ipc": {

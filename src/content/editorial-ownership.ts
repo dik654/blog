@@ -9779,7 +9779,7 @@ export const EDITORIAL_BOUNDARIES = {
   "lotus-state": {
     title: "Lotus StateTree·actor record·HAMT/AMT ownership",
     owns: ["ID address→actor record→Head CID의 versioned 조회 경계", "HAMT·AMT parameter path와 StateTree snapshot·revert·flush·release gate"],
-    reuses: [{ label: "FVM transactional state receipt", href: "/cs/blockchain/filecoin-fvm#state-commit" }, { label: "Content-addressed artifact", href: "/cs/p2p/content-addressing#overview" }, { label: "Lotus deterministic state replay", href: "/cs/blockchain/lotus-chain#state-replay" }],
+    reuses: [{ label: "FVM message sequence·final flush boundary", href: "/cs/blockchain/filecoin-fvm#machine-flush" }, { label: "Content-addressed artifact", href: "/cs/p2p/content-addressing#overview" }, { label: "Lotus deterministic state replay", href: "/cs/blockchain/lotus-chain#state-replay" }],
     evidence: [{ kind: "standard", rule: "StateTree protocol 역할은 Filecoin specification과 actor 공식 문서에 귀속한다." }, { kind: "primary-source", rule: "Load·lookup·snapshot·flush facts는 Lotus v1.36.2 commit c6f4d02와 pinned HAMT dependency에만 귀속한다." }, { kind: "project-measurement", rule: "Exact tree/network/bundle/codec parameters에서 actor fields·root·revert/crash parity를 검사한다." }, { kind: "project-claim", rule: "Root parity를 actor logic 안전·chain finality·database durability·fixed latency로 확대하지 않는다." }],
   },
   "giwa-chain": {
@@ -9789,10 +9789,39 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "standard", rule: "Generic batch derivation은 표시한 OP Stack specification revision에 귀속한다." }, { kind: "primary-source", rule: "GIWA network facts는 current official docs, concrete service/version facts는 node v0.6.0 commit 8cabd0d5에만 귀속한다." }, { kind: "project-measurement", rule: "Exact genesis·rollup config·L1 origin·binary generation에서 payload/state/head parity와 reorg·restart를 검사한다." }, { kind: "project-claim", rule: "OP Stack 채택·JWT·process health를 mainnet readiness·security inheritance·sequencer liveness·stablecoin peg/compliance 보장으로 확대하지 않는다." }],
   },
   "filecoin-fvm": {
-    title: "FVM message·state·actor-bundle execution ownership",
-    owns: ["Message·base state·network version·actor manifest execution envelope", "Nested actor transaction·state-root receipt와 FVM runtime release gate"],
-    reuses: [{ label: "Deterministic state transition", href: "/cs/blockchain/consensus-comparison#smr" }, { label: "Content-addressed artifact", href: "/cs/p2p/content-addressing#overview" }],
-    evidence: [{ kind: "standard", rule: "Protocol 도입은 Final FIP-0030 revision c856d99에 귀속한다." }, { kind: "primary-source", rule: "Executor·transaction·manifest facts는 ref-fvm commit ef0a993에만 귀속한다." }, { kind: "project-measurement", rule: "Exact message/state/version/bundle에서 state·receipt parity와 crash replay를 측정한다." }, { kind: "project-claim", rule: "Reference source를 current activation·actor safety·fixed gas/throughput 보장으로 확대하지 않는다." }],
+    title: "FVM Machine·message receipt·final state-root 경계",
+    owns: [
+      "초기 state·chain context·network version·actor manifest가 이루는 Machine 문맥",
+      "Actor-call revert·message receipt와 여러 message 뒤 final state-root flush의 구분",
+    ],
+    reuses: [
+      {
+        label: "Deterministic state transition",
+        href: "/cs/blockchain/consensus-comparison#smr",
+      },
+      {
+        label: "Content-addressed artifact",
+        href: "/cs/p2p/content-addressing#overview",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Protocol 도입과 native user-defined Wasm actor의 미배포 경계는 Final FIP-0030 revision 56863b1에 귀속한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "Executor·transaction·manifest facts는 ref-fvm fvm@v4.8.4 commit 8fbafbf에만 귀속한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "같은 초기 Machine context와 같은 message 순서에서 receipt 목록과 마지막 state root를 함께 비교한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Reference source와 flush 성공을 current activation·actor safety·chain finality·fixed gas/throughput 보장으로 확대하지 않는다.",
+      },
+    ],
   },
   "filecoin-ipc": {
     title: "IPC subnet과 양방향 완료 상태의 개념 경계",
@@ -9879,7 +9908,7 @@ export const EDITORIAL_BOUNDARIES = {
   "lotus-mpool": {
     title: "Lotus head-relative admission·nonce·gas lifecycle ownership",
     owns: ["Head-relative message admission과 sender nonce-chain selection", "Gas-estimate context receipt와 head-change/restart release gate"],
-    reuses: [{ label: "FVM message execution envelope", href: "/cs/blockchain/filecoin-fvm#message-envelope" }, { label: "Generic mempool local admission", href: "/cs/blockchain/cometbft-mempool#overview" }],
+    reuses: [{ label: "FVM Machine execution context", href: "/cs/blockchain/filecoin-fvm#machine-context" }, { label: "Generic mempool local admission", href: "/cs/blockchain/cometbft-mempool#overview" }],
     evidence: [{ kind: "primary-source", rule: "Lotus implementation facts는 v1.36.0 commit 154c0c3, effective-premium semantics는 FIP-0054 revision c856d99에 귀속한다." }, { kind: "project-measurement", rule: "Exact head·actor state·network/config에서 admission reasons, nonce packages, gas receipts와 apply/revert/restart parity를 재생한다." }, { kind: "project-claim", rule: "Local admission·estimate·selection을 inclusion·execution success·finality·optimal ordering으로 확대하지 않는다." }],
   },
   "initia-evm": {

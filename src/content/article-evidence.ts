@@ -6102,10 +6102,36 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "blockchain/proofs-snark": FILECOIN_PROOFS_SERIES_EVIDENCE,
   "blockchain/filecoin-fvm": [
-    { kind: "공식 규격", label: "FIP-0030 · Final revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0030.md", note: "FVM 도입과 actor model 규격이며 current gas schedule·actor bundle은 별도" },
-    { kind: "공식 코드", label: "ref-fvm executor · commit ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/executor/default.rs", note: "Message execution·receipt·state flush snapshot이며 fixed performance는 아님" },
-    { kind: "공식 코드", label: "ref-fvm call manager · commit ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/call_manager/default.rs", note: "Nested actor transactional state/events 구현 범위이며 outer chain effects 전체를 뜻하지 않음" },
-    { kind: "공식 코드", label: "ref-fvm actor manifest · commit ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/machine/manifest.rs", note: "Manifest version·required actor lookup snapshot이며 actor security audit는 아님" },
+    {
+      kind: "공식 규격",
+      label: "FIP-0030 · Final revision 56863b1",
+      href: "https://github.com/filecoin-project/FIPs/blob/56863b13e62685f8e8e6b2b2f5048ba142263031/FIPS/fip-0030.md",
+      note: "FVM 도입과 actor model 규격이며 native user-defined Wasm 미배포·current gas schedule·actor bundle은 별도",
+    },
+    {
+      kind: "공식 코드",
+      label: "ref-fvm executor · fvm@v4.8.4 · commit 8fbafbf",
+      href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/executor/default.rs",
+      note: "Message preflight·actor call·receipt·gas 정산 snapshot이며 final state-tree flush는 별도 Executor method",
+    },
+    {
+      kind: "공식 코드",
+      label: "ref-fvm call manager · fvm@v4.8.4 · commit 8fbafbf",
+      href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/call_manager/default.rs",
+      note: "Nested actor transactional state/events 구현 범위이며 outer chain effects 전체를 뜻하지 않음",
+    },
+    {
+      kind: "공식 코드",
+      label: "ref-fvm actor manifest · fvm@v4.8.4 · commit 8fbafbf",
+      href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/machine/manifest.rs",
+      note: "Manifest version·required actor lookup snapshot이며 actor security audit는 아님",
+    },
+    {
+      kind: "공식 코드",
+      label: "ref-fvm Executor interface · fvm@v4.8.4 · commit 8fbafbf",
+      href: "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/executor/mod.rs",
+      note: "Message별 execute_message와 전체 적용 뒤 flush가 분리된 API 경계이며 chain finality·fork choice는 별도",
+    },
   ],
   "blockchain/filecoin-ipc": [
     {

@@ -1,83 +1,605 @@
 import ContentBoundary from "@/components/articles/content-boundary";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { FvmExecutionViz } from "./FvmExecutionViz";
-import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import { FvmExecutionViz } from "./FvmExecutionViz";
 import { fvmTree } from "./fileTrees";
 
-const FIP30 = "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0030.md";
-const EXECUTOR = "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/executor/default.rs";
-const CALL_MANAGER = "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/call_manager/default.rs";
-const MANIFEST = "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/machine/manifest.rs";
+const FIP30 =
+  "https://github.com/filecoin-project/FIPs/blob/56863b13e62685f8e8e6b2b2f5048ba142263031/FIPS/fip-0030.md";
+const EXECUTOR =
+  "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/executor/default.rs";
+const EXECUTOR_TRAIT =
+  "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/executor/mod.rs";
+const CALL_MANAGER =
+  "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/call_manager/default.rs";
+const MANIFEST =
+  "https://github.com/filecoin-project/ref-fvm/blob/8fbafbf257333168b4782569415d1ad451c174fa/fvm/src/machine/manifest.rs";
 
 export default function ModernFilecoinFvm() {
   const sidebar = useCodeSidebar();
-  return <>
-  <article className="space-y-14">
-    <section id="overview" className="space-y-6"><header className="space-y-3"><p className="text-sm font-semibold text-primary">한 message가 actor를 호출하고 새 state root를 만드는 과정</p><h2 className="text-3xl font-bold tracking-tight">FVM은 스마트 컨트랙트 목록이 아니라 결정론적 message execution과 receipt를 만드는 WASM runtime이다</h2></header><p className="text-lg leading-8 text-foreground/90">블록체인 state를 공동 장부라고 생각하면 actor는 장부를 바꾸는 프로그램이고, message는 그 프로그램에 보내는 요청입니다. Filecoin Virtual Machine(FVM)은 message admission, actor 호출, syscall, gas accounting, transactional state와 receipt 생성을 같은 network-version 규칙으로 실행합니다. <a className="text-primary hover:underline" href="/cs/blockchain/consensus-comparison#smr">state machine replication 정본</a>은 여러 노드가 같은 입력에서 같은 state를 얻어야 하는 이유를 설명하고, 이 글은 FVM 구현 artifact와 release gate만 맡습니다.</p><FvmExecutionViz /><div className="not-prose flex flex-wrap gap-3"><CodeViewButton label="FVM Machine" onClick={() => sidebar.open("fvm-machine", codeRefs["fvm-machine"])} /></div><ContentBoundary article="filecoin-fvm" /><div id="paper-fvm-fip30"><CitationBlock type="paper" citeKey={1} source="FIP-0030 · Final · revision c856d99" href={FIP30}><p><strong>문제:</strong> Filecoin chain state 위에서 user-programmable actors를 결정론적으로 실행할 runtime이 필요합니다.</p><p><strong>핵심 기여:</strong> FIP-0030은 WASM-based FVM 도입, actor model과 protocol integration 방향을 정의합니다.</p><p><strong>중요 가정:</strong> Final FIP revision c856d99와 실제 활성 network version·actor bundle을 함께 확인합니다.</p><p><strong>근거 범위:</strong> FVM 도입의 protocol proposal과 motivation에 한정합니다.</p><p><strong>일반화 금지:</strong> FIP가 현재 모든 actor method, gas schedule, 성능 또는 application security를 보장하지 않습니다.</p></CitationBlock></div></section>
 
-    <section id="message-envelope" className="space-y-6"><header><p className="text-sm font-semibold text-primary">01 · Message envelope</p><h2 className="mt-2 text-2xl font-bold">Sender·nonce·value·gas와 network version을 먼저 고정해야 실행을 재현할 수 있다</h2></header><p>
-            예제로 Alice가 actor A의 method 2에 10 FIL이 아니라 단순한 value 10 단위를 보내고 A가 actor B를 nested send한다고 하겠습니다.
-            Admission receipt에는 chain epoch, network version, base state root를 먼저 남깁니다. 이어서 message CID,
-            sender·sequence, receiver·method·params codec, value를 적습니다. 여기에 gas limit·fee fields와 actor bundle
-            manifest CID까지 붙입니다. 잘못된 nonce, decode 실패, gas limit 초과는 actor business logic보다 먼저 구분해 기록합니다.
-          </p><ExplainedFormula question="같은 message bytes가 언제 같은 실행을 뜻할까?" idea={<>Program과 state 규칙까지 digest에 포함해 실행 envelope의 정체성을 고정합니다.</>} formula={String.raw`E=H(C_m\|C_s\|nv\|C_b\|e)`}
-    annotatedFormula={String.raw`\underbrace{E}_{\text{실행 envelope ID}}=H(\underbrace{C_m}_{\text{message}}\|\underbrace{C_s}_{\text{base state root}}\|\underbrace{nv}_{\text{network version}}\|\underbrace{C_b}_{\text{actor bundle}}\|\underbrace{e}_{\text{epoch}})`}
-    operations={[
-          { expression: String.raw`H(C_m\|C_s\|nv\|C_b\|e)`, annotation: ["message뿐 아니라 state·규칙·code까지","canonical 직렬화해 한 digest로 묶음","Message CID 같아도 root 다르면 E 다름"] },
-        ]} terms={[{symbol:"E",name:"Execution envelope digest",description:"재현·비교할 한 실행의 식별자입니다."},{symbol:"H",name:"Cryptographic hash",description:"정해진 canonical serialization에 적용한 hash입니다."},{symbol:"C_m",name:"Message CID",description:"Sender·nonce·method·params·gas를 담은 message content identifier입니다."},{symbol:"C_s",name:"Base state-root CID",description:"실행 직전 actor state tree의 root입니다."},{symbol:"nv",name:"Network version",description:"Syscall과 gas·execution semantics를 선택하는 protocol version입니다."},{symbol:"C_b",name:"Actor bundle CID",description:"Built-in actor code manifest를 가리킵니다."},{symbol:"e",name:"Epoch",description:"Network-version과 chain context를 해석하는 block height입니다."}]} assumptions={["모든 항목은 같은 canonical codec과 domain-separated schema로 직렬화합니다.","Hash 일치는 artifact identity이지 actor가 안전하다는 증명은 아닙니다."]} interpretation="Message CID가 같아도 base root나 actor bundle이 달라지면 E가 달라지므로 기존 receipt를 재사용하지 않습니다." /><div id="paper-fvm-executor"><CitationBlock type="code" citeKey={2} source="ref-fvm default executor · commit ef0a993" href={EXECUTOR}><p><strong>문제:</strong> Chain message를 검증하고 actor 호출 결과를 exit code·return data·gas receipt로 일관되게 바꿔야 합니다.</p><p><strong>핵심 기여:</strong> Pinned executor source는 execute_message, gas charging, receipt construction과 final state-tree flush 경계를 구현합니다.</p><p><strong>중요 가정:</strong> commit ef0a993의 Machine, network configuration, blockstore와 fvm_shared message/receipt types를 함께 고정합니다.</p><p><strong>근거 범위:</strong> 해당 reference executor snapshot의 control flow와 receipt fields에 한정합니다.</p><p><strong>일반화 금지:</strong> 이 source가 모든 network deployment, actor correctness, fixed gas cost 또는 throughput을 보장하지 않습니다.</p></CitationBlock></div></section>
+  return (
+    <>
+      <article className="space-y-14">
+        <section id="overview" className="space-y-6">
+          <header className="space-y-3">
+            <p className="text-sm font-semibold text-primary">
+              Machine 하나 · 순서가 있는 message 여러 건 · 마지막 state root 하나
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight">
+              FVM은 message마다 영수증을 만들고 마지막에 state root를 계산합니다
+            </h2>
+          </header>
+          <p className="text-lg leading-8 text-foreground/90">
+            Filecoin의 state를 공동 장부라고 생각하면 actor는 장부를 바꾸는
+            프로그램이고 message는 그 프로그램에 보내는 요청입니다. FVM은 초기
+            장부와 실행 규칙을 고정한 Machine에서 message를 순서대로 처리합니다.
+          </p>
+          <p>
+            여기서 message 한 건의 완료와 전체 실행 묶음의 완료를 구분해야
+            합니다. <code>execute_message()</code>는 각 message의 영수증을
+            만들고 working state를 다음 message로 넘깁니다. 호출자가 모든
+            message를 적용한 뒤 <code>flush()</code>를 불러야 최종 state root가
+            나옵니다.
+          </p>
+          <p>
+            이 글은 첫 message에서 actor A가 B를 부른 뒤 실패하고, 두 번째
+            message까지 적용한 다음 Machine을 flush하는 사례를 따라갑니다.
+            합의가 어느 chain을 선택하는지는
+            <a
+              className="ml-1 text-primary hover:underline"
+              href="/cs/blockchain/consensus-comparison#smr"
+            >
+              state machine replication 정본
+            </a>
+            에 맡기고, 여기서는 FVM 내부 실행 경계만 봅니다.
+          </p>
 
-    <section id="state-commit" className="space-y-6"><header><p className="text-sm font-semibold text-primary">02 · Transactional state receipt</p><h2 className="mt-2 text-2xl font-bold">Actor call scope의 writes·events를 함께 commit하거나 revert한 뒤 state root를 flush한다</h2></header><p>
-            Call manager는 state tree, actor events와 state-access tracker의 transaction을 함께 시작합니다. Actor A가 B를
-            부른 뒤 abort하면 해당 transaction scope의 staged changes는 되돌아갑니다. 다만 “실패하면 chain 전체가 아무 변화도 없다”로 일반화하면 안
-            됩니다. Message-level nonce·fee 처리처럼 executor 바깥 규칙은 exact network version을 확인합니다. Receipt는 exit
-            code, return codec/bytes, gas used, events root와 실행 뒤 state root를 함께 연결합니다.
-          </p><ExplainedFormula question="실행 결과를 어떤 함수로 이해하면 좋을까?" idea={<>Base state와 message를 versioned program에 넣어 receipt와 다음 state를 함께 얻는 결정론적 전이로 봅니다.</>} formula={String.raw`(S',R)=\operatorname{Apply}_{nv,B}(S,m)`}
-    annotatedFormula={String.raw`\underbrace{(S',R)}_{\text{다음 state·receipt}}=\underbrace{\operatorname{Apply}_{nv,B}}_{\text{versioned 전이 함수}}(\underbrace{S,m}_{\text{입력 state·message}})`}
-    operations={[
-          { expression: String.raw`\operatorname{Apply}_{nv,B}`, annotation: ["network version과 actor bundle이","어떤 semantics로 실행할지 고정"] },
-          { expression: String.raw`(S',R)`, annotation: ["같은 S,m,nv,B면 결과는 하나여야 함","다른 S′·R이 나오면 parity 실패","candidate runtime을 release하지 않음"] },
-        ]} terms={[{symbol:"S",name:"Pre-state",description:"Message 실행 전 state-tree root가 가리키는 상태입니다."},{symbol:"m",name:"Admitted message",description:"검증을 통과한 sender·method·params·gas envelope입니다."},{symbol:"nv",name:"Network version",description:"적용할 protocol semantics의 버전입니다."},{symbol:"B",name:"Actor bundle",description:"Manifest가 가리키는 built-in actor code 집합입니다."},{symbol:"S'",name:"Post-state",description:"Commit된 writes를 flush해 얻은 다음 state입니다."},{symbol:"R",name:"Execution receipt",description:"Exit code·return·gas·events와 실행 identity를 담습니다."}]} assumptions={["동일한 blockstore inputs, machine context와 canonical decoding을 모든 validator가 사용합니다.","Actor-call revert 범위와 message-level outer effects를 분리해 검증합니다."]} interpretation="같은 S,m,nv,B에서 다른 S′ 또는 R이 나오면 deterministic parity 실패이며 candidate runtime을 release하지 않습니다." /><div id="paper-fvm-transaction"><CitationBlock type="code" citeKey={3} source="ref-fvm call manager transactions · commit ef0a993" href={CALL_MANAGER}><p><strong>문제:</strong> Nested actor calls의 state, events와 access records를 같은 성공·abort 경계로 다뤄야 합니다.</p><p><strong>핵심 기여:</strong> Pinned call manager는 begin/end transaction과 revert flag를 state tree·events·access tracker에 함께 적용합니다.</p><p><strong>중요 가정:</strong> Exact commit, call depth, kernel/syscall implementation과 executor error mapping을 사용합니다.</p><p><strong>근거 범위:</strong> ref-fvm 내부 actor-call transactional scope의 구현 snapshot에 한정합니다.</p><p><strong>일반화 금지:</strong> Nested-call revert를 chain transaction의 fee·nonce·block inclusion 전체 무효화와 동일시하지 않습니다.</p></CitationBlock></div></section>
+          <FvmExecutionViz />
 
-    <section id="actor-bundle" className="space-y-6"><header><p className="text-sm font-semibold text-primary">03 · Network version and actor manifest</p><h2 className="mt-2 text-2xl font-bold">Actor 이름만 기록하지 말고 manifest root·code CID와 network version을 함께 pin한다</h2></header><p>
-            Built-in actor는 system, account, init 같은 manifest entries를 code CID에 연결합니다. User actor와 Ethereum
-            Virtual Machine 호환 경로(FEVM)가 존재한다는 설명은 “모든 WASM/EVM code가 그대로 호환된다”는 뜻이 아닙니다. Bundle manifest load
-            실패, required actor 누락, unsupported manifest version은 실행 전에 fail-closed해야 합니다. upgrade canary는 같은
-            fixture를 이전·후 runtime에서 replay해 expected changes만 승인합니다.
-          </p><ExplainedFormula question="Actor bundle을 바꿨을 때 무엇을 비교해야 할까?" idea={<>동일 fixture 집합에서 post-state와 receipt digest가 허용 목록과 맞는지 셉니다.</>} formula={String.raw`P=\frac{1}{N}\sum_{i=1}^{N}\mathbf{1}[H(S'_i,R_i)=D_i^{expected}]`}
-    annotatedFormula={String.raw`\underbrace{P}_{\text{parity rate}}=\underbrace{\frac{1}{N}}_{\text{fixture 수로 나눔}}\sum_{i=1}^{N}\underbrace{\mathbf{1}[H(S'_i,R_i)=D_i^{expected}]}_{\text{digest 일치면 1}}`}
-    operations={[
-          { expression: String.raw`\mathbf{1}[H(S'_i,R_i)=D_i^{expected}]`, annotation: ["fixture별 state·receipt digest를","승인된 expected digest와 비교해 0/1"] },
-          { expression: String.raw`\frac{1}{N}\sum_{i=1}^{N}`, annotation: ["일치한 fixture 수를 전체 N으로 나눔","100개 중 99개 일치면 P=0.99","release 기준은 보통 P=1"] },
-        ]} terms={[{symbol:"P",name:"Parity rate",description:"Expected state·receipt digest와 정확히 일치한 fixture 비율입니다."},{symbol:"N",name:"Fixture count",description:"Success, abort, nested call, out-of-gas와 malformed cases의 수입니다."},{symbol:"i",name:"Fixture index",description:"각 message/base-state test case를 가리킵니다."},{symbol:"H",name:"Receipt digest",description:"Post-state와 canonical receipt를 묶는 hash입니다."},{symbol:"D_i^{expected}",name:"Expected digest",description:"승인된 network-version change를 반영한 oracle 값입니다."},{symbol:String.raw`\mathbf{1}`,name:"Indicator",description:"두 digest가 같을 때 1, 다르면 0입니다."}]} assumptions={["Expected digest는 같은 network version과 manifest에서 독립적으로 생성·검토합니다.","Intentional protocol changes는 무조건 parity 실패로 숨기지 않고 versioned expectation으로 기록합니다."]} interpretation="100 fixtures 중 99개가 맞아도 consensus runtime release 기준은 보통 P=1입니다. 한 건의 설명되지 않은 divergence도 rollback 사유입니다." /><div id="paper-fvm-manifest"><CitationBlock type="code" citeKey={4} source="ref-fvm actor manifest · commit ef0a993" href={MANIFEST}><p><strong>문제:</strong> Runtime이 manifest version과 required actor names를 content-addressed code CIDs에 안전하게 연결해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned source는 blockstore에서 manifest root를 load하고 supported version과 required actor entries를 검증합니다.</p><p><strong>중요 가정:</strong> commit ef0a993의 manifest schema, actor bundle root와 network configuration을 정확히 사용합니다.</p><p><strong>근거 범위:</strong> Manifest loading·lookup 구현 경계에 한정합니다.</p><p><strong>일반화 금지:</strong> Manifest 존재가 actor source audit, upgrade safety 또는 arbitrary user actor 보안을 증명하지 않습니다.</p></CitationBlock></div></section>
+          <div className="not-prose flex flex-wrap gap-3">
+            <CodeViewButton
+              label="Message executor 발췌"
+              onClick={() =>
+                sidebar.open("fvm-machine", codeRefs["fvm-machine"])
+              }
+            />
+            <CodeViewButton
+              label="Executor와 flush 경계"
+              onClick={() => sidebar.open("fvm-flush", codeRefs["fvm-flush"])}
+            />
+          </div>
 
-    <section id="release-gate" className="space-y-6"><header><p className="text-sm font-semibold text-primary">04 · Execution release gate</p><h2 className="mt-2 text-2xl font-bold">Decode·gas·abort·state parity와 crash recovery를 통과한 runtime만 채택한다</h2></header><p>
-            Release suite에는 wrong nonce/codec/manifest와 missing block을 넣습니다. nested abort, out-of-gas, event
-            revert, state flush failure도 함께 넣고 restart와 deterministic replay까지 포함합니다. Cold load와 steady
-            execution, message당 gas·wall time·state I/O를 분리하되 고정 성능 수치는 hardware·binary·network-version
-            receipt가 있을 때만 주장합니다. Candidate가 실패하면 이전 runtime binary, actor bundle manifest와 network
-            configuration을 함께 rollback하고 이미 canonical chain에 반영된 message를 재실행하지 않습니다.
-          </p><ExplainedFormula question="FVM runtime release는 어떤 증거가 모두 있어야 할까?" idea={<>입력 admission, deterministic parity, transaction behavior, receipt schema와 recovery를 AND gate로 묶습니다.</>} formula={String.raw`A=E_{ok}\land P_{state}\land T_{abort}\land R_{schema}\land C_{replay}`}
-    annotatedFormula={String.raw`\underbrace{A}_{\text{release 승인}}=\underbrace{E_{ok}}_{\text{입력 admission}}\land \underbrace{P_{state}}_{\text{state parity}}\land \underbrace{T_{abort}}_{\text{abort 동작}}\land \underbrace{R_{schema}}_{\text{receipt schema}}\land \underbrace{C_{replay}}_{\text{crash 복구}}`}
-    operations={[
-          { expression: String.raw`E_{ok}\land P_{state}\land T_{abort}\land R_{schema}\land C_{replay}`, annotation: ["다섯 증거가 모두 1이어야 A=1","abort fixture 하나가 state를 남기면 A=0","성능 비교는 이 gate를 통과한 뒤"] },
-        ]} terms={[{symbol:"A",name:"Release acceptance",description:"Candidate runtime을 채택할 수 있으면 1입니다."},{symbol:"E_{ok}",name:"Envelope admission",description:"Message·state·version·bundle identity가 완전하면 1입니다."},{symbol:"P_{state}",name:"State parity",description:"Expected post-state roots가 전부 맞으면 1입니다."},{symbol:"T_{abort}",name:"Transaction parity",description:"Nested success·abort·out-of-gas effects가 oracle과 맞으면 1입니다."},{symbol:"R_{schema}",name:"Receipt parity",description:"Exit·return·gas·events serialization이 exact schema와 맞으면 1입니다."},{symbol:"C_{replay}",name:"Crash replay",description:"중단·재시작 후 duplicate external effect 없이 같은 결과를 얻으면 1입니다."}]} assumptions={["Canary가 production과 같은 binary, bundle, blockstore schema와 network context를 사용합니다.","Rollback 대상 artifacts와 replay/idempotency 정책을 release 전에 보존합니다."]} interpretation="처리 속도가 좋아도 abort fixture 하나가 state를 남기면 A=0입니다. 성능은 correctness gate를 통과한 후보끼리 비교합니다." /><aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 10/10:</strong> message envelope, actor/WASM·syscall, gas, nested transaction, state/receipt, network version·manifest, negative tests와 rollback을 이 글만으로 설명할 수 있습니다.</aside></section>
-  </article>
-  <CodeSidebar
-    codeRefKey={sidebar.codeRefKey}
-    codeRef={sidebar.codeRef}
-    onClose={sidebar.close}
-    onNavigate={sidebar.navigate}
-    codeRefs={codeRefs}
-    fileTrees={{ "ref-fvm": fvmTree }}
-    projectMetas={{
-      "ref-fvm": {
-        id: "ref-fvm",
-        label: "ref-fvm · Rust",
-        badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
-      },
-    }}
-  />
-  </>;
+          <ContentBoundary article="filecoin-fvm" />
+
+          <div id="paper-fvm-fip30">
+            <CitationBlock
+              type="paper"
+              citeKey={1}
+              source="FIP-0030 · Final · revision 56863b1"
+              href={FIP30}
+            >
+              <p>
+                <strong>문제:</strong> Filecoin state tree에 message를 적용할
+                결정론적 Wasm 실행 계층이 필요합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Machine, Call Manager, Invocation
+                Container, Kernel, syscall과 actor의 책임을 정의하고 message 적용과
+                마지막 flush를 분리합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> 2024-09-18에 Final로 바뀐 revision
+                56863b1과 실제 활성 network version을 함께 확인합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> FVM의 protocol 설계와 책임 경계에
+                한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> 이 문서는 native user-defined Wasm
+                actor를 현재 mainnet에 배포할 수 있다고 말하지 않습니다. Custom
+                EVM contract는 FEVM 경로입니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
+
+        <span id="message-envelope" className="sr-only" aria-hidden="true" />
+        <section id="machine-context" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              01 · Machine context
+            </p>
+            <h2 className="mt-2 text-2xl font-bold">
+              Message만 같으면 같은 실행일까요?
+            </h2>
+          </header>
+          <p>
+            아닙니다. FVM Machine은 초기 state root뿐 아니라 epoch, base fee,
+            circulating supply, network version과 blockstore를 입력으로 받습니다.
+            Built-in actor manifest도 어떤 code CID를 실행할지 정합니다. 이 문맥이
+            다르면 같은 message bytes도 다른 결과를 낼 수 있습니다.
+          </p>
+          <p>
+            Explicit message에는 발신자와 수신자, sequence, value, method, params,
+            gas limit, fee cap과 premium이 들어갑니다. Implicit message는 시스템이
+            만들며 sequence와 실제 gas 지불 규칙이 다릅니다. 둘을 같은 입력
+            유형으로 취급하면 안 됩니다.
+          </p>
+
+          <ExplainedFormula
+            question="FVM Machine 한 개를 재현하려면 무엇을 고정해야 할까?"
+            idea={
+              <>
+                초기 장부와 chain context, 실행 규칙과 저장소를 한 tuple로
+                기록합니다.
+              </>
+            }
+            formula={String.raw`M_0=(S_0,e,b,c,nv,BS,B)`}
+            annotatedFormula={String.raw`\underbrace{M_0}_{\text{초기 Machine}}=(\underbrace{S_0}_{\text{초기 state root}},\underbrace{e,b,c}_{\text{epoch·base fee·supply}},\underbrace{nv}_{\text{network version}},\underbrace{BS}_{\text{blockstore}},\underbrace{B}_{\text{actor manifest}})`}
+            operations={[
+              {
+                expression: String.raw`(S_0,e,b,c,nv,BS,B)`,
+                annotation: [
+                  "초기 state와 chain context를 고정",
+                  "실행 규칙·actor code·읽을 block을 고정",
+                  "그 뒤 순서가 있는 message를 적용",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "M_0",
+                name: "Initial Machine",
+                description: "Message를 적용하기 전 FVM 실행 인스턴스입니다.",
+              },
+              {
+                symbol: "S_0",
+                name: "Initial state root",
+                description: "Machine이 처음 읽는 actor state tree의 CID입니다.",
+              },
+              {
+                symbol: "e",
+                name: "Epoch",
+                description: "실행 시점의 Filecoin chain epoch입니다.",
+              },
+              {
+                symbol: "b",
+                name: "Base fee",
+                description: "해당 실행 문맥의 base fee입니다.",
+              },
+              {
+                symbol: "c",
+                name: "Circulating supply",
+                description: "Machine context가 받는 base circulating supply입니다.",
+              },
+              {
+                symbol: "nv",
+                name: "Network version",
+                description: "적용할 protocol semantics를 고릅니다.",
+              },
+              {
+                symbol: "BS",
+                name: "Blockstore",
+                description: "State와 actor bytecode를 읽고 새 block을 쓰는 저장소입니다.",
+              },
+              {
+                symbol: "B",
+                name: "Actor manifest",
+                description: "Built-in actor 이름과 code CID를 연결합니다.",
+              },
+            ]}
+            assumptions={[
+              "동일 실행을 비교할 때 message 순서와 외부 randomness 같은 Externs도 같아야 합니다.",
+              "이 tuple은 학습용 표기이며 chain에 저장되는 단일 공식 digest를 뜻하지 않습니다.",
+            ]}
+            interpretation="Message CID 하나만 같다고 실행이 같다고 판단하지 않습니다. Machine context와 message 순서를 함께 고정해야 합니다."
+          />
+
+          <div id="paper-fvm-executor">
+            <CitationBlock
+              type="code"
+              citeKey={2}
+              source="ref-fvm default executor · fvm@v4.8.4 · commit 8fbafbf"
+              href={EXECUTOR}
+            >
+              <p>
+                <strong>문제:</strong> Explicit·implicit message를 사전 검사하고
+                actor 호출 결과를 일관된 ApplyRet으로 바꿔야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> 고정 소스는 preflight, actor call,
+                receipt 생성과 message-level gas 정산 순서를 보여 줍니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> 2026-10-08 공개된 fvm@v4.8.4 tag와
+                commit 8fbafbf의 types·Machine·price list를 함께 사용합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> 해당 reference executor의 control
+                flow에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> 이 구현이 모든 client의 내부 구조,
+                actor 안전성이나 처리량을 보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
+
+        <span id="state-commit" className="sr-only" aria-hidden="true" />
+        <section id="actor-transaction" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              02 · Actor-call transaction
+            </p>
+            <h2 className="mt-2 text-2xl font-bold">
+              Actor A가 실패하면 무엇이 되돌아갈까요?
+            </h2>
+          </header>
+          <p>
+            Executor의 사전 검사는 explicit message의 sender sequence를 올리고 최대
+            gas 비용을 먼저 뺍니다. 그다음 Call Manager가 state tree, actor
+            events와 state-access tracker의 transaction을 시작하고 actor A를
+            호출합니다.
+          </p>
+          <p>
+            A가 B를 부른 뒤 성공하지 못하면 이 actor-call transaction에 임시로
+            쌓인 변경과 events를 되돌립니다. 그러나 transaction 밖에서 먼저
+            반영한 sender sequence와 gas 정산까지 없던 일이 되는 것은 아닙니다.
+            따라서 “actor 실패 = message가 state에 아무 영향도 주지 않음”은
+            틀린 설명입니다.
+          </p>
+          <p>
+            Message 영수증에는 exit code, return data, gas used와 events root가
+            들어갑니다. 최종 state root는 영수증 필드가 아니며, 여러 message를
+            적용한 뒤 별도의 flush에서 계산합니다.
+          </p>
+
+          <ExplainedFormula
+            question="Message 한 건을 적용하면 무엇이 남을까?"
+            idea={
+              <>
+                Working state의 다음 상태와 message 영수증을 함께 얻되, final root는
+                아직 만들지 않습니다.
+              </>
+            }
+            formula={String.raw`(\Sigma_i,R_i,G_i)=\operatorname{Apply}_{M_0}(\Sigma_{i-1},m_i)`}
+            annotatedFormula={String.raw`\underbrace{(\Sigma_i,R_i,G_i)}_{\text{다음 working state·영수증·gas 결과}}=\underbrace{\operatorname{Apply}_{M_0}}_{\text{고정된 Machine 규칙}}(\underbrace{\Sigma_{i-1},m_i}_{\text{직전 working state·현재 message}})`}
+            operations={[
+              {
+                expression: String.raw`\operatorname{Apply}_{M_0}(\Sigma_{i-1},m_i)`,
+                annotation: [
+                  "사전 검사와 message-level 효과 반영",
+                  "actor-call transaction 실행·필요하면 revert",
+                  "receipt와 gas 정산 결과 생성",
+                ],
+              },
+              {
+                expression: String.raw`(\Sigma_i,R_i,G_i)`,
+                annotation: [
+                  "Σᵢ는 다음 message가 볼 working state",
+                  "Rᵢ에는 state root가 없음",
+                  "Gᵢ는 burn·tip·refund 등 정산 결과",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: String.raw`\Sigma_{i-1}`,
+                name: "Working state before message",
+                description: "앞선 message까지 적용된 Machine 내부 상태입니다.",
+              },
+              {
+                symbol: "m_i",
+                name: "Current message",
+                description: "이번에 적용할 explicit 또는 implicit message입니다.",
+              },
+              {
+                symbol: String.raw`\Sigma_i`,
+                name: "Working state after message",
+                description: "이번 message와 바깥 gas 효과까지 반영한 다음 상태입니다.",
+              },
+              {
+                symbol: "R_i",
+                name: "Message receipt",
+                description: "Exit code·return data·gas used·events root를 담습니다.",
+              },
+              {
+                symbol: "G_i",
+                name: "Gas outputs",
+                description: "Burn, penalty, tip, refund와 gas accounting 결과입니다.",
+              },
+            ]}
+            assumptions={[
+              "Actor-call transaction과 message 전체 적용 경계를 구분합니다.",
+              "Working state Σ는 매 message 뒤 flush된 공식 state-root CID를 뜻하지 않습니다.",
+            ]}
+            interpretation="Actor A의 업무 변경이 되돌아가도 sender sequence와 gas 관련 state는 남을 수 있습니다. 영수증과 final state root도 구분해야 합니다."
+          />
+
+          <div id="paper-fvm-transaction">
+            <CitationBlock
+              type="code"
+              citeKey={3}
+              source="ref-fvm call manager transaction · fvm@v4.8.4 · commit 8fbafbf"
+              href={CALL_MANAGER}
+            >
+              <p>
+                <strong>문제:</strong> Nested actor calls의 state, events와 access
+                records를 같은 성공·실패 경계로 다뤄야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> <code>with_transaction</code>은 세
+                저장 영역을 함께 시작하고 non-success exit code나 execution
+                error에서 모두 revert합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> fvm@v4.8.4 commit 8fbafbf의 call
+                manager, gas tracker와 state tree 구현을 함께 봅니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> Actor-call transaction scope에
+                한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> 이 revert를 sender sequence, fee,
+                block inclusion까지 포함한 chain 전체 무변화로 확대하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
+
+        <section id="actor-bundle" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              03 · Actor manifest
+            </p>
+            <h2 className="mt-2 text-2xl font-bold">
+              어떤 actor code를 실행했는지는 어디서 정할까요?
+            </h2>
+          </header>
+          <p>
+            Built-in actor manifest는 <code>system</code>, <code>account</code>,
+            <code>init</code> 같은 이름을 content-addressed code CID에 연결합니다.
+            고정한 ref-fvm 구현은 manifest version 1만 받고, root CID의 block을
+            찾지 못하거나 필수 이름이 없으면 Machine 준비를 실패시킵니다.
+          </p>
+          <p>
+            Network upgrade가 actor bundle을 바꾸면 같은 actor 이름도 다른 code
+            CID를 가리킬 수 있습니다. 그래서 network version만 적거나 “Wasm
+            actor를 실행했다”라고만 쓰면 재현 정보가 부족합니다.
+          </p>
+          <p>
+            FIP-0030의 Final 문서는 native user-defined Wasm actor를 현재 Filecoin
+            mainnet에 배포할 수 없다고 명시합니다. 사용자가 배포하는 EVM smart
+            contract는 FEVM이 제공하는 foreign-runtime 경로입니다.
+          </p>
+
+          <ExplainedFormula
+            question="Actor 이름은 어떻게 실제 program으로 이어질까?"
+            idea={
+              <>
+                고정한 manifest 판본에서 actor 이름을 code CID로 해석합니다.
+              </>
+            }
+            formula={String.raw`C_a=\operatorname{Manifest}_{v,B}[name(a)]`}
+            annotatedFormula={String.raw`\underbrace{C_a}_{\text{실행할 actor code CID}}=\underbrace{\operatorname{Manifest}_{v,B}}_{\text{version·bundle root 고정}}[\underbrace{name(a)}_{\text{actor 이름}}]`}
+            operations={[
+              {
+                expression: String.raw`\operatorname{Manifest}_{v,B}[name(a)]`,
+                annotation: [
+                  "manifest version과 root B를 먼저 고정",
+                  "actor 이름으로 code CID 조회",
+                  "그 CID의 Wasm module을 blockstore에서 읽음",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "C_a",
+                name: "Actor code CID",
+                description: "실제로 불러올 actor Wasm bytecode의 식별자입니다.",
+              },
+              {
+                symbol: "v",
+                name: "Manifest version",
+                description: "Manifest 자료 구조의 지원 판본입니다.",
+              },
+              {
+                symbol: "B",
+                name: "Manifest root CID",
+                description: "Actor 이름·code CID 목록을 가리키는 root입니다.",
+              },
+              {
+                symbol: "name(a)",
+                name: "Actor name",
+                description: "System, account, init 같은 built-in actor 이름입니다.",
+              },
+            ]}
+            assumptions={[
+              "Manifest root가 가리키는 block과 actor code blocks를 blockstore에서 읽을 수 있어야 합니다.",
+              "Code CID 일치는 actor source audit나 application safety를 증명하지 않습니다.",
+            ]}
+            interpretation="Network version과 manifest root를 함께 기록해야 어느 actor program을 실행했는지 다시 확인할 수 있습니다."
+          />
+
+          <div id="paper-fvm-manifest">
+            <CitationBlock
+              type="code"
+              citeKey={4}
+              source="ref-fvm actor manifest · fvm@v4.8.4 · commit 8fbafbf"
+              href={MANIFEST}
+            >
+              <p>
+                <strong>문제:</strong> Runtime이 manifest 판본과 required actor
+                names를 code CID에 안전하게 연결해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> 고정 소스는 blockstore에서 root를
+                읽고 supported version과 required entries를 검증합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> fvm@v4.8.4 commit 8fbafbf의 manifest
+                schema와 network configuration을 사용합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> Manifest loading과 lookup 구현에
+                한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Manifest가 존재한다고 actor source
+                audit, upgrade safety나 arbitrary user code 보안이 증명되지는
+                않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
+
+        <span id="release-gate" className="sr-only" aria-hidden="true" />
+        <section id="machine-flush" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              04 · Message receipt와 final root
+            </p>
+            <h2 className="mt-2 text-2xl font-bold">
+              최종 state root는 정확히 언제 생길까요?
+            </h2>
+          </header>
+          <p>
+            호출자는 같은 Machine에 message를 순서대로 적용합니다. 각 호출은
+            ApplyRet을 돌려주고 그 안의 message receipt가 chain에 기록될 결과를
+            담습니다. 다음 message는 앞선 message까지 반영된 working state를
+            봅니다.
+          </p>
+          <p>
+            모든 message 적용을 마친 뒤 호출자가 <code>flush()</code>를 부르면
+            state tree가 blockstore에 기록되고 final state-root CID가 나옵니다.
+            따라서 R₁이 만들어진 시점과 Sfinal이 만들어진 시점은 다릅니다.
+          </p>
+          <p>
+            사전 검사 실패는 actor를 호출하지 않고 조기 ApplyRet을 만들 수
+            있습니다. Actor의 non-success exit는 actor-call 변경을 되돌린
+            영수증으로 남습니다. 반면 state I/O처럼 executor가 ApplyRet을 만들지
+            못하는 오류나 마지막 flush 실패는 호출자가 전체 실행 실패로 다뤄야
+            합니다.
+          </p>
+
+          <ExplainedFormula
+            question="여러 message 실행의 최종 산출물은 무엇일까?"
+            idea={
+              <>
+                각 message의 영수증을 순서대로 얻고, 마지막 working state만 한 번
+                flush합니다.
+              </>
+            }
+            formula={String.raw`\Sigma_i,R_i=\operatorname{Apply}(\Sigma_{i-1},m_i),\quad S_{final}=\operatorname{Flush}(\Sigma_n)`}
+            annotatedFormula={String.raw`\underbrace{\Sigma_i,R_i}_{\text{message i의 다음 state·영수증}}=\operatorname{Apply}(\underbrace{\Sigma_{i-1},m_i}_{\text{직전 state·현재 message}}),\quad \underbrace{S_{final}}_{\text{최종 state-root CID}}=\operatorname{Flush}(\underbrace{\Sigma_n}_{\text{모든 message 뒤 working state}})`}
+            operations={[
+              {
+                expression: String.raw`\Sigma_i,R_i=\operatorname{Apply}(\Sigma_{i-1},m_i)`,
+                annotation: [
+                  "m₁부터 mₙ까지 순서대로 적용",
+                  "각 message마다 Rᵢ 생성",
+                  "다음 message는 Σᵢ에서 시작",
+                ],
+              },
+              {
+                expression: String.raw`S_{final}=\operatorname{Flush}(\Sigma_n)`,
+                annotation: [
+                  "모든 message 적용을 마친 뒤 한 번 flush",
+                  "blockstore에 state blocks 기록",
+                  "최종 root CID 반환",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "n",
+                name: "Message count",
+                description: "호출자가 이 Machine에 적용한 message 수입니다.",
+              },
+              {
+                symbol: "R_i",
+                name: "Receipt i",
+                description: "i번째 message의 실행 영수증입니다.",
+              },
+              {
+                symbol: String.raw`\Sigma_n`,
+                name: "Final working state",
+                description: "모든 message가 적용됐지만 아직 flush 전인 state입니다.",
+              },
+              {
+                symbol: "S_{final}",
+                name: "Final state root",
+                description: "Flush가 반환한 content-addressed state-tree root입니다.",
+              },
+            ]}
+            assumptions={[
+              "같은 초기 Machine context와 같은 message 순서를 사용합니다.",
+              "FVM의 final root 계산과 consensus의 chain-head 선택은 서로 다른 책임입니다.",
+            ]}
+            interpretation="독립 실행을 비교할 때는 receipt 한 건만 보지 않고, 순서가 있는 receipt 목록과 마지막 state root를 함께 확인합니다."
+          />
+
+          <div id="paper-fvm-flush">
+            <CitationBlock
+              type="code"
+              citeKey={5}
+              source="ref-fvm Executor trait · fvm@v4.8.4 · commit 8fbafbf"
+              href={EXECUTOR_TRAIT}
+            >
+              <p>
+                <strong>문제:</strong> Message 적용과 state-tree flush의 API 경계를
+                분리해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Executor trait는
+                <code>execute_message</code>와 <code>flush</code>를 별도 method로
+                정의하고, flush가 새 root CID를 반환한다고 명시합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> fvm@v4.8.4 commit 8fbafbf의 Executor
+                interface와 caller가 정한 message 순서를 함께 봅니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> Reference FVM의 message/flush API
+                경계에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Flush 성공이 chain finality나 fork
+                choice, block inclusion을 보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+
+          <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground">
+            <strong className="text-foreground">부모 지도에 돌려줄 결론:</strong>{" "}
+            Lotus 같은 caller는 FVM에 초기 state와 순서가 있는 message를
+            전달합니다. FVM은 message별 receipt와 마지막 state root를 만들지만,
+            어느 chain이 정본인지는 합의 계층이 결정합니다.
+          </aside>
+        </section>
+      </article>
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ "ref-fvm": fvmTree }}
+        projectMetas={{
+          "ref-fvm": {
+            id: "ref-fvm",
+            label: "ref-fvm · Rust",
+            badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+          },
+        }}
+      />
+    </>
+  );
 }

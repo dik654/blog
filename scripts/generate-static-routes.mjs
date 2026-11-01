@@ -160,6 +160,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/lotus-state",
   "blockchain/ipfs-filecoin-storage",
   "blockchain/filecoin-ipc",
+  "blockchain/filecoin-fvm",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

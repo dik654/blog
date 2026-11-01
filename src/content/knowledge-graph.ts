@@ -15952,10 +15952,42 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "giwa-opnode-opreth-engine-handoff": { id: "giwa-opnode-opreth-engine-handoff", kind: "concept", domain: "distributed-systems", label: "GIWA op-node · op-reth Engine handoff", definition: "op-node가 pinned L1 view·rollup rules에서 payload와 head를 derivation하고 authenticated Engine API로 op-reth에 전달해 EVM execution result·state를 돌려받는 GIWA node 책임 경계입니다.", canonicalHref: "/cs/blockchain/giwa-chain#node-envelope" },
   "giwa-head-consumption-policy": { id: "giwa-head-consumption-policy", kind: "concept", domain: "distributed-systems", label: "GIWA unsafe · safe · finalized consumption policy", definition: "Sequencer가 만든 unsafe head, L1에 게시되어 derivation된 safe head, 해당 L1 origin이 finalized된 finalized head를 application effect의 위험도·confirmation·reconciliation 규칙에 각각 매핑하는 정책입니다.", canonicalHref: "/cs/blockchain/giwa-chain#derivation-heads" },
   "giwa-node-release-gate": { id: "giwa-node-release-gate", kind: "concept", domain: "distributed-systems", label: "GIWA node bundle release gate", definition: "Pinned chain/source/config에서 payload·state-root·head parity와 wrong profile, JWT failure, L1 reorg, snapshot corruption·restart fixtures를 통과한 op-node/op-reth bundle만 canary에서 채택하고 prior compatible generation으로 돌아가는 기준입니다.", canonicalHref: "/cs/blockchain/giwa-chain#release-gate" },
-  "fvm-message-execution-envelope": { id: "fvm-message-execution-envelope", kind: "concept", domain: "distributed-systems", label: "FVM message execution envelope", definition: "Message CID·base state root·epoch·network version과 actor bundle manifest를 한 실행 identity로 고정해 같은 actor call의 재현 범위를 정하는 FVM 경계입니다.", canonicalHref: "/cs/blockchain/filecoin-fvm#message-envelope" },
-  "fvm-transactional-state-root-receipt": { id: "fvm-transactional-state-root-receipt", kind: "concept", domain: "distributed-systems", label: "FVM transactional state-root receipt", definition: "Nested actor call의 state·events·access records를 함께 commit/revert하고 exit·return·gas와 flush된 post-state root를 동일 실행에 묶는 receipt입니다.", canonicalHref: "/cs/blockchain/filecoin-fvm#state-commit" },
-  "fvm-network-version-actor-manifest-binding": { id: "fvm-network-version-actor-manifest-binding", kind: "concept", domain: "computer-science", label: "FVM network-version · actor-manifest binding", definition: "Network version의 execution semantics와 manifest root가 가리키는 required built-in actor code CIDs를 하나의 runtime generation으로 결속하는 계약입니다.", canonicalHref: "/cs/blockchain/filecoin-fvm#actor-bundle" },
-  "fvm-execution-release-gate": { id: "fvm-execution-release-gate", kind: "method", domain: "distributed-systems", label: "FVM execution release gate", definition: "Message admission·state/receipt parity·nested abort·out-of-gas·missing artifact·crash replay를 통과한 runtime·bundle generation만 채택하는 절차입니다.", canonicalHref: "/cs/blockchain/filecoin-fvm#release-gate" },
+  "fvm-machine-execution-context": {
+    id: "fvm-machine-execution-context",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "FVM Machine execution context",
+    definition:
+      "Initial state root·epoch·base fee·circulating supply·network version·blockstore와 actor manifest가 message sequence를 적용할 FVM Machine의 재현 문맥을 이룹니다.",
+    canonicalHref: "/cs/blockchain/filecoin-fvm#machine-context",
+  },
+  "fvm-actor-call-transaction-receipt": {
+    id: "fvm-actor-call-transaction-receipt",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "FVM actor-call transaction · message receipt",
+    definition:
+      "Nested actor call의 state·events·access records를 함께 commit/revert하면서 그 바깥의 sender sequence·gas 효과를 구분하고 exit·return·gas·events root를 message receipt로 남기는 경계입니다.",
+    canonicalHref: "/cs/blockchain/filecoin-fvm#actor-transaction",
+  },
+  "fvm-network-version-actor-manifest-binding": {
+    id: "fvm-network-version-actor-manifest-binding",
+    kind: "concept",
+    domain: "computer-science",
+    label: "FVM network-version · actor-manifest binding",
+    definition:
+      "Network version의 execution semantics와 manifest root가 가리키는 required built-in actor code CIDs를 하나의 runtime generation으로 결속하는 계약입니다.",
+    canonicalHref: "/cs/blockchain/filecoin-fvm#actor-bundle",
+  },
+  "fvm-message-sequence-flush-boundary": {
+    id: "fvm-message-sequence-flush-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "FVM message sequence · final flush boundary",
+    definition:
+      "각 execute_message가 working state와 message receipt를 만들고, 호출자가 순서가 있는 모든 message를 적용한 뒤 별도 flush로 하나의 final state-root CID를 얻는 경계입니다.",
+    canonicalHref: "/cs/blockchain/filecoin-fvm#machine-flush",
+  },
   "ipc-subnet-genesis-power-artifact": {
     id: "ipc-subnet-genesis-power-artifact",
     kind: "concept",
@@ -49568,7 +49600,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "filecoin-actor-record-head-indirection", to: "filecoin-hamt-amt-parameter-path", relation: "produces", reason: "Top-level actor record와 Head 아래 collections를 실제로 찾을 때 versioned HAMT·AMT path를 사용합니다." },
   { from: "hash-canonical-bit-byte-input", to: "filecoin-hamt-amt-parameter-path", relation: "prerequisite", reason: "HAMT key bytes와 hash·bit slicing이 canonical해야 peers가 같은 branch와 root를 계산합니다." },
   { from: "filecoin-hamt-amt-parameter-path", to: "lotus-state-snapshot-flush-root", relation: "prerequisite", reason: "Surviving actor mutations를 정확한 parameterized map path에 반영해야 새 root를 재현합니다." },
-  { from: "lotus-state-snapshot-flush-root", to: "fvm-transactional-state-root-receipt", relation: "prerequisite", reason: "FVM transaction의 commit/revert 결과는 Lotus StateTree overlay를 flush한 post-state root로 receipt와 연결됩니다." },
+  {
+    from: "lotus-state-snapshot-flush-root",
+    to: "fvm-message-sequence-flush-boundary",
+    relation: "prerequisite",
+    reason:
+      "StateTree의 snapshot·revert·flush를 알아야 message별 working state와 마지막 final root를 구분할 수 있습니다.",
+  },
   { from: "filecoin-actor-record-head-indirection", to: "lotus-state-fail-closed-boundary", relation: "constrains", reason: "Actor의 Code와 Head가 요구하는 schema를 모르면 bytes를 임의의 최신 구조로 읽지 않습니다." },
   { from: "filecoin-hamt-amt-parameter-path", to: "lotus-state-fail-closed-boundary", relation: "constrains", reason: "Hash·bit width·codec이 맞지 않거나 child node가 없으면 다른 path나 빈 collection을 추측하지 않습니다." },
   { from: "lotus-state-snapshot-flush-root", to: "lotus-state-fail-closed-boundary", relation: "constrains", reason: "Snapshot layer가 하나로 정리되지 않으면 Flush를 거부하고, 생성한 local root를 canonical chain root와 구분합니다." },
@@ -49581,11 +49619,35 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "giwa-network-profile-artifact", to: "giwa-node-release-gate", relation: "prerequisite", reason: "Canary와 rollback이 비교할 exact source·chain·config generation을 제공합니다." },
   { from: "giwa-opnode-opreth-engine-handoff", to: "giwa-node-release-gate", relation: "evaluates", reason: "Payload·state-root parity, JWT mismatch와 reorg replay가 node bundle 채택을 평가합니다." },
   { from: "giwa-head-consumption-policy", to: "giwa-node-release-gate", relation: "evaluates", reason: "Unsafe rollback과 safe/finalized reconciliation이 application-facing release 조건입니다." },
-  { from: "smr-deterministic-transition", to: "fvm-message-execution-envelope", relation: "extends", reason: "Generic deterministic state transition을 Filecoin message·state·network-version·bundle 실행 identity로 구체화합니다." },
-  { from: "fvm-message-execution-envelope", to: "fvm-transactional-state-root-receipt", relation: "produces", reason: "Admitted execution envelope가 nested-call transaction 뒤 post-state와 receipt를 생성합니다." },
+  {
+    from: "smr-deterministic-transition",
+    to: "fvm-machine-execution-context",
+    relation: "extends",
+    reason:
+      "Generic deterministic state transition을 Filecoin initial state·chain context·network-version·actor manifest를 가진 Machine으로 구체화합니다.",
+  },
+  {
+    from: "fvm-machine-execution-context",
+    to: "fvm-actor-call-transaction-receipt",
+    relation: "produces",
+    reason:
+      "고정된 Machine context에서 message를 적용하면 actor-call transaction과 message receipt가 만들어집니다.",
+  },
   { from: "content-addressed-artifact-reference", to: "fvm-network-version-actor-manifest-binding", relation: "prerequisite", reason: "Manifest root와 actor code CIDs를 content-addressed runtime generation으로 고정합니다." },
-  { from: "fvm-network-version-actor-manifest-binding", to: "fvm-message-execution-envelope", relation: "constrains", reason: "Actor code와 network semantics가 message 실행 결과의 재현 범위를 제한합니다." },
-  { from: "fvm-transactional-state-root-receipt", to: "fvm-execution-release-gate", relation: "evaluates", reason: "State·abort·gas·receipt parity가 candidate runtime 채택 여부를 결정합니다." },
+  {
+    from: "fvm-network-version-actor-manifest-binding",
+    to: "fvm-machine-execution-context",
+    relation: "constrains",
+    reason:
+      "Actor code와 network semantics가 Machine에서 실행할 program과 결과의 재현 범위를 제한합니다.",
+  },
+  {
+    from: "fvm-actor-call-transaction-receipt",
+    to: "fvm-message-sequence-flush-boundary",
+    relation: "produces",
+    reason:
+      "각 message의 working state와 receipt가 다음 message의 입력이 되고 마지막 flush의 state를 만듭니다.",
+  },
   {
     from: "bft-honest-quorum-intersection",
     to: "ipc-subnet-genesis-power-artifact",
@@ -49659,7 +49721,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "filecoin-cloud-payment-rail-lockup-envelope", to: "filecoin-cloud-service-release-gate", relation: "evaluates", reason: "Rail funds·lockup·rate·settledUpTo parity가 storage service generation 채택의 필수 조건입니다." },
   { from: "pdp-contract-provider-release-gate", to: "filecoin-cloud-service-release-gate", relation: "prerequisite", reason: "PDP contract/provider parity를 먼저 통과해야 upload·payment·retrieval을 포함한 service를 승인할 수 있습니다." },
   { from: "storage-proof-service-boundary", to: "filecoin-cloud-service-release-gate", relation: "constrains", reason: "Proof와 contract receipts를 retrieval SLA나 미래 영구 보존으로 확대하지 않도록 제한합니다." },
-  { from: "fvm-message-execution-envelope", to: "lotus-mpool-head-relative-admission", relation: "prerequisite", reason: "FVM message fields와 network-version execution context가 mpool validity checks의 입력을 제공합니다." },
+  {
+    from: "fvm-machine-execution-context",
+    to: "lotus-mpool-head-relative-admission",
+    relation: "prerequisite",
+    reason:
+      "FVM message fields와 head-relative Machine context가 mpool validity checks의 입력을 제공합니다.",
+  },
   { from: "cometbft-mempool-local-admission", to: "lotus-mpool-head-relative-admission", relation: "extends", reason: "Generic local admission과 chain inclusion 분리를 Lotus actor state·message policy에 맞게 구체화합니다." },
   { from: "lotus-mpool-head-relative-admission", to: "lotus-mpool-sender-nonce-chain-selection", relation: "prerequisite", reason: "Current head에서 유효한 pending messages만 actor nonce부터 contiguous sender package를 구성합니다." },
   { from: "lotus-mpool-gas-estimate-context-receipt", to: "lotus-mpool-sender-nonce-chain-selection", relation: "constrains", reason: "Base-fee-aware effective premium과 reserved gas가 package ordering과 block-budget 선택을 제한합니다." },
