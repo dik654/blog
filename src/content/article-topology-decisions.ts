@@ -3362,9 +3362,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-product-approval-target-market-and-post-sale-monitoring": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 지배구조는 지급식과 나쁜 고객 결과를 출시 전에 시험해 목표·반대시장과 유통 채널을 정하고, 실제 판매·손실·민원 자료가 가정을 벗어나면 설명·채널·판매 여부를 다시 결정하는 생애주기 통제입니다.",
-    "sharedGate": "원금 100이 조건 충족 때 108로 늘어 이익 8, 지수 60의 나쁜 경로에서 손실 40이 되는 비대칭을 비교합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "원금 100의 좋은 경로 이익 8과 나쁜 경로 손실 40을 연 뒤 출시 전 시험, 목표·판매 제외 대상, 실제 고객과 채널 판단, 예상 2건 대비 실제 민원 8건의 사후 경보, 수정 행동과 제조자·판매자 책임 순환까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "108−100=8과 100−60=40, 실제 민원 8−예상 2=경보 6을 검산하고 상품 단위 목표시장과 거래 단위 적합성·적정성, 제조자와 판매자, 경보와 결론을 구분합니다."
   },
   "markets/multi-asset-options-correlation-and-rare-event-simulation": {
     "action": "keep",
@@ -4663,7 +4663,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/uncleared-initial-margin-simm-and-model-governance":"941f21bff7ae1dad",
 "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"bcddcd2ba09014de",
 "markets/collateral-operations-margin-calls-disputes-and-substitution":"4aab453963abd0f8",
-"markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"8c605652f58d653a",
+"markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"17e358218402434a",
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"fc0b347a31fcd02f",
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"7e1e5effa12b96fc",
 "markets/krx-derivatives-contract-orders-and-daily-settlement":"e8983d082a4cc018",

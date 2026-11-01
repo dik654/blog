@@ -220,7 +220,7 @@ export const productGovernanceData: DerivativeDeepArticleData = {
     ] },
     { id: "black-box", level: "B", title: "2. 설계자·목표 고객·판매 채널·사후 자료의 네 칸을 엽니다", bridge: "상품을 만든 뒤 영업에 넘기는 한 번의 회의로 보지 않습니다.", paragraphs: [
       "제조자는 지급식, 헤지 가능성, 비용과 이해상충을 검토하고 목표 고객과 맞지 않는 고객을 정합니다. 판매자는 실제 고객 자료와 제조자 정보를 맞춰 어느 채널에서 어떤 설명으로 팔지 결정합니다.",
-      "판매 뒤에는 목표시장 밖 판매, 중도해지, 손실, 민원과 시장 변화가 설계 가정을 깨는지 봅니다. 이 자료가 다시 제조자와 승인위원회로 돌아가야 상품 생애주기가 닫힙니다.",
+      "판매 뒤에는 목표시장 밖 판매, 중도해지, 손실, 민원과 시장 변화가 설계 가정을 깨는지 봅니다. 이 자료가 다시 제조자와 승인위원회로 돌아가야 상품 생애주기의 다음 판단으로 이어집니다.",
     ] },
     { id: "case", level: "0", title: "3. 지수가 60이면 고객은 40을 잃지만 표시 수익은 8에 멈춥니다", bridge: "수익과 손실의 비대칭을 먼저 손으로 확인합니다.", paragraphs: [
       "지수가 조건을 지키면 100은 108이 되어 이익은 8입니다. 보호선이 깨지고 최종 지수가 60이면 60을 받아 손실은 40입니다.",
@@ -272,8 +272,8 @@ export const productGovernanceData: DerivativeDeepArticleData = {
     { term: "사후 검토", description: "실제 판매와 고객 결과가 승인 가정에서 벗어났는지 확인하고 행동하는 절차입니다.", example: "민원 8건의 원인을 조사해 채널을 제한합니다.", boundary: "민원 건수 하나가 자동 결론은 아닙니다." },
   ] },
   sources: [
-    { source: "FCA Handbook · PROD 3", excerpt: "process for the approval of each financial instrument", application: "출시 전 승인, 목표·반대시장과 중요한 사건 뒤의 재검토를 연결합니다.", citation: "FCA PROD 3 Product governance: MiFID", href: "https://handbook.fca.org.uk/handbook/prod3", note: "2026년 1월 갱신본의 영국 규칙이며 다른 관할에는 해당 규칙을 그대로 적용하지 않습니다." },
-    { source: "금융투자교육원 · 파생상품투자권유자문인력", excerpt: "파생상품 중심 투자권유 절차와 유의사항", application: "상품 구조 지식과 고객 권유·분쟁조정이 함께 필요한 교육 범위를 확인합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "교육 범위표이며 상품 승인에 적용되는 개별 법규의 대체 자료가 아닙니다. 인용문은 과정표 8번 과목명입니다(2026-10-09 확인)." },
+    { source: "FCA Handbook · PROD 3", excerpt: "process for the approval of each financial instrument", application: "출시 전 승인, 목표·판매 제외 대상과 중요한 사건 뒤의 재검토를 연결합니다.", citation: "FCA PROD 3 Product governance: MiFID", href: "https://handbook.fca.org.uk/handbook/prod3", note: "2026-11-02에 2026년 1월 갱신본을 확인했습니다. 영국 규칙이며 다른 관할에는 그대로 적용하지 않습니다." },
+    { source: "ESMA · MiFID II 상품 지배구조 지침", excerpt: "product governance requirements introduced by MiFID II", application: "제조자와 판매자의 목표시장 판단, 유통 차단과 정기 재검토의 역할을 구분합니다.", citation: "ESMA35-43-3448, Guidelines on MiFID II product governance requirements", href: "https://www.esma.europa.eu/sites/default/files/2023-03/ESMA35-43-3448_Final_report_on_MiFID_II_guidelines_on_product_governance.pdf", note: "2023년 최종 보고서이며 EU MiFID II 체계의 지침입니다. 실제 적용에는 현재 지침과 회원국 이행 규정을 함께 확인해야 합니다(2026-11-02 확인)." },
   ],
   review: [
     "원금 100에서 위쪽 이익 8과 아래쪽 손실 40을 계산해 보세요. (답: 1·3절)",

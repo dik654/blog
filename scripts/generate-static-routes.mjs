@@ -234,6 +234,7 @@ const noScriptArticleRoutes = new Set([
   "markets/uncleared-initial-margin-simm-and-model-governance",
   "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation",
   "markets/collateral-operations-margin-calls-disputes-and-substitution",
+  "markets/derivatives-product-approval-target-market-and-post-sale-monitoring",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
