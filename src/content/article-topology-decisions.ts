@@ -3124,9 +3124,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-suitability-disclosure-and-sales-practice": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 권유는 고객의 목적·재산·경험과 실제 노출을 파악하고 상품의 유리·불리한 지급과 대안을 설명해 이해를 확인하며, 권유·승인·주문·사후 변경의 증거를 남기는 연속된 책임입니다.",
-    "sharedGate": "초과 1억 달러×환율 차이 200원=200억 원을 검산하고 자격·서명·수익 결과가 개별 판매 적합성을 자동 증명하지 않음을 밝힙니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "수출대금 1억 달러에서 출발해 구조화 계약의 매도의무 2억 달러, 초과의무 1억 달러와 설명용 차액 200억 원을 계산하고, 적합성·적정성·대안 비교·이해 확인·증거 보존을 8장면의 한 상담으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "초과의무 1억 달러×환율 차이 200원=200억 원을 검산하고, 권유 유무에 따른 적합성·적정성의 차이와 고객 프로필·상품 계산·설명·주문 기록의 상태 소유권을 구분하며 자격·서명·수익 결과가 개별 판매의 적절성을 자동 증명하지 않음을 밝힙니다."
   },
   "markets/currency-hedging-forward-points-and-cross-currency-basis": {
     "action": "keep",
@@ -4631,7 +4631,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "philosophy-topics/meaning-in-life-attraction-worth-and-commitment":"ac3ef0397b349366",
 "philosophy-topics/reference-context-and-speech-acts":"f887d8ccc192939f",
 "markets/clearing-margin-and-default-waterfall":"a2cd35c59b8aff7e",
-"markets/derivatives-suitability-disclosure-and-sales-practice":"28aa4961a49f583f",
+"markets/derivatives-suitability-disclosure-and-sales-practice":"942d179a87cf1930",
 "markets/interest-rate-derivatives-from-fra-to-swaptions":"8fb4b59da32013fc",
 "markets/no-arbitrage-cost-of-carry-and-basis":"8a85e9f19b7b1b6f",
 "markets/option-greeks-volatility-and-dynamic-hedging":"4647ce9e23e8541a",
