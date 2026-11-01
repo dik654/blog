@@ -48,6 +48,7 @@ export default function YieldCurveShapeViz() {
       title="만기를 가로축에 놓고 금리를 이으면 시장의 기대가 보입니다"
       description="곡선의 모양이 앞으로의 정책 경로에 대한 예상을 담지만, 프리미엄과 섞여 있습니다."
       note="금리 값은 모양을 보이기 위한 예시이며 특정 시점의 실제 국채 금리가 아닙니다."
+      documentFlow
     >
       <div
         data-viz-canvas
@@ -55,7 +56,7 @@ export default function YieldCurveShapeViz() {
         role="group"
         aria-label="수익률 곡선의 모양"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-auto min-h-0 min-w-0 flex-col overflow-visible outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem] sm:overflow-y-auto"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
@@ -63,7 +64,19 @@ export default function YieldCurveShapeViz() {
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
+          <div className="mt-4 grid grid-cols-2 gap-1.5 sm:hidden" aria-label="만기별 금리와 기대 평균">
+            {MATURITIES.map((maturity, index) => (
+              <div key={maturity} className="grid grid-cols-[auto_1fr] items-center gap-2 border-b border-border px-1 py-1.5">
+                <p className="text-[8px] font-black text-muted-foreground">{maturity}년</p>
+                <div className="text-right">
+                  <p className={`font-mono text-[10px] font-black ${step >= 2 ? "text-destructive" : "text-primary"}`}>{values[index].toFixed(1)}%</p>
+                  {step === 3 && <p className="font-mono text-[7px] font-bold text-emerald-600 dark:text-emerald-400">기대 {EXPECTATION[index].toFixed(1)}%</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 hidden w-full min-w-0 overflow-x-auto sm:block">
             <svg
               viewBox="0 0 480 200"
               role="img"

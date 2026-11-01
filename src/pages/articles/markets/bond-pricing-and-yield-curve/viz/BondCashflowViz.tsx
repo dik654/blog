@@ -49,6 +49,7 @@ export default function BondCashflowViz() {
       title="적혀 있는 현금흐름을 오늘로 모으면 그것이 가격입니다"
       description="채권은 할인 계산을 실제 청구권에 처음 적용하는 자리입니다."
       note="단위는 액면을 100으로 둔 상대값이며, 이자 지급 시점이 정확히 1년 간격이라고 두었습니다."
+      documentFlow
     >
       <div
         data-viz-canvas
@@ -56,7 +57,7 @@ export default function BondCashflowViz() {
         role="group"
         aria-label="채권 현금흐름의 할인"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-auto min-h-0 min-w-0 flex-col overflow-visible outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem] sm:overflow-y-auto"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
@@ -64,7 +65,26 @@ export default function BondCashflowViz() {
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
+          <div className="mt-4 grid grid-cols-3 gap-1.5 sm:hidden" aria-label="연도별 약정 현금흐름과 현재가치">
+            {YEARS.map((year) => {
+              const amount = cashflow(year);
+              const present = amount / (1 + rate) ** year;
+              return (
+                <div key={year} className="border border-border px-1.5 py-2.5 text-center">
+                  <p className="text-[8px] font-black">{year}년</p>
+                  <p className="mt-1 font-mono text-[9px] font-black">약정 {amount}</p>
+                  {step >= 1 && <p className={`mt-1 font-mono text-[9px] font-black ${step === 3 ? "text-destructive" : "text-primary"}`}>오늘 {present.toFixed(1)}</p>}
+                </div>
+              );
+            })}
+            {step >= 2 && (
+              <p className={`col-span-3 border-l border-current pl-2 font-mono text-[10px] font-black ${step === 3 ? "text-destructive" : "text-emerald-600 dark:text-emerald-400"}`}>
+                현재가치 합계 {total.toFixed(1)} · 할인율 {(rate * 100).toFixed(0)}%
+              </p>
+            )}
+          </div>
+
+          <div className="mt-4 hidden w-full min-w-0 overflow-x-auto sm:block">
             <svg
               viewBox="0 0 480 200"
               role="img"
