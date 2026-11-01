@@ -187,6 +187,7 @@ const noScriptArticleRoutes = new Set([
   "infrastructure/water-utility-and-tariffs",
   "infrastructure/transport-access-and-land-value",
   "infrastructure/housing-land-and-supply",
+  "infrastructure/materials-waste-and-circularity",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

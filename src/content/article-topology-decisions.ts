@@ -1787,7 +1787,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "관측된 변화와 원인효과, 측정 반복성과 편향, 무작위 배정과 표본 추출, 계산한 범위와 일반화할 범위를 분리해야 숫자의 근거 수준을 판단할 수 있습니다. 첫 그림은 A10→8·B10→9의 관찰에서 이중차분 −1, 반복측정 8.0·8.1·7.9와 가능한 계기 편향 −0.5, 교란, 배정과 표본, 보고 범위까지 일곱 장면으로 연결합니다.",
     "sharedGate": "첫 그림과 3·4·5·7·8·9·10절의 수치와 조건이 일치해야 합니다. 각 10가구인 A와 B가 모두 10에서 시작해 A는 8, B는 9kWh/가구·일이 되므로 두 변화의 차이는 −2−(−1)=−1입니다. 이 값은 평행 추세 등 조건이 있어야 장치의 원인효과로 읽을 수 있으며, 반복값 평균 8.0과 계기 편향 가능성 −0.5를 구분합니다. 개별 관측값·변동성·대표성·장기 효과는 현재 자료로 확정하지 않습니다."
   },
-  "infrastructure/materials-waste-and-circularity": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "수거율과 실제 회수량, 처리비용과 재원 이전, 재생재료와 새 원료 대체를 구분해야 순환의 효과를 계산할 수 있습니다.", "sharedGate": "(가정) 발생 100kg·수거 80kg·수율 75%·회수 60kg, 처리총비용 12만원·판매수입 6만원의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "infrastructure/materials-waste-and-circularity": {"action": "keep", "status": "implemented", "reviewedAt": "2026-11-02", "rationale": "자원 순환을 이해하려면 사용 뒤 물질의 행선지와 처리비의 지급 경로, 수거율·처리 수율·실제 회수율의 분모, 품질과 판매처, 처리비와 재원 공백, 생산자 책임과 최종 부담자, 회수량과 발생량 감소를 나눠야 합니다. 첫 그림은 원료에서 처리까지의 경로, 100kg의 분기, 80%·75%·60%의 차이, 품질 조건, 비용 12만 원과 공백 6만 원, 생산자 부담, 수요·발생량에 따른 새 원료 투입까지 일곱 장면으로 연결합니다.", "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 질량·분모·금액이 일치해야 합니다. 발생 100kg 중 80kg을 수거하고 수율 75%를 적용하면 회수 재료는 60kg이며, 미수거 20kg과 처리 잔여 20kg이 남습니다. 수거율은 80÷100=80%, 처리 수율은 60÷80=75%, 실제 회수율은 60÷100=60%입니다. 수거 4만 원·선별과 재처리 6만 원·잔여물 처리 2만 원의 총비용 12만 원에서 판매수입 6만 원을 빼면 재원 공백은 6만 원입니다. 생산자 부담이 이를 채워도 실제 회수량은 60kg이며, 수요와 발생량을 함께 보지 않으면 새 원료 대체 효과를 확정할 수 없습니다."},
   "gpu/amd-gpu-execution-and-hip": {
     "action": "keep",
     "status": "implemented",
@@ -4581,7 +4581,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "gpu/amd-gpu-execution-and-hip":"6e04d98fcafc385b",
 "gpu/gpu-memory-hierarchy-and-roofline":"a9aed826b3653311",
 "gpu/hbm-stack-and-memory-requests":"5a2477d7ba1ccefc",
-"infrastructure/materials-waste-and-circularity":"6e46845f992ce59d",
+"infrastructure/materials-waste-and-circularity":"680bab3743f1277d",
 "institutions/culture-norms-and-coordination":"4fbcb541df469e20",
 "institutions/evidence-measurement-and-causality":"0de8c9931780dbc9",
 "institutions/population-migration-and-care":"84f1a1f1e783549c",

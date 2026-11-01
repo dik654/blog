@@ -2,12 +2,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import MaterialsWasteCircularityViz from "./MaterialsWasteCircularityViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">버린 물건이 수거됐다는 사실은 과정의 시작입니다</h2>
+        <MaterialsWasteCircularityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             포장재를 분리해 버리면 다시 제품이 될 것이라고 기대합니다. 하지만 수거 뒤에도 섞인 재료를 가르고 오염을 제거하고 다시 쓸 품질로 만들어야 합니다. 그 과정에서 사용할 수
