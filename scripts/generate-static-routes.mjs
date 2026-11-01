@@ -195,6 +195,7 @@ const noScriptArticleRoutes = new Set([
   "markets/financial-products-and-claims",
   "markets/funds-etfs-and-etns",
   "markets/securitization-and-tranches",
+  "markets/forwards-and-futures",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

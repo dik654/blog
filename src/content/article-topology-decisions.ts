@@ -1634,10 +1634,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep"
   },
   "markets/forwards-and-futures": {
-    "rationale": "하나의 수치 사례에서 선물은 미래 가격을 고정하면서 반대편에 같은 크기의 위험을 건넨다의 지급·조건·한계를 순서대로 추적합니다.",
-    "reviewedAt": "2026-10-04",
+    "rationale": "제빵업자와 농가가 밀 100톤의 3개월 뒤 가격을 톤당 30만 원으로 정한 뒤, 선도와 선물의 계약 경로, 만기 가격 35만·25만 원의 손익, 일일 정산, 베이시스와 수량 불일치까지 같은 장부로 추적하므로 한 글에 유지합니다.",
+    "reviewedAt": "2026-11-02",
     "status": "implemented",
-    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "sharedGate": "8장면 지도와 본문에서 100톤, 톤당 30만 원, 약정대금 3000만 원, 만기 35만·25만 원일 때 계약 차액 500만 원, 30→31→35만 원의 일일 정산 100만·400만 원, 실제 36만 원과 정산가 35만 원의 베이시스 100만 원, 수확량 60톤을 같은 조건으로 유지합니다.",
     "action": "keep"
   },
   "markets/options-and-asymmetric-payoffs": {
@@ -4339,7 +4339,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "institutions/insurance-risk-pooling": "7595dcb32ba394af",
   "macro/global-capital-and-policy": "c169ae992e741ba4",
   "macro/narratives-and-market-regimes": "9b0ab093e34caa58",
-  "markets/forwards-and-futures": "e4db4ba88e33dbbf",
+  "markets/forwards-and-futures": "ee7836f334448ebc",
   "markets/funds-etfs-and-etns": "c196e3112e200592",
   "markets/options-and-asymmetric-payoffs": "e7ea53156ed34514",
   "markets/swaps-and-credit-risk": "c1add7c3c5db9fb9",
