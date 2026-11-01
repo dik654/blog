@@ -3474,9 +3474,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/portfolio-compression-risk-tolerances-and-records": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "포트폴리오 압축은 거래를 대사하고 참여자의 위험 허용오차 안에서 상쇄 거래를 종료·대체해 계약 수와 총 명목을 줄인 뒤 법률·평가·담보·보고 장부를 다시 맞추며, 명목 감소와 위험 감소를 따로 측정합니다.",
-    "sharedGate": "+100−60−40=0을 확인하고 완전 일치 사례의 총 명목 200을 0으로 줄입니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "수취 100과 지급 60·40의 순위험 0과 총 명목 200을 구분한 뒤 장부 대사, 참여자 위험 허용오차, 압축안, 승인과 법률상 종료, 거래·평가·담보·보고의 사후 대사까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "+100−60−40=0과 |100|+|−60|+|−40|=200을 검산하고 순위험과 총 명목, 계산 제안과 계약 효력, 압축 성과와 남은 시장·신용·유동성 위험을 구분합니다."
   },
   "markets/collateral-optimization-eligibility-haircuts-and-liquidity": {
     "action": "keep",
@@ -4667,7 +4667,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"f33e9bed4b132bae",
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"0fdde9365e1efac1",
 "markets/krx-derivatives-contract-orders-and-daily-settlement":"169f0c5dde9100b7",
-"markets/portfolio-compression-risk-tolerances-and-records":"a16d7c4b7737843c",
+"markets/portfolio-compression-risk-tolerances-and-records":"8fb8d694df4df230",
 "markets/collateral-optimization-eligibility-haircuts-and-liquidity":"1fcfce72b06354fa",
 "markets/ccp-default-management-hedging-auction-and-porting":"64fc431e5a1b28aa",
 "markets/swaption-annuity-volatility-quotes-and-cube":"5e9505995e4db8ac",

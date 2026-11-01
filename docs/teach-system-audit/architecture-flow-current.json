@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 804,
+    "dedicatedVisuals": 805,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 658,
+    "animatedMechanisms": 659,
     "architectureWithoutAnimation": 63,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14278,14 +14278,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/portfolio-compression-risk-tolerances-and-records.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/securitization-and-tranches",
