@@ -4306,7 +4306,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/climate-risk-and-exposure": "aa85ef97f65b45ea",
   "business/business-model-cashflow": "d9d96a98d88c5a2e",
   "business/franchise-incentives": "ad08dae42d90c580",
-  "business/shop-fitout-and-opening": "f5f30c96a55ff3ac",
+  "business/shop-fitout-and-opening": "758b12f0dd56e630",
   "business/shop-site-selection": "a029f77b0a6d4a1a",
   "business/shop-unit-economics": "8c31975990c3a73b",
   "business/supply-chain-bargaining": "dcc49518705755d1",
