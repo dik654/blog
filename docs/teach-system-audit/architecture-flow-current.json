@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 776,
+    "dedicatedVisuals": 777,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 630,
+    "animatedMechanisms": 631,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14102,14 +14102,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/market-risk-backtesting-pnl-attribution-and-model-governance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/minimum-variance-hedge-ratio-and-basis-risk",

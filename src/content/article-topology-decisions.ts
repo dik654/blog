@@ -3208,9 +3208,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/market-risk-backtesting-pnl-attribution-and-model-governance": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "시장위험 모형은 가상·실제 손익의 백테스트, 위험이론 손익과 가상 손익의 P&L 귀속 검사, 독립 검증과 지속 감시를 연결해 예외 원인을 실제 모형·한도·사용 변경으로 바꿉니다.",
-    "sharedGate": "열흘 설명용 예외 3개와 250일 규제 예외 7개·amber·1.83을 구분하고 가상·실제·모형 손익을 따로 검산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "위험값 5와 열흘 손실에서 예외 3건을 찾고, 가상·실제·모형 손익의 서로 다른 장부, 250일 예외 7건의 amber·1.83, P&L 귀속과 독립 검증을 수정·감시까지 여덟 장면으로 연결합니다.",
+    "sharedGate": "열흘의 6·7·8이 한도 5를 넘는 계산과 250일의 예외 7건·amber·1.83을 구분하고, 가상 손실 6+장중 헤지 이익 2=실제 손실 4에서 서로 다른 예외 판정을 확인합니다."
   },
   "markets/brownian-motion-ito-and-risk-neutral-pricing": {
     "action": "keep",
@@ -4647,7 +4647,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/implied-volatility-surface-skew-and-smile":"9058abfbe6e2f523",
 "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"04a01d32f906752d",
 "markets/xva-funding-margin-and-wrong-way-risk":"395fc5acc8d5e76e",
-"markets/market-risk-backtesting-pnl-attribution-and-model-governance":"8c97dbc86b89fe31",
+"markets/market-risk-backtesting-pnl-attribution-and-model-governance":"a7159bf1a579c78e",
 "markets/black-scholes-pde-finite-difference-and-numerical-error":"eedd210ad42edda2",
 "markets/brownian-motion-ito-and-risk-neutral-pricing":"2a0f49691cce1e3c",
 "markets/hazard-rate-curve-recovery-and-credit-correlation":"78d8e8ed48ee2aa1",
