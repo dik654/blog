@@ -6023,8 +6023,12 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "blockchain/expected-consensus": [
     { kind: "공식 규격", label: "Filecoin Specification — Expected Consensus", href: "https://spec.filecoin.io/algorithms/expected_consensus/", note: "Sortition·compatible tipset·validation·chain-weight fork choice의 protocol 기준이며 F3 finality는 별도" },
-    { kind: "공식 코드", label: "Lotus v1.36.2 electionproof.go", href: "https://github.com/filecoin-project/lotus/blob/v1.36.2/chain/types/electionproof.go", note: "Poisson inverse-CDF win count의 pinned implementation이며 randomness·block validity 전체를 보장하지 않음" },
-    { kind: "공식 코드", label: "Lotus v1.36.2 filcns weight.go", href: "https://github.com/filecoin-project/lotus/blob/v1.36.2/chain/consensus/filcns/weight.go", note: "EC chain-weight fixed-point integer 산술의 pinned source이며 irreversible finality 근거는 아님" },
+    { kind: "공식 코드", label: "Lotus v1.38.3 electionproof.go", href: "https://github.com/filecoin-project/lotus/blob/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0/chain/types/electionproof.go", note: "Poisson inverse-CDF win count의 pinned implementation이며 randomness·block validity 전체를 보장하지 않음" },
+    { kind: "공식 코드", label: "Lotus v1.38.3 tipset.go", href: "https://github.com/filecoin-project/lotus/blob/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0/chain/types/tipset.go", note: "NewTipSet이 직접 검사하는 non-empty·ticket·height·parents 경계이며 full block validation은 별도" },
+    { kind: "공식 코드", label: "Lotus v1.38.3 FilecoinEC validation", href: "https://github.com/filecoin-project/lotus/blob/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0/chain/consensus/filcns/filecoin.go", note: "부모 문맥과 election·signature·beacon·WinningPoSt·messages 검사 경로이며 canonical head·finality 보장은 아님" },
+    { kind: "공식 코드", label: "Lotus v1.38.3 filcns weight.go", href: "https://github.com/filecoin-project/lotus/blob/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0/chain/consensus/filcns/weight.go", note: "EC chain-weight fixed-point integer 산술의 pinned source이며 irreversible finality 근거는 아님" },
+    { kind: "공식 규격", label: "FIP-0086 · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0086.md", note: "EC proposal·finalized base·certificate와 fork-choice fence의 Final 규격이며 고정 finality SLA는 아님" },
+    { kind: "공식 코드", label: "go-f3 v0.8.15 README", href: "https://github.com/filecoin-project/go-f3/blob/v0.8.15/README.md", note: "F3 구성과 2025-04-29 mainnet 활성화 상태의 pinned 설명이며 현재 node availability·certificate lag 측정은 아님" },
   ],
   "blockchain/ipfs-filecoin-storage": [
     { kind: "공식 규격", label: "IPFS Bitswap protocol · commit ff7230f", href: "https://github.com/ipfs/specs/blob/ff7230ffe47f6aa765a105271f6294299e5f233f/src/bitswap-protocol.md", note: "Wantlist·block/presence exchange snapshot이며 provider ad가 possession·durability를 보장하지 않음" },

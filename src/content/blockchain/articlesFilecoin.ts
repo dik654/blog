@@ -17,13 +17,13 @@ export const filecoinArticles: Article[] = [
   },
   {
     slug: "expected-consensus",
-    title: "Expected Consensus: leader에서 weighted head까지",
+    title: "Expected Consensus",
     subcategory: "fil-overview",
     sections: [
-      { id: "overview", title: "한눈에 보는 전체 흐름" },
-      { id: "sortition", title: "Poisson sortition" },
-      { id: "tipset-weight", title: "Tipset·validation·weight" },
-      { id: "release", title: "Reorg와 release 경계" },
+      { id: "overview", title: "전체 흐름" },
+      { id: "sortition", title: "확률 선출" },
+      { id: "tipset-weight", title: "후보와 head" },
+      { id: "release", title: "재구성과 F3" },
     ],
     component: () => import("@/pages/articles/filecoin/expected-consensus"),
   },
