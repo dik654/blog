@@ -1,9 +1,9 @@
 import { CitationBlock } from "@/components/ui/citation";
-import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import BusinessCashflowViz from "./BusinessCashflowViz";
 
-/** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
+/** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
 export default function BusinessModelCashflowArticle() {
   return (
     <div className="space-y-16">
@@ -14,9 +14,11 @@ export default function BusinessModelCashflowArticle() {
           <p className="leading-7">여기서는 작은 판매자의 주문 한 묶음을 따라갑니다. 고객에게 약속한 일을 끝냈는지, 그 일을 위해 얼마를 먼저 냈는지, 돈이 언제 돌아오는지를 확인하면 판매·구독·중개·임대를 같은 눈으로 비교할 수 있습니다.</p>
         </div>
 
+        <BusinessCashflowViz />
+
         <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
-            누가 먼저 준비하고 나중에 받는지부터 비교해 보겠습니다. 그 약속을 세 역할로 나눠 봅니다.
-          </p>
+          그림에서는 같은 거래가 매출·중간 이익·현금흐름에서 서로 다르게 보였습니다. 이제 그 차이가 생기는 역할과 날짜를 하나씩 열어 봅니다.
+        </p>
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 고객의 약속, 물건의 이동, 돈의 지급을 따로 본다</h2>
@@ -25,7 +27,6 @@ export default function BusinessModelCashflowArticle() {
           <p className="leading-7">이 세 역할을 한 회사가 맡을 수도 있고 여러 회사가 나눌 수도 있습니다. 돈이 지나간 곳과 물건을 책임진 곳이 같은지부터 확인해야 거래의 크기를 잘못 읽지 않습니다.</p>
         </div>
 
-        <FlowRail title="주문에서 입금까지의 세 역할" steps={[{"actor": "누가 약속하나", "movement": "고객이 원하는 물건과 날짜를 정합니다.", "receives": "판매 약속"}, {"actor": "누가 준비하나", "movement": "물건을 준비하고 고객에게 보냅니다.", "receives": "제공 완료"}, {"actor": "누가 지급하나", "movement": "결제금에서 약정 금액을 보냅니다.", "receives": "실제 입금"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">물건과 결제가 다른 길로 간다는 구조를 잡았다면 거래 하나에 날짜를 넣을 수 있습니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -42,14 +43,9 @@ export default function BusinessModelCashflowArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">고객에게 가는 물건과 판매자에게 돌아오는 돈은 반대 방향이며 날짜도 다릅니다. 아래 그림에서 두 날짜의 간격을 지우면 판매가 늘어날 때 먼저 준비할 돈이 사라져 보입니다.</p>
         </div>
-        <FlowRail
-          title="같은 묶음의 세 날짜: 준비 → 판매 → 입금"
-          steps={[
-            { actor: "판매 7일 전", movement: "판매자가 공급자에게 120만 원을 지급합니다.", receives: "판매할 상품 100개" },
-            { actor: "판매일", movement: "고객이 상품의 통제를 얻고 결제업체에 200만 원을 냅니다.", receives: "판매자의 정산받을 금액 194만 원" },
-            { actor: "판매 14일 뒤", movement: "결제업체가 수수료 6만 원을 뺀 대금을 보냅니다.", receives: "판매자의 실제 입금 194만 원" },
-          ]}
-        />
+        <p className="mt-4 border-l border-border pl-4 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
+          첫 그림의 D−7에서는 재고와 선지출이, D0에서는 매출과 정산받을 권리가, D+14에서는 실제 입금이 바뀌었습니다. 같은 묶음이라도 세 상태는 한날에 바뀌지 않습니다.
+        </p>
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">두 화살표의 날짜가 다르다는 점을 보면 왜 기다리는 돈을 따로 세는지 이해할 수 있습니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
@@ -86,7 +82,7 @@ export default function BusinessModelCashflowArticle() {
           <p className="leading-7">고객이 200만 원을 낸 날짜만으로 매출 인식 시점을 정할 수는 없습니다. 약속한 상품의 통제가 언제 고객에게 넘어갔는지 확인합니다. 통제 이전을 물리적 배송일과 자동으로 같은 것으로 보지는 않습니다. 이 사례에서는 판매일에 통제가 넘어간다고 가정했습니다. 다음 문구는 IFRS 15 공식 안내의 수익 인식 5단계 중 마지막 단계입니다.</p>
         </div>
         <SourceApplication source="IFRS 15 · About, step 5" excerpt="recognise revenue when a performance obligation is satisfied by transferring a promised good or service" application="100개를 고객에게 넘긴 시점과 194만 원이 은행에 들어온 시점을 따로 기록합니다. 단순 중개회사가 200만 원을 잠시 받았다면 상품 전체 금액과 중개 보수를 구분해 본인·대리인 판단을 해야 합니다." />
-        <CitationBlock source="IFRS 15 · About, step 5" citeKey={1} href="https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/">2026-10-04 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
+        <CitationBlock source="IFRS 15 · About, step 5" citeKey={1} href="https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/">2026-11-01 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           <p className="leading-7">플랫폼이 200만 원을 받았다는 사실도 본인·대리인 역할을 결정하지 않습니다. 고객에게 약속한 상품이나 서비스를 특정한 뒤 고객에게 넘기기 전에 누가 그것을 통제했는지 봅니다. 이행 책임, 재고 위험, 가격 결정 재량은 그 판단을 돕는 지표이며 하나만으로 결론을 내리는 표가 아닙니다.</p>
           <p className="leading-7">같은 사례에서 판매자가 상품을 통제해 파는 본인이고 결제업체의 약속은 결제 서비스뿐이라고 가정하면, 판매자의 상품 매출 200만 원과 업체의 서비스 보수 6만 원을 나누어 봅니다. 여기서 6만 원을 전체 상품 매출의 대리인 보수라고 자동으로 부르는 것은 아닙니다. 실제 중개 계약이라면 그 계약의 약속과 통제를 다시 판단해야 합니다.</p>
@@ -104,7 +100,7 @@ export default function BusinessModelCashflowArticle() {
         </div>
         <p className="mt-5 leading-7">임대의 자금 회수도 같은 질문으로 비교할 수 있지만 회계 처리가 모두 IFRS 15를 따르는 것은 아닙니다. IFRS의 리스 계약에는 IFRS 16 등 해당 기준을 확인해야 합니다. 선불 구독과 임대료, 상품 판매대금을 같은 매출 인식 규칙으로 합치지 않습니다.</p>
         <SourceApplication source="IAS 7 · About, indirect method" excerpt="any deferrals or accruals of past or future operating cash receipts or payments" application="IAS 7은 영업 입출금의 시차를 간접법 조정에 포함합니다. 같은 판매일에 매출·원가·수수료를 인식해도 194만 원이 아직 안 들어왔다면 그날의 이익과 입금은 다릅니다. 직접 날짜를 적으면 120만 원 지출부터 194만 원 수령까지 21일임을 확인할 수 있습니다." />
-        <CitationBlock source="IAS 7 · About, indirect method" citeKey={2} href="https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/">2026-10-04 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
+        <CitationBlock source="IAS 7 · About, indirect method" citeKey={2} href="https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/">2026-11-01 확인. 이 절의 원문과 적용 범위를 확인합니다.</CitationBlock>
         <CitationBlock source="IFRS 15 Revenue from Contracts with Customers" citeKey={3} href="https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/">고객 계약의 수익 인식과 통제 이전 기준. 세법이나 현금 수령 시점을 정하는 문서는 아닙니다.</CitationBlock>
         <CitationBlock source="IFRS 16 Leases" citeKey={4} href="https://www.ifrs.org/issued-standards/list-of-standards/ifrs-16-leases/">리스의 인식·측정·표시·공시를 다루는 기준입니다. 이 글에서는 사업 간 비교 질문과 개별 회계 기준의 범위를 나누는 데 사용합니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">회계 표시와 실제 지급을 나눠 읽었다면 성장할수록 남는 위험을 확인할 수 있습니다.</p>

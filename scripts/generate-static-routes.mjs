@@ -162,6 +162,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/filecoin-ipc",
   "blockchain/filecoin-fvm",
   "blockchain/vdf",
+  "business/business-model-cashflow",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
