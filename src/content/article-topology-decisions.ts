@@ -4676,7 +4676,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/credit-tranche-base-correlation-and-default-auction":"8e55428f11e7a728",
 "markets/commodity-grades-location-basis-and-physical-delivery":"db4f1174a973f63c",
 "markets/derivatives-investigation-audit-trail-and-legal-hold":"5c8b7834dcca8da6",
-"markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link":"581239a972d966b2",
+"markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link":"d12facf25b66701a",
 "markets/fractional-investment-trust-beneficiary-certificates":"fa28e36f96c20689",
 "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control":"087a9f05150e5600",
 "philosophy-history/classical-india-pramana-self-and-liberation":"4bc84ed363f30015",

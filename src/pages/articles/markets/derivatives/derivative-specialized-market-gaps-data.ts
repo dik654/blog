@@ -316,7 +316,7 @@ export const usUkDerivativesTaxData: DerivativeDeepArticleData = {
       "양식 연도와 계약 범위를 확인해야 합니다. 본문의 10은 계산을 보여 주는 값이며 실제 신고에는 중개회사 자료, 다른 손익과 최신 세법을 함께 적용합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. HMRC는 영국 법인의 파생 손익을 회계 처리와 연결합니다", bridge: "미국식 계약 분류표와 다른 출발점을 공식 지침에서 확인합니다.", paragraphs: [
-      "HMRC Corporate Finance Manual은 법인의 파생계약 이익과 손실이 일반적으로 회계 처리와 연결되는 제도 안에서 계산된다고 설명합니다. 세법상 범위와 여러 조정 규칙이 회계 숫자에 더해집니다.",
+      "HMRC Corporate Finance Manual은 법인의 파생계약 이익과 손실을 일반적으로 단일 회사 회계와 연결해 계산한다고 설명합니다. 거래 목적에 따라 거래 수입·비용 또는 비거래 항목으로 들어갈 수 있고, 세법상 범위와 회계에서 벗어나는 조정 규칙도 따로 확인합니다.",
       "회계이익 10이 그대로 납부세액 10이라는 뜻은 아닙니다. 회사의 기능통화, 계약 목적, 연결 규칙과 적용 세율은 별도로 확인해야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 국가별 표 한 장은 조약·법인 구조·연도 변경을 담지 못합니다", bridge: "비교 글을 실제 신고 답안으로 쓰지 않아야 하는 경계를 남깁니다.", paragraphs: [
@@ -342,7 +342,7 @@ export const usUkDerivativesTaxData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "IRS · Form 6781 (2025)", excerpt: "60% long-term and 40% short-term", application: "적격 계약 순이익 10을 장기 6과 단기 4로 나누고 연말 평가·헤지 예외를 확인합니다.", citation: "Internal Revenue Service, 2025 Form 6781", href: "https://www.irs.gov/pub/irs-access/f6781_accessible.pdf", note: "2025 과세연도 양식의 일반 구조이며 납세자와 계약별 신고 판단을 대신하지 않습니다." },
-    { source: "HMRC · Corporate Finance Manual CFM50020", excerpt: "profits and losses ... derivative contracts", application: "영국 법인의 회계이익 10을 파생계약 제도와 세법 조정의 출발점에 놓습니다.", citation: "HMRC, CFM50020: Derivative contracts", href: "https://www.gov.uk/hmrc-internal-manuals/corporate-finance-manual/cfm50020", note: "영국 법인세 실무 지침이며 개인 과세나 다른 관할의 규칙으로 일반화하지 않습니다." },
+    { source: "HMRC · Corporate Finance Manual CFM50020", excerpt: "profits and losses ... derivative contracts", application: "영국 법인의 회계이익 10을 파생계약 제도와 세법 조정의 출발점에 놓습니다.", citation: "HMRC, CFM50020: Derivative contracts", href: "https://www.gov.uk/hmrc-internal-manuals/corporate-finance-manual/cfm50020", note: "2026년 8월 27일 갱신된 영국 법인세 실무 지침입니다. 개인 과세나 다른 관할의 규칙으로 일반화하지 않으며, 세부 성격과 회계 이탈 조정은 CFM50040·CFM52010 등 연결 지침을 함께 확인해야 합니다." },
   ],
   review: [
     "미국 적격 계약 순이익 10을 일반적인 60·40 성격으로 나눠 보세요. (답: 3·8절)",
