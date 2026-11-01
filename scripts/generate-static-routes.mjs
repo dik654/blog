@@ -200,6 +200,7 @@ const noScriptArticleRoutes = new Set([
   "markets/clearing-margin-and-default-waterfall",
   "markets/currency-hedging-forward-points-and-cross-currency-basis",
   "markets/commodity-carry-convenience-yield-and-roll",
+  "markets/minimum-variance-hedge-ratio-and-basis-risk",
   "markets/options-and-asymmetric-payoffs",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",

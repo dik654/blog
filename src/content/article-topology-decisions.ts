@@ -3173,9 +3173,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/minimum-variance-hedge-ratio-and-basis-risk": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "최소분산 헤지는 현물·선물 변화의 회귀 기울기를 노출가치와 계약가치에 적용해 수량을 정하고, 베이시스 변화·표본 오차·증거금과 재조정 비용을 함께 관리합니다.",
-    "sharedGate": "1억÷250만=40, 40×0.8=32계약을 검산하고 한 번의 손익과 전체 표본의 분산을 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "재고 1억 원의 가격 노출에서 시작해 금액 일치 40계약, 회귀 기울기 0.8, 최소분산 32계약, 한 날의 손익과 전체 표본, 베이시스 변화와 실행 경계까지 여덟 장면으로 추적합니다.",
+    "sharedGate": "1억÷250만=40과 40×0.8=32를 검산하고, 하락일의 잔여손실 72만 원과 40만 원이 한 날의 결과일 뿐 전체 표본의 최소분산 판단과는 다르다는 점을 확인합니다."
   },
   "markets/binomial-black-scholes-and-early-exercise": {
     "action": "keep",
@@ -4642,7 +4642,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/option-strategies-and-structured-notes":"5e440805f5fc03c5",
 "markets/otc-master-agreement-collateral-netting-and-cva":"14e9b3b5e52c1b75",
 "markets/var-expected-shortfall-stress-and-model-risk":"b0ceb8cf324687cf",
-"markets/minimum-variance-hedge-ratio-and-basis-risk":"bf39088ffe3023a7",
+"markets/minimum-variance-hedge-ratio-and-basis-risk":"86f50c4f552be7a6",
 "markets/binomial-black-scholes-and-early-exercise":"6a63ef76400b9d29",
 "markets/implied-volatility-surface-skew-and-smile":"48ac524d9f1bda29",
 "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"72599372e1d4728e",
