@@ -3481,9 +3481,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/collateral-optimization-eligibility-haircuts-and-liquidity": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "담보 최적화는 적격성·집중·통화·결제 제약을 먼저 적용하고 할인 후 가치당 조달·기회·운영 비용을 비교해 자산을 배정하되, 다음 증거금 충격을 견딜 현금과 고유동성자산 완충을 남기는 문제입니다.",
-    "sharedGate": "10÷95%=10.53과 10÷85%=11.77을 계산하고 B의 인정가치 한도 5 때문에 B 5와 A 5를 섞습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "인정가치 10의 의무에서 시작해 A·B의 할인 후 시장가와 기회비용, 적격성 필터, B의 인정가치 집중한도 5, A·B 혼합 배정, 결제 대사와 다음 날 유동성 완충 재검사까지 한 의무의 상태를 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "10÷95%=10.53과 10÷85%=11.77, 5÷85%=5.88과 5÷95%=5.26을 검산하고 시장가·할인 후 인정가치·기회비용·집중한도·결제 완료를 서로 다른 상태로 구분합니다."
   },
   "markets/ccp-default-management-hedging-auction-and-porting": {
     "action": "keep",
@@ -4668,7 +4668,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"0fdde9365e1efac1",
 "markets/krx-derivatives-contract-orders-and-daily-settlement":"169f0c5dde9100b7",
 "markets/portfolio-compression-risk-tolerances-and-records":"8fb8d694df4df230",
-"markets/collateral-optimization-eligibility-haircuts-and-liquidity":"1fcfce72b06354fa",
+"markets/collateral-optimization-eligibility-haircuts-and-liquidity":"211395f9610ad486",
 "markets/ccp-default-management-hedging-auction-and-porting":"64fc431e5a1b28aa",
 "markets/swaption-annuity-volatility-quotes-and-cube":"5e9505995e4db8ac",
 "markets/derivatives-sales-records-access-retention-and-deletion":"7106213433ef2db2",

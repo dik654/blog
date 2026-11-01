@@ -239,6 +239,7 @@ const noScriptArticleRoutes = new Set([
   "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
   "markets/krx-derivatives-contract-orders-and-daily-settlement",
   "markets/portfolio-compression-risk-tolerances-and-records",
+  "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
