@@ -3131,9 +3131,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/currency-hedging-forward-points-and-cross-currency-basis": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "환헤지는 총매출이 아니라 통화·날짜별 순노출을 찾고, 두 통화 금리가 만드는 선도포인트와 실제 조달 마찰인 교차통화 베이시스를 구분해 수량·만기·담보 위험을 함께 관리하는 일입니다.",
-    "sharedGate": "1,350×1.0075÷1.0125≈1,343원과 80만 달러의 약 10억7,467만 원을 검산하고 선도환율을 예측값과 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "8장면 지도에서 100만 달러 매출을 그대로 헤지하지 않고 같은 날 지급할 달러 원가를 빼 순노출을 구한 뒤, 금리평가 선도·과다 헤지·교차통화 베이시스·계약 조정·잔여 위험까지 한 사례로 이어가므로 한 글에 유지합니다.",
+    "sharedGate": "100만 달러에서 원가 20만 달러를 뺀 순노출 80만 달러, 1,350×1.0075÷1.0125≈1,343원, 고정액 약 10억7,467만 원, 실제 매출이 60만 달러일 때 부족한 40만 달러를 같은 조건으로 유지하고 선도환율을 미래 환율 예측과 구분합니다."
   },
   "markets/commodity-carry-convenience-yield-and-roll": {
     "action": "keep",
@@ -4638,7 +4638,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/option-replication-and-put-call-parity":"39b4be384f5e5bb5",
 "markets/commodity-carry-convenience-yield-and-roll":"3e8f0433956f4cd5",
 "markets/credit-derivatives-default-risk-and-tranches":"9988dd9bb2ab3cca",
-"markets/currency-hedging-forward-points-and-cross-currency-basis":"f0c822fd72a61246",
+"markets/currency-hedging-forward-points-and-cross-currency-basis":"2087a7e1b609e874",
 "markets/option-strategies-and-structured-notes":"5e440805f5fc03c5",
 "markets/otc-master-agreement-collateral-netting-and-cva":"14e9b3b5e52c1b75",
 "markets/var-expected-shortfall-stress-and-model-risk":"b0ceb8cf324687cf",

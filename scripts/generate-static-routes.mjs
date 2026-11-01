@@ -198,6 +198,7 @@ const noScriptArticleRoutes = new Set([
   "markets/forwards-and-futures",
   "markets/no-arbitrage-cost-of-carry-and-basis",
   "markets/clearing-margin-and-default-waterfall",
+  "markets/currency-hedging-forward-points-and-cross-currency-basis",
   "markets/options-and-asymmetric-payoffs",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
