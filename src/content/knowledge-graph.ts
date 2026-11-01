@@ -15956,10 +15956,42 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "fvm-transactional-state-root-receipt": { id: "fvm-transactional-state-root-receipt", kind: "concept", domain: "distributed-systems", label: "FVM transactional state-root receipt", definition: "Nested actor call의 state·events·access records를 함께 commit/revert하고 exit·return·gas와 flush된 post-state root를 동일 실행에 묶는 receipt입니다.", canonicalHref: "/cs/blockchain/filecoin-fvm#state-commit" },
   "fvm-network-version-actor-manifest-binding": { id: "fvm-network-version-actor-manifest-binding", kind: "concept", domain: "computer-science", label: "FVM network-version · actor-manifest binding", definition: "Network version의 execution semantics와 manifest root가 가리키는 required built-in actor code CIDs를 하나의 runtime generation으로 결속하는 계약입니다.", canonicalHref: "/cs/blockchain/filecoin-fvm#actor-bundle" },
   "fvm-execution-release-gate": { id: "fvm-execution-release-gate", kind: "method", domain: "distributed-systems", label: "FVM execution release gate", definition: "Message admission·state/receipt parity·nested abort·out-of-gas·missing artifact·crash replay를 통과한 runtime·bundle generation만 채택하는 절차입니다.", canonicalHref: "/cs/blockchain/filecoin-fvm#release-gate" },
-  "ipc-subnet-genesis-power-artifact": { id: "ipc-subnet-genesis-power-artifact", kind: "concept", domain: "distributed-systems", label: "IPC subnet genesis · power artifact", definition: "Parent route·subnet/chain identity, genesis root, permission mode, ordered validator powers와 gateway contracts를 동일 boot generation으로 묶는 IPC artifact입니다.", canonicalHref: "/cs/blockchain/filecoin-ipc#subnet-artifact" },
-  "ipc-parent-finality-topdown-receipt": { id: "ipc-parent-finality-topdown-receipt", kind: "concept", domain: "distributed-systems", label: "IPC parent-finality · top-down receipt", definition: "Child consensus가 parent height·hash ancestry에 합의하고 해당 queue 범위의 messages·validator changes를 child state에 적용한 결과를 잇는 receipt입니다.", canonicalHref: "/cs/blockchain/filecoin-ipc#topdown" },
-  "ipc-bottomup-checkpoint-quorum-receipt": { id: "ipc-bottomup-checkpoint-quorum-receipt", kind: "concept", domain: "distributed-systems", label: "IPC bottom-up checkpoint quorum receipt", definition: "Child state/message commitment, exact membership power quorum과 relayer의 parent gateway inclusion을 서로 다른 단계로 연결하는 bottom-up receipt입니다.", canonicalHref: "/cs/blockchain/filecoin-ipc#bottomup" },
-  "ipc-crossnet-release-gate": { id: "ipc-crossnet-release-gate", kind: "method", domain: "distributed-systems", label: "IPC cross-network release gate", definition: "Local inclusion·checkpoint quorum·relay·parent finality·destination execution을 같은 message identity로 검증하고 missing stage부터 idempotently 재개하는 채택 경계입니다.", canonicalHref: "/cs/blockchain/filecoin-ipc#release-gate" },
+  "ipc-subnet-genesis-power-artifact": {
+    id: "ipc-subnet-genesis-power-artifact",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "IPC subnet genesis · power artifact",
+    definition:
+      "Parent route·subnet/chain identity, genesis root, permission mode, ordered validator powers와 gateway contracts를 동일 boot generation으로 묶는 IPC artifact입니다.",
+    canonicalHref: "/cs/blockchain/filecoin-ipc#subnet-artifact",
+  },
+  "ipc-parent-finality-topdown-receipt": {
+    id: "ipc-parent-finality-topdown-receipt",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "IPC parent-finality · top-down receipt",
+    definition:
+      "Child consensus가 마지막 commit보다 높고 local parent cache의 같은-height hash와 일치하는 proposal에 합의한 뒤 해당 queue 범위의 messages·validator changes를 child state에 적용한 결과를 잇는 receipt입니다.",
+    canonicalHref: "/cs/blockchain/filecoin-ipc#topdown",
+  },
+  "ipc-bottomup-checkpoint-quorum-receipt": {
+    id: "ipc-bottomup-checkpoint-quorum-receipt",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "IPC bottom-up checkpoint quorum receipt",
+    definition:
+      "Child state/message commitment, exact membership power quorum과 relayer의 parent gateway inclusion을 서로 다른 단계로 연결하는 bottom-up receipt입니다.",
+    canonicalHref: "/cs/blockchain/filecoin-ipc#bottomup",
+  },
+  "ipc-crossnet-completion-boundary": {
+    id: "ipc-crossnet-completion-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "IPC cross-network completion boundary",
+    definition:
+      "Local inclusion·checkpoint quorum·relay·parent inclusion·destination execution이 같은 message에서도 서로 다른 완료 상태이며 앞 단계의 성공만으로 뒤 단계를 자동 추론할 수 없다는 경계입니다.",
+    canonicalHref: "/cs/blockchain/filecoin-ipc#completion-boundary",
+  },
   "storacha-space-capability-receipt": { id: "storacha-space-capability-receipt", kind: "concept", domain: "computer-science", label: "Storacha Space capability receipt", definition: "Space DID resource와 UCAN issuer·audience·ability·caveats·proof chain을 invocation에 묶고 child 권한이 parent를 넘지 않는지 검사한 authorization receipt입니다.", canonicalHref: "/cs/blockchain/filecoin-storacha#space-authorization" },
   "storacha-blob-effect-chain-receipt": { id: "storacha-blob-effect-chain-receipt", kind: "concept", domain: "distributed-systems", label: "Storacha blob effect-chain receipt", definition: "space/blob/add authorization과 allocate·put·accept effects를 동일 Space·task·blob digest·size로 연결해 upload-stage completion을 판정하는 receipt입니다.", canonicalHref: "/cs/blockchain/filecoin-storacha#blob-upload" },
   "storacha-sharded-dag-index-artifact": { id: "storacha-sharded-dag-index-artifact", kind: "concept", domain: "computer-science", label: "Storacha sharded-DAG index artifact", definition: "Root CID와 shard blob digests, block CID별 shard·offset·length를 versioned index로 묶어 range retrieval 뒤 content verification을 가능하게 하는 artifact입니다.", canonicalHref: "/cs/blockchain/filecoin-storacha#index-retrieval" },
@@ -49554,12 +49586,48 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "content-addressed-artifact-reference", to: "fvm-network-version-actor-manifest-binding", relation: "prerequisite", reason: "Manifest root와 actor code CIDs를 content-addressed runtime generation으로 고정합니다." },
   { from: "fvm-network-version-actor-manifest-binding", to: "fvm-message-execution-envelope", relation: "constrains", reason: "Actor code와 network semantics가 message 실행 결과의 재현 범위를 제한합니다." },
   { from: "fvm-transactional-state-root-receipt", to: "fvm-execution-release-gate", relation: "evaluates", reason: "State·abort·gas·receipt parity가 candidate runtime 채택 여부를 결정합니다." },
-  { from: "bft-honest-quorum-intersection", to: "ipc-subnet-genesis-power-artifact", relation: "prerequisite", reason: "Validator membership과 voting power를 고정해야 checkpoint quorum evidence를 해석할 수 있습니다." },
-  { from: "ipc-subnet-genesis-power-artifact", to: "ipc-parent-finality-topdown-receipt", relation: "prerequisite", reason: "Child identity와 validator generation이 parent finality를 합의·적용하는 context를 제공합니다." },
-  { from: "ipc-subnet-genesis-power-artifact", to: "ipc-bottomup-checkpoint-quorum-receipt", relation: "prerequisite", reason: "Exact child route와 membership powers가 bottom-up checkpoint signer validation의 기준입니다." },
-  { from: "ipc-parent-finality-topdown-receipt", to: "ipc-crossnet-release-gate", relation: "evaluates", reason: "Top-down parent ancestry와 child application receipt가 cross-network release의 한 축입니다." },
-  { from: "ipc-bottomup-checkpoint-quorum-receipt", to: "ipc-crossnet-release-gate", relation: "evaluates", reason: "Child quorum·relay·parent inclusion receipt가 bottom-up external effect 승인을 결정합니다." },
-  { from: "smr-client-effect-boundary", to: "ipc-crossnet-release-gate", relation: "constrains", reason: "Consensus·checkpoint success를 destination application의 durable external effect와 분리합니다." },
+  {
+    from: "bft-honest-quorum-intersection",
+    to: "ipc-subnet-genesis-power-artifact",
+    relation: "prerequisite",
+    reason:
+      "Validator membership과 voting power를 고정해야 checkpoint quorum evidence를 해석할 수 있습니다.",
+  },
+  {
+    from: "ipc-subnet-genesis-power-artifact",
+    to: "ipc-parent-finality-topdown-receipt",
+    relation: "prerequisite",
+    reason:
+      "Child identity와 validator generation이 parent finality를 합의·적용하는 context를 제공합니다.",
+  },
+  {
+    from: "ipc-subnet-genesis-power-artifact",
+    to: "ipc-bottomup-checkpoint-quorum-receipt",
+    relation: "prerequisite",
+    reason:
+      "Exact child route와 membership powers가 bottom-up checkpoint signer validation의 기준입니다.",
+  },
+  {
+    from: "ipc-parent-finality-topdown-receipt",
+    to: "ipc-crossnet-completion-boundary",
+    relation: "constrains",
+    reason:
+      "Parent finality 관찰과 child application을 분리해야 top-down의 완료 범위를 과장하지 않습니다.",
+  },
+  {
+    from: "ipc-bottomup-checkpoint-quorum-receipt",
+    to: "ipc-crossnet-completion-boundary",
+    relation: "constrains",
+    reason:
+      "Child quorum·relay·parent inclusion receipt가 있어도 destination effect는 별도 상태입니다.",
+  },
+  {
+    from: "smr-client-effect-boundary",
+    to: "ipc-crossnet-completion-boundary",
+    relation: "constrains",
+    reason:
+      "Consensus·checkpoint success를 destination application의 durable external effect와 분리합니다.",
+  },
   { from: "content-address-integrity", to: "storacha-space-capability-receipt", relation: "prerequisite", reason: "Authorized resource와 invocation이 다룰 content identity를 먼저 고정합니다." },
   { from: "storacha-space-capability-receipt", to: "storacha-blob-effect-chain-receipt", relation: "prerequisite", reason: "Valid Space capability가 blob allocation·put·accept effects를 시작할 권한을 제공합니다." },
   { from: "storacha-blob-effect-chain-receipt", to: "storacha-sharded-dag-index-artifact", relation: "produces", reason: "Accepted shard blobs가 root와 block locations를 연결하는 index의 referenced artifacts가 됩니다." },

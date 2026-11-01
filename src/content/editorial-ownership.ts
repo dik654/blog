@@ -9795,10 +9795,35 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "standard", rule: "Protocol 도입은 Final FIP-0030 revision c856d99에 귀속한다." }, { kind: "primary-source", rule: "Executor·transaction·manifest facts는 ref-fvm commit ef0a993에만 귀속한다." }, { kind: "project-measurement", rule: "Exact message/state/version/bundle에서 state·receipt parity와 crash replay를 측정한다." }, { kind: "project-claim", rule: "Reference source를 current activation·actor safety·fixed gas/throughput 보장으로 확대하지 않는다." }],
   },
   "filecoin-ipc": {
-    title: "IPC subnet·top-down·bottom-up receipt ownership",
-    owns: ["Subnet genesis·validator-power boot artifact", "Parent-finality top-down과 bottom-up checkpoint·cross-network release receipts"],
-    reuses: [{ label: "BFT quorum intersection", href: "/cs/blockchain/bft-comparison#quorum-safety" }, { label: "State transition과 client effect", href: "/cs/blockchain/consensus-comparison#smr" }],
-    evidence: [{ kind: "primary-source", rule: "IPC semantics와 contracts는 repository commit bcd7c0d에 귀속한다." }, { kind: "project-measurement", rule: "Local·quorum·relay·parent·destination receipts와 stage latency를 같은 message ID로 측정한다." }, { kind: "project-claim", rule: "Parent 존재·checkpoint·relayer 제출을 inherited safety·destination effect·고정 latency로 확대하지 않는다." }],
+    title: "IPC subnet과 양방향 완료 상태의 개념 경계",
+    owns: [
+      "Subnet genesis·validator-power boot artifact",
+      "Parent-finality top-down과 bottom-up checkpoint·destination effect의 완료 상태 구분",
+    ],
+    reuses: [
+      {
+        label: "BFT quorum intersection",
+        href: "/cs/blockchain/bft-comparison#quorum-safety",
+      },
+      {
+        label: "State transition과 client effect",
+        href: "/cs/blockchain/consensus-comparison#smr",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "IPC semantics·contracts와 unaudited·crash-recovery limitation은 current repository commit bcd7c0d에 귀속한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "설명용 사례의 Local·quorum·relay·parent·destination 상태와 stage latency를 같은 message ID로 추적한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Parent 존재·checkpoint·relayer 제출을 inherited safety·destination effect·고정 latency로 확대하지 않는다.",
+      },
+    ],
   },
   "filecoin-storacha": {
     title: "Storacha capability·blob·index·Filecoin receipt ownership",

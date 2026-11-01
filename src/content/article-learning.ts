@@ -84919,44 +84919,316 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "blockchain/filecoin-ipc": {
     entryLevel: true,
-    entryNote: "Subnet·quorum·finality를 안다고 가정하지 않고 parent와 child 사이 한 message의 두 방향 경로부터 시작합니다.",
-    coreIdea: "IPC는 subnet boot identity와 validator power를 고정하고 top-down parent finality와 bottom-up checkpoint quorum을 서로 다른 receipts로 운반해 destination effect까지 검증합니다.",
+    entryNote:
+      "Subnet·quorum·finality를 안다고 가정하지 않고 parent와 child 사이 한 message의 두 방향 경로부터 시작합니다.",
+    coreIdea:
+      "IPC는 subnet boot identity와 validator power를 고정하고 top-down parent finality와 bottom-up checkpoint quorum을 서로 다른 receipts로 운반해 destination effect까지 검증합니다.",
     assumedKnowledge: [],
     introducedHere: [
-      { id: "ipc-subnet-genesis-power-artifact", role: "Subnet route·genesis·validator membership을 동일 generation으로 묶습니다." },
-      { id: "ipc-parent-finality-topdown-receipt", role: "Parent ancestry와 child top-down application을 연결합니다." },
-      { id: "ipc-bottomup-checkpoint-quorum-receipt", role: "Child commitment·power quorum·parent inclusion을 분리합니다." },
-      { id: "ipc-crossnet-release-gate", role: "Cross-network stages와 retry·rollback을 검증합니다." },
+      {
+        id: "ipc-subnet-genesis-power-artifact",
+        role: "Subnet route·genesis·validator membership을 동일 generation으로 묶습니다.",
+      },
+      {
+        id: "ipc-parent-finality-topdown-receipt",
+        role: "Parent proposal의 height·cache hash 검사와 child top-down application을 연결합니다.",
+      },
+      {
+        id: "ipc-bottomup-checkpoint-quorum-receipt",
+        role: "Child commitment·power quorum·parent inclusion을 분리합니다.",
+      },
+      {
+        id: "ipc-crossnet-completion-boundary",
+        role: "Local·quorum·relay·parent·destination 완료 상태를 구분합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "ipc-subnet-genesis-power-artifact", sectionId: "subnet-artifact", intuition: "어느 parent 아래 누가 얼마의 표로 합의하는 chain인지 적힌 출생증명서입니다.", workedExample: "Parent route, chain ID, genesis root, validator 80·10·10 power와 gateway commit을 묶습니다.", boundary: "RPC endpoint만 같거나 validator 수가 같다고 같은 subnet generation은 아닙니다." },
-      { id: "ipc-parent-finality-topdown-receipt", sectionId: "topdown", intuition: "Parent의 새 확정 책갈피를 child consensus가 받아들여 queue를 적용한 영수증입니다.", workedExample: "Height 120 hash의 descendant인 121 hash와 queue range를 child block에서 commit합니다.", boundary: "Parent observer가 제안했다는 사실만으로 child application 완료가 아닙니다." },
-      { id: "ipc-bottomup-checkpoint-quorum-receipt", sectionId: "bottomup", intuition: "Child 상태 묶음에 충분한 voting power가 서명하고 relayer가 parent에 배달한 영수증입니다.", workedExample: "Checkpoint commitment·signer powers와 parent gateway transaction inclusion을 별도 fields로 기록합니다.", boundary: "Relayer 한 명의 제출이 child quorum을 만들거나 destination execution을 보장하지 않습니다." },
-      { id: "ipc-crossnet-release-gate", sectionId: "release-gate", intuition: "Source success부터 destination effect까지 다섯 개의 검표소를 모두 통과하는 절차입니다.", workedExample: "Parent reorg 때 parent receipt만 false로 돌리고 같은 message ID의 relay/delivery를 재개합니다.", boundary: "한 subnet의 측정 latency를 모든 topology와 fee 상태의 SLA로 일반화하지 않습니다." },
+      {
+        id: "ipc-subnet-genesis-power-artifact",
+        sectionId: "subnet-artifact",
+        intuition:
+          "어느 parent 아래 누가 얼마의 표로 합의하는 chain인지 적힌 출생증명서입니다.",
+        workedExample:
+          "Parent route, chain ID, genesis root, validator 80·10·10 power와 gateway commit을 묶습니다.",
+        boundary:
+          "RPC endpoint만 같거나 validator 수가 같다고 같은 subnet generation은 아닙니다.",
+      },
+      {
+        id: "ipc-parent-finality-topdown-receipt",
+        sectionId: "topdown",
+        intuition:
+          "Parent의 새 확정 책갈피를 child consensus가 받아들여 queue를 적용한 영수증입니다.",
+        workedExample:
+          "마지막 commit 120, cache 최신 125에서 제안된 121 hash를 cache의 같은-height hash와 비교합니다.",
+        boundary:
+          "Facet의 height guard와 provider의 cache-hash 일치가 parent chain finality 전체를 독립적으로 증명하는 것은 아닙니다.",
+      },
+      {
+        id: "ipc-bottomup-checkpoint-quorum-receipt",
+        sectionId: "bottomup",
+        intuition:
+          "Child 상태 묶음에 충분한 voting power가 서명하고 relayer가 parent에 배달한 영수증입니다.",
+        workedExample:
+          "Checkpoint commitment·signer powers와 parent gateway transaction inclusion을 별도 fields로 기록합니다.",
+        boundary:
+          "Relayer 한 명의 제출이 child quorum을 만들거나 destination execution을 보장하지 않습니다.",
+      },
+      {
+        id: "ipc-crossnet-completion-boundary",
+        sectionId: "completion-boundary",
+        intuition:
+          "Source에서 끝난 일과 destination에서 끝난 일을 서로 다른 칸에 표시하는 상태표입니다.",
+        workedExample:
+          "Q=1·P=0인 relayer 정지와 P=1·D=0인 message 실행 실패를 나란히 비교합니다.",
+        boundary:
+          "Checkpoint event나 parent inclusion 하나만으로 destination effect를 자동 추론하지 않습니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 boot", relation: "Subnet identity와 voting power를 고정합니다.", concepts: ["ipc-subnet-genesis-power-artifact"] },
-      { label: "01 top-down", relation: "Parent finality를 child state에 적용합니다.", concepts: ["ipc-parent-finality-topdown-receipt"] },
-      { label: "02 bottom-up", relation: "Child checkpoint를 quorum과 parent inclusion에 연결합니다.", concepts: ["ipc-bottomup-checkpoint-quorum-receipt"] },
-      { label: "03 release", relation: "Destination effect까지 검증합니다.", concepts: ["ipc-crossnet-release-gate"] },
+      {
+        label: "00 · Subnet 기준",
+        relation: "Subnet identity와 voting power를 고정합니다.",
+        concepts: ["ipc-subnet-genesis-power-artifact"],
+      },
+      {
+        label: "01 · Top-down",
+        relation: "Parent finality를 child state에 적용합니다.",
+        concepts: ["ipc-parent-finality-topdown-receipt"],
+      },
+      {
+        label: "02 · Bottom-up",
+        relation: "Child checkpoint를 quorum과 parent inclusion에 연결합니다.",
+        concepts: ["ipc-bottomup-checkpoint-quorum-receipt"],
+      },
+      {
+        label: "03 · 완료 경계",
+        relation: "각 receipt가 어디까지 완료됐는지 구분합니다.",
+        concepts: ["ipc-crossnet-completion-boundary"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "IPC subnet boot artifact에 포함할 identity와 power fields를 설명하세요.", answerChecklist: ["parent route", "chain/genesis", "permission mode", "validators/power", "contracts"], requiredConcepts: ["ipc-subnet-genesis-power-artifact"], sectionId: "subnet-artifact" },
-      { level: "basic", question: "Validator 수와 voting power quorum을 왜 구분해야 하는지 설명하세요.", answerChecklist: ["weighted power", "distinct signers", "membership revision", "threshold profile"], requiredConcepts: ["ipc-subnet-genesis-power-artifact"], sectionId: "subnet-artifact" },
-      { level: "basic", question: "Parent finality proposal과 child top-down application receipt를 구분하세요.", answerChecklist: ["observation", "child consensus", "height/hash ancestry", "queue application"], requiredConcepts: ["ipc-parent-finality-topdown-receipt"], sectionId: "topdown" },
-      { level: "basic", question: "Bottom-up checkpoint와 relayer transaction이 각각 무엇을 증명하는지 설명하세요.", answerChecklist: ["child commitment", "quorum", "transport", "parent inclusion"], requiredConcepts: ["ipc-bottomup-checkpoint-quorum-receipt"], sectionId: "bottomup" },
-      { level: "basic", question: "Cross-network latency를 다섯 단계로 나눠 측정하는 이유를 설명하세요.", answerChecklist: ["local", "quorum", "relay", "parent", "destination"], requiredConcepts: ["ipc-crossnet-release-gate"], sectionId: "bottomup" },
-      { level: "basic", question: "Local finality와 destination application success를 구분해 완료 조건을 쓰세요.", answerChecklist: ["local receipt", "checkpoint quorum", "parent finality", "destination receipt"], requiredConcepts: ["ipc-crossnet-release-gate"], sectionId: "release-gate" },
-      { level: "advanced", question: "Stale membership과 duplicate signer를 포함한 checkpoint negative test를 설계하세요.", answerChecklist: ["revision", "distinct signer", "power recompute", "reject"], requiredConcepts: ["ipc-subnet-genesis-power-artifact", "ipc-bottomup-checkpoint-quorum-receipt"], sectionId: "bottomup" },
-      { level: "advanced", question: "높이는 증가하지만 ancestry가 끊긴 parent finality 반례를 처리하세요.", answerChecklist: ["old hash", "new hash", "ancestry proof", "reject/quarantine"], requiredConcepts: ["ipc-parent-finality-topdown-receipt"], sectionId: "topdown" },
-      { level: "advanced", question: "두 relayer의 동일 checkpoint 중복 제출을 idempotently 처리하세요.", answerChecklist: ["checkpoint identity", "first inclusion", "duplicate guard", "no double effect"], requiredConcepts: ["ipc-bottomup-checkpoint-quorum-receipt"], sectionId: "bottomup" },
-      { level: "advanced", question: "Parent inclusion 뒤 destination revert가 난 cross-network resume plan을 설계하세요.", answerChecklist: ["preserve parent receipt", "destination retry", "message nonce", "rollback binary", "no reissue"], requiredConcepts: ["ipc-crossnet-release-gate"], sectionId: "release-gate" },
+      {
+        level: "basic",
+        question:
+          "IPC subnet boot artifact에 포함할 identity와 power fields를 설명하세요.",
+        answerChecklist: [
+          "parent route",
+          "chain/genesis",
+          "permission mode",
+          "validators/power",
+          "contracts",
+        ],
+        requiredConcepts: ["ipc-subnet-genesis-power-artifact"],
+        sectionId: "subnet-artifact",
+      },
+      {
+        level: "basic",
+        question:
+          "Validator 수와 voting power quorum을 왜 구분해야 하는지 설명하세요.",
+        answerChecklist: [
+          "weighted power",
+          "distinct signers",
+          "membership revision",
+          "threshold profile",
+        ],
+        requiredConcepts: ["ipc-subnet-genesis-power-artifact"],
+        sectionId: "subnet-artifact",
+      },
+      {
+        level: "basic",
+        question:
+          "Parent finality proposal과 child top-down application receipt를 구분하세요.",
+        answerChecklist: [
+          "observation",
+          "child consensus",
+          "height/cache hash",
+          "queue application",
+        ],
+        requiredConcepts: ["ipc-parent-finality-topdown-receipt"],
+        sectionId: "topdown",
+      },
+      {
+        level: "basic",
+        question:
+          "Bottom-up checkpoint와 relayer transaction이 각각 무엇을 증명하는지 설명하세요.",
+        answerChecklist: [
+          "child commitment",
+          "quorum",
+          "transport",
+          "parent inclusion",
+        ],
+        requiredConcepts: ["ipc-bottomup-checkpoint-quorum-receipt"],
+        sectionId: "bottomup",
+      },
+      {
+        level: "basic",
+        question:
+          "Cross-network latency를 다섯 단계로 나눠 측정하는 이유를 설명하세요.",
+        answerChecklist: ["local", "quorum", "relay", "parent", "destination"],
+        requiredConcepts: ["ipc-crossnet-completion-boundary"],
+        sectionId: "bottomup",
+      },
+      {
+        level: "basic",
+        question:
+          "Local finality와 destination application success를 구분해 완료 조건을 쓰세요.",
+        answerChecklist: [
+          "local receipt",
+          "checkpoint quorum",
+          "parent finality",
+          "destination receipt",
+        ],
+        requiredConcepts: ["ipc-crossnet-completion-boundary"],
+        sectionId: "completion-boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "Stale membership과 duplicate signer를 포함한 checkpoint negative test를 설계하세요.",
+        answerChecklist: [
+          "revision",
+          "distinct signer",
+          "power recompute",
+          "reject",
+        ],
+        requiredConcepts: [
+          "ipc-subnet-genesis-power-artifact",
+          "ipc-bottomup-checkpoint-quorum-receipt",
+        ],
+        sectionId: "bottomup",
+      },
+      {
+        level: "advanced",
+        question:
+          "마지막 commit보다 높지만 cache가 본 hash와 다른 parent finality proposal을 처리하세요.",
+        answerChecklist: [
+          "last committed height",
+          "latest cached height",
+          "same-height cached hash",
+          "reject",
+        ],
+        requiredConcepts: ["ipc-parent-finality-topdown-receipt"],
+        sectionId: "topdown",
+      },
+      {
+        level: "advanced",
+        question:
+          "두 relayer의 동일 checkpoint 중복 제출을 idempotently 처리하세요.",
+        answerChecklist: [
+          "checkpoint identity",
+          "first inclusion",
+          "duplicate guard",
+          "no double effect",
+        ],
+        requiredConcepts: ["ipc-bottomup-checkpoint-quorum-receipt"],
+        sectionId: "bottomup",
+      },
+      {
+        level: "advanced",
+        question:
+          "Q=1·P=0과 P=1·D=0 상태가 각각 무엇을 증명하고 무엇을 남기는지 비교하세요.",
+        answerChecklist: [
+          "checkpoint quorum",
+          "relay or parent gap",
+          "parent checkpoint record",
+          "destination effect gap",
+          "no implication",
+        ],
+        requiredConcepts: ["ipc-crossnet-completion-boundary"],
+        sectionId: "completion-boundary",
+      },
     ],
     papers: [
-      { title: "IPC parent–child interactions · bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/docs-gitbook/concepts/subnets/parent-child-interactions.md", problem: "Parent와 child 사이 state checkpoints와 messages를 양방향으로 전달해야 합니다.", contribution: "Checkpointing, parent finality와 top-down/bottom-up roles를 설명합니다.", assumptions: "Pinned docs와 matching contracts·Fendermint deployment를 함께 고정합니다.", evidenceScope: "해당 repository snapshot의 parent–child architecture에 한정합니다.", notClaim: "모든 subnet safety·parent failure 내성 또는 고정 latency를 보장하지 않습니다.", sectionId: "paper-ipc-parent-child" },
-      { title: "IPC validator membership · bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/specs/subnet-validator-membership.md", problem: "Parent-origin power changes를 child validator quorum이 확인해야 합니다.", contribution: "Staged genesis와 top-down/bottom-up membership round trip을 설명합니다.", assumptions: "Exact permission mode, active set와 deployed actor revision을 사용합니다.", evidenceScope: "Pinned validator membership design snapshot에 한정합니다.", notClaim: "Permissionless security·liveness 또는 고정 validator count를 보장하지 않습니다.", sectionId: "paper-ipc-membership" },
-      { title: "IPC TopDownFinalityFacet · bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/TopDownFinalityFacet.sol", problem: "Parent finality와 validator changes를 gateway state에 적용해야 합니다.", contribution: "Finality commit과 queued power-change application boundary를 구현합니다.", assumptions: "Matching facets, storage layout와 authorized system actor를 사용합니다.", evidenceScope: "Pinned Solidity gateway transition snapshot에 한정합니다.", notClaim: "Parent truth·child consensus·destination effect를 혼자 증명하지 않습니다.", sectionId: "paper-ipc-topdown" },
-      { title: "IPC CheckpointingFacet · bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/CheckpointingFacet.sol", problem: "Verified child checkpoint를 parent state와 batches에 반영해야 합니다.", contribution: "Checkpoint commit guards와 state/message/activity events를 구현합니다.", assumptions: "Quorum validation caller path와 matching gateway storage layout을 사용합니다.", evidenceScope: "Pinned parent gateway checkpoint commit snapshot에 한정합니다.", notClaim: "Child quorum correctness·relayer liveness·destination execution을 모두 보장하지 않습니다.", sectionId: "paper-ipc-checkpoint" },
+      {
+        title: "IPC parent–child interactions · bcd7c0d",
+        href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/docs-gitbook/concepts/subnets/parent-child-interactions.md",
+        problem:
+          "Parent와 child 사이 state checkpoints와 messages를 양방향으로 전달해야 합니다.",
+        contribution:
+          "Checkpointing, parent finality와 top-down/bottom-up roles를 설명합니다.",
+        assumptions:
+          "Pinned docs와 matching contracts·Fendermint deployment를 함께 고정합니다.",
+        evidenceScope:
+          "해당 repository snapshot의 parent–child architecture에 한정합니다.",
+        notClaim:
+          "모든 subnet safety·parent failure 내성 또는 고정 latency를 보장하지 않습니다.",
+        sectionId: "paper-ipc-parent-child",
+      },
+      {
+        title: "IPC validator membership · bcd7c0d",
+        href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/specs/subnet-validator-membership.md",
+        problem:
+          "Parent-origin power changes를 child validator quorum이 확인해야 합니다.",
+        contribution:
+          "Staged genesis와 top-down/bottom-up membership round trip을 설명합니다.",
+        assumptions:
+          "Exact permission mode, active set와 deployed actor revision을 사용합니다.",
+        evidenceScope:
+          "Pinned validator membership design snapshot에 한정합니다.",
+        notClaim:
+          "Permissionless security·liveness 또는 고정 validator count를 보장하지 않습니다.",
+        sectionId: "paper-ipc-membership",
+      },
+      {
+        title: "Fendermint FinalityWithNull · bcd7c0d",
+        href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/fendermint/vm/topdown/src/finality/null.rs",
+        problem:
+          "Child validator가 제안받은 parent height·hash를 자신의 관찰 범위와 비교해야 합니다.",
+        contribution:
+          "Last committed height, latest cached height와 같은-height block hash를 검사합니다.",
+        assumptions:
+          "Configured parent query source, cache와 proposal-delay 조건을 함께 사용합니다.",
+        evidenceScope:
+          "Pinned Fendermint proposal-check implementation에 한정합니다.",
+        notClaim:
+          "Cache 일치가 parent chain 전체의 경제적 finality를 독립적으로 증명하지 않습니다.",
+        sectionId: "paper-ipc-finality-provider",
+      },
+      {
+        title: "IPC TopDownFinalityFacet · bcd7c0d",
+        href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/TopDownFinalityFacet.sol",
+        problem:
+          "Parent finality와 validator changes를 gateway state에 적용해야 합니다.",
+        contribution:
+          "Finality commit과 queued power-change application boundary를 구현합니다.",
+        assumptions:
+          "Matching facets, storage layout와 authorized system actor를 사용합니다.",
+        evidenceScope:
+          "Pinned Solidity gateway transition snapshot에 한정합니다.",
+        notClaim:
+          "Parent truth·child consensus·destination effect를 혼자 증명하지 않습니다.",
+        sectionId: "paper-ipc-topdown",
+      },
+      {
+        title: "IPC CheckpointingFacet · bcd7c0d",
+        href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/CheckpointingFacet.sol",
+        problem:
+          "Verified child checkpoint를 parent state와 batches에 반영해야 합니다.",
+        contribution:
+          "Checkpoint commit guards와 state/message/activity events를 구현합니다.",
+        assumptions:
+          "Quorum validation caller path와 matching gateway storage layout을 사용합니다.",
+        evidenceScope:
+          "Pinned parent gateway checkpoint commit snapshot에 한정합니다.",
+        notClaim:
+          "Child quorum correctness·relayer liveness·destination execution을 모두 보장하지 않습니다.",
+        sectionId: "paper-ipc-checkpoint",
+      },
+      {
+        title: "IPC parent finality stuck 진단 · bcd7c0d",
+        href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/scripts/fix-parent-finality-stuck.md",
+        problem:
+          "Child가 parent RPC의 조회 가능 범위보다 오래 뒤처지면 finality sync가 전진하지 못할 수 있습니다.",
+        contribution:
+          "RPC lookback 한계가 parent finality와 cross-network flow를 멈추는 구체적인 failure mode를 기록합니다.",
+        assumptions:
+          "Pinned script의 Calibration RPC 사례와 해당 subnet 상태에 한정해 읽습니다.",
+        evidenceScope:
+          "Repository에 포함된 운영 진단 문서의 한 실패 사례에 한정합니다.",
+        notClaim:
+          "모든 provider·subnet의 장애 원인이나 안전한 공통 복구 절차를 뜻하지 않습니다.",
+        sectionId: "paper-ipc-parent-finality-stuck",
+      },
     ],
   },
   "blockchain/filecoin-storacha": {

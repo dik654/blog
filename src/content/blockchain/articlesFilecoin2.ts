@@ -121,7 +121,7 @@ export const filecoin2Articles: Article[] = [
       { id: "subnet-artifact", title: "Subnet boot artifact" },
       { id: "topdown", title: "Parent finality·top-down" },
       { id: "bottomup", title: "Bottom-up checkpoint" },
-      { id: "release-gate", title: "Cross-network release gate" },
+      { id: "completion-boundary", title: "완료 상태의 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/filecoin-ipc"),
   },

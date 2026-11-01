@@ -6108,10 +6108,54 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "ref-fvm actor manifest · commit ef0a993", href: "https://github.com/filecoin-project/ref-fvm/blob/ef0a99370839e8e453e2fc7bad07228c8be0bdfb/fvm/src/machine/manifest.rs", note: "Manifest version·required actor lookup snapshot이며 actor security audit는 아님" },
   ],
   "blockchain/filecoin-ipc": [
-    { kind: "공식 코드", label: "IPC parent–child interactions · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/docs-gitbook/concepts/subnets/parent-child-interactions.md", note: "Checkpoint·parent finality·top/down roles snapshot이며 inherited safety·fixed latency는 아님" },
-    { kind: "공식 규격", label: "IPC validator membership · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/specs/subnet-validator-membership.md", note: "Power-change round trip 설계이며 모든 deployment liveness를 보장하지 않음" },
-    { kind: "공식 코드", label: "IPC TopDownFinalityFacet · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/TopDownFinalityFacet.sol", note: "Parent-finality gateway transition snapshot이며 child finality 전체는 별도" },
-    { kind: "공식 코드", label: "IPC CheckpointingFacet · commit bcd7c0d", href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/CheckpointingFacet.sol", note: "Verified checkpoint commit boundary이며 signer quorum·relayer liveness는 별도" },
+    {
+      kind: "공식 코드",
+      label: "IPC repository safety warning · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/tree/bcd7c0d10a93a95b6d28954d482169da4b12479d",
+      note: "감사·심층 검증·crash recovery 부족과 mainnet·real-value 사용 금지 경고를 구조 설명보다 먼저 적용",
+    },
+    {
+      kind: "공식 코드",
+      label: "IPC parent–child interactions · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/docs-gitbook/concepts/subnets/parent-child-interactions.md",
+      note: "Checkpoint·parent finality·top/down roles snapshot이며 inherited safety·fixed latency는 아님",
+    },
+    {
+      kind: "공식 규격",
+      label: "IPC validator membership · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/specs/subnet-validator-membership.md",
+      note: "Power-change round trip 설계이며 모든 deployment liveness를 보장하지 않음",
+    },
+    {
+      kind: "공식 코드",
+      label: "IPC TopDownFinalityFacet · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/TopDownFinalityFacet.sol",
+      note: "Parent-finality gateway transition snapshot이며 child finality 전체는 별도",
+    },
+    {
+      kind: "공식 코드",
+      label: "Fendermint FinalityWithNull · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/fendermint/vm/topdown/src/finality/null.rs",
+      note: "Proposal height 범위와 같은-height hash를 local parent cache에 대조하는 구현이며 parent finality 전체의 독립 증명은 아님",
+    },
+    {
+      kind: "공식 코드",
+      label: "IPC LibGateway parent-finality storage · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/lib/LibGateway.sol",
+      note: "Height 단조 증가와 previous-finality 반환을 구현하며 hash ancestry·parent truth 검증은 바깥 계층의 책임",
+    },
+    {
+      kind: "공식 코드",
+      label: "IPC CheckpointingFacet · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/contracts/contracts/gateway/router/CheckpointingFacet.sol",
+      note: "Verified checkpoint commit boundary이며 signer quorum·relayer liveness는 별도",
+    },
+    {
+      kind: "공식 코드",
+      label: "IPC parent finality stuck 진단 · commit bcd7c0d",
+      href: "https://github.com/consensus-shipyard/ipc/blob/bcd7c0d10a93a95b6d28954d482169da4b12479d/scripts/fix-parent-finality-stuck.md",
+      note: "Parent RPC lookback 한계가 finality·cross-network flow를 멈추는 한 failure mode이며 보편적 복구 절차는 아님",
+    },
   ],
   "blockchain/filecoin-onchain-cloud": [
     { kind: "공식 규격", label: "Filecoin Services specification · commit a391c1c", href: "https://github.com/FilOzone/filecoin-services/blob/a391c1cd23c95ee8d8eadec462cdc35569ae486d/SPEC.md", note: "Dataset proving·storage payment lifecycle snapshot이며 example prices·기간·retrieval SLA는 아님" },
