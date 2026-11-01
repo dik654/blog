@@ -3369,9 +3369,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/multi-asset-options-correlation-and-rare-event-simulation": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "다중자산 옵션은 개별 변동성 외에 자산들의 상관과 극단 구간의 꼬리 의존에 민감하며, 희귀 지급은 적중 횟수·표준오차와 중요도 표본추출의 가중치까지 검증해야 가격의 계산 오차와 모형 오차를 구분할 수 있습니다.",
-    "sharedGate": "절반 가중·각 20% 변동성에서 상관 0이면 14.14%, 상관 1이면 20%를 구하고 10/100,000 희귀사건의 상대표준오차 약 31.6%를 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "두 자산의 비중 50%·변동성 20%를 고정하고 상관 0과 1에서 바구니 변동성 14.14%와 20%를 계산한 뒤 상관 경로, 가격과 표준오차, 10/100,000 희귀사건의 상대오차 31.6%, 중요도 표본추출과 모형 오차까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "상관 0의 √0.02≈14.14%, 상관 1의 √0.04=20%, 10/100,000=0.01%와 상대표준오차 약 31.6%를 검산하고 개별 분포와 의존 구조, 표본 오차와 모형 오차, 표본 분포와 원래 기대값을 구분합니다."
   },
   "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules": {
     "action": "keep",
@@ -4664,7 +4664,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"bcddcd2ba09014de",
 "markets/collateral-operations-margin-calls-disputes-and-substitution":"4aab453963abd0f8",
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"17e358218402434a",
-"markets/multi-asset-options-correlation-and-rare-event-simulation":"fc0b347a31fcd02f",
+"markets/multi-asset-options-correlation-and-rare-event-simulation":"2ea57eecbf9d6076",
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"7e1e5effa12b96fc",
 "markets/krx-derivatives-contract-orders-and-daily-settlement":"e8983d082a4cc018",
 "markets/portfolio-compression-risk-tolerances-and-records":"a16d7c4b7737843c",

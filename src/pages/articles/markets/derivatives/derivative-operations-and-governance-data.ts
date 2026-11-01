@@ -342,8 +342,8 @@ export const multiAssetRareEventData: DerivativeDeepArticleData = {
     { term: "중요도 표본추출", description: "희귀 경로를 자주 뽑고 가능도 가중치로 원래 기대값을 복원하는 방법입니다.", example: "0.01% 사건의 적중 수를 늘립니다.", boundary: "가중치를 빼면 편향된 값이 됩니다." },
   ] },
   sources: [
-    { source: "MIT OpenCourseWare · Simulation Methods", excerpt: "Generating Random Numbers · Variance Reduction · Quasi-Monte Carlo", application: "경로 생성, 가격 평균, 분산감소와 실제 오차 확인의 학습 순서를 사용합니다.", citation: "MIT 15.450 Analytics of Finance, Lecture 3", href: "https://www.ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/4fa033082ff5ee58722a67fe81f0dce7_MIT15_450F10_lec03.pdf", note: "강의의 예를 이 글의 바스켓 숫자로 바꿨으며 실제 상품 가격을 인용하지 않습니다." },
-    { source: "Stanford · 희귀사건 시뮬레이션", excerpt: "importance sampling algorithm", application: "희귀 경로를 자주 만들고 가능도 가중치로 기대값을 지키는 원리를 확인합니다.", citation: "Zhang, Blanchet, Glynn and Giesecke, Rare Event Simulation for a Generalized Hawkes Process, Proceedings of the 2009 Winter Simulation Conference", href: "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.pdf", note: "논문은 점과정 사례입니다. 이 글은 중요도 표본추출의 일반 원리만 사용합니다." },
+    { source: "MIT OpenCourseWare · Simulation Methods", excerpt: "same answer but smaller variance", application: "경로 생성, 가격 평균, 신뢰구간과 분산감소가 같은 기대값을 유지해야 한다는 학습 순서를 사용합니다.", citation: "MIT 15.450 Analytics of Finance, Lecture 3", href: "https://ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/resources/mit15_450f10_lec03/", note: "2010년 강의의 일반 원리를 이 글의 바스켓 숫자로 바꿨으며 실제 상품 가격을 인용하지 않습니다(2026-11-02 확인)." },
+    { source: "Stanford · 희귀사건 시뮬레이션", excerpt: "importance sampling algorithm", application: "희귀 경로를 자주 만들고 가능도 가중치로 기대값을 지키는 원리를 확인합니다.", citation: "Zhang, Blanchet, Glynn and Giesecke, Rare Event Simulation for a Generalized Hawkes Process, Proceedings of the 2009 Winter Simulation Conference", href: "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.html", note: "2009년 논문은 일반 바스켓 옵션이 아니라 일반화 Hawkes 점과정의 희귀 꼬리확률을 다룹니다. 이 글은 중요도 표본추출의 일반 원리만 사용합니다(2026-11-02 확인)." },
   ],
   review: [
     "두 자산의 변동성이 20%일 때 상관 0과 1의 바구니 변동성을 계산해 보세요. (답: 3절)",
