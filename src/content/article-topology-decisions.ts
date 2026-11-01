@@ -3187,9 +3187,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/implied-volatility-surface-skew-and-smile": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "내재변동성 표면은 옵션 호가를 가격모형으로 역산해 행사가와 만기에 놓은 지도이며, 스큐·미소와 빈 구간 보간을 실제 포트폴리오 민감도와 모형 검증에 연결해야 합니다.",
-    "sharedGate": "30%·20%·24%와 위험반전 −6%포인트를 검산하고 역산값을 미래 변동성 예측과 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "옵션 호가를 점별 내재변동성으로 역산하고 한 달 행사가 곡선의 스큐, 여러 만기의 표면, 장부 충격, 보간·재가격·무차익 검사를 8장면으로 연결합니다.",
+    "sharedGate": "90·100·110 행사가의 30%·20%·24%, 위험반전 24%−30%=−6%포인트와 한 달·세 달·여섯 달 중앙값 20%·22%·24%를 검산하고 관측 호가·보간값·미래 실현변동성을 구분합니다."
   },
   "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging": {
     "action": "keep",
@@ -4644,7 +4644,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/var-expected-shortfall-stress-and-model-risk":"b0ceb8cf324687cf",
 "markets/minimum-variance-hedge-ratio-and-basis-risk":"86f50c4f552be7a6",
 "markets/binomial-black-scholes-and-early-exercise":"6429e7751ab87616",
-"markets/implied-volatility-surface-skew-and-smile":"48ac524d9f1bda29",
+"markets/implied-volatility-surface-skew-and-smile":"9058abfbe6e2f523",
 "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"72599372e1d4728e",
 "markets/xva-funding-margin-and-wrong-way-risk":"f00134405cf50c68",
 "markets/market-risk-backtesting-pnl-attribution-and-model-governance":"8c97dbc86b89fe31",
