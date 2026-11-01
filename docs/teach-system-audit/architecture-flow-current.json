@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 768,
+    "dedicatedVisuals": 769,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 622,
+    "animatedMechanisms": 623,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14198,14 +14198,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/option-replication-and-put-call-parity.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/option-strategies-and-structured-notes",

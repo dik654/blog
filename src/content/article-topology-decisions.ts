@@ -3103,9 +3103,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/option-replication-and-put-call-parity": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "옵션 가격은 모든 관련 상태에서 같은 지급을 만드는 기초자산과 현금 조합의 비용으로 묶이며, 위험중립 가중치는 이 무차익 가격의 계산 도구이고 풋콜 등식은 같은 조건의 네 계약을 연결합니다.",
-    "sharedGate": "0.5×120−40=20과 0.5×80−40=0, 오늘 0.5×100−40=10을 검산하고 위험중립 0.5를 실제 예측과 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "만기 주가 120·80에서 콜 지급 20·0을 적고 델타 0.5와 차입금 40으로 두 상태를 복제한 뒤, 오늘 비용 10·가격 차이·위험중립 가중치·풋콜 등식까지 여덟 장면으로 연결합니다.",
+    "sharedGate": "(20−0)÷(120−80)=0.5, 0.5×120−40=20, 0.5×80−40=0, 오늘 0.5×100−40=10을 검산하고 가격 계산용 가중치 0.5를 실제 상승 가능성과 구분합니다."
   },
   "markets/option-greeks-volatility-and-dynamic-hedging": {
     "action": "keep",
@@ -4635,7 +4635,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/interest-rate-derivatives-from-fra-to-swaptions":"8fb4b59da32013fc",
 "markets/no-arbitrage-cost-of-carry-and-basis":"8a85e9f19b7b1b6f",
 "markets/option-greeks-volatility-and-dynamic-hedging":"bee28d2ce626059b",
-"markets/option-replication-and-put-call-parity":"39b4be384f5e5bb5",
+"markets/option-replication-and-put-call-parity":"f954abe9fd8b8b9c",
 "markets/commodity-carry-convenience-yield-and-roll":"b3fb6fe209a496cc",
 "markets/credit-derivatives-default-risk-and-tranches":"9988dd9bb2ab3cca",
 "markets/currency-hedging-forward-points-and-cross-currency-basis":"2087a7e1b609e874",

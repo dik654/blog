@@ -202,6 +202,7 @@ const noScriptArticleRoutes = new Set([
   "markets/commodity-carry-convenience-yield-and-roll",
   "markets/minimum-variance-hedge-ratio-and-basis-risk",
   "markets/options-and-asymmetric-payoffs",
+  "markets/option-replication-and-put-call-parity",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
