@@ -3299,9 +3299,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/bank-irrbb-alm-and-derivatives-hedging": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "은행 장부의 금리 위험은 EVE와 NII를 함께 측정하고 갭·베이시스·옵션 위험을 찾아 ALCO가 조달과 파생상품 헤지를 함께 조정해야 합니다.",
-    "sharedGate": "대출 100·예금 80에서 NII 감소 0.8을 계산하고 EVE와 NII, 고객 FP와 은행 ALM을 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "고정 대출 100과 변동 예금 80의 이자 차이 3.4가 금리 상승 뒤 2.6으로 줄어드는 사례에서 EVE·NII, 갭·베이시스·옵션, 감독 충격, ALCO의 스왑과 사후 재조정까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "100×5%=5, 80×2%=1.6, 80×3%=2.4와 NII 감소 0.8, 스왑 80×1%=0.8을 검산하고 EVE와 NII의 시간축, 여섯 EVE 충격과 두 NII 충격, 고객 상품 선택과 은행 ALM을 구분합니다."
   },
   "markets/hedge-accounting-designation-effectiveness-and-rebalancing": {
     "action": "keep",
@@ -4654,7 +4654,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/local-stochastic-volatility-jumps-and-calibration":"4954b39933cb2683",
 "markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"9d050c6730161317",
 "markets/short-rate-hjm-and-interest-rate-model-risk":"a96f30b96476b3df",
-"markets/bank-irrbb-alm-and-derivatives-hedging":"877bb9c531aca5e3",
+"markets/bank-irrbb-alm-and-derivatives-hedging":"4550d26a00a1bc38",
 "markets/hedge-accounting-designation-effectiveness-and-rebalancing":"6471628fddd31e4f",
 "markets/derivatives-tax-character-timing-and-jurisdiction":"cd185ef9970fbba8",
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"6a1d9b32f3876f0b",

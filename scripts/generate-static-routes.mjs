@@ -225,6 +225,7 @@ const noScriptArticleRoutes = new Set([
   "markets/us-derivatives-regulatory-map-and-customer-segregation",
   "markets/otc-clearing-reporting-and-bilateral-risk-mitigation",
   "markets/cross-border-netting-enforceability-and-regulatory-recognition",
+  "markets/bank-irrbb-alm-and-derivatives-hedging",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
