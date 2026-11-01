@@ -3229,9 +3229,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/black-scholes-pde-finite-difference-and-numerical-error": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "블랙숄즈 방정식은 시간·기울기·굽음·금리를 무차익 관계로 묶고, 유한차분은 이를 격자 차이로 바꾸며 수렴·안정성·경계와 독립 가격 비교로 수치오차를 통제합니다.",
-    "sharedGate": "(10−0+0)/100=0.1과 0.5×0.2²×100²×0.1×0.01=0.2를 검산하고 수치수렴과 모형정확성을 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "만기 지급 0·0·10에서 굽음 0.1과 한 칸 전 값 0.2를 만드는 과정을 8장면으로 추적하고, 블랙숄즈 방정식·격자 역진·안정 상한·수렴 검산·모형오차의 경계를 한 흐름으로 연결합니다.",
+    "sharedGate": "(10−2×0+0)/100=0.1, λ=0.02, 0.02×0+0.96×0+0.02×10=0.2와 Δt=0.01≤0.207을 검산하고 수치수렴과 모형정확성을 구분합니다."
   },
   "markets/local-stochastic-volatility-jumps-and-calibration": {
     "action": "keep",
@@ -4648,7 +4648,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"72599372e1d4728e",
 "markets/xva-funding-margin-and-wrong-way-risk":"f00134405cf50c68",
 "markets/market-risk-backtesting-pnl-attribution-and-model-governance":"8c97dbc86b89fe31",
-"markets/black-scholes-pde-finite-difference-and-numerical-error":"1f1209c21f1d755b",
+"markets/black-scholes-pde-finite-difference-and-numerical-error":"eedd210ad42edda2",
 "markets/brownian-motion-ito-and-risk-neutral-pricing":"2a0f49691cce1e3c",
 "markets/hazard-rate-curve-recovery-and-credit-correlation":"78d8e8ed48ee2aa1",
 "markets/local-stochastic-volatility-jumps-and-calibration":"94f7e6624c746d6b",
