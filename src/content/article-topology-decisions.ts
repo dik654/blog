@@ -1678,9 +1678,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "institutions/insurance-risk-pooling": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "보험은 많은 가입자의 보험료를 모아 일부의 약정 손실을 지급하는 위험 풀이고, 가격에는 예상 사고액뿐 아니라 운영비·자본·불확실성이 포함되며 대형 공통 충격은 다시 밖으로 넘겨야 합니다.",
-    "sharedGate": "1천 명이 한 해 10만 원씩 내면 총 1억 원입니다(가정). 그해 20명에게 각 300만 원을 지급한다면 총 6천만 원이 나갑니다. 돈의 차이는 4천만 원입니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "reviewedAt": "2026-11-01",
+    "rationale": "보험은 보험료를 모으는 일, 계약상 지급 대상을 판정하는 일, 보험자와 가입자의 부담을 나누는 일을 구분해야 이해할 수 있습니다. 첫 그림은 공동 장부 1억 원에서 6천만 원을 지급하는 사례와 계약 경계, 230만 원 지급 계산, 가입 전후 행동, 15억 원 동시 재난, 지급 능력 준비를 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·7·8·10절의 금액과 계약 경계가 일치해야 합니다. 1천 명이 10만 원씩 내면 1억 원이고, 20명에게 300만 원씩 지급하면 6천만 원이 나가지만 차이 4천만 원을 곧바로 이익으로 읽지 않습니다. 300만 원 손실에 자기부담금 20만 원과 한도 230만 원을 설명용 순서로 적용하면 보험자 지급은 230만 원, 가입자 부담은 70만 원입니다. 500명이 함께 300만 원씩 손해를 보면 15억 원이 필요하므로 독립 사고의 분산과 공통 충격을 같은 결론으로 합치지 않습니다."
   },
   "institutions/healthcare-payment-systems": {
     "action": "keep",
@@ -4312,7 +4312,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "business/supply-chain-bargaining": "64d8d1b4a0daaf0d",
   "institutions/healthcare-payment-systems": "5206c5601e4ddd64",
   "institutions/how-to-read-a-country": "436b348e745e7179",
-  "institutions/insurance-risk-pooling": "d1b2593d347e1c29",
+  "institutions/insurance-risk-pooling": "7595dcb32ba394af",
   "macro/global-capital-and-policy": "c169ae992e741ba4",
   "macro/narratives-and-market-regimes": "9b0ab093e34caa58",
   "markets/forwards-and-futures": "e4db4ba88e33dbbf",

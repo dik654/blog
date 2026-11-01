@@ -3,6 +3,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import InsuranceRiskPoolingViz from "./InsuranceRiskPoolingViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function InsuranceRiskPoolingArticle() {
@@ -10,6 +11,7 @@ export default function InsuranceRiskPoolingArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 혼자 감당하기 어려운 손실을 어떻게 나눌까요</h2>
+        <InsuranceRiskPoolingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">집이나 차가 크게 손상되면 평소의 생활비로 복구하기 어렵습니다. 여러 사람이 작은 돈을 미리 모으고 사고가 생긴 일부에게 지급하면 각자가 따로 큰돈을 보관하는 부담을 줄일 수 있습니다.</p>
           <p className="leading-8">이 글은 돈을 모으는 단계부터 지급 여부를 판단하고 남은 손실을 부담하는 단계까지 따라갑니다. 가입자가 많다는 사실이 어떤 위험에는 도움이 되고 어떤 위험에는 충분하지 않은지도 봅니다.</p>

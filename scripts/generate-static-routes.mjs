@@ -173,6 +173,7 @@ const noScriptArticleRoutes = new Set([
   "property/shop-transfer-and-goodwill",
   "property/shop-closure-and-restoration",
   "property/land-development-residual",
+  "institutions/insurance-risk-pooling",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
