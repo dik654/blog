@@ -3243,9 +3243,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/short-rate-hjm-and-interest-rate-model-risk": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "금리 파생상품은 한 개의 짧은 금리 또는 만기별 선도곡선의 미래 움직임을 모형화하고, 무차익 평균 제약·시장 보정·후보 모형 가격과 헤지 차이로 모형위험을 관리합니다.",
-    "sharedGate": "0.5×(4%−3%)÷252≈0.2bp, 1%÷√252≈6.3bp, 1%×(1%×2)=2bp/년을 검산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "오늘 3%인 한 점에서 하루 평균복귀 0.2bp와 표준 움직임 6.3bp를 계산하고, 단기금리 한 상태와 HJM 만기별 곡선의 차이, 2년 앞 무차익 평균 2bp, 보정·헤지·모형위험 경계를 여덟 장면으로 추적합니다.",
+    "sharedGate": "0.5×(4%−3%)÷252≈0.2bp, 1%÷√252≈6.3bp, 6.3÷0.2≈31.5와 1%×(1%×2)=2bp/년을 검산하고 무차익 평균과 금리 전망, 현재 가격 적합도와 미래 헤지 성능을 구분합니다."
   },
   "markets/hazard-rate-curve-recovery-and-credit-correlation": {
     "action": "keep",
@@ -4653,7 +4653,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/hazard-rate-curve-recovery-and-credit-correlation":"78d8e8ed48ee2aa1",
 "markets/local-stochastic-volatility-jumps-and-calibration":"4954b39933cb2683",
 "markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"9d050c6730161317",
-"markets/short-rate-hjm-and-interest-rate-model-risk":"7d249036d02cdd4f",
+"markets/short-rate-hjm-and-interest-rate-model-risk":"a96f30b96476b3df",
 "markets/bank-irrbb-alm-and-derivatives-hedging":"877bb9c531aca5e3",
 "markets/hedge-accounting-designation-effectiveness-and-rebalancing":"6471628fddd31e4f",
 "markets/derivatives-tax-character-timing-and-jurisdiction":"cd185ef9970fbba8",
