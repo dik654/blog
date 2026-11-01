@@ -9505,9 +9505,9 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "autobahn-deep": {
     title: "Autobahn lane·cut·recovery 글이 소유하는 범위",
-    owns: ["Car PoA lane chain과 certified-tip cut zipper", "Prepare·Confirm fast/slow evidence, TC recovery와 backlog release"],
+    owns: ["Car PoA lane chain과 certified-tip cut zipper", "Prepare·Confirm fast/slow evidence, TC recovery와 cut·sync·execution 경계"],
     reuses: [{ label: "Partial synchrony", href: "/cs/blockchain/bft-theory" }, { label: "Generic lane-cut recovery", href: "/cs/blockchain/dag-consensus" }],
-    evidence: [{ kind: "primary-source", rule: "Threshold·safety·liveness·seamless 주장은 Autobahn 2401.10369의 model에 귀속한다." }, { kind: "project-measurement", rule: "PoA equivocation·view change·non-monotonic cuts·blip backlog를 payload와 execution까지 재생한다." }, { kind: "project-claim", rule: "PoA를 non-equivocation QC로, cut latency를 end-to-end zero hangover로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Threshold·safety·liveness·seamless 주장은 Autobahn SOSP 2024 논문의 model에 귀속한다." }, { kind: "primary-source", rule: "구현 설명은 autobahn-artifact의 exact commit 6d77e03에서 확인한 자료형과 경로에 한정한다." }, { kind: "project-claim", rule: "PoA를 non-equivocation QC로, cut latency를 end-to-end zero hangover로 확대하지 않는다." }],
   },
   "mysticeti": {
     title: "Mysticeti uncertified vote·decision prefix 글이 소유하는 범위",

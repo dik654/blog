@@ -44,8 +44,8 @@ export const bftNewArticles: Article[] = [
     sections: [
       { id: "overview", title: "Lane과 cut 경계" },
       { id: "lanes-cut", title: "Car PoA와 certified cut" },
-      { id: "commit-recovery", title: "Commit과 view change" },
-      { id: "release", title: "Blip·backlog release" },
+      { id: "consensus", title: "Cut 합의와 view change" },
+      { id: "boundaries", title: "논문·코드·완료 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/autobahn-deep"),
   },

@@ -8027,9 +8027,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Asynchronous Bullshark v3", href: "https://arxiv.org/abs/2201.05677v3", note: "4라운드 wave·steady-state/fallback leaders·common coin을 부분 동기식 구현과 구분" },
   ],
   "blockchain/autobahn-deep": [
-    { kind: "핵심 논문", label: "Autobahn · arXiv 2401.10369", href: "https://arxiv.org/abs/2401.10369", note: "Chained lanes·cut consensus·view change의 primary paper이며 legacy fixed timeout·BLS·TPS를 보편값으로 주장하지 않음" },
-    { kind: "핵심 논문", label: "Autobahn §5.1 Lanes and Cars", href: "https://arxiv.org/pdf/2401.10369#page=9", note: "f+1 PoA와 tip semantics의 근거이며 PoA를 non-equivocation QC·total order로 확대하지 않음" },
-    { kind: "핵심 논문", label: "Autobahn §5.2–5.4 consensus", href: "https://arxiv.org/pdf/2401.10369#page=12", note: "Prepare·Confirm·all-node fast path·TC recovery 근거이며 cut commit이 payload sync·execution 완료를 뜻하지 않음" },
+    { kind: "핵심 논문", label: "Autobahn · SOSP 2024 camera-ready", href: "https://www.cs.cornell.edu/~fsp/reports/Autobahn__SOSP24_CR.pdf", note: "Chained lanes·cut consensus·view change의 primary paper이며 다른 배포의 성능을 보편값으로 주장하지 않음" },
+    { kind: "핵심 논문", label: "Autobahn §5.1 Lanes and Cars", href: "https://www.cs.cornell.edu/~fsp/reports/Autobahn__SOSP24_CR.pdf", note: "f+1 PoA와 tip 의미의 근거이며 PoA를 non-equivocation QC·total order로 확대하지 않음" },
+    { kind: "핵심 논문", label: "Autobahn §5.2–5.4 consensus", href: "https://www.cs.cornell.edu/~fsp/reports/Autobahn__SOSP24_CR.pdf", note: "Prepare·Confirm·all-node fast path·TC recovery 근거이며 cut 확정이 payload sync·execution 완료를 뜻하지 않음" },
+    { kind: "공식 코드", label: "autobahn-artifact · commit 6d77e03", href: "https://github.com/neilgiri/autobahn-artifact/tree/6d77e0307e9dc09cc8def2c846a20523646ab4de", note: "Prepare·Confirm·Commit 자료형과 payload·parent sync 경로를 확인한 공개 prototype의 고정 source" },
   ],
   "blockchain/mysticeti": [
     { kind: "핵심 논문", label: "Mysticeti · arXiv 2310.14821", href: "https://arxiv.org/abs/2310.14821", note: "Uncertified DAG·direct/indirect decisions·FPC 원문이며 paper 성능과 options를 current deployment 상수로 일반화하지 않음" },
