@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 781,
+    "dedicatedVisuals": 782,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 635,
+    "animatedMechanisms": 636,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -13590,14 +13590,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/credit-derivatives-default-risk-and-tranches.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/credit-event-auction-orders-and-base-correlation-history",

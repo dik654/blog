@@ -3152,9 +3152,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/credit-derivatives-default-risk-and-tranches": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "CDS는 정의된 신용사건과 결제 절차에 따라 회수율 손실을 옮기며, 지수 트랜치는 여러 기업의 누적손실 구간을 나눠 평균 부도뿐 아니라 공동부도와 상대방 위험을 가격에 담습니다.",
-    "sharedGate": "연 프리미엄 200만 원·보호 지급 6,000만 원·단순 부도강도 약 3.33%를 검산하고 계약 사건과 경제적 부실을 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "회사채 1억 원을 보유하면서 연 프리미엄 200만 원으로 손실을 옮기는 거래에서 출발해 역할 분리, 회수 40% 뒤 보호 지급 6,000만 원, 신용사건·경매 절차, 지수 손실 500만 원의 트랜치 배분과 공동부도 경계를 여덟 장면으로 추적합니다.",
+    "sharedGate": "1억 원×2%=200만 원, 1억 원×(1−40%)=6,000만 원, 2%÷60%≈3.33%와 손실 500만 원의 0~3% 구간 300만 원·3~7% 구간 200만 원 배분을 검산하고 계약상 신용사건과 경제적 부실을 구분합니다."
   },
   "markets/otc-master-agreement-collateral-netting-and-cva": {
     "action": "keep",
@@ -4637,7 +4637,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/option-greeks-volatility-and-dynamic-hedging":"4647ce9e23e8541a",
 "markets/option-replication-and-put-call-parity":"f954abe9fd8b8b9c",
 "markets/commodity-carry-convenience-yield-and-roll":"b3fb6fe209a496cc",
-"markets/credit-derivatives-default-risk-and-tranches":"9988dd9bb2ab3cca",
+"markets/credit-derivatives-default-risk-and-tranches":"53381e47bfb2fef7",
 "markets/currency-hedging-forward-points-and-cross-currency-basis":"2087a7e1b609e874",
 "markets/option-strategies-and-structured-notes":"5e440805f5fc03c5",
 "markets/otc-master-agreement-collateral-netting-and-cva":"14e9b3b5e52c1b75",
