@@ -3334,9 +3334,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-complaints-dispute-resolution-and-evidence": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 분쟁은 손실 결과나 서명 하나로 판단하지 않고 판매·체결·가격·증거금·통지 기록을 시간순으로 묶어 책임과 손해를 가린 뒤 계약 관할의 구제 경로로 이어야 합니다.",
-    "sharedGate": "100−30=70과 필요액 80의 부족 10을 계산하고 손실 결과, 고객 서명, 절차 준수와 인과관계를 따로 판단합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "계좌자금 100에서 시장 손실 30이 나 자금 70, 필요 증거금 80보다 10 부족한 사건을 판매·체결·증거금·통신 증거, 단일 시간줄, 원본 대조, 독립 심사와 외부 구제까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "100−30=70과 70−80=−10을 검산하고 시장 손실과 회사 책임, 판매와 체결, 고객 화면과 회사 로그, 내부 최종 답변과 외부 조정의 판단 주체를 구분합니다."
   },
   "markets/uncleared-initial-margin-simm-and-model-governance": {
     "action": "keep",
@@ -4659,7 +4659,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-tax-character-timing-and-jurisdiction":"db4ab7751e9f5f50",
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"409e7e4b7e967bcb",
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"f9d6deb10fa6f125",
-"markets/derivatives-complaints-dispute-resolution-and-evidence":"8ba90a064c6d314f",
+"markets/derivatives-complaints-dispute-resolution-and-evidence":"d23f172695692391",
 "markets/uncleared-initial-margin-simm-and-model-governance":"59305529180ca54c",
 "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"85a2a973129c6f80",
 "markets/collateral-operations-margin-calls-disputes-and-substitution":"8be8a0574eed18c7",

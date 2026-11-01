@@ -381,13 +381,13 @@ export const disputesData: DerivativeDeepArticleData = {
       "회사는 주장을 쟁점별로 나눠 접수하고 원본 로그 보존을 걸어 둡니다. 판매, 가격, 증거금과 통지 담당자가 자료를 내면 독립된 민원 담당자가 약관·법규와 실제 시간줄을 비교합니다.",
       "판단과 계산 근거, 인정하거나 거절한 항목, 보상액과 외부 구제기관·기한을 최종 답변에 적습니다. 반복된 원인이 발견되면 고객 한 명의 보상에서 끝내지 않고 같은 계좌와 시스템을 찾아 고칩니다.",
     ] },
-    { id: "source", level: "5", title: "8. 영국 옴부즈맨은 약관과 가격·헤지 자료까지 요구할 수 있습니다", bridge: "회사가 보관해야 할 실제 증거의 범위를 확인합니다.", paragraphs: [
-      "영국 Financial Ombudsman Service는 CFD 등 투자 민원을 볼 때 약관, 위험 경고, 적정성 자료, 체결 정책과 고객 통신을 요청할 수 있습니다. 가격 분쟁에는 유동성 공급자나 거래소 가격, 가격 자료와 회사의 헤지 거래도 관련될 수 있습니다.",
+    { id: "source", level: "5", title: "8. CFD 분쟁은 약관·설명·가격·청산 자료를 함께 봅니다", bridge: "회사가 보관해야 할 실제 증거의 범위를 공식 사례에서 확인합니다.", paragraphs: [
+      "영국 Financial Ombudsman Service의 CFD 전용 안내는 위험 설명, 잘못된 가격, 스프레드 확대, 증거금 부족에 따른 강제청산과 전자 거래 오류를 대표 쟁점으로 듭니다. 약관, 고객에게 한 설명, 당시 규칙과 양쪽이 제출한 증거를 사건별로 검토한다고 밝힙니다.",
       "이는 모든 분쟁에서 같은 서류가 반드시 필요하다는 목록이 아닙니다. 주장과 상품에 맞는 자료를 내되, 회사에 유리한 화면만 골라내지 않고 사건 전체를 재구성할 수 있어야 합니다.",
     ] },
-    { id: "comparison", level: "6", title: "9. 국내 자격 과정은 분쟁 예방과 주요 사례를 별도 과목으로 둡니다", bridge: "상품 지식이 민원 처리를 대신하지 못하는 이유를 봅니다.", paragraphs: [
-      "금융투자교육원의 파생상품투자권유자문인력 과정은 직무윤리와 법규 과목 옆에 분쟁조정 과목을 2시간 따로 두고, 그 안에서 분쟁조정시스템과 분쟁조정사례를 다룹니다(2026-10-09 과정표 확인). 판매자는 지급 구조를 설명할 지식과 고객의 이의를 증거로 다룰 절차를 함께 알아야 합니다.",
-      "국내 사건은 계약 금융회사와 상품에 맞는 내부 민원, 금융감독원 분쟁조정, 거래소·협회 절차와 소송 가능성을 확인합니다. 해외 옴부즈맨의 결과를 국내 관할에 그대로 적용하지 않습니다.",
+    { id: "comparison", level: "6", title: "9. 내부 민원과 외부 조정은 이어지지만 판단 주체가 다릅니다", bridge: "회사의 최종 답변이 외부 판단을 대신하지 못하는 이유를 봅니다.", paragraphs: [
+      "Financial Ombudsman Service는 먼저 금융회사가 민원을 조사할 기회를 가져야 하며, 회사의 최종 답변 뒤에도 해결되지 않거나 정해진 기간 안에 답이 없으면 외부 절차로 올 수 있다고 안내합니다. 회사는 접수 사실, 진행 상황과 최종 답변을 고객에게 알려야 합니다.",
+      "이 흐름은 영국 제도의 예입니다. 실제 사건에서는 계약 금융회사와 상품에 적용되는 내부 민원, 감독·조정기관, 중재나 법원의 관할과 신청 기한을 확인해야 하며 해외 절차를 국내 사건에 그대로 적용하지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 손실이 컸다는 사실도 서명했다는 사실도 결론은 아닙니다", bridge: "성과와 절차를 함께 보되 어느 한쪽으로 단정하지 않습니다.", paragraphs: [
       "고객이 큰 손실을 봤어도 적절한 설명과 공정한 체결 아래 시장이 움직인 결과일 수 있습니다. 반대로 위험확인서에 서명했어도 설명·가격·통지 의무를 실제로 지켰다는 증명이 자동으로 되지는 않습니다.",
@@ -410,8 +410,8 @@ export const disputesData: DerivativeDeepArticleData = {
     { term: "분쟁 구제 경로", description: "회사 민원과 최종 답변에서 외부 조정·중재·법원으로 이어지는 절차입니다.", example: "최종 답변에 외부 기관과 신청 기한을 적습니다.", boundary: "계약 법인과 국가에 따라 관할이 다릅니다." },
   ] },
   sources: [
-    { source: "Financial Ombudsman Service · Business evidence", excerpt: "information from financial businesses", application: "CFD 가격·적정성·증거금 분쟁에서 약관, 경고, 가격 원천과 헤지 기록을 사건 시간줄에 놓습니다.", citation: "UK Financial Ombudsman Service, Information from financial businesses", href: "https://www.financial-ombudsman.org.uk/businesses/resolving-complaint/information-from-financial-businesses", note: "금융 민원 조사에서 회사에 요구할 수 있는 자료를 안내하는 공식 페이지입니다." },
-    { source: "금융투자교육원 · 파생상품투자권유자문인력", excerpt: "분쟁조정 · 분쟁조정시스템 · 분쟁조정사례", application: "상품 설명과 별도로 분쟁조정 절차와 사례 학습이 필요한 이유를 분쟁 흐름에 반영합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력 등록교육", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "윤리·법규·세제·AML·분쟁조정과 상품 지식을 함께 다루는 공식 과정표입니다. 인용문은 과정표 2번 과목(분쟁조정, 2시간)의 과목명과 세부 항목 두 칸을 · 로 이어 옮긴 것이며, 별도의 분쟁예방·제재 과목은 과정표에 없습니다(2026-10-09 확인)." },
+    { source: "Financial Ombudsman Service · CFD complaints", excerpt: "we’ll look at the facts and evidence from both you and your customer", application: "위험 설명·체결 가격·증거금 부족에 따른 청산을 약관과 당시 기록의 시간줄에서 함께 검토합니다.", citation: "UK Financial Ombudsman Service, Spread betting and contracts for difference", href: "https://www.financial-ombudsman.org.uk/businesses/resolving-complaint/complaints-deal/investments/spread-betting-contracts-difference", note: "CFD 민원의 대표 쟁점과 사건별 증거 검토 범위를 설명하는 현재 공식 페이지입니다(2026-11-02 확인)." },
+    { source: "Financial Ombudsman Service · Complaint handling", excerpt: "send the customer a final response", application: "금융회사의 접수·진행 안내·최종 답변과, 해결되지 않을 때 외부 기관으로 이어지는 경계를 분리합니다.", citation: "UK Financial Ombudsman Service, How to settle complaints", href: "https://www.financial-ombudsman.org.uk/businesses/resolving-complaint", note: "금융회사가 먼저 민원을 조사하고 접수 안내와 최종 답변을 제공해야 한다는 영국 절차를 설명하는 현재 공식 페이지입니다(2026-11-02 확인). 국내 사건의 관할과 기한은 별도로 확인해야 합니다." },
   ],
   review: [
     "자금 100, 손실 30, 필요 증거금 80에서 부족액을 계산하세요. (답: 1·3절)",

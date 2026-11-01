@@ -230,6 +230,7 @@ const noScriptArticleRoutes = new Set([
   "markets/derivatives-tax-character-timing-and-jurisdiction",
   "markets/derivatives-market-abuse-position-limits-and-surveillance",
   "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring",
+  "markets/derivatives-complaints-dispute-resolution-and-evidence",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",

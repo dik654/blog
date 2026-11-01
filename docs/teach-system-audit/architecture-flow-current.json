@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 796,
+    "dedicatedVisuals": 797,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 650,
+    "animatedMechanisms": 651,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -13686,14 +13686,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-complaints-dispute-resolution-and-evidence.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/derivatives-investigation-audit-trail-and-legal-hold",
