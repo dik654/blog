@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 759,
+    "dedicatedVisuals": 760,
     "inlineVisuals": 525,
-    "customVisuals": 926,
-    "animatedMechanisms": 613,
+    "customVisuals": 927,
+    "animatedMechanisms": 614,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14294,14 +14294,14 @@
       "sourcePath": "src/pages/articles/markets/securitization-and-tranches.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/short-rate-hjm-and-interest-rate-model-risk",

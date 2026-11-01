@@ -1817,10 +1817,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep"
   },
   "markets/securitization-and-tranches": {
-    "rationale": "하나의 수치 사례에서 유동화는 대출의 현금흐름을 옮기고 손실을 받는 순서를 나눈다의 지급·조건·한계를 순서대로 추적합니다.",
-    "reviewedAt": "2026-10-04",
+    "rationale": "100억 원 대출을 SPV로 옮긴 뒤 70·20·10 트랜치로 나누고, 손실 35억 원을 후순위 10억·중순위 20억·선순위 5억으로 한 번씩 배분하는 절차를 끝까지 추적하므로 한 글에 유지합니다.",
+    "reviewedAt": "2026-11-02",
     "status": "implemented",
-    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "sharedGate": "8장면 지도, 손실 배분 의사코드, 본문에서 원금 100억 원, 선·중·후순위 70·20·10억 원, 손실 8·15·35억 원, 선순위 회수 65억 원과 손실률 7.14%, 각 트랜치 5% 위험보유 합계 5억 원을 같은 조건으로 유지합니다.",
     "action": "keep"
   },
   "banking/repo-and-collateral-funding": {
@@ -4587,7 +4587,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "institutions/population-migration-and-care":"84f1a1f1e783549c",
 "markets/covered-calls-and-income-funds":"1fbe1da7c51b1b9f",
 "markets/financial-products-and-claims":"90d023e2ac6dca08",
-"markets/securitization-and-tranches":"112869ad29851ed5",
+"markets/securitization-and-tranches":"4a28e3247b3042ed",
 "reasoning/argument-and-counterexample":"05bdb4f60de04946",
 "epistemology/knowledge-belief-and-luck":"2930c48b18617851",
 "ethics/consequence-duty-and-character":"653c67b9eade3a5f",
