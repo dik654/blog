@@ -3215,9 +3215,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/brownian-motion-ito-and-risk-neutral-pricing": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "연속시간 가격모형은 짧은 구간의 평균과 제곱근 크기 흔들림을 나누고, 이토 보정으로 굽은 지급의 제곱항을 살린 뒤 복제와 위험중립 장부로 무차익 가격을 만듭니다.",
-    "sharedGate": "20%×100÷√252≈1.26, 1.26²≈1.59, 100e^(5%/252)≈100.0198을 검산하고 실제 확률과 가격 가중치를 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "연간 흔들림을 하루 크기로 바꾸는 계산에서 시작해 시간과 제곱근 시간, 남는 제곱 몫, 이토 보정, 실제·가격 장부, 델타 복제와 시장 경계까지 여덟 장면으로 이어 갑니다.",
+    "sharedGate": "20%×100÷√252≈1.26, 1.26²≈1.59, 100e^(5%/252)≈100.0198을 검산하고 실제 수익 전망과 위험중립 가격 계산을 다른 장부로 유지합니다."
   },
   "markets/monte-carlo-path-dependent-pricing-and-variance-reduction": {
     "action": "keep",
@@ -4649,7 +4649,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/xva-funding-margin-and-wrong-way-risk":"f00134405cf50c68",
 "markets/market-risk-backtesting-pnl-attribution-and-model-governance":"8c97dbc86b89fe31",
 "markets/black-scholes-pde-finite-difference-and-numerical-error":"1f1209c21f1d755b",
-"markets/brownian-motion-ito-and-risk-neutral-pricing":"3806f40e22d005fa",
+"markets/brownian-motion-ito-and-risk-neutral-pricing":"2a0f49691cce1e3c",
 "markets/hazard-rate-curve-recovery-and-credit-correlation":"78d8e8ed48ee2aa1",
 "markets/local-stochastic-volatility-jumps-and-calibration":"94f7e6624c746d6b",
 "markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"cac01d22eab27a08",

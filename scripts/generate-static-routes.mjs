@@ -204,6 +204,7 @@ const noScriptArticleRoutes = new Set([
   "markets/options-and-asymmetric-payoffs",
   "markets/option-replication-and-put-call-parity",
   "markets/binomial-black-scholes-and-early-exercise",
+  "markets/brownian-motion-ito-and-risk-neutral-pricing",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
