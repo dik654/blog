@@ -3236,9 +3236,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/local-stochastic-volatility-jumps-and-calibration": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "옵션 모형은 현재 위치별 흔들림, 흔들림 자체의 미래 경로와 드문 큰 이동을 서로 다른 부품으로 설명하고, 가격 적합도·매개변수 안정성·헤지 손익·스트레스를 따로 검증합니다.",
-    "sharedGate": "|30−20|+|20−20|+|24−20|=14%포인트와 10%/(20%/√252)≈7.9를 검산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "30%·20%·24%의 옵션 표면에서 고정 20%의 날개 오차와 하루 −10% 꼬리 충격을 계산하고, 지역·확률변동성·점프의 역할, 듀파이어 지역값, 보정·헤지·스트레스 경계를 여덟 장면으로 연결합니다.",
+    "sharedGate": "|30−20|+|20−20|+|24−20|=14%포인트, 20%÷√252≈1.26%, 10%÷1.26%≈7.9와 듀파이어 지역변동성 약 19.97%를 검산하고 현재 적합도와 미래 헤지 성능을 구분합니다."
   },
   "markets/short-rate-hjm-and-interest-rate-model-risk": {
     "action": "keep",
@@ -4651,7 +4651,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/black-scholes-pde-finite-difference-and-numerical-error":"eedd210ad42edda2",
 "markets/brownian-motion-ito-and-risk-neutral-pricing":"2a0f49691cce1e3c",
 "markets/hazard-rate-curve-recovery-and-credit-correlation":"78d8e8ed48ee2aa1",
-"markets/local-stochastic-volatility-jumps-and-calibration":"94f7e6624c746d6b",
+"markets/local-stochastic-volatility-jumps-and-calibration":"4954b39933cb2683",
 "markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"9d050c6730161317",
 "markets/short-rate-hjm-and-interest-rate-model-risk":"7d249036d02cdd4f",
 "markets/bank-irrbb-alm-and-derivatives-hedging":"877bb9c531aca5e3",

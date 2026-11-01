@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 778,
+    "dedicatedVisuals": 779,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 632,
+    "animatedMechanisms": 633,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14086,14 +14086,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/local-stochastic-volatility-jumps-and-calibration.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/market-risk-backtesting-pnl-attribution-and-model-governance",

@@ -212,6 +212,7 @@ const noScriptArticleRoutes = new Set([
   "markets/brownian-motion-ito-and-risk-neutral-pricing",
   "markets/monte-carlo-path-dependent-pricing-and-variance-reduction",
   "markets/black-scholes-pde-finite-difference-and-numerical-error",
+  "markets/local-stochastic-volatility-jumps-and-calibration",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
