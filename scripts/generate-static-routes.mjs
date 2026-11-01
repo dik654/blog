@@ -210,6 +210,7 @@ const noScriptArticleRoutes = new Set([
   "markets/xva-funding-margin-and-wrong-way-risk",
   "markets/market-risk-backtesting-pnl-attribution-and-model-governance",
   "markets/brownian-motion-ito-and-risk-neutral-pricing",
+  "markets/monte-carlo-path-dependent-pricing-and-variance-reduction",
   "markets/black-scholes-pde-finite-difference-and-numerical-error",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",

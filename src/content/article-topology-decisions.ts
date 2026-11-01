@@ -3222,9 +3222,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/monte-carlo-path-dependent-pricing-and-variance-reduction": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "경로의존 파생상품은 무작위 경로별 지급을 할인 평균하고, 대칭표본과 통제변수로 계산 잡음을 줄이되 통계오차·시간격자·모형·계약 구현 오류를 따로 검증합니다.",
-    "sharedGate": "(5+0+10+0)/4=3.75와 표준오차 약 2.39·1.25를 검산하고 계산오차와 모형오차를 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "월말 가격 100·102·106·112의 평균 지급 5에서 시작해 난수·경로·지급·평균, 네 지급의 가격 3.75, 대칭 쌍의 표준오차 감소, 경로 수 비용과 경로 기억·검산·오차 경계를 여덟 장면으로 추적합니다.",
+    "sharedGate": "(100+102+106+112)÷4=105와 지급 5, (5+0+10+0)÷4=3.75, 대칭 쌍 평균 2.5·5와 표준오차 약 2.39→1.25를 검산하고 표본오차와 시간·계약·모형오차를 구분합니다."
   },
   "markets/black-scholes-pde-finite-difference-and-numerical-error": {
     "action": "keep",
@@ -4652,7 +4652,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/brownian-motion-ito-and-risk-neutral-pricing":"2a0f49691cce1e3c",
 "markets/hazard-rate-curve-recovery-and-credit-correlation":"78d8e8ed48ee2aa1",
 "markets/local-stochastic-volatility-jumps-and-calibration":"94f7e6624c746d6b",
-"markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"cac01d22eab27a08",
+"markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"9d050c6730161317",
 "markets/short-rate-hjm-and-interest-rate-model-risk":"7d249036d02cdd4f",
 "markets/bank-irrbb-alm-and-derivatives-hedging":"877bb9c531aca5e3",
 "markets/hedge-accounting-designation-effectiveness-and-rebalancing":"6471628fddd31e4f",
