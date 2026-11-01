@@ -1648,10 +1648,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep"
   },
   "markets/swaps-and-credit-risk": {
-    "rationale": "하나의 수치 사례에서 스왑은 서로 다른 조건의 현금흐름을 교환한다의 지급·조건·한계를 순서대로 추적합니다.",
-    "reviewedAt": "2026-10-04",
+    "rationale": "10억 원 변동금리 대출 위에 고정 4% 지급·변동금리 수취 스왑을 얹은 뒤, 금리 6%와 2%의 정산, 명목원금과 당기 차액, 통화·신용 스왑과 거래상대방 위험까지 같은 장부로 추적하므로 한 글에 유지합니다.",
+    "reviewedAt": "2026-11-02",
     "status": "implemented",
-    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "sharedGate": "8장면 지도와 본문에서 명목원금 10억 원, 고정 4%, 변동금리 6%·2%, 은행 지급 6000만·2000만 원, 스왑 차액 2000만 원, 순지출 4000만 원, 가산금리 1%일 때 5000만 원, 채권 회수율 40%와 CDS 보호 6억 원을 같은 조건으로 유지합니다.",
     "action": "keep"
   },
   "risk/margin-collateral-and-leverage": {
@@ -4342,7 +4342,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "markets/forwards-and-futures": "ee7836f334448ebc",
   "markets/funds-etfs-and-etns": "c196e3112e200592",
   "markets/options-and-asymmetric-payoffs": "465c090e6c3d1a82",
-  "markets/swaps-and-credit-risk": "c1add7c3c5db9fb9",
+  "markets/swaps-and-credit-risk": "5ca1aa6f5cf41ed3",
   "property/commercial-lease-and-rent": "8acca634fcd66705",
   "property/land-development-residual": "7162575eb1a8fcf7",
   "property/shop-closure-and-restoration": "03a95d282c2f33e5",

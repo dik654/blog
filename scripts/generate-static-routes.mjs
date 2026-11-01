@@ -197,6 +197,7 @@ const noScriptArticleRoutes = new Set([
   "markets/securitization-and-tranches",
   "markets/forwards-and-futures",
   "markets/options-and-asymmetric-payoffs",
+  "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
