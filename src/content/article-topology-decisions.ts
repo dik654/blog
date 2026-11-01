@@ -1748,10 +1748,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "institutions/media-attention-and-public-belief": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "플랫폼·언론은 정보를 선택·배치하고 관심을 광고주에게 판매하며, 사람의 믿음은 관측 정보뿐 아니라 반복 노출과 신뢰 관계를 통해 바뀝니다.",
-    "sharedGate": "게시물 100개 가운데 선택된 10개가 이용자 화면에서 반복 노출된다고 놓습니다(가정). 광고주는 그 화면에서 광고 1천 회 노출을 1만 원에 샀다고도 놓습니다. 실제 플랫폼의 선택 방식이나 단가는 아닙니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "정보가 제작되고 화면에 배치된 뒤 노출·클릭·구매로 기록되는 경로와 광고·구독·협찬의 돈 경로를 분리해야 주목·수입·믿음·행동의 관계를 판단할 수 있습니다. 첫 그림은 게시물 100개에서 화면 10개, 광고 1천 회에서 클릭 20번·구매 2건, 수입 방식, 추천 기준, 공개 의무, 인과효과의 경계까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 분모와 인과 경계가 일치해야 합니다. 게시물 100개 중 10개가 반복 노출되고, 광고 1천 회에서 클릭 20번과 구매 2건이 기록되면 노출 기준 클릭률은 2%, 클릭 기준 구매율은 10%입니다. 광고주는 노출 1천 회에 1만 원을 지급한다는 가정이며, 1천 회를 1천 명으로 읽거나 구매 2건을 모두 광고의 추가 효과로 확정하지 않습니다. 추천 기준 공개와 제작자 지급 관계 공개도 구분합니다."
   },
   "business/shop-daily-operations": {
     "action": "keep",
@@ -4308,7 +4308,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/evm-fundamentals": "48c9ad132b5994f1",
   "crypto/discrete-log": "3a45605b7fb5946c",
   "institutions/public-budget-and-taxes": "f1e686c97f11283a",
-  "institutions/media-attention-and-public-belief": "6bdcaf0879fe12b7",
+  "institutions/media-attention-and-public-belief": "00a86f75e792c174",
   "institutions/education-skills-and-signals": "6a6d17faed7d55b1",
   "infrastructure/water-utility-and-tariffs": "574f8404067226e8",
   "infrastructure/transport-access-and-land-value": "b4cdbe939dab95f4",

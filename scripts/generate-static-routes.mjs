@@ -179,6 +179,7 @@ const noScriptArticleRoutes = new Set([
   "institutions/population-migration-and-care",
   "institutions/evidence-measurement-and-causality",
   "institutions/public-budget-and-taxes",
+  "institutions/media-attention-and-public-belief",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
