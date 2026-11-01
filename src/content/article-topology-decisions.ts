@@ -3530,9 +3530,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-investigation-audit-trail-and-legal-hold": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 조사는 주문·수정·취소·체결과 통신·신원 자료를 같은 시각표에 놓고 원본 형식과 메타데이터, 수집·열람 이력을 보존하며, 범위가 정해진 법적 보류로 삭제를 멈춰 다른 검토자가 재현할 수 있게 해야 합니다.",
-    "sharedGate": ".100초 주문에서 .350초 수정과 .600초 취소까지 0.5초를 계산하고 09시59분50초 대화와 10시05분 경보를 같은 시각표에 놓습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "09시59분50초 대화, 10시00분00.100초 주문, .350초 수정, .600초 취소, 10시05분 경보에서 원본·통신·신원·시장 자료 수집, 범위가 정해진 법적 보류, 사건 재생·반증·검토·결정·해제까지 증거 상태를 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": ".350−.100=0.250초, .600−.100=0.500초, 10:05:00−10:00:00.600=4분59.4초를 검산하고 거래 사건·분석 경보·원본·변환본·법적 보류·최종 판단을 구분합니다."
   },
   "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link": {
     "action": "keep",
@@ -4675,7 +4675,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/equity-dispersion-implied-correlation-and-variance":"7211e5f64264551b",
 "markets/credit-tranche-base-correlation-and-default-auction":"8e55428f11e7a728",
 "markets/commodity-grades-location-basis-and-physical-delivery":"db4f1174a973f63c",
-"markets/derivatives-investigation-audit-trail-and-legal-hold":"1dca848f5cd377c4",
+"markets/derivatives-investigation-audit-trail-and-legal-hold":"5c8b7834dcca8da6",
 "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link":"581239a972d966b2",
 "markets/fractional-investment-trust-beneficiary-certificates":"fa28e36f96c20689",
 "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control":"087a9f05150e5600",

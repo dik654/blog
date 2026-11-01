@@ -271,8 +271,8 @@ export const derivativesInvestigationData: DerivativeDeepArticleData = {
     { term: "법적 보류", description: "분쟁이나 조사와 관련된 정해진 자료의 예정된 삭제를 잠시 멈추는 지시입니다.", example: "대상 계정과 기간의 자동 삭제를 중지합니다.", boundary: "회사 자료 전체를 영구 보관하는 명령이 아닙니다." },
   ] },
   sources: [
-    { source: "CFTC · Enforcement Manual", excerpt: "Native File Production", application: "주문·통신·오디오를 원본 형식과 메타데이터가 있는 조사 꾸러미로 모읍니다.", citation: "CFTC, Division of Enforcement Manual", href: "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf", note: "미국 CFTC 조사 절차의 일반 지침이며 개별 사건 요청과 법률 자문을 대신하지 않습니다." },
-    { source: "ESMA · MiFIR Article 25", excerpt: "relevant data relating to all orders", application: "주문 특성과 그 결과 거래를 연결해 .100→.350→.600의 순서를 보존합니다.", citation: "ESMA Interactive Single Rulebook, MiFIR Article 25", href: "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-25-obligation-maintain-records", note: "EU 적용 대상 회사의 기록 의무이며 다른 관할의 기간과 범위를 자동으로 정하지 않습니다." },
+    { source: "CFTC · Enforcement Manual", excerpt: "Native File Production", application: "주문·통신·계좌자료·오디오를 원본 형식과 메타데이터가 있는 조사 꾸러미로 모읍니다.", citation: "CFTC, Division of Enforcement Manual", href: "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf", note: "CFTC 집행부의 일반 조사 절차와 자료 제출 형식을 확인했습니다. 개별 사건 요청이나 법률 자문을 대신하지 않습니다(2026-11-02 확인)." },
+    { source: "ESMA · MiFIR Article 25", excerpt: "relevant data relating to all orders", application: "주문 특성과 수정·취소·부분·전부 체결, 그 결과 거래를 연결해 .100→.350→.600의 순서를 보존합니다.", citation: "ESMA Interactive Single Rulebook, MiFIR Article 25", href: "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-25-obligation-maintain-records", note: "현재 페이지는 2024-01-09 통합본이 개정 RTS 적용 전까지 유효하다고 안내합니다. EU 적용 대상 회사의 5년 의무를 다른 관할에 그대로 옮기지 않습니다(2026-11-02 확인)." },
   ],
   review: [
     ".100 주문에서 .600 취소까지 걸린 시간과 10초 전 대화의 위치를 계산해 보세요. (답: 1·3절)",
