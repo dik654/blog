@@ -35,7 +35,7 @@ export const unclearedInitialMarginData: DerivativeDeepArticleData = {
       "모형은 감독 승인을 받아야 하며 실제 자료에 대한 시험과 적용 상품의 타당성 검증을 계속해야 합니다. 한 감독기관의 승인이 모든 회사와 나라에 자동으로 이어지는 것도 아닙니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 최신 SIMM 버전과 회사별 승인 기록을 함께 봅니다", bridge: "업계 표준의 갱신과 개별 사용자의 책임을 나눕니다.", paragraphs: [
-      "ISDA는 2026년 6월 SIMM 2.8+2512를 공개했고 7월 11일을 적용일로 정했습니다. 2026년 9월에는 적어도 반기마다 보정하는 원칙을 반영한 지배구조 문서를 갱신했습니다.",
+      "ISDA는 2026년 6월 SIMM 2.8+2512를 공개했고 7월 11일을 적용일로 정했습니다. 이 버전은 2025년 12월 31일까지의 역사적 자료를 이용한 전면 재보정 결과를 반영합니다.",
       "회사는 새 버전의 금액 변화, 구현 단위시험, 승인 관할, 계약과 담보 운영의 준비 상태를 따로 확인해야 합니다. 최신 파일을 내려받았다는 사실만으로 실제 사용 승인이 끝나지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 개시증거금 8은 가격 위험과 유동성 위험을 함께 만듭니다", bridge: "신용보호가 자금 운영에 주는 부담까지 확인합니다.", paragraphs: [
@@ -60,8 +60,8 @@ export const unclearedInitialMarginData: DerivativeDeepArticleData = {
     { term: "SIMM 통제", description: "표준 모형의 버전·입력·보정·검증·승인을 계속 관리하는 일입니다.", example: "2.8+2512 전환 전후 금액을 비교합니다.", boundary: "공통 모형도 회사별 승인과 입력 대사가 필요합니다." },
   ] },
   sources: [
-    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "one-tailed 99 per cent confidence interval over a 10-day horizon", application: "IM의 목적, 99%·10일 출발점, 모형 승인과 지속 검증을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "국제 최소 기준이며 실제 적용 대상·문턱은 각 관할 규칙을 다시 확인합니다." },
-    { source: "ISDA · SIMM 2.8+2512", excerpt: "updates ... historical data up to 31 December 2025", application: "현재 버전의 보정 기준일과 2026년 7월 적용일을 확인합니다.", citation: "ISDA Publishes ISDA SIMM Methodology, Version 2.8+2512", href: "https://www.isda.org/?p=1243627", note: "SIMM 사용에는 지식재산 조건과 관할별 승인이 따를 수 있습니다." },
+    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "one-tailed 99 per cent confidence interval over a 10-day horizon", application: "IM의 목적, 99%·10일 출발점, 모형 승인과 지속 검증을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "현재 Basel Framework의 국제 최소 기준입니다. 실제 적용 대상·문턱과 승인 절차는 각 관할 규칙을 다시 확인해야 합니다(2026-11-02 확인)." },
+    { source: "ISDA · SIMM 2.8+2512", excerpt: "historical data up to 31 December 2025", application: "현재 버전의 보정 기준일과 2026년 7월 적용일을 확인합니다.", citation: "ISDA Publishes ISDA SIMM Methodology, Version 2.8+2512", href: "https://www.isda.org/2026/06/12/isda-publishes-isda-simm-methodology-version-2-8-2512/", note: "ISDA가 밝힌 2.8+2512의 공개일·보정 기준일·적용일을 확인하는 공식 자료입니다. SIMM 사용에는 지식재산 조건과 관할별 승인이 따를 수 있습니다(2026-11-02 확인)." },
   ],
   review: [
     "변동증거금 2.5와 개시증거금 8이 막는 위험이 어떻게 다른가요? (답: 1·4절)",

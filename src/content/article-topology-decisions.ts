@@ -3341,9 +3341,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/uncleared-initial-margin-simm-and-model-governance": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "비청산 개시증거금은 현재 평가손실이 아니라 상대방 부도 뒤 계약을 닫고 바꾸는 동안의 잠재 미래 노출을 막으며, 공통 SIMM을 써도 범위·민감도·버전·보정·승인과 분리 보관을 계속 통제해야 합니다.",
-    "sharedGate": "가중 민감도 6과 4, 상관 0.25에서 √(6²+4²+2×0.25×6×4)=8을 구하고 현재 노출 2.5와 나눕니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "현재 노출 2.5와 부도 뒤 잠재 미래 노출을 분리한 뒤 가중 민감도 6·4와 상관 0.25의 교육용 집계 8, 양방향 IM, 입력 대사, 분리 보관과 버전·승인 통제까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "√(6²+4²+2×0.25×6×4)=8을 검산하고 VM 2.5와 IM 8, 교육용 집계와 실제 SIMM, A·B의 양방향 담보, 표준 방법론과 회사별 입력·승인·결제 책임을 구분합니다."
   },
   "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation": {
     "action": "keep",
@@ -4660,7 +4660,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"409e7e4b7e967bcb",
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"f9d6deb10fa6f125",
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"d23f172695692391",
-"markets/uncleared-initial-margin-simm-and-model-governance":"59305529180ca54c",
+"markets/uncleared-initial-margin-simm-and-model-governance":"941f21bff7ae1dad",
 "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"85a2a973129c6f80",
 "markets/collateral-operations-margin-calls-disputes-and-substitution":"8be8a0574eed18c7",
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"8c605652f58d653a",

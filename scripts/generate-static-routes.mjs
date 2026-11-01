@@ -231,6 +231,7 @@ const noScriptArticleRoutes = new Set([
   "markets/derivatives-market-abuse-position-limits-and-surveillance",
   "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring",
   "markets/derivatives-complaints-dispute-resolution-and-evidence",
+  "markets/uncleared-initial-margin-simm-and-model-governance",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
