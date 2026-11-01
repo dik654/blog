@@ -1698,10 +1698,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "infrastructure/electricity-grid-and-power": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "전력 시장은 전기를 생산하는 설비, 같은 순간 수요와 공급을 맞추는 운영자, 송배전망을 소유하는 주체, 요금을 내는 사용자의 장부가 겹칩니다.",
-    "sharedGate": "오후 한 시간 동안 한 발전소는 100MWh를 만들 수 있고, 먼 공장으로 보내는 길은 그 시간에 80MWh까지만 통과시킨다고 놓습니다(가정). 공장이 원하는 양은 100MWh입니다. 손실과 다른 이용자는 우선 생략합니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "전력을 이해하려면 발전 가능량, 계통운영자의 안전 판단, 송전 경로의 한도, 공장의 시간별 수요와 지급 계약을 나눠야 합니다. 첫 그림은 발전에서 공장까지의 경로, 100MWh 발전 가능량과 80MWh 송전 한도, MW와 MWh의 구분, 600만 원 조달비, 망 보강·수요 이동·저장 선택, 지역별 운영 책임, 저장 출력의 경계까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 단위와 조건이 일치해야 합니다. 설명용 한 시간에 공장 수요는 100MWh, 먼 발전 가능량은 100MWh, 송전 한도는 80MWh이므로 가까운 공급이나 수요 조정이 필요한 차이는 20MWh입니다. 먼 공급 80MWh×5만 원=400만 원, 가까운 공급 20MWh×10만 원=200만 원으로 조달비는 600만 원입니다. 혼잡이 없을 때의 500만 원과 차이는 100만 원이지만 최종 요금 전체가 아닙니다. 20MWh 저장장치의 출력이 5MW면 한 시간에 5MWh만 공급해 15MWh가 남습니다."
   },
   "infrastructure/food-chain-and-prices": {
     "action": "keep",
@@ -4326,7 +4326,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/transport-access-and-land-value": "b4cdbe939dab95f4",
   "infrastructure/housing-land-and-supply": "d9a214167861d0d6",
   "infrastructure/food-chain-and-prices": "f6b223cdfc7c2798",
-  "infrastructure/electricity-grid-and-power": "d4901083041053ad",
+  "infrastructure/electricity-grid-and-power": "8663d1f04f659a25",
   "infrastructure/climate-risk-and-exposure": "aa85ef97f65b45ea",
   "business/business-model-cashflow": "d9d96a98d88c5a2e",
   "business/franchise-incentives": "c6da7928e309fac2",

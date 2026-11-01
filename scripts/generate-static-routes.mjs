@@ -182,6 +182,7 @@ const noScriptArticleRoutes = new Set([
   "institutions/media-attention-and-public-belief",
   "institutions/how-to-read-a-country",
   "institutions/culture-norms-and-coordination",
+  "infrastructure/electricity-grid-and-power",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

@@ -2,6 +2,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ElectricityGridPowerViz from "./ElectricityGridPowerViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function ElectricityGridAndPowerArticle() {
@@ -9,6 +10,7 @@ export default function ElectricityGridAndPowerArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 전기를 만들 장소와 사용할 장소 사이에 무엇이 필요할까요</h2>
+        <ElectricityGridPowerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">공장을 지을 때는 전기를 싸게 살 수 있는지와 원하는 날부터 계속 받을 수 있는지를 함께 봅니다. 발전소에 여유가 있어도 공장까지 보내는 길이 좁으면 생산을 시작하기 어렵습니다.</p>
           <p className="leading-8">이 글은 만드는 곳, 보내는 길, 쓰는 곳을 한 시간의 거래로 묶습니다. 설비를 더 짓는 선택과 사용 시간을 옮기는 선택이 각각 어느 막힘을 풀고 누구에게 비용을 보내는지 따라갑니다.</p>
