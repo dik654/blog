@@ -166,6 +166,7 @@ const noScriptArticleRoutes = new Set([
   "business/shop-unit-economics",
   "business/shop-site-selection",
   "business/shop-fitout-and-opening",
+  "business/shop-daily-operations",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

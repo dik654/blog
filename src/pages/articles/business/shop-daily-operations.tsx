@@ -3,8 +3,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ShopDailyOperationsViz from "./ShopDailyOperationsViz";
 
-/** 공식 자료 확인: 2026-10-04. 주문·금액·지급기한은 가정입니다. */
+/** 공식 자료 확인: 2026-11-01. 주문·금액·정산 시점은 가정입니다. */
 export default function ShopDailyOperationsArticle() {
   return (
     <div className="space-y-16">
@@ -15,8 +16,12 @@ export default function ShopDailyOperationsArticle() {
           <p className="leading-7">이 글은 주문 한 묶음이 재료 구매와 근무 기록을 거쳐 은행 입금과 세금 자료로 바뀌는 길을 설명합니다. 사람과 물건과 돈의 장부를 연결하면 어느 지점의 기록이 빠졌는지 찾을 수 있습니다.</p>
         </div>
 
+        <div className="mt-8">
+          <ShopDailyOperationsViz />
+        </div>
+
         <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
-            주문이 들어온 뒤 누가 재료와 돈을 확인하는지부터 나눠 보겠습니다.
+            그림에서는 같은 주문 20건이 재고·정산·근무 장부에 서로 다른 시점으로 기록됐습니다. 이제 각 장부의 역할을 나눕니다.
           </p>
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
@@ -82,10 +87,10 @@ export default function ShopDailyOperationsArticle() {
           <p className="leading-7">주방에서는 재료의 보관 온도와 사용기한을 확인하고 먼저 써야 할 재료부터 사용합니다. 이 사례에서는 20건을 제공하고 1개를 폐기했으므로 남는 것은 4개입니다. 폐기한 날짜와 이유를 남겨 과다 발주인지 보관 문제인지 다음 주문에서 고칩니다. 발주량을 판매량과 무조건 같게 두지 않고 입고까지 걸리는 날과 실제 변동을 반영합니다.</p>
           <p className="leading-7">근무 전에는 할 일과 시간, 임금·지급일을 정한 계약을 주고받습니다. 출퇴근 시각과 실제 근로·휴게를 나눠 기록하고 휴게 제공 의무와 유급·무급 처리를 적용법으로 확인합니다. 이 사례의 4시간은 이미 실제 일한 시간으로 확인한 값이므로, 휴게라는 이름으로 다시 빼지 않습니다. 한국이라면 기준이 숫자로 정해져 있습니다.</p>
           <p className="leading-7">근로기준법 제54조는 근로시간이 4시간이면 30분 이상, 8시간이면 1시간 이상의 휴게를 근로시간 도중에 주고 근로자가 자유롭게 쓰게 하도록 정하며, 이 의무는 5인 미만 사업장에도 적용됩니다. 2026년 최저임금은 업종 구분 없이 시간급 10,320원이므로 이 직원의 4시간에는 최소 4 × 10,320 = 41,280원이 듭니다.</p>
-          <p className="leading-7">같은 직원이 주 4일 일하면 주 소정근로 16시간으로 주휴수당 대상이 되고, 주 3일(12시간)이면 4주 평균 주 15시간 미만이라 제18조 제3항에 따라 주휴일(제55조)과 연차휴가(제60조) 규정이 적용되지 않습니다(근무일수는 가정, 2026-10-08 시행 근로기준법과 고용노동부 2026년 최저임금 고시 기준으로 2026-10-09 확인).</p>
+          <p className="leading-7">같은 직원이 주 4일 일하면 주 소정근로 16시간으로 주휴수당 대상이 되고, 주 3일(12시간)이면 4주 평균 주 15시간 미만이라 제18조 제3항에 따라 주휴일(제55조)과 연차휴가(제60조) 규정이 적용되지 않습니다. 근무일수는 가정이며, 2026-11-01 확인한 현행 근로기준법과 2026년 최저임금 공식 고시를 적용했습니다.</p>
           <p className="leading-7">급여일에는 근무기록에서 계산한 총액과 세금·보험 등의 적법한 공제, 실제 지급액을 맞추고 명세서를 전달합니다. 신규 입사와 퇴사 때 사회보험 신고 대상·기한도 근무형태에 맞춰 확인합니다.</p>
           <p className="leading-7">마감 때 판매 20건 16만 원을 결제방식별로 묶습니다. 결제업체의 정산 예정액 15만6천800원에 연결된 주문과 수수료 3천200원을 확인하고 이틀 뒤 은행에서 실제 입금을 찾습니다. 은행 도착을 확인하기 전에는 미입금으로 남깁니다. 배달 주문은 플랫폼 부담 할인과 점주 부담 할인, 광고·배달 비용과 환불을 따로 대조해야 하며 이 사례의 카드 2%를 그대로 쓰지 않습니다.</p>
-          <p className="leading-7">한국의 카드 결제라면 2%도 높게 잡은 가정입니다. 2025-02-14부터 적용된 우대수수료율은 연매출 3억 원 이하 가맹점의 신용카드가 0.40%, 체크카드가 0.15%이므로(정책브리핑 2025-08-15), 16만 원 신용카드 매출의 수수료는 3천200원이 아니라 640원입니다. 실제 율은 카드사 정산 내역으로 확인합니다.</p>
+          <p className="leading-7">본문의 2%는 정산 구조를 설명하기 위한 가정이며 한국의 우대수수료율과 같지 않습니다. 금융위원회의 2026년 하반기 안내에 따르면 연매출 3억 원 이하 영세가맹점의 우대수수료율은 신용카드 0.40%, 체크카드 0.15%이고, 연매출 30억 원 이하의 다른 구간에는 더 높은 우대율이 적용됩니다. 이 사례가 연매출 3억 원 이하 신용카드 우대 대상이라고 다시 가정하면 16만 원의 수수료는 640원입니다. 실제 율은 여신금융협회·카드사의 가맹점 조회와 정산 내역으로 확인합니다.</p>
           <p className="leading-7">사업에 쓰는 입출금 계좌를 생활비 계좌와 나누면 거래를 찾기 쉽습니다. 한국의 법정 사업용계좌 신고·사용 의무는 복식부기의무자 등 적용 대상에 따른 문제이므로 모든 영세 점주가 같은 신고 의무를 진다고 쓰지 않습니다. 카드와 플랫폼에 등록한 예금주·사업자·환불 경로도 일치시키고, 개인 생활비 인출을 재료 구입처럼 기록하지 않습니다.</p>
           <p className="leading-7">매일 자료를 모으고 월말에는 거래 누락·취소·미입금과 실제 재고를 정리합니다. 세금 계산서·카드 영수증·현금영수증 등 증빙을 회계 기록과 연결한 뒤 과세 유형에 맞는 신고 일정을 관리합니다. 이 사례는 세금 전 운영 비교이므로 16만 원에서 부가세나 소득세를 모두 계산할 수는 없습니다.</p>
         </div>
@@ -95,8 +100,10 @@ export default function ShopDailyOperationsArticle() {
           { code: "예정 입금 ← 고객 결제 − 수수료", note: "환불·보류·추가 조정이 없는 이 사례에서 156800원입니다." },
           { code: "입금 차이 ← 실제 입금 − 예정 입금", note: "같은 정산 대상 주문과 지급일을 맞춘 뒤 0인지 확인합니다." },
         ]} output="재고 차이 0개, 입금 차이 0원; 폐기손실 2000원과 근무 4시간은 별도 기록" />
-        <CitationBlock source="고용노동부 · [카드뉴스] 5인미만 사업장 적용 노동법(2022-05-10)" citeKey={1} href="https://www.moel.go.kr/news/cardinfo/view.do?bbs_seq=20220500493">근로계약서 교부와 임금명세서의 구성·계산·공제 기재, 휴게시간·주휴일이 5인 미만 사업장에도 적용된다는 안내를 확인했습니다. 2022년 자료라 당시 최저임금(9,160원)이 실려 있으므로 2026년 금액은 고용노동부 2026년 최저임금 고시(10,320원)로 따로 확인했습니다. 2026-10-09 대조.</CitationBlock>
-        <CitationBlock source="한국 소득세법 제160조의5" citeKey={2} href="https://www.law.go.kr/법령/소득세법/제160조의5">2026-01-01 시행본의 사업용계좌 신고·사용 대상과 기한을 2026-10-04 확인했습니다.</CitationBlock>
+        <CitationBlock source="고용노동부 · [카드뉴스] 5인미만 사업장 적용 노동법(2022-05-10)" citeKey={1} href="https://www.moel.go.kr/news/cardinfo/view.do?bbs_seq=20220500493">근로계약서 교부와 임금명세서의 구성·계산·공제 기재, 휴게시간·주휴일이 5인 미만 사업장에도 적용된다는 안내를 확인했습니다. 2022년 자료라 당시 최저임금(9,160원)은 재사용하지 않고 2026년 공식 고시와 2026-11-01 대조했습니다.</CitationBlock>
+        <CitationBlock source="고용노동부 · 2026년 적용 최저임금" citeKey={2} href="https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18144">2026년 시간급 10,320원과 모든 사업장에 같은 금액을 적용한다는 공식 고시 안내를 2026-11-01 확인했습니다. 본문의 4만1천280원은 수당·공제·보험을 빼지 않은 단순 하한 계산입니다.</CitationBlock>
+        <CitationBlock source="금융위원회 · 2026년 하반기 영세·중소가맹점 우대수수료율" citeKey={3} href="https://www.fsc.go.kr/po010104/87498?srchCtgry=4">2026-08-14부터 적용된 연매출 구간별 신용·체크카드 우대수수료율과 실제 적용률 조회 경로를 2026-11-01 확인했습니다. 본문의 2%는 이 표의 값이 아닙니다.</CitationBlock>
+        <CitationBlock source="한국 소득세법 제160조의5" citeKey={4} href="https://www.law.go.kr/법령/소득세법/제160조의5">2026-07-01 시행본의 사업용계좌 사용 대상과 신고 범위를 2026-11-01 확인했습니다.</CitationBlock>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">20건이 재료와 근무, 정산 자료로 이어졌습니다. 원문이 손실과 지급 확인을 어떻게 구분하는지 살펴봅니다.</p>
       </section>
       <section id="source" data-teach-level="5" className="scroll-mt-20">
@@ -105,9 +112,9 @@ export default function ShopDailyOperationsArticle() {
           <p className="leading-7">판매 20개와 폐기 1개는 같은 소비로 보일 수 있지만 판매 기록과 손실 기록이 나뉩니다. IAS 2 공식 안내는 재고 손실을 비용으로 인식하는 시점을 설명합니다. 이 글은 그 분리 원리를 쓰며 모든 소상공인에게 IFRS를 의무 적용한다고 가정하지 않습니다.</p>
         </div>
         <SourceApplication source="IAS 2 · About, inventory losses" excerpt="all losses of inventories are recognised as an expense" application="폐기 1개×2천 원=2천 원을 따로 남깁니다. 판매 재료 4만 원과 합치면 4만2천 원이며, 16만 원에서 수수료 3천200원까지 빼면 인건비·월세·세금 전 11만4천800원입니다." />
-        <CitationBlock source="IAS 2 Inventories" citeKey={3} href="https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/">공식 About의 재고 판매·손실 비용 인식 설명입니다.</CitationBlock>
+        <CitationBlock source="IAS 2 Inventories" citeKey={5} href="https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/">공식 About의 재고 판매·손실 비용 인식 설명입니다.</CitationBlock>
         <p className="mt-5 leading-7">Stripe의 정산 대조 문서에서도 은행 송금 한 건과 그 안에 포함된 거래 묶음을 연결합니다. 이 사례라면 같은 송금에 포함된 20건과 수수료를 찾아 15만6천800원을 맞춥니다. 실제 보고서에서는 환불·분쟁·다른 조정도 확인해야 합니다. 이 보고서는 자동 송금 등을 대상으로 하며, 일반 수동 송금은 잔액 보고서를 쓰고 즉시 송금은 거래 이력과 별도로 맞추도록 안내합니다.</p>
-        <CitationBlock source="Stripe · Payout reconciliation report" citeKey={4} href="https://docs.stripe.com/reports/payout-reconciliation">송금별 거래·수수료·잔액을 맞추는 결제업체 원문입니다. 사례의 2%와 이틀은 Stripe의 요금·일정이 아닌 가정입니다.</CitationBlock>
+        <CitationBlock source="Stripe · Payout reconciliation report" citeKey={6} href="https://docs.stripe.com/reports/payout-reconciliation">송금별 거래·수수료·잔액을 맞추는 결제업체 원문입니다. 사례의 2%와 이틀은 Stripe의 요금·일정이 아닌 가정입니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">폐기 1개의 원가를 판매에 숨기지 않는 근거를 확인했습니다. 노동 기록은 다른 나라에서 무엇을 요구하는지 비교합니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
@@ -117,7 +124,7 @@ export default function ShopDailyOperationsArticle() {
           <p className="leading-7">한국은 근로계약과 출퇴근·임금대장·명세서, 고용·급여 신고를 연결해 확인합니다. 미국이나 다른 나라에서는 연방·주·지방 규칙과 사업장 적용 대상을 확인해야 합니다. 자료 보관기간과 명세서 교부 시점은 현지 규정을 따르며 호주 기간을 다른 나라에 복사하지 않습니다.</p>
         </div>
         <SourceApplication source="Fair Work Ombudsman · Record-keeping fact sheet, Overview" excerpt="make and keep accurate and complete records for all of their employees" application="20건을 팔던 날의 근무 4시간을 기록하고 약정·법정 조건으로 계산한 총액과 공제·순지급을 연결합니다. 매출이 적었다는 이유로 실제 근무 기록을 줄이지 않습니다." />
-        <CitationBlock source="Australia Fair Work Ombudsman · Record-keeping and pay slips" citeKey={5} href="https://www.fairwork.gov.au/tools-and-resources/fact-sheets/rights-and-obligations/record-keeping-pay-slips">2026-10-04 확인. 호주 적용 노동법의 기록·명세서와 보관 의무 설명입니다.</CitationBlock>
+        <CitationBlock source="Australia Fair Work Ombudsman · Record-keeping and pay slips" citeKey={7} href="https://www.fairwork.gov.au/tools-and-resources/fact-sheets/rights-and-obligations/record-keeping-pay-slips">2026-11-01 확인. 호주 적용 노동법의 기록·명세서와 보관 의무 설명입니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">같은 4시간도 관할 규칙에 따라 지급 계산이 달라집니다. 마지막으로 장부가 맞아도 놓칠 수 있는 안전과 책임을 살핍니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
@@ -140,10 +147,10 @@ export default function ShopDailyOperationsArticle() {
             무조건 지우거나 반대로 모든 고객 연락처를 계속 보관하는 식으로 처리하지 않습니다.
           </p>
         </div>
-        <CitationBlock source="법제처 · 음식점 화재배상책임보험과 안전시설" citeKey={6} href="https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365">페이지 하단 &ldquo;2026년 9월 15일 기준으로 작성&rdquo; 안내를 2026-10-09 확인. 면적·층·출입구와 업종에 따른 대상·예외를 확인합니다.</CitationBlock>
-        <CitationBlock source="한국 개인정보 보호법 제21조" citeKey={7} href="https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625">불필요한 개인정보의 파기와 다른 법령에 따른 보존 자료 분리를 확인합니다.</CitationBlock>
-        <CitationBlock source="법제처 · 음식점 건강진단과 식품위생교육" citeKey={8} href="https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov">2026-09-15 기준 안내를 2026-10-04 확인. 식품위생법 제40조·제41조에 따른 대상·예외는 건강진단과 연결된 식품위생교육 절에서 확인합니다.</CitationBlock>
-        <CitationBlock source="법제처 · 식품위생교육 대상과 예외" citeKey={9} href="https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=839&ccfNo=4&cciNo=1&cnpClsNo=2">2026-09-15 기준 안내의 영업자 교육·대리·면제 범위를 확인했습니다. 식품위생법의 2026-10-08 시행분(법률 제21525호, 결격조항 정비)은 이미 시행됐지만 제40조·제41조 내용은 바뀌지 않았습니다(2026-10-09 확인). 같은 안내 상단이 예고하는 다음 개정은 2026-12-31 시행분입니다.</CitationBlock>
+        <CitationBlock source="법제처 · 음식점 화재배상책임보험과 안전시설" citeKey={8} href="https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365">페이지 하단 &ldquo;2026년 9월 15일 기준으로 작성&rdquo; 안내를 2026-11-01 확인했습니다. 면적·층·출입구와 업종에 따른 대상·예외를 확인합니다.</CitationBlock>
+        <CitationBlock source="한국 개인정보 보호법 제21조" citeKey={9} href="https://www.law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=900078981">2026-09-11 시행본에서 불필요한 개인정보의 파기와 다른 법령에 따라 보존할 자료의 분리 저장·관리를 2026-11-01 확인했습니다.</CitationBlock>
+        <CitationBlock source="법제처 · 음식점 건강진단" citeKey={10} href="https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov">종사 전 건강진단의 대상·시기·예외를 2026-11-01 확인했습니다. 구체적인 적용 여부는 관할기관에 확인합니다.</CitationBlock>
+        <CitationBlock source="법제처 · 식품위생교육 대상과 예외" citeKey={11} href="https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=839&ccfNo=4&cciNo=1&cnpClsNo=2">2026-10-15 기준 안내의 영업자 교육·대리·면제 범위를 2026-11-01 확인했습니다. 같은 안내 상단은 2026-12-31 시행 개정을 아직 반영하지 않았다고 표시합니다.</CitationBlock>
         <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">한 주문을 재료·사람·돈의 증거로 끝까지 연결하면 수익과 손실의 원인을 나누어 고칠 수 있습니다.</p>
         <ReviewPrompts questions={["25개 분량 중 20개를 팔고 1개를 버렸다면 남은 재료와 다른 비용 전 금액은 얼마이며 오늘 통장 잔액과 같을까요? (답: 3절)", "판매 16만 원과 이틀 뒤 입금 15만6천800원을 모두 매출로 기록하면 어떤 오류가 생길까요? (답: 5절)", "판매일 마감 때 아직 은행에 들어오지 않은 정산 예정액과 직원의 실제 근로 4시간을 각각 어떻게 남겨야 할까요? (답: 7절)"]} />
       </section>

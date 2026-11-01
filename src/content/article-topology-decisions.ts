@@ -1756,7 +1756,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "business/shop-daily-operations": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-04",
+    "reviewedAt": "2026-11-01",
     "rationale": "주문 하나의 기록이 재고·급여·결제 정산에서 누락되는 지점을 찾는 하나의 운영 경로입니다. 개업 시설, 장기 투자회수, 양도·폐업은 기존 정본을 재사용합니다.",
     "sharedGate": "동일한 하루20건×8천원, 재료25=판매20+폐기1+잔여4, 수수료3200원과입금156800원, 근무4시간을 본문·의사코드·문제에서 보존합니다."
   },

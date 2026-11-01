@@ -12400,13 +12400,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "소득세법 제160조의5 · 사업용계좌",
       "href": "https://www.law.go.kr/법령/소득세법/제160조의5",
-      "note": "국가법령정보센터의 실제 제160조의5 본문에서 대상 거래와 신고 범위를 읽었습니다. 모든 영세 점주에게 같은 계좌 신고 의무가 있다고 단정하지 않습니다."
+      "note": "2026-07-01 시행본의 제160조의5에서 대상 거래와 신고 범위를 2026-11-01 읽었습니다. 모든 영세 점주에게 같은 계좌 신고 의무가 있다고 단정하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "개인정보 보호법 제21조 · 파기와 보존",
-      "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
-      "note": "국가법령정보센터의 제21조 1~3항을 실제 읽었습니다. 모든 고객 연락처를 계속 보관할 근거나 개별 자료의 보존기간을 정한 것은 아닙니다."
+      "href": "https://www.law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=900078981",
+      "note": "2026-09-11 시행본의 제21조 1~3항에서 파기와 복구 방지, 법정 보존 자료의 분리 저장·관리를 2026-11-01 읽었습니다. 개별 자료의 보존기간을 정한 것은 아닙니다."
     },
     {
       "kind": "공식 문서",
@@ -12416,21 +12416,33 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       "kind": "공식 문서",
+      "label": "고용노동부 · 2026년 적용 최저임금",
+      "href": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18144",
+      "note": "2026년 시간급 10,320원과 모든 사업장에 동일하게 적용한다는 공식 고시 안내를 2026-11-01 확인했습니다. 수당·공제·보험까지 계산한 자료는 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 2026년 하반기 영세·중소가맹점 우대수수료율",
+      "href": "https://www.fsc.go.kr/po010104/87498?srchCtgry=4",
+      "note": "2026-08-14부터 적용되는 연매출 구간별 신용·체크카드 우대수수료율과 실제 적용률 조회 경로를 2026-11-01 확인했습니다. 본문의 2%·이틀 정산 가정은 이 표의 값이 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
       "label": "법제처 · 음식점 화재배상책임보험과 안전시설",
       "href": "https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365",
-      "note": "페이지 하단 '2026년 9월 15일 기준으로 작성' 안내에서 업종·면적(100㎡, 지하 66㎡)·층·주출입구와 예외를 2026-10-09 확인했습니다. 실제 점포의 가입 대상 판정은 별도입니다."
+      "note": "페이지 하단 '2026년 9월 15일 기준으로 작성' 안내에서 업종·면적(100㎡, 지하 66㎡)·층·주출입구와 예외를 2026-11-01 확인했습니다. 실제 점포의 가입 대상 판정은 별도입니다."
     },
     {
       "kind": "공식 문서",
       "label": "법제처 · 음식점 건강진단",
       "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov",
-      "note": "2026-09-15 기준 제40조의 대상·시기·예외 설명을 읽었습니다. 특정 질환의 진단이나 식품 안전 판정은 하지 않습니다."
+      "note": "종사 전 건강진단의 대상·시기·예외 설명을 2026-11-01 읽었습니다. 특정 질환의 진단이나 식품 안전 판정은 하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "법제처 · 식품위생교육",
       "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=839&ccfNo=4&cciNo=1&cnpClsNo=2",
-      "note": "2026-09-15 기준 제41조의 교육·대리·면제 범위를 읽었습니다. 식품위생법 2026-10-08 시행분(결격조항 정비)은 이미 시행됐으나 제41조 내용은 바뀌지 않았고, 다음 예고는 2026-12-31 시행분입니다(2026-10-09 확인)."
+      "note": "2026-10-15 기준 제41조의 교육·대리·면제 범위를 2026-11-01 읽었습니다. 같은 안내 상단은 2026-12-31 시행 개정을 아직 반영하지 않았다고 표시합니다."
     }
   ],
   "institutions/population-migration-and-care": [{"kind": "공식 문서", "label": "UN DESA · WPP2024 Methodology, p.1–2 및 II.G", "href": "https://population.un.org/wpp/assets/Files/WPP2024_Methodology.pdf", "note": "2024판은 연령·성별 출생·사망·국제이동으로 매년 인구를 전진시킵니다. 추정과 전망을 구분합니다."}, {"kind": "공식 문서", "label": "ILO · Care economy, What is the care economy?", "href": "https://www.ilo.org/topics-and-sectors/care-economy", "note": "유급·무급, 직접·간접 돌봄과 제공자·수혜자·고용주·서비스 기관의 범위. 확인 2026-10-04."}, {"kind": "공식 문서", "label": "ONS · National population projections methodology", "href": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/methodologies/methodologyusedtoproducethenationalpopulationprojections", "note": "출생·사망·이동의 가정에 따른 전망이라는 방법적 경계. 한국의 장기 전망이나 다른 나라의 실제 수치를 대신하지 않습니다."}],

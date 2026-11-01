@@ -133614,18 +133614,18 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "mechanism",
         "problem": "관리 목적의 계좌 분리와 법정 신고 의무를 혼동하는 문제입니다.",
         "contribution": "복식부기의무자 등 적용 대상을 확인하고 생활비 인출을 재료비로 기록하지 않습니다.",
-        "assumptions": "2026-01-01 시행본을 2026-10-04 확인했으며 개별 사업자의 기장의무는 별도로 판단합니다.",
+        "assumptions": "2026-07-01 시행본을 2026-11-01 확인했으며 개별 사업자의 기장의무는 별도로 판단합니다.",
         "evidenceScope": "국가법령정보센터의 실제 제160조의5 본문에서 대상 거래와 신고 범위를 읽었습니다.",
         "notClaim": "모든 영세 점주에게 같은 계좌 신고 의무가 있다고 단정하지 않습니다."
       },
       {
         "title": "개인정보 보호법 제21조 · 파기와 보존",
-        "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
+        "href": "https://www.law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=900078981",
         "sectionId": "limits",
         "problem": "폐업 때 모든 자료를 무조건 지우거나 무기한 보관하는 문제입니다.",
         "contribution": "불필요해진 정보의 파기와 다른 법령상 보존할 급여·세무 자료의 분리 관리를 나눕니다.",
         "assumptions": "2026-09-11 시행본의 제21조이며 개별 기록의 구체적인 보존기간은 해당 법령을 확인합니다.",
-        "evidenceScope": "국가법령정보센터의 제21조 1~3항을 실제 읽었습니다.",
+        "evidenceScope": "2026-09-11 시행본의 제21조 1~3항을 2026-11-01 읽었습니다.",
         "notClaim": "모든 고객 연락처를 계속 보관할 근거나 개별 자료의 보존기간을 정한 것은 아닙니다."
       }
     ]
