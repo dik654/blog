@@ -3495,9 +3495,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/swaption-annuity-volatility-quotes-and-cube": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "스왑션 평가는 곡선에서 선도스왑금리와 연금계수를 만든 뒤 옵션 만기·기초 스왑 만기·행사가의 큐브 좌표에서 단위와 모형이 명시된 변동성을 찾아 보정·보간하고 가격과 민감도를 시장 호가에 검증하는 과정입니다.",
-    "sharedGate": "10bp=0.001에 명목 1억과 연금계수 8.5를 곱해 기초 스왑 금리 차이 가치 85만 원을 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "3개월×10년 지급 스왑션의 계약 좌표에서 곡선의 선도금리·연금계수, 10bp 차이 가치, normal 70bp 호가형, moneyness 부호, 35bp 표준편차와 d, Bachelier 프리미엄 약 81만 원, 시장·손익 검증까지 큐브 한 점을 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "0.001×1억×8.5=85만 원, 70bp×√0.25=35bp, d=−10÷35≈−0.286, 1억×8.5×0.000953≈81만 원을 검산하고 금리 차이 가치·옵션 프리미엄·normal·lognormal·moneyness 부호를 구분합니다."
   },
   "markets/derivatives-sales-records-access-retention-and-deletion": {
     "action": "keep",
@@ -4670,7 +4670,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/portfolio-compression-risk-tolerances-and-records":"8fb8d694df4df230",
 "markets/collateral-optimization-eligibility-haircuts-and-liquidity":"211395f9610ad486",
 "markets/ccp-default-management-hedging-auction-and-porting":"40b7aa88ea82fa5f",
-"markets/swaption-annuity-volatility-quotes-and-cube":"5e9505995e4db8ac",
+"markets/swaption-annuity-volatility-quotes-and-cube":"cfefb2d036fad186",
 "markets/derivatives-sales-records-access-retention-and-deletion":"7106213433ef2db2",
 "markets/equity-dispersion-implied-correlation-and-variance":"dc637f6b4f965461",
 "markets/credit-tranche-base-correlation-and-default-auction":"69d67fe0bb57d7a0",
