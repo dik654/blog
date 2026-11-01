@@ -1,89 +1,180 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { BFTAxisTableViz, BFTMechanismComparisonViz } from "./viz/ModernBFTComparisonViz";
+import { AutobahnLaneCutViz, BFTAxisTableViz, BFTSameTraceViz } from "./viz/ModernBFTComparisonViz";
 
 function Note({ title, children }: { title: string; children: React.ReactNode }) {
-  return <div className="rounded-lg border border-border bg-card p-4"><h3 className="text-sm font-semibold text-foreground">{title}</h3><div className="mt-2 text-sm leading-6 text-muted-foreground">{children}</div></div>;
+  return (
+    <div className="border border-border bg-card p-4">
+      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+      <div className="mt-2 text-sm leading-6 text-muted-foreground">{children}</div>
+    </div>
+  );
 }
 
 export default function ModernBFTComparisonArticle() {
   return (
     <article className="space-y-14">
       <section id="overview" className="space-y-6">
-        <header className="space-y-3"><p className="text-sm font-semibold text-primary">BFT protocol을 비교하는 법</p><h2 className="text-3xl font-bold tracking-tight">빠른 논문 하나를 고르기 전에 같은 실패와 같은 workload를 놓는다</h2></header>
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">BFT 비교</p>
+          <h2 className="text-3xl font-bold tracking-tight">같은 요청과 같은 장애를 겪으면 세 프로토콜은 무엇을 넘길까요?</h2>
+        </header>
         <p className="text-lg leading-8 text-foreground/90">
-            PBFT, HotStuff, Autobahn은 모두 일부 replica가 거짓말하거나 서로 다른 내용을 보내도 하나의 명령 순서를 만드는 Byzantine fault-
-            tolerant state machine replication(BFT SMR) protocol입니다. 셋이 갈리는 지점은 data를 퍼뜨리는 위치, 안전한 vote
-            evidence를 만드는 방식, leader 교체 뒤 밀린 작업을 회복하는 경로입니다. 논문에 적힌 TPS만 나란히 놓고는 셋 중 하나를 고를 수 없습니다.
-          </p>
-        <p>이 글은 네 대의 equal-weight replica A·B·C·D 중 최대 한 대가 Byzantine인 작은 예에서 시작합니다. 세 대의 서명이 같은 height·view·phase·value에 모이면 quorum certificate(QC)가 되며, 서로 다른 두 3인 quorum은 적어도 두 replica를 공유합니다. 다만 교집합 산술만으로 safety가 완성되는 것은 아닙니다. 그 안의 honest replica가 protocol의 lock·vote rule에 따라 충돌하는 값에 다시 서명하지 않아야 합니다. 이 기초의 정본은 <a href="/cs/blockchain/bft-theory#faulty-threshold" className="text-primary underline-offset-4 hover:underline">BFT 이론의 quorum과 lock</a>에 있고, 여기서는 세 protocol이 그 evidence를 어떻게 운반하는지 비교합니다.</p>
-        <BFTMechanismComparisonViz />
-        <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> protocol 비교의 단위는 이름이 아니라 <em>membership·fault·timing model → data dissemination → order certificate → commit rule → leader-change recovery</em>입니다. 같은 단위를 고정한 뒤 latency·throughput·bytes·CPU를 측정해야 구조적 차이와 구현 차이를 분리할 수 있습니다.</aside>
+          앞선 글에서 PBFT의 prepared certificate, HotStuff의 QC 사슬과 pacemaker를 따로 확인했습니다. 이제 Alice의 요청 T1과 주 노드 정지 한 번을 같은 조건에 놓습니다. 비교할 것은 이름이나 논문의 최고 TPS가 아니라, <strong>데이터가 들어오는 위치, 커밋 증거, 장애 뒤 새 주 노드에게 넘기는 상태</strong>입니다.
+        </p>
+
+        <BFTSameTraceViz />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Note title="같게 고정한 조건">
+            복제본 A·B·C·D 네 대, 최대 Byzantine 한 대, 인증된 채널, 같은 요청 T1과 같은 주 노드 장애를 사용합니다. 따라서 n=4, f=1이고 2f+1 정족수는 세 대입니다.
+          </Note>
+          <Note title="먼저 확인할 질문">
+            인증서 하나를 발견했을 때 무엇이 확정됐고 무엇이 아직 남았는지 묻습니다. 데이터 가용성, 순서 합의, 커밋, 실행과 클라이언트 응답은 같은 사건이 아닙니다.
+          </Note>
+        </div>
+
+        <p>
+          세 방식은 모두 정족수 교집합과 정상 복제본의 투표 규칙으로 충돌하는 결정을 막습니다. 그러나 같은 증거를 운반하지는 않습니다.
+        </p>
+        <p>
+          PBFT는 순번별 prepared 상태를 view change에 싣고, HotStuff는 안전한 가지를 QC 사슬로 이어 갑니다. Autobahn은 데이터를 복제본별 lane에서 먼저 전파하고 합의는 각 lane의 어느 지점까지 포함할지 정합니다. 이 차이가 정상 구간의 지연뿐 아니라 장애가 끝난 뒤 밀린 요청을 처리하는 방식도 바꿉니다.
+        </p>
       </section>
 
       <section id="pbft" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">01 · PBFT</p><h2 className="mt-2 text-2xl font-bold">두 vote phase가 request 순서를 고정하고 view change가 prepared evidence를 회수한다</h2></header>
-        <p>PBFT의 primary는 sequence number가 붙은 PRE-PREPARE를 보냅니다. Backup은 request와 view·sequence가 맞으면 PREPARE를 multicast하고, pre-prepare와 서로 다른 replica의 충분한 prepare를 모아 <strong>prepared</strong> 상태를 만듭니다. 이어 COMMIT을 보내며 2f+1개의 일치하는 commit을 모으면 locally committed가 됩니다. n=4,f=1에서는 세 commit이 필요하므로, 최대 한 Byzantine replica만으로는 서로 충돌하는 두 local commit을 만들 수 없습니다.</p>
+        <header>
+          <p className="text-sm font-semibold text-primary">01 · PBFT</p>
+          <h2 className="mt-2 text-2xl font-bold">순번별 prepared 증거를 새 view가 이어받습니다</h2>
+        </header>
         <p>
-            Primary가 멈추거나 equivocate하면 replica는 timeout만으로 기존 lock을 지우지 않고 VIEW-CHANGE에 prepared certificate와
-            stable checkpoint를 담아 다음 primary에게 보냅니다. 새 primary의 NEW-VIEW가 이 evidence를 정당하게 선택해야 이미 prepared된
-            request와 충돌하는 sequence를 제안하지 않습니다. Original PBFT의 normal path와 view-change message는 구체적인
-            authenticator·batch·checkpoint 구성에 의존합니다. “PBFT는 언제나 O(n²), view change는 언제나 O(n³)”처럼 한 줄로 고정할 수
-            없는 이유입니다. 비교하려면 실제 구현의 전송 bytes와 verification 수를 직접 세어야 합니다.
-          </p>
-        <div id="paper-pbft-comparison"><CitationBlock source="Castro·Liskov — Practical Byzantine Fault Tolerance" citeKey={1} href="https://pmg.csail.mit.edu/papers/osdi99.pdf"><p><strong>문제:</strong> Byzantine replica가 있는 비동기 network에서 practical SMR을 구현합니다.</p><p><strong>기여:</strong> PRE-PREPARE·PREPARE·COMMIT, checkpoint와 view change를 결합하고 NFS workload에서 구현을 평가했습니다.</p><p><strong>전제와 범위:</strong> 논문의 fixed membership·authentication·workload와 당시 구현 결과에 한정합니다. 현대 WAN, stake weight, 다른 crypto·batch의 성능을 자동으로 예측하지 않습니다.</p></CitationBlock></div>
+          주 노드는 T1에 view 7과 순번 42를 붙여 PRE-PREPARE를 보냅니다. Backup은 그 조합을 받아들이면 PREPARE를 전파합니다. 한 복제본이 PRE-PREPARE와 서로 다른 backup의 일치하는 PREPARE 2f개를 모으면 prepared 상태가 됩니다.
+        </p>
+        <p>
+          이어 같은 view·순번·요청 해시에 대한 COMMIT 2f+1개를 받으면 locally committed가 됩니다. n=4, f=1에서는 PREPARE 두 개와 COMMIT 세 개가 각각의 조건입니다.
+        </p>
+        <p>
+          장애가 나면 timeout 자체가 이전 상태를 지우지 않습니다. 각 복제본은 stable checkpoint와 그 이후 순번의 prepared certificate를 VIEW-CHANGE에 담습니다. 새 주 노드는 VIEW-CHANGE 2f+1개에서 안전한 요청 집합을 만들고 NEW-VIEW로 증명합니다. 따라서 새 view가 같은 순번 42에 다른 요청을 넣으려면 이전 prepared 증거와 충돌하게 됩니다.
+        </p>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Note title="PBFT가 직접 보존하는 것">View·순번·요청 해시별 prepared 상태와 stable checkpoint입니다.</Note>
+          <Note title="별도로 복구할 것">요청 본문, checkpoint 이후 실행 로그, 클라이언트 중복 요청 판정과 응답입니다.</Note>
+        </div>
+        <div id="paper-pbft-comparison">
+          <CitationBlock source="Castro·Liskov — Practical Byzantine Fault Tolerance" citeKey={1} href="https://pmg.csail.mit.edu/papers/osdi99.pdf">
+            <p><strong>문제:</strong> 일부 복제본이 임의로 잘못 행동해도 복제 상태 기계가 같은 명령 순서를 실행하게 합니다.</p>
+            <p><strong>이 글에서 확인한 부분:</strong> §4의 PRE-PREPARE·PREPARE·COMMIT과 §4.4의 checkpoint·view change입니다.</p>
+            <p><strong>경계:</strong> 1999년 논문의 고정 membership·인증 방식·NFS 평가입니다. 현대 WAN이나 다른 서명 구현의 성능을 뜻하지 않습니다.</p>
+          </CitationBlock>
+        </div>
       </section>
 
       <section id="hotstuff" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">02 · HotStuff</p><h2 className="mt-2 text-2xl font-bold">Chained QC가 normal path와 leader 교체의 evidence 형식을 맞춘다</h2></header>
+        <header>
+          <p className="text-sm font-semibold text-primary">02 · HotStuff</p>
+          <h2 className="mt-2 text-2xl font-bold">안전한 가지를 QC 사슬로 운반합니다</h2>
+        </header>
         <p>
-            HotStuff의 block은 parent block과 그 parent를 지지하는 QC를 가리킵니다. Replica는 현재 lock과 양립하고 justify QC가 충분히
-            새로울 때 vote하며 leader는 그 vote를 모아 다음 QC를 만듭니다. Chained HotStuff에서는 연속된 proposal과 QC가 prepare·pre-
-            commit·commit 역할을 pipeline합니다. 한 block은 즉시 commit되지 않고 뒤의 certified descendants가 쌓여 commit rule을
-            만족한 뒤에야 commit됩니다.
-          </p>
+          HotStuff의 제안은 새 블록과 부모, 부모를 정당화하는 QC를 함께 운반합니다. 복제본은 제안이 현재 lock의 가지를 연장하거나, 더 높은 view의 유효한 QC가 다른 가지를 정당화할 때만 투표합니다. n=4, f=1에서는 같은 블록과 view를 가리키는 표 세 개가 QC가 됩니다. 하지만 QC 하나는 그 블록이 인증됐다는 뜻이지 곧바로 커밋됐다는 뜻이 아닙니다.
+        </p>
         <p>
-            Pacemaker는 view timeout과 leader 교체를 담당하지만 safety rule을 대신하지 않습니다. 새 leader는 replicas가 보낸 highest
-            QC를 바탕으로 safe proposal을 만듭니다. Threshold signature를 쓰면 normal view와 leader replacement의
-            authenticator communication을 linear하게 구성할 수 있습니다. 여기서 linear는 end-to-end traffic·signature
-            verification·payload dissemination 전체가 언제나 O(n)이라는 뜻이 아닙니다. Payload broadcast, timeout
-            certificate, threshold crypto 구현 비용은 측정표에 따로 남겨야 합니다.
-          </p>
-        <div id="paper-hotstuff-comparison"><CitationBlock source="Yin et al. — HotStuff" citeKey={2} href="https://arxiv.org/abs/1803.05069"><p><strong>문제:</strong> Partial synchrony에서 leader replacement가 단순하고 responsive한 BFT를 만듭니다.</p><p><strong>기여:</strong> Chained QC, three-phase safety와 pacemaker 분리를 통해 linear authenticator communication을 제시합니다.</p><p><strong>전제와 범위:</strong> Authenticated fixed-membership model과 논문의 protocol·crypto·evaluation 범위입니다. 모든 HotStuff 계열 구현이 같은 chain length나 latency를 갖는다는 뜻은 아닙니다.</p></CitationBlock></div>
+          Chained HotStuff에서는 B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모를 이어야 B10을 커밋할 수 있습니다. 주 노드가 멈추면 pacemaker가 view를 전진시키고 새 주 노드는 NEW-VIEW 2f+1개 안에서 가장 높은 유효 QC를 찾습니다. 이 QC가 가리키는 가지를 잇는 제안을 만든 뒤에도 각 복제본은 자신의 lock과 safe-vote 조건을 다시 검사합니다.
+        </p>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Note title="HotStuff가 단순해진 지점">정상 경로와 주 노드 교체가 모두 QC와 블록 가지라는 같은 형태의 증거를 사용합니다.</Note>
+          <Note title="여전히 남는 비용">Payload 전파, 표·QC 검증, timeout과 pacemaker 동기화, 빠진 블록과 실행 상태 복구는 별도입니다.</Note>
+        </div>
+        <div id="paper-hotstuff-comparison">
+          <CitationBlock source="Yin et al. — HotStuff v6" citeKey={2} href="https://arxiv.org/abs/1803.05069v6">
+            <p><strong>문제:</strong> Partial synchrony에서 주 노드 교체를 단순하게 유지하면서 실제 메시지 지연에 반응하는 BFT를 구성합니다.</p>
+            <p><strong>이 글에서 확인한 부분:</strong> Basic HotStuff의 safeNode·lock과 Chained HotStuff의 one·two·three-chain, pacemaker 분리입니다.</p>
+            <p><strong>경계:</strong> 논문의 linear communication은 해당 메시지·인증자 모델의 주장입니다. Payload bytes와 모든 변형의 end-to-end 비용이 언제나 O(n)이라는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
       </section>
 
       <section id="autobahn" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">03 · Autobahn</p><h2 className="mt-2 text-2xl font-bold">Replica별 lane에 data를 축적하고 consensus는 포함할 cut을 정한다</h2></header>
-        <p>Leader 중심 protocol에서는 leader가 order뿐 아니라 payload dissemination의 병목까지 떠안을 수 있습니다. Autobahn은 replica마다 순서가 있는 lane을 두어 data를 비동기적으로 퍼뜨리고, consensus proposal은 각 lane의 어느 tip까지 포함할지를 나타내는 <strong>cut</strong>을 정합니다. 한 cut이 확정되면 tip의 causal prefix를 결정적인 lane·slot 규칙으로 펼쳐 하나의 실행 순서를 얻습니다.</p>
+        <header>
+          <p className="text-sm font-semibold text-primary">03 · Autobahn</p>
+          <h2 className="mt-2 text-2xl font-bold">데이터는 lane에서 전파하고, 합의는 lane tip의 cut을 정합니다</h2>
+        </header>
+
+        <AutobahnLaneCutViz />
+
         <p>
-            이 분리 덕분에 network blip 동안 합의가 멈춰도 data lane은 계속 전진할 수 있습니다. Network가 회복되면 leader가 개별 transaction을
-            다시 모으기보다 certified lane tips를 cut에 포함해 backlog를 회수합니다. 다만 lane certificate는 transaction의
-            application validity나 fair ordering까지 보장하지 않습니다. Commit 뒤 실행이 막히지 않으려면 cut에 들어온 data를 모든 executor가
-            실제로 fetch할 수 있어야 합니다.
-          </p>
-        <div id="paper-autobahn"><CitationBlock source="Giridharan et al. — Autobahn: Seamless high speed BFT" citeKey={3} href="https://arxiv.org/abs/2401.10369"><p><strong>문제:</strong> 좋은 network 구간의 낮은 latency와 blip 뒤 빠른 회복을 동시에 얻습니다.</p><p><strong>기여:</strong> Parallel lane dissemination과 low-latency partially synchronous consensus를 결합하고 hangover를 평가합니다.</p><p><strong>전제와 범위:</strong> 논문의 deployment·fault injection·payload·implementation에서의 비교입니다. 다른 hardware나 membership에서 latency 절반이라는 비율이 유지된다는 일반 법칙은 아닙니다.</p></CitationBlock></div>
+          각 복제본은 자기 lane에서 car라고 부르는 proposal·vote 절차를 독립적으로 진행합니다. 한 car에 f+1표가 모이면 Proof of Availability(PoA)가 됩니다. f+1명 가운데 적어도 한 명은 정상이므로 필요할 때 데이터를 전달할 수 있습니다. 복제본은 같은 lane의 이전 위치를 이미 받고 투표한 경우에만 다음 위치에 투표합니다. 그래서 인증된 tip 하나가 그 앞 history의 가용성 근거가 됩니다.
+        </p>
+        <p>
+          합의 주 노드는 각 lane에서 자신이 본 최신 certified tip을 모아 cut을 제안합니다. Slow path에서는 Prepare vote 2f+1개로 PrepareQC를 만들고, Confirm-Ack 2f+1개로 CommitQC를 만듭니다.
+        </p>
+        <p>
+          Gracious interval의 fast path는 모든 n개의 Prepare vote를 받으면 Confirm 단계를 생략할 수 있습니다. CommitQC를 받은 복제본은 빠진 lane history를 동기화한 뒤 같은 규칙으로 lane들을 섞어 전체 순서를 만듭니다.
+        </p>
+        <p>
+          주 노드가 멈춰도 lane의 data 전파는 계속될 수 있습니다. Timeout 2f+1개로 만든 TC에는 각 복제본의 highQC와 highProp이 들어갑니다. 다음 주 노드는 TC에서 가장 높은 PrepareQC와 f+1회 나타난 proposal을 비교해 이전 view에서 커밋됐을 수 있는 cut을 보존합니다.
+        </p>
+        <p>
+          따라서 장애가 끝난 뒤 합의는 길어진 각 lane 전체를 다시 제안하지 않고 최신 tip을 가리킬 수 있습니다. 다만 누락된 payload를 실제로 받는 SYNC 비용은 사라지지 않습니다.
+        </p>
+        <div id="paper-autobahn">
+          <CitationBlock source="Giridharan et al. — Autobahn v4" citeKey={3} href="https://arxiv.org/abs/2401.10369v4">
+            <p><strong>문제:</strong> 정상 구간의 낮은 지연과 network blip 뒤 backlog 회복을 함께 다룹니다.</p>
+            <p><strong>이 글에서 확인한 부분:</strong> §5.1의 car·PoA, §5.2의 lane cut·Prepare/Confirm, §5.3의 TC와 winning proposal 선택입니다.</p>
+            <p><strong>경계:</strong> 논문의 latency·throughput·hangover 결과는 논문 구현과 배포 조건에 한정됩니다. 다른 장비에서도 같은 배수가 유지된다고 일반화하지 않습니다.</p>
+          </CitationBlock>
+        </div>
       </section>
 
       <section id="comparison" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">04 · 수치와 선택</p><h2 className="mt-2 text-2xl font-bold">Quorum 안전성은 공통으로 계산하고 성능은 동일 envelope 안에서 잰다</h2></header>
-        <ExplainedFormula question="Equal-weight BFT에서 두 commit quorum이 적어도 한 honest replica를 공유하려면 quorum은 얼마나 커야 하는가?" idea={<>두 집합의 원소 수를 더하면 전체 n을 넘는 부분이 반드시 교집합입니다. n=3f+1, q=2f+1을 대입하면 2q-n=f+1이 되어 최대 Byzantine 수 f보다 하나 많습니다.</>} formula={String.raw`\begin{aligned}|Q_1\cap Q_2|&\ge 2q-n\\&=f+1>f\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\underbrace{|Q_1\cap Q_2|}_{\text{두 quorum의 공통 signer}}&\ge \underbrace{2q-n}_{\text{n을 넘친 중복분}}\\&=\underbrace{f+1>f}_{\text{거짓말쟁이보다 하나 더}}\end{aligned}`}
-        operations={[
-          { expression: String.raw`2q-n`, annotation: ["두 quorum 크기를 더해 전체 n을","넘는 만큼은 반드시 겹칩니다","예: n=4, q=3이면 2·3−4=2"] },
-          { expression: String.raw`f+1>f`, annotation: ["겹친 signer가 Byzantine 최대 수 f보다","많으니 적어도 한 명은 honest","예: f=1이면 겹친 2명 중 1명 이상"] },
-        ]} terms={[{symbol:"n",name:"Replica 수",description:"같은 membership snapshot에 있는 equal-weight voting replicas입니다."},{symbol:"f",name:"Fault bound",description:"Protocol이 허용한다고 가정한 최대 Byzantine replica 수입니다."},{symbol:"q",name:"Quorum 크기",description:"한 certificate에 필요한 distinct valid signers 수로 여기서는 2f+1입니다."},{symbol:"Q_1,Q_2",name:"두 signer 집합",description:"서로 충돌할 수 있는 certificate의 signer sets입니다."}]} assumptions={["n=3f+1인 fixed equal-weight membership입니다.","Signer identity·phase·view·value와 signature를 검증하고 중복 signer를 한 번만 셉니다.","Honest replica가 protocol의 lock·vote rule을 지킵니다.","Stake-weighted quorum에는 signer 수가 아니라 historical voting weight를 사용합니다."]} interpretation="n=4,f=1,q=3이면 두 quorum은 최소 2명을 공유해 그중 적어도 한 명은 honest입니다. q를 2로 낮추면 {A,B}와 {C,D}처럼 교집합 없는 certificate가 가능하므로 이 safety 논리를 쓸 수 없습니다." />
+        <header>
+          <p className="text-sm font-semibold text-primary">04 · 비교</p>
+          <h2 className="mt-2 text-2xl font-bold">안전성은 먼저 통과하고, 성능은 같은 조건에서 나눠 잽니다</h2>
+        </header>
+
+        <ExplainedFormula
+          question="Equal-weight BFT에서 두 commit quorum이 적어도 한 정상 복제본을 공유하려면 교집합은 얼마나 커야 할까요?"
+          idea={<>두 집합의 크기를 더해 전체 복제본 수를 넘는 만큼은 반드시 겹칩니다. n=3f+1, q=2f+1이면 교집합은 적어도 f+1명입니다. Byzantine 복제본은 최대 f명이므로 정상 복제본이 한 명 이상 포함됩니다.</>}
+          formula={String.raw`\begin{aligned}|Q_1\cap Q_2|&\ge 2q-n\\&=f+1>f\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{|Q_1\cap Q_2|}_{\text{두 quorum의 공통 signer}}&\ge \underbrace{2q-n}_{\text{전체 수를 넘는 중복분}}\\&=\underbrace{f+1>f}_{\text{Byzantine 최대 수보다 큼}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`2q-n`, annotation: ["두 quorum의 크기를 더한 뒤", "전체 복제본 수를 빼면 최소 교집합입니다.", "n=4, q=3이면 2·3−4=2입니다."] },
+            { expression: String.raw`f+1>f`, annotation: ["교집합 두 명 가운데 Byzantine은", "최대 한 명이므로 정상 복제본이 남습니다."] },
+          ]}
+          terms={[
+            { symbol: "n", name: "전체 복제본 수", description: "같은 membership snapshot에 속한 equal-weight 복제본 수입니다." },
+            { symbol: "f", name: "장애 한도", description: "프로토콜이 허용한다고 가정한 최대 Byzantine 복제본 수입니다." },
+            { symbol: "q", name: "정족수 크기", description: "한 certificate에 필요한 서로 다른 유효 signer 수이며 여기서는 2f+1입니다." },
+            { symbol: "Q_1,Q_2", name: "두 signer 집합", description: "충돌할 수 있는 두 certificate의 signer 집합입니다." },
+          ]}
+          assumptions={[
+            "n=3f+1인 고정 equal-weight membership입니다.",
+            "Signer identity·phase·view·value와 signature를 검증하고 중복 signer는 한 번만 셉니다.",
+            "정상 복제본이 각 프로토콜의 lock·vote 규칙을 지킵니다.",
+            "Stake-weighted quorum에는 signer 수가 아니라 해당 시점의 voting weight를 사용합니다.",
+          ]}
+          interpretation="n=4, f=1, q=3이면 두 quorum은 최소 두 명을 공유하고 그중 한 명 이상은 정상입니다. q를 2로 낮추면 {A,B}와 {C,D}처럼 겹치지 않는 certificate가 가능하므로 이 논리를 사용할 수 없습니다. 교집합 산술만으로는 부족하며 정상 복제본의 투표 제한이 함께 필요합니다."
+        />
+
         <BFTAxisTableViz />
-        <div className="grid gap-4 md:grid-cols-2"><Note title="같은 조건으로 고정할 것">Membership·fault 위치·GST와 delay trace, payload bytes·batching, offered load, crypto·threshold setup, machine·region과 client measurement point를 함께 기록합니다.</Note><Note title="서로 따로 볼 결과">Conflicting commit은 0이어야 하는 hard safety gate입니다. 그 뒤 good-interval latency, blip 중 backlog, recovery time, useful throughput, network bytes와 CPU를 분리합니다.</Note></div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Note title="안전성 통과 조건">
+            Equivocation·omission·partition·재시작을 넣어도 충돌하는 commit은 0이어야 합니다. 한 번이라도 충돌하면 평균 처리량이 높아도 후보에서 제외합니다.
+          </Note>
+          <Note title="그 뒤 비교할 결과">
+            정상 구간 latency, blip 중 backlog, 회복 시간, 유효 payload throughput, phase별 network bytes, 서명 검증 CPU와 동기화 bytes를 따로 기록합니다.
+          </Note>
+        </div>
+
         <p>
-            예를 들어 후보 A가 정상 구간 100ms, blip 후 recovery 8초이고 후보 B가 정상 140ms, recovery 0.8초라면 “B가 느리다”로 끝낼 수 없습니다.
-            사용 환경의 blip 빈도와 latency SLO에 따라 선택이 달라집니다. Candidate가 빠르더라도 equivocation fixture에서 conflicting
-            committed digest가 하나라도 나오면 평균 throughput이 그 실패를 상쇄하지 못합니다.
-          </p>
-        <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>
-            기초 6문제의 범위는 4-replica quorum, PBFT phase, view change evidence, HotStuff chained QC, Autobahn
-            lane·cut, safety·liveness 분리까지입니다. 심화 4문제에서는 작은 quorum 반례와 동일 조건 비용 계산, blip trace 비교, failure-
-            injection release gate 설계를 다룹니다. 답안에 필요한 전제와 수치, 그리고 과도하게 읽으면 안 되는 결론은 앞의 네 section에 모두 놓았습니다.
-          </p>
+          같은 비교를 재현하려면 membership과 fault 위치, network delay trace를 먼저 고정해야 합니다. Payload 크기와 batch, offered load, 암호 구현, machine과 region, client 측정 지점도 같아야 합니다.
+        </p>
+        <p>
+          예를 들어 정상 구간 100ms·회복 8초인 후보와 정상 구간 140ms·회복 0.8초인 후보는 한 숫자로 순위를 정할 수 없습니다. 실제 blip 빈도, latency SLO와 backlog 한도가 선택을 바꿉니다.
+        </p>
+        <p>
+          따라서 이 글의 결론은 “Autobahn이 가장 새로우니 선택한다”가 아닙니다. PBFT는 순번별 prepared 상태, HotStuff는 QC 가지, Autobahn은 lane의 데이터와 cut을 중심으로 장애 상태를 소유합니다. 구현 후보를 고를 때는 우리 시스템이 어느 상태를 이미 갖고 있고, 장애 뒤 어떤 증거와 데이터를 복구할 수 있는지부터 확인해야 합니다.
+        </p>
       </section>
     </article>
   );

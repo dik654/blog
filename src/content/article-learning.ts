@@ -78122,10 +78122,17 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "blockchain/bft-comparison": {
-    entryLevel: true,
-    entryNote: "네 replica 중 하나가 서로 다른 값을 보내는 예에서 시작하고 process·message·quorum·safety·liveness를 모른다고 가정합니다.",
-    coreIdea: "PBFT·HotStuff·Autobahn은 같은 BFT SMR 목표를 data path, certificate·commit rule, leader-change recovery로 다르게 구성하므로 동일 membership·fault·workload envelope에서 hard safety 뒤 성능을 비교해야 합니다.",
-    assumedKnowledge: [],
+    entryLevel: false,
+    entryNote: "앞선 PBFT·HotStuff 글의 prepared certificate, QC·lock·pacemaker를 같은 요청과 장애에 다시 적용합니다. Autobahn의 lane·cut은 이 글에서 처음 설명합니다.",
+    coreIdea: "PBFT·HotStuff·Autobahn은 같은 요청과 주 노드 장애에서도 data가 들어오는 위치, commit evidence, 새 주 노드에게 넘기는 상태가 다르므로 인증·커밋·실행의 경계를 맞춘 뒤 비교해야 합니다.",
+    assumedKnowledge: [
+      { id: "pbft-prepared-commit-local-lifecycle", role: "PBFT의 PRE-PREPARE·PREPARE·COMMIT을 알고 시작합니다." },
+      { id: "pbft-stable-checkpoint-watermark", role: "PBFT의 checkpoint와 view change 복구 범위를 알고 시작합니다." },
+      { id: "hotstuff-three-chain-commit", role: "HotStuff의 QC·lock·three-chain commit을 알고 시작합니다." },
+      { id: "hotstuff-pacemaker-core-separation", role: "HotStuff의 pacemaker와 안전 상태를 구분합니다." },
+      { id: "consensus-safety-liveness", role: "충돌 금지와 장애 뒤 진행을 따로 판정합니다." },
+      { id: "bft-honest-quorum-intersection", role: "n=3f+1, q=2f+1의 정상 복제본 교집합을 재사용합니다." },
+    ],
     introducedHere: [
       { id: "pbft-prepared-view-change", role: "PBFT normal phases와 prepared evidence handoff를 연결합니다." },
       { id: "hotstuff-chained-qc-pacemaker", role: "Chained QC safety와 pacemaker progress를 분리합니다." },
@@ -78135,11 +78142,11 @@ export const ARTICLE_LEARNING: Readonly<
     conceptExplanations: [
       { id: "pbft-prepared-view-change", sectionId: "pbft", intuition: "반장을 바꿔도 이전 반에서 충분히 확인된 순서 영수증을 새 반장에게 넘깁니다.", workedExample: "n=4,f=1에서 pre-prepare와 prepare evidence 뒤 세 commit을 모으고, view change에는 stable checkpoint와 prepared certificate를 넣습니다.", boundary: "Timeout만으로 prepared evidence를 지우지 않으며 PBFT 성능 차수는 실제 authenticator·payload bytes를 대신하지 않습니다." },
       { id: "hotstuff-chained-qc-pacemaker", sectionId: "hotstuff", intuition: "다음 block의 QC가 앞 block을 안전하게 이어받는 영수증 사슬을 만듭니다.", workedExample: "Leader가 parent QC 위 block을 제안하고 후속 certified descendants가 commit chain을 완성하며 새 leader는 highest QC를 이어받습니다.", boundary: "Pacemaker는 liveness를 조정할 뿐 lock safety를 대신하지 않고 linear authenticator가 total traffic O(n)을 뜻하지 않습니다." },
-      { id: "autobahn-lane-cut-recovery", sectionId: "autobahn", intuition: "여러 차선에 화물을 미리 쌓고 합의는 각 차선의 어느 지점까지 통과시킬지만 정합니다.", workedExample: "Blip 중 replica lanes가 전진하고 회복 뒤 cut이 certified tips를 포함해 causal prefixes의 backlog를 순서화합니다.", boundary: "Lane certificate는 application validity·fairness·모든 executor의 즉시 fetch를 보장하지 않습니다." },
+      { id: "autobahn-lane-cut-recovery", sectionId: "autobahn", intuition: "여러 차선에 화물을 미리 쌓고 합의는 각 차선의 어느 지점까지 통과시킬지 정합니다.", workedExample: "n=4,f=1에서 A7의 f+1표가 PoA가 되고 cut [A7,B5,C8,D6]이 PrepareQC·CommitQC를 거쳐 동기화·실행됩니다.", boundary: "PoA는 data 가용성, CommitQC는 cut 합의의 증거입니다. 둘 다 application validity·모든 executor의 즉시 fetch를 보장하지 않습니다." },
       { id: "bft-comparison-envelope", sectionId: "comparison", intuition: "같은 장애 코스와 같은 화물을 달린 결과만 비교합니다.", workedExample: "같은 n=4,f=1, 1KiB payload·arrival trace와 blip에서 conflict=0 뒤 latency·recovery·bytes·CPU를 비교합니다.", boundary: "서로 다른 논문의 TPS를 hardware·batch·client 위치를 맞추지 않고 배수로 나누지 않습니다." },
     ],
     conceptStages: [
-      { label: "00 선수", relation: "Failure·safety/liveness·quorum 정본을 재사용합니다.", concepts: ["distributed-failure-model", "consensus-safety-liveness", "bft-honest-quorum-intersection"] },
+      { label: "00 선수", relation: "PBFT·HotStuff와 quorum 정본을 재사용합니다.", concepts: ["pbft-prepared-commit-local-lifecycle", "pbft-stable-checkpoint-watermark", "hotstuff-three-chain-commit", "hotstuff-pacemaker-core-separation", "consensus-safety-liveness", "bft-honest-quorum-intersection"] },
       { label: "01 PBFT", relation: "Prepared evidence와 view change를 연결합니다.", concepts: ["pbft-prepared-view-change"] },
       { label: "02 HotStuff", relation: "QC chain과 pacemaker를 분리합니다.", concepts: ["hotstuff-chained-qc-pacemaker"] },
       { label: "03 Autobahn", relation: "Lane data와 cut recovery를 구성합니다.", concepts: ["autobahn-lane-cut-recovery"] },
@@ -78159,8 +78166,8 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       { title: "Practical Byzantine Fault Tolerance", href: "https://pmg.csail.mit.edu/papers/osdi99.pdf", problem: "Byzantine SMR의 practical protocol과 implementation", contribution: "Normal phase·checkpoint·view change와 NFS evaluation", assumptions: "논문의 fixed membership·authentication·workload", evidenceScope: "PBFT protocol과 당시 구현 평가", notClaim: "현대 WAN·weighted BFT의 고정 성능이 아님", sectionId: "paper-pbft-comparison" },
-      { title: "HotStuff: BFT Consensus with Linearity and Responsiveness", href: "https://arxiv.org/abs/1803.05069", problem: "Leader replacement가 단순한 partially synchronous BFT", contribution: "Chained QC·linear authenticator·pacemaker separation", assumptions: "Authenticated fixed membership과 논문 crypto", evidenceScope: "HotStuff proof와 evaluation", notClaim: "모든 variant의 chain length·total bytes가 동일하지 않음", sectionId: "paper-hotstuff-comparison" },
-      { title: "Autobahn: Seamless high speed BFT", href: "https://arxiv.org/abs/2401.10369", problem: "낮은 정상 latency와 blip 회복의 동시 달성", contribution: "Parallel lanes와 cut consensus·hangover evaluation", assumptions: "논문의 partial-synchrony·deployment·fault workload", evidenceScope: "Autobahn construction과 SOSP 평가", notClaim: "다른 hardware에서 보고 배수가 유지되는 법칙이 아님", sectionId: "paper-autobahn" },
+      { title: "HotStuff: BFT Consensus with Linearity and Responsiveness", href: "https://arxiv.org/abs/1803.05069v6", problem: "Leader replacement가 단순한 partially synchronous BFT", contribution: "Chained QC·linear authenticator·pacemaker separation", assumptions: "Authenticated fixed membership과 논문 crypto", evidenceScope: "HotStuff proof와 evaluation", notClaim: "모든 variant의 chain length·total bytes가 동일하지 않음", sectionId: "paper-hotstuff-comparison" },
+      { title: "Autobahn: Seamless high speed BFT", href: "https://arxiv.org/abs/2401.10369v4", problem: "낮은 정상 latency와 blip 회복의 동시 달성", contribution: "Parallel lanes와 cut consensus·hangover evaluation", assumptions: "논문의 partial-synchrony·deployment·fault workload", evidenceScope: "Autobahn v4 §5.1–5.3 construction과 평가", notClaim: "다른 hardware에서 보고 배수가 유지되는 법칙이 아님", sectionId: "paper-autobahn" },
     ],
   },
   "blockchain/consensus-comparison": {

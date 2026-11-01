@@ -242,14 +242,14 @@ export const bftArticles: Article[] = [
   /* ── 리더 기반 BFT 비교 ── */
   {
     slug: "bft-comparison",
-    title: "BFT 합의 비교 (PBFT → HotStuff → Autobahn)",
+    title: "PBFT·HotStuff·Autobahn: 같은 요청과 장애 비교",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "BFT 프로토콜 진화" },
-      { id: "pbft", title: "PBFT" },
-      { id: "hotstuff", title: "HotStuff" },
-      { id: "autobahn", title: "Autobahn" },
-      { id: "comparison", title: "종합 비교" },
+      { id: "overview", title: "같은 요청과 장애" },
+      { id: "pbft", title: "PBFT의 증거 인계" },
+      { id: "hotstuff", title: "HotStuff의 QC 가지" },
+      { id: "autobahn", title: "Autobahn의 lane과 cut" },
+      { id: "comparison", title: "같은 조건에서 비교" },
     ],
     component: () => import("@/pages/articles/blockchain/bft-comparison"),
   },

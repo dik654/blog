@@ -7653,8 +7653,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "blockchain/bft-comparison": [
     { kind: "핵심 논문", label: "Castro·Liskov — Practical Byzantine Fault Tolerance", href: "https://pmg.csail.mit.edu/papers/osdi99.pdf", note: "PBFT normal phase·checkpoint·view change와 당시 NFS evaluation 범위" },
-    { kind: "핵심 논문", label: "Yin et al. — HotStuff", href: "https://arxiv.org/abs/1803.05069", note: "Chained QC·linear authenticator communication·pacemaker의 model과 proof" },
-    { kind: "핵심 논문", label: "Giridharan et al. — Autobahn", href: "https://arxiv.org/abs/2401.10369", note: "Parallel lanes·cut consensus와 piece-wise partial-synchrony blip 평가" },
+    { kind: "핵심 논문", label: "Yin et al. — HotStuff v6", href: "https://arxiv.org/abs/1803.05069v6", note: "Chained QC·linear authenticator communication·pacemaker의 model과 proof" },
+    { kind: "핵심 논문", label: "Giridharan et al. — Autobahn v4", href: "https://arxiv.org/abs/2401.10369v4", note: "§5.1–5.3의 car·PoA·lane cut·Prepare/Confirm·view change와 blip 평가" },
   ],
   "blockchain/consensus-comparison": [
     { kind: "핵심 논문", label: "Dwork·Lynch·Stockmeyer — Consensus in the Presence of Partial Synchrony", href: "https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf", note: "Unknown bound·GST timing model과 fault별 resilience의 원 이론" },
