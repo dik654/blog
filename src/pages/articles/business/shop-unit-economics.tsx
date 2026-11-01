@@ -1,9 +1,9 @@
 import { CitationBlock } from "@/components/ui/citation";
-import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ShopUnitEconomicsViz from "./ShopUnitEconomicsViz";
 
-/** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
+/** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopUnitEconomicsArticle() {
   return (
     <div className="space-y-16">
@@ -14,9 +14,11 @@ export default function ShopUnitEconomicsArticle() {
           <p className="leading-7">이 글의 목표는 한 잔 가격을 하루 필요한 판매량으로 바꾸는 것입니다. 문을 열어 유지하는 데 필요한 돈을 계산한 뒤 개업비와 점주의 노동까지 회수하는지 확인합니다.</p>
         </div>
 
+        <ShopUnitEconomicsViz />
+
         <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
-            한 잔의 판매가 한 달 비용을 얼마나 채우는지 보려면 돈이 빠지는 순서를 먼저 살펴봅니다.
-          </p>
+          그림의 기준선은 월 2천 잔입니다. 이제 가격 6천 원이 왜 그대로 월 비용을 채우는 돈이 아닌지 차례대로 확인합니다.
+        </p>
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 받는 돈에서 주문 때문에 나간 돈을 먼저 뺀다</h2>
@@ -24,7 +26,6 @@ export default function ShopUnitEconomicsArticle() {
           <p className="leading-7">손님이 돈을 내면 그 주문에 쓴 재료와 포장 비용이 빠집니다. 남은 돈을 모아 한 달 동안 공간과 사람을 유지한 대가를 냅니다. 그것을 다 낸 뒤에야 점주가 가져가거나 투자금을 회수할 몫을 말할 수 있습니다.</p>
         </div>
 
-        <FlowRail title="한 건의 주문에서 한 달 비용까지의 세 역할" steps={[{"actor": "얼마를 받나", "movement": "주문 한 건의 가격을 받습니다.", "receives": "한 건의 돈"}, {"actor": "주문에 얼마를 쓰나", "movement": "팔 때마다 필요한 비용을 뺍니다.", "receives": "남은 금액"}, {"actor": "한 달을 버티나", "movement": "남은 돈을 모아 매달 지출을 냅니다.", "receives": "부족 또는 잔액"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">주문별 비용을 뺀 돈을 월 비용에 보탠다는 구조에 작은 숫자를 넣습니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -45,14 +46,19 @@ export default function ShopUnitEconomicsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">잔당 금액과 한 달 총액은 단위가 다릅니다. 잔당 4천 원에 판매 잔 수를 곱한 뒤에야 월 800만 원과 비교할 수 있습니다.</p>
         </div>
-        <FlowRail
-          title="(가정) 잔당 4천 원 → 월 2천 잔에서 800만 원 → 월 비용 800만 원"
-          steps={[
-            { actor: "한 잔을 팔 때", movement: "받은 6천 원에서 그 주문의 비용 2천 원을 뺍니다.", receives: "월 비용에 보탤 4천 원" },
-            { actor: "한 달 2천 잔을 모을 때", movement: "잔당 4천 원에 판매량 2천 잔을 곱합니다.", receives: "월 비용에 보탤 800만 원" },
-            { actor: "한 달 비용과 비교할 때", movement: "800만 원에서 그달 공간·직원 등의 비용 800만 원을 뺍니다.", receives: "이 사례에 포함한 비용 뒤 잔액 0원" },
-          ]}
-        />
+        <div className="not-prose mt-6 grid gap-3 sm:grid-cols-3">
+          {[
+            ["한 잔", "6,000 − 2,000", "4,000원"],
+            ["한 달", "4,000 × 2,000", "800만 원"],
+            ["월 비용 뒤", "800만 − 800만", "0원"],
+          ].map(([label, expression, result]) => (
+            <div key={label} className="border border-border bg-background p-4">
+              <p className="text-xs font-bold text-muted-foreground">{label}</p>
+              <p className="mt-2 font-mono text-sm font-black">{expression}</p>
+              <p className="mt-1 font-mono text-sm font-black text-primary">= {result}</p>
+            </div>
+          ))}
+        </div>
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
             잔당 금액과 월 합계의 단위를 맞췄습니다. 같은 가격의 주문도 따로 계산할 이유를 봅니다.
           </p>
@@ -92,21 +98,19 @@ export default function ShopUnitEconomicsArticle() {
           <p className="leading-7">재료를 이번 달에 샀다는 사실만으로 전부 이번 달 판매의 비용이 되지는 않습니다. 이 사례의 2천 원은 재료·포장·결제비 합계이므로 재고 회계의 문구가 전체 2천 원을 정의하는 것도 아닙니다.</p>
         </div>
         <SourceApplication source="IAS 2 · About, expense recognition" excerpt="When inventories are sold" application="2천 원 가운데 재료 부분을 공급 명세와 실제 사용량으로 확인합니다. 남은 재료와 버린 재료를 따로 세어 비용을 잘못 낮추지 않습니다. 결제 수수료는 재고가 아닌 별도 비용으로 합칩니다." />
-        <CitationBlock source="IAS 2 · About, expense recognition" citeKey={1} href="https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/">2026-10-04 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
+        <CitationBlock source="IAS 2 · About, expense recognition" citeKey={1} href="https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/">2026-11-01 확인. 공식 설명은 팔린 재고의 장부금액을 관련 매출이 인식되는 기간의 비용으로 인식한다고 밝힙니다. 위 사례에서는 2천 원 중 재료 부분에만 이 원칙을 적용합니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">팔린 재료와 다른 비용을 구별했습니다. 공식 손익분기 정의와 이 숫자를 대조합니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 점주와 임대인의 숫자는 다른 속도로 움직입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">점주는 고객 수가 줄면 잔당 공헌이익을 잃지만 약정 임대료는 계속 냅니다. 건물주는 공실 때 임대료를 잃고 보증금 반환·수리비를 내야 합니다. 같은 거리의 가게라도 두 사람의 손익표는 다릅니다.</p>
-          <p className="leading-7">국가마다 임금·세금·영업시간·임대료 전가 방식이 다릅니다. GOV.UK 안내는 비주거 부동산의 business rates와 감면·면제, 지역별 차이를 설명합니다. 호주 NSW의 소매 임차인은 임대료 외에 부담할 outgoings가 계약과 임대인의 공개서에 어떻게 적혔는지 확인합니다.</p>
-          <p className="leading-7">같은 기관의 소매 임차 안내(Retail Tenancy Guide)는 토지세·청소·보안·지방세·수도와 공과금 같은 항목을 예로 들고, 공개서에 밝히지 않은 outgoings는 내지 않아도 될 수 있다고 설명합니다.</p>
+          <p className="leading-7">국가마다 임금·세금·영업시간·부동산 비용의 범위가 다릅니다. GOV.UK 안내는 대부분의 비주거 부동산에 business rates가 부과될 수 있고 지역과 감면·면제 조건에 따라 처리가 달라진다고 설명합니다.</p>
           <p className="leading-7">월별 부동산 비용이 늘면 나누는 식의 위쪽인 고정비 800만 원을 고칩니다. 주문마다 드는 비용이 바뀌면 아래쪽인 잔당 공헌이익 4천 원을 고칩니다. 현지 계약과 제도는 두 금액 모두에 영향을 줄 수 있습니다.</p>
         </div>
         <SourceApplication source="Business Queensland · Break-even point" excerpt="This is the point where your total revenue (sales or turnover) equals total costs." application="월 2천 잔이면 매출 1,200만 원, 주문별 비용 400만 원, 고정비 800만 원입니다. 두 비용의 합이 1,200만 원이므로 이 사례에 포함한 비용만큼은 정확히 충당합니다." />
-        <CitationBlock source="Business Queensland · Break-even point" citeKey={2} href="https://www.business.qld.gov.au/running-business/finance/essentials/break-even-profit">2026-10-04 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
-        <CitationBlock source="GOV.UK · Business rates overview" citeKey={3} href="https://www.gov.uk/introduction-to-business-rates">비주거 사용의 과세와 감면·면제를 확인했습니다. 스코틀랜드·북아일랜드의 처리 차이, 잉글랜드·웨일스의 감면 절차를 구분하는 안내이며 모든 점포가 같은 세액을 부담한다는 뜻은 아닙니다.</CitationBlock>
-        <CitationBlock source="NSW Small Business Commissioner · What are outgoings?" citeKey={4} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/what-are-outgoings">2026-10-09 이 페이지는 응답하지 않았고 보관 사본도 없어 원문을 다시 대조하지 못했습니다. 대신 같은 기관 Retail Tenancy Guide의 web.archive.org 2026-05-03 사본에서 &ldquo;Any outgoings the lessee must pay (e.g. land tax, cleaning, security, council rates, water/utility charges, etc)&rdquo;와 &ldquo;Undisclosed outgoings might not have to be paid.&rdquo;를 확인했습니다. 점포와의 직접적·합리적 관련 같은 세부 요건은 확인하지 못했습니다. 임대인이 정한 모든 항목이 자동으로 유효하다는 뜻은 아닙니다.</CitationBlock>
+        <CitationBlock source="Business Queensland · Break-even point" citeKey={2} href="https://www.business.qld.gov.au/running-business/finance/essentials/break-even-profit">2026-11-01 확인. 공식 안내는 손익분기점을 총수익과 총비용이 같아 이익도 손실도 없는 지점으로 설명하며, 실제 판단에서는 점주 자신의 임금이나 인출액도 비용에 포함하라고 안내합니다.</CitationBlock>
+        <CitationBlock source="GOV.UK · Business rates overview" citeKey={3} href="https://www.gov.uk/introduction-to-business-rates">2026-11-01 확인. 비주거 사용의 과세와 감면·면제를 설명하는 안내입니다. 스코틀랜드·북아일랜드의 처리 차이와 잉글랜드·웨일스의 감면 절차를 구분하며, 모든 점포가 같은 세액을 부담한다는 뜻은 아닙니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">비용 범위를 정해야 기준선도 정해집니다. 마지막으로 점주 노동과 투자 회수를 추가합니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
