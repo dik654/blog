@@ -9807,10 +9807,43 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "standard", rule: "Protocol facts와 maturity는 Storacha specs commit 3b67918에 귀속한다." }, { kind: "project-measurement", rule: "Capability·allocate/put/accept·index range·CID retrieval·Filecoin stage receipts를 각각 재생한다." }, { kind: "project-claim", rule: "Stable/reliable·upload/offer를 public retrieval·deal success·permanent storage로 확대하지 않는다." }],
   },
   "ipfs-filecoin-storage": {
-    title: "IPFS content·Filecoin retention integration ownership",
-    owns: ["CID·CAR·Piece/deal identity-map artifact", "Multi-path verified retrieval, retention receipt와 integration release gate"],
-    reuses: [{ label: "IPFS content addressing", href: "/cs/p2p/content-addressing#overview" }, { label: "Kubo routing·Bitswap·pin", href: "/cs/p2p/kubo#routing-bitswap" }, { label: "Filecoin proof stack", href: "/cs/blockchain/filecoin-proofs#overview" }],
-    evidence: [{ kind: "standard", rule: "Routing·Bitswap semantics는 IPFS specs commit ff7230f에 귀속한다." }, { kind: "primary-source", rule: "Kubo implementation은 stable v0.42.0, Filecoin bridge는 Storacha specs commit 3b67918로 pin한다." }, { kind: "project-measurement", rule: "Mapping digest·CID bytes·path latency·pin/deal/proof status와 correlated outages를 측정한다." }, { kind: "project-claim", rule: "Provider ad·pin·deal·proof 한 항목을 possession·retrieval SLA·영구 보존으로 확대하지 않는다." }],
+    title: "IPFS content와 Filecoin 보관 증거의 연결 경계",
+    owns: [
+      "CID·CAR·Piece/deal identity-map artifact",
+      "Multi-path verified retrieval, retention receipt와 evidence boundary",
+    ],
+    reuses: [
+      {
+        label: "IPFS content addressing",
+        href: "/cs/p2p/content-addressing#overview",
+      },
+      {
+        label: "Kubo routing·Bitswap·pin",
+        href: "/cs/p2p/kubo#routing-bitswap",
+      },
+      {
+        label: "Filecoin proof stack",
+        href: "/cs/blockchain/filecoin-proofs#overview",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "Routing·Bitswap semantics는 2026-11-01 IPFS specs HEAD commit 3000be6에 귀속한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "Kubo implementation은 stable v0.43.1 commit acc53c0, Filecoin bridge는 Storacha specs commit 3b67918로 pin한다.",
+      },
+      {
+        kind: "project-measurement",
+        rule: "Mapping digest·CID bytes·path latency·pin/deal/proof status와 correlated outages를 측정한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "Provider ad·pin·deal·proof 한 항목을 possession·retrieval SLA·영구 보존으로 확대하지 않는다.",
+      },
+    ],
   },
   "filecoin-onchain-cloud": {
     title: "Filecoin Cloud dataset·proof·payment service ownership",

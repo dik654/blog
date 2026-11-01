@@ -15964,10 +15964,42 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "storacha-blob-effect-chain-receipt": { id: "storacha-blob-effect-chain-receipt", kind: "concept", domain: "distributed-systems", label: "Storacha blob effect-chain receipt", definition: "space/blob/add authorization과 allocate·put·accept effects를 동일 Space·task·blob digest·size로 연결해 upload-stage completion을 판정하는 receipt입니다.", canonicalHref: "/cs/blockchain/filecoin-storacha#blob-upload" },
   "storacha-sharded-dag-index-artifact": { id: "storacha-sharded-dag-index-artifact", kind: "concept", domain: "computer-science", label: "Storacha sharded-DAG index artifact", definition: "Root CID와 shard blob digests, block CID별 shard·offset·length를 versioned index로 묶어 range retrieval 뒤 content verification을 가능하게 하는 artifact입니다.", canonicalHref: "/cs/blockchain/filecoin-storacha#index-retrieval" },
   "storacha-filecoin-deal-release-gate": { id: "storacha-filecoin-deal-release-gate", kind: "method", domain: "distributed-systems", label: "Storacha Filecoin deal release gate", definition: "Capability·blob·index·retrieval receipts와 선택한 offer·aggregate·deal tracking policy를 분리 검증해 service generation을 채택하는 절차입니다.", canonicalHref: "/cs/blockchain/filecoin-storacha#release-gate" },
-  "ipfs-filecoin-identity-map-artifact": { id: "ipfs-filecoin-identity-map-artifact", kind: "concept", domain: "computer-science", label: "IPFS–Filecoin identity-map artifact", definition: "UnixFS root/block CIDs, CAR/shard digest, Piece commitment, encoding profile와 deal/proof references를 서로 다른 의미로 보존해 연결하는 mapping manifest입니다.", canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#identity-map" },
-  "ipfs-filecoin-retrieval-policy-router": { id: "ipfs-filecoin-retrieval-policy-router", kind: "method", domain: "distributed-systems", label: "IPFS–Filecoin retrieval policy router", definition: "Local cache·IPFS provider/gateway·Filecoin retrieval candidates를 timeout/retry 정책으로 시도하고 받은 bytes를 requested CID로 검증한 뒤에만 route receipt를 승인하는 방법입니다.", canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#retrieve-path" },
-  "ipfs-filecoin-retention-receipt": { id: "ipfs-filecoin-retention-receipt", kind: "concept", domain: "distributed-systems", label: "IPFS–Filecoin retention receipt", definition: "Local pin/GC, replica targets, Filecoin deal lifecycle와 latest PoRep·PoSt evidence를 같은 content mapping에 연결하되 retrieval SLA와 구분하는 receipt입니다.", canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#retention" },
-  "ipfs-filecoin-service-release-gate": { id: "ipfs-filecoin-service-release-gate", kind: "method", domain: "distributed-systems", label: "IPFS–Filecoin service release gate", definition: "Identity map·CID byte verification·retention policy·multi-path retrieval samples와 repair/rollback readiness를 함께 검사하는 storage integration 채택 절차입니다.", canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#release-gate" },
+  "ipfs-filecoin-identity-map-artifact": {
+    id: "ipfs-filecoin-identity-map-artifact",
+    kind: "concept",
+    domain: "computer-science",
+    label: "IPFS–Filecoin identity-map artifact",
+    definition:
+      "UnixFS root/block CIDs, CAR/shard digest, Piece commitment, encoding profile와 deal/proof references를 서로 다른 의미로 보존해 연결하는 mapping manifest입니다.",
+    canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#identity-map",
+  },
+  "ipfs-filecoin-retrieval-policy-router": {
+    id: "ipfs-filecoin-retrieval-policy-router",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "IPFS–Filecoin retrieval policy router",
+    definition:
+      "Local cache·IPFS provider/gateway·Filecoin retrieval candidates를 timeout/retry 정책으로 시도하고 받은 bytes를 requested CID로 검증한 뒤에만 route receipt를 승인하는 방법입니다.",
+    canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#retrieve-path",
+  },
+  "ipfs-filecoin-retention-receipt": {
+    id: "ipfs-filecoin-retention-receipt",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "IPFS–Filecoin retention receipt",
+    definition:
+      "Local pin/GC, replica targets, Filecoin deal lifecycle와 latest PoRep·PoSt evidence를 같은 content mapping에 연결하되 retrieval SLA와 구분하는 receipt입니다.",
+    canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#retention",
+  },
+  "ipfs-filecoin-evidence-boundary": {
+    id: "ipfs-filecoin-evidence-boundary",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "IPFS–Filecoin evidence boundary",
+    definition:
+      "Deal·storage proof와 현재 verified retrieval이 서로 다른 사실을 관측하므로 어느 방향으로도 자동 추론할 수 없다는 경계입니다.",
+    canonicalHref: "/cs/blockchain/ipfs-filecoin-storage#evidence-boundary",
+  },
   "filecoin-cloud-dataset-service-artifact": { id: "filecoin-cloud-dataset-service-artifact", kind: "concept", domain: "distributed-systems", label: "Filecoin Cloud dataset-service artifact", definition: "Client·provider·ordered pieces, PDP dataset/listener, payment rails와 chain·contract·SDK revisions를 한 generation digest로 묶어 off-chain storage와 on-chain registration을 연결하는 artifact입니다.", canonicalHref: "/cs/blockchain/filecoin-onchain-cloud#dataset-service" },
   "filecoin-cloud-proof-gated-settlement-window": { id: "filecoin-cloud-proof-gated-settlement-window", kind: "method", domain: "distributed-systems", label: "Filecoin Cloud proof-gated settlement window", definition: "PDP proven period는 rate에 반영하고 deadline이 지난 fault는 0으로 cursor를 전진시키되 아직 open인 period 앞에서 멈추는 storage-payment validation 경계입니다.", canonicalHref: "/cs/blockchain/filecoin-onchain-cloud#proof-settlement" },
   "filecoin-cloud-payment-rail-lockup-envelope": { id: "filecoin-cloud-payment-rail-lockup-envelope", kind: "concept", domain: "distributed-systems", label: "Filecoin Cloud payment-rail lockup envelope", definition: "Payer·payee·token·operator/validator, rate segments, variable/fixed lockup, settledUpTo와 termination state를 같은 rail generation에 묶는 payment accounting envelope입니다.", canonicalHref: "/cs/blockchain/filecoin-onchain-cloud#payment-rail" },
@@ -49538,8 +49570,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "kubo-bitswap-block-receipt", to: "ipfs-filecoin-retrieval-policy-router", relation: "extends", reason: "Verified Bitswap block receipt를 local·gateway·Filecoin path를 포함한 route policy로 확장합니다." },
   { from: "ipfs-filecoin-identity-map-artifact", to: "ipfs-filecoin-retention-receipt", relation: "prerequisite", reason: "Exact root·CAR·piece mapping이 pin·deal·storage proof receipts를 같은 content에 연결합니다." },
   { from: "storage-proof-service-boundary", to: "ipfs-filecoin-retention-receipt", relation: "constrains", reason: "Deal·PoRep·PoSt evidence를 current retrieval latency나 permanent availability로 해석하지 않습니다." },
-  { from: "ipfs-filecoin-retrieval-policy-router", to: "ipfs-filecoin-service-release-gate", relation: "evaluates", reason: "Multi-path verified retrieval samples와 단계별 latency가 integration release를 평가합니다." },
-  { from: "ipfs-filecoin-retention-receipt", to: "ipfs-filecoin-service-release-gate", relation: "evaluates", reason: "Pin·replica·deal·proof policy 충족과 repair readiness가 storage service 채택을 결정합니다." },
+  {
+    from: "ipfs-filecoin-retrieval-policy-router",
+    to: "ipfs-filecoin-evidence-boundary",
+    relation: "constrains",
+    reason:
+      "Verified retrieval receipt는 현재 byte 수신을 증명하지만 장기 보관 증거를 대신하지 않습니다.",
+  },
+  {
+    from: "ipfs-filecoin-retention-receipt",
+    to: "ipfs-filecoin-evidence-boundary",
+    relation: "constrains",
+    reason:
+      "Pin·deal·proof evidence는 보관 상태를 설명하지만 현재 retrieval 성공을 보장하지 않습니다.",
+  },
   { from: "pdp-dataset-logical-array-artifact", to: "filecoin-cloud-dataset-service-artifact", relation: "extends", reason: "PDP logical-array identity에 client·provider·pieces·service contract와 payment rails를 연결합니다." },
   { from: "filecoin-cloud-dataset-service-artifact", to: "filecoin-cloud-proof-gated-settlement-window", relation: "prerequisite", reason: "Exact dataset·piece·provider generation이 proof-period verdict와 rate segments를 해석하는 기준입니다." },
   { from: "pdp-proving-period-fault-state", to: "filecoin-cloud-proof-gated-settlement-window", relation: "prerequisite", reason: "Canonical proven·faulted·open period state가 proof-gated payment validation의 직접 입력입니다." },

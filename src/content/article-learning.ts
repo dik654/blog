@@ -85004,44 +85004,288 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "blockchain/ipfs-filecoin-storage": {
     entryLevel: true,
-    entryNote: "CID·CAR·deal을 안다고 가정하지 않고 같은 파일에 왜 여러 identifiers와 receipts가 생기는지부터 시작합니다.",
-    coreIdea: "IPFS–Filecoin integration은 content identity와 retrieval, CAR/Piece mapping, retention/deal/proof evidence를 분리하고 verified bytes·repair readiness까지 연결합니다.",
+    entryNote:
+      "CID·CAR·deal을 안다고 가정하지 않고 같은 파일에 왜 여러 identifiers와 receipts가 생기는지부터 시작합니다.",
+    coreIdea:
+      "IPFS–Filecoin integration은 content identity와 retrieval, CAR·Piece mapping, deal·storage proof를 연결하되 각 증거가 보장하는 범위를 서로 구분합니다.",
     assumedKnowledge: [],
     introducedHere: [
-      { id: "ipfs-filecoin-identity-map-artifact", role: "Root/block CIDs와 CAR·Piece/deal references를 연결합니다." },
-      { id: "ipfs-filecoin-retrieval-policy-router", role: "Provider candidates와 verified retrieval paths를 구분합니다." },
-      { id: "ipfs-filecoin-retention-receipt", role: "Pin·replica·deal·storage proof evidence를 연결합니다." },
-      { id: "ipfs-filecoin-service-release-gate", role: "Identity·retrieval·retention·repair 뒤 service를 채택합니다." },
+      {
+        id: "ipfs-filecoin-identity-map-artifact",
+        role: "Root/block CIDs와 CAR·Piece/deal references를 연결합니다.",
+      },
+      {
+        id: "ipfs-filecoin-retrieval-policy-router",
+        role: "Provider candidates와 verified retrieval paths를 구분합니다.",
+      },
+      {
+        id: "ipfs-filecoin-retention-receipt",
+        role: "Pin·replica·deal·storage proof evidence를 연결합니다.",
+      },
+      {
+        id: "ipfs-filecoin-evidence-boundary",
+        role: "Storage evidence와 현재 verified retrieval이 서로를 대신하지 못하는 경계를 설명합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "ipfs-filecoin-identity-map-artifact", sectionId: "identity-map", intuition: "한 물건의 내용 지문, 포장 상자 지문과 계약 번호를 서로 다른 칸에 적은 송장입니다.", workedExample: "10 MiB file의 root/block CIDs, CAR digest, PieceCID, deal references와 importer revision을 묶습니다.", boundary: "Root CID와 PieceCID·deal ID가 같은 identifier나 같은 보장은 아닙니다." },
-      { id: "ipfs-filecoin-retrieval-policy-router", sectionId: "retrieve-path", intuition: "Local cache·IPFS peer·gateway·Filecoin 후보 중 순서와 timeout으로 경로를 고르는 안내원입니다.", workedExample: "Provider record 뒤 Bitswap bytes를 받고 requested block CID를 다시 계산해 route receipt를 승인합니다.", boundary: "Provider advertisement나 HTTP 200을 possession·integrity·latency evidence로 쓰지 않습니다." },
-      { id: "ipfs-filecoin-retention-receipt", sectionId: "retention", intuition: "지금 어디에 보존되며 어떤 proof가 최신인지 적되 내려받기 성공과는 분리한 장부입니다.", workedExample: "Local pin/GC, replicas, deal activation/expiration과 latest WindowPoSt status를 mapping에 연결합니다.", boundary: "Pin은 local retention이고 deal/proof는 current retrieval SLA나 영구성 보장이 아닙니다." },
-      { id: "ipfs-filecoin-service-release-gate", sectionId: "release-gate", intuition: "올바른 파일, 실제 검색, 보존 정책과 고장 수리 준비를 모두 보는 최종 검수입니다.", workedExample: "Corrupt CAR·stale provider·gateway wrong bytes·expired deal·correlated outage 뒤 rollback을 재생합니다.", boundary: "한 cache-hit 측정이나 한 proof receipt를 미래 availability SLA로 확대하지 않습니다." },
+      {
+        id: "ipfs-filecoin-identity-map-artifact",
+        sectionId: "identity-map",
+        intuition:
+          "한 물건의 내용 지문, 포장 상자 지문과 계약 번호를 서로 다른 칸에 적은 송장입니다.",
+        workedExample:
+          "10 MiB file의 root/block CIDs, CAR digest, PieceCID, deal references와 importer revision을 묶습니다.",
+        boundary:
+          "Root CID와 PieceCID·deal ID가 같은 identifier나 같은 보장은 아닙니다.",
+      },
+      {
+        id: "ipfs-filecoin-retrieval-policy-router",
+        sectionId: "retrieve-path",
+        intuition:
+          "Local cache·IPFS peer·gateway·Filecoin 후보 중 순서와 timeout으로 경로를 고르는 안내원입니다.",
+        workedExample:
+          "Provider record 뒤 Bitswap bytes를 받고 requested block CID를 다시 계산해 route receipt를 승인합니다.",
+        boundary:
+          "Provider advertisement나 HTTP 200을 possession·integrity·latency evidence로 쓰지 않습니다.",
+      },
+      {
+        id: "ipfs-filecoin-retention-receipt",
+        sectionId: "retention",
+        intuition:
+          "지금 어디에 보존되며 어떤 proof가 최신인지 적되 내려받기 성공과는 분리한 장부입니다.",
+        workedExample:
+          "Local pin/GC, replicas, deal activation/expiration과 latest WindowPoSt status를 mapping에 연결합니다.",
+        boundary:
+          "Pin은 local retention이고 deal/proof는 current retrieval SLA나 영구성 보장이 아닙니다.",
+      },
+      {
+        id: "ipfs-filecoin-evidence-boundary",
+        sectionId: "evidence-boundary",
+        intuition:
+          "창고 보관 증명서와 지금 배송받은 물건의 검수표는 연결되지만 서로를 대신하지 못합니다.",
+        workedExample:
+          "Deal과 proof는 있지만 retrieval이 실패한 경우, cache hit는 있지만 장기 deal이 없는 경우를 나란히 비교합니다.",
+        boundary:
+          "Storage proof로 현재 retrieval을, 한 번의 retrieval 성공으로 장기 보관을 자동 추론하지 않습니다.",
+      },
     ],
     conceptStages: [
-      { label: "00 identity", relation: "Content와 storage identifiers를 연결합니다.", concepts: ["ipfs-filecoin-identity-map-artifact"] },
-      { label: "01 retrieve", relation: "후보에서 verified bytes receipt를 만듭니다.", concepts: ["ipfs-filecoin-retrieval-policy-router"] },
-      { label: "02 retain", relation: "Pin·deal·proof evidence를 연결합니다.", concepts: ["ipfs-filecoin-retention-receipt"] },
-      { label: "03 release", relation: "Retrieval·retention·repair 뒤 채택합니다.", concepts: ["ipfs-filecoin-service-release-gate"] },
+      {
+        label: "00 · ID 변환",
+        relation: "Content와 storage identifiers를 연결합니다.",
+        concepts: ["ipfs-filecoin-identity-map-artifact"],
+      },
+      {
+        label: "01 · 탐색과 수신",
+        relation: "후보에서 verified bytes receipt를 만듭니다.",
+        concepts: ["ipfs-filecoin-retrieval-policy-router"],
+      },
+      {
+        label: "02 · 보관 증거",
+        relation: "Pin·deal·proof evidence를 연결합니다.",
+        concepts: ["ipfs-filecoin-retention-receipt"],
+      },
+      {
+        label: "03 · 증거 경계",
+        relation: "Storage evidence와 현재 retrieval을 따로 판정합니다.",
+        concepts: ["ipfs-filecoin-evidence-boundary"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "Root CID·block CID·CAR digest·PieceCID·deal ID를 구분하세요.", answerChecklist: ["DAG root", "block identity", "archive bytes", "piece commitment", "lifecycle record"], requiredConcepts: ["ipfs-filecoin-identity-map-artifact"], sectionId: "identity-map" },
-      { level: "basic", question: "Importer·chunker·padding profile을 identity map에 넣어야 하는 이유를 설명하세요.", answerChecklist: ["transformation", "different DAG/CAR", "piece mapping", "reproducibility"], requiredConcepts: ["ipfs-filecoin-identity-map-artifact"], sectionId: "identity-map" },
-      { level: "basic", question: "Provider routing result와 verified block receipt를 구분하세요.", answerChecklist: ["candidate", "dial/transfer", "bytes", "CID recompute"], requiredConcepts: ["ipfs-filecoin-retrieval-policy-router"], sectionId: "retrieve-path" },
-      { level: "basic", question: "Retrieval latency의 routing·dial·first-byte·transfer·verify 단계를 설명하세요.", answerChecklist: ["five stages", "same request", "monotonic time", "bottleneck"], requiredConcepts: ["ipfs-filecoin-retrieval-policy-router"], sectionId: "retrieve-path" },
-      { level: "basic", question: "Kubo pin과 Filecoin deal·PoRep·PoSt가 각각 보장하지 않는 것을 설명하세요.", answerChecklist: ["local GC retention", "deal lifecycle", "storage evidence", "not retrieval SLA"], requiredConcepts: ["ipfs-filecoin-retention-receipt"], sectionId: "retention" },
-      { level: "basic", question: "IPFS–Filecoin service release의 네 evidence groups를 설명하세요.", answerChecklist: ["identity", "byte verification", "retention policy", "retrieval sample", "repair"], requiredConcepts: ["ipfs-filecoin-service-release-gate"], sectionId: "release-gate" },
-      { level: "advanced", question: "같은 file bytes에 chunker만 바꾼 stale Piece mapping 재사용을 탐지하세요.", answerChecklist: ["profile change", "root/block set", "CAR/piece digest", "manifest mismatch"], requiredConcepts: ["ipfs-filecoin-identity-map-artifact"], sectionId: "identity-map" },
-      { level: "advanced", question: "Gateway HTTP 200이지만 bytes CID가 다른 retrieval 반례를 처리하세요.", answerChecklist: ["status not integrity", "hash bytes", "reject/quarantine", "fallback path"], requiredConcepts: ["ipfs-filecoin-retrieval-policy-router"], sectionId: "retrieve-path" },
-      { level: "advanced", question: "독립 replica availability 식이 correlated outage에서 틀리는 이유를 설명하세요.", answerChecklist: ["independence assumption", "shared failure domain", "overestimate", "fault-domain measurement"], requiredConcepts: ["ipfs-filecoin-retention-receipt"], sectionId: "retention" },
-      { level: "advanced", question: "Importer·Kubo·router candidate의 canary와 rollback plan을 설계하세요.", answerChecklist: ["pinned versions", "negative fixtures", "cold/cache paths", "previous manifest", "repair owner"], requiredConcepts: ["ipfs-filecoin-service-release-gate"], sectionId: "release-gate" },
+      {
+        level: "basic",
+        question:
+          "Root CID·block CID·CAR digest·PieceCID·deal ID를 구분하세요.",
+        answerChecklist: [
+          "DAG root",
+          "block identity",
+          "archive bytes",
+          "piece commitment",
+          "lifecycle record",
+        ],
+        requiredConcepts: ["ipfs-filecoin-identity-map-artifact"],
+        sectionId: "identity-map",
+      },
+      {
+        level: "basic",
+        question:
+          "Importer·chunker·padding profile을 identity map에 넣어야 하는 이유를 설명하세요.",
+        answerChecklist: [
+          "transformation",
+          "different DAG/CAR",
+          "piece mapping",
+          "reproducibility",
+        ],
+        requiredConcepts: ["ipfs-filecoin-identity-map-artifact"],
+        sectionId: "identity-map",
+      },
+      {
+        level: "basic",
+        question:
+          "Provider routing result와 verified block receipt를 구분하세요.",
+        answerChecklist: [
+          "candidate",
+          "dial/transfer",
+          "bytes",
+          "CID recompute",
+        ],
+        requiredConcepts: ["ipfs-filecoin-retrieval-policy-router"],
+        sectionId: "retrieve-path",
+      },
+      {
+        level: "basic",
+        question:
+          "Retrieval latency의 routing·dial·first-byte·transfer·verify 단계를 설명하세요.",
+        answerChecklist: [
+          "five stages",
+          "same request",
+          "monotonic time",
+          "bottleneck",
+        ],
+        requiredConcepts: ["ipfs-filecoin-retrieval-policy-router"],
+        sectionId: "retrieve-path",
+      },
+      {
+        level: "basic",
+        question:
+          "Kubo pin과 Filecoin deal·PoRep·PoSt가 각각 보장하지 않는 것을 설명하세요.",
+        answerChecklist: [
+          "local GC retention",
+          "deal lifecycle",
+          "storage evidence",
+          "not retrieval SLA",
+        ],
+        requiredConcepts: ["ipfs-filecoin-retention-receipt"],
+        sectionId: "retention",
+      },
+      {
+        level: "basic",
+        question:
+          "Filecoin storage proof만으로 현재 retrieval 성공을 결론내릴 수 없는 이유를 설명하세요.",
+        answerChecklist: [
+          "different observation",
+          "provider path",
+          "byte transfer",
+          "CID verification",
+          "counterexample",
+        ],
+        requiredConcepts: ["ipfs-filecoin-evidence-boundary"],
+        sectionId: "evidence-boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 file bytes에 chunker만 바꾼 stale Piece mapping 재사용을 탐지하세요.",
+        answerChecklist: [
+          "profile change",
+          "root/block set",
+          "CAR/piece digest",
+          "manifest mismatch",
+        ],
+        requiredConcepts: ["ipfs-filecoin-identity-map-artifact"],
+        sectionId: "identity-map",
+      },
+      {
+        level: "advanced",
+        question:
+          "Gateway HTTP 200이지만 bytes CID가 다른 retrieval 반례를 처리하세요.",
+        answerChecklist: [
+          "status not integrity",
+          "hash bytes",
+          "reject/quarantine",
+          "fallback path",
+        ],
+        requiredConcepts: ["ipfs-filecoin-retrieval-policy-router"],
+        sectionId: "retrieve-path",
+      },
+      {
+        level: "advanced",
+        question:
+          "독립 replica availability 식이 correlated outage에서 틀리는 이유를 설명하세요.",
+        answerChecklist: [
+          "independence assumption",
+          "shared failure domain",
+          "overestimate",
+          "fault-domain measurement",
+        ],
+        requiredConcepts: ["ipfs-filecoin-retention-receipt"],
+        sectionId: "retention",
+      },
+      {
+        level: "advanced",
+        question:
+          "Storage proof는 있지만 retrieval이 실패하는 상태와 그 반대 상태를 각각 구성하세요.",
+        answerChecklist: [
+          "deal/proof present",
+          "provider unavailable",
+          "cache hit",
+          "no long-term deal",
+          "invalid implication",
+        ],
+        requiredConcepts: ["ipfs-filecoin-evidence-boundary"],
+        sectionId: "evidence-boundary",
+      },
     ],
     papers: [
-      { title: "IPFS Bitswap protocol · ff7230f", href: "https://github.com/ipfs/specs/blob/ff7230ffe47f6aa765a105271f6294299e5f233f/src/bitswap-protocol.md", problem: "Content-addressed blocks를 peer 사이에서 발견·요청·전송해야 합니다.", contribution: "Wantlist, block/presence messages와 peer exchange roles를 정의합니다.", assumptions: "Pinned protocol revision, libp2p transport와 CID verification을 사용합니다.", evidenceScope: "Bitswap block-exchange specification snapshot에 한정합니다.", notClaim: "Provider/HAVE가 possession·latency·durability·deal을 보장하지 않습니다.", sectionId: "paper-ipfs-bitswap" },
-      { title: "IPFS HTTP Routing V1 · ff7230f", href: "https://github.com/ipfs/specs/blob/ff7230ffe47f6aa765a105271f6294299e5f233f/src/routing/http-routing-v1.md", problem: "Content·peer routing records를 interoperable HTTP API로 질의해야 합니다.", contribution: "Provider lookup request/response와 record transport schema를 정의합니다.", assumptions: "Exact endpoint profile, TTL/signature policy와 transfer verifier를 사용합니다.", evidenceScope: "HTTP routing candidate-discovery semantics에 한정합니다.", notClaim: "Provider response가 possession·transfer·integrity·retention을 보장하지 않습니다.", sectionId: "paper-ipfs-routing" },
-      { title: "Kubo v0.42.0 stable source", href: "https://github.com/ipfs/kubo/tree/v0.42.0", problem: "Blockstore·pin/GC·routing·exchange·gateway를 운영 node로 결합해야 합니다.", contribution: "Stable Kubo implementation과 repository/configuration boundaries를 제공합니다.", assumptions: "v0.42.0 binary, repo schema, datastore, pin·routing config를 기록합니다.", evidenceScope: "Pinned stable Kubo source snapshot에 한정합니다.", notClaim: "Local pin이 remote replication·deal·gateway uptime·영구 보존을 뜻하지 않습니다.", sectionId: "paper-ipfs-kubo" },
-      { title: "Storacha–Filecoin pipeline · 3b67918", href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-filecoin.md", problem: "Content artifacts를 Filecoin pieces·deal workflow와 status에 연결해야 합니다.", contribution: "Offer·aggregate·dealer·tracker roles의 integration boundary를 제공합니다.", assumptions: "Spec maturity, piece encoding과 deployed service/network versions을 확인합니다.", evidenceScope: "Pinned Storacha Filecoin integration design에 한정합니다.", notClaim: "Offer·deal status가 retrieval·permanence·all proof semantics를 대신하지 않습니다.", sectionId: "paper-ipfs-filecoin" },
+      {
+        title: "IPFS Bitswap protocol · 3000be6",
+        href: "https://github.com/ipfs/specs/blob/3000be69497e47c399cdb719440d0809f085388b/src/bitswap-protocol.md",
+        problem:
+          "Content-addressed blocks를 peer 사이에서 발견·요청·전송해야 합니다.",
+        contribution:
+          "Wantlist, block/presence messages와 peer exchange roles를 정의합니다.",
+        assumptions:
+          "Pinned protocol revision, libp2p transport와 CID verification을 사용합니다.",
+        evidenceScope:
+          "Bitswap block-exchange specification snapshot에 한정합니다.",
+        notClaim:
+          "Provider/HAVE가 possession·latency·durability·deal을 보장하지 않습니다.",
+        sectionId: "paper-ipfs-bitswap",
+      },
+      {
+        title: "IPFS Delegated Routing V1 · 3000be6",
+        href: "https://github.com/ipfs/specs/blob/3000be69497e47c399cdb719440d0809f085388b/src/routing/http-routing-v1.md",
+        problem:
+          "Content·peer routing records를 interoperable HTTP API로 질의해야 합니다.",
+        contribution:
+          "Provider lookup request/response와 record transport schema를 정의합니다.",
+        assumptions:
+          "Exact endpoint profile, TTL/signature policy와 transfer verifier를 사용합니다.",
+        evidenceScope:
+          "HTTP routing candidate-discovery semantics에 한정합니다.",
+        notClaim:
+          "Provider response가 possession·transfer·integrity·retention을 보장하지 않습니다.",
+        sectionId: "paper-ipfs-routing",
+      },
+      {
+        title: "Kubo v0.43.1 · commit acc53c0",
+        href: "https://github.com/ipfs/kubo/tree/acc53c093810a8fe9a4bc2f023f0b1e0c1d629b5",
+        problem:
+          "Blockstore·pin/GC·routing·exchange·gateway를 운영 node로 결합해야 합니다.",
+        contribution:
+          "Stable Kubo implementation과 repository/configuration boundaries를 제공합니다.",
+        assumptions:
+          "v0.43.1 binary, repo schema, datastore, pin·routing config를 기록합니다.",
+        evidenceScope: "Pinned stable Kubo source snapshot에 한정합니다.",
+        notClaim:
+          "Local pin이 remote replication·deal·gateway uptime·영구 보존을 뜻하지 않습니다.",
+        sectionId: "paper-ipfs-kubo",
+      },
+      {
+        title: "Storacha–Filecoin pipeline · 3b67918",
+        href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-filecoin.md",
+        problem:
+          "Content artifacts를 Filecoin pieces·deal workflow와 status에 연결해야 합니다.",
+        contribution:
+          "Offer·aggregate·dealer·tracker roles의 integration boundary를 제공합니다.",
+        assumptions:
+          "Spec maturity, piece encoding과 deployed service/network versions을 확인합니다.",
+        evidenceScope:
+          "Pinned Storacha Filecoin integration design에 한정합니다.",
+        notClaim:
+          "Offer·deal status가 retrieval·permanence·all proof semantics를 대신하지 않습니다.",
+        sectionId: "paper-ipfs-filecoin",
+      },
     ],
   },
   "blockchain/filecoin-onchain-cloud": {

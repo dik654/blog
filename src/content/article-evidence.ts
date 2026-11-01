@@ -6031,10 +6031,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "go-f3 v0.8.15 README", href: "https://github.com/filecoin-project/go-f3/blob/v0.8.15/README.md", note: "F3 구성과 2025-04-29 mainnet 활성화 상태의 pinned 설명이며 현재 node availability·certificate lag 측정은 아님" },
   ],
   "blockchain/ipfs-filecoin-storage": [
-    { kind: "공식 규격", label: "IPFS Bitswap protocol · commit ff7230f", href: "https://github.com/ipfs/specs/blob/ff7230ffe47f6aa765a105271f6294299e5f233f/src/bitswap-protocol.md", note: "Wantlist·block/presence exchange snapshot이며 provider ad가 possession·durability를 보장하지 않음" },
-    { kind: "공식 규격", label: "IPFS HTTP Routing V1 · commit ff7230f", href: "https://github.com/ipfs/specs/blob/ff7230ffe47f6aa765a105271f6294299e5f233f/src/routing/http-routing-v1.md", note: "Provider candidate schema이며 successful transfer·CID integrity는 별도" },
-    { kind: "공식 코드", label: "Kubo v0.42.0 stable source", href: "https://github.com/ipfs/kubo/tree/v0.42.0", note: "Pin/GC·routing·Bitswap·gateway implementation snapshot이며 remote replication·SLA는 아님" },
-    { kind: "공식 규격", label: "Storacha–Filecoin pipeline · commit 3b67918", href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-filecoin.md", note: "Content/piece/deal receipt bridge이며 offer가 deal·proof·retrieval 성공을 뜻하지 않음" },
+    {
+      kind: "공식 규격",
+      label: "IPFS Bitswap protocol · commit 3000be6",
+      href: "https://github.com/ipfs/specs/blob/3000be69497e47c399cdb719440d0809f085388b/src/bitswap-protocol.md",
+      note: "Wantlist·block/presence exchange snapshot이며 provider ad가 possession·durability를 보장하지 않음",
+    },
+    {
+      kind: "공식 규격",
+      label: "IPFS Delegated Routing V1 · commit 3000be6",
+      href: "https://github.com/ipfs/specs/blob/3000be69497e47c399cdb719440d0809f085388b/src/routing/http-routing-v1.md",
+      note: "Provider candidate schema이며 successful transfer·CID integrity는 별도",
+    },
+    {
+      kind: "공식 코드",
+      label: "Kubo v0.43.1 · commit acc53c0",
+      href: "https://github.com/ipfs/kubo/tree/acc53c093810a8fe9a4bc2f023f0b1e0c1d629b5",
+      note: "Pin/GC·routing·Bitswap·gateway implementation snapshot이며 remote replication·SLA는 아님",
+    },
+    {
+      kind: "공식 규격",
+      label: "Storacha–Filecoin pipeline · commit 3b67918",
+      href: "https://github.com/storacha/specs/blob/3b6791869635735ddb1a54aed7450ad6ef687c06/w3-filecoin.md",
+      note: "Content/piece/deal receipt bridge이며 offer가 deal·proof·retrieval 성공을 뜻하지 않음",
+    },
   ],
   "blockchain/lotus-chain": [
     { kind: "공식 코드", label: "Lotus ChainSync · v1.36.0 commit 154c0c3", href: "https://github.com/filecoin-project/lotus/blob/154c0c3a46e92006008818bb06aaf959e2e705a9/chain/sync.go", note: "Header/message 수집·validation·heaviest-tipset refresh의 pinned 구현이며 peer availability·finality 보장은 아님" },

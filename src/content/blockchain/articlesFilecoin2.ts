@@ -107,7 +107,7 @@ export const filecoin2Articles: Article[] = [
       { id: "identity-map", title: "CID·CAR·Piece identity map" },
       { id: "retrieve-path", title: "Verified retrieval router" },
       { id: "retention", title: "Pin·deal·proof receipt" },
-      { id: "release-gate", title: "End-to-end release gate" },
+      { id: "evidence-boundary", title: "보관 증거와 retrieval의 경계" },
     ],
     component: () =>
       import("@/pages/articles/blockchain/ipfs-filecoin-storage"),
