@@ -3502,9 +3502,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-sales-records-access-retention-and-deletion": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 판매 기록은 고객자료·설명서 버전·녹취·이해 확인·주문·체결·알림을 같은 시각과 사건번호로 이어 변조를 막고 열람에 응할 수 있어야 하며, 자료별 법적 근거·기간·접근권한·법적 보류와 파기를 함께 관리해야 합니다.",
-    "sharedGate": "14시10분부터 14시32분까지 22분의 고객자료·18분 녹취·설명서 3판·주문을 한 사건으로 연결합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "14시10분 고객자료와 사건번호, 설명서 3판의 버전·해시, 14시12~30분 18분 녹취, 주문 전 2분의 확인, 14시32분 주문·체결, 증거 묶음, 열람, 자료별 보존·법적 보류·파기까지 한 판매기록의 생애를 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "14시10분부터 14시32분까지 22분을 검산하고 고객자료·문서 버전·녹취·질문과 확인·주문·체결·열람 제공본·파기 기록을 같은 사건번호 아래 서로 다른 원본과 상태로 구분합니다."
   },
   "markets/equity-dispersion-implied-correlation-and-variance": {
     "action": "keep",
@@ -4671,7 +4671,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/collateral-optimization-eligibility-haircuts-and-liquidity":"211395f9610ad486",
 "markets/ccp-default-management-hedging-auction-and-porting":"40b7aa88ea82fa5f",
 "markets/swaption-annuity-volatility-quotes-and-cube":"cfefb2d036fad186",
-"markets/derivatives-sales-records-access-retention-and-deletion":"7106213433ef2db2",
+"markets/derivatives-sales-records-access-retention-and-deletion":"8d2d990bb78147db",
 "markets/equity-dispersion-implied-correlation-and-variance":"dc637f6b4f965461",
 "markets/credit-tranche-base-correlation-and-default-auction":"69d67fe0bb57d7a0",
 "markets/commodity-grades-location-basis-and-physical-delivery":"844b02bac84bad7e",

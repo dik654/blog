@@ -242,6 +242,7 @@ const noScriptArticleRoutes = new Set([
   "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
   "markets/ccp-default-management-hedging-auction-and-porting",
   "markets/swaption-annuity-volatility-quotes-and-cube",
+  "markets/derivatives-sales-records-access-retention-and-deletion",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
