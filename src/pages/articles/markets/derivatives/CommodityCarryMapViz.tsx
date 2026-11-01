@@ -140,9 +140,9 @@ function CurvePanel({ backward = false }: { backward?: boolean }) {
   const farY = backward ? 150 : 48;
   return (
     <svg viewBox="0 0 640 205" className="block w-full" role="img" aria-label={backward ? "가까운 가격이 먼 가격보다 높은 백워데이션 곡선" : "먼 가격이 가까운 가격보다 높은 콘탱고 곡선"}>
-      <line x1="72" y1="174" x2="590" y2="174" className="stroke-border" strokeWidth="2" />
-      <line x1="72" y1="26" x2="72" y2="174" className="stroke-border" strokeWidth="2" />
-      <path d={`M120 ${nearY} C260 ${nearY}, 420 ${farY}, 560 ${farY}`} fill="none" className="stroke-primary" strokeWidth="5" />
+      <line x1="72" y1="174" x2="590" y2="174" className="stroke-border" strokeWidth="1" />
+      <line x1="72" y1="26" x2="72" y2="174" className="stroke-border" strokeWidth="1" />
+      <path d={`M120 ${nearY} C260 ${nearY}, 420 ${farY}, 560 ${farY}`} fill="none" className="stroke-primary" strokeWidth="1.25" />
       <circle cx="120" cy={nearY} r="8" className="fill-foreground" />
       <circle cx="560" cy={farY} r="8" className="fill-primary" />
       <text x="120" y={nearY - 18} textAnchor="middle" className="fill-foreground text-[17px] font-black">가까운 계약 ${near.toFixed(2)}</text>
