@@ -1608,9 +1608,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "business/franchise-incentives": {
     "action": "keep",
     "status": "reviewed",
-    "rationale": "가맹본부의 브랜드·매뉴얼·공급망 수입과 가맹점의 매출·임금·월세·로열티를 별도로 그려야 양쪽의 인센티브와 위험 배분을 볼 수 있습니다.",
-    "reviewedAt": "2026-10-04",
-    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다."
+    "rationale": "가맹본부의 브랜드·매뉴얼·계약상 통제와 가맹점의 매출·임금·월세·로열티를 별도로 그려야 양쪽의 인센티브와 위험 배분을 볼 수 있습니다. 첫 그림은 같은 3천만 원이 네 장부에 기록되는 과정과 통제권을 일곱 장면으로 분리합니다.",
+    "reviewedAt": "2026-11-01",
+    "sharedGate": "첫 그림과 3·7절의 금액이 일치해야 합니다. 월매출 3천만 원의 5%인 150만 원은 점포 비용이자 본부 수입이며, 재료비 1천만 원 전부를 본부 이익으로 읽지 않습니다. 점포환경개선 부담은 확장·이전 여부에 따라 20%와 40%를 구분합니다."
   },
   "property/land-development-residual": {
     "action": "keep",
@@ -4305,7 +4305,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/electricity-grid-and-power": "d4901083041053ad",
   "infrastructure/climate-risk-and-exposure": "aa85ef97f65b45ea",
   "business/business-model-cashflow": "d9d96a98d88c5a2e",
-  "business/franchise-incentives": "ad08dae42d90c580",
+  "business/franchise-incentives": "c6da7928e309fac2",
   "business/shop-fitout-and-opening": "758b12f0dd56e630",
   "business/shop-site-selection": "a029f77b0a6d4a1a",
   "business/shop-unit-economics": "8c31975990c3a73b",
