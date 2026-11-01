@@ -1615,9 +1615,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "property/land-development-residual": {
     "action": "keep",
     "status": "reviewed",
-    "rationale": "개발 가능성은 등기상의 소유와 다르며 허가·용적·기반시설·분양가격·금융비용의 조건을 거꾸로 계산한 잔여액이 토지에 지불할 수 있는 값의 상한을 만듭니다.",
-    "reviewedAt": "2026-10-04",
-    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다."
+    "rationale": "토지 개발은 완공 뒤 가치에서 개발비와 목표 이익을 빼 토지·취득 잔여를 구하고, 취득 부대비용·가격과 비용 변화·지연 이자·현금 시점·인허가와 기반시설 조건으로 다시 검사하는 문제입니다. 첫 그림은 이 과정을 일곱 장면으로 연결합니다.",
+    "reviewedAt": "2026-11-01",
+    "sharedGate": "첫 그림과 3·4·7·8·9절의 금액이 일치해야 합니다. 100억 원에서 개발비 70억 원과 목표 이익 15억 원을 빼면 토지·취득 잔여는 15억 원이고, 취득 부대비용 2억 원을 빼면 매도자 예산은 13억 원입니다. 6개월 지연 이자 2억 원이 추가되면 잔여는 13억 원으로 줄어듭니다. 잔여값을 확정 토지 시세로 읽지 않습니다."
   },
   "business/supply-chain-bargaining": {
     "action": "keep",

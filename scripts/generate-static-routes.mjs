@@ -172,6 +172,7 @@ const noScriptArticleRoutes = new Set([
   "property/commercial-lease-and-rent",
   "property/shop-transfer-and-goodwill",
   "property/shop-closure-and-restoration",
+  "property/land-development-residual",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
