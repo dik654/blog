@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 783,
+    "dedicatedVisuals": 784,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 637,
+    "animatedMechanisms": 638,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14422,14 +14422,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/var-expected-shortfall-stress-and-model-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",

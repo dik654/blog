@@ -3166,9 +3166,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/var-expected-shortfall-stress-and-model-risk": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "VaR는 정한 기간과 신뢰수준의 손실 문턱을, 예상손실은 그 바깥 꼬리의 평균을 보여 주며, 자료에 없던 복합 충격과 모형·유동성 한계는 별도 스트레스 시험과 사후검증으로 관리합니다.",
-    "sharedGate": "열 손실의 80% VaR 4·ES 8과 별도 스트레스 18을 검산하고 본문 80% 예를 규제 97.5% 기준과 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "0·0·1·1·2·2·3·4·6·10의 열 손실에서 80% VaR 4와 Expected Shortfall 8을 직접 계산하고, 표본 밖 복합 스트레스 18, 그릭스와 위험 도구의 차이, 재평가·한도·실제 손익 검증 경계를 여덟 장면으로 추적합니다.",
+    "sharedGate": "8÷10=80%에서 VaR 4, (6+10)÷2=8과 별도 스트레스 18을 검산하고 분위수 문턱, 문턱 밖 평균과 발생확률을 자동으로 뜻하지 않는 지정 충격을 구분합니다."
   },
   "markets/minimum-variance-hedge-ratio-and-basis-risk": {
     "action": "keep",
@@ -4641,7 +4641,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/currency-hedging-forward-points-and-cross-currency-basis":"2087a7e1b609e874",
 "markets/option-strategies-and-structured-notes":"5e440805f5fc03c5",
 "markets/otc-master-agreement-collateral-netting-and-cva":"c9c4e1ce6901b22e",
-"markets/var-expected-shortfall-stress-and-model-risk":"b0ceb8cf324687cf",
+"markets/var-expected-shortfall-stress-and-model-risk":"c7562c6088eabc4c",
 "markets/minimum-variance-hedge-ratio-and-basis-risk":"86f50c4f552be7a6",
 "markets/binomial-black-scholes-and-early-exercise":"6429e7751ab87616",
 "markets/implied-volatility-surface-skew-and-smile":"9058abfbe6e2f523",

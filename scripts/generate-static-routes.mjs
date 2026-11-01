@@ -217,6 +217,7 @@ const noScriptArticleRoutes = new Set([
   "markets/credit-derivatives-default-risk-and-tranches",
   "markets/hazard-rate-curve-recovery-and-credit-correlation",
   "markets/otc-master-agreement-collateral-netting-and-cva",
+  "markets/var-expected-shortfall-stress-and-model-risk",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
