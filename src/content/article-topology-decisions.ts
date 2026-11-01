@@ -3257,9 +3257,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 계좌의 시장 진입 조건, 지식·경험 심사와 투자 권유의 적합성은 서로 다른 질문이며 국가와 상품에 맞춰 각각 확인해야 합니다.",
-    "sharedGate": "한국 1·3·1,000·10·2,000과 싱가포르 3년·6회의 대상·단위를 구분하고 거래 가능과 적합성을 분리합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "한 투자자의 첫 주문을 한국의 1단계·2단계와 싱가포르의 CAR·CKA에 차례로 통과시키며, 진입 조건·지식 심사·권유 적합성·계약법인과 분쟁 보호가 서로 다른 질문임을 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "한국의 1시간·3시간·1,000만 원과 10거래일·2,000만 원, 싱가포르의 최근 3년 6회·CAR 조건부 3년·CKA 1년을 대상과 단위별로 검산하고, 거래 가능·상품 이해·권유 적합성·자산 보관을 구분합니다."
   },
   "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": {
     "action": "keep",
@@ -4183,7 +4183,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "markets/cross-border-netting-enforceability-and-regulatory-recognition": "4dc9258b37d3e5f7",
   "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": "6db7d2acb567f37a",
   "markets/japan-australia-retail-leverage-and-product-governance": "af6b0f537743c99b",
-  "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": "5492c4b19d02ebec",
+  "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": "2c3853099c942095",
   "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": "332534b527713afc",
   "markets/us-derivatives-regulatory-map-and-customer-segregation": "89ec2a31d97827e3",
   "ai/agent-extension-boundaries": "fce567f71367b9d3",
