@@ -3201,9 +3201,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/xva-funding-margin-and-wrong-way-risk": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "xVA는 상대방·자기 신용, 무담보 자금과 개시증거금 비용을 구분해 거래 가치에 반영하고, 노출과 부도확률이 함께 나빠지는 잘못된 방향의 위험과 항 사이 중복을 관리합니다.",
-    "sharedGate": "조정가치 9.2, MVA 0.1, 독립 근사 0.12와 동시 악화 0.54를 검산하고 항 사이 중복을 확인합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "기준가격 10에 CVA·DVA·FVA·MVA를 한 칸씩 반영해 9.2가 되는 장부와, 독립 근사 0.12가 노출·부도확률의 동시 악화에서 0.54가 되는 경로를 여덟 장면으로 추적합니다.",
+    "sharedGate": "10−0.6+0.2−0.3−0.1=9.2, 증거금 5×2%×1년=0.1, 10×2%×60%=0.12, 18×5%×60%=0.54를 검산하고 계약·담보·곡선·부호의 중복 경계를 확인합니다."
   },
   "markets/market-risk-backtesting-pnl-attribution-and-model-governance": {
     "action": "keep",
@@ -4646,7 +4646,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/binomial-black-scholes-and-early-exercise":"6429e7751ab87616",
 "markets/implied-volatility-surface-skew-and-smile":"9058abfbe6e2f523",
 "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"04a01d32f906752d",
-"markets/xva-funding-margin-and-wrong-way-risk":"f00134405cf50c68",
+"markets/xva-funding-margin-and-wrong-way-risk":"395fc5acc8d5e76e",
 "markets/market-risk-backtesting-pnl-attribution-and-model-governance":"8c97dbc86b89fe31",
 "markets/black-scholes-pde-finite-difference-and-numerical-error":"eedd210ad42edda2",
 "markets/brownian-motion-ito-and-risk-neutral-pricing":"2a0f49691cce1e3c",

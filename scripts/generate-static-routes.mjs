@@ -207,6 +207,7 @@ const noScriptArticleRoutes = new Set([
   "markets/binomial-black-scholes-and-early-exercise",
   "markets/implied-volatility-surface-skew-and-smile",
   "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging",
+  "markets/xva-funding-margin-and-wrong-way-risk",
   "markets/brownian-motion-ito-and-risk-neutral-pricing",
   "markets/black-scholes-pde-finite-difference-and-numerical-error",
   "markets/swaps-and-credit-risk",
