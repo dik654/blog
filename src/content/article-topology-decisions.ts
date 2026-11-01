@@ -1768,7 +1768,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 단위와 조건이 일치해야 합니다. 100+2−1+3−2=102명이며 연초 연령 구성 20/60/20의 총부양비는 약 66.7이지만 실제 유급 취업자는 45명이라는 별도 가정입니다. 하루 8시간에서 돌봄 4시간을 빼면 유급 일 가능 시간은 4시간이고, 돌봄 2시간을 3만 원에 맡겨 4만 원의 추가 수입을 얻을 수 있을 때만 차이가 1만 원입니다. 총수 102명만으로 연말 연령 구성이나 정책 결과를 확정하지 않습니다."
   },
   "institutions/culture-norms-and-coordination": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "문화의 설명은 국적별 성격 분류가 아니라 공유한 기대·관측·규칙·권리가 실제 협력을 만드는 경로를 확인하는 일입니다.", "sharedGate": "(가정) 가게 10곳×월 2만원, 공동청소비 16만원, 잔액 4만원의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
-  "institutions/evidence-measurement-and-causality": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "측정의 신뢰성, 비교 집단의 적절성, 결과를 일반화할 범위는 서로 다른 질문이며 각각의 근거가 필요합니다.", "sharedGate": "(가정) 각 10가구 A10→8·B10→9kWh/가구·일, 반복측정 8.0·8.1·7.9의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "institutions/evidence-measurement-and-causality": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-11-01",
+    "rationale": "관측된 변화와 원인효과, 측정 반복성과 편향, 무작위 배정과 표본 추출, 계산한 범위와 일반화할 범위를 분리해야 숫자의 근거 수준을 판단할 수 있습니다. 첫 그림은 A10→8·B10→9의 관찰에서 이중차분 −1, 반복측정 8.0·8.1·7.9와 가능한 계기 편향 −0.5, 교란, 배정과 표본, 보고 범위까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·5·7·8·9·10절의 수치와 조건이 일치해야 합니다. 각 10가구인 A와 B가 모두 10에서 시작해 A는 8, B는 9kWh/가구·일이 되므로 두 변화의 차이는 −2−(−1)=−1입니다. 이 값은 평행 추세 등 조건이 있어야 장치의 원인효과로 읽을 수 있으며, 반복값 평균 8.0과 계기 편향 가능성 −0.5를 구분합니다. 개별 관측값·변동성·대표성·장기 효과는 현재 자료로 확정하지 않습니다."
+  },
   "infrastructure/materials-waste-and-circularity": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "수거율과 실제 회수량, 처리비용과 재원 이전, 재생재료와 새 원료 대체를 구분해야 순환의 효과를 계산할 수 있습니다.", "sharedGate": "(가정) 발생 100kg·수거 80kg·수율 75%·회수 60kg, 처리총비용 12만원·판매수입 6만원의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
   "gpu/amd-gpu-execution-and-hip": {
     "action": "keep",
@@ -4565,7 +4571,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "gpu/hbm-stack-and-memory-requests":"5a2477d7ba1ccefc",
 "infrastructure/materials-waste-and-circularity":"6e46845f992ce59d",
 "institutions/culture-norms-and-coordination":"705e25049059b440",
-"institutions/evidence-measurement-and-causality":"dd44544f6673b63b",
+"institutions/evidence-measurement-and-causality":"0de8c9931780dbc9",
 "institutions/population-migration-and-care":"84f1a1f1e783549c",
 "markets/covered-calls-and-income-funds":"1fbe1da7c51b1b9f",
 "markets/financial-products-and-claims":"fbd0d9ca8ca1f6b4",

@@ -2,12 +2,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import EvidenceMeasurementCausalityViz from "./EvidenceMeasurementCausalityViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10이 8이 되었다는 관찰과 원인을 안다는 말은 다릅니다</h2>
+        <EvidenceMeasurementCausalityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             전기를 덜 쓰게 해 준다는 장치를 달았더니 사용량이 10에서 8로 줄었습니다. 장치가 도움이 됐을 수 있습니다. 날씨가 바뀌었거나 집을 비운 시간이 늘었을 수도 있습니다.
