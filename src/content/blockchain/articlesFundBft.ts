@@ -256,12 +256,14 @@ export const bftArticles: Article[] = [
   /* ── DAG 기반 합의 ── */
   {
     slug: "dag-consensus",
-    title: "DAG 기반 합의 (Narwhal & Bullshark)",
+    title: "Narwhal·Bullshark: DAG가 실행 순서가 되는 과정",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "개요" },
-      { id: "narwhal", title: "Narwhal: DAG 기반 멤풀" },
-      { id: "bullshark", title: "Bullshark: DAG 순서 결정" },
+      { id: "overview", title: "한 거래의 전체 흐름" },
+      { id: "narwhal", title: "데이터 인증" },
+      { id: "bullshark", title: "앵커 결정" },
+      { id: "linearization", title: "선형화와 실행" },
+      { id: "comparison", title: "경계 정리" },
     ],
     component: () => import("@/pages/articles/blockchain/dag-consensus"),
   },

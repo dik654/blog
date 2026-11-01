@@ -4781,7 +4781,7 @@
     {
       "route": "blockchain/jolteon-ditto",
       "publicPath": "cs/blockchain/jolteon-ditto",
-      "title": "Jolteon & Ditto (Aptos DiemBFT 기반)",
+      "title": "Jolteon·Ditto: 정상 경로와 비동기 전환",
       "catalogIndex": 475,
       "status": "pending",
       "provenance": "assignment:chains",
@@ -4791,7 +4791,7 @@
     {
       "route": "blockchain/bft-comparison",
       "publicPath": "cs/blockchain/bft-comparison",
-      "title": "BFT 합의 비교 (PBFT → HotStuff → Autobahn)",
+      "title": "PBFT·HotStuff·Autobahn: 같은 요청과 장애 비교",
       "catalogIndex": 476,
       "status": "pending",
       "provenance": "assignment:chains",
@@ -4801,7 +4801,7 @@
     {
       "route": "blockchain/dag-consensus",
       "publicPath": "cs/blockchain/dag-consensus",
-      "title": "DAG 기반 합의 (Narwhal & Bullshark)",
+      "title": "Narwhal·Bullshark: DAG가 실행 순서가 되는 과정",
       "catalogIndex": 477,
       "status": "pending",
       "provenance": "assignment:chains",

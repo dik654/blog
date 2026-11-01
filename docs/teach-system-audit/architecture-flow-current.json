@@ -7,8 +7,8 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 564,
-    "architectureWithoutAnimation": 75,
+    "animatedMechanisms": 565,
+    "architectureWithoutAnimation": 74,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 243,
     "sourceCitationLinked": 998,
@@ -6786,18 +6786,18 @@
     {
       "route": "blockchain/dag-consensus",
       "publicPath": "cs/blockchain/dag-consensus",
-      "title": "DAG 기반 합의 (Narwhal & Bullshark)",
+      "title": "Narwhal·Bullshark: DAG가 실행 순서가 되는 과정",
       "sourcePath": "src/pages/articles/blockchain/dag-consensus.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/dai-maker",

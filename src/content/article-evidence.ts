@@ -7662,8 +7662,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Lamport·Shostak·Pease — The Byzantine Generals Problem", href: "https://lamport.azurewebsites.net/pubs/byz.pdf", note: "Byzantine interactive consistency의 oral/signed message model 경계" },
   ],
   "blockchain/dag-consensus": [
-    { kind: "핵심 논문", label: "Danezis et al. — Narwhal and Tusk", href: "https://arxiv.org/abs/2105.11827", note: "Reliable transaction dissemination과 ordering 분리·DAG mempool evaluation" },
-    { kind: "핵심 논문", label: "Spiegelman et al. — Bullshark", href: "https://arxiv.org/abs/2201.05677", note: "DAG anchor·wave ordering과 synchronous fast path·asynchronous property" },
+    { kind: "핵심 논문", label: "Danezis et al. — Narwhal and Tusk v4", href: "https://arxiv.org/abs/2105.11827v4", note: "§3의 2f+1 certificate·n−f parent·causal history 회수 조건" },
+    { kind: "핵심 논문", label: "Spiegelman et al. — Partially Synchronous Bullshark v1", href: "https://arxiv.org/abs/2209.05633v1", note: "짝수 라운드 anchor·다음 라운드 edge 투표·f+1 commit·간접 결정" },
+    { kind: "핵심 논문", label: "Spiegelman et al. — Bullshark v3", href: "https://arxiv.org/abs/2201.05677v3", note: "비동기 variant의 4-round wave·steady-state/fallback leader·deterministic delivery" },
   ],
   "blockchain/tendermint-bft": [
     { kind: "핵심 논문", label: "Jae Kwon — Tendermint: Consensus without Mining", href: "https://tendermint.com/static/docs/tendermint.pdf", note: "2014 draft v0.6의 역사적 Tendermint 설계이며 outdated 표기를 본문에 유지" },
