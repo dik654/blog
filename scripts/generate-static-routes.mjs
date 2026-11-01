@@ -192,6 +192,7 @@ const noScriptArticleRoutes = new Set([
   "banking/repo-and-collateral-funding",
   "markets/bond-pricing-and-yield-curve",
   "markets/equity-claims-and-valuation",
+  "markets/financial-products-and-claims",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
