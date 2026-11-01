@@ -63,8 +63,8 @@ export const krxDerivativesMechanicsData: DerivativeDeepArticleData = {
     { term: "일일정산", description: "매일 정산가격으로 선물 손익을 계산해 계좌 현금에 반영하는 절차입니다.", example: "300만 원에서 하루 손실 50만 원이 빠집니다.", boundary: "최종결제와 별개의 반복 절차입니다." },
   ] },
   sources: [
-    { source: "한국거래소 · 코스피200 선물 명세", excerpt: "Contract Size · Tick Size · Cash Settlement", application: "330에서 328로 움직인 1계약의 손익에 승수와 결제방식을 적용합니다.", citation: "KRX, KOSPI 200 Futures", href: "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp", note: "현재 종목 규격은 거래 시점의 KRX 계약명세에서 다시 확인합니다." },
-    { source: "한국거래소 · 주문유형", excerpt: "Limit · Market · IOC · FOK", application: "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다.", citation: "KRX, Order Types", href: "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp", note: "주문유형만 설명하는 페이지입니다. 체결 뒤 일일정산·반대거래·최종결제는 이 페이지에 없고, KRX 'Settlement of Futures Transactions' 안내(global.krx.co.kr GLB0603010802, 2026-10-09 확인)에서 확인합니다. 회원사별 추가 기준은 별도입니다." },
+    { source: "한국거래소 · 코스피200 선물 명세", excerpt: "Contract Size · Tick Size · Cash Settlement", application: "330에서 328로 움직인 1계약의 손익에 승수와 결제방식을 적용합니다.", citation: "KRX, KOSPI 200 Futures", href: "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp", note: "승수 25만 원, 최소 호가 0.05포인트와 현금결제를 2026-11-02 확인했습니다. 현재 종목 규격은 거래 시점의 KRX 계약명세에서 다시 확인합니다." },
+    { source: "한국거래소 · 주문·체결·선물 결제", excerpt: "Limit · Market · IOC · FOK · price and time priority · daily mark-to-market", application: "주문별 가격과 미체결 수량 처리, 가격·시간 우선 체결, 일일정산·반대거래·최종결제를 이어 봅니다.", citation: "KRX, Order Types; Conclusion of Trade Execution Contract; Settlement of Futures Transactions", href: "https://global.krx.co.kr/contents/GLB/06/0603/0603010802/GLB0603010802.jsp", note: "KRX 주문유형(GLB0603010200), 거래 체결(GLB0603010700), 선물 결제(GLB0603010802) 안내를 2026-11-02 함께 확인했습니다. 결제 안내에는 10년 국채선물과 금선물의 오래된 실물인수도 설명이 남아 현행 상품 명세·업무규정과 어긋나므로 상품별 최신 명세와 규정을 우선합니다." },
   ],
   review: [
     "330에 산 1계약이 328로 정산될 때 손익을 계산해 보세요. (답: 1·3절)",

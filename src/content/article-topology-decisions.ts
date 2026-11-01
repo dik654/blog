@@ -3467,9 +3467,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/krx-derivatives-contract-orders-and-daily-settlement": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "장내파생 거래는 계약명세의 승수·호가·만기에서 출발해 주문조건과 가격·시간 우선 체결을 거친 뒤 일일정산·반대거래·최종결제로 이어지며, 각 상태와 현금 영수증을 구분해야 합니다.",
-    "sharedGate": "330−328의 2포인트에 계약승수 25만 원을 곱해 50만 원 손실을 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "코스피200 선물의 승수·호가에서 시작해 330 지정가 주문, 가격·시간 우선 체결, 청산 포지션, 328 일일정산, 계좌와 증거금, 반대거래, 현금 최종결제까지 1계약의 상태와 현금을 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "0.05×25만 원=12,500원, (328−330)×25만 원=−50만 원, 300만−50만=250만 원을 검산하고 주문·체결·포지션·정산·최종결제를 서로 다른 상태로 구분합니다."
   },
   "markets/portfolio-compression-risk-tolerances-and-records": {
     "action": "keep",
@@ -4660,13 +4660,13 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"409e7e4b7e967bcb",
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"f9d6deb10fa6f125",
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"d23f172695692391",
-"markets/uncleared-initial-margin-simm-and-model-governance":"941f21bff7ae1dad",
-"markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"bcddcd2ba09014de",
-"markets/collateral-operations-margin-calls-disputes-and-substitution":"4aab453963abd0f8",
-"markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"17e358218402434a",
-"markets/multi-asset-options-correlation-and-rare-event-simulation":"2ea57eecbf9d6076",
+"markets/uncleared-initial-margin-simm-and-model-governance":"e92c95ff4339c9c5",
+"markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"145c967c4b889aa7",
+"markets/collateral-operations-margin-calls-disputes-and-substitution":"6bdb33764b464a78",
+"markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"34052c4963ec4517",
+"markets/multi-asset-options-correlation-and-rare-event-simulation":"f33e9bed4b132bae",
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"0fdde9365e1efac1",
-"markets/krx-derivatives-contract-orders-and-daily-settlement":"e8983d082a4cc018",
+"markets/krx-derivatives-contract-orders-and-daily-settlement":"169f0c5dde9100b7",
 "markets/portfolio-compression-risk-tolerances-and-records":"a16d7c4b7737843c",
 "markets/collateral-optimization-eligibility-haircuts-and-liquidity":"1fcfce72b06354fa",
 "markets/ccp-default-management-hedging-auction-and-porting":"64fc431e5a1b28aa",

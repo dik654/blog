@@ -237,6 +237,7 @@ const noScriptArticleRoutes = new Set([
   "markets/derivatives-product-approval-target-market-and-post-sale-monitoring",
   "markets/multi-asset-options-correlation-and-rare-event-simulation",
   "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
+  "markets/krx-derivatives-contract-orders-and-daily-settlement",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
