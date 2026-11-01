@@ -8223,8 +8223,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "RFC 5116 · Authenticated Encryption interface", href: "https://www.rfc-editor.org/rfc/rfc5116", note: "AEAD key/nonce/AAD/plaintext interface와 nonce 경계이며 key distribution·authorization을 해결하지 않음" },
   ],
   "blockchain/initia-evm": [
-    { kind: "공식 코드", label: "MiniEVM x/evm · v1.2.19", href: "https://github.com/initia-labs/minievm/tree/27e60c548f3e2868f6e6b3cf6456fc9289ce7950/x/evm", note: "Ethereum↔Cosmos transaction 변환·message·sequence boundary의 pinned 근거이며 모든 RPC·fork parity나 commit 보장은 아님" },
-    { kind: "공식 코드", label: "MiniEVM StateDB · v1.2.19", href: "https://github.com/initia-labs/minievm/blob/27e60c548f3e2868f6e6b3cf6456fc9289ce7950/x/evm/state/statedb.go", note: "Persistent/transient stores·snapshot·balance integration의 pinned 근거이며 transient effect를 durable app commit으로 확대하지 않음" },
+    { kind: "공식 코드", label: "MiniEVM repository · v1.2.19", href: "https://github.com/initia-labs/minievm/tree/27e60c548f3e2868f6e6b3cf6456fc9289ce7950", note: "JSON-RPC·Ethereum↔Cosmos transaction 변환·Ante·x/evm·StateDB를 함께 고정한 근거이며 모든 RPC·fork parity나 production readiness 보장은 아님" },
+    { kind: "공식 코드", label: "MiniEVM transaction ingress · v1.2.19", href: "https://github.com/initia-labs/minievm/blob/27e60c548f3e2868f6e6b3cf6456fc9289ce7950/jsonrpc/backend/tx.go", note: "Raw Ethereum transaction을 SDK transaction으로 바꿔 BroadcastTxSync에 전달하는 경로이며 hash 반환을 block commit으로 확대하지 않음" },
+    { kind: "공식 코드", label: "Initia Cosmos SDK BaseApp · v0.50.14-initia.3", href: "https://github.com/initia-labs/cosmos-sdk/blob/f62d8dfbcd45c64cbe36b77970e6ed90b9f42617/baseapp/baseapp.go", note: "Ante cache를 message branch보다 먼저 쓰는 pinned runTx 경계이며 message 실패가 sequence까지 rollback한다고 가정하지 않음" },
+    { kind: "공식 코드", label: "MiniEVM snapshot·Cosmos dispatch · v1.2.19", href: "https://github.com/initia-labs/minievm/blob/27e60c548f3e2868f6e6b3cf6456fc9289ce7950/x/evm/keeper/context.go", note: "EVM success·StateDB Commit·queued sdk.Msg dispatch 순서의 근거이며 중간 cache merge를 durable block state로 확대하지 않음" },
     { kind: "공식 문서", label: "Initia · MiniEVM compatibility and changes", href: "https://docs.initia.xyz/home/core-concepts/initia-and-rollups/rollups/vms/minievm/evm-compatibility-and-changes", note: "2026-08-14 current compatibility·known differences 근거이며 future release나 모든 Ethereum tooling 동작을 고정하지 않음" },
   ],
   "blockchain/kohaku-provider": [

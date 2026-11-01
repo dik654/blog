@@ -4137,38 +4137,77 @@
     {
       "route": "blockchain/initia-evm",
       "title": "Initia MiniEVM: Ethereum transaction과 Cosmos state 경계",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/initia-evm.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/initia-evm.tsx",
-        "src/pages/articles/blockchain/initia-evm/ModernArticle.tsx"
+        "src/pages/articles/blockchain/initia-evm/ModernArticle.tsx",
+        "src/pages/articles/blockchain/initia-evm/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/initia-evm/viz/ModernInitiaEvmViz.tsx",
+        "src/pages/articles/blockchain/CosmosEvmLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 9,
+        "predictionPointers": 9,
+        "assumptionMarkers": 7,
+        "sourceButtons": 9,
         "headings": [
-          "MiniEVM은 별도 Ethereum execution node를 옆에 두는 구조가 아니라, Ethereum transaction을 Cosmos SDK app의 한 실행 경로로 받아들인다",
-          "형식은 바꾸되 sender·nonce·chain·gas·data·value의 의미는 보존한다",
-          "EVM이 보는 StateDB를 Cosmos collections와 transient overlay 위에 구현한다",
-          "같은 transaction을 실패 지점별로 재생해 sequence·state·receipt가 한 번만 바뀌는지 확인한다"
+          "MiniEVM은 Ethereum 노드를 옆에 하나 더 두는 구조가 아닙니다",
+          "Ethereum 봉투를 Cosmos 봉투로 바꿔도 요청의 의미는 유지해야 합니다",
+          "Precompile은 Cosmos message를 queue에 예약합니다",
+          "실패 지점마다 어떤 후보 state가 버려지는지 구분해야 합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 RPC hash 반환, CheckTx, Ante, EVM snapshot, Cosmos message, block commit을 한 완료 신호처럼 이어 읽게 했습니다.",
+        "기존 code reference는 실제 v1.2.19 source의 함수·경로·commit 경계와 충분히 맞지 않았습니다.",
+        "Precompile queue에 예약하는 시점과 keeper가 실제 state를 바꾸는 시점이 분리되어 보이지 않았습니다.",
+        "초안은 message 실행 실패가 Ante sequence까지 되돌린다고 잘못 설명했지만 pinned BaseApp runTx는 Ante cache를 먼저 block working state에 씁니다."
+      ],
+      "fixture": {
+        "transaction": "Alice가 sequence 7로 서명한 T7이 Cosmos precompile에 MsgSend 10ufoo를 요청",
+        "initialState": "Alice 100ufoo, Bob 0ufoo, account sequence 7",
+        "successState": "block commit 뒤 sequence 8, Alice 90ufoo, Bob 10ufoo",
+        "failureAfterAnte": "block이 commit되면 sequence 8은 남고 balance는 Alice 100ufoo, Bob 0ufoo"
+      },
+      "stageEvidence": {
+        "0": "서명된 T7과 sequence 7, Alice 100/Bob 0을 같은 기준 상태에 고정합니다.",
+        "1": "eth_sendRawTransaction은 raw transaction을 decode하고 BroadcastTxSync 응답과 hash를 반환하지만 block inclusion을 보장하지 않습니다.",
+        "2": "MiniEVM이 Ethereum transaction을 MsgCall 또는 MsgCreate가 든 SDK transaction으로 변환합니다.",
+        "3": "AnteHandler가 signer sequence를 7에서 8로 올리고 BaseApp가 Ante cache를 message branch보다 먼저 씁니다.",
+        "4": "MsgCall이 Ante에서 올린 account sequence와 EVM transaction nonce를 구분해 EVM execution context를 엽니다.",
+        "5": "execute_cosmos precompile은 keeper를 즉시 호출하지 않고 snapshot 전용 queue에 Cosmos message를 넣습니다.",
+        "6": "EVM success 뒤 StateDB snapshot이 현재 Cosmos transaction context에 합쳐지지만 아직 block database의 최종 commit은 아닙니다.",
+        "7": "queue의 MsgSend를 별도 CacheContext에서 실행하고 성공 branch만 parent transaction에 합칩니다.",
+        "8": "FinalizeBlock transaction success와 CometBFT commit 뒤 sequence 8, Alice 90/Bob 10과 receipt를 함께 확인합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "initia-labs/minievm v1.2.19 commit 27e60c548f3e2868f6e6b3cf6456fc9289ce7950",
+          "application": "jsonrpc/backend/tx.go, txutils.go, sequence.go, keeper/context.go와 precompile/snapshot.go의 실제 호출 순서를 시각화와 한국어 source annotation에 연결했습니다."
+        },
+        {
+          "source": "initia-labs/cosmos-sdk v0.50.14-initia.3 commit f62d8dfbcd45c64cbe36b77970e6ed90b9f42617",
+          "application": "baseapp/baseapp.go runTx에서 Ante cache가 message cache보다 먼저 쓰이는 경계를 확인해 실패 후 sequence 설명을 바로잡았습니다."
+        },
+        {
+          "source": "Initia MiniEVM compatibility and changes, 2026-08-14 확인",
+          "application": "Ethereum compatibility와 알려진 차이의 범위를 고정하고 future release 동작으로 일반화하지 않았습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 MiniEVM v1.2.19, 의존 Cosmos SDK v0.50.14-initia.3의 pinned source를 읽고 RPC ingress·Ante·EVM snapshot·queued message·block commit의 상태 owner를 분리했습니다.",
+        "arithmetic": "성공 경로는 sequence 7→8, 100−10=90, 0+10=10으로 확인했고 Ante 뒤 실패 경로는 sequence 8, balance 100/0으로 구분했습니다.",
+        "source": "MiniEVM 공식 source 8개와 pinned BaseApp runTx를 CodeSidebar의 줄별 한국어 주석에 연결했습니다.",
+        "humanize": "hash 반환 뒤 무엇이 확정됐는지라는 질문 하나를 T7 한 건으로 9단계 추적하고, 영어식 완료 경계를 상태별 영수증으로 풀어 썼습니다.",
+        "build": "전체 TypeScript와 production build를 통과했습니다. 단독 typecheck는 115.48초, 최대 RSS 6,017,073,152 bytes였고 production build는 140.76초, 최대 RSS 6,480,330,752 bytes, swap 0이었습니다. 정적 public route 2,120개와 no-script article 388편을 생성했습니다.",
+        "browser390": "390×844에서 document overflow 0, 마지막 scene 8, ArrowLeft 8→7, reduced-motion의 8.2초 정지와 재생 비활성, CodeSidebar 주석을 확인했습니다. JavaScript 비활성 production preview에도 9개 장면과 sequence 8·balance 100/0 결론이 정적 읽기 순서로 남습니다.",
+        "browser1440": "1440×900에서 document overflow 0, 5.2초 뒤에도 scene 0 유지, BaseApp 원문 dialog의 정확한 경로와 한국어 주석, console 오류와 경고 0건을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 경로를 확인한 뒤 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-ethereum-envelope-to-cosmos-block-commit-trace"
     },
     {
       "route": "blockchain/ipfs-filecoin-storage",

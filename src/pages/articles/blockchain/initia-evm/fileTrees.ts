@@ -12,35 +12,42 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const minievm: FileNode = d("minievm", [
+export const minievm: FileNode = d("minievm · v1.2.19", [
+  d("jsonrpc/backend", [
+    f("tx.go", "minievm/jsonrpc/backend/tx.go", "rpc-ingress"),
+  ]),
+  d("app/ante", [
+    f("sequence.go", "minievm/app/ante/sequence.go", "ante-sequence"),
+  ]),
+  d("dependency · initia-cosmos-sdk", [
+    f(
+      "baseapp/baseapp.go",
+      "initia-cosmos-sdk/baseapp/baseapp.go",
+      "baseapp-ante-commit",
+    ),
+  ]),
   d("x/evm", [
+    d("types", [
+      f("txutils.go", "minievm/x/evm/types/txutils.go", "ethereum-envelope"),
+    ]),
     d("keeper", [
-      f("keeper.go", "minievm/x/evm/keeper/keeper.go", "mini-keeper"),
       f(
         "msg_server.go",
         "minievm/x/evm/keeper/msg_server.go",
-        "mini-msg-server",
+        "sequence-reconcile",
       ),
-      f("context.go", "minievm/x/evm/keeper/context.go", "mini-create-evm"),
-      f("context_utils.go", "minievm/x/evm/keeper/context_utils.go"),
-      f(
-        "precompiles.go",
-        "minievm/x/evm/keeper/precompiles.go",
-        "mini-precompile-reg",
-      ),
+      f("context.go", "minievm/x/evm/keeper/context.go", "evm-call"),
+      f("context.go · dispatch", "minievm/x/evm/keeper/context.go", "dispatch-message"),
     ]),
     d("state", [
-      f("statedb.go", "minievm/x/evm/state/statedb.go", "mini-statedb"),
-      f("snapshot.go", "minievm/x/evm/state/snapshot.go"),
+      f("snapshot.go", "minievm/x/evm/state/snapshot.go", "state-snapshot"),
     ]),
-    d("types", [f("dispatch.go", "minievm/x/evm/types/dispatch.go")]),
     d("precompiles/cosmos", [
       f(
         "contract.go",
         "minievm/x/evm/precompiles/cosmos/contract.go",
-        "mini-precompile",
+        "precompile-queue",
       ),
-      f("types.go", "minievm/x/evm/precompiles/cosmos/types.go"),
     ]),
   ]),
 ]);

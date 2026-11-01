@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 730,
-    "pending": 277,
+    "reviewed": 731,
+    "pending": 276,
     "untracked": 0,
-    "assignedPending": 235,
+    "assignedPending": 234,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4703,9 +4703,9 @@
       "publicPath": "cs/blockchain/initia-evm",
       "title": "Initia MiniEVM: Ethereum transaction과 Cosmos state 경계",
       "catalogIndex": 467,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
