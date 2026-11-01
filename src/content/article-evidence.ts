@@ -6061,7 +6061,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/lotus-state": [
     { kind: "공식 규격", label: "Filecoin Specification · State Tree", href: "https://spec.filecoin.io/systems/filecoin_vm/state_tree/", note: "Address→actor-state HAMT의 protocol 구조이며 current Lotus cache·schema·성능 보장은 아님" },
     { kind: "공식 문서", label: "Filecoin Actors", href: "https://docs.filecoin.io/basics/the-blockchain/actors", note: "Code·state pointer·nonce·balance와 actor model 설명이며 actor bundle·method set의 영구 고정은 아님" },
-    { kind: "공식 코드", label: "Lotus StateTree · v1.36.2 commit c6f4d02", href: "https://github.com/filecoin-project/lotus/blob/c6f4d02400dba55ebc5ab3677ef2ae5a5f4d1aef/chain/state/statetree.go", note: "Versioned load, address resolution, snapshot·revert·flush의 pinned 구현이며 database durability·fixed latency 보장은 아님" },
+    { kind: "공식 코드", label: "Lotus StateTree · v1.38.3 commit 29d72bd", href: "https://github.com/filecoin-project/lotus/blob/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0/chain/state/statetree.go", note: "Network v29→StateTree v5, address resolution, top-first snapshot, Revert·ClearSnapshot·single-layer Flush의 pinned 구현이며 chain adoption·database durability·fixed latency 보장은 아님" },
     { kind: "공식 코드", label: "go-hamt-ipld v3.4.1 · commit 0be9a0f", href: "https://github.com/filecoin-project/go-hamt-ipld/tree/0be9a0f6b272246618d22f19f95c28e2e043e890", note: "Parameterized HAMT implementation이며 모든 actor collection의 hash·bit width·bucket이 같다는 뜻은 아님" },
   ],
   "blockchain/giwa-chain": [
