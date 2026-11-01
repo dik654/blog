@@ -4065,6 +4065,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Evmos v20.0.0의 고정 commit에서 확인한 코드와 설명용 T7 수치를 구분하고, BroadcastSync 응답과 block commit을 같은 완료 시점으로 표현하지 않습니다.",
   },
+  "elections/electoral-systems": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-11-01",
+    rationale:
+      "선거구 9곳에서 나온 44·41·15의 득표를 다수제, 선거구 획정, 비례 배분과 불비례 지수에 차례로 넣는 한 비교 경로입니다. 절을 나누면 같은 표가 규칙에 따라 9·0·0, 3·6·0, 4·4·1로 바뀐다는 핵심 대비를 매번 다시 세워야 합니다.",
+    sharedGate:
+      "396·369·135의 9번째 의석과 10번째 탈락 경계, 44·41·15와 100·0·0의 차이 제곱합 5,042 및 최소제곱지수 약 50.2를 독립 검산하고, 제도 설명은 고정한 공식 자료의 범위 안에서만 씁니다.",
+  },
 };
 
 /**
@@ -4443,6 +4452,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/commonware-simplex": "6648846c934c07c9",
   "blockchain/berachain": "5e532516c9cba1e8",
   "blockchain/evmos": "582e84d3a2095317",
+  "elections/electoral-systems": "f53085acaa438b69",
   "blockchain/commonware-broadcast": "fb43bccdacf88df0",
   "blockchain/commonware-crypto-p2p": "32735f9bfea380ec",
   "blockchain/commonware-storage": "7a6433f3d1a008ad",
