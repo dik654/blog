@@ -1712,10 +1712,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "infrastructure/water-utility-and-tariffs": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "수도는 취수한 물의 양뿐 아니라 정수·배관·누수·위생 처리와 저소득층 접근을 함께 지불해야 하는 공공 서비스입니다.",
-    "sharedGate": "한 해 정수·운영에 60, 배관 교체에 30이 필요하다고 놓습니다(가정). 서비스에 필요한 자원은 합계 90입니다. 정부가 취약 가구를 대신해 요금 10을 내면 가구는 80, 정부는 10을 내서 공급자가 90을 받습니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "수도 요금을 이해하려면 취수·정수·배관·사용·하수 처리의 물리 경로, 운영과 교체의 비용, 요금과 지원의 부담자, 사용량과 무관하게 남는 망 비용, 연결 여부와 실제 공급 결과를 나눠야 합니다. 첫 그림은 서비스 경로, 정수·운영 60과 배관 교체 30, 가구 80과 정부 10의 부담, 고정적으로 남는 비용, 요금·지원 뒤 재원 공백, 요금 설계, 연결과 접근성의 경계까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 금액과 범위가 일치해야 합니다. 설명용 한 해에 정수·운영 60과 배관 교체 30을 합치면 서비스 필요액은 90입니다. 가구가 80, 정부가 대신 10을 지급하면 공급자 수입은 90이며 지원 10을 서비스 비용에 다시 더하지 않습니다. 가구 요금 수입이 60이면 요금 공백은 30이고, 정부 지급 10을 더한 총수입 70과 필요액 90의 최종 공백은 20입니다. 낮은 요금과 배관 연결·수질·공급 시간·누수는 별도 장부로 확인합니다."
   },
   "infrastructure/transport-access-and-land-value": {
     "action": "keep",
@@ -4322,7 +4322,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "institutions/public-budget-and-taxes": "f1e686c97f11283a",
   "institutions/media-attention-and-public-belief": "00a86f75e792c174",
   "institutions/education-skills-and-signals": "6a6d17faed7d55b1",
-  "infrastructure/water-utility-and-tariffs": "574f8404067226e8",
+  "infrastructure/water-utility-and-tariffs": "ce1cff99ba2dac0a",
   "infrastructure/transport-access-and-land-value": "b4cdbe939dab95f4",
   "infrastructure/housing-land-and-supply": "d9a214167861d0d6",
   "infrastructure/food-chain-and-prices": "169e242c680f7e98",
