@@ -1641,10 +1641,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep"
   },
   "markets/options-and-asymmetric-payoffs": {
-    "rationale": "하나의 수치 사례에서 옵션은 손해를 피할 선택권을 사고 그 값으로 프리미엄을 낸다의 지급·조건·한계를 순서대로 추적합니다.",
-    "reviewedAt": "2026-10-04",
+    "rationale": "행사가격 100인 콜을 프리미엄 8에 산 뒤 만기 가격 90·108·120의 손익, 매수자와 매도자의 반대 장부, 계약 승수와 반복 매도의 큰 손실까지 같은 계약으로 추적하므로 한 글에 유지합니다.",
+    "reviewedAt": "2026-11-02",
     "status": "implemented",
-    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "sharedGate": "8장면 지도와 본문에서 행사가격 100, 프리미엄 8, 만기 가격 90·108·120·200, 콜 매수 순손익 −8·0·12·92, 미국 주식옵션 100주일 때 1200달러, 포인트당 25만 원일 때 300만 원, 프리미엄 8을 열 번 받은 뒤 손실 92의 합계 −12를 같은 조건으로 유지합니다.",
     "action": "keep"
   },
   "markets/swaps-and-credit-risk": {
@@ -4341,7 +4341,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "macro/narratives-and-market-regimes": "9b0ab093e34caa58",
   "markets/forwards-and-futures": "ee7836f334448ebc",
   "markets/funds-etfs-and-etns": "c196e3112e200592",
-  "markets/options-and-asymmetric-payoffs": "e7ea53156ed34514",
+  "markets/options-and-asymmetric-payoffs": "465c090e6c3d1a82",
   "markets/swaps-and-credit-risk": "c1add7c3c5db9fb9",
   "property/commercial-lease-and-rent": "8acca634fcd66705",
   "property/land-development-residual": "7162575eb1a8fcf7",

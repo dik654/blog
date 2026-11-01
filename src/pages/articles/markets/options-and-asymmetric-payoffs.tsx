@@ -4,11 +4,13 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OptionPayoffChart from "./OptionPayoffChart";
+import OptionsPayoffMapViz from "./OptionsPayoffMapViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
   return (
     <div className="space-y-16">
+      <OptionsPayoffMapViz />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 불리하면 거래하지 않을 권리에도 가격이 있습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -20,11 +22,11 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 작은 선지급과 나중의 큰 의무가 교환됩니다</h2>
+<FlowRail title="선택권이 만들어지는 경로" steps={[{"actor": "권리를 사는 사람", "movement": "처음에 대가를 냅니다.", "receives": "나중에 거래를 선택"}, {"actor": "권리를 파는 사람", "movement": "대가를 받고 약속합니다.", "receives": "요청받으면 이행"}, {"actor": "이행 관리자", "movement": "팔았던 사람의 지급 능력을 봅니다.", "receives": "담보와 결제 확인"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">권리를 사는 사람은 돈을 먼저 냅니다. 권리를 파는 사람은 그 돈을 받고 구매자가 요구하면 미리 정한 값으로 거래합니다. 약속을 관리하는 곳은 팔았던 사람이 이행할 수 있는지 확인합니다.</p>
 <p className="leading-8">불리하면 거절할 수 있는 쪽과 거절할 수 없는 쪽은 손실 모양이 다릅니다. 이 차이를 보려면 처음 지급한 돈을 마지막 계산까지 가져가야 합니다.</p>
         </div>
-<FlowRail title="선택권이 만들어지는 경로" steps={[{"actor": "권리를 사는 사람", "movement": "처음에 대가를 냅니다.", "receives": "나중에 거래를 선택"}, {"actor": "권리를 파는 사람", "movement": "대가를 받고 약속합니다.", "receives": "요청받으면 이행"}, {"actor": "이행 관리자", "movement": "팔았던 사람의 지급 능력을 봅니다.", "receives": "담보와 결제 확인"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">선지급·선택·이행의 순서를 그렸습니다. 100에 살 권리의 가격을 8로 놓습니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -38,11 +40,11 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 정해진 값·마감일·단위가 지급액을 만듭니다</h2>
+<FlowRail title="선택권을 여는 세 질문" steps={[{"actor": "얼마에 바꾸나?", "movement": "약정가격 100을 적습니다.", "receives": "유리한지 판단"}, {"actor": "언제까지인가?", "movement": "행사 가능한 날을 정합니다.", "receives": "권리의 마지막 날"}, {"actor": "몇 단위인가?", "movement": "주식 수 또는 금액 승수를 정합니다.", "receives": "전체 지급액 계산"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">계약에는 무엇을 얼마나 살 수 있는지, 얼마에 살지, 언제까지 선택할 수 있는지를 적습니다. 마지막에 주식이 실제로 이동하는지 차액만 지급하는지도 정해야 합니다.</p>
 <p className="leading-8">한 단위의 차액이 20이어도 계약이 100주를 묶으면 차액은 2000입니다. 반대로 숫자가 주가가 아니라 지수 포인트라면 계약에서 정한 금액을 곱해야 합니다. 화면의 8을 현금 8원으로 바로 읽을 수 없는 이유입니다.</p>
         </div>
-<FlowRail title="선택권을 여는 세 질문" steps={[{"actor": "얼마에 바꾸나?", "movement": "약정가격 100을 적습니다.", "receives": "유리한지 판단"}, {"actor": "언제까지인가?", "movement": "행사 가능한 날을 정합니다.", "receives": "권리의 마지막 날"}, {"actor": "몇 단위인가?", "movement": "주식 수 또는 금액 승수를 정합니다.", "receives": "전체 지급액 계산"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">화면 숫자와 실제 지급액 사이에 계약 단위가 있음을 보았습니다. 선택권에 만료일과 담보가 필요한 이유를 살핍니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
