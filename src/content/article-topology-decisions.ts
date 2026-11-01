@@ -3355,9 +3355,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/collateral-operations-margin-calls-disputes-and-substitution": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "담보 운영은 계약식으로 호출액을 구한 뒤 양쪽 자료를 맞추고 적격 자산의 할인 가치를 확인해 실제 결제하며, 분쟁 합의분과 교체 자산을 무담보 틈 없이 처리해야 신용보호가 됩니다.",
-    "sharedGate": "노출 12−문턱 2−기존 담보 5=호출액 5를 구하고, 시장가 6 채권의 10% 할인 가치 5.4를 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "노출 12에서 계약상 문턱 2와 기존 담보 5를 빼 호출액 5를 만든 뒤 채권의 할인 가치 5.4, 합의분 3과 분쟁분 2, 자산 배정, 실제 결제, 새 담보 우선 수취와 별도 완료 상태까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "12−2−5=5와 6×(1−0.10)=5.4를 검산하고 호출·응답·합의·배정·결제·대사, 합의분과 분쟁분, 새 담보 수취와 기존 담보 반환을 구분합니다."
   },
   "markets/derivatives-product-approval-target-market-and-post-sale-monitoring": {
     "action": "keep",
@@ -4662,7 +4662,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"d23f172695692391",
 "markets/uncleared-initial-margin-simm-and-model-governance":"941f21bff7ae1dad",
 "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"bcddcd2ba09014de",
-"markets/collateral-operations-margin-calls-disputes-and-substitution":"8be8a0574eed18c7",
+"markets/collateral-operations-margin-calls-disputes-and-substitution":"4aab453963abd0f8",
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"8c605652f58d653a",
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"fc0b347a31fcd02f",
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"7e1e5effa12b96fc",

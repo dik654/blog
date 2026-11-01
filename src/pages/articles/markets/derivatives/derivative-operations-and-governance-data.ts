@@ -202,8 +202,8 @@ export const collateralOperationsData: DerivativeDeepArticleData = {
     { term: "교체 동시성", description: "새 담보 수취와 기존 담보 반환 사이의 무담보 시간을 막는 순서 통제입니다.", example: "현금 5.4를 받은 뒤 채권을 돌려줍니다.", boundary: "먼저 반환하면 결제 실패 때 노출이 생깁니다." },
   ] },
   sources: [
-    { source: "ISDA · 담보 운영 권고", excerpt: "trade and exposure data, collateral positions, agreement terms, market data", application: "호출 자료, 응답, 교체와 분쟁 원인을 하루 운영 흐름에 연결합니다.", citation: "Collateral Management Suggested Operational Practices", href: "https://www.isda.org/collateral-management-sop/", note: "업계 운영 권고이며 개별 CSA와 관할 규칙이 우선합니다." },
-    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "rigorous and robust dispute resolution procedures", application: "거래 전 분쟁 절차와 적시 IM 교환의 국제 최소 원칙을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "적격 담보와 할인 방식은 적용 관할과 계약을 다시 확인합니다." },
+    { source: "ISDA · 담보 운영 권고", excerpt: "trade and exposure data, collateral positions, agreement terms, market data", application: "호출 자료, 응답, 교체와 분쟁 원인을 하루 운영 흐름에 연결합니다.", citation: "Collateral Management Suggested Operational Practices", href: "https://www.isda.org/collateral-management-sop/", note: "2026년 2월 24일 개정본을 2026-11-02에 확인했습니다. 법적 의무가 아닌 업계 운영 권고이며 개별 CSA·CSD와 적용 관할 규칙이 우선합니다." },
+    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "rigorous and robust dispute resolution procedures", application: "거래 전 분쟁 절차, 적격 담보, 할인 후 가치와 적시 증거금 교환의 국제 최소 원칙을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "2026-11-02 현재 통합 Basel 기준을 확인했습니다. 실제 적격 담보와 할인 방식은 적용 관할과 계약을 다시 확인해야 합니다." },
   ],
   review: [
     "노출 12에서 문턱 2와 기존 담보 5를 빼 호출액 5를 만드는 과정을 설명해 보세요. (답: 1·3절)",
