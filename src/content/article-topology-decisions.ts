@@ -1705,10 +1705,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "infrastructure/food-chain-and-prices": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "식품의 소비자가격은 농가 출하 가격에 가공·저장·운송·소매의 비용과 협상력을 더한 결과이며 각 단계의 재고와 폐기 위험이 다릅니다.",
-    "sharedGate": "같은 품질의 식품 한 단위가 모두 판매된다고 놓습니다(가정). 농가 출하액 100원에 선별·저장 단계 30원, 운송 단계 20원, 소매 단계 50원이 더해져 소비자가 200원을 냅니다. 세금은 생략하고 추가 금액에는 각 단계의 비용과 이익이 함께 들어 있습니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "식품 가격을 이해하려면 식품이 앞으로 가는 경로와 대금·반품 책임의 경로, 단계별 추가 금액, 팔 수 있는 수량의 감소, 비용과 순마진을 나눠야 합니다. 첫 그림은 농가에서 소비자까지의 흐름, 100+30+20+50=200원, 농가 출하액 비중 50%의 경계, 10개 중 2개 손실, 1,500÷8=187.5원과 2,000÷8=250원, 손실·폐기의 단계 구분, 폭리 판단에 필요한 장부까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 수량과 금액이 일치해야 합니다. 설명용 한 단위에 농가 출하 100원, 선별·저장 30원, 운송 20원, 소매 50원이 더해져 소비자가는 200원입니다. 농가 출하액 비중은 100÷200=50%이지만 순이익률이 아닙니다. 10개를 가게까지 보내는 비용 1,500원을 모두 팔면 개당 150원, 2개를 잃고 8개만 팔면 187.5원입니다. 소매 단계까지 총 2,000원을 회수하려면 10개일 때 200원, 8개일 때 250원이므로 가격 +50원만으로 이익 증가를 확정하지 않습니다."
   },
   "infrastructure/water-utility-and-tariffs": {
     "action": "keep",
@@ -4325,7 +4325,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/water-utility-and-tariffs": "574f8404067226e8",
   "infrastructure/transport-access-and-land-value": "b4cdbe939dab95f4",
   "infrastructure/housing-land-and-supply": "d9a214167861d0d6",
-  "infrastructure/food-chain-and-prices": "f6b223cdfc7c2798",
+  "infrastructure/food-chain-and-prices": "169e242c680f7e98",
   "infrastructure/electricity-grid-and-power": "8663d1f04f659a25",
   "infrastructure/climate-risk-and-exposure": "aa85ef97f65b45ea",
   "business/business-model-cashflow": "d9d96a98d88c5a2e",

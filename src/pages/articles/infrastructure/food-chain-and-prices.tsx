@@ -2,6 +2,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import FoodChainPricesViz from "./FoodChainPricesViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function FoodChainAndPricesArticle() {
@@ -9,6 +10,7 @@ export default function FoodChainAndPricesArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 식탁의 가격을 밭까지 거슬러 올라갑니다</h2>
+        <FoodChainPricesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">장바구니 가격이 오르면 누가 더 가져갔는지 궁금해집니다. 농가가 받은 돈과 소비자가 낸 돈 사이에는 저장, 운송, 매장 운영과 팔리지 못한 식품이 있습니다. 이 연결을 알아야 원가 상승과 거래 조건의 변화를 구별할 수 있습니다.</p>
           <p className="leading-8">이 글은 같은 양의 식품을 끝까지 따라갑니다. 남은 음식의 처리와 돈을 받는 시점을 함께 놓으면, 물건을 만든 사람이 언제 협상에서 불리해지는지도 보입니다.</p>

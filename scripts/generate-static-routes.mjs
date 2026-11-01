@@ -183,6 +183,7 @@ const noScriptArticleRoutes = new Set([
   "institutions/how-to-read-a-country",
   "institutions/culture-norms-and-coordination",
   "infrastructure/electricity-grid-and-power",
+  "infrastructure/food-chain-and-prices",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
