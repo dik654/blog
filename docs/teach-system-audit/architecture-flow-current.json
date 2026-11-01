@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 558,
+    "animatedMechanisms": 559,
     "architectureWithoutAnimation": 76,
-    "recursiveLocators": 385,
-    "codeEvidenceLinked": 242,
+    "recursiveLocators": 386,
+    "codeEvidenceLinked": 243,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -6946,18 +6946,18 @@
     {
       "route": "blockchain/evmos",
       "publicPath": "cs/blockchain/evmos",
-      "title": "Evmos v20: Ethereum transaction을 Cosmos state로 commit하기",
+      "title": "Evmos v20: Ethereum hash부터 Cosmos block commit까지",
       "sourcePath": "src/pages/articles/blockchain/evmos.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/expected-consensus",

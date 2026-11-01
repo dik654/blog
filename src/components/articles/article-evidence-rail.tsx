@@ -17,6 +17,8 @@ const KIND_STYLE: Record<ArticleEvidenceItem["kind"], string> = {
   "공식 문서": "bg-blue-500/10 text-blue-700 dark:text-blue-300",
   "공식 구현": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
   "공식 가이드": "bg-blue-500/10 text-blue-700 dark:text-blue-300",
+  "공식 핸드북": "bg-blue-500/10 text-blue-700 dark:text-blue-300",
+  "공식 브리핑": "bg-blue-500/10 text-blue-700 dark:text-blue-300",
   "공식 OpenAI 문서": "bg-blue-500/10 text-blue-700 dark:text-blue-300",
   "공식 규격": "bg-blue-500/10 text-blue-700 dark:text-blue-300",
   "공식 코드": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",

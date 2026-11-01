@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 732,
-    "pending": 275,
+    "reviewed": 734,
+    "pending": 273,
     "untracked": 0,
-    "assignedPending": 233,
+    "assignedPending": 231,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4721,11 +4721,11 @@
     {
       "route": "blockchain/evmos",
       "publicPath": "cs/blockchain/evmos",
-      "title": "Evmos v20: Ethereum transaction을 Cosmos state로 commit하기",
+      "title": "Evmos v20: Ethereum hash부터 Cosmos block commit까지",
       "catalogIndex": 469,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -8873,9 +8873,9 @@
       "publicPath": "politics/elections/electoral-systems",
       "title": "표를 의석으로 바꾸는 규칙이 결과를 정합니다",
       "catalogIndex": 884,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {

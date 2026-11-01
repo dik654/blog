@@ -15,6 +15,8 @@ export type ArticleEvidenceKind =
   | "Benchmark 논문"
   | "평가 논문"
   | "공식 문서"
+  | "공식 핸드북"
+  | "공식 브리핑"
   | "공식 구현"
   | "공식 가이드"
   | "공식 OpenAI 문서"
@@ -5868,9 +5870,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Cosmos SDK v0.55.0 — BaseApp branch tests", href: "https://github.com/cosmos/cosmos-sdk/blob/64fd208a11fb54f7ffdca1a1290c2cfbbc254e49/baseapp/baseapp_test.go", note: "Ante 실패·message 실패·전체 성공과 CheckTx state reset 동작을 고정" },
   ],
   "blockchain/evmos": [
-    { kind: "공식 코드", label: "Evmos v20.0.0 — Ethereum ante", href: "https://github.com/evmos/evmos/tree/v20.0.0/app/ante/evm", note: "Sender recovery·fee·nonce·gas·sequence decorator ordering의 historical pinned source" },
-    { kind: "공식 코드", label: "Evmos v20.0.0 — x/evm", href: "https://github.com/evmos/evmos/tree/v20.0.0/x/evm", note: "EVM keeper·StateDB journal·state transition의 pinned implementation; current cosmos/evm으로 일반화하지 않음" },
-    { kind: "공식 코드", label: "Evmos v20.0.0 — ERC-20 IBC middleware", href: "https://github.com/evmos/evmos/blob/v20.0.0/x/erc20/ibc_middleware.go", note: "Receive·acknowledgement·timeout callback과 token representation 경계" },
+    { kind: "공식 코드", label: "Evmos v20.0.0 — RPC·Ethereum ante · eca13ef2", href: "https://github.com/evmos/evmos/tree/eca13ef2521a9ef13c32e80b1b147230bdb155b5/app/ante", note: "Sync broadcast hash와 block Commit을 분리하고 sender recovery·fee 선차감·nonce 7→8 순서를 고정" },
+    { kind: "공식 코드", label: "Evmos v20.0.0 — x/evm Keeper·StateDB · eca13ef2", href: "https://github.com/evmos/evmos/tree/eca13ef2521a9ef13c32e80b1b147230bdb155b5/x/evm", note: "EVM journal·tmp CacheContext·VM REVERT·gas refund·block state 경계; current cosmos/evm으로 일반화하지 않음" },
+    { kind: "공식 코드", label: "Evmos v20.0.0 — ERC-20 IBC middleware · eca13ef2", href: "https://github.com/evmos/evmos/blob/eca13ef2521a9ef13c32e80b1b147230bdb155b5/x/erc20/ibc_middleware.go", note: "Local Ethereum receipt과 별개인 receive·acknowledgement·timeout callback 순서" },
   ],
   "blockchain/hyperliquid": [
     {

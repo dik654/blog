@@ -22,6 +22,16 @@
 - JavaScript 비활성 경로에는 조작 버튼 없이 정적 아홉 장면, 전체 본문·확인 질문·부모 지도 반환이 순서대로 남고 console 오류·경고는 0건입니다. 정적 경로 생성은 public route 2,120개와 no-script 본문 389편을 만들었고 최대 RSS는 3,208,675,328 bytes, swap은 0이었습니다.
 - 전체 TypeScript와 production build를 Node heap 7GiB에서 순차 실행했습니다. 최대 RSS는 각각 6,080,872,448 bytes와 6,424,379,392 bytes이며 swap은 0입니다. 현재 상태는 `rewritten-local-verified`이고 공개 배포 검증은 남아 있습니다.
 
+### Evmos v20 transaction commit 로컬 검증 완료 (2026-11-01)
+
+- `blockchain/evmos`를 Alice가 nonce 7로 서명한 EIP-1559 transaction T7 한 건이 RPC, Ethereum 전용 ante, EVM StateDB, Cosmos CacheContext와 application Commit을 지나는 흐름으로 다시 썼습니다. RPC hash 반환부터 durable block state까지 아홉 장면으로 구분했습니다.
+- Evmos v20.0.0 commit `eca13ef2521a9ef13c32e80b1b147230bdb155b5`를 고정했습니다. `call_tx.go`, mono EVM ante, `ApplyTransaction`, StateDB journal과 ERC-20 IBC middleware를 실제 source와 대조했습니다. 현재 cosmos/evm의 동작으로 일반화하지 않습니다.
+- 설명용 fixture에서 effective gas price는 `min(30, 20+3)=23`입니다. `30,000×23=690,000`을 먼저 걷고, gas 21,000을 쓴 뒤 `9,000×23=207,000`을 돌려줘 net fee는 483,000입니다. 성공한 T7의 최종 상태는 Alice 516,990, Bob 10, sequence 8입니다.
+- EVM REVERT는 value·storage·log branch를 합치지 않지만 유효한 transaction이 사용한 gas 비용과 sequence 증가는 남습니다. StateDB.Commit, tmpCtx commit과 application Commit의 parent state를 분리했으며, IBC receive·acknowledgement·timeout은 로컬 Ethereum receipt과 다른 생명주기로 표시했습니다.
+- 1,440×900에서 document overflow 0, 첫 장면에서 ArrowRight 0→1, 직접 선택한 Block commit 장면과 receipt note, console 오류·경고 0건을 확인했습니다. 390×844에서도 document overflow 0이고 장면 탭과 조작 버튼은 50px이며 ArrowLeft 9→8이 동작합니다.
+- Reduced-motion에서는 선택한 장면이 유지되고 자동 재생이 비활성화됩니다. JavaScript 비활성 실제 브라우저에는 조작 버튼 없이 정적 아홉 장면, 690,000→207,000 계산, REVERT 경계, IBC 생명주기와 부모 지도 반환이 남습니다.
+- 기본 Node heap에서는 TypeScript가 RSS 4,437,884,928 bytes에서 OOM이 났습니다. 해당 build 한 번에만 heap 6GiB를 주어 다시 통과했고 최종 실행은 145.64초, 최대 RSS 5,715,214,336 bytes, swap 0입니다. 현재 상태는 `rewritten-local-verified`이고 공개 배포 검증은 남아 있습니다.
+
 ### CometBFT 전체 구조 로컬 검증 완료 (2026-10-31)
 
 - `blockchain/cometbft`를 높이 40의 node에 도착한 Alice→Bob 10 transaction 한 건으로 다시 썼습니다. RPC 수신, CheckTx, proposal, prevote, precommit, FinalizeBlock과 Commit h41을 여덟 장면에서 추적합니다.

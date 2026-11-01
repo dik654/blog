@@ -4047,6 +4047,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "node 5개·edge 4개의 원래 community 분할에서 Q=0.21875, E401을 옮긴 분할에서 Q=-0.03125가 되는지 검산하고, Local의 8,000토큰 기본 예산이 text unit 50%·community 25%·나머지 local data로 조립되는 v3.3.0 구현과 정확한 N-hop 그래프 질의를 구분합니다.",
   },
+  "blockchain/berachain": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-11-01",
+    rationale:
+      "같은 BERA 블록이 CometBFT finality, BeaconKit 실행, EVM receipt, WBERA 입금, Reward Vault 보상으로 이어지는 단일 상태 전이입니다. 절을 나누면 블록 확정과 보상 적립이 서로 다른 트랜잭션이라는 핵심 경계가 사라집니다.",
+    sharedGate:
+      "Berachain 공식 문서와 고정한 소스 버전에서 확인한 경로만 사실로 쓰고, 설명용 보상 수치와 실패 시나리오는 가정으로 구분합니다.",
+  },
+  "blockchain/evmos": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-11-01",
+    rationale:
+      "Ethereum 형식 트랜잭션 한 건이 JSON-RPC, Cosmos ante handler, EVM StateDB, CacheContext, block commit까지 이동하는 한 실행 경로입니다. 수수료·nonce와 EVM 상태를 나누면 REVERT 때 무엇이 남고 무엇이 사라지는지 추적할 수 없습니다.",
+    sharedGate:
+      "Evmos v20.0.0의 고정 commit에서 확인한 코드와 설명용 T7 수치를 구분하고, BroadcastSync 응답과 block commit을 같은 완료 시점으로 표현하지 않습니다.",
+  },
 };
 
 /**
@@ -4423,6 +4441,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-engine-api": "97fc3e69823881f9",
   "blockchain/commonware-deep-dive": "e52779a7bbd2cc35",
   "blockchain/commonware-simplex": "6648846c934c07c9",
+  "blockchain/berachain": "5e532516c9cba1e8",
+  "blockchain/evmos": "582e84d3a2095317",
   "blockchain/commonware-broadcast": "fb43bccdacf88df0",
   "blockchain/commonware-crypto-p2p": "32735f9bfea380ec",
   "blockchain/commonware-storage": "7a6433f3d1a008ad",
