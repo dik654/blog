@@ -1,68 +1,135 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { Hotstuff2EntryViz, Hotstuff2PhaseViz } from "./viz/ModernHotstuff2Viz";
+import { Hotstuff2CommitViz, Hotstuff2EntryViz, Hotstuff2FailureTable } from "./viz/ModernHotstuff2Viz";
 
-export default function ModernHotstuff2Article(){return <article className="space-y-14">
-  <section id="overview" className="space-y-6">
-    <header className="space-y-3"><p className="text-sm font-semibold text-primary">HotStuff-2 · two-phase responsive BFT</p><h2 className="text-3xl font-bold tracking-tight">HotStuff-2는 두 phase만 남기는 대신, 새 view가 숨은 lock을 놓치지 않는 방법까지 함께 설계한다</h2></header>
-    <p className="text-lg leading-8 text-foreground/90">Alice가 Bob에게 10을 보내는 요청이 block B에 들어갔다고 하겠습니다. Steady path에서는 B의 첫 certificate와 그 certificate를 다시 확인하는 <em>double certificate</em>가 다음 view의 안전한 출발점이 됩니다. 이 두 겹의 evidence가 있으면 연속된 honest leader는 알려진 최대 지연 Δ를 매번 기다리지 않고 actual network delay에 맞춰 진행합니다.</p>
-    <p>
-            이를 “HotStuff의 세 phase를 두 phase로 줄였다”로만 이해하면 핵심을 놓칩니다. 직전 view의 double certificate가 없을 때는 leader가
-            replicas의 lock status를 모읍니다. 이 recovery path에서는 GST 뒤에도 O(Δ) wait가 들어갈 수 있습니다. Steady latency,
-            failed-view recovery, communication과 pacemaker 비용을 따로 비교해야 합니다.
-          </p>
-    <Hotstuff2EntryViz />
-    <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Two-phase safety는 nested certificate에, responsiveness는 직전-view evidence가 있느냐에 달려 있습니다. Evidence가 없을 때의 wait는 safety rule을 약하게 만들지 않고 liveness를 복구하는 경계입니다.</aside>
-  </section>
-  <section id="two-phase" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">01 · two-phase와 double certificate</p><h2 className="mt-2 text-2xl font-bold">안쪽 certificate는 block을 인증하고, 바깥 certificate는 그 인증을 quorum이 다시 확인했음을 증명한다</h2></header>
-    <p>
-            Leader proposal을 검증한 replicas의 첫 votes 2f+1개는 block certificate가 됩니다. 다음 vote step에서는 replicas가 그
-            certificate 자체를 검증하고 다시 서명합니다. 다시 2f+1 shares가 모이면 double certificate가 됩니다. 두 set은 모두
-            committee·view·digest domain에 결속되어야 하고 서로 다른 blocks의 shares를 섞을 수 없습니다.
-          </p>
-    <ExplainedFormula question="n=3f+1에서 두 겹 certificate가 갖춰야 할 최소 quorum은 무엇인가?" idea={<>안쪽과 바깥쪽 모두 2f+1 distinct signers를 요구하면 임의의 두 quorum이 적어도 f+1 participants에서 겹치므로 honest replica가 하나 이상 남습니다.</>} formula={String.raw`\begin{aligned}|Q_i|&\ge 2f+1\\|Q_o|&\ge 2f+1\\|Q_1\cap Q_2|&\ge f+1\end{aligned}`}
-    annotatedFormula={String.raw`\begin{aligned}\underbrace{|Q_i|}_{\text{inner vote 수}}&\ge 2f+1\\\underbrace{|Q_o|}_{\text{outer vote 수}}&\ge 2f+1\\\underbrace{|Q_1\cap Q_2|}_{\text{두 quorum 교집합}}&\ge \underbrace{f+1}_{\text{honest 1명 이상}}\end{aligned}`}
-    operations={[
-          { expression: String.raw`2f+1`, annotation: ["inner·outer 모두 서로 다른 2f+1명","n=4, f=1이면 각각 3표"] },
-          { expression: String.raw`|Q_1\cap Q_2|`, annotation: ["3f+1 안에서 2f+1 집합 둘을 고르면","최소 2(2f+1)−(3f+1)=f+1명 겹침"] },
-          { expression: String.raw`f+1`, annotation: ["겹친 f+1 중 Byzantine은 최대 f명","n=4면 2명 겹치고 honest 1명 남음"] },
-        ]} terms={[{symbol:"Qᵢ",name:"inner voters",description:"같은 block·view에 첫 vote를 보낸 서로 다른 replicas입니다."},{symbol:"Qₒ",name:"outer voters",description:"검증된 inner certificate를 같은 protocol domain에서 다시 확인한 replicas입니다."},{symbol:"f",name:"Byzantine fault bound",description:"3f+1 replicas 가운데 arbitrary behavior를 할 수 있는 최대 수입니다."},{symbol:"f+1",name:"honest-intersection floor",description:"두 quorum 교집합의 최소 크기이며 적어도 한 honest signer를 포함합니다."}]} assumptions={["Signers를 중복 제거하고 historical committee를 고정합니다.","Inner digest·view·ancestry와 outer domain을 모두 검증합니다.","One-vote rule과 lock update를 함께 유지합니다.","Certificate는 payload execution·client settlement receipt가 아닙니다."]} interpretation="n=4,f=1이면 inner votes 3개와 outer votes 3개가 각각 필요합니다. 두 signer sets는 적어도 2명에서 겹치며 Byzantine replica가 최대 1명이므로 honest witness가 남습니다." />
-    <p>
-            Double certificate를 application finality로 곧바로 읽어서는 안 됩니다. Ordered block을 정한 뒤에도 payload
-            availability, deterministic execution, state-root persistence, client reply가 남습니다. Restart 때는
-            certificate 두 겹과 lock·view를 함께 복구해야 합니다.
-          </p>
-    <div id="paper-hotstuff2-steady"><CitationBlock source="HotStuff-2 paper §4 — Steady-State Protocol" citeKey={1} href="https://eprint.iacr.org/2023/397.pdf#page=4"><p><strong>문제:</strong> Linear communication을 유지하면서 한 view의 BFT commit을 two phase로 구성해야 합니다.</p><p><strong>기여:</strong> Block·certificate ranks, vote steps, lock update와 nested certificate handoff를 정의합니다.</p><p><strong>전제:</strong> Valid threshold shares, one-vote rules, chain extension과 exact view·rank comparisons를 따릅니다.</p><p><strong>근거 범위:</strong> Paper steady-state algorithm과 safety state transitions에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Nested certificate가 application execution·disk durability나 임의 two-phase protocol의 safety를 자동 보장하지 않습니다.</p></CitationBlock></div>
-  </section>
-  <section id="view-sync" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">02 · responsive entry와 lock-status recovery</p><h2 className="mt-2 text-2xl font-bold">직전-view 증거가 있으면 바로 진행하고, 없으면 2f+1 status에서 가장 높은 lock을 찾는다</h2></header>
-    <p>새 leader가 직전 view의 valid double certificate를 받았다면 그 branch를 이어 vote step으로 갑니다. Certificate가 없으면 higher lock이 network에 숨어 있는지 faulty leader가 evidence를 숨겼는지 구분할 수 없습니다. 이때 O(Δ) 동안 lock reports 2f+1개를 모아 status certificate를 만들고 가장 높은 valid certified block을 parent로 삼습니다.</p>
-    <p>
-            n=4,f=1에서 reports 2개만 받으면 빠진 honest replica가 더 높은 lock을 가질 수 있지만 reports 3개에는 이전 quorum과 honest
-            intersection이 생깁니다. 이 liveness 논리는 GST 뒤 known Δ와 pacemaker의 view synchronization을 전제로 합니다. GST 전
-            stall은 허용되지만 conflicting commit은 어떤 경우에도 허용되지 않습니다.
-          </p>
-    <Hotstuff2PhaseViz />
-    <div id="paper-hotstuff2-pacemaker"><CitationBlock source="HotStuff-2 paper §4 — Pacemaker and View Entry" citeKey={2} href="https://eprint.iacr.org/2023/397.pdf#page=6"><p><strong>문제:</strong> Previous leader failure 뒤 hidden higher locks를 놓치지 않으면서 honest-leader sequence는 responsive해야 합니다.</p><p><strong>기여:</strong> Previous-view evidence fast case, O(Δ) status-wait recovery와 integrated pacemaker를 정의합니다.</p><p><strong>전제:</strong> Unknown GST 뒤 알려진 Δ, valid timeout coordination와 paper epoch·view synchronization을 사용합니다.</p><p><strong>근거 범위:</strong> HotStuff-2 liveness·view-entry construction과 communication complexity argument입니다.</p><p><strong>말하지 않는 것:</strong> Δ wait가 모든 view에 생기거나 actual-delay 관찰만으로 GST를 알 수 있다는 뜻은 아닙니다.</p></CitationBlock></div>
-  </section>
-  <section id="release" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">03 · 비용과 release envelope</p><h2 className="mt-2 text-2xl font-bold">Happy path 두 phase와 failed-view cascade를 따로 재고, state receipt까지 확인한 뒤 결과를 낸다</h2></header>
-    <p>
-            Benchmark는 같은 payload·committee·crypto에서 연속 honest leaders와 t명의 faulty leaders trace를 분리합니다. Phase
-            latency뿐 아니라 status bytes, timeout certificates, pacemaker messages, Δ waits를 기록해야 “two phase”가 장애
-            복구도 늘 빠르다는 과장을 막을 수 있습니다.
-          </p>
-    <p>
-            Crash 뒤에는 persisted highest certificate, lock, view, committed boundary를 불러오고 missing blocks를
-            hash로 동기화합니다. Double certificate와 deterministic state root를 재검증한 뒤 client receipt를 냅니다. Invalid
-            nested digest, stale committee, status 미달, partition, crash를 주입해 safety conflict 0과 GST 뒤 eventual
-            progress를 따로 판정하며 rollback은 external receipt 전 speculation에만 허용합니다.
-          </p>
-    <div id="paper-hotstuff2"><CitationBlock source="HotStuff-2: Optimal Two-Phase Responsive BFT" citeKey={3} href="https://eprint.iacr.org/2023/397"><p><strong>문제:</strong> Two-phase optimistic latency, linear happy-path communication, responsiveness와 optimal worst-case complexity를 함께 달성해야 합니다.</p><p><strong>기여:</strong> Two-phase HotStuff variant와 previous-view certificate·status-aware pacemaker를 제시합니다.</p><p><strong>전제:</strong> n=3f+1 authenticated parties, 최대 f Byzantine faults, partial synchrony와 paper pacemaker를 사용합니다.</p><p><strong>근거 범위:</strong> HotStuff-2 protocol, safety·liveness proofs와 asymptotic analysis에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 모든 view가 wait-free이거나 third-party implementation·고정 latency가 검증됐다는 뜻은 아닙니다.</p></CitationBlock></div>
-    <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>
-            기초 6문제는 목표, nested certificate, n=4 quorum, status parent, 두 entry 경로, 비교축을 묻습니다. 심화 4문제는
-            invalid·missing evidence, hidden lock, faulty-leader 비용과 crash recovery를 설계하게 합니다.
-          </p>
-  </section>
-</article>}
+const VIEW_ENTRY_PSEUDOCODE = [
+  "// 직전 view의 이중 인증서가 있으면 곧바로 제안 단계로 갑니다.",
+  "if doubleCertificate.view == currentView - 1:",
+  "    enter_without_wait()",
+  "else:",
+  "    // 그렇지 않으면 각 복제본이 가장 높은 잠금 인증서를 보냅니다.",
+  "    send_locked_certificate_to_leader()",
+  "",
+  "    // GST 뒤 모든 정상 복제본의 보고가 도착할 시간을 보장합니다.",
+  "    wait(Ppc + delta)",
+  "",
+  "// 보고서 묶음이 아니라 가장 높은 인증서 하나로 부모를 정합니다.",
+  "parentCertificate = highest_valid_certificate(receivedLocks)",
+  "propose(child_of(parentCertificate.block), parentCertificate)",
+].join("\n");
+
+export default function ModernHotstuff2Article() {
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-6">
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">HotStuff-2 · HotStuff 다음의 질문</p>
+          <h2 className="text-3xl font-bold tracking-tight">합의 단계를 줄이면서도 매 view마다 Δ를 기다리지 않을 수 있을까요?</h2>
+        </header>
+        <p className="text-lg leading-8 text-foreground/90">
+          앞 글의 HotStuff는 바로 앞 부모를 가리키는 QC가 세 번 이어져야 가장 오래된 블록을 커밋했습니다. HotStuff-2는 한 view에서 같은 블록을 두 번 확인하는 방식으로 이 경로를 줄입니다. Alice의 송금을 담은 B20이 첫 인증서와 이중 인증서를 거쳐 다음 view에서 커밋되는 과정을 먼저 따라가겠습니다.
+        </p>
+        <Hotstuff2CommitViz />
+        <aside className="border-l-2 border-primary bg-primary/5 p-5 text-sm leading-6">
+          <strong>먼저 기억할 한 문장:</strong> HotStuff-2의 빠른 경로는 직전 view의 이중 인증서가 있을 때만 열립니다. 그 증거가 없으면 안전 규칙을 줄이는 대신 모든 정상 lock이 도착할 시간을 기다립니다.
+        </aside>
+      </section>
+
+      <section id="two-phase" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">01 · 두 번의 정족수 확인</p>
+          <h2 className="mt-2 text-2xl font-bold">첫 인증서는 블록을, 이중 인증서는 그 인증서를 다시 확인합니다</h2>
+        </header>
+        <p>
+          View 20의 주 노드는 B20을 제안하고 첫 번째 표를 모읍니다. 서로 다른 복제본 3대의 표가 모이면 C20(B20)이 됩니다. 주 노드는 이 인증서를 prepare 메시지로 방송합니다. 이를 검증한 복제본은 B20을 잠그고 C20(B20)에 대한 두 번째 표를 view 21의 주 노드에게 보냅니다.
+        </p>
+        <p>
+          두 번째 표 3개가 모이면 C20(C20(B20))이 됩니다. 이중 인증서는 직전 view에서 B20이 두 번의 정족수 확인을 통과했다는 뜻입니다. View 21의 주 노드는 이 증거를 받아 별도의 Δ 대기 없이 B20을 잇는 B21을 제안할 수 있습니다. 복제본은 제안에 담긴 이중 인증서가 가리키는 B20을 커밋합니다.
+        </p>
+        <ExplainedFormula
+          question="n=3t+1에서 블록 인증서와 이중 인증서에는 각각 몇 표가 필요합니까?"
+          idea={<>두 단계 모두 서로 다른 복제본 2t+1곳의 표를 요구합니다. 정족수 두 개는 적어도 t+1곳에서 겹치므로, 최대 t곳이 잘못돼도 정상 복제본이 하나 이상 교집합에 남습니다.</>}
+          formula={String.raw`|Q_1|\ge 2t+1,\quad |Q_2|\ge 2t+1`}
+          annotatedFormula={String.raw`\underbrace{|Q_1|\ge 2t+1}_{\text{블록에 대한 첫 표}}\qquad\underbrace{|Q_2|\ge 2t+1}_{\text{인증서에 대한 두 번째 표}}`}
+          operations={[
+            { expression: "n=3t+1", annotation: ["전체 복제본 수와 허용할 Byzantine fault 수의 관계입니다.", "n=4라면 t=1입니다."] },
+            { expression: "2t+1=3", annotation: ["B20의 첫 인증서에 서로 다른 표 3개가 필요합니다.", "이중 인증서에도 두 번째 표 3개가 필요합니다."] },
+            { expression: String.raw`|Q_a\cap Q_b|\ge t+1`, annotation: ["크기 2t+1인 두 집합은 최소 t+1곳에서 겹칩니다.", "t=1이면 두 곳이 겹치고 정상 복제본이 적어도 한 곳 남습니다."] },
+          ]}
+          terms={[
+            { symbol: "Q₁", name: "첫 번째 표 집합", description: "같은 B20과 view 20을 인증하는 서로 다른 복제본의 표입니다." },
+            { symbol: "Q₂", name: "두 번째 표 집합", description: "검증된 C20(B20)을 다시 인증하는 서로 다른 복제본의 표입니다." },
+            { symbol: "t", name: "Byzantine fault 상한", description: "3t+1대 가운데 임의로 잘못 행동할 수 있는 최대 복제본 수입니다." },
+          ]}
+          assumptions={[
+            "같은 복제본의 중복 표를 한 번만 세고 위원회 구성을 고정합니다.",
+            "표가 가리키는 view, 블록 해시와 인증서 도메인을 모두 검증합니다.",
+            "복제본은 같은 view의 같은 단계에서 충돌한 두 값에 투표하지 않습니다.",
+            "인증서는 블록 본문 저장이나 애플리케이션 실행 완료를 뜻하지 않습니다.",
+          ]}
+          interpretation="n=4, t=1에서는 첫 표 3개로 C20(B20)을 만들고, 두 번째 표 3개로 C20(C20(B20))을 만듭니다. 같은 숫자를 두 번 센다고 해서 두 인증서의 의미가 같은 것은 아닙니다."
+        />
+        <div id="paper-hotstuff2-steady">
+          <CitationBlock source="HotStuff-2 §4 · View Protocol" citeKey={1} href="https://eprint.iacr.org/2023/397.pdf#page=4">
+            <p><strong>문제:</strong> 부분 동기 네트워크에서 선형 통신을 유지하면서 한 view의 합의를 두 단계로 구성해야 합니다.</p>
+            <p><strong>기여:</strong> 블록 인증서, 이중 인증서, 잠금 갱신과 다음 주 노드로 보내는 vote2 절차를 정의합니다.</p>
+            <p><strong>전제:</strong> 인증된 복제본 3t+1대, 최대 t개의 Byzantine fault, threshold signature와 부분 동기 모델을 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 논문 Figure 1의 steady-state view protocol과 정족수 규칙입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 인증서 두 개만 있으면 블록 본문 저장과 상태 실행까지 자동으로 완료된다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="view-sync" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">02 · 두 가지 view 진입</p>
+          <h2 className="mt-2 text-2xl font-bold">직전 view의 증거가 없을 때는 표의 수보다 도착 시간을 확인합니다</h2>
+        </header>
+        <Hotstuff2EntryViz />
+        <p>
+          느린 진입 경로를 잠금 보고서 2t+1개로 상태 인증서를 만들어 방송하는 방식으로 이해하면 안 됩니다. 그런 보고서 묶음을 모든 복제본에게 보내면 한 view의 전달량이 O(n²)으로 커집니다. HotStuff-2는 주 노드가 Ppc + Δ를 기다려 모든 정상 복제본의 잠금 보고가 도착하도록 한 뒤, 그중 가장 높은 인증서 하나만 제안에 넣습니다.
+        </p>
+        <p>
+          Ppc는 pacemaker가 정상 복제본을 같은 view로 모으는 데 허용하는 시간 차이입니다. 논문이 예로 든 RareSync와 Lewis-Pye 계열에서는 Ppc = 2Δ로 둡니다. GST 전에는 이 시간이 실제 전달을 보장하지 않으므로 진행이 멈출 수 있습니다. 그러나 어떤 경우에도 복제본은 제안의 인증서가 자신의 lock보다 낮으면 투표하지 않습니다.
+        </p>
+        <div className="not-prose overflow-x-auto border border-border bg-muted/20 p-4">
+          <p className="mb-3 text-xs font-bold text-muted-foreground">HotStuff-2 Figure 1·2의 view 진입을 풀어 쓴 의사 코드</p>
+          <pre className="min-w-[48rem] text-xs leading-6"><code>{VIEW_ENTRY_PSEUDOCODE}</code></pre>
+        </div>
+        <div id="paper-hotstuff2-pacemaker">
+          <CitationBlock source="HotStuff-2 §4 · Pacemaker and view entry" citeKey={2} href="https://eprint.iacr.org/2023/397.pdf#page=5">
+            <p><strong>문제:</strong> 이전 주 노드가 실패했을 때 숨은 높은 lock을 놓치지 않으면서 정상 주 노드가 이어지는 경로는 매번 Δ를 기다리지 않아야 합니다.</p>
+            <p><strong>기여:</strong> 직전 view의 이중 인증서를 이용한 빠른 진입과 Ppc+Δ를 기다리는 느린 진입을 구분합니다.</p>
+            <p><strong>전제:</strong> GST 뒤 메시지 지연 상한 Δ와 pacemaker가 보장하는 view 진입 시간 차이 Ppc를 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 논문 Figure 2의 pacemaker와 §4.1의 지연·통신량 분석입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 첫 2t+1개 잠금 보고만으로 모든 정상 복제본의 가장 높은 lock을 알 수 있다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="release" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">03 · 확인 경계</p>
+          <h2 className="mt-2 text-2xl font-bold">빠른 경로와 복구 경로를 따로 재고, 블록 실행은 마지막에 확인합니다</h2>
+        </header>
+        <p>
+          두 단계라는 말만으로 실제 지연을 단정할 수는 없습니다. 정상 주 노드가 이어져 직전 view의 이중 인증서를 받는 경우와, 이전 주 노드가 실패해 Ppc+Δ를 기다리는 경우를 나눠야 합니다. 메시지 수뿐 아니라 인증자 수, 블록 본문 바이트, 서명 검증과 timeout certificate 비용도 따로 기록해야 합니다.
+        </p>
+        <p>
+          재시작한 복제본은 가장 높은 인증서와 이중 인증서, 현재 lock, view와 마지막 실행 위치를 복구해야 합니다. 인증서만 남고 B20 본문이나 부모 블록이 없다면 해시를 따라 빠진 블록을 받은 뒤 실행합니다. 클라이언트에게 결과를 내기 전 같은 순서의 상태 전이가 같은 결과를 만드는지도 확인해야 합니다.
+        </p>
+        <h3 className="text-xl font-semibold">틀리기 쉬운 네 경계</h3>
+        <Hotstuff2FailureTable />
+        <div id="paper-hotstuff2">
+          <CitationBlock source="HotStuff-2: Optimal Two-Phase Responsive BFT · ePrint 2023/397" citeKey={3} href="https://eprint.iacr.org/2023/397">
+            <p><strong>문제:</strong> 두 단계의 optimistic latency, 선형 정상 경로 통신, responsiveness와 제곱 최악 통신량을 함께 달성해야 합니다.</p>
+            <p><strong>기여:</strong> 두 단계 합의와 직전 view의 이중 인증서 여부를 이용하는 pacemaker를 하나의 프로토콜로 제시합니다.</p>
+            <p><strong>전제:</strong> 부분 동기 네트워크, 인증된 복제본 3t+1대, threshold signature와 논문이 정의한 pacemaker를 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 논문의 프로토콜, 안전성·진행 증명과 점근적 통신량 분석입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 모든 view가 기다림 없이 진행되거나 제3자 구현의 성능과 복구가 검증됐다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+    </article>
+  );
+}

@@ -8143,9 +8143,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 구현", label: "libhotstuff prototype · commit 34aa507", href: "https://github.com/hot-stuff/libhotstuff/tree/34aa50796f201aaab91c4db5aae9d3b7aceddb5c", note: "논문 저자들의 역사적 프로토타입입니다. 지속적인 제품 지원과 영속 복구를 보장하는 현재 구현으로 취급하지 않습니다." },
   ],
   "blockchain/hotstuff2": [
-    { kind: "핵심 논문", label: "HotStuff-2 · ePrint 2023/397", href: "https://eprint.iacr.org/2023/397", note: "Two-phase responsive BFT와 integrated pacemaker 원문이며 모든 view가 wait-free라는 뜻은 아님" },
-    { kind: "핵심 논문", label: "HotStuff-2 §4 Steady-State", href: "https://eprint.iacr.org/2023/397.pdf#page=4", note: "Nested/double certificate와 lock transition의 근거이며 application execution·durability certificate는 아님" },
-    { kind: "핵심 논문", label: "HotStuff-2 §4 Pacemaker", href: "https://eprint.iacr.org/2023/397.pdf#page=6", note: "Previous-view fast entry와 O(Δ) status recovery 경계이며 Δ wait가 모든 view에 필요하다는 뜻은 아님" },
+    { kind: "핵심 논문", label: "HotStuff-2 · ePrint 2023/397", href: "https://eprint.iacr.org/2023/397", note: "두 단계 합의와 pacemaker를 함께 정의한 원문입니다. 모든 view가 기다림 없이 진행된다는 뜻은 아닙니다." },
+    { kind: "핵심 논문", label: "HotStuff-2 §4 · 정상 view", href: "https://eprint.iacr.org/2023/397.pdf#page=4", note: "이중 인증서와 lock 갱신의 근거입니다. 애플리케이션 실행이나 영속 저장 완료를 증명하는 인증서는 아닙니다." },
+    { kind: "핵심 논문", label: "HotStuff-2 §4 Pacemaker", href: "https://eprint.iacr.org/2023/397.pdf#page=6", note: "직전 view의 이중 인증서가 없을 때 Ppc + Δ 동안 잠금 보고를 기다리는 근거입니다. 보고서 묶음을 상태 인증서로 방송하는 방식은 아닙니다." },
   ],
   "blockchain/jolteon-ditto": [
     { kind: "핵심 논문", label: "Jolteon and Ditto · arXiv 2106.10362", href: "https://arxiv.org/abs/2106.10362", note: "Two-chain sync path와 state-aware MVBA fallback 원문이며 current Aptos가 paper fallback을 그대로 쓴다고 주장하지 않음" },
