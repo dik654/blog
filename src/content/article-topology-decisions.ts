@@ -3110,9 +3110,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/option-greeks-volatility-and-dynamic-hedging": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "그릭스는 기초자산·곡률·시간·변동성 변화에 대한 옵션 가격의 국소 민감도이며, 델타가 계속 바뀌므로 헤지는 반복 조정해야 하고 거래비용·가격 도약·모형 가정의 어긋남이 실제 손익을 만듭니다.",
-    "sharedGate": "주가 +2의 델타 +1·감마 +0.08, 변동성 +5%p의 베가 +0.45, 하루 세타 −0.08을 단위와 국소 근사 조건 아래 검산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "가격 5인 옵션의 델타·감마·베가·세타 몫을 8장면에서 계산해 하루 근사 6.45를 만들고, 주가 상승 뒤 델타 헤지를 0.50주에서 0.58주로 다시 맞추는 과정과 국소 근사의 경계를 연결합니다.",
+    "sharedGate": "주가 +2의 델타 +1.00·감마 +0.08, 변동성 +5%p의 베가 +0.45, 하루 세타 −0.08, 합계 +1.45와 새 델타 0.58을 단위와 국소 근사 조건 아래 검산합니다."
   },
   "markets/interest-rate-derivatives-from-fra-to-swaptions": {
     "action": "keep",
@@ -4634,7 +4634,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-suitability-disclosure-and-sales-practice":"28aa4961a49f583f",
 "markets/interest-rate-derivatives-from-fra-to-swaptions":"8fb4b59da32013fc",
 "markets/no-arbitrage-cost-of-carry-and-basis":"8a85e9f19b7b1b6f",
-"markets/option-greeks-volatility-and-dynamic-hedging":"bee28d2ce626059b",
+"markets/option-greeks-volatility-and-dynamic-hedging":"4647ce9e23e8541a",
 "markets/option-replication-and-put-call-parity":"f954abe9fd8b8b9c",
 "markets/commodity-carry-convenience-yield-and-roll":"b3fb6fe209a496cc",
 "markets/credit-derivatives-default-risk-and-tranches":"9988dd9bb2ab3cca",
