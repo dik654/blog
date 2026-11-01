@@ -84352,32 +84352,34 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "blockchain/berachain": {
-    entryLevel: true, entryNote: "BERA·BGT·HONEY를 같은 token으로 보지 않고 100/1000 vault share 사례로 시작합니다.", coreIdea: "Berachain은 BERA consensus security와 BGT PoL incentive routing을 연결하지만 finality evidence와 reward receipt를 분리합니다.", assumedKnowledge: [],
-    introducedHere: [{ id: "berachain-pol-incentive-flow", role: "Boost·allocation·vault reward를 연결합니다." }, { id: "berachain-bgt-governance-boost-boundary", role: "BGT와 BERA authority를 구분합니다." }, { id: "berachain-reward-vault-eligibility", role: "Vault 생성·stake·emission 조건을 나눕니다." }, { id: "berachain-beaconkit-consensus-reward-boundary", role: "Finality와 reward evidence를 분리합니다." }, { id: "berachain-pol-release-gate", role: "Chain/token/contracts를 함께 검증합니다." }],
+    entryLevel: true, entryNote: "한 검증자가 만든 블록과 한 사용자의 100/1000 vault stake를 따라가며 합의·다음 블록의 protocol transaction·시간 분배를 구분합니다.", coreIdea: "Berachain의 현재 PoL은 확정된 블록의 제안자를 다음 블록의 첫 protocol transaction에서 처리하고, WBERA를 BeraChef allocation과 Reward Vault의 시간 적립을 거쳐 사용자에게 전달합니다.", assumedKnowledge: [],
+    introducedHere: [{ id: "berachain-consensus-emission-boundary", role: "블록 확정과 보상 적립의 완료 시점을 구분합니다." }, { id: "berachain-pol-system-transaction", role: "이전 블록 제안자를 다음 블록의 첫 transaction으로 처리합니다." }, { id: "berachain-berachef-allocation", role: "검증자별 vault weight와 fallback을 결정합니다." }, { id: "berachain-reward-vault-stream-accounting", role: "Vault reward를 stake와 경과 시간에 따라 적립합니다." }, { id: "berachain-bgt-deprecation-boundary", role: "현재 WBERA emission과 잔여 BGT 호환 경로를 구분합니다." }],
     conceptExplanations: [
-      { id: "berachain-pol-incentive-flow", sectionId: "pol-flow", intuition: "Validator가 받은 emission을 vault로 보내고 vault stakers가 share대로 받습니다.", workedExample: "전체 1000 중 100 stake, vault reward 50이면 단순 share reward는 5 BGT입니다.", boundary: "Reward flow가 block finality를 만들지는 않습니다." },
-      { id: "berachain-bgt-governance-boost-boundary", sectionId: "overview", intuition: "BERA는 validator security/gas, BGT는 governance·boost·reward 권한입니다.", workedExample: "BGT holder가 validator를 boost해 emission 크기에 영향을 줘도 BERA stake가 proposer selection 경로입니다.", boundary: "BGT를 freely transferable token이나 양방향 peg로 보지 않습니다." },
-      { id: "berachain-reward-vault-eligibility", sectionId: "pol-flow", intuition: "Vault contract가 존재해도 governance whitelist 없이는 validator emission을 못 받을 수 있습니다.", workedExample: "Receipt token stake는 되지만 removed whitelist나 끝난 period면 BGT reward가 0일 수 있습니다.", boundary: "Whitelisted가 principal/audit 안전 보증은 아닙니다." },
-      { id: "berachain-beaconkit-consensus-reward-boundary", sectionId: "consensus-boundary", intuition: "Block vote·payload validity·state commit과 reward 계산은 다른 receipts입니다.", workedExample: "CometBFT commit 뒤 별도 PoL accounting이 BGT를 vault로 배분합니다.", boundary: "Vault TVL과 consensus safety가 비례한다는 뜻은 아닙니다." },
-      { id: "berachain-pol-release-gate", sectionId: "berachain-release", intuition: "Token·vault·validator·BeaconKit version이 맞아야 end-to-end reward를 재현합니다.", workedExample: "Whitelist removal·zero reward·Engine API reject·reorg를 같은 height manifest로 재생합니다.", boundary: "표시 APR 하나로 release하지 않습니다." },
+      { id: "berachain-consensus-emission-boundary", sectionId: "block-finality", intuition: "블록 합의는 제안자와 실행 결과를 확정하지만 사용자의 vault reward까지 바로 적립하지는 않습니다.", workedExample: "검증자 V가 만든 H42가 확정되어도 Alice의 WBERA는 H42에서 늘지 않고, 다음 단계는 H43의 protocol transaction입니다.", boundary: "블록 finality와 사용자의 claim 가능 잔액을 같은 영수증으로 보지 않습니다." },
+      { id: "berachain-pol-system-transaction", sectionId: "system-transaction", intuition: "이전 블록의 제안자 보상은 다음 블록 첫 위치에 합성되는 protocol transaction이 실행합니다.", workedExample: "H43 transaction 0은 prev_proposer_pubkey=V로 distributeFor(V)를 호출하며, 누락·위치 오류·hash 불일치는 block invalidity로 이어집니다.", boundary: "외부 사용자가 mempool에 넣는 서명 transaction이 아닙니다." },
+      { id: "berachain-berachef-allocation", sectionId: "system-transaction", intuition: "BeraChef는 지연을 통과한 검증자별 weight를 활성화하고 사용할 수 없으면 baseline 또는 default allocation으로 돌아갑니다.", workedExample: "V의 active allocation이 Vault A 50%, Vault B 50%이면 1.305 WBERA 중 0.6525가 각각의 vault 경로로 향합니다.", boundary: "Source snapshot의 1.305 WBERA와 50% 가정은 영구 parameter나 실제 validator 설정이 아닙니다." },
+      { id: "berachain-reward-vault-stream-accounting", sectionId: "vault-accounting", intuition: "Vault는 받은 reward를 사용자 잔액에 즉시 더하지 않고 rewardRate와 rewardPerToken으로 시간에 따라 적립합니다.", workedExample: "Vault A 기여분 0.6525 WBERA에서 Alice가 100/1000 stake를 분배 기간 내내 유지하면 고립한 한 블록 기여분은 0.06525 WBERA입니다.", boundary: "중간 stake 변경·leftover reward·후속 notification·정수 반올림이 있으면 단순 10% 계산과 달라질 수 있습니다." },
+      { id: "berachain-bgt-deprecation-boundary", sectionId: "failure-boundaries", intuition: "새 Reward Vault emission은 WBERA이고, BGT는 과거 allowance를 정리하는 호환 경로에만 남아 있습니다.", workedExample: "잔여 BGT allowance가 있으면 claim 과정에서 BERA로 redeem한 뒤 WBERA로 감싸 현재 reward와 함께 보낼 수 있습니다.", boundary: "과거 BGT 설명을 현재 emission token의 동작으로 일반화하지 않습니다." },
     ],
-    conceptStages: [{ label: "Tokens", relation: "Authority 분리", concepts: ["berachain-bgt-governance-boost-boundary"] }, { label: "Rewards", relation: "Eligibility·flow", concepts: ["berachain-reward-vault-eligibility", "berachain-pol-incentive-flow"] }, { label: "Consensus", relation: "Finality 분리", concepts: ["berachain-beaconkit-consensus-reward-boundary"] }, { label: "Release", relation: "Cross-state verification", concepts: ["berachain-pol-release-gate"] }],
+    conceptStages: [{ label: "Block", relation: "확정 범위", concepts: ["berachain-consensus-emission-boundary"] }, { label: "Protocol transaction", relation: "이전 proposer 처리", concepts: ["berachain-pol-system-transaction"] }, { label: "Allocation", relation: "Vault weight 결정", concepts: ["berachain-berachef-allocation"] }, { label: "Reward Vault", relation: "시간·stake 적립", concepts: ["berachain-reward-vault-stream-accounting"] }, { label: "Migration", relation: "BGT 호환 경계", concepts: ["berachain-bgt-deprecation-boundary"] }],
     exercises: [
-      { level: "basic", question: "BERA·BGT·HONEY의 역할을 구분하세요.", answerChecklist: ["BERA gas/stake", "BGT non-transferable", "BGT governance/boost/reward", "HONEY stablecoin", "not same authority"], requiredConcepts: ["berachain-bgt-governance-boost-boundary"], sectionId: "overview" },
-      { level: "basic", question: "100/1000 vault stake와 50 BGT reward에서 user reward를 계산하세요.", answerChecklist: ["share 10%", "same interval", "vault reward 50", "user 5 BGT", "zero allocation boundary"], requiredConcepts: ["berachain-pol-incentive-flow"], sectionId: "pol-flow" },
-      { level: "basic", question: "Receipt token 취득부터 BGT 적립까지 순서를 적으세요.", answerChecklist: ["protocol action", "receipt token", "eligible vault stake", "validator allocation", "pro-rata accrual"], requiredConcepts: ["berachain-pol-incentive-flow", "berachain-reward-vault-eligibility"], sectionId: "pol-flow" },
-      { level: "basic", question: "Vault 생성·stake 가능·emission eligibility가 다른 이유를 설명하세요.", answerChecklist: ["contract exists", "eligible token", "governance whitelist", "active period", "reward may be zero"], requiredConcepts: ["berachain-reward-vault-eligibility"], sectionId: "pol-flow" },
-      { level: "basic", question: "BGT boost와 BERA validator selection을 비교하세요.", answerChecklist: ["BGT delegation", "emission influence", "BERA stake", "proposal probability", "no finality equivalence"], requiredConcepts: ["berachain-bgt-governance-boost-boundary"], sectionId: "overview" },
-      { level: "basic", question: "BeaconKit finality receipt와 PoL reward receipt를 구분하세요.", answerChecklist: ["Engine payload", "CometBFT votes", "state commit", "allocation", "vault accounting"], requiredConcepts: ["berachain-beaconkit-consensus-reward-boundary"], sectionId: "consensus-boundary" },
-      { level: "advanced", question: "Vault whitelist 제거 중 stake/reward race를 설계하세요.", answerChecklist: ["height/version", "pre/post eligibility", "pending reward", "no new emission", "withdraw/rollback"], requiredConcepts: ["berachain-reward-vault-eligibility", "berachain-pol-release-gate"], sectionId: "berachain-release" },
-      { level: "advanced", question: "Protocol incentive가 validator allocation을 왜곡하는 attack fixture를 만드세요.", answerChecklist: ["incentive deposit", "allocation change", "commission", "boost concentration", "security/reward metrics separate"], requiredConcepts: ["berachain-pol-incentive-flow"], sectionId: "berachain-release" },
-      { level: "advanced", question: "Block/reward/reorg reconciliation ledger를 설계하세요.", answerChecklist: ["height/hash", "validator/proposal", "boost/allocation", "vault reward", "commit/reorg", "idempotent replay"], requiredConcepts: ["berachain-beaconkit-consensus-reward-boundary"], sectionId: "berachain-release" },
-      { level: "advanced", question: "Berachain contract/consensus canary와 rollback matrix를 작성하세요.", answerChecklist: ["docs/source/config pins", "token/vault generation", "Engine reject", "reward negative fixtures", "prior contracts/config"], requiredConcepts: ["berachain-pol-release-gate"], sectionId: "berachain-release" },
+      { level: "basic", question: "현재 PoL에서 BERA, WBERA, BGT가 각각 맡는 일을 구분하세요.", answerChecklist: ["BERA stake와 block production", "WBERA current emission", "BGT deprecated", "잔여 BGT claim 호환", "같은 상태가 아님"], requiredConcepts: ["berachain-consensus-emission-boundary", "berachain-bgt-deprecation-boundary"], sectionId: "overview" },
+      { level: "basic", question: "V가 H42를 제안한 뒤 보상 실행이 H43에서 시작되는 순서를 설명하세요.", answerChecklist: ["H42 proposer V", "H42 commit", "H43 transaction 0", "prev proposer pubkey", "distributeFor(V)"], requiredConcepts: ["berachain-consensus-emission-boundary", "berachain-pol-system-transaction"], sectionId: "system-transaction" },
+      { level: "basic", question: "PoL transaction이 없거나 index 0이 아닐 때 왜 block 검증이 실패합니까?", answerChecklist: ["결정적 재구성", "expected hash", "transaction 0", "block validity", "외부 bot 아님"], requiredConcepts: ["berachain-pol-system-transaction"], sectionId: "system-transaction" },
+      { level: "basic", question: "BeraChef가 active allocation을 쓰지 못할 때의 fallback 순서를 적으세요.", answerChecklist: ["queued delay", "active allocation", "inactivity baseline", "weight validation", "default allocation"], requiredConcepts: ["berachain-berachef-allocation"], sectionId: "system-transaction" },
+      { level: "basic", question: "1.305 WBERA, Vault A weight 50%, Alice stake 100/1000에서 고립한 한 block 기여분을 계산하세요.", answerChecklist: ["Vault A 0.6525", "stake share 0.1", "Alice 0.06525 WBERA", "full interval assumption", "rounding omitted"], requiredConcepts: ["berachain-berachef-allocation", "berachain-reward-vault-stream-accounting"], sectionId: "vault-accounting" },
+      { level: "basic", question: "Vault notification과 Alice의 실제 token transfer가 같은 순간이 아닌 이유를 설명하세요.", answerChecklist: ["undistributed reward", "rewardRate", "elapsed time", "rewardPerToken", "claim transfer"], requiredConcepts: ["berachain-reward-vault-stream-accounting"], sectionId: "vault-accounting" },
+      { level: "advanced", question: "H43의 PoL transaction hash가 예상값과 다를 때 어떤 상태까지 유효하고 어디서 block을 거부해야 합니까?", answerChecklist: ["H42 finality 유지", "H43 invalid", "expected transaction", "receipt 미확정", "vault notification 없음"], requiredConcepts: ["berachain-consensus-emission-boundary", "berachain-pol-system-transaction"], sectionId: "failure-boundaries" },
+      { level: "advanced", question: "BeraChef가 준비되지 않은 경우 operator base와 vault path를 나누어 설명하세요.", answerChecklist: ["base 0.4 snapshot", "vault reward 0", "separate receivers", "isReady condition", "영구 parameter 아님"], requiredConcepts: ["berachain-berachef-allocation"], sectionId: "failure-boundaries" },
+      { level: "advanced", question: "분배 중 stake가 100에서 200으로 바뀌면 단순 10% 계산을 그대로 쓸 수 없는 이유를 설명하세요.", answerChecklist: ["time segments", "rewardPerToken delta", "balance at update", "totalSupply change", "leftover or later notification"], requiredConcepts: ["berachain-reward-vault-stream-accounting"], sectionId: "vault-accounting" },
+      { level: "advanced", question: "잔여 BGT allowance와 새 WBERA allowance가 함께 있을 때 claim 경로를 추적하세요.", answerChecklist: ["BGT allowance", "redeem to BERA", "wrap to WBERA", "new WBERA remainder", "single user transfer"], requiredConcepts: ["berachain-bgt-deprecation-boundary"], sectionId: "failure-boundaries" },
     ],
     papers: [
-      { title: "Berachain Proof of Liquidity overview", href: "https://docs.berachain.com/general/proof-of-liquidity/overview", problem: "Validator security와 application incentive를 연결해야 합니다.", contribution: "BERA/BGT, boost·allocation·vault lifecycle을 설명합니다.", assumptions: "2026-08-14 current docs와 deployed config를 확인합니다.", evidenceScope: "PoL actor·reward flow에 한정합니다.", notClaim: "Current parameters·APR·security를 영구 보장하지 않습니다.", sectionId: "paper-berachain-pol" },
-      { title: "Berachain Reward Vaults", href: "https://docs.berachain.com/general/proof-of-liquidity/reward-vaults", problem: "Eligible stake에 BGT reward를 accounting해야 합니다.", contribution: "Vault·delegation·reward mode·whitelist surface를 설명합니다.", assumptions: "Current contracts와 manager/governance state를 고정합니다.", evidenceScope: "Vault accounting lifecycle입니다.", notClaim: "Principal·APR·incentive value를 보장하지 않습니다.", sectionId: "paper-berachain-vault" },
-      { title: "BeaconKit · commit 59c0fd16", href: "https://github.com/berachain/beacon-kit/tree/59c0fd169f024e2a0ca95b4d550012eab3e4fee9", problem: "EVM payload를 CometBFT consensus와 연결해야 합니다.", contribution: "Pinned consensus/execution source를 제공합니다.", assumptions: "Commit·chain spec·execution client config를 고정합니다.", evidenceScope: "Implementation seam에 한정합니다.", notClaim: "PoL incentive의 safety theorem이나 fixed performance가 아닙니다.", sectionId: "paper-berachain-beaconkit" },
+      { title: "Berachain Docs · PoL vNext overview · ec5709d5", href: "https://github.com/berachain/docs/blob/ec5709d51747490c0a77b765ac026633d4ec438b/general/proof-of-liquidity/overview.mdx", problem: "Validator security와 current WBERA emission 경로를 구분해 연결해야 합니다.", contribution: "BERA block production, WBERA emission, BeraChef와 Reward Vault의 현재 역할을 설명합니다.", assumptions: "Docs commit ec5709d5의 공개 설명을 기준으로 합니다.", evidenceScope: "현재 actor와 보상 방향에 한정합니다.", notClaim: "APR·parameter·token 가격을 영구 보장하지 않습니다.", sectionId: "paper-berachain-overview" },
+      { title: "BeaconKit · v1.4.1 · 0a91d178", href: "https://github.com/berachain/beacon-kit/tree/0a91d178147821bb41b7e1de092b0a501236b4ee", problem: "CometBFT proposal과 EVM execution payload를 같은 block으로 검증해야 합니다.", contribution: "Engine API payload와 첫 inflation withdrawal의 고정된 구현을 제공합니다.", assumptions: "Stable tag v1.4.1과 matching execution client·chain spec을 함께 고정합니다.", evidenceScope: "Consensus와 execution payload 경계입니다.", notClaim: "Block commit이 사용자 reward claim까지 끝냈다는 뜻은 아닙니다.", sectionId: "paper-berachain-beaconkit" },
+      { title: "Bera-Reth · v1.4.4 · aa9bc73f", href: "https://github.com/berachain/bera-reth/tree/aa9bc73ffd49305ce0953c22b38f2affcbdabbd4", problem: "이전 proposer reward 호출을 모든 실행 노드가 같은 transaction으로 재구성해야 합니다.", contribution: "PoL transaction builder와 transaction 0 execution·validation 경로를 제공합니다.", assumptions: "Stable tag v1.4.4와 Prague1 이후 chain configuration을 기준으로 합니다.", evidenceScope: "H43이 H42 proposer를 처리하는 실행 경로입니다.", notClaim: "Transaction 생성만으로 H43 commit이나 vault 적립이 끝났다는 뜻은 아닙니다.", sectionId: "paper-berachain-reth" },
+      { title: "Berachain contracts · 70e392fc snapshot", href: "https://github.com/berachain/contracts/tree/70e392fc83deec6a34bd11613f2a446eb6266588", problem: "한 block reward를 operator와 vault로 나누고 사용자 stake에 시간 분배해야 합니다.", contribution: "Distributor·BlockRewardController·BeraChef·RewardVault source를 함께 고정합니다.", assumptions: "Release tag가 없는 repository의 commit snapshot이며 배포 proxy bytecode는 별도 확인 대상입니다.", evidenceScope: "공개 source의 보상 계산과 accounting 경로입니다.", notClaim: "Source 상수와 주소가 모든 network에서 영구 동일하다는 뜻은 아닙니다.", sectionId: "paper-berachain-contracts" },
+      { title: "Berachain Docs · BGT deprecation · ec5709d5", href: "https://github.com/berachain/docs/blob/ec5709d51747490c0a77b765ac026633d4ec438b/general/tokens/bgt.mdx", problem: "과거 BGT PoL 설명과 현재 WBERA emission을 같은 구조로 섞으면 안 됩니다.", contribution: "2026-07-08 deprecation과 잔여 BGT claim 호환 경로를 구분합니다.", assumptions: "Docs commit ec5709d5와 contracts snapshot을 함께 읽습니다.", evidenceScope: "BGT의 현재 역할과 migration boundary입니다.", notClaim: "모든 과거 balance가 자동으로 소멸했거나 사용자 조치가 언제나 필요 없다는 뜻은 아닙니다.", sectionId: "paper-berachain-bgt" },
     ],
   },
   "blockchain/crypto-theory": {
@@ -107913,7 +107915,7 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote:
       "앞 글에서 의석 분포가 협상력과 정부 형태의 성격을 정한다는 것까지 보고, 그 의석을 주어진 것으로 두었습니다. 여기서는 그 의석이 어디서 오는지를 봅니다.",
     coreIdea:
-      "표를 의석으로 바꾸는 규칙은 표를 그대로 옮기는 통로가 아니라 무엇을 버릴지 정하는 장치이며, 그 성격을 거의 다 정하는 것은 한 선거구에서 몇 명을 뽑는가입니다. 다수제는 표를 버려 단독 과반을 사고, 비례는 표를 지키는 대신 나누어 떨어지지 않는 것을 나누는 문제를 떠안으며, 그 차이는 하나의 지수로 잴 수 있습니다.",
+      "표를 의석으로 바꾸는 규칙은 표를 그대로 옮기는 통로가 아닙니다. 한 선거구에서 나눌 의석 수가 가능한 범위를 정하고, 배분 공식이 그 범위 안에서 실제 결과를 만듭니다. 다수제는 단독 과반이 나올 가능성을 높이는 대신 많은 표를 의석으로 바꾸지 못할 수 있고, 비례제는 더 많은 표를 반영하는 대신 정수 의석을 나누는 문제를 떠안습니다. 그 차이는 하나의 지수로 잴 수 있습니다.",
     assumedKnowledge: [
       {
         id: "voting-power-index",
@@ -107931,7 +107933,7 @@ export const ARTICLE_LEARNING: Readonly<
     introducedHere: [
       {
         id: "district-magnitude",
-        role: "제도의 성격을 거의 다 정하는 하나의 숫자를 세웁니다.",
+        role: "의석을 여러 정당에 나눌 수 있는 범위를 정하고 배분 공식이 작동할 자리를 엽니다.",
       },
       {
         id: "electoral-threshold",
@@ -107963,11 +107965,11 @@ export const ARTICLE_LEARNING: Readonly<
         id: "district-magnitude",
         sectionId: "district-magnitude",
         intuition:
-          "한 자리는 쪼갤 수 없고 열 자리는 쪼갤 수 있습니다. 비례성의 상한이 여기서 정해집니다.",
+          "한 자리는 여러 정당에 나눌 수 없고 열 자리는 나눌 수 있습니다. 다만 여러 자리라는 사실만으로 비례가 되지는 않으며, 배분 공식이 그 자리를 누구에게 줄지 정합니다.",
         workedExample:
-          "한 명만 뽑으면 1등 아닌 표가 전부 버려지고, 열 명을 뽑으면 10퍼센트 남짓으로도 한 자리를 얻습니다.",
+          "한 명을 1등에게 주면 44퍼센트 정당이 한 자리를 가져갑니다. 열 자리를 득표율에 비례해 나누면 10퍼센트 안팎의 정당도 한 자리를 얻을 가능성이 생기지만, 열 자리를 모두 1등 정당에 주면 비례 결과는 나오지 않습니다.",
         boundary:
-          "크기를 키우면 비례성은 올라가지만 유권자와 당선자 사이의 연결은 흐려집니다. 한쪽을 늘리면 다른 쪽이 줄어듭니다.",
+          "비례 배분에서는 선거구가 커질수록 대체로 비례성이 높아집니다. 그러나 블록 투표에서는 크기가 커질수록 비례성이 낮아질 수도 있으므로, 선거구 크기와 배분 공식을 함께 봐야 합니다.",
       },
       {
         id: "electoral-threshold",
@@ -107975,7 +107977,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "너무 잘게 쪼개지는 것을 막으려고 배분 전에 한 번 거릅니다.",
         workedExample:
-          "전국 득표 3퍼센트를 넘지 못한 정당을 빼면 그 표는 사라지지 않고 남은 정당들에게 나뉘어 갑니다.",
+          "전국 득표 3퍼센트를 넘지 못한 정당을 빼면 그 표가 다른 정당으로 직접 옮겨가지는 않습니다. 그 표를 계산에서 빼고 남은 정당끼리 의석을 나누므로 남은 정당의 상대 몫이 커집니다.",
         boundary:
           "문턱 바로 아래의 표는 통째로 빠지므로, 정당 수를 줄이려던 장치가 불비례를 오히려 키울 수 있습니다.",
       },
@@ -108007,7 +108009,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "득표 396·369·135을 1·2·3…으로 나눈 몫을 한 줄로 세우면 396, 369, 198, 184.5, 135, 132, 123, 99, 92.25 순서가 되어 9석이 4·4·1로 갈립니다.",
         boundary:
-          "나누는 수를 1·3·5…로 바꾸면 작은 정당이 더 일찍 들어옵니다. 어느 쪽이 옳은 것이 아니라 비례를 무엇으로 볼지에 대한 답이 다른 것입니다.",
+          "1·3·5… 방식도 첫 몫은 득표를 1로 나누므로 같습니다. 한 석을 얻은 뒤 다음 몫을 2가 아니라 3으로 나누는 데서 차이가 시작되며, 이미 의석을 받은 정당의 몫이 더 작아져 경계 의석이 작은 정당으로 갈 가능성이 커집니다. 같은 득표에서도 항상 결과가 달라지는 것은 아닙니다.",
       },
       {
         id: "disproportionality-index",
@@ -108019,7 +108021,7 @@ export const ARTICLE_LEARNING: Readonly<
         proofIdea:
           "합을 반으로 나누는 이유는 한 정당이 실제보다 많이 받으면 다른 정당들이 정확히 그만큼 적게 받기 때문입니다. 득표율의 합과 의석률의 합이 모두 100이므로 차이의 합은 언제나 0이고, 같은 왜곡이 더 받은 쪽과 덜 받은 쪽에서 한 번씩 제곱합에 들어갑니다. 이 인자가 없으면 값이 √2배 커질 뿐 제도 사이의 순서는 바뀌지 않습니다.",
         counterexample:
-          "값이 작다고 더 나은 제도인 것은 아닙니다. 완전히 비례하는 의회는 사회의 분열을 그대로 옮겨 놓아 정부 구성이 어려워지고, 값이 큰 다수제는 그 대가로 단독 과반을 얻습니다.",
+          "값이 작다고 더 나은 제도인 것은 아닙니다. 비례성이 높아 여러 정당이 진입하면 정부 구성 협상이 늘어날 수 있지만, 정당 수가 적거나 연립 관행이 안정적이면 반드시 그렇지는 않습니다. 다수제의 큰 값도 단독 과반이 나올 가능성과 함께 봐야 합니다.",
         boundary:
           "정당을 분석의 단위로 두므로 무소속이 많으면 값이 흔들리고, 지역구와 비례를 따로 뽑는 제도에서는 어느 표를 기준으로 삼을지부터 정해야 합니다.",
       },
@@ -108031,13 +108033,13 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "두 부분을 따로 계산해 더하면 지역구의 불비례가 그대로 남고, 정당 득표율로 전체를 먼저 정한 뒤 지역구에서 얻은 만큼을 빼면 전체가 비례에 가까워집니다.",
         boundary:
-          "한국 헌법은 선거구와 비례대표에 관한 사항을 법률에 위임하므로, 이 선택은 과반으로 바꿀 수 있고 바꾸는 주체가 그 제도로 당선된 사람들입니다.",
+          "한국 헌법은 선거구와 비례대표에 관한 사항을 법률에 위임하므로, 구체적인 규칙은 헌법 개정 없이 일반 법률 절차로 바꿀 수 있습니다. 그 법률을 고치는 주체가 현재 제도로 당선된 사람들입니다.",
       },
     ],
     conceptStages: [
       {
-        label: "00 하나의 숫자",
-        relation: "제도의 성격을 거의 다 정하는 선택지를 먼저 고릅니다.",
+        label: "00 의석 단위와 배분 규칙",
+        relation: "나눌 수 있는 자리와 그 자리를 실제로 나누는 방식을 함께 봅니다.",
         concepts: ["district-magnitude", "electoral-threshold"],
       },
       {
@@ -108065,12 +108067,12 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "선거구 크기가 왜 제도의 성격을 거의 다 정한다고 하는지 설명하세요.",
+          "선거구 크기와 배분 공식을 왜 함께 봐야 하는지 설명하세요.",
         answerChecklist: [
-          "의석을 나눌 수 있는 최소 단위를 정함",
-          "한 명이면 1등 아닌 표가 전부 버려짐",
-          "크면 작은 비율로도 한 자리를 얻음",
-          "제도의 이름이 아니라 이 숫자가 비례성의 상한",
+          "선거구 크기는 의석을 나눌 수 있는 범위를 정함",
+          "한 자리는 여러 정당에 나눌 수 없음",
+          "여러 자리는 비례의 가능성을 열 뿐 보장하지 않음",
+          "배분 공식이 실제 의석 결과를 정함",
         ],
         requiredConcepts: ["district-magnitude"],
         sectionId: "district-magnitude",
@@ -108160,7 +108162,7 @@ export const ARTICLE_LEARNING: Readonly<
         answerChecklist: [
           "문턱 아래 정당을 배분에서 제외",
           "그 표가 통째로 의석이 되지 못함",
-          "남은 정당들에게 나뉘어 감",
+          "표가 직접 이전되는 것이 아니라 남은 정당의 상대 몫이 커짐",
           "제외된 표가 클수록 지수가 올라감",
         ],
         requiredConcepts: ["electoral-threshold", "disproportionality-index"],
@@ -108172,9 +108174,9 @@ export const ARTICLE_LEARNING: Readonly<
           "불비례 지수가 낮은 제도를 곧바로 더 나은 제도라고 말할 수 없는 이유를 앞 글의 정부 구성 문제와 함께 쓰세요.",
         answerChecklist: [
           "지수는 비례에서 벗어난 정도만 잼",
-          "벗어남의 대가로 얻은 단독 과반을 세지 않음",
-          "완전 비례는 분열을 그대로 옮김",
-          "정부 구성이 어려워짐",
+          "단독 과반 가능성이나 지역 대표성을 세지 않음",
+          "여러 정당이 진입하면 협상이 늘 수 있음",
+          "정부 구성 난도는 정당 수와 연립 관행에도 달림",
         ],
         requiredConcepts: ["disproportionality-index", "coalition-government"],
         sectionId: "disproportionality",
@@ -108185,7 +108187,7 @@ export const ARTICLE_LEARNING: Readonly<
           "선거 제도가 헌정 질서 가운데 특이한 위치에 있다는 말의 뜻을 개정 문턱과 개정 주체로 설명하세요.",
         answerChecklist: [
           "헌법이 법률에 위임",
-          "헌법 개정과 달리 과반으로 개정 가능",
+          "헌법 개정 없이 일반 법률 절차로 변경 가능",
           "고치는 쪽이 그 제도로 당선된 사람들",
           "규칙을 만드는 쪽과 적용받는 쪽이 같음",
         ],
@@ -108194,6 +108196,40 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     papers: [
+      {
+        title:
+          "International IDEA · Electoral System Design: The New International IDEA Handbook",
+        href:
+          "https://www.idea.int/sites/default/files/publications/electoral-system-design-the-new-international-idea-handbook.pdf",
+        problem:
+          "선거구 크기와 배분 공식을 하나의 변수처럼 다루면, 복수 의석 선거구가 곧 비례 결과를 만든다고 잘못 이해하게 됩니다.",
+        contribution:
+          "선거 공식과 선거구 크기를 별도 핵심 변수로 구분하고, 비례대표에서 선거구 크기가 커질 때의 일반적 효과와 블록 투표에서 반대 효과가 날 수 있는 경계를 함께 설명합니다.",
+        assumptions:
+          "선거구 크기의 효과는 어떤 선거 공식과 결합하는지에 따라 달라지며, 비례대표 안에서의 일반적 경향을 모든 복수 의석 제도로 확대하지 않습니다.",
+        evidenceScope:
+          "International IDEA가 발행한 비교 설계 핸드북입니다. 여러 나라의 제도와 설계 원칙을 정리한 공식 참고서이며, 이 글의 44·41·15표 사례를 실증한 자료는 아닙니다.",
+        notClaim:
+          "선거구가 크면 언제나 비례성이 높아진다거나, 비례성이 높은 제도가 언제나 더 낫다는 주장이 아닙니다.",
+        sectionId: "district-magnitude",
+      },
+      {
+        title:
+          "European Parliamentary Research Service · Understanding the d’Hondt method (2024)",
+        href:
+          "https://www.europarl.europa.eu/RegData/etudes/BRIE/2024/762352/EPRS_BRI%282024%29762352_EN.pdf",
+        problem:
+          "정당 득표율을 쪼갤 수 없는 정수 의석으로 옮길 때, 어느 정당이 다음 의석을 받는지 반복 가능한 절차가 필요합니다.",
+        contribution:
+          "D’Hondt를 최고평균 방식으로 분류하고, 득표를 이미 받은 의석 수에 1을 더한 값으로 나눈 뒤 가장 큰 몫에 다음 의석을 주는 절차를 설명합니다.",
+        assumptions:
+          "고정된 의석 수를 정당 또는 명부 득표에 따라 나누며, 의석은 쪼갤 수 없는 정수라고 둡니다.",
+        evidenceScope:
+          "유럽의회 조사처가 2024년에 낸 공식 브리핑입니다. D’Hondt의 절차와 다른 배분 방식과의 일반적 차이를 설명하지만, 이 글의 축소 사례가 실제 선거 결과라는 뜻은 아닙니다.",
+        notClaim:
+          "D’Hondt가 모든 조건에서 같은 정당에 유리하거나, Sainte-Laguë로 바꾸면 매번 의석 결과가 달라진다는 주장이 아닙니다.",
+        sectionId: "proportional",
+      },
       {
         title:
           "Michael Gallagher · Proportionality, disproportionality and electoral systems (1991)",

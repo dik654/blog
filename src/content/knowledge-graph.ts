@@ -15917,11 +15917,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "Legal opinion·asset/custody ledger·token supply·cash queue와 DeFi oracle를 같은 cutoff에서 대조하고 mismatch·insolvency·reorg fixtures로 integration을 채택하는 절차입니다.",
     "canonicalHref": "/cs/blockchain/rwa-composition#rwa-release"
   },
-  "berachain-pol-incentive-flow": { id: "berachain-pol-incentive-flow", kind: "concept", domain: "distributed-systems", label: "Berachain PoL incentive flow", definition: "BERA-secured validator가 block에서 받은 variable BGT emission을 reward allocation에 따라 whitelisted vault로 보내고 protocol incentives·user stake와 순환시키는 lifecycle입니다.", canonicalHref: "/cs/blockchain/berachain#pol-flow" },
-  "berachain-bgt-governance-boost-boundary": { id: "berachain-bgt-governance-boost-boundary", kind: "concept", domain: "distributed-systems", label: "Berachain BGT governance · boost boundary", definition: "Non-transferable BGT의 governance·validator boost·reward 권한과 BERA stake·gas·block finality를 서로 다른 state와 authority로 구분하는 경계입니다.", canonicalHref: "/cs/blockchain/berachain#overview" },
-  "berachain-reward-vault-eligibility": { id: "berachain-reward-vault-eligibility", kind: "concept", domain: "computer-science", label: "Berachain Reward Vault eligibility", definition: "Vault 생성·stake 가능성과 governance whitelist·eligible receipt token·active reward period를 분리해 BGT emission 수령 가능성을 결정하는 계약입니다.", canonicalHref: "/cs/blockchain/berachain#pol-flow" },
-  "berachain-beaconkit-consensus-reward-boundary": { id: "berachain-beaconkit-consensus-reward-boundary", kind: "concept", domain: "distributed-systems", label: "BeaconKit consensus · reward boundary", definition: "CometBFT vote·Engine API payload·state commit으로 얻는 block finality evidence와 PoL reward allocation·vault accounting receipt를 구분하는 경계입니다.", canonicalHref: "/cs/blockchain/berachain#consensus-boundary" },
-  "berachain-pol-release-gate": { id: "berachain-pol-release-gate", kind: "method", domain: "distributed-systems", label: "Berachain PoL release gate", definition: "Token·vault·BeraChef·validator·BeaconKit generation을 묶고 whitelist·allocation·reward·reorg·Engine API failures를 재생해 배포 revision을 채택하는 절차입니다.", canonicalHref: "/cs/blockchain/berachain#berachain-release" },
+  "berachain-consensus-emission-boundary": { id: "berachain-consensus-emission-boundary", kind: "concept", domain: "distributed-systems", label: "Berachain consensus · emission boundary", definition: "CometBFT가 block 제안자와 execution state를 확정하는 시점과 다음 block의 protocol transaction이 proposer emission을 실행하는 시점을 구분하는 경계입니다.", canonicalHref: "/cs/blockchain/berachain#block-finality" },
+  "berachain-pol-system-transaction": { id: "berachain-pol-system-transaction", kind: "concept", domain: "distributed-systems", label: "Berachain PoL protocol transaction", definition: "이전 block 제안자의 BLS public key로 distributeFor 호출을 결정적으로 합성하고 다음 block transaction index 0에서 검증·실행하는 state transition입니다.", canonicalHref: "/cs/blockchain/berachain#system-transaction" },
+  "berachain-berachef-allocation": { id: "berachain-berachef-allocation", kind: "concept", domain: "distributed-systems", label: "BeraChef reward allocation", definition: "지연을 통과한 검증자별 Reward Vault weight를 활성화하고 inactivity·invalid weight에서는 baseline 또는 default allocation을 선택하는 규칙입니다.", canonicalHref: "/cs/blockchain/berachain#system-transaction" },
+  "berachain-reward-vault-stream-accounting": { id: "berachain-reward-vault-stream-accounting", kind: "concept", domain: "computer-science", label: "Berachain Reward Vault stream accounting", definition: "Notify된 WBERA를 rewardRate와 rewardPerToken으로 시간에 따라 누적하고 사용자의 eligible receipt-token stake 비율만큼 claimable reward를 계산하는 방식입니다.", canonicalHref: "/cs/blockchain/berachain#vault-accounting" },
+  "berachain-bgt-deprecation-boundary": { id: "berachain-bgt-deprecation-boundary", kind: "concept", domain: "distributed-systems", label: "Berachain BGT deprecation boundary", definition: "현재 Reward Vault emission token인 WBERA와 과거 allowance를 BERA로 redeem한 뒤 WBERA로 바꾸는 잔여 BGT 호환 경로를 구분하는 경계입니다.", canonicalHref: "/cs/blockchain/berachain#failure-boundaries" },
   "cryptographic-correctness-security-separation": { id: "cryptographic-correctness-security-separation", kind: "concept", domain: "computer-science", label: "Cryptographic correctness · security separation", definition: "Honest inputs에서 intended relation이 성립하는 correctness와 명시된 adversary game에서 win probability가 제한되는 security를 서로 다른 주장으로 구분하는 원칙입니다.", canonicalHref: "/cs/blockchain/crypto-theory#overview" },
   "cryptographic-security-game-advantage": { id: "cryptographic-security-game-advantage", kind: "metric", domain: "computer-science", label: "Cryptographic security-game advantage", definition: "Adversary의 view·oracle queries·resource와 win event를 고정한 experiment에서 baseline을 넘는 성공확률을 security parameter의 함수로 측정한 값입니다.", canonicalHref: "/cs/blockchain/crypto-theory#security-game" },
   "computational-information-theoretic-security": { id: "computational-information-theoretic-security", kind: "concept", domain: "computer-science", label: "Computational · information-theoretic security", definition: "제한된 계산 resource에서 attack advantage가 작다는 주장과 계산이 무한해도 지정된 view가 정보를 주지 않는 주장을 구분하는 경계입니다.", canonicalHref: "/cs/blockchain/crypto-theory#assumption-composition" },
@@ -24682,7 +24682,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "선거구 크기",
     aliases: ["district magnitude", "선거구 정수", "소선거구·대선거구"],
     definition:
-      "한 선거구에서 뽑는 사람의 수이며, 의석을 나눌 수 있는 최소 단위를 정하므로 비례성의 상한을 여기서 정합니다. 제도의 이름이 아니라 이 숫자가 결과를 끌고 가서, 비례대표라 불러도 크기가 작으면 작은 정당이 들어가지 못하고 다수제라 불러도 크기가 크면 결과가 비례에 가까워집니다.",
+      "한 선거구에서 뽑는 사람의 수이며, 의석을 여러 정당에 나눌 수 있는 범위를 정합니다. 비례 배분에서는 선거구가 클수록 대체로 비례성이 높아지지만, 여러 자리를 1등 정당이 모두 가져가는 블록 투표에서는 반대 결과도 날 수 있어 배분 공식과 함께 봐야 합니다.",
     canonicalHref: "/politics/elections/electoral-systems#district-magnitude",
   },
   "electoral-threshold": {
@@ -24692,7 +24692,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "봉쇄조항",
     aliases: ["의석 배분 문턱", "electoral threshold", "저지조항"],
     definition:
-      "의석 배분에 참여하려면 넘어야 하는 최소 득표율이나 최소 지역구 의석 수입니다. 정당이 잘게 쪼개지는 것을 막지만, 문턱 바로 아래의 표는 통째로 배분에서 빠져 남은 정당들에게 나뉘어 가므로 불비례를 오히려 키울 수 있습니다.",
+      "의석 배분에 참여하려면 넘어야 하는 최소 득표율이나 최소 지역구 의석 수입니다. 정당이 잘게 쪼개지는 것을 막지만, 문턱 아래 표는 다른 정당으로 직접 넘어가지 않은 채 계산에서 빠집니다. 남은 정당끼리 의석을 나누므로 그들의 상대 몫이 커지고 불비례가 오히려 커질 수 있습니다.",
     canonicalHref: "/politics/elections/electoral-systems#district-magnitude",
   },
   "wasted-votes-and-duverger": {
@@ -49464,12 +49464,11 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "rwa-valuation-cashflow-cutoff", to: "rwa-onchain-composability-risk", relation: "prerequisite", reason: "Stale or mismatched NAV를 식별해야 oracle·haircut·liquidation 전파를 평가할 수 있습니다." },
   { from: "rwa-transfer-eligibility-enforcement", to: "rwa-composition-release-gate", relation: "evaluates", reason: "Ineligible transfer와 registry mismatch가 integration release의 negative fixtures가 됩니다." },
   { from: "rwa-onchain-composability-risk", to: "rwa-composition-release-gate", relation: "evaluates", reason: "Redemption gate·thin liquidity·stale oracle stress가 DeFi integration 채택을 결정합니다." },
-  { from: "berachain-bgt-governance-boost-boundary", to: "berachain-pol-incentive-flow", relation: "prerequisite", reason: "BGT boost authority와 BERA security stake를 구분해야 emission path를 올바르게 추적할 수 있습니다." },
-  { from: "berachain-reward-vault-eligibility", to: "berachain-pol-incentive-flow", relation: "constrains", reason: "Emission은 stake 가능한 임의 vault가 아니라 current whitelisted vault로만 향합니다." },
-  { from: "bft-quorum-certificate", to: "berachain-beaconkit-consensus-reward-boundary", relation: "prerequisite", reason: "Consensus finality evidence를 reward allocation receipt와 구분하는 기준을 제공합니다." },
-  { from: "berachain-pol-incentive-flow", to: "berachain-beaconkit-consensus-reward-boundary", relation: "contrasts", reason: "PoL economic flow와 block ordering/finality path는 연결되지만 같은 state transition이 아닙니다." },
-  { from: "berachain-beaconkit-consensus-reward-boundary", to: "berachain-pol-release-gate", relation: "evaluates", reason: "Finality·execution·reward receipts를 별도로 대조해야 deployment generation을 채택할 수 있습니다." },
-  { from: "berachain-reward-vault-eligibility", to: "berachain-pol-release-gate", relation: "evaluates", reason: "Whitelist·delegation·reward-period failures를 release matrix에 포함합니다." },
+  { from: "bft-quorum-certificate", to: "berachain-consensus-emission-boundary", relation: "prerequisite", reason: "Block finality evidence를 다음 block의 proposer emission 실행과 구분하는 기준을 제공합니다." },
+  { from: "berachain-consensus-emission-boundary", to: "berachain-pol-system-transaction", relation: "produces", reason: "확정된 이전 block의 proposer public key가 다음 block PoL protocol transaction의 입력이 됩니다." },
+  { from: "berachain-pol-system-transaction", to: "berachain-berachef-allocation", relation: "produces", reason: "Distributor system call이 BeraChef의 현재 allocation을 읽어 vault별 WBERA 금액을 계산합니다." },
+  { from: "berachain-berachef-allocation", to: "berachain-reward-vault-stream-accounting", relation: "produces", reason: "검증자별 weight가 각 Reward Vault에 notify할 WBERA 기여분을 정합니다." },
+  { from: "berachain-bgt-deprecation-boundary", to: "berachain-reward-vault-stream-accounting", relation: "constrains", reason: "새 reward는 WBERA로 적립되고 잔여 BGT는 claim 시점의 호환 변환 경로에서만 처리됩니다." },
   { from: "cryptographic-correctness-security-separation", to: "cryptographic-security-game-advantage", relation: "prerequisite", reason: "Honest correctness와 adversarial win event를 분리한 뒤 security advantage를 정의합니다." },
   { from: "cryptographic-security-game-advantage", to: "computational-information-theoretic-security", relation: "constrains", reason: "Resource bound의 유무와 security-parameter behavior가 두 security claims를 구분합니다." },
   { from: "cryptographic-security-game-advantage", to: "cryptographic-assumption-reduction-map", relation: "produces", reason: "Primitive advantage를 hard-problem solver advantage와 resource loss에 연결합니다." },
@@ -53718,9 +53717,9 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   {
     from: "district-magnitude",
     to: "wasted-votes-and-duverger",
-    relation: "produces",
+    relation: "constrains",
     reason:
-      "한 선거구에서 한 명만 뽑으면 그 의석을 나눌 수 없으므로 1등이 아닌 표가 전부 버려집니다.",
+      "한 선거구에서 한 명만 뽑으면 의석을 여러 정당에 나눌 수 없고, 여기에 1등이 한 자리를 가져가는 단순다수 규칙이 결합하면 나머지 표가 의석으로 바뀌지 못합니다.",
   },
   {
     from: "district-magnitude",

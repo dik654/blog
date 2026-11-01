@@ -426,6 +426,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/cometbft-crypto",
   "blockchain/omni-octane",
   "blockchain/initia-evm",
+  "blockchain/berachain",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

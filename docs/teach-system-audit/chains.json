@@ -250,39 +250,79 @@
     },
     {
       "route": "blockchain/berachain",
-      "title": "Berachain — BERA·BGT Proof of Liquidity와 BeaconKit 경계",
-      "status": "unreviewed",
+      "title": "Berachain: block finality에서 WBERA Reward Vault까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/berachain.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/berachain.tsx",
-        "src/pages/articles/blockchain/berachain/ModernArticle.tsx"
+        "src/pages/articles/blockchain/berachain/ModernArticle.tsx",
+        "src/pages/articles/blockchain/berachain/officialCodeRefs.ts",
+        "src/pages/articles/blockchain/berachain/viz/ModernBerachainViz.tsx",
+        "src/pages/articles/blockchain/CosmosEvmLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 9,
+        "predictionPointers": 9,
+        "assumptionMarkers": 8,
+        "sourceButtons": 9,
         "headings": [
-          "\n            Berachain은 BERA stake로 block proposer를 정하고, 별도 BGT flow로\n            liquidity·application activity에 emission 방향을 연결한다\n          ",
-          "\n            Receipt stake→BGT earning→validator boost→vault allocation은 네 개의\n            state transition이다\n          ",
-          "\n            BeaconKit의 CometBFT·Engine API block path와 PoL reward accounting을\n            분리한다\n          ",
-          "\n            Token·vault·validator·chain generation을 한 manifest에 묶고 reward와\n            finality를 따로 대조한다\n          "
+          "현재 PoL은 BGT 보상이 아니라 WBERA 보상입니다",
+          "H42 합의는 제안자 V를 확정하지만 Alice의 보상까지 확정하지 않습니다",
+          "H43의 첫 시스템 트랜잭션이 H42 제안자의 보상을 실행합니다",
+          "Vault가 0.6525 WBERA를 받아도 Alice가 즉시 0.06525를 받는 것은 아닙니다",
+          "실패 지점을 알면 어떤 숫자가 0이고 어떤 상태가 남는지 설명할 수 있습니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 2026-07-08에 deprecated된 BGT boost·emission을 현재 PoL의 주 경로처럼 설명했습니다.",
+        "블록 확정, 다음 블록의 PoL 시스템 트랜잭션, vault notification과 사용자 적립을 한 보상 완료 흐름으로 읽기 쉬웠습니다.",
+        "BERA stake, BeraChef allocation과 Reward Vault receipt-token stake가 각각 무엇을 결정하는지 분리되지 않았습니다.",
+        "계약 source snapshot의 rate와 설명용 allocation을 영구 parameter나 실측 수익률로 오해할 경계가 부족했습니다."
+      ],
+      "fixture": {
+        "block": "검증자 V가 H42를 제안하고 H42가 commit된 뒤 H43 transaction 0이 distributeFor(V)를 호출",
+        "allocation": "DES 0%, Vault A 50%, Vault B 50%, vault path 1.305 WBERA",
+        "stake": "Alice가 Vault A의 eligible receipt token 100/1,000을 분배 기간 내내 유지",
+        "isolatedResult": "Vault A 기여분 0.6525 WBERA, Alice의 고립한 한 블록 기여분 0.06525 WBERA"
+      },
+      "stageEvidence": {
+        "0": "V의 BERA stake, 비어 있는 H42 payload, A/B 50% allocation과 Alice 100/1,000 stake를 기준 상태에 고정합니다.",
+        "1": "CometBFT가 V를 H42 proposer로 선택하고 BeaconKit이 Bera-Reth에 execution payload를 요청합니다.",
+        "2": "2/3 초과 precommit으로 H42의 ordering·execution state·proposer V가 commit되지만 vault reward는 아직 적립되지 않습니다.",
+        "3": "H43 builder가 H42의 prev_proposer_pubkey=V를 읽어 첫 protocol transaction을 결정합니다.",
+        "4": "Bera-Reth가 H43 transaction 0에서 Distributor.distributeFor(V)를 실행하고 누락·위치·hash 불일치를 block invalid로 처리합니다.",
+        "5": "BlockRewardController의 현재 source snapshot에서 vault path 1.305 WBERA를 BeraChef의 A/B 50% allocation으로 나눕니다.",
+        "6": "Vault A가 0.6525 WBERA를 notify받아 rewardRate와 rewardPerToken을 시간에 따라 갱신합니다.",
+        "7": "Alice의 100/1,000 지분과 경과 구간을 기준으로 고립한 한 블록 기여분 0.06525 WBERA를 계산합니다.",
+        "8": "Alice가 claim할 때 WBERA를 받고, 남은 legacy BGT allowance는 BERA redeem과 WBERA wrapping 호환 경로를 거칩니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Berachain docs commit ec5709d51747490c0a77b765ac026633d4ec438b",
+          "application": "PoL vNext의 BERA·WBERA·BeraChef·Reward Vault 역할과 2026-07-08 BGT deprecation 경계를 현재 설명에 반영했습니다."
+        },
+        {
+          "source": "BeaconKit v1.4.1 commit 0a91d178147821bb41b7e1de092b0a501236b4ee and Bera-Reth v1.4.4 commit aa9bc73ffd49305ce0953c22b38f2affcbdabbd4",
+          "application": "CometBFT proposal·Engine API payload·첫 inflation withdrawal과 이전 proposer를 쓰는 transaction 0 생성·검증 경로를 고정했습니다."
+        },
+        {
+          "source": "Berachain contracts snapshot 70e392fc83deec6a34bd11613f2a446eb6266588",
+          "application": "Distributor·BlockRewardController·BeraChef·RewardVault accounting을 줄별 한국어 주석에 연결하고, 배포 proxy bytecode 일치는 별도 검증 대상으로 남겼습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문, 현재 Berachain 공식 문서, BeaconKit v1.4.1, Bera-Reth v1.4.4와 contracts snapshot을 읽고 합의·protocol transaction·allocation·stream accounting의 상태 owner를 분리했습니다.",
+        "arithmetic": "1.305×0.5=0.6525 WBERA와 0.6525×100/1,000=0.06525 WBERA를 설명용 고립 구간에서 확인했으며 APR·처리량·실제 validator 수익은 측정하지 않았습니다.",
+        "source": "공식 source 9개를 CodeSidebar의 정확한 경로와 줄별 한국어 주석에 연결했습니다.",
+        "humanize": "H42에서 왜 Alice의 잔액이 늘지 않는지라는 질문 하나를 H43 transaction 0과 Reward Vault 시간 적립까지 아홉 장면으로 추적했습니다.",
+        "build": "Node heap 7GiB로 전체 TypeScript와 production build를 순차 통과했습니다. TypeScript 최대 RSS 6,080,872,448 bytes, build 최대 RSS 6,424,379,392 bytes, swap 0이었습니다.",
+        "browser390": "390×844에서 document overflow 0, 보이는 장면·조작 버튼 높이 49.5px, 수동 9번 선택 뒤 ArrowLeft 9→8, reduced-motion의 선택 상태 유지와 재생 비활성을 확인했습니다. JavaScript 비활성 경로에는 정적 아홉 장면·전체 본문·확인 질문·부모 지도 반환이 남고 console 오류·경고는 0건입니다.",
+        "browser1440": "1440×900에서 document overflow 0, 명시적 재생 전 9초 동안 첫 장면 유지, 재생 후 약 7.6초 간격의 1→2 전환, PoL source dialog의 경로·한국어 주석, console 오류·경고 0건을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "공개 배포 경로를 확인한 뒤 production-verified로 전환"
+      ],
+      "reviewDisposition": "rewrite-as-one-committed-block-to-next-block-pol-transaction-and-vault-accounting-trace"
     },
     {
       "route": "blockchain/bft-comparison",
@@ -4137,7 +4177,7 @@
     {
       "route": "blockchain/initia-evm",
       "title": "Initia MiniEVM: Ethereum transaction과 Cosmos state 경계",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/initia-evm.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/initia-evm.tsx",
@@ -4204,9 +4244,7 @@
         "browser390": "390×844에서 document overflow 0, 마지막 scene 8, ArrowLeft 8→7, reduced-motion의 8.2초 정지와 재생 비활성, CodeSidebar 주석을 확인했습니다. JavaScript 비활성 production preview에도 9개 장면과 sequence 8·balance 100/0 결론이 정적 읽기 순서로 남습니다.",
         "browser1440": "1440×900에서 document overflow 0, 5.2초 뒤에도 scene 0 유지, BaseApp 원문 dialog의 정확한 경로와 한국어 주석, console 오류와 경고 0건을 확인했습니다."
       },
-      "remaining": [
-        "공개 배포 경로를 확인한 뒤 production-verified로 전환"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-ethereum-envelope-to-cosmos-block-commit-trace"
     },
     {

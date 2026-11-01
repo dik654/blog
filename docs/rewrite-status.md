@@ -3,6 +3,25 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Initia MiniEVM 공개 검증 완료 (2026-11-01)
+
+- `blockchain/initia-evm`을 Alice가 sequence 7로 서명한 T7 한 건이 Ethereum RPC, Cosmos Ante, EVM snapshot, queued `MsgSend`와 block commit을 지나는 흐름으로 다시 썼습니다. 성공 경로와 Ante 뒤 실패 경로에서 sequence와 balance가 서로 다르게 남는 이유를 아홉 장면으로 구분했습니다.
+- MiniEVM v1.2.19 commit `27e60c548f3e2868f6e6b3cf6456fc9289ce7950`과 의존 Cosmos SDK v0.50.14-initia.3 commit `f62d8dfbcd45c64cbe36b77970e6ed90b9f42617`을 고정했습니다. BaseApp가 Ante cache를 message cache보다 먼저 block working state에 쓰므로, 뒤 실행이 실패해도 block commit 뒤 sequence 8과 balance 100/0이 남을 수 있다는 사실을 source로 바로잡았습니다.
+- Commit `6f5f13c7`의 GitHub Pages run `41266700649`가 전체 strict 감사, production build, 공개 1,007편 실브라우저 검사와 배포를 통과했습니다. 공개 1,440×900과 390×844에서 가로 넘침 0, 첫 장면 무자동 재생, 모바일 ArrowLeft 9→8과 49.5px 조작 버튼을 확인했습니다.
+- 공개 reduced-motion 경로에서 선택한 8번 장면이 유지되고 재생이 비활성화됩니다. JavaScript 비활성 공개 경로에는 정적 아홉 장면, 전체 본문, sequence 8·balance 90/10 성공과 sequence 8·balance 100/0 실패 결론, 부모 지도 반환이 남고 console 오류는 0건입니다.
+- 현재 상태는 `rewritten-production-verified`이며 남은 항목은 없습니다.
+
+### Berachain PoL 로컬 검증 완료 (2026-11-01)
+
+- `blockchain/berachain`을 검증자 V가 만든 H42와 Alice의 Vault A 지분 100/1,000을 따라가는 글로 다시 썼습니다. H42 합의, H43 transaction 0의 `distributeFor(V)`, BeraChef 배분, Reward Vault 시간 적립과 claim을 아홉 장면으로 분리했습니다.
+- 기존 글이 현재 구조처럼 설명하던 BGT boost·emission을 바로잡았습니다. 고정한 공식 문서 commit `ec5709d51747490c0a77b765ac026633d4ec438b`에서는 BGT가 2026-07-08에 deprecated되었고 새 Reward Vault emission token은 WBERA입니다. BGT는 잔여 allowance를 정리하는 호환 경로로만 남깁니다.
+- BeaconKit v1.4.1 commit `0a91d178147821bb41b7e1de092b0a501236b4ee`, Bera-Reth v1.4.4 commit `aa9bc73ffd49305ce0953c22b38f2affcbdabbd4`와 Berachain contracts snapshot `70e392fc83deec6a34bd11613f2a446eb6266588`을 고정했습니다. 이전 proposer를 쓰는 protocol transaction 생성·위치·hash 검증과 Distributor·BeraChef·RewardVault accounting을 실제 source와 대조했습니다.
+- 설명용 source snapshot에서 vault path `1.305 WBERA × 50% = 0.6525 WBERA`, Alice 지분 `0.6525 × 100/1,000 = 0.06525 WBERA`를 확인했습니다. 이 값은 처리량·APR·실제 validator 수익 측정값이나 영구 parameter가 아닙니다.
+- 1,440×900에서 문서 가로 넘침이 없고 명시적 재생 전 9초 동안 첫 장면이 유지됩니다. 재생 뒤에는 약 7.6초 간격으로 넘어가며, PoL source dialog의 정확한 경로·한국어 주석과 console 오류·경고 0건을 확인했습니다.
+- 390×844에서도 문서 폭과 scroll 폭이 390px이고 보이는 장면 탭과 조작 버튼 높이는 49.5px입니다. 9번 장면을 고른 뒤 ArrowLeft로 8번에 돌아왔고, reduced-motion에서는 선택 상태가 유지되며 재생이 비활성화됩니다.
+- JavaScript 비활성 경로에는 조작 버튼 없이 정적 아홉 장면, 전체 본문·확인 질문·부모 지도 반환이 순서대로 남고 console 오류·경고는 0건입니다. 정적 경로 생성은 public route 2,120개와 no-script 본문 389편을 만들었고 최대 RSS는 3,208,675,328 bytes, swap은 0이었습니다.
+- 전체 TypeScript와 production build를 Node heap 7GiB에서 순차 실행했습니다. 최대 RSS는 각각 6,080,872,448 bytes와 6,424,379,392 bytes이며 swap은 0입니다. 현재 상태는 `rewritten-local-verified`이고 공개 배포 검증은 남아 있습니다.
+
 ### CometBFT 전체 구조 로컬 검증 완료 (2026-10-31)
 
 - `blockchain/cometbft`를 높이 40의 node에 도착한 Alice→Bob 10 transaction 한 건으로 다시 썼습니다. RPC 수신, CheckTx, proposal, prevote, precommit, FinalizeBlock과 Commit h41을 여덟 장면에서 추적합니다.

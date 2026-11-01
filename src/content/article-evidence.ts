@@ -8213,9 +8213,12 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "blockchain/berachain": [
-    { kind: "공식 문서", label: "Berachain · Proof of Liquidity overview", href: "https://docs.berachain.com/general/proof-of-liquidity/overview", note: "2026-08-14 PoL actor·boost·allocation flow의 current docs이며 parameter·APR를 영구 고정하지 않음" },
-    { kind: "공식 문서", label: "Berachain · Reward Vaults", href: "https://docs.berachain.com/general/proof-of-liquidity/reward-vaults", note: "Vault eligibility·stake·reward accounting surface이며 principal·incentive value 보장은 아님" },
-    { kind: "공식 코드", label: "BeaconKit · commit 59c0fd16", href: "https://github.com/berachain/beacon-kit/tree/59c0fd169f024e2a0ca95b4d550012eab3e4fee9", note: "Pinned consensus/execution integration source이며 PoL economics의 safety theorem은 아님" },
+    { kind: "공식 문서", label: "Berachain Docs · PoL vNext overview · ec5709d5", href: "https://github.com/berachain/docs/blob/ec5709d51747490c0a77b765ac026633d4ec438b/general/proof-of-liquidity/overview.mdx", note: "BERA block production과 WBERA emission·BeraChef·Reward Vault의 현재 역할을 고정한 문서 스냅샷이며 APR·parameter를 영구 고정하지 않음" },
+    { kind: "공식 문서", label: "Berachain Docs · Reward Vaults · ec5709d5", href: "https://github.com/berachain/docs/blob/ec5709d51747490c0a77b765ac026633d4ec438b/general/proof-of-liquidity/reward-vaults.mdx", note: "Eligible receipt token stake와 WBERA reward stream을 설명하며 principal 안전이나 표시 수익률을 보장하지 않음" },
+    { kind: "공식 문서", label: "Berachain Docs · BGT deprecation · ec5709d5", href: "https://github.com/berachain/docs/blob/ec5709d51747490c0a77b765ac026633d4ec438b/general/tokens/bgt.mdx", note: "2026-07-08 BGT deprecation과 잔여 BGT claim 호환 경로를 현재 WBERA emission과 구분함" },
+    { kind: "공식 코드", label: "BeaconKit · v1.4.1 · 0a91d178", href: "https://github.com/berachain/beacon-kit/tree/0a91d178147821bb41b7e1de092b0a501236b4ee", note: "CometBFT proposal·Engine API payload·첫 inflation withdrawal의 공개 구현을 고정하며 Reward Vault 적립 완료를 뜻하지 않음" },
+    { kind: "공식 코드", label: "Bera-Reth · v1.4.4 · aa9bc73f", href: "https://github.com/berachain/bera-reth/tree/aa9bc73ffd49305ce0953c22b38f2affcbdabbd4", note: "이전 proposer를 참조하는 PoL transaction 생성과 transaction 0 검증 경로를 고정함" },
+    { kind: "공식 코드", label: "Berachain contracts · 70e392fc snapshot", href: "https://github.com/berachain/contracts/tree/70e392fc83deec6a34bd11613f2a446eb6266588", note: "Distributor·BlockRewardController·BeraChef·RewardVault accounting의 source snapshot이며 배포 proxy bytecode 일치 여부는 별도 검증 대상임" },
   ],
   "blockchain/crypto-theory": [
     { kind: "핵심 논문", label: "Goldwasser–Micali · Probabilistic Encryption", href: "https://doi.org/10.1016/0022-0000(84)90070-9", note: "Semantic computational security의 기반이며 임의 implementation·profile 안전 보장은 아님" },
@@ -10585,6 +10588,18 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "elections/electoral-systems": [
+    {
+      kind: "공식 핸드북",
+      label: "International IDEA · Electoral System Design: The New International IDEA Handbook",
+      href: "https://www.idea.int/sites/default/files/publications/electoral-system-design-the-new-international-idea-handbook.pdf",
+      note: "선거 공식과 선거구 크기를 별도 핵심 변수로 구분하고, 비례대표와 블록 투표에서 선거구 크기의 효과가 다를 수 있음을 확인한 공식 비교 자료",
+    },
+    {
+      kind: "공식 브리핑",
+      label: "EPRS · Understanding the d’Hondt method (PE 762.352, 2024)",
+      href: "https://www.europarl.europa.eu/RegData/etudes/BRIE/2024/762352/EPRS_BRI%282024%29762352_EN.pdf",
+      note: "D’Hondt의 1·2·3… 제수 절차와 최고평균 방식 분류, Sainte-Laguë보다 큰 명부에 유리한 일반적 경향을 확인한 자료",
+    },
     {
       kind: "보충 읽기",
       label:
