@@ -4,12 +4,14 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import CountryExplorer from "../world-systems/CountryExplorer";
 import { Link } from "react-router-dom";
+import HowToReadCountryViz from "./HowToReadCountryViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">나라의 별명보다 누가 벌고 누가 부담하는지 봅니다</h2>
+        <HowToReadCountryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             어느 나라에서 공장이 잘 돌아간다는 소식과 그곳 가계의 생활이 나아졌다는 소식은 같은 말이 아닙니다. 물건을 만들 때 밖에서 사 온 것이 많을 수도 있고 남은 돈이 일부

@@ -180,6 +180,7 @@ const noScriptArticleRoutes = new Set([
   "institutions/evidence-measurement-and-causality",
   "institutions/public-budget-and-taxes",
   "institutions/media-attention-and-public-belief",
+  "institutions/how-to-read-a-country",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

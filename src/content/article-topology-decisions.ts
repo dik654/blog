@@ -1689,7 +1689,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "의료비는 환자가 창구에서 낸 돈만이 아니라 미리 모은 공동 재원, 청구 심사, 의료기관 지급 규칙을 거쳐 움직입니다. 첫 그림은 2만 원과 8만 원이 합쳐지는 진료 한 건에서 청구 심사·비용 범위·재원 조달과 위험 풀과 구매·건별과 묶음 지급·국가별 적용 범위·결과 평가까지 일곱 장면으로 연결합니다.",
     "sharedGate": "첫 그림과 3·4·7·8·9·10절의 금액과 기능 경계가 일치해야 합니다. 환자 2만 원과 공동 재원 8만 원을 더하면 의료기관 총수입은 10만 원입니다. 관련 비용 7만 원과의 차이 3만 원은 비용 포함 범위를 확인하기 전 순이익이 아닙니다. 같은 진료 두 번을 건별로 지급하면 20만 원이지만 치료 과정 전체 묶음 지급을 설명용 10만 원으로 두면 진료 횟수만으로 총액이 늘지 않습니다. 이미 모은 보험료를 진료비 10만 원에 다시 더하지 않고 비용·대기·미충족 의료·건강 결과를 함께 봅니다."
   },
-  "institutions/how-to-read-a-country": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "국가의 생산·자금·생활·권력·정보를 같은 질문으로 추적하고, 통계의 지역 범위와 시점을 확인한 뒤 이야기를 검증합니다.", "sharedGate": "(가정) 수출 100·수입 중간재 60·외화 부채 30·정부 적자 5의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "institutions/how-to-read-a-country": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "국가의 생산·자금·생활·권력·정보를 같은 질문으로 추적하려면 흐름과 잔액, 국가 평균과 실제 생활, 통계의 범위와 현장 조건을 나눠야 합니다. 첫 그림은 A국의 국경 안팎 흐름, 수출 100−부품 60=잔액 40, 일곱 장부, 잔액의 분배, 외화 부채의 환율 환산, 자료 비교 조건, 국가에서 현장까지의 검증을 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 금액·시점·범위가 일치해야 합니다. 수출 100에서 외국산 부품 60을 빼면 생산 사슬 안쪽 잔액은 40이지만 국가 전체 GDP·순이익·가계 소득이 아닙니다. 외화 부채 30은 기말 잔액, 정부 적자 5는 기간 흐름이므로 합치지 않습니다. 환율이 1에서 1.2로 바뀌면 외화 부채 환산액은 30에서 36으로 6 증가하지만 수출·부품과 보유 주체를 확인하기 전 순효과를 확정하지 않습니다."
+  },
   "infrastructure/electricity-grid-and-power": {
     "action": "keep",
     "status": "reviewed",
@@ -4323,7 +4329,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "business/shop-unit-economics": "8c31975990c3a73b",
   "business/supply-chain-bargaining": "64d8d1b4a0daaf0d",
   "institutions/healthcare-payment-systems": "67673a248711934f",
-  "institutions/how-to-read-a-country": "436b348e745e7179",
+  "institutions/how-to-read-a-country": "29ef635d1a35f490",
   "institutions/insurance-risk-pooling": "7595dcb32ba394af",
   "macro/global-capital-and-policy": "c169ae992e741ba4",
   "macro/narratives-and-market-regimes": "9b0ab093e34caa58",
