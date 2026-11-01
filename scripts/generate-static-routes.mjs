@@ -169,6 +169,7 @@ const noScriptArticleRoutes = new Set([
   "business/shop-daily-operations",
   "business/franchise-incentives",
   "business/supply-chain-bargaining",
+  "property/commercial-lease-and-rent",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

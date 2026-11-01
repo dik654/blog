@@ -1587,9 +1587,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "property/commercial-lease-and-rent": {
     "action": "keep",
     "status": "reviewed",
-    "rationale": "상가 임대차의 경제적 본질은 임차인이 일정 기간 공간을 쓰는 대신 고정 현금흐름과 원상복구 의무를 부담하고, 임대인은 공실·수선·보증금 반환 위험을 지는 교환입니다.",
-    "reviewedAt": "2026-10-04",
-    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다."
+    "rationale": "상가 임대차는 임차인이 일정 기간 공간을 쓰는 대신 현금흐름과 종료 의무를 부담하고, 임대인은 공간을 인도한 뒤 보증금을 정산하는 교환입니다. 첫 그림은 보증금 3천만 원, 월세 200만 원, 36개월, 공간 상태 기록, 종료 반환과 제3자 권리를 일곱 장면으로 분리합니다.",
+    "reviewedAt": "2026-11-01",
+    "sharedGate": "첫 그림과 3·4·7·8절의 금액과 권리 경계가 일치해야 합니다. 지급 현금 1억200만 원에서 공제 없이 보증금 3천만 원을 반환받으면 순지급액은 월세 7천200만 원입니다. 대항력과 우선변제·실제 회수 가능액은 같은 결론으로 합치지 않습니다."
   },
   "property/shop-transfer-and-goodwill": {
     "action": "keep",
