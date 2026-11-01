@@ -8010,9 +8010,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Avalanche Builder Hub · Consensus Protocols", href: "https://build.avax.network/docs/nodes/architecture/consensus", note: "현재 Primary Network의 linear Snowman 경로와 Cortina 뒤 역사적 DAG engine 경계를 설명" },
   ],
   "blockchain/gossipbft": [
-    { kind: "공식 규격", label: "FIP-0086 GossiPBFT · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0086.md", note: "Weighted phases·best-effort broadcast·partial-synchrony properties의 Final 규격이며 Gossipsub exactly-once 보장은 아님" },
-    { kind: "공식 코드", label: "go-f3 v0.8.14 gpbft.go", href: "https://github.com/filecoin-project/go-f3/blob/v0.8.14/gpbft/gpbft.go", note: "QUALITY·CONVERGE·PREPARE·COMMIT·DECIDE와 timeout state의 pinned 구현이며 EC validity는 별도" },
-    { kind: "공식 코드", label: "go-f3 v0.8.14 quorum validation", href: "https://github.com/filecoin-project/go-f3/tree/v0.8.14/gpbft", note: "Historical weighted quorum·message validation의 pinned source이며 certificate catch-up 전체는 아님" },
+    { kind: "공식 규격", label: "FIP-0086 GossiPBFT · revision 1bec05f", href: "https://github.com/filecoin-project/FIPs/blob/1bec05ffc8cfdf03bc2ba3c404cd3d1c3170caf7/FIPS/fip-0086.md", note: "ceil(2W/3) strong quorum, round별 phase 분기, justification 추론·rebroadcast를 확인한 규격이며 Gossipsub exactly-once 보장은 아님" },
+    { kind: "공식 코드", label: "go-f3 v0.8.15 validator.go · a1f286d", href: "https://github.com/filecoin-project/go-f3/blob/v0.8.15/gpbft/validator.go", note: "Sender power·signature·phase와 justification phase·round·value 검증의 pinned 구현이며 network delivery는 별도" },
+    { kind: "공식 코드", label: "go-f3 v0.8.15 gpbft.go · a1f286d", href: "https://github.com/filecoin-project/go-f3/blob/v0.8.15/gpbft/gpbft.go", note: "Strong quorum·bottom recovery·DECIDE quorum·독립 rebroadcast의 pinned 구현이며 EC validity와 certificate catch-up은 별도" },
   ],
   "blockchain/narwhal-deep": [
     { kind: "핵심 논문", label: "Narwhal and Tusk v4 · arXiv 2105.11827", href: "https://arxiv.org/abs/2105.11827v4", note: "Worker/primary 분리와 availability-certificate DAG의 원문이며 논문 TPS·latency를 current Sui 값으로 일반화하지 않음" },

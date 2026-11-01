@@ -9480,10 +9480,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "EC semantics는 Filecoin spec, exact win/weight 산술은 Lotus v1.36.2 source에 귀속한다." }, { kind: "project-measurement", rule: "Invalid-heavy branch·incompatible tipset·reorg에서 validation receipt와 head transition을 재생한다." }, { kind: "project-claim", rule: "EC head를 irreversible finality나 F3 certificate로 표현하지 않는다." }],
   },
   "gossipbft": {
-    title: "GPBFT weighted phases·recovery 글이 소유하는 범위",
-    owns: ["Historical-power strict strong quorum과 phase justification transition", "Base·bottom recovery와 partial-synchrony timeout·rebroadcast"],
+    title: "GPBFT weighted quorum·phase·recovery 글이 소유하는 범위",
+    owns: ["Historical-power ceil(2W/3) strong quorum과 round별 phase justification transition", "Bottom recovery·DECIDE quorum과 partial-synchrony rebroadcast"],
     reuses: [{ label: "Gossipsub dissemination", href: "/cs/p2p/libp2p-gossipsub" }, { label: "BFT quorum intersection", href: "/cs/blockchain/bft-theory" }, { label: "F3 integration", href: "/cs/blockchain/filecoin-f3" }],
-    evidence: [{ kind: "primary-source", rule: "Protocol properties는 FIP-0086, local phase implementation은 go-f3 v0.8.14 source에 귀속한다." }, { kind: "project-measurement", rule: "Wrong domain·80/81 power·partition/GST trace에서 safety와 liveness를 별도 판정한다." }, { kind: "project-claim", rule: "Gossipsub publish·message receipt를 GPBFT decision certificate로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Protocol properties는 FIP-0086 revision 1bec05f, local validation·phase implementation은 go-f3 v0.8.15 tag a1f286d에 귀속한다." }, { kind: "project-claim", rule: "W=120에서 79는 거절하고 80부터 통과하는 계산과 P=65·Q=55 recovery trace를 설명용 fixture로 표시한다." }, { kind: "project-claim", rule: "Gossipsub publish·message receipt·DECIDE 한 장을 GPBFT decision certificate로 확대하지 않는다." }],
   },
   "filecoin-f3": {
     title: "Filecoin F3 EC integration·certificate sync 글이 소유하는 범위",

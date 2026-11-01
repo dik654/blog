@@ -4881,7 +4881,7 @@
     {
       "route": "blockchain/gossipbft",
       "publicPath": "cs/blockchain/gossipbft",
-      "title": "GossiPBFT: weighted quorum에서 decision까지",
+      "title": "GossiPBFT 합의",
       "catalogIndex": 485,
       "status": "pending",
       "provenance": "assignment:chains",
