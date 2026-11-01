@@ -341,8 +341,8 @@ export const derivativesAmlData: DerivativeDeepArticleData = {
     { term: "거래·자금 연결", description: "고객과 실소유자, 은행 입출금, 주문·포지션·손익을 같은 사건으로 묶는 일입니다.", example: "세 시스템의 1,000·20·980 기록을 한 시간줄로 합칩니다.", boundary: "필요한 사람에게만 접근 권한을 줍니다." },
   ] },
   sources: [
-    { source: "FATF · Securities sector risk-based approach", excerpt: "Options, futures, swaps, forward rate agreements and any other derivative", application: "파생상품과 국경 간 고속 거래의 취약성을 고객·자금·거래 연결에 반영합니다.", citation: "FATF, Risk-Based Approach Guidance for the Securities Sector", href: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Rba-securities-sector.html", note: "증권 부문의 상품 범위와 위험기반 AML 통제를 설명하는 국제 기준 지침(2018년 10월)입니다. FATF 사이트는 2026-10-09 자동 조회 403이라, 불가리아 금융감독위원회가 게시한 같은 지침 사본으로 상품 목록 d항 문구를 2차 확인했습니다." },
-    { source: "금융정보분석원 · 의심거래보고", excerpt: "금융거래의 상대방이 자금세탁행위나 공중협박자금조달행위를 하고 있다고 의심되는 합당한 근거가 있는 경우", application: "경보와 담당자의 STR 판단을 나누고 의심 근거와 비밀유지 기록을 남깁니다.", citation: "KoFIU, 의심거래보고제도", href: "https://www.kofiu.go.kr/kor/policy/amls03.do", note: "한국의 STR 판단·보고 흐름을 설명하는 금융정보분석원 공식 자료입니다." },
+    { source: "FATF · Securities sector risk-based approach", excerpt: "Options, futures, swaps, forward rate agreements and any other derivative", application: "파생상품과 국경 간 고속 거래의 취약성을 고객·자금·거래 연결에 반영합니다.", citation: "FATF, Risk-Based Approach Guidance for the Securities Sector", href: "https://www.fatf-gafi.org/en/publications/fatfrecommendations/documents/rba-securities-sector.html", note: "증권 부문의 상품 범위와 위험기반 AML 통제를 설명하는 2018년 10월 FATF 지침입니다. 현재 공식 페이지는 이 문서가 2025년 Recommendation 1 개정을 반영하지 않는다고 명시하므로 최신 FATF 기준과 함께 읽어야 합니다(2026-11-02 확인)." },
+    { source: "금융정보분석원 · 의심거래보고", excerpt: "금융거래의 상대방이 자금세탁행위나 공중협박자금조달행위를 하고 있다고 의심되는 합당한 근거가 있는 경우", application: "경보와 담당자의 STR 판단을 나누고 의심 근거와 비밀유지 기록을 남깁니다.", citation: "KoFIU, 의심거래보고제도", href: "https://www.kofiu.go.kr/kor/policy/amls03.do", note: "영업점의 내부 보고, 보고책임자의 STR 작성·제출, KoFIU의 종합 분석과 법집행기관 제공을 단계별로 설명하는 현재 공식 자료입니다(2026-11-02 확인)." },
   ],
   review: [
     "예상 100과 입금 1,000의 차이가 왜 자동 STR이 아닌지 설명하세요. (답: 3·8절)",

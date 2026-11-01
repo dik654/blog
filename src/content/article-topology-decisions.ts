@@ -3327,9 +3327,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 AML은 고객·실소유자와 예상 거래를 확인한 뒤 입출금·주문·손익을 한 사건으로 연결하고 경보·조사·STR 결정을 서로 다른 책임 단계로 남겨야 합니다.",
-    "sharedGate": "100·1,000·20·980의 자금 경로를 잇고 큰 금액 경보, 조사 사건, 합리적 의심과 STR 제출을 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "예상 월 거래 100인 법인 계좌에 들어온 1,000이 상쇄 파생상품 거래의 비용·손실 20을 거쳐 해외 출금 980으로 이동하는 사례에서 고객확인, 시스템 간 기록 연결, 경보·분석·STR·KoFIU·법집행기관의 책임까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "1,000−100=900과 1,000−20=980을 검산하고 큰 금액·해외 이동·거래 손실을 자동 STR이나 범죄 판정으로 읽지 않으며 경보·분석·보고책임자 판단·STR·KoFIU 분석·법집행기관 조사를 구분합니다."
   },
   "markets/derivatives-complaints-dispute-resolution-and-evidence": {
     "action": "keep",
@@ -4658,7 +4658,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/hedge-accounting-designation-effectiveness-and-rebalancing":"81679b85173219a6",
 "markets/derivatives-tax-character-timing-and-jurisdiction":"db4ab7751e9f5f50",
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"409e7e4b7e967bcb",
-"markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"5311cbf1747b73cf",
+"markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"f9d6deb10fa6f125",
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"8ba90a064c6d314f",
 "markets/uncleared-initial-margin-simm-and-model-governance":"59305529180ca54c",
 "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"85a2a973129c6f80",
