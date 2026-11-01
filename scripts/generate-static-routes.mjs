@@ -174,6 +174,7 @@ const noScriptArticleRoutes = new Set([
   "property/shop-closure-and-restoration",
   "property/land-development-residual",
   "institutions/insurance-risk-pooling",
+  "institutions/healthcare-payment-systems",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
