@@ -7,7 +7,7 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 525,
     "customVisuals": 911,
-    "animatedMechanisms": 576,
+    "animatedMechanisms": 577,
     "architectureWithoutAnimation": 66,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 244,
@@ -7545,11 +7545,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/lotus-miner",
