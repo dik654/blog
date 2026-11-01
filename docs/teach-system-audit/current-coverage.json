@@ -4911,7 +4911,7 @@
     {
       "route": "blockchain/expected-consensus",
       "publicPath": "cs/blockchain/expected-consensus",
-      "title": "Expected Consensus: leader에서 weighted head까지",
+      "title": "Expected Consensus",
       "catalogIndex": 488,
       "status": "pending",
       "provenance": "assignment:chains",

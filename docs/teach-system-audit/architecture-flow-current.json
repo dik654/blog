@@ -7,10 +7,10 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 525,
     "customVisuals": 911,
-    "animatedMechanisms": 575,
-    "architectureWithoutAnimation": 67,
+    "animatedMechanisms": 576,
+    "architectureWithoutAnimation": 66,
     "recursiveLocators": 386,
-    "codeEvidenceLinked": 243,
+    "codeEvidenceLinked": 244,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -6962,18 +6962,18 @@
     {
       "route": "blockchain/expected-consensus",
       "publicPath": "cs/blockchain/expected-consensus",
-      "title": "Expected Consensus: leader에서 weighted head까지",
+      "title": "Expected Consensus",
       "sourcePath": "src/pages/articles/filecoin/expected-consensus.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/filecoin-f3",
