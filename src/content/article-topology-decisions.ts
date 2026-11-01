@@ -3523,9 +3523,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/commodity-grades-location-basis-and-physical-delivery": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "실물인도 원자재 선물은 기준가격에 품질과 인도 장소의 계약상 차등을 적용하고 선적증서·공식 등급·무게·출고 절차를 거쳐 결제되며, 지역 현물 베이시스와 거래소 인도 가산을 구분해야 합니다.",
-    "sharedGate": "5달러−0.04달러+0.0625달러=5.0225달러를 구하고 5,000부셸에서 기준가격 대비 112.50달러 차이를 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "5,000부셸·5달러 계약에서 3등급 두 조건의 4센트 할인, Ottawa–Chillicothe 6.25센트 가산, 5.0225달러 송장과 112.50달러 조정, 현물 베이시스 −30센트, 승인 시설의 선적증서, 청산 인도, 보유·재인도·실물 출고 선택까지 물건·권리증서·돈의 상태를 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "5−0.04+0.0625=5.0225와 (5.0225−5)×5,000=112.50, 4.70−5=−0.30을 검산하고 거래소 품질·장소 차등, 지역 현물 베이시스, 증서 이전, 실제 출고를 구분합니다."
   },
   "markets/derivatives-investigation-audit-trail-and-legal-hold": {
     "action": "keep",
@@ -4674,7 +4674,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-sales-records-access-retention-and-deletion":"8d2d990bb78147db",
 "markets/equity-dispersion-implied-correlation-and-variance":"7211e5f64264551b",
 "markets/credit-tranche-base-correlation-and-default-auction":"8e55428f11e7a728",
-"markets/commodity-grades-location-basis-and-physical-delivery":"844b02bac84bad7e",
+"markets/commodity-grades-location-basis-and-physical-delivery":"db4f1174a973f63c",
 "markets/derivatives-investigation-audit-trail-and-legal-hold":"1dca848f5cd377c4",
 "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link":"581239a972d966b2",
 "markets/fractional-investment-trust-beneficiary-certificates":"fa28e36f96c20689",

@@ -240,6 +240,7 @@ const noScriptArticleRoutes = new Set([
   "markets/krx-derivatives-contract-orders-and-daily-settlement",
   "markets/equity-dispersion-implied-correlation-and-variance",
   "markets/credit-tranche-base-correlation-and-default-auction",
+  "markets/commodity-grades-location-basis-and-physical-delivery",
   "markets/portfolio-compression-risk-tolerances-and-records",
   "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
   "markets/ccp-default-management-hedging-auction-and-porting",
