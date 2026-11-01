@@ -226,6 +226,7 @@ const noScriptArticleRoutes = new Set([
   "markets/otc-clearing-reporting-and-bilateral-risk-mitigation",
   "markets/cross-border-netting-enforceability-and-regulatory-recognition",
   "markets/bank-irrbb-alm-and-derivatives-hedging",
+  "markets/hedge-accounting-designation-effectiveness-and-rebalancing",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",

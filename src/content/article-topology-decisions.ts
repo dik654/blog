@@ -3306,9 +3306,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/hedge-accounting-designation-effectiveness-and-rebalancing": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "헤지회계는 경제적 헤지를 자동 반영하는 장치가 아니라 시작 시 지정·문서화하고 효과를 계속 평가하며 위험관리 목적이 유지될 때 비율을 재조정하는 절차입니다.",
-    "sharedGate": "100억 차입·80억 스왑의 80% 지정과 차입 50억 뒤 160% 불일치를 계산하고 경제적 헤지와 회계 표시를 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "차입 100억과 스왑 80억의 80% 지정에서 금리 상승의 경제적 상쇄, 시작일 문서화, 효과 요건, 보고일 평가, 차입 감소 뒤 160% 불일치와 재조정·중단까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "80÷100=80%, 100억×1%=1억, 80억×1%=0.8억과 80÷50=160%를 검산하고 경제적 위험 감소와 회계상 지정, 목적 유지 시 재조정과 목적 종료·요건 실패 시 장래 중단을 구분합니다."
   },
   "markets/derivatives-tax-character-timing-and-jurisdiction": {
     "action": "keep",
@@ -4655,7 +4655,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"9d050c6730161317",
 "markets/short-rate-hjm-and-interest-rate-model-risk":"a96f30b96476b3df",
 "markets/bank-irrbb-alm-and-derivatives-hedging":"4550d26a00a1bc38",
-"markets/hedge-accounting-designation-effectiveness-and-rebalancing":"6471628fddd31e4f",
+"markets/hedge-accounting-designation-effectiveness-and-rebalancing":"81679b85173219a6",
 "markets/derivatives-tax-character-timing-and-jurisdiction":"cd185ef9970fbba8",
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"6a1d9b32f3876f0b",
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"5311cbf1747b73cf",
