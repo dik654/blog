@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 774,
+    "dedicatedVisuals": 775,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 628,
+    "animatedMechanisms": 629,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14470,14 +14470,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/yield-curve-bootstrapping-multicurve-and-key-rate-hedging.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "mind-and-language/behavior-meaning-and-machine-understanding",

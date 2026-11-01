@@ -3194,9 +3194,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "금리곡선은 짧은 만기 할인계수부터 부트스트랩해 시장 지급을 재현하고, 담보 할인과 기준금리 예상 곡선을 분리한 뒤 핵심만기 민감도로 비평행 위험을 헤지합니다.",
-    "sharedGate": "DF₂=0.9067, 2년 무이표 약 5.02%, 1년 뒤 선도 약 5.88%를 검산하고 스왑금리 5%와 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "1년 가격 96에서 DF₁=0.96을 읽고 2년 지급의 첫 쿠폰 현재가치 4.8을 차감해 DF₂=0.9067을 푼 뒤, 세 금리·다중곡선·핵심만기 헤지·재가격 경계를 8장면으로 연결합니다.",
+    "sharedGate": "DF₁=0.96, 100−5×0.96=95.2, DF₂=95.2÷105≈0.9067, 2년 무이표 약 5.02%, 1년 뒤 선도 약 5.88%를 검산하고 2년 스왑금리 5%와 구분합니다."
   },
   "markets/xva-funding-margin-and-wrong-way-risk": {
     "action": "keep",
@@ -4645,7 +4645,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/minimum-variance-hedge-ratio-and-basis-risk":"86f50c4f552be7a6",
 "markets/binomial-black-scholes-and-early-exercise":"6429e7751ab87616",
 "markets/implied-volatility-surface-skew-and-smile":"9058abfbe6e2f523",
-"markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"72599372e1d4728e",
+"markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"04a01d32f906752d",
 "markets/xva-funding-margin-and-wrong-way-risk":"f00134405cf50c68",
 "markets/market-risk-backtesting-pnl-attribution-and-model-governance":"8c97dbc86b89fe31",
 "markets/black-scholes-pde-finite-difference-and-numerical-error":"eedd210ad42edda2",
