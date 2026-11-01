@@ -3095,10 +3095,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "markets/clearing-margin-and-default-waterfall": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "중앙청산은 계약 상대와 위험 관리 경로를 바꾸고, 개시증거금은 잠재 미래 손실을, 변동증거금은 이미 생긴 시가 손익을 다루며, 회원 부도 뒤 손실은 규정된 재원 순서로 분담됩니다.",
-    "sharedGate": "잔액 12→4→추가 납부 8을 계산하고 계약가치·변동증거금·개시증거금·명목금액을 서로 다른 장부로 유지합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "개시증거금 12를 맡긴 선물 계좌에서 첫날 손실 8이 빠지고 추가 납부와 둘째 날 이익이 이어지는 과정을 따라가며, 고객·청산회원·중앙청산소의 장부와 회원 부도 처리, 손실 분담 순서까지 연결하므로 한 글에 유지합니다.",
+    "sharedGate": "8장면 지도와 본문에서 개시증거금 12, 유지 기준 9, 첫날 손실 8, 잔액 4, 추가 납부 8, 둘째 날 이익 5를 같은 조건으로 유지하고 명목금액·계약 손익·변동증거금·개시증거금과 회원 부도 재원을 서로 다른 장부로 구분합니다."
   },
   "markets/option-replication-and-put-call-parity": {
     "action": "keep",
@@ -4630,7 +4630,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "philosophy-topics/identity-through-change":"7db4a7cda9fb9d90",
 "philosophy-topics/meaning-in-life-attraction-worth-and-commitment":"ac3ef0397b349366",
 "philosophy-topics/reference-context-and-speech-acts":"f887d8ccc192939f",
-"markets/clearing-margin-and-default-waterfall":"ba750dae36da9afc",
+"markets/clearing-margin-and-default-waterfall":"a2cd35c59b8aff7e",
 "markets/derivatives-suitability-disclosure-and-sales-practice":"28aa4961a49f583f",
 "markets/interest-rate-derivatives-from-fra-to-swaptions":"8fb4b59da32013fc",
 "markets/no-arbitrage-cost-of-carry-and-basis":"8a85e9f19b7b1b6f",
