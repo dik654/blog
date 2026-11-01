@@ -272,8 +272,8 @@ export const marketAbuseData: DerivativeDeepArticleData = {
     { term: "파생상품 시장감시", description: "주문·거래·포지션과 현물 자료에서 조작과 한도 위반 징후를 찾는 운영입니다.", example: "큰 주문의 생성부터 취소까지와 관련 계좌 이익을 재구성합니다.", boundary: "경보는 위반 확정이 아닙니다." },
   ] },
   sources: [
-    { source: "CFTC · Speculative Position Limits", excerpt: "25 core referenced futures contracts", application: "관련 계좌 600계약의 합산과 선의의 헤지 예외를 서로 다른 판단으로 나눕니다.", citation: "CFTC, Speculative Limits", href: "https://www.cftc.gov/IndustryOversight/MarketSurveillance/SpeculativeLimits/index.htm", note: "미국 연방 포지션 한도와 핵심 계약·연결 계약·예외를 설명하는 공식 페이지입니다." },
-    { source: "CFTC · Market Surveillance Program", excerpt: "daily market surveillance", application: "주문과 포지션을 현물인도·현금결제 계약에 맞게 분석하는 과정을 설명합니다.", citation: "CFTC Market Surveillance Program", href: "https://www.cftc.gov/IndustryOversight/MarketSurveillance/CFTCMarketSurveillanceProgram/index.htm", note: "대규모 거래자와 거래소 자료를 사용하는 시장감시 업무의 공식 설명입니다." },
+    { source: "CFTC · Position Limits for Derivatives", excerpt: "25 physically-settled core referenced futures contracts", application: "관련 계좌 600계약의 합산과 선의의 헤지 예외를 서로 다른 판단으로 나눕니다.", citation: "CFTC, Position Limits for Derivatives", href: "https://www.cftc.gov/IndustryOversight/MarketSurveillance/SpeculativeLimits/index.htm", note: "미국 연방 포지션 한도의 계약 범위·예외·계좌 합산을 설명하는 공식 페이지입니다. 현물월 한도가 추정 인도 가능 공급량의 25% 이하라는 기준도 이 자료에서 확인했습니다(2026-11-02)." },
+    { source: "CFTC · Market Surveillance Program", excerpt: "daily activities of large traders", application: "주문과 포지션을 현물인도·현금결제 계약에 맞게 분석하는 과정을 설명합니다.", citation: "CFTC Market Surveillance Program", href: "https://www.cftc.gov/IndustryOversight/MarketSurveillance/CFTCMarketSurveillanceProgram/index.htm", note: "대규모 거래자, 거래소 일별자료와 현물 공급·가격 자료를 사용하는 시장감시 업무의 공식 설명입니다(2026-11-02 확인)." },
   ],
   review: [
     "관련 계좌 400계약과 200계약이 한도 500을 넘는 계산을 설명하세요. (답: 1·3절)",

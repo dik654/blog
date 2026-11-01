@@ -3320,9 +3320,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-market-abuse-position-limits-and-surveillance": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 시장질서는 관련 계좌의 포지션을 합산하고 선의의 헤지 예외를 문서로 확인하며 주문·포지션·현물 자료를 조사해 경보와 위반 판정을 구분해야 합니다.",
-    "sharedGate": "400+200=600과 한도 500의 초과 100을 계산하고 헤지 예외, 감시 경보와 법적 위반을 각각 구분합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "계좌 A 400과 B 200을 실소유자 기준으로 합산해 가정 한도 500을 100 초과하는 계산에서 시작해 선의의 헤지 예외, 주문 생애, 일별 감시자료, 경보·조사·판정 경계까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "400+200=600과 600−500=100을 검산하고 실물 헤지 200을 자동 차감하지 않으며 계좌 합산·예외 승인·감시 경보·법적 위반 판정의 상태 소유자를 구분합니다."
   },
   "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring": {
     "action": "keep",
@@ -4657,7 +4657,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/bank-irrbb-alm-and-derivatives-hedging":"4550d26a00a1bc38",
 "markets/hedge-accounting-designation-effectiveness-and-rebalancing":"81679b85173219a6",
 "markets/derivatives-tax-character-timing-and-jurisdiction":"db4ab7751e9f5f50",
-"markets/derivatives-market-abuse-position-limits-and-surveillance":"6a1d9b32f3876f0b",
+"markets/derivatives-market-abuse-position-limits-and-surveillance":"409e7e4b7e967bcb",
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"5311cbf1747b73cf",
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"8ba90a064c6d314f",
 "markets/uncleared-initial-margin-simm-and-model-governance":"59305529180ca54c",

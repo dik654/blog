@@ -228,6 +228,7 @@ const noScriptArticleRoutes = new Set([
   "markets/bank-irrbb-alm-and-derivatives-hedging",
   "markets/hedge-accounting-designation-effectiveness-and-rebalancing",
   "markets/derivatives-tax-character-timing-and-jurisdiction",
+  "markets/derivatives-market-abuse-position-limits-and-surveillance",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",
