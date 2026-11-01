@@ -2,6 +2,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import PublicBudgetTaxesViz from "./PublicBudgetTaxesViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function PublicBudgetAndTaxesArticle() {
@@ -9,6 +10,7 @@ export default function PublicBudgetAndTaxesArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 국가가 올해 쓰는 돈과 미래의 약속을 함께 읽습니다</h2>
+        <PublicBudgetTaxesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">정부 지출이 늘면 누가 혜택을 받고 누가 비용을 내는지 살펴야 합니다. 오늘 걷은 돈과 빌린 돈은 당장 같은 지급에 쓸 수 있지만 앞으로 남기는 의무가 다릅니다.</p>
           <p className="leading-8">이 글은 한 해의 현금 흐름을 맞춘 뒤 서비스 비용, 새 자산, 빚의 변화를 나눕니다. 이 구분을 해야 나라의 적자 숫자를 비교하거나 어떤 사업에 돈을 더 쓸지 판단할 수 있습니다.</p>

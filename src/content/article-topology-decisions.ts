@@ -1734,10 +1734,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "institutions/public-budget-and-taxes": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "공공 예산은 세입·차입으로 모은 돈을 서비스와 이전지출, 투자, 이자에 배분한 약속이며 부담자와 수혜자가 다른 시점과 집단에 걸칩니다.",
-    "sharedGate": "세금 80, 새로 빌린 돈 20이 들어온다고 놓습니다(가정). 의료 40, 교육 30, 도로 건설 20, 이자 10을 지급하면 총지출은 100입니다. 기존 빚의 원금 상환과 다른 수입은 없다고 단순화합니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "공공 예산은 세입과 차입으로 모은 현금, 당기 서비스 비용, 자산 취득, 금융 조달, 부채 잔액과 사업 결과를 나눠야 같은 지출을 다른 장부에서 정확히 읽을 수 있습니다. 첫 그림은 조달과 지급의 큰 흐름에서 현금 100, 비용 80·자산 20, 순운영수지 0·순차입 20·부채 220, 승인·지급 시점, 정부 범위, 통화·만기 위험까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 금액·분류·시점이 일치해야 합니다. 세금 80과 새 차입 20으로 조달한 100을 의료 40·교육 30·도로 20·이자 10에 지급하며, 비용 80과 비금융자산 취득 20을 구분합니다. 순운영수지는 80−80=0, 순융자·순차입은 0−20=−20이고 기말 부채는 200+20=220입니다. 통합재정수지 −10과 사회보장성기금 +40의 가정에서는 관리재정수지가 −50이지만 특정 국가의 실제 값으로 읽지 않습니다."
   },
   "institutions/education-skills-and-signals": {
     "action": "keep",
@@ -4307,7 +4307,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/crypto-theory": "cf4f2e2ae2a5e979",
   "blockchain/evm-fundamentals": "48c9ad132b5994f1",
   "crypto/discrete-log": "3a45605b7fb5946c",
-  "institutions/public-budget-and-taxes": "d20475b0f1195c69",
+  "institutions/public-budget-and-taxes": "f1e686c97f11283a",
   "institutions/media-attention-and-public-belief": "6bdcaf0879fe12b7",
   "institutions/education-skills-and-signals": "6a6d17faed7d55b1",
   "infrastructure/water-utility-and-tariffs": "574f8404067226e8",
