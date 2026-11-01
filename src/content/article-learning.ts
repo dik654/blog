@@ -66882,12 +66882,250 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "blockchain/vdf": {
-    entryLevel:true, entryNote:"반복 제곱부터 시작해 delay와 verification을 분리합니다.", coreIdea:"VDF는 T회의 sequential squaring으로 y를 만들고 Wesolowski quotient proof로 verifier가 훨씬 적은 work로 결과를 확인하게 합니다.", assumedKnowledge:[],
-    introducedHere:[{id:"vdf-sequential-evaluation-fast-verification",role:"Delay·uniqueness·verification 경계를 정합니다."},{id:"wesolowski-quotient-proof",role:"Quotient/remainder verification을 설명합니다."},{id:"vdf-parameter-timing-release-gate",role:"Security parameter와 wall time을 검증합니다."}],
-    conceptExplanations:[{id:"vdf-sequential-evaluation-fast-verification",sectionId:"contract",intuition:"Evaluator는 T번 앞 결과를 다음 입력으로 쓰지만 verifier는 proof로 건너뜁니다.",workedExample:"x=3 mod17,T=4이면 3²=9,9²=13,13²=16,16²=1입니다.",boundary:"작은 known-order group은 교육용이며 secure VDF가 아닙니다.",counterexample:"Group order를 알면 exponent를 줄여 delay를 건너뛸 수 있습니다."},{id:"wesolowski-quotient-proof",sectionId:"wesolowski",intuition:"2^T를 challenge prime l로 나눈 quotient를 group exponent에 옮깁니다.",workedExample:"T=4,l=5이면 16=3·5+1, pi=x³이고 verifier는 y=pi⁵x를 검사합니다.",boundary:"Challenge는 x,y,T,domain 뒤 hash-to-prime으로 정합니다.",proofIdea:"2^T=q l+r이므로 x^(2^T)=(x^q)^l x^r입니다.",counterexample:"l을 prover가 먼저 고르면 transcript soundness 전제가 깨집니다."},{id:"vdf-parameter-timing-release-gate",sectionId:"release",intuition:"T는 seconds가 아니라 sequential operations입니다.",workedExample:"Target CPU의 p50/p99 evaluation과 verify/proof bytes를 separate 측정합니다.",boundary:"Hardware advance와 implementation changes에 따라 wall time을 재보정합니다."}],
-    conceptStages:[{label:"00 group",relation:"Canonical input과 group assumption을 고정합니다.",concepts:["hash-canonical-bit-byte-input","cyclic-subgroup-dlp"]},{label:"01 delay",relation:"Sequential evaluation contract를 정의합니다.",concepts:["vdf-sequential-evaluation-fast-verification"]},{label:"02 proof",relation:"Quotient proof로 빠르게 검증합니다.",concepts:["wesolowski-quotient-proof"]},{label:"03 release",relation:"Timing과 failures를 검증합니다.",concepts:["vdf-parameter-timing-release-gate"]}],
-    exercises:[{level:"basic",question:"x=3 mod17,T=4 반복 제곱을 계산하세요.",answerChecklist:["9","13","16","1","four sequential steps"],requiredConcepts:["vdf-sequential-evaluation-fast-verification"],sectionId:"contract"},{level:"basic",question:"T와 wall-clock seconds를 구분하세요.",answerChecklist:["operation count","hardware dependent","benchmark","p99"],requiredConcepts:["vdf-parameter-timing-release-gate"],sectionId:"contract"},{level:"basic",question:"T=4이고 challenge prime l=5일 때 division algorithm으로 q와 r을 구하세요.",answerChecklist:["2^4=16","q=3","r=1"],requiredConcepts:["wesolowski-quotient-proof"],sectionId:"wesolowski"},{level:"basic",question:"Wesolowski verify 식을 쓰세요.",answerChecklist:["y=pi^l x^r","pi=x^q","challenge prime"],requiredConcepts:["wesolowski-quotient-proof"],sectionId:"wesolowski"},{level:"basic",question:"왜 toy mod17이 secure VDF가 아닌가요?",answerChecklist:["known order","small group","exponent reduction","no delay"],requiredConcepts:["vdf-sequential-evaluation-fast-verification"],sectionId:"contract"},{level:"basic",question:"VDF와 hash iteration을 구분하세요.",answerChecklist:["public verification","proof","uniqueness","sequentiality assumption"],requiredConcepts:["vdf-sequential-evaluation-fast-verification"],sectionId:"contract"},{level:"advanced",question:"Wesolowski identity를 유도하세요.",answerChecklist:["division algorithm","2^T=q l+r","exponent laws","verification"],requiredConcepts:["wesolowski-quotient-proof"],sectionId:"wesolowski"},{level:"advanced",question:"Challenge ordering 반례를 설명하세요.",answerChecklist:["commit y first","hash-to-prime","domain","adaptive l","soundness"],requiredConcepts:["wesolowski-quotient-proof"],sectionId:"wesolowski"},{level:"advanced",question:"Sequentiality benchmark를 설계하세요.",answerChecklist:["same parameters","cores","GPU/ASIC boundary","p50/p99","verify separate","thermal"],requiredConcepts:["vdf-parameter-timing-release-gate"],sectionId:"release"},{level:"advanced",question:"VDF release receipt를 작성하세요.",answerChecklist:["group generation","T","hash/domain","proof encoding","negative vectors","timing","rollback"],requiredConcepts:["vdf-parameter-timing-release-gate"],sectionId:"release"}],
-    papers:[{title:"Boneh et al. · Verifiable Delay Functions",href:"https://eprint.iacr.org/2018/601.pdf",problem:"평가에는 순차 시간이 들고 검증은 빠른 function 정의와 construction",contribution:"VDF definitions·security properties와 constructions 체계화",assumptions:"논문의 sequentiality/uniqueness model과 group assumptions",evidenceScope:"VDF property와 protocol analysis",notClaim:"특정 T가 모든 hardware에서 같은 seconds임을 보장하지 않음",sectionId:"paper-vdf"},{title:"Wesolowski · Efficient Verifiable Delay Functions",href:"https://eprint.iacr.org/2018/623.pdf",problem:"짧고 빠르게 검증되는 unknown-order VDF proof",contribution:"Quotient/remainder proof와 security analysis 제시",assumptions:"Unknown-order group·hash-to-prime·random oracle model",evidenceScope:"Wesolowski proof construction",notClaim:"Mod17 toy나 임의 modulus generation을 승인하지 않음",sectionId:"paper-wesolowski"}],
+    entryLevel: true,
+    entryNote:
+      "mod 17의 네 번 반복 제곱을 따라간 뒤, 같은 결과를 Wesolowski 증명 하나로 확인하고 실제 chiavdf 1.1.14 코드에 연결합니다.",
+    coreIdea:
+      "VDF는 앞 결과에 의존하는 T회의 반복 제곱으로 y를 만들고, Wesolowski quotient proof로 검증자가 원래 계산을 되풀이하지 않고 y를 확인하게 합니다. 검증 성공은 난수의 공정성이나 chain finality까지 보장하지 않습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "vdf-sequential-evaluation-fast-verification",
+        role: "Delay·uniqueness·verification 경계를 정합니다.",
+      },
+      {
+        id: "wesolowski-quotient-proof",
+        role: "Quotient/remainder verification을 설명합니다.",
+      },
+      {
+        id: "vdf-verification-claim-boundary",
+        role: "유효한 VDF 결과와 애플리케이션의 추가 보장을 구분합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "vdf-sequential-evaluation-fast-verification",
+        sectionId: "contract",
+        intuition:
+          "Evaluator는 T번 앞 결과를 다음 입력으로 쓰지만 verifier는 proof로 건너뜁니다.",
+        workedExample: "x=3 mod17,T=4이면 3²=9,9²=13,13²=16,16²=1입니다.",
+        boundary: "작은 known-order group은 교육용이며 secure VDF가 아닙니다.",
+        counterexample:
+          "Group order를 알면 exponent를 줄여 delay를 건너뛸 수 있습니다.",
+      },
+      {
+        id: "wesolowski-quotient-proof",
+        sectionId: "wesolowski",
+        intuition:
+          "2^T를 challenge prime l로 나눈 quotient를 group exponent에 옮깁니다.",
+        workedExample:
+          "T=4,l=5이면 16=3·5+1, pi=x³이고 verifier는 y=pi⁵x를 검사합니다.",
+        boundary:
+          "Survey의 일반 구성은 (G,g,y,T)를 hash-to-prime 입력으로 사용하지만 실제 구현의 정확한 직렬화 입력은 고정한 버전의 명세와 코드에서 확인합니다.",
+        proofIdea: "2^T=q l+r이므로 x^(2^T)=(x^q)^l x^r입니다.",
+        counterexample:
+          "l을 prover가 먼저 고르면 transcript soundness 전제가 깨집니다.",
+      },
+      {
+        id: "vdf-verification-claim-boundary",
+        sectionId: "boundary",
+        intuition:
+          "VDF 검증은 고정한 입력·T·출력·증명의 관계를 승인하며, 난수 소비 규칙이나 합의 완료를 대신하지 않습니다.",
+        workedExample:
+          "π^ℓg^r=y가 성립해도 T의 초 단위 지연, 입력 entropy, future-round 선택과 block finality는 별도 확인 대상입니다.",
+        boundary:
+          "검증된 VDF output과 그것을 사용하는 애플리케이션의 상태 전이를 같은 완료로 부르지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 group",
+        relation: "Canonical input과 group assumption을 고정합니다.",
+        concepts: ["hash-canonical-bit-byte-input", "cyclic-subgroup-dlp"],
+      },
+      {
+        label: "01 delay",
+        relation: "Sequential evaluation contract를 정의합니다.",
+        concepts: ["vdf-sequential-evaluation-fast-verification"],
+      },
+      {
+        label: "02 proof",
+        relation: "Quotient proof로 빠르게 검증합니다.",
+        concepts: ["wesolowski-quotient-proof"],
+      },
+      {
+        label: "03 claim boundary",
+        relation: "VDF 검증 결과가 말하는 범위를 구분합니다.",
+        concepts: ["vdf-verification-claim-boundary"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question: "x=3 mod17,T=4 반복 제곱을 계산하세요.",
+        answerChecklist: ["9", "13", "16", "1", "four sequential steps"],
+        requiredConcepts: ["vdf-sequential-evaluation-fast-verification"],
+        sectionId: "contract",
+      },
+      {
+        level: "basic",
+        question: "왜 T를 wall-clock seconds로 읽으면 안 되나요?",
+        answerChecklist: [
+          "operation count",
+          "hardware dependent",
+          "implementation dependent",
+          "separate calibration",
+        ],
+        requiredConcepts: ["vdf-sequential-evaluation-fast-verification"],
+        sectionId: "contract",
+      },
+      {
+        level: "basic",
+        question:
+          "T=4이고 challenge prime l=5일 때 division algorithm으로 q와 r을 구하세요.",
+        answerChecklist: ["2^4=16", "q=3", "r=1"],
+        requiredConcepts: ["wesolowski-quotient-proof"],
+        sectionId: "wesolowski",
+      },
+      {
+        level: "basic",
+        question: "Wesolowski verify 식을 쓰세요.",
+        answerChecklist: ["y=pi^l x^r", "pi=x^q", "challenge prime"],
+        requiredConcepts: ["wesolowski-quotient-proof"],
+        sectionId: "wesolowski",
+      },
+      {
+        level: "basic",
+        question: "왜 toy mod17이 secure VDF가 아닌가요?",
+        answerChecklist: [
+          "known order",
+          "small group",
+          "exponent reduction",
+          "no delay",
+        ],
+        requiredConcepts: ["vdf-sequential-evaluation-fast-verification"],
+        sectionId: "contract",
+      },
+      {
+        level: "basic",
+        question: "VDF와 hash iteration을 구분하세요.",
+        answerChecklist: [
+          "public verification",
+          "proof",
+          "uniqueness",
+          "sequentiality assumption",
+        ],
+        requiredConcepts: ["vdf-sequential-evaluation-fast-verification"],
+        sectionId: "contract",
+      },
+      {
+        level: "advanced",
+        question: "Wesolowski identity를 유도하세요.",
+        answerChecklist: [
+          "division algorithm",
+          "2^T=q l+r",
+          "exponent laws",
+          "verification",
+        ],
+        requiredConcepts: ["wesolowski-quotient-proof"],
+        sectionId: "wesolowski",
+      },
+      {
+        level: "advanced",
+        question: "Challenge ordering 반례를 설명하세요.",
+        answerChecklist: [
+          "commit y first",
+          "hash-to-prime",
+          "domain",
+          "adaptive l",
+          "soundness",
+        ],
+        requiredConcepts: ["wesolowski-quotient-proof"],
+        sectionId: "wesolowski",
+      },
+      {
+        level: "advanced",
+        question:
+          "Survey의 challenge transcript와 chiavdf 1.1.14 GetB 입력을 구분하세요.",
+        answerChecklist: [
+          "survey G,g,y,T",
+          "chiavdf x,y serialization",
+          "D context",
+          "iters verify input",
+          "version pin",
+        ],
+        requiredConcepts: ["wesolowski-quotient-proof"],
+        sectionId: "source",
+      },
+      {
+        level: "advanced",
+        question:
+          "유효한 VDF proof가 난수의 공정성이나 chain finality를 바로 보장하지 않는 이유를 설명하세요.",
+        answerChecklist: [
+          "verified tuple",
+          "input entropy",
+          "consumer rule",
+          "consensus separate",
+        ],
+        requiredConcepts: ["vdf-verification-claim-boundary"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "Boneh et al. · Verifiable Delay Functions",
+        href: "https://eprint.iacr.org/2018/601.pdf",
+        problem:
+          "평가에는 순차 시간이 들고 검증은 빠른 function 정의와 construction",
+        contribution:
+          "VDF definitions·security properties와 constructions 체계화",
+        assumptions:
+          "논문의 sequentiality/uniqueness model과 group assumptions",
+        evidenceScope: "VDF property와 protocol analysis",
+        notClaim: "특정 T가 모든 hardware에서 같은 seconds임을 보장하지 않음",
+        sectionId: "paper-vdf",
+      },
+      {
+        title: "Boneh·Bünz·Fisch · A Survey of Two VDFs",
+        href: "https://eprint.iacr.org/2018/712.pdf",
+        problem:
+          "Pietrzak과 Wesolowski 반복 제곱 VDF의 proof와 계산 가정 비교",
+        contribution:
+          "Wesolowski 검증식·비대화형 challenge·지수 안 long division을 한 흐름으로 설명",
+        assumptions:
+          "Unknown-order group·random oracle·adaptive-root assumption",
+        evidenceScope:
+          "이 글의 quotient/remainder 식과 설명용 proof 생성 반복",
+        notClaim:
+          "Proof 생성 비용이 0이거나 모든 구현의 transcript가 동일하다고 말하지 않음",
+        sectionId: "paper-wesolowski-survey",
+      },
+      {
+        title: "Wesolowski · Efficient Verifiable Delay Functions",
+        href: "https://eprint.iacr.org/2018/623.pdf",
+        problem: "짧고 빠르게 검증되는 unknown-order VDF proof",
+        contribution: "Quotient/remainder proof와 security analysis 제시",
+        assumptions: "Unknown-order group·hash-to-prime·random oracle model",
+        evidenceScope: "Wesolowski proof construction",
+        notClaim: "Mod17 toy나 임의 modulus generation을 승인하지 않음",
+        sectionId: "paper-wesolowski",
+      },
+      {
+        title: "Chia-Network/chiavdf 1.1.14 · commit 6c68b95",
+        href: "https://github.com/Chia-Network/chiavdf/tree/6c68b9538d6f84fc248f00adce20646fb838cdf8",
+        problem:
+          "Class group repeated squaring과 Wesolowski proof를 실제 encoding과 함수 경계로 수행",
+        contribution:
+          "vdf.h evaluation loop와 GetB·r·proof equation verifier 구현",
+        assumptions:
+          "1.1.14의 discriminant·form serialization·proof encoding을 함께 고정",
+        evidenceScope:
+          "이 버전 Chia 구현의 evaluation·verification control flow",
+        notClaim:
+          "모든 VDF transcript·보안 수준·wall-clock 지연을 대표하지 않음",
+        sectionId: "source-chiavdf",
+      },
+    ],
   },
   "blockchain/drand": {
     entryLevel:true, entryNote:"한 round의 threshold signature가 public randomness가 되는 흐름부터 시작합니다.", coreIdea:"drand는 DKG shares로 round message에 threshold BLS signature를 만들고 chain identity·round binding을 검증한 뒤 signature hash를 public randomness로 제공합니다.", assumedKnowledge:[],

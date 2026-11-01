@@ -60,6 +60,7 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "b300-switchless-network": "사례·실측",
   "reth-cli": "운영 가이드",
   "reth-chainspec": "개념 지도",
+  vdf: "개념 지도",
 };
 
 const CATEGORY_STARTS: Record<string, GuidanceLink> = {

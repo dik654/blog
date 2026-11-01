@@ -7474,7 +7474,32 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "공식 landing의 제목·저자·2006년 서지와 abstract만 확인했습니다. PDF 전문은 접근 오류로 읽지 못했으며 이 글의 수치·BN 구현 근거로 사용하지 않습니다."
     }
   ],
-  "blockchain/vdf": [{ kind:"핵심 논문", label:"Boneh et al. · VDF", href:"https://eprint.iacr.org/2018/601.pdf", note:"VDF definitions and constructions" },{ kind:"핵심 논문", label:"Wesolowski · Efficient VDF", href:"https://eprint.iacr.org/2018/623.pdf", note:"Quotient proof construction" }],
+  "blockchain/vdf": [
+    {
+      kind: "핵심 논문",
+      label: "Boneh et al. · VDF",
+      href: "https://eprint.iacr.org/2018/601.pdf",
+      note: "Setup·Eval·Verify와 correctness·soundness·sequentiality·uniqueness를 정의하지만 특정 T의 초 단위 지연은 보장하지 않음",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Boneh·Bünz·Fisch · A Survey of Two VDFs",
+      href: "https://eprint.iacr.org/2018/712.pdf",
+      note: "Wesolowski quotient/remainder 식, 비대화형 challenge와 q를 지수 안에서 계산하는 long division의 근거",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Wesolowski · Efficient VDF",
+      href: "https://eprint.iacr.org/2018/623.pdf",
+      note: "미지 순서 군에서 짧은 quotient proof와 보안 분석을 제시하며 작은 mod 17 예시는 승인하지 않음",
+    },
+    {
+      kind: "공식 코드",
+      label: "Chia-Network/chiavdf 1.1.14 · commit 6c68b95",
+      href: "https://github.com/Chia-Network/chiavdf/tree/6c68b9538d6f84fc248f00adce20646fb838cdf8",
+      note: "vdf.h의 반복 제곱과 proof_common.h·verifier.h의 GetB·r·proof equation을 고정한 구현 근거",
+    },
+  ],
   "blockchain/drand": [{ kind:"공식 문서", label:"drand specification", href:"https://docs.drand.love/docs/specification/", note:"Threshold beacon protocol specification" },{ kind:"공식 코드", label:"drand @ 2363f3b", href:"https://github.com/drand/drand/tree/2363f3b9ba5fd6f14e0b84a096b248479790d75d", note:"Pinned official source" }],
   "crypto/hash-theory": [
     {

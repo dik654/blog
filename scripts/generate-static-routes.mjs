@@ -161,6 +161,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/ipfs-filecoin-storage",
   "blockchain/filecoin-ipc",
   "blockchain/filecoin-fvm",
+  "blockchain/vdf",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

@@ -16217,6 +16217,42 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  vdf: {
+    title: "VDF 순차 계산·Wesolowski 검증 글이 소유하는 범위",
+    owns: [
+      "Setup·Eval·Verify와 순차성·유일성·공개 검증의 VDF 계약",
+      "반복 제곱 한 경로, Wesolowski quotient proof와 chiavdf 1.1.14 검증 함수",
+      "유효한 VDF 결과와 초 단위 지연·난수 공정성·합의 finality의 경계",
+    ],
+    reuses: [
+      {
+        label: "Canonical hash input",
+        href: "/cs/crypto/hash-theory#encoding",
+      },
+      {
+        label: "Cyclic group과 지수",
+        href: "/cs/crypto/cyclic-groups",
+      },
+      {
+        label: "drand threshold beacon",
+        href: "/cs/blockchain/drand",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "VDF 정의는 ePrint 2018/601, Wesolowski 식과 long division은 2018/712·2018/623에 귀속한다.",
+      },
+      {
+        kind: "primary-source",
+        rule: "구현 설명은 chiavdf 1.1.14 commit 6c68b95의 vdf.h·proof_common.h·verifier.h에 귀속한다.",
+      },
+      {
+        kind: "project-claim",
+        rule: "mod 17은 산술 예시일 뿐 안전한 VDF 매개변수가 아니며, proof 통과를 초 단위 지연·난수 공정성·chain finality로 확대하지 않는다.",
+      },
+    ],
+  },
   "fft": {
     "title": "FFT에서 직접 설명하는 범위",
     "owns": [

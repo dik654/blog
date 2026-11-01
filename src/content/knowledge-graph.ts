@@ -14836,9 +14836,33 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "입력의 곡선·부분군·바이트 규칙과 응용의 항등원 정책을 구분하고 원시 Miller 값·최종 출력·항등원 판정의 검증 범위를 정하는 절차입니다. 고정Ark는 항등원 입력쌍을 건너뛰며 결과 군의 zero는 내부체의 one이고,0인 Miller의 최종 계산은 None입니다. 같은 라이브러리 비교는 독립 구현 검증을 대신하지 않습니다.",
     "canonicalHref": "/cs/crypto/pairing#release"
   },
-  "vdf-sequential-evaluation-fast-verification": { id: "vdf-sequential-evaluation-fast-verification", kind: "concept", domain: "computer-science", label: "VDF sequential evaluation · fast verification", definition: "지정 delay T만큼 본질적으로 순차적인 evaluation을 요구하면서 결과와 짧은 proof는 훨씬 적은 work로 public verification하는 verifiable delay contract입니다.", canonicalHref: "/cs/blockchain/vdf#contract" },
-  "wesolowski-quotient-proof": { id: "wesolowski-quotient-proof", kind: "method", domain: "mathematics", label: "Wesolowski quotient proof", definition: "Unknown-order group에서 y=x^(2^T), challenge prime l, q=floor(2^T/l), r=2^T mod l에 대해 pi=x^q를 보내 y=pi^l x^r로 빠르게 검사하는 VDF proof입니다.", canonicalHref: "/cs/blockchain/vdf#wesolowski" },
-  "vdf-parameter-timing-release-gate": { id: "vdf-parameter-timing-release-gate", kind: "method", domain: "computer-science", label: "VDF parameter · timing release gate", definition: "Group/modulus generation·T·challenge/hash/domain·proof encoding을 pin하고 wrong output/proof/T/domain과 evaluator parallelism을 검사한 뒤 target hardware wall time·verify cost·rollback을 결정하는 절차입니다.", canonicalHref: "/cs/blockchain/vdf#release" },
+  "vdf-sequential-evaluation-fast-verification": {
+    id: "vdf-sequential-evaluation-fast-verification",
+    kind: "concept",
+    domain: "computer-science",
+    label: "VDF sequential evaluation · fast verification",
+    definition:
+      "앞 결과에 의존하는 T회의 evaluation을 요구하면서 결과와 짧은 proof는 훨씬 적은 일로 공개 검증하는 verifiable delay contract입니다. T는 초가 아니라 순차 연산 수이며 보안은 고정한 construction의 가정에 의존합니다.",
+    canonicalHref: "/cs/blockchain/vdf#contract",
+  },
+  "wesolowski-quotient-proof": {
+    id: "wesolowski-quotient-proof",
+    kind: "method",
+    domain: "mathematics",
+    label: "Wesolowski quotient proof",
+    definition:
+      "Unknown-order group에서 y=g^(2^T), challenge prime l, q=floor(2^T/l), r=2^T mod l에 대해 pi=g^q를 보내 y=pi^l g^r로 빠르게 검사하는 VDF proof입니다. 논문 표기와 실제 구현의 transcript 입력은 버전별로 구분합니다.",
+    canonicalHref: "/cs/blockchain/vdf#wesolowski",
+  },
+  "vdf-verification-claim-boundary": {
+    id: "vdf-verification-claim-boundary",
+    kind: "concept",
+    domain: "computer-science",
+    label: "VDF 검증 결과의 보장 범위",
+    definition:
+      "유효한 VDF proof가 고정한 입력·T·출력의 관계를 승인하는 범위와, 초 단위 지연·입력 entropy·난수 소비 규칙·합의 finality처럼 애플리케이션이 별도로 책임질 조건을 구분합니다.",
+    canonicalHref: "/cs/blockchain/vdf#boundary",
+  },
   "drand-threshold-bls-round-signature": { id: "drand-threshold-bls-round-signature", kind: "method", domain: "distributed-systems", label: "drand threshold-BLS round signature", definition: "DKG로 나눈 BLS secret shares 중 threshold 이상의 partial signatures를 같은 round message에 대해 모아 하나의 unique group signature로 보간·검증하는 beacon round 방법입니다.", canonicalHref: "/cs/blockchain/drand#threshold-round" },
   "drand-chain-hash-round-binding": { id: "drand-chain-hash-round-binding", kind: "concept", domain: "distributed-systems", label: "drand chain hash · round binding", definition: "Chain identity·period·genesis·public key와 round number, 이전 signature 또는 unchained domain을 signed message와 randomness derivation에 결속해 다른 network/round replay를 막는 계약입니다.", canonicalHref: "/cs/blockchain/drand#verification" },
   "drand-randomness-consumer-release-gate": { id: "drand-randomness-consumer-release-gate", kind: "method", domain: "distributed-systems", label: "drand consumer verification · release gate", definition: "Pinned chain info와 signature/round continuity·freshness·network identity를 검증하고 outage/replay/future round/malformed response를 fail closed한 뒤 application entropy derivation을 허용하는 절차입니다.", canonicalHref: "/cs/blockchain/drand#release" },
@@ -48929,10 +48953,34 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "pairing-final-exponent-decomposition", to: "pairing-final-subgroup-projection", relation: "optimizes", reason: "Final exponent의 easy/hard 분해가 target projection을 낮은 비용으로 실행합니다." },
   { from: "bn254-g1-g2-twist", to: "pairing-input-subgroup-release-gate", relation: "prerequisite", reason: "G1/G2 encoding·twist·subgroup profile을 pairing 입력 검증에 고정합니다." },
   { from: "pairing-final-subgroup-projection", to: "pairing-input-subgroup-release-gate", relation: "evaluates", reason: "Miller-only 값과 final pairing vector·bilinearity를 분리 검사합니다." },
-  { from: "cyclic-subgroup-dlp", to: "vdf-sequential-evaluation-fast-verification", relation: "contrasts", reason: "Known-order scalar groups과 달리 VDF 반복 squaring profile은 unknown-order assumption을 사용합니다." },
-  { from: "vdf-sequential-evaluation-fast-verification", to: "wesolowski-quotient-proof", relation: "produces", reason: "긴 repeated-squaring result를 quotient/remainder identity로 짧게 검증합니다." },
-  { from: "hash-canonical-bit-byte-input", to: "wesolowski-quotient-proof", relation: "prerequisite", reason: "Input·T·output에서 challenge prime을 domain-separated canonical transcript로 만듭니다." },
-  { from: "wesolowski-quotient-proof", to: "vdf-parameter-timing-release-gate", relation: "evaluates", reason: "Wrong result/proof/challenge/T fixtures와 verify cost를 release 전에 검사합니다." },
+  {
+    from: "cyclic-subgroup-dlp",
+    to: "vdf-sequential-evaluation-fast-verification",
+    relation: "contrasts",
+    reason:
+      "Known-order scalar groups과 달리 VDF 반복 squaring profile은 unknown-order assumption을 사용합니다.",
+  },
+  {
+    from: "vdf-sequential-evaluation-fast-verification",
+    to: "wesolowski-quotient-proof",
+    relation: "produces",
+    reason:
+      "긴 repeated-squaring result를 quotient/remainder identity로 짧게 검증합니다.",
+  },
+  {
+    from: "hash-canonical-bit-byte-input",
+    to: "wesolowski-quotient-proof",
+    relation: "prerequisite",
+    reason:
+      "Input·T·output에서 challenge prime을 domain-separated canonical transcript로 만듭니다.",
+  },
+  {
+    from: "wesolowski-quotient-proof",
+    to: "vdf-verification-claim-boundary",
+    relation: "evaluates",
+    reason:
+      "Proof equation 통과가 승인하는 VDF tuple과 애플리케이션의 추가 보장을 구분합니다.",
+  },
   { from: "bls-pairing-verification", to: "drand-threshold-bls-round-signature", relation: "extends", reason: "Single BLS verification을 threshold shares의 unique recovered round signature로 확장합니다." },
   { from: "hash-canonical-bit-byte-input", to: "drand-chain-hash-round-binding", relation: "prerequisite", reason: "Chain info·round·previous signature를 모호하지 않은 signed message로 직렬화합니다." },
   { from: "drand-threshold-bls-round-signature", to: "drand-chain-hash-round-binding", relation: "constrains", reason: "Recovered signature가 정확한 chain/round message에 속하도록 결속합니다." },
