@@ -4703,7 +4703,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance":"10851536e477e46f",
 "economic-history/regional-gdp-household-income-and-within-country-inequality":"416014a9571c236e",
 "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs":"441da045e18f33b6",
-"markets/credit-event-auction-orders-and-base-correlation-history":"2a57e40fcae8d608",
+"markets/credit-event-auction-orders-and-base-correlation-history":"95afc1b0b1ac7e35",
 "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery":"7d763bee1af8c156",
 "markets/lme-metals-warrants-quality-storage-and-load-out":"b0d3d849d1d2d151",
 "markets/livestock-futures-live-delivery-and-cash-settlement":"d65461a0264ab3bc",

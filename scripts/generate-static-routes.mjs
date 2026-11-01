@@ -245,6 +245,7 @@ const noScriptArticleRoutes = new Set([
   "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
   "markets/fractional-investment-trust-beneficiary-certificates",
   "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs",
+  "markets/credit-event-auction-orders-and-base-correlation-history",
   "markets/portfolio-compression-risk-tolerances-and-records",
   "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
   "markets/ccp-default-management-hedging-auction-and-porting",
