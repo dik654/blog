@@ -1,49 +1,155 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { DittoFallbackViz, JolteonPathViz } from "./viz/ModernJolteonDittoViz";
+import { DittoFallbackViz, JolteonDittoFailureTable, JolteonPathViz, JolteonTimeoutViz } from "./viz/ModernJolteonDittoViz";
 
-export default function ModernJolteonDittoArticle(){return <article className="space-y-14">
-  <section id="overview" className="space-y-6">
-    <header className="space-y-3"><p className="text-sm font-semibold text-primary">Jolteon &amp; Ditto · network-adaptive BFT</p><h2 className="text-3xl font-bold tracking-tight">Jolteon은 정상 구간을 two-chain으로 줄이고, Ditto는 오래 끊긴 network에서 별도의 asynchronous fallback을 연다</h2></header>
-    <p className="text-lg leading-8 text-foreground/90">
-            Alice 요청이 round 10 block B10에 들어갔다고 하겠습니다. Jolteon은 B10의 QC를 one-chain lock으로 기억하고 round 11 block이
-            그 QC를 직접 연장하면 B10과 ancestors를 two-chain commit합니다. Leader가 멈추면 2f+1 timeout reports를 모은 timeout
-            certificate(TC)가 다음 proposal이 따라야 할 highest QC를 알려 줍니다.
-          </p>
-    <p>Partial synchrony가 오래 회복되지 않으면 Jolteon normal path는 안전하게 멈출 수 있습니다. Ditto는 state-aware multi-valued Byzantine agreement(MVBA)를 열어 leader 한 명에 의존하지 않는 randomized fallback으로 progress를 시도합니다. 두 path는 다른 liveness assumptions를 쓰지만 같은 safety state를 이어 받아야 합니다.</p>
-    <JolteonPathViz />
-    <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Jolteon의 TC는 commit certificate가 아니라 safe parent를 제한하는 recovery evidence입니다. Ditto의 MVBA decision도 client success가 아니라 certification·execution·normal rejoin의 출발점입니다.</aside>
-  </section>
-  <section id="jolteon-path" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">01 · one-chain lock과 two-chain commit</p><h2 className="mt-2 text-2xl font-bold">Consecutive round의 direct-parent QC가 있어야 parent를 commit한다</h2></header>
-    <p>Replica는 valid parent QC, leader signature, ancestry와 round를 확인하고 current lock보다 낮은 branch에는 vote하지 않습니다. QC를 받으면 qchigh와 lock을 갱신합니다. 다음 round block이 바로 그 QC를 parent로 쓰면 two-chain이 완성되어 older block을 commit합니다. 높이가 인접해 보여도 round가 건너뛰었거나 parent가 sibling이면 commit evidence가 아닙니다.</p>
-    <ExplainedFormula question="Jolteon에서 QC와 TC의 threshold는 같아도 역할이 왜 다른가?" idea={<>둘 다 2f+1 distinct signatures로 honest intersection을 확보하지만, QC는 한 block vote를 인증하고 TC는 timeout reporters가 본 highest QCs를 모아 다음 safe proposal의 하한을 정합니다.</>} formula={String.raw`\begin{aligned}|QC_r|&\ge 2f+1\\|TC_r|&\ge 2f+1\\parent(B_{r+1})&=QC_r.block\end{aligned}`}
-    annotatedFormula={String.raw`\begin{aligned}\underbrace{|QC_r|}_{\text{block vote 수}}&\ge 2f+1\\\underbrace{|TC_r|}_{\text{timeout report 수}}&\ge 2f+1\\\underbrace{parent(B_{r+1})}_{\text{다음 block의 부모}}&=\underbrace{QC_r.block}_{\text{직전 QC의 block}}\end{aligned}`}
-    operations={[
-          { expression: String.raw`2f+1`, annotation: ["QC·TC 모두 distinct signature 2f+1","두 quorum이 honest replica를 공유","n=4, f=1이면 각각 3개"] },
-          { expression: String.raw`|TC_r|`, annotation: ["timeout reporter들의 highest QC를 모아","다음 safe proposal의 하한을 정함"] },
-          { expression: String.raw`QC_r.block`, annotation: ["round 11 block이 round 10 QC를 연장","그래야 round 10을 two-chain commit","round 9 QC를 연장한 round 12는 아님"] },
-        ]} terms={[{symbol:"QCᵣ",name:"block certificate",description:"같은 round·block에 대한 distinct valid votes의 quorum입니다."},{symbol:"TCᵣ",name:"timeout certificate",description:"같은 round의 timeout reports와 각 reporter의 highQC를 묶은 evidence입니다."},{symbol:"Bᵣ₊₁",name:"next-round block",description:"Direct QC 또는 TC가 허용한 highest QC를 연장해야 하는 proposal입니다."},{symbol:"f",name:"fault bound",description:"3f+1 replicas 가운데 Byzantine일 수 있는 최대 수입니다."}]} assumptions={["Exact round·epoch·committee·digest domains와 distinct signers를 검증합니다.","Replica는 round마다 conflicting blocks에 중복 vote하지 않습니다.","Direct-parent와 consecutive-round relation을 모두 확인합니다.","QC·TC는 ordering evidence이며 deterministic execution receipt는 별도입니다."]} interpretation="n=4,f=1이면 QC와 TC 모두 signatures 3개가 필요합니다. Round 10 QC를 round 11 block이 직접 연장하면 round 10을 commit할 수 있지만 round 12 block이 오래된 round 9 QC를 연장한 것은 two-chain이 아닙니다." />
-    <p>Bad round 뒤 proposal은 TC reports의 maximum highQC보다 낮은 certificate를 쓸 수 없습니다. Local timeout 하나나 2f reports만으로 넘어가면 빠진 honest replica가 newer QC를 가지고 있을 수 있습니다. TC는 이 hidden evidence를 honest intersection으로 끌어오는 장치입니다.</p>
-    <div id="paper-jolteon"><CitationBlock source="Jolteon and Ditto paper §3 — Jolteon" citeKey={1} href="https://arxiv.org/pdf/2106.10362#page=6"><p><strong>문제:</strong> Three-chain latency를 줄이면서 bad round 뒤에도 safe proposal을 식별해야 합니다.</p><p><strong>기여:</strong> One-chain lock, two-chain commit과 2f+1 high-QC timeout-certificate vote rule을 정의합니다.</p><p><strong>전제:</strong> Valid QCs, exact round relations, threshold signatures와 partial-synchrony pacemaker를 따릅니다.</p><p><strong>근거 범위:</strong> Paper Jolteon sync-path algorithm과 safety argument에 한정합니다.</p><p><strong>말하지 않는 것:</strong> TC가 commit certificate이거나 임의의 인접 block 높이가 two-chain commit을 만든다는 뜻은 아닙니다.</p></CitationBlock></div>
-  </section>
-  <section id="ditto-fallback" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">02 · asynchronous fallback</p><h2 className="mt-2 text-2xl font-bold">2f+1 timeouts 뒤 highQC-safe candidates만 state-aware MVBA에 넣는다</h2></header>
-    <p>같은 view의 timeouts 2f+1개가 모이면 replicas는 fallback mode에 진입합니다. 각 candidate는 current highQC를 연장하거나 paper가 정한 proof로 external-validity predicate를 통과해야 합니다. State-aware MVBA는 이 safety state를 입력으로 받아 authenticated asynchronous network에서 valid block 하나에 합의하며 termination은 randomized MVBA 전제에 의존합니다.</p>
-    <p>Jolteon과 Ditto를 “동기식과 비동기식 중 더 빠른 쪽을 늘 자동 선택”하는 기능으로 이해하면 안 됩니다. Fallback threshold, proof admission, randomness와 certificate handoff가 맞아야 하며 network가 좋아져도 replicas가 서로 다른 mode·view에 남으면 normal path가 곧바로 진행되지 않습니다.</p>
-    <DittoFallbackViz />
-    <div id="paper-jolteon-ditto"><CitationBlock source="Jolteon and Ditto: Network-Adaptive Efficient Consensus with Asynchronous Fallback" citeKey={2} href="https://arxiv.org/abs/2106.10362"><p><strong>문제:</strong> Linear happy-path BFT의 낮은 latency와 prolonged asynchrony에서의 robust progress를 함께 제공해야 합니다.</p><p><strong>기여:</strong> Two-chain Jolteon과 state-aware MVBA asynchronous fallback을 결합한 Ditto를 제시합니다.</p><p><strong>전제:</strong> n=3f+1 authenticated replicas, 최대 f Byzantine, sync path의 partial synchrony와 fallback의 asynchronous randomized MVBA model을 사용합니다.</p><p><strong>근거 범위:</strong> Jolteon·Ditto constructions, correctness arguments와 paper evaluation에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Paper의 latency·DiemBFT parameters나 Ditto fallback이 current Aptos에서 그대로 활성이라는 뜻은 아닙니다.</p></CitationBlock></div>
-  </section>
-  <section id="release" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">03 · certification, rejoin, current-source boundary</p><h2 className="mt-2 text-2xl font-bold">MVBA decision 뒤 ancestors를 commit하고 certificate를 맞춘 다음 normal path로 돌아간다</h2></header>
-    <p>
-            Fallback에서 block B를 결정하면 replicas는 B의 ancestors를 같은 순서로 commit합니다. 이어 B에 vote shares를 보내
-            certificate를 만들고 view·highest QC·fallback flag를 맞춘 뒤 normal path에 재진입합니다. Missing payload를 복구하고
-            deterministic state root가 일치해야 Alice의 client result를 release합니다. Local MVBA output만 보고 success를 내면
-            crash replica와 external effect가 갈릴 수 있습니다.
-          </p>
-    <p>Aptos current source는 Proposal, Vote, QC, TwoChainTimeoutCertificate와 OrderVote를 처리하지만 이를 paper Ditto MVBA implementation이라고 부르지 않습니다. Release fixture는 paper variant와 exact tag를 따로 고정해 invalid TC, stale QC, non-consecutive chain, partition, fallback/rejoin crash를 재생합니다. 두 path의 conflicting commit은 0이어야 하며 rollback은 external receipt 전 speculation에만 허용합니다.</p>
-    <div id="paper-aptos-round-v1486"><CitationBlock source="Aptos Core aptos-node-v1.48.6 — consensus round manager" citeKey={3} type="code" href="https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs"><p><strong>문제:</strong> Current Aptos node에서 proposals·votes·QCs·two-chain timeouts·order votes를 검증해 lifecycle로 연결해야 합니다.</p><p><strong>기여:</strong> Pinned round-manager verification, block-store synchronization과 current pipeline interfaces를 구현합니다.</p><p><strong>전제:</strong> aptos-node-v1.48.6 exact tag commit e9051e9와 matching on-chain consensus config를 사용합니다.</p><p><strong>근거 범위:</strong> 2026-08-14 확인한 pinned Aptos consensus integration snapshot에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 이 source가 paper Ditto MVBA fallback을 그대로 구현하거나 Jolteon constants를 고정한다는 뜻은 아닙니다.</p></CitationBlock></div>
-    <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 sync trace, lock/commit, n=4 quorum, TC parent, fallback trigger와 rejoin을 묻습니다. 심화 4문제는 safe-vote branches, false two-chain, prolonged partition assumptions와 pinned-source crash suite를 설계하게 합니다.</p>
-  </section>
-</article>}
+const FALLBACK_PSEUDOCODE = [
+  "// 같은 view의 timeout 2f+1개를 확인한 뒤에만 fallback을 엽니다.",
+  "if count_valid_timeouts(view) >= 2*f + 1:",
+  "    fallback = true",
+  "    current_view = view + 1",
+  "    multicast(proof(current_view, highest_qc))",
+  "",
+  "// 상대가 보낸 QC가 내 최고 QC보다 낮지 않으면 proof에 서명합니다.",
+  "if received_qc.rank >= highest_qc.rank:",
+  "    reply(ack_share(received_qc))",
+  "else:",
+  "    reply(higher_qc(highest_qc))",
+  "",
+  "// Proof 정족수 또는 더 높은 QC를 확보한 뒤에만 후보를 MVBA에 넣습니다.",
+  "candidate = child_of(highest_valid_qc)",
+  "mvba_input(candidate, proof_or_higher_qc)",
+  "",
+  "// 결정 블록과 조상을 커밋하고, 결정 블록을 다시 인증한 뒤 정상 경로로 돌아갑니다.",
+  "on_mvba_decide(block):",
+  "    commit(block_and_ancestors)",
+  "    multicast(vote_share(block))",
+  "    fallback = false",
+  "    wait_until_certified(block)",
+].join("\n");
+
+export default function ModernJolteonDittoArticle() {
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-6">
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">Jolteon·Ditto · HotStuff-2 다음의 질문</p>
+          <h2 className="text-3xl font-bold tracking-tight">주 노드가 멈춰도 안전한 가지를 찾고, 네트워크가 오래 불안정하면 다른 합의 경로로 넘어갈 수 있을까요?</h2>
+        </header>
+        <p className="text-lg leading-8 text-foreground/90">
+          앞 글의 HotStuff-2는 직전 view의 이중 인증서가 없으면 시간 경계를 기다렸습니다. Jolteon은 다른 선택을 합니다. 정상 round에서는 연속된 인증 블록 두 개로 커밋하고, 주 노드가 멈춘 round에서는 timeout 2f+1개에 담긴 가장 높은 QC를 다음 제안의 안전 하한으로 사용합니다. 먼저 Alice의 요청을 담은 B10이 정상 경로에서 커밋되는 과정을 보겠습니다.
+        </p>
+        <JolteonPathViz />
+        <aside className="border-l-2 border-primary bg-primary/5 p-5 text-sm leading-6">
+          <strong>먼저 기억할 한 문장:</strong> Jolteon의 TC는 커밋 증거가 아니고, Ditto의 MVBA 결정도 곧바로 클라이언트에게 결과를 보내도 된다는 증거가 아닙니다.
+        </aside>
+      </section>
+
+      <section id="jolteon-path" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">01 · 정상 round</p>
+          <h2 className="mt-2 text-2xl font-bold">직접 이어진 연속 round의 인증 블록 두 개가 필요합니다</h2>
+        </header>
+        <p>
+          B10의 표는 round 11의 주 노드에게 모이고 QC10이 됩니다. Round 11의 제안 B11이 QC10을 부모 인증서로 사용하면 복제본은 qchigh를 QC10까지 올리고 B11에 투표합니다. QC11이 만들어져 B10과 B11이 모두 인증되면, 두 블록이 직접 이어지고 round도 10·11로 연속인지 확인한 뒤 B10과 그 조상을 커밋합니다.
+        </p>
+        <ExplainedFormula
+          question="n=4, f=1에서 QC는 몇 표가 필요하고, two-chain은 무엇을 확인합니까?"
+          idea={<>QC에는 서로 다른 복제본 2f+1곳의 표가 필요합니다. 커밋할 때는 인증 블록이 두 개라는 사실만 보지 않고, 두 블록이 부모·자식이며 round가 정확히 하나 차이 나는지도 확인합니다.</>}
+          formula={String.raw`|QC_r|\ge 2f+1,\qquad B_{r+1}.parent=QC_r.block`}
+          annotatedFormula={String.raw`\underbrace{|QC_r|\ge 2f+1}_{\text{같은 블록에 대한 정족수}}\qquad\underbrace{B_{r+1}.parent=QC_r.block}_{\text{직접 이어진 연속 round}}`}
+          operations={[
+            { expression: "n=3f+1", annotation: ["n=4이면 f=1입니다.", "잘못 행동할 수 있는 복제본은 최대 한 대입니다."] },
+            { expression: "2f+1=3", annotation: ["B10의 QC에 서로 다른 표 3개가 필요합니다.", "B11의 QC에도 같은 수의 표가 필요합니다."] },
+            { expression: "B11.round=B10.round+1", annotation: ["Round 10과 11이 연속이어야 합니다.", "높이만 인접하거나 round를 건너뛴 블록은 two-chain이 아닙니다."] },
+          ]}
+          terms={[
+            { symbol: "QCᵣ", name: "Round r의 블록 인증서", description: "같은 round와 블록에 대한 서로 다른 2f+1개 표입니다." },
+            { symbol: "qchigh", name: "가장 높은 QC", description: "복제본이 지금까지 확인한 가장 높은 인증서이며 Jolteon의 one-chain lock 상태입니다." },
+            { symbol: "Bᵣ₊₁", name: "다음 round의 블록", description: "정상 경로에서는 직전 round QC의 블록을 직접 이어야 합니다." },
+          ]}
+          assumptions={[
+            "위원회, epoch, round, 블록 해시와 서로 다른 서명자를 검증합니다.",
+            "복제본은 같은 round에서 충돌한 두 블록에 투표하지 않습니다.",
+            "부모 관계와 연속 round 조건을 모두 확인합니다.",
+            "커밋 인증과 애플리케이션 실행 결과는 별도로 확인합니다.",
+          ]}
+          interpretation="n=4, f=1이면 B10과 B11의 QC에 각각 표 3개가 필요합니다. QC10을 직접 잇는 round 11의 B11이 인증되어야 B10을 커밋할 수 있습니다."
+        />
+      </section>
+
+      <section id="timeout-path" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">02 · 장애 round</p>
+          <h2 className="mt-2 text-2xl font-bold">Timeout certificate는 다음 제안이 내려갈 수 없는 선을 정합니다</h2>
+        </header>
+        <JolteonTimeoutViz />
+        <p>
+          주 노드가 멈추면 각 복제본은 round와 qchigh를 담은 timeout 메시지를 모든 복제본에게 보냅니다. 같은 round의 timeout 2f+1개가 모이면 TC가 됩니다. 다음 주 노드는 TC에 들어 있는 QC 가운데 가장 높은 것을 선택하고, 그 블록을 잇는 제안과 TC 전체를 함께 보냅니다. 그래서 정상 round의 통신은 선형이지만 장애 뒤 view 변경 제안은 O(n) 크기이고 전체 전달량은 O(n²)이 됩니다.
+        </p>
+        <p>
+          TC와 QC의 정족수는 같지만 역할은 다릅니다. QC는 한 블록이 투표 정족수를 얻었다는 증거이고, TC는 장애 round 뒤 새 제안이 TC 안의 가장 높은 QC보다 낮아질 수 없게 하는 증거입니다. TC만 보고 블록을 커밋하거나, TC에서 임의의 낮은 QC를 골라 제안하면 안전 규칙을 잃습니다.
+        </p>
+        <div id="paper-jolteon">
+          <CitationBlock source="Jolteon and Ditto §3 · Figure 2" citeKey={1} href="https://arxiv.org/pdf/2106.10362#page=5">
+            <p><strong>문제:</strong> HotStuff 계열의 커밋 지연을 줄이면서 장애 round 뒤에도 안전한 제안의 부모를 골라야 합니다.</p>
+            <p><strong>기여:</strong> One-chain lock, two-chain commit과 2f+1개 qchigh를 담은 timeout certificate 투표 규칙을 정의합니다.</p>
+            <p><strong>전제:</strong> 인증된 복제본 n=3f+1대, 최대 f개의 Byzantine fault, threshold signature와 부분 동기 pacemaker를 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 논문 Figure 2의 Jolteon 정상 경로와 pacemaker, §3.1의 통신량 분석입니다.</p>
+            <p><strong>말하지 않는 것:</strong> TC가 커밋 인증서이거나 높이가 인접한 임의의 두 블록이 two-chain을 만든다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="ditto-fallback" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">03 · 비동기 fallback</p>
+          <h2 className="mt-2 text-2xl font-bold">Ditto는 잠금 상태를 검증한 후보만 MVBA에 넣습니다</h2>
+        </header>
+        <p>
+          부분 동기 프로토콜은 GST 전의 긴 비동기 구간에서 안전하게 멈출 수 있습니다. Ditto는 같은 view의 timeout 2f+1개가 모이면 Jolteon의 pacemaker 대신 비동기 fallback을 엽니다. 그러나 timeout 직후 바로 합의를 시작하지는 않습니다. 각 복제본이 qchigh를 담은 proof를 전파하고, 상대가 이를 확인하거나 더 높은 QC를 돌려주는 과정이 먼저 필요합니다.
+        </p>
+        <DittoFallbackViz />
+        <div className="not-prose overflow-x-auto border border-border bg-muted/20 p-4">
+          <p className="mb-3 text-xs font-bold text-muted-foreground">Ditto Figure 3의 fallback을 풀어 쓴 의사 코드</p>
+          <pre className="min-w-[50rem] text-xs leading-6"><code>{FALLBACK_PSEUDOCODE}</code></pre>
+        </div>
+        <p>
+          MVBA의 상태 의존 유효성 검사는 후보의 view, 부모 QC의 view, 연속 round와 proof를 함께 확인합니다. MVBA가 블록 B를 결정하면 복제본은 B와 그 조상을 커밋하고 B의 표를 다시 전파합니다. 그다음 fallback 표시를 내리고 B가 인증될 때까지 기다려야 정상 경로로 돌아갈 수 있습니다.
+        </p>
+        <div id="paper-jolteon-ditto">
+          <CitationBlock source="Jolteon and Ditto §4 · Figure 3" citeKey={2} href="https://arxiv.org/abs/2106.10362">
+            <p><strong>문제:</strong> 정상 네트워크에서는 선형 통신을 유지하면서 긴 비동기 구간과 주 노드 공격에서도 진행 가능성을 확보해야 합니다.</p>
+            <p><strong>기여:</strong> Jolteon 정상 경로와 상태 의존 MVBA를 사용하는 비동기 fallback을 한 안전 상태 위에서 연결합니다.</p>
+            <p><strong>전제:</strong> 인증된 복제본 n=3f+1대, 최대 f개의 Byzantine fault와 무작위성을 사용하는 MVBA의 합의·유효성·종료 조건을 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 논문 Figure 3의 fallback 상태 전이와 §4의 안전성·통신량 분석입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 네트워크 상태를 예측해 더 빠른 경로를 고르거나, MVBA의 결정만으로 애플리케이션 실행과 외부 결과 전달까지 끝난다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="release" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">04 · 확인 경계</p>
+          <h2 className="mt-2 text-2xl font-bold">논문의 프로토콜과 고정한 제품 코드를 같은 구현으로 부르지 않습니다</h2>
+        </header>
+        <p>
+          논문은 비동기 fallback 구현과 평가가 오래되었고 Jolteon 및 Ditto의 동기 경로 구현은 최신이라고 직접 적고 있습니다. 따라서 논문의 통신량·진행 증명과 당시 실험 수치를 분리해야 합니다. 실제 적용을 검토할 때는 정상 경로, timeout, fallback 진입, MVBA 결정, 결정 블록 재인증과 재시작을 같은 버전에서 다시 측정해야 합니다.
+        </p>
+        <p>
+          Aptos 코드는 비교용으로 <code>aptos-node-v1.48.6</code> 태그를 고정합니다. 이 버전의 round manager에는 Proposal, Vote, QC, TwoChainTimeoutCertificate와 OrderVote 처리 경로가 있습니다. 이 사실만으로 해당 코드가 논문 Ditto의 state-aware MVBA fallback을 그대로 구현한다고 결론내리지 않습니다. 2026년 11월에는 더 새로운 release가 존재하므로, v1.48.6을 현재 최신 코드라고 부르지도 않습니다.
+        </p>
+        <h3 className="text-xl font-semibold">자주 섞이는 다섯 경계</h3>
+        <JolteonDittoFailureTable />
+        <div id="paper-aptos-round-v1486">
+          <CitationBlock source="Aptos Core · aptos-node-v1.48.6 round_manager.rs" citeKey={3} type="code" href="https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs">
+            <p><strong>문제:</strong> 고정한 Aptos release에서 실제로 어떤 합의 메시지와 처리 함수가 연결되는지 확인해야 합니다.</p>
+            <p><strong>기여:</strong> ProposalMsg, VoteMsg, RoundTimeoutMsg, OrderVoteMsg와 TwoChainTimeoutCertificate를 검증·처리하는 이벤트 경로를 제공합니다.</p>
+            <p><strong>전제:</strong> 태그 <code>aptos-node-v1.48.6</code>과 commit <code>e9051e97994eb73b18c185268953efa68586f9fa</code>를 고정합니다.</p>
+            <p><strong>근거 범위:</strong> 이 태그의 round manager와 직접 연결된 합의 메시지 처리 경계입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 이 파일이 논문 Ditto의 MVBA fallback을 그대로 구현하거나 현재 최신 Aptos 합의 전체를 대표한다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+    </article>
+  );
+}

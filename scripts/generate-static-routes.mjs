@@ -147,6 +147,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/pbft-deep",
   "blockchain/hotstuff-deep",
   "blockchain/hotstuff2",
+  "blockchain/jolteon-ditto",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

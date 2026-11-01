@@ -8148,9 +8148,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "HotStuff-2 §4 Pacemaker", href: "https://eprint.iacr.org/2023/397.pdf#page=6", note: "직전 view의 이중 인증서가 없을 때 Ppc + Δ 동안 잠금 보고를 기다리는 근거입니다. 보고서 묶음을 상태 인증서로 방송하는 방식은 아닙니다." },
   ],
   "blockchain/jolteon-ditto": [
-    { kind: "핵심 논문", label: "Jolteon and Ditto · arXiv 2106.10362", href: "https://arxiv.org/abs/2106.10362", note: "Two-chain sync path와 state-aware MVBA fallback 원문이며 current Aptos가 paper fallback을 그대로 쓴다고 주장하지 않음" },
-    { kind: "핵심 논문", label: "Jolteon and Ditto §3 Jolteon", href: "https://arxiv.org/pdf/2106.10362#page=6", note: "One-chain lock·two-chain commit·highQC TC의 근거이며 TC 자체는 commit certificate가 아님" },
-    { kind: "공식 코드", label: "Aptos round manager · aptos-node-v1.48.6", href: "https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs", note: "2026-08-14 pinned Proposal·Vote·QC·TwoChainTimeoutCertificate integration이며 paper Ditto MVBA 구현과 동일시하지 않음" },
+    { kind: "핵심 논문", label: "Jolteon and Ditto · arXiv 2106.10362", href: "https://arxiv.org/abs/2106.10362", note: "Jolteon의 two-chain 정상 경로와 Ditto의 상태 의존 MVBA fallback을 정의한 원문입니다. 현재 Aptos가 논문의 fallback을 그대로 사용한다는 근거는 아닙니다." },
+    { kind: "핵심 논문", label: "Jolteon and Ditto §3 · Jolteon", href: "https://arxiv.org/pdf/2106.10362#page=5", note: "One-chain lock, two-chain commit과 qchigh를 담은 TC의 근거입니다. TC 자체는 커밋 인증서가 아닙니다." },
+    { kind: "공식 코드", label: "Aptos round manager · aptos-node-v1.48.6", href: "https://github.com/aptos-labs/aptos-core/blob/aptos-node-v1.48.6/consensus/src/round_manager.rs", note: "Commit e9051e9로 고정한 Proposal·Vote·QC·TwoChainTimeoutCertificate 처리 경로입니다. 최신 코드나 논문 Ditto의 MVBA 구현으로 동일시하지 않습니다." },
   ],
   "blockchain/commonware-deep-dive": [
     { kind: "공식 코드", label: "Commonware monorepo · v2026.9.0 commit d476a236", href: "https://github.com/commonwarexyz/monorepo/tree/d476a2361ce6840d2b9d0aa6fb30a924429046d4", note: "2026-10-30 고정. 공개된 기본 부품·안정성 단계·플랫폼 지원 범위이며 조립한 Application의 정확성이나 고정 SLA를 보장하지 않음" },
