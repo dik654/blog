@@ -126,7 +126,7 @@ function Timeline({ scene }: { scene: Scene }) {
   );
 }
 
-function Exchange({ scene }: { scene: Scene }) {
+function Exchange() {
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-2 sm:gap-4" aria-label="점주와 임대인의 교환">
       <div className="min-w-0 border border-border p-2.5 sm:p-4">
@@ -247,7 +247,7 @@ export default function CommercialLeaseAndRentViz() {
           </div>
 
           <Timeline scene={scene} />
-          <Exchange scene={scene} />
+          <Exchange />
           <CashLedger scene={scene} />
           {scene.showLedger && <LedgerPanel scene={scene} />}
           {scene.showCondition && <ConditionPanel />}
