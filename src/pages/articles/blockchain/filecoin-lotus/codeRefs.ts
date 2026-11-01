@@ -5,14 +5,71 @@ import weightGo from "./codebase/lotus/chain/consensus/filcns/weight.go?raw";
 import mineGo from "./codebase/lotus/chain/consensus/filcns/mine.go?raw";
 import storeGo from "./codebase/lotus/chain/store/store.go?raw";
 import stmgrGo from "./codebase/lotus/chain/stmgr/stmgr.go?raw";
+import harmonyTaskGo from "./codebase/curio/harmony/harmonytask/harmonytask.go?raw";
+import taskTypeHandlerGo from "./codebase/curio/harmony/harmonytask/task_type_handler.go?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
+  "curio-task-interface": {
+    path: "curio/harmony/harmonytask/harmonytask.go",
+    code: harmonyTaskGo,
+    lang: "go",
+    highlight: [118, 165],
+    desc: "Curio v1.29.0의 TaskInterface입니다. 작업 구현은 실행·수용·비용·등록을 제공하지만, 실제 배정과 재시도 상태는 HarmonyTask와 HarmonyDB가 관리합니다.",
+    annotations: [
+      {
+        lines: [118, 128],
+        color: "sky",
+        note: "Do와 stillOwned — 외부 효과 전에 현재 소유권을 다시 확인",
+      },
+      {
+        lines: [130, 138],
+        color: "emerald",
+        note: "CanAccept와 TypeDetails — 이 장비가 작업을 실행할 수 있는지 판단",
+      },
+      {
+        lines: [140, 165],
+        color: "amber",
+        note: "Adder — 작업을 직접 실행하지 않고 DB에 등록",
+      },
+    ],
+  },
+
+  "curio-task-claim": {
+    path: "curio/harmony/harmonytask/task_type_handler.go",
+    code: taskTypeHandlerGo,
+    lang: "go",
+    highlight: [82, 102],
+    desc: "Curio v1.29.0의 작업 배정과 완료 기록입니다. 자원·CanAccept 검사를 통과한 후보를 SQL로 한 노드만 가져가며, 성공·실패·선점 결과를 DB에 기록합니다.",
+    annotations: [
+      {
+        lines: [82, 101],
+        color: "sky",
+        note: "배정 순서 — 동시성, 자원, 작업별 수용 조건, DB claim, 저장 경로, 실행",
+      },
+      {
+        lines: [166, 182],
+        color: "emerald",
+        note: "FOR UPDATE SKIP LOCKED와 owner_id 갱신 — 경쟁 중 한 노드만 claim",
+      },
+      {
+        lines: [396, 406],
+        color: "amber",
+        note: "완료 계약 — 성공은 삭제·history, 실패는 owner 해제·retry 또는 영구 실패",
+      },
+      {
+        lines: [448, 490],
+        color: "violet",
+        note: "실제 DB 상태 전이와 history 기록",
+      },
+    ],
+  },
+
   "lotus-filecoin-ec": {
     path: "lotus/chain/consensus/filcns/filecoin.go",
     code: filecoinGo,
     lang: "go",
     highlight: [44, 57],
-    desc: "FilecoinEC는 Expected Consensus의 핵심 구조체입니다. ChainStore, StateManager, Beacon, Verifier를 조합하여 블록 검증과 리더 선출을 수행합니다.",
+    desc: "Lotus v1.38.3의 FilecoinEC입니다. ChainStore, StateManager, Beacon, Verifier를 조합하여 블록 검증과 리더 선출을 수행합니다.",
     annotations: [
       {
         lines: [44, 57],

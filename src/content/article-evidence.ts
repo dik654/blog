@@ -6148,8 +6148,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     ),
   ],
   "blockchain/filecoin-lotus": [
-    { kind: "공식 문서", label: "Lotus suite components", href: "https://docs.filecoin.io/storage-providers/architecture/lotus-components", note: "Daemon·miner/worker·Boost의 process 책임 경계이며 모든 배포 topology를 뜻하지 않음" },
-    { kind: "공식 코드", label: "Lotus v1.36.0 · commit 154c0c3", href: "https://github.com/filecoin-project/lotus/tree/154c0c3a46e92006008818bb06aaf959e2e705a9", note: "2026-08-14 stable source snapshot이며 Curio·Boost 전체와 production SLA를 보장하지 않음" },
+    { kind: "공식 릴리스", label: "Lotus v1.38.3", href: "https://github.com/filecoin-project/lotus/releases/tag/v1.38.3", note: "2026-11-01 기준 stable tag와 변경 범위이며 실제 provider의 호환성·처리량을 보장하지 않음" },
+    { kind: "공식 코드", label: "Lotus v1.38.3 · commit 29d72bd", href: "https://github.com/filecoin-project/lotus/tree/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0", note: "ChainStore·StateManager·Expected Consensus 구현을 고정한 source이며 production availability 근거는 아님" },
+    { kind: "공식 릴리스", label: "Curio v1.29.0", href: "https://github.com/filecoin-project/curio/releases/tag/v1.29.0", note: "NV29·Lotus dependency·Curio market path의 공식 호환성 범위이며 현재 배포의 안전성을 자동 증명하지 않음" },
+    { kind: "공식 코드", label: "Curio HarmonyTask · commit 409a2ab", href: "https://github.com/filecoin-project/curio/blob/409a2ab3510d65f22ae31ba1afddc911f4b315d7/harmony/harmonytask/task_type_handler.go", note: "Resource·CanAccept 검사, SQL claim, owner_id·retry·history 상태 전이의 pinned 구현" },
   ],
   "gpu/hw-memory": [
     {

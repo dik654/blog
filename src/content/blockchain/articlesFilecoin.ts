@@ -4,14 +4,14 @@ export const filecoinArticles: Article[] = [
   /* ── 개요 & 합의 ── */
   {
     slug: "filecoin-lotus",
-    title: "Filecoin Lotus 아키텍처",
+    title: "Lotus와 Curio: 파일 하나의 전체 경로",
     subcategory: "fil-overview",
     sections: [
-      { id: "overview", title: "개요" },
-      { id: "process-map", title: "프로세스 책임 지도" },
-      { id: "artifact-handoff", title: "체인·provider 산출물" },
-      { id: "operations", title: "운영 판단" },
-      { id: "release-gate", title: "릴리스 기준" },
+      { id: "overview", title: "전체 경로" },
+      { id: "process-map", title: "상태 소유권" },
+      { id: "artifact-handoff", title: "작업 배정" },
+      { id: "operations", title: "완료 증거" },
+      { id: "release-gate", title: "배포 묶음" },
     ],
     component: () => import("@/pages/articles/blockchain/filecoin-lotus"),
   },

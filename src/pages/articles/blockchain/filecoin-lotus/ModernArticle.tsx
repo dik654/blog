@@ -1,57 +1,204 @@
 import ContentBoundary from "@/components/articles/content-boundary";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import ModernLotusSuiteViz from "./viz/ModernLotusSuiteViz";
-import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import { lotusTree } from "./fileTrees";
+import { curioTree, lotusTree } from "./fileTrees";
+import {
+  CurioTaskLifecycleViz,
+  LotusCompletionBoundaryViz,
+  LotusOwnershipMapViz,
+  LotusReleaseBundleViz,
+  LotusSuiteTraceViz,
+} from "./viz/ModernLotusSuiteViz";
 
-const COMPONENTS = "https://docs.filecoin.io/storage-providers/architecture/lotus-components";
-const LOTUS = "https://github.com/filecoin-project/lotus/tree/154c0c3a46e92006008818bb06aaf959e2e705a9";
+const LOTUS_RELEASE = "https://github.com/filecoin-project/lotus/releases/tag/v1.38.3";
+const LOTUS_SOURCE = "https://github.com/filecoin-project/lotus/tree/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0";
+const CURIO_RELEASE = "https://github.com/filecoin-project/curio/releases/tag/v1.29.0";
+const CURIO_DESIGN = "https://github.com/filecoin-project/curio/blob/409a2ab3510d65f22ae31ba1afddc911f4b315d7/documentation/en/design/README.md";
+const CURIO_TASK = "https://github.com/filecoin-project/curio/blob/409a2ab3510d65f22ae31ba1afddc911f4b315d7/harmony/harmonytask/task_type_handler.go";
 
 export default function ModernFilecoinLotusArticle() {
   const sidebar = useCodeSidebar();
+
   return <>
-  <article className="space-y-14">
-    <section id="overview" className="space-y-6"><header className="space-y-3"><p className="text-sm font-semibold text-primary">높이 100의 tipset과 sector 42가 만나는 지점부터</p><h2 className="text-3xl font-bold tracking-tight">Lotus는 하나의 daemon이 아니라 chain 검증과 provider 작업을 artifact로 연결하는 suite다</h2></header><p className="text-lg leading-8 text-foreground/90">Filecoin node가 받은 block을 검증하는 일과 고객 bytes를 sector로 만들고 proof를 제출하는 일은 같은 완료 상태가 아닙니다. <strong>Tipset</strong>은 같은 부모에서 함께 실행할 수 있는 block 묶음이고, <strong>sector</strong>는 provider가 저장 증명의 단위로 관리하는 data container입니다. 이 글은 Lotus 전체의 지도만 소유하며, ChainSync는 <a className="text-primary hover:underline" href="/cs/blockchain/lotus-chain">Lotus chain 글</a>, deal은 <a className="text-primary hover:underline" href="/cs/blockchain/lotus-market">market 글</a>, proof scheduling은 <a className="text-primary hover:underline" href="/cs/blockchain/lotus-miner">provider 글</a>에서 깊게 내려갑니다.</p><ModernLotusSuiteViz /><ContentBoundary article="filecoin-lotus" /></section>
+    <article className="space-y-14">
+      <section id="overview" className="scroll-mt-24 space-y-6">
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">파일 D7 하나의 전체 경로</p>
+          <h2 className="text-3xl font-bold tracking-tight">Lotus와 Curio는 체인 상태와 저장 작업을 나누어 맡습니다</h2>
+        </header>
+        <LotusSuiteTraceViz />
+        <p className="text-lg leading-8 text-foreground/90">
+          사용자가 파일 D7을 보관한 뒤 다시 내려받는 과정을 따라갑니다. Curio는 piece를 받고 sector 작업을 DB에 등록하며 실행 노드에 배정합니다. 계산이 끝나면 Lotus RPC를 통해 메시지를 제출하고, Lotus는 블록을 검증·실행해 체인 상태와 영수증을 만듭니다. 마지막에는 retrieval 경로가 저장된 bytes를 찾아 사용자에게 돌려줍니다.
+        </p>
+        <p>
+          이 글이 답할 질문은 하나입니다. <strong>한 파일이 업로드·작업·체인·전달을 지날 때 각 상태는 어디에 남고 누가 그 상태를 바꿀 수 있습니까?</strong> “업로드 완료”를 “체인 반영 완료”나 “다운로드 가능”으로 바꾸어 부르지 않고, 단계마다 다음 단계가 확인할 증거를 남깁니다.
+        </p>
+        <ContentBoundary article="filecoin-lotus" />
+      </section>
 
-    <section id="process-map" className="space-y-6"><header><p className="text-sm font-semibold text-primary">01 · Process responsibility</p><h2 className="mt-2 text-2xl font-bold">Chain lag·deal failure·proof miss를 한 프로세스 탓으로 묶지 않는다</h2></header><p><code>lotus</code> daemon은 P2P chain sync, tipset 검증·state execution, wallet/RPC를 맡습니다. Provider 쪽 scheduler는 sector와 proof jobs를 만들고 worker capability에 배치하며, worker는 CPU·GPU·storage를 사용해 계산합니다. Boost는 deal negotiation·data transfer와 retrieval 입구를 담당합니다. 역사적 <code>lotus-miner</code> state machine과 Curio의 database-backed task model은 같은 구현이 아니므로 배포 revision을 반드시 기록합니다.</p><div className="not-prose flex flex-wrap gap-3"><CodeViewButton label="FilecoinEC struct" onClick={() => sidebar.open("lotus-filecoin-ec", codeRefs["lotus-filecoin-ec"])} /><CodeViewButton label="CreateBlock()" onClick={() => sidebar.open("lotus-mine", codeRefs["lotus-mine"])} /></div><div className="grid gap-3 sm:grid-cols-2"><article className="rounded-lg border border-border p-4"><h3 className="font-semibold">고정 예제 · chain</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">높이 100 tipset의 header·messages·state root는 lotus daemon이 검증합니다. Provider worker가 빨라도 node가 stale head라면 새 randomness를 신뢰할 수 없습니다.</p></article><article className="rounded-lg border border-border p-4"><h3 className="font-semibold">고정 예제 · storage</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Deal D7은 Boost에서 PieceCID P로 준비되고 scheduler가 sector 42 작업을 만든 뒤 worker가 CommD·CommR과 proof를 계산합니다.</p></article></div><div id="paper-lotus-components"><CitationBlock citeKey={1} source="Lotus suite components · official docs" href={COMPONENTS}><p><strong>문제:</strong> Node·provider·worker·dealmaking 책임을 구분해야 합니다.</p><p><strong>핵심 기여:</strong> Lotus daemon, miner/worker와 Boost의 역할 및 service dependency를 설명합니다.</p><p><strong>중요 가정:</strong> 2026-08-14 문서와 실제 배포 topology·versions를 함께 기록합니다.</p><p><strong>근거 범위:</strong> 공식 Filecoin storage-provider component 설명입니다.</p><p><strong>일반화 금지:</strong> 모든 배포가 같은 process 수·HA 구성·성능을 가진다는 뜻은 아닙니다.</p></CitationBlock></div></section>
+      <section id="process-map" className="scroll-mt-24 space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">01 · 소유권</p>
+          <h2 className="mt-2 text-2xl font-bold">프로세스가 함께 떠 있어도 상태 원장은 서로 다릅니다</h2>
+        </header>
+        <LotusOwnershipMapViz />
+        <p>
+          Lotus의 <code>ChainStore</code>와 <code>StateManager</code>는 검증된 tipset, state root와 receipt root를 읽고 실행합니다. Curio의 HarmonyTask는 작업 행, <code>owner_id</code>, 재시도 횟수와 실행 이력을 HarmonyDB에 기록합니다. 계산 노드는 piece·scratch·sector 경로에 산출물을 쓰고, 시장·retrieval 경로는 사용자 요청과 전달 결과를 관리합니다.
+        </p>
+        <p>
+          이 경계를 알아야 장애를 잘못 진단하지 않습니다. Curio 작업이 성공했다고 Lotus의 canonical chain 포함이 증명되는 것은 아니며, Lotus가 sector의 actor state를 보여 준다고 사용자가 지금 bytes를 받을 수 있다는 뜻도 아닙니다. 실제 배포에서 여러 역할을 한 서버에 합칠 수는 있어도 authoritative writer는 상태별로 하나여야 합니다.
+        </p>
+        <p>
+          Curio v1.29.0의 공식 호환성 표에는 Boost가 <em>NA</em>이고 Curio의 market path를 사용한다고 적혀 있습니다. 따라서 이 글은 과거의 <code>lotus-miner + Boost</code> 구성을 현재 기본 구조처럼 그리지 않습니다. 기존 Boost 배포를 운영 중이라면 별도 마이그레이션 경계로 다뤄야 합니다.
+        </p>
+        <div className="not-prose flex flex-wrap gap-3">
+          <CodeViewButton label="Lotus FilecoinEC" onClick={() => sidebar.open("lotus-filecoin-ec", codeRefs["lotus-filecoin-ec"])} />
+          <CodeViewButton label="Lotus ChainStore" onClick={() => sidebar.open("lotus-chainstore", codeRefs["lotus-chainstore"])} />
+          <CodeViewButton label="Lotus StateManager" onClick={() => sidebar.open("lotus-statemgr", codeRefs["lotus-statemgr"])} />
+          <CodeViewButton label="Curio TaskInterface" onClick={() => sidebar.open("curio-task-interface", codeRefs["curio-task-interface"])} />
+        </div>
+        <div id="paper-curio-design">
+          <CitationBlock type="code" citeKey={1} source="Curio design · v1.29.0 commit 409a2ab" href={CURIO_DESIGN}>
+            <p><strong>문제:</strong> 여러 provider node가 sealing·proof·message 작업을 durable state로 나누어 실행해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> Pinned design은 HarmonyDB, task engine, storage paths와 chain-facing 작업의 책임을 설명합니다.</p>
+            <p><strong>중요 가정:</strong> Curio v1.29.0 코드와 같은 schema·설정·Lotus 연결을 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 해당 revision의 설계 문서와 source에 존재하는 구조에 한정합니다.</p>
+            <p><strong>일반화 금지:</strong> 문서가 provider의 처리량·고가용성이나 모든 storage topology를 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-lotus-release">
+          <CitationBlock type="code" citeKey={2} source="Lotus v1.38.3 release" href={LOTUS_RELEASE}>
+            <p><strong>문제:</strong> Network upgrade와 p2p·gateway 보안 수정이 포함된 실제 node revision을 고정해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> v1.38.3 tag와 변경 이력을 제공해 이 글의 Lotus source 범위를 재현할 수 있게 합니다.</p>
+            <p><strong>중요 가정:</strong> 배포 network, actor bundle, proof parameter와 database migration 조건을 함께 맞춥니다.</p>
+            <p><strong>근거 범위:</strong> 공식 release와 tag의 기능 존재에 한정합니다.</p>
+            <p><strong>일반화 금지:</strong> 최신 tag라는 사실이 현재 장비에서의 안정성·처리량을 증명하지는 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
 
-    <section id="artifact-handoff" className="space-y-6"><header><p className="text-sm font-semibold text-primary">02 · Artifact handoff</p><h2 className="mt-2 text-2xl font-bold">D7→PieceCID P→sector 42→CommR→chain receipt를 하나의 lineage로 잇는다</h2></header><p>
-            Process 이름보다 중요한 것은 immutable identifier입니다. Chain 쪽에는 network, tipset key, message CID,
-            state/receipt roots가 있습니다. provider 쪽에는 proposal digest, PieceCID와 size, sector number,
-            CommD·CommR, proof profile·parameters, job generation이 있습니다. 각 단계는 upstream digest와
-            software/schema revision을 받아야 하며 durable completion marker가 쓰이기 전에는 다음 단계가 결과를 소비하면 안 됩니다.
-          </p><div className="not-prose flex flex-wrap gap-3"><CodeViewButton label="Weight()" onClick={() => sidebar.open("lotus-weight", codeRefs["lotus-weight"])} /><CodeViewButton label="ChainStore struct" onClick={() => sidebar.open("lotus-chainstore", codeRefs["lotus-chainstore"])} /><CodeViewButton label="StateManager struct" onClick={() => sidebar.open("lotus-statemgr", codeRefs["lotus-statemgr"])} /></div><ol className="grid gap-3 md:grid-cols-4">{[["1","deal","D7 · P · size"],["2","sector","42 · CommD/CommR"],["3","proof","profile · proof digest"],["4","chain","message CID · tipset receipt"]].map(([n,t,d])=><li key={n} className="rounded-lg border border-border p-4"><p className="font-mono text-xs text-primary">{n}</p><h3 className="mt-2 font-semibold">{t}</h3><p className="mt-2 break-words text-sm text-muted-foreground">{d}</p></li>)}</ol><p><strong>완료 경계:</strong> Deal을 publish한 것은 저장 의도를 chain에 올린 것이고, sector activation은 별도 actor state입니다. Proof bytes 생성은 cryptographic computation 완료일 뿐 message inclusion과 reorg confidence까지 뜻하지 않습니다. 이 경계를 합치면 재시도에서 duplicate publish나 stale proof가 발생합니다.</p></section>
+      <section id="artifact-handoff" className="scroll-mt-24 space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">02 · 작업</p>
+          <h2 className="mt-2 text-2xl font-bold">HarmonyDB의 owner_id가 실행 권한을 한 노드에만 줍니다</h2>
+        </header>
+        <CurioTaskLifecycleViz />
+        <p>
+          작업은 <code>owner_id=NULL</code>인 대기 행으로 시작합니다. 각 노드는 동시 실행 한도, CPU·RAM·GPU·저장 경로와 task별 <code>CanAccept</code> 조건을 검사합니다. 후보 하나가 <code>FOR UPDATE SKIP LOCKED</code>로 행을 잠그고 자신의 machine ID를 기록한 뒤에야 <code>Do</code>를 실행합니다.
+        </p>
+        <p>
+          실행 중에는 <code>stillOwned</code>를 확인합니다. 소유권을 잃은 노드가 같은 체인 메시지나 파일 변경을 계속 만들면 중복 외부 효과가 생길 수 있기 때문입니다. 성공한 작업은 active table에서 지우고 history에 남깁니다. 재시도 가능한 실패는 <code>owner_id</code>를 다시 비우고 retry 수를 올립니다.
+        </p>
+        <p>
+          예를 들어 node 27이 TreeR 계산을 마친 직후 종료됐다고 하겠습니다. 재시작한 scheduler는 DB 행만 보고 proof와 체인 메시지가 모두 끝났다고 판단하면 안 됩니다. 저장 경로의 artifact digest, 제출한 message CID, Lotus receipt를 차례로 대조한 뒤 누락된 단계부터 다시 시작해야 합니다.
+        </p>
+        <div className="not-prose flex flex-wrap gap-3">
+          <CodeViewButton label="Curio TaskInterface · stillOwned" onClick={() => sidebar.open("curio-task-interface", codeRefs["curio-task-interface"])} />
+          <CodeViewButton label="Curio SQL claim · 완료 기록" onClick={() => sidebar.open("curio-task-claim", codeRefs["curio-task-claim"])} />
+        </div>
+        <div id="paper-curio-task">
+          <CitationBlock type="code" citeKey={3} source="Curio HarmonyTask · v1.29.0 commit 409a2ab" href={CURIO_TASK}>
+            <p><strong>문제:</strong> 여러 process가 같은 task를 경쟁해도 한 owner만 외부 효과를 만들고, 종료 뒤에는 안전하게 재개해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> Resource·CanAccept 검사, SQL claim, owner 갱신, 성공 history와 재시도 상태 전이를 구현합니다.</p>
+            <p><strong>중요 가정:</strong> HarmonyDB transaction과 machine identity가 정상이며 개별 task도 <code>stillOwned</code> 계약을 지킵니다.</p>
+            <p><strong>근거 범위:</strong> Pinned HarmonyTask handler의 배정·완료 처리에 한정합니다.</p>
+            <p><strong>일반화 금지:</strong> 공통 task engine만으로 proof artifact·message submission·storage durability의 정확성이 보장되지는 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
 
-    <section id="operations" className="space-y-6"><header><p className="text-sm font-semibold text-primary">03 · Operations</p><h2 className="mt-2 text-2xl font-bold">Readiness는 profile마다 필요한 chain·version·artifact 조건의 교집합이다</h2></header><ExplainedFormula question="한 provider job을 실행 가능한 상태라고 언제 판단할까?" idea={<>Chain context, software/profile compatibility와 upstream artifact lineage가 모두 유효해야 합니다.</>} formula={String.raw`A_{ready}=A_{chain}\land A_{profile}\land A_{lineage}`}
-    annotatedFormula={String.raw`A_{ready}=\underbrace{A_{chain}}_{\text{chain 문맥 승인}}\land\underbrace{A_{profile}}_{\text{버전 조합 허용}}\land\underbrace{A_{lineage}}_{\text{같은 generation 계보}}`}
-    operations={[
-          { expression: String.raw`A_{chain}\land A_{profile}\land A_{lineage}`, annotation: ["chain context, schema 호환, upstream","artifact 계보가 모두 1일 때만 job을","보내고 하나라도 0이면 시작하지 않습니다"] },
-        ]} terms={[{symbol:"A_{ready}",name:"Job readiness",description:"이 generation을 worker 또는 chain submission에 보낼 수 있으면 1입니다."},{symbol:"A_{chain}",name:"Chain context",description:"필요한 head·network version·randomness가 승인됐으면 1입니다."},{symbol:"A_{profile}",name:"Compatibility",description:"Node·actor·proof/service schema가 허용된 조합이면 1입니다."},{symbol:"A_{lineage}",name:"Artifact lineage",description:"Upstream IDs·digests·completion markers가 같은 generation이면 1입니다."}]} assumptions={["각 Boolean은 typed evidence로 계산하며 단순 process health가 아닙니다.","Read-only node처럼 provider artifact가 필요 없는 profile은 별도 readiness 식을 사용합니다."]} interpretation="세 항 중 하나라도 0이면 job을 시작하거나 external effect를 내지 않습니다. 이 식은 availability 수치나 deadline 성공 확률을 계산하지 않습니다." /><p>장애도 같은 지도에서 좁힙니다. Chain lag는 peer·header/message fetch·state replay부터, deal failure는 proposal/piece/publish lineage부터, PoSt miss는 deadline snapshot·storage reads·proof worker·message inclusion부터 확인합니다. 한 서비스의 CPU 사용률만으로 다른 failure domain의 원인을 결론내리지 않습니다.</p></section>
+      <section id="operations" className="scroll-mt-24 space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">03 · 완료</p>
+          <h2 className="mt-2 text-2xl font-bold">업로드·계산·제출·체인·전달의 영수증을 따로 확인합니다</h2>
+        </header>
+        <LotusCompletionBoundaryViz />
+        <p>
+          업로드 영수증은 piece bytes와 CID를 받았다는 뜻입니다. 계산 영수증은 commitment와 proof 산출물이 생겼다는 뜻이고, 제출 영수증은 메시지를 Lotus에 보냈다는 뜻입니다. 체인 영수증은 canonical tipset에서 actor state와 실행 결과를 확인했다는 뜻입니다. 사용자에게 bytes를 돌려주고 CID가 일치해야 전달까지 끝납니다.
+        </p>
+        <ExplainedFormula
+          question="서비스가 파일 D7을 사용할 수 있다고 표시하려면 어떤 증거가 필요합니까?"
+          idea={<>체인 반영, 현재 provider profile, artifact lineage와 작업 소유권을 같은 sector·message identity로 연결합니다. Retrieval 완료를 표시할 때는 전달된 bytes의 CID도 추가로 확인합니다.</>}
+          formula={String.raw`A_{ready}=A_{chain}\land A_{profile}\land A_{lineage}\land A_{owner}`}
+          annotatedFormula={String.raw`\underbrace{A_{ready}}_{\text{사용 가능 판정}}=\underbrace{A_{chain}}_{\text{체인 영수증}}\land\underbrace{A_{profile}}_{\text{버전·설정}}\land\underbrace{A_{lineage}}_{\text{산출물 계보}}\land\underbrace{A_{owner}}_{\text{단일 소유권}}`}
+          operations={[
+            { expression: String.raw`A_{chain}=1`, annotation: ["같은 message CID의 receipt와 actor state를 확인", "제출 응답만으로는 1이 아님"] },
+            { expression: String.raw`A_{profile}\land A_{lineage}`, annotation: ["Lotus·Curio·proof profile을 고정", "piece·sector·proof digest를 같은 작업 계보로 연결"] },
+            { expression: String.raw`A_{owner}=1`, annotation: ["현재 task owner와 완료 history가 모순되지 않음", "소유권을 잃은 worker의 외부 효과는 거절"] },
+          ]}
+          terms={[
+            { symbol: "Aready", name: "서비스 사용 가능", description: "선택한 완료 경계까지 필요한 증거가 모두 맞으면 1입니다." },
+            { symbol: "Achain", name: "체인 영수증", description: "메시지 실행 결과와 actor state가 요구한 confidence에서 canonical이면 1입니다." },
+            { symbol: "Aprofile", name: "호환 프로필", description: "Lotus·Curio·actor·proof 설정이 검증한 조합과 같으면 1입니다." },
+            { symbol: "Alineage", name: "산출물 계보", description: "PieceCID, sector, commitment, proof와 message가 같은 요청에서 이어졌으면 1입니다." },
+            { symbol: "Aowner", name: "작업 소유권", description: "현재 실행자와 history가 DB의 단일 owner 전이와 일치하면 1입니다." },
+          ]}
+          assumptions={[
+            "모든 영수증은 같은 piece D7, sector 42와 message M42를 가리킵니다.",
+            "Chain confidence와 reorg 처리 기준은 배포 정책에서 별도로 정합니다.",
+            "Retrieval 성공을 주장하려면 받은 bytes의 CID 검증을 이 식 뒤에 추가합니다.",
+          ]}
+          interpretation="Achain이 1이어도 artifact 계보가 끊겼거나 현재 작업 owner가 모순되면 서비스는 완료로 표시하지 않습니다. 실패한 단계의 소유자부터 조사하고 이미 확인한 외부 효과는 반복하지 않습니다."
+        />
+      </section>
 
-    <section id="release-gate" className="space-y-6"><header><p className="text-sm font-semibold text-primary">04 · Release and rollback</p><h2 className="mt-2 text-2xl font-bold">Version manifest와 failure replay가 맞아야 suite 조합을 채택한다</h2></header><p>
-            Canary는 Lotus source SHA, network·actor bundle, provider scheduler·database schema를 고정하고
-            Boost/retrieval profile과 proof API·parameter manifest도 같은 방식으로 묶습니다. 같은 D7/sector 42 fixture에는
-            stale head, wrong CommR, missing worker, process crash, message replacement와 reorg를 주입해
-            state·artifact·external-effect parity를 확인합니다. 측정값은 sync lag, job queue age, stage p50/p99, proof
-            verification, chain inclusion/confidence와 retrieval success를 섞지 않고 따로 남깁니다.
-          </p><p><strong>증명 아이디어:</strong> 각 external effect가 유일한 job generation과 canonical chain receipt를 역참조하면 재시작한 process가 이미 완료된 작업을 새 작업으로 오인하기 어렵습니다. 반대로 모든 health check가 성공해도 stale head의 randomness로 proof를 만들면 lineage가 끊기므로 readiness는 0입니다. 실패 시 새 writes를 멈추고 이전 호환 binary·schema·parameter bundle로 돌아가며, 이미 제출한 message는 chain state를 조회해 재전송 여부를 결정합니다.</p><div id="paper-lotus-source"><CitationBlock type="code" citeKey={2} source="Lotus v1.36.0 · commit 154c0c3" href={LOTUS}><p><strong>문제:</strong> Suite implementation 사실을 재현 가능한 revision에 고정해야 합니다.</p><p><strong>핵심 기여:</strong> Lotus node와 legacy miner/worker의 chain·state·storage source tree를 제공합니다.</p><p><strong>중요 가정:</strong> v1.36.0 dependencies, network/actor/proof profile과 build configuration을 함께 고정합니다.</p><p><strong>근거 범위:</strong> Commit 154c0c3에 존재하는 package/API behavior입니다.</p><p><strong>일반화 금지:</strong> Master branch, Curio·Boost 전체, production availability나 future behavior를 보장하지 않습니다.</p></CitationBlock></div><aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 10/10:</strong> 네 process의 owner, 고정 예제, chain/provider identifiers, 네 completion states, readiness 식, failure routing, immutable lineage, stale-head 반례, compatibility canary와 rollback을 이 글만으로 답할 수 있습니다.</aside></section>
-  </article>
-  <CodeSidebar
-    codeRefKey={sidebar.codeRefKey}
-    codeRef={sidebar.codeRef}
-    onClose={sidebar.close}
-    onNavigate={sidebar.navigate}
-    codeRefs={codeRefs}
-    fileTrees={{ lotus: lotusTree }}
-    projectMetas={{
-      lotus: {
-        id: "lotus",
-        label: "Lotus · Go",
-        badgeClass: "bg-blue-500/10 border-blue-500 text-blue-700",
-      },
-    }}
-  />
+      <section id="release-gate" className="scroll-mt-24 space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">04 · 배포</p>
+          <h2 className="mt-2 text-2xl font-bold">Lotus·Curio·proof 조합을 하나의 배포 단위로 검증합니다</h2>
+        </header>
+        <LotusReleaseBundleViz />
+        <p>
+          이 글의 코드 범위는 Lotus v1.38.3 tag와 Curio v1.29.0 tag에 고정했습니다. 하지만 tag 두 개가 존재한다고 서로 호환되거나 현재 provider에서 안전하다는 뜻은 아닙니다. Canary에는 actor·network version, Curio DB migration, proof parameter, sector size와 storage path profile을 함께 기록합니다.
+        </p>
+        <p>
+          같은 작은 piece fixture로 업로드, task claim, CommD·CommR·proof, message inclusion과 retrieval을 끝까지 실행합니다. Worker 종료, Lotus RPC timeout, DB owner 회수와 chain reorg를 단계별로 주입하고 중복 메시지·고아 artifact·잘못된 완료 표시가 없는지 확인합니다. 이 글은 해당 조합의 처리량이나 가용성을 측정하지 않았습니다.
+        </p>
+        <p>
+          되돌릴 때는 binary만 낮추지 않습니다. Lotus database와 network migration의 역호환 조건, Curio schema snapshot, 이전 proof parameter bundle과 routing 설정을 함께 확인합니다. 이미 chain에 포함된 메시지는 다시 제출하지 않고, 확인되지 않은 로컬 단계만 영수증에서 재개합니다.
+        </p>
+        <div id="paper-lotus-source">
+          <CitationBlock type="code" citeKey={4} source="Lotus source · v1.38.3 commit 29d72bd" href={LOTUS_SOURCE}>
+            <p><strong>문제:</strong> ChainStore·StateManager·Expected Consensus 구현 주장을 재현 가능한 source에 고정해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> 이 글에서 인용한 Lotus chain·state code의 정확한 revision을 제공합니다.</p>
+            <p><strong>중요 가정:</strong> 해당 tag의 dependencies, actor bundle, network profile과 build configuration을 함께 고정합니다.</p>
+            <p><strong>근거 범위:</strong> Commit 29d72bd의 source behavior에 한정합니다.</p>
+            <p><strong>일반화 금지:</strong> Source가 production availability, 고정 처리량이나 미래 network behavior를 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-curio-release">
+          <CitationBlock type="code" citeKey={5} source="Curio v1.29.0 release" href={CURIO_RELEASE}>
+            <p><strong>문제:</strong> Curio의 network·Lotus 의존성과 현재 market path를 실제 release에 고정해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> NV29 지원, Lotus dependency와 Boost 비적용을 포함한 v1.29.0 호환성 정보를 제공합니다.</p>
+            <p><strong>중요 가정:</strong> 배포하려는 network와 database migration path가 release 조건을 만족합니다.</p>
+            <p><strong>근거 범위:</strong> 공식 release note에 명시된 기능과 호환성 범위입니다.</p>
+            <p><strong>일반화 금지:</strong> Release note만으로 현재 storage hardware·DB·운영 절차의 안전성을 확정하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+    </article>
+
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={codeRefs}
+      fileTrees={{ lotus: lotusTree, curio: curioTree }}
+      projectMetas={{
+        lotus: {
+          id: "lotus",
+          label: "Lotus v1.38.3 · Go",
+          badgeClass: "border-blue-500 bg-blue-500/10 text-blue-700",
+        },
+        curio: {
+          id: "curio",
+          label: "Curio v1.29.0 · Go",
+          badgeClass: "border-emerald-500 bg-emerald-500/10 text-emerald-700",
+        },
+      }}
+    />
   </>;
 }

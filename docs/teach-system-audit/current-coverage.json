@@ -4901,7 +4901,7 @@
     {
       "route": "blockchain/filecoin-lotus",
       "publicPath": "cs/blockchain/filecoin-lotus",
-      "title": "Filecoin Lotus 아키텍처",
+      "title": "Lotus와 Curio: 파일 하나의 전체 경로",
       "catalogIndex": 487,
       "status": "pending",
       "provenance": "assignment:chains",

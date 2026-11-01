@@ -25,3 +25,18 @@ export const lotusTree: FileNode = d("lotus/chain", [
   d("store", [f("store.go", "lotus/chain/store/store.go", "lotus-chainstore")]),
   d("stmgr", [f("stmgr.go", "lotus/chain/stmgr/stmgr.go", "lotus-statemgr")]),
 ]);
+
+export const curioTree: FileNode = d("curio/harmony", [
+  d("harmonytask", [
+    f(
+      "harmonytask.go",
+      "curio/harmony/harmonytask/harmonytask.go",
+      "curio-task-interface",
+    ),
+    f(
+      "task_type_handler.go",
+      "curio/harmony/harmonytask/task_type_handler.go",
+      "curio-task-claim",
+    ),
+  ]),
+]);
