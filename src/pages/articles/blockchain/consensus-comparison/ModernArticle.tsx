@@ -1,53 +1,149 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { ConsensusFamilyMatrixViz, ConsensusSelectionFlowViz } from "./viz/ModernConsensusComparisonViz";
+import {
+  ConsensusFamilyMatrixViz,
+  ConsensusFaultTraceViz,
+  ConsensusLatencyPathViz,
+  ConsensusRequestTraceViz,
+  ConsensusSelectionFlowViz,
+} from "./viz/ModernConsensusComparisonViz";
 
 export default function ModernConsensusComparisonArticle() {
   return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">합의 protocol 종합 선택</p><h2 className="text-3xl font-bold tracking-tight">‘누가 어떤 실패 아래 무엇을 결정하는가’가 TPS보다 먼저다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">합의(consensus)는 여러 node가 network 도착 순서가 달라도 하나의 값이나 명령 순서를 결정하는 문제입니다. PBFT·HotStuff·Tendermint 같은 classical BFT, Narwhal·Bullshark 같은 DAG-BFT, Bitcoin식 Nakamoto consensus, 반복 sampling으로 선호를 굳히는 계열은 모두 합의라는 이름을 쓰지만 membership과 finality의 의미부터 다릅니다.</p>
-      <p>초심자가 가장 먼저 분리할 것은 safety와 liveness입니다. Safety는 두 정직 node가 충돌하는 결정을 내리지 않는 성질이고, liveness는 명시한 network·fault 조건에서 결국 새 결정을 내리는 성질입니다. Network partition에서 멈춰 safety를 지키는 protocol과 계속 한쪽 결과를 내는 protocol을 평균 TPS 하나로 비교하면 안 됩니다. <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/distributed-systems#overview">process·message·failure model</a>과 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/smr-theory#overview">SMR의 total order·deterministic apply</a>는 별도 정본에서 더 깊게 이어집니다.</p>
-      <ConsensusSelectionFlowViz />
-      <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> 같은 표의 첫 열은 protocol 이름이 아니라 membership snapshot과 influence 단위여야 합니다. 그 다음 failure·timing model, decision evidence, finality semantics를 고정하고 마지막에 workload 비용을 비교합니다.</aside>
+    <section id="overview" className="scroll-mt-24 space-y-6">
+      <header className="space-y-3">
+        <p className="text-sm font-semibold text-primary">합의 계열 비교 · 같은 요청을 네 경로로 추적</p>
+        <h2 className="text-3xl font-bold tracking-tight">무엇을 완료로 부르는지부터 맞춰야 비교가 시작됩니다</h2>
+      </header>
+      <p className="text-lg leading-8 text-foreground/90">
+        사용자가 잔액 10을 보내는 요청을 제출했다고 하겠습니다. Classical BFT는 validator 표를, DAG-BFT는 data certificate와 ordering evidence를, Nakamoto PoW는 누적 work를, sampling 계열은 반복 표본의 선호를 모읍니다. 네 계열 모두 하나의 history를 만들려 하지만, 참가 자격과 완료 증거는 서로 다릅니다.
+      </p>
+      <ConsensusRequestTraceViz />
+      <p>
+        이 글이 답할 질문은 하나입니다. <strong>서로 다른 합의 계열을 어떤 공통 질문으로 비교해야 제품의 안전성과 대기 시간을 잘못 해석하지 않는가?</strong> 비교 순서는 참가 자격과 영향력, 실패와 timing 전제, 결정 증거와 finality 의미, client가 실제로 기다린 경로입니다.
+      </p>
+      <aside className="border-l-2 border-primary pl-5 text-sm leading-6 text-muted-foreground">
+        <strong className="text-foreground">먼저 재사용할 개념:</strong> Safety는 충돌 결정을 금지하는 성질이고, liveness는 명시한 조건에서 결국 새 결정을 내리는 성질입니다. 합의가 순서를 정한 뒤에도 deterministic execution과 client notification은 별도 상태입니다. 자세한 정의는 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/distributed-systems#overview">분산 시스템</a>과 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/smr-theory#overview">상태 머신 복제</a> 글에서 이어집니다.
+      </aside>
     </section>
 
-    <section id="performance" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · 계열과 성능</p><h2 className="mt-2 text-2xl font-bold">Message 차수는 payload bytes, fan-out, crypto와 client wait를 대신하지 않는다</h2></header>
+    <section id="evidence" className="scroll-mt-24 space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">01 · 증거</p>
+        <h2 className="mt-2 text-2xl font-bold">Validator 한 표와 hash power 한 단위는 같은 표가 아닙니다</h2>
+      </header>
       <ConsensusFamilyMatrixViz />
       <p>
-            Classical leader BFT는 고정된 validator 집합에서 proposal과 vote certificate로 명령 순서를 결정합니다. DAG-BFT는 여러
-            validator의 data dissemination을 병렬화하되 DAG의 causal history를 결정적인 total order로 펼치는 규칙이 추가됩니다.
-            Nakamoto consensus는 열린 참여를 hash work 같은 희소 자원과 연결하고 cumulative work가 큰 유효 branch를 선택합니다. Sampling
-            계열은 작은 peer 표본을 반복해 선호 confidence를 키우므로 sample size·독립성·adversary fraction이 안전성 parameter가 됩니다.
-          </p>
-      <ExplainedFormula question="사용자가 느끼는 commit latency를 어떤 항목으로 분해해야 protocol의 진짜 병목을 찾을 수 있는가?" idea={<>한 번의 평균 RTT로 뭉개지 않고 request가 batch를 기다리는 시간, data가 필요한 replicas에 도달하는 시간, order round, deterministic execution, finality policy와 queueing을 더합니다. 서로 겹쳐 실행되는 구간은 critical path에서만 세어야 합니다.</>} formula={String.raw`\begin{aligned}L_{client}={}&L_{batch}+L_{data}+r\Delta\\&+L_{exec}+L_{finality}+L_{queue}\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}L_{client}={}&\underbrace{L_{batch}}_{\text{batch 대기}}+\underbrace{L_{data}}_{\text{payload 전파}}+\underbrace{r\Delta}_{\text{order round}}\\&+\underbrace{L_{exec}}_{\text{결정적 실행}}+\underbrace{L_{finality}}_{\text{finality policy}}+\underbrace{L_{queue}}_{\text{backlog}}\end{aligned}`}
-      operations={[
-        { expression: String.raw`L_{batch}+L_{data}`, annotation: ["request가 batch에 실릴 때까지와","payload가 필요한 replica에 닿는 시간.","A: 10+120ms, B: 60+50ms"] },
-        { expression: String.raw`r\Delta`, annotation: ["critical path의 순차 message 단계 수","× 측정한 delay. A: 2×40ms, B: 3×40ms"] },
-        { expression: String.raw`L_{exec}+L_{finality}+L_{queue}`, annotation: ["state transition 실행, confirmation","depth 같은 policy 대기, backlog.","round 하나 줄여도 queue 500ms면 무의미"] },
-      ]} terms={[{symbol:"L_{client}",name:"Client-visible latency",description:"제출 시점부터 선택한 finality evidence까지의 end-to-end 시간입니다."},{symbol:"r",name:"Critical-path rounds",description:"좋은 network 구간에서 순차적으로 기다려야 하는 message-delay 단계 수입니다."},{symbol:String.raw`\Delta`,name:"Observed network delay",description:"고정 상수가 아니라 region·payload·tail percentile과 함께 측정한 delay입니다."},{symbol:"L_{data},L_{exec}",name:"Data·execution cost",description:"Payload availability와 state transition 실행에 실제로 든 시간입니다."}]} assumptions={["모든 항목은 같은 client 위치·offered load·batch policy·payload에서 측정합니다.","병렬 data/order 작업을 중복 합산하지 않고 critical path를 계측합니다.","GST 뒤 theoretical bound와 실제 p50·p99를 구분합니다.","Confirmation depth나 challenge period처럼 protocol 밖 policy도 finality 항에 명시합니다."]} interpretation="Order round를 한 단계 줄여도 queue가 500ms라면 사용자는 거의 이득을 보지 못합니다. 반대로 낮은 p50만 보고 blip 뒤 backlog와 p99 recovery를 숨기면 운영 선택을 잘못하게 됩니다." />
-      <p>예를 들어 두 후보가 같은 1KiB transaction 10,000개를 처리하더라도 A는 10ms batching+120ms data+2×40ms order+30ms execution=240ms이고, B는 60ms batching+50ms data+3×40ms+10ms execution=240ms일 수 있습니다. 합계가 같아도 A는 data fan-out, B는 batching·round가 최적화 지점입니다. 논문 TPS는 machine·region·transaction size·batch·client load를 함께 인용해야 하며 다른 논문의 숫자를 가로로 빼서 배수 향상이라 부르지 않습니다.</p>
+        Classical BFT는 고정된 검증자 명부에서 서명된 표를 모읍니다. 명부는 epoch마다 바뀔 수 있습니다. 프로토콜마다 lock과 view change 방식은 다르지만, 같은 slot에서 충돌하는 quorum certificate를 만들지 못하게 하는 교집합이 핵심입니다.
+      </p>
+      <p>
+        DAG-BFT는 payload 전파를 ordering 경로와 분리하는 경우가 많습니다. 이때 batch를 여러 노드가 보관했다는 data certificate와 anchor의 순서를 확정했다는 증거는 서로 다릅니다. 전자가 생겼다고 실행 순서까지 결정된 것은 아닙니다.
+      </p>
+      <p>
+        Nakamoto PoW는 “노드 몇 대”보다 유효한 work가 얼마나 누적됐는지를 비교합니다. 열린 참여를 hash power라는 비용에 연결하고, 더 많은 누적 work를 가진 유효한 chain을 선택합니다. Sampling 계열은 작은 peer 표본을 여러 번 뽑아 선호와 confidence를 갱신합니다. 따라서 sample size, threshold, 연속 성공 횟수와 표본 전제가 결과의 일부입니다.
+      </p>
+      <p>
+        같은 요청을 받았다는 사실은 어느 계열에서도 완료가 아닙니다. BFT vote는 domain과 signature를, DAG vertex는 parents와 payload availability를, PoW block은 header·transactions·work를, sampling response는 poll 대상과 현재 선호를 검증한 뒤에야 다음 상태로 넘어갑니다.
+      </p>
     </section>
 
-    <section id="security" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · 안전성과 활성</p><h2 className="mt-2 text-2xl font-bold">결정적 finality와 확률적 confirmation은 같은 문장이 아니다</h2></header>
-      <p>Fixed-membership BFT에서 결정적 finality는 fault bound, authenticated vote, quorum intersection과 lock rule이 유지될 때 conflicting commit을 protocol 위반 없이 만들 수 없다는 뜻입니다. 이는 “block을 본 즉시 안전하다”거나 fault bound가 깨져도 history가 유지된다는 뜻이 아닙니다. Nakamoto 계열에서는 더 큰 competing work가 나타날 reorg 위험이 confirmation depth와 honest/adversarial work, propagation 조건에 따라 줄어드는 확률적 finality를 사용합니다.</p>
-      <p>Sampling 계열의 오류 확률도 독립 표본과 Byzantine 비율 같은 model parameter에 의존합니다. ‘확률적’이라는 말만 같다고 Nakamoto의 random walk와 metastable sampling을 같은 식으로 계산할 수 없습니다. DAG-BFT의 finality가 결정적이어도 data가 certificate만 있고 executor가 payload를 받지 못하면 safety와 별개로 liveness가 막힐 수 있습니다. 따라서 finality evidence, data availability, execution validity, client notification을 별도 receipt로 남깁니다.</p>
-      <div id="paper-dls-comparison"><CitationBlock source="Dwork·Lynch·Stockmeyer — Consensus in the Presence of Partial Synchrony" citeKey={1} href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf"><p><strong>문제:</strong> 완전 synchrony와 완전 asynchrony 사이에서 consensus 가능 조건을 밝힙니다.</p><p><strong>기여:</strong> Unknown delay bound와 unknown Global Stabilization Time(GST) model, fault별 resilience 결과를 제시합니다.</p><p><strong>전제와 범위:</strong> 논문의 process·authentication·fault model에 대한 이론 결과입니다. 실제 Internet의 GST 시점이나 timeout 값을 제공하지 않습니다.</p></CitationBlock></div>
-      <div id="paper-bitcoin-comparison"><CitationBlock source="Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System" citeKey={2} href="https://bitcoin.org/bitcoin.pdf"><p><strong>문제:</strong> 중앙 운영자 없이 double spend에 저항하는 transaction history를 만듭니다.</p><p><strong>기여:</strong> PoW chain, cumulative work 선택과 attacker catch-up 확률 모델을 결합합니다.</p><p><strong>전제와 범위:</strong> 논문의 hash-power·network·confirmation model입니다. 현대 Bitcoin 구현의 모든 relay·mining pool·fee 동작이나 다른 PoW chain의 확률을 자동 보장하지 않습니다.</p></CitationBlock></div>
+    <section id="security" className="scroll-mt-24 space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">02 · 장애</p>
+        <h2 className="mt-2 text-2xl font-bold">Network partition은 멈춤·branch 경쟁·표본 편향을 각각 만듭니다</h2>
+      </header>
+      <ConsensusFaultTraceViz />
+      <p>
+        고정된 참가자 명부를 쓰는 BFT에서는 어느 쪽도 정족수를 만들지 못하면 멈추는 것이 정상일 수 있습니다. 정지는 liveness 손실입니다. 그러나 주어진 전제 안에서 충돌하는 certificate가 없다면 곧바로 safety 실패라고 볼 수는 없습니다.
+      </p>
+      <p>
+        DLS의 partial synchrony는 두 모형을 구분합니다. 하나는 메시지 지연 상한이 있지만 그 값을 모르는 경우이고, 다른 하나는 알려진 상한이 알 수 없는 시점 이후부터 성립하는 경우입니다. 논문이 실제 인터넷의 GST 시각이나 timeout 값을 정해 주는 것은 아닙니다.
+      </p>
+      <p>
+        PoW network가 갈라지면 양쪽 branch에 work가 쌓일 수 있습니다. 연결이 돌아온 뒤 더 큰 누적 work를 가진 유효한 chain을 채택하면서 다른 branch의 낮은 깊이 거래가 되돌아갈 수 있습니다. Sampling 계열의 오류 확률은 반복 표본과 adversary model에서 나오므로, PoW의 attacker catch-up 확률과 같은 식이나 같은 “99.9% finality” 열에 넣으면 안 됩니다.
+      </p>
+      <div id="paper-dls-comparison"><CitationBlock source="Dwork·Lynch·Stockmeyer — Consensus in the Presence of Partial Synchrony" citeKey={1} href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf">
+        <p><strong>문제:</strong> 완전 synchrony와 완전 asynchrony 사이에서 consensus가 가능한 조건을 밝힙니다.</p>
+        <p><strong>기여:</strong> 알 수 없는 delay bound와 알 수 없는 안정화 시점을 구분하고 fault model별 resilience를 제시합니다.</p>
+        <p><strong>전제와 범위:</strong> 논문의 process·authentication·fault model에 대한 이론 결과입니다.</p>
+        <p><strong>말하지 않는 것:</strong> 실제 서비스의 GST 시점, timeout 값이나 관측 p99를 제공하지 않습니다.</p>
+      </CitationBlock></div>
+      <div id="paper-bitcoin-comparison"><CitationBlock source="Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System" citeKey={2} href="https://bitcoin.org/bitcoin.pdf">
+        <p><strong>문제:</strong> 중앙 운영자 없이 double spend에 저항하는 거래 history를 만듭니다.</p>
+        <p><strong>기여:</strong> Hash-based proof-of-work chain, 누적 work 선택과 attacker catch-up model을 결합합니다.</p>
+        <p><strong>전제와 범위:</strong> 원문의 hash-power·network·confirmation model입니다.</p>
+        <p><strong>말하지 않는 것:</strong> 현대 mining pool·relay·fee 정책이나 다른 PoW chain의 reorg 확률을 자동으로 설명하지 않습니다.</p>
+      </CitationBlock></div>
+      <div id="paper-avalanche-comparison"><CitationBlock source="Team Rocket et al. — Snow protocol family · arXiv v2" citeKey={3} href="https://arxiv.org/abs/1906.08936v2">
+        <p><strong>문제:</strong> 전체 참가자를 매번 모으지 않고 반복적인 network subsampling으로 선호를 수렴시킵니다.</p>
+        <p><strong>기여:</strong> Metastable sampling을 사용하는 Snow family와 그 probabilistic safety model을 제시합니다.</p>
+        <p><strong>전제와 범위:</strong> 논문의 sampling·Byzantine adversary·parameter와 평가 환경입니다.</p>
+        <p><strong>말하지 않는 것:</strong> 한 번의 poll, 임의 peer discovery나 현재 모든 Avalanche 구현의 network finality를 대신하지 않습니다.</p>
+      </CitationBlock></div>
     </section>
 
-    <section id="use-cases" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · 선택과 검증</p><h2 className="mt-2 text-2xl font-bold">제품의 membership과 실패 비용을 protocol 요구로 번역한다</h2></header>
-      <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[780px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">상황</th><th className="p-3">먼저 물을 질문</th><th className="p-3">후보와 주의점</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3 font-medium text-foreground">조직이 validator를 관리</td><td className="p-3">f, region, key·membership rotation</td><td className="p-3">Classical/DAG BFT; fault bound 초과와 operator correlation 검사</td></tr><tr><td className="p-3 font-medium text-foreground">Open participation ledger</td><td className="p-3">Sybil cost와 influence concentration</td><td className="p-3">PoW/PoS 계열; resource majority·custody·fork choice 분리</td></tr><tr><td className="p-3 font-medium text-foreground">큰 payload·높은 offered load</td><td className="p-3">Leader ingress와 data availability</td><td className="p-3">DAG/separated dissemination; order와 execution 병목은 그대로 측정</td></tr><tr><td className="p-3 font-medium text-foreground">간헐적 partition·blip</td><td className="p-3">정지 허용 시간과 conflict 비용</td><td className="p-3">Safety hard gate 뒤 recovery p99·backlog drain을 paired 비교</td></tr></tbody></table></div>
-      <p>Release test는 같은 binary·membership·keys·genesis, transaction bytes·arrival trace와 network fault schedule을 후보 둘에 재생합니다. Equivocation, omission, minority/majority partition, GST marker, leader crash·restart, stale certificate, disk recovery를 넣고 conflicting commit 0과 deterministic state hash parity를 먼저 검사합니다. 그 뒤 client p50/p99, useful committed bytes/s, per-replica network bytes, CPU·memory, backlog와 recovery time을 비교합니다.</p>
-      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>
-            기초 6문제는 safety·liveness, membership, 네 계열의 evidence, 결정적·확률적 finality, latency 분해와 비용 단위를 확인합니다.
-            심화 4문제는 서로 다른 finality를 같은 숫자로 비교한 반례, workload-normalized benchmark, partition trace, hard-gated
-            선택표를 만들게 합니다. 필요한 개념은 현재 글에서 직관과 예제로 설명하고 증명과 protocol별 유도는 연결한 canonical article로 확장합니다.
-          </p>
+    <section id="performance" className="scroll-mt-24 space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">03 · 대기</p>
+        <h2 className="mt-2 text-2xl font-bold">같은 240ms도 줄여야 할 계층이 다릅니다</h2>
+      </header>
+      <ConsensusLatencyPathViz />
+      <ExplainedFormula
+        question="Client가 실제로 기다린 시간을 어떻게 나누어야 병목을 찾을 수 있습니까?"
+        idea={<>Batch 대기, data와 ordering의 critical path, deterministic execution, finality policy, queue를 구분합니다. Data와 order가 병렬이라면 두 구간을 모두 더하지 않고 실제로 더 오래 걸린 critical path만 셉니다.</>}
+        formula={String.raw`L_{client}=L_{batch}+L_{critical}+L_{exec}+L_{policy}+L_{queue}`}
+        annotatedFormula={String.raw`L_{client}=\underbrace{L_{batch}}_{\text{묶음 대기}}+\underbrace{L_{critical}}_{\text{data·order 실제 경로}}+\underbrace{L_{exec}}_{\text{상태 실행}}+\underbrace{L_{policy}}_{\text{확인 정책}}+\underbrace{L_{queue}}_{\text{밀린 요청}}`}
+        operations={[
+          { expression: String.raw`10+120+2\times40+30=240\text{ ms}`, annotation: ["후보 A는 batch 10, data 120", "order 두 단계 80, execute 30", "data 전달이 가장 긴 구간입니다."] },
+          { expression: String.raw`60+50+3\times40+10=240\text{ ms}`, annotation: ["후보 B는 batch 60, data 50", "order 세 단계 120, execute 10", "batch와 order가 긴 구간입니다."] },
+          { expression: String.raw`L_{critical}=\max(L_{data},L_{order})`, annotation: ["두 작업이 완전히 겹치는 경우의 예입니다.", "겹치지 않으면 실제 순차 구간을 더합니다.", "Trace 없이 식만 보고 정하지 않습니다."] },
+        ]}
+        terms={[
+          { symbol: "Lclient", name: "client-visible latency", description: "요청 제출부터 선택한 완료 evidence를 받을 때까지의 시간입니다." },
+          { symbol: "Lcritical", name: "data·order critical path", description: "병렬 구간을 중복 계산하지 않은 실제 선행 경로입니다." },
+          { symbol: "Lpolicy", name: "finality policy wait", description: "Confirmation depth나 별도 checkpoint처럼 제품이 추가한 대기입니다." },
+          { symbol: "Lqueue", name: "queue delay", description: "Offered load가 처리량을 넘을 때 앞선 요청 때문에 기다린 시간입니다." },
+        ]}
+        assumptions={[
+          "후보는 같은 client 위치·transaction bytes·batch policy·offered load에서 측정합니다.",
+          "각 구간은 trace ID와 단조 시계로 계측하고 겹친 시간을 중복 합산하지 않습니다.",
+          "평균뿐 아니라 p50·p95·p99와 장애 뒤 backlog drain을 함께 봅니다.",
+          "논문의 theoretical message round를 실제 network delay나 제품 SLA로 바꾸지 않습니다.",
+        ]}
+        interpretation="두 후보의 합계가 같아도 A는 전파·storage·fan-out을, B는 batching·round·timeout을 먼저 조사해야 합니다. Queue가 500ms라면 consensus round를 한 단계 줄여도 사용자가 느끼는 개선은 작을 수 있습니다."
+      />
+      <p>
+        Throughput도 transaction count만 비교하지 않습니다. Useful committed bytes/s, payload 크기, batch, validator 수와 region, client offered load, signature·hash CPU, node별 ingress·egress를 같이 기록합니다. 서로 다른 논문에서 가져온 최고 TPS를 나란히 놓아 배수 향상으로 읽는 방식은 workload와 hardware 차이를 숨깁니다.
+      </p>
+      <div id="paper-narwhal-comparison"><CitationBlock source="Danezis et al. — Narwhal and Tusk · arXiv v4" citeKey={4} href="https://arxiv.org/abs/2105.11827v4">
+        <p><strong>문제:</strong> Reliable transaction dissemination을 ordering과 분리해 BFT의 data path 병목을 줄입니다.</p>
+        <p><strong>기여:</strong> Causal history를 저장하는 Narwhal과 이를 HotStuff·Tusk ordering에 연결하는 구조를 제시합니다.</p>
+        <p><strong>전제와 범위:</strong> 논문의 authenticated membership, worker 배치, payload와 WAN 평가 조건입니다.</p>
+        <p><strong>말하지 않는 것:</strong> 논문의 TPS가 다른 hardware·transaction·protocol의 상한이거나 data certificate가 곧 execution finality라는 뜻은 아닙니다.</p>
+      </CitationBlock></div>
+    </section>
+
+    <section id="use-cases" className="scroll-mt-24 space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">04 · 선택</p>
+        <h2 className="mt-2 text-2xl font-bold">후보 이름보다 먼저 제품이 지켜야 할 경계를 확정합니다</h2>
+      </header>
+      <ConsensusSelectionFlowViz />
+      <p>
+        조직이 검증자와 key rotation을 관리하며 충돌 비용이 매우 크다면, 고정 참가자 BFT의 fault domain과 허용 가능한 정지 시간을 먼저 적습니다. 누구나 참여할 수 있는 ledger라면 Sybil 영향력을 어떤 자원으로 제한하는지, 그 자원이 얼마나 집중되는지부터 봅니다.
+      </p>
+      <p>
+        큰 payload의 전파가 병목이라면 DAG나 분리된 dissemination이 후보가 될 수 있습니다. 다만 전파 경로를 분리해도 ordering, execution, storage의 병목까지 자동으로 사라지지는 않습니다.
+      </p>
+      <p>
+        비교 환경부터 고정합니다. 같은 binary, membership, keys, genesis를 쓰고 transaction bytes와 arrival trace도 같게 맞춥니다. Network fault schedule 역시 모든 후보에 똑같이 적용합니다.
+      </p>
+      <p>
+        정상 부하뿐 아니라 equivocation, omission, 소수·다수 partition, leader crash, 오래된 증거와 재시작도 시험합니다. 먼저 충돌 decision이 0건인지, 모든 정상 노드의 state hash가 같은지 확인합니다. 이 조건을 통과한 후보만 client p99, useful bytes/s, 노드별 network bytes, CPU·memory, backlog와 recovery time으로 비교합니다.
+      </p>
+      <p>
+        이 비교 글은 특정 protocol을 채택하라고 결론 내리지 않습니다. 각 계열의 완료 evidence를 분리하고 같은 조건의 실험 질문을 만드는 데서 끝납니다. 개별 protocol의 lock, quorum, DAG linearization, sampling state는 연결된 세부 글에서 한 요청씩 다시 추적합니다.
+      </p>
     </section>
   </article>;
 }

@@ -4891,7 +4891,7 @@
     {
       "route": "blockchain/consensus-comparison",
       "publicPath": "cs/blockchain/consensus-comparison",
-      "title": "합의 프로토콜 종합 비교",
+      "title": "합의 비교",
       "catalogIndex": 486,
       "status": "pending",
       "provenance": "assignment:chains",

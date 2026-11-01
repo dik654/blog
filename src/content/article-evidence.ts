@@ -7662,7 +7662,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/consensus-comparison": [
     { kind: "핵심 논문", label: "Dwork·Lynch·Stockmeyer — Consensus in the Presence of Partial Synchrony", href: "https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf", note: "Unknown bound·GST timing model과 fault별 resilience의 원 이론" },
     { kind: "핵심 논문", label: "Nakamoto — Bitcoin", href: "https://bitcoin.org/bitcoin.pdf", note: "PoW cumulative-work chain과 attacker catch-up confirmation model" },
-    { kind: "핵심 논문", label: "Lamport·Shostak·Pease — The Byzantine Generals Problem", href: "https://lamport.azurewebsites.net/pubs/byz.pdf", note: "Byzantine interactive consistency의 oral/signed message model 경계" },
+    { kind: "핵심 논문", label: "Team Rocket et al. — Snow family · arXiv v2", href: "https://arxiv.org/abs/1906.08936v2", note: "반복 network subsampling과 metastable probabilistic safety model의 고정 논문 버전" },
+    { kind: "핵심 논문", label: "Danezis et al. — Narwhal and Tusk · arXiv v4", href: "https://arxiv.org/abs/2105.11827v4", note: "Transaction dissemination과 ordering 분리, causal data certificate와 고정 평가 범위" },
   ],
   "blockchain/dag-consensus": [
     { kind: "핵심 논문", label: "Danezis et al. — Narwhal and Tusk v4", href: "https://arxiv.org/abs/2105.11827v4", note: "§3의 2f+1 certificate·n−f parent·causal history 회수 조건" },

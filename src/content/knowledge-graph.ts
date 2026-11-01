@@ -14169,7 +14169,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "consensus-family-assumption-matrix", kind: "method", domain: "distributed-systems",
     label: "Consensus family assumption matrix",
     definition: "Classical/DAG BFT·Nakamoto·sampling 계열을 protocol 이름이나 TPS가 아니라 membership·influence resource·failure/timing model·decision evidence·finality 의미로 먼저 정렬하는 비교 방법입니다.",
-    canonicalHref: "/cs/blockchain/consensus-comparison#overview",
+    canonicalHref: "/cs/blockchain/consensus-comparison#evidence",
   },
   "consensus-finality-semantics-boundary": {
     id: "consensus-finality-semantics-boundary", kind: "concept", domain: "distributed-systems",

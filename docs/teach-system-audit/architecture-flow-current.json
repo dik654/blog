@@ -7,8 +7,8 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 525,
     "customVisuals": 911,
-    "animatedMechanisms": 573,
-    "architectureWithoutAnimation": 69,
+    "animatedMechanisms": 574,
+    "architectureWithoutAnimation": 68,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 243,
     "sourceCitationLinked": 998,
@@ -6674,18 +6674,18 @@
     {
       "route": "blockchain/consensus-comparison",
       "publicPath": "cs/blockchain/consensus-comparison",
-      "title": "합의 프로토콜 종합 비교",
+      "title": "합의 비교",
       "sourcePath": "src/pages/articles/blockchain/consensus-comparison.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/consensus-mechanisms",
