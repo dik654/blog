@@ -1560,14 +1560,14 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep",
     "status": "reviewed",
     "rationale": "사업 모델을 비교할 때는 매출 이름보다 비용을 먼저 내는 사람, 고객에게서 돈을 받는 시점, 재고·반품·미수금을 떠안는 주체를 추적해야 합니다.",
-    "reviewedAt": "2026-10-04",
+    "reviewedAt": "2026-11-01",
     "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다."
   },
   "business/shop-unit-economics": {
     "action": "keep",
     "status": "reviewed",
     "rationale": "점포의 손익분기점은 객단가에서 재료·수수료 같은 변동비를 뺀 한 건의 공헌이익으로 고정비를 나눈 결과이며, 점주 노동과 개업비 회수는 별도로 계산해야 합니다.",
-    "reviewedAt": "2026-10-04",
+    "reviewedAt": "2026-11-01",
     "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다."
   },
   "business/shop-site-selection": {
@@ -4304,11 +4304,11 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/food-chain-and-prices": "f6b223cdfc7c2798",
   "infrastructure/electricity-grid-and-power": "d4901083041053ad",
   "infrastructure/climate-risk-and-exposure": "aa85ef97f65b45ea",
-  "business/business-model-cashflow": "a2a19e5897a643d4",
+  "business/business-model-cashflow": "d9d96a98d88c5a2e",
   "business/franchise-incentives": "ad08dae42d90c580",
   "business/shop-fitout-and-opening": "f5f30c96a55ff3ac",
   "business/shop-site-selection": "2eb3fc0cdb7035e1",
-  "business/shop-unit-economics": "c7589f2e05d10c5b",
+  "business/shop-unit-economics": "8c31975990c3a73b",
   "business/supply-chain-bargaining": "dcc49518705755d1",
   "institutions/healthcare-payment-systems": "5206c5601e4ddd64",
   "institutions/how-to-read-a-country": "436b348e745e7179",
