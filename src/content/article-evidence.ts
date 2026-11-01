@@ -11731,19 +11731,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "법제처 · 음식점 화재배상책임보험과 안전시설",
       "href": "https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365",
-      "note": "페이지 하단 '2026년 9월 15일 기준으로 작성' 안내의 대상 업종·면적(100㎡, 지하 66㎡)·층·출입구와 예외를 2026-10-09 읽었습니다."
+      "note": "페이지 하단 '2026년 9월 15일 기준으로 작성' 안내의 대상 업종·면적(100㎡, 지하 66㎡)·층·출입구와 예외를 2026-11-01 읽었습니다."
     },
     {
       "kind": "공식 문서",
       "label": "법제처 · 음식점 건강진단",
       "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov",
-      "note": "2026-09-15 안내의 제40조 대상·시기·예외를 읽었습니다."
+      "note": "2026-09-15 기준 안내의 제40조 대상·시기·예외를 2026-11-01 읽었습니다."
     },
     {
       "kind": "공식 문서",
       "label": "법제처 · 식품위생교육",
       "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=839&ccfNo=4&cciNo=1&cnpClsNo=2",
-      "note": "2026-09-15 안내의 제41조 교육·대리·예외를 읽었습니다. 식품위생법 2026-10-08 시행분(법률 제21525호, 결격조항 정비)은 이미 시행됐으나 제40조·제41조 내용은 바뀌지 않았고, 안내가 예고한 다음 개정은 2026-12-31 시행분입니다(2026-10-09 확인)."
+      "note": "2026-10-15 기준 안내의 제41조 교육·대리·예외를 2026-11-01 읽었습니다. 같은 안내 상단은 2026-12-31 시행 개정을 아직 반영하지 않았다고 표시합니다."
     }
   ],
   "property/commercial-lease-and-rent": [

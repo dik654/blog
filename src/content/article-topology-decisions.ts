@@ -1581,7 +1581,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep",
     "status": "reviewed",
     "rationale": "점포 공사는 임대인의 사용 동의, 업종에 필요한 설비 확인, 범위가 적힌 견적·변경 승인, 공정 검수, 신고와 개업 준비가 이어지는 계약과 현금의 순서입니다.",
-    "reviewedAt": "2026-10-04",
+    "reviewedAt": "2026-11-01",
     "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다."
   },
   "property/commercial-lease-and-rent": {
