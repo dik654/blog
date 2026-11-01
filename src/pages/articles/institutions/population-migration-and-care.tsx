@@ -2,12 +2,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import PopulationMigrationCareViz from "./PopulationMigrationCareViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">사람이 많다는 말만으로 시장의 크기를 알 수 없습니다</h2>
+        <PopulationMigrationCareViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             100명이 사는 마을도 어린이가 많은지, 하루 종일 일할 수 있는 사람이 많은지에 따라 필요한 가게와 서비스가 달라집니다. 누군가는 가족을 돌보느라 일할 시간을 내지 못합니다.
