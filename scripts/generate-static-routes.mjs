@@ -193,6 +193,7 @@ const noScriptArticleRoutes = new Set([
   "markets/bond-pricing-and-yield-curve",
   "markets/equity-claims-and-valuation",
   "markets/financial-products-and-claims",
+  "markets/funds-etfs-and-etns",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

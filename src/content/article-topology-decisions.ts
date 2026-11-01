@@ -1627,10 +1627,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "첫 그림과 3·7·8·9절의 금액이 일치해야 합니다. 최종소비 100달러와 조립국 출하 60달러를 구분하고, 60 안의 수입부품 40을 빼 국내 부가가치 20달러를 계산합니다. 관세 6달러는 판매 몫 24달러 또는 고객 가격 106달러로 이어지는 설명용 두 경로입니다."
   },
   "markets/funds-etfs-and-etns": {
-    "rationale": "하나의 수치 사례에서 ETF와 ETN은 거래 화면이 비슷해도 손에 쥔 청구권이 다르다의 지급·조건·한계를 순서대로 추적합니다.",
-    "reviewedAt": "2026-10-04",
+    "rationale": "1만100원에 같은 지수를 사는 사례로 ETF의 펀드 지분과 ETN의 발행자 채무를 가르고, NAV 괴리, 설정·환매, 실제 수익, 부도 회수, 일일 재설정까지 한 흐름으로 추적하므로 한 글에 유지합니다.",
+    "reviewedAt": "2026-11-02",
     "status": "implemented",
-    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "sharedGate": "8장면 지도와 본문에서 NAV 1만 원, 체결가 1만100원, 괴리 1%, 비용 60원일 때 차익 40원, 1만1000원 매도 때 수익 900원·8.91%, ETN 40% 회수액 4400원, 일일 2배 98.18을 같은 조건으로 유지합니다.",
     "action": "keep"
   },
   "markets/forwards-and-futures": {
@@ -4340,7 +4340,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "macro/global-capital-and-policy": "c169ae992e741ba4",
   "macro/narratives-and-market-regimes": "9b0ab093e34caa58",
   "markets/forwards-and-futures": "e4db4ba88e33dbbf",
-  "markets/funds-etfs-and-etns": "273c1e6bdf54c4ce",
+  "markets/funds-etfs-and-etns": "c196e3112e200592",
   "markets/options-and-asymmetric-payoffs": "e7ea53156ed34514",
   "markets/swaps-and-credit-risk": "c1add7c3c5db9fb9",
   "property/commercial-lease-and-rent": "8acca634fcd66705",

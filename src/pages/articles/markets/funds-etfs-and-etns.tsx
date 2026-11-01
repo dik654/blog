@@ -3,11 +3,13 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import FundsEtfsEtnsMapViz from "./FundsEtfsEtnsMapViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
   return (
     <div className="space-y-16">
+      <FundsEtfsEtnsMapViz />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 같은 숫자를 따라가는 상품도 받을 돈의 근거가 다릅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -19,11 +21,11 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 돈을 내는 사람과 돈을 보관하는 곳을 나눕니다</h2>
+<FlowRail title="돈에서 권리로 이어지는 두 경로" steps={[{"actor": "투자자", "movement": "돈을 내고 권리를 받습니다.", "receives": "팔거나 지급을 요구할 권리"}, {"actor": "자산 보관 경로", "movement": "여러 사람의 돈으로 자산을 보유합니다.", "receives": "각 사람의 몫을 기록"}, {"actor": "지급 약속 경로", "movement": "금융회사가 계산된 돈을 갚기로 합니다.", "receives": "회사가 이행할 채무"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">한 경로에서는 여러 사람이 돈을 모아 실제 자산을 보유합니다. 다른 경로에서는 금융회사가 정해진 계산에 따라 나중에 지급하겠다고 약속합니다. 거래 화면은 하나여도 돈을 돌려주는 근거는 이렇게 갈립니다.</p>
 <p className="leading-8">사고파는 장소는 두 경로의 바깥에 있습니다. 다른 투자자가 얼마에 사 줄지는 자산의 가치나 약속한 지급액과 잠시 달라질 수 있습니다.</p>
         </div>
-<FlowRail title="돈에서 권리로 이어지는 두 경로" steps={[{"actor": "투자자", "movement": "돈을 내고 권리를 받습니다.", "receives": "팔거나 지급을 요구할 권리"}, {"actor": "자산 보관 경로", "movement": "여러 사람의 돈으로 자산을 보유합니다.", "receives": "각 사람의 몫을 기록"}, {"actor": "지급 약속 경로", "movement": "금융회사가 계산된 돈을 갚기로 합니다.", "receives": "회사가 이행할 채무"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">소유와 지급 약속의 두 경로가 보이면 충분합니다. 한 좌의 가격을 넣어 차이를 계산합니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -37,11 +39,11 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 한 좌의 가치와 체결 가격은 서로 다른 곳에서 정해집니다</h2>
+<FlowRail title="자산 가치와 거래가격이 만나는 통로" steps={[{"actor": "얼마가 담겼나?", "movement": "1억 원을 1만 좌로 나눕니다.", "receives": "한 좌 1만 원"}, {"actor": "얼마에 팔리나?", "movement": "투자자 주문이 만납니다.", "receives": "체결 1만100원"}, {"actor": "차이를 줄일 수 있나?", "movement": "자산을 넣고 좌수를 받아 팝니다.", "receives": "비용을 넘는 차익 유인"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">자산 묶음의 장부는 보유한 물건의 가격과 빚을 셉니다. 거래 화면은 지금 사려는 주문과 팔려는 주문을 맞춥니다. 두 숫자 사이를 잇는 큰 거래자가 자산 묶음을 넣고 새 좌수를 받거나 좌수를 반납하고 자산을 꺼냅니다.</p>
 <p className="leading-8">큰 거래자가 1만 원어치 자산으로 새 한 좌를 만들었다고 합시다. 이를 1만100원에 팔 수 있다면 차이를 얻을 여지가 있습니다. 실제로는 큰 단위로 움직이고 거래비용이 들어갑니다.</p>
         </div>
-<FlowRail title="자산 가치와 거래가격이 만나는 통로" steps={[{"actor": "얼마가 담겼나?", "movement": "1억 원을 1만 좌로 나눕니다.", "receives": "한 좌 1만 원"}, {"actor": "얼마에 팔리나?", "movement": "투자자 주문이 만납니다.", "receives": "체결 1만100원"}, {"actor": "차이를 줄일 수 있나?", "movement": "자산을 넣고 좌수를 받아 팝니다.", "receives": "비용을 넘는 차익 유인"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">가격이 가까워지는 통로를 열었습니다. 이 통로와 재산의 분리가 왜 필요한지 봅니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">

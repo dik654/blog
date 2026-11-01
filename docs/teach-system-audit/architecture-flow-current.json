@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 758,
+    "dedicatedVisuals": 759,
     "inlineVisuals": 525,
-    "customVisuals": 925,
-    "animatedMechanisms": 612,
+    "customVisuals": 926,
+    "animatedMechanisms": 613,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -13926,14 +13926,14 @@
       "sourcePath": "src/pages/articles/markets/funds-etfs-and-etns.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/hazard-rate-curve-recovery-and-credit-correlation",
