@@ -3313,9 +3313,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/derivatives-tax-character-timing-and-jurisdiction": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "파생상품 세금은 세율보다 먼저 납세자와 계약의 소득 성격, 실현·연말평가 시점, 손익 통산 범위와 거주지 관할을 차례로 확인해야 합니다.",
-    "sharedGate": "12−5=7과 Section 1256의 10→6+4를 계산하고 계약 범위·연도·거주지 확인 전에는 실제 세액으로 쓰지 않습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "이익 1,200만 원과 손실 500만 원의 경제적 순손익 700만 원이 납세자·계약 분류·인식 시점·통산 범위를 거쳐 한국 설명용 세액 49.5만 원과 미국 Section 1256의 장기 6·단기 4로 갈라지는 과정을 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "1,200−500=700, (700−250)×10%=45와 지방소득세 4.5, Section 1256의 10×60%=6·10×40%=4를 검산하고 두 나라의 사례와 실제 납세자·계약·연도별 신고 판단을 섞지 않습니다."
   },
   "markets/derivatives-market-abuse-position-limits-and-surveillance": {
     "action": "keep",
@@ -4656,7 +4656,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/short-rate-hjm-and-interest-rate-model-risk":"a96f30b96476b3df",
 "markets/bank-irrbb-alm-and-derivatives-hedging":"4550d26a00a1bc38",
 "markets/hedge-accounting-designation-effectiveness-and-rebalancing":"81679b85173219a6",
-"markets/derivatives-tax-character-timing-and-jurisdiction":"cd185ef9970fbba8",
+"markets/derivatives-tax-character-timing-and-jurisdiction":"db4ab7751e9f5f50",
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"6a1d9b32f3876f0b",
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"5311cbf1747b73cf",
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"8ba90a064c6d314f",
