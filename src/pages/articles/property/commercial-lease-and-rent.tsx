@@ -2,6 +2,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CommercialLeaseAndRentViz from "./CommercialLeaseAndRentViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function CommercialLeaseAndRentArticle() {
@@ -9,6 +10,7 @@ export default function CommercialLeaseAndRentArticle() {
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 공간을 쓰는 기간이 시설 투자와 맞아야 한다</h2>
+        <CommercialLeaseAndRentViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">가게는 오랫동안 쓸수록 시설에 쓴 돈을 회수할 기회가 생깁니다. 하지만 공간을 가진 사람과 장사하는 사람이 다르면 언제까지 쓰고 어떤 상태로 돌려줄지를 먼저 정해야 합니다.</p>
           <p className="leading-7">이 글은 계약 시작 때 맡긴 돈, 매달 내는 돈, 마지막 날 돌려받는 돈을 한 선으로 연결합니다. 시작 가격만 비교하면 수선과 이전, 공실과 반환의 비용을 놓치기 쉽습니다.</p>
