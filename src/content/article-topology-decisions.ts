@@ -1574,8 +1574,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep",
     "status": "reviewed",
     "rationale": "입지는 유동인구 숫자 하나가 아니라 예상 방문자·구매전환·객단가·임대료를 같은 시간대와 동일 업종에서 대조하고 그 건물에서 영업이 가능한지 확인하는 선택입니다.",
-    "reviewedAt": "2026-10-04",
-    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다."
+    "reviewedAt": "2026-11-01",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 하루 1천 명 × 5% 입장 × 40% 구매는 하루 20건입니다."
   },
   "business/shop-fitout-and-opening": {
     "action": "keep",
@@ -4307,7 +4307,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "business/business-model-cashflow": "d9d96a98d88c5a2e",
   "business/franchise-incentives": "ad08dae42d90c580",
   "business/shop-fitout-and-opening": "f5f30c96a55ff3ac",
-  "business/shop-site-selection": "2eb3fc0cdb7035e1",
+  "business/shop-site-selection": "a029f77b0a6d4a1a",
   "business/shop-unit-economics": "8c31975990c3a73b",
   "business/supply-chain-bargaining": "dcc49518705755d1",
   "institutions/healthcare-payment-systems": "5206c5601e4ddd64",

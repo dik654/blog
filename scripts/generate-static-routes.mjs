@@ -164,6 +164,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/vdf",
   "business/business-model-cashflow",
   "business/shop-unit-economics",
+  "business/shop-site-selection",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

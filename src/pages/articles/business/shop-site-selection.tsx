@@ -1,9 +1,9 @@
 import { CitationBlock } from "@/components/ui/citation";
-import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ShopSiteSelectionViz from "./ShopSiteSelectionViz";
 
-/** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
+/** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopSiteSelectionArticle() {
   return (
     <div className="space-y-16">
@@ -14,7 +14,9 @@ export default function ShopSiteSelectionArticle() {
           <p className="leading-7">반복해서 팔 수 있는 양으로 공간 비용을 감당할 후보지를 고릅니다. 공사와 영업에 돈을 쓰기 전에 불가능한 조건도 찾아냅니다.</p>
         </div>
 
-        <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">어떤 고객을 받을 자리인지 정했다면 고객이 도달하는 단계를 나눌 수 있습니다.</p>
+        <ShopSiteSelectionViz />
+
+        <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">그림에서는 하루 20건으로 월 고정비를 감당할 수 없었습니다. 이제 통행 수가 어디서 줄고, 손익과 영업 허용 조건을 왜 따로 판정하는지 확인합니다.</p>
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 손님이 오는 경로와 건물의 허용 조건을 나누어 본다</h2>
@@ -22,7 +24,6 @@ export default function ShopSiteSelectionArticle() {
           <p className="leading-7">사람이 가게 앞에 도달하고 문 안으로 들어와 구매하는 과정을 나눕니다. 앞 단계의 숫자가 커도 다음 단계에서 막히면 주문으로 이어지지 않습니다. 건물에서 그 일을 해도 되는지는 이 숫자와 별도로 확인할 조건입니다. 실제 계약과 공사비 지출 전에 확인합니다.</p>
         </div>
 
-        <FlowRail title="구매의 두 단계와 지출 전에 확인할 공간 조건" steps={[{"actor": "누가 지나가나", "movement": "영업할 시간의 고객 경로를 봅니다.", "receives": "잠재 손님"}, {"actor": "누가 구매하나", "movement": "출입구를 발견하고 구매하는지 봅니다.", "receives": "실제 주문"}, {"actor": "여기서 팔 수 있나", "movement": "공간이 업종을 받아들이는지 봅니다.", "receives": "사용 가능 여부"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">구매에 이르는 통로를 잡았으니 천 명이라는 수치를 단계마다 줄여 봅니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -40,14 +41,19 @@ export default function ShopSiteSelectionArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">길에서 매장 안으로, 매장 안에서 계산대로 갈 때마다 일부 사람이 빠집니다. 아래의 감소 비율을 현장에서 확인하지 않으면 지도에 표시된 사람 수를 매출처럼 읽게 됩니다.</p>
         </div>
-        <FlowRail
-          title="(가정) 같은 하루의 통행 1천 명 → 입장 50명 → 구매 20건"
-          steps={[
-            { actor: "점포 앞에서", movement: "영업할 시간에 1천 명이 지나간다고 놓습니다.", receives: "문 앞의 통행 수 1천 명" },
-            { actor: "문 안에서", movement: "지나는 사람의 5%가 들어옵니다. 1천 × 0.05 = 50입니다.", receives: "입장한 사람 50명" },
-            { actor: "계산대에서", movement: "들어온 사람의 40%가 한 건씩 삽니다. 50 × 0.4 = 20입니다.", receives: "구매 20건, 8천 원씩 매출 16만 원" },
-          ]}
-        />
+        <div className="not-prose mt-6 grid grid-cols-3 gap-px bg-border p-px text-center">
+          {[
+            ["통행", "1,000명", "관찰"],
+            ["입장", "50명", "× 5%"],
+            ["구매", "20건", "× 40%"],
+          ].map(([label, value, note]) => (
+            <div key={label} className="min-w-0 bg-background p-3 sm:p-4">
+              <p className="break-keep text-[10px] font-bold text-muted-foreground sm:text-xs">{label}</p>
+              <p className="mt-1 font-mono text-sm font-black text-primary sm:text-lg">{value}</p>
+              <p className="mt-1 break-keep text-[9px] font-bold sm:text-[11px]">{note}</p>
+            </div>
+          ))}
+        </div>
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">통행과 주문 사이의 간격을 보았다면 현장 관찰과 건물 확인의 역할을 나눕니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
@@ -96,7 +102,7 @@ export default function ShopSiteSelectionArticle() {
           </p>
         </div>
         <SourceApplication source="Australian Government · Choose your business location, Location" excerpt="Is high foot traffic (the number of people who visit the area) important?" application="1천 명·50명·20건을 각각 확인해야 할 가정으로 관찰표에 적습니다. 보고서의 천 명만으로 5%와 40%가 증명되지는 않습니다. 같은 시간의 현장 관찰과 영업 요건을 갖춘 시험 운영으로 점검하되, 다른 자리의 결과를 새 점포 실측값으로 바꾸어 적지 않습니다." />
-        <CitationBlock source="Australian Government · Choose your business location, Location" citeKey={1} href="https://business.gov.au/planning/new-businesses/choose-your-business-location">2026-10-04 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
+        <CitationBlock source="Australian Government · Choose your business location, Location" citeKey={1} href="https://business.gov.au/planning/new-businesses/choose-your-business-location">2026-11-01 확인. 공식 안내는 통행량뿐 아니라 비용, 시설, 용도지역과 허가, 더 작은 공간에서의 시험까지 함께 검토하라고 설명합니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">보고서의 천 명과 실제 구매를 연결할 자료가 정해졌습니다. 업종 시설기준을 대조합니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
@@ -106,14 +112,15 @@ export default function ShopSiteSelectionArticle() {
             호주 정부의 창업 안내에 따라 위치를 고를 때 비용, 고객 접근성, 시설, 지방정부의 허용 사항을 함께 확인합니다. 한국 음식점도 건축물 용도와 식품위생 시설기준, 지역의 세부
             요건을 계약 전에 따져야 합니다. 임대인이 허용해도 관청의 신고가 자동으로 되는 것은 아닙니다.
           </p>
-          <p className="leading-7">건축물 용도는 숫자로 먼저 걸러집니다. 법제처 생활법령 「음식점 영업이 가능한 입지」(2026-10-09 확인)에 따르면 휴게음식점·제과점은 같은 건물에서 그 용도로 쓰는 바닥면적 합계가 300㎡ 미만이면 제1종 근린생활시설, 300㎡ 이상이면 제2종 근린생활시설이어야 하고, 일반음식점은 면적과 관계없이 제2종 근린생활시설이어야 합니다(「건축법 시행령」 별표 1).</p>
+          <p className="leading-7">건축물 용도는 숫자로 먼저 걸러집니다. 법제처 생활법령 「음식점 영업이 가능한 입지」(2026-11-01 확인)에 따르면 휴게음식점·제과점은 같은 건물에서 그 용도로 쓰는 바닥면적 합계가 300㎡ 미만이면 제1종 근린생활시설, 300㎡ 이상이면 제2종 근린생활시설이어야 하고, 일반음식점은 제2종 근린생활시설에 해당합니다(「건축법 시행령」 별표 1).</p>
           <p className="leading-7">후보 점포가 건축물대장에 제1종 근린생활시설로 올라 있고 바닥면적이 120㎡(가정)라면, 커피와 빵을 파는 휴게음식점은 들어갈 수 있지만 술과 식사를 파는 일반음식점은 그대로는 들어갈 수 없습니다. 용도가 맞지 않으면 「건축법」 제19조에 따라 허가를 받거나 신고하는 용도변경을 먼저 거쳐야 하므로, 그 기간과 비용도 계약 전에 확인합니다.</p>
           <p className="leading-7">소상공인365의 공식 서비스 개시 자료는 입지평가·배달정보 분석과 매출·유동인구 등을 제공한다고 설명합니다. 이런 자료로 후보지를 좁힌 뒤, 이 글의 가정인 입장률 5%와 구매율 40%를 현장에서 별도로 확인합니다.</p>
           <p className="leading-7">지도 수치가 이 점포의 방문 이유나 구매 전환을 직접 측정한 것은 아닙니다. 건축물 용도와 임대차의 업종 허용, 간판·배기·전기 증설 가능성까지 확인한 뒤에야 보증금과 공사비를 약속합니다.</p>
         </div>
         <SourceApplication source="한국 식품위생법 시행규칙 제36조" excerpt="업종별 시설기준은 별표 14과 같다" application="하루 20건이 예상되는 후보지가 음식점이라면 건축물 용도만 확인하고 끝내지 않습니다. 별표 14의 해당 업종 시설요건을 도면과 대조하고 관할 위생부서에 배기·급배수·구획 등을 확인한 뒤 계약 조건을 정합니다." />
-        <CitationBlock source="한국 식품위생법 시행규칙 제36조" citeKey={2} href="https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900">2026-10-04 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
-        <CitationBlock source="중소벤처기업부 · 소상공인365 정식 서비스 개시" citeKey={3} href="https://www.mss.go.kr/site/chungbuk/ex/bbs/View.do?bcIdx=1055594&cbIdx=180">2025-01-02 공식 보도자료에서 기능의 범위를 확인했습니다. 플랫폼의 제공 항목과 특정 점포의 매출 예측 정확도는 별도 문제입니다.</CitationBlock>
+        <CitationBlock source="법제처 · 음식점 영업이 가능한 입지" citeKey={2} href="https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=839">2026-11-01 확인. 용도지역과 건축물 용도를 따로 확인하고, 용도가 맞지 않으면 용도변경 절차를 검토해야 한다는 공식 생활법령 안내입니다. 개별 점포의 허가 가능성을 대신 판정하지는 않습니다.</CitationBlock>
+        <CitationBlock source="한국 식품위생법 시행규칙 제36조·별표 14" citeKey={3} href="https://law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0036&lsiSeq=289161&urlMode=lsScJoRltInfoR">2026-11-01 확인. 제36조는 업종별 시설기준을 별표 14로 연결하며, 별표의 식품접객업 기준은 영업장 분리·구획, 환기, 조리·세척·급수 등의 조건을 정합니다.</CitationBlock>
+        <CitationBlock source="중소벤처기업부 · 소상공인365 정식 서비스 개시" citeKey={4} href="https://www.mss.go.kr/site/chungbuk/ex/bbs/View.do?bcIdx=1055594&cbIdx=180">2026-11-01 확인. 2025-01-02 공식 보도자료는 입지평가·배달정보 분석, 매출액·고객 관심도, 시간대별 인기 메뉴·유동인구 등의 제공 범위를 설명합니다. 특정 점포의 전환율이나 매출 예측 정확도를 검증한 자료는 아닙니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">매출 가정과 허용 조건을 나누어 확인했다면 미래에 가정이 바뀌는 경우를 볼 차례입니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">

@@ -127959,14 +127959,24 @@ export const ARTICLE_LEARNING: Readonly<
         "notClaim": "호주 정부가 5%·40%를 추정하거나 모든 입지에서 반복 구매를 보장한다는 뜻은 아닙니다."
       },
       {
+        "title": "법제처 · 음식점 영업이 가능한 입지",
+        "href": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=839",
+        "sectionId": "comparison",
+        "problem": "건물주의 동의나 상권 수요를 음식점 영업이 가능한 용도지역·건축물 용도로 읽는 문제입니다.",
+        "contribution": "용도지역과 건축물 용도를 각각 확인하고, 맞지 않으면 용도변경 가능성과 절차를 계약 전에 검토합니다.",
+        "assumptions": "2026-11-01 확인한 생활법령정보이며 개별 점포의 사실관계와 최신 법령은 관할기관에 다시 확인합니다.",
+        "evidenceScope": "휴게음식점·제과점·일반음식점의 건축물 용도 구분과 용도변경 안내를 읽었습니다.",
+        "notClaim": "생활법령정보가 유권해석이거나 특정 점포의 신고·허가 가능성을 판정한다는 뜻은 아닙니다."
+      },
+      {
         "title": "식품위생법 시행규칙 제36조",
-        "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
+        "href": "https://law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0036&lsiSeq=289161&urlMode=lsScJoRltInfoR",
         "sectionId": "comparison",
         "problem": "상권 수요나 임대인 동의를 시설·영업 요건 충족으로 읽는 문제입니다.",
         "contribution": "20건이 예상되는 음식점도 해당 업종 시설기준과 도면·신고 요건을 별도로 확인합니다.",
         "assumptions": "2026-09-01 시행본 제36조이며 업종·점포의 사실관계와 적용 규칙을 따로 확인합니다.",
-        "evidenceScope": "실제 HTML에서 별표 14가 업종별 시설기준임을 지정하는 조문을 읽고 짧게 인용했습니다.",
-        "notClaim": "별표 전체를 검토해 특정 점포의 적합성을 판정하거나 임대차 분쟁을 해결한 것은 아닙니다."
+        "evidenceScope": "제36조와 2026-01-02 개정 별표 14의 식품접객업 시설기준을 읽었습니다.",
+        "notClaim": "특정 점포의 적합성을 판정하거나 관할기관의 신고·허가 절차를 대신한 것은 아닙니다."
       },
       {
         "title": "중소벤처기업부 · 소상공인365 정식 서비스 개시",

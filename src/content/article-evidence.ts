@@ -11673,9 +11673,15 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       "kind": "공식 문서",
+      "label": "법제처 · 음식점 영업이 가능한 입지",
+      "href": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&cciNo=1&cnpClsNo=1&csmSeq=839",
+      "note": "2026-11-01 실제 HTML에서 용도지역·건축물 용도와 용도변경 안내를 읽었습니다. 생활법령정보는 유권해석이 아니며 특정 점포의 허가 가능성을 판정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
       "label": "식품위생법 시행규칙 제36조",
-      "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
-      "note": "실제 HTML에서 별표 14가 업종별 시설기준임을 지정하는 조문을 읽고 짧게 인용했습니다. 별표 전체를 검토해 특정 점포의 적합성을 판정하거나 임대차 분쟁을 해결한 것은 아닙니다."
+      "href": "https://law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0036&lsiSeq=289161&urlMode=lsScJoRltInfoR",
+      "note": "2026-09-01 시행본 제36조와 2026-01-02 개정 별표 14의 식품접객업 시설기준을 읽었습니다. 특정 점포의 적합성을 판정하거나 관할기관의 신고·허가 절차를 대신한 것은 아닙니다."
     },
     {
       "kind": "공식 문서",
