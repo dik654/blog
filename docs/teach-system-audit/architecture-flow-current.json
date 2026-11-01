@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 806,
+    "dedicatedVisuals": 807,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 660,
+    "animatedMechanisms": 661,
     "architectureWithoutAnimation": 63,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -13478,14 +13478,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/ccp-default-management-hedging-auction-and-porting.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/clearing-margin-and-default-waterfall",

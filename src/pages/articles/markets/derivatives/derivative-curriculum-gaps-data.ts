@@ -273,8 +273,8 @@ export const ccpDefaultManagementData: DerivativeDeepArticleData = {
     { term: "고객 포지션 이전", description: "부도 회원 고객의 포지션과 관련 담보를 받을 다른 회원에게 옮기는 절차입니다.", example: "경매 전 고객계정의 이전 가능성을 확인합니다.", boundary: "회원 고유 포트폴리오의 경매와 다른 절차입니다." },
   ] },
   sources: [
-    { source: "CPMI·IOSCO · CCP 부도 경매", excerpt: "restore the CCP to a matched book", application: "+80 포트폴리오의 헤지·분할·입찰과 의사결정 권한을 시간순으로 놓습니다.", citation: "CPMI-IOSCO, Central counterparty default management auctions", href: "https://www.bis.org/publications/central-counterparty-default-management-auctions-issues-consideration", note: "경매 설계의 쟁점과 실무 선택지를 다루며 하나의 고정 절차를 강제하지 않습니다." },
-    { source: "CPMI·IOSCO · 금융시장인프라 원칙", excerpt: "Participant-default rules · Segregation and portability", application: "부도 규칙·연례 시험과 고객 포지션·담보 이전을 서로 다른 통제로 확인합니다.", citation: "CPMI-IOSCO, Principles for Financial Market Infrastructures", href: "https://www.bis.org/committees/cpmi/pfmi/overview", note: "원칙 13과 14의 국제 기준이며 개별 CCP 규칙집의 순서와 자원을 다시 확인합니다." },
+    { source: "CPMI·IOSCO · CCP 부도 경매", excerpt: "restore the CCP to a matched book", application: "+80 포트폴리오의 헤지·분할·입찰과 의사결정 권한을 시간순으로 놓습니다.", citation: "CPMI-IOSCO, Central counterparty default management auctions—issues for consideration, 2020-06-25", href: "https://www.bis.org/publications/central-counterparty-default-management-auctions-issues-consideration", note: "2026-11-02 확인한 2020년 경매 쟁점 보고서입니다. 경매를 부도 회원 포지션을 비부도 회원에게 이전해 CCP의 균형 장부를 회복하는 도구로 설명하지만, 모든 CCP에 하나의 고정 절차를 강제하지 않습니다." },
+    { source: "CPMI·IOSCO · 금융시장인프라 원칙", excerpt: "Participant-default rules · Segregation and portability", application: "부도 규칙·연례 시험과 고객 포지션·담보 이전을 서로 다른 통제로 확인합니다.", citation: "CPSS-IOSCO, Principles for Financial Market Infrastructures, Principles 13–14, 2012-04", href: "https://www.bis.org/committees/cpmi/pfmi/overview", note: "2026-11-02 확인한 PFMI 원칙 13·14입니다. 부도 규칙과 적어도 연례 시험, 고객 포지션·관련 담보의 구분과 이전 가능성을 다룹니다. 실제 재원 순서와 이전 조건은 개별 CCP 규칙집과 적용 법률을 다시 확인합니다." },
   ],
   review: [
     "+80 포트폴리오에 −60을 헤지한 뒤 5bp 충격 손익을 계산해 보세요. (답: 1·3절)",

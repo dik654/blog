@@ -3488,9 +3488,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/ccp-default-management-hedging-auction-and-porting": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "CCP 부도관리는 고객계정 이전 가능성을 가른 뒤 부도 포트폴리오의 급한 위험을 헤지하고 이해 가능한 묶음으로 경매해 균형 장부를 회복하며, 남은 손실은 규정된 재원 순서와 보충 절차로 처리합니다.",
-    "sharedGate": "+80에 −60을 더해 +20을 남기고 5bp 충격의 단순 잔여 손익 100을 계산합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "회원 부도 절차 개시에서 고유·고객 장부 분리, +80 위험 측정, −60 임시 헤지, 경매 묶음, 입찰 4·6·9, 포지션 이전과 장부 균형, 손실 재원 사용·보충·재시험까지 한 부도 사건을 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "+80−60=+20과 잔여 20×5=100을 검산하고 부도 선언·고객계정 이전·임시 헤지·경매 결과·실제 포지션 이전·손실 재원 사용을 서로 다른 상태로 구분합니다."
   },
   "markets/swaption-annuity-volatility-quotes-and-cube": {
     "action": "keep",
@@ -4669,7 +4669,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/krx-derivatives-contract-orders-and-daily-settlement":"169f0c5dde9100b7",
 "markets/portfolio-compression-risk-tolerances-and-records":"8fb8d694df4df230",
 "markets/collateral-optimization-eligibility-haircuts-and-liquidity":"211395f9610ad486",
-"markets/ccp-default-management-hedging-auction-and-porting":"64fc431e5a1b28aa",
+"markets/ccp-default-management-hedging-auction-and-porting":"40b7aa88ea82fa5f",
 "markets/swaption-annuity-volatility-quotes-and-cube":"5e9505995e4db8ac",
 "markets/derivatives-sales-records-access-retention-and-deletion":"7106213433ef2db2",
 "markets/equity-dispersion-implied-correlation-and-variance":"dc637f6b4f965461",
