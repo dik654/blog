@@ -8131,14 +8131,16 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Uniswap v4 Core whitepaper", href: "https://app.uniswap.org/whitepaper-v4.pdf", note: "Singleton·hooks·flash accounting 설계 원문이며 고정 gas 절감·liquidity·price execution 보장은 아님" },
   ],
   "blockchain/pbft-deep": [
-    { kind: "핵심 논문", label: "Practical Byzantine Fault Tolerance · OSDI 1999", href: "https://www.usenix.org/conference/osdi-99/presentation/practical-byzantine-fault-tolerance", note: "PBFT normal case·view change·checkpoint·client protocol의 원문이며 당시 crypto·NFS 수치를 current deployment 상수로 일반화하지 않음" },
-    { kind: "핵심 논문", label: "PBFT §4.2 Normal-Case Operation", href: "https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00042000000000000000", note: "Prepared·committed-local과 ordered execution의 exact 정의이며 단일 message가 client success를 뜻하지 않음" },
-    { kind: "핵심 논문", label: "PBFT §4.3–4.4 Checkpoint and View Change", href: "https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00043000000000000000", note: "Stable checkpoint·watermark·NEW-VIEW reconstruction 근거이며 local snapshot 하나로 global stability를 주장하지 않음" },
+    { kind: "핵심 논문", label: "Practical Byzantine Fault Tolerance · OSDI 1999", href: "https://www.usenix.org/conference/osdi-99/presentation/practical-byzantine-fault-tolerance", note: "PBFT의 정상 처리, 뷰 변경, 체크포인트와 클라이언트 절차를 정의한 원문입니다. 당시 암호 기술과 NFS 실험 수치를 현재 배포 환경의 상수로 일반화하지 않습니다." },
+    { kind: "핵심 논문", label: "PBFT §4.2 Normal-Case Operation", href: "https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00042000000000000000", note: "Prepared와 committed-local, 순서 실행의 정확한 정의입니다. 메시지 하나가 클라이언트 성공을 뜻하지는 않습니다." },
+    { kind: "핵심 논문", label: "PBFT §4.3–4.4 Checkpoint and View Change", href: "https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00043000000000000000", note: "안정 체크포인트, watermark와 NEW-VIEW 재구성의 근거입니다. 로컬 스냅샷 하나로 전체 복제본이 인정한 안정 상태를 주장할 수는 없습니다." },
+    { kind: "핵심 논문", label: "Practical Byzantine Fault Tolerance and Proactive Recovery · TOCS 2002", href: "https://www.microsoft.com/en-us/research/wp-content/uploads/2017/01/p398-castro-bft-tocs.pdf", note: "P·Q 기록, VIEW-CHANGE-ACK와 proactive recovery를 추가한 확장판입니다. 1999년 단순화된 절차와 메시지 형식을 섞지 않습니다." },
+    { kind: "핵심 논문", label: "A Correctness Proof for PBFT", href: "https://www.microsoft.com/en-us/research/publication/correctness-proof-practical-byzantine-fault-tolerant-replication-algorithm/", note: "PBFT의 안전성과 진행 조건을 형식화한 증명입니다. 특정 구현과 운영 환경의 정확성까지 자동으로 보장하지 않습니다." },
   ],
   "blockchain/hotstuff-deep": [
-    { kind: "핵심 논문", label: "HotStuff · arXiv 1803.05069", href: "https://arxiv.org/abs/1803.05069", note: "SafeNode·threshold QC·three-chain·pacemaker 원문이며 paper 수치를 current chain 성능으로 일반화하지 않음" },
-    { kind: "핵심 논문", label: "HotStuff §4–6 SafeNode and Chaining", href: "https://arxiv.org/pdf/1803.05069#page=8", note: "Lock vote rule과 direct one/two/three-chain의 exact 근거이며 block 높이 세 개만으로 commit을 주장하지 않음" },
-    { kind: "공식 구현", label: "libhotstuff prototype · commit 34aa507", href: "https://github.com/hot-stuff/libhotstuff/tree/34aa50796f201aaab91c4db5aae9d3b7aceddb5c", note: "Paper authors의 historical prototype snapshot이며 maintained production support·persistent recovery 보장은 아님" },
+    { kind: "핵심 논문", label: "HotStuff · arXiv 1803.05069v6", href: "https://arxiv.org/abs/1803.05069v6", note: "SafeNode, threshold QC, three-chain과 pacemaker를 정의한 원문입니다. 논문 수치를 현재 체인의 성능으로 일반화하지 않습니다." },
+    { kind: "핵심 논문", label: "HotStuff v6 §4–5 · SafeNode and Chaining", href: "https://arxiv.org/html/1803.05069v6#S4", note: "Lock을 지키는 투표와 바로 앞 부모를 잇는 one/two/three-chain의 근거입니다. 높이가 연속인 블록 세 개만으로 commit을 주장할 수는 없습니다." },
+    { kind: "공식 구현", label: "libhotstuff prototype · commit 34aa507", href: "https://github.com/hot-stuff/libhotstuff/tree/34aa50796f201aaab91c4db5aae9d3b7aceddb5c", note: "논문 저자들의 역사적 프로토타입입니다. 지속적인 제품 지원과 영속 복구를 보장하는 현재 구현으로 취급하지 않습니다." },
   ],
   "blockchain/hotstuff2": [
     { kind: "핵심 논문", label: "HotStuff-2 · ePrint 2023/397", href: "https://eprint.iacr.org/2023/397", note: "Two-phase responsive BFT와 integrated pacemaker 원문이며 모든 view가 wait-free라는 뜻은 아님" },
