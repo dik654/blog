@@ -1,80 +1,210 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { AvalancheStateViz, AvalancheTraceViz } from "./viz/ModernAvalancheConsensusViz";
+import {
+  AvalancheDecisionBoundaryViz,
+  AvalancheImplementationBoundaryViz,
+  AvalanchePollTraceViz,
+} from "./viz/ModernAvalancheConsensusViz";
+
+function PollUpdateSketch() {
+  return (
+    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
+      <pre><code>{`// Snowball은 preference threshold를 넘은 choice의 누적 strength를 먼저 올립니다.
+if count >= alphaPreference:
+    strength[choice] += 1
+
+// 새 strength가 기존 최댓값보다 클 때만 외부 preference를 바꿉니다.
+if strength[choice] > maxStrength:
+    snowballPreference = choice
+    maxStrength = strength[choice]
+
+// Snowflake는 preference threshold에도 못 미친 poll을 실패로 처리합니다.
+if count < alphaPreference:
+    confidence = 0
+    return
+
+// 내부 preference가 바뀌면 이전 choice의 연속 기록을 지웁니다.
+if choice != snowflakePreference:
+    confidence = 0
+    snowflakePreference = choice
+
+// Confidence threshold에 못 미치면 이번 poll은 연속 성공에 포함하지 않습니다.
+if count < alphaConfidence:
+    confidence = 0
+    return
+
+// 같은 choice가 confidence threshold를 넘었으므로 연속 counter를 올립니다.
+confidence += 1
+
+// Counter가 beta에 닿으면 이 로컬 상태를 더 이상 바꾸지 않습니다.
+if confidence >= beta:
+    finalized = true`}</code></pre>
+    </div>
+  );
+}
 
 export default function ModernAvalancheConsensusArticle() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Avalanche Snow 계열을 읽는 출발점</p><h2 className="text-3xl font-bold tracking-tight">전체 투표 한 번이 아니라 작은 표본을 여러 번 묻고 상태를 누적한다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">
-            Alice가 Bob에게 보내는 transfer를 담은 block A와 같은 자금을 다시 쓰는 block B가 동시에 보였다고 하겠습니다. 이때 node는 모든
-            validator에게 한 번씩 투표를 받아 즉시 확정하지 않습니다. 매 poll마다 validator 일부를 무작위로 뽑아 A와 B 가운데 어느 쪽 응답이 threshold를
-            넘었는지 관찰할 뿐입니다. 이 작은 관찰을 반복해 local preference가 안정되는 과정이 Snow 계열의 출발점입니다.
-          </p>
-      <p>여기에는 서로 다른 세 층이 있습니다. <strong>Sampler</strong>는 누구에게 물을지 정하고, <strong>Snowflake</strong>는 같은 preference가 연속으로 성공한 횟수를 세며, <strong>Snowball</strong>은 선택지마다 지금까지 성공한 poll 수를 누적합니다. 따라서 한 번의 poll 성공, 한 node의 local decision, network 전체가 받아들일 수 있는 확률적 finality를 같은 사건으로 부르면 안 됩니다. Safety는 conflicting decisions가 나오지 않는 성질이고 liveness는 network 조건이 회복된 뒤 결정을 계속 만드는 성질이라는 정본도 그대로 적용됩니다.</p>
-      <AvalancheTraceViz />
-      <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> 작은 표본은 한 poll의 통신량을 줄이지만, 안전성은 k·alpha·beta만으로 생기지 않습니다. Validator weight, sampling independence, Byzantine fraction, 응답 omission과 network scheduler까지 함께 고정한 모델에서 반복 상태 전이를 분석해야 합니다.</aside>
-    </section>
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-6">
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">Avalanche Snow 상세</p>
+          <h2 className="text-3xl font-bold tracking-tight">다섯 명에게 물은 결과가 어떻게 한 노드의 결정으로 쌓일까요?</h2>
+        </header>
+        <p className="text-lg leading-8 text-foreground/90">
+          같은 자금을 쓰는 block A와 B가 동시에 보였다고 하겠습니다. 노드는 전체 validator에게 한 번에 투표를 받지 않습니다. 작은 표본을 반복해서 뽑고, 같은 후보가 threshold를 넘었는지에 따라 <code>preference</code>와 <code>confidence</code>를 바꿉니다. 아래 그림은 A를 선호하던 한 노드가 B 표본을 여러 번 관찰해 B를 local decision으로 만드는 과정을 끝까지 추적합니다.
+        </p>
 
-    <section id="sampling-poll" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · random subsampling</p><h2 className="mt-2 text-2xl font-bold">k개 응답 중 alpha 이상이 같은 후보일 때만 성공 poll로 센다</h2></header>
-      <p>
-            예를 들어 k=5, alpha=4이면 A 응답 네 개와 응답 지연 하나는 A 성공 poll입니다. A 세 개·B 하나·지연 하나라면 어느 쪽도 threshold를 넘지 못한
-            unsuccessful poll입니다. 지연은 자동으로 B vote가 아니며 node는 deadline과 omission policy에 따라 poll을 실패로 처리합니다.
-            AvalancheGo의 실제 parameter validation은 preference threshold가 sample의 과반을 넘고 confidence threshold보다
-            크지 않도록 제한합니다. 이 관계가 막아주는 범위는 같은 표본에서 A와 B가 동시에 성공하는 단순 모순까지입니다. Sampler 편향이나 장기 eclipse는 여전히 별도
-            문제로 남습니다.
-          </p>
-      <ExplainedFormula question="N명 중 F명이 Byzantine일 때 k명 표본에 Byzantine 응답이 alpha개 이상 들어올 한 번의 확률은 얼마인가?" idea={<>복원하지 않고 균일하게 k명을 뽑는 설명용 모델에서는 hypergeometric distribution의 tail을 더합니다. 이 식은 한 poll의 composition을 보여 주며, 반복 poll의 독립성이나 adaptive adversary까지 증명하는 식은 아닙니다.</>} formula={String.raw`P[X\ge\alpha]=\sum_{i=\alpha}^{\min(k,F)}\frac{\binom Fi\binom{N-F}{k-i}}{\binom Nk}`}
-      annotatedFormula={String.raw`P[X\ge\alpha]=\underbrace{\sum_{i=\alpha}^{\min(k,F)}}_{\text{alpha개 이상인 경우}}\frac{\underbrace{\binom Fi}_{\text{Byzantine i명}}\underbrace{\binom{N-F}{k-i}}_{\text{나머지는 정직}}}{\underbrace{\binom Nk}_{\text{가능한 모든 표본}}}`}
-      operations={[
-          { expression: String.raw`\sum_{i=\alpha}^{\min(k,F)}`, annotation: ["표본 속 Byzantine 수 i가 alpha 이상인","경우만 더합니다","N=100,F=20,k=5,alpha=4면 i=4,5 두 항"] },
-          { expression: String.raw`\binom Fi\binom{N-F}{k-i}`, annotation: ["Byzantine 20명 중 i명, 정직 80명 중","나머지 k−i명을 뽑는 방법 수"] },
-          { expression: String.raw`\binom Nk`, annotation: ["100명 중 5명을 비복원으로 뽑는","전체 경우 수로 나눠 확률로 만듭니다","같은 peer subset만 뽑으면 전제가 깨짐"] },
-        ]} terms={[{symbol:"N",name:"validator population",description:"같은 membership snapshot에서 표본을 뽑는 전체 대상 수입니다."},{symbol:"F",name:"faulty population",description:"그 snapshot에서 adversary가 통제한다고 둔 validator 수입니다."},{symbol:"k",name:"sample size",description:"한 poll에서 중복 없이 뽑는 validator 수입니다."},{symbol:String.raw`\alpha`,name:"success threshold",description:"같은 choice 응답이 successful poll이 되기 위한 최소 수입니다."},{symbol:"X",name:"faulty sample count",description:"뽑힌 k명 가운데 Byzantine validators 수입니다."}]} assumptions={["Validator를 같은 확률로, 복원 없이 뽑는 단순 모델입니다. Stake-weighted sampler에는 해당 분포를 사용해야 합니다.","Membership과 F는 한 poll 동안 고정되어 있고 identity 중복을 제거합니다.","응답 지연·eclipse·correlated samples와 adversarial response strategy는 별도 실험에 넣습니다.","한 poll tail을 최종 conflict probability나 production SLA로 해석하지 않습니다."]} interpretation="N=100,F=20,k=5,alpha=4라면 i=4와 i=5 항만 더합니다. 이 값이 작더라도 node가 늘 같은 peer subset을 뽑거나 eclipse되어 있다면 식의 균일 표본 전제가 깨집니다." />
-      <div id="paper-avalanchego-parameters"><CitationBlock source="AvalancheGo v1.14.2 — Snowball parameters" citeKey={1} type="code" href="https://github.com/ava-labs/avalanchego/blob/v1.14.2/snow/consensus/snowball/parameters.go"><p><strong>문제:</strong> Engine이 sample·preference·confidence·commit thresholds의 잘못된 조합을 거절해야 합니다.</p><p><strong>기여:</strong> K, AlphaPreference, AlphaConfidence, Beta와 parameter inequalities의 pinned 구현을 제공합니다.</p><p><strong>전제:</strong> AvalancheGo v1.14.2 commit 6e5acf9와 해당 subnet configuration을 사용합니다.</p><p><strong>근거 범위:</strong> 이 revision의 parameter validation과 health threshold 계산입니다.</p><p><strong>말하지 않는 것:</strong> Default 값이 모든 subnet·future release에 최적이거나 sampler와 network safety 전체를 증명하지 않습니다.</p></CitationBlock></div>
-    </section>
+        <AvalanchePollTraceViz />
 
-    <section id="confidence" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Snowflake와 Snowball</p><h2 className="mt-2 text-2xl font-bold">연속 성공은 결정 시점을, 누적 성공은 preference의 관성을 만든다</h2></header>
-      <p>
-            Snowflake의 상태는 현재 preference와 consecutive confidence입니다. 같은 preference가 successful poll이면 counter를
-            하나 늘리지만 unsuccessful poll이면 0으로 되돌립니다. 다른 preference가 threshold를 넘으면 preference를 바꾸고 새 streak를
-            시작합니다. Counter가 beta에 닿을 때 local finalization 조건을 만족합니다. A 성공·A 성공·실패·A 성공을 beta=3에서 합계 세 번으로 세면
-            틀립니다. 이 경우 최종 streak는 1입니다.
-          </p>
-      <p>
-            Snowball은 이 상태 위에 후보별 cumulative strength를 더합니다. Successful A poll은 A의 strength를 하나 높이며 strength가
-            기존 preference보다 커지면 preference를 바꿉니다. 오래 지지받은 A가 strength 5이고 B가 3이라면 최근 한 번 B가 성공해도 preference가
-            바로 뒤집히지 않을 수 있습니다. Finalization을 판단하는 기준은 어디까지나 연속 confidence가 beta에 도달했는지입니다. strength와
-            confidence는 끝까지 별개의 counter입니다.
-          </p>
-      <AvalancheStateViz />
-      <div id="paper-avalanche-family"><CitationBlock source="Team Rocket — Snowflake to Avalanche" citeKey={2} href="https://arxiv.org/abs/1906.08936"><p><strong>문제:</strong> 개방형 validator 환경에서 전체 all-to-all vote 없이 확장 가능한 Byzantine consensus를 구성합니다.</p><p><strong>기여:</strong> Repeated random subsampling과 metastable preference를 이용한 Snowflake·Snowball·Avalanche protocol family를 제시합니다.</p><p><strong>전제:</strong> 논문이 명시한 Byzantine fraction, sampling, scheduler와 protocol parameter model을 따릅니다.</p><p><strong>근거 범위:</strong> 논문의 construction과 해당 모델에서의 probabilistic safety·liveness 분석입니다.</p><p><strong>말하지 않는 것:</strong> 특정 chain의 고정 TPS·finality seconds나 모든 production configuration의 안전을 보장하지 않습니다.</p></CitationBlock></div>
-      <div id="paper-avalanchego-snowball"><CitationBlock source="AvalancheGo v1.14.2 — Snowflake/Snowball state" citeKey={3} type="code" href="https://github.com/ava-labs/avalanchego/tree/v1.14.2/snow/consensus/snowball"><p><strong>문제:</strong> Poll 결과가 local preference·consecutive confidence·cumulative strength를 정확히 갱신해야 합니다.</p><p><strong>기여:</strong> Binary와 n-ary Snowflake·Snowball state transitions 및 regression tests를 구현합니다.</p><p><strong>전제:</strong> v1.14.2 exact source와 validated parameters, engine이 집계한 poll counts를 사용합니다.</p><p><strong>근거 범위:</strong> Pinned local consensus state transition 구현과 그 test 범위입니다.</p><p><strong>말하지 않는 것:</strong> Sampler independence, network delivery, block application validity나 production finality SLA를 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
+        <p>
+          이 글의 작은 수치는 상태 차이를 보이기 위한 설명용 예입니다. <code>k=5</code>, <code>alphaPreference=3</code>, <code>alphaConfidence=4</code>, <code>beta=3</code>은 AvalancheGo v1.14.2의 parameter 제약 <code>K/2 &lt; AlphaPreference ≤ AlphaConfidence ≤ K</code>를 만족합니다. 같은 릴리스의 기본값은 20·15·15·20입니다.
+        </p>
+        <p>
+          여기서 가장 중요한 구분은 한 poll의 성공, 한 노드의 local decision, network 전체의 probabilistic safety가 서로 다른 사건이라는 점입니다. 이 글은 Snow family의 상태 전이와 AvalancheGo v1.14.2의 고정 코드만 설명합니다. 특정 network의 finality 시간이나 처리량은 다루지 않습니다.
+        </p>
+      </section>
 
-    <section id="release" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · safety·liveness와 release</p><h2 className="mt-2 text-2xl font-bold">평균 latency보다 conflict 0과 partition 뒤 progress를 먼저 검사한다</h2></header>
-      <p>
-            Release fixture에는 같은 Alice→Bob conflict, 정확한 source revision, validator weight와 fault placement,
-            sampler seed, k·alpha·beta, poll deadline을 함께 저장합니다. Safety run에서는 honest nodes가 A와 B를 각각
-            finalized하는 사건이 하나도 없어야 합니다. Liveness run에서는 network partition 동안 멈추는 것이 허용되더라도 지연 상한이 회복된 뒤
-            preference가 수렴하고 pending decision이 끝나는지 확인합니다. 빠른 node 하나의 결과나 평균 poll 횟수는 이 두 run과 종류가 다른 지표입니다.
-          </p>
-      <p>
-            특히 biased sampler, correlated random seed, omission, eclipse를 따로 주입해야 합니다. Safety violation이면 즉시
-            fail closed하고 parameter 변경을 rollback합니다. Liveness만 나빠졌다면 sample reachability·deadline·peer
-            diversity를 진단합니다. Beta를 임의로 낮춰 진행률만 끌어올리는 것은 이 진단에 포함되지 않습니다. Classical BFT의 quorum certificate와
-            Avalanche의 sampling confidence는 evidence 형식과 전제가 다릅니다. 두 값을 같은 “2/3 finality” 문장으로 환산하면 틀린 결론이
-            나옵니다.
-          </p>
-      <div className="grid gap-4 md:grid-cols-2"><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">통과 조건</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Conflict decisions 0, sampler 분포 audit, GST 뒤 bounded recovery, 동일 transaction digest와 parameter manifest 보존.</p></aside><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">중단·rollback</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Conflict 하나, sample 편향, membership mismatch가 나오면 rollout을 멈추고 이전 parameter generation으로 되돌립니다.</p></aside></div>
-      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>
-            k·alpha, omission, Snowflake streak, Snowball strength, sampling finality와 certificate finality,
-            safety·liveness를 구분하는 것이 기초 6문제입니다. 심화 4문제에서는 hypergeometric tail, beta trace, biased sampler 공격,
-            pinned parameter failure suite를 직접 설계합니다. 답에 필요한 숫자 예와 반례는 위 세 단계에 이미 다 나와 있습니다.
-          </p>
-    </section>
-  </article>;
+      <section id="sampling-poll" className="space-y-6">
+        <header className="space-y-2">
+          <p className="text-sm font-semibold text-primary">01 · 한 번의 표본</p>
+          <h2 className="text-2xl font-bold">Preference를 바꾸는 표와 confidence를 올리는 표는 따로 셉니다</h2>
+        </header>
+        <p>
+          AvalancheGo v1.14.2에는 하나의 <code>alpha</code>가 아니라 두 threshold가 있습니다. 같은 choice가 <code>AlphaPreference</code> 이상이면 내부 preference를 바꿀 수 있고, <code>AlphaConfidence</code> 이상이어야 연속 confidence를 올립니다.
+        </p>
+        <p>
+          따라서 B가 3표를 얻은 세 번째 장면에서는 preference는 바뀌지만 confidence는 0입니다. 응답이 늦은 validator는 자동으로 반대 vote가 되지 않습니다. 집계된 수가 threshold에 못 미치면 unsuccessful poll처럼 counter가 초기화됩니다.
+        </p>
+
+        <ExplainedFormula
+          question="N명 중 F명이 Byzantine일 때 k명 표본에 Byzantine validator가 alpha명 이상 들어올 한 번의 확률은 얼마일까요?"
+          idea={<>균일하게 k명을 복원 없이 뽑는 설명용 모델에서는 hypergeometric distribution의 tail을 더합니다. N=100, F=20, k=5, alpha=4이면 약 0.00535, 즉 0.535%입니다. 이 값은 한 poll의 표본 구성만 말합니다.</>}
+          formula={String.raw`P[X\ge\alpha]=\sum_{i=\alpha}^{\min(k,F)}\frac{\binom Fi\binom{N-F}{k-i}}{\binom Nk}`}
+          annotatedFormula={String.raw`P[X\ge\alpha]=\underbrace{\sum_{i=\alpha}^{\min(k,F)}}_{\text{alpha명 이상인 경우}}\frac{\underbrace{\binom Fi}_{\text{Byzantine i명}}\underbrace{\binom{N-F}{k-i}}_{\text{나머지는 정직}}}{\underbrace{\binom Nk}_{\text{가능한 모든 표본}}}`}
+          operations={[
+            { expression: String.raw`\sum_{i=4}^{5}`, annotation: ["N=100·F=20·k=5·alpha=4", "i=4와 5인 경우만 더함", "한 poll의 표본 구성"] },
+            { expression: String.raw`\binom{20}{i}\binom{80}{5-i}`, annotation: ["Byzantine 집합에서 i명", "정직한 집합에서 나머지", "복원 없는 조합 수"] },
+            { expression: String.raw`P\approx0.005354`, annotation: ["약 0.535%", "반복 poll의 독립성은 별도", "network conflict 확률이 아님"] },
+          ]}
+          terms={[
+            { symbol: "N", name: "Validator population", description: "같은 membership snapshot에서 표본을 뽑는 전체 대상 수입니다." },
+            { symbol: "F", name: "Faulty population", description: "그 snapshot에서 adversary가 통제한다고 둔 validator 수입니다." },
+            { symbol: "k", name: "Sample size", description: "한 poll에서 뽑아 응답을 묻는 validator 수입니다." },
+            { symbol: String.raw`\alpha`, name: "Threshold", description: "이 확률식에서 위험 표본으로 세기 위한 faulty validator 수입니다." },
+            { symbol: "X", name: "Faulty sample count", description: "뽑힌 k명 안에 들어온 Byzantine validator 수입니다." },
+          ]}
+          assumptions={[
+            "Validator를 같은 확률로, 복원 없이 뽑는 단순 모델입니다.",
+            "실제 stake-weighted sampler에는 weight 분포에 맞는 모델이 필요합니다.",
+            "Membership과 F는 한 poll 동안 고정되어 있다고 둡니다.",
+            "Eclipse, correlated seeds, omission과 adaptive response는 포함하지 않습니다.",
+          ]}
+          interpretation="한 poll의 tail이 작아도 같은 peer만 되풀이해 뽑거나 공격자가 sampling 경로를 편향시키면 반복 실행의 전제가 깨집니다. 이 수치를 그대로 최종 상충 결정 확률로 읽으면 안 됩니다."
+        />
+
+        <div id="paper-avalanchego-parameters">
+          <CitationBlock source="AvalancheGo v1.14.2 · snowball/parameters.go" citeKey={1} type="code" href="https://github.com/ava-labs/avalanchego/blob/v1.14.2/snow/consensus/snowball/parameters.go">
+            <p><strong>문제:</strong> 잘못된 sample·preference·confidence·finalization threshold 조합을 초기화 전에 거절해야 합니다.</p>
+            <p><strong>구현:</strong> <code>K/2 &lt; AlphaPreference ≤ AlphaConfidence ≤ K</code>와 <code>0 &lt; ConcurrentRepolls ≤ Beta</code> 등을 검사합니다.</p>
+            <p><strong>전제:</strong> v1.14.2 tag가 가리키는 commit <code>6e5acf909c7a16b991142d6b3979bac5699bdb68</code>에 고정합니다.</p>
+            <p><strong>말하지 않는 것:</strong> Parameter가 유효하다는 사실만으로 sampler가 공정하거나 network safety가 증명되지는 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="confidence" className="space-y-6">
+        <header className="space-y-2">
+          <p className="text-sm font-semibold text-primary">02 · 두 종류의 기억</p>
+          <h2 className="text-2xl font-bold">Snowflake는 연속 성공을, Snowball은 누적 성공을 기억합니다</h2>
+        </header>
+
+        <AvalancheImplementationBoundaryViz />
+
+        <p>
+          Snowflake의 <code>confidence</code>는 같은 preference가 <code>AlphaConfidence</code>를 연속으로 넘은 횟수입니다. Preference가 바뀌거나 poll이 threshold에 못 미치면 0으로 돌아갑니다. <code>beta</code>에 닿으면 그 로컬 상태를 잠급니다. A 성공·A 성공·실패·A 성공을 합계 세 번으로 세면 안 되는 이유입니다.
+        </p>
+        <p>
+          Snowball은 각 choice가 <code>AlphaPreference</code>를 넘은 poll 수를 <code>preferenceStrength</code>에 계속 더합니다. 새 choice의 strength가 기존 최댓값보다 클 때만 외부 preference를 바꾸므로, 동률에서는 이전 preference가 남습니다. 누적 strength는 preference의 관성을 만들지만 finalization counter를 대신하지 않습니다.
+        </p>
+
+        <PollUpdateSketch />
+
+        <p>
+          구현 이름도 구분해야 합니다. AvalancheGo v1.14.2의 <code>chains/manager.go</code>는 Snowman consensus를 만들 때 <code>Topological&#123;Factory: snowball.SnowflakeFactory&#125;</code>를 사용합니다.
+        </p>
+        <p>
+          같은 package에 Snowball 구현이 존재한다고 해서 해당 manager 경로가 <code>SnowballFactory</code>를 쓴다고 말할 수는 없습니다. 위 두 열은 프로토콜 계보의 차이를 이해하기 위한 비교입니다.
+        </p>
+
+        <div id="paper-avalanche-family">
+          <CitationBlock source="Team Rocket · Scalable and Probabilistic Leaderless BFT Consensus through Metastability" citeKey={2} href="https://arxiv.org/abs/1906.08936">
+            <p><strong>문제:</strong> 전체 참여자의 all-to-all vote 없이 Byzantine 환경에서 합의에 가까워지는 protocol family가 필요합니다.</p>
+            <p><strong>기여:</strong> Repeated random subsampling과 metastability를 바탕으로 Slush·Snowflake·Snowball·Avalanche 구성을 제시합니다.</p>
+            <p><strong>전제:</strong> 논문이 명시한 sampling, Byzantine fraction과 network scheduler model 안에서 읽습니다.</p>
+            <p><strong>말하지 않는 것:</strong> 논문 실험의 처리량과 지연이 현재 모든 Avalanche network 또는 설정에서 그대로 나온다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+
+        <div id="paper-avalanchego-snow-state">
+          <CitationBlock source="AvalancheGo v1.14.2 · binary Snowflake와 Snowball" citeKey={3} type="code" href="https://github.com/ava-labs/avalanchego/tree/v1.14.2/snow/consensus/snowball">
+            <p><strong>문제:</strong> 같은 poll 결과가 연속 confidence와 누적 preference를 서로 다른 규칙으로 갱신해야 합니다.</p>
+            <p><strong>구현:</strong> <code>binary_snowflake.go</code>는 reset·increment·finalize를, <code>binary_snowball.go</code>는 choice별 strength와 lazy tie preference를 구현합니다.</p>
+            <p><strong>전제:</strong> Engine이 이미 choice별 poll count를 올바르게 집계해 전달했다고 가정합니다.</p>
+            <p><strong>말하지 않는 것:</strong> 이 로컬 state object가 sampling, network delivery, block validity와 chain acceptance 전체를 수행하지는 않습니다.</p>
+          </CitationBlock>
+        </div>
+
+        <div id="paper-avalanchego-snowman-factory">
+          <CitationBlock source="AvalancheGo v1.14.2 · Snowman factory wiring" citeKey={4} type="code" href="https://github.com/ava-labs/avalanchego/blob/v1.14.2/chains/manager.go#L930-L934">
+            <p><strong>문제:</strong> Node가 실제 linear-chain consensus 구현을 어떤 local choice state와 연결하는지 확인해야 합니다.</p>
+            <p><strong>구현:</strong> v1.14.2 manager는 Snowman의 <code>Topological</code> consensus에 <code>SnowflakeFactory</code>를 주입합니다.</p>
+            <p><strong>근거 범위:</strong> 이 고정 릴리스의 manager wiring에만 해당합니다.</p>
+            <p><strong>말하지 않는 것:</strong> 다른 릴리스·다른 chain engine이나 논문의 Snowball construction이 불필요하다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="limits" className="space-y-6">
+        <header className="space-y-2">
+          <p className="text-sm font-semibold text-primary">03 · 결정의 경계</p>
+          <h2 className="text-2xl font-bold">로컬 counter가 끝나도 network 성질은 별도의 전제를 요구합니다</h2>
+        </header>
+
+        <AvalancheDecisionBoundaryViz />
+
+        <p>
+          Safety는 두 정직한 노드가 상충하는 값을 결정하지 않는 성질입니다. Liveness는 필요한 network 조건이 성립할 때 정직한 노드가 결국 결정을 만드는 성질입니다. 한 노드의 confidence가 beta에 닿았다는 기록만으로 두 성질을 직접 관찰할 수는 없습니다.
+        </p>
+        <p>
+          두 성질을 판단하려면 Byzantine stake 비율, stake-weighted sampling, sample 사이의 상관, message delay와 omission을 포함한 model이 함께 필요합니다.
+        </p>
+        <p>
+          실패 동작도 나눠 봐야 합니다. AlphaPreference에 못 미친 poll은 confidence를 0으로 돌리지만 기존 preference와 Snowball strength를 지우지 않습니다. Preference threshold는 넘고 confidence threshold에는 못 미친 poll은 preference를 바꿀 수 있어도 streak를 늘리지 않습니다.
+        </p>
+        <p>
+          Partition이나 응답 부족이 계속되면 노드는 충돌 값을 억지로 정하지 않습니다. Confidence가 beta에 도달하지 못한 채 진행을 멈출 수 있습니다.
+        </p>
+        <p>
+          현재 Avalanche 문서에서 Primary Network의 P·C·X Chain은 linear Snowman 계열로 설명됩니다. X-Chain의 과거 Avalanche DAG engine은 2023년 Cortina upgrade 뒤 Primary Network에서 더 이상 사용하지 않는 역사적 경로입니다.
+        </p>
+        <p>
+          그러므로 “Avalanche 합의”라는 이름을 보았을 때 논문의 DAG, Snowball building block, 현재 Snowman chain engine을 한 프로그램으로 합치지 않아야 합니다.
+        </p>
+
+        <div id="paper-avalanche-current-consensus">
+          <CitationBlock source="Avalanche Builder Hub · Consensus Protocols" citeKey={5} href="https://build.avax.network/docs/nodes/architecture/consensus">
+            <p><strong>문제:</strong> Snow family의 개념과 현재 Primary Network에서 쓰는 linear consensus 경로를 구분해야 합니다.</p>
+            <p><strong>공식 설명:</strong> Snowman은 P·C·X Chain과 대부분의 Avalanche L1에서 쓰이며, X-Chain의 DAG engine은 Cortina 이후 역사적 호환 경로로 남아 있습니다.</p>
+            <p><strong>근거 범위:</strong> 문서가 설명하는 현재 network architecture와 protocol 계보입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 모든 L1의 정확한 parameter, 릴리스 wiring, finality 지연이 같다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+
+        <p>
+          이제 전체 지도에는 다음 사실을 되돌려 놓을 수 있습니다. Snow 계열의 핵심은 “작은 표본을 쓴다”가 아니라, 표본 결과가 preference와 연속 confidence를 서로 다른 state로 갱신하고, 이 로컬 상태 전이가 명시된 network model 아래에서 probabilistic safety로 이어진다는 점입니다. 제품의 parameter 변경·장애 주입·rollback 판단은 별도의 실무 글에서 다룹니다.
+        </p>
+      </section>
+    </article>
+  );
 }

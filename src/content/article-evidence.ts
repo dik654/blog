@@ -25,6 +25,7 @@ export type ArticleEvidenceKind =
   | "공식 연구"
   | "공식 예제"
   | "공식 프로젝트 기록"
+  | "공식 릴리스"
   | "구현 이슈"
   | "프로젝트 실측"
   | "공개 강의"
@@ -8002,9 +8003,11 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "commonware-broadcast v2026.9.0 buffered engine", href: "https://github.com/commonwarexyz/monorepo/blob/d476a2361ce6840d2b9d0aa6fb30a924429046d4/broadcast/src/buffered/engine.rs", note: "Peer deque·digest refcount·latest-primary eligibility cache의 pinned implementation이며 global reliable broadcast는 아님" },
   ],
   "blockchain/avalanche-consensus": [
-    { kind: "핵심 논문", label: "Snowflake to Avalanche · arXiv 1906.08936", href: "https://arxiv.org/abs/1906.08936", note: "Repeated random subsampling과 metastable consensus family의 원문이며 특정 chain TPS·고정 finality SLA는 아님" },
-    { kind: "공식 코드", label: "AvalancheGo v1.14.2 Snowball parameters", href: "https://github.com/ava-labs/avalanchego/blob/v1.14.2/snow/consensus/snowball/parameters.go", note: "K·alpha·beta parameter validation의 pinned source이며 모든 subnet의 optimal defaults는 아님" },
-    { kind: "공식 코드", label: "AvalancheGo v1.14.2 Snow state", href: "https://github.com/ava-labs/avalanchego/tree/v1.14.2/snow/consensus/snowball", note: "Snowflake consecutive confidence와 Snowball cumulative preference 구현이며 sampler/network 보장은 별도" },
+    { kind: "핵심 논문", label: "Snowflake to Avalanche · arXiv 1906.08936", href: "https://arxiv.org/abs/1906.08936", note: "Repeated random subsampling과 metastable Snow family의 원문이며 논문 실험 수치를 현재 chain SLA로 일반화하지 않음" },
+    { kind: "공식 코드", label: "AvalancheGo v1.14.2 · Snow parameters", href: "https://github.com/ava-labs/avalanchego/blob/v1.14.2/snow/consensus/snowball/parameters.go", note: "K·AlphaPreference·AlphaConfidence·Beta 관계와 기본값을 확인한 pinned source" },
+    { kind: "공식 코드", label: "AvalancheGo v1.14.2 · Snowflake/Snowball state", href: "https://github.com/ava-labs/avalanchego/tree/v1.14.2/snow/consensus/snowball", note: "Consecutive confidence와 cumulative preferenceStrength의 서로 다른 상태 전이를 확인" },
+    { kind: "공식 코드", label: "AvalancheGo v1.14.2 · Snowman factory wiring", href: "https://github.com/ava-labs/avalanchego/blob/v1.14.2/chains/manager.go#L930-L934", note: "Topological Snowman이 SnowflakeFactory를 받는 고정 구현이며 package에 Snowball type이 있다는 사실과 구분" },
+    { kind: "공식 문서", label: "Avalanche Builder Hub · Consensus Protocols", href: "https://build.avax.network/docs/nodes/architecture/consensus", note: "현재 Primary Network의 linear Snowman 경로와 Cortina 뒤 역사적 DAG engine 경계를 설명" },
   ],
   "blockchain/gossipbft": [
     { kind: "공식 규격", label: "FIP-0086 GossiPBFT · revision c856d99", href: "https://github.com/filecoin-project/FIPs/blob/c856d99b126cb52a0436c4838da55ec84495cfa7/FIPS/fip-0086.md", note: "Weighted phases·best-effort broadcast·partial-synchrony properties의 Final 규격이며 Gossipsub exactly-once 보장은 아님" },

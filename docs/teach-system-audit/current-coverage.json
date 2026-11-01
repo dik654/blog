@@ -4841,7 +4841,7 @@
     {
       "route": "blockchain/avalanche-consensus",
       "publicPath": "cs/blockchain/avalanche-consensus",
-      "title": "Avalanche 합의: sampling에서 Snowball까지",
+      "title": "Avalanche Snow: 표본 투표와 결정",
       "catalogIndex": 481,
       "status": "pending",
       "provenance": "assignment:chains",

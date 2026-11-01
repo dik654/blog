@@ -7,8 +7,8 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 568,
-    "architectureWithoutAnimation": 73,
+    "animatedMechanisms": 569,
+    "architectureWithoutAnimation": 72,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 243,
     "sourceCitationLinked": 998,
@@ -6322,18 +6322,18 @@
     {
       "route": "blockchain/avalanche-consensus",
       "publicPath": "cs/blockchain/avalanche-consensus",
-      "title": "Avalanche 합의: sampling에서 Snowball까지",
+      "title": "Avalanche Snow: 표본 투표와 결정",
       "sourcePath": "src/pages/articles/blockchain/avalanche-consensus.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/berachain",

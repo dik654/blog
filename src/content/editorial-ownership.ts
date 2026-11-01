@@ -9468,10 +9468,10 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Broadcaster·ingress·engine 동작은 commonware-broadcast v2026.7.0 pinned source에만 귀속한다." }, { kind: "project-measurement", rule: "Mailbox·decode·duplicate·deque overflow·primary update·waiter cancel에서 refcount와 typed receipt를 검증한다." }, { kind: "project-claim", rule: "Feedback·subscribe completion·cache refcount를 recipient acknowledgement·quorum·total order·durability로 확대하지 않는다." }],
   },
   "avalanche-consensus": {
-    title: "Avalanche sampling·Snowflake·Snowball 글이 소유하는 범위",
-    owns: ["Random subsample poll과 alpha 성공 판정", "Snowflake consecutive confidence·Snowball cumulative preference와 probabilistic release envelope"],
+    title: "Avalanche Snow 표본 투표·로컬 상태 전이 글이 소유하는 범위",
+    owns: ["Random subsample poll의 AlphaPreference·AlphaConfidence 판정", "Snowflake consecutive confidence·Snowball cumulative preference와 local decision 경계"],
     reuses: [{ label: "Consensus safety·liveness", href: "/cs/blockchain/bft-theory" }, { label: "Finality semantics boundary", href: "/cs/blockchain/consensus-comparison" }],
-    evidence: [{ kind: "primary-source", rule: "Protocol construction은 Snow paper, implementation state는 AvalancheGo v1.14.2 source에 각각 귀속한다." }, { kind: "project-measurement", rule: "Parameter·sampler·fault·network trace를 고정하고 conflict 0과 GST 뒤 progress를 분리 검사한다." }, { kind: "project-claim", rule: "한 poll 확률·default parameter·local decision을 universal finality SLA로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Protocol construction은 Snow paper, local state와 Snowman wiring은 AvalancheGo v1.14.2 source에 각각 귀속한다." }, { kind: "project-measurement", rule: "이 개념 글은 실측 결과를 주장하지 않으며 parameter 변경 실험·장애 주입·rollback은 별도 실무 글로 보낸다." }, { kind: "project-claim", rule: "한 poll의 확률·local decision·package type 존재를 network finality SLA나 current deployment 전체로 확대하지 않는다." }],
   },
   "expected-consensus": {
     title: "Filecoin EC sortition·tipset·weighted head 글이 소유하는 범위",

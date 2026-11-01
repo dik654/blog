@@ -15,13 +15,13 @@ export const bftNewArticles: Article[] = [
   },
   {
     slug: "avalanche-consensus",
-    title: "Avalanche 합의: sampling에서 Snowball까지",
+    title: "Avalanche Snow: 표본 투표와 결정",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "한눈에 보는 전체 흐름" },
-      { id: "sampling-poll", title: "무작위 표본과 threshold" },
-      { id: "confidence", title: "Snowflake와 Snowball 상태" },
-      { id: "release", title: "Safety·liveness와 release" },
+      { id: "overview", title: "한 poll부터 결정까지" },
+      { id: "sampling-poll", title: "두 threshold" },
+      { id: "confidence", title: "두 종류의 기억" },
+      { id: "limits", title: "로컬 결정과 network 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/avalanche-consensus"),
   },
