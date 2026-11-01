@@ -1733,10 +1733,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "infrastructure/climate-risk-and-exposure": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "홍수·폭염 등 위험을 평가할 때는 자연 현상의 강도, 노출된 사람과 자산, 취약성과 대응 능력을 분리해야 손실과 투자 판단이 가능합니다.",
-    "sharedGate": "동일한 홍수가 난 두 지역을 가정합니다. A에는 자산가치 100이 놓여 있고 10%가 손상돼 손실은 10입니다. B에는 자산 300이 있고 20%가 손상돼 손실은 60입니다. 모두 설명용 값이며 단위는 같은 금액 단위입니다(가정). 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "기후 위험을 이해하려면 물리적 사건, 그곳에 놓인 사람·자산, 손상과 회복 조건, 직접 손실, 보험·대출을 통한 비용 배분, 대응 비용, 사건 한 번과 미래 확률을 나눠야 합니다. 첫 그림은 위해에서 금융 부담까지의 경로, 같은 홍수에서 손실 10과 60, 노출·손상률 조정, 위해·노출·취약성, 보험 40과 소유자 20, 방재 뒤 손실 30, 연간 예상 손실의 경계까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 자산·손상률·지급 범위가 일치해야 합니다. 같은 홍수에서 A는 100×10%=10, B는 300×20%=60의 직접 자산 손실이 생깁니다. B의 노출을 150으로 줄이거나 손상률을 10%로 낮추면 손실은 모두 30이지만 조치와 비용은 다릅니다. 손실 60 중 보험이 40을 지급하면 소유자 부담은 20이어도 물리 손실은 60입니다. 방재 뒤 손실 감소 30은 공사·유지비를 빼기 전 값이며, 사건 한 번의 손실 60만으로 연간 예상 손실을 정하지 않습니다."
   },
   "institutions/public-budget-and-taxes": {
     "action": "keep",
@@ -4327,7 +4327,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/housing-land-and-supply": "42d56b118df033e4",
   "infrastructure/food-chain-and-prices": "169e242c680f7e98",
   "infrastructure/electricity-grid-and-power": "8663d1f04f659a25",
-  "infrastructure/climate-risk-and-exposure": "aa85ef97f65b45ea",
+  "infrastructure/climate-risk-and-exposure": "c33c76020b00c2cd",
   "business/business-model-cashflow": "d9d96a98d88c5a2e",
   "business/franchise-incentives": "c6da7928e309fac2",
   "business/shop-fitout-and-opening": "758b12f0dd56e630",
