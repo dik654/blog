@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 734,
+    "dedicatedVisuals": 735,
     "inlineVisuals": 525,
-    "customVisuals": 917,
-    "animatedMechanisms": 588,
+    "customVisuals": 918,
+    "animatedMechanisms": 589,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -8934,14 +8934,14 @@
       "sourcePath": "src/pages/articles/business/franchise-incentives.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "business/shop-daily-operations",
