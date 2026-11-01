@@ -151,6 +151,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/bft-comparison",
   "blockchain/dag-consensus",
   "blockchain/narwhal-deep",
+  "blockchain/bullshark-deep",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

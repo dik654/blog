@@ -7,7 +7,7 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 524,
     "customVisuals": 911,
-    "animatedMechanisms": 566,
+    "animatedMechanisms": 567,
     "architectureWithoutAnimation": 74,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 243,
@@ -6418,18 +6418,18 @@
     {
       "route": "blockchain/bullshark-deep",
       "publicPath": "cs/blockchain/bullshark-deep",
-      "title": "Bullshark 순서화 심층",
+      "title": "Bullshark: 인증서 DAG가 한 줄의 순서가 되는 과정",
       "sourcePath": "src/pages/articles/blockchain/bullshark-deep.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/cometbft",

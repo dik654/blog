@@ -1,66 +1,185 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { BullsharkOrderingViz, BullsharkWaveViz } from "./viz/ModernBullsharkViz";
+import {
+  BullsharkCommitTraceViz,
+  BullsharkOrderingViz,
+  BullsharkVariantViz,
+} from "./viz/ModernBullsharkViz";
+
+function BullsharkSketch() {
+  return (
+    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
+      <pre><code>{`// 새 인증서를 로컬 DAG의 작성자·라운드 위치에 넣습니다.
+dag[certificate.round][certificate.author] = certificate
+
+// 방금 받은 홀수 라운드 인증서의 직전 짝수 라운드를 후보로 봅니다.
+leader_round = certificate.round - 1
+if leader_round < 2 or leader_round is odd:
+    return []
+
+// 후보 리더를 부모로 참조한 서로 다른 작성자의 stake를 더합니다.
+leader = predefined_leader(leader_round)
+support = sum(
+    stake(child.author)
+    for child in dag[certificate.round]
+    if leader.digest in child.parents
+)
+
+// 지지 임계값에 못 미치면 DAG만 보관하고 출력을 만들지 않습니다.
+if support < validity_threshold:
+    return []
+
+// 현재 리더에서 도달할 수 있는 이전 리더를 찾고 오래된 것부터 처리합니다.
+leaders = reverse(order_leaders_from_current(leader))
+for leader in leaders:
+    // 이미 커밋한 인증서를 제외하고 인과적 과거를 결정적으로 펼칩니다.
+    for certificate in order_dag(leader):
+        update_last_committed(certificate)
+        persist(consensus_index, certificate.digest)
+        emit(certificate, consensus_index)
+        consensus_index += 1`}</code></pre>
+    </div>
+  );
+}
 
 export default function ModernBullsharkArticle() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Certificate DAG · ordering plane</p><h2 className="text-3xl font-bold tracking-tight">Bullshark는 Narwhal certificate DAG의 edges를 leader vote로 읽고 한 sequence를 만든다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Narwhal이 Alice→Bob batch의 bytes를 분산 저장하고 certificate vertex를 만들었다고 하겠습니다. 이 시점에는 availability와 causal history는 있지만 transaction의 전역 순서는 없습니다. Bullshark는 rounds를 wave로 묶고 미리 정한 leader certificate가 다음 round children에게 충분히 참조됐는지 봅니다. Supported leader를 찾으면 그 leader가 도달하는 과거 leaders와 아직 출력하지 않은 ancestors를 오래된 순서로 펼칩니다.</p>
-      <p>
-            따라서 책임은 세 층입니다. Narwhal certificate가 data availability를 맡고 Bullshark가 leader decision과
-            deterministic certificate order를 맡으며 application이 certificate가 가리키는 transactions를 실행합니다. Leader를
-            local에서 먼저 봤다는 사실이나 certificate arrival order는 합의 근거가 아닙니다.
-          </p>
-      <BullsharkWaveViz />
-      <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Bullshark가 추가 ordering vote messages를 보내는 대신 이미 certificate DAG에 들어 있는 causal references를 vote evidence로 해석합니다. 하지만 어떤 leader·threshold·timing 전제를 쓰는지는 protocol variant와 pinned 구현별로 구분해야 합니다.</aside>
-    </section>
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-6">
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">Bullshark 상세</p>
+          <h2 className="text-3xl font-bold tracking-tight">인증서 DAG의 여러 가능한 순서 가운데 하나를 어떻게 고를까요?</h2>
+        </header>
+        <p className="text-lg leading-8 text-foreground/90">
+          <a className="font-semibold text-primary underline-offset-4 hover:underline" href="/cs/blockchain/dag-consensus#bullshark">앞선 DAG 합의 지도</a>와 <a className="font-semibold text-primary underline-offset-4 hover:underline" href="/cs/blockchain/narwhal-deep#overview">Narwhal 상세편</a>에서 거래 배치가 인증서가 되는 과정까지 봤습니다. 이 글은 인증된 DAG를 한 줄의 합의 순서로 바꾸는 구간만 확대합니다. 직접 커밋되지 못한 앵커 L2와 나중에 지지를 얻는 L4를 끝까지 따라갑니다.
+        </p>
 
-    <section id="wave-anchor" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · wave와 leader support</p><h2 className="mt-2 text-2xl font-bold">Current supported leader에서 reachable earlier leaders를 찾아 oldest-first로 결정한다</h2></header>
-      <p>Round는 validators가 certificate vertices를 만드는 logical step이고, wave는 여러 rounds를 묶어 leader 판정을 반복하는 단위입니다. Leader schedule은 특정 round의 validator를 anchor 후보로 정합니다. Archived standalone implementation은 even-round leader를 찾고, 다음 round certificate authors 가운데 그 leader를 parent로 참조한 distinct authors의 stake가 validity threshold에 닿는지 검사합니다. Equal-weight n=4,f=1 예에서는 <code>f+1=2</code> support입니다. 이는 historical implementation의 조건이며 다른 paper variant의 모든 threshold로 일반화하지 않습니다.</p>
-      <ExplainedFormula question="Archived n=4,f=1 구현에서 leader support를 어떻게 계산하는가?" idea={<>다음 round의 distinct certificate authors 가운데 causal parents로 leader를 지지한 voting power를 더해 validity threshold와 비교합니다. Equal-weight 예에서 threshold는 f+1=2입니다.</>} formula={String.raw`\begin{aligned}S(L_r)&=\sum_{a\in C_{r+1}}w(a)I_a(L_r)\\I_a(L_r)&=1\iff L_r\in parents(a)\\S(L_r)&\ge f+1\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}\underbrace{S(L_r)}_{\text{leader 지지 stake}}&=\underbrace{\sum_{a\in C_{r+1}}w(a)I_a(L_r)}_{\text{다음 round 지지자 합}}\\I_a(L_r)&=\underbrace{1\iff L_r\in parents(a)}_{\text{parent edge가 곧 한 표}}\\S(L_r)&\ge \underbrace{f+1}_{\text{validity threshold}}\end{aligned}`}
-      operations={[
-        { expression: String.raw`\sum_{a\in C_{r+1}}w(a)I_a(L_r)`, annotation: ["round r+1의 distinct author마다","leader를 지지했으면 voting power를 더함","같은 author 중복 수신은 한 번만"] },
-        { expression: String.raw`1\iff L_r\in parents(a)`, annotation: ["별도 vote message 없이 child가","leader를 causal parent로 참조하면 1","edge 없는 C는 0"] },
-        { expression: String.raw`f+1`, annotation: ["archived 구현의 support 기준","예: n=4, f=1이면 2","A·B가 참조하면 support=2로 통과"] },
-      ]} terms={[{symbol:"Lᵣ",name:"predefined leader",description:"Leader schedule이 round r에 고른 certificate입니다."},{symbol:"Cᵣ₊₁",name:"next-round authors",description:"Round r+1 valid certificates를 만든 distinct validators입니다."},{symbol:"w(a)",name:"voting power",description:"Pinned historical committee에서 author a의 weight입니다."},{symbol:"Iₐ(Lᵣ)",name:"support indicator",description:"Child가 leader를 causal parent로 지지하면 1, 아니면 0입니다."}]} assumptions={["Archived commit e67f915 standalone partial-synchrony implementation의 판정입니다.","Certificate·parent links와 distinct author voting power를 먼저 검증합니다.","Equal-weight n=4,f=1 예에서 validity threshold f+1은 2입니다.","Support 판정은 application execution이나 모든 Bullshark variants의 고정 threshold가 아닙니다."]} interpretation="A와 B의 round r+1 certificates가 Lr을 참조하면 support=2라 threshold를 만족합니다. A의 certificate를 중복 수신해 두 표로 세거나, parent edge가 없는 C를 더해서는 안 됩니다." />
-      <p>새 leader L4가 supported이고 L4의 causal history가 이전 leader L2에 닿으면 L2를 먼저, L4를 나중에 결정합니다. L2를 당시 직접 commit하지 못했더라도 later anchor가 공통 evidence를 제공해 회수할 수 있습니다. 반대로 L4에서 L2로 가는 certified link가 없다면 local 추측으로 L2를 끼워 넣지 않습니다. 모든 replica가 같은 DAG에서 같은 oldest-first leader list를 얻어야 합니다.</p>
-      <div id="paper-bullshark"><CitationBlock source="Bullshark: DAG BFT Protocols Made Practical" citeKey={1} href="https://arxiv.org/abs/2201.05677"><p><strong>문제:</strong> Certified DAG에서 별도 ordering messages를 늘리지 않고 practical atomic broadcast를 만들어야 합니다.</p><p><strong>기여:</strong> Wave·leader interpretation과 synchronous fast path를 갖는 Bullshark protocol variants를 제시합니다.</p><p><strong>전제:</strong> n=3f+1 authenticated committee와 variant별 partial synchrony 또는 asynchronous common-coin model을 사용합니다.</p><p><strong>근거 범위:</strong> Bullshark variants의 constructions, correctness proofs와 paper evaluation입니다.</p><p><strong>말하지 않는 것:</strong> 모든 DAG protocol·implementation이 같은 wave length, threshold, fairness나 latency를 가진다는 뜻은 아닙니다.</p></CitationBlock></div>
-      <div id="paper-bullshark-e67"><CitationBlock source="MystenLabs/narwhal commit e67f915 — bullshark.rs" citeKey={2} type="code" href="https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/bullshark.rs"><p><strong>문제:</strong> Certificate arrival마다 supported leaders와 commit sequence를 deterministic하게 갱신해야 합니다.</p><p><strong>기여:</strong> Even-round leader selection, f+1 support, prior-leader recovery와 sub-DAG ordering을 구현합니다.</p><p><strong>전제:</strong> Archived exact commit e67f915의 Committee, ConsensusState, leader schedule과 GC configuration을 사용합니다.</p><p><strong>근거 범위:</strong> Historical standalone partially synchronous Bullshark implementation에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Current Sui consensus나 asynchronous coin variant의 구현, 보편 parameter를 나타내지 않습니다.</p></CitationBlock></div>
-    </section>
+        <BullsharkCommitTraceViz />
 
-    <section id="ordering" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · deterministic sub-DAG</p><h2 className="mt-2 text-2xl font-bold">Leader의 새 ancestors만 stable key로 펼치고 이미 출력한 vertex는 제외한다</h2></header>
-      <p>
-            Leader decision은 아직 transaction sequence 전체가 아닙니다. Node는 committed leader가 도달하는 certificates를 거슬러
-            올라가되 이미 committed한 vertices를 제외하고 round가 오래된 것부터 stable author/digest tie-break로 정렬합니다.
-            Certificate 안의 transaction batch order까지 고정한 뒤 output digest를 계산합니다. HashMap iteration이나 local
-            network arrival order를 tie-break로 사용하면 같은 DAG를 가진 replicas도 state root가 갈릴 수 있습니다.
-          </p>
-      <BullsharkOrderingViz />
-      <p>예를 들어 node A가 C3→A1→B2 순서로 받고 node B가 B2→C3→A1 순서로 받더라도 검증된 DAG set과 edges가 같으면 결과가 같아야 합니다. L2 sub-DAG를 먼저 출력한 뒤 L4를 commit했다면 L4 history에서 L2 이전 vertices를 중복 출력하지 않고 새 causal suffix만 이어 붙입니다. 이는 certificate order이며 application validity, transaction fairness와 successful execution은 별도 receipt입니다.</p>
-      <div id="paper-bullshark-utils-e67"><CitationBlock source="MystenLabs/narwhal commit e67f915 — consensus ordering utilities" citeKey={3} type="code" href="https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/utils.rs"><p><strong>문제:</strong> Committed leader의 causal history를 arrival order와 무관한 duplicate-free sequence로 바꿔야 합니다.</p><p><strong>기여:</strong> Reachable certificates를 수집하고 stable ordering으로 sub-DAG를 평탄화하는 historical utility를 제공합니다.</p><p><strong>전제:</strong> Exact archived commit e67f915, validated certificate DAG와 matching consensus state를 사용합니다.</p><p><strong>근거 범위:</strong> 이 pinned implementation의 leader sub-DAG traversal과 deterministic ordering 경로입니다.</p><p><strong>말하지 않는 것:</strong> Transaction 내부 fairness, application success, current Sui linearizer나 모든 DAG의 보편 tie-break를 규정하지 않습니다.</p></CitationBlock></div>
-    </section>
+        <p>
+          Narwhal 인증서는 데이터 회수 근거와 부모 관계를 제공합니다. 그러나 서로 인과관계가 없는 인증서는 여러 순서로 나열할 수 있습니다. Bullshark는 미리 정한 앵커가 다음 라운드 인증서들의 지지를 받았는지 확인하고, 결정된 앵커에서 거슬러 갈 수 있는 과거를 같은 규칙으로 펼쳐 공통 접두사를 만듭니다.
+        </p>
+        <p>
+          이 글의 동작 추적은 보관 종료된 MystenLabs/narwhal의 <code>e67f915</code> 커밋에 있는 부분 동기식 standalone 구현에 한정합니다. Bullshark 전체 논문의 비동기 변형은 리더와 wave 규칙이 다르므로 마지막 절에서 따로 구분합니다.
+        </p>
+      </section>
 
-    <section id="release" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · variant·failure·release</p><h2 className="mt-2 text-2xl font-bold">Safety는 conflict 없음으로, liveness는 해당 timing model에서 eventual commit으로 따로 검사한다</h2></header>
-      <p>
-            Network partition이나 leader omission 중 commit이 멈춰도 서로 다른 honest replicas가 conflicting sequences를
-            확정하지 않았다면 safety는 유지될 수 있습니다. Liveness는 variant가 요구하는 조건이 회복된 뒤 새 supported leader와 contiguous
-            output이 결국 생기는지를 묻습니다. Partial-synchrony variant는 GST 이후 bounded delay와 honest leader/support를
-            재생하고 asynchronous variant는 논문의 common-coin 경로를 따로 검증해야 합니다. 두 설명을 하나의 implementation 특성처럼 합치면 안
-            됩니다.
-          </p>
-      <p>Release suite는 unsupported L2와 supported L4를 만들고 L4→L2 causal link가 있는 경우 L2→L4, 없는 경우 L4만 나오는지 비교합니다. 같은 certificates를 여러 arrival permutations과 map insertion orders로 replay해 output digest가 같은지도 봅니다. Leader omission·Byzantine equivocation에서는 invalid support를 배제하고 conflict 0을 safety oracle로, network recovery 뒤 eventual commit을 liveness oracle로 둡니다.</p>
-      <p>
-            Crash·restart에서는 exact source commit과 variant manifest, last-committed leader map, DAG/GC
-            watermark를 고정합니다. Persisted boundary에서 DAG를 재구성해 state parity를 확인하고 불완전한 local output만
-            rollback합니다. Ordered certificate가 가리키는 payload를 hash-verify하고 application state receipt가 생긴 뒤에만
-            Bob의 balance 변경을 release합니다.
-          </p>
-      <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 Narwhal/Bullshark 경계, round·wave·leader·support, f+1 예, direct/indirect leader 회수, sub-DAG order와 safety/liveness를 묻습니다. 심화 4문제는 causal-link 두 traces, arrival-order parity, partition/equivocation oracle와 archived restart·GC suite를 설계하게 합니다.</p>
-    </section>
-  </article>;
+      <section id="wave-anchor" className="space-y-6">
+        <header className="space-y-2">
+          <p className="text-sm font-semibold text-primary">01 · 지지와 앵커</p>
+          <h2 className="text-2xl font-bold">다음 라운드의 부모 참조가 앵커에 대한 표가 됩니다</h2>
+        </header>
+
+        <ExplainedFormula
+          question="n=4, f=1인 고정 구현에서 L4의 지지 power는 어떻게 계산할까요?"
+          idea={<>라운드 5의 서로 다른 작성자 가운데 L4의 digest를 부모로 담은 인증서만 골라 stake를 더합니다. Equal-weight 예에서 B5와 C5가 L4를 가리키면 합계 2가 validity threshold f+1=2에 닿습니다.</>}
+          formula={String.raw`S(L_4)=\sum_{c\in DAG[5]} stake(author(c))\cdot \mathbf{1}[digest(L_4)\in parents(c)]\ge f+1`}
+          annotatedFormula={String.raw`\underbrace{S(L_4)}_{\text{L4 지지 power}}=\underbrace{stake(B)+stake(C)}_{\text{서로 다른 작성자}}=2\ge\underbrace{f+1}_{\text{validity threshold}}=2`}
+          operations={[
+            { expression: String.raw`digest(L_4)\in parents(c)`, annotation: ["별도 투표 메시지를 만들지 않음", "child의 parent 참조를 표로 해석", "참조가 없으면 0"] },
+            { expression: String.raw`\sum stake(author(c))`, annotation: ["DAG가 작성자마다 인증서 하나를 보관", "같은 작성자의 중복 수신은 한 번만 계산", "weighted committee는 stake로 합산"] },
+            { expression: String.raw`S(L_4)\ge f+1`, annotation: ["고정 구현의 validity threshold", "equal-weight n=4, f=1이면 2", "B5·C5로 직접 커밋 조건 충족"] },
+          ]}
+          terms={[
+            { symbol: "L₄", name: "짝수 라운드 앵커", description: "모든 검증자가 같은 leader schedule로 고르는 라운드 4 인증서입니다." },
+            { symbol: "DAG[5]", name: "다음 라운드 인증서 집합", description: "라운드 5에서 작성자별로 검증해 저장한 인증서들입니다." },
+            { symbol: "parents(c)", name: "부모 digest 집합", description: "인증서 c가 직전 라운드에서 인과적으로 참조한 인증서 식별자들입니다." },
+          ]}
+          assumptions={[
+            "보관된 e67f915의 부분 동기식 Bullshark 구현을 읽습니다.",
+            "n=4, f=1이고 네 검증자의 stake가 같은 설명용 예입니다.",
+            "인증서와 부모 관계는 Narwhal 계층에서 이미 검증됐습니다.",
+            "이 f+1 식을 비동기 Bullshark v3의 모든 리더 판정에 적용하지 않습니다.",
+          ]}
+          interpretation="L4 자체를 먼저 받았다는 사실은 커밋 근거가 아닙니다. B5와 C5가 L4를 부모로 참조해 서로 다른 stake 2를 제공해야 이 구현의 직접 커밋 경로가 열립니다."
+        />
+
+        <p>
+          새 인증서가 들어오면 구현은 그 인증서를 DAG에 넣고 직전 라운드를 후보 리더 라운드로 계산합니다. 후보가 2 이상의 짝수 라운드가 아니거나, 리더 인증서가 없거나, 지지 power가 임계값보다 작으면 빈 출력으로 돌아갑니다. DAG는 계속 자라지만 합의 순서는 아직 늘어나지 않습니다.
+        </p>
+        <p>
+          L4가 임계값을 넘으면 곧바로 L4만 출력하지 않습니다. <code>order_leaders</code>는 L4에서 이전 짝수 라운드 리더로 가는 경로를 검사합니다. L4에서 L2까지 닿으면 목록에 L2를 추가하고, 목록을 뒤집어 L2부터 처리합니다. 반대로 경로가 없다면 L2를 끼워 넣지 않습니다. 부분 동기식 논문의 DAG 완전성 조건에서는 미래 앵커가 L2에 닿지 않는다면 어느 정상 노드도 L2를 커밋하지 않았다고 판단할 수 있기 때문입니다.
+        </p>
+
+        <BullsharkSketch />
+
+        <div id="paper-bullshark-partial">
+          <CitationBlock source="Bullshark: The Partially Synchronous Version v1" citeKey={1} href="https://arxiv.org/abs/2209.05633v1">
+            <p><strong>문제:</strong> 인증서 DAG 위에서 별도의 합의 메시지를 추가하지 않고 앵커와 전체 순서를 결정해야 합니다.</p>
+            <p><strong>기여:</strong> 짝수 라운드 앵커, 다음 홀수 라운드의 f+1표, 이전 앵커 경로 검사와 결정적 인과 이력 출력을 간결하게 설명합니다.</p>
+            <p><strong>전제:</strong> n=3f+1, reliable·non-equivocating·complete DAG와 GST 이후의 부분 동기 네트워크를 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 이 글의 L2·L4 앵커와 직접·간접 결정 흐름입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 비동기 Bullshark의 4라운드 wave와 fallback leader가 같은 규칙이라는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+
+        <div id="paper-bullshark-e67">
+          <CitationBlock source="MystenLabs/narwhal commit e67f915 — bullshark.rs" citeKey={2} type="code" href="https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/bullshark.rs">
+            <p><strong>문제:</strong> 인증서가 도착할 때마다 현재 DAG만으로 커밋 가능한 리더와 출력 인증서를 갱신해야 합니다.</p>
+            <p><strong>구현:</strong> 짝수 라운드 리더 선택, 다음 라운드의 validity-threshold 지지 계산, 이전 리더 회수, consensus index 부여와 상태 저장을 수행합니다.</p>
+            <p><strong>근거 범위:</strong> 보관 종료된 저장소의 정확한 커밋 e67f915에 있는 historical standalone 구현입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 현재 Sui의 합의 구현이나 비동기 Bullshark 변형을 나타내지 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="ordering" className="space-y-6">
+        <header className="space-y-2">
+          <p className="text-sm font-semibold text-primary">02 · 하위 DAG</p>
+          <h2 className="text-2xl font-bold">앵커를 고른 뒤에도 어떤 인증서를 어떤 순서로 내보낼지 정해야 합니다</h2>
+        </header>
+
+        <BullsharkOrderingViz />
+
+        <p>
+          논문은 앵커의 인과적 과거를 “어떤 결정적 규칙”으로 정렬한다고 정의합니다. 고정 구현의 실제 규칙은 더 구체적입니다. <code>order_dag</code>는 앵커에서 DFS를 시작하고, 각 헤더의 부모 digest를 <code>BTreeSet</code> 순서로 읽습니다. 이미 방문한 digest와 작성자별 <code>last_committed</code> 라운드는 건너뛰고, GC 범위 밖의 인증서를 제거한 뒤 <code>round</code> 기준 안정 정렬을 적용합니다.
+        </p>
+        <p>
+          여기에는 별도의 “author 기준 정렬”이 없습니다. 같은 라운드 안의 순서는 정렬된 부모 digest를 따라간 DFS 방문 순서가 안정 정렬 뒤에도 유지됩니다. 따라서 로컬 네트워크 도착 순서나 <code>HashMap</code> 순회를 합의 규칙으로 사용한다고 설명하면 실제 코드와 달라집니다. 자료구조의 순서 보장이 바뀌면 결과도 다시 검증해야 합니다.
+        </p>
+        <p>
+          L2 하위 DAG를 먼저 출력하면 <code>state.update</code>가 작성자별 마지막 커밋 라운드를 올립니다. 이어서 L4를 펼칠 때 이미 처리한 인증서는 제외되어 같은 인증서가 두 번 나오지 않습니다. 각 새 인증서에는 전역 <code>consensus_index</code>가 붙고, 마지막 커밋 상태와 digest가 저장됩니다. 이 출력은 인증서 순서이며, 인증서가 가리키는 배치 원문을 가져와 거래를 실행한 결과는 아닙니다.
+        </p>
+
+        <div id="paper-bullshark-utils-e67">
+          <CitationBlock source="MystenLabs/narwhal commit e67f915 — consensus ordering utilities" citeKey={3} type="code" href="https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/utils.rs">
+            <p><strong>문제:</strong> 현재 리더에서 도달할 수 있는 이전 리더와 아직 출력하지 않은 인과적 과거를 중복 없이 한 줄로 만들어야 합니다.</p>
+            <p><strong>구현:</strong> <code>linked</code>가 라운드를 거슬러 경로를 검사하고, <code>order_dag</code>가 DFS·중복 제거·GC 필터·round 안정 정렬을 수행합니다.</p>
+            <p><strong>전제:</strong> 같은 커밋의 <code>Header.parents: BTreeSet&lt;CertificateDigest&gt;</code>, 검증된 DAG와 일치하는 consensus state를 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 이 고정 구현의 리더 회수와 하위 DAG 평탄화 경로입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 거래 공정성, 애플리케이션 실행 성공, 현재 Sui linearizer의 규칙을 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="release" className="space-y-6">
+        <header className="space-y-2">
+          <p className="text-sm font-semibold text-primary">03 · 변형과 멈춤</p>
+          <h2 className="text-2xl font-bold">같은 이름의 프로토콜 변형과 시스템의 실패 동작을 섞지 않습니다</h2>
+        </header>
+
+        <BullsharkVariantViz />
+
+        <p>
+          부분 동기식 설명과 고정 구현에서는 짝수 라운드 앵커가 다음 홀수 라운드의 f+1 지지를 받는 흐름을 추적했습니다. 전체 비동기 Bullshark v3는 네 라운드를 한 wave로 묶고, 첫째·셋째 라운드의 steady-state leaders와 common coin으로 고르는 fallback leader, 투표 유형과 2f+1 판정을 함께 사용합니다. “Bullshark는 항상 2라운드마다 f+1표로 커밋한다”라고 요약하면 서로 다른 변형을 합친 잘못된 설명이 됩니다.
+        </p>
+        <p>
+          시스템이 지지 임계값을 얻지 못하면 해당 호출은 빈 순서를 반환하고 DAG만 더 쌓습니다. 네트워크가 나뉘거나 예정된 리더가 늦으면 커밋이 멈출 수 있지만, 그 사실만으로 서로 다른 두 순서를 확정했다는 뜻은 아닙니다. Safety는 정상 노드가 충돌하는 순서를 내지 않는지, liveness는 해당 변형의 네트워크 조건이 회복된 뒤 새 순서가 계속 나오는지 따로 판단합니다.
+        </p>
+        <p>
+          재시작 시 고정 구현은 저장된 작성자별 <code>last_committed</code>와 consensus index를 읽고, 인증서 저장소에서 GC 범위 안의 DAG를 다시 만듭니다. 필요한 과거가 GC 경계 밖이라면 임의로 복원하지 않습니다. 합의 출력 뒤에도 배치 바이트가 없거나 실행 검증이 실패하면 애플리케이션은 그 자리에서 멈춰야 하며, 인증서 커밋을 거래 성공으로 바꾸어 기록해서는 안 됩니다.
+        </p>
+
+        <div id="paper-bullshark-full">
+          <CitationBlock source="Bullshark: DAG BFT Protocols Made Practical v3" citeKey={4} href="https://arxiv.org/abs/2201.05677v3">
+            <p><strong>문제:</strong> 비동기 진행을 보존하면서 동기적인 구간에서는 낮은 지연의 fast path를 제공해야 합니다.</p>
+            <p><strong>기여:</strong> 4라운드 wave, steady-state·fallback leaders, vote type과 common coin을 결합한 비동기 Bullshark를 제시합니다.</p>
+            <p><strong>전제:</strong> n=3f+1 authenticated committee, reliable broadcast와 논문이 정의한 global perfect coin을 사용합니다.</p>
+            <p><strong>근거 범위:</strong> 비동기 변형의 leader·wave·liveness 경계를 부분 동기식 구현과 구분하는 데 사용합니다.</p>
+            <p><strong>말하지 않는 것:</strong> e67f915의 standalone <code>bullshark.rs</code>가 이 전체 알고리즘을 구현한다는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+    </article>
+  );
 }

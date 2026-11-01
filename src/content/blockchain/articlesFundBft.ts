@@ -281,13 +281,13 @@ export const bftArticles: Article[] = [
   },
   {
     slug: "bullshark-deep",
-    title: "Bullshark 순서화 심층",
+    title: "Bullshark: 인증서 DAG가 한 줄의 순서가 되는 과정",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "DAG ordering 경계" },
-      { id: "wave-anchor", title: "Wave와 leader support" },
-      { id: "ordering", title: "Deterministic sub-DAG" },
-      { id: "release", title: "Variant와 release" },
+      { id: "overview", title: "한 앵커의 전체 흐름" },
+      { id: "wave-anchor", title: "지지와 앵커" },
+      { id: "ordering", title: "이전 앵커와 하위 DAG" },
+      { id: "release", title: "변형과 멈춤" },
     ],
     component: () => import("@/pages/articles/blockchain/bullshark-deep"),
   },

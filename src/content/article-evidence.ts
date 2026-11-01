@@ -8016,9 +8016,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Archived Narwhal synchronizer · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/primary/src/synchronizer.rs", note: "Missing parents와 (digest, worker id) payload 동기화 구현이며 즉시 fetch·영구 보관을 보장하지 않음" },
   ],
   "blockchain/bullshark-deep": [
-    { kind: "핵심 논문", label: "Bullshark · arXiv 2201.05677", href: "https://arxiv.org/abs/2201.05677", note: "Wave·leader DAG ordering variants의 원문이며 partial-synchrony와 asynchronous-coin 전제를 서로 바꾸어 쓰지 않음" },
+    { kind: "핵심 논문", label: "Partially Synchronous Bullshark v1", href: "https://arxiv.org/abs/2209.05633v1", note: "짝수 라운드 앵커·다음 홀수 라운드 f+1표·이전 앵커 회수의 설명 원문" },
     { kind: "공식 코드", label: "Archived Bullshark · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/bullshark.rs", note: "Even-round leader·f+1 support의 historical standalone 구현이며 current Sui 또는 모든 paper variant는 아님" },
-    { kind: "공식 코드", label: "Archived Bullshark ordering utils · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/utils.rs", note: "Sub-DAG traversal·ordering의 pinned source이며 transaction fairness·application success는 별도" },
+    { kind: "공식 코드", label: "Archived Bullshark ordering utils · commit e67f915", href: "https://github.com/MystenLabs/narwhal/blob/e67f91530e6bd4ef7808e42f548f07e58764ec5b/consensus/src/utils.rs", note: "BTreeSet 부모 순회·DFS·중복 제거·GC 필터·round 안정 정렬의 고정 source" },
+    { kind: "핵심 논문", label: "Asynchronous Bullshark v3", href: "https://arxiv.org/abs/2201.05677v3", note: "4라운드 wave·steady-state/fallback leaders·common coin을 부분 동기식 구현과 구분" },
   ],
   "blockchain/autobahn-deep": [
     { kind: "핵심 논문", label: "Autobahn · arXiv 2401.10369", href: "https://arxiv.org/abs/2401.10369", note: "Chained lanes·cut consensus·view change의 primary paper이며 legacy fixed timeout·BLS·TPS를 보편값으로 주장하지 않음" },

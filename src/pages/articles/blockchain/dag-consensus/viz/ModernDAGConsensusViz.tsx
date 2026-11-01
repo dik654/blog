@@ -32,7 +32,7 @@ const TRACE_STATES = [
   },
   {
     title: "모든 검증자가 A2의 미처리 인과적 과거를 같은 규칙으로 펼칩니다.",
-    now: "A1·B1·C1 뒤 A2처럼 round·author·digest 기반의 고정 규칙으로 순서를 만듭니다.",
+    now: "A1·B1·C1 뒤 A2처럼 프로토콜과 구현이 공유하는 결정적 규칙으로 순서를 만듭니다.",
     evidence: "도착 순서가 달라도 같은 committed prefix가 나옵니다.",
     pending: "T1을 실행하기 전 현재 노드에 A1의 배치 원문이 없으면 먼저 가져와야 합니다.",
   },
@@ -211,7 +211,7 @@ export function DAGArrivalOrderCounterexampleViz() {
         </div>
       </div>
       <div className="mt-3 border border-primary bg-primary/5 p-3 text-xs font-semibold leading-5">
-        해결: committed anchor의 causal history를 round·author·digest처럼 모든 검증자가 공유하는 값으로 정렬합니다.
+        해결: committed anchor의 causal history를 모든 검증자가 동일하게 계산할 수 있는 고정 규칙으로 정렬합니다. 실제 tie-break는 구현의 자료구조까지 확인해야 합니다.
       </div>
     </VizFrame>
   );

@@ -4821,7 +4821,7 @@
     {
       "route": "blockchain/bullshark-deep",
       "publicPath": "cs/blockchain/bullshark-deep",
-      "title": "Bullshark 순서화 심층",
+      "title": "Bullshark: 인증서 DAG가 한 줄의 순서가 되는 과정",
       "catalogIndex": 479,
       "status": "pending",
       "provenance": "assignment:chains",
