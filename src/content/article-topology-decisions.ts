@@ -1719,10 +1719,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "infrastructure/transport-access-and-land-value": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "교통 투자는 차량 속도뿐 아니라 사람이 일자리·학교·서비스에 도달하는 범위와 그 이익이 임대료로 이동하는 과정을 함께 바꿉니다.",
-    "sharedGate": "통근이 편도 60분에서 35분으로 줄고 한 달에 20일 출근한다고 놓습니다(가정). 편도 절약은 25분, 한 달 편도 합계는 500분입니다. 같은 조건으로 귀가한다면 왕복 합계는 1,000분, 약 16시간 40분입니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "교통 투자를 이해하려면 시설을 짓고 운행하는 물리 경로, 문 앞에서 문 앞까지의 이동시간, 정해진 시간·비용 안에서 닿는 기회, 가구의 현금 지출, 위치 이익이 임대료로 이동하는 과정을 나눠야 합니다. 첫 그림은 건설에서 기회까지의 경로, 편도 25분과 한 달 1,000분, 차량 시간과 전체 통근시간의 범위, 접근성 조건, 교통비·월세 장부, 이익의 분배와 중복 계산, 새 수요·지연·유지비·이주의 경계까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 시간·금액·범위가 일치해야 합니다. 편도 통근이 60분에서 35분으로 줄면 25분을 아끼고, 왕복 2회와 20일을 곱하면 한 달 1,000분, 즉 16시간 40분입니다. 차량 탑승만 35분이고 걷기 10분과 대기 10분이 더 들면 문 앞 통근은 55분이므로 같은 사례와 섞지 않습니다. 추가 교통비 2만 원과 월세 상승 10만 원은 현금 지출 +12만 원이며, 절약한 시간이 같은 달 통장 수입은 아닙니다. 시간 가치와 토지가치 상승이 같은 접근성 개선을 반영하면 사회 편익으로 두 번 더하지 않습니다."
   },
   "infrastructure/housing-land-and-supply": {
     "action": "keep",
@@ -4323,7 +4323,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "institutions/media-attention-and-public-belief": "00a86f75e792c174",
   "institutions/education-skills-and-signals": "6a6d17faed7d55b1",
   "infrastructure/water-utility-and-tariffs": "ce1cff99ba2dac0a",
-  "infrastructure/transport-access-and-land-value": "b4cdbe939dab95f4",
+  "infrastructure/transport-access-and-land-value": "b5a45374278b75a4",
   "infrastructure/housing-land-and-supply": "d9a214167861d0d6",
   "infrastructure/food-chain-and-prices": "169e242c680f7e98",
   "infrastructure/electricity-grid-and-power": "8663d1f04f659a25",
