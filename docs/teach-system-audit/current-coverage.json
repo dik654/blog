@@ -4871,7 +4871,7 @@
     {
       "route": "blockchain/mysticeti",
       "publicPath": "cs/blockchain/mysticeti",
-      "title": "Mysticeti (Sui 최신 합의)",
+      "title": "Mysticeti 합의",
       "catalogIndex": 484,
       "status": "pending",
       "provenance": "assignment:chains",

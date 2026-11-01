@@ -8033,9 +8033,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "autobahn-artifact · commit 6d77e03", href: "https://github.com/neilgiri/autobahn-artifact/tree/6d77e0307e9dc09cc8def2c846a20523646ab4de", note: "Prepare·Confirm·Commit 자료형과 payload·parent sync 경로를 확인한 공개 prototype의 고정 source" },
   ],
   "blockchain/mysticeti": [
-    { kind: "핵심 논문", label: "Mysticeti · arXiv 2310.14821", href: "https://arxiv.org/abs/2310.14821", note: "Uncertified DAG·direct/indirect decisions·FPC 원문이며 paper 성능과 options를 current deployment 상수로 일반화하지 않음" },
-    { kind: "공식 코드", label: "Sui mainnet-v1.77.2 BaseCommitter", href: "https://github.com/MystenLabs/sui/blob/mainnet-v1.77.2/consensus/core/src/base_committer.rs", note: "Exact tag commit 51d177a의 leader-decision source이며 future ProtocolConfig를 고정하지 않음" },
-    { kind: "공식 코드", label: "Sui mainnet-v1.77.2 consensus core", href: "https://github.com/MystenLabs/sui/tree/mainnet-v1.77.2/consensus/core/src", note: "UniversalCommitter·Linearizer·transaction vote tracking의 pinned source이며 application checkpoint durability는 별도" },
+    { kind: "핵심 논문", label: "Mysticeti · arXiv 2310.14821", href: "https://docs.sui.io/paper/mysticeti.pdf", note: "Uncertified DAG·direct/indirect decisions·FPC 원문이며 논문 성능과 옵션을 현재 배포 상수로 일반화하지 않음" },
+    { kind: "공식 코드", label: "Sui mainnet-v1.82.3 BaseCommitter", href: "https://github.com/MystenLabs/sui/blob/mainnet-v1.82.3/consensus/core/src/base_committer.rs", note: "Exact tag commit bf407391의 leader-decision source이며 future ProtocolConfig를 고정하지 않음" },
+    { kind: "공식 코드", label: "Sui mainnet-v1.82.3 consensus core", href: "https://github.com/MystenLabs/sui/tree/mainnet-v1.82.3/consensus/core/src", note: "UniversalCommitter·Linearizer·transaction vote tracking의 pinned source이며 execution·checkpoint·ordering fairness는 별도" },
+    { kind: "공식 문서", label: "Sui Consensus · Mysticeti", href: "https://www.docs.sui.io/develop/sui-architecture/consensus", note: "현재 Sui의 제품 배치를 확인하는 자료이며 과거 Tusk·Bullshark와 같은 rule을 실행한다는 뜻은 아님" },
   ],
   "blockchain/impl-field-arithmetic": [
     { kind: "공식 코드", label: "arkworks algebra prime-field model · commit 6a28df5", href: "https://github.com/arkworks-rs/algebra/tree/6a28df57ddf1f0cb9735ec22d6e9e7f8785980b5/ff/src/fields/models/fp", note: "Prime-field configuration과 big-integer implementation의 pinned source이며 custom constants·side-channel audit 보장은 아님" },

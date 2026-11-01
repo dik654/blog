@@ -7,8 +7,8 @@
     "dedicatedVisuals": 728,
     "inlineVisuals": 525,
     "customVisuals": 911,
-    "animatedMechanisms": 571,
-    "architectureWithoutAnimation": 70,
+    "animatedMechanisms": 572,
+    "architectureWithoutAnimation": 69,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 243,
     "sourceCitationLinked": 998,
@@ -7682,18 +7682,18 @@
     {
       "route": "blockchain/mysticeti",
       "publicPath": "cs/blockchain/mysticeti",
-      "title": "Mysticeti (Sui 최신 합의)",
+      "title": "Mysticeti 합의",
       "sourcePath": "src/pages/articles/blockchain/mysticeti.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/narwhal-deep",

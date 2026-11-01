@@ -9511,9 +9511,9 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "mysticeti": {
     title: "Mysticeti uncertified vote·decision prefix 글이 소유하는 범위",
-    owns: ["First-support vote와 direct·indirect slot decisions", "UniversalCommitter decided prefix, Sui sub-DAG·FPC release boundary"],
+    owns: ["First-support vote와 direct·indirect slot decisions", "UniversalCommitter decided prefix와 sub-DAG·execution receipt 경계"],
     reuses: [{ label: "Generic parent-quorum overlap", href: "/cs/blockchain/dag-consensus" }, { label: "Consensus safety·liveness", href: "/cs/blockchain/bft-theory" }],
-    evidence: [{ kind: "primary-source", rule: "Protocol은 Mysticeti paper, current behavior는 Sui mainnet-v1.77.2 exact source에 귀속한다." }, { kind: "project-measurement", rule: "Equivocation·undecided barrier·partition/GST·restart와 feature config를 고정해 재생한다." }, { kind: "project-claim", rule: "Uncertified를 unvalidated로, FPC execution을 checkpoint finality로 표현하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Protocol은 Mysticeti paper, 현재 구현 설명은 Sui mainnet-v1.82.3 exact source에 귀속한다." }, { kind: "project-claim", rule: "Proposal→vote→certificate→decision→prefix→linearization을 한 거래 trace로 설명한다." }, { kind: "project-claim", rule: "Uncertified를 unvalidated로, consensus order를 execution·checkpoint finality나 fairness로 표현하지 않는다." }],
   },
   "impl-field-arithmetic": {
     title: "Rust field value lifecycle 글이 소유하는 범위",

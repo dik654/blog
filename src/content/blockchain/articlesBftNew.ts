@@ -51,13 +51,13 @@ export const bftNewArticles: Article[] = [
   },
   {
     slug: "mysticeti",
-    title: "Mysticeti (Sui 최신 합의)",
+    title: "Mysticeti 합의",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "Uncertified DAG 경계" },
-      { id: "uncertified-votes", title: "Support와 vote pattern" },
-      { id: "decision-linearize", title: "Slot decision과 linearize" },
-      { id: "release", title: "FPC와 release" },
+      { id: "overview", title: "거래 하나의 전체 흐름" },
+      { id: "votes", title: "Support와 certificate pattern" },
+      { id: "decisions", title: "Slot decision과 prefix" },
+      { id: "boundaries", title: "Linearization과 완료 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/mysticeti"),
   },

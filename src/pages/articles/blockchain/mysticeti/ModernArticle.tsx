@@ -1,59 +1,137 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { MysticetiDecisionViz, MysticetiPatternViz } from "./viz/ModernMysticetiViz";
+import { MysticetiBoundaryViz, MysticetiTraceViz } from "./viz/ModernMysticetiViz";
 
 export default function ModernMysticetiArticle() {
   return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Uncertified DAG · ordering and fast path</p><h2 className="text-3xl font-bold tracking-tight">Mysticeti는 별도 block certificate round를 없애고 later blocks의 causal pattern을 vote로 읽는다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Alice→Bob transaction이 signed block에 들어갔다고 하겠습니다. Narwhal 계열은 block/header에 votes를 모아 explicit certificate를 만든 뒤 DAG vertex로 사용합니다. Mysticeti-C는 매 round의 signed blocks가 이전 blocks를 참조하는 DAG 자체에서 support·vote·certificate pattern을 읽습니다. 이 때문에 block마다 별도 certificate를 방송하는 round를 줄이면서 leader slot을 commit·skip·undecided로 판정할 수 있습니다.</p>
-      <p>그렇다고 raw reference 하나가 certificate가 되는 것은 아닙니다. Block signature, epoch·round·author, ancestor structure와 previous-round parent quorum을 검증한 뒤, 같은 author가 equivocate할 때 어떤 block을 처음 support했는지도 deterministic하게 계산해야 합니다. 이후 UniversalCommitter가 오래된 slot부터 연속 결정 prefix만 내보내고 Linearizer가 committed leader의 새 causal sub-DAG를 한 번씩 출력합니다.</p>
-      <MysticetiPatternViz />
-      <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> “Uncertified”는 검증이 없다는 뜻이 아니라 per-block standalone certificate를 만들지 않는다는 뜻입니다. Consensus order, Mysticeti-FPC transaction fast execution, Sui checkpoint finality는 서로 다른 receipts입니다.</aside>
-    </section>
-
-    <section id="uncertified-votes" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · support, vote, certificate pattern</p><h2 className="mt-2 text-2xl font-bold">각 author의 first-supported block만 세어 equivocation을 quorum 두 곳에 중복 사용하지 않는다</h2></header>
+    <section id="overview" className="scroll-mt-24 space-y-6">
+      <header className="space-y-3">
+        <p className="text-sm font-semibold text-primary">Uncertified DAG · 한 거래 추적</p>
+        <h2 className="text-3xl font-bold tracking-tight">Mysticeti는 certificate를 없앤 것이 아니라 DAG 안에서 찾아냅니다</h2>
+      </header>
+      <p className="text-lg leading-8 text-foreground/90">
+        Alice가 Bob에게 보내는 거래가 leader block에 들어갔다고 하겠습니다. Mysticeti-C는 그 block에 대한 별도 certificate를 먼저 만들지 않습니다. 대신 다음 round의 signed blocks가 누구를 지지했는지, 그다음 blocks가 그 vote quorum을 ancestry에 담았는지를 읽어 leader slot을 commit·skip·undecided로 판정합니다.
+      </p>
+      <MysticetiTraceViz />
       <p>
-            Round r의 leader slot에 L과 L′이라는 conflicting blocks가 있다고 하겠습니다. Round r+1의 validator block이 causal
-            ancestry에서 처음 지지한 leader block이 그 validator의 vote가 됩니다. 같은 author의 later references를 두 후보에 모두 세지
-            않으며 canonical traversal로 first support를 정합니다. Round r+2 blocks가 quorum의 vote blocks를 parents로 담으면
-            leader에 대한 certificate pattern을 만들 수 있습니다. Distinct voting power와 valid ancestry가 핵심이며 local
-            arrival order는 의미가 없습니다.
-          </p>
-      <ExplainedFormula question="Mysticeti의 implicit certificate pattern에서 왜 distinct-author quorum과 first support를 함께 검사하는가?" idea={<>Signed later blocks가 leader vote를 운반하므로 각 author의 최초 causal support를 하나만 선택하고 그 distinct voting power를 더해야 합니다. 그래야 equivocation 두 후보가 같은 author stake를 동시에 사용하지 못합니다.</>} formula={String.raw`\begin{aligned}F(a)&=\operatorname{firstSupport}(B_a)\\V(L)&=\{a:F(a)=L\}\\\sum_{a\in V(L)}w(a)&\ge 2f+1\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}F(a)&=\underbrace{\operatorname{firstSupport}(B_a)}_{\text{a가 처음 지지한 leader}}\\V(L)&=\underbrace{\{a:F(a)=L\}}_{\text{L의 distinct 지지자}}\\\underbrace{\sum_{a\in V(L)}w(a)}_{\text{중복 없는 voting power}}&\ge \underbrace{2f+1}_{\text{certificate quorum}}\end{aligned}`}
-      operations={[
-        { expression: String.raw`\operatorname{firstSupport}(B_a)`, annotation: ["B_a의 ancestry를 canonical 순서로 훑어","처음 만난 leader 후보 하나만","author a의 vote로 인정합니다"] },
-        { expression: String.raw`\{a:F(a)=L\}`, annotation: ["L을 첫 지지로 고른 author 집합.","같은 author의 equivocating block은","L과 L′ 양쪽에 동시에 못 들어갑니다"] },
-        { expression: String.raw`\sum_{a\in V(L)}w(a)`, annotation: ["집합의 voting power 합이 2f+1 이상이면","certificate pattern. n=4, f=1이면","distinct author 3명의 valid vote"] },
-      ]} terms={[{symbol:"L",name:"leader block",description:"정해진 leader slot의 signed block candidate입니다."},{symbol:"Bₐ",name:"later block by author a",description:"Leader 뒤 round에서 a가 만든 검증된 block입니다."},{symbol:"F(a)",name:"canonical first support",description:"Causal ancestry에서 같은 slot 후보 중 protocol rule이 처음 지지로 인정한 block입니다."},{symbol:"V(L)",name:"distinct supporter set",description:"Leader L을 처음 지지한 중복 없는 authors의 집합입니다."},{symbol:"w(a)",name:"voting power",description:"Pinned committee에서 author a가 가진 검증 weight입니다."}]} assumptions={["설명을 위한 equal-weight n=3f+1 표기이며 current implementation은 committee voting power와 protocol config를 사용합니다.","Block signature·epoch·round·author·ancestor quorum과 causal links를 먼저 검증합니다.","같은 author의 equivocating blocks를 중복 집계하지 않고 deterministic traversal을 사용합니다.","Vote/certificate pattern은 leader decision evidence이며 application execution receipt가 아닙니다."]} interpretation="n=4,f=1에서 세 distinct authors의 valid vote pattern은 quorum입니다. Author A의 두 blocks를 A와 A′ 두 표로 세면 안 되며, L과 L′에 A의 stake를 동시에 더해서도 안 됩니다." />
-      <p>Negative test는 같은 author-round에 두 digests를 만들고 node마다 반대 arrival order로 넣습니다. 두 nodes는 canonical ancestry traversal로 author당 하나의 supported leader만 계산하고 어느 candidate도 duplicate stake를 얻지 않아야 합니다. Wrong epoch, invalid signature, missing previous-round parent quorum과 malformed ancestor는 DAG state를 바꾸기 전에 거절합니다.</p>
-      <div id="paper-mysticeti"><CitationBlock source="Mysticeti: Reaching the Limits of Latency with Uncertified DAGs" citeKey={1} href="https://arxiv.org/abs/2310.14821"><p><strong>문제:</strong> Certified DAG의 per-block certificate round를 없애면서 low-latency BFT order와 transaction fast path를 만들어야 합니다.</p><p><strong>기여:</strong> Mysticeti-C direct·indirect slot decisions와 DAG에 vote를 포함하는 Mysticeti-FPC를 제시합니다.</p><p><strong>전제:</strong> n=3f+1 Byzantine committee, authenticated signed blocks와 논문의 timing·liveness·object-conflict model을 사용합니다.</p><p><strong>근거 범위:</strong> Mysticeti-C/FPC constructions, safety·liveness argument와 paper evaluation에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 논문의 throughput·0.5초 결과나 모든 FPC option이 current Sui deployment에서 항상 활성이라는 뜻은 아닙니다.</p></CitationBlock></div>
+        이 글이 답할 질문은 하나입니다. <strong>별도 block certificate 없이도 모든 정직한 replica가 어떻게 같은 leader prefix와 같은 sub-DAG 순서를 얻는가?</strong> 답은 first support, direct·indirect decision, undecided barrier, deterministic linearization의 조합입니다.
+      </p>
+      <aside className="border-l-2 border-primary pl-5 text-sm leading-6 text-muted-foreground">
+        <strong className="text-foreground">먼저 구분할 것:</strong> uncertified는 검증하지 않는다는 뜻이 아닙니다. Block signature와 epoch·round·author·parents를 검증하고, proposal·implicit certificate·leader commit·application execution·checkpoint를 서로 다른 상태로 둡니다.
+      </aside>
     </section>
 
-    <section id="decision-linearize" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · direct, indirect, decided prefix</p><h2 className="mt-2 text-2xl font-bold">오래된 undecided slot이 있으면 newer commit도 보류해 모든 replica의 prefix를 지킨다</h2></header>
+    <section id="votes" className="scroll-mt-24 space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">01 · support와 certificate pattern</p>
+        <h2 className="mt-2 text-2xl font-bold">한 author의 first support를 한 표로만 셉니다</h2>
+      </header>
       <p>
-            Commit pattern이 충분하면 leader slot을 direct commit하고 충분한 non-support 또는 blame pattern이면 direct
-            skip합니다. 어느 쪽 evidence도 충분하지 않으면 undecided입니다. 이는 실패나 임의 선택이 아니라 미래의 decided anchor를 기다리는 안전한
-            상태입니다. Later committed anchor가 older leader와 certified causal link가 있으면 indirect commit하고 해당 link가
-            없음을 protocol rule로 판정하면 indirect skip할 수 있습니다.
-          </p>
-      <MysticetiDecisionViz />
-      <p>UniversalCommitter는 여러 leader deciders의 결과를 slot 순서로 합쳐 longest contiguous decided prefix만 consumer에게 줍니다. <code>[commit L1, skip L2, undecided L3, commit L4]</code>라면 L1·L2까지만 외부화합니다. L4를 먼저 출력하면 나중에 L3이 indirect commit될 때 stable order 앞에 새 sub-DAG를 끼워야 하므로 replicas가 갈릴 수 있습니다.</p>
-      <p>결정된 leader는 Linearizer가 causal ancestors를 거슬러 올라가 이미 committed한 blocks를 제외하고 stable order로 펼칩니다. Commit digest에는 sequence boundary를 묶어 restart 때 같은 sub-DAG output을 재구성하게 합니다. Leader schedule, wave length와 leaders 수는 versioned ProtocolConfig이므로 paper의 예를 current mainnet 상수로 옮겨 적지 않습니다.</p>
-      <div id="paper-sui-committer-v1772"><CitationBlock source="Sui mainnet-v1.77.2 — base_committer.rs" citeKey={2} type="code" href="https://github.com/MystenLabs/sui/blob/mainnet-v1.77.2/consensus/core/src/base_committer.rs"><p><strong>문제:</strong> Uncertified DAG에서 leader slot의 support·blame·direct/indirect decision을 deterministic하게 판정해야 합니다.</p><p><strong>기여:</strong> Support traversal, vote/certificate patterns, direct commit·skip과 anchor-based indirect decision을 구현합니다.</p><p><strong>전제:</strong> Sui mainnet-v1.77.2 exact tag commit 51d177a와 matching Committee·ProtocolConfig·DagState를 사용합니다.</p><p><strong>근거 범위:</strong> 이 pinned current Sui consensus leader-decision implementation에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 논문의 모든 pseudocode parameter, future mainnet config나 application execution을 고정하지 않습니다.</p></CitationBlock></div>
-      <div id="paper-sui-linearizer-v1772"><CitationBlock source="Sui mainnet-v1.77.2 — UniversalCommitter and Linearizer" citeKey={3} type="code" href="https://github.com/MystenLabs/sui/tree/mainnet-v1.77.2/consensus/core/src"><p><strong>문제:</strong> Multiple leader decisions를 contiguous prefix와 duplicate-free committed sub-DAG sequence로 전달해야 합니다.</p><p><strong>기여:</strong> UniversalCommitter, Linearizer, block validation과 transaction vote tracking의 pinned implementation을 제공합니다.</p><p><strong>전제:</strong> mainnet-v1.77.2 exact tag, matching protocol config와 persisted DagState/commit chain을 사용합니다.</p><p><strong>근거 범위:</strong> Pinned Sui consensus core의 decision prefix, sub-DAG output과 fast-path vote integration입니다.</p><p><strong>말하지 않는 것:</strong> Application execution success, checkpoint durability나 모든 feature flag activation을 자동 보장하지 않습니다.</p></CitationBlock></div>
+        Round r의 같은 leader slot에 L과 L′이 생겼다고 하겠습니다. Round r+1의 block은 causal ancestry를 따라가면서 그 slot에서 처음 지지한 block 하나를 고릅니다. L을 first support한 서로 다른 author들의 voting power가 quorum에 이르면 vote pattern이 됩니다. Round r+2의 block이 그 quorum votes를 ancestors로 담으면 L의 implicit certificate block입니다.
+      </p>
+      <ExplainedFormula
+        question="왜 first support와 distinct-author quorum을 함께 검사합니까?"
+        idea={<>Later block이 leader vote를 운반하므로 author별 첫 지지 하나만 고른 뒤 중복 없는 voting power를 더해야 합니다. 그래야 equivocation으로 만든 L과 L′이 같은 stake를 동시에 쓰지 못합니다.</>}
+        formula={String.raw`\begin{aligned}F(a)&=\operatorname{firstSupport}(B_a)\\V(L)&=\{a:F(a)=L\}\\\sum_{a\in V(L)}w(a)&\ge 2f+1\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}F(a)&=\underbrace{\operatorname{firstSupport}(B_a)}_{\text{a가 처음 지지한 leader}}\\V(L)&=\underbrace{\{a:F(a)=L\}}_{\text{L의 중복 없는 지지자}}\\\underbrace{\sum_{a\in V(L)}w(a)}_{\text{distinct voting power}}&\ge \underbrace{2f+1}_{\text{quorum}}\end{aligned}`}
+        operations={[
+          { expression: String.raw`\operatorname{firstSupport}(B_a)`, annotation: ["Bₐ의 ancestry를 protocol 순서로 훑습니다.", "같은 slot 후보 가운데 하나만", "author a의 vote로 인정합니다."] },
+          { expression: String.raw`V(L)`, annotation: ["L을 처음 지지한 author 집합입니다.", "같은 author의 두 block은", "두 표로 세지 않습니다."] },
+          { expression: String.raw`\sum w(a)`, annotation: ["n=4, f=1의 equal-weight 예시라면", "서로 다른 세 author가 필요합니다.", "raw reference 하나만으로는 부족합니다."] },
+        ]}
+        terms={[
+          { symbol: "L", name: "leader block", description: "정해진 leader slot의 signed block 후보입니다." },
+          { symbol: "Bₐ", name: "later block", description: "Author a가 뒤 round에 만든 검증된 block입니다." },
+          { symbol: "F(a)", name: "first support", description: "같은 slot 후보 중 protocol traversal이 처음 지지로 인정한 block입니다." },
+          { symbol: "V(L)", name: "supporter set", description: "L을 처음 지지한 중복 없는 authors의 집합입니다." },
+          { symbol: "w(a)", name: "voting power", description: "Pinned committee에서 author a가 가진 weight입니다." },
+        ]}
+        assumptions={[
+          "n=3f+1과 equal weight는 손으로 따라가기 위한 축소 표기입니다.",
+          "실제 구현은 committee voting power와 ProtocolConfig를 사용합니다.",
+          "Signature·epoch·round·author·ancestor quorum을 먼저 검증합니다.",
+          "Vote pattern은 leader decision evidence이지 거래 실행 receipt가 아닙니다.",
+        ]}
+        interpretation="n=4, f=1이면 서로 다른 세 author의 valid votes가 quorum입니다. Author A가 equivocate해도 A의 stake를 L과 L′ 양쪽에 동시에 더하지 않습니다."
+      />
+      <pre className="overflow-x-auto border border-border bg-muted/20 p-4 text-sm leading-6"><code>{`// 같은 author·round의 후보 가운데 protocol 순서상 첫 지지를 찾습니다.
+supported = find_supported_block(later_block, leader_slot)
+
+// 후보 L을 첫 지지한 서로 다른 author의 voting power만 더합니다.
+votes = distinct_power(blocks where supported(block) == L)
+
+// 한 later block이 quorum votes를 ancestry에 담았을 때만 certificate입니다.
+is_certificate = votes >= quorum_power`}</code></pre>
+      <p>
+        반례는 arrival order를 바꾸는 것입니다. 같은 author-round의 L과 L′을 서로 다른 순서로 받은 두 replica도 검증된 ancestor 배열과 같은 traversal 규칙으로 같은 first support를 계산해야 합니다. Wrong epoch, invalid signature, parent quorum 부족은 vote 계산보다 먼저 거절합니다.
+      </p>
+      <div id="paper-mysticeti"><CitationBlock source="Mysticeti: Reaching the Latency Limits with Uncertified DAGs" citeKey={1} href="https://docs.sui.io/paper/mysticeti.pdf">
+        <p><strong>문제:</strong> Certified DAG의 per-block certificate round를 없애면서 3-message-round BFT order와 transaction fast path를 만들어야 합니다.</p>
+        <p><strong>기여:</strong> Skip·certificate patterns, direct·indirect slot decisions와 DAG에 transaction votes를 싣는 Mysticeti-FPC를 제시합니다.</p>
+        <p><strong>전제:</strong> n=3f+1 Byzantine committee, authenticated signed blocks와 논문의 partial-synchrony·object-conflict model을 사용합니다.</p>
+        <p><strong>근거 범위:</strong> Mysticeti-C/FPC의 프로토콜, 증명과 논문 평가 환경에 한정합니다.</p>
+        <p><strong>말하지 않는 것:</strong> 논문의 0.5초·200K+ TPS 결과나 모든 FPC 옵션이 현재 Sui 배포에서 그대로 활성이라는 뜻은 아닙니다.</p>
+      </CitationBlock></div>
     </section>
 
-    <section id="release" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · FPC·failure·release</p><h2 className="mt-2 text-2xl font-bold">Fast execution receipt와 consensus commit·checkpoint finality를 같은 완료 상태로 표시하지 않는다</h2></header>
-      <p>Mysticeti-FPC는 transaction votes와 object-conflict exclusion을 DAG에 실어 특정 path에서 consensus order보다 먼저 실행할 수 있게 합니다. 그러나 실행 receipt는 later consensus checkpoint나 epoch-final durability와 같은 말이 아닙니다. Shared-object transaction은 consensus order를 기다리는 경로가 있으며, owned-object fast path와 현재 Sui feature/config activation도 별도로 기록해야 합니다.</p>
-      <p>Release suite는 partition·crashed leader·GST recovery를 나눕니다. Partition 중 undecided가 늘고 output이 멈춰도 conflicting decided prefix가 0이면 safety oracle은 통과할 수 있습니다. Bounded delivery와 quorum parents가 회복된 뒤 timeout/leader progression으로 eventual decided prefix가 늘어야 liveness를 통과합니다. Conflict exclusion을 위반한 FPC votes, invalid blocks와 digest mismatch는 execution 전에 fail closed합니다.</p>
-      <p>Restart에서는 exact mainnet-v1.77.2 tag/commit, ProtocolConfig, verified block store, last commit digest와 transaction-vote mode를 pin합니다. Leader decisions와 sub-DAG digest를 replay해 state parity를 확인하고 incomplete speculative execution만 rollback합니다. External success에는 selected path의 execution result와 필요한 checkpoint/finality receipt를 함께 요구합니다.</p>
-      <div className="grid gap-4 md:grid-cols-2"><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">Consensus receipt</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Decided slot prefix, committed leader, sub-DAG digest, application state root와 checkpoint identifier.</p></aside><aside className="rounded-lg border border-border p-4"><h3 className="font-semibold">FPC receipt</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">Transaction digest, object versions, distinct vote power, conflict check, execution result와 later-finality status.</p></aside></div>
-      <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 certified/uncertified evidence, first support, direct commit·skip·undecided, prefix barrier, sub-DAG order와 FPC/최종성 경계를 묻습니다. 심화 4문제는 equivocation parity, indirect commit·skip traces, partition/GST oracle와 pinned Sui release suite를 설계하게 합니다.</p>
+    <section id="decisions" className="scroll-mt-24 space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">02 · direct·indirect decision과 prefix</p>
+        <h2 className="mt-2 text-2xl font-bold">Undecided slot 뒤의 결정은 먼저 내보내지 않습니다</h2>
+      </header>
+      <p>
+        Direct rule은 충분한 certificate blocks가 있으면 commit, 충분한 non-support가 있으면 skip으로 판정합니다. 둘 다 부족하면 undecided입니다. 이 상태는 실패가 아니라 미래의 anchor가 더 많은 causal evidence를 가져올 때까지 순서를 보존하는 장벽입니다.
+      </p>
+      <pre className="overflow-x-auto border border-border bg-muted/20 p-4 text-sm leading-6"><code>{`// 가장 최신 slot부터 direct rule을 적용합니다.
+status = try_direct_decide(slot)
+
+// 직접 판정하지 못하면 뒤에서 이미 판정된 anchor를 찾습니다.
+if status == undecided:
+    status = try_indirect_decide(slot, later_leaders)
+
+// 오래된 slot부터 연속으로 판정된 prefix까지만 외부화합니다.
+for leader in oldest_first(leaders):
+    if leader.status == undecided:
+        break
+    emit(commit_or_skip(leader))`}</code></pre>
+      <p>
+        Indirect rule은 target slot보다 뒤의 첫 committed anchor를 사용합니다. Anchor ancestry에 target leader의 certificate가 있으면 indirect commit, 없으면 indirect skip입니다. Anchor 자체가 undecided라면 target도 그대로 기다립니다.
+      </p>
+      <p>
+        따라서 <code>[commit L1, skip L2, undecided L3, commit L4]</code>에서 외부화할 수 있는 것은 L1·L2뿐입니다. L4를 먼저 내보내면 L3이 나중에 commit될 때 이미 공개한 total order 앞에 새 sub-DAG를 끼워야 합니다. Sui의 <code>UniversalCommitter::try_decide</code>도 첫 undecided를 만나면 prefix 생성을 멈춥니다.
+      </p>
+      <div id="paper-sui-committer-v1823"><CitationBlock source="Sui mainnet-v1.82.3 · base_committer.rs" citeKey={2} type="code" href="https://github.com/MystenLabs/sui/blob/mainnet-v1.82.3/consensus/core/src/base_committer.rs">
+        <p><strong>문제:</strong> Uncertified DAG에서 support·blame·direct/indirect decision을 결정적으로 판정해야 합니다.</p>
+        <p><strong>기여:</strong> <code>find_supported_block</code>, vote·certificate 검사, direct commit·skip과 anchor 기반 indirect decision을 구현합니다.</p>
+        <p><strong>전제:</strong> <code>mainnet-v1.82.3</code> tag commit <code>bf407391</code>과 matching Committee·ProtocolConfig·DagState를 사용합니다.</p>
+        <p><strong>근거 범위:</strong> 이 태그의 consensus leader-decision 구현에 한정합니다.</p>
+        <p><strong>말하지 않는 것:</strong> 논문의 모든 pseudocode parameter나 future mainnet configuration을 고정하지 않습니다.</p>
+      </CitationBlock></div>
+    </section>
+
+    <section id="boundaries" className="scroll-mt-24 space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">03 · linearization과 완료 경계</p>
+        <h2 className="mt-2 text-2xl font-bold">CommittedSubDag는 공통 순서이지 거래 성공 전체가 아닙니다</h2>
+      </header>
+      <p>
+        결정된 leader를 받으면 Linearizer는 아직 commit하지 않은 causal ancestors만 모읍니다. 현재 고정한 Sui 소스는 GC 경계 아래와 이미 committed한 block을 제외하고, round 다음 authority index로 정렬한 block references를 이전 commit digest에 연결합니다. 이는 replica마다 같은 순서를 재구성하기 위한 규칙이지 그 순서가 공정하다는 증명은 아닙니다.
+      </p>
+      <MysticetiBoundaryViz />
+      <p>
+        <code>CommittedSubDag</code>가 consumer로 전달되면 consensus order는 정해졌습니다. 하지만 application execution, effects 저장과 checkpoint 반영은 뒤의 처리입니다. Mysticeti-FPC의 transaction votes도 별도 경로입니다. 현재 Sui source에는 explicit reject와 implicit accept vote 자료형이 있지만, 자료형이 존재한다는 사실만으로 모든 protocol configuration에서 같은 fast path가 활성이라고 단정할 수 없습니다.
+      </p>
+      <div id="paper-sui-linearizer-v1823"><CitationBlock source="Sui mainnet-v1.82.3 · UniversalCommitter·Linearizer" citeKey={3} type="code" href="https://github.com/MystenLabs/sui/tree/mainnet-v1.82.3/consensus/core/src">
+        <p><strong>문제:</strong> 여러 leader decision을 연속 prefix와 중복 없는 committed sub-DAG로 consumer에 전달해야 합니다.</p>
+        <p><strong>기여:</strong> UniversalCommitter의 longest decided prefix, Linearizer의 ancestry 수집·stable sort·commit chain, transaction vote 자료형과 tracking 경로를 제공합니다.</p>
+        <p><strong>전제:</strong> <code>mainnet-v1.82.3</code> exact tag commit <code>bf4073918ed33cfa0b09c500658fa116a774bcfd</code>와 matching store·ProtocolConfig를 사용합니다.</p>
+        <p><strong>근거 범위:</strong> 이 태그의 consensus core와 output boundary에 한정합니다.</p>
+        <p><strong>말하지 않는 것:</strong> Application execution success, checkpoint durability, ordering fairness나 future feature activation을 자동 보장하지 않습니다.</p>
+      </CitationBlock></div>
+      <div id="paper-sui-current-consensus"><CitationBlock source="Sui 공식 문서 · Consensus" citeKey={4} href="https://www.docs.sui.io/develop/sui-architecture/consensus">
+        <p><strong>확인되는 것:</strong> 현재 공개 문서는 Sui가 DAG 기반 Mysticeti 합의를 사용한다고 설명합니다.</p>
+        <p><strong>구분할 것:</strong> 이 제품 배치 사실은 과거 Tusk·Bullshark와 같은 인증된 DAG 규칙을 그대로 실행한다는 뜻이 아닙니다.</p>
+      </CitationBlock></div>
     </section>
   </article>;
 }
