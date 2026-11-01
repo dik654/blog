@@ -186,6 +186,7 @@ const noScriptArticleRoutes = new Set([
   "infrastructure/food-chain-and-prices",
   "infrastructure/water-utility-and-tariffs",
   "infrastructure/transport-access-and-land-value",
+  "infrastructure/housing-land-and-supply",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

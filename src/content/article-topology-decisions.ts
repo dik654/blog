@@ -1726,10 +1726,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "infrastructure/housing-land-and-supply": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "주택 가격과 임대료는 토지 사용권, 인허가, 기반 시설, 건설비, 금융과 지역 일자리 수요가 서로 제약하면서 형성됩니다.",
-    "sharedGate": "완성한 집의 예상 판매대금을 10억 원으로 놓습니다(가정). 공사 5억 원, 금융·허가·관련 비용 1억 원, 사업자가 요구하는 정상 이익 1억 원이 필요하면 토지에 지불할 수 있는 금액은 3억 원입니다. 세금과 시간 차이를 이 합계에 반영했다고 단순화합니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "주택 공급을 이해하려면 토지 사용권에서 인허가·자금·공사·기반 시설·완공·입주까지의 경로, 예상 판매에서 토지에 남는 잔여금액, 지연 전후의 부담자, 거래하는 권리의 기간과 처분 조건, 집 수와 가구의 거주 결과를 나눠야 합니다. 첫 그림은 공급 경로, 판매 10억 원과 토지 3억 원, 토지 요구 4억 원과의 차이, 지연 비용 5천만 원, 거래 전후 손익, 권리 조건, 허가에서 실제 입주까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 금액·시점·권리 범위가 일치해야 합니다. 예상 판매 10억 원에서 공사 5억 원, 금융·허가 등 1억 원, 정상 이익 1억 원을 빼면 토지 잔여금액은 3억 원입니다. 토지 요구가 4억 원이면 차이는 1억 원입니다. 지연 비용 5천만 원이 늘면 거래 전 토지 여유는 2억5천만 원으로 줄지만, 이미 토지 3억 원을 지급했다면 같은 조건에서 정상 이익 1억 원 중 5천만 원이 줄어듭니다. 같은 가격도 권리 기간·거주 의무·임대·매각·환수 조건이 다르면 같은 자산으로 보지 않습니다."
   },
   "infrastructure/climate-risk-and-exposure": {
     "action": "keep",
@@ -4324,7 +4324,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "institutions/education-skills-and-signals": "6a6d17faed7d55b1",
   "infrastructure/water-utility-and-tariffs": "ce1cff99ba2dac0a",
   "infrastructure/transport-access-and-land-value": "b5a45374278b75a4",
-  "infrastructure/housing-land-and-supply": "d9a214167861d0d6",
+  "infrastructure/housing-land-and-supply": "42d56b118df033e4",
   "infrastructure/food-chain-and-prices": "169e242c680f7e98",
   "infrastructure/electricity-grid-and-power": "8663d1f04f659a25",
   "infrastructure/climate-risk-and-exposure": "aa85ef97f65b45ea",
