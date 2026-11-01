@@ -4540,7 +4540,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "blockchain/robinhood-chain-blob-demand":"02cf5430aa729ef9",
 "blockchain/robinhood-chain-settlement":"a7a8664a0bcb7d32",
 "blockchain/rwa-composition":"d7b3622726d50ca4",
-"business/shop-daily-operations":"49773583b9d773de",
+"business/shop-daily-operations":"8c609d792693c412",
 "crypto/constraint-systems":"180451df5e454382",
 "crypto/fri":"ac11504ca83c08d9",
 "crypto/jolt":"ce2cf82725d8cb32",
