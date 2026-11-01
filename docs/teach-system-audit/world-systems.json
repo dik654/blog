@@ -1273,13 +1273,85 @@
     },
     {
       "route": "elections/electoral-systems",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-11-01",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/elections/electoral-systems.tsx",
+          "src/pages/articles/elections/electoral-systems/viz/ElectoralSystemsViz.tsx",
+          "src/pages/articles/elections/electoral-systems/viz/DivisorViz.tsx"
+        ],
+        "beforeDefects": [
+          "같은 득표 사례는 있었지만 불비례 지수 50.2를 독자가 한 줄씩 다시 계산할 세로 장부가 없었습니다.",
+          "최고평균 배분 Viz가 9석 뒤 경계를 135÷2=67.5로 잘못 표시했고, 모바일에서는 전체 SVG를 축소해 숫자와 의석 변화가 읽히지 않았습니다.",
+          "첫 전체 구조 Viz도 모바일에서 데스크톱 SVG를 축소해 선거구별 표·득표율·의석 결과의 관계를 읽기 어려웠습니다.",
+          "일부 긴 문단과 조사 표현이 계산 경로를 끊었고, 장면을 바꾼 뒤 내부 스크롤이 이전 위치에 남았습니다."
+        ],
+        "fixture": "선거구 9곳·각 100표의 전국 득표 44·41·15와 최고평균 배분용 396·369·135를 같은 글에서 추적합니다. 소선거구 결과 9·0·0, 경계를 다시 그린 결과 3·6·0, 전국 비례 결과 4·4·1을 비교합니다.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "overview",
+          "0": "overview",
+          "1": "overview",
+          "2": "district-magnitude",
+          "3": "district-magnitude",
+          "4": [
+            "plurality",
+            "proportional",
+            "disproportionality"
+          ],
+          "5": [
+            "proportional",
+            "disproportionality",
+            "mixed"
+          ],
+          "6": [
+            "proportional",
+            "disproportionality",
+            "mixed"
+          ],
+          "7": [
+            "boundary",
+            "review"
+          ]
+        },
+        "changes": "44·41·15를 전체 구조·다수제·선거구 획정·비례 결과에 계속 사용하고, 396·369·135의 최고평균 몫을 9번째 의석과 10번째 탈락 경계까지 다시 계산했습니다. 불비례 지수는 득표율→의석률→차이→제곱합 5042→반으로 나눔→제곱근 50.2의 세로 장부로 펼쳤습니다. 두 핵심 Viz에 모바일 전용 숫자·칸 구성을 넣고 장면 변경 시 바깥 canvas 스크롤이 위로 돌아가게 했습니다.",
+        "answerCoverage": "기초 6·심화 4의 답 section과 선거구 크기·다수제 두 효과·선거구 획정·최고평균 배분·불비례 지수·혼합형 제도의 여섯 정본 개념을 실제 본문 앵커와 대조했습니다.",
+        "sourceApplication": "International IDEA 핸드북의 선거 공식·선거구 크기 구분, EPRS 2024의 D’Hondt 최고평균 절차, Gallagher 최소제곱지수의 귀속 범위, 대한민국헌법 제41조의 법률 위임을 각각 해당 사례에 적용했습니다. 원 논문 전문을 열지 못한 Gallagher 항목은 보충 읽기로만 표시했습니다.",
+        "numericVerification": "396·369·135의 9번째 몫은 92.25이고 10번째 경계 몫은 396÷5=79.2입니다. 44·41·15와 100·0·0의 차이 제곱합은 5042이며 √(5042÷2)≈50.2입니다. 4·4·1 결과는 약 3.7입니다.",
+        "humanize": {
+          "roundTrip": true,
+          "applied": true,
+          "koNaturalErrors": 0,
+          "koNaturalWarnings": 0,
+          "notes": "본문 전체 윤문·수치 보존 검사를 마친 뒤 새 모바일 라벨과 조사 수정도 합니다체·easy lexicon으로 다시 검사했습니다."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "overviewScenesPerViewport": 4,
+          "divisorScenesPerViewport": 4,
+          "calculationLedger": true,
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "noAutoPlay": true,
+          "mobileControlMinimumPx": 49.5,
+          "overflow": 0,
+          "console": 0,
+          "actualScreensRead": true,
+          "screens": "output/playwright/electoral-overview-mobile-scroll-bottom-v3.png; output/playwright/electoral-overview-desktop-scene4.png; output/playwright/electoral-divisor-mobile-scene4.png; output/playwright/electoral-divisor-desktop-scene4.png; output/playwright/electoral-calculation-mobile.png; output/playwright/electoral-calculation-desktop.png"
+        },
+        "verification": "선택 ESLint와 learning·graph·formula·calculation·pseudocode·Viz·article·reading·order·prose·Korean·term strict 감사를 모두 통과했습니다. production build는 129.87초, 최대 RSS 6,293,110,784 bytes, swap 0으로 통과했고 정적 공개 경로 2,120개와 no-script 본문 390편을 생성했습니다. 전역 topology strict 감사는 다른 글의 기존 merge/split 검토 후보 때문에 실패했으며 이 글의 오류는 보고하지 않았습니다.",
+        "remaining": "공개 배포·운영 경로 재검증과 아직 미검토인 다른 글의 전수 개선이 남아 있습니다."
+      }
     },
     {
       "route": "elections/parties-and-interest-groups",

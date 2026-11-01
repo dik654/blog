@@ -96,12 +96,13 @@ export default function ElectoralSystemsViz() {
       note="선거구 아홉 곳, 각 100표로 줄인 예입니다. 실제 선거에서는 유권자가 제도에 맞춰 투표를 바꾸므로 득표율 자체도 함께 움직입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="같은 표가 다른 의석이 되는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem] sm:overflow-y-auto"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
@@ -109,12 +110,129 @@ export default function ElectoralSystemsViz() {
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
+          <div
+            className="mt-4 space-y-2 sm:hidden"
+            role="img"
+            aria-label={`${SCENES[step]}. 전국 득표는 같고, 선거구별 표와 의석 결과만 비교합니다.`}
+          >
+            <section className="border border-border p-2">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-xs font-bold text-foreground">
+                  {step === 3 ? "선거구 지도 B" : "선거구 지도 A"}
+                </p>
+                <p className="text-[11px] leading-4 text-muted-foreground">
+                  {step === 2 ? "경계를 쓰지 않음" : "각 칸이 한 선거구"}
+                </p>
+              </div>
+              <div className="mt-1.5 grid grid-cols-3 gap-1">
+                {map.map((district, districtIndex) => {
+                  const winner = winners[districtIndex];
+                  const showWinner = step === 1 || step === 3;
+                  return (
+                    <div
+                      key={districtIndex}
+                      className="min-w-0 border px-1 py-1 text-center"
+                      style={{
+                        borderColor: step === 2 ? MUTED : COLORS[winner],
+                        backgroundColor: step === 2 ? `${MUTED}0f` : `${COLORS[winner]}18`,
+                      }}
+                    >
+                      <p className="text-[10px] font-semibold leading-3 tabular-nums text-muted-foreground">
+                        {district.join("·")}
+                      </p>
+                      <p
+                        className={`min-h-3 text-[11px] font-bold leading-3 ${showWinner ? "" : "invisible"}`}
+                        style={{ color: COLORS[winner] }}
+                        aria-hidden={!showWinner}
+                      >
+                        {NAMES[winner]}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="border border-border p-2">
+              <p className="text-xs font-bold text-foreground">전국 득표율 · 네 장면 모두 고정</p>
+              <div className="mt-1.5 space-y-1">
+                {votes.map((vote, partyIndex) => {
+                  const share = (vote / voteSum) * 100;
+                  return (
+                    <div key={NAMES[partyIndex]} className="grid grid-cols-[2.5rem_1fr_2rem] items-center gap-2">
+                      <span className="text-[11px] font-bold" style={{ color: COLORS[partyIndex] }}>
+                        {NAMES[partyIndex]}
+                      </span>
+                      <span className="h-2 border" style={{ borderColor: COLORS[partyIndex] }}>
+                        <span
+                          className="block h-full"
+                          style={{ width: `${share}%`, backgroundColor: `${COLORS[partyIndex]}55` }}
+                        />
+                      </span>
+                      <span className="text-right text-[11px] tabular-nums text-muted-foreground">
+                        {share.toFixed(0)}%
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="min-h-[6.75rem] border border-border p-2">
+              {showSeats ? (
+                <>
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-bold text-foreground">
+                      의석 · {step === 2 ? "전국 비례 9석" : "소선거구 9석"}
+                    </p>
+                    <p className="text-[11px] font-bold" style={{ color: index > 20 ? WARN : COLORS[2] }}>
+                      불비례 {index.toFixed(1)}
+                    </p>
+                  </div>
+                  <div className="mt-1.5 space-y-1">
+                    {seats.map((seatCount, partyIndex) => {
+                      const share = (seatCount / 9) * 100;
+                      return (
+                        <div key={NAMES[partyIndex]} className="grid grid-cols-[2.5rem_1fr_2rem] items-center gap-2">
+                          <span className="text-[11px] font-bold" style={{ color: COLORS[partyIndex] }}>
+                            {NAMES[partyIndex]}
+                          </span>
+                          <span className="h-2 border" style={{ borderColor: COLORS[partyIndex] }}>
+                            <span
+                              className="block h-full"
+                              style={{ width: `${Math.max(share, seatCount === 0 ? 0 : 1)}%`, backgroundColor: COLORS[partyIndex] }}
+                            />
+                          </span>
+                          <span
+                            className="text-right text-[11px] font-bold tabular-nums"
+                            style={{ color: seatCount === 0 ? WARN : COLORS[partyIndex] }}
+                          >
+                            {seatCount}석
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-1.5 text-[10px] leading-4 text-muted-foreground">
+                    불비례 값은 0에 가까울수록 득표율과 의석률이 비슷합니다.
+                  </p>
+                </>
+              ) : (
+                <div className="flex min-h-[5rem] items-center justify-center text-center">
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    아직 의석을 계산하지 않았습니다.<br />다음 장면부터 같은 표를 서로 다른 규칙으로 셉니다.
+                  </p>
+                </div>
+              )}
+            </section>
+          </div>
+
+          <div className="mt-4 hidden w-full min-w-0 sm:block">
             <svg
               viewBox="0 0 480 200"
               role="img"
               aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
+              className="h-auto w-full max-w-2xl"
             >
               <text x={GX} y={GY - 12} fontSize={9} fontWeight={700} fill={MUTED}>
                 {step === 3 ? "선거구 지도 B" : "선거구 지도 A"}

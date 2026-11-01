@@ -14,7 +14,9 @@ const TAKEN = [1, 3, 6, 9] as const;
 
 const NAMES = ["가당", "나당", "다당"] as const;
 const VOTES = [396, 369, 135] as const;
-const DIVISORS = [1, 2, 3, 4] as const;
+// 9석을 나눈 다음 경계(10번째 몫)까지 보여 주려면 4석을 받은
+// 가당·나당의 다음 몫인 ÷5 열이 필요하다.
+const DIVISORS = [1, 2, 3, 4, 5] as const;
 
 const COLORS = ["#6366f1", "#f59e0b", "#10b981"];
 const WARN = "#ef4444";
@@ -27,10 +29,10 @@ const RANKED: Cell[] = NAMES.flatMap((_, party) =>
   DIVISORS.map((divisor) => ({ party, divisor, value: VOTES[party] / divisor })),
 ).sort((a, b) => b.value - a.value);
 
-const TX = 96;
-const CW = 84;
-const TY = 46;
-const RH = 30;
+const TX = 80;
+const CW = 70;
+const TY = 50;
+const RH = 36;
 
 export default function DivisorViz() {
   const scenes = useAnimatedScenes(SCENES.length, 3800);
@@ -42,12 +44,13 @@ export default function DivisorViz() {
   };
   const seats = NAMES.map((_, p) => RANKED.slice(0, k).filter((c) => c.party === p).length);
   const nextCell = RANKED[k];
+  const visibleCells = RANKED.slice(0, k + 1);
 
   const NOTES = [
-    `표를 1로 나눈 몫이 그대로 첫 줄이 됩니다. ${NAMES[RANKED[0].party]}이 ${RANKED[0].value}로 가장 커서 첫 석을 가져갑니다.`,
+    `표를 1로 나눈 몫이 그대로 첫 줄이 됩니다. ${NAMES[RANKED[0].party]}이 ${RANKED[0].value}으로 가장 커서 첫 석을 가져갑니다.`,
     `의석을 받은 당은 다음 계산에서 나누는 수가 하나 커집니다. 그래서 ${NAMES[0]}의 몫이 ${VOTES[0]}에서 ${VOTES[0] / 2}로 줄고, 아직 한 석도 받지 못한 ${NAMES[1]}의 ${VOTES[1]}이 앞으로 나옵니다.`,
     `다섯 번째 자리에서 ${NAMES[2]}의 첫 몫 ${VOTES[2]}이 ${NAMES[0]}의 세 번째 몫 ${VOTES[0] / 3}보다 커서 한 석을 가져갑니다. 큰 당의 몫이 충분히 줄어드는 순간에만 작은 당의 차례가 옵니다.`,
-    `아홉 석을 다 나누면 ${NAMES.map((n, i) => `${n} ${seats[i]}석`).join(" · ")}입니다. 열 번째 자리에 있던 ${NAMES[nextCell.party]}의 몫 ${nextCell.value}은 의석으로 바뀌지 못하고 잘립니다.`,
+    `아홉 석을 다 나누면 ${NAMES.map((n, i) => `${n} ${seats[i]}석`).join(" · ")}입니다. 열 번째 자리에 있던 ${NAMES[nextCell.party]}의 몫 ${nextCell.value}는 의석으로 바뀌지 못하고 잘립니다.`,
   ] as const;
 
   return (
@@ -55,9 +58,10 @@ export default function DivisorViz() {
       eyebrow="비례 배분"
       title="나누어 떨어지지 않는 것을 순서대로 하나씩 나눕니다"
       description="표를 1·2·3…으로 나눈 몫을 한 줄로 세우고, 앞에서부터 의석 수만큼 끊습니다."
-      note={`득표 ${VOTES.join(" · ")}, 나눌 의석 9석으로 둔 예입니다. 나누는 수를 1·3·5…로 바꾸면 작은 당이 더 일찍 들어오는 다른 방식이 됩니다.`}
+      note={`득표 ${VOTES.join(" · ")}, 나눌 의석 9석으로 둔 예입니다. 1·3·5… 방식도 첫 몫은 같습니다. 한 석 뒤의 다음 몫부터 더 작아져 경계 의석이 달라질 수 있습니다.`}
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -65,31 +69,72 @@ export default function DivisorViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col justify-center sm:min-h-[30.5rem]">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(step + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
+          <div
+            className="mt-4 grid grid-cols-2 gap-2 sm:hidden"
+            role="img"
+            aria-label={`${SCENES[step]}의 큰 몫 순서`}
+          >
+            {visibleCells.map((cell, index) => {
+              const selected = index < k;
+              const cut = step === 3 && index === k;
+              return (
+                <div
+                  key={`${cell.party}-${cell.divisor}`}
+                  className={`min-w-0 border px-3 py-2 ${cut ? "border-dashed border-destructive" : "border-border"}`}
+                  style={{
+                    backgroundColor: selected ? `${COLORS[cell.party]}18` : "transparent",
+                    borderColor: selected ? COLORS[cell.party] : undefined,
+                  }}
+                >
+                  <p
+                    className="text-[11px] font-bold leading-4"
+                    style={{ color: selected ? COLORS[cell.party] : MUTED }}
+                  >
+                    {index + 1} · {NAMES[cell.party]}
+                  </p>
+                  <p className="mt-0.5 text-[13px] font-bold leading-5 tabular-nums text-foreground">
+                    {VOTES[cell.party]} ÷ {cell.divisor} = {cell.value}
+                  </p>
+                  <p
+                    className="mt-0.5 text-[10px] font-semibold leading-4"
+                    style={{ color: cut ? WARN : selected ? COLORS[cell.party] : MUTED }}
+                  >
+                    {selected
+                      ? `${index + 1}번째 의석`
+                      : cut
+                        ? "경계 밖 · 잘린 몫"
+                        : "다음 후보"}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 hidden w-full min-w-0 sm:block">
             <svg
-              viewBox="0 0 480 200"
+              viewBox="0 0 450 230"
               role="img"
               aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
+              className="h-auto w-full max-w-2xl"
             >
               {DIVISORS.map((d, c) => (
-                <text key={d} x={TX + c * CW + CW / 2} y={TY - 10} textAnchor="middle" fontSize={9} fontWeight={700} fill={MUTED}>
+                <text key={d} x={TX + c * CW + CW / 2} y={TY - 10} textAnchor="middle" fontSize={11.5} fontWeight={700} fill={MUTED}>
                   ÷ {d}
                 </text>
               ))}
-              <text x={TX - 10} y={TY - 10} textAnchor="end" fontSize={9} fontWeight={700} fill={MUTED}>
+              <text x={TX - 10} y={TY - 10} textAnchor="end" fontSize={11.5} fontWeight={700} fill={MUTED}>
                 득표
               </text>
 
               {NAMES.map((name, p) => (
                 <g key={name}>
-                  <text x={TX - 10} y={TY + p * RH + 18} textAnchor="end" fontSize={9} fontWeight={700} fill={COLORS[p]}>
+                  <text x={TX - 10} y={TY + p * RH + 20} textAnchor="end" fontSize={11.5} fontWeight={700} fill={COLORS[p]}>
                     {name} {VOTES[p]}
                   </text>
                   {DIVISORS.map((d, c) => {
@@ -110,20 +155,20 @@ export default function DivisorViz() {
                         />
                         <text
                           x={TX + c * CW + (CW - 6) / 2}
-                          y={TY + p * RH + 15}
+                          y={TY + p * RH + 17}
                           textAnchor="middle"
-                          fontSize={9.5}
+                          fontSize={11.5}
                           fontWeight={rank ? 700 : 400}
                           fill={rank ? COLORS[p] : MUTED}
                         >
                           {VOTES[p] / d}
                         </text>
                         {rank ? (
-                          <text x={TX + c * CW + (CW - 6) / 2} y={TY + p * RH + 24} textAnchor="middle" fontSize={7.5} fontWeight={700} fill={COLORS[p]}>
+                          <text x={TX + c * CW + (CW - 6) / 2} y={TY + p * RH + 28} textAnchor="middle" fontSize={8.5} fontWeight={700} fill={COLORS[p]}>
                             {rank}번째 의석
                           </text>
                         ) : isNext && step === 3 ? (
-                          <text x={TX + c * CW + (CW - 6) / 2} y={TY + p * RH + 24} textAnchor="middle" fontSize={7.5} fontWeight={700} fill={WARN}>
+                          <text x={TX + c * CW + (CW - 6) / 2} y={TY + p * RH + 28} textAnchor="middle" fontSize={8.5} fontWeight={700} fill={WARN}>
                             잘린 몫
                           </text>
                         ) : null}
@@ -133,14 +178,14 @@ export default function DivisorViz() {
                 </g>
               ))}
 
-              <text x={TX - 10} y={TY + 3 * RH + 22} textAnchor="end" fontSize={9} fontWeight={700} fill={MUTED}>
+              <text x={TX - 10} y={TY + 3 * RH + 22} textAnchor="end" fontSize={10.5} fontWeight={700} fill={MUTED}>
                 지금까지
               </text>
-              <text x={TX} y={TY + 3 * RH + 22} fontSize={9.5} fontWeight={700} fill={MUTED}>
+              <text x={TX} y={TY + 3 * RH + 22} fontSize={10.5} fontWeight={700} fill={MUTED}>
                 {k}석 배분 · {NAMES.map((n, i) => `${n} ${seats[i]}`).join(" · ")}
               </text>
               {step === 3 && (
-                <text x={TX} y={TY + 3 * RH + 38} fontSize={9} fill={MUTED}>
+                <text x={TX} y={TY + 3 * RH + 39} fontSize={10.5} fill={MUTED}>
                   의석이 하나씩만 있는 경계에서 누가 끊기는지가 제도의 성격을 정합니다
                 </text>
               )}
