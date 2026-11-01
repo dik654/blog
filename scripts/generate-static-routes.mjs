@@ -156,6 +156,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/avalanche-consensus",
   "blockchain/expected-consensus",
   "blockchain/lotus-market",
+  "blockchain/lotus-mpool",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",
