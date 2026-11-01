@@ -3278,9 +3278,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/us-derivatives-regulatory-map-and-customer-segregation": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "미국 파생상품에서는 상품 관할, 거래상대 영업행위와 고객 돈 보관을 각각 분류해야 실제 감독·파산·분쟁 경로를 찾을 수 있습니다.",
-    "sharedGate": "고객 현금 100에서 증거금 20과 잔액 80을 모두 분리 표시하고 등록·분리를 손실 보장으로 읽지 않습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "한 기업의 금리스왑·단일 회사 신용스왑·선물 계좌를 분류하고 CFTC·SEC 관할, 딜러 영업행위와 고객 현금 100의 FCM 분리·파산 경로를 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "고객 입금 100=필요 증거금 20+남은 고객 잔액 80과 설명용 분리 풀 부족 100−90=10을 검산하고 상품 관할·등록 역할·영업행위·자금 분리를 구분하며 분리를 원금 보장으로 읽지 않습니다."
   },
   "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": {
     "action": "keep",
@@ -4185,7 +4185,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "markets/japan-australia-retail-leverage-and-product-governance": "1577959c26eee21d",
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": "2c3853099c942095",
   "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": "332534b527713afc",
-  "markets/us-derivatives-regulatory-map-and-customer-segregation": "89ec2a31d97827e3",
+  "markets/us-derivatives-regulatory-map-and-customer-segregation": "590dc8723d21fe05",
   "ai/agent-extension-boundaries": "fce567f71367b9d3",
   "ai/launch-overhead-and-cpu-gpu-synchronization": "f1d055fa0a9dcc1c",
   "ai/inference-optimization-layers": "749076b26a4967e9",

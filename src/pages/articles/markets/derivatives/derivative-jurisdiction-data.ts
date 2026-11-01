@@ -271,7 +271,7 @@ export const usRegulatoryMapData: DerivativeDeepArticleData = {
     { term: "FCM 고객자금 분리", description: "선물 고객의 돈과 재산을 중개회사 자기 자산에서 떼어 보관하는 장치입니다.", example: "100 중 쓰지 않은 80도 고객 계정 표시를 유지합니다.", boundary: "시장 손실 보전이나 예금보험과 같지 않습니다." },
   ] },
   sources: [
-    { source: "SEC · Security-Based Swap Markets", excerpt: "SEC regulates security-based swaps", application: "금리스왑과 단일 회사 신용스왑의 관할·영업행위 문을 구분합니다.", citation: "U.S. Securities and Exchange Commission, Security-Based Swap Markets", href: "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets", note: "미국 SEC·CFTC의 상품 관할 분할과 증권기반스왑 제도 자료를 모은 공식 페이지입니다. 이 페이지는 관할 분할만 설명합니다. 딜러 영업행위 기준(거래상대 자격·공시·일일 가격 표시)은 17 CFR 240.15Fh-3 조문(코넬 LII 사본, 2026-10-09 확인)에 근거합니다." },
+    { source: "SEC · Security-Based Swap Markets", excerpt: "SEC regulates security-based swaps", application: "금리스왑과 단일 회사 신용스왑의 관할·영업행위 문을 구분합니다.", citation: "U.S. Securities and Exchange Commission, Security-Based Swap Markets", href: "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets", note: "2026년 6월 26일 갱신된 SEC 공식 페이지로 SEC·CFTC의 관할 분할과 증권기반스왑 자료를 모읍니다. 딜러의 거래상대 확인·위험과 이해충돌 공시·일일 가격 표시는 공식 eCFR의 17 CFR 240.15Fh-3에서 별도로 확인해야 합니다." },
     { source: "CFTC · Futures Commission Merchants", excerpt: "kept apart (segregated)", application: "고객 현금 100과 필요 증거금 20을 회사 자기 자산과 분리하는 장부로 적용합니다.", citation: "Commodity Futures Trading Commission, Futures Commission Merchants", href: "https://www.cftc.gov/IndustryOversight/Intermediaries/FCMs/fcmsegregationfunds.html", note: "FCM 고객자금 분리, 계정 표시와 파산 시 한계를 설명하는 CFTC 공식 안내입니다." },
   ],
   review: [

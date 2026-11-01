@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 788,
+    "dedicatedVisuals": 789,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 642,
+    "animatedMechanisms": 643,
     "architectureWithoutAnimation": 64,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -14390,14 +14390,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/us-derivatives-regulatory-map-and-customer-segregation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
