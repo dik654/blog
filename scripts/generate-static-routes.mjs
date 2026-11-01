@@ -220,6 +220,7 @@ const noScriptArticleRoutes = new Set([
   "markets/var-expected-shortfall-stress-and-model-risk",
   "markets/derivatives-suitability-disclosure-and-sales-practice",
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests",
+  "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",

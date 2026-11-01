@@ -3264,9 +3264,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "소매 CFD 보호는 거래 전 적정성, 기초자산별 레버리지, 계좌 강제청산과 음수 잔액 보호가 서로 다른 시점에 작동하는 구조입니다.",
-    "sharedGate": "100×30=3,000과 3,000×1%=30을 검산하고 50% 청산선과 음수 잔액 보호를 원금 보장으로 읽지 않습니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "현금 100에 30배 노출 3,000을 만들고 1% 손실 30, 순자산 50의 강제청산선, 가격 틈과 음수 잔액 보호를 한 계좌의 거래 전·중·후 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "100×30=3,000, 3,000×1%=30, 100−30=70과 100×50%=50을 검산하고 레버리지 한도·계좌 강제청산·음수 잔액 보호의 작동 시점을 구분하며 영구선물 이름보다 실제 CFD 지급 구조를 확인합니다."
   },
   "markets/japan-australia-retail-leverage-and-product-governance": {
     "action": "keep",
@@ -4181,7 +4181,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology": "80edf0ce0db7744c",
   "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action": "287c7be8714df3ab",
   "markets/cross-border-netting-enforceability-and-regulatory-recognition": "4dc9258b37d3e5f7",
-  "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": "6db7d2acb567f37a",
+  "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": "8aeac780ee5fea31",
   "markets/japan-australia-retail-leverage-and-product-governance": "af6b0f537743c99b",
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": "2c3853099c942095",
   "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": "332534b527713afc",
