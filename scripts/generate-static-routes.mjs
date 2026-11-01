@@ -181,6 +181,7 @@ const noScriptArticleRoutes = new Set([
   "institutions/public-budget-and-taxes",
   "institutions/media-attention-and-public-belief",
   "institutions/how-to-read-a-country",
+  "institutions/culture-norms-and-coordination",
   "ai/dropout-regularization",
   "ai/weight-decay",
   "ai/early-stopping",

@@ -1773,7 +1773,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "인구의 출입 장부와 연령 구성, 실제 취업, 가구의 돌봄 시간을 분리해야 사람 수를 노동·소비·공공서비스 수요로 바꿀 수 있습니다. 첫 그림은 100명이 102명이 되는 계산에서 20/60/20 연령 구성, 총부양비 66.7, 하루 8시간 배분, 외부 돌봄의 현금 차이, 코호트 전망, 인구 숫자의 한계까지 일곱 장면으로 연결합니다.",
     "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 단위와 조건이 일치해야 합니다. 100+2−1+3−2=102명이며 연초 연령 구성 20/60/20의 총부양비는 약 66.7이지만 실제 유급 취업자는 45명이라는 별도 가정입니다. 하루 8시간에서 돌봄 4시간을 빼면 유급 일 가능 시간은 4시간이고, 돌봄 2시간을 3만 원에 맡겨 4만 원의 추가 수입을 얻을 수 있을 때만 차이가 1만 원입니다. 총수 102명만으로 연말 연령 구성이나 정책 결과를 확정하지 않습니다."
   },
-  "institutions/culture-norms-and-coordination": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "문화의 설명은 국적별 성격 분류가 아니라 공유한 기대·관측·규칙·권리가 실제 협력을 만드는 경로를 확인하는 일입니다.", "sharedGate": "(가정) 가게 10곳×월 2만원, 공동청소비 16만원, 잔액 4만원의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "institutions/culture-norms-and-coordination": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "문화를 국적별 성격으로 분류하지 않고 약속·실제 행동·관찰·정정·권리와 다음 기대가 협력을 만드는 경로로 봐야 합니다. 첫 그림은 A시장 가게 10곳의 약속, 회비 20만 원과 청소비 16만 원, 납부·청소 기록, 분담·관찰·이의 절차, 규범과 행동, 미납 시나리오, 가게 수와 참여 권리의 경계까지 일곱 장면으로 연결합니다.",
+    "sharedGate": "첫 그림과 3·4·6·7·8·9·10절의 금액과 규칙 경계가 일치해야 합니다. 가게 10곳이 한 곳당 2만 원을 내면 20만 원이며 청소비 16만 원을 지급하고 4만 원이 남습니다. 2곳 미납이면 16만 원으로 잔액 0, 3곳 미납이면 14만 원으로 2만 원이 부족합니다. 가게가 9곳으로 줄면 모두 납부해도 18−16=2만 원만 남습니다. 납부 결과를 고정된 문화 성향으로 읽지 않고 기록 오류·사정·참여·정보·정정 권리를 함께 확인합니다."
+  },
   "institutions/evidence-measurement-and-causality": {
     "action": "keep",
     "status": "implemented",
@@ -4576,7 +4582,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "gpu/gpu-memory-hierarchy-and-roofline":"a9aed826b3653311",
 "gpu/hbm-stack-and-memory-requests":"5a2477d7ba1ccefc",
 "infrastructure/materials-waste-and-circularity":"6e46845f992ce59d",
-"institutions/culture-norms-and-coordination":"705e25049059b440",
+"institutions/culture-norms-and-coordination":"4fbcb541df469e20",
 "institutions/evidence-measurement-and-causality":"0de8c9931780dbc9",
 "institutions/population-migration-and-care":"84f1a1f1e783549c",
 "markets/covered-calls-and-income-funds":"1fbe1da7c51b1b9f",
