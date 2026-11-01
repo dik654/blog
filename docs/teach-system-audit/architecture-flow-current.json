@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 815,
+    "dedicatedVisuals": 816,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 669,
+    "animatedMechanisms": 670,
     "architectureWithoutAnimation": 63,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
@@ -13846,14 +13846,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/equity-dispersion-pnl-attribution-and-rebalancing-costs.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance",

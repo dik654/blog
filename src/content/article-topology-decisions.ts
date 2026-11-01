@@ -4702,7 +4702,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring":"9e2244b4b2fff944",
 "economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance":"10851536e477e46f",
 "economic-history/regional-gdp-household-income-and-within-country-inequality":"416014a9571c236e",
-"markets/equity-dispersion-pnl-attribution-and-rebalancing-costs":"ccba27c2aede24bf",
+"markets/equity-dispersion-pnl-attribution-and-rebalancing-costs":"441da045e18f33b6",
 "markets/credit-event-auction-orders-and-base-correlation-history":"2a57e40fcae8d608",
 "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery":"7d763bee1af8c156",
 "markets/lme-metals-warrants-quality-storage-and-load-out":"b0d3d849d1d2d151",
