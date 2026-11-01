@@ -236,6 +236,7 @@ const noScriptArticleRoutes = new Set([
   "markets/collateral-operations-margin-calls-disputes-and-substitution",
   "markets/derivatives-product-approval-target-market-and-post-sale-monitoring",
   "markets/multi-asset-options-correlation-and-rare-event-simulation",
+  "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",
   "ai/weight-decay",

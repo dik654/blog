@@ -388,7 +388,7 @@ export const canadaHongKongSwitzerlandData = {
     ] },
     { id: "comparison", level: "6", title: "9. 홍콩의 복잡상품과 스위스의 서비스 검사는 출발점이 다릅니다", bridge: "두 제도를 같은 적합성 표 하나로 합치지 않습니다.", paragraphs: [
       "홍콩 SFC 목록은 홍콩선물거래소 선물, 상장 주식 파생상품, 합성·선물형 ETF 등을 복잡한 장내 파생상품 예로 듭니다. 권유가 없는 장내 거래의 예외가 있어도 파생상품 지식과 위험 설명 요건을 따로 봅니다.",
-      "스위스 FINMA 안내는 고객 자문가가 재무상황·투자목표와 지식·경험을 확인하고 추천 전 적정성을 살피며 서비스를 기록한다고 설명합니다. 정확한 검사는 자문·일임·주문 실행 등 제공 서비스에 달려 있습니다.",
+      "스위스 FinSA에서 개별 거래 자문은 고객의 지식·경험을 확인하는 적정성 검사를, 포트폴리오 전체 자문과 일임은 재무상황·투자목표까지 확인하는 적합성 검사를 사용합니다. 단순 주문 실행은 두 검사를 하지 않을 수 있지만 그 사실을 미리 알려야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 세 나라 비교표는 최신 법률의 적용 판단을 대신하지 않습니다", bridge: "국경 간 계약에서 자주 바뀌는 조건을 확인합니다.", paragraphs: [
       "캐나다는 주별 증권 규제와 전국 규칙의 적용, 홍콩은 거래 장소·권유와 상품 유형, 스위스는 고객 구분·서비스 종류와 국경 간 제공 방식이 결론을 바꿉니다. 회사의 면허와 계약 법인도 중요합니다.",
@@ -412,9 +412,10 @@ export const canadaHongKongSwitzerlandData = {
     { term: "서비스별 검사", description: "스위스에서 실행·자문·일임 서비스에 맞춰 지식·경험·재무상황과 목표를 확인하는 절차입니다.", example: "추천 전 고객 자료와 상품을 맞춥니다.", boundary: "서비스가 달라지면 필요한 검사도 달라집니다." },
   ] },
   sources: [
-    { source: "Canadian Securities Administrators · NI 93-101", excerpt: "Derivatives: Business Conduct", application: "당사자 정보, 적합성, 확인서와 영업행위 보호의 적용 범위를 확인합니다.", citation: "National Instrument 93-101, consolidated 2024", href: "https://www.asc.ca/securities-law-and-policy/regulatory-instruments/93-101", note: "캐나다 참여 관할의 통합 자료이며 주별 적용과 면제를 다시 확인합니다." },
-    { source: "Hong Kong SFC · 복잡상품", excerpt: "Complex products - Derivatives traded on an exchange", application: "장내 선물·주식 파생상품과 복잡상품·파생상품 지식 요건의 관계를 확인합니다.", citation: "SFC Non-complex and complex products", href: "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products", note: "목록은 비포괄적이며 권유 여부와 거래 장소별 요건을 함께 확인합니다." },
-    { source: "FINMA · 고객 자문가 의무", excerpt: "financial situation and investment goals ... knowledge and experience", application: "스위스에서 고객 정보·추천 전 검사·기록과 옴부즈맨 안내의 기본 흐름을 확인합니다.", citation: "FINMA, Questions about client advisers", href: "https://www.finma.ch/en/finma-public/fragen-und-probleme/zur-registrierung-von-kundenberaterinnen-oder-kundenberatern/", note: "FinSA 일반 안내이며 개별 파생상품과 국경 간 서비스의 법률 적용을 다시 확인합니다." },
+    { source: "Canadian Securities Administrators · NI 93-101", excerpt: "Know your derivatives party · needs and objectives · suitability", application: "당사자 지위, 필요·목표·재무상황·위험감내도와 거래 적합성의 적용 범위를 확인합니다.", citation: "National Instrument 93-101 and Companion Policy, consolidated 28 September 2024", href: "https://www.asc.ca/securities-law-and-policy/regulatory-instruments/93-101", note: "ASC가 제공하는 현행 통합 자료를 2026-11-02 확인했습니다. 캐나다 전역의 모든 거래를 한 문장으로 일반화하지 않고 지역별 적용·개정·면제를 다시 확인합니다." },
+    { source: "Hong Kong SFC · 복잡상품", excerpt: "Complex products - Derivatives traded on an exchange", application: "HKFE 선물과 SEHK 주식 파생상품이 복잡한 장내 파생상품 예에 들어가는지 확인합니다.", citation: "SFC, Non-complex and complex products", href: "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products", note: "비포괄적 현행 목록을 2026-11-02 확인했습니다. 온라인·오프라인, 거래 장소와 권유 여부에 따른 세부 요건은 별도로 확인합니다." },
+    { source: "Hong Kong SFC · 파생상품 지식 FAQ", excerpt: "appropriate enquiries ... instead of relying merely on the client’s declaration", application: "고객 자기진술만으로 지식을 인정하지 않고 KYC 자료와 감사 흔적을 남기는 기준을 확인합니다.", citation: "SFC, Frequently Asked Questions on paragraphs 5.1A and 5.3 of the Code of Conduct", href: "https://www.sfc.hk/en/faqs/intermediaries/supervision/Code-of-Conduct-5-1-A-and-5-3/Code-of-Conduct-5-1-A-and-5-3", note: "2026-10-30 갱신본을 2026-11-02 확인했습니다. 과거 3년간 파생상품 5회 거래는 최소 참고 기준이며 고객별 사정을 함께 봅니다." },
+    { source: "Swiss Confederation · FinSA", excerpt: "Assessment of appropriateness · Assessment of suitability · Exemption from the duty to review", application: "개별 거래 자문, 포트폴리오 전체 자문·일임, 단순 주문 실행의 검사 범위를 구분합니다.", citation: "Financial Services Act, Articles 10–13", href: "https://www.fedlex.admin.ch/eli/cc/2019/758/en", note: "Fedlex 현행 법령 경로를 2026-11-02 확인했습니다. 영어 번역은 참고용이며 법적 효력과 국경 간 적용은 독일어·프랑스어·이탈리아어 원문과 전문가 검토가 필요합니다." },
   ],
   review: [
     "예치금 20의 5배 노출에서 12% 하락 손실이 고객 한도를 얼마나 넘는지 계산해 보세요. (답: 3절)",

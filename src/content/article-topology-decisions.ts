@@ -3376,9 +3376,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "캐나다·홍콩·스위스의 파생상품 고객 보호는 고객 지위, 복잡상품 여부와 제공 서비스라는 서로 다른 출발점에서 적용되므로 같은 손실 사례도 계약 법인·권유 여부·장내외 상품과 현재 관할 원문을 나눠 판단해야 합니다.",
-    "sharedGate": "예치금 20×5배=노출 100에서 12% 하락 손실 12를 계산해 고객이 밝힌 손실 한도 10보다 2 큰지 확인합니다."
+    "reviewedAt": "2026-11-02",
+    "rationale": "예치금 20과 5배 노출 100, 12% 하락 손실 12를 고정한 뒤 공통 사실, 캐나다의 당사자 지위·적합성, 홍콩의 복잡상품·파생상품 지식·권유와 거래 장소, 스위스의 서비스별 적정성·적합성·실행 전용, 주문 판단 기록까지 8장면으로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "20×5=100, 100×12%=12, 12−10=2를 검산하고 관할·고객·서비스·상품·권유 사실, 고객 분류와 실제 지식, 적정성과 적합성, 면제와 의무 부재를 구분합니다."
   },
   "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control": {
     "action": "keep",
@@ -4665,7 +4665,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/collateral-operations-margin-calls-disputes-and-substitution":"4aab453963abd0f8",
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"17e358218402434a",
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"2ea57eecbf9d6076",
-"markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"7e1e5effa12b96fc",
+"markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"0fdde9365e1efac1",
 "markets/krx-derivatives-contract-orders-and-daily-settlement":"e8983d082a4cc018",
 "markets/portfolio-compression-risk-tolerances-and-records":"a16d7c4b7737843c",
 "markets/collateral-optimization-eligibility-haircuts-and-liquidity":"1fcfce72b06354fa",
