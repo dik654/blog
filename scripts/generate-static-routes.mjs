@@ -196,6 +196,7 @@ const noScriptArticleRoutes = new Set([
   "markets/funds-etfs-and-etns",
   "markets/securitization-and-tranches",
   "markets/forwards-and-futures",
+  "markets/no-arbitrage-cost-of-carry-and-basis",
   "markets/options-and-asymmetric-payoffs",
   "markets/swaps-and-credit-risk",
   "ai/dropout-regularization",

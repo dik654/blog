@@ -3088,10 +3088,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "markets/no-arbitrage-cost-of-carry-and-basis": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-07",
-    "rationale": "선물의 상대 가격은 미래 전망 하나가 아니라 현물을 만기까지 보유하는 자금·보관 비용과 수입을 복제해 무차익 경계를 만들며, 결제일에는 인도 가능한 현물과 선물의 베이시스가 수렴합니다.",
-    "sharedGate": "100+5−2=103의 복제비용과 108 선물 매도 뒤 5의 차이를 검산하고 차입·공매도·세금·인도 제약을 함께 밝힙니다."
+    "status": "implemented",
+    "reviewedAt": "2026-11-02",
+    "rationale": "현물 100을 빌려 사고 배당 2를 받는 거래로 공정가치 103을 만든 뒤, 비싼 선물 108과 싼 선물 99의 반대 차익거래, 만기 수렴과 실제 거래비용까지 같은 장부로 추적하므로 한 글에 유지합니다.",
+    "sharedGate": "8장면 지도와 본문에서 현물 100, 이자 5, 배당 2, 공정가치 103, 선물 108일 때 차익 5, 선물 99일 때 반대 거래 차익 4, 결제일 베이시스 0과 현실의 차입·대차·세금·거래비용을 같은 조건으로 유지합니다."
   },
   "markets/clearing-margin-and-default-waterfall": {
     "action": "keep",
@@ -4633,7 +4633,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/clearing-margin-and-default-waterfall":"ba750dae36da9afc",
 "markets/derivatives-suitability-disclosure-and-sales-practice":"28aa4961a49f583f",
 "markets/interest-rate-derivatives-from-fra-to-swaptions":"8fb4b59da32013fc",
-"markets/no-arbitrage-cost-of-carry-and-basis":"b36afbb46e581626",
+"markets/no-arbitrage-cost-of-carry-and-basis":"8a85e9f19b7b1b6f",
 "markets/option-greeks-volatility-and-dynamic-hedging":"bee28d2ce626059b",
 "markets/option-replication-and-put-call-parity":"39b4be384f5e5bb5",
 "markets/commodity-carry-convenience-yield-and-roll":"3e8f0433956f4cd5",
