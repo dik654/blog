@@ -4,11 +4,11 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 818,
+    "dedicatedVisuals": 819,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 672,
-    "architectureWithoutAnimation": 62,
+    "animatedMechanisms": 673,
+    "architectureWithoutAnimation": 61,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
     "sourceCitationLinked": 998,
@@ -14070,14 +14070,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/lme-metals-warrants-quality-storage-and-load-out.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/local-stochastic-volatility-jumps-and-calibration",

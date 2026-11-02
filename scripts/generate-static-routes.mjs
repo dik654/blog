@@ -247,6 +247,7 @@ const noScriptArticleRoutes = new Set([
   "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs",
   "markets/credit-event-auction-orders-and-base-correlation-history",
   "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",
+  "markets/lme-metals-warrants-quality-storage-and-load-out",
   "markets/portfolio-compression-risk-tolerances-and-records",
   "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
   "markets/ccp-default-management-hedging-auction-and-porting",

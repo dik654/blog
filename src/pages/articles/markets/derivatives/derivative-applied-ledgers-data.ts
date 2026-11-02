@@ -271,7 +271,7 @@ export const lmeMetalWarrantData: DerivativeDeepArticleData = {
     { term: "출고 비용 장부", description: "보관료·트럭 적재·재워런트 비용을 금속값과 나눈 기록입니다.", example: "가정한 보관·출고비 합계는 1,500달러입니다.", boundary: "창고·지역·금속마다 실제 요금이 다릅니다." },
   ] },
   sources: [
-    { source: "LME · Zinc Contract Specifications", excerpt: "Special high-grade zinc of 99.995% purity (minimum)", application: "25.3톤이 ±2% 범위에 드는지와 순도·브랜드·창고 조건을 함께 확인합니다.", citation: "London Metal Exchange, LME Zinc contract specifications", href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications", note: "아연 상품 규격 페이지입니다. lme.com은 2026-10-09 자동 조회 403(봇 차단)이라 2026-09-08 웹 아카이브 사본으로 원문을 대조했습니다. 같은 페이지에 'Warrant 25 tonnes (with a tolerance of +/-2%)', 승인 브랜드·승인 창고 요건과 네 가지 화학 조성 표준이 있습니다. 세부 조항은 페이지가 안내하는 LME Rulebook이 우선합니다." },
+    { source: "LME · Zinc Contract Specifications", excerpt: "Special high-grade zinc of 99.995% purity (minimum)", application: "25.3톤이 ±2% 범위에 드는지와 순도·브랜드·창고 조건을 함께 확인합니다.", citation: "London Metal Exchange, LME Zinc contract specifications", href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications", note: "2026년 11월 2일 LME 공식 상품 규격에서 순도 99.995% 이상, 25톤 워런트의 ±2% 허용 범위, 승인 브랜드·승인 창고와 네 가지 화학 조성 표준을 대조했습니다. 세부 조항은 페이지가 안내하는 현행 LME Rulebook이 우선합니다." },
     { source: "LME · Warehouse Agreement 2026", excerpt: "rent must accrue on a daily basis", application: "워런트 취소 기록, 일별 보관료와 합의한 출고 일정을 1,500달러 비용 장부에 연결합니다.", citation: "LME Warehouse Agreement", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", note: "2026년 개정 자료의 창고 운영 규칙이며 본문 요율은 설명용 가정입니다." },
   ],
   review: [
