@@ -4,11 +4,11 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 817,
+    "dedicatedVisuals": 818,
     "inlineVisuals": 525,
     "customVisuals": 930,
-    "animatedMechanisms": 671,
-    "architectureWithoutAnimation": 63,
+    "animatedMechanisms": 672,
+    "architectureWithoutAnimation": 62,
     "recursiveLocators": 386,
     "codeEvidenceLinked": 245,
     "sourceCitationLinked": 998,
@@ -14438,14 +14438,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/wti-crude-oil-cushing-storage-pipeline-and-delivery.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/xva-funding-margin-and-wrong-way-risk",
