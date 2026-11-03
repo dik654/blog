@@ -64,7 +64,7 @@
    - **A16** 같은 글: 라이선스 단계 반영과 N4 링크.
    - **A17** `hw/network/*`(rdma-roce, gpu-collective-network): PRO 6000의 GPUDirect RDMA는 NVIDIA 공식 명시가 없으니 노드별로 `ib_write_bw --use_cuda`로 확인하라는 내용과, PCIe 시스템에서 `NCCL_NET_GDR_READ=1`을 명시해야 한다는 내용. N4 `#network`로 링크한다.
 2. **말투 정리 완료(후속 회차)**: humanize-korean heavy 경로로 처리했고, 게이트 exit 0과 왕복 대조 어긋남 0을 확인했다. ko-natural은 오류 0이다. 상세는 `docs/rewrite-status.md` 2026-11-03 항목에 있다.
-3. **`KVFundamentals.tsx` 미사용 파일**: C4 수정은 독자에게 보이지 않는다. 지울지, 어딘가에 붙일지 결정해야 한다.
+3. **`KVFundamentals.tsx` 처리 결정(유지)**: `ai/hybrid-attention-serving`은 폐기된 route다(`scripts/audit-learning-routes.test.mjs`가 phantom route로 명시). 같은 폴더의 `Overview.tsx`·`Deployment.tsx`와 함께 import되지 않는 레거시 파일이다. AGENTS.md가 레거시 보존을 허용하므로 지우지 않는다. MLA 설명 오류는 이미 고쳐 두었으므로, 나중에 다시 쓰더라도 틀린 설명이 되살아나지 않는다.
 4. **개념 중복 점검**: N1의 `kv-shard-replication-factor`(일반식)와 N2의 `mla-kv-tp-replication`(MLA 특수 경우)이 겹친다. 연결은 돼 있고 alias 충돌은 없다.
 5. **새로 확인된 사실, 근거 문서 반영 필요**: vLLM PR #34795(FP8 KV + DCP for MLA)는 **병합되지 않고 stale로 닫혔다**(2026-07-05). 이 PR이 제거하던 assert는 v0.33.0에 없다. 00 문서, 벤치 README, N4의 "체리픽 필요" 표현은 "v0.33.0 이상에서는 불필요할 수 있음, 실측 확인"으로 고쳐야 한다. #46721도 stale로 닫혔다.
 6. **장부 상태**: 4편은 `reviewed-local`이다(DoD 확인과 no-script 등록을 마쳤다). 배포 뒤 공개 URL을 다시 확인하면 `reviewed-production`으로 올린다.

@@ -47,7 +47,7 @@
 - **남은 일**:
   - main의 미커밋 작업과 병합해 배포하고, 공개 경로를 다시 확인한다.
   - C1 `hw/modded-rtx4090-moe-serving` 출시 게이트 라이선스 단계, A16·A17 `hw/network` 보강은 다른 세션의 미커밋 작업과 겹쳐 보류했다.
-  - 미사용 파일 `hybrid-attention-serving/KVFundamentals.tsx`를 처리한다.
+  - `hybrid-attention-serving/KVFundamentals.tsx`는 폐기 route의 레거시 파일이라 AGENTS.md에 따라 유지한다(오류 수정은 반영됨).
 
 ### 같은 10만 원 요구인데 왜 하나는 법일까요 로컬 검증 완료 (2026-11-01)
 
