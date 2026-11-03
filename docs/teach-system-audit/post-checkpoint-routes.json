@@ -315,6 +315,26 @@
       "route": "blockchain/kohaku-provider-validation",
       "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#kohaku-provider-개념실무-분리-공개-검증-완료-2026-10-29"
+    },
+    {
+      "route": "ai/mla-kv-replication-and-decode-context-parallel",
+      "status": "pending-full-review",
+      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
+    },
+    {
+      "route": "ai/serving-architecture-matrix",
+      "status": "pending-full-review",
+      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
+    },
+    {
+      "route": "ai/agent-serving-slo-and-capacity",
+      "status": "pending-full-review",
+      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
+    },
+    {
+      "route": "gpu/pcie-blackwell-moe-node-build",
+      "status": "pending-full-review",
+      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
     }
   ]
 }

@@ -30386,6 +30386,95 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "1,000 req/s·15% 오류 10분 서비스와 Kubernetes toil 예시는 가정이며 budget·burn rate·창 평균은 손 계산이다. monitoring을 실제로 돌리지 않았다." },
     ],
   },
+  "agent-serving-slo-and-capacity": {
+    title: "에이전트 서빙 용량은 SLO를 지키는 동시 에이전트 수로 잽니다 글이 소유하는 범위",
+    owns: [
+      "서버 합계와 요청 하나의 몫을 구분하고 헤드라인 처리량을 몫으로 바꾸는 계산",
+      "에이전트 약속을 P25 출력 속도와 P95 TTFT로 정하는 이유, AA-AgentPerf 등급과 NVIDIA 표기 오류의 정리",
+      "최대 동시 에이전트 수를 속도 상한과 KV 상주 상한의 최솟값으로 보는 용량 모델과 context thrashing",
+      "문맥이 자라는 닫힌 루프 재생과 지수 증가·이분 탐색 측정 절차, 자체 시험에서 찾은 두 측정 버그",
+      "약속을 지키는 처리량을 분모로 한 장비 구입비 상한 역산",
+    ],
+    reuses: [
+      { label: "TTFT·백분위·처리량 정의", href: "/cs/ai/serving-latency-metrics-and-slo#metrics" },
+      { label: "준비 구간과 정상 구간", href: "/cs/ai/serving-benchmark-methodology#protocol" },
+      { label: "MLA KV 복제와 decode context parallel", href: "/cs/ai/mla-kv-replication-and-decode-context-parallel" },
+      { label: "KV 보존 우선순위와 호스트 오프로드", href: "/cs/ai/tensorrt-llm-kv-cache-and-kernels#retention" },
+      { label: "추론 비용과 용량 계획", href: "/cs/ai/inference-cost-and-capacity-planning#capacity" },
+      { label: "토큰 원가와 API 가격의 단위 차이, 손익분기 역산", href: "/cs/ai/own-vs-rent-inference-capacity#unit-mismatch" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "등급·지표 정의·공개 결과는 AA 원문과 임베디드 데이터에만 귀속하고, NVIDIA 표의 30/100/300은 오기로 표시한다" },
+      { kind: "secondary-source", rule: "rtx6kpro 위키 수치는 현장 경험으로 표시하고 출력 길이 강제·추측 디코딩 조건을 함께 적으며 sweet spot이나 보편 배수로 쓰지 않는다" },
+      { kind: "project-measurement", rule: "자체 도구 결과는 가짜 서버 자체 시험과 스모크 시험까지만 주장하고, 8장 서버의 실제 최대 동시 수는 미측정으로 남긴다" },
+      { kind: "project-claim", rule: "API 단가는 조회일을 붙인 매개변수로 쓰고 하드웨어 가격은 넣지 않으며, X_SLO 400은 측정이 아닌 어림값임을 계산 옆에 적는다" },
+    ],
+  },
+  "pcie-blackwell-moe-node-build": {
+    title: "NVLink 없는 RTX PRO 6000 8장으로 1T MoE 노드를 짜는 판단",
+    owns: [
+      "PCIe 전용 8장 노드의 dual-root 스위치·NIC 내장 스위치 배치 비교",
+      "단일 스트림 토큰 시간을 가중치 읽기와 122번의 동기화로 나누는 예산",
+      "단일 사용자와 고동시성에 반대인 P2P·NCCL 설정과 노드 수락 순서",
+      "복제본 우선 확장과 노드 망·GPUDirect RDMA 도입 시점",
+    ],
+    reuses: [
+      { label: "PCIe peer 경로", href: "/cs/gpu/gpu-interconnects#pcie-topology-peer-path" },
+      { label: "GPUDirect RDMA 토폴로지", href: "/cs/gpu/rdma-roce#gpudirect-topology" },
+      { label: "메모리 채널 공급 상한", href: "/cs/gpu/server-cpu-lineup-comparison#memory-channels" },
+      { label: "층마다 TP all-reduce", href: "/cs/ai/tensor-and-pipeline-parallel-inference#tensor-parallel" },
+      { label: "그룹 단위 복제본", href: "/cs/ai/onprem-k8s-inference-platform#group-replica" },
+      { label: "소유와 임대 비교의 자", href: "/cs/ai/own-vs-rent-inference-capacity#unit-mismatch" },
+      { label: "개조 RTX 4090의 링크 한계", href: "/cs/gpu/modded-rtx4090-moe-serving" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "카드 사양·NVLink 여부·GPUDirect RDMA 조건·라이선스 조항은 2026-11-03에 연 공식 문서의 짧은 인용과 위치로만 쓴다." },
+      { kind: "primary-source", rule: "엔진·쿠버네티스 동작은 vLLM v0.32.0, LWS v1.0.0, Kueue v0.20.4, GPU Operator v26.7.2 태그의 코드·문서 읽기까지만 주장하고 실행 결과로 쓰지 않는다." },
+      { kind: "project-claim", rule: "rtx6kpro 위키 수치는 현장 경험으로 조건과 함께 인용하고 보편 배수로 쓰지 않으며, 기억 칸·토큰 시간·망 전송량은 config 값으로 손으로 계산한 (계산)으로 표시한다. 하드웨어 가격은 조사하지 않는다." },
+    ],
+  },
+  "mla-kv-replication-and-decode-context-parallel": {
+    title: "MLA KV의 TP 복제와 decode context parallel",
+    owns: [
+      "MLA latent KV가 TP rank마다 복제되는 원인과 장 단위 KV byte 식",
+      "decode context parallel의 token 배정, 부분 attention의 LSE 병합, 층당 통신",
+      "Kimi K2.5 8×RTX PRO 6000의 KV dtype × DCP 용량과 200K 대화 수",
+      "DCP의 속도·정확성 비용과 GQA·hybrid·sliding window 대비",
+    ],
+    reuses: [
+      { label: "MLA 압축과 weight absorption", href: "/cs/ai/multi-head-latent-attention-mechanics#weight-absorption" },
+      { label: "token당 KV byte와 GQA 공유", href: "/cs/ai/kv-cache-fundamentals#parallel-budget" },
+      { label: "FP8 KV의 scale과 포화", href: "/cs/ai/kv-cache-quantization#names" },
+      { label: "ring 방식 context parallel", href: "/cs/ai/tensor-and-pipeline-parallel-inference#sequence-context-parallel" },
+      { label: "online softmax", href: "/cs/ai/flash-attention-io-aware-kernel#online-softmax" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "vLLM v0.33.0 commit 4ba787e의 전체 원문을 고정해 KV head 수·cache 폭·DCP 상한·통신 순서의 행 번호를 읽는다." },
+      { kind: "primary-source", rule: "모델 층 수와 폭은 2026-11-03 Hugging Face config.json으로 확인한 값만 쓴다." },
+      { kind: "secondary-source", rule: "rtx6kpro 위키의 용량·속도는 현장 경험으로만 표기하고 비율 검산에만 쓴다. 절대값을 다른 노드의 기준으로 옮기지 않는다." },
+      { kind: "project-claim", rule: "장당 자리 역산, 통신 183회, 호스트 213개 대화는 계산값이다. GPU에서 직접 측정하지 않았다." },
+    ],
+  },
+  "serving-architecture-matrix": {
+    title: "모델 구조가 서빙 장비와 병렬화를 정합니다 글이 소유하는 범위",
+    owns: [
+      "dense·MoE+GQA·MoE+MLA·hybrid linear·SWA 모델을 같은 다섯 질문으로 비교하는 표",
+      "batch expert 합집합 E·(1−(1−k/E)^B)로 MoE decode 읽기량을 다시 세는 계산",
+      "TP·DCP 배치의 KV 사본 배수 M ÷ (min(T, H_kv)·D)",
+      "8×RTX PRO 6000 PCIe 노드에서 모델별 상주 에이전트 수와 노드 확장의 효과",
+    ],
+    reuses: [
+      { label: "MoE VRAM 예산", href: "/cs/ai/model-vram-budgeting#moe-serving-boundary" },
+      { label: "KV cache 모양", href: "/cs/ai/kv-cache-fundamentals#kv-shape-sharing" },
+      { label: "TP와 PP", href: "/cs/ai/tensor-and-pipeline-parallel-inference#tensor-parallel" },
+      { label: "Expert parallelism", href: "/cs/ai/expert-parallelism-moe-systems#all-to-all" },
+      { label: "Hybrid KV 할당", href: "/cs/ai/hybrid-kv-cache-allocation#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "층 수·head 수·latent 폭·expert 수는 2026-11-03에 연 공개 config.json 값만 쓰고, 계산값에는 (계산)·(추정)을 붙인다." },
+      { kind: "secondary-source", rule: "rtx6kpro 위키 수치는 현장 경험으로 표시하고 조건(P2P, KV dtype, DCP, gpu-util)과 함께만 인용한다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

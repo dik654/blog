@@ -4184,6 +4184,42 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "같은 GPU job을 서비스 지향 Kubernetes와 batch 지향 Slurm에 넣어 queue·placement·gang·recovery 영수증을 비교하는 단일 선택 문제입니다.",
     "동일 artifact·GPU topology·priority·failure fixture로 wait time, start success, completion, recovery와 운영 비용을 비교하고 제품 이름만으로 우열을 정하지 않습니다.",
   ),
+  "ai/tensor-and-pipeline-parallel-inference": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-11-03",
+    rationale:
+      "2026-11-03 보강으로 import closure가 1,200줄을 넘었지만 늘어난 부분은 기존 decode-impact와 pipeline-parallel 절 안의 PCIe·MoE 수치 예(61층 122회 동기화, P2P on/off, PP 경계 14 KiB)와 계산 장부 두 개입니다. 새 concept나 새 section을 만들지 않았고, MLA KV 복제·DCP는 ai/mla-kv-replication-and-decode-context-parallel, 구조별 비교는 ai/serving-architecture-matrix가 소유하므로 분리할 독립 단위가 없습니다.",
+    sharedGate:
+      "같은 layer 수·hidden·link 가정에서 TP·PP·DP·context parallel의 token당 통신 횟수와 byte를 한 장부로 비교합니다.",
+  },
+  "gpu/pcie-blackwell-moe-node-build": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-11-03",
+    rationale:
+      "노드 한 대를 사는 하나의 질문을 담기 → 맞추기 → 설정 → 늘리기 순서로 같은 사례(595.2GB, 8장, 0.92)에 닫는다. 토폴로지 절만 떼면 설정이 왜 반대인지, 망 절만 떼면 왜 복제본이 기본인지 다시 세워야 한다.",
+    sharedGate:
+      "3절의 595.2GB·0.92·70,272byte와 5절의 65·44 tok/s·122번이 본문·식·계산 장부·Viz·연습문제에서 같은 값인지로 판정하고, 현장 수치는 rtx6kpro 커밋 1b6de11b의 조건과 함께만 쓴다.",
+  },
+  "ai/mla-kv-replication-and-decode-context-parallel": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-11-03",
+    rationale:
+      "장당 KV byte 하나의 질문을 층 1개·token 4개 사례에서 Kimi K2.5 노드의 대화 수까지 같은 식(B_rank = L·H_rank·w·b ÷ D)으로 따라간다. 복제 원인, LSE 병합, 용량, 비용이 같은 식의 항을 하나씩 다루므로 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "본문·식·Viz·연습문제가 576, 70,272 byte, 190,000·449,600·1,500,000·3,621,504 token, LSE 사례 3.614를 같은 값으로 쓰는지와 vLLM v0.33.0 원문 행 번호로 판정한다.",
+  },
+  "ai/agent-serving-slo-and-capacity": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-11-03",
+    rationale:
+      "에이전트 서빙 용량을 'SLO를 지키는 동시 에이전트 수' 하나의 질문으로 묶는다. 측정 정의, 처리량 곡선, KV 상주, 측정 절차, 경제성 연결이 같은 분모(X_SLO)를 쓰므로 나누면 같은 사례를 다시 세워야 한다.",
+    sharedGate:
+      "본문·식·Viz·연습문제가 AA-AgentPerf 티어 20/60/180, H200×8 11·B300×8 144, 900→9 tok/s, 98.85%→16.78% 붕괴를 같은 값으로 쓰는지로 판정한다.",
+  },
 };
 
 /**
@@ -4191,6 +4227,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "gpu/pcie-blackwell-moe-node-build": "50826ba77f90fea7",
+  "ai/tensor-and-pipeline-parallel-inference": "1c76055f53aef5ab",
+  "ai/mla-kv-replication-and-decode-context-parallel": "28c9701fa24a2197",
+  "ai/agent-serving-slo-and-capacity": "173fe7d8d39431d2",
   "ai/vector-search-and-ann-indexes": "1b2aed448dad9989",
   "ai/lexical-retrieval-bm25-inverted-index": "03c283713aa04e5a",
   "ai/image-training-stages": "20ded1bf15e7dd02",
@@ -4308,7 +4348,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "banking/bank-balance-sheet-and-deposit-creation": "05598a4b186734fa",
   "crypto/sparse-multiplication": "654e9f0cc5bb6ace",
   "ai/disaggregated-prefill-decode-serving": "6dc1c1dacf4c55a9",
-  "ai/inference-cost-and-capacity-planning": "cb99a362a8308cc4",
+  "ai/inference-cost-and-capacity-planning": "62fa25add95db392",
   "ai/math-complex-numbers-oscillations": "cffaff02d99071fc",
   "ai/math-differential-equations-numerical-solvers": "5379880defe02d0c",
   "ai/prefill-decode-phase-dynamics": "a0e7311550495cce",
@@ -4316,7 +4356,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/extension-fields": "5af7ff4c6c338153",
   "crypto/frobenius-optimization": "05f920aec7cb1ef0",
   "gpu/cuda-sync-streams": "1e3dd40cdf06c5ba",
-  "ai/kv-cache-fundamentals": "229af3d9291203f1",
+  "ai/kv-cache-fundamentals": "d2b11d2e6d552306",
   "ai/math-exponents-logarithms": "397e1980112d0e72",
   "ai/math-high-dimensional-geometry": "f3eb98b0469c83ea",
   "ai/math-matrices-svd": "d21e58dfecd7e065",
@@ -4532,7 +4572,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/rag-context-assembly-and-evaluation": "bbed55eefdc6b60b",
   "ai/knowledge-graph-construction": "d77325ccee6d293e",
   "ai/graphrag-community-and-multihop-search": "bd317ddb459c472d",
-  "ai/model-vram-budgeting": "c6b1e28dd71284c2",
+  "ai/model-vram-budgeting": "6c40e3cea96f99be",
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "fcf010a8405d4e70",
   "blockchain/cometbft": "41077d98c4feaa9c",
@@ -4637,7 +4677,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "inference-from-sources/naming-the-past": "58060787a5f1d221",
 
 "ai/agent-memory-lifecycle":"04074d70c07ae9de",
-"ai/expert-parallelism-moe-systems":"8ec999e3890d800b",
+"ai/expert-parallelism-moe-systems":"945a53ff058c2b17",
 "ai/fast-weight-memory-and-chunkwise-recurrence":"715409b280659501",
 "ai/flash-attention-io-aware-kernel":"6358bc6072ecfe8f",
 "ai/reward-design-for-verifiable-rl":"0f1307d7f3825ece",

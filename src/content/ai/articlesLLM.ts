@@ -211,6 +211,7 @@ export const llmBaseArticles: Article[] = [
       { id: "overview", title: "세 축을 먼저 분리하기" },
       { id: "axes", title: "세 독립 수업으로 이동" },
       { id: "configuration", title: "93층 구성 장부" },
+      { id: "serving", title: "서빙 메모리와 장비 수" },
       { id: "evidence", title: "근거 강도 구분" },
     ],
     component: () => import("@/pages/articles/ai/kimi-k3-architecture"),
