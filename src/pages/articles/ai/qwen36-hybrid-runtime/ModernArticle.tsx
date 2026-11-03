@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import HybridRuntimeFlowViz from "./viz/HybridRuntimeFlowViz";
@@ -227,6 +228,81 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
             차지하는 몫은 shape마다 capture된 graph 수에 좌우됩니다 — request
             길이 분포가 다양할수록 capture해야 할 shape도 늘어납니다.
           </p>
+        </div>
+
+        <div id="tp-split" className="prose prose-neutral max-w-none scroll-mt-20 dark:prose-invert">
+          <h3>Tensor parallel에서는 두 항이 서로 다른 축으로 나뉩니다</h3>
+          <p className="leading-8">
+            위 식은 GPU 한 장을 가정했습니다. 여러 장에 tensor parallel(TP)로 나누면 M_KV와 M_Δ가 같은 비율로 줄지 않습니다. 둘을
+            나누는 축이 다르기 때문입니다.
+          </p>
+          <p className="leading-8">
+            vLLM main(커밋 4c45411, 2026-11-03)에서 Qwen3.6은 linear attention층에 Gated DeltaNet 구현을, full attention층에
+            Qwen3-Next의 attention 구현을 씁니다. 두 구현이 TP를 다루는 규칙을 코드에서 직접 읽었습니다.
+          </p>
+          <p className="leading-8">
+            Delta state는 value head 축으로 나뉩니다. state 모양이 (value head ÷ TP, 128, 128)이고 convolution state도 채널을 TP로
+            나눕니다. Qwen3.6-27B는 value head 48개, key head 16개라 TP8이면 rank마다 value head 6개, key head 2개를 맡습니다.
+          </p>
+          <p className="leading-8">
+            Full attention KV는 KV head 축으로 나뉩니다. 그런데 KV head가 4개뿐입니다. TP4까지는 rank마다 다른 head를 들지만 TP8에서는
+            rank마다 head 1개를 들고 두 rank가 같은 head를 복제합니다.
+          </p>
+        </div>
+        <CalculationWalkthrough
+          title="Qwen3.6-27B 한 request의 rank별 몫"
+          question="TP4를 TP8로 늘리면 rank 한 장의 Delta state와 KV는 각각 얼마나 줄까요?"
+          scope="고정 config(64층 중 linear 48, full 16), Delta state float32, KV BF16. convolution state·MTP 여분 칸·block padding은 뺀 논리 용량입니다."
+          steps={[
+            { label: "층 하나의 Delta state", expression: "48 head × 128 × 128", result: "786,432개", reason: "value head마다 128×128 행렬 state 하나를 둡니다." },
+            { label: "linear층 전체를 byte로", expression: "786,432 × 48층 × 4byte", result: "144MiB", reason: "vLLM은 따로 지정하지 않으면 config의 mamba_ssm_dtype(float32)을 state dtype으로 씁니다. 숫자당 4byte입니다." },
+            { label: "TP4와 TP8의 rank 몫", expression: "144MiB ÷ 4, 144MiB ÷ 8", result: "36MiB → 18MiB", reason: "value head 48개가 TP로 나누어떨어져 복제가 없습니다." },
+            { label: "token 하나의 full attention KV", expression: "16층 × 4 head × 256 × 2 × 2byte", result: "64KiB", reason: "KV cache 기초 글 16절과 같은 계산입니다." },
+            { label: "TP4와 TP8의 rank 몫", expression: "64KiB ÷ 4, 그다음 head 1개에서 멈춤", result: "16KiB → 16KiB", reason: "KV head가 4개라 TP8에서는 더 나눌 head가 없어 두 rank가 같은 head를 듭니다." },
+          ]}
+          conclusion="TP8로 GPU를 두 배 늘리면 rank당 Delta state는 절반이 되지만 rank당 KV는 TP4와 같습니다. 긴 request가 많을수록 추가 GPU의 효과가 KV 쪽에서 막힙니다. (계산)"
+          caveats={[
+            "--mamba-ssm-cache-dtype을 직접 지정하면 그 값이 우선합니다. 같은 커밋의 config.py가 이 규칙을 둡니다.",
+            "TP 크기는 key head 16과 value head 48을 함께 나누어야 하므로 1·2·4·8·16 중에서 고릅니다.",
+          ]}
+        />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            구조를 나란히 놓으면 차이가 보입니다. MLA는 KV head가 하나라 TP rank마다 KV 전체가 복제되고, GQA는 KV head 수까지만 나뉩니다.
+            Linear attention state는 head 축으로 깔끔하게 나뉘지만 request마다 붙고, sliding window층은 창 길이가 보존량을 묶습니다.
+          </p>
+          <p className="leading-8">
+            세 경우를 같은 GPU 8장 그림으로 비교한 내용은{" "}
+            <Link to="/cs/ai/kv-cache-fundamentals#parallel-budget">KV cache 기초 글의 21절</Link>에 있습니다. MLA KV를 token 축으로
+            다시 나누는 방법은{" "}
+            <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">decode context parallel 글</Link>이 다룹니다.
+          </p>
+        </div>
+        <div id="code-vllm-tp-split" className="scroll-mt-20">
+          <CitationBlock
+            source="vLLM main 4c45411 · mamba_utils.py gated_delta_net_state_shape · qwen3_next.py Qwen3NextAttention"
+            citeKey={3}
+            type="code"
+            href="https://github.com/vllm-project/vllm/blob/4c45411134e204346c8b0c8d8aafeafb9d8e7aae/vllm/model_executor/layers/mamba/mamba_utils.py#L272-L293"
+          >
+            <p>
+              <strong>문제:</strong> Hybrid model의 state와 KV가 TP rank마다 얼마씩 놓이는지 확인합니다.
+            </p>
+            <p>
+              <strong>핵심 기여:</strong> Delta state는 divide(num_v_heads, tp_world_size)로, convolution state는
+              divide(conv_dim, tp_world_size)로 나눕니다. Full attention은 total_num_kv_heads가 tp_size보다 작으면 head를 복제합니다.
+            </p>
+            <p>
+              <strong>전제:</strong> Qwen3_5ForConditionalGeneration이 linear층에 QwenGatedDeltaNetAttention, full층에
+              Qwen3NextAttention을 쓰는 같은 커밋입니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> 할당 모양의 코드 경로입니다. 측정한 메모리 사용량은 아닙니다.
+            </p>
+            <p>
+              <strong>비주장:</strong> 다른 engine(SGLang 등)이나 다른 커밋도 같은 규칙을 쓴다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
         </div>
       </section>
 

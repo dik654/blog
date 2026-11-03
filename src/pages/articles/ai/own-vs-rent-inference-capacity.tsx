@@ -5,6 +5,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
+import BreakEvenCapexViz from "./own-vs-rent-inference-capacity/viz/BreakEvenCapexViz";
 import CostCurveViz from "./own-vs-rent-inference-capacity/viz/CostCurveViz";
 import DenominatorViz from "./own-vs-rent-inference-capacity/viz/DenominatorViz";
 import {
@@ -316,6 +318,111 @@ export default function OwnVsRentInferenceCapacityArticle() {
             100만 토큰에 0.56달러, 125토큰을 목표로 하면 약 4달러라고 봅니다.{" "}
             <strong>속도 2.5배에 비용 7배입니다.</strong> 원가 한 줄로 말할 수
             있는 것이 아닙니다.
+          </p>
+
+          <p className="leading-7">
+            에이전트 부하에서는 이 불일치가 훨씬 커집니다. 코딩 에이전트는 매 턴
+            긴 대화 기록을 다시 보내고 짧게 답합니다. 공개 트레이스의 입력 대
+            출력은 100~131:1이고, 한 팀이 Claude Code 기록 887세션을 센 값은
+            448:1이었습니다. 이 입력의 94~99퍼센트는 캐시 적중입니다.
+          </p>
+
+          <p className="leading-7">
+            그래서 API 비용은 출력 단가보다 입력과 캐시 입력 단가가 좌우합니다.
+            출력 100만 토큰마다 입력이 그 비율만큼 따라붙으므로, 출력 기준
+            실비용을 아래 식으로 다시 셉니다.
+          </p>
+        </div>
+
+        <ExplainedFormula
+          question="에이전트 부하에서 출력 100만 토큰을 받는 데 API에 실제로 얼마를 냅니까?"
+          idea="출력 100만 토큰에는 입력 r백만 토큰이 함께 붙습니다. 그 입력 가운데 캐시에 적중한 몫은 캐시 단가로, 나머지는 일반 입력 단가로 냅니다. 셋을 더하면 출력 기준 실비용입니다."
+          formula={String.raw`c_{\text{out}} = p_{\text{out}} + r\,\bigl(h\,p_{\text{cache}} + (1-h)\,p_{\text{in}}\bigr)`}
+          annotatedFormula={String.raw`\underbrace{c_{\text{out}}}_{\text{출력 1M당 실비용}} = \underbrace{p_{\text{out}}}_{\text{출력 단가}} + \underbrace{r}_{\text{입력:출력}}\,\bigl(\underbrace{h\,p_{\text{cache}}}_{\text{적중 입력}} + \underbrace{(1-h)\,p_{\text{in}}}_{\text{미적중 입력}}\bigr)`}
+          operations={[
+            {
+              expression: String.raw`h\,p_{\text{cache}} + (1-h)\,p_{\text{in}}`,
+              annotation: [
+                "입력 100만 토큰의 평균 단가입니다.",
+                "적중률 h로 캐시 단가와 일반 입력 단가를 가중 평균합니다.",
+              ],
+            },
+            {
+              expression: String.raw`r\,(\cdots)`,
+              annotation: [
+                "출력 100만 토큰에 붙는 입력 r백만 토큰의 값입니다.",
+                "r이 수백이면 이 항이 출력 단가보다 몇십 배 커집니다.",
+              ],
+            },
+            {
+              expression: String.raw`p_{\text{out}} + r\,(\cdots)`,
+              annotation: [
+                "출력 단가를 더해 출력 기준 실비용을 냅니다.",
+                "자체 호스팅의 토큰당 원가와 견줄 수 있는 자가 이 값입니다.",
+              ],
+            },
+          ]}
+          terms={[
+            { symbol: "r", name: "입력:출력 비", description: "출력 토큰 하나당 들어간 입력 토큰 수입니다. 공개 트레이스 100~131, 한 팀의 Claude Code 기록 448입니다." },
+            { symbol: "h", name: "캐시 적중률", description: "입력 가운데 공급자 캐시에서 읽힌 비율입니다. 에이전트 트레이스는 94~99퍼센트입니다." },
+            { symbol: String.raw`p_{\text{in}}, p_{\text{cache}}, p_{\text{out}}`, name: "100만 토큰당 단가", description: "일반 입력, 캐시 입력, 출력 단가입니다. 공급자마다 다르고 자주 바뀝니다." },
+          ]}
+          assumptions={[
+            "캐시 쓰기 할증과 TTL 만료는 넣지 않았습니다. 넣으면 실비용이 조금 오릅니다.",
+            "적중률을 요청마다 같다고 둔 평균 계산입니다.",
+          ]}
+          interpretation="출력 단가가 같은 두 API라도 캐시 입력 단가가 다르면 에이전트 부하의 실비용은 몇 배 벌어집니다. 그래서 API 가격을 출력 단가 한 줄로 옮겨 적으면 자체 호스팅과의 비교가 처음부터 어긋납니다."
+        />
+
+        <CalculationWalkthrough
+          title="입력:출력 비에 따라 출력 1M당 API 실비용"
+          question="출력 단가 $2.50인 K2.5 API는 에이전트 부하에서 출력 100만 토큰당 얼마일까요?"
+          scope="OpenRouter 2026-11-02 수집가 기준입니다. K2.5는 SiliconFlow의 입력 $0.50, 캐시 $0.15, 출력 $2.50입니다. V4-Pro 할인 시간대는 DeepSeek 공식가의 절반인 $0.66, $0.022, $1.98입니다."
+          steps={[
+            { label: "K2.5, 30:1 · 적중 90%", expression: "2.50 + 30 × (0.9 × 0.15 + 0.1 × 0.50)", result: "$8.05", reason: "입력 30백만 토큰의 평균 단가가 $0.185라 입력 몫이 $5.55입니다." },
+            { label: "K2.5, 100:1 · 적중 95%", expression: "2.50 + 100 × (0.95 × 0.15 + 0.05 × 0.50)", result: "$19.25", reason: "입력이 세 배 넘게 늘어 입력 몫이 $16.75가 됩니다." },
+            { label: "K2.5, 448:1 · 적중 95%", expression: "2.50 + 448 × 0.1675", result: "약 $78 (계산)", reason: "적중률 95퍼센트는 이 계산의 가정입니다. 출력 단가만 본 $2.50의 약 31배입니다." },
+            { label: "V4-Pro 할인, 같은 두 부하", expression: "1.98 + 30 × 0.0858, 1.98 + 448 × 0.0539", result: "$4.55, 약 $26 (계산)", reason: "캐시 단가가 $0.022라 입력이 많아질수록 K2.5와의 차이가 벌어집니다." },
+          ]}
+          conclusion="같은 에이전트 부하라도 30:1이면 $8, 448:1이면 $78입니다. 비교할 API를 바꾸면 $4.55와 $26으로 내려갑니다."
+          caveats={["단가는 수집일의 스냅샷이며 Moonshot은 K2 계열을 2026년 말 종료할 예정입니다.", "448:1은 한 팀의 기록이라 다른 사용 패턴에 그대로 옮기지 않습니다."]}
+        />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            자체 호스팅 쪽은 가격을 넣지 않고 거꾸로 셉니다. PRO 6000 서버판의
+            중고 시세는 2026년 7월에서 10월 사이 약 66퍼센트 올랐습니다. 특정
+            가격으로 낸 결론은 금방 낡으므로, SLO를 지키는 처리량과 가동률을
+            정하고 API와 비용이 같아지는 최대 시스템 가격을 구합니다.
+          </p>
+
+          <p className="leading-7">
+            처리량은 서버 합계의 최댓값이 아니라 요청마다 초당 20~30토큰을
+            지키는 동시성에서 잰 합계여야 합니다. 8장 서버에서 그 값은 아직
+            측정된 적이 없어 250~650토큰/s로 추정했습니다. (추정) 아래 그림이
+            그 범위에서 역산한 상한입니다.
+          </p>
+        </div>
+
+        <BreakEvenCapexViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            읽는 법은 하나입니다. 막대보다 실제 시스템 가격이 낮으면 자체
+            호스팅이 쌉니다. SLO 충족 400토큰/s, 100:1 부하, 가동률 70퍼센트면
+            K2.5 API와 견줄 때 $331k까지 낼 수 있지만, V4-Pro 할인 시간대와
+            견주면 $112k로 내려갑니다.
+          </p>
+
+          <p className="leading-7">
+            이 역산에는 자체 호스팅에 유리한 가정이 하나 있습니다. 캐시에 적중한
+            입력을 자체 비용 0으로 두었습니다. 긴 문맥 세션이 많아 KV가 넘치면
+            적중률이 떨어지므로 실제 상한은 더 낮습니다. 세션 수와 적중률의
+            관계는{" "}
+            <Link to="/cs/ai/agent-serving-slo-and-capacity">
+              에이전트 서빙의 SLO와 용량
+            </Link>
+            에서 다룹니다.
           </p>
         </div>
 

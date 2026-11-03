@@ -5,6 +5,8 @@ import gemma from "./codebase/transformers/models/gemma4/modeling_gemma4.py?raw"
 import qwenConfig from "./codebase/configs/Qwen3.6-27B/config.json?raw";
 import museConfig from "./codebase/configs/Muse-Glimmer-30B/config.json?raw";
 import gemmaConfig from "./codebase/configs/gemma-4-31B/config.json?raw";
+import vllmQwen3Next from "./codebase/vllm/model_executor/models/qwen3_next.py?raw";
+import vllmMla from "./codebase/vllm/model_executor/layers/attention/mla_attention.py?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
 "current-projection": {...{"path": "transformers/models/mixtral/modeling_mixtral.py", "highlight": [308, 318], "desc": "현재 Q/K/V를 만든 뒤 저장 기록을 갱신합니다.", "annotations": [{"lines": [308, 318], "color": "sky", "note": "Q는 (1,4,1,2)이며 새 K/V는 (1,2,1,2)입니다. update 뒤 K/V 위치 길이는 4입니다."}]}, code:mixtral, lang:"python"},
@@ -16,4 +18,6 @@ export const codeRefs: Record<string, CodeRef> = {
 "gemma-config": {...{"path": "configs/gemma-4-31B/config.json", "highlight": [16, 116], "desc": "두 층 종류의 서로 다른 KV 모양입니다.", "annotations": [{"lines": [16, 116], "color": "sky", "note": "50 local:16head·256폭·1024window, 10 global:4head·512폭입니다. num_kv_shared_layers는 0입니다."}]}, code:gemmaConfig, lang:"typescript"},
 "gemma-shared-projection": {...{"path": "transformers/models/gemma4/modeling_gemma4.py", "highlight": [1172, 1212], "desc": "global에서만 별도 value projection을 없애는 조건입니다.", "annotations": [{"lines": [1172, 1212], "color": "sky", "note": "attention_k_eq_v와 not self.is_sliding을 함께 확인합니다. 하나의 raw projection을 공유하는 설정이지 최종 cache 텐서 동일성의 증거는 아닙니다."}]}, code:gemma, lang:"python"},
 "gemma-cache-write": {...{"path": "transformers/models/gemma4/modeling_gemma4.py", "highlight": [1241, 1257], "desc": "raw 값을 공유한 뒤 서로 다른 K/V 변환을 수행합니다.", "annotations": [{"lines": [1241, 1257], "color": "sky", "note": "K는 k_norm과 위치 회전을 거치며 V는 v_norm을 거칩니다. 이후 cache.update에 두 값 모두 전달합니다."}]}, code:gemma, lang:"python"},
+"vllm-gqa-tp-replicate": {...{"path": "vllm/model_executor/models/qwen3_next.py", "highlight": [302, 318], "desc": "full attention층이 TP 크기와 KV head 수를 비교해 나눌지 복제할지 정합니다.", "annotations": [{"lines": [306, 315], "color": "sky", "note": "KV head 4개에 TP8이면 assert 8 % 4 == 0을 통과하고 rank마다 max(1, 4 // 8) = 1개 head를 듭니다. 두 rank가 같은 head를 갖는 복제입니다."}]}, code:vllmQwen3Next, lang:"python"},
+"vllm-mla-single-kv-head": {...{"path": "vllm/model_executor/layers/attention/mla_attention.py", "highlight": [1373, 1383], "desc": "MLA 층의 cache spec은 KV head 1개, 폭 kv_lora_rank + qk_rope_head_dim입니다.", "annotations": [{"lines": [1378, 1381], "color": "sky", "note": "num_kv_heads=1과 max_tp_shards=1이라 TP rank 수와 상관없이 rank마다 같은 latent 줄 전체를 둡니다. 폭은 480행의 head_size, 곧 512+64=576입니다."}]}, code:vllmMla, lang:"python"},
 };

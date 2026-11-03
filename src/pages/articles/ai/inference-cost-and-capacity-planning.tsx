@@ -197,6 +197,14 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             utilization 100 % 에 해당하므로 latency 가 발산하는 점입니다.
           </p>
           <p>
+            여기서 1,000은 장비가 낼 수 있는 최대 합계가 아니라 요청마다 SLO를 지키는 동시성에서 잰 합계여야 합니다. RTX PRO 6000 8장에서 Kimi K2.5가 냈다는
+            900 tokens/s 는 동시 100개에서 나온 값이라 요청당 약 9 tokens/s 입니다. 코딩 에이전트 기준인 요청당 20 tokens/s 를 지키는 합계는 측정된 적이 없습니다.
+          </p>
+          <p>
+            이런 분모를 재는 방법은{" "}
+            <Link to="/cs/ai/agent-serving-slo-and-capacity">에이전트 서빙의 SLO와 용량</Link>에서 다룹니다. 아래 계산의 1,000도 그런 조건에서 잰 값이라고 가정합니다.
+          </p>
+          <p>
             이 설명에서는 목표 이용률을 0.7로 가정해 6,000 / (1,000 × 0.7) = 8.57을
             얻고, 정수로 올림해 9장으로 계획합니다. 0.7은 관례나 권장값이 아닙니다. 실제
             계획에서는 앞 글의 부하 곡선에서 지연·오류 SLO를 마지막으로 안정적으로 만족한

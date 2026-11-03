@@ -5,11 +5,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./kv-cache-fundamentals/codeRefs";
-import { kvCacheFundamentalsTree } from "./kv-cache-fundamentals/fileTree";
+import { kvCacheFundamentalsTree, kvCacheFundamentalsVllmTree } from "./kv-cache-fundamentals/fileTree";
 import { SHAPE_TERMS, BYTE_TERMS } from "./kv-cache-fundamentals/formulaTerms";
 import KVCacheLifecycleViz from "./kv-cache-fundamentals/viz/KVCacheLifecycleViz";
 import KvHeadSharingViz from "./kv-cache-fundamentals/viz/KvHeadSharingViz";
 import MlaAbsorbViz from "./kv-cache-fundamentals/viz/MlaAbsorbViz";
+import TpKvPlacementViz from "./kv-cache-fundamentals/viz/TpKvPlacementViz";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
+import { Link } from "react-router-dom";
 import {
   KVCacheSeriesLocator,
   KVCacheSeriesMapReturn,
@@ -156,7 +159,33 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
 
 <section id="position-key" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">20. 위치 회전용 기록은 별도 경로에 남습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>실제 attention은 내용뿐 아니라 위치 차이도 구별해야 합니다. 벡터를 위치에 따라 회전하는 RoPE를 앞의 K 경로에 그대로 섞으면 위치마다 다른 회전 행렬이 들어갑니다. 행렬 곱은 일반적으로 순서를 바꿀 수 없으므로 한 번 정한 query 변환에 전부 흡수하기 어려워집니다.</p><p>DeepSeek-V2 §2.1.3은 위치 회전용 key를 내용 latent와 나눈 경로로 둡니다. Table 1의 MLA cache 원소 수는 층마다 latent 폭 dc와 별도 위치 key 폭 dR을 더한 (dc+dR)L입니다. c만 세는 계산보다 큽니다.</p><p>우리 toy에서 latent 폭 1 외에 위치 key 숫자 1개를 별도로 둔다면 한 위치에 (1+1)×2=4byte이고 네 위치는 16byte입니다. 위치 key까지 없는 8byte와 구별해야 합니다. 이 숫자는 실제 DeepSeek의 폭이나 성능이 아닌 식의 적용 예입니다. (가정)</p></div><div id="mla-position" className="mt-8 scroll-mt-20"><CitationBlock source="DeepSeek-V2 v5 · §2.1.3 and Table 1" citeKey={1} href="https://arxiv.org/html/2405.04434v5#S2.SS1.SSS3"><q>Decoupled Rotary Position Embedding</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>내용 latent와 위치 key를 분리하는 원문 경로입니다. 추가 저장 항까지 포함해야 작은 표현이 실제로 차지하는 용량을 비교할 수 있습니다.</p></div></div></section>
 
-<section id="parallel-budget" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">21. GPU 한 장의 저장량과 모델 전체를 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>여러 GPU로 head를 나누는 tensor parallel에서는 한 GPU가 담당한 KV head를 셉니다. KV head보다 GPU가 많아 일부 head를 복제하는 구현이라면 전체 byte를 GPU 수로 단순히 나누면 틀립니다. 층을 나누는 pipeline parallel에서는 담당 층 수를 셉니다.</p><p>가중치를 작은 숫자로 저장하는 weight quantization은 먼저 차지하는 고정 용량을 줄여 KV에 남길 예산을 바꿉니다. KV 자체의 원소당 byte는 별도 cache dtype이 정합니다. 같은 설정 이름 아래 scale·정렬 공간이 더 필요한지도 확인합니다.</p><p>이 글의 48·64byte와 모델별 계산은 분할과 padding이 없는 논리 용량입니다. 실제 장비에서는 rank별 KV spec과 block 수를 확인해야 합니다. 보존 가능한 token 수는 같은 예산에서 토큰당 저장량이 작아지는 방향으로 늘지만 마지막 block의 빈칸까지 공짜가 되지는 않습니다.</p></div></section>
+<section id="parallel-budget" data-calculation-explained data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">21. GPU 한 장의 저장량과 모델 전체를 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>여러 GPU로 head를 나누는 tensor parallel에서는 한 GPU가 담당한 KV head를 셉니다. KV head보다 GPU가 많아 일부 head를 복제하는 구현이라면 전체 byte를 GPU 수로 단순히 나누면 틀립니다. 층을 나누는 pipeline parallel에서는 담당 층 수를 셉니다.</p>
+<p>vLLM의 GQA attention은 KV head 수가 TP 크기 이상이면 head를 나누고, 그보다 적으면 같은 head를 여러 rank에 복제합니다. 16절의 Qwen3.6-27B full attention층은 KV head가 4개라 TP4까지는 rank마다 다른 head를 들지만, TP8에서는 두 rank가 같은 head를 함께 듭니다.</p>
+<p>MLA는 나눌 head가 처음부터 하나입니다. 19절의 흡수 뒤에는 모든 query head가 latent 512개와 위치 key 64개, 합쳐 576개 숫자를 KV head 하나처럼 함께 읽습니다. vLLM도 MLA 층의 cache를 KV head 1개, 폭 576으로 등록합니다.</p>
+<p>그래서 TP rank마다 같은 latent 기록이 통째로 복제됩니다. GPU를 8장 쓰면 가중치는 8로 나뉘지만, MLA KV를 몇 token 담을 수 있는지는 GPU 한 장의 남은 공간이 정합니다.</p></div>
+<TpKvPlacementViz />
+<div className="prose prose-neutral max-w-none dark:prose-invert"><p>Kimi K2.5와 DeepSeek-V3 계열은 61층입니다. BF16 cache라면 토큰당 61층 × 576개 × 2byte = 70,272byte, 약 68.6KiB입니다. 20만 token 요청 하나면 약 14GB이고, 이 14GB가 rank마다 똑같이 놓입니다. (계산)</p></div>
+<CalculationWalkthrough
+ title="MLA KV를 rank 단위로 셉니다"
+ question="Kimi K2.5 요청 하나의 20만 token KV는 GPU 한 장에 얼마나 놓일까요?"
+ scope="BF16 latent cache, 61층, TP8, DCP 없음. block padding과 FP8 scale은 넣지 않은 논리 용량입니다."
+ steps={[
+  {label:"층마다 남기는 폭",expression:"512 + 64",result:"576개",reason:"내용 latent와 분리된 위치 key를 함께 저장합니다(20절)."},
+  {label:"모든 층에 더하기",expression:"61 × 576",result:"35,136개",reason:"61층이 모두 MLA라 같은 폭을 층 수만큼 반복합니다."},
+  {label:"byte로 바꾸기",expression:"35,136 × 2byte",result:"70,272byte ≈ 68.6KiB",reason:"BF16 숫자 하나가 2byte입니다."},
+  {label:"요청 길이 곱하기",expression:"70,272byte × 200,000",result:"약 14.1GB",reason:"KV는 처리한 token마다 한 줄씩 늘어납니다."},
+  {label:"GPU 한 장의 몫",expression:"KV head 1개 → 8로 나눌 수 없음",result:"장마다 약 14.1GB",reason:"GQA처럼 head 축으로 나눌 수 없어 8장이 같은 14.1GB를 듭니다."},
+ ]}
+ conclusion="TP8로 가중치를 8분의 1로 나눠도 MLA KV는 장마다 약 14.1GB입니다. 8장 합계 공간이 아니라 한 장의 남은 공간과 비교해야 합니다."
+ caveats={["FP8 KV는 숫자당 1byte라 절반이 되지만 scale과 정렬 공간이 붙을 수 있습니다.","decode context parallel을 켜면 token 축으로 나뉘어 이 결론이 바뀝니다."]}
+/>
+<div className="prose prose-neutral max-w-none dark:prose-invert"><p>8×RTX PRO 6000에서 Kimi K2.5를 돌린 커뮤니티 기록(rtx6kpro 위키, 현장 경험)도 이 모양입니다. BF16 KV에 DCP 없이 잡히는 용량은 약 19만 token이라, 200K 요청 하나를 겨우 담습니다.</p>
+<p>FP8 KV로 바꾸면 DCP 없이 약 44.9만 token입니다. 같은 FP8 KV에 DCP 8을 켜고 gpu-util을 0.93으로 두면 3,621,504 token입니다. 200K 문맥 에이전트로 치면 약 18개를 동시에 담는 크기입니다. (계산)</p>
+<p>여기서 DCP(decode context parallel)는 같은 latent를 든 rank들이 token 축을 나눠 갖게 하는 설정입니다. 각 rank가 자기 몫의 token으로 부분 attention을 계산하고, 층마다 그 결과를 합칩니다. 부분 결과를 합치는 원리는 <Link to="/cs/ai/tensor-and-pipeline-parallel-inference#sequence-context-parallel">context parallel</Link>과 같습니다.</p>
+<p>대가가 있습니다. 같은 위키에서 단일 요청 속도는 BF16 DCP1의 90 tok/s에서 FP8 DCP8의 65 tok/s로 내려갑니다. FP8 DCP1이 79 tok/s라 DCP만의 몫은 79→65입니다. 반대로 DCP 없이 150K 문맥에서는 6~7 tok/s로 무너졌다는 보고가 있습니다.</p>
+<p>vLLM에는 DCP를 켰을 때 출력이 어긋나는 drift 버그(vllm#41623)가 2026-11-03 기준 열려 있습니다. 위키 수치도 디스코드 대화를 정리한 것이라 장비 조건이 일부 빠져 있습니다. rank별 배치와 용량 계산 전체는 <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 decode context parallel 글</Link>에서 이어 갑니다.</p>
+<p>구조마다 답이 다릅니다. GQA는 head 축으로 나뉘고 MLA는 token 축으로 나눠야 복제가 사라집니다. Qwen3.6의 linear attention층은 요청당 고정 크기 state를 두고, vLLM은 그 state를 value head 축으로 나눕니다(<Link to="/cs/ai/qwen36-hybrid-runtime#hybrid-runtime">hybrid runtime 글</Link>). sliding window층은 창 길이가 보존량의 상한입니다.</p>
+<p>가중치를 작은 숫자로 저장하는 weight quantization은 먼저 차지하는 고정 용량을 줄여 KV에 남길 예산을 바꿉니다. KV 자체의 원소당 byte는 별도 cache dtype이 정합니다. 같은 설정 이름 아래 scale·정렬 공간이 더 필요한지도 확인합니다.</p><p>이 글의 48·64byte와 모델별 계산은 분할과 padding이 없는 논리 용량입니다. 실제 장비에서는 rank별 KV spec과 block 수를 확인해야 합니다. 보존 가능한 token 수는 같은 예산에서 토큰당 저장량이 작아지는 방향으로 늘지만 마지막 block의 빈칸까지 공짜가 되지는 않습니다.</p></div><CodeViewButton label="vLLM: KV head가 TP보다 적으면 복제" onClick={() => sidebar.navigate("vllm-gqa-tp-replicate", codeRefs["vllm-gqa-tp-replicate"])} /><CodeViewButton label="vLLM: MLA cache는 KV head 1개·폭 576" onClick={() => sidebar.navigate("vllm-mla-single-kv-head", codeRefs["vllm-mla-single-kv-head"])} /></section>
 
 <section id="capacity-bandwidth" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">22. 저장량이 4분의 1이어도 전체 시간은 따로 계산합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>고정된 공간에 더 많은 기록을 담는 것이 capacity saving입니다. 한 실행이 메모리에서 가져오는 byte를 줄이는 것이 bandwidth saving입니다. 실제 시간에는 기록뿐 아니라 가중치 읽기·계산·GPU 사이 통신·실행 준비도 들어갑니다.</p><p>한 실행이 가중치 100MB와 KV 100MB를 읽는다고 합시다. KV만 25MB로 줄이면 총전송은 200→125MB이고 비율은 0.625입니다. 같은 유효 대역폭에서 전송 시간만 지배한다는 조건을 추가해도 전체 시간의 예상 비율은 0.25가 아니라 0.625입니다. (가정)</p><p>GQA의 작은 head 축과 MLA의 작은 표현은 저장 및 읽기 비용을 바꿀 수 있습니다. 어느 쪽이 얼마나 빠른지는 실제 읽은 byte·연산 경로·batch·문맥 길이를 함께 재야 합니다. 저장 byte 절감만으로 일정한 배수의 속도를 보장하지 않습니다.</p></div></section>
 
@@ -164,5 +193,5 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
 
 <section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">24. 값을 바꾸기 전에 다음 결과를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>현재 Q head가 4개라서 eager 계산용 K/V를 4head로 펼쳤습니다. 다음 실행까지 남는 cache도 128byte로 바뀌었을까요? (답: 11절)</p><p>K=(0,c), V=(c,2c)인 네 기록을 c=1·2·3·4로 저장했습니다. 모든 K/V를 먼저 복원해야 출력 (2.5,5)를 얻을 수 있을까요? (답: 19절)</p><p>가중치 100MB와 KV 100MB 중 KV만 25MB로 줄였습니다. 같은 대역폭이라고 실행 전체가 네 배 빨라진다고 말할 수 있을까요? (답: 22절)</p></div></section>
 <KVCacheSeriesMapReturn current="fundamentals" />
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{transformers:kvCacheFundamentalsTree}} projectMetas={{transformers:{id:"transformers",label:"Transformers v5.15.0 · 고정 모델 config",badgeClass:"bg-yellow-500/10 border-yellow-500 text-yellow-700"}}} /></>;
+</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{transformers:kvCacheFundamentalsTree,vllm:kvCacheFundamentalsVllmTree}} projectMetas={{transformers:{id:"transformers",label:"Transformers v5.15.0 · 고정 모델 config",badgeClass:"bg-yellow-500/10 border-yellow-500 text-yellow-700"},vllm:{id:"vllm",label:"vLLM main 4c45411 · 2026-11-03",badgeClass:"bg-sky-500/10 border-sky-500 text-sky-700"}}} /></>;
 }

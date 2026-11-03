@@ -18,3 +18,10 @@ Full unmodified official Hugging Face Transformers v5.15.0 source and publisher 
   https://huggingface.co/meta-models/Muse-Glimmer-30B/resolve/a4e59da52a7bc87ae7251dd5545c0dd437c44b68/config.json
 - `configs/gemma-4-31B/config.json`: revision `5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89`, 4181 bytes, SHA-256 `6a81841cad2b6ba06841e23c6afb5f0a27827bc12c64328ffa6338831a21267e`
   https://huggingface.co/google/gemma-4-31B/resolve/5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89/config.json
+
+vLLM excerpts added 2026-11-03 for the tensor-parallel KV placement paragraph (#parallel-budget). Full unmodified files from vllm-project/vllm main at commit `4c45411134e204346c8b0c8d8aafeafb9d8e7aae` (2026-11-03). Apache-2.0 license retained as `vllm/LICENSE`.
+
+- `vllm/model_executor/models/qwen3_next.py`: 35664 bytes, SHA-256 `92ff95db994a56927008624de7e6fadcd0064efda6e11611e6057fb78af42884`
+  https://raw.githubusercontent.com/vllm-project/vllm/4c45411134e204346c8b0c8d8aafeafb9d8e7aae/vllm/model_executor/models/qwen3_next.py
+- `vllm/model_executor/layers/attention/mla_attention.py`: 134268 bytes, SHA-256 `e7fbda9af71dc3baacb96fc7abf47aa5ee6ee0b637b7d8d7fa60b8799c4d285a`
+  https://raw.githubusercontent.com/vllm-project/vllm/4c45411134e204346c8b0c8d8aafeafb9d8e7aae/vllm/model_executor/layers/attention/mla_attention.py

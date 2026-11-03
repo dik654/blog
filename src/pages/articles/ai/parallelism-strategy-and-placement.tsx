@@ -76,15 +76,29 @@ export default function ParallelismStrategyAndPlacementArticle() {
             <Link to="/cs/gpu/gpu-interconnects#nvlink-device-fabric-boundary">gpu-interconnects</Link>{" "}
             글이, InfiniBand 와 RoCE 의 선택은{" "}
             <Link to="/cs/gpu/gpu-collective-network#infiniband">gpu-collective-network</Link> 글이
-            소유합니다. 여기서는 두 계층의 대역폭과 latency 만 숫자로 씁니다.
+            소유합니다. 여기서는 각 계층의 대역폭과 latency 만 숫자로 씁니다.
+          </p>
+          <p>
+            NVLink 가 없는 node 도 흔합니다. RTX PRO 6000 같은 PCIe 카드 8 장 서버는 GPU 끼리 PCIe switch 나 CPU root complex 로만 이어집니다. 같은
+            switch 아래 두 장과 CPU socket 을 넘는 두 장은 경로가 달라 α 와 B 도 다릅니다.
+          </p>
+          <p>
+            Node 사이는 InfiniBand 대신 RoCE 를 쓰기도 합니다. Ethernet 위에서 RDMA 를 하는 방식이라 400 Gb/s 면 방향당 대역폭은 InfiniBand 와 같은 급이지만,
+            손실 없는 전송 설정과 GPU 메모리를 NIC 이 직접 읽는 GPUDirect RDMA 가 실제로 동작하는지를 node 마다 따로 확인해야 합니다.
+          </p>
+          <p>
+            PCIe node 에서는 node 안 TP 조차 NVSwitch 만큼 싸지 않습니다. 그래서 replica 하나를 node 하나에 맞추고 node 를 늘려 replica 를 늘리는 쪽이 기본값이
+            됩니다. node 사이에 layer 마다 통신하는 축을 두지 않으면 비싼 fabric 은 필요가 증명될 때까지 미룰 수 있습니다.
           </p>
         </div>
         <TermBreakdown
-          title="배치 계산에 쓰는 두 fabric 계층의 수치"
+          title="배치 계산에 쓰는 fabric 계층의 수치"
           description="사양표와 현장 값을 섞은 계산 예시이며 실제 α 와 B 는 nccl-tests 로 재야 합니다."
           items={[
             { term: "NVSwitch 도메인 (node 안)", description: "GPU 8 장이 NVLink 로 NVSwitch 에 붙어 모든 쌍이 같은 속도입니다.", example: "B = 900 GB/s (Hopper 사양), α ≈ 5 μs", boundary: "8 장을 넘는 순간 이 도메인을 벗어납니다. NVL72 같은 rack 급 도메인은 별도 hardware 입니다." },
             { term: "InfiniBand (node 사이)", description: "GPU 마다 붙은 400 Gb/s adapter 로 RDMA 를 합니다.", example: "B = 50 GB/s (방향당), α ≈ 15 μs", boundary: "adapter 수와 rail 구성에 따라 GPU 당 대역폭이 달라지며 switch 를 지나면 α 가 더 오릅니다." },
+            { term: "PCIe Gen5 x16 (NVLink 없는 node 안)", description: "GPU 끼리 PCIe switch 나 CPU root complex 를 거쳐 통신합니다. 같은 switch 아래(PIX)와 socket 을 넘는 경로(SYS)의 비용이 다릅니다.", example: "B ≈ 63 GB/s (방향당 raw, 계산), α 는 P2P 설정만으로 collective 당 수십 μs 차이 (추정, 앞 글의 P2P on/off 계산)", boundary: "P2P 가 꺼지면 데이터가 host memory 를 거칩니다. nvidia-smi topo 로 경로를, NCCL 로그로 실제 transport 를 확인합니다." },
+            { term: "RoCE 400G (node 사이)", description: "Ethernet 위에서 RDMA 를 합니다. PFC·ECN 같은 손실 없는 전송 설정이 전제입니다.", example: "B = 50 GB/s (방향당, 계산), α 는 InfiniBand 이상", boundary: "GPUDirect RDMA 가 안 되면 host memory 를 거칩니다. RTX PRO 6000 은 NVIDIA 공식 명시가 없어 ib_write_bw --use_cuda 로 node 마다 증명합니다." },
           ]}
         />
         <div id="paper-nvlink" className="not-prose my-8 scroll-mt-24">
@@ -291,20 +305,35 @@ export default function ParallelismStrategyAndPlacementArticle() {
           </p>
           <p>
             이 순서는 vLLM 공식 문서의 권고와 같습니다. model 이 한 GPU 에 안 들어가지만 한 node 에 들어가면 TP, 한 node 에도 안 들어가면 TP 를 node 당
-            GPU 수로 두고 PP 를 node 수로 두라고 적습니다. NVLink 가 없는 node 에서는 TP 대신 PP 를 쓰라고 합니다. 아래 pseudocode 는 그 권고에
-            memory 와 통신 비율 검산을 붙인 것입니다.
+            GPU 수로 두고 PP 를 node 수로 두라고 적습니다. NVLink 가 없는 node 에서는 TP 대신 PP 를 쓰라고도 합니다.
+          </p>
+          <p>
+            마지막 권고는 규칙으로 굳히지 않습니다. RTX PRO 6000 8 장 PCIe node 에서 Kimi K2.5 를 실제로 서빙한 현장 기록은 TP 8 에 DCP 8 을 더한
+            구성이었습니다. 단일 스트림은 P2P 를 켜면 65, 끄면 44 tok/s 였고 node 하나에 model 이 들어갔습니다.
+          </p>
+          <p>
+            &quot;PP 가 TP 만큼 빠르다&quot;는 근거로 인용되는 MLX 결과는 batch 1 이었습니다. PP 는 한 사용자를 빠르게 하지 않으므로, PCIe node 에서 TP 와
+            PP 중 무엇이 나은지는 동시성을 걸고 TP 8 과 TP 4 × PP 2 를 같은 부하로 재서 정합니다.
+          </p>
+          <p>
+            Model 구조도 갈림길입니다. MLA 의 압축 KV 는 TP rank 마다 복제되므로 KV 예산 K 를 TP 로 나눌 수 없습니다. 그래서 MLA model 은 DCP 를 함께 켜
+            KV 를 sequence 축으로 나눕니다. GQA model 은 KV head 수까지는 TP 로 KV 가 나뉩니다.
+          </p>
+          <p>
+            아래 pseudocode 는 vLLM 권고에 memory 와 통신 비율 검산, 그리고 이 PCIe 분기를 붙인 것입니다.
           </p>
         </div>
         <AlgorithmBlock
           title="TP·PP·DP degree 선택 (memory → node 경계 → throughput)"
-          input={["model weight byte W_model, 요청당 KV byte 와 목표 동시 요청 수로 구한 KV 예산 K", "GPU memory C, utilization u, node 당 GPU 수 g, node 수 n", "node 안 link (B_in, α_in), node 사이 link (B_out, α_out), layer 수 L, hidden h, decode batch T", "목표 TPOT 과 목표 초당 token"]}
+          input={["model weight byte W_model, 요청당 KV byte 와 목표 동시 요청 수로 구한 KV 예산 K, attention 구조(GQA 의 KV head 수 또는 MLA)", "GPU memory C, utilization u, node 당 GPU 수 g, node 수 n", "node 안 link (B_in, α_in), node 사이 link (B_out, α_out), layer 수 L, hidden h, decode batch T", "목표 TPOT 과 목표 초당 token"]}
           steps={[
-            { code: "g_min ← ceil((W_model + K) / (u·C))  — replica 하나에 필요한 최소 GPU 수", note: "weight 와 KV 예산이 utilization 안에 들어가는 가장 작은 GPU 수입니다. 70B FP16 140 GB + KV 200 GB, 72 GB 예산이면 5 → NVLink 도메인 정렬로 8." },
-            { code: "if g_min ≤ g: TP ← g_min 을 2 의 거듭제곱으로 올림; PP ← 1", note: "replica 가 node 안에 들어가면 layer 마다의 all-reduce 를 전부 NVSwitch 에 둡니다. head 수가 TP 로 나뉘어야 합니다." },
-            { code: "else: TP ← g; PP ← ceil(g_min / g)", note: "node 를 넘어야 하면 node 안은 TP 로 꽉 채우고 stage 경계만 InfiniBand 를 지나게 합니다. NVLink 없는 node 면 TP 를 줄이고 PP 를 올립니다." },
+            { code: "g_min ← 가장 작은 g′ 로 W_model / g′ + K_rank(g′) ≤ u·C  — replica 하나에 필요한 최소 GPU 수", note: "K_rank 는 rank 하나가 드는 KV 입니다. GQA 는 K / min(g′, KV head 수), MLA 는 TP 로 나뉘지 않아 K / DCP 입니다. 70B FP16 140 GB + KV 200 GB, 72 GB 예산이면 5 → 8." },
+            { code: "if g_min ≤ g and node 안이 NVLink: TP ← g_min 을 2 의 거듭제곱으로 올림; PP ← 1", note: "replica 가 node 안에 들어가면 layer 마다의 all-reduce 를 전부 NVSwitch 에 둡니다. head 수가 TP 로 나뉘어야 합니다." },
+            { code: "elif g_min ≤ g (PCIe node): TP ← g; MLA 면 DCP ← TP; P2P 경로 확인; 후보 TP 4 × PP 2 를 같은 부하로 실측 비교", note: "PCIe 8 장 node 에서 실제로 동작한 기록은 TP 8 + DCP 8 입니다. 'PCIe 면 PP' 를 기본값으로 두지 않고, 측정한 TPOT 과 동시성으로 고릅니다." },
+            { code: "else: TP ← g; PP ← ceil(g_min / g)", note: "node 하나에 안 들어갈 때만 PP 로 node 를 넘습니다. 경계 전송은 token 당 hidden × 2 byte 라 100GbE 로도 대역폭은 충분하지만 한 요청의 속도는 늘지 않습니다." },
             { code: "T_comm ← L·2·(α_in + 2(TP−1)/TP · T·h·2 / B_in) + (PP−1)·(α_out + T·h·2 / B_out)", note: "앞 글의 α + n/B 로 token 당 통신 시간을 셉니다. TP 가 node 를 넘으면 α_in·B_in 대신 α_out·B_out 이 들어가 이 항이 급증합니다." },
             { code: "T_comp ← (W_model / TP) / HBM 대역폭 (decode 기준); R ← T_comm / T_comp", note: "R 이 1 을 넘으면 TP 를 낮추고 PP 나 DP 로 축을 옮깁니다. TPOT ≈ PP·T_comp + T_comm 이 목표를 넘으면 TP 를 올려 T_comp 를 줄입니다." },
-            { code: "DP ← floor(g·n / (TP·PP))", note: "남는 GPU 는 모두 replica 로 만들어 throughput 을 곱합니다. 초당 token 이 목표에 못 미치면 node 를 늘려 DP 를 키우는 것이 TP 를 올리는 것보다 쌉니다." },
+            { code: "DP ← floor(g·n / (TP·PP))", note: "남는 GPU 는 모두 replica 로 만들어 throughput 을 곱합니다. 초당 token 이 목표에 못 미치면 node 를 늘려 DP 를 키우는 것이 TP 를 올리는 것보다 쌉니다. PCIe node 라면 node 마다 replica 하나가 기본입니다." },
             { code: "placement: TP 그룹의 rank 를 같은 host 의 연속 GPU 에, PP stage 를 host 순서로 배정; 기동 log 에서 rank↔host 대응 확인", note: "mesh 가 맞아도 rank 가 node 에 걸치면 후보 A 의 통신량이 됩니다." },
           ]}
           output="TP·PP·DP degree 와 rank↔GPU 배치, 그 배치의 예상 TPOT 과 통신 비율 R"
@@ -322,7 +351,18 @@ export default function ParallelismStrategyAndPlacementArticle() {
             적고, NVLink 없는 L40S 같은 node 에서는 통신 overhead 가 낮은 pipeline parallelism 을
             권합니다. node 를 넘는 TP 는 InfiniBand 같은 빠른 adapter 가 있어야 한다는 문장도 있습니다.
             이 글의 절차는 그 권고에 memory 와 통신 비율 검산을 덧붙인 것이며 vLLM 의 자동 선택 기능을
-            뜻하지 않습니다.
+            뜻하지 않습니다. NVLink 없는 node 의 PP 권고는 실측 비교 후보로만 옮겼습니다.
+          </CitationBlock>
+        </div>
+        <div id="field-rtx6kpro" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="local-inference-lab/rtx6kpro · benchmarks/results.md, models/kimi-k25.md (커밋 1b6de11b, 2026-11-02 확인)"
+            citeKey={4}
+            href="https://github.com/local-inference-lab/rtx6kpro/blob/main/benchmarks/results.md"
+          >
+            RTX PRO 6000 8 장 PCIe 서버에서 Kimi K2.5 INT4 를 vLLM TP 8 · DCP 8 · FP8 KV 로 돌린 단일 batch 기록으로
+            P2P 사용 65 tok/s, NCCL_P2P_DISABLE=1 44 tok/s 를 적습니다. 디스코드 대화를 정리한 커뮤니티 위키라
+            측정 환경 일부가 빠져 있어 이 글은 현장 경험 등급으로만 인용하고, 보편 배수로 쓰지 않습니다.
           </CitationBlock>
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">

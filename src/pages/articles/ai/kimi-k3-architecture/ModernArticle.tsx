@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
@@ -46,8 +48,62 @@ export default function KimiK3ArchitectureArticle() {
         <TermLesson name="공개 configuration receipt" oneLine="모델명 대신 layer·width·expert·context·dtype를 version과 함께 고정한 재현 장부입니다." shape="2.8T total · 104B active · 93 layers · 896 experts · 1,048,576 context" example="Inference memory를 계산할 때 total parameter와 token당 active parameter를 분리하고, MXFP4 weight와 runtime state를 별도 항으로 둡니다." boundary="표의 수치는 품질·latency·가용 VRAM을 자동으로 보장하지 않습니다. Runtime kernel과 batching 조건이 필요합니다." />
       </section>
 
+      <section id="serving" className="space-y-6">
+        <LessonHeader number="03" eyebrow="서빙 장비로 옮기면" title="길이에 따라 커지는 기록은 24개 MLA층에만 쌓인다">
+          93층 전체가 KV를 남긴다고 세면 메모리를 크게 잘못 잡습니다. 문맥 길이에 비례하는 몫, request마다 고정인 몫, 가중치 몫을 따로 셉니다.
+        </LessonHeader>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            문맥이 길어질수록 커지는 것은 24개 MLA층의 KV뿐입니다. Hugging Face config(revision f831ab6)의 kv_lora_rank는 512,
+            qk_rope_head_dim은 64라 층마다 token 하나에 576개를 남깁니다. Kimi K2.5와 같은 폭이고 층 수만 61에서 24로 줄었습니다.
+          </p>
+          <p>
+            나머지 69개 KDA층은 token이 늘어도 커지지 않는 request당 state를 둡니다. config의 KDA는 head 96개, head 폭 128이라 층마다
+            128×128 행렬 96개입니다. 짧은 request를 많이 띄우면 이 고정 몫이 쌓입니다.
+          </p>
+          <p>
+            두 몫은 tensor parallel에서도 다르게 나뉩니다. vLLM main(커밋 4c45411)의 K3 구현은 MLA cache를 KV head 1개로 등록하므로 rank마다
+            같은 latent가 복제됩니다. KDA state는 head 96개를 TP로 나눕니다. 복제되는 MLA KV를 token 축으로 다시 나누는 설정이 decode context
+            parallel(DCP)입니다.
+          </p>
+        </div>
+        <CalculationWalkthrough
+          title="K3 request 하나의 메모리 몫"
+          question="1M token request 하나를 K3로 서빙하면 rank 한 장에 무엇이 얼마나 놓일까요?"
+          scope="공개 config 기준 논리 용량입니다. MLA KV는 BF16, KDA state는 vLLM 기본값 float32로 가정하고 convolution state·block padding은 뺐습니다."
+          steps={[
+            { label: "token 하나의 MLA KV", expression: "24층 × 576 × 2byte", result: "27,648byte = 27KiB", reason: "KV를 남기는 층은 MLA 24개뿐입니다. K2.5의 70,272byte와 비교하면 약 39%입니다." },
+            { label: "1M token 문맥", expression: "27KiB × 1,048,576", result: "27GiB", reason: "공개 최대 문맥 1,048,576 token을 꽉 채운 경우입니다." },
+            { label: "TP만 쓸 때 rank 몫", expression: "KV head 1개 → 복제", result: "rank마다 27GiB", reason: "MLA는 나눌 KV head가 하나라 TP16이어도 16장 모두 같은 27GiB를 듭니다." },
+            { label: "DCP16을 켤 때 rank 몫", expression: "27GiB ÷ 16", result: "약 1.7GiB", reason: "token을 16장에 번갈아 나눠 각 rank가 16분의 1만 듭니다." },
+            { label: "request 하나의 KDA state", expression: "69층 × 96 × 128 × 128 × 4byte", result: "약 414MiB", reason: "문맥 길이와 무관합니다. TP16이면 rank마다 head 6개, 약 26MiB입니다." },
+          ]}
+          conclusion="1M 문맥에서 K3를 TP만으로 나누면 rank마다 MLA KV 27GiB가 똑같이 놓입니다. 긴 문맥을 여러 개 받으려면 DCP가 사실상 전제가 됩니다. (계산)"
+          caveats={[
+            "실제 cache dtype(FP8 등)과 vLLM의 block 단위 할당에 따라 값이 달라집니다.",
+            "rank 몫은 vLLM main 4c45411의 할당 규칙을 따른 계산이고 측정값이 아닙니다.",
+          ]}
+        />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            장비 수는 가중치가 먼저 정합니다. 공식 MXFP4 체크포인트의 Hugging Face 저장 크기는 1,561GB라 RTX PRO 6000 8장(768GB)에 들어가지
+            않습니다. 이 크기는 디스크 기준이고, 실제 VRAM 상주량은 엔진과 포함 범위에 따라 조금 다를 수 있습니다.
+          </p>
+          <p>
+            커뮤니티 기록(rtx6kpro 위키, 현장 경험)은 공식 MXFP4를 RTX PRO 6000 16장, TP16과 DCP16으로 돌렸습니다. 256 token prompt 하나만
+            돌린 단일 시퀀스 속도는 draft 없이 55.8 tok/s, DSpark 122.7 tok/s, DFlash 155.1 tok/s입니다. 원문이 동시성 결과로 읽지 말라고
+            적은 값입니다.
+          </p>
+          <p>
+            공식 가중치 대신 2bit급 커뮤니티 양자화(QSRT-K2)를 쓰면 9장에 올린 기록이 있습니다. 품질 비교는 이 글의 범위 밖입니다. MLA KV가
+            rank마다 복제되는 이유는 <Link to="/cs/ai/kv-cache-fundamentals#parallel-budget">KV cache 기초 글의 21절</Link>, DCP의
+            비용은 <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">decode context parallel 글</Link>에서 이어 봅니다.
+          </p>
+        </div>
+      </section>
+
       <section id="evidence" className="space-y-6">
-        <LessonHeader number="03" eyebrow="무엇이 사실이고 무엇이 해석인가" title="Configuration·component 실험·전체 scaling claim을 같은 근거로 읽지 않는다">
+        <LessonHeader number="04" eyebrow="무엇이 사실이고 무엇이 해석인가" title="Configuration·component 실험·전체 scaling claim을 같은 근거로 읽지 않는다">
           숫자가 정확해 보여도 claim의 범위는 다릅니다. 공식 config는 재현 사실이고, 작은 model의 ablation은 제한된 비교이며, 2.5×는 architecture·data·training을 합친 전체 결과입니다.
         </LessonHeader>
         <TermLesson name="Frontier scaling evidence boundary" oneLine="구성 사실, 방법 식, component ablation, 종합 scaling, benchmark harness를 서로 다른 증거 층으로 분리하는 읽기 규칙입니다." shape="config → method → ablation → integrated scaling → system benchmark" example="K3가 같은 loss에 약 2.5× 적은 compute를 보고했다는 사실을 KDA 단독 2.5× 속도 향상으로 바꾸지 않습니다." boundary="Tool·reasoning budget·runtime이 섞인 benchmark를 model weight만의 인과 효과로 일반화하지 않습니다." />

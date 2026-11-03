@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
@@ -235,6 +236,50 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             PP 가
             지키는 것은 동시 요청이 많아 microbatch 가 채워질 때의 throughput 이고, 한 요청의 속도는 PP 로 빨라지지 않습니다.
           </p>
+          <h3>MoE 의 stage 경계는 token 당 14 KiB 라 PP 가 늘리는 것은 용량입니다</h3>
+          <p>
+            Decode 에서 stage 경계를 넘는 것은 token 하나의 hidden vector 뿐입니다. Kimi K2.5 와 DeepSeek-R1 은 hidden 이 7168 이라 BF16 이면
+            14,336 byte, 약 14 KiB 입니다. 1T 급 MoE 라도 이 값은 expert 수와 무관합니다.
+          </p>
+          <p>
+            초당 2,000 token 을 내도 경계 하나를 지나는 양은 약 28.7 MB/s, 0.23 Gbps 입니다(계산). 100GbE 서비스망으로도 대역폭은 크게 남습니다.
+            그래서 node 를 넘는 PP 는 InfiniBand 나 RoCE 없이도 대역폭 면에서는 성립합니다.
+          </p>
+          <p>
+            대역폭이 남는다고 한 사용자가 빨라지지는 않습니다. 그 사용자의 token 은 두 node 의 stage 를 차례로 지나고 hop latency 가 더해집니다. PP 가
+            주는 것은 한 replica 가 쓸 수 있는 VRAM 이고, 속도는 microbatch 가 찰 때 throughput 으로만 돌아옵니다.
+          </p>
+          <p>
+            용량 때문에 PP 가 필요한 예가 DeepSeek-R1 FP8 입니다. 체크포인트가 688.6 GB 라 RTX PRO 6000 8 장(768 GB)에 가중치는 들어가도 KV 를 둘
+            자리가 거의 없어 2 node PP 2 가 거론됩니다. 595 GB 인 Kimi K2.5 INT4 는 한 node 에 들어가므로 PP 가 필수는 아닙니다.
+          </p>
+          <p>
+            &quot;PP 가 TP 만큼 빠르다&quot;는 인용으로 MLX 측정이 자주 쓰입니다. M3 Ultra 5 대를 Thunderbolt 5 RDMA 로 묶어 Kimi K2 Thinking 을 돌린
+            결과가 PP4 14.49, TP4 14.82 tok/s 였습니다. 원문 조건은 batch 1 이라 동시 처리의 근거로는 쓸 수 없습니다.
+          </p>
+        </div>
+        <CalculationWalkthrough
+          title="MoE decode 의 PP 경계 전송량"
+          question="hidden 7168 인 MoE 를 node 두 대로 PP 하면 경계 link 는 초당 몇 bit 를 옮기나요?"
+          scope="decode 의 forward activation 만 셉니다. prefill 의 긴 prompt 와 sampling metadata 는 뺍니다."
+          steps={[
+            { label: "token 하나의 activation", expression: "7168 원소 × 2 byte (BF16)", result: "14,336 byte ≈ 14 KiB", reason: "stage 경계를 넘는 것은 마지막 layer 의 hidden vector 하나입니다. config.json 의 hidden_size 를 씁니다." },
+            { label: "초당 token 2,000 개", expression: "14,336 byte × 2,000", result: "약 28.7 MB/s", reason: "8 장 node 가 고동시성에서 내는 집계 처리량 규모를 넉넉하게 잡은 값입니다." },
+            { label: "bit 로 바꾸기", expression: "28.7 MB/s × 8", result: "약 0.23 Gbps (계산)", reason: "100GbE 의 0.23% 수준이라 link 대역폭은 병목이 아닙니다." },
+          ]}
+          conclusion="Node 를 넘는 PP 의 경계 전송은 대역폭이 거의 필요 없습니다. 남는 비용은 hop latency 와 stage 직렬 실행이고, 이 둘이 한 사용자의 속도를 정합니다."
+          caveats={["prefill 에서는 prompt 의 token 수만큼 곱해져 수십 MB 단위가 됩니다.", "PP 와 speculative decoding 을 함께 쓸 때 출력이 틀리는 vLLM 이슈(#52071)가 열려 있습니다."]}
+        />
+        <div id="paper-mlx-pp-tp" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="ml-explore/mlx Discussion #2990 · Kimi K2 Thinking on M3 Ultra × 5 (TB5 RDMA, 2026-01-12)"
+            citeKey={5}
+            href="https://github.com/ml-explore/mlx/discussions/2990"
+          >
+            Mac Studio 5 대를 Thunderbolt 5 RDMA 로 묶어 PP4 14.49, TP4 14.82, PP5 14.45 TPS 를 보고하고,
+            측정 조건을 &quot;batch size = 1 and a fixed context length&quot; 로 적습니다. 단일 스트림 수치라
+            이 글은 동시 처리에서 PP 와 TP 를 비교하는 근거로 쓰지 않습니다.
+          </CitationBlock>
         </div>
         <ExplainedFormula
           question="PP 에서 GPU 가 노는 bubble 은 전체 시간의 몇 퍼센트인가요?"
@@ -340,6 +385,10 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             만족하지 못하므로 KV 를 나눠 둔 채 부분 attention 결과만 모으는 쪽이 보통입니다.
           </p>
           <p>
+            vLLM 에서는 이 방식을 decode context parallel(DCP)이라 부릅니다. MLA 처럼 KV 가 TP rank 마다 복제되는 모델에서 특히
+            필요합니다(<Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 DCP</Link>).
+          </p>
+          <p>
             GPU 4 장으로 줄여 그리면 query block 은 제자리에 있고 KV block 만 ring 을 한 칸씩 돕니다. 네 step 이 지나면 query block 과 KV block
             의 쌍 16 개가 모두 한 번씩 계산됩니다.
           </p>
@@ -428,6 +477,62 @@ export default function TensorAndPipelineParallelInferenceArticle() {
           </p>
         </ProgressiveDetail>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <h3>PCIe node 의 61 층 MoE 는 token 마다 122 번 동기화합니다</h3>
+          <p>
+            지금까지의 예는 NVLink 안의 70B dense 였습니다. 같은 셈을 NVLink 없이 PCIe 로만 이어진 8 장 node 와 MoE 로 옮기면 숫자가 바뀝니다.
+            Kimi K2.5 와 DeepSeek-R1 은 61 층이라 token 하나에 all-reduce 가 2 × 61 = 122 번 필요합니다.
+          </p>
+          <p>
+            PCIe 에는 NVSwitch 가 없습니다. collective 는 PCIe switch 나 CPU root complex 를 지나고, 두 GPU 가 서로 다른 CPU socket 아래 있으면 socket
+            사이 link 까지 탑니다. 한 번의 α 가 NVLink 보다 크고, 그 α 를 122 번 냅니다. 메시지가 작은 decode 에서는 이 latency 가 대역폭보다 먼저 막힙니다.
+          </p>
+          <p>
+            현장 경험으로 남은 수치가 있습니다. RTX PRO 6000 8 장에서 K2.5 를 단일 스트림으로 돌리면 GPU 끼리 직접 쓰는 PCIe P2P 를 켰을 때 65 tok/s,
+            NCCL_P2P_DISABLE=1 로 껐을 때 44 tok/s 였습니다(vLLM, FP8 KV, DCP 8). token 당 15.4 ms 와 22.7 ms 입니다.
+          </p>
+        </div>
+        <CalculationWalkthrough
+          title="P2P on/off 차이를 동기화 횟수로 나누기"
+          question="P2P 를 끄면 collective 한 번이 얼마나 느려지나요?"
+          scope="단일 스트림 decode 의 token 당 시간 차이를 전부 TP 통신 탓으로 두고 나눕니다. 그래서 결과는 상한 쪽 어림입니다."
+          steps={[
+            { label: "token 당 동기화 횟수", expression: "layer 당 2 번 × 61 layer", result: "122 번", reason: "attention 끝과 MLP·MoE 끝에서 한 번씩 all-reduce 합니다. 70B dense 80 층이면 160 번입니다." },
+            { label: "P2P on 의 token 시간", expression: "1,000 ms ÷ 65 tok/s", result: "15.4 ms", reason: "rtx6kpro 커뮤니티 위키의 Turin 시스템 값입니다(현장 경험)." },
+            { label: "P2P off 의 token 시간", expression: "1,000 ms ÷ 44 tok/s", result: "22.7 ms", reason: "같은 시스템에서 NCCL_P2P_DISABLE=1 만 바꾼 값입니다." },
+            { label: "차이를 횟수로 나누기", expression: "7.3 ms ÷ 122", result: "collective 당 약 60 μs (추정)", reason: "P2P 를 끄면 데이터가 host memory 를 거쳐 가므로 한 번마다 이만큼이 더 붙는다고 어림합니다." },
+          ]}
+          conclusion="NVLink 의 α 5 μs 를 가정한 앞 계산과 달리, PCIe node 에서는 collective 한 번의 경로 차이만으로 수십 μs 가 갈립니다. 122 번이 곱해지면 단일 스트림 속도가 1.5 배 달라집니다."
+          caveats={["DCP 8 에서는 attention 안에 collective 가 더 있어 실제 횟수가 122 보다 많습니다. 그만큼 한 번당 증가분은 60 μs 보다 작습니다.", "위키 수치는 디스코드 기록을 정리한 것이라 측정 환경 일부가 빠져 있습니다."]}
+        />
+        <div id="field-rtx6kpro-p2p" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="local-inference-lab/rtx6kpro · benchmarks/results.md (커밋 1b6de11b, 2026-11-02 확인)"
+            citeKey={6}
+            href="https://github.com/local-inference-lab/rtx6kpro/blob/main/benchmarks/results.md"
+          >
+            RTX PRO 6000 8 장, Kimi K2.5 INT4, vLLM FP8 KV, DCP 8 단일 batch 에서 P2P 65 / 36 / 27 tok/s,
+            NCCL_P2P_DISABLE=1 44 / 29 / 23 tok/s (context 0 / 100K / 200K), Genoa 시스템 약 32 tok/s 를 적습니다.
+            100 요청 × 40K 의 약 900 tok/s 는 원 스크린샷상 P2P 를 끈 값입니다. 커뮤니티 위키의 현장 경험 수치입니다.
+          </CitationBlock>
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            같은 위키는 반대 방향의 결과도 적습니다. 100 개 요청이 각각 40K token 씩 들어온 고동시성에서는 P2P 를 끈 쪽이 집계 약 900 tok/s, 켠 쪽이
+            약 600 tok/s 였습니다. 요청당으로 나누면 9 와 6 tok/s 입니다. 원인은 기록에 없지만, 단일 스트림 최적값과 고동시성 최적값이 반대라는 점은 남습니다.
+          </p>
+          <p>
+            CPU 플랫폼도 변수입니다. 같은 vLLM 설정의 단일 스트림이 Turin 시스템에서 65, Genoa 시스템에서 약 32 tok/s 로 보고됐습니다. 다만 두 시스템은 메모리
+            채널과 socket 연결까지 달라 통제된 A/B 가 아닙니다. CPU 세대만의 효과로 읽으면 안 됩니다.
+          </p>
+          <p>
+            Kimi K2.5 같은 MLA model 은 KV 용량을 늘리려고 decode context parallel(DCP)을 켜는 경우가 많습니다. vLLM v0.32.0 코드에서 DCP 가 2 이상이면
+            MLA decode 는 query 를 all-gather 하고, rank 별 부분 attention 출력을 log-sum-exp 로 보정해 합칩니다. 층마다 collective 가 더 붙습니다.
+          </p>
+          <p>
+            같은 FP8 KV 에서 DCP 1 은 79, DCP 8 은 65 tok/s 였습니다(현장 경험). GQA model 은 KV head 가 TP 로 나뉘므로 KV 용량 때문에 DCP 를 켤 일이 적습니다. 그 차이는{" "}
+            <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 DCP</Link> 글이, 구조별 비교는{" "}
+            <Link to="/cs/ai/serving-architecture-matrix">서빙 아키텍처 매트릭스</Link>가 다룹니다.
+          </p>
           <p>
             다음 읽기는 이 byte 와 μs 를 실제 node 와 link 위에 올려 TP·PP·DP degree 를 고르는{" "}
             <Link to="/cs/ai/parallelism-strategy-and-placement">parallelism 전략과 placement</Link>{" "}

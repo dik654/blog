@@ -94,7 +94,7 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
           </p><p>
             큰 예의 q1·q2·q3가 100자리씩이고 250을 요구하면 모두 비어 있을 때 300을 돌려줍니다. R3 경로가 보호되고 다른 후보가 없다면 200뿐입니다. 네 번째 요청의
             unlocked 600자리까지 남은 장면에서는 200에서 반드시 끝난다고 말할 수 없습니다.
-          </p></div><CodeViewButton label="실제 leaf 반환과 경로 잠금" onClick={() => sidebar.open("radix-evict", codeRefs["radix-evict"])} /></section>
+          </p></div><CodeViewButton label="실제 leaf 반환과 경로 잠금" onClick={() => sidebar.open("radix-evict", codeRefs["radix-evict"])} /><div className="prose prose-neutral mt-8 max-w-none dark:prose-invert"><p>반환 후보가 곧 다시 쓰일 기록이면 문제가 달라집니다. 동시에 살아 있는 세션의 앞부분을 합친 길이가 공간보다 크면, 한 세션의 다음 턴이 오기 전에 그 앞부분이 오래된 순서로 밀려납니다. 15절의 X와 Y 교대가 큰 규모로 일어나는 셈이고 context thrashing이라고 부릅니다.</p><p>arXiv 2605.26297은 H100 한 장의 Qwen3.6-27B 서버에 Terminal-Bench 에이전트를 붙였습니다. 동시 15개에서 prefix 적중률 98.85%, 요청당 생성 30.08토큰/s였습니다. 20개로 늘리자 적중률이 16.78%, 생성이 16.96토큰/s로 떨어졌습니다. 다섯 세션을 더 받은 대가가 적중률의 붕괴였습니다.</p><p>코딩 에이전트는 평소 적중률이 94~99%라 이 붕괴가 그대로 처리량 손실이 됩니다. GitHub Copilot 실서비스 분석도 턴 안에서는 평균 90%, 턴 경계에서는 55%를 보고했습니다. 공간을 넘는 세션을 받지 않는 상한과 호스트 메모리 보관은 <a href="/cs/ai/agent-serving-slo-and-capacity">에이전트 서빙의 SLO와 용량</a>에서 다룹니다.</p></div></section>
 
 <section id="free-queue" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. vLLM은 tree 대신 참조 수와 free queue를 갱신합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             vLLM의 요청 종료는 single_type_kv_cache_manager.py 519–527행에서 block 목록을 역순으로 전달합니다. R2의 table=[5,9]라면 9를

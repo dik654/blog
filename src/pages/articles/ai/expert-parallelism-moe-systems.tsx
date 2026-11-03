@@ -1,6 +1,7 @@
 import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
@@ -141,6 +142,30 @@ export default function Article(){
         <p className="leading-8">뜨거운 expert를 복제하면 입력을 다른 GPU로 나눌 수 있습니다. 대신 weight 메모리와 복제 계획, 학습 시 weight·gradient 일치 비용이 생깁니다. 반면 capacity를 넘긴 token을 버리는 방식은 계산 대상 자체를 바꾸므로 같은 의미의 최적화가 아닙니다. Factor 2라는 숫자만으로 실제 buffer 절반이 항상 padding이라고 단정할 수도 없습니다.</p>
         <p className="leading-8">최신 V2.5 README는 EP dispatch/combine에 SM이 필요하며 zero-SM RDMA EP를 지원하지 않는다고 명시합니다. 1.847ms 계산과 통신을 겹치는 설계에서도 통신에 할당한 SM이 계산 자원을 줄이는지 확인합니다. 새로운 이름보다 이 자원 분배가 실제 시간을 정합니다.</p>
       </div>
+      <span id="all2all-backends" className="scroll-mt-20" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">교환 라이브러리를 고르기 전에 GPU 사이 연결부터 봅니다. DeepEP README는 node 안 통신에 NVLink를 쓴다고 적습니다. 메인테이너는 issue #216에서 low-latency mode는 아니지만 normal mode에는 NVLink가 필수라고 답했습니다.</p>
+        <p className="leading-8">NVLink 없이 PCIe로만 이어진 8장 서버에서 DeepEP 초기화가 peer access 오류로 실패한다는 보고(#584)도 열려 있습니다. RTX PRO 6000 같은 PCIe node라면 DeepEP normal mode는 선택지에서 먼저 빠집니다.</p>
+        <p className="leading-8">vLLM v0.32.0의 다른 backend도 사정이 비슷합니다. pplx나 naive를 지정하면 경고를 남기고 allgather_reducescatter로 바꿉니다. 이 기본 backend는 어떤 EP와 DP 조합에서도 돌지만, token hidden state를 모든 rank에 모으므로 traffic이 DP 크기에 비례해 늘어납니다.</p>
+        <p className="leading-8">여러 node에 expert를 펼치는 wide-EP의 기준 가이드인 llm-d v1.0.0은 H200과 B200 클러스터에서 deepep_v2와 all-to-all RDMA로만 검증했습니다. PCIe와 RoCE로 된 node에서 node 간 wide-EP를 돌린 공개 사례는 성공이든 실패든 찾지 못했습니다.</p>
+      </div>
+      <TermBreakdown
+        title="vLLM v0.32.0 EP all2all backend와 연결 조건"
+        description="2026-11-03에 vLLM 문서·코드와 DeepEP issue를 대조한 상태입니다. 하드웨어에서 직접 실행한 결과는 아닙니다."
+        items={[
+          { term: "deepep_high_throughput · deepep_v2 (normal)", description: "prefill과 대량 decode용 grouped GEMM 경로입니다.", example: "llm-d wide-EP 가이드는 32×H200(InfiniBand, GKE RoCE)에서 검증했습니다.", boundary: "node 안 NVLink가 필수입니다(DeepEP #216). PCIe 8장에서 init 실패 보고(#584)가 열려 있습니다." },
+          { term: "deepep_low_latency", description: "decode용 CUDA graph 경로이며 NVSHMEM과 IBGDA를 씁니다.", example: "H800 PCIe에서 동작은 했지만 allgather보다 느렸다는 보고가 있습니다(#462).", boundary: "RTX PRO 6000(SM120) 동작 보고는 찾지 못했습니다." },
+          { term: "pplx · naive", description: "vLLM에서 제거된 backend입니다. 지정하면 경고 뒤 allgather_reducescatter로 바뀝니다.", example: "pplx-kernels 자체도 deprecated이고 4090·5090 PCIe 실패 보고가 있습니다.", boundary: "옛 설정 예제를 그대로 쓰면 다른 backend로 돌고 있을 수 있습니다." },
+          { term: "allgather_reducescatter (기본)", description: "NCCL all-gather와 reduce-scatter로 교환합니다.", example: "문서 표현으로 어떤 EP+DP 구성에서도 동작합니다.", boundary: "hidden state를 모든 rank에 모아 traffic이 DP 크기에 비례합니다. node 사이로 넓히면 이 항이 커집니다." },
+          { term: "flashinfer_nvlink · moonep", description: "multi-node NVLink(MNNVL) 시스템용 교환입니다.", example: "GB200 NVL72 같은 rack 급 NVLink 도메인을 전제합니다.", boundary: "PCIe node에서는 쓸 수 없습니다." },
+        ]}
+      />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">그래서 PCIe node에서는 EP와 DP를 node 안의 비교 실험으로만 두고, node를 늘릴 때는 node마다 독립 replica를 두는 쪽이 현재 기본값입니다. 그 배치 절차는 <Link to="/cs/ai/parallelism-strategy-and-placement#procedure">parallelism 배치 절차</Link>에 있습니다.</p>
+      </div>
+      <div id="paper-deepep-nvlink" className="not-prose my-8 scroll-mt-24">
+        <CitationBlock source={"deepseek-ai/DeepEP issue #216 · #584"} citeKey={3} href={"https://github.com/deepseek-ai/DeepEP/issues/216"}>메인테이너 답변 원문은 &quot;For low-latency mode, it is not mandatory. For normal mode, NVLink is a must&quot;입니다. #584(2026-02-20 등록, 2026-11-03 OPEN 확인)는 부분 CUDA peer access에서 deep_ep.cpp:200 초기화가 실패한다는 보고입니다.</CitationBlock>
+      </div>
 <SourceApplication source={"DeepEP V2.5의 통신 자원 경계"} excerpt={"zero-SM RDMA EP is not supported"} application={"통신이 0개의 SM을 쓴다고 놓고 600TFLOP/s 계산 상한을 그대로 겹칠 수 없습니다."} /><CitationBlock source={"DeepEP V2.5의 통신 자원 경계"} citeKey={2} href={"https://github.com/deepseek-ai/DeepEP/blob/93eb6eb238127e96c6d7a4a625a6dad158348509/README.md"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock><PaperReading id="paper-deepseek-reading" title={"DeepSeek-V3 Technical Report"} href={"https://arxiv.org/abs/2412.19437"} problem={"MoE routing과 대규모 교환 비용"} idea={"node 제한 routing과 부하 균형·통신 계산 겹침"} assumption={"해당 모델의 topology·expert 배치와 workload"} experiment={"보고서의 학습·추론 구성에 대한 저자 측정"} boundary={"이 글의 64 expert·8GPU 수치는 설명용이며 V3의 실제 제품 구성을 옮긴 것이 아니다."} />
       <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">제한·복제·겹침이 각각 무엇을 바꾸는지 확인했습니다. 마지막으로 측정 조건을 고정합니다.</p>
     </section>
@@ -149,6 +174,9 @@ export default function Article(){
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">2048개를 32개 token으로 줄이면 논리 dispatch는 512KiB입니다. 전송량과 expert 계산은 줄어도 count 교환·launch·동기화의 고정 비용은 같은 비율로 줄지 않습니다. 단지 batch가 절반이 됐다는 이유만으로 메모리 병목이 됐다고 판정하지 말고 실제 분해 시간을 확인합니다.</p>
         <p className="leading-8">측정에는 모델·routing 분포·dtype·padding, GPU·node·NIC, 단방향 유효 대역폭, 라이브러리 commit, 평균과 p99 완료시간을 남깁니다. 평균 균형이 좋아도 순간 hot expert가 꼬리를 늦출 수 있습니다. <Link to="/cs/gpu/gpu-collective-network">collective 통신 정본</Link>과 <Link to="/cs/ai/serving-benchmark-methodology">서빙 측정 정본</Link>에서 이어집니다.</p>
+        <p className="leading-8">반대로 EP가 이득을 내는 조건도 batch에서 나옵니다. 동시 요청이 늘면 한 layer가 읽는 expert가 합집합으로 늘고, expert마다 들어오는 token도 늘어 expert GEMM이 찹니다. batch가 작으면 expert마다 token이 몇 개뿐이라 교환의 고정 비용만 남습니다.</p>
+        <p className="leading-8">공개 수치가 그 운영점을 보여 줍니다. vLLM 블로그의 wide-EP는 H200 한 장당 출력 약 2,200 tok/s였는데, 차트 조건이 EP rank당 동시 요청 256개였습니다. 요청 하나로 나누면 약 8.6 tok/s입니다(계산).</p>
+        <p className="leading-8">GPU당 처리량 헤드라인은 이렇게 요청당 한 자릿수 속도에서 나오곤 합니다. 요청당 속도에 SLO가 걸린 서빙이라면 그 운영점이 SLO 안에 있는지부터 확인합니다. batch와 expert 합집합의 계산은 <Link to="/cs/ai/model-vram-budgeting#moe-vram-serving-tradeoff">MoE decode read 장부</Link>에 있습니다.</p>
         <p className="leading-8">예측해 보세요. token 37의 두 expert를 모두 GPU 0으로 옮기면 무엇이 사라질까요? 그 token의 원격 왕복은 줄지만 weight 저장과 expert 계산 및 결합 자체는 남습니다. 3절에서 센 바이트의 경계로 답할 수 있습니다.</p>
       </div>
 
