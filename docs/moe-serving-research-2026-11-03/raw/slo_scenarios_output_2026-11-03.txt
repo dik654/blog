@@ -1,0 +1,13 @@
+8x PRO6000 single server, Kimi K2.5. Max system capex (USD) to match API, 3y, util grid
+agg tok/s @SLO in/out   hit |    K25 u30    K25 u50    K25 u70 |  V4off u50  V4off u70
+           250     30  0.90 |        21k        52k        82k |        19k        36k
+           250    100  0.95 |        79k       147k       216k |        41k        68k
+           400     30  0.90 |        45k        91k       137k |        41k        67k
+           400    100  0.95 |       128k       229k       331k |        73k       112k
+           650     30  0.90 |        80k       149k       218k |        74k       113k
+           650    100  0.95 |       195k       342k       488k |       116k       172k
+           900     30  0.90 |       110k       199k       288k |       102k       152k
+           900    100  0.95 |       250k       432k       614k |       150k       220k
+
+API $/1M out (ref K2.5 / V4-Pro offpeak): ipo30 hit.90 -> 8.05 / 4.55; ipo100 hit.95 -> 19.25 / 7.37
+Compare: placeholder system capex = 8 x GPU + ~$45k base/net (e.g. $151k at $13.25k/GPU, $229k at $23k/GPU)

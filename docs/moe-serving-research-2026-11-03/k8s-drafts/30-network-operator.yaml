@@ -1,0 +1,85 @@
+# UNVALIDATED DRAFT (2026-11-03). Not applied to any cluster.
+# NVIDIA Network Operator v26.7.1 objects for a 2-4 node RoCE fabric (ConnectX-7/8).
+#
+# Confirmed:
+# - Kinds/fields: NicClusterPolicy {rdmaSharedDevicePlugin, secondaryNetwork{multus,cniPlugins},
+#   nvIpam}, MacvlanNetwork {networkNamespace, master, mode, mtu, ipam}, IPPool
+#   nv-ipam.nvidia.com/v1alpha1 {subnet, perNodeBlockSize, gateway}:
+#   Mellanox/network-operator v26.7.1 api/v1alpha1/nicclusterpolicy_types.go and
+#   example/crs/mellanox.com_v1alpha1_nicclusterpolicy_cr-nvidia-ipam.yaml
+# - "DOCA-Host (host-installed) and the containerized DOCA-OFED driver are mutually exclusive";
+#   with host DOCA/inbox mlx5, omit ofedDriver (docs.nvidia.com/networking/display/kubernetes2670).
+# - Kubernetes v1.32-v1.36 supported (same doc set).
+# NOT confirmed:
+# - deviceIDs below: 1021 = ConnectX-7 (from general knowledge, not from NVIDIA doc read today);
+#   ConnectX-8 ID unknown -> prefer ifNames selectors measured on the real host.
+# - Whether macvlan or SR-IOV/host-device is better for one 8-GPU vLLM pod per node: NVIDIA
+#   does not name a "GPUDirect mode"; macvlan+shared plugin is the simplest documented path.
+apiVersion: mellanox.com/v1alpha1
+kind: NicClusterPolicy
+metadata:
+  name: nic-cluster-policy
+spec:
+  # ofedDriver intentionally omitted: hosts carry DOCA-Host / inbox mlx5 (same policy as GPU
+  # driver: workstation images own the kernel modules).
+  rdmaSharedDevicePlugin:
+    image: k8s-rdma-shared-dev-plugin
+    repository: nvcr.io/nvidia/mellanox
+    version: network-operator-v26.7.1
+    config: |
+      {
+        "configList": [
+          {
+            "resourceName": "rdma_shared_device_a",
+            "rdmaHcaMax": 63,
+            "selectors": {"ifNames": ["ens1f0np0"]}
+          }
+        ]
+      }
+  secondaryNetwork:
+    cniPlugins:
+      image: plugins
+      repository: nvcr.io/nvidia/mellanox
+      version: network-operator-v26.7.1
+    multus:
+      image: multus-cni
+      repository: nvcr.io/nvidia/mellanox
+      version: network-operator-v26.7.1
+  nvIpam:
+    image: nvidia-k8s-ipam
+    repository: nvcr.io/nvidia/mellanox
+    version: network-operator-v26.7.1
+    enableWebhook: false
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: example.com/rdma-fabric
+              operator: In
+              values: ["roce-a"]
+  tolerations:
+    - key: example.com/execution-mode
+      operator: Equal
+      value: shared-k8s
+      effect: NoSchedule
+---
+apiVersion: nv-ipam.nvidia.com/v1alpha1
+kind: IPPool
+metadata:
+  name: roce-a
+  namespace: nvidia-network-operator
+spec:
+  subnet: 192.168.100.0/24
+  perNodeBlockSize: 16
+  gateway: 192.168.100.1
+---
+apiVersion: mellanox.com/v1alpha1
+kind: MacvlanNetwork
+metadata:
+  name: roce-a
+spec:
+  networkNamespace: moe-serving
+  master: ens1f0np0
+  mode: bridge
+  mtu: 9000            # host 9000 / switch 9216 (MLNX_OFED QoS docs)
+  ipam: '{"type":"nv-ipam","poolName":"roce-a"}'

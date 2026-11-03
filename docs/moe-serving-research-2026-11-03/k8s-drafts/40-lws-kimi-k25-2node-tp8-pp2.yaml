@@ -1,0 +1,232 @@
+# UNVALIDATED DRAFT (2026-11-03). Not applied to any cluster.
+# PP-centric multi-node layout: ONE model replica = 2 nodes x 8 RTX PRO 6000,
+# TP=8 inside each node (PCIe), PP=2 across nodes (RoCE). Use this when a single node
+# cannot hold weights + KV (e.g. DeepSeek-R1 FP8 ~690 GB, or long-context Kimi K2.5).
+#
+# Confirmed:
+# - vLLM multi-node launch without Ray: `--nnodes $(LWS_GROUP_SIZE) --node-rank
+#   $(LWS_WORKER_INDEX) --master-addr $(LWS_LEADER_ADDRESS)`, workers add `--headless`:
+#   vLLM v0.32.0 docs/deployment/frameworks/lws.md (Multiprocessing tab, the default) and
+#   lws v1.0.0 docs/examples/leaderworkerset/basic/vllm.yaml ("no Ray").
+# - v0.32.0 arg_utils.py: `nnodes > 1` forces the mp executor; Ray rejects nnodes > 1.
+# - LWS env vars LWS_LEADER_ADDRESS / LWS_GROUP_SIZE / LWS_WORKER_INDEX and
+#   leaderTemplate/workerTemplate, startupPolicy LeaderReady: lws v1.0.0 types.
+# - Kueue TAS on LWS: podset-group-name + podset-required-topology on BOTH templates:
+#   kueue v0.20.4 LWS TAS example. TAS is Beta/on by default since v0.14.
+# - Multus attach annotation k8s.v1.cni.cncf.io/networks, IPC_LOCK, rdma/rdma_shared_device_a:
+#   Network Operator v26.7.1 example/rdma-gpu-test-pod1.yml.
+# - NCCL env semantics (NCCL 2.32.3 env docs): NCCL_IB_GID_INDEX AUTO since 2.32u1,
+#   NCCL_IB_TC default 0, NCCL_NET_GDR_READ default "1 for NVLink-based platforms and 0 otherwise".
+# NOT confirmed / risks:
+# - GPUDirect RDMA on RTX PRO 6000 is not named in any NVIDIA datasheet read today; one forum
+#   user reports it working on Max-Q (forums.developer.nvidia.com/t/346764). If GDR is absent
+#   NCCL falls back to host staging - PP still works (activations are small), just slower.
+# - Kueue TAS + DRA ResourceClaims: KueueDRADeviceFeasibility is alpha/off in v0.20;
+#   without it "TAS places the Pod by its other resources alone" (Kueue DRA doc). With whole-node
+#   claims (8/8 GPUs) and required hostname-level separation this is usually OK, but verify.
+# - LWS native gang scheduling (spec.scheduling) needs Kubernetes 1.37 -> not used on k3s 1.34.
+#   Gang admission here comes from Kueue (whole LWS group = one Workload).
+# - LWS on Kubernetes 1.34 requires the MaxUnavailableStatefulSet feature gate (lws v1.0.0 docs).
+apiVersion: leaderworkerset.x-k8s.io/v1
+kind: LeaderWorkerSet
+metadata:
+  name: kimi-k25-tp8-pp2
+  namespace: moe-serving
+  labels:
+    kueue.x-k8s.io/queue-name: shared-workstation
+spec:
+  replicas: 1
+  startupPolicy: LeaderCreated
+  leaderWorkerTemplate:
+    size: 2
+    restartPolicy: RecreateGroupOnPodRestart
+    leaderTemplate:
+      metadata:
+        labels:
+          inference.example.com/model: kimi-k25
+          inference.example.com/layout: tp8-pp2
+        annotations:
+          kueue.x-k8s.io/podset-group-name: kimi-k25-tp8-pp2
+          kueue.x-k8s.io/podset-required-topology: topology.example.com/network-fabric
+          k8s.v1.cni.cncf.io/networks: roce-a
+      spec:
+        nodeSelector:
+          example.com/execution-mode: shared-k8s
+          example.com/gpu-model: rtx-pro-6000-bw
+          example.com/rdma-fabric: roce-a
+        tolerations:
+          - key: example.com/execution-mode
+            operator: Equal
+            value: shared-k8s
+            effect: NoSchedule
+        terminationGracePeriodSeconds: 180
+        resourceClaims:
+          - name: gpus
+            resourceClaimTemplateName: pro6000-x8
+        containers:
+          - name: vllm
+            image: docker.io/vllm/vllm-openai:v0.32.0@sha256:befccf0e7e4089aa23926bb6f887a85c0d46c2a99e6de5c5ffdf5cb7957c5b34
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                EXTRA=""
+                if [ "${LWS_WORKER_INDEX}" != "0" ]; then EXTRA="--headless"; fi
+                exec vllm serve /models/moonshotai/Kimi-K2.5 \
+                  --served-model-name kimi-k25 \
+                  --host 0.0.0.0 --port 8000 \
+                  --trust-remote-code \
+                  --language-model-only \
+                  --tensor-parallel-size 8 \
+                  --pipeline-parallel-size 2 \
+                  --nnodes "${LWS_GROUP_SIZE}" \
+                  --node-rank "${LWS_WORKER_INDEX}" \
+                  --master-addr "${LWS_LEADER_ADDRESS}" \
+                  --max-model-len 262144 \
+                  --gpu-memory-utilization 0.92 \
+                  --enable-prefix-caching \
+                  --enable-auto-tool-choice --tool-call-parser kimi_k2 --reasoning-parser kimi_k2 \
+                  ${EXTRA}
+            env:
+              - name: HF_HUB_OFFLINE
+                value: "1"
+              # Bootstrap/control traffic on the secondary RoCE interface (Multus => net1).
+              - name: NCCL_SOCKET_IFNAME
+                value: net1
+              - name: GLOO_SOCKET_IFNAME
+                value: net1
+              - name: NCCL_IB_HCA
+                value: mlx5_0            # measure on host: ibdev2netdev
+              # Must match switch PFC class (Cumulus default DSCP 26 -> ToS 106).
+              - name: NCCL_IB_TC
+                value: "106"
+              # PCIe platform: NCCL disables GDR reads by default; enable explicitly to test GDR.
+              - name: NCCL_NET_GDR_READ
+                value: "1"
+              - name: NCCL_DEBUG
+                value: INFO              # look for "GPU Direct RDMA Enabled" in logs
+            ports:
+              - name: http
+                containerPort: 8000
+            # Only the leader serves HTTP; workers run --headless (no probes).
+            startupProbe:
+              httpGet: {path: /health, port: http}
+              periodSeconds: 15
+              failureThreshold: 240
+            readinessProbe:
+              httpGet: {path: /health, port: http}
+              periodSeconds: 5
+              failureThreshold: 3
+            securityContext:
+              capabilities:
+                add: ["IPC_LOCK"]
+            resources:
+              claims:
+                - name: gpus
+              requests:
+                cpu: "32"
+                memory: 256Gi
+                rdma/rdma_shared_device_a: "1"
+              limits:
+                memory: 768Gi
+                rdma/rdma_shared_device_a: "1"
+            volumeMounts:
+              - {name: models, mountPath: /models, readOnly: true}
+              - {name: shm, mountPath: /dev/shm}
+        volumes:
+          - name: models
+            hostPath:
+              path: /var/lib/models
+              type: Directory
+          - name: shm
+            emptyDir:
+              medium: Memory
+              sizeLimit: 64Gi
+    workerTemplate:
+      metadata:
+        labels:
+          inference.example.com/model: kimi-k25-worker   # NOT selected by the InferencePool
+          inference.example.com/layout: tp8-pp2
+        annotations:
+          kueue.x-k8s.io/podset-group-name: kimi-k25-tp8-pp2
+          kueue.x-k8s.io/podset-required-topology: topology.example.com/network-fabric
+          k8s.v1.cni.cncf.io/networks: roce-a
+      spec:
+        nodeSelector:
+          example.com/execution-mode: shared-k8s
+          example.com/gpu-model: rtx-pro-6000-bw
+          example.com/rdma-fabric: roce-a
+        tolerations:
+          - key: example.com/execution-mode
+            operator: Equal
+            value: shared-k8s
+            effect: NoSchedule
+        terminationGracePeriodSeconds: 180
+        resourceClaims:
+          - name: gpus
+            resourceClaimTemplateName: pro6000-x8
+        containers:
+          - name: vllm
+            image: docker.io/vllm/vllm-openai:v0.32.0@sha256:befccf0e7e4089aa23926bb6f887a85c0d46c2a99e6de5c5ffdf5cb7957c5b34
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                EXTRA=""
+                if [ "${LWS_WORKER_INDEX}" != "0" ]; then EXTRA="--headless"; fi
+                exec vllm serve /models/moonshotai/Kimi-K2.5 \
+                  --served-model-name kimi-k25 \
+                  --host 0.0.0.0 --port 8000 \
+                  --trust-remote-code \
+                  --language-model-only \
+                  --tensor-parallel-size 8 \
+                  --pipeline-parallel-size 2 \
+                  --nnodes "${LWS_GROUP_SIZE}" \
+                  --node-rank "${LWS_WORKER_INDEX}" \
+                  --master-addr "${LWS_LEADER_ADDRESS}" \
+                  --max-model-len 262144 \
+                  --gpu-memory-utilization 0.92 \
+                  --enable-prefix-caching \
+                  --enable-auto-tool-choice --tool-call-parser kimi_k2 --reasoning-parser kimi_k2 \
+                  ${EXTRA}
+            env:
+              - name: HF_HUB_OFFLINE
+                value: "1"
+              # Bootstrap/control traffic on the secondary RoCE interface (Multus => net1).
+              - name: NCCL_SOCKET_IFNAME
+                value: net1
+              - name: GLOO_SOCKET_IFNAME
+                value: net1
+              - name: NCCL_IB_HCA
+                value: mlx5_0            # measure on host: ibdev2netdev
+              # Must match switch PFC class (Cumulus default DSCP 26 -> ToS 106).
+              - name: NCCL_IB_TC
+                value: "106"
+              # PCIe platform: NCCL disables GDR reads by default; enable explicitly to test GDR.
+              - name: NCCL_NET_GDR_READ
+                value: "1"
+              - name: NCCL_DEBUG
+                value: INFO              # look for "GPU Direct RDMA Enabled" in logs
+            securityContext:
+              capabilities:
+                add: ["IPC_LOCK"]
+            resources:
+              claims:
+                - name: gpus
+              requests:
+                cpu: "32"
+                memory: 256Gi
+                rdma/rdma_shared_device_a: "1"
+              limits:
+                memory: 768Gi
+                rdma/rdma_shared_device_a: "1"
+            volumeMounts:
+              - {name: models, mountPath: /models, readOnly: true}
+              - {name: shm, mountPath: /dev/shm}
+        volumes:
+          - name: models
+            hostPath:
+              path: /var/lib/models
+              type: Directory
+          - name: shm
+            emptyDir:
+              medium: Memory
+              sizeLimit: 64Gi

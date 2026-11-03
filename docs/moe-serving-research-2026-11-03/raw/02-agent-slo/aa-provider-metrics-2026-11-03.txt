@@ -1,0 +1,73 @@
+===== aa_kimi-k2-5.html
+DeepInfra [Kimi K2.5] | in $0.45 out $2.25 cache $0.07 | tok/s med 22.4 p25 16.6 p5 12.3 | TTFT med 1.12 p95 71.57 | TTFAnswer med 133.4
+SiliconFlow [Kimi K2.5 (FP8)] | in $0.45 out $2.25 cache $0.07 | tok/s med 25.9 p25 25.3 p5 23.6 | TTFT med 2.17 p95 4.07 | TTFAnswer med 116.8
+Microsoft Azure [Kimi K2.5] | in $0.6 out $3 cache $null | tok/s med 243.0 p25 197.7 p5 113.8 | TTFT med 2.03 p95 5.11 | TTFAnswer med 14.2
+Amazon Bedrock [Kimi K2.5] | in $0.6 out $3 cache $null | tok/s med 103.8 p25 84.3 p5 73.1 | TTFT med 1.26 p95 2.66 | TTFAnswer med 29.8
+Novita [Kimi K2.5] | in $0.6 out $3 cache $0.1 | tok/s med 50.3 p25 42.6 p5 35.9 | TTFT med 2.51 p95 7.68 | TTFAnswer med 61.5
+===== aa_kimi-k2-6.html
+Baseten [Kimi K2.6] | in $0.95 out $4 cache $0.16 | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+CoreWeave [Kimi K2.6] | in $0.65 out $3.41 cache $0.15 | tok/s med 150.3 p25 79.8 p5 38.3 | TTFT med 1.2 p95 4.4 | TTFAnswer med 30.8
+Novita [Kimi K2.6] | in $0.8 out $3.4 cache $0.16 | tok/s med 38.4 p25 36.9 p5 35.8 | TTFT med 4.71 p95 14.67 | TTFAnswer med 120.7
+GMI [Kimi K2.6 FP8] | in $0.855 out $3.6 cache $0.144 | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+Fireworks [Kimi K2.6] | in $0.95 out $4 cache $0.16 | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+SiliconFlow [Kimi K2.6 (FP8)] | in $0.77 out $3.4 cache $0.14 | tok/s med 26.0 p25 24.6 p5 23.8 | TTFT med 1.54 p95 3.02 | TTFAnswer med 172.6
+DeepInfra [Kimi K2.6 (FP4)] | in $0.75 out $3.5 cache $0.15 | tok/s med 22.2 p25 19.2 p5 14.6 | TTFT med 1.18 p95 11.52 | TTFAnswer med 201.2
+Parasail [Kimi K2.6] | in $0.75 out $3.5 cache $0.16 | tok/s med 91.5 p25 72.9 p5 44.7 | TTFT med 1.24 p95 1.73 | TTFAnswer med 49.9
+Nebius [Kimi K2.6] | in $0.95 out $4 cache $0.16 | tok/s med 272.5 p25 255.6 p5 223.7 | TTFT med 1.47 p95 1.56 | TTFAnswer med 17.8
+Microsoft Azure [Kimi K2.6] | in $0.95 out $4 cache $null | tok/s med 255.2 p25 228.0 p5 176.8 | TTFT med 1.46 p95 2.44 | TTFAnswer med 18.9
+Kimi [Kimi K2.6] | in $0.95 out $4 cache $0.16 | tok/s med 40.7 p25 36.8 p5 35.4 | TTFT med 2.83 p95 11.59 | TTFAnswer med 112.2
+===== aa_kimi-k3.html
+Databricks [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 118.8 p25 92.7 p5 67.2 | TTFT med 0.87 p95 1.02 | TTFAnswer med 17.7
+Fireworks [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 113.9 p25 111.9 p5 109.4 | TTFT med 0.96 p95 1.41 | TTFAnswer med 18.5
+Modal [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 119.6 p25 95.6 p5 53.9 | TTFT med 0.96 p95 2.98 | TTFAnswer med 17.7
+Together AI [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 43.2 p25 40.7 p5 38.6 | TTFT med 1.32 p95 7.28 | TTFAnswer med 47.6
+Makora [Kimi K3 (max)] | in $0.65 out $15 cache $0.23 | tok/s med 84.5 p25 63.0 p5 50.7 | TTFT med 1.22 p95 2.3 | TTFAnswer med 24.9
+LithosAI [Kimi K3 (max) (ULTRA CHAT)] | in $5.6 out $28 cache $0.56 | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+DigitalOcean [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 31.2 p25 23.8 p5 12.2 | TTFT med 1.22 p95 3.45 | TTFAnswer med 65.3
+Baseten [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 90.1 p25 75.5 p5 61.0 | TTFT med 1.13 p95 7.11 | TTFAnswer med 23.3
+Parasail [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 148.6 p25 119.9 p5 63.5 | TTFT med 1.21 p95 4.6 | TTFAnswer med 14.7
+Nebius [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 212.0 p25 170.9 p5 80.3 | TTFT med 1.05 p95 11.7 | TTFAnswer med 10.5
+Inco [Kimi K3 (max) (FAST)] | in $6 out $30 cache $0.6 | tok/s med 481.7 p25 460.1 p5 371.4 | TTFT med 1.66 p95 2.66 | TTFAnswer med 5.8
+Amazon Bedrock [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 295.8 p25 101.8 p5 56.3 | TTFT med 1.41 p95 1.55 | TTFAnswer med 8.2
+Kimi [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 65.9 p25 53.1 p5 44.0 | TTFT med 6.88 p95 20.96 | TTFAnswer med 37.2
+Inco [Kimi K3 (max)] | in $3 out $15 cache $0.3 | tok/s med 176.9 p25 161.7 p5 144.9 | TTFT med 1.79 p95 2.15 | TTFAnswer med 13.1
+===== aa_deepseek-r1.html
+Together AI [DeepSeek R1 0528] | in $3 out $7 cache $null | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+Hyperbolic [DeepSeek R1 0528] | in $3 out $3 cache $null | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+Novita [DeepSeek R1 0528] | in $0.7 out $2.5 cache $0.35 | tok/s med 25.0 p25 22.1 p5 17.0 | TTFT med 1.6 p95 2.14 | TTFAnswer med 81.6
+DeepInfra [DeepSeek R1 0528] | in $0.5 out $2.15 cache $0.35 | tok/s med 25.6 p25 21.4 p5 18.6 | TTFT med 1.14 p95 1.82 | TTFAnswer med 79.2
+===== aa_deepseek-v3-2.html
+GMI [DeepSeek V3.2 (non-reasoning)] | in $0.2088 out $0.3096 cache $0.0216 | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+SambaNova [DeepSeek V3.2 (non-reasoning)] | in $3 out $4.5 cache $null | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+Fireworks [DeepSeek V3.2 (non-reasoning)] | in $0.56 out $1.68 cache $null | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+Microsoft Azure [DeepSeek V3.2 (non-reasoning)] | in $0.58 out $1.68 cache $null | tok/s med 190.1 p25 174.2 p5 127.1 | TTFT med 1.66 p95 2.53 | TTFAnswer med 1.7
+Amazon Bedrock [DeepSeek V3.2 (non-reasoning)] | in $0.62 out $1.85 cache $null | tok/s med 59.8 p25 57.6 p5 44.6 | TTFT med 1.51 p95 2.45 | TTFAnswer med 1.5
+DeepInfra [DeepSeek V3.2 (non-reasoning)] | in $0.26 out $0.38 cache $0.13 | tok/s med 31.0 p25 27.9 p5 19.1 | TTFT med 1.01 p95 1.41 | TTFAnswer med 1.0
+DeepSeek [DeepSeek V3.2 (non-reasoning)] | in $0.28 out $0.42 cache $null | tok/s med None p25 None p5 None | TTFT med None p95 None | TTFAnswer med None
+DigitalOcean [DeepSeek V3.2 (non-reasoning)] | in $0.5 out $1.6 cache $0.15 | tok/s med 47.2 p25 31.2 p5 12.9 | TTFT med 0.86 p95 3.68 | TTFAnswer med 0.9
+FriendliAI [DeepSeek V3.2 (non-reasoning)] | in $0.5 out $1.5 cache $0.25 | tok/s med 196.5 p25 175.7 p5 158.5 | TTFT med 0.83 p95 1.0 | TTFAnswer med 0.8
+SiliconFlow [DeepSeek V3.2 (non-reasoning) (FP8)] | in $0.27 out $0.42 cache $0.135 | tok/s med 22.4 p25 20.2 p5 8.2 | TTFT med 2.1 p95 3.94 | TTFAnswer med 2.1
+===== aa_deepseek-v4-pro.html
+GMI [DeepSeek V4 Pro 0813 (max)] | in $1.056 out $3.168 cache $0.0352 | tok/s med 70.6 p25 66.2 p5 58.0 | TTFT med 3.11 p95 4.06 | TTFAnswer med 31.5
+DeepSeek [DeepSeek V4 Pro 0813 (max)] | in $1.32 out $3.96 cache $0.044 | tok/s med 93.5 p25 76.5 p5 52.0 | TTFT med 1.79 p95 7.08 | TTFAnswer med 23.2
+SiliconFlow [DeepSeek V4 Pro 0813 (max)] | in $1.32 out $3.96 cache $0.044 | tok/s med 64.6 p25 63.0 p5 53.1 | TTFT med 2.06 p95 2.89 | TTFAnswer med 33.0
+Baseten [DeepSeek V4 Pro 0813 (max)] | in $1.32 out $3.96 cache $0.132 | tok/s med 143.5 p25 131.9 p5 95.5 | TTFT med 1.59 p95 3.25 | TTFAnswer med 15.5
+Novita [DeepSeek V4 Pro 0813 (max)] | in $1.32 out $3.96 cache $0.044 | tok/s med 72.3 p25 64.8 p5 60.2 | TTFT med 2.12 p95 3.65 | TTFAnswer med 29.8
+DigitalOcean [DeepSeek V4 Pro 0813 (max)] | in $1.32 out $3.96 cache $0.044 | tok/s med 57.7 p25 56.4 p5 51.7 | TTFT med 0.84 p95 1.3 | TTFAnswer med 35.5
+DeepInfra [DeepSeek V4 Pro 0813 (max)] | in $1.3 out $2.6 cache $0.1 | tok/s med 81.8 p25 67.4 p5 48.1 | TTFT med 1.13 p95 1.97 | TTFAnswer med 25.6
+Systalyze [DeepSeek V4 Pro 0813 (max)] | in $0.5 out $2 cache $0.04 | tok/s med 306.7 p25 290.1 p5 224.4 | TTFT med 1.87 p95 3.15 | TTFAnswer med 8.4
+Databricks [DeepSeek V4 Pro 0813 (max)] | in $1.32 out $3.96 cache $0.132 | tok/s med 237.3 p25 234.9 p5 233.0 | TTFT med 1.59 p95 1.92 | TTFAnswer med 10.0
+Nebius [DeepSeek V4 Pro 0813 (max)] | in $1.32 out $3.96 cache $0.04 | tok/s med 178.2 p25 150.2 p5 69.9 | TTFT med 1.6 p95 2.49 | TTFAnswer med 12.8
+===== aa_claude-opus-5-5.html
+Anthropic [Claude Opus 5.5 (max with fallback)] | in $4 out $20 cache $0.2 | tok/s med 95.5 p25 93.3 p5 91.4 | TTFT med 728.68 p95 1030.01 | TTFAnswer med 728.7
+Amazon Bedrock [Claude Opus 5.5 (max with fallback)] | in $4 out $20 cache $0.2 | tok/s med 96.6 p25 95.9 p5 91.6 | TTFT med 749.42 p95 1078.16 | TTFAnswer med 749.4
+Google [Claude Opus 5.5 (max with fallback)] | in $4 out $20 cache $0.2 | tok/s med 96.9 p25 94.3 p5 92.6 | TTFT med 744.97 p95 1008.23 | TTFAnswer med 745.0
+Microsoft Azure [Claude Opus 5.5 (max with fallback)] | in $4 out $20 cache $0.2 | tok/s med 96.2 p25 95.1 p5 92.0 | TTFT med 732.68 p95 1083.55 | TTFAnswer med 732.7
+===== aa_claude-sonnet-5.html
+Google [Claude Sonnet 5 (max)] | in $2 out $10 cache $0.2 | tok/s med 80.9 p25 75.1 p5 66.3 | TTFT med 218.64 p95 272.53 | TTFAnswer med 218.6
+Microsoft Azure [Claude Sonnet 5 (max)] | in $2 out $10 cache $0.2 | tok/s med 83.2 p25 77.1 p5 66.8 | TTFT med 232.0 p95 274.01 | TTFAnswer med 232.0
+Anthropic [Claude Sonnet 5 (max)] | in $2 out $10 cache $0.2 | tok/s med 80.4 p25 75.1 p5 66.6 | TTFT med 166.67 p95 239.06 | TTFAnswer med 166.7
+Amazon Bedrock [Claude Sonnet 5 (max)] | in $2 out $10 cache $0.2 | tok/s med 81.3 p25 73.3 p5 67.7 | TTFT med 236.27 p95 289.09 | TTFAnswer med 236.3
+===== aa_gpt-5-5.html
+Amazon Bedrock [GPT-5.5 (xhigh)] | in $5.5 out $33 cache $0.55 | tok/s med 135.9 p25 105.2 p5 90.2 | TTFT med 43.4 p95 141.26 | TTFAnswer med 43.4
+OpenAI [GPT-5.5 (xhigh)] | in $5 out $30 cache $0.5 | tok/s med 90.8 p25 75.2 p5 62.9 | TTFT med 68.13 p95 175.85 | TTFAnswer med 68.1

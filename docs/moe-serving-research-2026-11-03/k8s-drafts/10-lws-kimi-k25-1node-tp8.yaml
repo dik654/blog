@@ -1,0 +1,131 @@
+# UNVALIDATED DRAFT (2026-11-03). Not applied to any cluster.
+# Kimi K2.5 (native INT4 compressed-tensors W4A16) on ONE node of 8x RTX PRO 6000 (SM120),
+# TP=8, served as an llm-d InferencePool backend.
+#
+# Why LWS with size=1: keeps the same object kind/labels as the 2-node variants (40-*, 41-*),
+# so the InferencePool selector and Kueue queueing do not change when the group grows.
+#
+# Confirmed (source, version):
+# - LWS API leaderworkerset.x-k8s.io/v1: replicas, leaderWorkerTemplate.{size,workerTemplate,
+#   restartPolicy: RecreateGroupOnPodRestart}, startupPolicy LeaderCreated|LeaderReady:
+#   kubernetes-sigs/lws v1.0.0 api/leaderworkerset/v1/leaderworkerset_types.go
+# - Kueue LWS integration via metadata.labels kueue.x-k8s.io/queue-name, TAS annotation
+#   kueue.x-k8s.io/podset-required-topology on pod templates: kueue v0.20.4
+#   apis/kueue/v1beta2/topology_types.go + LWS example
+# - vLLM flags exist in v0.32.0 arg_utils.py: --tensor-parallel-size, --language-model-only,
+#   --disable-custom-all-reduce, --decode-context-parallel-size, --speculative-config,
+#   --tool-call-parser kimi_k2 / --reasoning-parser kimi_k2 (vllm/tool_parsers/__init__.py,
+#   vllm/reasoning/__init__.py at tag v0.32.0, commit 5df63a7)
+# - Kernel path chosen on SM120 (code reading, v0.32.0): INT4 MoE -> Marlin MoE
+#   (oracle/int_wna16.py; MARLIN_MOE_ARCHS "8.0+PTX;12.0f"), MLA -> TRITON_MLA
+#   (platforms/cuda.py: major == 12 -> [TRITON_MLA, FLASHINFER_MLA_SPARSE_SM120])
+# - Image tag vllm/vllm-openai:v0.32.0, index digest from Docker Hub API on 2026-11-03.
+# NOT confirmed / risks:
+# - Nobody upstream reports Kimi K2.5 on stock v0.32.0 + 8x PRO 6000. Closest evidence:
+#   vllm#40608 (Kimi-K2.6, 8x RTX 6000 Pro, TP8, TRITON_MLA, DCP, eagle3) used a CUSTOM image.
+# - PCIe P2P / custom all-reduce hangs on PCIe Blackwell are user-reported
+#   (discuss.vllm.ai thread 2540, Level1Techs 242403, vllm#56180). Fallback flags are commented.
+# - Vision tower: vllm#45847 (OPEN) ViT attention assert on SM120 for Kimi-K2.6, so this draft
+#   starts text-only with --language-model-only.
+apiVersion: leaderworkerset.x-k8s.io/v1
+kind: LeaderWorkerSet
+metadata:
+  name: kimi-k25-tp8
+  namespace: moe-serving
+  labels:
+    kueue.x-k8s.io/queue-name: shared-workstation
+spec:
+  replicas: 1
+  startupPolicy: LeaderCreated
+  leaderWorkerTemplate:
+    size: 1
+    restartPolicy: RecreateGroupOnPodRestart
+    workerTemplate:
+      metadata:
+        labels:
+          inference.example.com/model: kimi-k25
+          inference.example.com/layout: tp8
+        annotations:
+          kueue.x-k8s.io/podset-required-topology: kubernetes.io/hostname
+      spec:
+        nodeSelector:
+          example.com/execution-mode: shared-k8s
+          example.com/gpu-model: rtx-pro-6000-bw   # label to be created by the node inventory
+        tolerations:
+          - key: example.com/execution-mode
+            operator: Equal
+            value: shared-k8s
+            effect: NoSchedule
+        terminationGracePeriodSeconds: 180
+        resourceClaims:
+          - name: gpus
+            resourceClaimTemplateName: pro6000-x8
+        containers:
+          - name: vllm
+            image: docker.io/vllm/vllm-openai:v0.32.0@sha256:befccf0e7e4089aa23926bb6f887a85c0d46c2a99e6de5c5ffdf5cb7957c5b34
+            command: ["vllm", "serve"]
+            args:
+              - /models/moonshotai/Kimi-K2.5          # pre-staged snapshot, HF_HUB_OFFLINE
+              - --served-model-name=kimi-k25
+              - --host=0.0.0.0
+              - --port=8000
+              - --trust-remote-code
+              - --tensor-parallel-size=8
+              - --language-model-only
+              - --max-model-len=131072
+              - --gpu-memory-utilization=0.92
+              - --enable-prefix-caching
+              - --enable-auto-tool-choice
+              - --tool-call-parser=kimi_k2
+              - --reasoning-parser=kimi_k2
+              # MLA KV is a single latent head, so TP8 replicates it on every rank (KV capacity = 1 GPU's share).
+              # DCP shards KV along the sequence. rtx6kpro measured BF16+DCP1 ~190K tokens vs FP8+DCP8 3.62M.
+              # Baseline for long-context agents (00-SYNTHESIS §6-1). Open bug: output drift vllm#41623.
+              - --decode-context-parallel-size=8
+              # FP8 KV: field runs used vllm#34597 (merged) + #34795 (closed unmerged; its asserts are gone in v0.33.0); #46721 reported "Out of Resource"
+              # for FP8 KV on SM120 (K2.7). Enable only after verifying on the target image.
+              # - --kv-cache-dtype=fp8
+              # --- PCIe-only fallbacks (enable one at a time while debugging hangs) ---
+              # - --disable-custom-all-reduce
+              # --- experiments, each needs its own A/B run ---
+              # - --speculative-config={"model":"/models/lightseekorg/kimi-k2.5-eagle3-mla","method":"eagle3","num_speculative_tokens":3}
+            env:
+              - name: HF_HUB_OFFLINE
+                value: "1"
+              # Uncomment if NCCL hangs with P2P enabled on this board (see README):
+              # - name: NCCL_P2P_DISABLE
+              #   value: "1"
+            ports:
+              - name: http
+                containerPort: 8000
+            resources:
+              claims:
+                - name: gpus
+              requests:
+                cpu: "32"
+                memory: 256Gi
+              limits:
+                memory: 768Gi
+            startupProbe:
+              httpGet: {path: /health, port: http}
+              periodSeconds: 15
+              failureThreshold: 240          # up to 60 min to load ~600 GB of weights
+            readinessProbe:
+              httpGet: {path: /health, port: http}
+              periodSeconds: 5
+              failureThreshold: 3
+            volumeMounts:
+              - name: models
+                mountPath: /models
+                readOnly: true
+              - name: shm
+                mountPath: /dev/shm
+        volumes:
+          - name: models
+            hostPath:
+              path: /var/lib/models     # follow docs/model-storage-kubernetes-runtime.md
+              type: Directory
+          - name: shm
+            emptyDir:
+              medium: Memory
+              sizeLimit: 64Gi

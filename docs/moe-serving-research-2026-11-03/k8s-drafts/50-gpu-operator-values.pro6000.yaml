@@ -1,0 +1,46 @@
+# UNVALIDATED DRAFT (2026-11-03). Helm values for NVIDIA GPU Operator v26.7.2 on RTX PRO 6000
+# Blackwell nodes. Derived from infra/k3s/workstation-pools/gpu-operator-dra-values.yaml.
+#
+# Confirmed (gpu-operator v26.7.2 source + docs):
+# - GPUCluster (DRA) path "does not manage the NVIDIA driver or the device-plugin"
+#   (api gpucluster_types.go); GPUClusterSpec has only draDriver, dcgm, dcgmExporter, hostPaths,
+#   daemonsets -> there is NO rdma field on this path. values.yaml calls GPUCluster
+#   "an experimental feature and is disabled by default".
+# - driver.rdma.{enabled,useHostMofed} only affect the operator-managed driver container
+#   (ClusterPolicy / NVIDIADriver CR). With driver.enabled=false they do nothing.
+# - GPU Operator docs (26.7, gpu-operator-rdma.html): "NVIDIA recommends using the DMA-BUF rather
+#   than using the nvidia-peermem kernel module"; DMA-BUF needs open kernel modules, kernel >= 5.12.
+# - Blackwell is only supported by the open kernel modules (NVIDIA driver README) -> host 580+
+#   driver on PRO 6000 is already "open", so DMA-BUF GPUDirect RDMA is a HOST concern:
+#   inbox/DOCA-Host mlx5 + rdma-core, no peermem needed. NCCL_DMABUF_ENABLE defaults to 1.
+# - Platform support (26.7): "RTX PRO 6000 Blackwell Server Edition" listed (driver >= 575.57.08);
+#   Workstation Edition and GeForce RTX 4090 NOT listed.
+# - dra-driver-nvidia-gpu v0.5.1: ComputeDomains = Multi-Node NVLink (MNNVL) only -> disable on PCIe.
+# NOT confirmed: NVIDIA does not name GPUDirect RDMA for RTX PRO 6000 explicitly in any
+# datasheet read today. Prove it per node with perftest (ib_write_bw --use_cuda) before 40-*/41-*.
+clusterPolicy:
+  deployCR: false
+gpuCluster:
+  deployCR: true
+driver:
+  enabled: false          # host-installed >= 580 open driver
+draDriver:
+  computeDomains:
+    enabled: false        # PCIe-only, no MNNVL
+  featureGates: {}
+  gpus:
+    kubeletPlugin:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+      healthcheck:
+        enabled: true
+daemonsets:
+  tolerations:
+    - key: example.com/execution-mode
+      operator: Equal
+      value: shared-k8s
+      effect: NoSchedule
+# Network Operator also ships NFD (nfd.enabled: true by default in its values.yaml).
+# Keep exactly one NFD instance in the cluster: either here or in the Network Operator chart.

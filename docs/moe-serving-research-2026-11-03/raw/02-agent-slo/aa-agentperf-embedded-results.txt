@@ -1,0 +1,8 @@
+TP8 / radix cache / no specdec | 2026-05-27T12:20:03.635712+00:00 | 20 | p25 | 17 | 8 | 8 | 2.125 | 4.787649999999999 | MI355X x8 | sglang | ROCm 7.2 DSv4 dev | fp4 | Artificial Analysis | agents/MW=3551
+Disagg 6p1d / ctx TP4 / gen DEP16 / MTP3 | 2026-06-11T20:41:09.17927+00:00 | 60 | p25 | 768 | 72 | 40 | 19.2 | 33.21 | GB300 NVL72 | tensorrt-llm | 1.3.0rc15.post1 | nvfp4 | NVIDIA | agents/MW=23126
+TP8 / EAGLE | 2026-06-11T20:59:00+00:00 | 20 | p25 | 11 | 8 | 8 | 1.375 | 4.24 | H200 (SXM) x8 | sglang | 0.5.11 DSv4 | nvfp4 | Artificial Analysis | agents/MW=2594
+Disagg 1p1d / TEP4 ctx+gen / MTP3 | 2026-06-12T06:06:00+00:00 | 60 | p25 | 36 | 8 | 8 | 4.5 | 5.18 | B300 x8 | tensorrt-llm | 1.3.0rc15.post1 | nvfp4 | NVIDIA | agents/MW=6950
+TP8 / radix cache / no specdec | 2026-05-29T19:06:41.611802+00:00 | 60 | p25 | 1 | 8 | 8 | 0.125 | 3.1317167 | MI355X x8 | sglang | ROCm 7.2 DSv4 dev | fp4 | Artificial Analysis | agents/MW=319
+TP8 / EAGLE | 2026-06-11T22:31:00+00:00 | 60 | p25 | 7 | 8 | 8 | 0.875 | 3.92 | H200 (SXM) x8 | sglang | 0.5.11 DSv4 | nvfp4 | Artificial Analysis | agents/MW=1786
+Disagg 6p1d / ctx TP4 / gen DEP8 / MTP3 | 2026-06-12T01:05:24.989418+00:00 | 20 | p25 | 1840 | 72 | 32 | 57.5 | 29.99 | GB300 NVL72 | tensorrt-llm | 1.3.0rc15.post1 | nvfp4 | NVIDIA | agents/MW=61354
+Disagg 1p1d / TEP4 ctx+gen / MTP3 | 2026-06-12T03:50:30+00:00 | 20 | p25 | 144 | 8 | 8 | 18 | 6.84 | B300 x8 | tensorrt-llm | 1.3.0rc15.post1 | nvfp4 | NVIDIA | agents/MW=21053

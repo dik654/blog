@@ -1,0 +1,112 @@
+# UNVALIDATED DRAFT (2026-11-03). Not applied to any cluster.
+# InferencePool + llm-d EPP for the LWS-based Kimi K2.5 replicas (10-*, 11-*, 40-*).
+#
+# Confirmed:
+# - InferencePool API inference.networking.k8s.io/v1 {selector.matchLabels, targetPorts,
+#   endpointPickerRef{name,kind,port}}: GAIE v1.6.2; same shape as this repo's
+#   manifests/physical-inference-stack.yaml (already running with router v0.11.0).
+# - EPP config apiVersion llm-d.ai/v1alpha1 is what router v0.11.0 accepts
+#   (llm-d-router v0.11.0 apix/config/v1alpha1, strict decoding). llm-d v1.0.0 guides use
+#   llm-d.ai/v1, which router v0.11.0 would REJECT - do not copy v1.0.0 guide configs
+#   without upgrading the router to v1.0.0.
+# - Plugin types kv-cache-utilization-scorer / max-score-picker / utilization-detector:
+#   this repo's manifests/kv-scoring.yaml (validated on router v0.11.0 earlier).
+# - LWS pod label leaderworkerset.sigs.k8s.io/worker-index exists on every pod (lws v1.0.0
+#   code). Selecting worker-index "0" = only the leader (the pod that runs the API server).
+#   llm-d's own guides instead give workers a different app label; both work in principle.
+#   Using worker-index as a selector is NOT shown in any llm-d guide (inference).
+# Reuse ServiceAccount/RBAC from manifests/physical-inference-stack.yaml ,
+# adjusted to this namespace.
+apiVersion: inference.networking.k8s.io/v1
+kind: InferencePool
+metadata:
+  name: kimi-k25-pool
+  namespace: moe-serving
+spec:
+  selector:
+    matchLabels:
+      inference.example.com/model: kimi-k25
+      leaderworkerset.sigs.k8s.io/worker-index: "0"
+  targetPorts:
+    - number: 8000
+  endpointPickerRef:
+    name: kimi-k25-epp
+    kind: Service
+    port:
+      number: 9002
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kimi-k25-epp-config
+  namespace: moe-serving
+data:
+  plugins.yaml: |
+    apiVersion: llm-d.ai/v1alpha1
+    kind: EndpointPickerConfig
+    plugins:
+      - type: kv-cache-utilization-scorer
+      - type: max-score-picker
+      - type: utilization-detector
+        parameters:
+          stalenessPolicy: ignore
+    flowControl:
+      saturationDetector:
+        pluginRef: utilization-detector
+    schedulingProfiles:
+      - name: default
+        plugins:
+          - pluginRef: kv-cache-utilization-scorer
+          - pluginRef: max-score-picker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kimi-k25-epp
+  namespace: moe-serving
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kimi-k25-epp
+  template:
+    metadata:
+      labels:
+        app: kimi-k25-epp
+    spec:
+      serviceAccountName: kimi-k25-epp
+      containers:
+        - name: epp
+          image: ghcr.io/llm-d/llm-d-router-endpoint-picker:v0.11.0
+          args:
+            - --pool-name=kimi-k25-pool
+            - --pool-namespace=moe-serving
+            - --grpc-port=9002
+            - --grpc-health-port=9003
+            - --refresh-metrics-interval=5s
+            - --config-file=/config/plugins.yaml
+          ports:
+            - {name: grpc, containerPort: 9002}
+            - {name: health, containerPort: 9003}
+            - {name: metrics, containerPort: 9090}
+          readinessProbe:
+            grpc: {port: 9003, service: inference-extension}
+            periodSeconds: 3
+          volumeMounts:
+            - {name: config, mountPath: /config}
+      volumes:
+        - name: config
+          configMap:
+            name: kimi-k25-epp-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kimi-k25-epp
+  namespace: moe-serving
+spec:
+  selector:
+    app: kimi-k25-epp
+  ports:
+    - {name: grpc, port: 9002, targetPort: 9002, appProtocol: http2}
+    - {name: metrics, port: 9090, targetPort: 9090}

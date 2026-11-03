@@ -1,0 +1,244 @@
+# UNVALIDATED DRAFT (2026-11-03). Not applied to any cluster. EXPERIMENT, not a target layout.
+# Wide-EP-style layout: ONE model replica = 2 nodes x 8 RTX PRO 6000, attention DP=16 (TP=1 per
+# rank), MoE experts sharded EP=16 across both nodes over RoCE.
+#
+# Why allgather_reducescatter and not DeepEP:
+# - vLLM v0.32.0 docs/serving/expert_parallel_deployment.md: allgather_reducescatter = "Default
+#   backend ... works with any EP+DP configuration" (NCCL collectives -> runs over PCIe + RoCE,
+#   with or without GPUDirect). It is also the code default (config/parallel.py line 219).
+# - DeepEP: README (main, V2.5) requires "NVLink for intranode communication"; maintainer on
+#   DeepEP#216: "For normal mode, NVLink is a must"; DeepEP#584 (OPEN): init fails on an 8-GPU
+#   PCIe-only host ("peer access is not supported between these two devices").
+#   pplx was removed from vLLM (falls back to allgather_reducescatter); pplx-kernels deprecated.
+# - llm-d wide-EP guide (v1.0.0) is validated only on 32xH200 (IB / GKE RoCE), uses
+#   --all2all-backend deepep_v2 and requires all-to-all RDMA NIC connectivity.
+# Expected outcome: allgather_reducescatter moves every token's hidden state to every rank, so
+# per-step inter-node traffic grows with DP size; on 200/400G RoCE vs NVLink this is likely to
+# lose to the PP layout (40-*). Run it only as the comparison arm of the PP-vs-EP benchmark.
+#
+# Confirmed flags (vLLM v0.32.0 arg_utils.py + docs/serving/data_parallel_deployment.md):
+#   leader: --data-parallel-size N --data-parallel-size-local L --data-parallel-address A
+#           --data-parallel-rpc-port P ; other nodes add --headless and --data-parallel-start-rank.
+#   --enable-expert-parallel, --all2all-backend, --enable-eplb.
+# LWS/Kueue/Multus/NCCL fields: see 40-lws-kimi-k25-2node-tp8-pp2.yaml header.
+apiVersion: leaderworkerset.x-k8s.io/v1
+kind: LeaderWorkerSet
+metadata:
+  name: kimi-k25-dp16-ep
+  namespace: moe-serving
+  labels:
+    kueue.x-k8s.io/queue-name: shared-workstation
+spec:
+  replicas: 1
+  startupPolicy: LeaderCreated
+  leaderWorkerTemplate:
+    size: 2
+    restartPolicy: RecreateGroupOnPodRestart
+    leaderTemplate:
+      metadata:
+        labels:
+          inference.example.com/model: kimi-k25
+          inference.example.com/layout: dp16-ep16
+        annotations:
+          kueue.x-k8s.io/podset-group-name: kimi-k25-dp16-ep
+          kueue.x-k8s.io/podset-required-topology: topology.example.com/network-fabric
+          k8s.v1.cni.cncf.io/networks: roce-a
+      spec:
+        nodeSelector:
+          example.com/execution-mode: shared-k8s
+          example.com/gpu-model: rtx-pro-6000-bw
+          example.com/rdma-fabric: roce-a
+        tolerations:
+          - key: example.com/execution-mode
+            operator: Equal
+            value: shared-k8s
+            effect: NoSchedule
+        terminationGracePeriodSeconds: 180
+        resourceClaims:
+          - name: gpus
+            resourceClaimTemplateName: pro6000-x8
+        containers:
+          - name: vllm
+            image: docker.io/vllm/vllm-openai:v0.32.0@sha256:befccf0e7e4089aa23926bb6f887a85c0d46c2a99e6de5c5ffdf5cb7957c5b34
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                EXTRA=""
+                if [ "${LWS_WORKER_INDEX}" != "0" ]; then EXTRA="--headless"; fi
+                exec vllm serve /models/moonshotai/Kimi-K2.5 \
+                  --served-model-name kimi-k25 \
+                  --host 0.0.0.0 --port 8000 \
+                  --trust-remote-code \
+                  --language-model-only \
+                  --tensor-parallel-size 1 \
+                  --data-parallel-size $(( LWS_GROUP_SIZE * 8 )) \
+                  --data-parallel-size-local 8 \
+                  --data-parallel-start-rank $(( LWS_WORKER_INDEX * 8 )) \
+                  --data-parallel-address "${LWS_LEADER_ADDRESS}" \
+                  --data-parallel-rpc-port 5555 \
+                  --enable-expert-parallel \
+                  --all2all-backend allgather_reducescatter \
+                  --max-model-len 131072 \
+                  --gpu-memory-utilization 0.92 \
+                  --enable-prefix-caching \
+                  --enable-auto-tool-choice --tool-call-parser kimi_k2 --reasoning-parser kimi_k2 \
+                  ${EXTRA}
+                # Variants to A/B later (each one changes ONE thing):
+                #   --enable-eplb
+                #   --all2all-backend deepep_low_latency   (expected to fail: NVSHMEM/IBGDA + P2P, DeepEP#584)
+            env:
+              - name: HF_HUB_OFFLINE
+                value: "1"
+              # llm-d wide-EP base env (llm-d v1.0.0 guides/wide-ep/.../disaggregatedset.yaml)
+              - name: VLLM_SKIP_P2P_CHECK
+                value: "1"
+              # Bootstrap/control traffic on the secondary RoCE interface (Multus => net1).
+              - name: NCCL_SOCKET_IFNAME
+                value: net1
+              - name: GLOO_SOCKET_IFNAME
+                value: net1
+              - name: NCCL_IB_HCA
+                value: mlx5_0            # measure on host: ibdev2netdev
+              # Must match switch PFC class (Cumulus default DSCP 26 -> ToS 106).
+              - name: NCCL_IB_TC
+                value: "106"
+              # PCIe platform: NCCL disables GDR reads by default; enable explicitly to test GDR.
+              - name: NCCL_NET_GDR_READ
+                value: "1"
+              - name: NCCL_DEBUG
+                value: INFO              # look for "GPU Direct RDMA Enabled" in logs
+            ports:
+              - name: http
+                containerPort: 8000
+            # Only the leader serves HTTP; workers run --headless (no probes).
+            startupProbe:
+              httpGet: {path: /health, port: http}
+              periodSeconds: 15
+              failureThreshold: 240
+            readinessProbe:
+              httpGet: {path: /health, port: http}
+              periodSeconds: 5
+              failureThreshold: 3
+            securityContext:
+              capabilities:
+                add: ["IPC_LOCK"]
+            resources:
+              claims:
+                - name: gpus
+              requests:
+                cpu: "32"
+                memory: 256Gi
+                rdma/rdma_shared_device_a: "1"
+              limits:
+                memory: 768Gi
+                rdma/rdma_shared_device_a: "1"
+            volumeMounts:
+              - {name: models, mountPath: /models, readOnly: true}
+              - {name: shm, mountPath: /dev/shm}
+        volumes:
+          - name: models
+            hostPath:
+              path: /var/lib/models
+              type: Directory
+          - name: shm
+            emptyDir:
+              medium: Memory
+              sizeLimit: 64Gi
+    workerTemplate:
+      metadata:
+        labels:
+          inference.example.com/model: kimi-k25-worker   # NOT selected by the InferencePool
+          inference.example.com/layout: dp16-ep16
+        annotations:
+          kueue.x-k8s.io/podset-group-name: kimi-k25-dp16-ep
+          kueue.x-k8s.io/podset-required-topology: topology.example.com/network-fabric
+          k8s.v1.cni.cncf.io/networks: roce-a
+      spec:
+        nodeSelector:
+          example.com/execution-mode: shared-k8s
+          example.com/gpu-model: rtx-pro-6000-bw
+          example.com/rdma-fabric: roce-a
+        tolerations:
+          - key: example.com/execution-mode
+            operator: Equal
+            value: shared-k8s
+            effect: NoSchedule
+        terminationGracePeriodSeconds: 180
+        resourceClaims:
+          - name: gpus
+            resourceClaimTemplateName: pro6000-x8
+        containers:
+          - name: vllm
+            image: docker.io/vllm/vllm-openai:v0.32.0@sha256:befccf0e7e4089aa23926bb6f887a85c0d46c2a99e6de5c5ffdf5cb7957c5b34
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                EXTRA=""
+                if [ "${LWS_WORKER_INDEX}" != "0" ]; then EXTRA="--headless"; fi
+                exec vllm serve /models/moonshotai/Kimi-K2.5 \
+                  --served-model-name kimi-k25 \
+                  --host 0.0.0.0 --port 8000 \
+                  --trust-remote-code \
+                  --language-model-only \
+                  --tensor-parallel-size 1 \
+                  --data-parallel-size $(( LWS_GROUP_SIZE * 8 )) \
+                  --data-parallel-size-local 8 \
+                  --data-parallel-start-rank $(( LWS_WORKER_INDEX * 8 )) \
+                  --data-parallel-address "${LWS_LEADER_ADDRESS}" \
+                  --data-parallel-rpc-port 5555 \
+                  --enable-expert-parallel \
+                  --all2all-backend allgather_reducescatter \
+                  --max-model-len 131072 \
+                  --gpu-memory-utilization 0.92 \
+                  --enable-prefix-caching \
+                  --enable-auto-tool-choice --tool-call-parser kimi_k2 --reasoning-parser kimi_k2 \
+                  ${EXTRA}
+                # Variants to A/B later (each one changes ONE thing):
+                #   --enable-eplb
+                #   --all2all-backend deepep_low_latency   (expected to fail: NVSHMEM/IBGDA + P2P, DeepEP#584)
+            env:
+              - name: HF_HUB_OFFLINE
+                value: "1"
+              # llm-d wide-EP base env (llm-d v1.0.0 guides/wide-ep/.../disaggregatedset.yaml)
+              - name: VLLM_SKIP_P2P_CHECK
+                value: "1"
+              # Bootstrap/control traffic on the secondary RoCE interface (Multus => net1).
+              - name: NCCL_SOCKET_IFNAME
+                value: net1
+              - name: GLOO_SOCKET_IFNAME
+                value: net1
+              - name: NCCL_IB_HCA
+                value: mlx5_0            # measure on host: ibdev2netdev
+              # Must match switch PFC class (Cumulus default DSCP 26 -> ToS 106).
+              - name: NCCL_IB_TC
+                value: "106"
+              # PCIe platform: NCCL disables GDR reads by default; enable explicitly to test GDR.
+              - name: NCCL_NET_GDR_READ
+                value: "1"
+              - name: NCCL_DEBUG
+                value: INFO              # look for "GPU Direct RDMA Enabled" in logs
+            securityContext:
+              capabilities:
+                add: ["IPC_LOCK"]
+            resources:
+              claims:
+                - name: gpus
+              requests:
+                cpu: "32"
+                memory: 256Gi
+                rdma/rdma_shared_device_a: "1"
+              limits:
+                memory: 768Gi
+                rdma/rdma_shared_device_a: "1"
+            volumeMounts:
+              - {name: models, mountPath: /models, readOnly: true}
+              - {name: shm, mountPath: /dev/shm}
+        volumes:
+          - name: models
+            hostPath:
+              path: /var/lib/models
+              type: Directory
+          - name: shm
+            emptyDir:
+              medium: Memory
+              sizeLimit: 64Gi

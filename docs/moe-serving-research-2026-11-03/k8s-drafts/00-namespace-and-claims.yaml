@@ -1,0 +1,73 @@
+# UNVALIDATED DRAFT (2026-11-03). Not applied to any cluster.
+# Namespace + DRA ResourceClaimTemplates for RTX PRO 6000 Blackwell nodes.
+#
+# Confirmed:
+# - resource.k8s.io/v1 ResourceClaimTemplate shape (spec.spec.devices.requests[].exactly.
+#   {deviceClassName, allocationMode: ExactCount, count}) and `constraints[].matchAttribute`:
+#   kubernetes-sigs/dra-driver-nvidia-gpu v0.5.1
+#   demo/specs/fabric-manager-partitioning/resourceClaimTemplates.yaml
+# - DeviceClass name `gpu.nvidia.com` and device attributes productName / architecture /
+#   cudaComputeCapability / pcieRoot: dra-driver-nvidia-gpu v0.5.1
+#   deployments/helm/.../deviceclass-gpu.yaml and cmd/gpu-kubelet-plugin/deviceinfo.go
+# - Namespace labels / Kueue deviceClassMappings `example.com/gpu -> gpu.nvidia.com`:
+#   this repo, infra/k3s/workstation-pools/{shared-pool.yaml,kueue-configuration.fragment.yaml}
+# NOT confirmed:
+# - The exact productName string the driver reports for RTX PRO 6000 Server Edition.
+#   Read it from `kubectl get resourceslices -o yaml` on a real node before relying on it.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: moe-serving
+  labels:
+    example.com/gpu-workloads: "true"
+    kueue.x-k8s.io/managed-namespace: "true"
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: LocalQueue
+metadata:
+  name: shared-workstation
+  namespace: moe-serving
+spec:
+  clusterQueue: shared-workstation
+---
+# One whole 8-GPU PRO 6000 node per pod.
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: pro6000-x8
+  namespace: moe-serving
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpus
+          exactly:
+            deviceClassName: gpu.nvidia.com
+            allocationMode: ExactCount
+            count: 8
+            selectors:
+              - cel:
+                  # SM120 = compute capability 12.0. Version attribute comparison per DRA CEL.
+                  expression: >-
+                    device.attributes['gpu.nvidia.com'].cudaComputeCapability.compareTo(semver('12.0.0')) == 0
+---
+# 4 GPUs behind the same PCIe root complex (for TP4 x PP2 inside one node, or
+# for NIC/GPU locality). pcieRoot attribute name: resource.kubernetes.io/pcieRoot
+# (standard attribute, added via deviceattribute in dra-driver-nvidia-gpu deviceinfo.go).
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: pro6000-x4-same-pcie-root
+  namespace: moe-serving
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpus
+          exactly:
+            deviceClassName: gpu.nvidia.com
+            allocationMode: ExactCount
+            count: 4
+      constraints:
+        - requests: ["gpus"]
+          matchAttribute: resource.kubernetes.io/pcieRoot

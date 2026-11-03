@@ -1,0 +1,66 @@
+Workload: 30 input tok per output tok, cache hit 90%; life 3y; elec 200 KRW/kWh; PUE 1.4; FX 1400
+======================================================================================================================
+A. API baseline — USD per 1M OUTPUT tokens incl. the input that rides with them
+API                              in  cache    out | r 10/h80 r 30/h90 r 30/h70 r100/h95
+K2.5 OR AtlasCloud int4       0.490  0.200   2.50 |      5.08      9.37     11.11     23.95
+K2.5 OR SiliconFlow int4      0.500  0.150   2.50 |      4.70      8.05     10.15     19.25
+K2.5 OR Novita                0.570  0.095   2.85 |      4.75      7.12      9.97     14.73
+K2.5 OR Bedrock               0.600  0.600   3.00 |      9.00     21.00     21.00     63.00
+K2.6 Moonshot (via OR)        0.950  0.160   4.00 |      7.18     11.17     15.91     23.95
+DSV3.2 OR DeepInfra fp4       0.260  0.130   0.38 |      1.94      4.67      5.45     14.03
+DSR1-0528 OR DeepInfra        0.500  0.350   2.15 |      5.95     13.10     14.00     37.90
+DS V4-Pro official peak       1.320  0.044   3.96 |      6.95      9.11     16.76     14.74
+DS V4-Pro official offpk      0.660  0.022   1.98 |      3.48      4.55      8.38      7.37
+-> reference baseline 'K2.5 OR SiliconFlow int4' at current workload = $8.05 per 1M output
+======================================================================================================================
+B. Configurations (capex uses PLACEHOLDER prices — overwrite)
+config                                 GPUs    capex$  kW IT kW fac  opex$/y  s/1Mout eff.out tok/s
+i) 8x PRO6000 (1 srv)                     8   151,000   5.28   7.39   16,801     1486           673
+ii) 16x PRO6000 (2 srv, 2 replicas)      16   307,000  10.86  15.20   34,377      743          1346
+iii-a) 32x 4090-48G (4 srv, 2 repl)      32   212,000  16.54  23.16   39,578     1301           769
+iii-b) 48x 4090-48G (6 srv, 3 repl)      48   318,000  24.76  34.66   59,280      867          1153
+iv) 1x HGX 8xH200                         8   350,000   8.16  11.42   31,796      361          2772
+======================================================================================================================
+C. Self-host cost per 1M output tokens (USD) vs utilization  | API ref = $8.05
+config                                     10%     20%     30%     50%     70%     90%  BE util
+i) 8x PRO6000 (1 srv)                    31.64   15.82   10.55    6.33    4.52    3.52      39%
+ii) 16x PRO6000 (2 srv, 2 replicas)      32.21   16.11   10.74    6.44    4.60    3.58      40%
+iii-a) 32x 4090-48G (4 srv, 2 repl)      45.48   22.74   15.16    9.10    6.50    5.05      56%
+iii-b) 48x 4090-48G (6 srv, 3 repl)      45.45   22.73   15.15    9.09    6.49    5.05      56%
+iv) 1x HGX 8xH200                        16.98    8.49    5.66    3.40    2.43    1.89      21%
+======================================================================================================================
+D. INVERTED: maximum total system capex (USD) at which self-host == API ref (negative = cannot win even with free hardware)
+config                                        10%        20%        30%        50%        70%        90%
+i) 8x PRO6000 (1 srv)                      20,431     64,994    109,557    198,683    287,809    376,935
+ii) 16x PRO6000 (2 srv, 2 replicas)        39,491    128,617    217,743    395,995    574,247    752,499
+iii-a) 32x 4090-48G (4 srv, 2 repl)       -24,688     26,218     77,125    178,938    280,751    382,564
+iii-b) 48x 4090-48G (6 srv, 3 repl)       -36,804     39,556    115,915    268,635    421,354    574,074
+iv) 1x HGX 8xH200                         146,301    329,897    513,492    880,684  1,247,875  1,615,067
+
+   ...same, expressed as MAX PRICE PER GPU after subtracting base+network placeholders
+i) 8x PRO6000 (1 srv)                      -3,071      2,499      8,070     19,210     30,351     41,492
+ii) 16x PRO6000 (2 srv, 2 replicas)        -3,469      2,101      7,671     18,812     29,953     41,094
+iii-a) 32x 4090-48G (4 srv, 2 repl)        -3,397     -1,806       -215      2,967      6,148      9,330
+iii-b) 48x 4090-48G (6 srv, 3 repl)        -3,392     -1,801       -210      2,972      6,153      9,335
+======================================================================================================================
+E. Sensitivity (config i, 8x PRO6000): max system capex at 50% util vs decode tok/s x workload
+decode tok/s      r10/h80      r30/h90      r30/h70     r100/h95
+         400       46,170       91,043       91,043      229,253
+         600       76,736      138,053      125,424      321,393
+         900      117,906      198,683      162,580      431,961
+        1500      186,773      293,751      208,897      588,896
+        2500      273,298      403,130      249,645      748,383
+======================================================================================================================
+F. Sensitivity (config i): cost per 1M output (USD) at 50% util vs electricity & PUE
+ KRW/kWh PUE 1.2 PUE 1.4 PUE 1.6
+     150    6.02    6.11    6.20
+     200    6.20    6.33    6.45
+     250    6.39    6.55    6.70
+======================================================================================================================
+G. GPU count needed per model replica (weights + KV headroom)
+   (smallest power-of-2 GPU count with weights <= 85% of total VRAM; parentheses = total VRAM, KV headroom GB)
+model                               PRO6000 96GB    4090 48GB(mod)         4090 24GB        H200 141GB        B200 180GB
+Kimi K2.5 INT4 (~1T)               8 ( 768/ 168)    16 ( 768/ 168)    32 ( 768/ 168)     8 (1128/ 528)     4 ( 720/ 120)
+DeepSeek V3/R1 FP8 (671B)         16 (1536/ 846)    32 (1536/ 846)    64 (1536/ 846)     8 (1128/ 438)     8 (1440/ 750)
+DeepSeek V3/R1 4-bit (671B)        8 ( 768/ 388)    16 ( 768/ 388)    32 ( 768/ 388)     4 ( 564/ 184)     4 ( 720/ 340)
+   -> plug-in rule: 1 PRO6000 replica (8 cards) ~ 16x 4090-48G ~ 32x 4090-24G (VRAM parity); compute/comm parity is NOT implied.
