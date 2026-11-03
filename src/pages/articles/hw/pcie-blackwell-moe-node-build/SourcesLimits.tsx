@@ -15,7 +15,7 @@ export default function SourcesLimits() {
         <h2 className="mb-6 text-2xl font-bold">10. 제품 문서·포럼·라이선스 원문이 말하는 것과 아닌 것</h2>
         <div className={prose}>
           <p>
-            이 절은 앞에서 쓴 판단의 원문을 하나씩 엽니다. 각 원문 아래에는 그 문장이 3절과 7절의 노드에서 무엇을 허용하고 무엇을 확인하라고 요구하는지를 적습니다.
+            앞에서 쓴 판단의 원문을 하나씩 엽니다. 각 원문 아래에는 그 문장이 3절과 7절의 노드에서 무엇을 허용하고 무엇을 확인하라고 요구하는지를 적습니다.
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function SourcesLimits() {
 
         <div className={prose}>
           <p>
-            지금부터는 이 노드가 고르지 않은 두 길의 원문입니다. 첫째는 같은 돈으로 소비자용 카드를 더 많이 사는 길이고, 둘째는 노드를 넘어 expert를 흩는 길입니다.
+            이어지는 원문은 이 노드가 고르지 않은 두 길에 관한 것입니다. 같은 돈으로 소비자용 카드를 더 많이 사는 길과 노드를 넘어 expert를 흩는 길입니다.
           </p>
         </div>
 
@@ -87,7 +87,7 @@ export default function SourcesLimits() {
 
         <div className={prose}>
           <p>
-            라이선스 말고도 RTX 4090을 빼는 이유가 둘 더 있습니다. P2P는 드라이버 525.105.17 이후 막혀 있고 비공식 P2P 패치에는 580 브랜치가 없습니다. GPUDirect RDMA도 앞 문서의 &ldquo;Tesla and Quadro&rdquo; 밖입니다. 그리고 48GB 개조판으로도 595GB 가중치만 담는 데 13장 이상이 필요해 한 벌이 노드 두 대에 걸칩니다. 개조 카드의 회로와 링크 차이는{" "}
+            라이선스 말고도 RTX 4090을 빼는 이유가 둘 더 있습니다. P2P는 드라이버 525.105.17 이후 막혀 있고 비공식 P2P 패치에는 580 브랜치가 없습니다. GPUDirect RDMA도 앞 문서의 &ldquo;Tesla and Quadro&rdquo; 밖입니다. 48GB 개조판으로도 595GB 가중치만 담는 데 13장 이상이 필요해 한 벌이 노드 두 대에 걸칩니다. 개조 카드의 회로와 링크 차이는{" "}
             <Link to="/cs/gpu/modded-rtx4090-moe-serving">개조 RTX 4090과 MoE 서빙</Link>이 다룹니다.
           </p>
         </div>
@@ -107,7 +107,8 @@ export default function SourcesLimits() {
         <h2 className="mb-6 text-2xl font-bold">11. 이 노드 설계는 아직 한 번도 측정되지 않았습니다</h2>
         <div className={prose}>
           <p>
-            가장 큰 한계부터 적습니다. 이 글의 어떤 숫자도 우리 손으로 잰 것이 아닙니다. 공식 사양, 코드와 문서 읽기, 커뮤니티 위키의 현장 경험, 그리고 그 위의 계산입니다. 위키 숫자는 같은 사람이 같은 노드에서 낸 것이라 서로 비교할 만하지만, 반복과 오차가 없어 배수를 일반 법칙으로 쓰지 않습니다.
+            가장 큰 한계부터 적습니다. 이 글의 어떤 숫자도 우리 손으로 잰 것이 아닙니다. 공식 사양, 코드와 문서 읽기, 커뮤니티 위키의 현장 경험, 그리고 그 위의 계산입니다. 위키
+            숫자는 같은 사람이 같은 노드에서 낸 것이라 서로 비교할 만하지만 반복과 오차가 없어 배수를 일반 법칙으로 쓰지 않습니다.
           </p>
           <p>
             둘째, 1절의 900 tok/s는 요청 하나로 보면 9 tok/s입니다. 에이전트 서빙의 독립 평가 기준인 AA-AgentPerf Tier 1은 요청별 P25가 20 tok/s 이상이라 이 숫자는 그 기준에 못 미칩니다. 이 노드가 서비스 목표를 지키며 몇 에이전트를 받는지는 어디에도 측정돼 있지 않고, 측정 방법은{" "}
@@ -115,7 +116,7 @@ export default function SourcesLimits() {
           </p>
           <p>
             셋째, 가격을 넣지 않았습니다. 카드와 서버 값은 날마다 바뀌므로 파라미터로 둡니다. 손익분기는 서비스 목표를 지키는 처리량과 가동률이 정하고, 같은 처리량이면 가동률이 단가를 가장 크게 움직입니다. 비교의 자를 맞추는 법은{" "}
-            <Link to="/cs/ai/own-vs-rent-inference-capacity#unit-mismatch">소유와 임대의 비교</Link>에 있습니다. 그래서 순서는 같은 구성을 먼저 빌려 우리 트레이스로 재고, 그 숫자를 넣어 살지 정하는 것입니다.
+            <Link to="/cs/ai/own-vs-rent-inference-capacity#unit-mismatch">소유와 임대의 비교</Link>에 있습니다. 순서도 여기서 정해집니다. 같은 구성을 먼저 빌려 자기 워크로드 트레이스로 잰 뒤 그 숫자를 넣어 살지 정합니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -127,10 +128,12 @@ export default function SourcesLimits() {
               현장 측정은 PR 두 개를 얹은 커스텀 vLLM 이미지에서 나왔습니다. 공개 v0.32.0 이미지로 이 노드에서 Kimi K2.5가 돈 보고는 찾지 못했습니다. FP8 기억은 SM120에서 &ldquo;Out of Resource&rdquo;로 실패한 다른 모델의 이슈(#46721)도 있어 대상 이미지에서 먼저 켜 봐야 합니다.
             </p>
             <p>
-              기억 오프로드가 TP rank마다 같은 기억을 각자 내리는지는 확인하지 못했습니다. 그렇다면 3절의 142개는 17개로 줄어 호스트 메모리 크기를 다시 정해야 합니다. 시퀀스 분할의 출력 drift 버그 vllm#41623도 열려 있어, 켜기 전에 고정 프롬프트로 출력 비교를 돌립니다.
+              기억 오프로드가 TP rank마다 같은 기억을 각자 내리는지는 확인하지 못했습니다. 그렇다면 3절의 142개는 17개로 줄어 호스트 메모리 크기를 다시 정해야 합니다.
+              시퀀스 분할의 출력 drift 버그 vllm#41623도 열려 있으니 켜기 전에 고정 프롬프트로 출력 비교를 돌립니다.
             </p>
             <p>
-              GPUDirect RDMA는 NVIDIA 문서가 제품명으로 확인하지 않았습니다. Server Edition이 PCIe ATS를 광고하지 않아 ESXi의 P2P 경로가 막힌다는 포럼 보고도 있어, 가상화를 끼우면 7절의 수락을 다시 해야 합니다.
+              GPUDirect RDMA는 NVIDIA 문서가 제품명으로 확인하지 않았습니다. Server Edition이 PCIe ATS를 광고하지 않아 ESXi의 P2P 경로가
+              막힌다는 포럼 보고도 있어서 가상화를 끼우면 7절의 수락을 다시 해야 합니다.
             </p>
           </div>
         </ProgressiveDetail>

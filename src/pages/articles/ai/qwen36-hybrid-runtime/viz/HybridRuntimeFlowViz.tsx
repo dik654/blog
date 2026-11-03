@@ -1,4 +1,5 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -162,21 +163,28 @@ export default function HybridRuntimeFlowViz() {
         </div>
 
         <div className="mt-3 grid gap-2 sm:mt-6 sm:gap-5 lg:grid-cols-[minmax(0,.72fr)_minmax(0,1.28fr)]">
-          <section className={`grid grid-cols-[5.5rem_minmax(0,1fr)] gap-x-3 border p-3 sm:block sm:p-5 ${STAGES[active].tone}`}>
-            <div>
-              <p className="text-xs font-black">{STAGES[active].short}</p>
-              <h4 className="mt-1 text-sm font-black sm:mt-2 sm:text-lg">{STAGES[active].label}</h4>
-            </div>
-            <p className="text-xs leading-5 sm:mt-4 sm:text-sm sm:leading-7">{STAGES[active].detail}</p>
-            <div className="col-span-2 mt-2 flex items-baseline justify-between gap-3 border-t border-current/20 pt-2 sm:mt-5 sm:block sm:pt-4">
-              <p className="text-[11px] font-bold uppercase tracking-wide">
-                현재 state
-              </p>
-              <p className="text-right font-mono text-[11px] leading-5 sm:mt-2 sm:text-left sm:text-xs">
-                {STAGES[active].state}
-              </p>
-            </div>
-          </section>
+          {/* 단계마다 설명 길이가 달라 현재 단계만 그리면 아래 조작부가 위아래로 움직인다.
+              모든 단계 카드를 같은 칸에 겹쳐 가장 긴 카드 높이를 예약한다. */}
+          <StableSceneStack
+            active={active}
+            scenes={STAGES.map((stage) => (
+              <section key={stage.id} className={`grid h-full grid-cols-[5.5rem_minmax(0,1fr)] gap-x-3 border p-3 sm:block sm:p-5 ${stage.tone}`}>
+                <div>
+                  <p className="text-xs font-black">{stage.short}</p>
+                  <h4 className="mt-1 text-sm font-black sm:mt-2 sm:text-lg">{stage.label}</h4>
+                </div>
+                <p className="text-xs leading-5 sm:mt-4 sm:text-sm sm:leading-7">{stage.detail}</p>
+                <div className="col-span-2 mt-2 flex items-baseline justify-between gap-3 border-t border-current/20 pt-2 sm:mt-5 sm:block sm:pt-4">
+                  <p className="text-[11px] font-bold uppercase tracking-wide">
+                    현재 state
+                  </p>
+                  <p className="text-right font-mono text-[11px] leading-5 sm:mt-2 sm:text-left sm:text-xs">
+                    {stage.state}
+                  </p>
+                </div>
+              </section>
+            ))}
+          />
           <StateShape active={active} />
         </div>
 

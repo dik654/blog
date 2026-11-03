@@ -36,10 +36,22 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           <h2 className="mb-6 text-2xl font-bold">1. GPU 8장인데 긴 대화 하나도 다 못 담는 이유는?</h2>
           <KvPoolPerCardViz />
           <div className={prose}>
-            <p className="text-lg leading-8">1조 파라미터 MoE인 Kimi K2.5를 96 GB 카드 8장에 올린 사람들이 같은 벽을 만났습니다. 가중치는 장마다 약 74 GB로 잘 나뉘는데, 20만 token짜리 대화 하나의 기록을 담을 자리가 모자랐습니다. 메모리 합계는 768 GB인데도 그렇습니다.</p>
-            <p>이 글이 답할 질문은 하나입니다. GPU를 늘리면 가중치는 나뉘는데 대화 기록은 왜 나뉘지 않을까요? 짧은 답은 이렇습니다. 이 모델은 모든 attention head가 숫자 576개짜리 묶음 하나를 함께 읽어서, head를 기준으로 나누던 방식이 통하지 않습니다.</p>
-            <p>그러면 무엇을 기준으로 나눠야 할까요? 위 그림 마지막 장면처럼 대화의 token을 8장에 번갈아 나눠 담으면 기록이 다시 1/8로 줄어듭니다. 대신 장마다 계산한 부분 결과를 매 층 합쳐야 하고, 그 합치기에는 시간과 아직 덜 다듬어진 구현이라는 비용이 붙습니다.</p>
-            <p>순서는 이렇습니다. 층 하나와 token 네 개로 장마다 드는 byte를 먼저 세고, 왜 나눌 수 없는지를 본 뒤, token을 나눴을 때 결과를 어떻게 합치는지 따라갑니다. 그다음 Kimi K2.5 숫자로 용량을 다시 세고, vLLM 원문과 현장 측정, 비용과 다른 구조와의 비교로 마무리합니다.</p>
+            <p className="text-lg leading-8">
+            1조 파라미터 MoE인 Kimi K2.5를 96 GB 카드 8장에 올린 사람들이 같은 벽을 만났습니다. 가중치는 장마다 약 74 GB로 잘 나뉘는데 20만 token짜리 대화
+            하나의 기록을 담을 자리가 모자랐습니다. 메모리 합계는 768 GB인데도 그렇습니다.
+          </p>
+            <p>
+            이 글이 답할 질문은 하나입니다. GPU를 늘리면 가중치는 나뉘는데 대화 기록은 왜 나뉘지 않을까요? 이 모델은 모든 attention head가 숫자 576개짜리 묶음 하나를
+            함께 읽어서 head를 기준으로 나누던 방식이 통하지 않습니다.
+          </p>
+            <p>
+            그러면 무엇을 기준으로 나눠야 할까요? 위 그림 마지막 장면처럼 대화의 token을 8장에 번갈아 나눠 담으면 기록이 다시 1/8로 줄어듭니다. 대신 장마다 계산한 부분 결과를
+            매 층 합쳐야 하고 그 합치기에는 시간과 아직 덜 다듬어진 구현이라는 비용이 붙습니다.
+          </p>
+            <p>
+            층 하나와 token 네 개로 장마다 드는 byte를 먼저 세고 왜 나눌 수 없는지 본 뒤, token을 나눴을 때 결과를 어떻게 합치는지 따라갑니다. 그다음 Kimi K2.5
+            숫자로 용량을 다시 세고 vLLM 원문과 현장 측정, 비용과 다른 구조와의 비교로 마무리합니다.
+          </p>
           </div>
         </section>
 
@@ -47,9 +59,14 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           <h2 className="mb-6 text-2xl font-bold">2. config 세 줄과 설정 세 개가 용량을 정합니다</h2>
           <div className={prose}>
             <p>바깥에서 보면 이 문제의 입력은 짧습니다. 모델 쪽은 config.json의 세 값, 곧 층 수 61, 압축 묶음 폭 512, 위치 전용 폭 64입니다. 장비 쪽은 GPU 수, 대화 token을 몇 장에 나눠 담을지, 기록의 숫자 하나를 몇 byte로 저장할지입니다.</p>
-            <p>출력도 두 개입니다. GPU 한 장이 담는 token 수와, 그것을 대화 길이로 나눈 동시 대화 수입니다. 에이전트 서빙에서는 두 번째 숫자가 곧 동시에 상주시킬 수 있는 에이전트 수라서, 처리 속도보다 먼저 서비스 규모를 정합니다.</p>
+            <p>
+            출력은 GPU 한 장이 담는 token 수와 그것을 대화 길이로 나눈 동시 대화 수입니다. 에이전트 서빙에서는 동시 대화 수가 곧 동시에 상주시킬 수 있는 에이전트 수라서 처리
+            속도보다 먼저 서비스 규모를 정합니다.
+          </p>
             <p>config에 적힌 num_key_value_heads 64는 이 상자의 입력이 아닙니다. 이 값만 보고 64개 head를 8장에 8개씩 나누면 된다고 계산하면 틀립니다. 실제 기록이 몇 묶음인지는 4절에서 확인합니다.</p>
-            <p>attention 행렬곱 자체나 expert 계산, 가중치 양자화는 이 상자 밖에 있습니다. 여기까지가 무엇을 넣고 무엇을 얻는지의 계약이고, 다음 절은 가장 작은 숫자로 그 안을 열어 봅니다.</p>
+            <p>
+            attention 행렬곱 자체나 expert 계산, 가중치 양자화는 이 상자 밖에 있습니다. 상자 안쪽은 가장 작은 숫자로 먼저 열어 봅니다.
+          </p>
           </div>
         </section>
 
@@ -60,7 +77,10 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
             <p>층 하나, token 네 개, 숫자당 2 byte로 두 모델을 비교합니다. 첫째는 KV head 4개에 head 폭 128인 모델입니다(가정). 둘째는 모든 head가 숫자 576개를 함께 읽는 모델로, 576은 Kimi K2.5 config의 512와 64를 더한 값입니다.</p>
             <p>첫째 모델의 token 하나는 head마다 K와 V 128개씩, 곧 256개 숫자를 남기고 2 byte라 512 byte입니다. GPU 4장이 head를 하나씩 맡으면 장마다 token당 512 byte, token 4개면 2,048 byte입니다. 네 장의 기록은 모두 다릅니다.</p>
             <p>둘째 모델의 token 하나는 576개 숫자, 1,152 byte로 첫째 모델 전체 2,048 byte보다 작습니다. 그런데 나눌 head가 하나뿐이라 네 장 모두 1,152 byte를 token마다 들어 장마다 4,608 byte입니다. 장 단위로는 첫째 모델의 2.25배입니다.</p>
-            <p>token을 장마다 하나씩 나눠 담으면 둘째 모델도 장마다 1,152 byte로 내려갑니다. 반대로 첫째 모델을 8장에 올리면 head 4개를 8장이 나눌 수 없어 두 장씩 같은 head를 들고, 장마다 여전히 2,048 byte입니다. 이 숫자 묶음을 글 끝까지 다시 씁니다.</p>
+            <p>
+            token을 장마다 하나씩 나눠 담으면 둘째 모델도 장마다 1,152 byte로 내려갑니다. 반대로 첫째 모델을 8장에 올리면 head 4개를 8장이 나눌 수 없어 두 장씩
+            같은 head를 들고 장마다 여전히 2,048 byte입니다. 이 숫자 묶음을 글 끝까지 다시 씁니다.
+          </p>
           </div>
           <CalculationWalkthrough
             title="층 1개, token 4개에서 장마다 드는 byte"
@@ -77,17 +97,29 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
             caveats={["KV head 4개와 head 폭 128은 작은 사례용 가정입니다.", "token을 나눠 담으면 결과를 합치는 통신이 생깁니다(5절)."]}
           />
           <div className={prose}>
-            <p>작은 사례가 보여 준 것은 두 가지입니다. head 축으로 나눌 수 있는 양에는 head 수라는 상한이 있고, 이 모델은 그 상한이 1입니다. 왜 1인지, 그리고 그 1을 넘어서려면 무엇을 나눠야 하는지가 다음 두 절의 질문입니다.</p>
+            <p>
+            작은 사례에서 보듯 head 축으로 나눌 수 있는 양에는 head 수라는 상한이 있고 이 모델은 그 상한이 1입니다. 왜 1인지, 그 1을 넘어서려면 무엇을 나눠야 하는지는
+            이어지는 두 절에서 다룹니다.
+          </p>
           </div>
         </section>
 
         <section id="why-replicated" data-teach-level="2" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. 64개 query head가 같은 576개를 읽기 때문입니다</h2>
           <div className={prose}>
-            <p>GPU 여러 장에 행렬을 나누는 tensor parallel(TP)은 attention을 head 단위로 나눕니다. head마다 계산이 서로 독립이라, 각 장은 자기 head의 query와 자기 head의 KV만 있으면 됩니다. GQA에서 KV head가 8장에 고르게 나뉘는 이유가 이것입니다.</p>
-            <p>MLA는 token마다 key와 value를 head별로 저장하지 않고, 둘을 512차원 latent 하나로 압축해 둡니다. 위치 정보는 head 공유 key 64차원에 따로 둡니다. 원래는 읽을 때 head마다 key를 복원해야 하지만, decode에서는 그 복원 행렬을 query 쪽으로 미리 접어 둡니다.</p>
+            <p>
+            GPU 여러 장에 행렬을 나누는 tensor parallel(TP)은 attention을 head 단위로 나눕니다. head마다 계산이 서로 독립이라 각 장은 자기 head의
+            query와 자기 head의 KV만 있으면 됩니다. GQA에서 KV head가 8장에 고르게 나뉘는 것도 이 덕분입니다.
+          </p>
+            <p>
+            MLA는 token마다 key와 value를 head별로 저장하지 않고 둘을 512차원 latent 하나로 압축해 둡니다. 위치 정보는 head 공유 key 64차원에 따로
+            둡니다. 원래는 읽을 때 head마다 key를 복원해야 하지만 decode에서는 그 복원 행렬을 query 쪽으로 미리 접어 둡니다.
+          </p>
             <p>이 접기를 weight absorption이라고 합니다. 접고 나면 64개 query head 각각이 512차원으로 바뀐 query를 들고 같은 latent를 읽습니다. query는 64개인데 KV는 하나뿐인 multi-query attention(MQA) 모양이 됩니다. 유도는 <Link to="/cs/ai/multi-head-latent-attention-mechanics#weight-absorption">MLA 메커니즘 글</Link>에 있습니다.</p>
-            <p>TP가 query head를 8장에 8개씩 나누면 장마다 자기 query 8개가 읽을 KV가 필요한데, 그 KV는 64개 head가 함께 쓰는 576개 숫자 전부입니다. 그래서 장마다 같은 latent를 통째로 듭니다. 나누지 못하는 것이 아니라 나눌 head 경계가 처음부터 없습니다.</p>
+            <p>
+            TP가 query head를 8장에 8개씩 나누면 장마다 자기 query 8개가 읽을 KV가 필요합니다. 그 KV가 64개 head가 함께 쓰는 576개 숫자 전부라서 장마다
+            같은 latent를 통째로 듭니다. 나누지 못하는 것이 아니라 나눌 head 경계가 처음부터 없습니다.
+          </p>
           </div>
           <ExplainedFormula
             question="token 하나의 KV 기록은 GPU 한 장에 몇 byte씩 놓일까요?"
@@ -117,7 +149,10 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
             </CitationBlock>
           </div>
           <div className={prose}>
-            <p>정리하면 GQA는 head 수까지는 GPU를 늘리는 만큼 장당 기록이 줄고, MLA는 처음부터 줄지 않습니다. 장당 기록을 줄이려면 head가 아닌 다른 축이 필요한데, 남은 축은 token입니다. 다음 절은 token을 나눴을 때 계산이 어떻게 맞아떨어지는지 봅니다.</p>
+            <p>
+            GQA는 head 수까지는 GPU를 늘리는 만큼 장당 기록이 줄지만 MLA는 처음부터 줄지 않습니다. 장당 기록을 줄이려면 head가 아닌 다른 축이 필요한데 남은 축은
+            token입니다. token으로 나눠도 계산은 맞아떨어질까요?
+          </p>
           </div>
         </section>
 
@@ -126,9 +161,15 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           <DcpDecodeStepViz />
           <div className={prose}>
             <p>token t를 rank t mod 4에 두면 rank마다 대화의 1/4만 남습니다. 문제는 attention이 모든 token에 걸친 softmax라는 점입니다. 한 rank는 자기 token의 점수만 알기 때문에 혼자서는 전체 분모를 모릅니다.</p>
-            <p>그래서 각 rank는 두 가지를 냅니다. 자기 token만으로 계산한 가중합과, 그때 쓴 분모의 로그입니다. 분모의 로그를 log-sum-exp(LSE)라고 부르고 head마다 숫자 하나입니다. 모든 rank의 LSE를 모으면 전체 분모를 정확히 복원할 수 있습니다.</p>
+            <p>
+            각 rank는 자기 token만으로 계산한 가중합과 그때 쓴 분모의 로그를 함께 냅니다. 분모의 로그를 log-sum-exp(LSE)라고 부르고 head마다 숫자 하나입니다.
+            모든 rank의 LSE를 모으면 전체 분모를 정확히 복원할 수 있습니다.
+          </p>
             <p>숫자로 확인합니다(가정). rank 0의 token 두 개는 점수 1과 0, 값 2와 4입니다. rank 1은 점수 0과 −1, 값 6과 8입니다. 각자의 분모는 3.718과 1.368이고 각자의 가중합은 2.538과 6.538입니다. 두 결과를 단순 평균하면 4.538이지만 정답은 아닙니다.</p>
-            <p>전체 분모는 3.718과 1.368의 합 5.086입니다. 각 rank는 자기 분모가 전체에서 차지하는 비율 0.731과 0.269를 자기 결과에 곱합니다. 더하면 3.614이고, 네 token을 한 장에서 한 번에 계산한 값과 같습니다.</p>
+            <p>
+            전체 분모는 3.718과 1.368의 합 5.086입니다. 각 rank는 자기 분모가 전체에서 차지하는 비율 0.731과 0.269를 자기 결과에 곱합니다. 이를 더한
+            3.614는 네 token을 한 장에서 한 번에 계산한 값과 같습니다.
+          </p>
           </div>
           <ExplainedFormula
             question="자기 token만 본 rank들의 부분 attention을 어떻게 하나의 정답으로 합칠까요?"
@@ -178,14 +219,17 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
             output="rank r이 맡은 query head의 attention 출력(latent 공간). 이어서 흡수된 W^O W^UV로 model 차원으로 보냅니다."
           />
           <div className={prose}>
-            <p>합치는 원리는 FlashAttention이 block마다 분모를 갱신하는 <Link to="/cs/ai/flash-attention-io-aware-kernel#online-softmax">online softmax</Link>와 같습니다. 다른 점은 합칠 대상이 다른 GPU에 있다는 것뿐입니다. 이 절이 끝낸 것은 값이 맞는다는 확인이고, 남은 질문은 이 구성들에 붙은 공식 이름입니다.</p>
+            <p>합치는 원리는 FlashAttention이 block마다 분모를 갱신하는 <Link to="/cs/ai/flash-attention-io-aware-kernel#online-softmax">online softmax</Link>와 같습니다. 다른 점은 합칠 대상이 다른 GPU에 있다는 것뿐입니다. 값이 맞는다는 것까지 확인했으니 남은 것은 이 구성들에 붙은 공식 이름입니다.</p>
           </div>
         </section>
 
         <section id="names" data-teach-level="3" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">6. 이 구성에는 각각 이름이 있습니다</h2>
           <div className={prose}>
-            <p>지금까지 이름 없이 본 세 가지에 이름을 붙입니다. 장마다 같은 latent가 통째로 놓이는 현상, token을 나눠 담는 설정, 부분 결과를 분모부터 맞춰 더하는 계산입니다. 숫자 byte를 줄이는 쪽에도 이름이 있어 함께 정리합니다.</p>
+            <p>
+            장마다 같은 latent가 통째로 놓이는 현상, token을 나눠 담는 설정, 부분 결과를 분모부터 맞춰 더하는 계산에는 각각 이름이 있습니다. 숫자 byte를 줄이는 쪽의
+            이름도 함께 적어 둡니다.
+          </p>
           </div>
           <TermBreakdown
             title="역할에서 이름으로"
@@ -197,7 +241,7 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
             ]}
           />
           <div className={prose}>
-            <p>DCP는 이미 있는 <Link to="/cs/ai/tensor-and-pipeline-parallel-inference#sequence-context-parallel">context parallel</Link>의 decode판입니다. 그 글이 말하듯 decode에서는 query가 token 하나라 KV를 돌리는 ring이 이득이 없으므로, KV를 나눠 둔 채 작은 query와 결과만 옮깁니다. FP8 KV의 scale은 <Link to="/cs/ai/kv-cache-quantization#names">KV cache 양자화</Link>에서 다룹니다.</p>
+            <p>DCP는 이미 있는 <Link to="/cs/ai/tensor-and-pipeline-parallel-inference#sequence-context-parallel">context parallel</Link>의 decode판입니다. 그 글이 말하듯 decode에서는 query가 token 하나라 KV를 돌리는 ring이 이득이 없으므로 KV를 나눠 둔 채 작은 query와 결과만 옮깁니다. FP8 KV의 scale은 <Link to="/cs/ai/kv-cache-quantization#names">KV cache 양자화</Link>에서 다룹니다.</p>
           </div>
         </section>
 
@@ -225,7 +269,10 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
             caveats={["BF16 측정의 gpu-util 설정은 기록에 없어 두 자리(13.4 GB와 15.9 GB)가 다릅니다. 그래서 FP8 효과가 정확히 2배가 아니라 2.4배로 보입니다.", "자리 역산은 측정 token 수에 이론 byte를 곱한 값이라 실제 allocator 크기와 다를 수 있습니다(추정)."]}
           />
           <div className={prose}>
-            <p>8장에 나누면 장마다 452,688 token을 들고, 그 1 byte 기록은 15.9 GB로 FP8 DCP1에서 역산한 15.8 GB와 0.7% 차이입니다. 두 측정이 같은 자리를 서로 다른 방식으로 채웠다는 뜻이고, 4절 식의 ÷D가 측정과 맞는다는 확인입니다. (계산)</p>
+            <p>
+            8장에 나누면 장마다 452,688 token을 들고 그 1 byte 기록은 15.9 GB로 FP8 DCP1에서 역산한 15.8 GB와 0.7% 차이입니다. 두 측정은 같은
+            자리를 서로 다른 방식으로 채웠고, 4절 식의 ÷D가 측정과 맞는다는 것도 여기서 확인됩니다. (계산)
+          </p>
           </div>
         </section>
 
@@ -238,20 +285,32 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           {code("kv-heads-per-rank", "MLA면 KV head 1개, GQA면 head ÷ TP")}
           {code("mla-head-size", "MLA cache 폭 = 512 + 64")}
           <div className={prose}>
-            <p>DCP 크기의 상한도 같은 파일에 있습니다. MLA가 아니면 TP가 KV head 수보다 커야 하고, 최대 DCP는 TP를 KV head 수로 나눈 몫입니다. 복제로 같은 head를 든 장만 token 축으로 묶을 수 있다는 뜻이고, MLA는 이 검사를 건너뛰어 DCP를 TP 크기까지 올립니다.</p>
+            <p>
+            DCP 크기의 상한도 같은 파일에 있습니다. MLA가 아니면 TP가 KV head 수보다 커야 하고, 최대 DCP는 TP를 KV head 수로 나눈 몫입니다. 곧 복제로 같은
+            head를 든 장만 token 축으로 묶을 수 있습니다. MLA는 이 검사를 건너뛰어 DCP를 TP 크기까지 올립니다.
+          </p>
             <p>token 배정은 backends/utils.py의 get_dcp_local_seq_lens가 셉니다. 길이 10인 대화를 DCP 4로 나누면 몫 2를 먼저 주고 남은 2개를 rank 0과 1이 하나씩 더 가져가 3, 3, 2, 2입니다. 5절의 t mod D 배정과 같습니다.</p>
           </div>
           {code("dcp-gqa-limit", "GQA의 DCP 상한 = TP ÷ KV head")}
           {code("dcp-local-seq-lens", "rank마다 든 token 수 계산")}
           <div className={prose}>
-            <p>decode 한 층의 순서는 mla_attention.py에 있습니다. query를 DCP 그룹에서 모으고, forward_mqa가 자기 token으로 부분 출력과 lse를 내고, dcp_manager.combine이 합칩니다. 5절 AlgorithmBlock의 여섯 줄이 이 세 호출에 대응합니다.</p>
-            <p>합치는 기본 함수는 ops/dcp.py의 cp_lse_ag_out_rs입니다. lse를 all-gather하고, correct_attn_out이 몫을 곱하고, 출력을 reduce-scatter합니다. dcp_comm_backend를 a2a로 두면 all-to-all 한 번으로 바꾸는 경로도 있습니다.</p>
+            <p>
+            decode 한 층의 순서는 mla_attention.py에 있습니다. query를 DCP 그룹에서 모으면 forward_mqa가 자기 token으로 부분 출력과 lse를 내고
+            dcp_manager.combine이 이를 합칩니다. 5절 AlgorithmBlock의 여섯 줄이 이 세 호출에 대응합니다.
+          </p>
+            <p>
+            합치는 기본 함수는 ops/dcp.py의 cp_lse_ag_out_rs입니다. lse를 all-gather한 뒤 correct_attn_out이 몫을 곱하고 출력을
+            reduce-scatter합니다. dcp_comm_backend를 a2a로 두면 all-to-all 한 번으로 바꾸는 경로도 있습니다.
+          </p>
           </div>
           {code("dcp-decode-path", "query 모으기 → 부분 attention → 합치기")}
           {code("lse-combine", "lse all-gather와 출력 reduce-scatter")}
           {code("combine-backend", "기본 ag+rs와 a2a 선택")}
           <div className={prose}>
-            <p>RTX PRO 6000 같은 SM120에서 쓸 수 있는 MLA backend는 TRITON_MLA입니다. supports_dcp = True를 선언하고, FP8 KV는 SM89 이상에서 받습니다. 다만 이 선언은 코드 경로가 있다는 뜻이지 그 조합이 이 장비에서 안정적이라는 보증은 아닙니다(10절).</p>
+            <p>
+            RTX PRO 6000 같은 SM120에서 쓸 수 있는 MLA backend는 TRITON_MLA입니다. supports_dcp = True를 선언하고 FP8 KV는 SM89
+            이상에서 받습니다. 다만 이 선언은 코드 경로가 있다는 뜻이지 그 조합이 이 장비에서 안정적이라는 보증은 아닙니다(10절).
+          </p>
           </div>
           {code("triton-mla-dcp", "TRITON_MLA의 DCP 선언과 FP8 하한")}
         </section>
@@ -269,10 +328,16 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           </div>
           <ProgressiveDetail title="이 측정표에서 빠진 실행 조건은 무엇인가요?" preview="vLLM 버전과 BF16 행의 메모리 설정, 반복 횟수가 없습니다. 용량 네 값은 서로 비교할 수 있지만 다른 장비의 기준값으로 옮기지는 않습니다.">
             <p>Docker 이미지는 voipmonitor/vllm-openai:cu130-nightly-patched로 적혀 있지만 그 안의 vLLM commit은 없습니다. BF16 두 행은 gpu-memory-utilization이 적혀 있지 않고, 측정 반복 횟수와 오차도 없습니다. 같은 문서 개요표는 총 파라미터를 약 530B로 적어 공식 1T와 다릅니다.</p>
-            <p>그래서 이 글은 네 값 사이의 비율과 4절 식의 일치만 주장하고, 3,621,504라는 절대값이 다른 노드에서 재현된다고 주장하지 않습니다. 같은 문서의 100 동시 요청 900 tok/s는 P2P를 끈 상태였다는 점도 원본 스크린샷에서 확인되었습니다.</p>
+            <p>
+            이 글은 네 값 사이의 비율과 4절 식의 일치만 주장합니다. 3,621,504라는 절대값이 다른 노드에서 재현된다고는 주장하지 않습니다. 같은 문서의 100 동시 요청 900
+            tok/s는 P2P를 끈 상태였다는 점도 원본 스크린샷에서 확인되었습니다.
+          </p>
           </ProgressiveDetail>
           <div className={prose}>
-            <p>8절의 원문과 이 표를 겹치면 이야기가 닫힙니다. 엔진은 MLA KV를 head 1개로 세어 장마다 복제하고, DCP 8은 그 복제를 token 축 분할로 바꾸며, 측정 용량은 그 비율대로 8배 늘었습니다. 이제 이 8배에 붙은 값을 봅니다.</p>
+            <p>
+            8절의 원문과 이 표를 겹쳐 보면 앞뒤가 맞습니다. 엔진은 MLA KV를 head 1개로 세어 장마다 복제하고 DCP 8은 그 복제를 token 축 분할로 바꾸며, 측정 용량은
+            그 비율대로 8배 늘었습니다. 이 8배에도 치르는 값이 있습니다.
+          </p>
           </div>
         </section>
 
@@ -280,15 +345,36 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           <h2 className="mb-6 text-2xl font-bold">10. 8배의 자리는 속도와 안정성으로 값을 치릅니다</h2>
           <div className={prose}>
             <p>첫 비용은 단일 요청 속도입니다. 같은 위키에서 FP8 KV, TRITON_MLA의 DCP1은 79 tok/s, DCP8은 65 tok/s입니다. 다른 사용자의 backend 비교표도 FP8 79 대 68, BF16 78 대 67로 DCP가 약 11~14 tok/s를 깎습니다. (현장 경험)</p>
-            <p>흔히 인용하는 90에서 65로의 하락에는 다른 원인이 섞여 있습니다. 90은 BF16 KV를 FlashInfer FA2 backend로 돌린 값인데, FA2는 FP8 KV를 받지 못합니다. 같은 TRITON_MLA끼리 비교하면 DCP만의 몫은 79에서 65입니다.</p>
-            <p>속도가 떨어지는 이유는 5절의 통신입니다. vLLM 기본 경로는 MLA 층마다 query all-gather, lse all-gather, 출력 reduce-scatter 세 번을 더합니다. 61층이면 decode step마다 183번이고, TP가 원래 하던 층당 두 번의 all-reduce 122번 위에 얹힙니다. (계산)</p>
-            <p>긴 대화에서는 반대가 됩니다. DCP 없이 150K 문맥이면 약 6~7 tok/s로 떨어지고 DCP 8이면 28~35 tok/s를 유지했다고 위키는 적습니다. 장마다 읽는 KV가 1/8이 되는 것으로 방향은 설명되지만, 이만큼의 차이는 대역폭 산수로 다 설명되지 않아 원인은 확인하지 못했습니다. (현장 경험)</p>
+            <p>
+            흔히 인용하는 90에서 65로의 하락에는 다른 원인이 섞여 있습니다. 90은 BF16 KV를 FlashInfer FA2 backend로 돌린 값인데 FA2는 FP8 KV를 받지
+            못합니다. 같은 TRITON_MLA끼리 비교하면 DCP만의 몫은 79에서 65입니다.
+          </p>
+            <p>
+            속도가 떨어지는 이유는 5절의 통신입니다. vLLM 기본 경로는 MLA 층마다 query all-gather, lse all-gather, 출력 reduce-scatter 세
+            번을 더합니다. 61층이면 decode step마다 183번이고 TP가 원래 하던 층당 두 번의 all-reduce 122번 위에 얹힙니다. (계산)
+          </p>
+            <p>
+            긴 대화에서는 반대가 됩니다. DCP 없이 150K 문맥이면 약 6~7 tok/s로 떨어지고 DCP 8이면 28~35 tok/s를 유지했다고 위키는 적습니다. 장마다 읽는
+            KV가 1/8이 되는 것으로 방향은 설명되지만 이만큼의 차이는 대역폭 산수로 다 설명되지 않아 원인은 확인하지 못했습니다. (현장 경험)
+          </p>
           </div>
           <div className={prose}>
-            <p>둘째 비용은 정확성입니다. vllm#41623은 DCP를 켜면 출력이 어긋나고 무관한 문장이 나온다는 회귀 보고로, 2026-11-03 기준 열려 있습니다. 보고 환경은 8×A100, Kimi-K2.6, v0.21.0과 nightly이며 특정 두 commit 사이에서 생겼다고 적습니다.</p>
-            <p>셋째는 SM120 전제 조건입니다. FP8 KV를 TRITON_MLA decode에 넣은 PR #34597은 2026-03-12에 병합됐습니다. FP8 KV와 DCP를 함께 허용하던 PR #34795는 병합되지 않고 2026-07-05 비활동으로 닫혔습니다.</p>
-            <p>v0.33.0 원문에서는 #34795가 지우려던 두 assert 문장을 찾을 수 없어, 그 조합을 막는 코드는 다른 경로로 사라진 것으로 보입니다. 다만 SM120에서 패치 없는 upstream 이미지로 FP8과 DCP 8을 함께 켠 보고는 근거에 없습니다. (미확인)</p>
-            <p>K2.7의 FP8 KV가 SM120에서 Out of Resource로 실패한 #46721도 수정 확인 없이 비활동으로 닫혔습니다. 정리하면 FP8과 DCP 8은 커뮤니티 패치 이미지에서 검증된 조합이고, 공식 릴리스로 옮길 때는 정확성 평가부터 다시 해야 합니다.</p>
+            <p>
+            정확성도 대가를 치릅니다. vllm#41623은 DCP를 켜면 출력이 어긋나고 무관한 문장이 나온다는 회귀 보고로, 2026-11-03 기준 열려 있습니다. 보고 환경은
+            8×A100, Kimi-K2.6, v0.21.0과 nightly이며 특정 두 commit 사이에서 생겼다고 적습니다.
+          </p>
+            <p>
+            SM120에서는 전제 조건도 따져야 합니다. FP8 KV를 TRITON_MLA decode에 넣은 PR #34597은 2026-03-12에 병합됐습니다. FP8 KV와 DCP를
+            함께 허용하던 PR #34795는 병합되지 않고 2026-07-05 비활동으로 닫혔습니다.
+          </p>
+            <p>
+            v0.33.0 원문에서는 #34795가 지우려던 두 assert 문장을 찾을 수 없어 그 조합을 막는 코드는 다른 경로로 사라진 것으로 보입니다. 다만 SM120에서 패치 없는
+            upstream 이미지로 FP8과 DCP 8을 함께 켠 보고는 근거에 없습니다. (미확인)
+          </p>
+            <p>
+            K2.7의 FP8 KV가 SM120에서 Out of Resource로 실패한 #46721도 수정 확인 없이 비활동으로 닫혔습니다. FP8과 DCP 8은 커뮤니티 패치 이미지에서
+            검증된 조합이므로 공식 릴리스로 옮길 때는 정확성 평가부터 다시 해야 합니다.
+          </p>
           </div>
           <div id="paper-vllm-41623" className="not-prose my-8 scroll-mt-24">
             <CitationBlock source="vLLM issue #41623 · Decode Context Parallelism output drift and gibberish (2026-05-04 개설, 2026-11-03 OPEN 확인)" citeKey={3} href="https://github.com/vllm-project/vllm/issues/41623">
@@ -302,7 +388,10 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           <div className={prose}>
             <p>이 숫자가 왜 중요한지는 실제 사용 모양에서 드러납니다. 사용자 자신의 Claude Code 기록 887세션, 18,353회 호출에서 호출당 문맥 중앙값은 205K token이었습니다. 이 길이면 FP8 DCP8 노드에 17개, BF16 DCP1 노드에는 하나도 온전히 들어가지 않습니다. (계산)</p>
             <p>자리가 모자라면 기록을 지우고 다음 호출 때 다시 만들어야 합니다. 공개 연구는 Qwen3.6-27B, H100 환경에서 동시 에이전트를 15에서 20으로 늘리자 prefix cache 적중률이 98.85%에서 16.78%로, 요청당 생성 속도가 30.08에서 16.96 tok/s로 떨어졌다고 보고합니다.</p>
-            <p>그래서 18개 위로 넘치는 대화는 GPU 밖에 둡니다. 호스트 DRAM에 KV를 내려 두었다가 다시 올리는 LMCache 같은 계층이 다음 단계입니다. FP8 대화 하나의 전체 latent 7.0 GB를 기준으로 하면 1.5 TB 호스트 메모리는 약 213개 대화를 담는 크기입니다. (계산)</p>
+            <p>
+            18개 위로 넘치는 대화는 GPU 밖에 둡니다. 호스트 DRAM에 KV를 내려 두었다가 다시 올리는 LMCache 같은 계층이 다음 단계입니다. FP8 대화 하나의 전체
+            latent 7.0 GB를 기준으로 하면 1.5 TB 호스트 메모리는 약 213개 대화를 담는 크기입니다. (계산)
+          </p>
             <p>다만 DCP로 8장에 나뉜 KV를 LMCache가 어떤 모양으로 내려받고 다시 나눠 올리는지는 이 글에서 확인하지 못했습니다. (미확인) 선점과 swap의 기본 동작은 <Link to="/cs/ai/serving-memory-admission-and-preemption">메모리 수용과 선점</Link>에서 이어집니다.</p>
           </div>
           <CalculationWalkthrough
@@ -342,10 +431,16 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
           <h2 className="mb-6 text-2xl font-bold">12. 다른 attention 구조는 다른 축으로 KV를 줄입니다</h2>
           <div className={prose}>
             <p>GQA부터 봅니다. Qwen3-235B-A22B는 94층, KV head 4개, head 폭 128이라 token 하나의 KV가 BF16 192,512 byte로 K2.5의 2.7배입니다. 그런데 TP8에서는 head 하나씩 두 장이 나눠 들어 장마다 48,128 byte로, K2.5의 70,272 byte보다 작습니다. (계산)</p>
-            <p>이 모델에도 DCP를 쓸 수 있지만 상한은 TP 8을 KV head 4로 나눈 2입니다. DCP 2면 장마다 24,064 byte입니다. 복제가 2배뿐이라 되찾을 몫도 2배뿐이고, K2.5처럼 8배가 열리지 않습니다. (계산)</p>
+            <p>
+            이 모델에도 DCP를 쓸 수 있지만 상한은 TP 8을 KV head 4로 나눈 2입니다. DCP 2면 장마다 24,064 byte입니다. 복제가 2배뿐이라 되찾을 몫도
+            2배뿐이고 K2.5처럼 8배가 열리지 않습니다. (계산)
+          </p>
             <p>linear attention과 섞은 hybrid는 축 자체가 다릅니다. Qwen3.6-27B는 64층 중 16층만 token마다 KV를 쌓는 attention이고 48층은 대화 길이와 상관없이 고정 크기 state를 둡니다. 이 state가 TP에서 어떻게 나뉘는지는 이 글에서 확인하지 않았습니다.</p>
             <p>Kimi K3도 93층 중 24층만 Gated MLA이고 69층은 KDA라는 고정 state입니다. config의 kv_lora_rank 512, qk_rope_head_dim 64를 그대로 쓰면 token당 24층 × 576개 × 2 byte, 27,648 byte입니다. config에 mla_use_nope가 true라 실제 저장 폭은 확인하지 못했습니다. (계산, 미확인)</p>
-            <p>K3의 24층도 MLA라 TP에서 복제되는 성질은 그대로이고, 가중치가 1,561 GB라 PRO 6000 16장, TP16과 DCP16 구성이 현장에서 쓰였습니다. sliding window 층은 또 다르게 창 길이가 보존량의 상한이고, 창 밖 block을 실제로 돌려주는지는 runtime마다 다릅니다.</p>
+            <p>
+            K3의 24층도 MLA라 TP에서 복제되는 성질은 그대로입니다. 가중치가 1,561 GB라 현장에서는 PRO 6000 16장에 TP16과 DCP16을 건 구성이 쓰였습니다.
+            sliding window 층은 또 달라서 창 길이가 보존량의 상한이고, 창 밖 block을 실제로 돌려주는지는 runtime마다 다릅니다.
+          </p>
           </div>
           <div className="not-prose my-8 overflow-x-auto">
             <table className="w-full min-w-[34rem] border-collapse text-sm">
@@ -392,7 +487,7 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
             </table>
           </div>
           <div className={prose}>
-            <p>표의 마지막 열이 이 글의 결론을 다시 말해 줍니다. MLA는 token당 기록이 이미 작지만 GPU를 늘려도 장당 몫이 줄지 않는 구조라, 남은 손잡이는 byte와 token 나눔뿐입니다. hybrid 구조의 층 배치는 <Link to="/cs/ai/hybrid-kv-cache-allocation">hybrid KV cache 할당</Link>, 창 밖 회수는 <Link to="/cs/ai/sliding-window-kv-and-attention-sinks">sliding window KV</Link>에서 다룹니다.</p>
+            <p>표의 마지막 열이 이 글의 결론을 다시 말해 줍니다. MLA는 token당 기록이 이미 작지만 GPU를 늘려도 장당 몫이 줄지 않는 구조라 남은 손잡이는 byte와 token 나눔뿐입니다. hybrid 구조의 층 배치는 <Link to="/cs/ai/hybrid-kv-cache-allocation">hybrid KV cache 할당</Link>, 창 밖 회수는 <Link to="/cs/ai/sliding-window-kv-and-attention-sinks">sliding window KV</Link>에서 다룹니다.</p>
           </div>
           <ContentBoundary article="mla-kv-replication-and-decode-context-parallel" />
         </section>

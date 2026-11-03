@@ -1,30 +1,57 @@
 import { NodeBox, StoryShell } from "./kimi-k3-shared";
 import { useStory } from "./useKimiStory";
+import { StableSceneStack } from "@/components/viz/StableSceneStack";
 
 const arrow = <span aria-hidden className="text-center text-xl text-muted-foreground">→</span>;
+
+/** md 미만에서는 네 칸을 세로로 쌓으면 frame이 viewport보다 길어지므로 ㄹ자 2×2로 접는다. */
+function FlowArrow({ mobile, className }: { mobile: "→" | "↓" | "←"; className: string }) {
+  return (
+    <span aria-hidden className={`self-center text-center text-base leading-5 text-muted-foreground md:self-auto md:text-xl md:leading-7 ${className}`}>
+      <span className="md:hidden">{mobile}</span>
+      <span className="hidden md:inline">→</span>
+    </span>
+  );
+}
+
+const AXIS_NOTES = [
+  "먼저 입력 한 줄만 둡니다. 아직 KDA·AttnRes·MoE를 섞지 않습니다.",
+  "Sequence 축은 긴 token history를 어떤 상태로 보관하고 언제 원문을 다시 볼지 정합니다.",
+  "Depth 축은 93층을 지날 때 직전 층만 받을지, 앞선 block을 골라 읽을지 정합니다.",
+  "Width 축은 896개 expert의 계산 폭과 배정 불균형을 다룹니다. 세 축을 합친 것이 K3입니다.",
+] as const;
 
 export function KimiAxisViz() {
   const story = useStory(4);
   const labels = ["입력", "sequence", "depth", "width"] as const;
   return (
     <StoryShell title="K3는 세 축의 병목을 따로 바꾼다" subtitle="한 장면에 용어를 모두 쏟지 않고, token 흐름에 sequence·depth·width 변경을 한 축씩 붙입니다." labels={labels} {...story}>
-      <div className="grid min-w-0 items-stretch gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
-        <NodeBox active title="Token stream" detail="입력 순서와 현재 residual state" />
-        {arrow}
-        <NodeBox active={story.step >= 1} tone="sequence" title="Sequence mixer" detail="KDA로 압축하고 MLA로 직접 조회" />
-        {arrow}
-        <NodeBox active={story.step >= 2} tone="depth" title="Depth routing" detail="이전 block 중 지금 읽을 source 선택" />
-        {arrow}
-        <NodeBox active={story.step >= 3} tone="width" title="Latent MoE" detail="전문가 계산만 작은 latent width에서 수행" />
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-x-2 gap-y-1 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:gap-3">
+        <div className="col-start-1 row-start-1 grid md:col-auto md:row-auto">
+          <NodeBox active title="Token stream" detail="입력 순서와 현재 residual state" />
+        </div>
+        <FlowArrow mobile="→" className="col-start-2 row-start-1 md:col-auto md:row-auto" />
+        <div className="col-start-3 row-start-1 grid md:col-auto md:row-auto">
+          <NodeBox active={story.step >= 1} tone="sequence" title="Sequence mixer" detail="KDA로 압축하고 MLA로 직접 조회" />
+        </div>
+        <FlowArrow mobile="↓" className="col-start-3 row-start-2 md:col-auto md:row-auto" />
+        <div className="col-start-3 row-start-3 grid md:col-auto md:row-auto">
+          <NodeBox active={story.step >= 2} tone="depth" title="Depth routing" detail="이전 block 중 지금 읽을 source 선택" />
+        </div>
+        <FlowArrow mobile="←" className="col-start-2 row-start-3 md:col-auto md:row-auto" />
+        <div className="col-start-1 row-start-3 grid md:col-auto md:row-auto">
+          <NodeBox active={story.step >= 3} tone="width" title="Latent MoE" detail="전문가 계산만 작은 latent width에서 수행" />
+        </div>
       </div>
-      <div className="mt-5 border-l border-primary pl-4 text-sm leading-7">
-        {[
-          "먼저 입력 한 줄만 둡니다. 아직 KDA·AttnRes·MoE를 섞지 않습니다.",
-          "Sequence 축은 긴 token history를 어떤 상태로 보관하고 언제 원문을 다시 볼지 정합니다.",
-          "Depth 축은 93층을 지날 때 직전 층만 받을지, 앞선 block을 골라 읽을지 정합니다.",
-          "Width 축은 896개 expert의 계산 폭과 배정 불균형을 다룹니다. 세 축을 합친 것이 K3입니다.",
-        ][story.step]}
-      </div>
+      <StableSceneStack
+        active={story.step}
+        className="mt-4 md:mt-5"
+        scenes={AXIS_NOTES.map((note) => (
+          <div key={note} className="border-l border-primary pl-4 text-sm leading-6 md:leading-7">
+            {note}
+          </div>
+        ))}
+      />
     </StoryShell>
   );
 }

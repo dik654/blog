@@ -467,6 +467,10 @@ const noScriptArticleRoutes = new Set([
   "blockchain/kohaku-provider",
   "blockchain/kohaku-provider-validation",
   "blockchain/webcat-frontend-integrity",
+  "ai/mla-kv-replication-and-decode-context-parallel",
+  "ai/serving-architecture-matrix",
+  "ai/agent-serving-slo-and-capacity",
+  "gpu/pcie-blackwell-moe-node-build",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

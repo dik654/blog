@@ -1,4 +1,4 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
 import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
@@ -126,6 +126,7 @@ export default function CacheThrashViz() {
           ))}
         />
         <AnimatedSceneControls {...scene} labels={SCENES.map((s) => s.label)} />
+        <StaticSceneList labels={SCENES.map((s) => s.label)} notes={NOTES} />
       </div>
     </VizFrame>
   );

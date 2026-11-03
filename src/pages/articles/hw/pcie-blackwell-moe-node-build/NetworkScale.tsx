@@ -47,16 +47,20 @@ export default function NetworkScale() {
         <h2 className="mb-6 text-2xl font-bold">8. 노드 밖 망은 복제본이면 거의 놀고 앞뒤 분리에서만 일합니다</h2>
         <div className={prose}>
           <p>
-            노드 한 대가 감당하는 동시 에이전트가 모자라면 노드를 더합니다. 이때 망 크기는 노드를 어떻게 묶느냐로 정해집니다. 같은 모델 한 벌을 노드마다 통째로 올리면, 카드끼리 맞추는 122번은 모두 노드 안에서 끝나고 노드 사이로는 요청과 응답 글자만 갑니다.
+            노드 한 대가 감당하는 동시 에이전트가 모자라면 노드를 더합니다. 이때 망 크기는 노드를 어떻게 묶느냐로 정해집니다. 같은 모델 한 벌을 노드마다 통째로 올리면 카드끼리 맞추는
+            122번은 모두 노드 안에서 끝나고 노드 사이로는 요청과 응답 글자만 갑니다.
           </p>
           <p>
-            그래서 첫 노드는 400G 포트를 하나 꽂아만 두고 기존 100GbE 서비스망에 붙입니다. 노드가 늘면 llm-d의 요청 분배기(EPP)가 각 복제본의 기억 상태를 보고 요청을 나눕니다. 같은 앞부분을 가진 요청이 같은 노드로 가야 3절의 기억 칸이 다시 쓰입니다.
+            첫 노드는 400G 포트를 하나 꽂아만 두고 기존 100GbE 서비스망에 붙입니다. 노드가 늘면 llm-d의 요청 분배기(EPP)가 각 복제본의 기억 상태를 보고 요청을
+            나눕니다. 같은 앞부분을 가진 요청이 같은 노드로 가야 3절의 기억 칸이 다시 쓰입니다.
           </p>
           <p>
-            층을 두 노드에 나누는 방식은 다릅니다. 경계에서 토큰마다 hidden 벡터 하나를 넘기므로 망은 거의 쓰지 않지만, 한 사용자의 토큰은 여전히 두 노드를 차례로 지나야 해서 빨라지지 않습니다. 이 방식은 한 노드에 안 들어가는 모델이나 기억을 담으려고 쓰는 것입니다.
+            층을 두 노드에 나누는 방식은 다릅니다. 경계에서 토큰마다 hidden 벡터 하나를 넘기므로 망은 거의 쓰지 않지만 한 사용자의 토큰은 여전히 두 노드를 차례로 지나야 해서
+            빨라지지 않습니다. 한 노드에 안 들어가는 모델이나 기억을 담을 때 쓰는 방식입니다.
           </p>
           <p>
-            망이 실제로 일하는 것은 앞뒤 단계를 나눌 때입니다. 프롬프트를 읽는 노드와 토큰을 내는 노드를 따로 두면, 앞 노드가 만든 기억을 뒤 노드로 넘겨야 합니다. 200K 토큰 대화면 그 기억이 기가바이트 단위라, 여기서 처음으로 RDMA와 400G가 값을 합니다.
+            망이 실제로 일하는 것은 앞뒤 단계를 나눌 때입니다. 프롬프트를 읽는 노드와 토큰을 내는 노드를 따로 두면 앞 노드가 만든 기억을 뒤 노드로 넘겨야 합니다. 200K 토큰
+            대화면 그 기억이 기가바이트 단위라서 여기서 처음으로 RDMA와 400G가 값을 합니다.
           </p>
         </div>
 
@@ -82,10 +86,14 @@ export default function NetworkScale() {
 
         <div className={prose}>
           <p>
-            RDMA를 켤 때는 카드 쪽 증명이 먼저입니다. NVIDIA의 GPUDirect RDMA 문서는 지원 대상을 &ldquo;Tesla and Quadro&rdquo;로 적고, RTX PRO 6000을 제품명으로 적은 공식 문서는 찾지 못했습니다. RTX PRO가 Quadro 계보라 포함된다고 읽을 수는 있지만 그건 해석입니다. 포럼 사용자 한 명이 Max-Q에서 동작했다고 보고한 정도가 실증입니다.
+            RDMA를 켤 때는 카드 쪽 증명이 먼저입니다. NVIDIA의 GPUDirect RDMA 문서는 지원 대상을 &ldquo;Tesla and Quadro&rdquo;로 적고
+            RTX PRO 6000을 제품명으로 적은 공식 문서는 찾지 못했습니다. RTX PRO가 Quadro 계보라 포함된다고 읽을 수는 있지만 그건 해석입니다. 실증이라 할 만한 것은
+            포럼 사용자 한 명이 Max-Q에서 동작했다고 보고한 정도입니다.
           </p>
           <p>
-            그래서 노드마다 ib_write_bw --use_cuda로 네트워크 카드가 카드 메모리를 직접 읽는지 확인합니다. 같은 문서는 두 장치가 같은 root complex 아래 있어야 하고 스위치만 거치는 길이 가장 좋으며 소켓을 건너는 길은 매우 느리거나 불안정할 수 있다고 적습니다. 7절의 topo 출력에서 NIC와 카드가 같은 스위치인지 보는 이유입니다.
+            노드마다 ib_write_bw --use_cuda로 네트워크 카드가 카드 메모리를 직접 읽는지 확인합니다. 같은 문서는 두 장치가 같은 root complex 아래 있어야 하고
+            스위치만 거치는 길이 가장 좋으며 소켓을 건너는 길은 매우 느리거나 불안정할 수 있다고 적습니다. 7절의 topo 출력에서 NIC와 카드가 같은 스위치인지 보는 것도 이
+            때문입니다.
           </p>
           <p>
             NCCL에도 하나 짚을 값이 있습니다. NCCL_NET_GDR_READ의 기본값은 NVLink가 있는 플랫폼에서만 1이고 나머지는 0입니다. 이 노드처럼 PCIe만 있으면 직접 1로 적어야 송신 쪽도 카드 메모리를 직접 읽습니다.
@@ -103,7 +111,8 @@ export default function NetworkScale() {
             8절의 결론을 쿠버네티스 객체로 옮기면 단순합니다. 복제본 하나가 노드 하나의 카드 여덟 장을 통째로 잡고, 요청 분배기가 복제본 앞에 섭니다. 아래 초안은 근거 조사에서 함께 만든 것이며 아직 어느 클러스터에도 적용하지 않았습니다.
           </p>
           <p>
-            실행 단위로 LeaderWorkerSet(LWS) v1.0.0을 씁니다. 노드 하나짜리 복제본이면 size 1이라 Deployment로도 되지만, 나중에 두 노드짜리로 바꿀 때 객체 종류와 라벨이 그대로라 요청 분배기와 큐 설정을 다시 손대지 않아도 됩니다.
+            실행 단위로 LeaderWorkerSet(LWS) v1.0.0을 씁니다. 노드 하나짜리 복제본이면 size 1이라 Deployment로도 되지만 나중에 두 노드짜리로 바꿀 때
+            객체 종류와 라벨이 그대로라 요청 분배기와 큐 설정을 다시 손대지 않아도 됩니다.
           </p>
         </div>
         <pre className="not-prose my-6 overflow-x-auto rounded-lg border border-border bg-muted/30 p-4 text-xs leading-5">
@@ -119,13 +128,19 @@ export default function NetworkScale() {
         </pre>
         <div className={prose}>
           <p>
-            승인과 배치는 Kueue v0.20.4의 LWS 통합과 토폴로지 인지 배치(TAS)로 합니다. 쿠버네티스 1.34에서는 LWS 자체의 gang 기능이 1.37을 요구해 쓸 수 없으므로, LWS 그룹 전체를 Kueue Workload 하나로 승인받습니다. TAS와 DRA를 함께 쓰려면 KueueDRADeviceFeasibility라는 alpha 게이트가 필요하다는 점을 먼저 시험합니다.
+            승인과 배치는 Kueue v0.20.4의 LWS 통합과 토폴로지 인지 배치(TAS)로 합니다. 쿠버네티스 1.34에서는 LWS 자체의 gang 기능이 1.37을 요구해 쓸 수
+            없으므로 LWS 그룹 전체를 Kueue Workload 하나로 승인받습니다. TAS와 DRA를 함께 쓰려면 KueueDRADeviceFeasibility라는 alpha 게이트가
+            필요하다는 점을 먼저 시험합니다.
           </p>
           <p>
-            GPU Operator v26.7.2의 지원 목록에는 RTX PRO 6000 Blackwell Server Edition이 있고 Workstation Edition은 없습니다. 그런데 GPU Operator가 카드를 DRA로 나눠 주는 경로(GPUCluster)에는 RDMA 설정 필드가 없습니다. 그래서 GPUDirect RDMA는 호스트 작업이고, 문서가 권하는 DMA-BUF 경로를 호스트 드라이버에서 준비합니다.
+            GPU Operator v26.7.2의 지원 목록에는 RTX PRO 6000 Blackwell Server Edition이 있고 Workstation Edition은 없습니다.
+            그런데 GPU Operator가 카드를 DRA로 나눠 주는 경로(GPUCluster)에는 RDMA 설정 필드가 없습니다. GPUDirect RDMA는 호스트 작업으로 남으므로
+            문서가 권하는 DMA-BUF 경로를 호스트 드라이버에서 준비합니다.
           </p>
           <p>
-            NIC는 Network Operator v26.7.1로 붙입니다. 문서의 네트워크 모드 가운데 GPUDirect 전용으로 지정된 것은 없고, 노드당 8장짜리 Pod 하나라면 macvlan과 RDMA shared device plugin 조합이 가장 단순합니다. 다만 GPU는 DRA로, NIC는 device plugin으로 따로 받으면 둘을 같은 NUMA에 맞춰 줄 장치가 없습니다(추론). 이 점도 수락 단계에서 확인합니다.
+            NIC는 Network Operator v26.7.1로 붙입니다. 문서의 네트워크 모드 가운데 GPUDirect 전용으로 지정된 것은 없고 노드당 8장짜리 Pod 하나라면
+            macvlan과 RDMA shared device plugin 조합이 가장 단순합니다. 다만 GPU는 DRA로, NIC는 device plugin으로 따로 받으면 둘을 같은
+            NUMA에 맞춰 줄 장치가 없습니다(추론). 이 점도 수락 단계에서 확인합니다.
           </p>
           <p>
             복제본을 묶는 그룹 개념은{" "}

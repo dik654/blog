@@ -1,4 +1,5 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -81,7 +82,13 @@ export default function CostCurveViz() {
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
+          <StableSceneStack
+            active={s}
+            className="mt-2"
+            scenes={SCENES.map((label) => (
+              <h4 key={label} className="text-base font-bold">{label}</h4>
+            ))}
+          />
 
           <div className="mt-4 w-full min-w-0 overflow-x-auto">
             <svg
@@ -169,9 +176,15 @@ export default function CostCurveViz() {
             </svg>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[s]}
-          </p>
+          <StableSceneStack
+            active={s}
+            className="mt-5"
+            scenes={NOTES.map((note) => (
+              <p key={note} className="border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+                {note}
+              </p>
+            ))}
+          />
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
         <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">

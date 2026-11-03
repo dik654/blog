@@ -4227,10 +4227,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
-  "gpu/pcie-blackwell-moe-node-build": "50826ba77f90fea7",
+  "gpu/pcie-blackwell-moe-node-build": "d012290e82b13ab9",
   "ai/tensor-and-pipeline-parallel-inference": "1c76055f53aef5ab",
-  "ai/mla-kv-replication-and-decode-context-parallel": "28c9701fa24a2197",
-  "ai/agent-serving-slo-and-capacity": "173fe7d8d39431d2",
+  "ai/mla-kv-replication-and-decode-context-parallel": "a54daaf064754b88",
+  "ai/agent-serving-slo-and-capacity": "62d3ccd4e580c297",
   "ai/vector-search-and-ann-indexes": "1b2aed448dad9989",
   "ai/lexical-retrieval-bm25-inverted-index": "03c283713aa04e5a",
   "ai/image-training-stages": "20ded1bf15e7dd02",

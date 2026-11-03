@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import { DataBox, ModuleBox } from "@/components/viz/boxes";
 import { StableSceneStack } from "@/components/viz/StableSceneStack";
@@ -185,6 +185,7 @@ export default function DcpDecodeStepViz() {
           />
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <StaticSceneList labels={SCENES.map((s) => s.label)} notes={SCENES.map((s) => s.note)} />
       </div>
     </VizFrame>
   );

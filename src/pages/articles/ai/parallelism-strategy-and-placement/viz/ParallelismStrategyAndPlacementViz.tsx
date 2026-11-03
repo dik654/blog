@@ -1,4 +1,5 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -145,9 +146,15 @@ export default function ParallelismStrategyAndPlacementViz() {
             <CrossLink scene={s} />
             <CompareBars scene={s} />
           </svg>
-          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10rem] sm:min-h-0">
-            {NOTES[s]}
-          </p>
+          <StableSceneStack
+            active={s}
+            className="mt-4"
+            scenes={NOTES.map((note) => (
+              <p key={note} className="border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+                {note}
+              </p>
+            ))}
+          />
         </div>
         <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
           {SCENES.map((label, index) => (

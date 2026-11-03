@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import VizFrame from "@/components/viz/VizFrame";
@@ -128,6 +128,7 @@ export default function CapacityGridViz() {
           />
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <StaticSceneList labels={SCENES.map((s) => s.label)} notes={SCENES.map((s) => s.note)} />
       </div>
     </VizFrame>
   );

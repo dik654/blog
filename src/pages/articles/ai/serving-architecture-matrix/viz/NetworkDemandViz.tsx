@@ -1,4 +1,4 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
@@ -111,6 +111,7 @@ export default function NetworkDemandViz() {
         />
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

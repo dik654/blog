@@ -1,4 +1,4 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
 import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
@@ -140,6 +140,7 @@ export default function ConcurrencySweepViz() {
           />
         </div>
         <AnimatedSceneControls {...scene} labels={labels} />
+        <StaticSceneList labels={labels} notes={NOTES} />
       </div>
     </VizFrame>
   );

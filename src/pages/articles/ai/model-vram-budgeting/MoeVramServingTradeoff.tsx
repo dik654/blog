@@ -40,8 +40,8 @@ export default function MoeVramServingTradeoff() {
       <ExplainedFormula
         question="Batch 1의 MoE decode 한 step이 실제로 읽는 weight bytes는 무엇에 비례하나요?"
         idea={<>Dense는 매 step 전체 weight를 다시 읽습니다. MoE는 요청이 하나면 router가 고른 expert path만 읽습니다. 같은 dtype byte 폭으로 두 read량을 비교합니다.</>}
-        formula={String.raw`\text{bytes}_{dense}=P_{total}B,\qquad \text{bytes}_{moe,1}=P_{active}B`}
-        annotatedFormula={String.raw`\text{bytes}_{dense}=\underbrace{P_{total}}_{\text{dense는 전체 parameter}}\times B,\qquad \text{bytes}_{moe,1}=\underbrace{P_{active}}_{\text{batch 1이면 선택된 path만}}\times B`}
+        formula={String.raw`\begin{aligned}\text{bytes}_{dense}&=P_{total}B\\ \text{bytes}_{moe,1}&=P_{active}B\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\text{bytes}_{dense}&=\underbrace{P_{total}}_{\text{dense는 전체 parameter}}\times B\\ \text{bytes}_{moe,1}&=\underbrace{P_{active}}_{\text{batch 1이면 선택된 path만}}\times B\end{aligned}`}
         operations={[
           { expression: String.raw`P_{total}\times B`, annotation: ["Dense는 매 token마다", "전체 parameter를 다시 읽음"] },
           { expression: String.raw`P_{active}\times B`, annotation: ["요청이 하나인 MoE는 router가 고른", "expert path만 다시 읽음"] },
