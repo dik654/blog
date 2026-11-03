@@ -3,23 +3,36 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AddressingCompareViz from "./viz/AddressingCompareViz";
 
+const HELLO_CID = "bafkreibm6jg3ux5qumhcn2b3flc3tyu6dmlb4xa7u5bf44yegnrjhc4yeq";
+
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Content addressing은 “어디에 있나”보다 “받은 bytes가 맞나”를 먼저
-        묻습니다
+        Content address는 파일을 보관한 곳이 아니라 받아야 할 bytes를 가리킵니다
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          위치 주소인 URL은 어느 server에서 resource를 받을지 알려 주지만 오늘 받은 bytes가 어제와 같은지는 주소만으로 증명하지 못합니다. Content
-          addressing(내용 주소 지정)은 canonical bytes의 cryptographic hash를 주소에 넣습니다. 어느 peer에서 받았든 다시 hash해 주소와 같으면
-          같은 bytes라는 무결성 검사를 할 수 있습니다.
+          <strong>
+            URL이 “어디에 요청할까?”에 답한다면, content address는 “받은 bytes가
+            내가 요청한 것과 같은가?”에 답합니다.
+          </strong>{" "}
+          그래서 provider가 바뀌어도 같은 bytes를 검증할 수 있지만, provider를
+          찾거나 계속 보관하게 만들지는 못합니다.
         </p>
         <p>
-          이 성질은 availability와 다릅니다. CID를 알아도 해당 block을 가진 peer가 없으면 다운로드할 수 없고 malicious peer가 bytes를 숨기는 것도
-          막지 못합니다. 또한 hash는 작성자의 identity나 content의 진실성을 증명하지 않습니다. 누가 publish했는지는 signature·name
-          system·application policy가 별도로 담당합니다.
+          이 글은 정확히 다섯 글자인 raw bytes <code>hello</code> 하나를 끝까지
+          따라갑니다. SHA-256 digest는
+          <code>2cf24dba…38b9824</code>, raw CIDv1 문자열은
+          <code>{HELLO_CID}</code>입니다. 뒤에서는 이 block을 project Merkle
+          DAG의 <code>readme</code> leaf로 재사용하고, <code>lib.rs</code>를
+          고쳐 새 root가 생긴 뒤 IPNS와 DNSLink가 새 root를 가리키게 합니다.
+        </p>
+        <p>
+          Hash 일치는 byte integrity만 확인합니다. 작성자, 내용의 진실성,
+          malware 안전성은 증명하지 않습니다. 같은 논리적 내용도 newline, codec,
+          key order, chunking이 달라 실제 hash 입력 bytes가 달라지면 다른 CID가
+          됩니다.
         </p>
       </div>
       <ContentBoundary article="content-addressing" />
@@ -27,12 +40,11 @@ export default function Overview() {
         <AddressingCompareViz />
       </div>
       <ExplainedFormula
-        question="다른 peer에서 받은 bytes가 요청한 content와 같은지 어떻게 확인할까요?"
+        question="Provider가 돌려준 bytes를 왜 다시 hash해야 할까요?"
         idea={
           <>
-            주소를 만들 때 codec으로 canonical bytes를 정하고 cryptographic
-            hash를 계산합니다. 수신자는 같은 codec bytes를 다시 hash해 주소의
-            digest와 비교합니다.
+            CID를 만들 때 확정한 bytes의 digest를 기대값으로 둡니다. 수신자는
+            받은 bytes를 같은 algorithm으로 hash한 뒤 그 기대값과 비교합니다.
           </>
         }
         formula={String.raw`\begin{aligned}
@@ -41,79 +53,94 @@ d &= H(b),\\
 \operatorname{accept}(b^{\prime}) &\iff H(b^{\prime})=d.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-b &= \underbrace{\operatorname{Encode}_{codec}(x)}_{\text{canonical bytes}},\\
-d &= \underbrace{H(b)}_{\text{CID에 들어갈 digest}},\\
-\operatorname{accept}(b^{\prime}) &\iff \underbrace{H(b^{\prime})=d}_{\text{재해시해 digest 비교}}.
+b &= \underbrace{\operatorname{Encode}_{codec}(x)}_{\text{주소를 붙일 실제 bytes}},\\
+d &= \underbrace{H(b)}_{\text{CID가 운반하는 기대 digest}},\\
+\operatorname{accept}(b^{\prime}) &\iff \underbrace{H(b^{\prime})=d}_{\text{받은 bytes를 재해시해 비교}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{Encode}_{codec}(x)`, annotation: ["파일·IPLD node 같은 논리 값을", "codec 규칙으로 직렬화한 hash 입력", "codec·key order·chunking이 다르면 다른 b"] },
-          { expression: String.raw`H(b)`, annotation: ["canonical bytes의 SHA-256 같은 digest", "multihash로 CID 안에 들어감", "'hello' 끝에 newline 하나면 새 digest"] },
-          { expression: String.raw`H(b^{\prime})=d`, annotation: ["어느 peer에서 받았든 같은 hash를 다시", "계산해 주소의 d와 같을 때만 수락", "일치해도 publisher·가용성은 별도"] },
+          {
+            expression: String.raw`\operatorname{Encode}_{codec}(x)`,
+            annotation: [
+              "논리 값 x를 codec 규칙으로 직렬화합니다",
+              "이 결과 b가 실제 hash 입력입니다",
+              "newline·key order가 달라지면 b도 달라집니다",
+            ],
+          },
+          {
+            expression: String.raw`H(b)`,
+            annotation: [
+              "b를 SHA-256 같은 algorithm에 넣습니다",
+              "hello의 결과는 2cf24dba…38b9824입니다",
+              "CID의 multihash가 algorithm과 digest를 함께 운반합니다",
+            ],
+          },
+          {
+            expression: String.raw`H(b^{\prime})=d`,
+            annotation: [
+              "Provider에서 받은 b′를 같은 방식으로 hash합니다",
+              "기대 digest d와 같을 때만 bytes를 수락합니다",
+              "일치해도 publisher·availability는 별도 문제입니다",
+            ],
+          },
         ]}
         terms={[
           {
             symbol: "x",
-            name: "logical value",
-            description:
-              "파일이나 IPLD node처럼 주소를 붙이려는 논리적 값입니다.",
+            name: "Logical value",
+            description: "파일이나 IPLD node처럼 주소를 붙이려는 값입니다.",
           },
           {
             symbol: "b",
-            name: "canonical encoded bytes",
-            description: "선택한 codec 규칙으로 직렬화한 실제 hash 입력입니다.",
-          },
-          {
-            symbol: "H",
-            name: "cryptographic hash function",
-            description:
-              "임의 길이 bytes를 고정 길이 digest로 보내는 함수입니다.",
+            name: "Encoded bytes",
+            description: "Codec이 확정한 원래 hash 입력입니다.",
           },
           {
             symbol: "d",
-            name: "digest",
-            description: "CID의 multihash 안에 들어가는 hash 결과입니다.",
+            name: "Expected digest",
+            description: "CID의 multihash 안에 들어가는 기대 hash 결과입니다.",
           },
           {
             symbol: "b^{\\prime}",
-            name: "received bytes",
-            description: "어떤 provider에서 실제로 받은 검증 대상입니다.",
+            name: "Received bytes",
+            description: "Provider에서 실제로 받아 다시 검증할 bytes입니다.",
           },
         ]}
         assumptions={[
-          "Hash가 collision·second-preimage attack에 충분히 강하고 구현이 정확한 algorithm code와 digest length를 사용해야 합니다.",
-          "같은 logical value라도 codec, map key order, chunking이 다르면 encoded bytes와 CID가 달라질 수 있습니다.",
-          "Digest 일치는 byte integrity를 확인할 뿐 publisher identity, semantics, malware safety나 availability를 보장하지 않습니다.",
+          "Hash가 collision·second-preimage attack에 충분히 강하고 구현이 CID의 algorithm code와 digest length를 그대로 따라야 합니다.",
+          "같은 논리 값이라도 codec·chunking이 다르면 encoded bytes와 CID가 달라질 수 있습니다.",
+          "Digest 일치는 byte integrity일 뿐 publisher identity·semantic safety·availability를 보장하지 않습니다.",
         ]}
-        interpretation="'hello'의 raw SHA‑256 digest와 같은 bytes를 어느 peer에서 받아도 검증 결과는 같습니다. 반면 끝에 newline 하나를 붙이면 입력 bytes가 달라져 새 digest와 새 CID가 됩니다."
+        interpretation="UTF-8 hello는 68 65 6c 6c 6f이고 SHA-256은 2cf24dba…38b9824입니다. hello!를 받으면 hash가 달라져 같은 CID 요청의 응답으로 수락할 수 없습니다."
       />
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Hash 함수의 직관과 실제 보안 경계</h3>
-        <p>
-          간단한 예로 byte 합을 16으로 나눈 나머지를 주소로 쓰면 1+2와 0+3이 모두 3이어서 collision이 쉽게 납니다. SHA‑256 같은 cryptographic
-          hash는 이런 충돌을 현실적인 계산량으로 찾기 어렵게 설계하지만 수학적으로 collision이 존재하지 않는 일대일 함수는 아닙니다. Algorithm과 digest
-          length를 주소가 함께 말해야 교체와 검증 정책을 명확히 할 수 있습니다.
-        </p>
-        <div
-          id="paper-cid-spec"
-          className="scroll-mt-24 border-l border-primary/50 pl-4"
-        >
-          <p className="text-xs font-bold text-primary">
-            명세 읽기 · CID specification
-          </p>
-          <p>
-            현재 CID specification은 CIDv1을 version, content multicodec과 multihash의 binary tuple로 정의하고 문자열의
-            multibase는 binary CID 바깥 표현임을 구분합니다. 여기서는 IPFS product 동작이 아니라 identifier format만 근거로 사용합니다.
-          </p>
-          <CitationBlock
-            source="IPFS Standards — CID (Content IDentifier)"
-            citeKey={1}
-            href="https://specs.ipfs.tech/cid/"
-          >
-            Typed content address의 binary 구조, CIDv0/v1 decoding과 malformed
-            input rejection 규칙을 확인합니다.
-          </CitationBlock>
-        </div>
+      <div className="not-prose my-6 rounded-xl border border-border/70 bg-muted/20 p-4 text-sm leading-6">
+        <p className="font-semibold">공식 raw hello 예를 bytes부터 따라가기</p>
+        <ol className="mt-2 list-decimal space-y-1 pl-5 text-foreground/75">
+          <li>
+            <code>hello</code>의 UTF-8은 <code>68 65 6c 6c 6f</code>입니다.
+          </li>
+          <li>
+            SHA-256 결과는 <code>2cf24dba…38b9824</code>입니다.
+          </li>
+          <li>
+            앞에 CIDv1·raw·sha2-256·32-byte 표지인
+            <code>01 55 12 20</code>을 붙입니다.
+          </li>
+          <li>
+            그 binary CID를 base32로 쓰면 <code>{HELLO_CID}</code>입니다.
+          </li>
+        </ol>
       </div>
+      <CitationBlock
+        source="IPFS Standards — CID (Content IDentifier)"
+        citeKey={1}
+        href="https://specs.ipfs.tech/cid/"
+      >
+        <p id="paper-cid-spec" className="text-sm leading-6">
+          2026-06-26 current specification의 raw hello test vector와 CIDv1
+          binary 구조, strict decoder 규칙을 사용합니다. CID format을
+          availability나 routing 성능의 근거로 확대하지 않습니다.
+        </p>
+      </CitationBlock>
     </section>
   );
 }

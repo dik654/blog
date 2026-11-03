@@ -116,9 +116,9 @@ export const ncaAiioStudyGuideData: AiInfrastructureArticleData = {
       title: "9. 현행 시험 범위와 다음 Professional 단계를 구분합니다",
       bridge: "Associate 목표를 첫 점검까지 내렸습니다. 현재 시험 정보와 다음 단계가 요구하는 행동을 비교합니다.",
       paragraphs: [
-        "2026년 10월 8일 확인 기준으로 NCA-AIIO는 영어 50문항, 60분, 미화 125달러의 원격 감독 시험이며 유효기간은 2년입니다. NVIDIA는 응시 전 현재 페이지와 정책을 다시 확인하라고 안내합니다.",
-        "NCP-AII는 server·network 설치, physical layer, firmware와 system 검증으로 내려갑니다. NCP-AIO는 monitoring·troubleshooting·optimization과 실제 cluster 도구 숙련을 요구합니다. 지금은 NCA로 전체 지도를 닫고, P0 case study로 지원 직무의 깊이를 별도로 증명합니다.",
-        "두 단계의 차이는 시험 형식에서 바로 보입니다. NCP-AIO는 객관식 30문항과 hands-on lab 3개를 한 번의 120분 안에 함께 풀고, 응시료는 미화 500달러입니다. Lab은 Slurm·Kubernetes·Base Command Manager가 도는 실제 cluster를 Linux 명령줄로 다루게 합니다(2026-10-09 공식 페이지 확인). NCA-AIIO의 60분 50문항과 달리 개념을 고르는 것만으로는 통과할 수 없는 형식입니다.",
+        "2026년 11월 2일 확인 기준으로 NCA-AIIO는 영어 50문항, 60분, 미화 125달러의 원격 감독 시험이며 유효기간은 2년입니다. NVIDIA는 응시 전 현재 페이지와 정책을 다시 확인하라고 안내합니다.",
+        "NCP-AII는 server·network 설치, physical layer, firmware와 system 검증으로 내려갑니다. 현재 공식 안내는 120분, 70~75문항, 미화 400달러이며 2~3년의 실무 경험을 권장합니다. NCP-AIO는 monitoring·troubleshooting·optimization과 실제 cluster 도구 숙련을 요구합니다. 지금은 NCA로 전체 지도를 닫고, P0 case study로 지원 직무의 깊이를 별도로 증명합니다.",
+        "두 단계의 차이는 시험 형식에서 바로 보입니다. NCP-AIO는 객관식 30문항과 hands-on lab 3개를 한 번의 120분 안에 함께 풀고, 응시료는 미화 500달러입니다. Lab은 Slurm·Kubernetes·Base Command Manager가 도는 실제 cluster를 Linux 명령줄로 다루게 합니다(2026-11-02 공식 페이지 확인). NCA-AIIO의 60분 50문항과 달리 개념을 고르는 것만으로는 통과할 수 없는 형식입니다.",
       ],
     },
     {
@@ -195,7 +195,7 @@ export const ncaAiioStudyGuideData: AiInfrastructureArticleData = {
   },
   examScope: {
     title: "NCA-AIIO 공식 시험 청사진",
-    asOf: "2026-10-08 · NVIDIA certification page와 Jan 2026 Study Guide",
+    asOf: "2026-11-02 · NVIDIA certification page와 Jan 2026 Study Guide",
     domains: [
       { name: "Essential AI Knowledge", weight: "38%", focus: "AI·ML·DL, GPU와 CPU, NVIDIA software stack, training과 inference, AI lifecycle" },
       { name: "AI Infrastructure", weight: "40%", focus: "Hardware scaling, cluster, network·protocol·DPU, power·cooling·facility, on-prem과 cloud" },
@@ -215,7 +215,7 @@ export const ncaAiioStudyGuideData: AiInfrastructureArticleData = {
       application: "이 문장을 역할 경계로 사용합니다. 자격 취득을 독립적인 128-GPU 설계·구축 경험으로 확대하지 않습니다.",
       citation: "NVIDIA · NCA-AIIO Exam Study Guide",
       href: "https://dam-cdn.nvd.orangelogic.com/AssetLink/x874j05hy3m3r2sor84kpvp70750m468.pdf",
-      note: "2026년 1월판의 job description, responsibilities와 세 영역 세부 목표를 확인했습니다. 본문 꼬리 표기는 “Jan26”이고 PDF 파일은 2026-06-25에 다시 저장됐습니다(확인일 2026-10-09).",
+      note: "2026년 1월판의 job description, responsibilities와 세 영역 세부 목표를 확인했습니다. 본문 꼬리 표기는 “Jan26”이며, 현재 certification page의 38%·40%·22%와 다시 대조했습니다(확인일 2026-11-02).",
     },
     {
       source: "NVIDIA Certification Program",
@@ -223,7 +223,7 @@ export const ncaAiioStudyGuideData: AiInfrastructureArticleData = {
       application: "NCA-AIIO는 지금의 폭 점검에 쓰고, NCP-AII·NCP-AIO는 실제 구축·운영 경험을 쌓은 뒤의 다음 단계로 둡니다.",
       citation: "NVIDIA · Certification Programs",
       href: "https://www.nvidia.com/en-us/learn/certification/",
-      note: "2026년 10월 8일 현재 AI Infrastructure 분야의 Associate와 Professional 자격 구성을 확인했습니다.",
+      note: "2026년 11월 2일 현재 AI Infrastructure 분야의 Associate와 Professional 자격 구성을 확인했습니다.",
     },
   ],
   review: [

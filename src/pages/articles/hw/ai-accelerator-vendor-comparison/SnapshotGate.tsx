@@ -4,105 +4,167 @@ import GateViz from "./viz/GateViz";
 
 const SNAPSHOT = [
   {
-    name: "NVIDIA B200",
-    memory: "180~192GB HBM3e",
-    link: "NVLink 5 · 전용 스위치",
-    form: "SXM 모듈 (벤더 규격)",
+    name: "NVIDIA HGX B300",
+    boundary: "OEM·자체 랙 / cloud",
+    memory: "GPU당 288GB HBM3e · 최대 8TB/s",
+    scale: "8-GPU HGX · NVLink 5 / NVSwitch",
+    fixedCase: "용량 후보 · 약 268.2GiB nominal",
+    status: "지역·OEM BOM과 납기 확인",
   },
   {
-    name: "AMD Instinct MI355X",
-    memory: "288GB HBM3E · 8TB/s",
-    link: "Infinity Fabric 7링크 메시",
-    form: "OAM 모듈 (공개 규격) · 액랭 1,400W",
+    name: "AMD Instinct MI455X · Helios",
+    boundary: "통합 rack-scale system",
+    memory: "GPU당 432GB HBM4 · 23.3TB/s",
+    scale: "UALink · 장치당 최대 3.6TB/s scale-up",
+    fixedCase: "용량 후보 · runtime 실행 필요",
+    status: "2026 H2 초기 출하 · 견적 확인",
   },
   {
     name: "Intel Gaudi 3",
-    memory: "128GB HBM2e · 3.7TB/s",
-    link: "패키지 내장 200GbE 24포트",
-    form: "OAM 모듈 900W · PCIe 카드 600W",
+    boundary: "OEM server / cloud",
+    memory: "가속기당 128GB HBM2e · 3.7TB/s",
+    scale: "장치당 24×200GbE",
+    fixedCase: "한 장 경로 탈락",
+    status: "정확한 OAM·PCIe 구성 확인",
   },
-];
+  {
+    name: "Google Cloud TPU7x Ironwood",
+    boundary: "Google Cloud service",
+    memory: "chip당 192GiB HBM · 7.38TB/s",
+    scale: "ICI 1.2TB/s bidirectional · 3D topology",
+    fixedCase: "한 chip 경로 탈락",
+    status: "GA · region·quota 확인",
+  },
+  {
+    name: "AWS Trainium3 · Trn3 UltraServer",
+    boundary: "AWS EC2 service",
+    memory: "chip당 144GB HBM3e · 4.9TB/s",
+    scale: "NeuronSwitch-v1 · chip당 2TB/s NeuronLink",
+    fixedCase: "한 chip 경로 탈락",
+    status: "region·instance quota 확인",
+  },
+] as const;
 
 export default function SnapshotGate() {
   return (
     <section id="snapshot-gate" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">스냅샷은 기준일과 함께 읽습니다</h2>
+      <h2 className="mb-6 break-keep text-2xl font-bold">
+        2026년 스냅샷은 순위표가 아니라 실행 후보를 거르는 출발점입니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          아래 표는 2026년 9월 11일 기준으로 각 벤더가 공개한 스펙에서 네 축에 해당하는 항목만 뽑은 것입니다.
-          숫자를 외우는 것이 목적이 아니라, 앞에서 본 축이 실제 제품에서 어떻게 나타나는지 확인하는 것이
-          목적입니다.
+          아래 값은 2026년 11월 2일 공식 문서에서 확인한 대표 system·service의
+          per-accelerator 수치입니다. Rack 전체 합계와 chip 한 개 수치를 섞지 않았습니다.
+          이 표만으로 성능 우열을 정하지 않고, 고정한 70B 사례가 한 장에 들어갈 가능성과
+          실제 조달 경계를 먼저 가릅니다.
+        </p>
+        <p className="leading-7">
+          앞에서 계산한 210.4GiB는 runtime 여유를 넣기 전 최소선입니다. 따라서
+          192GiB·144GB·128GB 후보는 한 장 경로에서 탈락합니다. 288GB와 432GB 후보도
+          “합격”이 아니라 실행 시험으로 넘어갈 뿐입니다. Decimal 288GB는 약 268.2GiB라
+          allocator·workspace·fragmentation에 남는 폭이 표의 차이보다 작습니다.
         </p>
       </div>
 
-      <div className="not-prose my-6 overflow-x-auto">
-        <table className="w-full min-w-[720px] border border-border text-sm">
+      <div className="not-prose my-7 space-y-3 md:hidden">
+        {SNAPSHOT.map((row) => (
+          <article key={row.name} className="rounded-xl border border-border bg-card p-4">
+            <h3 className="break-keep text-sm font-bold text-foreground">{row.name}</h3>
+            <dl className="mt-3 grid grid-cols-[5.5rem_minmax(0,1fr)] gap-x-3 gap-y-2 text-xs leading-5">
+              <dt className="font-semibold text-muted-foreground">배치 경계</dt><dd>{row.boundary}</dd>
+              <dt className="font-semibold text-muted-foreground">HBM</dt><dd>{row.memory}</dd>
+              <dt className="font-semibold text-muted-foreground">Scale-up</dt><dd>{row.scale}</dd>
+              <dt className="font-semibold text-muted-foreground">70B 사례</dt><dd>{row.fixedCase}</dd>
+              <dt className="font-semibold text-muted-foreground">현재 관문</dt><dd>{row.status}</dd>
+            </dl>
+          </article>
+        ))}
+      </div>
+
+      <div className="not-prose my-7 hidden overflow-x-auto md:block">
+        <table className="w-full min-w-[980px] border-collapse border border-border text-xs leading-5">
           <thead>
-            <tr className="bg-muted/50">
-              {["제품", "메모리", "가속기 간 링크", "폼팩터와 전력"].map((h) => (
-                <th key={h} className="border border-border px-3 py-2 text-left font-semibold">
-                  {h}
-                </th>
+            <tr className="bg-muted/50 text-left">
+              {['대표 system·service', '배치 경계', 'Per accelerator HBM', 'Scale-up 경로', '70B 사례', '현재 관문'].map((heading) => (
+                <th key={heading} className="border border-border px-3 py-3 font-semibold">{heading}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {SNAPSHOT.map((r) => (
-              <tr key={r.name}>
-                <td className="border border-border px-3 py-2 font-medium">{r.name}</td>
-                <td className="border border-border px-3 py-2">{r.memory}</td>
-                <td className="border border-border px-3 py-2">{r.link}</td>
-                <td className="border border-border px-3 py-2 text-muted-foreground">{r.form}</td>
+            {SNAPSHOT.map((row) => (
+              <tr key={row.name} className="align-top">
+                <td className="border border-border px-3 py-3 font-semibold">{row.name}</td>
+                <td className="border border-border px-3 py-3">{row.boundary}</td>
+                <td className="border border-border px-3 py-3">{row.memory}</td>
+                <td className="border border-border px-3 py-3">{row.scale}</td>
+                <td className="border border-border px-3 py-3">{row.fixedCase}</td>
+                <td className="border border-border px-3 py-3 text-muted-foreground">{row.status}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-sm leading-6 text-muted-foreground">
-          기준일 2026-09-11. 각 항목은 해당 벤더의 공개 제품 페이지와 기술 문서 기준이며, 같은 계열 안에서도
-          공랭·액랭 변형에 따라 전력이 다릅니다. 연산 성능 수치는 정밀도 정의와 측정 조건이 벤더마다 달라 이
-          표에 넣지 않았습니다.
-        </p>
-
-        <p className="leading-7">
-          표에서 읽어야 할 것은 세 회사가 서로 다른 축을 밀고 있다는 사실입니다. 한쪽은 노드 안 균일한 대역폭,
-          다른 쪽은 카드 한 장의 용량, 또 다른 쪽은 표준 이더넷으로 노드 안팎을 통일하는 것입니다. 내 워크로드가
-          어느 축에 민감한지가 곧 선택 기준입니다.
-        </p>
-      </div>
+      <p className="text-sm leading-6 text-muted-foreground">
+        기준일 2026-11-02. “GA·출하·제품 page 존재”와 필요한 region·계정·수량의
+        capacity 확보는 다른 사실입니다. TPU8i는 공식 TPU page가 이 기준일에도
+        coming soon으로 안내하므로 현재 production 후보 표에는 넣지 않았습니다.
+      </p>
 
       <GateViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+        <h3 className="break-keep">최종 선택은 다섯 관문을 같은 순서로 통과시킵니다</h3>
+        <ol className="leading-7">
+          <li><strong>배치 가능성:</strong> 자체 랙 BOM 또는 cloud region·quota를 실제로 확보할 수 있는가?</li>
+          <li><strong>Memory:</strong> Weight·KV·workspace가 usable HBM에 여유를 두고 들어가는가?</li>
+          <li><strong>기능·품질:</strong> 동일 artifact와 serving 기능이 fallback 없이 정확도 gate를 통과하는가?</li>
+          <li><strong>요청 성능:</strong> 같은 profile에서 p95 TTFT·TPOT·throughput·error가 목표를 만족하는가?</li>
+          <li><strong>운영 비용:</strong> 전력·냉각·cloud 요금·이식·cold start·장애 복구를 포함한 단위 요청 비용이 맞는가?</li>
+        </ol>
         <p className="leading-7">
-          판단 순서는 이렇습니다. 먼저 모델과 실행 상태가 카드 한 장에 들어가는지 봅니다. 들어가면 링크 축의
-          비중이 크게 줄고 메모리 대역폭과 소프트웨어 축이 결정적이 됩니다. 들어가지 않으면 링크 구조와
-          통신 패턴의 궁합을 먼저 보고, 그다음 폼팩터가 요구하는 전력·냉각을 현장이 감당할 수 있는지 확인합니다.
-        </p>
-
-        <p className="leading-7">
-          마지막 관문은 소프트웨어입니다. 앞의 세 축에서 아무리 유리해도 지금 스택이 그 위에서 같은 기능으로
-          돌지 않으면 그 차이는 실현되지 않습니다. 그래서 최종 후보는 문서가 아니라 실제 워크로드를 한 번
-          띄워 보고 정합니다.
-        </p>
-
-        <p className="leading-7">
-          이 글이 주장하지 않는 것도 분명합니다. 어느 제품이 더 빠른지 순위를 매기지 않았고, 연산 성능 수치를
-          비교하지 않았습니다. 정밀도 정의와 측정 조건이 벤더마다 달라 같은 표에 놓으면 오해를 만들기 때문이며,
-          그 비교가 필요하면 <Link to="/cs/ai/serving-benchmark-methodology">같은 조건에서 직접 재는 방법</Link>을
-          따라야 합니다.
+          이 순서의 목적은 최고 제품 하나를 선언하는 것이 아닙니다. 자체 데이터센터의
+          기본 용량에는 운영 가능한 system을, burst에는 실제 quota가 있는 cloud service를
+          고를 수 있게 비교 단위를 맞추는 것입니다. 최종 benchmark 설계는{" "}
+          <Link to="/cs/ai/serving-benchmark-methodology">같은 조건에서 직접 재는 방법</Link>으로
+          이어집니다.
         </p>
       </div>
 
       <CitationBlock
-        source="AMD · Intel · NVIDIA 공개 제품 문서 (2026-09-11 확인)"
+        source="NVIDIA Enterprise Reference Architecture · HGX B300 components"
         citeKey={1}
-        href="https://instinct.docs.amd.com/projects/system-acceptance/en/latest/gpus/mi355x.html"
+        href="https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html"
       >
-        표의 메모리·링크·폼팩터 항목은 각 벤더가 공개한 제품 페이지와 기술 문서에서 가져온 값입니다. 제품 계열이
-        갱신되면 값이 바뀌므로 기준일과 함께 읽어야 하며, 이 표로 성능 우열을 판정하지 않습니다.
+        B300 GPU당 288GB HBM3e, 최대 8TB/s, HGX 8-GPU 구성과 NVLink·NVSwitch 수치를 확인했습니다.
+      </CitationBlock>
+      <CitationBlock
+        source="AMD Instinct MI400 series · MI455X"
+        citeKey={2}
+        href="https://www.amd.com/en/products/accelerators/instinct/mi400.html"
+      >
+        MI455X GPU당 432GB HBM4, 23.3TB/s와 UALink scale-up 정보를 확인했습니다. 실제 공급 일정은 별도 견적 관문으로 남겼습니다.
+      </CitationBlock>
+      <CitationBlock
+        source="Intel Gaudi 3 AI accelerator"
+        citeKey={3}
+        href="https://www.intel.com/content/www/us/en/products/details/processors/ai-accelerators/gaudi.html"
+      >
+        Gaudi 3의 128GB HBM2e, 3.7TB/s와 OAM·PCIe 형태의 공식 제품 범위를 확인했습니다.
+      </CitationBlock>
+      <CitationBlock
+        source="Google Cloud · TPU7x Ironwood"
+        citeKey={4}
+        href="https://docs.cloud.google.com/tpu/docs/tpu7x"
+      >
+        TPU7x chip당 192GiB HBM, 7.38TB/s, 1.2TB/s bidirectional ICI와 Cloud TPU 지원 범위를 확인했습니다.
+      </CitationBlock>
+      <CitationBlock
+        source="AWS EC2 Trn3 instances"
+        citeKey={5}
+        href="https://aws.amazon.com/ec2/instance-types/trn3/"
+      >
+        Trainium3 chip당 144GB HBM3e, 4.9TB/s, NeuronSwitch-v1과 NeuronLink 수치를 확인했습니다.
       </CitationBlock>
     </section>
   );

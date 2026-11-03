@@ -8,117 +8,117 @@
   "articles": [
     {
       "route": "gpu/ai-infrastructure-b300-128-blueprint",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
       "route": "gpu/ai-cluster-software-compatibility",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
       "route": "gpu/kubernetes-vs-slurm-gpu-scheduling",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
       "route": "gpu/ai-cluster-storage-io",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
       "route": "gpu/b300-rack-power-cooling",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
       "route": "gpu/ai-infrastructure-commissioning-acceptance",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
       "route": "gpu/nvidia-nca-aiio-study-guide",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#자격-지도-1편"
     },
     {
       "route": "cloud/cloud-certification-roadmap-2026",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/cloud-foundations-responsibility-regions",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/cloud-identity-access-hierarchy",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/cloud-networking-request-path",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/cloud-compute-selection",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/cloud-storage-database-selection",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/cloud-reliability-observability-iac",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/aws-clf-c02-fast-study",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/aws-saa-c03-fast-study",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/aws-developer-cloudops-paths",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/azure-az900-fast-study",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/azure-az104-fast-study",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/azure-ai200-fast-study",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/azure-architect-devops-paths",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
       "route": "cloud/kubernetes-request-path-and-cka",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#fine-tuningmlflowkubernetes-과정과-cka-브라우저-실습-보강-2026-10-08"
     },
     {
       "route": "cloud/kubernetes-network-packet-path",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#cloud온프레미스-읽기-순서와-배포-자산-복구-보강-2026-10-09"
     },
     {
@@ -173,62 +173,62 @@
     },
     {
       "route": "cloud/linux-kernel-process-syscall-scheduler",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-containers-cgroup-namespace",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-vfs-mount-page-cache-fsync",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-network-interface-route-netfilter-dns",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-observability-proc-psi-perf-ebpf",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-sre-metrics-slo-safe-change",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-server-interview-incident-map",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-memory-page-cache-oom",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-disk-full-inode-deleted-files",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-process-signals-pid1-fds",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-tcp-time-wait-ports-backlog",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/linux-systemd-boot-change-incidents",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -238,37 +238,37 @@
     },
     {
       "route": "cloud/kubernetes-controllers-reconcile-deployment-job",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/kubernetes-requests-limits-allocatable-qos",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/kubernetes-pod-states-crashloop-probes-events",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/kubernetes-pvc-pv-storageclass-csi",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/kubernetes-rollout-termination-pdb-drain-hpa",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
       "route": "cloud/kubernetes-sre-slo-burn-rate-upgrades",
-      "status": "pending-full-review",
+      "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {

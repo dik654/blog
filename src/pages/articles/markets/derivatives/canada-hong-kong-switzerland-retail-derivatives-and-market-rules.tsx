@@ -5,13 +5,11 @@ import FlowRail from "../../world-systems/FlowRail";
 import NumericPath from "../../world-systems/NumericPath";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import SourceApplication from "../../world-systems/SourceApplication";
-import CanadaHongKongSwitzerlandViz from "./CanadaHongKongSwitzerlandViz";
 import { canadaHongKongSwitzerlandData as data } from "./derivative-operations-and-governance-data";
 
 export default function CanadaHongKongSwitzerlandDerivativesArticle() {
   return (
     <div className="space-y-16">
-      <CanadaHongKongSwitzerlandViz />
       {data.sections.map((section) => (
         <LessonSection key={section.id} id={section.id} level={section.level} title={section.title} bridge={section.bridge}>
           <div className="prose prose-neutral max-w-none dark:prose-invert">

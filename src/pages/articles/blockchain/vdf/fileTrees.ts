@@ -16,8 +16,13 @@ export const chiaVdfTree: FileNode = d("chiavdf", [
   d("src", [
     f("vdf.h — 반복 제곱 evaluation", "src/vdf.h", "vdf-repeated-square"),
     f(
-      "proof_common.h + verifier.h — B·r·검증식",
-      "src/proof_common.h + src/verifier.h",
+      "proof_common.h — challenge prime B",
+      "src/proof_common.h",
+      "vdf-get-b",
+    ),
+    f(
+      "verifier.h — r·proof 검증식",
+      "src/verifier.h",
       "vdf-wesolowski-verify",
     ),
   ]),

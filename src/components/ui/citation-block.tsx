@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface CitationBlockProps {
   source: string;
   citeKey: number;
-  type?: "paper" | "code";
+  type?: "paper" | "code" | "spec";
   children: ReactNode;
   href?: string;
 }
@@ -18,24 +18,28 @@ export function CitationBlock({
 }: CitationBlockProps) {
   const [open, setOpen] = useState(false);
 
-  const accent =
-    type === "code"
-      ? "border-emerald-500/40 bg-emerald-500/5"
+  const accent = type === "code"
+    ? "border-emerald-500/40 bg-emerald-500/5"
+    : type === "spec"
+      ? "border-violet-500/40 bg-violet-500/5"
       : "border-blue-500/40 bg-blue-500/5";
 
-  const badgeColor =
-    type === "code"
-      ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+  const badgeColor = type === "code"
+    ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+    : type === "spec"
+      ? "bg-violet-500/15 text-violet-400 border-violet-500/30"
       : "bg-blue-500/15 text-blue-400 border-blue-500/30";
 
-  const icon = type === "code" ? "</>" : "\u{1F4C4}";
+  const icon = type === "code" ? "</>" : type === "spec" ? "§" : "\u{1F4C4}";
 
   return (
     <div className="not-prose my-3">
       <button
+        type="button"
+        aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         className={`
-          flex w-full max-w-full flex-wrap items-center gap-2 px-3 py-1.5
+          flex min-h-11 w-full max-w-full flex-wrap items-center gap-2 px-3 py-1.5
           rounded-lg border text-xs font-medium text-left
           cursor-pointer select-none transition-all duration-200
           ${open ? accent + " border-opacity-100" : "border-border hover:bg-accent"}

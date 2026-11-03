@@ -1,29 +1,414 @@
 import ContentBoundary from "@/components/articles/content-boundary";
-import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import BulletproofsFlowViz from "./BulletproofsFlowViz";
+import { codeRefs } from "./codeRefs";
+import { bulletproofsTree } from "./fileTree";
 
-export default function ModernBulletproofsArticle(){return <article className="space-y-14">
-  <section id="overview" className="space-y-6"><header className="space-y-3"><p className="text-sm font-semibold text-primary">Committed witness의 range에서 시작하기</p><h2 className="text-3xl font-bold tracking-tight">w=4를 공개하지 않고 0≤w&lt;8과 3w=12를 함께 증명한다</h2></header><p className="text-lg leading-8 text-foreground/90">Public input은 x=3,y=12이고 witness는 w=4입니다. Prover는 random r로 Pedersen commitment V=wG+rH를 공개한 뒤, 같은 w가 3w=12를 만족하고 3-bit unsigned range 안에 있다는 proof를 만듭니다. Bulletproofs는 이 relation을 vector inner product로 바꾸고 trusted setup 없이 짧게 접습니다.</p><p>여기서 “짧다”는 proof의 group/field elements가 witness 길이에 logarithmic하다는 뜻입니다. Prover와 verifier가 처리하는 vector·MSM work, generator capacity, transcript와 range의 integer encoding은 별도 비용과 전제입니다.</p><aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> Commitment와 bit vector가 같은 w를 가리키도록 결속한 다음, inner-product argument(IPA)가 dimension만 절반씩 줄입니다.</aside><ContentBoundary article="bulletproofs"/><BulletproofsFlowViz/></section>
-  <section id="inner-product" className="space-y-6"><header><p className="text-sm font-semibold text-primary">01 · Inner-product argument</p><h2 className="mt-2 text-2xl font-bold">좌우 cross terms를 먼저 commit하고 challenge로 vector를 접는다</h2></header><p>
-            길이 n vector a,b와 generator vectors G,H의 commitment P가 inner product c=⟨a,b⟩와 일치한다는 relation을
-            생각합니다. Prover는 좌·우 halves의 cross inner products를 담은 L,R을 먼저 보내고 verifier가 transcript challenge u를
-            만든 뒤 vector와 generators를 u,u⁻¹ coefficient로 합칩니다.
-          </p><ExplainedFormula question="한 IPA round는 길이 n relation을 어떻게 n/2 relation으로 바꾸는가?" idea={<>L,R이 좌우 cross terms를 commitment에 고정합니다. 그 뒤 challenge u를 받아 같은 coefficient로 witnesses와 반대 coefficient로 generators를 접으면 새 commitment가 같은 inner product relation을 보존합니다.</>} formula={String.raw`\mathbf a'=u\mathbf a_L+u^{-1}\mathbf a_R,\quad \mathbf b'=u^{-1}\mathbf b_L+u\mathbf b_R,\quad \mathbf G'=u^{-1}\mathbf G_L+u\mathbf G_R,\quad \mathbf H'=u\mathbf H_L+u^{-1}\mathbf H_R`}
-  annotatedFormula={String.raw`\mathbf a'=\underbrace{u\mathbf a_L+u^{-1}\mathbf a_R}_{\text{witness 절반 접기}},\quad \mathbf b'=\underbrace{u^{-1}\mathbf b_L+u\mathbf b_R}_{\text{반대 계수로 접기}},\quad \mathbf G'=\underbrace{u^{-1}\mathbf G_L+u\mathbf G_R}_{\text{basis도 맞춰 접기}},\quad \mathbf H'=u\mathbf H_L+u^{-1}\mathbf H_R`}
-  operations={[
-    { expression: String.raw`u\mathbf a_L+u^{-1}\mathbf a_R`, annotation: ["L,R을 commit한 뒤 받은 challenge u로","좌우 절반을 하나로 합칩니다","예: n=8이면 8→4→2→1, 세 round"] },
-    { expression: String.raw`u^{-1}\mathbf b_L+u\mathbf b_R`, annotation: ["b는 a와 반대 계수로 접어","⟨a′,b′⟩에 원래 ⟨a,b⟩와","L·R cross term만 남게 합니다"] },
-    { expression: String.raw`u^{-1}\mathbf G_L+u\mathbf G_R`, annotation: ["generator는 witness와 반대 계수로","접어 새 commitment가 같은 relation을","보존하게 합니다 (H′도 같은 방식)"] },
-  ]} terms={[{symbol:"\\mathbf a_L,\\mathbf a_R",name:"Witness halves",description:"원래 witness vector의 좌우 절반입니다."},{symbol:"L,R",name:"Cross-term commitments",description:"Challenge 전에 cross inner products와 generators를 고정합니다."},{symbol:"u",name:"Round challenge",description:"L,R과 statement를 transcript에 넣은 뒤 얻습니다."},{symbol:"\\mathbf a',\\mathbf b'",name:"Folded witnesses",description:"길이가 절반인 다음 relation vector입니다."},{symbol:"\\mathbf G',\\mathbf H'",name:"Folded generators",description:"Commitment equality를 보존하는 새 basis입니다."}]} assumptions={["n은 profile이 정한 power of two이거나 의미가 고정된 zero padding을 사용합니다.","Prime-order group과 독립 generator vectors, DLP hardness를 사용합니다.","L,R·statement·generator/range profile을 흡수한 뒤 u를 생성합니다."]} interpretation="n=8이면 8→4→2→1로 세 rounds입니다. Proof에 남는 round elements는 logarithmic하지만 첫 vector와 verifier MSM의 총 work가 자동으로 logarithmic이 되지는 않습니다."/><p><strong>증명 아이디어:</strong> k rounds 뒤 dimension은 n/2ᵏ이므로 1이 되는 k는 log₂n입니다. 반례로 n=6을 아무 표시 없이 8로 pad하면 verifier가 원래 length를 모를 수 있으므로 transcript에 logical length와 padding rule을 binding해야 합니다.</p></section>
-  <section id="range-proof" className="space-y-6"><header><p className="text-sm font-semibold text-primary">02 · Range proof와 aggregation</p><h2 className="mt-2 text-2xl font-bold">Booleanity와 weighted sum이 integer range를 만든다</h2></header><ExplainedFormula question="w=4가 3-bit unsigned range 안에 있다는 relation은 무엇인가?" idea={<>Secret bits가 각각 0 또는 1이고 powers-of-two weighted sum이 commitment 속 w와 같으면 가능한 값은 0부터 7뿐입니다.</>} formula={String.raw`\mathbf a_L=(a_0,a_1,a_2),\quad a_i(a_i-1)=0,\quad w=\langle\mathbf a_L,(1,2,4)\rangle=4`}
-  annotatedFormula={String.raw`\mathbf a_L=\underbrace{(a_0,a_1,a_2)}_{\text{w의 3개 bit}},\quad \underbrace{a_i(a_i-1)=0}_{\text{각 bit는 0 또는 1}},\quad w=\underbrace{\langle\mathbf a_L,(1,2,4)\rangle}_{\text{bit에 자릿값 곱해 복원}}=4`}
-  operations={[
-    { expression: String.raw`a_i(a_i-1)=0`, annotation: ["field에 zero divisor가 없어","a_i=0 또는 a_i=1만 통과합니다"] },
-    { expression: String.raw`\langle\mathbf a_L,(1,2,4)\rangle`, annotation: ["little-endian 자릿값 1·2·4를 곱해 더함","예: (0,0,1)이면 0+0+4=4","3 bit라 가능한 값은 0~7뿐"] },
-  ]} terms={[{symbol:"a_i",name:"Secret bit",description:"Field에서 boolean constraint를 만족합니다."},{symbol:"a_i(a_i-1)",name:"Booleanity",description:"Field에 zero divisor가 없으므로 0 또는 1만 남깁니다."},{symbol:"(1,2,4)",name:"Bit weights",description:"Little-endian 3-bit unsigned integer를 복원합니다."},{symbol:"w",name:"Committed value",description:"Pedersen commitment V의 같은 witness와 연결돼야 합니다."}]} assumptions={["w의 canonical integer interpretation과 range bit length 3을 protocol profile에 고정합니다.","Bit relation과 V=wG+rH가 동일 witness variables를 공유합니다.","Silent truncation·signed encoding·field wraparound를 허용하지 않습니다."]} interpretation="aL=(0,0,1)이면 w=4입니다. w=9를 하위 3 bits 001로 잘라 1로 증명하면 원래 integer 9의 range proof가 아니므로 반드시 reject해야 합니다."/><p>여러 values는 bit vectors를 이어 붙여 aggregate할 수 있지만 generator capacity와 verifier MSM은 커집니다. Multi-party aggregation에서는 ordered commitments, 각 party nonce contribution, abort 뒤 nonce 재사용 금지와 range/context domain을 고정해야 합니다.</p><div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-5 text-sm leading-6"><strong>실패 반례:</strong> 3w=12 relation의 w와 range vector의 w를 따로 두면 각각 참인 witness를 골라 결합 statement를 위조할 수 있습니다. Constraint system은 두 경로가 같은 committed scalar를 공유하도록 해야 합니다.</div></section>
-  <section id="release" className="space-y-6"><header><p className="text-sm font-semibold text-primary">03 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Range failure와 pinned source parity 뒤 성능을 비교한다</h2></header><p>w=4와 correct V는 accept하고 w=−1·8·9, altered V, wrong range bits, generator order, transcript domain, malformed point는 모두 reject해야 합니다. Single/aggregate workloads에서 prove/verify time, proof bytes, peak RSS와 batch verifier를 재되 commit SHA·curve·generator capacity·logical range를 함께 기록합니다.</p><p>
-            업그레이드는 old/new verifier cross-matrix와 serialized proof/key rejection을 포함하고 실패하면 pinned
-            binary·parameters로 돌아갈 rollback artifact를 남깁니다.
-          </p><div id="paper-bulletproofs"><CitationBlock source="Bünz et al. · Bulletproofs (2017)" citeKey={1} href="https://eprint.iacr.org/2017/1066.pdf"><p><strong>문제:</strong> Trusted setup 없이 committed ranges와 arithmetic relations를 짧게 증명해야 합니다.</p><p><strong>기여:</strong> Logarithmic-size IPA, range proof와 aggregation을 제시합니다.</p><p><strong>전제:</strong> Prime-order DLP group, independent generators와 random-oracle Fiat–Shamir를 사용합니다.</p><p><strong>근거 범위:</strong> 논문 construction·security·당시 benchmark 범위입니다.</p><p><strong>말하지 않는 것:</strong> Verifier work가 logarithmic이거나 모든 구현이 audited/constant-time이라는 뜻은 아닙니다.</p></CitationBlock></div><div id="paper-dalek-bulletproofs"><CitationBlock source="dalek-cryptography/bulletproofs · pinned be67b6d" citeKey={2} type="code" href="https://github.com/dalek-cryptography/bulletproofs/tree/be67b6d5f5ad1c1f54d5511b52e6d645a1313d07"><p><strong>문제:</strong> 실제 Ristretto serialization·transcript·generator 구현을 고정해 확인해야 합니다.</p><p><strong>기여:</strong> Rust source와 tests/bench entry를 제공합니다.</p><p><strong>전제:</strong> Commit be67b6d, dependencies와 compiler profile을 pin합니다.</p><p><strong>근거 범위:</strong> 해당 snapshot의 public/source behavior입니다.</p><p><strong>말하지 않는 것:</strong> 최신 release나 모든 target의 production 안전성을 보장하지 않습니다.</p></CitationBlock></div><p>이 글의 10문항은 commitment ownership, 3-bit 계산, booleanity, IPA rounds/order/work, truncation, padding, aggregation, release/rollback을 묻고 위 계산·전제·반례로 모두 답할 수 있습니다.</p></section>
-  </article>}
+const BULLETPROOFS_PAPER = "https://eprint.iacr.org/2017/1066.pdf";
+const DALEK_SOURCE =
+  "https://github.com/dalek-cryptography/bulletproofs/tree/be67b6d5f5ad1c1f54d5511b52e6d645a1313d07";
+
+export default function ModernBulletproofsArticle() {
+  const sidebar = useCodeSidebar();
+
+  return (
+    <>
+      <article className="space-y-14 [overflow-wrap:anywhere]">
+        <section id="overview" className="space-y-6 scroll-mt-20">
+          <header className="space-y-3">
+            <p className="text-sm font-semibold text-primary">
+              한 문장으로 먼저 답하기
+            </p>
+            <h2 className="max-w-4xl break-keep text-3xl font-bold tracking-tight">
+              Bulletproofs는 숨긴 값을 열지 않고 범위 안이라는 사실을 증명합니다
+            </h2>
+          </header>
+
+          <p className="text-lg leading-8 text-foreground/90">
+            공개된 값은 <code>x=3</code>과 <code>y=12</code>이고, 숨길 값은
+            <code>w=4</code>라고 하겠습니다. Prover는 <code>3w=12</code>와
+            <code>0≤w&lt;8</code>을 모두 보이고 싶지만, verifier에게 4를 직접
+            알려 주고 싶지는 않습니다.
+          </p>
+          <p>
+            먼저 <code>V=wG+rH</code>라는 Pedersen commitment를 공개합니다.
+            무작위 blinding <code>r</code> 때문에 V만 보고 w를 알 수 없지만, 이후
+            증명은 같은 V에 들어간 값이 산술식과 3-bit range를 함께 만족한다는
+            사실을 확인하게 합니다.
+          </p>
+
+          <BulletproofsFlowViz />
+          <ContentBoundary article="bulletproofs" />
+
+          <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3">
+            {[
+              [
+                "COMMITMENT",
+                "값을 숨긴 공개 기준점",
+                "V=wG+rH는 w를 숨기면서 이후 증명이 가리킬 같은 기준점을 남깁니다.",
+              ],
+              [
+                "RANGE RELATION",
+                "0부터 7까지를 식으로 표현",
+                "Secret bits의 booleanity와 1·2·4 weighted sum이 3-bit unsigned range를 만듭니다.",
+              ],
+              [
+                "INNER PRODUCT",
+                "긴 vector 관계를 절반씩 접기",
+                "Round마다 L·R을 먼저 고정하고 challenge로 relation을 n→n/2로 줄입니다.",
+              ],
+            ].map(([eyebrow, title, body]) => (
+              <article key={eyebrow} className="min-w-0 bg-background p-4">
+                <p className="text-[9px] font-bold text-primary">{eyebrow}</p>
+                <h3 className="mt-2 break-keep text-sm font-black">{title}</h3>
+                <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">
+                  {body}
+                </p>
+              </article>
+            ))}
+          </div>
+
+          <div className="not-prose flex flex-wrap gap-2">
+            <CodeViewButton
+              label="실제 Pedersen commitment"
+              onClick={() =>
+                sidebar.open("pedersen-gens", codeRefs["pedersen-gens"])
+              }
+            />
+          </div>
+        </section>
+
+        <section id="range-proof" className="space-y-6 scroll-mt-20">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              01 · 숨긴 4를 3개 bit로 바꾸기
+            </p>
+            <h2 className="mt-2 break-keep text-2xl font-bold">
+              Booleanity와 자릿값의 합이 0≤w&lt;8을 만듭니다
+            </h2>
+          </header>
+
+          <p>
+            4의 3-bit little-endian 표현은 <code>(0,0,1)</code>입니다. 각 원소가
+            정말 0 또는 1인지 확인하고, 자릿값 1·2·4를 곱해 더한 결과가 같은
+            witness w인지 확인합니다. 두 조건이 모두 있어야 음수·8·9처럼 범위를
+            벗어난 integer를 막을 수 있습니다.
+          </p>
+
+          <ExplainedFormula
+            question="3개의 secret field element가 어떻게 0부터 7까지의 integer가 되나요?"
+            idea="각 원소를 bit로 제한한 뒤, 1·2·4 자릿값으로 같은 w를 복원합니다."
+            formula={String.raw`a_i(a_i-1)=0,qquad w=langlemathbf a_L,(1,2,4)angle`}
+            annotatedFormula={String.raw`\underbrace{a_i(a_i-1)=0}_{\text{각 }a_i\text{는 0 또는 1}},\qquad \underbrace{w}_{\text{commitment의 같은 값}}=\underbrace{\langle\mathbf a_L,(1,2,4)\rangle}_{\text{bit에 자릿값을 곱해 합침}}`}
+            operations={[
+              {
+                expression: String.raw`a_i(a_i-1)=0`,
+                annotation: [
+                  "Field에는 zero divisor가 없으므로",
+                  "곱이 0이면 ai=0 또는 ai=1",
+                  "세 원소 모두 따로 검사",
+                ],
+              },
+              {
+                expression: String.raw`(0,0,1)\cdot(1,2,4)`,
+                annotation: [
+                  "0·1 + 0·2 + 1·4",
+                  "합은 4",
+                  "3 bits가 만드는 값은 0부터 7",
+                ],
+              },
+              {
+                expression: String.raw`V=wG+rH`,
+                annotation: [
+                  "복원한 w를 처음 commitment의 value와 결속",
+                  "3w=12의 w와도 같은 변수",
+                  "각각 다른 witness를 쓰는 위조를 차단",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "a_i",
+                name: "Secret bit",
+                description: "Field 안에서 0 또는 1로 제한한 비공개 값입니다.",
+              },
+              {
+                symbol: String.raw`\mathbf a_L`,
+                name: "Bit vector",
+                description: "w=4일 때 little-endian (0,0,1)입니다.",
+              },
+              {
+                symbol: "w",
+                name: "Committed value",
+                description: "V와 산술식, range 식이 공유해야 하는 같은 witness입니다.",
+              },
+            ]}
+            assumptions={[
+              "Protocol profile이 unsigned integer, bit length 3과 little-endian 자릿값을 고정합니다.",
+              "Field element를 integer로 옮길 때 canonical encoding을 사용하고 silent truncation을 허용하지 않습니다.",
+              "Bit relation과 V=wG+rH, 3w=12가 같은 witness variable을 공유합니다.",
+            ]}
+            interpretation="w=9의 하위 3 bits만 취하면 001, 즉 1이 됩니다. 이는 9가 range 안이라는 증명이 아니라 9 mod 8의 다른 값을 증명한 것이므로 reject해야 합니다."
+          />
+
+          <p>
+            여러 commitment의 bit vectors를 이어 붙이면 한 proof로 aggregate할 수
+            있습니다. 논문에서 proof 길이는 단일 proof보다 <code>O(log m)</code>
+            group element만 더 늘지만, generator 수·multiscalar multiplication과
+            참여자 간 nonce·순서 조율 비용까지 사라지는 것은 아닙니다.
+          </p>
+        </section>
+
+        <section id="inner-product" className="space-y-6 scroll-mt-20">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              02 · 긴 관계를 짧은 proof로 접기
+            </p>
+            <h2 className="mt-2 break-keep text-2xl font-bold">
+              L과 R을 먼저 고정한 뒤 challenge로 vector 길이를 절반으로 줄입니다
+            </h2>
+          </header>
+
+          <p>
+            Range proof가 만든 긴 vector relation을 그대로 보내면 proof도 길어집니다.
+            Inner-product argument는 vector를 좌우로 나눈 뒤 cross term을 담은
+            <code>L</code>과 <code>R</code>을 먼저 transcript에 넣습니다. 그 뒤에
+            challenge <code>u</code>를 얻고 witness와 generator를 함께 접습니다.
+          </p>
+
+          <ExplainedFormula
+            question="한 round에서 길이 n relation을 어떻게 n/2 relation으로 줄이나요?"
+            idea="Witness와 generator에 맞물린 u·u⁻¹ 계수를 써서 commitment equality를 보존합니다."
+            formula={String.raw`\mathbf a'=u\mathbf a_L+u^{-1}\mathbf a_R,\quad \mathbf G'=u^{-1}\mathbf G_L+u\mathbf G_R`}
+            annotatedFormula={String.raw`\underbrace{\mathbf a'}_{\text{절반 길이 witness}}=\underbrace{u\mathbf a_L+u^{-1}\mathbf a_R}_{\text{challenge로 좌우 결합}},\quad \underbrace{\mathbf G'}_{\text{절반 길이 basis}}=\underbrace{u^{-1}\mathbf G_L+u\mathbf G_R}_{\text{반대 계수로 결합}}`}
+            operations={[
+              {
+                expression: String.raw`L,R\to u`,
+                annotation: [
+                  "Cross term point L·R을 먼저 transcript에 추가",
+                  "그 다음 challenge u 생성",
+                  "Prover가 u를 본 뒤 L·R을 바꾸지 못함",
+                ],
+              },
+              {
+                expression: String.raw`n\to n/2`,
+                annotation: [
+                  "Witness a·b와 generator G·H를 모두 접음",
+                  "길이 8이면 8→4→2→1",
+                  "총 3=log₂8 rounds",
+                ],
+              },
+              {
+                expression: String.raw`(L_i,R_i)_{i=1}^{\log_2 n}`,
+                annotation: [
+                  "Proof에는 round별 point pair와 마지막 scalar가 남음",
+                  "Proof 크기는 O(log n)",
+                  "전체 MSM work는 여전히 n 규모",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "L,R",
+                name: "Cross-term commitments",
+                description: "현재 좌우 절반의 교차 inner product를 challenge 전에 고정합니다.",
+              },
+              {
+                symbol: "u",
+                name: "Transcript challenge",
+                description: "Statement와 L·R을 흡수한 뒤 얻는 round scalar입니다.",
+              },
+              {
+                symbol: "n",
+                name: "Relation dimension",
+                description: "Profile이 정한 power-of-two vector 길이입니다.",
+              },
+            ]}
+            assumptions={[
+              "n은 power of two이며 padding을 쓰면 logical length와 padding rule을 transcript에 결속합니다.",
+              "Prime-order group, 독립 generator와 discrete-log hardness를 가정합니다.",
+              "Statement·generator/range profile·L·R을 같은 Merlin transcript에 순서대로 넣습니다.",
+            ]}
+            interpretation="n=8이면 L/R pair는 3개만 남지만 prover와 verifier가 처음 vector 전체를 처리하는 일까지 3개 연산으로 줄어드는 것은 아닙니다."
+          />
+
+          <AlgorithmBlock
+            title="Inner-product argument 한 round"
+            input={[
+              "길이 n인 witness vectors a, b",
+              "길이 n인 generators G, H와 commitment point Q",
+              "Statement까지 흡수한 transcript",
+            ]}
+            steps={[
+              {
+                code: "a,b,G,H를 왼쪽과 오른쪽 절반으로 나눈다",
+                note: "네 vector 모두 같은 가운데에서 나눠야 관계의 좌표가 맞습니다.",
+              },
+              {
+                code: "cL ← ⟨aL,bR⟩, cR ← ⟨aR,bL⟩",
+                note: "접을 때 생기는 두 cross inner product를 계산합니다.",
+              },
+              {
+                code: "L,R을 계산하고 transcript에 append한다",
+                note: "Challenge를 보기 전에 이번 round의 cross term을 point로 고정합니다.",
+              },
+              {
+                code: "u ← transcript.challenge_scalar('u')",
+                note: "Statement와 L·R에 결속된 challenge와 inverse u⁻¹을 얻습니다.",
+              },
+              {
+                code: "a,b,G,H ← u와 u⁻¹ 계수로 fold한다",
+                note: "Witness와 basis를 함께 접어 길이를 n/2로 줄이면서 같은 relation을 유지합니다.",
+              },
+            ]}
+            repeatUntil="vector 길이가 1이 될 때까지 반복합니다. n=8이면 세 round입니다."
+            output="L_vec, R_vec와 마지막 scalar a, b"
+          />
+
+          <div className="not-prose flex flex-wrap gap-2">
+            <CodeViewButton
+              label="실제 IPA proof 구조"
+              onClick={() => sidebar.open("ipa-struct", codeRefs["ipa-struct"])}
+            />
+            <CodeViewButton
+              label="실제 IPA 첫 round"
+              onClick={() =>
+                sidebar.open("ipa-first-round", codeRefs["ipa-first-round"])
+              }
+            />
+          </div>
+
+          <p>
+            논문 abstract는 n-bit range proof가 <code>2log₂(n)+9</code>개의 group과
+            field element로 구성되고, proof generation과 verification time은 n에
+            선형이라고 명시합니다. “짧은 proof”와 “logarithmic verifier time”은
+            같은 말이 아닙니다.
+          </p>
+        </section>
+
+        <section id="release" className="space-y-6 scroll-mt-20">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              03 · 검증 결과와 배포 경계
+            </p>
+            <h2 className="mt-2 break-keep text-2xl font-bold">
+              Trusted setup이 없다는 말도 모든 신뢰와 실패가 없다는 뜻은 아닙니다
+            </h2>
+          </header>
+
+          <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-2">
+            <article className="bg-background p-5">
+              <p className="text-xs font-bold text-primary">Proof가 확인하는 것</p>
+              <ul className="mt-3 space-y-2 text-sm leading-6">
+                <li>고정한 V의 숨긴 값이 지정 range 안에 있음</li>
+                <li>산술식과 range가 같은 witness를 공유함</li>
+                <li>고정한 transcript·generator profile에서 IPA가 성립함</li>
+              </ul>
+            </article>
+            <article className="bg-background p-5">
+              <p className="text-xs font-bold text-amber-700 dark:text-amber-300">
+                따로 확인할 것
+              </p>
+              <ul className="mt-3 space-y-2 text-sm leading-6">
+                <li>Generator derivation과 curve 구현의 안전성</li>
+                <li>Signed·unsigned와 bit length·domain의 일치</li>
+                <li>Verifier 배포·serialization·성능·애플리케이션 정책</li>
+              </ul>
+            </article>
+          </div>
+
+          <p>
+            Release test는 먼저 w=4와 올바른 V가 통과하는지 확인합니다. 이어서 실패
+            원인을 섞지 않고 다음 입력을 하나씩 거절해야 합니다.
+          </p>
+          <ul>
+            <li>범위를 벗어난 −1·8·9</li>
+            <li>값이 바뀐 V와 잘못된 bit order</li>
+            <li>다른 generator·transcript domain</li>
+            <li>해석할 수 없는 Ristretto point</li>
+          </ul>
+          <p>
+            그다음 single·aggregate proof의 bytes, prove time, verify time과 peak memory를
+            같은 commit·curve·generator capacity·logical range에서 측정합니다. 구버전과
+            신버전 verifier의 교차 검증도 포함합니다.
+          </p>
+
+          <div id="paper-bulletproofs" className="scroll-mt-24">
+            <CitationBlock
+              type="paper"
+              citeKey={1}
+              source="Bünz et al. · Bulletproofs · 2017/1066"
+              href={BULLETPROOFS_PAPER}
+            >
+              <p>
+                <strong>문제:</strong> Trusted setup 없이 committed range와 arithmetic
+                relation을 짧게 증명해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Logarithmic-size inner-product argument,
+                range proof와 aggregation·multi-party protocol을 제시합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> Discrete-log hardness, independent generator,
+                random-oracle Fiat–Shamir와 protocol의 integer encoding을 사용합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> 논문 construction·security model과 당시
+                benchmark에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Proof size가 logarithmic하다는 사실을
+                prover·verifier time도 logarithmic하다고 확대하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+
+          <div id="paper-dalek-bulletproofs" className="scroll-mt-24">
+            <CitationBlock
+              type="code"
+              citeKey={2}
+              source="dalek-cryptography/bulletproofs · commit be67b6d"
+              href={DALEK_SOURCE}
+            >
+              <p>
+                <strong>문제:</strong> 실제 Ristretto commitment와 Merlin transcript,
+                IPA folding 순서를 source로 확인해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> PedersenGens, InnerProductProof와 첫 round의
+                L·R→u→fold 구현을 제공합니다.
+              </p>
+              <p>
+                <strong>고정한 버전:</strong> Commit <code>be67b6d</code>의 세 원문
+                범위를 사용합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> 이 snapshot의 source 확인이 최신 release,
+                모든 target의 constant-time 동작이나 production audit를 보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
+      </article>
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ bulletproofs: bulletproofsTree }}
+        projectMetas={{
+          bulletproofs: {
+            id: "bulletproofs",
+            label: "dalek bulletproofs · Rust",
+            badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
+          },
+        }}
+      />
+    </>
+  );
+}

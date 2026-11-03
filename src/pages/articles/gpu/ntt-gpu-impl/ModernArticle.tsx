@@ -5,18 +5,18 @@ import { ModernNttGpuViz } from "./ModernNttGpuViz";
 
 const SPPARK_KERNEL = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/ntt/kernels.cu";
 const SPPARK_NTT = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/ntt/ntt.cuh";
-const CUDA = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html";
+const CUDA = "https://docs.nvidia.com/cuda/archive/13.2.1/pdf/CUDA_C_Best_Practices_Guide.pdf";
 
 export default function ModernNttGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Finite-field transform를 launch plan으로 내리기</p><h2 className="text-3xl font-bold tracking-tight">GPU NTT의 핵심은 butterfly 수가 아니라 stage 사이의 order·twiddle·buffer 계약이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Number theoretic transform(NTT)의 field, root of unity, forward/inverse 수식은 <a className="text-primary hover:underline" href="/cs/crypto/fft#dft">NTT 정본</a>에서 먼저 설명합니다. 여기서는 같은 transform을 pinned sppark의 Cooley–Tukey(CT)·Gentleman–Sande(GS) kernels, bit-reversal, coset power pass로 실행하는 구현 경계만 소유합니다.</p>
-      <p>
-            고정 예제는 N=8 coefficient buffer를 evaluation form으로 바꾼 뒤 inverse로 복원하는 workload입니다. 호출 receipt에는
-            field와 N, root/domain id, direction을 적습니다. coset, input/output order, normalization, backend SHA도
-            같은 자리에 들어갑니다. 하나라도 빠지면 길이가 같은 잘못된 배열이 성공처럼 보입니다.
-          </p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">N=8 배열 하나를 끝까지 따라가기</p><h2 className="text-3xl font-bold tracking-tight">GPU NTT는 빠른 butterfly보다 배열 순서를 지키는 일이 먼저다</h2></header>
+      <p className="text-lg leading-8 text-foreground/90"><strong>Thread가 읽을 pair, 곱할 twiddle, 다음 stage가 기다릴 경계, 최종 배열 순서를 한 계약으로 묶어야 합니다.</strong> 하나라도 다르면 길이는 같아도 다른 transform입니다.</p>
+      <p>이 작업을 number theoretic transform(NTT)의 GPU launch plan이라고 부릅니다. Field, root of unity, forward/inverse 수식은 <a className="text-primary hover:underline" href="/cs/crypto/fft#dft">NTT 정본</a>에서 먼저 설명합니다. 여기서는 같은 transform을 pinned sppark의 Cooley–Tukey(CT)·Gentleman–Sande(GS) kernels, bit-reversal, coset power pass로 실행하는 구현 경계만 소유합니다.</p>
+      <div className="space-y-3">
+        <p>고정 예제는 N=8 coefficient buffer를 evaluation form으로 바꾼 뒤 inverse로 복원하는 workload입니다. 호출 receipt에는 field와 N, root/domain id와 direction을 적습니다.</p>
+        <p>Coset, input/output order, normalization과 backend SHA도 같은 자리에 넣습니다. 하나라도 빠지면 길이가 같은 잘못된 배열이 성공처럼 보입니다.</p>
+      </div>
       <ModernNttGpuViz />
       <ContentBoundary article="ntt-gpu-impl" />
     </section>
@@ -37,11 +37,10 @@ export default function ModernNttGpuArticle() {
         {symbol:"g",name:"Group index",description:"길이 2h인 butterfly group 번호입니다."},
         {symbol:"i_0,i_1",name:"Input indices",description:"한 butterfly가 읽고 쓰는 두 array indices입니다."},
       ]} assumptions={["N은 field가 지원하는 2의 거듭제곱 domain이며 t<N/2입니다.","이 index 식은 radix-2 설명용입니다. Pinned sppark의 mixed-radix launch details를 같은 식으로 단정하지 않습니다."]} interpretation="N=8,s=1이면 h=2입니다. t=3은 j=1,g=1이므로 indices (5,7)을 처리합니다." />
-      <p>
-            Shared memory에 여러 stages를 묶으면 global traffic이 줄어듭니다. 대신 block 안 barrier와 shared capacity·bank
-            mapping이 새 제약으로 붙습니다. Tile 밖 stage에는 kernel boundary나 global synchronization이 필요합니다. block
-            barrier만으로는 grid 전체 순서를 만들지 못합니다.
-          </p>
+      <div className="space-y-3">
+        <p>Shared memory에 여러 stages를 묶으면 global traffic이 줄어듭니다. 대신 block 안 barrier, shared capacity와 bank mapping이 새 제약으로 붙습니다.</p>
+        <p>Tile 밖 stage에는 kernel boundary나 검증된 global synchronization이 필요합니다. Block barrier만으로는 grid 전체 순서를 만들지 못합니다.</p>
+      </div>
     </section>
 
     <section id="twiddle-contract" className="space-y-6">
@@ -76,22 +75,20 @@ export default function ModernNttGpuArticle() {
         {symbol:"r",name:"Bit position",description:"0부터 k−1까지 순회하는 index입니다."},
         {symbol:"rev_k(i)",name:"Bit-reversed index",description:"k bits의 순서를 뒤집어 얻은 position입니다."},
       ]} assumptions={["N=2^k이고 index는 정확히 k bits로 zero-pad합니다.","CT/GS 및 in/out ordering 계약에 따라 별도 permutation pass가 필요 없을 수도 있지만 output tag는 남깁니다."]} interpretation="N=8,k=3에서 i=3=011₂이면 rev₃(i)=110₂=6입니다." />
-      <p>
-            In-place permutation은 pair를 한 번만 swap해야 합니다. out-of-place permutation에는 별도 buffer와 read/write
-            traffic이 듭니다. Pinned kernels에는 작은 domain용 direct bit reversal과 shared-memory를 쓰는 큰-domain path가 둘
-            다 있습니다. 그래서 “bit reverse는 항상 CPU 전처리”라고 쓰지 않습니다.
-          </p>
+      <div className="space-y-3">
+        <p>In-place permutation은 pair를 한 번만 swap해야 합니다. Out-of-place permutation에는 별도 buffer와 read/write traffic이 듭니다.</p>
+        <p>Pinned kernels에는 작은 domain용 direct bit reversal과 shared memory를 쓰는 큰 domain path가 모두 있습니다. 그래서 “bit reverse는 항상 CPU 전처리”라고 일반화하지 않습니다.</p>
+      </div>
       <div id="paper-sppark-permutation"><CitationBlock type="code" citeKey={2} source="sppark kernels.cu · commit 17278d7" href={SPPARK_KERNEL}><p><strong>문제:</strong> NTT input/output order와 coset powers를 GPU memory에 실제 배치해야 합니다.</p><p><strong>핵심 기여:</strong> Direct·shared-memory bit-reversal kernels와 LDE power kernels를 제공합니다.</p><p><strong>중요 가정:</strong> Commit 17278d7, lg_domain_size, launch bounds와 field type을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 permutation·power kernel source입니다.</p><p><strong>일반화 금지:</strong> 고정 bandwidth·bank conflict·모든 domain 우위를 제공하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Round-trip·naive DFT·convolution을 통과한 뒤 stage traffic과 전체 시간을 잰다</h2></header>
-      <p>
-            검사 대상은 N=1/2/8과 zero/constant/basis vector입니다. invalid domain, wrong root, wrong order, coset
-            mismatch도 함께 넣습니다. 작은 N은 O(N²) field DFT와 비교하고 큰 N은 pinned CPU NTT·round-trip·convolution
-            identity와 맞춥니다. Warm-up 뒤에는 stage별 events와 final sync, actual/requested bytes를 남깁니다. field
-            butterfly/s와 occupancy·bank conflicts·stalls, H2D/D2H도 같이 기록합니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">정답을 통과한 뒤 traffic과 시간을 잰다</h2></header>
+      <div className="space-y-3">
+        <p>검사 대상은 N=1·2·8과 zero, constant, basis vector입니다. Invalid domain, wrong root, wrong order와 coset mismatch도 함께 넣습니다.</p>
+        <p>작은 N은 O(N²) field DFT와 비교합니다. 큰 N은 pinned CPU NTT, round trip과 convolution identity에 맞춥니다.</p>
+        <p>Warm-up 뒤에는 stage별 events와 final sync, actual/requested bytes를 남깁니다. Field butterfly/s, occupancy, bank conflict, stall과 H2D/D2H도 함께 기록합니다.</p>
+      </div>
       <ExplainedFormula question="Out-of-place radix-2 NTT의 최소 requested traffic을 어떻게 추정할까?" idea={<>각 stage가 N field elements를 한 번 읽고 한 번 쓴다고 단순화해 stage 수만큼 합합니다.</>} formula={String.raw`B_{req}=2Ns_F\log_2N,\qquad BW_{req}=\frac{B_{req}}{t_{stages}}`}
       annotatedFormula={String.raw`B_{req}=\underbrace{2Ns_F}_{\text{stage당 read+write}}\underbrace{\log_2N}_{\text{stage 수}},\qquad BW_{req}=\frac{B_{req}}{\underbrace{t_{stages}}_{\text{NTT kernel 시간}}}`}
       operations={[
@@ -105,7 +102,8 @@ export default function ModernNttGpuArticle() {
         {symbol:"BW_{req}",name:"Requested bandwidth",description:"Algorithmic bytes를 measured stage time으로 나눈 값입니다."},
         {symbol:"t_{stages}",name:"Stage-chain time",description:"Permutation/transfer 제외 여부를 명시한 NTT kernel events 시간입니다."},
       ]} assumptions={["모든 stage가 out-of-place global pass라는 상한 모델이며 fused shared-memory stages는 이 traffic보다 작을 수 있습니다.","Profiler actual transactions와 cache hit를 별도 기록하며 requested BW를 HBM achieved BW로 부르지 않습니다."]} interpretation="N=8,sF=32B이면 단순 requested traffic은 2×8×32×3=1,536B입니다." />
-      <div id="paper-cuda-ntt"><CitationBlock type="paper" citeKey={3} source="CUDA C++ Best Practices Guide 12.8.1" href={CUDA}><p><strong>문제:</strong> Kernel timing과 requested/actual bandwidth를 올바른 동기화 경계에서 비교해야 합니다.</p><p><strong>핵심 기여:</strong> CUDA event, effective bandwidth, coalescing과 correctness-first 절차를 설명합니다.</p><p><strong>중요 가정:</strong> CUDA 12.8.1과 target GPU properties·compiler를 고정합니다.</p><p><strong>근거 범위:</strong> 측정과 memory behavior 방법론입니다.</p><p><strong>일반화 금지:</strong> 특정 tile·radix·occupancy가 항상 최적이라는 뜻은 아닙니다.</p></CitationBlock></div>
+      <div id="paper-cuda-ntt"><CitationBlock type="paper" citeKey={3} source="CUDA C++ Best Practices Guide 13.2.1" href={CUDA}><p><strong>문제:</strong> Kernel timing과 requested/actual bandwidth를 올바른 동기화 경계에서 비교해야 합니다.</p><p><strong>핵심 기여:</strong> CUDA event, effective bandwidth, coalescing과 correctness-first 절차를 설명합니다.</p><p><strong>중요 가정:</strong> CUDA 13.2.1과 target GPU properties·compiler를 고정합니다.</p><p><strong>근거 범위:</strong> 측정과 memory behavior 방법론입니다.</p><p><strong>일반화 금지:</strong> 특정 tile·radix·occupancy가 항상 최적이라는 뜻은 아닙니다.</p></CitationBlock></div>
+      <p className="text-sm leading-6 text-muted-foreground">고정한 sppark commit 17278d7의 <code>ntt.cuh</code>와 <code>kernels.cu</code>는 2026-11-02 upstream HEAD 69440fd와 SHA-256이 각각 일치했습니다. 이는 source path가 유지됐다는 확인이며 새 GPU의 성능 보장은 아닙니다.</p>
       <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 역검사 10/10:</strong> thread pair, butterfly, twiddle artifact, bit reversal, coset/order boundary, buffer traffic, reference fixtures, invalid domain, measurement와 rollback을 이 글만으로 다뤄야 합니다. Round-trip·convolution·p95 중 하나라도 기준을 넘으면 이전 kernel plan으로 되돌립니다.</aside>
     </section>
   </article>;

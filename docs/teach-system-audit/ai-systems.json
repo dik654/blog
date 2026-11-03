@@ -164,15 +164,15 @@
         "narrowTextAfterFix": 0,
         "animatedAllScenes3901440": true,
         "learning": "strict require-registration 통과",
-        "typescript": "root 통합 실제 app 검증 진행 중"
+        "typescript": "2026-11-01 root TypeScript --noEmit 통과"
       },
-      "remaining": ["root 통합 검토·전역 build·배포 검증"],
+      "remaining": [],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--agent-changelog-evidence.json",
       "bodyFiles": [
         "src/pages/articles/ai/agent-changelog-evidence/ModernArticle.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/agent-changelog-evidence/ModernArticle.tsx",
-      "contentHash": "a6ce8b34bfdae4bbbef4bd2572e43f3b3f61c30dca79c69f60aabbe94a00311f",
+      "contentHash": "daac04e5889c6fd2f48121385cb13cb79bbf85f0b1c0d4e6e441cdb150735696",
       "evidenceFiles": [
         "/tmp/world-browser-audit/teach-ai-systems-docs06-summary.json",
         "/tmp/teach-all/ai-systems-screens-06/summary.json",

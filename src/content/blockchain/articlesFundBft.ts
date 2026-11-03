@@ -16,48 +16,48 @@ export const fundamentalsArticles: Article[] = [
   },
   {
     slug: "consensus-mechanisms",
-    title: "합의 알고리즘 비교",
+    title: "PoW와 PoS는 영향력을 어떻게 제한할까?",
     subcategory: "fundamentals",
     sections: [
   {
     "id": "overview",
-    "title": "1. 누가 보냈는지 알아도 어느 송금이 먼저인지는 남습니다"
+    "title": "1. 서명을 확인했는데도 왜 합의가 필요할까요?"
   },
   {
     "id": "black-box",
-    "title": "2. 참여 비용, 내용 검사, 기록 선택을 차례로 봅니다"
+    "title": "2. 한 후보를 선택하려면 어떤 판단을 나눠야 할까요?"
   },
   {
     "id": "case",
-    "title": "3. 네 참여자의 자원을 합하면 100입니다"
+    "title": "3. 같은 네 참여자의 영향력을 어떻게 비교할까요?"
   },
   {
     "id": "parts",
-    "title": "4. 후보를 만드는 사람과 그 후보를 확인하는 사람이 있습니다"
+    "title": "4. 후보를 만드는 일과 검사하는 일은 왜 나눌까요?"
   },
   {
     "id": "why-parts",
-    "title": "5. 이름 수로 투표하면 같은 사람이 표를 계속 늘립니다"
+    "title": "5. 이름 수로 투표하면 왜 안 될까요?"
   },
   {
     "id": "names",
-    "title": "6. PoW와 PoS는 영향력의 근거를 달리 정합니다"
+    "title": "6. PoW와 PoS는 무엇을 다르게 비용으로 묶을까요?"
   },
   {
     "id": "trace",
-    "title": "7. 같은 X를 만들고 검사한 뒤 선택 근거를 모읍니다"
+    "title": "7. 같은 송금이 두 방식에서 어디까지 같고 어디서 갈릴까요?"
   },
   {
     "id": "pow",
-    "title": "8. A의 이름이 100개여도 계산 몫 10%는 그대로입니다"
+    "title": "8. A가 이름을 100개 만들면 계산 몫도 늘까요?"
   },
   {
     "id": "pos",
-    "title": "9. 지분 40은 매번 당첨된다는 뜻이 아닙니다"
+    "title": "9. 지분 40이면 D가 매번 제안자가 될까요?"
   },
   {
     "id": "comparison",
-    "title": "10. 자원 비용만으로 안전성과 속도를 함께 결론내릴 수 없습니다"
+    "title": "10. PoW와 PoS를 에너지와 속도만으로 비교하면 될까요?"
   }
 ],
     component: () => import("@/pages/articles/blockchain/consensus-mechanisms"),
@@ -180,55 +180,55 @@ export const bftArticles: Article[] = [
   },
   {
     slug: "pbft-deep",
-    title: "PBFT 3단계 심층 (Pre-prepare/Prepare/Commit)",
+    title: "복제본 하나가 거짓말해도 PBFT는 어떻게 같은 결과를 만들까요?",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "PBFT 개요" },
-      { id: "normal-case", title: "Normal case와 두 predicate" },
-      { id: "view-recovery", title: "View change와 checkpoint" },
-      { id: "release", title: "Client reply와 복구" },
+      { id: "overview", title: "요청 한 건의 전체 흐름" },
+      { id: "normal-case", title: "Prepared와 committed-local" },
+      { id: "view-recovery", title: "주 노드 교체와 기록 정리" },
+      { id: "release", title: "사용자가 결과를 받아들이는 때" },
     ],
     component: () => import("@/pages/articles/blockchain/pbft-deep"),
   },
   {
     slug: "tendermint-bft",
-    title: "Tendermint BFT 프로토콜",
+    title: "제안자가 바뀌어도 Tendermint는 어떻게 블록 하나만 결정할까요?",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "Tendermint BFT 개요" },
-      { id: "protocol", title: "프로토콜 흐름" },
-      { id: "locking", title: "Polka 잠금 메커니즘" },
-      { id: "comparison", title: "PBFT와 비교" },
+      { id: "overview", title: "블록 한 칸을 정하는 흐름" },
+      { id: "protocol", title: "두 번의 투표와 nil" },
+      { id: "locking", title: "라운드를 건너는 잠금" },
+      { id: "comparison", title: "느린 네트워크와 운영 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/tendermint-bft"),
   },
   {
     slug: "hotstuff-deep",
-    title: "HotStuff 체인 투표 & 선형 통신",
+    title: "HotStuff는 QC 사슬로 어떻게 안전하게 주 노드를 바꿀까요?",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "HotStuff 개요" },
-      { id: "qc-chain", title: "Safe vote와 QC chain" },
-      { id: "pacemaker", title: "Pacemaker와 응답성" },
-      { id: "release", title: "Persistence와 release" },
+      { id: "overview", title: "송금 한 건이 확정되는 흐름" },
+      { id: "qc-chain", title: "안전한 투표와 QC 사슬" },
+      { id: "pacemaker", title: "주 노드 교체와 진행" },
+      { id: "release", title: "재시작과 검증" },
     ],
     component: () => import("@/pages/articles/blockchain/hotstuff-deep"),
   },
   {
     slug: "hotstuff2",
-    title: "HotStuff-2 (2단계 축소)",
+    title: "HotStuff-2는 두 단계로 줄이고도 어떻게 안전하게 진행할까요?",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "HotStuff-2 개요" },
-      { id: "two-phase", title: "2단계 프로토콜" },
-      { id: "view-sync", title: "View entry와 lock status" },
-      { id: "release", title: "비용과 release" },
+      { id: "overview", title: "송금 한 건의 빠른 경로" },
+      { id: "two-phase", title: "두 번의 정족수 확인" },
+      { id: "view-sync", title: "빠른 진입과 느린 진입" },
+      { id: "release", title: "비용과 확인 경계" },
     ],
     component: () => import("@/pages/articles/blockchain/hotstuff2"),
   },
   {
     slug: "jolteon-ditto",
-    title: "Jolteon·Ditto: 정상 경로와 비동기 전환",
+    title: "Jolteon·Ditto는 멈춘 합의를 어떻게 비동기 경로로 전환할까요?",
     subcategory: "bft-consensus",
     sections: [
       { id: "overview", title: "두 경로의 전체 흐름" },
@@ -242,7 +242,7 @@ export const bftArticles: Article[] = [
   /* ── 리더 기반 BFT 비교 ── */
   {
     slug: "bft-comparison",
-    title: "PBFT·HotStuff·Autobahn: 같은 요청과 장애 비교",
+    title: "PBFT·HotStuff·Autobahn은 같은 장애를 어떻게 다르게 넘길까요?",
     subcategory: "bft-consensus",
     sections: [
       { id: "overview", title: "같은 요청과 장애" },
@@ -256,7 +256,7 @@ export const bftArticles: Article[] = [
   /* ── DAG 기반 합의 ── */
   {
     slug: "dag-consensus",
-    title: "Narwhal·Bullshark: DAG가 실행 순서가 되는 과정",
+    title: "Narwhal·Bullshark는 병렬 거래를 어떻게 한 실행 순서로 만들까요?",
     subcategory: "bft-consensus",
     sections: [
       { id: "overview", title: "한 거래의 전체 흐름" },
@@ -269,7 +269,7 @@ export const bftArticles: Article[] = [
   },
   {
     slug: "narwhal-deep",
-    title: "Narwhal: 거래 바이트가 인증서가 되는 과정",
+    title: "Narwhal은 거래 원문을 다시 보내지 않고 어떻게 가용성을 증명할까요?",
     subcategory: "bft-consensus",
     sections: [
       { id: "overview", title: "한 배치의 전체 흐름" },
@@ -281,7 +281,7 @@ export const bftArticles: Article[] = [
   },
   {
     slug: "bullshark-deep",
-    title: "Bullshark: 인증서 DAG가 한 줄의 순서가 되는 과정",
+    title: "Bullshark는 인증서 DAG에서 어떻게 한 실행 순서를 고를까요?",
     subcategory: "bft-consensus",
     sections: [
       { id: "overview", title: "한 앵커의 전체 흐름" },

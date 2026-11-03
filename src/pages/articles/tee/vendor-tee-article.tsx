@@ -83,7 +83,7 @@ const CONFIG: Record<VendorKey, VendorConfig> = {
     failures: [["Wrong-owner RMP mapping", "Access 또는 validation 실패, guest commit 0회"], ["Shared/private confusion", "I/O buffer class mismatch를 fail closed"], ["Old reported TCB", "Minimum policy 아래면 quote signature가 맞아도 deny"], ["RMP transition crash", "Page state receipt로 reconcile하고 추측으로 재사용하지 않음"]],
     evidence: [
       { anchor: <span id="paper-amd-sev-overview" />, title: "AMD Secure Encrypted Virtualization", href: "https://www.amd.com/en/developer/sev.html", problem: "SEV·ES·SNP·TIO의 보호 추가분을 세대별로 구분해야 합니다.", contribution: "VM별 key, encrypted register state, SNP integrity와 current official specifications를 연결합니다.", assumptions: "CPU generation·firmware·guest·hypervisor enablement를 배포 manifest에 고정합니다.", scope: "AMD SEV family의 공식 capability·documentation surface입니다.", notClaim: "모든 세대가 같은 cipher·key count·SNP feature를 제공하거나 side channel·DoS를 제거한다고 주장하지 않습니다." },
-      { anchor: <span id="paper-amd-sev-snp-abi-vendor" />, title: "AMD SEV-SNP Firmware ABI 1.58", href: "https://docs.amd.com/v/u/en-US/56860_PUB_1.58_SEV_SNP", problem: "Host·guest·firmware의 page state와 report command를 재현 가능하게 해석해야 합니다.", contribution: "SNP command, page state, guest message, attestation report와 status code를 versioned ABI로 정의합니다.", assumptions: "Revision 1.58, 해당 firmware feature bits와 CPU family를 고정합니다.", scope: "SNP firmware ABI와 report/page lifecycle을 뒷받침합니다.", notClaim: "OS·VMM implementation correctness, workload code, relying-party policy를 인증하지 않습니다." },
+      { anchor: <span id="paper-amd-sev-snp-abi-vendor" />, title: "AMD SEV-SNP Firmware ABI 1.59", href: "https://docs.amd.com/v/u/en-US/56860_PUB_SEV_SNP", problem: "Host·guest·firmware의 page state와 report command를 재현 가능하게 해석해야 합니다.", contribution: "SNP command, page state, guest message, attestation report와 status code를 versioned ABI로 정의합니다.", assumptions: "2026년 8월 공개된 revision 1.59와 해당 firmware feature bits·CPU family를 배포 manifest에 고정합니다.", scope: "SNP firmware ABI와 report/page lifecycle을 뒷받침합니다.", notClaim: "OS·VMM implementation correctness, workload code, relying-party policy를 인증하지 않습니다." },
     ],
   },
   "intel-tdx": {
@@ -136,8 +136,8 @@ const CONFIG: Record<VendorKey, VendorConfig> = {
     claims: ["Realm initial/extensible measurement와 personalization", "RMM·platform TCB claim", "client challenge와 Realm attestation public key binding", "CCA platform token·Realm token의 issuer와 algorithm"],
     failures: [["Undelegated granule reuse", "Realm create/map 전에 state transition 실패"], ["Stale host mapping or DMA", "Delegate precondition과 SMMU/device policy 실패로 deny"], ["Token challenge mismatch", "Freshness 실패로 key release 0회"], ["RMM update drift", "Reference manifest·RMM version mismatch로 canary 중단"]],
     evidence: [
-      { anchor: <span id="paper-arm-cca-rme" />, title: "Arm Realm Management Extension overview", href: "https://developer.arm.com/community/arm-community-blogs/b/architectures-and-processors-blog/posts/introducing-arms-dynamic-trustzone-technology", problem: "Memory page를 여러 security world 사이에서 동적으로 소유시키는 hardware boundary가 필요합니다.", contribution: "RME, GPT와 granule protection check가 world assignment를 집행하는 구조를 설명합니다.", assumptions: "해당 Armv9-A/RME 설명과 실제 platform firmware·SMMU implementation을 구분합니다.", scope: "RME의 world·granule·GPT access-control 직관을 뒷받침합니다.", notClaim: "Blog가 RMM ABI·token format·device isolation 구현을 완전히 규정하거나 제품을 인증하지 않습니다." },
-      { anchor: <span id="paper-arm-rmm-architecture" />, title: "Arm Realm Management Monitor Architecture", href: "https://developer.arm.com/-/cdn-downloads/permalink/Architectures/Armv9/DEN0137_1.0-rel0-rc1_rmm-arch_external.pdf", problem: "Realm lifecycle·RMI/RSI·measurement·attestation semantics를 interoperable하게 정의해야 합니다.", contribution: "RMM architecture, Realm state와 CCA platform/Realm token binding을 규정합니다.", assumptions: "DEN0137 1.0-rel0-rc1과 대응 RME/RMM/CCA token revisions를 고정합니다.", scope: "RMM lifecycle·measurement·attestation token 구조의 vendor architecture입니다.", notClaim: "특정 firmware build의 correctness, side-channel·availability·application policy를 인증하지 않습니다." },
+      { anchor: <span id="paper-arm-cca-rme" />, title: "Arm Confidential Compute Architecture", href: "https://www.arm.com/architecture/security-features/arm-confidential-compute-architecture", problem: "Memory page를 여러 security world 사이에서 동적으로 소유시키는 hardware boundary가 필요합니다.", contribution: "RME, Root·Realm world, RMM과 GPT가 resource management와 access right를 분리하는 current architecture entry를 제공합니다.", assumptions: "2026-11-02에 확인한 Arm CCA 설명과 실제 platform firmware·SMMU implementation을 구분합니다.", scope: "RME의 world·granule·GPT access-control 직관을 뒷받침합니다.", notClaim: "Architecture page가 특정 RMM build·token verifier·device isolation 구현을 인증하지 않습니다." },
+      { anchor: <span id="paper-arm-rmm-architecture" />, title: "Arm Realm Management Monitor Specification · latest", href: "https://support.arm.com/documentation/den0137/latest/", problem: "Realm lifecycle·RMI/RSI·measurement·attestation semantics를 interoperable하게 정의해야 합니다.", contribution: "RMM architecture, Realm state와 CCA platform/Realm token binding을 규정합니다.", assumptions: "배포 시 latest 별칭을 그대로 믿지 않고 실제 DEN0137 revision과 대응 RME·CCA token revision을 manifest에 고정합니다.", scope: "RMM lifecycle·measurement·attestation token 구조의 vendor specification입니다.", notClaim: "특정 firmware build의 correctness, side-channel·availability·application policy를 인증하지 않습니다." },
     ],
   },
 };
@@ -201,6 +201,7 @@ export default function VendorTeeArticle({ vendor }: { vendor: VendorKey }) {
           question="같은 page bytes라도 주소·순서·type이 달라진 build를 왜 다른 identity로 볼 수 있는가?"
           idea={<>측정 ledger는 직전 digest에 event type·주소·page digest를 순서대로 접어 넣습니다. 아래 식은 네 제품의 실제 encoding이 아니라 measurement의 순서·주소 binding을 이해하기 위한 공통 모형입니다.</>}
           formula={String.raw`D_i=H\!\left(D_{i-1}\,\|\,t_i\,\|\,a_i\,\|\,H(P_i)\right)`}
+          mobileFormula={String.raw`\begin{aligned}D_i=H\!\big(&D_{i-1}\,\|\,t_i\,\|\,a_i\\&\|\,H(P_i)\big)\end{aligned}`}
           annotatedFormula={String.raw`D_i=H\!\left(\underbrace{D_{i-1}}_{\text{직전 ledger digest}}\,\|\,\underbrace{t_i}_{\text{event type}}\,\|\,\underbrace{a_i}_{\text{주소}}\,\|\,\underbrace{H(P_i)}_{\text{page digest}}\right)`}
           operations={[
           { expression: String.raw`D_{i-1}`, annotation: ["직전 digest를 입력에 넣어 순서를 묶음"] },
@@ -222,9 +223,10 @@ export default function VendorTeeArticle({ vendor }: { vendor: VendorKey }) {
       </section>
 
       <section id="release-gate" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">04 · Failure와 release gate</p><h2 className="mt-2 text-2xl font-bold">정상 부팅보다 잘못된 page·오래된 evidence·중간 crash에서 secret이 안 나가는지 본다</h2></header>
+        <header><p className="text-sm font-semibold text-primary">04 · Failure와 release gate</p><h2 className="mt-2 text-2xl font-bold">실패한 실행에서 secret이 나가지 않는지 본다</h2></header>
         <div className="overflow-hidden rounded-lg border border-border"><div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] bg-muted/40 px-4 py-3 text-xs font-semibold"><span>주입할 실패</span><span>관측할 판정</span></div>{config.failures.map(([fault, oracle]) => <div key={fault} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3 border-t border-border px-4 py-3 text-sm"><span className="font-medium">{fault}</span><span className="text-muted-foreground">{oracle}</span></div>)}</div>
-        <p>Base와 candidate에 같은 workload image·firmware/module/RMM·host kernel·verifier·collateral·reference manifest·nonce corpus를 사용합니다. Valid와 invalid fixture를 모두 replay하고 unauthorized release 0, state/measurement parity, reason-code stability, p50/p99, recovery time을 비교합니다. Security hard gate가 깨지면 성능이 좋아도 prior binary·firmware·policy manifest로 되돌립니다.</p>
+        <p>기존 버전과 후보 버전에는 같은 workload image, platform firmware, host kernel, verifier, reference manifest와 nonce 묶음을 사용합니다. 그래야 두 결과의 차이를 후보 변경에서 찾을 수 있습니다.</p>
+        <p>정상 입력과 실패 입력을 모두 다시 실행합니다. 허가되지 않은 secret 지급은 반드시 0건이어야 하며, 상태와 측정값, 실패 이유, p50·p99, 복구 시간을 함께 비교합니다. 이 안전 조건이 깨지면 성능이 좋아도 이전 binary와 policy로 되돌립니다.</p>
       </section>
     </article>
   );

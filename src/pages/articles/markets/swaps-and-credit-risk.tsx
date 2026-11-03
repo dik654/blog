@@ -2,13 +2,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import SwapsCreditRiskMapViz from "./SwapsCreditRiskMapViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
   return (
     <div className="space-y-16">
-      <SwapsCreditRiskMapViz />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 빚을 없애지 않고 갚는 방식만 바꿀 수 있습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -20,11 +18,11 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 빌린 곳에 갚고 다른 곳에서 일부를 돌려받습니다</h2>
-<FlowRail title="기존 빚과 별도 지급 교환" steps={[{"actor": "회사", "movement": "은행에 변하는 이자를 냅니다.", "receives": "설비 자금 유지"}, {"actor": "교환 상대", "movement": "변하는 이자를 회사에 지급합니다.", "receives": "회사에서 정해진 이자 수취"}, {"actor": "은행", "movement": "회사의 대출 이자를 받습니다.", "receives": "원금과 이자 청구"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">회사는 은행에 변하는 이자를 냅니다. 별도 계약 상대에게 정해진 이자를 내는 대신, 그 상대에게서 같은 기준으로 변하는 이자를 받습니다. 두 변동이 같은 금액과 날짜에 맞으면 회사에는 정해진 부담이 남습니다.</p>
 <p className="leading-8">은행 대출과 교환 계약은 다른 약속입니다. 한쪽에서 받을 돈이 늦어져도 다른 쪽에 낼 의무는 그대로일 수 있습니다.</p>
         </div>
+<FlowRail title="기존 빚과 별도 지급 교환" steps={[{"actor": "회사", "movement": "은행에 변하는 이자를 냅니다.", "receives": "설비 자금 유지"}, {"actor": "교환 상대", "movement": "변하는 이자를 회사에 지급합니다.", "receives": "회사에서 정해진 이자 수취"}, {"actor": "은행", "movement": "회사의 대출 이자를 받습니다.", "receives": "원금과 이자 청구"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">대출과 교환의 두 경로가 보입니다. 10억 원을 기준으로 같은 기간의 이자를 계산합니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -38,11 +36,11 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 같은 숫자를 곱해도 날짜와 기준이 다르면 어긋납니다</h2>
-<FlowRail title="지급 약속의 내부 조건" steps={[{"actor": "얼마를 기준으로 하나?", "movement": "10억 원을 적습니다.", "receives": "이자 계산의 크기"}, {"actor": "어떤 비율을 쓰나?", "movement": "고정 4%와 같은 기준의 변동을 적습니다.", "receives": "두 지급액"}, {"actor": "언제 지급하나?", "movement": "같은 기간과 날짜를 맞춥니다.", "receives": "순지급 가능 여부"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">두 지급액에는 기준 금액, 이자율, 적용 기간과 지급 날짜가 들어갑니다. 회사가 갚는 이율과 받는 이율이 서로 다른 기준을 따르면 변하는 부분이 완전히 지워지지 않습니다.</p>
 <p className="leading-8">대출 6% 안에는 회사의 신용 때문에 추가된 1%가 있다고 합시다. 교환 계약에서 기준 5%만 받는다면 고정 4% 외에 1%가 남습니다. 똑같이 변하는 이자라고 부르는 것만으로 상쇄가 성립하지 않습니다.</p>
         </div>
+<FlowRail title="지급 약속의 내부 조건" steps={[{"actor": "얼마를 기준으로 하나?", "movement": "10억 원을 적습니다.", "receives": "이자 계산의 크기"}, {"actor": "어떤 비율을 쓰나?", "movement": "고정 4%와 같은 기준의 변동을 적습니다.", "receives": "두 지급액"}, {"actor": "언제 지급하나?", "movement": "같은 기간과 날짜를 맞춥니다.", "receives": "순지급 가능 여부"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">맞춰야 할 조건은 이율 이름만이 아님을 확인했습니다. 원금을 움직이지 않는 이유를 봅니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">

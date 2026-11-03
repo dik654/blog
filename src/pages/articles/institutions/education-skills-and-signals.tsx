@@ -3,7 +3,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import EducationSkillsAndSignalsViz from "./EducationSkillsAndSignalsViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function EducationSkillsAndSignalsArticle() {
@@ -11,7 +10,6 @@ export default function EducationSkillsAndSignalsArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 교육을 선택할 때 무엇이 달라질지 묻습니다</h2>
-        <EducationSkillsAndSignalsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">교육을 받으면 일을 더 잘하게 될 수도 있고, 이미 가진 능력을 다른 사람에게 보여 줄 수도 있습니다. 두 경우 모두 취업에 영향을 줄 수 있지만 배움의 효과를 판단할 때는 서로 구분해야 합니다.</p>
           <p className="leading-8">이 글은 학습자가 지금 내는 돈과 포기하는 소득을 적고, 이후의 임금 변화가 어느 경로에서 왔는지 살핍니다. 교육의 가치는 임금 외에도 있지만 금융적 계산을 할 때 무엇이 빠졌는지는 분명히 해야 합니다.</p>

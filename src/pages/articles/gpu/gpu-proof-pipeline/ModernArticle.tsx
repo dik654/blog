@@ -11,8 +11,10 @@ const ICICLE = "https://github.com/ingonyama-zk/icicle/tree/6b451e6ed5dcdd9b49aa
 export default function ModernGpuProofPipelineArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Kernel을 proof dependency에 맞춰 잇기</p><h2 className="text-3xl font-bold tracking-tight">GPU proof pipeline은 NTT와 MSM의 합이 아니라, transcript와 buffer lifetime이 제한하는 실행 DAG다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">증명 생성에는 witness 계산, polynomial 변환, commitment, transcript challenge, quotient/opening과 proof 조립이 이어집니다. 일부 NTT와 MSM은 GPU에서 크게 병렬화되지만, 다음 round의 challenge가 나오기 전에는 후속 polynomial을 만들 수 없고 아직 소비되지 않은 buffer를 재사용할 수도 없습니다. 따라서 kernel을 많이 겹치는 것보다 <strong>허용된 dependency 안에서 데이터 이동과 계산을 겹치고 검증 가능한 receipt를 남기는 일</strong>이 먼저입니다.</p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Kernel을 proof dependency에 맞춰 잇기</p><h2 className="text-3xl font-bold tracking-tight">GPU proof pipeline: transcript와 buffer가 정하는 실행 DAG</h2></header>
+      <div className="rounded-2xl border border-primary/25 bg-primary/5 p-5"><p className="text-xs font-black tracking-[0.15em] text-primary">한 문장 답</p><p className="mt-2 text-lg font-bold leading-8">NTT와 MSM을 GPU에 올리는 것만으로는 부족합니다. 같은 proof attempt의 data와 challenge만 연결하고, 마지막 소비가 끝난 buffer만 재사용한 뒤, verifier가 승인한 전체 시간을 비교해야 합니다.</p></div>
+      <p className="text-lg leading-8 text-foreground/90">증명 생성에는 witness 계산, polynomial 변환, commitment, transcript challenge, quotient/opening과 proof 조립이 이어집니다. 일부 NTT와 MSM은 GPU에서 크게 병렬화됩니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">그러나 다음 round의 challenge가 나오기 전에는 후속 polynomial을 만들 수 없고, 아직 소비되지 않은 buffer도 재사용할 수 없습니다. 따라서 kernel을 많이 겹치는 것보다 <strong>허용된 dependency 안에서 data 이동과 계산을 겹치고 검증 가능한 receipt를 남기는 일</strong>이 먼저입니다.</p>
       <p>Groth16의 QAP·proof equation은 <a className="text-primary hover:underline" href="/cs/crypto/groth16">Groth16 정본</a>, PLONK의 gate·permutation·transcript는 <a className="text-primary hover:underline" href="/cs/crypto/plonk">PLONK 정본</a>이 소유합니다. MSM·NTT의 계산 의미는 <a className="text-primary hover:underline" href="/cs/gpu/msm-ntt">MSM/NTT workload 글</a>에서 재사용하고, 여기서는 proof round를 device jobs와 buffers로 내리는 orchestration만 다룹니다.</p>
       <ProofPipelineDagViz />
       <ContentBoundary article="gpu-proof-pipeline" />
@@ -20,8 +22,10 @@ export default function ModernGpuProofPipelineArticle() {
 
     <section id="stage-dag" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Stage DAG</p><h2 className="mt-2 text-2xl font-bold">고정 proof workload를 producer·consumer·barrier로 그린다</h2></header>
-      <p>먼저 protocol, curve/field, circuit revision, SRS digest, domain size, public/private input seed, transcript hash와 backend SHA를 고정합니다. 각 stage에는 input buffers, output buffers, device, stream, completion event와 verifier-visible result를 적습니다. Edge는 단순한 실행 순서가 아니라 “이 output 또는 transcript challenge가 있어야 다음 stage가 유효하다”는 dependency입니다.</p>
-      <p>Groth16에서는 witness와 QAP quotient가 proving-key MSM inputs를 만들고 A·B·C group elements로 이어집니다. PLONKish prover는 wire commitments를 transcript에 흡수한 뒤 challenges로 permutation·quotient·opening work를 만듭니다. 이름이 같은 NTT나 MSM이라도 round별 size, coset, curve group, input residency가 다르므로 고정 호출 횟수를 보편 법칙처럼 쓰지 않습니다.</p>
+      <p>먼저 protocol, curve/field, circuit revision, SRS digest와 domain size를 고정합니다. Public/private input seed, transcript hash와 backend SHA도 같은 receipt에 넣습니다.</p>
+      <p>각 stage에는 input·output buffer, device, stream, completion event와 verifier-visible result를 적습니다. Edge는 단순한 실행 순서가 아니라 “이 output 또는 challenge가 있어야 다음 stage가 유효하다”는 dependency입니다.</p>
+      <p>Groth16에서는 witness와 QAP quotient가 proving-key MSM input을 만들고 A·B·C group element로 이어집니다. PLONKish prover는 wire commitment를 transcript에 흡수한 뒤 challenge로 permutation·quotient·opening work를 만듭니다.</p>
+      <p>이름이 같은 NTT나 MSM이라도 round별 size, coset, curve group과 input residency가 다릅니다. 그래서 한 구현의 고정 호출 횟수를 보편 법칙처럼 쓰지 않습니다.</p>
       <ExplainedFormula question="Pipeline stage들의 dependency를 어떤 실행 가능 조건으로 표현할까?" idea={<>Stage v는 모든 predecessor가 completion receipt를 냈고 필요한 buffers와 transcript state가 같은 generation일 때만 enqueue합니다.</>} formula={String.raw`\begin{aligned}D_v&=\bigwedge_{u\prec v}done(u)\\g_i&=gen(inputs_v)\\g_t&=gen(transcript_v)\\ready(v)&=D_v\land[g_i=g_t]\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}D_v&=\underbrace{\bigwedge_{u\prec v}done(u)}_{\text{선행 stage 모두 완료}}\\g_i&=\underbrace{gen(inputs_v)}_{\text{입력의 proof attempt}}\\g_t&=\underbrace{gen(transcript_v)}_{\text{challenge의 attempt}}\\ready(v)&=D_v\land\underbrace{[g_i=g_t]}_{\text{같은 attempt}}\end{aligned}`}
       operations={[
@@ -69,7 +73,8 @@ export default function ModernGpuProofPipelineArticle() {
 
     <section id="overlap" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Overlap</p><h2 className="mt-2 text-2xl font-bold">서로 독립인 transfer·kernel만 stream으로 겹치고 critical path를 측정한다</h2></header>
-      <p>Double buffering은 chunk k의 kernel 동안 chunk k+1을 전송할 수 있을 때 유효합니다. 같은 buffer를 쓰거나 transcript barrier 뒤에만 생성되는 data는 겹칠 수 없습니다. Device copy engines, pageable/pinned host memory, stream ordering과 kernel resource contention도 실제 overlap을 제한하므로 API enqueue 시각이 아니라 profiler timeline과 completion events를 확인합니다.</p>
+      <p>Double buffering은 chunk k의 kernel 동안 chunk k+1을 전송할 수 있을 때 유효합니다. 같은 buffer를 쓰거나 transcript barrier 뒤에만 생성되는 data는 겹칠 수 없습니다.</p>
+      <p>Copy engine 수, pageable/pinned host memory, stream ordering과 kernel resource contention도 실제 overlap을 제한합니다. 그래서 API enqueue 시각이 아니라 profiler timeline과 completion event를 확인합니다.</p>
       <ExplainedFormula question="겹침이 있는 pipeline 시간을 단순 stage 합과 어떻게 구분할까?" idea={<>DAG의 각 stage 완료 시각은 predecessor 중 가장 늦은 완료 뒤 자신의 measured duration을 더해 구합니다. 전체 시간은 sink 중 가장 늦은 완료입니다.</>} formula={String.raw`\begin{aligned}E(v)&=d(v)+\max_{u\in pred(v)}E(u)\\T_{critical}&=\max_{v\in sinks}E(v)\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}E(v)&=\underbrace{d(v)}_{\text{자기 측정 시간}}+\underbrace{\max_{u\in pred(v)}E(u)}_{\text{가장 늦은 선행 완료}}\\T_{critical}&=\underbrace{\max_{v\in sinks}E(v)}_{\text{가장 늦은 sink 완료}}\end{aligned}`}
       operations={[
@@ -88,8 +93,15 @@ export default function ModernGpuProofPipelineArticle() {
 
     <section id="release-gate" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Independent verifier가 같은 statement를 승인한 뒤 성능과 회복을 본다</h2></header>
-      <p>Correctness suite는 valid proof뿐 아니라 wrong witness/public input, SRS mismatch, transcript reorder, invalid field/point encoding, NTT round-trip failure, GPU OOM·kernel error·timeout과 restart를 포함합니다. Candidate proof는 pinned independent verifier가 같은 public input에서 승인해야 하고 negative fixtures는 baseline과 같은 failure class로 거절해야 합니다.</p>
-      <p>Warm-up에는 context·module/JIT·allocator pool을 분리하고 cold start도 별도 표에 남깁니다. Stage별 CUDA events와 end-to-end wall time, H2D/D2H, peak live bytes, achieved bandwidth, useful MSM/NTT units, occupancy·stall, median/p95, proofs/hour와 energy를 기록합니다. 같은 circuit·batch·SRS·backend SHA·clock에서 CPU/hybrid/GPU 후보를 paired 비교합니다.</p>
+      <p>Correctness suite에는 valid proof와 함께 wrong witness/public input, SRS mismatch, transcript reorder와 invalid encoding을 넣습니다. NTT round-trip failure, GPU OOM·kernel error·timeout과 restart도 실패 fixture입니다.</p>
+      <p>Candidate proof는 pinned independent verifier가 같은 public input에서 승인해야 합니다. Negative fixture는 baseline과 같은 failure class로 거절돼야 합니다.</p>
+      <p>Warm-up은 context, module/JIT와 allocator pool로 나누고 cold start도 별도 표에 남깁니다. 측정값은 다음 세 묶음으로 기록합니다.</p>
+      <ul className="list-disc space-y-2 pl-6 text-sm leading-6 text-muted-foreground">
+        <li><strong className="text-foreground">시간:</strong> stage별 CUDA event, end-to-end wall time와 median·p95</li>
+        <li><strong className="text-foreground">이동·memory:</strong> H2D/D2H, peak live bytes와 achieved bandwidth</li>
+        <li><strong className="text-foreground">유효 작업:</strong> MSM/NTT units, occupancy·stall, verified proofs/hour와 energy</li>
+      </ul>
+      <p>같은 circuit·batch·SRS·backend SHA·clock에서 CPU, hybrid와 GPU 후보를 paired 비교합니다.</p>
       <ExplainedFormula question="Pipeline throughput과 speedup을 어떤 end-to-end 경계에서 계산해야 할까?" idea={<>검증을 통과한 proofs 수만 useful output으로 세고, baseline과 candidate 모두 같은 input 준비부터 verifier receipt까지 시간을 사용합니다.</>} formula={String.raw`R_{proof}=\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{baseline}^{e2e}}{T_{candidate}^{e2e}}`}
       annotatedFormula={String.raw`R_{proof}=\frac{\underbrace{N_{verified}}_{\text{검증 통과 proof}}}{\underbrace{T_{wall}}_{\text{입력→verifier receipt}}},\qquad S=\frac{\underbrace{T_{baseline}^{e2e}}_{\text{기존 전체 경로}}}{\underbrace{T_{candidate}^{e2e}}_{\text{새 전체 경로}}}`}
       operations={[

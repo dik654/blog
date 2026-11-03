@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import { CitationBlock } from "@/components/ui/citation-block";
-import ContextViz from "./viz/ContextViz";
-import SyncCommitteeViz from "./viz/SyncCommitteeViz";
+import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
+import SyncCommitteeLifecycleViz from "./viz/SyncCommitteeLifecycleViz";
 
 export default function Overview({
   onCodeRef: _onCodeRef,
@@ -12,123 +11,92 @@ export default function Overview({
 }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Sync committee는 light client가 head를 추적할 집계 서명을 만든다</h2>
-      <div className="not-prose mb-8">
-        <ContextViz />
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          이 글은 전체 BeaconState를 실행하지 않는 기기가 새 header를 어떻게
-          따라갈 수 있는지부터 설명합니다. 위원회 membership, 매 슬롯의
-          domain-separated message, 네 subnet의 contribution, 최종
-          SyncAggregate와 light-client update의 신뢰 경계를 차례로 연결합니다.
+      <h2 className="mb-5 break-keep text-2xl font-bold">
+        한 sync 서명은 finality가 아니라, light client용 압축 재료입니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          <strong>
+            위원회 구성원 한 명의 서명은 “이 block root를 보았다”는 표입니다.
+          </strong>{" "}
+          같은 slot의 표를 subnet 안에서 먼저 합치고, 다음 block proposer가 네
+          subcommittee 결과를 <em>SyncAggregate</em> 하나로 줄입니다.
         </p>
-        <p className="leading-7">
-          Sync committee 서명은 full-node 검증의 축약판이지 finality 그 자체가
-          아닙니다. BLS 집계는 <Link to="/cs/blockchain/prysm-bls">BLS</Link>,
-          Merkle branch는 <Link to="/cs/blockchain/prysm-ssz">SSZ</Link>,
-          finalized checkpoint의 의미는 <Link to="/cs/blockchain/prysm-finality">finality</Link> 정본을 재사용합니다.
+        <p>
+          Light client는 그 aggregate만 믿지 않습니다. 미리 신뢰한 block root에서
+          위원회가 나온 경로, 참여자 bits, 서명, finality와 다음 위원회 Merkle
+          branch를 함께 검사한 뒤에야 헤더를 전진시킵니다.
         </p>
-
-        {/* ── Sync Committee 배경 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Sync Committee — light client 지원 (Altair+)
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              문제: Light client의 block root 검증
-            </p>
-            <p className="text-sm text-foreground/80">
-              라이트 클라이언트는 전체 상태와 모든 attestation을 실행하지
-              않는다. Altair는 제한된 sync committee의 집계 서명으로 헤더를
-              추적하는 별도 경로를 도입했다.
-            </p>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              Sync Committee 특성
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-center">
-              <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">512 positions</p>
-                <p className="text-foreground/50">mainnet preset</p>
-              </div>
-              <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">256 epochs</p>
-                <p className="text-foreground/50">mainnet preset period</p>
-              </div>
-              <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">매 slot 서명</p>
-                <p className="text-foreground/50">block_root BLS</p>
-              </div>
-              <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">
-                  SyncAggregate
-                </p>
-                <p className="text-foreground/50">1 sig + 512 bits</p>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                Light client 사용 흐름
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>1. trusted sync committee snapshot 로드</p>
-                <p>
-                  2. 새 <code>LightClientUpdate</code> 수신
-                </p>
-                <p>
-                  3. 현재 committee에 대한 <code>sync_aggregate</code>와 참여
-                  bits 검증
-                </p>
-                <p>
-                  4. 참여 임계값·Merkle branch·finality 규칙에 따라
-                  optimistic/finalized header 갱신
-                </p>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                설계 근거
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>위원회 크기와 period는 consensus preset에서 결정</p>
-                <p>
-                  집계 공개키·서명으로 전체 검증자 집합보다 작은 검증 경로 제공
-                </p>
-                <p>committee 교체도 update 안의 증명으로 이어서 검증</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p className="leading-7">
-          Sync Committee는 light client가 매 slot header를 저렴하게 확인할 수
-          있도록 선택된 <strong>validator position 목록</strong>이다.
-          mainnet preset에서는 512 positions와 256 epochs를 사용하지만 구현은 preset
-          값을 읽어야 하며,
-          light client는 집계 서명뿐 아니라 참여도, branch, committee 전환과
-          finality 조건을 함께 검증한다.
+        <p>
+          Slot 100에서 validator <strong>V37</strong>이 head root{" "}
+          <strong>R100</strong>을 보았다고 하겠습니다. V37의 signature 하나가
+          곧 R100의 finality는 아닙니다. 이 글은 그 한 표가{" "}
+          <strong>
+            member signature → subnet contribution → block 101의 SyncAggregate →
+            light-client update
+          </strong>
+          로 바뀌는 동안 무엇이 새로 증명되고 무엇은 아직 증명되지 않는지
+          따라갑니다.
         </p>
       </div>
       <ContentBoundary article="prysm-sync-committee" />
-      <div className="not-prose mt-6">
-        <SyncCommitteeViz />
+      <SyncCommitteeLifecycleViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>먼저 세 가지를 다른 물건으로 봅니다</h3>
+        <p>
+          <strong>SyncCommitteeMessage</strong>는 한 validator가 한 slot의 head
+          root에 남긴 서명입니다.
+        </p>
+        <p>
+          <strong>SyncCommitteeContribution</strong>은 같은 subnet·slot·root의
+          messages를 local bitvector와 aggregate signature로 줄인 것입니다.
+          <strong> SyncAggregate</strong>는 proposer가 subcommittee별 결과를
+          512-position bitvector와 한 서명으로 합쳐 다음 block에 넣은 것입니다.
+        </p>
+        <p>
+          Mainnet preset에서는 위원회에 <strong>512 positions</strong>가 있고,
+          같은 구성이 <strong>256 epochs</strong> 동안 current committee로
+          사용됩니다. 512는 고유 validator 수가 아닙니다.
+        </p>
+        <p>
+          추출은 replacement를 허용하므로 같은 validator public key가 여러
+          position에 들어갈 수 있습니다. Position과 validator identity를 섞으면
+          bitvector와 aggregate public key가 어긋납니다.
+        </p>
+        <p>
+          서명과 bitvector의 일반 원리는 <Link to="/cs/blockchain/prysm-bls">BLS</Link>,
+          state root에 committee와 finalized header를 연결하는 원리는{" "}
+          <Link to="/cs/blockchain/prysm-ssz">SSZ Merkle proof</Link>, chain의
+          finality 자체는 <Link to="/cs/blockchain/prysm-finality">finality</Link>{" "}
+          글에서 이어집니다. 여기서는 세 원리가 Prysm의 한 요청 경로에서 만나는
+          지점에 집중합니다.
+        </p>
       </div>
+
       <div id="paper-consensus-sync-committee-spec" className="scroll-mt-24">
-        <CitationBlock source="Ethereum Consensus Specifications v1.6.1 — Altair validator and light-client rules" citeKey={1} href="https://github.com/ethereum/consensus-specs/tree/v1.6.1/specs/altair">
-          Sync committee membership, message·selection-proof domain,
-          contribution과 light-client update 검증의 protocol 기준입니다. 512 positions,
-          256 epochs 같은 값은 mainnet preset에 귀속합니다.
+        <CitationBlock
+          source="Ethereum Consensus Specifications v1.7.0-beta.4 @ aa16bb4c — Altair validator·beacon-chain·light-client rules"
+          citeKey={1}
+          href="https://github.com/ethereum/consensus-specs/tree/aa16bb4c156184e9548a997d53efaf2a228a6304/specs/altair"
+        >
+          위원회 message와 contribution, block의 SyncAggregate, light-client
+          bootstrap·update·optimistic/finalized 갱신 규칙의 protocol 기준입니다.
+          512 positions와 256 epochs는 mainnet preset 값이며 다른 preset에 그대로
+          일반화하지 않습니다.
         </CitationBlock>
       </div>
       <div id="paper-prysm-sync-source" className="scroll-mt-24">
-        <CitationBlock source="OffchainLabs/prysm — pinned sync-committee implementation" citeKey={2} type="code" href="https://github.com/OffchainLabs/prysm/tree/ea3fbe48b48170e7f7252fbc15e9591d462a0f87">
-          Prysm validator client와 beacon-chain sync aggregate 처리의 source
-          snapshot입니다. 운영상 timeout·dedupe·release fixture는 별도의
-          hardening 설계이며 moving master의 동작으로 일반화하지 않습니다.
+        <CitationBlock
+          source="OffchainLabs Prysm v7.3.1 @ 96d418cd — sync-committee implementation"
+          citeKey={2}
+          type="code"
+          href="https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db"
+        >
+          Validator signing, committee sampling, contribution selection, proposer
+          aggregation과 block state-transition 검증의 실제 owner를 이 snapshot에서
+          확인했습니다. Moving master나 다른 fork·network 설정도 같다고 주장하지
+          않습니다.
         </CitationBlock>
       </div>
     </section>

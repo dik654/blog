@@ -338,6 +338,16 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
     overflow: hidden !important;
   }
 
+  /*
+   * 주소 표시줄이 나타나 viewport 높이만 달라져도 읽던 문단이 밀리지 않게,
+   * 같은 사례를 여러 장면으로 넘기는 이 Viz들은 바깥 높이를 고정합니다.
+   * 긴 장면은 아래의 직계 canvas 안에서만 스크롤합니다.
+   */
+  figure[data-viz="modern"].mobile-viz-stable-height:has([data-viz-controls]) {
+    height: 42rem !important;
+    max-height: 42rem !important;
+  }
+
   figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-canvas],
   figure[data-viz="lesson-flow-v4"]:has([data-viz-controls]) > [data-viz-canvas] {
     height: auto !important;

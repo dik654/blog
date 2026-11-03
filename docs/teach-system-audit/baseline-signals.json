@@ -8,7 +8,15 @@
       "levels": [],
       "headingCount": 9,
       "questions": [],
-      "status": "unreviewed"
+      "status": "rewritten-local-verified",
+      "reviewLedger": "docs/teach-system-audit/ai-systems.json",
+      "verification": {
+        "substantiveReading": "AI systems ledger의 작은 12개 기록 fixture, 실제 Keep a Changelog 원문 적용, Unreleased→release 경계와 예측 질문을 current body에서 다시 대조했습니다.",
+        "static": "TypeScript --noEmit, article contract, learning, knowledge graph, prose, Korean, term density, wrapping, reading order, viz, calculation and pseudocode audits passed.",
+        "browser390": "Playwright 390×844: body/doc 390/390, story root 352/352, AlgorithmBlock 352/352; keyboard ArrowRight로 독자와 영향→근거 연결 이동; console errors 0.",
+        "browser1440": "Playwright 1440×1000: body 1440/1440, story root 709/709, AlgorithmBlock 709/709; console errors 0.",
+        "bodySha256": "daac04e5889c6fd2f48121385cb13cb79bbf85f0b1c0d4e6e441cdb150735696"
+      }
     },
     {
       "route": "ai/adversarial-density-ratios",

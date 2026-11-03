@@ -2,14 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import EvidenceMeasurementCausalityViz from "./EvidenceMeasurementCausalityViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10이 8이 되었다는 관찰과 원인을 안다는 말은 다릅니다</h2>
-        <EvidenceMeasurementCausalityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             전기를 덜 쓰게 해 준다는 장치를 달았더니 사용량이 10에서 8로 줄었습니다. 장치가 도움이 됐을 수 있습니다. 날씨가 바뀌었거나 집을 비운 시간이 늘었을 수도 있습니다.
@@ -27,7 +25,7 @@ export default function Article() {
           <p className="leading-8">대상을 고르는 단계에서 특정 집만 모이면 처음부터 범위가 좁아집니다. 재는 방법이 달라져도 차이가 생깁니다. 계산식이 맞다는 이유만으로 앞 단계의 문제가 사라지지는 않습니다.</p>
         </div>
 
-        <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">대상·측정·비교·해석이 다른 일을 한다는 점이 보입니다.20가구의 가정 숫자로 좁혀 봅니다.</p>
+        <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">대상·측정·비교·해석이 다른 일을 한다는 점이 보입니다. 20가구의 가정 숫자로 좁혀 봅니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">A와 B는 각 10가구이며 처음에는 모두 평균 10입니다</h2>
@@ -100,7 +98,7 @@ export default function Article() {
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">무작위 배정은 참여한 사람들의 개입을 정하는 절차입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">ICH E9의 무작위 배정 설명은 원래 임상시험 설계에 관한 것입니다. 여기서는 그 비교 원리를 전력 장치의 가정 실험에 적용합니다.20가구가 모인 뒤 A와 B에 10가구씩 나눌 때 사전에 정한 무작위 절차를 쓰면 개인의 선택과 담당자의 선호가 배정을 정하지 않게 할 수 있습니다.</p>
+          <p className="leading-8">ICH E9의 무작위 배정 설명은 원래 임상시험 설계에 관한 것입니다. 여기서는 그 비교 원리를 전력 장치의 가정 실험에 적용합니다. 20가구가 모인 뒤 A와 B에 10가구씩 나눌 때 사전에 정한 무작위 절차를 쓰면 개인의 선택과 담당자의 선호가 배정을 정하지 않게 할 수 있습니다.</p>
           <p className="leading-8">배정은 이미 모인 20가구를 어떻게 나누는지에 관한 절차입니다. 전국에서 누가 이 20가구에 들어오는지를 정하는 표본 추출과 다릅니다. 무작위 배정만으로 전국의 모든 가구를 대표하지는 않습니다.</p>
           <p className="leading-8">작은 집단은 우연히 다를 수 있고 배정 뒤 탈락과 측정 누락도 생깁니다. 누가 빠졌는지와 어떤 결과를 분석할지 미리 정해 기록해야 합니다. 이후 잘 나온 가구만 골라 평균을 다시 내면 처음의 비교 근거가 달라집니다.</p>
         </div>

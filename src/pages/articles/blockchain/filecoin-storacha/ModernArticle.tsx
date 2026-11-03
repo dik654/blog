@@ -15,82 +15,647 @@ const README = `https://github.com/storacha/specs/blob/${REV}/Readme.md`;
 
 export default function ModernStoracha() {
   const sidebar = useCodeSidebar();
-  return <>
-  <article className="space-y-14">
-    <section id="overview" className="space-y-6"><header className="space-y-3"><p className="text-sm font-semibold text-primary">한 파일을 Space에 올리고 root CID로 다시 찾는 receipt chain</p><h2 className="text-3xl font-bold tracking-tight">Storacha upload는 한 번의 저장 성공이 아니라 capability, blob effects, DAG index와 비동기 Filecoin 단계의 결합이다</h2></header><p className="text-lg leading-8 text-foreground/90">
-            초심자가 먼저 구분할 것은 파일 bytes와 content identifier(CID), 권한을 갖는 Space입니다. 여기에 blob upload receipt, root
-            CID를 shard 위치에 연결해 주는 index, Filecoin aggregation/deal status가 더 붙습니다. Storacha specification은
-            문서별로 stable·reliable·work in progress 상태를 표시하며 “permanent storage”를 보장하지 않는다고 명시합니다. 현재 protocol
-            facts, 구현 snapshot, roadmap/marketing 설명을 한 문장에 섞지 않습니다.
-          </p><StorachaReceiptViz /><ContentBoundary article="filecoin-storacha" /><div id="paper-storacha-spec-status"><CitationBlock type="code" citeKey={1} source="Storacha protocol specs status · commit 3b67918" href={README}><p><strong>문제:</strong> 여러 Storacha protocols의 maturity와 interoperability 범위를 구분해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned README는 각 specification을 stable, reliable, work in progress로 표시하고 permanence claim의 한계를 밝힙니다.</p><p><strong>중요 가정:</strong> commit 3b67918의 문서 상태와 실제 deployed service/API version을 별도로 확인합니다.</p><p><strong>근거 범위:</strong> Storacha protocol specification repository의 maturity label snapshot에 한정합니다.</p><p><strong>일반화 금지:</strong> Stable label이 무중단 서비스, 영구 보존, Filecoin deal 완료 또는 모든 client compatibility를 보장하지 않습니다.</p></CitationBlock></div></section>
+  return (
+    <>
+      <article className="space-y-14">
+        <section id="overview" className="space-y-6">
+          <header className="space-y-3">
+            <p className="text-sm font-semibold text-primary">
+              한 파일을 Space에 올리고 root CID로 다시 찾는 receipt chain
+            </p>
+            <h2 className="break-keep text-3xl font-bold tracking-tight">
+              Storacha의 업로드 완료는 서로 연결된 여러 영수증으로 판단합니다
+            </h2>
+          </header>
+          <p className="text-lg leading-8 text-foreground/90">
+            한 문장으로 말하면, Storacha는 파일을 받았다는 응답 하나만으로 저장
+            완료를 선언하지 않습니다. 누가 어느 Space에 올릴 수 있는지, 실제
+            bytes를 받았는지, root CID를 어느 shard에서 찾을 수 있는지와
+            Filecoin 단계가 어디까지 갔는지를 서로 다른 signed receipt로
+            연결합니다.
+          </p>
+          <p>
+            그러면 “PUT이 성공했는데 왜 또 확인해야 할까?”라는 질문이 생깁니다.
+            PUT은 바이트 전송만 답하기 때문입니다. 아래에서는 Alice의 파일 한
+            건을 따라가며 각 receipt가 답하는 질문과 답하지 못하는 질문을
+            구분합니다. 공식 specs도 문서별 maturity를 표시하며, 저장소 안의
+            어떤 spec도 <em>permanent</em> 상태가 아니라고 밝힙니다.
+          </p>
+          <StorachaReceiptViz />
+          <ContentBoundary article="filecoin-storacha" />
+          <div id="paper-storacha-spec-status">
+            <CitationBlock
+              type="code"
+              citeKey={1}
+              source="Storacha protocol specs status · commit 3b67918"
+              href={README}
+            >
+              <p>
+                <strong>문제:</strong> 여러 Storacha protocols의 maturity와
+                interoperability 범위를 구분해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Pinned README는 각 specification을
+                stable, reliable, work in progress로 표시하고 permanence claim의
+                한계를 밝힙니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> commit 3b67918의 문서 상태와 실제
+                deployed service/API version을 별도로 확인합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> Storacha protocol specification
+                repository의 maturity label snapshot에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Stable label이 무중단 서비스, 영구
+                보존, Filecoin deal 완료 또는 모든 client compatibility를
+                보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
 
-    <section id="space-authorization" className="space-y-6"><header><p className="text-sm font-semibold text-primary">01 · Space capability receipt</p><h2 className="mt-2 text-2xl font-bold">Space DID를 resource로 고정하고 위임받은 ability와 caveats 안에서만 invocation한다</h2></header><p>
-            Space는 서버가 임의로 발급한 폴더 번호가 아니라 client가 만든 decentralized identifier(DID) namespace입니다. UCAN은 “누가
-            누구에게 어느 resource의 어떤 ability를 어떤 제약으로 위임했는가”를 signed chain으로 표현합니다. Upload를 받아들일 때는 invocation
-            signature와 issuer/audience, proof chain을 먼저 확인합니다. expiration/not-before, resource, ability,
-            caveats까지 통과해야 하며 계정 로그인에 성공했다고 해서 모든 Space 권한이 주어지지는 않습니다.
-          </p><div className="not-prose"><CodeViewButton label="ucanto defaultDerives()" onClick={() => sidebar.open("ucan-attenuation", codeRefs["ucan-attenuation"])} /></div><ExplainedFormula question="Child delegation이 parent보다 강한 권한을 만들지 않았는지 어떻게 보나?" idea={<>Resource·ability 집합은 좁아지고 caveats는 같거나 더 엄격해야 합니다.</>} formula={String.raw`C_{child}\subseteq C_{parent},\qquad R_c\subseteq R_p,\qquad A_c\subseteq A_p`}
-    annotatedFormula={String.raw`\underbrace{C_{child}\subseteq C_{parent}}_{\text{caveat 같거나 더 엄격}},\qquad \underbrace{R_c\subseteq R_p}_{\text{Space 범위 축소}},\qquad \underbrace{A_c\subseteq A_p}_{\text{ability 축소}}`}
-    operations={[
-      { expression: String.raw`C_{child}\subseteq C_{parent}`, annotation: ["child capability 전체가 parent proof","chain이 실제 보유한 권한 안에 들어야","합니다. caveat는 같거나 더 엄격"] },
-      { expression: String.raw`R_c\subseteq R_p`, annotation: ["child가 접근할 Space DID·resource가","parent가 허용한 범위를 넘지 않음"] },
-      { expression: String.raw`A_c\subseteq A_p`, annotation: ["parent가 space/blob/add만 갖는데","child에 admin ability를 넣으면","A_c⊄A_p라 invocation 거절"] },
-    ]} terms={[{symbol:"C_{child}",name:"Child capability",description:"다음 principal에게 위임하려는 resource·ability·caveats 집합입니다."},{symbol:"C_{parent}",name:"Parent capability",description:"Delegator가 proof chain으로 실제 보유한 상위 권한입니다."},{symbol:"R_c",name:"Child resources",description:"Child가 접근하도록 허용한 Space/resource 범위입니다."},{symbol:"R_p",name:"Parent resources",description:"Parent proof가 허용한 resource 범위입니다."},{symbol:"A_c",name:"Child abilities",description:"Child invocation이 사용할 수 있는 operations입니다."},{symbol:"A_p",name:"Parent abilities",description:"Parent가 위임할 수 있는 operations입니다."},{symbol:String.raw`\subseteq`,name:"Attenuation relation",description:"Child가 parent 범위를 넘지 않는다는 포함 관계입니다."}]} assumptions={["각 capability의 signature, issuer–audience 연결, expiry와 revocation policy를 검증합니다.","Caveat 비교는 단순 문자열 비교가 아니라 해당 capability schema의 attenuation semantics를 따릅니다."]} interpretation="Parent가 space/blob/add만 갖는데 child에게 admin ability를 넣으면 A_c⊄A_p이므로 invocation을 거절합니다." /><div id="paper-storacha-space"><CitationBlock type="code" citeKey={2} source="Storacha Space specification · commit 3b67918" href={SPACE}><p><strong>문제:</strong> User data namespace와 authority를 특정 service account에 종속시키지 않고 식별해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned spec은 locally generated Space DID, account association와 capability-based administration boundary를 설명합니다.</p><p><strong>중요 가정:</strong> Matching w3-ucan semantics, DID/key custody, revocation checks와 service implementation을 사용합니다.</p><p><strong>근거 범위:</strong> w3-space protocol document snapshot의 Space identity·authorization 역할에 한정합니다.</p><p><strong>일반화 금지:</strong> Space DID 소유가 blob durability, public retrieval, billing status 또는 Filecoin deal을 자동 보장하지 않습니다.</p></CitationBlock></div></section>
+        <section id="space-authorization" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              01 · Space capability receipt
+            </p>
+            <h2 className="mt-2 break-keep text-2xl font-bold">
+              파일보다 먼저 누가 어느 Space에서 무엇을 할 수 있는지 확인합니다
+            </h2>
+          </header>
+          <p>
+            Space는 서버가 붙인 폴더 번호가 아니라 로컬에서 만든 key pair의
+            DID로 식별하는 namespace입니다. UCAN 위임은 “누가 누구에게, 어느
+            resource에서, 어떤 일을, 어떤 조건으로 허용했는가”를 서명한 사슬로
+            나타냅니다.
+          </p>
+          <p>
+            서비스는 invocation 서명, issuer와 audience, 만료 시점과 proof
+            chain을 확인합니다. 그 뒤 요청한 Space와 ability가 상위 위임 범위를
+            넘지 않는지 봅니다. 따라서 계정 로그인에 성공했어도 다른 Space의
+            <code> space/blob/add</code> 권한이 자동으로 생기지는 않습니다.
+          </p>
+          <div className="not-prose">
+            <CodeViewButton
+              label="ucanto defaultDerives()"
+              onClick={() =>
+                sidebar.open("ucan-attenuation", codeRefs["ucan-attenuation"])
+              }
+            />
+          </div>
+          <ExplainedFormula
+            question="하위 위임이 상위 위임보다 더 넓어지지 않았는지 어떻게 볼까?"
+            idea={
+              <>
+                Resource와 ability 범위는 그대로이거나 좁아져야 하고, 상위
+                caveat를 어기면 안 됩니다.
+              </>
+            }
+            formula={String.raw`C_{child}\subseteq C_{parent},\qquad R_c\subseteq R_p,\qquad A_c\subseteq A_p`}
+            annotatedFormula={String.raw`\underbrace{C_{child}\subseteq C_{parent}}_{\text{caveat 같거나 더 엄격}},\qquad \underbrace{R_c\subseteq R_p}_{\text{Space 범위 축소}},\qquad \underbrace{A_c\subseteq A_p}_{\text{ability 축소}}`}
+            operations={[
+              {
+                expression: String.raw`C_{child}\subseteq C_{parent}`,
+                annotation: [
+                  "child capability 전체가 parent proof",
+                  "chain이 실제 보유한 권한 안에 들어야",
+                  "합니다. caveat는 같거나 더 엄격",
+                ],
+              },
+              {
+                expression: String.raw`R_c\subseteq R_p`,
+                annotation: [
+                  "child가 접근할 Space DID·resource가",
+                  "parent가 허용한 범위를 넘지 않음",
+                ],
+              },
+              {
+                expression: String.raw`A_c\subseteq A_p`,
+                annotation: [
+                  "parent가 space/blob/add만 갖는데",
+                  "child에 admin ability를 넣으면",
+                  "A_c⊄A_p라 invocation 거절",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "C_{child}",
+                name: "Child capability",
+                description:
+                  "다음 principal에게 위임하려는 resource·ability·caveats 집합입니다.",
+              },
+              {
+                symbol: "C_{parent}",
+                name: "Parent capability",
+                description:
+                  "Delegator가 proof chain으로 실제 보유한 상위 권한입니다.",
+              },
+              {
+                symbol: "R_c",
+                name: "Child resources",
+                description:
+                  "Child가 접근하도록 허용한 Space/resource 범위입니다.",
+              },
+              {
+                symbol: "R_p",
+                name: "Parent resources",
+                description: "Parent proof가 허용한 resource 범위입니다.",
+              },
+              {
+                symbol: "A_c",
+                name: "Child abilities",
+                description:
+                  "Child invocation이 사용할 수 있는 operations입니다.",
+              },
+              {
+                symbol: "A_p",
+                name: "Parent abilities",
+                description: "Parent가 위임할 수 있는 operations입니다.",
+              },
+              {
+                symbol: String.raw`\subseteq`,
+                name: "Attenuation relation",
+                description:
+                  "Child가 parent 범위를 넘지 않는다는 포함 관계입니다.",
+              },
+            ]}
+            assumptions={[
+              "각 capability의 signature, issuer–audience 연결, expiry와 revocation policy를 검증합니다.",
+              "본문 식은 개념 모델입니다. 실제 defaultDerives는 ability parser가 선택된 뒤 resource와 delegated caveat 값을 검사합니다.",
+            ]}
+            interpretation="Parent가 space/blob/add만 갖는데 child에게 admin ability를 넣으면 A_c⊄A_p이므로 invocation을 거절합니다."
+          />
+          <div id="paper-storacha-space">
+            <CitationBlock
+              type="code"
+              citeKey={2}
+              source="Storacha Space specification · commit 3b67918"
+              href={SPACE}
+            >
+              <p>
+                <strong>문제:</strong> User data namespace와 authority를 특정
+                service account에 종속시키지 않고 식별해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Pinned spec은 locally generated
+                Space DID, account association와 capability-based administration
+                boundary를 설명합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> Matching w3-ucan semantics, DID/key
+                custody, revocation checks와 service implementation을
+                사용합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> w3-space protocol document
+                snapshot의 Space identity·authorization 역할에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Space DID 소유가 blob durability,
+                public retrieval, billing status 또는 Filecoin deal을 자동
+                보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
 
-    <section id="blob-upload" className="space-y-6"><header><p className="text-sm font-semibold text-primary">02 · Blob effect chain receipt</p><h2 className="mt-2 text-2xl font-bold">space/blob/add receipt와 allocate→put→accept effects를 끝까지 같은 digest로 연결한다</h2></header><p>Client는 파일을 blocks/CAR shards로 만들고 blob digest와 size를 계산합니다. `space/blob/add` invocation은 곧바로 “IPFS에 광고됐고 언제든 검색 가능하다”는 뜻이 아닙니다. Allocation, byte transfer(put), service acceptance가 각각 성공하고 receipt의 link가 같은 task/digest를 가리켜야 blob 단계가 끝납니다. Timeout 뒤 retry할 때도 idempotency key와 receipt lookup으로 이미 완료된 put을 중복 과금·저장하지 않습니다.</p><div className="not-prose"><CodeViewButton label="w3up blobAddProvider()" onClick={() => sidebar.open("blob-add-effects", codeRefs["blob-add-effects"])} /></div><ExplainedFormula question="Blob upload 단계를 완료로 표시하는 최소 조건은 무엇일까?" idea={<>Authorization과 세 effect receipt, byte digest 일치를 모두 AND로 묶습니다.</>} formula={String.raw`U=Auth\land Alloc\land Put\land Accept\land(H(bytes)=d)`}
-    annotatedFormula={String.raw`U=\underbrace{Auth}_{\text{Space 권한}}\land\underbrace{Alloc\land Put\land Accept}_{\text{세 effect receipt}}\land\underbrace{(H(bytes)=d)}_{\text{받은 bytes digest 일치}}`}
-    operations={[
-      { expression: String.raw`Auth`, annotation: ["Space resource와 blob/add ability","proof chain이 유효해야 1"] },
-      { expression: String.raw`Alloc\land Put\land Accept`, annotation: ["allocate→put→accept receipt가 전부","같은 task/digest를 가리켜야 1.","alloc·put만 있고 accept 없으면 U=0"] },
-      { expression: String.raw`H(bytes)=d`, annotation: ["실제 받은 blob bytes의 hash가","invocation이 고정한 d와 다르면","accept receipt가 있어도 quarantine"] },
-    ]} terms={[{symbol:"U",name:"Upload-stage acceptance",description:"Blob effect chain이 완료됐으면 1입니다."},{symbol:"Auth",name:"Authorization",description:"Space resource와 blob/add ability proof가 유효하면 1입니다."},{symbol:"Alloc",name:"Allocation receipt",description:"Expected space·digest·size에 capacity가 배정되면 1입니다."},{symbol:"Put",name:"Transfer receipt",description:"Expected bytes 전송 operation이 완료되면 1입니다."},{symbol:"Accept",name:"Acceptance receipt",description:"Service가 effect chain을 받아들여 signed receipt를 만들면 1입니다."},{symbol:"H(bytes)",name:"Observed digest",description:"실제 받은 blob bytes의 hash입니다."},{symbol:"d",name:"Expected digest",description:"Invocation과 allocation이 고정한 blob digest입니다."}]} assumptions={["모든 receipt link가 같은 Space, task, blob digest와 size를 가리킵니다.","U는 blob-stage 완료일 뿐 index advertisement·retrieval·Filecoin permanence는 별도입니다."]} interpretation="Allocate와 put이 성공했어도 accept receipt가 없으면 U=0입니다. 반대로 accept receipt가 있어도 bytes digest가 다르면 즉시 quarantine합니다." /><div id="paper-storacha-blob"><CitationBlock type="code" citeKey={3} source="Storacha Blob protocol · commit 3b67918" href={BLOB}><p><strong>문제:</strong> Space authorization에서 large blob allocation·transfer·acceptance를 effect receipts로 분리해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned w3-blob spec은 space/blob/add invocation과 allocate, put, accept effect chain 및 receipt links를 정의합니다.</p><p><strong>중요 가정:</strong> Exact invocation/receipt schemas, blob digest, service DID와 transport implementation을 고정합니다.</p><p><strong>근거 범위:</strong> commit 3b67918의 blob protocol workflow에 한정합니다.</p><p><strong>일반화 금지:</strong> Add·accept 성공이 advertisement, public IPFS retrieval, permanent durability 또는 Filecoin deal success를 뜻하지 않습니다.</p></CitationBlock></div></section>
+        <section id="blob-upload" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              02 · Blob effect chain receipt
+            </p>
+            <h2 className="mt-2 break-keep text-2xl font-bold">
+              allocate → put → accept가 끝나야 blob 업로드가 완료됩니다
+            </h2>
+          </header>
+          <p>
+            Client는 파일을 CAR shard로 만들고 각 blob의 digest와 크기를
+            계산합니다. <code>space/blob/add</code>는 세 effect를 시작합니다.
+            allocate는 저장 위치를 마련하고, put은 bytes를 보내며, accept는 받은
+            내용이 요청한 digest·크기와 맞는지 확인해 location commitment를
+            만듭니다.
+          </p>
+          <p>
+            앞 단계 receipt가 다음 task의 같은 blob을 가리켜야 전체 흐름이
+            이어집니다. Allocate와 put만 끝난 상태를 “언제든 검색 가능한 업로드
+            완료”라고 부르면 accept와 index가 빠집니다. 재시도할 때도 기존
+            task와 receipt를 먼저 조회해 이미 받은 blob을 새 업로드처럼 처리하지
+            않아야 합니다.
+          </p>
+          <div className="not-prose">
+            <CodeViewButton
+              label="w3up blobAddProvider()"
+              onClick={() =>
+                sidebar.open("blob-add-effects", codeRefs["blob-add-effects"])
+              }
+            />
+          </div>
+          <ExplainedFormula
+            question="Blob upload 단계를 완료로 표시하는 최소 조건은 무엇일까?"
+            idea={
+              <>
+                Authorization과 세 effect receipt, byte digest 일치를 모두 AND로
+                묶습니다.
+              </>
+            }
+            formula={String.raw`U=Auth\land Alloc\land Put\land Accept\land(H(bytes)=d)`}
+            annotatedFormula={String.raw`U=\underbrace{Auth}_{\text{Space 권한}}\land\underbrace{Alloc\land Put\land Accept}_{\text{세 effect receipt}}\land\underbrace{(H(bytes)=d)}_{\text{받은 bytes digest 일치}}`}
+            operations={[
+              {
+                expression: String.raw`Auth`,
+                annotation: [
+                  "Space resource와 blob/add ability",
+                  "proof chain이 유효해야 1",
+                ],
+              },
+              {
+                expression: String.raw`Alloc\land Put\land Accept`,
+                annotation: [
+                  "allocate→put→accept receipt가 전부",
+                  "같은 task/digest를 가리켜야 1.",
+                  "alloc·put만 있고 accept 없으면 U=0",
+                ],
+              },
+              {
+                expression: String.raw`H(bytes)=d`,
+                annotation: [
+                  "실제 받은 blob bytes의 hash가",
+                  "invocation이 고정한 d와 다르면",
+                  "accept receipt가 있어도 quarantine",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "U",
+                name: "Upload-stage acceptance",
+                description: "Blob effect chain이 완료됐으면 1입니다.",
+              },
+              {
+                symbol: "Auth",
+                name: "Authorization",
+                description:
+                  "Space resource와 blob/add ability proof가 유효하면 1입니다.",
+              },
+              {
+                symbol: "Alloc",
+                name: "Allocation receipt",
+                description:
+                  "Expected space·digest·size에 capacity가 배정되면 1입니다.",
+              },
+              {
+                symbol: "Put",
+                name: "Transfer receipt",
+                description:
+                  "Expected bytes 전송 operation이 완료되면 1입니다.",
+              },
+              {
+                symbol: "Accept",
+                name: "Acceptance receipt",
+                description:
+                  "Service가 effect chain을 받아들여 signed receipt를 만들면 1입니다.",
+              },
+              {
+                symbol: "H(bytes)",
+                name: "Observed digest",
+                description: "실제 받은 blob bytes의 hash입니다.",
+              },
+              {
+                symbol: "d",
+                name: "Expected digest",
+                description:
+                  "Invocation과 allocation이 고정한 blob digest입니다.",
+              },
+            ]}
+            assumptions={[
+              "모든 receipt link가 같은 Space, task, blob digest와 size를 가리킵니다.",
+              "U는 blob-stage 완료일 뿐 index advertisement·retrieval·Filecoin permanence는 별도입니다.",
+            ]}
+            interpretation="Allocate와 put이 성공했어도 accept receipt가 없으면 U=0입니다. 반대로 accept receipt가 있어도 bytes digest가 다르면 즉시 quarantine합니다."
+          />
+          <div id="paper-storacha-blob">
+            <CitationBlock
+              type="code"
+              citeKey={3}
+              source="Storacha Blob protocol · commit 3b67918"
+              href={BLOB}
+            >
+              <p>
+                <strong>문제:</strong> Space authorization에서 large blob
+                allocation·transfer·acceptance를 effect receipts로 분리해야
+                합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Pinned w3-blob spec은 space/blob/add
+                invocation과 allocate, put, accept effect chain 및 receipt
+                links를 정의합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> Exact invocation/receipt schemas,
+                blob digest, service DID와 transport implementation을
+                고정합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> commit 3b67918의 blob protocol
+                workflow에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Add·accept 성공이 advertisement,
+                public IPFS retrieval, permanent durability 또는 Filecoin deal
+                success를 뜻하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
 
-    <section id="index-retrieval" className="space-y-6"><header><p className="text-sm font-semibold text-primary">03 · Sharded DAG index artifact</p><h2 className="mt-2 text-2xl font-bold">Root CID를 shard blob과 byte range에 연결하는 index를 독립 artifact로 검증한다</h2></header><p>
-            파일이 여러 CAR shards로 나뉘면 root CID만 알아서는 어느 shard의 어느 offset에 원하는 block이 있는지 알 수 없습니다. Index
-            artifact에는 root CID와 index CID/schema, shard blob digests를 남깁니다. block CID→shard/offset/length
-            entries와 builder revision도 같이 기록합니다. Retrieval은 index lookup 뒤 exact byte range를 읽고 block CID를 다시
-            hash-verify해야 하며 authorized request receipt와 실제 delivery receipt를 구분합니다.
-          </p><ExplainedFormula question="Index entry가 가리킨 byte range를 어떻게 검증할까?" idea={<>Shard의 half-open range를 읽어 expected block CID와 다시 대조합니다.</>} formula={String.raw`b=S_j[o:o+\ell),\qquad verify\iff CID(b)=c`}
-    annotatedFormula={String.raw`b=\underbrace{S_j[o:o+\ell)}_{\text{shard j의 half-open range}},\qquad verify\iff \underbrace{CID(b)=c}_{\text{다시 hash해 대조}}`}
-    operations={[
-      { expression: String.raw`S_j[o:o+\ell)`, annotation: ["index가 가리킨 shard j에서 offset o부터","ℓ bytes를 읽습니다.","o=1000, ℓ=256이면 [1000,1256)"] },
-      { expression: String.raw`CID(b)=c`, annotation: ["읽은 bytes를 다시 hash해 DAG link가","요구한 block CID c와 비교.","HTTP 206이어도 다르면 false"] },
-    ]} terms={[{symbol:"S_j",name:"Shard blob",description:"Index가 선택한 j번째 immutable CAR/blob bytes입니다."},{symbol:"o",name:"Offset",description:"Block이 시작하는 shard 내부 byte 위치입니다."},{symbol:String.raw`\ell`,name:"Length",description:"읽을 block byte 수입니다."},{symbol:"b",name:"Retrieved block",description:"Half-open interval에서 실제 읽은 bytes입니다."},{symbol:"CID",name:"Content-ID function",description:"Codec·multihash profile로 bytes의 content identifier를 계산합니다."},{symbol:"c",name:"Expected block CID",description:"DAG link와 index query가 요구한 identifier입니다."}]} assumptions={["Offset과 length는 non-negative이고 shard size 안에 있으며 index schema를 canonical decode합니다.","Range response가 성공해도 CID(b)=c가 아니면 content receipt로 인정하지 않습니다."]} interpretation="Offset 1000, length 256이면 bytes [1000,1256)를 읽습니다. HTTP 206만 성공하고 hash가 다르면 verify는 false입니다." /><div id="paper-storacha-index"><CitationBlock type="code" citeKey={4} source="Storacha Sharded DAG Index · commit 3b67918" href={INDEX}><p><strong>문제:</strong> Large DAG를 여러 blobs로 나눈 뒤 block CID를 containing shard와 byte location에 연결해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned spec은 index artifact와 root/shard/block location mapping의 interoperability boundary를 정의합니다.</p><p><strong>중요 가정:</strong> Exact index version, CAR/shard encoding과 all referenced blob digests를 고정합니다.</p><p><strong>근거 범위:</strong> w3-index document snapshot의 indexing data model에 한정합니다.</p><p><strong>일반화 금지:</strong> Index 존재가 shard availability, gateway authorization, low latency 또는 delivered bytes integrity를 혼자 보장하지 않습니다.</p></CitationBlock></div></section>
+        <section id="index-retrieval" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              03 · Sharded DAG index artifact
+            </p>
+            <h2 className="mt-2 break-keep text-2xl font-bold">
+              Root CID만으로 여러 shard 안의 block 위치를 찾을 수는 없습니다
+            </h2>
+          </header>
+          <p>
+            큰 DAG가 여러 CAR shard로 나뉘면 root CID만으로는 원하는 block이
+            어느 shard의 몇 번째 byte에 있는지 알 수 없습니다. Sharded DAG
+            index는 root CID와 shard digest를 연결하고, 각 block digest에
+            offset과 length를 붙입니다.
+          </p>
+          <p>
+            검색할 때는 index가 가리킨 byte range를 실제로 읽은 뒤 block CID를
+            다시 계산합니다. HTTP range 응답이 왔다는 사실과 올바른 block을
+            받았다는 사실은 다릅니다. 요청 권한 receipt와 실제 bytes 전달
+            receipt도 따로 기록해야 합니다.
+          </p>
+          <ExplainedFormula
+            question="Index entry가 가리킨 byte range를 어떻게 검증할까?"
+            idea={
+              <>
+                Shard의 half-open range를 읽어 expected block CID와 다시
+                대조합니다.
+              </>
+            }
+            formula={String.raw`b=S_j[o:o+\ell),\qquad verify\iff CID(b)=c`}
+            annotatedFormula={String.raw`b=\underbrace{S_j[o:o+\ell)}_{\text{shard j의 half-open range}},\qquad verify\iff \underbrace{CID(b)=c}_{\text{다시 hash해 대조}}`}
+            operations={[
+              {
+                expression: String.raw`S_j[o:o+\ell)`,
+                annotation: [
+                  "index가 가리킨 shard j에서 offset o부터",
+                  "ℓ bytes를 읽습니다.",
+                  "o=1000, ℓ=256이면 [1000,1256)",
+                ],
+              },
+              {
+                expression: String.raw`CID(b)=c`,
+                annotation: [
+                  "읽은 bytes를 다시 hash해 DAG link가",
+                  "요구한 block CID c와 비교.",
+                  "HTTP 206이어도 다르면 false",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "S_j",
+                name: "Shard blob",
+                description:
+                  "Index가 선택한 j번째 immutable CAR/blob bytes입니다.",
+              },
+              {
+                symbol: "o",
+                name: "Offset",
+                description: "Block이 시작하는 shard 내부 byte 위치입니다.",
+              },
+              {
+                symbol: String.raw`\ell`,
+                name: "Length",
+                description: "읽을 block byte 수입니다.",
+              },
+              {
+                symbol: "b",
+                name: "Retrieved block",
+                description: "Half-open interval에서 실제 읽은 bytes입니다.",
+              },
+              {
+                symbol: "CID",
+                name: "Content-ID function",
+                description:
+                  "Codec·multihash profile로 bytes의 content identifier를 계산합니다.",
+              },
+              {
+                symbol: "c",
+                name: "Expected block CID",
+                description:
+                  "DAG link와 index query가 요구한 identifier입니다.",
+              },
+            ]}
+            assumptions={[
+              "Offset과 length는 non-negative이고 shard size 안에 있으며 index schema를 canonical decode합니다.",
+              "Range response가 성공해도 CID(b)=c가 아니면 content receipt로 인정하지 않습니다.",
+            ]}
+            interpretation="Offset 1000, length 256이면 bytes [1000,1256)를 읽습니다. HTTP 206만 성공하고 hash가 다르면 verify는 false입니다."
+          />
+          <div id="paper-storacha-index">
+            <CitationBlock
+              type="code"
+              citeKey={4}
+              source="Storacha Sharded DAG Index · commit 3b67918"
+              href={INDEX}
+            >
+              <p>
+                <strong>문제:</strong> Large DAG를 여러 blobs로 나눈 뒤 block
+                CID를 containing shard와 byte location에 연결해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Pinned spec은 index artifact와
+                root/shard/block location mapping의 interoperability boundary를
+                정의합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> Exact index version, CAR/shard
+                encoding과 all referenced blob digests를 고정합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> w3-index document snapshot의
+                indexing data model에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Index 존재가 shard availability,
+                gateway authorization, low latency 또는 delivered bytes
+                integrity를 혼자 보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+        </section>
 
-    <section id="release-gate" className="space-y-6"><header><p className="text-sm font-semibold text-primary">04 · Filecoin and service release gate</p><h2 className="mt-2 text-2xl font-bold">Upload·index·retrieval과 Filecoin offer/aggregate/deal status를 서로 다른 receipts로 승인한다</h2></header><p>
-            현재 pinned된 w3-filecoin 문서는 Storefront, Aggregator, Dealer와 Deal Tracker 역할, `filecoin/offer`
-            effect를 설명하지만 이는 future deal inclusion이나 permanence promise가 아닙니다. Release suite는 expired/revoked
-            UCAN과 overbroad ability, wrong size/digest부터 확인합니다. missing effect link, corrupt index offset,
-            unauthorized range, missing shard, 그리고 failed offer/aggregate/deal tracking과 retry duplication까지가
-            검사 범위입니다. 후보가 실패하면 이전 client/service schema와 allowlist로 되돌리고 이미 accepted된 blob은 content digest로
+        <section id="release-gate" className="space-y-6">
+          <header>
+            <p className="text-sm font-semibold text-primary">
+              04 · Filecoin and service release gate
+            </p>
+            <h2 className="mt-2 break-keep text-2xl font-bold">
+              업로드 성공과 Filecoin deal 진행 상태는 같은 완료가 아닙니다
+            </h2>
+          </header>
+          <p>
+            w3-filecoin 흐름에서 Storefront는 piece를 받고, Aggregator는 작은
+            piece들을 큰 aggregate로 묶으며, Dealer는 storage provider와 deal을
+            추진합니다. Deal Tracker는 chain 상태를 조회합니다. 이 과정은
+            <code>filecoin/offer</code> 뒤에 비동기로 이어지므로 최초 offer
+            receipt를 deal 완료나 영구 보관 약속으로 읽으면 안 됩니다.
+          </p>
+          <p>
+            운영 검증에서는 만료·폐기된 UCAN, 과도한 ability, 잘못된
+            digest·크기, 끊어진 effect link와 잘못된 index range를 각각
+            실패시킵니다. Shard 검색 실패와 offer·aggregation·deal tracking
+            실패도 따로 기록합니다. 후보 버전이 실패하면 이전 schema와
+            allowlist로 되돌리고, 이미 accept된 blob은 content digest로 식별해
             재사용합니다.
-          </p><ExplainedFormula question="사용자에게 저장·검색 준비 완료를 표시하려면 무엇이 모두 필요한가?" idea={<>Capability, blob, index, retrieval sample과 선택한 Filecoin policy receipt를 독립적으로 확인합니다.</>} formula={String.raw`A=C_{ok}\land U_{ok}\land I_{ok}\land R_{ok}\land F_{policy}`}
-    annotatedFormula={String.raw`A=\underbrace{C_{ok}\land U_{ok}}_{\text{권한·blob receipt}}\land\underbrace{I_{ok}\land R_{ok}}_{\text{index·retrieval 표본}}\land\underbrace{F_{policy}}_{\text{상품별 Filecoin 단계}}`}
-    operations={[
-      { expression: String.raw`C_{ok}\land U_{ok}`, annotation: ["현재 Space delegation이 유효하고","allocate·put·accept·digest까지","blob 단계가 끝났는지"] },
-      { expression: String.raw`I_{ok}\land R_{ok}`, annotation: ["root→shard→range index 검증과","표본 block을 실제로 가져와 CID 검증.","upload·index 성공해도 R_ok=0이면 A=0"] },
-      { expression: String.raw`F_{policy}`, annotation: ["상품이 요구한 offer·aggregate·deal","tracking 단계. deal 없는 상품은","다른 policy를 명시해야 함"] },
-    ]} terms={[{symbol:"A",name:"Service release",description:"선택한 service policy 기준으로 준비 완료면 1입니다."},{symbol:"C_{ok}",name:"Capability receipt",description:"Current Space delegation과 invocation이 유효하면 1입니다."},{symbol:"U_{ok}",name:"Blob receipt",description:"Allocation·put·accept와 digest가 완전하면 1입니다."},{symbol:"I_{ok}",name:"Index receipt",description:"Root→shard→range mappings가 검증되면 1입니다."},{symbol:"R_{ok}",name:"Retrieval receipt",description:"표본 block bytes를 가져와 CID 검증하면 1입니다."},{symbol:"F_{policy}",name:"Filecoin policy receipt",description:"상품이 요구한 offer·aggregate·deal/tracking stage가 충족되면 1입니다."}]} assumptions={["상품별 policy가 요구하는 Filecoin stage와 confidence를 명시하고 receipt version을 pin합니다.","마케팅의 영구성 표현 대신 관찰 가능한 현재 receipts와 retry/repair 책임을 기록합니다."]} interpretation="Upload와 index가 성공해도 retrieval sample이 실패하면 A=0입니다. Filecoin deal을 선택하지 않은 상품이라면 Fpolicy 정의 자체를 다른 policy로 명시해야 합니다." /><div id="paper-storacha-filecoin"><CitationBlock type="code" citeKey={5} source="Storacha Filecoin pipeline spec · commit 3b67918" href={FILECOIN}><p><strong>문제:</strong> Uploaded content pieces를 aggregate하고 Filecoin deal workflow·status tracking으로 전달해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned spec은 Storefront, Aggregator, Dealer, Deal Tracker와 filecoin/offer receipt chain의 protocol roles를 설명합니다.</p><p><strong>중요 가정:</strong> Spec maturity status, exact UCAN/receipt schemas, piece encoding과 deployed service versions을 함께 확인합니다.</p><p><strong>근거 범위:</strong> commit 3b67918의 Storacha–Filecoin protocol design snapshot에 한정합니다.</p><p><strong>일반화 금지:</strong> Offer·aggregate receipt가 on-chain deal inclusion, PoRep·PoSt success, permanent storage 또는 retrieval SLA를 보장하지 않습니다.</p></CitationBlock></div><aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 10/10:</strong> Space/UCAN attenuation, blob effect chain, DAG index/range 검증, retrieval receipt, Filecoin 비동기 단계, maturity와 rollback을 이 글만으로 설명할 수 있습니다.</aside></section>
-  </article>
-  <CodeSidebar
-    codeRefKey={sidebar.codeRefKey}
-    codeRef={sidebar.codeRef}
-    onClose={sidebar.close}
-    onNavigate={sidebar.navigate}
-    codeRefs={codeRefs}
-    fileTrees={{ ucanto: ucantoTree, w3up: w3upTree }}
-    projectMetas={{
-      ucanto: {
-        id: "ucanto",
-        label: "ucanto · JS",
-        badgeClass: "bg-blue-500/10 border-blue-500 text-blue-700",
-      },
-      w3up: {
-        id: "w3up",
-        label: "w3up · JS",
-        badgeClass: "bg-emerald-500/10 border-emerald-500 text-emerald-700",
-      },
-    }}
-  />
-  </>;
+          </p>
+          <ExplainedFormula
+            question="사용자에게 저장·검색 준비 완료를 표시하려면 무엇이 모두 필요한가?"
+            idea={
+              <>
+                Capability, blob, index, retrieval sample과 선택한 Filecoin
+                policy receipt를 독립적으로 확인합니다.
+              </>
+            }
+            formula={String.raw`A=C_{ok}\land U_{ok}\land I_{ok}\land R_{ok}\land F_{policy}`}
+            annotatedFormula={String.raw`A=\underbrace{C_{ok}\land U_{ok}}_{\text{권한·blob receipt}}\land\underbrace{I_{ok}\land R_{ok}}_{\text{index·retrieval 표본}}\land\underbrace{F_{policy}}_{\text{상품별 Filecoin 단계}}`}
+            operations={[
+              {
+                expression: String.raw`C_{ok}\land U_{ok}`,
+                annotation: [
+                  "현재 Space delegation이 유효하고",
+                  "allocate·put·accept·digest까지",
+                  "blob 단계가 끝났는지",
+                ],
+              },
+              {
+                expression: String.raw`I_{ok}\land R_{ok}`,
+                annotation: [
+                  "root→shard→range index 검증과",
+                  "표본 block을 실제로 가져와 CID 검증.",
+                  "upload·index 성공해도 R_ok=0이면 A=0",
+                ],
+              },
+              {
+                expression: String.raw`F_{policy}`,
+                annotation: [
+                  "상품이 요구한 offer·aggregate·deal",
+                  "tracking 단계. deal 없는 상품은",
+                  "다른 policy를 명시해야 함",
+                ],
+              },
+            ]}
+            terms={[
+              {
+                symbol: "A",
+                name: "Service release",
+                description:
+                  "선택한 service policy 기준으로 준비 완료면 1입니다.",
+              },
+              {
+                symbol: "C_{ok}",
+                name: "Capability receipt",
+                description:
+                  "Current Space delegation과 invocation이 유효하면 1입니다.",
+              },
+              {
+                symbol: "U_{ok}",
+                name: "Blob receipt",
+                description:
+                  "Allocation·put·accept와 digest가 완전하면 1입니다.",
+              },
+              {
+                symbol: "I_{ok}",
+                name: "Index receipt",
+                description: "Root→shard→range mappings가 검증되면 1입니다.",
+              },
+              {
+                symbol: "R_{ok}",
+                name: "Retrieval receipt",
+                description: "표본 block bytes를 가져와 CID 검증하면 1입니다.",
+              },
+              {
+                symbol: "F_{policy}",
+                name: "Filecoin policy receipt",
+                description:
+                  "상품이 요구한 offer·aggregate·deal/tracking stage가 충족되면 1입니다.",
+              },
+            ]}
+            assumptions={[
+              "상품별 policy가 요구하는 Filecoin stage와 confidence를 명시하고 receipt version을 pin합니다.",
+              "마케팅의 영구성 표현 대신 관찰 가능한 현재 receipts와 retry/repair 책임을 기록합니다.",
+            ]}
+            interpretation="Upload와 index가 성공해도 retrieval sample이 실패하면 A=0입니다. Filecoin deal을 선택하지 않은 상품이라면 Fpolicy 정의 자체를 다른 policy로 명시해야 합니다."
+          />
+          <div id="paper-storacha-filecoin">
+            <CitationBlock
+              type="code"
+              citeKey={5}
+              source="Storacha Filecoin pipeline spec · commit 3b67918"
+              href={FILECOIN}
+            >
+              <p>
+                <strong>문제:</strong> Uploaded content pieces를 aggregate하고
+                Filecoin deal workflow·status tracking으로 전달해야 합니다.
+              </p>
+              <p>
+                <strong>핵심 기여:</strong> Pinned spec은 Storefront,
+                Aggregator, Dealer, Deal Tracker와 filecoin/offer receipt
+                chain의 protocol roles를 설명합니다.
+              </p>
+              <p>
+                <strong>중요 가정:</strong> Spec maturity status, exact
+                UCAN/receipt schemas, piece encoding과 deployed service
+                versions을 함께 확인합니다.
+              </p>
+              <p>
+                <strong>근거 범위:</strong> commit 3b67918의 Storacha–Filecoin
+                protocol design snapshot에 한정합니다.
+              </p>
+              <p>
+                <strong>일반화 금지:</strong> Offer·aggregate receipt가 on-chain
+                deal inclusion, PoRep·PoSt success, permanent storage 또는
+                retrieval SLA를 보장하지 않습니다.
+              </p>
+            </CitationBlock>
+          </div>
+          <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground">
+            <strong className="text-foreground">Article-only 10/10:</strong>{" "}
+            Space/UCAN attenuation, blob effect chain, DAG index/range 검증,
+            retrieval receipt, Filecoin 비동기 단계, maturity와 rollback을 이
+            글만으로 설명할 수 있습니다.
+          </aside>
+        </section>
+      </article>
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ ucanto: ucantoTree, w3up: w3upTree }}
+        projectMetas={{
+          ucanto: {
+            id: "ucanto",
+            label: "ucanto · JS",
+            badgeClass: "bg-blue-500/10 border-blue-500 text-blue-700",
+          },
+          w3up: {
+            id: "w3up",
+            label: "w3up · JS",
+            badgeClass: "bg-emerald-500/10 border-emerald-500 text-emerald-700",
+          },
+        }}
+      />
+    </>
+  );
 }

@@ -36,8 +36,11 @@ export default function Optimization() {
         <div id="gpu-peak-achieved-boundary" className="scroll-mt-24">
           <p>
             사양표의 peak FLOPS와 HBM bandwidth는 이상적인 상한이고 achieved throughput은 실제 연산량 또는 byte를 wall-clock kernel
-            time으로 나눈 측정값입니다. 최적화는 한 번에 여러 기법을 붙이는 일이 아닙니다. 먼저 trace에서 가장 긴 kernel과 idle gap을 찾고 metric으로
-            bottleneck 가설을 세운 다음 한 축만 바꿔 correctness와 end-to-end time을 다시 측정하는 과정입니다.
+            time으로 나눈 측정값입니다.
+          </p>
+          <p>
+            최적화는 한 번에 여러 기법을 붙이는 일이 아닙니다. 먼저 trace에서 가장 긴 kernel과 idle gap을 찾고 metric으로 bottleneck 가설을
+            세웁니다. 그다음 한 축만 바꿔 correctness와 end-to-end time을 다시 측정합니다.
           </p>
         </div>
         <div className="not-prose my-6 overflow-hidden rounded-lg border border-border/70">
@@ -74,7 +77,7 @@ export default function Optimization() {
         <div id="paper-roofline-model" className="scroll-mt-24">
           <CitationBlock
             source="Williams et al. — Roofline: An Insightful Visual Performance Model"
-            citeKey={4}
+            citeKey={5}
             type="paper"
             href="https://escholarship.org/uc/item/3qf383m0"
           >

@@ -5,14 +5,18 @@ import { ClusterScopeViz, HopperPipelineViz } from "./viz/ModernHopperViz";
 
 const TUNING = "https://docs.nvidia.com/cuda/archive/12.8.1/hopper-tuning-guide/index.html";
 const GUIDE = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html";
+const PTX = "https://docs.nvidia.com/cuda/archive/12.8.1/parallel-thread-execution/index.html#asynchronous-warpgroup-level-matrix-instructions";
 const WHITEPAPER = "https://resources.nvidia.com/en-us-tensor-core/nvidia-hopper-architecture-whitepaper";
 
 export default function ModernHopperArticle(){return <article className="space-y-14">
   <section id="overview" className="space-y-6">
-    <header className="space-y-3"><p className="text-sm font-semibold text-primary">Hopper를 기능 목록이 아니라 실행 경로로</p><h2 className="text-3xl font-bold tracking-tight">Hopper는 더 많은 FLOPS만 제공한 세대가 아니라, data 이동과 협력 범위를 다시 나눴다</h2></header>
-    <p className="text-lg leading-8 text-foreground/90">NVIDIA Hopper 계열은 기존 grid·block·warp 위에 optional <strong>thread block cluster</strong>를 추가하고, <strong>TMA(Tensor Memory Accelerator)</strong>로 다차원 tensor 이동을 계산 threads와 분리합니다. Tensor Cores와 Transformer Engine은 낮은 precision의 matrix 연산을 가속하지만 정확도와 scaling contract가 함께 필요합니다.</p>
+    <header className="space-y-3"><p className="text-sm font-semibold text-primary">Hopper를 기능 목록이 아니라 실행 경로로</p><h2 className="text-3xl font-bold tracking-tight">다음 tile을 옮기는 동안 현재 tile을 계산한다</h2></header>
+    <p className="text-lg leading-8 text-foreground/90">행렬곱 하나를 생각해 보겠습니다. A·B 원본은 HBM에 있고, Tensor Core가 쓸 조각은 더 가까운 shared memory에 있어야 합니다.</p>
+    <p>여러 thread가 주소를 계산하며 조각을 옮기면 계산에 쓸 thread와 instruction이 줄어듭니다. Hopper에서는 <strong>TMA(Tensor Memory Accelerator)</strong>가 이동을 맡고 <strong>transaction barrier</strong>가 도착을 알립니다. 그러면 네 warp의 <strong>WGMMA</strong>가 도착한 tile을 계산할 수 있습니다.</p>
+    <p>그래서 질문도 자연스럽게 이어집니다. 복사를 시작한 뒤 언제 읽어도 되는가? 다음 tile이 현재 tile을 덮어쓰지 않게 하려면 무엇이 필요한가? 여러 block까지 협력하면 같은 방법을 그대로 쓸 수 있는가? 아래에서는 이 세 질문을 한 tile의 이동 경로로 답합니다.</p>
     <p>이 글은 일반적인 SM·warp·memory hierarchy를 <a className="text-primary hover:underline" href="/cs/gpu/gpu-architecture">GPU architecture 정본</a>에서 재사용하고, Hopper에서 달라진 producer–consumer pipeline과 deployment gate만 소유합니다. H100의 peak 수치를 모든 Hopper SKU나 실제 kernel 성능으로 확대하지 않습니다.</p>
     <HopperPipelineViz />
+    <aside className="rounded-lg border border-primary/25 bg-primary/5 p-5 text-sm leading-6"><strong>먼저 범위를 고정합니다.</strong> 위 그림은 한 thread block 안의 가장 단순한 HBM → shared memory → WGMMA 경로입니다. <strong>DSM은 이 경로의 필수 단계가 아닙니다.</strong> 여러 block이 cluster로 협력할 때만 각 block의 shared memory를 rank로 찾아가는 별도 경로가 생깁니다.</aside>
     <ContentBoundary article="gpu-arch-hopper" />
   </section>
 
@@ -23,12 +27,14 @@ export default function ModernHopperArticle(){return <article className="space-y
   </section>
 
   <section id="tma" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">02 · TMA</p><h2 className="mt-2 text-2xl font-bold">한 thread가 transfer를 시작하고 나머지는 계산을 이어 간다</h2></header>
+    <header><p className="text-sm font-semibold text-primary">02 · TMA에서 WGMMA까지</p><h2 className="mt-2 text-2xl font-bold">한 thread가 tile을 부르고, barrier가 문을 열면 네 warp가 계산한다</h2></header>
     <p>
-            TMA는 global↔shared memory 사이의 1D부터 다차원 tensor transfer를 descriptor로 기술하고 asynchronous하게 실행하는
-            Hopper mechanism입니다. 주소 계산과 element-wise copy instruction을 많은 threads가 직접 수행하는 대신 작은 producer 역할이
-            transfer를 발행하고 consumer는 completion barrier 이후 shared tile을 사용합니다.
+            TMA는 global↔shared memory 사이의 큰 block 또는 tensor tile을 asynchronous하게 옮기는 Hopper mechanism입니다.
+            1D bulk copy와 달리 다차원 bulk tensor copy는 host가 만든 <strong>tensor map</strong>에 1~5차원 크기·stride·box와 layout을 담습니다.
           </p>
+    <p>선출된 한 thread가 tile 좌표와 함께 transfer를 발행하면 hardware가 주소 생성과 data movement를 진행합니다. Consumer는 transaction barrier가 약속된 byte의 도착을 알린 뒤 shared tile을 사용합니다.</p>
+    <p><strong>WGMMA</strong>는 이 tile을 소비하는 Hopper의 warpgroup-level matrix instruction입니다. 연속한 네 warp, 즉 128 threads가 함께 <code>D = A × B + C</code>를 발행합니다.</p>
+    <p>B operand는 shared memory descriptor에서 읽고 A는 shared memory 또는 registers에서 올 수 있습니다. Accumulator C·D는 warpgroup의 registers에 나뉘어 놓입니다. 즉 TMA가 Tensor Core 안으로 data를 직접 밀어 넣는 것이 아닙니다. <strong>TMA가 shared tile을 준비하고 barrier가 소유권을 넘긴 뒤 WGMMA가 그 tile을 읽습니다.</strong></p>
     <ExplainedFormula question="두 단계 pipeline이 steady state에서 tile 하나당 얼마나 걸리는지 어떻게 근사할까?" idea={<>Load와 compute를 겹치면 매 tile마다 둘을 더하지 않고 더 느린 단계가 cadence를 정합니다. 처음 채우기와 마지막 비우기 비용은 별도로 남습니다.</>} formula={String.raw`\begin{aligned}T_{stage}&=\max(T_{copy},T_{compute})\\[3pt]T_{pipe}&\approx T_{fill}+(L-1)T_{stage}+T_{drain}\end{aligned}`}
     annotatedFormula={String.raw`\begin{aligned}T_{stage}&=\underbrace{\max(T_{copy},T_{compute})}_{\text{느린 단계가 cadence}}\\[3pt]T_{pipe}&\approx\underbrace{T_{fill}}_{\text{처음 채우기}}+\underbrace{(L-1)T_{stage}}_{\text{나머지 tile}}+\underbrace{T_{drain}}_{\text{마지막 비우기}}\end{aligned}`}
     operations={[
@@ -47,34 +53,35 @@ export default function ModernHopperArticle(){return <article className="space-y
             shared region을 덮어쓰지 않도록 barrier phase를 맞춰야 합니다. 작은·불규칙 transfer는 descriptor와 synchronization 비용
             때문에 일반 load보다 불리할 수 있습니다.
           </p>
+    <div id="paper-hopper-wgmma"><CitationBlock type="code" citeKey={2} source="NVIDIA PTX ISA 12.8.1 · Asynchronous Warpgroup-level Matrix Instructions" href={PTX}><p><strong>문제:</strong> Hopper의 warpgroup이 shared-memory operand와 register accumulator로 비동기 matrix multiply를 수행하는 정확한 instruction contract가 필요합니다.</p><p><strong>핵심 아이디어:</strong> <code>wgmma.mma_async</code>의 128-thread scope, operand source·descriptor·ordering과 completion semantics를 정의합니다.</p><p><strong>중요 가정:</strong> 해당 instruction을 지원하는 architecture target과 PTX ISA 12.8.1의 shape·type·alignment 제약을 따릅니다.</p><p><strong>근거 범위:</strong> WGMMA가 읽는 memory와 accumulator 위치, warpgroup 실행 범위입니다.</p><p><strong>일반화 금지:</strong> WGMMA를 발행하면 TMA overlap이나 end-to-end speedup이 자동으로 생긴다는 뜻은 아닙니다.</p></CitationBlock></div>
     <div id="paper-hopper-tuning"><CitationBlock type="code" citeKey={1} source="NVIDIA Hopper Tuning Guide · CUDA 12.8.1" href={TUNING}><p><strong>문제:</strong> Compute capability 9.0의 resource, TMA, asynchronous execution과 thread block cluster를 최적화에 적용해야 합니다.</p><p><strong>핵심 아이디어:</strong> Hopper-specific execution·memory 기능과 programming considerations를 제공합니다.</p><p><strong>중요 가정:</strong> CUDA 12.8.1, compute capability 9.0 target과 실제 device properties를 확인합니다.</p><p><strong>근거 범위:</strong> Hopper tuning behavior와 공식 programming guidance입니다.</p><p><strong>일반화 금지:</strong> TMA·cluster 사용이 모든 kernel에서 speedup을 보장하거나 이후 architecture와 완전히 동일하다는 뜻은 아닙니다.</p></CitationBlock></div>
   </section>
 
   <section id="cluster" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">03 · Thread block cluster와 DSM</p><h2 className="mt-2 text-2xl font-bold">Block-local shared memory를 인접 blocks의 명시적 협력으로 확장한다</h2></header>
-    <p><strong>Thread block cluster</strong>는 여러 blocks를 같은 GPC 안에서 함께 scheduling할 수 있는 optional hierarchy입니다. Cluster 안의 block은 자신의 shared-memory 주소를 다른 block의 rank로 mapping해 접근하는 <strong>DSM(Distributed Shared Memory)</strong>을 사용할 수 있습니다. 이는 chip 전체가 공유하는 cache가 아니라, 정해진 cluster와 lifetime 안의 협력 범위입니다.</p>
+    <p><strong>Thread block cluster</strong>는 여러 blocks를 같은 GPC 안에서 함께 scheduling할 수 있는 optional hierarchy입니다. Cluster 안의 block은 다른 block의 shared-memory 주소를 rank로 mapping해 접근할 수 있습니다.</p>
+    <p>이 주소 공간이 <strong>DSM(Distributed Shared Memory)</strong>입니다. Chip 전체가 공유하는 cache가 아니라, 정해진 cluster와 lifetime 안에서만 쓰는 협력 범위입니다.</p>
     <ClusterScopeViz />
     <p>
-            Histogram bin이나 working set이 block shared memory 하나에는 크지만 cluster 합산 capacity에는 맞는 경우가 후보입니다. 반대로
-            remote DSM access와 cluster synchronization이 local shared access보다 비싸고 cluster residency 조건이
-            scheduling을 제한할 수 있으므로 global-memory baseline과 traffic·stall·occupancy·end-to-end를 비교해야 합니다.
+            Histogram bin이나 working set이 block shared memory 하나에는 크지만 cluster 합산 capacity에는 맞는 경우가 후보입니다.
           </p>
-    <div id="paper-cuda-clusters"><CitationBlock type="code" citeKey={2} source="NVIDIA CUDA C++ Programming Guide 12.8.1 · Thread Block Clusters" href={GUIDE}><p><strong>문제:</strong> Cluster launch, synchronization과 distributed shared-memory address space의 semantics를 정의해야 합니다.</p><p><strong>핵심 아이디어:</strong> Grid와 block 사이의 optional cluster hierarchy와 cluster group primitives를 제공합니다.</p><p><strong>중요 가정:</strong> Compute capability 9.0 이상, portable/architecture-specific cluster size와 launch API를 확인합니다.</p><p><strong>근거 범위:</strong> CUDA 12.8.1의 programming model·API semantics입니다.</p><p><strong>일반화 금지:</strong> Cluster 크기나 DSM latency가 모든 device에서 고정이라는 뜻은 아닙니다.</p></CitationBlock></div>
+    <p>하지만 remote DSM access와 cluster synchronization은 local shared access보다 비쌉니다. Cluster residency가 scheduling을 제한할 수도 있습니다. 따라서 global-memory baseline과 traffic·stall·occupancy·end-to-end를 함께 비교해야 합니다.</p>
+    <div id="paper-cuda-clusters"><CitationBlock type="code" citeKey={3} source="NVIDIA CUDA C++ Programming Guide 12.8.1 · Thread Block Clusters" href={GUIDE}><p><strong>문제:</strong> Cluster launch, synchronization과 distributed shared-memory address space의 semantics를 정의해야 합니다.</p><p><strong>핵심 아이디어:</strong> Grid와 block 사이의 optional cluster hierarchy와 cluster group primitives를 제공합니다.</p><p><strong>중요 가정:</strong> Compute capability 9.0 이상, portable/architecture-specific cluster size와 launch API를 확인합니다.</p><p><strong>근거 범위:</strong> CUDA 12.8.1의 programming model·API semantics입니다.</p><p><strong>일반화 금지:</strong> Cluster 크기나 DSM latency가 모든 device에서 고정이라는 뜻은 아닙니다.</p></CitationBlock></div>
   </section>
 
   <section id="transformer-engine" className="space-y-6">
-    <header><p className="text-sm font-semibold text-primary">04 · Transformer Engine</p><h2 className="mt-2 text-2xl font-bold">FP8 throughput은 format·scale·accumulation·quality를 함께 고정해야 비교할 수 있다</h2></header>
+    <header><p className="text-sm font-semibold text-primary">04 · Transformer Engine</p><h2 className="mt-2 text-2xl font-bold">FP8은 숫자 형식·범위·누산·품질을 함께 본다</h2></header>
     <p>Hopper Transformer Engine은 Tensor Core matrix 연산에서 FP8과 더 높은 precision을 workload에 맞게 사용하도록 지원하는 hardware/software 경로입니다. 여기서 FP8은 숫자 저장 format만이 아니라 tensor별 scaling, overflow/underflow 관리, accumulation precision과 model quality evaluation을 포함한 contract입니다.</p>
     <p>
             Peak Tensor Core 수치는 dense/sparse 여부, input·accumulator precision, clock과 특정 instruction path에 따라
-            다른 ceiling입니다. 일반 FP32 CUDA core peak와 FP8 Tensor Core peak를 한 열에서 직접 나누거나 peak 비율을 training time
-            speedup으로 읽으면 data movement·non-GEMM·collective·optimizer와 convergence 차이를 놓칩니다.
+            다른 ceiling입니다.
           </p>
-    <div id="paper-hopper-whitepaper"><CitationBlock citeKey={3} source="NVIDIA Hopper Architecture In-Depth / Whitepaper" href={WHITEPAPER}><p><strong>문제:</strong> Hopper의 Tensor Core, Transformer Engine, TMA·cluster와 system interconnect 설계 의도를 설명합니다.</p><p><strong>핵심 아이디어:</strong> AI·HPC workload를 위한 precision·data movement·scaling 기능을 architecture 수준에서 통합합니다.</p><p><strong>중요 가정:</strong> 발표된 Hopper/H100 product configuration과 문서 revision의 peak 조건을 따릅니다.</p><p><strong>근거 범위:</strong> NVIDIA가 공개한 architecture 기능과 명시된 benchmark 조건입니다.</p><p><strong>일반화 금지:</strong> Marketing peak 또는 특정 benchmark 배수가 임의 application의 achieved speedup을 보장하지 않습니다.</p></CitationBlock></div>
+    <p>일반 FP32 CUDA core peak와 FP8 Tensor Core peak를 한 열에서 직접 나누면 안 됩니다. 그 비율을 training time speedup으로 읽어도 안 됩니다. Data movement·non-GEMM·collective·optimizer와 convergence 차이가 빠지기 때문입니다.</p>
+    <div id="paper-hopper-whitepaper"><CitationBlock citeKey={4} source="NVIDIA Hopper Architecture In-Depth / Whitepaper" href={WHITEPAPER}><p><strong>문제:</strong> Hopper의 Tensor Core, Transformer Engine, TMA·cluster와 system interconnect 설계 의도를 설명합니다.</p><p><strong>핵심 아이디어:</strong> AI·HPC workload를 위한 precision·data movement·scaling 기능을 architecture 수준에서 통합합니다.</p><p><strong>중요 가정:</strong> 발표된 Hopper/H100 product configuration과 문서 revision의 peak 조건을 따릅니다.</p><p><strong>근거 범위:</strong> NVIDIA가 공개한 architecture 기능과 명시된 benchmark 조건입니다.</p><p><strong>일반화 금지:</strong> Marketing peak 또는 특정 benchmark 배수가 임의 application의 achieved speedup을 보장하지 않습니다.</p></CitationBlock></div>
   </section>
 
   <section id="release-gate" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">05 · 호환성과 채택</p><h2 className="mt-2 text-2xl font-bold">Feature path와 fallback을 모두 검증한 뒤 deployment를 연다</h2></header>
-    <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Hopper gate:</strong> GPU UUID·compute capability, driver·Toolkit·compiler, resolved kernel과 dtype/scale policy를 고정합니다. TMA/cluster candidate는 unsupported target fallback과 odd/edge shape parity를 먼저 통과하고 warm-up 뒤 kernel/end-to-end median·p95, achieved bandwidth/FLOP/s, actual traffic, occupancy·stall과 quality metric을 baseline에 paired 비교합니다. 기능 존재만 확인했거나 peak만 높으면 채택하지 않습니다.</aside>
+    <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Hopper gate:</strong> GPU UUID·compute capability, architecture target, driver·Toolkit·compiler, resolved kernel과 dtype/scale policy를 고정합니다. TMA·WGMMA·cluster candidate는 unsupported target fallback과 odd/edge shape parity를 먼저 통과하고 warm-up 뒤 kernel/end-to-end median·p95, achieved bandwidth/FLOP/s, actual traffic, occupancy·stall과 quality metric을 baseline에 paired 비교합니다. 기능 존재만 확인했거나 peak만 높으면 채택하지 않습니다.</aside>
   </section>
 </article>}

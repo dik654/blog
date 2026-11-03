@@ -2,15 +2,13 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import SupplyChainBargainingViz from "./SupplyChainBargainingViz";
 
-/** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
+/** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function SupplyChainBargainingArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 만든 사람과 가격을 정하는 사람이 왜 다른가</h2>
-        <SupplyChainBargainingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">제품은 여러 사람의 작업을 거쳐 손님에게 도착합니다. 그중 어느 회사가 더 많은 몫을 갖는지는 손으로 한 일이 얼마나 많은지뿐 아니라 다른 회사가 그 역할을 바꿀 수 있는지에 달려 있습니다.</p>
           <p className="leading-7">한 물건에 지불한 돈을 생산과 이동과 판매로 따라가면 기업의 힘과 국가의 교역 통계가 함께 보입니다. 같은 물건이 국경을 여러 번 넘었다고 새 가치가 그때마다 전액 생기는 것은 아닙니다.</p>
@@ -108,7 +106,6 @@ export default function SupplyChainBargainingArticle() {
         <CitationBlock source="World Bank WDR 2020 · About" citeKey={2} href="https://www.worldbank.org/en/publication/wdr2020">2026-10-04 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
         <CitationBlock source="World Bank · Global Value Chains" citeKey={3} href="https://www.worldbank.org/ext/en/topic/trade/global-value-chains">Context의 여러 나라 투입과 단계별 생산, Strategy의 물류·무역·투자·표준 등 정책 연결을 확인했습니다. 국가마다 한 가지 역할이 고정된다는 자료는 아닙니다.</CitationBlock>
         <CitationBlock source="US CBP · Tips for New Importers and Exporters" citeKey={4} href="https://www.cbp.gov/trade/basic-import-export/importer-exporter-tips">통관업자를 쓰더라도 importer of record의 신고 정확성과 관세·세금·수수료 책임이 남는다는 공식 본문을 확인했습니다. 사례의 10% 세율과 60달러 과세가격은 이 자료에서 가져온 실제 수치가 아닙니다.</CitationBlock>
-        <CitationBlock source="WTO · Customs Valuation Agreement, Article 8.2" citeKey={5} href="https://www.wto.org/english/docs_e/legal_e/cv_e.htm">2026-11-01 확인. 수입항까지의 운송비, 적재·하역·취급비, 보험료를 과세가격에 전부 또는 일부 포함하거나 제외하는 선택을 회원국 법에 두는 공식 조문입니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
             정책 변화가 전해지는 경로를 확인했습니다. 어느 나라에 이익이 남는지는 더 따져 봐야 합니다.
           </p>

@@ -2,10 +2,15 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { FusionMegakernelViz } from "../cuda-perf-analysis/viz/FusionResourceViz";
+import {
+  FusionReleaseViz,
+  FusionResourceViz,
+  FusionShapeViz,
+  FusionTrafficViz,
+} from "./viz/FusionDecisionViz";
 
 const PRACTICES =
-  "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html";
+  "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html";
 const FLASH_ATTENTION = "https://arxiv.org/abs/2205.14135";
 const CUTLASS = "https://docs.nvidia.com/cutlass/latest/overview.html";
 const TRITON =
@@ -19,18 +24,24 @@ export default function ModernCudaKernelFusionArticle() {
           <p className="text-sm font-semibold text-primary">
             Fusion boundary first
           </p>
-          <h2 className="text-3xl font-bold tracking-tight">
-            Kernel fusion은 “크게 합치기”가 아니라 중간값을 어디에 남길지 고르는
-            일이다
+          <h2 className="break-keep text-3xl font-bold tracking-tight [text-wrap:balance]">
+            Kernel fusion은 중간값을 HBM에 내리지 않고 다음 계산에 바로 넘기는 일이다
           </h2>
         </header>
-        <p className="text-lg leading-8 text-foreground/90">
-          Separate kernels는 A의 output을 HBM에 쓴 뒤 B가 다시 읽습니다.
-          Fusion은 같은 값을 register나 shared memory에 두고 다음 연산으로 넘겨
-          launch와 intermediate traffic을 줄입니다. 하지만 합친 code가 붙잡는
-          값과 자원도 함께 늘기 때문에 모든 연산을 하나로 만드는 것이 목표는
-          아닙니다.
+        <p data-teach-level="S" className="text-lg leading-8 text-foreground/90">
+          한 문장으로 말하면, kernel fusion은 여러 계산을 무조건 크게 합치는 기술이 아니라
+          <strong> 중간 배열의 HBM 왕복을 없애도 새 자원 비용보다 이익이 큰 가장 작은 경계</strong>를 찾는 기술입니다.
         </p>
+        <p data-teach-level="B">
+          32 MiB FP16 배열에 <span className="whitespace-nowrap">scale → GELU → clamp</span>를 차례로 적용한다고 해보겠습니다.
+          세 kernel을 따로 실행하면 각 단계가 32 MiB를 읽고 32 MiB를 써 요청량은 192 MiB입니다.
+          한 kernel에서 같은 thread가 중간값을 register로 넘기면 첫 입력과 마지막 출력만 남아 64 MiB가 됩니다.
+        </p>
+        <p data-teach-level="0">
+          그러면 128 MiB를 줄였으니 항상 빨라질까요? 그렇지 않습니다. 합친 kernel이 더 많은 register와 shared memory를 붙잡으면
+          동시에 머무는 block이 줄고, spill이나 긴 dependency가 생길 수 있습니다. 이 꼬리 질문이 fusion 경계를 정하는 출발점입니다.
+        </p>
+        <FusionTrafficViz />
         <TermBreakdown
           title="먼저 세 가지 범위를 구분합니다"
           description="이름이 비슷해도 줄이는 비용과 새로 소유하는 계약이 다릅니다."
@@ -64,16 +75,15 @@ export default function ModernCudaKernelFusionArticle() {
             },
           ]}
         />
-        <FusionMegakernelViz />
         <ContentBoundary article="cuda-kernel-fusion" />
       </section>
 
-      <section id="small-fusion" className="space-y-6">
+      <section id="small-fusion" data-teach-level="1" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
             01 · Small fusion
           </p>
-          <h2 className="mt-2 text-2xl font-bold">
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
             같은 element를 짧게 변환하는 경계부터 시작한다
           </h2>
         </header>
@@ -132,7 +142,7 @@ export default function ModernCudaKernelFusionArticle() {
           interpretation="Δt=5 μs=0.005 ms, T_base=100 ms이면 G_e2e=0.005%입니다. 반대로 3–5 μs kernels가 수천 번 반복되면 합산 비중이 커질 수 있습니다."
         />
         <div id="fusion-shapes" className="space-y-4">
-          <h3 className="text-lg font-bold">
+          <h3 className="break-keep text-lg font-bold [text-wrap:balance]">
             Vertical·horizontal·epilogue는 같은 traffic 절감 공식을 쓰지 않는다
           </h3>
           <p>
@@ -173,13 +183,14 @@ export default function ModernCudaKernelFusionArticle() {
               },
             ]}
           />
+          <FusionShapeViz />
         </div>
       </section>
 
-      <section id="megakernel" className="space-y-6">
+      <section id="megakernel" data-teach-level="2" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">02 · Megakernel</p>
-          <h2 className="mt-2 text-2xl font-bold">
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
             HBM·launch 절감과 resource·scheduling 손실을 한 장부에 둔다
           </h2>
         </header>
@@ -193,6 +204,13 @@ export default function ModernCudaKernelFusionArticle() {
           launch configuration과 scheduler flexibility를 포기하는 일이 생깁니다. 그래서 spill이 0이어도 occupancy와 eligible
           warps가 먼저 줄어 느려질 수 있습니다.
         </p>
+        <p>
+          같은 고정 사례에서 단순 register 상한도 함께 보겠습니다. SM당 register 65,536개, block당 256 threads라고 가정하면
+          32 registers/thread는 <span className="whitespace-nowrap">⌊65,536÷(32×256)⌋=8 blocks</span>,
+          72 registers/thread는 <span className="whitespace-nowrap">⌊65,536÷(72×256)⌋=3 blocks</span>입니다.
+          실제 residency는 allocation granularity·warp·shared-memory·architecture limit도 함께 받으므로 이 숫자는 원인을 찾는 교육용 ceiling입니다.
+        </p>
+        <FusionResourceViz />
         <ExplainedFormula
           question="Fusion 후보의 절감과 새 자원 비용을 어떤 방향으로 비교할까요?"
           idea={
@@ -285,12 +303,12 @@ export default function ModernCudaKernelFusionArticle() {
         </p>
       </section>
 
-      <section id="flash-attention" className="space-y-6">
+      <section id="flash-attention" data-teach-level="3" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
             03 · Tile-budgeted fusion
           </p>
-          <h2 className="mt-2 text-2xl font-bold">
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
             FlashAttention은 model 전체 Megakernel이 아니다
           </h2>
         </header>
@@ -341,12 +359,12 @@ export default function ModernCudaKernelFusionArticle() {
         </div>
       </section>
 
-      <section id="kernel-stack" className="space-y-6">
+      <section id="kernel-stack" data-teach-level="4" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
             04 · Authoring layer
           </p>
-          <h2 className="mt-2 text-2xl font-bold">
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
             CUTLASS·CuTe·Triton은 같은 이름의 커널 언어가 아니다
           </h2>
         </header>
@@ -356,9 +374,10 @@ export default function ModernCudaKernelFusionArticle() {
           직접 소유합니다.
         </p>
         <p>
-          CUTLASS는 GEMM mainloop와 epilogue를 reusable collectives로 조립합니다. 그 아래 CuTe는 shape·stride layout과
-          copy/MMA atoms의 thread–value mapping을 기술합니다. Triton은 한 program instance가 value block을 다루게 쓰고
-          compiler가 coalescing, vectorization과 memory placement의 상당 부분을 낮춥니다.
+          CUTLASS는 GEMM mainloop와 epilogue를 reusable components로 조립합니다. 현재 CUTLASS 4.8.1 문서는 CUDA C++뿐 아니라
+          CuTe DSL을 포함한 Python-native DSL 계층도 함께 설명합니다. 그 아래의 핵심 개념인 CuTe layout·tensor·hardware atom은
+          shape·stride와 thread–value mapping을 기술합니다. Triton은 한 program instance가 value block을 다루게 쓰고 compiler가
+          block-level data-flow를 바탕으로 scheduling과 lowering의 상당 부분을 맡습니다.
         </p>
         <TermBreakdown
           title="이름 대신 누가 어떤 결정을 소유하는지 봅니다"
@@ -432,12 +451,12 @@ export default function ModernCudaKernelFusionArticle() {
         </div>
       </section>
 
-      <section id="release-gate" className="space-y-6">
+      <section id="release-gate" data-teach-level="5" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
             05 · Fusion release gate
           </p>
-          <h2 className="mt-2 text-2xl font-bold">
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
             Unfused·small fusion·Megakernel을 같은 receipt에서 비교한다
           </h2>
         </header>
@@ -466,6 +485,7 @@ export default function ModernCudaKernelFusionArticle() {
           Shape·batch·sequence slices 중 일부가 회귀하면 rollback하거나 더 작은
           fusion boundary로 되돌립니다.
         </p>
+        <FusionReleaseViz />
         <p>
           Kernel을 오래 살려 launch 자체를 다른 공급 모델로 바꾸는 설계는
           <a
@@ -526,7 +546,7 @@ export default function ModernCudaKernelFusionArticle() {
           <CitationBlock
             type="code"
             citeKey={2}
-            source="NVIDIA CUDA C++ Best Practices Guide 12.8.1"
+            source="NVIDIA CUDA C++ Best Practices Guide 13.4"
             href={PRACTICES}
           >
             <p>
@@ -538,7 +558,7 @@ export default function ModernCudaKernelFusionArticle() {
               comparison 지침을 제공합니다.
             </p>
             <p>
-              <strong>중요 가정:</strong> CUDA 12.8.1과 동일
+              <strong>중요 가정:</strong> CUDA 13.4 문서와 동일
               workload·target·precision을 고정합니다.
             </p>
             <p>

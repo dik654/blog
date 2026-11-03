@@ -101,7 +101,7 @@ export default function Layout() {
                 pathname: location.pathname,
               })
             }
-            className="mr-2 flex size-9 shrink-0 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 lg:hidden"
+            className="mr-2 flex size-11 shrink-0 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 lg:hidden"
           >
             {mobileSidebarOpen ? (
               <X className="size-4.5" aria-hidden="true" />
@@ -111,7 +111,7 @@ export default function Layout() {
           </button>
           <Link
             to="/"
-            className="mr-2 min-w-0 truncate whitespace-nowrap text-base font-semibold tracking-tight sm:mr-10 sm:text-lg"
+            className="mr-2 flex min-h-11 min-w-0 items-center truncate whitespace-nowrap text-base font-semibold tracking-tight sm:mr-10 sm:text-lg"
           >
             Dylan's Study Notes
           </Link>
@@ -156,7 +156,7 @@ export default function Layout() {
                     pathname: location.pathname,
                   })
                 }
-                className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                className="flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
               >
                 <X className="size-4.5" aria-hidden="true" />
               </button>

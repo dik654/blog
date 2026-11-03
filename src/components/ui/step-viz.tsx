@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
-export type StepDef = string | { label: string; body?: ReactNode };
+export type StepDef = string | { label: string; tabLabel?: string; body?: ReactNode };
 
 interface Props {
   steps: readonly StepDef[];
@@ -64,23 +64,25 @@ export default function StepViz({ steps, children }: Props) {
             {step + 1} / {steps.length}
           </span>
         </div>
-        <div className="hidden min-w-0 sm:flex sm:overflow-x-auto">
+        <div className="hidden min-w-0 gap-1.5 sm:flex sm:overflow-hidden">
           {steps.map((item, i) => {
             const itemLabel = typeof item === "string" ? item : item.label;
+            const tabLabel = typeof item === "string" ? item : (item.tabLabel ?? item.label);
             const isActive = i === step;
             return (
               <button
-                key={`${i}-${itemLabel}`}
+                key={`${i}-${tabLabel}`}
                 type="button"
                 onClick={() => setStep(i)}
                 aria-current={isActive ? "step" : undefined}
+                aria-label={`${i + 1}. ${itemLabel}`}
                 title={itemLabel}
-                className={`group relative flex min-w-0 items-start gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors sm:min-w-32 sm:flex-1 ${
+                className={`group relative flex items-start rounded-lg border py-2.5 text-left transition-[color,background-color,border-color,flex] ${
                   isActive
-                    ? "border-primary/40 bg-background text-foreground"
+                    ? "min-w-0 flex-1 gap-2 border-primary/40 bg-background px-3 text-foreground"
                     : i < step
-                      ? "border-border/70 bg-background/70 text-foreground/70"
-                      : "border-transparent bg-transparent text-muted-foreground hover:border-border hover:bg-background"
+                      ? "w-10 flex-none justify-center border-border/70 bg-background/70 px-2 text-foreground/70"
+                      : "w-10 flex-none justify-center border-transparent bg-transparent px-2 text-muted-foreground hover:border-border hover:bg-background"
                 }`}
               >
                 {isActive && (
@@ -95,9 +97,11 @@ export default function StepViz({ steps, children }: Props) {
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="min-w-0 break-words text-xs font-semibold leading-5 [overflow-wrap:anywhere]">
-                  {itemLabel}
-                </span>
+                {isActive ? (
+                  <span className="min-w-0 break-words text-xs font-semibold leading-5 [overflow-wrap:anywhere]">
+                    {tabLabel}
+                  </span>
+                ) : null}
               </button>
             );
           })}

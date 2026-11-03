@@ -6,7 +6,6 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BondCashflowViz from "./bond-pricing-and-yield-curve/viz/BondCashflowViz";
-import BondPricingMapViz from "./bond-pricing-and-yield-curve/viz/BondPricingMapViz";
 import PriceYieldCurveViz from "./bond-pricing-and-yield-curve/viz/PriceYieldCurveViz";
 import YieldCurveShapeViz from "./bond-pricing-and-yield-curve/viz/YieldCurveShapeViz";
 
@@ -20,7 +19,6 @@ import YieldCurveShapeViz from "./bond-pricing-and-yield-curve/viz/YieldCurveSha
 export default function BondPricingAndYieldCurveArticle() {
   return (
     <div className="space-y-16">
-      <BondPricingMapViz />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           채권은 2편의 할인 식에 현금흐름을 꽂아 넣은 첫 사례입니다
@@ -45,6 +43,8 @@ export default function BondPricingAndYieldCurveArticle() {
             이야기가 늘 &ldquo;금리가 오르면 채권값이 떨어진다&rdquo;로 시작하는 이유입니다.
           </p>
         </div>
+
+        <BondCashflowViz />
 
         <ContentBoundary article="bond-pricing-and-yield-curve" />
 
@@ -82,7 +82,6 @@ export default function BondPricingAndYieldCurveArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 1. 현금흐름이 적혀 있으면 가격은 계산의 결과입니다
         </h2>
-        <BondCashflowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             액면 100만 원, 표면금리 연 3%, 만기 3년짜리 채권은 1년 뒤 3만 원,
@@ -259,7 +258,6 @@ export default function BondPricingAndYieldCurveArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 3. 가격이 얼마나 흔들릴지는 현금흐름의 무게중심이 정합니다
         </h2>
-        <PriceYieldCurveViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             이제 첫 질문에 답할 차례입니다. 금리가 1%포인트 오를 때 가격이 0.9% 떨어지는 채권이 있고 18% 떨어지는 채권이 있습니다. 차이는 돈이 언제 들어오느냐에서 생깁니다.
@@ -352,6 +350,8 @@ export default function BondPricingAndYieldCurveArticle() {
           interpretation="수정 듀레이션이 8인 채권은 금리가 1%포인트 오를 때 가격이 약 8% 떨어집니다. 여기서 읽어야 할 것은 만기가 아니라 듀레이션이 위험의 척도라는 점입니다. 읽으면 안 되는 것은 이 값이 항상 정확하다는 생각입니다. 볼록성 항이 말해 주듯 실제 손실은 직선 근사보다 작고 이익은 더 크며, 변화가 클수록 그 차이가 벌어집니다."
         />
 
+        <PriceYieldCurveViz />
+
         <div id="duration-use" className="scroll-mt-20">
           <h3 className="mb-4 mt-12 text-xl font-bold">
             같은 만기라도 듀레이션은 다를 수 있습니다
@@ -402,7 +402,6 @@ export default function BondPricingAndYieldCurveArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 4. 만기마다 금리가 다르므로 하나의 y로는 부족합니다
         </h2>
-        <YieldCurveShapeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             지금까지 모든 기간에 같은 y를 썼습니다. 편했지만 사실이 아닙니다.
@@ -428,6 +427,8 @@ export default function BondPricingAndYieldCurveArticle() {
             할인하는 것이 정확한 계산입니다.
           </p>
         </div>
+
+        <YieldCurveShapeViz />
 
         <div id="curve-shapes" className="scroll-mt-20">
           <h3 className="mb-4 mt-12 text-xl font-bold">

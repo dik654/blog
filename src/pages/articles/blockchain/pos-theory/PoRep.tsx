@@ -9,10 +9,14 @@ export default function PoRep() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          같은 raw data 한 벌로 replica 여러 개의 보상을 받는 deduplication attack을 줄이려면 claimed replica마다 committed
-          representation이 서로 달라야 합니다. Filecoin sealing은 exact sector data와 provider·sector·protocol
-          randomness에서 replica identity를 뽑아냅니다. 여기에 construction-specific encoding을 건 다음 data commitment와
-          replica commitment의 관계를 succinct proof로 검증합니다.
+          같은 raw data 한 벌로 replica 여러 개의 보상을 받는 공격을 줄이려면
+          claimed replica마다 committed representation이 달라야 합니다. Filecoin
+          sealing은 sector data와 provider·sector·protocol randomness에서
+          replica identity를 만듭니다.
+        </p>
+        <p>
+          그 identity로 construction-specific encoding을 수행한 뒤 data
+          commitment와 replica commitment의 관계를 succinct proof로 검증합니다.
         </p>
       </div>
       <PoRepFlowViz />
@@ -30,38 +34,99 @@ export default function PoRep() {
           C_{R_i}&=\underbrace{C(R_i)}_{\text{replica별로 다른 commitment}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`E(D,i)`, annotation: ["sector data D와 replica identity i","(provider·sector·ticket)를 함께 받아","i마다 다른 encoded replica"] },
-          { expression: String.raw`C(D)`, annotation: ["replica와 무관한 원본 data의","commitment. 같은 D면 모든 replica가 공유"] },
-          { expression: String.raw`C(R_i)`, annotation: ["encoded replica의 commitment.","replica_id₁≠replica_id₂면 같은 D라도","C_R₁≠C_R₂여야 dedup attack 차단"] },
+          {
+            expression: String.raw`E(D,i)`,
+            annotation: [
+              "sector data D와 replica identity i",
+              "(provider·sector·ticket)를 함께 받아",
+              "i마다 다른 encoded replica",
+            ],
+          },
+          {
+            expression: String.raw`C(D)`,
+            annotation: [
+              "replica와 무관한 원본 data의",
+              "commitment. 같은 D면 모든 replica가 공유",
+            ],
+          },
+          {
+            expression: String.raw`C(R_i)`,
+            annotation: [
+              "encoded replica의 commitment.",
+              "replica_id₁≠replica_id₂면 같은 D라도",
+              "C_R₁≠C_R₂여야 dedup attack 차단",
+            ],
+          },
         ]}
         terms={[
-          { symbol: "D", name: "sector data", description: "Padding·piece layout까지 확정된 source sector bytes입니다." },
-          { symbol: String.raw`\mathrm{replica\_id}_i`, name: "replica identity", description: "Provider·sector·ticket 등 protocol inputs에 귀속되는 context입니다." },
-          { symbol: String.raw`R_i`, name: "encoded replica", description: "Identity i에 맞게 encoding된 stored representation입니다." },
-          { symbol: String.raw`C_D,C_{R_i}`, name: "commitments", description: "Data와 encoded replica를 proof statement에 묶는 commitments입니다." },
+          {
+            symbol: "D",
+            name: "sector data",
+            description:
+              "Padding·piece layout까지 확정된 source sector bytes입니다.",
+          },
+          {
+            symbol: String.raw`\mathrm{replica\_id}_i`,
+            name: "replica identity",
+            description:
+              "Provider·sector·ticket 등 protocol inputs에 귀속되는 context입니다.",
+          },
+          {
+            symbol: String.raw`R_i`,
+            name: "encoded replica",
+            description:
+              "Identity i에 맞게 encoding된 stored representation입니다.",
+          },
+          {
+            symbol: String.raw`C_D,C_{R_i}`,
+            name: "commitments",
+            description:
+              "Data와 encoded replica를 proof statement에 묶는 commitments입니다.",
+          },
         ]}
-        assumptions={["Encode·Commit·proof statement는 선택한 PoRep construction과 network version에 고정합니다.", "Physical-device independence나 geographic diversity를 commitment 하나로 직접 관측한다고 가정하지 않습니다."]}
+        assumptions={[
+          "Encode·Commit·proof statement는 선택한 PoRep construction과 network version에 고정합니다.",
+          "Physical-device independence나 geographic diversity를 commitment 하나로 직접 관측한다고 가정하지 않습니다.",
+        ]}
         interpretation="replica_id₁≠replica_id₂이면 같은 D에서도 R₁과 R₂의 commitment가 달라져야 합니다. Verifier는 proof가 C_D·C_R·public inputs를 같은 instance로 묶는지 확인합니다."
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>구현 수치를 이론 정의와 분리합니다</h3>
         <p>
-          Sealing phase 수, graph layer 수, sector size, proof system, proof bytes, 시간과 hardware는 network
-          upgrade·proof parameter·implementation에 따라 달라집니다. 따라서 고정된 “몇 시간·몇 byte”를 PoRep의 정의로 쓰는 대신 network
-          version·proving parameter digest·hardware·peak memory·wall time을 run receipt에 남깁니다.
+          Sealing phase와 graph layer, sector size, proof system은 network
+          upgrade와 proof parameter에 따라 달라집니다. Proof bytes와 실행 시간,
+          필요한 hardware도 구현마다 달라집니다.
+        </p>
+        <p>
+          따라서 고정된 “몇 시간·몇 byte”를 PoRep의 정의로 쓰지 않습니다.
+          Network version과 parameter digest, hardware, peak memory와 wall
+          time을 실행 기록에 남깁니다.
         </p>
       </div>
-      <div id="paper-filecoin-porep" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+      <div
+        id="paper-filecoin-porep"
+        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+      >
         <p className="text-xs font-bold text-primary">
-            PoRep와 PoSt, 논문으로 읽기
-          </p>
-        <p className="mt-2 text-sm font-semibold">Filecoin: A Decentralized Storage Network</p>
+          PoRep와 PoSt, 논문으로 읽기
+        </p>
+        <p className="mt-2 text-sm font-semibold">
+          Filecoin: A Decentralized Storage Network
+        </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            decentralized storage market에서 claimed storage를 공개 검증하는 것이 문제입니다. Proof-of-Replication과 Proof-of-
-            Spacetime, market·power accounting의 초기 설계를 제시할 뿐 현재 production proof constants·actors·penalties의
-            최종 규격으로 읽으면 안 됩니다.
-          </p>
-        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://filecoin.io/filecoin.pdf" target="_blank" rel="noreferrer">Filecoin paper 보기</a>
+          decentralized storage market에서 claimed storage를 공개 검증하는 것이
+          문제입니다. Proof-of-Replication과 Proof-of- Spacetime, market·power
+          accounting의 초기 설계를 제시할 뿐 현재 production proof
+          constants·actors·penalties의 최종 규격으로 읽으면 안 됩니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://filecoin.io/filecoin.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Filecoin paper 보기
+        </a>
       </div>
     </section>
   );

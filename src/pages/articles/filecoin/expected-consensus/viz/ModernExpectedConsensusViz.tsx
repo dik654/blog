@@ -102,41 +102,43 @@ export function ExpectedConsensusTraceViz() {
   >
     <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Filecoin Expected Consensus 요청 흐름 장면 탐색기">
       <div data-viz-live-only className="space-y-4">
-        <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-8">
-          {TRACE_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black transition-colors duration-300 ${index === scenes.active ? "border-primary bg-primary/10" : index < scenes.active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
-        </div>
+        <div data-viz-scene-stage className="min-h-[34rem] space-y-4 sm:min-h-[27rem] xl:min-h-[24rem]">
+          <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-8">
+            {TRACE_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black transition-colors duration-300 ${index === scenes.active ? "border-primary bg-primary/10" : index < scenes.active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
+          </div>
 
-        <div className="grid gap-px bg-border p-px lg:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)]">
-          <div className="bg-background p-4 sm:p-5">
-            <p className="text-[10px] font-black text-primary">현재 상태 소유자 · {scene.owner}</p>
-            <h4 className="mt-2 break-keep text-base font-black leading-6 sm:text-lg">{scene.title}</h4>
-            <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
-            <div className="mt-3 border-t border-border pt-3 sm:hidden">
-              <p className="text-[9px] font-bold text-muted-foreground">현재 단계의 증거</p>
-              <p className="mt-1 border-l-2 border-primary pl-2 font-mono text-xs font-black">{scene.evidence}</p>
+          <div className="grid gap-px bg-border p-px lg:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)]">
+            <div className="bg-background p-4 sm:p-5">
+              <p className="text-[10px] font-black text-primary">현재 상태 소유자 · {scene.owner}</p>
+              <h4 className="mt-2 break-keep text-base font-black leading-6 sm:text-lg">{scene.title}</h4>
+              <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
+              <div className="mt-3 border-t border-border pt-3 sm:hidden">
+                <p className="text-[9px] font-bold text-muted-foreground">현재 단계의 증거</p>
+                <p className="mt-1 border-l-2 border-primary pl-2 font-mono text-xs font-black">{scene.evidence}</p>
+              </div>
+              <div className="mt-5 h-1.5 bg-border/70" aria-label={`전체 진행 ${scenes.active + 1}/${TRACE_SCENES.length}`}>
+                <div className="h-full bg-primary transition-[width] duration-500" style={{ width: `${((scenes.active + 1) / TRACE_SCENES.length) * 100}%` }} />
+              </div>
             </div>
-            <div className="mt-5 h-1.5 bg-border/70" aria-label={`전체 진행 ${scenes.active + 1}/${TRACE_SCENES.length}`}>
-              <div className="h-full bg-primary transition-[width] duration-500" style={{ width: `${((scenes.active + 1) / TRACE_SCENES.length) * 100}%` }} />
+            <div className="hidden bg-background p-4 sm:block sm:p-5">
+              <p className="text-[9px] font-bold text-muted-foreground">현재 단계가 남기는 증거</p>
+              <p className="mt-2 border-l-2 border-primary pl-3 font-mono text-sm font-black">{scene.evidence}</p>
+              <p className="mt-4 text-[9px] leading-5 text-muted-foreground">이 증거는 바로 다음 판단의 입력입니다. 뒤 단계의 성공을 대신하지 않습니다.</p>
             </div>
           </div>
-          <div className="hidden bg-background p-4 sm:block sm:p-5">
-            <p className="text-[9px] font-bold text-muted-foreground">현재 단계가 남기는 증거</p>
-            <p className="mt-2 border-l-2 border-primary pl-3 font-mono text-sm font-black">{scene.evidence}</p>
-            <p className="mt-4 text-[9px] leading-5 text-muted-foreground">이 증거는 바로 다음 판단의 입력입니다. 뒤 단계의 성공을 대신하지 않습니다.</p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-          {[
-            ["요청", scene.request],
-            ["block·tipset", scene.block],
-            ["EC local head", scene.chain],
-            ["F3 확정 prefix", scene.finality],
-          ].map(([label, value], index) => <div key={label} className={`relative min-w-0 border bg-background p-3 ${index === Math.min(3, Math.floor(scenes.active / 2)) ? "border-primary/60" : "border-border"}`}>
-            <span className={`absolute -left-1 top-4 size-2 ${index <= Math.floor(scenes.active / 2) ? "bg-primary" : "bg-border"}`} />
-            <p className="text-[9px] font-bold text-muted-foreground">{label}</p>
-            <p className="mt-2 break-keep font-mono text-[10px] font-bold leading-5">{value}</p>
-          </div>)}
+          <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+            {[
+              ["요청", scene.request],
+              ["block·tipset", scene.block],
+              ["EC local head", scene.chain],
+              ["F3 확정 prefix", scene.finality],
+            ].map(([label, value], index) => <div key={label} className={`relative min-w-0 border bg-background p-3 ${index === Math.min(3, Math.floor(scenes.active / 2)) ? "border-primary/60" : "border-border"}`}>
+              <span className={`absolute -left-1 top-4 size-2 ${index <= Math.floor(scenes.active / 2) ? "bg-primary" : "bg-border"}`} />
+              <p className="text-[9px] font-bold text-muted-foreground">{label}</p>
+              <p className="mt-2 break-keep font-mono text-[10px] font-bold leading-5">{value}</p>
+            </div>)}
+          </div>
         </div>
 
         <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="전체 경로 재생" compact />
@@ -278,22 +280,24 @@ export function HeadChangeTraceViz() {
   >
     <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="EC head와 F3 확정 prefix 변화 장면 탐색기">
       <div data-viz-live-only className="space-y-4">
-        <div className="grid gap-px bg-border p-px sm:grid-cols-[6rem_minmax(0,1fr)_8rem]">
-          <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">현재 epoch</p><strong className="mt-1 block font-mono text-lg">{scene.epoch}</strong></div>
-          <div className="bg-background p-3 sm:p-4"><p className="text-[9px] font-bold text-primary">{scenes.active + 1}. {HEAD_LABELS[scenes.active]}</p><h4 className="mt-1 break-keep text-sm font-black leading-6">{scene.title}</h4><p className="mt-1 break-keep text-[10px] leading-5 text-muted-foreground">{scene.detail}</p></div>
-          <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">상태 전이</p><strong className="mt-1 block break-keep font-mono text-[10px] leading-5">{scene.action}</strong></div>
-        </div>
+        <div data-viz-scene-stage className="min-h-[32rem] space-y-4 sm:min-h-[24rem]">
+          <div className="grid gap-px bg-border p-px sm:grid-cols-[6rem_minmax(0,1fr)_8rem]">
+            <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">현재 epoch</p><strong className="mt-1 block font-mono text-lg">{scene.epoch}</strong></div>
+            <div className="bg-background p-3 sm:p-4"><p className="text-[9px] font-bold text-primary">{scenes.active + 1}. {HEAD_LABELS[scenes.active]}</p><h4 className="mt-1 break-keep text-sm font-black leading-6">{scene.title}</h4><p className="mt-1 break-keep text-[10px] leading-5 text-muted-foreground">{scene.detail}</p></div>
+            <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">상태 전이</p><strong className="mt-1 block break-keep font-mono text-[10px] leading-5">{scene.action}</strong></div>
+          </div>
 
-        <div className="relative overflow-hidden border border-border bg-background p-4 sm:p-6">
-          <div className="absolute bottom-4 left-[4.4rem] top-4 w-px bg-foreground/30 sm:left-[6.5rem]" aria-hidden="true" />
-          <div className="grid grid-cols-[4rem_minmax(0,1fr)] gap-4 sm:grid-cols-[6rem_minmax(0,1fr)]">
-            <div className="space-y-10 py-2 text-right font-mono text-[9px] text-muted-foreground"><p>T98</p><p>T100</p><p>101+</p></div>
-            <div className="space-y-5">
-              <div className="flex items-center gap-2"><span className="size-3 rounded-full bg-foreground" /><strong className="text-[10px]">공통 prefix</strong><span className="ml-auto border border-primary/60 px-2 py-1 font-mono text-[9px] font-black text-primary">F3 · {scene.f3}</span></div>
-              <div className="ml-1 h-5 border-l border-foreground/30" />
-              <div className="grid grid-cols-2 gap-3">
-                <div className={`min-w-0 border p-3 transition-colors duration-300 ${scene.x === "head" ? "border-primary bg-primary/10" : "border-border bg-muted/20 text-muted-foreground"}`}><p className="text-[9px] font-black">branch X</p><p className="mt-1 break-keep font-mono text-[9px]">T101 · M5 receipt</p><p className="mt-2 text-[9px] font-bold">{scene.x}</p></div>
-                <div className={`min-w-0 border p-3 transition-colors duration-300 ${scene.y.includes("head") || scene.y === "heavier" ? "border-primary bg-primary/10" : "border-border bg-background"}`}><p className="text-[9px] font-black">branch Y</p><p className="mt-1 break-keep font-mono text-[9px]">T101′ → T102′</p><p className="mt-2 text-[9px] font-bold">{scene.y}</p></div>
+          <div className="relative overflow-hidden border border-border bg-background p-4 sm:p-6">
+            <div className="absolute bottom-4 left-[4.4rem] top-4 w-px bg-foreground/30 sm:left-[6.5rem]" aria-hidden="true" />
+            <div className="grid grid-cols-[4rem_minmax(0,1fr)] gap-4 sm:grid-cols-[6rem_minmax(0,1fr)]">
+              <div className="space-y-10 py-2 text-right font-mono text-[9px] text-muted-foreground"><p>T98</p><p>T100</p><p>101+</p></div>
+              <div className="space-y-5">
+                <div className="flex items-center gap-2"><span className="size-3 rounded-full bg-foreground" /><strong className="text-[10px]">공통 prefix</strong><span className="ml-auto border border-primary/60 px-2 py-1 font-mono text-[9px] font-black text-primary">F3 · {scene.f3}</span></div>
+                <div className="ml-1 h-5 border-l border-foreground/30" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div className={`min-w-0 border p-3 transition-colors duration-300 ${scene.x === "head" ? "border-primary bg-primary/10" : "border-border bg-muted/20 text-muted-foreground"}`}><p className="text-[9px] font-black">branch X</p><p className="mt-1 break-keep font-mono text-[9px]">T101 · M5 receipt</p><p className="mt-2 text-[9px] font-bold">{scene.x}</p></div>
+                  <div className={`min-w-0 border p-3 transition-colors duration-300 ${scene.y.includes("head") || scene.y === "heavier" ? "border-primary bg-primary/10" : "border-border bg-background"}`}><p className="text-[9px] font-black">branch Y</p><p className="mt-1 break-keep font-mono text-[9px]">T101′ → T102′</p><p className="mt-2 text-[9px] font-bold">{scene.y}</p></div>
+                </div>
               </div>
             </div>
           </div>

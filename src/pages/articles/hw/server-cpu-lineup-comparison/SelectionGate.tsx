@@ -3,9 +3,24 @@ import { CitationBlock } from "@/components/ui/citation";
 import GateViz from "./viz/GateViz";
 
 const SNAPSHOT = [
-  { tier: "서버 계열 (2소켓)", lanes: "소켓당 128레인 수준", channels: "12채널", note: "가속기 8장 + NIC + NVMe 구성의 기준" },
-  { tier: "워크스테이션 계열", lanes: "128레인 수준", channels: "8채널", note: "단일 소켓, 가속기 2~4장 작업 기기" },
-  { tier: "고성능 데스크톱 계열", lanes: "48레인 수준", channels: "4~8채널", note: "가속기 1~2장. 8장 구성에는 예산 부족" },
+  {
+    tier: "EPYC 9005 · 1소켓",
+    lanes: "최대 128 PCIe 5.0",
+    channels: "12채널",
+    note: "서버 운영 기능은 실제 보드·섀시에서 확인",
+  },
+  {
+    tier: "Threadripper PRO 9000 WX · WRX90",
+    lanes: "144 사용 가능 · 최대 128 Gen 5",
+    channels: "8채널",
+    note: "단일 소켓 다중 GPU 워크스테이션 예시",
+  },
+  {
+    tier: "Threadripper 9000 · TRX50",
+    lanes: "88 사용 가능 · 최대 80 Gen 5",
+    channels: "4채널",
+    note: "같은 sTR5라도 PRO 플랫폼과 예산이 다름",
+  },
 ];
 
 export default function SelectionGate() {
@@ -20,14 +35,14 @@ export default function SelectionGate() {
         </p>
 
         <p className="leading-7">
-          계산 순서는 네 단계입니다. 가속기 수와 종류로 레인 요구를 정하고, 네트워크와 저장장치를 더하고,
-          데이터 공급 경로에 필요한 메모리 대역폭을 가늠한 뒤, 운영 요구에서 관리·이중화 기능을 확인합니다.
-          여기까지 하면 후보 계열이 하나나 둘로 좁혀집니다.
+          계산 순서는 여섯 단계입니다. 장치 목록과 레인 예산, 메모리 요구, 호스트 작업과 NUMA를 먼저 적습니다.
+          그다음 전력·냉각·섀시 한계를 확인하고, 마지막에 소프트웨어 라이선스와 원격 관리·이중화 비용을 더합니다.
+          코어당 또는 소켓당 과금하는 소프트웨어라면 CPU를 하나 늘리는 결정이 구매가보다 더 비쌀 수도 있습니다.
         </p>
       </div>
 
-      <div className="not-prose my-6 overflow-x-auto">
-        <table className="w-full min-w-[680px] border border-border text-sm">
+      <div className="not-prose my-6">
+        <table className="hidden w-full border border-border text-sm md:table">
           <thead>
             <tr className="bg-muted/50">
               {["계열", "PCIe 레인", "메모리 채널", "맞는 구성"].map((h) => (
@@ -48,18 +63,34 @@ export default function SelectionGate() {
             ))}
           </tbody>
         </table>
+        <div className="grid gap-3 md:hidden">
+          {SNAPSHOT.map((row) => (
+            <article key={row.tier} className="min-w-0 border border-border bg-card p-4">
+              <h3 className="break-keep text-sm font-bold leading-6">{row.tier}</h3>
+              <dl className="mt-3 grid grid-cols-[5.5rem_minmax(0,1fr)] gap-x-3 gap-y-2 text-sm leading-6">
+                <dt className="font-semibold text-muted-foreground">PCIe 레인</dt>
+                <dd className="min-w-0 break-words">{row.lanes}</dd>
+                <dt className="font-semibold text-muted-foreground">메모리</dt>
+                <dd>{row.channels}</dd>
+                <dt className="font-semibold text-muted-foreground">읽는 법</dt>
+                <dd className="min-w-0 break-words text-muted-foreground">{row.note}</dd>
+              </dl>
+            </article>
+          ))}
+        </div>
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-sm leading-6 text-muted-foreground">
-          기준일 2026-09-11. 계열별 대표값이며 같은 계열 안에서도 모델에 따라 다릅니다. 구체적인 레인·채널 수는
-          해당 세대의 공식 제품 사양과 메인보드 문서를 함께 확인해야 합니다.
+          기준일 2026-11-02. 위 표는 추상적인 계열 평균이 아니라 공식 문서에서 확인한 세 가지 구체적 플랫폼
+          예시입니다. 실제 슬롯 폭과 슬롯끼리의 공유 조건은 CPU 숫자만으로 확정되지 않으므로 메인보드 블록도와
+          슬롯 장착표를 함께 확인해야 합니다.
         </p>
 
         <p className="leading-7">
-          표에서 읽어야 할 것은 개별 숫자가 아니라 계열 사이의 간격입니다. 데스크톱 계열과 서버 계열의 레인
-          차이가 두 배를 넘고, 이 차이가 곧 붙일 수 있는 가속기 수를 정합니다. 코어 수는 이 간격과 거의 무관하게
-          겹쳐 있어서 선택 기준이 되기 어렵습니다.
+          이 표의 결론은 “서버 CPU가 항상 정답”이 아닙니다. 176레인 사례는 세 플랫폼 모두 직접 연결 예산이
+          모자라므로, 2소켓·PCIe 스위치·장치 폭 축소·장치 수 축소 가운데 하나를 택해야 합니다. 반대로 필요한
+          장치가 80레인 안쪽이라면 더 작은 플랫폼이 전력·가격·NUMA 복잡성에서 유리할 수 있습니다.
         </p>
       </div>
 
@@ -81,12 +112,20 @@ export default function SelectionGate() {
       </div>
 
       <CitationBlock
-        source="AMD · Intel 공개 프로세서 사양 (2026-09-11 확인)"
+        source="AMD EPYC 9005 Architecture Overview (2026-11-02 확인)"
         citeKey={1}
         href="https://www.amd.com/en/products/processors/server/epyc.html"
       >
-        계열별 레인·채널 대표값은 각 제조사의 공개 제품 사양에서 가져왔습니다. 세대마다 값이 바뀌고 같은 계열
-        안에서도 모델별로 다르므로 기준일과 함께 읽어야 하며, 이 표로 제품 성능을 비교하지 않습니다.
+        EPYC 9005의 1소켓 최대 128 PCIe 레인·12개 메모리 채널과, 2소켓에서 xGMI 링크 수에 따라 외부 PCIe가
+        일반적으로 128개 또는 최대 160개가 되는 경계를 확인했습니다.
+      </CitationBlock>
+      <CitationBlock
+        source="AMD Ryzen Threadripper 9000 Platform Specifications (2026-11-02 확인)"
+        citeKey={2}
+        href="https://www.amd.com/en/products/processors/workstations/ryzen-threadripper.html"
+      >
+        WRX90은 144개 사용 가능 레인·최대 128개 PCIe 5.0·8채널 메모리, TRX50은 88개 사용 가능 레인·최대
+        80개 PCIe 5.0·4채널 메모리를 제공한다는 공식 플랫폼 표를 확인했습니다.
       </CitationBlock>
     </section>
   );

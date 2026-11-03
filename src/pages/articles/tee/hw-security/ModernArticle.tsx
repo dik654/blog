@@ -35,6 +35,7 @@ export default function ModernHardwareSecurityArticle() {
           question="Payroll key를 자동 지급하려면 어떤 조건을 동시에 만족해야 하는가?"
           idea={<>기밀성 하나만 보지 않고 measurement 무결성, freshness, 업무 policy를 Boolean gate로 결합합니다. 하나라도 0이면 자동 지급은 0입니다.</>}
           formula={String.raw`A=C\land I\land F\land P`}
+          mobileFormula={String.raw`A=C\land I\land F\land P`}
           annotatedFormula={String.raw`\underbrace{A}_{\text{key 자동 지급}}=\underbrace{C}_{\text{기밀성}}\land\underbrace{I}_{\text{measurement 무결성}}\land\underbrace{F}_{\text{freshness}}\land\underbrace{P}_{\text{업무 policy}}`}
           operations={[
           { expression: String.raw`C\land I\land F\land P`, annotation: ["기밀성만으로는 부족해 네 조건을 모두 요구", "C=1이어도 F=0이면 replay일 수 있어 A=0", "암호화된 VM이라는 이름만으로 지급 안 함"] },
@@ -53,11 +54,8 @@ export default function ModernHardwareSecurityArticle() {
 
       <section id="roots-resilience" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Root와 resilience</p><h2 className="mt-2 text-2xl font-bold">Root of Trust는 작고 고정된 시작점이며 보호·탐지·복구가 함께 있어야 한다</h2></header>
-        <p>
-          Root of Trust(RoT)는 모든 software를 무조건 신뢰한다는 뜻이 아니라 첫 검증이나 첫 측정을 수행하는 최소 시작점입니다. Boot ROM이나 CPU의
-          hardware-backed key가 다음 firmware를 검증하고 그 firmware가 다시 다음 단계를 검증하거나 측정합니다. 그러나 서명 확인만 성공해도 runtime이
-          계속 정상인 것은 아니므로 firmware protection과 함께 변경 탐지와 known-good 복구 경로가 필요합니다.
-        </p>
+        <p>Root of Trust(RoT)는 모든 software를 무조건 신뢰한다는 뜻이 아닙니다. 첫 검증이나 첫 측정을 수행하는 최소 시작점입니다. Boot ROM이나 CPU의 hardware-backed key가 다음 firmware를 검증하고, 그 firmware가 다시 다음 단계를 검증하거나 측정합니다.</p>
+        <p>서명 확인에 성공했어도 runtime이 계속 정상이라는 보장은 없습니다. 따라서 firmware 보호뿐 아니라 변경 탐지와 정상 상태로 되돌리는 복구 경로가 함께 필요합니다.</p>
         <ul className="grid gap-3 md:grid-cols-3">
           <li className="rounded-lg border border-border p-4"><strong>Protect</strong><p className="mt-2 text-sm text-muted-foreground">승인된 update만 허용하고 rollback·write 경로를 제한합니다.</p></li>
           <li className="rounded-lg border border-border p-4"><strong>Detect</strong><p className="mt-2 text-sm text-muted-foreground">Boot measurement·runtime health·failed validation을 관측합니다.</p></li>
@@ -79,20 +77,14 @@ export default function ModernHardwareSecurityArticle() {
           <div className="rounded-lg border border-border p-5"><h3 className="font-semibold">Secure Boot</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">다음 component의 서명과 policy를 확인해 실행을 허용하거나 거부합니다. 실제 선택된 sequence의 설명서는 아닙니다.</p></div>
           <div className="rounded-lg border border-border p-5"><h3 className="font-semibold">Attestation</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">측정된 상태와 freshness evidence를 원격 verifier에게 전달합니다. 최종 authorization은 relying party policy가 합니다.</p></div>
         </div>
-        <p>
-          Payroll 사례의 안전한 순서는 image와 TCB reference를 version으로 고정하고 fresh attestation을 검증한 뒤에만 session key를 해당
-          channel에 묶어 지급하는 것입니다. Debug가 켜졌거나 patch minimum보다 낮거나 reference manifest가 없으면 fail closed합니다. 반대로
-          host가 실행을 멈추면 secret 미지급에는 성공해도 서비스 가용성에는 실패한 것이니 별도 상태로 기록합니다.
-        </p>
+        <p>Payroll 사례에서는 먼저 image와 TCB 기준값의 버전을 고정합니다. 그다음 최신 attestation을 검증하고, 통과했을 때만 session key를 해당 channel에 묶어 지급합니다. Debug가 켜졌거나 patch 최소선보다 낮거나 기준 manifest가 없으면 지급하지 않습니다.</p>
+        <p>Host가 실행을 멈춘 경우는 따로 봐야 합니다. Secret 미지급에는 성공했지만 서비스 가용성에는 실패했으므로, 보안 성공으로 한데 묶지 않고 별도 상태로 기록합니다.</p>
       </section>
 
       <section id="release-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">제품 이름이 아니라 failure matrix와 evidence receipt로 채택한다</h2></header>
-        <p>
-          기초 여섯 문제에서는 이 글만으로 threat model 네 요소, confidentiality·integrity·freshness·availability, RoT와 chain,
-          protect·detect·recover, 세 control의 역할, Boolean release를 설명할 수 있어야 합니다. 심화 네 문제에서는 replay, stale
-          firmware, malicious shared buffer, denial of service를 넣어 deny·review·recover를 구분합니다.
-        </p>
+        <p>기초 확인에서는 위협을 일으키는 주체, 지킬 자산, 보안 성질과 가정 범위를 말할 수 있어야 합니다. 또한 기밀성·무결성·최신성·가용성, 신뢰의 시작점, 보호·탐지·복구, 세 제어 장치의 역할과 최종 지급 조건을 구별해야 합니다.</p>
+        <p>심화 확인에서는 과거 증거 재사용, 오래된 firmware, 악의적인 공유 buffer와 서비스 중단을 넣습니다. 각 실패를 즉시 거부할지, 사람에게 보낼지, 복구 절차로 넘길지 구분합니다.</p>
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Paired gate:</strong> 같은 workload image·host firmware·policy manifest에서 base/candidate를 실행하고 valid, altered image, old TCB, reused nonce, debug, malformed evidence, host pause를 주입합니다. Secret release count, false accept·false reject, appraisal p95, recovery time, evidence digest를 기록하며 unauthorized release가 한 건이라도 있으면 rollback합니다.</aside>
       </section>
     </article>

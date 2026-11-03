@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileGateRows from "./MobileGateRows";
 
 /** 본문 대응: Seismic.tsx — 무게 중심과 고정 */
 const SCENES = ["무게 중심", "고정하지 않으면", "바닥 고정", "장비와 케이블"] as const;
@@ -39,7 +40,8 @@ export default function SeismicViz() {
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileGateRows step={step} rows={[["무게 중심", "높을수록 전도 모멘트↑"], ["수평 가속", "미끄러짐·기울어짐"], ["구조체 고정", "지정 anchor 방식"], ["내부 연결", "섀시·cable·배관"]]} note="랙 등급·시공·장비·연결을 함께 봅니다" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <line x1={40} y1={160} x2={440} y2={160} stroke={MUTED} strokeWidth={1.25} />
             <g transform={`rotate(${tilt} 140 160)`}>
               <rect x={100} y={40} width={80} height={120} fill={RACK} fillOpacity={0.12} stroke={step === 1 ? BAD : RACK} strokeWidth={1.25} />

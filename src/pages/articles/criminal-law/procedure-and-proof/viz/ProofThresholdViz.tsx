@@ -1,162 +1,100 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-/** 본문 대응: threshold 의 ExplainedFormula — 두 오판 비용의 비가 문턱을 정한다 */
-const SCENES = [
-  "두 잘못이 같은 무게라면",
-  "열 배 무겁다면",
-  "백 배 무겁다면",
-  "문턱을 옮겨 쓰면 어떻게 되는가",
+const STEPS = [
+  { label: "가상 증거 평가를 π=0.92라고 둠", body: "출입 기록·영상·발견 물건과 H의 설명을 본 뒤 92%라고 숫자로 표현할 수 있다고 가정합니다. 실제 법관이 이렇게 확률을 적는다는 뜻이 아닙니다." },
+  { label: "오류 비용이 같으면 장난감 문턱은 50%", body: "r=1이면 r/(1+r)=1/2입니다. π=0.92가 이를 넘으므로 이 모형은 유죄 쪽 기대손실이 작다고 말합니다." },
+  { label: "오유죄가 10배 무거우면 문턱은 약 90.9%", body: "r=10이면 10/11≈0.909입니다. 같은 π=0.92가 아주 조금 넘습니다. 이것은 계산 예이지 형사법의 숫자 기준이 아닙니다." },
+  { label: "100배면 99%라 판정이 바뀌지만 실제 법은 숫자를 쓰지 않음", body: "r=100이면 100/101≈0.990이라 π=0.92는 못 넘습니다. 실제 합리적 의심 없는 증명은 이 r이나 π를 정하지 않고 증거 전체와 남은 합리적 대안을 이유로 평가합니다." },
 ] as const;
 
-/** 무고한 유죄의 무게가 놓아주는 것의 몇 배인가 */
-const RATIOS = [1, 10, 100] as const;
-
-const OK = "#10b981";
-const WARN = "#ef4444";
-const ACCENT = "#6366f1";
-const MUTED = "#94a3b8";
-
+const C = { evidence: "#0284c7", threshold: "#4f46e5", convict: "#dc2626", acquit: "#059669", caution: "#d97706", muted: "#64748b" } as const;
+const PI = 0.92;
 const threshold = (r: number) => r / (1 + r);
-const pct = (v: number) => `${Math.round(v * 1000) / 10}`;
+const pct = (n: number) => `${(n * 100).toFixed(n === 0.5 ? 0 : 1)}%`;
 
-const X0 = 60;
-const SPAN = 360;
-const toX = (p: number) => X0 + p * SPAN;
+function currentRatio(step: number) {
+  if (step <= 1) return 1;
+  if (step === 2) return 10;
+  return 100;
+}
+
+function MobileThreshold({ step }: { step: number }) {
+  const r = currentRatio(step);
+  const t = threshold(r);
+  const verdict = PI > t ? "장난감 모형: 유죄 쪽 손실이 작음" : "장난감 모형: 무죄 쪽 손실이 작음";
+  return (
+    <svg className="block sm:!hidden" viewBox="0 0 360 390" role="img" aria-label="같은 가상 증거 확률과 다른 오류 비용 비를 비교하는 모바일 도식">
+      <rect x="40" y="18" width="280" height="60" rx="11" fill="#0284c712" stroke={C.evidence} strokeWidth="1.2" />
+      <text x="180" y="40" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={C.evidence}>가상 증거 평가 π = 0.92</text>
+      <text x="180" y="59" textAnchor="middle" fontSize="9.5" fill="currentColor">실제 법정 수치가 아닌 사고실험의 입력</text>
+
+      <line x1="38" y1="126" x2="322" y2="126" stroke={C.muted} strokeWidth="1.2" />
+      {[0, 0.5, 0.75, 1].map((tick) => {
+        const x = 38 + tick * 284;
+        return <g key={tick}><line x1={x} y1="120" x2={x} y2="132" stroke={C.muted} strokeWidth="1.2" /><text x={x} y="147" textAnchor="middle" fontSize="8.8" fill={C.muted}>{Math.round(tick * 100)}%</text></g>;
+      })}
+      <line x1={38 + t * 284} y1="99" x2={38 + t * 284} y2="160" stroke={C.threshold} strokeWidth="1.2" />
+      <circle cx={38 + t * 284} cy="99" r="4" fill={C.threshold} />
+      <text x={Math.min(314, Math.max(46, 38 + t * 284))} y="88" textAnchor={t > 0.85 ? "end" : "middle"} fontSize="9.5" fontWeight="700" fill={C.threshold}>문턱 {pct(t)}</text>
+      <line x1={38 + PI * 284} y1="113" x2={38 + PI * 284} y2="171" stroke={C.evidence} strokeWidth="1.2" />
+      <circle cx={38 + PI * 284} cy="171" r="4.5" fill={C.evidence} />
+      <text x={38 + PI * 284} y="188" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={C.evidence}>π 92%</text>
+
+      <rect x="42" y="210" width="276" height="70" rx="11" fill={PI > t ? "#dc262612" : "#05966912"} stroke={PI > t ? C.convict : C.acquit} strokeWidth="1.2" />
+      <text x="180" y="234" textAnchor="middle" fontSize="10" fontWeight="700" fill={PI > t ? C.convict : C.acquit}>{verdict}</text>
+      <text x="180" y="255" textAnchor="middle" fontSize="9.5" fill="currentColor">r={r} → 문턱 {r}/{1 + r} = {pct(t)}</text>
+      <text x="180" y="271" textAnchor="middle" fontSize="9" fill="currentColor" opacity="0.68">같은 π여도 가정한 오류 비가 판정을 바꿈</text>
+
+      <rect x="32" y="306" width="296" height="56" rx="11" fill="#d9770612" stroke={C.caution} strokeWidth="1.2" />
+      <text x="180" y="329" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.caution}>{step === 3 ? "실제 법: 합리적 의심 없음 ≠ 99%" : "아직 법적 증명 기준을 계산한 것이 아닙니다"}</text>
+      <text x="180" y="348" textAnchor="middle" fontSize="9.2" fill="currentColor">{step === 3 ? "증거 전체·대안 설명·이유 제시로 판단" : "π와 r 모두 학습용 가정"}</text>
+      <text x="180" y="385" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={C.caution}>구조를 이해하되 숫자를 법정 기준으로 읽지 않습니다</text>
+    </svg>
+  );
+}
 
 export default function ProofThresholdViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
-  const step = scenes.active;
-  const r = RATIOS[Math.min(step, RATIOS.length - 1)];
-  const t = threshold(r);
-
-  const NOTES = [
-    `무고한 유죄와 놓아주는 것의 무게가 같다면 문턱은 ${pct(t)}퍼센트입니다. 조금이라도 더 그럴듯한 쪽으로 정하면 된다는 뜻이고, 사인끼리 다투는 사건에서 쓰는 기준이 여기 가깝습니다.`,
-    `무고한 유죄가 ${r}배 무겁다면 문턱은 ${pct(t)}퍼센트로 올라갑니다. 열 명을 놓치더라도 한 명을 잘못 벌하지 말라는 말이 이 비를 고른 것이고, 그 비가 이 문턱을 만듭니다.`,
-    `${r}배로 두면 문턱이 ${pct(t)}퍼센트가 됩니다. 비를 올릴수록 문턱은 1에 가까워지지만 결코 1이 되지는 않습니다. 확실해야 한다는 말이 완전히 확실해야 한다는 뜻일 수는 없습니다.`,
-    "문턱을 맞바꿔 쓰면 두 방향으로 어긋납니다. 사인끼리 다투는 사건에 형사 문턱을 쓰면 옳은 청구의 대부분이 기각되고, 형사 사건에 사인 사이의 문턱을 쓰면 무고한 유죄가 크게 늘어납니다.",
-  ] as const;
-
   return (
-    <VizFrame
-      eyebrow="문턱"
-      title="얼마나 확실해야 벌할 수 있는지는 두 잘못의 무게가 정합니다"
-      description="무게가 같으면 반반이고, 한쪽이 무거우면 그만큼 옮겨 갑니다."
-      note="두 잘못의 무게를 같은 단위로 견줄 수 있다고 둔 계산입니다. 실제로는 그 비를 정하는 일 자체가 사회의 선택입니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="오판 비용의 비와 유죄 문턱"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+    <StepViz steps={STEPS}>
+      {(step) => {
+        const r = currentRatio(step);
+        const t = threshold(r);
+        const verdict = PI > t;
+        return (
+          <>
+            <MobileThreshold step={step} />
+            <svg className="!hidden sm:!block" viewBox="0 0 700 300" role="img" aria-label="같은 가상 증거 확률과 다른 오류 비용 비를 비교하는 도식">
+              <rect x="28" y="32" width="202" height="70" rx="12" fill="#0284c712" stroke={C.evidence} strokeWidth="1.2" />
+              <text x="129" y="58" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={C.evidence}>가상 증거 평가 π = 0.92</text>
+              <text x="129" y="79" textAnchor="middle" fontSize="9.3" fill="currentColor">실제 법정 수치가 아닌 입력</text>
+              <text x="129" y="94" textAnchor="middle" fontSize="8.5" fill="currentColor" opacity="0.65">출입 기록 · 영상 · 발견 물건 · H의 설명</text>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              {step < 3 ? (
-                <g>
-                  <text x={X0} y={30} fontSize={9} fontWeight={700} fill={MUTED}>
-                    무고한 유죄가 놓아주는 것보다
-                  </text>
-                  <text x={X0 + 150} y={30} fontSize={11} fontWeight={700} fill={WARN}>
-                    {r}배 무겁다
-                  </text>
+              <line x1="274" y1="90" x2="650" y2="90" stroke={C.muted} strokeWidth="1.2" />
+              {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
+                const x = 274 + tick * 376;
+                return <g key={tick}><line x1={x} y1="84" x2={x} y2="96" stroke={C.muted} strokeWidth="1.2" /><text x={x} y="111" textAnchor="middle" fontSize="8.5" fill={C.muted}>{Math.round(tick * 100)}%</text></g>;
+              })}
+              <line x1={274 + t * 376} y1="50" x2={274 + t * 376} y2="124" stroke={C.threshold} strokeWidth="1.2" />
+              <circle cx={274 + t * 376} cy="50" r="4" fill={C.threshold} />
+              <text x={Math.min(648, 274 + t * 376)} y="40" textAnchor={t > 0.85 ? "end" : "middle"} fontSize="9.5" fontWeight="700" fill={C.threshold}>장난감 문턱 {pct(t)}</text>
+              <line x1={274 + PI * 376} y1="74" x2={274 + PI * 376} y2="136" stroke={C.evidence} strokeWidth="1.2" />
+              <circle cx={274 + PI * 376} cy="136" r="4.5" fill={C.evidence} />
+              <text x={274 + PI * 376} y="154" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={C.evidence}>π 92%</text>
 
-                  <rect x={X0} y={52} width={toX(t) - X0} height={22} fill={OK} fillOpacity={0.18} stroke={OK} strokeWidth={1} />
-                  <rect x={toX(t)} y={52} width={toX(1) - toX(t)} height={22} fill={WARN} fillOpacity={0.25} stroke={WARN} strokeWidth={1} />
-                  <text x={X0 + 8} y={67} fontSize={8.5} fontWeight={700} fill={OK}>
-                    무죄
-                  </text>
-                  <text x={toX(1) - 8} y={67} textAnchor="end" fontSize={8.5} fontWeight={700} fill={WARN}>
-                    유죄
-                  </text>
+              <rect x="78" y="176" width="260" height="72" rx="12" fill={verdict ? "#dc262612" : "#05966912"} stroke={verdict ? C.convict : C.acquit} strokeWidth="1.2" />
+              <text x="208" y="201" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={verdict ? C.convict : C.acquit}>{verdict ? "모형: 유죄 쪽 기대손실이 작음" : "모형: 무죄 쪽 기대손실이 작음"}</text>
+              <text x="208" y="224" textAnchor="middle" fontSize="10" fill="currentColor">r={r} → {r}/{1 + r} = {pct(t)}</text>
+              <text x="208" y="240" textAnchor="middle" fontSize="8.8" fill="currentColor" opacity="0.66">같은 π도 오류 비 가정에 따라 판정이 바뀜</text>
 
-                  <line x1={toX(t)} y1={44} x2={toX(t)} y2={96} stroke={ACCENT} strokeWidth={1.25} />
-                  <text x={toX(t)} y={40} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={ACCENT}>
-                    문턱 {pct(t)}%
-                  </text>
-
-                  <line x1={X0} y1={104} x2={X0 + SPAN} y2={104} stroke={MUTED} strokeWidth={1} />
-                  {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
-                    <g key={tick}>
-                      <line x1={toX(tick)} y1={100} x2={toX(tick)} y2={108} stroke={MUTED} strokeWidth={1} />
-                      <text x={toX(tick)} y={120} textAnchor="middle" fontSize={8} fill={MUTED}>
-                        {pct(tick)}%
-                      </text>
-                    </g>
-                  ))}
-                  <text x={X0 + SPAN} y={136} textAnchor="end" fontSize={8} fill={MUTED}>
-                    증거를 본 뒤의 유죄 확률
-                  </text>
-
-                  <text x={X0} y={162} fontSize={9.5} fontWeight={700} fill={ACCENT}>
-                    문턱 = 비 ÷ (1 + 비) = {r} ÷ {1 + r} = {pct(t)}퍼센트
-                  </text>
-                  <text x={X0} y={182} fontSize={9} fill={MUTED}>
-                    {r === 1
-                      ? "조금이라도 더 그럴듯한 쪽으로 정하면 됩니다"
-                      : "비를 올릴수록 문턱은 1에 가까워지되 1이 되지는 않습니다"}
-                  </text>
-                </g>
-              ) : (
-                <g>
-                  <text x={36} y={28} fontSize={9} fontWeight={700} fill={MUTED}>
-                    문턱을 맞바꿔 쓰면
-                  </text>
-                  {[
-                    {
-                      label: "사인 사이 다툼에 형사 문턱",
-                      detail: `${pct(threshold(10))}퍼센트를 넘지 못한 옳은 청구가 전부 기각됩니다`,
-                      color: WARN,
-                    },
-                    {
-                      label: "형사 사건에 사인 사이 문턱",
-                      detail: `${pct(threshold(1))}퍼센트만 넘으면 벌하게 되어 무고한 유죄가 크게 늘어납니다`,
-                      color: WARN,
-                    },
-                    {
-                      label: "각자 제 문턱을 쓰면",
-                      detail: "두 잘못의 무게 차이가 각 영역에서 그대로 반영됩니다",
-                      color: OK,
-                    },
-                  ].map((row, i) => (
-                    <g key={row.label}>
-                      <rect x={36} y={42 + i * 40} width={172} height={30} rx={4} fill={row.color} fillOpacity={0.1} stroke={row.color} strokeWidth={1} />
-                      <text x={122} y={61 + i * 40} textAnchor="middle" fontSize={9} fontWeight={700} fill={row.color}>
-                        {row.label}
-                      </text>
-                      <text x={220} y={61 + i * 40} fontSize={9} fill={MUTED}>
-                        {row.detail}
-                      </text>
-                    </g>
-                  ))}
-                  <text x={36} y={180} fontSize={9.5} fontWeight={700} fill={ACCENT}>
-                    문턱이 다른 것은 기준이 느슨해서가 아니라 무게가 다르기 때문입니다
-                  </text>
-                </g>
-              )}
+              <rect x="370" y="176" width="262" height="72" rx="12" fill="#d9770612" stroke={C.caution} strokeWidth="1.2" />
+              <text x="501" y="201" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={C.caution}>{step === 3 ? "실제 법: 합리적 의심 없음 ≠ 99%" : "법적 기준을 산출한 것이 아님"}</text>
+              <text x="501" y="224" textAnchor="middle" fontSize="9.2" fill="currentColor">{step === 3 ? "증거 전체와 대안 설명을 이유로 평가" : "π와 r은 모두 사고실험의 가정"}</text>
+              <text x="501" y="241" textAnchor="middle" fontSize="8.8" fill="currentColor" opacity="0.66">백분율을 판결 기준으로 옮기지 않음</text>
+              <text x="350" y="286" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.caution}>숫자는 오류 배분의 구조를 보이고, 법은 실제 판단 규칙을 정합니다</text>
             </svg>
-          </div>
-
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[step]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
+          </>
+        );
+      }}
+    </StepViz>
   );
 }

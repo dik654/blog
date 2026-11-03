@@ -61,7 +61,7 @@ export default function AlgorithmBlock({
               type="button"
               aria-pressed={activeStage === index}
               onClick={() => setActiveStage(index)}
-              className={`min-h-9 min-w-9 rounded-md border px-2.5 py-1.5 text-xs font-bold ${
+              className={`min-h-11 min-w-11 rounded-md border px-2.5 py-1.5 text-xs font-bold ${
                 activeStage === index
                   ? "border-primary bg-primary/10 text-foreground"
                   : index < activeStage

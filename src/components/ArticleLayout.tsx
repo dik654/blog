@@ -14,7 +14,16 @@ export default function ArticleLayout({ title, children }: Props) {
   return (
     <div className="flex">
       <article ref={articleRef} className="min-w-0 flex-1">
-        <h1 className="text-3xl font-bold tracking-tight mb-8">{title}</h1>
+        <h1 className="mb-8 break-words text-2xl font-bold tracking-tight [overflow-wrap:anywhere] sm:break-keep sm:text-3xl sm:[overflow-wrap:normal]">
+          {title.split(/([·:—/])/g).map((part, index) =>
+            /[·:—/]/.test(part) ? (
+              <span key={`${part}-${index}`}>
+                {part}
+                <wbr />
+              </span>
+            ) : part,
+          )}
+        </h1>
         <div>{children}</div>
       </article>
       <aside className="hidden w-64 shrink-0 ml-10 xl:block">

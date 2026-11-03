@@ -1,8 +1,9 @@
-// gemmini/PE.scala — MacUnit·PE (UC Berkeley Gemmini, commit 참조: ucb-bar/gemmini @ main,
-// 2026-09 clone 기준). systolic array 한 칸의 전체 정의입니다.
-// 본문 대응: MacUnit이 mac-unit 절의 "곱셈+누산 한 사이클" 원자 연산, PE의 when(df==OS)/
+// gemmini/PE.scala — MacUnit·PE (UC Berkeley Gemmini commit
+// 8c3f9923a44a2fe2c7930587be297d6d4f8c09ca). systolic array 한 칸의 전체 정의입니다.
+// 본문 대응: MacUnit이 mac-unit 절의 "곱셈+누산 데이터 경로" 원자 연산, PE의 when(df==OS)/
 // when(df==WS) 분기가 dataflow 절의 Output-/Weight-Stationary, c1·c2 레지스터와
-// flip·shift_offset이 double-buffer 절의 이중 버퍼링에 대응합니다.
+// flip·shift_offset이 double-buffer 절의 이중 버퍼링에 대응합니다. 아래 한국어 주석만
+// 덧붙였고 Chisel 문장은 pinned source와 같습니다.
 // See README.md for license details.
 package gemmini
 
@@ -15,14 +16,14 @@ class PEControl[T <: Data : Arithmetic](accType: T) extends Bundle {
   val shift = UInt(log2Up(accType.getWidth).W)
 }
 
-// article의 "MAC 하나 = 원자 연산" — mac() 한 줄이 곱셈과 누산을 같은 사이클에 묶는다.
+// article의 "MAC 하나 = 원자 연산" — mac() 한 줄이 곱셈과 누산의 조합 논리를 묶는다.
 // PE가 WS/OS 두 dataflow를 모두 지원해도 회로 합성 도구가 MAC을 중복 생성하지 않도록
 // 이 module 하나로 강제 재사용한다(원문 주석 참고).
 class MacUnit[T <: Data](inputType: T, weightType: T, cType: T, dType: T) (implicit ev: Arithmetic[T]) extends Module {
   import ev._
   val io = IO(new Bundle {
     val in_a  = Input(inputType)   // activation
-    val in_b  = Input(weightType)  // weight (WS) 또는 활성 자체(OS 분기에서 재사용)
+    val in_b  = Input(weightType)  // MacUnit port: dataflow 배선 뒤의 두 번째 곱 입력
     val in_c  = Input(cType)       // 누적 중인 partial sum
     val out_d = Output(dType)      // article의 "누산 결과"
   })
@@ -39,7 +40,7 @@ class PE[T <: Data](inputType: T, weightType: T, outputType: T, accType: T, df: 
 
   val io = IO(new Bundle {
     val in_a = Input(inputType)   // 왼쪽 PE에서 넘어오는 activation
-    val in_b = Input(outputType)  // 위쪽 PE에서 넘어오는 weight 또는 partial sum
+    val in_b = Input(outputType)  // 위쪽 PE에서 넘어오는 weight(OS) 또는 partial sum(WS)
     val in_d = Input(outputType)  // 새 값을 밀어 넣을 때 쓰는 입력(propagate 시 c1/c2에 적재)
     val out_a = Output(inputType) // 오른쪽 PE로 activation을 그대로 흘려보냄(systolic 전파)
     val out_b = Output(outputType)
@@ -90,7 +91,7 @@ class PE[T <: Data](inputType: T, weightType: T, outputType: T, accType: T, df: 
   mac_unit.io.in_a := a
 
   // article의 flip — 직전 사이클의 propagate 값과 지금 값이 다르면 "역할이 막 뒤집힌
-  // 첫 사이클"이라는 뜻이고, 그 사이클에만 shift(반올림 자리수)를 적용해 출력한다.
+  // 첫 사이클"이라는 뜻이고, 그 사이클에만 shift(right-shift scaling)를 적용해 출력한다.
   val last_s = RegEnable(prop, valid)
   val flip = last_s =/= prop
   val shift_offset = Mux(flip, shift, 0.U)
@@ -122,12 +123,12 @@ class PE[T <: Data](inputType: T, weightType: T, outputType: T, accType: T, df: 
       c2 := d.withWidthOf(cType)
     }
   // article의 Weight-Stationary 분기 — weight(c1 또는 c2에 미리 적재된 값)가 이 PE에
-  // 고정되고 activation(b)이 흘러 지나가며 즉시 mac 결과를 다음 PE로 내보낸다.
+  // 고정되고 activation(a)과 incoming partial sum(b)이 지나가며 mac 결과를 다음 PE로 내보낸다.
   }.elsewhen ((df == Dataflow.WS).B || ((df == Dataflow.BOTH).B && dataflow === WEIGHT_STATIONARY)) {
     when(prop === PROPAGATE) {
       io.out_c := c1
       mac_unit.io.in_b := c2.asTypeOf(weightType) // article의 "고정된 weight"
-      mac_unit.io.in_c := b                       // article의 "흘러 지나가는 activation"
+      mac_unit.io.in_c := b                       // article의 "위에서 흘러온 partial sum"
       io.out_b := mac_unit.io.out_d                // 결과를 즉시 다음 PE로 전달(누적 대기 없음)
       c1 := d // 새 weight를 미리 적재
     }.otherwise {

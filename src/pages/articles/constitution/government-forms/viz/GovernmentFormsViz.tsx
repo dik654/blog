@@ -1,201 +1,148 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-/** 본문 대응: overview·two-axes — 같은 권력분립에서 두 체계가 갈리는 두 축 */
-const SCENES = [
-  "같은 부품, 다른 조립",
-  "축 하나. 생존이 걸려 있는가",
-  "축 둘. 누가 뽑는가",
-  "네 칸과 각 칸의 출구",
+const STEPS = [
+  {
+    label: "같은 의석과 같은 예산안에서 시작",
+    body: "300석 의회에 가당 140석·나당 140석·다당 20석이 있습니다. 가당 출신 행정부가 예산안 P를 냈고 151표가 필요합니다. 다당이 어느 편에 서느냐가 첫 갈림길입니다.",
+  },
+  {
+    label: "대통령제: 예산이 져도 대통령은 남음",
+    body: "나당과 다당이 반대해 P가 부결되어도 가당 대통령의 임기는 보통 끝나지 않습니다. 타협·거부권·새 법안·다음 선거와 각 헌법의 예외적 출구를 따로 봐야 합니다.",
+  },
+  {
+    label: "의원내각제: 151석이 정부의 생존도 정함",
+    body: "가당은 다당의 지지나 묵인이 없으면 정부를 세우기 어렵습니다. 이미 선 정부가 신임을 잃으면 새 과반이 후임을 만들거나, 헌법이 허용하는 조건에서 총선으로 갑니다.",
+  },
+  {
+    label: "준대통령제: 먼저 대통령과 총리의 권한을 나눠 봄",
+    body: "가당 대통령은 남아도 나당·다당 160석이 총리를 지탱할 수 있습니다. 이때 P를 누가 통제하는지는 대통령 선출 방식 하나가 아니라 총리 책임, 해임권, 의회 해산권과 실제 다수파에 달렸습니다.",
+  },
 ] as const;
 
-const NOTES = [
-  "입법과 행정이라는 같은 두 기관을 두고도 체계가 갈립니다. 갈리는 지점은 기관의 이름이 아니라 둘을 잇는 선의 종류입니다.",
-  "첫째 축은 행정부가 의회의 신임 없이도 임기를 채우는가입니다. 이 하나가 뒤따르는 차이를 거의 다 만듭니다.",
-  "둘째 축은 행정부 수반을 누가 뽑는가입니다. 두 축을 곱하면 흔히 둘로만 말하는 정부 형태가 네 칸이 됩니다.",
-  "각 칸은 교착이 생겼을 때 남는 출구가 다릅니다. 체계를 고르는 일은 교착을 어떤 방식으로 풀지를 고르는 일입니다.",
+const PARTY = [
+  { name: "가당", seats: 140, color: "#4f46e5" },
+  { name: "나당", seats: 140, color: "#d97706" },
+  { name: "다당", seats: 20, color: "#059669" },
 ] as const;
 
-const ACCENT = "#6366f1";
-const OK = "#10b981";
-const WARN = "#ef4444";
-const MUTED = "#94a3b8";
-const AMBER = "#f59e0b";
-
-/** 2×2. 가로 = 행정부 수반의 선출 기원, 세로 = 의회 신임 의존 여부 */
-const CELLS = [
-  { col: 0, row: 0, name: "대통령제", exit: "탄핵 · 다음 선거", color: ACCENT },
-  { col: 1, row: 0, name: "회의제·의회선출 고정임기", exit: "임기 만료", color: MUTED },
-  { col: 0, row: 1, name: "준대통령제", exit: "총리 교체 · 의회 해산", color: AMBER },
-  { col: 1, row: 1, name: "의원내각제", exit: "불신임 · 해산 후 총선", color: OK },
+const SYSTEMS = [
+  { name: "대통령제", x: 22, color: "#4f46e5" },
+  { name: "의원내각제", x: 207, color: "#059669" },
+  { name: "준대통령제", x: 392, color: "#d97706" },
 ] as const;
 
-const GX = 150;
-const GY = 46;
-const CW = 138;
-const CH = 46;
+function multiline(lines: readonly string[], x: number, y: number, color = "currentColor") {
+  return (
+    <text x={x} y={y} textAnchor="middle" fontSize="9.5" fill={color}>
+      {lines.map((line, index) => (
+        <tspan key={line} x={x} dy={index === 0 ? 0 : 15}>{line}</tspan>
+      ))}
+    </text>
+  );
+}
+
+function MobileDiagram({ step }: { step: number }) {
+  const rows = [
+    { name: "대통령제", color: "#4f46e5", lines: ["P가 져도 대통령 임기는 계속", "정책 교착과 대통령 생존이 분리됨"] },
+    { name: "의원내각제", color: "#059669", lines: ["151석이 정부를 세우고 유지", "신임 상실 뒤 후임 구성 또는 총선"] },
+    { name: "준대통령제", color: "#d97706", lines: ["대통령은 남고 총리는 151석에 의존", "누가 P를 맡는지 권한 배분 확인"] },
+  ] as const;
+  return (
+    <svg className="block sm:!hidden" viewBox="0 0 360 426" role="img" aria-label="모바일에서 세로로 보는 정부 형태별 예산안 처리 경로">
+      <text x="180" y="18" textAnchor="middle" fontSize="11" fontWeight="700" fill="currentColor">가상 사례 · 예산안 P는 151표가 필요</text>
+      <g>
+        <rect x="20" y="32" width="320" height="32" rx="8" fill="var(--muted)" opacity="0.45" />
+        {PARTY.map((party, index) => {
+          const start = PARTY.slice(0, index).reduce((sum, item) => sum + item.seats, 0);
+          const x = 20 + (start / 300) * 320;
+          const width = (party.seats / 300) * 320;
+          return (
+            <g key={party.name}>
+              <rect x={x} y="32" width={width} height="32" fill={party.color} fillOpacity="0.2" stroke={party.color} strokeWidth="1.2" />
+              <text x={x + width / 2} y="52" textAnchor="middle" fontSize={index === 2 ? "8" : "10"} fontWeight="700" fill={party.color}>{party.name} {party.seats}</text>
+            </g>
+          );
+        })}
+      </g>
+      <rect x="80" y="80" width="200" height="44" rx="10" fill="#2563eb14" stroke="#2563eb" strokeWidth="1.2" />
+      <text x="180" y="99" textAnchor="middle" fontSize="10.5" fontWeight="700" fill="#2563eb">가당 행정부의 예산안 P</text>
+      <text x="180" y="115" textAnchor="middle" fontSize="9" fill="currentColor" opacity="0.65">다당 20석의 선택이 통과를 가름</text>
+      {rows.map((row, index) => {
+        const y = 145 + index * 86;
+        const active = step === 0 || step === index + 1;
+        return (
+          <g key={row.name} opacity={active ? 1 : 0.25}>
+            <line x1="180" y1={index === 0 ? 124 : y - 12} x2="180" y2={y - 4} stroke={row.color} strokeWidth="1.2" />
+            <circle cx="180" cy={y} r="4.5" fill={row.color} />
+            <rect x="28" y={y + 8} width="304" height="62" rx="11" fill={`${row.color}12`} stroke={row.color} strokeWidth="1.2" />
+            <text x="48" y={y + 31} fontSize="10.5" fontWeight="700" fill={row.color}>{row.name}</text>
+            <text x="48" y={y + 49} fontSize="9.5" fill="currentColor">{row.lines[0]}</text>
+            <text x="48" y={y + 63} fontSize="9.5" fill="currentColor" opacity="0.7">{row.lines[1]}</text>
+          </g>
+        );
+      })}
+      <text x="180" y="418" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={step === 0 ? "#475569" : rows[step - 1].color}>
+        {step === 0 ? "같은 패배 뒤의 다음 동작이 달라집니다" : step === 1 ? "정책 패배와 대통령 퇴진은 별개입니다" : step === 2 ? "정책 과반과 정부 생존이 연결됩니다" : "두 행정부의 권한을 따로 읽습니다"}
+      </text>
+    </svg>
+  );
+}
 
 export default function GovernmentFormsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3600);
-  const step = scenes.active;
-
   return (
-    <VizFrame
-      eyebrow="정부 형태"
-      title="갈림길은 두 개뿐이고, 나머지 차이는 거기서 따라 나옵니다"
-      description="행정부가 의회 신임에 생존을 의존하는가와, 행정부 수반을 누가 뽑는가입니다."
-      note="실제 헌법들은 두 축 위의 점에 가깝고 칸의 한가운데에 딱 놓이지 않습니다. 비교를 위한 좌표계입니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="정부 형태를 가르는 두 축"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+    <StepViz steps={STEPS}>
+      {(step) => (
+        <>
+        <MobileDiagram step={step} />
+        <svg className="!hidden sm:!block" viewBox="0 0 580 310" role="img" aria-label="같은 의석과 예산안이 정부 형태에 따라 다른 경로로 처리되는 과정">
+          <text x="290" y="20" textAnchor="middle" fontSize="11" fontWeight="700" fill="currentColor">
+            가상 사례 · 예산안 P는 151표가 있어야 통과
+          </text>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              {step === 0 && (
-                <g>
-                  <rect x={70} y={60} width={120} height={40} rx={4} fill={ACCENT} fillOpacity={0.12} stroke={ACCENT} strokeWidth={1} />
-                  <text x={130} y={84} textAnchor="middle" fontSize={11} fontWeight={700} fill={ACCENT}>
-                    입법부
-                  </text>
-                  <rect x={290} y={60} width={120} height={40} rx={4} fill={AMBER} fillOpacity={0.12} stroke={AMBER} strokeWidth={1} />
-                  <text x={350} y={84} textAnchor="middle" fontSize={11} fontWeight={700} fill={AMBER}>
-                    행정부
-                  </text>
-                  <line x1={190} y1={80} x2={290} y2={80} stroke={MUTED} strokeWidth={1} strokeDasharray="4 4" />
-                  <text x={240} y={72} textAnchor="middle" fontSize={10} fontWeight={700} fill={MUTED}>
-                    ?
-                  </text>
-                  <text x={240} y={130} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    같은 두 기관인데 둘을 잇는 선이 정해지지 않았습니다
-                  </text>
-                  <text x={240} y={148} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    이 선을 어떻게 긋느냐가 체계를 가릅니다
+          <g>
+            <rect x="58" y="36" width="464" height="30" rx="8" fill="var(--muted)" opacity="0.45" />
+            {PARTY.map((party, index) => {
+              const start = PARTY.slice(0, index).reduce((sum, item) => sum + item.seats, 0);
+              const x = 58 + (start / 300) * 464;
+              const width = (party.seats / 300) * 464;
+              return (
+                <g key={party.name}>
+                  <rect x={x} y="36" width={width} height="30" fill={party.color} fillOpacity="0.2" stroke={party.color} strokeWidth="1.2" />
+                  <text x={x + width / 2} y="55" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={party.color}>
+                    {party.name} {party.seats}
                   </text>
                 </g>
-              )}
+              );
+            })}
+            <line x1={58 + (151 / 300) * 464} y1="31" x2={58 + (151 / 300) * 464} y2="72" stroke="#dc2626" strokeWidth="1.2" strokeDasharray="3 3" />
+          </g>
 
-              {step === 1 && (
-                <g>
-                  <text x={240} y={36} textAnchor="middle" fontSize={10} fontWeight={700} fill={MUTED}>
-                    행정부는 의회의 신임 없이도 임기를 채우는가
-                  </text>
-                  <rect x={46} y={58} width={170} height={72} rx={4} fill={ACCENT} fillOpacity={0.1} stroke={ACCENT} strokeWidth={1} />
-                  <text x={131} y={80} textAnchor="middle" fontSize={10} fontWeight={700} fill={ACCENT}>
-                    예 · 생존이 분리됨
-                  </text>
-                  <text x={131} y={100} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    임기가 고정되고 의회가
-                  </text>
-                  <text x={131} y={114} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    반대해도 자리는 남습니다
-                  </text>
-                  <rect x={264} y={58} width={170} height={72} rx={4} fill={OK} fillOpacity={0.1} stroke={OK} strokeWidth={1} />
-                  <text x={349} y={80} textAnchor="middle" fontSize={10} fontWeight={700} fill={OK}>
-                    아니오 · 신임에 매임
-                  </text>
-                  <text x={349} y={100} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    과반이 등을 돌리는 순간
-                  </text>
-                  <text x={349} y={114} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    내각이 물러납니다
-                  </text>
-                  <text x={240} y={156} textAnchor="middle" fontSize={9} fontWeight={700} fill={WARN}>
-                    임기의 고정성·교착의 출구·연립의 필요가 전부 이 하나에서 갈립니다
-                  </text>
-                </g>
-              )}
+          <rect x="225" y="88" width="130" height="42" rx="10" fill="#2563eb14" stroke="#2563eb" strokeWidth="1.2" />
+          <text x="290" y="106" textAnchor="middle" fontSize="10" fontWeight="700" fill="#2563eb">가당 행정부의 예산안 P</text>
+          <text x="290" y="121" textAnchor="middle" fontSize="8.5" fill="currentColor" opacity="0.62">다당 20석의 선택이 통과를 가름</text>
 
-              {step >= 2 && (
-                <g>
-                  <text x={GX + CW} y={24} textAnchor="middle" fontSize={9} fontWeight={700} fill={MUTED}>
-                    행정부 수반을 누가 뽑는가
-                  </text>
-                  <text x={GX + CW / 2} y={40} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    국민이 직접
-                  </text>
-                  <text x={GX + CW + CW / 2} y={40} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    의회가
-                  </text>
-                  <text x={16} y={GY + CH / 2} fontSize={9} fill={MUTED}>
-                    신임과 무관
-                  </text>
-                  <text x={16} y={GY + CH + CH / 2} fontSize={9} fill={MUTED}>
-                    신임에 매임
-                  </text>
-                  <text x={16} y={GY - 10} fontSize={9} fontWeight={700} fill={MUTED}>
-                    행정부의 생존
-                  </text>
+          {SYSTEMS.map((system, index) => {
+            const active = step === 0 || step === index + 1;
+            const center = system.x + 83;
+            return (
+              <g key={system.name} opacity={active ? 1 : 0.28}>
+                <path d={`M290 130 C290 154 ${center} 148 ${center} 164`} fill="none" stroke={system.color} strokeWidth="1.2" />
+                <circle cx={center} cy="166" r="5" fill={system.color} />
+                <rect x={system.x} y="180" width="166" height="105" rx="12" fill={`${system.color}12`} stroke={system.color} strokeWidth="1.2" />
+                <text x={center} y="201" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={system.color}>{system.name}</text>
+                {index === 0 && multiline(["P가 져도", "대통령 임기는 계속", "정책 교착과 생존 분리"], center, 222)}
+                {index === 1 && multiline(["151석이 정부를 세움", "신임을 잃으면", "후임 구성 또는 총선"], center, 222)}
+                {index === 2 && multiline(["대통령은 남고", "총리는 151석에 의존", "권한 배분을 다시 확인"], center, 222)}
+              </g>
+            );
+          })}
 
-                  {CELLS.map((cell) => {
-                    const x = GX + cell.col * CW;
-                    const y = GY + cell.row * CH;
-                    return (
-                      <g key={cell.name}>
-                        <rect
-                          x={x}
-                          y={y}
-                          width={CW}
-                          height={CH}
-                          fill={cell.color}
-                          fillOpacity={step === 3 ? 0.14 : 0.06}
-                          stroke={cell.color}
-                          strokeWidth={1}
-                        />
-                        <text x={x + CW / 2} y={y + (step === 3 ? 20 : 28)} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={cell.color}>
-                          {cell.name}
-                        </text>
-                        {step === 3 && (
-                          <text x={x + CW / 2} y={y + 36} textAnchor="middle" fontSize={8} fill={MUTED}>
-                            출구 · {cell.exit}
-                          </text>
-                        )}
-                      </g>
-                    );
-                  })}
-
-                  {step === 2 && (
-                    <text x={240} y={GY + 2 * CH + 24} textAnchor="middle" fontSize={9} fill={MUTED}>
-                      둘로만 말하던 구분이 네 칸이 됩니다
-                    </text>
-                  )}
-                  {step === 3 && (
-                    <g>
-                      <text x={240} y={GY + 2 * CH + 22} textAnchor="middle" fontSize={9} fontWeight={700} fill={WARN}>
-                        왼쪽 위 칸만 교착의 출구가 다음 선거까지 미뤄집니다
-                      </text>
-                      <text x={240} y={GY + 2 * CH + 38} textAnchor="middle" fontSize={9} fill={MUTED}>
-                        이 글이 가장 길게 다루는 칸이 그래서 왼쪽 위입니다
-                      </text>
-                    </g>
-                  )}
-                </g>
-              )}
-            </svg>
-          </div>
-
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[step]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
+          <text x="290" y="304" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={step === 0 ? "#475569" : SYSTEMS[step - 1].color}>
+            {step === 0 ? "정부 형태는 같은 갈등의 다음 동작을 바꿉니다" : step === 1 ? "정책 패배와 대통령 퇴진은 같은 사건이 아닙니다" : step === 2 ? "정책 과반과 정부 생존 과반이 연결됩니다" : "준대통령제는 한 점이 아니라 두 행정부의 관계입니다"}
+          </text>
+        </svg>
+        </>
+      )}
+    </StepViz>
   );
 }

@@ -44,6 +44,7 @@ export default function ModernTcbArticle() {
           question="왜 같은 event 둘을 다른 순서로 측정하면 PCR 결과가 달라지는가?"
           idea={<>PCR extend는 기존 값과 새 event digest를 이어 붙여 다시 hash합니다. 따라서 단순 집합이 아니라 순서 있는 history를 접습니다.</>}
           formula={String.raw`\mathrm{PCR}_{i}=H\!\left(\mathrm{PCR}_{i-1}\,\|\,H(e_i)\right)`}
+          mobileFormula={String.raw`\begin{aligned}\mathrm{PCR}_{i}=H\!\big(&\mathrm{PCR}_{i-1}\\&\|\,H(e_i)\big)\end{aligned}`}
           annotatedFormula={String.raw`\mathrm{PCR}_{i}=H\!\left(\underbrace{\mathrm{PCR}_{i-1}}_{\text{직전까지의 누적 값}}\,\|\,\underbrace{H(e_i)}_{\text{새 event digest}}\right)`}
           operations={[
           { expression: String.raw`\mathrm{PCR}_{i-1}`, annotation: ["직전 extend까지 접힌 누적 값을 입력으로", "firmware→bootloader와 역순은 다른 PCR"] },

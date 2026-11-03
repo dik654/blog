@@ -1,153 +1,97 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-/** 본문 대응: checks 의 ExplainedFormula — 승인 구간의 교집합이 통과 가능 영역 */
-const SCENES = [
-  "한 명이면 옮길 폭이 넓다",
-  "둘이면 겹치는 곳만 남는다",
-  "셋이면 더 좁아진다",
-  "현상유지가 사이에 있으면 빈다",
+const STEPS = [
+  {
+    label: "한 명이면 승인 구간이 넓음",
+    body: "현상유지 q=10, 이상점 5인 사람은 0<x<10을 더 낫다고 봅니다. 경계 0과 10은 같은 거리라 포함하지 않습니다.",
+  },
+  {
+    label: "둘이면 교집합만 남음",
+    body: "이상점 7인 사람의 4<x<10을 겹치면 4<x<10만 두 사람이 함께 승인합니다.",
+  },
+  {
+    label: "셋이면 8<x<10으로 좁아짐",
+    body: "이상점 9의 승인 구간 8<x<10을 더 교차합니다. 사람 수 자체보다 서로 다른 승인 구간의 교집합이 핵심입니다.",
+  },
+  {
+    label: "현상유지가 사이에 있으면 교집합이 빔",
+    body: "q=6에서 이상점 5는 4<x<6, 이상점 7은 6<x<8을 원합니다. 둘 다 더 낫다고 보는 새 위치는 없습니다.",
+  },
 ] as const;
 
-const NOTES = [
-  "거부권자가 한 명이면 현상유지보다 자기 이상점에 가까운 구간 전체가 통과 가능합니다.",
-  "한 명이라도 반대하면 끝이므로 합집합이 아니라 교집합입니다. 구간이 좁아지기만 하고 넓어지지는 않습니다.",
-  "거부권자를 더할수록 겹치는 곳이 계속 줄어듭니다. 견제 장치가 남용과 함께 정상적인 변경도 막는 이유입니다.",
-  "같은 사람들이라도 현상유지가 이상점들 사이에 놓이면 서로 반대 방향을 원해 겹치는 곳이 사라집니다.",
-] as const;
+const COLORS = ["#4f46e5", "#d97706", "#9333ea"];
+const X0 = 55;
+const SPAN = 470;
+const toX = (value: number) => X0 + (value / 10) * SPAN;
 
-const COLORS = ["#6366f1", "#f59e0b", "#a855f7"];
-const OK = "#10b981";
-const WARN = "#ef4444";
-const MUTED = "#94a3b8";
-
-const X0 = 40;
-const SPAN = 400;
-const toX = (v: number) => X0 + (v / 10) * SPAN;
-
-/** 장면별 (거부권자 이상점 목록, 현상유지) */
-const SETUP: Array<{ ideals: number[]; q: number }> = [
+const SETUPS = [
   { ideals: [5], q: 10 },
   { ideals: [5, 7], q: 10 },
   { ideals: [5, 7, 9], q: 10 },
   { ideals: [5, 7], q: 6 },
-];
+] as const;
 
-/** i의 승인 구간: 현상유지 q와 이상점 기준 반사점 2·x_i − q 사이 */
-function approval(ideal: number, q: number): [number, number] {
-  const mirror = 2 * ideal - q;
-  return [Math.min(q, mirror), Math.max(q, mirror)];
+function approval(ideal: number, statusQuo: number): [number, number] {
+  const reflected = 2 * ideal - statusQuo;
+  return [Math.min(statusQuo, reflected), Math.max(statusQuo, reflected)];
 }
 
 export default function VetoPlayerViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3600);
-  const step = scenes.active;
-  const { ideals, q } = SETUP[step];
-  const ranges = ideals.map((ideal) => approval(ideal, q));
-  const low = Math.max(...ranges.map(([start]) => start));
-  const high = Math.min(...ranges.map(([, end]) => end));
-  const winset: [number, number] | null = low < high ? [low, high] : null;
-
   return (
-    <VizFrame
-      eyebrow="거부권 행위자"
-      title="통과 가능한 영역은 모든 승인 구간이 겹치는 곳뿐입니다"
-      description="거부권자를 더할수록 좁아지고, 현상유지가 이상점들 사이에 놓이면 아예 사라집니다."
-      note="정책을 하나의 축으로 줄이고 선호가 이상점에서 멀어질수록 단조롭게 나빠진다고 가정한 단순화입니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="거부권자의 승인 구간과 교집합"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <line x1={X0} y1={156} x2={X0 + SPAN} y2={156} stroke={MUTED} strokeWidth={1} />
-              {[0, 2, 4, 6, 8, 10].map((tick) => (
-                <g key={tick}>
-                  <line x1={toX(tick)} y1={152} x2={toX(tick)} y2={160} stroke={MUTED} strokeWidth={1} />
-                  <text x={toX(tick)} y={172} textAnchor="middle" fontSize={8} fill={MUTED}>
-                    {tick}
+    <StepViz steps={STEPS}>
+      {(step) => {
+        const { ideals, q } = SETUPS[step];
+        const ranges = ideals.map((ideal) => approval(ideal, q));
+        const low = Math.max(...ranges.map(([start]) => start));
+        const high = Math.min(...ranges.map(([, end]) => end));
+        const hasWinset = low < high;
+        return (
+          <svg viewBox="0 0 580 280" role="img" aria-label="거부권자의 승인 구간을 교차해 통과 가능 영역을 구하는 과정">
+            <text x="290" y="22" textAnchor="middle" fontSize="12" fontWeight="700" fill="currentColor">
+              한 축의 단순 모형 · 새 정책은 모두가 현상유지보다 좋아해야 통과
+            </text>
+            {ranges.map(([start, end], index) => {
+              const y = 48 + index * 46;
+              return (
+                <g key={`${start}-${end}-${index}`}>
+                  <text x="28" y={y + 19} fontSize="9.5" fontWeight="700" fill={COLORS[index]}>P{index + 1}</text>
+                  <rect x={toX(start)} y={y + 9} width={toX(end) - toX(start)} height="10" rx="5" fill={COLORS[index]} fillOpacity="0.22" />
+                  <circle cx={toX(start)} cy={y + 14} r="4.5" fill="var(--background)" stroke={COLORS[index]} strokeWidth="1.25" />
+                  <circle cx={toX(end)} cy={y + 14} r="4.5" fill="var(--background)" stroke={COLORS[index]} strokeWidth="1.25" />
+                  <circle cx={toX(ideals[index])} cy={y + 14} r="4" fill={COLORS[index]} />
+                  <text x={Math.min(toX(end) - 4, 520)} y={y + 33} textAnchor="end" fontSize="8.5" fill={COLORS[index]}>
+                    이상점 {ideals[index]} · {start}&lt;x&lt;{end}
                   </text>
                 </g>
-              ))}
-              <text x={X0 + SPAN} y={190} textAnchor="end" fontSize={8} fill={MUTED}>
-                정책 축
-              </text>
-
-              {ranges.map(([start, end], index) => {
-                const color = COLORS[index];
-                const y = 44 + index * 28;
-                return (
-                  <g key={index}>
-                    <rect
-                      x={toX(start)}
-                      y={y}
-                      width={toX(end) - toX(start)}
-                      height={18}
-                      fill={color}
-                      fillOpacity={0.16}
-                      stroke={color}
-                      strokeWidth={1}
-                    />
-                    <circle cx={toX(ideals[index])} cy={y + 9} r={3} fill={color} />
-                    <text x={toX(end) + 8} y={y + 13} fontSize={9} fontWeight={700} fill={color}>
-                      이상점 {ideals[index]}
-                    </text>
-                  </g>
-                );
-              })}
-
-              <line x1={toX(q)} y1={36} x2={toX(q)} y2={156} stroke={MUTED} strokeWidth={1} strokeDasharray="4 3" />
-              <text x={toX(q)} y={30} textAnchor="middle" fontSize={9} fontWeight={700} fill={MUTED}>
-                현상유지 {q}
-              </text>
-
-              {winset ? (
-                <g>
-                  <rect
-                    x={toX(winset[0])}
-                    y={130}
-                    width={toX(winset[1]) - toX(winset[0])}
-                    height={18}
-                    fill={OK}
-                    fillOpacity={0.25}
-                    stroke={OK}
-                    strokeWidth={1}
-                  />
-                  <text x={toX((winset[0] + winset[1]) / 2)} y={143} textAnchor="middle" fontSize={9} fontWeight={700} fill={OK}>
-                    통과 가능 {winset[0]}~{winset[1]}
-                  </text>
-                </g>
-              ) : (
-                <text x={toX(3)} y={143} textAnchor="middle" fontSize={10} fontWeight={700} fill={WARN}>
-                  통과 가능 영역 없음 · 현상유지 고착
+              );
+            })}
+            <line x1={X0} y1="206" x2={X0 + SPAN} y2="206" stroke="#94a3b8" strokeWidth="1.25" />
+            {[0, 2, 4, 6, 8, 10].map((tick) => (
+              <g key={tick}>
+                <line x1={toX(tick)} y1="201" x2={toX(tick)} y2="211" stroke="#94a3b8" strokeWidth="1.25" />
+                <text x={toX(tick)} y="225" textAnchor="middle" fontSize="8.5" fill="currentColor" opacity="0.6">{tick}</text>
+              </g>
+            ))}
+            <line x1={toX(q)} y1="40" x2={toX(q)} y2="206" stroke="#64748b" strokeWidth="1.25" strokeDasharray="4 4" />
+            <text x={Math.min(toX(q), 520)} y="38" textAnchor={q === 10 ? "end" : "middle"} fontSize="9.5" fontWeight="700" fill="#64748b">현상유지 q={q}</text>
+            {hasWinset ? (
+              <g>
+                <rect x={toX(low)} y="238" width={toX(high) - toX(low)} height="12" rx="6" fill="#059669" fillOpacity="0.24" />
+                <circle cx={toX(low)} cy="244" r="5.5" fill="var(--background)" stroke="#059669" strokeWidth="1.25" />
+                <circle cx={toX(high)} cy="244" r="5.5" fill="var(--background)" stroke="#059669" strokeWidth="1.25" />
+                <text x={(toX(low) + toX(high)) / 2} y="267" textAnchor="middle" fontSize="10" fontWeight="700" fill="#059669">
+                  모두 승인: {low}&lt;x&lt;{high}
                 </text>
-              )}
-            </svg>
-          </div>
-
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[step]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
+              </g>
+            ) : (
+              <g>
+                <line x1="212" y1="244" x2="368" y2="244" stroke="#dc2626" strokeWidth="1.25" />
+                <text x="290" y="267" textAnchor="middle" fontSize="10" fontWeight="700" fill="#dc2626">교집합 없음 · 현상유지 고착</text>
+              </g>
+            )}
+          </svg>
+        );
+      }}
+    </StepViz>
   );
 }

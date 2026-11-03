@@ -2,6 +2,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ContentBoundary from "@/components/articles/content-boundary";
 import NetworkLearningFlowViz from "./viz/NetworkLearningFlowViz";
+import NetworkBudgetViz from "./viz/NetworkBudgetViz";
 
 const axes = [
   {
@@ -67,12 +68,17 @@ export default function Overview() {
             <strong> 어떤 endpoint가 누구에게 얼마를 언제 보내는지</strong>를
             정하는 문제다. 같은 100 Gb/s 링크라도 큰 checkpoint 하나를 옮기는
             흐름과 수백 rank가 barrier에 맞춰 all-to-all을 수행하는 흐름은
-            queue와 tail latency가 전혀 다르게 나타난다. 먼저
+            queue와 tail latency가 전혀 다르게 나타난다.
+          </p>
+          <p className="leading-7">
+            먼저
             source·destination·message size·동시 flow·burst를 기록한 traffic
             matrix를 만들고, 그다음에 링크와 fabric이 이를 감당하는지 계산해야
             한다.
           </p>
         </div>
+
+        <NetworkBudgetViz />
 
         <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {axes.map((axis) => (
@@ -170,7 +176,10 @@ export default function Overview() {
         <p className="leading-7">
           관리·block gossip처럼 작고 지연에 민감한 flow, storage sync와
           backup처럼 큰 bulk flow, GPU collective처럼 여러 rank가 barrier에서
-          만나는 east-west flow는 목표와 실패 영향이 다르다. 그래서
+          만나는 east-west flow는 목표와 실패 영향이 다르다.
+        </p>
+        <p className="leading-7">
+          그래서
           VLAN·VRF·queue·별도 fabric 가운데 필요한 격리 수준을 정하고 각 class의
           SLO와 capacity를 따로 계산한다. Blockchain, storage, AI라는 제품
           이름만으로 고정 link rate를 배정하면 실제 burst와 fan-in을 놓치기
@@ -186,8 +195,12 @@ export default function Overview() {
           </p>
         </div>
         <p>
-          이 글은 GPU memory에서 PCIe·NVLink를 거쳐 HCA와 switched fabric으로 나가는 경로를 먼저 보고 그 뒤 Ethernet·RDMA·InfiniBand의
-          계약을 확장합니다. CUDA block·stream은 각 정본 글에서 재사용하며 여기서는 interconnect topology와 end-to-end 측정만 소유합니다.
+          이 글은 traffic matrix, payload goodput과 Ethernet link·leaf-spine
+          경계까지만 소유합니다. GPU의 PCIe·NVLink 경로는
+          <a href="/cs/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency"> GPU interconnect</a>,
+          remote memory와 RoCE는 <a href="/cs/gpu/rdma-roce#rdma-control-data-path">RDMA·RoCE</a>,
+          rank collective는 <a href="/cs/gpu/gpu-collective-network#collective-rank-semantics">GPU collective network</a>에서
+          같은 측정 계약을 이어 갑니다.
         </p>
 
         <div id="paper-ethernet-8023" className="scroll-mt-24">

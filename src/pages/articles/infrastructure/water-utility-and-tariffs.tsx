@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import WaterUtilityTariffsViz from "./WaterUtilityTariffsViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function WaterUtilityAndTariffsArticle() {
@@ -10,7 +9,6 @@ export default function WaterUtilityAndTariffsArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 오늘 나오는 물을 내년에도 받으려면 무엇을 내야 할까요</h2>
-        <WaterUtilityTariffsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">수돗물이 오늘 나온다고 배관을 앞으로도 계속 쓸 수 있는 것은 아닙니다. 물을 깨끗하게 만드는 일과 땅속 관을 교체하는 일은 지출 시점이 다릅니다.</p>
           <p className="leading-8">요금을 정할 때는 안전하게 공급할 총비용과 가구가 감당할 몫을 함께 봅니다. 누군가 덜 내도록 지원한다면 그 차이를 누가 메우는지도 정해야 합니다.</p>

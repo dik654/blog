@@ -6,7 +6,6 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ClaimLadderViz from "./equity-claims-and-valuation/viz/ClaimLadderViz";
-import EquityValuationMapViz from "./equity-claims-and-valuation/viz/EquityValuationMapViz";
 import GordonSensitivityViz from "./equity-claims-and-valuation/viz/GordonSensitivityViz";
 
 /**
@@ -19,7 +18,6 @@ import GordonSensitivityViz from "./equity-claims-and-valuation/viz/GordonSensit
 export default function EquityClaimsAndValuationArticle() {
   return (
     <div className="space-y-16">
-      <EquityValuationMapViz />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           같은 회사에 걸린 청구권들이 순위대로 줄을 서 있습니다
@@ -44,6 +42,8 @@ export default function EquityClaimsAndValuationArticle() {
             커집니다. 분자와 분모가 함께 흔들리는 것이 주식 가치평가의 본질적인 어려움입니다.
           </p>
         </div>
+
+        <ClaimLadderViz />
 
         <ContentBoundary article="equity-claims-and-valuation" />
 
@@ -78,7 +78,6 @@ export default function EquityClaimsAndValuationArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 1. 마지막 순위이면서 아래가 막혀 있다는 것이 핵심입니다
         </h2>
-        <ClaimLadderViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             주주는 마지막에 받지만 손실도 무한정 지지는 않습니다. 회사가 아무리
@@ -262,7 +261,6 @@ export default function EquityClaimsAndValuationArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 3. 적혀 있지 않은 현금흐름은 모양을 가정해야 합니다
         </h2>
-        <GordonSensitivityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             할인 식 자체는 달라지지 않습니다. 주주가 받을 현금을 시점마다 적고 할인해 더하면 됩니다. 문제는 그 현금흐름에 끝이 없다는 데 있습니다. 회사는 만기가 없으므로 배당은
@@ -339,6 +337,8 @@ export default function EquityClaimsAndValuationArticle() {
           ]}
           interpretation="1년 뒤 배당이 1,000원, 요구 수익률이 8%, 성장률이 3%면 가치는 1,000 ÷ 0.05 = 20,000원입니다. 그런데 성장률만 4%로 올리면 25,000원이 되어 25% 오릅니다. 여기서 읽어야 할 것은 이 식이 '참값을 계산해 준다'가 아니라 '가정을 밝히면 그 가정 아래의 값을 준다'는 점입니다. 영구 성장률은 경제 전체의 장기 성장률을 넘을 수 없다는 제약을 함께 걸지 않으면, 이 식은 원하는 답을 만들어 내는 도구가 되기 쉽습니다."
         />
+
+        <GordonSensitivityViz />
       </section>
 
       <section id="multiples" className="scroll-mt-20">

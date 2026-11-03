@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import MediaAttentionPublicBeliefViz from "./MediaAttentionPublicBeliefViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function MediaAttentionAndPublicBeliefArticle() {
@@ -10,7 +9,6 @@ export default function MediaAttentionAndPublicBeliefArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 사람들이 보는 정보의 순서도 시장을 움직입니다</h2>
-        <MediaAttentionPublicBeliefViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 사실이 있어도 사람들이 어떤 화면에서 얼마나 자주 보느냐에 따라 체감이 달라질 수 있습니다. 주목을 얻은 이야기가 주문이나 투표로 이어지는지 보려면 정보가 만들어지고 배치되고 행동으로 옮겨지는 경로를 따로 살펴야 합니다.</p>
           <p className="leading-8">이 글은 제한된 화면에 무엇이 올라오는지, 그 과정에서 누가 돈을 내고 받는지 추적합니다. 많이 보였다는 사실과 믿게 됐다는 사실을 구별하는 것이 출발점입니다.</p>

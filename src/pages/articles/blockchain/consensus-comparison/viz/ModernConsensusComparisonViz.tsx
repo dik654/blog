@@ -91,33 +91,35 @@ export function ConsensusRequestTraceViz() {
   >
     <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="합의 계열별 요청 처리 장면 탐색기">
       <div data-viz-live-only className="space-y-4">
-        <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-6">
-          {TRACE_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black transition-colors duration-300 ${index === active ? "border-primary bg-primary/10" : index < active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
-        </div>
-        <div className="border border-border bg-background p-4">
-          <p className="text-[10px] font-black text-primary">장면 {active + 1} / {TRACE_LABELS.length}</p>
-          <h4 className="mt-2 break-keep text-base font-black leading-6">{TRACE_HEADINGS[active]}</h4>
-          <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{TRACE_DETAILS[active]}</p>
-        </div>
-        <div className="space-y-3">
-          {TRACE_FAMILIES.map((family) => <div key={family.name} className="border border-border bg-background p-4">
-            <div className="grid min-w-0 grid-cols-[5.75rem_minmax(0,1fr)] items-start gap-3 sm:grid-cols-[7.5rem_minmax(0,1fr)]">
-              <div>
-                <h5 className="text-xs font-black">{family.name}</h5>
-                <p className="mt-1 break-keep text-[9px] leading-4 text-muted-foreground">{family.influence}</p>
-              </div>
-              <div className="min-w-0">
-                <div className="relative h-1.5 bg-border/60" aria-label={`${family.name} 진행 ${active + 1}/${TRACE_LABELS.length}`}>
-                  <span className="absolute inset-y-0 left-0 bg-primary transition-[width] duration-500" style={{ width: `${((active + 1) / TRACE_LABELS.length) * 100}%` }} />
-                  <span className="absolute top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 border border-primary bg-background transition-[left] duration-500" style={{ left: `${((active + 0.5) / TRACE_LABELS.length) * 100}%` }} />
+        <div data-viz-scene-stage className="min-h-[54rem] space-y-4 sm:min-h-[35rem]">
+          <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-6">
+            {TRACE_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black transition-colors duration-300 ${index === active ? "border-primary bg-primary/10" : index < active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
+          </div>
+          <div className="border border-border bg-background p-4">
+            <p className="text-[10px] font-black text-primary">장면 {active + 1} / {TRACE_LABELS.length}</p>
+            <h4 className="mt-2 break-keep text-base font-black leading-6">{TRACE_HEADINGS[active]}</h4>
+            <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{TRACE_DETAILS[active]}</p>
+          </div>
+          <div className="space-y-3">
+            {TRACE_FAMILIES.map((family) => <div key={family.name} className="border border-border bg-background p-4">
+              <div className="grid min-w-0 gap-3 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-start">
+                <div>
+                  <h5 className="text-xs font-black">{family.name}</h5>
+                  <p className="mt-1 break-keep text-[9px] leading-4 text-muted-foreground">{family.influence}</p>
                 </div>
-                <div className="mt-3 grid min-w-0 grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-2">
-                  <div className="border-l-2 border-primary pl-2"><p className="text-[9px] font-bold text-muted-foreground">현재 상태</p><p className="mt-1 break-keep text-xs font-black">{family.states[active]}</p></div>
-                  <div className="border-l border-border pl-2"><p className="text-[9px] font-bold text-muted-foreground">확인할 증거</p><p className="mt-1 break-keep text-xs font-semibold">{family.evidence[active]}</p></div>
+                <div className="min-w-0">
+                  <div className="relative h-1.5 bg-border/60" aria-label={`${family.name} 진행 ${active + 1}/${TRACE_LABELS.length}`}>
+                    <span className="absolute inset-y-0 left-0 bg-primary transition-[width] duration-500" style={{ width: `${((active + 1) / TRACE_LABELS.length) * 100}%` }} />
+                    <span className="absolute top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 border border-primary bg-background transition-[left] duration-500" style={{ left: `${((active + 0.5) / TRACE_LABELS.length) * 100}%` }} />
+                  </div>
+                  <div className="mt-3 grid min-w-0 grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-2">
+                    <div className="border-l-2 border-primary pl-2"><p className="text-[9px] font-bold text-muted-foreground">현재 상태</p><p className="mt-1 break-keep text-xs font-black">{family.states[active]}</p></div>
+                    <div className="border-l border-border pl-2"><p className="text-[9px] font-bold text-muted-foreground">확인할 증거</p><p className="mt-1 break-keep text-xs font-semibold">{family.evidence[active]}</p></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>)}
+            </div>)}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="네 경로 재생" compact />
       </div>
@@ -161,27 +163,29 @@ export function ConsensusFaultTraceViz() {
   >
     <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="합의 계열별 network partition 복구 장면 탐색기">
       <div data-viz-live-only className="space-y-4">
-        <div className="grid grid-cols-5 gap-1.5">
-          {FAULT_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black ${index === active ? "border-primary bg-primary/10" : index < active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
-        </div>
-        <div className="border border-border bg-background p-4">
-          <p className="text-[10px] font-black text-primary">장면 {active + 1} / {FAULT_LABELS.length}</p>
-          <h4 className="mt-2 break-keep text-base font-black leading-6">{FAULT_HEADINGS[active]}</h4>
-          <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center text-[10px] font-black">
-            <div className="border border-border py-3">Network A</div>
-            <div className={`h-px w-8 ${active === 0 || active >= 3 ? "bg-primary" : "border-t border-dashed border-destructive"}`} />
-            <div className="border border-border py-3">Network B</div>
+        <div data-viz-scene-stage className="min-h-[44rem] space-y-4 sm:min-h-[28rem]">
+          <div className="grid grid-cols-5 gap-1.5">
+            {FAULT_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black ${index === active ? "border-primary bg-primary/10" : index < active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          {FAULT_FAMILIES.map(([key, label]) => {
-            const lines = state[key];
-            return <div key={key} className="border border-border bg-background p-4">
-              <h5 className="text-xs font-black">{label}</h5>
-              <p className="mt-3 border-l-2 border-primary pl-3 text-xs font-semibold leading-5">{lines[0]}</p>
-              <p className="mt-2 break-keep pl-3 text-[10px] leading-5 text-muted-foreground">{lines[1]}</p>
-            </div>;
-          })}
+          <div className="border border-border bg-background p-4">
+            <p className="text-[10px] font-black text-primary">장면 {active + 1} / {FAULT_LABELS.length}</p>
+            <h4 className="mt-2 break-keep text-base font-black leading-6">{FAULT_HEADINGS[active]}</h4>
+            <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center text-[10px] font-black">
+              <div className="border border-border py-3">Network A</div>
+              <div className={`h-px w-8 ${active === 0 || active >= 3 ? "bg-primary" : "border-t border-dashed border-destructive"}`} />
+              <div className="border border-border py-3">Network B</div>
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {FAULT_FAMILIES.map(([key, label]) => {
+              const lines = state[key];
+              return <div key={key} className="border border-border bg-background p-4">
+                <h5 className="text-xs font-black">{label}</h5>
+                <p className="mt-3 border-l-2 border-primary pl-3 text-xs font-semibold leading-5">{lines[0]}</p>
+                <p className="mt-2 break-keep pl-3 text-[10px] leading-5 text-muted-foreground">{lines[1]}</p>
+              </div>;
+            })}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={FAULT_LABELS} controlLabels={FAULT_LABELS} playLabel="분리와 복구 재생" compact />
       </div>

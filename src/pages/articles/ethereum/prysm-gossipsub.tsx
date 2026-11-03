@@ -12,8 +12,8 @@ export default function PrysmGossipsub() {
     <>
       <Overview onCodeRef={sidebar.open} />
       <Topics onCodeRef={sidebar.open} />
-      <MessageValidation onCodeRef={sidebar.open} />
       <SnappyEncoding onCodeRef={sidebar.open} />
+      <MessageValidation onCodeRef={sidebar.open} />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
@@ -24,7 +24,7 @@ export default function PrysmGossipsub() {
         projectMetas={{
           prysm: {
             id: "prysm",
-            label: "Prysm · Go",
+            label: "Prysm v7.3.1 · Go",
             badgeClass: "bg-violet-500/10 border-violet-500 text-violet-700",
           },
         }}

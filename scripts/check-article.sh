@@ -30,6 +30,51 @@ run node scripts/audit-knowledge-graph.mjs --strict
 VIZ_PATHS=()
 [ -d "src/pages/articles/$CATEGORY/$SLUG" ] && VIZ_PATHS+=("src/pages/articles/$CATEGORY/$SLUG")
 [ -f "src/pages/articles/$CATEGORY/$SLUG.tsx" ] && VIZ_PATHS+=("src/pages/articles/$CATEGORY/$SLUG.tsx")
+if [ ${#VIZ_PATHS[@]} -eq 0 ]; then
+  SOURCE_FILE="$(find src/pages/articles -type f -name "$SLUG.tsx" -print -quit)"
+  if [ -n "$SOURCE_FILE" ] && [ -f "$SOURCE_FILE" ]; then
+    VIZ_PATHS+=("$SOURCE_FILE")
+    SOURCE_DIR="${SOURCE_FILE%.tsx}"
+    [ -d "$SOURCE_DIR" ] && VIZ_PATHS+=("$SOURCE_DIR")
+    while IFS= read -r DEPENDENCY; do
+      [ -n "$DEPENDENCY" ] && VIZ_PATHS+=("$DEPENDENCY")
+    done < <(node - "$SOURCE_FILE" <<'NODE'
+const fs = require("node:fs");
+const path = require("node:path");
+
+const entry = path.resolve(process.argv[2]);
+const seen = new Set([entry]);
+const queue = [entry];
+const found = [];
+const extensions = [".tsx", ".ts", ".jsx", ".js"];
+
+function resolveRelative(fromFile, specifier) {
+  const base = path.resolve(path.dirname(fromFile), specifier);
+  const candidates = [
+    ...extensions.map((extension) => base + extension),
+    ...extensions.map((extension) => path.join(base, "index" + extension)),
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
+}
+
+while (queue.length > 0) {
+  const file = queue.shift();
+  const source = fs.readFileSync(file, "utf8");
+  const imports = source.matchAll(/(?:from\s+|import\s*)["'](\.[^"']+)["']/g);
+  for (const match of imports) {
+    const resolved = resolveRelative(file, match[1]);
+    if (!resolved || seen.has(resolved)) continue;
+    seen.add(resolved);
+    queue.push(resolved);
+    found.push(path.relative(process.cwd(), resolved));
+  }
+}
+
+process.stdout.write(found.join("\n"));
+NODE
+)
+  fi
+fi
 if [ ${#VIZ_PATHS[@]} -gt 0 ]; then
   run node scripts/audit-viz-style.mjs --strict "${VIZ_PATHS[@]}"
 fi

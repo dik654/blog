@@ -28,9 +28,9 @@ export default function PowerSizing() {
 
       <ExplainedFormula
         question="회로 용량을 어떤 값으로 잡아야 합니까"
-        idea="섀시별 지속 부하를 더한 뒤 여유율을 곱하고, 이중화 구성이면 한 경로가 감당해야 할 몫으로 다시 나눕니다."
-        formula={String.raw`P_{\text{circuit}} \ge \frac{k \sum_{i} P_i}{r}`}
-        annotatedFormula={String.raw`P_{\text{circuit}} \ge \frac{\overbrace{k}^{\text{여유율}} \sum_{i} \overbrace{P_i}^{\text{섀시 지속 부하}}}{\underbrace{r}_{\text{정상 시 경로 분담}}}`}
+        idea="섀시별 지속 부하를 더해 여유율을 곱합니다. A/B 이중 급전이면 나누지 않고 각 경로가 이 전체 값을 혼자 감당하게 잡습니다."
+        formula={String.raw`P_{\text{feed}} \ge k \sum_{i} P_i`}
+        annotatedFormula={String.raw`\underbrace{P_{\text{feed}}}_{\text{A 또는 B 한 경로 용량}} \ge \overbrace{k}^{\text{여유율}} \sum_{i} \underbrace{P_i}_{\text{섀시 지속 부하}}`}
         operations={[
           {
             expression: String.raw`\sum_{i} P_i`,
@@ -44,21 +44,20 @@ export default function PowerSizing() {
             annotation: "여유율을 곱해 피크와 안전율을 흡수합니다. 값은 지역 전기 기준과 사내 규정을 따릅니다",
           },
           {
-            expression: String.raw`\frac{\cdot}{r}`,
-            annotation: "두 경로가 정상 시 절반씩 나눠 지면 r은 0.5이며, 한 경로가 끊겼을 때 나머지가 전부를 받습니다",
+            expression: String.raw`P_{\text{feed}} \ge k \sum_i P_i`,
+            annotation: "A와 B가 평소 절반씩 나눠 들어도 각 경로의 정격은 전체 설계 부하 이상이어야 합니다",
           },
         ]}
         terms={[
-          { symbol: String.raw`P_{\text{circuit}}`, name: "회로 용량", description: "한 급전 경로가 제공해야 하는 용량입니다." },
+          { symbol: String.raw`P_{\text{feed}}`, name: "한 급전 경로의 용량", description: "A 또는 B 하나가 제공해야 하는 용량입니다." },
           { symbol: String.raw`P_i`, name: "섀시 지속 부하", description: "명판이 아니라 실제 지속 소비 전력입니다." },
           { symbol: "k", name: "여유율", description: "피크와 안전율을 흡수하는 계수이며 규정에서 정해집니다." },
-          { symbol: "r", name: "정상 시 경로 분담률", description: "이중 급전에서 한 경로가 평소 지는 비율입니다." },
         ]}
         assumptions={[
           "지속 부하 값이 실제 워크로드에서 측정됐다고 가정합니다. 유휴 상태에서 잰 값을 쓰면 과소 산정됩니다.",
           "여유율과 회로 산정 기준은 지역 전기 규정에 따르며 이 식은 구조만 보여 줍니다.",
         ]}
-        interpretation="이중화 구성에서 각 경로를 절반 용량으로 잡으면 한 경로가 끊겼을 때 남은 경로가 두 배를 받아 차단됩니다. 이중화는 용량을 나누는 것이 아니라 각 경로가 전부를 감당할 수 있어야 성립합니다."
+        interpretation="정상 상태에서 각 경로가 50%씩 공급하더라도, 한쪽 상실 뒤 남은 경로에는 rack 부하 100%가 흐릅니다. 각 경로를 50% 용량으로 설계했다면 자기 정격의 200%를 요구받아 차단될 수 있습니다. 이중화는 용량을 반으로 나누는 설계가 아닙니다."
       />
 
       <PowerViz />

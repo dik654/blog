@@ -60,8 +60,8 @@ export const equityDispersionData: DerivativeDeepArticleData = {
     { term: "상관 표면", description: "만기와 행사가에 따라 달라지는 내재 상관을 좌표별로 모은 표입니다.", example: "1개월 등가격과 1년 하락 구간을 다른 점으로 둡니다.", boundary: "빈 좌표를 채우는 방법과 모형에 따라 값이 달라집니다." },
   ] },
   sources: [
-    { source: "Cboe · Implied Correlation Index 계산 백서", excerpt: "The implied correlation is a measure of the average correlation between SPX index components", application: "지수 분산 0.03과 개별 기여 0.02를 식에 넣어 상관 0.5를 풉니다.", citation: "Cboe, The Implied Correlation Index Calculation: Step-by-Step", href: "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf", note: "평균상관 식과 지수 산출 구조를 확인했습니다. 백서의 2021년 표본과 본문의 두 종목 가정은 현재 지수 수준이 아닙니다(2026-11-02 확인)." },
-    { source: "Cboe · Implied Correlation", excerpt: "spread between the average variance of component securities and portfolio variance", application: "종목 분산의 비중가중 평균 0.04와 지수 분산 0.03의 차이를 디스퍼전의 출발점으로 읽습니다.", citation: "Cboe, Implied Correlation", href: "https://www.cboe.com/us/indices/implied/", note: "현재 페이지의 COR3M 설명과 디스퍼전 정의를 확인했습니다. 실시간 지수값과 실제 전략의 수수료·헤지 손익은 인용하지 않습니다(2026-11-02 확인)." },
+    { source: "Cboe · Implied Correlation Index 백서", excerpt: "The implied correlation is a measure of the average correlation between SPX index components", application: "지수 분산 0.03과 개별 기여 0.02를 식에 넣어 상관 0.5를 풉니다.", citation: "Cboe, Implied Correlation Index White Paper", href: "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf", note: "평균상관 식과 지수 산출 구조를 확인했으며 두 종목 수치는 설명용 가정입니다." },
+    { source: "Cboe · Implied Correlation Indices", excerpt: "spread between average component variance and portfolio variance", application: "개별 분산 0.04와 지수 분산 0.03의 차이를 디스퍼전의 출발점으로 읽습니다.", citation: "Cboe, Implied Correlation Indices", href: "https://www.cboe.com/us/indices/implied/", note: "현재 지수 설명과 구성 원리를 확인하며 실제 전략의 수수료·헤지 손익은 별도입니다." },
   ],
   review: [
     "20%인 두 종목의 비중이 같을 때 상관 0과 0.5의 지수 변동성을 계산해 보세요. (답: 3절)",
@@ -130,8 +130,8 @@ export const creditTrancheAuctionData: DerivativeDeepArticleData = {
     { term: "경매 최종가격", description: "신용사건 뒤 표준 경매로 정해 현금결제의 회수 기준으로 쓰는 가격입니다.", example: "35이면 단순 손실률은 65%입니다.", boundary: "모든 채권의 장기 회수액과 같다고 보지 않습니다." },
   ] },
   sources: [
-    { source: "BIS · CDS index tranches", excerpt: "base correlation against the upper bound", application: "0~3·3~7·7~10의 시장가치 합과 0~10 가상 첫손실 구간의 모형가를 맞추는 베이스 상관의 뜻을 확인합니다.", citation: "BIS Quarterly Review, CDS index tranches and the pricing of credit risk correlations", href: "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf", note: "2005년 당시 시장과 1요인 모형을 분석한 자료입니다. 현재 호가나 최선의 가격모형으로 사용하지 않습니다(2026-11-02 확인)." },
-    { source: "ISDA · Big Bang Protocol", excerpt: "auction settlement", application: "결정위원회의 신용사건·경매 판단과 사건별 조건, 경매 최종가격을 계약 결제에 넣는 경로를 확인합니다.", citation: "ISDA, Big Bang Protocol", href: "https://www.isda.org/traditional-protocol/big-bang-protocol/", note: "2009년 프로토콜은 종료됐지만 경매 결제를 표준 문서에 넣은 역사적 구조를 설명합니다. 실제 사건은 적용 계약과 현재 결정위원회 문서·경매 조건을 다시 확인합니다(2026-11-02 확인)." },
+    { source: "BIS · CDS index tranches", excerpt: "base correlation against the upper bound", application: "0~3·3~7·7~10의 합과 0~10 가상 구간을 맞추는 베이스 상관의 뜻을 확인합니다.", citation: "BIS Quarterly Review, CDS index tranches and the pricing of credit risk correlations", href: "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf", note: "2005년 시장과 모형을 분석한 자료이며 현재 호가 수준으로 사용하지 않습니다." },
+    { source: "ISDA · Big Bang Protocol", excerpt: "auction settlement", application: "신용사건 판단 뒤 경매 최종가격을 계약 결제에 넣는 표준 흐름을 확인합니다.", citation: "ISDA, Big Bang Protocol", href: "https://www.isda.org/traditional-protocol/big-bang-protocol/", note: "프로토콜 구조를 설명하며 실제 사건은 해당 경매 조건과 계약 문서를 다시 확인합니다." },
   ],
   review: [
     "손실 7을 0~3·3~7·7~10 구간에 나눠 보세요. (답: 1·3절)",
@@ -201,8 +201,8 @@ export const commodityDeliveryData: DerivativeDeepArticleData = {
     { term: "선적증서", description: "승인 시설이 보유자 요청 때 계약 상품을 인도하겠다는 의무를 나타내는 양도 가능한 문서입니다.", example: "증서를 받은 뒤 발행 시설에 출고를 요청합니다.", boundary: "즉시 적재 완료나 특정 곡물 더미의 소유를 뜻하지 않습니다." },
   ] },
   sources: [
-    { source: "CBOT · Corn Futures Chapter 10", excerpt: "class and grade · location differentials", application: "5달러에서 품질 4센트를 빼고 Ottawa–Chillicothe 지역 6.25센트를 더하는 조건과 월물을 확인합니다.", citation: "CBOT Rulebook, Chapter 10 Corn Futures", href: "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf", note: "현행 PDF의 10104 등급 차등과 10105 지역 가산 두 표를 확인했습니다. 2027년 12월물까지와 2028년 3월물부터 일부 지역 가산이 달라지므로 거래 시점의 표를 다시 확인합니다(2026-11-02 확인)." },
-    { source: "CME Group · Understanding the Grain Delivery Process", excerpt: "three-day delivery process", application: "선적증서를 승인 시설에서 상품을 받을 권리로 읽고, 매도자의 인도 의사·청산 배정·대금과 증서 이전 뒤 보유·재인도·실물 출고 선택을 구분합니다.", citation: "CME Group, Understanding the Grain Delivery Process", href: "https://www.cmegroup.com/education/courses/introduction-to-grains-and-oilseeds/understanding-the-grain-delivery-process", note: "곡물 선물의 일반적인 증서 인도 흐름과 보유자의 선택을 설명하는 공식 교육 자료입니다. 정확한 기한·결제 시각과 옥수수 세부 조건은 적용 계약의 현행 규정이 우선합니다(2026-11-02 확인)." },
+    { source: "CBOT · Corn Futures Chapter 10", excerpt: "class and grade · location differentials", application: "5달러에서 품질 4센트를 빼고 지역 6.25센트를 더하는 범위와 월물을 확인합니다.", citation: "CBOT Rulebook, Chapter 10 Corn Futures", href: "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf", note: "옥수수 선물 규정입니다. 원본 PDF는 2026-10-09 자동 조회 403·타임아웃이라 2026-01-07 웹 아카이브 사본(2025년 2월 판과 같은 파일)으로 10104 등급 차등(2센트·4센트 조건)과 10105 지역 가산 두 표(2027년 12월물까지·2028년 3월물부터)를 대조했습니다. 거래 시점에 현행 규정을 다시 확인합니다." },
+    { source: "CME Group · Warehouse Receipts vs. Shipping Certificates", excerpt: "commitment ... to deliver", application: "선적증서를 승인 시설의 인도 약속으로 읽고 출고 장소와 후속 절차를 구분합니다.", citation: "CME Group, Warehouse Receipts vs. Shipping Certificates FAQ", href: "https://www.cmegroup.com/education/articles-and-reports/warehouse-receipts-vs-shipping-certificates-frequently-asked-questions", note: "증서의 일반 구조를 확인하며 옥수수의 세부 인도 조건은 현행 Rulebook이 우선합니다. 이 페이지는 2026-10-09 자동 조회 타임아웃이라 선적증서 정의 문구를 검색 요약으로만 2차 확인했습니다." },
   ],
   review: [
     "5달러에서 4센트를 빼고 6.25센트를 더한 5,000부셸 조정액을 계산해 보세요. (답: 3절)",
@@ -271,8 +271,8 @@ export const derivativesInvestigationData: DerivativeDeepArticleData = {
     { term: "법적 보류", description: "분쟁이나 조사와 관련된 정해진 자료의 예정된 삭제를 잠시 멈추는 지시입니다.", example: "대상 계정과 기간의 자동 삭제를 중지합니다.", boundary: "회사 자료 전체를 영구 보관하는 명령이 아닙니다." },
   ] },
   sources: [
-    { source: "CFTC · Enforcement Manual", excerpt: "Native File Production", application: "주문·통신·계좌자료·오디오를 원본 형식과 메타데이터가 있는 조사 꾸러미로 모읍니다.", citation: "CFTC, Division of Enforcement Manual", href: "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf", note: "CFTC 집행부의 일반 조사 절차와 자료 제출 형식을 확인했습니다. 개별 사건 요청이나 법률 자문을 대신하지 않습니다(2026-11-02 확인)." },
-    { source: "ESMA · MiFIR Article 25", excerpt: "relevant data relating to all orders", application: "주문 특성과 수정·취소·부분·전부 체결, 그 결과 거래를 연결해 .100→.350→.600의 순서를 보존합니다.", citation: "ESMA Interactive Single Rulebook, MiFIR Article 25", href: "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-25-obligation-maintain-records", note: "현재 페이지는 2024-01-09 통합본이 개정 RTS 적용 전까지 유효하다고 안내합니다. EU 적용 대상 회사의 5년 의무를 다른 관할에 그대로 옮기지 않습니다(2026-11-02 확인)." },
+    { source: "CFTC · Enforcement Manual", excerpt: "Native File Production", application: "주문·통신·오디오를 원본 형식과 메타데이터가 있는 조사 꾸러미로 모읍니다.", citation: "CFTC, Division of Enforcement Manual", href: "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf", note: "미국 CFTC 조사 절차의 일반 지침이며 개별 사건 요청과 법률 자문을 대신하지 않습니다." },
+    { source: "ESMA · MiFIR Article 25", excerpt: "relevant data relating to all orders", application: "주문 특성과 그 결과 거래를 연결해 .100→.350→.600의 순서를 보존합니다.", citation: "ESMA Interactive Single Rulebook, MiFIR Article 25", href: "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-25-obligation-maintain-records", note: "EU 적용 대상 회사의 기록 의무이며 다른 관할의 기간과 범위를 자동으로 정하지 않습니다." },
   ],
   review: [
     ".100 주문에서 .600 취소까지 걸린 시간과 10초 전 대화의 위치를 계산해 보세요. (답: 1·3절)",
@@ -316,7 +316,7 @@ export const usUkDerivativesTaxData: DerivativeDeepArticleData = {
       "양식 연도와 계약 범위를 확인해야 합니다. 본문의 10은 계산을 보여 주는 값이며 실제 신고에는 중개회사 자료, 다른 손익과 최신 세법을 함께 적용합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. HMRC는 영국 법인의 파생 손익을 회계 처리와 연결합니다", bridge: "미국식 계약 분류표와 다른 출발점을 공식 지침에서 확인합니다.", paragraphs: [
-      "HMRC Corporate Finance Manual은 법인의 파생계약 이익과 손실을 일반적으로 단일 회사 회계와 연결해 계산한다고 설명합니다. 거래 목적에 따라 거래 수입·비용 또는 비거래 항목으로 들어갈 수 있고, 세법상 범위와 회계에서 벗어나는 조정 규칙도 따로 확인합니다.",
+      "HMRC Corporate Finance Manual은 법인의 파생계약 이익과 손실이 일반적으로 회계 처리와 연결되는 제도 안에서 계산된다고 설명합니다. 세법상 범위와 여러 조정 규칙이 회계 숫자에 더해집니다.",
       "회계이익 10이 그대로 납부세액 10이라는 뜻은 아닙니다. 회사의 기능통화, 계약 목적, 연결 규칙과 적용 세율은 별도로 확인해야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 국가별 표 한 장은 조약·법인 구조·연도 변경을 담지 못합니다", bridge: "비교 글을 실제 신고 답안으로 쓰지 않아야 하는 경계를 남깁니다.", paragraphs: [
@@ -342,7 +342,7 @@ export const usUkDerivativesTaxData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "IRS · Form 6781 (2025)", excerpt: "60% long-term and 40% short-term", application: "적격 계약 순이익 10을 장기 6과 단기 4로 나누고 연말 평가·헤지 예외를 확인합니다.", citation: "Internal Revenue Service, 2025 Form 6781", href: "https://www.irs.gov/pub/irs-access/f6781_accessible.pdf", note: "2025 과세연도 양식의 일반 구조이며 납세자와 계약별 신고 판단을 대신하지 않습니다." },
-    { source: "HMRC · Corporate Finance Manual CFM50020", excerpt: "profits and losses ... derivative contracts", application: "영국 법인의 회계이익 10을 파생계약 제도와 세법 조정의 출발점에 놓습니다.", citation: "HMRC, CFM50020: Derivative contracts", href: "https://www.gov.uk/hmrc-internal-manuals/corporate-finance-manual/cfm50020", note: "2026년 8월 27일 갱신된 영국 법인세 실무 지침입니다. 개인 과세나 다른 관할의 규칙으로 일반화하지 않으며, 세부 성격과 회계 이탈 조정은 CFM50040·CFM52010 등 연결 지침을 함께 확인해야 합니다." },
+    { source: "HMRC · Corporate Finance Manual CFM50020", excerpt: "profits and losses ... derivative contracts", application: "영국 법인의 회계이익 10을 파생계약 제도와 세법 조정의 출발점에 놓습니다.", citation: "HMRC, CFM50020: Derivative contracts", href: "https://www.gov.uk/hmrc-internal-manuals/corporate-finance-manual/cfm50020", note: "영국 법인세 실무 지침이며 개인 과세나 다른 관할의 규칙으로 일반화하지 않습니다." },
   ],
   review: [
     "미국 적격 계약 순이익 10을 일반적인 60·40 성격으로 나눠 보세요. (답: 3·8절)",

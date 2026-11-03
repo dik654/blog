@@ -36,6 +36,7 @@ type Config = {
   question: string;
   idea: string;
   formula: string;
+  mobileFormula: string;
   annotatedFormula: string;
   operations: readonly { expression: string; annotation: string | readonly string[] }[];
   terms: readonly { symbol: string; name: string; description: string }[];
@@ -76,6 +77,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "검증한 자산 105 BTC와 포함 채무 100 BTC를 어떻게 읽어야 하는가?",
     idea: "단순 비율은 snapshot 안에서 검증된 자산이 포함 채무보다 얼마나 큰지만 보여 줍니다. 채무 모집단 완전성과 자산의 법적·운영 통제는 별도 증거입니다.",
     formula: String.raw`R=\frac{A_{\mathrm{verified}}}{L_{\mathrm{included}}}=\frac{105}{100}=1.05`,
+    mobileFormula: String.raw`R=\frac{105}{100}=1.05`,
     annotatedFormula: String.raw`R=\frac{\underbrace{A_{\mathrm{verified}}}_{\text{snapshot 검증 자산}}}{\underbrace{L_{\mathrm{included}}}_{\text{포함된 고객 채무}}}=\frac{105}{100}=1.05`,
     operations: [
           { expression: String.raw`A_{\mathrm{verified}}`, annotation: ["snapshot 안에서 검증된 자산 105 BTC"] },
@@ -86,7 +88,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     assumptions: ["같은 asset unit·cutoff·valuation rule을 사용합니다.", "Liability population completeness와 asset encumbrance는 별도 검증합니다.", "R≥1은 지급능력·감사·미래 출금 성공을 증명하지 않습니다."],
     interpretation: "R=1.05는 포함 채무 100 BTC에 대해 검증 자산 105 BTC가 보였다는 뜻뿐입니다. 숨은 채무 20 BTC가 있으면 전체 비율은 달라지므로 PoR와 solvency를 구분합니다.",
     citations: [
-      { id: "paper-fsc-vasp-custody", title: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: FSC_LAW, problem: "국내 이용자 자산 보관비율과 산정·유지 시점을 확인해야 합니다.", contribution: "경제적 가치 기준 80% 이상 콜드월렛 보관과 일일 산정·상시 유지 경계를 설명합니다.", assumptions: "2026-08-14 현행 법령·감독규정과 사업자 사실관계를 준법 owner가 재확인합니다.", scope: "대한민국 VASP의 이용자 자산 보관 관련 공식 설명입니다.", notClaim: "80%가 모든 국가의 보편값이거나 PoR·지급능력·key safety를 자동 증명한다는 뜻은 아닙니다." },
+      { id: "paper-fsc-vasp-custody", title: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: FSC_LAW, problem: "국내 이용자 자산 보관비율과 산정·유지 시점을 확인해야 합니다.", contribution: "경제적 가치 기준 80% 이상 콜드월렛 보관과 일일 산정·상시 유지 경계를 설명합니다.", assumptions: "2026-11-02 현행 법령·감독규정과 사업자 사실관계를 준법 owner가 재확인합니다.", scope: "대한민국 VASP의 이용자 자산 보관 관련 공식 설명입니다.", notClaim: "80%가 모든 국가의 보편값이거나 PoR·지급능력·key safety를 자동 증명한다는 뜻은 아닙니다." },
       { id: "paper-fatf-vasp-custody", title: "FATF · Updated Guidance for VA and VASPs", href: FATF_VASP, problem: "외부 수탁·wallet·거래 통제를 고객 위험과 책임에 연결해야 합니다.", contribution: "VASP risk-based control과 third-party 관계의 국제 정책 경계를 제공합니다.", assumptions: "국내 법령과 실제 custody 역할·계약·위험평가를 함께 적용합니다.", scope: "FATF의 VASP risk-control 원칙에 한정합니다.", notClaim: "특정 wallet architecture·PoR 방식·custodian 제품을 승인하지 않습니다." },
     ],
   },
@@ -116,6 +118,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "출금 release gate는 어떤 독립 조건이 모두 참이어야 하는가?",
     idea: "고객 의도, 정책, 분리 승인, signer binding, chain/ledger reconciliation이 같은 generation에서 검증돼야 외부 효과를 허용합니다.",
     formula: String.raw`W=I\land P\land A\land S\land R`,
+    mobileFormula: String.raw`\begin{aligned}W&=I\land P\land A\\&\quad\land S\land R\end{aligned}`,
     annotatedFormula: String.raw`\underbrace{W}_{\text{출금 release}}=\underbrace{I}_{\text{고객 의도}}\land\underbrace{P}_{\text{policy}}\land\underbrace{A}_{\text{분리 승인}}\land\underbrace{S}_{\text{signer binding}}\land\underbrace{R}_{\text{reconcile}}`,
     operations: [
           { expression: String.raw`I\land P\land A\land S\land R`, annotation: ["의도·정책·분리 승인·signer·reconcile이", "같은 generation에서 모두 1이어야 출금", "HSM 서명 가능 S=1이어도 A=0이면 W=0"] },
@@ -124,7 +127,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     assumptions: ["각 Boolean은 같은 intent와 policy/key generation을 가리킵니다.", "MPC share 수와 업무 승인자 수를 구분합니다.", "W=1은 chain finality·고객 기기 안전·법률 준수 전체의 증명이 아닙니다."],
     interpretation: "HSM 서명이 가능해 S=1이어도 approver 분리가 깨져 A=0이면 W=0입니다. 서명 장비 하나만 통과했다고 출금을 release하지 않습니다.",
     citations: [
-      { id: "paper-fsc-vasp-wallet", title: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: FSC_LAW, problem: "이용자 자산의 안전한 보관과 손실 대응 경계를 현행 기준에서 확인해야 합니다.", contribution: "콜드월렛 비율·보험/공제/준비금 등 국내 보호조치의 공식 설명을 제공합니다.", assumptions: "2026-08-14 현행 규정과 실제 wallet·보험·준비금 scope를 다시 확인합니다.", scope: "국내 VASP 이용자 자산 보호의 상위 운영 경계입니다.", notClaim: "특정 HSM·MPC·multisig architecture나 한계값을 승인하지 않습니다." },
+      { id: "paper-fsc-vasp-wallet", title: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: FSC_LAW, problem: "이용자 자산의 안전한 보관과 손실 대응 경계를 현행 기준에서 확인해야 합니다.", contribution: "콜드월렛 비율·보험/공제/준비금 등 국내 보호조치의 공식 설명을 제공합니다.", assumptions: "2026-11-02 현행 규정과 실제 wallet·보험·준비금 scope를 다시 확인합니다.", scope: "국내 VASP 이용자 자산 보호의 상위 운영 경계입니다.", notClaim: "특정 HSM·MPC·multisig architecture나 한계값을 승인하지 않습니다." },
       { id: "paper-fatf-vasp-wallet", title: "FATF · Updated Guidance for VA and VASPs", href: FATF_VASP, problem: "Wallet transaction과 고객·counterparty 위험을 지속적으로 통제해야 합니다.", contribution: "VASP risk-based controls와 ongoing monitoring의 국제 원칙을 제공합니다.", assumptions: "국내 법령·chain 위험·service model과 함께 적용합니다.", scope: "VASP의 일반 risk-control 원칙입니다.", notClaim: "FATF가 특정 key ceremony·signer·blockchain finality 정책을 정했다는 뜻은 아닙니다." },
     ],
   },
@@ -154,6 +157,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "하루 alert 480건을 4명이 건당 10분씩, 각 360분 검토할 수 있으면 부하는 얼마인가?",
     idea: "총 검토 필요시간을 실제 analyst 가용시간으로 나눠 threshold가 운영 가능한지 확인합니다.",
     formula: String.raw`Q=\frac{A m}{H}=\frac{480\times 10}{4\times 360}\approx 3.33`,
+    mobileFormula: String.raw`\begin{aligned}Q&=\frac{480\times 10}{4\times 360}\\&\approx 3.33\end{aligned}`,
     annotatedFormula: String.raw`Q=\frac{\underbrace{A m}_{\text{총 검토 필요시간}}}{\underbrace{H}_{\text{analyst 가용시간}}}=\frac{480\times 10}{4\times 360}\approx 3.33`,
     operations: [
           { expression: String.raw`A m`, annotation: ["하루 alert 480건 × 건당 10분 = 4,800분"] },
@@ -164,7 +168,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     assumptions: ["같은 alert definition과 severity mix를 사용합니다.", "P95 queue age와 고위험 miss를 별도로 봅니다.", "Q는 위법 판단 threshold나 신고 의무 조건이 아닙니다."],
     interpretation: "Q≈3.33이면 queue가 계속 쌓입니다. Recall 숫자만 보고 배포하지 말고 threshold·workflow·인력을 조정한 뒤 독립 holdout으로 다시 확인합니다.",
     citations: [
-      { id: "paper-fsc-market-surveillance", title: "금융위원회 · 가상자산 이상거래 상시감시 현장점검", href: FSC_SURVEILLANCE, problem: "거래소의 이상거래 상시감시와 당국 통보 책임을 구분해야 합니다.", contribution: "가격·거래량 감시, 예방조치, 의심거래 통보의 국내 공식 운영 경계를 설명합니다.", assumptions: "2026-08-14 현행 법령과 거래소별 업무규정·권한을 재확인합니다.", scope: "대한민국 가상자산거래소의 이상거래 상시감시입니다.", notClaim: "Alert나 거래소 심리가 위법·유죄·부당이득을 자동 확정한다는 뜻은 아닙니다." },
+      { id: "paper-fsc-market-surveillance", title: "금융위원회 · 가상자산 이상거래 상시감시 현장점검", href: FSC_SURVEILLANCE, problem: "거래소의 이상거래 상시감시와 당국 통보 책임을 구분해야 합니다.", contribution: "가격·거래량 감시, 예방조치, 의심거래 통보의 국내 공식 운영 경계를 설명합니다.", assumptions: "2026-11-02 현행 법령과 거래소별 업무규정·권한을 재확인합니다.", scope: "대한민국 가상자산거래소의 이상거래 상시감시입니다.", notClaim: "Alert나 거래소 심리가 위법·유죄·부당이득을 자동 확정한다는 뜻은 아닙니다." },
       { id: "paper-fsc-unfair-results", title: "금융위원회 · 가상자산 불공정거래 조사 2년 성과", href: FSC_RESULTS, problem: "감시·혐의통보·조사·조치의 실제 authority chain을 구분해야 합니다.", contribution: "2026년 현재 조사 전담조직·거래소 상시감시·혐의 확인 뒤 조사 흐름을 공식 설명합니다.", assumptions: "보도자료의 집계 시점과 개별 사건 사실관계를 구분합니다.", scope: "2024-07-19 법 시행 뒤 국내 조사 운영의 공개 snapshot입니다.", notClaim: "공개 건수·평균 부당이득을 모든 사건의 base rate나 detector 성능으로 일반화하지 않습니다." },
     ],
   },
@@ -183,7 +187,7 @@ export default function VaspOperationsArticle({ article }: { article: ArticleKey
   return <article className="space-y-14">
     <section id="overview" className="space-y-6"><p className="text-sm font-semibold text-primary">{c.eyebrow}</p><h2 className="text-3xl font-bold tracking-tight">{c.title}</h2><p className="text-lg leading-8">{c.lead}</p><aside className="rounded-lg border border-border p-4 text-sm leading-6">{c.boundary}</aside><Flow config={c}/><ContentBoundary article={c.key}/></section>
     <section id={c.firstId} className="space-y-5"><p className="text-sm font-semibold text-primary">01 · 개념과 통제 경계</p><h2 className="text-2xl font-bold">{c.firstTitle}</h2>{c.firstBody.map((p) => <p key={p} className="leading-7">{p}</p>)}</section>
-    <section id={c.secondId} className="space-y-5"><p className="text-sm font-semibold text-primary">02 · 계산과 운영 증거</p><h2 className="text-2xl font-bold">{c.secondTitle}</h2>{c.secondBody.map((p) => <p key={p} className="leading-7">{p}</p>)}<ExplainedFormula question={c.question} idea={c.idea} formula={c.formula} annotatedFormula={c.annotatedFormula} operations={c.operations} terms={c.terms} assumptions={c.assumptions} interpretation={c.interpretation}/>{c.citations.map((item, index) => <Evidence key={item.id} item={item} index={index}/>)}</section>
+    <section id={c.secondId} className="space-y-5"><p className="text-sm font-semibold text-primary">02 · 계산과 운영 증거</p><h2 className="text-2xl font-bold">{c.secondTitle}</h2>{c.secondBody.map((p) => <p key={p} className="leading-7">{p}</p>)}<ExplainedFormula question={c.question} idea={c.idea} formula={c.formula} mobileFormula={c.mobileFormula} annotatedFormula={c.annotatedFormula} operations={c.operations} terms={c.terms} assumptions={c.assumptions} interpretation={c.interpretation}/>{c.citations.map((item, index) => <Evidence key={item.id} item={item} index={index}/>)}</section>
     <section id={c.releaseId} className="space-y-5"><p className="text-sm font-semibold text-primary">03 · 실패 주입과 release gate</p><h2 className="text-2xl font-bold">정상 예시보다 누락·우회·외부 effect의 불확실성을 먼저 시험합니다</h2><div className="overflow-hidden rounded-lg border border-border">{c.failures.map(([fault, oracle]) => <div key={fault} className="grid grid-cols-[minmax(0,.7fr)_minmax(0,1.3fr)] gap-3 border-b border-border p-4 text-sm last:border-b-0"><strong>{fault}</strong><span className="min-w-0 break-words text-muted-foreground">{oracle}</span></div>)}</div><p className="leading-7">Base와 candidate는 같은 사건·기간·policy·code·key/model generation에서 비교합니다. Missing·unknown은 pass가 아니며 owner, reviewer, source digest, canary와 rollback receipt를 하나의 release record로 남깁니다.</p><h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p className="leading-7">기초 6문제는 용어·흐름·작은 계산을, 심화 4문제는 반례·실패 주입·독립 검증·rollback을 묻습니다. 각 답의 전제와 비보장은 위 절에서 직접 찾을 수 있습니다.</p></section>
   </article>;
 }

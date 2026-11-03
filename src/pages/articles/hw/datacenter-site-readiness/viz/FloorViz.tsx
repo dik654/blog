@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileGateRows from "./MobileGateRows";
 
 /** 본문 대응: FloorLoad.tsx — 면하중과 점하중 */
 const SCENES = ["랙 총 무게", "면하중", "점하중", "분산판"] as const;
@@ -38,7 +39,8 @@ export default function FloorViz() {
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileGateRows step={step} rows={[["총 무게", "W = 1,400kg"], ["면하중", "1,400÷0.72 = 1,944"], ["점하중", "1,400÷4 = 350"], ["분산판", "점하중만 완화"]]} note="면하중과 점하중을 서로 다른 허용치와 비교합니다" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <rect x={60} y={40} width={110} height={100} fill={W} fillOpacity={0.14} stroke={W} strokeWidth={1.25} />
             <text x={115} y={84} textAnchor="middle" fontSize={10} fontWeight={700} fill={W}>
               랙
@@ -96,7 +98,7 @@ export default function FloorViz() {
               두 값 중 하나만 넘어도 그대로 들일 수 없습니다
             </text>
             <text x={60} y={190} fontSize={9} fill={MUTED}>
-              참고로 일반 사무실 설계 기준은 수백 kg/m² 수준입니다
+              실제 판정은 설치 구역 구조 도면의 분포·집중 하중 허용치와 비교합니다
             </text>
           </svg>
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>

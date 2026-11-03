@@ -1,6 +1,6 @@
 {
  "$comment": "세션 입력 개념 목록의 처리 원장. status: existing(이미 node) · planned(배정됨) · done(글에 반영, conceptId·owner 확정) · alias(기존 node 에 별칭만) · defer(관찰 원장). 작업자는 registration module 의 LEDGER export 로 row 를 갱신한다.",
- "generatedAt": "2026-10-24",
+ "generatedAt": "2026-11-01",
  "rows": [
   {
    "batch": "1560",
@@ -6765,8 +6765,8 @@
    "plannedArticle": "cuda-persistent-kernels",
    "plannedRoute": "gpu/cuda-persistent-kernels",
    "inProse": true,
-   "reason": "기존 node 재사용 — 본문에 Gupta 등의 정의(maximal launch·work queue loop)와 네 use case·손해 조건 문단 추가",
-   "updatedAt": "2026-08-29"
+   "reason": "Resident grid와 반복 queue loop를 실제 block-scheduling 경계와 함께 설명",
+   "updatedAt": "2026-11-01"
   },
   {
    "batch": "1560",
@@ -6778,9 +6778,9 @@
    "owner": "/gpu/cuda-persistent-kernels#overview",
    "plannedArticle": "cuda-persistent-kernels",
    "plannedRoute": "gpu/cuda-persistent-kernels",
-   "inProse": false,
-   "reason": "Resident worker 가 소비하는 work queue 는 기존 node 의 정의 그대로",
-   "updatedAt": "2026-08-29"
+   "inProse": true,
+   "reason": "Task descriptor·ticket·completion을 분리한 queue lifecycle",
+   "updatedAt": "2026-11-01"
   },
   {
    "batch": "1560",
@@ -6792,9 +6792,9 @@
    "owner": "/gpu/cuda-persistent-kernels#work-assignment",
    "plannedArticle": "cuda-persistent-kernels",
    "plannedRoute": "gpu/cuda-persistent-kernels",
-   "inProse": false,
-   "reason": "Device 의 block 이 다음 일을 고르는 static·dynamic 배분의 canonical",
-   "updatedAt": "2026-08-29"
+   "inProse": true,
+   "reason": "Static·dynamic·chunk 배분의 canonical",
+   "updatedAt": "2026-11-01"
   },
   {
    "batch": "1560",
@@ -6806,9 +6806,9 @@
    "owner": "/gpu/cuda-persistent-kernels#work-assignment",
    "plannedArticle": "cuda-persistent-kernels",
    "plannedRoute": "gpu/cuda-persistent-kernels",
-   "inProse": false,
-   "reason": "Queue 를 block 별로 나눠 contention 을 분산하는 방식의 canonical",
-   "updatedAt": "2026-08-29"
+   "inProse": true,
+   "reason": "Per-worker deque·victim·termination detection의 canonical",
+   "updatedAt": "2026-11-01"
   },
   {
    "batch": "1560",
@@ -6821,8 +6821,8 @@
    "plannedArticle": "cuda-persistent-kernels",
    "plannedRoute": "gpu/cuda-persistent-kernels",
    "inProse": true,
-   "reason": "가장 늦은 block 대 평균의 비율이라는 측정 기준 — 같은 node 의 alias",
-   "updatedAt": "2026-08-29"
+   "reason": "마지막 worker÷평균 busy time이라는 fixture 측정 기준",
+   "updatedAt": "2026-11-01"
   },
   {
    "batch": "1560",
@@ -6834,9 +6834,9 @@
    "owner": "/gpu/cuda-persistent-kernels#work-assignment",
    "plannedArticle": "cuda-persistent-kernels",
    "plannedRoute": "gpu/cuda-persistent-kernels",
-   "inProse": false,
-   "reason": "tile += g loop 의 static 면 — 같은 node 의 alias",
-   "updatedAt": "2026-08-29"
+   "inProse": true,
+   "reason": "tile=b; tile+=g의 static strided 배분",
+   "updatedAt": "2026-11-01"
   },
   {
    "batch": "1560",
@@ -6848,9 +6848,9 @@
    "owner": "/gpu/cuda-persistent-kernels#work-assignment",
    "plannedArticle": "cuda-persistent-kernels",
    "plannedRoute": "gpu/cuda-persistent-kernels",
-   "inProse": false,
-   "reason": "atomicAdd counter 의 dynamic 면 — 같은 node 의 alias",
-   "updatedAt": "2026-08-29"
+   "inProse": true,
+   "reason": "Atomic ticket과 chunk의 dynamic 배분",
+   "updatedAt": "2026-11-01"
   },
   {
    "batch": "1560",

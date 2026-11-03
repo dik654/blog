@@ -265,17 +265,17 @@ export const collectiveFieldLab = hardwareLab({
 export const modded4090FieldLab = hardwareLab({
   title: "개조 장비를 용량 성공과 운영 승인으로 분리하는 원장",
   question: "VRAM이 늘어난 사실과 장기 안정성·재현성·지원 가능성을 따로 판정합니까?",
-  rows: [["identity", "board/VBIOS/memory·power limit", "manifest", "개조 범위"], ["health", "ECC 부재·Xid·temperature·throttle", "telemetry·soak log", "안정성"], ["workload", "model load·tokens/s·p99·OOM", "benchmark JSON", "용량/성능"], ["operation", "spare·repair·rollback·warranty", "runbook·cost", "production 사용 여부"]],
+  rows: [["identity", "board/firmware/memory·power limit", "manifest", "개조 범위"], ["path", "P2P status·host staging·pair bandwidth", "topo·nvbandwidth", "실제 통신 경로"], ["health", "Xid·temperature·throttle", "telemetry·soak log", "안정성"], ["workload", "model load·tokens/s·p95·p99·OOM", "benchmark JSON", "용량/성능"], ["operation", "spare·repair·rollback·warranty", "runbook·cost", "production 사용 여부"]],
   conclusion: "개조 GPU는 ‘모델이 한 번 올라갔다’와 ‘서비스에 승인됐다’ 사이의 긴 증거 사슬을 별도로 채워야 합니다.",
   evidenceTitle: "VRAM 용량·PCIe path·열·장시간 오류를 한 run에 묶습니다",
   evidenceQuestion: "초기 성공 뒤 몇 시간 후 throttle·Xid·memory corruption을 잡을 수 있습니까?",
   body: "부하 시험은 화재·장비 손상 위험과 제조사 지원 상실 가능성을 먼저 검토한 격리 환경에서만 수행합니다. 온도와 power cap, 오류 log를 지속 수집합니다.",
-  command: "nvidia-smi --query-gpu=name,uuid,memory.total,power.limit,temperature.gpu,clocks_throttle_reasons.active --format=csv -l 10\nnvidia-smi topo -m\njournalctl -kf | grep -Ei 'NVRM|Xid'\n<serving-benchmark> --model <model> --duration 3600 --output-json <run-id>.json",
+  command: "nvidia-smi --query-gpu=name,uuid,memory.total,power.limit,temperature.gpu,clocks_throttle_reasons.active --format=csv -l 10\nnvidia-smi topo -m\nnvidia-smi topo -p2p p\nnvbandwidth -p device_to_device --format json\njournalctl -kf | grep -Ei 'NVRM|Xid'\n<serving-benchmark> --model <model> --duration 3600 --output-json <run-id>.json",
   normal: "memory.total=49140MiB\n1h errors=0, throttle=inactive\ntokens/s and p99 within acceptance",
   normalReading: "이 결과는 해당 board·VBIOS·냉각·runtime 조합의 한 run에만 유효합니다. 반복 run과 spare strategy가 필요합니다.",
   failure: "after 37m: Xid 31\ntemperature=91C, SW Thermal Slowdown\np99 latency +240%",
   failureReading: "용량 성공과 무관하게 운영 acceptance는 실패입니다. 냉각·power·memory 안정성을 재검증하고 생산 투입을 보류합니다.",
-  sources: [nvidiaSmi, dcgm, linuxPci, { label: "NVIDIA Xid errors", href: "https://docs.nvidia.com/deploy/xid-errors/index.html", claim: "Xid event의 수집 위치와 대표 원인·진단 경로를 확인했습니다.", checkedAt }, { label: "NVIDIA GPU Debug Guidelines", href: "https://docs.nvidia.com/deploy/gpu-debug-guidelines/index.html", claim: "GPU 장애 시 상태 보존과 debug data 수집 순서를 확인했습니다.", checkedAt }],
+  sources: [nvidiaSmi, dcgm, linuxPci, { label: "NVIDIA NCCL · GPU troubleshooting", href: "https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html", claim: "topo -p2p로 direct access를 확인하고 nvbandwidth로 pair별 실제 bandwidth를 측정하는 절차를 확인했습니다.", checkedAt }, { label: "NVIDIA nvbandwidth", href: "https://github.com/NVIDIA/nvbandwidth", claim: "device_to_device prefix와 JSON 출력으로 pair bandwidth를 기록하는 CLI를 확인했습니다.", checkedAt }, { label: "NVIDIA Xid errors", href: "https://docs.nvidia.com/deploy/xid-errors/index.html", claim: "Xid event의 수집 위치와 대표 원인·진단 경로를 확인했습니다.", checkedAt }, { label: "NVIDIA GPU Debug Guidelines", href: "https://docs.nvidia.com/deploy/gpu-debug-guidelines/index.html", claim: "GPU 장애 시 상태 보존과 debug data 수집 순서를 확인했습니다.", checkedAt }],
 });
 
 export const b300SwitchlessFieldLab = hardwareLab({

@@ -1,13 +1,12 @@
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PoWMiningViz from "./viz/PoWMiningViz";
-import PoWFlowViz from "./viz/PoWFlowViz";
+import PoWFlowViz, { PoWVerificationPseudocodeViz } from "./viz/PoWFlowViz";
 
 export default function ProofOfWork() {
   return (
     <section data-teach-level="5" id="pow" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        8. A의 이름이 100개여도 계산 몫 10%는 그대로입니다
+        8. A가 이름을 100개 만들면 계산 몫도 늘까요?
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -47,7 +46,7 @@ export default function ProofOfWork() {
       />
 
       <p className="leading-8">평균 시도 횟수를 E라고 놓으면 한 번은 반드시 시도하고 실패확률 1−p일 때 같은 탐색을 다시 시작합니다. 따라서 E=1+(1−p)E이고 pE=1에서 E=1/p를 얻습니다. 사례의 전체 속도 100회/초라면 평균 대기 16/100=0.16초입니다. 이것은 단순 모형의 값이며 네트워크 전파나 난이도 조정을 포함한 실제 체인 속도가 아닙니다.</p>
-      <AlgorithmBlock title="작업 증거를 검증하는 개념 절차 (의사코드)" input={["이전 기록 P, 후보 X, 계산 증거", "설명용 8비트 hash와 T=16 (가정)"]} steps={[{code:"후보가 P를 올바르게 참조하는지 확인한다"},{code:"X 안의 각 거래를 앞선 상태에서 순서대로 검증한다",note:"사례의 잔액은 100−10=90이어야 합니다."},{code:"합의한 입력 인코딩으로 hash를 다시 계산한다"},{code:"설명용 조건 H < 16인지 확인한다"},{code:"유효한 후보의 누적 작업량을 갱신하고 선택 규칙을 적용한다"}]} output="유효한 경쟁 가지와 현재 head. 증거 한 개만으로 영구 확정을 선언하지 않습니다." />
+      <PoWVerificationPseudocodeViz />
       <PoWFlowViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>유효한 블록 두 개가 생기면 누적 작업량을 비교합니다</h3>

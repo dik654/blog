@@ -4,14 +4,12 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import CountryExplorer from "../world-systems/CountryExplorer";
 import { Link } from "react-router-dom";
-import HowToReadCountryViz from "./HowToReadCountryViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">나라의 별명보다 누가 벌고 누가 부담하는지 봅니다</h2>
-        <HowToReadCountryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             어느 나라에서 공장이 잘 돌아간다는 소식과 그곳 가계의 생활이 나아졌다는 소식은 같은 말이 아닙니다. 물건을 만들 때 밖에서 사 온 것이 많을 수도 있고 남은 돈이 일부
@@ -45,10 +43,10 @@ export default function Article() {
             금액 단위입니다. 생산 사슬 안에서 나눌 잔액은 40입니다.
           </p>
           <p className="leading-8">
-            (가정) A국 기업들이 연말에 진 외화 부채의 잔액은 30이고 A국 정부는 같은 해 수입보다 지출을 5 더 했습니다. 여기서 30은 한 시점의 빚,5는 한 해의 부족액입니다.
+            (가정) A국 기업들이 연말에 진 외화 부채의 잔액은 30이고 A국 정부는 같은 해 수입보다 지출을 5 더 했습니다. 여기서 30은 한 시점의 빚, 5는 한 해의 부족액입니다.
             수출 100과 함께 더해 135의 소득이라고 부를 수 없습니다.
           </p>
-          <p className="leading-8">40 가운데 얼마가 노동자의 임금이고 얼마가 소유자의 몫인지 아직 모릅니다.30을 다음 주에 갚는지 10년 후에 갚는지도 모릅니다. 사례에 적힌 네 숫자가 답하지 못하는 질문을 다음 장부에서 채웁니다.</p>
+          <p className="leading-8">40 가운데 얼마가 노동자의 임금이고 얼마가 소유자의 몫인지 아직 모릅니다. 30을 다음 주에 갚는지 10년 후에 갚는지도 모릅니다. 사례에 적힌 네 숫자가 답하지 못하는 질문을 다음 장부에서 채웁니다.</p>
         </div>
 
         <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">100·60·30·5는 서로 다른 대상을 셉니다. 이제 같은 수출 거래가 지나가는 길을 그립니다.</p>
@@ -56,7 +54,7 @@ export default function Article() {
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">판매 100에서 밖으로 60이 나가고 안쪽에 40이 남습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">외국 고객이 낸 100 중 60은 외국 부품 판매자에게 갑니다. 남은 40은 이 단순한 생산 사슬에서 일한 사람과 자본 제공자 등이 나눌 몫입니다.40이 정부 통장에 들어가는 것도, 모두 가계 월급이 되는 것도 아닙니다.</p>
+          <p className="leading-8">외국 고객이 낸 100 중 60은 외국 부품 판매자에게 갑니다. 남은 40은 이 단순한 생산 사슬에서 일한 사람과 자본 제공자 등이 나눌 몫입니다. 40이 정부 통장에 들어가는 것도, 모두 가계 월급이 되는 것도 아닙니다.</p>
           <p className="leading-8">빚 30은 이 흐름 옆에 따로 둡니다. 이자를 내는 비용과 원금을 갚는 현금은 판매액의 차이만으로 알 수 없습니다. 정부의 5도 세금·지출·차입의 흐름에서 다시 확인해야 합니다.</p>
         </div>
         <NumericPath title="(가정) 한 생산 사슬의 연간 흐름" steps={[{"label": "외국 고객의 지급", "value": "100", "detail": "같은 외화 단위"}, {"label": "밖에서 산 부품", "value": "−60", "detail": "다른 중간 투입 생략"}, {"label": "안쪽에서 나눌 잔액", "value": "40", "detail": "국가전체 GDP·순이익 아님"}]} />
@@ -93,8 +91,8 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">A국의 40이 생활과 상환 능력이 되려면 조건이 더 필요합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫째, 수출 100에서 수입 투입 60을 빼 40을 얻습니다. 이것은 생략한 다른 중간 투입이 없다는 가정의 생산 사슬 잔액입니다. 나라 전체의 생산을 다 센 값도, 세금과 이자까지 뺀 회사 순이익도 아닙니다.</p>
-          <p className="leading-8">둘째,40이 임금과 자본의 몫으로 어떻게 나뉘는지 확인합니다. 소득이 생겼어도 실제 입금이 늦으면 곧 돌아오는 부채 30의 만기를 넘길 수 있습니다. 외화 수출대금의 수취일, 부채의 상환일과 보유 현금을 함께 놓아야 합니다.</p>
-          <p className="leading-8">(가정) 외화 1을 사는 데 자국 돈 1이 들다가 1.2가 들게 되면, 외화 부채 30의 자국 돈 환산액은 30에서 36이 됩니다.6만큼 커집니다. 동시에 외화 수출 100과 부품값 60의 환산액도 달라집니다. 어떤 회사가 수출하고 어떤 회사가 빚을 졌는지 모르면 국가 합계로 순효과를 확정할 수 없습니다.</p>
+          <p className="leading-8">둘째, 40이 임금과 자본의 몫으로 어떻게 나뉘는지 확인합니다. 소득이 생겼어도 실제 입금이 늦으면 곧 돌아오는 부채 30의 만기를 넘길 수 있습니다. 외화 수출대금의 수취일, 부채의 상환일과 보유 현금을 함께 놓아야 합니다.</p>
+          <p className="leading-8">(가정) 외화 1을 사는 데 자국 돈 1이 들다가 1.2가 들게 되면, 외화 부채 30의 자국 돈 환산액은 30에서 36이 됩니다. 6만큼 커집니다. 동시에 외화 수출 100과 부품값 60의 환산액도 달라집니다. 어떤 회사가 수출하고 어떤 회사가 빚을 졌는지 모르면 국가 합계로 순효과를 확정할 수 없습니다.</p>
           <p className="leading-8">셋째, 정부 적자 5가 전력 시설 때문인지 다른 지출 때문인지 봅니다. 시설이 제때 작동하고 사용료가 들어오는지에 따라 이후 비용과 생산이 달라집니다. 마지막으로 실제 임금·가격·서비스의 변화가 처음의 기대와 맞았는지 확인합니다.</p>
         </div>
 
@@ -107,7 +105,7 @@ export default function Article() {
             여러 나라를 같은 화면에 놓으려면 비교 가능한 자료가 필요합니다. World Bank의 WDI는 여러 공식 원자료를 모은 출발점입니다. 한 기관에서 다운로드했어도 지표마다
             정의와 연도가 다를 수 있습니다.
           </p>
-          <p className="leading-8">예를 들어 A국의 100은 연간 총수출,30은 연말 외화 부채 잔액입니다. 지표 이름·단위·대상·기준 연도를 각각 기록하고 가져옵니다. 기업 부채를 정부 부채로 바꾸거나, 현재 달러 값을 물가를 고정한 성장률로 읽지 않습니다.</p>
+          <p className="leading-8">예를 들어 A국의 100은 연간 총수출, 30은 연말 외화 부채 잔액입니다. 지표 이름·단위·대상·기준 연도를 각각 기록하고 가져옵니다. 기업 부채를 정부 부채로 바꾸거나, 현재 달러 값을 물가를 고정한 성장률로 읽지 않습니다.</p>
           <p className="leading-8">탐색기의 1인당 국내총생산도 이 나라 안에서 생산한 가치를 인구로 나눈 값입니다. 환율이 달라지면 현재 달러 값이 변합니다. 그 값이 평균 임금이나 개인이 자유롭게 쓸 수 있는 돈을 직접 보여주는 것은 아닙니다.</p>
         </div>
 
@@ -119,11 +117,11 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">250개 국가·지역을 같은 질문으로 탐색합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
-            UN M49는 통계에 쓸 국가·지역 코드 목록입니다.2026-10-04에 확인한 기본 목록 248개를 모두 싣고 FAQ에서 별도 통계 코드 사용을 설명하는 코소보 412와 대만
+            UN M49는 통계에 쓸 국가·지역 코드 목록입니다. 2026-10-04에 확인한 기본 목록 248개를 모두 싣고 FAQ에서 별도 통계 코드 사용을 설명하는 코소보 412와 대만
             158을 더했습니다. 아래 250개는 외교상 승인된 국가 수를 뜻하지 않습니다.
           </p>
           <p className="leading-8">World Bank 국가 API에는 집계 지역을 뺀 217개 경제가 있습니다. 이 중 Channel Islands 같은 항목은 UN의 개별 지역 행과 범위가 다릅니다. 이런 값을 저지섬·건지섬 각각의 값으로 복제하지 않았습니다. 원자료가 없는 지역은 빈칸의 이유를 읽을 수 있게 남겼습니다.</p>
-          <p className="leading-8">인구,1인당 생산액,65세 이상 비중,전력 접근 인구를 나란히 확인해 보세요. 각 값은 2020–2025년 중 가장 최근 관측값입니다.2025년 값과 2023년 값을 같은 해의 차이라고 읽지 않습니다. 전력 접근률이 같아도 정전 시간·산업 요금·접속 대기는 다를 수 있습니다.</p>
+          <p className="leading-8">인구, 1인당 생산액, 65세 이상 비중, 전력 접근 인구를 나란히 확인해 보세요. 각 값은 2020–2025년 중 가장 최근 관측값입니다. 2025년 값과 2023년 값을 같은 해의 차이라고 읽지 않습니다. 전력 접근률이 같아도 정전 시간·산업 요금·접속 대기는 다를 수 있습니다.</p>
         </div>
 <CountryExplorer />
         <SourceApplication source="UNSD · M49, Countries or Areas와 FAQ" excerpt="for strictly statistical purposes" application="A국을 목록에 대응시킬 때 국가 이름 외에 통계 지역 코드를 기록합니다. 본문 탐색기는 248개 행에 코소보·대만 2개 행을 보태 250개를 보여주며, 주권 승인 목록이라고 부르지 않습니다." />

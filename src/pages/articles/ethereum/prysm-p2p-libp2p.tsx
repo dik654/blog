@@ -3,8 +3,8 @@ import { codeRefs } from "./prysm-p2p-libp2p/codeRefs";
 import { prysmTree } from "./prysm-p2p-libp2p/fileTrees";
 import Overview from "./prysm-p2p-libp2p/Overview";
 import PeerDiscovery from "./prysm-p2p-libp2p/PeerDiscovery";
-import PeerScoring from "./prysm-p2p-libp2p/PeerScoring";
 import ConnectionGating from "./prysm-p2p-libp2p/ConnectionGating";
+import PeerScoring from "./prysm-p2p-libp2p/PeerScoring";
 
 export default function PrysmP2PLibp2p() {
   const sidebar = useCodeSidebar();
@@ -12,8 +12,8 @@ export default function PrysmP2PLibp2p() {
     <>
       <Overview onCodeRef={sidebar.open} />
       <PeerDiscovery onCodeRef={sidebar.open} />
-      <PeerScoring onCodeRef={sidebar.open} />
       <ConnectionGating onCodeRef={sidebar.open} />
+      <PeerScoring onCodeRef={sidebar.open} />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

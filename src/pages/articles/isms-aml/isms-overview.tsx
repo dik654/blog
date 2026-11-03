@@ -34,7 +34,7 @@ export default function IsmsOverview() {
         <div className="not-prose my-6 grid gap-4 rounded-xl border border-border/80 p-5 sm:grid-cols-3">
           <div>
             <p className="text-xs font-bold text-primary">관할·확인일</p>
-            <p className="mt-2 text-sm leading-6">대한민국 · 2026-08-14 확인</p>
+            <p className="mt-2 text-sm leading-6">대한민국 · 2026-11-02 확인</p>
           </div>
           <div>
             <p className="text-xs font-bold text-primary">적용 판단</p>
@@ -57,8 +57,13 @@ export default function IsmsOverview() {
             말고 법인, 서비스, 매출 산정 범위와 통지 내용을 확인해야 합니다. 의무대상이 아니어도 자율 신청은 가능합니다.
           </p>
           <p>
-            인증범위(scope)는 회사 이름과 같은 말이 아닙니다. 대상 서비스, 이를 운영하는 조직과 사람, 애플리케이션·서버·네트워크·데이터, 사무실·IDC·클라우드 위치, 외부
-            위탁자를 경계로 고정한 것입니다. 범위 밖 시스템이 인증 서비스의 로그인, 배포, 결제나 백업에 의존한다면 연결 관계와 제외 근거를 설명해야 합니다.
+            인증범위(scope)는 회사 이름과 같은 말이 아닙니다. 대상 서비스와 이를 운영하는
+            조직·사람, 애플리케이션·서버·네트워크·데이터를 경계로 고정한 것입니다.
+          </p>
+          <p>
+            사무실, IDC, 클라우드 위치와 외부 위탁자도 범위에 포함해 판단합니다. 범위 밖
+            시스템이 인증 서비스의 로그인, 배포, 결제, 백업에 연결된다면 그 관계와 제외
+            근거를 설명해야 합니다.
           </p>
         </div>
 
@@ -69,12 +74,12 @@ export default function IsmsOverview() {
         </div>
         <div id="paper-isms-target" className="scroll-mt-24">
           <CitationBlock citeKey={2} source="KISA ISMS-P 누리집 · 인증대상" href={KISA_TARGET}>
-            문제: 신청 조직이 의무대상인지 자율 신청자인지 실무적으로 확인해야 합니다. 기여: ISP·IDC·매출·이용자 기준과 최초 의무대상자의 취득 시점을 안내합니다. 전제: 2026-08-14 확인 화면이며 사업자별 매출·이용자 산정과 예외는 원 법령과 KISA 안내를 다시 대조합니다. 근거 범위: 현재 제도 안내입니다. 비주장: 누리집의 일반 표만으로 특정 법인의 최종 법률 판단을 대신하지 않습니다.
+            문제: 신청 조직이 의무대상인지 자율 신청자인지 실무적으로 확인해야 합니다. 기여: ISP·IDC·매출·이용자 기준과 최초 의무대상자의 취득 시점을 안내합니다. 전제: 2026-11-02 확인 화면이며 사업자별 매출·이용자 산정과 예외는 원 법령과 KISA 안내를 다시 대조합니다. 근거 범위: 현재 제도 안내입니다. 비주장: 누리집의 일반 표만으로 특정 법인의 최종 법률 판단을 대신하지 않습니다.
           </CitationBlock>
         </div>
         <div id="paper-isms-guide" className="scroll-mt-24">
           <CitationBlock citeKey={3} source="KISA ISMS-P 인증기준 안내서 · 2023.11" href={KISA_GUIDE}>
-            문제: 추상적인 인증기준을 조직이 확인 가능한 활동과 증적으로 바꿔야 합니다. 기여: 관리체계 수립·운영, 보호대책, 개인정보 처리 단계의 주요 확인사항·결함사례·증적 예를 제공합니다. 전제: 2023.11 안내서는 심사 해설 자료이므로 2026-08-14 시행 법령·고시와 함께 읽습니다. 근거 범위: 기준 해석과 준비 방향입니다. 비주장: 예시 문서나 제품을 그대로 복제하면 적합하다는 체크리스트가 아닙니다.
+            문제: 추상적인 인증기준을 조직이 확인 가능한 활동과 증적으로 바꿔야 합니다. 기여: 관리체계 수립·운영, 보호대책, 개인정보 처리 단계의 주요 확인사항·결함사례·증적 예를 제공합니다. 전제: 2023.11 안내서는 심사 해설 자료이므로 2026-11-02 시행 법령·고시와 함께 읽습니다. 근거 범위: 기준 해석과 준비 방향입니다. 비주장: 예시 문서나 제품을 그대로 복제하면 적합하다는 체크리스트가 아닙니다.
           </CitationBlock>
         </div>
       </section>
@@ -130,13 +135,17 @@ export default function IsmsOverview() {
       </section>
 
       <section id="protection-measures" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">보호대책은 정책·실행 지점·운영 기록·효과 검증으로 완성됩니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">보호대책은 실제 작동과 검증으로 완성됩니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             인증기준 번호에 문서 파일 하나씩 대응시키는 방식은 통제의 작동 여부를 보여주지
-            못합니다. 하나의 위험 시나리오에 정책과 승인 책임을 두고, IAM·endpoint·network·
-            application·database·physical zone에서 실제 요청을 차단하거나 허용하며, 그 결과를
-            log·ticket·review receipt로 남겨야 합니다.
+            못합니다. 하나의 위험 시나리오에 정책과 승인 책임을 둔 뒤, IAM과 endpoint,
+            network, application, database, physical zone에서 요청을 실제로 차단하거나
+            허용해야 합니다.
+          </p>
+          <p>
+            그 결과는 log, ticket, review receipt로 남깁니다. 즉 정책 문서, 실행 지점,
+            운영 기록, 효과 검증이 하나의 흐름으로 이어져야 합니다.
           </p>
           <h3>세 층을 함께 설계합니다</h3>
           <ul>
@@ -170,9 +179,15 @@ export default function IsmsOverview() {
             떨어집니다.
           </p>
           <p>
-            결함이 나오면 증상만 수정하지 않습니다. 요구사항, 직접 원인, 근본 원인, 같은 원인이 영향을 준 자산·기간·계정을 조사한 뒤 수정·보상통제·재발방지를 정합니다. 이후 원래
-            표본과 확장 표본으로 다시 검증하고 owner·완료일·검증자·잔여위험을 종결 기록에 남깁니다. 예를 들어 퇴직자 한 명의 계정을 끄는 것으로 끝내지 않고 HR event 누락
-            원인을 고쳐 전체 퇴직자 모집단과 API key·VPN certificate까지 재대조해야 합니다.
+            결함이 나오면 증상만 수정하지 않습니다. 요구사항과 직접 원인, 근본 원인을 찾고
+            같은 원인이 영향을 준 자산·기간·계정을 조사합니다. 그 뒤 수정, 보상통제,
+            재발방지를 정합니다.
+          </p>
+          <p>
+            원래 표본과 확장 표본으로 다시 검증하고 owner, 완료일, 검증자, 잔여위험을 종결
+            기록에 남깁니다. 예를 들어 퇴직자 한 명의 계정을 끄는 데서 멈추지 않습니다.
+            HR event 누락 원인을 고쳐 전체 퇴직자 모집단과 API key, VPN certificate까지
+            다시 대조해야 합니다.
           </p>
           <p>
             법상 인증 유효기간은 3년이고 연 1회 이상 사후관리가 수행됩니다. 그러나 그 기간 동안 시스템이 안전하다는 보증은 아닙니다. 인증은 정해진 범위와 심사시점·표본에서 관리체계가

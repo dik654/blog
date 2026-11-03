@@ -1,37 +1,83 @@
+import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
-export default function ConnectionGating({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function ConnectionGating({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="connection-gating" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Connection gate는 candidate·pending·active peer마다 다른 예산과 권한을 준다</h2>
+      <h2 className="mb-5 break-keep text-2xl font-bold">
+        libp2p 연결 뒤 Status까지 통과해야 Prysm의 Connected 피어가 됩니다
+      </h2>
+      <div className="not-prose my-5 flex flex-wrap gap-2">
+        <CodeViewButton
+          onClick={() => onCodeRef("connect-peer", codeRefs["connect-peer"])}
+        />
+        <CodeViewButton
+          onClick={() =>
+            onCodeRef("connection-handler", codeRefs["connection-handler"])
+          }
+        />
+        <CodeViewButton
+          onClick={() =>
+            onCodeRef("status-validation", codeRefs["status-validation"])
+          }
+        />
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          최대 peer 수 하나만 두면 inbound flood가 dial slot과 handshake CPU를 모두 차지할 수 있습니다. Candidate queue, concurrent
-          dial, unauthenticated inbound handshake, authenticated-but-unchecked connection과 active protocol
-          stream에 별도 count·byte·deadline budget을 둡니다. State 승격은 단계의 validation receipt가 있을 때만 허용합니다.
+          후보 N42를 dial하면 Prysm은 먼저 자기 자신이거나 이미 bad인 PeerId인지
+          확인하고, <code>maxDialTimeout</code> 안에서
+          <code>host.Connect</code>를 호출합니다. libp2p host는 설정에 따라 TCP
+          또는 QUIC transport를 사용하고 Noise로 상대 PeerId를 인증한 뒤 stream
+          multiplexer를 준비합니다. 여기까지 성공해도 Prysm 상태는 합의 protocol
+          관점에서 아직
+          <strong> Connecting</strong>입니다.
         </p>
 
-        <h3>Gate 순서와 실패 owner</h3>
-        <ol>
-          <li>Address·source·backoff·diversity policy로 dial admission을 결정합니다.</li>
-          <li>Transport timeout과 socket/resource cap을 적용합니다.</li>
-          <li>Noise/TLS에서 expected PeerId와 authenticated identity를 대조합니다.</li>
-          <li>Multiplexer·protocol ID를 협상하고 Ethereum Status compatibility를 확인합니다.</li>
-          <li>Active peer에 gossip·Req/Resp별 queue와 rate budget을 부여합니다.</li>
-        </ol>
+        <h3>Outbound와 inbound는 누가 먼저 Status를 보냅니까?</h3>
         <p>
-          Reject reason은 local-capacity, stale/backoff, identity mismatch, no common protocol, wrong network/fork, bad status와
-          protocol abuse로 나눕니다. Local-capacity close를 permanent ban으로 feedback하면 혼잡 때 좋은 peer를 잃고, identity
-          mismatch를 일시적 timeout처럼 retry하면 공격자가 handshake 자원을 반복 소비할 수 있습니다.
+          우리가 먼저 건 outbound 연결에서는 Prysm이 N42에게 Status request를
+          보냅니다. 응답을 decode하고
+          <strong>
+            {" "}
+            fork digest, 지나치게 미래인 head slot, finalized epoch와 finalized
+            root
+          </strong>
+          를 local chain과 비교합니다. 이 검사가 성공한 뒤에야 connection
+          state를 Connected로 올립니다.
+        </p>
+        <p>
+          상대가 먼저 건 inbound 연결에서는 상대가 Status request를 시작해야
+          합니다. 현재 Prysm source는 최대 10초 동안 기다린 뒤 chain state가
+          기록되지 않았거나 갱신되지 않았으면 Goodbye와 함께 연결을 닫습니다.
+          양쪽 모두 같은 질문을 확인하지만 먼저 질문하는 쪽이 다릅니다.
         </p>
 
-        <h3>Release gate</h3>
+        <h3>Status 검사가 필요한 이유</h3>
         <p>
-          Base와 candidate에 stale ENR·same-prefix flood·unreachable address·wrong PeerId·no common
-          protocol·wrong fork Status·slowloris·valid reconnect를 같은 순서로 주입합니다. Candidate/pending/active count,
-          open sockets/streams, reason-coded close, backoff와 useful-peer diversity parity를 hard gate로 둔 뒤
-          discovery-to-active p95와 CPU·memory를 비교합니다. 설정을 바꿀 때는 version receipt와 rollback 가능한 previous peer DB
-          snapshot을 함께 배포합니다.
+          Noise가 확인하는 것은 PeerId 소유자와 암호화 통로입니다. 같은 PeerId가
+          어느 Ethereum network와 fork를 따르는지는 알려주지 않습니다. Status가
+          wrong fork나 local finalized chain과 모순되는 root를 보내면 protocol상
+          대화할 수 없는 상대이므로 피어 점수 평균이 좋아질 때까지 기다리지 않고
+          terminal 오류로 다룹니다.
+        </p>
+        <p>
+          반대로 Status 통과는 N42가 앞으로 보내는 모든 block이 유효하다는
+          보증이 아닙니다. Connected는 “합의 메시지를 교환할 수 있다”는
+          권한입니다. 각 gossip message와 Req/Resp response는 별도의 검증기를
+          다시 지나며, 그 결과가 다음 절의 peer score와 bad 판정에 들어갑니다.
+        </p>
+
+        <h3>연결 수와 들어오는 속도도 앞단에서 제한합니다</h3>
+        <p>
+          현재 Prysm connection gater는 시작 전 inbound를 거절하고, IP별
+          leaky-bucket과 inbound·전체 peer limit, CIDR allow/deny filter를
+          적용합니다. 이 gate는 Status의 chain 검사를 대신하지 않습니다. 앞단
+          gate는 연결 자원을 보호하고, Status는 protocol 호환성을 확인합니다.
         </p>
       </div>
     </section>

@@ -4,13 +4,11 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
-import SecuritizationTranchesMapViz from "./SecuritizationTranchesMapViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
   return (
     <div className="space-y-16">
-      <SecuritizationTranchesMapViz />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 미래에 들어올 대출 상환액을 오늘의 자금으로 바꿉니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -22,11 +20,11 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 돈을 빌린 사람과 최종 투자자 사이에 별도 장부가 놓입니다</h2>
-<FlowRail title="미래 대출 상환액의 이동" steps={[{"actor": "돈을 빌린 사람들", "movement": "약속한 원리금을 갚습니다.", "receives": "대출 잔액 감소"}, {"actor": "별도 보유 기구", "movement": "넘겨받은 대출에서 돈을 모읍니다.", "receives": "정해진 순서로 지급"}, {"actor": "투자자들", "movement": "처음에 증권 매수대금을 냅니다.", "receives": "미래 지급 청구권"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">원래 대출을 만든 곳이 받을 권리를 별도 기구로 넘깁니다. 별도 기구는 투자자에게 그 권리를 바탕으로 지급할 증권을 팔고, 받은 돈으로 대출 자산을 삽니다. 돈을 실제로 수금하는 업무는 원래 금융회사 등이 계속 맡을 수 있습니다.</p>
 <p className="leading-8">따라서 돈을 받는 창구와 그 돈의 최종 소유자가 다를 수 있습니다. 별도 기구에 어떤 권리가 유효하게 넘어갔는지가 투자자의 출발점입니다.</p>
         </div>
+<FlowRail title="미래 대출 상환액의 이동" steps={[{"actor": "돈을 빌린 사람들", "movement": "약속한 원리금을 갚습니다.", "receives": "대출 잔액 감소"}, {"actor": "별도 보유 기구", "movement": "넘겨받은 대출에서 돈을 모읍니다.", "receives": "정해진 순서로 지급"}, {"actor": "투자자들", "movement": "처음에 증권 매수대금을 냅니다.", "receives": "미래 지급 청구권"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">대출·권리 이전·투자자 지급의 경로가 보입니다. 총 100억 원을 세 순서로 나눕니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -40,11 +38,11 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 권리의 이전과 지급 순서를 따로 확인합니다</h2>
-<FlowRail title="묶음 안에서 확인할 질문" steps={[{"actor": "누구 재산인가?", "movement": "대출 권리의 이전을 확인합니다.", "receives": "원래 회사 부도와 분리"}, {"actor": "어떤 순서로 주나?", "movement": "70 다음 20 다음 10을 적습니다.", "receives": "지급 우선순위"}, {"actor": "부족하면 누가 잃나?", "movement": "10부터 손실을 흡수합니다.", "receives": "8 손실 후 마지막 몫 2"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">첫 칸은 대출을 원래 금융회사의 재산에서 유효하게 분리했는지입니다. 둘째는 모인 돈에서 수금 비용과 이자를 처리하는 순서입니다. 셋째는 원금이 부족할 때 누구의 몫을 먼저 줄이는지입니다.</p>
 <p className="leading-8">실제 계약은 일정 조건을 넘으면 뒤 순서 지급을 멈추고 앞 순서 원금부터 갚도록 할 수 있습니다. 원금 손실 모형 하나만으로 매달 분배 현금을 설명할 수 없는 이유입니다.</p>
         </div>
+<FlowRail title="묶음 안에서 확인할 질문" steps={[{"actor": "누구 재산인가?", "movement": "대출 권리의 이전을 확인합니다.", "receives": "원래 회사 부도와 분리"}, {"actor": "어떤 순서로 주나?", "movement": "70 다음 20 다음 10을 적습니다.", "receives": "지급 우선순위"}, {"actor": "부족하면 누가 잃나?", "movement": "10부터 손실을 흡수합니다.", "receives": "8 손실 후 마지막 몫 2"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">재산 이전과 현금 배분이 별개의 계약임을 확인했습니다. 순서를 나누는 이유를 살핍니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">

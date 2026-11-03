@@ -11,24 +11,28 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          카페 Wi‑Fi처럼 네트워크를 믿을 수 없는 곳에서도 서버의 응답을 읽고
-          바꾸지 못하게 하려면, 양 끝점이 같은 키를 만들고 상대의 신원을 확인한
-          뒤 모든 메시지를 그 합의에 묶어야 합니다. TLS(Transport Layer
-          Security)는 이 전체 절차를 담당합니다. 핵심은 “암호화했다”가 아니라
-          <strong> 누구와 어떤 조건으로 어떤 키를 합의했는지</strong>입니다.
+          <strong>
+            TLS 1.3은 브라우저가 의도한 서버인지 확인하고, 둘만 아는 키를 만든
+            뒤, 그 키로 이후 바이트를 읽기·변조로부터 보호하는 절차입니다.
+          </strong>{" "}
+          따라서 자물쇠 하나의 이름이 아니라 “누구와 어떤 조건으로 어떤 키를
+          합의했는가”를 정하는 통신 규칙입니다.
         </p>
         <p>
-          TLS 1.3은 두 책임으로 나뉩니다. Handshake protocol은 version과 cipher suite, key share를 협상하고 서버를 인증해 traffic
-          secret을 만듭니다. Record protocol은 그 secret에서 만든 방향별 key와 nonce로 application bytes를 보호합니다. Handshake가
-          실패하면 record layer가 대신 신뢰를 만들어 주지 못합니다. 반대로 인증서를 확인했더라도 record nonce를 재사용하면 데이터 보호가 깨질 수 있습니다.
+          먼저 한 요청만 따라가 보겠습니다. 카페 Wi‑Fi에서 브라우저가
+          <code>https://api.example/login</code>을 엽니다. 이 글의 사례는 이전
+          접속 정보가 없는 새 연결이며, 브라우저가 X25519 공개값과
+          <code>TLS_AES_128_GCM_SHA256</code>을 제안하고 서버가 그대로 고르는
+          경로입니다. 재시도도, PSK도, 0‑RTT도 없습니다. 실제 패킷을 캡처한 값이
+          아니라 각 단계의 책임을 고정하기 위한 대표 사례입니다.
         </p>
         <p>
-          여기서는 byte가 직렬화된다는 최소 전제에서 출발합니다. ECDHE의 군 연산
-          자체는 <Link to="/cs/crypto/diffie-hellman">Diffie–Hellman 정본</Link>
-          에서 더 깊게 다루고, 이 글은 그 shared secret이
-          transcript·certificate·HKDF와 어떻게 결합되는지 소유합니다. 다음 글인{" "}
-          <Link to="/cs/p2p/quic-fundamentals">QUIC</Link>은 이 TLS handshake를 UDP
-          위 packet·loss recovery와 결합합니다.
+          브라우저와 서버는 공개값을 주고받아 같은 비밀을 계산합니다. 브라우저는
+          인증서에 적힌 이름이 자신이 입력한 <code>api.example</code>과 맞는지
+          확인합니다. 이어서 지금까지 주고받은 내용 전체가 바뀌지 않았는지
+          확인한 뒤에야 HTTP 요청을 보냅니다. 이 앞 절차를
+          <strong> 핸드셰이크</strong>, 합의한 키로 실제 바이트를 보호하는 뒤
+          절차를 <strong>레코드 프로토콜</strong>이라고 부릅니다.
         </p>
       </div>
       <ContentBoundary article="tls-fundamentals" />
@@ -38,33 +42,47 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>먼저 관측 가능한 흐름을 잡습니다</h3>
         <p>
-          ClientHello와 ServerHello까지는 협상과 key share가 보입니다. 이후 EncryptedExtensions와 Certificate,
-          CertificateVerify, Finished는 handshake traffic key로 보호됩니다. Client가 서버의 certificate chain과 signature,
-          Finished를 모두 검증한 뒤에야 “이 서버와 합의한 transcript”에 연결된 channel이 됩니다. TLS는 server identity 정책이나 hostname을
-          스스로 정하지 않습니다. 어떤 이름을 인증서와 비교할지는 상위 protocol의 몫입니다.
+          이 사례에서는 ClientHello와 ServerHello의 협상 정보와 X25519 공개값이
+          네트워크에 보입니다. 그 뒤의 EncryptedExtensions, Certificate,
+          CertificateVerify, Finished는 핸드셰이크 키로 보호됩니다. 브라우저가
+          인증서 경로·서비스 이름·서명·Finished를 모두 확인해야 “내가 요청한
+          서버와 합의한 연결”이 됩니다. 인증서가 있다는 사실만으로는 부족합니다.
         </p>
         <p>
-          TLS 1.3의 full handshake는 보통 1‑RTT에 application key를 만듭니다. HelloRetryRequest가 필요하거나 network loss가 나면
-          더 오래 걸립니다. 0‑RTT가 말하는 것은 이전 PSK를 이용해 첫 flight에 early data를 보낼 수 있다는 범위까지입니다. 응답까지 0시간이 되거나 replay
-          protection이 생기지는 않습니다.
+          이 전체 흐름에서 한 질문이 다음 질문을 낳습니다. 공개값만으로 같은
+          비밀을 만들 수 있다면 중간자를 어떻게 막을까요? 인증서가 맞더라도 협상
+          중 한 바이트가 바뀌지 않았다는 것은 어떻게 알까요? 하나의 비밀을
+          양방향 모든 용도에 그대로 쓰지 않으려면 어떻게 나눌까요? 마지막으로
+          같은 키로 여러 레코드를 보낼 때 nonce를 어떻게 겹치지 않게 할까요? 뒤
+          절들은 이 네 질문을 같은 <code>api.example</code> 연결로 답합니다.
+        </p>
+        <p>
+          여기서는 바이트가 순서와 길이를 가지고 직렬화된다는 최소 전제에서
+          출발합니다. X25519의 수학은{" "}
+          <Link to="/cs/crypto/diffie-hellman">Diffie–Hellman 정본</Link>에서 더
+          깊게 다룹니다. 다음 글인{" "}
+          <Link to="/cs/p2p/quic-fundamentals">QUIC</Link>은 이 핸드셰이크를 UDP
+          위 패킷·손실 복구와 결합합니다.
         </p>
         <div
-          id="paper-rfc8446"
+          id="paper-rfc9846"
           className="scroll-mt-24 border-l border-primary/50 pl-4"
         >
-          <p className="text-xs font-bold text-primary">명세 읽기 · RFC 8446</p>
+          <p className="text-xs font-bold text-primary">명세 읽기 · RFC 9846</p>
           <p>
-            RFC 8446은 TLS 1.3의 handshake와 record protection, HKDF key schedule, 0‑RTT anti-replay 경계를 함께
-            정의합니다. 이 글의 메시지 순서와 보안 주장은 해당 상태 기계에 한정합니다. 특정 library의 API나 모든 application의 hostname 정책까지 표준이
-            정한다고 일반화하지는 않습니다.
+            2026년 7월 발행된 RFC 9846은 RFC 8446을 대체한 현재 TLS 1.3
+            규격입니다. 핸드셰이크, 레코드 보호, 키 스케줄, 0‑RTT의 경계를 함께
+            정의합니다. 이 글의 메시지 순서와 보안 주장은 그 상태 기계에
+            한정하며, 실제 지연 시간이나 특정 라이브러리 API까지 규격의 보장으로
+            넓히지 않습니다.
           </p>
           <CitationBlock
-            source="IETF RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3"
+            source="IETF RFC 9846 — The Transport Layer Security (TLS) Protocol Version 1.3"
             citeKey={1}
-            href="https://www.rfc-editor.org/rfc/rfc8446.html"
+            href="https://www.rfc-editor.org/rfc/rfc9846.html"
           >
-            Handshake가 인증·협상·keying material을 만들고 record protocol이
-            이를 사용해 각 record를 보호한다는 두 책임을 확인합니다.
+            기본 전체 핸드셰이크와 재시도·PSK 변형, AEAD 레코드 구조, HKDF 키
+            스케줄과 KeyUpdate의 보안 경계를 확인합니다.
           </CitationBlock>
         </div>
       </div>

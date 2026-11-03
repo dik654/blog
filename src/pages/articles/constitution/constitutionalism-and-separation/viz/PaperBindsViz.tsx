@@ -1,155 +1,72 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-/** 본문 대응: overview·why-paper-binds — 종이가 조정 신호가 되어 힘을 묶는 경로 */
-const SCENES = [
-  "불만은 각자 다른 시점에 생긴다",
-  "선을 미리 그어 둔다",
-  "선을 넘으면 판단이 한 점에 모인다",
-  "선이 흐리면 신호가 켜지지 않는다",
+const STEPS = [
+  {
+    label: "각자는 불만이 있어도 남의 반응을 모름",
+    body: "기자·공무원·야당·지역정부·유권자가 따로 판단하면, 먼저 나서는 비용 때문에 위반을 보아도 동시에 움직이기 어렵습니다.",
+  },
+  {
+    label: "미리 공개된 선이 생김",
+    body: "가상 헌법은 언론사 폐쇄에 법원의 사전 영장이 필요하다고 정합니다. 어떤 행동이 선을 넘는지 모두가 같은 문장으로 확인할 수 있습니다.",
+  },
+  {
+    label: "행정부가 영장 없이 폐쇄 명령",
+    body: "공개된 명령과 명확한 조항이 만나면 서로 다른 행위자들이 같은 사건을 위반 후보로 인식하기 쉬워집니다.",
+  },
+  {
+    label: "공통 신호가 대응의 조정을 돕음",
+    body: "법원 판단·공무원의 집행 거부·언론 보도·정치적 책임 추궁이 서로의 행동을 보이게 합니다. 다만 실제 제동은 독립성과 집행 능력이 있어야 가능합니다.",
+  },
 ] as const;
 
-const NOTES = [
-  "각자 참을 수 있는 정도가 달라 저항이 흩어집니다. 흩어진 저항은 통치를 위협하지 못합니다.",
-  "어디까지가 허용이고 어디부터가 위반인지를 문서로 못 박아 둡니다. 아직 아무 일도 일어나지 않았습니다.",
-  "선을 넘는 순간 모두가 같은 시점에 같은 판단을 합니다. 지배자가 물러서는 이유는 이 조정 가능성입니다.",
-  "조항이 모호하면 사람마다 다르게 읽혀 판단이 모이지 않고, 그러면 선을 넘어도 큰일이 생기지 않습니다.",
-] as const;
-
-const ACCENT = "#6366f1";
-const OK = "#10b981";
-const WARN = "#ef4444";
-const MUTED = "#94a3b8";
-
-/** 시민 여덟 명이 각자 참는 한계(가로 위치가 임계점) */
-const CITIZENS = [18, 34, 52, 61, 74, 86, 95, 108];
-const LINE_X = 240;
+const ACTORS = ["기자", "공무원", "야당", "지역정부", "유권자"];
+const COLORS = ["#2563eb", "#7c3aed", "#d97706", "#0891b2", "#16a34a"];
 
 export default function PaperBindsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3400);
-  const step = scenes.active;
-
   return (
-    <VizFrame
-      eyebrow="헌법의 구속력"
-      title="종이가 힘을 묶는 것은 판단을 한곳에 모으기 때문입니다"
-      description="구속력은 문서 자체가 아니라 그 문서가 만들어 내는 조정 효과에서 나옵니다."
-      note="시민을 여덟 명으로 줄이고 판단을 한 줄에 놓은 단순화입니다. 실제 저항의 조직에는 더 많은 조건이 필요합니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="헌법이 조정 신호가 되는 경로"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <line x1={24} y1={150} x2={456} y2={150} stroke={MUTED} strokeWidth={1} />
-              <text x={24} y={170} fontSize={8} fill={MUTED}>
-                지배자의 행위가 점점 심해지는 방향 →
-              </text>
-
-              {CITIZENS.map((limit, index) => {
-                const x = 40 + limit * 2.6;
-                const triggered =
-                  step === 2 ? x <= LINE_X + 120 : step === 3 ? index % 3 === 0 : false;
-                const color = triggered ? WARN : MUTED;
-                return (
-                  <g key={limit}>
-                    <circle cx={x} cy={150} r={4} fill={color} fillOpacity={triggered ? 0.9 : 0.35} />
-                    {step === 0 && (
-                      <line x1={x} y1={146} x2={x} y2={126} stroke={MUTED} strokeWidth={1} />
-                    )}
-                  </g>
-                );
-              })}
-
-              {step === 0 && (
-                <text x={40} y={116} fontSize={9} fill={MUTED}>
-                  각자의 인내 한계가 흩어져 있습니다
+    <StepViz steps={STEPS}>
+      {(step) => (
+        <svg viewBox="0 0 580 280" role="img" aria-label="공개된 헌법 조항이 흩어진 판단을 공통 신호로 바꾸는 과정">
+          <defs>
+            <marker id="constitution-signal-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0 0L7 3.5L0 7Z" fill="#94a3b8" />
+            </marker>
+          </defs>
+          <text x="290" y="22" textAnchor="middle" fontSize="12" fontWeight="700" fill="currentColor">
+            가상 사례 · 영장 없는 언론사 폐쇄 명령 E
+          </text>
+          {ACTORS.map((actor, index) => {
+            const y = 50 + index * 36;
+            const converged = step >= 2;
+            return (
+              <g key={actor}>
+                <rect x="28" y={y} width="92" height="26" rx="8" fill={`${COLORS[index]}14`} stroke={COLORS[index]} strokeWidth="1.25" />
+                <text x="74" y={y + 17} textAnchor="middle" fontSize="10" fontWeight="700" fill={COLORS[index]}>{actor}</text>
+                <text x="140" y={y + 17} fontSize="9.5" fill="currentColor" opacity="0.65">
+                  {step === 0 ? ["보도할까?", "집행할까?", "항의할까?", "소송할까?", "투표할까?"][index] : step === 1 ? "영장 없이는 폐쇄 불가" : "명령 E는 영장이 없음"}
                 </text>
-              )}
-
-              {step >= 1 && (
-                <g>
-                  <line
-                    x1={LINE_X}
-                    y1={40}
-                    x2={LINE_X}
-                    y2={160}
-                    stroke={step === 3 ? MUTED : ACCENT}
-                    strokeWidth={step === 3 ? 1 : 1.25}
-                    strokeDasharray={step === 3 ? "3 5" : undefined}
-                  />
-                  <text
-                    x={LINE_X + 6}
-                    y={54}
-                    fontSize={9}
-                    fontWeight={700}
-                    fill={step === 3 ? MUTED : ACCENT}
-                  >
-                    {step === 3 ? "모호한 선" : "헌법이 그은 선"}
-                  </text>
-                  <text x={LINE_X + 6} y={68} fontSize={8} fill={MUTED}>
-                    {step === 3 ? "읽는 사람마다 위치가 다름" : "여기부터 위반"}
-                  </text>
-                </g>
-              )}
-
-              {step === 2 && (
-                <g>
-                  <rect x={40} y={86} width={300} height={28} fill={WARN} fillOpacity={0.1} stroke={WARN} strokeWidth={1} />
-                  <text x={190} y={104} textAnchor="middle" fontSize={9} fontWeight={700} fill={WARN}>
-                    같은 시점에 같은 판단 · 저항이 한꺼번에 조직될 수 있음
-                  </text>
-                  <text x={350} y={104} fontSize={9} fontWeight={700} fill={OK}>
-                    그래서 물러선다
-                  </text>
-                </g>
-              )}
-
-              {step === 3 && (
-                <g>
-                  {[LINE_X - 46, LINE_X, LINE_X + 52].map((x, index) => (
-                    <line key={index} x1={x} y1={96} x2={x} y2={160} stroke={MUTED} strokeWidth={1} strokeDasharray="3 5" />
-                  ))}
-                  <text x={40} y={110} fontSize={9} fontWeight={700} fill={MUTED}>
-                    누구는 넘었다 하고 누구는 아니라 합니다
-                  </text>
-                  <text x={40} y={128} fontSize={9} fontWeight={700} fill={WARN}>
-                    판단이 모이지 않아 선을 넘어도 조용합니다
-                  </text>
-                </g>
-              )}
-
-              {step === 1 && (
-                <text x={40} y={116} fontSize={9} fill={MUTED}>
-                  선이 뚜렷할수록, 그리고 널리 알려질수록 뒤 장면이 강해집니다
-                </text>
-              )}
-            </svg>
-          </div>
-
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[step]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
+                {converged && (
+                  <line x1="266" y1={y + 13} x2="327" y2="140" stroke="#94a3b8" strokeWidth="1.25" markerEnd="url(#constitution-signal-arrow)" />
+                )}
+              </g>
+            );
+          })}
+          <rect x="335" y="105" width="215" height="70" rx="12" fill={step >= 2 ? "#ef444414" : "var(--muted)"} stroke={step >= 2 ? "#ef4444" : "#94a3b8"} strokeWidth="1.25" />
+          <text x="442.5" y="128" textAnchor="middle" fontSize="10" fontWeight="700" fill={step >= 2 ? "#dc2626" : "currentColor"}>
+            {step < 1 ? "공통 기준 없음" : step === 1 ? "공개된 헌법선" : "같은 위반 후보 E"}
+          </text>
+          <text x="442.5" y="148" textAnchor="middle" fontSize="9.5" fill="currentColor" opacity="0.68">
+            {step < 1 ? "판단 시점이 흩어짐" : step === 1 ? "영장 없이는 폐쇄 불가" : "영장 없는 폐쇄 명령"}
+          </text>
+          <text x="442.5" y="163" textAnchor="middle" fontSize="8.5" fill="currentColor" opacity="0.55">
+            {step === 3 ? "대응 가능성이 커짐 · 자동 제동은 아님" : "판단을 모을 초점"}
+          </text>
+          <rect x="28" y="238" width="522" height="28" rx="8" fill="var(--muted)" opacity="0.55" />
+          <text x="289" y="256" textAnchor="middle" fontSize="10" fontWeight="700" fill="currentColor">
+            {step === 0 ? "문제가 있어도 누가 함께 움직일지 모릅니다" : step === 1 ? "문서는 나중 행동의 공통 기준을 미리 만듭니다" : step === 2 ? "명확하고 공개된 위반은 같은 사건을 가리키게 합니다" : "법원·공무원·언론·정치가 실제로 독립적일 때 제약으로 이어집니다"}
+          </text>
+        </svg>
+      )}
+    </StepViz>
   );
 }

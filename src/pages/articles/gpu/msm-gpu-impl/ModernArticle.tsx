@@ -5,24 +5,25 @@ import { ModernMsmGpuViz } from "./ModernMsmGpuViz";
 
 const SPPARK = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/pippenger.cuh";
 const SPPARK_SORT = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/sort.cuh";
-const CUDA = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html";
+const CUDA = "https://docs.nvidia.com/cuda/archive/13.2.1/pdf/CUDA_C_Best_Practices_Guide.pdf";
 
 export default function ModernMsmGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Scalar-point pairs를 device 작업표로 바꾸기</p><h2 className="text-3xl font-bold tracking-tight">GPU MSM은 점을 많이 더하는 문제가 아니라, window digit의 충돌과 bucket reduction을 재현 가능하게 배치하는 문제다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Multi-scalar multiplication(MSM)은 여러 scalar와 curve point를 받아 하나의 point를 만듭니다. 수학적 정의와 Pippenger의 원리는 <a className="text-primary hover:underline" href="/cs/crypto/elliptic-curves#g1-curve">타원곡선 정본</a>이 소유하고, 이 글은 고정된 curve·scalar encoding·입력 길이를 pinned sppark CUDA 작업으로 내리는 경계만 다룹니다.</p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">8개 scalar-point 입력을 끝까지 따라가기</p><h2 className="text-3xl font-bold tracking-tight">GPU MSM의 핵심은 같은 통을 함께 갱신하지 않게 만드는 것이다</h2></header>
+      <p className="text-lg leading-8 text-foreground/90"><strong>긴 수를 작은 자리로 나누고, 같은 자리값의 점을 한 owner에게 모은 뒤, 뒤에서부터 누적하면 됩니다.</strong> 이 결과가 CPU와 같을 때만 전체 처리 시간을 비교합니다.</p>
+      <p>이 방식을 multi-scalar multiplication(MSM)의 Pippenger GPU 구현이라고 부릅니다. 여러 scalar와 curve point를 받아 하나의 point를 만드는 수학적 정의는 <a className="text-primary hover:underline" href="/cs/crypto/elliptic-curves#g1-curve">타원곡선 정본</a>이 소유하고, 이 글은 고정된 curve·scalar encoding·입력 길이를 pinned sppark CUDA 작업으로 내리는 경계만 다룹니다.</p>
       <p>
-            공통 예제는 coefficient polynomial에서 나온 scalar 8개와 같은 길이의 SRS points입니다. 먼저 scalar를 signed window
-            digits로 나눈 뒤 같은 digit을 가진 point를 bucket에 모으고 running sum으로 window 결과를 만든 다음 높은 window부터 결합합니다.
-            “GPU니까 모두 독립”인 것이 아니라 같은 bucket을 갱신하는 충돌을 누가 소유할지 정해야 합니다.
+            공통 예제는 scalar 8개와 같은 길이의 points입니다. 낮은 3비트 자리만 잘라 보면 digit은
+            <code>[1, 2, 3, 1, 0, 2, 3, 1]</code>입니다. 같은 digit을 가진 point를 bucket에 모으고 running sum으로 window 결과를 만든 다음 높은 window부터 결합합니다.
+            “GPU니까 모두 독립”인 것이 아니라 같은 bucket을 갱신하는 충돌을 누가 소유할지 정해야 합니다. 실제 signed digit에서는 부호가 음수인 항의 point를 먼저 뒤집어 같은 magnitude bucket에 넣습니다.
           </p>
       <ModernMsmGpuViz />
       <ContentBoundary article="msm-gpu-impl" />
     </section>
 
     <section id="work-plan" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Work plan</p><h2 className="mt-2 text-2xl font-bold">Window 폭은 계산량·bucket memory·digit extraction을 함께 바꾼다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">01 · Work plan</p><h2 className="mt-2 text-2xl font-bold">Scalar를 window 작업표로 바꾼다</h2></header>
       <p>Pinned sppark의 <code>breakdown</code> kernel은 scalar를 Booth-encoded signed digits로 만들며, <code>window_size</code>는 입력 수에 따라 폭을 고릅니다. 따라서 c=16 같은 숫자를 보편 최적값으로 두지 않고 scalar bit length, points 수, available memory, implementation SHA와 함께 receipt로 남깁니다.</p>
       <ExplainedFormula question="Scalar를 c-bit window 작업으로 어떻게 나눌까?" idea={<>각 scalar를 radix 2^c의 signed digits로 나타내면 window마다 같은 절댓값 digit을 bucket 하나에 모을 수 있습니다.</>} formula={String.raw`s_i=\sum_{j=0}^{W-1}d_{i,j}2^{cj},\qquad W=\left\lceil\frac{\ell}{c}\right\rceil`}
       annotatedFormula={String.raw`s_i=\sum_{j=0}^{W-1}\underbrace{d_{i,j}}_{\text{signed digit}}\underbrace{2^{cj}}_{\text{window 자리값}},\qquad W=\underbrace{\left\lceil\frac{\ell}{c}\right\rceil}_{\text{scalar를 덮는 window 수}}`}
@@ -41,7 +42,7 @@ export default function ModernMsmGpuArticle() {
     </section>
 
     <section id="bucket-ownership" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Bucket ownership</p><h2 className="mt-2 text-2xl font-bold">같은 bucket을 여러 thread가 동시에 갱신하지 않도록 작업을 묶는다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">02 · Bucket ownership</p><h2 className="mt-2 text-2xl font-bold">같은 bucket에는 owner 하나만 둔다</h2></header>
       <p>Point addition은 단일 scalar atomic add가 아닙니다. sppark snapshot은 custom sort가 digit과 원래 index를 정렬하고, <code>accumulate</code>가 정렬된 구간을 읽어 bucket을 만듭니다. 다른 구현은 thread-local buckets나 partition 후 merge를 택할 수 있지만, 그 선택을 sppark의 사실로 섞지 않습니다.</p>
       <ExplainedFormula question="Bucket workspace의 상한을 어떻게 예산할까?" idea={<>Window와 partition마다 non-zero bucket point를 보관한다고 가정하면 bucket 수와 내부 point bytes의 곱으로 기본 storage를 잡습니다.</>} formula={String.raw`B_{bucket}=W\,G\,(2^{c-1})\,s_P`}
       annotatedFormula={String.raw`B_{bucket}=\underbrace{W\,G}_{\text{window×partition}}\,\underbrace{(2^{c-1})}_{\text{group당 bucket}}\,\underbrace{s_P}_{\text{device point bytes}}`}
@@ -80,8 +81,11 @@ export default function ModernMsmGpuArticle() {
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">CPU reference와 edge cases가 맞은 뒤 useful point/s와 end-to-end를 잰다</h2></header>
-      <p>0·1·최대 scalar, identity, P와 −P, subgroup-invalid point, n=0/1, 마지막 partial window와 skewed digits를 CPU reference와 비교합니다. Warm-up, CUDA events, completion sync, H2D·digit/sort·bucket·reduction·D2H를 분리하고 actual bytes, registers/spills, occupancy와 stall reason을 진단값으로 남깁니다.</p>
+      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">정답이 같아야 속도를 잰다</h2></header>
+      <div className="space-y-3">
+        <p>먼저 0·1·최대 scalar, identity, P와 −P, subgroup-invalid point를 CPU reference와 비교합니다. 입력 수 0·1, 마지막 partial window, 한 digit에 쏠린 입력도 따로 검사합니다.</p>
+        <p>그다음 warm-up 뒤 CUDA event로 kernel chain을 재고, host-to-device·digit/sort·bucket·reduction·device-to-host 시간을 나눠 기록합니다. 실제 이동 bytes, register spill, occupancy와 stall reason은 원인을 찾는 진단값으로 남깁니다.</p>
+      </div>
       <ExplainedFormula question="GPU MSM 후보의 처리량과 채택 speedup을 어떻게 계산할까?" idea={<>Correct output에 실제로 반영된 pair만 세고 baseline과 candidate의 같은 end-to-end 경계를 비교합니다.</>} formula={String.raw`R_{pair}=\frac{n_{valid}}{t_{kernel}},\qquad S=\frac{T_{CPU}^{e2e}}{T_{GPU}^{e2e}}`}
       annotatedFormula={String.raw`R_{pair}=\frac{\underbrace{n_{valid}}_{\text{결과 반영 pair}}}{\underbrace{t_{kernel}}_{\text{digit→reduction}}},\qquad S=\frac{\underbrace{T_{CPU}^{e2e}}_{\text{CPU 전체}}}{\underbrace{T_{GPU}^{e2e}}_{\text{전송 포함 GPU 전체}}}`}
       operations={[
@@ -95,7 +99,8 @@ export default function ModernMsmGpuArticle() {
         {symbol:"T_{CPU}^{e2e}",name:"CPU baseline time",description:"같은 decoding·validation·MSM·serialization 경계의 wall time입니다."},
         {symbol:"T_{GPU}^{e2e}",name:"GPU candidate time",description:"Transfer·allocation·sync·fallback을 포함한 wall time입니다."},
       ]} assumptions={["Curve·n·scalar distribution·threading·clock·software SHA를 고정하고 warm/cold 결과를 분리합니다.","Invalid inputs, retries와 fallback 시간을 숨기지 않습니다."]} interpretation="Kernel이 2ms여도 H2D 3ms, D2H·validation 2ms이면 GPU end-to-end는 최소 7ms입니다. 10ms CPU 대비 speedup은 5배가 아니라 약 1.43배입니다." />
-      <div id="paper-cuda-msm"><CitationBlock type="paper" citeKey={3} source="CUDA C++ Best Practices Guide 12.8.1" href={CUDA}><p><strong>문제:</strong> 비동기 GPU kernel과 transfer를 재현 가능하게 측정해야 합니다.</p><p><strong>핵심 기여:</strong> CUDA event timing, effective bandwidth와 correctness-first optimization 지침을 제공합니다.</p><p><strong>중요 가정:</strong> CUDA 12.8.1 semantics와 target device properties를 함께 기록합니다.</p><p><strong>근거 범위:</strong> Timing·bandwidth·optimization methodology입니다.</p><p><strong>일반화 금지:</strong> 높은 occupancy나 특정 window 폭이 더 빠르다는 보장은 아닙니다.</p></CitationBlock></div>
+      <div id="paper-cuda-msm"><CitationBlock type="paper" citeKey={3} source="CUDA C++ Best Practices Guide 13.2.1" href={CUDA}><p><strong>문제:</strong> 비동기 GPU kernel과 transfer를 재현 가능하게 측정해야 합니다.</p><p><strong>핵심 기여:</strong> CUDA event timing, effective bandwidth와 correctness-first optimization 지침을 제공합니다.</p><p><strong>중요 가정:</strong> CUDA 13.2.1 semantics와 target device properties를 함께 기록합니다.</p><p><strong>근거 범위:</strong> Timing·bandwidth·optimization methodology입니다.</p><p><strong>일반화 금지:</strong> 높은 occupancy나 특정 window 폭이 더 빠르다는 보장은 아닙니다.</p></CitationBlock></div>
+      <p className="text-sm leading-6 text-muted-foreground">고정한 sppark commit 17278d7의 <code>pippenger.cuh</code>와 <code>sort.cuh</code>는 2026-11-02의 upstream HEAD 69440fd와 SHA-256이 각각 일치했습니다. 이 확인은 source dataflow가 유지됐다는 뜻이며, 새 GPU에서 같은 성능이 난다는 뜻은 아닙니다.</p>
       <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 역검사 10/10:</strong> digit 분해, partial top window, workspace, collision ownership, running sum, implementation scope, edge fixtures, timing boundary, end-to-end speedup과 rollback을 이 글만으로 설명·계산할 수 있어야 합니다. Parity나 p95가 나빠지면 이전 artifact로 되돌리고 실패한 curve·size·SHA를 격리합니다.</aside>
     </section>
   </article>;

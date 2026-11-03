@@ -12,7 +12,7 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const prysmTree: FileNode = d("prysm", [
+export const prysmTree: FileNode = d("prysm-v7.3.1", [
   d("beacon-chain/sync", [
     f(
       "validate_beacon_blocks.go — validateBeaconBlockPubSub()",
@@ -20,14 +20,26 @@ export const prysmTree: FileNode = d("prysm", [
       "validate-block-pubsub",
     ),
     f(
-      "subscriber.go — subscribeStaticTopics()",
-      "beacon-chain/sync/subscriber.go",
-      "subscribe-topics",
-    ),
-    f(
       "subscriber.go — subscribe()",
       "beacon-chain/sync/subscriber.go",
-      "message-handler",
+      "subscribe-topic",
+    ),
+    f(
+      "subscriber.go — wrapAndReportValidation()",
+      "beacon-chain/sync/subscriber.go",
+      "validation-wrapper",
+    ),
+    f(
+      "decode_pubsub.go — decodePubsubMessage()",
+      "beacon-chain/sync/decode_pubsub.go",
+      "decode-pubsub",
+    ),
+  ]),
+  d("beacon-chain/p2p/encoder", [
+    f(
+      "ssz.go — DecodeGossip()",
+      "beacon-chain/p2p/encoder/ssz.go",
+      "decode-gossip",
     ),
   ]),
 ]);

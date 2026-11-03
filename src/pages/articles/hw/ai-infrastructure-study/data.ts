@@ -10,6 +10,49 @@ import {
 
 export const b300BlueprintData: AiInfrastructureArticleData = {
   engineeringDepth: b300BlueprintDepth,
+  architectureMap: {
+    title: "128 GPU 주문은 16대 서버가 아니라 여섯 경로의 계약입니다",
+    answer: "워크로드 완료 조건에서 시작해 노드 안 scale-up, 노드 사이 scale-out, 저장·서비스, 관리, 전력·냉각을 따로 설계하고 마지막 검수 영수증에서 다시 합칩니다.",
+    workload: {
+      label: "워크로드 계약",
+      detail: "model revision·precision·context·batch·완료 시간·p99·복구 목표",
+    },
+    compute: {
+      label: "16 × 8-GPU B300 노드",
+      inventory: "128 GPU · 36.864TB 분산 HBM · 최소 32TB host memory",
+      scaleUp: "노드마다 8 GPU를 NVLink·NVSwitch로 연결",
+    },
+    fabrics: [
+      {
+        name: "동서 compute fabric",
+        link: "노드당 ConnectX-8 8개 · 전체 128개",
+        destination: "16노드 collective·분산 학습",
+        boundary: "800Gb/s는 adapter 상한입니다. Plane·switch·optic·blocking ratio가 실제 경로를 정합니다.",
+      },
+      {
+        name: "북남 storage·service",
+        link: "HGX 기준 후보 1 DPU/node · DGX 완제품 2 DPU/node",
+        destination: "공유 저장소·사용자 요청·tenant 경계",
+        boundary: "HGX 권장안과 DGX 실물 수량을 섞지 않고 선택한 OEM BOM으로 다시 셉니다.",
+      },
+      {
+        name: "OOB management",
+        link: "BMC 1GbE·별도 control plane",
+        destination: "전원·firmware·복구·scheduler 관리",
+        boundary: "서비스 망이 막혀도 장비를 고칠 수 있도록 data traffic과 장애 영역을 나눕니다.",
+      },
+    ],
+    facility: {
+      label: "시설 경계 · rack·power·cooling·cable reach",
+      detail: "DGX B300 16대의 system max 합은 16×15kW=240kW입니다. 이 값은 스위치·스토리지·냉각·전력 이중화와 여유를 더하기 전의 장비 상한 합계이므로 site survey를 대신하지 않습니다.",
+    },
+    receipts: [
+      "inventory: GPU 128/128·NIC topology·firmware revision",
+      "network: 1→2→4→16노드 NCCL transport·bandwidth·p99",
+      "storage: 8TB checkpoint를 목표 120초 안에 저장·복구",
+      "facility·operations: A/B feed·열 제거·node drain·repair·return",
+    ],
+  },
   formulas: [
     {
       section: "case",
@@ -114,6 +157,36 @@ export const b300BlueprintData: AiInfrastructureArticleData = {
 
 export const softwareCompatibilityData: AiInfrastructureArticleData = {
   engineeringDepth: softwareCompatibilityDepth,
+  compatibilityMap: {
+    title: "같은 컨테이너도 호스트 아래의 두 경로가 다르면 다르게 실행됩니다",
+    answer: "컨테이너는 사용자 공간을 고정합니다. 실제 계산은 GPU 경로로, 노드 간 전송은 NIC 경로로 내려가며 두 경로는 OS와 커널만 공유한 뒤 서로 다른 driver와 firmware를 통과합니다.",
+    container: {
+      label: "같은 image digest",
+      layers: ["framework와 Python package", "CUDA user library", "NCCL user library"],
+      guarantee: "컨테이너 안 파일과 사용자 공간 의존성",
+    },
+    host: {
+      label: "host image · OS · kernel · container runtime",
+      layers: ["OS release", "kernel", "container runtime", "scheduler 설정"],
+    },
+    branches: [
+      {
+        label: "계산 경로",
+        path: ["GPU kernel driver", "GPU firmware", "PCIe·NVLink", "GPU 계산"],
+        failure: "장치가 안 보이거나 kernel launch·P2P가 실패합니다.",
+      },
+      {
+        label: "노드 간 통신 경로",
+        path: ["RDMA user library", "DOCA-OFED·NIC driver", "NIC firmware·route", "다른 노드의 rank"],
+        failure: "RDMA가 실패하거나 socket으로 물러나고 communicator가 멈춥니다.",
+      },
+    ],
+    gate: {
+      label: "manifest 일치 + 계산·RDMA·collective 시험",
+      rollout: "1대 canary → 2대 RDMA pair → 4대 → 16대",
+      result: "15/16 설치 성공이 아니라 16/16 실행 경로 통과일 때만 128-GPU 작업을 시작합니다.",
+    },
+  },
   formulas: [
     {
       section: "case",
@@ -121,6 +194,7 @@ export const softwareCompatibilityData: AiInfrastructureArticleData = {
         question: "16노드가 하나의 작업에 들어가기 전에 어떤 조건을 모두 통과해야 하나요?",
         idea: "각 노드의 소프트웨어 명세가 승인 기준과 일치하고 사전 통신 시험도 통과해야 합니다. 하나라도 거짓이면 16노드 작업을 시작하지 않습니다.",
         formula: String.raw`A_{\mathrm{cluster}}=\bigwedge_{n=1}^{16}\left[(M_n=M_{\mathrm{base}})\land(C_n=1)\right]`,
+        mobileFormula: String.raw`\begin{aligned}g_n&=\underbrace{(M_n=M_{\mathrm{base}})}_{\text{명세}}\land\underbrace{(C_n=1)}_{\text{시험}}\\A_{\mathrm{cluster}}&=g_1\land g_2\land\cdots\land g_{16}\end{aligned}`,
         annotatedFormula: String.raw`\underbrace{A_{\mathrm{cluster}}}_{\text{작업 투입 가능}}=\bigwedge_{n=1}^{16}\left[\underbrace{(M_n=M_{\mathrm{base}})}_{\text{명세 일치}}\land\underbrace{(C_n=1)}_{\text{사전 시험 통과}}\right]`,
         operations: [
           { expression: String.raw`M_n=M_{\mathrm{base}}`, annotation: "노드의 OS·커널·펌웨어·드라이버·라이브러리 명세를 승인 기준과 비교합니다." },
@@ -169,8 +243,8 @@ export const softwareCompatibilityData: AiInfrastructureArticleData = {
       "canary 한 대에서 재부팅·장치 열거·단일 GPU·노드 내부 P2P·노드 사이 RDMA·NCCL collective를 차례로 시험합니다. 그다음 한 작은 작업 묶음, 전체 16노드로 넓힙니다. 실패하면 어느 층에서 처음 달라졌는지 원장 diff로 찾습니다.",
     ] },
     { id: "source", level: "5", title: "8. DGX OS release 조합을 원장에 옮깁니다", bridge: "원장 작성 순서를 세웠습니다. 기준일이 있는 실제 release 조합을 예로 옮겨 봅니다.", paragraphs: [
-      "2026년 10월 8일 확인한 DGX OS 7 release notes는 현재 버전 표에서 GPU driver, CUDA Toolkit, DOCA OFED, NCCL, kernel과 firmware 조합을 함께 제공합니다. 이 글은 숫자 하나를 추천하는 대신 그 표의 한 행 전체를 검토 단위로 삼습니다.",
-      "문서의 current 표는 이후 바뀔 수 있습니다. 제안서에는 확인일과 release ID를 적고, 운영 배포에는 실제 repository snapshot과 노드 manifest를 남겨야 같은 이름의 ‘최신’이 달라지는 일을 막을 수 있습니다.",
+      "2026년 11월 2일 확인한 DGX OS 7 문서에서 current repository의 GPU driver는 580.196.07이지만, 2026년 9월 14일 공개된 DGX OS 7.6.0 release snapshot의 driver는 580.178.04입니다. 같은 문서 안에서도 ‘지금 저장소가 주는 값’과 ‘그 release가 검증한 고정 행’이 이미 다릅니다.",
+      "그래서 이 글은 숫자 하나를 최신값으로 추천하지 않습니다. 제안서에는 확인일과 release ID를 적고, 운영 배포에는 repository snapshot·host manifest·container digest를 함께 남깁니다. 그래야 저장소가 앞으로 이동해도 어느 조합을 시험하고 승인했는지 되살릴 수 있습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. DOCA profile을 필요한 기능으로 고릅니다", bridge: "검증된 release 행을 봤습니다. 같은 DOCA라는 이름 안에서 설치 범위를 선택합니다.", paragraphs: [
       "NVIDIA의 현재 profile 문서는 ConnectX 환경에는 networking profile을 권장하고, MLNX_OFED와 같은 드라이버·도구만 필요하면 `doca-ofed`, RoCE만 필요하면 `doca-roce`를 제시합니다. BlueField의 추가 가속 기능을 쓸 때는 더 넓은 profile이 필요할 수 있습니다.",
@@ -223,7 +297,7 @@ export const schedulerChoiceData: AiInfrastructureArticleData = {
   engineeringDepth: schedulerChoiceDepth,
   sections: [
     { id: "overview", level: "S", title: "1. GPU는 남아 있는데 네 학습 작업이 하나도 시작하지 못했습니다", bridge: "자원을 잘게 나눠 준 결과 모든 작업이 기다립니다. 작업이 태어나고 끝나는 순서부터 다시 봅니다.", paragraphs: [
-      "(가정) 16노드 클러스터에 각각 8노드를 동시에 요구하는 학습 작업 네 개가 들어왔습니다. 관리 도구가 공평하게 보이도록 작업마다 노드 두 대씩 먼저 나눠 줬지만, 어느 작업도 필요한 여덟 대를 한꺼번에 얻지 못해 GPU 16대가 비어 있는 채로 기다렸습니다.",
+      "(가정) 16노드 클러스터에 각각 8노드를 동시에 요구하는 학습 작업 네 개가 들어왔습니다. 잘못 만든 정책이 공평하게 나눈다는 이유로 작업마다 노드 두 대씩 먼저 잡게 했지만, 어느 작업도 필요한 여덟 대를 한꺼번에 얻지 못해 GPU 16대가 할당된 채로 기다렸습니다.",
       "반대편에는 항상 떠 있어야 하는 추론 API도 있습니다. 이 서비스는 여덟 노드의 동시 시작보다 죽은 복제본 교체와 점진 배포가 중요합니다. 같은 GPU와 컨테이너를 쓴다는 이유만으로 두 작업을 같은 방식으로 관리할 수 있는지부터 따져야 합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 요청·대기·할당·실행·회수를 추적합니다", bridge: "작업 형태가 선택을 바꾼다는 결론을 얻었습니다. 두 도구를 비교하기 전에 공통 생애를 그립니다.", paragraphs: [
@@ -255,7 +329,7 @@ export const schedulerChoiceData: AiInfrastructureArticleData = {
       "작업이 끝난 뒤에는 `sacct`로 실제 사용량을 남기고, `squeue`의 pending reason이 Resources인지 Priority인지 구분합니다. 단순히 ‘대기 중’이라고만 알리면 사용자와 운영자가 용량 부족과 정책 순서를 구분할 수 없습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. Kubernetes의 Job과 GPU Operator를 적용합니다", bridge: "배치 queue의 동작을 확인했습니다. 같은 자원을 서비스 운영 관점에서 비교합니다.", paragraphs: [
-      "Kubernetes Job은 지정한 수의 Pod가 성공적으로 끝나도록 관리합니다. 그러나 8노드 분산 작업의 공동 시작·queue fairness·topology 묶음은 기본 Job 이름만으로 완성되지 않으므로 현재 workload API와 별도 queueing 구성의 지원 상태를 확인해야 합니다.",
+      "Kubernetes Job은 지정한 수의 Pod가 성공적으로 끝나도록 관리합니다. Kubernetes v1.36부터는 기본 비활성인 `WorkloadWithJob` 알파 기능에서 `spec.scheduling`의 gang·topology 의도를 Workload와 PodGroup으로 바꿀 수 있습니다. 이 필드를 생략한 Basic 정책은 기존처럼 Pod별로 배치됩니다. 따라서 ‘Job이 된다’가 아니라 cluster version·feature gate·queue controller와 실제 PodGroup 상태를 확인해야 합니다.",
       "GPU Operator는 GPU driver와 device plugin 등 노드 준비 상태를 선언한 값으로 되돌리는 controller입니다. 같은 event가 다시 와도 결과가 달라지지 않아야 하며, spec 세대와 처리한 세대, update 충돌, 삭제 전 정리를 구분해야 합니다. 그래도 작업이 어떤 8노드를 함께 받아야 하는지와 사용자 우선순위를 결정하지는 않습니다. 장치 준비와 workload scheduling은 다른 책임입니다.",
     ] },
     { id: "limits", level: "7", title: "10. 둘을 함께 쓸 때 소유권부터 정합니다", bridge: "각 도구가 잘하는 일을 비교했습니다. 혼합 운영에서 가장 먼저 막아야 할 충돌을 남깁니다.", paragraphs: [
@@ -278,6 +352,12 @@ export const schedulerChoiceData: AiInfrastructureArticleData = {
     { signal: "복제본이 계속 요청을 받고 점진 배포와 자동 복구가 필요합니다.", choose: "Kubernetes 우선 검토", why: "service API·controller·autoscaling·rolling update가 중심입니다." },
     { signal: "학습 queue와 추론 service를 같은 조직이 운영합니다.", choose: "분리 또는 명시적 bridge", why: "한 GPU의 최종 소유자와 accounting·maintenance 경계를 하나로 고정합니다." },
   ] },
+  currentNotice: {
+    label: "2026-11-02 현재 · Kubernetes Workload API 경계",
+    body: "Kubernetes v1.36의 WorkloadWithJob은 알파이며 기본으로 꺼져 있습니다. 켜고 gang 정책을 명시하면 Job controller가 Workload와 PodGroup을 만들지만, 아무 설정 없는 Job은 여전히 Pod를 하나씩 배치합니다. 운영 설계에는 버전·feature gate·정책 객체와 fallback을 함께 적어야 합니다.",
+    href: "https://kubernetes.io/docs/concepts/workloads/controllers/job/#integrate-with-workload-apis",
+    linkLabel: "Kubernetes Job의 Workload API 통합 확인",
+  },
   terms: { title: "두 scheduler의 실행 단위", items: [
     { term: "Slurm allocation", description: "사용자 작업이 일정 시간 동안 쓸 node·CPU·GPU·memory 묶음입니다.", example: "A 작업이 8노드를 받고 그 안에서 64개 GPU rank를 시작합니다.", boundary: "공유 파일을 자동으로 노드에 복제하거나 application service를 만들어 주지는 않습니다." },
     { term: "Kubernetes Job", description: "지정한 완료 조건을 만족할 때까지 하나 이상의 Pod 실행을 관리하는 workload object입니다.", example: "전처리 shard 16개가 각각 성공할 때까지 실패한 Pod를 다시 만듭니다.", boundary: "다중 노드 GPU 작업의 queue fairness와 gang scheduling 전체를 단독으로 보장하지 않습니다." },
@@ -310,6 +390,7 @@ export const storageIoData: AiInfrastructureArticleData = {
         question: "4MiB 요청으로 8GiB/s를 내려면 몇 IOPS와 몇 개의 진행 중 요청이 필요한가요?",
         idea: "처리량을 요청 크기로 나누면 초당 요청 수가 나옵니다. 여기에 평균 응답 시간을 곱하면 경로 안에 머무는 요청 수를 가늠할 수 있습니다.",
         formula: String.raw`I=\frac{B}{S}=\frac{8\,\mathrm{GiB/s}}{4\,\mathrm{MiB}}=2{,}048\,\mathrm{IOPS},\qquad N\approx I\times L=2{,}048\times0.004\approx8.2`,
+        mobileFormula: String.raw`\begin{aligned}I&=8{,}192\,\mathrm{MiB/s}\div4\,\mathrm{MiB}=2{,}048/\mathrm{s}\\N&=2{,}048/\mathrm{s}\times0.004\,\mathrm{s}\approx8.2\end{aligned}`,
         annotatedFormula: String.raw`\underbrace{I}_{\text{초당 완료 요청}}=\frac{\overbrace{B}^{8\,\mathrm{GiB/s}}}{\underbrace{S}_{4\,\mathrm{MiB}}}=2{,}048\,\mathrm{IOPS},\qquad\underbrace{N}_{\text{진행 중 요청}}\approx I\times\underbrace{L}_{4\,\mathrm{ms}}\approx8.2`,
         operations: [
           { expression: String.raw`8\,\mathrm{GiB/s}=8{,}192\,\mathrm{MiB/s}`, annotation: "이 예에서는 이진 접두사를 사용해 단위를 먼저 맞춥니다." },
@@ -331,6 +412,7 @@ export const storageIoData: AiInfrastructureArticleData = {
         question: "Raw 2PB를 8+2 erasure coding과 20% 운영 여유로 구성하면 얼마를 계획 용량으로 볼 수 있나요?",
         idea: "먼저 보호 방식의 data 비율을 적용하고, 그다음 rebuild와 성장에 남길 여유를 뺍니다. snapshot·metadata·filesystem reserve는 별도 열로 남깁니다.",
         formula: String.raw`C_{\mathrm{plan}}=C_{\mathrm{raw}}\times\frac{k}{k+m}\times(1-r)=2\,\mathrm{PB}\times\frac{8}{10}\times0.8=1.28\,\mathrm{PB}`,
+        mobileFormula: String.raw`\begin{aligned}C_{\mathrm{usable}}&=2\,\mathrm{PB}\times8/10=1.6\,\mathrm{PB}\\C_{\mathrm{plan}}&=1.6\,\mathrm{PB}\times0.8=1.28\,\mathrm{PB}\end{aligned}`,
         annotatedFormula: String.raw`\underbrace{C_{\mathrm{plan}}}_{\text{계획 가능 용량}}=\overbrace{2\,\mathrm{PB}}^{\text{raw}}\times\underbrace{\frac{8}{8+2}}_{\text{EC data 비율}}\times\underbrace{(1-0.2)}_{\text{운영 여유}}=1.28\,\mathrm{PB}`,
         operations: [
           { expression: String.raw`2\,\mathrm{PB}\times8/10=1.6\,\mathrm{PB}`, annotation: "두 parity shard의 보호 비용을 반영한 usable 값입니다." },
@@ -397,6 +479,7 @@ export const storageIoData: AiInfrastructureArticleData = {
       "NAVER·Kakao·우아한형제들·당근 사례는 이 질문을 보충합니다. Cache의 원본, small-file 유지비, 실제 workload 재현, online source 부하 격리만 가져오며 당시 version과 수치를 B300 환경의 보장값으로 쓰지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. Restore가 끝나야 storage를 채택합니다", bridge: "PoC가 정상 상태를 통과했습니다. 처음 사건처럼 node가 사라진 뒤에도 같은 답이 나오는지 확인합니다.", paragraphs: [
+      "결론부터 말하면 정상 상태의 최고 GB/s만으로는 합격이 아닙니다. 허용한 장애를 넣은 상태와 rebuild 중에도 foreground p99를 지키고, 마지막 complete checkpoint를 실제로 restore해 목표 시점부터 다시 계산해야 합격입니다. 아래 CORVAULT 계산은 이 결론을 대신하는 제품 추천이 아니라, raw 용량·예비 공간·rebuild 구조가 왜 검수표에 들어가야 하는지 보여 주는 한 가지 구체적 사례입니다.",
       "먼저 대표 dataset read와 checkpoint write를 정상 상태에서 실행합니다. 다음에는 drive·storage node·network path 하나를 중단하고 같은 작업을 계속합니다. Degraded 상태와 rebuild 중에는 p99, slowest rank, error, 남은 공간과 복구 예상 시간을 한 시간축에 남깁니다.",
       "Raw 2PB에 8+2 EC를 적용하면 설명용 usable capacity는 1.6PB입니다. 여기서 rebuild와 성장을 위한 20%를 남기면 계획값은 1.28PB가 됩니다. Snapshot·metadata·작은 object·compaction 임시 공간은 아직 빼지 않았으므로 별도 열에 기록합니다.",
       "같은 2PB급 용량이 drive 한 상자에 들어가면 rebuild 시간이 새 문제가 됩니다. (가정) 24TB HDD 106개를 담은 4U 장비의 raw는 106×24 = 2,544TB입니다. 전통적인 8+2 RAID는 drive 10개가 한 묶음이라, 하나가 고장 나면 남은 9개에서 읽어 예비 drive 한 대에 24TB를 다시 써야 합니다.",
@@ -465,7 +548,8 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
         question: "B300 16대의 평균 열 가운데 90%를 물로 받고 온도차를 10°C로 두면 필요한 유량은 얼마인가요?",
         idea: "서버 평균 전력을 열부하로 보고, 물이 받는 몫을 비열과 공급·환수 온도차로 나눕니다. 먼저 평균과 피크 전력을 따로 계산합니다.",
         formula: String.raw`P_{\mathrm{avg}}=16\times14.5=232\,\mathrm{kW},\quad P_{\mathrm{peak}}=16\times19=304\,\mathrm{kW},\quad\dot m=\frac{0.9P_{\mathrm{avg}}}{c_p\Delta T}\approx4.99\,\mathrm{kg/s}`,
-        annotatedFormula: String.raw`\underbrace{P_{\mathrm{avg}}}_{\text{평균 IT 부하}}=232\,\mathrm{kW},\quad\underbrace{P_{\mathrm{peak}}}_{\text{피크 IT 부하}}=304\,\mathrm{kW},\quad\underbrace{\dot m}_{\text{필요 질량 유량}}=\frac{\overbrace{0.9P_{\mathrm{avg}}}^{\text{물이 받는 열}}}{\underbrace{c_p\Delta T}_{\text{물 1kg의 운반량}}}\approx4.99\,\mathrm{kg/s}`,
+        mobileFormula: String.raw`\begin{aligned}P_{\mathrm{avg}}&=16\times14.5=232\,\mathrm{kW}\\P_{\mathrm{peak}}&=16\times19=304\,\mathrm{kW}\\Q_{\mathrm{water}}&=0.9\times232=208.8\,\mathrm{kW}\\\dot m&=\frac{208.8}{4.186\times10}\approx4.99\,\mathrm{kg/s}\end{aligned}`,
+        annotatedFormula: String.raw`\begin{aligned}\underbrace{P_{\mathrm{avg}}}_{\text{평균 IT 부하}}&=232\,\mathrm{kW}&\underbrace{P_{\mathrm{peak}}}_{\text{피크 IT 부하}}&=304\,\mathrm{kW}\\\underbrace{Q_{\mathrm{water}}}_{\text{물이 받는 열}}&=0.9P_{\mathrm{avg}}=208.8\,\mathrm{kW}\\\underbrace{\dot m}_{\text{필요 질량 유량}}&=\frac{Q_{\mathrm{water}}}{\underbrace{c_p\Delta T}_{\text{물 1kg의 운반량}}}\approx4.99\,\mathrm{kg/s}\end{aligned}`,
         operations: [
           { expression: String.raw`16\times14.5=232\,\mathrm{kW}`, annotation: "16대의 설명용 평균 전력을 합합니다." },
           { expression: String.raw`0.9\times232=208.8\,\mathrm{kW}`, annotation: "전체 평균 열의 90%를 물이 받는다고 가정합니다." },
@@ -518,7 +602,7 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. 싱가포르의 고온 운영 기준을 별도로 확인합니다", bridge: "장비 쪽 deployment 기준을 적용했습니다. 이제 설치 지역의 facility 운영 기준을 별도 축으로 확인합니다.", paragraphs: [
       "싱가포르 IMDA는 SS 697:2023을 tropical climate에서 data center 운영 온도를 26°C 이상으로 단계적으로 높이는 방법과 지침으로 설명합니다. 이 기준을 이유로 장비 inlet 한계를 임의로 올리면 안 됩니다. server vendor 환경 범위와 facility risk assessment를 함께 만족해야 합니다.",
-      "B300 쪽 숫자는 NVIDIA guide에 있습니다. 사양표의 operating temperature는 10–35°C이지만, 공급 공기는 ASHRAE Class A2를 따르되 최대 30°C로 제한하라고 적습니다. ASHRAE 표의 권장(recommended) 범위는 모든 A 등급 공통 18–27°C이고, 30°C까지는 허용(allowable) 구간입니다. 고도 조건도 붙어서 30°C 운전은 해발 1000ft 이하에서만 열립니다. 따라서 26°C 공급은 권장 상한 27°C 바로 아래, 28–30°C는 권장 밖 허용 구간이 됩니다. 3절의 14.5kW·19kW는 25°C 공급 공기 기준 추정치라 26°C 이상에서는 그대로 쓰지 말고 현장 측정값으로 바꿉니다(확인일 2026-10-09).",
+      "B300 쪽 숫자는 NVIDIA guide에 있습니다. 사양표의 operating temperature는 10–35°C이지만, 공급 공기는 ASHRAE Class A2를 따르되 최대 30°C로 제한하라고 적습니다. ASHRAE 표의 권장(recommended) 범위는 모든 A 등급 공통 18–27°C이고, 30°C까지는 허용(allowable) 구간입니다. 고도 조건도 붙어서 30°C 운전은 해발 1000ft 이하에서만 열립니다. 따라서 26°C 공급은 권장 상한 27°C 바로 아래, 28–30°C는 권장 밖 허용 구간이 됩니다. 3절의 14.5kW·19kW는 25°C 공급 공기 기준 추정치라 26°C 이상에서는 그대로 쓰지 말고 현장 측정값으로 바꿉니다(확인일 2026-11-02).",
       "높은 공급 온도는 냉각 에너지를 줄일 수 있지만 고밀도 rack의 실제 inlet 분포와 습도·hotspot을 측정해야 합니다. 평균 room temperature 하나로 모든 server inlet이 안전하다고 결론내리지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 유량 계산은 설비 승인 도면이 아닙니다", bridge: "지역 기준까지 대조했습니다. 마지막으로 빠른 sizing과 전문 설계의 경계를 남깁니다.", paragraphs: [
@@ -554,7 +638,7 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
     { code: "실제_workload로_power·inlet·flow·throttle을_측정", note: "planning 값을 현장 acceptance 값으로 교체합니다." },
   ], output: "rack별 average·peak·N−1 전력과 air/water 열 제거 원장", repeatUntil: "rack population·power cap·facility 조건이 바뀔 때마다 다시 산정합니다." },
   sources: [
-    { source: "NVIDIA · Data Center Best Practices with DGX B300", excerpt: "Four air-cooled DGX B300s per 48U MGX rack", application: "16대 예를 4대×4 racks 또는 2대×8 racks로 나누고 rack 평균·피크를 계산합니다.", citation: "NVIDIA, Data Center Best Practices with DGX B300", href: "https://docs.nvidia.com/dgx-pdf/data-center-best-practices-with-dgx-b300-v1.pdf", note: "B300의 고밀도·저밀도 배치, 평균·피크 전력(25°C 공급 공기 기준 추정), 10–35°C operating temperature와 최대 30°C 공급 공기, passive RDHx 비권장, 64-node SU 보조 전력표를 다루는 공식 planning guide입니다(확인일 2026-10-09)." },
+    { source: "NVIDIA · Data Center Best Practices with DGX B300", excerpt: "Four air-cooled DGX B300s per 48U MGX rack", application: "16대 예를 4대×4 racks 또는 2대×8 racks로 나누고 rack 평균·피크를 계산합니다.", citation: "NVIDIA, Data Center Best Practices with DGX B300", href: "https://docs.nvidia.com/dgx-pdf/data-center-best-practices-with-dgx-b300-v1.pdf", note: "B300의 고밀도·저밀도 배치, 평균·피크 전력(25°C 공급 공기 기준 추정), 10–35°C operating temperature와 최대 30°C 공급 공기, passive RDHx 비권장, 64-node SU 보조 전력표를 다루는 공식 planning guide입니다(확인일 2026-11-02)." },
     { source: "Singapore IMDA · Tropical DC Standard", excerpt: "gradual increase in the DC operating temperatures to 26°C and above", application: "싱가포르 고온 운영은 임의 setpoint가 아니라 SS 697 방법과 vendor 환경 범위를 함께 검증하는 별도 조건으로 둡니다.", citation: "IMDA, Tropical Data Centre Standard SS 697:2023", href: "https://www.imda.gov.sg/how-we-can-help/green-dc-roadmap/tropical-dc-standard", note: "tropical climate에서 운영 온도를 안전하게 높이는 방법과 냉각 에너지 절감 범위를 설명하는 싱가포르 공식 안내입니다." },
   ],
   review: [
@@ -573,6 +657,7 @@ export const commissioningAcceptanceData: AiInfrastructureArticleData = {
         question: "16노드에서 노드마다 네 묶음의 검수 증거를 요구하면 최소 몇 개가 필요한가요?",
         idea: "각 노드에서 빠짐없이 남겨야 하는 증거 묶음 수를 노드 수와 곱합니다. 클러스터·시설 시험은 이 값에 별도로 더합니다.",
         formula: String.raw`E_{\min}=N_{\mathrm{node}}\times K_{\mathrm{evidence}}=16\times4=64`,
+        mobileFormula: String.raw`\begin{aligned}E_{\min}&=N_{\mathrm{node}}\times K_{\mathrm{evidence}}\\&=16\times4=64\end{aligned}`,
         annotatedFormula: String.raw`\underbrace{E_{\min}}_{\text{최소 노드별 결과}}=\underbrace{N_{\mathrm{node}}}_{\text{검수 노드}}\times\underbrace{K_{\mathrm{evidence}}}_{\text{노드당 증거 묶음}}=16\times4=64`,
         operations: [
           { expression: String.raw`16\times4=64`, annotation: "16대 각각에서 inventory·health·stress·network 증거를 하나씩 남깁니다." },
@@ -619,6 +704,7 @@ export const commissioningAcceptanceData: AiInfrastructureArticleData = {
     { id: "source", level: "5", title: "8. NVSM·Slurm·NCCL로 층별 상태를 확인합니다", bridge: "계층별 시험 순서를 만들었습니다. NVIDIA 공개 deployment 절차의 실제 명령과 비교합니다.", paragraphs: [
       "DGX B300 user guide는 production 전 NVSM health와 약 20분 stress test를 권합니다. B300 deployment guide는 node 상태, openibd·fabric manager, Slurm `sinfo`, GPU test, multi-node NCCL test로 범위를 넓힙니다.",
       "각 명령은 다른 층을 봅니다. `nvidia-smi` 성공으로 RDMA와 collective를 통과했다고 보지 않으며, NCCL bus bandwidth 하나로 storage·전력 N−1과 application SLA를 통과했다고 보지 않습니다.",
+      "DCGM active diagnostic은 실제 GPU·CPU·memory·power·fabric 자원을 소비하므로 workload를 drain한 뒤 실행합니다. JSON 출력도 release 사이에 고정된 공개 schema가 아니므로 image·DCGM version을 함께 고정하고, parser는 해당 release의 실제 출력을 fixture로 검증합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 공공 제안에서는 CSAP 범위를 따로 적습니다", bridge: "기술 시험을 공식 deployment 절차와 맞췄습니다. 공공 사업의 인증 주장을 기술 검수와 분리합니다.", paragraphs: [
       "클라우드서비스 보안인증(CSAP)은 제공하는 cloud service가 정해진 정보보호 기준을 준수하는지 평가하는 제도입니다. GPU server·rack을 납품했다는 사실만으로 고객에게 제공할 cloud service 전체가 인증됐다고 말할 수 없습니다.",
@@ -659,7 +745,7 @@ export const commissioningAcceptanceData: AiInfrastructureArticleData = {
   ], output: "FAT·SAT·성능·운영 evidence와 예외가 연결된 acceptance ledger", repeatUntil: "모든 필수 요구가 통과하거나 명시적으로 승인된 예외로 닫힐 때까지 반복합니다." },
   sources: [
     { source: "NVIDIA B300 Deployment Guide", excerpt: "run sinfo to verify that all the nodes are up and ready", application: "node health 뒤 Slurm·GPU·multi-node NCCL로 범위를 넓히는 현장 시험 순서에 적용합니다.", citation: "NVIDIA, B300 BasePOD and SuperPOD Deployment Guide", href: "https://docs.nvidia.com/dgx-basepod/deployment-guides/dgx-basepod-b200/latest/b300/b300-nmc.html", note: "B300 network·provisioning·service 상태와 Slurm·NCCL validation 명령을 담은 공식 deployment guide입니다." },
-    { source: "KISA · CSAP 안내", excerpt: "클라우드컴퓨팅서비스 사업자가 제공하는 서비스에 대해 정보보호 기준의 준수여부를 평가․인증하는 제도", application: "hardware 납품의 보안 기능과 cloud service certification claim을 분리하고 현재 인증 범위를 증서로 확인합니다.", citation: "KISA, 클라우드 보안인증제(CSAP) 소개", href: "https://www.kisa.or.kr/1050603", note: "KISA 공식 사이트의 CSAP 제도 소개입니다. 이전에 인용한 isms.kisa.or.kr 공지 경로는 2026-10-09 확인 시 DNS가 해석되지 않고 보관 사본도 없어 이 페이지로 바꿨습니다." },
+    { source: "KISA · CSAP 안내", excerpt: "클라우드컴퓨팅서비스 사업자가 제공하는 서비스에 대해 정보보호 기준의 준수여부를 평가․인증하는 제도", application: "hardware 납품의 보안 기능과 cloud service certification claim을 분리하고 현재 인증 범위를 증서로 확인합니다.", citation: "KISA, 클라우드 보안인증제(CSAP) 소개", href: "https://www.kisa.or.kr/1050603", note: "KISA 공식 사이트의 CSAP 제도·평가 기관 안내입니다. hardware 한 대의 상태가 아니라 신청한 cloud service의 인증 범위를 판단한다는 경계로 사용했습니다(확인일 2026-11-02)." },
   ],
   review: [
     "16노드×4개 시험이 64개 결과가 되어도 cluster 검수가 끝나지 않는 이유는 무엇입니까? (답: 3절)",

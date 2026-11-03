@@ -12,7 +12,7 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const prysmTree: FileNode = d("prysm", [
+export const prysmTree: FileNode = d("prysm-v7.3.1", [
   d("validator/client", [
     f(
       "attest.go — SubmitAttestation()",
@@ -22,13 +22,20 @@ export const prysmTree: FileNode = d("prysm", [
   ]),
   d("beacon-chain/operations/attestations", [
     f(
-      "pool.go — SaveAggregatedAttestation()",
+      "pool.go — owner contract",
       "operations/attestations/pool.go",
-      "attestation-pool",
+      "pool-interface",
     ),
     f(
-      "pool.go — ComputeSubnet 참조",
-      "operations/attestations/pool.go",
+      "kv/aggregated.go — save/merge",
+      "operations/attestations/kv/aggregated.go",
+      "attestation-pool",
+    ),
+  ]),
+  d("beacon-chain/core/helpers", [
+    f(
+      "attestation.go — subnet",
+      "core/helpers/attestation.go",
       "compute-subnet",
     ),
   ]),

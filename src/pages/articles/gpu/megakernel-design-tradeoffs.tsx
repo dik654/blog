@@ -10,8 +10,10 @@ import MegakernelDesignTradeoffsViz from "./megakernel-design-tradeoffs/viz/Mega
 const MPK = "https://arxiv.org/abs/2512.22219";
 const HAZY = "https://hazyresearch.stanford.edu/blog/2025-05-27-no-bubbles";
 const FA3 = "https://arxiv.org/abs/2407.08608";
-const GUIDE = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html";
+const GUIDE = "https://docs.nvidia.com/cuda/archive/13.4.2/cuda-programming-guide/04-special-topics/cooperative-groups.html";
 const VOLTA = "https://arxiv.org/abs/1804.06826";
+const ADA_MK = "https://arxiv.org/abs/2605.11581";
+const CUT_MK = "https://arxiv.org/abs/2610.35336";
 
 /**
  * Megakernel 은 launch 와 tail 을 지우는 대신 자원 공유 비용을 냅니다
@@ -27,14 +29,18 @@ export default function MegakernelDesignTradeoffsArticle() {
   return (
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Batch-1 decode 에서는 kernel 경계가 시간의 큰 몫을 차지합니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">작은 kernel 이 이어지면 경계도 일이 됩니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
+            <strong>
+              Megakernel 은 launch 와 tail 을 줄이지만, counter 대기와 가장 무거운 task 의
+              register·shared-memory·code 비용이 더 커지면 오히려 느려집니다.
+            </strong>
+          </p>
+          <p>
             Decode 한 step 은 token 하나를 만들려고 layer 마다 kernel 을 여러 개 띄웁니다. Batch 가 1 이면 kernel 하나가 하는 일은 수 µs 에서
-            수십 µs 로 작고 kernel 사이의 launch 와 tail 이 그 일과 같은 크기로 남습니다. Megakernel 은 이 경계를 없애려고 forward 전체를 kernel
-            하나에 넣는 설계입니다.
+            수십 µs 로 작고 kernel 사이의 launch 와 tail 이 그 일과 같은 크기로 남습니다. Megakernel 은 여러 경계를 없애려고 여러 operator 를 한
+            persistent kernel 안의 task 로 바꾸는 설계입니다.
           </p>
           <p>
             숫자로 보면 이렇습니다. Hazy Research 는 Llama-1B 의 forward 가 kernel 약
@@ -55,10 +61,10 @@ export default function MegakernelDesignTradeoffsArticle() {
             설정을 이 글은 batch-1 megakernel optimization 이라고 부릅니다.
           </p>
           <p>
-            이 글의 순서는 이렇습니다. 먼저 kernel 경계를 지우면 무엇이 전역으로 바뀌는지,
-            다음으로 지워진 경계 대신 무엇이 의존을 표현하는지, 그리고 합쳐진 operator 가
-            register 와 shared memory 와 instruction cache 를 어떻게 나눠 쓰는지 봅니다.
-            마지막에 CUDA graph 와 비교합니다.
+            그러면 질문은 하나로 좁혀집니다. <strong>어디까지 합치고, 어디서 다시 자를 것인가?</strong>
+            먼저 경계를 지우면 무엇이 전역으로 바뀌는지 봅니다. 그다음 지워진 경계 대신
+            무엇이 의존을 표현하는지, 합쳐진 operator 가 자원을 어떻게 나눠 쓰는지 추적합니다.
+            마지막에는 graph·전체 megakernel·여러 megakernel 중 무엇을 고를지 정합니다.
           </p>
         </div>
         <MegakernelDesignTradeoffsViz />
@@ -66,9 +72,7 @@ export default function MegakernelDesignTradeoffsArticle() {
       </section>
 
       <section id="global-scheduling" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Kernel 경계를 지우면 scheduling 단위가 operator 에서 task 로 바뀝니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">경계를 지우면 operator 가 task 로 바뀝니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Megakernel 의 이득은 launch 를 아끼는 데서 끝나지 않습니다. Kernel 경계가 있을 때 하드웨어는 operator 하나의 block 만 볼 수 있어 그
@@ -120,9 +124,7 @@ export default function MegakernelDesignTradeoffsArticle() {
       </section>
 
       <section id="task-loop" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Kernel 경계 대신 counter 와 barrier 가 의존을 표현합니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">지운 경계는 counter 로 다시 만듭니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Kernel 경계는 공짜 동기화였습니다. 같은 stream 의 다음 kernel 은 앞 kernel 의
@@ -183,9 +185,7 @@ export default function MegakernelDesignTradeoffsArticle() {
       </section>
 
       <section id="resource-sharing" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          합쳐진 operator 는 register 상한과 shared memory 를 한 예산에서 나눕니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">합친 operator 는 자원 예산도 공유합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Kernel 은 launch 순간에 thread 당 register 수와 block 당 shared memory 를 정하고 그 값은 kernel 이 끝날 때까지 바뀌지
@@ -224,9 +224,7 @@ export default function MegakernelDesignTradeoffsArticle() {
       </section>
 
       <section id="code-footprint" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Operator 가 모이면 code 크기가 instruction cache 를 넘습니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">Code 도 모이면 cache 를 넘습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Kernel 하나에 operator 가 모두 들어가면 code 도 모두 들어갑니다. SM 은 instruction 을 register 처럼 미리 잡지 않고 cache 에서
@@ -267,9 +265,7 @@ export default function MegakernelDesignTradeoffsArticle() {
       </section>
 
       <section id="graph-vs-megakernel" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          CUDA graph 는 launch 비용만 지우고 megakernel 은 경계를 지웁니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">정답은 하나의 거대한 kernel 이 아닙니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <Link to="/cs/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 는 launch 열을 한 번
@@ -285,14 +281,28 @@ export default function MegakernelDesignTradeoffsArticle() {
             크기라는 이 글의 비용을 전부 떠안습니다.
           </p>
           <p>
-            선택 기준은 kernel 당 일의 크기입니다. Kernel 하나가 수백 µs 이상 돌면 graph 로 launch 만 지워도 tail 과 sync 는 비율로 사라져
-            megakernel 의 추가 이득이 작고 batch-1 decode 처럼 kernel 하나가 수 µs 면 경계 자체가 시간이라 megakernel 이 이깁니다. Llama-1B
-            는 H100 에서 1 ms 안팎, memory bandwidth 78% 로 baseline 의 50% 이하와 대비됩니다.
+            첫 기준은 kernel 당 일의 크기입니다. Kernel 하나가 수백 µs 이상 돌면 graph 로 launch 만 줄여도 충분할 수 있습니다. Batch-1 decode 처럼
+            kernel 하나가 수 µs 라면 경계를 합칠 후보가 됩니다. 그러나 이것만으로 전체 forward 를 하나로 합친다고 결론 내릴 수는 없습니다.
           </p>
           <p>
-            둘은 배타적이지 않습니다. Megakernel 도 launch 는 하므로 graph 안의 node 하나로 넣을 수 있고 MPK 는 multi-GPU 의 allreduce 를
-            task 로 넣어 계산과 통신을 kernel 안에서 겹칩니다. Graph 가 못 하는 것은 kernel 경계를 넘는 overlap 이고, megakernel 이 못 하는 것은
-            operator 마다 다른 launch configuration 입니다.
+            둘째 기준은 합친 뒤의 비용입니다. Prefill 과 decode 의 병목이 다르거나 operator 사이의 register·shared-memory 요구가 크게 다르면
+            경계를 일부 남기는 편이 낫습니다. Ada-MK 는 prefill 은 기존 고처리량 경로에 두고 decode 에 megakernel 을 붙이는 하이브리드를 보고했습니다.
+            2026년 10월의 <em>One Megakernel is Not Enough</em> 는 시험한 13개 model·batch 조합에서 최선이 2~4개 megakernel 또는 완전한
+            conventional graph였고, 하나의 monolith가 아니었다고 자기보고합니다.
+          </p>
+          <ol>
+            <li><strong>Graph:</strong> operator kernel 이 충분히 크고 host launch 만 줄이면 될 때.</li>
+            <li><strong>하나의 megakernel:</strong> 짧고 비슷한 task가 많고, counter·자원 공유 비용보다 없앤 경계가 클 때.</li>
+            <li><strong>하이브리드·분할:</strong> prefill/decode 또는 operator 군의 자원 모양이 달라, 경계 몇 개를 남겨 얻는 이득이 더 클 때.</li>
+          </ol>
+          <p>
+            따라서 cut point 하나를 시험할 때마다 앞의 식을 다시 씁니다. 경계 하나를 더 남겨 늘어난 launch·tail보다 그 경계가 줄여 준 sync·register·shared-memory·code 손실이
+            크면 자르는 편이 낫습니다. 최근 논문들의 성능 수치는 모두 저자 자기보고이며, 이 글이 독립 재현한 결과는 아닙니다.
+          </p>
+          <p>
+            Graph 와 megakernel 은 배타적이지 않습니다. Megakernel도 graph node 하나가 될 수 있고 MPK는 multi-GPU allreduce를 task로 넣어 계산과
+            통신을 겹칩니다. Graph가 못 하는 것은 kernel 경계를 넘는 overlap이고, 하나의 megakernel이 못 하는 것은 operator마다 다른 launch configuration을
+            그대로 보존하는 일입니다.
           </p>
           <p>
             Fusion 글의{" "}
@@ -321,9 +331,7 @@ export default function MegakernelDesignTradeoffsArticle() {
       </section>
 
       <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          MPK 논문과 Hazy Research 블로그가 수치의 근거입니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">수치와 선택 경계를 분리해 읽습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Kernel 293개, task 13,867개, worker 128개와 scheduler warp 16개, register 를 task type 최대값으로 고정한다는 서술,
@@ -340,6 +348,11 @@ export default function MegakernelDesignTradeoffsArticle() {
             논문의 측정값이며 Hopper 의 값이 아닙니다. Warp specialization 과 named barrier
             는 FlashAttention-3 논문, grid.sync() 의 co-residency 조건은 CUDA Programming
             Guide 의 서술입니다.
+          </p>
+          <p>
+            Prefill과 decode를 다른 실행 경로에 둔다는 경계는 Ada-MK, 여러 cut point가 하나의 monolith보다 나을 수 있다는 경계는
+            <em>One Megakernel is Not Enough</em>의 2026년 자기보고에서 가져왔습니다. 두 논문은 서로 다른 model·GPU·평가 조건을 쓰므로 수치를
+            직접 비교하지 않았습니다.
           </p>
           <p>
             이 글의 register 예(128·96·40, 96+64+128) 와 Viz 의 시간 축은 계산을 보여 주기
@@ -388,7 +401,7 @@ export default function MegakernelDesignTradeoffsArticle() {
         </div>
         <div id="paper-cuda-cooperative-groups" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="NVIDIA · CUDA C++ Programming Guide 12.8.1 · Cooperative Groups, Grid Synchronization"
+            source="NVIDIA · CUDA Programming Guide 13.4.2 · Cooperative Groups, Grid Synchronization"
             citeKey={4}
             href={GUIDE}
             type="code"
@@ -409,6 +422,28 @@ export default function MegakernelDesignTradeoffsArticle() {
             Scheduler 당 L0 instruction cache 약 12 KiB, SM 당 L1 instruction cache 128 KiB,
             L2 6,144 KiB 를 FFMA 열의 길이를 늘려 가며 측정한 결과입니다. Volta 의 값이며
             이후 세대의 크기는 이 글이 확인하지 못했습니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-ada-mk" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Dong, Hu, Yu et al. · Ada-MK: Adaptive MegaKernel Optimization via Automated DAG-based Search for LLM Inference (2026)"
+            citeKey={6}
+            href={ADA_MK}
+            type="paper"
+          >
+            Runtime 분기를 compile time DAG 탐색으로 옮기고, TensorRT-LLM의 고처리량 prefill 경로와 저지연 decode megakernel을 합친
+            하이브리드 구조입니다. L20에서의 성능 수치는 저자 자기보고이며 이 글이 재현하지 않았습니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-one-megakernel-not-enough" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Chatterjee, Joseph, Chauhan · One Megakernel is Not Enough: Predicting Where to Cut for Streaming Inference (2026)"
+            citeKey={7}
+            href={CUT_MK}
+            type="paper"
+          >
+            Conventional-graph profile과 standalone kernel benchmark로 cut point를 고릅니다. 시험한 13개 model·batch 조합의 최선이
+            2~4개 megakernel 또는 완전한 conventional execution이었다는 결과는 저자 자기보고이며, 일반 법칙으로 확대하지 않습니다.
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">

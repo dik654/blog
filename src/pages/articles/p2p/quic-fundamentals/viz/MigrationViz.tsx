@@ -1,182 +1,160 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
+import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
   {
-    label: "Wi-Fi 연결",
-    desc: "Client가 Wi-Fi(IP: 192.168.1.x)로 Server에 QUIC 연결. Connection ID: 0xABCD",
+    label: "Wi‑Fi path에서 연결 상태를 사용합니다",
+    body: "Source address는 192.0.2.10:51000이고 peer가 준 CID-A로 server의 기존 connection state를 찾습니다.",
   },
   {
-    label: "IP 변경",
-    desc: "Wi-Fi → 셀룰러 전환. IP가 10.0.0.x로 변경. TCP라면 연결 끊김.",
+    label: "LTE 전환으로 4-tuple이 바뀝니다",
+    body: "Source address가 198.51.100.20:62000으로 바뀌어도 CID로 같은 connection을 찾을 수 있습니다. 새 주소를 아직 신뢰한 것은 아닙니다.",
   },
   {
-    label: "Connection Migration",
-    desc: "Connection ID 0xABCD 유지. PATH_CHALLENGE → PATH_RESPONSE로 새 경로 검증.",
+    label: "PATH_CHALLENGE가 새 path의 왕복 가능성을 묻습니다",
+    body: "예측하기 어려운 8-byte 값을 보내고 동일한 PATH_RESPONSE가 돌아오는지 확인합니다. Identity가 아니라 return reachability 검사입니다.",
   },
   {
-    label: "연결 유지",
-    desc: "기존 스트림, 데이터, 암호화 상태 모두 유지. 사용자 경험 끊김 없음.",
+    label: "검증 뒤 새 CID와 path 상태로 전환합니다",
+    body: "연결과 stream state는 이어지지만 전환 시간 0을 보장하지 않습니다. 새 RTT·congestion 상태와 CID rotation을 함께 관리합니다.",
   },
-];
+] as const;
 
 const C = {
-  client: "#6366f1",
-  server: "#10b981",
+  client: "#2563eb",
+  server: "#059669",
   wifi: "#0ea5e9",
-  cell: "#f59e0b",
+  cell: "#d97706",
+  check: "#7c3aed",
 };
 
 export default function MigrationViz() {
-  const [step, setStep] = useState(0);
-  const s = STEPS[step];
-  const isCell = step >= 1;
-
   return (
-    <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-      <p className="text-xs font-mono text-foreground/50">
-        QUIC Connection Migration
-      </p>
-      <svg
-        viewBox="0 0 360 110"
-        className="w-full max-w-2xl"
-        style={{ height: "auto" }}
-      >
-        {/* Client */}
-        <motion.g
-          animate={{ y: isCell ? 20 : 0 }}
-          transition={{ type: "spring", bounce: 0.15 }}
-        >
-          <rect
-            x={20}
-            y={30}
-            width={80}
-            height={28}
-            rx={5}
-            fill={C.client + "12"}
-            stroke={C.client}
-            strokeWidth={1}
-          />
-          <text
-            x={60}
-            y={48}
-            textAnchor="middle"
-            fontSize={10}
-            fontWeight={600}
-            fill={C.client}
+    <StepViz steps={STEPS}>
+      {(step) => {
+        const moved = step >= 1;
+        return (
+          <svg
+            viewBox="0 0 460 166"
+            className="w-full max-w-2xl"
+            aria-label="Wi-Fi에서 LTE로 이동하는 QUIC path validation"
           >
-            Client
-          </text>
-          <text
-            x={60}
-            y={68}
-            textAnchor="middle"
-            fontSize={10}
-            fill={isCell ? C.cell : C.wifi}
-          >
-            {isCell ? "10.0.0.5" : "192.168.1.5"}
-          </text>
-        </motion.g>
-        {/* Server */}
-        <rect
-          x={260}
-          y={30}
-          width={80}
-          height={28}
-          rx={5}
-          fill={C.server + "12"}
-          stroke={C.server}
-          strokeWidth={1}
-        />
-        <text
-          x={300}
-          y={48}
-          textAnchor="middle"
-          fontSize={10}
-          fontWeight={600}
-          fill={C.server}
-        >
-          Server
-        </text>
-        {/* Connection line */}
-        <motion.line
-          x1={100}
-          y1={isCell ? 64 : 44}
-          x2={260}
-          y2={44}
-          stroke={isCell ? C.cell : C.wifi}
-          strokeWidth={1}
-          strokeDasharray={step === 1 ? "4 3" : "0"}
-          animate={{ opacity: step === 1 ? 0.4 : 1 }}
-        />
-        {/* Connection ID badge */}
-        <rect
-          x={148}
-          y={step >= 2 ? 22 : 28}
-          width={64}
-          height={14}
-          rx={3}
-          fill="var(--card)"
-          stroke={step >= 2 ? C.cell : C.wifi}
-          strokeWidth={1}
-        />
-        <text
-          x={180}
-          y={step >= 2 ? 32 : 38}
-          textAnchor="middle"
-          fontSize={10}
-          fontWeight={600}
-          fill={step >= 2 ? C.cell : C.wifi}
-        >
-          CID: 0xABCD
-        </text>
-        {/* Path validation */}
-        {step >= 2 && (
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <motion.g
+              animate={{ y: moved ? 54 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <rect
+                x="20"
+                y="24"
+                width="116"
+                height="36"
+                rx="7"
+                fill={C.client + "14"}
+                stroke={C.client}
+              />
+              <text
+                x="78"
+                y="39"
+                textAnchor="middle"
+                fontSize="10.5"
+                fontWeight="700"
+                fill={C.client}
+              >
+                mobile client
+              </text>
+              <text
+                x="78"
+                y="52"
+                textAnchor="middle"
+                fontSize="9"
+                fill={moved ? C.cell : C.wifi}
+              >
+                {moved ? "198.51.100.20:62000" : "192.0.2.10:51000"}
+              </text>
+            </motion.g>
             <rect
-              x={135}
-              y={52}
-              width={92}
-              height={12}
-              rx={2}
-              fill="var(--card)"
+              x="324"
+              y="51"
+              width="116"
+              height="36"
+              rx="7"
+              fill={C.server + "14"}
+              stroke={C.server}
             />
             <text
-              x={181}
-              y={61}
+              x="382"
+              y="66"
               textAnchor="middle"
-              fontSize={10}
-              fill={C.cell}
+              fontSize="10.5"
+              fontWeight="700"
+              fill={C.server}
             >
-              PATH_CHALLENGE/RESPONSE
+              server state
             </text>
-          </motion.g>
-        )}
-        {step === 3 && (
-          <motion.text
-            x={180}
-            y={90}
-            textAnchor="middle"
-            fontSize={10}
-            fill={C.server}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            스트림 & 암호화 상태 유지
-          </motion.text>
-        )}
-      </svg>
-      <div className="flex gap-1.5">
-        {STEPS.map((_, i) => (
-          <div
-            key={i}
-            onClick={() => setStep(i)}
-            className={`h-1 flex-1 rounded-full cursor-pointer transition-colors ${i <= step ? "bg-primary" : "bg-border"}`}
-          />
-        ))}
-      </div>
-      <p className="text-xs font-semibold text-center">{s.label}</p>
-      <p className="text-[10px] text-foreground/50 text-center">{s.desc}</p>
-    </div>
+            <text
+              x="382"
+              y="79"
+              textAnchor="middle"
+              fontSize="9"
+              fill={C.server}
+            >
+              stream · key · ACK
+            </text>
+            <line
+              x1="136"
+              y1={moved ? 96 : 42}
+              x2="324"
+              y2="69"
+              stroke={moved ? C.cell : C.wifi}
+              strokeWidth="1.2"
+              strokeDasharray={step === 1 ? "5 4" : undefined}
+            />
+            <rect
+              x="190"
+              y={moved ? 63 : 25}
+              width="80"
+              height="22"
+              rx="6"
+              fill="var(--background)"
+              stroke={step === 3 ? C.check : C.wifi}
+            />
+            <text
+              x="230"
+              y={moved ? 78 : 40}
+              textAnchor="middle"
+              fontSize="10"
+              fontWeight="700"
+              fill={step === 3 ? C.check : C.wifi}
+            >
+              {step === 3 ? "CID-B" : "CID-A"}
+            </text>
+            <motion.g
+              animate={{ opacity: step >= 2 ? 1 : 0.2 }}
+              transition={{ duration: 0.18 }}
+            >
+              <rect
+                x="162"
+                y="126"
+                width="220"
+                height="26"
+                rx="7"
+                fill={C.check + "14"}
+                stroke={C.check}
+              />
+              <text
+                x="272"
+                y="143"
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="700"
+                fill={C.check}
+              >
+                8B challenge ⇄ same response
+              </text>
+            </motion.g>
+          </svg>
+        );
+      }}
+    </StepViz>
   );
 }

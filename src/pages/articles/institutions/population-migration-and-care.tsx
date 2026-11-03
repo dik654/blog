@@ -2,14 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import PopulationMigrationCareViz from "./PopulationMigrationCareViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">사람이 많다는 말만으로 시장의 크기를 알 수 없습니다</h2>
-        <PopulationMigrationCareViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             100명이 사는 마을도 어린이가 많은지, 하루 종일 일할 수 있는 사람이 많은지에 따라 필요한 가게와 서비스가 달라집니다. 누군가는 가족을 돌보느라 일할 시간을 내지 못합니다.
@@ -36,8 +34,8 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">100명과 하루 8시간을 기준으로 삼습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
-            (가정) 연초 A마을은 100명입니다. 한 해 출생 2명·사망 1명·전입 3명·전출 2명이 있고 모두 같은 거주지 기준으로 셉니다. 연초의 나이는 0–14세 20명,15–64세
-            60명,65세 이상 20명입니다.60명 가운데 실제 유급 취업자는 45명이라고 놓습니다.
+            (가정) 연초 A 마을은 100명입니다. 한 해 출생 2명·사망 1명·전입 3명·전출 2명이 있고 모두 같은 거주지 기준으로 셉니다. 연초의 나이는 0–14세 20명, 15–64세
+            60명, 65세 이상 20명입니다. 60명 가운데 실제 유급 취업자는 45명이라고 놓습니다.
           </p>
           <p className="leading-8">
             (가정) 한 가구의 성인에게 하루 8시간이 있고 가족 돌봄에 4시간이 필요합니다. 돌봄과 유급 일을 동시에 할 수 없고 통근·휴식은 생략하므로 밖에서 일할 수 있는 시간은
@@ -50,7 +48,7 @@ export default function Article() {
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">태어난 사람과 들어온 사람을 같은 바구니에 더합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">먼저 100명에 태어난 2명을 더하고 사망한 1명을 뺍니다.101명입니다. 전입 3명을 더하고 전출 2명을 빼면 102명이 됩니다.2명이 늘었지만 출생·사망의 차이로 1명, 이동의 차이로 1명 늘었습니다.</p>
+          <p className="leading-8">먼저 100명에 태어난 2명을 더하고 사망한 1명을 뺍니다. 101명입니다. 전입 3명을 더하고 전출 2명을 빼면 102명이 됩니다. 2명이 늘었지만 출생·사망의 차이로 1명, 이동의 차이로 1명 늘었습니다.</p>
           <p className="leading-8">이 그림은 총수를 보여줍니다. 전입 3명이 영아인지 취업 가능한 성인인지 알 수 없으므로, 일할 사람 3명이 생겼다는 결론은 아직 낼 수 없습니다. 나이를 나눈 장부가 필요한 이유입니다.</p>
         </div>
         <NumericPath title="(가정) 같은 거주지·같은 1년의 사람 수" steps={[{"label": "연초", "value": "100명", "detail": "출발 시점"}, {"label": "출생−사망", "value": "+1명", "detail": "2−1"}, {"label": "전입−전출", "value": "+1명", "detail": "3−2"}, {"label": "연말", "value": "102명", "detail": "나이별 구성은 별도"}]} />
@@ -76,7 +74,7 @@ export default function Article() {
           <p className="leading-8">
             처음 인구에 태어난 사람과 들어온 사람을 더하고 사망한 사람과 떠난 사람을 빼는 것이 인구의 잔액·출입 장부입니다. 관측 기간의 길이와 거주자 정의가 같아야 계산이 맞습니다.
           </p>
-          <p className="leading-8">15–64세 인구를 분모로 두고 그 밖의 연령을 분자로 두는 비율을 여기서는 연령 부양비라고 부릅니다. UN의 표준 지표명으로는 총부양비(total dependency ratio)입니다. A마을은(20+20)/60×100=약 66.7입니다.15–64세 100명당 다른 연령 66.7명이 있다는 뜻입니다.65세 이상 모두가 경제적으로 의존한다는 뜻도,15세부터 모두 취업한다는 뜻도 아닙니다.</p>
+          <p className="leading-8">15–64세 인구를 분모로 두고 그 밖의 연령을 분자로 두는 비율을 여기서는 연령 부양비라고 부릅니다. UN의 표준 지표명으로는 총부양비(total dependency ratio)입니다. A 마을은 (20+20)/60×100=약 66.7입니다. 15–64세 100명당 다른 연령 66.7명이 있다는 뜻입니다. 65세 이상 모두가 경제적으로 의존한다는 뜻도, 15세부터 모두 취업한다는 뜻도 아닙니다.</p>
           <p className="leading-8">다른 사람의 생활과 능력을 유지하도록 제공하는 활동을 돌봄 노동이라고 부릅니다. 식사를 직접 돕는 일뿐 아니라 청소·준비처럼 간접적으로 돌보는 일도 있습니다. 임금을 받는지 여부와 실제 노동이 존재하는지는 구분합니다.</p>
         </div>
 
@@ -85,7 +83,7 @@ export default function Article() {
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">102명이라는 결과와 가계의 1만원은 다른 경로에서 나옵니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">마을 장부는 100+2−1+3−2=102명입니다. 전입자가 모두 어린이라면 총수는 그대로 102명이지만 즉시 취업할 성인은 늘지 않습니다.20/60/20은 연초 구성입니다. 연말 연령별 숫자는 사망·이동의 나이와 생일이 있어야 계산할 수 있습니다.</p>
+          <p className="leading-8">마을 장부는 100+2−1+3−2=102명입니다. 전입자가 모두 어린이라면 총수는 그대로 102명이지만 즉시 취업할 성인은 늘지 않습니다. 20/60/20은 연초 구성입니다. 연말 연령별 숫자는 사망·이동의 나이와 생일이 있어야 계산할 수 있습니다.</p>
           <p className="leading-8">
             (가정) 가구가 돌봄 4시간 중 2시간을 외부 서비스에 맡깁니다. 요금은 시간당 1.5만원이고 비워진 2시간에 시간당 2만원의 유급 일을 할 수 있다고 놓습니다. 늘어난 수입은
             4만원, 늘어난 지출은 3만원이므로 차액은 1만원입니다. 세금과 통근비는 생략했습니다.
@@ -98,13 +96,13 @@ export default function Article() {
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">UN은 같은 나이 집단을 한 해씩 앞으로 옮깁니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">UN의 WPP2024 방법론은 총인구에 일정한 증가율을 계속 곱하는 방식으로 끝나지 않습니다. 나이와 성별을 나눈 현재 인구에 출생·사망·이동을 적용해 다음 해를 만듭니다. A마을의 102명을 학교 수요로 바꾸려면 바로 이 나이별 경로가 필요합니다.</p>
+          <p className="leading-8">UN의 WPP2024 방법론은 총인구에 일정한 증가율을 계속 곱하는 방식으로 끝나지 않습니다. 나이와 성별을 나눈 현재 인구에 출생·사망·이동을 적용해 다음 해를 만듭니다. A 마을의 102명을 학교 수요로 바꾸려면 바로 이 나이별 경로가 필요합니다.</p>
           <p className="leading-8">
             방법론의 출발점을 사례로 읽어 봅니다. 현재 10세인 집단 가운데 다음 해까지 살아남은 사람은 11세 집단으로 이동합니다. 새로 태어난 2명은 새 나이 집단에 들어가고 전입
             3명과 전출 2명은 각자의 나이 위치에 반영됩니다. 이 글에는 그 상세 나이가 없으므로 다음 해 학생 수를 지어내지 않습니다.
           </p>
           <p className="leading-8">이렇게 나이 집단마다 생존·출생·이동을 적용해 한 해씩 앞으로 옮기는 방법을 코호트 요인법이라고 합니다. WPP2024 방법론은 이를 cohort-component method for projecting population(CCMPP)이라 부르고 2024판 추계와 전망의 핵심 방법으로 둡니다.</p>
-          <p className="leading-8">다만 UN은 나라 사이의 이동을 전입과 전출로 따로 세지 않고 순국제이동(net international migration)으로 추정합니다. A마을에 적용하면 전입 3명과 전출 2명 대신 순이동 3 − 2 = +1명만 나이별로 나누어 넣는 셈이므로, 위 문단의 전입·전출 구분은 마을 사례를 설명하기 위한 것이지 UN 방법을 그대로 옮긴 것은 아닙니다.</p>
+          <p className="leading-8">다만 UN은 나라 사이의 이동을 전입과 전출로 따로 세지 않고 순국제이동(net international migration)으로 추정합니다. A 마을에 적용하면 전입 3명과 전출 2명 대신 순이동 3 − 2 = +1명만 나이별로 나누어 넣는 셈이므로, 위 문단의 전입·전출 구분은 마을 사례를 설명하기 위한 것이지 UN 방법을 그대로 옮긴 것은 아닙니다.</p>
           <p className="leading-8">2024판의 전망값에는 앞으로의 출생·사망·이동에 대한 가정이 들어갑니다. 멀리 갈수록 정책과 생활조건의 변화가 누적됩니다. 중간 시나리오 한 줄과 함께 불확실성 범위를 읽어야 합니다.</p>
         </div>
 
@@ -115,7 +113,7 @@ export default function Article() {
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">ILO의 돌봄 범위에는 가정에서 보낸 4시간도 들어갑니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">ILO는 돌봄의 범위를 유급 서비스에 한정하지 않습니다. 가족과 공동체가 무급으로 맡는 활동도 포함합니다. A가구의 4시간을 가계 지출이 없다는 이유로 0으로 처리하면 실제 제약을 지우게 됩니다.</p>
+          <p className="leading-8">ILO는 돌봄의 범위를 유급 서비스에 한정하지 않습니다. 가족과 공동체가 무급으로 맡는 활동도 포함합니다. A 가구의 4시간을 가계 지출이 없다는 이유로 0으로 처리하면 실제 제약을 지우게 됩니다.</p>
           <p className="leading-8">2시간이 유료 서비스로 옮겨가면 3만원의 거래가 새로 기록됩니다. 그러나 이전에도 같은 2시간의 돌봄이 있었습니다. 통계에 잡히는 돈의 증가와 돌봄의 양·품질 증가, 다른 일을 할 수 있는 시간 증가는 각각 측정해야 합니다.</p>
           <p className="leading-8">국가를 비교할 때는 공공 서비스의 이용 자격·대기·시간대, 가계 부담, 종사자의 근무조건을 확인합니다. 세금으로 낸 비용을 무료라고 지우거나, 값싼 돌봄의 조건을 제공자의 낮은 보수와 불안정한 지위에서 떼어 놓으면 부담의 이동을 놓칩니다.</p>
         </div>
@@ -132,7 +130,7 @@ export default function Article() {
             이주는 출발지와 도착지 모두를 바꿉니다. 송금과 숙련 이전이 생길 수 있고 가족 분리와 특정 직종의 인력 부족도 생길 수 있습니다. 이주자 전체를 하나의 효과로 묶기보다 누가
             언제 어떤 권리로 이동했는지 봅니다.
           </p>
-          <p className="leading-8">정책의 효과를 보려면 사람 수 외에 실제 취업자·근무시간·시간 사용 조사·대기시간·돌봄 품질을 함께 관측합니다.102명이라는 총수와 가계의 추가 1만원은 그중 일부를 설명하는 가정 계산입니다.</p>
+          <p className="leading-8">정책의 효과를 보려면 사람 수 외에 실제 취업자·근무시간·시간 사용 조사·대기시간·돌봄 품질을 함께 관측합니다. 102명이라는 총수와 가계의 추가 1만원은 그중 일부를 설명하는 가정 계산입니다.</p>
         </div>
 
         <CitationBlock source="ONS · National population projections methodology" citeKey={3} href="https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/methodologies/methodologyusedtoproducethenationalpopulationprojections">출생·사망·이동의 가정에 따른 전망이라는 방법적 경계. 한국의 장기 전망이나 다른 나라의 실제 수치를 대신하지 않습니다.</CitationBlock>

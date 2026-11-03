@@ -128,7 +128,7 @@ function StateBand({ label, children }: { label: string; children: ReactNode }) 
 
 function ProtocolColumn({ name, state }: { name: string; state: ProtocolState }) {
   return (
-    <section className="w-[min(18rem,88vw)] shrink-0 snap-start border border-border bg-background xl:w-auto xl:min-w-0">
+    <section className="min-w-0 border border-border bg-background">
       <header className="border-b border-border px-3 py-2.5">
         <h4 className="text-sm font-black text-foreground">{name}</h4>
       </header>
@@ -163,11 +163,10 @@ export function BFTSameTraceViz() {
       canvasClassName="p-2.5 sm:p-5"
     >
       <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="BFT 세 프로토콜의 동일 요청과 장애 비교" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[1110px] sm:min-h-[1040px] lg:min-h-[990px] xl:min-h-[510px]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {TRACE_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
-          <p className="mt-2 text-[10px] font-semibold text-muted-foreground xl:hidden">가로로 넘겨 PBFT·HotStuff·Autobahn 비교</p>
-          <div className="mt-3 flex min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto pb-2 xl:grid xl:grid-cols-3 xl:overflow-visible xl:pb-0">
+          <div className="mt-3 grid min-w-0 gap-3 xl:grid-cols-3">
             <ProtocolColumn name="PBFT" state={state.pbft} />
             <ProtocolColumn name="HotStuff" state={state.hotstuff} />
             <ProtocolColumn name="Autobahn" state={state.autobahn} />
@@ -232,7 +231,7 @@ export function AutobahnLaneCutViz() {
       canvasClassName="p-2.5 sm:p-5"
     >
       <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Autobahn lane과 cut의 다섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[420px]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {LANE_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
           <div className="mt-3 space-y-px">

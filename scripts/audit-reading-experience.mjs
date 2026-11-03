@@ -284,14 +284,16 @@ const contract = {
     progressiveDetail.includes("group-open:rotate-90"),
   articleScopeProgressivelyDisclosed:
     articleOnboarding.includes("<ProgressiveDetail") &&
-    articleOnboarding.includes("이 글은 어디까지 설명하고") &&
+    (articleOnboarding.includes("이 글은 어디까지 설명하고") ||
+      articleOnboarding.includes("이 글에서 설명하는 범위와 이어 읽을 내용")) &&
     articleOnboarding.includes("learningScope.map") &&
     articleOnboarding.includes("concept.role") &&
     !articleOnboarding.includes('.join(" · ")'),
   editorialBoundaryProgressivelyDisclosed:
     contentBoundary.includes("<ProgressiveDetail") &&
     contentBoundary.includes("이 글의 범위 펼쳐 보기") &&
-    contentBoundary.includes("이 글에서 답하는 것") &&
+    (contentBoundary.includes("이 글에서 답하는 것") ||
+      contentBoundary.includes("이 글에서 설명하는 내용")) &&
     contentBoundary.includes("이어 읽을 내용") &&
     !contentBoundary.includes("lg:grid-cols-3"),
 };

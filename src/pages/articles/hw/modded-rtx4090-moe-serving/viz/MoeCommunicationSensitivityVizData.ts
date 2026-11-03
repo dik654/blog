@@ -19,8 +19,8 @@ export const STEPS = [
     body: "토큰마다 top-k expert만 계산에 쓰인다. 하지만 어느 expert가 선택될지 모르므로\n전체 expert weight가 항상 메모리에 상주해야 한다 — 연산은 sparse, 메모리는 dense.",
   },
   {
-    label: "TP의 all-reduce — 대칭·고정",
-    body: "Tensor parallel은 attention 뒤·MLP 뒤로 layer마다 all-reduce 2번.\n모든 GPU가 같은 크기의 partial sum을 대칭으로 주고받고, 통신량은 라우팅과 무관하게 고정이다.",
+    label: "TP의 all-reduce — 라우팅과 무관",
+    body: "Tensor parallel collective는 router 선택과 무관하다.\n다만 실제 wire traffic은 TP degree와 collective 알고리즘에 따라 달라진다.",
   },
   {
     label: "EP dispatch — 비대칭 all-to-all",
@@ -31,11 +31,11 @@ export const STEPS = [
     body: "Expert 연산 결과를 원래 토큰 위치로 되돌리는 반대 방향 all-to-all.\ndispatch가 만든 불균형 패턴을 combine도 그대로 물려받는다.",
   },
   {
-    label: "TP vs EP — 고정 비율 vs 가변 비율",
-    body: "TP는 GPU 수가 늘어도 layer당 통신량이 평평한 선으로 남는다.\nEP는 GPU 개수·expert 개수·top-k·batch 구성이 얽혀 라우팅 쏠림에 따라 들쭉날쭉하다.",
+    label: "TP vs EP — 서로 다른 변수가 payload를 정한다",
+    body: "TP는 degree·알고리즘, EP는 토큰 수·top-k·배치·load balance의 영향을 받는다.\n구조만 보고 어느 쪽이 항상 더 많다고 단정할 수 없다.",
   },
   {
     label: "PCIe 전용 구성에서 드러나는 병목",
-    body: "NVSwitch처럼 모든 GPU 쌍이 같은 대역폭인 fabric에서는 이 비대칭성이 잘 안 보인다.\nPCIe만 있는 4090 다중 구성에서는 라우팅이 조금만 쏠려도 특정 링크가 포화된다.",
+    body: "균일한 고대역폭 fabric은 쏠림의 영향을 줄일 수 있다.\n4090 다중 구성은 P2P 미지원과 host staging까지 포함해 특정 rank의 p95·p99가 나빠질 수 있다.",
   },
 ];

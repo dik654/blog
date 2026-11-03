@@ -1,147 +1,113 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-/** 본문 대응: overview·why-state — 사인 간 조정이 무너지는 세 지점 */
-const SCENES = [
-  "값을 주고받으면 끝나는 경우",
-  "물릴 재산이 없으면",
-  "누가 했는지 모르면",
-  "값을 치르면 해도 되는 것이 되면",
+const STEPS = [
+  {
+    label: "한 사건에서 재산 손실과 공적 규칙 위반이 함께 생김",
+    body: "H가 경보기를 끄고 물건을 가져간 가상 사건입니다. 물건값을 돌려주는 일은 손실을 메우지만, 조사·강제력·동일한 규칙 적용의 문제까지 자동으로 끝내지는 않습니다.",
+  },
+  {
+    label: "행위 전에 법이 금지와 가능한 제재를 정함",
+    body: "국가가 처벌하려면 먼저 접근 가능하고 예측 가능한 법적 근거가 있어야 합니다. 사건 뒤에 금지를 만들어 H에게 거꾸로 적용할 수 없습니다.",
+  },
+  {
+    label: "절차가 행위·책임·항변을 증명함",
+    body: "공적 필요가 있다는 사실은 H의 유죄 증거가 아닙니다. 독립된 증명 문턱을 넘기 전에는 형벌 목적을 H에게 적용할 수 없습니다.",
+  },
+  {
+    label: "유죄 뒤에야 형벌 목적이 형의 종류와 정도를 이끎",
+    body: "응보·억제·무해화·재활은 유죄를 만드는 부품이 아니라, 유죄가 확인된 뒤 어떤 공적 반응이 정당한지 묻는 서로 다른 이유입니다.",
+  },
 ] as const;
 
-const NOTES = [
-  "앞 세 글은 전부 이 모양이었습니다. 손해를 입힌 쪽을 특정하고, 그쪽에 재산이 있고, 값을 치르면 정리되는 경우입니다.",
-  "물릴 재산이 없으면 이 사슬이 첫 칸에서 끊어집니다. 판결을 받아도 받을 것이 없고, 그러면 손해를 입힐 유인도 줄지 않습니다.",
-  "누가 했는지 알 수 없으면 아예 시작되지 않습니다. 당한 쪽이 스스로 찾아내야 하는데, 찾는 비용이 받을 값보다 큰 경우가 대부분입니다.",
-  "마지막이 가장 중요합니다. 값만 치르면 해도 되는 것으로 두면, 앞 글에서 동의를 요구하던 보호가 값을 치르면 뚫리는 보호로 바뀝니다. 동의를 받아야 한다는 규칙 자체가 무의미해집니다.",
-] as const;
+const COLORS = {
+  event: "#d97706",
+  law: "#4f46e5",
+  proof: "#0284c7",
+  sentence: "#059669",
+  muted: "#64748b",
+} as const;
 
-const OK = "#10b981";
-const WARN = "#ef4444";
-const ACCENT = "#6366f1";
-const MUTED = "#94a3b8";
-
-const CHAIN = [
-  { label: "누가 했는지 안다", broken: 2 },
-  { label: "그쪽에 재산이 있다", broken: 1 },
-  { label: "값을 치르면 정리된다", broken: 3 },
-] as const;
-
-const BX = 42;
-const BW = 122;
-const GAP = 14;
+function MobileFlow({ step }: { step: number }) {
+  const rows = [
+    { y: 88, label: "사전 법률", note: "행위 전에 금지·제재의 경계", color: COLORS.law },
+    { y: 174, label: "유죄 판단", note: "행위·책임·항변을 별도로 증명", color: COLORS.proof },
+    { y: 260, label: "형벌 목적", note: "유죄 뒤 형의 종류·정도를 판단", color: COLORS.sentence },
+  ] as const;
+  return (
+    <svg className="block sm:!hidden" viewBox="0 0 360 376" role="img" aria-label="H 사건이 법률, 유죄 판단, 형벌 목적을 차례로 통과하는 모바일 흐름도">
+      <rect x="28" y="18" width="304" height="48" rx="11" fill={`${COLORS.event}14`} stroke={COLORS.event} strokeWidth="1.2" />
+      <text x="180" y="38" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={COLORS.event}>H가 경보기를 끄고 물건을 가져감</text>
+      <text x="180" y="54" textAnchor="middle" fontSize="9.5" fill="currentColor" opacity="0.72">재산 손실과 공적 규칙 위반이 함께 생김</text>
+      {rows.map((row, index) => {
+        const active = step >= index + 1;
+        const previousY = index === 0 ? 66 : rows[index - 1].y + 56;
+        return (
+          <g key={row.label} opacity={active ? 1 : 0.26}>
+            <line x1="180" y1={previousY} x2="180" y2={row.y - 8} stroke={row.color} strokeWidth="1.2" />
+            <circle cx="180" cy={row.y - 5} r="4" fill={row.color} />
+            <rect x="36" y={row.y} width="288" height="56" rx="11" fill={`${row.color}12`} stroke={row.color} strokeWidth="1.2" />
+            <text x="56" y={row.y + 23} fontSize="10.5" fontWeight="700" fill={row.color}>{index + 1}. {row.label}</text>
+            <text x="56" y={row.y + 42} fontSize="9.5" fill="currentColor">{row.note}</text>
+          </g>
+        );
+      })}
+      <rect x="36" y="334" width="288" height="30" rx="8" fill={step === 0 ? "#64748b12" : `${rows[Math.max(0, step - 1)].color}12`} stroke={step === 0 ? COLORS.muted : rows[Math.max(0, step - 1)].color} strokeWidth="1.2" />
+      <text x="180" y="353" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={step === 0 ? COLORS.muted : rows[Math.max(0, step - 1)].color}>
+        {step === 0 ? "배상과 형사 절차는 서로 다른 질문입니다" : step === 1 ? "법이 먼저입니다" : step === 2 ? "공적 필요가 유죄 증거는 아닙니다" : "형벌 목적은 마지막에 작동합니다"}
+      </text>
+    </svg>
+  );
+}
 
 export default function WhyStateProsecutesViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
-  const step = scenes.active;
-
   return (
-    <VizFrame
-      eyebrow="왜 국가가 나서는가"
-      title="사인끼리 값을 주고받는 방식은 세 지점에서 무너집니다"
-      description="앞 세 글의 장치가 전제하던 것들이 하나씩 빠지는 경우를 봅니다."
-      note="세 조건으로 줄인 그림입니다. 실제로는 소송 비용과 시간처럼 이 사슬을 더 약하게 만드는 요인이 더 있습니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="사인 간 조정이 무너지는 지점"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+    <StepViz steps={STEPS}>
+      {(step) => (
+        <>
+          <MobileFlow step={step} />
+          <svg className="!hidden sm:!block" viewBox="0 0 700 286" role="img" aria-label="H 사건이 법률, 유죄 판단, 형벌 목적을 차례로 통과하는 흐름도">
+            <rect x="24" y="28" width="164" height="78" rx="13" fill={`${COLORS.event}14`} stroke={COLORS.event} strokeWidth="1.2" />
+            <text x="106" y="54" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={COLORS.event}>가상 H 사건</text>
+            <text x="106" y="75" textAnchor="middle" fontSize="9.5" fill="currentColor">경보기 해제 · 물건 취득</text>
+            <text x="106" y="94" textAnchor="middle" fontSize="9" fill="currentColor" opacity="0.68">손실 회복만으로 끝나지 않음</text>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <text x={BX} y={34} fontSize={9} fontWeight={700} fill={MUTED}>
-                사인끼리 정리되려면 이 셋이 모두 성립해야 합니다
-              </text>
-
-              {CHAIN.map((node, i) => {
-                const broken = node.broken === step;
-                const color = broken ? WARN : step === 0 ? OK : MUTED;
-                const x = BX + i * (BW + GAP);
-                return (
-                  <g key={node.label}>
-                    <rect
-                      x={x}
-                      y={50}
-                      width={BW}
-                      height={40}
-                      rx={4}
-                      fill={color}
-                      fillOpacity={broken ? 0.14 : step === 0 ? 0.12 : 0.06}
-                      stroke={color}
-                      strokeWidth={1}
-                      strokeDasharray={broken ? "3 3" : undefined}
-                    />
-                    <text x={x + BW / 2} y={74} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={color}>
-                      {node.label}
-                    </text>
-                    {broken && (
-                      <line x1={x + 10} y1={84} x2={x + BW - 10} y2={56} stroke={WARN} strokeWidth={1} />
-                    )}
-                    {i < CHAIN.length - 1 && (
-                      <line x1={x + BW} y1={70} x2={x + BW + GAP} y2={70} stroke={MUTED} strokeWidth={1} />
-                    )}
-                  </g>
-                );
-              })}
-
-              {step === 0 ? (
-                <g>
-                  <rect x={BX} y={110} width={3 * BW + 2 * GAP} height={28} rx={4} fill={OK} fillOpacity={0.1} stroke={OK} strokeWidth={1} />
-                  <text x={BX + (3 * BW + 2 * GAP) / 2} y={128} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={OK}>
-                    사인끼리 값을 주고받는 것으로 정리됩니다
-                  </text>
-                  <text x={BX} y={160} fontSize={9} fill={MUTED}>
-                    앞 세 글이 다룬 것이 전부 이 경우였습니다
-                  </text>
+            {[
+              { x: 220, label: "1. 사전 법률", note: ["금지와 제재의", "예측 가능한 경계"], color: COLORS.law },
+              { x: 386, label: "2. 유죄 판단", note: ["행위·책임·항변", "독립된 증명"], color: COLORS.proof },
+              { x: 552, label: "3. 형벌 목적", note: ["유죄 뒤 형의", "종류와 정도"], color: COLORS.sentence },
+            ].map((box, index) => {
+              const active = step >= index + 1;
+              const startX = index === 0 ? 188 : box.x - 32;
+              return (
+                <g key={box.label} opacity={active ? 1 : 0.25}>
+                  <line x1={startX} y1="67" x2={box.x - 11} y2="67" stroke={box.color} strokeWidth="1.2" />
+                  <circle cx={box.x - 7} cy="67" r="4" fill={box.color} />
+                  <rect x={box.x} y="28" width="136" height="78" rx="13" fill={`${box.color}12`} stroke={box.color} strokeWidth="1.2" />
+                  <text x={box.x + 68} y="54" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={box.color}>{box.label}</text>
+                  <text x={box.x + 68} y="76" textAnchor="middle" fontSize="9.5" fill="currentColor">{box.note[0]}</text>
+                  <text x={box.x + 68} y="93" textAnchor="middle" fontSize="9.5" fill="currentColor">{box.note[1]}</text>
                 </g>
-              ) : (
-                <g>
-                  <rect x={BX} y={110} width={3 * BW + 2 * GAP} height={28} rx={4} fill={WARN} fillOpacity={0.1} stroke={WARN} strokeWidth={1} />
-                  <text x={BX + (3 * BW + 2 * GAP) / 2} y={128} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={WARN}>
-                    {step === 1
-                      ? "판결을 받아도 받을 것이 없습니다"
-                      : step === 2
-                        ? "물을 상대를 특정할 수 없습니다"
-                        : "동의를 요구하던 보호가 값으로 뚫립니다"}
-                  </text>
-                  <text x={BX} y={160} fontSize={9} fontWeight={700} fill={ACCENT}>
-                    {step === 3
-                      ? "그래서 값이 아니라 하지 못하게 하는 장치가 따로 필요해집니다"
-                      : "그래서 당한 쪽이 아니라 국가가 나서게 됩니다"}
-                  </text>
-                  <text x={BX} y={180} fontSize={9} fill={MUTED}>
-                    {step === 1
-                      ? "손해를 입힐 유인도 그만큼 줄지 않습니다"
-                      : step === 2
-                        ? "찾는 비용이 받을 값보다 큰 경우가 대부분입니다"
-                        : "값만 치르면 된다면 동의를 받아야 한다는 규칙이 무의미해집니다"}
-                  </text>
-                </g>
-              )}
-            </svg>
-          </div>
+              );
+            })}
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[step]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
+            <g opacity={step === 0 ? 1 : 0.4}>
+              <rect x="46" y="146" width="252" height="76" rx="12" fill="#d9770610" stroke={COLORS.event} strokeWidth="1.2" />
+              <text x="66" y="170" fontSize="10" fontWeight="700" fill={COLORS.event}>민사상 질문</text>
+              <text x="66" y="192" fontSize="9.5" fill="currentColor">누가 어떤 손실을 메워야 하는가?</text>
+              <text x="66" y="210" fontSize="9" fill="currentColor" opacity="0.65">물건 반환·손해배상과 형사 절차는 병존 가능</text>
+            </g>
+            <g opacity={step === 0 || step === 3 ? 1 : 0.4}>
+              <rect x="326" y="146" width="328" height="76" rx="12" fill="#05966910" stroke={COLORS.sentence} strokeWidth="1.2" />
+              <text x="346" y="170" fontSize="10" fontWeight="700" fill={COLORS.sentence}>형사상 질문</text>
+              <text x="346" y="192" fontSize="9.5" fill="currentColor">유죄가 증명된 뒤 어떤 공적 반응이 정당한가?</text>
+              <text x="346" y="210" fontSize="9" fill="currentColor" opacity="0.65">응보 · 억제 · 무해화 · 재활은 이 단계에서 작동</text>
+            </g>
+            <text x="350" y="264" textAnchor="middle" fontSize="10" fontWeight="700" fill={step === 0 ? COLORS.event : step === 1 ? COLORS.law : step === 2 ? COLORS.proof : COLORS.sentence}>
+              {step === 0 ? "손실의 가격과 공적 반응은 같은 문제가 아닙니다" : step === 1 ? "처벌하려면 사건보다 법이 먼저 있어야 합니다" : step === 2 ? "공적 필요가 H의 유죄를 대신 증명하지 않습니다" : "형벌 목적은 유죄 뒤에야 형을 이끕니다"}
+            </text>
+          </svg>
+        </>
+      )}
+    </StepViz>
   );
 }

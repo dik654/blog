@@ -102,7 +102,7 @@ export function BullsharkCommitTraceViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[730px] lg:min-h-[670px] xl:min-h-[440px]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {TRACE_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
 
@@ -143,16 +143,16 @@ export function BullsharkCommitTraceViz() {
               </div>
             </div>
 
-            <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 xl:block xl:space-y-px xl:overflow-visible xl:border xl:border-border xl:bg-border xl:p-px">
-              <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 xl:w-auto xl:border-0">
+            <div className="grid gap-px border border-border bg-border p-px">
+              <div className="min-w-0 bg-background p-3">
                 <p className="text-[10px] font-semibold text-muted-foreground">지금 일어나는 일</p>
                 <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.now}</p>
               </div>
-              <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 xl:w-auto xl:border-0">
+              <div className="min-w-0 bg-background p-3">
                 <p className="text-[10px] font-semibold text-muted-foreground">새로 생긴 근거</p>
                 <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.evidence}</p>
               </div>
-              <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 xl:w-auto xl:border-0">
+              <div className="min-w-0 bg-background p-3">
                 <p className="text-[10px] font-semibold text-muted-foreground">아직 남은 단계</p>
                 <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.pending}</p>
               </div>
@@ -163,6 +163,87 @@ export function BullsharkCommitTraceViz() {
         <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="L2와 L4의 순서 결정 과정 재생" />
       </div>
       <StaticSceneList labels={TRACE_LABELS} notes={TRACE_NOTES} />
+    </VizFrame>
+  );
+}
+
+const DECISION_LABELS = ["DAG 저장", "앵커 후보", "지지 합산", "임계값", "이전 앵커", "순서 저장"] as const;
+
+const DECISION_STATES = [
+  {
+    title: "새 인증서를 작성자와 라운드 위치에 넣어 로컬 DAG를 갱신합니다.",
+    code: "dag[certificate.round][certificate.author] = certificate",
+    input: "Narwhal 검증을 통과한 certificate의 round·author·parents입니다.",
+    output: "작성자별 한 칸을 가진 새 DAG 상태가 생깁니다.",
+    guard: "인증서를 저장했다는 사실만으로 합의 출력은 늘지 않습니다.",
+  },
+  {
+    title: "방금 받은 홀수 라운드 인증서의 직전 짝수 라운드를 앵커 후보로 봅니다.",
+    code: "leader_round = certificate.round - 1; if invalid: return []",
+    input: "라운드 5 인증서를 받았다면 후보는 라운드 4의 예정된 L4입니다.",
+    output: "확인할 앵커 round와 leader identity가 정해집니다.",
+    guard: "짝수 라운드가 아니거나 L4가 없으면 빈 출력으로 끝납니다.",
+  },
+  {
+    title: "L4를 부모로 가리킨 다음 라운드 작성자의 stake만 더합니다.",
+    code: "support = sum(stake(child.author) if L4 in child.parents)",
+    input: "B5와 C5처럼 L4 digest를 parents에 담은 서로 다른 작성자입니다.",
+    output: "Equal-weight 예에서 support=1+1=2가 됩니다.",
+    guard: "같은 인증서의 중복 수신이나 참조하지 않은 child는 세지 않습니다.",
+  },
+  {
+    title: "지지 power가 validity threshold에 못 미치면 DAG만 보관합니다.",
+    code: "if support < validity_threshold: return []",
+    input: "고정 구현의 validity threshold와 방금 계산한 support입니다.",
+    output: "2≥2이면 L4 직접 커밋 경로가 열립니다.",
+    guard: "임계값 미달을 임의 timeout이나 먼저 도착한 값으로 보충하지 않습니다.",
+  },
+  {
+    title: "L4에서 닿는 미커밋 이전 앵커를 찾아 오래된 것부터 놓습니다.",
+    code: "leaders = reverse(order_leaders_from_current(L4))",
+    input: "L4→round 3 certificates→L2의 검증 가능한 부모 경로입니다.",
+    output: "처리할 앵커 순서가 L2→L4로 고정됩니다.",
+    guard: "L4에서 닿지 않는 L2를 추측해 목록에 끼워 넣지 않습니다.",
+  },
+  {
+    title: "각 앵커의 새 인과적 과거에 index를 붙여 저장하고 한 번씩 내보냅니다.",
+    code: "for c in order_dag(leader): persist(index, c.digest); emit(c, index)",
+    input: "정렬된 parents, last_committed, GC 경계와 현재 consensus index입니다.",
+    output: "중복 없는 certificate 순서와 재시작 가능한 커밋 상태가 남습니다.",
+    guard: "Certificate 출력은 payload 회수나 애플리케이션 실행 성공이 아닙니다.",
+  },
+] as const;
+
+const DECISION_NOTES = DECISION_STATES.map((state) => `${state.title} ${state.output} ${state.guard}`);
+
+export function BullsharkDecisionPseudocodeViz() {
+  const scenes = useAnimatedScenes(DECISION_LABELS.length, 6200, { loop: false });
+  const state = DECISION_STATES[scenes.active];
+
+  return (
+    <VizFrame
+      eyebrow="결정 절차 · 의사코드와 상태를 함께 읽기"
+      title="인증서 하나가 들어와도 조건을 통과한 앵커만 순서를 늘립니다"
+      description="DAG 저장부터 지지 계산, 이전 앵커 회수와 index 저장까지 코드 한 줄의 입력과 결과를 연결합니다."
+      note="MystenLabs/narwhal e67f915의 부분 동기식 standalone Bullshark 경계를 설명용 의사코드로 줄였습니다. 비동기 Bullshark 전체 알고리즘은 아닙니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Bullshark 인증서 처리 의사코드의 여섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+        <div data-viz-scene-stage className="min-h-[580px] sm:min-h-[430px]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {DECISION_LABELS[scenes.active]}</p>
+          <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">{state.code}</code>
+          <div className="mt-3 grid gap-px border border-border bg-border p-px sm:grid-cols-3">
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">확인하는 입력</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.input}</p></div>
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">새로 생긴 상태</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.output}</p></div>
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">넘지 않는 경계</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.guard}</p></div>
+          </div>
+          <div className="mt-4 grid grid-cols-6 gap-1" aria-hidden="true">{DECISION_LABELS.map((label, index) => <span key={label} className={`h-1.5 ${index <= scenes.active ? "bg-primary" : "bg-border"}`} />)}</div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={DECISION_LABELS} controlLabels={DECISION_LABELS} playLabel="Bullshark 결정 의사코드 재생" />
+      </div>
+      <StaticSceneList labels={DECISION_LABELS} notes={DECISION_NOTES} />
     </VizFrame>
   );
 }

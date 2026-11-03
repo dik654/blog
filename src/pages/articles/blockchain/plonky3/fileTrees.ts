@@ -1,31 +1,30 @@
 import type { FileNode } from "@/components/code/types";
 
-const f = (name: string, path: string, codeKey?: string): FileNode => ({
+const file = (name: string, path: string, codeKey: string): FileNode => ({
   name,
   type: "file",
   path,
   codeKey,
 });
-const d = (name: string, children: FileNode[]): FileNode => ({
+
+const directory = (name: string, children: FileNode[]): FileNode => ({
   name,
   type: "dir",
   children,
 });
 
-export const plonky3Tree: FileNode = d("plonky3", [
-  d("baby-bear/src", [
-    f("baby_bear.rs", "plonky3/baby-bear/src/baby_bear.rs", "p3-babybear"),
+export const plonky3Tree: FileNode = directory("Plonky3@0d803737", [
+  directory("uni-stark/tests", [
+    file("fib_air.rs · AIR+trace", "Plonky3/uni-stark/tests/fib_air.rs", "p3-fib-air"),
+    file("fib_air.rs · config", "Plonky3/uni-stark/tests/fib_air.rs", "p3-fib-config"),
+    file("fib_air.rs · prove+verify", "Plonky3/uni-stark/tests/fib_air.rs", "p3-fib-success"),
+    file("fib_air.rs · mismatch", "Plonky3/uni-stark/tests/fib_air.rs", "p3-public-mismatch"),
   ]),
-  d("fri/src", [
-    f("two_adic_pcs.rs", "plonky3/fri/src/two_adic_pcs.rs", "p3-fri-pcs"),
-  ]),
-  d("poseidon2/src", [
-    f("lib.rs", "plonky3/poseidon2/src/lib.rs", "p3-poseidon2"),
-  ]),
-  d("keccak-air/src", [
-    f("air.rs", "plonky3/keccak-air/src/air.rs", "p3-keccak-air"),
-  ]),
-  d("uni-stark/src", [
-    f("config.rs", "plonky3/uni-stark/src/config.rs", "p3-stark-config"),
+  directory("uni-stark/src", [
+    file("config.rs", "Plonky3/uni-stark/src/config.rs", "p3-generic-config"),
+    file("prover.rs", "Plonky3/uni-stark/src/prover.rs", "p3-prove-pipeline"),
+    file("proof.rs", "Plonky3/uni-stark/src/proof.rs", "p3-proof-shape"),
+    file("verifier.rs · transcript", "Plonky3/uni-stark/src/verifier.rs", "p3-verify-transcript"),
+    file("verifier.rs · AIR", "Plonky3/uni-stark/src/verifier.rs", "p3-verify-air"),
   ]),
 ]);

@@ -22,12 +22,12 @@ export const B300_SWITCHLESS_PIPELINE = [
   },
   {
     id: "cable",
-    label: "노드 쌍별 direct cable topology",
+    label: "노드 쌍별 800G physical cable topology",
     artifact: "cables.txt",
   },
   {
     id: "address",
-    label: "링크별 /30 주소 생성",
+    label: "split된 400G logical link별 /30 주소 생성",
     artifact: "node별 netplan/ip commands",
   },
   {
@@ -44,6 +44,7 @@ export const B300_SWITCHLESS_PIPELINE = [
 
 export const B300_SWITCHLESS_MEASUREMENT = {
   nodes: 2,
+  physicalCablesPerPair: 8,
   gpusPerNode: 8,
   logicalLinks: 16,
   lineRateGbpsPerLink: 400,
@@ -52,7 +53,7 @@ export const B300_SWITCHLESS_MEASUREMENT = {
   ncclAllReduceBusBandwidthGbPerSec: 787.211,
   ratioOfNominalLineRate: 787.211 / 800,
   warning:
-    "nccl-tests busbw이며 application payload goodput·all workload throughput과 동일하지 않다.",
+    "2노드 max-width fixture의 nccl-tests busbw이며 wire payload goodput·8노드 full-mesh throughput과 동일하지 않습니다.",
 } as const;
 
 export const SWITCHLESS_REQUIRED_ENV = [
@@ -63,6 +64,10 @@ export const SWITCHLESS_REQUIRED_ENV = [
 ] as const;
 
 export const B300_SWITCHLESS_SOURCE_LINKS = {
+  architecture: {
+    label: "NVIDIA HGX AI Factory logical network architecture",
+    href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/network-logical-architecture.html",
+  },
   dgx: {
     label: "NVIDIA DGX B300 user guide",
     href: "https://docs.nvidia.com/dgx/dgxb300-user-guide/introduction-to-dgxb300.html",

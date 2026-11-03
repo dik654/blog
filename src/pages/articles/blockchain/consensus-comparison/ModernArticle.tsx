@@ -13,8 +13,11 @@ export default function ModernConsensusComparisonArticle() {
     <section id="overview" className="scroll-mt-24 space-y-6">
       <header className="space-y-3">
         <p className="text-sm font-semibold text-primary">합의 계열 비교 · 같은 요청을 네 경로로 추적</p>
-        <h2 className="text-3xl font-bold tracking-tight">무엇을 완료로 부르는지부터 맞춰야 비교가 시작됩니다</h2>
+        <h2 className="text-3xl font-bold tracking-tight">서로 다른 합의 계열은 무엇부터 같은 기준으로 맞춰야 할까요?</h2>
       </header>
+      <p className="text-lg font-semibold leading-8 text-foreground">
+        합의 계열은 TPS부터 줄 세우는 대신, <strong>누가 영향력을 갖고 어떤 장애를 견디며 무슨 증거를 완료로 인정하는지</strong>를 같은 질문으로 맞춘 뒤 비교해야 합니다.
+      </p>
       <p className="text-lg leading-8 text-foreground/90">
         사용자가 잔액 10을 보내는 요청을 제출했다고 하겠습니다. Classical BFT는 validator 표를, DAG-BFT는 data certificate와 ordering evidence를, Nakamoto PoW는 누적 work를, sampling 계열은 반복 표본의 선호를 모읍니다. 네 계열 모두 하나의 history를 만들려 하지만, 참가 자격과 완료 증거는 서로 다릅니다.
       </p>
@@ -30,7 +33,7 @@ export default function ModernConsensusComparisonArticle() {
     <section id="evidence" className="scroll-mt-24 space-y-6">
       <header>
         <p className="text-sm font-semibold text-primary">01 · 증거</p>
-        <h2 className="mt-2 text-2xl font-bold">Validator 한 표와 hash power 한 단위는 같은 표가 아닙니다</h2>
+        <h2 className="mt-2 text-2xl font-bold">Validator 한 표와 hash power 한 단위는 왜 같은 표가 아닐까요?</h2>
       </header>
       <ConsensusFamilyMatrixViz />
       <p>
@@ -50,7 +53,7 @@ export default function ModernConsensusComparisonArticle() {
     <section id="security" className="scroll-mt-24 space-y-6">
       <header>
         <p className="text-sm font-semibold text-primary">02 · 장애</p>
-        <h2 className="mt-2 text-2xl font-bold">Network partition은 멈춤·branch 경쟁·표본 편향을 각각 만듭니다</h2>
+        <h2 className="mt-2 text-2xl font-bold">같은 network partition이 왜 서로 다른 실패를 만들까요?</h2>
       </header>
       <ConsensusFaultTraceViz />
       <p>
@@ -85,7 +88,7 @@ export default function ModernConsensusComparisonArticle() {
     <section id="performance" className="scroll-mt-24 space-y-6">
       <header>
         <p className="text-sm font-semibold text-primary">03 · 대기</p>
-        <h2 className="mt-2 text-2xl font-bold">같은 240ms도 줄여야 할 계층이 다릅니다</h2>
+        <h2 className="mt-2 text-2xl font-bold">합계가 같은 240ms인데 왜 최적화할 곳이 다를까요?</h2>
       </header>
       <ConsensusLatencyPathViz />
       <ExplainedFormula
@@ -126,7 +129,7 @@ export default function ModernConsensusComparisonArticle() {
     <section id="use-cases" className="scroll-mt-24 space-y-6">
       <header>
         <p className="text-sm font-semibold text-primary">04 · 선택</p>
-        <h2 className="mt-2 text-2xl font-bold">후보 이름보다 먼저 제품이 지켜야 할 경계를 확정합니다</h2>
+        <h2 className="mt-2 text-2xl font-bold">프로토콜 이름보다 무엇을 먼저 정해야 할까요?</h2>
       </header>
       <ConsensusSelectionFlowViz />
       <p>

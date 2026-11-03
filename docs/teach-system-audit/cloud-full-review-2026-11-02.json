@@ -1,0 +1,36 @@
+{
+  "reviewedAt": "2026-11-02",
+  "scope": "cloud 공개 경로 35편의 실제 본문·근거·모바일/데스크톱 렌더 검수",
+  "actualBodyRead": true,
+  "groups": {
+    "cloudAndCertification": {
+      "count": 14,
+      "result": "직무 또는 요구 조건에서 출발해 서비스·시험 이름을 뒤에 붙이고, 한 요청·복구·포트폴리오 증거까지 이어지는 구조를 확인했다.",
+      "sourceCurrentness": "AWS와 Microsoft 공식 시험 가이드를 2026-11-02에 다시 확인했다. DVA-C03 등록/제공 시점과 DVA-C02 종료일을 구분하고, AI-200을 2026-10-07 범위·30–35% 데이터 영역·ab-200 공식 URL로 갱신했다."
+    },
+    "linux": {
+      "count": 12,
+      "result": "한 장애 증상에서 /proc·kernel state·queue·timer·filesystem·network 장부로 좁히고, 작은 계산과 원문 코드 경계 뒤에 명령·복구 판단이 이어지는지 확인했다."
+    },
+    "kubernetes": {
+      "count": 9,
+      "result": "API request, packet, controller chain, scheduler/kubelet, requests/limits, Pod state, CSI, rollout/drain/HPA, SLO/upgrade를 각기 다른 제어 문제로 분리하고 수량·시간 기본값과 비보장 범위를 확인했다.",
+      "versionBoundary": "공식 문서의 현재 버전이 v1.37임을 확인했으며 글 속 버전·source anchor가 특정 버전일 때 현재 일반 동작과 고정 snapshot을 구분해 읽었다."
+    }
+  },
+  "verification": {
+    "routeChecks": "35/35 PASS",
+    "typescript": "PASS",
+    "globalProseStrict": "PASS, unreviewed 0",
+    "browser": "390/1024/1440에서 105 화면 HTTP 200·document overflow 0·Viz overflow 0·formula clip 0·console error 0",
+    "mobileControls": "공통 CodeViewButton을 min-height 44px로 고친 뒤 390px 35/35에서 44px 미만 button 0",
+    "titleWrapping": "공통 ArticleLayout 제목에 구두점 뒤 wbr와 keep-all을 적용한 뒤 390px 35/35 document overflow 0; Kubernetes 대표 화면 직접 확인",
+    "reducedMotion": "대표 6편에서 settling 뒤 running animation 0"
+  },
+  "artifacts": [
+    "artifacts/cloud-audit-final/cloud-certification-roadmap-2026-mobile-top.png",
+    "artifacts/cloud-audit-final/linux-kernel-process-syscall-scheduler-mobile-top.png",
+    "artifacts/cloud-audit-final/kubernetes-network-title-fixed.png",
+    "artifacts/cloud-audit-final/azure-ai200-fast-study-mobile-top.png"
+  ]
+}

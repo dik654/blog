@@ -3,166 +3,114 @@ import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
   {
-    label: "TCP+TLS 스택",
-    body: "TCP는 바이트 스트림, TLS는 별도 핸드셰이크. 3-way + TLS = 최소 2~3 RTT.",
+    label: "앱의 바이트를 STREAM frame으로 자릅니다",
+    body: "대화 텍스트의 stream 0 · offset 100–199를 STREAM frame에 넣습니다. Stream 위치는 packet 번호와 별개의 좌표입니다.",
   },
   {
-    label: "QUIC 스택",
-    body: "QUIC는 UDP 위에 전송+암호화를 통합. 1-RTT 핸드셰이크, 스트림 멀티플렉싱 내장.",
+    label: "Frame을 packet 18에 넣고 보호합니다",
+    body: "Packet number 18과 control frame을 묶고 TLS에서 파생한 key로 payload와 선택된 header bit를 보호합니다.",
   },
   {
-    label: "HOL Blocking 비교",
-    body: "TCP: 패킷 1개 손실 → 전체 차단. QUIC: 해당 스트림만 차단, 나머지 정상.",
+    label: "UDP는 완성된 datagram을 전달할 뿐입니다",
+    body: "Kernel의 UDP는 IP·port demultiplexing과 checksum 경계를 제공합니다. ACK·재조립·loss 판단은 QUIC endpoint의 상태입니다.",
   },
-];
+  {
+    label: "손실된 frame은 새 packet 25에 다시 싣습니다",
+    body: "Packet 18의 암호문과 번호를 재사용하지 않습니다. ACK와 timer로 손실을 판단한 뒤 필요한 stream bytes를 새로운 packet number로 보냅니다.",
+  },
+] as const;
 
-const sp = { type: "spring" as const, bounce: 0.15, duration: 0.5 };
-const C = { tcp: "#ef4444", tls: "#f59e0b", quic: "#0ea5e9", udp: "#6366f1" };
+const LAYERS = [
+  {
+    label: "Application bytes",
+    detail: "stream 0 · offset 100–199",
+    color: "#7c3aed",
+  },
+  { label: "QUIC frame", detail: "STREAM + ACK/control", color: "#059669" },
+  {
+    label: "QUIC packet",
+    detail: "PN 18 · protected payload",
+    color: "#2563eb",
+  },
+  {
+    label: "UDP datagram",
+    detail: "source/destination IP · port",
+    color: "#d97706",
+  },
+] as const;
 
 export default function QUICStackViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
         <svg
-          viewBox="0 0 460 180"
+          viewBox="0 0 460 194"
           className="w-full max-w-2xl"
-          style={{ height: "auto" }}
+          aria-label="한 stream byte가 QUIC packet과 UDP datagram이 되는 과정"
         >
-          {/* TCP stack */}
-          <motion.g
-            animate={{
-              opacity: step === 1 ? 0.15 : 1,
-              x: step === 2 ? -10 : 0,
-            }}
-            transition={sp}
-          >
-            <text
-              x={80}
-              y={16}
-              textAnchor="middle"
-              fontSize={10}
-              fontWeight={600}
-              fill="var(--foreground)"
-            >
-              TCP + TLS
-            </text>
-            {[
-              { y: 24, h: 28, label: "Application", c: "#64748b" },
-              { y: 56, h: 28, label: "TLS 1.3", c: C.tls },
-              { y: 88, h: 28, label: "TCP", c: C.tcp },
-              { y: 120, h: 28, label: "IP", c: "#6b7280" },
-            ].map((l) => (
-              <g key={l.label}>
+          {LAYERS.map((layer, index) => {
+            const y = 16 + index * 40;
+            const active = index === Math.min(step, 2);
+            return (
+              <motion.g
+                key={layer.label}
+                animate={{ opacity: active || step === 3 ? 1 : 0.3 }}
+                transition={{ duration: 0.18 }}
+              >
                 <rect
-                  x={10}
-                  y={l.y}
-                  width={140}
-                  height={l.h}
-                  rx={4}
-                  fill={l.c + "12"}
-                  stroke={l.c}
-                  strokeWidth={1}
+                  x={52 + index * 12}
+                  y={y}
+                  width={356 - index * 24}
+                  height="30"
+                  rx="7"
+                  fill={layer.color + "14"}
+                  stroke={layer.color}
+                  strokeWidth={active ? 1.7 : 1}
                 />
                 <text
-                  x={80}
-                  y={l.y + l.h / 2 + 4}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fontWeight={600}
-                  fill={l.c}
+                  x={72 + index * 12}
+                  y={y + 13}
+                  fontSize="11"
+                  fontWeight="700"
+                  fill={layer.color}
                 >
-                  {l.label}
+                  {layer.label}
                 </text>
-              </g>
-            ))}
-          </motion.g>
-          {/* QUIC stack */}
-          <motion.g
-            animate={{ opacity: step === 0 ? 0.15 : 1, x: step === 2 ? 10 : 0 }}
-            transition={sp}
-          >
-            <text
-              x={340}
-              y={16}
-              textAnchor="middle"
-              fontSize={10}
-              fontWeight={600}
-              fill="var(--foreground)"
-            >
-              QUIC
-            </text>
-            {[
-              { y: 24, h: 28, label: "Application", c: "#64748b" },
-              { y: 56, h: 60, label: "QUIC (TLS + Stream + Flow)", c: C.quic },
-              { y: 120, h: 28, label: "UDP", c: C.udp },
-            ].map((l) => (
-              <g key={l.label}>
-                <rect
-                  x={250}
-                  y={l.y}
-                  width={180}
-                  height={l.h}
-                  rx={4}
-                  fill={l.c + "12"}
-                  stroke={l.c}
-                  strokeWidth={1}
-                />
                 <text
-                  x={340}
-                  y={l.y + l.h / 2 + 4}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fontWeight={600}
-                  fill={l.c}
+                  x={72 + index * 12}
+                  y={y + 24}
+                  fontSize="10"
+                  fill="currentColor"
                 >
-                  {l.label}
+                  {layer.detail}
                 </text>
-              </g>
-            ))}
+              </motion.g>
+            );
+          })}
+          <motion.g
+            animate={{ opacity: step === 3 ? 1 : 0.2 }}
+            transition={{ duration: 0.18 }}
+          >
+            <rect
+              x="124"
+              y="168"
+              width="212"
+              height="22"
+              rx="6"
+              fill="#dc262614"
+              stroke="#dc2626"
+            />
+            <text
+              x="230"
+              y="183"
+              textAnchor="middle"
+              fontSize="10.5"
+              fontWeight="700"
+              fill="#dc2626"
+            >
+              lost PN 18 → same frame in new PN 25
+            </text>
           </motion.g>
-          {/* HOL blocking indicator */}
-          {step === 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <rect
-                x={10}
-                y={158}
-                width={140}
-                height={14}
-                rx={3}
-                fill={C.tcp + "18"}
-                stroke={C.tcp}
-                strokeWidth={1}
-              />
-              <text
-                x={80}
-                y={168}
-                textAnchor="middle"
-                fontSize={10}
-                fill={C.tcp}
-              >
-                전체 차단
-              </text>
-              <rect
-                x={250}
-                y={158}
-                width={180}
-                height={14}
-                rx={3}
-                fill={C.quic + "18"}
-                stroke={C.quic}
-                strokeWidth={1}
-              />
-              <text
-                x={340}
-                y={168}
-                textAnchor="middle"
-                fontSize={10}
-                fill={C.quic}
-              >
-                스트림별 독립
-              </text>
-            </motion.g>
-          )}
         </svg>
       )}
     </StepViz>

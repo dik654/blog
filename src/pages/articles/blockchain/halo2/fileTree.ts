@@ -12,25 +12,16 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const halo2Tree: FileNode = d("halo2_proofs/src", [
-  f("circuit.rs", "halo2_proofs/src/circuit.rs", "circuit-trait"),
-  f("plonk.rs", "halo2_proofs/src/plonk.rs", "plonk-mod"),
-  d("plonk", [
-    f("keygen.rs", "halo2_proofs/src/plonk/keygen.rs", "keygen-vk"),
-    f("prover.rs", "halo2_proofs/src/plonk/prover.rs", "create-proof"),
-    f("verifier.rs", "halo2_proofs/src/plonk/verifier.rs", "verify-proof"),
-    d("permutation", [
-      f("keygen.rs", "halo2_proofs/src/plonk/permutation/keygen.rs"),
-      f("prover.rs", "halo2_proofs/src/plonk/permutation/prover.rs"),
-      f("verifier.rs", "halo2_proofs/src/plonk/permutation/verifier.rs"),
+export const halo2Tree: FileNode = d("zcash/halo2 @ 3442dd3", [
+  d("halo2_proofs", [
+    d("examples", [
+      f("simple-example.rs:76–117", "halo2_proofs/examples/simple-example.rs", "simple-gate"),
+      f("simple-example.rs:185–230", "halo2_proofs/examples/simple-example.rs", "simple-mul-expose"),
+      f("simple-example.rs:305–337", "halo2_proofs/examples/simple-example.rs", "simple-mock"),
     ]),
-    d("lookup", [
-      f("prover.rs", "halo2_proofs/src/plonk/lookup/prover.rs"),
-      f("verifier.rs", "halo2_proofs/src/plonk/lookup/verifier.rs"),
-    ]),
-    d("vanishing", [
-      f("prover.rs", "halo2_proofs/src/plonk/vanishing/prover.rs"),
-      f("verifier.rs", "halo2_proofs/src/plonk/vanishing/verifier.rs"),
+    d("src/plonk", [
+      f("prover.rs:30–59", "halo2_proofs/src/plonk/prover.rs", "create-proof"),
+      f("verifier.rs:69–88", "halo2_proofs/src/plonk/verifier.rs", "verify-proof"),
     ]),
   ]),
 ]);

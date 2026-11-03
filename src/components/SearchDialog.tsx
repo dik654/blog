@@ -138,11 +138,13 @@ export default function SearchDialog() {
   return (
     <div ref={wrapperRef} className="relative">
       <button
+        type="button"
+        aria-label="아티클 검색 열기"
         onClick={() => {
           if (open) close();
           else setOpen(true);
         }}
-        className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+        className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
           open
             ? "border-accent-foreground/20 bg-accent text-accent-foreground"
             : "text-muted-foreground hover:bg-accent"

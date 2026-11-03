@@ -19,13 +19,25 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
     <div id="overview" className="space-y-16">
       <section id="block-program" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Triton kernel 은 thread 가 아니라 block 하나를 맡는 program 을 씁니다
+          98,432개 원소를 thread 98,432개로 직접 나누지 않아도 됩니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            CUDA kernel 은 thread 하나가 원소 하나를 다루는 scalar program 이고 Triton kernel 은 program instance 하나가
-            BLOCK_SIZE 개의 원소를 한 번에 다루는 block program 입니다. 프로그래머는 block 안의 원소가 어느 thread 에 배정되는지를 쓰지 않습니다. 그
-            배정과 메모리 접근 순서는 compiler 가 정합니다.
+            답은 원소 1,024개짜리 묶음 97개를 만드는 것입니다. 프로그래머는 “97번째 묶음에는
+            실제 원소가 128개뿐”이라는 경계까지만 적고, 묶음 안 원소를 어느 thread가 맡을지는
+            compiler에 넘깁니다. 이것이 Triton의 block programming model입니다.
+          </p>
+          <p>
+            다만 Triton이 GPU 최적화를 전부 알아서 한다는 뜻은 아닙니다. 사용자는 block shape,
+            memory access, 경계 mask, warp 수, pipeline stage, autotune 후보를 정합니다. Compiler는
+            그 block을 warp와 thread에 배치하고, 가능한 경우 coalescing·vectorization·software
+            pipeline으로 낮춥니다. 이 글은 그 경계를 끝까지 추적합니다.
+          </p>
+          <p>
+            CUDA kernel은 흔히 thread 하나가 원소 하나를 다루는 scalar program으로 시작합니다.
+            Triton kernel은 program instance 하나가 <code>BLOCK_SIZE</code>개의 원소를 한 번에
+            다루는 block program으로 시작합니다. 이 차이 때문에 thread index가 아니라 block
+            전체의 offset tensor를 씁니다.
           </p>
           <p>
             Triton 은 Python 문법 위에 얹힌 kernel DSL 입니다. <code>@triton.jit</code> 을 붙인
@@ -52,9 +64,10 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
           </p>
           <p>
             CUDA 라면 <code>if (i &lt; N)</code> 분기로 thread 마다 처리하던 경계가 Triton 에서는
-            block 연산의 인자 하나로 들어갑니다. 경계뿐 아니라 matmul 의 K 꼬리, 대각선 아래만
-            읽는 causal mask 도 같은 자리에 들어가므로 masked load/store 가 Triton 의 유일한
-            경계 도구입니다.
+            block 연산의 인자 하나로 들어갑니다. Matmul 의 K 꼬리나 causal attention의 삼각형
+            경계도 같은 방식으로 표현할 수 있습니다. 기본 pointer tensor 경로에서는 masked
+            load/store를 쓰고, tensor descriptor 경로에서는 descriptor의 shape와 padding 규칙으로
+            경계를 표현할 수도 있습니다.
           </p>
           <p>
             BLOCK_SIZE 는 <code>tl.constexpr</code> 로 선언합니다. <code>tl.arange(0, BLOCK_SIZE)</code>
@@ -73,6 +86,10 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
           annotatedFormula={String.raw`\begin{aligned}
 \mathrm{offsets} &= \underbrace{\mathrm{pid}\cdot B}_{\text{이 instance 의 block 시작}} + \underbrace{\mathrm{arange}(0, B)}_{\text{block 안 lane 번호 0..B-1}} \\
 \mathrm{mask} &= \underbrace{\mathrm{offsets} < N}_{\text{lane 별 유효 여부}},\qquad \underbrace{G=\left\lceil N / B \right\rceil}_{\text{grid 의 instance 수}}
+\end{aligned}`}
+          mobileFormula={String.raw`\begin{aligned}
+o &= pB+[0,\ldots,B-1] \\
+m &= (o<N)
 \end{aligned}`}
           operations={[
             { expression: String.raw`\mathrm{pid}\cdot B`, annotation: ["pid 96, B 1024 이면 98304", "이 instance 가 맡는 첫 원소"] },
@@ -128,10 +145,16 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             입니다.
           </p>
           <p>
-            Config 6개에 서로 다른 (M, N, K) 가 2개 들어오면 첫 호출마다 6개 variant 를 컴파일하고
-            벤치마크해 12번의 컴파일과 두 번의 탐색이 일어납니다. 같은 (M, N, K) 가 다시 오면
-            기억한 config 로 바로 실행합니다. 탐색 비용은 첫 호출에 몰리므로 warmup 없이 잰
-            첫 iteration 시간은 kernel 성능이 아닙니다.
+            Config 6개에 서로 다른 (M, N, K)가 2개 들어오면 autotune key가 두 번 갈리므로
+            config 평가는 6개씩 두 차례 일어납니다. 하지만 “후보 평가 12개 = 새 컴파일 12번”은
+            아닙니다. 두 shape가 같은 JIT specialization을 공유하면 이미 만든 binary를 다시
+            benchmark할 수 있고, specialization이 달라지면 새로 컴파일합니다.
+          </p>
+          <p>
+            후보 하나도 실제로는 warmup과 반복 측정을 거치므로 평가 횟수를 kernel launch 횟수로
+            읽어서도 안 됩니다. 같은 autotune key가 다시 오면 메모리에 기억한 best config를
+            바로 사용합니다. <code>cache_results=True</code>를 켜면 autotune timing 결과를 disk에
+            저장할 수도 있습니다. 따라서 cold compile, cold autotune, warm launch를 따로 재야 합니다.
           </p>
           <p>
             Search space 를 줄이는 손잡이가 <code>prune_configs_by</code> 입니다. 성능 모델로 상위
@@ -175,26 +198,33 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             specialization 입니다.
           </p>
           <p>
-            셋째가 눈에 덜 띄는 부분입니다. 정수 인자는 값이 16 의 배수인지, 1 과 같은지로 나뉘고 pointer 인자는 16 byte 정렬 여부로 나뉩니다. N = 4096 과 N
-            = 4100 은 둘 다 runtime 정수인데 전자만 16 의 배수이므로 서로 다른 variant 로 컴파일됩니다. 이것이 shape specialization 입니다.
+            셋째가 눈에 덜 띄는 부분입니다. Runtime은 target backend가 돌려준 인자 속성도
+            specialization에 넣습니다. 정수 값의 특성이나 pointer alignment처럼 code generation에
+            도움이 되는 정보입니다. 정확히 어떤 속성이 들어가는지는 Triton version과 backend에
+            묶이므로 “모든 정수는 항상 16의 배수 여부로 갈린다”는 고정 규칙으로 외우면 안 됩니다.
           </p>
           <p>
             Compiler 가 이 성질을 원하는 이유는 vectorization 때문입니다. 정렬된 pointer 와 16 의 배수 길이를 알면 lane 여러 개를 128-bit load
             하나로 묶을 수 있고 stride 가 1 이면 곱셈을 없앨 수 있습니다. 성질을 모르는 채 컴파일하면 이 최적화를 포기해야 합니다.
           </p>
           <p>
-            비용은 variant 수입니다. 매 호출 길이가 달라지는 workload 에서 16 의 배수 여부가 섞이면 같은 kernel 이 두 번 컴파일되고 autotune 과 곱해지면
-            config 수 × 2 가 됩니다. 앞 절의 예에서 (M, N, K) 두 shape 이 하나는 16 의 배수이고 하나는 아니라면 12개 variant 가 전부 별개 코드입니다.
+            비용은 variant 수입니다. 같은 dtype이라도 runtime 속성이 달라지면 새 specialization이
+            생길 수 있고, block shape와 num_warps 같은 config option이 달라져도 별도 code가 됩니다.
+            따라서 variant 수는 “autotune key 수 × config 수”로 고정되지 않고, 실제 JIT cache
+            key가 몇 종류로 갈렸는지로 세어야 합니다.
           </p>
           <p>
-            둘 다 16 의 배수라면 autotune 의 key 는 두 번 갈리지만 JIT cache key 는 config 마다 하나뿐이라 컴파일은 6번입니다. 두 번째 shape 의
-            탐색은 컴파일된 variant 를 다시 실행만 합니다. Autotune key 와 JIT cache key 가 다른 층이라는 점이 컴파일 시간을 셀 때의 핵심입니다.
+            예를 들어 두 shape가 autotune key는 다르지만 dtype·runtime 속성이 같고 같은 config
+            6개를 평가한다면, 두 번째 탐색은 앞에서 만든 6개 binary를 다시 실행할 수 있습니다.
+            반대로 속성이 다르면 일부 또는 전부가 새 variant가 됩니다. Autotune cache와 JIT
+            cache가 다른 장부라는 점이 첫 요청 비용을 셀 때의 핵심입니다.
           </p>
           <p>
-            Variant 폭발을 막는 손잡이는 <code>do_not_specialize</code> 입니다. 여기에 넣은 인자는
-            16 의 배수 여부를 key 에 넣지 않으므로 하나의 variant 로 모든 값을 받습니다. 대신 그
-            인자에 걸린 vectorization 을 포기하므로 어느 쪽이 싼지는 호출 빈도와 길이 분포로
-            정해야 합니다.
+            Variant 폭발을 막는 손잡이는 <code>do_not_specialize</code>와
+            <code>do_not_specialize_on_alignment</code>입니다. 앞의 옵션은 runtime value 기반
+            specialization을, 뒤의 옵션은 alignment 기반 specialization을 끕니다. Variant는
+            줄지만 compiler가 쓸 수 있는 정렬·값 정보도 줄 수 있으므로 호출 분포와 실제 성능으로
+            결정해야 합니다.
           </p>
         </div>
         <TermBreakdown
@@ -203,7 +233,7 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
           items={[
             { term: "Type signature", description: "Pointer 의 element dtype 과 scalar 인자의 type 입니다.", example: "x_ptr 이 fp16 tensor 면 *fp16, fp32 면 *fp32 로 다른 key.", boundary: "같은 dtype 이면 tensor 의 값이나 크기는 여기에 들어가지 않습니다." },
             { term: "constexpr 값", description: "tl.constexpr 로 선언한 인자의 실제 값입니다. 코드 생성에 그대로 쓰입니다.", example: "BLOCK_SIZE=1024 와 512 는 arange 길이가 달라 다른 코드.", boundary: "constexpr 인자는 Python 값이어야 하며 tensor 를 넣을 수 없습니다." },
-            { term: "인자 성질 (specialization)", description: "정수의 16 배수 여부·1 과 같은지, pointer 의 16 byte 정렬 여부입니다.", example: "N=4096 은 divisible_by_16, N=4100 은 아님 → 두 variant.", boundary: "do_not_specialize 에 넣으면 이 층에서 빠지고, 그 인자 기반 vectorization 도 사라집니다." },
+            { term: "인자 성질 (specialization)", description: "Backend가 runtime 인자에서 뽑은 값·정렬 속성입니다.", example: "같은 dtype이라도 backend가 code generation에 쓰는 속성이 다르면 cache key가 갈릴 수 있습니다.", boundary: "정확한 속성 집합은 version·backend에 묶입니다. 값은 do_not_specialize, 정렬은 do_not_specialize_on_alignment로 따로 제어합니다." },
             { term: "Launch option", description: "num_warps·num_stages·num_ctas 같은 meta-parameter 입니다.", example: "같은 BLOCK 이라도 num_warps 4 와 8 은 thread 배치가 달라 별개 코드.", boundary: "Autotune 의 config 가 바로 이 층과 constexpr 층을 함께 바꿉니다." },
           ]}
         />
@@ -273,13 +303,15 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             num_warps 와 num_stages 는 이 단계에 영향을 주지 않습니다.
           </p>
           <p>
-            TritonGPU IR 단계(make_ttgir)는 convert-to-ttgpuir 로 layout 을 붙인 뒤 coalesce,
-            f32-dot-tc, plan-cta, remove-layout-conversions, optimize-thread-locality,
-            accelerate-matmul, optimize-dot-operands 를 지납니다.
+            TritonGPU IR 단계(make_ttgir)는 convert-to-ttgpuir로 layout을 붙인 뒤 coalesce,
+            f32-dot-tc, assign-cga-layouts, remove-layout-conversions, optimize-thread-locality,
+            accelerate-matmul, optimize-dot-operands를 지납니다.
           </p>
           <p>
-            이어 assign-latencies, schedule-loops, pipeline 이 num_stages 를 받고, SM90 이상은
-            warp-specialize 와 optimize-partition-warps 가 추가됩니다.
+            이어 assign-latencies, schedule-loops, pipeline이 num_stages를 받습니다. 현재
+            pipeline은 SM80·SM90 경로와 SM100 이상 경로가 갈리고, Hopper용 warp-specialization
+            pass와 Blackwell 이후의 warp-specialize·partition pass도 같은 순서로 일반화할 수
+            없습니다.
           </p>
           <p>
             LLVM 단계(make_llir)는 allocate-shared-memory 로 shared memory offset 을 확정하고
@@ -287,8 +319,9 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             얻고, make_cubin 이 ptxas 로 SASS 를 담은 cubin 을 만듭니다.
           </p>
           <p>
-            Pass 이름은 2026년 8월 기준 main branch 의
-            <code>third_party/nvidia/backend/compiler.py</code> 에서 읽었습니다.
+            Pass 이름은 2026-11-02의 main commit
+            <code>19a5c66d023edacb12c0a64a4fb39c8e549bcd4b</code>에 고정해 읽었습니다. Main
+            branch는 계속 바뀌므로 배포된 Triton version과 그대로 같다고 가정하면 안 됩니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -356,8 +389,9 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             구현이며 논문의 주장 범위 밖입니다.
           </p>
           <p>
-            이 글의 API 이름과 cache key 구성, pass 이름은 2026년 8월 기준 공식 문서와 main
-            branch 의 <code>python/triton/runtime/jit.py</code>,
+            이 글의 API 이름과 cache key 구성, pass 이름은 2026-11-02 기준 공식 문서와 main
+            commit <code>19a5c66d023edacb12c0a64a4fb39c8e549bcd4b</code>의
+            <code>python/triton/runtime/jit.py</code>,
             <code>third_party/nvidia/backend/compiler.py</code> 에서 읽었습니다. Specialization
             규칙과 pass 목록은 버전에 따라 바뀌므로 배포 중인 버전에서 다시 확인해야 합니다.
           </p>
@@ -382,19 +416,19 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             Blocked program 과 scalar thread 의 대비, compiler 가 자동으로 하는 최적화 목록,
             polyhedral·scheduling language 와의 위치, vector add 의 N = 98432 예와 matmul 의
             grouped ordering·autotune config, num_warps·num_stages 의 정의를 이 문서에서
-            읽었습니다.
+            읽었습니다. 2026-11-02 확인.
           </CitationBlock>
         </div>
         <div id="source-triton-jit-runtime" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="triton-lang/triton · python/triton/runtime/jit.py, third_party/nvidia/backend/compiler.py"
+            source="triton-lang/triton · commit 19a5c66 · runtime/jit.py, runtime/autotuner.py, NVIDIA backend/compiler.py"
             citeKey={3}
-            href="https://github.com/triton-lang/triton/blob/main/python/triton/runtime/jit.py"
+            href="https://github.com/triton-lang/triton/blob/19a5c66d023edacb12c0a64a4fb39c8e549bcd4b/python/triton/runtime/jit.py"
             type="code"
           >
-            Cache key 가 (specialization tuple, options) 로 구성되고 specialization 에 type·constexpr·
-            16 배수 및 정렬 성질이 들어가는 것, do_not_specialize 의 동작, 그리고 ttir → ttgir →
-            llir → ptx → cubin 단계와 pass 이름을 이 소스에서 확인했습니다.
+            Cache key가 specialization tuple과 options로 구성되는 것, 값과 alignment
+            specialization이 별도 옵션으로 제어되는 것, autotune key cache가 JIT cache와 다른
+            장부인 것, ttir → ttgir → llir → ptx → cubin 단계와 pass 이름을 확인했습니다.
           </CitationBlock>
         </div>
         <div id="doc-mlir" className="not-prose my-8 scroll-mt-24">

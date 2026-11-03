@@ -1,59 +1,103 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
-import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
-import PrysmNetworkViz from "../prysm-network-viz";
+import P2PPeerLifecycleViz from "./viz/P2PPeerLifecycleViz";
 
-export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function Overview({
+  onCodeRef: _onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Prysm P2P는 발견한 주소를 곧바로 consensus peer로 믿지 않는다</h2>
+      <h2 className="mb-5 break-keep text-2xl font-bold">
+        발견한 주소는 피어 후보일 뿐이며, 신원과 체인 상태를 통과해야 합의
+        피어가 됩니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Beacon node는 중앙 서버 목록 없이 후보를 찾지만 signed ENR을 받았다는 사실만으로 그 node가 같은 Ethereum network에서 유용한 block을
-          제공한다는 뜻은 아닙니다. 후보는 address와 network metadata를 거쳐 dial되고 libp2p transport·peer identity·stream
-          protocol 협상 뒤 Ethereum Status compatibility와 resource policy까지 통과해야 active peer가 됩니다.
+          <strong>
+            Prysm은 Discv5에서 주소를 찾았다는 이유만으로 그 노드를 믿지
+            않습니다.
+          </strong>{" "}
+          주소가 쓸 만한지 먼저 거르고, libp2p 연결에서 상대 신원을 확인한 뒤,
+          Ethereum <em>Status</em> 메시지로 같은 fork와 chain을 따르는지
+          확인해야 비로소 <em>Connected</em> 상태로 올립니다. 그 뒤에 받은
+          block과 attestation도 다시 검증합니다.
         </p>
         <p>
-          이 글은 한 후보를 <strong>ENR→dial→authenticated PeerId→multiplexed connection→Status→score·gate→close</strong>
-          순서로 추적합니다. TCP·Noise·Swarm의 일반 원리는 <Link to="/cs/p2p/libp2p">libp2p 정본</Link>이 소유하고, 여기서는
-          Ethereum consensus metadata와 Prysm peer lifecycle만 다룹니다.
+          전화번호를 받았다고 회사 직원에게 바로 결재 권한을 주지 않는 것과
+          같습니다. 번호가 유효한지, 통화한 사람이 명함의 당사자인지, 같은
+          업무를 말하는지 차례로 확인합니다. 이 글에서는 새 후보{" "}
+          <strong>N42</strong> 한 개가
+          <strong>
+            {" "}
+            발견 → 후보 필터 → 연결 → 신원 확인 → Status 검사 → 활성 피어 → 지속
+            평가
+          </strong>
+          를 지나는 동안 무엇이 새로 확정되는지 따라갑니다.
         </p>
       </div>
       <ContentBoundary article="prysm-p2p-libp2p" />
-      <PrysmNetworkViz mode="p2p" />
+      <P2PPeerLifecycleViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>고정 사례: ENR 후보 한 개가 active peer가 되기까지</h3>
+        <h3>먼저 세 경계를 구분합니다</h3>
         <p>
-          Candidate receipt에는 discovery source, node ID, ENR sequence, IP/UDP/TCP 또는 QUIC address, fork
-          digest와 subnet bitfield를 남깁니다. Dial attempt에는 transport, timeout과 expected PeerId를 연결하고 secure
-          channel 뒤 실제 PeerId가 다르면 즉시 닫습니다. 마지막으로 Status의 fork digest·finalized root/epoch·head root/slot을
-          local chain context와 비교하고 통과한 peer만 gossip과 Req/Resp resource budget을 얻습니다.
+          <strong>Discv5</strong>는 주변 노드의 서명된 안내문을 찾는
+          발견망입니다. 안내문인 <strong>ENR</strong>에는 node ID, 주소, fork와
+          subnet 정보가 들어갑니다. <strong>multiaddr</strong>는 TCP나 QUIC로
+          실제 전화를 걸 주소이고,
+          <strong>PeerId</strong>는 libp2p 보안 연결에서 확인할 상대의 공개키
+          기반 신원입니다.
         </p>
         <p>
-          각 단계는 서로 다른 보장입니다. ENR signature는 record origin을, Noise/TLS는 channel peer identity를, Status는 protocol
-          compatibility를 확인하지만 peer honesty나 block validity를 보장하지 않습니다. 그래서 active 이후에도 message outcome,
-          request usefulness와 resource abuse를 score·close reason으로 feedback합니다.
+          여기까지는 “누구와 암호화된 통로가 열렸다”는 뜻입니다. 같은 Ethereum
+          합의망을 보는지는 별도입니다. 그래서
+          <strong> Status RPC</strong>로 fork digest, finalized checkpoint와
+          head를 교환합니다. Status까지 통과한
+          <strong> active peer</strong>도 정직하다고 보증된 것은 아닙니다. 단지
+          gossip과 요청·응답을 시작할 수 있는 상대가 됐을 뿐입니다.
+        </p>
+        <p>
+          TCP·QUIC, Noise와 stream multiplexing의 일반 원리는{" "}
+          <Link to="/cs/p2p/libp2p">libp2p 글</Link>이 다룹니다. 여기서는 그
+          연결 위에 Prysm이 후보를 올리고 Ethereum chain 호환성을 확인하는
+          경계에 집중합니다.
         </p>
       </div>
       <div id="paper-ethereum-p2p-spec" className="scroll-mt-24">
-        <CitationBlock {...OFFICIAL_SOURCES.ethereum.p2p} citeKey={1}>
-          Ethereum consensus networking spec은 transport·identity·protocol negotiation과 gossip·Req/Resp·discovery domain,
-          ENR metadata와 Status 경계를 정의합니다. Protocol 정본이지만 Prysm의 queue·score threshold·package layout을 정하지
-          않으며 spec commit·fork·network preset을 함께 고정합니다.
+        <CitationBlock
+          source="Ethereum Consensus Specifications v1.7.0-beta.4 @ aa16bb4c — P2P interface"
+          href="https://github.com/ethereum/consensus-specs/blob/aa16bb4c156184e9548a997d53efaf2a228a6304/specs/phase0/p2p-interface.md"
+          citeKey={1}
+        >
+          Ethereum 합의 규격은 ENR의 eth2 field와 Status·Goodbye·Req/Resp의 wire
+          contract를 정의합니다. Prysm의 함수 배치나 피어 점수 가중치는 정하지
+          않으므로 protocol 근거로만 사용합니다.
         </CitationBlock>
       </div>
       <div id="paper-libp2p-connection-spec" className="scroll-mt-24">
-        <CitationBlock source="libp2p Connection Establishment Specification" href="https://github.com/libp2p/specs/tree/master/connections" citeKey={2}>
-          이 규격은 transport 이후 secure channel·multiplexer·protocol negotiation의 일반 연결 계약을 제공합니다. Ethereum
-          fork compatibility나 Prysm peer score를 정의하지 않으므로 현재 글에서는 재사용되는 lower-layer 근거로만 씁니다.
+        <CitationBlock
+          source="libp2p Specifications @ c750236 — connection establishment"
+          href="https://github.com/libp2p/specs/tree/c750236de43cd8b246a824b377dfdb26bae686db/connections"
+          citeKey={2}
+        >
+          이 규격은 transport 연결 뒤 secure channel, PeerId와 stream
+          multiplexer가 맡는 일반 연결 계약을 제공합니다. Ethereum fork 호환성과
+          Prysm peer policy를 정의하지는 않습니다.
         </CitationBlock>
       </div>
       <div id="paper-prysm-p2p-source" className="scroll-mt-24">
-        <CitationBlock {...OFFICIAL_SOURCES.prysm.repository} citeKey={3} type="code">
-          Prysm source는 discovery service·connection manager·peer status/scorer의 실제 implementation 근거입니다. Threshold와
-          field 이름은 분석한 release·git SHA에 귀속하며 moving branch를 production 전체로 일반화하지 않습니다.
+        <CitationBlock
+          source="OffchainLabs Prysm v7.3.1 @ 96d418cd — p2p·sync source"
+          href="https://github.com/OffchainLabs/prysm/tree/96d418cd964b083e37519a9df274030a1beac7db/beacon-chain"
+          citeKey={3}
+          type="code"
+        >
+          고정한 source에서 filterPeer, connectWithPeer, AddConnectionHandler,
+          validateStatusMessage와 네 하위 scorer의 실제 경계를 확인했습니다.
+          이후 release나 다른 설정의 수치까지 같다고 일반화하지 않습니다.
         </CitationBlock>
       </div>
     </section>

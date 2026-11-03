@@ -4,10 +4,10 @@ import VizFrame from "@/components/viz/VizFrame";
 
 /** 본문 대응: proportional 의 AlgorithmBlock — 동트 방식이 의석을 하나씩 가져가는 과정 */
 const SCENES = [
-  "첫 석은 표가 가장 많은 당에",
-  "세 석까지 · 몫이 반으로 줄며 순서가 바뀐다",
-  "여섯 석까지 · 작은 당이 한 번 끼어든다",
-  "아홉 석 전부 · 남은 몫과 잘린 몫",
+  "첫 의석은 표가 가장 많은 정당에",
+  "세 번째 의석까지 · 몫이 줄며 순서가 바뀐다",
+  "여섯 번째 의석까지 · 작은 정당에도 차례가 온다",
+  "아홉 의석을 나눈 뒤 · 배분선 밖에 남은 몫",
 ] as const;
 
 const TAKEN = [1, 3, 6, 9] as const;
@@ -50,14 +50,14 @@ export default function DivisorViz() {
     `표를 1로 나눈 몫이 그대로 첫 줄이 됩니다. ${NAMES[RANKED[0].party]}이 ${RANKED[0].value}으로 가장 커서 첫 석을 가져갑니다.`,
     `의석을 받은 당은 다음 계산에서 나누는 수가 하나 커집니다. 그래서 ${NAMES[0]}의 몫이 ${VOTES[0]}에서 ${VOTES[0] / 2}로 줄고, 아직 한 석도 받지 못한 ${NAMES[1]}의 ${VOTES[1]}이 앞으로 나옵니다.`,
     `다섯 번째 자리에서 ${NAMES[2]}의 첫 몫 ${VOTES[2]}이 ${NAMES[0]}의 세 번째 몫 ${VOTES[0] / 3}보다 커서 한 석을 가져갑니다. 큰 당의 몫이 충분히 줄어드는 순간에만 작은 당의 차례가 옵니다.`,
-    `아홉 석을 다 나누면 ${NAMES.map((n, i) => `${n} ${seats[i]}석`).join(" · ")}입니다. 열 번째 자리에 있던 ${NAMES[nextCell.party]}의 몫 ${nextCell.value}는 의석으로 바뀌지 못하고 잘립니다.`,
+    `아홉 석을 다 나누면 ${NAMES.map((n, i) => `${n} ${seats[i]}석`).join(" · ")}입니다. 열 번째 자리에 놓인 ${NAMES[nextCell.party]}의 몫 ${nextCell.value}는 배분선 바로 밖에 남습니다.`,
   ] as const;
 
   return (
     <VizFrame
       eyebrow="비례 배분"
-      title="나누어 떨어지지 않는 것을 순서대로 하나씩 나눕니다"
-      description="표를 1·2·3…으로 나눈 몫을 한 줄로 세우고, 앞에서부터 의석 수만큼 끊습니다."
+      title="소수점으로 남는 의석을 큰 몫부터 배분합니다"
+      description="표를 1·2·3…으로 나눈 몫을 큰 순서로 세우고, 의석 수만큼 고릅니다."
       note={`득표 ${VOTES.join(" · ")}, 나눌 의석 9석으로 둔 예입니다. 1·3·5… 방식도 첫 몫은 같습니다. 한 석 뒤의 다음 몫부터 더 작아져 경계 의석이 달라질 수 있습니다.`}
     >
       <div
@@ -71,7 +71,7 @@ export default function DivisorViz() {
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center sm:min-h-[30.5rem]">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
+            장면 · {String(step + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 
@@ -108,7 +108,7 @@ export default function DivisorViz() {
                     {selected
                       ? `${index + 1}번째 의석`
                       : cut
-                        ? "경계 밖 · 잘린 몫"
+                        ? "배분선 밖에 남은 몫"
                         : "다음 후보"}
                   </p>
                 </div>
@@ -169,7 +169,7 @@ export default function DivisorViz() {
                           </text>
                         ) : isNext && step === 3 ? (
                           <text x={TX + c * CW + (CW - 6) / 2} y={TY + p * RH + 28} textAnchor="middle" fontSize={8.5} fontWeight={700} fill={WARN}>
-                            잘린 몫
+                            배분선 밖
                           </text>
                         ) : null}
                       </g>
@@ -186,7 +186,7 @@ export default function DivisorViz() {
               </text>
               {step === 3 && (
                 <text x={TX} y={TY + 3 * RH + 39} fontSize={10.5} fill={MUTED}>
-                  의석이 하나씩만 있는 경계에서 누가 끊기는지가 제도의 성격을 정합니다
+                  배분선 바로 밖에 놓인 몫은 다음 의석을 받지 못합니다
                 </text>
               )}
             </svg>

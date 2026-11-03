@@ -2,7 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import {
+  CfdCaseViz,
   CfdGpuMappingViz,
+  CfdVerificationViz,
   FiniteVolumePipelineViz,
 } from "./viz/CfdPipelineViz";
 
@@ -10,28 +12,49 @@ const NASA_NAVIER_STOKES =
   "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/navier-strokes-equation/";
 const OPENFOAM_GUIDES = "https://openfoam.org/guides/";
 const NASA_LAVA = "https://www.nas.nasa.gov/LAVA/introduction/";
+const NASA_VERIFICATION =
+  "https://www.grc.nasa.gov/www/wind/valid/tutorial/verassess.html";
 
 export default function ModernCfdFiniteVolumeGpuArticle() {
   return (
     <article className="space-y-14">
-      <section id="conservation" className="space-y-6">
+      <section id="conservation" data-teach-level="S" className="space-y-6">
         <span id="overview" className="block scroll-mt-20" aria-hidden="true" />
         <header className="space-y-3">
           <p className="text-sm font-semibold text-primary">
-            CFD starts from a balance sheet
+            먼저 네 칸짜리 관의 질량 장부를 봅니다
           </p>
-          <h2 className="text-3xl font-bold tracking-tight">
-            CFD는 그림을 만드는 일이 아니라 보존 법칙을 격자 위에서 닫는 일이다
+          <h2 className="break-keep text-3xl font-bold tracking-tight [text-wrap:balance]">
+            CFD는 유체 그림을 그리는 일이 아니라 경계를 드나든 양으로 변화를 설명하는 일입니다
           </h2>
         </header>
         <p className="text-lg leading-8 text-foreground/90">
-          Computational Fluid Dynamics는 질량·운동량·에너지 보존식을 컴퓨터가 풀 수 있는 유한한 상태와 연산으로 바꿉니다. 여기서는 압축성 유동의 보존형
-          Navier–Stokes를 기준으로 finite volume discretization이 face flux를 어떻게 만드는지, 그 local stencil이 GPU memory
-          traffic으로 어떻게 이어지는지 봅니다.
+          길이 1cm, 단면적 1m²인 cell 네 개가 일렬로 있고 양끝은 막혀 있다고
+          가정합니다. Cell 2에서 3으로 질량이 5kg/s의 속도로 10μs 동안 이동하면
+          cell 2가 잃은 양과 cell 3이 얻은 양은 정확히 같아야 합니다. CFD의 첫
+          일은 이 장부를 모든 질량·운동량·에너지 항에서 닫는 것입니다.
         </p>
-        <p>
-          물리 model과 실행 최적화는 다른 층입니다. Flux 식이나 turbulence closure를 바꾸면 계산 결과의 의미가 달라집니다. 같은 face flux를 더
-          coalesced하게 읽는 일은 이산식은 그대로 두고 실행만 효율화하는 후보입니다. 둘 모두 검증 없이 교환할 수 없습니다.
+        <div className="not-prose">
+          <CfdCaseViz />
+        </div>
+        <p data-teach-level="B">
+          이 사례에서 내부 face 하나는 하나의 거래입니다. 양쪽 cell이 같은 값을
+          반대 부호로 기록하면 domain 전체 질량은 변하지 않습니다. 그 거래를
+          cell마다 모아 다음 상태를 만들고, 파동이 한 번에 너무 멀리 가지 않도록
+          시간 간격을 제한한 뒤 이 작업을 반복합니다.
+        </p>
+        <p data-teach-level="0">
+          이동 질량은 5kg/s×10μs=5×10⁻⁵kg입니다. Cell volume 0.01m³로
+          나누면 cell 2의 밀도는 0.005kg/m³ 줄고 cell 3은 같은 만큼 늘어납니다.
+          또한 u=30m/s, sound speed=330m/s, target CFL=0.5이면 허용 Δt는
+          13.9μs입니다. 실제 10μs를 쓰면 물리시간 1ms에 100번 갱신합니다.
+        </p>
+        <p data-teach-level="1">
+          이제 이 질량 장부를 질량·운동량·에너지의 묶음으로 넓힌 것이 보존형
+          Navier–Stokes이고, cell 경계의 거래로 바꾼 것이 finite volume입니다.
+          Flux 식이나 turbulence closure를 바꾸면 물리 model이 달라집니다. 같은
+          face flux를 더 연속적으로 읽는 일은 이산식은 유지하고 실행만 바꾸는
+          후보입니다. 두 변경을 같은 최적화라고 부르면 안 됩니다.
         </p>
         <ExplainedFormula
           question="Control volume 안 보존량은 무엇 때문에 변할까요?"
@@ -102,19 +125,21 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
         <ContentBoundary article="cfd-finite-volume-gpu" />
       </section>
 
-      <section id="finite-volume" className="space-y-6">
+      <section id="finite-volume" data-teach-level="2" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
             01 · Finite volume
           </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Cell마다 같은 face flux를 반대 부호로 기록한다
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
+            같은 face flux를 두 cell 장부에 반대 부호로 기록합니다
           </h2>
         </header>
         <p>
-          Finite volume method는 각 cell에서 보존식을 적분합니다. Gauss theorem이 divergence를 face flux 합으로 바꿉니다. Face 하나를
-          공유하는 owner와 neighbour cell은 같은 numerical flux를 각각 +와 −로 사용합니다. 이 pairwise cancellation이 cell-local
-          update와 domain-global conservation을 연결합니다.
+          Finite volume method는 각 cell에서 보존식을 적분합니다. Gauss theorem은
+          divergence를 face flux의 합으로 바꿉니다. 고정 사례의 cell 2와 3처럼
+          face 하나를 공유하는 owner와 neighbour는 같은 numerical flux를 각각
+          −와 +로 사용합니다. 이 pairwise cancellation이 cell-local update와
+          domain-global conservation을 연결합니다.
         </p>
         <FiniteVolumePipelineViz />
         <ExplainedFormula
@@ -184,17 +209,19 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
         </div>
       </section>
 
-      <section id="time-step" className="space-y-6">
+      <section id="time-step" data-teach-level="3" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">02 · CFL budget</p>
-          <h2 className="mt-2 text-2xl font-bold">
-            GPU가 빨라도 explicit time step의 물리 거리 제한은 사라지지 않는다
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
+            GPU가 빨라도 explicit time step의 물리 거리 제한은 사라지지 않습니다
           </h2>
         </header>
         <p>
-          Explicit scheme에서 한 update가 참조하는 stencil보다 정보가 더 멀리 이동하면 numerical domain of dependence가 physical
-          propagation을 따라가지 못하는 경우가 생깁니다. 단순한 1D 압축성 예에서는 local velocity와 sound speed의 합을 cell length와 비교해
-          Courant number를 만듭니다.
+          Explicit scheme에서 한 update가 참조하는 stencil보다 정보가 더 멀리
+          이동하면 numerical domain of dependence가 physical propagation을
+          따라가지 못할 수 있습니다. 고정 사례에서는 |u|+c=360m/s이고 cell
+          길이가 0.01m이므로 target CFL 0.5의 상한은 13.9μs입니다. 10μs를
+          선택한 이유가 여기에 있습니다.
         </p>
         <ExplainedFormula
           question="Target CFL에서 허용할 global time step은 어떻게 고를까요?"
@@ -246,19 +273,21 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
         />
       </section>
 
-      <section id="gpu-mapping" className="space-y-6">
+      <section id="gpu-mapping" data-teach-level="4" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
             03 · GPU mapping
           </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Cell loop는 병렬이지만 face gather와 global coupling이 병목을 정한다
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
+            Cell loop는 병렬이어도 face gather와 global coupling이 병목을 정합니다
           </h2>
         </header>
         <p>
-          Structured mesh의 regular stencil은 이웃 offset이 예측 가능하지만 unstructured mesh는 face owner/neighbour
-          connectivity를 따라 indirect gather를 수행합니다. Cell-centered fields를 Structure of Arrays로 연속 배치해도 face 순서와
-          neighbour index가 흩어져 있으면 transaction과 cache reuse가 나빠지기도 합니다.
+          고정 사례의 cell 네 개는 이웃이 단순하지만 실제 unstructured mesh는
+          face owner/neighbour index를 따라 두 cell state를 간접적으로 모읍니다.
+          Cell-centered fields를 Structure of Arrays로 연속 배치해도 face 순서와
+          neighbour index가 흩어져 있으면 transaction과 cache reuse가 나빠질 수
+          있습니다.
         </p>
         <CfdGpuMappingViz />
         <p>
@@ -296,13 +325,13 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
         </div>
       </section>
 
-      <section id="verification" className="space-y-6">
+      <section id="verification" data-teach-level="5" className="space-y-6">
         <header>
           <p className="text-sm font-semibold text-primary">
             04 · Verification before speed
           </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            잔차가 줄었다, 정답이다, 현실과 맞다는 서로 다른 주장이다
+          <h2 className="mt-2 break-keep text-2xl font-bold [text-wrap:balance]">
+            잔차가 줄었다, 식을 맞게 풀었다, 현실과 맞다는 서로 다른 주장입니다
           </h2>
         </header>
         <p>
@@ -312,7 +341,8 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           은 별도 실험 data와 비교해 선택한 물리 model이 target reality를 설명하는지
           묻습니다. Residual convergence 하나로 세 주장을 합치지 않습니다.
         </p>
-        <ul className="space-y-3 pl-5 text-sm leading-7">
+        <CfdVerificationViz />
+        <ul data-teach-level="6" className="space-y-3 pl-5 text-sm leading-7">
           <li>
             <strong>Conservation:</strong> Internal face contribution이 owner와
             neighbour에서 bitwise 또는 tolerance 안에서 반대인지 검사합니다.
@@ -332,7 +362,7 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
             기록합니다.
           </li>
         </ul>
-        <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground">
+        <aside data-teach-level="7" className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground">
           <strong className="text-foreground">Release gate:</strong> 고정한 equation,
           mesh, boundary condition, precision과 solver tolerance에서 conservation,
           analytic/manufactured case, refinement order, experiment validation을 먼저
@@ -340,6 +370,24 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           time-to-solution, HBM·communication breakdown을 비교하며 실패 시 이전
           discretization 또는 kernel boundary로 rollback합니다.
         </aside>
+        <div id="paper-nasa-verification">
+          <CitationBlock
+            type="paper"
+            citeKey={4}
+            source="NASA Glenn · Verification Assessment"
+            href={NASA_VERIFICATION}
+          >
+            <p>
+              <strong>근거 범위:</strong> Mass conservation 같은 consistency
+              check, code implementation과 numerical error를 구분하는 verification
+              assessment의 공식 설명입니다.
+            </p>
+            <p>
+              <strong>일반화 금지:</strong> Verification을 통과했다고 turbulence
+              model과 boundary condition이 실제 실험을 설명한다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </section>
     </article>
   );

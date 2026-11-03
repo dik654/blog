@@ -1,0 +1,58 @@
+# Source: giwa-io/node v0.6.1, commit dcb59ac76a2b1aa7ec5dbc236c03053895b040b8
+# Exact service definitions from docker-compose.yaml.
+services:
+  jwt-generator:
+    container_name: giwa-jwt-generator
+    image: alpine/openssl
+    entrypoint: >
+      /bin/sh -c "[ ! -s /shared/jwtsecret.key ] && openssl rand -hex 32 | tr -d '\n' > /shared/jwtsecret.key || exit 0"
+    volumes:
+      - shared:/shared
+    restart: "no"
+  execution:
+    container_name: giwa-el
+    depends_on:
+      jwt-generator:
+        condition: service_completed_successfully
+    build:
+      context: .
+      dockerfile: ./reth/Dockerfile
+      args:
+        RETH_VERSION: v2.3.3
+    env_file:
+      - ${NETWORK_ENV:-.env.sepolia}
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+      - "7301:6060"
+      - "30303:30303"
+      - "30303:30303/udp"
+    volumes:
+      - shared:/shared
+      - ${DATA_DIR}:/app/data
+  consensus:
+    container_name: giwa-cl
+    depends_on:
+      jwt-generator:
+        condition: service_completed_successfully
+      execution:
+        condition: service_started
+    build:
+      context: .
+      dockerfile: ./node/Dockerfile
+      args:
+        OPNODE_VERSION: v1.19.5
+    env_file:
+      - ${NETWORK_ENV:-.env.sepolia}
+    environment:
+      OP_NODE_L2_ENGINE_KIND: reth
+    ports:
+      - "9545:9545"
+      - "9222:9222"
+      - "9222:9222/udp"
+      - "7300:7300"
+    volumes:
+      - shared:/shared
+
+volumes:
+  shared:

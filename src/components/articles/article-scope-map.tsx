@@ -131,14 +131,14 @@ export default function ArticleScopeMap({
       <div className="flex min-w-0 items-center gap-1.5 text-xs sm:hidden">
         <Link
           to={domainHref(domainSlug)}
-          className="inline-flex min-h-11 shrink-0 items-center text-muted-foreground hover:text-primary"
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center px-2 text-muted-foreground hover:text-primary"
         >
           {domain?.name ?? domainSlug}
         </Link>
         <span aria-hidden="true" className="text-muted-foreground">›</span>
         <Link
           to={mobileParentHref}
-          className="inline-flex min-h-11 max-w-[7rem] shrink items-center truncate text-muted-foreground hover:text-primary"
+          className="inline-flex min-h-11 min-w-11 max-w-[7rem] shrink items-center px-1 text-muted-foreground hover:text-primary"
         >
           {mobileParentLabel}
         </Link>

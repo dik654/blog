@@ -3,42 +3,48 @@ import type { Article } from "../types";
 export const governanceArticles: Article[] = [
   {
     slug: "bureaucracy-and-implementation",
-    title: "결정된 것과 실제로 일어나는 것은 다릅니다",
+    title: "차량 1,000대를 점검하라는 결정은 현장에서 어떻게 달라질까요?",
     subcategory: "gov-bureaucracy",
     sections: [
       {
         id: "overview",
-        title: "표결이 끝난 자리에서 다시 긴 사슬이 시작됩니다",
+        title:
+          "“차량 1,000대를 점검하라”는 결정만으로는 결과가 정해지지 않습니다",
       },
       {
         id: "why-delegate",
-        title: "부품 1. 맡기는 것은 고르는 일이 아니라 피할 수 없는 일입니다",
+        title:
+          "1. 의회는 기준을 정할 수 있지만 차량 1,000대를 직접 볼 수는 없습니다",
       },
       {
         id: "agency",
-        title: "부품 2. 맡기는 순간 아는 것이 갈립니다",
+        title: "2. 맡기는 순간 목표를 아는 쪽과 현장을 아는 쪽이 갈립니다",
       },
       {
         id: "rules-or-discretion",
-        title: "부품 3. 규칙으로 묶으면 재량이 죽고 재량을 주면 통제가 죽습니다",
+        title:
+          "3. 체크리스트는 같은 답을 만들지만 목록 밖 결함은 놓칠 수 있습니다",
         subsections: [
           {
             id: "street-level",
-            title: "마지막 창구에서 정책이 다시 쓰입니다",
+            title:
+              "마지막 검사관이 200일의 정밀 점검 시간을 누구에게 쓸지 정합니다",
           },
         ],
       },
       {
         id: "measurement",
-        title: "부품 4. 무엇을 재는지가 무엇을 하는지를 정합니다",
+        title: "4. 완료 건수에만 보상하면 정밀 조사는 줄어들 수 있습니다",
       },
       {
         id: "control",
-        title: "부품 5. 통제 장치들은 각각 다른 것을 값으로 치릅니다",
+        title:
+          "5. 통제는 차이를 없애는 일이 아니라 어디에서 다시 볼지 정하는 일입니다",
       },
       {
         id: "boundary",
-        title: "집행 실패를 태도 문제로 읽으면 고칠 곳을 찾지 못합니다",
+        title:
+          "6. 집행 실패는 누가 게을렀나보다 어느 선택이 결과를 바꿨나로 봐야 합니다",
       },
     ],
     component: () =>
@@ -46,38 +52,39 @@ export const governanceArticles: Article[] = [
   },
   {
     slug: "international-anarchy",
-    title: "위가 없는 곳에서는 같은 문제가 다르게 풀립니다",
+    title: "강제할 곳이 없어도 국가 간 약속이 서는 조건",
     subcategory: "gov-international",
     sections: [
       {
         id: "overview",
-        title: "여덟 글이 쌓은 구조에서 맨 위 칸을 지워 봅니다",
+        title: "약속을 강제로 지키게 할 곳이 없어도 협력은 가능할까요?",
       },
       {
         id: "no-sovereign",
-        title: "부품 1. 무정부는 혼란이 아니라 위가 없다는 뜻입니다",
+        title: "1. 국제 무정부는 무질서가 아니라 최종 집행자가 없다는 뜻입니다",
       },
       {
         id: "security-dilemma",
-        title: "부품 2. 스스로를 지키는 일이 서로를 덜 안전하게 만듭니다",
+        title: "2. 방어용 순찰선도 상대 눈에는 공격 수단으로 보입니다",
       },
       {
         id: "shadow",
-        title: "부품 3. 강제할 곳이 없어도 약속이 서는 조건이 있습니다",
+        title: "3. 다음 해의 가치가 0.5보다 크면 제한을 지키는 편이 유리합니다",
       },
       {
         id: "institutions",
-        title: "부품 4. 강제하지 않는 기구가 무엇을 하는지가 여기서 설명됩니다",
+        title: "4. 국제 제도는 처벌자가 아니라 계산을 바꾸는 장치입니다",
       },
       {
         id: "limits",
-        title: "부품 5. 그래도 남는 것이 있습니다",
+        title: "5. 둘 다 이익이어도 누가 더 얻는지와 국내 비준이 남습니다",
       },
       {
         id: "boundary",
-        title: "첫 글의 질문으로 돌아와서 무엇이 답해졌는지 봅니다",
+        title: "6. 협력의 핵심은 선의가 아니라 위반 뒤의 계산까지 설계하는 일입니다",
       },
     ],
-    component: () => import("@/pages/articles/governance/international-anarchy"),
+    component: () =>
+      import("@/pages/articles/governance/international-anarchy"),
   },
 ];

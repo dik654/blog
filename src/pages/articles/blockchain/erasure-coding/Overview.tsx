@@ -1,16 +1,25 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { Link } from "react-router-dom";
-import ErasureOverviewViz from "./viz/ErasureOverviewViz";
+import ErasureObjectTraceViz from "./viz/ErasureObjectTraceViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Erasure coding은 같은 데이터를 복사하는 대신 복원에 필요한 정보를 나누어
-        저장합니다
+        열 조각 중 여섯 조각만 남아도 원본을 되살릴 수 있습니다
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          한 문장으로 말하면,{" "}
+          <strong>
+            열 조각 중 아무 여섯 조각으로 원본을 복원하도록 미리 관계를 만들어
+            두는 저장 방식
+          </strong>
+          입니다. 그러면 왜 여섯 조각만으로 충분한지, 없어진 조각과 틀린 조각은
+          왜 다르게 세는지, 이 원리가 blockchain의 data availability와 어떻게
+          이어지는지가 다음 질문이 됩니다.
+        </p>
         <p>
           세 저장소에 파일을 그대로 세 번 복사하면 한 저장소만 살아 있어도 읽을
           수 있지만 저장량은 원본의 3배입니다. Erasure coding은 원본을{" "}
@@ -36,7 +45,7 @@ export default function Overview() {
         </p>
       </div>
       <ContentBoundary article="erasure-coding" />
-      <ErasureOverviewViz />
+      <ErasureObjectTraceViz />
 
       <ExplainedFormula
         question="(10,6) code는 저장 공간을 얼마나 더 쓰고 몇 개의 erasure를 견딜까요?"
@@ -48,9 +57,28 @@ E_{max}&=n-k
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}R&=\frac{\underbrace{k}_{\text{원본 symbol}}}{\underbrace{n}_{\text{저장한 전체 symbol}}}\\[3pt]O_{extra}&=\frac{\underbrace{n-k}_{\text{repair symbol}}}{\underbrace{k}_{\text{원본 기준}}}\\[3pt]E_{max}&=\underbrace{n-k}_{\text{잃어도 되는 최대 수}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{k}{n}`, annotation: ["저장한 symbol 중 원본 정보의 비율","예: (10,6)이면 6/10=60%"] },
-          { expression: String.raw`\frac{n-k}{k}`, annotation: ["원본 대비 더 저장한 repair의 비율","분모가 k라 rate와 다릅니다","예: 4/6≈66.7% 추가"] },
-          { expression: String.raw`E_{max}`, annotation: ["MDS code는 아무 k개만 남으면 복원","예: 10개 중 4개까지 잃어도 됨"] },
+          {
+            expression: String.raw`\frac{k}{n}`,
+            annotation: [
+              "저장한 symbol 중 원본 정보의 비율",
+              "예: (10,6)이면 6/10=60%",
+            ],
+          },
+          {
+            expression: String.raw`\frac{n-k}{k}`,
+            annotation: [
+              "원본 대비 더 저장한 repair의 비율",
+              "분모가 k라 rate와 다릅니다",
+              "예: 4/6≈66.7% 추가",
+            ],
+          },
+          {
+            expression: String.raw`E_{max}`,
+            annotation: [
+              "MDS code는 아무 k개만 남으면 복원",
+              "예: 10개 중 4개까지 잃어도 됨",
+            ],
+          },
         ]}
         terms={[
           {

@@ -3,14 +3,14 @@
   "note": "이 파일은 전수 개편의 작업 목록입니다. 실제 import closure 안의 전용 viz 파일과 inline SVG·canvas, 코드 발췌, 외부 근거를 서로 나눠 셉니다. 각 신호는 검토 우선순위를 정할 뿐 설명 품질이나 애니메이션 필요 여부를 자동 판정하지 않습니다.",
   "summary": {
     "publicArticles": 1007,
-    "architectureCandidates": 176,
-    "dedicatedVisuals": 819,
-    "inlineVisuals": 525,
-    "customVisuals": 930,
-    "animatedMechanisms": 673,
-    "architectureWithoutAnimation": 61,
-    "recursiveLocators": 386,
-    "codeEvidenceLinked": 245,
+    "architectureCandidates": 173,
+    "dedicatedVisuals": 742,
+    "inlineVisuals": 537,
+    "customVisuals": 925,
+    "animatedMechanisms": 606,
+    "architectureWithoutAnimation": 56,
+    "recursiveLocators": 385,
+    "codeEvidenceLinked": 256,
     "sourceCitationLinked": 998,
     "architectureWithoutCustomVisual": 15
   },
@@ -6262,14 +6262,14 @@
       "sourcePath": "src/pages/articles/banking/repo-and-collateral-funding.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "blockchain/aa-fundamentals",
@@ -6306,10 +6306,10 @@
     {
       "route": "blockchain/autobahn-deep",
       "publicPath": "cs/blockchain/autobahn-deep",
-      "title": "Autobahn 하이브리드 파이프라인 심층",
+      "title": "Autobahn은 멈춘 동안 쌓인 거래를 어떻게 따라잡을까요?",
       "sourcePath": "src/pages/articles/blockchain/autobahn-deep.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
+      "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
@@ -6322,7 +6322,7 @@
     {
       "route": "blockchain/avalanche-consensus",
       "publicPath": "cs/blockchain/avalanche-consensus",
-      "title": "Avalanche Snow: 표본 투표와 결정",
+      "title": "Avalanche는 작은 표본을 어떻게 한 노드의 결정으로 쌓을까요?",
       "sourcePath": "src/pages/articles/blockchain/avalanche-consensus.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
@@ -6354,7 +6354,7 @@
     {
       "route": "blockchain/bft-comparison",
       "publicPath": "cs/blockchain/bft-comparison",
-      "title": "PBFT·HotStuff·Autobahn: 같은 요청과 장애 비교",
+      "title": "PBFT·HotStuff·Autobahn은 같은 장애를 어떻게 다르게 넘길까요?",
       "sourcePath": "src/pages/articles/blockchain/bft-comparison.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -6418,10 +6418,10 @@
     {
       "route": "blockchain/bullshark-deep",
       "publicPath": "cs/blockchain/bullshark-deep",
-      "title": "Bullshark: 인증서 DAG가 한 줄의 순서가 되는 과정",
+      "title": "Bullshark는 인증서 DAG에서 어떻게 한 실행 순서를 고를까요?",
       "sourcePath": "src/pages/articles/blockchain/bullshark-deep.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": false,
+      "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
@@ -6658,23 +6658,23 @@
     {
       "route": "blockchain/compound-v3",
       "publicPath": "cs/blockchain/compound-v3",
-      "title": "Compound V3: base principal·factors·absorb",
+      "title": "Compound III는 한 base 자산과 담보를 어떻게 따로 관리할까요?",
       "sourcePath": "src/pages/articles/blockchain/compound-v3.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/consensus-comparison",
       "publicPath": "cs/blockchain/consensus-comparison",
-      "title": "합의 비교",
+      "title": "합의 계열은 무엇부터 비교해야 할까?",
       "sourcePath": "src/pages/articles/blockchain/consensus-comparison.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
@@ -6690,18 +6690,18 @@
     {
       "route": "blockchain/consensus-mechanisms",
       "publicPath": "cs/blockchain/consensus-mechanisms",
-      "title": "합의 알고리즘 비교",
+      "title": "PoW와 PoS는 영향력을 어떻게 제한할까?",
       "sourcePath": "src/pages/articles/blockchain/consensus-mechanisms.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/cosmos-sdk",
@@ -6786,7 +6786,7 @@
     {
       "route": "blockchain/dag-consensus",
       "publicPath": "cs/blockchain/dag-consensus",
-      "title": "Narwhal·Bullshark: DAG가 실행 순서가 되는 과정",
+      "title": "Narwhal·Bullshark는 병렬 거래를 어떻게 한 실행 순서로 만들까요?",
       "sourcePath": "src/pages/articles/blockchain/dag-consensus.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
@@ -6809,11 +6809,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/distributed-systems",
@@ -6838,14 +6838,14 @@
       "sourcePath": "src/pages/articles/blockchain/drand.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/dydx",
@@ -6889,11 +6889,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/ethereum-future-roadmap",
@@ -6985,11 +6985,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/filecoin-fvm",
@@ -7065,11 +7065,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/filecoin-proofs",
@@ -7081,11 +7081,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/filecoin-storacha",
@@ -7097,11 +7097,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/fork-id",
@@ -7129,11 +7129,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/glamsterdam-block-execution",
@@ -7154,10 +7154,10 @@
     {
       "route": "blockchain/gossipbft",
       "publicPath": "cs/blockchain/gossipbft",
-      "title": "GossiPBFT 합의",
+      "title": "GossiPBFT는 메시지 수신을 어떻게 결정으로 바꿀까?",
       "sourcePath": "src/pages/articles/blockchain/gossipbft.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
+      "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
@@ -7298,10 +7298,10 @@
     {
       "route": "blockchain/hotstuff-deep",
       "publicPath": "cs/blockchain/hotstuff-deep",
-      "title": "HotStuff 체인 투표 & 선형 통신",
+      "title": "HotStuff는 QC 사슬로 어떻게 안전하게 주 노드를 바꿀까요?",
       "sourcePath": "src/pages/articles/blockchain/hotstuff-deep.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": false,
+      "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
@@ -7314,7 +7314,7 @@
     {
       "route": "blockchain/hotstuff2",
       "publicPath": "cs/blockchain/hotstuff2",
-      "title": "HotStuff-2 (2단계 축소)",
+      "title": "HotStuff-2는 두 단계로 줄이고도 어떻게 안전하게 진행할까요?",
       "sourcePath": "src/pages/articles/blockchain/hotstuff2.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -7458,10 +7458,10 @@
     {
       "route": "blockchain/jolteon-ditto",
       "publicPath": "cs/blockchain/jolteon-ditto",
-      "title": "Jolteon·Ditto: 정상 경로와 비동기 전환",
+      "title": "Jolteon·Ditto는 멈춘 합의를 어떻게 비동기 경로로 전환할까요?",
       "sourcePath": "src/pages/articles/blockchain/jolteon-ditto.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": false,
+      "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
@@ -7506,7 +7506,7 @@
     {
       "route": "blockchain/longest-chain",
       "publicPath": "cs/blockchain/longest-chain",
-      "title": "Nakamoto: 누적 work와 재조직",
+      "title": "더 무거운 분기는 장부를 어떻게 바꿀까?",
       "sourcePath": "src/pages/articles/blockchain/longest-chain.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -7529,11 +7529,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/lotus-market",
@@ -7561,11 +7561,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/lotus-mpool",
@@ -7682,10 +7682,10 @@
     {
       "route": "blockchain/mysticeti",
       "publicPath": "cs/blockchain/mysticeti",
-      "title": "Mysticeti 합의",
+      "title": "Mysticeti는 별도 인증서 없이 어떻게 블록을 확정할까?",
       "sourcePath": "src/pages/articles/blockchain/mysticeti.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
+      "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
@@ -7698,7 +7698,7 @@
     {
       "route": "blockchain/narwhal-deep",
       "publicPath": "cs/blockchain/narwhal-deep",
-      "title": "Narwhal: 거래 바이트가 인증서가 되는 과정",
+      "title": "Narwhal은 거래 원문을 다시 보내지 않고 어떻게 가용성을 증명할까요?",
       "sourcePath": "src/pages/articles/blockchain/narwhal-deep.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -7746,7 +7746,7 @@
     {
       "route": "blockchain/pbft-deep",
       "publicPath": "cs/blockchain/pbft-deep",
-      "title": "PBFT 3단계 심층 (Pre-prepare/Prepare/Commit)",
+      "title": "복제본 하나가 거짓말해도 PBFT는 어떻게 같은 결과를 만들까요?",
       "sourcePath": "src/pages/articles/blockchain/pbft-deep.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -7769,11 +7769,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/pq-account",
@@ -7801,11 +7801,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/proofs-post",
@@ -7817,11 +7817,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/proofs-snark",
@@ -7833,11 +7833,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm",
@@ -7849,11 +7849,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-attestation",
@@ -7863,7 +7863,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -8034,34 +8034,34 @@
     {
       "route": "blockchain/prysm-gossipsub",
       "publicPath": "cs/blockchain/prysm-gossipsub",
-      "title": "Prysm Gossipsub 토픽 & 메시지 검증",
+      "title": "Prysm Gossipsub: 토픽과 메시지 검증",
       "sourcePath": "src/pages/articles/ethereum/prysm-gossipsub.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-p2p-libp2p",
       "publicPath": "cs/blockchain/prysm-p2p-libp2p",
-      "title": "Prysm libp2p 네트워킹 & 피어 관리",
+      "title": "Prysm P2P: 후보에서 합의 피어까지",
       "sourcePath": "src/pages/articles/ethereum/prysm-p2p-libp2p.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "architectureCandidate": true,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/prysm-slot-processing",
@@ -8130,12 +8130,12 @@
     {
       "route": "blockchain/prysm-sync-committee",
       "publicPath": "cs/blockchain/prysm-sync-committee",
-      "title": "Prysm 싱크 위원회",
+      "title": "Sync Committee: 한 서명에서 헤더까지",
       "sourcePath": "src/pages/articles/ethereum/prysm-sync-committee.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -8146,18 +8146,18 @@
     {
       "route": "blockchain/prysm-validator-client",
       "publicPath": "cs/blockchain/prysm-validator-client",
-      "title": "Prysm 검증자 클라이언트",
+      "title": "Validator client: 한 duty의 안전 경로",
       "sourcePath": "src/pages/articles/ethereum/prysm-validator-client.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/railgun",
@@ -8786,26 +8786,26 @@
     {
       "route": "blockchain/tendermint-bft",
       "publicPath": "cs/blockchain/tendermint-bft",
-      "title": "Tendermint BFT 프로토콜",
+      "title": "제안자가 바뀌어도 Tendermint는 어떻게 블록 하나만 결정할까요?",
       "sourcePath": "src/pages/articles/blockchain/tendermint-bft.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
+      "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/tusk",
       "publicPath": "cs/blockchain/tusk",
-      "title": "Tusk (비동기 DAG 합의)",
+      "title": "Tusk는 건너뛴 지도자를 어떻게 되찾을까?",
       "sourcePath": "src/pages/articles/blockchain/tusk.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
+      "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
@@ -8866,23 +8866,23 @@
     {
       "route": "blockchain/usdc-circle",
       "publicPath": "cs/blockchain/usdc-circle",
-      "title": "USDC — Circle의 법정화폐 담보 스테이블코인",
+      "title": "USDC: 100달러가 토큰이 되고 돌아오는 법",
       "sourcePath": "src/pages/articles/blockchain/usdc-circle.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/vdf",
       "publicPath": "cs/blockchain/vdf",
-      "title": "VDF: Verifiable Delay Function",
+      "title": "VDF: 오래 계산하고 빠르게 검증하는 함수",
       "sourcePath": "src/pages/articles/blockchain/vdf.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -8934,14 +8934,14 @@
       "sourcePath": "src/pages/articles/business/franchise-incentives.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "business/shop-daily-operations",
@@ -9014,14 +9014,14 @@
       "sourcePath": "src/pages/articles/business/supply-chain-bargaining.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "circuits/feedback-gain-and-stability",
@@ -9698,66 +9698,66 @@
     {
       "route": "constitution/constitutionalism-and-separation",
       "publicPath": "politics/constitution/constitutionalism-and-separation",
-      "title": "헌법은 종이인데도 힘을 묶습니다",
+      "title": "헌법은 종이인데 어떻게 힘을 묶습니까",
       "sourcePath": "src/pages/articles/constitution/constitutionalism-and-separation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "constitution/government-forms",
       "publicPath": "politics/constitution/government-forms",
-      "title": "같은 권력분립에서 왜 다른 체계가 나옵니까",
+      "title": "같은 권력분립에서 왜 다른 체계가 나옵니까",
       "sourcePath": "src/pages/articles/constitution/government-forms.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "criminal-law/crime-and-punishment-purpose",
       "publicPath": "law/criminal-law/crime-and-punishment-purpose",
-      "title": "왜 국가가 직접 벌합니까",
+      "title": "왜 국가가 직접 벌합니까",
       "sourcePath": "src/pages/articles/criminal-law/crime-and-punishment-purpose.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "criminal-law/procedure-and-proof",
       "publicPath": "law/criminal-law/procedure-and-proof",
-      "title": "얼마나 확실해야 벌할 수 있습니까",
+      "title": "얼마나 확실해야 벌할 수 있습니까",
       "sourcePath": "src/pages/articles/criminal-law/procedure-and-proof.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "crypto/binary-field-proving",
@@ -9778,34 +9778,34 @@
     {
       "route": "crypto/bulletproofs",
       "publicPath": "cs/crypto/bulletproofs",
-      "title": "Bulletproofs: 투명 셋업 범위 증명 (Inner Product Argument)",
+      "title": "Bulletproofs: 숨긴 숫자가 범위 안임을 증명하는 법",
       "sourcePath": "src/pages/articles/blockchain/bulletproofs.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/circom",
       "publicPath": "cs/crypto/circom",
-      "title": "Circom: signal·R1CS lowering과 reproducible artifact",
+      "title": "Circom: 계산한 값과 증명된 규칙을 구별하는 법",
       "sourcePath": "src/pages/articles/blockchain/circom.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/constraint-systems",
@@ -10066,18 +10066,18 @@
     {
       "route": "crypto/halo2",
       "publicPath": "cs/crypto/halo2",
-      "title": "Halo2: columns·regions·IPA profile (zcash/halo2)",
+      "title": "Halo2: 표의 cell을 증명 규칙으로 바꾸는 법",
       "sourcePath": "src/pages/articles/blockchain/halo2.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/hash-theory",
@@ -10098,18 +10098,18 @@
     {
       "route": "crypto/hyperplonk",
       "publicPath": "cs/crypto/hyperplonk",
-      "title": "HyperPLONK",
+      "title": "HyperPLONK: 많은 행을 짧게 검증하는 법",
       "sourcePath": "src/pages/articles/blockchain/hyperplonk/index.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/jolt",
@@ -10162,18 +10162,18 @@
     {
       "route": "crypto/libiop",
       "publicPath": "cs/crypto/libiop",
-      "title": "libiop: R1CS oracle reduction과 BCS transcript",
+      "title": "libiop: 표를 고정하고 일부만 검사하기",
       "sourcePath": "src/pages/articles/blockchain/libiop.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/ml-kem-and-noisy-equations",
@@ -10274,18 +10274,18 @@
     {
       "route": "crypto/plonky3",
       "publicPath": "cs/crypto/plonky3",
-      "title": "Plonky3: generic STARK config과 proof artifact",
+      "title": "Plonky3: proof bytes만으로는 의미가 정해지지 않는다",
       "sourcePath": "src/pages/articles/blockchain/plonky3.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/polycommit",
@@ -10338,18 +10338,18 @@
     {
       "route": "crypto/proofofsql",
       "publicPath": "cs/crypto/proofofsql",
-      "title": "Proof of SQL: query relation·snapshot·sumcheck·Dory",
+      "title": "Proof of SQL: plan·result·열 commitment를 한 점에서 검증하기",
       "sourcePath": "src/pages/articles/blockchain/proofofsql.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/prover-memory-and-verifier-cost",
@@ -10418,34 +10418,34 @@
     {
       "route": "crypto/risc0",
       "publicPath": "cs/crypto/risc0",
-      "title": "RISC Zero: RISC-V zkVM & STARK 증명 시스템",
+      "title": "RISC Zero: guest 실행 claim과 receipt 검증",
       "sourcePath": "src/pages/articles/blockchain/risc0.tsx",
+      "locationMap": "global:ArticleOnboarding",
+      "architectureCandidate": true,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": false,
+      "hasCodeEvidence": true,
+      "hasSourceCitation": true,
+      "reviewPriority": "verify-motion-semantics"
+    },
+    {
+      "route": "crypto/scroll-zkevm",
+      "publicPath": "cs/crypto/scroll-zkevm",
+      "title": "Scroll zkEVM: OpenVM 상태 전이에서 L1 bundle proof까지",
+      "sourcePath": "src/pages/articles/blockchain/scroll-zkevm.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
-    },
-    {
-      "route": "crypto/scroll-zkevm",
-      "publicPath": "cs/crypto/scroll-zkevm",
-      "title": "Scroll zkEVM: EVM trace·Halo2 proof artifact",
-      "sourcePath": "src/pages/articles/blockchain/scroll-zkevm.tsx",
-      "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
-      "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/shamir-secret-sharing",
@@ -10482,18 +10482,18 @@
     {
       "route": "crypto/sp1",
       "publicPath": "cs/crypto/sp1",
-      "title": "SP1: Plonky3 기반 RISC-V zkVM",
+      "title": "SP1 Hypercube: RV64IM 실행에서 검증된 공개값까지",
       "sourcePath": "src/pages/articles/blockchain/sp1.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": false,
+      "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/sparse-multiplication",
@@ -10610,18 +10610,18 @@
     {
       "route": "dispute-resolution/settlement-and-access",
       "publicPath": "law/dispute-resolution/settlement-and-access",
-      "title": "규칙은 적용되지 않는 사건에서도 작동합니다",
+      "title": "법은 재판하지 않은 분쟁에도 어떻게 작동합니까",
       "sourcePath": "src/pages/articles/dispute-resolution/settlement-and-access.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence",
@@ -11122,12 +11122,12 @@
     {
       "route": "elections/parties-and-interest-groups",
       "publicPath": "politics/elections/parties-and-interest-groups",
-      "title": "선택지를 줄이는 장치들이 무엇을 함께 잘라 냅니다",
+      "title": "열두 후보가 세 정당이 되면 무엇이 쉬워지고 무엇이 사라질까요?",
       "sourcePath": "src/pages/articles/elections/parties-and-interest-groups.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -11138,7 +11138,7 @@
     {
       "route": "elections/voting-paradoxes",
       "publicPath": "politics/elections/voting-paradoxes",
-      "title": "규칙을 아무리 잘 골라도 남는 문제가 있습니다",
+      "title": "세 번 모두 2대 1인데 왜 마지막 답은 없을까요?",
       "sourcePath": "src/pages/articles/elections/voting-paradoxes.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -11522,12 +11522,12 @@
     {
       "route": "governance/bureaucracy-and-implementation",
       "publicPath": "politics/governance/bureaucracy-and-implementation",
-      "title": "결정된 것과 실제로 일어나는 것은 다릅니다",
+      "title": "차량 1,000대를 점검하라는 결정은 현장에서 어떻게 달라질까요?",
       "sourcePath": "src/pages/articles/governance/bureaucracy-and-implementation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -11538,12 +11538,12 @@
     {
       "route": "governance/international-anarchy",
       "publicPath": "politics/governance/international-anarchy",
-      "title": "위가 없는 곳에서는 같은 문제가 다르게 풀립니다",
+      "title": "강제할 곳이 없어도 국가 간 약속이 서는 조건",
       "sourcePath": "src/pages/articles/governance/international-anarchy.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -11554,18 +11554,18 @@
     {
       "route": "gpu/ai-accelerator-vendor-comparison",
       "publicPath": "cs/gpu/ai-accelerator-vendor-comparison",
-      "title": "가속기 비교는 스펙표가 아니라 네 축으로 합니다",
+      "title": "AI 가속기는 같은 요청을 다섯 관문에 통과시켜 고릅니다",
       "sourcePath": "src/pages/articles/hw/ai-accelerator-vendor-comparison.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "gpu/ai-cluster-software-compatibility",
@@ -11666,12 +11666,12 @@
     {
       "route": "gpu/b300-switchless-network",
       "publicPath": "cs/gpu/b300-switchless-network",
-      "title": "DGX B300 Switchless: ConnectX-8 직결 RoCE 클러스터",
+      "title": "B300 switchless: 28개 물리 edge를 collective까지 추적합니다",
       "sourcePath": "src/pages/articles/hw/b300-switchless-network.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11682,12 +11682,12 @@
     {
       "route": "gpu/cfd-finite-volume-gpu",
       "publicPath": "cs/gpu/cfd-finite-volume-gpu",
-      "title": "CFD 기초: finite volume에서 GPU mapping까지",
+      "title": "CFD: 네 cell의 보존 장부에서 GPU time-to-solution까지",
       "sourcePath": "src/pages/articles/gpu/cfd-finite-volume-gpu.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11730,28 +11730,28 @@
     {
       "route": "gpu/cuda-kernel-fusion",
       "publicPath": "cs/gpu/cuda-kernel-fusion",
-      "title": "CUDA kernel fusion과 Megakernel",
+      "title": "CUDA kernel fusion: 192 MiB를 64 MiB로 줄인 뒤 다시 묻는 것",
       "sourcePath": "src/pages/articles/gpu/cuda-kernel-fusion.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "gpu/cuda-matrix-multiply",
       "publicPath": "cs/gpu/cuda-matrix-multiply",
-      "title": "CUDA 행렬 곱셈: 기초 → 공유메모리 타일링",
+      "title": "CUDA 행렬곱: C[1,2]=70에서 tiled GEMM release까지",
       "sourcePath": "src/pages/articles/gpu/cuda-matrix-multiply.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11767,7 +11767,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11783,7 +11783,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11865,11 +11865,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "gpu/cutlass-gemm-hierarchy-and-cute-layouts",
@@ -11881,16 +11881,16 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "gpu/datacenter-site-readiness",
       "publicPath": "cs/gpu/datacenter-site-readiness",
-      "title": "랙에 들어가는지는 무게와 냉각으로 먼저 갈립니다",
+      "title": "데이터센터 현장 준비: 반입 경로·하중·전력·냉각",
       "sourcePath": "src/pages/articles/hw/datacenter-site-readiness.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -11911,7 +11911,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11927,7 +11927,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11943,7 +11943,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11954,18 +11954,18 @@
     {
       "route": "gpu/gemmini-pe-mac-dataflow",
       "publicPath": "cs/gpu/gemmini-pe-mac-dataflow",
-      "title": "PE 한 칸: MAC 을 이중 레지스터로 감싸 데이터플로우를 전환합니다",
+      "title": "Gemmini PE 한 칸: OS는 출력, WS는 weight를 붙잡는다",
       "sourcePath": "src/pages/articles/gpu/gemmini-pe-mac-dataflow.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "gpu/gpu-arch-hopper",
@@ -11975,7 +11975,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -11991,7 +11991,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -12018,7 +12018,7 @@
     {
       "route": "gpu/gpu-data-movement-optimization",
       "publicPath": "cs/gpu/gpu-data-movement-optimization",
-      "title": "Data movement 최적화: global→shared→register 경로와 overlap",
+      "title": "Data movement 최적화: byte 절감과 overlap",
       "sourcePath": "src/pages/articles/gpu/gpu-data-movement-optimization.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -12566,14 +12566,14 @@
       "sourcePath": "src/pages/articles/infrastructure/climate-risk-and-exposure.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "infrastructure/electricity-grid-and-power",
@@ -12582,14 +12582,14 @@
       "sourcePath": "src/pages/articles/infrastructure/electricity-grid-and-power.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "infrastructure/food-chain-and-prices",
@@ -12598,14 +12598,14 @@
       "sourcePath": "src/pages/articles/infrastructure/food-chain-and-prices.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "infrastructure/housing-land-and-supply",
@@ -12614,14 +12614,14 @@
       "sourcePath": "src/pages/articles/infrastructure/housing-land-and-supply.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "infrastructure/materials-waste-and-circularity",
@@ -12630,14 +12630,14 @@
       "sourcePath": "src/pages/articles/infrastructure/materials-waste-and-circularity.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "infrastructure/transport-access-and-land-value",
@@ -12646,14 +12646,14 @@
       "sourcePath": "src/pages/articles/infrastructure/transport-access-and-land-value.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "infrastructure/water-utility-and-tariffs",
@@ -12662,14 +12662,14 @@
       "sourcePath": "src/pages/articles/infrastructure/water-utility-and-tariffs.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/culture-norms-and-coordination",
@@ -12678,14 +12678,14 @@
       "sourcePath": "src/pages/articles/institutions/culture-norms-and-coordination.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/education-skills-and-signals",
@@ -12694,14 +12694,14 @@
       "sourcePath": "src/pages/articles/institutions/education-skills-and-signals.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/evidence-measurement-and-causality",
@@ -12710,14 +12710,14 @@
       "sourcePath": "src/pages/articles/institutions/evidence-measurement-and-causality.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/healthcare-payment-systems",
@@ -12726,14 +12726,14 @@
       "sourcePath": "src/pages/articles/institutions/healthcare-payment-systems.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/how-to-read-a-country",
@@ -12742,14 +12742,14 @@
       "sourcePath": "src/pages/articles/institutions/how-to-read-a-country.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/insurance-risk-pooling",
@@ -12758,14 +12758,14 @@
       "sourcePath": "src/pages/articles/institutions/insurance-risk-pooling.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/media-attention-and-public-belief",
@@ -12774,14 +12774,14 @@
       "sourcePath": "src/pages/articles/institutions/media-attention-and-public-belief.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/population-migration-and-care",
@@ -12790,14 +12790,14 @@
       "sourcePath": "src/pages/articles/institutions/population-migration-and-care.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "institutions/public-budget-and-taxes",
@@ -12806,14 +12806,14 @@
       "sourcePath": "src/pages/articles/institutions/public-budget-and-taxes.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "isms-aml/aml-cdd-deep",
@@ -13170,12 +13170,12 @@
     {
       "route": "legal-system/precedent-and-legal-change",
       "publicPath": "law/legal-system/precedent-and-legal-change",
-      "title": "앞선 판단은 왜 구속하고 언제 뒤집습니까",
+      "title": "판례는 왜 따르고 언제 바꿀까요?",
       "sourcePath": "src/pages/articles/legal-system/precedent-and-legal-change.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -13186,12 +13186,12 @@
     {
       "route": "legal-system/rules-standards-and-interpretation",
       "publicPath": "law/legal-system/rules-standards-and-interpretation",
-      "title": "미리 적어 둘 것인가 그때 판단할 것인가",
+      "title": "법은 언제 구체적인 답을 정할까요?",
       "sourcePath": "src/pages/articles/legal-system/rules-standards-and-interpretation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -13202,12 +13202,12 @@
     {
       "route": "legal-system/what-makes-law-law",
       "publicPath": "law/legal-system/what-makes-law-law",
-      "title": "무엇이 이 문장을 법으로 만듭니까",
+      "title": "같은 10만 원 요구인데 왜 하나는 법일까요",
       "sourcePath": "src/pages/articles/legal-system/what-makes-law-law.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -13382,14 +13382,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/bank-irrbb-alm-and-derivatives-hedging.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/binomial-black-scholes-and-early-exercise",
@@ -13398,14 +13398,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/binomial-black-scholes-and-early-exercise.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/black-scholes-pde-finite-difference-and-numerical-error",
@@ -13414,14 +13414,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/black-scholes-pde-finite-difference-and-numerical-error.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/bond-pricing-and-yield-curve",
@@ -13446,14 +13446,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/brownian-motion-ito-and-risk-neutral-pricing.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
@@ -13462,14 +13462,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/canada-hong-kong-switzerland-retail-derivatives-and-market-rules.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/ccp-default-management-hedging-auction-and-porting",
@@ -13478,14 +13478,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/ccp-default-management-hedging-auction-and-porting.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/clearing-margin-and-default-waterfall",
@@ -13494,14 +13494,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/clearing-margin-and-default-waterfall.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/collateral-operations-margin-calls-disputes-and-substitution",
@@ -13510,14 +13510,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/collateral-operations-margin-calls-disputes-and-substitution.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
@@ -13526,14 +13526,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/collateral-optimization-eligibility-haircuts-and-liquidity.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/commodity-carry-convenience-yield-and-roll",
@@ -13542,14 +13542,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/commodity-carry-convenience-yield-and-roll.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/commodity-grades-location-basis-and-physical-delivery",
@@ -13558,14 +13558,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/commodity-grades-location-basis-and-physical-delivery.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/covered-calls-and-income-funds",
@@ -13590,14 +13590,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/credit-derivatives-default-risk-and-tranches.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/credit-event-auction-orders-and-base-correlation-history",
@@ -13606,14 +13606,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/credit-event-auction-orders-and-base-correlation-history.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/credit-tranche-base-correlation-and-default-auction",
@@ -13622,14 +13622,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/credit-tranche-base-correlation-and-default-auction.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/cross-border-netting-enforceability-and-regulatory-recognition",
@@ -13638,14 +13638,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/cross-border-netting-enforceability-and-regulatory-recognition.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/currency-hedging-forward-points-and-cross-currency-basis",
@@ -13654,14 +13654,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/currency-hedging-forward-points-and-cross-currency-basis.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring",
@@ -13670,14 +13670,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-aml-kyc-and-suspicious-transaction-monitoring.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-complaints-dispute-resolution-and-evidence",
@@ -13686,14 +13686,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-complaints-dispute-resolution-and-evidence.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-investigation-audit-trail-and-legal-hold",
@@ -13702,14 +13702,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-investigation-audit-trail-and-legal-hold.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-market-abuse-position-limits-and-surveillance",
@@ -13718,14 +13718,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-market-abuse-position-limits-and-surveillance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-product-approval-target-market-and-post-sale-monitoring",
@@ -13734,14 +13734,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-product-approval-target-market-and-post-sale-monitoring.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-sales-records-access-retention-and-deletion",
@@ -13750,14 +13750,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-sales-records-access-retention-and-deletion.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-suitability-disclosure-and-sales-practice",
@@ -13766,14 +13766,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-suitability-disclosure-and-sales-practice.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-tax-character-timing-and-jurisdiction",
@@ -13782,14 +13782,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-tax-character-timing-and-jurisdiction.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation",
@@ -13798,14 +13798,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/equity-claims-and-valuation",
@@ -13830,14 +13830,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/equity-dispersion-implied-correlation-and-variance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs",
@@ -13846,14 +13846,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/equity-dispersion-pnl-attribution-and-rebalancing-costs.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance",
@@ -13862,14 +13862,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/eu-uk-cfd-appropriateness-leverage-and-negative-balance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/financial-products-and-claims",
@@ -13878,14 +13878,14 @@
       "sourcePath": "src/pages/articles/markets/financial-products-and-claims.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "markets/forwards-and-futures",
@@ -13894,14 +13894,14 @@
       "sourcePath": "src/pages/articles/markets/forwards-and-futures.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "markets/fractional-investment-trust-beneficiary-certificates",
@@ -13910,14 +13910,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/fractional-investment-trust-beneficiary-certificates.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/funds-etfs-and-etns",
@@ -13926,14 +13926,14 @@
       "sourcePath": "src/pages/articles/markets/funds-etfs-and-etns.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "markets/hazard-rate-curve-recovery-and-credit-correlation",
@@ -13942,14 +13942,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/hazard-rate-curve-recovery-and-credit-correlation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/hedge-accounting-designation-effectiveness-and-rebalancing",
@@ -13958,14 +13958,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/hedge-accounting-designation-effectiveness-and-rebalancing.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/implied-volatility-surface-skew-and-smile",
@@ -13974,14 +13974,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/implied-volatility-surface-skew-and-smile.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/interest-rate-derivatives-from-fra-to-swaptions",
@@ -14006,14 +14006,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/japan-australia-retail-leverage-and-product-governance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests",
@@ -14022,14 +14022,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/korea-singapore-retail-derivatives-entry-and-knowledge-tests.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/krx-derivatives-contract-orders-and-daily-settlement",
@@ -14038,14 +14038,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/krx-derivatives-contract-orders-and-daily-settlement.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/livestock-futures-live-delivery-and-cash-settlement",
@@ -14070,14 +14070,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/lme-metals-warrants-quality-storage-and-load-out.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/local-stochastic-volatility-jumps-and-calibration",
@@ -14086,14 +14086,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/local-stochastic-volatility-jumps-and-calibration.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/market-risk-backtesting-pnl-attribution-and-model-governance",
@@ -14102,14 +14102,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/market-risk-backtesting-pnl-attribution-and-model-governance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/minimum-variance-hedge-ratio-and-basis-risk",
@@ -14118,14 +14118,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/minimum-variance-hedge-ratio-and-basis-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/monte-carlo-path-dependent-pricing-and-variance-reduction",
@@ -14134,14 +14134,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/monte-carlo-path-dependent-pricing-and-variance-reduction.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/multi-asset-options-correlation-and-rare-event-simulation",
@@ -14150,14 +14150,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/multi-asset-options-correlation-and-rare-event-simulation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/no-arbitrage-cost-of-carry-and-basis",
@@ -14166,14 +14166,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/no-arbitrage-cost-of-carry-and-basis.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/option-greeks-volatility-and-dynamic-hedging",
@@ -14182,14 +14182,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/option-greeks-volatility-and-dynamic-hedging.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/option-replication-and-put-call-parity",
@@ -14198,14 +14198,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/option-replication-and-put-call-parity.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/option-strategies-and-structured-notes",
@@ -14230,14 +14230,14 @@
       "sourcePath": "src/pages/articles/markets/options-and-asymmetric-payoffs.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "markets/otc-clearing-reporting-and-bilateral-risk-mitigation",
@@ -14246,14 +14246,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/otc-clearing-reporting-and-bilateral-risk-mitigation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/otc-master-agreement-collateral-netting-and-cva",
@@ -14262,14 +14262,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/otc-master-agreement-collateral-netting-and-cva.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/portfolio-compression-risk-tolerances-and-records",
@@ -14278,14 +14278,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/portfolio-compression-risk-tolerances-and-records.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/securitization-and-tranches",
@@ -14294,14 +14294,14 @@
       "sourcePath": "src/pages/articles/markets/securitization-and-tranches.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "markets/short-rate-hjm-and-interest-rate-model-risk",
@@ -14310,14 +14310,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/short-rate-hjm-and-interest-rate-model-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/singapore-derivatives-records-complaints-and-tax-ledger",
@@ -14342,14 +14342,14 @@
       "sourcePath": "src/pages/articles/markets/swaps-and-credit-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "markets/swaption-annuity-volatility-quotes-and-cube",
@@ -14358,14 +14358,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/swaption-annuity-volatility-quotes-and-cube.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/uncleared-initial-margin-simm-and-model-governance",
@@ -14374,14 +14374,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/uncleared-initial-margin-simm-and-model-governance.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/us-derivatives-regulatory-map-and-customer-segregation",
@@ -14390,14 +14390,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/us-derivatives-regulatory-map-and-customer-segregation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
@@ -14406,14 +14406,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/us-uk-derivatives-tax-mark-to-market-and-accounting-link.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/var-expected-shortfall-stress-and-model-risk",
@@ -14422,14 +14422,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/var-expected-shortfall-stress-and-model-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",
@@ -14438,14 +14438,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/wti-crude-oil-cushing-storage-pipeline-and-delivery.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/xva-funding-margin-and-wrong-way-risk",
@@ -14454,14 +14454,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/xva-funding-margin-and-wrong-way-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging",
@@ -14470,14 +14470,14 @@
       "sourcePath": "src/pages/articles/markets/derivatives/yield-curve-bootstrapping-multicurve-and-key-rate-hedging.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "mind-and-language/behavior-meaning-and-machine-understanding",
@@ -14530,24 +14530,8 @@
     {
       "route": "p2p/bittorrent",
       "publicPath": "cs/p2p/bittorrent",
-      "title": "BitTorrent 아키텍처",
+      "title": "BitTorrent: block으로 받고 piece로 믿는 이유",
       "sourcePath": "src/pages/articles/filecoin/bittorrent.tsx",
-      "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
-      "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
-      "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
-    },
-    {
-      "route": "p2p/content-addressing",
-      "publicPath": "cs/p2p/content-addressing",
-      "title": "Content Addressing 기초: CID, Merkle DAG, 이름 해석",
-      "sourcePath": "src/pages/articles/p2p/content-addressing.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
@@ -14560,9 +14544,25 @@
       "reviewPriority": "verify-motion-semantics"
     },
     {
+      "route": "p2p/content-addressing",
+      "publicPath": "cs/p2p/content-addressing",
+      "title": "Content Addressing: hello에서 최신 project root까지",
+      "sourcePath": "src/pages/articles/p2p/content-addressing.tsx",
+      "locationMap": "global:ArticleOnboarding",
+      "architectureCandidate": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": false,
+      "hasRecursiveLocator": false,
+      "hasCodeEvidence": false,
+      "hasSourceCitation": true,
+      "reviewPriority": "verify-static-visual"
+    },
+    {
       "route": "p2p/dht-security",
       "publicPath": "cs/p2p/dht-security",
-      "title": "DHT 보안: Sybil, Eclipse, 방어 구현",
+      "title": "DHT 보안: 한 운영자의 여러 ID가 피해자 시야를 가두는 과정",
       "sourcePath": "src/pages/articles/p2p/dht-security.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -14578,23 +14578,23 @@
     {
       "route": "p2p/discv4",
       "publicPath": "cs/p2p/discv4",
-      "title": "Ethereum discv4: UDP 노드 발견 프로토콜",
+      "title": "Ethereum discv4: UDP 주소 확인에서 dial 후보까지",
       "sourcePath": "src/pages/articles/p2p/discv4.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
+      "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "p2p/discv5",
       "publicPath": "cs/p2p/discv5",
-      "title": "Ethereum discv5: 암호화 노드 발견 (TALKREQ)",
+      "title": "Ethereum discv5: WHOAREYOU에서 암호화된 노드 목록까지",
       "sourcePath": "src/pages/articles/p2p/discv5.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
@@ -14610,28 +14610,12 @@
     {
       "route": "p2p/gossip-fundamentals",
       "publicPath": "cs/p2p/gossip-fundamentals",
-      "title": "Gossip 프로토콜 기초: Epidemic 모델과 GossipSub",
+      "title": "Gossip은 왜 중복해서 보내는가: m42로 보는 GossipSub",
       "sourcePath": "src/pages/articles/p2p/gossip-fundamentals.tsx",
-      "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
-      "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
-      "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
-    },
-    {
-      "route": "p2p/iroh",
-      "publicPath": "cs/p2p/iroh",
-      "title": "Iroh: EndpointAddr·ALPN·direct/relay 경로 선택",
-      "sourcePath": "src/pages/articles/blockchain/iroh.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14640,26 +14624,10 @@
       "reviewPriority": "verify-static-visual"
     },
     {
-      "route": "p2p/kad-lookup",
-      "publicPath": "cs/p2p/kad-lookup",
-      "title": "Kademlia 탐색: 반복 FIND_NODE 알고리즘",
-      "sourcePath": "src/pages/articles/p2p/kad-lookup.tsx",
-      "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
-      "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
-      "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
-    },
-    {
-      "route": "p2p/kademlia",
-      "publicPath": "cs/p2p/kademlia",
-      "title": "Kademlia DHT: XOR 거리와 K-버킷",
-      "sourcePath": "src/pages/articles/p2p/kademlia.tsx",
+      "route": "p2p/iroh",
+      "publicPath": "cs/p2p/iroh",
+      "title": "Iroh: 주소 후보에서 인증 연결·payload 검증까지",
+      "sourcePath": "src/pages/articles/blockchain/iroh.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
@@ -14670,6 +14638,38 @@
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
+    },
+    {
+      "route": "p2p/kad-lookup",
+      "publicPath": "cs/p2p/kad-lookup",
+      "title": "Kademlia 탐색: α개 질문과 거리순 후보표",
+      "sourcePath": "src/pages/articles/p2p/kad-lookup.tsx",
+      "locationMap": "global:ArticleOnboarding",
+      "architectureCandidate": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": false,
+      "hasRecursiveLocator": false,
+      "hasCodeEvidence": false,
+      "hasSourceCitation": true,
+      "reviewPriority": "verify-static-visual"
+    },
+    {
+      "route": "p2p/kademlia",
+      "publicPath": "cs/p2p/kademlia",
+      "title": "Kademlia: XOR 거리에서 연락처 교체까지",
+      "sourcePath": "src/pages/articles/p2p/kademlia.tsx",
+      "locationMap": "global:ArticleOnboarding",
+      "architectureCandidate": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": false,
+      "hasRecursiveLocator": false,
+      "hasCodeEvidence": false,
+      "hasSourceCitation": true,
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "p2p/kubo",
@@ -14679,7 +14679,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14690,12 +14690,12 @@
     {
       "route": "p2p/libp2p",
       "publicPath": "cs/p2p/libp2p",
-      "title": "rust-libp2p Swarm 아키텍처: 코드 추적",
+      "title": "rust-libp2p: 주소에서 protocol event까지",
       "sourcePath": "src/pages/articles/p2p/libp2p.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14711,7 +14711,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14722,12 +14722,12 @@
     {
       "route": "p2p/libp2p-noise",
       "publicPath": "cs/p2p/libp2p-noise",
-      "title": "libp2p-noise: Noise XX 핸드셰이크 구현 코드 분석",
+      "title": "libp2p Noise: XX에서 PeerId와 secure I/O까지",
       "sourcePath": "src/pages/articles/p2p/libp2p-noise.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14743,7 +14743,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14754,12 +14754,12 @@
     {
       "route": "p2p/libp2p-tcp",
       "publicPath": "cs/p2p/libp2p-tcp",
-      "title": "libp2p-tcp: TCP Transport 구현 코드 분석",
+      "title": "libp2p TCP: 주소에서 Swarm-ready 연결까지",
       "sourcePath": "src/pages/articles/p2p/libp2p-tcp.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14770,12 +14770,12 @@
     {
       "route": "p2p/libp2p-yamux",
       "publicPath": "cs/p2p/libp2p-yamux",
-      "title": "rust-libp2p Yamux: stream credit·backpressure·failure scope",
+      "title": "rust-libp2p Yamux: 독립 stream과 공유 connection",
       "sourcePath": "src/pages/articles/p2p/libp2p-yamux.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
@@ -14786,18 +14786,18 @@
     {
       "route": "p2p/nat-traversal",
       "publicPath": "cs/p2p/nat-traversal",
-      "title": "NAT Traversal 기초: STUN, TURN, ICE, Hole Punching",
+      "title": "NAT Traversal: 관측 주소에서 실제 경로 선택까지",
       "sourcePath": "src/pages/articles/p2p/nat-traversal.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-static-visual"
     },
     {
       "route": "p2p/quic-fundamentals",
@@ -14823,13 +14823,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "p2p/tls-fundamentals",
@@ -15494,14 +15494,14 @@
       "sourcePath": "src/pages/articles/property/commercial-lease-and-rent.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "property/land-development-residual",
@@ -15510,14 +15510,14 @@
       "sourcePath": "src/pages/articles/property/land-development-residual.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "property/shop-closure-and-restoration",
@@ -15526,14 +15526,14 @@
       "sourcePath": "src/pages/articles/property/shop-closure-and-restoration.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "property/shop-transfer-and-goodwill",
@@ -15542,14 +15542,14 @@
       "sourcePath": "src/pages/articles/property/shop-transfer-and-goodwill.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": true,
+      "hasDedicatedVisual": false,
       "hasInlineVisual": false,
-      "hasCustomVisual": true,
-      "hasAnimatedMechanism": true,
+      "hasCustomVisual": false,
+      "hasAnimatedMechanism": false,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-motion-semantics"
+      "reviewPriority": "verify-text-first"
     },
     {
       "route": "reasoning/argument-and-counterexample",

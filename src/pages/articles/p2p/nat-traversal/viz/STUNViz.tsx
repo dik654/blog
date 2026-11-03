@@ -1,160 +1,273 @@
-import { motion } from "framer-motion";
 import StepViz from "@/components/ui/step-viz";
-
-const sp = { type: "spring" as const, bounce: 0.12, duration: 0.5 };
-const C = { c: "#6366f1", nat: "#6b7280", stun: "#10b981", r: "#f59e0b" };
 
 const STEPS = [
   {
-    label: "Binding Request 전송",
-    body: "STUN_HEADER {\n  type: 0x0001,            // Binding Request\n  length: 0,               // 속성 없음\n  magic: 0x2112A442,       // STUN 매직 쿠키\n  txn_id: random(12B)\n}\nUDP src = 192.168.1.5:3000 → stun.example.com:3478",
+    label: "Alice가 Binding Request를 보냅니다",
+    body: "10.0.0.5:5000에서 STUN server로 UDP request를 보냅니다. 96-bit transaction ID는 나중에 response를 이 request와 맞추는 표식입니다.",
   },
   {
-    label: "NAT 매핑 생성",
-    body: "NAT 테이블 추가:\n  Internal: 192.168.1.5:3000\n  External: 203.0.113.10:5678  // NAT 할당\n  Remote:   stun.example.com:3478\n\nPacket rewrite:\n  src: 192.168.1.5:3000 → 203.0.113.10:5678\n  dst: stun.example.com:3478 (변경 없음)",
+    label: "NAT가 source transport address를 바꿉니다",
+    body: "NAT A는 내부 주소를 203.0.113.5:40000으로 바꾸고 mapping state를 남깁니다. STUN server는 바뀐 source만 볼 수 있습니다.",
   },
   {
-    label: "Binding Response",
-    body: "XOR-MAPPED-ADDRESS {\n  family: 0x01,           // IPv4\n  port: 5678 XOR 0x2112, // = 0x373C\n  addr: 203.0.113.10 XOR 0x2112A442\n}\n// XOR encoding은 payload 속 address를 ALG가 재작성하는 문제를 줄임.\n// 클라이언트가 XOR 해제 → 관측 주소 복원.",
+    label: "Server가 관측한 주소를 돌려줍니다",
+    body: "Binding success response의 XOR-MAPPED-ADDRESS에는 203.0.113.5:40000이 들어갑니다. XOR는 주소를 비밀로 하는 암호가 아닙니다.",
   },
   {
-    label: "외부 주소 획득",
-    body: "port = 0x373C XOR 0x2112 = 5678\naddr = XOR_addr XOR 0x2112A442 = 203.0.113.10\n\n이 server가 본 주소: 203.0.113.10:5678\n→ ICE candidate로 피어에게 전달.\n// Mapping/filtering은 별도 behavior test나 실제 check로 확인.",
+    label: "Alice가 server-reflexive candidate로 저장합니다",
+    body: "이 값은 그 STUN 목적지에서 본 관찰값입니다. Bob에게도 같은 mapping이 쓰이는지, Bob packet이 들어오는지는 아직 증명되지 않았습니다.",
   },
-];
+] as const;
+
+const COLORS = {
+  alice: "#4f46e5",
+  nat: "#7c3aed",
+  server: "#0891b2",
+  result: "#059669",
+  muted: "#64748b",
+};
+
+function ArrowDefs() {
+  return (
+    <defs>
+      <marker
+        id="stun-arrow"
+        viewBox="0 0 8 8"
+        markerWidth="8"
+        markerHeight="8"
+        refX="6"
+        refY="4"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0 0 L8 4 L0 8 Z" fill="context-stroke" />
+      </marker>
+    </defs>
+  );
+}
 
 export default function STUNViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
         <svg
-          viewBox="0 0 490 160"
-          className="w-full max-w-2xl"
-          style={{ height: "auto" }}
+          viewBox="0 0 500 190"
+          aria-label="STUN Binding transaction이 관측 주소를 만드는 과정"
         >
-          {step === 0 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.c}>
-                Binding Request
+          <ArrowDefs />
+
+          <rect
+            x="12"
+            y="60"
+            width="112"
+            height="48"
+            rx="8"
+            fill={`${COLORS.alice}10`}
+            stroke={COLORS.alice}
+          />
+          <text
+            x="68"
+            y="80"
+            textAnchor="middle"
+            fontSize="11"
+            fontWeight="700"
+            fill={COLORS.alice}
+          >
+            Alice socket
+          </text>
+          <text
+            x="68"
+            y="96"
+            textAnchor="middle"
+            fontSize="9.5"
+            fill={COLORS.alice}
+          >
+            10.0.0.5:5000
+          </text>
+
+          <rect
+            x="194"
+            y="50"
+            width="112"
+            height="68"
+            rx="8"
+            fill={`${COLORS.nat}0d`}
+            stroke={COLORS.nat}
+          />
+          <text
+            x="250"
+            y="71"
+            textAnchor="middle"
+            fontSize="11"
+            fontWeight="700"
+            fill={COLORS.nat}
+          >
+            NAT A
+          </text>
+          <text
+            x="250"
+            y="88"
+            textAnchor="middle"
+            fontSize="9"
+            fill={COLORS.nat}
+          >
+            internal :5000
+          </text>
+          <text
+            x="250"
+            y="104"
+            textAnchor="middle"
+            fontSize="9"
+            fill={COLORS.nat}
+          >
+            external :40000
+          </text>
+
+          <rect
+            x="376"
+            y="60"
+            width="112"
+            height="48"
+            rx="8"
+            fill={`${COLORS.server}10`}
+            stroke={COLORS.server}
+          />
+          <text
+            x="432"
+            y="80"
+            textAnchor="middle"
+            fontSize="11"
+            fontWeight="700"
+            fill={COLORS.server}
+          >
+            STUN server
+          </text>
+          <text
+            x="432"
+            y="96"
+            textAnchor="middle"
+            fontSize="9.5"
+            fill={COLORS.server}
+          >
+            192.0.2.10:3478
+          </text>
+
+          {(step === 0 || step === 1) && (
+            <>
+              <line
+                x1="124"
+                y1="76"
+                x2="184"
+                y2="76"
+                stroke={COLORS.alice}
+                strokeWidth="1.2"
+                markerEnd="url(#stun-arrow)"
+              />
+              <line
+                x1="306"
+                y1="76"
+                x2="366"
+                y2="76"
+                stroke={COLORS.alice}
+                strokeWidth="1.2"
+                markerEnd="url(#stun-arrow)"
+              />
+              <text
+                x="250"
+                y="35"
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="700"
+                fill={COLORS.alice}
+              >
+                Binding Request · txid 7b…2e
               </text>
-              {[
-                "STUN {",
-                "  type: 0x0001,  // Binding Request",
-                "  magic: 0x2112A442,",
-                "  txn_id: random(12B)",
-                "}",
-                "",
-                "UDP 192.168.1.5:3000 → stun:3478",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.c}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
+            </>
+          )}
+
+          {step >= 2 && (
+            <>
+              <line
+                x1="376"
+                y1="94"
+                x2="316"
+                y2="94"
+                stroke={COLORS.server}
+                strokeWidth="1.2"
+                markerEnd="url(#stun-arrow)"
+              />
+              <line
+                x1="194"
+                y1="94"
+                x2="134"
+                y2="94"
+                stroke={COLORS.server}
+                strokeWidth="1.2"
+                markerEnd="url(#stun-arrow)"
+              />
+              <text
+                x="250"
+                y="137"
+                textAnchor="middle"
+                fontSize="9.5"
+                fontWeight="700"
+                fill={COLORS.server}
+              >
+                XOR-MAPPED-ADDRESS = 203.0.113.5:40000
+              </text>
+            </>
+          )}
+
+          {step === 1 && (
+            <rect
+              x="172"
+              y="129"
+              width="156"
+              height="30"
+              rx="6"
+              fill={`${COLORS.nat}0d`}
+              stroke={COLORS.nat}
+            />
           )}
           {step === 1 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
+            <text
+              x="250"
+              y="148"
+              textAnchor="middle"
+              fontSize="9.5"
+              fill={COLORS.nat}
             >
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.nat}>
-                NAT 매핑
-              </text>
-              {[
-                "NAT table += {",
-                "  int: 192.168.1.5:3000",
-                "  ext: 203.0.113.10:5678",
-                "  rem: stun:3478",
-                "}",
-                "",
-                "src rewrite: .5:3000 → .10:5678",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.nat}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
+              10.0.0.5:5000 → 203.0.113.5:40000
+            </text>
           )}
-          {step === 2 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.stun}>
-                Binding Response
-              </text>
-              {[
-                "XOR-MAPPED-ADDRESS {",
-                "  family: 0x01,  // IPv4",
-                "  port: 5678 XOR 0x2112",
-                "  addr: 203.0.113.10 XOR 0x2112A442",
-                "}",
-                "",
-                "// XOR: payload ALG 재작성 완화",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.stun}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
-          )}
+
           {step === 3 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              <text x={20} y={18} fontSize={10} fontWeight={600} fill={C.r}>
-                주소 복원
+            <>
+              <rect
+                x="151"
+                y="151"
+                width="198"
+                height="28"
+                rx="7"
+                fill={`${COLORS.result}10`}
+                stroke={COLORS.result}
+              />
+              <text
+                x="250"
+                y="169"
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="700"
+                fill={COLORS.result}
+              >
+                srflx A = 203.0.113.5:40000
               </text>
-              {[
-                "port = 0x373C XOR 0x2112 = 5678",
-                "addr = XOR_val XOR 0x2112A442",
-                "     = 203.0.113.10",
-                "",
-                "관측 주소: 203.0.113.10:5678",
-                "→ ICE candidate로 피어에게 전달",
-              ].map((t, i) => (
-                <text
-                  key={i}
-                  x={20}
-                  y={38 + i * 16}
-                  fontSize={10}
-                  fontFamily="monospace"
-                  fill={C.r}
-                >
-                  {t}
-                </text>
-              ))}
-            </motion.g>
+            </>
           )}
+
+          <text x="12" y="178" fontSize="9" fill={COLORS.muted}>
+            관측 주소 ≠ peer identity ≠ direct path 성공
+          </text>
         </svg>
       )}
     </StepViz>

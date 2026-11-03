@@ -10,9 +10,126 @@ interface Props {
 export default function Contribution({ onCodeRef }: Props) {
   return (
     <section id="contribution" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">기여 집계</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="not-prose flex flex-wrap gap-2 mb-4">
+      <h2 className="mb-6 break-keep text-2xl font-bold">
+        Subnet에서 먼저 줄이고, 다음 block에 네 구간을 합칩니다
+      </h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          V37의 position 261은 mainnet의 네 subcommittee 중 세 번째인 subnet 2에
+          속합니다. 한 subnet은 <code>512 / 4 = 128</code> positions이므로 local
+          position은 <code>261 - 2 × 128 = 5</code>입니다. Contribution에는 전체
+          position 261이 아니라 subnet-local bit 5가 켜집니다. 전체 offset은
+          다음 proposer가 SyncAggregate를 만들 때 복원됩니다.
+        </p>
+
+        <h3>Aggregator는 고정 담당자가 아니라 slot마다 다시 뽑힙니다</h3>
+        <p>
+          위원회 구성원은 slot과 subcommittee index를 별도 domain으로 서명해
+          selection proof를 만듭니다. 그 proof의 hash가 modulo 조건을 통과하면 그
+          slot의 aggregator가 됩니다. Mainnet 값으로 계산하면 modulo는 8입니다.
+        </p>
+
+        <ExplainedFormula
+          question="왜 mainnet의 한 subcommittee에서 대략 16명의 aggregator를 기대할까요?"
+          idea={<>128-position subcommittee를 목표 16명으로 나눠 modulo 8을 만들고, selection-proof hash가 여덟 residue 중 0에 들어온 경우만 선택합니다.</>}
+          formula={String.raw`\begin{aligned}
+q&=512/4=128\\
+m&=\max(1,128/16)=8\\
+h&=\operatorname{u64}(H(\sigma_{sel})_{0:8})\\
+h\bmod 8&=0
+\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}
+q&=\underbrace{512/4}_{\text{한 subnet의 positions}}=128\\
+m&=\max(1,\underbrace{128/16}_{\text{목표 aggregator 수로 나눔}})=8\\
+h&=\operatorname{u64}(\underbrace{H(\sigma_{sel})_{0:8}}_{\text{proof hash 앞 8 bytes}})\\
+\underbrace{h\bmod 8=0}_{\text{여덟 residue 중 하나면 선택}}
+\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`512/4=128`,
+              annotation: [
+                "Mainnet committee 512 positions를 4 subnets로 나눕니다.",
+                "따라서 contribution bitvector는 128 bits입니다.",
+              ],
+            },
+            {
+              expression: String.raw`128/16=8`,
+              annotation: [
+                "Subcommittee당 목표 aggregator 수 16으로 나눕니다.",
+                "Modulo 8이므로 균등 hash에서 한 proof의 통과 확률은 1/8입니다.",
+              ],
+            },
+            {
+              expression: String.raw`h\bmod 8=0`,
+              annotation: [
+                "Slot과 subcommittee가 바뀌면 selection proof와 hash도 바뀝니다.",
+                "16은 목표 기대값이지 매 slot 정확히 16명이라는 보장이 아닙니다.",
+              ],
+            },
+          ]}
+          terms={[
+            { symbol: "q", name: "subcommittee size", description: "Mainnet에서 한 subnet에 배치된 128 positions입니다." },
+            { symbol: "m", name: "selection modulo", description: "Subcommittee 크기와 목표 aggregator 수로 계산한 8입니다." },
+            { symbol: "\\sigma_{sel}", name: "selection proof", description: "Slot과 subcommittee index를 selection-proof domain으로 서명한 값입니다." },
+            { symbol: "h", name: "proof hash integer", description: "Selection proof hash의 앞 8 bytes를 uint64로 읽은 값입니다." },
+          ]}
+          assumptions={[
+            "Mainnet preset의 committee size 512, subnet count 4, target aggregators 16을 사용합니다.",
+            "Hash residue를 균등하다고 보아 기대값을 말합니다. Duplicate positions와 우연 때문에 실제 distinct aggregator 수는 달라질 수 있습니다.",
+          ]}
+          interpretation="Modulo 8 조건은 각 eligible validator-subcommittee proof에 1/8의 선택 기회를 줍니다. 따라서 16은 목표 평균이지 고정 인원수가 아닙니다."
+        />
+
+        <div className="not-prose mb-5 flex flex-wrap gap-2">
+          <CodeViewButton
+            onClick={() =>
+              onCodeRef(
+                "sync-aggregator-selection",
+                codeRefs["sync-aggregator-selection"],
+              )
+            }
+          />
+          <span className="self-center text-xs text-muted-foreground">
+            IsSyncCommitteeAggregator() 원문
+          </span>
+        </div>
+
+        <h3>선택된 aggregator는 아무 message나 섞지 않습니다</h3>
+        <p>
+          Aggregator는 자신이 보는 R100과 같은 <strong>slot 100·R100·subnet
+          2</strong>의 유효 message만 모읍니다. Position별 local bit를 켜고 BLS
+          signatures를 합쳐 <code>SyncCommitteeContribution</code>을 만듭니다.
+        </p>
+        <p>
+          Selection proof는 “이 validator가 이번 slot과 subnet의 aggregator로
+          뽑혔다”는 증명이고, contribution-and-proof signature는 aggregator
+          identity와 contribution 자체를 묶습니다.
+        </p>
+
+        <h3>다음 block proposer가 local bits를 512-position bits로 바꿉니다</h3>
+        <p>
+          Slot 101 proposer는 pool에서 slot 100과 parent root R100에 맞는
+          contributions만 남깁니다. 각 subnet에서 중복을 합친 뒤 참여가 가장 많은
+          contribution을 고르고, subnet 0·1·2·3의 128-bit 구간을 순서대로 이어
+          512-bit <code>sync_committee_bits</code>를 만듭니다. 네 aggregate
+          signatures도 한 BLS signature로 합칩니다.
+        </p>
+        <p>
+          이때 subnet 2의 local bit 5는 전체 bit 261로 돌아갑니다. 같은 validator
+          public key가 여러 position에 있더라도 position ordering을 유지해야
+          합니다. Unique validator 목록으로 다시 압축하면 bits와 public keys가
+          어긋나 서명 검증 결과가 달라집니다.
+        </p>
+
+        <div className="not-prose mb-5 flex flex-wrap gap-2">
+          <CodeViewButton
+            onClick={() =>
+              onCodeRef(
+                "proposer-sync-aggregate",
+                codeRefs["proposer-sync-aggregate"],
+              )
+            }
+          />
           <CodeViewButton
             onClick={() =>
               onCodeRef(
@@ -21,262 +138,34 @@ export default function Contribution({ onCodeRef }: Props) {
               )
             }
           />
-          <span className="text-xs text-muted-foreground self-center">
-            ProcessSyncAggregate()
+          <span className="self-center text-xs text-muted-foreground">
+            proposer 구성과 state-transition 검증 원문
           </span>
         </div>
 
-        {/* ── 4 subnet 집계 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Subnet 집계 — SyncAggregate 구성
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              용어 정리
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-foreground/80">
-              <div>
-                <span className="font-semibold">SyncCommitteeMessage</span> —
-                개별 validator 서명
-              </div>
-              <div>
-                <span className="font-semibold">SyncCommitteeContribution</span>{" "}
-                — subnet 내 집계
-              </div>
-              <div>
-                <span className="font-semibold">SyncAggregate</span> — 모든
-                subcommittee contribution의 최종 집계
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                SyncCommitteeContribution
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>
-                  <code>slot: Slot</code>
-                </p>
-                <p>
-                  <code>beacon_block_root: Root</code>
-                </p>
-                <p>
-                  <code>subcommittee_index: uint64</code> — preset 범위
-                </p>
-                <p>
-                  <code>aggregation_bits</code> — subcommittee 크기의 Bitvector
-                </p>
-                <p>
-                  <code>signature: BLSSignature</code>
-                </p>
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-              <p className="text-xs font-bold text-foreground/70 mb-2">
-                SyncAggregate
-              </p>
-              <div className="space-y-1 text-sm text-foreground/80">
-                <p>
-                  <code>
-                    sync_committee_bits: Bitvector[SYNC_COMMITTEE_SIZE]
-                  </code>
-                </p>
-                <p>
-                  <code>sync_committee_signature: BLSSignature</code>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              aggregateContributions 흐름
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>1. Subnet aggregator 선정 (committee처럼)</p>
-              <p>
-                2. 각 subnet에서 subcommittee member의 서명을 수집해
-                Contribution 생성
-              </p>
-              <p>
-                3. Block proposer가 서로 다른 subcommittee contribution을 수신
-              </p>
-              <p>
-                4. preset의 subcommittee size로 전체 sync committee bitvector
-                위치에 매핑
-              </p>
-              <p>5. contribution 서명을 BLS aggregate해 SyncAggregate 생성</p>
-              <p>6. Block body에 포함</p>
-            </div>
-          </div>
-        </div>
+        <h3>Block 101은 왜 R100의 서명을 검사합니까?</h3>
         <p>
-          Sync committee는 preset이 정한 subnet 수와 subcommittee 크기에 따라 나뉩니다. 각 subnet의 aggregator가 같은 beacon block root에 대한 signature를 contribution으로 묶고, block proposer는 선택한 contribution을 통합해 전체 participation bitvector와 하나의 aggregate signature를 <code>SyncAggregate</code>에 넣습니다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Position은 validator index가 아니다</h3>
-        <p>
-          Mainnet preset의 512 positions와 4 subnet을 예로 들면 한
-          subcommittee는 128 positions입니다. Subnet 2의 local bit 5는 전체
-          bitvector의 <code>2 × 128 + 5 = 261</code> 위치에 놓입니다. 같은
-          validator가 sampling with replacement로 두 position에 뽑혔다면 public
-          key도 두 위치에 나타날 수 있으므로 unique validator 수로 bitvector를
-          다시 만들면 안 됩니다.
-        </p>
-
-        <ExplainedFormula
-          question="각 sync subcommittee에서 slot마다 소수의 aggregator를 선택하는 기준은 무엇일까요?"
-          idea={<>Subcommittee 한 칸의 크기를 목표 aggregator 수로 나눠 modulo를 만들고, domain-separated selection proof hash가 0번 residue에 들어온 validator를 선택합니다.</>}
-          formula={String.raw`\begin{aligned}
-q&=C/N\\
-a&=\left\lfloor q/A\right\rfloor\\
-m&=\max(1,a)\\
-z&=H(\sigma)\\
-h&=\operatorname{u64}(z_{0:8})\\
-h\bmod m&=0
-\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}
-q&=\underbrace{C/N}_{\text{subnet당 position}}\\
-a&=\underbrace{\left\lfloor q/A\right\rfloor}_{\text{목표 수로 나눈 몫}}\\
-m&=\underbrace{\max(1,a)}_{\text{modulo 최소 1}}\\
-z&=H(\sigma)\\
-h&=\operatorname{u64}(z_{0:8})\\
-h\bmod m&=0
-\end{aligned}`}
-          operations={[
-            { expression: String.raw`C/N`, annotation: ["sync committee 512 positions를","4개 subnet으로 나눔 → subnet당 128"] },
-            { expression: String.raw`\left\lfloor q/A\right\rfloor`, annotation: ["subcommittee 크기를 목표 aggregator","수 A로 나눈 정수 몫","작을수록 더 많은 validator가 선택됨"] },
-            { expression: String.raw`\max(1,a)`, annotation: ["q<A라 몫이 0이면 m=1로 올림","0으로 나눈 나머지를 피하고","그 경우 member 전원이 aggregator"] },
-          ]}
-          terms={[
-            { symbol: "C", name: "sync committee size", description: "Mainnet preset에서 512 positions입니다." },
-            { symbol: "N", name: "sync subnet count", description: "Mainnet preset에서 4개 subcommittee입니다." },
-            { symbol: "A", name: "target aggregators per subcommittee", description: "Subcommittee별 기대 aggregator 수를 정하는 preset 값입니다." },
-            { symbol: "q", name: "subcommittee size", description: "전체 committee positions를 subnet 수로 나눈 값입니다." },
-            { symbol: "a", name: "raw modulo", description: "Subcommittee 크기를 목표 aggregator 수로 나눈 정수 몫입니다." },
-            { symbol: "z", name: "proof hash bytes", description: "Selection proof에 hash 함수를 적용한 byte string입니다." },
-            { symbol: "h", name: "proof hash integer", description: "Selection proof hash의 앞 8 bytes를 uint64로 읽은 값입니다." },
-            { symbol: "\\sigma", name: "sync selection proof", description: "slot과 subcommittee index에 DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF로 서명한 값입니다." },
-          ]}
-          assumptions={["C/N이 subcommittee position 수를 이루며 preset·fork를 고정합니다.", "동일 validator가 여러 committee position에 들어갈 수 있으므로 participant identity와 bit position을 구분합니다."]}
-          interpretation="Mainnet의 512 positions를 4개 subnet으로 나누면 contribution bitvector는 subnet당 128 bits입니다. 이후 proposer가 네 구간을 올바른 offset에 놓아 전체 bitvector를 만듭니다."
-        />
-
-        {/* ── Light Client 활용 ── */}
-        <h3 className="text-xl font-semibold mt-6 mb-3">
-          Light Client — SyncAggregate로 head 검증
-        </h3>
-        <div className="not-prose space-y-3 my-4">
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              1. Bootstrapping (최초 1회)
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>
-                <code>
-                  GET
-                  /eth/v1/beacon/light_client/bootstrap/&#123;trusted_block_root&#125;
-                </code>
-              </p>
-              <p>
-                header + <code>current_sync_committee</code> + merkle proof 수신
-              </p>
-              <p>
-                <code>state_root</code>에서 <code>current_sync_committee</code>{" "}
-                merkle proof 검증
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              2. Update 수신 (주기적)
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-foreground/80">
-              <span>
-                <code>attested_header</code> — 신뢰할 새 block
-              </span>
-              <span>
-                <code>next_sync_committee</code> — 다음 committee
-              </span>
-              <span>
-                <code>finalized_header</code>
-              </span>
-              <span>
-                <code>sync_aggregate</code> — 현재 committee 서명
-              </span>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              3-4. SyncAggregate 검증
-            </p>
-            <div className="space-y-1 text-sm text-foreground/80">
-              <p>
-                참여자 수를 현재 committee size와 update 종류별 안전 임계값에
-                대조
-              </p>
-              <p>bit가 set된 position의 pubkey 수집</p>
-              <p>
-                <code>
-                  FastAggregateVerify(activePubkeys, signingRoot, signature)
-                </code>{" "}
-                — BLS 검증
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-bold text-foreground/70 mb-2">
-              5. Update 채택 효과
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-center">
-              <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">
-                  제한된 위원회
-                </p>
-                <p className="text-foreground/50">전체 state 실행 생략</p>
-              </div>
-              <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">크기 제한</p>
-                <p className="text-foreground/50">preset·branch 내용 의존</p>
-              </div>
-              <div className="rounded border border-border/40 p-2">
-                <p className="text-foreground/70 font-semibold">
-                  모바일/브라우저
-                </p>
-                <p className="text-foreground/50">Helios 등 가능</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>
-          Light client는 <code>SyncAggregate</code>로 attested beacon header에 충분한 sync committee가 서명했는지 확인하고, Merkle branch로 finalized checkpoint와 다음 committee를 state root에 연결합니다. 이 경로는 full state를 내려받지 않아도 되지만 모든 block과 state transition을 실행하는 full consensus node와 같은 검증 범위를 제공하지는 않습니다.
-        </p>
-
-        <p className="mt-4 border-l-2 border-amber-500/50 pl-3 text-sm">
-          <strong>💡 서브넷 집계</strong> — committee size와 subnet 수를
-          preset에서 읽어 subcommittee로 분할합니다. Subnet 안에서 BLS signature를 contribution으로 aggregate하고, proposer가 이를 전체 committee bitvector와 aggregate signature로 합쳐 block에 포함합니다.
-        </p>
-
-        <p className="mt-4 border-l-2 border-violet-500/50 pl-3 text-sm">
-          <strong>💡 보상 & 패널티</strong> — sync committee reward는 total
-          active balance와 preset constant, proposer·participant 역할을 사용해 계산합니다. 불참 delta도 현재 fork formula를 따르는 값이지 고정 금액이 아닙니다. Light client는 SyncAggregate만 보는 것이 아니라 trusted root, Merkle branch와 update selection rule까지 검증합니다.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">Light client가 믿는 범위와 release gate</h3>
-        <p>
-          신뢰는 공격자가 건넨 committee의 자기서명에서 시작하지 않습니다. 사용자가 고정한 trusted block root에서 current committee Merkle
-          branch를 확인하고 update의 participant-position public keys와 BLS signature, finalized·next-committee
-          branch, update selection rule을 차례로 검증합니다. 이 경로는 full execution과 모든 BeaconState transition을 대신하지
-          않습니다.
+          Prysm의 <code>setSyncAggregate</code>는 새 block slot의 previous slot과
+          parent root를 사용합니다. 따라서 block 101의 SyncAggregate는 slot 100의
+          root R100을 가리킵니다.
         </p>
         <p>
-          Release 전에는 period 전환, duplicate positions, wrong domain·root,
-          잘못된 subnet offset, 부족한 participation, 깨진 Merkle branch,
-          reorg와 restart를 동일 fixture로 paired 실행합니다. Contribution
-          bytes와 light-client optimistic/finalized header가 baseline과 같아야
-          BLS batch나 pool 성능 개선을 비교합니다.
+          Block을 처리할 때 Prysm은 set bits에 해당하는
+          current-committee public keys를 모으고, previous-slot root와 sync domain으로
+          signing root를 다시 만든 뒤 FastAggregateVerify를 실행합니다.
         </p>
+        <p>
+          같은 loop에서 set bit position에는 participant reward를, unset position에는
+          penalty를 적용하고 proposer에게 inclusion reward를 더합니다. 이 회계는
+          “서명이 block 101의 state transition을 통과했다”는 consensus 처리입니다.
+          Light client가 그 aggregate로 어떤 header를 채택할지는 다음 절의 별도
+          규칙입니다.
+        </p>
+        <aside className="not-prose mt-5 border-l-2 border-amber-500/60 bg-amber-500/5 p-4 text-sm leading-6">
+          <strong>여기까지 확정된 것:</strong> Block 101이 current committee의
+          position ordering과 previous-slot root R100에 맞는 aggregate signature를
+          포함했습니다. 이것만으로 R100이 finalized되었다고 말할 수는 없습니다.
+        </aside>
       </div>
     </section>
   );

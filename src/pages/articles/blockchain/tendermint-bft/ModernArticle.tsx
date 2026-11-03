@@ -1,58 +1,48 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { TendermintLockTraceViz, TendermintRoundViz } from "./viz/ModernTendermintViz";
+import { TendermintFailureTable, TendermintLockTraceViz, TendermintRoundViz } from "./viz/ModernTendermintViz";
 
 export default function ModernTendermintArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Tendermint consensus를 처음부터</p><h2 className="text-3xl font-bold tracking-tight">한 block height에서 propose·prevote·precommit을 반복하며 lock으로 충돌을 막는다</h2></header>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Tendermint · 블록 한 칸을 정하는 과정</p><h2 className="text-3xl font-bold tracking-tight">제안자가 계속 바뀌어도 어떻게 같은 블록 하나만 결정할까요?</h2></header>
       <p className="text-lg leading-8 text-foreground/90">
-            Tendermint는 알려진 validator 집합이 매 block height마다 하나의 block을 결정하는 round-based Byzantine consensus입니다.
-            Validator는 key 개수가 아니라 voting power로 투표하며 같은 round에서 특정 block에 전체 power의 2/3를 초과하는 precommit이 모이면
-            그 block을 commit합니다.
-          </p>
-      <p>Height는 결정할 block 위치이고 round는 그 height에서 proposer를 바꾸며 다시 시도하는 번호입니다. Step은 Propose, Prevote, Precommit, Commit처럼 현재 기다리는 evidence를 나타냅니다. Network가 느리거나 proposer가 offline이면 timeout으로 다음 step·round에 갈 수 있지만, timeout은 상대가 Byzantine이라는 증명도, 이전 lock을 지우는 권한도 아닙니다. 이 일반 원리의 정본은 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/bft-theory#safety-liveness">BFT lock·partial synchrony</a>에 있고 현재 CometBFT 구현의 event loop는 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/cometbft-consensus#overview">CometBFT consensus</a>에서 이어집니다.</p>
+        Tendermint의 답은 간단합니다. 같은 블록에 먼저 1차 투표를 모아 잠금 근거를 만들고, 그 근거를 본 검증자들이 2차 투표를 보냅니다. 같은 라운드의 2차 투표가 전체 투표권의 3분의 2를 엄격히 넘을 때만 그 블록을 결정합니다. 제안자가 멈춰 라운드가 바뀌어도 잠금은 저절로 사라지지 않습니다.
+      </p>
+      <p>
+        여기서 높이(<em>height</em>)는 지금 채울 블록 위치입니다. 라운드(<em>round</em>)는 그 위치를 채우지 못했을 때 제안자를 바꾸며 다시 시도한 횟수입니다. 단계(<em>step</em>)는 현재 제안, 1차 투표, 2차 투표 중 무엇을 기다리는지 나타냅니다. 먼저 블록 X가 height 120에 들어가는 한 번의 정상 흐름을 보겠습니다.
+      </p>
       <TendermintRoundViz />
-      <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> prevote quorum은 “이 round에서 lock을 만들거나 바꿀 수 있는 근거”를 만들고, precommit quorum은 block을 결정합니다. Round가 올라가도 honest validator의 lock은 더 높은 round의 정당한 prevote evidence 없이는 바뀌지 않습니다.</aside>
+      <aside className="border-l-2 border-primary bg-primary/5 p-5 text-sm leading-6"><strong>한 문장 답:</strong> 1차 투표 정족수는 잠금을 만들거나 바꿀 근거이고, 2차 투표 정족수는 블록을 결정하는 근거입니다. 라운드 번호나 타임아웃만으로 잠금을 바꿀 수는 없습니다.</aside>
     </section>
 
     <section id="protocol" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Protocol</p><h2 className="mt-2 text-2xl font-bold">Block vote와 nil vote가 같은 round machine을 전진시킨다</h2></header>
-      <p>Propose step에서 정해진 proposer가 block을 보냅니다. Validator는 현재 lock과 양립하고 application이 proposal을 유효하다고 판단하면 그 block을 prevote합니다. Proposal을 받지 못했거나 invalid하고 안전한 locked block도 없다면 nil을 prevote합니다. Nil은 빈 block을 commit한다는 뜻이 아니라 “현재 evidence로 특정 block을 지지하지 않는다”는 typed vote입니다.</p>
-      <p>같은 (height, round)에서 block B에 +2/3 prevote를 보면 validator는 B에 lock하거나 relock하고 B를 precommit합니다. +2/3 nil prevote를 보면 nil을 precommit하고 다음 round 진행을 준비합니다. 같은 round B에 +2/3 precommit이 모이면 commit으로 갑니다. Vote sign bytes에는 chain ID, height, round, vote type과 BlockID를 묶어 다른 chain·round·phase의 signature를 재사용하지 못하게 해야 합니다.</p>
-      <ExplainedFormula question="Voting power가 제각각일 때 block commit certificate가 threshold를 넘었는지 어떻게 판정하는가?" idea={<>Certificate의 distinct valid signers가 membership snapshot에서 가진 power를 더합니다. ‘2/3 이상’으로 반올림하지 않고 CometBFT 문서의 +2/3, 즉 전체 power의 2/3를 엄격히 초과하는지 정수 비교합니다.</>} formula={String.raw`3W_{signed}>2W_{total}`}
+      <header><p className="text-sm font-semibold text-primary">01 · 두 번의 투표</p><h2 className="mt-2 text-2xl font-bold">nil 투표는 빈 블록 결정이 아니라 “지금은 특정 블록을 지지하지 않는다”는 표입니다</h2></header>
+      <p>제안 단계에서는 정해진 제안자가 블록을 보냅니다. 검증자는 제안이 애플리케이션 규칙에 맞고 자기 잠금과 충돌하지 않으면 그 블록에 1차 투표(<em>prevote</em>)합니다. 제안을 제때 받지 못했거나 제안이 잘못됐고 지켜야 할 잠긴 블록도 없다면 nil에 1차 투표합니다. nil은 빈 블록을 확정한다는 뜻이 아닙니다. 이번 라운드에서 특정 블록을 지지할 근거가 없다는 뜻입니다.</p>
+      <p>같은 높이와 라운드에서 블록 B의 1차 투표가 전체 투표권의 3분의 2를 넘으면 B의 잠금 변경 증명(Proof of Lock Change, PoLC)이 생깁니다. 이 증거를 본 검증자는 B에 잠기고 B에 2차 투표(<em>precommit</em>)합니다. 같은 라운드의 B 2차 투표가 다시 3분의 2를 넘으면 B를 결정합니다. 서명에는 체인 ID, 높이, 라운드, 투표 종류와 블록 ID를 함께 묶어 다른 체인이나 단계의 표를 재사용하지 못하게 합니다.</p>
+      <ExplainedFormula question="검증자마다 투표권이 다르면 3분의 2 초과를 어떻게 계산할까요?" idea={<>유효한 서명을 보낸 서로 다른 검증자의 투표권을 더합니다. 키 개수를 세거나 3분의 2를 반올림하지 않고, 양변에 3을 곱해 정수로 엄격하게 비교합니다.</>} formula={String.raw`3W_{signed}>2W_{total}`}
       annotatedFormula={String.raw`\underbrace{3W_{signed}}_{\text{서명 power×3}}>\underbrace{2W_{total}}_{\text{전체 power×2}}`}
       operations={[
-          { expression: String.raw`3W_{signed}`, annotation: ["서로 다른 signer의 과거 power 합","key 80개라도 power 60이면 부족"] },
-          { expression: String.raw`2W_{total}`, annotation: ["2/3를 반올림 없이 정수로 엄격 비교","total 100: 67은 201>200이라 통과","66은 198이라 실패"] },
-        ]} terms={[{symbol:"W_{signed}",name:"Signed voting power",description:"같은 chain·height·round·precommit type·BlockID에 유효하게 서명한 validators의 power 합입니다."},{symbol:"W_{total}",name:"Total voting power",description:"해당 height를 검증하는 historical validator-set snapshot의 전체 power입니다."},{symbol:"3,2",name:"Integer comparison",description:"부동소수점 2/3와 rounding 대신 양변을 정수로 비교합니다."}]} assumptions={["Validator를 중복 세지 않고 해당 historical membership과 power를 사용합니다.","Signature, sign bytes, vote type, height·round와 BlockID를 검증합니다.","Byzantine voting power가 전체의 1/3 미만이라는 safety envelope를 둡니다.","Membership update의 적용 height와 proposer priority는 별도 versioned state입니다."]} interpretation="Total power 100이면 signed 67은 201>200이라 threshold를 넘지만 66은 198>200이 아니므로 부족합니다. Key 80개가 서명해도 power 합이 60이면 commit certificate가 아닙니다." />
+          { expression: String.raw`3W_{signed}`, annotation: ["서로 다른 서명자의 투표권 합에 3을 곱합니다.","키가 80개여도 투표권 합이 60이면 부족합니다."] },
+          { expression: String.raw`2W_{total}`, annotation: ["전체 투표권 합에 2를 곱합니다.","전체가 100이면 67은 201>200이라 통과하고, 66은 198이라 실패합니다."] },
+        ]} terms={[{symbol:"W_{signed}",name:"서명한 투표권",description:"같은 체인·높이·라운드·투표 종류·블록 ID에 유효하게 서명한 서로 다른 검증자의 투표권 합입니다."},{symbol:"W_{total}",name:"전체 투표권",description:"그 높이에 적용되는 검증자 집합의 전체 투표권 합입니다."},{symbol:"3,2",name:"정수 비교",description:"소수점과 반올림 없이 3분의 2 초과를 판정하기 위해 양변에 곱하는 수입니다."}]} assumptions={["같은 검증자를 중복해서 세지 않습니다.","그 높이에 적용되는 검증자 집합과 투표권을 사용합니다.","서명, 체인 ID, 투표 종류, 높이·라운드와 블록 ID를 모두 검증합니다.","Byzantine 투표권은 전체의 3분의 1 미만이라고 가정합니다."]} interpretation="전체 투표권이 100이면 67은 통과하지만 66은 부족합니다. 이 계산은 검증자 수가 아니라 투표권 합을 셉니다." />
       <div id="paper-tendermint-original"><CitationBlock source="Jae Kwon — Tendermint: Consensus without Mining" citeKey={1} href="https://tendermint.com/static/docs/tendermint.pdf"><p><strong>문제:</strong> PoW mining 없이 blockchain ledger에 BFT finality를 제공합니다.</p><p><strong>기여:</strong> Partial synchrony와 1/3 미만 Byzantine power 아래 round-based blockchain consensus 초기 설계를 제시했습니다.</p><p><strong>전제와 범위:</strong> 2014 draft v0.6의 역사적 설계 근거이며 문서 자체가 outdated임을 밝힙니다. 현재 CometBFT wire·ABCI++·state transition의 정본으로 사용하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="locking" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Locking</p><h2 className="mt-2 text-2xl font-bold">Higher-round PoLC가 있어야 다른 block으로 lock을 옮길 수 있다</h2></header>
-      <p>
-            Proof of Lock Change(PoLC, 흔히 polka)는 같은 height·round에서 특정 block 또는 nil에 모인 +2/3 prevote 집합입니다.
-            Validator가 r0에서 A의 PoLC를 보고 A를 precommit했다면 A에 lockedRound=0을 기록합니다. r1 proposer가 아무 근거 없이 B를 보내도
-            이 validator는 A를 prevote합니다. B로 바꾸려면 lockedRound보다 높은 round에서 B의 PoLC를 확인해야 합니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">02 · 라운드를 건너는 잠금</p><h2 className="mt-2 text-2xl font-bold">새 제안이 왔다는 이유만으로 이전 블록을 버리면 두 결과가 생길 수 있습니다</h2></header>
+      <p>PoLC는 같은 높이와 라운드에서 특정 블록 또는 nil에 모인 3분의 2 초과 1차 투표 묶음입니다. 검증자가 0라운드에서 A의 PoLC를 보고 A에 잠겼다면, 1라운드 제안자가 근거 없이 B를 보내도 A를 지킵니다. B로 바꾸려면 기존 잠금 라운드보다 높고 현재 라운드보다 낮은 B의 PoLC를 실제 표와 함께 확인해야 합니다.</p>
       <TendermintLockTraceViz />
-      <p>이 규칙이 필요한 이유를 n=4,f=1에서 볼 수 있습니다. A의 +2/3 precommit에는 power 기준 quorum이 참여했고, 충돌하는 B의 quorum도 honest power를 공유해야 합니다. 그 honest validator가 낮거나 근거 없는 round에서 lock을 버리지 않으므로 두 block이 같은 height에 commit되는 경로를 끊습니다. 다만 실제 safety proof는 proposal의 validRound/POLRound, vote gossip, round jump와 lock update 조건 전체를 사용하므로 위 한 문단을 구현 specification으로 대신할 수 없습니다.</p>
-      <div id="paper-cometbft-consensus"><CitationBlock source="CometBFT v0.38 Specification — Byzantine Consensus Algorithm" citeKey={2} href="https://docs.cometbft.com/v0.38/spec/consensus/consensus"><p><strong>문제:</strong> Height·round·step별 proposal, prevote, precommit, commit과 round 전환 조건을 구현 가능한 상태 machine으로 규정합니다.</p><p><strong>기여:</strong> +2/3, PoLC, lock/unlock, common exit와 timeout semantics를 명시합니다.</p><p><strong>전제와 범위:</strong> 링크한 v0.38 specification의 의미입니다. 최신 main이나 다른 release의 정확한 code path는 배포 version·SHA와 다시 대조해야 합니다.</p></CitationBlock></div>
+      <p>왜 이렇게 복잡한가요? 한 블록이 이미 결정되었다면 그 2차 투표 정족수와 충돌 블록의 1차 투표 정족수는 정직한 투표권을 공유해야 합니다. 정직한 검증자가 정당한 더 높은 근거 없이는 잠금을 바꾸지 않으므로 충돌 블록이 다시 정족수를 얻는 길이 막힙니다. 반대로 아직 결정되지 않고 잠금만 갈라졌다면, 더 높은 라운드의 PoLC를 전달해 오래된 잠금을 안전하게 한쪽으로 모을 수 있습니다.</p>
+      <div id="paper-cometbft-consensus"><CitationBlock source="CometBFT v0.38.25 Specification — Byzantine Consensus Algorithm" citeKey={2} href="https://github.com/cometbft/cometbft/blob/v0.38.25/spec/consensus/consensus.md"><p><strong>문제:</strong> 높이·라운드·단계마다 제안, 1차·2차 투표, 결정과 라운드 전환 조건을 구현 가능한 상태 기계로 규정합니다.</p><p><strong>기여:</strong> 3분의 2 초과, PoLC, 잠금 변경, 공통 종료 조건과 타임아웃의 의미를 명시합니다.</p><p><strong>전제와 범위:</strong> v0.38.25 태그의 규격입니다. 다른 버전의 코드 경로와 같다고 가정하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="comparison" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Liveness와 운영</p><h2 className="mt-2 text-2xl font-bold">Safety는 GST 전에도, progress는 network가 안정된 뒤 조건부로 검사한다</h2></header>
-      <p>Partial synchrony에서 Global Stabilization Time(GST) 전에는 message delay 상한을 알 수 없으므로 여러 rounds가 timeout될 수 있습니다. Protocol은 이 구간에서 conflicting commit을 만들지 않는 safety를 지켜야 합니다. GST 뒤 message가 timeout 안에 전달되고 충분한 honest power가 online이며 proposal이 valid하고 proposer가 적절한 round에 오면 prevote·precommit quorum이 형성되어 liveness가 회복됩니다.</p>
-      <p>
-            Timeout을 짧게 잡으면 정상 jitter에서도 round가 자주 바뀌고 길게 잡으면 실제 proposer 장애 회복이 느립니다. Round가 올라갈수록 timeout을
-            늘리는 정책은 unknown delay bound를 찾아가는 운영 근사지만 무한한 liveness를 보장하지 않습니다. 1/3 이상 power가 offline이면 safety가
-            깨지지 않더라도 +2/3 certificate를 만들 수 없어 chain이 멈춥니다. 1/3 이상 Byzantine power라는 fault-bound 위반에서는 정규
-            safety 보장을 주장하지 않습니다.
-          </p>
-      <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[760px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">주입 사건</th><th className="p-3">기대 동작</th><th className="p-3">검증 evidence</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3 font-medium text-foreground">Proposer offline</td><td className="p-3">nil vote·timeout 뒤 round 증가</td><td className="p-3">H/R/S trace·proposer·timeout receipt</td></tr><tr><td className="p-3 font-medium text-foreground">Stale conflicting proposal</td><td className="p-3">Lock 유지·unsafe prevote 거절</td><td className="p-3">lockedBlock·lockedRound·POLRound</td></tr><tr><td className="p-3 font-medium text-foreground">Minority partition</td><td className="p-3">Minority commit 불가, majority 조건부 진행</td><td className="p-3">Historical power와 signed sums</td></tr><tr><td className="p-3 font-medium text-foreground">1/3+ offline</td><td className="p-3">정지 허용, conflict 금지</td><td className="p-3">No commit·no conflicting state·recovery time</td></tr></tbody></table></div>
-      <p>Tendermint algorithm, 현재 CometBFT consensus engine, ABCI++ application은 같은 말이 아닙니다. Consensus가 block order를 정해도 application의 non-deterministic transition이나 external payment를 exactly-once로 만들지 않습니다. Version-pinned consensus와 deterministic state hash parity를 확인하고 external effects는 outbox·idempotency receipt로 따로 조정해야 합니다.</p>
-      <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p>기초 6문제는 height·round·step, block/nil prevote, strict +2/3 power 계산, commit, lock·PoLC, timeout을 다룹니다. 심화 4문제는 stale proposal safety trace, GST 전후 liveness, 1/3 power boundary, version-pinned failure release gate를 설계하게 합니다.</p>
+      <header><p className="text-sm font-semibold text-primary">03 · 느린 네트워크와 운영 경계</p><h2 className="mt-2 text-2xl font-bold">충돌을 막는 조건과 계속 진행하는 조건은 다릅니다</h2></header>
+      <p>부분 동기 네트워크에서는 언젠가 통신 지연이 일정 범위 안으로 들어오지만, 그 시점(GST)과 지연 상한을 미리 알 수 없습니다. 그전에는 여러 라운드가 연속으로 타임아웃되어도 이상하지 않습니다. 이때 지켜야 할 것은 서로 충돌하는 두 블록을 결정하지 않는 안전성입니다. 통신이 안정된 뒤에는 충분한 정직한 투표권이 온라인이고 유효한 제안이 제때 전달되면 1차·2차 투표 정족수가 생겨 다시 진행할 수 있습니다.</p>
+      <p>타임아웃을 너무 짧게 잡으면 정상적인 지연에도 제안자가 자주 바뀝니다. 너무 길게 잡으면 실제 장애를 발견한 뒤 오래 기다립니다. 라운드가 오를수록 타임아웃을 늘리는 방식은 알 수 없는 지연 상한을 찾아가는 운영 전략입니다. 그러나 전체 투표권의 3분의 1 이상이 오프라인이면 3분의 2 초과 표를 만들 수 없어 체인이 멈춥니다. 멈춤은 허용되지만 충돌 결정은 없어야 합니다.</p>
+      <TendermintFailureTable />
+      <p>Tendermint 합의 알고리즘, CometBFT 프로그램, ABCI++ 애플리케이션은 같은 층이 아닙니다. 합의가 블록 순서를 정해도 애플리케이션의 비결정적 계산이나 외부 결제를 자동으로 한 번만 실행하게 만들지는 않습니다. 배포한 버전의 합의 규칙과 모든 노드의 상태 해시가 같은지 확인하고, 외부 효과는 outbox나 멱등성 영수증으로 따로 관리해야 합니다.</p>
     </section>
   </article>;
 }

@@ -1,39 +1,33 @@
 package gpbft
 
-// GossiPBFT — GossipSub 기반 PBFT 변형 합의
-// 전통적 PBFT와 달리 GossipSub으로 메시지를 전파하여 확장성 확보
-
-import "context"
-
-// Phase는 GossiPBFT의 투표 단계
-type Phase int
-
-const (
-	QUALITY  Phase = iota // 0: 후보 tipset 품질 투표
-	CONVERGE              // 1: 수렴 — 최다 득표 tipset 선택
-	PREPARE               // 2: 준비 — 2/3+ 동의 확인
-	COMMIT                // 3: 커밋 — 최종 확정
-	DECIDE                // 4: 결정 — 인증서 발행
-)
-
-// Runner는 하나의 GossiPBFT 인스턴스
-type Runner struct {
-	phase       Phase
-	participants []Participant // 스토리지 프로바이더 목록
-	powerTable   PowerTable   // 주소별 스토리지 파워
+// go-f3 v0.8.15 gpbft/gpbft.go의 실제 strong-quorum 판정입니다.
+func divCeil(a, b int64) int64 {
+	quo := a / b
+	rem := a % b
+	if rem != 0 {
+		quo += 1
+	}
+	return quo
 }
 
-// RunToCompletion은 5단계 투표를 순차 실행
-// QUALITY → CONVERGE → PREPARE → COMMIT → DECIDE
-func (r *Runner) RunToCompletion(ctx context.Context) (*Certificate, error) {
-	for r.phase <= DECIDE {
-		votes := r.collectVotes(ctx, r.phase)
-		// 2/3+ 스토리지 파워가 동일 값에 투표했는지 확인
-		if !r.hasQuorum(votes) {
-			return nil, ErrNoQuorum
-		}
-		r.phase++
+func IsStrongQuorum(part int64, whole int64) bool {
+	return part >= divCeil(2*whole, 3)
+}
+
+// Round 0은 QUALITY에서 시작하고, strong quorum이나 timeout 뒤 PREPARE로 갑니다.
+// CONVERGE는 이후 round에서 justification을 받아 진입하는 별도 경로입니다.
+func (i *instance) Start() error {
+	return i.beginQuality()
+}
+
+func (i *instance) tryQuality() error {
+	foundQuorum := i.quality.HasStrongQuorumFor(i.proposal.Key())
+	timeoutExpired := i.phaseTimeoutElapsed()
+	if foundQuorum || timeoutExpired {
+		i.proposal = i.quality.FindStrongQuorumValueForLongestPrefixOf(i.input)
+		i.addCandidatePrefixes(i.proposal)
+		i.value = i.proposal
+		i.beginPrepare(nil)
 	}
-	// 모든 단계 통과 → 확정 인증서 생성
-	return r.buildCertificate(), nil
+	return nil
 }

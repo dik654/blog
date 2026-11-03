@@ -3,64 +3,68 @@ import type { Article } from "../types";
 export const legalSystemArticles: Article[] = [
   {
     slug: "what-makes-law-law",
-    title: "무엇이 이 문장을 법으로 만듭니까",
+    title: "같은 10만 원 요구인데 왜 하나는 법일까요",
     subcategory: "ls-validity",
     sections: [
       {
         id: "overview",
-        title: "정해진 문장과 내 사건의 판단 사이에는 아직 거리가 있습니다",
+        title: "같은 10만 원 요구인데 왜 하나는 고지서이고 하나는 협박일까요?",
       },
       {
         id: "command-vs-law",
-        title: "부품 1. 총을 든 요구와 고지서는 어디서 갈라집니까",
+        title: "1. 불이익이 있다는 사실만으로는 법과 협박을 가를 수 없습니다",
       },
       {
         id: "validity-chain",
-        title: "부품 2. 효력은 위에서 오고, 사슬은 규범이 아닌 곳에서 멈춥니다",
+        title: "2. 권한의 근거는 위로 이어지지만 마지막에는 문서가 아니라 관행이 있습니다",
       },
       {
         id: "form-conditions",
-        title: "부품 3. 효력이 있다고 해서 사람을 이끌 수 있는 것은 아닙니다",
+        title: "3. 법적 효력이 있어도 사람이 미리 행동을 맞추지 못할 수 있습니다",
       },
       {
         id: "why-form-matters",
-        title: "부품 4. 이 조건들이 요구되는 이유는 도덕이 아니라 기능입니다",
+        title: "4. 법적 효력, 법치의 작동, 도덕적 정당성은 서로 다른 판단입니다",
       },
       {
         id: "boundary",
-        title: "여기까지는 어떤 문장이 법인지까지입니다",
+        title: "5. 법이라는 확인이 끝나도 해석과 복종의 질문은 남습니다",
+      },
+      {
+        id: "review",
+        title: "6. 새 사례에 세 질문을 적용해 보세요",
       },
     ],
     component: () => import("@/pages/articles/legal-system/what-makes-law-law"),
   },
   {
     slug: "rules-standards-and-interpretation",
-    title: "미리 적어 둘 것인가 그때 판단할 것인가",
+    title: "법은 언제 구체적인 답을 정할까요?",
     subcategory: "ls-interpretation",
     sections: [
       {
         id: "overview",
-        title: "같은 내용을 언제 정하느냐가 제도를 가릅니다",
+        title: "법은 구체적인 답을 정하는 시점을 고릅니다",
       },
       {
         id: "two-timings",
-        title: "부품 1. 차이는 내용이 아니라 시점입니다",
+        title: "왜 같은 95킬로미터가 다른 판정을 만들까요?",
       },
       {
         id: "cost-comparison",
-        title: "부품 2. 어느 쪽이 싼지는 사안이 몇 건이냐가 정합니다",
+        title: "어느 쪽이 나은지는 무엇을 세어야 알 수 있을까요?",
       },
       {
         id: "interpretation",
-        title: "부품 3. 어느 쪽을 택해도 해석은 남습니다",
+        title: "숫자로 선을 그었는데도 왜 해석이 남을까요?",
       },
       {
         id: "gaps-and-analogy",
-        title: "부품 4. 적혀 있지 않은 사안에서 두 방향이 갈립니다",
+        title: "적용할 문장 자체가 없다면 어디까지 메울 수 있을까요?",
       },
       {
         id: "boundary",
-        title: "한 번 메운 회색은 그 사건에서 끝나지 않습니다",
+        title: "결국 어느 형식을 고를지는 세 값을 함께 보는 일입니다",
       },
     ],
     component: () =>
@@ -68,38 +72,38 @@ export const legalSystemArticles: Article[] = [
   },
   {
     slug: "precedent-and-legal-change",
-    title: "앞선 판단은 왜 구속하고 언제 뒤집습니까",
+    title: "판례는 왜 따르고 언제 바꿀까요?",
     subcategory: "ls-interpretation",
     sections: [
       {
         id: "overview",
-        title: "한 사건에서 메운 회색은 그 사건에서 끝나지 않습니다",
+        title: "판례는 지난 답을 복사하는 장치가 아닙니다",
       },
       {
         id: "what-binds",
-        title: "부품 1. 끌려오는 것은 결론이 아니라 이유입니다",
+        title: "다음 사건으로 넘어가는 것은 무엇일까요?",
       },
       {
         id: "why-follow",
-        title: "부품 2. 따르는 이유는 넷이고 서로 다른 것을 지킵니다",
+        title: "판례의 힘은 나라마다 어떻게 다를까요?",
       },
       {
         id: "distinguishing",
-        title: "부품 3. 뒤집지 않고도 방향을 바꾸는 통로가 있습니다",
+        title: "판례를 뒤집지 않고 비켜 갈 수 있을까요?",
       },
       {
         id: "when-to-overrule",
-        title: "부품 4. 뒤집을 때가 언제인지는 견줘서 정합니다",
+        title: "판례를 바꾸려면 무엇을 함께 봐야 할까요?",
         subsections: [
           {
             id: "retroactivity",
-            title: "뒤집으면 언제부터 적용되는가",
+            title: "바뀐 판단은 과거 사건도 다시 열까요?",
           },
         ],
       },
       {
         id: "boundary",
-        title: "판단이 쌓일수록 법은 규칙에 가까워집니다",
+        title: "다음 사건에서는 네 질문을 순서대로 확인합니다",
       },
     ],
     component: () =>

@@ -1,5 +1,6 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
@@ -48,6 +49,13 @@ export default function ModernArticle() {
             repeated squaring으로 <code>y</code>를 만든 뒤 Wesolowski 증명
             <code>π</code>를 검사하는 한 흐름만 추적합니다. VDF를 난수 비콘에
             연결하거나 블록을 선택하는 규칙은 별도 프로토콜의 책임입니다.
+          </p>
+          <p>
+            실제로는 Chia의 timelord처럼 한 주체가 오래 계산한 Proof of Time을
+            내고, 여러 full node가 그 시간을 처음부터 다시 기다리지 않고 proof를
+            확인하는 곳에 쓸 수 있습니다. 여기서 full node가 빠르게 확인하는 것은
+            고정된 입력·횟수·결과의 관계입니다. 어느 block을 채택할지는 여전히
+            consensus 규칙이 정합니다.
           </p>
 
           <ContentBoundary article="vdf" />
@@ -99,6 +107,15 @@ export default function ModernArticle() {
             경로의 임계 경로에는 T개의 의존 단계가 남습니다. 안전한 VDF는 여기에
             순서를 알기 어려운 군과 construction의 보안 가정을 더해, 지수를 군의
             순서로 줄여 건너뛰는 우회도 막습니다.
+          </p>
+          <p>
+            여기서 <strong>순차적이라는 말은 CPU 한 core만 쓴다는 뜻이 아닙니다.</strong>
+            한 번의 큰 정수·군 연산 내부는 thread·SIMD·ASIC으로 더 빠르게 만들 수
+            있습니다. Chia 구현도 master와 slave thread가 한 번의 squaring에 필요한
+            일부 작업을 나눕니다. 그래도 다음 군 원소는 이전 squaring의 결과가 나온
+            뒤에야 시작할 수 있다는 의존 사슬은 남습니다. 따라서 <code>T</code>는
+            초가 아니라 연산 횟수이고, 실제 지연은 배포할 evaluator의 초당 반복 수를
+            따로 재서 정해야 합니다.
           </p>
 
           <ExplainedFormula
@@ -254,27 +271,34 @@ export default function ModernArticle() {
             interpretation="설명용 mod 17 예시에서 π=3³=10, ℓ=5, r=1이므로 10⁵·3 mod 17=1=y입니다. 이 등식은 산술을 확인할 뿐 mod 17을 안전한 VDF로 만들지는 않습니다."
           />
 
-          <div className="not-prose border border-border bg-muted/15 p-4 sm:p-5">
-            <p className="text-xs font-bold text-primary">
-              큰 q를 정수로 펼치지 않는 증명 생성 흐름
-            </p>
-            <pre className="mt-3 overflow-x-auto text-xs leading-6 text-foreground">
-              <code>{`// 증명 원소는 군의 항등원에서 시작합니다.
-π ← 1
-// 나눗셈의 현재 나머지를 1로 시작합니다.
-r ← 1
-// 2^T의 비트를 왼쪽부터 처리하듯 T번 반복합니다.
-repeat T times:
-  // 두 배한 나머지가 ℓ을 넘는지 확인해 몫의 다음 비트를 얻습니다.
-  b ← floor(2r / ℓ)
-  // 검증자가 다시 계산할 나머지만 유지합니다.
-  r ← 2r mod ℓ
-  // 몫 q를 저장하지 않고 지수 안에서 π=g^q를 누적합니다.
-  π ← π² · g^b
-// 완성된 군 원소 하나를 증명으로 보냅니다.
-return π`}</code>
-            </pre>
-          </div>
+          <AlgorithmBlock
+            title="큰 q를 저장하지 않고 π=g^q를 만드는 의사코드"
+            input={[
+              "군 원소 g",
+              "순차 반복 횟수 T",
+              "결과 y를 먼저 고정한 뒤 만든 challenge prime ℓ",
+            ]}
+            steps={[
+              {
+                code: "π ← 1, r ← 1",
+                note: "증명 원소는 군의 항등원, 현재 나머지는 1에서 시작합니다.",
+              },
+              {
+                code: "b ← floor(2r / ℓ)",
+                note: "2^T를 왼쪽부터 나눈다고 생각하고 몫 q의 다음 bit를 얻습니다.",
+              },
+              {
+                code: "r ← 2r mod ℓ",
+                note: "검증자가 다시 계산할 작은 나머지만 유지합니다.",
+              },
+              {
+                code: "π ← π² · g^b",
+                note: "거대한 몫 q를 정수로 저장하지 않고 군의 지수 안에서 g^q를 누적합니다.",
+              },
+            ]}
+            repeatUntil="2^T의 T개 bit를 모두 처리할 때까지 2–4번 줄을 반복합니다. T=4, ℓ=5이면 마지막에 r=1, π=g³이 됩니다."
+            output="proof element π와 검증에 사용할 remainder r"
+          />
 
           <div id="paper-wesolowski-survey">
             <CitationBlock
@@ -347,11 +371,19 @@ return π`}</code>
             </h2>
           </header>
           <p>
-            고정한 <code>chiavdf 1.1.14</code>의 기준 경로에서
+            고정한 <code>chiavdf 1.1.14</code>의 always-works reference/fallback
+            경로에서
             <code>repeated_square_original</code>은 직전 form을 제곱해 다음
             iteration으로 넘깁니다. 검증 경로는 <code>GetB</code>로 소수 B를
             만들고, <code>r = 2^iters mod B</code>와 <code>proof^B · x^r</code>
             를 계산해 제출된 <code>y</code>와 비교합니다.
+          </p>
+          <p>
+            이 함수가 Chia의 성능 최적화 main loop 전체라는 뜻은 아닙니다. 같은
+            commit의 README는 실제 main VDF loop가 NUDUPL·빠른 reducer와
+            master/slave thread를 사용한다고 설명합니다. 여기서는 속도 구현 전체가
+            아니라 “이번 form이 나온 뒤 다음 form을 제곱한다”는 의존 관계를 가장
+            짧은 원문으로 확인합니다.
           </p>
           <p>
             논문 표기의 비대화형 transcript와 실제 구현의 입력을 같다고
@@ -379,7 +411,11 @@ return π`}</code>
               }
             />
             <CodeViewButton
-              label="Wesolowski 검증 발췌"
+              label="x·y에서 challenge B 만들기"
+              onClick={() => sidebar.open("vdf-get-b", codeRefs["vdf-get-b"])}
+            />
+            <CodeViewButton
+              label="Wesolowski 관계식 검증"
               onClick={() =>
                 sidebar.open(
                   "vdf-wesolowski-verify",
@@ -402,8 +438,10 @@ return π`}</code>
               </p>
               <p>
                 <strong>핵심 기여:</strong> <code>src/vdf.h</code>의 evaluation
-                루프와 <code>proof_common.h</code>·<code>verifier.h</code>의
-                hash-to-prime, remainder, proof equation을 제공합니다.
+                reference/fallback 루프와 <code>proof_common.h</code>·
+                <code>verifier.h</code>의 hash-to-prime, remainder, proof
+                equation을 제공합니다. README는 별도로 최적화 main loop와 내부
+                thread 구성을 설명합니다.
               </p>
               <p>
                 <strong>중요 가정:</strong> 1.1.14 tag의 commit 6c68b95와 같은

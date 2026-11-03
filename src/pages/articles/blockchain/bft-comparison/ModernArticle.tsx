@@ -22,6 +22,9 @@ export default function ModernBFTComparisonArticle() {
         <p className="text-lg leading-8 text-foreground/90">
           앞선 글에서 PBFT의 prepared certificate, HotStuff의 QC 사슬과 pacemaker를 따로 확인했습니다. 이제 Alice의 요청 T1과 주 노드 정지 한 번을 같은 조건에 놓습니다. 비교할 것은 이름이나 논문의 최고 TPS가 아니라, <strong>데이터가 들어오는 위치, 커밋 증거, 장애 뒤 새 주 노드에게 넘기는 상태</strong>입니다.
         </p>
+        <aside className="border-l-2 border-primary bg-primary/5 p-5 text-sm leading-6">
+          <strong>먼저 기억할 한 문장:</strong> 같은 주 노드 장애가 나도 PBFT는 순번별 prepared 증거, HotStuff는 가장 높은 QC의 가지, Autobahn은 계속 자라는 lane의 tip과 cut 증거를 다음 주 노드에게 넘깁니다.
+        </aside>
 
         <BFTSameTraceViz />
 

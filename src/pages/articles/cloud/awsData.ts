@@ -206,15 +206,15 @@ export const awsDeveloperCloudOpsData: CloudCertificationArticleData = {
       "자동 배포도 잘못된 설정을 빠르게 퍼뜨릴 수 있습니다. 작은 비율에 먼저 배포하고 사용자 지표가 나빠지면 중단하며, 이전 산출물과 설정으로 돌아갈 경로를 둡니다.",
     ] },
     { id: "names", level: "3", title: "6. 개발·배포·관측·복구 범위에 시험 이름을 붙입니다", bridge: "공통 실패 처리를 봤습니다. 두 시험의 공식 영역을 역할에 붙입니다.", paragraphs: [
-      "DVA-C02는 AWS 서비스를 이용한 개발, 보안, 배포, 문제 해결과 최적화를 다룹니다. Lambda·API Gateway·DynamoDB·S3·SQS·SNS·EventBridge, SDK, IAM·KMS·Secrets Manager와 배포 도구의 개발자 관점을 봅니다.",
+      "새로 준비한다면 DVA-C03을 기준으로 봅니다. 이 시험은 AWS 서비스를 이용한 개발, 보안, 시험과 배포, 문제 해결과 최적화를 다루며 AI 보조 개발 도구 사용도 포함합니다. 2026년 11월 30일까지 DVA-C02를 응시할 사람만 기존 범위를 따로 확인합니다.",
       "SOA-C03의 현행 명칭은 AWS Certified CloudOps Engineer – Associate입니다. 관측·분석·개선, 신뢰성과 연속성, 배포·프로비저닝·자동화, 보안·규정, 네트워크와 콘텐츠 전달을 운영자 관점에서 다룹니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 현재 업무 기록으로 둘 중 하나를 고릅니다", bridge: "공식 범위를 붙였습니다. 최근 한 달의 작업을 시험 선택으로 바꾸는 절차를 만듭니다.", paragraphs: [
       "최근 한 달의 작업 20개에서 동사를 뽑습니다. 구현·SDK·이벤트·코드 디버깅이 많으면 DVA 쪽 점수를 올리고, 구성·감시·용량·백업·복구·망 진단이 많으면 SOA 쪽 점수를 올립니다.",
       "점수가 비슷하면 지원 공고의 필수 항목과 실습으로 증명하기 어려운 빈칸을 봅니다. 먼저 하나를 끝내고 공통 실습을 다음 시험에 재사용합니다.",
     ] },
-    { id: "source", level: "5", title: "8. DVA-C02는 개발 32%와 보안 26%가 절반을 넘습니다", bridge: "개인 업무로 경로를 골랐습니다. DVA의 공식 비중에 학습 시간을 맞춥니다.", paragraphs: [
-      "DVA-C02의 공식 영역은 AWS 서비스를 이용한 개발 32%, 보안 26%, 배포 24%, 문제 해결과 최적화 18%입니다. 코드 작성만 준비하면 권한·비밀·배포와 관측에서 큰 빈칸이 남습니다.",
+    { id: "source", level: "5", title: "8. DVA-C03은 개발 30%와 보안 26%가 절반을 넘습니다", bridge: "개인 업무로 경로를 골랐습니다. DVA의 공식 비중에 학습 시간을 맞춥니다.", paragraphs: [
+      "DVA-C03의 공식 영역은 AWS 서비스를 이용한 개발 30%, 보안 26%, 시험과 배포 22%, 문제 해결과 최적화 22%입니다. 코드 작성만 준비하면 권한·비밀·배포와 관측에서 큰 빈칸이 남습니다.",
       "실습은 함수 하나보다 이벤트 입력, 데이터 쓰기, 최소 권한, 실패 재시도, 로그와 배포를 한 경로로 연결합니다. 오류를 일부러 내고 SDK 예외와 서비스 로그를 함께 봅니다.",
     ] },
     { id: "comparison", level: "6", title: "9. SOA-C03은 관측·신뢰성·자동화가 각각 22%입니다", bridge: "DVA의 무게 중심을 봤습니다. SOA의 공식 비중과 운영 실습을 비교합니다.", paragraphs: [
@@ -238,7 +238,7 @@ export const awsDeveloperCloudOpsData: CloudCertificationArticleData = {
     { label: "복구", value: "10분", detail: "이전 버전 전환" },
   ] },
   decision: { title: "DVA와 SOA 선택", question: "최근 업무에서 어떤 동사를 더 자주 썼나요?", options: [
-    { signal: "구현·SDK 호출·이벤트 처리·코드 디버깅이 많습니다.", choose: "DVA-C02", why: "애플리케이션이 AWS 서비스를 사용하는 코드 경로가 중심입니다." },
+    { signal: "구현·SDK 호출·이벤트 처리·코드 디버깅이 많습니다.", choose: "DVA-C03", why: "애플리케이션이 AWS 서비스를 사용하는 코드 경로가 중심입니다." },
     { signal: "구성·관측·용량·백업·복구·망 진단이 많습니다.", choose: "SOA-C03", why: "배포된 클라우드 환경의 운영 경로가 중심입니다." },
     { signal: "두 역할을 모두 맡고 지원 공고도 섞여 있습니다.", choose: "공고 빈도 높은 하나부터", why: "공통 실습을 만든 뒤 두 번째 시험에 재사용합니다." },
   ] },
@@ -247,27 +247,27 @@ export const awsDeveloperCloudOpsData: CloudCertificationArticleData = {
     { term: "단계 배포", description: "새 버전을 일부 트래픽이나 자원에 먼저 내고 지표가 좋을 때 범위를 넓히는 방식입니다.", example: "10% 요청에서 오류율을 본 뒤 100%로 올립니다.", boundary: "표본이 작거나 경보가 틀리면 문제를 놓칠 수 있습니다." },
     { term: "드리프트", description: "선언한 구성과 실제 실행 중인 자원 상태가 달라진 상태입니다.", example: "화면에서 연 포트가 IaC 파일에는 없습니다.", boundary: "차이가 모두 오류는 아니지만 검토되지 않은 차이는 재배포 때 사라질 수 있습니다." },
   ] },
-  algorithm: { title: "DVA-C02와 SOA-C03 중 먼저 볼 시험 고르기", input: ["최근 작업 20개", "지원 공고 20개", "구현 경험", "운영 경험"], steps: [
+  algorithm: { title: "DVA-C03과 SOA-C03 중 먼저 볼 시험 고르기", input: ["최근 작업 20개", "지원 공고 20개", "구현 경험", "운영 경험"], steps: [
     { code: "동사 = 최근_작업에서_행동을_뽑는다()", note: "제품 이름보다 구현·배포·관측·복구를 셉니다." },
     { code: "DVA_점수 = 구현 + SDK + 이벤트 + 코드_디버깅", note: "개발 경로의 빈도를 더합니다." },
     { code: "SOA_점수 = 구성 + 관측 + 백업 + 복구 + 망_진단", note: "운영 경로의 빈도를 더합니다." },
     { code: "if 비슷함: 공고_빈도와_경험_빈칸으로_결정", note: "채용 목표와 부족한 증거를 우선합니다." },
     { code: "공통_실습 = 이벤트_API + 단계_배포 + 경보 + 복구", note: "첫 시험 뒤 두 번째 경로에 재사용합니다." },
   ], output: "첫 시험 + 공통 실습 + 다음 시험으로 넘길 항목", repeatUntil: "목표 직무가 바뀌거나 최근 업무 비중이 달라질 때 다시 계산합니다." },
-  examScope: { title: "두 Associate 시험의 공식 무게 중심", asOf: "AWS 공식 DVA-C02·SOA-C03 Exam Guide, 2026년 10월 확인 (DVA-C03은 2026-10-27 등록 개시·DVA-C02는 2026-11-30 마지막 응시)", domains: [
-    { name: "DVA · Development", weight: "32%", focus: "서비스 API와 애플리케이션 기능을 구현합니다." },
-    { name: "DVA · Security/Deploy/Optimize", weight: "68%", focus: "보안 26%, 배포 24%, 문제 해결·최적화 18%를 함께 봅니다." },
+  examScope: { title: "두 Associate 시험의 공식 무게 중심", asOf: "AWS 공식 DVA-C03·SOA-C03 Exam Guide, 2026년 11월 2일 확인 (DVA-C02는 2026-11-30 마지막 응시)", domains: [
+    { name: "DVA · Development", weight: "30%", focus: "서비스 API와 애플리케이션 기능을 구현하고 AI 보조 개발 도구를 활용합니다." },
+    { name: "DVA · Security/Test/Optimize", weight: "70%", focus: "보안 26%, 시험·배포 22%, 문제 해결·최적화 22%를 함께 봅니다." },
     { name: "SOA · Observe/Reliability/Automation", weight: "66%", focus: "관측·개선, 연속성, 프로비저닝·자동화가 각각 22%입니다." },
     { name: "SOA · Security/Network", weight: "34%", focus: "보안·규정 16%, 네트워크·전달 18%를 운영 관점에서 다룹니다." },
   ] },
   currentNotice: {
     label: "2026년 시험 버전·언어 일정",
-    body: "AWS는 Developer – Associate를 DVA-C03으로 갱신한다고 공지했습니다. 2026년 10월 27일부터 DVA-C03 등록이 열리고 DVA-C02는 2026년 11월 30일이 마지막 응시일입니다. 이 글의 네 영역 비중은 DVA-C02 가이드 기준이므로 11월 30일 이후 응시라면 DVA-C03 가이드로 다시 확인합니다. 한국어 SOA-C03 시험은 2026년 11월 19일 이후 폐지되므로, 한국어로 응시하려면 남은 일정을 확인하고 이후 응시라면 영어 시험 준비 기간을 따로 잡습니다.",
-    href: "https://aws.amazon.com/certification/certified-developer-associate/",
+    body: "DVA-C03 등록은 2026년 10월 27일 열렸고 실제 시험 제공은 12월 1일 시작합니다. DVA-C02는 11월 30일이 마지막 응시일입니다. 새로 시작한다면 DVA-C03 가이드를 기준으로 하고, 이미 C02를 준비했다면 남은 일정과 변경 비교표를 확인합니다. 한국어 SOA-C03 시험은 2026년 11월 19일 이후 폐지되므로 이후 응시자는 영어 준비 시간을 따로 잡습니다.",
+    href: "https://aws.amazon.com/blogs/training-and-certification/register-now-updated-developer-associate-and-solutions-architect-professional-exams/",
     linkLabel: "AWS의 DVA-C03 전환·한국어 시험 안내 확인",
   },
   sources: [
-    { source: "AWS · DVA-C02 Exam Guide", excerpt: "Development with AWS Services", application: "SDK·이벤트·서비스 통합을 중심으로 보안·배포·문제 해결을 함께 준비하는 범위로 씁니다.", citation: "AWS Certified Developer – Associate Exam Guide (DVA-C02)", href: "https://docs.aws.amazon.com/pdfs/aws-certification/latest/developer-associate-02/developer-associate-02.pdf", note: "DVA-C02의 대상 역할과 네 영역 비중을 밝힌 AWS 공식 PDF입니다." },
+    { source: "AWS · DVA-C03 Exam Guide", excerpt: "Development with AWS Services", application: "SDK·이벤트·서비스 통합과 AI 보조 개발을 중심으로 보안·시험·배포·문제 해결을 함께 준비하는 범위로 씁니다.", citation: "AWS Certified Developer – Associate Exam Guide (DVA-C03)", href: "https://docs.aws.amazon.com/aws-certification/latest/developer-associate-03/developer-associate-03.html", note: "DVA-C03의 대상 역할과 30%·26%·22%·22% 네 영역 비중을 밝힌 AWS 공식 가이드입니다." },
     { source: "AWS · SOA-C03 Exam Guide", excerpt: "Monitoring, Logging, Analysis, Remediation", application: "관측 화면 암기를 넘어 탐지·진단·조치·검증의 운영 고리를 준비하는 근거로 씁니다.", citation: "AWS Certified CloudOps Engineer – Associate Exam Guide (SOA-C03)", href: "https://docs.aws.amazon.com/pdfs/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.pdf", note: "명칭이 바뀐 SOA-C03의 대상 역할과 다섯 영역 비중을 밝힌 AWS 공식 PDF입니다." },
   ],
   review: [

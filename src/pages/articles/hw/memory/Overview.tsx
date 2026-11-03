@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ContextViz from "./viz/ContextViz";
+import CapacityBudgetViz from "./viz/CapacityBudgetViz";
 
 const axes = [
   [
@@ -71,6 +72,7 @@ export default function Overview() {
             memory bandwidth와 p50·p99 access latency를 workload phase와 함께
             기록합니다.
           </p>
+          <CapacityBudgetViz />
           <p>
             예를 들어 peak RSS 180GiB, OS·cache 24GiB와 동시 job 32GiB를 합치면 236GiB이고 여기에 20% 성장 여유를 적용하면 283.2GiB입니다.
             256GiB 구성은 명목상 애플리케이션 하나를 담더라도 동시 실행에서 page pressure가 생길 수 있으므로 다음 지원 구성으로 올리거나 concurrency를 제한해야
@@ -79,15 +81,15 @@ export default function Overview() {
         </div>
         <div id="paper-amd-memory-population" className="scroll-mt-24">
           <CitationBlock
-            source="AMD EPYC 9005 Architecture Overview"
+            source="AMD EPYC 9005 Memory Population Recommendations"
             citeKey={1}
             type="paper"
-            href="https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/user-guides/58462_amd-epyc-9005-tg-architecture-overview.pdf"
+            href="https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/user-guides/58463_amd-epyc-9005-ug-memory-population-recommendations.pdf"
           >
-            공식 platform guide는 channel 수, DIMM type, DPC와 지원 data rate가
-            CPU 세대와 population에 종속됨을 보여 줍니다. 이 값은 다른 CPU나
-            board에 그대로 옮길 수 없으므로 실제 system manual과 firmware를 함께
-            고정합니다.
+            2026-11-02에 다시 확인한 이 고정 세대 가이드는 12개 UMC와 channel,
+            1DPC·2DPC, 균형 population의 관계를 설명합니다. 9005가 최신 세대라는
+            뜻은 아니며 다른 CPU나 board에는 실제 system manual과 firmware를
+            함께 고정해야 합니다.
           </CitationBlock>
         </div>
       </div>

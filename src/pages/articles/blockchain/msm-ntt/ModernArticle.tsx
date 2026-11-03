@@ -3,15 +3,19 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { MsmNttWorkloadViz } from "./viz/ModernMsmNttViz";
 
-const ICICLE = "https://github.com/ingonyama-zk/icicle/tree/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2";
+const ICICLE = "https://github.com/ingonyama-zk/icicle/tree/6c77775961b0e4dc2be359feec1ac11536c18043";
 const SPPARK = "https://github.com/supranational/sppark/tree/17278d74295392f9813f009300b257a688422b7a";
-const CUDA = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html";
+const CUDA = "https://docs.nvidia.com/cuda/archive/13.4.2/cuda-programming-guide/index.html";
 
 export default function ModernMsmNttArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">ZK workload를 GPU 작업으로 번역하기</p><h2 className="text-3xl font-bold tracking-tight">MSM과 NTT는 모두 크지만, 나눌 수 있는 방향과 기다려야 하는 지점이 다르다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">증명기가 느릴 때 “MSM과 NTT를 GPU로 보낸다”는 말만으로는 구현을 정할 수 없습니다. <strong>MSM</strong>(multi-scalar multiplication, 여러 곡선점의 scalar multiple을 더하는 연산)은 bucket 충돌과 reduction이 있고, <strong>NTT</strong>(number theoretic transform, 유한체 위의 FFT)는 한 stage 안 butterfly는 독립이지만 다음 stage가 이전 결과를 기다립니다. 이 글은 고정된 proof workload에서 두 dependency를 식별하고 routing·resident memory·측정 경계를 정하는 법을 다룹니다.</p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">한 proof의 두 큰 계산을 갈라 보기</p><h2 className="text-3xl font-bold tracking-tight">둘 다 GPU에 올려도 같은 방식으로 나누면 안 된다</h2></header>
+      <p className="text-lg leading-8 text-foreground/90"><strong>하나는 같은 통에 작업이 몰릴 때 기다리고, 다른 하나는 앞줄 계산이 끝날 때까지 기다립니다.</strong> 따라서 memory와 thread 수만 보고 같은 queue로 보내면 병목을 잘못 짚습니다.</p>
+      <div className="space-y-3">
+        <p>같은 통에 작업이 모이는 연산을 <strong>MSM</strong>이라고 부릅니다. Multi-scalar multiplication은 여러 곡선점의 scalar multiple을 더하며, bucket 충돌과 마지막 reduction이 있습니다.</p>
+        <p>앞줄 완료를 기다리는 연산은 <strong>NTT</strong>라고 부릅니다. Number theoretic transform은 유한체 위의 FFT이며, 한 stage의 butterfly는 독립이지만 다음 stage가 이전 결과를 기다립니다. 이 글은 고정 proof workload에서 두 dependency와 routing·resident memory·측정 경계를 정합니다.</p>
+      </div>
       <p>타원곡선 group law와 scalar multiplication은 <a className="text-primary hover:underline" href="/cs/crypto/elliptic-curves#g1-curve">타원곡선 정본</a>, roots of unity와 butterfly 유도는 <a className="text-primary hover:underline" href="/cs/crypto/fft#butterfly">NTT 정본</a>이 소유합니다. 여기서는 그 수학을 반복하지 않고, 같은 입력을 CPU reference와 GPU candidate에 넣어 어느 단계가 병렬화되고 어디서 barrier가 필요한지 연결합니다.</p>
       <MsmNttWorkloadViz />
       <ContentBoundary article="msm-ntt" />
@@ -19,7 +23,10 @@ export default function ModernMsmNttArticle() {
 
     <section id="workload-contract" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Fixed workload</p><h2 className="mt-2 text-2xl font-bold">먼저 points·scalars·polynomials와 representation을 고정한다</h2></header>
-      <p>측정 단위는 “한 proof”처럼 모호하면 안 됩니다. Curve·field·domain size <code>N</code>, MSM 항 수 <code>m</code>, scalar bit length, point coordinate format, batch 수, input seed, SRS와 backend revision을 receipt에 남깁니다. Affine point를 GPU에서 Jacobian으로 바꾸거나 field 값을 Montgomery domain으로 바꾸는 비용도 어느 구간에 포함하는지 밝혀야 합니다.</p>
+      <div className="space-y-3">
+        <p>측정 단위는 “한 proof”처럼 모호하면 안 됩니다. Curve·field·domain size <code>N</code>, MSM 항 수 <code>m</code>, scalar bit length와 point coordinate format을 고정합니다.</p>
+        <p>Batch 수, input seed, SRS와 backend revision도 receipt에 남깁니다. Affine point를 GPU에서 Jacobian으로 바꾸거나 field 값을 Montgomery domain으로 바꾸는 비용이 어느 구간에 들어가는지도 밝힙니다.</p>
+      </div>
       <ExplainedFormula question="MSM이 계산하는 값과 window 분해는 GPU 작업을 어떻게 만든다고 볼 수 있을까?" idea={<>각 scalar를 w-bit digits로 나누면 같은 digit을 가진 points를 bucket에 모을 수 있습니다. Window들은 부분적으로 병렬화할 수 있지만 같은 bucket update와 마지막 weighted reduction은 dependency를 갖습니다.</>} formula={String.raw`\begin{aligned}Q&=\sum_{i=0}^{m-1}[s_i]P_i\\s_i&=\sum_{j=0}^{J-1}d_{i,j}2^{jw}\\J&=\lceil b/w\rceil\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}\underbrace{Q}_{\text{MSM 결과 점}}&=\sum_{i=0}^{m-1}\underbrace{[s_i]P_i}_{\text{scalar배 point}}\\s_i&=\sum_{j=0}^{J-1}\underbrace{d_{i,j}}_{\text{w-bit digit}}\underbrace{2^{jw}}_{\text{window 자리값}}\\\underbrace{J}_{\text{window 수}}&=\lceil b/w\rceil\end{aligned}`}
       operations={[
@@ -41,7 +48,10 @@ export default function ModernMsmNttArticle() {
 
     <section id="parallel-frontier" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Parallel frontier</p><h2 className="mt-2 text-2xl font-bold">MSM은 bucket ownership, NTT는 stage boundary가 병렬화의 경계다</h2></header>
-      <p>MSM에서 thread마다 point를 처리하면 여러 thread가 같은 bucket을 갱신할 수 있습니다. Atomic update, thread-local buckets 뒤 merge, sort·segmented reduction 같은 선택지는 충돌·workspace·extra passes를 서로 바꿉니다. Bucket 합을 만든 뒤에는 큰 digit부터 running sum을 누적하는 weighted reduction이 필요하므로 “point가 독립”이라는 설명만으로 전체 MSM이 embarrassingly parallel이라고 할 수 없습니다.</p>
+      <div className="space-y-3">
+        <p>MSM에서 thread마다 point를 처리하면 여러 thread가 같은 bucket을 갱신할 수 있습니다. Atomic update, thread-local buckets 뒤 merge, sort·segmented reduction은 충돌·workspace·추가 pass를 서로 맞바꿉니다.</p>
+        <p>Bucket 합을 만든 뒤에는 큰 digit부터 running sum을 누적하는 weighted reduction이 필요합니다. 그러므로 “point가 독립”이라는 설명만으로 전체 MSM이 완전히 독립적인 계산이라고 할 수 없습니다.</p>
+      </div>
       <p>Radix-2 NTT의 한 stage에서는 서로 겹치지 않는 pair가 동시에 butterfly를 수행하지만, stage <code>k+1</code>의 입력은 stage <code>k</code>의 output입니다. Block 안에서 끝나는 작은 stage는 shared memory와 block barrier로 묶을 수 있지만 여러 blocks가 참여하는 경계는 kernel launch를 나누거나 cooperative 조건을 검증해야 합니다.</p>
       <ExplainedFormula question="한 NTT butterfly가 어떤 두 값을 만들며 왜 stage 사이에 synchronization이 필요할까?" idea={<>Pair의 두 input에서 하나는 그대로, 다른 하나는 stage별 twiddle로 곱한 뒤 합과 차를 만듭니다. 다음 stage가 이 두 output을 다시 섞으므로 이전 stage 완료가 선행되어야 합니다.</>} formula={String.raw`u'=u+\omega^k v,\qquad v'=u-\omega^k v`}
       annotatedFormula={String.raw`\underbrace{u'}_{\text{합 출력}}=u+\underbrace{\omega^k v}_{\text{twiddle 곱한 짝}},\qquad \underbrace{v'}_{\text{차 출력}}=u-\omega^k v`}
@@ -55,17 +65,16 @@ export default function ModernMsmNttArticle() {
         {symbol:"u',v'",name:"Butterfly outputs",description:"다음 stage가 읽는 두 field elements입니다."},
       ]} assumptions={["Field가 요구한 N-th root를 가지며 addition·subtraction·multiplication은 modulus 안에서 정확합니다.","Index permutation과 twiddle table이 선택한 decimation convention과 일치합니다."]} interpretation="한 stage의 disjoint pairs는 병렬 실행할 수 있지만 같은 buffer의 다음 stage가 먼저 읽으면 race가 생깁니다. 이 식만으로 optimal radix나 memory layout이 결정되지는 않습니다." />
       <p>구체적인 bucket kernel과 butterfly layout은 각각 <a className="text-primary hover:underline" href="/cs/gpu/msm-gpu-impl">MSM GPU 구현</a>, <a className="text-primary hover:underline" href="/cs/gpu/ntt-gpu-impl">NTT GPU 구현</a>에서 이어집니다. 이 글의 역할은 두 구현을 한 proof workload 안에서 같은 비교축에 놓는 것입니다.</p>
-      <div id="paper-icicle-msm-ntt"><CitationBlock type="code" citeKey={1} source="ICICLE v3.9.0 source tree · commit 6b451e6" href={ICICLE}><p><strong>문제:</strong> 여러 curve·field에서 MSM과 NTT를 device backend로 제공해야 합니다.</p><p><strong>핵심 기여:</strong> Version-pinned implementation이 backend abstraction, field/curve specialization과 MSM·NTT API를 함께 보여 줍니다.</p><p><strong>중요 가정:</strong> v3.9.0 commit, 지원 curve·device·configuration과 호출자의 memory ownership을 고정합니다.</p><p><strong>근거 범위:</strong> 링크한 revision의 source structure와 API에 한정합니다.</p><p><strong>일반화 금지:</strong> 모든 GPU·size에서 특정 backend가 빠르거나 production correctness가 자동 보장된다는 뜻은 아닙니다.</p></CitationBlock></div>
+      <div id="paper-icicle-msm-ntt"><CitationBlock type="code" citeKey={1} source="ICICLE v4.0.0 source tree · commit 6c77775" href={ICICLE}><p><strong>문제:</strong> 여러 curve·field에서 MSM과 NTT를 device backend로 제공해야 합니다.</p><p><strong>핵심 기여:</strong> Version-pinned implementation이 backend abstraction, field/curve specialization과 MSM·NTT API를 함께 보여 줍니다.</p><p><strong>중요 가정:</strong> v4.0.0 commit, 지원 curve·device·configuration과 호출자의 memory ownership을 고정합니다. v4는 field와 Rust API가 재설계된 major release입니다.</p><p><strong>근거 범위:</strong> 링크한 revision의 source structure와 API에 한정합니다.</p><p><strong>일반화 금지:</strong> 모든 GPU·size에서 특정 backend가 빠르거나 production correctness가 자동 보장된다는 뜻은 아닙니다.</p></CitationBlock></div>
     </section>
 
     <section id="residency-budget" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Residency</p><h2 className="mt-2 text-2xl font-bold">VRAM 용량보다 동시에 살아 있는 buffer와 transfer critical path를 계산한다</h2></header>
-      <p>
-            MSM은 bases·scalars·buckets·partials, NTT는 coefficients·twiddles·workspace가 필요합니다. 이들을 모두 더한 최대
-            live set이 VRAM을 넘으면 chunking이 필요하지만 chunk마다 immutable bases나 twiddles를 다시 보내면 PCIe traffic이 kernel
-            이득을 삼킬 수 있습니다. 반대로 다음 chunk transfer와 현재 kernel이 서로 다른 copy engine/stream에서 진짜 overlap되는 경우에는 단순
-            합이 아니라 timeline의 가장 긴 경로를 봅니다.
-          </p>
+      <div className="space-y-3">
+        <p>MSM에는 bases와 scalars가 들어오고 buckets와 partials가 중간에 생깁니다.</p>
+        <p>NTT에는 coefficients가 들어오고 twiddles와 workspace가 함께 살아 있습니다. 두 작업의 최대 live set이 VRAM을 넘으면 chunking이 필요합니다.</p>
+        <p>하지만 chunk마다 바뀌지 않는 bases나 twiddles를 다시 보내면 PCIe traffic이 kernel 이득을 삼킬 수 있습니다. 반대로 다음 chunk transfer와 현재 kernel이 서로 다른 copy engine과 stream에서 실제로 겹치면 단순 합이 아니라 timeline의 가장 긴 경로를 봅니다.</p>
+      </div>
       <ExplainedFormula question="Proof workload의 device resident byte와 겹친 실행 시간을 어떻게 상한으로 잡을까?" idea={<>동시에 살아 있는 allocations만 합하고, 겹치지 않는 dependency 경로는 더하되 transfer와 compute가 실제로 겹치는 구간은 더 큰 쪽을 critical path로 둡니다.</>} formula={String.raw`\begin{aligned}B_{live}&=B_P+B_s+B_{poly}\\&\quad+B_{tw}+B_{work}\\T_{chunk}&\approx\max(T_{H2D},T_{kernel})\\&\quad+T_{barrier}\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}\underbrace{B_{live}}_{\text{동시 생존 bytes}}&=\underbrace{B_P+B_s+B_{poly}}_{\text{point·scalar·poly}}\\&\quad+\underbrace{B_{tw}+B_{work}}_{\text{twiddle·scratch}}\\T_{chunk}&\approx\underbrace{\max(T_{H2D},T_{kernel})}_{\text{겹친 전송·연산}}\\&\quad+\underbrace{T_{barrier}}_{\text{직렬 경계}}\end{aligned}`}
       operations={[
@@ -87,16 +96,17 @@ export default function ModernMsmNttArticle() {
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Reference parity를 통과한 뒤 stage별 achieved traffic과 end-to-end proof를 잰다</h2></header>
-      <p>
-            0·1·odd 항 수, zero scalar, identity point, repeated bucket, 최대 scalar, NTT impulse, forward→inverse
-            round trip과 unsupported domain을 먼저 검사합니다. 그다음 context/module warm-up 뒤 같은 stream events로 kernel
-            chain을 측정하고 end-to-end에는 H2D·D2H·synchronization·proof assembly를 포함합니다. Occupancy 하나가 높아졌다는 이유로
-            채택하지 않고 achieved bandwidth, useful field/point operations, actual bytes, stalls와 median/p95를 함께
-            보존합니다.
-          </p>
-      <p>예를 들어 MSM candidate가 kernel-only 2배 빨라도 bases를 매번 옮겨 proof latency가 같다면 residency나 batch 전략이 먼저입니다. NTT candidate가 한 size에서 빨라도 unsupported root, inverse normalization 또는 coset fixture에서 틀리면 즉시 탈락합니다. GPU OOM·driver error·backend mismatch 때 CPU fallback이 같은 output을 내는지와 timeout·rollback도 운영 계약에 포함합니다.</p>
-      <div id="paper-cuda-execution-model"><CitationBlock type="code" citeKey={3} source="NVIDIA CUDA C++ Programming Guide 12.8.1" href={CUDA}><p><strong>문제:</strong> Kernel launch, memory hierarchy, synchronization과 concurrent execution의 공식 의미가 필요합니다.</p><p><strong>핵심 기여:</strong> Grid·block·thread, memory scope, stream ordering과 device capability 계약을 제공합니다.</p><p><strong>중요 가정:</strong> CUDA Toolkit 12.8.1 archive와 실제 compute capability·driver를 함께 고정합니다.</p><p><strong>근거 범위:</strong> CUDA programming semantics와 documented capabilities입니다.</p><p><strong>일반화 금지:</strong> 규격이 특정 MSM·NTT mapping의 정확성이나 성능 우위를 보장하지 않습니다.</p></CitationBlock></div>
+      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">정답이 같은 후보의 전체 시간을 잰다</h2></header>
+      <div className="space-y-3">
+        <p>먼저 MSM은 항 수 0·1·홀수, zero scalar, identity point, repeated bucket과 최대 scalar를 검사합니다. NTT는 impulse, forward→inverse round trip과 unsupported domain을 검사합니다.</p>
+        <p>그다음 context와 module을 warm-up하고 같은 stream의 events로 kernel chain을 잽니다. End-to-end에는 H2D·D2H·synchronization·proof assembly를 포함합니다. Occupancy 하나만 보지 않고 achieved bandwidth, useful field/point operations, actual bytes, stalls와 median·p95를 함께 보존합니다.</p>
+      </div>
+      <div className="space-y-3">
+        <p>MSM candidate의 kernel이 2배 빨라도 bases를 매번 옮겨 proof latency가 같다면, kernel 교체보다 residency나 batch 전략을 먼저 고칩니다.</p>
+        <p>NTT candidate가 한 size에서 빨라도 unsupported root, inverse normalization 또는 coset fixture에서 틀리면 즉시 탈락합니다.</p>
+        <p>GPU OOM, driver error와 backend mismatch 때 CPU fallback이 같은 output을 내는지도 확인합니다. Timeout과 rollback은 이 fallback과 함께 운영 계약에 넣습니다.</p>
+      </div>
+      <div id="paper-cuda-execution-model"><CitationBlock type="code" citeKey={3} source="NVIDIA CUDA Programming Guide 13.4.2" href={CUDA}><p><strong>문제:</strong> Kernel launch, memory hierarchy, synchronization과 concurrent execution의 공식 의미가 필요합니다.</p><p><strong>핵심 기여:</strong> Grid·block·thread, memory scope, stream ordering과 device capability 계약을 제공합니다.</p><p><strong>중요 가정:</strong> CUDA Toolkit 13.4.2 archive와 실제 compute capability·driver를 함께 고정합니다.</p><p><strong>근거 범위:</strong> CUDA programming semantics와 documented capabilities입니다.</p><p><strong>일반화 금지:</strong> 규격이 특정 MSM·NTT mapping의 정확성이나 성능 우위를 보장하지 않습니다.</p></CitationBlock></div>
       <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">역검사:</strong> 이 글만으로 reader는 두 연산의 입력·dependency를 구분하고, b=8,w=2 window 수와 butterfly pair를 설명하며, live bytes·overlap 반례를 계산하고, correctness-first paired benchmark와 fallback gate를 설계할 수 있어야 합니다.</aside>
     </section>
   </article>;

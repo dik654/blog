@@ -10,44 +10,46 @@ const OPENCL = "https://registry.khronos.org/OpenCL/specs/3.0-unified/html/OpenC
 export default function ModernEcGpuGenArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Field type에서 실행 artifact까지</p><h2 className="text-3xl font-bold tracking-tight">ec-gpu-gen은 곡선 공식을 발명하는 도구가 아니라, 검증된 parameter를 backend source에 특수화하는 build pipeline이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90"><strong>ec-gpu-gen</strong>은 Rust field/curve type을 받아 CUDA 또는 OpenCL용 finite-field·elliptic-curve kernel을 생성합니다. 같은 add·multiply·FFT·multiexponentiation template라도 modulus, limb count, Montgomery constants와 curve type이 달라지므로, 사람이 복사한 상수를 여러 kernel에 흩뿌리는 대신 한 typed source에서 artifact를 만듭니다.</p>
-      <p>Field arithmetic의 정확성 자체는 <a className="text-primary hover:underline" href="/cs/crypto/field-arithmetic">field 정본</a>, GPU point mapping은 <a className="text-primary hover:underline" href="/cs/gpu/ec-gpu-ops">EC GPU ops</a>가 소유합니다. 이 글은 parameter specialization, generated artifact provenance, CUDA/OpenCL parity와 codegen release gate에 집중합니다.</p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Field type에서 실행 artifact까지</p><h2 className="text-3xl font-bold tracking-tight">한 번 고른 field 값을 CUDA와 OpenCL 커널에 똑같이 넣는 빌드 파이프라인</h2></header>
+      <p className="text-lg leading-8 text-foreground/90"><strong>ec-gpu-gen</strong>은 새로운 곡선 공식을 만드는 도구가 아닙니다. Rust 타입이 건넨 field 값을 이미 검토된 연산 틀에 채우고, CUDA 또는 OpenCL이 실행할 소스로 바꾸는 도구입니다.</p>
+      <p>Bellperson의 실제 <code>build.rs</code> 한 건을 보겠습니다. 이 파일은 Scalar FFT, G1 MSM, G2 MSM을 요청합니다. ec-gpu-gen은 필요한 field를 한 번씩만 모으고, 같은 요청에서 CUDA fatbin과 OpenCL source를 만듭니다. 아래 그림의 다섯 단계를 따라가면 이 글의 결론이 먼저 잡힙니다.</p>
+      <p>여기서 곧 꼬리 질문이 생깁니다. “같은 field인데 왜 backend마다 배열 모양이 달라지는가?”, “같은 Program API라면 결과도 같은가?”, “코드가 생성됐다는 사실만으로 증명이 맞다고 할 수 있는가?” 이후 절은 이 세 질문에 답합니다.</p>
       <EcGpuGenArtifactViz />
       <ContentBoundary article="ec-gpu-gen" />
     </section>
 
     <section id="parameter-contract" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Parameter contract</p><h2 className="mt-2 text-2xl font-bold">GpuField adapter가 제공하는 값과 generator가 유도하는 값을 구분한다</h2></header>
-      <p>Pinned interface의 <code>GpuName</code>/<code>GpuField</code> boundary는 GPU-safe type 이름과 little-endian u32 words의 <code>one</code>, <code>r2</code>, <code>modulus</code>, optional subfield를 제공합니다. Curve coefficient나 generator 좌표까지 trait가 모두 제공한다고 설명하면 실제 API와 다릅니다. Generator는 이 snapshot과 backend limb width에서 필요한 derived constants를 만듭니다.</p>
-      <p>
-            CUDA와 OpenCL이 허용하는 limb width도 같다고 가정하면 안 됩니다. Pinned source에서 CUDA는 32-bit limbs, OpenCL
-            generated source는 64-bit limbs를 사용하며 prime의 most-significant bit가 unset이라는 reduction 전제를 둡니다. 따라서
-            새 field를 추가할 때 modulus만 바꾸는 것이 아니라 top-bit, limb packing, derived constants와 reference vectors를 함께
-            검증합니다.
-          </p>
-      <ExplainedFormula question="Modulus p와 backend limb width w에서 representation constants는 어떻게 정해질까?" idea={<>p를 담을 최소 limb 수 L을 정한 뒤 radix R을 limb capacity로 두고, normal residue를 Montgomery domain으로 옮길 R²와 낮은 word cancellation constant를 준비합니다.</>} formula={String.raw`\begin{aligned}L&=\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil\\R&=2^{wL}\\R_2&=R^2\bmod p\\p'&=-p_0^{-1}\bmod 2^w\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}L&=\underbrace{\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil}_{\text{p를 담을 limb 수}}\\R&=\underbrace{2^{wL}}_{\text{limb 전체 용량}}\\R_2&=\underbrace{R^2\bmod p}_{\text{Montgomery 진입 상수}}\\p'&=\underbrace{-p_0^{-1}\bmod 2^w}_{\text{낮은 word 소거 상수}}\end{aligned}`}
+      <header><p className="text-sm font-semibold text-primary">01 · 입력 계약</p><h2 className="mt-2 text-2xl font-bold">입력으로 받은 값과 생성기가 계산한 값을 먼저 나눈다</h2></header>
+      <p>고정한 소스의 <code>GpuField</code>는 이름과 <code>one</code>, <code>r2</code>, <code>modulus</code>를 little-endian <code>u32</code> 배열로 제공합니다. 확장 field라면 하위 field 이름도 줍니다. 곡선 계수나 생성점 좌표까지 이 trait가 모두 준다고 말하면 실제 API와 다릅니다.</p>
+      <p>더 중요한 경계가 있습니다. 생성기는 <code>R²</code>를 다시 계산하지 않습니다. 입력의 <code>r2</code> 배열을 그대로 32-bit word로 쓰거나 두 개씩 묶어 64-bit word로 만듭니다. 반면 Montgomery reduction에 쓰는 <code>INV</code>는 modulus의 낮은 word에서 backend 폭마다 계산합니다.</p>
+      <ExplainedFormula question="u32 word 8개인 입력은 두 backend에서 어떻게 달라질까?" idea={<>CUDA 경로는 32-bit word를 그대로 쓰고, OpenCL 경로는 인접한 두 word를 little-endian 64-bit limb 하나로 묶습니다. 값은 같고 source의 배열 모양만 달라집니다.</>} formula={String.raw`\begin{aligned}L_{32}&=n=8\\L_{64}&=n/2=4\\q_j&=m_{2j}+2^{32}m_{2j+1}\\\operatorname{INV}_w&=-p_0^{-1}\bmod 2^w\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}L_{32}&=\underbrace{n}_{\text{입력 u32 word 수}}=8\\L_{64}&=\underbrace{n/2}_{\text{두 word를 한 limb로}}=4\\q_j&=\underbrace{m_{2j}+2^{32}m_{2j+1}}_{\text{little-endian pair packing}}\\\operatorname{INV}_w&=\underbrace{-p_0^{-1}\bmod 2^w}_{\text{backend 폭별로 계산}}\end{aligned}`}
       operations={[
-  { expression: String.raw`\left\lceil\frac{\operatorname{bitlen}(p)}{w}\right\rceil`, annotation: ["modulus bit 수를 backend word 폭으로 나눠","올림합니다","254 bit: CUDA w=32→8, w=64→4"] },
-  { expression: String.raw`2^{wL}`, annotation: ["L개 limb가 표현하는 전체 용량을","Montgomery radix R로 씁니다"] },
-  { expression: String.raw`R^2\bmod p`, annotation: ["normal residue a에 곱해 aR mod p로","옮길 때 쓰는 변환 상수입니다"] },
-  { expression: String.raw`-p_0^{-1}\bmod 2^w`, annotation: ["p의 최하위 word 역원의 음수로","word별 reduction에서 low limb를 0으로","backend마다 w가 달라 따로 생성"] },
+  { expression: String.raw`L_{32}=n=8`, annotation: ["GpuField가 준 u32 배열 길이 n을","32-bit limb 수로 그대로 씁니다"] },
+  { expression: String.raw`L_{64}=n/2=4`, annotation: ["u32 두 개를 u64 하나로 묶으므로","입력 길이는 짝수여야 합니다"] },
+  { expression: String.raw`m_{2j}+2^{32}m_{2j+1}`, annotation: ["낮은 word를 아래 32bit에 두고","다음 word를 위 32bit에 둡니다"] },
+  { expression: String.raw`-p_0^{-1}\bmod 2^w`, annotation: ["낮은 modulus limb의 역원으로","reduction에서 low limb를 없앱니다","w=32와 w=64는 각각 다시 계산합니다"] },
 ]} terms={[
-        {symbol:"p",name:"Prime modulus",description:"GpuField가 제공하는 field identity의 modulus입니다."},
-        {symbol:"w",name:"Backend limb width",description:"CUDA path는 32, OpenCL generated path는 64 bits를 사용합니다."},
-        {symbol:"L",name:"Limb count",description:"p를 담는 backend words 개수입니다."},
-        {symbol:"R",name:"Montgomery radix",description:"전체 limb capacity의 2의 거듭제곱입니다."},
-        {symbol:"R_2",name:"Conversion constant",description:"Normal residue를 Montgomery representation으로 옮길 때 쓰는 R² mod p입니다."},
-        {symbol:"p_0",name:"Low modulus limb",description:"p의 가장 낮은 w-bit word입니다."},
-        {symbol:"p'",name:"Cancellation constant",description:"Word-by-word reduction에서 low limb를 없애는 modular inverse constant입니다."},
-      ]} assumptions={["p는 odd prime이고 inverse가 존재하며 pinned implementation의 top-bit 전제를 만족합니다.","Montgomery 유도 자체는 field 정본을 재사용하고 여기서는 generator input/output contract만 다룹니다."]} interpretation="bitlen(p)=254이면 CUDA w=32에서 L=8, OpenCL w=64에서 L=4입니다. 같은 field라도 backend source layout이 다르며 constants를 손으로 복사하지 않습니다." />
+        {symbol:"n",name:"Input word count",description:"GpuField가 돌려준 u32 배열의 길이입니다."},
+        {symbol:"m_i",name:"Input word",description:"Little-endian 순서의 i번째 32-bit word입니다."},
+        {symbol:"q_j",name:"Packed limb",description:"인접한 u32 두 개를 묶은 j번째 64-bit limb입니다."},
+        {symbol:"L_w",name:"Backend limb count",description:"폭 w인 source가 사용하는 limb 수입니다."},
+        {symbol:"p_0",name:"Low modulus limb",description:"폭 w로 포장한 modulus의 가장 낮은 limb입니다."},
+        {symbol:String.raw`\operatorname{INV}_w`,name:"Cancellation constant",description:"Word별 Montgomery reduction에서 낮은 limb를 없애는 값입니다."},
+      ]} assumptions={["one·r2·modulus 배열 길이가 서로 같고 64-bit 경로에서는 짝수입니다.","p는 홀수라서 낮은 limb의 2^w에 대한 역원이 존재합니다.","이 식은 commit 16d38ef의 packing 경로를 설명하며 임의 구현의 최소 limb 계산식이 아닙니다."]} interpretation="이 예에서는 CUDA source가 32-bit limb 8개를, OpenCL source가 같은 256bit를 64-bit limb 4개로 표현합니다. R² 값은 입력에서 왔고 INV만 backend 폭에 맞춰 새로 계산됩니다." />
       <div id="paper-ec-gpu-interface"><CitationBlock type="code" citeKey={1} source="ec-gpu GpuField interface · commit 16d38ef" href={`${ECGPU}/ec-gpu/src/lib.rs`}><p><strong>문제:</strong> Rust field type과 generator 사이의 최소 parameter boundary가 필요합니다.</p><p><strong>핵심 기여:</strong> Pinned <code>GpuName</code>/<code>GpuField</code> methods와 word serialization contract를 정의합니다.</p><p><strong>중요 가정:</strong> Commit 16d38ef의 interface와 implementing field revision을 고정합니다.</p><p><strong>근거 범위:</strong> Trait가 실제 제공하는 parameter surface입니다.</p><p><strong>일반화 금지:</strong> Trait 구현이 constants의 정확성·curve security를 자동 증명하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="codegen" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Source specialization</p><h2 className="mt-2 text-2xl font-bold">SourceBuilder가 field·FFT·multiexp capability를 중복 없이 조립한다</h2></header>
-      <p>공식 revision의 quickstart는 <code>SourceBuilder::new().add_field::&lt;Scalar&gt;().build_64_bit_limbs()</code>처럼 field type을 등록합니다. Integration에서는 <code>build.rs</code>가 <code>add_fft</code>·<code>add_multiexp</code> 같은 capability를 고른 뒤 <code>generate</code>를 호출합니다. 즉 “curve 이름 문자열” 하나가 아니라 어떤 base/extension field와 operation family를 생성했는지가 artifact interface입니다.</p>
+      <header><p className="text-sm font-semibold text-primary">02 · Source 조립</p><h2 className="mt-2 text-2xl font-bold">요청한 연산만 넣고, 겹치는 field는 한 번만 만든다</h2></header>
+      <p>Bellperson의 고정 <code>build.rs</code>는 <code>add_fft::&lt;Scalar&gt;()</code>, <code>add_multiexp::&lt;G1Affine, Fp&gt;()</code>, <code>add_multiexp::&lt;G2Affine, Fp2&gt;()</code>를 차례로 호출합니다. <code>add_multiexp</code>는 좌표 field와 scalar field도 함께 등록합니다. 이미 들어간 field는 이름 기준 집합에서 중복이 제거됩니다.</p>
+      <pre className="overflow-x-auto rounded-xl border border-border bg-muted/35 p-4 text-sm leading-6"><code>{`let source_builder = SourceBuilder::new()
+    .add_fft::<Scalar>()
+    .add_multiexp::<G1Affine, Fp>()
+    .add_multiexp::<G2Affine, Fp2>();
+
+ec_gpu_gen::generate(&source_builder);`}</code></pre>
+      <p>따라서 artifact의 입력은 “BLS12-381” 같은 이름 하나가 아닙니다. 어떤 field와 연산 묶음을 등록했는지, 어느 ec-gpu revision의 template을 썼는지, 어떤 compiler와 target을 골랐는지가 모두 결과를 바꿉니다.</p>
       <ExplainedFormula question="생성된 kernel artifact의 identity에는 어떤 입력이 모두 들어가야 할까?" idea={<>Field 값뿐 아니라 template revision, operation set, backend, compiler flags와 target architecture가 달라지면 실행 artifact도 달라집니다. 이 tuple을 hash해 cache와 benchmark의 key로 사용합니다.</>} formula={String.raw`K=H(F,\,C,\,O,\,R_t,\,B,\,V_c,\,A,\,\Phi)`}
       annotatedFormula={String.raw`K=H(\underbrace{F,\,C}_{\text{field·curve 값}},\,\underbrace{O,\,R_t}_{\text{연산 set·template}},\,\underbrace{B,\,V_c,\,A,\,\Phi}_{\text{backend·compiler·target·flags}})`}
       operations={[
@@ -69,9 +71,10 @@ export default function ModernEcGpuGenArticle() {
     </section>
 
     <section id="artifact-lifecycle" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Artifact lifecycle</p><h2 className="mt-2 text-2xl font-bold">Generated source뿐 아니라 compiler output과 resolved configuration을 보존한다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">03 · Artifact 생애주기</p><h2 className="mt-2 text-2xl font-bold">생성 소스와 컴파일 결과를 함께 보존한다</h2></header>
       <p>공식 integration에서 CUDA는 build 과정에 fatbin을 만들고, OpenCL은 source를 생성해 runtime에 compile합니다. 생성 경로는 내부 환경 변수로 artifact 위치를 전달하고 <code>program!</code> macro가 device별 program을 만듭니다. 그러므로 “같은 Rust binary”만 기록하면 OpenCL driver가 만든 binary, 선택된 device와 runtime options를 재현할 수 없습니다.</p>
-      <p>Build log에는 field/curve type, ec-gpu commit, Cargo feature set, generated source digest, compiler command·stderr와 artifact digest를 남깁니다. Runtime log에는 backend, device UUID/name, driver, loaded artifact key, kernel entry names와 fallback reason을 남깁니다. Build 실패를 빈 source나 오래된 cache로 조용히 대체하지 않고 명시적으로 fail하거나 승인된 CPU fallback으로 전환합니다.</p>
+      <p>Build log에는 field/curve type, ec-gpu commit, Cargo feature set을 남깁니다. 생성한 source digest, compiler command·stderr, artifact digest도 같은 기록에 묶습니다.</p>
+      <p>Runtime log에는 backend, device UUID/name, driver, loaded artifact key를 남깁니다. Kernel entry와 fallback 이유도 기록합니다. Build 실패를 빈 source나 오래된 cache로 숨기지 않고, 실패시키거나 승인된 CPU 경로로 전환합니다.</p>
       <ExplainedFormula question="Codegen 변경이 전체 실행 시간에 이득인지 build·startup·steady-state를 어떻게 나눌까?" idea={<>Build-time compile, 첫 program creation, 반복 kernel 실행은 서로 다른 사용자가 지불합니다. 배포 빈도와 process lifetime을 고정해 amortized cost를 계산합니다.</>} formula={String.raw`T_{amort}=\frac{T_{build}}{D}+\frac{T_{startup}}{R}+T_{steady}`}
       annotatedFormula={String.raw`T_{amort}=\underbrace{\frac{T_{build}}{D}}_{\text{build 비용 분담}}+\underbrace{\frac{T_{startup}}{R}}_{\text{초기화 비용 분담}}+\underbrace{T_{steady}}_{\text{warm 실행}}`}
       operations={[
@@ -90,33 +93,27 @@ export default function ModernEcGpuGenArticle() {
     </section>
 
     <section id="runtime-dispatch" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Runtime dispatch</p><h2 className="mt-2 text-2xl font-bold">CUDA와 OpenCL은 unified Program 뒤에 있지만 artifact lifecycle은 다르다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">04 · Runtime 선택</p><h2 className="mt-2 text-2xl font-bold">같은 Program API라도 검증은 backend마다 따로 한다</h2></header>
       <p>ec-gpu는 <code>cuda</code>와 <code>opencl</code> feature를 지원하고, 둘 다 활성화되면 runtime framework selection을 제공합니다. 그러나 CUDA fatbin과 OpenCL runtime source compile은 artifact lifecycle이 다르며, integer overflow·shift·address-space·work-group semantics가 source 언어와 compiler에서 같다는 보장도 없습니다.</p>
-      <p>
-            Parity test는 CPU reference, CUDA, OpenCL에 같은 canonical field/point vectors를 넣고 output을 canonical
-            form으로 decode해 비교합니다. 0·p−1·carry chain, invalid/noncanonical input, infinity·doubling, FFT round
-            trip, MSM zero/repeated points와 unsupported device를 포함합니다. Backend별 work-group/block size가 달라도 결과와
-            failure class는 같아야 합니다. 하나가 성공하고 다른 하나가 silently truncates하면 release하지 않습니다.
-          </p>
+      <p>Parity test는 CPU, CUDA, OpenCL에 같은 field와 point 입력을 넣습니다. 출력은 canonical form으로 되돌린 뒤 비교합니다.</p>
+      <ul className="list-disc space-y-2 pl-6">
+        <li>Field: 0, p−1, 긴 carry, canonical 범위 밖의 입력</li>
+        <li>Point: 무한원점, doubling, 같은 점과 반대점</li>
+        <li>연산: FFT 왕복, MSM의 0 scalar와 반복 point</li>
+        <li>실패: 지원하지 않는 device, compile 오류, 메모리 부족</li>
+      </ul>
+      <p>Block과 work-group 크기가 달라도 값과 실패 종류는 같아야 합니다. 한 backend만 성공하거나 값을 조용히 잘라 내면 release하지 않습니다.</p>
       <div id="paper-ec-gpu-program-dispatch"><CitationBlock type="code" citeKey={4} source="ec-gpu program dispatch · commit 16d38ef" href={`${ECGPU}/ec-gpu-gen/src/program.rs`}><p><strong>문제:</strong> Feature-supported backend를 고르고 embedded artifact로 device program을 만들어야 합니다.</p><p><strong>핵심 기여:</strong> Pinned <code>program!</code> path의 environment/device selection과 CUDA load·OpenCL compile branches를 보여 줍니다.</p><p><strong>중요 가정:</strong> Embedded artifacts, enabled features와 available device/backend가 일치합니다.</p><p><strong>근거 범위:</strong> 링크 revision의 runtime dispatch behavior입니다.</p><p><strong>일반화 금지:</strong> CUDA/OpenCL numerical parity, driver quality나 같은 성능을 보장하지 않습니다.</p></CitationBlock></div>
       <div id="paper-opencl-api"><CitationBlock type="code" citeKey={5} source="Khronos OpenCL 3.0 Unified Specification" href={OPENCL}><p><strong>문제:</strong> OpenCL program build, kernel, memory와 command-queue semantics가 필요합니다.</p><p><strong>핵심 기여:</strong> OpenCL 3.0 API contract와 feature query boundary를 정의합니다.</p><p><strong>중요 가정:</strong> 실제 platform이 광고한 version과 optional features를 runtime에 조회합니다.</p><p><strong>근거 범위:</strong> OpenCL API와 execution semantics입니다.</p><p><strong>일반화 금지:</strong> CUDA와 bit-identical code generation이나 같은 성능을 보장하지 않습니다.</p></CitationBlock></div>
       <div id="paper-bellperson-ec-gpu-build"><CitationBlock type="code" citeKey={6} source="bellperson build integration · commit 728306c" href={`${BELLPERSON}/build.rs`}><p><strong>문제:</strong> Consumer prover가 Scalar FFT와 G1/G2 multiexp sources를 build에 포함해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned build script의 실제 SourceBuilder integration을 보여 줍니다.</p><p><strong>중요 가정:</strong> Commit 728306c, selected Cargo features와 matching ec-gpu dependency를 고정합니다.</p><p><strong>근거 범위:</strong> Bellperson의 build-time capability registration입니다.</p><p><strong>일반화 금지:</strong> Prover 시간 비율, 고정 speedup이나 현재 production deployment를 주장하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Parameter diff에서 proof parity·rollback까지 한 변경 단위로 검증한다</h2></header>
-      <p>
-            새 field/curve 또는 compiler flag를 넣으면 먼저 generated constants와 source digest를 review하고 CPU vectors를
-            통과시킵니다. 그다음 지원 GPU마다 clean build와 cache-hit build를 나누고 CUDA/OpenCL/CPU output과 failure parity를
-            검사합니다. 마지막으로 fixed proof workload에서 build, cold startup, warm kernel, H2D/D2H, synchronization,
-            peak memory와 end-to-end median/p95를 기록합니다.
-          </p>
-      <p>
-            Release artifact에는 crate/source SHA, compiler·driver, target architecture, generated source/fatbin
-            digest와 proof verification receipt를 붙입니다. Unknown device, compiler error, OOM, concurrent program
-            conflict에서는 typed error와 승인된 CPU fallback을 사용하고 이전 artifact key로 되돌릴 수 있어야 합니다. 코드 생성 성공은 proof
-            correctness가 아니며 independent verifier 성공이 마지막 gate입니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">05 · Release gate</p><h2 className="mt-2 text-2xl font-bold">값 변경부터 proof 검증과 rollback까지 한 묶음으로 확인한다</h2></header>
+      <p>새 field나 compiler flag를 넣으면 먼저 생성된 상수와 source digest를 검토합니다. CPU 기준 벡터를 통과한 다음, 지원 GPU마다 clean build와 cache-hit build를 나눠 확인합니다.</p>
+      <p>고정 proof workload에서는 build, cold startup, warm kernel을 따로 잽니다. H2D/D2H, synchronization, peak memory, end-to-end median과 p95도 기록합니다.</p>
+      <p>Release artifact에는 crate/source SHA, compiler·driver, target architecture를 붙입니다. 생성 source/fatbin digest와 proof verification 영수증도 포함합니다.</p>
+      <p>지원하지 않는 device, compiler 오류, OOM, 동시 실행 충돌에는 구분 가능한 오류를 반환합니다. 승인된 CPU fallback과 이전 artifact key로 되돌리는 경로도 둡니다. 코드 생성 성공이 아니라 독립 verifier 성공이 마지막 관문입니다.</p>
       <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">역검사:</strong> Reader는 SourceBuilder→artifact→program 흐름을 설명하고, artifact key와 amortized 150ms 예를 계산하며, CUDA/OpenCL parity fixture와 provenance·fallback·rollback release gate를 설계할 수 있어야 합니다.</aside>
     </section>
   </article>;

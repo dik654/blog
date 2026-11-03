@@ -1,22 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { Hotstuff2CommitViz, Hotstuff2EntryViz, Hotstuff2FailureTable } from "./viz/ModernHotstuff2Viz";
-
-const VIEW_ENTRY_PSEUDOCODE = [
-  "// 직전 view의 이중 인증서가 있으면 곧바로 제안 단계로 갑니다.",
-  "if doubleCertificate.view == currentView - 1:",
-  "    enter_without_wait()",
-  "else:",
-  "    // 그렇지 않으면 각 복제본이 가장 높은 잠금 인증서를 보냅니다.",
-  "    send_locked_certificate_to_leader()",
-  "",
-  "    // GST 뒤 모든 정상 복제본의 보고가 도착할 시간을 보장합니다.",
-  "    wait(Ppc + delta)",
-  "",
-  "// 보고서 묶음이 아니라 가장 높은 인증서 하나로 부모를 정합니다.",
-  "parentCertificate = highest_valid_certificate(receivedLocks)",
-  "propose(child_of(parentCertificate.block), parentCertificate)",
-].join("\n");
+import { Hotstuff2CommitViz, Hotstuff2EntryDecisionViz, Hotstuff2EntryViz, Hotstuff2FailureTable } from "./viz/ModernHotstuff2Viz";
 
 export default function ModernHotstuff2Article() {
   return (
@@ -92,10 +76,7 @@ export default function ModernHotstuff2Article() {
         <p>
           Ppc는 pacemaker가 정상 복제본을 같은 view로 모으는 데 허용하는 시간 차이입니다. 논문이 예로 든 RareSync와 Lewis-Pye 계열에서는 Ppc = 2Δ로 둡니다. GST 전에는 이 시간이 실제 전달을 보장하지 않으므로 진행이 멈출 수 있습니다. 그러나 어떤 경우에도 복제본은 제안의 인증서가 자신의 lock보다 낮으면 투표하지 않습니다.
         </p>
-        <div className="not-prose overflow-x-auto border border-border bg-muted/20 p-4">
-          <p className="mb-3 text-xs font-bold text-muted-foreground">HotStuff-2 Figure 1·2의 view 진입을 풀어 쓴 의사 코드</p>
-          <pre className="min-w-[48rem] text-xs leading-6"><code>{VIEW_ENTRY_PSEUDOCODE}</code></pre>
-        </div>
+        <Hotstuff2EntryDecisionViz />
         <div id="paper-hotstuff2-pacemaker">
           <CitationBlock source="HotStuff-2 §4 · Pacemaker and view entry" citeKey={2} href="https://eprint.iacr.org/2023/397.pdf#page=5">
             <p><strong>문제:</strong> 이전 주 노드가 실패했을 때 숨은 높은 lock을 놓치지 않으면서 정상 주 노드가 이어지는 경로는 매번 Δ를 기다리지 않아야 합니다.</p>

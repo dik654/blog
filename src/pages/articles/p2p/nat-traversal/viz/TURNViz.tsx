@@ -1,208 +1,318 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
-  { label: "Allocate", desc: "Peer A가 TURN 서버에 릴레이 주소 할당 요청" },
-  { label: "Permission", desc: "Peer B의 IP를 허용 목록에 등록" },
-  { label: "Data Relay", desc: "A → TURN → B: 모든 데이터가 TURN 서버를 경유" },
   {
-    label: "양방향 중계",
-    desc: "B → TURN → A: 역방향도 relay 경유. 추가 지연은 topology에서 측정",
+    label: "인증한 Alice가 relay address를 빌립니다",
+    body: "Allocate 성공 response는 192.0.2.44:55000 같은 relayed transport address와 실제 lifetime을 돌려줍니다. 기본 lifetime은 600초입니다.",
   },
-];
+  {
+    label: "Bob의 IP에 permission을 만듭니다",
+    body: "CreatePermission 또는 ChannelBind로 198.51.100.10을 허용합니다. Permission은 port가 아니라 peer IP 단위이며 lifetime은 300초입니다.",
+  },
+  {
+    label: "직접 경로 대신 relay가 packet을 전달합니다",
+    body: "Alice의 application data는 TURN server를 거쳐 Bob에게 갑니다. 경로가 하나 더 생기므로 지연과 server bandwidth를 실제 topology에서 측정해야 합니다.",
+  },
+  {
+    label: "Allocation과 permission을 따로 갱신합니다",
+    body: "Data를 보냈다고 allocation timer가 자동 갱신되지는 않습니다. Alice는 Refresh와 permission 갱신을 제때 보내고, 필요 없으면 lifetime 0으로 allocation을 지웁니다.",
+  },
+] as const;
 
-const C = { a: "#6366f1", turn: "#10b981", b: "#ec4899" };
+const COLORS = {
+  alice: "#4f46e5",
+  relay: "#0891b2",
+  bob: "#059669",
+  timer: "#d97706",
+  muted: "#64748b",
+};
+
+function ArrowDefs() {
+  return (
+    <defs>
+      <marker
+        id="turn-arrow"
+        viewBox="0 0 8 8"
+        markerWidth="8"
+        markerHeight="8"
+        refX="6"
+        refY="4"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0 0 L8 4 L0 8 Z" fill="context-stroke" />
+      </marker>
+    </defs>
+  );
+}
 
 export default function TURNViz() {
-  const [step, setStep] = useState(0);
-  const s = STEPS[step];
-
   return (
-    <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-      <p className="text-xs font-mono text-foreground/50">TURN Relay 흐름</p>
-      <svg
-        viewBox="0 0 360 100"
-        className="w-full max-w-2xl"
-        style={{ height: "auto" }}
-      >
-        {/* Nodes */}
-        <rect
-          x={20}
-          y={35}
-          width={60}
-          height={28}
-          rx={5}
-          fill={C.a + "12"}
-          stroke={C.a}
-          strokeWidth={1.25}
-        />
-        <text
-          x={50}
-          y={53}
-          textAnchor="middle"
-          fontSize={10}
-          fontWeight={600}
-          fill={C.a}
+    <StepViz steps={STEPS}>
+      {(step) => (
+        <svg
+          viewBox="0 0 500 190"
+          aria-label="TURN relay allocation과 permission lifecycle"
         >
-          Peer A
-        </text>
+          <ArrowDefs />
 
-        <rect
-          x={150}
-          y={20}
-          width={60}
-          height={28}
-          rx={5}
-          fill={C.turn + "12"}
-          stroke={C.turn}
-          strokeWidth={1.25}
-        />
-        <text
-          x={180}
-          y={38}
-          textAnchor="middle"
-          fontSize={10}
-          fontWeight={600}
-          fill={C.turn}
-        >
-          TURN
-        </text>
-
-        <rect
-          x={280}
-          y={35}
-          width={60}
-          height={28}
-          rx={5}
-          fill={C.b + "12"}
-          stroke={C.b}
-          strokeWidth={1.25}
-        />
-        <text
-          x={310}
-          y={53}
-          textAnchor="middle"
-          fontSize={10}
-          fontWeight={600}
-          fill={C.b}
-        >
-          Peer B
-        </text>
-
-        {/* Allocate arrow */}
-        {step >= 0 && (
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <line
-              x1={80}
-              y1={42}
-              x2={150}
-              y2={34}
-              stroke={C.a}
-              strokeWidth={1.25}
-            />
-            {step === 0 && (
-              <>
-                <rect
-                  x={92}
-                  y={26}
-                  width={48}
-                  height={12}
-                  rx={2}
-                  fill="var(--card)"
-                />
-                <text
-                  x={116}
-                  y={35}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fill={C.a}
-                >
-                  Allocate
-                </text>
-              </>
-            )}
-          </motion.g>
-        )}
-        {/* Data relay A→TURN→B */}
-        {step >= 2 && (
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <line
-              x1={80}
-              y1={49}
-              x2={150}
-              y2={40}
-              stroke={C.a}
-              strokeWidth={1.25}
-            />
-            <line
-              x1={210}
-              y1={40}
-              x2={280}
-              y2={49}
-              stroke={C.turn}
-              strokeWidth={1.25}
-            />
-            <motion.circle
-              initial={false}
-              r={3}
-              fill={C.a}
-              animate={{ cx: [80, 150, 210, 280], cy: [49, 40, 40, 49] }}
-              transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 0.6 }}
-            />
-          </motion.g>
-        )}
-        {/* Reverse relay B→TURN→A */}
-        {step >= 3 && (
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <line
-              x1={280}
-              y1={56}
-              x2={210}
-              y2={48}
-              stroke={C.b}
-              strokeWidth={1}
-              strokeDasharray="4 3"
-            />
-            <line
-              x1={150}
-              y1={48}
-              x2={80}
-              y2={56}
-              stroke={C.turn}
-              strokeWidth={1}
-              strokeDasharray="4 3"
-            />
-            <rect
-              x={130}
-              y={60}
-              width={100}
-              height={14}
-              rx={3}
-              fill="var(--card)"
-            />
-            <text
-              x={180}
-              y={70}
-              textAnchor="middle"
-              fontSize={10}
-              fill={C.turn}
-            >
-              양방향 relay path
-            </text>
-          </motion.g>
-        )}
-      </svg>
-      <div className="flex gap-1.5">
-        {STEPS.map((_, i) => (
-          <div
-            key={i}
-            onClick={() => setStep(i)}
-            className={`h-1 flex-1 rounded-full cursor-pointer transition-colors ${i <= step ? "bg-primary" : "bg-border"}`}
+          <rect
+            x="12"
+            y="69"
+            width="104"
+            height="44"
+            rx="8"
+            fill={`${COLORS.alice}10`}
+            stroke={COLORS.alice}
           />
-        ))}
-      </div>
-      <p className="text-xs font-semibold text-center">{s.label}</p>
-      <p className="text-[11px] text-foreground/60 text-center">{s.desc}</p>
-    </div>
+          <text
+            x="64"
+            y="88"
+            textAnchor="middle"
+            fontSize="11"
+            fontWeight="700"
+            fill={COLORS.alice}
+          >
+            Alice
+          </text>
+          <text
+            x="64"
+            y="103"
+            textAnchor="middle"
+            fontSize="9"
+            fill={COLORS.alice}
+          >
+            TURN client
+          </text>
+
+          <rect
+            x="190"
+            y="42"
+            width="120"
+            height="98"
+            rx="10"
+            fill={`${COLORS.relay}0d`}
+            stroke={COLORS.relay}
+          />
+          <text
+            x="250"
+            y="63"
+            textAnchor="middle"
+            fontSize="11"
+            fontWeight="700"
+            fill={COLORS.relay}
+          >
+            TURN server
+          </text>
+          <text
+            x="250"
+            y="82"
+            textAnchor="middle"
+            fontSize="9"
+            fill={COLORS.relay}
+          >
+            relay 192.0.2.44:55000
+          </text>
+          <text
+            x="250"
+            y="101"
+            textAnchor="middle"
+            fontSize="9"
+            fill={step >= 1 ? COLORS.bob : COLORS.muted}
+          >
+            permission 198.51.100.10
+          </text>
+          <text
+            x="250"
+            y="120"
+            textAnchor="middle"
+            fontSize="9"
+            fill={COLORS.timer}
+          >
+            allocation timer 600s
+          </text>
+
+          <rect
+            x="384"
+            y="69"
+            width="104"
+            height="44"
+            rx="8"
+            fill={`${COLORS.bob}10`}
+            stroke={COLORS.bob}
+          />
+          <text
+            x="436"
+            y="88"
+            textAnchor="middle"
+            fontSize="11"
+            fontWeight="700"
+            fill={COLORS.bob}
+          >
+            Bob
+          </text>
+          <text
+            x="436"
+            y="103"
+            textAnchor="middle"
+            fontSize="9"
+            fill={COLORS.bob}
+          >
+            198.51.100.10
+          </text>
+
+          {step === 0 && (
+            <>
+              <line
+                x1="116"
+                y1="80"
+                x2="180"
+                y2="70"
+                stroke={COLORS.alice}
+                strokeWidth="1.2"
+                markerEnd="url(#turn-arrow)"
+              />
+              <text
+                x="150"
+                y="59"
+                textAnchor="middle"
+                fontSize="9.5"
+                fontWeight="700"
+                fill={COLORS.alice}
+              >
+                Allocate
+              </text>
+              <line
+                x1="190"
+                y1="112"
+                x2="126"
+                y2="102"
+                stroke={COLORS.relay}
+                strokeWidth="1.2"
+                markerEnd="url(#turn-arrow)"
+              />
+              <text
+                x="150"
+                y="130"
+                textAnchor="middle"
+                fontSize="9"
+                fill={COLORS.relay}
+              >
+                relayed address
+              </text>
+            </>
+          )}
+
+          {step === 1 && (
+            <>
+              <line
+                x1="116"
+                y1="91"
+                x2="180"
+                y2="91"
+                stroke={COLORS.alice}
+                strokeWidth="1.2"
+                markerEnd="url(#turn-arrow)"
+              />
+              <text
+                x="150"
+                y="80"
+                textAnchor="middle"
+                fontSize="9.5"
+                fontWeight="700"
+                fill={COLORS.alice}
+              >
+                permission
+              </text>
+              <rect
+                x="178"
+                y="151"
+                width="144"
+                height="27"
+                rx="6"
+                fill={`${COLORS.bob}0d`}
+                stroke={COLORS.bob}
+              />
+              <text
+                x="250"
+                y="168"
+                textAnchor="middle"
+                fontSize="9.5"
+                fill={COLORS.bob}
+              >
+                peer IP 허용 · 300s
+              </text>
+            </>
+          )}
+
+          {step === 2 && (
+            <>
+              <line
+                x1="116"
+                y1="91"
+                x2="180"
+                y2="91"
+                stroke={COLORS.alice}
+                strokeWidth="1.2"
+                markerEnd="url(#turn-arrow)"
+              />
+              <line
+                x1="310"
+                y1="91"
+                x2="374"
+                y2="91"
+                stroke={COLORS.relay}
+                strokeWidth="1.2"
+                markerEnd="url(#turn-arrow)"
+              />
+              <circle cx="144" cy="91" r="4" fill={COLORS.alice} />
+              <circle cx="342" cy="91" r="4" fill={COLORS.relay} />
+              <text
+                x="250"
+                y="163"
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="700"
+                fill={COLORS.relay}
+              >
+                application data: Alice → relay → Bob
+              </text>
+            </>
+          )}
+
+          {step === 3 && (
+            <>
+              <line
+                x1="116"
+                y1="91"
+                x2="180"
+                y2="91"
+                stroke={COLORS.timer}
+                strokeWidth="1.2"
+                markerEnd="url(#turn-arrow)"
+              />
+              <rect
+                x="162"
+                y="151"
+                width="176"
+                height="27"
+                rx="6"
+                fill={`${COLORS.timer}0d`}
+                stroke={COLORS.timer}
+              />
+              <text
+                x="250"
+                y="168"
+                textAnchor="middle"
+                fontSize="9.5"
+                fill={COLORS.timer}
+              >
+                Refresh 전송 · data만으로 갱신 안 됨
+              </text>
+            </>
+          )}
+        </svg>
+      )}
+    </StepViz>
   );
 }

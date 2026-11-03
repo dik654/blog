@@ -2,152 +2,120 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: interpretation — 같은 조문에도 확실한 안쪽·확실한 바깥·회색 지대가 있다 */
 const SCENES = [
-  "확실히 걸리는 것이 있다",
-  "확실히 안 걸리는 것도 있다",
-  "그 사이가 회색 지대다",
-  "회색은 무엇으로 메우는가",
+  "확실히 걸리는 사례가 있습니다",
+  "확실히 벗어나는 사례도 있습니다",
+  "그 사이에서 해석이 시작됩니다",
+  "근거를 넓혀 가며 답을 찾습니다",
 ] as const;
 
 const NOTES = [
-  "조문은 공원에 차량을 들이지 말라고만 적혀 있습니다. 승용차가 걸린다는 데는 아무도 다투지 않습니다. 이런 사안은 해석이랄 것이 없습니다.",
-  "유모차를 밀고 들어가는 사람이 걸리지 않는다는 데도 다툼이 없습니다. 조문의 뜻이 정해져 있는 구간이 양쪽에 있다는 뜻입니다.",
-  "문제는 사이입니다. 자전거·전동 휠체어·응급차·기념물로 세워 둘 옛 전차는 조문만 읽어서는 정해지지 않습니다. 이 구간이 넓으냐 좁으냐가 명확성 조건의 실제 내용입니다.",
-  "회색을 메우는 도구는 네 가지이고 순서가 있습니다. 문언에서 시작해 체계와 목적을 보고, 그래도 남으면 만들 때의 기록을 봅니다. 뒤로 갈수록 판단하는 쪽의 몫이 커집니다.",
+  "공원에 차량 출입을 금지했다면 승용차와 화물차는 문장만으로도 적용 대상이라고 판단하기 쉽습니다.",
+  "보행자와 반려견은 차량이 아닙니다. 모든 사례가 회색인 것이 아니라 양쪽 끝에는 비교적 확실한 구간이 있습니다.",
+  "자전거·전동 휠체어·응급차·전시용 전차는 말 하나만으로 답하기 어렵습니다. 이 중간 구간에서 해석이 필요합니다.",
+  "먼저 문언과 조문이 놓인 체계를 확인하고, 필요하면 목적·연혁·입법 자료까지 함께 봅니다. 다만 도구의 우선순위와 무게는 법체계와 사건에 따라 다릅니다.",
 ] as const;
 
-const OK = "#10b981";
-const WARN = "#ef4444";
-const AMBER = "#f59e0b";
-const MUTED = "#94a3b8";
-const ACCENT = "#6366f1";
-
-const CORE = ["승용차", "화물차", "오토바이"] as const;
-const OUTSIDE = ["유모차", "보행자", "반려견"] as const;
-const GRAY = ["자전거", "전동 휠체어", "응급차", "기념 전차"] as const;
+const ZONES = [
+  {
+    title: "확실히 걸림",
+    items: "승용차 · 화물차 · 오토바이",
+    style: "border-rose-500/40 bg-rose-500/[0.07] text-rose-700 dark:text-rose-300",
+  },
+  {
+    title: "해석이 필요한 사이",
+    items: "자전거 · 전동 휠체어 · 응급차 · 전시용 전차",
+    style: "border-amber-500/50 bg-amber-500/[0.08] text-amber-800 dark:text-amber-300",
+  },
+  {
+    title: "확실히 벗어남",
+    items: "유모차 · 보행자 · 반려견",
+    style: "border-emerald-500/40 bg-emerald-500/[0.07] text-emerald-700 dark:text-emerald-300",
+  },
+] as const;
 
 const TOOLS = [
-  { label: "문언", detail: "쓰인 말의 통상적 뜻" },
-  { label: "체계", detail: "같은 법의 다른 조문과의 관계" },
-  { label: "목적", detail: "그 조문이 막으려던 것" },
-  { label: "입법 기록", detail: "만들 때 무엇을 염두에 뒀는가" },
+  ["1", "문언", "쓰인 말의 통상적 의미"],
+  ["2", "체계", "같은 법과 다른 법의 관계"],
+  ["3", "목적·연혁", "왜 만들었고 어떻게 바뀌었는지"],
+  ["4", "입법 자료", "만들 때 남은 기록"],
 ] as const;
 
-const X0 = 32;
-const SPAN = 416;
-
 export default function InterpretationCoreViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 4200);
   const step = scenes.active;
 
   return (
     <VizFrame
-      eyebrow="해석"
-      title="조문에는 뜻이 정해진 구간과 정해지지 않은 구간이 함께 있습니다"
-      description="해석이 필요한지가 아니라 어디서부터 필요한지가 문제입니다."
-      note="'공원에 차량 출입 금지'는 법철학에서 오래 쓰여 온 예입니다. 어떤 사안이 회색에 들어가는지는 그 사회의 통상적 용법에 따라 달라집니다."
+      documentFlow
+      eyebrow="문장에서 사건으로"
+      title="해석은 모든 곳이 아니라 두 끝 사이에서 시작됩니다"
+      description="같은 조문의 적용 대상도 확실한 안쪽, 다투는 중간, 확실한 바깥으로 나뉩니다."
+      note="'공원에 차량 출입 금지'는 법철학에서 오래 쓰인 사고실험입니다. 실제 단어의 범위는 법령 정의와 사회의 통상적 용법에 따라 달라집니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="조문의 확실한 구간과 회색 지대"
+        aria-label="공원 차량 금지 조문의 확실한 적용 구간과 해석이 필요한 구간"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="min-h-[52rem] py-1 sm:min-h-[30rem]">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
+            장면 {step + 1} / {SCENES.length}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+          <h4 className="mt-2 text-base font-bold text-foreground">{SCENES[step]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <text x={X0} y={24} fontSize={9.5} fontWeight={700} fill={ACCENT}>
-                조문 · 공원에 차량 출입 금지
-              </text>
+          <p className="mt-4 rounded-xl border border-border bg-muted/35 px-4 py-3 text-sm font-bold text-foreground">
+            조문 · 공원에 차량 출입 금지
+          </p>
 
-              <rect x={X0} y={38} width={SPAN * 0.3} height={30} fill={WARN} fillOpacity={step === 0 ? 0.2 : 0.07} stroke={WARN} strokeWidth={1} />
-              <rect x={X0 + SPAN * 0.3} y={38} width={SPAN * 0.4} height={30} fill={AMBER} fillOpacity={step >= 2 ? 0.2 : 0.05} stroke={AMBER} strokeWidth={1} strokeDasharray="4 3" />
-              <rect x={X0 + SPAN * 0.7} y={38} width={SPAN * 0.3} height={30} fill={OK} fillOpacity={step === 1 ? 0.2 : 0.07} stroke={OK} strokeWidth={1} />
-
-              <text x={X0 + SPAN * 0.15} y={57} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={WARN}>
-                확실히 걸림
-              </text>
-              <text x={X0 + SPAN * 0.5} y={57} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={AMBER}>
-                회색 지대
-              </text>
-              <text x={X0 + SPAN * 0.85} y={57} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={OK}>
-                확실히 안 걸림
-              </text>
-
-              {step === 0 &&
-                CORE.map((item, i) => (
-                  <text key={item} x={X0 + 8} y={92 + i * 16} fontSize={9.5} fontWeight={700} fill={WARN}>
-                    {item}
-                  </text>
-                ))}
-
-              {step === 1 &&
-                OUTSIDE.map((item, i) => (
-                  <text key={item} x={X0 + SPAN * 0.7 + 8} y={92 + i * 16} fontSize={9.5} fontWeight={700} fill={OK}>
-                    {item}
-                  </text>
-                ))}
-
-              {step === 2 &&
-                GRAY.map((item, i) => (
-                  <text key={item} x={X0 + SPAN * 0.3 + 10} y={92 + i * 16} fontSize={9.5} fontWeight={700} fill={AMBER}>
-                    {item}
-                  </text>
-                ))}
-
-              {step === 2 && (
-                <text x={X0} y={162} fontSize={9} fontWeight={700} fill={AMBER}>
-                  이 구간이 얼마나 넓으냐가 명확성 조건의 실제 내용입니다
-                </text>
-              )}
-
-              {step < 2 && (
-                <text x={X0} y={162} fontSize={9} fill={MUTED}>
-                  양쪽 끝에서는 조문만 읽어도 답이 정해집니다
-                </text>
-              )}
-
-              {step === 3 && (
-                <g>
-                  {TOOLS.map((tool, i) => (
-                    <g key={tool.label}>
-                      <rect x={X0 + i * 106} y={86} width={98} height={34} rx={4} fill={ACCENT} fillOpacity={0.09} stroke={ACCENT} strokeWidth={1} />
-                      <text x={X0 + i * 106 + 49} y={101} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={ACCENT}>
-                        {i + 1}. {tool.label}
-                      </text>
-                      <text x={X0 + i * 106 + 49} y={113} textAnchor="middle" fontSize={7} fill={MUTED}>
-                        {tool.detail}
-                      </text>
-                    </g>
-                  ))}
-                  <text x={X0} y={144} fontSize={9} fontWeight={700} fill={WARN}>
-                    뒤로 갈수록 판단하는 쪽의 몫이 커집니다
-                  </text>
-                  <text x={X0} y={162} fontSize={9} fill={MUTED}>
-                    그래서 형벌 조문에서는 마지막 도구로 처벌 범위를 넓히는 것이 금지됩니다
-                  </text>
-                </g>
-              )}
-            </svg>
+          <div className="mt-3 grid min-w-0 grid-cols-1 gap-2 md:grid-cols-3">
+            {ZONES.map((zone, index) => {
+              const active =
+                (step === 0 && index === 0) ||
+                (step === 1 && index === 2) ||
+                (step >= 2 && index === 1);
+              return (
+                <div
+                  key={zone.title}
+                  className={`min-w-0 rounded-xl border p-3 transition-opacity ${zone.style} ${active ? "opacity-100 ring-2 ring-primary/25" : "opacity-55"}`}
+                >
+                  <p className="text-sm font-black">{zone.title}</p>
+                  <p className="mt-2 text-xs leading-5">{zone.items}</p>
+                </div>
+              );
+            })}
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          {step === 3 ? (
+            <ol className="mt-4 grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2">
+              {TOOLS.map(([number, label, detail]) => (
+                <li key={number} className="flex min-w-0 gap-3 rounded-xl border border-primary/25 bg-primary/[0.05] p-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-black text-primary-foreground">
+                    {number}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-black text-foreground">{label}</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <div className="mt-4 rounded-xl border border-dashed border-border px-4 py-3 text-sm leading-6 text-muted-foreground">
+              {step < 2
+                ? "양쪽 끝에서는 조문과 사실을 맞대는 것만으로 답이 비교적 선명합니다."
+                : "중간에 들어온 사례만 다음 장면의 해석 근거를 더 확인해야 합니다."}
+            </div>
+          )}
+
+          <p className="mt-4 border-l-2 border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
             {NOTES[step]}
           </p>
         </div>
+
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

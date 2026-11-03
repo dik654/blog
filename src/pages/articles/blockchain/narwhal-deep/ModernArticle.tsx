@@ -1,39 +1,12 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { NarwhalBatchTraceViz, NarwhalFailureViz, NarwhalStateViz } from "./viz/ModernNarwhalViz";
+import { NarwhalBatchTraceViz, NarwhalFailureViz, NarwhalStateViz, NarwhalVerificationPseudocodeViz } from "./viz/ModernNarwhalViz";
 
 function BoundaryNote({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border border-border bg-card p-4">
       <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       <div className="mt-2 text-sm leading-6 text-muted-foreground">{children}</div>
-    </div>
-  );
-}
-
-function NarwhalSketch() {
-  return (
-    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
-      <pre><code>{`// Worker가 원문 바이트를 저장하고 식별자를 만듭니다.
-digest = hash(batch)
-store[(digest, worker_id)] = batch
-
-// 동료 workers의 저장 확인 power가 정족수에 닿을 때까지 기다립니다.
-if ack_power >= quorum:
-    notify_primary(digest, worker_id)
-
-// Primary는 원문 대신 위치와 이전 라운드 인증서를 묶습니다.
-header = sign(epoch, round, author, payload, parents)
-
-// 부모나 원문이 없으면 투표하지 않고 가져온 뒤 다시 처리합니다.
-if missing_parents(header) or missing_payload(header):
-    suspend_and_fetch(header)
-
-// 같은 작성자·라운드의 다른 헤더에 이미 투표했다면 거부합니다.
-if voted_for_different_digest(author, round):
-    reject_second_vote()
-
-vote(header)`}</code></pre>
     </div>
   );
 }
@@ -49,6 +22,9 @@ export default function ModernNarwhalArticle() {
         <p className="text-lg leading-8 text-foreground/90">
           <a className="font-semibold text-primary underline-offset-4 hover:underline" href="/cs/blockchain/dag-consensus#narwhal">앞선 DAG 합의 지도</a>에서는 거래 T1이 인증·정렬·실행되는 전체 경로를 봤습니다. 이 글은 그중 데이터 인증 구간만 확대합니다. 네 검증자 A·B·C·D와 배치 d7 하나를 따라가며 worker 저장 확인과 primary 투표가 왜 별도 단계인지 확인합니다.
         </p>
+        <aside className="border-l-2 border-primary bg-primary/5 p-5 text-sm leading-6">
+          <strong>먼저 기억할 한 문장:</strong> Narwhal은 거래 원문을 여러 worker에 먼저 보관시키고, 그 위치와 부모를 적은 작은 header에 별도의 정족수 투표를 받아 나중에 원문을 되찾을 근거를 만듭니다.
+        </aside>
 
         <NarwhalBatchTraceViz />
 
@@ -79,7 +55,7 @@ export default function ModernNarwhalArticle() {
           보관된 구현의 <code>Processor</code>는 배치 원문을 해시해 저장한 뒤 digest를 내보냅니다. <code>QuorumWaiter</code>는 동료 worker들의 응답 power와 자기 power를 합산해 committee 정족수에 도달한 뒤에만 그 배치를 다음 경로로 넘깁니다. 따라서 primary가 digest를 받았다는 사건은 단순한 “로컬 파일 생성”보다 강하지만, 아직 primary 헤더 투표 정족수는 아닙니다.
         </p>
 
-        <NarwhalSketch />
+        <NarwhalVerificationPseudocodeViz />
 
         <div id="paper-narwhal-worker-e67">
           <CitationBlock

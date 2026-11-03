@@ -3,129 +3,189 @@ import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
   {
-    label: "레코드 헤더",
-    body: "ContentType(1B) + ProtocolVersion(2B) + Length(2B). 총 5바이트 헤더.",
+    label: "먼저 숨길 평문을 한 덩어리로 만듭니다",
+    body: "HTTP content 뒤에 실제 content type과 선택한 수의 0 패딩을 붙입니다. 패딩은 인증 태그 뒤가 아니라 암호화될 TLSInnerPlaintext 안에 있습니다.",
   },
   {
-    label: "암호화 페이로드",
-    body: "AEAD로 암호화된 Fragment. 인증 태그(16B)가 무결성 보장.",
+    label: "평문 전체를 AEAD로 보호합니다",
+    body: "방향별 key와 여섯 번째 nonce를 쓰고, 공개 헤더는 additional data로 인증합니다. encrypted_record에는 암호문과 AEAD 확장분이 함께 들어갑니다.",
   },
   {
-    label: "Padding",
-    body: "패딩 바이트 추가로 실제 레코드 크기 은닉. 트래픽 분석 방어.",
+    label: "네트워크에서는 헤더와 encrypted_record만 보입니다",
+    body: "outer type은 application_data, legacy version은 0x0303입니다. 실제 type과 패딩은 암호문 안에 있지만 전체 길이와 전송 시각은 보입니다.",
   },
-];
+] as const;
 
-const sp = { type: "spring" as const, bounce: 0.12, duration: 0.5 };
 const C = {
-  hdr: "#6366f1",
-  payload: "#10b981",
-  tag: "#f59e0b",
+  header: "#2563eb",
+  content: "#059669",
+  type: "#7c3aed",
   pad: "#64748b",
+  encrypted: "#d97706",
 };
-
-const FIELDS = [
-  { x: 20, w: 44, label: "Content\nType", sub: "1 byte", c: C.hdr },
-  { x: 68, w: 64, label: "Protocol\nVersion", sub: "2 bytes", c: C.hdr },
-  { x: 136, w: 50, label: "Length", sub: "2 bytes", c: C.hdr },
-  {
-    x: 190,
-    w: 140,
-    label: "Encrypted Fragment",
-    sub: "variable",
-    c: C.payload,
-  },
-  { x: 334, w: 52, label: "Auth Tag", sub: "16 bytes", c: C.tag },
-  { x: 390, w: 50, label: "Padding", sub: "0+ bytes", c: C.pad },
-];
 
 export default function TLSRecordViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
         <svg
-          viewBox="0 0 460 100"
+          viewBox="0 0 460 164"
           className="w-full max-w-2xl"
-          style={{ height: "auto" }}
+          aria-label="TLSInnerPlaintext가 TLSCiphertext로 보호되는 구조"
         >
-          {FIELDS.map((f, i) => {
-            const group = i < 3 ? 0 : i < 5 ? 1 : 2;
-            const active = group === step;
-            return (
-              <motion.g
-                key={i}
-                animate={{ opacity: active ? 1 : 0.25 }}
-                transition={sp}
-              >
-                <rect
-                  x={f.x}
-                  y={20}
-                  width={f.w}
-                  height={36}
-                  rx={4}
-                  fill={f.c + "12"}
-                  stroke={f.c}
-                  strokeWidth={1}
-                />
-                {f.label.split("\n").map((line, li) => (
-                  <text
-                    key={li}
-                    x={f.x + f.w / 2}
-                    y={34 + li * 10}
-                    textAnchor="middle"
-                    fontSize={10}
-                    fontWeight={600}
-                    fill={f.c}
-                  >
-                    {line}
-                  </text>
-                ))}
-                <text
-                  x={f.x + f.w / 2}
-                  y={70}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fill={f.c}
-                  opacity={0.6}
-                >
-                  {f.sub}
-                </text>
-              </motion.g>
-            );
-          })}
-          {/* Bracket labels */}
-          <motion.g animate={{ opacity: step === 0 ? 1 : 0.2 }} transition={sp}>
-            <line
-              x1={20}
-              y1={82}
-              x2={186}
-              y2={82}
-              stroke={C.hdr}
-              strokeWidth={1}
-            />
-            <text x={103} y={94} textAnchor="middle" fontSize={10} fill={C.hdr}>
-              5-byte Header
-            </text>
-          </motion.g>
-          <motion.g animate={{ opacity: step === 1 ? 1 : 0.2 }} transition={sp}>
-            <line
-              x1={190}
-              y1={82}
-              x2={386}
-              y2={82}
-              stroke={C.payload}
-              strokeWidth={1}
+          <text x="16" y="13" fontSize="11" fontWeight="700" fill="currentColor">
+            전송되는 TLSCiphertext
+          </text>
+          <motion.g
+            animate={{ opacity: step === 0 ? 0.28 : 1 }}
+            transition={{ duration: 0.18 }}
+          >
+            <rect
+              x="16"
+              y="22"
+              width="138"
+              height="42"
+              rx="6"
+              fill={C.header + "16"}
+              stroke={C.header}
             />
             <text
-              x={288}
-              y={94}
+              x="85"
+              y="38"
               textAnchor="middle"
-              fontSize={10}
-              fill={C.payload}
+              fontSize="11"
+              fontWeight="700"
+              fill={C.header}
             >
-              AEAD Encrypted
+              공개 헤더 · 5B
+            </text>
+            <text
+              x="85"
+              y="52"
+              textAnchor="middle"
+              fontSize="9.5"
+              fill={C.header}
+            >
+              type 23 · 0x0303 · length
+            </text>
+            <rect
+              x="160"
+              y="22"
+              width="284"
+              height="42"
+              rx="6"
+              fill={C.encrypted + "16"}
+              stroke={C.encrypted}
+              strokeWidth={step === 2 ? 1.8 : 1}
+            />
+            <text
+              x="302"
+              y="38"
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="700"
+              fill={C.encrypted}
+            >
+              encrypted_record
+            </text>
+            <text
+              x="302"
+              y="52"
+              textAnchor="middle"
+              fontSize="9.5"
+              fill={C.encrypted}
+            >
+              암호문 + AEAD 인증 태그
             </text>
           </motion.g>
+
+          <text x="16" y="91" fontSize="11" fontWeight="700" fill="currentColor">
+            암호화 직전 TLSInnerPlaintext
+          </text>
+          <motion.g
+            animate={{ opacity: step === 2 ? 0.28 : 1 }}
+            transition={{ duration: 0.18 }}
+          >
+            <rect
+              x="16"
+              y="100"
+              width="250"
+              height="36"
+              rx="6"
+              fill={C.content + "16"}
+              stroke={C.content}
+            />
+            <text
+              x="141"
+              y="122"
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="700"
+              fill={C.content}
+            >
+              content · HTTP 바이트
+            </text>
+            <rect
+              x="272"
+              y="100"
+              width="72"
+              height="36"
+              rx="6"
+              fill={C.type + "16"}
+              stroke={C.type}
+            />
+            <text
+              x="308"
+              y="116"
+              textAnchor="middle"
+              fontSize="9.5"
+              fontWeight="700"
+              fill={C.type}
+            >
+              inner type
+            </text>
+            <text
+              x="308"
+              y="128"
+              textAnchor="middle"
+              fontSize="9.5"
+              fill={C.type}
+            >
+              1B
+            </text>
+            <rect
+              x="350"
+              y="100"
+              width="94"
+              height="36"
+              rx="6"
+              fill={C.pad + "16"}
+              stroke={C.pad}
+            />
+            <text
+              x="397"
+              y="116"
+              textAnchor="middle"
+              fontSize="9.5"
+              fontWeight="700"
+              fill={C.pad}
+            >
+              zero padding
+            </text>
+            <text x="397" y="128" textAnchor="middle" fontSize="9.5" fill={C.pad}>
+              선택 길이
+            </text>
+          </motion.g>
+          <text
+            x="230"
+            y="154"
+            textAnchor="middle"
+            fontSize="9.5"
+            fill="currentColor"
+            opacity="0.65"
+          >
+            AEAD(key, nonce, 공개 헤더, content ∥ inner type ∥ zeros)
+          </text>
         </svg>
       )}
     </StepViz>

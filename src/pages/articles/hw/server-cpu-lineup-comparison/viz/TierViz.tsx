@@ -19,7 +19,7 @@ const MUTED = "#94a3b8";
 const TIERS = [
   { n: "서버", c: SRV, core: 0.9, lane: 1.0, ch: 1.0, mgmt: true },
   { n: "워크스테이션", c: WS, core: 0.75, lane: 1.0, ch: 0.67, mgmt: false },
-  { n: "고성능 데스크톱", c: HED, core: 0.7, lane: 0.375, ch: 0.5, mgmt: false },
+  { n: "고성능 데스크톱", c: HED, core: 0.7, lane: 0.625, ch: 0.5, mgmt: false },
 ];
 
 export default function TierViz() {

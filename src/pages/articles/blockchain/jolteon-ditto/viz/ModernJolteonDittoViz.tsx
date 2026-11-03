@@ -33,13 +33,13 @@ const TIMEOUT_NOTES = TIMEOUT_STATES.map((state) => `${state.title} ${state.guar
 const FALLBACK_LABELS = ["Timeout 3개", "Proof 전파", "Ack·더 높은 QC", "MVBA 입력", "유효성 검사", "MVBA 결정", "정상 경로 복귀"] as const;
 
 const FALLBACK_STATES = [
-  { title: "같은 view의 timeout 3개를 받은 복제본이 fallback을 엽니다.", state: "fallback=true · vcur=v+1", traffic: "Timeout에는 현재 view의 서명 조각과 qchigh가 들어 있습니다.", result: "한 복제본의 로컬 timeout만으로는 열리지 않습니다." },
-  { title: "각 복제본이 새 view와 자신의 qchigh를 담은 proof 메시지를 모든 복제본에게 보냅니다.", state: "proof(vcur, qchigh)", traffic: "후보 블록을 만들기 전에 다른 정상 복제본의 잠금 상태와 비교합니다.", result: "아직 MVBA를 호출하지 않습니다." },
-  { title: "받은 QC가 내 qchigh보다 낮지 않으면 ack하고, 더 낮으면 내가 아는 높은 QC를 돌려줍니다.", state: "ack share 또는 higherQC", traffic: "Proof 서명 3개가 모이거나 더 높은 QC를 하나 받으면 다음 단계로 갑니다.", result: "낮은 인증서의 가지가 후보가 되는 것을 막습니다." },
-  { title: "복제본은 선택한 qchigh를 직접 잇는 후보 블록을 만들어 MVBA에 넣습니다.", state: "B=[parent qchigh, qchigh.r+1, vcur]", traffic: "Proof 서명 또는 더 높은 QC 경로를 함께 전달합니다.", result: "각 복제본이 후보를 하나씩 낼 수 있습니다." },
-  { title: "상태를 반영한 유효성 검사가 view·부모 QC·round·proof를 함께 확인합니다.", state: "external validity(B, proof, local qchigh)", traffic: "내가 아는 qchigh보다 낮은 후보는 MVBA의 유효한 출력이 될 수 없습니다.", result: "정상 경로의 lock 안전성을 fallback에서도 이어 갑니다." },
-  { title: "MVBA가 유효한 블록 B 하나를 결정하면 B와 그 조상을 커밋합니다.", state: "MVBA output=B · commit ancestors", traffic: "모든 정상 복제본이 같은 출력에 도달한다는 MVBA 합의를 사용합니다.", result: "결정 블록 B의 인증서는 아직 만들어야 합니다." },
-  { title: "복제본이 B의 서명 조각을 전파하고, B가 인증될 때까지 기다린 뒤 정상 경로로 돌아갑니다.", state: "fallback=false · wait QC(B)", traffic: "vcur와 마지막 투표 round를 맞추고 다음 주 노드 경로를 엽니다.", result: "결정·인증·실행·클라이언트 결과를 한 단계로 뭉치지 않습니다." },
+  { title: "같은 view의 timeout 3개를 받은 복제본이 fallback을 엽니다.", code: "if valid_timeouts(view) >= 2*f+1: fallback = true", state: "fallback=true · vcur=v+1", traffic: "Timeout에는 현재 view의 서명 조각과 qchigh가 들어 있습니다.", result: "한 복제본의 로컬 timeout만으로는 열리지 않습니다." },
+  { title: "각 복제본이 새 view와 자신의 qchigh를 담은 proof 메시지를 모든 복제본에게 보냅니다.", code: "multicast(proof(vcur, qchigh))", state: "proof(vcur, qchigh)", traffic: "후보 블록을 만들기 전에 다른 정상 복제본의 잠금 상태와 비교합니다.", result: "아직 MVBA를 호출하지 않습니다." },
+  { title: "받은 QC가 내 qchigh보다 낮지 않으면 ack하고, 더 낮으면 내가 아는 높은 QC를 돌려줍니다.", code: "reply(receivedQC >= qchigh ? ack : higherQC)", state: "ack share 또는 higherQC", traffic: "Proof 서명 3개가 모이거나 더 높은 QC를 하나 받으면 다음 단계로 갑니다.", result: "낮은 인증서의 가지가 후보가 되는 것을 막습니다." },
+  { title: "복제본은 선택한 qchigh를 직접 잇는 후보 블록을 만들어 MVBA에 넣습니다.", code: "mvba_input(child_of(highestQC), proof_or_higherQC)", state: "B=[parent qchigh, qchigh.r+1, vcur]", traffic: "Proof 서명 또는 더 높은 QC 경로를 함께 전달합니다.", result: "각 복제본이 후보를 하나씩 낼 수 있습니다." },
+  { title: "상태를 반영한 유효성 검사가 view·부모 QC·round·proof를 함께 확인합니다.", code: "external_validity(B, proof, local_qchigh)", state: "external validity(B, proof, local qchigh)", traffic: "내가 아는 qchigh보다 낮은 후보는 MVBA의 유효한 출력이 될 수 없습니다.", result: "정상 경로의 lock 안전성을 fallback에서도 이어 갑니다." },
+  { title: "MVBA가 유효한 블록 B 하나를 결정하면 B와 그 조상을 커밋합니다.", code: "on_decide(B): commit(B_and_ancestors)", state: "MVBA output=B · commit ancestors", traffic: "모든 정상 복제본이 같은 출력에 도달한다는 MVBA 합의를 사용합니다.", result: "결정 블록 B의 인증서는 아직 만들어야 합니다." },
+  { title: "복제본이 B의 서명 조각을 전파하고, B가 인증될 때까지 기다린 뒤 정상 경로로 돌아갑니다.", code: "vote(B); fallback=false; wait_until_certified(B)", state: "fallback=false · wait QC(B)", traffic: "vcur와 마지막 투표 round를 맞추고 다음 주 노드 경로를 엽니다.", result: "결정·인증·실행·클라이언트 결과를 한 단계로 뭉치지 않습니다." },
 ] as const;
 
 const FALLBACK_NOTES = FALLBACK_STATES.map((state) => `${state.title} ${state.result}`);
@@ -63,7 +63,7 @@ export function JolteonPathViz() {
   return (
     <VizFrame eyebrow="Jolteon 정상 경로 · n=4, f=1" title="B10은 연속된 두 인증 블록이 보일 때 커밋됩니다" description="블록 높이만 보지 않고 round, 부모 QC와 인증서가 실제로 전달되는 순서를 따라갑니다." note="Jolteon and Ditto 논문 Figure 2의 정상 경로를 Alice의 요청에 적용한 설명용 흐름입니다." documentFlow canvasClassName="p-2.5 sm:p-5">
       <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Jolteon two-chain 커밋의 여섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[34rem] sm:min-h-[21rem]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {COMMIT_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
           <div className="mt-3 space-y-px"><StateRow label="메시지·인증서">{state.message}</StateRow><StateRow label="복제본의 판단">{state.replicas}</StateRow><StateRow label="이 단계의 결과">{state.evidence}</StateRow></div>
@@ -82,7 +82,7 @@ export function JolteonTimeoutViz() {
   return (
     <VizFrame eyebrow="Jolteon 장애 round · TC" title="TC는 커밋 증거가 아니라 다음 제안의 안전 하한입니다" description="Timeout 2f+1개에 들어 있는 qchigh를 모두 비교해, 장애 뒤 제안이 기존 커밋 가지보다 아래로 내려가지 못하게 합니다." documentFlow canvasClassName="p-2.5 sm:p-5">
       <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Jolteon timeout certificate의 다섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[35rem] sm:min-h-[22rem]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {TIMEOUT_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
           <div className="mt-3 space-y-px"><StateRow label="전달되는 정보">{state.traffic}</StateRow><StateRow label="증거의 역할">{state.owner}</StateRow><StateRow label="안전 조건">{state.guard}</StateRow></div>
@@ -101,9 +101,10 @@ export function DittoFallbackViz() {
   return (
     <VizFrame eyebrow="Ditto · 비동기 fallback" title="Timeout 뒤에도 proof와 상태 검사를 거쳐 MVBA에 들어갑니다" description="Fallback을 하나의 검은 상자로 그리지 않고, 어떤 후보가 유효해지고 결정 블록이 어떻게 정상 경로로 돌아오는지 따라갑니다." documentFlow canvasClassName="p-2.5 sm:p-5">
       <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Ditto fallback의 일곱 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[45rem] sm:min-h-[27rem]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {FALLBACK_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">{state.code}</code>
           <div className="mt-3 space-y-px"><StateRow label="현재 상태">{state.state}</StateRow><StateRow label="메시지 흐름">{state.traffic}</StateRow><StateRow label="이 단계의 결과">{state.result}</StateRow></div>
           <SceneProgress active={scenes.active} total={FALLBACK_LABELS.length} />
         </div>

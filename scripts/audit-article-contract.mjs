@@ -59,7 +59,14 @@ for (const [group, groupFiles] of groups) {
   const gradients = (source.match(/bg-gradient|<linearGradient|<radialGradient/g) ?? []).length;
   const thickStroke = (source.match(/strokeWidth=\{?(?:["']?[2-9]|["']?1\.(?:[3-9]\d*|2[6-9]))/g) ?? []).length;
   const awkward = (source.match(/시킨 말|검사를 닫|결과(?:물)?을 버렸|결과(?:물)?를 버렸/g) ?? []).length;
-  const hasOpeningAnchor = /id=["'](?:overview|problem)["']/.test(source);
+  const hasLiteralOpeningAnchor = /id=["'](?:overview|problem)["']/.test(source);
+  // Data-driven article shells pass each typed section id through LessonSection.
+  // Count that contract only when the same source closure actually contains an
+  // overview item, so an arbitrary dynamic id cannot satisfy the opening rule.
+  const hasDataDrivenOpeningAnchor =
+    /\bid:\s*["']overview["']/.test(source) &&
+    /<LessonSection\b[\s\S]{0,240}\bid=\{section\.id\}/.test(source);
+  const hasOpeningAnchor = hasLiteralOpeningAnchor || hasDataDrivenOpeningAnchor;
   let score = 0;
   if (sectionCount > 0 && !hasOpeningAnchor) score += 2;
   if (displayMath > 0) score += Math.min(8, displayMath * 2);

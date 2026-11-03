@@ -12,16 +12,16 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const bulletproofsTree: FileNode = d("bulletproofs/src", [
-  f("generators.rs", "bulletproofs/src/generators.rs", "pedersen-gens"),
+export const bulletproofsTree: FileNode = d("bulletproofs @ be67b6d", [
+  f("generators.rs:29–53", "src/generators.rs", "pedersen-gens"),
   f(
-    "inner_product_proof.rs",
-    "bulletproofs/src/inner_product_proof.rs",
-    "ipa-create",
+    "inner_product_proof.rs:18–24",
+    "src/inner_product_proof.rs",
+    "ipa-struct",
   ),
-  d("range_proof", [
-    f("mod.rs", "bulletproofs/src/range_proof/mod.rs", "range-proof-struct"),
-    f("dealer.rs", "bulletproofs/src/range_proof/dealer.rs", "dealer"),
-    f("party.rs", "bulletproofs/src/range_proof/party.rs", "party"),
-  ]),
+  f(
+    "inner_product_proof.rs:75–141",
+    "src/inner_product_proof.rs",
+    "ipa-first-round",
+  ),
 ]);

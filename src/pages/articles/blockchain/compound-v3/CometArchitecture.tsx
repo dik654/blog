@@ -4,7 +4,7 @@ import ModernCometViz from "./viz/ModernCometViz";
 export default function CometArchitecture() {
   return (
     <section id="comet-architecture" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Signed principal은 0을 경계로 supply와 borrow index를 선택한다</h2>
+      <h2 className="mb-5 break-keep text-2xl font-bold">잔액 숫자 하나로 공급과 차입을 어떻게 함께 기록할까요?</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p><code>userBasic.principal</code>이 양수면 base 공급, 음수면 base 차입입니다. Current balance를 저장하지 않고 supply/borrow index로 현재가치화하며, base를 공급해 음수에서 0을 지나면 먼저 repay하고 남는 양만 supply가 됩니다.</p>
       </div>

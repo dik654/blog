@@ -7,14 +7,16 @@ import Ports from "./b300-switchless-network/Ports";
 import Topology from "./b300-switchless-network/Topology";
 import HardwareFieldLab from "./HardwareFieldLab";
 import HardwareTeachOpening, { HardwareTeachMechanism } from "./HardwareTeachOpening";
-import { b300SwitchlessFieldLab } from "./hardwareFieldLabs";
-import { hardwareTeachCases } from "./hardwareTeachCases";
+import {
+  b300SwitchlessFieldLab,
+  b300SwitchlessTeachCase,
+} from "./b300-switchless-network/teachData";
 
 export default function B300SwitchlessNetworkArticle() {
   return (
     <div className="space-y-12">
-      <HardwareTeachOpening data={hardwareTeachCases.b300Switchless} />
-      <HardwareTeachMechanism data={hardwareTeachCases.b300Switchless}>
+      <HardwareTeachOpening data={b300SwitchlessTeachCase} />
+      <HardwareTeachMechanism data={b300SwitchlessTeachCase}>
         <Overview />
         <Ports />
         <Topology />

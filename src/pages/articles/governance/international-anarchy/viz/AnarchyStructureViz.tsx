@@ -1,150 +1,139 @@
+import type { ReactNode } from "react";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: overview·no-sovereign·security-dilemma — 위 칸이 비면 무엇이 달라지는가 */
 const SCENES = [
-  "국가 안에서는 위에 한 칸이 있다",
-  "국가들 사이에는 그 칸이 없다",
-  "그래서 스스로 지키는데 그것이 문제다",
-  "그래도 전부 사라지지는 않는다",
+  "국내 계약에는 마지막 집행자가 있습니다",
+  "국가 사이에는 그 자리가 비어 있습니다",
+  "그래서 각자 대비하고 서로 더 불안해집니다",
+  "협력에는 세 조건이 남습니다",
 ] as const;
 
 const NOTES = [
-  "1편부터 8편까지 쌓은 구조입니다. 다툼이 생기면 더 올라갈 데가 없는 자리가 판정하고, 그 판정에 강제력이 붙습니다.",
-  "국가들 사이에는 그 자리가 비어 있습니다. 무정부는 혼란이 아니라 위가 없다는 뜻이며, 약속을 어겼을 때 집행해 줄 곳이 없다는 것이 핵심입니다.",
-  "위가 없으면 각자 스스로 지켜야 합니다. 그런데 스스로를 지키는 수단의 상당수가 상대의 안전을 그만큼 줄여, 서로 나쁜 뜻이 없어도 둘 다 더 쓰고 덜 안전해집니다.",
-  "강제력은 없어도 남는 것이 있습니다. 같은 상대를 계속 만난다는 사실, 지난 행동이 기록된다는 사실, 그리고 무슨 일이 있었는지 알려 주는 자리입니다. 뒤 절들이 이 셋을 하나씩 폅니다.",
+  "국내에서는 법원이 다툼을 판정하고 국가가 판결을 집행합니다. 당사자가 싫다고 해도 작동하는 마지막 자리가 있습니다.",
+  "A국과 B국 위에는 같은 방식의 세계 정부가 없습니다. 재판과 중재가 있어도 관할과 대응은 국가의 동의와 선택에 기대므로, 각국이 최악의 경우를 직접 대비합니다.",
+  "A국의 방어용 순찰선은 B국의 눈에는 항로를 막을 능력입니다. B국도 늘리면 양쪽 모두 비용을 더 쓰고도 상대 전력이 커져 더 불안해집니다.",
+  "그래도 협력은 가능합니다. 위반을 볼 수 있고, 대응할 수 있으며, 앞으로의 협력 가치가 한 번의 배신 이익보다 커야 합니다.",
 ] as const;
 
-const ACCENT = "#6366f1";
-const AMBER = "#f59e0b";
-const OK = "#10b981";
-const WARN = "#ef4444";
-const MUTED = "#94a3b8";
-
-const LEFTOVERS = [
-  { label: "반복", detail: "같은 상대를 계속 만남" },
-  { label: "평판", detail: "지난 행동이 남음" },
-  { label: "정보", detail: "무슨 일이 있었는지 알려 주는 자리" },
-] as const;
+function Actor({ children, tone }: { children: ReactNode; tone: "blue" | "amber" }) {
+  const color =
+    tone === "blue"
+      ? "border-sky-300 bg-sky-50 text-sky-900 dark:border-sky-800 dark:bg-sky-950/40 dark:text-sky-100"
+      : "border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100";
+  return (
+    <div className={"flex min-h-16 items-center justify-center rounded-xl border px-3 text-center text-sm font-bold " + color}>
+      {children}
+    </div>
+  );
+}
 
 export default function AnarchyStructureViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 4200);
   const step = scenes.active;
-  const domestic = step === 0;
 
   return (
     <VizFrame
-      eyebrow="위가 없는 곳"
-      title="여덟 글이 쌓은 구조에서 맨 위 칸을 지우면 무엇이 남습니까"
-      description="무정부는 혼란이 아니라 최종 판정과 집행의 자리가 비어 있다는 뜻입니다."
-      note="국가를 하나의 행위자로 줄인 그림입니다. 실제로는 국내 정치가 이 그림 안으로 계속 들어옵니다."
+      documentFlow
+      eyebrow="먼저 볼 질문"
+      title="국내 계약과 국가 간 약속은 어디에서 갈라질까요?"
+      description="두 당사자 위에서 판정하고 집행하는 마지막 자리가 있는지만 먼저 보세요."
+      note="해협과 수치는 설명용 가상 사례입니다. 국제 제도 자체가 없다는 뜻이 아니라, 국내 정부와 같은 자동적인 최종 집행자가 없다는 비교입니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="위 칸이 비었을 때의 구조 변화"
+        aria-label="최종 집행자가 있을 때와 없을 때의 선택 변화"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-[32rem] min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary md:min-h-[27rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
+            장면 {step + 1} / {SCENES.length}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <rect
-                x={150}
-                y={22}
-                width={180}
-                height={36}
-                rx={4}
-                fill={domestic ? ACCENT : MUTED}
-                fillOpacity={domestic ? 0.16 : 0.04}
-                stroke={domestic ? ACCENT : MUTED}
-                strokeWidth={1}
-                strokeDasharray={domestic ? undefined : "4 4"}
-              />
-              <text x={240} y={38} textAnchor="middle" fontSize={10} fontWeight={700} fill={domestic ? ACCENT : MUTED}>
-                {domestic ? "최종 판정과 집행" : "비어 있음"}
-              </text>
-              <text x={240} y={51} textAnchor="middle" fontSize={8} fill={MUTED}>
-                {domestic ? "더 올라갈 데가 없는 자리" : "어겨도 집행해 줄 곳이 없음"}
-              </text>
+          <div className="mt-5 flex flex-1 flex-col justify-center">
+            {step === 0 && (
+              <div className="mx-auto w-full max-w-xl">
+                <div className="mx-auto max-w-xs rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-center dark:border-emerald-800 dark:bg-emerald-950/40">
+                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100">
+                    법원 판정 + 국가 집행
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">싫어도 따르게 하는 마지막 자리</p>
+                </div>
+                <div className="py-2 text-center text-lg text-emerald-600" aria-hidden="true">↓</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Actor tone="blue">계약 당사자 A</Actor>
+                  <Actor tone="amber">계약 당사자 B</Actor>
+                </div>
+                <p className="mt-4 rounded-lg bg-muted/60 p-3 text-center text-sm leading-6">
+                  해석이 다르면 법원이 끝내고, 위반하면 국가가 집행합니다.
+                </p>
+              </div>
+            )}
 
-              <line x1={195} y1={58} x2={165} y2={96} stroke={domestic ? MUTED : MUTED} strokeOpacity={domestic ? 1 : 0.25} strokeWidth={1} strokeDasharray={domestic ? undefined : "3 4"} />
-              <line x1={285} y1={58} x2={315} y2={96} stroke={domestic ? MUTED : MUTED} strokeOpacity={domestic ? 1 : 0.25} strokeWidth={1} strokeDasharray={domestic ? undefined : "3 4"} />
+            {step === 1 && (
+              <div className="mx-auto w-full max-w-xl">
+                <div className="mx-auto max-w-xs rounded-xl border border-dashed border-slate-300 bg-slate-50/70 p-3 text-center dark:border-slate-700 dark:bg-slate-900/40">
+                  <p className="text-sm font-bold text-muted-foreground">자동적인 최종 집행자 없음</p>
+                  <p className="mt-1 text-xs text-muted-foreground">판정과 대응이 국가의 동의·선택에 기대는 자리</p>
+                </div>
+                <div className="py-2 text-center text-lg text-slate-400" aria-hidden="true">↓</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Actor tone="blue">해협의 A국</Actor>
+                  <Actor tone="amber">해협의 B국</Actor>
+                </div>
+                <p className="mt-4 rounded-lg bg-rose-50 p-3 text-center text-sm leading-6 text-rose-900 dark:bg-rose-950/30 dark:text-rose-100">
+                  최악의 경우를 각자 대비합니다. 이것이 자력구제입니다.
+                </p>
+              </div>
+            )}
 
-              {[
-                { x: 110, label: domestic ? "당사자 가" : "국가 가", color: AMBER },
-                { x: 290, label: domestic ? "당사자 나" : "국가 나", color: OK },
-              ].map((actor) => (
-                <g key={actor.label}>
-                  <rect x={actor.x} y={96} width={80} height={32} rx={4} fill={actor.color} fillOpacity={0.14} stroke={actor.color} strokeWidth={1} />
-                  <text x={actor.x + 40} y={116} textAnchor="middle" fontSize={10} fontWeight={700} fill={actor.color}>
-                    {actor.label}
-                  </text>
-                </g>
-              ))}
-              <line x1={190} y1={112} x2={290} y2={112} stroke={MUTED} strokeWidth={1} />
-              <text x={240} y={106} textAnchor="middle" fontSize={8} fill={MUTED}>
-                다툼
-              </text>
+            {step === 2 && (
+              <div className="mx-auto grid w-full max-w-xl gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+                <Actor tone="blue">
+                  A국
+                  <br />
+                  방어용 순찰선 +2
+                </Actor>
+                <div className="text-center text-xs font-bold text-rose-600">
+                  <span className="hidden sm:inline">위협으로 읽음 ⇄</span>
+                  <span className="sm:hidden">↓ 위협으로 읽고 대응 ↓</span>
+                </div>
+                <Actor tone="amber">
+                  B국
+                  <br />
+                  대응 순찰선 +2
+                </Actor>
+                <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-center text-sm leading-6 text-rose-900 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-100 sm:col-span-3">
+                  둘 다 더 지출 · 상대 전력도 증가 · 둘 다 더 불안
+                  <br />
+                  <strong>악의가 없어도 생기는 안보 딜레마</strong>
+                </div>
+              </div>
+            )}
 
-              {step === 0 && (
-                <text x={60} y={160} fontSize={9.5} fill={MUTED}>
-                  판정이 최종이고 그 판정에 강제력이 붙는다는 것이 앞 여덟 글의 전제였습니다
-                </text>
-              )}
-
-              {step === 1 && (
-                <g>
-                  <text x={60} y={154} fontSize={9.5} fontWeight={700} fill={WARN}>
-                    사라지는 것 · 최종 판정 · 약속의 집행 · 다수결로 정한 것을 따르게 할 힘
-                  </text>
-                  <text x={60} y={172} fontSize={9} fill={MUTED}>
-                    남는 것은 각자의 판단과 각자의 힘뿐입니다
-                  </text>
-                </g>
-              )}
-
-              {step === 2 && (
-                <g>
-                  <path d="M150 140 L150 158 L330 158 L330 140" fill="none" stroke={WARN} strokeWidth={1} />
-                  <text x={240} y={172} textAnchor="middle" fontSize={9} fontWeight={700} fill={WARN}>
-                    가가 자기를 지키려 늘린 수단이 나에게는 위협으로 보입니다
-                  </text>
-                  <text x={240} y={186} textAnchor="middle" fontSize={9} fill={MUTED}>
-                    나도 늘리면 둘 다 더 쓰고 둘 다 덜 안전해집니다
-                  </text>
-                </g>
-              )}
-
-              {step === 3 && (
-                <g>
-                  {LEFTOVERS.map((item, i) => (
-                    <g key={item.label}>
-                      <rect x={40 + i * 140} y={142} width={128} height={34} rx={4} fill={OK} fillOpacity={0.08} stroke={OK} strokeWidth={1} />
-                      <text x={104 + i * 140} y={158} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={OK}>
-                        {item.label}
-                      </text>
-                      <text x={104 + i * 140} y={170} textAnchor="middle" fontSize={7.5} fill={MUTED}>
-                        {item.detail}
-                      </text>
-                    </g>
-                  ))}
-                </g>
-              )}
-            </svg>
+            {step === 3 && (
+              <div className="mx-auto grid w-full max-w-xl gap-3 sm:grid-cols-3">
+                {[
+                  ["1", "위반을 볼 수 있음", "공동 위치 기록·검증"],
+                  ["2", "대응할 수 있음", "항만 협력 중단·자체 대비"],
+                  ["3", "미래가 더 큼", "반복되는 협력의 가치"],
+                ].map(([number, title, detail]) => (
+                  <div key={number} className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950/30">
+                    <p className="text-xs font-black text-emerald-700 dark:text-emerald-300">조건 {number}</p>
+                    <p className="mt-2 text-sm font-bold">{title}</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{detail}</p>
+                  </div>
+                ))}
+                <p className="rounded-xl bg-muted/60 p-3 text-center text-sm font-semibold leading-6 sm:col-span-3">
+                  세 조건이 모이면 강제 없이도 약속을 지키는 편이 유리해질 수 있습니다.
+                </p>
+              </div>
+            )}
           </div>
 
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">

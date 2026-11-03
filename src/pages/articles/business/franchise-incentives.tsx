@@ -2,15 +2,13 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import FranchiseIncentivesViz from "./FranchiseIncentivesViz";
 
-/** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
+/** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function FranchiseIncentivesArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">1. 같은 간판 아래 돈과 권한은 다르게 나뉜다</h2>
-        <FranchiseIncentivesViz />
+        <h2 className="mb-6 text-2xl font-bold">1. 같은 간판 아래 세 사람의 돈은 다르게 남는다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">익숙한 간판은 손님이 가게를 선택하는 시간을 줄여 줍니다. 점주는 그 이름과 운영 방법을 얻는 대신 돈을 내고 운영의 선택 일부를 약속합니다. 브랜드가 커질 때 가게 주인도 함께 좋아지는지는 이 약속을 읽어야 알 수 있습니다.</p>
           <p className="leading-7">고객이 낸 돈이 누구에게 어떤 조건으로 가는지 살펴봅니다. 문을 열 때 한 번 내는 돈부터 매달의 지급, 계약을 끝낼 때 책임까지 한 점포의 장부로 봅니다.</p>
@@ -82,8 +80,8 @@ export default function FranchiseIncentivesArticle() {
           <p className="leading-7">같은 달에 고객에게서 받은 3천만 원을 본부 150만 원, 재료 1천만 원, 월세 300만 원에 배분하면 1천550만 원이 남습니다. 직원 급여 등 실제 비용을 더 반영한 뒤, 점주가 일한 시간에 다른 곳에서 벌 수 있었던 돈도 비교합니다. 이 노동 대가는 사업 선택을 위한 기회비용입니다. 실제 지급하지 않은 점주 급여가 장부나 세금 계산에 자동으로 비용 처리된다는 뜻은 아닙니다.</p>
           <p className="leading-7">계약 전에는 문을 열 때의 가맹·교육·장비 비용과 그 가맹금을 예치기관에 맡기는지, 운영 중의 로열티와 광고분담, 갱신 때의 시설 교체, 양도 때의 승인·교육 비용을 날짜별로 놓습니다. 지정품목 가격이 바뀔 때 통지와 협의가 어떻게 되는지, 광고비 집행 내역을 어떤 문서로 보는지도 질문합니다.</p>
           <p className="leading-7">마지막에는 영업지역과 온라인·배달 주문의 배분, 계약 기간과 갱신 조건을 읽습니다. 임대차가 먼저 끝나거나 본부 계약이 해지되면 간판 제거·재고 처분·장비 리스가 각각 어떻게 남는지 확인합니다. 본부의 최근 점포 증가뿐 아니라 양도·폐점 점주에게도 실제 비용을 물어야 합니다.</p>
-          <p className="leading-7">갱신 때의 시설 교체 비용은 한국에서 점주 혼자 지는 돈이 아닐 수 있습니다. 가맹사업법 제12조의2는 본부가 대통령령으로 정한 정당한 사유 없이 점포환경개선을 강요하지 못하게 하고, 시행령 제13조의2는 대상이 되는 간판·인테리어 비용과 본부 부담 비율을 구분합니다.</p>
-          <p className="leading-7">리모델링 비용이 5천만 원(가정)이고 그 전부가 대상 비용이라면, 점포 확장·이전이 없을 때 본부 부담은 20%인 1천만 원, 확장·이전이 함께 있으면 40%인 2천만 원입니다. 장비·집기나 점주가 별도로 추가한 공사 등은 대상에서 빠질 수 있으므로 총공사비에 비율만 곱해 지급액을 확정하지 않습니다. 반면 온라인·배달 주문을 지역별로 어떻게 나누는지는 이 조문이 직접 정하지 않으므로 계약서에서 확인할 항목으로 남습니다.</p>
+          <p className="leading-7">갱신 때의 시설 교체 비용은 한국에서 점주 혼자 지는 돈이 아닐 수 있습니다. 가맹사업법 제12조의2는 본부가 대통령령으로 정한 정당한 사유 없이 점포환경개선을 강요하지 못하게 하고, 점주의 점포환경개선 비용 가운데 대통령령으로 정한 비용의 100분의 40 이내에서 대통령령이 정한 비율만큼을 본부가 부담하도록 합니다.</p>
+          <p className="leading-7">리모델링 비용이 5천만 원(가정)이고 그 전부가 대상 비용이라면 본부 부담은 많아야 5천만 × 0.4 = 2천만 원이며, 실제 비율과 대상 비용의 범위는 시행령에서 따로 확인해야 합니다. 반면 온라인·배달 주문을 지역별로 어떻게 나누는지는 법이 직접 정하지 않으므로 계약서에서 확인할 항목으로 남습니다.</p>
         </div>
 
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">계약의 계산 기준과 지급일을 나누어 보았습니다. 적자 때도 지급 의무가 남는지 공식 안내를 확인합니다.</p>
@@ -94,7 +92,7 @@ export default function FranchiseIncentivesArticle() {
           <p className="leading-7">3천만 원 매출의 5%라는 약속은 본부의 150만 원 수입과 점주의 생활비를 직접 연결하지 않습니다. 미국 FTC의 소비자 안내는 반복 지급 비용을 설명할 때 이 조건을 분명히 합니다.</p>
         </div>
         <SourceApplication source="US FTC · Consumer Guide, Royalties" excerpt="even if you are losing money" application="직원 급여·광고·공과금 등 추가 비용이 1천550만 원을 넘으면 이 계산은 적자가 되지만, 매출 연동 약정의 150만 원은 자동으로 없어지지 않습니다. 실제 면제·유예 여부는 계약으로 확인합니다." />
-        <CitationBlock source="US FTC · Consumer Guide, Royalties" citeKey={1} href="https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise">2026-11-01 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
+        <CitationBlock source="US FTC · Consumer Guide, Royalties" citeKey={1} href="https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise">2026-10-04 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">로열티의 계산 기준을 확인했습니다. 예상 매출을 공시에서 찾는 방법을 봅니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
@@ -108,13 +106,11 @@ export default function FranchiseIncentivesArticle() {
           <p className="leading-7">유럽연합의 2022년 수직적 제한 가이드라인 165~168항은 상표·운영 방법 제공과 계약 제한을 경쟁법으로 살핍니다. 이는 미국의 FDD와 같은 공시 서식을 EU 전체에 요구한다는 설명이 아닙니다. 품질을 통일한다는 이유만으로 모든 가격·판매지역 제한이 허용되는 것도 아닙니다. 계약 구조와 해당 제한의 적용 요건을 따로 확인합니다.</p>
         </div>
         <SourceApplication source="US FTC · FDD Item 19 안내" excerpt="Item 19 contains claims the franchisor chooses to make about sales or earnings." application="본부가 월매출 3천만 원이라는 실적 주장을 한다면 Item 19의 표본·가정과 근거를 대조합니다. 이 항목에 실적 수치를 반드시 제공해야 하는 것은 아니며 특정 기존 점포의 실제 기록 등 좁은 예외도 있습니다. 공시를 읽고도 별도로 비용을 확인해야 합니다. 사례의 1천550만 원은 순이익 보증액이 아닙니다." />
-        <CitationBlock source="US FTC · FDD Item 19 안내" citeKey={2} href="https://www.ftc.gov/business-guidance/blog/2023/05/franchise-fundamentals-taking-deep-dive-franchise-disclosure-document">2026-11-01 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
-        <CitationBlock source="16 CFR 436.2(a) · FDD 제공 의무" citeKey={3} href="https://www.ecfr.gov/current/title-16/chapter-I/subchapter-D/part-436/subpart-B/section-436.2">2026-11-01 확인. 2026-10-29까지 반영된 eCFR에서 미국·미국령의 비면제 거래, 계약 또는 지급 전 최소 14달력일이라는 적용 범위를 읽습니다.</CitationBlock>
+        <CitationBlock source="US FTC · FDD Item 19 안내" citeKey={2} href="https://www.ftc.gov/business-guidance/blog/2023/05/franchise-fundamentals-taking-deep-dive-franchise-disclosure-document">2026-10-04 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
+        <CitationBlock source="16 CFR 436.2(a) · FDD 제공 의무" citeKey={3} href="https://www.ecfr.gov/current/title-16/chapter-I/subchapter-D/part-436/subpart-B/section-436.2">2026-10-04 확인. 미국·미국령의 비면제 거래, 계약 또는 지급 전 최소 14달력일이라는 적용 범위를 읽습니다.</CitationBlock>
         <CitationBlock source="US FTC Consumer Guide to Buying a Franchise" citeKey={4} href="https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise">미국의 FDD 14일 사전 제공과 항목별 검토를 설명합니다.</CitationBlock>
         <CitationBlock source="한국 공정위 가맹 정보공개서 비교" citeKey={5} href="https://franchise.ftc.go.kr/firHope/comparePopup.do">한국의 점포 수·평균 매출·비용 비교 항목을 확인합니다.</CitationBlock>
         <CitationBlock source="EU Vertical Guidelines 2022 · 165~168항" citeKey={6} href="https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A52022XC0630%2801%29">2022/C 248/01의 가맹계약·수직적 제한 설명입니다. 적용 제외·일괄 면제·개별 평가의 요건이 있으며, 개별 조항의 적법성을 일괄 판정하는 자료로 쓰지 않습니다.</CitationBlock>
-        <CitationBlock source="한국 가맹사업법 제6조의5·제7조·제11조" citeKey={7} href="https://law.go.kr/법령/가맹사업거래의공정화에관한법률">2026-10-02 시행본을 2026-11-01 확인했습니다. 예치가맹금, 정보공개서·계약서 제공 뒤 14일(자문 시 7일), 강제 거래 대상과 공급 가격 산정방식의 계약서 기재 범위를 읽습니다.</CitationBlock>
-        <CitationBlock source="한국 가맹사업법 제12조의4·시행령 제13조의2" citeKey={8} href="https://law.go.kr/법령/가맹사업거래의공정화에관한법률">2026-11-01 확인. 영업지역 설정·침해 금지와 점포환경개선 대상 비용을 구분하고, 확장·이전이 없는 경우 20%, 수반하는 경우 40%라는 시행령 비율을 적용했습니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">공시가 담는 정보와 점주 수익의 차이를 구분했습니다. 평균이 놓치는 점포를 확인합니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">

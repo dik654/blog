@@ -6,14 +6,15 @@ export default function Addressing() {
   return (
     <section id="addressing" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        cables.txt를 주소·interface 설정의 단일 원천으로
+        케이블 원장에서 두 논리 링크의 주소를 함께 만듭니다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          switchless에서는 각 cable이 하나의 L3 segment다. 링크마다 `/30`을
-          배정하면 network, 두 endpoint, broadcast가 명확하고 peer를 잘못 고른
-          GID도 쉽게 진단할 수 있다. 주소는 수작업 표와 shell 명령에 중복하지
-          않고 topology manifest에서 생성한다.
+          Split 구성에서는 물리 케이블 하나가 두 400G 논리 링크를 만듭니다.
+          따라서 “케이블 하나에 /30 하나”가 아니라 <strong>논리 링크 하나에
+          /30 하나</strong>를 배정합니다. Network, 두 endpoint, broadcast가
+          분리되어야 peer를 잘못 고른 GID도 진단할 수 있습니다. 주소는 수작업
+          표와 shell 명령에 반복하지 않고 topology manifest에서 생성합니다.
         </p>
         <ExplainedFormula
           question="Node pair와 link 번호만으로 충돌하지 않는 /30 주소를 어떻게 만드는가?"
@@ -22,7 +23,7 @@ export default function Addressing() {
               작은 node 번호는 <span className="whitespace-nowrap">작은 번호(a)</span>로 둡니다.
               큰 node 번호는 <span className="whitespace-nowrap">큰 번호(b)</span>로 둡니다. 이 순서로 정렬하면 방향과 무관한 pair
               identity가 됩니다. 두 번호를 second octet에 넣고 link 번호를 third
-              octet에 넣어 cable마다 고유한 /30을 만듭니다.
+              octet에 넣어 logical link마다 고유한 /30을 만듭니다.
             </p>
           }
           formula={String.raw`\begin{aligned}
@@ -32,40 +33,42 @@ export default function Addressing() {
           \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
             \underbrace{o_2}_{\text{node pair를 담는 둘째 octet}} &= \underbrace{100}_{\text{사설 주소 기준}}+\underbrace{10a+b}_{\text{정렬한 두 node 번호}} \\
-            \underbrace{\mathrm{net}(a,b,\ell)}_{\text{cable의 subnet}} &= 10.\underbrace{o_2}_{\text{node pair}}.\underbrace{\ell}_{\text{link 번호}}.0/30 \\
+            \underbrace{\mathrm{net}(a,b,\ell)}_{\text{논리 link의 subnet}} &= 10.\underbrace{o_2}_{\text{node pair}}.\underbrace{\ell}_{\text{link 번호}}.0/30 \\
             \underbrace{h_a}_{\text{작은 node의 host}} &= .1,\qquad \underbrace{h_b}_{\text{큰 node의 host}}=.2
           \end{aligned}`}
           operations={[
             { expression: String.raw`100+10a+b`, annotation: ["정렬한 두 node 번호를 둘째 octet 하나에 넣습니다."] },
-            { expression: String.raw`10.o_2.\ell.0/30`, annotation: ["node pair와 link 번호를 합쳐 cable 하나의 subnet을 만듭니다."] },
+            { expression: String.raw`10.o_2.\ell.0/30`, annotation: ["node pair와 논리 link 번호를 합쳐 /30 segment 하나를 만듭니다."] },
             { expression: String.raw`h_a=.1,\ h_b=.2`, annotation: ["작은 node에는 첫 host를, 큰 node에는 둘째 host를 줍니다."] },
           ]}
           terms={[
             { symbol: "a,b", name: "sorted node IDs", description: "a<b가 되도록 정렬한 1–8 범위의 두 server 번호입니다." },
-            { symbol: "\\ell", name: "link index", description: "같은 node pair 사이에서 cable을 구분하는 1부터 시작하는 번호입니다." },
+            { symbol: "\\ell", name: "logical link index", description: "같은 물리 cable에서 split된 두 400G path를 구분하는 1 또는 2입니다." },
             { symbol: "o_2", name: "second octet", description: "Node pair identity를 사람이 읽을 수 있게 담는 IPv4 두 번째 octet입니다." },
             { symbol: "/30", name: "point-to-point prefix", description: "Network·두 host·broadcast의 네 주소를 갖는 subnet입니다." },
           ]}
           assumptions={[
             "Node ID는 1–8이고 a<b로 정렬하며 link index와 octet 범위를 validator가 검사합니다.",
-            "각 cable은 하나의 독립 L3 segment이고 같은 /30을 두 cable에 재사용하지 않습니다.",
+            "물리 cable 하나가 두 logical link를 만들며 각 link에 서로 다른 /30을 줍니다.",
             "주소 규칙과 interface mapping은 같은 manifest revision에서 생성합니다.",
           ]}
-          interpretation="Server 1↔2의 첫 cable은 10.112.1.0/30이 되고, server 1은 .1, server 2는 .2를 사용합니다. 방향을 바꿔 입력해도 같은 subnet이 나와야 합니다."
+          interpretation="Node 3↔7의 두 logical link는 10.137.1.0/30과 10.137.2.0/30입니다. Node 3은 .1, node 7은 .2를 사용하며 방향을 바꿔 입력해도 같은 두 subnet이 나와야 합니다."
         />
         <p className="leading-7">
-          예를 들어 server 1↔2의 첫 링크는 `10.112.1.0/30`, endpoint는 `.1`과
-          `.2`다. server 2↔3의 세 번째 링크는 `10.123.3.0/30`이다. 이 규칙은
-          1–8번 노드를 가정하므로 범위를 validator에서 제한한다.
+          고정 사례에서 a=3, b=7이므로 둘째 octet은 100+30+7=137입니다.
+          첫 logical link는 <code>10.137.1.0/30</code>, 둘째는
+          <code>10.137.2.0/30</code>입니다. Node 3은 각 subnet의 .1, node 7은
+          .2를 사용합니다. 이 규칙은 1–8번 node와 link index 1–2를 가정하므로
+          validator가 범위를 제한해야 합니다.
         </p>
         <div
           data-viz="switchless-manifest-contract"
           className="not-prose my-6 overflow-hidden rounded-lg border border-border/70"
         >
           {[
-            ["입력", "node pair · physical OSFP · cable/link index", "중복 edge와 port 재사용을 거부"],
-            ["inventory 결합", "PCI BDF · netdev · RDMA device", "현재 host inventory와 일치하는지 확인"],
-            ["생성", "/30 endpoint · MTU · link-up 명령", "양 끝이 같은 prefix이고 host가 .1/.2인지 확인"],
+            ["물리 입력", "node pair · 양쪽 OSFP · cable serial", "중복 edge와 port 재사용을 거부"],
+            ["논리 결합", "PF · netdev · RDMA device · link 1/2", "현재 host inventory와 일치하는지 확인"],
+            ["주소 생성", "논리 link별 /30 · MTU · link-up 명령", "양 끝이 같은 prefix이고 host가 .1/.2인지 확인"],
             ["검증", "route · ping · RDMA pair test", "각 interface가 정확히 한 direct peer에만 닿는지 확인"],
           ].map(([stage, artifact, check]) => (
             <article key={stage} className="grid min-w-0 gap-3 border-b border-border/70 px-4 py-4 last:border-b-0 md:grid-cols-[7rem_1fr_1.2fr] md:gap-4">
@@ -76,14 +79,14 @@ export default function Addressing() {
           ))}
         </div>
         <pre className="overflow-x-auto text-xs">
-          <code>{`# 생성된 명령의 형태 — 실제 interface는 inventory에서 resolve
+          <code>{`# node3 logical link 1 — 실제 interface는 inventory에서 resolve
 ip link set <netdev> up mtu 9000
 ip addr flush dev <netdev>
-ip addr add 10.112.1.1/30 dev <netdev>
+ip addr add 10.137.1.1/30 dev <netdev>
 
 # 검증: 양끝에 정확히 하나의 peer route만 있어야 함
 ip -br addr show dev <netdev>
-ping -I <netdev> 10.112.1.2`}</code>
+ping -I <netdev> 10.137.1.2`}</code>
         </pre>
         <p className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm leading-6">
           `ip addr flush`는 기존 주소를 제거한다. 관리망이 아닌 대상 compute

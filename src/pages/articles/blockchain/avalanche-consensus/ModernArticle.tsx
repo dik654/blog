@@ -3,45 +3,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import {
   AvalancheDecisionBoundaryViz,
   AvalancheImplementationBoundaryViz,
+  AvalanchePollUpdatePseudocodeViz,
   AvalanchePollTraceViz,
 } from "./viz/ModernAvalancheConsensusViz";
-
-function PollUpdateSketch() {
-  return (
-    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
-      <pre><code>{`// Snowball은 preference threshold를 넘은 choice의 누적 strength를 먼저 올립니다.
-if count >= alphaPreference:
-    strength[choice] += 1
-
-// 새 strength가 기존 최댓값보다 클 때만 외부 preference를 바꿉니다.
-if strength[choice] > maxStrength:
-    snowballPreference = choice
-    maxStrength = strength[choice]
-
-// Snowflake는 preference threshold에도 못 미친 poll을 실패로 처리합니다.
-if count < alphaPreference:
-    confidence = 0
-    return
-
-// 내부 preference가 바뀌면 이전 choice의 연속 기록을 지웁니다.
-if choice != snowflakePreference:
-    confidence = 0
-    snowflakePreference = choice
-
-// Confidence threshold에 못 미치면 이번 poll은 연속 성공에 포함하지 않습니다.
-if count < alphaConfidence:
-    confidence = 0
-    return
-
-// 같은 choice가 confidence threshold를 넘었으므로 연속 counter를 올립니다.
-confidence += 1
-
-// Counter가 beta에 닿으면 이 로컬 상태를 더 이상 바꾸지 않습니다.
-if confidence >= beta:
-    finalized = true`}</code></pre>
-    </div>
-  );
-}
 
 export default function ModernAvalancheConsensusArticle() {
   return (
@@ -51,6 +15,9 @@ export default function ModernAvalancheConsensusArticle() {
           <p className="text-sm font-semibold text-primary">Avalanche Snow 상세</p>
           <h2 className="text-3xl font-bold tracking-tight">다섯 명에게 물은 결과가 어떻게 한 노드의 결정으로 쌓일까요?</h2>
         </header>
+        <p className="text-lg font-semibold leading-8 text-foreground/90">
+          작은 표본에서 같은 후보가 충분히 자주, 그리고 연속해서 우세한지를 반복해 묻고 그 기억을 쌓으면 한 노드의 결정에 도달합니다.
+        </p>
         <p className="text-lg leading-8 text-foreground/90">
           같은 자금을 쓰는 block A와 B가 동시에 보였다고 하겠습니다. 노드는 전체 validator에게 한 번에 투표를 받지 않습니다. 작은 표본을 반복해서 뽑고, 같은 후보가 threshold를 넘었는지에 따라 <code>preference</code>와 <code>confidence</code>를 바꿉니다. 아래 그림은 A를 선호하던 한 노드가 B 표본을 여러 번 관찰해 B를 local decision으로 만드는 과정을 끝까지 추적합니다.
         </p>
@@ -68,7 +35,7 @@ export default function ModernAvalancheConsensusArticle() {
       <section id="sampling-poll" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">01 · 한 번의 표본</p>
-          <h2 className="text-2xl font-bold">Preference를 바꾸는 표와 confidence를 올리는 표는 따로 셉니다</h2>
+          <h2 className="break-keep text-2xl font-bold">같은 표를 보고도 선호 후보와 연속 횟수가 다르게 바뀌는 이유는 무엇일까요?</h2>
         </header>
         <p>
           AvalancheGo v1.14.2에는 하나의 <code>alpha</code>가 아니라 두 threshold가 있습니다. 같은 choice가 <code>AlphaPreference</code> 이상이면 내부 preference를 바꿀 수 있고, <code>AlphaConfidence</code> 이상이어야 연속 confidence를 올립니다.
@@ -116,7 +83,7 @@ export default function ModernAvalancheConsensusArticle() {
       <section id="confidence" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">02 · 두 종류의 기억</p>
-          <h2 className="text-2xl font-bold">Snowflake는 연속 성공을, Snowball은 누적 성공을 기억합니다</h2>
+          <h2 className="break-keep text-2xl font-bold">실패 한 번은 무엇을 지우고 무엇을 남길까요?</h2>
         </header>
 
         <AvalancheImplementationBoundaryViz />
@@ -128,7 +95,7 @@ export default function ModernAvalancheConsensusArticle() {
           Snowball은 각 choice가 <code>AlphaPreference</code>를 넘은 poll 수를 <code>preferenceStrength</code>에 계속 더합니다. 새 choice의 strength가 기존 최댓값보다 클 때만 외부 preference를 바꾸므로, 동률에서는 이전 preference가 남습니다. 누적 strength는 preference의 관성을 만들지만 finalization counter를 대신하지 않습니다.
         </p>
 
-        <PollUpdateSketch />
+        <AvalanchePollUpdatePseudocodeViz />
 
         <p>
           구현 이름도 구분해야 합니다. AvalancheGo v1.14.2의 <code>chains/manager.go</code>는 Snowman consensus를 만들 때 <code>Topological&#123;Factory: snowball.SnowflakeFactory&#125;</code>를 사용합니다.
@@ -168,7 +135,7 @@ export default function ModernAvalancheConsensusArticle() {
       <section id="limits" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">03 · 결정의 경계</p>
-          <h2 className="text-2xl font-bold">로컬 counter가 끝나도 network 성질은 별도의 전제를 요구합니다</h2>
+          <h2 className="break-keep text-2xl font-bold">한 노드가 결정을 내리면 네트워크 전체도 끝난 걸까요?</h2>
         </header>
 
         <AvalancheDecisionBoundaryViz />

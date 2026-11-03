@@ -296,7 +296,7 @@ export const azureAi200Data: CloudCertificationArticleData = {
       "로그만 많이 모아도 한 요청의 실행·검색·큐 처리를 이어 보지 못하면 첫 실패를 찾기 어렵습니다. 관리 ID·Key Vault, 재시도·죽은 편지 큐, OpenTelemetry trace ID와 KQL 조회를 한 경로에 붙입니다.",
     ] },
     { id: "names", level: "3", title: "6. 네 공식 영역과 현재 자격 이름을 역할에 붙입니다", bridge: "이름 없는 요청 경로를 만들었습니다. Microsoft가 쓰는 시험 영역과 서비스 이름을 연결합니다.", paragraphs: [
-      "현행 자격 이름은 Microsoft Certified: Azure AI Cloud Developer Associate이고 시험은 AI-200입니다. 컨테이너 솔루션 20~25%, Azure 데이터 서비스를 쓴 AI 솔루션 25~30%, Azure 서비스 연결·사용 20~25%, 보안·관측·문제 해결 20~25%입니다.",
+      "현행 자격 이름은 Microsoft Certified: Azure AI Cloud Developer Associate이고 시험은 AI-200입니다. 2026년 10월 7일 기준으로 컨테이너 솔루션 20~25%, Azure 데이터 서비스를 쓴 AI 솔루션 30~35%, Azure 서비스 연결·사용 20~25%, 보안·관측·문제 해결 20~25%입니다.",
       "컨테이너에는 ACR·App Service·Container Apps·AKS, 데이터에는 Cosmos DB·PostgreSQL·Azure Managed Redis, 연결에는 Service Bus·Event Grid·Functions, 운영에는 Key Vault·App Configuration·OpenTelemetry·KQL이 들어갑니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 검색 요청 한 건에서 첫 실패 관문을 찾습니다", bridge: "공식 이름을 요청 경로에 붙였습니다. 시험 보기와 실무 장애에 같은 진단 순서를 적용합니다.", paragraphs: [
@@ -345,14 +345,14 @@ export const azureAi200Data: CloudCertificationArticleData = {
     { code: "trace_ID로_실행·자료·큐_구간을_잇는다()", note: "첫 실패와 가장 긴 구간을 찾습니다." },
     { code: "최소_수정_뒤_같은_100건을_다시_보낸다()", note: "복구 전후의 지연·실패·비용을 비교합니다." },
   ], output: "첫 실패 관문 + 최소 수정 + 복구 전후 운영 기록", repeatUntil: "오류·지연·죽은 편지 메시지가 목표 안에 들고 비밀 노출이 없을 때까지 반복합니다." },
-  examScope: { title: "AI-200 공식 영역", asOf: "Study guide updated May 5, 2026", domains: [
+  examScope: { title: "AI-200 공식 영역", asOf: "Skills measured as of October 7, 2026 · page updated October 15, 2026", domains: [
     { name: "Develop containerized solutions", weight: "20–25%", focus: "ACR image와 App Service·Container Apps·AKS 배포, 확장과 문제 해결을 다룹니다." },
-    { name: "Develop AI solutions using data services", weight: "25–30%", focus: "Cosmos DB·PostgreSQL·Redis의 질의·인덱스·벡터 검색과 성능을 다룹니다." },
+    { name: "Develop AI solutions using data services", weight: "30–35%", focus: "Cosmos DB·PostgreSQL·Redis의 질의·인덱스·벡터 검색과 성능을 다룹니다." },
     { name: "Connect to and consume Azure services", weight: "20–25%", focus: "Service Bus·Event Grid의 사건 흐름과 Azure Functions를 구현합니다." },
     { name: "Secure, monitor, troubleshoot", weight: "20–25%", focus: "Key Vault·App Configuration, OpenTelemetry와 KQL로 보호하고 진단합니다." },
   ] },
   sources: [
-    { source: "Microsoft Learn · AI-200 Study Guide", excerpt: "Develop AI solutions by using Azure data management services", application: "네 영역의 비중과 컨테이너·벡터 자료·메시징·보안·관측 세부 항목을 학습표에 그대로 대응합니다.", citation: "Microsoft Learn, Study guide for Exam AI-200", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200", note: "AI-200의 대상 역할, 합격 기준과 2026년 5월 기준 기술 범위를 밝힌 공식 가이드입니다." },
+    { source: "Microsoft Learn · AI-200 Study Guide", excerpt: "Develop AI solutions by using Azure data management services", application: "네 영역의 비중과 컨테이너·벡터 자료·메시징·보안·관측 세부 항목을 학습표에 그대로 대응합니다.", citation: "Microsoft Learn, Study guide for Exam AI-200", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-200", note: "AI-200의 대상 역할, 합격 기준과 2026년 10월 7일 기준 기술 범위를 밝힌 공식 가이드입니다." },
     { source: "Microsoft Learn · Azure AI Cloud Developer Associate", excerpt: "back-end services, scalable architectures, and the full development lifecycle", application: "모델 호출 한 부분보다 요구·개발·배포·보안·관측까지 이어지는 포트폴리오를 만드는 근거로 씁니다.", citation: "Microsoft Learn, Azure AI Cloud Developer Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-cloud-developer-associate/", note: "현행 자격 이름, 역할, 시험 시간·언어와 공식 AI-200 연결을 안내하는 자격 페이지입니다." },
   ],
   review: [

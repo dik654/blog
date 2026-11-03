@@ -2,31 +2,6 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { DittoFallbackViz, JolteonDittoFailureTable, JolteonPathViz, JolteonTimeoutViz } from "./viz/ModernJolteonDittoViz";
 
-const FALLBACK_PSEUDOCODE = [
-  "// 같은 view의 timeout 2f+1개를 확인한 뒤에만 fallback을 엽니다.",
-  "if count_valid_timeouts(view) >= 2*f + 1:",
-  "    fallback = true",
-  "    current_view = view + 1",
-  "    multicast(proof(current_view, highest_qc))",
-  "",
-  "// 상대가 보낸 QC가 내 최고 QC보다 낮지 않으면 proof에 서명합니다.",
-  "if received_qc.rank >= highest_qc.rank:",
-  "    reply(ack_share(received_qc))",
-  "else:",
-  "    reply(higher_qc(highest_qc))",
-  "",
-  "// Proof 정족수 또는 더 높은 QC를 확보한 뒤에만 후보를 MVBA에 넣습니다.",
-  "candidate = child_of(highest_valid_qc)",
-  "mvba_input(candidate, proof_or_higher_qc)",
-  "",
-  "// 결정 블록과 조상을 커밋하고, 결정 블록을 다시 인증한 뒤 정상 경로로 돌아갑니다.",
-  "on_mvba_decide(block):",
-  "    commit(block_and_ancestors)",
-  "    multicast(vote_share(block))",
-  "    fallback = false",
-  "    wait_until_certified(block)",
-].join("\n");
-
 export default function ModernJolteonDittoArticle() {
   return (
     <article className="space-y-14">
@@ -109,10 +84,6 @@ export default function ModernJolteonDittoArticle() {
           부분 동기 프로토콜은 GST 전의 긴 비동기 구간에서 안전하게 멈출 수 있습니다. Ditto는 같은 view의 timeout 2f+1개가 모이면 Jolteon의 pacemaker 대신 비동기 fallback을 엽니다. 그러나 timeout 직후 바로 합의를 시작하지는 않습니다. 각 복제본이 qchigh를 담은 proof를 전파하고, 상대가 이를 확인하거나 더 높은 QC를 돌려주는 과정이 먼저 필요합니다.
         </p>
         <DittoFallbackViz />
-        <div className="not-prose overflow-x-auto border border-border bg-muted/20 p-4">
-          <p className="mb-3 text-xs font-bold text-muted-foreground">Ditto Figure 3의 fallback을 풀어 쓴 의사 코드</p>
-          <pre className="min-w-[50rem] text-xs leading-6"><code>{FALLBACK_PSEUDOCODE}</code></pre>
-        </div>
         <p>
           MVBA의 상태 의존 유효성 검사는 후보의 view, 부모 QC의 view, 연속 round와 proof를 함께 확인합니다. MVBA가 블록 B를 결정하면 복제본은 B와 그 조상을 커밋하고 B의 표를 다시 전파합니다. 그다음 fallback 표시를 내리고 B가 인증될 때까지 기다려야 정상 경로로 돌아갈 수 있습니다.
         </p>

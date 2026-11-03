@@ -2,14 +2,24 @@ import { B300_SWITCHLESS_MEASUREMENT as M } from "@/content/b300-switchless-netw
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { B300_SWITCHLESS_SOURCE_LINKS } from "@/content/b300-switchless-network";
+import MeasurementViz from "./viz/MeasurementViz";
 
 export default function Measurement() {
   return (
     <section id="measurement" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        787GB/s는 2-node all-reduce의 busbw다
+        787.211GB/s는 2노드 전용 fixture의 all-reduce busbw입니다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="leading-7">
+          먼저 측정 대상을 고정합니다. 이 수치는 두 노드 사이에 물리 케이블
+          여덟 개를 모두 몰아 넣고, split된 논리 링크 16개를 사용한 project
+          결과입니다. Pair당 물리 케이블 하나만 쓰는 8노드 full mesh의 측정값이
+          아닙니다.
+        </p>
+        <div className="not-prose my-6">
+          <MeasurementViz />
+        </div>
         <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-lg border p-4">
             <p className="text-xs text-muted-foreground">nodes</p>
@@ -75,8 +85,10 @@ export default function Measurement() {
           Direct RDMA, duplex 방향을 함께 보존해야 재현 가능한 결과가 된다.
         </p>
         <p className="leading-7">
-          4–8 node에서 보고한 4–6Tb/s 범위는 별도 topology·collective 실측으로 분리한다. 이 2-node 숫자에서 자동으로 외삽하지 않는다. all-
-          gather, all-to-all, reduce-scatter는 traffic pattern이 달라 각각 측정한다.
+          8노드 full mesh는 pair마다 800G 물리 케이블 하나, 즉 두 400G 논리
+          링크만 가집니다. 따라서 이 2노드 숫자에서 pair bandwidth나 전체
+          all-reduce를 외삽하지 않습니다. All-gather, all-to-all,
+          reduce-scatter도 traffic pattern이 달라 각각 측정합니다.
         </p>
         <div id="paper-switchless-measurement" className="scroll-mt-24">
           <CitationBlock source="NVIDIA nccl-tests performance semantics" citeKey={6} href="https://github.com/NVIDIA/nccl-tests/blob/master/doc/PERFORMANCE.md">

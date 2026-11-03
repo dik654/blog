@@ -8,7 +8,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import WarpStallReasonsAndIssueUtilizationViz from "./warp-stall-reasons-and-issue-utilization/viz/WarpStallReasonsAndIssueUtilizationViz";
 
 const NCU = "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html";
-const PRACTICES = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html";
+const TRIAGE = "https://docs.nvidia.com/nsight-compute/ComputeTriage/index.html";
+const PRACTICES = "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html";
 
 /**
  * Warp stall reason 읽기: scoreboard, barrier, not selected, issue slot
@@ -24,26 +25,36 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
     <div id="overview" className="space-y-16">
       <section id="sampling" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Profiler 는 counter 로 세고 sampling 으로 warp 의 상태를 뽑습니다
+          Warp 가 8개나 있는데도 scheduler 는 왜 자꾸 쉴까요?
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Kernel 이 느린 이유를 profiler 가 알려 주는 방식은 두 가지뿐입니다. 하나는 SM 안의 hardware performance counter 가 issue 된
-            instruction 수나 DRAM 을 지난 byte 수를 사건마다 세는 것입니다. 다른 하나는 일정 clock 마다 warp 하나를 무작위로 골라 그 순간의 상태를 적어 두는
-            sampling 입니다.
+            SM subpartition 에 warp 8개가 들어 있는데 issue activity 가 40%라고 합시다.
+            답은 “warp 수가 적다”가 아니라 “그 순간 다음 instruction 을 낼 수 있는 warp 가
+            자주 0개였다”입니다. GPU를 채운 warp 수와 실제로 준비된 warp 수는 다릅니다.
           </p>
           <p>
-            Counter 는 정확하지만 이유를 말하지 못합니다. Issue 된 instruction 이 1000 clock 에 400개였다는 사실은 알려 줘도 나머지 600 clock 에
-            warp 들이 무엇을 기다렸는지는 counter 에 없습니다. 그 이유를 채우는 것이 warp state sampling 입니다.
+            그러면 곧바로 두 질문이 생깁니다. 준비되지 못한 warp 는 무엇을 기다렸을까요?
+            그리고 기다림이 많았다는 사실만으로 정말 그 기다림을 고쳐야 할까요? 첫 질문에는
+            warp state sampling 이, 두 번째 질문에는 issue activity 와 처리량 지표가 답합니다.
           </p>
           <p>
-            Nsight Compute 의 sampler 는 SM 마다 고정 간격으로 active warp 하나를 골라 program counter 와 scheduler 가 본 그 warp
-            의 상태를 기록합니다. 간격은 작은 GPU 에서 32 clock, SM 이 많은 chip 에서는 2048 clock 까지 늘어납니다. 결과는 시간축 없이 instruction
-            주소별 표본 수로만 남습니다.
+            Profiler 가 이 답을 만드는 재료는 두 종류입니다. Hardware performance counter 는
+            issue 된 instruction 수나 DRAM 을 지난 byte 수를 사건마다 셉니다. Counter 는
+            1,000 active clock 동안 instruction 이 얼마나 issue 됐는지는 알려 주지만, 쉬었던
+            clock 에 warp 들이 무엇을 기다렸는지는 말하지 못합니다.
           </p>
           <p>
-            어떤 warp 의 표본 100개 가운데 60개가 memory 를 기다리는 상태였다면 그 warp 는 시간의 약 60% 를 그 상태로 보낸 것입니다. 표본은 이렇게 통계입니다.
-            이 비율을 원인별로 나눈 이름표가 다음 절의 stall reason 입니다. 표본 수가 적은 짧은 kernel 에서는 이 비율이 흔들립니다.
+            이 빈칸을 sampling 이 채웁니다. Nsight Compute 의 sampler 는 SM 마다 고정
+            간격으로 active warp 하나를 무작위로 골라 program counter 와 scheduler 상태를
+            기록합니다. 간격은 장치에 따라 32 clock 에서 2,048 clock 까지 달라질 수 있습니다.
+            결과는 시간 순서가 아니라 instruction 주소별 표본 수로 남습니다.
+          </p>
+          <p>
+            표본 100개 가운데 60개가 memory 결과를 기다리는 상태라면, 관측된 active
+            warp-cycle 중 약 60%가 그 상태였다고 추정합니다. 이것은 stopwatch 로 잰 60 clock 이
+            아니라 통계입니다. 표본 수가 적은 짧은 kernel 에서는 비율이 크게 흔들릴 수 있습니다.
+            이 상태들을 기다리는 대상별로 붙인 이름이 다음 절의 stall reason 입니다.
           </p>
           <p>
             Counter 도 한 번에 다 읽히지 않습니다. 하드웨어 counter 의 수가 한정돼 있어
@@ -77,13 +88,16 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             barrier 같은 드문 경우입니다.
           </p>
           <p>
-            수치로 읽어 보겠습니다. 어떤 warp 의 표본 100개가 long scoreboard 60, short scoreboard 15, barrier 10, not selected
-            10, selected 5 로 나뉘었다고 합시다. 이 warp 는 100 clock 중 5 clock 만 issue 했으므로 issue 하나마다 평균 20 clock 을 보냈고
-            그 20 clock 의 절반 이상이 global memory 를 기다린 시간입니다.
+            수치로 읽어 보겠습니다. 한 scheduler가 관리한 active warp 표본 100개가 long
+            scoreboard 60, short scoreboard 15, barrier 10, not selected 10, selected 5로
+            나뉘었다고 합시다. 평균적으로 issue 한 번 사이에 warp 상태 표본이 20개 있었고,
+            그중 12개가량이 L1TEX 경로의 결과를 기다리는 표본입니다.
           </p>
           <p>
-            같은 subpartition 에 이런 warp 가 8개 있으면 scheduler 가 매 clock 하나를 고를 수 있는 clock 은 대략 8 × 5% = 40% 입니다.
-            나머지 60% 의 clock 에는 고를 warp 가 없어 issue slot 이 빕니다. 진단은 global memory latency 에 묶인 kernel 입니다.
+            단, 여기서 곧바로 “100 clock 중 60 clock을 HBM에서 기다렸다”라고 말하면 안 됩니다.
+            Sampler가 고른 warp와 실제로 issue된 warp는 다를 수 있고, 여러 warp의 기다림은 서로
+            겹칩니다. 먼저 Scheduler Statistics에서 실제 issue activity가 낮은지 확인한 뒤,
+            그때에만 이 분포를 원인 후보로 사용합니다.
           </p>
           <p>
             이 절의 원인 이름은 scheduler 의 판정을 이름 붙인 것이지 원인의 증명이 아닙니다. 표본이 어느 instruction 에 몰렸는지를 source view 에서 함께
@@ -111,9 +125,14 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Long 과 short 의 차이는 경로에서 옵니다. 기다림의 길이로 갈리는 것이 아닙니다. Nsight Compute 는 L1TEX unit 을 거치는
-            global·local·surface·texture 접근을 long scoreboard 로, MIO queue 를 거치는 shared memory·특수 함수·dynamic
-            branch 를 short scoreboard 로 나눕니다. 이름의 long·short 는 두 경로의 전형적인 latency 를 딴 것입니다.
+            Long 과 short 의 차이는 기다림의 길이가 아니라 경로에서 옵니다. Nsight Compute는
+            L1TEX unit을 거치는 접근을 long scoreboard로 분류합니다. 여기에는 global,
+            local, surface, texture memory가 들어갑니다.
+          </p>
+          <p>
+            MIO queue를 거치는 접근은 short scoreboard입니다. Shared memory, 특수 함수,
+            dynamic branch가 이 경로에 들어갑니다. Long과 short라는 이름은 두 경로의 전형적인
+            latency에서 왔지만, 측정된 시간이 일정 기준을 넘는지로 분류하는 것은 아닙니다.
           </p>
           <p>
             Scoreboard 자체는 하나입니다. Issue 된 load 의 결과 register 에 미완료 표시를
@@ -167,21 +186,29 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
 
       <section id="eligible-issue-slot" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Eligible warp 가 매 clock 하나 이상이어야 issue slot 이 채워집니다
+          Active warp 수가 아니라 eligible warp 수가 issue 를 결정합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Stall reason 을 읽기 전에 볼 숫자가 있습니다. Scheduler Statistics 의 eligible warps per scheduler 는 매 clock
-            scheduler 가 고를 수 있었던 warp 수의 평균이고 issue slot utilization 은 active clock 가운데 실제로 instruction 을 낸
-            clock 의 비율입니다. 문서는 scheduler 가 매 clock issue 하고 있다면 stall 을 보지 말라고 씁니다.
+            Stall reason 을 읽기 전에 Scheduler Statistics를 봅니다. Eligible Warps Per
+            Scheduler는 매 active cycle에 다음 instruction을 낼 준비가 된 warp 수의 평균입니다.
           </p>
           <p>
-            Scheduler 하나는 clock 당 warp 하나만 issue 합니다. 그래서 eligible 이 3개인 clock 도 1개인 clock 도 issue 는 한 번이고
-            eligible 이 0개인 clock 만 slot 을 비웁니다. Issue slot utilization 은 eligible 이 하나 이상인 clock 의 비율과 같습니다.
+            <code>smsp__issue_active.avg.per_cycle_active</code>는 scheduler 하나가 active cycle마다
+            평균 몇 instruction을 issue했는지 보여 줍니다. 장치의 최대 IPC로 정규화한 백분율
+            지표도 따로 있습니다.
           </p>
           <p>
-            평균 eligible 이 0.8 이라면 slot 이 채워진 clock 은 아무리 많아도 80% 입니다. Eligible 이 1을 넘는 clock 이 하나라도 있으면 그만큼 다른
-            clock 이 0이어야 평균이 맞으므로 실제 utilization 은 80% 보다 낮습니다. Eligible 이 2와 0으로만 번갈아 나타나면 40% 까지 떨어집니다.
+            Scheduler는 eligible 집합에서 warp 하나를 고르고, 그 warp에서 하나 이상의
+            instruction을 issue할 수 있습니다. Eligible warp가 0개인 cycle에는 issue하지
+            못합니다. 따라서 eligible 수의 평균만으로 실제 issue activity를 정확히 복원할 수는
+            없지만, 준비된 warp가 부족한지 판단하는 직접적인 단서는 됩니다.
+          </p>
+          <p>
+            이해를 위해 cycle당 최대 한 번 issue하는 단순 모형을 쓰겠습니다. 평균 eligible이
+            0.8이면 issue가 있었던 cycle 비율은 80%를 넘을 수 없습니다. Eligible이 2인 cycle과
+            0인 cycle이 번갈아 나오면 평균은 1이지만 issue cycle 비율은 50%입니다. 그래서
+            평균 eligible이 1이라고 해서 매 cycle issue했다는 뜻은 아닙니다.
           </p>
           <p>
             Not selected 는 이 셈의 반대편입니다. Eligible 이 2 이상인 clock 마다 선택되지
@@ -190,9 +217,10 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             cache locality 를 얻는 쪽을 고려하라고 씁니다.
           </p>
           <p>
-            앞 절의 예로 돌아가면 warp 하나가 100 clock 에 5번 issue 했으므로 매 clock slot 을 채우려면 warp 20개가 필요한데 subpartition 의
-            상한은 16개입니다. Occupancy 를 끝까지 올려도 utilization 은 80% 를 넘지 못합니다. 처방은 warp 수가 아니라 issue 하나당 20 clock 을
-            만드는 long scoreboard 를 줄이는 것입니다.
+            Warp State Statistics의 “cycles per issued instruction”이 20이라면, 단순히 active
+            warp를 더 넣어 latency를 숨길 수 있는지 계산해 볼 수 있습니다. 하지만 필요한 warp
+            수가 장치의 scheduler당 resident warp 상한을 넘는다면 occupancy만 올려서는 해결되지
+            않습니다. 그때는 long scoreboard를 만드는 dependency 자체를 줄여야 합니다.
           </p>
           <p>
             Ready warp 수를 latency 로부터 계산하는 Little's law 셈은{" "}
@@ -201,29 +229,31 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
           </p>
         </div>
         <ExplainedFormula
-          question="Issue slot utilization 은 eligible warp 수와 어떻게 묶이나요?"
-          idea="Scheduler 는 clock 당 한 번만 issue 하므로 slot 이 채워진 clock 의 비율은 eligible 이 하나 이상인 clock 의 비율이고, 평균 eligible 수는 그 비율의 상한이 됩니다."
+          question="평균 eligible warp 수로 issue cycle 비율의 상한을 어떻게 볼까요?"
+          idea="Cycle당 최대 한 번 issue하는 단순 모형에서는 issue가 있었던 cycle에 eligible warp가 적어도 하나 있어야 하므로, 평균 eligible 수가 issue cycle 비율의 상한이 됩니다."
           formula={String.raw`\begin{aligned}
-U_{\mathrm{issue}} &= \frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}} = \Pr[E \ge 1] \\
+R_{\mathrm{issue\ cycle}} &= \frac{C_{\mathrm{issued\ cycle}}}{C_{\mathrm{active}}} = \Pr[E \ge 1] \\
 \Pr[E \ge 1] &\le \min(1,\ \bar{E})
 \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
-U_{\mathrm{issue}} &= \underbrace{\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}}}_{\text{issue 한 clock 의 비율}} = \underbrace{\Pr[E \ge 1]}_{\text{eligible 이 하나 이상인 clock}} \\
+R_{\mathrm{issue\ cycle}} &= \underbrace{\frac{C_{\mathrm{issued\ cycle}}}{C_{\mathrm{active}}}}_{\text{issue가 있었던 cycle 비율}} \\
+&= \underbrace{\Pr[E \ge 1]}_{\text{eligible이 하나 이상일 확률}} \\
 \Pr[E \ge 1] &\le \underbrace{\min(1,\ \bar{E})}_{\text{평균 eligible 수가 상한}}
 \end{aligned}`}
+          mobileFormula={String.raw`R_{\mathrm{issue\ cycle}}=\Pr[E\ge1]\le\min(1,\bar E)`}
           operations={[
-            { expression: String.raw`\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}}`, annotation: ["Instruction 을 낸 clock 수를", "scheduler 가 살아 있던 clock 수로 나눠 utilization 을 구함"] },
-            { expression: String.raw`\Pr[E \ge 1]`, annotation: ["Clock 당 issue 가 한 번뿐이므로", "eligible 이 1 이상인 clock 의 비율과 같아짐"] },
+            { expression: String.raw`\frac{C_{\mathrm{issued\ cycle}}}{C_{\mathrm{active}}}`, annotation: ["Issue가 한 번이라도 있었던 cycle 수를", "scheduler가 active였던 cycle 수로 나눔"] },
+            { expression: String.raw`\Pr[E \ge 1]`, annotation: ["단순 모형에서는 eligible이 1 이상일 때", "그 cycle에 issue가 일어났다고 둠"] },
             { expression: String.raw`\min(1,\ \bar{E})`, annotation: ["Eligible 수의 평균을 구해", "E≥1 인 clock 비율의 상한으로 둠 (Markov 부등식)"] },
           ]}
           terms={[
-            { symbol: String.raw`C_{\mathrm{issued}}`, name: "Issue 한 clock 수", description: "Scheduler 가 instruction 을 하나 이상 낸 clock 의 수입니다." },
+            { symbol: String.raw`C_{\mathrm{issued\ cycle}}`, name: "Issue가 있었던 cycle 수", description: "Scheduler가 instruction을 하나 이상 낸 active cycle의 수입니다." },
             { symbol: String.raw`C_{\mathrm{active}}`, name: "Active clock 수", description: "Scheduler 에 resident warp 가 하나라도 있던 clock 의 수입니다." },
             { symbol: String.raw`E`, name: "Clock 당 eligible warp 수", description: "그 clock 에 scoreboard·barrier·pipe 모두가 허락한 warp 의 수입니다." },
             { symbol: String.raw`\bar{E}`, name: "평균 eligible warp 수", description: "Nsight Compute 의 Eligible Warps Per Scheduler 가 이 값입니다." },
           ]}
-          assumptions={["Scheduler 가 eligible warp 가 있으면 반드시 issue 한다고 봅니다. Dispatch stall 이 있으면 등호가 부등호가 됩니다.", "Clock 당 issue 를 1 로 둔 셈이며 dual issue 는 고려하지 않습니다.", "Eligible 수의 분포가 시간에 따라 바뀌면 평균만으로는 utilization 을 정하지 못하고 상한만 줍니다."]}
-          interpretation="평균 eligible 0.8 이면 utilization 은 80% 이하이고, eligible 이 몰려 있을수록 더 낮습니다. 반대로 not selected 가 많은 kernel 은 E 가 자주 2 이상이라는 뜻이라 warp 를 더 넣어도 utilization 이 오르지 않습니다."
+          assumptions={["설명을 위해 cycle당 최대 한 번 issue하는 scheduler를 가정합니다.", "실제 Nsight Compute의 issue-active metric은 architecture의 최대 IPC와 한 cycle의 복수 instruction issue를 반영할 수 있으므로 이 확률식과 동일한 지표가 아닙니다.", "Eligible 수의 분포가 시간에 따라 바뀌면 평균만으로는 issue cycle 비율을 정하지 못하고 상한만 줍니다."]}
+          interpretation="평균 eligible이 0.8이면 단순 모형의 issue cycle 비율은 80% 이하입니다. 반대로 not selected가 많으면 E가 자주 2 이상이었다는 뜻이라 active warp를 더 넣는 처방은 우선순위가 낮습니다. 실제 최적화 판단에는 smsp__issue_active와 실행 pipe 처리량을 함께 씁니다."
         />
       </section>
 
@@ -243,7 +273,7 @@ U_{\mathrm{issue}} &= \underbrace{\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}
             throughput metric 이 active 기준과 elapsed 기준을 따로 두는 이유가 이것입니다.
           </p>
           <p>
-            SM utilization 이 낮은 원인은 stall 이 아닙니다. H100 의 SM 132개에 block 66개짜리 grid 를 띄우면 절반의 SM 은 처음부터 끝까지 비어
+            SM utilization 이 낮은 원인은 stall 이 아닙니다. SM 132개인 GPU에 block 66개짜리 grid 를 띄우면 절반의 SM 은 처음부터 끝까지 비어
             있습니다. Block 수가 SM 수의 배수가 아니면 마지막 wave 에서 일부 SM 만 일하는 tail 이 생깁니다. 이때 issue active 는 높아도 chip 은 놀고
             있습니다.
           </p>
@@ -324,10 +354,10 @@ U_{\mathrm{issue}} &= \underbrace{\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}
             말라는 지침은 같은 문서의 Warp Stall Reasons 표와 section 설명의 것입니다.
           </p>
           <p>
-            표본 100개의 분포, eligible 0.8, block 66개 같은 숫자는 문서 수치가 아니라 이
-            글이 셈을 보이려고 둔 가정값입니다. Subpartition 당 warp 상한 16개와 H100 의 SM
-            132개는 <Link to="/cs/gpu/sm-warp-scheduling-and-issue#sm-structure">SM 내부 글</Link>
-            의 근거를 그대로 씁니다.
+            표본 100개의 분포, eligible 0.8, SM 132개와 block 66개 같은 숫자는 문서 수치가
+            아니라 이 글이 셈을 보이려고 둔 가정값입니다. 장치별 scheduler 수와 최대 IPC,
+            resident warp 상한은 Nsight Compute의 device attribute 또는 해당 GPU 사양으로 다시
+            확인해야 합니다.
           </p>
           <p>
             Profiling 을 hotspot 찾기의 첫 단계로 두고 effective bandwidth 를 측정 지표로
@@ -346,20 +376,32 @@ U_{\mathrm{issue}} &= \underbrace{\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}
             방식, active·eligible·issued warp 의 정의와 eligible 이 없는 clock 에 issue slot
             이 비는 서술, long·short scoreboard·barrier·not selected·wait·math pipe throttle
             같은 stall reason 의 정의와 처방 문장이 이 문서에 있습니다. Sampling 비율은
-            상태의 통계이지 원인의 증명이 아닙니다.
+            상태의 통계이지 원인의 증명이 아닙니다. 2026-11-02에 현재 문서를 다시 확인했습니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-nsight-compute-triage" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="NVIDIA · Nsight Compute Compute Triage Guide · latency- versus throughput-limited, issue activity"
+            citeKey={2}
+            href={TRIAGE}
+            type="code"
+          >
+            Stall 수 자체가 아니라 issue-slot 활용이 최적화 대상이라는 원칙, issue activity가
+            낮을 때에만 stall 원인을 주된 처방으로 삼는 순서, issue-active와 eligible warp를
+            함께 읽는 기준을 이 문서에서 확인했습니다. 2026-11-02 확인.
           </CitationBlock>
         </div>
         <div id="paper-cuda-best-practices-profiling" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="NVIDIA · CUDA C++ Best Practices Guide 12.8.1 · Profile, Understanding Scaling, Effective Bandwidth"
-            citeKey={2}
+            source="NVIDIA · CUDA C++ Best Practices Guide · Profile, Understanding Scaling, Effective Bandwidth"
+            citeKey={3}
             href={PRACTICES}
             type="code"
           >
             Hotspot 을 찾기 위해 먼저 profiling 하라는 high priority 지침, Amdahl 로 강한
             scaling 의 상한을 보는 절차, effective bandwidth 를 성능 지표로 쓰라는 권고가
             여기에 있습니다. 예제의 V100 bandwidth 같은 수치는 그 GPU 에 묶이며 이 글의
-            가정값과 무관합니다.
+            가정값과 무관합니다. 2026-11-02에 현재 문서를 다시 확인했습니다.
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">

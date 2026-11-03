@@ -1,134 +1,126 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-/** 본문 대응: settlement-range 의 ExplainedFormula — 합의 구간의 폭과 소멸 */
-const SCENES = [
-  "같은 기대라면 구간이 열린다",
-  "기대가 조금 갈려도 남아 있다",
-  "너무 갈리면 구간이 사라진다",
-  "소송비용이 크면 같은 차이도 견딘다",
+const STEPS = [
+  {
+    label: "M이 1,200만원을 요구함",
+    body: "청구액 1,200만원은 협상의 출발점일 뿐입니다. M은 포기·합의·재판 중 하나를 고르고, V도 합의·재판 중 하나를 고릅니다.",
+  },
+  {
+    label: "M의 재판 대안값은 456만원",
+    body: "0.90×0.70×1,200만원−300만원=456만원입니다. 이 단순 모형에서 M은 그보다 낮은 제안을 받느니 재판하는 편이 낫습니다.",
+  },
+  {
+    label: "V의 재판 대안값은 848만원",
+    body: "0.90×0.60×1,200만원+200만원=848만원입니다. V는 그보다 많이 지급하느니 재판하는 편이 낫습니다.",
+  },
+  {
+    label: "456만~848만원이 겹침",
+    body: "둘이 동시에 받아들일 수 있는 범위가 열립니다. 범위가 있다는 것만 알 수 있고, 실제 합의금이나 공정한 금액이 자동으로 정해지는 것은 아닙니다.",
+  },
 ] as const;
 
-/** 판결 금액과 장면별 양측의 승소 기대·소송비용 */
-const JUDGMENT = 1000;
-const SETUP = [
-  { pp: 0.5, pd: 0.5, cp: 80, cd: 80 },
-  { pp: 0.6, pd: 0.5, cp: 80, cd: 80 },
-  { pp: 0.7, pd: 0.5, cp: 80, cd: 80 },
-  { pp: 0.7, pd: 0.5, cp: 150, cd: 150 },
-] as const;
+const C = {
+  claim: "#7c3aed",
+  owner: "#0284c7",
+  vendor: "#d97706",
+  overlap: "#059669",
+  muted: "#64748b",
+  danger: "#dc2626",
+} as const;
 
-const OK = "#10b981";
-const WARN = "#ef4444";
-const ACCENT = "#6366f1";
-const MUTED = "#94a3b8";
+const CLAIM = 12;
+const M_MIN = 4.56;
+const V_MAX = 8.48;
+const x = (value: number, start: number, span: number) => start + (value / CLAIM) * span;
 
-const X0 = 46;
-const SPAN = 384;
-const MAXV = 1000;
-const toX = (v: number) => X0 + (v / MAXV) * SPAN;
-const fmt = (v: number) => v.toLocaleString("ko-KR");
-const pct = (p: number) => `${Math.round(p * 1000) / 10}`;
+function MobileRange({ step }: { step: number }) {
+  return (
+    <svg className="block sm:!hidden" viewBox="0 0 360 430" role="img" aria-label="가게 주인 M과 경보기 업체 V의 합의 범위를 계산하는 모바일 도식">
+      <rect x="42" y="18" width="276" height="64" rx="11" fill="#7c3aed12" stroke={C.claim} strokeWidth="1.2" />
+      <text x="180" y="42" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={C.claim}>M의 청구액 1,200만원</text>
+      <text x="180" y="62" textAnchor="middle" fontSize="9.4" fill="currentColor">이 금액이 곧 합의금은 아님</text>
+
+      <line x1="38" y1="126" x2="322" y2="126" stroke={C.muted} strokeWidth="1.2" />
+      {[0, 4, 8, 12].map((tick) => {
+        const tx = x(tick, 38, 284);
+        return <g key={tick}><line x1={tx} y1="120" x2={tx} y2="132" stroke={C.muted} strokeWidth="1.2" /><text x={tx} y="148" textAnchor="middle" fontSize="9" fill={C.muted}>{tick === 0 ? "0" : `${tick}백만`}</text></g>;
+      })}
+
+      {step >= 1 && (
+        <g>
+          <line x1={x(M_MIN, 38, 284)} y1="98" x2={x(M_MIN, 38, 284)} y2="174" stroke={C.owner} strokeWidth="1.2" />
+          <circle cx={x(M_MIN, 38, 284)} cy="98" r="4" fill={C.owner} />
+          <text x={x(M_MIN, 38, 284)} y="88" textAnchor="middle" fontSize="9.4" fontWeight="700" fill={C.owner}>M 최저 456만</text>
+        </g>
+      )}
+      {step >= 2 && (
+        <g>
+          <line x1={x(V_MAX, 38, 284)} y1="108" x2={x(V_MAX, 38, 284)} y2="184" stroke={C.vendor} strokeWidth="1.2" />
+          <circle cx={x(V_MAX, 38, 284)} cy="184" r="4" fill={C.vendor} />
+          <text x={x(V_MAX, 38, 284)} y="202" textAnchor="middle" fontSize="9.4" fontWeight="700" fill={C.vendor}>V 최고 848만</text>
+        </g>
+      )}
+      {step >= 3 && (
+        <g>
+          <rect x={x(M_MIN, 38, 284)} y="112" width={x(V_MAX, 38, 284) - x(M_MIN, 38, 284)} height="28" rx="6" fill="#05966924" stroke={C.overlap} strokeWidth="1.2" />
+          <text x={(x(M_MIN, 38, 284) + x(V_MAX, 38, 284)) / 2} y="130" textAnchor="middle" fontSize="9.2" fontWeight="700" fill={C.overlap}>합의 가능</text>
+        </g>
+      )}
+
+      <rect x="32" y="230" width="296" height="70" rx="11" fill={step === 1 ? "#0284c712" : "#64748b0d"} stroke={step === 1 ? C.owner : "#cbd5e1"} strokeWidth="1.2" />
+      <text x="180" y="254" textAnchor="middle" fontSize="9.8" fontWeight="700" fill={step === 1 ? C.owner : "currentColor"}>M: 0.90 × 0.70 × 12 − 3 = 4.56</text>
+      <text x="180" y="274" textAnchor="middle" fontSize="9.2" fill="currentColor">미래 판결 기대액에서 자기 부담을 뺌</text>
+      <text x="180" y="291" textAnchor="middle" fontSize="8.9" fill={C.muted}>단위: 백만원</text>
+
+      <rect x="32" y="314" width="296" height="70" rx="11" fill={step === 2 ? "#d9770612" : "#64748b0d"} stroke={step === 2 ? C.vendor : "#cbd5e1"} strokeWidth="1.2" />
+      <text x="180" y="338" textAnchor="middle" fontSize="9.8" fontWeight="700" fill={step === 2 ? C.vendor : "currentColor"}>V: 0.90 × 0.60 × 12 + 2 = 8.48</text>
+      <text x="180" y="358" textAnchor="middle" fontSize="9.2" fill="currentColor">예상 지급액에 피할 수 있는 자기 부담을 더함</text>
+      <text x="180" y="375" textAnchor="middle" fontSize="8.9" fill={C.muted}>M이 이길 확률을 V가 60%로 봄</text>
+
+      <text x="180" y="416" textAnchor="middle" fontSize="9.6" fontWeight="700" fill={step === 3 ? C.overlap : C.danger}>
+        {step === 3 ? "겹침은 가능한 범위이지 공정한 정답이 아닙니다" : "청구액과 실제 협상 범위를 구별합니다"}
+      </text>
+    </svg>
+  );
+}
 
 export default function SettlementRangeViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
-  const step = scenes.active;
-  const { pp, pd, cp, cd } = SETUP[step];
-  const low = pp * JUDGMENT - cp;
-  const high = pd * JUDGMENT + cd;
-  const open = low < high;
-  const gapNeeded = Math.round((pp - pd) * JUDGMENT);
-
-  const NOTES = [
-    `판결이 나면 오가는 돈이 ${fmt(JUDGMENT)}이고 양쪽 다 이길 확률을 ${pct(pp)}퍼센트로 봅니다. 소송비용이 각각 ${fmt(cp)}이면 청구하는 쪽은 ${fmt(low)} 이상이면 받아들이고 받는 쪽은 ${fmt(high)} 이하면 내놓으므로, 그 사이가 전부 합의 가능한 금액입니다.`,
-    `청구하는 쪽이 ${pct(pp)}퍼센트, 받는 쪽이 ${pct(pd)}퍼센트로 갈려도 구간이 ${fmt(low)}에서 ${fmt(high)}까지 남습니다. 기대의 차이 ${fmt(gapNeeded)}이 두 소송비용의 합 ${fmt(cp + cd)}보다 작기 때문입니다.`,
-    `차이가 ${fmt(gapNeeded)}으로 벌어지면 두 소송비용의 합 ${fmt(cp + cd)}을 넘어 구간이 사라집니다. 청구하는 쪽의 최저선이 받는 쪽의 최고선보다 높아져 겹치는 금액이 없습니다. 이때 재판으로 갑니다.`,
-    `같은 차이 ${fmt(gapNeeded)}이라도 소송비용이 각각 ${fmt(cp)}이면 합이 ${fmt(cp + cd)}이 되어 다시 구간이 열립니다. 재판이 비쌀수록 서로 양보할 폭이 넓어진다는 뜻입니다.`,
-  ] as const;
-
   return (
-    <VizFrame
-      eyebrow="합의 구간"
-      title="합의할 수 있는 금액의 폭은 소송비용만큼입니다"
-      description="재판을 피해서 아끼는 돈이 양보할 수 있는 폭이 됩니다."
-      note={`판결 금액을 ${fmt(JUDGMENT)}으로 고정하고 양측의 기대와 소송비용만 바꾼 예입니다. 위험을 대하는 태도와 시간의 값은 넣지 않았습니다.`}
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="합의 가능한 금액의 구간"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+    <StepViz steps={STEPS}>
+      {(step) => (
+        <>
+          <MobileRange step={step} />
+          <svg className="!hidden sm:!block" viewBox="0 0 700 320" role="img" aria-label="가게 주인 M과 경보기 업체 V의 합의 범위를 계산하는 도식">
+            <rect x="28" y="34" width="170" height="68" rx="12" fill="#7c3aed12" stroke={C.claim} strokeWidth="1.2" />
+            <text x="113" y="60" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={C.claim}>M의 청구액 1,200만원</text>
+            <text x="113" y="81" textAnchor="middle" fontSize="9.2" fill="currentColor">출발점이지 합의금이 아님</text>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <text x={X0} y={26} fontSize={9} fill={MUTED}>
-                청구하는 쪽 기대 {pct(pp)}% · 받는 쪽 기대 {pct(pd)}% · 소송비용 각 {fmt(cp)}
-              </text>
+            <line x1="246" y1="108" x2="666" y2="108" stroke={C.muted} strokeWidth="1.2" />
+            {[0, 3, 6, 9, 12].map((tick) => {
+              const tx = x(tick, 246, 420);
+              return <g key={tick}><line x1={tx} y1="102" x2={tx} y2="114" stroke={C.muted} strokeWidth="1.2" /><text x={tx} y="130" textAnchor="middle" fontSize="8.9" fill={C.muted}>{tick === 0 ? "0" : `${tick}백만`}</text></g>;
+            })}
 
-              {open ? (
-                <rect x={toX(low)} y={48} width={toX(high) - toX(low)} height={26} fill={OK} fillOpacity={0.25} stroke={OK} strokeWidth={1} />
-              ) : (
-                <rect x={toX(high)} y={48} width={toX(low) - toX(high)} height={26} fill={WARN} fillOpacity={0.18} stroke={WARN} strokeWidth={1} strokeDasharray="4 3" />
-              )}
+            {step >= 1 && <g><line x1={x(M_MIN, 246, 420)} y1="72" x2={x(M_MIN, 246, 420)} y2="154" stroke={C.owner} strokeWidth="1.2" /><circle cx={x(M_MIN, 246, 420)} cy="72" r="4" fill={C.owner} /><text x={x(M_MIN, 246, 420)} y="61" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={C.owner}>M 최저 456만원</text></g>}
+            {step >= 2 && <g><line x1={x(V_MAX, 246, 420)} y1="82" x2={x(V_MAX, 246, 420)} y2="164" stroke={C.vendor} strokeWidth="1.2" /><circle cx={x(V_MAX, 246, 420)} cy="164" r="4" fill={C.vendor} /><text x={x(V_MAX, 246, 420)} y="183" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={C.vendor}>V 최고 848만원</text></g>}
+            {step >= 3 && <g><rect x={x(M_MIN, 246, 420)} y="94" width={x(V_MAX, 246, 420) - x(M_MIN, 246, 420)} height="28" rx="6" fill="#05966924" stroke={C.overlap} strokeWidth="1.2" /><text x={(x(M_MIN, 246, 420) + x(V_MAX, 246, 420)) / 2} y="112" textAnchor="middle" fontSize="9.3" fontWeight="700" fill={C.overlap}>합의 가능 범위</text></g>}
 
-              <line x1={toX(low)} y1={40} x2={toX(low)} y2={96} stroke={ACCENT} strokeWidth={1.25} />
-              <text x={toX(low)} y={36} textAnchor="middle" fontSize={8.5} fontWeight={700} fill={ACCENT}>
-                청구 최저 {fmt(low)}
-              </text>
-              <line x1={toX(high)} y1={40} x2={toX(high)} y2={96} stroke={WARN} strokeWidth={1.25} />
-              <text x={toX(high)} y={112} textAnchor="middle" fontSize={8.5} fontWeight={700} fill={WARN}>
-                수용 최고 {fmt(high)}
-              </text>
+            <rect x="34" y="202" width="292" height="76" rx="12" fill={step === 1 ? "#0284c712" : "#64748b0d"} stroke={step === 1 ? C.owner : "#cbd5e1"} strokeWidth="1.2" />
+            <text x="180" y="228" textAnchor="middle" fontSize="10.2" fontWeight="700" fill={step === 1 ? C.owner : "currentColor"}>M: 0.90 × 0.70 × 12 − 3 = 4.56</text>
+            <text x="180" y="250" textAnchor="middle" fontSize="9.3" fill="currentColor">미래 판결 기대액 − M의 소송부담</text>
+            <text x="180" y="268" textAnchor="middle" fontSize="8.8" fill={C.muted}>단위: 백만원</text>
 
-              <line x1={X0} y1={96} x2={X0 + SPAN} y2={96} stroke={MUTED} strokeWidth={1} />
-              {[0, 250, 500, 750, 1000].map((tick) => (
-                <g key={tick}>
-                  <line x1={toX(tick)} y1={92} x2={toX(tick)} y2={100} stroke={MUTED} strokeWidth={1} />
-                  <text x={toX(tick)} y={90} textAnchor="middle" fontSize={7.5} fill={MUTED}>
-                    {fmt(tick)}
-                  </text>
-                </g>
-              ))}
-              <text x={X0 + SPAN} y={128} textAnchor="end" fontSize={8} fill={MUTED}>
-                합의 금액
-              </text>
+            <rect x="374" y="202" width="292" height="76" rx="12" fill={step === 2 ? "#d9770612" : "#64748b0d"} stroke={step === 2 ? C.vendor : "#cbd5e1"} strokeWidth="1.2" />
+            <text x="520" y="228" textAnchor="middle" fontSize="10.2" fontWeight="700" fill={step === 2 ? C.vendor : "currentColor"}>V: 0.90 × 0.60 × 12 + 2 = 8.48</text>
+            <text x="520" y="250" textAnchor="middle" fontSize="9.3" fill="currentColor">예상 지급액 + 피할 수 있는 V의 소송부담</text>
+            <text x="520" y="268" textAnchor="middle" fontSize="8.8" fill={C.muted}>V가 보는 M 승소 가능성 60%</text>
 
-              <text x={X0} y={152} fontSize={10} fontWeight={700} fill={open ? OK : WARN}>
-                {open
-                  ? `합의 가능 구간 ${fmt(low)} ~ ${fmt(high)} · 폭 ${fmt(high - low)}`
-                  : "겹치는 금액이 없습니다 · 재판으로 갑니다"}
-              </text>
-              <text x={X0} y={172} fontSize={9} fill={MUTED}>
-                기대의 차이 {fmt(gapNeeded)} {open ? "<" : ">"} 두 소송비용의 합 {fmt(cp + cd)}
-              </text>
-              <text x={X0} y={190} fontSize={9} fontWeight={700} fill={ACCENT}>
-                {open
-                  ? "재판을 피해 아끼는 돈이 양보할 폭이 됩니다"
-                  : "양쪽이 자기가 이긴다고 보는 정도가 아끼는 돈보다 큽니다"}
-              </text>
-            </svg>
-          </div>
-
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[step]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
+            <text x="350" y="307" textAnchor="middle" fontSize="10" fontWeight="700" fill={step === 3 ? C.overlap : C.danger}>
+              {step === 3 ? "겹침은 가능한 협상 범위이지 공정한 금액의 자동 답이 아닙니다" : "청구액 → 각자의 재판 대안값 → 겹치는 범위 순서로 봅니다"}
+            </text>
+          </svg>
+        </>
+      )}
+    </StepViz>
   );
 }

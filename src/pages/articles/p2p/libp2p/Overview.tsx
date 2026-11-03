@@ -11,19 +11,28 @@ export default function Overview() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          주소를 알아낸 두 peer가 연결 한 건을 만든다고 해봅시다. 실제
-          application message를 보내기 전에는 연결 방법을 고르고, 상대 identity를
-          인증하고, 한 연결을 여러 protocol stream으로 나눈 뒤, 각 event를 올바른
-          protocol state에 전달해야 합니다. libp2p는 이 책임을 하나의 거대한
-          protocol에 넣지 않고 <strong>Transport → Security → Stream multiplexer →
-          Swarm → NetworkBehaviour</strong> 경계로 조립합니다.
+          <strong>
+            libp2p는 하나의 통신 protocol이 아니라, 주소에서 인증된 protocol
+            stream까지 만드는 부품과 상태 소유권을 조립하는 규칙입니다.
+          </strong>{" "}
+          연결·인증·다중화·application protocol을 한 객체가 모두 맡지 않기 때문에
+          TCP를 QUIC으로 바꾸거나 Ping 옆에 Kademlia를 추가해도 각 책임의 경계를
+          유지할 수 있습니다.
         </p>
         <p>
-          이 글은 rust-libp2p의 한 outbound connection을 끝까지 추적합니다.
-          Transport가 <em>어떻게 연결할지</em>, ConnectionHandler가 <em>그 연결에서
-          어떤 protocol stream을 열지</em>, NetworkBehaviour가 <em>어느 peer와 무엇을
-          할지</em>를 나눠 보는 것이 핵심입니다. 이름을 외우는 대신 각 state의
-          owner와 실패가 어디로 돌아오는지를 확인합니다.
+          이 글에서는 Alice가 Bob에게 Ping 하나를 보내는 고정 사례만 따라갑니다.
+          Bob의 주소는
+          <code>/ip4/203.0.113.7/tcp/4001/p2p/12D3KooWBob</code>이고, Alice는 TCP
+          위에서 Noise와 Yamux를 협상합니다. Swarm에 등록된 연결 ID는
+          <code>42</code>, Ping nonce는 <code>7</code>, substream protocol은
+          <code>/ipfs/ping/1.0.0</code>이라고 두겠습니다.
+        </p>
+        <p>
+          이 사례에서 Transport는 <em>어떻게 연결할지</em>, ConnectionHandler는
+          <em>연결 42에서 어떤 stream을 열지</em>, NetworkBehaviour는
+          <em>어느 peer와 무엇을 할지</em>를 소유합니다. Swarm은 이 셋의 command와
+          event를 전달합니다. 이름을 먼저 외우지 않고 nonce 7이 내려갔다가 Ping
+          결과로 돌아오는 길을 본 뒤 이름을 붙입니다.
         </p>
         <p>
           암호 채널 자체는 <Link to="/cs/p2p/tls-fundamentals">TLS 1.3 정본</Link>,
@@ -38,10 +47,13 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>먼저 output type을 따라갑니다</h3>
         <p>
-          TCP Transport의 첫 output은 peer identity가 없는 <code>TcpStream</code>입니다.
+          Base TCP transport의 output은 peer identity가 없는 <code>TcpStream</code>입니다.
           Noise upgrade가 성공하면 remote <code>PeerId</code>와 암호화된 I/O가 생기고,
           Yamux 같은 multiplexer가 올라가면 여러 bidirectional substream을 열 수 있는
-          <code>StreamMuxerBox</code>가 됩니다. Swarm이 받는
+          <code>StreamMuxerBox</code>가 됩니다.
+        </p>
+        <p>
+          Swarm이 받는
           <code>(PeerId, StreamMuxerBox)</code>는 이 앞 단계가 모두 끝났다는 계약이지,
           Kademlia나 GossipSub가 이미 실행됐다는 뜻은 아닙니다.
         </p>
@@ -60,9 +72,9 @@ export default function Overview() {
             negotiation과 output 책임은 이 경계로 읽어야 합니다.
           </p>
           <CitationBlock
-            source="libp2p Specifications — Connection Establishment"
+            source="libp2p Specifications commit c750236 — Connection Establishment"
             citeKey={1}
-            href="https://github.com/libp2p/specs/tree/master/connections"
+            href="https://github.com/libp2p/specs/tree/c750236de43cd8b246a824b377dfdb26bae686db/connections"
           >
             Transport upgrade, secure channel, stream multiplexer와 protocol negotiation이
             연결 수립 과정에서 맡는 역할을 확인합니다.

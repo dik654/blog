@@ -1,14 +1,15 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileGateRows from "./MobileGateRows";
 
 /** 본문 대응: Overview.tsx — 서버 쪽 숫자와 건물 쪽 숫자를 짝짓기 */
-const SCENES = ["냉각", "전력", "하중", "내진"] as const;
+const SCENES = ["반입", "하중·내진", "전력", "냉각"] as const;
 const NOTES = [
-  "서버가 요구하는 냉각 방식과 전산실이 제공할 수 있는 설비를 맞춥니다.",
-  "섀시 지속 부하의 합과 랙당 회로 용량을 맞춥니다.",
-  "랙 총 무게에서 나온 면하중·점하중과 바닥 허용치를 맞춥니다.",
-  "랙 등급과 고정 방식을 지역 기준과 건물 설계에 맞춥니다.",
+  "포장된 장비의 외형·무게와 실제 문·승강기·회전 반경을 맞춥니다.",
+  "랙 총 무게·고정 방식과 바닥의 분포·집중 하중 허용치를 맞춥니다.",
+  "섀시 지속 부하의 합과 랙당 A/B 회로 용량을 맞춥니다.",
+  "서버가 요구하는 공기·물 조건과 전산실이 제공할 수 있는 설비를 맞춥니다.",
 ] as const;
 
 const SRV = "#6366f1";
@@ -17,10 +18,10 @@ const OKC = "#10b981";
 const MUTED = "#94a3b8";
 
 const PAIRS = [
-  { k: "냉각", s: "요구 냉각 방식", b: "전산실 설비" },
-  { k: "전력", s: "섀시 지속 부하 합", b: "랙당 회로 용량" },
-  { k: "하중", s: "랙 총 무게", b: "바닥 허용치" },
-  { k: "내진", s: "랙 등급·고정 방식", b: "지역 기준·건물 설계" },
+  { k: "반입", s: "포장 외형·무게", b: "문·승강기·동선" },
+  { k: "하중", s: "랙 무게·고정", b: "바닥·구조 허용치" },
+  { k: "전력", s: "섀시 지속 부하 합", b: "랙당 A/B 용량" },
+  { k: "냉각", s: "공기·물 요구 조건", b: "전산실 설비" },
 ];
 
 export default function ReadinessViz() {
@@ -44,7 +45,8 @@ export default function ReadinessViz() {
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileGateRows step={step} rows={[["반입", "포장 ↔ 실제 경로"], ["하중·내진", "랙 ↔ 구조 허용치"], ["전력", "지속 부하 ↔ A/B"], ["냉각", "공기·물 ↔ 설비"]]} note="바꾸기 어려운 현장 조건부터 닫습니다" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <text x={30} y={30} fontSize={9} fontWeight={700} fill={SRV}>
               서버 쪽 숫자
             </text>

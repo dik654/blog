@@ -1,3 +1,4 @@
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CIDStructViz from "./viz/CIDStructViz";
 
@@ -5,88 +6,134 @@ export default function CID() {
   return (
     <section id="cid" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        CIDv1은 version·codec·multihash를 담은 typed content address입니다
+        CID는 hash만 적은 문자열이 아니라 bytes를 검증하고 읽는 방법까지 담은
+        주소입니다
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          CID(Content Identifier)를 단순히 “hash 문자열”이라고 부르면 중요한
-          type 정보가 빠집니다. Binary CIDv1은 version varint, content codec
-          varint, multihash로 구성됩니다. Multihash 안에는 다시 hash algorithm
-          code, digest length와 digest bytes가 들어갑니다. 문자열 앞의 multibase
-          prefix는 이 binary CID를 base32·base58btc 등 어떤 문자 체계로
-          표현했는지 알려 주며 binary CID 자체의 일부는 아닙니다.
+          <strong>
+            Raw hello CID의 <code>01 55 12 20</code>은 각각 CIDv1, raw codec,
+            sha2-256, 32-byte digest length를 뜻합니다.
+          </strong>{" "}
+          그 뒤에 실제 digest 32 bytes가 옵니다. 그래서 decoder는 format과 hash
+          algorithm을 바깥 설정으로 추측하지 않아도 됩니다.
+        </p>
+        <p>
+          문자열 맨 앞의 <code>b</code>는 binary CID를 base32로 표현했다는
+          multibase prefix입니다. Binary CID의 첫 field는 <code>0x01</code>이지
+          <code>b</code>가 아닙니다. 같은 binary CID를 다른 허용 multibase로
+          표현하면 문자열은 달라도 content address의 binary 값은 같습니다.
         </p>
       </div>
       <div className="not-prose my-8">
         <CIDStructViz />
       </div>
       <ExplainedFormula
-        question="CID parser는 문자열에서 어떤 순서로 type과 digest를 복구할까요?"
-        idea={
-          <>
-            먼저 multibase prefix로 문자열을 bytes로 되돌리고, minimal varint로
-            version과 codec을 읽은 뒤 multihash의 algorithm·length·digest를
-            정확히 소비합니다.
-          </>
-        }
+        question="Binary CIDv1 안에서 codec과 hash 정보는 어떻게 이어질까요?"
+        idea="작은 정수 field는 minimal unsigned varint로 쓰고, multihash는 hash algorithm code·digest byte 수·digest를 연달아 둡니다."
         formula={String.raw`\begin{aligned}
-\mathrm{CIDv1}_{bin} &= \operatorname{varint}(1)\,\|\,
-\operatorname{varint}(codec)\,\|\,\operatorname{multihash}(b),\\
-\operatorname{multihash}(b) &= \operatorname{varint}(hcode)\,\|\,
-\operatorname{varint}(|d|)\,\|\,d.
+\mathrm{CIDv1}_{bin} &= \operatorname{varint}(1)\,\|\,\operatorname{varint}(codec)\,\|\,mh,\\
+mh &= \operatorname{varint}(hcode)\,\|\,\operatorname{varint}(|d|)\,\|\,d.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\mathrm{CIDv1}_{bin} &= \underbrace{\operatorname{varint}(1)\,\|\,
-\operatorname{varint}(codec)\,\|\,\operatorname{multihash}(b),}_{\text{unsigned variable 계산}}\\
-\operatorname{multihash}(b) &= \underbrace{\operatorname{varint}(hcode)\,\|\,
-\operatorname{varint}(|d|)\,\|\,d.}_{\text{unsigned variable 계산}}
+\mathrm{CIDv1}_{bin} &= \underbrace{\operatorname{varint}(1)}_{\text{CIDv1}}\,\|\,\underbrace{\operatorname{varint}(codec)}_{\text{content 형식}}\,\|\,\underbrace{mh}_{\text{self-describing hash}},\\
+mh &= \underbrace{\operatorname{varint}(hcode)}_{\text{hash algorithm}}\,\|\,\underbrace{\operatorname{varint}(|d|)}_{\text{digest byte 수}}\,\|\,\underbrace{d}_{\text{digest bytes}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{varint}(1)\,\|\,
-\operatorname{varint}(codec)\,\|\,\operatorname{multihash}(b),`, annotation: ["unsigned variable integer이(가) 식의","결과에 기여하는 방식을 계산합니다.","먼저 multibase prefix로 문자열을 bytes로","되돌리고, minimal varint로 version과"] },
-          { expression: String.raw`\operatorname{varint}(hcode)\,\|\,
-\operatorname{varint}(|d|)\,\|\,d.`, annotation: ["unsigned variable integer이(가) 식의","결과에 기여하는 방식을 계산합니다.","먼저 multibase prefix로 문자열을 bytes로","되돌리고, minimal varint로 version과"] },
+          {
+            expression: String.raw`\operatorname{varint}(1)`,
+            annotation: [
+              "첫 minimal varint가 1이면 CIDv1입니다",
+              "raw hello에서는 한 byte 0x01입니다",
+            ],
+          },
+          {
+            expression: String.raw`\operatorname{varint}(codec)`,
+            annotation: [
+              "Digest가 가리키는 content 형식을 식별합니다",
+              "raw codec code는 0x55입니다",
+            ],
+          },
+          {
+            expression: String.raw`\operatorname{varint}(hcode)\,\|\,\operatorname{varint}(|d|)`,
+            annotation: [
+              "0x12는 sha2-256 algorithm code입니다",
+              "0x20은 뒤 digest가 32 bytes라는 뜻입니다",
+            ],
+          },
+          {
+            expression: String.raw`\operatorname{varint}(|d|)\,\|\,d`,
+            annotation: [
+              "선언한 길이만큼 digest를 정확히 읽습니다",
+              "Truncated input이나 남는 trailing bytes를 거부합니다",
+            ],
+          },
         ]}
         terms={[
           {
             symbol: "codec",
-            name: "content multicodec",
-            description:
-              "raw, dag-pb, dag-cbor처럼 digest가 가리키는 bytes의 해석 format입니다.",
+            name: "Content multicodec",
+            description: "raw·dag-pb·dag-cbor처럼 bytes의 해석 format입니다.",
           },
           {
             symbol: "hcode",
-            name: "hash function code",
-            description: "sha2-256 등 digest를 계산한 algorithm을 식별합니다.",
+            name: "Hash function code",
+            description: "sha2-256 등 digest를 계산한 algorithm의 code입니다.",
           },
           {
             symbol: "|d|",
-            name: "digest length",
-            description:
-              "뒤따르는 digest byte 수이며 trailing·truncated input 검증에 사용합니다.",
+            name: "Digest length",
+            description: "뒤따르는 digest의 정확한 byte 수입니다.",
           },
           {
-            symbol: "varint",
-            name: "unsigned variable integer",
-            description:
-              "작은 code를 적은 bytes로 표현하되 CID parser는 최소 인코딩만 허용합니다.",
+            symbol: "d",
+            name: "Digest bytes",
+            description: "Content bytes를 hash한 실제 결과입니다.",
           },
         ]}
         assumptions={[
-          "CIDv1 parser는 overlong varint, truncated digest와 multihash 뒤 trailing bytes를 거부해야 합니다.",
-          "Codec code는 bytes를 어떻게 decode할지 말하지만 content가 그 schema에서 의미상 유효하다고 자동 보장하지 않습니다.",
-          "CIDv0은 34-byte sha2-256 multihash와 implicit dag-pb라는 제한된 legacy form입니다.",
+          "각 varint는 최소 길이로 인코딩해야 하며 overlong representation은 거부합니다.",
+          "Content codec은 bytes의 형식을 식별하지만 그 schema의 의미상 유효성까지 보장하지 않습니다.",
+          "CIDv0은 정확한 34-byte sha2-256 multihash와 implicit dag-pb를 쓰는 제한된 legacy form입니다.",
         ]}
-        interpretation="공식 예의 raw 'hello'는 01(version) 55(raw) 12(sha2-256) 20(32-byte length) 뒤에 digest가 옵니다. 같은 binary CID를 base32와 base58btc로 쓰면 문자열은 달라도 content address는 같습니다."
+        interpretation="Raw hello는 01 | 55 | 12 | 20 | 2cf24dba…38b9824로 분해됩니다. 즉 앞 네 표지는 4 bytes이고 뒤 digest는 32 bytes여서 binary CIDv1 전체는 36 bytes입니다."
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Decoder는 permissive하게 추측하지 않습니다</h3>
+        <AlgorithmBlock
+          title="bafk…4yeq를 strict하게 읽는 순서"
+          input={[
+            "CID string bafkreibm6jg3…hc4yeq",
+            "multibase·multicodec·multihash registry",
+          ]}
+          steps={[
+            {
+              code: "prefix 'b' → base32_decode(rest)",
+              note: "Multibase는 문자열을 binary CID로 되돌리는 바깥 표현입니다.",
+            },
+            {
+              code: "read_minimal_varint() == 0x01",
+              note: "CIDv1만 허용하고 예약 version·overlong varint를 거부합니다.",
+            },
+            {
+              code: "codec = read_minimal_varint()  // 0x55 raw",
+              note: "Hash 대상 bytes를 어떤 content format으로 읽을지 정합니다.",
+            },
+            {
+              code: "hcode=0x12; digest_len=0x20",
+              note: "Sha2-256 digest 32 bytes가 이어져야 합니다.",
+            },
+            {
+              code: "digest = read_exact(32); require_eof()",
+              note: "부족한 digest와 뒤에 남은 bytes를 모두 거부합니다.",
+            },
+          ]}
+          output="CIDv1(raw, sha2-256, 2cf24dba…38b9824)"
+        />
         <p>
-          CIDv0은 정확히 34 bytes이고 0x12 0x20으로 시작하는 경우에만
-          판정합니다. CIDv1은 leading varint 0x01을 요구하며 reserved
-          version이나 남는 bytes를 거부합니다. 이렇게 canonical encoding을
-          강제해야 같은 identifier가 여러 byte representation으로 나타나 cache
-          key·signature 검증을 흔드는 문제를 줄일 수 있습니다.
+          Strict decoding이 필요한 이유는 같은 identifier를 여러 byte 표현으로
+          만들지 않기 위해서입니다. Decoder가 overlong varint나 trailing bytes를
+          눈감아 주면 cache key, signature 대상, equality 판정이 구현마다 달라질
+          수 있습니다.
         </p>
       </div>
     </section>

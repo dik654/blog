@@ -120,7 +120,7 @@ export function PbftNormalViz() {
       canvasClassName="p-2.5 sm:p-5"
     >
       <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="PBFT 요청 한 건의 여섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[35rem] sm:min-h-[22.25rem]">
           <div className="border-y border-border py-3">
             <p className="text-[10px] font-black text-muted-foreground">현재 동작</p>
             <p className="mt-1 min-h-12 break-keep text-sm font-bold leading-6">{state.action}</p>
@@ -142,6 +142,98 @@ export function PbftNormalViz() {
   );
 }
 
+const PREDICATE_LABELS = ["제안 확인", "PREPARE 계산", "COMMIT 전송", "COMMIT 계산", "순서 실행"] as const;
+
+const PREDICATE_STATES = [
+  {
+    code: "has_request(m) && has_preprepare(m, view, sequence)",
+    question: "요청 본문과 주 노드의 제안이 같은 자리입니까?",
+    evidence: ["요청 m", "PRE-PREPARE(0, 42, dA)", "D(m) = dA"],
+    count: "개수를 세기 전 단계",
+    result: "서명·view·sequence·digest·watermark가 맞으므로 제안을 로그에 넣습니다.",
+  },
+  {
+    code: "distinct_matching_prepares(view, sequence, digest) >= 2 * f",
+    question: "서로 다른 백업이 같은 제안을 보았습니까?",
+    evidence: ["R1: PREPARE(0, 42, dA)", "R2: PREPARE(0, 42, dA)"],
+    count: "2개 ≥ 2f = 2개",
+    result: "요청·PRE-PREPARE와 이 두 표가 함께 있으므로 prepared입니다.",
+  },
+  {
+    code: "if prepared(m, view, sequence): send_commit(view, sequence, digest)",
+    question: "이 복제본이 COMMIT을 보낼 자격을 얻었습니까?",
+    evidence: ["로컬 prepared = 참", "아직 실행하지 않음"],
+    count: "조건 통과",
+    result: "COMMIT을 보냅니다. COMMIT 전송 자체는 실행이나 사용자 성공이 아닙니다.",
+  },
+  {
+    code: "prepared(...) && distinct_matching_commits(...) >= 2 * f + 1",
+    question: "같은 증거가 다음 view에도 남을 만큼 퍼졌습니까?",
+    evidence: ["로컬 prepared", "R0·R1·R2의 COMMIT"],
+    count: "3개 ≥ 2f+1 = 3개",
+    result: "committed-local입니다. COMMIT 세 개만 있고 로컬 prepared가 없으면 실패입니다.",
+  },
+  {
+    code: "execute_after_all_lower_sequences(sequence)",
+    question: "지금 sequence 42를 상태 기계에 적용해도 됩니까?",
+    evidence: ["committed-local(42)", "sequence 0…41 실행 완료"],
+    count: "두 조건 모두 통과",
+    result: "42번 요청을 실행하고 결과를 클라이언트에게 보냅니다.",
+  },
+] as const;
+
+const PREDICATE_NOTES = PREDICATE_STATES.map(
+  (state) => `${state.question} ${state.count}. ${state.result}`,
+);
+
+export function PbftPredicateViz() {
+  const scenes = useAnimatedScenes(PREDICATE_LABELS.length, 6200, { loop: false });
+  const state = PREDICATE_STATES[scenes.active];
+
+  return (
+    <VizFrame
+      eyebrow="OSDI 1999 §4.2 · 판정 의사코드"
+      title="코드는 표를 세기 전에 무엇을 함께 확인하는지부터 말합니다"
+      description="한 줄씩 실행하면서 현재 질문, 실제 증거, n=4·f=1의 계산과 판정 결과를 같은 화면에서 연결합니다."
+      note="같은 발신자의 중복 메시지는 한 번만 셉니다. 모든 PREPARE와 COMMIT은 같은 view·sequence·digest를 가리켜야 합니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div
+        id={scenes.playbackId}
+        data-viz-live-only
+        tabIndex={0}
+        role="group"
+        aria-label="PBFT 판정 의사코드 다섯 단계"
+        onKeyDown={scenes.onKeyDown}
+        className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        <div data-viz-scene-stage className="min-h-[38rem] border-y border-border py-4 sm:min-h-[23rem]">
+          <p className="text-[10px] font-black text-primary">
+            {String(scenes.active + 1).padStart(2, "0")} · {PREDICATE_LABELS[scenes.active]}
+          </p>
+          <h4 className="mt-2 break-keep text-base font-bold leading-7">{state.question}</h4>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">
+            {state.code}
+          </code>
+          <div className="mt-3 grid gap-px bg-border p-px sm:grid-cols-[8rem_minmax(0,1fr)]">
+            <strong className="bg-background p-3 text-[10px] text-muted-foreground">로컬에 있는 증거</strong>
+            <ul className="min-w-0 space-y-1 bg-background p-3 text-xs font-bold leading-5">
+              {state.evidence.map((item) => <li key={item} className="break-keep">· {item}</li>)}
+            </ul>
+            <strong className="bg-background p-3 text-[10px] text-muted-foreground">이번 계산</strong>
+            <p className="min-w-0 break-keep bg-background p-3 text-xs font-bold leading-5">{state.count}</p>
+            <strong className="bg-background p-3 text-[10px] text-muted-foreground">다음 상태</strong>
+            <p className="min-w-0 break-keep bg-background p-3 text-xs font-bold leading-5">{state.result}</p>
+          </div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={PREDICATE_LABELS} controlLabels={PREDICATE_LABELS} playLabel="PBFT 판정 의사코드 재생" />
+      </div>
+      <StaticSceneList labels={PREDICATE_LABELS} notes={PREDICATE_NOTES} />
+    </VizFrame>
+  );
+}
+
 export function PbftRecoveryViz() {
   const scenes = useAnimatedScenes(RECOVERY_LABELS.length, 6000, { loop: false });
   const state = RECOVERY_STATES[scenes.active];
@@ -155,7 +247,7 @@ export function PbftRecoveryViz() {
       canvasClassName="p-2.5 sm:p-5"
     >
       <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="PBFT 주 노드 장애부터 복제본 복구까지 여섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <div data-viz-scene-stage className="border-y border-border py-4">
+        <div data-viz-scene-stage className="min-h-[25.75rem] border-y border-border py-4 sm:min-h-[16.75rem]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {RECOVERY_LABELS[scenes.active]}</p>
           <h4 className="mt-2 break-keep text-base font-bold leading-7">{state.title}</h4>
           <div className="mt-4 grid gap-px bg-border p-px sm:grid-cols-[8rem_minmax(0,1fr)]">

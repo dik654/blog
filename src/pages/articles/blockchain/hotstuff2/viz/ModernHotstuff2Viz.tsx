@@ -127,7 +127,7 @@ export function Hotstuff2CommitViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[35rem] sm:min-h-[21rem]">
           <p className="min-h-14 border-y border-border py-3 text-sm font-bold leading-6">{state.title}</p>
           <div className="mt-3 grid gap-px bg-border p-px sm:grid-cols-2">
             <div className="bg-background p-3">
@@ -171,7 +171,7 @@ export function Hotstuff2EntryViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[36rem] sm:min-h-[22rem]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {ENTRY_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
           <div className="mt-3 space-y-px">
@@ -188,6 +188,79 @@ export function Hotstuff2EntryViz() {
         <AnimatedSceneControls {...scenes} labels={ENTRY_LABELS} controlLabels={ENTRY_LABELS} playLabel="느린 view 진입 재생" />
       </div>
       <StaticSceneList labels={ENTRY_LABELS} notes={ENTRY_NOTES} />
+    </VizFrame>
+  );
+}
+
+const ENTRY_DECISION_LABELS = ["증거 확인", "빠른 진입", "잠금 보고", "시간 대기", "부모 선택"] as const;
+
+const ENTRY_DECISION_STATES = [
+  {
+    code: "if doubleCertificate.view == currentView - 1",
+    input: "현재 view 21 · 이중 인증서 view 20",
+    decision: "20 = 21 - 1 · 직전 view 증거",
+    action: "빠른 경로 조건을 만족합니다.",
+    guard: "이중 인증서의 두 정족수와 블록 해시를 먼저 검증합니다.",
+  },
+  {
+    code: "enter_without_wait()",
+    input: "직전 view 20의 C20(C20(B20))",
+    decision: "더 높은 숨은 lock이 존재할 수 없음",
+    action: "Ppc+Δ를 기다리지 않고 B20의 자식 B21을 제안합니다.",
+    guard: "오래된 이중 인증서나 서명이 틀린 증거에는 이 분기를 열지 않습니다.",
+  },
+  {
+    code: "else: send_locked_certificate_to_leader()",
+    input: "직전 view 이중 인증서 없음",
+    decision: "느린 경로",
+    action: "각 복제본이 자신이 가진 가장 높은 잠금 인증서를 새 주 노드에게 보냅니다.",
+    guard: "첫 2t+1개만 받고 바로 부모를 고르지 않습니다.",
+  },
+  {
+    code: "wait(Ppc + delta)",
+    input: "GST 뒤 · 정상 복제본의 view 진입 차이 ≤ Ppc · 메시지 지연 ≤ Δ",
+    decision: "모든 정상 잠금 보고가 도착할 시간 경과",
+    action: "늦게 들어온 정상 복제본의 더 높은 lock까지 비교 대상에 넣습니다.",
+    guard: "GST 전에는 이 시간이 전달 완료를 보장하지 않으므로 진행이 멈출 수 있습니다.",
+  },
+  {
+    code: "parent = highest_valid_certificate(receivedLocks)",
+    input: "도착한 유효한 잠금 인증서 전체",
+    decision: "가장 높은 인증서 하나 선택",
+    action: "그 인증서의 블록을 부모로 새 블록을 제안합니다.",
+    guard: "보고서 묶음을 제안에 붙이는 status certificate로 바꾸지 않습니다.",
+  },
+] as const;
+
+const ENTRY_DECISION_NOTES = ENTRY_DECISION_STATES.map((state) => `${state.code}. ${state.action} ${state.guard}`);
+
+export function Hotstuff2EntryDecisionViz() {
+  const scenes = useAnimatedScenes(ENTRY_DECISION_LABELS.length, 7000, { loop: false });
+  const state = ENTRY_DECISION_STATES[scenes.active];
+
+  return (
+    <VizFrame
+      eyebrow="HotStuff-2 Figure 1·2 · 진입 의사코드"
+      title="직전 view의 이중 인증서가 있느냐가 빠른 길과 느린 길을 가릅니다"
+      description="각 코드 줄이 검사하는 입력, 판정, 실제 동작과 안전장치를 한 화면에서 연결합니다."
+      note="빠른 길은 증거를 생략하는 길이 아닙니다. 직전 view의 유효한 이중 인증서가 느린 대기를 대신하는 증거입니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="HotStuff-2 view 진입 의사코드 다섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+        <div data-viz-scene-stage className="min-h-[39rem] border-y border-border py-4 sm:min-h-[24rem]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {ENTRY_DECISION_LABELS[scenes.active]}</p>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">{state.code}</code>
+          <div className="mt-3 space-y-px">
+            <EvidenceRow label="들어온 상태">{state.input}</EvidenceRow>
+            <EvidenceRow label="이번 판정">{state.decision}</EvidenceRow>
+            <EvidenceRow label="다음 동작">{state.action}</EvidenceRow>
+            <EvidenceRow label="빠뜨리면 안 될 조건">{state.guard}</EvidenceRow>
+          </div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={ENTRY_DECISION_LABELS} controlLabels={ENTRY_DECISION_LABELS} playLabel="HotStuff-2 view 진입 판정 재생" />
+      </div>
+      <StaticSceneList labels={ENTRY_DECISION_LABELS} notes={ENTRY_DECISION_NOTES} />
     </VizFrame>
   );
 }

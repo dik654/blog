@@ -1,190 +1,129 @@
 import type { CodeRef } from "@/components/code/types";
-export type { LineNote, CodeRef } from "@/components/code/types";
-
-import plonkRs from "./codebase/halo2_proofs/src/plonk.rs?raw";
-import keygenRs from "./codebase/halo2_proofs/src/plonk/keygen.rs?raw";
-import proverRs from "./codebase/halo2_proofs/src/plonk/prover.rs?raw";
-import verifierRs from "./codebase/halo2_proofs/src/plonk/verifier.rs?raw";
-import circuitRs from "./codebase/halo2_proofs/src/circuit.rs?raw";
+import simpleGateRs from "./codebase/halo2/simple_gate.rs?raw";
+import simpleMulExposeRs from "./codebase/halo2/simple_mul_expose.rs?raw";
+import simpleMockRs from "./codebase/halo2/simple_mock.rs?raw";
+import createProofRs from "./codebase/halo2/create_proof.rs?raw";
+import verifyProofRs from "./codebase/halo2/verify_proof.rs?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
-  "plonk-mod": {
-    path: "halo2_proofs/src/plonk.rs",
-    code: plonkRs,
+  "simple-gate": {
+    path: "halo2_proofs/examples/simple-example.rs:76–117",
+    code: simpleGateRs.trimEnd(),
     lang: "rust",
-    highlight: [40, 50],
+    highlight: [1, 42],
+    desc: "zcash/halo2 @ 3442dd3 · equality-enabled columns, selector, cur/next rotations와 s_mul·(lhs·rhs−out) gate를 만드는 공식 예제 원문",
     annotations: [
       {
-        lines: [18, 27],
+        lines: [1, 12],
         color: "sky",
-        note: "하위 모듈 선언 — circuit, keygen, prover, verifier, lookup, permutation, vanishing",
+        note: "Advice·instance columns에 equality를 켜고 multiplication selector를 만듭니다.",
       },
       {
-        lines: [40, 50],
-        color: "emerald",
-        note: "VerifyingKey 구조체 — 도메인, 고정 열 커밋, 퍼뮤테이션 VK, ConstraintSystem",
-      },
-      {
-        lines: [131, 141],
+        lines: [15, 31],
         color: "amber",
-        note: "ProvingKey 구조체 — VK + l0/l_blind/l_last 도메인 다항식 + 고정 다항식",
+        note: "Row 0의 lhs·rhs와 다음 row의 out을 Rotation::cur·next로 읽습니다.",
       },
       {
-        lines: [157, 175],
-        color: "violet",
-        note: "Fiat-Shamir 도전값 타입 정의 (Theta, Beta, Gamma, Y, X)",
+        lines: [33, 42],
+        color: "emerald",
+        note: "Selector가 0이면 값이 자유롭고, 0이 아니면 lhs·rhs=out을 강제한다는 공식 주석과 식입니다.",
       },
     ],
-    desc: "크레이트 최상위 PLONK 모듈입니다. VerifyingKey와 ProvingKey 구조체를 정의하고, keygen/prover/verifier 하위 모듈을 re-export합니다. Fiat-Shamir 도전값 타입(Theta, Beta, Gamma, Y, X)도 여기서 정의됩니다.",
   },
-
-  "circuit-trait": {
-    path: "halo2_proofs/src/circuit.rs",
-    code: circuitRs,
+  "simple-mul-expose": {
+    path: "halo2_proofs/examples/simple-example.rs:185–230",
+    code: simpleMulExposeRs.trimEnd(),
     lang: "rust",
-    highlight: [28, 50],
+    highlight: [1, 46],
+    desc: "zcash/halo2 @ 3442dd3 · selector를 켜고 입력 cell을 copy한 뒤 다음 row에 결과를 배치하고 instance에 노출하는 공식 예제 원문",
     annotations: [
       {
-        lines: [20, 27],
-        color: "sky",
-        note: "Chip 트레이트 — Config + Loaded 연관 타입으로 가젯 상태 관리",
-      },
-      {
-        lines: [30, 36],
-        color: "emerald",
-        note: "Cell 구조체 — region_index + row_offset + column으로 셀 위치 식별",
-      },
-      {
-        lines: [55, 60],
+        lines: [9, 15],
         color: "amber",
-        note: "Region — assign_advice/assign_fixed/constrain_equal로 셀 할당",
+        note: "Region offset 0에서 selector를 켜야 두 행의 multiplication gate가 활성화됩니다.",
       },
       {
-        lines: [103, 120],
+        lines: [17, 22],
         color: "violet",
-        note: "Layouter 트레이트 — assign_region/assign_table로 회로 배치 전략 추상화",
+        note: "다른 곳의 입력은 copy_advice로 equality constraint에 결속합니다.",
+      },
+      {
+        lines: [24, 34],
+        color: "emerald",
+        note: "곱을 계산해 next row의 output cell에 배치합니다. 계산만이 아니라 앞의 gate가 관계를 강제합니다.",
+      },
+      {
+        lines: [37, 46],
+        color: "sky",
+        note: "Output cell을 instance column의 지정 row와 constrain_instance로 묶습니다.",
       },
     ],
-    desc: "회로 구현을 위한 핵심 트레이트와 구조체입니다. Chip은 가젯의 설정/상태를 관리하고, Region은 실제 셀 할당이 이루어지는 영역입니다. Layouter가 Region 배치를 최적화합니다.",
   },
-
-  "keygen-vk": {
-    path: "halo2_proofs/src/plonk/keygen.rs",
-    code: keygenRs,
+  "simple-mock": {
+    path: "halo2_proofs/examples/simple-example.rs:305–337",
+    code: simpleMockRs.trimEnd(),
     lang: "rust",
-    highlight: [189, 244],
+    highlight: [1, 33],
+    desc: "zcash/halo2 @ 3442dd3 · 정확한 public input은 통과하고 1을 더한 잘못된 public input은 실패하는 공식 MockProver 예제 원문",
     annotations: [
       {
-        lines: [189, 197],
+        lines: [5, 20],
         color: "sky",
-        note: "keygen_vk 함수 시그니처 — Params + Circuit → VerifyingKey",
+        note: "k=4와 private values로 circuit을 구성하고 public 결과를 계산합니다.",
       },
       {
-        lines: [198, 211],
+        lines: [22, 28],
         color: "emerald",
-        note: "create_domain + Assembly 초기화 — 고정 열, 퍼뮤테이션, 선택자 빈 배열 생성",
+        note: "정확한 instance c는 MockProver 검증을 통과합니다.",
       },
       {
-        lines: [214, 227],
-        color: "amber",
-        note: "회로 합성 + 선택자 압축 — FloorPlanner::synthesize → compress_selectors",
-      },
-      {
-        lines: [229, 244],
-        color: "violet",
-        note: "퍼뮤테이션 VK 빌드 + 고정 열 KZG 커밋 → VerifyingKey 조립",
+        lines: [30, 33],
+        color: "rose",
+        note: "같은 회로에서 public input에 1을 더하면 검증이 실패합니다.",
       },
     ],
-    desc: "keygen_vk는 Circuit 인스턴스에서 VerifyingKey를 생성합니다. 회로를 합성하여 고정 열과 퍼뮤테이션 데이터를 채우고, 선택자를 압축한 뒤 KZG 커밋으로 마무리합니다.",
   },
-
-  "keygen-pk": {
-    path: "halo2_proofs/src/plonk/keygen.rs",
-    code: keygenRs,
-    lang: "rust",
-    highlight: [247, 337],
-    annotations: [
-      {
-        lines: [247, 255],
-        color: "sky",
-        note: "keygen_pk 함수 시그니처 — Params + VK + Circuit → ProvingKey",
-      },
-      {
-        lines: [290, 302],
-        color: "emerald",
-        note: "고정 다항식 변환 — Lagrange → 계수형 → extended coset",
-      },
-      {
-        lines: [304, 309],
-        color: "amber",
-        note: "l0(X) 계산 — row 0 경계 다항식 (그랜드 프로덕트 초기 조건)",
-      },
-      {
-        lines: [311, 325],
-        color: "violet",
-        note: "l_blind(X) + l_last(X) — 블라인딩 행 + 마지막 활성 행 경계 다항식",
-      },
-    ],
-    desc: "keygen_pk는 VK에 증명 전용 데이터를 추가합니다. l0, l_blind, l_last는 그랜드 프로덕트 인수의 경계 조건을 인코딩하는 Lagrange 다항식으로, extended coset 형태로 미리 계산됩니다.",
-  },
-
   "create-proof": {
-    path: "halo2_proofs/src/plonk/prover.rs",
-    code: proverRs,
+    path: "halo2_proofs/src/plonk/prover.rs:30–59",
+    code: createProofRs.trimEnd(),
     lang: "rust",
-    highlight: [35, 48],
+    highlight: [1, 30],
+    desc: "zcash/halo2 @ 3442dd3 · 같은 circuit의 proving key, instances와 transcript를 받아 proof를 만들고 VK를 transcript에 먼저 hash하는 원문",
     annotations: [
       {
-        lines: [35, 48],
+        lines: [1, 18],
         color: "sky",
-        note: "create_proof 시그니처 — Params, ProvingKey, circuits, instances, rng, transcript",
+        note: "Params·ProvingKey·circuit·public instances·RNG·transcript가 proof 생성 profile을 이룹니다.",
       },
       {
-        lines: [59, 68],
-        color: "emerald",
-        note: "VK 해시 → 트랜스크립트 + ConstraintSystem 로드 (도메인 분리)",
-      },
-      {
-        lines: [269, 317],
+        lines: [19, 27],
         color: "amber",
-        note: "어드바이스 열 합성 + 블라인딩 + KZG 커밋 → 트랜스크립트 기록",
+        note: "Circuit 수와 instance 묶음 수, instance column 수가 맞지 않으면 즉시 거절합니다.",
       },
       {
-        lines: [339, 346],
+        lines: [29, 30],
         color: "violet",
-        note: "theta/beta/gamma/y 도전값 샘플링 → 그랜드 프로덕트 & 소멸 다항식 구성",
+        note: "Verification key를 transcript에 넣어 challenge가 circuit identity에 결속되도록 합니다.",
       },
     ],
-    desc: "create_proof는 PLONKish 증명의 전체 파이프라인을 구현합니다. Fiat-Shamir 트랜스크립트로 도전값을 순차 생성하며, 어드바이스 커밋 → 그랜드 프로덕트 → 소멸 다항식 → SHPLONK 개구 순서로 진행됩니다.",
   },
-
   "verify-proof": {
-    path: "halo2_proofs/src/plonk/verifier.rs",
-    code: verifierRs,
+    path: "halo2_proofs/src/plonk/verifier.rs:69–88",
+    code: verifyProofRs.trimEnd(),
     lang: "rust",
-    highlight: [67, 79],
+    highlight: [1, 20],
+    desc: "zcash/halo2 @ 3442dd3 · Params·VK·instances·transcript를 받아 검증하고 instance column 수를 먼저 확인하는 원문",
     annotations: [
       {
-        lines: [22, 32],
+        lines: [1, 14],
         color: "sky",
-        note: "VerificationStrategy 트레이트 — MSM 기반 검증 전략 추상화",
+        note: "Verifier도 exact Params·VK·instance schema·transcript profile을 받습니다.",
       },
       {
-        lines: [34, 47],
-        color: "emerald",
-        note: "SingleVerifier — 단일 증명 검증, msm.eval()로 최종 판정",
-      },
-      {
-        lines: [67, 79],
-        color: "amber",
-        note: "verify_proof 시그니처 — Params, VK, strategy, instances, transcript",
-      },
-      {
-        lines: [109, 130],
-        color: "violet",
-        note: "Fiat-Shamir 재생: 같은 순서로 도전값 재생성하여 증명 검증",
+        lines: [15, 20],
+        color: "rose",
+        note: "Expected instance column 수와 다르면 proof 연산 전에 InvalidInstances로 실패합니다.",
       },
     ],
-    desc: "verify_proof는 증명을 검증합니다. 증명자와 동일한 순서로 Fiat-Shamir 도전값을 재생성하고, 게이트/퍼뮤테이션/룩업 제약의 합이 소멸 다항식과 일치하는지 확인한 뒤 MSM으로 최종 판정합니다.",
   },
 };

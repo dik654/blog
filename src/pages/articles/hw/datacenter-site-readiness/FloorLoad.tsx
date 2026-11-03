@@ -70,8 +70,8 @@ export default function FloorLoad() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           가속기를 가득 채운 랙의 총 무게를 1,400 kg으로 잡아 보겠습니다. 폭 0.6 m, 깊이 1.2 m인 랙이면 바닥
-          투영 면적은 0.72 m²이고, 면하중은 1,400을 0.72로 나눠 약 1,944 kg/m²입니다. 일반 사무실 설계 기준으로
-          흔히 쓰이는 300 kg/m² 수준과는 자릿수가 다릅니다.
+          투영 면적은 0.72 m²이고, 면하중은 1,400을 0.72로 나눠 약 1,944 kg/m²입니다. 이 값을 해당 설치 구역의
+          구조 도면에 적힌 허용치와 비교합니다. 다른 건물이나 일반적인 숫자를 대신 넣어 판정하면 안 됩니다.
         </p>
 
         <p className="leading-7">

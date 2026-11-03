@@ -35,7 +35,7 @@ export const unclearedInitialMarginData: DerivativeDeepArticleData = {
       "모형은 감독 승인을 받아야 하며 실제 자료에 대한 시험과 적용 상품의 타당성 검증을 계속해야 합니다. 한 감독기관의 승인이 모든 회사와 나라에 자동으로 이어지는 것도 아닙니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 최신 SIMM 버전과 회사별 승인 기록을 함께 봅니다", bridge: "업계 표준의 갱신과 개별 사용자의 책임을 나눕니다.", paragraphs: [
-      "ISDA는 2026년 6월 SIMM 2.8+2512를 공개했고 7월 11일을 적용일로 정했습니다. 이 버전은 2025년 12월 31일까지의 역사적 자료를 이용한 전면 재보정 결과를 반영합니다.",
+      "ISDA는 2026년 6월 SIMM 2.8+2512를 공개했고 7월 11일을 적용일로 정했습니다. 2026년 9월에는 적어도 반기마다 보정하는 원칙을 반영한 지배구조 문서를 갱신했습니다.",
       "회사는 새 버전의 금액 변화, 구현 단위시험, 승인 관할, 계약과 담보 운영의 준비 상태를 따로 확인해야 합니다. 최신 파일을 내려받았다는 사실만으로 실제 사용 승인이 끝나지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 개시증거금 8은 가격 위험과 유동성 위험을 함께 만듭니다", bridge: "신용보호가 자금 운영에 주는 부담까지 확인합니다.", paragraphs: [
@@ -60,8 +60,8 @@ export const unclearedInitialMarginData: DerivativeDeepArticleData = {
     { term: "SIMM 통제", description: "표준 모형의 버전·입력·보정·검증·승인을 계속 관리하는 일입니다.", example: "2.8+2512 전환 전후 금액을 비교합니다.", boundary: "공통 모형도 회사별 승인과 입력 대사가 필요합니다." },
   ] },
   sources: [
-    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "one-tailed 99 per cent confidence interval over a 10-day horizon", application: "IM의 목적, 99%·10일 출발점, 모형 승인과 지속 검증을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "현재 Basel Framework의 국제 최소 기준입니다. 실제 적용 대상·문턱과 승인 절차는 각 관할 규칙을 다시 확인해야 합니다(2026-11-02 확인)." },
-    { source: "ISDA · SIMM 2.8+2512", excerpt: "historical data up to 31 December 2025", application: "현재 버전의 보정 기준일과 2026년 7월 적용일을 확인합니다.", citation: "ISDA Publishes ISDA SIMM Methodology, Version 2.8+2512", href: "https://www.isda.org/2026/06/12/isda-publishes-isda-simm-methodology-version-2-8-2512/", note: "ISDA가 밝힌 2.8+2512의 공개일·보정 기준일·적용일을 확인하는 공식 자료입니다. SIMM 사용에는 지식재산 조건과 관할별 승인이 따를 수 있습니다(2026-11-02 확인)." },
+    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "one-tailed 99 per cent confidence interval over a 10-day horizon", application: "IM의 목적, 99%·10일 출발점, 모형 승인과 지속 검증을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "국제 최소 기준이며 실제 적용 대상·문턱은 각 관할 규칙을 다시 확인합니다." },
+    { source: "ISDA · SIMM 2.8+2512", excerpt: "updates ... historical data up to 31 December 2025", application: "현재 버전의 보정 기준일과 2026년 7월 적용일을 확인합니다.", citation: "ISDA Publishes ISDA SIMM Methodology, Version 2.8+2512", href: "https://www.isda.org/?p=1243627", note: "SIMM 사용에는 지식재산 조건과 관할별 승인이 따를 수 있습니다." },
   ],
   review: [
     "변동증거금 2.5와 개시증거금 8이 막는 위험이 어떻게 다른가요? (답: 1·4절)",
@@ -130,7 +130,7 @@ export const tradeLifecycleData: DerivativeDeepArticleData = {
     { term: "포트폴리오 대사", description: "살아 있는 거래의 목록·조건·평가를 상대방 장부와 맞추는 통제입니다.", example: "100건 중 두 건의 차이를 찾아 원인을 고칩니다.", boundary: "차이 발견만으로 해결이 끝나지 않습니다." },
   ] },
   sources: [
-    { source: "CFTC · 스왑 운영 규칙", excerpt: "Confirmation, Portfolio Reconciliation, Portfolio Compression", application: "확인·대사·압축·거래관계 문서가 연결된 통제임을 확인합니다.", citation: "17 CFR Part 23 Final Rule, 2012-21414", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414", note: "미국 스왑 딜러·주요 스왑 참가자에 대한 2012년 원 규칙입니다. 이후 확인·문서 규칙의 개정이 있었으므로 실제 적용에는 현재 17 CFR과 최신 개정 내용을 다시 확인해야 합니다(2026-11-02 확인)." },
+    { source: "CFTC · 스왑 운영 규칙", excerpt: "Confirmation, Portfolio Reconciliation, Portfolio Compression", application: "확인·대사·압축·거래관계 문서가 연결된 통제임을 확인합니다.", citation: "17 CFR Part 23 Final Rule, 2012-21414", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414", note: "미국 스왑 딜러·주요 스왑 참가자 규칙의 범위입니다." },
     { source: "BIS · OTC 결제 절차", excerpt: "data capture through to confirmation and settlement", application: "체결 뒤 데이터 입력·확인·결제와 복잡한 거래의 수동 예외를 구분합니다.", citation: "Report on OTC Derivatives: Settlement procedures and counterparty risk management", href: "https://www.bis.org/publications/report-otc-derivatives-settlement-procedures-and-counterparty-risk-management", note: "1998년 운영 조사이므로 현재 규칙의 기한을 정하는 자료로 쓰지 않습니다." },
   ],
   review: [
@@ -202,8 +202,8 @@ export const collateralOperationsData: DerivativeDeepArticleData = {
     { term: "교체 동시성", description: "새 담보 수취와 기존 담보 반환 사이의 무담보 시간을 막는 순서 통제입니다.", example: "현금 5.4를 받은 뒤 채권을 돌려줍니다.", boundary: "먼저 반환하면 결제 실패 때 노출이 생깁니다." },
   ] },
   sources: [
-    { source: "ISDA · 담보 운영 권고", excerpt: "trade and exposure data, collateral positions, agreement terms, market data", application: "호출 자료, 응답, 교체와 분쟁 원인을 하루 운영 흐름에 연결합니다.", citation: "Collateral Management Suggested Operational Practices", href: "https://www.isda.org/collateral-management-sop/", note: "2026년 2월 24일 개정본을 2026-11-02에 확인했습니다. 법적 의무가 아닌 업계 운영 권고이며 개별 CSA·CSD와 적용 관할 규칙이 우선합니다." },
-    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "rigorous and robust dispute resolution procedures", application: "거래 전 분쟁 절차, 적격 담보, 할인 후 가치와 적시 증거금 교환의 국제 최소 원칙을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "2026-11-02 현재 통합 Basel 기준을 확인했습니다. 실제 적격 담보와 할인 방식은 적용 관할과 계약을 다시 확인해야 합니다." },
+    { source: "ISDA · 담보 운영 권고", excerpt: "trade and exposure data, collateral positions, agreement terms, market data", application: "호출 자료, 응답, 교체와 분쟁 원인을 하루 운영 흐름에 연결합니다.", citation: "Collateral Management Suggested Operational Practices", href: "https://www.isda.org/collateral-management-sop/", note: "업계 운영 권고이며 개별 CSA와 관할 규칙이 우선합니다." },
+    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "rigorous and robust dispute resolution procedures", application: "거래 전 분쟁 절차와 적시 IM 교환의 국제 최소 원칙을 확인합니다.", citation: "Basel Framework, MGN20 Margin requirements", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "적격 담보와 할인 방식은 적용 관할과 계약을 다시 확인합니다." },
   ],
   review: [
     "노출 12에서 문턱 2와 기존 담보 5를 빼 호출액 5를 만드는 과정을 설명해 보세요. (답: 1·3절)",
@@ -220,7 +220,7 @@ export const productGovernanceData: DerivativeDeepArticleData = {
     ] },
     { id: "black-box", level: "B", title: "2. 설계자·목표 고객·판매 채널·사후 자료의 네 칸을 엽니다", bridge: "상품을 만든 뒤 영업에 넘기는 한 번의 회의로 보지 않습니다.", paragraphs: [
       "제조자는 지급식, 헤지 가능성, 비용과 이해상충을 검토하고 목표 고객과 맞지 않는 고객을 정합니다. 판매자는 실제 고객 자료와 제조자 정보를 맞춰 어느 채널에서 어떤 설명으로 팔지 결정합니다.",
-      "판매 뒤에는 목표시장 밖 판매, 중도해지, 손실, 민원과 시장 변화가 설계 가정을 깨는지 봅니다. 이 자료가 다시 제조자와 승인위원회로 돌아가야 상품 생애주기의 다음 판단으로 이어집니다.",
+      "판매 뒤에는 목표시장 밖 판매, 중도해지, 손실, 민원과 시장 변화가 설계 가정을 깨는지 봅니다. 이 자료가 다시 제조자와 승인위원회로 돌아가야 상품 생애주기가 닫힙니다.",
     ] },
     { id: "case", level: "0", title: "3. 지수가 60이면 고객은 40을 잃지만 표시 수익은 8에 멈춥니다", bridge: "수익과 손실의 비대칭을 먼저 손으로 확인합니다.", paragraphs: [
       "지수가 조건을 지키면 100은 108이 되어 이익은 8입니다. 보호선이 깨지고 최종 지수가 60이면 60을 받아 손실은 40입니다.",
@@ -272,8 +272,8 @@ export const productGovernanceData: DerivativeDeepArticleData = {
     { term: "사후 검토", description: "실제 판매와 고객 결과가 승인 가정에서 벗어났는지 확인하고 행동하는 절차입니다.", example: "민원 8건의 원인을 조사해 채널을 제한합니다.", boundary: "민원 건수 하나가 자동 결론은 아닙니다." },
   ] },
   sources: [
-    { source: "FCA Handbook · PROD 3", excerpt: "process for the approval of each financial instrument", application: "출시 전 승인, 목표·판매 제외 대상과 중요한 사건 뒤의 재검토를 연결합니다.", citation: "FCA PROD 3 Product governance: MiFID", href: "https://handbook.fca.org.uk/handbook/prod3", note: "2026-11-02에 2026년 1월 갱신본을 확인했습니다. 영국 규칙이며 다른 관할에는 그대로 적용하지 않습니다." },
-    { source: "ESMA · MiFID II 상품 지배구조 지침", excerpt: "product governance requirements introduced by MiFID II", application: "제조자와 판매자의 목표시장 판단, 유통 차단과 정기 재검토의 역할을 구분합니다.", citation: "ESMA35-43-3448, Guidelines on MiFID II product governance requirements", href: "https://www.esma.europa.eu/sites/default/files/2023-03/ESMA35-43-3448_Final_report_on_MiFID_II_guidelines_on_product_governance.pdf", note: "2023년 최종 보고서이며 EU MiFID II 체계의 지침입니다. 실제 적용에는 현재 지침과 회원국 이행 규정을 함께 확인해야 합니다(2026-11-02 확인)." },
+    { source: "FCA Handbook · PROD 3", excerpt: "process for the approval of each financial instrument", application: "출시 전 승인, 목표·반대시장과 중요한 사건 뒤의 재검토를 연결합니다.", citation: "FCA PROD 3 Product governance: MiFID", href: "https://handbook.fca.org.uk/handbook/prod3", note: "2026년 1월 갱신본의 영국 규칙이며 다른 관할에는 해당 규칙을 그대로 적용하지 않습니다." },
+    { source: "금융투자교육원 · 파생상품투자권유자문인력", excerpt: "파생상품 중심 투자권유 절차와 유의사항", application: "상품 구조 지식과 고객 권유·분쟁조정이 함께 필요한 교육 범위를 확인합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "교육 범위표이며 상품 승인에 적용되는 개별 법규의 대체 자료가 아닙니다. 인용문은 과정표 8번 과목명입니다(2026-10-09 확인)." },
   ],
   review: [
     "원금 100에서 위쪽 이익 8과 아래쪽 손실 40을 계산해 보세요. (답: 1·3절)",
@@ -342,8 +342,8 @@ export const multiAssetRareEventData: DerivativeDeepArticleData = {
     { term: "중요도 표본추출", description: "희귀 경로를 자주 뽑고 가능도 가중치로 원래 기대값을 복원하는 방법입니다.", example: "0.01% 사건의 적중 수를 늘립니다.", boundary: "가중치를 빼면 편향된 값이 됩니다." },
   ] },
   sources: [
-    { source: "MIT OpenCourseWare · Simulation Methods", excerpt: "same answer but smaller variance", application: "경로 생성, 가격 평균, 신뢰구간과 분산감소가 같은 기대값을 유지해야 한다는 학습 순서를 사용합니다.", citation: "MIT 15.450 Analytics of Finance, Lecture 3", href: "https://ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/resources/mit15_450f10_lec03/", note: "2010년 강의의 일반 원리를 이 글의 바스켓 숫자로 바꿨으며 실제 상품 가격을 인용하지 않습니다(2026-11-02 확인)." },
-    { source: "Stanford · 희귀사건 시뮬레이션", excerpt: "importance sampling algorithm", application: "희귀 경로를 자주 만들고 가능도 가중치로 기대값을 지키는 원리를 확인합니다.", citation: "Zhang, Blanchet, Glynn and Giesecke, Rare Event Simulation for a Generalized Hawkes Process, Proceedings of the 2009 Winter Simulation Conference", href: "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.html", note: "2009년 논문은 일반 바스켓 옵션이 아니라 일반화 Hawkes 점과정의 희귀 꼬리확률을 다룹니다. 이 글은 중요도 표본추출의 일반 원리만 사용합니다(2026-11-02 확인)." },
+    { source: "MIT OpenCourseWare · Simulation Methods", excerpt: "Generating Random Numbers · Variance Reduction · Quasi-Monte Carlo", application: "경로 생성, 가격 평균, 분산감소와 실제 오차 확인의 학습 순서를 사용합니다.", citation: "MIT 15.450 Analytics of Finance, Lecture 3", href: "https://www.ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/4fa033082ff5ee58722a67fe81f0dce7_MIT15_450F10_lec03.pdf", note: "강의의 예를 이 글의 바스켓 숫자로 바꿨으며 실제 상품 가격을 인용하지 않습니다." },
+    { source: "Stanford · 희귀사건 시뮬레이션", excerpt: "importance sampling algorithm", application: "희귀 경로를 자주 만들고 가능도 가중치로 기대값을 지키는 원리를 확인합니다.", citation: "Zhang, Blanchet, Glynn and Giesecke, Rare Event Simulation for a Generalized Hawkes Process, Proceedings of the 2009 Winter Simulation Conference", href: "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.pdf", note: "논문은 점과정 사례입니다. 이 글은 중요도 표본추출의 일반 원리만 사용합니다." },
   ],
   review: [
     "두 자산의 변동성이 20%일 때 상관 0과 1의 바구니 변동성을 계산해 보세요. (답: 3절)",
@@ -388,7 +388,7 @@ export const canadaHongKongSwitzerlandData = {
     ] },
     { id: "comparison", level: "6", title: "9. 홍콩의 복잡상품과 스위스의 서비스 검사는 출발점이 다릅니다", bridge: "두 제도를 같은 적합성 표 하나로 합치지 않습니다.", paragraphs: [
       "홍콩 SFC 목록은 홍콩선물거래소 선물, 상장 주식 파생상품, 합성·선물형 ETF 등을 복잡한 장내 파생상품 예로 듭니다. 권유가 없는 장내 거래의 예외가 있어도 파생상품 지식과 위험 설명 요건을 따로 봅니다.",
-      "스위스 FinSA에서 개별 거래 자문은 고객의 지식·경험을 확인하는 적정성 검사를, 포트폴리오 전체 자문과 일임은 재무상황·투자목표까지 확인하는 적합성 검사를 사용합니다. 단순 주문 실행은 두 검사를 하지 않을 수 있지만 그 사실을 미리 알려야 합니다.",
+      "스위스 FINMA 안내는 고객 자문가가 재무상황·투자목표와 지식·경험을 확인하고 추천 전 적정성을 살피며 서비스를 기록한다고 설명합니다. 정확한 검사는 자문·일임·주문 실행 등 제공 서비스에 달려 있습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 세 나라 비교표는 최신 법률의 적용 판단을 대신하지 않습니다", bridge: "국경 간 계약에서 자주 바뀌는 조건을 확인합니다.", paragraphs: [
       "캐나다는 주별 증권 규제와 전국 규칙의 적용, 홍콩은 거래 장소·권유와 상품 유형, 스위스는 고객 구분·서비스 종류와 국경 간 제공 방식이 결론을 바꿉니다. 회사의 면허와 계약 법인도 중요합니다.",
@@ -412,10 +412,9 @@ export const canadaHongKongSwitzerlandData = {
     { term: "서비스별 검사", description: "스위스에서 실행·자문·일임 서비스에 맞춰 지식·경험·재무상황과 목표를 확인하는 절차입니다.", example: "추천 전 고객 자료와 상품을 맞춥니다.", boundary: "서비스가 달라지면 필요한 검사도 달라집니다." },
   ] },
   sources: [
-    { source: "Canadian Securities Administrators · NI 93-101", excerpt: "Know your derivatives party · needs and objectives · suitability", application: "당사자 지위, 필요·목표·재무상황·위험감내도와 거래 적합성의 적용 범위를 확인합니다.", citation: "National Instrument 93-101 and Companion Policy, consolidated 28 September 2024", href: "https://www.asc.ca/securities-law-and-policy/regulatory-instruments/93-101", note: "ASC가 제공하는 현행 통합 자료를 2026-11-02 확인했습니다. 캐나다 전역의 모든 거래를 한 문장으로 일반화하지 않고 지역별 적용·개정·면제를 다시 확인합니다." },
-    { source: "Hong Kong SFC · 복잡상품", excerpt: "Complex products - Derivatives traded on an exchange", application: "HKFE 선물과 SEHK 주식 파생상품이 복잡한 장내 파생상품 예에 들어가는지 확인합니다.", citation: "SFC, Non-complex and complex products", href: "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products", note: "비포괄적 현행 목록을 2026-11-02 확인했습니다. 온라인·오프라인, 거래 장소와 권유 여부에 따른 세부 요건은 별도로 확인합니다." },
-    { source: "Hong Kong SFC · 파생상품 지식 FAQ", excerpt: "appropriate enquiries ... instead of relying merely on the client’s declaration", application: "고객 자기진술만으로 지식을 인정하지 않고 KYC 자료와 감사 흔적을 남기는 기준을 확인합니다.", citation: "SFC, Frequently Asked Questions on paragraphs 5.1A and 5.3 of the Code of Conduct", href: "https://www.sfc.hk/en/faqs/intermediaries/supervision/Code-of-Conduct-5-1-A-and-5-3/Code-of-Conduct-5-1-A-and-5-3", note: "2026-10-30 갱신본을 2026-11-02 확인했습니다. 과거 3년간 파생상품 5회 거래는 최소 참고 기준이며 고객별 사정을 함께 봅니다." },
-    { source: "Swiss Confederation · FinSA", excerpt: "Assessment of appropriateness · Assessment of suitability · Exemption from the duty to review", application: "개별 거래 자문, 포트폴리오 전체 자문·일임, 단순 주문 실행의 검사 범위를 구분합니다.", citation: "Financial Services Act, Articles 10–13", href: "https://www.fedlex.admin.ch/eli/cc/2019/758/en", note: "Fedlex 현행 법령 경로를 2026-11-02 확인했습니다. 영어 번역은 참고용이며 법적 효력과 국경 간 적용은 독일어·프랑스어·이탈리아어 원문과 전문가 검토가 필요합니다." },
+    { source: "Canadian Securities Administrators · NI 93-101", excerpt: "Derivatives: Business Conduct", application: "당사자 정보, 적합성, 확인서와 영업행위 보호의 적용 범위를 확인합니다.", citation: "National Instrument 93-101, consolidated 2024", href: "https://www.asc.ca/securities-law-and-policy/regulatory-instruments/93-101", note: "캐나다 참여 관할의 통합 자료이며 주별 적용과 면제를 다시 확인합니다." },
+    { source: "Hong Kong SFC · 복잡상품", excerpt: "Complex products - Derivatives traded on an exchange", application: "장내 선물·주식 파생상품과 복잡상품·파생상품 지식 요건의 관계를 확인합니다.", citation: "SFC Non-complex and complex products", href: "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products", note: "목록은 비포괄적이며 권유 여부와 거래 장소별 요건을 함께 확인합니다." },
+    { source: "FINMA · 고객 자문가 의무", excerpt: "financial situation and investment goals ... knowledge and experience", application: "스위스에서 고객 정보·추천 전 검사·기록과 옴부즈맨 안내의 기본 흐름을 확인합니다.", citation: "FINMA, Questions about client advisers", href: "https://www.finma.ch/en/finma-public/fragen-und-probleme/zur-registrierung-von-kundenberaterinnen-oder-kundenberatern/", note: "FinSA 일반 안내이며 개별 파생상품과 국경 간 서비스의 법률 적용을 다시 확인합니다." },
   ],
   review: [
     "예치금 20의 5배 노출에서 12% 하락 손실이 고객 한도를 얼마나 넘는지 계산해 보세요. (답: 3절)",

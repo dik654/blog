@@ -6,8 +6,7 @@ export default function TwoDimensional() {
   return (
     <section id="two-dimensional" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        2D extension은 행과 열에 복원 경로를 만들지만, sampling 하나로
-        availability가 자동 증명되지는 않습니다
+        일부만 확인해도 전체가 공개됐다고 판단할 수 있을까요?
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
@@ -27,8 +26,21 @@ export default function TwoDimensional() {
         formula={String.raw`P_{detect}=1-(1-\beta)^s`}
         annotatedFormula={String.raw`P_{detect}=\underbrace{1}_{\text{전체 확률}}-\underbrace{(1-\beta)^s}_{\text{s번 모두 놓침}}`}
         operations={[
-          { expression: String.raw`(1-\beta)^s`, annotation: ["한 sample이 공개 cell만 고를 확률 1-β를","독립 s번 곱해 모두 놓칠 확률을 구함","β=1/2, s=10이면 0.5^10≈0.098%"] },
-          { expression: String.raw`1-(1-\beta)^s`, annotation: ["한 번이라도 숨긴 cell을 만날 확률","1-0.5^10≈99.902%(toy bound)"] },
+          {
+            expression: String.raw`(1-\beta)^s`,
+            annotation: [
+              "한 sample이 공개 cell만 고를 확률 1-β를",
+              "독립 s번 곱해 모두 놓칠 확률을 구함",
+              "β=1/2, s=10이면 0.5^10≈0.098%",
+            ],
+          },
+          {
+            expression: String.raw`1-(1-\beta)^s`,
+            annotation: [
+              "한 번이라도 숨긴 cell을 만날 확률",
+              "1-0.5^10≈99.902%(toy bound)",
+            ],
+          },
         ]}
         terms={[
           {
@@ -74,19 +86,26 @@ export default function TwoDimensional() {
           </li>
         </ol>
         <p>
-          Merkle/KZG proof 성공은 첫 질문에 주로 답하며 나머지 두 질문을 대신하지 않습니다. Sampling index를 producer가 예측하거나 여러 요청이 같은 악성
-          peer에 묶이면 독립성 전제가 무너지므로 peer diversity·custody·timeout·reconstruction attempt와 receipt가 필요합니다.
+          Merkle/KZG proof 성공은 첫 질문에 주로 답하며 나머지 두 질문을
+          대신하지 않습니다. Sampling index를 producer가 예측하거나 여러 요청이
+          같은 악성 peer에 묶이면 독립성 전제가 무너지므로 peer
+          diversity·custody·timeout·reconstruction attempt와 receipt가
+          필요합니다.
         </p>
         <h3>Celestia의 2D 방식과 Ethereum PeerDAS를 구분합니다</h3>
         <p>
           2D Reed–Solomon square는 Al-Bassam·Sonnino·Buterin의
           fraud/data-availability proof 계열과 Celestia 설계에서 중요한
-          construction입니다. 반면 EIP-7594 PeerDAS는 EIP-4844 blob의 각 row를{" "}
-          <strong>1차원 erasure-code extension</strong>하고, 여러 row의 같은
-          index를 column으로 묶어 custody·sampling합니다. 두 시스템 모두 “일부만
-          내려받아 availability를 확인한다”는 목표를 공유하지만 matrix
-          구성·commitment·sample unit·reconstruction threshold는 같다고 가정하면
-          안 됩니다.
+          구성입니다.
+        </p>
+        <p>
+          반면 EIP-7594 PeerDAS는 EIP-4844 blob의 각 행을
+          <strong>1차원 erasure-code로 확장</strong>합니다. 이어 여러 행에서
+          같은 위치에 있는 cell을 열로 묶어 보관하고 표본을 요청합니다.
+        </p>
+        <p>
+          두 시스템 모두 일부만 내려받아 데이터가 공개됐는지 확인하려 합니다.
+          그러나 행렬 구성, commitment, 표본 단위와 복원 기준은 서로 다릅니다.
         </p>
       </div>
 
@@ -108,7 +127,7 @@ export default function TwoDimensional() {
       </div>
       <div id="paper-eip7594-peerdas" className="scroll-mt-24">
         <CitationBlock
-          source="EIP-7594 · PeerDAS"
+          source="EIP-7594 · PeerDAS (Final)"
           href="https://eips.ethereum.org/EIPS/eip-7594"
           citeKey={3}
         >

@@ -1,88 +1,98 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-/** 본문 대응: Overview.tsx — 네 축이 서로를 묶는 구조 */
-const SCENES = ["메모리", "링크", "폼팩터", "소프트웨어"] as const;
-const NOTES = [
-  "용량은 나누지 않아도 되는 구간을, 대역폭은 생성 속도의 상한을 정합니다.",
-  "나눠야 할 때 가속기 사이를 무엇으로 잇는지가 성능을 정합니다.",
-  "링크 방식이 폼팩터를 정하고 폼팩터가 전력과 냉각을 정합니다.",
-  "앞 세 축에서 유리해도 지금 스택이 돌지 않으면 그 차이는 실현되지 않습니다.",
+const STEPS = [
+  {
+    label: "먼저 실제로 배치할 수 있는 후보만 남깁니다",
+    body: "자체 데이터센터에는 OEM·rack system 후보를, cloud burst에는 region과 quota가 있는 service를 놓습니다. 제품 page의 존재만으로 capacity를 가정하지 않습니다.",
+  },
+  {
+    label: "Weight·KV·workspace가 usable HBM에 들어가는지 계산합니다",
+    body: "70B·32K·동시 8 요청은 runtime 여유 전부터 210.4GiB입니다. 192GiB 이하는 한 장 경로에서 탈락하고 더 큰 후보도 실제 load를 거칩니다.",
+  },
+  {
+    label: "나눠야 하면 한 요청이 넘는 통신 domain을 확인합니다",
+    body: "Tensor parallel collective가 scale-up 안에서 끝나는지, rack 사이 network를 건너는지에 따라 p95 TPOT가 달라집니다.",
+  },
+  {
+    label: "동일 artifact의 기능과 정확도를 통과시킵니다",
+    body: "Framework 지원 표시가 아니라 operator fallback, quantization, cache, batching과 관측 기능을 실제 runtime에서 확인합니다.",
+  },
+  {
+    label: "같은 request profile과 운영 조건으로 최종 선택합니다",
+    body: "p95 TTFT·TPOT·처리량·전력·cold start·복구를 한 원장에 놓습니다. Peak FLOPS는 이 단계의 실제 결과를 대신하지 않습니다.",
+  },
 ] as const;
 
-const MEM = "#6366f1";
-const LINK = "#10b981";
-const FORM = "#f59e0b";
-const SW = "#8b5cf6";
-const MUTED = "#94a3b8";
-const AXES = [
-  { n: "메모리", c: MEM, q: "한 장에 들어가는가" },
-  { n: "링크", c: LINK, q: "나누면 얼마나 비싼가" },
-  { n: "폼팩터", c: FORM, q: "전력·냉각을 감당하는가" },
-  { n: "소프트웨어", c: SW, q: "지금 스택이 도는가" },
-];
+const GATES = [
+  { name: "배치 경계", detail: "살 수 있나 · quota 있나", color: "#2563eb" },
+  { name: "HBM 적합성", detail: "최소 210.4GiB + 여유", color: "#7c3aed" },
+  { name: "통신 domain", detail: "한 요청의 collective 경로", color: "#0f766e" },
+  { name: "Software", detail: "기능 · 정확도 · fallback", color: "#c2410c" },
+  { name: "실측·운영", detail: "p95 · 전력 · 복구 · 비용", color: "#be123c" },
+] as const;
+
+function DesktopFlow({ step }: { step: number }) {
+  return (
+    <svg className="!hidden sm:!block" viewBox="0 0 760 190" role="img" aria-label="가속기 선택의 다섯 관문을 왼쪽부터 통과하는 흐름">
+      {GATES.map((gate, index) => {
+        const x = 10 + index * 150;
+        const active = index <= step;
+        return (
+          <g key={gate.name}>
+            {index > 0 && (
+              <g>
+                <line x1={x - 22} y1="88" x2={x - 6} y2="88" stroke={active ? gate.color : "#cbd5e1"} strokeWidth="1.2" />
+                <circle cx={x - 6} cy="88" r="2.4" fill={active ? gate.color : "#cbd5e1"} />
+              </g>
+            )}
+            <rect x={x} y="48" width="128" height="80" rx="12" fill={active ? `${gate.color}12` : "#94a3b80a"} stroke={active ? gate.color : "#cbd5e1"} strokeWidth={index === step ? 1.25 : 1} />
+            <text x={x + 64} y="75" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={active ? gate.color : "#64748b"}>{index + 1}. {gate.name}</text>
+            <text x={x + 64} y="98" textAnchor="middle" fontSize="8.8" fill="currentColor">{gate.detail}</text>
+            <text x={x + 64} y="116" textAnchor="middle" fontSize="8.6" fill={index === step ? gate.color : "#64748b"}>{index === step ? "지금 확인" : index < step ? "통과" : "다음 관문"}</text>
+          </g>
+        );
+      })}
+      <text x="380" y="157" textAnchor="middle" fontSize="10" fontWeight="700" fill={GATES[step].color}>{STEPS[step].label}</text>
+      <text x="380" y="177" textAnchor="middle" fontSize="8.8" fill="#64748b">고정 사례 · BF16 70B · 32K · 동시 요청 8 · 자체 랙 기본 + cloud burst</text>
+    </svg>
+  );
+}
+
+function MobileFlow({ step }: { step: number }) {
+  return (
+    <svg className="block sm:!hidden" viewBox="0 0 300 330" role="img" aria-label="모바일용 가속기 선택의 다섯 관문 흐름">
+      {GATES.map((gate, index) => {
+        const y = 8 + index * 58;
+        const active = index <= step;
+        return (
+          <g key={gate.name}>
+            {index > 0 && (
+              <g>
+                <line x1="150" y1={y - 16} x2="150" y2={y - 4} stroke={active ? gate.color : "#cbd5e1"} strokeWidth="1.2" />
+                <circle cx="150" cy={y - 4} r="2.4" fill={active ? gate.color : "#cbd5e1"} />
+              </g>
+            )}
+            <rect x="25" y={y} width="250" height="42" rx="10" fill={active ? `${gate.color}12` : "#94a3b80a"} stroke={active ? gate.color : "#cbd5e1"} strokeWidth={index === step ? 1.25 : 1} />
+            <text x="42" y={y + 18} fontSize="10.5" fontWeight="700" fill={active ? gate.color : "#64748b"}>{index + 1}. {gate.name}</text>
+            <text x="42" y={y + 33} fontSize="8.8" fill="currentColor">{gate.detail}</text>
+            <text x="260" y={y + 26} textAnchor="end" fontSize="8.8" fontWeight="700" fill={index === step ? gate.color : "#64748b"}>{index === step ? "확인" : index < step ? "통과" : "대기"}</text>
+          </g>
+        );
+      })}
+      <text x="150" y="314" textAnchor="middle" fontSize="8.8" fill="#64748b">70B · 32K · 동시 8 · 자체 랙 + cloud burst</text>
+    </svg>
+  );
+}
 
 export default function AxesViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
-  const step = scenes.active;
   return (
-    <VizFrame
-      eyebrow="비교의 축"
-      title="네 축은 순서대로 서로를 묶습니다"
-      description="앞 축의 결정이 뒤 축의 선택지를 좁힙니다."
-      note="연산 성능 수치는 정밀도 정의와 측정 조건이 벤더마다 달라 이 축에 넣지 않았습니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="가속기 비교의 네 축"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
-            {AXES.map((a, i) => {
-              const active = i <= step;
-              return (
-                <g key={a.n}>
-                  <rect
-                    x={16 + i * 116}
-                    y={52}
-                    width={100}
-                    height={56}
-                    fill={a.c}
-                    fillOpacity={active ? 0.14 : 0.04}
-                    stroke={active ? a.c : MUTED}
-                    strokeWidth={i === step ? 1.25 : 1}
-                  />
-                  <text x={66 + i * 116} y={76} textAnchor="middle" fontSize={10} fontWeight={700} fill={active ? a.c : MUTED}>
-                    {a.n}
-                  </text>
-                  <text x={66 + i * 116} y={94} textAnchor="middle" fontSize={8} fill={active ? a.c : MUTED}>
-                    {a.q}
-                  </text>
-                  {i < 3 && <line x1={116 + i * 116} y1={80} x2={132 + i * 116} y2={80} stroke={active ? MUTED : "none"} strokeWidth={1} />}
-                </g>
-              );
-            })}
-            <text x={16} y={36} fontSize={9} fill={MUTED}>
-              앞 축이 뒤 축의 선택지를 좁힙니다
-            </text>
-            <text x={16} y={140} fontSize={9} fontWeight={700} fill={AXES[step].c}>
-              {["용량과 대역폭은 다른 질문에 답합니다", "전용 스위치 · 메시 · 표준 이더넷", "모듈 규격이 전력 상한을 정합니다", "문서가 아니라 실행으로 확인합니다"][step]}
-            </text>
-            <text x={16} y={176} fontSize={9} fill={MUTED}>
-              스펙 숫자보다 축이 오래 갑니다
-            </text>
-          </svg>
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
+    <StepViz steps={STEPS}>
+      {(step) => (
+        <>
+          <MobileFlow step={step} />
+          <DesktopFlow step={step} />
+        </>
+      )}
+    </StepViz>
   );
 }

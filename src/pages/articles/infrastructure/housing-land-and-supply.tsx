@@ -3,7 +3,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import HousingLandSupplyViz from "./HousingLandSupplyViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function HousingLandAndSupplyArticle() {
@@ -11,7 +10,6 @@ export default function HousingLandAndSupplyArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 집을 원하는 사람과 입주 가능한 집 사이를 봅니다</h2>
-        <HousingLandSupplyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">주거비가 오르면 더 지으면 되는지 묻게 됩니다. 집을 완성하려면 지을 권리, 돈, 공사와 기반 시설이 모두 준비돼야 합니다. 한 부분이 늦으면 수요가 늘어도 당장 입주할 집은 늘지 않습니다.</p>
           <p className="leading-8">이 글은 한 사업의 판매대금에서 출발해 땅에 얼마를 쓸 수 있는지, 허가와 대출 조건이 바뀌면 그 숫자가 어떻게 달라지는지 추적합니다.</p>

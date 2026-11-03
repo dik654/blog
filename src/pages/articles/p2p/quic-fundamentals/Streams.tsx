@@ -9,9 +9,16 @@ export default function Streams() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          QUIC stream은 byte offset을 가진 ordered sequence입니다. 하나의 packet에 여러 stream frame이 들어갈 수 있고 한 stream
-          frame이 여러 packet으로 나뉘기도 합니다. Receiver는 packet 도착 순서와 무관하게 stream ID와 offset으로 bytes를 재조립합니다. 중간
-          offset이 비면 그 stream만 해당 구간에서 기다립니다.
+          QUIC stream은 byte offset을 가진 ordered sequence입니다. 하나의
+          packet에 여러 STREAM frame이 들어갈 수 있고, 한 stream의 바이트가 여러
+          packet으로 나뉘기도 합니다. 따라서 stream과 packet은 같은 단위가
+          아닙니다.
+        </p>
+        <p>
+          사례에서 packet 18이 잃어버린 것은 스트림 0의 offset 100–199입니다.
+          Receiver는 스트림 0의 그 구간을 기다리지만, 스트림 4에서 이미 연속으로
+          도착한 미리보기 바이트는 먼저 전달할 수 있습니다. Packet 25에서 빠진
+          offset이 채워지면 스트림 0도 다시 이어집니다.
         </p>
       </div>
       <div className="not-prose my-8">
@@ -37,9 +44,30 @@ o_s + \ell_s &\le M_s,\\
 \text{sendable}_s &= \min(\underbrace{M_s-o_s}_{\text{stream credit}},\;\underbrace{M_{conn}-D_{conn}}_{\text{connection credit}}).
 \end{aligned}`}
         operations={[
-          { expression: String.raw`o_s + \ell_s`, annotation: ["이번 frame의 시작 offset에 길이를 더한", "끝 offset이 receiver가 stream s에", "허용한 최대 offset을 넘지 않아야 함"] },
-          { expression: String.raw`\sum_s \Delta_s`, annotation: ["모든 stream이 새로 보낸 byte 합이", "connection 전체 credit 안이어야 함", "재전송 offset은 다시 세지 않음"] },
-          { expression: String.raw`\min(M_s-o_s,\;M_{conn}-D_{conn})`, annotation: ["두 credit 중 작은 쪽까지만 새 data 전송", "stream 1,000B, connection 300B 남으면", "이번에 보낼 수 있는 건 300B"] },
+          {
+            expression: String.raw`o_s + \ell_s`,
+            annotation: [
+              "이번 frame의 시작 offset에 길이를 더한",
+              "끝 offset이 receiver가 stream s에",
+              "허용한 최대 offset을 넘지 않아야 함",
+            ],
+          },
+          {
+            expression: String.raw`\sum_s \Delta_s`,
+            annotation: [
+              "모든 stream이 새로 보낸 byte 합이",
+              "connection 전체 credit 안이어야 함",
+              "재전송 offset은 다시 세지 않음",
+            ],
+          },
+          {
+            expression: String.raw`\min(M_s-o_s,\;M_{conn}-D_{conn})`,
+            annotation: [
+              "두 credit 중 작은 쪽까지만 새 data 전송",
+              "stream 1,000B, connection 300B 남으면",
+              "이번에 보낼 수 있는 건 300B",
+            ],
+          },
         ]}
         terms={[
           {
@@ -80,9 +108,12 @@ o_s + \ell_s &\le M_s,\\
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Loss isolation과 자원 격리는 다릅니다</h3>
         <p>
-          Stream A의 offset 100–199가 유실돼도 Stream B의 연속 bytes는 application에 전달할 수 있습니다. 다만 두 stream은 congestion
-          controller, connection MAX_DATA, CPU와 socket buffer를 공유하므로 A가 다른 자원에 주는 영향은 그대로 남습니다. Priority와 per-
-          stream quota는 application protocol이나 implementation scheduler가 추가로 설계하는 몫입니다.
+          스트림 0의 offset 100–199가 유실돼도 스트림 4의 연속 bytes는
+          application에 전달할 수 있습니다. 하지만 두 stream은 congestion
+          controller, connection MAX_DATA, CPU와 socket buffer를 공유합니다.
+          Stream loss isolation이 곧 resource isolation은 아닙니다. Priority와
+          per-stream quota는 application protocol이나 implementation scheduler가
+          추가로 설계해야 합니다.
         </p>
       </div>
     </section>

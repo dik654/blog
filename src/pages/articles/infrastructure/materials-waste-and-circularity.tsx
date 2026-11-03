@@ -2,14 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import MaterialsWasteCircularityViz from "./MaterialsWasteCircularityViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">버린 물건이 수거됐다는 사실은 과정의 시작입니다</h2>
-        <MaterialsWasteCircularityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             포장재를 분리해 버리면 다시 제품이 될 것이라고 기대합니다. 하지만 수거 뒤에도 섞인 재료를 가르고 오염을 제거하고 다시 쓸 품질로 만들어야 합니다. 그 과정에서 사용할 수
@@ -38,7 +36,7 @@ export default function Article() {
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">100kg 중 80kg을 모으고 그중 75%를 회수합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">(가정) 사용이 끝난 같은 종류의 포장재 100kg이 있습니다.80kg을 모으고 20kg은 수거되지 않습니다. 모은 80kg의 75%만 다시 쓸 재료가 됩니다. 수분과 추가 투입, 재고의 증감은 생략해 같은 기준의 질량을 비교합니다.</p>
+          <p className="leading-8">(가정) 사용이 끝난 같은 종류의 포장재 100kg이 있습니다. 80kg을 모으고 20kg은 수거되지 않습니다. 모은 80kg의 75%만 다시 쓸 재료가 됩니다. 수분과 추가 투입, 재고의 증감은 생략해 같은 기준의 질량을 비교합니다.</p>
           <p className="leading-8">(가정) 수거비 4만원, 선별·재처리비 6만원, 잔여물 처리비 2만원입니다. 회수한 재료는 1kg당 1000원에 팔 수 있다고 놓습니다. 이것은 특정 국가나 재료의 실제 단가가 아닙니다.</p>
         </div>
 
@@ -80,9 +78,9 @@ export default function Article() {
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">60kg을 팔아 6만원을 받아도 처리비 12만원이 남습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">발생 100kg 중 80kg을 수거해 60kg을 회수했습니다.80kg을 재활용했다고 적으면 실제 재료 회수 60kg보다 20kg을 과장합니다. 분류상 재활용의 인정 시점이 다른 제도와 비교할 때에는 법적 집계 정의도 함께 적어야 합니다.</p>
-          <p className="leading-8">회수품 60kg을kg당 1000원에 팔면 6만원입니다. 수거 4만원+재처리 6만원+잔여물 2만원=12만원이므로 추가로 6만원의 재원이 필요합니다. 요금·생산자 부담·세금 등 누가 채울지 결정하지 않으면 운영이 계속되기 어렵습니다.</p>
-          <p className="leading-8">(가정) 판매가격만kg당 800원으로 떨어지면 수입은 4만 8000원이고 부족액은 7만 2000원입니다. 물질을 같은 60kg 회수했어도 재무 결과가 바뀝니다. 품질과 판로, 비용을 함께 봐야 하는 이유입니다.</p>
+          <p className="leading-8">발생 100kg 중 80kg을 수거해 60kg을 회수했습니다. 80kg을 재활용했다고 적으면 실제 재료 회수 60kg보다 20kg을 과장합니다. 분류상 재활용의 인정 시점이 다른 제도와 비교할 때에는 법적 집계 정의도 함께 적어야 합니다.</p>
+          <p className="leading-8">회수품 60kg을 kg당 1000원에 팔면 6만원입니다. 수거 4만원+재처리 6만원+잔여물 2만원=12만원이므로 추가로 6만원의 재원이 필요합니다. 요금·생산자 부담·세금 등 누가 채울지 결정하지 않으면 운영이 계속되기 어렵습니다.</p>
+          <p className="leading-8">(가정) 판매가격만 kg당 800원으로 떨어지면 수입은 4만 8000원이고 부족액은 7만 2000원입니다. 물질을 같은 60kg 회수했어도 재무 결과가 바뀝니다. 품질과 판로, 비용을 함께 봐야 하는 이유입니다.</p>
         </div>
 
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">물질 회수의 성과와 자금 부족을 같이 계산했습니다. 원문 그림에서도 두 종류의 화살표를 확인합니다.</p>
@@ -90,13 +88,13 @@ export default function Article() {
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">OECD 그림은 물건의 이동과 돈의 지급을 다르게 그립니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">OECD의 플라스틱 보고서 Figure6.4는 제품·포장·폐기물의 흐름을 실선 블록 화살표로, 돈의 흐름을 점선으로 구분합니다. 이 구분을 100kg 사례에 적용하면 수거·처리·회수의 양과 판매·부담금의 금액을 같은 장부에 섞지 않게 됩니다.</p>
-          <p className="leading-8">60kg을 누가 받아 어떤 용도에 썼는지 물질 경로에 적습니다.6만원의 판매대금과 추가 재원을 누가 냈는지는 돈의 경로에 적습니다. 물건이 국경을 넘으면 운송·통관·실제 처리시설의 확인도 필요합니다.</p>
+          <p className="leading-8">OECD의 플라스틱 보고서 Figure 6.4는 제품·포장·폐기물의 흐름을 실선 블록 화살표로, 돈의 흐름을 점선으로 구분합니다. 이 구분을 100kg 사례에 적용하면 수거·처리·회수의 양과 판매·부담금의 금액을 같은 장부에 섞지 않게 됩니다.</p>
+          <p className="leading-8">60kg을 누가 받아 어떤 용도에 썼는지 물질 경로에 적습니다. 6만원의 판매대금과 추가 재원을 누가 냈는지는 돈의 경로에 적습니다. 물건이 국경을 넘으면 운송·통관·실제 처리시설의 확인도 필요합니다.</p>
           <p className="leading-8">보고서의 그림은 이 사례의 75% 수율이나 12만원 비용을 뒷받침하는 실측이 아닙니다. 그런 수치는 재료·설비·지역별 자료로 채워야 합니다. 여기서는 서로 다른 흐름을 구분하는 도구를 가져옵니다.</p>
         </div>
 
-        <SourceApplication source="OECD · Global Plastics Outlook, Box6.4·Figure6.4" excerpt="The block arrows represent physical flows of products, packaging or waste." application="100→80→60kg은 물질 이동입니다. 판매수입 6만원과 부족분 6만원은 돈의 이동입니다. 생산자가 6만원을 낸다고 60kg이 100kg으로 늘거나 처리비용 12만원이 사라지지 않습니다." />
-        <CitationBlock source="OECD · Global Plastics Outlook, Box6.4·Figure6.4" citeKey={1} href="https://www.oecd.org/en/publications/global-plastics-outlook_de747aef-en/full-report/component-11.html">Figure6.4는 물리적 물질 이동과 돈의 흐름을 다른 화살표로 구분합니다.100kg 계산은 본문 가정입니다.</CitationBlock>
+        <SourceApplication source="OECD · Global Plastics Outlook, Box 6.4·Figure 6.4" excerpt="The block arrows represent physical flows of products, packaging or waste." application="100→80→60kg은 물질 이동입니다. 판매수입 6만원과 부족분 6만원은 돈의 이동입니다. 생산자가 6만원을 낸다고 60kg이 100kg으로 늘거나 처리비용 12만원이 사라지지 않습니다." />
+        <CitationBlock source="OECD · Global Plastics Outlook, Box 6.4·Figure 6.4" citeKey={1} href="https://www.oecd.org/en/publications/global-plastics-outlook_de747aef-en/full-report/component-11.html">Figure 6.4는 물리적 물질 이동과 돈의 흐름을 다른 화살표로 구분합니다. 100kg 계산은 본문 가정입니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">수치가 어떤 원문 원리와 연결되고 어떤 부분은 가정인지 확인했습니다. 처리 책임의 원문을 읽습니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
@@ -123,7 +121,7 @@ export default function Article() {
             (가정) 재생재료 60kg을 새 원료와 같은 품질로 모두 쓸 수 있습니다. 새 제품의 필요량이 100kg이면 새 원료 40kg이 필요하지만 수요가 120kg으로 늘면 60kg이
             필요합니다. 회수량이 같아도 전체 수요가 커지면 새 원료 사용이 늘 수 있습니다.
           </p>
-          <p className="leading-8">(가정) 반대로 제품을 오래 써서 발생량을 100kg에서 80kg으로 줄이고 수거율 80%·처리수율 75%를 유지하면 회수량은 48kg입니다.60kg보다 작지만 폐기물 발생 자체가 20kg 줄었습니다. 회수된 톤수 하나만으로 정책의 성패를 정할 수 없습니다.</p>
+          <p className="leading-8">(가정) 반대로 제품을 오래 써서 발생량을 100kg에서 80kg으로 줄이고 수거율 80%·처리수율 75%를 유지하면 회수량은 48kg입니다. 60kg보다 작지만 폐기물 발생 자체가 20kg 줄었습니다. 회수된 톤수 하나만으로 정책의 성패를 정할 수 없습니다.</p>
           <p className="leading-8">UNEP의 2024년 전망에서 2060년 자원 추출량이 2020년보다 60% 늘 수 있다는 설명도 정책과 수요의 조건이 있는 시나리오입니다. 확정된 미래가 아니며 이 글의 60% 재료 회수와도 다른 수치입니다.</p>
           <p className="leading-8">
             제품을 비교할 때에는 같은 기능을 얼마나 오래 제공하는지부터 맞춥니다. 제조·세척·운송·재사용 횟수·처리의 경계를 정하고 온실가스·물 사용·유해성·일하는 조건을 각각

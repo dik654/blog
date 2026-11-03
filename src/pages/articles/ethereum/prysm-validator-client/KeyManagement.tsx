@@ -3,62 +3,116 @@ import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
 
 const BACKENDS = [
-  ["Local keystore", "암호화된 EIP-2335 file을 host에서 복호화", "filesystem·memory·password·backup"],
-  ["Remote signer", "인증된 API로 signing request를 보내 secret을 분리", "authorization·network·timeout·remote history"],
-  ["Derived wallet", "EIP-2334 path로 mnemonic에서 validator key를 파생", "seed custody·path·account discovery"],
+  {
+    title: "Local keystore",
+    action: "복호화한 secret key를 process memory의 cache에서 찾아 RA에 직접 서명합니다.",
+    boundary: "Wallet file·password·memory·host 접근 권한",
+  },
+  {
+    title: "Derived wallet",
+    action: "Mnemonic과 derivation path에서 만든 key set을 같은 Sign interface로 사용합니다.",
+    boundary: "Seed custody·derivation path·backup 복구",
+  },
+  {
+    title: "Web3Signer",
+    action: "Prysm request를 structured JSON으로 바꿔 remote signer에 보내 signature를 받습니다.",
+    boundary: "Signer policy·인증·network·timeout·공용 history",
+  },
 ] as const;
 
-export default function KeyManagement({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
+export default function KeyManagement({
+  onCodeRef,
+}: {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}) {
   return (
     <section id="key-management" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Keymanager는 key storage보다 signing authority를 제한하는 경계다</h2>
+      <h2 className="mb-5 break-keep text-2xl font-bold">
+        Keymanager는 data를 고르지 않고, 받은 signing root에 서명합니다
+      </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Keymanager의 공통 interface는 public-key discovery와 sign operation을 제공합니다. 그 제공이 caller가 보낸 임의 bytes에
-          서명해도 된다는 허가까지는 아닙니다. Validator client는 chain identity, fork domain, duty type, validator key와
-          signing root를 검토하고 backend는 허용된 key와 request policy를 다시 적용합니다. Key 보관 위치가 달라도 이 context는 사라지지 않습니다.
+          V37의 attestation data가 정해지면 Prysm은 target epoch의 attester
+          domain을 얻고, data와 domain을 hash해 RA를 만듭니다. Sign request에는
+          V37의 public key, RA, domain, 원래 attestation data와 slot 100이 함께
+          들어갑니다. 이 문맥은 remote signer가 object type을 구분하고 자체
+          정책을 적용할 때도 필요합니다.
+        </p>
+        <p>
+          다만 <strong>공통 keymanager interface가 보장하는 것은 public-key 조회와
+          Sign 호출입니다.</strong> Local 구현의 <code>Sign</code>은 public key가
+          cache에 있는지 확인한 뒤 <code>req.SigningRoot</code>에 곧바로
+          서명합니다. 그것만으로 duty가 맞는지, RA가 double vote인지 다시
+          판정하지 않습니다. 그 책임은 caller와 slashing-protection 경로에
+          남아 있습니다.
         </p>
       </div>
 
       <div className="not-prose my-6 grid min-w-0 gap-4 md:grid-cols-3">
-        {BACKENDS.map(([title, action, boundary], index) => (
-          <article key={title} className="min-w-0 rounded-lg border border-border p-4">
-            <p className="font-mono text-[10px] font-bold text-primary">0{index + 1}</p>
-            <h3 className="mt-2 text-sm font-bold">{title}</h3>
-            <p className="mt-2 text-xs leading-5 text-muted-foreground">{action}</p>
-            <p className="mt-3 border-t border-border pt-3 text-xs leading-5"><strong>추가 경계</strong> · {boundary}</p>
+        {BACKENDS.map((backend, index) => (
+          <article key={backend.title} className="min-w-0 border border-border p-4">
+            <p className="font-mono text-[10px] font-bold text-primary">
+              0{index + 1}
+            </p>
+            <h3 className="mt-2 text-sm font-bold">{backend.title}</h3>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {backend.action}
+            </p>
+            <p className="mt-3 border-t border-border pt-3 text-xs leading-5">
+              <strong>주요 경계</strong> · {backend.boundary}
+            </p>
           </article>
         ))}
       </div>
 
       <div className="not-prose my-5 flex flex-wrap gap-2">
-        <CodeViewButton onClick={() => onCodeRef("run-client", codeRefs["run-client"])} />
-        <span className="self-center text-xs text-muted-foreground">분석한 snapshot의 keymanager 초기화 확인</span>
+        <CodeViewButton
+          onClick={() =>
+            onCodeRef("keymanager-contract", codeRefs["keymanager-contract"])
+          }
+        />
+        <CodeViewButton
+          onClick={() => onCodeRef("local-sign", codeRefs["local-sign"])}
+        />
+        <CodeViewButton
+          onClick={() => onCodeRef("remote-sign", codeRefs["remote-sign"])}
+        />
+        <span className="self-center text-xs text-muted-foreground">
+          공통 계약과 local·remote 서명 구현 원문
+        </span>
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>EIP-2335 keystore는 암호화 format이지 signing policy가 아닙니다</h3>
+        <h3>Remote signer를 쓰면 무엇이 좋아지고 무엇이 새로 생길까요?</h3>
         <p>
-          Keystore JSON은 KDF, checksum, cipher, public key와 derivation path를 self-describing parameter로 기록합니다.
-          복호화할 때는 file에 적힌 KDF로 derived key를 만들고 checksum을 먼저 확인한 뒤 cipher를 풉니다. 특정 scrypt 비용이나 cipher 조합을 모든
-          file의 상수로 가정하지 않고 schema와 parameter를 읽어야 합니다. 복호화 성공은 그 key로 지금 이 duty에 서명할 authorization과 별개입니다.
+          Secret key가 validator host 밖에 있으므로 host 침해와 key custody를
+          분리할 수 있습니다. Prysm의 Web3Signer adapter는 SignRequest를 object
+          type에 맞는 JSON으로 변환하고 genesis validators root를 포함해 remote
+          endpoint에 보냅니다. Remote signer는 이 구조를 보고 block과
+          attestation을 구별할 수 있습니다.
+        </p>
+        <p>
+          하지만 adapter가 호출됐다는 사실만으로 remote signer의 slashing
+          protection이 켜져 있다고 말할 수는 없습니다. 인증 실패, network tail
+          latency, 응답을 잃은 뒤 실제 서명 여부를 모르는 timeout도 새로 생깁니다.
+          같은 key를 여러 Prysm client가 공유한다면 signer 쪽의 공용 history나
+          확실한 single-writer fencing이 필요합니다.
         </p>
 
-        <h3>Remote signer request의 최소 필드</h3>
+        <h3>Timeout 뒤 root를 바꾸어 재시도하면 왜 위험할까요?</h3>
         <p>
-          Request에는 public key, signing root, duty/object type, fork information을 담습니다. 여기에 genesis validators
-          root와 slot 또는 epoch, stable duty ID를 더해 mutually authenticated channel로 전송합니다. Signer receipt에는
-          request digest, accepted/rejected policy, signature 또는 기존 signature reference를 남깁니다. 단순 HTTP 200과 유효
-          BLS signature도 올바른 duty에 대한 authorization이 없으면 충분하지 않습니다.
+          RA 요청의 응답만 잃었더라도 remote signer에는 σA가 남아 있을 수
+          있습니다. 이때 같은 duty에 대해 다른 head로 만든 RB를 보내면 두
+          signature가 존재할 수 있습니다. 재시도는 stable request digest로 같은
+          root의 기존 결과를 조회하거나, signer가 같은 root 재요청을 idempotent하게
+          처리할 때만 안전합니다. “응답을 못 받았다”는 “서명하지 않았다”는 증거가
+          아닙니다.
         </p>
-
-        <h3>운영 선택 기준</h3>
-        <p>
-          Local signer는 network dependency가 적지만 validator host 침해 범위가 커집니다. Remote signer는 key isolation과 중앙
-          policy를 얻는 대신 tail latency와 correlated outage가 생깁니다. 같은 key를 active-active로 실행하지 않고 fencing token이나
-          단일 writer lease, shared slashing history와 tested failover runbook을 둡니다. 평균 signer latency보다 slot
-          deadline 초과율과 timeout 뒤 reconciliation 가능성을 함께 측정합니다.
-        </p>
+        <aside className="not-prose mt-5 border-l-2 border-amber-500/60 bg-amber-500/5 p-4 text-sm leading-6">
+          <strong>여기까지 확정된 것:</strong> V37·slot 100·attester domain·RA에
+          묶인 σA가 생겼습니다. 이 signature가 local history와 충돌하지 않는지와
+          network로 제출됐는지는 아직 확정되지 않았습니다.
+        </aside>
       </div>
     </section>
   );

@@ -74,6 +74,7 @@ export default function WarpStallReasonsAndIssueUtilizationViz() {
 
   return (
     <VizFrame
+      documentFlow
       eyebrow="Warp state sampling · stall reason"
       title="Sampler 는 clock 마다 warp 의 상태를 뽑고, 그 표본의 분포가 stall reason 이 됩니다"
       description="Scheduler 하나에 warp 4개가 resident 한 상황입니다. 위 표는 clock 마다 각 warp 가 어떤 상태였는지, 아래는 지금까지의 표본 분포와 issue slot 이 채워진 clock 수입니다."
@@ -85,7 +86,7 @@ export default function WarpStallReasonsAndIssueUtilizationViz() {
         role="group"
         aria-label="Scheduler 하나의 warp 4개가 clock 마다 selected, not selected, long scoreboard, short scoreboard, barrier 상태를 오가며 표본이 쌓이는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(36rem,calc(100svh-15rem))] min-h-[29rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-auto min-h-0 min-w-0 flex-col overflow-visible outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(36rem,calc(100svh-15rem))] sm:min-h-[29rem] sm:overflow-y-auto"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
@@ -93,8 +94,8 @@ export default function WarpStallReasonsAndIssueUtilizationViz() {
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
 
-          <div className="mt-5 min-w-0 overflow-x-auto">
-            <div className="grid min-w-[20rem] grid-cols-[3.25rem_repeat(4,minmax(0,1fr))] gap-1 font-mono text-[10px]">
+          <div className="mt-5 min-w-0 overflow-visible sm:overflow-x-auto">
+            <div className="grid min-w-0 grid-cols-[2.5rem_repeat(4,minmax(0,1fr))] gap-1 font-mono text-[9px] sm:min-w-[20rem] sm:grid-cols-[3.25rem_repeat(4,minmax(0,1fr))] sm:text-[10px]">
               <div className="flex h-6 items-center text-muted-foreground">clock</div>
               {WARPS.map((name) => (
                 <div key={name} className="flex h-6 items-center justify-center font-bold text-muted-foreground">
@@ -107,7 +108,7 @@ export default function WarpStallReasonsAndIssueUtilizationViz() {
                 return [
                   <div
                     key={`c${clockIndex}`}
-                    className={`flex h-9 items-center ${isActive ? "font-bold text-foreground" : "text-muted-foreground"}`}
+                    className={`flex h-12 items-center sm:h-9 ${isActive ? "font-bold text-foreground" : "text-muted-foreground"}`}
                   >
                     c{clockIndex + 1}
                     {isActive ? " ◀" : ""}
@@ -115,7 +116,7 @@ export default function WarpStallReasonsAndIssueUtilizationViz() {
                   ...clock.map((state, warpIndex) => (
                     <div
                       key={`c${clockIndex}w${warpIndex}`}
-                      className={`flex h-9 items-center justify-center border px-1 text-center leading-3 ${
+                      className={`flex h-12 min-w-0 items-center justify-center overflow-hidden border px-0.5 text-center leading-[0.68rem] sm:h-9 sm:px-1 sm:leading-3 ${
                         isActive || isPast ? CLASS[state] : "border-border/40 text-transparent"
                       } ${isActive ? "outline outline-1 outline-primary" : ""}`}
                     >

@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import ShopTransferAndGoodwillViz from "./ShopTransferAndGoodwillViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopTransferAndGoodwillArticle() {
@@ -10,7 +9,6 @@ export default function ShopTransferAndGoodwillArticle() {
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 돈을 낸 뒤 실제로 영업을 이어받을 수 있어야 한다</h2>
-        <ShopTransferAndGoodwillViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">가게를 사는 일에는 냉장고처럼 손에 잡히는 물건과 같은 자리에서 장사할 기회가 섞여 있습니다. 물건을 다 받았어도 공간을 계속 쓰거나 고객에게 같은 서비스를 제공할 수 없다면 기대한 거래가 완성되지 않습니다.</p>
           <p className="leading-7">

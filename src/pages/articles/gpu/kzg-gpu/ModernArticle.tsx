@@ -4,13 +4,14 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { ModernKzgGpuViz } from "./ModernKzgGpuViz";
 
 const KZG = "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf";
-const CKZG = "https://github.com/ethereum/c-kzg-4844/tree/673d93cdb5b61072f288f08c147c180cf378cb9b";
+const CKZG = "https://github.com/ethereum/c-kzg-4844/tree/e125905e5e01186e6ccb7a0ced4845bf7eddbcfe";
 const SPPARK = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/pippenger.cuh";
 
 export default function ModernKzgGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">KZG equation을 검증 가능한 GPU jobs로 내리기</p><h2 className="text-3xl font-bold tracking-tight">KZG GPU 가속은 commitment 수식을 바꾸는 일이 아니라 polynomial·SRS·MSM artifact의 identity를 보존하는 일이다</h2></header>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">KZG equation을 검증 가능한 GPU jobs로 내리기</p><h2 className="text-3xl font-bold tracking-tight">KZG GPU는 수식을 바꾸지 않고 artifact identity를 보존한다</h2></header>
+      <aside className="rounded-lg border border-primary/20 bg-primary/5 p-5 text-base leading-7"><strong>한 문장 답:</strong> KZG에서 GPU는 coefficient와 같은 index의 SRS point를 더하는 MSM을 빠르게 할 뿐이며, SRS·basis·quotient·verifier가 같은 요청에 속한다는 책임은 runtime에 남습니다.</aside>
       <p className="text-lg leading-8 text-foreground/90">Polynomial commitment interface와 KZG quotient·pairing equation은 <a className="text-primary hover:underline" href="/cs/crypto/polycommit#kzg">KZG 정본</a>이 소유합니다. 이 글은 coefficient/evaluation buffer가 <a className="text-primary hover:underline" href="/cs/gpu/poly-ops-gpu">GPU polynomial 연산</a>과 <a className="text-primary hover:underline" href="/cs/gpu/msm-gpu-impl">GPU MSM</a>을 거쳐 commitment/proof가 되고, 독립 verifier receipt로 닫히는 구현 경계만 다룹니다.</p>
       <p>공통 workload는 degree 7 polynomial, 정확히 8개 SRS G1 points, evaluation claim (z,y), quotient polynomial과 proof입니다. GPU 결과가 빨라도 SRS prefix·curve·form·generation이 다르면 폐기합니다.</p>
       <ModernKzgGpuViz />
@@ -18,8 +19,9 @@ export default function ModernKzgGpuArticle() {
     </section>
 
     <section id="srs-residency" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · SRS residency</p><h2 className="mt-2 text-2xl font-bold">SRS를 bytes로 cache하지 말고 curve·degree·digest·validation이 붙은 immutable artifact로 올린다</h2></header>
-      <p>Structured reference string(SRS)은 [τ⁰]G,[τ¹]G,… points입니다. Loader는 외부 encoding을 해석하고 point-on-curve·subgroup·길이와 digest를 확인한 뒤 backend 내부 point layout으로 변환합니다. 외부 compressed bytes와 device Jacobian/affine bytes는 다르므로 고정 GB 수치를 encoding 설명 없이 일반화하지 않습니다.</p>
+      <header><p className="text-sm font-semibold text-primary">01 · SRS residency</p><h2 className="mt-2 text-2xl font-bold">SRS를 검증된 immutable artifact로 올린다</h2></header>
+      <p>Structured reference string(SRS)은 [τ⁰]G,[τ¹]G,… points입니다. 이 글의 release loader는 외부 encoding을 해석하고 point-on-curve·subgroup·길이와 digest를 확인한 뒤 backend 내부 point layout으로 변환합니다.</p>
+      <p>외부 compressed bytes와 device Jacobian/affine bytes는 다르므로 고정 GB 수치를 encoding 설명 없이 일반화하지 않습니다. 또한 c-kzg의 bundled trusted setup처럼 신뢰를 전제로 한 loader와 임의 외부 SRS를 검증하는 loader를 같은 경계로 부르지 않습니다.</p>
       <ExplainedFormula question="고정 SRS와 한 KZG job의 peak live bytes를 어떻게 예산할까?" idea={<>항상 resident인 SRS prefix에 scalar, quotient, MSM workspace와 outputs가 동시에 살아 있는 구간을 더합니다.</>} formula={String.raw`B_{live}=n s_P+n s_F+n_qs_F+B_{MSM}+B_{out}+B_{runtime}`}
       annotatedFormula={String.raw`B_{live}=\underbrace{n s_P}_{\text{상주 SRS prefix}}+\underbrace{n s_F+n_qs_F}_{\text{계수·quotient}}+\underbrace{B_{MSM}}_{\text{MSM 작업 공간}}+\underbrace{B_{out}+B_{runtime}}_{\text{출력·runtime}}`}
       operations={[
@@ -39,7 +41,7 @@ export default function ModernKzgGpuArticle() {
     </section>
 
     <section id="commit-job" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Commit job</p><h2 className="mt-2 text-2xl font-bold">Coefficient form과 정확한 SRS monomial prefix를 같은 MSM job으로 묶는다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">02 · Commit job</p><h2 className="mt-2 text-2xl font-bold">Coefficient와 monomial SRS를 같은 index로 묶는다</h2></header>
       <ExplainedFormula question="KZG commitment가 GPU MSM의 어떤 입력이 될까?" idea={<>각 coefficient를 scalar로, 같은 degree의 SRS power를 point로 넣은 MSM 결과가 commitment입니다.</>} formula={String.raw`f(X)=\sum_{i=0}^{n-1}a_iX^i,\qquad C=\sum_{i=0}^{n-1}a_i[\tau^i]G=[f(\tau)]G`}
       annotatedFormula={String.raw`f(X)=\sum_{i=0}^{n-1}\underbrace{a_i}_{\text{계수=scalar}}X^i,\qquad C=\underbrace{\sum_{i=0}^{n-1}a_i[\tau^i]G}_{\text{GPU MSM 한 번}}=\underbrace{[f(\tau)]G}_{\text{숨은 점에서 평가한 commit}}`}
       operations={[
@@ -61,12 +63,9 @@ export default function ModernKzgGpuArticle() {
     </section>
 
     <section id="opening-dag" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Opening DAG</p><h2 className="mt-2 text-2xl font-bold">Evaluation·exact quotient·proof MSM·pairing verify를 generation-bound DAG로 잇는다</h2></header>
-      <p>
-            Claim y=f(z)를 계산하고 q=(f−y)/(X−z)의 remainder가 0인지 확인한 뒤 q coefficients와 SRS prefix를 MSM해 proof π를
-            만듭니다. Batch opening은 transcript challenge와 aggregation equation을 특정 protocol/version에 고정해야 하며 여러
-            commitments를 무조건 하나의 MSM으로 이어 붙이는 식으로 group 결과를 분리할 수 없습니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">03 · Opening DAG</p><h2 className="mt-2 text-2xl font-bold">Evaluation에서 verifier까지 한 generation으로 잇는다</h2></header>
+      <p>Claim y=f(z)를 계산하고 q=(f−y)/(X−z)의 remainder가 0인지 확인한 뒤 q coefficients와 SRS prefix를 MSM해 proof π를 만듭니다.</p>
+      <p>Batch opening은 transcript challenge와 aggregation equation을 특정 protocol·version에 고정해야 합니다. 여러 commitments를 무조건 하나의 MSM으로 이어 붙인 뒤 group 결과를 임의로 분리할 수는 없습니다.</p>
       <ExplainedFormula question="KZG artifact가 같은 입력 generation에서 만들어졌는지 어떻게 봉인할까?" idea={<>Polynomial, SRS, claim, backend와 output digests를 하나의 receipt identity에 묶어 verifier 결과와 함께 저장합니다.</>} formula={String.raw`R=H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)`}
       annotatedFormula={String.raw`R=H(\underbrace{A_f\|A_{SRS}}_{\text{다항식·setup}}\|\underbrace{z\|y}_{\text{opening claim}}\|\underbrace{H(C)\|H(\pi)}_{\text{결과 encoding}}\|\underbrace{v\|b}_{\text{verifier·backend}})`}
       operations={[
@@ -84,17 +83,17 @@ export default function ModernKzgGpuArticle() {
         {symbol:"v",name:"Verifier result",description:"Pinned independent verifier의 success/failure receipt입니다."},
         {symbol:"b",name:"Backend identity",description:"GPU model, driver, implementation SHA와 artifact key입니다."},
       ]} assumptions={["각 field는 length-delimited canonical encoding이고 verifier version·public inputs를 고정합니다.","Receipt는 verifier의 cryptographic check를 대체하지 않고 그 결과와 provenance를 결속합니다."]} interpretation="같은 C와 π라도 SRS digest가 바뀌면 R이 달라집니다. 오래된 verifier 성공을 새 setup의 승인으로 재사용할 수 없습니다." />
-      <div id="paper-ckzg-kzg"><CitationBlock type="code" citeKey={2} source="ethereum/c-kzg-4844 v2.1.6 · commit 673d93c" href={CKZG}><p><strong>문제:</strong> Ethereum blob KZG commitments/proofs, trusted setup loading과 verification을 상호운용 가능한 API로 구현해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned official repository가 setup parsing, commitment/proof compute·verify와 consensus test vectors를 제공합니다.</p><p><strong>중요 가정:</strong> v2.1.6, BLS12-381, EIP-4844 profile과 shipped trusted setup/test formats를 고정합니다.</p><p><strong>근거 범위:</strong> 해당 revision의 CPU reference/API behavior입니다.</p><p><strong>일반화 금지:</strong> 임의 KZG batch protocol·GPU acceleration·모든 proof system의 setup을 보장하지 않습니다.</p></CitationBlock></div>
+      <div id="paper-ckzg-kzg"><CitationBlock type="code" citeKey={2} source="ethereum/c-kzg-4844 v2.1.8 · commit e125905" href={CKZG}><p><strong>문제:</strong> Ethereum blob·cell KZG commitments/proofs, trusted setup loading과 verification을 상호운용 가능한 API로 구현해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned official repository가 EIP-4844 blob과 EIP-7594 cell compute·recover·verify API 및 consensus test vectors를 제공합니다.</p><p><strong>중요 가정:</strong> v2.1.8, BLS12-381, EIP-4844·7594 profile과 bundled trusted setup/test formats를 고정합니다.</p><p><strong>근거 범위:</strong> 해당 revision의 CPU reference/API behavior입니다. Blob·cell의 evaluation/basis 계약은 이 글의 작은 monomial coefficient fixture와 별도입니다.</p><p><strong>일반화 금지:</strong> 임의 KZG batch protocol·GPU acceleration·모든 proof system의 setup 검증을 보장하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Independent verifier와 negative fixtures가 승인한 artifact만 성능 비교에 넣는다</h2></header>
-      <p>
-            Zero/constant/max-degree, SRS short/wrong digest/wrong subgroup, coefficient/evaluation mismatch,
-            y·z mutation, quotient remainder, malformed C/π, GPU OOM·timeout과 fallback을 포함합니다. CPU reference와
-            GPU C·π bytes 또는 normalized points를 비교하고 pinned independent verifier가 valid를 승인하고 invalid를 같은
-            failure class로 거절해야 합니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Verifier가 승인한 artifact만 성능표에 넣는다</h2></header>
+      <ol className="list-decimal space-y-3 pl-5">
+        <li><strong>입력 fixture:</strong> zero·constant·max-degree와 SRS short·wrong digest·wrong subgroup·coefficient/evaluation mismatch를 고정합니다.</li>
+        <li><strong>Opening failure:</strong> z·y mutation, non-zero quotient remainder와 malformed C·π를 같은 failure class로 거절합니다.</li>
+        <li><strong>Runtime failure:</strong> GPU OOM·timeout·retry·fallback을 성공 표본에서 숨기지 않습니다.</li>
+        <li><strong>독립 승인:</strong> CPU reference와 GPU의 C·π bytes 또는 normalized points를 비교한 뒤 pinned verifier가 valid만 승인해야 합니다.</li>
+      </ol>
       <ExplainedFormula question="KZG GPU 경로의 유효 처리량과 speedup을 어떤 경계에서 계산할까?" idea={<>독립 verifier가 승인한 artifacts만 세고 setup cache hit/cold, transfer, polynomial work와 MSM을 포함한 같은 wall-clock 경계를 비교합니다.</>} formula={String.raw`R_{KZG}=\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{reference}^{e2e}}{T_{GPU}^{e2e}}`}
       annotatedFormula={String.raw`R_{KZG}=\frac{\underbrace{N_{verified}}_{\text{verifier 승인 수}}}{\underbrace{T_{wall}}_{\text{요청→receipt}}},\qquad S=\frac{\underbrace{T_{reference}^{e2e}}_{\text{reference 전체}}}{\underbrace{T_{GPU}^{e2e}}_{\text{GPU 경로 전체}}}`}
       operations={[

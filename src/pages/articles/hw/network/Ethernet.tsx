@@ -87,7 +87,10 @@ export default function Ethernet() {
         </h3>
         <p className="leading-7">
           host-facing port의 합을 leaf uplink 합으로 나눈 oversubscription은 출발점이다. 실제 결과는 동시에 통신하는 source·destination이
-          어느 leaf에 있는지와 ECMP hash가 path를 얼마나 고르게 쓰는지에 달린다. 장애로 uplink 하나가 빠졌을 때의 비율과 elephant·mice flow가 섞일 때의
+          어느 leaf에 있는지와 ECMP hash가 path를 얼마나 고르게 쓰는지에 달린다.
+        </p>
+        <p className="leading-7">
+          장애로 uplink 하나가 빠졌을 때의 비율과 elephant·mice flow가 섞일 때의
           queue도 함께 계산한다. 필요하면 workload placement를 fabric topology에 맞춰 cross-leaf traffic 자체를 줄인다.
         </p>
         <ExplainedFormula
@@ -156,12 +159,14 @@ export default function Ethernet() {
           제공한다.
         </CitationBlock>
         <CitationBlock
-          source="IEEE 802.3 — Active Ethernet Projects"
+          source="IEEE P802.3dj — 200G·400G·800G·1.6T Ethernet Task Force"
           citeKey={4}
-          href="https://www.ieee802.org/3/index.html"
+          href="https://www.ieee802.org/3/dj/index.html"
         >
-          800 Gb/s와 1.6 Tb/s를 포함한 일부 차세대 규격이 진행 중인 project일 수
-          있으므로 구매 시 표준 상태와 제품 지원을 별도로 확인해야 한다.
+          800Gb/s Ethernet 자체는 IEEE 802.3df-2024로 승인됐습니다. 반면
+          2026-11-02 현재 P802.3dj의 1.6Tb/s 등을 포함한 후속 PHY·media 작업은
+          task force 단계이므로 rate 이름만 보고 모든 reach·lane 조합이 표준화됐다고
+          가정하지 않습니다.
         </CitationBlock>
       </div>
     </section>

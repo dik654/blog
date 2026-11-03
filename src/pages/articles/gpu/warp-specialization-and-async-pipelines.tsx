@@ -5,7 +5,38 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import NumericPath from "@/pages/articles/world-systems/NumericPath";
 import WarpSpecializationAndAsyncPipelinesViz from "./warp-specialization-and-async-pipelines/viz/WarpSpecializationAndAsyncPipelinesViz";
+
+function StageBudgetViz() {
+  return (
+    <NumericPath
+      title="1.2µs의 기다림을 0.3µs 계산으로 가리는 과정"
+      steps={[
+        {
+          label: "Tile 한 벌이 도착하는 시간",
+          value: "1.2µs",
+          detail: "HBM 왕복과 전송을 합친 설명용 가정",
+        },
+        {
+          label: "그동안 끝낼 수 있는 계산 수",
+          value: "1.2 ÷ 0.3 = 4",
+          detail: "시간을 시간으로 나누므로 단위가 사라지고 tile 네 벌이 남음",
+        },
+        {
+          label: "지금 계산 중인 자리까지 포함",
+          value: "4 + 1 = 5 stages",
+          detail: "날아오는 네 벌과 consumer가 읽는 한 벌",
+        },
+        {
+          label: "Shared memory 사용량",
+          value: "5 × 32KB = 160KB",
+          detail: "Stage마다 A 16KB와 B 16KB를 보관",
+        },
+      ]}
+    />
+  );
+}
 
 /**
  * Warp specialization 과 asynchronous pipeline: TMA, wgmma, stage ring
@@ -21,34 +52,41 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
     <div id="overview" className="space-y-16">
       <section id="warp-specialization" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Warp specialization 은 warp 를 producer 와 consumer 로 나눕니다
+          다음 tile 을 기다리는 동안 Tensor Core 가 쉽니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Warp specialization 은 한 threadblock 안의 warp 에 서로 다른 역할을 주는 kernel 구조입니다. Producer warp 는 global
-            memory 에서 shared memory 로 tile 을 옮기는 일만 하고 consumer warp 는 shared memory 의 tile 로 계산만 합니다. 두 역할은
-            같은 kernel 코드 안에서 warp 번호로 갈라집니다.
+            (설명용 가정) 행렬곱의 tile 하나를 memory 에서 가져오는 데 1.2µs, 계산하는 데 0.3µs가 걸립니다. 같은 warp가
+            <code>load → wait → compute</code>를 반복하면 tile 하나마다 1.5µs가 들고, 계산기는 다음 data를 기다리는 동안 비어 있습니다.
           </p>
           <p>
-            나누는 이유는 한 warp 가 load 와 계산을 번갈아 하면 둘 중 하나가 늘 기다리기 때문입니다. Load 를 낸 warp 가 그 결과로 계산하려면 데이터가 도착할 때까지
-            멈추고 그 사이 tensor core 는 놉니다. 역할을 나누면 producer 는 다음 tile 을 계속 요청하고 consumer 는 이미 도착한 tile 을 계속
-            계산합니다.
+            핵심 해법은 한 무리는 다음 tile을 계속 가져오고, 다른 무리는 이미 도착한 tile만 계산하게 하는 것입니다. 둘 사이에 shared memory
+            칸을 여러 개 두면 memory 요청과 Tensor Core 계산이 서로 다른 tile에서 동시에 진행됩니다.
           </p>
           <p>
-            Hopper 의 CUTLASS 3.x GEMM 은 threadblock 을 384 thread, 곧 warpgroup 3개로 잡습니다. Warpgroup 0 이
-            producer, 1 과 2 가 consumer 입니다. Producer 128 thread 가운데 실제로 TMA 명령을 내는 것은 thread 하나뿐이고 나머지는
-            register 를 반납하고 대기합니다.
+            이렇게 한 threadblock 안의 warp에 서로 다른 일을 맡기는 구조가 <strong>warp specialization</strong>입니다. Data를 가져오는 쪽이
+            producer입니다. 계산하는 쪽은 consumer입니다. 이 이름을 먼저 외우는 대신 “누가 다음 tile을 가져오고, 누가 현재 tile을 계산하는가”로
+            읽으면 됩니다.
           </p>
           <p>
-            Register 반납이 이 구조를 완성합니다. SM 의 register 는 65,536개이고 384 thread 가
-            균등하게 나누면 thread 당 170개입니다. <code>setmaxnreg</code> 로 producer 를 thread 당
-            40개로 줄이고 consumer 를 232개로 늘리면 40×128 + 232×256 = 64,512개로 예산 안에 들어
-            consumer 가 큰 accumulator 를 register 에 둘 수 있습니다.
+            현재 CUTLASS의 Hopper ping-pong GEMM 예는 threadblock을 384 thread, 곧 warpgroup 3개로 잡습니다. Warpgroup 0은
+            producer 역할이고 1·2는 consumer입니다.
           </p>
           <p>
-            이 글은 producer 가 쓰는 두 가지 asynchronous copy, consumer 가 내는 warpgroup MMA,
-            둘 사이의 stage ring 과 mbarrier 손잡이, 그리고 이 모든 것이 하나의 software
-            pipelining 이라는 점을 차례로 봅니다. 앞 글{" "}
+            다만 producer 128개 thread가 모두 놀고 있는 것은 아닙니다. 그 안의 warp들은 mainloop
+            load, tile scheduling, epilogue load 같은 역할로 다시 갈리고, mainloop의 TMA 발행 자체는 뽑힌 lane 하나가 맡습니다.
+          </p>
+          <p>
+            Register 재분배가 이 구조를 완성합니다. SM의 register 65,536개를 384 thread가 똑같이 나누면 thread당 약 170개입니다.
+          </p>
+          <p>
+            <code>setmaxnreg</code>로 producer 쪽 상한을 40개, consumer를 232개로 잡으면
+            40×128 + 232×256 = 64,512개가 되어 예산 안에서 consumer가 큰 accumulator를 들 수 있습니다. 이 40·232는 모든 kernel의
+            상수가 아니라 현재 CUTLASS schedule이 register pressure에 따라 고르는 값입니다.
+          </p>
+          <p>
+            이제 같은 사례를 따라 producer의 asynchronous copy, consumer의 warpgroup MMA, 둘 사이 stage ring과 mbarrier, 마지막으로
+            이 전체를 부르는 software pipelining 순서로 내려갑니다. 앞 글{" "}
             <Link to="/cs/gpu/gpu-arch-hopper#tma">Hopper 의 TMA producer–consumer 개요</Link> 가
             그림 한 장으로 말한 것을 명령 단위로 내려갑니다.
           </p>
@@ -62,6 +100,7 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             { term: "Specialized warp pipeline", description: "Producer 가 S−1 개 tile 을 앞서 요청하고 consumer 가 뒤따르는 구조 전체입니다.", example: "Stage 4 면 producer 는 consumer 보다 최대 3 tile 앞서 갑니다.", boundary: "K 방향 tile 수가 stage 수보다 적으면 앞설 것이 없어 이득이 사라집니다." },
           ]}
         />
+        <WarpSpecializationAndAsyncPipelinesViz />
         <ContentBoundary article="warp-specialization-and-async-pipelines" />
       </section>
 
@@ -136,7 +175,9 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
           <p>
             숫자를 넣어 봅니다. Threadblock tile은 M 128행 × N 128열 × K 깊이 64입니다. Consumer warpgroup 2개가 M 방향을
             나누면 각각 M 64행 × N 128열을 맡습니다. <code>wgmma.m64n128k16</code> 한 번은 K를 16만큼 진행하므로 K 64÷16=4번 냅니다.
-            출력 accumulator는 M 64 × N 128 = 8,192개이고, warpgroup의 128 thread가 나누면 thread마다 8,192÷128=64개를 듭니다. 앞 절의 232 register 예산 안에서
+          </p>
+          <p>
+            출력 accumulator는 M 64 × N 128 = 8,192개입니다. Warpgroup의 128 thread가 나누면 thread마다 8,192÷128=64개를 듭니다. 앞 절의 232 register 예산 안에서
             tile 을 128×256 으로 키우면 accumulator 만 128개가 됩니다.
           </p>
           <p>
@@ -184,10 +225,10 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
           </p>
           <p>
             Stage 를 늘려도 이득이 멈추는 지점이 있습니다. L 이 C 보다 작아지면 S = 2 로 충분하고 K 방향 tile 수가 S 보다 적으면 ring 이 한 바퀴도 돌지
-            못합니다. 아래 Viz 는 stage 4 ring 이 채워지고 소비되는 한 바퀴를 보여 줍니다.
+            못합니다. 첫 절의 Viz는 stage 4 ring이 채워지고 소비되는 한 바퀴를 먼저 보여 줬습니다.
           </p>
         </div>
-        <WarpSpecializationAndAsyncPipelinesViz />
+        <StageBudgetViz />
         <ExplainedFormula
           question="Load 지연을 완전히 숨기려면 shared memory stage 가 몇 개 필요한가요?"
           idea="Consumer 가 tile 하나를 계산하는 C 동안 producer 가 미리 날려 둔 load 가 L 을 채워야 합니다. L/C 개의 tile 이 날아가는 중이어야 하고, 계산 중인 tile 하나의 자리가 더 필요합니다."
@@ -195,6 +236,7 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
 S &\ge \left\lceil \frac{L}{C} \right\rceil + 1 \\
 \text{smem} &= S \cdot (B_A + B_B)
 \end{aligned}`}
+          mobileFormula={String.raw`\begin{aligned}S&\ge\left\lceil L/C\right\rceil+1\\B_{\mathrm{smem}}&=S(B_A+B_B)\end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
 S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 동안 날아가야 할 tile 수}} + \underbrace{1}_{\text{지금 계산 중인 stage}} \\
 \text{smem} &= \underbrace{S}_{\text{stage 수}} \cdot \underbrace{(B_A + B_B)}_{\text{stage 한 벌의 bytes}}
@@ -344,7 +386,7 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
           </p>
           <p>
             Producer·consumer warpgroup 의 역할 배정, 40·232 register 값, ping-pong 의 ordered
-            barrier 는 CUTLASS main branch 소스에서 읽은 것이며 2026년 8월 기준입니다. 이 글의
+            barrier는 CUTLASS main branch의 2026-11-02 commit e13f5cd에서 다시 확인했습니다. 이 글의
             0.3 µs·1.2 µs·5 stage 는 그 구조에 H100 공개 사양을 넣어 계산한 산수이지 측정이
             아닙니다.
           </p>
@@ -379,7 +421,7 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
           <CitationBlock
             source="NVIDIA/cutlass · pingpong·warpspecialized mainloop · pipeline.md"
             citeKey={3}
-            href="https://github.com/NVIDIA/cutlass/blob/main/include/cutlass/gemm/kernel/sm90_gemm_tma_warpspecialized_pingpong.hpp"
+            href="https://github.com/NVIDIA/cutlass/blob/e13f5cd4142c43efc37c2f6339923eb4a57afb99/include/cutlass/gemm/kernel/sm90_gemm_tma_warpspecialized_pingpong.hpp"
             type="code"
           >
             384 thread 를 producer 1·consumer 2 warpgroup 으로 나누는 WarpGroupRole, 40·232 (heavy

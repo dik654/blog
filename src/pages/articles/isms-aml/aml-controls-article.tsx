@@ -57,6 +57,8 @@ const FATF_RBA =
 const FATF_DIGITAL_ID =
   "https://www.fatf-gafi.org/content/dam/fatf-gafi/guidance/Guidance-on-Digital-Identity.pdf.coredownload.pdf";
 const FSC_TRAVEL_RULE = "https://www.fsc.go.kr/po010102/77579";
+const KOFIU_VASP_2026 =
+  "https://www.kofiu.go.kr/kor/notification/report_view.do?ntcnYardOrdrNo=412&seCd=0001";
 
 const CONFIG: Record<ArticleKey, Config> = {
   "aml-compliance": {
@@ -128,7 +130,7 @@ const CONFIG: Record<ArticleKey, Config> = {
         problem: "국가와 금융기관이 위험에 비례하는 AML/CFT 예방조치를 공통 기준으로 연결해야 합니다.",
         contribution: "Risk-based approach, CDD, record keeping, suspicious transaction reporting과 supervision의 국제 기준을 제시합니다.",
         assumptions: "공식 영문·불문판과 대한민국의 현행 법령·감독 지침을 함께 적용합니다.",
-        scope: "2026-08-14 현재 FATF가 게시한 국제 AML/CFT 표준의 범위입니다.",
+        scope: "2026-11-02 현재 FATF가 게시한 국제 AML/CFT 표준의 범위입니다.",
         notClaim: "한 detector, 고객 score, 조직도 또는 workflow가 모든 관할과 상품에 그대로 적합하다는 뜻은 아닙니다.",
       },
       {
@@ -164,7 +166,8 @@ const CONFIG: Record<ArticleKey, Config> = {
       "한울무역에는 국내 급여·매입, 월 5천만 원, 주 거래 상대와 지역을 expected behavior로 기록합니다. Source of funds는 이번 관계·거래에 들어오는 자금의 출처이고 source of wealth는 고객의 전체 자산 형성 배경입니다. 모든 고객에게 같은 깊이를 요구하지 않고 상품·고객·지역·채널·소유구조의 위험 근거에 따라 범위를 정합니다.",
       "EDD는 복잡한 소유구조, 고위험 지역, PEP 관련성, 설명되지 않는 대규모·비정상 거래 같은 위험 원인별로 추가 source, senior approval, 목적·자금 원천 증명, 강화 monitoring을 붙입니다. Risk label만 높이고 어떤 의문을 어떤 evidence로 줄였는지 기록하지 않으면 EDD가 아닙니다.",
       "CDD는 onboarding 한 번으로 끝나지 않습니다. 위험에 따른 주기와 함께 주소·대표·실제소유자·상품·거래 패턴 변화, 기존 자료의 정확성 의심 같은 trigger가 생기면 refresh합니다. Raw document와 extracted field, normalization rule, verifier version, reviewer와 effective time을 분리해 과거 판단도 재현합니다.",
-      "Travel Rule은 VASP 사이 가상자산 이전에 송·수신인 정보를 거래와 함께 전달·보존하는 별도 information-sharing control입니다. On-chain address만으로 자연인 identity가 증명되는 것은 아니므로 originator·beneficiary identity, VASP·wallet type, transfer ID와 message receipt를 묶고 최소 정보·암호화·access·retention을 적용합니다. 2022 시행 안내의 100만 원 기준을 영구 상수로 복사하지 않고 2026-08-14의 실제 법령 effective date와 금융당국의 확대 개정 여부를 release마다 확인합니다.",
+      "Travel Rule은 VASP 사이 가상자산 이전에 송·수신인 정보를 거래와 함께 전달·보존하는 별도 information-sharing control입니다. On-chain address만으로 자연인 identity가 증명되는 것은 아니므로 originator·beneficiary identity, VASP·wallet type, transfer ID와 message receipt를 묶고 최소 정보·암호화·access·retention을 적용합니다.",
+      "2022년 최초 시행 안내에는 100만 원 기준이 있었습니다. 2026년 8월 11일 의결된 시행령 개정안은 이 기준 폐지와 해외 VASP·개인지갑 거래 통제를 예고했지만, 조항별 시행일이 같지 않습니다. 2026-11-02 현재에는 의결 내용과 실제 시행 조문을 구분하고, 거래 시점에 효력이 있는 법령·감독규정을 release마다 확인합니다.",
     ],
     releaseId: "cdd-release",
     stages: [
@@ -200,7 +203,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     ],
     assumptions: [
       "모든 지분은 같은 기준일의 0~1 비율이며 nominee·voting agreement 같은 별도 지배 근거를 따로 검토합니다.",
-      "25% 기준과 실제소유자 확인 순서는 2026-08-14 현재 국내 공식 안내와 적용 법령을 다시 확인합니다.",
+      "25% 기준과 실제소유자 확인 순서는 2026-11-02 현재 국내 공식 안내와 적용 법령을 다시 확인합니다.",
       "지분 계산만으로 실질 지배자·대표자 resolution 단계를 생략하지 않습니다.",
     ],
     interpretation: "한울무역←법인 A 60%, A←김민지 50%이면 0.60×0.50=0.30, 즉 간접 30%입니다. 계산 결과와 별도로 registry source, 기준일, 의결권·지배 근거를 함께 보존합니다.",
@@ -231,9 +234,19 @@ const CONFIG: Record<ArticleKey, Config> = {
         href: FSC_TRAVEL_RULE,
         problem: "VASP 간 가상자산 이전에 송·수신인 정보를 함께 전달하고 보존해야 합니다.",
         contribution: "2022-03-25 시행 당시 적용대상, 제공정보·시기, 보존과 해외·개인지갑 경계를 공식 설명합니다.",
-        assumptions: "2026-08-14의 법령 effective date와 이후 확대 개정·상대 VASP·개인지갑 정책을 별도로 확인합니다.",
+        assumptions: "2026-11-02의 실제 시행 조문과 이후 효력이 생기는 개정 조항, 상대 VASP·개인지갑 정책을 별도로 확인합니다.",
         scope: "대한민국 Travel Rule 최초 시행 구조를 설명하는 금융위원회 공식 자료입니다.",
         notClaim: "2022년 금액 기준·해외 이전 절차가 이후 개정 없이 현재도 동일하거나 on-chain 주소가 identity를 증명한다는 뜻은 아닙니다.",
+      },
+      {
+        id: "paper-kofiu-vasp-2026",
+        title: "금융정보분석원 · 2026 특정금융정보법 시행령 개정안 의결",
+        href: KOFIU_VASP_2026,
+        problem: "Travel Rule 기준과 해외 VASP·개인지갑 거래 통제가 바뀌는 시점과 내용을 구분해야 합니다.",
+        contribution: "2026-08-11 의결된 기준금액 폐지, 해외 VASP·개인지갑 위험기반 거래 통제와 고객확인 명확화, 조항별 시행 시점을 공식 설명합니다.",
+        assumptions: "의결 발표와 실제 효력 발생을 같은 날짜로 보지 않고 거래 시점의 공포문·시행 조문·감독규정을 확인합니다.",
+        scope: "2026년 개정안의 공식 정책 설명과 예정된 시행 경계입니다.",
+        notClaim: "발표된 모든 변경이 2026-11-02 현재 이미 시행 중이거나 모든 개인지갑 거래가 일률적으로 금지된다는 뜻은 아닙니다.",
       },
     ],
   },
@@ -401,7 +414,7 @@ const CONFIG: Record<ArticleKey, Config> = {
         href: KOFIU_LAWS,
         problem: "보고 시점·기록 보존·비밀 유지 등 구체 의무를 현행 조문에서 확인해야 합니다.",
         contribution: "법률·시행령·관련 규정에 접근하는 공식 법령 체계를 제공합니다.",
-        assumptions: "2026-08-14 현재 효력, 기관 scope, 사건 발생일과 후속 개정을 법무·준법이 확인합니다.",
+        assumptions: "2026-11-02 현재 효력, 기관 scope, 사건 발생일과 후속 개정을 법무·준법이 확인합니다.",
         scope: "STR와 관련 자료 보존·confidentiality 의무를 검증하는 국내 공식 출발점입니다.",
         notClaim: "이 글의 workflow와 5년 요약이 모든 자료의 유일한 retention 기간이나 사건별 법률 자문을 대신하지 않습니다.",
       },

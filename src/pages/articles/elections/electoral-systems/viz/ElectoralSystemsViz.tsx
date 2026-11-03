@@ -82,10 +82,10 @@ export default function ElectoralSystemsViz() {
   const index = lsq(votes, seats);
 
   const NOTES = [
-    `선거구 아홉 곳이 있고 어디서나 득표가 똑같습니다. 전국 득표율은 ${NAMES.map((n, i) => `${n} ${((votes[i] / voteSum) * 100).toFixed(0)}%`).join(" · ")}이며, 이 숫자는 네 장면 내내 바뀌지 않습니다.`,
+    `아홉 선거구의 득표 분포가 모두 같습니다. 전국 득표율은 ${NAMES.map((n, i) => `${n} ${((votes[i] / voteSum) * 100).toFixed(0)}%`).join(" · ")}이며, 이 숫자는 네 장면 내내 바뀌지 않습니다.`,
     `모든 선거구에서 가당이 1등이라 아홉 석을 전부 가져갑니다. ${((votes[0] / voteSum) * 100).toFixed(0)}%의 표가 100%의 의석이 되고, 나머지 ${((1 - votes[0] / voteSum) * 100).toFixed(0)}%의 표는 의석으로 전혀 바뀌지 않습니다.`,
     `같은 표를 전국 단위로 나누면 ${NAMES.map((n, i) => `${n} ${pr[i]}석`).join(" · ")}입니다. 득표율과 의석률의 차이를 하나의 수로 잰 값이 ${lsq(votes, fptp).toFixed(1)}에서 ${index.toFixed(1)}로 내려갑니다.`,
-    `규칙도 전국 득표도 그대로 두고 선거구 경계만 다시 그었습니다. 가당의 표가 세 곳에 몰린 탓에 아홉 석을 전부 가져가던 당이 세 석만 가져갑니다. 표를 몰아 이기면 남는 표가 버려집니다.`,
+    `규칙과 전국 득표는 그대로 두고 선거구 경계만 다시 그었습니다. 가당의 표가 세 곳에 몰리자 의석은 아홉 석에서 세 석으로 줄었습니다. 큰 표차로 이긴 선거구에서는 승리에 쓰고 남는 표가 의석을 더 만들지 못합니다.`,
   ] as const;
 
   return (
@@ -106,7 +106,7 @@ export default function ElectoralSystemsViz() {
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
+            장면 · {String(step + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
 

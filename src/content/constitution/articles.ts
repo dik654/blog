@@ -3,12 +3,12 @@ import type { Article } from "../types";
 export const constitutionArticles: Article[] = [
   {
     slug: "constitutionalism-and-separation",
-    title: "헌법은 종이인데도 힘을 묶습니다",
+    title: "헌법은 종이인데 어떻게 힘을 묶습니까",
     subcategory: "const-limits",
     sections: [
       {
         id: "overview",
-        title: "강제력을 쥔 쪽이 왜 자기를 묶는 문서를 지키는지가 먼저입니다",
+        title: "영장 없는 폐쇄 명령 E에서 시작합니다",
       },
       {
         id: "why-paper-binds",
@@ -16,7 +16,7 @@ export const constitutionArticles: Article[] = [
       },
       {
         id: "separation",
-        title: "부품 2. 규칙을 만드는 쪽과 집행하는 쪽과 판정하는 쪽을 가릅니다",
+        title: "부품 2. 규칙·집행·최종 판정의 독점을 막습니다",
       },
       {
         id: "checks",
@@ -42,7 +42,7 @@ export const constitutionArticles: Article[] = [
   },
   {
     slug: "government-forms",
-    title: "같은 권력분립에서 왜 다른 체계가 나옵니까",
+    title: "같은 권력분립에서 왜 다른\u00A0체계가 나옵니까",
     subcategory: "const-forms",
     sections: [
       {
@@ -51,11 +51,11 @@ export const constitutionArticles: Article[] = [
       },
       {
         id: "two-axes",
-        title: "부품 1. 갈림길은 행정부가 의회 신임에 목숨을 거는가입니다",
+        title: "부품 1. 먼저 정책 패배가 정부 퇴진으로 이어지는지 묻습니다",
       },
       {
         id: "presidential",
-        title: "부품 2. 대통령제는 고정 임기로 안정과 경직을 함께 삽니다",
+        title: "부품 2. 대통령제에서는 정책 패배와 대통령 생존이 분리됩니다",
         subsections: [
           {
             id: "deadlock-exit",
@@ -65,15 +65,15 @@ export const constitutionArticles: Article[] = [
       },
       {
         id: "parliamentary",
-        title: "부품 3. 의원내각제는 교착을 풀 수 있는 대신 정부가 흔들립니다",
+        title: "부품 3. 의원내각제는 과반을 정책과 정부 생존에 연결합니다",
       },
       {
         id: "power-index",
-        title: "부품 4. 의석을 많이 가진 것과 협상력이 큰 것은 다릅니다",
+        title: "부품 4. 의석 비율과 형식적 투표력은 같은 수가 아닙니다",
       },
       {
         id: "semi-presidential",
-        title: "부품 5. 둘을 섞으면 좋은 쪽만 오지는 않습니다",
+        title: "부품 5. 준대통령제에서는 대통령과 총리를 따로 추적합니다",
       },
       {
         id: "boundary",

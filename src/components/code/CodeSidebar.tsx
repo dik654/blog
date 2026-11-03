@@ -98,7 +98,7 @@ export default function CodeSidebar({
   const projectId = codeRef?.path.split("/")[0] ?? "";
   const tree = fileTrees[projectId];
   const meta = projectMetas?.[projectId];
-  const lineCount = codeRef?.code.split("\n").length ?? 0;
+  const lineCount = codeRef?.code.trimEnd().split("\n").length ?? 0;
   const annotations = codeRef?.annotations ?? [];
   const flowNodes = initialKey && flowData ? flowData[initialKey] : undefined;
 

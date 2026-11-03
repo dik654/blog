@@ -3,13 +3,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import ForwardsFuturesMapViz from "./ForwardsFuturesMapViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
   return (
     <div className="space-y-16">
-      <ForwardsFuturesMapViz />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 앞으로 살 물건의 값이 바뀌면 사업 계획도 바뀝니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -21,11 +19,11 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 사는 사람과 파는 사람의 약속을 누군가 관리합니다</h2>
-<FlowRail title="원료 가격을 정하는 약속" steps={[{"actor": "제빵업자", "movement": "나중에 밀을 살 값을 정합니다.", "receives": "원료비 계획"}, {"actor": "농가", "movement": "나중에 밀을 팔 값을 정합니다.", "receives": "판매대금 계획"}, {"actor": "이행 관리자", "movement": "지급 능력과 중간 정산을 확인합니다.", "receives": "계약 지속 여부"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">당사자가 직접 약속하면 품질과 날짜를 자신의 거래에 맞출 수 있습니다. 많은 사람이 같은 약속을 사고팔려면 규격을 맞추고, 약속을 바꿔 넘긴 뒤에도 누가 지급할지 정해야 합니다.</p>
 <p className="leading-8">중간의 관리자는 가격 변화에 따라 돈을 주고받게 할 수 있습니다. 덕분에 손실을 뒤로만 미루지 않지만 실제 물건 대금보다 먼저 현금을 준비해야 합니다.</p>
         </div>
+<FlowRail title="원료 가격을 정하는 약속" steps={[{"actor": "제빵업자", "movement": "나중에 밀을 살 값을 정합니다.", "receives": "원료비 계획"}, {"actor": "농가", "movement": "나중에 밀을 팔 값을 정합니다.", "receives": "판매대금 계획"}, {"actor": "이행 관리자", "movement": "지급 능력과 중간 정산을 확인합니다.", "receives": "계약 지속 여부"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">가격 약속과 중간 지급의 역할이 나뉘었습니다. 밀 100톤에 한 가격을 붙입니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -39,11 +37,11 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 약속을 계산 가능한 다섯 칸으로 엽니다</h2>
-<FlowRail title="하나의 가격 약속 안에서 확인할 질문" steps={[{"actor": "어떤 물건인가?", "movement": "품질과 장소, 100톤을 적습니다.", "receives": "실제 구매와 대응"}, {"actor": "언제 얼마인가?", "movement": "3개월 뒤 톤당 30만 원을 적습니다.", "receives": "약정대금 3000만 원"}, {"actor": "어떻게 끝내나?", "movement": "실물 또는 차액 정산을 정합니다.", "receives": "인도와 현금 준비"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">무슨 물건인지, 얼마나 거래하는지, 어느 가격을 쓰는지, 언제 계산하는지, 무엇을 실제로 넘기는지 정해야 합니다. 같은 밀도 품질과 인도 장소가 다르면 가격이 달라집니다.</p>
 <p className="leading-8">실물 100톤을 넘길 수도 있고, 비교 가격과 30만 원의 차액만 주고받을 수도 있습니다. 차액으로 끝내더라도 제빵업자는 실제 밀을 별도로 사야 합니다.</p>
         </div>
+<FlowRail title="하나의 가격 약속 안에서 확인할 질문" steps={[{"actor": "어떤 물건인가?", "movement": "품질과 장소, 100톤을 적습니다.", "receives": "실제 구매와 대응"}, {"actor": "언제 얼마인가?", "movement": "3개월 뒤 톤당 30만 원을 적습니다.", "receives": "약정대금 3000만 원"}, {"actor": "어떻게 끝내나?", "movement": "실물 또는 차액 정산을 정합니다.", "receives": "인도와 현금 준비"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">가격 차액과 실제 구매가 별개의 거래임을 확인했습니다. 표준 규격과 중간 지급이 필요한 이유를 살핍니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">

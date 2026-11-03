@@ -12,11 +12,11 @@ export const electionsArticles: Article[] = [
       },
       {
         id: "district-magnitude",
-        title: "부품 1. 규칙은 여럿이지만 결과를 정하는 것은 거의 하나입니다",
+        title: "한 선거구에서 몇 명을 뽑느냐가 왜 중요한가",
       },
       {
         id: "plurality",
-        title: "부품 2. 다수제는 표를 버려서 다수를 만듭니다",
+        title: "1등만 뽑으면 어떤 표가 사라지는가",
         subsections: [
           {
             id: "districting",
@@ -26,15 +26,15 @@ export const electionsArticles: Article[] = [
       },
       {
         id: "proportional",
-        title: "부품 3. 비례는 나누어 떨어지지 않는 것을 나눕니다",
+        title: "의석은 쪼갤 수 없는데 어떻게 비례해 나누는가",
       },
       {
         id: "disproportionality",
-        title: "부품 4. 얼마나 비틀렸는지는 하나의 수로 잴 수 있습니다",
+        title: "득표율과 의석률은 얼마나 어긋났는가",
       },
       {
         id: "mixed",
-        title: "부품 5. 섞으면 두 논리가 한 선거에 들어옵니다",
+        title: "두 방식을 섞으면 무엇이 달라지는가",
       },
       {
         id: "boundary",
@@ -45,74 +45,78 @@ export const electionsArticles: Article[] = [
   },
   {
     slug: "voting-paradoxes",
-    title: "규칙을 아무리 잘 골라도 남는 문제가 있습니다",
+    title: "세 번 모두 2대 1인데 왜 마지막 답은 없을까요?",
     subcategory: "elect-aggregation",
     sections: [
       {
         id: "overview",
-        title: "더 나은 규칙을 찾는 문제가 아닐 수도 있습니다",
+        title: "세 번 모두 2대 1인데 왜 마지막 답은 없을까요?",
       },
       {
         id: "cycle",
-        title: "부품 1. 개인은 멀쩡한데 집단만 순서를 잃습니다",
+        title: "1. 개인의 순서는 집단으로 자동 복사되지 않습니다",
       },
       {
         id: "agenda",
-        title: "부품 2. 순환이 있으면 순서를 쥔 사람이 결과를 정합니다",
+        title: "2. 순환이 생기면 표결 순서가 승자를 고릅니다",
       },
       {
         id: "other-rules",
-        title: "부품 3. 규칙을 바꾸면 대신 다른 것이 깨집니다",
+        title: "3. 규칙을 바꾸면 결함이 사라지는 대신 자리를 옮깁니다",
+      },
+      {
+        id: "conditions",
+        title: "4. 집계 규칙에 바라는 다섯 조건을 먼저 펼칩니다",
       },
       {
         id: "arrow",
-        title: "부품 4. 교체가 끝나지 않는 이유가 증명되어 있습니다",
+        title: "5. 다섯 조건을 모두 지키는 규칙은 존재하지 않습니다",
       },
       {
         id: "median-voter",
-        title: "부품 5. 그런데도 대개 굴러가는 이유는 규칙이 아니라 선호의 모양입니다",
+        title: "6. 처음의 선호 한 줄을 고치면 가운데 안이 승자가 됩니다",
       },
       {
         id: "boundary",
-        title: "불가능하다는 말은 무의미하다는 말이 아닙니다",
+        title: "7. 실제 판단에서는 규칙과 선호 구조를 함께 봐야 합니다",
       },
     ],
     component: () => import("@/pages/articles/elections/voting-paradoxes"),
   },
   {
     slug: "parties-and-interest-groups",
-    title: "선택지를 줄이는 장치들이 무엇을 함께 잘라 냅니다",
+    title: "열두 후보가 세 정당이 되면 무엇이 쉬워지고 무엇이 사라질까요?",
     subcategory: "elect-parties",
     sections: [
       {
         id: "overview",
-        title: "선호가 한 줄로 정리되는 것은 저절로 되는 일이 아닙니다",
+        title: "열두 후보가 세 정당이 되면 무엇이 쉬워지고 무엇이 사라질까요?",
       },
       {
         id: "why-parties",
-        title: "부품 1. 정당은 대표하기 전에 먼저 줄입니다",
+        title: "1. 정당은 열두 후보를 세 묶음으로 압축합니다",
       },
       {
         id: "competition",
-        title: "부품 2. 가운데로 가지만 끝까지 가지는 않습니다",
+        title: "2. 한 축에서는 두 큰 정당이 가운데로 밀립니다",
       },
       {
         id: "who-organizes",
-        title: "부품 3. 조직되는 이익과 조직되지 않는 이익이 갈립니다",
+        title: "3. 빠진 면허 쟁점은 조직하기 쉬운 쪽을 통해 돌아옵니다",
       },
       {
         id: "rent-seeking",
-        title: "부품 4. 다투는 일 자체가 비용입니다",
+        title: "4. 면허를 얻으려는 다툼은 이전과 별개의 비용을 만듭니다",
         subsections: [
           {
             id: "capture",
-            title: "규제하는 쪽이 규제받는 쪽에 기대게 되는 경로",
+            title: "5. 규제기관이 듣는 정보도 조직된 쪽으로 기울 수 있습니다",
           },
         ],
       },
       {
         id: "boundary",
-        title: "걸러 내는 장치를 없애면 더 잘 대표되지는 않습니다",
+        title: "6. 압축 장치를 없애는 대신 빠진 요구의 재진입 통로를 봐야 합니다",
       },
     ],
     component: () =>

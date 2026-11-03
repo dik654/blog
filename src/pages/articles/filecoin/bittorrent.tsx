@@ -1,144 +1,256 @@
 import { Link } from "react-router-dom";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation";
-import BitTorrentComponentsViz from "./bittorrent/viz/BitTorrentComponentsViz";
-import PeerExchangeFlowViz from "./bittorrent/viz/PeerExchangeFlowViz";
-import SwarmFlowViz from "./bittorrent/viz/SwarmFlowViz";
+import {
+  BitTorrentPieceLedgerViz,
+  BitTorrentTrustFlowViz,
+} from "./bittorrent/viz/ModernBitTorrentViz";
 
 export default function BitTorrentArticle() {
   return (
-    <>
-      <section id="overview" className="mb-16 scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          한 파일을 찾고, 검증 가능한 조각으로 나누어 받기
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            민수의 노트북이 900 MiB 배포 이미지를 받는다고 하자. BitTorrent의 첫 질문은 “누가 파일을 갖고 있는가”이고, 다음 질문은 “서로 믿지 않는 여러 피어에게서
-            받은 바이트가 맞는가”다. 메타정보는 파일을 식별하고 piece 경계와 hash를 제공하며 tracker 또는 DHT는 같은 torrent에 참여한 피어의 endpoint를
-            찾는 출발점이 된다.
+    <article className="space-y-14">
+      <section id="overview" className="space-y-6">
+        <header className="space-y-3">
+          <p className="text-sm font-semibold text-primary">
+            BEP 3 Final · v1 torrent를 기준으로 한 입문
           </p>
-          <p>
-            여기서 discovery, identity, transport를 섞지 않는 것이 중요하다.
-            Tracker 응답이나 BEP 5 DHT의 <code>get_peers</code>는 후보 주소를
-            돌려줄 뿐 상대가 원하는 파일을 끝까지 전송하거나 정직하다고
-            보증하지 않는다. 후보와 연결한 뒤 BitTorrent handshake로
-            info-hash를 맞추고, peer wire의 request/piece 메시지로 block을
-            교환하며, 완성한 piece의 hash가 다르면 폐기하고 다른 피어에게
-            다시 요청한다.
-          </p>
-          <p>
-            이 글은 Final 상태 BEP 3의 v1 metainfo와 Accepted 상태 BEP 5를 대상으로 한다. Session receipt에는 metainfo 원본 byte와
-            info-hash rule, BEP/profile을 남긴다. 여기에 client version과 enabled extension·transport, 각 peer outcome도
-            남긴다. Private torrent, BEP 52 v2 또는 magnet extension을 쓴다면 같은 포맷이라고 가정하지 않고 별도 profile로 검증한다.
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight">
+            BitTorrent는 작은 block을 나눠 받되, 완성한 piece 단위로 믿습니다
+          </h2>
+        </header>
+        <p className="text-lg leading-8">
+          한 문장으로 답하면, BitTorrent는 파일 묶음을 hash가 붙은 piece로 나누고,
+          각 piece의 작은 block을 여러 peer에게 받은 뒤, 기대한 piece hash와 같을 때만
+          그 조각을 보유한 것으로 인정하는 배포 방식입니다.
+        </p>
+        <p>
+          700 KiB짜리 배포 묶음 하나를 받는다고 하겠습니다. <code>.torrent</code>에는
+          256 KiB마다 끊은 piece 세 개의 기대 hash가 있습니다. 첫 piece는 16 KiB
+          block 16개로 나눠 peer A·B·C에게 요청하지만, 마지막 block 하나가 왔다고 곧바로
+          믿지는 않습니다. 16개를 올바른 offset에 조립해 전체 256 KiB의 SHA-1을
+          대조한 뒤에야 저장소와 다른 peer에게 공개합니다.
+        </p>
+        <p>
+          여기서 바로 꼬리 질문이 생깁니다. Peer 주소는 어디서 얻고, 그 주소를 왜 믿을
+          수 있을까요? Tracker와 DHT는 주소 후보만 돌려줍니다. 같은 swarm인지 확인하는
+          handshake와 실제 byte를 승인하는 piece hash는 그 뒤의 별도 단계입니다.
+        </p>
+        <BitTorrentTrustFlowViz />
+        <div id="paper-bep3">
+          <CitationBlock
+            source="BEP 3 — The BitTorrent Protocol Specification · 0e08ddf"
+            citeKey={1}
+            href="https://www.bittorrent.org/beps/bep_0003.html"
+          >
+            <p><strong>문제:</strong> 같은 파일 묶음을 받는 downloader가 서로 업로드해 원본 서버 부하를 나눕니다.</p>
+            <p><strong>기여:</strong> v1 metainfo·tracker announce·68-byte handshake·piece hash·peer wire message를 정의합니다.</p>
+            <p><strong>전제:</strong> 이 글은 2017-02-04에 마지막으로 고친 Final 문서의 v1 형식을 기준으로 합니다.</p>
+            <p><strong>근거 범위:</strong> Info-hash, SHA-1 piece 검증, request/piece와 choke 상태의 의미입니다.</p>
+            <p><strong>말하지 않는 것:</strong> Peer의 실세계 신원, 악성 파일 여부, 모든 client의 scheduler 성능을 보장하지 않습니다.</p>
+          </CitationBlock>
         </div>
+      </section>
 
-        <div className="not-prose my-8">
-          <BitTorrentComponentsViz />
+      <section id="peer-discovery" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">01 · 주소 후보에서 같은 swarm까지</p>
+          <h2 className="mt-2 text-2xl font-bold">
+            Tracker·DHT 응답은 연락처이고, handshake는 torrent 확인입니다
+          </h2>
+        </header>
+        <p>
+          v1의 <code>info_hash</code>는 metainfo 안 <code>info</code> dictionary가 원래
+          bencode된 byte의 SHA-1입니다. 파일 내용만 hash한 값이 아닙니다. 파일 이름·길이·
+          piece length·piece hash 목록 같은 정보까지 들어간 정확한 encoding을 묶습니다.
+          Magnet이나 tracker, DHT는 이 값을 “어느 swarm의 peer를 찾는가”라는 열쇠로 씁니다.
+        </p>
+        <p>
+          Tracker announce나 BEP 5 <code>get_peers</code>가 돌려준 것은 IP:port 후보입니다.
+          주소가 많아도 연결 가능성, 완성본 보유, 서로 다른 운영자라는 사실은 알 수 없습니다.
+        </p>
+        <p>
+          TCP 또는 합의한 transport로 연결한 뒤 기본 handshake의 protocol string, reserved
+          bits, 20-byte info_hash, 20-byte peer ID를 읽습니다. Info-hash가 다르면 그 연결에
+          block을 요청하지 않습니다. Peer ID도 로그인 계정이나 법적 신원이 아니라 protocol
+          수준의 식별 표식입니다.
+        </p>
+        <p>
+          DHT의 token도 payload 신뢰 표가 아닙니다. 최근 <code>get_peers</code>를 한 IP가
+          다른 주소를 임의로 등록하기 어렵게 <code>announce_peer</code> 쓰기를 제한하는
+          값입니다. 이후 peer가 보내는 byte의 무결성은 여전히 piece hash로 검사해야 합니다.
+        </p>
+        <div id="paper-bep5">
+          <CitationBlock
+            source="BEP 5 — DHT Protocol · aa944d9"
+            citeKey={2}
+            href="https://www.bittorrent.org/beps/bep_0005.html"
+          >
+            <p><strong>문제:</strong> 중앙 tracker 없이도 특정 info-hash의 peer contact를 찾습니다.</p>
+            <p><strong>기여:</strong> UDP KRPC의 get_peers·announce_peer와 IP에 묶인 write token을 정의합니다.</p>
+            <p><strong>전제:</strong> Accepted 상태 문서의 2020-01-21 revision을 기준으로 합니다.</p>
+            <p><strong>근거 범위:</strong> DHT node와 payload peer의 역할, endpoint discovery, token 경계입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 반환된 peer의 접속 성공·보유 piece·정직성·payload 무결성을 보장하지 않습니다.</p>
+          </CitationBlock>
         </div>
+      </section>
 
+      <section id="piece-verify" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">02 · block과 piece를 나누는 이유</p>
+          <h2 className="mt-2 text-2xl font-bold">
+            작게 요청해야 병렬화할 수 있고, 크게 검사해야 metainfo hash를 쓸 수 있습니다
+          </h2>
+        </header>
+        <p>
+          <strong>Piece</strong>는 metainfo에 기대 hash가 하나씩 있는 검증 단위입니다.
+          <strong>Block</strong>은 peer wire의 <code>request(index, begin, length)</code>로
+          청하는 더 작은 전송 구간입니다. 큰 piece 하나를 통째로 한 peer에게 맡기지 않고
+          여러 request를 pipeline할 수 있지만, v1 metainfo는 block별 hash를 주지 않으므로
+          piece가 완성되기 전에는 최종 승인을 못 합니다.
+        </p>
+        <p>
+          BEP 3은 16 KiB를 de-facto request 크기로 기록합니다. 이것은 v1 piece hash의
+          고정 단위가 아니라 interoperable client들이 널리 받아 온 요청 크기입니다. 마지막
+          block은 더 짧을 수 있습니다. 아래 계산에서는 이해를 위해 16 KiB로 고정합니다.
+        </p>
         <ExplainedFormula
-          question="전체 길이 L을 piece 길이 P로 나누면 검증할 piece는 몇 개인가?"
-          idea="앞쪽 piece는 같은 P byte로 자르고 마지막 remainder만 짧게 둔다. 따라서 나눗셈의 몫에 remainder가 있으면 한 piece를 더 세는 ceiling division이 필요하다."
-          formula={String.raw`n_p=\left\lceil\frac{L}{P}\right\rceil`}
-          annotatedFormula={String.raw`\underbrace{n_p}_{\text{검증할 piece 수}}=\underbrace{\left\lceil\frac{L}{P}\right\rceil}_{\text{나머지는 한 piece 더}}`}
+          question="전체 byte를 piece로 자르면 검증할 조각은 몇 개인가?"
+          idea="P byte씩 채우고 남은 byte가 하나라도 있으면 마지막 piece 하나를 더 만듭니다. 그래서 내림이 아니라 올림 나눗셈입니다."
+          formula={String.raw`N_{piece}=\left\lceil\frac{L}{P}\right\rceil`}
+          annotatedFormula={String.raw`\underbrace{N_{piece}}_{\text{검증할 piece 수}}=\underbrace{\left\lceil\frac{\underbrace{L}_{\text{전체 payload byte}}}{\underbrace{P}_{\text{piece당 byte}}}\right\rceil}_{\text{남은 byte도 한 piece로 셈}}`}
           operations={[
-          { expression: String.raw`\left\lceil\frac{L}{P}\right\rceil`, annotation: ["전체 길이 L을 P byte piece로 자른 개수", "나머지가 있으면 짧은 마지막 piece를 더함", "900 MiB/4 MiB=225, 901 MiB면 226"] },
-        ]}
+            {
+              expression: String.raw`\left\lceil L/P\right\rceil`,
+              annotation: ["전체 payload를 같은 길이 P로 나눕니다.", "나머지가 있으면 마지막 짧은 piece를 하나 더 셉니다.", "700/256=2.734375이므로 3개입니다."],
+            },
+          ]}
           terms={[
-            { symbol: "L", name: "Payload length", description: "모든 파일을 이어 붙인 전체 payload 길이, 단위 byte" },
-            { symbol: "P", name: "Piece length", description: "메타정보가 선언한 보통의 piece 길이, 단위 byte" },
-            { symbol: "n_p", name: "Piece count", description: "Hash로 각각 검증해야 하는 piece 수, 무차원 개수" },
-            { symbol: "\\lceil\\cdot\\rceil", name: "Ceiling", description: "나누어떨어지지 않는 마지막 구간을 한 개로 올려 세는 연산" },
+            { symbol: "L", name: "전체 payload 길이", description: "v1 multi-file torrent라면 파일들을 선언된 순서로 이어 본 총 byte 수입니다." },
+            { symbol: "P", name: "piece length", description: "마지막을 제외한 각 검증 조각의 byte 수입니다." },
+            { symbol: "N_{piece}", name: "piece count", description: "metainfo의 hash와 각각 비교할 조각 수입니다." },
           ]}
           assumptions={[
-            "BEP 3의 v1 metainfo처럼 마지막 piece를 제외한 piece 길이가 P로 고정된 경우다.",
-            "L과 P는 같은 byte 단위이며 P는 0보다 커야 한다.",
-            "식은 piece 수만 세며 peer 수, 다운로드 시간, availability를 계산하지 않는다.",
+            "BEP 3 v1의 고정 piece length를 사용합니다.",
+            "L과 P를 같은 KiB 또는 byte 단위로 넣고 P>0이어야 합니다.",
+            "BEP 52 v2의 파일별 Merkle tree와 piece alignment에는 이 장부를 그대로 확대하지 않습니다.",
           ]}
-          interpretation="L=900 MiB, P=4 MiB이면 정확히 225개다. L=901 MiB이면 마지막 1 MiB piece가 생겨 226개다. 이 계산을 BEP 52 v2의 Merkle tree 검증 구조까지 같은 포맷이라고 확대하면 안 된다."
+          interpretation="700 KiB를 256 KiB로 나누면 256 KiB 두 개와 188 KiB 하나, 모두 세 piece입니다."
         />
-
-        <div className="not-prose my-8">
-          <PeerExchangeFlowViz />
-        </div>
-
-        <CitationBlock
-          source="BEP 3 — The BitTorrent Protocol Specification"
-          citeKey={1}
-          href="https://www.bittorrent.org/beps/bep_0003.html"
-        >
-          <div id="paper-bep3" className="space-y-1 text-sm leading-6">
-            <p><strong>문제:</strong> 큰 파일을 여러 downloader가 서로 업로드하며 배포해야 한다.</p>
-            <p><strong>기여:</strong> v1 metainfo, tracker, peer handshake, piece hash와 choking 메시지를 정의한다.</p>
-            <p><strong>전제:</strong> BEP 3 Final 문서의 v1 wire와 bencoding을 대상으로 한다.</p>
-            <p><strong>근거 범위:</strong> 이 글의 metainfo와 기본 peer-wire 동작에만 사용한다.</p>
-            <p><strong>비보장:</strong> 모든 구현의 scheduler, BEP 52 v2, 전송 성능이나 peer 정직성을 보장하지 않는다.</p>
-          </div>
-        </CitationBlock>
-
-        <CitationBlock
-          source="BEP 5 — DHT Protocol"
-          citeKey={2}
-          href="https://www.bittorrent.org/beps/bep_0005.html"
-        >
-          <div id="paper-bep5" className="space-y-1 text-sm leading-6">
-            <p><strong>문제:</strong> Tracker가 없는 torrent에서도 peer contact를 찾아야 한다.</p>
-            <p><strong>기여:</strong> UDP KRPC의 get_peers·announce_peer와 token 경계를 규정한다.</p>
-            <p><strong>전제:</strong> Accepted 상태 BEP 5와 선택한 구현 revision을 함께 고정한다.</p>
-            <p><strong>근거 범위:</strong> DHT node가 peer endpoint 위치를 찾는 discovery 역할에 한정한다.</p>
-            <p><strong>비보장:</strong> DHT 응답이 실제 seeder, payload 무결성, 연결 성공을 증명하지 않는다.</p>
-          </div>
-        </CitationBlock>
+        <CalculationWalkthrough
+          title="piece와 request block을 손으로 나누는 장부"
+          question="700 KiB payload는 몇 piece와 몇 block이 될까요?"
+          scope="BEP 3 v1, piece length 256 KiB, 이 예시의 request block 16 KiB입니다. 속도·peer 수·재요청은 아직 넣지 않습니다."
+          steps={[
+            {
+              label: "완전히 채워지는 piece 수를 셉니다",
+              expression: "700 ÷ 256 = 2, 나머지 188",
+              result: "완전한 piece 2개",
+              reason: "256 KiB를 두 번 쓰면 512 KiB이고 아직 188 KiB가 남습니다.",
+            },
+            {
+              label: "남은 byte를 마지막 piece로 셉니다",
+              expression: "256 + 256 + 188 = 700 KiB",
+              result: "총 3 pieces",
+              reason: "188 KiB도 기대 hash 하나를 가진 독립 검증 단위입니다.",
+            },
+            {
+              label: "첫 256 KiB piece의 request 수를 셉니다",
+              expression: "256 ÷ 16 = 16",
+              result: "16 blocks",
+              reason: "각 request가 서로 다른 begin offset의 16 KiB를 맡습니다.",
+            },
+            {
+              label: "마지막 188 KiB piece의 request 수를 셉니다",
+              expression: "188 = 11×16 + 12",
+              result: "12 blocks",
+              reason: "16 KiB block 11개 뒤에 12 KiB짜리 마지막 block이 하나 더 필요합니다.",
+            },
+          ]}
+          conclusion="세 piece를 모두 받는다면 이 고정 정책에서는 16 + 16 + 12 = 44개 request가 필요합니다. Hash 판정은 request 44번이 아니라 piece 세 번입니다."
+          caveats={[
+            "재전송·중복 endgame request가 생기면 실제 request 수와 traffic은 늘어납니다.",
+            "v1 multi-file torrent의 piece는 파일 경계를 넘어갈 수 있으므로 piece와 파일을 같은 것으로 보면 안 됩니다.",
+          ]}
+        />
+        <BitTorrentPieceLedgerViz />
       </section>
 
-      <section id="architecture" className="mb-16 scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Swarm의 실행 경로: 연결, block 요청, 검증, 재시도
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            민수는 tracker와 DHT 결과를 합치고 endpoint 중복을 제거한다. TCP나 지원하는 별도 transport로 연결한 뒤 68-byte 기본 handshake에서
-            protocol string, reserved bits, info-hash, peer ID를 확인한다. Peer ID는 연결을 구분하는 표식일 뿐, 현실의 독립된 사람을
-            증명하는 강한 identity는 못 된다. Info-hash가 다르면 같은 swarm이 아니므로 그 연결에서 piece를 요청하지 않는다.
-          </p>
-          <p>
-            연결이 성립하면 bitfield/have로 상대가 가진 piece를 파악하고 interested·choke 상태가 허용하는 동안 request를 보낸다. Request는
-            piece index, begin offset, length로 block을 지정하고 piece 메시지가 그 block을 돌려준다. 현재 BEP 3은 request 길이의 규범적
-            상한과 널리 수용되는 16 KiB 관행을 구분한다. “모든 block은 반드시 16 KiB”라는 말은 그래서 틀린다.
-          </p>
-        </div>
-
-        <div className="not-prose my-8">
-          <SwarmFlowViz />
-        </div>
-
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h3>고정 예시의 실패 장부</h3>
-          <ol>
-            <li><strong>Discovery 실패:</strong> tracker timeout과 DHT timeout을 따로 기록하고 다른 source를 시도한다.</li>
-            <li><strong>Handshake 실패:</strong> info-hash mismatch, unsupported extension, transport error를 구분한다.</li>
-            <li><strong>전송 실패:</strong> choke와 request timeout은 손상된 piece와 다른 결과다. In-flight block을 다른 피어에 재배치할 수 있다.</li>
-            <li><strong>무결성 실패:</strong> piece가 완성된 뒤 hash가 다르면 그 piece 전체를 인정하지 않고 block provenance를 남겨 다시 받는다.</li>
-          </ol>
-          <p>
-            Rare piece를 먼저 고르는 scheduler와 optimistic unchoke는 흔한 구현
-            전략이지만 BEP 3이 모든 선택 세부를 하나로 고정하지는 않는다.
-            운영 비교에서는 같은 torrent·peer set·transport에서 completion
-            time, duplicate bytes, hash-failure bytes, timeout과 retry를 함께
-            측정해야 한다. 피어를 찾는 Kademlia 자체가 필요하면{" "}
-            <Link to="/cs/p2p/kademlia">Kademlia routing</Link>과{" "}
-            <Link to="/cs/p2p/kad-lookup">반복 탐색</Link>을 이어 읽는다.
-          </p>
-          <p>
-            Release gate는 같은 torrent·peer fixture에서 base와 candidate에 dial·handshake reject reason과 request
-            timeout, duplicate bytes, hash-failure bytes를 기록한다. 여기에 peak in-flight memory와 completion time도
-            남긴다. 후보 수만 세는 자리가 아니다. Correctness parity 뒤 canary를 열고 retry·resource threshold를 넘으면 이전 scheduler로
-            rollback한다.
-          </p>
-        </div>
+      <section id="release" className="space-y-6">
+        <header>
+          <p className="text-sm font-semibold text-primary">03 · 한 piece의 승인과 재시도</p>
+          <h2 className="mt-2 text-2xl font-bold">
+            Timeout은 block을 다시 맡기고, hash mismatch는 piece 승인을 취소합니다
+          </h2>
+        </header>
+        <p>
+          Bitfield와 HAVE는 상대가 어느 piece를 보유한다고 알리는 메시지입니다. 내가
+          interested 상태이고 상대가 unchoke했다면 scheduler가 아직 비어 있는 offset을
+          요청합니다. Choke나 timeout은 “byte가 틀렸다”는 뜻이 아닙니다. 미완료 request를
+          다른 peer에게 다시 맡길 전송 실패입니다. 반대로 모든 block을 조립한 뒤 hash가
+          다르면 그 piece를 보유한 것으로 인정할 수 없습니다.
+        </p>
+        <AlgorithmBlock
+          title="piece 0 하나를 받는 admission 절차"
+          input={[
+            "expected_hash = metainfo.pieces[0]",
+            "piece_length = 256 KiB, block_length = 16 KiB",
+            "peer bitfields + choke state + request timeout",
+          ]}
+          steps={[
+            {
+              code: "choose peer that advertises piece 0 and is unchoked",
+              note: "광고는 후보 조건일 뿐 byte가 맞다는 증거가 아닙니다.",
+            },
+            {
+              code: "request(index=0, begin=next_offset, length≤16 KiB)",
+              note: "Offset이 겹치거나 범위를 벗어나지 않게 in-flight 장부를 만듭니다.",
+            },
+            {
+              code: "on timeout or disconnect: release offset and retry another peer",
+              note: "전송 실패와 무결성 실패를 분리합니다.",
+            },
+            {
+              code: "place received block at piece_buffer[begin..begin+length]",
+              note: "Peer와 offset provenance를 남기고 모든 byte가 채워질 때까지 승인하지 않습니다.",
+            },
+            {
+              code: "actual_hash = SHA1(piece_buffer)",
+              note: "v1 metainfo가 준 hash와 같은 전체 piece 경계를 정확히 사용합니다.",
+            },
+            {
+              code: "if actual_hash != expected_hash: discard piece and reschedule",
+              note: "어느 block이 틀렸는지 hash 하나만으로 알 수 없으므로 piece 전체를 다시 구성합니다.",
+            },
+            {
+              code: "mark piece 0 complete; persist bytes; announce HAVE",
+              note: "이 시점부터만 읽기·업로드 가능한 검증 완료 조각으로 공개합니다.",
+            },
+          ]}
+          output="검증된 piece 0 또는 원인별 timeout·transport·hash-mismatch 기록"
+          repeatUntil="필요한 모든 piece가 검증되거나 retry·resource 한계에 도달할 때까지 반복합니다."
+        />
+        <p>
+          Rarest-first, request pipeline, endgame duplicate request, optimistic unchoke는 이 기본
+          경로 위에 얹는 scheduler 정책입니다. 후보가 희귀하다는 사실은 무결성 판정을
+          바꾸지 않습니다.
+        </p>
+        <p>
+          운영에서는 completion time만 보지 말고 timeout, duplicate bytes,
+          hash-failure bytes, peak in-flight memory와 peer별 provenance를 함께 기록해야 합니다.
+        </p>
+        <p>
+          여기까지 확정되는 것은 metainfo가 지정한 byte와 같다는 사실입니다. Publisher
+          서명, malware 검사, 라이선스, durable receipt는 application의 별도 책임입니다.
+        </p>
+        <p>
+          DHT가 peer 주소를 좁히는 원리가 더 궁금하면 <Link to="/cs/p2p/kademlia">Kademlia</Link>와{" "}
+          <Link to="/cs/p2p/kad-lookup">반복 lookup</Link>을 이어 읽습니다. BEP 52 v2는
+          SHA-256 Merkle tree와 파일별 alignment를 쓰므로 v1의 “연결된 파일 byte 위 SHA-1
+          piece 목록”을 그대로 적용하지 않습니다.
+        </p>
       </section>
-    </>
+    </article>
   );
 }

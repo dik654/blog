@@ -30,16 +30,16 @@
       "score": 42
     },
     "blockchain/filecoin-storacha": {
-      "fingerprint": "d7e36e6bbe5b99ce",
-      "score": 41
+      "fingerprint": "ff537b223265c599",
+      "score": 15
     },
     "ai/claw-api-client": {
       "fingerprint": "7313146083b73126",
       "score": 40
     },
     "gpu/ec-gpu-gen": {
-      "fingerprint": "c8f5e7428804c679",
-      "score": 37
+      "fingerprint": "42b27d710dc67dda",
+      "score": 6
     },
     "blockchain/prysm": {
       "fingerprint": "89b6f69575db6be0",
@@ -126,8 +126,8 @@
       "score": 29
     },
     "gpu/filecoin-gpu-proofs": {
-      "fingerprint": "0997fcd841b91bfd",
-      "score": 29
+      "fingerprint": "2b50d1bce113918b",
+      "score": 5
     },
     "ai/claw-file-ops": {
       "fingerprint": "a3791092a489c5e7",

@@ -13,20 +13,30 @@ export default function Overview() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           GPU 사양표에는 core·SM·warp·HBM·FLOPS가 한꺼번에 등장하지만, 이 이름을
-          따로 외우면 왜 빠르거나 느린지 설명하기 어렵습니다. 먼저 CPU가
-          buffer와 kernel launch를 준비하고, runtime이 grid를 만들며, hardware가
-          block을 SM에 배치하고, warp가 instruction을 issue해
-          register·cache·HBM을 읽는 <strong>하나의 고정 trace</strong>를
-          붙잡아야 합니다.
+          따로 외우면 왜 빠르거나 느린지 설명하기 어렵습니다.
+        </p>
+        <p>
+          이 글은 CPU의 kernel launch에서 시작해 결과 저장까지 <strong>하나의
+          고정 trace</strong>만 따라갑니다. Runtime이 grid를 만들고, hardware가
+          block을 SM에 배치하고, warp가 instruction을 발행해 memory를 읽는
+          순서입니다.
         </p>
         <p>
           이 글의 핵심 아이디어는 GPU를 “core가 많은 CPU”가 아니라, 많은 독립
           thread state를 chip에 resident로 두고 기다리는 warp 대신 다른 warp를
-          실행해 throughput을 높이는 processor로 읽는 것입니다.
+          실행해 전체 처리량을 높이는 장치로 읽는 것입니다.
+        </p>
+        <p>
           Grid·block·thread 좌표와 index 계산은{" "}
           <Link to="/cs/gpu/cuda-thread-hierarchy">CUDA thread hierarchy 글</Link>
           이 정본이고, 여기서는 그 작업표가 실제 hardware와 memory traffic으로
           어떻게 내려가는지만 설명합니다.
+        </p>
+        <p>
+          모든 절에서 같은 예시를 씁니다. <code>y[i] = a × x[i] + y[i]</code>를
+          1,048,576개 원소에 적용하는 SAXPY kernel입니다. Block당 256 threads,
+          float 원소를 가정하고 CPU launch부터 warp 0의 32개 결과가 저장될 때까지
+          숫자를 바꾸지 않습니다.
         </p>
       </div>
       <ContentBoundary article="gpu-architecture" />
@@ -37,14 +47,19 @@ export default function Overview() {
         </h3>
         <p>
           Kernel launch가 만드는 grid와 block은 software가 표현한 작업 단위입니다. 반면 SM(Streaming Multiprocessor), warp
-          scheduler와 execution unit은 그 작업을 실행하는 hardware입니다. Block은 실행되는 동안 한 SM에 머물지만 어느 SM에 언제 배치될지는 보장되지
-          않으며 thread 하나가 CUDA core 하나를 계속 소유하지도 않습니다. SM은 block의 thread를 32-lane warp로 묶어 ready instruction을
-          issue합니다.
+          scheduler와 execution unit은 그 작업을 실행하는 hardware입니다.
+        </p>
+        <p>
+          Block은 실행되는 동안 한 SM에 머물지만 어느 SM에 언제 배치될지는 보장되지 않습니다. Thread 하나가 CUDA core 하나를 계속 소유하지도 않습니다.
+          SM은 block의 thread를 32-lane warp로 묶어 ready instruction을 발행합니다.
         </p>
         <p>
           CPU는 보통 복잡한 분기와 한 thread의 지연을 줄이기 위해 큰 cache, branch prediction과 out-of-order 실행에 많은 transistor를
-          씁니다. GPU는 제어 자원을 상대적으로 줄이고 더 많은 arithmetic lane과 resident thread state를 둡니다. 그래서 동일한 계산을 충분히 많은
-          data에 적용할 때 강하지만 작업이 작거나 분기가 크게 갈리고 memory parallelism이 부족하면 launch와 data movement 비용을 상쇄하지 못합니다.
+          씁니다. GPU는 제어 자원을 상대적으로 줄이고 더 많은 arithmetic lane과 resident thread state를 둡니다.
+        </p>
+        <p>
+          따라서 GPU는 동일한 계산을 충분히 많은 data에 적용할 때 강합니다. 작업이 작거나 분기가 크게 갈리고 memory parallelism이 부족하면 launch와 data
+          movement 비용을 상쇄하지 못합니다.
         </p>
       </div>
       <CpuGpuCompareViz />

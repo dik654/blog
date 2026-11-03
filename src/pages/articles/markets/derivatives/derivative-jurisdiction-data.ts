@@ -176,8 +176,8 @@ export const japanAustraliaLeverageData: DerivativeDeepArticleData = {
       "4%의 역수 25를 쓴 본문 계산은 이 관계를 보인 것입니다. 로스컷이 급격한 가격 틈에서 정한 가격에 반드시 체결되거나 원금을 지켜 준다는 뜻은 아닙니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 호주는 레버리지와 목표시장 통제를 함께 집행합니다", bridge: "상품 조건과 판매 경로를 같은 감독 흐름에서 봅니다.", paragraphs: [
-      "ASIC의 현행 CFD 개입은 소매 레버리지를 30대 1에서 2대 1 범위로 제한하고, 계좌 강제 청산·음수 잔액 보호·유인 금지를 둡니다. 2026년 10월 공개된 연장·개정안은 현재 조치가 2027년 5월 23일 만료 예정이며, 10년 연장은 장관 승인 전의 제안이라고 분명히 밝힙니다.",
-      "ASIC은 별도로 설계·유통 의무를 통해 목표시장 문서, 가입 질문, 실제 판매 결과와 불만을 감독합니다. 현재 규칙, 연장 제안과 최종 결정을 구분하고 만료일이 지난 뒤에는 다시 공식 문서를 확인해야 합니다.",
+      "ASIC의 CFD 개입은 소매 레버리지를 30대 1에서 2대 1 범위로 낮추고, 계좌 강제 청산·음수 잔액 보호·유인 금지를 둡니다. 2026년 ASIC 안내는 이 조치가 2027년 5월 23일까지 이어지는 현재 상태도 밝힙니다.",
+      "ASIC은 별도로 설계·유통 의무를 통해 목표시장과 실제 판매 관행을 감독합니다. 규정 종료일이 다가온다는 사실은 자동 폐지를 뜻하지 않으므로 만기 뒤에는 재제정·연장 여부를 다시 확인해야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 25배와 30배를 나라의 위험 순위로 쓰지 않습니다", bridge: "숫자 밖의 상품·청산·집행 조건을 남깁니다.", paragraphs: [
       "25가 30보다 작다고 일본의 모든 파생상품이 호주보다 안전한 것은 아닙니다. 비교 숫자는 서로 다른 기초자산과 고객 범위에 붙어 있고, 시장 유동성과 강제 청산 방식도 다릅니다.",
@@ -202,7 +202,7 @@ export const japanAustraliaLeverageData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "Japan FSA · 개인 장외 FX", excerpt: "４％以上の証拠金", application: "증거금 4%를 최대 25배로 바꾸고 현금 100의 1% 충격 손실 25를 계산합니다.", citation: "金融庁, いわゆる外国為替証拠金取引について", href: "https://www.fsa.go.jp/ordinary/iwagai/index.html", note: "일본 개인 장외 FX의 증거금·로스컷·등록 업체 확인을 설명하는 금융청 공식 안내입니다." },
-    { source: "호주 연방 법령등록부 · CFD 상품개입 명령", excerpt: "3.33% of the notional value", application: "3.33%·5%·10%·20%·50%의 초기증거금을 30배·20배·10배·5배·2배로 바꾸고 현금 100의 노출과 1% 손실을 비교합니다.", citation: "ASIC Corporations (Product Intervention Order—Contracts for Difference) Instrument 2020/986", href: "https://www.legislation.gov.au/F2020L01338/latest/text", note: "현재 시행 중으로 표시된 공식 명령입니다. 2026년 10월 ASIC은 2027년 5월 23일 만료 예정인 조치를 10년 연장하는 안을 공개했지만, 연장은 장관 승인 전의 제안입니다." },
+    { source: "ASIC · CFD product intervention order", excerpt: "30:1 for CFDs referencing an exchange rate for a major currency pair", application: "기초자산별 배수(주요 통화쌍 30배~암호자산 2배)를 현금 100의 노출·손실 비교에 적용합니다.", citation: "ASIC, 20-254MR ASIC product intervention order strengthens CFD protections", href: "https://asic.gov.au/about-asic/news-centre/find-a-media-release/2020-releases/20-254mr-asic-product-intervention-order-strengthens-cfd-protections/", note: "2021년 3월 29일부터 적용된 호주 소매 CFD 개입 조치의 배수를 밝힌 ASIC 보도자료입니다. 이 조치가 다시 제정되지 않으면 2027년 5월 23일 만료된다는 일정은 ASIC 시장중개인 감독 우선순위 페이지(2026-10-09 확인)에 있습니다." },
   ],
   review: [
     "4% 증거금이 왜 25배 이하인지 설명하고 1% 손실을 계산해 보세요. (답: 1·3·8절)",
@@ -271,7 +271,7 @@ export const usRegulatoryMapData: DerivativeDeepArticleData = {
     { term: "FCM 고객자금 분리", description: "선물 고객의 돈과 재산을 중개회사 자기 자산에서 떼어 보관하는 장치입니다.", example: "100 중 쓰지 않은 80도 고객 계정 표시를 유지합니다.", boundary: "시장 손실 보전이나 예금보험과 같지 않습니다." },
   ] },
   sources: [
-    { source: "SEC · Security-Based Swap Markets", excerpt: "SEC regulates security-based swaps", application: "금리스왑과 단일 회사 신용스왑의 관할·영업행위 문을 구분합니다.", citation: "U.S. Securities and Exchange Commission, Security-Based Swap Markets", href: "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets", note: "2026년 6월 26일 갱신된 SEC 공식 페이지로 SEC·CFTC의 관할 분할과 증권기반스왑 자료를 모읍니다. 딜러의 거래상대 확인·위험과 이해충돌 공시·일일 가격 표시는 공식 eCFR의 17 CFR 240.15Fh-3에서 별도로 확인해야 합니다." },
+    { source: "SEC · Security-Based Swap Markets", excerpt: "SEC regulates security-based swaps", application: "금리스왑과 단일 회사 신용스왑의 관할·영업행위 문을 구분합니다.", citation: "U.S. Securities and Exchange Commission, Security-Based Swap Markets", href: "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets", note: "미국 SEC·CFTC의 상품 관할 분할과 증권기반스왑 제도 자료를 모은 공식 페이지입니다. 이 페이지는 관할 분할만 설명합니다. 딜러 영업행위 기준(거래상대 자격·공시·일일 가격 표시)은 17 CFR 240.15Fh-3 조문(코넬 LII 사본, 2026-10-09 확인)에 근거합니다." },
     { source: "CFTC · Futures Commission Merchants", excerpt: "kept apart (segregated)", application: "고객 현금 100과 필요 증거금 20을 회사 자기 자산과 분리하는 장부로 적용합니다.", citation: "Commodity Futures Trading Commission, Futures Commission Merchants", href: "https://www.cftc.gov/IndustryOversight/Intermediaries/FCMs/fcmsegregationfunds.html", note: "FCM 고객자금 분리, 계정 표시와 파산 시 한계를 설명하는 CFTC 공식 안내입니다." },
   ],
   review: [

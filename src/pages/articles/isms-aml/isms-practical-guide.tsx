@@ -24,7 +24,7 @@ export default function IsmsPracticalGuide() {
             이 글은 특정 심사에서 실제로 받은 결함을 보편 규칙처럼 나열하지 않습니다.
             대신 요구사항을 <strong>설계 → 구현 → 운영 → 검토 증거</strong>로 변환하고,
             gap을 원인과 영향 범위까지 보완하는 재현 가능한 방법을 다룹니다. 관할은
-            대한민국이며 법령·고시 상태는 2026-08-14에 확인했습니다.
+            대한민국이며 법령·고시 상태는 2026-11-02에 확인했습니다.
           </p>
         </div>
 
@@ -34,9 +34,15 @@ export default function IsmsPracticalGuide() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>먼저 scope와 control owner를 고정합니다</h3>
           <p>
-            VASP 신고 서류에는 정보보호 관리체계 인증 자료가 포함됩니다. 그렇다고 모든 조직의 범위와 구조가 같아야 한다는 뜻은 아닙니다. 거래·보관·이전 중 실제 제공 업무, 고객과
-            관리자 접점, wallet key와 승인자, cloud·IDC·수탁자, 개발·운영 조직을 data flow로 연결하고 각 control의 책임자와 대체자를 정합니다. 인증 특례
-            대상에서는 VASP가 제외된다는 현행 시행령도 별도로 확인해야 합니다.
+            VASP 신고 서류에는 정보보호 관리체계 인증 자료가 포함됩니다. 그렇다고 모든
+            조직의 범위와 구조가 같아야 한다는 뜻은 아닙니다. 먼저 거래, 보관, 이전 중
+            실제 제공하는 업무를 출발점으로 삼습니다.
+          </p>
+          <p>
+            그 업무에서 고객과 관리자가 만나는 지점부터 wallet key, 승인자, cloud,
+            IDC, 수탁자, 개발·운영 조직까지 data flow로 연결합니다. 각 통제에는 책임자와
+            대체자를 정합니다. 또한 인증 특례 대상에서 VASP가 제외되는 현행 시행령도
+            별도로 확인해야 합니다.
           </p>
         </div>
 
@@ -47,7 +53,7 @@ export default function IsmsPracticalGuide() {
         </div>
         <div id="paper-isms-practice-guide" className="scroll-mt-24">
           <CitationBlock citeKey={2} source="KISA ISMS-P 인증기준 안내서 · 2023.11" href={KISA_GUIDE}>
-            문제: 인증기준을 일상 운영과 심사 가능한 증적으로 바꿔야 합니다. 기여: 항목별 주요 확인사항·결함사례·증적 예를 제공해 gap analysis의 공통 출발점을 만듭니다. 전제: 2023.11 해설 자료이므로 2026-08-14 시행 법령과 조직의 실제 위험평가를 우선합니다. 근거 범위: 준비·심사 해설입니다. 비주장: 예시와 동일한 제품·주기·문서 형식을 사용해야만 적합하다는 의미가 아닙니다.
+            문제: 인증기준을 일상 운영과 심사 가능한 증적으로 바꿔야 합니다. 기여: 항목별 주요 확인사항·결함사례·증적 예를 제공해 gap analysis의 공통 출발점을 만듭니다. 전제: 2023.11 해설 자료이므로 2026-11-02 시행 법령과 조직의 실제 위험평가를 우선합니다. 근거 범위: 준비·심사 해설입니다. 비주장: 예시와 동일한 제품·주기·문서 형식을 사용해야만 적합하다는 의미가 아닙니다.
           </CitationBlock>
         </div>
       </section>
@@ -56,16 +62,26 @@ export default function IsmsPracticalGuide() {
         <h2 className="mb-6 text-2xl font-bold">암호화와 인증은 알고리즘 이름보다 key·parameter·migration 경로를 심사합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            사용자 비밀번호는 복호화 가능한 암호문이 아니라 salt와 cost가 있는 password hashing scheme으로 저장해야 합니다.
-            bcrypt·scrypt·Argon2id 중 이름만 고르는 것으로 끝나지 않고 production hardware에서 login latency와 공격 비용을 함께 재어 work
-            factor를 정하고 algorithm·parameter·salt·version을 record에 남깁니다. 오래된 hash는 로그인 성공 시 rehash하거나 강제 재설정하는
-            migration 상태로 추적하며 원문 비밀번호를 log나 analytics에 남기지 않습니다.
+            사용자 비밀번호는 복호화 가능한 암호문이 아니라 salt와 cost가 있는 password
+            hashing scheme으로 저장해야 합니다. bcrypt, scrypt, Argon2id 중 이름만
+            고르는 것으로 끝나지 않습니다.
           </p>
           <p>
-            데이터 암호화는 data key와 key-encryption key, 생성·보관·사용·rotation·폐기 owner를 나눕니다. 애플리케이션 환경변수에 key를 넣었다는
-            사실만으로 key management가 되지 않으며 backup·replica·log·export까지 plaintext가 흐르는 경로를 확인해야 합니다. 고객과 관리자 인증은
-            위험도가 다르므로 고위험 관리자·wallet 승인에는 phishing-resistant MFA를 우선 검토하고 recovery가 MFA보다 약한 우회 경로가 되지 않게 같은
-            assurance로 설계합니다.
+            실제 운영 장비에서 로그인 지연과 공격 비용을 함께 재어 work factor를 정합니다.
+            저장 기록에는 algorithm, parameter, salt, version을 남깁니다. 오래된 hash는
+            로그인 성공 시 rehash하거나 강제 재설정하는 migration 상태로 추적하고, 원문
+            비밀번호는 log나 analytics에 남기지 않습니다.
+          </p>
+          <p>
+            데이터 암호화에서는 data key와 key-encryption key를 구별합니다. 그리고 key의
+            생성, 보관, 사용, 교체, 폐기를 누가 책임지는지 나눕니다. 환경변수에 key를 넣었다는
+            사실만으로 key management가 끝나지는 않습니다.
+          </p>
+          <p>
+            Backup, replica, log, export까지 평문이 흐르는 경로를 확인해야 합니다. 고객과
+            관리자 인증의 위험도도 다릅니다. 고위험 관리자와 wallet 승인에는
+            phishing-resistant MFA를 우선 검토하고, recovery가 더 약한 우회로가 되지 않게
+            같은 assurance로 설계합니다.
           </p>
         </div>
       </section>
@@ -74,17 +90,26 @@ export default function IsmsPracticalGuide() {
         <h2 className="mb-6 text-2xl font-bold">DB 접근은 개인 계정·승인 session·query 결과를 한 trace로 묶습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            운영자가 DB에 직접 접속해야 한다면 개인 identity로 bastion 또는 DB access gateway에 인증하고 ticket의 목적·대상 DB·role·시간창을
-            승인받은 뒤 짧은 credential을 발급받습니다. 애플리케이션 service account와 사람 계정을 분리하고 read·write·DDL·grant 권한을 업무 역할에
-            맞춰 나눕니다. shared root 계정을 피할 수 없는 legacy 구간은 password vault checkout, 단일 session, command logging,
-            즉시 rotation과 종료 계획을 보상통제로 둡니다.
+            운영자가 DB에 직접 접속해야 한다면 개인 identity로 bastion이나 DB access
+            gateway에 인증합니다. Ticket에는 접속 목적, 대상 DB, 필요한 role, 허용 시간창을
+            적습니다. 승인이 끝난 뒤에만 짧게 만료되는 credential을 발급합니다.
           </p>
           <p>
-            감사 log에는 actor, 승인 ticket, source, session ID, query 또는 행위 유형,
-            대상, 결과, timestamp, policy revision을 연결합니다. SQL 전문에 개인정보가
-            포함될 수 있으므로 무조건 장기 보관하는 대신 masking·접근권한·무결성·보관기간을
-            함께 설계합니다. “접근제어 제품 도입”이 아니라 우회 port와 cloud console,
-            replica·backup에도 같은 경계가 적용되는지 test해야 합니다.
+            애플리케이션 service account와 사람 계정은 분리합니다. Read, write, DDL,
+            grant 권한도 업무 역할에 맞춰 나눕니다. shared root 계정을 피할 수 없는 legacy
+            구간에는 vault checkout, 단일 session, command logging, 즉시 rotation과 종료
+            계획을 보상통제로 둡니다.
+          </p>
+          <p>
+            감사 log는 누가 했는지, 어떤 ticket으로 승인됐는지, 어디에서 접속했는지부터
+            보여줘야 합니다. 여기에 session ID, 행위 유형, 대상, 결과, 시각, 적용한 policy
+            revision을 연결합니다.
+          </p>
+          <p>
+            SQL 전문에는 개인정보가 들어갈 수 있습니다. 그래서 무조건 오래 보관하지 않고
+            masking, 접근권한, 무결성, 보관기간을 함께 설계합니다. 또한 접근제어 제품을
+            설치했다는 사실보다 우회 port, cloud console, replica, backup에도 같은 경계가
+            적용되는지 시험해야 합니다.
           </p>
         </div>
       </section>
@@ -93,16 +118,25 @@ export default function IsmsPracticalGuide() {
         <h2 className="mb-6 text-2xl font-bold">웹 보안은 scanner 결과가 code-to-production 경로를 실제로 바꾸는지 확인합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            보안 요구사항을 threat scenario와 acceptance criterion으로 작성하고 code review, dependency·secret scan,
-            SAST·DAST, penetration test 중 위험에 맞는 검사를 CI/CD gate에 배치합니다. finding에는 asset·version·severity
-            근거·owner·기한·exception 승인과 retest 결과가 있어야 하며 “false positive” 판단도 재현 가능한 입력과 검토자를 남깁니다.
+            보안 요구사항은 threat scenario와 acceptance criterion으로 작성합니다. Code
+            review, dependency·secret scan, SAST·DAST, penetration test 가운데 위험에
+            맞는 검사를 CI/CD gate에 배치합니다.
+          </p>
+          <p>
+            발견 사항에는 대상 asset과 version, 심각도 근거, 담당자, 기한, 예외 승인,
+            재시험 결과가 있어야 합니다. “False positive”라는 판단에도 다른 검토자가 같은
+            결론을 재현할 수 있는 입력과 판단자를 남깁니다.
           </p>
           <p>
             WAF는 입력 검증과 authorization bug를 대신하지 않습니다. SQL injection은
-            parameterized query와 최소 DB role에서, XSS는 context-aware output encoding과
-            CSP에서, secret 노출은 build artifact와 runtime secret injection 경로에서 각각
-            줄입니다. 배포 후에는 version·change ticket·approval·test receipt와 rollback
-            target을 연결해 어떤 수정이 어느 production instance에 반영됐는지 확인합니다.
+            parameterized query와 최소 DB role로 줄입니다. XSS에는 context-aware output
+            encoding과 CSP를 적용하고, secret 노출은 build artifact와 runtime injection
+            경로에서 막습니다.
+          </p>
+          <p>
+            배포 후에는 version, change ticket, 승인, test receipt, rollback target을
+            연결합니다. 그래야 어떤 수정이 어느 production instance에 반영됐는지 확인할
+            수 있습니다.
           </p>
         </div>
       </section>
@@ -111,17 +145,24 @@ export default function IsmsPracticalGuide() {
         <h2 className="mb-6 text-2xl font-bold">Wallet 운영은 key를 누가 어떤 조건에서 사용했는지까지 통제합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Hot·warm·cold라는 이름만으로 보안 수준이 정해지지 않습니다. 각 wallet의 network
-            reachability, key storage와 export 가능성, signer quorum, transaction policy,
-            일·건별 한도, address allowlist, emergency halt와 복구 절차를 문서와 실제 signer
-            configuration에서 대조합니다. 생성 ceremony, backup, shard·device 보관, rotation,
-            파기에는 서로 다른 담당자와 증인이 필요합니다.
+            Hot, warm, cold라는 이름만으로 보안 수준이 정해지지 않습니다. 각 wallet에서
+            network reachability, key 저장·반출 가능성, signer quorum, transaction policy를
+            실제 설정과 대조해야 합니다.
           </p>
           <p>
-            출금 trace는 request ID에서 customer authentication, risk/FDS decision, 승인자, unsigned transaction
-            digest, signer attestation, broadcast hash, chain confirmation과 회계 원장 반영까지 이어집니다. 서로 다른 단계의
-            hash·amount·network가 달라지면 중단해야 하며 emergency 권한은 짧은 만료와 사후 검토가 있는 break-glass 절차로만 사용합니다. 이는 ISMS
-            통제와 AML/FDS 판단을 연결하지만 두 제도를 같은 것으로 합치지는 않습니다.
+            일·건별 한도, address allowlist, emergency halt와 복구 절차도 같은 방식으로
+            확인합니다. Key 생성 ceremony부터 backup, shard·device 보관, rotation, 파기까지
+            한 사람이 모두 맡지 않도록 담당자와 증인을 나눕니다.
+          </p>
+          <p>
+            출금 trace는 request ID에서 시작해 고객 인증, risk/FDS 판단, 승인자, unsigned
+            transaction digest, signer attestation으로 이어집니다. 이후 broadcast hash,
+            chain confirmation, 회계 원장 반영까지 같은 요청으로 연결해야 합니다.
+          </p>
+          <p>
+            단계 사이에서 hash, amount, network가 달라지면 처리를 중단합니다. Emergency
+            권한은 짧게 만료되고 사후 검토가 붙는 break-glass 절차로만 사용합니다. 이 연결은
+            ISMS 통제와 AML/FDS 판단을 함께 보게 하지만, 두 제도를 하나로 합친다는 뜻은 아닙니다.
           </p>
         </div>
       </section>
@@ -130,9 +171,14 @@ export default function IsmsPracticalGuide() {
         <h2 className="mb-6 text-2xl font-bold">증적은 캡처 파일이 아니라 모집단에서 결론까지 재현하는 record입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            심사기간의 퇴직자 계정 회수를 확인한다고 가정해 보겠습니다. HR 퇴직자 모집단과 IAM·VPN·cloud·DB 계정 목록을 같은 identifier와 cutoff time으로
-            join하고 미매칭과 SLA 초과를 예외 목록으로 만듭니다. 그중 표본을 골라 승인·disable·token revocation·login deny를 확인한 뒤 전체 모집단
-            coverage와 남은 예외를 함께 보고해야 합니다.
+            예를 들어 심사기간의 퇴직자 계정 회수를 확인한다고 해보겠습니다. HR 퇴직자
+            모집단과 IAM, VPN, cloud, DB 계정 목록을 같은 identifier와 cutoff time으로
+            join합니다. 맞지 않는 항목과 SLA 초과 건은 예외 목록으로 만듭니다.
+          </p>
+          <p>
+            그중 표본을 골라 승인, 계정 disable, token revocation, login deny가 실제로
+            끝났는지 확인합니다. 마지막에는 표본 결과만 내지 않고 전체 모집단 coverage와
+            아직 남은 예외를 함께 보고합니다.
           </p>
         </div>
 
@@ -159,11 +205,14 @@ export default function IsmsPracticalGuide() {
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            화면 촬영이 금지된 IDC처럼 원본 반출이 어려우면 심사 편의를 이유로 정책을
-            우회하지 않습니다. read-only 현장 조회, 승인된 export, hash와 timestamp가 있는
-            report, 심사원 동석 확인처럼 보안정책 안에서 재현 가능한 방식을 사전에 합의합니다.
-            Evidence package에는 source URI, query·filter, 추출 시각, tool version, checksum,
-            작성자·검토자, redaction 이유와 보관기간을 붙입니다.
+            화면 촬영이 금지된 IDC처럼 원본 반출이 어렵더라도 심사 편의를 이유로 정책을
+            우회하지 않습니다. Read-only 현장 조회, 승인된 export, hash와 timestamp가 있는
+            report, 심사원 동석 확인처럼 정책 안에서 재현 가능한 방식을 미리 합의합니다.
+          </p>
+          <p>
+            Evidence package에는 source URI, query·filter, 추출 시각, tool version,
+            checksum을 붙입니다. 누가 작성하고 검토했는지, 왜 일부를 가렸는지, 언제까지
+            보관하는지도 함께 기록합니다.
           </p>
           <p>
             개인정보 처리시스템의 권한 부여·변경·말소 기록은 현행 안전성 확보조치 기준상

@@ -13,6 +13,8 @@ interface ExplainedFormulaProps {
   question: string;
   idea: ReactNode;
   formula: string;
+  /** A shorter, line-broken equivalent used below the sm breakpoint. */
+  mobileFormula?: string;
   /** A domain-specific KaTeX formula with underbrace/overbrace annotations. */
   annotatedFormula?: string;
   /** Domain-specific operation fragments. Generic fallbacks are inferred when omitted. */
@@ -165,6 +167,7 @@ export default function ExplainedFormula({
   question,
   idea,
   formula,
+  mobileFormula,
   annotatedFormula,
   operations,
   terms,
@@ -191,7 +194,18 @@ export default function ExplainedFormula({
         }
         className="mx-0 min-w-0 max-w-full overflow-x-auto rounded-lg border border-border/70 bg-background px-0 py-5 sm:px-6"
       >
-        <Math display>{annotatedFormula ?? formula}</Math>
+        {mobileFormula ? (
+          <>
+            <div className="sm:hidden">
+              <Math display>{mobileFormula}</Math>
+            </div>
+            <div className="hidden sm:block">
+              <Math display>{annotatedFormula ?? formula}</Math>
+            </div>
+          </>
+        ) : (
+          <Math display>{annotatedFormula ?? formula}</Math>
+        )}
         <div
           data-formula-operations
           className="mt-4 border-t border-border/60 px-3 pt-4 sm:px-0"

@@ -111,7 +111,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     interpretation: "하루 600건, 건당 12분, 가용시간 6명×360분이면 Q=7200/2160≈3.33입니다. Recall 숫자만 보고 배포하지 말고 threshold·인력·workflow를 다시 설계합니다.",
     citations: [
       { id: "paper-fatf-vasp-monitoring", title: "FATF · Updated Guidance for VA and VASPs", href: FATF_VASP, problem: "대량 가상자산 거래를 고객 위험과 관계 목적에 맞춰 지속적으로 모니터링해야 합니다.", contribution: "자동 monitoring 뒤 flagged transaction을 사람·전문가가 분석하고 rule integrity를 정기 검증하는 위험기반 경계를 설명합니다.", assumptions: "국내 법령·기관 위험평가·customer profile과 적용 시점의 FATF 문서를 함께 확인합니다.", scope: "VASP의 ongoing CDD와 transaction monitoring 원칙에 한정합니다.", notClaim: "특정 rule, vendor tag, model score나 cutoff가 합리적 의심을 자동 증명한다는 뜻은 아닙니다." },
-      { id: "paper-kofiu-str-fds", title: "KoFIU · 의심거래보고제도", href: KOFIU_STR, problem: "내부 탐지 결과와 법률상 의심거래보고 판단을 구분해야 합니다.", contribution: "합리적 의심 근거와 보고 내용·절차의 국내 공식 경계를 제공합니다.", assumptions: "2026-08-14 현행 법령·감독규정과 기관별 승인 권한을 다시 확인합니다.", scope: "대한민국 STR의 공식 제도 설명입니다.", notClaim: "Alert·case·STR가 거래 동결, 고객 유죄나 수사 착수를 자동 의미하지 않습니다." },
+      { id: "paper-kofiu-str-fds", title: "KoFIU · 의심거래보고제도", href: KOFIU_STR, problem: "내부 탐지 결과와 법률상 의심거래보고 판단을 구분해야 합니다.", contribution: "합리적 의심 근거와 보고 내용·절차의 국내 공식 경계를 제공합니다.", assumptions: "2026-11-02 현행 법령·감독규정과 기관별 승인 권한을 다시 확인합니다.", scope: "대한민국 STR의 공식 제도 설명입니다.", notClaim: "Alert·case·STR가 거래 동결, 고객 유죄나 수사 착수를 자동 의미하지 않습니다." },
     ],
   },
   "isms-audit-checklist": {
@@ -149,7 +149,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     assumptions: ["분자와 분모가 같은 기간·scope·dedupe rule을 씁니다.", "Traceable은 통제 결과가 합격했다는 뜻이 아니라 검증 가능한 상태라는 뜻입니다.", "C=1도 sampling과 evidence 진실성·통제 설계 적정성을 대신하지 않습니다."],
     interpretation: "배포 200건 중 184건만 request·approval·artifact·production receipt가 연결되면 C=0.92입니다. 나머지 16건의 공통 source와 영향범위를 조사한 뒤 표본 결과를 해석합니다.",
     citations: [
-      { id: "paper-kisa-isms-audit", title: "KISA · ISMS-P 인증기준 안내서 2023.11", href: KISA_ISMS, problem: "인증기준을 실제 운영 증거·결함사례와 연결해야 합니다.", contribution: "관리체계·보호대책·개인정보 단계별 기준에 확인사항, 증거자료와 결함사례를 제시합니다.", assumptions: "2024-01-02 이후 적용 세부점검항목과 2026-08-14 현행 법령·조직 scope를 함께 확인합니다.", scope: "국내 ISMS-P 심사의 공식 해설과 증거 예시에 한정합니다.", notClaim: "예시 문서 목록을 모두 모으면 인증되거나 한 표본이 모집단 전체를 증명한다는 뜻은 아닙니다." },
+      { id: "paper-kisa-isms-audit", title: "KISA · ISMS-P 인증기준 안내서 2023.11", href: KISA_ISMS, problem: "인증기준을 실제 운영 증거·결함사례와 연결해야 합니다.", contribution: "관리체계·보호대책·개인정보 단계별 기준에 확인사항, 증거자료와 결함사례를 제시합니다.", assumptions: "2024-01-02 이후 적용 세부점검항목과 2026-11-02 현행 법령·조직 scope를 함께 확인합니다.", scope: "국내 ISMS-P 심사의 공식 해설과 증거 예시에 한정합니다.", notClaim: "예시 문서 목록을 모두 모으면 인증되거나 한 표본이 모집단 전체를 증명한다는 뜻은 아닙니다." },
       { id: "paper-kisa-isms-site", title: "KISA · ISMS-P 인증 제도·자료실", href: "https://pims.kisa.or.kr/", problem: "안내서·세부점검항목·적용일의 최신 게시본을 확인해야 합니다.", contribution: "KISA의 인증제도와 최신 공지·자료의 공식 진입점을 제공합니다.", assumptions: "심사 신청일과 적용 공지, 인증기관 요구를 release마다 확인합니다.", scope: "ISMS-P 현행 자료 탐색의 공식 출발점입니다.", notClaim: "이 글의 checklist가 실제 심사 범위·표본·판정을 고정한다는 뜻은 아닙니다." },
     ],
   },
@@ -188,7 +188,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     assumptions: ["Event와 기간의 timezone·calendar rule·policy generation을 고정합니다.", "Legal hold는 권한·최소범위·해제 조건이 있는 별도 state입니다.", "Deadline 계산만으로 모든 사본의 실제 삭제가 증명되지는 않습니다."],
     interpretation: "채용 절차가 8월 14일 끝나고 적용 정책이 30일 보유라면 deadline은 policy calendar에 따른 9월 13일입니다. 유효한 hold가 없다면 그 시각에 artifact manifest 전체를 삭제·검증합니다.",
     citations: [
-      { id: "paper-pipa-lifecycle", title: "국가법령정보센터 · 개인정보 보호법", href: PIPA, problem: "처리 목적·보유·파기·정보주체 권리와 법적 예외를 현행 조문에서 확인해야 합니다.", contribution: "대한민국 개인정보 보호법의 현재 법령 원문과 시행 이력을 제공합니다.", assumptions: "2026-08-14 효력, 처리자 유형·사실관계와 다른 법률의 보존 의무를 법무·privacy owner가 확인합니다.", scope: "국내 개인정보 처리·파기의 상위 법률 근거입니다.", notClaim: "이 글의 30일 예시가 법정 공통 보유기간이거나 암호화·분리보관이 파기를 대체한다는 뜻은 아닙니다." },
+      { id: "paper-pipa-lifecycle", title: "국가법령정보센터 · 개인정보 보호법", href: PIPA, problem: "처리 목적·보유·파기·정보주체 권리와 법적 예외를 현행 조문에서 확인해야 합니다.", contribution: "대한민국 개인정보 보호법의 현재 법령 원문과 시행 이력을 제공합니다.", assumptions: "2026-11-02 효력, 처리자 유형·사실관계와 다른 법률의 보존 의무를 법무·privacy owner가 확인합니다.", scope: "국내 개인정보 처리·파기의 상위 법률 근거입니다.", notClaim: "이 글의 30일 예시가 법정 공통 보유기간이거나 암호화·분리보관이 파기를 대체한다는 뜻은 아닙니다." },
       { id: "paper-kisa-privacy-lifecycle", title: "KISA · ISMS-P 인증기준 안내서 2023.11", href: KISA_ISMS, problem: "보유기간 경과·목적 달성 뒤 안전하고 완전한 파기 운영을 검증해야 합니다.", contribution: "개인정보 처리단계별 보유·파기·분리보관의 확인사항과 결함사례를 제공합니다.", assumptions: "최신 세부점검항목과 현행 법령, 조직의 실제 system lineage를 함께 적용합니다.", scope: "국내 ISMS-P 인증 확인사항과 증거 예시에 한정합니다.", notClaim: "문서상 파기 정책이나 DB delete log 한 건이 파생물·backup까지 완전 삭제됐음을 증명하지 않습니다." },
     ],
   },
@@ -227,9 +227,9 @@ const CONFIG: Record<ArticleKey, Config> = {
     assumptions: ["각 Boolean은 문서 존재가 아니라 같은 fixture·generation에서 검증된 상태입니다.", "어떤 처리가 동의를 요구하는지는 현행 법령과 사실관계로 별도 판단합니다.", "P는 법적 적법성 전체를 수학적으로 증명하는 식이 아니라 누락 방지용 내부 gate입니다."],
     interpretation: "방침 문구가 정확해 N=1이어도 reject 뒤 광고 SDK가 호출돼 C=0이면 P=0입니다. Runtime을 고치고 새 network trace와 withdrawal receipt를 만든 뒤 다시 승인합니다.",
     citations: [
-      { id: "paper-pipa-policy", title: "국가법령정보센터 · 개인정보 보호법", href: PIPA, problem: "처리방침·처리 근거·제공·위탁·국외이전·권리의 현행 의무를 확인해야 합니다.", contribution: "대한민국 개인정보 보호법의 현재 원문과 시행 이력을 제공합니다.", assumptions: "2026-08-14 효력, 처리자·정보주체·목적·상대방의 사실관계를 privacy/legal owner가 확인합니다.", scope: "국내 개인정보 처리의 상위 법률 근거입니다.", notClaim: "처리방침 공개나 동의 한 번이 모든 수집·이용·제공을 자동 적법하게 만든다는 뜻은 아닙니다." },
+      { id: "paper-pipa-policy", title: "국가법령정보센터 · 개인정보 보호법", href: PIPA, problem: "처리방침·처리 근거·제공·위탁·국외이전·권리의 현행 의무를 확인해야 합니다.", contribution: "대한민국 개인정보 보호법의 현재 원문과 시행 이력을 제공합니다.", assumptions: "2026-11-02 효력, 처리자·정보주체·목적·상대방의 사실관계를 privacy/legal owner가 확인합니다.", scope: "국내 개인정보 처리의 상위 법률 근거입니다.", notClaim: "처리방침 공개나 동의 한 번이 모든 수집·이용·제공을 자동 적법하게 만든다는 뜻은 아닙니다." },
       { id: "paper-privacy-standard-guideline", title: "개인정보위 · 표준 개인정보 보호지침", href: PRIVACY_GUIDE, problem: "처리방침을 명확하고 구체적인 항목으로 작성하고 실제 처리와 연결해야 합니다.", contribution: "처리방침 작성과 개인정보 처리의 세부 기준을 공식 행정규칙으로 제공합니다.", assumptions: "법률·시행령·고시의 최신 효력과 서비스별 실제 flow를 함께 적용합니다.", scope: "국내 처리방침 작성·공개의 일반 기준입니다.", notClaim: "예시 문구 복사가 서비스의 실제 처리·권리보장·보안 통제를 증명하지 않습니다." },
-      { id: "paper-pipc-behavior-data", title: "개인정보위 · 맞춤형 광고 행태정보 정책 방안", href: PIPC_BEHAVIOR, problem: "Cookie·광고 ID 등 누적 행태정보의 식별·추론 위험과 이용자 통제를 다뤄야 합니다.", contribution: "맞춤형 광고 행태정보의 명확한 고지, 적법한 수집요건과 사후 거부 경계를 설명합니다.", assumptions: "후속 개정 guidance와 2026-08-14 현행 법령·실제 identifier flow를 다시 확인합니다.", scope: "온라인 행태정보와 맞춤형 광고의 국내 정책 방향에 한정합니다.", notClaim: "모든 cookie가 동의 대상이거나 browser 차단 하나로 모든 SDK·server-side 처리가 중단된다는 뜻은 아닙니다." },
+      { id: "paper-pipc-behavior-data", title: "개인정보위 · 맞춤형 광고 행태정보 정책 방안", href: PIPC_BEHAVIOR, problem: "Cookie·광고 ID 등 누적 행태정보의 식별·추론 위험과 이용자 통제를 다뤄야 합니다.", contribution: "맞춤형 광고 행태정보의 명확한 고지, 적법한 수집요건과 사후 거부 경계를 설명합니다.", assumptions: "후속 개정 guidance와 2026-11-02 현행 법령·실제 identifier flow를 다시 확인합니다.", scope: "온라인 행태정보와 맞춤형 광고의 국내 정책 방향에 한정합니다.", notClaim: "모든 cookie가 동의 대상이거나 browser 차단 하나로 모든 SDK·server-side 처리가 중단된다는 뜻은 아닙니다." },
     ],
   },
 };
@@ -290,15 +290,16 @@ export default function ComplianceEvidenceArticle({ article }: { article: Articl
       </section>
 
       <section id={config.releaseId} className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">03 · 실패 주입과 release gate</p><h2 className="mt-2 text-2xl font-bold">정상 화면보다 누락·우회·잘못된 권한·복구 뒤 재발을 먼저 시험한다</h2></header>
+        <header><p className="text-sm font-semibold text-primary">03 · 실패 주입과 release gate</p><h2 className="mt-2 text-2xl font-bold">정상 동작보다 실패와 재발을 먼저 시험한다</h2></header>
         <div className="overflow-hidden rounded-lg border border-border"><div className="grid grid-cols-[minmax(0,.72fr)_minmax(0,1.28fr)] gap-3 bg-muted/40 px-4 py-3 text-xs font-semibold"><span>실패 주입</span><span>기대 결과</span></div>{config.failures.map(([fault, oracle, receipt]) => <div key={fault} className="grid grid-cols-[minmax(0,.72fr)_minmax(0,1.28fr)] gap-3 border-t border-border px-4 py-3 text-sm"><span className="font-medium">{fault}</span><span className="min-w-0 break-words text-muted-foreground">{oracle} <strong className="text-foreground">[{receipt}]</strong></span></div>)}</div>
         <p className="leading-7">
-            Base와 candidate는 같은 population·fixture·effective date·policy·code·model generation에서 비교합니다.
+            Base와 candidate는 같은 population과 fixture에서 비교합니다. Effective date,
+            policy, code, model generation도 같은 조건으로 고정합니다.
             Missing·unknown은 pass가 아니며 owner·reviewer·artifact digest·canary·rollback과 외부 effect receipt를 하나의
             release record로 남깁니다.
           </p>
         <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3>
-        <p className="leading-7">기초 6문제는 용어·흐름·작은 계산을, 심화 4문제는 반례·실패 주입·독립 평가·rollback을 묻습니다. 정답 체크리스트의 전제와 비보장은 위 절에서 직접 회수할 수 있어야 합니다.</p>
+        <p className="leading-7">기초 6문제는 용어와 흐름, 작은 계산을 묻습니다. 심화 4문제는 반례와 실패 주입, 독립 평가, rollback을 묻습니다. 정답 체크리스트의 전제와 비보장은 위 절에서 직접 찾아낼 수 있어야 합니다.</p>
       </section>
     </article>
   );

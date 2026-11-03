@@ -1,18 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { HotstuffChainViz, HotstuffFailureTable, HotstuffRecoveryViz } from "./viz/ModernHotstuffViz";
-
-const SAFE_VOTE_PSEUDOCODE = [
-  "// 제안이 현재 lock이 지키는 가지를 연장하는지 확인합니다.",
-  "extendsLockedBranch = isDescendant(proposal.block, lockedQC.block)",
-  "",
-  "// 다른 가지라면 제안에 담긴 QC가 현재 lock보다 높은 view인지 확인합니다.",
-  "hasHigherQC = proposal.justifyQC.view > lockedQC.view",
-  "",
-  "// 두 조건 가운데 하나를 만족하고 QC 자체가 유효할 때만 표를 보냅니다.",
-  "if verify(proposal.justifyQC) && (extendsLockedBranch || hasHigherQC):",
-  "    vote(proposal.block, proposal.view)",
-].join("\n");
+import { HotstuffChainViz, HotstuffFailureTable, HotstuffRecoveryViz, HotstuffSafeVoteViz } from "./viz/ModernHotstuffViz";
 
 export default function ModernHotstuffArticle() {
   return (
@@ -63,10 +51,7 @@ export default function ModernHotstuffArticle() {
           ]}
           interpretation="lockedQC가 view 11이라면 그 가지를 연장하는 B12에는 투표할 수 있습니다. 충돌한 가지는 view 12 이상의 유효한 QC가 있어야 검토할 수 있습니다. 숫자 12만 적힌 제안은 충분하지 않습니다."
         />
-        <div className="not-prose overflow-x-auto border border-border bg-muted/20 p-4">
-          <p className="mb-3 text-xs font-bold text-muted-foreground">HotStuff §4.1의 safeNode 판정을 풀어 쓴 의사 코드</p>
-          <pre className="min-w-[46rem] text-xs leading-6"><code>{SAFE_VOTE_PSEUDOCODE}</code></pre>
-        </div>
+        <HotstuffSafeVoteViz />
         <p>
           n=4, f=1에서는 같은 블록과 view를 가리키는 유효한 표 3개가 QC를 만듭니다. Threshold signature를 사용하면 이 표들을 하나의 짧은 서명으로 표현할 수 있습니다. 그래도 누가 표를 보냈는지, 어느 위원회와 view의 표인지, 어떤 블록 해시를 가리키는지는 계속 검증해야 합니다.
         </p>

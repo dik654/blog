@@ -95,37 +95,39 @@ export function LotusSuiteTraceViz() {
   >
     <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Lotus와 Curio의 파일 보관 흐름 장면 탐색기">
       <div data-viz-live-only className="space-y-4">
-        <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-8">
-          {TRACE_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black transition-colors duration-300 ${index === active ? "border-primary bg-primary/10" : index < active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
-        </div>
+        <div data-viz-scene-stage className="min-h-[47rem] space-y-4 sm:min-h-[26rem]">
+          <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-8">
+            {TRACE_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black transition-colors duration-300 ${index === active ? "border-primary bg-primary/10" : index < active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
+          </div>
 
-        <div className="grid gap-px bg-border p-px lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-          <div className="bg-background p-4 sm:p-5">
-            <p className="text-[10px] font-black text-primary">현재 소유자 · {scene.owner}</p>
-            <h4 className="mt-2 break-keep text-base font-black leading-6 sm:text-lg">{scene.title}</h4>
-            <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
-            <div className="mt-5 h-1.5 bg-border/70" aria-label={`전체 진행 ${active + 1}/${TRACE_SCENES.length}`}>
-              <div className="h-full bg-primary transition-[width] duration-500" style={{ width: `${((active + 1) / TRACE_SCENES.length) * 100}%` }} />
+          <div className="grid gap-px bg-border p-px lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+            <div className="bg-background p-4 sm:p-5">
+              <p className="text-[10px] font-black text-primary">현재 소유자 · {scene.owner}</p>
+              <h4 className="mt-2 break-keep text-base font-black leading-6 sm:text-lg">{scene.title}</h4>
+              <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
+              <div className="mt-5 h-1.5 bg-border/70" aria-label={`전체 진행 ${active + 1}/${TRACE_SCENES.length}`}>
+                <div className="h-full bg-primary transition-[width] duration-500" style={{ width: `${((active + 1) / TRACE_SCENES.length) * 100}%` }} />
+              </div>
+            </div>
+            <div className="bg-background p-4 sm:p-5">
+              <p className="text-[9px] font-bold text-muted-foreground">현재 단계의 완료 증거</p>
+              <p className="mt-2 border-l-2 border-primary pl-3 font-mono text-sm font-black">{scene.receipt}</p>
+              <p className="mt-4 text-[9px] leading-5 text-muted-foreground">이 증거는 다음 단계의 입력일 뿐, 뒤 단계의 완료를 대신하지 않습니다.</p>
             </div>
           </div>
-          <div className="bg-background p-4 sm:p-5">
-            <p className="text-[9px] font-bold text-muted-foreground">현재 단계의 완료 증거</p>
-            <p className="mt-2 border-l-2 border-primary pl-3 font-mono text-sm font-black">{scene.receipt}</p>
-            <p className="mt-4 text-[9px] leading-5 text-muted-foreground">이 증거는 다음 단계의 입력일 뿐, 뒤 단계의 완료를 대신하지 않습니다.</p>
-          </div>
-        </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            ["HarmonyDB", "작업·owner·retry", scene.db],
-            ["저장 경로", "piece·sector 산출물", scene.storage],
-            ["Lotus 체인", "tipset·state·receipt", scene.chain],
-          ].map(([name, role, value], index) => <div key={name} className={`relative min-w-0 border bg-background p-4 ${value === "변화 없음" || value === "제출 전" ? "border-border" : "border-primary/50"}`}>
-            <span className={`absolute -left-1 top-5 size-2 ${index <= Math.min(active, 2) ? "bg-primary" : "bg-border"}`} />
-            <p className="text-[9px] font-bold text-muted-foreground">{role}</p>
-            <h5 className="mt-1 text-xs font-black">{name}</h5>
-            <p className="mt-3 break-words font-mono text-[10px] leading-5">{value}</p>
-          </div>)}
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              ["HarmonyDB", "작업·owner·retry", scene.db],
+              ["저장 경로", "piece·sector 산출물", scene.storage],
+              ["Lotus 체인", "tipset·state·receipt", scene.chain],
+            ].map(([name, role, value], index) => <div key={name} className={`relative min-w-0 border bg-background p-4 ${value === "변화 없음" || value === "제출 전" ? "border-border" : "border-primary/50"}`}>
+              <span className={`absolute -left-1 top-5 size-2 ${index <= Math.min(active, 2) ? "bg-primary" : "bg-border"}`} />
+              <p className="text-[9px] font-bold text-muted-foreground">{role}</p>
+              <h5 className="mt-1 text-xs font-black">{name}</h5>
+              <p className="mt-3 break-words font-mono text-[10px] leading-5">{value}</p>
+            </div>)}
+          </div>
         </div>
 
         <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="파일 경로 재생" compact />
@@ -190,21 +192,23 @@ export function CurioTaskLifecycleViz() {
   >
     <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Curio HarmonyTask 상태 전이 장면 탐색기">
       <div data-viz-live-only className="space-y-4">
-        <div className="flex items-center gap-1">
-          {TASK_LABELS.map((label, index) => <div key={label} className="flex min-w-0 flex-1 items-center gap-1">
-            <span className={`flex size-7 shrink-0 items-center justify-center rounded-full border text-[9px] font-black ${index === active ? "border-primary bg-primary text-primary-foreground" : index < active ? "border-foreground/40 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}</span>
-            {index < TASK_LABELS.length - 1 && <span className={`h-px min-w-0 flex-1 ${index < active ? "bg-primary" : "bg-border"}`} />}
-          </div>)}
-        </div>
+        <div data-viz-scene-stage className="min-h-[28rem] space-y-4 sm:min-h-[19rem]">
+          <div className="flex items-center gap-1">
+            {TASK_LABELS.map((label, index) => <div key={label} className="flex min-w-0 flex-1 items-center gap-1">
+              <span className={`flex size-7 shrink-0 items-center justify-center rounded-full border text-[9px] font-black ${index === active ? "border-primary bg-primary text-primary-foreground" : index < active ? "border-foreground/40 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}</span>
+              {index < TASK_LABELS.length - 1 && <span className={`h-px min-w-0 flex-1 ${index < active ? "bg-primary" : "bg-border"}`} />}
+            </div>)}
+          </div>
 
-        <div className="border border-border bg-background p-4 sm:p-5">
-          <p className="text-[10px] font-black text-primary">{active + 1}. {TASK_LABELS[active]}</p>
-          <h4 className="mt-2 break-keep text-base font-black leading-6">{scene.title}</h4>
-          <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
-          <div className="mt-4 grid gap-px bg-border p-px sm:grid-cols-3">
-            <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">harmony_task</p><p className="mt-1 break-words font-mono text-[10px] font-bold leading-5">{scene.row}</p></div>
-            <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">실행 주체·조건</p><p className="mt-1 break-keep text-[10px] font-bold leading-5">{scene.machine}</p></div>
-            <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">현재 판정</p><p className="mt-1 font-mono text-[10px] font-black leading-5 text-primary">{scene.result}</p></div>
+          <div className="border border-border bg-background p-4 sm:p-5">
+            <p className="text-[10px] font-black text-primary">{active + 1}. {TASK_LABELS[active]}</p>
+            <h4 className="mt-2 break-keep text-base font-black leading-6">{scene.title}</h4>
+            <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
+            <div className="mt-4 grid gap-px bg-border p-px sm:grid-cols-3">
+              <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">harmony_task</p><p className="mt-1 break-words font-mono text-[10px] font-bold leading-5">{scene.row}</p></div>
+              <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">실행 주체·조건</p><p className="mt-1 break-keep text-[10px] font-bold leading-5">{scene.machine}</p></div>
+              <div className="bg-background p-3"><p className="text-[9px] text-muted-foreground">현재 판정</p><p className="mt-1 font-mono text-[10px] font-black leading-5 text-primary">{scene.result}</p></div>
+            </div>
           </div>
         </div>
 

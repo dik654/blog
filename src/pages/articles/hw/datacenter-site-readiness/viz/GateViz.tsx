@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileGateRows from "./MobileGateRows";
 
 /** 본문 대응: ReadinessGate.tsx — 건물 제약에서 거꾸로 올라오는 순서 */
 const SCENES = ["바닥과 내진", "회로 용량", "냉각 설비", "후보 서버"] as const;
@@ -44,7 +45,8 @@ export default function GateViz() {
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileGateRows step={step} rows={[["바닥·내진", "구조 담당 승인"], ["회로 용량", "전기 담당 승인"], ["냉각 설비", "공조 담당 승인"], ["후보 서버", "IT가 남은 구성 선택"]]} note="바꾸기 어려운 조건에서 서버 쪽으로 올라옵니다" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             {STEPS.map((s, i) => {
               const active = i === step;
               const done = i < step;

@@ -1,216 +1,268 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useId } from "react";
+import {
+  AnimatedSceneControls,
+  StaticSceneList,
+} from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: overview·cycle·agenda — 개인 선호는 멀쩡한데 집단 결과만 순환한다 */
+/** 본문 대응: overview·cycle·agenda — 같은 세 표가 순환과 의사일정 효과를 만든다. */
 const SCENES = [
-  "세 사람의 선호는 각자 멀쩡하다",
-  "둘씩 붙이면 전부 2대 1로 갈린다",
-  "그래서 이기는 순서가 원을 그린다",
-  "순서를 쥔 사람이 우승자를 정한다",
+  "세 사람의 순서를 그대로 적는다",
+  "둘씩 세 번 비교한다",
+  "세 승패를 한 그림에 잇는다",
+  "표결 순서만 바꿔 본다",
 ] as const;
 
-const OPTIONS = ["가안", "나안", "다안"] as const;
-const SHORT = ["가", "나", "다"] as const;
-const COLORS = ["#6366f1", "#f59e0b", "#10b981"];
-const WARN = "#ef4444";
-const MUTED = "#94a3b8";
+const CONTROL_LABELS = ["세 표", "세 비교", "승패 고리", "표결 순서"] as const;
+const PREFS = [
+  ["가", "나", "다"],
+  ["나", "다", "가"],
+  ["다", "가", "나"],
+] as const;
 
-/** 유권자별 선호 순서. 값은 OPTIONS의 index이며 앞에 올수록 더 원한다 */
-const PREFS: number[][] = [
-  [0, 1, 2],
-  [1, 2, 0],
-  [2, 0, 1],
-];
+const PAIRS = [
+  { left: "가", right: "나", winner: "가", voters: "1번·3번", score: "2대 1" },
+  { left: "나", right: "다", winner: "나", voters: "1번·2번", score: "2대 1" },
+  { left: "다", right: "가", winner: "다", voters: "2번·3번", score: "2대 1" },
+] as const;
 
-const rank = (voter: number, option: number) => PREFS[voter].indexOf(option);
+const AGENDAS = [
+  { first: "가 대 나 → 가 승", second: "가 대 다 → 다 승", winner: "다" },
+  { first: "나 대 다 → 나 승", second: "나 대 가 → 가 승", winner: "가" },
+  { first: "가 대 다 → 다 승", second: "다 대 나 → 나 승", winner: "나" },
+] as const;
 
-/** a와 b를 붙였을 때 a를 더 원하는 사람 수 */
-const support = (a: number, b: number) =>
-  PREFS.filter((_, v) => rank(v, a) < rank(v, b)).length;
+const NOTES = [
+  "1번은 가>나>다, 2번은 나>다>가, 3번은 다>가>나입니다. 각 사람 안에서는 앞뒤가 모순되지 않습니다.",
+  "가-나, 나-다, 다-가를 각각 세면 매번 2대 1입니다. 무승부도 계산 착오도 없는데 세 번의 승자가 서로 이어지지 않습니다.",
+  "가가 나를, 나가 다를, 다가 가를 이깁니다. 가장 강한 안 하나가 남지 않고 출발점으로 돌아오는 고리가 생깁니다.",
+  "같은 세 표를 두고 먼저 붙일 쌍만 바꾸면 다·가·나가 차례로 우승합니다. 순서를 정하는 권한이 결과를 고르는 권한이 됩니다.",
+] as const;
 
-const beats = (a: number, b: number) => support(a, b) > PREFS.length / 2;
-
-const PAIRS: Array<[number, number]> = [
-  [0, 1],
-  [1, 2],
-  [2, 0],
-];
-
-/** 먼저 둘을 붙이고 이긴 쪽을 남은 하나와 붙이는 2단계 의사일정 */
-const AGENDAS: Array<[number, number, number]> = [
-  [0, 1, 2],
-  [1, 2, 0],
-  [0, 2, 1],
-];
-
-function runAgenda([a, b, c]: [number, number, number]) {
-  const first = beats(a, b) ? a : b;
-  return beats(first, c) ? first : c;
+function PreferenceRows() {
+  return (
+    <div className="space-y-2" aria-label="세 사람의 선호 순서">
+      {PREFS.map((pref, voter) => (
+        <div
+          key={voter}
+          className="grid grid-cols-[3.25rem_minmax(0,1fr)] items-center gap-2"
+        >
+          <span className="text-xs font-bold text-muted-foreground">
+            {voter + 1}번
+          </span>
+          <div className="grid grid-cols-3 border border-border bg-background">
+            {pref.map((option, rank) => (
+              <div
+                key={option}
+                className={`flex min-h-11 items-center justify-center border-r border-border text-sm font-bold last:border-r-0 ${
+                  rank === 0 ? "bg-primary/10 text-primary" : "text-foreground"
+                }`}
+              >
+                {option}
+                <span className="ml-1 text-[10px] font-normal text-muted-foreground">
+                  {rank + 1}위
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default function CondorcetCycleViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 3200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const arrowId = `condorcet-${useId().replace(/:/g, "")}`;
   const step = scenes.active;
-
-  const NOTES = [
-    "누구도 이상한 선호를 갖고 있지 않습니다. 세 사람 모두 첫째보다 둘째를, 둘째보다 셋째를 덜 원하는 일관된 순서를 갖습니다.",
-    `둘씩 붙이면 ${PAIRS.map(([a, b]) => `${SHORT[a]}가 ${SHORT[b]}를 ${support(a, b)}대 ${support(b, a)}로`).join(" · ")} 이깁니다. 세 판 모두 과반이 갈렸고 어디에도 무승부가 없습니다.`,
-    "세 결과를 이으면 원이 됩니다. 가장 원하는 안이 무엇이냐는 질문에 다수결이 답을 내놓지 못합니다. 개인의 순서는 전부 이행적인데 집단의 순서만 그렇지 않습니다.",
-    `어느 둘을 먼저 붙이느냐에 따라 우승자가 ${AGENDAS.map((a) => SHORT[runAgenda(a)]).join(" · ")}로 전부 달라집니다. 표를 한 장도 바꾸지 않고 순서만 정해 결과를 고를 수 있습니다.`,
-  ] as const;
 
   return (
     <VizFrame
-      eyebrow="다수결의 순환"
-      title="개인의 선호가 전부 멀쩡해도 집단의 순서는 무너집니다"
-      description="세 사람이 세 안을 놓고 다수결을 하면 이기는 순서가 원을 그립니다."
-      note="사람 셋, 안 셋으로 줄인 최소 예입니다. 사람이 많아도 선호가 충분히 갈리면 같은 일이 생깁니다."
+      className="mobile-viz-stable-height"
+      eyebrow="세 번의 2대 1"
+      title="표는 그대로인데 마지막 답이 사라집니다"
+      description="세 사람의 순서를 적고, 둘씩 비교한 뒤, 표결 순서만 바꿔 봅니다."
+      note="사람 수가 홀수이고 모두가 세 안을 빠짐없이 엄격하게 순위 매긴 경우입니다. 그래서 모든 쌍의 승패가 무승부 없이 정해집니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="다수결이 순환하는 과정"
+        aria-label="같은 세 표에서 다수결의 고리와 의사일정 효과가 생기는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
+          <div id={scenes.playbackId} className="min-w-0 py-1">
+            <p className="text-[11px] font-black text-primary">
+              장면 {step + 1} / {SCENES.length}
+            </p>
+            <h4 className="mt-2 text-base font-bold leading-6">
+              {SCENES[step]}
+            </h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              {/* 선호표는 모든 장면에 남겨 둔다 */}
-              <text x={22} y={26} fontSize={9} fontWeight={700} fill={MUTED}>
-                각자의 선호 순서
-              </text>
-              {PREFS.map((pref, v) => (
-                <g key={v}>
-                  <text x={22} y={48 + v * 26} fontSize={9} fontWeight={700} fill={MUTED}>
-                    {v + 1}번
-                  </text>
-                  {pref.map((opt, position) => (
-                    <g key={opt}>
-                      <rect
-                        x={54 + position * 38}
-                        y={38 + v * 26}
-                        width={34}
-                        height={16}
-                        fill={COLORS[opt]}
-                        fillOpacity={position === 0 ? 0.3 : 0.1}
-                        stroke={COLORS[opt]}
-                        strokeWidth={1}
-                      />
-                      <text x={71 + position * 38} y={50 + v * 26} textAnchor="middle" fontSize={8.5} fontWeight={700} fill={COLORS[opt]}>
-                        {SHORT[opt]}
-                      </text>
-                    </g>
-                  ))}
-                </g>
-              ))}
-              <text x={54} y={130} fontSize={8} fill={MUTED}>
-                왼쪽일수록 더 원합니다
-              </text>
-
+            <div className="mt-4 min-w-0">
               {step === 0 && (
-                <text x={200} y={100} fontSize={9.5} fill={MUTED}>
-                  세 사람 모두 순서가 일관됩니다
-                </text>
+                <div className="space-y-4">
+                  <PreferenceRows />
+                  <p className="border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+                    왼쪽일수록 더 원합니다. 각 행만 보면 세 사람 모두 일관된
+                    순서를 가집니다.
+                  </p>
+                </div>
               )}
 
               {step === 1 && (
-                <g>
-                  <text x={200} y={26} fontSize={9} fontWeight={700} fill={MUTED}>
-                    둘씩 붙인 결과
-                  </text>
-                  {PAIRS.map(([a, b], i) => (
-                    <g key={i}>
-                      <text x={200} y={48 + i * 26} fontSize={9.5} fill={MUTED}>
-                        {OPTIONS[a]} 대 {OPTIONS[b]}
-                      </text>
-                      <text x={300} y={48 + i * 26} fontSize={9.5} fontWeight={700} fill={COLORS[a]}>
-                        {SHORT[a]} 승 · {support(a, b)}대 {support(b, a)}
-                      </text>
-                    </g>
+                <div className="space-y-2">
+                  {PAIRS.map((pair) => (
+                    <div
+                      key={`${pair.left}-${pair.right}`}
+                      className="grid gap-2 border-b border-border py-3 last:border-b-0 sm:grid-cols-[7rem_5rem_minmax(0,1fr)] sm:items-center"
+                    >
+                      <span className="text-sm font-semibold">
+                        {pair.left} 대 {pair.right}
+                      </span>
+                      <strong className="text-sm text-primary">
+                        {pair.winner} 승 · {pair.score}
+                      </strong>
+                      <span className="text-xs leading-5 text-muted-foreground">
+                        {pair.winner}를 고른 사람: {pair.voters}
+                      </span>
+                    </div>
                   ))}
-                  <text x={200} y={130} fontSize={9} fill={MUTED}>
-                    세 판 모두 과반이 분명히 갈렸습니다
-                  </text>
-                </g>
+                </div>
               )}
 
               {step === 2 && (
-                <g>
-                  <circle cx={300} cy={44} r={15} fill={COLORS[0]} fillOpacity={0.2} stroke={COLORS[0]} strokeWidth={1} />
-                  <text x={300} y={48} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS[0]}>
-                    {SHORT[0]}
-                  </text>
-                  <circle cx={356} cy={112} r={15} fill={COLORS[1]} fillOpacity={0.2} stroke={COLORS[1]} strokeWidth={1} />
-                  <text x={356} y={116} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS[1]}>
-                    {SHORT[1]}
-                  </text>
-                  <circle cx={244} cy={112} r={15} fill={COLORS[2]} fillOpacity={0.2} stroke={COLORS[2]} strokeWidth={1} />
-                  <text x={244} y={116} textAnchor="middle" fontSize={10} fontWeight={700} fill={COLORS[2]}>
-                    {SHORT[2]}
-                  </text>
-                  <path d="M312 56 L344 98" stroke={COLORS[0]} strokeWidth={1.25} markerEnd="url(#cyc-arrow)" />
-                  <path d="M341 116 L259 116" stroke={COLORS[1]} strokeWidth={1.25} markerEnd="url(#cyc-arrow)" />
-                  <path d="M256 98 L288 56" stroke={COLORS[2]} strokeWidth={1.25} markerEnd="url(#cyc-arrow)" />
-                  <defs>
-                    <marker id="cyc-arrow" markerWidth={6} markerHeight={6} refX={5} refY={3} orient="auto">
-                      <path d="M0 0 L6 3 L0 6 z" fill={MUTED} />
-                    </marker>
-                  </defs>
-                  <text x={200} y={160} fontSize={9.5} fontWeight={700} fill={WARN}>
-                    가장 원하는 안이 무엇인지에 답이 없습니다
-                  </text>
-                </g>
+                <div className="mx-auto w-full max-w-md">
+                  <svg
+                    viewBox="0 0 360 250"
+                    role="img"
+                    aria-label="가가 나를, 나가 다를, 다가 가를 이기는 원형 관계"
+                    className="h-auto w-full"
+                  >
+                    <defs>
+                      <marker
+                        id={arrowId}
+                        markerWidth="8"
+                        markerHeight="8"
+                        refX="7"
+                        refY="4"
+                        orient="auto"
+                      >
+                        <path d="M0 0 L8 4 L0 8 z" fill="currentColor" />
+                      </marker>
+                    </defs>
+                    <g
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.25"
+                      className="text-primary"
+                      markerEnd={`url(#${arrowId})`}
+                    >
+                      <path d="M192 57 C244 68 278 98 288 137" />
+                      <path d="M270 174 C232 210 150 210 109 174" />
+                      <path d="M92 137 C101 98 136 68 168 58" />
+                    </g>
+                    {[
+                      { label: "가", x: 180, y: 42 },
+                      { label: "나", x: 298, y: 158 },
+                      { label: "다", x: 62, y: 158 },
+                    ].map((node) => (
+                      <g key={node.label}>
+                        <circle
+                          cx={node.x}
+                          cy={node.y}
+                          r="24"
+                          className="fill-background stroke-primary"
+                          strokeWidth="1.25"
+                        />
+                        <text
+                          x={node.x}
+                          y={node.y + 5}
+                          textAnchor="middle"
+                          fontSize="16"
+                          fontWeight="700"
+                          className="fill-foreground"
+                        >
+                          {node.label}
+                        </text>
+                      </g>
+                    ))}
+                    <text
+                      x="225"
+                      y="91"
+                      fontSize="11"
+                      className="fill-muted-foreground"
+                    >
+                      가가 나를 이김
+                    </text>
+                    <text
+                      x="151"
+                      y="226"
+                      fontSize="11"
+                      className="fill-muted-foreground"
+                    >
+                      나가 다를 이김
+                    </text>
+                    <text
+                      x="29"
+                      y="91"
+                      fontSize="11"
+                      className="fill-muted-foreground"
+                    >
+                      다가 가를 이김
+                    </text>
+                  </svg>
+                  <p className="mt-2 text-center text-sm font-semibold text-primary">
+                    한 바퀴를 돌아 출발점으로 되돌아옵니다.
+                  </p>
+                </div>
               )}
 
               {step === 3 && (
-                <g>
-                  <text x={200} y={26} fontSize={9} fontWeight={700} fill={MUTED}>
-                    먼저 붙이는 둘을 고르면
-                  </text>
-                  {AGENDAS.map((agenda, i) => {
-                    const [a, b, c] = agenda;
-                    const winner = runAgenda(agenda);
-                    return (
-                      <g key={i}>
-                        <text x={200} y={48 + i * 26} fontSize={9} fill={MUTED}>
-                          {SHORT[a]}·{SHORT[b]} 먼저 → 이긴 쪽 대 {SHORT[c]}
-                        </text>
-                        <text x={352} y={48 + i * 26} fontSize={9.5} fontWeight={700} fill={COLORS[winner]}>
-                          {OPTIONS[winner]} 우승
-                        </text>
-                      </g>
-                    );
-                  })}
-                  <text x={200} y={130} fontSize={9} fontWeight={700} fill={WARN}>
-                    표는 하나도 바뀌지 않았습니다
-                  </text>
-                  <text x={200} y={148} fontSize={9} fill={MUTED}>
-                    순서를 정하는 자리가 결과를 정하는 자리가 됩니다
-                  </text>
-                </g>
+                <div className="space-y-3">
+                  {AGENDAS.map((agenda, index) => (
+                    <div
+                      key={agenda.winner}
+                      className="grid gap-2 border border-border bg-background p-3 sm:grid-cols-[2rem_minmax(0,1fr)_4.5rem] sm:items-center"
+                    >
+                      <span className="text-xs font-bold text-muted-foreground">
+                        {index + 1}
+                      </span>
+                      <div className="text-sm leading-6">
+                        <span>{agenda.first}</span>
+                        <span className="mx-2 text-muted-foreground">→</span>
+                        <span>{agenda.second}</span>
+                      </div>
+                      <strong className="text-sm text-primary">
+                        {agenda.winner} 우승
+                      </strong>
+                    </div>
+                  ))}
+                </div>
               )}
-            </svg>
-          </div>
+            </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[step]}
-          </p>
+            <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+              {NOTES[step]}
+            </p>
+          </div>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+
+        <AnimatedSceneControls
+          {...scenes}
+          labels={SCENES}
+          controlLabels={CONTROL_LABELS}
+          playLabel="과정 재생"
+        />
       </div>
+
+      <StaticSceneList labels={SCENES} notes={NOTES} />
     </VizFrame>
   );
 }

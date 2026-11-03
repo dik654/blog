@@ -1,175 +1,53 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import {
-  AutobahnCommitViz,
-  AutobahnEvidenceBoundaryViz,
-  AutobahnLaneCutViz,
-} from "./viz/ModernAutobahnViz";
+import { AutobahnCommitViz, AutobahnLaneCutViz } from "./viz/ModernAutobahnViz";
 
 export default function ModernAutobahnArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3">
-        <p className="text-sm font-semibold text-primary">Autobahn 전체 흐름</p>
-        <h2 className="text-3xl font-bold tracking-tight">거래 데이터는 여러 차선으로 보내고, 합의는 각 차선의 도착 지점만 정합니다</h2>
-      </header>
-      <p className="text-lg leading-8 text-foreground/90">
-        이 글은 한 가지 질문을 따라갑니다. Alice가 Bob에게 보내는 거래 묶음이 A 차선의 <em>car</em>가 된 뒤, 네 replica가
-        어떤 데이터를 실행할지 어떻게 같은 결론에 도달할까요?
-      </p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">차선형 데이터 전파 · 끝점 합의</p><h2 className="break-keep text-3xl font-bold tracking-tight">Autobahn은 멈춘 동안 쌓인 거래를 어떻게 한 번에 따라잡을까요?</h2></header>
+      <p className="text-lg font-semibold leading-8 text-foreground/90">각 복제본은 합의가 멈춰도 자기 차선에 거래 묶음을 계속 인증하고, 합의는 모든 묶음 대신 각 차선의 최신 끝점만 담은 짧은 목록 하나를 결정합니다.</p>
+      <p>Alice가 Bob에게 보내는 거래가 A 차선의 두 번째 칸에 들어갔다고 하겠습니다. 거래 묶음은 승객(passenger), 차선의 한 칸은 자동차(car)라고 부릅니다. 자동차에는 차선 위치, 이전 자동차의 참조, 실제 거래 묶음이 들어갑니다.</p>
+      <p>서로 다른 복제본 <code>f+1</code>개가 같은 자동차를 받았다고 표를 주면 가용성 증명(Proof of Availability, PoA)이 생깁니다. 각 차선은 서로 기다리지 않고 자라기 때문에 네트워크가 잠깐 흔들리는 동안에도 가능한 차선은 데이터를 계속 퍼뜨릴 수 있습니다.</p>
+      <p>합의는 쌓인 거래 바이트를 다시 전부 싣지 않습니다. 대신 모든 차선에서 PoA를 얻은 최신 끝점을 모은 목록, 즉 cut을 결정합니다. 각 노드는 지난 cut 뒤에 새로 생긴 차선 뒷부분(suffix)을 가져오고, 모두가 아는 같은 규칙으로 한 줄에 섞은 뒤 실행으로 넘깁니다. 따라서 합의 메시지 크기는 backlog 길이에 따라 늘지 않습니다. 다만 빠진 payload를 받는 시간, 쌓인 거래를 실제로 실행하는 시간까지 사라지는 것은 아닙니다.</p>
       <AutobahnLaneCutViz />
-      <p>
-        Autobahn은 replica마다 독립적인 데이터 차선(<em>lane</em>)을 둡니다. 각 차선의 car는 바로 앞 car를 가리키므로
-        순서가 있는 이력을 만듭니다. 합의 제안에는 쌓인 거래를 다시 전부 넣지 않고, 각 차선에서 선택한 마지막 인증 car의 위치만
-        <em>cut</em>으로 넣습니다. cut이 확정되면 직전 cut 이후의 차선 구간을 동기화하고, 모두가 공유하는 결정적 규칙으로 한
-        실행 순서로 펼칩니다.
-      </p>
-      <aside className="border-l-2 border-primary pl-5 text-sm leading-7">
-        <strong>분리해서 볼 세 가지:</strong> PoA는 데이터를 다시 받을 경로를 남기고, CommitQC는 어떤 cut을 선택했는지
-        확정하며, payload 검증과 실행은 그 선택을 실제 상태에 반영합니다. 셋 중 하나가 끝났다고 나머지까지 끝난 것은 아닙니다.
-      </aside>
+      <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>세 증거를 섞지 마세요.</strong> PoA는 데이터를 다시 받을 곳이 남았다는 증거이고, cut 합의는 어느 끝점까지 순서에 넣을지 정한 증거입니다. 실제 payload 동기화와 애플리케이션 상태 변경은 그 뒤에 따로 끝내야 합니다.</aside>
     </section>
 
     <section id="lanes-cut" className="space-y-6">
-      <header>
-        <p className="text-sm font-semibold text-primary">01 · 차선과 cut</p>
-        <h2 className="mt-2 text-2xl font-bold">f+1표는 데이터를 가진 정직한 replica를 남기지만, car 하나만 존재한다고 증명하지는 않습니다</h2>
-      </header>
-      <p>
-        논문은 replica 수를 <code>n=3f+1</code>, Byzantine replica의 상한을 <code>f</code>로 둡니다. 같은
-        차선·위치·car digest에 서로 다른 <code>f+1</code>명의 표가 모이면 proof of availability(PoA)가 됩니다.
-        <code>n=4, f=1</code>이면 두 표 중 적어도 한 표는 정직한 replica가 냈으므로 car 데이터를 다시 받을 수 있는
-        보관자가 적어도 한 명 남습니다.
-      </p>
-      <ExplainedFormula
-        question="Car PoA에서 보장되는 정직한 보관자의 최솟값은 얼마인가?"
-        idea={<>PoA 서명자 f+1명 중 Byzantine replica가 최대 f명이므로, 적어도 한 명은 정직합니다. 이 계산은 데이터 가용성의 하한이지 같은 위치의 car가 하나뿐이라는 증명은 아닙니다.</>}
-        formula={String.raw`\begin{aligned}honest(PoA)&\ge |PoA|-f\\&=(f+1)-f=1\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}honest(PoA)&\ge \underbrace{|PoA|-f}_{\text{PoA 서명자에서 Byzantine 상한을 제외}}\\&=\underbrace{(f+1)-f=1}_{\text{정직한 보관자 최소 1명}}\end{aligned}`}
-        operations={[
-          { expression: String.raw`|PoA|-f`, annotation: ["서로 다른 서명자만 셉니다.", "그중 Byzantine replica는 최대 f명입니다.", "나머지가 정직한 보관자의 하한입니다."] },
-          { expression: String.raw`(f+1)-f=1`, annotation: ["n=4, f=1이면 PoA 기준은 2표입니다.", "두 표 모두 Byzantine일 수는 없습니다.", "따라서 정직한 보관자가 최소 한 명입니다."] },
-        ]}
-        terms={[
-          { symbol: "PoA", name: "proof of availability", description: "같은 차선·위치·car digest에 대한 서로 다른 replica의 표입니다." },
-          { symbol: "f", name: "Byzantine fault bound", description: "n=3f+1 위원회에서 허용하는 Byzantine replica의 최대 수입니다." },
-          { symbol: "f+1", name: "car 인증 기준", description: "논문의 데이터 계층이 PoA를 만들 때 요구하는 표 수입니다." },
-          { symbol: "honest(PoA)", name: "정직한 보관자 하한", description: "PoA에 참여한 replica 중 car 데이터를 보관한 정직한 replica의 최솟값입니다." },
-        ]}
-        assumptions={[
-          "인증된 채널과 유효한 전자서명을 사용하고, 중복 서명자는 한 번만 셉니다.",
-          "표는 같은 차선·위치·car digest에 결속됩니다.",
-          "정직한 voter는 프로토콜이 요구한 car 데이터를 보관합니다.",
-          "PoA만으로 전체 순서, 영구 보관, 애플리케이션 실행 성공을 주장하지 않습니다.",
-        ]}
-        interpretation="Byzantine 차선 소유자가 같은 위치에 car x와 y를 만들 수 있습니다. Byzantine replica B와 정직한 H1이 x에, B와 정직한 H2가 y에 투표하면 두 car 모두 두 표를 얻습니다. 그러므로 consensus cut이 어느 tip을 사용할지 하나로 확정해야 합니다."
-      />
-      <p>
-        직전 cut이 <code>[1,1,1,1]</code>이고 새 cut이 <code>[2,2,2,3]</code>이라면 새로 처리할 구간은
-        A2, B2, C2, D2, D3입니다. replica는 없는 car를 parent digest를 따라 받아 검증한 뒤, 이미 처리한 위치 이하를 제외하고
-        결정적 zipping 함수를 적용합니다. 논문은 모든 replica가 같은 결과를 만드는 함수를 요구하지만, A 차선부터 D 차선까지
-        고정해서 읽는 하나의 함수만을 규정하지는 않습니다.
-      </p>
-      <div id="paper-autobahn-lanes">
-        <CitationBlock source="Autobahn: Seamless high speed BFT · §5.1 Lanes" citeKey={1} href="https://www.cs.cornell.edu/~fsp/reports/Autobahn__SOSP24_CR.pdf">
-          <p><strong>문제:</strong> 합의가 잠시 멈춰도 데이터 전파를 계속하고, 긴 차선 이력을 작은 tip 참조로 표현해야 합니다.</p>
-          <p><strong>기여:</strong> 앞 car를 가리키는 차선, f+1표의 PoA, certified tip과 cut의 입력을 정의합니다.</p>
-          <p><strong>전제:</strong> n=3f+1, 최대 f Byzantine faults, 인증된 채널과 논문의 투표 규칙을 사용합니다.</p>
-          <p><strong>근거 범위:</strong> 논문의 차선과 PoA 의미에 한정합니다.</p>
-          <p><strong>말하지 않는 것:</strong> PoA가 car의 유일성, 전체 순서, 영구 보관을 보장한다고 확대하지 않습니다.</p>
-        </CitationBlock>
-      </div>
+      <header><p className="text-sm font-semibold text-primary">01 · 자동차와 가용성 증명</p><h2 className="mt-2 break-keep text-2xl font-bold">PoA가 있는데도 왜 같은 위치에 두 자동차가 생길 수 있을까요?</h2></header>
+      <p>논문은 전체 복제본을 <code>n=3f+1</code>개, 그중 Byzantine 장애를 일으킬 수 있는 복제본을 최대 <code>f</code>개로 둡니다. 자동차의 PoA에는 같은 내용에 대한 서로 다른 표 <code>f+1</code>개가 필요합니다. 따라서 표를 준 복제본 중 적어도 한 곳은 정상이며 데이터를 다시 내줄 수 있습니다.</p>
+      <p><code>n=4, f=1</code>이면 필요한 표는 2개이고 정상 보유자의 하한은 1명입니다. 하지만 Byzantine 차선 소유자가 같은 위치에 자동차 두 대를 제안하고 서로 다른 정상 복제본이 하나씩 투표하면 두 자동차 모두 PoA를 얻을 수 있습니다. PoA를 “갈라지지 않았다는 인증서”로 보면 안 되는 이유입니다. 합의가 그 차선에서 사용할 끝점 하나를 나중에 정합니다.</p>
+      <ExplainedFormula question="Car PoA의 honest-holder 하한은 얼마이고 무엇을 보장하지 않는가?" idea={<>PoA signer가 f+1명이고 Byzantine signer가 최대 f명이므로 적어도 한 명은 honest합니다. 이 결과는 data retrieval 후보를 남기지만 같은 position의 유일한 car를 증명하지는 않습니다.</>} formula={String.raw`\begin{aligned}honest(PoA)&\ge |PoA|-f\\&=(f+1)-f=1\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}honest(PoA)&\ge \underbrace{|PoA|-f}_{\text{서명자 중 최대 f명 Byzantine}}\\&=\underbrace{(f+1)-f=1}_{\text{honest holder 최소 1}}\end{aligned}`}
+      operations={[
+        { expression: String.raw`|PoA|-f`, annotation: ["distinct matching vote 수에서","최악의 경우 Byzantine f명을 뺀","honest voter 하한"] },
+        { expression: String.raw`(f+1)-f=1`, annotation: ["car threshold f+1을 넣으면 1.","n=4, f=1: 2표 중 최대 1표 Byzantine.","같은 position의 두 car 모두 PoA 가능"] },
+      ]} terms={[{symbol:"PoA",name:"proof of availability",description:"같은 lane·position·car digest에 대한 distinct matching votes입니다."},{symbol:"f",name:"Byzantine bound",description:"n=3f+1 committee에서 허용하는 faulty replicas 상한입니다."},{symbol:"f+1",name:"car threshold",description:"Paper data layer가 availability premise에 사용하는 vote 수입니다."},{symbol:"honest(PoA)",name:"honest holder lower bound",description:"PoA voters 중 batch retrieval에 응답할 honest replica 최소 수입니다."}]} assumptions={["Static Byzantine adversary, authenticated reliable channels와 valid signatures를 사용합니다.","Vote는 같은 lane·position·digest domain에 결속되고 duplicate signer를 제거합니다.","Honest voter가 protocol이 요구한 car data를 보관한다는 전제를 사용합니다.","PoA는 total order, non-equivocation, permanent retention이나 application execution receipt가 아닙니다."]} interpretation="n=4,f=1에서 PoA 두 표 중 최대 한 표만 Byzantine이므로 honest holder가 적어도 한 명입니다. 하지만 Byzantine voter B와 honest H1이 car x에, B와 honest H2가 car y에 투표하면 x와 y 모두 PoA를 가질 수 있습니다." />
+      <p>Cut <code>[2,2,2,3]</code>은 네 차선에서 선택한 인증된 끝점 위치입니다. 이전에 커밋한 cut이 <code>[1,1,1,1]</code>이었다면 이번에 새로 처리할 뒷부분은 A2, B2, C2, D2·D3입니다.</p>
+      <p>각 노드는 빠진 자동차를 digest와 부모 연결을 따라 병렬로 받고, 차선과 위치에 대한 결정적 zipper 규칙을 적용합니다. 나중 cut에 어떤 차선의 더 낮은 과거 위치가 들어 있어도, 차선마다 기록한 마지막 커밋 위치 이하를 다시 출력하면 안 됩니다.</p>
+      <div id="paper-autobahn-lanes"><CitationBlock source="Autobahn paper §5.1 — Lanes and Cars" citeKey={1} href="https://arxiv.org/pdf/2401.10369"><p><strong>문제:</strong> Consensus와 독립적으로 data를 전파하면서 긴 lane history를 작은 tip reference로 표현해야 합니다.</p><p><strong>기여:</strong> In-order parent chaining, f+1 PoA, certified·optimistic tips와 non-blocking synchronization premise를 정의합니다.</p><p><strong>전제:</strong> Paper model의 reliable authenticated channels, digest/signature validity와 lane-position voting rules를 사용합니다.</p><p><strong>근거 범위:</strong> Autobahn data layer와 proof-of-availability semantics에 한정합니다.</p><p><strong>말하지 않는 것:</strong> PoA가 reliable-broadcast non-equivocation, total order, permanent storage나 실행 성공을 보장하지 않습니다.</p></CitationBlock></div>
     </section>
 
-    <section id="consensus" className="space-y-6">
-      <header>
-        <p className="text-sm font-semibold text-primary">02 · cut 합의</p>
-        <h2 className="mt-2 text-2xl font-bold">PrepareQC, CommitQC, fast-path 증거를 서로 바꿔 쓰면 안 됩니다</h2>
-      </header>
+    <section id="commit-recovery" className="space-y-6">
+      <header><p className="text-sm font-semibold text-primary">02 · 준비, 확정, 주 노드 교체</p><h2 className="mt-2 break-keep text-2xl font-bold">빠른 확정과 느린 확정은 왜 서로 다른 증거를 남길까요?</h2></header>
+      <p>일반 view에서 주 노드가 cut을 제안하면 <code>2f+1</code>개의 준비 표(Prep-Vote)가 PrepareQC를 만듭니다. 느린 경로는 이 증거를 다시 알리는 Confirm 메시지 뒤에 <code>2f+1</code>개의 확인 응답(Confirm-Ack)을 모아 CommitQC를 만듭니다. 여러 정상 노드가 PrepareQC를 저장했기 때문에 주 노드가 바뀌어도 결정 후보를 복구할 수 있습니다.</p>
+      <p>반면 모든 <code>n</code>개 복제본의 준비 표가 모인 빠른 경로는 Confirm 단계를 생략합니다. <code>n=4, f=1</code>이면 PrepareQC에는 3표, 느린 CommitQC에는 확인 응답 3개, 빠른 CommitQC에는 준비 표 4개가 필요합니다. 이름과 기준이 다른 증거를 하나의 <code>ready=true</code>로 뭉치면 다음 view가 무엇을 반드시 이어받아야 하는지 알 수 없습니다.</p>
       <AutobahnCommitViz />
-      <p>
-        leader가 cut을 제안하면 <code>2f+1</code> Prep-Votes가 PrepareQC를 만듭니다. 일반적인 slow path에서는 이어지는
-        Confirm message에 <code>2f+1</code> Confirm-Acks가 모여 CommitQC가 됩니다.
-      </p>
-      <p>
-        좋은 네트워크 구간에서 모든 <code>n</code> replica의 Prep-Vote를 얻으면 Confirm 단계를 생략하는 fast path를 사용할 수 있습니다.
-        <code>n=4, f=1</code>에서 세 Prep-Votes와 네 Prep-Votes는 같은 증거가 아닙니다.
-      </p>
-      <p>
-        진행이 멈추면 <code>f+1</code> timeout messages를 본 replica가 timeout을 다시 퍼뜨립니다. 이 기준에는 적어도
-        한 정직한 replica의 불만이 포함됩니다. <code>2f+1</code> Timeouts가 모인 Timeout Certificate는 다음 view로
-        이동할 ticket이 됩니다. 새 leader는 보고된 highQC와 high proposal을 논문의 규칙대로 비교해 안전한 제안을 복구합니다.
-      </p>
-      <pre className="overflow-x-auto border border-border bg-muted/30 p-4 text-sm leading-6"><code>{`// 같은 view와 cut digest에 묶인 서로 다른 Prep-Vote를 셉니다.
-prepareVotes = collectDistinctPrepVotes(view, cutDigest)
-
-// 2f+1표가 모이면 slow path의 준비 증거를 만듭니다.
-if prepareVotes.count >= 2*f + 1:
-    prepareQC = makePrepareQC(prepareVotes)
-
-// 모든 n명이 투표한 경우에만 Confirm 단계를 생략합니다.
-if prepareVotes.count == n:
-    commit(fastCommitQC(prepareVotes))
-else:
-    // PrepareQC를 받은 replica가 Confirm-Ack을 보냅니다.
-    confirmAcks = collectDistinctConfirmAcks(prepareQC)
-
-    // 2f+1 Confirm-Ack이 모이면 slow-path 결정 증거를 만듭니다.
-    if confirmAcks.count >= 2*f + 1:
-        commit(slowCommitQC(confirmAcks))`}</code></pre>
-      <div id="paper-autobahn-consensus">
-        <CitationBlock source="Autobahn: Seamless high speed BFT · §5.2–5.4" citeKey={2} href="https://www.cs.cornell.edu/~fsp/reports/Autobahn__SOSP24_CR.pdf">
-          <p><strong>문제:</strong> backlog가 커져도 작은 cut을 낮은 지연으로 확정하고, view가 바뀔 때 안전한 증거를 넘겨야 합니다.</p>
-          <p><strong>기여:</strong> Prepare/Confirm slow path, 모든 replica의 표를 쓰는 fast path, timeout과 view-change 규칙을 정의합니다.</p>
-          <p><strong>전제:</strong> 논문이 구분한 표의 domain과 기준, 차선 이력 동기화, 제한된 동시 consensus instance를 따릅니다.</p>
-          <p><strong>근거 범위:</strong> cut consensus와 view-change 알고리즘 및 증명에 한정합니다.</p>
-          <p><strong>말하지 않는 것:</strong> cut 확정만으로 payload 동기화와 애플리케이션 실행이 끝났다고 주장하지 않습니다.</p>
-        </CitationBlock>
-      </div>
+      <p>진행이 없으면 먼저 <code>f+1</code>개의 Timeout 메시지가 모입니다. 이 가운데 적어도 하나는 정상 복제본의 불만이므로 다른 복제본도 같은 view의 Timeout을 퍼뜨립니다. <code>2f+1</code>개가 모이면 타임아웃 인증서(Timeout Certificate, TC)가 생기고 다음 view를 여는 표가 됩니다.</p>
+      <p>새 주 노드는 TC 안에서 가장 높은 PrepareQC와, <code>f+1</code>개 보고서에 반복해서 나타난 가장 높은 제안을 비교해 논문의 우선순위 규칙으로 안전한 후보를 고릅니다. 고정 timeout 값이나 BLS 서명 사용은 프로토콜의 필수 전제가 아니므로 실제 배포에서 따로 정하고 측정해야 합니다.</p>
+      <div id="paper-autobahn-consensus"><CitationBlock source="Autobahn paper §5.2–5.4 — Cut consensus and view change" citeKey={2} href="https://arxiv.org/pdf/2401.10369"><p><strong>문제:</strong> 큰 backlog를 참조하는 cut을 낮은 agreement latency로 commit하고 fast/slow evidence를 view change에서 보존해야 합니다.</p><p><strong>기여:</strong> Prepare/Confirm, all-node fast commit, TC recovery, deterministic lane zipping과 parallel slots를 정의합니다.</p><p><strong>전제:</strong> Paper의 exact quorum domains, lane-history synchronization과 bounded concurrent-instance policy를 따릅니다.</p><p><strong>근거 범위:</strong> Autobahn cut consensus·view-change·processing algorithms와 correctness proofs에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Cut commit이 payload synchronization·execution 완료나 모든 load에서 zero hangover를 뜻하지 않습니다.</p></CitationBlock></div>
     </section>
 
-    <section id="boundaries" className="space-y-6">
-      <header>
-        <p className="text-sm font-semibold text-primary">03 · 확인된 경계</p>
-        <h2 className="mt-2 text-2xl font-bold">논문의 알고리즘, 공개 프로토타입, 클라이언트 완료 상태를 따로 확인합니다</h2>
-      </header>
-      <AutobahnEvidenceBoundaryViz />
-      <p>
-        공개 artifact의 <code>autobahn</code> 브랜치를 commit
-        <code>6d77e0307e9dc09cc8def2c846a20523646ab4de</code>로 고정해 확인했습니다. 메시지 자료형에는
-        Prepare, Confirm, Commit이 따로 있고, core에는 제안의 payload와 parent를 동기화한 뒤 consensus 준비 여부를 판단하는
-        경로가 있습니다.
-      </p>
-      <p>
-        이는 논문의 구조가 코드에 어떤 모양으로 나타났는지 확인하는 근거입니다. 다만 README가 설명하듯 실험
-        재현용 prototype이므로, 이 코드만 보고 제품 수준의 장기 보관·자동 복구·모든 최적화가 끝났다고 말할 수는 없습니다.
-      </p>
-      <div id="code-autobahn-artifact">
-        <CitationBlock source="autobahn-artifact · messages.rs/core.rs · commit 6d77e03" citeKey={3} href="https://github.com/neilgiri/autobahn-artifact/tree/6d77e0307e9dc09cc8def2c846a20523646ab4de">
-          <p><strong>확인 대상:</strong> Rust/Tokio 기반 공개 artifact의 primary message와 core 처리 경로입니다.</p>
-          <p><strong>확인된 것:</strong> Proposal의 header digest·height, Prepare/Confirm/Commit message 구분, payload·parent sync와 consensus 준비 검사가 코드에 존재합니다.</p>
-          <p><strong>근거 범위:</strong> 고정된 commit의 공개 prototype에 한정합니다.</p>
-          <p><strong>말하지 않는 것:</strong> 논문의 모든 의사코드와 최적화가 일대일로 구현됐거나 production 운영이 검증됐다고 주장하지 않습니다.</p>
-        </CitationBlock>
-      </div>
-      <p>
-        마지막으로 <em>seamless</em>는 합의 메시지 크기와 네트워크 장애 뒤의 agreement 회복을 설명하는 논문 주장입니다.
-        offered load가 네트워크·디스크·실행 용량을 넘으면 backlog는 줄지 않습니다. cut을 빠르게 확정하더라도 느린 replica가
-        긴 suffix를 받아 검증하고 실행하는 시간은 남습니다.
-      </p>
-      <p>
-        따라서 이 글에서 확정할 결론은 “cut 합의와 데이터 처리를 분리한다”는
-        메커니즘이며, 모든 배포에서 end-to-end 지연이 사라진다는 성능 보장이 아닙니다.
-      </p>
-      <div id="paper-autobahn">
-        <CitationBlock source="Autobahn: Seamless high speed BFT · SOSP 2024" citeKey={4} href="https://www.cs.cornell.edu/~fsp/reports/Autobahn__SOSP24_CR.pdf">
-          <p><strong>문제:</strong> 부분 동기 네트워크의 일시적 장애 뒤 traditional BFT의 backlog hangover와 DAG BFT의 정상 구간 지연을 함께 줄이려 합니다.</p>
-          <p><strong>기여:</strong> chained lanes, f+1 PoA, certified-tip cut과 낮은 지연의 view-based consensus를 결합합니다.</p>
-          <p><strong>전제:</strong> n=3f+1 authenticated replicas, static Byzantine adversary를 두며, liveness와 회복 주장은 좋은 네트워크 구간과 처리 용량 전제를 사용합니다.</p>
-          <p><strong>근거 범위:</strong> 논문의 프로토콜·증명·평가에 한정합니다.</p>
-          <p><strong>말하지 않는 것:</strong> 다른 하드웨어와 부하에서도 같은 처리량·지연이 나온다고 일반화하지 않습니다.</p>
-        </CitationBlock>
-      </div>
+    <section id="release" className="space-y-6">
+      <header><p className="text-sm font-semibold text-primary">03 · 네트워크 흔들림과 회복</p><h2 className="mt-2 break-keep text-2xl font-bold">Cut 하나가 backlog를 가리켜도 왜 복구 시간이 0초는 아닐까요?</h2></header>
+      <p>3초 동안 합의가 멈췄고 네 차선이 각각 자동차 20개씩 전진했다고 하겠습니다. 회복 뒤 cut 하나는 자동차 80개의 끝점을 한 번에 가리킬 수 있습니다. 합의 메시지는 자동차 80개에 비례해 커지지 않습니다.</p>
+      <p>그러나 느린 노드는 자신에게 없는 차선 뒷부분을 받고, hash와 부모 연결을 확인하고, 결정된 순서로 실행해야 합니다. 들어오는 부하가 네트워크·디스크·실행 용량보다 크면 backlog는 계속 늘어납니다. cut이 빨리 커밋됐다는 사실만으로 모든 후유증이 사라졌다고 결론 내리면 안 됩니다.</p>
+      <p>안전성 검사는 네트워크 속도와 관계없이 서로 충돌하는 cut이나 출력 순서가 생기지 않는지를 봅니다. 진행성과 매끄러운 회복 검사는 논문이 말하는 좋은 구간, 정상 주 노드, 부하가 처리 용량보다 낮다는 조건에서 cut이 다시 커밋되고 backlog가 줄어드는지를 봅니다. 네트워크 분할 중 정지는 허용되지만 서로 다른 결과의 확정은 허용되지 않습니다. 메시지 전달 상한이 회복된 뒤에도 계속 커밋하지 못하면 진행성 실패입니다.</p>
+      <p>출시 전에는 같은 차선 위치에서 두 PoA가 생기는 경우, 빠른 경로 후보 직후 주 노드가 바뀌는 경우, 이전보다 낮은 위치가 섞인 cut, 여러 합의 slot이 함께 움직이는 경우를 재생해야 합니다. 각 차선에서 이미 커밋한 위치 이하를 버리고, slot 순서·suffix를 섞는 규칙·중복 제거를 적용했을 때 모든 정상 노드의 상태 digest가 같은지 확인합니다.</p>
+      <p>클라이언트 성공은 cut 인증서만 보지 않고 payload hash 검증, 거래 순서 확정, 애플리케이션 상태 변경 영수증까지 포함해야 합니다. 실패 때는 아직 커밋되지 않은 로컬 제안과 캐시만 되돌립니다.</p>
+      <div id="paper-autobahn"><CitationBlock source="Autobahn: Seamless high speed BFT" citeKey={3} href="https://arxiv.org/abs/2401.10369"><p><strong>문제:</strong> Partial-synchrony blip 뒤 traditional BFT hangover와 DAG BFT의 good-interval latency를 함께 줄여야 합니다.</p><p><strong>기여:</strong> Chained lanes, f+1 car PoA, certified-tip cuts와 low-latency view-based consensus를 결합합니다.</p><p><strong>전제:</strong> n=3f+1 authenticated replicas, static Byzantine adversary를 두고 safety에는 synchrony가 필요 없지만 liveness에는 good interval을 사용합니다.</p><p><strong>근거 범위:</strong> Autobahn protocol, correctness·seamlessness definitions와 paper evaluation입니다.</p><p><strong>말하지 않는 것:</strong> Legacy fixed timeout·BLS·TPS 숫자나 다른 deployment의 speedup을 보편값으로 주장하지 않습니다.</p></CitationBlock></div>
+      <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3><p>기초 6문제는 lane/car/passenger/PoA/tip, honest-holder 하한, cut suffix, slow·fast thresholds, timeout relay·TC와 cut/실행 경계를 묻습니다. 심화 4문제는 PoA equivocation, fast-view recovery, non-monotonic duplicate 방지와 blip·backlog release suite를 설계하게 합니다.</p>
     </section>
   </article>;
 }

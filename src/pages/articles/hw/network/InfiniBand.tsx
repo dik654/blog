@@ -55,11 +55,22 @@ export default function InfiniBand() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="collective-rank-semantics" className="scroll-mt-24">
+          <p className="text-lg font-semibold leading-8 text-foreground">
+            한 문장으로 말하면, collective 속도는 가장 빠른 link 하나가 아니라
+            가장 늦은 rank와 그 rank가 지나야 하는 전체 local·remote 경로가
+            결정한다.
+          </p>
           <p className="leading-7">
-            InfiniBand는 server·storage 연결을 위한 IBTA 표준 channel-based switched fabric이다. GPU 전용도, 단일 회사의 비공개
-            protocol도 아니다. Reliable messaging와 RDMA semantics, HCA·switch·subnet management를 하나의 ecosystem으로
-            제공해 HPC와 분산 학습에 널리 쓰인다. 다만 collective는 fabric 이름만으로 빨라지지 않는다. 같은 count와 datatype으로 참여한 rank들의 위치,
-            node 안 NVLink·PCIe 경로, node 밖 HCA와 fabric 경로, message size와 algorithm이 함께 완료 시간을 만든다.
+            InfiniBand는 server·storage 연결을 위한 IBTA 표준 channel-based
+            switched fabric이다. GPU 전용도, 단일 회사의 비공개 protocol도
+            아니다. Reliable messaging와 RDMA semantics, HCA·switch·subnet
+            management를 한 생태계로 제공해 HPC와 분산 학습에 널리 쓰인다.
+          </p>
+          <p className="leading-7">
+            하지만 collective는 fabric 이름만으로 빨라지지 않는다. 같은
+            count와 datatype으로 참여한 rank들의 위치, node 안 NVLink·PCIe,
+            node 밖 HCA·fabric, message size와 algorithm이 함께 완료 시간을
+            만든다.
           </p>
         </div>
 
@@ -92,9 +103,14 @@ export default function InfiniBand() {
           NDR·XDR 이름만으로 포트 bandwidth를 읽지 않는다
         </h3>
         <p className="leading-7">
-          InfiniBand data rate 세대는 lane 속도를 포함한 규격 이름이고 실제 port는 1x·2x·4x 같은 link width와 encoding·FEC를 조합한다.
-          같은 세대라도 adapter port, switch port와 cable breakout 방식에 따라 aggregate와 endpoint rate가 달라질 수 있다. IBTA 규격
-          세대, 제품의 실제 width, 단방향·양방향 표기와 application payload goodput은 구분해 기록한다.
+          InfiniBand data rate 세대는 lane 속도를 포함한 규격 이름이다. 실제
+          port는 1x·2x·4x 같은 link width와 encoding·FEC를 조합한다. 같은
+          세대라도 adapter port, switch port와 cable breakout 방식에 따라
+          aggregate와 endpoint rate가 달라질 수 있다.
+        </p>
+        <p className="leading-7">
+          따라서 IBTA 규격 세대, 제품의 실제 width, 단방향·양방향 표기와
+          application payload goodput을 따로 기록한다.
         </p>
 
         <h3
@@ -104,10 +120,15 @@ export default function InfiniBand() {
           노드 안과 밖의 topology를 함께 본다
         </h3>
         <p className="leading-7">
-          GPU collective는 노드 안의 NVLink·PCIe와 노드 밖의 HCA·fabric을 연속해서 사용한다. Rank가 어느 GPU에 있고 그 GPU에서 가장 가까운 HCA가
-          무엇인지, collective algorithm이 ring·tree 등의 path를 어떻게 만드는지가 성능에 영향을 준다. 단일 pair bandwidth 다음에는 실제 rank
-          수와 message size로 all-reduce·all-gather·reduce-scatter를 측정하고 operation time·algorithm bandwidth·bus
-          bandwidth를 함께 비교한다.
+          GPU collective는 노드 안의 NVLink·PCIe와 노드 밖의 HCA·fabric을
+          연속해서 사용한다. Rank가 어느 GPU에 있고, 그 GPU에서 가장 가까운
+          HCA가 무엇인지가 첫 번째 조건이다. 그 위에서 ring·tree 같은
+          collective algorithm이 실제 path를 만든다.
+        </p>
+        <p className="leading-7">
+          단일 pair bandwidth를 확인한 다음에는 실제 rank 수와 message
+          size로 all-reduce·all-gather·reduce-scatter를 실행한다. 이때
+          operation time, algorithm bandwidth, bus bandwidth를 함께 비교한다.
         </p>
 
         <ExplainedFormula
@@ -219,13 +240,15 @@ export default function InfiniBand() {
               <span className="min-w-0 break-words leading-6">GPU 수 n이 커지면 ring은 2(n−1)/n → 2, switch 방식은 1 + 1/n → 1이라 차이가 2배에 가까워진다.</span>
             </li>
             <li className="grid min-w-0 gap-1 px-4 py-3">
-              <strong>6. busbw ≈ 1.56 × link 속도</strong>
-              <span className="min-w-0 break-words leading-6">Link 한 방향 속도를 L이라 하면 완료 시간은 약 1.125GB ÷ L, algbw는 약 0.89L이다. nccl-tests는 여기에 1.75를 곱하므로 busbw가 L보다 크게 나온다. 측정 오류가 아니라 보정식의 전제가 깨진 결과다.</span>
+              <strong>6. 이상적 상한에서는 busbw ≈ 1.56 × link 속도</strong>
+              <span className="min-w-0 break-words leading-6">한 방향 link가 계속 가득 차고 다른 병목이 없다고 놓으면 완료 시간은 약 1.125GB ÷ L, algbw는 약 0.89L이다. nccl-tests는 여기에 1.75를 곱하므로 환산 busbw가 L보다 크게 나올 수 있다. 실제 측정값이 반드시 이 비율이 된다는 뜻은 아니다.</span>
             </li>
           </ol>
           <p className="border-t px-4 py-3 text-xs leading-5 text-muted-foreground">
-            3~6행은 아래 multimem 동작에서 이 글이 직접 센 이상적인 link byte다. 사용자 buffer를 NCCL에 등록하지 않으면 staging buffer 복사가 더해지고,
-            protocol header와 동기화 비용은 넣지 않았다.
+            3~6행은 아래 multimem 명령의 의미에서 유도한 이상적 link-boundary
+            장부다. NCCL trace나 switch counter로 잰 값이 아니다. 사용자 buffer를
+            등록하지 않았을 때의 staging copy, protocol header, channel 간 불균형,
+            동기화와 다른 traffic은 넣지 않았다.
           </p>
         </div>
 
@@ -249,7 +272,10 @@ asm volatile("multimem.ld_reduce.relaxed.sys.global.add" PtxAcc_for_##ptx_ty "."
           처음 예에 대입해 보자. 3번 GPU는 자기가 맡은 세 번째 조각의 multicast 주소에 이 명령을 실행한다. Switch는 8개 replica에서 같은 조각을 읽어 더한 값을 3번 GPU로 돌려준다. 3번 GPU가 그 합계를 <code>multimem.st</code>로 쓰면 8개 GPU 모두에 세 번째 조각의 결과가 놓인다.
         </p>
         <p className="leading-7">
-          8개 GPU가 각자 한 조각씩 이 일을 하면 원장의 1.125GB가 된다. NCCL의 all-reduce kernel은 warp에 scatter, reduce, broadcast, gather 역할을 나눠 주고 이 흐름을 channel마다 돌린다.
+          8개 GPU가 각자 한 조각씩 이 일을 한다고 단순화하면 앞 원장의
+          1.125GB가 나온다. 실제 NCCL의 all-reduce kernel은 warp에 scatter,
+          reduce, broadcast, gather 역할을 나누고 여러 channel에서 실행하므로,
+          실제 byte는 반드시 switch·link counter로 확인한다.
         </p>
         <p className="leading-7">
           NCCL은 2.17.1에서 node 안 all-reduce에 NVLS를 처음 넣었다. 2.18.1에서는 node 밖으로 넓혀 두 algorithm을 추가했다. NVLS는 InfiniBand switch의 SHARP와 묶었고, NVLSTree는 node 사이를 tree로 잇는다.
@@ -334,11 +360,13 @@ asm volatile("multimem.ld_reduce.relaxed.sys.global.add" PtxAcc_for_##ptx_ty "."
           <CitationBlock
             source="NVIDIA Technical Blog — Upgrading Multi-GPU Interconnectivity with the Third-Generation NVIDIA NVSwitch (2022-08-23)"
             citeKey={11}
-            href="https://developer.nvidia.com/blog/upgrading-multi-gpu-interconnectivity-with-the-third-generation-nvidia-nvswitch/"
+            href="https://developer.nvidia.com/blog/upgrading-multi-gpu-interconnectivity-with-the-third-generation-nvidia-nvswitch/?ncid=so-twit-238470"
           >
-            “SHARP arithmetic logic units (ALUs) highly leveraged from those in the NVIDIA Hopper Architecture”, “These ALUs support a wide variety of
-            operators, such as logical, min/max, and add”, “This results in a total of 2 N +2 operations, or approximately halving the number of
-            read/write operations needed to perform the all-reduce calculation.” 2026-10-12 원문 확인.
+            3세대 NVSwitch에 SHARP controller·SRAM·Hopper 계열 ALU가 있고,
+            logical·min/max·add와 여러 수치 형식을 지원한다. NVIDIA가 기존
+            all-reduce의 interface read/write 4N을 NVLS의 2N+2 operation과
+            비교한 근거다. Operation을 link byte로 바꾸지는 않는다. 2026-11-02
+            원문 확인.
           </CitationBlock>
         </div>
         <CitationBlock
@@ -346,34 +374,38 @@ asm volatile("multimem.ld_reduce.relaxed.sys.global.add" PtxAcc_for_##ptx_ty "."
           citeKey={12}
           href="https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html"
         >
-          “NVLink SHARP is available in third-generation NVSwitch systems (NVLink4) with Hopper and later GPU architectures, allowing collectives such
-          as ncclAllReduce to be offloaded to the NVSwitch domain.” 기본값 2, 2.27·2.28의 fallback이 일부 rank만 실패할 때 hang을 낼 수 있어 2.29에서
-          되돌렸다는 문장, 같은 GPU의 다중 rank에서는 NVLS가 꺼진다는 문장. 2026-10-12 원문 확인.
+          NVLink4 기반 3세대 NVSwitch와 Hopper 이후에서 NVLink SHARP를 사용할
+          수 있다는 범위, 기본값 2, 2.27·2.28의 부분 실패 fallback이 hang을 낼
+          수 있어 2.29에서 되돌린 이유, 같은 GPU의 다중 rank에서는 NVLS가
+          꺼지는 조건을 확인했다. 2026-11-02 원문 확인.
         </CitationBlock>
         <CitationBlock
           source="NVIDIA NCCL Release Notes 2.17.1 · 2.18.1"
           citeKey={13}
           href="https://docs.nvidia.com/deeplearning/nccl/release-notes/rel_2-18-1.html"
         >
-          2.17.1: “Add support for NVLink SHARP Reduction / Broadcast to accelerate intra-node allreduce operations.” 2.18.1: “Add inter-node algorithms
-          for NVLink SHARP: NVLink SHARP + IB SHARP (NVLS), NVLink SHARP + Tree (NVLSTREE).” 2026-10-12 원문 확인.
+          2.17.1의 node 안 reduction·broadcast 지원과 2.18.1의 node 간
+          NVLS·NVLSTree algorithm 추가를 버전 경계로 확인했다. 2026-11-02 원문
+          확인.
         </CitationBlock>
         <CitationBlock
           source="NVIDIA PTX ISA — multimem.ld_reduce, multimem.st, multimem.red"
           citeKey={14}
           href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html"
         >
-          “Instruction multimem.st performs a store operation of the input operand b to all the memory locations pointed to by the multimem address
-          a.” ld_reduce는 모든 위치에서 읽어 .op로 줄인 결과를 register d에 돌려준다. “Introduced in PTX ISA version 8.1.” “Requires sm_90 or higher.”
-          CUDA Programming Guide 4.17.4는 GPU N개 multicast team에 replica가 N개 생긴다고 적는다. 2026-10-12 원문 확인.
+          multimem.st가 multicast 주소의 모든 replica에 쓰고, ld_reduce가 모든
+          replica에서 읽어 줄인 결과를 register에 돌려주는 의미를 확인했다. 두
+          명령의 도입 경계는 PTX ISA 8.1·sm_90 이상이다. 2026-11-02 원문 확인.
         </CitationBlock>
         <CitationBlock
           source="NVIDIA/nccl v2.32.3-1 — src/tuning/nvls.cc, src/device/reduce_kernel.h"
           citeKey={15}
           href="https://github.com/NVIDIA/nccl/blob/v2.32.3-1/src/tuning/nvls.cc"
         >
-          “// NVLS is supported for AR, AG, and RS.” “// NVLSTree is only supported for AR.” Simple 이외 protocol 비활성화, all-reduce의 intraBw *= 2.0f,
-          reduce_kernel.h의 multimem.ld_reduce 인라인 PTX. 2026-10-12 원문 확인.
+          고정 tag 소스에서 NVLS는 AR·AG·RS, NVLSTree는 AR만 허용하고 Simple
+          이외 protocol을 비활성화하는 조건, all-reduce 비용 모델의 intraBw ×2,
+          reduce kernel의 multimem.ld_reduce 인라인 PTX를 확인했다. 2026-11-02
+          원문 확인.
         </CitationBlock>
       </div>
     </section>

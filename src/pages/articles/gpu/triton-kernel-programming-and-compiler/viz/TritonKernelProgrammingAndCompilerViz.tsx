@@ -34,16 +34,16 @@ const PROGRAM_STRIP: (number | "gap")[] = [0, 1, 2, 3, "gap", 94, 95, 96];
 
 function ProgramStrip({ highlight }: { highlight: number | null }) {
   return (
-    <div className="flex items-center gap-1" aria-label={`program instance ${NUM_PROGRAMS}개`}>
+    <div className="flex min-w-0 items-center gap-0.5 sm:gap-1" aria-label={`program instance ${NUM_PROGRAMS}개`}>
       {PROGRAM_STRIP.map((item, index) =>
         item === "gap" ? (
-          <span key={`gap-${index}`} className="px-1 font-mono text-[11px] text-muted-foreground">
+          <span key={`gap-${index}`} className="px-0.5 font-mono text-[11px] text-muted-foreground sm:px-1">
             …
           </span>
         ) : (
           <span
             key={item}
-            className={`flex h-9 w-11 items-center justify-center border font-mono text-[11px] ${
+            className={`flex h-9 w-8 min-w-0 items-center justify-center border font-mono text-[10px] sm:w-11 sm:text-[11px] ${
               highlight === item
                 ? "border-primary bg-primary/15 text-foreground"
                 : "border-border bg-muted/40 text-muted-foreground"
@@ -85,6 +85,7 @@ export default function TritonKernelProgrammingAndCompilerViz() {
 
   return (
     <VizFrame
+      documentFlow
       eyebrow="Triton block programming model"
       title="Program instance 가 block 하나씩 맡고 mask 가 경계를 자릅니다"
       description="Vector add 의 N = 98432, BLOCK_SIZE = 1024 예입니다. 위 줄은 grid 의 program instance, 아래 막대는 선택된 instance 의 block 1024 원소를 32칸으로 나눈 것입니다."
@@ -96,7 +97,7 @@ export default function TritonKernelProgrammingAndCompilerViz() {
         role="group"
         aria-label="Program instance 가 block 을 맡고 mask 가 경계를 자르는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-auto min-h-0 min-w-0 flex-col overflow-visible outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(32rem,calc(100svh-15rem))] sm:min-h-[26rem] sm:overflow-y-auto"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
@@ -142,7 +143,7 @@ export default function TritonKernelProgrammingAndCompilerViz() {
                     </span>
                   )}
                 </div>
-                <p className="mt-3 font-mono text-[11px] text-primary">
+                <p className="mt-3 break-all font-mono text-[11px] text-primary">
                   {active === 3
                     ? `tl.load(x_ptr + offsets, mask=mask, other=0.0) · tl.store(out_ptr + offsets, y, mask=mask)`
                     : `mask = offsets < ${N}`}

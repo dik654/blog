@@ -104,7 +104,7 @@ export function NarwhalBatchTraceViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[715px] sm:min-h-[520px]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {TRACE_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
 
@@ -142,16 +142,16 @@ export function NarwhalBatchTraceViz() {
             </div>
           </div>
 
-          <div className="mt-2 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible">
-            <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 sm:w-auto">
+          <div className="mt-2 grid gap-2 sm:grid-cols-3">
+            <div className="min-w-0 border border-border bg-background p-3">
               <p className="text-[10px] font-semibold text-muted-foreground">지금 일어나는 일</p>
               <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.action}</p>
             </div>
-            <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 sm:w-auto">
+            <div className="min-w-0 border border-border bg-background p-3">
               <p className="text-[10px] font-semibold text-muted-foreground">새로 생긴 증거</p>
               <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.evidence}</p>
             </div>
-            <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 sm:w-auto">
+            <div className="min-w-0 border border-border bg-background p-3">
               <p className="text-[10px] font-semibold text-muted-foreground">아직 확정되지 않음</p>
               <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.pending}</p>
             </div>
@@ -161,6 +161,80 @@ export function NarwhalBatchTraceViz() {
         <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="d7 처리 과정 재생" />
       </div>
       <StaticSceneList labels={TRACE_LABELS} notes={TRACE_NOTES} />
+    </VizFrame>
+  );
+}
+
+const VERIFY_LABELS = ["원문 저장", "저장 정족수", "헤더 작성", "누락 회수", "이중 투표 차단"] as const;
+
+const VERIFY_STATES = [
+  {
+    title: "Worker가 배치 원문을 저장하고 내용으로 식별할 digest를 만듭니다.",
+    code: "digest = hash(batch); store[(digest, worker_id)] = batch",
+    input: "T1을 포함한 d7 원문과 worker 0이라는 저장 위치입니다.",
+    output: "(d7, worker 0)으로 바이트를 찾고 다시 검증할 수 있습니다.",
+    guard: "로컬 저장 하나는 원격 가용성이나 header 인증을 뜻하지 않습니다.",
+  },
+  {
+    title: "동료 worker의 저장 확인 power가 정족수에 닿을 때까지 기다립니다.",
+    code: "if ack_power >= quorum: notify_primary(digest, worker_id)",
+    input: "A·B·C처럼 서로 다른 검증자의 저장 확인과 voting power입니다.",
+    output: "Primary가 d7의 위치를 header payload에 넣을 수 있습니다.",
+    guard: "저장 확인 정족수와 primary vote 정족수는 서로 다른 단계입니다.",
+  },
+  {
+    title: "Primary는 원문 대신 위치와 직전 라운드 부모를 하나의 digest로 묶습니다.",
+    code: "header = sign(epoch, round, author, payload, parents)",
+    input: "Epoch·round·작성자·(d7, w0)·직전 round certificates입니다.",
+    output: "서명된 H8이 생겨 다른 primaries가 같은 내용을 검증할 수 있습니다.",
+    guard: "작성자 서명 하나는 availability certificate가 아닙니다.",
+  },
+  {
+    title: "부모 인증서나 payload가 없으면 투표를 멈추고 먼저 가져옵니다.",
+    code: "if missing_parents(H8) or missing_payload(H8): suspend_and_fetch(H8)",
+    input: "Local certificate store와 payload_store[(d7, worker 0)]의 조회 결과입니다.",
+    output: "가져온 부모와 d7의 digest를 확인한 뒤 같은 H8 처리를 재개합니다.",
+    guard: "Digest만 보고 원문이 있는 척 투표하지 않습니다.",
+  },
+  {
+    title: "같은 작성자·round의 다른 digest에 이미 투표했다면 두 번째 표를 거부합니다.",
+    code: "if voted_other(author, round): reject(); else: vote(H8)",
+    input: "저장된 이전 vote의 author·round·header digest와 새 H8입니다.",
+    output: "검증을 통과한 한 header에만 이 primary의 표가 남습니다.",
+    guard: "중복 signer나 충돌한 두 header의 표를 함께 정족수로 세지 않습니다.",
+  },
+] as const;
+
+const VERIFY_NOTES = VERIFY_STATES.map((state) => `${state.title} ${state.output} ${state.guard}`);
+
+export function NarwhalVerificationPseudocodeViz() {
+  const scenes = useAnimatedScenes(VERIFY_LABELS.length, 6200, { loop: false });
+  const state = VERIFY_STATES[scenes.active];
+
+  return (
+    <VizFrame
+      eyebrow="검증 절차 · 의사코드와 상태를 함께 읽기"
+      title="저장 확인과 header 투표는 서로 다른 문턱입니다"
+      description="코드 한 줄이 어떤 저장 상태를 읽고, 어떤 다음 상태만 허용하는지 다섯 장면으로 연결합니다."
+      note="보관 종료된 MystenLabs/narwhal e67f915의 worker·primary 경계를 설명용 의사코드로 줄인 것입니다. 현재 Sui 구현과 동일하다는 뜻은 아닙니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Narwhal 저장과 header 투표 검증의 다섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+        <div data-viz-scene-stage className="min-h-[560px] sm:min-h-[410px]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {VERIFY_LABELS[scenes.active]}</p>
+          <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">{state.code}</code>
+          <div className="mt-3 grid gap-px border border-border bg-border p-px sm:grid-cols-3">
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">확인하는 입력</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.input}</p></div>
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">새로 생긴 상태</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.output}</p></div>
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">넘지 않는 경계</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.guard}</p></div>
+          </div>
+          <div className="mt-4 grid grid-cols-5 gap-1" aria-hidden="true">{VERIFY_LABELS.map((label, index) => <span key={label} className={`h-1.5 ${index <= scenes.active ? "bg-primary" : "bg-border"}`} />)}</div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={VERIFY_LABELS} controlLabels={VERIFY_LABELS} playLabel="Narwhal 검증 의사코드 재생" />
+      </div>
+      <StaticSceneList labels={VERIFY_LABELS} notes={VERIFY_NOTES} />
     </VizFrame>
   );
 }

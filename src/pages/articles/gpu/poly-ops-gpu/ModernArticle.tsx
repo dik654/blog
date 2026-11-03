@@ -4,30 +4,29 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { ModernPolyOpsViz } from "./ModernPolyOpsViz";
 
 const SPPARK_NTT = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/ntt/ntt.cuh";
-const CKZG = "https://github.com/ethereum/c-kzg-4844/blob/673d93cdb5b61072f288f08c147c180cf378cb9b/src/ckzg.c";
-const ICICLE = "https://github.com/ingonyama-zk/icicle/tree/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2";
+const CKZG = "https://github.com/ethereum/c-kzg-4844/blob/e125905e5e01186e6ccb7a0ced4845bf7eddbcfe/src/ckzg.c";
+const ICICLE = "https://github.com/ingonyama-zk/icicle/tree/6c77775961b0e4dc2be359feec1ac11536c18043";
 
 export default function ModernPolyOpsGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Representation을 잃지 않는 polynomial kernel</p><h2 className="text-3xl font-bold tracking-tight">GPU polynomial 연산은 배열을 빠르게 처리하기 전에 그 배열이 coefficient인지 evaluation인지부터 증명해야 한다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Polynomial의 coefficient/evaluation form, interpolation, vanishing polynomial과 NTT는 <a className="text-primary hover:underline" href="/cs/crypto/polynomials">다항식 정본</a>과 <a className="text-primary hover:underline" href="/cs/crypto/fft">NTT 정본</a>이 소유합니다. 여기서는 하나의 proof workload가 coefficient buffer에서 coset evaluation으로 이동하고, pointwise 계산 뒤 quotient/opening용 coefficient로 돌아오는 GPU 구현 경계만 설명합니다.</p>
-      <p>
-            Buffer receipt에는 field와 representation form, domain/coset id를 둡니다. N과 order, Montgomery/canonical
-            state, generation도 같은 자리에 함께 적습니다. 길이와 element type만 맞춰 배열을 받는 API로는 representation mismatch를 잡아낼
-            수 없습니다.
-          </p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">같은 숫자 배열이 다른 뜻을 갖는 순간</p><h2 className="text-3xl font-bold tracking-tight">Coefficient와 evaluation은 서로 바꿔 쓸 수 없다</h2></header>
+      <p className="text-lg leading-8 text-foreground/90"><strong>Kernel에 bytes만 넘기지 말고, 이 배열이 어느 field의 어떤 표현이며 어느 domain 순서인지 함께 넘겨야 합니다.</strong> 길이가 같아도 representation이 다르면 계산 결과의 뜻이 달라집니다.</p>
+      <p>Polynomial의 coefficient/evaluation form, interpolation, vanishing polynomial과 NTT는 <a className="text-primary hover:underline" href="/cs/crypto/polynomials">다항식 정본</a>과 <a className="text-primary hover:underline" href="/cs/crypto/fft">NTT 정본</a>이 소유합니다. 여기서는 하나의 proof workload가 coefficient buffer에서 coset evaluation으로 이동하고, pointwise 계산 뒤 quotient/opening용 coefficient로 돌아오는 GPU 구현 경계만 설명합니다.</p>
+      <div className="space-y-3">
+        <p>Buffer receipt에는 field와 representation form, domain/coset id를 둡니다. N과 order도 같은 자리에 적습니다.</p>
+        <p>Montgomery/canonical state와 proof generation도 함께 기록합니다. 길이와 element type만 맞춰 배열을 받는 API로는 representation mismatch를 잡아낼 수 없습니다.</p>
+      </div>
       <ModernPolyOpsViz />
       <ContentBoundary article="poly-ops-gpu" />
     </section>
 
     <section id="form-domain" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Form/domain tag</p><h2 className="mt-2 text-2xl font-bold">Kernel input을 bytes가 아니라 typed polynomial artifact로 받는다</h2></header>
-      <p>
-            Coefficient a_i는 monomial basis의 가중치이고 evaluation y_j는 특정 domain point에서 갖는 값입니다. 같은 N field
-            elements라도 pointwise multiplication은 evaluation form에서 convolution을 뜻합니다. coefficient form에서는 단순
-            coefficient별 곱일 뿐입니다. Domain root와 coset generator가 다르면 evaluation form끼리도 호환되지 않습니다.
-          </p>
+      <div className="space-y-3">
+        <p>Coefficient a_i는 monomial basis의 가중치입니다. Evaluation y_j는 특정 domain point에서 polynomial이 갖는 값입니다.</p>
+        <p>같은 N field elements라도 pointwise multiplication은 evaluation form에서 convolution을 뜻합니다. Coefficient form에서는 단순 coefficient별 곱일 뿐입니다. Domain root와 coset generator가 다르면 evaluation form끼리도 호환되지 않습니다.</p>
+      </div>
       <ExplainedFormula question="Polynomial buffer artifact를 어떤 identity로 구분할까?" idea={<>값 digest뿐 아니라 field·form·domain·order·generation을 묶어 같은 길이의 다른 의미를 분리합니다.</>} formula={String.raw`A=H(\mathrm{field}\|\mathrm{form}\|N\|\mathrm{domain}\|\mathrm{order}\|\mathrm{gen}\|H(\mathrm{bytes}))`}
       annotatedFormula={String.raw`A=H(\underbrace{\mathrm{field}\|\mathrm{form}}_{\text{어느 field·표현}}\|\underbrace{N\|\mathrm{domain}\|\mathrm{order}}_{\text{길이·domain·순서}}\|\underbrace{\mathrm{gen}}_{\text{proof attempt}}\|\underbrace{H(\mathrm{bytes})}_{\text{실제 값}})`}
       operations={[
@@ -64,21 +63,16 @@ export default function ModernPolyOpsGpuArticle() {
         {symbol:"N",name:"Domain size",description:"Transform length이자 coefficient padding 길이입니다."},
         {symbol:"f",name:"Polynomial",description:"Degree가 N보다 작은 고정 field polynomial입니다."},
       ]} assumptions={["g≠0이고 gΩ는 의도한 coset이며 N은 field two-adicity가 지원합니다.","Inverse path는 inverse NTT normalization 뒤 g^{-i}로 untwist하고 output order를 확인합니다."]} interpretation="f=1+2X, g=3이면 twisted coefficients는 (1,6)입니다. ω-domain에서 평가한 값은 정확히 f(3ω^j)입니다." />
-      <p>
-            Pinned sppark는 forward coset에서 NTT 전에, inverse coset에서는 inverse NTT 뒤에 LDE powers를 적용합니다. 이를 별도
-            kernel로 둘지 stage와 fuse할지는 같은 workload에서 잰 traffic과 register pressure가 판단 근거입니다.
-          </p>
+      <p>Pinned sppark는 forward coset에서 NTT 전에 LDE powers를 적용합니다. Inverse coset에서는 inverse NTT 뒤에 적용합니다. 이를 별도 kernel로 둘지 stage와 fuse할지는 같은 workload의 traffic과 register pressure로 판단합니다.</p>
       <div id="paper-sppark-coset"><CitationBlock type="code" citeKey={1} source="sppark ntt.cuh · commit 17278d7" href={SPPARK_NTT}><p><strong>문제:</strong> Forward/inverse NTT에서 coset powers와 bit order를 올바른 위치에 적용해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned dispatch가 CT/GS, bit reversal과 forward-before/inverse-after LDE power passes를 조합합니다.</p><p><strong>중요 가정:</strong> Commit 17278d7의 field, NTTParameters, direction/type/order를 고정합니다.</p><p><strong>근거 범위:</strong> 해당 source revision의 coset NTT orchestration입니다.</p><p><strong>일반화 금지:</strong> 모든 library가 같은 pass 순서·fusion·성능을 갖는다는 뜻은 아닙니다.</p></CitationBlock></div>
     </section>
 
     <section id="recurrence-map" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Recurrence map</p><h2 className="mt-2 text-2xl font-bold">Horner와 synthetic division은 polynomial 사이에는 병렬이지만 한 polynomial 안에는 dependency chain이 있다</h2></header>
-      <p>
-            임의의 point 한 곳에서 하는 Horner evaluation과 (f−y)/(X−z) synthetic division은 높은 coefficient의 결과를 다음
-            coefficient가 소비합니다. 그래서 “Coefficient마다 thread 하나”로 단순 분할하면 recurrence가 깨집니다. 여러
-            polynomials·points를 batch하거나 prefix-style 알고리즘을 고르는 선택지가 있습니다. 어느 쪽이든 추가 passes·workspace와
-            crossover를 측정한 값이 근거입니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">03 · Recurrence map</p><h2 className="mt-2 text-2xl font-bold">Horner는 앞 결과가 끝나야 다음 계수를 계산한다</h2></header>
+      <div className="space-y-3">
+        <p>임의의 point 한 곳에서 하는 Horner evaluation과 (f−y)/(X−z) synthetic division은 높은 coefficient의 결과를 다음 coefficient가 소비합니다. 그래서 “coefficient마다 thread 하나”로 단순 분할하면 recurrence가 깨집니다.</p>
+        <p>여러 polynomials·points를 batch하거나 prefix-style 알고리즘을 고를 수 있습니다. 어느 쪽이든 추가 pass·workspace와 crossover를 실제로 측정해야 합니다.</p>
+      </div>
       <ExplainedFormula question="Horner evaluation의 순차 dependency는 어디에 있을까?" idea={<>가장 높은 coefficient에서 시작해 이전 accumulator에 z를 곱하고 다음 coefficient를 더합니다.</>} formula={String.raw`h_{d}=a_d,\qquad h_i=h_{i+1}z+a_i\;(i=d-1,\ldots,0),\qquad f(z)=h_0`}
       annotatedFormula={String.raw`\underbrace{h_{d}=a_d}_{\text{최고차 계수에서 시작}},\qquad \underbrace{h_i=h_{i+1}z+a_i}_{\text{앞 결과를 소비}}\;(i=d-1,\ldots,0),\qquad \underbrace{f(z)=h_0}_{\text{마지막 누산값}}`}
       operations={[
@@ -108,16 +102,15 @@ export default function ModernPolyOpsGpuArticle() {
         {symbol:"q(X)",name:"Quotient",description:"Degree가 f보다 하나 작은 polynomial입니다."},
         {symbol:"X",name:"Formal variable",description:"Polynomial identity의 indeterminate입니다."},
       ]} assumptions={["d≥1이며 coefficient order는 ascending이고 indices가 범위를 벗어나지 않습니다.","Opening quotient (f−y)/(X−z)는 r=y일 때만 exact하므로 mismatch를 error로 처리합니다."]} interpretation="f=1+2X+3X²,z=2이면 q=8+3X,r=17이며 (X−2)(3X+8)+17=f입니다." />
-      <div id="paper-ckzg-poly"><CitationBlock type="code" citeKey={2} source="c-kzg-4844 v2.1.6 · commit 673d93c" href={CKZG}><p><strong>문제:</strong> Ethereum KZG API에서 polynomial evaluation·quotient와 proof inputs를 일관되게 계산해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned official implementation은 polynomial/KZG routines와 validation path를 제공합니다.</p><p><strong>중요 가정:</strong> v2.1.6 commit, BLS12-381 field/domain constants와 API input format을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 CPU reference implementation snapshot입니다.</p><p><strong>일반화 금지:</strong> GPU recurrence parallelization이나 임의 proof system의 성능을 보장하지 않습니다.</p></CitationBlock></div>
+      <div id="paper-ckzg-poly"><CitationBlock type="code" citeKey={2} source="c-kzg-4844 v2.1.8 · commit e125905" href={CKZG}><p><strong>문제:</strong> Ethereum KZG API에서 polynomial evaluation·quotient와 proof inputs를 일관되게 계산해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned official implementation은 polynomial/KZG routines와 validation path를 제공합니다.</p><p><strong>중요 가정:</strong> v2.1.8 commit, BLS12-381 field/domain constants와 API input format을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 CPU reference implementation snapshot입니다.</p><p><strong>일반화 금지:</strong> GPU recurrence parallelization이나 임의 proof system의 성능을 보장하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Round-trip·exact remainder·form mismatch를 확인한 뒤 유효 element/s를 비교한다</h2></header>
-      <p>
-            Zero/constant/max-degree와 N=1, wrong form/domain/order를 넣습니다. coset g=0, unsupported N, non-zero
-            division remainder, aliasing도 포함합니다. CPU reference와 coset round-trip, direct evaluation,
-            f=(X−z)q+r identity를 먼저 맞춥니다. 그다음 H2D·twist·NTT·pointwise·INTT·recurrence·D2H를 분리 측정합니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">표현과 정답이 맞은 결과만 센다</h2></header>
+      <div className="space-y-3">
+        <p>Zero, constant, max-degree와 N=1을 검사합니다. Wrong form/domain/order, coset g=0, unsupported N, non-zero division remainder와 aliasing도 넣습니다.</p>
+        <p>CPU reference와 coset round trip, direct evaluation, f=(X−z)q+r identity를 먼저 맞춥니다. 그다음 H2D·twist·NTT·pointwise·INTT·recurrence·D2H를 분리 측정합니다.</p>
+      </div>
       <ExplainedFormula question="Polynomial kernel 후보의 useful throughput을 어떻게 기록할까?" idea={<>검증된 logical elements만 세고 전체 pipeline 및 kernel-chain 시간을 별도로 둡니다.</>} formula={String.raw`R_{elem}=\frac{B\,N_{valid}}{t_{kernel}},\qquad S=\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}`}
       annotatedFormula={String.raw`R_{elem}=\frac{\underbrace{B\,N_{valid}}_{\text{검증된 element}}}{\underbrace{t_{kernel}}_{\text{kernel chain}}},\qquad S=\frac{\underbrace{T_{reference}^{e2e}}_{\text{reference 전체}}}{\underbrace{T_{candidate}^{e2e}}_{\text{전송 포함 GPU 전체}}}`}
       operations={[
@@ -132,7 +125,7 @@ export default function ModernPolyOpsGpuArticle() {
         {symbol:"T_{reference}^{e2e}",name:"Reference time",description:"Pinned CPU/reference 전체 경로 wall time입니다."},
         {symbol:"T_{candidate}^{e2e}",name:"Candidate time",description:"Transfer·sync·error/fallback을 포함한 GPU 전체 경로입니다."},
       ]} assumptions={["Field·N·batch·form/domain·backend SHA와 warm/cold 상태를 고정합니다.","Wrong-form rejection과 remainder mismatch를 successful output에서 제외하고 retry 비용은 포함합니다."]} interpretation="B=4,N=1024,kernel=2ms이면 2,048,000 element/s입니다. 이 값만으로 transfer가 포함된 proof throughput을 주장할 수 없습니다." />
-      <div id="paper-icicle-poly"><CitationBlock type="code" citeKey={3} source="ICICLE v3.9.0 · commit 6b451e6" href={ICICLE}><p><strong>문제:</strong> Polynomial·NTT primitives를 여러 accelerator backends에서 일관된 API로 호출해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned repository가 polynomial/NTT runtime surface와 examples를 제공합니다.</p><p><strong>중요 가정:</strong> v3.9.0, supported field/backend, caller-owned stream·memory·representation을 고정합니다.</p><p><strong>근거 범위:</strong> 해당 revision의 implementation/API surface입니다.</p><p><strong>일반화 금지:</strong> Protocol soundness·모든 size speedup·automatic form safety를 대신 보장하지 않습니다.</p></CitationBlock></div>
+      <div id="paper-icicle-poly"><CitationBlock type="code" citeKey={3} source="ICICLE v4.0.0 · commit 6c77775" href={ICICLE}><p><strong>문제:</strong> Polynomial·NTT primitives를 여러 accelerator backends에서 일관된 API로 호출해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned repository가 polynomial/NTT runtime surface와 examples를 제공합니다.</p><p><strong>중요 가정:</strong> v4.0.0, supported field/backend, caller-owned stream·memory·representation을 고정합니다. v4는 field와 Rust API가 재설계된 major release입니다.</p><p><strong>근거 범위:</strong> 해당 revision의 implementation/API surface입니다.</p><p><strong>일반화 금지:</strong> Protocol soundness·모든 size speedup·automatic form safety를 대신 보장하지 않습니다.</p></CitationBlock></div>
       <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 역검사 10/10:</strong> form/domain identity, coset twist, inverse untwist, Horner dependency, synthetic quotient/remainder, 반례, fixtures, kernel/e2e 측정, failure와 rollback을 이 글만으로 풀 수 있어야 합니다. Mismatch가 나면 artifact generation을 폐기하고 이전 typed kernel plan으로 되돌립니다.</aside>
     </section>
   </article>;

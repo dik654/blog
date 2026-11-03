@@ -1,21 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import { PbftNormalViz, PbftRecoveryViz, PbftTestTable } from "./viz/ModernPbftViz";
-
-const PREDICATE_PSEUDOCODE = `// 요청 본문과 주 노드의 제안이 로컬 로그에 있어야 합니다.
-has_request(m) && has_preprepare(m, view, sequence)
-
-// 같은 view·sequence·digest를 가리키는 서로 다른 백업의 PREPARE를 셉니다.
-&& distinct_matching_prepares(view, sequence, digest) >= 2 * f
-
-// 위 조건을 만족한 복제본만 COMMIT을 보낼 수 있습니다.
-send_commit(view, sequence, digest)
-
-// 로컬 prepared와 서로 다른 복제본의 COMMIT을 함께 확인합니다.
-prepared(m, view, sequence) && distinct_matching_commits(view, sequence, digest) >= 2 * f + 1
-
-// 앞선 순번까지 실행한 뒤 현재 요청을 상태 기계에 적용합니다.
-execute_after_all_lower_sequences(sequence)`;
+import { PbftNormalViz, PbftPredicateViz, PbftRecoveryViz, PbftTestTable } from "./viz/ModernPbftViz";
 
 export default function ModernPbftArticle() {
   return (
@@ -69,10 +54,7 @@ export default function ModernPbftArticle() {
           ]}
           interpretation="n=4, f=1이면 제안과 PREPARE 2개가 prepared를 만들고, 로컬 prepared와 COMMIT 3개가 committed-local을 만듭니다. 서로 다른 단계의 증거를 합쳐 세면 안 됩니다."
         />
-        <div className="not-prose overflow-x-auto border border-border bg-muted/20 p-4">
-          <p className="mb-3 text-xs font-bold text-muted-foreground">OSDI 1999 §4.2의 판정 조건을 풀어 쓴 의사 코드</p>
-          <pre className="min-w-[46rem] text-xs leading-6"><code>{PREDICATE_PSEUDOCODE}</code></pre>
-        </div>
+        <PbftPredicateViz />
         <div id="paper-pbft-normal">
           <CitationBlock source="PBFT paper §4.2 — Normal-Case Operation" citeKey={1} href="https://www.usenix.org/legacy/publications/library/proceedings/osdi99/full_papers/castro/castro_html/node4.html#SECTION00042000000000000000">
             <p><strong>문제:</strong> 잘못된 주 노드가 같은 순번에 다른 요청을 보내더라도 정상 복제본의 실행 순서가 갈라지지 않아야 합니다.</p>

@@ -108,10 +108,10 @@ export const hardwareTeachCases = {
       "CPU는 data loader와 통신 준비를 수행하고, memory 채널에서 읽은 data를 장치가 접근할 수 있는 통로에 놓습니다. 장치가 많으면 통로 수와 어느 socket에 붙었는지가 먼저 제약이 됩니다.",
       "코어를 더 늘려도 memory나 I/O가 막히면 GPU 대기는 줄지 않습니다. 반대로 host 작업이 무거우면 lane만 충분한 낮은 core 구성도 병목이 됩니다.",
     ],
-    numberTitle: "8 GPU와 8 NIC가 각각 16 lane이면 계산 전부터 256 lane입니다",
+    numberTitle: "8 GPU와 2 NIC, 4 NVMe를 직접 연결하면 176 lane입니다",
     numbers: [
-      "(가정) GPU 8개와 NIC 8개가 각각 16 lane을 직접 요구하면 256 lane입니다. 실제 시스템은 switch와 bifurcation을 쓸 수 있으므로 단순 합계가 제품 요구량은 아니지만 설계가 숨겨서는 안 될 출발점입니다.",
-      "여기에 boot·data NVMe와 관리 장치가 더해집니다. 다음 본문에서는 lane budget, memory channel, core 성격과 제품 계층을 차례로 붙입니다.",
+      "(가정) GPU 8개가 128 lane, NIC 2개가 32 lane, NVMe 4개가 16 lane을 직접 요구해 합계가 176 lane입니다. switch와 bifurcation으로 공유할 수 있지만 동시 전송 때 상위 link가 병목이 될 수 있습니다.",
+      "같은 176-lane 구성을 끝까지 유지하면서 lane budget, memory channel, NUMA, 전력·냉각, 라이선스와 운영 기능을 차례로 붙입니다.",
     ],
     steps: [
       { role: "Host 작업을 계산합니다", result: "Data 준비와 통신 제어가 GPU를 기다리게 하지 않습니다." },
@@ -420,7 +420,7 @@ export const hardwareTeachCases = {
   modded4090: {
     incidentTitle: "96GB에는 모델이 들어갔지만 토큰이 장치 사이에서 기다렸습니다",
     incident: [
-      "(가정) 48GB로 개조한 카드 두 장에 90GB model을 나눠 올렸습니다. Weight는 들어갔지만 매 layer에서 선택된 조각으로 token을 흩었다 모으는 traffic이 좁은 host 통로에 몰려 처리량이 기대보다 낮았습니다.",
+      "(가정) 48GB로 개조한 카드 두 장에 90GB model을 나눠 올렸습니다. Weight는 들어갔지만 각 MoE layer에서 선택된 expert로 token을 흩었다 모으는 traffic이 좁은 host 통로에 몰려 처리량이 기대보다 낮았습니다.",
       "Memory 용량을 늘린 변화와 장치 사이 통로·오류 검출·냉각·지원 경계는 별개입니다. 한 번 model을 load한 성공을 장시간 서비스 승인으로 바꾸려면 계산과 이동, 온도와 오류를 함께 봐야 합니다.",
     ],
     pathTitle: "Token은 선택되고, 다른 장치로 흩어지고, 계산 뒤 다시 모입니다",

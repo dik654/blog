@@ -20,10 +20,10 @@ export default function DatacenterSiteReadinessArticle() {
       <HardwareTeachOpening data={hardwareTeachCases.siteReadiness} />
       <HardwareTeachMechanism data={hardwareTeachCases.siteReadiness}>
         <Overview />
-        <CoolingType />
-        <PowerSizing />
         <FloorLoad />
         <Seismic />
+        <PowerSizing />
+        <CoolingType />
         <ReadinessGate />
       </HardwareTeachMechanism>
       <HardwareFieldLab data={siteReadinessFieldLab} />

@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 734,
-    "pending": 273,
+    "reviewed": 1007,
+    "pending": 0,
     "untracked": 0,
-    "assignedPending": 231,
-    "postCheckpointPending": 42,
+    "assignedPending": 0,
+    "postCheckpointPending": 0,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -3911,11 +3911,11 @@
     {
       "route": "blockchain/consensus-mechanisms",
       "publicPath": "cs/blockchain/consensus-mechanisms",
-      "title": "합의 알고리즘 비교",
+      "title": "PoW와 PoS는 영향력을 어떻게 제한할까?",
       "catalogIndex": 388,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "locally-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4741,161 +4741,161 @@
     {
       "route": "blockchain/pbft-deep",
       "publicPath": "cs/blockchain/pbft-deep",
-      "title": "PBFT 3단계 심층 (Pre-prepare/Prepare/Commit)",
+      "title": "복제본 하나가 거짓말해도 PBFT는 어떻게 같은 결과를 만들까요?",
       "catalogIndex": 471,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/tendermint-bft",
       "publicPath": "cs/blockchain/tendermint-bft",
-      "title": "Tendermint BFT 프로토콜",
+      "title": "제안자가 바뀌어도 Tendermint는 어떻게 블록 하나만 결정할까요?",
       "catalogIndex": 472,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/hotstuff-deep",
       "publicPath": "cs/blockchain/hotstuff-deep",
-      "title": "HotStuff 체인 투표 & 선형 통신",
+      "title": "HotStuff는 QC 사슬로 어떻게 안전하게 주 노드를 바꿀까요?",
       "catalogIndex": 473,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/hotstuff2",
       "publicPath": "cs/blockchain/hotstuff2",
-      "title": "HotStuff-2 (2단계 축소)",
+      "title": "HotStuff-2는 두 단계로 줄이고도 어떻게 안전하게 진행할까요?",
       "catalogIndex": 474,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/jolteon-ditto",
       "publicPath": "cs/blockchain/jolteon-ditto",
-      "title": "Jolteon·Ditto: 정상 경로와 비동기 전환",
+      "title": "Jolteon·Ditto는 멈춘 합의를 어떻게 비동기 경로로 전환할까요?",
       "catalogIndex": 475,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/bft-comparison",
       "publicPath": "cs/blockchain/bft-comparison",
-      "title": "PBFT·HotStuff·Autobahn: 같은 요청과 장애 비교",
+      "title": "PBFT·HotStuff·Autobahn은 같은 장애를 어떻게 다르게 넘길까요?",
       "catalogIndex": 476,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/dag-consensus",
       "publicPath": "cs/blockchain/dag-consensus",
-      "title": "Narwhal·Bullshark: DAG가 실행 순서가 되는 과정",
+      "title": "Narwhal·Bullshark는 병렬 거래를 어떻게 한 실행 순서로 만들까요?",
       "catalogIndex": 477,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/narwhal-deep",
       "publicPath": "cs/blockchain/narwhal-deep",
-      "title": "Narwhal: 거래 바이트가 인증서가 되는 과정",
+      "title": "Narwhal은 거래 원문을 다시 보내지 않고 어떻게 가용성을 증명할까요?",
       "catalogIndex": 478,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/bullshark-deep",
       "publicPath": "cs/blockchain/bullshark-deep",
-      "title": "Bullshark: 인증서 DAG가 한 줄의 순서가 되는 과정",
+      "title": "Bullshark는 인증서 DAG에서 어떻게 한 실행 순서를 고를까요?",
       "catalogIndex": 479,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/longest-chain",
       "publicPath": "cs/blockchain/longest-chain",
-      "title": "Nakamoto: 누적 work와 재조직",
+      "title": "더 무거운 분기는 장부를 어떻게 바꿀까?",
       "catalogIndex": 480,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/avalanche-consensus",
       "publicPath": "cs/blockchain/avalanche-consensus",
-      "title": "Avalanche Snow: 표본 투표와 결정",
+      "title": "Avalanche는 작은 표본을 어떻게 한 노드의 결정으로 쌓을까요?",
       "catalogIndex": 481,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/tusk",
       "publicPath": "cs/blockchain/tusk",
-      "title": "Tusk (비동기 DAG 합의)",
+      "title": "Tusk는 건너뛴 지도자를 어떻게 되찾을까?",
       "catalogIndex": 482,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/autobahn-deep",
       "publicPath": "cs/blockchain/autobahn-deep",
-      "title": "Autobahn 하이브리드 파이프라인 심층",
+      "title": "Autobahn은 멈춘 동안 쌓인 거래를 어떻게 따라잡을까요?",
       "catalogIndex": 483,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/mysticeti",
       "publicPath": "cs/blockchain/mysticeti",
-      "title": "Mysticeti 합의",
+      "title": "Mysticeti는 별도 인증서 없이 어떻게 블록을 확정할까?",
       "catalogIndex": 484,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/gossipbft",
       "publicPath": "cs/blockchain/gossipbft",
-      "title": "GossiPBFT 합의",
+      "title": "GossiPBFT는 메시지 수신을 어떻게 결정으로 바꿀까?",
       "catalogIndex": 485,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/consensus-comparison",
       "publicPath": "cs/blockchain/consensus-comparison",
-      "title": "합의 비교",
+      "title": "합의 계열은 무엇부터 비교해야 할까?",
       "catalogIndex": 486,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4903,9 +4903,9 @@
       "publicPath": "cs/blockchain/filecoin-lotus",
       "title": "Lotus와 Curio: 파일 하나의 전체 경로",
       "catalogIndex": 487,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4913,9 +4913,9 @@
       "publicPath": "cs/blockchain/expected-consensus",
       "title": "Expected Consensus",
       "catalogIndex": 488,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4923,9 +4923,9 @@
       "publicPath": "cs/blockchain/filecoin-f3",
       "title": "Filecoin F3: EC에서 fast finality까지",
       "catalogIndex": 489,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4933,9 +4933,9 @@
       "publicPath": "cs/blockchain/lotus-chain",
       "title": "Lotus 체인 동기화 & 블록 검증",
       "catalogIndex": 490,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4943,9 +4943,9 @@
       "publicPath": "cs/blockchain/lotus-miner",
       "title": "Lotus 마이닝 & 섹터 관리",
       "catalogIndex": 491,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4953,9 +4953,9 @@
       "publicPath": "cs/blockchain/lotus-market",
       "title": "Lotus 스토리지 딜 & 리트리벌",
       "catalogIndex": 492,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4963,9 +4963,9 @@
       "publicPath": "cs/blockchain/lotus-mpool",
       "title": "Lotus 메시지 풀 & 가스",
       "catalogIndex": 493,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4973,9 +4973,9 @@
       "publicPath": "cs/blockchain/lotus-state",
       "title": "Lotus 상태 관리 — Actor record·HAMT/AMT·snapshot",
       "catalogIndex": 494,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4983,9 +4983,9 @@
       "publicPath": "cs/blockchain/filecoin-proofs",
       "title": "Filecoin 저장 증명 개요: PoRep & PoSt",
       "catalogIndex": 495,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4993,9 +4993,9 @@
       "publicPath": "cs/blockchain/proofs-porep",
       "title": "PoRep 봉인 파이프라인 심층 (PC1→PC2→C1→C2)",
       "catalogIndex": 496,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5003,9 +5003,9 @@
       "publicPath": "cs/blockchain/proofs-post",
       "title": "PoSt 심층: WindowPoSt vs WinningPoSt",
       "catalogIndex": 497,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5013,9 +5013,9 @@
       "publicPath": "cs/blockchain/proofs-snark",
       "title": "Filecoin SNARK: Groth16 & GPU 가속",
       "catalogIndex": 498,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5023,9 +5023,9 @@
       "publicPath": "cs/blockchain/filecoin-pdp",
       "title": "PDP: Proof of Data Possession (핫스토리지 검증)",
       "catalogIndex": 499,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5033,9 +5033,9 @@
       "publicPath": "cs/blockchain/filecoin-storacha",
       "title": "Storacha: 탈중앙 핫스토리지 네트워크",
       "catalogIndex": 500,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5043,9 +5043,9 @@
       "publicPath": "cs/blockchain/filecoin-onchain-cloud",
       "title": "Filecoin Onchain Cloud 플랫폼",
       "catalogIndex": 501,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5053,9 +5053,9 @@
       "publicPath": "cs/blockchain/ipfs-filecoin-storage",
       "title": "IPFS & Filecoin 연동",
       "catalogIndex": 502,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5063,9 +5063,9 @@
       "publicPath": "cs/blockchain/filecoin-ipc",
       "title": "IPC: InterPlanetary Consensus 서브넷",
       "catalogIndex": 503,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5073,9 +5073,9 @@
       "publicPath": "cs/blockchain/filecoin-fvm",
       "title": "FVM: Filecoin Virtual Machine",
       "catalogIndex": 504,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5083,9 +5083,9 @@
       "publicPath": "cs/blockchain/erasure-coding",
       "title": "이레이저 코딩 이론: RS, 2D 코딩, DAS",
       "catalogIndex": 505,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5093,19 +5093,19 @@
       "publicPath": "cs/blockchain/pos-theory",
       "title": "저장 증명 이론: PoR, PoRep, PoSt",
       "catalogIndex": 506,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/vdf",
       "publicPath": "cs/blockchain/vdf",
-      "title": "VDF: Verifiable Delay Function",
+      "title": "VDF: 오래 계산하고 빠르게 검증하는 함수",
       "catalogIndex": 507,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5113,9 +5113,9 @@
       "publicPath": "cs/blockchain/drand",
       "title": "DRAND: 분산 랜덤 비콘",
       "catalogIndex": 508,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5123,9 +5123,9 @@
       "publicPath": "cs/blockchain/prysm",
       "title": "Prysm 아키텍처 개요",
       "catalogIndex": 509,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5221,11 +5221,11 @@
     {
       "route": "blockchain/prysm-validator-client",
       "publicPath": "cs/blockchain/prysm-validator-client",
-      "title": "Prysm 검증자 클라이언트",
+      "title": "Validator client: 한 duty의 안전 경로",
       "catalogIndex": 519,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5233,39 +5233,39 @@
       "publicPath": "cs/blockchain/prysm-attestation",
       "title": "Prysm 어테스테이션: 생성, 집계, 서브넷",
       "catalogIndex": 520,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/prysm-sync-committee",
       "publicPath": "cs/blockchain/prysm-sync-committee",
-      "title": "Prysm 싱크 위원회",
+      "title": "Sync Committee: 한 서명에서 헤더까지",
       "catalogIndex": 521,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/prysm-p2p-libp2p",
       "publicPath": "cs/blockchain/prysm-p2p-libp2p",
-      "title": "Prysm libp2p 네트워킹 & 피어 관리",
+      "title": "Prysm P2P: 후보에서 합의 피어까지",
       "catalogIndex": 522,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/prysm-gossipsub",
       "publicPath": "cs/blockchain/prysm-gossipsub",
-      "title": "Prysm Gossipsub 토픽 & 메시지 검증",
+      "title": "Prysm Gossipsub: 토픽과 메시지 검증",
       "catalogIndex": 523,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5491,11 +5491,11 @@
     {
       "route": "blockchain/compound-v3",
       "publicPath": "cs/blockchain/compound-v3",
-      "title": "Compound V3: base principal·factors·absorb",
+      "title": "Compound III는 한 base 자산과 담보를 어떻게 따로 관리할까요?",
       "catalogIndex": 546,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5511,11 +5511,11 @@
     {
       "route": "blockchain/usdc-circle",
       "publicPath": "cs/blockchain/usdc-circle",
-      "title": "USDC — Circle의 법정화폐 담보 스테이블코인",
+      "title": "USDC: 100달러가 토큰이 되고 돌아오는 법",
       "catalogIndex": 548,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5523,9 +5523,9 @@
       "publicPath": "cs/blockchain/dai-maker",
       "title": "DAI & MakerDAO — CDP 기반 암호 담보 스테이블",
       "catalogIndex": 549,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5543,9 +5543,9 @@
       "publicPath": "cs/blockchain/giwa-chain",
       "title": "GIWA Chain — OP Stack node·derivation·finality 경계",
       "catalogIndex": 551,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5901,11 +5901,11 @@
     {
       "route": "crypto/hyperplonk",
       "publicPath": "cs/crypto/hyperplonk",
-      "title": "HyperPLONK",
+      "title": "HyperPLONK: 많은 행을 짧게 검증하는 법",
       "catalogIndex": 587,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5921,31 +5921,31 @@
     {
       "route": "crypto/bulletproofs",
       "publicPath": "cs/crypto/bulletproofs",
-      "title": "Bulletproofs: 투명 셋업 범위 증명 (Inner Product Argument)",
+      "title": "Bulletproofs: 숨긴 숫자가 범위 안임을 증명하는 법",
       "catalogIndex": 589,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "crypto/libiop",
       "publicPath": "cs/crypto/libiop",
-      "title": "libiop: R1CS oracle reduction과 BCS transcript",
+      "title": "libiop: 표를 고정하고 일부만 검사하기",
       "catalogIndex": 590,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "crypto/proofofsql",
       "publicPath": "cs/crypto/proofofsql",
-      "title": "Proof of SQL: query relation·snapshot·sumcheck·Dory",
+      "title": "Proof of SQL: plan·result·열 commitment를 한 점에서 검증하기",
       "catalogIndex": 591,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5961,61 +5961,61 @@
     {
       "route": "crypto/halo2",
       "publicPath": "cs/crypto/halo2",
-      "title": "Halo2: columns·regions·IPA profile (zcash/halo2)",
+      "title": "Halo2: 표의 cell을 증명 규칙으로 바꾸는 법",
       "catalogIndex": 593,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "crypto/plonky3",
       "publicPath": "cs/crypto/plonky3",
-      "title": "Plonky3: generic STARK config과 proof artifact",
+      "title": "Plonky3: proof bytes만으로는 의미가 정해지지 않는다",
       "catalogIndex": 594,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "crypto/circom",
       "publicPath": "cs/crypto/circom",
-      "title": "Circom: signal·R1CS lowering과 reproducible artifact",
+      "title": "Circom: 계산한 값과 증명된 규칙을 구별하는 법",
       "catalogIndex": 595,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "crypto/scroll-zkevm",
       "publicPath": "cs/crypto/scroll-zkevm",
-      "title": "Scroll zkEVM: EVM trace·Halo2 proof artifact",
+      "title": "Scroll zkEVM: OpenVM 상태 전이에서 L1 bundle proof까지",
       "catalogIndex": 596,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "crypto/sp1",
       "publicPath": "cs/crypto/sp1",
-      "title": "SP1: Plonky3 기반 RISC-V zkVM",
+      "title": "SP1 Hypercube: RV64IM 실행에서 검증된 공개값까지",
       "catalogIndex": 597,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "crypto/risc0",
       "publicPath": "cs/crypto/risc0",
-      "title": "RISC Zero: RISC-V zkVM & STARK 증명 시스템",
+      "title": "RISC Zero: guest 실행 claim과 receipt 검증",
       "catalogIndex": 598,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -6043,9 +6043,9 @@
       "publicPath": "cs/p2p/tls-fundamentals",
       "title": "TLS 1.3 기초: 핸드셰이크, AEAD, 키 스케줄",
       "catalogIndex": 601,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6053,89 +6053,89 @@
       "publicPath": "cs/p2p/quic-fundamentals",
       "title": "QUIC 프로토콜 기초: UDP 기반 차세대 전송 계층",
       "catalogIndex": 602,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/nat-traversal",
       "publicPath": "cs/p2p/nat-traversal",
-      "title": "NAT Traversal 기초: STUN, TURN, ICE, Hole Punching",
+      "title": "NAT Traversal: 관측 주소에서 실제 경로 선택까지",
       "catalogIndex": 603,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/gossip-fundamentals",
       "publicPath": "cs/p2p/gossip-fundamentals",
-      "title": "Gossip 프로토콜 기초: Epidemic 모델과 GossipSub",
+      "title": "Gossip은 왜 중복해서 보내는가: m42로 보는 GossipSub",
       "catalogIndex": 604,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/content-addressing",
       "publicPath": "cs/p2p/content-addressing",
-      "title": "Content Addressing 기초: CID, Merkle DAG, 이름 해석",
+      "title": "Content Addressing: hello에서 최신 project root까지",
       "catalogIndex": 605,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/kademlia",
       "publicPath": "cs/p2p/kademlia",
-      "title": "Kademlia DHT: XOR 거리와 K-버킷",
+      "title": "Kademlia: XOR 거리에서 연락처 교체까지",
       "catalogIndex": 606,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/kad-lookup",
       "publicPath": "cs/p2p/kad-lookup",
-      "title": "Kademlia 탐색: 반복 FIND_NODE 알고리즘",
+      "title": "Kademlia 탐색: α개 질문과 거리순 후보표",
       "catalogIndex": 607,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/discv4",
       "publicPath": "cs/p2p/discv4",
-      "title": "Ethereum discv4: UDP 노드 발견 프로토콜",
+      "title": "Ethereum discv4: UDP 주소 확인에서 dial 후보까지",
       "catalogIndex": 608,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/discv5",
       "publicPath": "cs/p2p/discv5",
-      "title": "Ethereum discv5: 암호화 노드 발견 (TALKREQ)",
+      "title": "Ethereum discv5: WHOAREYOU에서 암호화된 노드 목록까지",
       "catalogIndex": 609,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/dht-security",
       "publicPath": "cs/p2p/dht-security",
-      "title": "DHT 보안: Sybil, Eclipse, 방어 구현",
+      "title": "DHT 보안: 한 운영자의 여러 ID가 피해자 시야를 가두는 과정",
       "catalogIndex": 610,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6143,29 +6143,29 @@
       "publicPath": "cs/p2p/kubo",
       "title": "Kubo: CID에서 provider·Bitswap·pin/GC까지",
       "catalogIndex": 611,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/libp2p",
       "publicPath": "cs/p2p/libp2p",
-      "title": "rust-libp2p Swarm 아키텍처: 코드 추적",
+      "title": "rust-libp2p: 주소에서 protocol event까지",
       "catalogIndex": 612,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/libp2p-tcp",
       "publicPath": "cs/p2p/libp2p-tcp",
-      "title": "libp2p-tcp: TCP Transport 구현 코드 분석",
+      "title": "libp2p TCP: 주소에서 Swarm-ready 연결까지",
       "catalogIndex": 613,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6173,29 +6173,29 @@
       "publicPath": "cs/p2p/libp2p-quic",
       "title": "rust-libp2p QUIC: PeerId 인증부터 stream까지",
       "catalogIndex": 614,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/libp2p-noise",
       "publicPath": "cs/p2p/libp2p-noise",
-      "title": "libp2p-noise: Noise XX 핸드셰이크 구현 코드 분석",
+      "title": "libp2p Noise: XX에서 PeerId와 secure I/O까지",
       "catalogIndex": 615,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/libp2p-yamux",
       "publicPath": "cs/p2p/libp2p-yamux",
-      "title": "rust-libp2p Yamux: stream credit·backpressure·failure scope",
+      "title": "rust-libp2p Yamux: 독립 stream과 공유 connection",
       "catalogIndex": 616,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6203,19 +6203,19 @@
       "publicPath": "cs/p2p/libp2p-gossipsub",
       "title": "rust-libp2p GossipSub: publish·heartbeat·peer score",
       "catalogIndex": 617,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/bittorrent",
       "publicPath": "cs/p2p/bittorrent",
-      "title": "BitTorrent 아키텍처",
+      "title": "BitTorrent: block으로 받고 piece로 믿는 이유",
       "catalogIndex": 618,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6223,19 +6223,19 @@
       "publicPath": "cs/p2p/rqbit",
       "title": "rqbit: peer 후보부터 piece hash·range stream까지",
       "catalogIndex": 619,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "p2p/iroh",
       "publicPath": "cs/p2p/iroh",
-      "title": "Iroh: EndpointAddr·ALPN·direct/relay 경로 선택",
+      "title": "Iroh: 주소 후보에서 인증 연결·payload 검증까지",
       "catalogIndex": 620,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6243,19 +6243,19 @@
       "publicPath": "cs/gpu/hw-gpu-comparison",
       "title": "GPU 비교: RTX 4090 vs 5090 vs A100 vs H100",
       "catalogIndex": 621,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "gpu/ai-accelerator-vendor-comparison",
       "publicPath": "cs/gpu/ai-accelerator-vendor-comparison",
-      "title": "가속기 비교는 스펙표가 아니라 네 축으로 합니다",
+      "title": "AI 가속기는 같은 요청을 다섯 관문에 통과시켜 고릅니다",
       "catalogIndex": 622,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6263,9 +6263,9 @@
       "publicPath": "cs/gpu/hw-server-vs-desktop",
       "title": "서버 vs 데스크톱: 부품 차이 완전 정리",
       "catalogIndex": 623,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6273,9 +6273,9 @@
       "publicPath": "cs/gpu/server-cpu-lineup-comparison",
       "title": "GPU 서버의 CPU는 레인과 채널로 고릅니다",
       "catalogIndex": 624,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6283,9 +6283,9 @@
       "publicPath": "cs/gpu/hw-nvme-storage",
       "title": "NVMe 스토리지: M.2 vs U.2 vs E1.S",
       "catalogIndex": 625,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6293,9 +6293,9 @@
       "publicPath": "cs/gpu/hw-storage-comparison",
       "title": "스토리지 비교: SATA vs NVMe vs SAS",
       "catalogIndex": 626,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6303,9 +6303,9 @@
       "publicPath": "cs/gpu/hw-memory",
       "title": "메모리: DDR4 vs DDR5, ECC, RDIMM",
       "catalogIndex": 627,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6313,19 +6313,19 @@
       "publicPath": "cs/gpu/hw-power-cooling",
       "title": "서버 전력·냉각: 입력 전력부터 랙 열 제거까지",
       "catalogIndex": 628,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "gpu/datacenter-site-readiness",
       "publicPath": "cs/gpu/datacenter-site-readiness",
-      "title": "랙에 들어가는지는 무게와 냉각으로 먼저 갈립니다",
+      "title": "데이터센터 현장 준비: 반입 경로·하중·전력·냉각",
       "catalogIndex": 629,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "reviewed",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6333,9 +6333,9 @@
       "publicPath": "cs/gpu/hw-network",
       "title": "서버 네트워크 기초: Workload · Goodput · Ethernet Fabric",
       "catalogIndex": 630,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6343,9 +6343,9 @@
       "publicPath": "cs/gpu/gpu-interconnects",
       "title": "GPU Interconnects: PCIe · NVLink · Device Topology",
       "catalogIndex": 631,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6353,9 +6353,9 @@
       "publicPath": "cs/gpu/rdma-roce",
       "title": "RDMA · RoCE: Memory Registration에서 GPUDirect까지",
       "catalogIndex": 632,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6363,9 +6363,9 @@
       "publicPath": "cs/gpu/gpu-collective-network",
       "title": "GPU Collective Network: Rank · Fabric · NCCL 측정",
       "catalogIndex": 633,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6373,19 +6373,19 @@
       "publicPath": "cs/gpu/modded-rtx4090-moe-serving",
       "title": "개조 RTX 4090 48GB와 MoE Serving: NVLink 공백을 엔지니어링으로 메우기",
       "catalogIndex": 634,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "gpu/b300-switchless-network",
       "publicPath": "cs/gpu/b300-switchless-network",
-      "title": "DGX B300 Switchless: ConnectX-8 직결 RoCE 클러스터",
+      "title": "B300 switchless: 28개 물리 edge를 collective까지 추적합니다",
       "catalogIndex": 635,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6393,9 +6393,9 @@
       "publicPath": "cs/gpu/ai-infrastructure-b300-128-blueprint",
       "title": "B300 128 GPU 설계: 요구사항에서 BOM까지",
       "catalogIndex": 636,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
@@ -6403,9 +6403,9 @@
       "publicPath": "cs/gpu/ai-cluster-software-compatibility",
       "title": "GPU 클러스터 호환성: OS부터 NCCL·DOCA-OFED까지",
       "catalogIndex": 637,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
@@ -6413,9 +6413,9 @@
       "publicPath": "cs/gpu/kubernetes-vs-slurm-gpu-scheduling",
       "title": "Kubernetes와 Slurm: GPU 작업을 어디에 맡길까",
       "catalogIndex": 638,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
@@ -6423,9 +6423,9 @@
       "publicPath": "cs/gpu/ai-cluster-storage-io",
       "title": "AI 클러스터 스토리지: 한 번의 I/O에서 복구까지",
       "catalogIndex": 639,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
@@ -6433,9 +6433,9 @@
       "publicPath": "cs/gpu/b300-rack-power-cooling",
       "title": "B300 128 GPU 전력·냉각: 랙과 열 제거를 계산합니다",
       "catalogIndex": 640,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
@@ -6443,9 +6443,9 @@
       "publicPath": "cs/gpu/ai-infrastructure-commissioning-acceptance",
       "title": "AI 인프라 구축·검수: 납품을 재현 가능한 증거로 닫습니다",
       "catalogIndex": 641,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
     },
     {
@@ -6453,9 +6453,9 @@
       "publicPath": "cs/gpu/nvidia-nca-aiio-study-guide",
       "title": "NCA-AIIO 준비: 시험 범위를 AI 인프라 현장 증거로 바꾸기",
       "catalogIndex": 642,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#자격-지도-1편"
     },
     {
@@ -6463,9 +6463,9 @@
       "publicPath": "cs/gpu/gpu-architecture",
       "title": "GPU 아키텍처 기초 (SIMT, 메모리 계층, 워프)",
       "catalogIndex": 643,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6531,11 +6531,11 @@
     {
       "route": "gpu/cuda-matrix-multiply",
       "publicPath": "cs/gpu/cuda-matrix-multiply",
-      "title": "CUDA 행렬 곱셈: 기초 → 공유메모리 타일링",
+      "title": "CUDA 행렬곱: C[1,2]=70에서 tiled GEMM release까지",
       "catalogIndex": 650,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6573,9 +6573,9 @@
       "publicPath": "cs/gpu/gpu-arch-hopper",
       "title": "Hopper 아키텍처: SM, TMA, Cluster",
       "catalogIndex": 654,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6583,19 +6583,19 @@
       "publicPath": "cs/gpu/warp-specialization-and-async-pipelines",
       "title": "Warp specialization 과 asynchronous pipeline: TMA, wgmma, stage ring",
       "catalogIndex": 655,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "gpu/gpu-data-movement-optimization",
       "publicPath": "cs/gpu/gpu-data-movement-optimization",
-      "title": "Data movement 최적화: global→shared→register 경로와 overlap",
+      "title": "Data movement 최적화: byte 절감과 overlap",
       "catalogIndex": 656,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6603,9 +6603,9 @@
       "publicPath": "cs/gpu/cuda-perf-analysis",
       "title": "CUDA 성능 분석: timing, Roofline, profiler",
       "catalogIndex": 657,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6613,9 +6613,9 @@
       "publicPath": "cs/gpu/warp-stall-reasons-and-issue-utilization",
       "title": "Warp stall reason 읽기: scoreboard, barrier, not selected, issue slot",
       "catalogIndex": 658,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6631,11 +6631,11 @@
     {
       "route": "gpu/cuda-kernel-fusion",
       "publicPath": "cs/gpu/cuda-kernel-fusion",
-      "title": "CUDA kernel fusion과 Megakernel",
+      "title": "CUDA kernel fusion: 192 MiB를 64 MiB로 줄인 뒤 다시 묻는 것",
       "catalogIndex": 660,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6643,9 +6643,9 @@
       "publicPath": "cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts",
       "title": "CUTLASS GEMM 계층과 CuTe layout: tile·fragment·swizzle·copy atom",
       "catalogIndex": 661,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "reviewed",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6653,9 +6653,9 @@
       "publicPath": "cs/gpu/cutlass-collectives-and-tile-schedulers",
       "title": "CUTLASS collective·tile scheduler·Stream-K·cluster",
       "catalogIndex": 662,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6663,9 +6663,9 @@
       "publicPath": "cs/gpu/triton-kernel-programming-and-compiler",
       "title": "Triton: block 프로그래밍 모델, autotune, MLIR 컴파일, specialization",
       "catalogIndex": 663,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6673,9 +6673,9 @@
       "publicPath": "cs/gpu/cuda-persistent-kernels",
       "title": "CUDA persistent kernel: queue, worker, work assignment, shutdown",
       "catalogIndex": 664,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6683,19 +6683,19 @@
       "publicPath": "cs/gpu/megakernel-design-tradeoffs",
       "title": "Megakernel: 전역 scheduling 의 이득과 자원 공유 비용",
       "catalogIndex": 665,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "gpu/cfd-finite-volume-gpu",
       "publicPath": "cs/gpu/cfd-finite-volume-gpu",
-      "title": "CFD 기초: finite volume에서 GPU mapping까지",
+      "title": "CFD: 네 cell의 보존 장부에서 GPU time-to-solution까지",
       "catalogIndex": 666,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6703,9 +6703,9 @@
       "publicPath": "cs/gpu/msm-ntt",
       "title": "MSM·NTT GPU workload: bucket, stage, residency",
       "catalogIndex": 667,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6713,9 +6713,9 @@
       "publicPath": "cs/gpu/filecoin-gpu-proofs",
       "title": "Filecoin 증명 GPU: phase artifact와 검증 gate",
       "catalogIndex": 668,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6723,9 +6723,9 @@
       "publicPath": "cs/gpu/ec-gpu-ops",
       "title": "타원곡선 GPU 연산: Fp 곱셈, 점 덧셈 CUDA 커널",
       "catalogIndex": 669,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "reviewed",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6733,9 +6733,9 @@
       "publicPath": "cs/gpu/msm-gpu-impl",
       "title": "MSM GPU 구현: 버킷 누적과 커널 설계",
       "catalogIndex": 670,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6743,9 +6743,9 @@
       "publicPath": "cs/gpu/ntt-gpu-impl",
       "title": "NTT GPU 구현: Butterfly 커널과 메모리 전략",
       "catalogIndex": 671,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6753,9 +6753,9 @@
       "publicPath": "cs/gpu/gpu-proof-pipeline",
       "title": "GPU 증명 파이프라인: Groth16/PLONK 전체 흐름",
       "catalogIndex": 672,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6763,9 +6763,9 @@
       "publicPath": "cs/gpu/icicle-framework",
       "title": "ICICLE: backend·memory·primitive runtime contract",
       "catalogIndex": 673,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6773,9 +6773,9 @@
       "publicPath": "cs/gpu/poseidon-gpu",
       "title": "Poseidon GPU: parameter artifact와 batch kernel",
       "catalogIndex": 674,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6783,9 +6783,9 @@
       "publicPath": "cs/gpu/poly-ops-gpu",
       "title": "다항식 연산 GPU: coset NTT, 나눗셈, 다점 평가",
       "catalogIndex": 675,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6793,9 +6793,9 @@
       "publicPath": "cs/gpu/kzg-gpu",
       "title": "KZG 커밋먼트 GPU: SRS, MSM 기반 커밋, Batch Opening",
       "catalogIndex": 676,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6803,9 +6803,9 @@
       "publicPath": "cs/gpu/ec-gpu-gen",
       "title": "ec-gpu-gen: 커브별 CUDA/OpenCL 커널 자동 생성",
       "catalogIndex": 677,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "reviewed",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6813,9 +6813,9 @@
       "publicPath": "cs/gpu/rapidsnark-gpu",
       "title": "rapidsnark: Groth16 GPU Prover 구현 분석",
       "catalogIndex": 678,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6823,19 +6823,19 @@
       "publicPath": "cs/gpu/gpu-witness-gen",
       "title": "GPU Witness 생성: dataflow frontier와 검증 gate",
       "catalogIndex": 679,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "retained-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "gpu/gemmini-pe-mac-dataflow",
       "publicPath": "cs/gpu/gemmini-pe-mac-dataflow",
-      "title": "PE 한 칸: MAC 을 이중 레지스터로 감싸 데이터플로우를 전환합니다",
+      "title": "Gemmini PE 한 칸: OS는 출력, WS는 weight를 붙잡는다",
       "catalogIndex": 680,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6843,9 +6843,9 @@
       "publicPath": "cs/tee/hw-security",
       "title": "하드웨어 보안 기초: TCB, 메모리 암호화, 원격 증명",
       "catalogIndex": 681,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6853,9 +6853,9 @@
       "publicPath": "cs/tee/intel-sgx",
       "title": "Intel SGX: linux-sgx SDK 구현 분석",
       "catalogIndex": 682,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6863,9 +6863,9 @@
       "publicPath": "cs/tee/op-tee",
       "title": "ARM OP-TEE: TrustZone TEE OS 구현 분석",
       "catalogIndex": 683,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6873,9 +6873,9 @@
       "publicPath": "cs/tee/amd-sev",
       "title": "AMD SEV: 기밀 VM 보호 메커니즘",
       "catalogIndex": 684,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6883,9 +6883,9 @@
       "publicPath": "cs/tee/dstack",
       "title": "dStack: Intel TDX 기밀 VM 인프라",
       "catalogIndex": 685,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6893,9 +6893,9 @@
       "publicPath": "cs/tee/keylime",
       "title": "Keylime: TPM 증거에서 정책 기반 키 반출까지",
       "catalogIndex": 686,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6903,9 +6903,9 @@
       "publicPath": "cs/tee/oasis",
       "title": "Oasis Network: TEE 기반 기밀 스마트 컨트랙트",
       "catalogIndex": 687,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6913,9 +6913,9 @@
       "publicPath": "cs/tee/phala",
       "title": "Phala Network: TEE 기반 오프체인 컴퓨팅 프로토콜",
       "catalogIndex": 688,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6923,9 +6923,9 @@
       "publicPath": "cs/tee/tee-tcb",
       "title": "TCB & 측정 부팅: 신뢰 경계의 설계",
       "catalogIndex": 689,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6933,9 +6933,9 @@
       "publicPath": "cs/tee/tee-memory",
       "title": "메모리 격리 & 암호화: CPU 내부 메커니즘",
       "catalogIndex": 690,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6943,9 +6943,9 @@
       "publicPath": "cs/tee/tee-sealing",
       "title": "TEE 데이터 봉인: Identity 정책에서 안전한 마이그레이션까지",
       "catalogIndex": 691,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6953,9 +6953,9 @@
       "publicPath": "cs/tee/tee-attestation",
       "title": "TEE 원격 증명: 로컬 → 원격 → DCAP",
       "catalogIndex": 692,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6963,9 +6963,9 @@
       "publicPath": "cs/tee/tee-sidechannel",
       "title": "TEE 사이드채널: Secret에서 관측값까지",
       "catalogIndex": 693,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6973,9 +6973,9 @@
       "publicPath": "cs/tee/intel-tdx",
       "title": "Intel TDX: Trust Domain 기밀 VM (심층 분석)",
       "catalogIndex": 694,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6983,9 +6983,9 @@
       "publicPath": "cs/tee/arm-cca",
       "title": "ARM CCA: Realm Management Architecture (심층 분석)",
       "catalogIndex": 695,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -6993,9 +6993,9 @@
       "publicPath": "cs/isms-aml/isms-overview",
       "title": "ISMS-P 관리체계 — 범위·위험·통제·심사",
       "catalogIndex": 696,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7003,9 +7003,9 @@
       "publicPath": "cs/isms-aml/isms-audit-checklist",
       "title": "ISMS 현장심사 — 모집단·표본·발견사항·재검증",
       "catalogIndex": 697,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7013,9 +7013,9 @@
       "publicPath": "cs/isms-aml/isms-practical-guide",
       "title": "VASP ISMS 실전 — 통제에서 재현 가능한 증적까지",
       "catalogIndex": 698,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7023,9 +7023,9 @@
       "publicPath": "cs/isms-aml/aml-compliance",
       "title": "AML/CFT 컴플라이언스 — VASP 자금세탁방지 체계",
       "catalogIndex": 699,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7033,9 +7033,9 @@
       "publicPath": "cs/isms-aml/vasp-wallet-security",
       "title": "VASP 지갑 보안과 내부통제",
       "catalogIndex": 700,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7043,9 +7043,9 @@
       "publicPath": "cs/isms-aml/isms-incident-response",
       "title": "사고 예방 및 대응 — 탐지부터 재발방지까지",
       "catalogIndex": 701,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7053,9 +7053,9 @@
       "publicPath": "cs/isms-aml/isms-backup-recovery",
       "title": "백업 및 재해복구 — 정책 수립부터 복구 테스트까지",
       "catalogIndex": 702,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7063,9 +7063,9 @@
       "publicPath": "cs/isms-aml/isms-encryption",
       "title": "암호화 적용 — 데이터·비밀번호·키 수명주기",
       "catalogIndex": 703,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7073,9 +7073,9 @@
       "publicPath": "cs/isms-aml/isms-dev-security",
       "title": "개발 보안 — 시큐어코딩·배포·취약점 관리",
       "catalogIndex": 704,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7083,9 +7083,9 @@
       "publicPath": "cs/isms-aml/isms-auth-management",
       "title": "인증·계정관리 — MFA·비밀번호·identity lifecycle",
       "catalogIndex": 705,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7093,9 +7093,9 @@
       "publicPath": "cs/isms-aml/isms-access-control",
       "title": "접근통제 — 권한결정·망분리·DB audit",
       "catalogIndex": 706,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7103,9 +7103,9 @@
       "publicPath": "cs/isms-aml/aml-fds-deep",
       "title": "이상거래 탐지 — Feature lineage·rule/model·case",
       "catalogIndex": 707,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7113,9 +7113,9 @@
       "publicPath": "cs/isms-aml/aml-str-reporting",
       "title": "의심거래 보고 — SAR 작성·FIU 보고·Tipping-off 금지",
       "catalogIndex": 708,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7123,9 +7123,9 @@
       "publicPath": "cs/isms-aml/aml-cdd-deep",
       "title": "고객확인제도 심층 — CDD·EDD·실제소유자·Travel Rule",
       "catalogIndex": 709,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7133,9 +7133,9 @@
       "publicPath": "cs/isms-aml/aml-rba-deep",
       "title": "위험기반 접근법 — FATF 프레임워크와 전사 위험평가",
       "catalogIndex": 710,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7143,9 +7143,9 @@
       "publicPath": "cs/isms-aml/vasp-custody-management",
       "title": "가상자산 보관 관리 — 콜드월렛 80%·Proof of Reserves·수탁",
       "catalogIndex": 711,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7153,9 +7153,9 @@
       "publicPath": "cs/isms-aml/vasp-unfair-trading",
       "title": "불공정거래 방지 — 미공개정보·시세조종·내부자거래",
       "catalogIndex": 712,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7163,9 +7163,9 @@
       "publicPath": "cs/isms-aml/isms-security-infra",
       "title": "보안 인프라 운영 — Zone Enforcement에서 Telemetry Release까지",
       "catalogIndex": 713,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7173,9 +7173,9 @@
       "publicPath": "cs/isms-aml/isms-privacy-policy",
       "title": "개인정보 처리방침 — 공시·선택·runtime parity",
       "catalogIndex": 714,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7183,9 +7183,9 @@
       "publicPath": "cs/isms-aml/isms-privacy-lifecycle",
       "title": "개인정보 생명주기 — 목적·보유·파생물·검증된 파기",
       "catalogIndex": 715,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7193,9 +7193,9 @@
       "publicPath": "cs/saas/edge-request-defense-pipeline",
       "title": "요청 하나가 오리진까지 여러 관문을 지납니다",
       "catalogIndex": 716,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7203,9 +7203,9 @@
       "publicPath": "cs/saas/anycast-delivery-continuity",
       "title": "무중단은 고장이 없는 상태가 아니라 고장이 짧은 상태입니다",
       "catalogIndex": 717,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7213,9 +7213,9 @@
       "publicPath": "cs/saas/private-access-inbound-closure",
       "title": "안쪽 자원을 열지 않고 닿게 하는 방법은 방향을 뒤집는 것입니다",
       "catalogIndex": 718,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7223,9 +7223,9 @@
       "publicPath": "cs/cloud/cloud-certification-roadmap-2026",
       "title": "취업용 AWS·Azure 자격증은 목표 직무에서 거꾸로 고릅니다",
       "catalogIndex": 719,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7233,9 +7233,9 @@
       "publicPath": "cs/cloud/cloud-foundations-responsibility-regions",
       "title": "클라우드는 서버보다 책임·위치·용량의 경계를 바꿉니다",
       "catalogIndex": 720,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7243,9 +7243,9 @@
       "publicPath": "cs/cloud/cloud-identity-access-hierarchy",
       "title": "클라우드 권한은 주체·행동·대상·범위를 함께 판정합니다",
       "catalogIndex": 721,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7253,9 +7253,9 @@
       "publicPath": "cs/cloud/cloud-networking-request-path",
       "title": "DNS에서 사설 데이터까지 요청 경로를 한 칸씩 추적합니다",
       "catalogIndex": 722,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7263,9 +7263,9 @@
       "publicPath": "cs/cloud/cloud-compute-selection",
       "title": "VM·컨테이너·PaaS·함수는 운영할 단위로 고릅니다",
       "catalogIndex": 723,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7273,9 +7273,9 @@
       "publicPath": "cs/cloud/cloud-storage-database-selection",
       "title": "객체·블록·파일·데이터베이스는 접근 약속으로 고릅니다",
       "catalogIndex": 724,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7283,9 +7283,9 @@
       "publicPath": "cs/cloud/cloud-reliability-observability-iac",
       "title": "복구 목표에서 관측·IaC·백업·비용을 거꾸로 설계합니다",
       "catalogIndex": 725,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7293,9 +7293,9 @@
       "publicPath": "cs/cloud/linux-kernel-process-syscall-scheduler",
       "title": "커널과 프로세스: 시스템 콜 경계, 스레드, R/S/D/Z, 그리고 EEVDF가 고르는 법",
       "catalogIndex": 726,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7303,9 +7303,9 @@
       "publicPath": "cs/cloud/linux-containers-cgroup-namespace",
       "title": "컨테이너는 cgroup과 namespace다: CPU quota·weight·memory.high·capability",
       "catalogIndex": 727,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7313,9 +7313,9 @@
       "publicPath": "cs/cloud/linux-vfs-mount-page-cache-fsync",
       "title": "파일이 디스크에 닿기까지: VFS·mount·overlayfs·dirty page·fsync",
       "catalogIndex": 728,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7323,9 +7323,9 @@
       "publicPath": "cs/cloud/linux-network-interface-route-netfilter-dns",
       "title": "패킷이 프로세스에 닿기까지: 인터페이스·라우팅·netfilter·conntrack·DNS",
       "catalogIndex": 729,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7333,9 +7333,9 @@
       "publicPath": "cs/cloud/linux-observability-proc-psi-perf-ebpf",
       "title": "서버를 관측하는 도구: /proc·USE·PSI·perf·eBPF",
       "catalogIndex": 730,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7343,9 +7343,9 @@
       "publicPath": "cs/cloud/linux-sre-metrics-slo-safe-change",
       "title": "SRE로 서버 보기: 증상 지표→SLO, 안전한 변경, toil",
       "catalogIndex": 731,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7353,9 +7353,9 @@
       "publicPath": "cs/cloud/linux-server-interview-incident-map",
       "title": "리눅스 서버 면접과 장애는 증상을 자원 하나로 좁히는 순서를 묻습니다",
       "catalogIndex": 732,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7363,9 +7363,9 @@
       "publicPath": "cs/cloud/linux-memory-page-cache-oom",
       "title": "리눅스 메모리: used가 아니라 available, 그리고 OOM 점수",
       "catalogIndex": 733,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7373,9 +7373,9 @@
       "publicPath": "cs/cloud/linux-disk-full-inode-deleted-files",
       "title": "디스크가 찼다는 말은 네 계정 중 하나가 바닥났다는 뜻입니다",
       "catalogIndex": 734,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7383,9 +7383,9 @@
       "publicPath": "cs/cloud/linux-process-signals-pid1-fds",
       "title": "프로세스·신호·PID 1: docker stop이 10초 뒤 137로 끝나는 이유",
       "catalogIndex": 735,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7393,9 +7393,9 @@
       "publicPath": "cs/cloud/linux-tcp-time-wait-ports-backlog",
       "title": "TIME_WAIT·출발 포트·listen 대기열: 연결이 안 열리는 세 장부",
       "catalogIndex": 736,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7403,9 +7403,9 @@
       "publicPath": "cs/cloud/linux-systemd-boot-change-incidents",
       "title": "systemd 부팅과 재시작: 패치 하나가 노드를 끊은 순서",
       "catalogIndex": 737,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7413,9 +7413,9 @@
       "publicPath": "cs/cloud/kubernetes-request-path-and-cka",
       "title": "Kubernetes 요청 경로와 CKA v1.37: Pending에서 복구까지",
       "catalogIndex": 738,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#fine-tuningmlflowkubernetes-과정과-cka-브라우저-실습-보강-2026-10-08"
     },
     {
@@ -7423,9 +7423,9 @@
       "publicPath": "cs/cloud/kubernetes-network-packet-path",
       "title": "Kubernetes 패킷 경로: namespace에서 Calico·Gateway·eBPF까지",
       "catalogIndex": 739,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#cloud온프레미스-읽기-순서와-배포-자산-복구-보강-2026-10-09"
     },
     {
@@ -7443,9 +7443,9 @@
       "publicPath": "cs/cloud/kubernetes-controllers-reconcile-deployment-job",
       "title": "Kubernetes 컨트롤러: Deployment는 Pod를 만들지 않고, ReplicaSet은 차이만 메웁니다",
       "catalogIndex": 741,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7453,9 +7453,9 @@
       "publicPath": "cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready",
       "title": "Pod가 Node에 가는 길: scheduler가 이름을 적고, kubelet이 읽고, 50초 + 300초 뒤에 떠납니다",
       "catalogIndex": 742,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7463,9 +7463,9 @@
       "publicPath": "cs/cloud/kubernetes-requests-limits-allocatable-qos",
       "title": "requests는 scheduler의 숫자, limits는 커널의 숫자: Allocatable·throttling·OOM·eviction",
       "catalogIndex": 743,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7473,9 +7473,9 @@
       "publicPath": "cs/cloud/kubernetes-pod-states-crashloop-probes-events",
       "title": "Pending·CrashLoopBackOff·OOMKilled의 뜻: 10→300초 시계, probe 기본값, Event 읽기",
       "catalogIndex": 744,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7483,9 +7483,9 @@
       "publicPath": "cs/cloud/kubernetes-pvc-pv-storageclass-csi",
       "title": "Kubernetes 스토리지: PVC가 디렉터리가 되기까지, 그리고 노드가 죽은 뒤의 6분",
       "catalogIndex": 745,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7493,9 +7493,9 @@
       "publicPath": "cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa",
       "title": "Kubernetes 운영: Pod 종료의 두 시계와 rollout·PDB·drain·HPA",
       "catalogIndex": 746,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7503,9 +7503,9 @@
       "publicPath": "cs/cloud/kubernetes-sre-slo-burn-rate-upgrades",
       "title": "Kubernetes SRE: error budget 43분, 소진 속도 14.4배, 업그레이드는 한 단계씩",
       "catalogIndex": 747,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
     },
     {
@@ -7513,9 +7513,9 @@
       "publicPath": "cs/cloud/aws-clf-c02-fast-study",
       "title": "AWS CLF-C02 빠른 공부 지도: 역할과 시점으로 서비스를 가릅니다",
       "catalogIndex": 748,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7523,9 +7523,9 @@
       "publicPath": "cs/cloud/aws-saa-c03-fast-study",
       "title": "AWS SAA-C03 빠른 공부 지도: 제약표로 구조를 고릅니다",
       "catalogIndex": 749,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7533,9 +7533,9 @@
       "publicPath": "cs/cloud/aws-developer-cloudops-paths",
       "title": "AWS DVA-C02와 SOA-C03: 개발과 CloudOps 경로를 가릅니다",
       "catalogIndex": 750,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7543,9 +7543,9 @@
       "publicPath": "cs/cloud/azure-az900-fast-study",
       "title": "Azure AZ-900 빠른 공부 지도: 자원 계층과 관리 도구를 잇습니다",
       "catalogIndex": 751,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7553,9 +7553,9 @@
       "publicPath": "cs/cloud/azure-az104-fast-study",
       "title": "Azure AZ-104 빠른 공부 지도: 만들고 끊고 복구합니다",
       "catalogIndex": 752,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7563,9 +7563,9 @@
       "publicPath": "cs/cloud/azure-ai200-fast-study",
       "title": "Azure AI-200 빠른 공부 지도: AI 백엔드 한 요청을 끝까지 잇습니다",
       "catalogIndex": 753,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7573,9 +7573,9 @@
       "publicPath": "cs/cloud/azure-architect-devops-paths",
       "title": "Azure AZ-305와 AZ-400: 설계와 DevOps 경로를 가릅니다",
       "catalogIndex": 754,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
     },
     {
@@ -7583,9 +7583,9 @@
       "publicPath": "economics/scarcity/scarcity-and-opportunity-cost",
       "title": "무엇을 포기할지부터 정해야 합니다",
       "catalogIndex": 755,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7593,9 +7593,9 @@
       "publicPath": "economics/scarcity/gains-from-trade",
       "title": "더 잘하는 쪽이 다 하지 않는 것이 낫습니다",
       "catalogIndex": 756,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7603,9 +7603,9 @@
       "publicPath": "economics/prices/supply-demand-and-equilibrium",
       "title": "아무도 정하지 않은 숫자가 정해집니다",
       "catalogIndex": 757,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7613,9 +7613,9 @@
       "publicPath": "economics/prices/surplus-and-efficiency",
       "title": "거래가 만든 값은 누구에게 갑니까",
       "catalogIndex": 758,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7623,9 +7623,9 @@
       "publicPath": "economics/prices/prices-as-information",
       "title": "가격은 아무도 갖지 않은 지식을 옮깁니다",
       "catalogIndex": 759,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7633,9 +7633,9 @@
       "publicPath": "economics/market-failure/externalities-and-social-cost",
       "title": "장부에 적히지 않은 비용은 누가 냅니까",
       "catalogIndex": 760,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7643,9 +7643,9 @@
       "publicPath": "economics/market-failure/public-goods-and-commons",
       "title": "빼놓을 수 없으면 아무도 내지 않고, 줄어드는 것이면 너무 빨리 씁니다",
       "catalogIndex": 761,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7653,9 +7653,9 @@
       "publicPath": "economics/market-failure/information-asymmetry",
       "title": "한쪽만 아는 것이 있으면 값이 평균을 말합니다",
       "catalogIndex": 762,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7663,9 +7663,9 @@
       "publicPath": "economics/macro/aggregation-and-composition",
       "title": "한 사람에게 맞는 답이 모두에게 맞지는 않습니다",
       "catalogIndex": 763,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7673,9 +7673,9 @@
       "publicPath": "economics/macro/why-per-head-stalls",
       "title": "총량이 늘어도 한 사람 몫은 제자리일 수 있습니다",
       "catalogIndex": 764,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7683,9 +7683,9 @@
       "publicPath": "economics/macro/what-the-price-level-hides",
       "title": "값이 올랐다는 말은 네 자리 중 어디가 움직였는지를 말하지 않습니다",
       "catalogIndex": 765,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7693,9 +7693,9 @@
       "publicPath": "economics/macro/who-counts-as-unemployed",
       "title": "실업자는 세 조건을 통과한 사람으로 정의됩니다",
       "catalogIndex": 766,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7703,9 +7703,9 @@
       "publicPath": "economics/macro/what-ricardo-assumed",
       "title": "리카도의 논증은 자본이 국경을 넘지 않는다는 전제 위에 있습니다",
       "catalogIndex": 767,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7713,9 +7713,9 @@
       "publicPath": "economics/macro/global-capital-and-policy",
       "title": "국가 정책은 국제 자금의 제약을 지나 환율·금리·자산값에 닿는다",
       "catalogIndex": 768,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7723,9 +7723,9 @@
       "publicPath": "economics/macro/narratives-and-market-regimes",
       "title": "대세는 사람들이 믿는 이야기와 실제 자금 제약이 서로를 바꿀 때 생긴다",
       "catalogIndex": 769,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7843,9 +7843,9 @@
       "publicPath": "economics/institutions/insurance-risk-pooling",
       "title": "보험은 작은 보험료를 모아 큰 손실을 나누지만 모든 위험을 없애지는 못한다",
       "catalogIndex": 781,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7853,9 +7853,9 @@
       "publicPath": "economics/institutions/healthcare-payment-systems",
       "title": "의료비는 환자·보험자·정부·병원 사이를 돌아서 움직인다",
       "catalogIndex": 782,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7863,9 +7863,9 @@
       "publicPath": "economics/institutions/public-budget-and-taxes",
       "title": "세금은 국가가 서비스를 사는 돈이고 예산은 우선순위의 기록이다",
       "catalogIndex": 783,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7873,9 +7873,9 @@
       "publicPath": "economics/institutions/education-skills-and-signals",
       "title": "교육은 기술을 만들고 자격을 보여 주지만 두 효과는 다르다",
       "catalogIndex": 784,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7883,9 +7883,9 @@
       "publicPath": "economics/institutions/media-attention-and-public-belief",
       "title": "정보는 사실이 전달되는 길과 주목을 파는 시장을 동시에 지난다",
       "catalogIndex": 785,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7893,9 +7893,9 @@
       "publicPath": "economics/institutions/how-to-read-a-country",
       "title": "어느 나라든 일곱 장부로 읽는 법",
       "catalogIndex": 786,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7903,9 +7903,9 @@
       "publicPath": "economics/institutions/population-migration-and-care",
       "title": "인구·이주·돌봄은 사람 수를 일할 시간과 생활 수요로 바꾼다",
       "catalogIndex": 787,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7913,9 +7913,9 @@
       "publicPath": "economics/institutions/culture-norms-and-coordination",
       "title": "문화와 규범은 서로의 행동을 예상하고 함께 일하는 방식을 바꾼다",
       "catalogIndex": 788,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7923,9 +7923,9 @@
       "publicPath": "economics/institutions/evidence-measurement-and-causality",
       "title": "숫자를 믿기 전에 무엇을 재고 무엇과 비교했는지 묻는다",
       "catalogIndex": 789,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7933,9 +7933,9 @@
       "publicPath": "economics/infrastructure/electricity-grid-and-power",
       "title": "전기는 발전소보다 전력망의 연결과 시간 제약을 함께 봐야 한다",
       "catalogIndex": 790,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7943,9 +7943,9 @@
       "publicPath": "economics/infrastructure/food-chain-and-prices",
       "title": "식품 가격은 농장의 생산량에서 식탁까지의 손실과 권력으로 만들어진다",
       "catalogIndex": 791,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7953,9 +7953,9 @@
       "publicPath": "economics/infrastructure/water-utility-and-tariffs",
       "title": "수도 요금은 물값과 배관을 계속 유지할 돈을 함께 묻는다",
       "catalogIndex": 792,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7963,9 +7963,9 @@
       "publicPath": "economics/infrastructure/transport-access-and-land-value",
       "title": "교통은 이동 시간을 바꿔 일자리와 땅값을 다시 배분한다",
       "catalogIndex": 793,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7973,9 +7973,9 @@
       "publicPath": "economics/infrastructure/housing-land-and-supply",
       "title": "집값은 건축비만이 아니라 토지 권리와 지을 수 있는 양에 좌우된다",
       "catalogIndex": 794,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7983,9 +7983,9 @@
       "publicPath": "economics/infrastructure/climate-risk-and-exposure",
       "title": "기후 위험은 날씨의 세기와 그곳에 놓인 사람·자산이 만나 생긴다",
       "catalogIndex": 795,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -7993,9 +7993,9 @@
       "publicPath": "economics/infrastructure/materials-waste-and-circularity",
       "title": "자원과 폐기물은 수거된 양·다시 쓸 양·비용을 나눠 읽는다",
       "catalogIndex": 796,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8043,9 +8043,9 @@
       "publicPath": "economics/labor/measuring-the-spread",
       "title": "벌어진 정도는 표가 아니라 곡선으로 잽니다",
       "catalogIndex": 801,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8053,9 +8053,9 @@
       "publicPath": "finance/money/money-as-a-claim",
       "title": "돈은 물건이 아니라 남이 갚아야 할 약속입니다",
       "catalogIndex": 802,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8063,9 +8063,9 @@
       "publicPath": "finance/money/time-value-and-discounting",
       "title": "지금의 1만 원과 1년 뒤의 1만 원은 다른 값입니다",
       "catalogIndex": 803,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8113,9 +8113,9 @@
       "publicPath": "finance/markets/bond-pricing-and-yield-curve",
       "title": "채권 가격과 수익률은 같은 정보를 반대 방향으로 적은 것입니다",
       "catalogIndex": 808,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8123,9 +8123,9 @@
       "publicPath": "finance/markets/equity-claims-and-valuation",
       "title": "주주는 아무것도 약속받지 못한 대신 남는 것을 전부 갖습니다",
       "catalogIndex": 809,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8133,9 +8133,9 @@
       "publicPath": "finance/markets/financial-products-and-claims",
       "title": "금융상품은 누가 언제 무엇을 지급하는지로 구별한다",
       "catalogIndex": 810,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8143,9 +8143,9 @@
       "publicPath": "finance/markets/funds-etfs-and-etns",
       "title": "ETF와 ETN은 거래 화면이 비슷해도 손에 쥔 청구권이 다르다",
       "catalogIndex": 811,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8153,9 +8153,9 @@
       "publicPath": "finance/markets/securitization-and-tranches",
       "title": "유동화는 대출의 현금흐름을 옮기고 손실을 받는 순서를 나눈다",
       "catalogIndex": 812,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8163,9 +8163,9 @@
       "publicPath": "finance/markets/forwards-and-futures",
       "title": "선물은 미래 가격을 고정하면서 반대편에 같은 크기의 위험을 건넨다",
       "catalogIndex": 813,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8173,9 +8173,9 @@
       "publicPath": "finance/markets/options-and-asymmetric-payoffs",
       "title": "옵션은 손해를 피할 선택권을 사고 그 값으로 프리미엄을 낸다",
       "catalogIndex": 814,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8183,9 +8183,9 @@
       "publicPath": "finance/markets/covered-calls-and-income-funds",
       "title": "커버드콜은 상승 일부를 팔아 현금을 받고 주가 하락은 감당한다",
       "catalogIndex": 815,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8193,9 +8193,9 @@
       "publicPath": "finance/markets/swaps-and-credit-risk",
       "title": "스왑은 서로 다른 조건의 현금흐름을 교환한다",
       "catalogIndex": 816,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8803,9 +8803,9 @@
       "publicPath": "finance/risk/risk-diversification-and-pricing",
       "title": "나눠서 없앨 수 있는 위험에는 아무도 대가를 주지 않습니다",
       "catalogIndex": 877,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8813,9 +8813,9 @@
       "publicPath": "finance/risk/capital-requirements-and-systemic-risk",
       "title": "은행에만 미리 자본을 쌓으라고 하는 이유는 손실이 번지기 때문입니다",
       "catalogIndex": 878,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8823,9 +8823,9 @@
       "publicPath": "finance/risk/margin-collateral-and-leverage",
       "title": "담보와 증거금은 최종 손익보다 먼저 현금을 요구한다",
       "catalogIndex": 879,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8833,9 +8833,9 @@
       "publicPath": "politics/polity/collective-choice-problem",
       "title": "각자 고르면 되는 일과 하나로 정해야 하는 일은 다릅니다",
       "catalogIndex": 880,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8843,29 +8843,29 @@
       "publicPath": "politics/polity/state-and-legitimacy",
       "title": "강제력을 한 곳에 몰아주고 정당성으로 묶습니다",
       "catalogIndex": 881,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "constitution/constitutionalism-and-separation",
       "publicPath": "politics/constitution/constitutionalism-and-separation",
-      "title": "헌법은 종이인데도 힘을 묶습니다",
+      "title": "헌법은 종이인데 어떻게 힘을 묶습니까",
       "catalogIndex": 882,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "constitution/government-forms",
       "publicPath": "politics/constitution/government-forms",
-      "title": "같은 권력분립에서 왜 다른 체계가 나옵니까",
+      "title": "같은 권력분립에서 왜 다른 체계가 나옵니까",
       "catalogIndex": 883,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8881,71 +8881,71 @@
     {
       "route": "elections/voting-paradoxes",
       "publicPath": "politics/elections/voting-paradoxes",
-      "title": "규칙을 아무리 잘 골라도 남는 문제가 있습니다",
+      "title": "세 번 모두 2대 1인데 왜 마지막 답은 없을까요?",
       "catalogIndex": 885,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "elections/parties-and-interest-groups",
       "publicPath": "politics/elections/parties-and-interest-groups",
-      "title": "선택지를 줄이는 장치들이 무엇을 함께 잘라 냅니다",
+      "title": "열두 후보가 세 정당이 되면 무엇이 쉬워지고 무엇이 사라질까요?",
       "catalogIndex": 886,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "governance/bureaucracy-and-implementation",
       "publicPath": "politics/governance/bureaucracy-and-implementation",
-      "title": "결정된 것과 실제로 일어나는 것은 다릅니다",
+      "title": "차량 1,000대를 점검하라는 결정은 현장에서 어떻게 달라질까요?",
       "catalogIndex": 887,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "governance/international-anarchy",
       "publicPath": "politics/governance/international-anarchy",
-      "title": "위가 없는 곳에서는 같은 문제가 다르게 풀립니다",
+      "title": "강제할 곳이 없어도 국가 간 약속이 서는 조건",
       "catalogIndex": 888,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "legal-system/what-makes-law-law",
       "publicPath": "law/legal-system/what-makes-law-law",
-      "title": "무엇이 이 문장을 법으로 만듭니까",
+      "title": "같은 10만 원 요구인데 왜 하나는 법일까요",
       "catalogIndex": 889,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "legal-system/rules-standards-and-interpretation",
       "publicPath": "law/legal-system/rules-standards-and-interpretation",
-      "title": "미리 적어 둘 것인가 그때 판단할 것인가",
+      "title": "법은 언제 구체적인 답을 정할까요?",
       "catalogIndex": 890,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "legal-system/precedent-and-legal-change",
       "publicPath": "law/legal-system/precedent-and-legal-change",
-      "title": "앞선 판단은 왜 구속하고 언제 뒤집습니까",
+      "title": "판례는 왜 따르고 언제 바꿀까요?",
       "catalogIndex": 891,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8953,9 +8953,9 @@
       "publicPath": "law/private-law/contract-and-enforceable-promise",
       "title": "어떤 약속을 법이 지켜 줍니까",
       "catalogIndex": 892,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8963,9 +8963,9 @@
       "publicPath": "law/private-law/property-and-entitlement",
       "title": "소유는 무엇을 주고 무엇을 요구합니까",
       "catalogIndex": 893,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -8973,39 +8973,39 @@
       "publicPath": "law/private-law/tort-and-accident-cost",
       "title": "사고의 비용을 누가 집니까",
       "catalogIndex": 894,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "criminal-law/crime-and-punishment-purpose",
       "publicPath": "law/criminal-law/crime-and-punishment-purpose",
-      "title": "왜 국가가 직접 벌합니까",
+      "title": "왜 국가가 직접 벌합니까",
       "catalogIndex": 895,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "criminal-law/procedure-and-proof",
       "publicPath": "law/criminal-law/procedure-and-proof",
-      "title": "얼마나 확실해야 벌할 수 있습니까",
+      "title": "얼마나 확실해야 벌할 수 있습니까",
       "catalogIndex": 896,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
       "route": "dispute-resolution/settlement-and-access",
       "publicPath": "law/dispute-resolution/settlement-and-access",
-      "title": "규칙은 적용되지 않는 사건에서도 작동합니다",
+      "title": "법은 재판하지 않은 분쟁에도 어떻게 작동합니까",
       "catalogIndex": 897,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9013,9 +9013,9 @@
       "publicPath": "history/testimony/speeches-were-reconstructed",
       "title": "연설문은 그가 지어 적은 것이라고 본인이 밝혔습니다",
       "catalogIndex": 898,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9023,9 +9023,9 @@
       "publicPath": "history/testimony/told-but-not-believed",
       "title": "믿지 않는 이야기도 적는다고 그는 규칙으로 적었습니다",
       "catalogIndex": 899,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9033,9 +9033,9 @@
       "publicPath": "history/testimony/the-writer-was-there",
       "title": "한쪽에서 싸운 사람이 적은 기록을 읽는 법",
       "catalogIndex": 900,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9043,9 +9043,9 @@
       "publicPath": "history/record-numbers/how-the-army-was-counted",
       "title": "170만이라는 수가 어떤 절차로 나왔는지 적혀 있습니다",
       "catalogIndex": 901,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9053,9 +9053,9 @@
       "publicPath": "history/record-numbers/what-the-total-cannot-tell",
       "title": "총계는 센 수가 아니라 계산한 수입니다",
       "catalogIndex": 902,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9063,9 +9063,9 @@
       "publicPath": "history/record-numbers/numbers-that-command",
       "title": "재기 위한 숫자가 아니라 시키기 위한 숫자",
       "catalogIndex": 903,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9073,9 +9073,9 @@
       "publicPath": "history/inference-from-sources/ruins-mislead",
       "title": "폐허는 두 방향으로 잘못 말합니다",
       "catalogIndex": 904,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9083,9 +9083,9 @@
       "publicPath": "history/inference-from-sources/the-gap-was-made",
       "title": "조항 번호가 65에서 100으로 건너뜁니다",
       "catalogIndex": 905,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {
@@ -9093,9 +9093,9 @@
       "publicPath": "history/inference-from-sources/naming-the-past",
       "title": "우리가 법전이라 부르는 것이 스스로를 부르는 이름",
       "catalogIndex": 906,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:world_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/world-systems.json"
     },
     {

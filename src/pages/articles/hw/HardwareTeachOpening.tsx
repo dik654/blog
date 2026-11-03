@@ -7,17 +7,9 @@ export interface HardwareTeachCase {
   path: readonly [string, string];
   numberTitle: string;
   numbers: readonly [string, string];
-  steps: readonly [
-    { role: string; result: string },
-    { role: string; result: string },
-    { role: string; result: string },
-  ];
+  steps: readonly { role: string; result: string }[];
   whyParts: readonly [string, string];
-  terms: readonly [
-    { role: string; name: string; boundary: string },
-    { role: string; name: string; boundary: string },
-    { role: string; name: string; boundary: string },
-  ];
+  terms: readonly { role: string; name: string; boundary: string }[];
   next: string;
 }
 

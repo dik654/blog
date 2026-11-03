@@ -1,62 +1,114 @@
 import type { CodeRef } from "@/components/code/types";
-import attestRaw from "./codebase/prysm/validator/client/attest.go?raw";
-import poolRaw from "./codebase/prysm/beacon-chain/operations/attestations/pool.go?raw";
+import attestRaw from "../prysm/codebase/prysm/validator/client/attest_v7.go?raw";
+import poolInterfaceRaw from "./codebase/prysm/beacon-chain/operations/attestations/pool_v7.go?raw";
+import aggregatedRaw from "./codebase/prysm/beacon-chain/operations/attestations/kv/aggregated_v7.go?raw";
+import subnetRaw from "./codebase/prysm/beacon-chain/core/helpers/attestation_v7.go?raw";
 
 export const attestCodeRefs: Record<string, CodeRef> = {
   "submit-attestation": {
-    path: "validator/client/attest.go — SubmitAttestation()",
+    path: "validator/client/attest.go — validator.SubmitAttestation()",
     lang: "go",
     code: attestRaw,
-    highlight: [3, 42],
-    desc: "SubmitAttestation — 위원회 할당 조회 → 데이터 수신 → 슬래싱 체크 → 서명 → 제출",
+    highlight: [1, 161],
+    desc: "Prysm v7.3.1 · duty 조회, signing root, slashing protection, fork별 제출과 receipt",
     annotations: [
       {
-        lines: [7, 11],
-        color: "violet",
-        note: "위원회 할당 조회 (서브넷 결정)",
+        lines: [6, 47],
+        color: "sky",
+        note: "같은 key·role을 잠그고 현재 duty와 committee를 찾습니다.",
       },
       {
-        lines: [13, 17],
+        lines: [51, 91],
         color: "emerald",
-        note: "AttestationData 수신 (source, target, head)",
+        note: "Attestation data에 서명하고 fork에 맞는 indexed object를 만듭니다.",
       },
-      { lines: [22, 25], color: "amber", note: "슬래싱 방지 DB 확인" },
-      { lines: [27, 30], color: "sky", note: "BLS 서명 생성" },
       {
-        lines: [32, 38],
+        lines: [93, 116],
         color: "rose",
-        note: "서브넷 계산 + 비콘 노드에 제출",
+        note: "Signing root를 계산한 뒤 local slashing-protection DB가 충돌을 거절합니다.",
+      },
+      {
+        lines: [118, 161],
+        color: "violet",
+        note: "Electra 전후 schema에 맞는 object를 제출하고 결과를 저장합니다.",
+      },
+    ],
+  },
+  "pool-interface": {
+    path: "beacon-chain/operations/attestations/pool.go — Pool",
+    lang: "go",
+    code: poolInterfaceRaw,
+    highlight: [1, 42],
+    desc: "Prysm v7.3.1 · proposer·aggregator·fork choice가 쓰는 attestation pool 계약",
+    annotations: [
+      {
+        lines: [1, 14],
+        color: "violet",
+        note: "Aggregated vote는 proposer가, unaggregated vote는 aggregator가 사용합니다.",
+      },
+      {
+        lines: [15, 29],
+        color: "sky",
+        note: "집계 전후의 저장·조회·삭제와 seen 상태를 나눕니다.",
+      },
+      {
+        lines: [30, 38],
+        color: "emerald",
+        note: "Block 포함용과 fork-choice 전달용 상태도 별도 owner로 둡니다.",
       },
     ],
   },
   "attestation-pool": {
-    path: "operations/attestations/pool.go — Pool + SaveAggregated",
+    path: "beacon-chain/operations/attestations/kv/aggregated.go — SaveAggregatedAttestation()",
     lang: "go",
-    code: poolRaw,
-    highlight: [3, 22],
-    desc: "Pool — 집계된/미집계 어테스테이션을 보관하는 풀. 블록 제안 시 참조.",
+    code: aggregatedRaw,
+    highlight: [1, 74],
+    desc: "Prysm v7.3.1 · 집계 여부·중복 bit·data identity를 검사하고 clone한 aggregate를 저장",
     annotations: [
       {
-        lines: [6, 9],
-        color: "violet",
-        note: "aggregated / unaggregated / forkchoice 슬라이스",
+        lines: [1, 23],
+        color: "sky",
+        note: "Nil·미집계·이미 저장됨·이미 본 participation bit를 먼저 거릅니다.",
       },
       {
-        lines: [14, 21],
+        lines: [24, 47],
         color: "emerald",
-        note: "SaveAggregatedAttestation: 집계 검증 후 풀에 추가",
+        note: "AttestationData identity로 묶고 lock 안에서 clone을 저장하거나 기존 aggregate와 합칩니다.",
+      },
+      {
+        lines: [49, 60],
+        color: "rose",
+        note: "여러 저장 중 하나가 실패하면 잘못 남은 aggregate를 삭제합니다.",
+      },
+      {
+        lines: [62, 74],
+        color: "violet",
+        note: "읽을 때는 read lock 아래 모든 data group의 aggregate를 모읍니다.",
       },
     ],
   },
   "compute-subnet": {
-    path: "operations/attestations/pool.go — AggregatedAttestations()",
+    path: "beacon-chain/core/helpers/attestation.go — ComputeSubnetForAttestation()",
     lang: "go",
-    code: poolRaw,
-    highlight: [24, 30],
-    desc: "AggregatedAttestations — 현재 fork의 block operation limit에 맞춰 집계 어테스테이션 반환",
+    code: subnetRaw,
+    highlight: [1, 44],
+    desc: "Prysm v7.3.1 · 활성 validator 수에서 committees-per-slot을 구해 slot·committee를 gossip subnet에 대응",
     annotations: [
-      { lines: [27, 28], color: "violet", note: "RLock으로 읽기 전용 접근" },
-      { lines: [29, 29], color: "emerald", note: "복사본 반환 (원본 보호)" },
+      {
+        lines: [1, 18],
+        color: "sky",
+        note: "공식 식과 함수 입력의 차이를 source 주석에 함께 남깁니다.",
+      },
+      {
+        lines: [19, 39],
+        color: "emerald",
+        note: "Attestation 또는 slot·committee 입력을 공통 계산 함수로 보냅니다.",
+      },
+      {
+        lines: [40, 44],
+        color: "violet",
+        note: "Epoch 안에서 지난 committee 수를 더한 뒤 subnet 수로 나눈 나머지를 반환합니다.",
+      },
     ],
   },
 };

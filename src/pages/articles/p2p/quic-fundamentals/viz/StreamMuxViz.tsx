@@ -3,164 +3,123 @@ import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
   {
-    label: "TCP: 단일 바이트 스트림",
-    body: "TCP는 하나의 연결에 하나의 순서 보장 스트림만 제공합니다. 패킷 손실 시 전체 차단.",
+    label: "두 stream은 각자 offset 장부를 가집니다",
+    body: "Stream 0은 대화 텍스트, stream 4는 미리보기 데이터입니다. 각 stream 안에서는 순서를 지키지만 두 stream 사이의 전달 순서는 독립적입니다.",
   },
   {
-    label: "QUIC: 독립 스트림",
-    body: "하나의 QUIC 연결에 여러 스트림. 각 스트림은 독립적 순서 보장.",
+    label: "Packet 18 손실은 stream 0에 빈 구간을 만듭니다",
+    body: "Stream 0의 offset 100–199만 비어 있습니다. Stream 4의 연속된 0–299 bytes는 application에 전달할 수 있습니다.",
   },
   {
-    label: "패킷 손실 시 차이",
-    body: "Stream 2에서 패킷 손실 발생. TCP: 전체 차단. QUIC: Stream 2만 대기, 나머지 정상.",
+    label: "Packet 25가 빈 offset을 채우면 stream 0도 이어집니다",
+    body: "같은 stream bytes를 새 packet number에 실어 보냅니다. 두 stream은 독립 전달되지만 congestion window와 MAX_DATA는 공유합니다.",
   },
-];
+] as const;
 
-const sp = { type: "spring" as const, bounce: 0.15, duration: 0.5 };
-const C = { s1: "#6366f1", s2: "#10b981", s3: "#f59e0b", tcp: "#ef4444" };
+const C = {
+  text: "#2563eb",
+  preview: "#059669",
+  lost: "#dc2626",
+  recovered: "#7c3aed",
+};
+
+function Segment({
+  x,
+  y,
+  color,
+  label,
+  dashed = false,
+}: {
+  x: number;
+  y: number;
+  color: string;
+  label: string;
+  dashed?: boolean;
+}) {
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width="78"
+        height="24"
+        rx="5"
+        fill={color + "14"}
+        stroke={color}
+        strokeDasharray={dashed ? "4 3" : undefined}
+      />
+      <text
+        x={x + 39}
+        y={y + 15}
+        textAnchor="middle"
+        fontSize="9.5"
+        fontWeight="700"
+        fill={color}
+      >
+        {label}
+      </text>
+    </g>
+  );
+}
 
 export default function StreamMuxViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
         <svg
-          viewBox="0 0 420 160"
+          viewBox="0 0 460 154"
           className="w-full max-w-2xl"
-          style={{ height: "auto" }}
+          aria-label="QUIC stream 0의 손실과 stream 4의 독립 전달"
         >
-          {step === 0 && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
+          <text x="16" y="31" fontSize="11" fontWeight="700" fill={C.text}>
+            stream 0 · text
+          </text>
+          <Segment x={132} y={14} color={C.text} label="0–99" />
+          <motion.g
+            animate={{ opacity: step === 1 ? 0.3 : 1 }}
+            transition={{ duration: 0.18 }}
+          >
+            <Segment
+              x={218}
+              y={14}
+              color={step === 2 ? C.recovered : C.lost}
+              label="100–199"
+              dashed={step === 1}
+            />
+          </motion.g>
+          <Segment x={304} y={14} color={C.text} label="200–299" />
+          <text x="16" y="83" fontSize="11" fontWeight="700" fill={C.preview}>
+            stream 4 · preview
+          </text>
+          <Segment x={132} y={66} color={C.preview} label="0–99" />
+          <Segment x={218} y={66} color={C.preview} label="100–199" />
+          <Segment x={304} y={66} color={C.preview} label="200–299" />
+          <motion.g
+            animate={{ opacity: step === 0 ? 0.25 : 1 }}
+            transition={{ duration: 0.18 }}
+          >
+            <rect
+              x="95"
+              y="112"
+              width="270"
+              height="28"
+              rx="7"
+              fill={(step === 2 ? C.recovered : C.lost) + "12"}
+              stroke={step === 2 ? C.recovered : C.lost}
+            />
+            <text
+              x="230"
+              y="130"
+              textAnchor="middle"
+              fontSize="10.5"
+              fontWeight="700"
+              fill={step === 2 ? C.recovered : C.lost}
             >
-              <rect
-                x={40}
-                y={50}
-                width={340}
-                height={30}
-                rx={5}
-                fill={C.tcp + "12"}
-                stroke={C.tcp}
-                strokeWidth={1}
-              />
-              <text
-                x={210}
-                y={69}
-                textAnchor="middle"
-                fontSize={10}
-                fontWeight={600}
-                fill={C.tcp}
-              >
-                TCP: 단일 바이트 스트림
-              </text>
-              {[0, 1, 2, 3, 4].map((i) => (
-                <motion.rect
-                  key={i}
-                  x={60 + i * 64}
-                  y={90}
-                  width={48}
-                  height={16}
-                  rx={3}
-                  fill={C.tcp + "20"}
-                  stroke={C.tcp}
-                  strokeWidth={1}
-                  animate={{ y: [90, 95, 90] }}
-                  transition={{
-                    duration: 1.2,
-                    delay: i * 0.15,
-                    repeat: Infinity,
-                  }}
-                />
-              ))}
-              <text
-                x={210}
-                y={124}
-                textAnchor="middle"
-                fontSize={10}
-                fill="var(--foreground)"
-                opacity={0.5}
-              >
-                순서대로만 전달 가능
-              </text>
-            </motion.g>
-          )}
-          {(step === 1 || step === 2) && (
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={sp}
-            >
-              {[
-                { y: 20, c: C.s1, label: "Stream 0" },
-                { y: 65, c: C.s2, label: "Stream 2" },
-                { y: 110, c: C.s3, label: "Stream 4" },
-              ].map((s, si) => (
-                <g key={si}>
-                  <rect
-                    x={40}
-                    y={s.y}
-                    width={340}
-                    height={28}
-                    rx={5}
-                    fill={s.c + "10"}
-                    stroke={s.c}
-                    strokeWidth={1}
-                    strokeDasharray={step === 2 && si === 1 ? "4 3" : "0"}
-                  />
-                  <text
-                    x={60}
-                    y={s.y + 18}
-                    fontSize={10}
-                    fontWeight={600}
-                    fill={s.c}
-                  >
-                    {s.label}
-                  </text>
-                  {[0, 1, 2].map((pi) => (
-                    <motion.rect
-                      key={pi}
-                      x={140 + pi * 76}
-                      y={s.y + 6}
-                      width={52}
-                      height={16}
-                      rx={3}
-                      fill={
-                        step === 2 && si === 1 && pi === 1
-                          ? C.tcp + "30"
-                          : s.c + "20"
-                      }
-                      stroke={step === 2 && si === 1 && pi === 1 ? C.tcp : s.c}
-                      strokeWidth={1}
-                      animate={
-                        step === 2 && si === 1 && pi === 1
-                          ? { opacity: [1, 0.3, 1] }
-                          : { opacity: 1 }
-                      }
-                      transition={{
-                        duration: 0.8,
-                        repeat:
-                          step === 2 && si === 1 && pi === 1 ? Infinity : 0,
-                      }}
-                    />
-                  ))}
-                </g>
-              ))}
-              {step === 2 && (
-                <motion.text
-                  x={210}
-                  y={155}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fill={C.tcp}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  Stream 2만 대기 — 나머지 정상 전송
-                </motion.text>
-              )}
-            </motion.g>
-          )}
+              {step === 2
+                ? "PN 25: stream 0의 100–199 복구"
+                : "PN 18 lost: stream 0만 빈 구간 대기"}
+            </text>
+          </motion.g>
         </svg>
       )}
     </StepViz>

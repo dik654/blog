@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import LandDevelopmentResidualViz from "./LandDevelopmentResidualViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function LandDevelopmentResidualArticle() {
@@ -10,7 +9,6 @@ export default function LandDevelopmentResidualArticle() {
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 완공 뒤 받을 돈에서 땅에 줄 돈을 거꾸로 구한다</h2>
-        <LandDevelopmentResidualViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">땅을 산 뒤 건물을 지어 팔려면 완공 전까지 여러 사람이 먼저 돈과 시간을 내야 합니다. 나중에 팔 가격이 높아 보인다는 이유만으로 지금 땅에 같은 금액을 지불할 수는 없습니다.</p>
           <p className="leading-7">

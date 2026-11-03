@@ -14,17 +14,21 @@ export default function MemoryHierarchy() {
         <div id="gpu-memory-traffic-hierarchy" className="scroll-mt-24">
           <p>
             Register는 thread의 operand를, shared memory는 같은 block의 협업 데이터를 가깝게 보관합니다. L1은 주로 SM-local access를,
-            L2는 chip-wide access를 가깝게 둡니다. 마지막 device memory인 HBM·GDDR은 용량과 순차 대역폭이 크지만 load의 종단 latency가 길기
-            때문에 많은 ready warp와 연속 transaction으로 기다림을 가려야 합니다. 세대에 따라 cache와 shared-memory partition이 달라지므로 “항상
-            몇 cycle”이라는 표는 정본이 될 수 없습니다.
+            L2는 chip-wide access를 가깝게 둡니다.
+          </p>
+          <p>
+            마지막 device memory인 HBM·GDDR은 용량과 순차 대역폭이 크지만 load의 종단 latency가 깁니다. 그래서 많은 eligible warp와 연속
+            transaction으로 기다림을 가려야 합니다.
+          </p>
+          <p>
+            세대에 따라 cache와 shared-memory partition이 달라집니다. 따라서 “항상 몇 cycle”이라는 표는 정본이 될 수 없습니다.
           </p>
           <p>
             Register가 부족해 compiler가 값을 spill하면 thread-private 값이
             <em> local memory address space</em>로 내려가지만, 이름과 달리
             물리적인 별도 on-chip RAM이 아니라 device memory traffic을 만들 수
-            있습니다. Shared memory의 coalescing·bank conflict·padding은{" "}
-            <Link to="/cs/gpu/cuda-shared-memory">공유 메모리 정본 글</Link>에서
-            계산합니다.
+            있습니다. Global-memory coalescing과 shared-memory bank conflict·padding은{" "}
+            <Link to="/cs/gpu/cuda-shared-memory">공유 메모리 정본 글</Link>에서 계산합니다.
           </p>
         </div>
         <ExplainedFormula

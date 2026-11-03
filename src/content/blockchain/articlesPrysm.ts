@@ -185,13 +185,16 @@ export const prysmArticles: Article[] = [
   /* 4. 검증자: 클라이언트 & 의무 수행 */
   {
     slug: "prysm-validator-client",
-    title: "Prysm 검증자 클라이언트",
+    title: "Validator client: 한 duty의 안전 경로",
     subcategory: "eth-prysm",
     sections: [
-      { id: "overview", title: "Validator client는 duty·key·slashing protection을 한 루프로 묶는다" },
-      { id: "duty-assignment", title: "의무 할당 & 슬롯 루프" },
-      { id: "key-management", title: "키 관리 (Keymanager)" },
-      { id: "slashing-protection", title: "슬래싱 방지 DB" },
+      {
+        id: "overview",
+        title: "한 표의 실제 실행 순서",
+      },
+      { id: "duty-assignment", title: "Duty와 slot deadline" },
+      { id: "key-management", title: "Keymanager의 책임 경계" },
+      { id: "slashing-protection", title: "Post-sign DB gate와 운영 경계" },
     ],
     component: () => import("@/pages/articles/ethereum/prysm-validator-client"),
   },
@@ -200,7 +203,11 @@ export const prysmArticles: Article[] = [
     title: "Prysm 어테스테이션: 생성, 집계, 서브넷",
     subcategory: "eth-prysm",
     sections: [
-      { id: "overview", title: "Attestation은 validator 관찰에서 fork choice weight까지 이어진다" },
+      {
+        id: "overview",
+        title:
+          "Attestation은 validator 관찰에서 fork choice weight까지 이어진다",
+      },
       { id: "attestation-creation", title: "생성 & 서명" },
       { id: "aggregation", title: "집계 & 서브넷" },
       { id: "pool-inclusion", title: "풀 관리 & 블록 포함" },
@@ -209,12 +216,20 @@ export const prysmArticles: Article[] = [
   },
   {
     slug: "prysm-sync-committee",
-    title: "Prysm 싱크 위원회",
+    title: "Sync Committee: 한 서명에서 헤더까지",
     subcategory: "eth-prysm",
     sections: [
-      { id: "overview", title: "Sync committee는 light client가 head를 추적할 집계 서명을 만든다" },
-      { id: "participation", title: "위원회 참여 & 서명" },
-      { id: "contribution", title: "기여 집계" },
+      {
+        id: "overview",
+        title:
+          "한 sync 서명은 finality가 아니라 light client용 압축 재료다",
+      },
+      { id: "participation", title: "기간 위원회와 매 slot 서명" },
+      { id: "contribution", title: "Subnet 집계와 다음 block 포함" },
+      {
+        id: "light-client-verification",
+        title: "Trusted root에서 header 갱신까지",
+      },
     ],
     component: () => import("@/pages/articles/ethereum/prysm-sync-committee"),
   },
@@ -222,25 +237,28 @@ export const prysmArticles: Article[] = [
   /* 5. 네트워크: P2P & 동기화 */
   {
     slug: "prysm-p2p-libp2p",
-    title: "Prysm libp2p 네트워킹 & 피어 관리",
+    title: "Prysm P2P: 후보에서 합의 피어까지",
     subcategory: "eth-prysm",
     sections: [
-      { id: "overview", title: "Prysm P2P는 discovery·connection·gossip을 계층으로 나눈다" },
-      { id: "peer-discovery", title: "Discv5 피어 탐색" },
-      { id: "peer-scoring", title: "피어 스코어링" },
-      { id: "connection-gating", title: "연결 게이팅" },
+      {
+        id: "overview",
+        title: "발견한 주소가 아직 피어가 아닌 이유",
+      },
+      { id: "peer-discovery", title: "Discv5 후보 필터" },
+      { id: "connection-gating", title: "libp2p 연결과 Status 검사" },
+      { id: "peer-scoring", title: "행동 점수와 퇴출 판단" },
     ],
     component: () => import("@/pages/articles/ethereum/prysm-p2p-libp2p"),
   },
   {
     slug: "prysm-gossipsub",
-    title: "Prysm Gossipsub 토픽 & 메시지 검증",
+    title: "Prysm Gossipsub: 토픽과 메시지 검증",
     subcategory: "eth-prysm",
     sections: [
-      { id: "overview", title: "Gossipsub 프로토콜" },
-      { id: "topics", title: "토픽 & 포크 다이제스트" },
-      { id: "message-validation", title: "메시지 검증 파이프라인" },
-      { id: "snappy-encoding", title: "SSZ-Snappy 인코딩" },
+      { id: "overview", title: "검증된 메시지만 증폭하는 이유" },
+      { id: "topics", title: "Topic과 포크 다이제스트" },
+      { id: "snappy-encoding", title: "SSZ-Snappy 크기 제한" },
+      { id: "message-validation", title: "Accept·Reject·Ignore" },
     ],
     component: () => import("@/pages/articles/ethereum/prysm-gossipsub"),
   },

@@ -3,36 +3,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import {
   ChainworkImplementationViz,
   FinalityBoundaryViz,
+  ReorgImplementationPseudocodeViz,
   NakamotoReorgTraceViz,
 } from "./viz/ModernLongestViz";
-
-function ReorgSketch() {
-  return (
-    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
-      <pre><code>{`// Header의 compact target을 block 하나의 정수 work로 바꿉니다.
-block_work = GetBitsProof(header.nBits)
-
-// 부모가 가진 누적 work에 방금 계산한 block work를 더합니다.
-index.nChainWork = parent.nChainWork + block_work
-
-// 알려진 invalid 조상이나 block data가 없는 후보는 제외합니다.
-candidate = FindMostWorkChain()
-
-// 현재 tip과 후보가 만나는 마지막 공통 조상을 찾습니다.
-fork = active_chain.FindFork(candidate)
-
-// 현재 분기의 block을 tip부터 공통 조상까지 하나씩 되돌립니다.
-while active_chain.tip != fork:
-    DisconnectTip()
-
-// 새 분기의 block은 공통 조상 다음부터 정방향으로 검증·적용합니다.
-for block in path(fork, candidate):
-    if not ConnectTip(block):
-        mark_failed_branch()
-        choose_another_candidate()`}</code></pre>
-    </div>
-  );
-}
 
 export default function ModernLongestChainArticle() {
   return (
@@ -42,6 +15,9 @@ export default function ModernLongestChainArticle() {
           <p className="text-sm font-semibold text-primary">Nakamoto 합의 상세</p>
           <h2 className="text-3xl font-bold tracking-tight">더 무거운 분기가 도착하면 이미 실행한 장부는 어떻게 바뀔까요?</h2>
         </header>
+        <p className="text-lg font-semibold leading-8 text-foreground">
+          노드는 <strong>더 많은 누적 work를 가진 유효한 분기</strong>를 후보로 고른 뒤, 공통 조상까지 기존 상태를 되돌리고 새 분기를 앞에서부터 다시 실행합니다.
+        </p>
         <p className="text-lg leading-8 text-foreground/90">
           <a className="font-semibold text-primary underline-offset-4 hover:underline" href="/cs/blockchain/consensus-mechanisms#pow">앞선 합의 기초</a>에서 hash lottery, cumulative work와 확률적 confirmation을 구분했습니다. 이 글은 같은 parent에서 갈라진 두 유효 분기만 확대합니다. A 분기의 송금 x를 실행한 노드가 더 많은 누적 work를 가진 B3를 받았을 때 후보 head, UTXO와 x의 상태가 어떤 순서로 바뀌는지 끝까지 따라갑니다.
         </p>
@@ -59,7 +35,7 @@ export default function ModernLongestChainArticle() {
       <section id="chain-selection" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">01 · 누적 work와 재조직</p>
-          <h2 className="text-2xl font-bold">후보의 점수를 계산한 뒤, 공통 조상에서 실제 상태를 갈아 끼웁니다</h2>
+          <h2 className="text-2xl font-bold">누적 work가 큰 후보를 찾았다고 장부가 바로 바뀔까요?</h2>
         </header>
 
         <ChainworkImplementationViz />
@@ -94,7 +70,7 @@ export default function ModernLongestChainArticle() {
           <code>FindMostWorkChain</code>이 고른 후보도 아직 완전히 실행된 체인은 아닙니다. 경로에 알려진 invalid block이 있거나 필요한 block data가 없으면 후보에서 제외합니다. <code>ActivateBestChainStep</code>은 현재 tip과 후보의 공통 조상을 찾고, 이전 분기를 <code>DisconnectTip</code>으로 역순 해제한 뒤 새 분기를 <code>ConnectTip</code>으로 정방향 검증합니다. 새 분기의 transaction이 실패하면 그 분기를 invalid로 표시하고 다른 후보를 찾습니다.
         </p>
 
-        <ReorgSketch />
+        <ReorgImplementationPseudocodeViz />
 
         <div id="paper-bitcoin-core-v32-chainwork">
           <CitationBlock source="Bitcoin Core v32.1 · chainwork와 후보 정렬" citeKey={1} type="code" href="https://github.com/bitcoin/bitcoin/tree/v32.1">
@@ -119,7 +95,7 @@ export default function ModernLongestChainArticle() {
       <section id="finality" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">02 · 확인 깊이</p>
-          <h2 className="text-2xl font-bold">확인 수가 늘면 따라잡아야 할 deficit이 커지지만 확정 스위치가 생기지는 않습니다</h2>
+          <h2 className="text-2xl font-bold">확인 수가 늘면 왜 위험은 줄지만 확정 스위치는 생기지 않을까요?</h2>
         </header>
 
         <FinalityBoundaryViz />
@@ -165,7 +141,7 @@ export default function ModernLongestChainArticle() {
       <section id="release" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">03 · 공통 접두사와 실패</p>
-          <h2 className="text-2xl font-bold">깊은 과거가 같아지는 성질도 실행 구간과 네트워크 전제를 붙여 말해야 합니다</h2>
+          <h2 className="text-2xl font-bold">깊은 과거가 같아진다는 말은 어떤 전제에서만 맞을까요?</h2>
         </header>
 
         <p>

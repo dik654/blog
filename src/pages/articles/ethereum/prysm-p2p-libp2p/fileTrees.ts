@@ -14,23 +14,44 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 
 export const prysmTree: FileNode = d("prysm", [
   d("beacon-chain/p2p", [
-    f("service.go — Start()", "beacon-chain/p2p/service.go", "p2p-start"),
     f(
-      "service.go — initDiscoveryV5()",
+      "discovery.go — filterPeer()",
+      "beacon-chain/p2p/discovery.go",
+      "discovery-filter",
+    ),
+    f(
+      "service.go — connectWithPeer()",
       "beacon-chain/p2p/service.go",
-      "discv5-init",
+      "connect-peer",
+    ),
+    f(
+      "handshake.go — AddConnectionHandler()",
+      "beacon-chain/p2p/handshake.go",
+      "connection-handler",
     ),
     d("peers/scorers", [
       f(
-        "service.go — Score()",
+        "service.go — weights",
+        "beacon-chain/p2p/peers/scorers/service.go",
+        "score-weights",
+      ),
+      f(
+        "service.go — ScoreNoLock()",
         "beacon-chain/p2p/peers/scorers/service.go",
         "peer-score",
       ),
       f(
-        "service.go — Decay()",
-        "beacon-chain/p2p/peers/scorers/service.go",
-        "peer-decay",
+        "bad_responses.go — Decay()",
+        "beacon-chain/p2p/peers/scorers/bad_responses.go",
+        "score-decay",
       ),
     ]),
+  ]),
+  d("beacon-chain/sync", [
+    f(
+      "rpc_status.go — validateStatusMessage()",
+      "beacon-chain/sync/rpc_status.go",
+      "status-validation",
+    ),
   ]),
 ]);

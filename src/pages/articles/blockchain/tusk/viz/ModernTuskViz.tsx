@@ -83,9 +83,9 @@ function StatusCell({ label, value, active }: { label: string; value: string; ac
 export function TuskWaveTraceViz() {
   const scenes = useAnimatedScenes(SCENE_LABELS.length, 6500, { loop: false });
   const state = TRACE_STATES[scenes.active];
-  return <VizFrame eyebrow="설명용 DAG · n=4 · f=1 · 지지 기준 f+1=2" title="첫 지도자를 건너뛰어도 다음 지도자가 인과 경로를 따라 되찾습니다" description="논문 Figure 5의 핵심을 여덟 장면으로 나눠, 후보 선택·지지·명시적 확정·이전 지도자 복구를 따로 봅니다." note="화살표는 새 인증서가 가리키는 부모 방향입니다. 실제 인증서는 이전 라운드의 2f+1개 부모를 가지며, 그림은 판단에 필요한 연결을 중심으로 단순화했습니다." canvasClassName="p-2.5 sm:p-5">
+  return <VizFrame eyebrow="설명용 DAG · n=4 · f=1 · 지지 기준 f+1=2" title="첫 지도자를 건너뛰어도 다음 지도자가 인과 경로를 따라 되찾습니다" description="논문 Figure 5의 핵심을 여덟 장면으로 나눠, 후보 선택·지지·명시적 확정·이전 지도자 복구를 따로 봅니다." note="화살표는 새 인증서가 가리키는 부모 방향입니다. 실제 인증서는 이전 라운드의 2f+1개 부모를 가지며, 그림은 판단에 필요한 연결을 중심으로 단순화했습니다." documentFlow canvasClassName="p-2.5 sm:p-5">
     <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="두 개의 겹치는 Tusk wave에서 L1을 건너뛰고 L2 확정 뒤 L1을 복구하는 여덟 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-      <div data-viz-scene-stage>
+      <div data-viz-scene-stage className="min-h-[38rem] sm:min-h-[41rem]">
         <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {SCENE_LABELS[scenes.active]}</p>
         <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
         <p className="mt-1 min-h-12 text-xs font-semibold leading-5 text-muted-foreground">{state.detail}</p>
@@ -96,7 +96,7 @@ export function TuskWaveTraceViz() {
           {state.visibleRound >= 3 && <div className="absolute left-1/2 top-11 -translate-x-1/2 border border-destructive bg-background px-1.5 py-0.5 text-[8px] font-black text-destructive">동전 → L1</div>}
           {state.visibleRound >= 5 && <div className="absolute left-[92%] top-11 -translate-x-1/2 border border-primary bg-background px-1.5 py-0.5 text-[8px] font-black text-primary">동전 → L2</div>}
           <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none"><defs><marker id="tusk-arrow-primary" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="var(--primary)" /></marker><marker id="tusk-arrow-danger" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="var(--destructive)" /></marker></defs>
-            {DAG_EDGES.map((edge) => { const from = NODE_BY_ID[edge.from]; const to = NODE_BY_ID[edge.to]; const visible = from.round <= state.visibleRound; const active = edgeIsActive(edge, state); const danger = edge.kind === "l1-support" && state.l1Status === "지지 부족"; return <line key={`${edge.from}-${edge.to}`} x1={from.x - 2.5} y1={from.y} x2={to.x + 2.5} y2={to.y} stroke={active ? danger ? "var(--destructive)" : "var(--primary)" : "var(--border)"} strokeWidth={active ? 2.4 : 0.8} strokeOpacity={visible ? active ? 1 : 0.5 : 0} strokeLinecap="round" vectorEffect="non-scaling-stroke" markerEnd={visible && active ? danger ? "url(#tusk-arrow-danger)" : "url(#tusk-arrow-primary)" : undefined} className="transition-all duration-200" />; })}
+            {DAG_EDGES.map((edge) => { const from = NODE_BY_ID[edge.from]; const to = NODE_BY_ID[edge.to]; const visible = from.round <= state.visibleRound; const active = edgeIsActive(edge, state); const danger = edge.kind === "l1-support" && state.l1Status === "지지 부족"; return <line key={`${edge.from}-${edge.to}`} x1={from.x - 6} y1={from.y} x2={to.x + 6} y2={to.y} stroke={active ? danger ? "var(--destructive)" : "var(--primary)" : "var(--border)"} strokeWidth={active ? 2.4 : 0.8} strokeOpacity={visible ? active ? 1 : 0.5 : 0} strokeLinecap="round" vectorEffect="non-scaling-stroke" markerEnd={visible && active ? danger ? "url(#tusk-arrow-danger)" : "url(#tusk-arrow-primary)" : undefined} className="transition-all duration-200" />; })}
           </svg>
           {DAG_NODES.map((node) => { const visible = node.round <= state.visibleRound; const active = nodeIsActive(node, state); const l1 = node.id === "r1d"; const l2 = node.id === "r3c"; const rejected = l1 && state.l1Status === "지지 부족"; const committed = (l1 && state.l1Status === "간접 확정") || (l2 && state.l2Status === "명시적 확정"); const color = committed || l2 ? "border-primary bg-primary text-primary-foreground" : rejected || l1 ? "border-destructive bg-destructive text-destructive-foreground" : active ? "border-foreground bg-foreground text-background" : "border-border bg-card text-muted-foreground"; return <div key={node.id} className={`absolute flex h-8 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center border text-[8px] font-black transition-all duration-200 sm:h-10 sm:w-12 sm:text-[10px] ${color}`} style={{ left: `${node.x}%`, top: `${node.y}%`, opacity: visible ? active || l1 || l2 ? 1 : 0.52 : 0 }} aria-hidden="true">{nodeLabel(node)}</div>; })}
         </div>
@@ -106,6 +106,106 @@ export function TuskWaveTraceViz() {
       <AnimatedSceneControls {...scenes} labels={SCENE_LABELS} controlLabels={SCENE_LABELS} playLabel="Tusk 확정 과정 재생" />
     </div>
     <StaticSceneList labels={SCENE_LABELS} notes={TRACE_NOTES} />
+  </VizFrame>;
+}
+
+const ORDER_LABELS = ["선택", "지지", "문턱", "복구", "정렬", "출력"] as const;
+const ORDER_SCENES = [
+  {
+    code: "leader = choose_leader(common_coin,\n  wave.first_round)",
+    heading: "두 번째 wave의 공통 동전이 3라운드 C 인증서 L2를 고릅니다",
+    detail: "동전은 이미 DAG에 들어온 첫 라운드 후보 중 하나를 뒤늦게 선택합니다. 선택만으로 확정되지는 않습니다.",
+    leader: "L2 · 후보",
+    support: "아직 세지 않음",
+    recovered: "없음",
+    output: "없음",
+  },
+  {
+    code: "support = count_distinct_authors(\n  pointing_to(L2))",
+    heading: "4라운드에서 L2를 직접 가리킨 서로 다른 작성자 A와 B를 셉니다",
+    detail: "같은 작성자가 연결을 여러 개 만들더라도 한 명으로만 셉니다.",
+    leader: "L2 · 후보",
+    support: "A·B = 2명",
+    recovered: "없음",
+    output: "없음",
+  },
+  {
+    code: "if support < f + 1:\n  return NO_EXPLICIT_COMMIT",
+    heading: "n=4, f=1에서 2≥f+1이므로 L2는 문턱을 통과합니다",
+    detail: "앞선 L1은 지지 1명이라 이 분기에서 건너뛰었습니다. 동전 선택과 확정 문턱은 다른 사건입니다.",
+    leader: "L2 · 명시적 확정",
+    support: "2/2 · 통과",
+    recovered: "L1은 아직 미출력",
+    output: "없음",
+  },
+  {
+    code: "leaders = recover_linked_previous_leaders(L2)",
+    heading: "L2에서 직전 확정 지점으로 거슬러 가며 연결된 L1을 다시 찾습니다",
+    detail: "L2→R2-B→L1이라는 인과 경로가 있으므로 지지 부족으로 건너뛴 L1도 복구 목록에 들어갑니다.",
+    leader: "L2 · 현재 anchor",
+    support: "2/2",
+    recovered: "[L2, L1]",
+    output: "아직 없음",
+  },
+  {
+    code: "leaders = oldest_first([L2, L1])",
+    heading: "복구한 지도자를 오래된 순서 [L1, L2]로 뒤집습니다",
+    detail: "로컬 도착 순서가 아니라 모든 정직한 노드가 다시 계산할 수 있는 round와 부모 경로를 사용합니다.",
+    leader: "L2 · 현재 anchor",
+    support: "2/2",
+    recovered: "[L1, L2]",
+    output: "출력 준비",
+  },
+  {
+    code: "for leader in [L1, L2]:\n  output(unordered_ancestors(leader))",
+    heading: "각 지도자의 아직 출력하지 않은 인과 과거와 지도자를 차례로 내보냅니다",
+    detail: "같은 인증서를 중복 출력하지 않으면서 L1 쪽 과거→L1→L2 쪽 나머지 과거→L2 순서를 얻습니다.",
+    leader: "L2 · 확정",
+    support: "2/2",
+    recovered: "L1 먼저",
+    output: "L1 과거→L1→L2 과거→L2",
+  },
+] as const;
+
+const ORDER_NOTES = ORDER_LABELS.map((label, index) => `${label}. ${ORDER_SCENES[index].heading} ${ORDER_SCENES[index].detail}`);
+
+export function TuskOrderingPseudocodeViz() {
+  const scenes = useAnimatedScenes(ORDER_SCENES.length, 6800, { loop: false });
+  const scene = ORDER_SCENES[scenes.active];
+  return <VizFrame
+    eyebrow="Tusk ordering 의사코드 · 상태와 함께 읽기"
+    title="선택·지지·이전 지도자 복구·출력을 한 줄씩 실행합니다"
+    description="앞의 DAG에서 L2를 확정한 뒤, 건너뛴 L1이 최종 순서에 다시 들어오는 지점을 추적합니다."
+    note="함수 이름은 논문과 고정 프로토타입의 역할을 설명하기 위한 의사코드입니다. 공개 프로토타입의 leader 선택은 공통 동전이 아닌 라운드 로빈이라는 경계를 본문에서 따로 확인합니다."
+    documentFlow
+    canvasClassName="p-3 sm:p-6"
+  >
+    <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Tusk ordering 의사코드 장면 탐색기" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary">
+      <div data-viz-scene-stage className="min-h-[33rem] space-y-4 sm:min-h-[23rem]">
+        <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-6">
+          {ORDER_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black ${index === scenes.active ? "border-primary bg-primary/10" : index < scenes.active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
+        </div>
+        <div className="border border-border bg-foreground p-4 text-background">
+          <p className="text-[10px] font-black text-primary-foreground/70">실행 중인 의사코드 · {scenes.active + 1}/{ORDER_SCENES.length}</p>
+          <code className="mt-2 block font-mono text-[11px] font-bold leading-6 sm:text-sm">
+            {scene.code.split("\n").map((line, index) => (
+              <span key={`${scenes.active}-${index}`} className={`block break-words ${line.startsWith(" ") ? "pl-2" : ""}`}>
+                {line.trimStart()}
+              </span>
+            ))}
+          </code>
+        </div>
+        <div className="border border-border bg-background p-4">
+          <h4 className="break-keep text-base font-black leading-6">{scene.heading}</h4>
+          <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {[["지도자", scene.leader], ["직접 지지", scene.support], ["복구 목록", scene.recovered], ["출력", scene.output]].map(([label, value]) => <div key={label} className="min-w-0 border border-border bg-background p-3"><p className="text-[9px] font-bold text-muted-foreground">{label}</p><p className="mt-1 break-keep text-xs font-black leading-5">{value}</p></div>)}
+        </div>
+      </div>
+      <AnimatedSceneControls {...scenes} labels={ORDER_LABELS} controlLabels={ORDER_LABELS} playLabel="정렬 절차 재생" compact />
+    </div>
+    <StaticSceneList labels={ORDER_LABELS} notes={ORDER_NOTES} />
   </VizFrame>;
 }
 

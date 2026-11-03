@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileGateRows from "./MobileGateRows";
 
 /** 본문 대응: CoolingType.tsx — 네 가지 냉각 방식의 배기 경로 */
 const SCENES = ["후면 배기형", "개방형 축류", "밀집 구성에서", "액체 냉각"] as const;
@@ -38,7 +39,8 @@ export default function CoolingTypeViz() {
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileGateRows step={step} rows={[["후면 배기", "뜨거운 공기를 밖으로"], ["개방형", "섀시 안으로 배기"], ["밀집 구성", "옆 카드 열 재흡입"], ["액체", "CDU·배관·누수 감지"]]} note="카드 팬이 아니라 열이 마지막에 어디로 가는지 봅니다" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <rect x={40} y={40} width={400} height={110} fill="none" stroke={MUTED} strokeWidth={1.25} />
             <text x={40} y={32} fontSize={9} fill={MUTED}>
               섀시 단면 · 왼쪽 흡기, 오른쪽 배기

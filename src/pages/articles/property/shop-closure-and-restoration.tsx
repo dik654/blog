@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import ShopClosureAndRestorationViz from "./ShopClosureAndRestorationViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopClosureAndRestorationArticle() {
@@ -10,7 +9,6 @@ export default function ShopClosureAndRestorationArticle() {
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 문을 닫은 뒤에도 남는 약속을 끝내는 법</h2>
-        <ShopClosureAndRestorationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">영업을 그만두는 날과 모든 돈이 정리되는 날은 다릅니다. 마지막 손님에게 물건을 제공한 뒤에도 고객에게 돌려줄 돈, 직원에게 지급할 돈, 공간을 돌려주며 확인할 상태가 남습니다.</p>
           <p className="leading-7">가게를 닫을 때는 앞으로 제공하거나 지급할 의무가 남았는지 확인합니다. 돈이 들어올 날과 나갈 날을 맞춰야 정리 과정에서 다시 빚을 만드는 일을 줄일 수 있습니다.</p>

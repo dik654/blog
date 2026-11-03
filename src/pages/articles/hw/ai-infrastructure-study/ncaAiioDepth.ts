@@ -1,6 +1,6 @@
 import type { EngineeringDepthData } from "../../cloud/EngineeringDepthBlocks";
 
-const checkedAt = "2026-10-08";
+const checkedAt = "2026-11-02";
 
 export const ncaAiioDepth = {
   ledgers: [
@@ -261,14 +261,14 @@ export const ncaAiioDepth = {
     {
       label: "NVIDIA · NCP-AI Infrastructure",
       href: "https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-professional/",
-      claim: "배포·구성·검증, server·network 설치와 physical layer 관리가 Professional 단계임을 확인했습니다.",
+      claim: "배포·구성·검증, server·network 설치와 physical layer 관리가 Professional 단계임을 확인했습니다. 현재 안내는 120분, 70~75문항, $400이며 2~3년 hands-on experience를 권장합니다.",
       checkedAt,
     },
     {
       label: "NVIDIA · NCP-AI Operations",
       href: "https://www.nvidia.com/en-us/learn/certification/ai-operations-professional/",
-      claim: "Monitoring·troubleshooting·optimization과 Slurm·Kubernetes 실습이 Professional 운영 단계임을 확인했습니다. 2026-10-09 재확인: “includes 30 multiple choice questions, 3 hands-on lab exercises, and has a 120-minute time limit”, Price $500, 유효기간 2년.",
-      checkedAt: "2026-10-09",
+      claim: "Monitoring·troubleshooting·optimization과 Slurm·Kubernetes·Base Command Manager live cluster 실습이 Professional 운영 단계임을 확인했습니다. 현재 30개 객관식과 hands-on lab 3개를 120분 안에 풀며 가격은 $500, 유효기간은 2년입니다.",
+      checkedAt: "2026-11-02",
     },
     {
       label: "NVIDIA · DCGM User Guide",

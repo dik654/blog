@@ -22,7 +22,7 @@ export default function IsmsAccessControl() {
           </p>
           <p>
             이 글은 초심자를 위해 identity → session → policy decision → enforcement → audit·revocation 순서를 먼저 보여 준 뒤,
-            망분리와 DB 접근통제가 각각 무엇을 막고 무엇을 막지 못하는지 설명합니다. 대한민국 법령·고시 상태는 2026-08-14에 확인했으며 NIST Zero Trust는 국내 법적
+            망분리와 DB 접근통제가 각각 무엇을 막고 무엇을 막지 못하는지 설명합니다. 대한민국 법령·고시 상태는 2026-11-02에 확인했으며 NIST Zero Trust는 국내 법적
             의무가 아니라 설계 참고 기준으로만 씁니다.
           </p>
         </div>
@@ -33,10 +33,14 @@ export default function IsmsAccessControl() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>최소 권한과 직무분리를 한 권한표에서 계산합니다</h3>
           <p>
-            최소 권한(least privilege)은 직급이 낮다는 뜻이 아니라 맡은 업무를 수행하는 데 필요한 resource와 action만, 필요한 기간 동안 부여하는 원칙입니다.
-            RBAC(Role- Based Access Control)는 권한을 업무 역할에 묶어 관리하고 ABAC(Attribute-Based Access Control)는
-            resource 민감도·device 상태·시간·ticket 같은 속성 조건을 결정에 더합니다. 역할은 시작점이며 실제 사용하지 않는 권한을 계속 갖는 entitlement
-            creep을 정기 review로 제거해야 합니다.
+            최소 권한(least privilege)은 직급이 낮다는 뜻이 아닙니다. 맡은 업무를 수행하는
+            데 필요한 resource와 action만, 필요한 기간 동안 부여한다는 원칙입니다.
+          </p>
+          <p>
+            RBAC는 권한을 업무 역할에 묶습니다. ABAC는 resource 민감도, device 상태,
+            시간, ticket 같은 현재 조건을 결정에 더합니다. 역할은 시작점일 뿐입니다.
+            실제로 쓰지 않는 권한이 계속 쌓이는 entitlement creep은 정기 review로 제거해야
+            합니다.
           </p>
         </div>
 
@@ -66,16 +70,20 @@ export default function IsmsAccessControl() {
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            직무분리(Separation of Duties)는 위험한 end-to-end action을 한 사람이 혼자 완성하지 못하게 합니다. 권한 신청자와 승인자, code 작성자와
-            production 배포자, 출금 요청자와 wallet signer를 분리하되 인원이 적은 조직은 독립 사후검토·한도· immutable log 같은 보상통제를 명시합니다.
-            공유 계정은 책임추적성을 잃으므로 원칙적으로 개인 계정을 쓰고 unavoidable break-glass는 vault checkout·MFA· 짧은 만료·session
-            recording·사후 review로 좁힙니다.
+            직무분리(Separation of Duties)는 위험한 end-to-end action을 한 사람이 혼자
+            완성하지 못하게 합니다. 예를 들어 권한 신청자와 승인자, code 작성자와
+            production 배포자, 출금 요청자와 wallet signer를 서로 나눕니다.
+          </p>
+          <p>
+            인원이 적다면 독립 사후검토와 한도, 변경하기 어려운 log 같은 보상통제를 둡니다.
+            공유 계정 대신 개인 계정을 쓰는 것이 원칙입니다. 긴급 break-glass는 vault
+            checkout, MFA, 짧은 만료, session recording과 사후 review로 사용 범위를 좁힙니다.
           </p>
         </div>
 
         <div id="paper-isms-access-guide" className="scroll-mt-24">
           <CitationBlock citeKey={1} source="KISA ISMS-P 인증기준 안내서 · 접근통제" href={KISA_GUIDE}>
-            문제: 계정·식별·인증과 network·system·application 접근 요구를 실제 심사 항목으로 연결합니다. 기여: 2.5 인증 및 권한관리와 2.6 접근통제의 주요 확인사항·결함사례·증적 예를 제공합니다. 전제: 2023.11 안내서이므로 2026-08-14 시행 법령과 조직 위험평가를 함께 적용합니다. 근거 범위: ISMS-P 심사 해설입니다. 비주장: 특정 망분리 방식·제품·고정 주기가 모든 조직의 유일한 적합 구현이라는 뜻은 아닙니다.
+            문제: 계정·식별·인증과 network·system·application 접근 요구를 실제 심사 항목으로 연결합니다. 기여: 2.5 인증 및 권한관리와 2.6 접근통제의 주요 확인사항·결함사례·증적 예를 제공합니다. 전제: 2023.11 안내서이므로 2026-11-02 시행 법령과 조직 위험평가를 함께 적용합니다. 근거 범위: ISMS-P 심사 해설입니다. 비주장: 특정 망분리 방식·제품·고정 주기가 모든 조직의 유일한 적합 구현이라는 뜻은 아닙니다.
           </CitationBlock>
         </div>
         <div id="paper-zero-trust" className="scroll-mt-24">
@@ -89,16 +97,25 @@ export default function IsmsAccessControl() {
         <h2 className="mb-6 text-2xl font-bold">망분리는 신뢰를 만드는 벽이 아니라 이동 경로를 줄이는 통제입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Network segmentation은 internet, user, management, production, database, wallet zone처럼 trust와 영향이
-            다른 구간을 나누고 필요한 flow만 허용합니다. 먼저 source identity·zone, destination resource, protocol·port, business
-            purpose, owner, expiry를 적은 flow inventory를 만든 뒤 default deny에서 예외를 승인합니다. 방화벽 rule의 이름만 보고 판단하지 않고
-            양방향 test와 packet·flow log로 실제 reachability를 확인합니다.
+            Network segmentation은 trust와 영향이 다른 구간을 나눕니다. 예를 들면 internet,
+            user, management, production, database, wallet zone입니다. 구간 사이에는 필요한
+            flow만 허용합니다.
           </p>
           <p>
-            외부 운영자는 MFA가 적용된 VPN으로 들어와 managed device posture를 통과하고 bastion을 거쳐 승인된 production target에 짧은
-            session으로 접속하도록 설계할 수 있습니다. 하지만 같은 zone 안의 compromised host, 허용된 HTTPS tunnel, cloud control
-            plane, service-to-service credential은 network boundary를 우회할 수 있습니다. 따라서 workload
-            identity·application authorization·endpoint detection을 함께 두고 망분리만으로 내부 주체를 신뢰하지 않습니다.
+            먼저 source identity와 zone, destination resource, protocol과 port, 업무 목적,
+            owner, expiry가 있는 flow inventory를 만듭니다. Default deny에서 필요한 예외만
+            승인합니다. Rule 이름만 믿지 않고 양방향 test와 packet·flow log로 실제
+            reachability를 확인합니다.
+          </p>
+          <p>
+            외부 운영자는 MFA가 적용된 VPN으로 들어옵니다. 관리되는 device인지 확인한 뒤
+            bastion을 거쳐 승인된 production target에 짧은 session으로 접속하게 할 수 있습니다.
+          </p>
+          <p>
+            하지만 같은 zone 안의 감염된 host, 허용된 HTTPS tunnel, cloud control plane,
+            service credential은 network boundary를 우회할 수 있습니다. 따라서 workload
+            identity, application authorization, endpoint detection을 함께 두고 내부 주체를
+            자동으로 신뢰하지 않습니다.
           </p>
 
           <h3>Rule lifecycle을 운영합니다</h3>
@@ -115,23 +132,37 @@ export default function IsmsAccessControl() {
         <h2 className="mb-6 text-2xl font-bold">DB에서는 연결, 권한, query, 결과 반출을 각각 통제합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            연결 허용은 DB 권한 허용과 다릅니다. 사람은 개인 identity로 approved gateway를 거치고 애플리케이션은 workload별 service account와
-            secret rotation을 사용합니다. Schema·table·column·row·procedure 수준의 read/write/DDL/grant를 분리하며
-            production write나 대량 export는 ticket·2인 승인·시간 제한이 있는 JIT(Just-in- Time) role로 승격합니다. DBA가 audit
-            log를 삭제할 수 있다면 독립 저장소와 별도 log-admin 권한으로 책임을 분리합니다.
+            연결 허용은 DB 권한 허용과 다릅니다. 사람은 개인 identity로 approved gateway를
+            거치고, 애플리케이션은 workload별 service account와 secret rotation을 사용합니다.
+            Schema, table, column, row, procedure 수준에서 read, write, DDL, grant를 나눕니다.
           </p>
           <p>
-            감사 record는 actor, 실제 인증된 principal, proxy chain, source, request·session ID, query category,
-            object, row count, result, timestamp, policy revision을 남깁니다. 개인정보 원문이나 secret이 query text에 들어갈 수
-            있으므로 masking과 제한된 reader를 두고 clock synchronization·append integrity·retention·alert owner를 함께
-            관리합니다. 단순히 “로그를 보관한다”가 아니라 이상 대량조회·야간 DDL·반복 deny가 alert→triage→ticket→ 종결로 이어지는지 표본을 재생합니다.
+            Production write나 대량 export에는 ticket, 2인 승인, 시간 제한이 있는 JIT role을
+            사용합니다. DBA가 audit log까지 삭제할 수 있다면 독립 저장소와 별도 log-admin
+            권한으로 책임을 분리합니다.
+          </p>
+          <p>
+            감사 record에는 actor와 실제 인증된 principal, proxy chain, source, request·session
+            ID를 남깁니다. Query 종류와 대상 object, row count, 결과, timestamp, policy
+            revision도 연결합니다.
+          </p>
+          <p>
+            Query text에는 개인정보나 secret이 들어갈 수 있으므로 masking과 제한된 reader를
+            둡니다. 시각 동기화, append integrity, retention, alert owner도 함께 관리합니다.
+            마지막으로 대량조회나 야간 DDL 같은 신호가 alert에서 triage, ticket, 종결로
+            실제 이어지는지 표본을 재생합니다.
           </p>
           <h3>권한 review는 모집단 대조로 수행합니다</h3>
           <p>
-            IAM export, DB catalog, HR roster와 privileged access tool을 같은 cutoff로 join해 orphan, shared,
-            dormant, direct grant, role conflict와 만료 초과를 찾습니다. Manager가 role 이름만 승인하지 않도록 실제 resource-action과
-            최근 사용, data sensitivity를 보여 주며 변경·말소 내역과 검토 결정을 record로 남깁니다. 현행 개인정보 안전성 확보조치 기준은 최소 권한의 차등 부여,
-            업무 변경 시 지체 없는 변경·말소, 관련 내역의 최소 3년 보관, 정당한 사유 없는 공유 계정 금지를 규정합니다.
+            IAM export, DB catalog, HR roster, privileged access tool을 같은 cutoff로 맞춥니다.
+            그 결과에서 orphan, shared, dormant, direct grant, role conflict, 만료 초과를
+            찾습니다.
+          </p>
+          <p>
+            Manager에게 role 이름만 보여 주지 말고 실제 resource-action과 최근 사용,
+            data sensitivity를 제시합니다. 변경·말소 내역과 검토 결정은 record로 남깁니다.
+            현행 개인정보 안전성 확보조치 기준도 최소 권한, 지체 없는 변경·말소, 관련 내역
+            최소 3년 보관, 정당한 사유 없는 공유 계정 금지를 규정합니다.
           </p>
         </div>
 

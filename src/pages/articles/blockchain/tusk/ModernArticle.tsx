@@ -3,31 +3,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import {
   TuskEvidenceBoundaryViz,
   TuskLivenessBoundaryViz,
+  TuskOrderingPseudocodeViz,
   TuskWaveTraceViz,
 } from "./viz/ModernTuskViz";
-
-function TuskOrderingSketch() {
-  return (
-    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
-      <pre><code>{`// wave의 마지막 라운드가 끝나면 공통 동전으로 첫 라운드의 지도자를 고릅니다.
-leader = choose_leader(common_coin, wave.first_round)
-
-// 다음 라운드에서 서로 다른 작성자의 인증서가 지도자를 가리키는지 셉니다.
-support = count_distinct_authors_pointing_to(leader)
-
-// f+1명보다 적으면 이 지도자는 지금 확정하지 않습니다.
-if support < f + 1:
-    return NO_EXPLICIT_COMMIT
-
-// 현재 지도자에서 직전 확정 지점까지 거슬러 가며 연결된 이전 지도자를 찾습니다.
-leaders = recover_linked_previous_leaders(leader)
-
-// 오래된 지도자부터 아직 출력하지 않은 인과 과거를 같은 규칙으로 펼칩니다.
-for candidate in oldest_first(leaders):
-    output(deterministic_unordered_ancestors(candidate))`}</code></pre>
-    </div>
-  );
-}
 
 export default function ModernTuskArticle() {
   return (
@@ -37,6 +15,9 @@ export default function ModernTuskArticle() {
           <p className="text-sm font-semibold text-primary">Tusk 상세</p>
           <h2 className="text-3xl font-bold tracking-tight">첫 지도자가 실패했는데도 다음 지도자가 왜 그 기록까지 확정할까요?</h2>
         </header>
+        <p className="text-lg font-semibold leading-8 text-foreground">
+          Tusk는 지지가 부족한 지도자를 즉시 버리지 않고, <strong>다음에 확정된 지도자의 인과 과거에서 다시 찾아 오래된 지도자부터 출력</strong>합니다.
+        </p>
         <p className="text-lg leading-8 text-foreground/90">
           Narwhal은 거래 묶음을 여러 검증자가 보관했다는 인증서와 부모 연결을 먼저 만듭니다. Tusk는 이 인증된 DAG를 다시 전송하지 않고 각 검증자의 로컬 DAG에서 읽습니다. 아래 예에서는 첫 지도자 L1이 지지를 하나만 받아 건너뛰지만, 다음 지도자 L2가 지지 둘을 얻고 L1까지 이어지는 인과 경로를 품으면서 둘의 순서가 함께 정해집니다.
         </p>
@@ -63,7 +44,7 @@ export default function ModernTuskArticle() {
       <section id="wave-commit" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">01 · 후보와 지지</p>
-          <h2 className="text-2xl font-bold">동전은 후보를 고르고, f+1 지지는 그 후보를 확정할 수 있는지 가릅니다</h2>
+          <h2 className="text-2xl font-bold">공통 동전으로 지도자를 고르면 바로 확정될까요?</h2>
         </header>
         <p>
           각 wave의 첫 라운드가 끝났을 때는 어느 인증서가 지도자가 될지 아직 모릅니다. 두 번째 라운드의 부모 연결까지 고정된 뒤 공통 동전이 첫 라운드의 작성자를 골라 지도자를 뒤늦게 정합니다. 이 순서가 지켜져야 네트워크를 조절하는 공격자가 지도자를 먼저 안 뒤 그 지도자만 고립시키기 어렵습니다.
@@ -107,7 +88,7 @@ export default function ModernTuskArticle() {
       <section id="causal-order" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">02 · 인과 과거</p>
-          <h2 className="text-2xl font-bold">현재 지도자를 확정한 뒤 이전 지도자와 미출력 조상을 오래된 순서로 펼칩니다</h2>
+          <h2 className="text-2xl font-bold">건너뛴 L1은 어떻게 L2보다 먼저 출력될까요?</h2>
         </header>
         <p>
           L2의 지지만 확인하고 L2부터 출력하면 L1의 기록을 잃습니다. Tusk는 현재 지도자에서 직전 확정 지점으로 거슬러 가며 연결된 과거 지도자를 찾습니다. L2에서 L1로 가는 경로가 있으므로 L1을 먼저 후보 목록에 넣고, 각 지도자의 아직 출력하지 않은 인과 조상을 정해진 순서로 펼칩니다.
@@ -116,7 +97,7 @@ export default function ModernTuskArticle() {
           로컬 도착 순서는 사용할 수 없습니다. 같은 인증서를 모두 받았더라도 네트워크 지연 때문에 A 노드와 B 노드의 도착 순서는 다를 수 있기 때문입니다. 부모 식별자와 라운드처럼 모든 정직한 노드가 다시 계산할 수 있는 값으로 순서를 정하고, 이미 출력한 인증서는 중복으로 내보내지 않아야 합니다.
         </p>
 
-        <TuskOrderingSketch />
+        <TuskOrderingPseudocodeViz />
 
         <p>
           논문에 연결된 프로토타입의 고정 커밋 <code>70dc862</code>도 같은 큰 흐름을 구현합니다. <code>validity_threshold()</code>로 f+1 지지를 검사하고, <code>order_leaders()</code>가 현재 지도자와 연결된 이전 지도자를 찾은 뒤, <code>order_dag()</code>가 인과 과거를 펼칩니다. 그러나 논문의 공통 동전은 구현되어 있지 않습니다. <code>leader()</code>에는 TODO가 남아 있고 실제 선택은 라운드 로빈입니다.
@@ -137,7 +118,7 @@ export default function ModernTuskArticle() {
       <section id="limits" className="space-y-6">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-primary">03 · 진행성의 경계</p>
-          <h2 className="text-2xl font-bold">원 논문의 진행성 주장은 2024년 후속 분석과 함께 읽어야 합니다</h2>
+          <h2 className="text-2xl font-bold">비동기라면 모든 노드가 결국 계속 확정할까요?</h2>
         </header>
 
         <TuskLivenessBoundaryViz />

@@ -156,7 +156,7 @@ export function Step0() {
   );
 }
 
-/* ── Step 1: TP all-reduce — 대칭·고정 ──────────────────── */
+/* ── Step 1: TP all-reduce — 라우팅과 무관 ─────────────── */
 export function Step1() {
   const w = 90;
   const h = 40;
@@ -184,7 +184,7 @@ export function Step1() {
         fontWeight={700}
         fill={C.tp}
       >
-        TP all-reduce — 모든 엣지 동일 크기
+        TP all-reduce — router 선택과 무관
       </text>
 
       {edges.map((e, i) => (
@@ -252,7 +252,7 @@ export function Step1() {
         w={100}
         h={40}
         label="all-reduce"
-        sub="layer당 고정 2회"
+        sub="구현별 collective"
         color={C.tp}
       />
 
@@ -263,7 +263,7 @@ export function Step1() {
         fontSize={7.5}
         fill="var(--muted-foreground)"
       >
-        Attention 뒤 1회 + MLP 뒤 1회 — 라우팅과 무관하게 항상 고정
+        Degree·collective 알고리즘이 wire traffic을 정한다
       </text>
     </g>
   );
@@ -457,7 +457,7 @@ export function Step3() {
   );
 }
 
-/* ── Step 4: TP vs EP — 고정 비율 vs 가변 비율 ──────────── */
+/* ── Step 4: TP vs EP — 다른 변수가 payload를 결정 ─────── */
 export function Step4() {
   const tpPts = [
     { x: 50, y: 110 },
@@ -476,7 +476,7 @@ export function Step4() {
   return (
     <g>
       <text x={120} y={20} textAnchor="middle" fontSize={9} fontWeight={700} fill={C.tp}>
-        TP — layer당 통신량 고정
+        TP — degree·알고리즘 영향
       </text>
       <text x={365} y={20} textAnchor="middle" fontSize={9} fontWeight={700} fill={C.ep}>
         EP — 라우팅 쏠림 따라 가변
@@ -520,7 +520,7 @@ export function Step4() {
         스텝(라우팅 분포) →
       </text>
 
-      <DataBox x={30} y={172} w={72} h={26} label="TP" sub="고정" color={C.tp} />
+      <DataBox x={30} y={172} w={90} h={26} label="TP" sub="라우팅 무관" color={C.tp} />
       <DataBox x={378} y={172} w={72} h={26} label="EP" sub="가변" color={C.ep} />
     </g>
   );
@@ -569,7 +569,7 @@ export function Step5() {
       <ModuleBox x={95} y={88} w={50} h={26} label="NVSwitch" sub="균일" color={C.nvswitch} />
 
       <text x={120} y={196} textAnchor="middle" fontSize={7} fill={C.nvswitch}>
-        균등 — 어떤 pair도 같은 대역폭
+        고대역폭 fabric — 쏠림 영향 완화
       </text>
 
       {/* ── 오른쪽: PCIe 2-way — 특정 링크 포화 ── */}

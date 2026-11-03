@@ -1,46 +1,104 @@
 import type { CodeRef } from "@/components/code/types";
-import warmStorageSol from "./codebase/filecoin-services/service_contracts/src/FilecoinWarmStorageService.sol?raw";
-import filecoinPaySol from "./codebase/filecoin-pay/src/FilecoinPayV1.sol?raw";
+import paySol from "./codebase/filecoin-pay/src/FilecoinPayV1.sol?raw";
+import provingSol from "./codebase/filecoin-services/service_contracts/src/modules/FWSSProvingModule.sol?raw";
+import storageSol from "./codebase/filecoin-services/service_contracts/src/storage/FWSSStorage.sol?raw";
+import managerTs from "./codebase/synapse-sdk/packages/synapse-sdk/src/storage/manager.ts?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
   "dataset-info": {
-    path: "filecoin-services/service_contracts/src/FilecoinWarmStorageService.sol",
-    code: warmStorageSol,
-    lang: "typescript",
-    highlight: [12, 25],
-    desc: "문제: dataset record가 실제로 어떤 필드로 이루어져 있고, proof·payment가 같은 주문을 가리키는지 어떻게 연결되는지 확인해야 합니다.\n\n해결: FilecoinWarmStorageService.sol의 DataSetInfo struct가 payer/payee/serviceProvider와 pdpRailId(payment 연결점)를 한 record에 묶습니다.",
+    path: "service_contracts/src/storage/FWSSStorage.sol · v1.5.0 excerpt",
+    code: storageSol,
+    lang: "solidity",
+    highlight: [10, 34],
+    desc: "실제 filecoin-services v1.5.0 저장소 레이아웃 발췌입니다. dataset 서비스 기록과 proof·payment를 연결하는 bitmap·deadline·rail 역참조를 함께 봅니다.",
     annotations: [
-      { lines: [13, 13], color: "sky", note: "article의 payment 연결점 — 이 rail ID로 proof와 payment가 같은 주문임을 확인" },
-      { lines: [16, 18], color: "emerald", note: "article의 payer/payee/provider — dataset record의 핵심 세 주체" },
-      { lines: [23, 24], color: "amber", note: "lifecycle 관련 잔액 — pending fee와 rail lockup의 local mirror" },
+      {
+        lines: [11, 16],
+        color: "sky",
+        note: "PDP rail과 payer·payee·provider가 같은 dataset 서비스 기록에 묶입니다.",
+      },
+      {
+        lines: [19, 22],
+        color: "amber",
+        note: "종료 경계와 아직 flush하지 않은 lifecycle 비용·reserve를 따로 보존합니다.",
+      },
+      {
+        lines: [25, 34],
+        color: "emerald",
+        note: "period bitmap·activation·deadline과 rail→dataset 역참조가 proof-aware settlement를 가능하게 합니다.",
+      },
     ],
   },
   "period-state": {
-    path: "filecoin-services/service_contracts/src/FilecoinWarmStorageService.sol",
-    code: warmStorageSol,
-    lang: "typescript",
-    highlight: [33, 105],
-    desc: "문제: Period state의 세 값(판정 전/통과/deadline 놓침)이 실제로 어느 storage 변수와 함수 분기에 대응하는지 확인해야 합니다.\n\n해결: possessionProven이 challenge window 안에서만 provenThisPeriod를 true로 확정하고, nextProvingPeriod가 아직 proven되지 않은 period를 fault로 기록한 뒤 다음 period로 넘어갑니다.",
+    path: "service_contracts/src/modules/FWSSProvingModule.sol · v1.5.0 excerpt",
+    code: provingSol,
+    lang: "solidity",
+    highlight: [5, 112],
+    desc: "실제 filecoin-services v1.5.0 proving 모듈 발췌입니다. proof 접수와 Filecoin Pay validator가 proven·faulted·open period를 서로 다르게 처리하는 지점을 확인합니다.",
     annotations: [
-      { lines: [54, 57], color: "sky", note: "article의 '판정 전' — NO_PROVING_DEADLINE인 dataset은 proving 자체가 시작 안 됨" },
-      { lines: [59, 62], color: "rose", note: "article의 'deadline을 놓침' — challenge window 밖 제출은 revert" },
-      { lines: [69, 72], color: "emerald", note: "article의 '통과' — window 안에서만 provenThisPeriod=true로 확정" },
-      { lines: [92, 100], color: "amber", note: "다음 period로 넘어갈 때 아직 proven 안 된 period를 fault로 기록" },
+      {
+        lines: [16, 40],
+        color: "sky",
+        note: "중복·challenge 수·활성화·window를 통과한 proof만 현재 period bitmap에 기록합니다.",
+      },
+      {
+        lines: [66, 82],
+        color: "emerald",
+        note: "활성화 전에는 0원으로 cursor를 전진시키고, proven epoch 비율로 제안 금액을 줄입니다.",
+      },
+      {
+        lines: [99, 107],
+        color: "amber",
+        note: "proven은 지급 epoch를 세고, deadline이 지난 fault는 0원으로 전진하며, open은 cursor를 움직이지 않습니다.",
+      },
     ],
   },
   "rail-settle": {
-    path: "filecoin-pay/src/FilecoinPayV1.sol",
-    code: filecoinPaySol,
-    lang: "typescript",
-    highlight: [9, 123],
-    desc: "문제: Payment rail의 다섯 장부 항목(Deposit·Operator allowance·Variable rate·Fixed lockup)이 실제로 어떤 struct field이고, 정산이 어떻게 rate*epoch로 계산되는지 확인해야 합니다.\n\n해결: FilecoinPayV1.sol의 Account/Rail/OperatorApproval struct가 다섯 항목을 field로 갖고, settleRail→_settleSegmentGross가 실제 정산 금액을 계산합니다.",
+    path: "src/FilecoinPayV1.sol · v1.0.0 excerpt",
+    code: paySol,
+    lang: "solidity",
+    highlight: [4, 105],
+    desc: "실제 Filecoin Pay v1.0.0 발췌입니다. account·rail·operator approval와 validator가 gross settlement를 줄이는 경계를 함께 확인합니다.",
     annotations: [
-      { lines: [10, 10], color: "sky", note: "article의 Deposit — payer가 맡겨 둔 실제 잔액" },
-      { lines: [24, 24], color: "emerald", note: "article의 Variable rate — epoch당 누적 지급 속도" },
-      { lines: [26, 26], color: "amber", note: "article의 Fixed lockup" },
-      { lines: [36, 43], color: "violet", note: "article의 Operator allowance — operator가 만들 수 있는 rail의 상한" },
-      { lines: [106, 107], color: "rose", note: "article의 'rate가 epoch당 2이고 10 epochs가 proven이면 20' — 정확히 rate*duration" },
-      { lines: [110, 120], color: "sky", note: "article의 'open이나 faulted epoch를 곱하지 않는다' — validator(WarmStorageService)가 proof 결과로 정산 구간·금액을 좁힘" },
+      {
+        lines: [4, 35],
+        color: "sky",
+        note: "잔액, rate·fixed lockup, settledUpTo와 operator 한도를 서로 다른 필드로 둡니다.",
+      },
+      {
+        lines: [72, 82],
+        color: "emerald",
+        note: "먼저 rate×duration으로 최대 금액을 만들고 validator에 검증을 요청합니다.",
+      },
+      {
+        lines: [84, 105],
+        color: "amber",
+        note: "validator는 구간 밖으로 나가거나 해당 구간의 최대액보다 많이 지급하게 만들 수 없습니다.",
+      },
+    ],
+  },
+  "sdk-upload": {
+    path: "packages/synapse-sdk/src/storage/manager.ts · v2.0.2 excerpt",
+    code: managerTs,
+    lang: "typescript",
+    highlight: [5, 85],
+    desc: "실제 Synapse SDK v2.0.2 업로드 흐름 발췌입니다. 기본 두 제공자의 store→pull→commit과 부분 성공 경계를 보여 줍니다.",
+    annotations: [
+      {
+        lines: [5, 16],
+        color: "sky",
+        note: "기본은 두 사본이며 일부만 성공하면 complete=false입니다.",
+      },
+      {
+        lines: [22, 43],
+        color: "emerald",
+        note: "원본 바이트는 주 제공자에 한 번 store합니다. 이 단계만으로 on-chain commit은 아닙니다.",
+      },
+      {
+        lines: [47, 83],
+        color: "amber",
+        note: "보조 제공자는 pull하고, 성공한 context들은 각자 commit을 병렬 실행합니다.",
+      },
     ],
   },
 };

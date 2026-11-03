@@ -5,20 +5,22 @@ import { WitnessFrontierViz } from "./WitnessFrontierViz";
 
 const CIRCOM = "https://github.com/iden3/circom/tree/ad44e915a12bb047b05745c2884aad9cc8326bc6";
 const OU = "https://eprint.iacr.org/2023/657";
-const CUDA = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html";
+const CUDA = "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html";
 
 export default function ModernGpuWitnessArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Witness를 GPU kernel보다 먼저 dataflow로 읽기</p><h2 className="text-3xl font-bold tracking-tight">Witness generation은 R1CS 행을 푸는 일이 아니라 입력에서 모든 중간 signal을 계산하는 프로그램 실행이다</h2></header>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Witness를 GPU kernel보다 먼저 dataflow로 읽기</p><h2 className="text-3xl font-bold tracking-tight">Witness generation: constraint보다 먼저 계산 순서를 만든다</h2></header>
+      <div className="rounded-2xl border border-primary/25 bg-primary/5 p-5"><p className="text-xs font-black tracking-[0.15em] text-primary">한 문장 답</p><p className="mt-2 text-lg font-bold leading-8">Witness generation은 정답표를 검사하는 일이 아니라, 입력에서 증명에 필요한 모든 중간값을 dependency 순서대로 실제 계산하는 프로그램 실행입니다.</p></div>
       <p className="text-lg leading-8 text-foreground/90">증명 workload는 입력에서 witness를 만들고, field-native hash와 polynomial 연산을 거쳐 MSM·NTT·Poseidon 결과를 proof artifact에 넣습니다. 이 글은 그 첫 단계만 맡습니다. <a className="text-primary hover:underline" href="/cs/crypto/r1cs">R1CS 정본</a>은 완성된 witness가 만족해야 할 관계를 설명하고, 여기서는 그 witness를 만드는 producer dependency와 GPU release gate를 설명합니다.</p>
-      <p>초심자가 가장 먼저 구분할 것은 <strong>constraint</strong>와 <strong>witness program</strong>입니다. Constraint는 “결과가 맞는가”를 검사하지만, witness program은 “중간값을 어떤 순서로 계산할까”를 정합니다. Circom 2.2.3은 C++·WebAssembly witness calculator를 생성합니다. 아래 GPU frontier는 그 현재 구현 사실이 아니라, dependency graph를 보존하며 accelerator로 내릴 때 필요한 설계 계약입니다.</p>
+      <p>초심자가 가장 먼저 구분할 것은 <strong>constraint</strong>와 <strong>witness program</strong>입니다. Constraint는 “결과가 맞는가”를 검사하고, witness program은 “중간값을 어떤 순서로 계산할까”를 정합니다.</p>
+      <p>Circom 2.2.3은 C++·WebAssembly witness calculator를 생성합니다. 아래 GPU frontier는 Circom의 현재 구현이라고 주장하는 그림이 아닙니다. Dependency graph를 보존하며 accelerator로 내릴 때 필요한 설계 계약입니다.</p>
       <WitnessFrontierViz />
       <ContentBoundary article="gpu-witness-gen" />
     </section>
 
     <section id="dataflow-dag" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Dataflow DAG</p><h2 className="mt-2 text-2xl font-bold">각 signal에 producer와 consumers를 붙이고 cycle·unknown input을 실행 전에 거절한다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">01 · Dataflow DAG</p><h2 className="mt-2 text-2xl font-bold">Signal마다 producer를 붙이고 잘못된 graph를 먼저 거절한다</h2></header>
       <p>Signal node는 field value 하나를 만들며 incoming edge는 먼저 필요한 값입니다. 예를 들어 x=3, a=x², b=x+5, out=a·b라면 a와 b는 서로 독립이지만 out은 둘 다 기다립니다. R1CS를 sparse matrix로 GPU에 올리는 것만으로는 이 계산 순서를 얻을 수 없습니다.</p>
       <ExplainedFormula question="각 signal이 실행 가능한 가장 이른 level을 어떻게 계산할까?" idea={<>선행 producer가 없으면 입력 level이고, 그렇지 않으면 가장 늦은 predecessor보다 한 단계 뒤입니다.</>} formula={String.raw`L(v)=\begin{cases}0,&\operatorname{pred}(v)=\varnothing\\1+\max_{u\in\operatorname{pred}(v)}L(u),&\text{otherwise}\end{cases}`}
       annotatedFormula={String.raw`\underbrace{L(v)}_{\text{v의 최초 실행 단계}}=\begin{cases}\underbrace{0}_{\text{입력·상수}},&\operatorname{pred}(v)=\varnothing\\\underbrace{1+\max_{u\in\operatorname{pred}(v)}L(u)}_{\text{가장 늦은 선행값 다음}},&\text{otherwise}\end{cases}`}
@@ -58,7 +60,7 @@ export default function ModernGpuWitnessArticle() {
     </section>
 
     <section id="residency-plan" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Residency plan</p><h2 className="mt-2 text-2xl font-bold">전체 R1CS가 아니라 현재 살아 있는 inputs·instructions·signals의 실제 bytes를 예산한다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">03 · Residency plan</p><h2 className="mt-2 text-2xl font-bold">Live signal·instruction·scratch의 실제 bytes만 예산한다</h2></header>
       <p>한 frontier가 끝났다고 모든 signal을 버릴 수는 없습니다. 뒤 level이 다시 읽는 값은 마지막 consumer까지 살아 있어야 합니다. Host/device 경계를 넘나드는 작은 frontier는 launch와 transfer가 계산보다 비쌀 수 있으므로 CPU에 남기거나 여러 witnesses를 batch하는 선택도 계획에 포함합니다.</p>
       <ExplainedFormula question="한 시점의 witness device memory를 어떻게 계산할까?" idea={<>현재 살아 있는 signal bytes와 instructions, constants, frontier scratch, runtime reserve를 실제 allocation 기준으로 더합니다.</>} formula={String.raw`B_{live}(k)=s_F\,|S_k|+B_{inst}+B_{const}+B_{scratch}(k)+B_{runtime}`}
       annotatedFormula={String.raw`B_{live}(k)=\underbrace{s_F\,|S_k|}_{\text{살아 있는 signal}}+\underbrace{B_{inst}+B_{const}}_{\text{상주 명령·상수}}+\underbrace{B_{scratch}(k)}_{\text{frontier 임시}}+\underbrace{B_{runtime}}_{\text{context 예약}}`}
@@ -78,13 +80,14 @@ export default function ModernGpuWitnessArticle() {
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Witness bytes, constraint satisfaction, proof verification을 차례로 통과한 결과만 성능표에 넣는다</h2></header>
-      <p>
-            Zero·one·maximum canonical field value, branch 양쪽, unused signal, dependency cycle, divide-by-
-            zero, malformed input, device OOM·timeout을 포함합니다. CPU/reference witness와 canonical field values를
-            비교하고 전체 constraints와 최종 verifier가 같은 statement를 승인해야 합니다. GPU failure는 generation을 폐기하고 검증된 CPU
-            경로나 이전 scheduler artifact로 되돌립니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Witness부터 proof 검증까지 통과한 결과만 센다</h2></header>
+      <p>Negative fixture는 세 묶음으로 나눕니다.</p>
+      <ul className="list-disc space-y-2 pl-6 text-sm leading-6 text-muted-foreground">
+        <li><strong className="text-foreground">Field·입력:</strong> zero, one, maximum canonical value와 malformed input</li>
+        <li><strong className="text-foreground">Program:</strong> branch 양쪽, unused signal, dependency cycle와 divide-by-zero</li>
+        <li><strong className="text-foreground">Device:</strong> GPU OOM, kernel error와 timeout</li>
+      </ul>
+      <p>CPU/reference witness와 canonical field value를 비교하고, 전체 constraint와 최종 verifier가 같은 statement를 승인해야 합니다. GPU failure는 해당 generation을 폐기한 뒤 검증된 CPU 경로나 이전 scheduler artifact로 되돌립니다.</p>
       <ExplainedFormula question="Witness GPU 경로의 유효 처리량을 어떤 경계에서 셀까?" idea={<>최종 proof verifier까지 통과한 witnesses만 세고 parse·transfer·kernel·sync·fallback 시간을 wall clock에 포함합니다.</>} formula={String.raw`R_{witness}=\frac{N_{verified}}{T_{wall}}`}
       annotatedFormula={String.raw`R_{witness}=\frac{\underbrace{N_{verified}}_{\text{verifier까지 통과}}}{\underbrace{T_{wall}}_{\text{fallback 포함 전체}}}`}
       operations={[
@@ -94,7 +97,7 @@ export default function ModernGpuWitnessArticle() {
         {symbol:"N_{verified}",name:"Verified count",description:"Reference parity·constraint check·proof verification을 모두 통과한 수입니다."},
         {symbol:"T_{wall}",name:"Wall time",description:"입력 수신부터 verified receipt까지의 전체 시간입니다."},
       ]} assumptions={["같은 circuit/input generation·field·batch·hardware·software SHA를 고정합니다.","Warmup과 반복 수를 기록하고 median/p95, failure·retry·fallback을 숨기지 않습니다."]} interpretation="100개를 0.5초에 계산했어도 2개가 검증 실패하면 성공 수는 98개이고 196 verified witness/s입니다." />
-      <div id="paper-cuda-witness"><CitationBlock type="code" citeKey={3} source="NVIDIA CUDA C++ Best Practices Guide 12.8.1" href={CUDA}><p><strong>문제:</strong> Asynchronous GPU work의 시간을 올바르게 재고 memory transfer와 kernel 병목을 구분해야 합니다.</p><p><strong>핵심 기여:</strong> Events·synchronization·effective bandwidth와 correctness-first verification 방법을 설명합니다.</p><p><strong>중요 가정:</strong> CUDA 12.8.1 semantics와 같은 benchmark boundary·workload를 고정합니다.</p><p><strong>근거 범위:</strong> GPU timing·bandwidth 측정 방법입니다.</p><p><strong>일반화 금지:</strong> Witness scheduler correctness·고정 occupancy·고정 speedup을 보장하지 않습니다.</p></CitationBlock></div>
+      <div id="paper-cuda-witness"><CitationBlock type="code" citeKey={3} source="NVIDIA CUDA C++ Best Practices Guide 13.4" href={CUDA}><p><strong>문제:</strong> Asynchronous GPU work의 시간을 올바르게 재고 memory transfer와 kernel 병목을 구분해야 합니다.</p><p><strong>핵심 기여:</strong> Events·synchronization·effective bandwidth와 correctness-first verification 방법을 설명합니다.</p><p><strong>중요 가정:</strong> CUDA 13.4 문서 의미와 같은 benchmark boundary·workload를 고정합니다.</p><p><strong>근거 범위:</strong> GPU timing·bandwidth 측정 방법입니다.</p><p><strong>일반화 금지:</strong> Witness scheduler correctness·고정 occupancy·고정 speedup을 보장하지 않습니다.</p></CitationBlock></div>
       <aside className="rounded-lg border border-border bg-muted/20 p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Article-only 역검사 10/10:</strong> constraint/witness 구분, DAG, level 계산, work/span, 작은 계산, live memory, batching 경계, negative fixtures, verifier gate, measurement·rollback까지 이 글만으로 답할 수 있어야 합니다.</aside>
     </section>
   </article>;

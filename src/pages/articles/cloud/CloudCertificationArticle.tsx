@@ -12,6 +12,12 @@ import {
   EngineeringDepthBlocks,
   type EngineeringDepthData,
 } from "./EngineeringDepthBlocks";
+import InfrastructureArchitectureMap, {
+  type InfrastructureArchitectureMapData,
+} from "./InfrastructureArchitectureMap";
+import CompatibilityExecutionMap, {
+  type CompatibilityExecutionMapData,
+} from "./CompatibilityExecutionMap";
 
 type SectionId =
   | "overview"
@@ -110,6 +116,8 @@ export interface CloudCertificationArticleData {
   ];
   review: readonly [string, string, string];
   engineeringDepth?: EngineeringDepthData;
+  architectureMap?: InfrastructureArchitectureMapData;
+  compatibilityMap?: CompatibilityExecutionMapData;
   formulas?: readonly CloudArticleFormula[];
 }
 
@@ -218,6 +226,7 @@ function SectionVisuals({
             question={formula.content.question}
             idea={formula.content.idea}
             formula={formula.content.formula}
+            mobileFormula={formula.content.mobileFormula}
             annotatedFormula={formula.content.annotatedFormula}
             operations={formula.content.operations}
             terms={formula.content.terms}
@@ -227,6 +236,12 @@ function SectionVisuals({
         ))}
       {(overviewFlowFirst && section.id === "overview") || (!overviewFlowFirst && section.id === "black-box") ? (
         <FlowRail title={data.overviewFlow.title} steps={[...data.overviewFlow.steps]} />
+      ) : null}
+      {section.id === "black-box" && data.architectureMap ? (
+        <InfrastructureArchitectureMap data={data.architectureMap} />
+      ) : null}
+      {section.id === "black-box" && data.compatibilityMap ? (
+        <CompatibilityExecutionMap data={data.compatibilityMap} />
       ) : null}
       {section.id === "case" ? (
         <NumericPath title={data.numericCase.title} steps={[...data.numericCase.steps]} />

@@ -3,183 +3,121 @@ import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
   {
-    label: "TLS 1.2 핸드셰이크",
-    body: "2-RTT 필요. ClientHello → ServerHello → 키 교환 → Finished. 레거시 암호(RC4, CBC) 허용.",
+    label: "브라우저가 먼저 기대 이름을 정합니다",
+    body: "URL https://api.example/login에서 DNS-ID api.example을 만듭니다. 서버가 보낼 인증서를 보고 기대 이름을 바꾸지 않습니다.",
   },
   {
-    label: "TLS 1.3 핸드셰이크",
-    body: "1-RTT로 단축. 첫 메시지에 key_share 포함. ECDHE 필수, 레거시 암호 전면 제거.",
+    label: "공개 조건과 X25519 공개값을 교환합니다",
+    body: "이 사례에서는 TLS 1.3 · AES-128-GCM/SHA-256 · X25519를 선택합니다. 공개값은 보여도 개인값과 shared secret은 보이지 않습니다.",
   },
   {
-    label: "비교: 성능 & 보안",
-    body: "1.3은 RTT 절반 + 위험한 알고리즘 제거. 0-RTT 재연결까지 지원.",
+    label: "서버 이름과 지금까지의 대화를 검증합니다",
+    body: "브라우저가 인증서의 DNS-ID, CertificateVerify 서명, Finished MAC을 확인합니다. 셋은 서로 대신할 수 없습니다.",
   },
-];
+  {
+    label: "검증이 끝난 뒤 HTTP 바이트를 보호합니다",
+    body: "방향별 application key와 레코드별 nonce로 /login 요청과 응답을 AEAD 보호합니다. 길이와 전송 시각까지 숨기는 것은 아닙니다.",
+  },
+] as const;
 
-const sp = { type: "spring" as const, bounce: 0.12, duration: 0.5 };
-const C = { old: "#ef4444", neo: "#6366f1", ok: "#10b981", warn: "#f59e0b" };
+const COLORS = ["#2563eb", "#7c3aed", "#059669", "#d97706"];
+const ROWS = [
+  ["기대 이름", "api.example"],
+  ["키 합의", "X25519 + AES-128-GCM"],
+  ["서버 인증", "DNS-ID + 서명 + Finished"],
+  ["보호된 데이터", "HTTP request / response"],
+] as const;
 
 export default function TLSOverviewViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
         <svg
-          viewBox="0 0 460 160"
+          viewBox="0 0 460 196"
           className="w-full max-w-2xl"
-          style={{ height: "auto" }}
+          aria-label="브라우저와 서버 사이 TLS 1.3 한 연결의 네 단계"
         >
-          {/* TLS 1.2 */}
-          <motion.g
-            animate={{ opacity: step === 1 ? 0.15 : 1, x: step === 2 ? -6 : 0 }}
-            transition={sp}
+          <text
+            x="42"
+            y="16"
+            textAnchor="middle"
+            fontSize="12"
+            fontWeight="700"
+            fill="currentColor"
           >
-            <text
-              x={100}
-              y={14}
-              textAnchor="middle"
-              fontSize={10}
-              fontWeight={700}
-              fill={C.old}
-            >
-              TLS 1.2
-            </text>
-            {[
-              { y: 22, label: "ClientHello", c: C.old },
-              { y: 50, label: "ServerHello + Cert", c: C.old },
-              { y: 78, label: "Key Exchange", c: C.warn },
-              { y: 106, label: "Finished", c: C.old },
-            ].map((r, i) => (
-              <g key={i}>
+            브라우저
+          </text>
+          <text
+            x="418"
+            y="16"
+            textAnchor="middle"
+            fontSize="12"
+            fontWeight="700"
+            fill="currentColor"
+          >
+            서버
+          </text>
+          <line
+            x1="42"
+            y1="24"
+            x2="42"
+            y2="184"
+            stroke="currentColor"
+            strokeOpacity="0.16"
+          />
+          <line
+            x1="418"
+            y1="24"
+            x2="418"
+            y2="184"
+            stroke="currentColor"
+            strokeOpacity="0.16"
+          />
+          {ROWS.map(([title, detail], index) => {
+            const y = 30 + index * 40;
+            const active = index === step;
+            const color = COLORS[index];
+            return (
+              <motion.g
+                key={title}
+                animate={{ opacity: active ? 1 : 0.3 }}
+                transition={{ duration: 0.18 }}
+              >
+                <line
+                  x1="50"
+                  y1={y + 16}
+                  x2="410"
+                  y2={y + 16}
+                  stroke={color}
+                  strokeWidth={active ? 2 : 1}
+                />
+                <circle cx="42" cy={y + 16} r={active ? 5 : 3} fill={color} />
+                <circle cx="418" cy={y + 16} r={active ? 5 : 3} fill={color} />
                 <rect
-                  x={20}
-                  y={r.y}
-                  width={160}
-                  height={22}
-                  rx={4}
-                  fill={r.c + "12"}
-                  stroke={r.c}
-                  strokeWidth={1.2}
+                  x="104"
+                  y={y}
+                  width="252"
+                  height="32"
+                  rx="7"
+                  fill="var(--background)"
+                  stroke={color}
+                  strokeWidth={active ? 1.6 : 1}
                 />
                 <text
-                  x={100}
-                  y={r.y + 14}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fontWeight={600}
-                  fill={r.c}
+                  x="116"
+                  y={y + 13}
+                  fontSize="11"
+                  fontWeight="700"
+                  fill={color}
                 >
-                  {r.label}
+                  {title}
                 </text>
-              </g>
-            ))}
-            <text
-              x={100}
-              y={145}
-              textAnchor="middle"
-              fontSize={10}
-              fill={C.old}
-              fontWeight={600}
-            >
-              2-RTT
-            </text>
-          </motion.g>
-          {/* TLS 1.3 */}
-          <motion.g
-            animate={{ opacity: step === 0 ? 0.15 : 1, x: step === 2 ? 6 : 0 }}
-            transition={sp}
-          >
-            <text
-              x={360}
-              y={14}
-              textAnchor="middle"
-              fontSize={10}
-              fontWeight={700}
-              fill={C.neo}
-            >
-              TLS 1.3
-            </text>
-            {[
-              { y: 22, label: "ClientHello + key_share", c: C.neo },
-              { y: 50, label: "ServerHello + Encrypted", c: C.ok },
-              { y: 78, label: "Finished", c: C.neo },
-            ].map((r, i) => (
-              <g key={i}>
-                <rect
-                  x={260}
-                  y={r.y}
-                  width={200}
-                  height={22}
-                  rx={4}
-                  fill={r.c + "12"}
-                  stroke={r.c}
-                  strokeWidth={1.2}
-                />
-                <text
-                  x={360}
-                  y={r.y + 14}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fontWeight={600}
-                  fill={r.c}
-                >
-                  {r.label}
+                <text x="116" y={y + 25} fontSize="10.5" fill="currentColor">
+                  {detail}
                 </text>
-              </g>
-            ))}
-            <text
-              x={360}
-              y={118}
-              textAnchor="middle"
-              fontSize={10}
-              fill={C.neo}
-              fontWeight={600}
-            >
-              1-RTT
-            </text>
-          </motion.g>
-          {/* Comparison badges */}
-          {step === 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <rect
-                x={20}
-                y={132}
-                width={160}
-                height={16}
-                rx={3}
-                fill={C.old + "15"}
-                stroke={C.old}
-                strokeWidth={1}
-              />
-              <text
-                x={100}
-                y={143}
-                textAnchor="middle"
-                fontSize={10}
-                fill={C.old}
-              >
-                RC4, CBC, SHA-1 허용
-              </text>
-              <rect
-                x={260}
-                y={132}
-                width={200}
-                height={16}
-                rx={3}
-                fill={C.ok + "15"}
-                stroke={C.ok}
-                strokeWidth={1}
-              />
-              <text
-                x={360}
-                y={143}
-                textAnchor="middle"
-                fontSize={10}
-                fill={C.ok}
-              >
-                AEAD 전용 (AES-GCM, ChaCha20)
-              </text>
-            </motion.g>
-          )}
+              </motion.g>
+            );
+          })}
         </svg>
       )}
     </StepViz>

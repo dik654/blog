@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import ClimateRiskExposureViz from "./ClimateRiskExposureViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function ClimateRiskAndExposureArticle() {
@@ -10,7 +9,6 @@ export default function ClimateRiskAndExposureArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 같은 비가 왜 다른 손실을 만들까요</h2>
-        <ClimateRiskExposureViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">재난 뉴스를 보면 비의 양과 바람의 세기를 먼저 보게 됩니다. 하지만 같은 비에도 사람이 사는 위치와 집의 상태가 다르면 피해는 달라집니다.</p>
           <p className="leading-8">이 글은 날씨, 그곳에 놓인 자산, 손상되는 비율을 따로 놓고 손실이 보험과 대출로 이어지는 경로를 봅니다. 무엇을 줄여야 피해가 줄어드는지 구별하는 것이 목적입니다.</p>
@@ -72,7 +70,7 @@ export default function ClimateRiskAndExposureArticle() {
         <h2 className="mb-6 text-2xl font-bold">5 · IPCC는 세 요소가 서로 작용한다고 설명합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">IPCC AR6 WGII의 그림 1.4는 위해, 노출, 취약성의 상호작용을 제시합니다. 사례에서 홍수를 같게 놓고도 노출과 손상 비율 때문에 10과 60이 달라졌다는 해석이 이 틀에 해당합니다.</p>
-          <p className="leading-8">같은 그림 캡션은 대응(responses)도 세 요소를 바꾼다고 덧붙입니다. 그림 1.5는 대응이 위해·취약성·노출을 각각 조정할 수 있다는 점을 이번 평가의 새 강조점으로 둡니다. 4절에서 방재로 손상 비율을 20%에서 10%로 줄인 것과 보험이 40을 지급한 것이 그런 대응의 예입니다. IPCC 용어집은 기후 변화에 대응하는 과정에서도 새 위험이 생길 수 있다고 적으므로, 대응을 언제나 위험을 줄이는 장치로만 볼 수는 없습니다.</p>
+          <p className="leading-8">같은 그림 캡션은 세 요소가 대응(responses)에 의해 형성된다고 덧붙이고, 그림 1.5는 대응이 위해·취약성·노출 각각을 조정하는 역할을 이번 평가의 새 강조점으로 둡니다. 4절에서 방재로 손상 비율을 20%에서 10%로 줄인 것과 보험이 40을 지급한 것이 그런 대응의 예입니다. IPCC 용어집은 기후 변화에 대한 사람의 대응에서도 위험이 생길 수 있다고 적으므로, 대응은 위험을 줄이기만 하는 장치로 볼 수 없습니다.</p>
           <p className="leading-8">다만 실제 피해는 물의 깊이와 지속 시간, 설비 위치에 따라 비선형으로 달라집니다. 100×10%라는 식은 이해를 위한 조건부 회계 예시이며 IPCC가 제시한 보편 피해 함수가 아닙니다.</p>
         </div>
         <SourceApplication source="IPCC AR6 WGII · Chapter 1, Figure 1.4" excerpt="Risk results from interactions among the determinants of risk—hazard, vulnerability, and exposure, shaped by responses" application="동일 홍수에서 A는 100×10%=10, B는 300×20%=60입니다. 특정 사건의 가정 계산이며 발생확률과 인명 손실을 생략했습니다." />

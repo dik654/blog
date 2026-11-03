@@ -51,7 +51,7 @@ export default function ModernFilecoinLotusArticle() {
           이 경계를 알아야 장애를 잘못 진단하지 않습니다. Curio 작업이 성공했다고 Lotus의 canonical chain 포함이 증명되는 것은 아니며, Lotus가 sector의 actor state를 보여 준다고 사용자가 지금 bytes를 받을 수 있다는 뜻도 아닙니다. 실제 배포에서 여러 역할을 한 서버에 합칠 수는 있어도 authoritative writer는 상태별로 하나여야 합니다.
         </p>
         <p>
-          Curio v1.29.0의 공식 호환성 표에는 Boost가 <em>NA</em>이고 Curio의 market path를 사용한다고 적혀 있습니다. 따라서 이 글은 과거의 <code>lotus-miner + Boost</code> 구성을 현재 기본 구조처럼 그리지 않습니다. 기존 Boost 배포를 운영 중이라면 별도 마이그레이션 경계로 다뤄야 합니다.
+          Curio v1.29.0 릴리스는 새 저장 계약의 market intake를 Curio의 Market 2.0 경로로 안내합니다. 따라서 이 글은 별도 Boost 배포를 모든 provider가 반드시 거치는 기본 경로처럼 그리지 않습니다. Boost를 함께 운영한다면 proposal·piece·message 영수증을 잇는 별도 서비스 경계로 표시해야 합니다.
         </p>
         <div className="not-prose flex flex-wrap gap-3">
           <CodeViewButton label="Lotus FilecoinEC" onClick={() => sidebar.open("lotus-filecoin-ec", codeRefs["lotus-filecoin-ec"])} />
@@ -70,8 +70,8 @@ export default function ModernFilecoinLotusArticle() {
         </div>
         <div id="paper-lotus-release">
           <CitationBlock type="code" citeKey={2} source="Lotus v1.38.3 release" href={LOTUS_RELEASE}>
-            <p><strong>문제:</strong> Network upgrade와 p2p·gateway 보안 수정이 포함된 실제 node revision을 고정해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> v1.38.3 tag와 변경 이력을 제공해 이 글의 Lotus source 범위를 재현할 수 있게 합니다.</p>
+            <p><strong>문제:</strong> 실제 node revision과 그 binary를 만든 Go 보안 버전을 고정해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> v1.38.3은 Go 1.26.10으로 node·miner·worker를 다시 빌드해 알려진 손상 intermediate certificate를 <code>crypto/x509</code>이 거절하게 한 patch release입니다.</p>
             <p><strong>중요 가정:</strong> 배포 network, actor bundle, proof parameter와 database migration 조건을 함께 맞춥니다.</p>
             <p><strong>근거 범위:</strong> 공식 release와 tag의 기능 존재에 한정합니다.</p>
             <p><strong>일반화 금지:</strong> 최신 tag라는 사실이 현재 장비에서의 안정성·처리량을 증명하지는 않습니다.</p>
@@ -170,8 +170,8 @@ export default function ModernFilecoinLotusArticle() {
         </div>
         <div id="paper-curio-release">
           <CitationBlock type="code" citeKey={5} source="Curio v1.29.0 release" href={CURIO_RELEASE}>
-            <p><strong>문제:</strong> Curio의 network·Lotus 의존성과 현재 market path를 실제 release에 고정해야 합니다.</p>
-            <p><strong>핵심 기여:</strong> NV29 지원, Lotus dependency와 Boost 비적용을 포함한 v1.29.0 호환성 정보를 제공합니다.</p>
+            <p><strong>문제:</strong> Curio의 network·Lotus 의존성과 현재 market intake 변화를 실제 release에 고정해야 합니다.</p>
+            <p><strong>핵심 기여:</strong> NV29 지원, Lotus v1.37.0 의존성, 새 DDO 계약의 Market 2.0 경로와 중단되는 legacy intake를 명시합니다.</p>
             <p><strong>중요 가정:</strong> 배포하려는 network와 database migration path가 release 조건을 만족합니다.</p>
             <p><strong>근거 범위:</strong> 공식 release note에 명시된 기능과 호환성 범위입니다.</p>
             <p><strong>일반화 금지:</strong> Release note만으로 현재 storage hardware·DB·운영 절차의 안전성을 확정하지 않습니다.</p>

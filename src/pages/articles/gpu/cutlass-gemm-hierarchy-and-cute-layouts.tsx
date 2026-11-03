@@ -1,4 +1,3 @@
-import { LayoutTransformViz } from "@/components/articles/calculation-structure-gallery";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
@@ -6,7 +5,13 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import CutlassGemmHierarchyAndCuteLayoutsViz from "./cutlass-gemm-hierarchy-and-cute-layouts/viz/CutlassGemmHierarchyAndCuteLayoutsViz";
+import CutlassGemmHierarchyAndCuteLayoutsViz, {
+  LayoutMappingViz,
+  MainloopTraceViz,
+  MmaCountViz,
+  SwizzleBanksViz,
+  TvPartitionViz,
+} from "./cutlass-gemm-hierarchy-and-cute-layouts/viz/CutlassGemmHierarchyAndCuteLayoutsViz";
 
 /**
  * CUTLASS GEMM 계층과 CuTe layout: tile·fragment·swizzle·copy atom
@@ -18,13 +23,50 @@ import CutlassGemmHierarchyAndCuteLayoutsViz from "./cutlass-gemm-hierarchy-and-
  */
 export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
   return (
-    <div id="overview" className="space-y-16">
-      <section id="tile-hierarchy" data-calculation-explained className="scroll-mt-20">
+    <article className="space-y-16">
+      <section id="overview" data-teach-level="S" data-calculation-explained className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          CUTLASS는 큰 행렬곱을 memory 계층에 맞춰 계속 작은 tile로 좁힙니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            한 문장으로 먼저 답하면, <strong>global memory에서 다시 쓸 조각은 threadblock tile</strong>로,
+            <strong> register에서 다시 쓸 조각은 warp tile</strong>로, <strong>tensor core 한 번의 일은
+            MMA tile</strong>로 나눕니다. CuTe layout은 각 단계에서 “누가 어느 원소를 드는가”를
+            좌표에서 index로 가는 함수 하나로 적습니다.
+          </p>
+          <p>
+            그러면 다음 질문이 이어집니다. 한 tile에서 A·B를 몇 byte 옮길까요? Thread마다 copy를
+            몇 번 해야 할까요? 같은 논리 좌표가 row-major와 column-major에서 왜 다른 주소가 될까요?
+            Shared memory 행들이 같은 bank에 겹치면 layout만 바꿔 어떻게 흩을까요?
+          </p>
+          <p>
+            앞 글과 같은 GEMM <code>M=512, N=640, K=256</code>을 씁니다. 이 글의 threadblock tile은
+            <code>128×128×32</code>, warp tile은 <code>64×64×32</code>, 명령은 Ampere의
+            <code>mma.sync.m16n8k16</code>입니다. Output tile은 20개이고 K 반복은 8회입니다.
+          </p>
+        </div>
+        <CutlassGemmHierarchyAndCuteLayoutsViz />
+        <div data-teach-level="B">
+          <TermBreakdown
+            title="이름을 붙이기 전에 구별할 세 동작"
+            description="Tile은 크기 이름이 아니라 재사용할 memory 층과 함께 읽습니다."
+            items={[
+              { term: "Threadblock tile", description: "Global에서 A·B를 한 번 읽어 shared memory에서 여러 warp가 다시 쓰는 범위입니다.", example: "128×128×32에서 A 8KiB+B 8KiB를 한 K 반복에 올립니다.", boundary: "크면 재사용은 늘지만 shared-memory와 가장자리 낭비가 커집니다." },
+              { term: "Warp·MMA tile", description: "Shared memory 조각을 register로 올려 여러 tensor-core 명령이 다시 쓰는 범위와 명령 한 번의 범위입니다.", example: "64×64×32 warp tile은 m16n8k16 명령 64회입니다.", boundary: "명령 모양과 lane fragment는 architecture·dtype이 고정합니다." },
+              { term: "CuTe layout", description: "논리 coordinate를 memory index 또는 tile coordinate로 보내는 Shape:Stride 함수입니다.", example: "(4,8):(8,1)에서 (2,3)은 index 19입니다.", boundary: "주소를 표현할 뿐 그 layout이 빠른지는 별도 측정 대상입니다." },
+            ]}
+          />
+        </div>
+        <ContentBoundary article="cutlass-gemm-hierarchy-and-cute-layouts" />
+      </section>
+
+      <section id="tile-hierarchy" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           GEMM 은 threadblock, warp, MMA tile 로 세 번 잘립니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
+          <p>
             CUTLASS 가 만드는 GEMM kernel 은 출력 행렬 C 를 세 단계로 자릅니다. 한 threadblock이
             맡는 구간은 threadblock tile입니다. 그 안에서 한 warp가 맡는 구간은 warp tile입니다. Tensor core
             명령 한 번이 계산하는 구간은 MMA tile입니다. 각 층은 자기 층의 memory 에서 아래 층의
@@ -38,7 +80,7 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             <Link to="/cs/gpu/cuda-matrix-multiply#tiled">CUDA GEMM shared-tile 재사용</Link> 에 있습니다.
           </p>
           <p>
-            숫자를 넣어 봅니다. Threadblock tile은 M 128행 × N 128열 × K 깊이 32입니다. Warp 4개를 M 방향 2개와 N 방향 2개로
+            같은 숫자를 넣어 봅니다. Threadblock tile은 M 128행 × N 128열 × K 깊이 32입니다. Warp 4개를 M 방향 2개와 N 방향 2개로
             나누면 warp 하나는 M 128÷2=64행, N 128÷2=64열, K 깊이 32를 맡습니다. Ampere의 fp16 명령{" "}
             <code>mma.sync.m16n8k16</code>은 한 번에 M 16행 × N 8열을 만들며 K를 16만큼 진행합니다. 따라서 warp 하나는
             M 방향 64÷16=4번, N 방향 64÷8=8번, K 방향 32÷16=2번, 모두 4×8×2=64번 명령을 내야 한 K 구간을 끝냅니다.
@@ -62,7 +104,7 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             가 드러날 때까지를 보여 줍니다.
           </p>
         </div>
-        <CutlassGemmHierarchyAndCuteLayoutsViz />
+        <MmaCountViz />
         <TermBreakdown
           title="세 tile 층이 각각 소유하는 memory 이동"
           description="층마다 위 memory 에서 아래 memory 로 조각을 옮기고, 그 조각을 아래 층이 여러 번 재사용합니다."
@@ -72,10 +114,9 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             { term: "MMA tile", description: "Tensor core 명령 한 번의 M×N×K 모양. Register fragment 를 입력으로 받습니다.", example: "m16n8k16: warp tile 64×64×32 를 덮는 데 4×8×2 = 64 번 필요합니다.", boundary: "명령 모양은 architecture 와 dtype 마다 다르며 Hopper 의 wgmma 는 warp 4개가 한 명령을 냅니다." },
           ]}
         />
-        <ContentBoundary article="cutlass-gemm-hierarchy-and-cute-layouts" />
       </section>
 
-      <section id="mainloop-epilogue" className="scroll-mt-20">
+      <section id="mainloop-epilogue" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Mainloop 은 K 를 bK 씩 돌고 epilogue 가 accumulator 를 C 로 씁니다
         </h2>
@@ -83,12 +124,12 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
           <p>
             GEMM kernel 의 몸통은 두 구간입니다. Mainloop 은 K 를 bK 폭으로 잘라 k-iteration 마다 A·B 조각을 올리고 MMA 로 accumulator 에
             더하는 반복입니다. Epilogue 는 반복이 끝난 뒤 register 의 accumulator 에 alpha·beta 와 bias·activation 을 적용해 C 로
-            내보내는 한 번의 구간입니다. K 4096 을 bK 32 로 돌면 mainloop 은 128번 돕니다.
+            내보내는 한 번의 구간입니다. 이 사례의 K 256을 bK 32로 돌면 mainloop은 8번 돕니다.
           </p>
           <p>
-            한 k-iteration 은 memory 층을 한 칸씩 내려갑니다. 먼저 threadblock 의 128 thread 가
-            copy atom 으로 global 의 A·B 조각 16 KB 를 shared memory 로 옮깁니다. Thread 당
-            128 B, 곧 16 B 짜리 vector copy 8번입니다.
+            한 k-iteration은 memory 층을 한 칸씩 내려갑니다. 먼저 threadblock의 128 thread가
+            copy atom으로 global의 A·B 조각 16KiB를 shared memory로 옮깁니다. A와 B는 각각
+            8KiB이므로 thread당 A 64B와 B 64B입니다. 16B vector copy로는 A 4회와 B 4회입니다.
           </p>
           <p>
             그 다음 각 warp 가 <code>ldmatrix</code> 로 shared memory 의 조각을 register
@@ -113,24 +154,25 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             이 tree 를 compiler 가 자동 생성하는 데까지 확장했습니다.
           </p>
         </div>
+        <MainloopTraceViz />
         <AlgorithmBlock
-          title="CUTLASS GEMM mainloop 의 한 k-iteration (Ampere, fp16, 128×128×32 tile)"
+          title="CUTLASS GEMM mainloop의 한 k-iteration을 따라가는 개념 의사코드"
           input={["gA, gB: 이 threadblock 이 맡은 A 128×K, B K×128 조각의 global tensor", "sA, sB: shared memory 의 128×32, 32×128 tile (stage 수만큼)", "tiled_copy_g2s: cp.async 16 B copy atom 을 128 thread 에 배치한 TiledCopy", "tiled_copy_s2r: ldmatrix copy atom 을 warp 의 32 lane 에 배치한 TiledCopy", "tiled_mma: mma.m16n8k16 atom 을 2×2 warp 로 배치한 TiledMMA", "acc: thread 당 fp32 128개 register fragment, 0 으로 초기화"]}
           steps={[
-            { code: "copy(tiled_copy_g2s, tAgA(_,_,k_tile), tAsA(_,_,stage))", note: "Thread 마다 16 B 씩 8번, threadblock 전체로 A 8 KB 를 shared memory 로 발행합니다. cp.async 라 명령은 바로 돌아옵니다." },
+            { code: "copy(tiled_copy_g2s, tAgA(_,_,k_tile), tAsA(_,_,stage))", note: "Thread마다 16B씩 4번, threadblock 전체로 A 8KiB를 shared memory로 발행합니다. cp.async라 명령은 바로 돌아옵니다." },
             { code: "copy(tiled_copy_g2s, tBgB(_,_,k_tile), tBsB(_,_,stage));  cp_async_fence()", note: "B 8 KB 도 같은 방식입니다. fence 가 이 stage 의 copy 묶음 경계를 표시합니다." },
-            { code: "cp_async_wait<STAGES-2>();  __syncthreads()", note: "가장 오래된 stage 의 도착만 기다리고 나머지는 계속 날아오게 둡니다. Barrier 뒤에야 다른 thread 가 쓴 조각이 보입니다." },
+            { code: "wait_for_oldest_ready_stage();  __syncthreads()", note: "가장 오래된 준비 완료 stage만 기다리고 나머지는 계속 날아오게 둡니다. 실제 wait-group 숫자는 CUTLASS schedule과 stage 수가 정합니다." },
             { code: "for k_block in 0..1:  copy(tiled_copy_s2r, tCsA(_,_,k_block), tCrA(_,_,k_block))", note: "bK 32 는 명령 K 16 의 두 배이므로 두 번 돕니다. ldmatrix 가 8×8 조각을 fragment 규칙대로 32 lane 에 나눠 줍니다." },
             { code: "  copy(tiled_copy_s2r, tCsB(_,_,k_block), tCrB(_,_,k_block))", note: "B fragment 도 같은 규칙으로 올립니다. Swizzle 된 shared layout 이 여기서 bank conflict 를 막습니다." },
             { code: "  gemm(tiled_mma, tCrA(_,_,k_block), tCrB(_,_,k_block), acc)", note: "Warp 당 M 4 × N 8 = 32 번의 m16n8k16 를 발행합니다. acc 의 (V,M,N) 모양은 MMA atom 의 C layout 이 정합니다." },
             { code: "__syncthreads();  stage = (stage+1) % STAGES;  다음 k_tile 의 copy 발행", note: "방금 다 읽은 stage 를 비워야 그 자리에 다음 조각을 받을 수 있습니다." },
           ]}
-          repeatUntil="k_tile 이 K/bK = 128 에 닿을 때까지 반복하고, 끝나면 epilogue 가 acc 에 alpha·beta·visitor 연산을 적용해 C 로 씁니다."
+          repeatUntil="k_tile이 K/bK = 8에 닿을 때까지 반복하고, 끝나면 epilogue가 acc에 alpha·beta·visitor 연산을 적용해 D로 씁니다."
           output="이 threadblock 의 C 128×128 조각. Register 의 accumulator 가 epilogue 를 거쳐 global memory 에 저장됩니다."
         />
       </section>
 
-      <section id="cute-layout" className="scroll-mt-20">
+      <section id="cute-layout" data-teach-level="2" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           CuTe layout 은 좌표를 stride 와 내적해 offset 으로 바꾸는 함수입니다
         </h2>
@@ -141,7 +183,7 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             pointer 를 붙인 것입니다.
           </p>
           <p>
-            <code>(4,8):(1,4)</code> 는 4×8 행렬을 열 우선으로 놓은 layout 입니다. 좌표
+            큰 A tile에서 주소 규칙만 확대해 보는 4×8 창을 씁니다. <code>(4,8):(1,4)</code> 는 이 창을 열 우선으로 놓은 layout 입니다. 좌표
             (2,3) 은 2·1 + 3·4 = 14 로 갑니다. 같은 모양을 행 우선으로 놓은{" "}
             <code>(4,8):(8,1)</code> 에서는 (2,3) 이 2·8 + 3·1 = 19 입니다. 열 우선과 행 우선의
             차이는 어느 축의 stride 가 1 이냐뿐이며, 같은 coordinate mapping 규칙이 둘 다를
@@ -160,6 +202,7 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             다룰 수 있고, 다음 절의 합성이 그 위에서 정의됩니다.
           </p>
         </div>
+        <LayoutMappingViz />
         <ExplainedFormula
           question="CuTe layout 은 좌표를 어떤 규칙으로 memory offset 으로 바꾸나요?"
           idea="Shape 가 좌표의 범위를, stride 가 각 축을 한 칸 움직일 때 offset 이 얼마나 뛰는지를 정합니다. Offset 은 좌표와 stride 의 내적이며, 합성은 안쪽 layout 의 offset 을 바깥 layout 의 좌표로 다시 넣는 것입니다."
@@ -211,10 +254,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             나눠 주는 연산이 정확히 이것입니다.
           </p>
         </div>
-      <LayoutTransformViz mode="layout" />
 </section>
 
-      <section id="tv-partition" className="scroll-mt-20">
+      <section id="tv-partition" data-teach-level="3" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Thread·value layout 이 atom 을 펼쳐 thread 몫을 정합니다
         </h2>
@@ -265,6 +307,7 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             Value mode 의 stride 16·8·128 은 열 1칸, 행 8칸, 열 8칸이며 이것이 첫 절에서 말로 적은 lane 규칙과 같은 내용입니다.
           </p>
         </div>
+        <TvPartitionViz />
         <TermBreakdown
           title="Partitioning 에 쓰이는 네 layout 의 역할"
           description="네 layout 은 모두 같은 shape·stride 함수이지만 정의역이 다릅니다."
@@ -277,7 +320,7 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
         />
       </section>
 
-      <section id="swizzle" data-calculation-explained className="scroll-mt-20">
+      <section id="swizzle" data-teach-level="4" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Swizzle 은 행 번호로 chunk 번호를 XOR 해 bank conflict 를 없앱니다
         </h2>
@@ -319,6 +362,7 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             올리는 Hopper tile 은 descriptor 에 같은 swizzle 모드를 적어야 합니다.
           </p>
         </div>
+        <SwizzleBanksViz />
         <ProgressiveDetail
           title="Swizzle 이 layout 함수와 합성된다는 것은 정확히 무슨 뜻인가요?"
           preview="Swizzle 은 정수 offset 을 정수 offset 으로 보내는 bijection 이고, CuTe 는 이것을 shape·stride layout 의 바깥에 합성해 하나의 layout 으로 다룹니다. 좌표 계산은 그대로이고 마지막 정수만 바뀝니다."
@@ -339,18 +383,22 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             <code>SmemLayoutAtomA</code> 로 들어갑니다.
           </p>
         </ProgressiveDetail>
-      <LayoutTransformViz mode="swizzle" />
 </section>
 
-      <section id="evidence" data-calculation-explained className="scroll-mt-20">
+      <section id="evidence" data-teach-level="5" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           계층과 layout 규칙은 CUTLASS 문서와 CuTe 소스에서 읽었습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Threadblock·warp·instruction 의 세 층과 shared memory·register 의 double buffering 은 CUTLASS 의
-            efficient GEMM 문서가 설명하는 구조입니다. 이 글의 128×128×32 와 64×64 warp tile 은 그 구조에 Ampere fp16 명령 모양을 넣어 계산한
-            산수이며 특정 GPU 에서 이 구성이 가장 빠르다는 뜻은 아닙니다.
+            efficient GEMM 문서가 설명하는 구조입니다. 이 글에서 고정한 행렬 크기와 tile 크기는 그 구조에
+            Ampere fp16 명령 모양을 넣어 계산한 교육용 예이며, 특정 GPU에서 이 구성이 가장 빠르다는 뜻은 아닙니다.
+          </p>
+          <p>
+            문서 기준은 CUTLASS 4.8.1(2026년 10월)입니다. Efficient GEMM 문서는 전통적인
+            Ampere <code>mma.sync</code> 경로를 설명하는 데 사용했고, Hopper·Blackwell의
+            warp-group MMA까지 같은 lane 규칙이라고 일반화하지 않습니다.
           </p>
           <p>
             Layout 함수의 정의와 합성·divide 의 예는 CuTe 의 layout 과 layout algebra 문서에서,
@@ -365,9 +413,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
         </div>
         <div id="paper-cutlass-efficient-gemm" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="NVIDIA CUTLASS · Efficient GEMM in CUDA (media/docs/cpp/efficient_gemm.md)"
+            source="NVIDIA CUTLASS 4.8.1 · Efficient GEMM in CUDA"
             citeKey={1}
-            href="https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/efficient_gemm.md"
+            href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html"
           >
             Threadblock·warp·instruction 세 층의 tile 구조, shared memory tile 과 register
             fragment 의 double buffering, epilogue 가 shared memory 를 거쳐 coalesced store 를
@@ -376,9 +424,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
         </div>
         <div id="paper-cute-layout-docs" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="NVIDIA CUTLASS · CuTe Layouts · Layout Algebra · Tensors (media/docs/cpp/cute/01~03)"
+            source="NVIDIA CUTLASS 4.8.1 · CuTe Layouts · Layout Algebra"
             citeKey={2}
-            href="https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/cute/02_layout_algebra.md"
+            href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/cute/02_layout_algebra.html"
           >
             Layout 을 shape·stride 쌍의 함수로 정의하고 coalesce·composition·complement·
             logical divide·product 를 예와 함께 적습니다. <code>20:2 ∘ (5,4):(4,1) = (5,4):(8,2)</code>,{" "}
@@ -393,14 +441,23 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             type="code"
           >
             <code>SM80_16x8x16_F32F16F16F32_TN</code> 의 ALayout·BLayout·CLayout 과{" "}
-            <code>Swizzle&lt;B,M,S&gt;::apply</code> 의 XOR 식을 이 소스에서 읽었습니다. Lane 규칙의
-            원 출처는 PTX ISA 의 mma.m16n8k16 fragment 절입니다.
+            <code>Swizzle&lt;B,M,S&gt;::apply</code> 의 XOR 식을 이 소스에서 읽었습니다.
+          </CitationBlock>
+        </div>
+        <div id="source-ptx-mma-fragment" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="NVIDIA · PTX ISA 9.4 · mma.m16n8k16 floating-point fragments"
+            citeKey={4}
+            href="https://docs.nvidia.com/cuda/parallel-thread-execution/"
+          >
+            <code>groupID=laneid&gt;&gt;2</code>, <code>threadID=laneid%4</code>와 C fragment의
+            row·column 식을 확인했습니다. Lane 5의 네 좌표는 이 식에 직접 대입한 값입니다.
           </CitationBlock>
         </div>
         <div id="paper-evt" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Chen et al. · EVT: Accelerating Deep Learning Training with Epilogue Visitor Tree (ASPLOS 2024)"
-            citeKey={4}
+            citeKey={5}
             href="https://dl.acm.org/doi/10.1145/3620666.3651369"
           >
             GEMM epilogue 에 elementwise·reduction·broadcast 연산을 tree 로 조립하는 epilogue
@@ -412,8 +469,7 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
           다음 글: <Link to="/cs/gpu/cutlass-collectives-and-tile-schedulers">CUTLASS collective, tile scheduler, Stream-K, cluster</Link>,
           그리고 이 층을 언제 고를지는 <Link to="/cs/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>.
         </p>
-      <LayoutTransformViz mode="hierarchy" />
 </section>
-    </div>
+    </article>
   );
 }

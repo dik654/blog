@@ -5,9 +5,10 @@ import ModernCometViz from "./viz/ModernCometViz";
 export default function Liquidation() {
   return (
     <section id="liquidation" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Absorb는 liquidator가 debt를 갚는 경매가 아니라 protocol balance-sheet 전환이다</h2>
+      <h2 className="mb-5 break-keep text-2xl font-bold">청산 호출자가 담보를 바로 가져가지 않는 이유는 무엇일까요?</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p><code>absorb</code>는 liquidatable account의 collateral을 protocol로 옮기고, protocol base reserves가 borrow를 정리합니다. Caller는 source snapshot에서 liquidator points를 기록받지만 seized collateral을 즉시 소유하지 않습니다. Protocol reserves가 target보다 부족한 sale gate에서 별도 buyer가 <code>buyCollateral</code>로 할인 collateral을 삽니다.</p>
+        <p><code>absorb</code>는 청산 가능한 계정의 담보를 protocol로 옮기고, protocol의 base reserves로 부채를 정리합니다. 호출자는 확인한 source snapshot에서 liquidator points를 기록받지만 압류 담보를 즉시 소유하지 않습니다.</p>
+        <p>담보 판매 조건이 열리면 별도 구매자가 <code>buyCollateral</code>을 실행해 할인된 담보를 삽니다. 부실 계정을 닫는 사람과 protocol inventory를 사는 사람이 분리된 구조입니다.</p>
       </div>
       <ModernCometViz mode="liquidation" />
       <ExplainedFormula
@@ -28,12 +29,15 @@ export default function Liquidation() {
         interpretation="SF=50%, LF=90%이면 d=5%라 oracle $100 collateral의 ask는 $95입니다. 이를 ‘liquidator bonus 5%를 absorb caller에게 즉시 지급’으로 해석하면 틀립니다. Buyer는 별도 transaction에서 minAmount로 slippage를 제한합니다."
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Absorb receipt는 reserve 손실과 collateral inventory를 함께 보여야 한다</h3>
-        <p>Debt $900, collateral credit $850라면 protocol reserves가 $50 shortfall을 흡수하고 collateral inventory를 받습니다. 반대로 credit가 debt보다 크면 account에 positive base supply가 남을 수 있습니다. Price·factor·rounding·asset membership 오류를 숨기지 않도록 old/new principal, basePaidOut, seized asset amounts, totalSupplyBase·totalBorrowBase와 reserves를 한 receipt로 비교합니다.</p>
+        <h3>청산 영수증에서 무엇을 함께 봐야 할까요?</h3>
+        <p>부채가 $900이고 담보 credit이 $850이면 protocol은 base reserves로 부채를 정리하고, 담보 inventory와 가치 기준 $50 부족분을 함께 떠안습니다. 반대로 credit이 부채보다 크면 계정에 양수 base supply가 남을 수 있습니다.</p>
+        <p>가격·factor·반올림·asset membership 오류를 숨기지 않으려면 이전과 이후의 principal, basePaidOut, 압류한 자산 수량, totalSupplyBase·totalBorrowBase와 reserves를 한 receipt에서 비교해야 합니다.</p>
       </div>
       <div id="compound-v3-release-gate" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Release gate</h3>
-        <p>Chain, Comet proxy/implementation SHA, base asset/scales, collateral list bitmap, price feeds, indexes/time, both rate curves, borrow/liquidate/liquidation factors, caps, baseBorrowMin, targetReserves와 pause flags를 고정합니다. Principal 0 crossing, supply floor/borrow ceil, S=0 utilization, kink 양쪽, borrow vs liquidation buffer, stale/bad price, multi-collateral, absorb shortfall/excess, points, reserve gate, discount quote, minAmount, reentrant-token exclusion과 restart를 differential replay합니다. State·events·custom errors가 같아진 뒤 gas를 비교합니다.</p>
+        <h3>출시 전에 고정할 조건</h3>
+        <p>먼저 chain과 Comet proxy·implementation SHA를 고정합니다. 이어서 base asset과 scale, 담보 목록 bitmap, price feed, index와 시간, 두 금리 곡선, 모든 factor와 cap, baseBorrowMin, targetReserves와 pause flag를 같은 snapshot으로 묶습니다.</p>
+        <p>그 상태에서 principal이 0을 지나는 경우, supply 내림·borrow 올림, 공급량 0의 이용률, kink 양쪽, 차입선과 청산선의 완충, 오래되거나 잘못된 가격, 여러 담보를 차례로 재생합니다.</p>
+        <p>마지막으로 absorb의 부족분·초과분, points, reserve gate, 할인 견적, minAmount, 재진입 token 배제와 재시작을 비교합니다. State·event·custom error가 모두 같아진 뒤에 gas를 비교합니다.</p>
       </div>
       <div id="paper-compound-liquidation" className="scroll-mt-24">
         <CitationBlock source="Compound III official docs · Liquidation" href="https://docs.compound.finance/liquidation/" citeKey={2}>

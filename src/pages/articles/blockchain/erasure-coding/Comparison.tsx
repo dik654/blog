@@ -5,13 +5,21 @@ export default function Comparison() {
   return (
     <section id="comparison" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        RS·RaptorQ·LDPC는 보장·channel·decoder 비용을 함께 놓고 선택합니다
+        어떤 복구 방식을 선택해야 할까요?
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Reed–Solomon은 고정된 block에서 정확한 MDS threshold가 중요할 때 강합니다. RaptorQ는 repair symbol을 계속 만들 수 있는 fountain
-          계열이라 수신자가 어떤 packet을 잃을지 모르고 수신 수가 유동적인 전송에 맞습니다. LDPC는 sparse parity-check graph와 iterative
-          decoder를 사용해 큰 block에서 높은 throughput을 노리지만 필요한 수신량과 실패율은 선택한 code profile·channel·decoder에 따라 달라집니다.
+          Reed–Solomon은 고정된 묶음에서 정확한 복원 기준이 중요할 때
+          적합합니다. 예를 들어 (10,6)이라면 정확한 조각 여섯 개가 기준입니다.
+        </p>
+        <p>
+          RaptorQ는 필요한 만큼 repair symbol을 계속 만들 수 있습니다. 어떤
+          packet이 사라질지 모르고 수신량이 유동적인 전송에 잘 맞습니다.
+        </p>
+        <p>
+          LDPC는 연결이 드문 parity-check graph를 반복해서 풀어 큰 묶음의 높은
+          처리량을 노립니다. 다만 필요한 수신량과 실패율은 선택한 profile, 전송
+          환경과 decoder에 따라 달라집니다.
         </p>
       </div>
       <ECComparisonViz />

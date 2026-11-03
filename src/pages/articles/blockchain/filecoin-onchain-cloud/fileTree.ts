@@ -14,20 +14,39 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 
 export const filecoinServicesTree: FileNode = d("filecoin-services", [
   d("service_contracts/src", [
-    f(
-      "FilecoinWarmStorageService.sol — DataSetInfo",
-      "filecoin-services/service_contracts/src/FilecoinWarmStorageService.sol",
-      "dataset-info",
-    ),
+    d("storage", [
+      f(
+        "FWSSStorage.sol — dataset·period state",
+        "filecoin-services/service_contracts/src/storage/FWSSStorage.sol",
+        "dataset-info",
+      ),
+    ]),
+    d("modules", [
+      f(
+        "FWSSProvingModule.sol — proof·payment validation",
+        "filecoin-services/service_contracts/src/modules/FWSSProvingModule.sol",
+        "period-state",
+      ),
+    ]),
   ]),
 ]);
 
 export const filecoinPayTree: FileNode = d("filecoin-pay", [
   d("src", [
     f(
-      "FilecoinPayV1.sol — Rail·settleRail",
+      "FilecoinPayV1.sol — rail·validator settlement",
       "filecoin-pay/src/FilecoinPayV1.sol",
       "rail-settle",
+    ),
+  ]),
+]);
+
+export const synapseSdkTree: FileNode = d("synapse-sdk", [
+  d("packages/synapse-sdk/src/storage", [
+    f(
+      "manager.ts — store·pull·commit",
+      "synapse-sdk/packages/synapse-sdk/src/storage/manager.ts",
+      "sdk-upload",
     ),
   ]),
 ]);

@@ -1,134 +1,339 @@
-import { motion } from "framer-motion";
 import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
   {
-    label: "SWIM: Probe & Piggybacking",
-    body: "핑 → 간접 핑 → 의심 → Dead. 멤버십 변경을 메시지에 부착.",
+    label: "SWIM은 누가 응답하는지 관찰합니다",
+    body: "P0의 direct PING이 timeout이면 다른 node에 indirect PING_REQ를 부탁합니다. 그래도 확인되지 않으면 P3를 suspect로 표시하지만, timeout 자체는 사망 증명이 아닙니다.",
   },
   {
-    label: "HyParView: Active/Passive View",
-    body: "Active View(소수 직접연결) + Passive View(백업 후보). 주기적 Shuffle.",
+    label: "HyParView는 누구와 연결할지 관리합니다",
+    body: "작은 active view에는 실제 연결을, 더 큰 passive view에는 backup 후보를 둡니다. Active peer가 끊기면 passive 후보를 승격해 overlay를 복구합니다.",
   },
   {
-    label: "PlumTree: Eager + Lazy Push",
-    body: "스패닝 트리로 즉시 전달(eager) + 트리 외 메타데이터만(lazy).",
+    label: "Plumtree는 어떤 message를 어떻게 퍼뜨릴지 정합니다",
+    body: "Eager link에는 full m42를 보내고 lazy link에는 IHAVE 요약을 보냅니다. 누락을 발견한 peer는 GRAFT로 eager 경로를 복구합니다. GossipSub의 IWANT과는 다른 protocol입니다.",
   },
-];
+] as const;
 
-const sp = { type: "spring" as const, bounce: 0.12, duration: 0.5 };
-const C = ["#0ea5e9", "#10b981", "#f59e0b"];
+const COLORS = {
+  swim: "#0284c7",
+  overlay: "#059669",
+  broadcast: "#d97706",
+  suspect: "#dc2626",
+  muted: "#64748b",
+};
 
-const CENTER = { x: 180, y: 70 };
+function ArrowDefs() {
+  return (
+    <defs>
+      <marker
+        id="role-arrow"
+        viewBox="0 0 8 8"
+        markerWidth="8"
+        markerHeight="8"
+        refX="6"
+        refY="4"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0 0 L8 4 L0 8 Z" fill="context-stroke" />
+      </marker>
+    </defs>
+  );
+}
+
+function Box({
+  x,
+  y,
+  width,
+  label,
+  detail,
+  color,
+}: {
+  x: number;
+  y: number;
+  width: number;
+  label: string;
+  detail: string;
+  color: string;
+}) {
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height="44"
+        rx="7"
+        fill={`${color}0d`}
+        stroke={color}
+      />
+      <text
+        x={x + width / 2}
+        y={y + 18}
+        textAnchor="middle"
+        fontSize="10"
+        fontWeight="700"
+        fill={color}
+      >
+        {label}
+      </text>
+      <text
+        x={x + width / 2}
+        y={y + 33}
+        textAnchor="middle"
+        fontSize="8.5"
+        fill={color}
+      >
+        {detail}
+      </text>
+    </g>
+  );
+}
 
 export default function ProtocolCompareViz() {
   return (
     <StepViz steps={STEPS}>
       {(step) => (
         <svg
-          viewBox="0 0 420 145"
-          className="w-full max-w-2xl"
-          style={{ height: "auto" }}
+          viewBox="0 0 500 180"
+          aria-label="SWIM HyParView Plumtree가 맡는 서로 다른 책임"
         >
-          {/* Central node */}
-          <circle
-            cx={CENTER.x}
-            cy={CENTER.y}
-            r={16}
-            fill={C[step] + "15"}
-            stroke={C[step]}
-            strokeWidth={1.25}
-          />
-          <text
-            x={CENTER.x}
-            y={CENTER.y + 4}
-            textAnchor="middle"
-            fontSize={10}
-            fontWeight={600}
-            fill={C[step]}
-          >
-            Node
-          </text>
+          <ArrowDefs />
 
-          {/* Surrounding nodes */}
-          {Array.from({ length: 6 }).map((_, i) => {
-            const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
-            const r = 55;
-            const nx = CENTER.x + Math.cos(angle) * r;
-            const ny = CENTER.y + Math.sin(angle) * r;
-            const isActive = step === 1 ? i < 3 : true;
-            const isEager = step === 2 ? i < 3 : true;
-
-            return (
-              <motion.g
-                key={i}
-                animate={{ opacity: isActive || step !== 1 ? 1 : 0.3 }}
-                transition={sp}
+          {step === 0 && (
+            <>
+              <Box
+                x={20}
+                y={64}
+                width={104}
+                label="P0 probe"
+                detail="direct PING"
+                color={COLORS.swim}
+              />
+              <Box
+                x={198}
+                y={22}
+                width={104}
+                label="P2 helper"
+                detail="indirect PING_REQ"
+                color={COLORS.swim}
+              />
+              <Box
+                x={376}
+                y={64}
+                width={104}
+                label="P3 target"
+                detail="slow or unreachable"
+                color={COLORS.suspect}
+              />
+              <line
+                x1="124"
+                y1="78"
+                x2="366"
+                y2="78"
+                stroke={COLORS.swim}
+                strokeWidth="1.2"
+                markerEnd="url(#role-arrow)"
+              />
+              <line
+                x1="124"
+                y1="66"
+                x2="188"
+                y2="49"
+                stroke={COLORS.swim}
+                strokeWidth="1.2"
+                markerEnd="url(#role-arrow)"
+              />
+              <line
+                x1="302"
+                y1="49"
+                x2="371"
+                y2="66"
+                stroke={COLORS.swim}
+                strokeWidth="1.2"
+                markerEnd="url(#role-arrow)"
+              />
+              <rect
+                x="177"
+                y="126"
+                width="146"
+                height="28"
+                rx="6"
+                fill={`${COLORS.suspect}0d`}
+                stroke={COLORS.suspect}
+              />
+              <text
+                x="250"
+                y="144"
+                textAnchor="middle"
+                fontSize="9.5"
+                fontWeight="700"
+                fill={COLORS.suspect}
               >
-                {/* Connection */}
-                <line
-                  x1={CENTER.x}
-                  y1={CENTER.y}
-                  x2={nx}
-                  y2={ny}
-                  stroke={C[step]}
-                  strokeWidth={step === 2 && !isEager ? 0.8 : 1.2}
-                  strokeDasharray={
-                    step === 2 && !isEager
-                      ? "3 3"
-                      : step === 1 && !isActive
-                        ? "3 3"
-                        : "0"
-                  }
-                  strokeOpacity={0.5}
-                />
-                {/* Node */}
-                <circle
-                  cx={nx}
-                  cy={ny}
-                  r={10}
-                  fill={isActive || step !== 1 ? C[step] + "15" : "#64748b08"}
-                  stroke={isActive || step !== 1 ? C[step] : "#64748b"}
-                  strokeWidth={1}
-                />
-                {/* SWIM ping indicator */}
-                {step === 0 && i === 0 && (
-                  <motion.circle
-                    cx={nx}
-                    cy={ny}
-                    r={10}
-                    fill="none"
-                    stroke={C[0]}
-                    strokeWidth={1}
-                    initial={false}
-                    animate={{ r: 20, opacity: 0 }}
-                    transition={{ duration: 1.2, repeat: Infinity }}
-                  />
-                )}
-              </motion.g>
-            );
-          })}
-
-          {/* Legend */}
-          {step === 1 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}>
-              <text x={340} y={50} fontSize={10} fill={C[1]}>
-                Active (3)
+                evidence → SUSPECT, not proof
               </text>
-              <text x={340} y={65} fontSize={10} fill="#64748b">
-                Passive (3)
-              </text>
-            </motion.g>
+            </>
           )}
+
+          {step === 1 && (
+            <>
+              <Box
+                x={20}
+                y={68}
+                width={96}
+                label="local P0"
+                detail="view owner"
+                color={COLORS.overlay}
+              />
+              <Box
+                x={176}
+                y={22}
+                width={130}
+                label="active view"
+                detail="P1 · P2 connections"
+                color={COLORS.overlay}
+              />
+              <Box
+                x={350}
+                y={22}
+                width={130}
+                label="passive view"
+                detail="P3 · P4 backups"
+                color={COLORS.muted}
+              />
+              <line
+                x1="116"
+                y1="84"
+                x2="166"
+                y2="53"
+                stroke={COLORS.overlay}
+                strokeWidth="1.2"
+                markerEnd="url(#role-arrow)"
+              />
+              <line
+                x1="350"
+                y1="50"
+                x2="316"
+                y2="50"
+                stroke={COLORS.overlay}
+                strokeWidth="1.2"
+                markerEnd="url(#role-arrow)"
+              />
+              <text
+                x="333"
+                y="38"
+                textAnchor="middle"
+                fontSize="8.5"
+                fill={COLORS.overlay}
+              >
+                promote
+              </text>
+              <rect
+                x="151"
+                y="126"
+                width="198"
+                height="28"
+                rx="6"
+                fill={`${COLORS.overlay}0d`}
+                stroke={COLORS.overlay}
+              />
+              <text
+                x="250"
+                y="144"
+                textAnchor="middle"
+                fontSize="9.5"
+                fontWeight="700"
+                fill={COLORS.overlay}
+              >
+                output: resilient partial-view overlay
+              </text>
+            </>
+          )}
+
           {step === 2 && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}>
-              <text x={340} y={50} fontSize={10} fill={C[2]}>
-                Eager (실선)
+            <>
+              <Box
+                x={18}
+                y={68}
+                width={102}
+                label="P0 source"
+                detail="message m42"
+                color={COLORS.broadcast}
+              />
+              <Box
+                x={198}
+                y={22}
+                width={104}
+                label="eager P1"
+                detail="full m42"
+                color={COLORS.broadcast}
+              />
+              <Box
+                x={378}
+                y={68}
+                width={104}
+                label="lazy P2"
+                detail="IHAVE(m42)"
+                color={COLORS.muted}
+              />
+              <line
+                x1="120"
+                y1="79"
+                x2="188"
+                y2="53"
+                stroke={COLORS.broadcast}
+                strokeWidth="1.2"
+                markerEnd="url(#role-arrow)"
+              />
+              <line
+                x1="302"
+                y1="53"
+                x2="368"
+                y2="79"
+                stroke={COLORS.muted}
+                strokeWidth="1.2"
+                strokeDasharray="4 3"
+                markerEnd="url(#role-arrow)"
+              />
+              <line
+                x1="378"
+                y1="100"
+                x2="312"
+                y2="100"
+                stroke={COLORS.broadcast}
+                strokeWidth="1.2"
+                markerEnd="url(#role-arrow)"
+              />
+              <text
+                x="345"
+                y="116"
+                textAnchor="middle"
+                fontSize="8.5"
+                fill={COLORS.broadcast}
+              >
+                GRAFT missing
               </text>
-              <text x={340} y={65} fontSize={10} fill={C[2]}>
-                Lazy (점선)
+              <rect
+                x="164"
+                y="136"
+                width="172"
+                height="27"
+                rx="6"
+                fill={`${COLORS.broadcast}0d`}
+                stroke={COLORS.broadcast}
+              />
+              <text
+                x="250"
+                y="153"
+                textAnchor="middle"
+                fontSize="9"
+                fontWeight="700"
+                fill={COLORS.broadcast}
+              >
+                output: broadcast path + repair
               </text>
-            </motion.g>
+            </>
           )}
         </svg>
       )}

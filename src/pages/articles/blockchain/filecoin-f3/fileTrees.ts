@@ -13,6 +13,6 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 });
 
 export const f3Tree: FileNode = d("go-f3", [
-  f("f3.go", "go-f3/f3.go", "f3-run"),
+  f("certs.go", "go-f3/certs.go", "f3-run"),
   f("gpbft.go", "go-f3/gpbft.go", "gpbft-run"),
 ]);

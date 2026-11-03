@@ -20,22 +20,27 @@ export default function ConstitutionalismAndSeparationArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          강제력을 쥔 쪽이 왜 자기를 묶는 문서를 지키는지가 먼저입니다
+          영장 없이 언론사를 닫으라는 명령 E에서 시작합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            앞 글은 불편한 곳에서 끝났습니다. 통치가 유지되는 조건은 폭정에서도 똑같이 성립하고 지배자의 이익과 사회의 이익이 겹치는 구간은 조건부라는 것이었습니다. 그래서 다음 질문이
-            나왔습니다. 선의나 계산에 기대지 않고 미리 묶어 둘 수 있는가입니다.
+            한 문장으로 답하면, 헌법은 스스로 권력을 멈추는 종이가 아닙니다. 무엇이 위반인지
+            공개된 기준을 만들고, 서로 다른 기관과 시민이 그 기준을 보고 함께 대응할 수 있게
+            하며, 한쪽이 혼자 밀어붙이는 데 필요한 동의와 비용을 늘리는 장치입니다.
           </p>
 
           <p className="leading-7">
-            헌법이 그 답이라고들 합니다. 그런데 여기서 바로 이상한 점이 드러납니다. 헌법은 종이에 적힌 글자이고 그것을 어길 수 있는 힘은 정작 묶이는 쪽이 쥐고 있습니다. 군대와
-            경찰을 가진 쪽이 문서 한 장 때문에 물러설 이유가 무엇일까요.
+            가상의 나라에서 행정부가 법원의 영장 없이 언론사 문을 90일 닫는 명령
+            <strong> E</strong>를 냈다고 하겠습니다. 헌법에는 “언론사 폐쇄에는 사전 영장이
+            필요하다”고 적혀 있습니다. 이 문장만으로 경찰이 멈추지는 않습니다. 법원이 E를
+            무효라고 판정하고, 공무원이 집행을 보류하고, 언론과 야당이 같은 위반을 알리고,
+            유권자가 정치적 책임을 물을 수 있을 때 비로소 글자가 제약으로 이어집니다.
           </p>
 
           <p className="leading-7">
-            이 질문을 건너뛰면 헌법 이야기가 전부 당위가 됩니다. 그래서 이 글은 거기서 시작합니다. 종이가 실제로 힘을 묶는 경로를 먼저 세우고 그 위에서 나누기·견제·굳히기 세 장치가
-            각각 무엇을 막는지 봅니다.
+            바로 꼬리 질문이 생깁니다. 행정부가 경찰과 예산을 쥐고 있는데 왜 다른 기관의
+            판정을 따를까요? 이 글은 E 하나를 끝까지 따라가며 공통 신호, 기능 배분, 상호 견제,
+            위헌심사, 개정 문턱이 어디에서 제동을 걸고 언제 실패하는지 봅니다.
           </p>
         </div>
 
@@ -75,8 +80,10 @@ export default function ConstitutionalismAndSeparationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            앞 글에서 통치가 순응 위에 선다는 것을 봤습니다. 뒤집으면 순응이 한꺼번에 무너지면 통치도 무너진다는 뜻입니다. 그런데 사람들이 한꺼번에 움직이려면 조건이 하나 필요합니다.
-            지금이 나설 때라는 것을 서로 알아야 합니다.
+            E를 본 기자 한 명은 다른 사람이 침묵할까 두렵고, 공무원 한 명은 혼자 집행을
+            거부하면 징계를 받을 수 있습니다. 각자 위반이라고 생각해도 다른 사람의 판단과
+            행동을 모르면 먼저 나서기 어렵습니다. 그래서 개인의 불만과 집단의 제동 사이에는
+            <strong> 조정 문제</strong>가 있습니다.
           </p>
 
           <p className="leading-7">
@@ -87,8 +94,10 @@ export default function ConstitutionalismAndSeparationArticle() {
           </p>
 
           <p className="leading-7">
-            그래서 지배자가 물러서는 이유는 문서를 존중해서가 아닙니다. 선을 넘으면 흩어져 있던 저항이 한꺼번에 조직될 위험이 커지기 때문입니다. 헌법의 구속력은 종이 자체가 아니라 그
-            종이가 만들어 내는 조정 효과에서 나옵니다.
+            그래서 지배자가 물러설 유인은 문서를 존중하는 마음에만 있지 않습니다. 선을 넘으면
+            법원·공무원·언론·야당·유권자의 대응이 한 사건에 모일 위험이 커지기 때문입니다.
+            헌법의 구속력은 종이 자체가 아니라 그 종이가 도울 수 있는 조정 효과와, 실제로
+            대응할 수 있는 독립 기관·정보·집행 능력에서 나옵니다.
           </p>
 
           <p className="leading-7">
@@ -129,6 +138,18 @@ export default function ConstitutionalismAndSeparationArticle() {
             },
           ]}
         />
+
+        <CitationBlock
+          source="Barry R. Weingast · The Political Foundations of Democracy and the Rule of Law (APSR 91:2, 1997)"
+          citeKey={1}
+          href="https://www.cambridge.org/core/journals/american-political-science-review/article/political-foundations-of-democracy-and-the-rule-of-the-law/564FB92EE1808897FD0041E25289CF1F"
+        >
+          <p><strong>문제:</strong> 국가가 강제력을 쥐는데도 정치적 한계를 지킬 유인이 어떻게 생기는지 설명합니다.</p>
+          <p><strong>기여:</strong> 시민이 권리 침해에 대응하는 일을 분산된 조정 문제로 모델링하고, 한계 준수가 스스로 유지되는 균형이어야 한다는 틀을 제시합니다.</p>
+          <p><strong>전제:</strong> 시민이 국가 행동을 허용·위반으로 분류하고 다른 사람의 대응 가능성을 고려할 수 있다고 둡니다.</p>
+          <p><strong>근거 범위:</strong> 이 절의 “공개된 선이 공통 초점이 될 수 있다”는 이론적 경로입니다.</p>
+          <p><strong>말하지 않는 것:</strong> 조항 하나가 자동으로 저항을 만들거나 모든 나라에서 같은 효과를 낸다고 입증하지 않습니다.</p>
+        </CitationBlock>
       </section>
 
       <section id="separation" className="scroll-mt-20">
@@ -137,17 +158,19 @@ export default function ConstitutionalismAndSeparationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            한 사람이 규칙을 만들고 집행하고 위반 여부까지 판정하면, 자기가 만든
-            규칙으로 자기를 심판하는 셈이 됩니다. 그러면 앞 절의 신호가 아예
-            생기지 않습니다. 위반이라고 선언할 사람이 위반한 당사자이기
-            때문입니다.
+            E를 만든 행정부가 영장 발부와 최종 위헌 판정까지 독점한다면 “영장이 없었다”는
+            신호는 제동으로 이어지기 어렵습니다. 자기 행동의 허용 범위를 자기가 최종 결정하기
+            때문입니다. 그래서 규칙 만들기, 집행하기, 다툼을 판정하기를 서로 다른 책임 경로에
+            둡니다.
           </p>
 
           <p className="leading-7">
             그래서 기능을 셋으로 가릅니다. 일반적인 규칙을 정하는 입법, 개별
             사안에 그 규칙을 적용해 실행하는 행정, 다툼이 생겼을 때 규칙에 맞는지
-            판정하는 사법입니다. 이 구분은 조직도가 아니라 <em>같은 사람이 두
-            역할을 겸하지 못하게</em> 하는 데 목적이 있습니다.
+            판정하는 사법입니다. 핵심은 모든 나라에서 사람이 절대 겸직하지 못한다는 뜻이
+            아닙니다. 의원내각제처럼 입법 다수와 행정부가 인적으로 겹치는 체계도 있습니다.
+            핵심은 한 행위자가 규칙 제정·집행·최종 판정을 아무 독립 제약 없이 모두 독점하지
+            못하게 기능과 책임 경로를 배분하는 데 있습니다.
           </p>
 
           <p className="leading-7">
@@ -158,7 +181,7 @@ export default function ConstitutionalismAndSeparationArticle() {
 
         <CitationBlock
           source="Publius · The Federalist No. 51 (1788년 2월 8일)"
-          citeKey={1}
+          citeKey={2}
           href="https://avalon.law.yale.edu/18th_century/fed51.asp"
         >
           권력분립의 근거를 사람의 덕성이 아니라 제도적 이해관계에서 찾은
@@ -181,6 +204,12 @@ export default function ConstitutionalismAndSeparationArticle() {
             서로의 결정에 끼어들 수단을 줍니다. 거부권, 동의 요건, 탄핵, 위헌
             심사가 그런 장치입니다. 이제 한 쪽이 무언가를 하려면 다른 쪽의
             승인이 필요해집니다.
+          </p>
+
+          <p className="leading-7">
+            E 사례에서는 의회가 행정부 권한의 법적 근거를 정하고, 법원이 영장 없는 명령을
+            심사하며, 의회가 예산·조사·탄핵 같은 수단으로 책임을 물을 수 있습니다. 이 수단은
+            나라마다 다르고, 어느 하나가 모든 체계에 반드시 있는 것은 아닙니다.
           </p>
 
           <p className="leading-7">
@@ -248,6 +277,18 @@ export default function ConstitutionalismAndSeparationArticle() {
 
         <VetoPlayerViz />
 
+        <CitationBlock
+          source="George Tsebelis · Decision Making in Political Systems (BJPS 25:3, 1995)"
+          citeKey={3}
+          href="https://www.cambridge.org/core/journals/british-journal-of-political-science/article/abs/decision-making-in-political-systems-veto-players-in-presidentialism-parliamentarism-multicameralism-and-multipartyism/5E1E9DBFB4106517287328AEE1879A1E"
+        >
+          <p><strong>문제:</strong> 대통령제·의원내각제·단원제·양원제처럼 이름이 다른 체계를 정책 변경 능력이라는 같은 기준으로 비교합니다.</p>
+          <p><strong>기여:</strong> 현상유지를 바꾸려면 동의가 필요한 개인·집단을 거부권자로 정의하고, 수·입장 차이·집단 내부 응집성이 정책 안정과 연결되는 틀을 제시합니다.</p>
+          <p><strong>전제:</strong> 이 글의 계산은 한 정책 축, 단봉 선호, 사안 간 거래 없음, 나열된 행위자의 만장일치를 단순 가정합니다.</p>
+          <p><strong>근거 범위:</strong> 승인 구간의 교집합이 넓어지지 않는다는 비교정태를 설명하는 데 씁니다.</p>
+          <p><strong>말하지 않는 것:</strong> 거부권자가 많으면 반드시 좋은 제도이거나 반드시 교착한다는 결론은 아닙니다.</p>
+        </CitationBlock>
+
         <div id="judicial-review" className="scroll-mt-20">
           <h3 className="mb-4 mt-12 text-xl font-bold">
             선출되지 않은 기관이 선출된 결정을 뒤집어도 되는가
@@ -269,7 +310,26 @@ export default function ConstitutionalismAndSeparationArticle() {
               이 답이 성립하려면 조건이 있습니다. 헌법의 선이 읽는 사람에 따라 크게 달라지지 않아야 합니다. 해석의 폭이 넓어질수록 그 기관은 합의를 읽는 자리가 아니라 스스로 정하는
               자리에 가까워지고 1절의 신호도 함께 흐려집니다.
             </p>
+
+            <p className="leading-7">
+              또한 위헌심사의 형식은 하나가 아닙니다. 일반 법원이 사건마다 심사하는 체계도,
+              별도 헌법재판기관이 집중 심사하는 체계도, 의회가 최종 책임을 더 크게 지는 체계도
+              있습니다. 여기서 필요한 공통 질문은 “누가 E를 어떤 절차와 근거로 무효화하고,
+              그 판정을 누가 실제로 집행하는가”입니다.
+            </p>
           </div>
+
+          <CitationBlock
+            source="Alexander Hamilton · The Federalist No. 78 (1788)"
+            citeKey={4}
+            href="https://avalon.law.yale.edu/18th_century/fed78.asp"
+          >
+            <p><strong>문제:</strong> 법원이 입법부가 만든 법률보다 헌법을 우선해 판단하는 일을 어떻게 정당화할지 논증합니다.</p>
+            <p><strong>기여:</strong> 헌법을 상위의 선행 의사, 법률을 하위의 후행 의사로 놓고 충돌 시 법원이 전자를 적용해야 한다는 방어 논리를 제시합니다.</p>
+            <p><strong>전제:</strong> 법원이 정치적 의지보다 법적 판단을 행사하고 다른 부문으로부터 충분히 독립적이라고 둡니다.</p>
+            <p><strong>근거 범위:</strong> 미국 헌법 비준을 옹호한 18세기 정치 문헌의 위헌심사 정당화입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 모든 국가의 심사 제도나 법원의 실제 독립성을 실증한 연구가 아닙니다.</p>
+          </CitationBlock>
         </div>
       </section>
 
@@ -291,8 +351,11 @@ export default function ConstitutionalismAndSeparationArticle() {
           </p>
 
           <p className="leading-7">
-            대가는 앞 절의 계산 그대로입니다. 문턱이 높다는 것은 거부권자가 많다는 뜻이고 그만큼 통과 가능 영역이 좁아집니다. 정말 고쳐야 할 것도 고칠 수 없게 되며 그 압력이 개정이
-            아니라 해석의 변경이나 조문 무시로 빠져나가기도 합니다.
+            대가는 앞 절과 닮았지만 같은 계산은 아닙니다. 여러 기관·지역·국민투표의 동의를
+            더 요구하면 별도 거부 지점이 늘 수 있고, 한 의회 안에서 과반을 3분의 2로 높이면
+            집단 내부 승인 규칙이 더 엄격해집니다. 둘 다 통과를 어렵게 하지만 “거부권자 한 명
+            추가”와 “정족수 상향”을 같은 변수로 취급하면 안 됩니다. 너무 어려워지면 고쳐야 할
+            것도 못 고치고, 압력이 개정 대신 해석 변경이나 조문 무시로 빠져나갑니다.
           </p>
         </div>
 
@@ -346,6 +409,18 @@ export default function ConstitutionalismAndSeparationArticle() {
             흔들리지 않게 하고 싶은지에 대한 답입니다.
           </p>
         </ProgressiveDetail>
+
+        <CitationBlock
+          source="Venice Commission · Report on Constitutional Amendment · CDL-AD(2010)001"
+          citeKey={5}
+          href="https://www.venice.coe.int/webforms/documents/default.aspx?pdffile=CDL-AD%282010%29001-e"
+        >
+          <p><strong>문제:</strong> 여러 국가의 헌법 개정 절차와 민주적 정당성·안정성 사이의 긴장을 비교합니다.</p>
+          <p><strong>기여:</strong> 의회 특별다수, 반복 의결, 국민투표와 여러 기관 참여처럼 서로 다른 개정 장치를 국가별로 정리합니다.</p>
+          <p><strong>전제:</strong> 법문상의 절차와 실제 정치 운용을 구분해 읽어야 합니다.</p>
+          <p><strong>근거 범위:</strong> 개정 문턱이 하나의 보편 공식이 아니라 여러 절차 조합이라는 비교 근거입니다.</p>
+          <p><strong>말하지 않는 것:</strong> 어느 한 문턱이 모든 국가와 모든 조항에 최적이라고 판정하지 않습니다.</p>
+        </CitationBlock>
       </section>
 
       <section id="boundary" className="scroll-mt-20">

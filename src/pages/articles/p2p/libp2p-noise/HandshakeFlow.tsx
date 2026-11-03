@@ -15,9 +15,12 @@ export default function HandshakeFlow() {
         <p>
           세 번째 <code>→ s, se</code>에서는 initiator static key와 identity payload가
           보호된 상태로 전달됩니다. 양쪽이 모든 token과 payload를 처리하면 handshake
-          hash와 chaining key에서 두 방향 CipherState를 나눕니다. 메시지 2 payload에는
-          forward secrecy가 있어도 sender가 아직 responder를 인증하기 전이라는 spec의
-          경계가 있으므로 민감한 application early data를 임의로 싣지 않습니다.
+          hash와 chaining key에서 두 방향 CipherState를 나눕니다.
+        </p>
+        <p>
+          메시지 2 payload에는 forward secrecy가 있어도 sender가 아직 responder를
+          인증하기 전이라는 spec의 경계가 있습니다. 따라서 민감한 application early
+          data를 임의로 싣지 않습니다.
         </p>
         <h3>Token을 읽는 최소 규칙</h3>
         <ul>

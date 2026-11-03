@@ -8,8 +8,8 @@ export default function TLSFundamentalsArticle() {
     <>
       <Overview />
       <Handshake />
-      <RecordProtocol />
       <KeySchedule />
+      <RecordProtocol />
     </>
   );
 }

@@ -98,7 +98,7 @@ export function DAGTransactionTraceViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[665px] lg:min-h-[600px] xl:min-h-[440px]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {TRACE_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
 
@@ -138,16 +138,16 @@ export function DAGTransactionTraceViz() {
               </div>
             </div>
 
-            <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 xl:block xl:space-y-px xl:overflow-visible xl:border xl:border-border xl:bg-border xl:p-px">
-              <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 xl:w-auto xl:border-0">
+            <div className="grid gap-px border border-border bg-border p-px">
+              <div className="min-w-0 bg-background p-3">
                 <p className="text-[10px] font-semibold text-muted-foreground">지금 일어나는 일</p>
                 <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.now}</p>
               </div>
-              <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 xl:w-auto xl:border-0">
+              <div className="min-w-0 bg-background p-3">
                 <p className="text-[10px] font-semibold text-muted-foreground">새로 생긴 증거</p>
                 <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.evidence}</p>
               </div>
-              <div className="w-[86%] shrink-0 snap-start border border-border bg-background p-3 xl:w-auto xl:border-0">
+              <div className="min-w-0 bg-background p-3">
                 <p className="text-[10px] font-semibold text-muted-foreground">아직 확정되지 않음</p>
                 <p className="mt-1 break-keep text-xs font-semibold leading-5">{state.pending}</p>
               </div>
@@ -159,6 +159,73 @@ export function DAGTransactionTraceViz() {
         <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="T1 처리 과정 재생" />
       </div>
       <StaticSceneList labels={TRACE_LABELS} notes={TRACE_NOTES} />
+    </VizFrame>
+  );
+}
+
+const ORDER_LABELS = ["앵커 지지 확인", "과거 수집", "결정적 정렬", "회수·실행"] as const;
+
+const ORDER_STATES = [
+  {
+    title: "다음 라운드의 서로 다른 작성자 f+1명이 앵커를 가리키는지 먼저 셉니다.",
+    code: "if support(anchor) < f+1: wait",
+    input: "n=4, f=1이면 B3와 C3처럼 A2를 가리키는 두 edge가 필요합니다.",
+    output: "조건을 통과하면 A2를 결정할 수 있습니다.",
+    pending: "Edge 하나나 로컬 도착 순서만으로는 앵커를 결정하지 않습니다.",
+  },
+  {
+    title: "결정된 앵커에서 아직 처리하지 않은 인과적 과거를 모읍니다.",
+    code: "history = uncommitted_ancestors(anchor)",
+    input: "A2가 가리키는 A1·B1·C1과 아직 실행하지 않은 조상을 따라갑니다.",
+    output: "이번 committed prefix에 들어갈 블록 집합이 생깁니다.",
+    pending: "집합만 생겼을 뿐 독립 블록의 앞뒤 순서는 아직 하나가 아닙니다.",
+  },
+  {
+    title: "모든 검증자가 공유하는 값만 써서 같은 순서를 만듭니다.",
+    code: "ordered = sort(history, by=(round, author, digest))",
+    input: "로컬 수신 시각 대신 round·작성자·digest처럼 검증 가능한 값을 사용합니다.",
+    output: "어느 검증자에서도 같은 ordered prefix가 나옵니다.",
+    pending: "정확한 tie-break는 실제 프로토콜과 구현의 자료구조에 고정돼야 합니다.",
+  },
+  {
+    title: "빠진 배치를 회수·검증한 뒤 거래를 한 번씩 실행합니다.",
+    code: "execute(fetch_missing(ordered))",
+    input: "Cert(A1)의 정상 서명자에게 없는 payload를 요청하고 digest를 확인합니다.",
+    output: "T1의 실행 receipt와 새 state root가 생깁니다.",
+    pending: "앵커 결정 시각과 payload 수신·실행·클라이언트 응답 시각은 다릅니다.",
+  },
+] as const;
+
+const ORDER_NOTES = ORDER_STATES.map((state) => `${state.title} ${state.output} ${state.pending}`);
+
+export function DAGOrderingPseudocodeViz() {
+  const scenes = useAnimatedScenes(ORDER_LABELS.length, 6200, { loop: false });
+  const state = ORDER_STATES[scenes.active];
+
+  return (
+    <VizFrame
+      eyebrow="결정 절차 · 의사코드와 상태를 함께 읽기"
+      title="앵커를 확인한 뒤 과거를 모으고, 정렬하고, 실행합니다"
+      description="코드 한 줄이 어떤 증거를 입력으로 받고 무엇을 새로 확정하는지 장면마다 연결합니다."
+      note="부분 동기식 Bullshark의 결정 경계를 설명하기 위한 의사코드입니다. 전체 프로토콜 구현을 그대로 옮긴 코드는 아닙니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="DAG 앵커를 실행 순서로 바꾸는 네 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+        <div data-viz-scene-stage className="min-h-[520px] sm:min-h-[390px]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {ORDER_LABELS[scenes.active]}</p>
+          <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">{state.code}</code>
+          <div className="mt-3 grid gap-px border border-border bg-border p-px sm:grid-cols-3">
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">입력·판단</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.input}</p></div>
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">새로 생긴 결과</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.output}</p></div>
+            <div className="bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">아직 남은 일</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.pending}</p></div>
+          </div>
+          <div className="mt-4 grid grid-cols-4 gap-1" aria-hidden="true">{ORDER_LABELS.map((label, index) => <span key={label} className={`h-1.5 ${index <= scenes.active ? "bg-primary" : "bg-border"}`} />)}</div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={ORDER_LABELS} controlLabels={ORDER_LABELS} playLabel="DAG 정렬 의사코드 재생" />
+      </div>
+      <StaticSceneList labels={ORDER_LABELS} notes={ORDER_NOTES} />
     </VizFrame>
   );
 }

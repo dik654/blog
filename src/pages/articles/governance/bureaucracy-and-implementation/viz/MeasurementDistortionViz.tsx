@@ -1,133 +1,169 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import {
+  AnimatedSceneControls,
+  StaticSceneList,
+} from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: measurement 의 ExplainedFormula — 잰 것에 보상을 걸수록 못 잰 것이 밀려난다 */
-const SCENES = [
-  "성과급 없이 직업의식만 있을 때",
-  "성과급을 걸면 잰 쪽이 늘어난다",
-  "더 걸면 못 잰 쪽이 더 줄어든다",
-  "끝까지 걸면 못 잰 쪽이 사라진다",
-] as const;
-
-/** 두 과업이 시간을 두고 다투는 정도, 못 재는 과업에 대한 내적 동기 */
 const GAMMA = 0.5;
 const MU = 10;
-/** 사회가 보는 단위당 가치. 재기 어려운 쪽이 더 중요한 경우를 둔다 */
-const V1 = 1;
-const V2 = 3;
-
 const BETAS = [5, 10, 15, 20] as const;
 
-const ACCENT = "#6366f1";
-const OK = "#10b981";
-const WARN = "#ef4444";
-const MUTED = "#94a3b8";
-
-const effortMeasured = (beta: number) => (beta - GAMMA * MU) / (1 - GAMMA * GAMMA);
-const effortUnmeasured = (beta: number) => (MU - GAMMA * beta) / (1 - GAMMA * GAMMA);
+const effortMeasured = (beta: number) =>
+  (beta - GAMMA * MU) / (1 - GAMMA * GAMMA);
+const effortUnmeasured = (beta: number) =>
+  (MU - GAMMA * beta) / (1 - GAMMA * GAMMA);
 const socialValue = (beta: number) =>
-  V1 * effortMeasured(beta) + V2 * effortUnmeasured(beta);
+  effortMeasured(beta) + 3 * effortUnmeasured(beta);
+const fmt = (value: number) =>
+  Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2);
 
-const fmt = (v: number) => (Math.abs(v - Math.round(v)) < 1e-9 ? `${Math.round(v)}` : v.toFixed(2));
+const SCENES = [
+  "보상 5: 정밀 조사에 노력이 남는다",
+  "보상 10: 두 노력이 같아진다",
+  "보상 15: 빠른 점검 쪽으로 기운다",
+  "보상 20: 정밀 조사 노력이 0이 된다",
+] as const;
 
-const BAR_X = 128;
-const BAR_W = 220;
-const SCALE = BAR_W / 20;
+const CONTROL_LABELS = ["β=5", "β=10", "β=15", "β=20"] as const;
+
+const NOTES = [
+  "β=5에서는 빠른 점검 0, 정밀 조사 10입니다. 설명용 전체 가치는 30입니다.",
+  "β=10에서는 두 노력이 6.67로 같지만 전체 가치는 26.67로 줄어듭니다.",
+  "β=15에서는 빠른 점검 13.33, 정밀 조사 3.33이고 전체 가치는 23.33입니다.",
+  "β=20에서는 정밀 조사 노력이 0입니다. 완료 숫자는 가장 크지만 전체 가치는 20입니다.",
+] as const;
+
+function EffortBar({
+  label,
+  value,
+  max,
+  tone,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  tone: string;
+}) {
+  const width = Math.max(0, Math.min(100, (value / max) * 100));
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-3 text-[11px]">
+        <span>{label}</span>
+        <strong className="tabular-nums">{fmt(value)}</strong>
+      </div>
+      <div className="mt-1 h-5 border border-border bg-background p-1">
+        <div
+          className={`h-full ${tone}`}
+          style={{ width: `${width}%` }}
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function MeasurementDistortionViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 4200, { loop: false });
   const step = scenes.active;
   const beta = BETAS[step];
-  const e1 = effortMeasured(beta);
-  const e2 = effortUnmeasured(beta);
-  const value = socialValue(beta);
-
-  const NOTES = [
-    `보상을 잰 과업에 걸긴 하되 아주 약하게 두면(계수 ${beta}) 담당자는 잴 수 없는 쪽에만 ${fmt(e2)}만큼 힘을 씁니다. 사회가 보는 값의 합은 ${fmt(value)}입니다.`,
-    `계수를 ${beta}로 올리면 잰 쪽 노력이 ${fmt(e1)}로 올라오지만 못 잰 쪽은 ${fmt(e2)}로 내려갑니다. 둘이 같은 시간을 두고 다투기 때문이고, 합은 ${fmt(value)}으로 줄었습니다.`,
-    `계수 ${beta}에서 잰 쪽은 ${fmt(e1)}, 못 잰 쪽은 ${fmt(e2)}입니다. 관리 지표는 계속 좋아지는데 사회가 보는 값의 합은 ${fmt(value)}으로 더 줄어듭니다.`,
-    `계수 ${beta}에서 못 잰 쪽 노력이 정확히 ${fmt(e2)}이 됩니다. 지표만 보면 가장 성공한 상태인데 합은 ${fmt(value)}으로 가장 낮습니다.`,
-  ] as const;
+  const quick = effortMeasured(beta);
+  const deep = effortUnmeasured(beta);
+  const total = socialValue(beta);
 
   return (
     <VizFrame
-      eyebrow="측정과 유인"
-      title="잴 수 있는 것에 보상을 걸수록 잴 수 없는 것이 밀려납니다"
-      description="두 일이 같은 시간을 두고 다툴 때, 한쪽에만 걸린 보상은 다른 쪽을 끌어내립니다."
-      note={`두 과업이 시간을 두고 다투는 정도를 ${GAMMA}, 잴 수 없는 일에 대한 직업의식을 ${MU}로 두었습니다. 사회가 보는 단위당 가치는 잰 쪽 ${V1}, 못 잰 쪽 ${V2}입니다.`}
+      className="mobile-viz-stable-height"
+      eyebrow="같은 검사관의 시간 배분"
+      title="완료 보상을 올리면 빠른 점검과 정밀 조사의 비율이 바뀝니다"
+      description="β만 5→10→15→20으로 바꾸고 나머지 조건은 그대로 둡니다."
+      note="γ=0.5, μ=10인 설명용 모형입니다. 실제 검사관의 생산성이나 안전 효과를 측정한 값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="성과급 계수와 두 과업의 노력"
+        aria-label="완료 건수 보상에 따라 빠른 점검과 정밀 조사 노력이 달라지는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
+            장면 {step + 1} / {SCENES.length}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+          <h4 className="mt-1 break-keep text-base font-bold leading-6">
+            {SCENES[step]}
+          </h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <text x={BAR_X - 10} y={32} textAnchor="end" fontSize={9} fontWeight={700} fill={ACCENT}>
-                성과급 계수
-              </text>
-              <rect x={BAR_X} y={20} width={beta * SCALE} height={14} fill={ACCENT} fillOpacity={0.25} stroke={ACCENT} strokeWidth={1} />
-              <text x={BAR_X + BAR_W + 10} y={31} fontSize={9} fontWeight={700} fill={ACCENT}>
-                {beta}
-              </text>
-
-              <text x={BAR_X - 10} y={68} textAnchor="end" fontSize={9} fontWeight={700} fill={OK}>
-                잴 수 있는 일
-              </text>
-              <rect x={BAR_X} y={56} width={Math.max(e1 * SCALE, 0.6)} height={14} fill={OK} fillOpacity={0.5} stroke={OK} strokeWidth={1} />
-              <text x={BAR_X + BAR_W + 10} y={67} fontSize={9} fontWeight={700} fill={OK}>
-                {fmt(e1)}
-              </text>
-              <text x={BAR_X - 10} y={82} textAnchor="end" fontSize={7.5} fill={MUTED}>
-                처리 건수 · 적발 실적
-              </text>
-
-              <text x={BAR_X - 10} y={106} textAnchor="end" fontSize={9} fontWeight={700} fill={WARN}>
-                잴 수 없는 일
-              </text>
-              <rect x={BAR_X} y={94} width={Math.max(e2 * SCALE, 0.6)} height={14} fill={WARN} fillOpacity={0.5} stroke={WARN} strokeWidth={1} />
-              <text x={BAR_X + BAR_W + 10} y={105} fontSize={9} fontWeight={700} fill={e2 <= 0.001 ? WARN : MUTED}>
-                {fmt(e2)}
-              </text>
-              <text x={BAR_X - 10} y={120} textAnchor="end" fontSize={7.5} fill={MUTED}>
-                판단의 질 · 어려운 사안
-              </text>
-
-              <line x1={BAR_X} y1={14} x2={BAR_X} y2={134} stroke={MUTED} strokeWidth={1} />
-
-              <text x={BAR_X - 10} y={158} textAnchor="end" fontSize={9} fontWeight={700} fill={MUTED}>
-                사회가 보는 값
-              </text>
-              <rect x={BAR_X} y={146} width={(value / 30) * BAR_W} height={14} fill={MUTED} fillOpacity={0.35} stroke={MUTED} strokeWidth={1} />
-              <text x={BAR_X + BAR_W + 10} y={157} fontSize={9} fontWeight={700} fill={step === 0 ? OK : WARN}>
-                {fmt(value)}
-              </text>
-              <text x={BAR_X} y={176} fontSize={8} fill={MUTED}>
-                잰 쪽 × {V1} + 못 잰 쪽 × {V2}
-              </text>
-            </svg>
+          <div className="mt-2 grid grid-cols-3 gap-1.5">
+            <div className="border border-sky-400/70 bg-sky-500/10 p-1 text-center">
+              <p className="text-[10px] leading-4 text-muted-foreground">
+                완료 보상 β
+              </p>
+              <p className="text-lg font-black tabular-nums">{beta}</p>
+            </div>
+            <div className="border border-border p-1 text-center">
+              <p className="text-[10px] leading-4 text-muted-foreground">
+                시간 경쟁 γ
+              </p>
+              <p className="text-lg font-black tabular-nums">0.5</p>
+            </div>
+            <div className="border border-border p-1 text-center">
+              <p className="text-[10px] leading-4 text-muted-foreground">
+                직업의식 μ
+              </p>
+              <p className="text-lg font-black tabular-nums">10</p>
+            </div>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <div className="mt-2 space-y-2">
+            <EffortBar
+              label="빠른 점검 노력 e₁"
+              value={quick}
+              max={20}
+              tone="bg-emerald-500/60"
+            />
+            <EffortBar
+              label="정밀 조사 노력 e₂"
+              value={deep}
+              max={10}
+              tone="bg-rose-500/60"
+            />
+            <EffortBar
+              label="설명용 전체 가치 e₁+3e₂"
+              value={total}
+              max={30}
+              tone="bg-slate-500/45"
+            />
+          </div>
+
+          <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-y border-border py-1.5 text-center">
+            <div>
+              <p className="text-[10px] text-muted-foreground">관리 화면</p>
+              <p className="font-black">{fmt(quick)} ↑</p>
+            </div>
+            <span aria-hidden="true" className="text-muted-foreground">
+              ≠
+            </span>
+            <div>
+              <p className="text-[10px] text-muted-foreground">전체 가치</p>
+              <p className="font-black">{fmt(total)} ↓</p>
+            </div>
+          </div>
+
+          <p className="mt-1 border-l border-primary/50 pl-3 text-xs leading-5 text-muted-foreground">
             {NOTES[step]}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+
+        <AnimatedSceneControls
+          {...scenes}
+          labels={SCENES}
+          controlLabels={CONTROL_LABELS}
+          playLabel="노력 배분 재생"
+        />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

@@ -69,7 +69,7 @@ export default function ArticleOnboarding({
     ...(boundary?.reuses.map((link) => ({
       ...link,
       reason:
-        "공통 원리는 이 글에서 다시 정의하지 않고 해당 글의 설명을 사용합니다.",
+        "여러 글에서 함께 쓰는 원리는 연결된 글에서 더 자세히 설명합니다.",
     })) ?? []),
   ]).filter((link) => link.href !== hrefForRoute(routeKey));
   const learningScope = learning?.introducedHere.slice(0, 5).map((concept) => ({
@@ -149,13 +149,13 @@ export default function ArticleOnboarding({
 
       <ProgressiveDetail
         className="my-0"
-        title="이 글은 어디까지 설명하고, 무엇을 연결 글에 맡기나요?"
+        title="이 글에서 설명하는 범위와 이어 읽을 내용"
         preview={scopePreview}
       >
         <p>
-          이 글은 {ARTICLE_INTENT_DESCRIPTIONS[intent]}입니다. 핵심 판단에 필요한
-          흐름은 본문에서 설명하고, 여러 글에 공통인 정의는 아래 연결 글의 정본
-          설명을 사용합니다.
+          이 글은 {ARTICLE_INTENT_DESCRIPTIONS[intent]}입니다. 핵심 흐름은 본문에서
+          설명하며, 여러 글에서 함께 쓰는 개념은 아래 연결 글에서 더 자세히 볼 수
+          있습니다.
         </p>
         {learningScope && learningScope.length > 0 ? (
           <ol>
@@ -175,7 +175,7 @@ export default function ArticleOnboarding({
         {reuseLinks.length > 0 && (
           <div className="not-prose mt-5 border-t border-border/70 pt-4">
             <p className="text-xs font-bold text-amber-700 dark:text-amber-300">
-              이 글과 역할을 나누는 연결 글
+              함께 읽으면 좋은 연결 글
             </p>
             <div className="mt-2 grid min-w-0 gap-2 sm:grid-cols-2">
               {reuseLinks.map((link) => (

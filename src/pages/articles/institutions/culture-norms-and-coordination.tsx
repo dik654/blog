@@ -2,14 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import CultureNormsCoordinationViz from "./CultureNormsCoordinationViz";
 
 export default function Article() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">계약서에 적지 않은 예상도 사람을 움직입니다</h2>
-        <CultureNormsCoordinationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">새로운 시장에 가게를 열면 임대료뿐 아니라 주변 사람들과 일을 맞추는 방식도 배워야 합니다. 물건이 늦었을 때 누가 먼저 연락하는지, 공동 비용은 언제 내는지, 이견을 어디서 이야기하는지 알아야 일이 이어집니다.</p>
           <p className="leading-8">이 글은 이런 약속을 사람들이 어떻게 예상하고 지키게 되는지 다룹니다. 한 나라 사람의 성격을 분류하는 대신 가게들이 공동 비용을 모으는 작은 장면을 따라갑니다.</p>
@@ -74,7 +72,7 @@ export default function Article() {
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">미납이 2곳일 때와 3곳일 때 결과가 달라집니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">모두 납부하면 10×2=20만원에서 16만원을 내고 4만원이 남습니다.2곳이 미납하면 8×2=16만원으로 청소비만 충당합니다. 세 번째 가게도 내지 않으면 7×2=14만원이 되어 2만원이 부족합니다.</p>
+          <p className="leading-8">모두 납부하면 10×2=20만원에서 16만원을 내고 4만원이 남습니다. 2곳이 미납하면 8×2=16만원으로 청소비만 충당합니다. 세 번째 가게도 내지 않으면 7×2=14만원이 되어 2만원이 부족합니다.</p>
           <p className="leading-8">돈을 걷는 담당자는 먼저 납부기록과 지급일을 대조합니다. 입금이 잘못 연결됐는지, 일시적 어려움이 있는지 확인하고 당사자에게 설명할 기회를 줍니다. 부족한 2만원을 임시로 누가 낼지와 나중에 어떻게 돌려받을지도 문서에 남깁니다.</p>
           <p className="leading-8">청소를 줄이면 거리를 함께 쓰는 모두에게 결과가 나타납니다. 다음 달 납부가 더 줄어들 수도 있습니다. 이 방향은 가정의 가능한 경로이며 실제 결과는 서비스 만족도·소득·관계에 따라 달라집니다. 규칙을 고칠 때는 납부율과 청소 품질을 함께 봅니다.</p>
         </div>

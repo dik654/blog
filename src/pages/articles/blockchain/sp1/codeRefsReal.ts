@@ -1,57 +1,109 @@
 import type { CodeRef } from "@/components/code/types";
+import fibonacciRs from "./codebase/sp1/examples/fibonacci/program/src/main.rs?raw";
 import programRs from "./codebase/sp1/crates/core/executor/src/program.rs?raw";
 import recordRs from "./codebase/sp1/crates/core/executor/src/record.rs?raw";
+import coreVerifyRs from "./codebase/sp1/crates/prover/src/verify.rs?raw";
 import proofRs from "./codebase/sp1/crates/sdk/src/proof.rs?raw";
 import proverRs from "./codebase/sp1/crates/sdk/src/prover.rs?raw";
+import tensorRs from "./codebase/sp1/slop/crates/tensor/src/inner.rs?raw";
+
+export const SP1_VERSION = "v6.10.0";
+export const SP1_COMMIT = "d83ed91f96701209613720708f36ffce0e98ed33";
 
 export const codeRefsReal: Record<string, CodeRef> = {
+  "sp1-fibonacci": {
+    path: "sp1/examples/fibonacci/program/src/main.rs",
+    code: fibonacciRs,
+    lang: "rust",
+    highlight: [7, 23],
+    desc: "공식 Fibonacci guest가 stdin에서 n을 읽고 무엇을 어떤 순서로 public values에 commit하는지 확인합니다. n=10이면 n·a·b는 10·55·89입니다.",
+    annotations: [
+      { lines: [8, 10], color: "sky", note: "stdin의 n을 읽고 첫 public value로 commit" },
+      { lines: [12, 19], color: "emerald", note: "a=0, b=1에서 n번 반복해 F(n), F(n+1) 계산" },
+      { lines: [21, 22], color: "amber", note: "두 번째와 세 번째 public value를 순서대로 commit" },
+    ],
+  },
   "sp1-program": {
     path: "sp1/crates/core/executor/src/program.rs",
     code: programRs,
     lang: "rust",
-    highlight: [17, 48],
-    desc: "문제: A_P=H(d_src‖d_tool‖H(ELF)‖H(VK)‖d_schema‖v) 식에서 H(ELF) 대상이 되는 \"parsed ELF\" artifact가 실제로 어떤 구조인지 확인해야 합니다.\n\n해결: Program struct가 ELF에서 파싱한 instructions와 memory_image, 시작 주소(pc_start_abs)를 담습니다.",
+    highlight: [3, 53],
+    desc: "소스 이름이 아니라 executor가 실제로 읽는 ELF bytes가 instruction·PC·memory image를 가진 Program으로 바뀌는 경계입니다.",
     annotations: [
-      { lines: [20, 21], color: "sky", note: "article의 ELF instructions — parse된 실행 명령어 목록" },
-      { lines: [26, 27], color: "emerald", note: "article의 program artifact identity 중 실행 시작점" },
-      { lines: [35, 36], color: "amber", note: "article의 memory image — 전역 상수 등 초기 메모리" },
+      { lines: [3, 15], color: "sky", note: "Program identity에 들어가는 instruction·PC·memory fields" },
+      { lines: [19, 30], color: "emerald", note: "ELF decode와 RV64IM instruction transpile" },
+      { lines: [32, 37], color: "amber", note: "빈 ELF와 최대 program size를 거절" },
     ],
   },
   "sp1-record": {
     path: "sp1/crates/core/executor/src/record.rs",
     code: recordRs,
     lang: "rust",
-    highlight: [10, 80],
-    desc: "문제: ExecutionRecord가 \"단순 instruction count가 아니라 CPU·memory·syscall/precompile events와 public values를 담는 witness artifact\"라는 주장과, shard 연속성 식 m_i^out=m_{i+1}^in이 실제로 어떻게 구현되는지 확인해야 합니다.\n\n해결: ExecutionRecord struct가 event trace들과 public_values를 함께 담고, split()이 이전 shard의 종료 state를 다음 shard의 시작 state로 그대로 이어붙입니다.",
+    highlight: [3, 27],
+    desc: "ExecutionRecord가 instruction count가 아니라 CPU·ALU·branch·memory·syscall·public values와 shard boundary를 함께 담는 witness artifact임을 보여 줍니다.",
     annotations: [
-      { lines: [18, 25], color: "sky", note: "article의 CPU/memory events — 대표 event trace 필드 (실제로는 수십 개)" },
-      { lines: [27, 34], color: "emerald", note: "article의 syscall/precompile events와 memory boundary event" },
-      { lines: [63, 72], color: "amber", note: "article의 m_i^out=m_{i+1}^in — 이전 shard 종료 state를 다음 shard 시작 state로 그대로 이어붙임" },
+      { lines: [3, 12], color: "sky", note: "CPU·ALU·control-flow event fields" },
+      { lines: [13, 20], color: "emerald", note: "memory·precompile·syscall·global interaction fields" },
+      { lines: [21, 27], color: "amber", note: "public values, timestamp, PC와 exit boundary" },
+    ],
+  },
+  "sp1-core-verify": {
+    path: "sp1/crates/prover/src/verify.rs",
+    code: coreVerifyRs,
+    lang: "rust",
+    highlight: [3, 41],
+    desc: "Core verifier가 각 shard proof의 유효성만 보는 것이 아니라 timestamp와 program counter를 앞 shard의 끝에서 다음 shard의 시작으로 연결하는 실제 검사입니다.",
+    annotations: [
+      { lines: [3, 14], color: "sky", note: "last_timestamp → next initial_timestamp 연속성" },
+      { lines: [16, 35], color: "emerald", note: "VK start PC와 shard nextPC → next startPC 연속성" },
+      { lines: [37, 41], color: "amber", note: "마지막 next PC가 HALT_PC인지 확인" },
     ],
   },
   "sp1-proof": {
     path: "sp1/crates/sdk/src/proof.rs",
     code: proofRs,
     lang: "rust",
-    highlight: [17, 62],
-    desc: "문제: d_S=H(vkHash‖H(PV)) 식 — statement digest가 vkey hash와 public values hash의 결속으로 만들어진다는 주장이 실제 코드에서 확인되는지 봐야 합니다.\n\n해결: verify_mock_public_inputs가 정확히 vkey.hash_bn254()와 public_values.hash_bn254()를 비교하고, SP1ProofWithPublicValues struct가 proof·public_values·sp1_version을 함께 묶습니다.",
+    highlight: [3, 35],
+    desc: "Core·Compressed·PLONK·Groth16의 네 proof variants와 proof·public values·version을 묶은 receipt, wrapper의 vkey/PV hash 검사를 한 화면에서 봅니다.",
     annotations: [
-      { lines: [22, 30], color: "sky", note: "article의 vkHash — verification key의 canonical identity 검사" },
-      { lines: [32, 40], color: "emerald", note: "article의 H(PV) — public values hash 검사" },
-      { lines: [52, 61], color: "amber", note: "article의 receipt 필드 — mode(proof 안에 포함)·public_values·sp1_version이 한 struct에" },
+      { lines: [3, 8], color: "sky", note: "서로 목적과 verifier가 다른 네 proof modes" },
+      { lines: [10, 15], color: "emerald", note: "proof·public_values·sp1_version을 묶은 receipt" },
+      { lines: [21, 31], color: "amber", note: "wrapper public inputs의 vkey hash와 public-values hash 검사" },
     ],
   },
   "sp1-prover": {
     path: "sp1/crates/sdk/src/prover.rs",
     code: proverRs,
     lang: "rust",
-    highlight: [10, 59],
-    desc: "문제: \"Program setup, execution, proof construction과 verification을 stable SDK 경계로 제공\"한다는 주장이 실제로 어느 trait에서 확인되는지 봐야 합니다.\n\n해결: Prover trait이 setup/prove/execute/verify 네 메서드로 이 경계를 정의합니다.",
+    highlight: [3, 31],
+    desc: "User-facing lifecycle이 setup·prove·execute·verify로 나뉘는 이유와 각 단계의 artifact를 확인합니다.",
     annotations: [
-      { lines: [30, 33], color: "sky", note: "article의 program artifact 생성 — setup이 ProvingKey(VK 포함)를 만듦" },
-      { lines: [35, 37], color: "emerald", note: "article의 proof mode 생성 진입점" },
-      { lines: [39, 44], color: "amber", note: "article의 execution-shards — proof 없이 실행만 하는 execute" },
-      { lines: [46, 58], color: "violet", note: "article의 receipt 검증 — statement digest·mode·버전 확인" },
+      { lines: [14, 16], color: "sky", note: "ELF→PK/VK setup과 proof request" },
+      { lines: [18, 20], color: "emerald", note: "proof를 만들지 않는 execute 경로" },
+      { lines: [22, 30], color: "amber", note: "proof·VK·expected status를 받는 verify 경로" },
+    ],
+  },
+  "sp1-verification": {
+    path: "sp1/crates/sdk/src/prover.rs",
+    code: proverRs,
+    lang: "rust",
+    highlight: [33, 53],
+    desc: "Receipt version을 먼저 확인하고 mode별 verifier에 expected VK를 전달하는 SDK 경계입니다. Full source는 이 사이에서 exit code와 public-values digest도 검사합니다.",
+    annotations: [
+      { lines: [40, 44], color: "sky", note: "bundle version과 현재 circuit version mismatch 거절" },
+      { lines: [48, 53], color: "emerald", note: "expected vkey로 mode별 proof 검증" },
+    ],
+  },
+  "sp1-tensor-shape": {
+    path: "sp1/slop/crates/tensor/src/inner.rs",
+    code: tensorRs,
+    lang: "rust",
+    highlight: [3, 43],
+    desc: "v6.8.1 security fix 이후 tensor의 declared dimensions와 physical storage length를 같게 강제하고, 2×2인데 원소가 3개 또는 5개인 bincode를 거절하는 회귀 테스트입니다.",
+    annotations: [
+      { lines: [8, 20], color: "sky", note: "expected dimensions product와 actual storage length 비교" },
+      { lines: [22, 24], color: "emerald", note: "verifier가 재사용하는 physical shape predicate" },
+      { lines: [27, 43], color: "amber", note: "appended/truncated storage negative fixtures" },
     ],
   },
 };

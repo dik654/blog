@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import {
   DAGArrivalOrderCounterexampleViz,
+  DAGOrderingPseudocodeViz,
   DAGStateBoundaryViz,
   DAGTransactionTraceViz,
 } from "./viz/ModernDAGConsensusViz";
@@ -11,23 +12,6 @@ function BoundaryNote({ title, children }: { title: string; children: React.Reac
     <div className="border border-border bg-card p-4">
       <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       <div className="mt-2 text-sm leading-6 text-muted-foreground">{children}</div>
-    </div>
-  );
-}
-
-function OrderingSketch() {
-  return (
-    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
-      <pre><code>{`// 다음 라운드 블록 f+1개가 앵커를 가리키는지 확인합니다.
-if support(anchor) >= f + 1:
-    // 결정된 앵커에서 아직 처리하지 않은 인과적 과거를 모읍니다.
-    history = uncommitted_ancestors(anchor)
-
-    // 모든 검증자가 공유하는 값으로 같은 순서를 만듭니다.
-    ordered = sort(history, by=(round, author, digest))
-
-    // 빠진 배치를 가져온 뒤 각 거래를 한 번만 실행합니다.
-    execute(fetch_missing(ordered))`}</code></pre>
     </div>
   );
 }
@@ -43,6 +27,9 @@ export default function ModernDAGConsensusArticle() {
         <p className="text-lg leading-8 text-foreground/90">
           네 검증자 A·B·C·D가 서로 기다리지 않고 거래를 퍼뜨린다고 가정하겠습니다. Alice의 거래 T1은 A가 만든 블록 A1에 들어갑니다. Narwhal은 A1의 데이터를 나중에 다시 가져올 수 있다는 증거를 만들고, Bullshark는 DAG의 edge를 읽어 어느 앵커까지 결정됐는지 판단합니다. 마지막으로 모든 검증자가 같은 규칙으로 앵커의 인과적 과거를 펼쳐야 T1의 실행 위치가 정해집니다.
         </p>
+        <aside className="border-l-2 border-primary bg-primary/5 p-5 text-sm leading-6">
+          <strong>먼저 기억할 한 문장:</strong> Narwhal은 거래 데이터를 병렬로 인증하고, Bullshark는 공통 앵커를 정하며, 마지막 결정적 정렬이 그 앵커의 과거를 모두 같은 실행 순서로 바꿉니다.
+        </aside>
 
         <DAGTransactionTraceViz />
 
@@ -116,7 +103,7 @@ export default function ModernDAGConsensusArticle() {
           전체 비동기 Bullshark는 네 라운드 wave, steady-state leader와 fallback leader, 무작위성을 함께 사용합니다. 따라서 “모든 Bullshark는 두 라운드와 f+1표만 쓴다”고 일반화하면 안 됩니다. 여기서 f+1 규칙은 부분 동기식 버전의 ordering 핵심을 이해하기 위한 정확한 범위입니다.
         </p>
 
-        <OrderingSketch />
+        <DAGOrderingPseudocodeViz />
         <p className="text-sm leading-6 text-muted-foreground">
           위 코드는 논문의 전체 알고리즘을 옮긴 구현이 아니라, 이 글에서 따라온 결정 경계를 보여주는 의사코드입니다. 실제 구현은 이전 앵커의 간접 결정, equivocation, garbage collection과 재시작 상태까지 처리해야 합니다.
         </p>

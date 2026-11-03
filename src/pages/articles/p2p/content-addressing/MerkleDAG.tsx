@@ -1,3 +1,4 @@
+import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MerkleDAGViz from "./viz/MerkleDAGViz";
 
@@ -5,85 +6,117 @@ export default function MerkleDAG() {
   return (
     <section id="merkle-dag" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Merkle DAG는 child CID를 parent bytes에 넣어 전체 구조를 root에
-        커밋합니다
+        Merkle DAG는 child CID를 parent bytes에 넣어 root 하나로 아래 구조를
+        묶습니다
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          큰 directory를 한 block으로 hash하면 작은 파일 하나를 읽거나 바꿀 때도
-          전체를 다시 처리해야 합니다. Merkle DAG(해시 링크가 있는 방향성 비순환
-          그래프)는 data를 block으로 나누고 parent node의 canonical bytes에
-          child CID를 link로 넣습니다. Root CID 하나를 알면 내려가는 각 edge마다
-          받은 child bytes를 검증할 수 있습니다.
+          <strong>
+            Leaf가 바뀌면 그 CID를 적어 둔 parent bytes가 바뀌고, 이 변화가 root
+            CID까지 올라갑니다.
+          </strong>{" "}
+          반대로 바뀌지 않은 sibling block은 같은 CID로 그대로 재사용할 수
+          있습니다.
+        </p>
+        <p>
+          같은 사례를 이어 가겠습니다. Project root는 raw <code>hello</code>
+          readme block과 <code>src</code> directory를 가리킵니다. src는 다시
+          <code>lib.rs</code>를 가리킵니다. 여기서 lib.rs v1을 v2로 한 번
+          수정합니다. 그림의 <code>C_lib1</code> 같은 표기는 긴 CID 대신 흐름을
+          읽기 위한 축약 이름입니다.
         </p>
       </div>
       <div className="not-prose my-8">
         <MerkleDAGViz />
       </div>
       <ExplainedFormula
-        question="Leaf 한 개가 바뀌면 왜 root CID까지 달라질까요?"
-        idea={
-          <>
-            Leaf bytes의 digest가 바뀌면 leaf CID가 바뀌고, 그 CID를 포함한
-            parent encoding도 달라집니다. 같은 계산이 ancestor마다 반복되어
-            root까지 전파됩니다.
-          </>
-        }
+        question="lib.rs 하나를 고쳤는데 왜 project root까지 새 CID가 될까요?"
+        idea="Leaf CID가 parent의 serialized bytes 안에 들어 있기 때문입니다. Child link가 달라지면 parent bytes와 그 digest도 달라집니다."
         formula={String.raw`\begin{aligned}
 c_L &= \operatorname{CID}(b_L),\\
 b_P &= \operatorname{Encode}(data_P,[c_L,c_2,\ldots]),\\
 c_P &= \operatorname{CID}(b_P).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-c_L &= \underbrace{\operatorname{CID}(b_L)}_{\text{leaf chunk의 주소}},\\
-b_P &= \operatorname{Encode}(\underbrace{data_P}_{\text{이름·metadata}},\underbrace{[c_L,c_2,\ldots]}_{\text{child CID link 목록}}),\\
-c_P &= \underbrace{\operatorname{CID}(b_P)}_{\text{link 포함 parent 주소}}.
+c_L &= \underbrace{\operatorname{CID}(b_L)}_{\text{lib.rs leaf 주소}},\\
+b_P &= \operatorname{Encode}(\underbrace{data_P}_{\text{parent 자체 값}},\underbrace{[c_L,c_2,\ldots]}_{\text{child CID link 목록}}),\\
+c_P &= \underbrace{\operatorname{CID}(b_P)}_{\text{link까지 포함한 parent 주소}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{CID}(b_L)`, annotation: ["file chunk bytes를 hash한 주소", "lib.rs 한 byte가 바뀌면 c_L부터 바뀜"] },
-          { expression: String.raw`\operatorname{Encode}(data_P,[c_L,c_2,\ldots])`, annotation: ["parent 자신의 data와 child CID들을", "codec 규칙대로 canonical bytes로 직렬화", "c_L이 바뀌면 b_P도 달라짐"] },
-          { expression: String.raw`\operatorname{CID}(b_P)`, annotation: ["달라진 b_P를 hash하니 c_P도 새 값", "같은 계산이 src directory, root까지 반복", "안 바뀐 readme block은 그대로 재사용"] },
+          {
+            expression: String.raw`\operatorname{CID}(b_L)`,
+            annotation: [
+              "lib.rs v1 bytes는 C_lib1을 만듭니다",
+              "한 byte를 고친 v2 bytes는 C_lib2를 만듭니다",
+            ],
+          },
+          {
+            expression: String.raw`\operatorname{Encode}(data_P,[c_L,c_2,\ldots])`,
+            annotation: [
+              "src directory의 자체 값과 child CID를 직렬화합니다",
+              "C_lib1이 C_lib2로 바뀌면 parent bytes도 바뀝니다",
+            ],
+          },
+          {
+            expression: String.raw`\operatorname{CID}(b_P)`,
+            annotation: [
+              "새 src bytes가 C_src2를 만듭니다",
+              "Root에 C_src2가 들어가 C_root2까지 이어집니다",
+              "안 바뀐 hello block CID는 그대로입니다",
+            ],
+          },
         ]}
         terms={[
           {
             symbol: "b_L, c_L",
-            name: "leaf bytes and CID",
+            name: "Leaf bytes and CID",
             description:
-              "실제 file chunk bytes와 그 typed content address입니다.",
+              "lib.rs 같은 leaf block의 bytes와 content address입니다.",
           },
           {
             symbol: "data_P",
-            name: "parent local data",
-            description:
-              "Directory name·metadata처럼 parent가 직접 소유한 값입니다.",
+            name: "Parent local data",
+            description: "Directory metadata처럼 parent가 직접 가진 값입니다.",
           },
           {
             symbol: "[c_L,c_2,…]",
-            name: "ordered child links",
+            name: "Child links",
             description: "Parent encoding 안에 들어가는 child CID 목록입니다.",
           },
           {
             symbol: "b_P, c_P",
-            name: "parent bytes and CID",
+            name: "Parent bytes and CID",
             description:
-              "Child links까지 canonical하게 직렬화한 bytes와 그 주소입니다.",
+              "Child links까지 직렬화한 bytes와 그 content address입니다.",
           },
         ]}
         assumptions={[
-          "Node codec의 canonical encoding과 link order·metadata 규칙을 고정해야 같은 logical graph가 같은 root를 가집니다.",
-          "DAG는 cycle이 없어 root에서 유한하게 탐색할 수 있다는 전제를 가지며 mutable back-reference는 별도 layer로 둡니다.",
-          "Root CID는 포함된 bytes의 무결성을 커밋하지만 누락 block의 availability나 publisher identity를 보장하지 않습니다.",
+          "Node codec의 canonical encoding과 link order·metadata 규칙을 고정해야 합니다.",
+          "같은 file bytes라도 chunking이 다르면 leaf 경계와 root CID가 달라질 수 있습니다.",
+          "Root CID는 포함된 bytes의 무결성을 묶지만 누락 block의 availability나 publisher identity를 보장하지 않습니다.",
         ]}
-        interpretation="lib.rs leaf만 바꾸면 그 leaf, src directory와 root CID가 새로 생기고 변경되지 않은 readme block은 그대로 재사용할 수 있습니다. 이 구조적 공유가 version 간 deduplication의 근거입니다."
+        interpretation="C_lib1→C_lib2, C_src1→C_src2, C_root1→C_root2 순서로 새 CID가 생깁니다. raw hello block은 바뀌지 않았으므로 두 root가 같은 block을 공유합니다."
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Chunking과 codec도 root identity의 일부입니다</h3>
         <p>
-          같은 file bytes라도 256 KiB 고정 chunk와 content-defined chunking은 다른 leaf 경계를 만들 수 있고 dag-pb와 dag-cbor는 다른
-          parent bytes를 만듭니다. 따라서 root CID 비교는 “사용자에게 보이는 파일이 같다”보다 “같은 encoding pipeline으로 만든 graph bytes가
-          같다”는 더 좁은 주장입니다.
+          여기서 “같은 root”가 뜻하는 범위는 생각보다 좁습니다. 같은
+          사용자-visible file이라도 256 KiB 고정 chunk와 content-defined
+          chunking은 leaf 경계를 다르게 만들 수 있습니다. DAG-PB와 DAG-CBOR도
+          parent bytes가 다릅니다. Root CID는 같은 encoding pipeline으로 만든
+          graph bytes의 identity입니다.
         </p>
       </div>
+      <CitationBlock
+        source="IPLD — A Terse, Quick Primer for the Engineer"
+        citeKey={2}
+        href="https://ipld.io/docs/intro/primer/"
+      >
+        <p id="paper-ipld-primer" className="text-sm leading-6">
+          IPLD의 Block·Node·Link 구분과 CID link가 block을 가리키는 경계를
+          사용합니다. 특정 chunker나 codec이 언제나 최적이라는 성능 결론은 이
+          문서에서 가져오지 않습니다.
+        </p>
+      </CitationBlock>
     </section>
   );
 }

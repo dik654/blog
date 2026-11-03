@@ -11,10 +11,10 @@ import { gemminiPeMacDataflowTree } from "./gemmini-pe-mac-dataflow/fileTree";
 import GemminiPeMacDataflowViz from "./gemmini-pe-mac-dataflow/viz/GemminiPeMacDataflowViz";
 
 /**
- * PE 한 칸: MAC 을 이중 레지스터로 감싸 데이터플로우를 전환합니다
+ * PE 한 칸: 같은 MAC 배선을 OS와 WS가 공유합니다
  *
  * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- * 실제 소스: UC Berkeley Gemmini (github.com/ucb-bar/gemmini) src/main/scala/gemmini/PE.scala
+ * 실제 소스: UC Berkeley Gemmini commit 8c3f992 · src/main/scala/gemmini/PE.scala
  */
 export default function GemminiPeMacDataflowArticle() {
   const sidebar = useCodeSidebar();
@@ -22,22 +22,22 @@ export default function GemminiPeMacDataflowArticle() {
   return (
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">PE 한 칸은 시스톨릭 배열 전체가 반복하는 재사용의 최소 단위입니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">OS는 출력 하나를 붙잡고, WS는 weight 하나를 붙잡습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Gemmini 의 systolic array(시스톨릭 배열)는 특별한 회로가 아니라 PE(processing element, 처리 요소) 한 칸을
-            격자 모양으로 수백 번 복제한 것입니다. PE 한 칸이 곱셈+누산(MAC)을 한 사이클에 처리하고 그 결과를 이웃
-            PE 로 흘려보내는 규칙만 알면 16×16 이든 32×32 든 같은 규칙이 반복될 뿐입니다.
+            Gemmini PE 한 칸의 핵심은 계산기가 두 개라는 데 있지 않습니다. 같은 MacUnit 하나를 두고,
+            Output-Stationary(OS)는 완성할 출력의 부분합을 레지스터에 붙잡으며 Weight-Stationary(WS)는 weight를
+            붙잡습니다. 무엇을 붙잡느냐가 데이터 이동과 재사용 축을 바꿉니다.
           </p>
           <p>
-            이 반복이 중요한 이유는 roofline 에서 이미 본 arithmetic intensity(연산 강도, 메모리에서 읽은 1바이트당
-            연산 횟수) 때문입니다. 이 비율이 낮으면 memory-bound, 높으면 compute-bound 로 갈립니다. PE 한 칸의
-            dataflow — weight 를 고정할지 partial sum(누적 중인 출력)을 고정할지 — 가 바로 이 재사용 횟수를 정하는
-            스위치입니다.
+            숫자 하나부터 보겠습니다. <code>C₀₀ = D₀₀ + A₀₀B₀₀ + A₀₁B₁₀</code>이고 값이
+            <code>11 + 2×5 + 3×7 = 42</code>라면, OS는 11을 PE 안에서 21, 42로 키웁니다. 반면 WS는
+            B₀₀=5 같은 weight를 고정하고 서로 다른 출력 행의 activation과 들어온 partial sum을 통과시킵니다.
           </p>
           <p>
-            이 글은 실제 Gemmini 저장소의 PE.scala 파일 하나만 놓고 MacUnit 이라는 원자 연산부터
-            Weight-/Output-Stationary 전환, 그리고 그 전환을 끊기지 않게 만드는 이중 레지스터까지 따라갑니다.
+            그러면 왜 두 방식이 같은 MacUnit을 공유할 수 있을까요? c1·c2는 왜 두 벌이고, <code>propagate</code>가
+            바뀌는 순간에만 <code>shift</code>를 적용할까요? 아래에서 고정 commit의 <code>PE.scala</code> 배선을
+            숫자 42 하나와 함께 따라가며 답합니다.
           </p>
         </div>
         <GemminiPeMacDataflowViz />
@@ -45,17 +45,21 @@ export default function GemminiPeMacDataflowArticle() {
       </section>
 
       <section id="mac-unit" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">MacUnit 은 곱셈과 누산을 한 사이클에 묶은 원자 연산입니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">MacUnit은 세 값을 받아 한 번의 곱셈-누산을 표현합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            PE 안에서 실제로 값을 계산하는 부분은 MacUnit 이라는 별도 module 하나뿐입니다.{" "}
-            <code>io.out_d := io.in_c.mac(io.in_a, io.in_b)</code> — in_c(누적 중인 값)에 in_a(activation)와
-            in_b(weight)의 곱을 더한 값을 반환합니다. PE 전체 로직이 복잡해 보여도 실제 연산은 이 한 줄뿐입니다.
+            첫 항 <code>11 + 2×5 = 21</code>을 포트에 넣어 보겠습니다. <code>in_c=11</code>은 들어온 누적값,
+            <code>in_a=2</code>와 <code>in_b=5</code>는 곱할 두 값입니다. 소스의
+            <code>io.out_d := io.in_c.mac(io.in_a, io.in_b)</code>가 이 세 값을 21로 바꿉니다.
           </p>
           <p>
-            MacUnit 을 별도로 뗀 이유는 dataflow 전환 때문입니다. Weight-Stationary 와 Output-Stationary 는 mac_unit
-            에 넣는 입력의 배선만 다르고 연산 자체는 같습니다. 회로 합성 도구가 이를 눈치채지 못하면 곱셈기를 두 벌
-            만들어 칩 면적을 낭비할 수 있어 Gemmini 는 module 하나로 재사용을 강제합니다.
+            이 한 줄은 조합 논리를 기술합니다. 따라서 “모든 Gemmini 설정에서 반드시 한 클록에 끝난다”는 뜻은
+            아닙니다. 실제 clock timing과 pipeline register는 Tile·Mesh 구성까지 함께 봐야 합니다. 이 글에서
+            MacUnit을 원자 연산이라고 부르는 이유는 시간 보장이 아니라 OS와 WS가 같은 계산 회로를 공유하기 때문입니다.
+          </p>
+          <p>
+            소스 주석도 합성 도구가 두 dataflow의 MAC을 따로 만들 수 있어 별도 module 하나로 재사용을 강제한다고
+            설명합니다. OS와 WS에서 달라지는 것은 식이 아니라 <code>in_b</code>와 <code>in_c</code>에 무엇을 연결하는지입니다.
           </p>
         </div>
         <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -66,28 +70,29 @@ export default function GemminiPeMacDataflowArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            MacUnit 혼자서는 곱셈기 하나에 불과합니다. 그 앞뒤로 어떤 값을 넣고 뺄지 정하는 것이 PE 본체의 dataflow
-            로직입니다. 다음 절에서 이어집니다.
+            이제 같은 포트 이름도 dataflow에 따라 의미가 달라지는 지점을 보겠습니다. 특히 WS의
+            <code>mac_unit.io.in_c := b</code>에서 <code>b</code>는 activation이 아니라 위에서 흘러온 partial sum입니다.
           </p>
         </div>
       </section>
 
       <section id="dataflow" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">Weight-Stationary 는 weight 를, Output-Stationary 는 partial sum 을 PE 에 고정합니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">OS는 reduction 항을 모으고, WS는 여러 출력 행에 weight를 재사용합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            PEControl.dataflow 한 비트가 이 PE 가 무엇을 고정할지 정합니다. Weight-Stationary(WS)는 weight 를 PE
-            레지스터에 붙박아 두고 activation 만 흘려보내며 Output-Stationary(OS)는 반대로 partial sum 을 붙박아
-            두고 weight 와 activation 을 함께 흘려보냅니다.
+            <code>PEControl.dataflow</code> 한 비트가 두 배선 중 하나를 고릅니다. OS에서는 A와 B가 흐르고 D가
+            c1 또는 c2에 먼저 들어갑니다. 같은 출력 C₀₀에 속하는 reduction 항이 도착할 때마다
+            <code>11→21→42</code>로 누적되므로 partial sum이 PE 안에 머뭅니다.
           </p>
           <p>
-            WS 분기에서는 mac_unit.io.in_b(고정 weight 로 씀)에 레지스터 값을, mac_unit.io.in_c(누적 대상)에 옆에서
-            들어온 activation 을 넣습니다. 결과는 out_b 로 즉시 다음 PE 에 넘어가고 이 PE 안에는 남지 않습니다 —
-            weight 하나가 activation 이 흐르는 사이클 수만큼 반복해서 곱해지는 재사용이 여기서 일어납니다.
+            WS에서는 c1·c2의 값을 <code>mac_unit.io.in_b</code>에 연결해 weight로 씁니다. A는 늘 그렇듯
+            <code>in_a</code>로 들어갑니다. 중요한 차이는 <code>mac_unit.io.in_c := b</code>입니다. 여기의 b는 위에서
+            들어온 partial sum이며, MAC 결과는 <code>out_b</code>로 다음 PE에 전달되어 다른 weight 항을 계속 더합니다.
           </p>
           <p>
-            OS 분기는 정반대로, mac_unit.io.in_c(누적 대상)에 레지스터 값을 넣고 weight 는 in_b 로 흘려보내기만
-            합니다. 값이 이 PE 안에서 계속 쌓이다가 propagate 신호가 켜졌을 때만 out_c 로 빠져나갑니다.
+            따라서 WS에서 고정 weight B₀₀=5는 A의 여러 출력 행에 재사용됩니다. 행 0의 a=2와 partial sum 11을
+            받아 21을 만들고, 뒤이어 행 1의 a=4와 partial sum 13을 받아 33을 만듭니다. 반면 OS의 고정 partial sum은
+            같은 출력의 reduction 길이만큼 재사용됩니다. 두 방식은 재사용 축이 다릅니다.
           </p>
         </div>
         <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -105,48 +110,49 @@ export default function GemminiPeMacDataflowArticle() {
           items={[
             {
               term: "Weight-Stationary",
-              description: "weight 를 PE 에 고정하고 activation 이 흐르는 동안 매 사이클 재사용합니다.",
-              example: "K 사이클 동안 activation 이 흐르면 같은 weight 로 K 번 MAC 을 수행합니다.",
-              boundary: "다른 출력 채널로 넘어갈 때마다 weight 를 새로 로드해야 합니다.",
+              description: "weight를 PE에 고정하고 서로 다른 출력 행의 activation·partial sum이 지날 때 재사용합니다.",
+              example: "B₀₀=5를 고정하면 output row 0의 a=2와 row 1의 a=4가 차례로 같은 5를 사용합니다.",
+              boundary: "한 PE의 out_b는 최종 출력이 아니라 다음 PE가 이어서 누적할 partial sum일 수 있습니다.",
             },
             {
               term: "Output-Stationary",
-              description: "partial sum 을 PE 에 고정하고 weight·activation 이 함께 흘러 그 위에 누적됩니다.",
-              example: "reduction 차원 전체를 더할 때까지 값이 이 PE 를 벗어나지 않습니다.",
-              boundary: "누적이 끝나기 전에는 out_c 로 아무 것도 나가지 않아 첫 결과까지의 지연이 더 깁니다.",
+              description: "출력 하나의 partial sum을 PE에 고정하고 A·B 항을 그 위에 누적합니다.",
+              example: "C₀₀는 D₀₀=11에서 시작해 2×5를 더한 21, 다시 3×7을 더한 42가 됩니다.",
+              boundary: "propagate 선택 전에도 다른 c 레지스터의 값은 out_c에 보일 수 있으므로, 단순히 '출력이 전혀 없다'고 말하면 안 됩니다.",
             },
           ]}
         />
         <ExplainedFormula
-          question="Weight-Stationary PE 한 칸은 weight 를 한 번 읽고 몇 번 재사용합니까"
-          idea="weight 가 K 사이클 동안 레지스터에 고정된 채 매 사이클 새 activation 과 곱해지므로, 메모리 접근 1회 대비 연산 K 회의 비율이 그 PE 만의 국소 arithmetic intensity 입니다."
-          formula={String.raw`I_{PE} = \frac{2K}{w}`}
-          annotatedFormula={String.raw`I_{PE} = \frac{\underbrace{2K}_{\text{곱셈+누산}\;K\text{회}}}{\underbrace{w}_{\text{weight 1개, 최초 1회만 읽음}}}`}
+          question="WS에서 weight 하나의 읽기 비용은 MAC 한 번당 얼마로 줄어듭니까"
+          idea="같은 weight를 M개 출력 행에서 재사용하면 최초 w바이트 읽기를 M번의 MAC이 나눠 부담합니다. 따라서 MAC당 weight traffic은 w/M이고, weight 읽기만 분모로 잡은 비율은 2M/w FLOP/B입니다."
+          formula={String.raw`T_{w/\mathrm{MAC}} = \frac{w}{M},\qquad R_w = \frac{2M}{w}`}
+          annotatedFormula={String.raw`\underbrace{T_{w/\mathrm{MAC}}}_{\text{MAC당 weight bytes}} = \frac{\underbrace{w}_{\text{weight 1개 bytes}}}{\underbrace{M}_{\text{재사용한 output rows}}},\quad \underbrace{R_w}_{\text{weight-only FLOP/B}} = \frac{\underbrace{2M}_{\text{MAC }M\text{회}}}{\underbrace{w}_{\text{최초 weight read}}}`}
           operations={[
-            { expression: "2K", annotation: ["곱셈 K 번 + 누산 K 번 = 2K FLOP", "매 사이클 새 activation 과 mac"] },
-            { expression: "w", annotation: ["weight 1개를 최초 1회만 읽음", "이후 K 사이클 동안 레지스터에서 재사용"] },
+            { expression: "w/M", annotation: ["int8 weight이면 w=1B", "M=64개 출력 행이 나눠 부담하면 1/64B per MAC"] },
+            { expression: "2M/w", annotation: ["MAC 한 번을 곱셈+덧셈 2 FLOP로 셈", "M=64, w=1이면 weight-only ratio는 128 FLOP/B"] },
           ]}
           terms={[
-            { symbol: "K", name: "공유 차원 길이", description: "이 PE 를 통과하는 activation 스트림의 사이클 수(행렬의 reduction 차원)" },
+            { symbol: "M", name: "weight 재사용 출력 행 수", description: "같은 B[k,j]를 사용하는 서로 다른 output rows의 수" },
             { symbol: "w", name: "weight 원소 바이트 수", description: "int8 이면 1, bf16 이면 2" },
+            { symbol: "R_w", name: "weight-only 비율", description: "activation·partial sum·scratchpad traffic을 제외하고 weight 읽기만 분모로 잡은 비교용 값" },
           ]}
-          assumptions={["이 weight 가 K 사이클 내내 flip 없이 고정돼 있다고 가정합니다(같은 행렬곱 안)"]}
-          interpretation="K 가 커질수록(긴 행렬을 한 weight 로 통과시킬수록) I_PE 가 선형으로 오르고, 이는 roofline 에서 오른쪽(compute-bound)으로 이동한다는 뜻입니다. 다만 이건 PE 한 칸의 국소 재사용이고, 칩 전체가 DDR·HBM 에서 실제로 읽는 트래픽은 Mesh 전체와 Scratchpad 정책까지 봐야 합니다."
+          assumptions={["같은 weight가 M개 output rows 동안 교체되지 않고, MAC을 곱셈+덧셈 2 FLOP로 세며, 최초 weight read만 분모에 넣습니다"]}
+          interpretation="M=64, int8이면 MAC당 weight 부담은 1/64B이고 R_w=128 FLOP/B입니다. 하지만 이것을 PE 전체 arithmetic intensity라고 부르면 안 됩니다. activation·partial sum 이동, scratchpad refill, DMA traffic이 빠져 있기 때문입니다."
         />
       </section>
 
       <section id="double-buffer" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">c1·c2 이중 레지스터가 지금 나가는 값과 다음에 쌓일 값을 동시에 붙잡습니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">c1·c2는 출력 중인 값과 다음에 계산할 값을 겹쳐 보관합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            PE 는 레지스터를 하나가 아니라 c1, c2 두 개 둡니다. 한쪽이 propagate(밖으로 내보내는 중)이면 다른 쪽은
-            compute(계속 누적 중)입니다. 매 사이클 이 역할이 뒤집힐 수 있는데, 뒤집히는 순간을 회로가 놓치지 않아야
-            파이프라인이 끊기지 않습니다.
+            OS에서 <code>prop=0</code>이면 c1이 compute하고 c2가 out_c 쪽에 놓입니다. <code>prop=1</code>이면
+            c2가 compute하고 c1이 out_c 쪽에 놓입니다. 이 선택은 매 사이클 반드시 뒤집히는 것이 아닙니다.
+            한 출력 구간 동안 유지되다가 다음 구간으로 넘어갈 때 바뀔 수 있습니다.
           </p>
           <p>
-            last_s 는 한 사이클 전의 propagate 값을 저장해 두고 flip 은 그 값이 지금 값과 다른지를 봅니다. flip 이
-            참인 사이클, 즉 역할이 막 뒤집힌 그 순간에만 shift(반올림 자리수)를 적용하고 나머지 사이클에는 0 을
-            씁니다 — 매 사이클 shift 를 적용하면 같은 값을 여러 번 깎는 실수가 생기기 때문입니다.
+            <code>last_s</code>는 직전 유효 사이클의 prop을 저장하고, <code>flip</code>은 지금 prop과 달라졌는지 봅니다.
+            flip인 첫 유효 사이클에만 <code>shift_offset=shift</code>가 됩니다. 소스는 이 값을 out_c에 right shift로
+            적용하므로, 이를 근거 없이 “반올림”이라고 부르지 않고 출력 경계의 scaling shift라고 부르는 편이 정확합니다.
           </p>
         </div>
         <div className="not-prose my-4 flex flex-wrap gap-3">
@@ -156,37 +162,37 @@ export default function GemminiPeMacDataflowArticle() {
           />
         </div>
         <AlgorithmBlock
-          title="한 사이클 동안 flip 을 판정하는 절차"
+          title="prop 선택이 바뀐 첫 유효 사이클을 찾는 절차"
           input={["propagate 신호(prop)", "이 신호가 유효한지(valid)"]}
           steps={[
             { code: "last_s := RegEnable(prop, valid)", note: "valid 인 사이클에만 이전 prop 값을 저장합니다" },
-            { code: "flip := (last_s =/= prop)", note: "저장된 값과 지금 값이 다르면 역할이 막 뒤집힌 첫 사이클입니다" },
-            { code: "shift_offset := Mux(flip, shift, 0.U)", note: "뒤집힌 사이클에만 반올림을 적용하고 그 외는 0을 씁니다" },
+            { code: "flip := (last_s =/= prop)", note: "저장된 선택과 지금 선택이 다르면 출력·계산 레지스터가 교대하는 경계입니다" },
+            { code: "shift_offset := Mux(flip, shift, 0.U)", note: "경계의 out_c에만 right shift를 적용하고 같은 구간의 나머지 사이클에는 0을 씁니다" },
           ]}
-          output="정확히 한 번만 반올림이 적용된 out_c 값"
+          output="구간 경계에서 한 번만 scaling shift가 적용된 out_c 값"
         />
       </section>
 
       <section id="build" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">PE 하나를 직접 poke·peek 해 보면 두 dataflow 전환이 눈에 보입니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">공식 경로는 소프트웨어 빌드와 cycle-accurate simulator를 분리합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Gemmini 저장소에는 Mesh 전체를 검증하는 MeshWithDelaysUnitTest 는 있지만 PE 한 칸만 떼어 테스트하는
-            파일은 없습니다. 이 글이 다룬 WS·OS 전환을 눈으로 확인하려면 그 자리를 스스로 채워 보는 것이 가장 빠른
-            실습입니다. 아래는 그 실습을 포함해 Chipyard 환경에서 Gemmini 를 처음 받아 시뮬레이션까지 돌리는
-            절차입니다.
+            공식 README의 현재 quick start는 Chipyard를 설치한 뒤 Gemmini software를 빌드하고, 별도로 Verilator
+            simulator를 만드는 순서입니다. PE 한 칸의 custom harness는 가능한 추가 실습이지만 공식 quick start에
+            포함된 명령처럼 섞어 쓰면 안 됩니다.
           </p>
         </div>
         <AlgorithmBlock
-          title="Chipyard 로 Gemmini 를 받아 PE·SoC 시뮬레이션까지"
-          input={["Scala 2.13 + sbt", "RISC-V 툴체인(Chipyard build-setup.sh 가 함께 설치)"]}
+          title="공식 README 기준으로 Gemmini binary와 simulator를 준비하는 절차"
+          input={["Chipyard dependency를 설치한 Linux 환경", "Gemmini pinned commit과 호환되는 Chipyard checkout"]}
           steps={[
-            { code: "git clone https://github.com/ucb-bar/chipyard && cd chipyard && ./build-setup.sh", note: "Chipyard 가 generators/gemmini 서브모듈로 Gemmini 소스를 받아옵니다" },
-            { code: "cd generators/gemmini && sbt test", note: "저장소에 이미 있는 MeshWithDelaysUnitTest 같은 PeekPokeTester 기반 단위 테스트가 먼저 통과하는지 확인합니다" },
-            { code: "직접 PETester.scala 를 작성해 PE 하나에 in_a·in_b·in_d 를 poke 하고 dataflow 를 OS→WS 로 바꿔 out_c 를 peek", note: "저장소에 없는 부분이라 이 글이 다룬 두 dataflow 전환을 직접 검증하는 첫 실습입니다" },
-            { code: "cd ../../sims/verilator && make CONFIG=GemminiRocketConfig", note: "PE 154줄이 16×16 Mesh 로 엮인 전체 SoC 를 사이클 단위로 시뮬레이션할 Verilog 를 생성합니다" },
+            { code: "git clone https://github.com/ucb-bar/chipyard.git && cd chipyard && ./build-setup.sh && source env.sh", note: "Chipyard와 toolchain 환경을 준비합니다. 실제 재현 문서에서는 사용한 commit을 함께 고정합니다" },
+            { code: "cd generators/gemmini && make -C software/libgemmini install", note: "Gemmini instruction을 이해하는 Spike extension을 설치합니다" },
+            { code: "cd software/gemmini-rocc-tests && ./build.sh", note: "공식 bare-metal·Linux·proxy-kernel test binaries를 build 디렉터리에 만듭니다" },
+            { code: "cd ../../../../sims/verilator && make debug CONFIG=GemminiRocketConfig", note: "파형을 남길 수 있는 cycle-accurate simulator와 generated Verilog를 만듭니다" },
+            { code: "make CONFIG=GemminiRocketConfig run-binary BINARY=../../generators/gemmini/software/gemmini-rocc-tests/build/bareMetalC/template-baremetal", note: "작은 공식 binary를 simulator에서 실행한 뒤 PE-level custom harness는 별도 실험으로 추가합니다" },
           ]}
-          output="PE 하나의 동작을 확인한 파형(.vcd)과, 그 PE 256개가 실제 RISC-V SoC 안에서 도는 cycle-accurate 시뮬레이터"
+          output="공식 test binary와 GemminiRocketConfig cycle-accurate simulator"
         />
       </section>
 
@@ -199,8 +205,8 @@ export default function GemminiPeMacDataflowArticle() {
             행렬곱을 계산합니다.
           </p>
           <p>
-            앞서 구한 I_PE = 2K/w 는 PE 하나의 국소적인 재사용일 뿐입니다. 칩 전체가 DDR·HBM 에서 실제로 읽는 바이트
-            수는 Scratchpad(온칩 SRAM)가 weight 를 얼마나 오래 들고 있는지에 따라 또 달라집니다. 그 병목을 읽는
+            앞서 구한 <code>R_w=2M/w</code>는 weight 읽기만 분모로 잡은 재사용 비율입니다. 칩 전체가 DDR·HBM에서
+            실제로 읽는 바이트 수는 activation·partial sum과 Scratchpad(온칩 SRAM) refill까지 포함해야 합니다. 그 병목을 읽는
             방법은{" "}
             <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">
               GPU roofline 과 ridge point
@@ -209,13 +215,14 @@ export default function GemminiPeMacDataflowArticle() {
           </p>
         </div>
         <ProgressiveDetail
-          title="Gemmini 기본 설정에서 PE 몇 개가 격자를 이루는가"
-          preview="기본 GemminiRocketConfig 는 16×16 = 256개 PE 를 씁니다."
+          title="고정 commit의 기본 설정에서 PE 몇 개가 격자를 이루는가"
+          preview="commit 8c3f992의 defaultConfig는 16×16 = 256개 PE를 씁니다."
         >
           <p>
-            Configs.scala 의 defaultConfig 는 meshRows=16, meshColumns=16, tileRows=tileColumns=1 로 둬 Tile 하나가
-            PE 정확히 1개가 됩니다. 다른 프로파일(chipConfig)은 32×32 까지도 쓰고, dataflow 기본값은
-            Dataflow.BOTH — 이 글에서 본 두 분기를 명령어 단위로 실행 중에 골라 쓸 수 있다는 뜻입니다.
+            <code>Configs.scala</code>의 defaultConfig는 meshRows=16, meshColumns=16,
+            tileRows=tileColumns=1입니다. 따라서 Tile 하나에 PE 한 칸, 전체에는 256칸이 있습니다. dataflow 기본값은
+            <code>Dataflow.BOTH</code>라 OS와 WS를 runtime 명령 설정으로 고를 수 있습니다. 이는 고정 commit의 기본값이지
+            모든 Gemmini 생성물의 고정 규격은 아닙니다.
           </p>
         </ProgressiveDetail>
       </section>
@@ -238,6 +245,15 @@ export default function GemminiPeMacDataflowArticle() {
           대비 최대 세 자릿수(orders-of-magnitude) 배 speedup 을 여러 DNN benchmark 에서 보였다고 저자들이
           보고합니다. 이 배수는 저자 자기보고이며 이 글은 그 성능 주장을 검증하지 않고 PE.scala 라는 실제 소스
           하나의 회로 구조만 다룹니다.
+        </CitationBlock>
+        <CitationBlock
+          source="UC Berkeley Gemmini · PE.scala and README · commit 8c3f992"
+          citeKey={2}
+          href="https://github.com/ucb-bar/gemmini/blob/8c3f9923a44a2fe2c7930587be297d6d4f8c09ca/src/main/scala/gemmini/PE.scala"
+        >
+          본문의 포트 배선, c1·c2, prop·flip·shift는 이 commit의 PE.scala에 고정했습니다. Quick start와 OS·WS의
+          A/B/D 흐름은 같은 commit의 README를 대조했습니다. 2026년 공개 issue에 mixed-precision OS 경로 논의가
+          남아 있으므로 이 글의 수치 예는 기본 정수형 경로의 배선 설명으로 한정합니다.
         </CitationBlock>
       </section>
 

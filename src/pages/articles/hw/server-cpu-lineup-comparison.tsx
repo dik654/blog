@@ -12,7 +12,7 @@ import { hardwareTeachCases } from "./hardwareTeachCases";
 /**
  * GPU 서버의 CPU는 레인과 채널로 고릅니다
  *
- * 계열별 대표값은 2026-09-11 기준 각 제조사 공개 사양에서 가져왔다.
+ * 예시 플랫폼 사양은 2026-11-02 기준 제조사 공식 자료에서 가져왔다.
  */
 export default function ServerCpuLineupComparisonArticle() {
   return (

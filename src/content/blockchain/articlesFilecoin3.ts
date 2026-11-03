@@ -28,7 +28,7 @@ export const filecoin3Articles: Article[] = [
   },
   {
     slug: "vdf",
-    title: "VDF: Verifiable Delay Function",
+    title: "VDF: 오래 계산하고 빠르게 검증하는 함수",
     subcategory: "fil-theory",
     sections: [
       { id: "overview", title: "VDF 전체 흐름" },

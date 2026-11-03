@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
@@ -12,14 +13,14 @@ const SCENES = [
   "직렬: tile 0 의 load 동안 계산이 없습니다",
   "tile 0 계산 중에 tile 1 을 load 합니다",
   "load·compute·store 가 세 tile 에 동시에",
-  "시간: 합 2.0 µs/tile 대 max 1.2 µs/tile",
+  "100 tile · 200 µs → 120.8 µs",
 ] as const;
 
 const NOTES = [
   "Tile 0 이 HBM 에서 shared memory 로 내려오는 1.2 µs 동안 register 는 비어 있고 tensor core 는 놉니다. 이 첫 load 는 어떤 pipeline 도 숨기지 못하는 T_fill 입니다.",
   "Tile 0 이 도착해 register 로 올라가 계산되는 0.8 µs 동안, 다음 stage 로 tile 1 의 load 를 미리 냅니다. 두 이동이 서로 다른 자원을 쓰므로 같은 시간에 진행됩니다.",
   "정상 상태입니다. Tile 2 가 내려오고, tile 1 이 계산되며, tile 0 의 결과가 register 에서 HBM 으로 올라갑니다. 세 층이 모두 바쁘고 tile 당 시간은 가장 긴 load 1.2 µs 에 수렴합니다.",
-  "순서대로 하면 tile 당 1.2 + 0.8 = 2.0 µs 이고 겹치면 max(1.2, 0.8) = 1.2 µs 입니다. 100 tile 이면 200 µs 대 121 µs 이며, 남은 병목이 load 이므로 다음 손잡이는 byte 를 줄이는 것입니다.",
+  "순서대로 하면 tile당 1.2 + 0.8 = 2.0 µs입니다. Pipeline은 첫 load 1.2 µs + 정상 구간 99×1.2 µs + 마지막 compute 0.8 µs = 120.8 µs입니다. 시작과 끝은 숨길 수 없고, 정상 구간의 남은 병목은 load입니다.",
 ] as const;
 
 type Lane = "global" | "shared" | "register";
@@ -124,7 +125,7 @@ function TimeBars() {
   return (
     <g>
       <text x={x0} y={40} className="fill-foreground font-mono text-[11px]">
-        serial · tile 당 2.0 µs
+        serial · 100 tile = 200 µs
       </text>
       <rect x={x0} y={50} width={1.2 * scale} height={22} className="fill-primary/20 stroke-primary/70" strokeWidth={1} />
       <rect x={x0 + 1.2 * scale} y={50} width={0.8 * scale} height={22} className="fill-primary/60 stroke-primary" strokeWidth={1} />
@@ -136,7 +137,7 @@ function TimeBars() {
       </text>
 
       <text x={x0} y={120} className="fill-foreground font-mono text-[11px]">
-        overlap · tile 당 max = 1.2 µs
+        pipeline · 100 tile = 120.8 µs
       </text>
       <rect x={x0} y={130} width={1.2 * scale} height={22} className="fill-primary/20 stroke-primary/70" strokeWidth={1} />
       <rect x={x0} y={156} width={0.8 * scale} height={22} className="fill-primary/60 stroke-primary" strokeWidth={1} />
@@ -148,9 +149,126 @@ function TimeBars() {
       </text>
       <line x1={x0 + 1.2 * scale} y1={44} x2={x0 + 1.2 * scale} y2={184} className="stroke-border" strokeWidth={1} strokeDasharray="3 3" />
       <text x={x0} y={215} className="fill-muted-foreground font-mono text-[10px]">
-        100 tile: 200 µs → 1.2 + 100 × 1.2 ≈ 121 µs
+        1.2 + 99 × max(1.2, 0.8) + 0.8 = 120.8 µs
       </text>
     </g>
+  );
+}
+
+const MOBILE_LANE_NOTE: Record<Lane, string> = {
+  global: "HBM · load/store",
+  shared: "stage · read",
+  register: "mma · accumulator",
+};
+
+function MobileTimeBars() {
+  return (
+    <div className="space-y-4 md:hidden" aria-label="100 tile 직렬 실행과 pipeline 실행 시간 비교">
+      <div className="rounded-xl border border-border bg-background/70 p-3">
+        <p className="text-xs font-bold">직렬 · 100 tile = 200 µs</p>
+        <div className="mt-3 flex h-8 overflow-hidden rounded-md border border-border text-[11px] font-semibold">
+          <div className="flex w-3/5 items-center justify-center bg-primary/15">load 1.2</div>
+          <div className="flex w-2/5 items-center justify-center bg-primary text-primary-foreground">compute 0.8</div>
+        </div>
+      </div>
+      <div className="rounded-xl border border-primary/40 bg-primary/5 p-3">
+        <p className="text-xs font-bold">Pipeline · 100 tile = 120.8 µs</p>
+        <div className="mt-3 h-8 rounded-md border border-primary/40 bg-primary/15 px-3 text-[11px] font-semibold leading-8">
+          정상 구간 load 1.2
+        </div>
+        <div className="mt-1 h-7 w-2/3 rounded-md bg-primary px-3 text-[11px] font-semibold leading-7 text-primary-foreground">
+          compute 0.8
+        </div>
+      </div>
+      <p className="rounded-lg bg-muted/40 px-3 py-2 font-mono text-[11px] leading-5 text-muted-foreground">
+        1.2 + 99 × max(1.2, 0.8) + 0.8 = 120.8 µs
+      </p>
+    </div>
+  );
+}
+
+function MobileFlowScene({ active, marks }: { active: number; marks: readonly TileMark[] }) {
+  if (active === 3) return <MobileTimeBars />;
+
+  const motionLabel = (mark: TileMark) =>
+    mark.motion === "load"
+      ? `tile ${mark.k} · load`
+      : mark.motion === "store"
+        ? `tile ${mark.k} · store`
+        : mark.lane === "register"
+          ? `tile ${mark.k} · mma`
+          : `tile ${mark.k} · read`;
+
+  return (
+    <div className="space-y-2 md:hidden" aria-label={`장면 ${active + 1}의 memory tier별 작업`}>
+      {(Object.keys(LANE_Y) as Lane[]).map((lane, index) => {
+        const laneMarks = marks.filter((mark) => mark.lane === lane);
+        const flowActive =
+          index === 0
+            ? marks.some((mark) => mark.motion === "load")
+            : marks.some(
+                (mark) => mark.lane === "shared" && mark.motion === "compute",
+              );
+        return (
+          <Fragment key={lane}>
+            <div className="rounded-xl border border-border bg-background/70 p-3">
+              <div className="flex items-center justify-between gap-3">
+                <strong className="text-xs">{LANE_LABEL[lane]}</strong>
+                <span className="text-[11px] text-muted-foreground">{MOBILE_LANE_NOTE[lane]}</span>
+              </div>
+              <div className="mt-3 flex min-h-8 flex-wrap gap-2">
+                {laneMarks.length ? (
+                  laneMarks.map((mark) => (
+                    <span
+                      key={`${lane}-${mark.k}-${mark.motion}`}
+                      className={`rounded-md border px-2.5 py-1.5 text-xs font-semibold ${
+                        mark.motion === "compute"
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : mark.motion === "load"
+                            ? "border-primary/60 bg-primary/10"
+                            : "border-border bg-muted"
+                      }`}
+                    >
+                      {motionLabel(mark)}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs leading-8 text-muted-foreground">아직 맡은 tile 없음</span>
+                )}
+              </div>
+            </div>
+            {index < 2 ? (
+              <div
+                className={`flex h-8 items-center justify-center gap-2 text-xs font-semibold ${flowActive ? "text-primary" : "text-muted-foreground/50"}`}
+                aria-hidden="true"
+              >
+                <span className="text-base leading-none">↓</span>
+                <span>
+                  {flowActive
+                    ? index === 0
+                      ? "load"
+                      : "fragment read"
+                    : "아직 이동 없음"}
+                </span>
+              </div>
+            ) : null}
+          </Fragment>
+        );
+      })}
+      {marks.some((mark) => mark.motion === "store") ? (
+        <div className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-xs font-semibold text-muted-foreground">
+          <span className="text-base leading-none">↑</span>
+          <span>완료한 tile 0을 HBM으로 store</span>
+        </div>
+      ) : null}
+      <p className="font-mono text-[11px] text-muted-foreground">
+        {[
+          "t = 0 ~ 1.2 µs",
+          "t = 1.2 ~ 2.4 µs",
+          "t = 2.4 ~ 3.6 µs",
+        ][active]}
+      </p>
+    </div>
   );
 }
 
@@ -164,7 +282,7 @@ export default function GpuDataMovementOptimizationViz() {
       eyebrow="Global → shared → register overlap"
       title="세 층이 서로 다른 tile 을 동시에 다루면 시간이 합에서 max 로 줄어듭니다"
       description="세 가로 띠는 global memory, shared memory, register 입니다. 점선 상자는 내려오는 중인 load, 진한 상자는 계산 중, 회색 상자는 되돌아 올라가는 store 이며 화살표가 이동 방향입니다."
-      note="Tile 당 load 1.2 µs, compute 0.8 µs 를 가정한 산수이며 측정이 아닙니다. Shared memory 안의 stage 수와 barrier, register 안의 fragment 배치는 그리지 않았습니다."
+      note="Tile당 load 1.2 µs, compute 0.8 µs를 가정한 산수이며 측정이 아닙니다. Shared memory 안의 stage 수와 barrier, register 안의 fragment 배치는 그리지 않았습니다."
     >
       <div
         data-viz-canvas
@@ -172,15 +290,19 @@ export default function GpuDataMovementOptimizationViz() {
         role="group"
         aria-label="Global, shared, register 세 층 사이를 tile 이 흐르며 load·compute·store 가 겹치는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 scroll-mt-24 flex-col overflow-visible outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary md:h-[min(34rem,calc(100svh-12rem))] md:min-h-[28rem] md:overflow-y-auto"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(active + 1).padStart(2, "0")}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[active]}</h4>
+          <h4 className="mt-2 min-h-6 text-base font-bold">{SCENES[active]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
+          <div className="mt-4 w-full min-w-0 md:hidden">
+            <MobileFlowScene active={active} marks={marks} />
+          </div>
+
+          <div className="mt-4 hidden w-full min-w-0 md:block">
             <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} className="h-auto w-full max-w-full" role="img" aria-label={SCENES[active]}>
               {active === 3 ? (
                 <TimeBars />

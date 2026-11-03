@@ -5,29 +5,24 @@ import { PoseidonKernelViz } from "./PoseidonKernelViz";
 
 const POSEIDON = "https://www.usenix.org/system/files/sec21-grassi.pdf";
 const FILECOIN = "https://spec.filecoin.io/algorithms/crypto/poseidon/";
-const ICICLE = "https://github.com/ingonyama-zk/icicle/blob/6b451e6ed5dcdd9b49aa5f9d5657e0c00cfab6a2/docs/docs/icicle/primitives/poseidon.md";
+const ICICLE = "https://dev.ingonyama.com/api/cpp/hash";
 
 export default function ModernPoseidonGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Poseidon instance를 검증 가능한 GPU batch로 내리기</p><h2 className="text-3xl font-bold tracking-tight">GPU Poseidon의 출발점은 x⁵ kernel이 아니라 field·width·round constants가 봉인된 parameter artifact다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">고정 proof workload에서 witness의 field elements는 hash와 Merkle tree inputs가 되고, root는 이후 proof statement에 들어갑니다. <a className="text-primary hover:underline" href="/cs/crypto/poseidon-hash">Poseidon 정본</a>이 sponge, HADES rounds, S-box와 MDS의 수학·security를 소유합니다. 이 글은 exact instance를 GPU state lanes와 batch/tree frontier로 내리고, reference parity를 통과한 artifact만 release하는 구현 경계를 맡습니다.</p>
-      <p>
-            “Poseidon은 α=5, RF=8, RP=57”처럼 하나의 숫자 묶음을 보편값으로 외우면 안 됩니다. Prime field와 state width, security
-            target에 따라 profile이 달라집니다. optimized constants와 sparse transforms도 같은 derivation revision에 속해야
-            합니다.
-          </p>
+      <header className="space-y-3"><p className="text-sm font-semibold text-primary">같은 해시를 더 빨리 계산하고 있는지 먼저 증명하기</p><h2 className="text-3xl font-bold tracking-tight">GPU Poseidon은 빠른 x⁵보다 먼저 같은 해시를 계산하고 있는지 확인해야 한다</h2></header>
+      <p className="text-lg leading-8 text-foreground/90"><strong>한 문장 답:</strong> 입력이 같아도 field·상수·행렬 중 하나가 다르면 GPU는 빠르게 틀린 root를 만듭니다. 따라서 exact instance를 봉인하고, 같은 작은 입력이 CPU·circuit과 일치한 뒤에만 batch 처리량을 셉니다.</p>
+      <p>먼저 아래에서 보안용이 아닌 F17 장난감 한 round를 따라갑니다. (1,2,3)에 상수를 더하고, 각 값을 다섯 제곱한 뒤, 세 칸을 행렬로 섞습니다. 이 동작의 이름이 차례로 ARK, S-box, mix입니다.</p>
+      <p>실제 proof workload에서는 witness의 field elements가 hash와 Merkle tree input이 되고, root가 proof statement에 들어갑니다. <a className="text-primary hover:underline" href="/cs/crypto/poseidon-hash">Poseidon 정본</a>은 sponge와 HADES round의 수학·security를 설명하고, 이 글은 exact instance를 GPU batch와 tree frontier로 내리는 구현 경계를 설명합니다.</p>
+      <p>“Poseidon은 α=5, RF=8, RP=57”처럼 하나의 숫자 묶음을 보편값으로 외우면 안 됩니다. Prime field와 state width, security target에 따라 profile이 달라집니다. Optimized constants와 sparse transform도 같은 derivation revision에 속해야 합니다.</p>
       <PoseidonKernelViz />
       <ContentBoundary article="poseidon-gpu" />
     </section>
 
     <section id="parameter-artifact" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · Parameter artifact</p><h2 className="mt-2 text-2xl font-bold">Field부터 constants digest까지 하나의 immutable profile로 묶고 partial mix를 임의 조합하지 않는다</h2></header>
-      <p>
-            Artifact에는 modulus와 state width t, rate/capacity, domain tag를 넣습니다. S-box exponent α와 full/partial
-            rounds, round constants도 같이 들어갑니다. MDS와 optimized sparse matrices, generator revision도 빠뜨리지 않습니다.
-            Caller input의 field encoding이 profile field와 다르면 kernel launch 전에 실패합니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">01 · 계산 영수증</p><h2 className="mt-2 text-2xl font-bold">Field부터 constants digest까지 한 묶음으로 고정한다</h2></header>
+      <p>Artifact에는 modulus와 state width t, rate/capacity, domain tag를 넣습니다. S-box exponent α와 full/partial rounds, round constants도 같은 묶음에 둡니다.</p>
+      <p>MDS와 optimized sparse matrices, generator revision도 빠뜨리지 않습니다. Caller input의 field encoding이 profile field와 다르면 kernel launch 전에 실패합니다.</p>
       <ExplainedFormula question="GPU output이 정확히 어느 Poseidon instance의 결과인지 어떻게 봉인할까?" idea={<>Algorithm 이름 대신 모든 parameters와 constants bytes를 canonical digest에 결속합니다.</>} formula={String.raw`A_P=H(p\|t\|r\|c\|\alpha\|R_F\|R_P\|H(C)\|H(M)\|v)`}
       annotatedFormula={String.raw`A_P=H(\underbrace{p\|t\|r\|c}_{\text{field·state 폭}}\|\underbrace{\alpha\|R_F\|R_P}_{\text{S-box·round 수}}\|\underbrace{H(C)\|H(M)}_{\text{상수·mix 행렬}}\|\underbrace{v}_{\text{revision}})`}
       operations={[
@@ -50,13 +45,10 @@ export default function ModernPoseidonGpuArticle() {
     </section>
 
     <section id="round-kernel" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · Round kernel</p><h2 className="mt-2 text-2xl font-bold">ARK→S-box→mix 순서를 보존하고 lane ownership과 barrier를 profile width에 맞춘다</h2></header>
-      <p>
-            한 state를 thread 하나가 소유할지, coordinates를 여러 lanes가 나눌지는 batch와 width, register pressure와 matrix
-            traffic을 재서 정합니다. Full round는 모든 coordinates에, partial round는 profile이 지정한 coordinate에 S-box를
-            적용합니다. Cross-thread mix가 있으면 producer values가 준비된 뒤 barrier가 필요합니다. ICICLE v3.9.0 문서에는 batch API와
-            constants profile이 나와 있을 뿐, CUDA kernel 내부 schedule의 보편 최적성을 증명하지는 않습니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">02 · 한 round의 경로</p><h2 className="mt-2 text-2xl font-bold">상수 더하기→S-box→mix 순서를 그대로 지킨다</h2></header>
+      <p>한 state를 thread 하나가 소유할지, coordinates를 여러 lanes가 나눌지는 batch와 width, register pressure와 matrix traffic을 재서 정합니다.</p>
+      <p>Full round는 모든 coordinates에 S-box를 적용하고, partial round는 profile이 지정한 coordinate에만 적용합니다. Cross-thread mix가 있으면 producer values가 준비된 뒤 barrier가 필요합니다.</p>
+      <p>ICICLE v4.0.0 문서는 batch hash와 domain tag를 설명하지만, CUDA kernel 내부 schedule의 보편 최적성을 증명하지는 않습니다.</p>
       <ExplainedFormula question="한 Poseidon round를 GPU에서 어떤 세 단계로 읽을까?" idea={<>먼저 round constants를 더하고, schedule에 따라 S-box를 적용한 뒤, matrix로 모든 output coordinates를 섞습니다.</>} formula={String.raw`x_i'=\sum_{j=0}^{t-1}M_{ij}\,S_r(x_j+C_{r,j})`}
       annotatedFormula={String.raw`x_i'=\sum_{j=0}^{t-1}\underbrace{M_{ij}}_{\text{3. 전 coordinate mix}}\,\underbrace{S_r}_{\text{2. S-box}}(\underbrace{x_j+C_{r,j}}_{\text{1. 상수 더하기}})`}
       operations={[
@@ -78,7 +70,7 @@ export default function ModernPoseidonGpuArticle() {
     </section>
 
     <section id="batch-tree" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · Batch and tree frontier</p><h2 className="mt-2 text-2xl font-bold">독립 states는 batch하되 Merkle level 사이의 parent dependency와 padding·domain tag를 보존한다</h2></header>
+      <header><p className="text-sm font-semibold text-primary">03 · Batch와 tree</p><h2 className="mt-2 text-2xl font-bold">같은 level은 함께 돌리고 부모는 child를 기다린다</h2></header>
       <p>
             첫 level에는 hashes가 많아 GPU가 충분히 찹니다. root에 가까워질수록 jobs는 줄어듭니다. Parent는 ordered children이 모두 준비된 뒤에야
             실행합니다. Leaf와 internal node의 domain과 arity, 마지막 incomplete group의 padding rule이 다르면 같은 leaves에서도 다른
@@ -95,17 +87,13 @@ export default function ModernPoseidonGpuArticle() {
         {symbol:"\\ell",name:"Level",description:"Leaves를 0으로 둔 tree depth index입니다."},
         {symbol:"\\lceil\\cdot\\rceil",name:"Ceiling",description:"Incomplete 마지막 group도 한 parent job으로 셉니다."},
       ]} assumptions={["Padding 또는 exact-size rejection rule과 leaf/internal domain tags를 profile에 고정합니다.","부모 level은 필요한 child outputs와 completion event가 모두 준비된 뒤 시작합니다."]} interpretation="N0=8,a=2이면 8→4→2→1입니다. N0=7이면 마지막 child 처리 규칙을 정하지 않고 7→4라고만 계산해서는 root semantics가 완성되지 않습니다." />
-      <div id="paper-icicle-poseidon"><CitationBlock type="code" citeKey={3} source="ICICLE v3.9.0 Poseidon documentation · commit 6b451e6" href={ICICLE}><p><strong>문제:</strong> Poseidon parameter sets와 여러 preimages의 batch hashing을 accelerator API로 노출해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned page는 constants profile, hash_many input/output shape와 supported binding surface를 설명합니다.</p><p><strong>중요 가정:</strong> v3.9.0의 실제 supported field/arity, loaded constants와 backend installation을 확인합니다.</p><p><strong>근거 범위:</strong> 해당 revision의 documented Poseidon API behavior입니다.</p><p><strong>일반화 금지:</strong> 문서의 GPU 설명을 모든 kernel 내부 mapping·모든 arity 지원·고정 throughput의 증거로 확대하지 않습니다.</p></CitationBlock></div>
+      <div id="paper-icicle-poseidon"><CitationBlock type="code" citeKey={3} source="ICICLE v4.0.0 · Hashing Logic" href={ICICLE}><p><strong>문제:</strong> Poseidon instance와 여러 preimage의 batch hashing을 accelerator API로 노출해야 합니다.</p><p><strong>핵심 기여:</strong> 공식 문서는 hasher 생성, batch 설정, domain tag와 CPU·GPU backend 경계를 설명합니다.</p><p><strong>중요 가정:</strong> 실제 supported field·state width와 설치한 backend를 확인합니다.</p><p><strong>근거 범위:</strong> v4.0.0 hashing API의 documented behavior입니다.</p><p><strong>일반화 금지:</strong> API 설명을 모든 kernel 내부 mapping·모든 width 지원·고정 throughput의 증거로 확대하지 않습니다.</p></CitationBlock></div>
     </section>
 
     <section id="release-gate" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">04 · Release gate</p><h2 className="mt-2 text-2xl font-bold">Official/reference vectors와 tree root parity 뒤 verified states/s를 측정하고 profile mismatch는 fail closed한다</h2></header>
-      <p>
-            Zero/one/max canonical field element와 width·round/constants·domain mismatch, noncanonical input을
-            넣습니다. empty/partial batch, leaf order mutation, wrong padding, wrong event dependency도 포함합니다. OOM과
-            timeout까지 같은 목록입니다. Round-by-round debug fixture와 full hash/tree roots는 CPU reference·circuit과
-            비교합니다. 그리고 최종 proof verifier가 같은 public root를 승인하는지까지 확인합니다.
-          </p>
+      <header><p className="text-sm font-semibold text-primary">04 · 배포 문턱</p><h2 className="mt-2 text-2xl font-bold">정답이 맞은 state만 처리량에 센다</h2></header>
+      <p>Zero/one/max canonical field element와 width·round/constants·domain mismatch, noncanonical input을 넣습니다. Empty/partial batch, leaf order mutation, wrong padding, wrong event dependency도 포함합니다.</p>
+      <p>OOM과 timeout도 같은 실패 목록으로 관리합니다. Round-by-round debug fixture와 full hash/tree root를 CPU reference·circuit과 비교하고, 마지막에는 proof verifier가 같은 public root를 승인하는지 확인합니다.</p>
       <ExplainedFormula question="GPU Poseidon의 유효 처리량을 어떻게 보고할까?" idea={<>Reference/root/proof gate를 통과한 states만 세고 transfer·kernel·sync를 같은 wall-clock boundary에 넣습니다.</>} formula={String.raw`R_P=\frac{N_{states}^{verified}}{T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}}`}
       annotatedFormula={String.raw`R_P=\frac{\underbrace{N_{states}^{verified}}_{\text{parity 통과 state}}}{\underbrace{T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}}_{\text{같은 wall-clock 경계}}}`}
       operations={[

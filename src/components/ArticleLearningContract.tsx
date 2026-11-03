@@ -20,6 +20,7 @@ const RELATION_LABEL: Record<KnowledgeEdge["relation"], string> = {
   constrains: "가능한 범위를 제한함",
   evaluates: "효과를 평가함",
   extends: "더 구체적인 문제로 확장함",
+  enables: "다음 동작을 가능하게 함",
 };
 
 function getStageEdges(contract: ArticleLearningContract, stageIndex: number) {
@@ -82,7 +83,7 @@ function getDisplayStages(contract: ArticleLearningContract) {
   return [
     {
       label: "선수 개념",
-      relation: "본문 흐름에 들어가기 전에 정본에서 확인",
+      relation: "본문을 읽기 전에 먼저 확인할 개념",
       concepts: implicitPrerequisites,
     },
     ...contract.conceptStages,
@@ -148,7 +149,7 @@ function TermCard({
         이 글에서의 역할: {role}
       </span>
       <span className="mt-3 block text-xs font-bold text-primary">
-        정본 설명 열기 →
+        자세한 설명 보기 →
       </span>
     </>
   );
@@ -184,9 +185,9 @@ export function ArticleLessonPrimer({
         </h2>
         <p className="mt-3 max-w-4xl text-sm leading-7 text-foreground/80">
           위쪽 지도에는 본문에서 설명한 개념과 연결 순서가 나옵니다. 노드를
-          선택하면 방금 읽은 장면, 정의, 앞뒤 관계, 작은 예와 적용할 수 없는
-          경계를 함께 볼 수 있습니다. 재생 버튼은 같은 구조를 다섯 단계로 다시
-          펼칩니다.
+          선택하면 방금 읽은 장면과 정의, 앞뒤 관계, 작은 예를 함께 볼 수 있습니다.
+          어디까지 적용되는지도 확인할 수 있으며, 재생 버튼은 같은 구조를 다섯
+          단계로 다시 보여 줍니다.
         </p>
       </div>
 
@@ -255,7 +256,7 @@ export default function ArticleLearningContractView({
           </h2>
           <p className="mt-1 max-w-3xl text-xs leading-5 text-muted-foreground">
             각 용어를 넓은 카드에서 문장으로 다시 읽습니다. 정의와 이 글에서의
-            역할을 구분하고, 필요할 때만 정본 설명으로 이동합니다.
+            역할을 구분하고, 필요할 때만 자세한 설명으로 이동합니다.
           </p>
           <div className="mt-4 grid gap-4">
             {contract.introducedHere.map((item) => (
@@ -270,8 +271,8 @@ export default function ArticleLearningContractView({
           <div className="min-w-0">
             <h2 className="text-sm font-bold text-foreground">개념 그래프</h2>
             <p className="mt-1 max-w-3xl text-xs leading-5 text-muted-foreground">
-              왼쪽에서 오른쪽으로 읽으면 이 글의 학습 순서입니다. 각 개념은 정본
-              설명으로 바로 이동하며, 다른 글에서 같은 정의를 반복하지 않습니다.
+              왼쪽에서 오른쪽으로 읽으면 이 글의 학습 순서입니다. 각 개념에서
+              자세한 설명으로 바로 이동할 수 있습니다.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2 text-[11px] font-semibold text-muted-foreground">
@@ -284,7 +285,7 @@ export default function ArticleLearningContractView({
             </span>
             <span aria-hidden="true">→</span>
             <span className="rounded border border-border/70 px-2 py-1">
-              정본 개념
+              개념 설명
             </span>
           </div>
         </div>
@@ -376,11 +377,11 @@ export default function ArticleLearningContractView({
         {followupEdges.length > 0 && (
           <div className="mt-5 border-t border-border/70 pt-5">
             <h3 className="text-xs font-bold text-foreground">
-              이 글 다음에 확장할 정본
+              다음에 이어 읽을 글
             </h3>
             <p className="mt-1 max-w-3xl text-xs leading-5 text-muted-foreground">
-              현재 글에서 만든 개념을 실제 선수 지식으로 사용하는 다음 글입니다.
-              연결 이유를 보고 필요한 경로만 선택할 수 있습니다.
+              방금 배운 개념을 바탕으로 더 나아가는 글입니다. 연결 이유를 보고
+              필요한 글부터 골라 읽을 수 있습니다.
             </p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               {followupEdges.map((edge) => {
@@ -412,12 +413,11 @@ export default function ArticleLearningContractView({
 
       <section className="border-t border-border/60 px-4 py-5 sm:px-6">
         <h2 className="text-sm font-bold text-foreground">
-          처음 보는 개념을 이해하는 순서
+          새 개념을 다시 확인하는 순서
         </h2>
         <p className="mt-1 max-w-3xl text-xs leading-5 text-muted-foreground">
-          정의부터 외우지 않습니다. 익숙한 상황과 작은 수치 예시를 먼저 본 뒤,
-          본문에서 표준 용어와 수식으로 연결합니다. 적용되지 않는 경우까지
-          설명해야 이 글의 개념 설명이 완료됩니다.
+          익숙한 상황과 작은 수치 예에서 출발해 표준 용어와 수식으로 이어집니다.
+          각 개념이 어디까지 적용되는지도 함께 확인합니다.
         </p>
         <div className="mt-4 space-y-4">
           {contract.conceptExplanations.map((explanation) => {
@@ -438,7 +438,7 @@ export default function ArticleLearningContractView({
                   </div>
                   <a
                     href={`#${explanation.sectionId}`}
-                    className="shrink-0 text-xs font-bold text-foreground/70 hover:text-primary"
+                    className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center px-1 text-xs font-bold text-foreground/70 hover:text-primary"
                   >
                     본문 ↓
                   </a>
@@ -482,12 +482,11 @@ export default function ArticleLearningContractView({
 
       <section className="border-t border-border/60 px-4 py-5 sm:px-6">
         <h2 className="text-sm font-bold text-foreground">
-          이 글만으로 풀어야 하는 연습문제
+          읽은 내용을 확인하는 연습문제
         </h2>
         <p className="mt-1 text-xs leading-5 text-muted-foreground">
-          문제와 정답 체크리스트를 먼저 만들고, 각 항목을 설명하는 본문
-          section을 연결합니다. 기본과 심화 중 하나라도 비면 글은 완료되지
-          않습니다.
+          답이 막히면 문제에 연결된 본문 절로 돌아가 확인할 수 있습니다. 기초
+          문제로 흐름을 되짚고, 심화 문제로 전제와 한계까지 설명해 봅니다.
         </p>
         <div className="mt-4 grid gap-6 lg:grid-cols-2">
           {(["basic", "advanced"] as const).map((level) => (
@@ -530,7 +529,7 @@ export default function ArticleLearningContractView({
       {contract.papers && contract.papers.length > 0 && (
         <section className="border-t border-border/60 px-4 py-5 sm:px-6">
           <h2 className="text-sm font-bold text-foreground">
-            근거 논문을 따라 읽는 내부 해설 경로
+            근거 논문을 더 깊게 읽기
           </h2>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {contract.papers.map((paper) => (

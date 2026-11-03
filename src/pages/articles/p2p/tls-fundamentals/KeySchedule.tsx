@@ -10,9 +10,16 @@ export default function KeySchedule() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          ECDHE output을 그대로 모든 암호 연산에 쓰면 한 용도의 key 노출이나 protocol confusion이 다른 용도까지 번질 수 있습니다. HKDF(HMAC-based
-          Extract-and-Expand Key Derivation Function)는 입력 key material을 먼저 균일한 pseudorandom key로 추출합니다. 여기에
-          label과 transcript context를 넣어 client/server handshake와 application, resumption secret을 따로 확장합니다.
+          사례의 X25519 output을 그대로 모든 암호 연산에 쓰면 한 용도의 key
+          노출이나 protocol confusion이 다른 용도까지 번질 수 있습니다.
+        </p>
+        <p>
+          HKDF(HMAC-based Extract-and-Expand Key Derivation Function)는 입력 key
+          material을 먼저 균일한 pseudorandom key로 추출합니다. 여기에 label과
+          transcript context를 넣어 client/server handshake와 application,
+          resumption secret을 따로 확장합니다. 같은 재료를 쓰더라도
+          <code>c hs traffic</code>과 <code>s ap traffic</code>이 서로 다른
+          열쇠가 되는 이유입니다.
         </p>
       </div>
       <div className="not-prose my-8">
@@ -40,10 +47,31 @@ S_{role,phase} &= \operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
 K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K)}_{\text{AEAD key로 분리}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{HKDF\!\text{-}Extract}(salt,IKM)`, annotation: ["PSK·ECDHE shared secret·0 중 하나를", "salt와 HMAC해 균일한 pseudorandom key로", "raw ECDHE output을 바로 쓰지 않음"] },
-          { expression: String.raw`\operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
-(PRK,label,H(T),L)`, annotation: ["같은 PRK라도 label이 c hs traffic과", "s ap traffic으로 다르면 별도 secret", "H(T)가 이번 handshake에 결속"] },
-          { expression: String.raw`\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K)`, annotation: ["방향·단계별 secret에서 다시 \"key\"", "label로 AEAD가 요구하는 길이 L_K의 key", "iv는 같은 secret에서 다른 label로"] },
+          {
+            expression: String.raw`\operatorname{HKDF\!\text{-}Extract}(salt,IKM)`,
+            annotation: [
+              "PSK·ECDHE shared secret·0 중 하나를",
+              "salt와 HMAC해 균일한 pseudorandom key로",
+              "raw ECDHE output을 바로 쓰지 않음",
+            ],
+          },
+          {
+            expression: String.raw`\operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
+(PRK,label,H(T),L)`,
+            annotation: [
+              "같은 PRK라도 label이 c hs traffic과",
+              "s ap traffic으로 다르면 별도 secret",
+              "H(T)가 이번 handshake에 결속",
+            ],
+          },
+          {
+            expression: String.raw`\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K)`,
+            annotation: [
+              '방향·단계별 secret에서 다시 "key"',
+              "label로 AEAD가 요구하는 길이 L_K의 key",
+              "iv는 같은 secret에서 다른 label로",
+            ],
+          },
         ]}
         terms={[
           {
@@ -75,7 +103,7 @@ K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnoth
           },
         ]}
         assumptions={[
-          "HMAC과 선택한 hash가 안전하고 label·context·length encoding이 RFC 8446과 정확히 일치해야 합니다.",
+          "HMAC과 선택한 hash가 안전하고 label·context·length encoding이 RFC 9846과 정확히 일치해야 합니다.",
           "Forward secrecy는 fresh (EC)DHE를 실제로 사용하고 ephemeral private key를 보호·폐기한 handshake에서만 기대할 수 있습니다.",
           "PSK-only mode와 0-RTT early data는 full (EC)DHE handshake와 같은 forward-secrecy·anti-replay 속성을 주지 않습니다.",
         ]}
@@ -84,10 +112,17 @@ K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnoth
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>세 단계와 운영 경계를 함께 봅니다</h3>
         <p>
-          Early secret은 PSK 또는 0에서 시작합니다. Handshake secret은 ECDHE input을 섞어 handshake traffic key를 만듭니다.
-          Master secret에서는 application traffic secret과 exporter, resumption master secret이 갈라집니다. KeyUpdate는
-          현재 application traffic secret에서 다음 generation을 만듭니다. 다만 이미 탈취된 endpoint가 계속 새 secret을 관찰할 수 있는 상황까지
-          스스로 치유한다고 보장하지는 않습니다.
+          Early secret은 PSK 또는 0에서 시작합니다. Handshake secret은 ECDHE
+          input을 섞어 handshake traffic key를 만듭니다. Master secret에서는
+          application traffic secret과 exporter, resumption master secret이
+          갈라집니다.
+        </p>
+        <p>
+          KeyUpdate는 현재 application traffic secret에서 다음
+          세대를 만들고 이전 세대를 지운 뒤 과거 레코드를 보호합니다. 그러나
+          현재 secret을 얻은 공격자는 이후 세대도 계산할 수 있습니다. 미래
+          데이터를 다시 안전하게 만들려면 비대칭 키 교환을 포함한 새
+          핸드셰이크와 새 연결이 필요합니다.
         </p>
         <div
           id="paper-rfc5869"
@@ -95,12 +130,13 @@ K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnoth
         >
           <p className="text-xs font-bold text-primary">명세 읽기 · RFC 5869</p>
           <p>
-            RFC 5869은 generic HKDF의 Extract와 Expand를 정의합니다. TLS 1.3의 labeled tree는 RFC 8446이 그 primitive 위에
-            추가한 protocol-specific 구조입니다. 두 문서가 지는 책임은 여기서 갈립니다.
+            RFC 5869은 generic HKDF의 Extract와 Expand를 정의합니다. TLS 1.3의
+            labeled tree는 RFC 9846이 그 primitive 위에 추가한 protocol-specific
+            구조입니다. 두 문서가 지는 책임은 여기서 갈립니다.
           </p>
           <CitationBlock
             source="IETF RFC 5869 — HMAC-based Extract-and-Expand Key Derivation Function"
-            citeKey={2}
+            citeKey={3}
             href="https://www.rfc-editor.org/rfc/rfc5869.html"
           >
             Extract가 input key material을 PRK로 만들고 Expand가 context별

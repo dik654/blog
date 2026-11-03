@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import HealthcarePaymentSystemsViz from "./HealthcarePaymentSystemsViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function HealthcarePaymentSystemsArticle() {
@@ -10,7 +9,6 @@ export default function HealthcarePaymentSystemsArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 진료실에서 낸 돈 밖에도 비용을 낸 사람이 있습니다</h2>
-        <HealthcarePaymentSystemsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">병원 창구에서 낸 금액만 보면 진료에 들어간 돈의 일부를 놓칠 수 있습니다. 다른 가입자와 정부가 미리 낸 돈이 의료기관으로 돌아오기 때문입니다.</p>
           <p className="leading-8">이 글은 한 번의 진료를 따라 환자, 돈을 모은 곳, 병원 사이의 지급을 나눕니다. 병원에 돈을 주는 방식이 바뀌면 어떤 진료를 늘리거나 아끼려는 유인이 생기는지도 봅니다.</p>

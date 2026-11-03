@@ -2,45 +2,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import {
   BullsharkCommitTraceViz,
+  BullsharkDecisionPseudocodeViz,
   BullsharkOrderingViz,
   BullsharkVariantViz,
 } from "./viz/ModernBullsharkViz";
-
-function BullsharkSketch() {
-  return (
-    <div className="not-prose overflow-x-auto border border-border bg-[#111318] p-4 text-[12px] leading-6 text-[#e7eaf0]">
-      <pre><code>{`// 새 인증서를 로컬 DAG의 작성자·라운드 위치에 넣습니다.
-dag[certificate.round][certificate.author] = certificate
-
-// 방금 받은 홀수 라운드 인증서의 직전 짝수 라운드를 후보로 봅니다.
-leader_round = certificate.round - 1
-if leader_round < 2 or leader_round is odd:
-    return []
-
-// 후보 리더를 부모로 참조한 서로 다른 작성자의 stake를 더합니다.
-leader = predefined_leader(leader_round)
-support = sum(
-    stake(child.author)
-    for child in dag[certificate.round]
-    if leader.digest in child.parents
-)
-
-// 지지 임계값에 못 미치면 DAG만 보관하고 출력을 만들지 않습니다.
-if support < validity_threshold:
-    return []
-
-// 현재 리더에서 도달할 수 있는 이전 리더를 찾고 오래된 것부터 처리합니다.
-leaders = reverse(order_leaders_from_current(leader))
-for leader in leaders:
-    // 이미 커밋한 인증서를 제외하고 인과적 과거를 결정적으로 펼칩니다.
-    for certificate in order_dag(leader):
-        update_last_committed(certificate)
-        persist(consensus_index, certificate.digest)
-        emit(certificate, consensus_index)
-        consensus_index += 1`}</code></pre>
-    </div>
-  );
-}
 
 export default function ModernBullsharkArticle() {
   return (
@@ -53,6 +18,9 @@ export default function ModernBullsharkArticle() {
         <p className="text-lg leading-8 text-foreground/90">
           <a className="font-semibold text-primary underline-offset-4 hover:underline" href="/cs/blockchain/dag-consensus#bullshark">앞선 DAG 합의 지도</a>와 <a className="font-semibold text-primary underline-offset-4 hover:underline" href="/cs/blockchain/narwhal-deep#overview">Narwhal 상세편</a>에서 거래 배치가 인증서가 되는 과정까지 봤습니다. 이 글은 인증된 DAG를 한 줄의 합의 순서로 바꾸는 구간만 확대합니다. 직접 커밋되지 못한 앵커 L2와 나중에 지지를 얻는 L4를 끝까지 따라갑니다.
         </p>
+        <aside className="border-l-2 border-primary bg-primary/5 p-5 text-sm leading-6">
+          <strong>먼저 기억할 한 문장:</strong> Bullshark는 예정된 앵커를 다음 라운드의 부모 참조로 지지하고, 결정된 새 앵커에서 닿는 이전 앵커와 하위 DAG를 오래된 것부터 한 번씩 출력합니다.
+        </aside>
 
         <BullsharkCommitTraceViz />
 
@@ -101,7 +69,7 @@ export default function ModernBullsharkArticle() {
           L4가 임계값을 넘으면 곧바로 L4만 출력하지 않습니다. <code>order_leaders</code>는 L4에서 이전 짝수 라운드 리더로 가는 경로를 검사합니다. L4에서 L2까지 닿으면 목록에 L2를 추가하고, 목록을 뒤집어 L2부터 처리합니다. 반대로 경로가 없다면 L2를 끼워 넣지 않습니다. 부분 동기식 논문의 DAG 완전성 조건에서는 미래 앵커가 L2에 닿지 않는다면 어느 정상 노드도 L2를 커밋하지 않았다고 판단할 수 있기 때문입니다.
         </p>
 
-        <BullsharkSketch />
+        <BullsharkDecisionPseudocodeViz />
 
         <div id="paper-bullshark-partial">
           <CitationBlock source="Bullshark: The Partially Synchronous Version v1" citeKey={1} href="https://arxiv.org/abs/2209.05633v1">

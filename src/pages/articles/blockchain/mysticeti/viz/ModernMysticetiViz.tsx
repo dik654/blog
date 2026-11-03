@@ -3,161 +3,164 @@ import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-const SCENE_LABELS = ["제안", "vote", "certificate", "직접 결정", "prefix", "간접 결정", "linearize", "완료 경계"] as const;
-const PHASES = ["제안", "vote", "certificate", "결정", "prefix", "anchor", "정렬", "receipt"] as const;
-const AUTHORS = ["A", "B", "C", "D"] as const;
-const SLOTS = ["L1", "L2", "L3", "L4"] as const;
+const COMMIT_LABELS = ["제안", "첫 참조", "지지 정족수", "인증", "인증서 정족수", "직접 확정"] as const;
 
-type SlotStatus = "commit" | "skip" | "undecided" | "held";
-type TraceState = {
-  title: string;
-  detail: string;
-  result: string;
-  phase: number;
-  votes: number;
-  certificates: number;
-  visibleRound: number;
-  slots: Record<(typeof SLOTS)[number], SlotStatus>;
-  prefix: readonly string[];
-  output: readonly string[];
-  receipt: "none" | "consensus" | "execution";
-};
-
-const TRACE_STATES: readonly TraceState[] = [
-  {
-    title: "Alice→Bob 거래가 A의 leader block L1에 들어갑니다",
-    detail: "L1은 signed proposal입니다. 별도 certificate는 없지만 epoch·round·author·parents·signature는 검증합니다.",
-    result: "L1 제안 · uncertified는 unvalidated라는 뜻이 아님",
-    phase: 0, votes: 0, certificates: 0, visibleRound: 0,
-    slots: { L1: "undecided", L2: "undecided", L3: "undecided", L4: "undecided" }, prefix: [], output: [], receipt: "none",
-  },
-  {
-    title: "다음 round의 세 author가 L1을 처음 지지합니다",
-    detail: "A1·B1·C1이 ancestry에서 L1을 first support합니다. 같은 author의 stake는 한 번만 셉니다.",
-    result: "Distinct vote 3/3 · L1 support quorum",
-    phase: 1, votes: 3, certificates: 0, visibleRound: 1,
-    slots: { L1: "undecided", L2: "undecided", L3: "undecided", L4: "undecided" }, prefix: [], output: [], receipt: "none",
-  },
-  {
-    title: "그다음 round의 세 block이 vote quorum을 ancestry에 담습니다",
-    detail: "A2·B2·C2 각각이 quorum votes를 ancestry에 담아 implicit certificate가 됩니다. 세 개가 direct commit pattern을 만듭니다.",
-    result: "Certificate block 3/3 · direct commit pattern",
-    phase: 2, votes: 3, certificates: 3, visibleRound: 2,
-    slots: { L1: "undecided", L2: "undecided", L3: "undecided", L4: "undecided" }, prefix: [], output: [], receipt: "none",
-  },
-  {
-    title: "Direct decider가 L1을 commit으로 판정합니다",
-    detail: "Quorum certificate blocks면 commit, quorum non-support면 skip입니다. 둘 다 부족하면 추측하지 않고 undecided로 둡니다.",
-    result: "L1 direct commit · decision과 실행은 아직 별개",
-    phase: 3, votes: 3, certificates: 3, visibleRound: 2,
-    slots: { L1: "commit", L2: "skip", L3: "undecided", L4: "held" }, prefix: [], output: [], receipt: "none",
-  },
-  {
-    title: "오래된 undecided L3가 뒤의 L4 외부화를 막습니다",
-    detail: "연속으로 판정된 L1·L2까지만 내보냅니다. L3 뒤의 L4 결정은 사라지지 않고 보류됩니다.",
-    result: "Decided prefix [L1, L2] · L4 보류",
-    phase: 4, votes: 3, certificates: 3, visibleRound: 2,
-    slots: { L1: "commit", L2: "skip", L3: "undecided", L4: "held" }, prefix: ["L1", "L2"], output: [], receipt: "none",
-  },
-  {
-    title: "나중에 결정된 anchor가 L3의 상태를 간접 판정합니다",
-    detail: "Anchor ancestry에 L3 certificate가 있으면 indirect commit, 없으면 skip입니다. 여기서는 L3을 commit해 L4까지 이어집니다.",
-    result: "Prefix [L1, L2, L3, L4] · gap 해소",
-    phase: 5, votes: 3, certificates: 3, visibleRound: 2,
-    slots: { L1: "commit", L2: "skip", L3: "commit", L4: "commit" }, prefix: ["L1", "L2", "L3", "L4"], output: [], receipt: "none",
-  },
-  {
-    title: "Linearizer가 새 causal ancestors만 한 번씩 펼칩니다",
-    detail: "이미 committed한 blocks와 GC 경계 아래를 빼고 ancestry를 모읍니다. Sui v1.82.3은 round·authority 순으로 정렬합니다.",
-    result: "예시 sub-DAG A0 → A1 → B1 → C1 → A2 → B2 → C2",
-    phase: 6, votes: 3, certificates: 3, visibleRound: 2,
-    slots: { L1: "commit", L2: "skip", L3: "commit", L4: "commit" }, prefix: ["L1", "L2", "L3", "L4"], output: ["A0", "A1", "B1", "C1", "A2", "B2", "C2"], receipt: "consensus",
-  },
-  {
-    title: "Consensus order와 거래 실행·checkpoint를 따로 확인합니다",
-    detail: "CommittedSubDag는 consensus output입니다. Fast path, application execution, checkpoint는 별도 상태입니다.",
-    result: "Consensus receipt 확보 · execution/finality receipt는 별도",
-    phase: 7, votes: 3, certificates: 3, visibleRound: 2,
-    slots: { L1: "commit", L2: "skip", L3: "commit", L4: "commit" }, prefix: ["L1", "L2", "L3", "L4"], output: ["A0", "A1", "B1", "C1", "A2", "B2", "C2"], receipt: "execution",
-  },
+const COMMIT_SCENES = [
+  { title: "라운드 r에서 지도자 블록 L이 거래를 제안합니다", detail: "L은 작성자 서명과 부모 정족수 검증을 통과한 블록입니다. 아직 다음 검증자의 지지는 없습니다.", proposal: "L · 제안됨", support: "0/3", certificates: "0/3", result: "미결정" },
+  { title: "r+1의 A 블록이 같은 자리에서 L을 처음 지지합니다", detail: "부모 참조 하나는 한 작성자의 표입니다. A가 만든 다른 블록이 있어도 A의 투표권은 한 번만 셉니다.", proposal: "L · 제안됨", support: "A = 1/3", certificates: "0/3", result: "미결정" },
+  { title: "r+1의 A·B·C가 L을 처음 지지해 첫 정족수를 만듭니다", detail: "n=4, f=1의 설명용 동일 투표권에서는 2f+1=3명이 필요합니다.", proposal: "L · 제안됨", support: "A·B·C = 3/3", certificates: "0/3", result: "L 인증 가능" },
+  { title: "지지 정족수 3개가 L을 인증하지만 아직 직접 확정은 아닙니다", detail: "첫 정족수는 같은 자리의 충돌 블록이 또 인증되지 못하게 합니다. 다음 라운드의 확인이 하나 더 필요합니다.", proposal: "L · 인증됨", support: "3/3 · 통과", certificates: "0/3", result: "첫 문턱 통과" },
+  { title: "r+2의 A·B·C 블록이 각각 L의 지지 정족수를 인과 과거에 담습니다", detail: "이 세 블록이 L에 대한 서로 다른 작성자의 암묵적 인증서가 됩니다.", proposal: "L · 인증됨", support: "3/3", certificates: "A·B·C = 3/3", result: "직접 확정 가능" },
+  { title: "인증서 블록 3개를 확인한 뒤 L을 직접 확정합니다", detail: "제안→지지·인증→인증서 확인이라는 세 메시지 지연을 거쳤습니다. 이제 L의 자리를 commit으로 표시합니다.", proposal: "L · 직접 확정", support: "3/3", certificates: "3/3 · 통과", result: "commit L" },
 ] as const;
 
-const TRACE_NOTES = TRACE_STATES.map((state) => `${state.title}. ${state.detail} ${state.result}`);
+const COMMIT_NOTES = COMMIT_LABELS.map((label, index) => `${label}. ${COMMIT_SCENES[index].title} ${COMMIT_SCENES[index].detail}`);
 
-function DagNode({ label, active, muted, note }: { label: string; active: boolean; muted?: boolean; note: string }) {
-  return <div className={`relative z-10 min-w-0 border px-1.5 py-1.5 text-center transition-colors duration-300 ${active ? "border-primary bg-primary/10" : muted ? "border-border/50 bg-muted/20 text-muted-foreground/55" : "border-border bg-background"}`}>
-    <p className="text-xs font-black">{label}</p>
-    <p className="mt-0.5 break-keep text-[9px] leading-3.5 text-muted-foreground">{note}</p>
-  </div>;
-}
-
-function EvidenceMeter({ label, value, target }: { label: string; value: number; target: number }) {
-  return <div className="border border-border bg-background p-3">
-    <div className="flex items-center justify-between gap-3"><p className="break-keep text-[10px] font-bold text-muted-foreground">{label}</p><p className="text-xs font-black">{value}/{target}</p></div>
-    <div className="mt-2 grid grid-cols-3 gap-1" aria-label={`${label} ${value}/${target}`}>
-      {Array.from({ length: target }, (_, index) => <span key={index} className={`h-2 ${index < value ? "bg-primary" : "bg-border"}`} />)}
+function EvidenceNode({ label, value, active, complete }: { label: string; value: string; active?: boolean; complete?: boolean }) {
+  return (
+    <div className={`min-w-0 border p-3 ${active ? "border-primary bg-primary text-primary-foreground" : complete ? "border-primary bg-primary/10" : "border-border bg-background"}`}>
+      <p className={`text-[9px] font-black ${active ? "text-primary-foreground/75" : "text-muted-foreground"}`}>{label}</p>
+      <p className="mt-1 break-keep text-xs font-black leading-5">{value}</p>
     </div>
-  </div>;
+  );
 }
 
-function statusLabel(status: SlotStatus) {
-  if (status === "commit") return "commit";
-  if (status === "skip") return "skip";
-  if (status === "held") return "commit · 보류";
-  return "undecided";
+function FlowArrow() {
+  return (
+    <div aria-hidden="true" className="flex h-7 items-center justify-center text-lg font-black text-primary sm:h-auto sm:w-8 sm:shrink-0">
+      <span className="sm:hidden">↓</span><span className="hidden sm:inline">→</span>
+    </div>
+  );
 }
 
-export function MysticetiTraceViz() {
-  const scenes = useAnimatedScenes(SCENE_LABELS.length, 6500, { loop: false });
-  const state = TRACE_STATES[scenes.active];
-  return <VizFrame eyebrow="한 거래 추적 · n=4 · f=1" title="Signed block 하나가 vote pattern을 거쳐 공통 순서가 되기까지" description="제안 자체의 certificate를 만들지 않는다는 말부터, 결정된 sub-DAG와 실행 완료가 다른 상태라는 점까지 여덟 장면으로 봅니다." note="A0·A1 같은 이름과 마지막 sub-DAG 배열은 원리를 따라가기 위한 축소 예시입니다. 현재 배포의 leader 수·wave 설정은 ProtocolConfig에 달려 있습니다." documentFlow canvasClassName="p-4 sm:p-6">
-    <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Mysticeti 처리 흐름 장면 탐색기">
-      <div data-viz-live-only className="space-y-4">
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
-          {PHASES.map((phase, index) => <div key={phase} className={`border px-1.5 py-2 text-center text-[9px] font-black transition-colors duration-300 ${index === state.phase ? "border-primary bg-primary/10 text-foreground" : index < state.phase ? "border-foreground/30 bg-background text-foreground" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {phase}</div>)}
-        </div>
+export function MysticetiCommitTraceViz() {
+  const scenes = useAnimatedScenes(COMMIT_SCENES.length, 6500, { loop: false });
+  const scene = COMMIT_SCENES[scenes.active];
+  const supportCount = Math.min(3, scenes.active === 0 ? 0 : scenes.active === 1 ? 1 : 3);
+  const certificateCount = scenes.active >= 4 ? 3 : 0;
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,1.08fr)]">
-          <div className="min-w-0 border border-border bg-background p-3 sm:p-4">
-            <div className="grid grid-cols-[2rem_repeat(3,minmax(0,1fr))] gap-2 border-b border-border pb-2 text-center text-[10px] font-black text-muted-foreground">
-              <span />{["round r", "round r+1", "round r+2"].map((round) => <span key={round}>{round}</span>)}
+  return (
+    <VizFrame
+      eyebrow="설명용 동일 투표권 · n=4 · f=1 · Q=3"
+      title="한 블록은 지지 정족수와 인증서 정족수를 차례로 넘습니다"
+      description="제안 L이 직접 확정되기까지 두 문턱을 여섯 장면으로 나눠 봅니다."
+      note="실제 구현은 사람 수가 아니라 서로 다른 작성자의 투표권을 합산합니다. 블록 검증을 이미 통과했다는 전제입니다."
+      documentFlow
+      canvasClassName="p-3 sm:p-6"
+    >
+      <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Mysticeti 제안 블록이 두 정족수를 거쳐 직접 확정되는 여섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <div data-viz-scene-stage className="min-h-[45rem] sm:min-h-[22rem]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {COMMIT_LABELS[scenes.active]}</p>
+          <h4 className="mt-2 min-h-14 break-keep text-base font-black leading-7">{scene.title}</h4>
+          <p className="mt-1 min-h-16 text-xs font-semibold leading-6 text-muted-foreground sm:min-h-12">{scene.detail}</p>
+
+          <div className="mt-4 flex flex-col sm:flex-row sm:items-stretch">
+            <div className={`flex-1 border-2 p-4 ${scenes.active === 0 ? "border-primary bg-primary text-primary-foreground" : "border-primary bg-primary/10"}`}>
+              <p className="text-[9px] font-black opacity-70">라운드 r · 제안</p>
+              <p className="mt-2 text-lg font-black">L</p>
+              <p className="mt-1 text-[10px] font-semibold">서명 블록 · 거래 포함</p>
             </div>
-            <div className="mt-3 space-y-1.5">
-              {AUTHORS.map((author, row) => <div key={author} className="grid grid-cols-[2rem_repeat(3,minmax(0,1fr))] items-center gap-2">
-                <span className="text-center text-xs font-black">{author}</span>
-                <DagNode label={row === 0 ? "A0 · L1" : `${author}0`} note={row === 0 ? "거래" : "제안"} active={row === 0 && state.visibleRound >= 0} muted={row !== 0} />
-                <DagNode label={`${author}1`} note={row < 3 ? "L1 vote" : "기타 vote"} active={row < 3 && state.visibleRound >= 1} muted={state.visibleRound < 1 || row === 3} />
-                <DagNode label={`${author}2`} note={row < 3 ? "L1 cert." : "기타 cert."} active={row < 3 && state.visibleRound >= 2} muted={state.visibleRound < 2 || row === 3} />
-              </div>)}
+            <FlowArrow />
+            <div className={`flex-[1.35] border-2 p-4 ${scenes.active >= 1 && scenes.active <= 3 ? "border-primary bg-primary/10" : supportCount === 3 ? "border-primary bg-primary/5" : "border-border bg-background"}`}>
+              <p className="text-[9px] font-black text-muted-foreground">라운드 r+1 · 첫 지지</p>
+              <div className="mt-3 grid grid-cols-4 gap-1">
+                {["A", "B", "C", "D"].map((author, index) => <span key={author} className={`border py-2 text-center text-[10px] font-black ${index < supportCount ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"}`}>{author}</span>)}
+              </div>
+              <p className="mt-2 text-[10px] font-semibold">{supportCount}/3 · {supportCount === 3 ? "L 인증" : "정족수 대기"}</p>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-2"><EvidenceMeter label="Distinct votes" value={state.votes} target={3} /><EvidenceMeter label="Certificate blocks" value={state.certificates} target={3} /></div>
+            <FlowArrow />
+            <div className={`flex-[1.35] border-2 p-4 ${scenes.active >= 4 ? "border-primary bg-primary/10" : "border-border bg-background"}`}>
+              <p className="text-[9px] font-black text-muted-foreground">라운드 r+2 · 인증서 블록</p>
+              <div className="mt-3 grid grid-cols-4 gap-1">
+                {["A", "B", "C", "D"].map((author, index) => <span key={author} className={`border py-2 text-center text-[10px] font-black ${index < certificateCount ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"}`}>{author}</span>)}
+              </div>
+              <p className="mt-2 text-[10px] font-semibold">{certificateCount}/3 · {certificateCount === 3 ? "직접 확정 가능" : "아직 없음"}</p>
+            </div>
           </div>
 
-          <div className="min-w-0 space-y-3">
-            <div className="border border-border bg-background p-4"><p className="text-[10px] font-black text-primary">장면 {scenes.active + 1} / {SCENE_LABELS.length}</p><h4 className="mt-2 break-keep text-base font-black leading-6">{state.title}</h4><p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{state.detail}</p><p className="mt-3 border-l-2 border-primary pl-3 text-xs font-bold leading-5">{state.result}</p></div>
-            <div className="grid grid-cols-4 gap-2">
-              {SLOTS.map((slot) => <div key={slot} className={`border px-2 py-1.5 ${state.slots[slot] === "commit" ? "border-primary bg-primary/10" : "border-border bg-background"}`}><p className="text-[10px] font-black">{slot}</p><p className="mt-0.5 break-keep text-[10px] text-muted-foreground">{statusLabel(state.slots[slot])}</p></div>)}
-            </div>
-            <div className="border border-border bg-background p-3"><p className="text-[10px] font-bold text-muted-foreground">외부화 가능한 prefix</p><p className="mt-2 min-h-5 break-keep text-xs font-black">{state.prefix.length ? state.prefix.join(" → ") : "아직 없음"}</p></div>
-            <div className="border border-border bg-background p-3"><p className="text-[10px] font-bold text-muted-foreground">Committed sub-DAG output</p><div className="mt-2 flex min-h-8 flex-wrap gap-1.5">{state.output.length ? state.output.map((item, index) => <span key={item} className="border border-primary bg-primary/10 px-2 py-1 text-[10px] font-black">{index + 1}. {item}</span>) : <span className="text-xs text-muted-foreground">결정된 출력 없음</span>}</div>{state.receipt !== "none" && <p className="mt-2 text-[10px] font-bold text-primary">{state.receipt === "consensus" ? "consensus order receipt" : "execution·checkpoint는 별도 확인"}</p>}</div>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <EvidenceNode label="제안 상태" value={scene.proposal} complete={scenes.active > 0} />
+            <EvidenceNode label="첫 지지" value={scene.support} complete={supportCount === 3} />
+            <EvidenceNode label="인증서 블록" value={scene.certificates} complete={certificateCount === 3} />
+            <EvidenceNode label="현재 결론" value={scene.result} active={scenes.active === 5} />
           </div>
         </div>
-        <AnimatedSceneControls labels={SCENE_LABELS} active={scenes.active} playing={scenes.playing} reducedMotion={scenes.reducedMotion} setActive={scenes.setActive} setPlaying={scenes.setPlaying} playLabel="흐름 재생" controlLabels={SCENE_LABELS} compact />
+        <AnimatedSceneControls {...scenes} labels={COMMIT_LABELS} controlLabels={COMMIT_LABELS} playLabel="Mysticeti 직접 확정 과정 재생" />
       </div>
-      <StaticSceneList labels={SCENE_LABELS} notes={TRACE_NOTES} />
-    </div>
-  </VizFrame>;
+      <StaticSceneList labels={COMMIT_LABELS} notes={COMMIT_NOTES} />
+    </VizFrame>
+  );
 }
 
-const BOUNDARY_ROWS = [
-  ["Signed proposal", "서명·epoch·round·author·parent 검증", "이 block의 독립 certificate"],
-  ["Implicit certificate", "2f+1 first-support votes를 ancestry에 담은 block", "leader direct commit"],
-  ["Direct commit pattern", "2f+1 certificate blocks", "application execution·checkpoint"],
-  ["Decided prefix", "undecided gap 전까지의 commit·skip", "gap 뒤 결정의 즉시 외부화"],
-  ["CommittedSubDag", "새 ancestors의 중복 없는 결정적 순서", "공정한 순서·거래 성공"],
-  ["Transaction votes", "fast-path accept·reject evidence", "모든 설정에서 활성·checkpoint finality"],
+const DECISION_LABELS = ["L3 미결정", "L4 확정", "앞에서 검사", "장벽 정지", "L3 간접 결정", "출력 재개"] as const;
+
+const DECISION_SCENES = [
+  { code: "status[L3] = try_direct_decide(L3)", heading: "L3에는 commit도 skip도 할 만큼 증거가 없어 undecided로 남습니다", detail: "증거가 부족하다는 이유로 임의로 건너뛰지 않습니다.", statuses: ["commit L1", "skip L2", "undecided L3", "대기 L4"], output: "L1 · L2" },
+  { code: "status[L4] = try_direct_decide(L4)", heading: "더 새로운 L4는 인증서 정족수를 얻어 직접 commit됩니다", detail: "계산상 L4가 결정됐어도 앞의 L3은 여전히 미결정입니다.", statuses: ["commit L1", "skip L2", "undecided L3", "commit L4"], output: "L1 · L2" },
+  { code: "for status in oldest_first(statuses):", heading: "결정 결과를 가장 오래된 L1부터 차례로 검사합니다", detail: "새로운 slot부터 계산한 결과를 외부에 내보낼 때는 오래된 순서로 다시 읽습니다.", statuses: ["commit L1", "skip L2", "undecided L3", "commit L4"], output: "L1 · L2" },
+  { code: "if status == UNDECIDED: break", heading: "L3에서 멈추므로 뒤의 commit L4도 아직 외부화하지 않습니다", detail: "L3의 미래 결정이 이미 공개한 순서 앞에 끼어드는 일을 막습니다.", statuses: ["commit L1", "skip L2", "undecided L3", "commit L4 · 보류"], output: "L1 · L2 · 여기서 정지" },
+  { code: "status[L3] = decide_from_anchor(L4, L3)", heading: "확정된 anchor L4가 L3의 인증 경로를 품어 L3을 간접 commit합니다", detail: "인증 경로가 없다는 규칙상 증거였다면 L3은 간접 skip이 됩니다.", statuses: ["commit L1", "skip L2", "commit L3", "commit L4"], output: "L1 · L2 · L3 · L4" },
+  { code: "emit(linearize_unseen_ancestors(L1..L4))", heading: "연속 결정 구간이 열리면 아직 내보내지 않은 인과 조상만 차례로 출력합니다", detail: "skip L2는 자리를 비우고, commit L1·L3·L4의 sub-DAG는 중복 없이 안정된 순서로 나갑니다.", statuses: ["commit L1", "skip L2", "commit L3", "commit L4"], output: "L1 과거→L1→L3 과거→L3→L4 나머지→L4" },
 ] as const;
 
-export function MysticetiBoundaryViz() {
-  return <VizFrame eyebrow="증거와 완료 상태" title="Uncertified, committed, executed를 한 상태로 합치지 않습니다" description="각 단계가 무엇을 보장하고, 그 증거만으로는 어디까지 말할 수 없는지 나눕니다." documentFlow canvasClassName="p-0"><ResponsiveVizTable columns={["상태·증거", "확인되는 것", "아직 확인되지 않는 것"]} rows={BOUNDARY_ROWS} desktopMinWidthClassName="min-w-[820px]" /></VizFrame>;
+const DECISION_NOTES = DECISION_LABELS.map((label, index) => `${label}. ${DECISION_SCENES[index].heading} ${DECISION_SCENES[index].detail}`);
+
+export function MysticetiDecisionPseudocodeViz() {
+  const scenes = useAnimatedScenes(DECISION_SCENES.length, 6800, { loop: false });
+  const scene = DECISION_SCENES[scenes.active];
+  return (
+    <VizFrame
+      eyebrow="UniversalCommitter 의사코드 · 상태와 함께 읽기"
+      title="뒤에서 commit이 보여도 앞의 undecided 자리에서 출력을 멈춥니다"
+      description="L3 미결정과 L4 직접 확정이 함께 있을 때, 연속 결정 구간이 어떻게 열리는지 추적합니다."
+      note="함수 이름은 논문과 고정 구현의 역할을 설명하기 위한 의사코드입니다. 실제 구현은 여러 committer와 투표권·ProtocolConfig를 함께 사용합니다."
+      documentFlow
+      canvasClassName="p-3 sm:p-6"
+    >
+      <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="Mysticeti 미결정 장벽과 간접 결정을 실행하는 의사코드 여섯 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <div data-viz-scene-stage className="min-h-[36rem] space-y-4 sm:min-h-[26rem]">
+          <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-6">
+            {DECISION_LABELS.map((label, index) => <div key={label} className={`border px-1 py-2 text-center text-[9px] font-black ${index === scenes.active ? "border-primary bg-primary/10" : index < scenes.active ? "border-foreground/30 bg-background" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {label}</div>)}
+          </div>
+          <div className="border border-border bg-foreground p-4 text-background">
+            <p className="text-[10px] font-black text-primary-foreground/70">실행 중인 의사코드 · {scenes.active + 1}/{DECISION_SCENES.length}</p>
+            <code className="mt-2 block break-words font-mono text-[11px] font-bold leading-6 sm:text-sm">{scene.code}</code>
+          </div>
+          <div className="border border-border bg-background p-4">
+            <h4 className="break-keep text-base font-black leading-7">{scene.heading}</h4>
+            <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">{scene.detail}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {scene.statuses.map((status, index) => {
+              const blocked = status.includes("undecided") || status.includes("보류");
+              const committed = status.includes("commit") && !status.includes("보류");
+              return <div key={`${index}-${status}`} className={`min-w-0 border p-3 ${blocked ? "border-destructive bg-destructive/10" : committed ? "border-primary bg-primary/10" : "border-border bg-background"}`}><p className="text-[9px] font-bold text-muted-foreground">L{index + 1}</p><p className="mt-1 break-keep text-xs font-black leading-5">{status.replace(` L${index + 1}`, "")}</p></div>;
+            })}
+          </div>
+          <div className="border border-primary bg-primary/10 p-4">
+            <p className="text-[9px] font-black text-primary">현재 외부화할 수 있는 순서</p>
+            <p className="mt-1 break-keep text-xs font-black leading-6">{scene.output}</p>
+          </div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={DECISION_LABELS} controlLabels={DECISION_LABELS} playLabel="Mysticeti 결정 절차 재생" compact />
+      </div>
+      <StaticSceneList labels={DECISION_LABELS} notes={DECISION_NOTES} />
+    </VizFrame>
+  );
+}
+
+const EVIDENCE_ROWS = [
+  ["서명 블록 수신", "서명·epoch·round·부모 정족수", "이 블록을 DAG 입력으로 받아도 됨", "지도자 확정"],
+  ["지도자 자리 결정", "commit 또는 skip의 정족수 증거", "연속 결정 구간 안에서 순서를 정할 수 있음", "거래 실행 성공"],
+  ["sub-DAG 출력", "commit된 지도자와 아직 안 나온 인과 조상", "합의 consumer가 처리할 안정된 블록 순서", "애플리케이션 상태 반영"],
+  ["빠른 실행 결과", "거래 표·충돌 배제·실행 결과", "해당 fast path의 실행 응답", "합의 체크포인트 인증"],
+  ["체크포인트 인증", "정족수가 확인한 effects/checkpoint", "문서가 정의한 settlement finality 증거", "모든 외부 시스템의 부수 효과"],
+] as const;
+
+export function MysticetiEvidenceBoundaryViz() {
+  return (
+    <VizFrame eyebrow="같은 거래에 여러 완료 상태가 있습니다" title="무엇을 확인했는지에 따라 말할 수 있는 결론이 달라집니다" description="블록 수신부터 합의 순서, 실행, 체크포인트까지 증거를 한 줄로 합치지 않습니다." documentFlow canvasClassName="p-0">
+      <ResponsiveVizTable columns={["관찰한 상태", "필요한 증거", "여기까지 말할 수 있음", "아직 말할 수 없음"]} rows={EVIDENCE_ROWS} desktopMinWidthClassName="min-w-[960px]" />
+    </VizFrame>
+  );
 }

@@ -12,6 +12,17 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const pdpTree: FileNode = d("curio", [
-  d("pdp", [f("pdp.go — PDP 증명 생성 & 검증", "pdp/pdp.go", "pdp-main")]),
+export const pdpTree: FileNode = d("pdp", [
+  d("src", [
+    f(
+      "PDPVerifier.sol — challenge·proof 검증",
+      "pdp/src/PDPVerifier.sol",
+      "pdp-verifier",
+    ),
+    f(
+      "SimplePDPService.sol — window·fault",
+      "pdp/src/SimplePDPService.sol",
+      "pdp-schedule",
+    ),
+  ]),
 ]);

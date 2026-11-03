@@ -1,3 +1,6 @@
+import ExplainedFormula from "@/components/ui/explained-formula";
+import TopologyViz from "./viz/TopologyViz";
+
 const examples = [
   [
     "2 nodes",
@@ -23,14 +26,17 @@ export default function Topology() {
   return (
     <section id="topology" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        full mesh는 node 수가 늘수록 pair당 bandwidth를 내준다
+        노드 수가 늘면 케이블은 제곱에 가깝게 늘고 pair 대역폭은 줄어듭니다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          N개 노드를 full mesh로 연결하고 노드 쌍마다 c개의 800G cable을 쓰면
-          전체 cable은 c·N(N−1)/2개, 노드당 port는 c·(N−1)개다. DGX B300의
-          physical port가 8개이므로 c·(N−1) ≤ 8이어야 한다.
+          N개 노드를 full mesh로 연결하고 노드 쌍마다 c개의 800G 물리 케이블을
+          쓰면 전체 케이블은 c·N(N−1)/2개, 노드당 포트는 c·(N−1)개입니다.
+          DGX B300의 물리 OSFP가 8개이므로 c·(N−1)≤8이어야 합니다.
         </p>
+        <div className="not-prose my-6">
+          <TopologyViz />
+        </div>
         <ExplainedFormula
           question="Node 수를 늘릴 때 cable 수와 node당 port 수는 얼마나 빨리 늘어나는가?"
           idea={
@@ -88,12 +94,13 @@ export default function Topology() {
           </div>
         </div>
         <p className="leading-7">
-          한 800G OSFP direct cable이 split된 두 400G logical link를 같은 peer에 제공한다고 가정한 nominal 수치다. protocol
-          overhead, collective topology, PCIe·GPU affinity, 양방향 traffic 때문에 application bandwidth와는 다르다.
-          4-node·12-cable 구성은 pair마다 cable 두 개를 배정한 사례라 8-node에 그대로 옮길 수 없다.
+          한 800G OSFP direct cable이 split된 두 400G logical link를 같은 peer에
+          제공한다고 가정한 nominal 수치입니다. Protocol overhead, collective
+          topology, PCIe·GPU affinity, 양방향 traffic 때문에 application bandwidth와는
+          다릅니다. 2노드·8케이블과 4노드·12케이블 fixture는 8노드·28케이블
+          full mesh에 그대로 옮길 수 없습니다.
         </p>
       </div>
     </section>
   );
 }
-import ExplainedFormula from "@/components/ui/explained-formula";

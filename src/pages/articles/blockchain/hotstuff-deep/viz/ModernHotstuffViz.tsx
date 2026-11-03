@@ -146,7 +146,7 @@ export function HotstuffChainViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[43rem] sm:min-h-[24rem]">
           <p className="min-h-12 border-y border-border py-3 text-sm font-bold leading-6">{state.action}</p>
           <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4">
             {state.blocks.map((block, index) => (
@@ -187,7 +187,7 @@ export function HotstuffRecoveryViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage className="border-y border-border py-4">
+        <div data-viz-scene-stage className="min-h-[30rem] border-y border-border py-4 sm:min-h-[18rem]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {RECOVERY_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
           <div className="mt-3 grid gap-px bg-border p-px sm:grid-cols-2">
@@ -209,6 +209,75 @@ export function HotstuffRecoveryViz() {
         <AnimatedSceneControls {...scenes} labels={RECOVERY_LABELS} controlLabels={RECOVERY_LABELS} playLabel="HotStuff 복구 재생" />
       </div>
       <StaticSceneList labels={RECOVERY_LABELS} notes={RECOVERY_NOTES} />
+    </VizFrame>
+  );
+}
+
+const SAFE_VOTE_LABELS = ["QC 검증", "잠금 가지 연장", "낮은 QC의 갈림길", "높은 QC의 갈림길"] as const;
+
+const SAFE_VOTE_STATES = [
+  {
+    code: "verify(proposal.justifyQC)",
+    proposal: "제안 B12 · justify QC11 · lockedQC11",
+    extends: "아직 계산하지 않음",
+    higher: "아직 계산하지 않음",
+    verdict: "QC의 위원회·view·블록 해시·결합 서명이 유효해야 다음 검사를 합니다.",
+  },
+  {
+    code: "extendsLockedBranch = isDescendant(B12, lockedBlock)",
+    proposal: "B12의 부모가 잠긴 B11",
+    extends: "참 · 같은 가지를 직접 연장",
+    higher: "검사하지 않아도 됨",
+    verdict: "안전성 조건을 만족하므로 B12에 투표할 수 있습니다.",
+  },
+  {
+    code: "extends || justifyQC.view > lockedQC.view",
+    proposal: "갈라진 C12 · justify QC10 · lockedQC11",
+    extends: "거짓 · B11의 자손이 아님",
+    higher: "거짓 · view 10 > view 11이 아님",
+    verdict: "두 조건이 모두 거짓이므로 C12에 투표하지 않습니다.",
+  },
+  {
+    code: "verify(QC12) && (false || 12 > 11)",
+    proposal: "갈라진 C13 · 유효한 justify QC12 · lockedQC11",
+    extends: "거짓 · 기존 가지와 충돌",
+    higher: "참 · 유효한 QC view 12가 lock view 11보다 높음",
+    verdict: "더 높은 정당화 증거가 있으므로 C13을 검토하고 투표할 수 있습니다.",
+  },
+] as const;
+
+const SAFE_VOTE_NOTES = SAFE_VOTE_STATES.map((state) => `${state.proposal}. ${state.verdict}`);
+
+export function HotstuffSafeVoteViz() {
+  const scenes = useAnimatedScenes(SAFE_VOTE_LABELS.length, 6800, { loop: false });
+  const state = SAFE_VOTE_STATES[scenes.active];
+
+  return (
+    <VizFrame
+      eyebrow="HotStuff §4.1 · safeNode 판정"
+      title="갈라진 블록은 더 높은 유효한 QC가 있을 때만 다시 검토합니다"
+      description="의사코드의 각 조건을 같은 가지, 낮은 QC의 갈림길, 높은 QC의 갈림길에 차례로 대입합니다."
+      note="view 숫자만 높다고 통과하지 않습니다. justify QC 자체의 서명과 블록 조상 관계를 먼저 검증합니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div id={scenes.playbackId} data-viz-live-only tabIndex={0} role="group" aria-label="HotStuff 안전한 투표 판정 네 단계" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+        <div data-viz-scene-stage className="min-h-[34rem] border-y border-border py-4 sm:min-h-[22rem]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {SAFE_VOTE_LABELS[scenes.active]}</p>
+          <h4 className="mt-2 break-keep text-base font-bold leading-7">{state.proposal}</h4>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">{state.code}</code>
+          <div className="mt-3 grid gap-px bg-border p-px sm:grid-cols-[8rem_minmax(0,1fr)]">
+            <strong className="bg-background p-3 text-[10px] text-muted-foreground">잠금 가지 연장</strong>
+            <p className="min-w-0 break-keep bg-background p-3 text-xs font-bold leading-5">{state.extends}</p>
+            <strong className="bg-background p-3 text-[10px] text-muted-foreground">더 높은 QC</strong>
+            <p className="min-w-0 break-keep bg-background p-3 text-xs font-bold leading-5">{state.higher}</p>
+            <strong className="bg-background p-3 text-[10px] text-muted-foreground">판정</strong>
+            <p className="min-w-0 break-keep bg-background p-3 text-xs font-bold leading-5">{state.verdict}</p>
+          </div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={SAFE_VOTE_LABELS} controlLabels={SAFE_VOTE_LABELS} playLabel="HotStuff 안전 투표 판정 재생" />
+      </div>
+      <StaticSceneList labels={SAFE_VOTE_LABELS} notes={SAFE_VOTE_NOTES} />
     </VizFrame>
   );
 }

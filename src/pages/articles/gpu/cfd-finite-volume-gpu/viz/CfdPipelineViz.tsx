@@ -1,94 +1,69 @@
-const stages = [
-  ["Cell state", "ρ · ρu · ρE", "보존량"],
-  ["Face flux", "convective + diffusive", "이웃 교환"],
-  ["Residual", "Σ face flux + source", "cell balance"],
-  ["Update", "Uⁿ → Uⁿ⁺¹", "CFL 제한"],
+import StepViz from "@/components/ui/step-viz";
+
+const C = { blue: "#2563eb", teal: "#0f766e", amber: "#d97706", red: "#dc2626", violet: "#7c3aed", ink: "#334155", muted: "#64748b", line: "#cbd5e1" };
+
+const CASE_STEPS = [
+  { label: "길이 1cm인 cell 네 개와 닫힌 양끝을 고정합니다", body: "단면적은 1m², cell volume은 0.01m³입니다. 바깥 경계의 질량 flux와 volume source는 0입니다." },
+  { label: "Cell 2에서 3으로 5kg/s가 10μs 동안 이동합니다", body: "내부 face 한 곳의 같은 numerical mass flux를 두 cell이 공유합니다." },
+  { label: "Cell 2는 0.005kg/m³ 줄고 cell 3은 같은 만큼 늘어납니다", body: "이동 질량은 5×10⁻⁵kg이고 volume 0.01m³로 나누면 밀도 변화는 0.005kg/m³입니다. 전체 변화는 0입니다." },
+  { label: "u=30m/s·c=330m/s에서 CFL 상한은 13.9μs입니다", body: "0.5×0.01÷360=1.389×10⁻⁵s입니다. 실제 10μs step은 이 단순 profile의 상한 안에 있습니다." },
+  { label: "물리시간 1ms를 풀려면 정확히 100 step이 필요합니다", body: "GPU가 flux kernel을 빠르게 해도 같은 Δt를 유지하면 step 수는 줄지 않습니다. End-to-end time-to-solution을 재야 합니다." },
 ] as const;
 
-export function FiniteVolumePipelineViz() {
-  return (
-    <figure
-      data-viz="cfd-finite-volume-pipeline"
-      className="not-prose my-9 overflow-hidden rounded-xl border border-border bg-card"
-    >
-      <figcaption className="border-b border-border px-5 py-4 sm:px-6">
-        <p className="text-xs font-semibold text-primary">
-          보존량 → face 교환 → 다음 상태
-        </p>
-        <p className="mt-1 text-base font-bold">
-          Finite volume은 미분식을 cell 경계의 flux 장부로 바꾼다
-        </p>
-      </figcaption>
-      <div
-        data-viz-canvas
-        className="grid gap-4 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-4"
-      >
-        {stages.map(([title, detail, receipt], index) => (
-          <section
-            key={title}
-            className="relative min-w-0 rounded-lg border border-border bg-background p-4"
-          >
-            <p className="text-[11px] font-bold text-primary">0{index + 1}</p>
-            <p className="mt-2 text-sm font-bold">{title}</p>
-            <p className="mt-2 break-words font-mono text-xs text-foreground/80">
-              {detail}
-            </p>
-            <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              {receipt}
-            </p>
-            {index < stages.length - 1 ? (
-              <span
-                aria-hidden
-                className="absolute -right-3 top-1/2 hidden -translate-y-1/2 bg-card px-1 text-muted-foreground lg:block"
-              >
-                →
-              </span>
-            ) : null}
-          </section>
-        ))}
-      </div>
-    </figure>
-  );
+function Cells({ step, mobile = false }: { step: number; mobile?: boolean }) {
+  const x0 = mobile ? 34 : 100; const w = mobile ? 58 : 112; const y = mobile ? 48 : 70; const h = mobile ? 72 : 86;
+  return <>
+    {[0,1,2,3].map(i=>{const delta=step>=2?(i===1?"−0.005":i===2?"+0.005":"0"):"";return <g key={i}><rect x={x0+i*w} y={y} width={w} height={h} fill={i===1&&step>=1?`${C.amber}12`:i===2&&step>=1?`${C.teal}12`:"#f8fafc"} stroke={i===1&&step>=1?C.amber:i===2&&step>=1?C.teal:C.line}/><text x={x0+i*w+w/2} y={y+24} textAnchor="middle" fontSize={mobile?9:10} fontWeight="700" fill={C.ink}>C{i+1}</text><text x={x0+i*w+w/2} y={y+47} textAnchor="middle" fontSize={mobile?8.6:9} fill={C.muted}>Δx=1cm</text>{delta&&<text x={x0+i*w+w/2} y={y+66} textAnchor="middle" fontSize={mobile?8.6:9} fontWeight="700" fill={i===1?C.amber:i===2?C.teal:C.muted}>{delta}</text>}</g>})}
+    <line x1={x0-12} y1={y} x2={x0-12} y2={y+h} stroke={C.ink} strokeWidth="1.25"/><line x1={x0+4*w+12} y1={y} x2={x0+4*w+12} y2={y+h} stroke={C.ink} strokeWidth="1.25"/>
+    {step>=1&&<><line x1={x0+2*w-28} y1={y-18} x2={x0+2*w+28} y2={y-18} stroke={C.blue} strokeWidth="1.25"/><circle cx={x0+2*w+28} cy={y-18} r="3" fill={C.blue}/><text x={x0+2*w} y={y-29} textAnchor="middle" fontSize={mobile?8.8:9.5} fontWeight="700" fill={C.blue}>5kg/s · 10μs</text></>}
+  </>;
 }
 
-const mappings = [
-  ["Cell-centered field", "연속 index · coalesced read/write", "SoA 후보"],
-  ["Face connectivity", "owner/neighbour gather", "indirect access"],
-  ["Halo state", "partition boundary exchange", "communication"],
-  ["Linear solve", "SpMV·reduction·preconditioner", "global coupling"],
+function CaseDesktop({ step }: { step: number }) {
+  return <svg className="!hidden sm:!block" viewBox="0 0 700 290" role="img" aria-label="4-cell 관에서 질량 보존과 CFL을 계산하는 사례">
+    {step<=2&&<><Cells step={step}/><rect x="100" y="190" width="448" height="54" rx="10" fill={step===2?`${C.teal}0d`:"#f8fafc"} stroke={step===2?C.teal:C.line}/><text x="324" y="212" textAnchor="middle" fontSize="10" fontWeight="700" fill={step===2?C.teal:C.muted}>{step===0?"외부 flux 0 · source 0":step===1?"같은 face flux를 두 cell에 반대 부호로 기록":"5×10⁻⁵kg ÷ 0.01m³ = 0.005kg/m³"}</text><text x="324" y="232" textAnchor="middle" fontSize="8.8" fill={C.muted}>{step===2?"Cell 2 + Cell 3의 변화 = 0 · domain total 보존":"내부 face는 domain 밖으로 질량을 내보내지 않음"}</text></>}
+    {step===3&&<><rect x="62" y="58" width="176" height="90" rx="12" fill="#f8fafc" stroke={C.line}/><text x="150" y="88" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.ink}>파동 속도</text><text x="150" y="117" textAnchor="middle" fontSize="12" fontWeight="700" fill={C.blue}>|30|+330=360m/s</text><line x1="248" y1="103" x2="278" y2="103" stroke={C.blue}/><circle cx="278" cy="103" r="2.5" fill={C.blue}/><rect x="286" y="58" width="176" height="90" rx="12" fill="#f8fafc" stroke={C.line}/><text x="374" y="88" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.ink}>Cell travel time</text><text x="374" y="117" textAnchor="middle" fontSize="12" fontWeight="700" fill={C.amber}>0.01÷360</text><line x1="472" y1="103" x2="502" y2="103" stroke={C.teal}/><circle cx="502" cy="103" r="2.5" fill={C.teal}/><rect x="510" y="58" width="128" height="90" rx="12" fill={`${C.teal}12`} stroke={C.teal}/><text x="574" y="88" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.teal}>× CFL 0.5</text><text x="574" y="117" textAnchor="middle" fontSize="12" fontWeight="700" fill={C.teal}>13.9μs</text><text x="350" y="206" textAnchor="middle" fontSize="11" fontWeight="700" fill={C.blue}>실제 Δt=10μs ≤ 13.9μs</text><text x="350" y="232" textAnchor="middle" fontSize="8.8" fill={C.muted}>이 수치는 1D compressible explicit 설명 profile에만 유효합니다</text></>}
+    {step===4&&<><rect x="64" y="54" width="220" height="104" rx="12" fill="#f8fafc" stroke={C.line}/><text x="174" y="85" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.ink}>목표 physical time</text><text x="174" y="122" textAnchor="middle" fontSize="20" fontWeight="700" fill={C.blue}>1ms</text><line x1="296" y1="106" x2="330" y2="106" stroke={C.blue}/><circle cx="330" cy="106" r="2.5" fill={C.blue}/><rect x="342" y="54" width="294" height="104" rx="12" fill={`${C.teal}12`} stroke={C.teal}/><text x="489" y="85" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.teal}>1ms ÷ 10μs</text><text x="489" y="122" textAnchor="middle" fontSize="20" fontWeight="700" fill={C.teal}>100 updates</text><text x="350" y="210" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.red}>Flux kernel 2× ≠ full solve 2×</text><text x="350" y="235" textAnchor="middle" fontSize="8.8" fill={C.muted}>Halo · reduction · linear solve · I/O와 100번의 step을 함께 잽니다</text></>}
+  </svg>;
+}
+
+function CaseMobile({ step }: { step: number }) {
+  if(step<=2)return <svg className="block sm:!hidden" viewBox="0 0 300 330" role="img" aria-label="모바일용 4-cell 질량 보존 사례"><Cells step={step} mobile/><rect x="32" y="174" width="236" height="68" rx="10" fill={step===2?`${C.teal}10`:"#f8fafc"} stroke={step===2?C.teal:C.line}/><text x="150" y="201" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={step===2?C.teal:C.ink}>{step===0?"closed boundary · source 0":step===1?"한 face · 한 flux · 반대 부호":"−0.005 + 0.005 = 0"}</text><text x="150" y="223" textAnchor="middle" fontSize="8.8" fill={C.muted}>{step===2?"domain total mass 보존":"외부로 나간 질량 없음"}</text><text x="150" y="294" textAnchor="middle" fontSize="8.8" fill={C.muted}>cell volume 0.01m³</text></svg>;
+  const vals=step===3?[["360m/s","|u|+c"],["0.01÷360","travel time"],["13.9μs","× CFL 0.5"],["10μs","actual step"]]:[["1ms","physical time"],["÷10μs","step size"],["100","updates"],["end-to-end","measure"]];
+  return <svg className="block sm:!hidden" viewBox="0 0 300 360" role="img" aria-label="모바일용 CFL과 step 수 계산">{vals.map(([a,b],i)=><g key={a}><rect x="38" y={22+i*76} width="224" height="52" rx="9" fill={i===vals.length-1?`${C.teal}10`:"#f8fafc"} stroke={i===vals.length-1?C.teal:C.line}/><text x="150" y={44+i*76} textAnchor="middle" fontSize="10.5" fontWeight="700" fill={i===vals.length-1?C.teal:C.ink}>{a}</text><text x="150" y={62+i*76} textAnchor="middle" fontSize="8.8" fill={C.muted}>{b}</text>{i<vals.length-1&&<><line x1="150" y1={77+i*76} x2="150" y2={91+i*76} stroke={C.blue}/><circle cx="150" cy={91+i*76} r="2.3" fill={C.blue}/></>}</g>)}</svg>;
+}
+
+export function CfdCaseViz(){return <StepViz steps={CASE_STEPS}>{step=><><CaseMobile step={step}/><CaseDesktop step={step}/></>}</StepViz>}
+
+const FV_STEPS=[
+  {label:"Face 양쪽 cell state를 읽습니다",body:"Cell 2와 3의 reconstructed state·face geometry를 한 번 모읍니다."},
+  {label:"공유 numerical flux를 한 번 계산합니다",body:"두 cell이 서로 다른 flux를 다시 계산하지 않도록 face 결과를 하나로 둡니다."},
+  {label:"Owner와 neighbour residual에 반대 부호로 더합니다",body:"Cell 2에는 −ṁ, cell 3에는 +ṁ를 써 internal contribution을 상쇄합니다."},
+  {label:"Volume으로 나누고 Δt를 곱해 다음 state를 만듭니다",body:"Flux 합과 source를 state 변화량으로 바꾼 뒤 Uⁿ⁺¹을 저장합니다."},
 ] as const;
 
-export function CfdGpuMappingViz() {
-  return (
-    <figure
-      data-viz="cfd-gpu-mapping"
-      className="not-prose my-9 overflow-hidden rounded-xl border border-border bg-card"
-    >
-      <figcaption className="border-b border-border px-5 py-4 sm:px-6">
-        <p className="text-xs font-semibold text-primary">
-          Mesh topology가 memory traffic을 만든다
-        </p>
-        <p className="mt-1 text-base font-bold">
-          “GPU로 옮긴다”는 네 종류의 data path를 따로 최적화하는 일이다
-        </p>
-      </figcaption>
-      <div data-viz-canvas className="grid gap-3 p-5 sm:p-6">
-        {mappings.map(([field, path, bottleneck], index) => (
-          <div
-            key={field}
-            className="grid min-w-0 gap-2 rounded-lg border border-border bg-background p-4 md:grid-cols-[2rem_10rem_1fr_8rem] md:items-center"
-          >
-            <span className="text-xs font-bold text-primary">0{index + 1}</span>
-            <strong className="text-sm">{field}</strong>
-            <span className="break-words text-xs leading-5 text-muted-foreground">
-              {path}
-            </span>
-            <span className="font-mono text-xs text-foreground/75">
-              {bottleneck}
-            </span>
-          </div>
-        ))}
-      </div>
-    </figure>
-  );
-}
+function FvDesktop({step}:{step:number}){return <svg className="!hidden sm:!block" viewBox="0 0 700 270" role="img" aria-label="공유 face flux를 cell update에 쓰는 과정"><rect x="64" y="62" width="210" height="110" rx="12" fill={`${C.amber}0d`} stroke={C.amber}/><text x="169" y="92" textAnchor="middle" fontSize="11" fontWeight="700" fill={C.amber}>Owner · Cell 2</text><text x="169" y="128" textAnchor="middle" fontSize="9" fill={C.ink}>{step>=2?"residual − F̂A":"reconstructed left state"}</text><rect x="426" y="62" width="210" height="110" rx="12" fill={`${C.teal}0d`} stroke={C.teal}/><text x="531" y="92" textAnchor="middle" fontSize="11" fontWeight="700" fill={C.teal}>Neighbour · Cell 3</text><text x="531" y="128" textAnchor="middle" fontSize="9" fill={C.ink}>{step>=2?"residual + F̂A":"reconstructed right state"}</text><rect x="305" y="48" width="90" height="138" rx="12" fill={step>=1?`${C.blue}12`:"#f8fafc"} stroke={step>=1?C.blue:C.line}/><text x="350" y="83" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.blue}>shared face</text><text x="350" y="113" textAnchor="middle" fontSize="11" fontWeight="700" fill={C.ink}>{step>=1?"F̂f":"gather"}</text><text x="350" y="145" textAnchor="middle" fontSize="8.8" fill={C.muted}>{step>=1?"compute once":"UL · UR · n · A"}</text>{step>=2&&<><line x1="301" y1="117" x2="282" y2="117" stroke={C.amber}/><circle cx="282" cy="117" r="2.4" fill={C.amber}/><line x1="399" y1="117" x2="418" y2="117" stroke={C.teal}/><circle cx="418" cy="117" r="2.4" fill={C.teal}/></>}{step===3&&<><text x="169" y="154" textAnchor="middle" fontSize="9" fontWeight="700" fill={C.amber}>U₂ⁿ⁺¹ = U₂ⁿ − Δt/V·F̂A</text><text x="531" y="154" textAnchor="middle" fontSize="9" fontWeight="700" fill={C.teal}>U₃ⁿ⁺¹ = U₃ⁿ + Δt/V·F̂A</text></>}<text x="350" y="228" textAnchor="middle" fontSize="9" fill={step>=2?C.blue:C.muted}>{step>=2?"internal pair sum = 0":"한 물리 face의 거래는 장부 하나"}</text></svg>}
+function FvMobile({step}:{step:number}){const rows=step===0?[["Cell 2","left state"],["shared face","geometry"],["Cell 3","right state"]]:step===1?[["UL·UR","input"],["F̂f","compute once"],["face cache","one value"]]:step===2?[["Cell 2","−F̂A"],["same F̂","shared"],["Cell 3","+F̂A"]]:[["residual","ΣF̂A+S"],["× Δt/V","state delta"],["Uⁿ⁺¹","next state"]];return <svg className="block sm:!hidden" viewBox="0 0 300 330" role="img" aria-label="모바일용 finite-volume face update">{rows.map(([a,b],i)=><g key={`${a}-${i}`}><rect x="35" y={28+i*82} width="230" height="56" rx="10" fill={i===1?`${C.blue}10`:"#f8fafc"} stroke={i===1?C.blue:C.line}/><text x="150" y={52+i*82} textAnchor="middle" fontSize="10.5" fontWeight="700" fill={i===1?C.blue:C.ink}>{a}</text><text x="150" y={71+i*82} textAnchor="middle" fontSize="8.8" fill={C.muted}>{b}</text>{i<2&&<><line x1="150" y1={88+i*82} x2="150" y2={103+i*82} stroke={C.blue}/><circle cx="150" cy={103+i*82} r="2.3" fill={C.blue}/></>}</g>)}</svg>}
+export function FiniteVolumePipelineViz(){return <StepViz steps={FV_STEPS}>{step=><><FvMobile step={step}/><FvDesktop step={step}/></>}</StepViz>}
+
+const GPU_STEPS=[
+  {label:"Cell fields는 연속 배열로 읽고 씁니다",body:"ρ·ρu·ρE를 field별 연속 index에 두면 cell update의 coalescing 후보가 됩니다."},
+  {label:"Face owner/neighbour index가 간접 gather를 만듭니다",body:"Unstructured face 순서가 흩어지면 두 cell state를 읽는 transaction과 cache reuse가 나빠집니다."},
+  {label:"Interior 계산과 halo 통신을 겹칩니다",body:"Remote 값이 필요 없는 interior cells를 먼저 계산하고 receive 뒤 partition boundary를 계산합니다."},
+  {label:"Global reduction과 implicit solve가 다시 동기화합니다",body:"Residual norm·CFL minimum·SpMV/GMRES는 local flux kernel 밖의 critical path입니다."},
+] as const;
+const gpuRows=[["Cell SoA","contiguous load/store","HBM"],["Face index","owner/neighbour gather","cache"],["Halo","pack · send · receive","network"],["Reduction/solve","min · norm · SpMV","global sync"]] as const;
+function GpuDesktop({step}:{step:number}){return <svg className="!hidden sm:!block" viewBox="0 0 700 300" role="img" aria-label="CFD mesh data가 GPU memory와 communication path로 내려가는 과정">{gpuRows.map(([a,b,c],i)=>{const y=34+i*58;const active=i===step;const color=[C.blue,C.amber,C.teal,C.violet][i];return <g key={a} opacity={i>step?0.35:1}><rect x="42" y={y} width="616" height="44" rx="9" fill={active?`${color}12`:"#f8fafc"} stroke={active?color:C.line}/><text x="62" y={y+27} fontSize="9.5" fontWeight="700" fill={active?color:C.ink}>{a}</text><text x="350" y={y+27} textAnchor="middle" fontSize="9" fill={C.muted}>{b}</text><text x="626" y={y+27} textAnchor="end" fontSize="9" fontWeight="700" fill={active?color:C.muted}>{c}</text>{i<3&&<><line x1="58" y1={y+47} x2="58" y2={y+55} stroke={active?color:C.line}/><circle cx="58" cy={y+55} r="2.2" fill={active?color:C.line}/></>}</g>})}<text x="350" y="278" textAnchor="middle" fontSize="8.8" fill={C.muted}>Kernel 하나가 아니라 HBM→indirect gather→network→global sync 전체를 측정합니다</text></svg>}
+function GpuMobile({step}:{step:number}){const [a,b,c]=gpuRows[step];const color=[C.blue,C.amber,C.teal,C.violet][step];return <svg className="block sm:!hidden" viewBox="0 0 300 320" role="img" aria-label="모바일용 CFD GPU data path"><rect x="36" y="34" width="228" height="58" rx="10" fill={`${color}12`} stroke={color}/><text x="150" y="60" textAnchor="middle" fontSize="11" fontWeight="700" fill={color}>{a}</text><text x="150" y="80" textAnchor="middle" fontSize="9" fill={C.muted}>현재 경로</text><line x1="150" y1="96" x2="150" y2="116" stroke={color}/><circle cx="150" cy="116" r="2.4" fill={color}/><rect x="36" y="122" width="228" height="58" rx="10" fill="#f8fafc" stroke={C.line}/><text x="150" y="156" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={C.ink}>{b}</text><line x1="150" y1="184" x2="150" y2="204" stroke={color}/><circle cx="150" cy="204" r="2.4" fill={color}/><rect x="36" y="210" width="228" height="58" rx="10" fill={`${color}0d`} stroke={color}/><text x="150" y="245" textAnchor="middle" fontSize="10.5" fontWeight="700" fill={color}>{c}</text><text x="150" y="300" textAnchor="middle" fontSize="8.8" fill={C.muted}>각 경로는 다른 counter와 병목을 가집니다</text></svg>}
+export function CfdGpuMappingViz(){return <StepViz steps={GPU_STEPS}>{step=><><GpuMobile step={step}/><GpuDesktop step={step}/></>}</StepViz>}
+
+const VERIFY_STEPS=[
+  {label:"Code verification: 이산식을 의도대로 계산했는지 봅니다",body:"Internal face ± cancellation, manufactured solution과 기대 order를 검사합니다."},
+  {label:"Solution verification: mesh·Δt 불확실성을 줄입니다",body:"h·h/2·h/4와 time-step refinement에서 observable과 error의 수렴을 확인합니다."},
+  {label:"Validation: 물리 model을 독립 실험과 비교합니다",body:"같은 좌표계·reference condition·measurement uncertainty에서 압력·힘 등을 비교합니다."},
+  {label:"Performance gate: 같은 정답 조건의 time-to-solution을 잽니다",body:"CPU/GPU parity를 통과한 뒤 physical 1ms까지의 wall time·HBM·halo·reduction을 비교합니다."},
+] as const;
+const verifyRows=[["식 구현","± face · manufactured","code"],["수치 오차","h · h/2 · h/4","solution"],["현실 비교","experiment uncertainty","model"],["속도 채택","same answer · wall time","release"]] as const;
+function VerifyDesktop({step}:{step:number}){return <svg className="!hidden sm:!block" viewBox="0 0 700 278" role="img" aria-label="CFD verification validation performance release gate">{verifyRows.map(([a,b,c],i)=>{const x=32+i*169;const color=[C.blue,C.amber,C.teal,C.violet][i];return <g key={a} opacity={i>step?0.38:1}><rect x={x} y="68" width="145" height="104" rx="12" fill={i===step?`${color}12`:"#f8fafc"} stroke={i===step?color:C.line}/><text x={x+72.5} y="96" textAnchor="middle" fontSize="10" fontWeight="700" fill={i===step?color:C.ink}>{a}</text><text x={x+72.5} y="125" textAnchor="middle" fontSize="8.8" fill={C.muted}>{b}</text><text x={x+72.5} y="151" textAnchor="middle" fontSize="8.8" fontWeight="700" fill={i===step?color:C.muted}>{c}</text>{i<3&&<><line x1={x+149} y1="120" x2={x+165} y2="120" stroke={color}/><circle cx={x+165} cy="120" r="2.3" fill={color}/></>}</g>})}<text x="350" y="222" textAnchor="middle" fontSize="10" fontWeight="700" fill={C.red}>Residual 감소 하나로 네 관문을 합치지 않습니다</text><text x="350" y="246" textAnchor="middle" fontSize="8.8" fill={C.muted}>앞 관문 실패 시 performance 숫자는 release evidence가 아닙니다</text></svg>}
+function VerifyMobile({step}:{step:number}){return <svg className="block sm:!hidden" viewBox="0 0 300 340" role="img" aria-label="모바일용 CFD 검증 관문">{verifyRows.map(([a,b,c],i)=>{const y=20+i*72;const color=[C.blue,C.amber,C.teal,C.violet][i];return <g key={a} opacity={i>step?0.36:1}><rect x="34" y={y} width="232" height="52" rx="9" fill={i===step?`${color}12`:"#f8fafc"} stroke={i===step?color:C.line}/><text x="54" y={y+22} fontSize="9.5" fontWeight="700" fill={i===step?color:C.ink}>{a}</text><text x="54" y={y+41} fontSize="8.6" fill={C.muted}>{b}</text><text x="250" y={y+31} textAnchor="end" fontSize="8.6" fontWeight="700" fill={i===step?color:C.muted}>{c}</text>{i<3&&<><line x1="46" y1={y+55} x2="46" y2={y+67} stroke={color}/><circle cx="46" cy={y+67} r="2.2" fill={color}/></>}</g>})}<text x="150" y="326" textAnchor="middle" fontSize="8.8" fill={C.red}>앞 관문 실패 시 속도 비교 중단</text></svg>}
+export function CfdVerificationViz(){return <StepViz steps={VERIFY_STEPS}>{step=><><VerifyMobile step={step}/><VerifyDesktop step={step}/></>}</StepViz>}

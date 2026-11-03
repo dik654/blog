@@ -31,8 +31,22 @@ p(x)&=\sum_{i=0}^{k-1}\underbrace{y_i}_{\text{받은 평가값}}\,\underbrace{L_
 L_i(x)&=\prod_{j\ne i}\frac{\underbrace{x-x_j}_{\text{다른 점에서 0}}}{\underbrace{x_i-x_j}_{\text{자기 점에서 1로 보정}}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{i=0}^{k-1}y_iL_i(x)`, annotation: ["받은 k개 평가값을 basis에 실어 더함","GF(7)의 (1,5),(3,4)면 항은 k=2개","두 항의 합이 p(x)=2+3x를 복원"] },
-          { expression: String.raw`\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}`, annotation: ["분자는 다른 관측점에서 0을 만들고","분모는 x=x_i에서 값을 1로 맞춤","(3,4)용 basis는 (x−1)/(3−1)"] },
+          {
+            expression: String.raw`\sum_{i=0}^{k-1}y_iL_i(x)`,
+            annotation: [
+              "받은 k개 평가값을 basis에 실어 더함",
+              "GF(7)의 (1,5),(3,4)면 항은 k=2개",
+              "두 항의 합이 p(x)=2+3x를 복원",
+            ],
+          },
+          {
+            expression: String.raw`\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}`,
+            annotation: [
+              "분자는 다른 관측점에서 0을 만들고",
+              "분모는 x=x_i에서 값을 1로 맞춤",
+              "(3,4)용 basis는 (x−1)/(3−1)",
+            ],
+          },
         ]}
         terms={[
           {
@@ -69,17 +83,23 @@ L_i(x)&=\prod_{j\ne i}\frac{\underbrace{x-x_j}_{\text{다른 점에서 0}}}{\und
         <h3>MDS와 error budget은 같은 말이 아닙니다</h3>
         <p>
           (n,k) Reed–Solomon code의 minimum distance는 <code>d=n-k+1</code>
-          입니다. 위치를 아는 erasure를 s개, 위치를 모르는 잘못된 symbol을
-          e개라고 할 때 일반적인 unique decoding 경계는 <code>2e+s&lt;d</code>,
-          즉 <code>2e+s≤n-k</code>입니다. (10,6)에서 erasure 네 개는 복원할 수
-          있지만, error 두 개가 이미 parity budget 네 칸을 모두 사용합니다.
-          그래서 production decoder는 checksum·commitment로 corruption을
-          erasure로 바꿀 수 있는지 먼저 봅니다.
+          입니다. 위치를 아는 빈칸을 s개, 위치를 모르는 오답을 e개라고 두면 복원
+          경계는 <code>2e+s&lt;d</code>, 즉 <code>2e+s≤n-k</code>입니다.
         </p>
         <p>
-          “Systematic”은 source symbol이 codeword에 그대로 포함된다는 배치 방식입니다. 다항식 평가라는 수학적 정의만으로 저장 배열의 앞 k칸이 자동으로 원문이
-          되는 것은 아니며 generator matrix와 encoding profile을 고정해야 합니다. Field 크기와 symbol packing 역시 구현마다 다르므로
-          GF(2^8)을 모든 Reed–Solomon 또는 Ethereum blob의 보편적 field라고 부르지 않습니다.
+          (10,6)은 복구 예산이 네 칸입니다. 위치를 아는 빈칸 네 개는 한 칸씩
+          써서 복원할 수 있습니다. 반면 위치를 모르는 오답은 하나에 두 칸을
+          쓰므로 오답 두 개만으로 예산이 끝납니다. 그래서 실제 decoder는
+          checksum이나 commitment로 손상 위치를 먼저 알아낼 수 있는지
+          확인합니다.
+        </p>
+        <p>
+          “Systematic”은 source symbol이 codeword에 그대로 포함된다는 배치
+          방식입니다. 다항식 평가라는 수학적 정의만으로 저장 배열의 앞 k칸이
+          자동으로 원문이 되는 것은 아니며 generator matrix와 encoding profile을
+          고정해야 합니다. Field 크기와 symbol packing 역시 구현마다 다르므로
+          GF(2^8)을 모든 Reed–Solomon 또는 Ethereum blob의 보편적 field라고
+          부르지 않습니다.
         </p>
       </div>
 

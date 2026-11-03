@@ -171,6 +171,7 @@ export function AvalanchePollTraceViz() {
       title="같은 poll 기록이 preference와 confidence를 서로 다르게 바꿉니다"
       description="AvalancheGo v1.14.2의 Snowflake와 Snowball 상태 전이를 여덟 장면으로 나눠 따라갑니다."
       note="실제 v1.14.2 기본값은 20·15·15·20입니다. 서로 다른 두 alpha의 역할을 보이려고 유효한 작은 값을 사용합니다."
+      documentFlow
       canvasClassName="p-2.5 sm:p-5"
     >
       <div
@@ -182,7 +183,7 @@ export function AvalanchePollTraceViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div data-viz-scene-stage>
+        <div data-viz-scene-stage className="min-h-[845px] sm:min-h-[627px] xl:min-h-[471px]">
           <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {TRACE_LABELS[scenes.active]}</p>
           <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.sampleResult}</h4>
 
@@ -234,6 +235,104 @@ export function AvalanchePollTraceViz() {
         <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="표본 투표 상태 전이 재생" />
       </div>
       <StaticSceneList labels={TRACE_LABELS} notes={TRACE_NOTES} />
+    </VizFrame>
+  );
+}
+
+const UPDATE_LABELS = ["표 수신", "누적 우세", "외부 선호", "실패 분기", "내부 선호", "연속 성공", "결정 잠금"] as const;
+
+const UPDATE_STATES = [
+  {
+    title: "이번 표본에서 가장 많이 나온 후보와 그 표 수를 받습니다.",
+    code: "choice, count = poll.mode()",
+    input: "예: [B, B, B, B, A]에서 choice=B, count=4",
+    update: "아직 상태를 바꾸지 않고 아래 두 기준과 비교할 입력만 만듭니다.",
+    guard: "응답하지 않은 노드를 임의로 A나 B 표에 더하지 않습니다.",
+  },
+  {
+    title: "선호 기준을 넘은 후보의 누적 우세 횟수를 먼저 올립니다.",
+    code: "if count >= alphaPreference: strength[choice] += 1",
+    input: "count=4, alphaPreference=3",
+    update: "B의 누적 strength가 2에서 3으로 늘어납니다.",
+    guard: "이 누적값은 연속 성공 횟수도, 최종 결정도 아닙니다.",
+  },
+  {
+    title: "새 누적값이 기존 최고값보다 클 때만 외부 선호를 바꿉니다.",
+    code: "if strength[choice] > maxStrength: preference = choice",
+    input: "B strength=3, 기존 maxStrength=2",
+    update: "외부에서 보이는 Snowball preference가 B가 됩니다.",
+    guard: "누적값이 동률이면 기존 preference를 그대로 둡니다.",
+  },
+  {
+    title: "선호 기준에도 못 미친 표본은 연속 횟수만 0으로 돌리고 끝냅니다.",
+    code: "if count < alphaPreference: confidence = 0; return",
+    input: "예: B 2표, alphaPreference=3",
+    update: "현재 연속 성공 구간이 끊기고 confidence가 0이 됩니다.",
+    guard: "기존 preference와 choice별 누적 strength까지 지우지는 않습니다.",
+  },
+  {
+    title: "내부 선호 후보가 달라지면 새 후보의 연속 기록을 0부터 시작합니다.",
+    code: "if choice != innerPreference: confidence = 0; innerPreference = choice",
+    input: "기존 내부 선호 A, 이번 choice B",
+    update: "Snowflake의 내부 선호가 B로 바뀌지만 confidence는 아직 0입니다.",
+    guard: "후보가 바뀐 poll을 이전 후보의 연속 성공에 이어 붙이지 않습니다.",
+  },
+  {
+    title: "더 높은 confidence 기준까지 넘은 같은 후보만 연속 횟수를 올립니다.",
+    code: "if count < alphaConfidence: confidence = 0; return; else confidence += 1",
+    input: "count=4, alphaConfidence=4, 내부 선호 B",
+    update: "B의 현재 연속 confidence가 1 늘어납니다.",
+    guard: "3표처럼 선호만 바꿀 수 있는 결과는 연속 성공으로 세지 않습니다.",
+  },
+  {
+    title: "연속 횟수가 beta에 닿으면 이 로컬 선택을 더 이상 바꾸지 않습니다.",
+    code: "if confidence >= beta: finalized = true",
+    input: "confidence=3, beta=3",
+    update: "이 노드의 로컬 Snowflake 상태가 B로 잠깁니다.",
+    guard: "한 노드의 잠금만으로 네트워크 전체의 상충 결정 확률을 측정한 것은 아닙니다.",
+  },
+] as const;
+
+const UPDATE_NOTES = UPDATE_STATES.map((state) => `${state.title} ${state.update} ${state.guard}`);
+
+export function AvalanchePollUpdatePseudocodeViz() {
+  const scenes = useAnimatedScenes(UPDATE_LABELS.length, 6200, { loop: false });
+  const state = UPDATE_STATES[scenes.active];
+
+  return (
+    <VizFrame
+      eyebrow="의사코드를 상태 변화로 읽기"
+      title="표본 하나가 들어오면 이 순서로 두 종류의 기억을 갱신합니다"
+      description="코드 한 줄과 그 줄이 읽는 입력, 바꾸는 상태, 넘지 않는 경계를 같은 장면에 놓았습니다."
+      note="설명을 위해 binary Snowball·Snowflake 갱신의 핵심 분기를 한 순서로 펼쳤습니다. 실제 엔진의 sampling·block validity·ancestry 처리는 포함하지 않습니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div
+        id={scenes.playbackId}
+        data-viz-live-only
+        tabIndex={0}
+        role="group"
+        aria-label="Avalanche poll 갱신 의사코드의 일곱 단계"
+        onKeyDown={scenes.onKeyDown}
+        className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        <div data-viz-scene-stage className="min-h-[590px] sm:min-h-[440px]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {UPDATE_LABELS[scenes.active]}</p>
+          <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
+          <code className="mt-3 block whitespace-pre-wrap break-words border border-border bg-muted/40 p-3 text-xs font-bold leading-6">{state.code}</code>
+          <div className="mt-3 grid gap-px border border-border bg-border p-px sm:grid-cols-3">
+            <div className="min-w-0 bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">이번 줄이 읽는 값</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.input}</p></div>
+            <div className="min-w-0 bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">바뀌는 상태</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.update}</p></div>
+            <div className="min-w-0 bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">여기서 넘지 않는 경계</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.guard}</p></div>
+          </div>
+          <div className="mt-4 grid grid-cols-7 gap-1" aria-hidden="true">
+            {UPDATE_LABELS.map((label, index) => <span key={label} className={`h-1.5 ${index <= scenes.active ? "bg-primary" : "bg-border"}`} />)}
+          </div>
+        </div>
+        <AnimatedSceneControls {...scenes} labels={UPDATE_LABELS} controlLabels={UPDATE_LABELS} playLabel="표본 갱신 의사코드 재생" />
+      </div>
+      <StaticSceneList labels={UPDATE_LABELS} notes={UPDATE_NOTES} />
     </VizFrame>
   );
 }

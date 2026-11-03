@@ -88,7 +88,7 @@ export const certificationRoadmapData: CloudCertificationArticleData = {
   ] },
   sources: [
     { source: "AWS Certification · Exam Guides", excerpt: "validates the ability to design solutions based on the AWS Well-Architected Framework", application: "시험을 서비스 이름 모음이 아니라 역할별 능력 검증으로 나누는 기준으로 사용합니다.", citation: "AWS Certification Exam Guides", href: "https://docs.aws.amazon.com/aws-certification/latest/examguides/", note: "AWS가 현재 제공하는 시험 코드와 각 시험 가이드로 이어지는 공식 색인입니다." },
-    { source: "Microsoft Learn · AI-200 study guide", excerpt: "Developing AI Cloud Solutions on Azure", application: "폐지된 AZ-204와 현행 AI-200을 구분하고 AI 백엔드 개발 범위를 현재 로드맵에 넣습니다.", citation: "Microsoft Learn, Study guide for Exam AI-200", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200", note: "현행 AI-200의 대상 역할과 컨테이너·데이터·서비스 연결·운영 영역을 밝힌 공식 가이드입니다." },
+    { source: "Microsoft Learn · AI-200 study guide", excerpt: "Developing AI Cloud Solutions on Azure", application: "폐지된 AZ-204와 현행 AI-200을 구분하고 AI 백엔드 개발 범위를 현재 로드맵에 넣습니다.", citation: "Microsoft Learn, Study guide for Exam AI-200", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-200", note: "현행 AI-200의 대상 역할과 2026년 10월 7일 기준 컨테이너·데이터·서비스 연결·운영 영역을 밝힌 공식 가이드입니다." },
   ],
   review: [
     "공고 20개를 먼저 세면 첫 시험을 더 빨리 고를 수 있는 이유는 무엇인가요? (답: 1·4절)",

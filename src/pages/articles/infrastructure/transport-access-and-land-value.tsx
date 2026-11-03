@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import TransportAccessLandValueViz from "./TransportAccessLandValueViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function TransportAccessAndLandValueArticle() {
@@ -10,7 +9,6 @@ export default function TransportAccessAndLandValueArticle() {
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">S · 빠르게 가는 길이 누구의 기회를 바꿀까요</h2>
-        <TransportAccessLandValueViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">새 역이나 도로의 가치는 이동 속도만으로 끝나지 않습니다. 출퇴근이 쉬워지면 지원할 일자리와 이용할 병원이 달라지고, 그 위치에 살려는 사람도 늘어납니다.</p>
           <p className="leading-8">이 글은 한 사람의 통근시간을 줄인 뒤 그 이익이 승객, 집주인, 정부 사이에 어떻게 나뉘는지 추적합니다. 시설을 짓는 비용과 이용하면서 얻는 시간을 같은 장부에 두기 전에 각각 무엇을 세는지 확인합니다.</p>

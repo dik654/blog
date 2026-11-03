@@ -1,127 +1,203 @@
-import { motion } from "framer-motion";
 import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
-  { label: "루트 노드", body: "자식 노드들의 CID를 링크로 보유" },
   {
-    label: "중간 노드 (서브디렉토리)",
-    body: "자식 변경 시 이 노드의 CID도 변경",
+    label: "Root bytes가 child CID를 담습니다",
+    body: "Project root는 raw hello block과 src directory의 CID를 link로 담습니다. 화살표는 parent bytes 안의 link 방향입니다.",
   },
   {
-    label: "Leaf 노드 (파일)",
-    body: "실제 데이터를 담는 말단 노드, CID = hash(data)",
+    label: "lib.rs bytes를 바꾸면 leaf CID가 바뀝니다",
+    body: "lib.rs v1을 v2로 고치면 leaf bytes의 digest가 달라져 C_lib1 대신 C_lib2가 생깁니다.",
   },
   {
-    label: "변경 시 연쇄 갱신",
-    body: "lib.rs 수정이 Root CID까지 전파 — 루트로 전체 검증",
+    label: "바뀐 link가 ancestor CID까지 올라갑니다",
+    body: "src bytes에 C_lib2가 들어가 C_src2가 되고, root bytes에 C_src2가 들어가 C_root2가 됩니다.",
   },
-];
+  {
+    label: "안 바뀐 hello block은 그대로 재사용합니다",
+    body: "Root가 새로 생겨도 raw hello CID는 같습니다. 구조적 공유가 version 간 deduplication을 가능하게 합니다.",
+  },
+] as const;
 
-const sp = { type: "spring" as const, bounce: 0.12, duration: 0.5 };
-const C = {
-  root: "#6366f1",
-  dir: "#0ea5e9",
-  file: "#10b981",
-  changed: "#ef4444",
+const COLORS = {
+  root: "#4f46e5",
+  directory: "#0284c7",
+  leaf: "#059669",
+  changed: "#dc2626",
+  quiet: "#94a3b8",
 };
 
-const NODES = [
-  { id: "root", x: 170, y: 10, label: "Root", cid: "bafyA", c: C.root },
-  { id: "readme", x: 60, y: 65, label: "readme.md", cid: "bafyB", c: C.file },
-  { id: "src", x: 280, y: 65, label: "src/", cid: "bafyC", c: C.dir },
-  { id: "main", x: 220, y: 120, label: "main.rs", cid: "bafyD", c: C.file },
-  { id: "lib", x: 340, y: 120, label: "lib.rs", cid: "bafyE", c: C.file },
-];
+function ArrowDefs() {
+  return (
+    <defs>
+      <marker
+        id="dag-arrow"
+        viewBox="0 0 8 8"
+        markerWidth="8"
+        markerHeight="8"
+        refX="6"
+        refY="4"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <path d="M0 0 L8 4 L0 8 Z" fill="context-stroke" />
+      </marker>
+    </defs>
+  );
+}
 
-const EDGES = [
-  [0, 1],
-  [0, 2],
-  [2, 3],
-  [2, 4],
-];
+function Node({
+  x,
+  y,
+  title,
+  cid,
+  color,
+  dimmed,
+}: {
+  x: number;
+  y: number;
+  title: string;
+  cid: string;
+  color: string;
+  dimmed?: boolean;
+}) {
+  return (
+    <g opacity={dimmed ? 0.3 : 1}>
+      <rect
+        x={x}
+        y={y}
+        width="120"
+        height="42"
+        rx="7"
+        fill={`${color}0d`}
+        stroke={color}
+      />
+      <text
+        x={x + 60}
+        y={y + 17}
+        textAnchor="middle"
+        fontSize="9.5"
+        fontWeight="700"
+        fill={color}
+      >
+        {title}
+      </text>
+      <text
+        x={x + 60}
+        y={y + 32}
+        textAnchor="middle"
+        fontSize="8.5"
+        fill={color}
+      >
+        {cid}
+      </text>
+    </g>
+  );
+}
 
-const BW = 72,
-  BH = 26;
+function Edge({
+  x1,
+  y1,
+  x2,
+  y2,
+  color,
+}: {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  color: string;
+}) {
+  return (
+    <line
+      x1={x1}
+      y1={y1}
+      x2={x2}
+      y2={y2}
+      stroke={color}
+      strokeWidth="1.2"
+      markerEnd="url(#dag-arrow)"
+    />
+  );
+}
 
 export default function MerkleDAGViz() {
   return (
     <StepViz steps={STEPS}>
-      {(step) => (
-        <svg
-          viewBox="0 0 420 155"
-          className="w-full max-w-2xl"
-          style={{ height: "auto" }}
-        >
-          {/* Edges */}
-          {EDGES.map(([fi, ti], i) => {
-            const f = NODES[fi],
-              t = NODES[ti];
-            const changed =
-              step === 3 && ([0, 2, 4].includes(fi) || [0, 2, 4].includes(ti));
-            return (
-              <motion.line
-                key={i}
-                x1={f.x + BW / 2}
-                y1={f.y + BH}
-                x2={t.x + BW / 2}
-                y2={t.y}
-                stroke={changed ? C.changed : "#64748b"}
-                strokeWidth={1.2}
-                strokeOpacity={0.5}
-                animate={{ stroke: changed ? C.changed : "#64748b" }}
-                transition={sp}
-              />
-            );
-          })}
-          {/* Nodes */}
-          {NODES.map((n, i) => {
-            const highlight =
-              (step === 0 && i === 0) ||
-              (step === 1 && i === 2) ||
-              (step === 2 && (i === 1 || i === 3 || i === 4)) ||
-              (step === 3 && (i === 0 || i === 2 || i === 4));
-            const changed = step === 3 && (i === 0 || i === 2 || i === 4);
-            return (
-              <motion.g
-                key={n.id}
-                animate={{ opacity: highlight ? 1 : 0.25 }}
-                transition={sp}
-              >
-                <rect
-                  x={n.x}
-                  y={n.y}
-                  width={BW}
-                  height={BH}
-                  rx={5}
-                  fill={(changed ? C.changed : n.c) + "12"}
-                  stroke={changed ? C.changed : n.c}
-                  strokeWidth={1}
-                />
-                <text
-                  x={n.x + BW / 2}
-                  y={n.y + 11}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fontWeight={600}
-                  fill={changed ? C.changed : n.c}
-                >
-                  {n.label}
-                </text>
-                <text
-                  x={n.x + BW / 2}
-                  y={n.y + 22}
-                  textAnchor="middle"
-                  fontSize={10}
-                  fill={changed ? C.changed : n.c}
-                  opacity={0.7}
-                >
-                  {changed ? n.cid + "'" : n.cid}
-                </text>
-              </motion.g>
-            );
-          })}
-        </svg>
-      )}
+      {(step) => {
+        const leafChanged = step >= 1;
+        const ancestorsChanged = step >= 2;
+        return (
+          <svg
+            viewBox="0 0 500 230"
+            aria-label="lib.rs 변경이 project Merkle DAG root까지 전파되는 과정"
+          >
+            <ArrowDefs />
+
+            <Edge
+              x1={228}
+              y1={62}
+              x2={94}
+              y2={88}
+              color={step === 3 ? COLORS.leaf : COLORS.quiet}
+            />
+            <Edge
+              x1={272}
+              y1={62}
+              x2={406}
+              y2={88}
+              color={ancestorsChanged ? COLORS.changed : COLORS.quiet}
+            />
+            <Edge
+              x1={410}
+              y1={142}
+              x2={410}
+              y2={160}
+              color={leafChanged ? COLORS.changed : COLORS.quiet}
+            />
+
+            <Node
+              x={190}
+              y={14}
+              title="project root"
+              cid={ancestorsChanged ? "C_root2" : "C_root1"}
+              color={ancestorsChanged ? COLORS.changed : COLORS.root}
+            />
+            <Node
+              x={34}
+              y={94}
+              title="readme · raw “hello”"
+              cid="bafk…4yeq · reused"
+              color={COLORS.leaf}
+              dimmed={step === 1 || step === 2}
+            />
+            <Node
+              x={350}
+              y={94}
+              title="src directory"
+              cid={ancestorsChanged ? "C_src2" : "C_src1"}
+              color={ancestorsChanged ? COLORS.changed : COLORS.directory}
+            />
+            <Node
+              x={350}
+              y={166}
+              title={leafChanged ? "lib.rs · bytes v2" : "lib.rs · bytes v1"}
+              cid={leafChanged ? "C_lib2" : "C_lib1"}
+              color={leafChanged ? COLORS.changed : COLORS.leaf}
+            />
+
+            <text
+              x="250"
+              y="223"
+              textAnchor="middle"
+              fontSize="8.5"
+              fill="var(--muted-foreground)"
+            >
+              C_root·C_src·C_lib는 흐름을 읽기 위한 축약 이름입니다
+            </text>
+          </svg>
+        );
+      }}
     </StepViz>
   );
 }

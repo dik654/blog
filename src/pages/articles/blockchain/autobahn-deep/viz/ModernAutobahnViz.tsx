@@ -3,160 +3,181 @@ import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-const SCENE_LABELS = ["직전 cut", "거래 탑승", "PoA", "새 cut", "Prepare", "Confirm", "동기화", "실행"] as const;
+const TRACE_LABELS = ["배치 적재", "PoA 인증", "blip 동안 축적", "cut 결정", "빠진 suffix 동기화", "한 줄로 실행"] as const;
 
-type LaneName = "A" | "B" | "C" | "D";
-type Car = { id: string; position: number; label?: string };
-type TraceState = {
-  title: string;
-  detail: string;
-  result: string;
-  visible: Record<LaneName, number>;
-  certified: readonly string[];
-  active: readonly string[];
-  cut: string;
-  prepare: number;
-  confirm: number;
-  synced: readonly string[];
-  output: readonly string[];
-  phase: number;
-};
-
-const LANE_CARS: Record<LaneName, readonly Car[]> = {
-  A: [{ id: "A1", position: 1 }, { id: "A2", position: 2, label: "Alice→Bob" }],
-  B: [{ id: "B1", position: 1 }, { id: "B2", position: 2 }],
-  C: [{ id: "C1", position: 1 }, { id: "C2", position: 2 }],
-  D: [{ id: "D1", position: 1 }, { id: "D2", position: 2 }, { id: "D3", position: 3 }],
-};
-
-const TRACE_STATES: readonly TraceState[] = [
+const TRACE_STATES = [
   {
-    title: "직전에 확정한 cut은 네 차선의 1번 car를 가리킵니다",
-    detail: "각 replica는 자기 차선을 독립적으로 늘립니다. 합의는 거래 원문이 아니라 각 차선에서 어디까지 처리할지를 가리키는 좌표를 다룹니다.",
-    result: "직전 cut [1,1,1,1] · 새로 실행할 car 없음",
-    visible: { A: 1, B: 1, C: 1, D: 1 }, certified: ["A1", "B1", "C1", "D1"], active: ["A1", "B1", "C1", "D1"], cut: "[1,1,1,1]", prepare: 0, confirm: 0, synced: [], output: [], phase: 0,
+    title: "A 차선의 새 칸 A2에 Alice→Bob 거래 묶음이 실립니다.",
+    now: "A 복제본은 거래 묶음, 차선 위치 2, 이전 칸 A1의 참조를 한 제안에 담아 모든 복제본에 보냅니다.",
+    evidence: "A2가 A1 뒤에 놓여야 한다는 부모 관계와 실제 payload가 전달되기 시작했습니다.",
+    pending: "제안만 보냈을 뿐입니다. 다른 노드가 데이터를 받았다는 증거도, 전체 순서도 아직 없습니다.",
   },
   {
-    title: "Alice→Bob 거래 묶음이 A 차선의 다음 car에 탑승합니다",
-    detail: "A2에는 차선 번호와 위치, A1의 digest, 거래 묶음이 들어갑니다. 아직 다른 replica의 확인을 받지 않았으므로 단순 제안입니다.",
-    result: "A2 제안 · 아직 certified tip이 아님",
-    visible: { A: 2, B: 1, C: 1, D: 1 }, certified: ["A1", "B1", "C1", "D1"], active: ["A2"], cut: "[1,1,1,1]", prepare: 0, confirm: 0, synced: [], output: [], phase: 0,
+    title: "같은 A2를 받은 f+1개 노드의 표가 모여 PoA가 됩니다.",
+    now: "n=4, f=1 예에서는 같은 digest에 대한 서로 다른 두 표가 모이면 A2가 인증된 car가 됩니다.",
+    evidence: "투표자 중 적어도 한 정상 노드가 A2와 그 앞의 차선 이력을 가지고 있습니다.",
+    pending: "PoA는 데이터 회수 가능성의 증거입니다. A2의 전역 순서나 Byzantine 차선의 유일한 fork를 정하지는 않습니다.",
   },
   {
-    title: "서로 다른 두 replica가 A2를 확인해 PoA를 만듭니다",
-    detail: "n=4, f=1이면 f+1=2표입니다. 두 표 중 적어도 한 표는 정직한 보관자가 냈으므로 A2 데이터를 다시 받을 경로가 남습니다.",
-    result: "A2 PoA 2/2 · A 차선의 certified tip이 2로 전진",
-    visible: { A: 2, B: 1, C: 1, D: 1 }, certified: ["A1", "A2", "B1", "C1", "D1"], active: ["A2"], cut: "[1,1,1,1]", prepare: 0, confirm: 0, synced: [], output: [], phase: 0,
+    title: "합의가 잠시 멈춰도 네 차선은 가능한 속도로 계속 전진합니다.",
+    now: "A·B·C는 2번 칸까지, D는 3번 칸까지 인증됩니다. 합의 leader의 정지와 데이터 전파를 묶지 않았기 때문입니다.",
+    evidence: "blip 동안 처리해야 할 데이터가 각 차선의 인증된 이력으로 이미 쌓였습니다.",
+    pending: "차선마다 따로 놓인 기록일 뿐입니다. 어느 끝점까지 한 번에 커밋할지는 정하지 않았습니다.",
   },
   {
-    title: "네 차선이 서로 다른 속도로 전진하고 leader가 새 cut을 제안합니다",
-    detail: "A·B·C는 2번, D는 3번까지 인증됐습니다. leader는 전체 backlog를 복사하지 않고 certified tip 네 개만 [2,2,2,3]으로 묶습니다.",
-    result: "제안한 cut [2,2,2,3] · 합의 전",
-    visible: { A: 2, B: 2, C: 2, D: 3 }, certified: ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2", "D3"], active: ["A2", "B2", "C2", "D2", "D3"], cut: "[2,2,2,3]", prepare: 0, confirm: 0, synced: [], output: [], phase: 1,
+    title: "Leader는 모든 데이터를 다시 싣지 않고 네 차선의 끝점 [2,2,2,3]만 제안합니다.",
+    now: "합의는 A2·B2·C2·D3의 digest와 인증 근거를 담은 짧은 cut 하나를 결정합니다.",
+    evidence: "이전 cut 뒤의 backlog 전체를 어떤 끝점까지 포함할지가 한 번에 고정됩니다.",
+    pending: "느린 노드는 cut이 가리키는 payload 일부를 아직 갖고 있지 않을 수 있습니다.",
   },
   {
-    title: "세 replica가 같은 cut에 Prep-Vote를 보내 PrepareQC를 만듭니다",
-    detail: "2f+1=3표가 같은 view와 cut digest에 결속됩니다. PrepareQC는 slow path의 첫 번째 합의 증거이지 아직 CommitQC와 같은 증거가 아닙니다.",
-    result: "Prep-Vote 3/3 · PrepareQC 형성",
-    visible: { A: 2, B: 2, C: 2, D: 3 }, certified: ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2", "D3"], active: ["A2", "B2", "C2", "D2", "D3"], cut: "[2,2,2,3]", prepare: 3, confirm: 0, synced: [], output: [], phase: 2,
+    title: "각 노드는 자신에게 빠진 차선의 뒷부분만 병렬로 가져옵니다.",
+    now: "이전 cut [1,1,1,1]과 비교해 A2·B2·C2·D2·D3을 찾고, digest와 부모 연결을 확인합니다.",
+    evidence: "결정된 cut을 실제 거래 묶음과 연결할 수 있는 완전한 suffix가 로컬에 생깁니다.",
+    pending: "payload를 모았어도 모든 노드가 같은 거래 순서로 실행한다는 규칙이 한 단계 남았습니다.",
   },
   {
-    title: "세 Confirm-Ack이 모이면 slow-path CommitQC가 됩니다",
-    detail: "Confirm 단계는 결정 증거가 다음 view에도 남도록 만듭니다. 모든 n=4 Prep-Vote가 모인 fast path라면 이 단계를 생략할 수 있지만, 3표를 fast evidence로 바꿔 부를 수는 없습니다.",
-    result: "Confirm-Ack 3/3 · cut 확정",
-    visible: { A: 2, B: 2, C: 2, D: 3 }, certified: ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2", "D3"], active: ["A2", "B2", "C2", "D2", "D3"], cut: "[2,2,2,3]", prepare: 3, confirm: 3, synced: [], output: [], phase: 3,
-  },
-  {
-    title: "느린 replica는 자신에게 없는 D2와 D3를 먼저 동기화합니다",
-    detail: "cut을 확정했다는 사실과 payload를 모두 보유했다는 사실은 다릅니다. 누락된 suffix를 받아 digest와 parent chain을 검증해야 실행 순서를 만들 수 있습니다.",
-    result: "D2·D3 수신 및 검증 · 실행 준비",
-    visible: { A: 2, B: 2, C: 2, D: 3 }, certified: ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2", "D3"], active: ["D2", "D3"], cut: "[2,2,2,3]", prepare: 3, confirm: 3, synced: ["D2", "D3"], output: [], phase: 4,
-  },
-  {
-    title: "모두가 같은 규칙으로 새 suffix를 섞어 한 번씩 실행합니다",
-    detail: "직전 cut 이후 A2·B2·C2·D2·D3만 꺼냅니다. 아래 A→B→C→D 순서는 이해를 위한 예시이며, 논문은 모든 replica가 공유하는 결정적 zipping 함수만 요구합니다.",
-    result: "예시 출력 A2 → B2 → C2 → D2 → D3",
-    visible: { A: 2, B: 2, C: 2, D: 3 }, certified: ["A1", "A2", "B1", "B2", "C1", "C2", "D1", "D2", "D3"], active: ["A2", "B2", "C2", "D2", "D3"], cut: "[2,2,2,3]", prepare: 3, confirm: 3, synced: ["D2", "D3"], output: ["A2", "B2", "C2", "D2", "D3"], phase: 5,
+    title: "모든 노드가 같은 zipper 규칙으로 새 suffix를 한 줄의 실행 순서로 만듭니다.",
+    now: "차선과 위치에 대한 결정적 규칙을 적용하고, 이미 실행한 watermark 이하의 칸은 다시 내보내지 않습니다.",
+    evidence: "A2의 Alice→Bob 거래가 다른 차선 거래와 같은 전역 위치에 놓이고 중복 없이 실행으로 넘어갑니다.",
+    pending: "합의 성공은 애플리케이션 실행 성공과 다릅니다. 상태 변경 영수증까지 확인해야 요청이 끝납니다.",
   },
 ] as const;
 
-const TRACE_NOTES = TRACE_STATES.map((state) => `${state.title}. ${state.detail} ${state.result}`);
-const PHASES = ["차선", "cut", "Prepare", "Confirm", "동기화", "실행"] as const;
+const TRACE_NOTES = TRACE_STATES.map((state) => `${state.title} ${state.evidence} ${state.pending}`);
 
-function LaneRail({ lane, state }: { lane: LaneName; state: TraceState }) {
-  return <div className="grid min-w-0 grid-cols-[2.25rem_minmax(0,1fr)] items-center gap-3">
-    <div className="flex h-9 w-9 items-center justify-center border border-foreground/30 bg-background text-sm font-black">{lane}</div>
-    <div className="relative grid min-h-16 grid-cols-3 items-center gap-2 before:absolute before:left-3 before:right-3 before:top-1/2 before:h-px before:bg-border">
-      {LANE_CARS[lane].map((car) => {
-        const visible = car.position <= state.visible[lane];
-        const certified = state.certified.includes(car.id);
-        const active = state.active.includes(car.id);
-        const synced = state.synced.includes(car.id);
-        return <div key={car.id} className={`relative z-10 min-w-0 border px-2 py-2 text-center transition-colors duration-300 ${!visible ? "invisible" : active ? "border-primary bg-primary/10" : "border-border bg-background"}`}>
-          <p className="text-xs font-black">{car.id}</p>
-          <p className="mt-0.5 break-keep text-[9px] leading-4 text-muted-foreground">{synced ? "동기화 완료" : certified ? "PoA" : car.label ?? "제안"}</p>
-        </div>;
-      })}
-    </div>
-  </div>;
+const LANES = [
+  { name: "A", cars: ["A0", "A1", "A2"], tip: 2 },
+  { name: "B", cars: ["B0", "B1", "B2"], tip: 2 },
+  { name: "C", cars: ["C0", "C1", "C2"], tip: 2 },
+  { name: "D", cars: ["D0", "D1", "D2", "D3"], tip: 3 },
+] as const;
+
+function carVisible(laneIndex: number, carIndex: number, scene: number) {
+  if (scene <= 1) return laneIndex === 0 && carIndex <= 2;
+  return true;
 }
 
-function VoteMeter({ label, value, target }: { label: string; value: number; target: number }) {
-  return <div className="min-w-0 border border-border bg-background p-3">
-    <div className="flex items-center justify-between gap-3"><p className="break-keep text-[10px] font-bold text-muted-foreground">{label}</p><p className="text-xs font-black">{value}/{target}</p></div>
-    <div className="mt-2 grid grid-cols-3 gap-1" aria-label={`${label} ${value}/${target}`}>
-      {Array.from({ length: target }, (_, index) => <span key={index} className={`h-2 ${index < value ? "bg-primary" : "bg-border"}`} />)}
+function carActive(laneIndex: number, carIndex: number, scene: number) {
+  if (scene <= 1) return laneIndex === 0 && carIndex === 2;
+  if (scene === 2 || scene === 3) return carIndex === LANES[laneIndex].tip;
+  return carIndex > 1;
+}
+
+function LaneTrack({ laneIndex, scene }: { laneIndex: number; scene: number }) {
+  const lane = LANES[laneIndex];
+  return (
+    <div className="grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)] items-center gap-2">
+      <span className="text-center text-xs font-black text-muted-foreground">{lane.name}</span>
+      <div className="flex min-w-0 items-center gap-1" aria-label={`${lane.name} 차선`}>
+        {lane.cars.map((car, carIndex) => {
+          const visible = carVisible(laneIndex, carIndex, scene);
+          const active = carActive(laneIndex, carIndex, scene);
+          return (
+            <div key={car} className="contents">
+              {carIndex > 0 ? <span className={`shrink-0 text-[10px] font-black ${visible ? "text-primary" : "text-border"}`} aria-hidden="true">→</span> : null}
+              <span
+                className={`min-w-0 flex-1 border px-1 py-2 text-center text-[10px] font-bold transition-colors duration-200 ${
+                  active && visible
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : visible
+                      ? "border-border bg-background text-foreground"
+                      : "border-border/40 bg-muted/20 text-muted-foreground/25"
+                }`}
+              >
+                {car}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
-  </div>;
+  );
 }
 
 export function AutobahnLaneCutViz() {
-  const scenes = useAnimatedScenes(SCENE_LABELS.length, 6500, { loop: false });
+  const scenes = useAnimatedScenes(TRACE_LABELS.length, 6200, { loop: false });
   const state = TRACE_STATES[scenes.active];
-  return <VizFrame eyebrow="한 요청 추적 · n=4 · f=1" title="거래 하나가 차선에 들어가 cut으로 확정되고 실행되기까지" description="차선 전파, tip 합의, 누락 데이터 동기화, 실행을 여덟 장면으로 나눠 봅니다." note="마지막 장면의 A→B→C→D zipping은 설명용 예시입니다. 논문은 하나의 고정된 차선 우선순위가 아니라 모든 replica가 공유하는 결정적 함수를 요구합니다." canvasClassName="p-4 sm:p-6">
-    <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Autobahn 처리 흐름 장면 탐색기">
-      <div data-viz-live-only className="space-y-5">
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-          {PHASES.map((phase, index) => <div key={phase} className={`border px-2 py-2 text-center text-[10px] font-black transition-colors duration-300 ${index === state.phase ? "border-primary bg-primary/10 text-foreground" : index < state.phase ? "border-foreground/30 bg-background text-foreground" : "border-border bg-background text-muted-foreground"}`}>{index + 1}. {phase}</div>)}
-        </div>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(15rem,0.75fr)]">
-          <div className="min-w-0 space-y-2 border border-border bg-background p-3 sm:p-4">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3"><p className="text-xs font-black">replica별 data lane</p><code className="border border-border bg-muted/40 px-2 py-1 text-xs">cut {state.cut}</code></div>
-            {(["A", "B", "C", "D"] as const).map((lane) => <LaneRail key={lane} lane={lane} state={state} />)}
+  return (
+    <VizFrame
+      eyebrow="한 거래 묶음 추적 · n=4, f=1"
+      title="A2에 실린 거래가 네 차선의 전역 순서가 되기까지"
+      description="데이터 전파와 합의를 분리하면 blip 동안 쌓인 backlog를 왜 cut 하나로 따라잡을 수 있는지 봅니다."
+      note="화살표는 각 차선 안의 부모 참조를 뜻합니다. 차선끼리 직접 참조하는 DAG가 아닙니다."
+      documentFlow
+      canvasClassName="p-2.5 sm:p-5"
+    >
+      <div
+        id={scenes.playbackId}
+        data-viz-live-only
+        tabIndex={0}
+        role="group"
+        aria-label="Autobahn에서 A2 거래 묶음이 전역 순서가 되는 여섯 단계"
+        onKeyDown={scenes.onKeyDown}
+        className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        <div data-viz-scene-stage className="min-h-[772px] sm:min-h-[704px] xl:min-h-[470px]">
+          <p className="text-[10px] font-black text-primary">{String(scenes.active + 1).padStart(2, "0")} · {TRACE_LABELS[scenes.active]}</p>
+          <h4 className="mt-2 min-h-14 break-keep text-base font-bold leading-7">{state.title}</h4>
+
+          <div className="mt-3 grid gap-3 xl:grid-cols-[1.1fr_.9fr]">
+            <div className="min-w-0 border border-border bg-card p-3">
+              <div className="space-y-2.5">
+                {LANES.map((lane, laneIndex) => <LaneTrack key={lane.name} laneIndex={laneIndex} scene={scenes.active} />)}
+              </div>
+
+              <div className={`mt-4 border p-3 transition-colors duration-200 ${scenes.active >= 3 ? "border-primary bg-primary/5" : "border-border bg-muted/20"}`}>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-[10px] font-semibold text-muted-foreground">합의가 정하는 cut</p>
+                  <p className="text-[10px] font-bold text-primary">이전 cut [1,1,1,1]</p>
+                </div>
+                <div className="mt-2 grid grid-cols-4 gap-1">
+                  {[2, 2, 2, 3].map((position, index) => (
+                    <span key={`${LANES[index].name}-${position}`} className={`border px-1 py-2 text-center text-xs font-black ${scenes.active >= 3 ? "border-primary bg-background text-primary" : "border-border bg-background text-muted-foreground/30"}`}>
+                      {LANES[index].name}{position}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-px border border-border bg-border p-px">
+              <div className="min-w-0 bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">지금 일어나는 일</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.now}</p></div>
+              <div className="min-w-0 bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">새로 확정된 것</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.evidence}</p></div>
+              <div className="min-w-0 bg-background p-3"><p className="text-[10px] font-semibold text-muted-foreground">아직 확정되지 않은 것</p><p className="mt-1 break-keep text-xs font-semibold leading-5">{state.pending}</p></div>
+            </div>
           </div>
-          <div className="min-w-0 space-y-3">
-            <div className="border border-border bg-background p-4"><p className="text-[10px] font-black text-primary">장면 {scenes.active + 1} / {SCENE_LABELS.length}</p><h4 className="mt-2 break-keep text-base font-black leading-6">{state.title}</h4><p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{state.detail}</p><p className="mt-3 border-l-2 border-primary pl-3 text-xs font-bold leading-5">{state.result}</p></div>
-            <div className="grid grid-cols-2 gap-2"><VoteMeter label="Prep-Vote" value={state.prepare} target={3} /><VoteMeter label="Confirm-Ack" value={state.confirm} target={3} /></div>
-            <div className="border border-border bg-background p-3"><p className="text-[10px] font-bold text-muted-foreground">결정적 출력</p><div className="mt-2 flex min-h-8 flex-wrap gap-1.5">{state.output.length ? state.output.map((item, index) => <span key={item} className="border border-primary bg-primary/10 px-2 py-1 text-xs font-black">{index + 1}. {item}</span>) : <span className="text-xs text-muted-foreground">아직 실행 순서가 없습니다.</span>}</div></div>
+
+          <div className="mt-4 grid grid-cols-6 gap-1" aria-hidden="true">
+            {TRACE_LABELS.map((label, index) => <span key={label} className={`h-1.5 ${index <= scenes.active ? "bg-primary" : "bg-border"}`} />)}
           </div>
         </div>
-        <AnimatedSceneControls labels={SCENE_LABELS} active={scenes.active} playing={scenes.playing} reducedMotion={scenes.reducedMotion} setActive={scenes.setActive} setPlaying={scenes.setPlaying} playLabel="흐름 재생" controlLabels={SCENE_LABELS} />
+        <AnimatedSceneControls {...scenes} labels={TRACE_LABELS} controlLabels={TRACE_LABELS} playLabel="Autobahn 거래 처리 과정 재생" />
       </div>
-      <StaticSceneList labels={SCENE_LABELS} notes={TRACE_NOTES} />
-    </div>
-  </VizFrame>;
+      <StaticSceneList labels={TRACE_LABELS} notes={TRACE_NOTES} />
+    </VizFrame>
+  );
 }
-
-const COMMIT_ROWS = [
-  ["Car PoA", "f+1 matching votes", "적어도 한 정직한 데이터 보관자", "같은 위치의 유일한 car"],
-  ["PrepareQC", "2f+1 Prep-Votes", "같은 view·cut에 대한 준비 증거", "slow-path 최종 확정"],
-  ["Slow CommitQC", "2f+1 Confirm-Acks", "다음 view에서도 보존할 결정 증거", "payload 동기화·실행 완료"],
-  ["Fast CommitQC", "모든 n Prep-Votes", "좋은 구간에서 Confirm 생략", "2f+1표만으로 가능한 fast path"],
-  ["Timeout Certificate", "2f+1 Timeouts", "다음 view로 이동할 ticket", "어떤 cut을 확정했다는 증거"],
-] as const;
 
 export function AutobahnCommitViz() {
-  return <VizFrame eyebrow="증거의 종류" title="이름이 다른 증거는 표 수와 보장도 다릅니다" description="구현에서 모두 같은 boolean으로 합치면 view change가 어떤 값을 보존해야 하는지 잃습니다." documentFlow canvasClassName="p-0"><ResponsiveVizTable columns={["증거", "논문 기준", "보장하는 것", "보장하지 않는 것"]} rows={COMMIT_ROWS} desktopMinWidthClassName="min-w-[900px]" /></VizFrame>;
-}
+  const rows = [
+    ["car PoA", "f+1", "데이터 보유 정상 노드를 적어도 한 명 남김", "전역 순서·fork 부재"],
+    ["PrepareQC", "2f+1 Prep-Vote", "같은 view에서 한 cut만 준비됨", "아직 slow-path commit 아님"],
+    ["slow CommitQC", "2f+1 Confirm-Ack", "다음 view가 복구할 durable 증거", "payload 실행 완료"],
+    ["fast CommitQC", "n Prep-Vote", "gracious interval에서 Confirm 생략", "일부 표만 받은 상태"],
+    ["Timeout Certificate", "2f+1 Timeout", "다음 view를 여는 ticket", "임의의 새 cut 선택"],
+  ] as const;
 
-const EVIDENCE_ROWS = [
-  ["SOSP 2024 논문", "lane·PoA·cut·Prepare/Confirm·view change", "프로토콜과 증명, 논문 조건의 평가", "공개 코드가 모든 알고리즘을 그대로 구현"],
-  ["artifact commit 6d77e03", "Rust primary/worker와 Prepare·Confirm·Commit messages", "실험용 프로토타입의 실제 자료형과 경로", "제품 수준 복구·보관·모든 최적화"],
-  ["cut 확정", "[2,2,2,3]에 대한 CommitQC", "어떤 lane suffix를 순서에 넣을지 합의", "누락 payload 수신과 상태 반영 완료"],
-  ["처리 완료", "payload 검증·결정적 zip·application receipt", "클라이언트가 관찰할 결과", "모든 부하에서 backlog가 즉시 사라짐"],
-] as const;
-
-export function AutobahnEvidenceBoundaryViz() {
-  return <VizFrame eyebrow="논문 · 공개 코드 · 완료 상태" title="프로토콜 주장과 공개 프로토타입, 서비스 완료를 한 문장으로 합치지 않습니다" description="어디까지 확인했는지와 아직 말할 수 없는 범위를 함께 둡니다." documentFlow canvasClassName="p-0"><ResponsiveVizTable columns={["근거·상태", "확인 대상", "확인되는 것", "이것만으로 말할 수 없는 것"]} rows={EVIDENCE_ROWS} desktopMinWidthClassName="min-w-[940px]" /></VizFrame>;
+  return (
+    <VizFrame
+      eyebrow="증거의 이름이 다른 이유"
+      title="각 인증서는 다음 단계에 필요한 한 가지 사실만 증명합니다"
+      description="PoA, PrepareQC, CommitQC와 TC를 하나의 ready 값으로 뭉치면 복구 때 무엇이 확정됐는지 잃습니다."
+      documentFlow
+      canvasClassName="p-0"
+    >
+      <ResponsiveVizTable columns={["증거", "필요한 표", "여기까지 보장", "아직 보장하지 않음"]} rows={rows} desktopMinWidthClassName="min-w-[860px]" />
+    </VizFrame>
+  );
 }

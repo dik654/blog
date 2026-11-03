@@ -1934,10 +1934,11 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
         label: "Stream ID",
         detail: "open frame으로 논리 stream을 식별합니다.",
       },
-      { label: "Window", detail: "stream별 flow-control credit을 갱신합니다." },
-      { label: "Close/Reset", detail: "다른 stream과 독립적으로 종료합니다." },
+      { label: "Window", detail: "읽은 byte만큼 stream별 credit을 돌려줍니다." },
+      { label: "Shared wire", detail: "stream은 분리해도 poll loop와 TCP socket은 공유합니다." },
+      { label: "Close/Reset", detail: "RST와 connection close의 영향 범위를 구분합니다." },
     ],
-    "Yamux의 핵심은 동시성보다 stream별 순서·흐름 제어·장애 격리입니다.",
+    "Yamux의 핵심은 stream별 흐름 제어와 shared connection 병목을 동시에 구분하는 것입니다.",
   ),
   "p2p/libp2p-gossipsub": flow(
     "GossipSub 전파",
@@ -1945,9 +1946,10 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     [
       {
         label: "Publish",
-        detail: "topic message ID를 계산하고 중복 캐시에 넣습니다.",
+        detail: "source+sequence message ID와 queue admission을 검사합니다.",
       },
-      { label: "Mesh", detail: "선택된 mesh peer에 본문을 즉시 전파합니다." },
+      { label: "Initial send", detail: "기본 flood publish는 eligible subscriber에 본문을 보냅니다." },
+      { label: "Mesh", detail: "전달·복구용 이웃을 heartbeat로 유지합니다." },
       { label: "Gossip", detail: "mesh 밖 peer에는 IHAVE 요약을 보냅니다." },
       { label: "Score", detail: "전달 품질과 위반을 peer score에 반영합니다." },
     ],
@@ -2029,20 +2031,20 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
   ),
   "gpu/gpu-arch-hopper": flow(
     "Hopper 데이터 이동",
-    "SM이 tensor core를 기다리지 않게 하려면?",
+    "다음 tile을 옮기는 동안 현재 tile을 계산하려면?",
     [
       { label: "HBM", detail: "큰 tensor tile의 원본이 있습니다." },
       { label: "TMA", detail: "thread 계산과 분리해 다차원 tile을 옮깁니다." },
       {
-        label: "Cluster/DSM",
-        detail: "여러 block이 인접 shared data를 협력 사용합니다.",
+        label: "Barrier/Shared",
+        detail: "약속한 byte가 도착한 뒤 consumer에게 tile을 넘깁니다.",
       },
       {
-        label: "Tensor Core",
-        detail: "FP8·matrix 연산에 compute 시간을 집중합니다.",
+        label: "WGMMA",
+        detail: "네 warp가 shared tile을 읽어 register 결과를 쌓습니다.",
       },
     ],
-    "Hopper의 핵심은 peak FLOPS보다 데이터 이동과 producer–consumer 동기화를 하드웨어화한 점입니다.",
+    "Hopper의 핵심은 peak FLOPS보다 TMA 복사와 WGMMA 계산의 ownership을 barrier로 넘겨 overlap할 수 있게 한 점입니다.",
   ),
   "gpu/cuda-perf-analysis": flow(
     "GPU 병목 판별",
@@ -2148,17 +2150,17 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
   ),
   "gpu/ec-gpu-ops": flow(
     "곡선점 GPU 연산",
-    "큰 정수와 점 연산을 warp에 어떻게 나눌까?",
+    "gid=6인 work item은 어떤 MSM 조각을 맡을까?",
     [
-      { label: "Limbs", detail: "체 원소를 여러 machine word로 나눕니다." },
-      { label: "Montgomery", detail: "곱셈과 modular reduction을 결합합니다." },
+      { label: "Map", detail: "gid를 window 2·group 1로 풉니다." },
+      { label: "Buckets", detail: "c=3의 global slice 42..48을 소유합니다." },
       {
-        label: "Point formula",
-        detail: "Jacobian 좌표로 inversion을 피합니다.",
+        label: "Field·point",
+        detail: "full-limb carry와 Jacobian mixed add를 수행합니다.",
       },
-      { label: "Batch", detail: "많은 독립 점을 warp·block에 배치합니다." },
+      { label: "Result", detail: "summation 뒤 results[6]을 normalize합니다." },
     ],
-    "GPU 이득은 한 점 계산보다 많은 field·point 연산을 규칙적으로 batch할 때 커집니다.",
+    "Pinned ec-gpu는 limb-per-lane이 아니라 한 work item이 full limbs와 자기 bucket slice를 끝까지 처리합니다.",
   ),
   "gpu/msm-gpu-impl": flow(
     "Pippenger MSM kernel",
@@ -2280,11 +2282,11 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     [
       {
         label: "Curve params",
-        detail: "modulus·limb·Montgomery 상수를 입력합니다.",
+        detail: "GpuField의 one·r2·modulus u32 words를 입력합니다.",
       },
       {
         label: "Template",
-        detail: "field와 point 연산 template을 구체화합니다.",
+        detail: "backend limb로 재포장하고 field·point 연산 template을 구체화합니다.",
       },
       {
         label: "Compile",

@@ -3,13 +3,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-import FinancialClaimsMapViz from "./FinancialClaimsMapViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
   return (
     <div className="space-y-16">
-      <FinancialClaimsMapViz />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 상품 이름보다 내가 받을 권리부터 읽습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -21,11 +19,11 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. 판매한 사람과 실제로 갚는 사람이 다를 수 있습니다</h2>
-<FlowRail title="판매 화면에서 실제 지급자까지" steps={[{"actor": "고객", "movement": "1000만 원을 내거나 빌립니다.", "receives": "지급받을 권리 또는 갚을 의무"}, {"actor": "판매 창구", "movement": "상품과 계약 조건을 연결합니다.", "receives": "판매 보수"}, {"actor": "지급자와 보관처", "movement": "약정 또는 보유 자산에 따라 지급합니다.", "receives": "계약 조건과 손실 부담"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">판매 창구는 계약을 소개하고 수수료를 받을 수 있습니다. 실제로 돈을 갚는 곳이나 자산을 보관하는 곳은 따로 있을 수 있습니다. 약속한 사건이 발생했는지 확인하는 관리자도 필요할 수 있습니다.</p>
 <p className="leading-8">투자자는 이 연결을 보며 어느 회사가 실패하면 자기 돈에 영향이 오는지 찾습니다. 돈을 빌리는 사람은 같은 장부의 반대편에서 언제 얼마를 지급해야 하는지 적습니다.</p>
         </div>
+<FlowRail title="판매 화면에서 실제 지급자까지" steps={[{"actor": "고객", "movement": "1000만 원을 내거나 빌립니다.", "receives": "지급받을 권리 또는 갚을 의무"}, {"actor": "판매 창구", "movement": "상품과 계약 조건을 연결합니다.", "receives": "판매 보수"}, {"actor": "지급자와 보관처", "movement": "약정 또는 보유 자산에 따라 지급합니다.", "receives": "계약 조건과 손실 부담"}]} />
         <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">창구·지급자·자산 보관의 역할을 나눴습니다. 1000만 원을 받거나 내는 작은 사례를 만듭니다.</p>
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
@@ -39,11 +37,11 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 계약에서 지급 조건과 출구를 찾습니다</h2>
-<FlowRail title="1000만 원 계약에서 여는 질문" steps={[{"actor": "누가 지급하나?", "movement": "은행·발행자·보유 자산을 구별합니다.", "receives": "청구 대상"}, {"actor": "언제 얼마인가?", "movement": "만기·분할 지급·사건을 적습니다.", "receives": "현금 일정"}, {"actor": "일찍 나가면?", "movement": "매도·환매·해지 조건을 봅니다.", "receives": "받는 금액과 비용"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">먼저 법적 지급자와 가진 권리를 적습니다. 다음에 돈을 받거나 낼 날짜, 금액을 정하는 방식, 그 전에 나갈 방법을 적습니다. 마지막으로 부도나 해지 때 무엇이 남는지 확인합니다.</p>
 <p className="leading-8">연 4%라는 숫자만으로는 1년 중간에 돈을 찾아도 같은 이자를 받는지 알 수 없습니다. 주기적으로 지급하는 상품도 재원을 확인해야 합니다. 새로 번 돈을 주는지 내 원금 일부를 돌려주는지 봅니다.</p>
         </div>
+<FlowRail title="1000만 원 계약에서 여는 질문" steps={[{"actor": "누가 지급하나?", "movement": "은행·발행자·보유 자산을 구별합니다.", "receives": "청구 대상"}, {"actor": "언제 얼마인가?", "movement": "만기·분할 지급·사건을 적습니다.", "receives": "현금 일정"}, {"actor": "일찍 나가면?", "movement": "매도·환매·해지 조건을 봅니다.", "receives": "받는 금액과 비용"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">수익률 외에 계약에서 읽을 네 칸을 만들었습니다. 서로 다른 포장이 생기는 이유를 살핍니다.</p>
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">

@@ -2,174 +2,154 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: overview·validity-chain — 효력의 근거를 거슬러 올라가면 어디서 멈추는가 */
 const SCENES = [
-  "고지서 한 장에서 시작한다",
-  "근거를 위로 계속 거슬러 간다",
-  "사슬은 규범이 아닌 곳에서 멈춘다",
-  "그 바닥이 바뀌면 전부 새로 선다",
+  "고지서만 보아서는 근거를 알 수 없습니다",
+  "각 문서는 위에서 권한을 받아야 합니다",
+  "마지막에는 공직자의 공통 기준이 있습니다",
+  "효력의 경로는 정당성까지 보증하지 않습니다",
 ] as const;
 
 const NOTES = [
-  "과태료 고지서 한 장을 받았습니다. 왜 이걸 따라야 하느냐고 물으면 답은 언제나 다른 문장을 가리킵니다. 그 문장에 대해 같은 질문을 또 할 수 있습니다.",
-  "시행령은 법률이 위임했기 때문에, 법률은 헌법이 정한 절차를 밟았기 때문에 효력을 갖습니다. 한 칸 올라갈 때마다 같은 형태의 답이 나옵니다.",
-  "헌법에 이르면 답할 상위 규범이 없습니다. 여기서 사슬을 멈추는 것은 더 높은 규범이 아니라 공직자들이 실제로 이 문서를 기준으로 삼고 있다는 사실입니다.",
-  "그래서 제헌이나 혁명은 사슬 안의 사건이 아니라 바닥이 바뀌는 사건입니다. 기준으로 삼는 문서가 바뀌면 그 위에 걸려 있던 효력이 한꺼번에 다시 계산됩니다.",
+  "고지서에 시청 로고가 있다는 사실만으로는 충분하지 않습니다. 누가 어떤 규칙에 따라 이 결정을 내릴 수 있었는지 거꾸로 확인해야 합니다.",
+  "고지서는 시 규칙을, 시 규칙은 법률을, 법률은 헌법과 입법 절차를 가리킵니다. 중간 어느 단계에서든 권한이나 절차가 끊기면 아래 결정의 효력도 흔들립니다.",
+  "헌법 위의 비밀 문서를 하나 더 찾는 것이 아닙니다. 법원·의회·행정부가 헌법과 적법한 입법을 법의 기준으로 실제 사용하는 공통 관행에서 질문이 멈춥니다.",
+  "이 경로가 모두 이어져도 10만 원이 공정한지, 그 규칙에 복종할 도덕적 이유가 있는지는 별도입니다. 효력 검사는 출처와 절차에 답할 뿐입니다.",
 ] as const;
-
-const ACCENT = "#6366f1";
-const AMBER = "#f59e0b";
-const OK = "#10b981";
-const WARN = "#ef4444";
-const MUTED = "#94a3b8";
 
 const CHAIN = [
-  { label: "과태료 부과", detail: "개별 처분", color: AMBER },
-  { label: "시행령", detail: "법률이 위임", color: ACCENT },
-  { label: "법률", detail: "헌법이 정한 절차", color: ACCENT },
-  { label: "헌법", detail: "상위 규범 없음", color: OK },
+  ["10만 원 고지서", "민에게 내린 개별 결정"],
+  ["시 규칙", "부과 조건과 담당 기관"],
+  ["법률", "시가 정할 수 있는 범위"],
+  ["헌법·입법 절차", "법률을 만드는 기준"],
 ] as const;
 
-const BX = 22;
-const BW = 92;
-const GAP = 14;
-const BY = 62;
-
 export default function NormChainViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 4800);
   const step = scenes.active;
-  const visible = step === 0 ? 1 : 4;
 
   return (
     <VizFrame
-      eyebrow="효력의 사슬"
-      title="왜 이걸 따라야 하느냐는 질문은 언제나 다른 문장을 가리킵니다"
-      description="그 문장에 같은 질문을 다시 할 수 있고, 어디선가는 멈춰야 합니다."
-      note="네 칸으로 줄인 그림입니다. 실제로는 처분과 법률 사이에 시행규칙·고시·조례가 더 들어갑니다."
+      documentFlow
+      eyebrow="효력의 경로"
+      title="고지서의 근거를 위로 따라가면 어디에서 멈출까요?"
+      description="각 칸은 아래 결정을 만들 권한과 절차를 제공합니다. 마지막 칸 뒤에는 또 다른 문서가 아니라 공통의 공직 관행이 있습니다."
+      note="가상 사례를 단순화한 그림입니다. 실제 체계에는 조례·시행령·행정규칙·판례 등 더 많은 단계가 들어갈 수 있습니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="효력의 근거를 거슬러 올라가는 사슬"
+        aria-label="고지서에서 승인 규칙까지 법적 효력의 근거를 따라가는 그림"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-[46rem] min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:min-h-[40rem] lg:min-h-[35rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(step + 1).padStart(2, "0")}
+            확인 {step + 1} / {SCENES.length}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
+          <h4 className="mt-2 min-h-12 text-base font-bold sm:min-h-0">
+            {SCENES[step]}
+          </h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
-            <svg
-              viewBox="0 0 480 200"
-              role="img"
-              aria-label={SCENES[step]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
-            >
-              <text x={BX} y={38} fontSize={9} fontWeight={700} fill={MUTED}>
-                무엇이 이것을 효력 있게 만드는가 →
-              </text>
-
-              {CHAIN.map((node, i) => {
-                const shown = i < visible;
-                const x = BX + i * (BW + GAP);
+          <div className="mt-5 grid flex-1 gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="flex flex-col justify-center">
+              {CHAIN.map(([title, detail], index) => {
+                const reached = step >= 1 || index === 0;
+                const current =
+                  step === 0 ? index === 0 : index === CHAIN.length - 1;
                 return (
-                  <g key={node.label}>
-                    <rect
-                      x={x}
-                      y={BY}
-                      width={BW}
-                      height={42}
-                      rx={4}
-                      fill={node.color}
-                      fillOpacity={shown ? 0.14 : 0.04}
-                      stroke={shown ? node.color : MUTED}
-                      strokeWidth={1}
-                      strokeDasharray={shown ? undefined : "3 3"}
-                    />
-                    <text x={x + BW / 2} y={BY + 19} textAnchor="middle" fontSize={10.5} fontWeight={700} fill={shown ? node.color : MUTED}>
-                      {node.label}
-                    </text>
-                    <text x={x + BW / 2} y={BY + 33} textAnchor="middle" fontSize={7.5} fill={MUTED}>
-                      {node.detail}
-                    </text>
-                    {i < CHAIN.length - 1 && shown && i + 1 < visible && (
-                      <line x1={x + BW} y1={BY + 21} x2={x + BW + GAP} y2={BY + 21} stroke={MUTED} strokeWidth={1} />
+                  <div key={title}>
+                    <div
+                      className={
+                        "rounded-xl border p-3 transition-colors " +
+                        (current
+                          ? "border-primary bg-primary/10"
+                          : reached
+                            ? "border-sky-200 bg-sky-50/80 dark:border-sky-900 dark:bg-sky-950/30"
+                            : "border-border bg-muted/20")
+                      }
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background text-xs font-black text-primary ring-1 ring-border">
+                          {index + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold">{title}</p>
+                          <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
+                            {detail}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    {index < CHAIN.length - 1 && (
+                      <div
+                        className="flex h-7 items-center gap-2 pl-4 text-xs font-bold text-muted-foreground"
+                        aria-hidden="true"
+                      >
+                        <span className="text-base leading-none">↓</span>
+                        <span>누가 만들 권한을 주었나?</span>
+                      </div>
                     )}
-                  </g>
+                  </div>
                 );
               })}
+            </div>
 
-              {step >= 2 && (
-                <g>
-                  <line x1={BX + 3 * (BW + GAP) + BW} y1={BY + 21} x2={BX + 3 * (BW + GAP) + BW + GAP} y2={BY + 21} stroke={step === 3 ? WARN : MUTED} strokeWidth={1} />
-                  <rect
-                    x={BX + 3 * (BW + GAP) + BW + GAP}
-                    y={BY}
-                    width={16}
-                    height={42}
-                    rx={3}
-                    fill={step === 3 ? WARN : MUTED}
-                    fillOpacity={0.1}
-                    stroke={step === 3 ? WARN : MUTED}
-                    strokeWidth={1}
-                    strokeDasharray="3 3"
-                  />
-                  <text x={BX + 3 * (BW + GAP) + BW + GAP + 8} y={BY + 26} textAnchor="middle" fontSize={10} fontWeight={700} fill={step === 3 ? WARN : MUTED}>
-                    ?
-                  </text>
-                </g>
-              )}
+            <div className="flex flex-col justify-center gap-3">
+              <div
+                className={
+                  "rounded-xl border p-4 transition-colors " +
+                  (step >= 2
+                    ? "border-emerald-300 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/30"
+                    : "border-dashed border-border bg-muted/20")
+                }
+              >
+                <p className="text-xs font-black text-emerald-700 dark:text-emerald-300">
+                  문서 사슬이 멈추는 자리
+                </p>
+                <p className="mt-2 text-sm font-bold">
+                  공직자들이 공통으로 쓰는 법 판별 기준
+                </p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  헌법과 적법한 입법을 실제 판결·입법·집행의 기준으로 받아들이는
+                  관행
+                </p>
+                <p className="mt-3 rounded-lg bg-background/80 px-3 py-2 text-xs font-bold">
+                  이름을 나중에 붙이면 · 승인의 규칙
+                </p>
+              </div>
 
-              {step === 0 && (
-                <text x={BX} y={132} fontSize={9.5} fill={MUTED}>
-                  왜 따라야 하는지 물으면 답은 이 종이 바깥을 가리킵니다
-                </text>
-              )}
-
-              {step === 1 && (
-                <text x={BX} y={132} fontSize={9.5} fill={MUTED}>
-                  한 칸 올라갈 때마다 같은 형태의 답이 나오고, 같은 질문을 또 할 수 있습니다
-                </text>
-              )}
-
-              {step === 2 && (
-                <g>
-                  <text x={BX} y={132} fontSize={9.5} fontWeight={700} fill={OK}>
-                    헌법 위에는 답할 상위 규범이 없습니다
-                  </text>
-                  <text x={BX} y={150} fontSize={9.5} fill={MUTED}>
-                    사슬을 멈추는 것은 더 높은 규범이 아니라 하나의 사실입니다
-                  </text>
-                  <text x={BX} y={168} fontSize={9.5} fontWeight={700} fill={ACCENT}>
-                    공직자들이 실제로 이 문서를 기준으로 삼고 있다
-                  </text>
-                </g>
-              )}
-
-              {step === 3 && (
-                <g>
-                  <text x={BX} y={132} fontSize={9.5} fontWeight={700} fill={WARN}>
-                    바닥이 규범이 아니라 사실이므로 옳고 그름을 따질 대상이 아닙니다
-                  </text>
-                  <text x={BX} y={150} fontSize={9.5} fill={MUTED}>
-                    바뀌었는지 아닌지를 관찰할 대상이고, 바뀌면 위에 걸린 효력이 한꺼번에
-                  </text>
-                  <text x={BX} y={168} fontSize={9.5} fill={MUTED}>
-                    다시 계산됩니다. 제헌과 혁명이 사슬 안의 사건이 아닌 이유입니다.
-                  </text>
-                </g>
-              )}
-            </svg>
+              <div
+                className={
+                  "rounded-xl border p-4 transition-colors " +
+                  (step === 3
+                    ? "border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30"
+                    : "border-border bg-muted/20")
+                }
+              >
+                <p className="text-xs font-black text-amber-700 dark:text-amber-300">
+                  이 경로가 답하지 않는 질문
+                </p>
+                <p className="mt-2 text-sm font-bold">
+                  10만 원이 공정한가? 나는 왜 따라야 하는가?
+                </p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  법적 효력을 확인한 뒤에도 내용의 정당성과 복종 의무는 따로
+                  남습니다.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 min-h-32 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-24 lg:min-h-0">
             {NOTES[step]}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls
+          {...scenes}
+          labels={SCENES}
+          controlLabels={["고지서", "권한 경로", "멈추는 자리", "남는 질문"]}
+        />
       </div>
     </VizFrame>
   );
