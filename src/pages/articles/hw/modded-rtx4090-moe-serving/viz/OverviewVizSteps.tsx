@@ -38,9 +38,10 @@ export function Step3() { return <g>
   </g>; }
 
 export function Step4() { return <g>
-  <text x={240} y={18} textAnchor="middle" fontSize={10} fontWeight={700}>세 질문이 채택 결론을 만든다</text>
-  <ActionBox x={25} y={48} w={130} h={52} label="1. 용량" sub="한 장에 합쳐지는가?" color={C.capacity} />
-  <ActionBox x={175} y={48} w={130} h={52} label="2. 경로" sub="P2P인가, host인가?" color={C.bandwidth} />
-  <ActionBox x={325} y={48} w={130} h={52} label="3. SLO" sub="p95·p99 통과?" color={C.solved} />
+  <text x={240} y={18} textAnchor="middle" fontSize={10} fontWeight={700}>네 질문이 채택 결론을 만든다</text>
+  <ActionBox x={18} y={48} w={104} h={52} label="1. 라이선스" sub="이 용도 허락?" color={C.alert} />
+  <ActionBox x={134} y={48} w={104} h={52} label="2. 용량" sub="한 장에 합쳐지나?" color={C.capacity} />
+  <ActionBox x={250} y={48} w={104} h={52} label="3. 경로" sub="P2P인가, host인가?" color={C.bandwidth} />
+  <ActionBox x={366} y={48} w={104} h={52} label="4. SLO" sub="p95·p99 통과?" color={C.solved} />
   <AlertBox x={55} y={125} w={370} h={48} label="명목 스펙만으로 출시하지 않는다" sub="request profile · 오류 · 전력 · 복구 시간까지 검증" color={C.alert} />
   </g>; }

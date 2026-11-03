@@ -7812,6 +7812,12 @@ export const ARTICLE_EVIDENCE: Readonly<
   "gpu/rdma-roce": [
     {
       kind: "공식 문서",
+      label: "NVIDIA NCCL 2.32.3 · Environment Variables (NCCL_NET_GDR_READ)",
+      href: "https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html#nccl-net-gdr-read",
+      note: "2026-11-03 rst 원문 확인. 2.4.2부터 NVLink 플랫폼 1·그 밖 0, 0이면 CPU 메모리 경유, PCIe에서는 직접 읽기가 조금 느릴 수 있다는 주의. 그래서 1 명시와 기본값을 같은 collective로 비교하라고 썼습니다.",
+    },
+    {
+      kind: "공식 문서",
       label: "NVIDIA Networking — RDMA over Converged Ethernet",
       href: "https://docs.nvidia.com/networking/display/mlnxenv23102131201lts/RDMA+over+Converged+Ethernet+(RoCE)",
       note: "IP·GID table·RoCE type·QP source GID 선택의 구현 경계",
@@ -14895,6 +14901,12 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "gpu/modded-rtx4090-moe-serving": [
+    {
+      kind: "공식 문서",
+      label: "NVIDIA · License For Customer Use of NVIDIA GeForce Software (v. February 25, 2025)",
+      href: "https://www.nvidia.com/en-us/drivers/geforce-license/",
+      note: "2026-11-03 원문 확인. 2.8조 'is not licensed for datacenter deployment', 2.7조 commercial hosting services 금지. 개조 48GB 카드에도 같은 조항이 적용된다는 것은 이 글의 해석이며 법률 자문이 아닙니다.",
+    },
     {
       kind: "공식 문서",
       label: "NVIDIA · Ada GPU Architecture Whitepaper v2.1",

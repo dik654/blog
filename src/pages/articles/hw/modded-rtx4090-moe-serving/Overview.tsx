@@ -29,6 +29,11 @@ export default function Overview() {
           구분해 비교한다. 마지막으로 expert 배치, 통신 정밀도, overlap, 병렬화 전략을 어떤 순서로 A/B 검증할지 정리한다.
         </p>
         <p className="leading-7">
+          상용 서빙이라면 그 전에 확인할 것이 하나 더 있다. GeForce 드라이버 라이선스는 데이터센터 배포와 상업 호스팅을
+          허락하지 않는다. 그래서 이 글의 측정은 개인 연구나 사내 실험처럼 그 조항 밖의 용도를 전제로 한다. 판정 순서 맨
+          앞에 이 단계를 두는 이유는 마지막 절에서 다룬다.
+        </p>
+        <p className="leading-7">
           카드 자체의 세대별 스펙 비교는{" "}
           <a href="/cs/gpu/hw-gpu-comparison">GPU 비교 글</a>이, PCIe·NVLink의 raw bandwidth 공식은{" "}
           <a href="/cs/gpu/gpu-interconnects">GPU interconnect 글</a>이, MoE의 VRAM·decode bandwidth

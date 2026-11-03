@@ -59,10 +59,9 @@
 
 ## 3. 남은 일과 보류
 
-1. **보류(다른 세션 미커밋 작업과 충돌)**: 메인 저장소에 미커밋 변경이 있는 파일이라 이번에는 건드리지 않았다.
-   - **C1** `hw/modded-rtx4090-moe-serving/ReleaseGate.tsx:24`: 출시 게이트 맨 앞에 라이선스 단계를 둔다. GeForce EULA §2.8은 데이터센터 배포를, §2.7은 상업 호스팅을 금지한다. 4090은 상용 1T 서빙에서 제외하고 N4 `#sources`로 링크한다.
-   - **A16** 같은 글: 라이선스 단계 반영과 N4 링크.
-   - **A17** `hw/network/*`(rdma-roce, gpu-collective-network): PRO 6000의 GPUDirect RDMA는 NVIDIA 공식 명시가 없으니 노드별로 `ib_write_bw --use_cuda`로 확인하라는 내용과, PCIe 시스템에서 `NCCL_NET_GDR_READ=1`을 명시해야 한다는 내용. N4 `#network`로 링크한다.
+1. **보류 3건 처리 완료(메인 커밋 76fdedc8 위로 리베이스 뒤)**
+   - **C1·A16** `hw/modded-rtx4090-moe-serving`: 출시 게이트 맨 앞에 라이선스 단계를 넣었다(본문 `ReleaseGate.tsx`, ReleaseGateViz 7단계, OverviewViz "네 질문"). GeForce 라이선스 2.8조(데이터센터 배포 불허)·2.7조(상업 호스팅 금지)를 적고, 개조 카드 적용은 (해석)으로 표시했다. 링크는 N4 `#source-geforce-license`, 근거는 article-evidence에 추가했다. 기존 "비공식 카드라는 이름만으로 탈락시키지 않는다"는 "라이선스 단계를 통과한 용도라면"으로 조건을 달았다.
+   - **A17** `hw/network/RDMA.tsx`(rdma-roce 글) `#gpudirect-topology`: PRO 6000처럼 제품명 명시가 없는 카드는 `ib_write_bw --use_cuda`로 노드마다 확인한다. `NCCL_NET_GDR_READ`는 NCCL 2.32.3 env 문서 rst 원문으로 다시 확인했다. 2.4.2부터 기본값이 NVLink 플랫폼에서만 1이고, 같은 항목에 PCIe에서는 직접 읽기가 조금 느릴 수 있다는 주의가 있다. 그래서 "1을 명시해야 한다"가 아니라 "1과 기본값을 같은 collective로 비교해 고른다"로 썼다. 인용 블록 [8]과 N4 `#network` 링크를 추가했다. gpu-collective-network 글은 InfiniBand 절만 렌더링하므로 RDMA 절 한 곳에만 넣었다.
 2. **말투 정리 완료(후속 회차)**: humanize-korean heavy 경로로 처리했고, 게이트 exit 0과 왕복 대조 어긋남 0을 확인했다. ko-natural은 오류 0이다. 상세는 `docs/rewrite-status.md` 2026-11-03 항목에 있다.
 3. **`KVFundamentals.tsx` 처리 결정(유지)**: `ai/hybrid-attention-serving`은 폐기된 route다(`scripts/audit-learning-routes.test.mjs`가 phantom route로 명시). 같은 폴더의 `Overview.tsx`·`Deployment.tsx`와 함께 import되지 않는 레거시 파일이다. AGENTS.md가 레거시 보존을 허용하므로 지우지 않는다. MLA 설명 오류는 이미 고쳐 두었으므로, 나중에 다시 쓰더라도 틀린 설명이 되살아나지 않는다.
 4. **개념 중복 점검**: N1의 `kv-shard-replication-factor`(일반식)와 N2의 `mla-kv-tp-replication`(MLA 특수 경우)이 겹친다. 연결은 돼 있고 alias 충돌은 없다.

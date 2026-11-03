@@ -164,6 +164,19 @@ export default function RDMA() {
           complex, IOMMU·ACS, BAR와 driver 지원이 경로 성능을 좌우하므로 GPU별 NIC affinity를 확인하고 host-staged path와 실제
           collective 결과를 비교해야 한다.
         </p>
+        <p className="leading-7">
+          NVLink가 없는 PCIe 카드로 노드를 짜면 두 가지를 더 확인한다. 하나는 지원 여부다. RTX PRO 6000처럼 NVIDIA 문서가
+          GPUDirect RDMA 지원을 제품명으로 적지 않은 카드는 지원을 가정하지 않는다. 노드마다 <code>ib_write_bw --use_cuda</code>로
+          GPU 메모리를 직접 등록해 보내 보고, 대역폭이 host 메모리로 보낸 값과 비슷하게 나오는지부터 본다.
+        </p>
+        <p className="leading-7">
+          다른 하나는 NCCL 기본값이다. NCCL 2.4.2부터 <code>NCCL_NET_GDR_READ</code> 기본값은 NVLink 플랫폼에서만 1이고 그 밖에서는
+          0이다. 0이면 보내는 데이터를 먼저 CPU 메모리에 옮긴 뒤 NIC로 넘긴다. 그래서 PCIe 노드에서는 앞의 확인이 끝났더라도
+          보내는 쪽은 GPU 메모리를 직접 읽지 않는다. 다만 NCCL 문서는 PCIe 같은 플랫폼에서 GPU 메모리를 직접 읽는 쪽이 조금
+          느릴 수 있다고도 적는다. 그러니 1로 명시한 실행과 기본값 실행을 같은 collective로 비교해 고른다. 8장 PCIe 노드에서
+          이 확인을 어느 단계에 두는지는{" "}
+          <a href="/cs/gpu/pcie-blackwell-moe-node-build#network">PCIe Blackwell MoE 노드 구성</a>에 정리했다.
+        </p>
 
         <div className="not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {tests.map(([title, body]) => (
@@ -200,6 +213,16 @@ export default function RDMA() {
           >
             GPU와 NIC 같은 peer device 사이의 direct PCIe data path, memory
             pinning과 root-complex 등 platform 제약을 설명한다.
+          </CitationBlock>
+        </div>
+        <div id="paper-nccl-gdr-read" className="scroll-mt-24">
+          <CitationBlock
+            source="NVIDIA NCCL 2.32.3 — Environment Variables · NCCL_NET_GDR_READ"
+            citeKey={8}
+            href="https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html#nccl-net-gdr-read"
+          >
+            2.4.2부터 기본값이 NVLink 플랫폼에서 1, 그 밖에서 0이고, 0이면 보내는 데이터가 CPU 메모리를 거쳐 NIC로 간다.
+            PCIe 같은 플랫폼에서는 GPU 메모리를 직접 읽는 쪽이 조금 느릴 수 있다는 주의도 같은 항목에 있다.
           </CitationBlock>
         </div>
       </div>
