@@ -63,11 +63,11 @@
    - **C1** `hw/modded-rtx4090-moe-serving/ReleaseGate.tsx:24`: 출시 게이트 맨 앞에 라이선스 단계를 둔다. GeForce EULA §2.8은 데이터센터 배포를, §2.7은 상업 호스팅을 금지한다. 4090은 상용 1T 서빙에서 제외하고 N4 `#sources`로 링크한다.
    - **A16** 같은 글: 라이선스 단계 반영과 N4 링크.
    - **A17** `hw/network/*`(rdma-roce, gpu-collective-network): PRO 6000의 GPUDirect RDMA는 NVIDIA 공식 명시가 없으니 노드별로 `ib_write_bw --use_cuda`로 확인하라는 내용과, PCIe 시스템에서 `NCCL_NET_GDR_READ=1`을 명시해야 한다는 내용. N4 `#network`로 링크한다.
-2. **말투 정리(humanize-korean) 미실시**: 서브에이전트 안에서는 스킬을 쓸 수 없다. 감사(korean·prose)는 통과했지만 새 글 4편은 윤문 후보다.
+2. **말투 정리 완료(후속 회차)**: humanize-korean heavy 경로로 처리했고, 게이트 exit 0과 왕복 대조 어긋남 0을 확인했다. ko-natural은 오류 0이다. 상세는 `docs/rewrite-status.md` 2026-11-03 항목에 있다.
 3. **`KVFundamentals.tsx` 미사용 파일**: C4 수정은 독자에게 보이지 않는다. 지울지, 어딘가에 붙일지 결정해야 한다.
 4. **개념 중복 점검**: N1의 `kv-shard-replication-factor`(일반식)와 N2의 `mla-kv-tp-replication`(MLA 특수 경우)이 겹친다. 연결은 돼 있고 alias 충돌은 없다.
 5. **새로 확인된 사실, 근거 문서 반영 필요**: vLLM PR #34795(FP8 KV + DCP for MLA)는 **병합되지 않고 stale로 닫혔다**(2026-07-05). 이 PR이 제거하던 assert는 v0.33.0에 없다. 00 문서, 벤치 README, N4의 "체리픽 필요" 표현은 "v0.33.0 이상에서는 불필요할 수 있음, 실측 확인"으로 고쳐야 한다. #46721도 stale로 닫혔다.
-6. **장부 상태**: 4편은 `pending-full-review`다. 본문 전체를 사람이 검수한 뒤 `reviewed-local`로 올리고, 배포 뒤 `reviewed-production`으로 올린다.
+6. **장부 상태**: 4편은 `reviewed-local`이다(DoD 확인과 no-script 등록을 마쳤다). 배포 뒤 공개 URL을 다시 확인하면 `reviewed-production`으로 올린다.
 
 ## 4. (미확인)·(추정)으로 남긴 주장 (작업자 보고 종합)
 

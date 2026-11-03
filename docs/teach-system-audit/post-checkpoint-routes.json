@@ -318,23 +318,23 @@
     },
     {
       "route": "ai/mla-kv-replication-and-decode-context-parallel",
-      "status": "pending-full-review",
-      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
       "route": "ai/serving-architecture-matrix",
-      "status": "pending-full-review",
-      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
       "route": "ai/agent-serving-slo-and-capacity",
-      "status": "pending-full-review",
-      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
       "route": "gpu/pcie-blackwell-moe-node-build",
-      "status": "pending-full-review",
-      "evidence": "docs/moe-serving-research-2026-11-03/STATUS.md"
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     }
   ]
 }

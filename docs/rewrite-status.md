@@ -3,6 +3,52 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### 서빙 PCIe·MLA·에이전트 보강 로컬 검증 완료 (2026-11-03)
+
+- **요청과 정본 반영**: 사용자 요청은 "왜 그런지 디테일 포함, 블로그에 없는 부분 정리, 모델 구조별 포함"이다. 요청에서 나온 기준 세 가지를 `blog-rewrite-contract.md` 2.8에 먼저 병합했다.
+  - 서버 총 처리량과 요청 하나의 속도를 구분하고, 용량은 SLO를 지키는 동시 수로 센다.
+  - dense·MoE·GQA·MLA·선형/하이브리드·SWA를 나눠 계산하고, 한 구조의 결론을 다른 구조로 일반화하지 않는다.
+  - 하드웨어 가격은 입력값으로 두고 손익분기를 역산한다.
+- **근거**: 원자료 검증 원장은 `docs/moe-serving-research-2026-11-03/`이다. 계획은 `05-blog-gap-analysis.md`, 남은 일은 `STATUS.md`에 있다. 작업은 브랜치 `moe-serving-pcie-mla`(기준 `64850e64`)에서 했다.
+- **새 글 4편**:
+  - `ai/mla-kv-replication-and-decode-context-parallel`은 13절과 장면형 Viz 4개다. MLA latent 576이 TP rank마다 복제되는 이유, 토큰당 70,272 B, DCP와 LSE 병합을 다룬다. rtx6kpro 현장 수치(BF16·DCP1 약 19만 토큰, FP8·DCP8 3,621,504 토큰)를 쓰고 vLLM v0.33.0 원문을 발췌했다.
+  - `ai/serving-architecture-matrix`는 7절과 Viz 5개다. 일곱 모델의 Hugging Face config를 직접 열어 다섯 질문에 답한다: 가중치 VRAM, 토큰당 읽는 byte, 에이전트 기록, 병렬화, 네트워크.
+  - `ai/agent-serving-slo-and-capacity`는 10절과 Viz 2개다. AA-AgentPerf 방법·티어·결과, 요청 단위 P25 속도와 P95 TTFT, KV 상주와 적중률 붕괴(98.85%→16.78%), 측정 하네스를 다룬다.
+  - `gpu/pcie-blackwell-moe-node-build`는 12절과 Viz 4개다. NVLink 없는 8장 노드의 토폴로지, 토큰 시간 예산, 복제본 우선 네트워크, RDMA 검증, RTX 4090 제외 이유를 다룬다. 가격은 넣지 않았다.
+- **기존 글 14편**: 절 단위로 사실을 바로잡고 보강했다.
+  - "NVLink가 없으면 TP를 줄이고 PP를 늘린다" 규칙을 실측 비교로 교체했다.
+  - MoE batch 합집합 식을 추가했다. K2.5 기준 B=64에서 74%다.
+  - 그 밖의 보강: TP 동기화 122회, PP는 용량만 늘린다는 점, all2all 백엔드 표, MLA·GQA의 KV 배치, Kimi K3·Qwen3.6의 TP 분할(vLLM 코드 확인), 총 처리량과 요청당 속도의 구분, 손익분기 역산.
+- **기존 결함 수정**: 같은 글에서 기준 커밋부터 있던 Viz 결함 4건을 `StableSceneStack`과 모바일 2×2 배치로 고쳤다. 기준 커밋에서도 똑같이 실패하는 것을 확인했다.
+  - `KimiAxisViz`: 모바일 frame 1,048px → 824px.
+  - `CostCurveViz`: 모바일 버튼 흔들림 4px → 0.
+  - `ParallelismStrategyAndPlacementViz`: 데스크톱 버튼 흔들림 31px → 0.
+  - `HybridRuntimeFlowViz`: 데스크톱 버튼 흔들림 85px → 0.
+
+  `model-vram-budgeting`의 batch 1 식은 데스크톱에서 52px 넘쳐서 aligned 두 줄로 바꿨다.
+- **윤문(humanize-korean v2.3, heavy)**: 새 글 4편의 순수 문단 229개(40,745자)를 대상으로 했다.
+  - 처리 순서: 진단 1콜, 청크 8개 병렬 윤문, finalize 1콜.
+  - 게이트 exit 0: 문자율 2.7%, P1 `ending_comma_rate` z +5.58 → +1.32(부분 개선), 대구 9 → 4, golden PASS, 문장 터치율 19.5%.
+  - finalize가 국소 보정한 3건: 시험 대상이 확정 전제로 바뀐 문장, 원문에 없던 전제, 빠진 비교 대상을 되돌렸다.
+  - 오케스트레이터 사실 정정 1건: 하네스 첫째 버그는 동시 1 단계에서 9건 표본이 SLO 실패로 오판된 것이다. 원문의 "고동시성"과 "P25 우연히 낮음"은 사실과 달라 고쳤다.
+  - 링크·코드가 섞인 문단 20개는 수동으로 다듬었다(문두 "그래서", 연결어미 쉼표, 안내 문장).
+  - 마커 229개, 숫자, 태그, 라틴 토큰을 전수 대조했다. 재삽입 뒤 왕복 추출에서 어긋남은 0이다.
+- **ko-natural**: `audit:korean`에서 오류 0, 문맥 검토 0이다.
+- **감사·빌드**:
+  - 글별 `audit:learning --require-registration` 17편, 바뀐 Viz의 `audit:viz --strict`, CI 플래그와 같은 전역 감사 17개가 모두 exit 0이다.
+  - TypeScript는 최대 RSS 7,453,327,360 bytes, production build는 137.08초·최대 RSS 6,754,533,376 bytes다.
+  - 정적 public route 2,128개와 no-script 본문 505편(새 글 4편 추가)을 생성했다.
+- **브라우저**:
+  - `sweep-routes`로 바뀐 경로 17개 × 1,440·390을 검사해 실패 0이다.
+  - 새 Viz는 6초 동안 자동 재생되지 않는다. `←`·`→` 키로 장면이 이동하고, reduced-motion에서는 재생이 꺼진다. 모바일 버튼은 50px 이상이다.
+  - KaTeX는 질문 → 식 → 해설 순서이고 데스크톱 식 넘침은 0이다. 모바일의 긴 식은 식 안쪽 가로 스크롤로 처리한다.
+  - JavaScript를 끈 정적 경로: 4편 모두 본문 약 2만 자와 `(답: N절)` 3개가 보인다. 정적 장면 목록은 4·5·2·4개 Viz에 16·21·9·19장면이다. 조작부는 0, 가로 넘침은 0, console 오류는 0이다. 앱에서는 정적 목록이 보이지 않는다.
+- **현재 상태**: `rewritten-local-verified`. 장부 `post-checkpoint-routes.json`에서 새 글 4편을 `reviewed-local`로 올렸다.
+- **남은 일**:
+  - main의 미커밋 작업과 병합해 배포하고, 공개 경로를 다시 확인한다.
+  - C1 `hw/modded-rtx4090-moe-serving` 출시 게이트 라이선스 단계, A16·A17 `hw/network` 보강은 다른 세션의 미커밋 작업과 겹쳐 보류했다.
+  - 미사용 파일 `hybrid-attention-serving/KVFundamentals.tsx`를 처리한다.
+
 ### 같은 10만 원 요구인데 왜 하나는 법일까요 로컬 검증 완료 (2026-11-01)
 
 - `legal-system/what-makes-law-law`를 가상 도시의 과속 고지서와 공무원의 개인 계좌 요구라는 한 사례로 다시 썼습니다. 결론은 “법적 요구인지는 권한과 절차가 최종 기준까지 이어지는지에서 갈리고, 사람이 미리 행동을 맞출 수 있는지는 공개성·명확성·장래성·집행 일치 같은 법치의 조건에서 갈린다”입니다.
