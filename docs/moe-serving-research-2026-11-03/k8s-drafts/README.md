@@ -42,7 +42,7 @@
 | DeviceClass `gpu.nvidia.com`, 속성 `cudaComputeCapability`(version)·`productName`·`architecture` | dra-driver-nvidia-gpu v0.5.1 `templates/deviceclass-gpu.yaml`, `cmd/gpu-kubelet-plugin/deviceinfo.go` |
 | `resource.kubernetes.io/pcieRoot` | 같은 저장소의 vendor `k8s.io/dynamic-resource-allocation/deviceattribute/attribute.go` |
 | `kueue.x-k8s.io/queue-name`(LWS metadata.labels), `podset-required-topology`·`podset-group-name`(두 템플릿 모두) | kueue v0.20.4 `apis/kueue/v1beta2/topology_types.go`와 LWS TAS 예제 |
-| InferencePool `inference.networking.k8s.io/v1`, EPP 설정 `llm-d.ai/v1alpha1` | GAIE v1.6.2, llm-d-router v0.11.0 `apix/config/v1alpha1`, 이 저장소의 `manifests/physical-inference-stack.yaml`·`kv-scoring.yaml` |
+| InferencePool `inference.networking.k8s.io/v1`, EPP 설정 `llm-d.ai/v1alpha1` | GAIE v1.6.2, llm-d-router v0.11.0 `apix/config/v1alpha1`, 이미 돌고 있는 추론 스택 설정·`kv-scoring.yaml` |
 | NicClusterPolicy의 `rdmaSharedDevicePlugin`·`secondaryNetwork{multus,cniPlugins}`·`nvIpam`·`nodeAffinity`·`tolerations`, MacvlanNetwork, IPPool(`nv-ipam.nvidia.com/v1alpha1`) | Mellanox/network-operator v26.7.1 `api/v1alpha1/nicclusterpolicy_types.go`, `example/crs/…-nvidia-ipam.yaml` |
 | Pod의 `k8s.v1.cni.cncf.io/networks`, `IPC_LOCK`, `rdma/rdma_shared_device_a` | network-operator v26.7.1 `example/rdma-gpu-test-pod1.yml` |
 | NCCL 변수 `NCCL_IB_GID_INDEX`(2.32u1부터 AUTO), `NCCL_IB_TC`(기본 0), `NCCL_NET_GDR_READ`(NVLink가 없으면 기본 0) | NCCL 2.32.3 env 문서 |
