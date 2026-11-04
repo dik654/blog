@@ -220,6 +220,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
 />
 <div className="prose prose-neutral max-w-none dark:prose-invert"><p>8×RTX PRO 6000에서 Kimi K2.5를 돌린 커뮤니티 기록(rtx6kpro 위키, 현장 경험)도 이 모양입니다. BF16 KV에 DCP 없이 잡히는 용량은 약 19만 token이라, 200K 요청 하나를 겨우 담습니다.</p>
 <p>FP8 KV로 바꾸면 DCP 없이 약 44.9만 token입니다. 같은 FP8 KV에 DCP 8을 켜고 gpu-util을 0.93으로 두면 3,621,504 token입니다. 200K 문맥 에이전트로 치면 약 18개를 동시에 담는 크기입니다. (계산)</p>
+<p>여기서 gpu-util은 vLLM의 <code>--gpu-memory-utilization</code>을 줄여 쓴 말로, GPU 메모리 가운데 vLLM이 쓸 상한 비율입니다. 이 예산에서 가중치와 계산 중 최대 사용량을 뺀 나머지가 KV 자리이므로 값을 올리면 token을 더 담지만 예상 밖의 메모리 사용을 받아 줄 여유는 줄어듭니다. 계산식과 숫자 예는 <Link to="/cs/ai/inference-runtime-anatomy#memory-plan">추론 런타임 글의 메모리 계획 절</Link>에 있습니다.</p>
 <p>여기서 DCP(decode context parallel)는 같은 latent를 든 rank들이 token 축을 나눠 갖게 하는 설정입니다. 각 rank가 자기 몫의 token으로 부분 attention을 계산하고, 층마다 그 결과를 합칩니다. 부분 결과를 합치는 원리는 <Link to="/cs/ai/tensor-and-pipeline-parallel-inference#sequence-context-parallel">context parallel</Link>과 같습니다.</p>
 <p>대가가 있습니다. 같은 위키에서 단일 요청 속도는 BF16 DCP1의 90 tok/s에서 FP8 DCP8의 65 tok/s로 내려갑니다. FP8 DCP1이 79 tok/s라 DCP만의 몫은 79→65입니다. 반대로 DCP 없이 150K 문맥에서는 6~7 tok/s로 무너졌다는 보고가 있습니다.</p>
 <p>vLLM에는 DCP를 켰을 때 출력이 어긋나는 drift 버그(vllm#41623)가 2026-11-03 기준 열려 있습니다. 위키 수치도 디스코드 대화를 정리한 것이라 장비 조건이 일부 빠져 있습니다. rank별 배치와 용량 계산 전체는 <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 decode context parallel 글</Link>에서 이어 갑니다.</p>

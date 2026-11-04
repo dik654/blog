@@ -86,6 +86,7 @@ export default function MlaAbsorbViz() {
       note="W_K = (0,1), W_V = (1,2)인 한 head 사례이며 위치 회전(RoPE)은 넣지 않았습니다. 회전용 기록은 다음 절에서 따로 봅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

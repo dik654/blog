@@ -86,6 +86,7 @@ export default function TpKvPlacementViz() {
       note="head 수와 GPU 수만 바꾼 모형입니다. 실제 byte는 본문 계산을 따릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -4356,7 +4356,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/extension-fields": "5af7ff4c6c338153",
   "crypto/frobenius-optimization": "05f920aec7cb1ef0",
   "gpu/cuda-sync-streams": "1e3dd40cdf06c5ba",
-  "ai/kv-cache-fundamentals": "2edbb9e0af35f5a6",
+  "ai/kv-cache-fundamentals": "a0468e06511f5ed8",
   "ai/math-exponents-logarithms": "397e1980112d0e72",
   "ai/math-high-dimensional-geometry": "f3eb98b0469c83ea",
   "ai/math-matrices-svd": "d21e58dfecd7e065",

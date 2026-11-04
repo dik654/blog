@@ -84,6 +84,7 @@ export default function KvHeadSharingViz() {
       note="9절 사례의 3위치·head 폭 2·숫자당 2byte를 고정하고 head 수만 바꿨습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
