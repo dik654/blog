@@ -4882,5 +4882,10 @@
 - 사용자 요청: 긴 곱셈이 글자로만 있어 이해하기 어려우니 별도 페이지가 아니라 글 안에서 아래에 자세히 설명할 것. 기준은 `blog-rewrite-contract.md` 1.4에 병합했습니다.
 - `ai/kv-cache-fundamentals`의 `model-configs`, `kv-shape-runtime`, `cache-representation-design` 세 절을 `질문 → Viz → 풀이`로 다시 구성하고 Viz 다섯 개와 계산 장부 두 개를 추가했습니다. 이어서 `request-trace`, `attention-read`, `position-key`, `capacity-bandwidth` 네 절도 같은 순서로 바꾸고 Viz 네 개를 추가했습니다. 고정 config 세 개의 층 종류·KV head·폭·window와 gemma4 K/V 경로는 소스에서 다시 확인했습니다.
 - window 회수 곡선의 182MiB와 대용 계산 분해(320MiB + 2,400MiB)는 config 값에서 유도한 논리 계산이며 측정값이 아닙니다.
-- 새 문단은 `audit:korean`과 `audit:prose`로 확인했고 `humanize-korean` 윤문은 거치지 않았습니다. 
+- 새 문단은 `audit:korean`과 `audit:prose`로 확인했습니다. `humanize-korean` 윤문은 이 단계에서는 거치지 않았고 아래 항목에서 진행했습니다.
 - GitHub Pages run `41780167351`(`f5bf7e95`, 커밋 `51ce39c9` 포함)이 성공한 뒤 공개 URL을 1,440×1000과 390×844에서 다시 열었습니다. 문서 가로 넘침과 console 오류·경고는 없고 새 Viz 아홉 개가 모두 보이며 `request-trace` Viz의 키보드 장면 이동을 확인했습니다. 나머지 Viz의 장면별 검사는 배포 전 로컬에서 했고, JavaScript를 끈 화면은 no-script 영역에 Viz 아홉 개가 들어 있는지만 DOM에서 확인했습니다.
+- 윤문(humanize-korean v2.3, light, 보수 강도): 7·8·16~18·20·22절과 21절 gpu-util 문단에서 커밋 `51ce39c9` 이후 새로 쓴 `<p>` 45개를 대상으로 해 12개를 고쳤습니다. 주로 연결어미 뒤 쉼표를 덜어 내고 잘게 끊긴 문장을 이었으며, finalize에서 쉼표 5곳을 되돌렸습니다. 17절 `attention_k_eq_v=true` 문장은 앞 문단을 받도록 조사를 고쳤습니다. 표·계산 장부·Viz 문구는 대상이 아닙니다.
+- 게이트: 문자율 0.3%, `ending_comma_rate` z +2.78 → +0.48, 문장 터치율 14.2%이고 exit 1입니다. 경고 사유인 golden `footnote_anchor` FAIL 3건은 오탐입니다. 게이트의 각주 정규식이 `(1,2)` 같은 좌표의 뒷숫자를 각주로 읽었고 입력에 실제 각주는 없습니다. 숫자·식별자·태그 토큰은 문단별로 일치합니다.
+- `ko-natural`: `audit:korean` strict에서 이 글의 지적은 0건입니다.
+- 버튼 위치: 로컬 dev 서버의 390×844와 1440×1000에서 Viz 13개의 모든 장면을 키보드로 넘기며 쟀습니다. 버튼 이동은 가로세로 0px이고 frame 높이도 일정합니다(reduced motion 기준). `TpKvPlacementViz` 4장면을 포함하며, 앞 커밋에서 남은 미측정 항목을 닫습니다. 문서 가로 넘침과 console 오류도 0입니다.
+- CI와 같은 lint·전역 감사 15개·`audit:runtime`, build(NODE_OPTIONS 8192)가 통과했습니다. CI의 브라우저 감사 단계는 로컬에서 돌리지 않았습니다. 이 윤문의 커밋·배포와 공개 URL 재확인은 아직 하지 않았습니다.
