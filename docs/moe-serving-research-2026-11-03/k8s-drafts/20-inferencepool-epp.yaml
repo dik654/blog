@@ -3,14 +3,14 @@
 #
 # Confirmed:
 # - InferencePool API inference.networking.k8s.io/v1 {selector.matchLabels, targetPorts,
-#   endpointPickerRef{name,kind,port}}: GAIE v1.6.2; same shape as this repo's
+#   endpointPickerRef{name,kind,port}}: GAIE v1.6.2; same shape as an existing
 #   manifests/physical-inference-stack.yaml (already running with router v0.11.0).
 # - EPP config apiVersion llm-d.ai/v1alpha1 is what router v0.11.0 accepts
 #   (llm-d-router v0.11.0 apix/config/v1alpha1, strict decoding). llm-d v1.0.0 guides use
 #   llm-d.ai/v1, which router v0.11.0 would REJECT - do not copy v1.0.0 guide configs
 #   without upgrading the router to v1.0.0.
 # - Plugin types kv-cache-utilization-scorer / max-score-picker / utilization-detector:
-#   this repo's manifests/kv-scoring.yaml (validated on router v0.11.0 earlier).
+#   an existing kv-scoring manifest (validated on router v0.11.0 earlier).
 # - LWS pod label leaderworkerset.sigs.k8s.io/worker-index exists on every pod (lws v1.0.0
 #   code). Selecting worker-index "0" = only the leader (the pod that runs the API server).
 #   llm-d's own guides instead give workers a different app label; both work in principle.

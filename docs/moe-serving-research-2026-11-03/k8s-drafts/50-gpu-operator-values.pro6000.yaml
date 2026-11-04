@@ -1,5 +1,5 @@
 # UNVALIDATED DRAFT (2026-11-03). Helm values for NVIDIA GPU Operator v26.7.2 on RTX PRO 6000
-# Blackwell nodes. Derived from infra/k3s/workstation-pools/gpu-operator-dra-values.yaml.
+# Blackwell nodes. Adapt from the existing GPU Operator DRA values.
 #
 # Confirmed (gpu-operator v26.7.2 source + docs):
 # - GPUCluster (DRA) path "does not manage the NVIDIA driver or the device-plugin"

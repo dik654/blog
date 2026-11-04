@@ -52,10 +52,10 @@
 
 아래 값은 출처로 확인하지 못했다. 실제 장비에서 측정해 바꿔야 한다.
 
-- 레이블 `example.com/gpu-model: rtx-pro-6000-bw`, `example.com/rdma-fabric: roce-a`, `topology.example.com/network-fabric`. 앞의 둘은 새로 만들 레이블이다. 마지막 것은 기존 `shared-pool.yaml`의 Topology 레벨을 그대로 썼다.
+- 레이블 `example.com/gpu-model: rtx-pro-6000-bw`, `example.com/rdma-fabric: roce-a`, `topology.example.com/network-fabric`. 앞의 둘은 새로 만들 레이블이다. 마지막 것은 기존 클러스터의 Topology 레벨 이름에 맞춰야 한다.
 - `ens1f0np0`, `mlx5_0`, `NCCL_IB_TC=106`, 서브넷 값. `ibdev2netdev`와 스위치 QoS 설정을 확인한 뒤 바꾼다.
 - CEL `cudaComputeCapability.compareTo(semver('12.0.0')) == 0`. 문법을 확인하지 않았다. 실패하면 ResourceSlice에 실제로 나온 `productName` 문자열로 바꾼다.
-- 모델 hostPath `/var/lib/models`. `docs/model-storage-kubernetes-runtime.md`의 실제 배포 경로에 맞춰야 한다.
+- 모델 hostPath `/var/lib/models`. 실제 배포 경로에 맞춰야 한다.
 - InferencePool selector에 `leaderworkerset.sigs.k8s.io/worker-index: "0"`을 쓰는 방식. 이 레이블은 코드에 있지만 llm-d 가이드에는 이 사용 예가 없다. 40·41 파일은 같은 목적으로 워커 Pod의 `inference.example.com/model` 값도 바꿔 두었다.
 - Kueue TAS와 DRA를 함께 쓰는 경우. `KueueDRADeviceFeasibility`는 v0.20에서 alpha이고 기본값이 꺼져 있다. 이 상태에서 GPU 수를 고려하지 않은 배치가 생겨 Pod가 Pending에 머물 수 있다.
 - LWS v1.0.0을 Kubernetes 1.34에서 쓰려면 `MaxUnavailableStatefulSet` feature gate가 필요하다(LWS 문서). k3s 서버 인자로 켜야 한다.

@@ -10,7 +10,7 @@
 #   cudaComputeCapability / pcieRoot: dra-driver-nvidia-gpu v0.5.1
 #   deployments/helm/.../deviceclass-gpu.yaml and cmd/gpu-kubelet-plugin/deviceinfo.go
 # - Namespace labels / Kueue deviceClassMappings `example.com/gpu -> gpu.nvidia.com`:
-#   this repo, infra/k3s/workstation-pools/{shared-pool.yaml,kueue-configuration.fragment.yaml}
+#   match the existing cluster pool and Kueue configuration
 # NOT confirmed:
 # - The exact productName string the driver reports for RTX PRO 6000 Server Edition.
 #   Read it from `kubectl get resourceslices -o yaml` on a real node before relying on it.

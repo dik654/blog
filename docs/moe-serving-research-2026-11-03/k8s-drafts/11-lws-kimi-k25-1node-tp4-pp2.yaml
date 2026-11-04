@@ -118,7 +118,7 @@ spec:
         volumes:
           - name: models
             hostPath:
-              path: /var/lib/models     # follow docs/model-storage-kubernetes-runtime.md
+              path: /var/lib/models     # align with your model storage layout
               type: Directory
           - name: shm
             emptyDir:

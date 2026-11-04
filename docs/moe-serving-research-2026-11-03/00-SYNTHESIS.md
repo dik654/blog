@@ -100,7 +100,7 @@
 | GPU | RTX PRO 6000 **Server Edition** ×8. 600W이고 450W 상한 SKU가 있다 | K2.5 INT4 595GB가 768GB에 들어간다. MLA KV는 TP8에서 복제되므로 KV 용량은 DCP8+FP8 KV 기준 약 362만 토큰이다(§6-1) |
 | PCIe 토폴로지 | Gen5 스위치 기반 dual-root 섀시. 예: Supermicro SYS-522GA-NRT. 또는 ConnectX-8 SuperNIC 내장 스위치형 RTX PRO Server | P2P·NCCL·NUMA 설정에 따라 단일 스트림 속도가 2~3배 갈린다(01 보고서) |
 | CPU·메모리 | 듀얼 소켓, 소켓당 12채널 DDR5-6400, 1.5TB 이상 | 커뮤니티 측정에서 Turin 65 tok/s 대 Genoa 32 tok/s였다(통제 A/B는 아님). 남는 RAM은 KV 오프로드(LMCache)에 쓴다. 캐시 적중률 붕괴를 막는 게 목적이다 |
-| 저장 | 로컬 Gen5 NVMe(가중치 캐시) | 기존 덱 25장의 cold load 설계를 그대로 쓴다 |
+| 저장 | 로컬 Gen5 NVMe(가중치 캐시) | 가중치 cold load 설계를 따로 둔다 |
 | NIC | 400G 1포트를 장착만 해 둔다(ConnectX-7/8). 처음에는 기존 100GbE 서비스망으로 운영한다 | 복제본 확장에는 노드 간 GPU 통신이 없다. P/D 분리를 할 때만 RDMA가 필요하다 |
 
 ### 확장 단계
@@ -134,7 +134,7 @@ Helix 사례가 있다. DeepSeek-V4-Flash FP8을 8×PRO 6000에서 4장씩 두 �
 
 ## 6-1. 우리 실제 에이전트 사용 모양 (Claude Code 기록, 숫자만)
 
-[`agent-trace-bench`](../../integration-validation/agent-trace-bench/README.md)로 추출했다. 대상은 887 세션, 18,353 호출이다.
+[`agent-trace-bench`](agent-trace-bench-ref/README.md)로 추출했다. 대상은 887 세션, 18,353 호출이다.
 
 | 지표 | 우리 기록 | 공개 벤치마크 |
 |---|---|---|
