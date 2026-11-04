@@ -1055,7 +1055,7 @@
       "catalogIndex": 102,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
@@ -1395,7 +1395,7 @@
       "catalogIndex": 136,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
@@ -1405,7 +1405,7 @@
       "catalogIndex": 137,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
@@ -6445,7 +6445,7 @@
       "catalogIndex": 641,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {

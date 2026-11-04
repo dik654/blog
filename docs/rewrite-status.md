@@ -45,7 +45,7 @@
   - 새 Viz는 6초 동안 자동 재생되지 않는다. `←`·`→` 키로 장면이 이동하고, reduced-motion에서는 재생이 꺼진다. 모바일 버튼은 50px 이상이다.
   - KaTeX는 질문 → 식 → 해설 순서이고 데스크톱 식 넘침은 0이다. 모바일의 긴 식은 식 안쪽 가로 스크롤로 처리한다.
   - JavaScript를 끈 정적 경로: 4편 모두 본문 약 2만 자와 `(답: N절)` 3개가 보인다. 정적 장면 목록은 4·5·2·4개 Viz에 16·21·9·19장면이다. 조작부는 0, 가로 넘침은 0, console 오류는 0이다. 앱에서는 정적 목록이 보이지 않는다.
-- **현재 상태**: `rewritten-local-verified`. 장부 `post-checkpoint-routes.json`에서 새 글 4편을 `reviewed-local`로 올렸다.
+- **현재 상태**: `reviewed-production`. main b5a3af0d 배포(GitHub Actions run 41600337980 build·deploy success) 뒤 공개 URL에서 7편(새 글 4편, 4090, RDMA, TP·PP)을 1440·390 화면으로 sweep해 실패 0이었다. 새 글 4편은 JS 없이도 본문이 나오고(한글 1만~1.5만 자), 4090 글의 라이선스 단계와 RDMA 글의 `NCCL_NET_GDR_READ` 문단이 공개 페이지에 렌더링되는 것을 확인했다. 장부의 새 글 4편은 `reviewed-production`으로 올렸다. 첫 배포(run 41599252477)는 수정한 두 글의 topology 지문이 stale이라 `audit:topology --strict`에서 멈췄고, 지문 갱신 뒤 재배포했다.
 - **남은 일**:
   - main의 미커밋 작업과 병합해 배포하고, 공개 경로를 다시 확인한다.
   - C1 `hw/modded-rtx4090-moe-serving` 출시 게이트 라이선스 단계, A16·A17 `hw/network` 보강은 다른 세션의 미커밋 작업과 겹쳐 보류했다.

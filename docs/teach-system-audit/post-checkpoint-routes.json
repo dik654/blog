@@ -318,22 +318,22 @@
     },
     {
       "route": "ai/mla-kv-replication-and-decode-context-parallel",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
       "route": "ai/serving-architecture-matrix",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
       "route": "ai/agent-serving-slo-and-capacity",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     },
     {
       "route": "gpu/pcie-blackwell-moe-node-build",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#서빙-pcie·mla·에이전트-보강-로컬-검증-완료-2026-11-03"
     }
   ]
