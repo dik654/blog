@@ -4882,4 +4882,5 @@
 - 사용자 요청: 긴 곱셈이 글자로만 있어 이해하기 어려우니 별도 페이지가 아니라 글 안에서 아래에 자세히 설명할 것. 기준은 `blog-rewrite-contract.md` 1.4에 병합했습니다.
 - `ai/kv-cache-fundamentals`의 `model-configs`, `kv-shape-runtime`, `cache-representation-design` 세 절을 `질문 → Viz → 풀이`로 다시 구성하고 Viz 다섯 개와 계산 장부 두 개를 추가했습니다. 이어서 `request-trace`, `attention-read`, `position-key`, `capacity-bandwidth` 네 절도 같은 순서로 바꾸고 Viz 네 개를 추가했습니다. 고정 config 세 개의 층 종류·KV head·폭·window와 gemma4 K/V 경로는 소스에서 다시 확인했습니다.
 - window 회수 곡선의 182MiB와 대용 계산 분해(320MiB + 2,400MiB)는 config 값에서 유도한 논리 계산이며 측정값이 아닙니다.
-- 새 문단은 `audit:korean`과 `audit:prose`로 확인했고 `humanize-korean` 윤문은 거치지 않았습니다. 공개 URL 재검증 결과는 배포 뒤 이 항목에 이어 적습니다.
+- 새 문단은 `audit:korean`과 `audit:prose`로 확인했고 `humanize-korean` 윤문은 거치지 않았습니다. 
+- GitHub Pages run `41780167351`(`f5bf7e95`, 커밋 `51ce39c9` 포함)이 성공한 뒤 공개 URL을 1,440×1000과 390×844에서 다시 열었습니다. 문서 가로 넘침과 console 오류·경고는 없고 새 Viz 아홉 개가 모두 보이며 `request-trace` Viz의 키보드 장면 이동을 확인했습니다. 나머지 Viz의 장면별 검사는 배포 전 로컬에서 했고, JavaScript를 끈 화면은 no-script 영역에 Viz 아홉 개가 들어 있는지만 DOM에서 확인했습니다.
