@@ -2612,9 +2612,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/kv-cache-fundamentals": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
+    "reviewedAt": "2026-11-04",
     "rationale": "한 요청의 현재 질문과 보존할 기록을 작은 배열부터 실제 코드·모델 설정까지 이어 추적합니다. head 공유·저장 표현·시간 비용을 같은 기록의 수명과 연결하므로 한 글에 유지하고 allocator 세부 구현은 별도 글이 소유합니다.",
-    "sharedGate": "3→4위치48→64byte/Q16byte,head0·0·1·1과출력(2.5,5)를본문·원문·Viz·문제에서일치시킵니다. MLA흡수동치·Gemma800+320=1120MiB와대용3840MiB·총전송200→125MB를 독립 검산하고 전체원문pin·3수식·390/1440·9패널·5장면을 검사합니다."
+    "sharedGate": "3→4위치48→64byte/Q16byte,head0·0·1·1과출력(2.5,5)를본문·원문·Viz·문제에서일치시킵니다. MLA흡수동치·Gemma800+320=1120MiB와대용3840MiB·총전송200→125MB를 독립 검산하고 전체원문pin·3수식·390/1440과 7·8·16·17·18·20·22절의 Viz 장면을 검사합니다."
   },
   "crypto/karatsuba": {
     "action": "keep",
@@ -4356,7 +4356,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/extension-fields": "5af7ff4c6c338153",
   "crypto/frobenius-optimization": "05f920aec7cb1ef0",
   "gpu/cuda-sync-streams": "1e3dd40cdf06c5ba",
-  "ai/kv-cache-fundamentals": "d2b11d2e6d552306",
+  "ai/kv-cache-fundamentals": "2edbb9e0af35f5a6",
   "ai/math-exponents-logarithms": "397e1980112d0e72",
   "ai/math-high-dimensional-geometry": "f3eb98b0469c83ea",
   "ai/math-matrices-svd": "d21e58dfecd7e065",

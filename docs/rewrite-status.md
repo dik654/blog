@@ -4876,3 +4876,10 @@
 - 최종 Chromium 전수 점검은 네 shard에서 각 글을 1,440×1,000과 390×844로 열었습니다. 처음 발견한 `constitutional-ai` 모바일 제목 overflow와 `risc0` KaTeX 밑줄 parse 오류를 수정한 뒤 두 경로를 재검사해, 최종 1,007편 × 2 viewport의 console·동적 import·문서 overflow·KaTeX 실패가 모두 0입니다.
 - 최종 production build는 8,298개 module을 변환했고 정적 public route 2,120개와 404 fallback, 검토 완료 글 414편의 no-script 본문을 생성했습니다. TypeScript와 수정 파일 ESLint, `git diff --check`도 통과했습니다.
 - 이번 작업 범위는 사용자 요청에 따라 로컬 커밋까지입니다. 원격 push, GitHub Pages 배포와 공개 URL 재검증은 별도 단계로 남깁니다.
+
+# KV cache 기본 글 7·8·16~18·20·22절 시각 설명 보강 (2026-11-04)
+
+- 사용자 요청: 긴 곱셈이 글자로만 있어 이해하기 어려우니 별도 페이지가 아니라 글 안에서 아래에 자세히 설명할 것. 기준은 `blog-rewrite-contract.md` 1.4에 병합했습니다.
+- `ai/kv-cache-fundamentals`의 `model-configs`, `kv-shape-runtime`, `cache-representation-design` 세 절을 `질문 → Viz → 풀이`로 다시 구성하고 Viz 다섯 개와 계산 장부 두 개를 추가했습니다. 이어서 `request-trace`, `attention-read`, `position-key`, `capacity-bandwidth` 네 절도 같은 순서로 바꾸고 Viz 네 개를 추가했습니다. 고정 config 세 개의 층 종류·KV head·폭·window와 gemma4 K/V 경로는 소스에서 다시 확인했습니다.
+- window 회수 곡선의 182MiB와 대용 계산 분해(320MiB + 2,400MiB)는 config 값에서 유도한 논리 계산이며 측정값이 아닙니다.
+- 새 문단은 `audit:korean`과 `audit:prose`로 확인했고 `humanize-korean` 윤문은 거치지 않았습니다. 공개 URL 재검증 결과는 배포 뒤 이 항목에 이어 적습니다.
