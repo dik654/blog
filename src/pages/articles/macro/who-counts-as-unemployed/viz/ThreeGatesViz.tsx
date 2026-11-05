@@ -58,6 +58,7 @@ export default function ThreeGatesViz() {
       note="100명짜리 보기는 설명을 위해 만든 것이고 실제 자료가 아닙니다. 세 조건은 19차 ICLS 결의 47항 그대로입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

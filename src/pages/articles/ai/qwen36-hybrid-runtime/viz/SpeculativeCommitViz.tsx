@@ -86,6 +86,7 @@ export default function SpeculativeCommitViz() {
       note="draft 4개·승인 2개는 본문의 질문 사례입니다. conv history 창의 실제 길이는 그리지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

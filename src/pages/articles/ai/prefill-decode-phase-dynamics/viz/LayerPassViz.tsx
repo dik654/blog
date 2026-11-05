@@ -102,6 +102,7 @@ export default function LayerPassViz() {
       note="32층은 설명용 예시입니다(Llama 3 8B가 32층). 각 층은 자기 층의 K/V만 따로 저장하고 읽습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -59,6 +59,7 @@ export default function SloWindowBudgetViz() {
       note="칸의 위치는 설명용 배치입니다. 288칸·허용 2칸·10칸 누락은 본문 12~13절의 가정 숫자입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -36,6 +36,7 @@ export default function ContractViz() {
       note="확장 수치는 한 소스·한 마스크의 스윕이며 대상 크기에 따라 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

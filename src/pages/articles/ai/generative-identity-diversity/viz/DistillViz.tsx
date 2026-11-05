@@ -36,6 +36,7 @@ export default function DistillViz() {
       note="한 모델 가족에서 한 번 잰 결과이며 증류 일반에 대한 주장이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

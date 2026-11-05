@@ -35,6 +35,7 @@ export default function CapitalMovesViz() {
       note="장면 3과 4의 내용은 Ricardo(1817) 초판 6장(3판 기준 7장)의 서술이고, 장면 2의 물음은 그 서술로 넘어가기 위해 이 글이 둔 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

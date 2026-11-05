@@ -51,6 +51,7 @@ export default function ReviewRoundsViz() {
       note="한 건의 조사 결과물을 세 라운드에 걸쳐 외부 모델에 검증시킨 기록입니다. 표본이 하나라 일반화할 수 없습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

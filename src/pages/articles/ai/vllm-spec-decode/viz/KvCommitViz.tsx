@@ -133,6 +133,7 @@ export default function KvCommitViz() {
       note="logits_indices=[0,1,2,3,4], target_logits_indices=[0,1,2,3], bonus=[4]는 단일 요청 기준입니다. 늦은 출력·빈자리·선점이 없는 동기 경로입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

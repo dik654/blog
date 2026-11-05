@@ -55,6 +55,7 @@ export default function MathHighDimensionalGeometryViz() {
       note="실제 분포는 데이터마다 다르며, 이 수치는 균등분포 무작위 점과 Dasgupta–Gupta 하한·Pope et al. 2021 추정치를 단순화한 예시입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -76,6 +76,7 @@ export default function WindowReclaimViz() {
       note="T=4,096, W=1,024, global 2층·local 6층은 본문 사례입니다. block 크기 256은 칸을 셀 수 있게 정한 설명용 단위입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

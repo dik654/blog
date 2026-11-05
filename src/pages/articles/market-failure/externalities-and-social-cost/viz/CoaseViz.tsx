@@ -78,6 +78,7 @@ export default function CoaseViz() {
       note="넷째 한 개만 떼어 본 계산입니다. 양쪽이 서로의 숫자를 알고 상대를 특정할 수 있다고 둔 경우입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

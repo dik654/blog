@@ -44,6 +44,7 @@ export default function BalanceSheetViz() {
       note="단위는 억 원이고 숫자는 구조가 보이도록 고른 예시입니다. 실제 은행의 자산 구성은 이보다 훨씬 다양합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

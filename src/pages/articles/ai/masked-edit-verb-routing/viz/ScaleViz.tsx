@@ -34,6 +34,7 @@ export default function ScaleViz() {
       note="수치는 같은 그림체 안에서만 비교할 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -45,6 +45,7 @@ export default function LostInMiddleViz() {
       note="1·10·20 번째 세 위치만 논문의 실측값이고, 그 사이 곡선은 U자형 경향을 보여주는 보간선이지 추가 측정값이 아닙니다. 다른 model·context length·task에서 같은 낙폭이 재현된다는 뜻은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

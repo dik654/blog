@@ -46,6 +46,7 @@ export default function PropertyReachViz() {
       note="사람을 다섯으로 줄인 그림입니다. 실제로는 채권을 제삼자에게 주장할 수 있게 만드는 별도의 장치들도 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

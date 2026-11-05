@@ -40,6 +40,7 @@ export default function EnclosureCountViz() {
       note="절차와 170만이라는 수는 헤로도토스 『역사』 7권 60절의 것입니다. Macaulay 영역본으로 읽었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

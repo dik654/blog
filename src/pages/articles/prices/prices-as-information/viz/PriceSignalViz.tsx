@@ -54,6 +54,7 @@ export default function PriceSignalViz() {
       note="파는 쪽 전체에 같은 충격이 온 경우입니다. 한쪽에만 오거나 값이 정수로 떨어지지 않으면 이 그림이 덜 깔끔해집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -52,6 +52,7 @@ export default function ContagionViz() {
       note="기관 수와 연결은 구조를 보이기 위한 단순화입니다. 실제 금융망은 훨씬 조밀하고 비은행 기관도 포함합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

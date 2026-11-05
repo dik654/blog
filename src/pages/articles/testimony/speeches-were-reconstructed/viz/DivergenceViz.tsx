@@ -41,6 +41,7 @@ export default function DivergenceViz() {
       note="두 이유는 투키디데스 1권 22절에 적힌 것이고, 흩어짐과 쏠림의 그림은 그 둘의 차이를 보이기 위해 이 글이 그린 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

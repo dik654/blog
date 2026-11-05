@@ -36,6 +36,7 @@ export default function FailViz() {
       note="이 실행의 네거티브는 안내 계수 1.0 탓에 무효였습니다. 양의 프롬프트는 정상 적용됐습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

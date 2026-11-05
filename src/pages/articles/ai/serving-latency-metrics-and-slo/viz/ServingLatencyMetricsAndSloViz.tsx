@@ -64,6 +64,7 @@ export default function ServingLatencyMetricsAndSloViz() {
       note="Step 시간은 예시 값입니다. 실제 t(B) 는 model·GPU·prefill 혼합 비율에 따라 다르고 대기 시간은 도착 분포와 처리 시간·요청 수용 정책에도 달려 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

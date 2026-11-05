@@ -35,6 +35,7 @@ export default function ReadinessViz() {
       note="구체적인 허용치와 요구 등급은 지역 기준과 건물마다 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

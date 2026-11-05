@@ -60,6 +60,7 @@ export default function RequestMemoryMixViz() {
       note="token당 64 KiB와 144 MiB는 Qwen3.6 구조 글의 BF16 KV·FP32 core state 계산입니다. convolution state, block padding, weight와 workspace는 뺐습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

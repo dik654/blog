@@ -115,6 +115,7 @@ export default function SyncScopeStreamsViz() {
       note="A의 계산 시각과 B가 50 μs에 끝난다는 값은 본문 사례입니다. B 작업이 20 μs에 시작하는 것과 50–56 μs의 추가 작업은 그림을 위한 가정이며 호출 자체의 비용은 무시했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

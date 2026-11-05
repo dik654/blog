@@ -86,8 +86,7 @@ export default function KimiK3ArchitectureArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            장비 수는 가중치가 먼저 정합니다. 공식 MXFP4 체크포인트의 Hugging Face 저장 크기는 1,561GB라 RTX PRO 6000 8장(768GB)에 들어가지
-            않습니다. 이 크기는 디스크 기준이고, 실제 VRAM 상주량은 엔진과 포함 범위에 따라 조금 다를 수 있습니다.
+            장비 수는 가중치가 먼저 정합니다. 공식 MXFP4 체크포인트의 Hugging Face 저장 크기는 1,561GB라 RTX PRO 6000 8장(768GB)에 들어가지 않습니다. 이 크기는 디스크 기준이고 실제 VRAM 상주량은 엔진과 포함 범위에 따라 조금 다를 수 있습니다.
           </p>
           <p>
             커뮤니티 기록(rtx6kpro 위키, 현장 경험)은 공식 MXFP4를 RTX PRO 6000 16장, TP16과 DCP16으로 돌렸습니다. 256 token prompt 하나만
@@ -95,9 +94,7 @@ export default function KimiK3ArchitectureArticle() {
             적은 값입니다.
           </p>
           <p>
-            공식 가중치 대신 2bit급 커뮤니티 양자화(QSRT-K2)를 쓰면 9장에 올린 기록이 있습니다. 품질 비교는 이 글의 범위 밖입니다. MLA KV가
-            rank마다 복제되는 이유는 <Link to="/cs/ai/kv-cache-fundamentals#parallel-budget">KV cache 기초 글의 21절</Link>, DCP의
-            비용은 <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">decode context parallel 글</Link>에서 이어 봅니다.
+            공식 가중치 대신 2bit급 커뮤니티 양자화(QSRT-K2)를 쓰면 9장에 올린 기록이 있지만 품질 비교는 이 글의 범위 밖입니다. MLA KV가 rank마다 복제되는 이유는 <Link to="/cs/ai/kv-cache-fundamentals#parallel-budget">KV cache 기초 글의 21절</Link>, DCP의 비용은 <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">decode context parallel 글</Link>에서 이어 봅니다.
           </p>
         </div>
       </section>

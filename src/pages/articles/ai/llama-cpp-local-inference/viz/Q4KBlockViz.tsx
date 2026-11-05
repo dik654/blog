@@ -169,6 +169,7 @@ export default function Q4KBlockViz() {
       note="복원 장면의 q·sc·m·d·dmin 값은 설명용 예시입니다. 마지막 장면은 모든 텐서를 한 형식으로 둔다는 가정의 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

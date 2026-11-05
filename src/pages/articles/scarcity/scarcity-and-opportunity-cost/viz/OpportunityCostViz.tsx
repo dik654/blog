@@ -59,6 +59,7 @@ export default function OpportunityCostViz() {
       note="각 선택지가 주는 값을 같은 자로 잴 수 있다고 둔 예입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

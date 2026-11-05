@@ -69,6 +69,7 @@ export default function TaskArithmeticMergeViz() {
       note="실제 모델은 수십억 차원이며 여기서는 좌표 두 개로만 단순화했습니다. 방향 간섭이 없는 이상적인 경우만 보여 줍니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -83,6 +83,7 @@ export default function PoolToRequestViz() {
       note="10 GiB·256 KiB, 세 runtime의 cache token과 배수는 본문의 startup log 값입니다. 마지막 두 장면은 예약 크기를 바꾼 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

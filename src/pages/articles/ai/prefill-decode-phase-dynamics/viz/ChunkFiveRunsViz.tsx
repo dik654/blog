@@ -50,6 +50,7 @@ export default function ChunkFiveRunsViz() {
       note="A·B가 다섯 실행 내내 끝나지 않는다고 둔 본문 7절의 가정입니다. 행마다 걸리는 시간은 같다고 볼 수 없습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

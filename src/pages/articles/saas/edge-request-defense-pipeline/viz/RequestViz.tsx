@@ -34,6 +34,7 @@ export default function RequestViz() {
       note="통과 비율은 구조를 보여 주기 위한 예시 값이며 실제 트래픽 분포가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

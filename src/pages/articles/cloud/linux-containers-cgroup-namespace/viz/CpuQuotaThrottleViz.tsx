@@ -83,6 +83,7 @@ export default function CpuQuotaThrottleViz() {
       note="(가정) cpu.max 50000 100000, 요청 하나 = 4 스레드 × 15ms, 노드에 빈 CPU가 넉넉하다고 둡니다. 5ms slice 단위로 나눠 받는 세부는 생략했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

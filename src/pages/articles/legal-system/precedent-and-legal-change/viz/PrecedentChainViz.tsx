@@ -35,6 +35,7 @@ export default function PrecedentChainViz() {
       note="두 사건은 설명을 위한 가상 사례입니다. 실제 판정은 적용 법령, 법원의 위계, 판례 법리와 구체적 사실에 따라 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

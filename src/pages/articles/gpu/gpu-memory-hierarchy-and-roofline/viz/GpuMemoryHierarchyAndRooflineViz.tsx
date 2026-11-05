@@ -50,6 +50,7 @@ export default function GpuMemoryHierarchyAndRooflineViz() {
       note="Float(4 B) 읽기, L1 을 거치지 않는 32 B sector 기준의 단순화입니다. 128 B cache line 단위 allocation 과 L2 hit 은 생략했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

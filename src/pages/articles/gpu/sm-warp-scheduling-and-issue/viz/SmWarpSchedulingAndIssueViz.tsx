@@ -117,6 +117,7 @@ export default function SmWarpSchedulingAndIssueViz() {
       note="산술 latency 4 clock, global load latency 수백 clock 은 본문의 가정값입니다. 실제 scheduler 의 선택 우선순위와 pipe 폭은 생략했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

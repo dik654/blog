@@ -146,6 +146,7 @@ export default function InferenceRuntimeAnatomyViz() {
       note="70B FP16 model 을 80 GB GPU 8 장에 TP 로 올리는 계산 예시이며 그중 GPU 두 장만 그렸습니다. peak·graph 크기는 설명용 수치이고 실제 값은 model·backend·capture size 에 따라 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

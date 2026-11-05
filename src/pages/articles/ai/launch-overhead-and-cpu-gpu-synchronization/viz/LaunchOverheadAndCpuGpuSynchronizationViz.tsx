@@ -171,6 +171,7 @@ export default function LaunchOverheadAndCpuGpuSynchronizationViz() {
       note="scheduler 1.0 ms, kernel 300개 × launch 5 µs, GPU 실행 2.0 ms, graph launch 60 µs 는 설명용 수치입니다. 실제 값은 runtime·model·batch 에 따라 다르고 profiler 로 재야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

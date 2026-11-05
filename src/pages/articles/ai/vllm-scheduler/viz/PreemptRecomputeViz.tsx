@@ -120,6 +120,7 @@ export default function PreemptRecomputeViz() {
       note="KV 칸 12개와 Q는 설명용 배치입니다. 8·3·5·4는 본문 12절의 가정 숫자이며 실제 hit은 재개 시 조회 결과로 정해집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

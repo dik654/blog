@@ -34,6 +34,7 @@ export default function CouplingViz() {
       note="회전 각도는 결과 이미지에서 실측한 값입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

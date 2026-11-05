@@ -114,6 +114,7 @@ export default function StartLimitViz() {
       note="실행 0.5초와 주소 9초는 설명용 가정입니다. 한도 10초·5번과 > 비교는 systemd v249 기본값과 ratelimit.c를 따릅니다. 실제 시각에는 수 ms의 처리 지연이 더해집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

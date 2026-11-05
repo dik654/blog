@@ -27,6 +27,7 @@ export default function WindingViz() {
       note="렌더링 파이프라인의 버그이며 생성 모델 쪽 문제가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

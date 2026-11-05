@@ -30,6 +30,7 @@ export default function AverageShipViz() {
       note="1,200척·120명·50명과 '대단치 않다'는 결론은 투키디데스 1권 10절의 것입니다. 85명과 102,000이라는 곱은 이 글이 계산한 것이고 책에 적혀 있지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

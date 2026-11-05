@@ -45,6 +45,7 @@ export default function DirtyThresholdViz() {
       note="(가정) 빈 page − 예약 + file LRU = 12,288 MiB로 두고 dirty_background_ratio 10, dirty_ratio 20을 적용해 손으로 계산했습니다. 실제 서버는 이 분모가 page cache 크기에 따라 계속 움직입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -34,6 +34,7 @@ export default function WhereItCanSlipViz() {
       note="절차와 170만은 헤로도토스 7권 60절의 것입니다. 어긋날 자리를 셋으로 가른 것은 이 글이 정리한 것이고 사료에 그 꼴로 적혀 있지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

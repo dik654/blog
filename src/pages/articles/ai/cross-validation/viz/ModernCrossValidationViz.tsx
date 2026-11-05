@@ -102,7 +102,7 @@ function ValidationSceneViz({
   description: string;
   scenes: Scene[];
 }) {
-  const controls = useAnimatedScenes(scenes.length, 2700);
+  const controls = useAnimatedScenes(scenes.length, 2700, { playbackId: id });
   const scene = scenes[controls.active];
   const gap = 270 / Math.max(scene.items.length - 1, 1);
   return (

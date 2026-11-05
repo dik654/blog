@@ -27,6 +27,7 @@ export default function RoleViz() {
       note="추론 전용 노드와 학습 노드는 CPU 요구가 다르며 그림은 학습 쪽에 가깝습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

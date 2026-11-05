@@ -37,6 +37,7 @@ export default function ShapeViz() {
       note="네 얼굴 표본이라 편차 추정이 거칠고 자릿수를 읽는 용도입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

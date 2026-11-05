@@ -28,6 +28,7 @@ export default function ControlViz() {
       note="판정 대상은 지우기 실험이며 자세한 결과는 별도 글이 다룹니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

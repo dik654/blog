@@ -40,6 +40,7 @@ export default function LayerOffloadViz() {
       note="층당 189.8MB는 Q4_K 가중치 122.7MB와 n_ctx 16,384의 f16 KV 67.1MB를 더한 가정값입니다. 실행 버퍼는 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

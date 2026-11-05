@@ -195,6 +195,7 @@ export default function PrefixHashChainViz() {
       note="block 크기 16, 번호 P7·P2·P9·P11은 13절의 설명용 가정이고 C는 parent 사슬을 보이려고 덧붙인 가상의 요청입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

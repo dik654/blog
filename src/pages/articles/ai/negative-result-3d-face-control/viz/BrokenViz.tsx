@@ -27,6 +27,7 @@ export default function BrokenViz() {
       note="탐지 실패와 낮은 유사도의 구분은 별도 글이 소유합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

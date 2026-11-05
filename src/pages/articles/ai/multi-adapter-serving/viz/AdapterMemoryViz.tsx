@@ -83,6 +83,7 @@ export default function AdapterMemoryViz() {
       note="한 token의 KV는 128 KiB, page 하나는 hidden 4,096개 BF16인 8 KiB로 둔 가정입니다. 두 방식의 GPU 총량은 같게 맞췄습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -23,7 +23,7 @@ function LessonScene({
   notes: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 3000);
+  const controls = useAnimatedScenes(labels.length, 3000, { playbackId: id });
   return (
     <VizFrame title={title} description={description} className="my-8">
       <div

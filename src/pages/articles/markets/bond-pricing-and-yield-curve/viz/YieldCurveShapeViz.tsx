@@ -50,6 +50,7 @@ export default function YieldCurveShapeViz() {
       note="금리 값은 모양을 보이기 위한 예시이며 특정 시점의 실제 국채 금리가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

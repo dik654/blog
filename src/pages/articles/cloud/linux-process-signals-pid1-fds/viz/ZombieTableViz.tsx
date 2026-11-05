@@ -71,6 +71,7 @@ export default function ZombieTableViz() {
       note="16 CPU 서버의 pid_max 기본값 32,768과 초당 3개의 helper는 설명용 가정입니다. 실제 번호는 1~32,767이고 한 바퀴 돈 뒤에는 300 미만을 다시 쓰지 않으므로 좀비가 채울 수 있는 칸은 이보다 조금 적습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

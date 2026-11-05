@@ -58,6 +58,7 @@ export default function ContainerThreeAxesViz() {
       note="cpu.weight 20은 Kubernetes v1.37.1 kubelet의 변환식(1 + (512 − 2) × 9999 ÷ 262142)으로 계산한 값입니다. namespace 공유 범위는 containerd·CRI-O의 기본 Pod sandbox 설정 기준입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

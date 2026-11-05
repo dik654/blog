@@ -80,6 +80,7 @@ export default function LiabilityRuleViz() {
       note="양쪽 모두 조심할 수 있는 사고를 전제한 비교입니다. 한쪽만 조심할 수 있는 사고에서는 그쪽에 손해를 지우는 것으로 충분합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

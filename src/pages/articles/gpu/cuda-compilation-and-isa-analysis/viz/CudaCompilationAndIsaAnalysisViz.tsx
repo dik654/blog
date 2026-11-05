@@ -122,6 +122,7 @@ export default function CudaCompilationAndIsaAnalysisViz() {
       note="PTX·SASS 줄은 본문의 예제를 줄여 쓴 것이고 unroll 4 장면의 register 16개는 산수 상한입니다. 실제 수는 CUDA 버전과 sm_XX 에 따라 다르며 -Xptxas -v 로 확인해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -91,6 +91,7 @@ export default function DnsSearchNdotsViz() {
       note="(가정) Pod가 네임스페이스 test에 있고 kubelet이 쓴 resolv.conf는 search test.svc.cluster.local svc.cluster.local cluster.local / options ndots:5입니다. 호스트 search 도메인은 없다고 둡니다. A·AAAA 동시 질의는 glibc 기본 동작입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

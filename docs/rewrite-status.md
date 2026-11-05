@@ -4888,4 +4888,17 @@
 - 게이트: 문자율 0.3%, `ending_comma_rate` z +2.78 → +0.48, 문장 터치율 14.2%이고 exit 1입니다. 경고 사유인 golden `footnote_anchor` FAIL 3건은 오탐입니다. 게이트의 각주 정규식이 `(1,2)` 같은 좌표의 뒷숫자를 각주로 읽었고 입력에 실제 각주는 없습니다. 숫자·식별자·태그 토큰은 문단별로 일치합니다.
 - `ko-natural`: `audit:korean` strict에서 이 글의 지적은 0건입니다.
 - 버튼 위치: 로컬 dev 서버의 390×844와 1440×1000에서 Viz 13개의 모든 장면을 키보드로 넘기며 쟀습니다. 버튼 이동은 가로세로 0px이고 frame 높이도 일정합니다(reduced motion 기준). `TpKvPlacementViz` 4장면을 포함하며, 앞 커밋에서 남은 미측정 항목을 닫습니다. 문서 가로 넘침과 console 오류도 0입니다.
-- CI와 같은 lint·전역 감사 15개·`audit:runtime`, build(NODE_OPTIONS 8192)가 통과했습니다. CI의 브라우저 감사 단계는 로컬에서 돌리지 않았습니다. 이 윤문의 커밋·배포와 공개 URL 재확인은 아직 하지 않았습니다.
+- CI와 같은 lint·전역 감사 15개·`audit:runtime`, build(NODE_OPTIONS 8192)가 통과했습니다. CI의 브라우저 감사 단계는 로컬에서 돌리지 않았습니다. 이 윤문은 커밋 `a2588cb4`로 배포했습니다.
+
+# 장면 Viz 조작부 안정화와 서빙 글 윤문 (2026-11-05)
+
+- 사용자 요청: KV cache 글에서 고친 문제가 다른 글에도 있는지 보고 개선할 것. 버튼 흔들림, 설명 없는 줄임말, 윤문 누락 세 유형으로 나눠 전수 조사했습니다.
+- `playbackId`: `useAnimatedScenes`를 쓰는 Viz 384개에 빠져 있어 장면 전환 때 안쪽 스크롤 복귀와 화면 밖 재생 정지가 꺼져 있었습니다. 모두 연결했고, 앵커 id가 있는 14개는 `{ playbackId: id }` 옵션으로 재사용합니다. `autoPlay: true`인 파일은 없어 자동 재생이 사라지는 경우는 없습니다. `audit:runtime`에 `animatedScenesBindPlaybackRoot` 검사를 추가했고 기준은 `viz-design-standard.md`에 병합했습니다.
+- 조작부 흔들림: 공개 catalog 1,011 route × 1,440·390px sweep에서 처음에 실패 route 229개, 흔들림 305건이 나왔습니다. CI는 `--entry-only`로 돌아 Viz 흔들림을 재지 않기 때문에 그동안 보이지 않았습니다. 고정 높이 figure에는 CSS sticky를 추가했고(주석만 있고 규칙이 없었습니다), `useAnimatedScenes`는 Viz가 화면 근처에 오면 모든 장면을 동기 렌더해 조작부 위치와 높이의 최댓값을 예약합니다.
+- 재측정: 흔들림 305건 → 10건(모두 9px 이하: `lotus-mpool`·`prysm-sync-committee`·`latent-variable-generative-models`·`helios-config`·`vdf`·`shop-unit-economics`·`lotus-state`·`shop-site-selection`·`prysm-beacon-api`). 콘솔 오류와 문서 가로 넘침은 0입니다. 미통과로 남깁니다.
+- 프레임이 viewport보다 큰 경우 80건(68 route, 대부분 mobile)은 고치지 않았습니다. 대부분 명시적으로 고른 `documentFlow`이고 18건은 `kimi-k3-shared`의 `animated-story`입니다. 기준을 어떻게 적용할지 사용자 판단이 필요합니다.
+- `gpu-util`: `mla-kv-replication-and-decode-context-parallel`, `CapacityGridViz`, `serving-architecture-matrix`에 뜻을 풀어 적었습니다. 다른 줄임말의 전수 조사는 하지 않았습니다.
+- 윤문(humanize-korean v2.3, heavy): 서빙 보강 때 새로 쓰고 윤문을 거치지 않은 17개 파일 103문단(19,882자)을 진단 1콜, 청크 3개 병렬, finalize 1콜로 처리해 62문단을 고쳤습니다. finalize가 원문에 없던 인과 표현과 출처 범위 변경 등 14곳을 되돌렸습니다. 게이트 exit 1: 문자율 1.3%, `ending_comma_rate` z +4.47 → −0.52 달성, `comma_segment_length` z +2.22 → +3.02 미달(문장을 이으면서 생긴 부작용), golden PASS, 터치율 32.8%. 토큰 차이는 문중으로 옮긴 `Dense → dense` 1건입니다.
+- 검수: lint, 전역 감사 15개, `audit:runtime`, build가 통과했습니다. 소스 지문이 Viz의 `id` 한 줄로 바뀐 topology 77건과 prose baseline 2건(점수 동일)은 지문만 갱신했습니다. 바뀐 Viz 385개에 `audit:viz --strict`를 돌렸고 exit 0입니다.
+- 남은 위험: 화면 근처에서 동기 측정이 일어나 scroll anchoring이 없는 브라우저(일부 Safari)에서는 위에서 내려오지 않고 아래에서 올라올 때 문단이 한 번 밀릴 수 있습니다. Safari 실기기는 확인하지 않았습니다.
+

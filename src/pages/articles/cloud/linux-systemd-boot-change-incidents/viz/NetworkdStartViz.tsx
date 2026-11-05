@@ -95,6 +95,7 @@ export default function NetworkdStartViz() {
       note="networkd.c 84–100행, networkd-manager.c 664–679행, networkd-routing-policy-rule.c 644–668·982–987·1025–1043행, networkd-link.c 997–1022·1326–1420행을 줄인 의사코드입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

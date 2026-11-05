@@ -100,6 +100,7 @@ export default function StopSequenceViz() {
       note="shop-api 컨테이너, start.sh가 PID 1이고 python server.py가 PID 7이라는 구성은 설명용 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

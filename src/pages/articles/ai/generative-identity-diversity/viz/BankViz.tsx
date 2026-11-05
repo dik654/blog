@@ -34,6 +34,7 @@ export default function BankViz() {
       note="판정 임계값은 별도 글이 정한 값을 기본으로 씁니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

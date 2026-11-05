@@ -18,7 +18,7 @@ export default function DescentDynamicsViz() {
   return <VizFrame eyebrow="같은 축에서 세 경로" title="보폭만 바꾸면 수축·왕복·발산이 갈린다"
     description="f(x)=x²/2, 시작값 4를 고정했습니다. 가로축은 실제 위치이고 아래로 내려갈수록 반복 횟수가 늘어납니다."
     note="점수 곡선이 아닌 위치의 기록입니다. 세 장면은 동일한 가로축을 사용하며 −32까지의 값을 자르거나 축척을 바꾸지 않았습니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="같은 축에서 보폭별 반복 위치" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="같은 축에서 보폭별 반복 위치" onKeyDown={scenes.onKeyDown}
       className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <svg viewBox="0 0 300 245" className="mx-auto h-auto w-full max-w-[350px]" aria-label="0부터 세 번까지 반복한 실제 위치의 경로">
         <line x1="28" y1="215" x2="273" y2="215" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />

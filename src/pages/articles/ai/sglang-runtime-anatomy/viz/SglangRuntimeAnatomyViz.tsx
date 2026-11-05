@@ -50,6 +50,7 @@ export default function SglangRuntimeAnatomyViz() {
       note="부품 이름은 고정한 SGLang 원문의 역할을 줄여 부른 것입니다. 수치는 본문 3절의 가정을 씁니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

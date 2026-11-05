@@ -233,8 +233,7 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
         <div id="tp-split" className="prose prose-neutral max-w-none scroll-mt-20 dark:prose-invert">
           <h3>Tensor parallel에서는 두 항이 서로 다른 축으로 나뉩니다</h3>
           <p className="leading-8">
-            위 식은 GPU 한 장을 가정했습니다. 여러 장에 tensor parallel(TP)로 나누면 M_KV와 M_Δ가 같은 비율로 줄지 않습니다. 둘을
-            나누는 축이 다르기 때문입니다.
+            위 식은 GPU 한 장을 가정했습니다. 여러 장에 tensor parallel(TP)로 나누면 M_KV와 M_Δ는 나뉘는 축이 달라 같은 비율로 줄지 않습니다.
           </p>
           <p className="leading-8">
             vLLM main(커밋 4c45411, 2026-11-03)에서 Qwen3.6은 linear attention층에 Gated DeltaNet 구현을, full attention층에
@@ -245,8 +244,7 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
             나눕니다. Qwen3.6-27B는 value head 48개, key head 16개라 TP8이면 rank마다 value head 6개, key head 2개를 맡습니다.
           </p>
           <p className="leading-8">
-            Full attention KV는 KV head 축으로 나뉩니다. 그런데 KV head가 4개뿐입니다. TP4까지는 rank마다 다른 head를 들지만 TP8에서는
-            rank마다 head 1개를 들고 두 rank가 같은 head를 복제합니다.
+            Full attention KV는 KV head 축으로 나뉘는데 KV head가 4개뿐입니다. TP4까지는 rank마다 다른 head를 들지만 TP8에서는 rank마다 head 1개를 들고 두 rank가 같은 head를 복제합니다.
           </p>
         </div>
         <CalculationWalkthrough
@@ -268,8 +266,7 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
-            구조를 나란히 놓으면 차이가 보입니다. MLA는 KV head가 하나라 TP rank마다 KV 전체가 복제되고, GQA는 KV head 수까지만 나뉩니다.
-            Linear attention state는 head 축으로 깔끔하게 나뉘지만 request마다 붙고, sliding window층은 창 길이가 보존량을 묶습니다.
+            구조를 나란히 놓으면 차이가 보입니다. MLA는 KV head가 하나라 TP rank마다 KV 전체가 복제되고 GQA는 KV head 수까지만 나뉩니다. Linear attention state는 head 축으로 깔끔하게 나뉘지만 request마다 붙고 sliding window층은 창 길이가 보존량을 묶습니다.
           </p>
           <p className="leading-8">
             세 경우를 같은 GPU 8장 그림으로 비교한 내용은{" "}

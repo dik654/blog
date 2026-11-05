@@ -99,6 +99,7 @@ export default function SignalVerdictViz() {
       note="kernel/signal.c v6.12의 sig_task_ignored를 그대로 따랐습니다. ptrace 중인 경우와 신호를 막아 둔(blocked) 경우는 뺐습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

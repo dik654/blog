@@ -95,6 +95,7 @@ export default function PortPoolViz() {
       note="같은 출발 IP·목적 IP·목적 포트로 가는 연결만 셉니다. 클라이언트가 먼저 끊는다고 가정했습니다. 연결이 열려 있는 시간은 60초에 비해 짧아 무시했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

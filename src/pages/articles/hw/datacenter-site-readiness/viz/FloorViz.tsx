@@ -29,6 +29,7 @@ export default function FloorViz() {
       note="숫자는 계산 방법을 보여 주기 위한 예시이며 실제 무게와 허용치는 제품과 건물마다 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

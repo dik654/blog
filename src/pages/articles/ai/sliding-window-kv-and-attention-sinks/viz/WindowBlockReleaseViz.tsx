@@ -90,6 +90,7 @@ export default function WindowBlockReleaseViz() {
       note="W = 8, block 4 token은 셈을 보이려는 작은 모형입니다. 넷째 장면만 gpt-oss-20b 설정과 vLLM 기본 block 16을 쓰고, 마지막 장면은 같은 작은 모형에 TensorRT-LLM 기준(9절)을 겁니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

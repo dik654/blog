@@ -242,12 +242,10 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             14,336 byte, 약 14 KiB 입니다. 1T 급 MoE 라도 이 값은 expert 수와 무관합니다.
           </p>
           <p>
-            초당 2,000 token 을 내도 경계 하나를 지나는 양은 약 28.7 MB/s, 0.23 Gbps 입니다(계산). 100GbE 서비스망으로도 대역폭은 크게 남습니다.
-            그래서 node 를 넘는 PP 는 InfiniBand 나 RoCE 없이도 대역폭 면에서는 성립합니다.
+            초당 2,000 token 을 내도 경계 하나를 지나는 양은 약 28.7 MB/s, 0.23 Gbps 입니다(계산). 100GbE 서비스망으로도 대역폭이 크게 남으니 node 를 넘는 PP 는 InfiniBand 나 RoCE 없이도 대역폭 면에서는 성립합니다.
           </p>
           <p>
-            대역폭이 남는다고 한 사용자가 빨라지지는 않습니다. 그 사용자의 token 은 두 node 의 stage 를 차례로 지나고 hop latency 가 더해집니다. PP 가
-            주는 것은 한 replica 가 쓸 수 있는 VRAM 이고, 속도는 microbatch 가 찰 때 throughput 으로만 돌아옵니다.
+            대역폭이 남는다고 한 사용자가 빨라지지는 않습니다. 그 사용자의 token 은 두 node 의 stage 를 차례로 지나고 hop latency 가 더해집니다. PP 가 주는 것은 한 replica 가 쓸 수 있는 VRAM 이고 속도는 microbatch 가 찰 때 throughput 으로만 돌아옵니다.
           </p>
           <p>
             용량 때문에 PP 가 필요한 예가 DeepSeek-R1 FP8 입니다. 체크포인트가 688.6 GB 라 RTX PRO 6000 8 장(768 GB)에 가중치는 들어가도 KV 를 둘
@@ -479,12 +477,10 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>PCIe node 의 61 층 MoE 는 token 마다 122 번 동기화합니다</h3>
           <p>
-            지금까지의 예는 NVLink 안의 70B dense 였습니다. 같은 셈을 NVLink 없이 PCIe 로만 이어진 8 장 node 와 MoE 로 옮기면 숫자가 바뀝니다.
-            Kimi K2.5 와 DeepSeek-R1 은 61 층이라 token 하나에 all-reduce 가 2 × 61 = 122 번 필요합니다.
+            지금까지의 예는 NVLink 안의 70B dense 였는데 같은 셈을 NVLink 없이 PCIe 로만 이어진 8 장 node 와 MoE 로 옮기면 숫자가 바뀝니다. Kimi K2.5 와 DeepSeek-R1 은 61 층이라 token 하나에 all-reduce 가 2 × 61 = 122 번 필요합니다.
           </p>
           <p>
-            PCIe 에는 NVSwitch 가 없습니다. collective 는 PCIe switch 나 CPU root complex 를 지나고, 두 GPU 가 서로 다른 CPU socket 아래 있으면 socket
-            사이 link 까지 탑니다. 한 번의 α 가 NVLink 보다 크고, 그 α 를 122 번 냅니다. 메시지가 작은 decode 에서는 이 latency 가 대역폭보다 먼저 막힙니다.
+            PCIe 에는 NVSwitch 가 없습니다. collective 는 PCIe switch 나 CPU root complex 를 지나고 두 GPU 가 서로 다른 CPU socket 아래 있으면 socket 사이 link 까지 탑니다. 한 번의 α 가 NVLink 보다 큰데 그 α 를 122 번 냅니다. 메시지가 작은 decode 에서는 이 latency 가 대역폭보다 먼저 막힙니다.
           </p>
           <p>
             현장 경험으로 남은 수치가 있습니다. RTX PRO 6000 8 장에서 K2.5 를 단일 스트림으로 돌리면 GPU 끼리 직접 쓰는 PCIe P2P 를 켰을 때 65 tok/s,
@@ -517,21 +513,16 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 위키는 반대 방향의 결과도 적습니다. 100 개 요청이 각각 40K token 씩 들어온 고동시성에서는 P2P 를 끈 쪽이 집계 약 900 tok/s, 켠 쪽이
-            약 600 tok/s 였습니다. 요청당으로 나누면 9 와 6 tok/s 입니다. 원인은 기록에 없지만, 단일 스트림 최적값과 고동시성 최적값이 반대라는 점은 남습니다.
+            같은 위키는 반대 방향의 결과도 적습니다. 100 개 요청이 각각 40K token 씩 들어온 고동시성에서는 P2P 를 끈 쪽이 집계 약 900 tok/s, 켠 쪽이 약 600 tok/s 였습니다. 요청당으로 나누면 9 와 6 tok/s 입니다. 원인은 기록에 없지만 단일 스트림 최적값과 고동시성 최적값이 반대라는 점은 남습니다.
           </p>
           <p>
-            CPU 플랫폼도 변수입니다. 같은 vLLM 설정의 단일 스트림이 Turin 시스템에서 65, Genoa 시스템에서 약 32 tok/s 로 보고됐습니다. 다만 두 시스템은 메모리
-            채널과 socket 연결까지 달라 통제된 A/B 가 아닙니다. CPU 세대만의 효과로 읽으면 안 됩니다.
+            CPU 플랫폼도 변수입니다. 같은 vLLM 설정의 단일 스트림이 Turin 시스템에서 65, Genoa 시스템에서 약 32 tok/s 로 보고됐습니다. 다만 두 시스템은 메모리 채널과 socket 연결까지 달라 통제된 A/B 가 아니므로 CPU 세대만의 효과로 읽으면 안 됩니다.
           </p>
           <p>
-            Kimi K2.5 같은 MLA model 은 KV 용량을 늘리려고 decode context parallel(DCP)을 켜는 경우가 많습니다. vLLM v0.32.0 코드에서 DCP 가 2 이상이면
-            MLA decode 는 query 를 all-gather 하고, rank 별 부분 attention 출력을 log-sum-exp 로 보정해 합칩니다. 층마다 collective 가 더 붙습니다.
+            Kimi K2.5 같은 MLA model 은 KV 용량을 늘리려고 decode context parallel(DCP)을 켜는 경우가 많습니다. vLLM v0.32.0 코드에서 DCP 가 2 이상이면 MLA decode 는 query 를 all-gather 하고 rank 별 부분 attention 출력을 log-sum-exp 로 보정해 합칩니다. 층마다 collective 가 더 붙습니다.
           </p>
           <p>
-            같은 FP8 KV 에서 DCP 1 은 79, DCP 8 은 65 tok/s 였습니다(현장 경험). GQA model 은 KV head 가 TP 로 나뉘므로 KV 용량 때문에 DCP 를 켤 일이 적습니다. 그 차이는{" "}
-            <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 DCP</Link> 글이, 구조별 비교는{" "}
-            <Link to="/cs/ai/serving-architecture-matrix">서빙 아키텍처 매트릭스</Link>가 다룹니다.
+            같은 FP8 KV 에서 DCP 1 은 79, DCP 8 은 65 tok/s 였습니다(현장 경험). GQA model 은 KV head 가 TP 로 나뉘므로 KV 용량 때문에 DCP 를 켤 일이 적습니다. 그 차이는{" "} <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 DCP</Link> 글에, 구조별 비교는{" "} <Link to="/cs/ai/serving-architecture-matrix">서빙 아키텍처 매트릭스</Link>에 있습니다.
           </p>
           <p>
             다음 읽기는 이 byte 와 μs 를 실제 node 와 link 위에 올려 TP·PP·DP degree 를 고르는{" "}

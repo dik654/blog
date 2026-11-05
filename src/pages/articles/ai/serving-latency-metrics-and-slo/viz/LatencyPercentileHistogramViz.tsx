@@ -77,6 +77,7 @@ export default function LatencyPercentileHistogramViz() {
       note="Nearest-rank 정의입니다. NumPy 기본 선형 보간의 P95는 1.4625초입니다. 각 표본과 개수를 고정한 설명용 가정이며 운영 측정값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

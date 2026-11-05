@@ -10,7 +10,7 @@ export default function LaborSceneFrame({ title, description, note, labels, note
 }) {
   const scenes = useAnimatedScenes(labels.length, 5600);
   return <VizFrame eyebrow="같은 사례를 단계별로 보기" title={title} description={description} note={note}>
-    <div data-viz-canvas tabIndex={0} role="group" aria-label={title} onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label={title} onKeyDown={scenes.onKeyDown}
       className="flex h-[39rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{labels[scenes.active]}</h4>

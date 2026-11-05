@@ -55,6 +55,7 @@ export default function PromiseFilterViz() {
       note="체를 넷으로 줄인 그림이며 순서도 설명을 위한 것입니다. 실제로는 어느 요건이 먼저 다투어지는지가 사건마다 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

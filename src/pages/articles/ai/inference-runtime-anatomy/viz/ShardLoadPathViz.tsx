@@ -54,6 +54,7 @@ export default function ShardLoadPathViz() {
       note="70B FP16 = 140 GB, TP 8, 2 GB/s·1 GB/s는 본문의 가정입니다. 실제 시간은 이 하한에 파일 열기·GPU 복사·초기화가 더해집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

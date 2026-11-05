@@ -61,6 +61,7 @@ export default function NettingViz() {
       note="단위는 억 원이고 여섯 건은 계산이 보이도록 고른 예시입니다. 실제 시스템의 상계 효율은 참가자 구성과 흐름에 따라 크게 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

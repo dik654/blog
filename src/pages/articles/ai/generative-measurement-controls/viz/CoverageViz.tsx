@@ -29,6 +29,7 @@ export default function CoverageViz() {
       note="1·2단계 수치는 서로 다른 편집에서 나온 값이라 직접 비교하면 안 됩니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

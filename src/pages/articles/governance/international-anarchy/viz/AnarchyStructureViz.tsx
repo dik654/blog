@@ -42,6 +42,7 @@ export default function AnarchyStructureViz() {
       note="해협과 수치는 설명용 가상 사례입니다. 국제 제도 자체가 없다는 뜻이 아니라, 국내 정부와 같은 자동적인 최종 집행자가 없다는 비교입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

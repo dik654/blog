@@ -26,7 +26,7 @@ export default function ServingMemoryAdmissionAndPreemptionViz() {
     description="40개 공간의 소유와 C의 상태를 함께 봅니다. 하한 3은 빈 공간 개수의 조건입니다."
     note="한 block16토큰·2MiB, 전용 공간, 동기식, 공유 없음. 모든 숫자는 가정입니다."
   >
-    <div data-viz-canvas role="group" tabIndex={0} aria-label="C의 수용부터 중단과 재개까지" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas role="group" tabIndex={0} aria-label="C의 수용부터 중단과 재개까지" onKeyDown={scenes.onKeyDown}
       className="flex h-auto min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex flex-none flex-col py-2">
         <div className="flex items-center justify-between gap-3">

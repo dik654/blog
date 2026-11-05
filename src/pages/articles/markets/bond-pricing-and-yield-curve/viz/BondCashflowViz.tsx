@@ -51,6 +51,7 @@ export default function BondCashflowViz() {
       note="단위는 액면을 100으로 둔 상대값이며, 이자 지급 시점이 정확히 1년 간격이라고 두었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

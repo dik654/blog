@@ -123,6 +123,7 @@ export default function StaticAddressReplayViz() {
       note="A·t1·t2·t3·Z·B는 실제 가상 주소를 대신하는 표지이고 값은 본문 사례입니다. 복사가 재생보다 먼저 끝난다고 가정합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

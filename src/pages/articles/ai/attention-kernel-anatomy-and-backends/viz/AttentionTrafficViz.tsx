@@ -174,7 +174,7 @@ export default function AttentionTrafficViz() {
       description="작은 칸 하나가 2바이트 값 하나입니다. 모든 장면은 여덟 위치와 성분 두 개라는 같은 사례를 사용합니다."
       note="칸이 차지한 저장 공간과 칸이 메모리 경계를 건넌 횟수를 구별합니다. 실제 cache와 보조 이동은 아래 계산 장부의 경계에서 따로 설명합니다."
     >
-      <div role="group" tabIndex={0} onKeyDown={scene.onKeyDown} aria-label="attention 배열 이동량 세 장면" className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <div id={scene.playbackId} role="group" tabIndex={0} onKeyDown={scene.onKeyDown} aria-label="attention 배열 이동량 세 장면" className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <div className="grid grid-cols-3 gap-2">
           {overview.map(([id, value, detail], index) => (
             <div key={id} className={`min-w-0 border-t-2 px-2 py-2 text-center ${scene.active === index ? "border-primary bg-primary/5" : "border-border"}`}>

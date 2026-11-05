@@ -30,6 +30,7 @@ export default function ScopeViz() {
       note="호스트 12개는 설명을 위한 축소 모형이며 실제 대역 규모는 훨씬 큽니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

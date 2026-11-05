@@ -25,7 +25,7 @@ export default function SensitivityShapeViz() {
   const scenes=useAnimatedScenes(SCENES.length);const dir=DIRECTIONS[scenes.active];
   return (
     <VizFrame eyebrow="방향과 변화율" title="같은 길이의 네 방향을 같은 점에서 비교합니다" description="가정 f=x²+3y의 (2,−1)에서 시작합니다. 회색 선은 실제 식으로 계산한 같은 함수값의 선이고 화살표는 길이 1인 방향입니다." note="화살표 길이는 방향 비교용입니다. 그만큼 실제로 움직였을 때의 유한 변화가 이 국소 변화율과 같다는 뜻은 아닙니다. 두 좌표축의 눈금 간격은 같습니다.">
-      <div data-viz-canvas tabIndex={0} role="group" aria-label="같은 길이의 입력 방향별 변화율" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="같은 길이의 입력 방향별 변화율" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <svg viewBox="0 0 320 260" className="mx-auto h-auto w-full max-w-[360px]" role="img" aria-label="제곱과 선형 항의 실제 등고선 및 단위 방향 화살표">
           <defs><marker id="sensitivity-unit-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="var(--primary)" strokeWidth="1" /></marker></defs>
           <path d="M50 20V220H268" fill="none" stroke="currentColor" strokeWidth="1" opacity=".35" />

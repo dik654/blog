@@ -113,6 +113,7 @@ export default function RuleFlushViz() {
       note="규칙과 주소는 Datadog 2023-03-08 사후 보고서의 AWS 노드 예시입니다. 109번 규칙의 역할 설명은 이 글의 해석입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

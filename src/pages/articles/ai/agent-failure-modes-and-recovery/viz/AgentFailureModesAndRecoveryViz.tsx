@@ -74,6 +74,7 @@ export default function AgentFailureModesAndRecoveryViz() {
       note="실제 taxonomy는 더 세분화되지만, 이 장면은 retry 대 escalation 판정 축 하나만 단순화해 보여줍니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

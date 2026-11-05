@@ -62,6 +62,7 @@ export default function PsiAverageViz() {
       note="(가정) 12스레드 폭주 1초 + 한가 3초가 반복되는 4 vCPU 서버입니다. 계수 1677/2048·1981/2048은 kernel/sched/psi.c의 EXP_10s·EXP_60s 값이고, 폭주 중에는 min(8 ÷ 4, 1) = 100%가 기다리는 것으로 봤습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

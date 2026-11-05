@@ -97,6 +97,7 @@ export default function CacheThrashViz() {
       note="적중률과 속도는 arXiv 2605.26297 Table II의 저자 보고값입니다. 네 번째 장면은 대응 방향을 보여 줄 뿐 측정값이 아닙니다."
     >
       <div
+        id={scene.playbackId}
         role="group"
         tabIndex={0}
         onKeyDown={scene.onKeyDown}

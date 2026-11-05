@@ -30,6 +30,7 @@ export default function RolloutViz() {
       note="단계 비율과 시간은 계산 구조를 보여 주기 위한 예시이며 권고값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

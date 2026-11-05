@@ -41,6 +41,7 @@ export default function CacheStateViz() {
       note="실제 GPU 할당에는 convolution state, block padding, prefix cache, tensor parallel, CUDA graph와 workspace가 더해집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

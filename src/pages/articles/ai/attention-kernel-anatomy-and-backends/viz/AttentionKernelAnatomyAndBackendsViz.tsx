@@ -6,7 +6,7 @@ const notes=["모든 위치를 허용하면 2×2짜리 16조각, 64칸입니다.
 export default function AttentionKernelAnatomyAndBackendsViz(){
  const scenes=useAnimatedScenes(3,6000);const active=scenes.active;
  return <VizFrame eyebrow="가정한 여덟 위치" title="허용한 칸과 계산할 조각을 구별합니다" description="점수는 모두 0, 가져올 값은 1부터 8까지입니다. 숫자 위치는 0부터 셉니다." note="2×2 조각과 3·3·2 분할은 설명용 배치이며 특정 GPU의 지원 모양이나 SM 배정이 아닙니다.">
- <div data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="같은 여덟 위치의 전체·인과·분할 계산" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div id={scenes.playbackId} data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="같은 여덟 위치의 전체·인과·분할 계산" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
  <div className="flex flex-none flex-col py-1"><h4 className="font-bold">{labels[active]}</h4>
  <svg viewBox="0 0 340 310" role="img" aria-label={active===2?"마지막 행의 세 부분 평균을 비중으로 합치기":"여덟 행과 여덟 열을 둘씩 묶은 조각 격자"} className="mt-1 h-auto max-h-72 w-full">
  {active<2?<>

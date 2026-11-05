@@ -54,6 +54,7 @@ export default function VerticalSumViz() {
       note="세 사람과 가로등 네 개로 줄인 예입니다. 각자의 값을 정확히 안다고 둔 계산이며, 그 전제는 다음 절에서 풉니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

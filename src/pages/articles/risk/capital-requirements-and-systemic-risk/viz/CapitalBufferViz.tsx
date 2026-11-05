@@ -48,6 +48,7 @@ export default function CapitalBufferViz() {
       note="자산 100·자본 8과 가중치 0·100%는 계산이 보이도록 고른 예시이며 특정 은행이나 규제 수준이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

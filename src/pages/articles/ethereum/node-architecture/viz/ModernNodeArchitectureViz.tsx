@@ -712,6 +712,7 @@ export function NodeRequestTraceViz() {
       className="[&>figcaption]:!mb-3 [&_p]:!leading-6"
     >
       <div
+        id={state.playbackId}
         data-viz="node-map-trace"
         data-viz-keyboard
         data-scene={scene.label}
@@ -865,6 +866,7 @@ export function EngineBoundaryViz() {
       className="!h-auto !max-h-none [&_p]:!leading-6"
     >
       <div
+        id={state.playbackId}
         ref={traceRef}
         data-viz="engine-boundary"
         data-viz-keyboard

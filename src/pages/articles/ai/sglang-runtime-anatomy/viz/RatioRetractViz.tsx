@@ -87,6 +87,7 @@ export default function RatioRetractViz() {
       note="기본값 0.7, 0.14, 600 step, 여유 20 step을 넣었습니다. 700번째 step의 retract와 네 요청의 출력 수는 설명용 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

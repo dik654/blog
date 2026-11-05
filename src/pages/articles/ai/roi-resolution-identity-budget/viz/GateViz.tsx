@@ -35,6 +35,7 @@ export default function GateViz() {
       note="네 항목은 이 기록이 정리한 점검 틀이며 표준 절차가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

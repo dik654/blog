@@ -16,7 +16,7 @@ export default function SecantTangentViz() {
   const line = `M${sx(1.8)} ${sy(9+slope*(1.8-3))} L${sx(5.2)} ${sy(9+slope*(5.2-3))}`;
   return (
     <VizFrame eyebrow="간격과 변화율" title="두 점을 잇는 선이 한 점의 접선에 가까워집니다" description="제곱 함수의 실제 좌표 (3,9)를 고정하고 옆 점을 움직입니다. 입력 간격은 가정 사례의 1, 0.1, 0.01입니다." note="가로축은 x, 세로축은 x²입니다. 두 축의 화면 배율은 다르므로 화면에서 보이는 각도로 수학적 기울기를 읽지 않습니다.">
-      <div data-viz-canvas tabIndex={0} role="group" aria-label="할선에서 접선으로 가는 미분 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="할선에서 접선으로 가는 미분 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <svg viewBox="0 0 360 250" className="mx-auto h-auto w-full max-w-[430px]" role="img" aria-label="실제 좌표로 그린 x 제곱 곡선과 할선 또는 접선">
           <path d="M36 22V212H336" fill="none" stroke="currentColor" strokeWidth="1" opacity=".4" />
           {[1,2,3,4,5].map(x=><text key={x} x={sx(x)} y="229" textAnchor="middle" fontSize="11" fill="currentColor">{x}</text>)}

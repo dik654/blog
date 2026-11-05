@@ -13,7 +13,7 @@ const values=[4,8,11,22];const x=(t:number)=>55+t*13;
 export default function CudaGraphTimelineViz(){
  const scenes=useAnimatedScenes(3,6000);const s=scenes.active;
  return <VizFrame eyebrow="같은 네 작업 · 가정" title="답은 22로 같고 끝나는 시각이 달라집니다" description="입력 3에 +1, ×2, +3, ×2를 차례로 적용합니다. 전달하는 쪽과 계산하는 쪽은 동시에 일할 수 있습니다." note="단일 실행열의 설명용 시간표입니다. 실제 CPU·GPU 호출을 측정한 결과가 아닙니다.">
- <div data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="네 작업의 전달과 완료 시간표" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div id={scenes.playbackId} data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="네 작업의 전달과 완료 시간표" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
  <div className="flex flex-none flex-col py-1"><h4 className="font-bold">{labels[s]}</h4>
  <svg viewBox="0 0 340 245" role="img" aria-label={labels[s]+"의 시간축과 결과"} className="mt-1 h-auto max-h-72 w-full">
  <defs><marker id="graph-time-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8" className="fill-foreground"/></marker></defs>

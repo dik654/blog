@@ -59,6 +59,7 @@ export default function CacheAwareOrderViz() {
       note="15절의 별도 사례입니다. 공간은 한 요청의 8자리만 담고 한 번에 하나씩 처리하며 생성 기록은 세지 않는다고 가정합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

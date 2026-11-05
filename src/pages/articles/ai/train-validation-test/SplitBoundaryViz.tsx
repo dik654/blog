@@ -19,6 +19,7 @@ export default function SplitBoundaryViz() {
       note="60·22·18은 역할을 보여주는 예시 비율입니다. 실제 비율과 group·time 경계는 배포 단위에 맞춰야 합니다."
     >
       <div
+        id={scenes.playbackId}
         tabIndex={0}
         role="group"
         aria-label="Train validation test split 애니메이션"

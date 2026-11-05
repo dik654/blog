@@ -34,6 +34,7 @@ export default function FreezeViz() {
       note="실제 비율은 모델과 옵티마이저, 실행 조건에 따라 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

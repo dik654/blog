@@ -32,6 +32,7 @@ export default function XqaGroupViz() {
       note="500 token·head 128·FP16과 묶음 8은 설명용 가정입니다. 실제 kernel은 KV를 여러 tile로 나눠 반복해 읽습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

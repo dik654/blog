@@ -73,6 +73,7 @@ export default function RejectionResampleViz() {
       note="숫자는 설명용 예시입니다. 실제 runtime은 같은 판정을 batch 전체에 대해 vectorize하고, KV cache commit 지점을 rejection point에 맞춥니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

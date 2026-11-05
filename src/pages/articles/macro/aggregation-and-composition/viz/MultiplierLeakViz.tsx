@@ -54,6 +54,7 @@ export default function MultiplierLeakViz() {
       note="값과 이자율이 움직이지 않고 다시 쓰는 몫이 소득 구간마다 같다고 둔 계산입니다. 실제로는 둘 다 움직입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

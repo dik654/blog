@@ -57,6 +57,7 @@ function PatternViz({ id, eyebrow, title, description, nodes, edgeLabels, sceneN
   return (
     <VizFrame eyebrow={eyebrow} title={title} description={description} note={note}>
       <div
+        id={controls.playbackId}
         data-viz={id}
         tabIndex={0}
         role="group"

@@ -38,6 +38,7 @@ export default function HintViz() {
       note="크기만 재는 값이라 그린 대로 나왔는지는 그림으로 따로 확인해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

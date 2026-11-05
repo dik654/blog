@@ -27,6 +27,7 @@ export default function ScopeViz() {
       note="어댑터를 어느 모듈에 붙이느냐에 따라 살아 있어야 하는 경로가 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

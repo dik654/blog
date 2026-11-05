@@ -40,6 +40,7 @@ export default function MonopolyViz() {
       note="실제 국가 형성은 지역과 시대마다 경로가 다르며, 이 그림은 이어지는 설명에 필요한 구조만 그렸습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

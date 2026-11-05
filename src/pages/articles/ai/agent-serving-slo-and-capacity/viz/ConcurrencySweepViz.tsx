@@ -49,6 +49,7 @@ export default function ConcurrencySweepViz() {
       note="현장 경험 수치(rtx6kpro 위키, K2.6, DCP8+MTP3, 출력 길이 강제)이며 실제 에이전트 트래픽 측정이 아닙니다."
     >
       <div
+        id={scene.playbackId}
         role="group"
         tabIndex={0}
         onKeyDown={scene.onKeyDown}

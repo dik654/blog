@@ -73,6 +73,7 @@ export default function ResidualMassViz() {
       note="한 위치만 떼어 본 두 후보 예시입니다. 기준 p=(.7, .3), 초안 q=(.4, .6)."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

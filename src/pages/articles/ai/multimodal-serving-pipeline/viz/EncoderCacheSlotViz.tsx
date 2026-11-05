@@ -129,6 +129,7 @@ export default function EncoderCacheSlotViz() {
       note="max_num_batched_tokens 8,192와 사진당 1,369는 본문의 가정입니다. 마지막 장면의 참조 해제 시점도 설명용 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

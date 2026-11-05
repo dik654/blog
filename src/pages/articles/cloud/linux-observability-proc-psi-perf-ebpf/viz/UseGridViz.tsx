@@ -114,6 +114,7 @@ export default function UseGridViz() {
       note="(가정) 4 vCPU 서버에서 12스레드 배치 작업이 4초마다 1초씩 폭주하고 나머지 시간엔 웹 앱이 20%를 쓰는 상황입니다. 0.25 × 100% + 0.75 × 20% = 40% 사용률, PSI cpu some ≈ 25%입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

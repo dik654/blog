@@ -61,6 +61,7 @@ export default function LorenzCurveViz() {
       note="숫자는 Lorenz(1905) 218쪽이 든 반례 그대로입니다. 열 사람에게 100달러를 나눈 두 경우입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

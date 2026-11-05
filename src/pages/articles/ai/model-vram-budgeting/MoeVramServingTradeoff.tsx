@@ -30,10 +30,10 @@ export default function MoeVramServingTradeoff() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h2>MoE decode가 active parameter만 읽는 것은 batch 1일 때입니다</h2>
         <p className="leading-8">
-          Decode 한 step이 다시 읽는 weight bytes는 dense에서는 total parameter에 비례합니다. MoE에서 요청이 하나뿐이면 router가 고른 active parameter에 비례합니다. Active parameter가 작을수록 이 read량이 줄어 단일 스트림 decode가 가벼워집니다.
+          Decode 한 step이 다시 읽는 weight bytes는 dense에서는 total parameter에 비례하지만 MoE에서 요청이 하나뿐이면 router가 고른 active parameter에 비례합니다. Active parameter가 작을수록 이 read량이 줄어 단일 스트림 decode가 가벼워집니다.
         </p>
         <p className="leading-8">
-          조건이 하나 붙습니다. 여러 요청을 한 step에 묶으면 token마다 고른 expert가 달라서, 그 층이 읽어야 하는 expert는 합집합으로 늘어납니다. 아래에서 먼저 batch 1의 장부를 세고, 다음에 batch를 키웁니다.
+          다만 여러 요청을 한 step에 묶으면 token마다 고른 expert가 달라서 그 층이 읽어야 하는 expert는 합집합으로 늘어납니다. 아래에서 먼저 batch 1의 장부를 세고 다음에 batch를 키웁니다.
         </p>
       </div>
 
@@ -57,7 +57,7 @@ export default function MoeVramServingTradeoff() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          이 byte를 GPU 여러 장이 나눠 읽으면 한 장의 몫은 TP degree만큼 줄어듭니다. 그 몫을 GPU 한 장의 memory 대역폭으로 나누면 token 하나를 내는 데 필요한 최소 시간이 나옵니다. 그 역수가 단일 스트림 속도의 상한입니다.
+          이 byte를 GPU 여러 장이 나눠 읽으면 한 장의 몫은 TP degree만큼 줄어듭니다. 그 몫을 GPU 한 장의 memory 대역폭으로 나누면 token 하나를 내는 데 필요한 최소 시간이 나오고 그 역수가 단일 스트림 속도의 상한입니다.
         </p>
       </div>
 
@@ -130,11 +130,10 @@ export default function MoeVramServingTradeoff() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          마지막 caveat가 아키텍처에 따라 달라지는 부분입니다. GQA는 KV head가 TP rank로 나뉘지만 MLA의 압축 KV는 head가 하나라 rank마다 통째로 복제됩니다. 그 차이와 decode context parallel은{" "}
-          <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제 글</Link>이 다룹니다.
+          마지막 caveat가 아키텍처에 따라 달라지는 부분입니다. GQA는 KV head가 TP rank로 나뉘지만 MLA의 압축 KV는 head가 하나라 rank마다 통째로 복제됩니다. 그 차이와 decode context parallel은{" "} <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제 글</Link>에 있습니다.
         </p>
         <p className="leading-8">
-          이제 batch를 키웁니다. Token 16개가 한 step에 들어오면 각자 8개를 고르고, 겹치지 않은 선택만큼 그 층이 읽는 expert가 늘어납니다. 384개 중 8개를 균등하게 고른다고 두면 어떤 expert가 한 번도 안 뽑힐 확률은 (1−8/384)^B입니다.
+          이제 batch를 키웁니다. Token 16개가 한 step에 들어오면 각자 8개를 고르고 겹치지 않은 선택만큼 그 층이 읽는 expert가 늘어납니다. 384개 중 8개를 균등하게 고른다고 두면 어떤 expert가 한 번도 안 뽑힐 확률은 (1−8/384)^B입니다.
         </p>
       </div>
 
@@ -160,14 +159,13 @@ export default function MoeVramServingTradeoff() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          그래서 &quot;1T MoE가 32B처럼 decode한다&quot;는 말은 단일 스트림 지연에만 맞습니다. 동시성이 높아지면 step당 읽기는 거의 1T 쪽이고, 대신 그 읽기를 B개 token이 나눠 냅니다. 처리량을 정하는 것은 결국 전체 weight 읽기와 expert GEMM이 얼마나 꽉 차는지입니다.
+          그래서 &quot;1T MoE가 32B처럼 decode한다&quot;는 말은 단일 스트림 지연에만 맞습니다. 동시성이 높아지면 step당 읽기는 거의 1T 쪽이고 대신 그 읽기를 B개 token이 나눠 냅니다. 처리량은 결국 전체 weight 읽기와 expert GEMM이 얼마나 꽉 차는지로 정해집니다.
         </p>
         <p className="leading-8">
-          Dense model은 이 전환이 없습니다. batch와 무관하게 step마다 전체를 읽고 batch가 커질수록 token당 몫만 줄어듭니다. MoE는 batch 1에서 dense보다 훨씬 가볍게 시작해 batch가 커질수록 dense와 같은 장부로 수렴합니다.
+          이 전환이 없는 dense model은 batch와 무관하게 step마다 전체를 읽고 batch가 커질수록 token당 몫만 줄어듭니다. MoE는 batch 1에서 dense보다 훨씬 가볍게 시작해 batch가 커질수록 dense와 같은 장부로 수렴합니다.
         </p>
         <p className="leading-8">
-          그래서 consumer·workstation GPU에서는 active/total 비율만으로는 부족하고, 몇 개 요청을 동시에 받을지까지 정해야 병목이 보입니다. Expert를 GPU에 나누는{" "}
-          <Link to="/cs/ai/expert-parallelism-moe-systems#limits">expert parallelism</Link>이 큰 batch에서만 이득인 이유도 같은 곳에 있습니다.
+          그래서 consumer·workstation GPU에서는 active/total 비율만으로는 부족하고 몇 개 요청을 동시에 받을지까지 정해야 병목이 보입니다. Expert를 GPU에 나누는{" "} <Link to="/cs/ai/expert-parallelism-moe-systems#limits">expert parallelism</Link>이 큰 batch에서만 이득인 이유도 같은 곳에 있습니다.
         </p>
       </div>
 

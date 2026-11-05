@@ -53,7 +53,7 @@ export default function CapacityGridViz() {
       eyebrow="노드가 담는 token 수"
       title="byte를 절반으로 줄인 효과와 8장에 나눈 효과는 곱해집니다"
       description="막대는 노드 하나가 담는 token 수이고, 위 눈금 하나가 200,000 token 대화 하나입니다. 네 막대 모두 커뮤니티 측정값입니다."
-      note="Kimi K2.5 INT4, 8×RTX PRO 6000, vLLM TRITON_MLA 기준 rtx6kpro 위키 값(현장 경험)입니다. BF16 행은 gpu-util 설정이 적혀 있지 않습니다."
+      note="Kimi K2.5 INT4, 8×RTX PRO 6000, vLLM TRITON_MLA 기준 rtx6kpro 위키 값(현장 경험)입니다. BF16 행은 GPU 메모리 사용 상한(gpu-util) 설정이 적혀 있지 않습니다."
     >
       <div
         id={scenes.playbackId}

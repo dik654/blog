@@ -48,6 +48,7 @@ export default function AnycastViz() {
       note="캐치먼트 폭은 구조를 보여 주기 위한 예시이며 실제 경로 분포가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

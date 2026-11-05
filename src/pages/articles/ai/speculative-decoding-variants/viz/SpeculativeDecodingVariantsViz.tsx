@@ -55,6 +55,7 @@ export default function SpeculativeDecodingVariantsViz() {
       note="실제 tree 는 수십 node 이고 prefix 의 causal mask 가 앞에 붙습니다. 그림은 tree 부분만 보이고 root 는 마지막 확정 token 입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -31,6 +31,7 @@ export default function PoolLayoutViz() {
       note="80층·KV head 8·head 128·FP16은 설명용 모델 가정입니다. 층 1~4와 80만 그리고 사이는 줄였습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

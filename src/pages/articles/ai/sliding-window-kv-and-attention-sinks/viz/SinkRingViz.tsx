@@ -40,6 +40,7 @@ export default function SinkRingViz() {
       note="칸 8개와 sink 4개는 논문 Figure 4의 작은 예를 따랐습니다. 실제 실험은 4 + 1020, 4 + 2044처럼 수천 칸입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -39,6 +39,7 @@ export default function GateViz() {
       note="강도 구분은 예시이며 실제 값은 각 경로의 피해 비용에 따라 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

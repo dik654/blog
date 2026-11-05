@@ -37,6 +37,7 @@ export default function BalancerViz() {
       note="연결 9개와 서버 3대는 계산이 정확히 맞아떨어지도록 고른 축소 모형입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

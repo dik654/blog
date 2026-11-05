@@ -16,7 +16,7 @@ export default function MarkupViz() {
   return <VizFrame eyebrow="같은 계산의 조건 변경" title="수요·비용·생산 한도를 따로 바꿔 비교한다"
     description="마크업은 가격을 분모로 계산합니다. 최적점이 움직이면 그 점의 탄력성도 달라질 수 있습니다."
     note="(가정) 선형 수요·단일 상품·동일 가격입니다. 마지막 잉여 계산은 동일한 기본 수요와 비용을 유지합니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="수요 비용 한도와 잉여의 비교" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="수요 비용 한도와 잉여의 비교" onKeyDown={scenes.onKeyDown}
       className="flex h-[37rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{SCENES[s]}</h4>

@@ -54,6 +54,7 @@ export default function BreachIncentiveViz() {
       note={`상대가 이행으로 얻는 이익을 ${V}으로 고정하고 배상액만 바꾼 예입니다. 사정 변경이 사후에 드러난다고 두었고 소송 비용은 넣지 않았습니다.`}
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

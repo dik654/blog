@@ -60,6 +60,7 @@ export default function RecomputeVsSwapViz() {
       note="block 수와 6.44 ms·1.678 ms는 8·9·17절의 설명용 가정과 근사입니다. 실측이 아니며 attention 길이 항과 전송 준비 비용은 빠져 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

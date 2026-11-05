@@ -42,6 +42,7 @@ export default function RepresentationDepthViz() {
       note="그림의 edge·part 이름은 직관을 위한 예입니다. 실제 hidden coordinate 하나가 사람 개념 하나와 정확히 대응한다는 뜻은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         tabIndex={0}
         role="group"
         aria-label="Representation learning 단계 애니메이션"

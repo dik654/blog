@@ -52,6 +52,7 @@ export default function MarketLadderViz() {
       note="사는 사람과 파는 사람이 여섯씩이고 각자 한 개만 거래하는 경우로 줄인 예입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -29,6 +29,7 @@ export default function CoolingTypeViz() {
       note="실제 기류는 섀시 팬과 배플 설계에 따라 크게 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

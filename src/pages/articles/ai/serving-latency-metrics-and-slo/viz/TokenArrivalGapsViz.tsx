@@ -82,6 +82,7 @@ export default function TokenArrivalGapsViz() {
       note="도착 시각은 본문 3절의 설명용 가정입니다. 묶음 수신은 10절의 1·1.040·1.327초 사례와 같습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

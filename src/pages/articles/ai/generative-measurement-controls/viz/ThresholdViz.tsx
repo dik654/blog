@@ -41,6 +41,7 @@ export default function ThresholdViz() {
       note="점은 2026-09-11 실측값이며 한 장비·한 모델 조합에서 얻은 45쌍입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -46,6 +46,7 @@ export default function MirrorViz() {
       note="관절 좌표 표현의 성질이며 다른 자세 표현에서는 다를 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -31,6 +31,7 @@ export default function ThreeFiltersViz() {
       note="지워진 내용과 아시리아 사본의 세 조항, 번역하지 않은 700행은 Johns 영역본의 편집자 주와 머리말에 적힌 것입니다. 세 겹으로 정리한 것은 이 글입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

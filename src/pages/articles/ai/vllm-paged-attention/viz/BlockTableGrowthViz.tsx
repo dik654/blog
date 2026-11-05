@@ -47,6 +47,7 @@ export default function BlockTableGrowthViz() {
       note="block 크기 16과 번호 7·2·9·5는 7절의 설명용 가정입니다. 회색 block은 다른 요청이 쓰거나 비어 있는 block입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

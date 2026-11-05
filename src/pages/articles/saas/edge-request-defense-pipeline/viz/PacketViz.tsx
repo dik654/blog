@@ -28,6 +28,7 @@ export default function PacketViz() {
       note="구성요소 이름과 배치는 사업자마다 다르며 여기서는 공개된 구조만 정리했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

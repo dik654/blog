@@ -44,6 +44,7 @@ export default function LamaViz() {
       note="이 그래프에는 오토인코더가 없어 마스크 밖 수치에 차감할 바닥값이 없습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

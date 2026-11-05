@@ -30,6 +30,7 @@ export default function SeismicViz() {
       note="요구 등급과 인정되는 고정 방식은 지역 건축 기준과 건물 설계에 따릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

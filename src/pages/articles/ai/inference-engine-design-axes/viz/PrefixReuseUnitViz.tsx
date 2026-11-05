@@ -67,6 +67,7 @@ export default function PrefixReuseUnitViz() {
       note="1,000 token과 block 크기 16·32는 본문의 가정이며 첫 요청의 KV가 아직 지워지지 않았다고 둡니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

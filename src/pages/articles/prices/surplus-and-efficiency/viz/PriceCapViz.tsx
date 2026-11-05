@@ -76,6 +76,7 @@ export default function PriceCapViz() {
       note="드는 값이 상한을 넘는 쪽이 만들지 않는다고 둔 계산이며, 실제로는 품질을 낮추거나 다른 조건을 붙이는 길이 함께 열립니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

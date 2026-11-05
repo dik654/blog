@@ -25,7 +25,7 @@ function Scene({
   notes: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 3200);
+  const controls = useAnimatedScenes(labels.length, 3200, { playbackId: id });
   return (
     <VizFrame title={title} description={description} className="my-8">
       <div

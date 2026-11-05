@@ -53,6 +53,7 @@ export default function PolicyRateViz() {
       note="금리 경로는 구조를 보이기 위한 예시이며 특정 기간의 실제 시계열이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

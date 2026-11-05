@@ -134,7 +134,7 @@ export default function AttentionScaleViz() {
       description="길이 4,096, head 폭 128, 값마다 2바이트인 한 attention head부터 시작합니다."
       note="사각형의 면적과 칸 수는 관계를 보여 주기 위해 축소했습니다. 화면의 픽셀 면적을 실제 byte 비율로 읽지 않습니다."
     >
-      <div role="group" tabIndex={0} onKeyDown={scene.onKeyDown} aria-label="큰 attention 계산의 prefill decode GQA 대역폭 장면" className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <div id={scene.playbackId} role="group" tabIndex={0} onKeyDown={scene.onKeyDown} aria-label="큰 attention 계산의 prefill decode GQA 대역폭 장면" className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {["정사각형 계산", "긴 K·V 읽기", "여덟 Q가 공유", "이동 시간 하한"].map((item, index) => (
             <div key={item} className={`border-t-2 px-2 py-2 text-center text-xs font-bold leading-5 ${scene.active === index ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground"}`}>{item}</div>

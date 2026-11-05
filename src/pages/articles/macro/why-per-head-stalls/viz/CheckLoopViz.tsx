@@ -44,6 +44,7 @@ export default function CheckLoopViz() {
       note="고리 자체는 Malthus(1798)의 구조이고, 마지막 장면의 판정은 이후 두 세기의 결과를 이 글이 그 구조에 대어 본 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

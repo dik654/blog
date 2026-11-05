@@ -46,6 +46,7 @@ export default function FourNumbersViz() {
       note="네 숫자는 Ricardo 『On the Principles of Political Economy, and Taxation』(1817) 초판 6장(3판 기준 7장) 「On Foreign Trade」의 예시 그대로입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

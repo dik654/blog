@@ -33,6 +33,7 @@ export default function TokenViz() {
       note="축소 배율과 패치 크기는 구현마다 달라 여기 값은 관계를 보여 주는 예시입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

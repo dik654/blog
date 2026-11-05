@@ -83,12 +83,10 @@ export default function ParallelismStrategyAndPlacementArticle() {
             switch 아래 두 장과 CPU socket 을 넘는 두 장은 경로가 달라 α 와 B 도 다릅니다.
           </p>
           <p>
-            Node 사이는 InfiniBand 대신 RoCE 를 쓰기도 합니다. Ethernet 위에서 RDMA 를 하는 방식이라 400 Gb/s 면 방향당 대역폭은 InfiniBand 와 같은 급이지만,
-            손실 없는 전송 설정과 GPU 메모리를 NIC 이 직접 읽는 GPUDirect RDMA 가 실제로 동작하는지를 node 마다 따로 확인해야 합니다.
+            Node 사이는 InfiniBand 대신 RoCE 를 쓰기도 합니다. Ethernet 위에서 RDMA 를 하는 방식이라 400 Gb/s 면 방향당 대역폭은 InfiniBand 와 같은 급이지만 손실 없는 전송 설정과 GPU 메모리를 NIC 이 직접 읽는 GPUDirect RDMA 가 실제로 동작하는지를 node 마다 따로 확인해야 합니다.
           </p>
           <p>
-            PCIe node 에서는 node 안 TP 조차 NVSwitch 만큼 싸지 않습니다. 그래서 replica 하나를 node 하나에 맞추고 node 를 늘려 replica 를 늘리는 쪽이 기본값이
-            됩니다. node 사이에 layer 마다 통신하는 축을 두지 않으면 비싼 fabric 은 필요가 증명될 때까지 미룰 수 있습니다.
+            PCIe node 에서는 node 안 TP 조차 NVSwitch 만큼 싸지 않아서 replica 하나를 node 하나에 맞추고 node 를 늘려 replica 를 늘리는 쪽이 기본값이 됩니다. node 사이에 layer 마다 통신하는 축을 두지 않으면 비싼 fabric 은 필요가 증명될 때까지 미룰 수 있습니다.
           </p>
         </div>
         <TermBreakdown
@@ -312,12 +310,10 @@ export default function ParallelismStrategyAndPlacementArticle() {
             구성이었습니다. 단일 스트림은 P2P 를 켜면 65, 끄면 44 tok/s 였고 node 하나에 model 이 들어갔습니다.
           </p>
           <p>
-            &quot;PP 가 TP 만큼 빠르다&quot;는 근거로 인용되는 MLX 결과는 batch 1 이었습니다. PP 는 한 사용자를 빠르게 하지 않으므로, PCIe node 에서 TP 와
-            PP 중 무엇이 나은지는 동시성을 걸고 TP 8 과 TP 4 × PP 2 를 같은 부하로 재서 정합니다.
+            &quot;PP 가 TP 만큼 빠르다&quot;는 근거로 인용되는 MLX 결과는 batch 1 이었습니다. PP 는 한 사용자를 빠르게 하지 않으므로 PCIe node 에서 TP 와 PP 중 무엇이 나은지는 동시성을 걸고 TP 8 과 TP 4 × PP 2 를 같은 부하로 재서 정합니다.
           </p>
           <p>
-            Model 구조도 갈림길입니다. MLA 의 압축 KV 는 TP rank 마다 복제되므로 KV 예산 K 를 TP 로 나눌 수 없습니다. 그래서 MLA model 은 DCP 를 함께 켜
-            KV 를 sequence 축으로 나눕니다. GQA model 은 KV head 수까지는 TP 로 KV 가 나뉩니다.
+            Model 구조도 갈림길입니다. MLA 의 압축 KV 는 TP rank 마다 복제되어 KV 예산 K 를 TP 로 나눌 수 없으므로 MLA model 은 DCP 를 함께 켜 KV 를 sequence 축으로 나눕니다. GQA model 은 KV head 수까지는 TP 로 KV 가 나뉩니다.
           </p>
           <p>
             아래 pseudocode 는 vLLM 권고에 memory 와 통신 비율 검산, 그리고 이 PCIe 분기를 붙인 것입니다.

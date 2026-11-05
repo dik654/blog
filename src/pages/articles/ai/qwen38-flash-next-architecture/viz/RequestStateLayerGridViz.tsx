@@ -125,6 +125,7 @@ export default function RequestStateLayerGridViz() {
       note="BF16 K/V·indexer와 FP32 선형 상태의 논리 크기입니다. 블록 할당·병렬 분할·실행 버퍼는 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

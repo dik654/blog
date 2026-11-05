@@ -49,6 +49,7 @@ export default function ImageTokenViz() {
       note="Qwen2.5-VL-7B-Instruct의 공개 설정(patch 14, merge 2, 최소 3,136·최대 12,845,056 픽셀)으로 계산했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

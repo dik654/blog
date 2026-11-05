@@ -18,7 +18,7 @@ export default function DifferentiationViz() {
   return <VizFrame eyebrow="같은 부품 90개" title="세 곳의 주문을 모으면 설비 비용을 나눌 수 있다"
     description="세 고객의 30개씩을 한 생산자가 처리하는 경우를 비교합니다. 생산량과 부품 규격을 바꾸지 않습니다."
     note="(가정) 세 곳의 일정이 맞고 함께 생산할 여력이 있습니다. 운송·검사·계약 비용은 뒤 장면에서 별도로 더합니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="세 업체의 개별 생산과 주문 합산 비교" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="세 업체의 개별 생산과 주문 합산 비교" onKeyDown={scenes.onKeyDown}
       className="flex h-[37rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{s + 1}. {SCENES[s]}</h4>

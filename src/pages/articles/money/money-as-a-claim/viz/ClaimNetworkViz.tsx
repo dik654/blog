@@ -61,6 +61,7 @@ export default function ClaimNetworkViz() {
       note="실제 제도에는 보험·연금·비은행 금융기관 등 더 많은 주체가 있으며, 이 그림은 이어지는 글들이 다루는 범위만 그렸습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

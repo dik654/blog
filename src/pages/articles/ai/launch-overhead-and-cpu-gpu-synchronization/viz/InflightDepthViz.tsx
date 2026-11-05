@@ -86,6 +86,7 @@ export default function InflightDepthViz() {
       note="D는 CUDA driver의 queue 크기가 아니라 본문에서 가정한 프로그램의 제한입니다. 시간은 본문 graph 사례의 가정값입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

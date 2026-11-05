@@ -16,6 +16,7 @@ export default function TrainingLoopViz() {
       note="Batch는 여러 example을 계산상 묶는 축입니다. Batch의 row마다 서로 다른 model을 쓰는 것이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         tabIndex={0}
         role="group"
         aria-label="Supervised training loop 애니메이션"

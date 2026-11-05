@@ -57,6 +57,7 @@ export default function AdapterLedgerViz() {
       note="Llama 3 8B와 같은 모양(hidden 4,096, 32층, KV head 8)과 q·k·v·o에만 rank 16을 붙인 경우를 가정했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

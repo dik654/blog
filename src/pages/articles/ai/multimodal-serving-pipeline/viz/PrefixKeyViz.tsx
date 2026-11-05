@@ -58,6 +58,7 @@ export default function PrefixKeyViz() {
       note="텍스트 15, 사진 시작 1, 사진 1,369, 사진 끝 1, 질문 20으로 둔 1,406 token 요청입니다(가정)."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

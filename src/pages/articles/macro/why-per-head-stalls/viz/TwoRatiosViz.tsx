@@ -59,6 +59,7 @@ export default function TwoRatiosViz() {
       note="숫자는 Malthus(1798) 초판 21~26쪽의 예시 그대로입니다. 단위는 그가 쓴 100만 명입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

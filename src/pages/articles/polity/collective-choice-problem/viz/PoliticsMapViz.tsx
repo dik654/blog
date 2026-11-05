@@ -51,6 +51,7 @@ export default function PoliticsMapViz() {
       note="실제 정치학은 이 줄기 밖에도 많은 주제를 다루며, 이 그림은 이어지는 글들이 맡는 범위만 그렸습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

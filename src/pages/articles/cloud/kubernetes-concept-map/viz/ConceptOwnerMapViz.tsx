@@ -200,6 +200,7 @@ export default function ConceptOwnerMapViz() {
       note="수치는 동작을 설명하기 위한 가정입니다. 각 단계의 기본값과 소스 근거는 연결된 글에서 확인합니다."
     >
       <div
+        id={scenes.playbackId}
         ref={canvasRef}
         data-viz-canvas
         tabIndex={0}

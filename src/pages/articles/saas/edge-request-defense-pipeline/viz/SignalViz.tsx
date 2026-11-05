@@ -29,6 +29,7 @@ export default function SignalViz() {
       note="점수 분포 곡선은 개념도이며 특정 서비스의 실제 분포가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

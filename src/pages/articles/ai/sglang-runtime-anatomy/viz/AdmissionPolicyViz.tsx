@@ -143,6 +143,7 @@ export default function AdmissionPolicyViz() {
       note="입력 200, 출력 상한 1,000, page 1칸, prefix 재사용 없음의 설명용 가정입니다. block 반올림은 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

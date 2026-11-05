@@ -39,6 +39,7 @@ export default function GateViz() {
       note="시간은 한 장비의 실측이며 같은 시드 재실행은 캐시가 답하므로 제외했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

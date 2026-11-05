@@ -38,6 +38,7 @@ export default function ReplayBufferForgettingViz() {
       note="숫자는 buffer 크기와 forgetting의 관계를 보여주기 위한 예시 값이며 특정 논문의 실측치가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

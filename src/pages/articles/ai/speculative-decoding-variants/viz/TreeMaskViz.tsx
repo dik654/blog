@@ -61,6 +61,7 @@ export default function TreeMaskViz() {
       note="처음 네 자리의 기록은 이미 있다고 두고 이번 회차의 일곱 자리만 그렸습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -65,6 +65,7 @@ export default function ClaimTraceViz() {
       note="여러 지적 가운데 하나의 주장을 골라 라운드별로 이어 붙인 것입니다. 나머지 지적도 대체로 같은 모양으로 이어졌습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

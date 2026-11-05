@@ -9,7 +9,7 @@ const trace = [
 ] as const;
 export function EvmStepTraceViz() {
  const state=useAnimatedScenes(trace.length);const current=trace[state.active];
- return <div data-viz="evm-literal-step" data-viz-keyboard tabIndex={0} onKeyDown={state.onKeyDown} className="not-prose flex min-w-0 flex-col rounded-lg border border-border p-4 sm:p-6">
+ return <div id={state.playbackId} data-viz="evm-literal-step" data-viz-keyboard tabIndex={0} onKeyDown={state.onKeyDown} className="not-prose flex min-w-0 flex-col rounded-lg border border-border p-4 sm:p-6">
  <p className="mb-4 font-semibold">같은 프로그램의 pc·스택·남은 예산</p>
  <div data-viz-canvas className="min-h-[23rem] min-w-0 overflow-auto">
  <div className="min-w-[280px]"><table className="w-full text-left text-xs sm:text-sm"><thead><tr className="border-b border-border"><th className="p-2">실행한 명령</th><th className="p-2">다음 pc</th><th className="p-2">stack</th><th className="p-2">gas</th></tr></thead><tbody>{trace.map((row,i)=><tr key={row.label} aria-current={i===state.active?"step":undefined} className={`border-b border-border ${i===state.active?"bg-primary/10 font-semibold":""}`}><td className="p-2">{i===state.active?"→ ":""}{row.command}</td><td className="p-2 font-mono">{row.pc}</td><td className="p-2 font-mono">{row.stack}</td><td className="p-2 font-mono">{row.gas}</td></tr>)}</tbody></table></div>

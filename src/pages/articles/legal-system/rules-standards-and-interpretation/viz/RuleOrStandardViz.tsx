@@ -84,6 +84,7 @@ export default function RuleOrStandardViz() {
       note={`제정 비용 ${C_RULE}, 사건당 판단 비용 ${C_STANDARD}, 기본 어긋남 손해 ${MISS_LOW}을 둔 가상 단위입니다. 실제 금액이나 통계가 아닙니다.`}
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

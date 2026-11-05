@@ -39,6 +39,7 @@ export default function FloorViz() {
       note="실측값이며 단위는 /255, 소스는 표가 실제로 쓴 전신 프레임입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -40,6 +40,7 @@ export default function MoneyAsAClaimViz() {
       note="실제 화폐의 등장 과정은 나라마다 다르며, 이 그림은 기능을 설명하기 위한 단순화입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

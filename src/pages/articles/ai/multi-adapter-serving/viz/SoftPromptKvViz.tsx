@@ -62,6 +62,7 @@ export default function SoftPromptKvViz() {
       note="한 token의 KV 128 KiB는 32층·KV head 8·head 128·BF16 가정에서 나옵니다. text 입력의 KV는 두 방식에 같으므로 빼고 셉니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

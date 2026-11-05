@@ -75,6 +75,7 @@ export default function IncidentTimelineViz() {
       note="날짜·시각은 Datadog 사후 보고서 두 편(2023-05-16, 2023-05-24)과 Ubuntu USN-5928-1에서 옮겼습니다. 시각은 모두 UTC입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

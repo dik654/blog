@@ -72,6 +72,7 @@ export default function InferenceEngineDesignAxesViz() {
       note="pool 4,096과 요청 모양은 설명용 가정입니다. SGLang은 첫 판정만 그렸고 llama.cpp는 unified KV를 끈 경우입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

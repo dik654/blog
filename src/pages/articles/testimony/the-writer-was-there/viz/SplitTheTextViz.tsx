@@ -35,6 +35,7 @@ export default function SplitTheTextViz() {
       note="나눠 읽기 요청은 서문 4절, 겪은 이들이 독자라는 대목은 서문 8·12절의 것입니다. Whiston 영역본으로 읽었습니다. 증인의 유리함을 함께 보는 읽기는 이 글이 더한 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

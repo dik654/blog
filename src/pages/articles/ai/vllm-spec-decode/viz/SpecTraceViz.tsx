@@ -29,7 +29,7 @@ export default function SpecTraceViz() {
     if (viewport) viewport.scrollTop = 0;
   }, [active]);
   return <VizFrame eyebrow="가정한 한 요청" title="첫 거부 뒤의 후보는 이어 쓰지 않습니다" description="같은 네 후보가 세 개의 확정 출력이 되는 과정을 따라갑니다." note="처음 세 위치의 기준 비중은 A 70%·B 30%, 제안 비중은 A 40%·B 60%입니다. 종료 신호는 없는 사례입니다.">
-    <div ref={canvas} data-viz-canvas role="group" tabIndex={0} aria-label="후보 네 개의 확인과 교체" onKeyDown={scenes.onKeyDown} className="flex min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+    <div id={scenes.playbackId} ref={canvas} data-viz-canvas role="group" tabIndex={0} aria-label="후보 네 개의 확인과 교체" onKeyDown={scenes.onKeyDown} className="flex min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex flex-none flex-col py-2">
         <h4 className="font-bold">{TITLES[active]}</h4>
         <div className="mt-3 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-start sm:gap-6">

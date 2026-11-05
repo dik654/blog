@@ -33,6 +33,7 @@ export default function ChannelViz() {
       note="실제 대역폭은 속도 등급과 모듈 종류에 따라 달라지며 그림은 비율만 보여 줍니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

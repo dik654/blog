@@ -42,6 +42,7 @@ export default function BankRunViz() {
       note="급매 손실률 30%는 구조를 보이기 위한 예시 값이며 특정 사건의 실측이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

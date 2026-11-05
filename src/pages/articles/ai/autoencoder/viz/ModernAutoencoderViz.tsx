@@ -110,7 +110,7 @@ function LearningViz({ id, eyebrow, title, description, scenes, edgeLabels, note
   const controls = useAnimatedScenes(scenes.length, 3200, { loop: false });
   return (
     <VizFrame eyebrow={eyebrow} title={title} description={description} note={note}>
-      <div data-viz={id} tabIndex={0} role="group" aria-label={`${title} animation`} onKeyDown={controls.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+      <div id={controls.playbackId} data-viz={id} tabIndex={0} role="group" aria-label={`${title} animation`} onKeyDown={controls.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
         <div className="flex min-h-0 flex-1 flex-col justify-center py-1">
           <div data-viz-canvas className="hidden min-w-0 gap-2 lg:grid lg:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)] lg:items-center">
             {scenes.map((scene, index) => {

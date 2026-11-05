@@ -29,6 +29,7 @@ export default function PrecomputeViz() {
       note="증강이나 캡션 드롭아웃이 있으면 전제가 깨지므로 조건을 먼저 확인해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

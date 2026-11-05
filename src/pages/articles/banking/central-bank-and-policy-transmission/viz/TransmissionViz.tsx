@@ -40,6 +40,7 @@ export default function TransmissionViz() {
       note="도착 시각은 일반적으로 보고되는 순서를 개념적으로 표시한 것이며 특정 국가·시기의 추정치가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

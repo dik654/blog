@@ -126,6 +126,7 @@ export default function PartialReuseCopyViz() {
       note="52 token 일치는 본문의 가정입니다. 부분 재사용과 복사는 enable_partial_reuse·copy_on_partial_reuse 기본값(둘 다 켜짐)일 때의 동작입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

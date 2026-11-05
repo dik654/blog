@@ -38,6 +38,7 @@ export default function GateViz() {
       note="어느 관문 하나라도 실패하면 더 비싼 CPU가 아니라 구성 자체를 다시 설계합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -117,6 +117,7 @@ export default function PageGranularityHitViz() {
       note="B=4와 hash 단위 4는 10절의 설명용 가정입니다. 마지막 위치를 남기는 상한(11절)은 이 사례에서 결과를 바꾸지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

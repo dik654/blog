@@ -28,6 +28,7 @@ export default function OriginViz() {
       note="터널 방식의 이름과 구현은 사업자마다 다르며 여기서는 연결 방향만 비교합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

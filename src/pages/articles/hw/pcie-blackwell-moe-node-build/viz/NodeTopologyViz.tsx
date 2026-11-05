@@ -181,6 +181,7 @@ export default function NodeTopologyViz() {
       note="스위치마다 카드 넷을 붙인 배치는 설명용 가정입니다. 실제 배치는 섀시와 슬롯마다 다르므로 7절의 명령으로 확인합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

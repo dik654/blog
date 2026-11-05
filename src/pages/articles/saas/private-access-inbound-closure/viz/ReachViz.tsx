@@ -28,6 +28,7 @@ export default function ReachViz() {
       note="세 답은 배타적이지 않으며 실제 구성은 섞여 쓰입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

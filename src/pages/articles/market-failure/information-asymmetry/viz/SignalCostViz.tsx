@@ -53,6 +53,7 @@ export default function SignalCostViz() {
       note="두 유형이 절반씩 섞여 있는 경우로 줄인 예입니다. 표시가 일을 해내는 양을 전혀 바꾸지 않는다고 둔 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

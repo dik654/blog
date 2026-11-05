@@ -32,6 +32,7 @@ export default function GateViz() {
       note="세 사례는 이 회차의 기록이며 일반 절차로 제시하는 것은 마지막 장면의 방법입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

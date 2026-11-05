@@ -28,6 +28,7 @@ export default function ContinuityViz() {
       note="시간 막대의 길이는 관계를 보여 주기 위한 예시이며 특정 구성의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

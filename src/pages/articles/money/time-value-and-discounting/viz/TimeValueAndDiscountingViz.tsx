@@ -46,6 +46,7 @@ export default function TimeValueAndDiscountingViz() {
       note="금액 단위는 만 원이고 이자율은 계산이 보이도록 고른 값입니다. 특정 상품의 조건이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -178,6 +178,7 @@ export default function MtpChainViz() {
       note="Medusa 후보 칸은 자리만 표시했습니다. 어떤 글자가 나오는지는 head의 학습 결과에 달려 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

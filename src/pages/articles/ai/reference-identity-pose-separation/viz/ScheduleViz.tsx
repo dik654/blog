@@ -35,6 +35,7 @@ export default function ScheduleViz() {
       note="구체 값은 이 모델 조합의 실측이며 다른 조합으로 일반화하지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

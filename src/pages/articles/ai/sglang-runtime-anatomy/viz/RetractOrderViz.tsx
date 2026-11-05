@@ -62,6 +62,7 @@ export default function RetractOrderViz() {
       note="출력 250·200·150·100과 출력 상한 1,000은 11절의 설명용 가정입니다. 비율 식은 고정한 SGLang 코드의 estimate_new_token_ratio_after_retract입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

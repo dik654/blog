@@ -27,6 +27,7 @@ export default function GateViz() {
       note="이 회차에는 자동 판정기가 없습니다. 계측기 둘이 각자의 대조군에서 실패했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

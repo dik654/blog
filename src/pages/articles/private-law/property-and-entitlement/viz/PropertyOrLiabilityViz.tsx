@@ -51,6 +51,7 @@ export default function PropertyOrLiabilityViz() {
       note="가치와 비용을 같은 단위로 어림잡을 수 있다고 둔 비교입니다. 실제로는 세 값 모두 사건 밖에서 관측되지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

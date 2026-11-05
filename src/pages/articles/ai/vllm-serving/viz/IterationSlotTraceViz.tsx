@@ -111,6 +111,7 @@ export default function IterationSlotTraceViz() {
       note="본문 3절의 가정(예산 4·요청 2·메모리 충분·C는 실행 3 뒤 도착)을 그대로 씁니다. 마지막 반례만 예산과 도착 시점을 바꿉니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

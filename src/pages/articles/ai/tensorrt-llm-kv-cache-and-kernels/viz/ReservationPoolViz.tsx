@@ -73,6 +73,7 @@ export default function ReservationPoolViz() {
       note="요청 길이와 pool 크기는 설명용 가정입니다. 프롬프트 공유와 chunked prefill은 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

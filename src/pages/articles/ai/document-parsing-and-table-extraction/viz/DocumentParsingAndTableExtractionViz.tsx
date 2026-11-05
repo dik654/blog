@@ -118,6 +118,7 @@ export default function DocumentParsingAndTableExtractionViz() {
       note="지표·2024·Q1·Q2 표는 구조를 보여 주기 위한 예시이며 특정 문서의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -74,6 +74,7 @@ export default function BowAndAreaViz() {
       note="프로이센 숫자는 Lorenz(1905) 214쪽 표를 가난한 쪽부터 쌓은 값입니다. 넓이 비는 이 글이 그 곡선에서 계산한 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

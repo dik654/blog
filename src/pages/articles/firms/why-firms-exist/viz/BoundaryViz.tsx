@@ -19,7 +19,7 @@ export default function BoundaryViz() {
     <VizFrame eyebrow="같은 여섯 일" title="안에서 처리할 일을 바꾸며 합계를 비교한다"
       description="숫자는 만드는 비용을 뺀 조정 비용입니다. 두 방식의 생산비·품질·수량은 같다고 가정합니다."
       note="(가정) 정해진 순서대로 앞에서부터 들입니다. 설립·전환 비용은 0이며 수치는 실측값이 아닙니다.">
-      <div data-viz-canvas tabIndex={0} role="group" aria-label="여섯 일의 안과 밖 비용 비교" onKeyDown={scenes.onKeyDown}
+      <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="여섯 일의 안과 밖 비용 비교" onKeyDown={scenes.onKeyDown}
         className="flex h-[37rem] min-h-[32rem] min-w-0 flex-col gap-5 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{scenes.active + 1}. {SCENES[scenes.active]}</h4>

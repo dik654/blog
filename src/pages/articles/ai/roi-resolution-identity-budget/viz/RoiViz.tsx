@@ -27,6 +27,7 @@ export default function RoiViz() {
       note="예산 값은 모델마다 다르며 구체 수치는 각 구현을 확인해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

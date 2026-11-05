@@ -17,7 +17,7 @@ function Box({ x, y, w, h, label, detail, active, dashed = false }: { x: number;
 }
 
 function Scene({ id, eyebrow, title, description, labels, notes, children }: { id: string; eyebrow: string; title: string; description: string; labels: readonly string[]; notes: readonly string[]; children: (active: number) => ReactNode }) {
-  const controls = useAnimatedScenes(labels.length, 3200);
+  const controls = useAnimatedScenes(labels.length, 3200, { playbackId: id });
   return <VizFrame title={title} description={description} className="my-8"><div id={id} data-viz tabIndex={0} onKeyDown={controls.onKeyDown} className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"><p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">{eyebrow} · {String(controls.active + 1).padStart(2, "0")}</p><h3 className="mt-2 text-lg font-bold leading-7">{labels[controls.active]}</h3><div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">{children(controls.active)}</div><p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{notes[controls.active]}</p><AnimatedSceneControls labels={[...labels]} {...controls} /></div></VizFrame>;
 }
 

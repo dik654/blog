@@ -37,6 +37,7 @@ export default function BudgetViz() {
       note="실제 사용량은 할당기 단편화와 커널 작업 공간 때문에 이보다 큽니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

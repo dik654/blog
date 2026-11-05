@@ -63,6 +63,7 @@ export default function ThriftParadoxViz() {
       note="소득이 1 늘 때 0.8을 다시 쓰고 투자가 소득과 무관하게 정해진다고 둔 계산입니다. 값과 이자율은 움직이지 않는다고 두었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -41,6 +41,7 @@ export default function ClaimLadderViz() {
       note="단위는 억 원이고 선순위 청구액 60은 구조를 보이기 위한 예시입니다. 실제로는 세금·임금 등 더 앞선 순위가 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

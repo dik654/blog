@@ -32,6 +32,7 @@ export default function QsaIndexViz() {
       note="점수 값은 설명을 위한 예시이며 특정 입력의 실제 측정값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

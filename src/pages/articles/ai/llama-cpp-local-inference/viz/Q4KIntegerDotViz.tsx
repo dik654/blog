@@ -67,6 +67,7 @@ export default function Q4KIntegerDotViz() {
       note="본문 예시의 값 4개짜리 축소 블록입니다. 활성값을 int8로 바꿀 때의 반올림 오차는 0으로 두었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

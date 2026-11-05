@@ -36,6 +36,7 @@ export default function GateViz() {
       note="계산값은 하한이며 실제로 들어가는지는 한 스텝 돌려 확인해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -29,6 +29,7 @@ export default function ParamClassesViz() {
       note="공개 config와 reference 구현의 텐서 모양으로 센 논리적 개수입니다. 양자화 후 실제 메모리와는 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

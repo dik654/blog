@@ -13,7 +13,20 @@ const articleTemplate = read("src/pages/articles/cloud/CloudCertificationArticle
 const staticRoutes = read("scripts/generate-static-routes.mjs");
 const html = read("index.html");
 
+const animatedSceneFiles = ["src/pages", "src/components"]
+  .flatMap((root) => fs.readdirSync(root, { recursive: true }).map((file) => `${root}/${file}`))
+  .filter((file) => file.endsWith(".tsx"))
+  .map((file) => ({ file, source: read(file) }))
+  .filter(({ source }) => source.includes("useAnimatedScenes("));
+const scenesWithoutPlaybackRoot = animatedSceneFiles
+  .filter(({ source }) => !source.includes("playbackId"))
+  .map(({ file }) => file);
+if (scenesWithoutPlaybackRoot.length) {
+  console.error(`playbackId 없는 장면 Viz:\n${scenesWithoutPlaybackRoot.join("\n")}`);
+}
+
 const checks = {
+  animatedScenesBindPlaybackRoot: scenesWithoutPlaybackRoot.length === 0,
   basePathBridgeMounted:
     app.includes("<InternalLinkBridge />") &&
     bridge.includes("import.meta.env.BASE_URL") &&

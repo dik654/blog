@@ -141,6 +141,7 @@ export default function OverlapStepViz() {
       note="(가정) 준비 2단위·계산 4단위는 설명용 값입니다. 세 엔진의 기본값이 겹침이라는 사실만 본문의 원문에서 확인했고 실제 시간 비율은 모델과 batch에 따라 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -40,6 +40,7 @@ export default function SettlementLayerViz() {
       note="실제 시스템에는 어음교환·지로·공동망 등 여러 소액지급시스템이 있으며 이 그림은 공통 구조만 그렸습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -61,6 +61,7 @@ export default function LongContextPoolViz() {
       note="128KiB/토큰 모델, 16토큰 block, 짧은 대화 94block은 10·12절의 가정을 그대로 씁니다. 하한 block과 prefix 공유는 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

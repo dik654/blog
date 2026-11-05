@@ -64,6 +64,7 @@ export default function KvUnitTailViz() {
       note="요청 길이 500은 3절의 입력 200과 실제 출력 300을 더한 값입니다. 세로선은 block 경계입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

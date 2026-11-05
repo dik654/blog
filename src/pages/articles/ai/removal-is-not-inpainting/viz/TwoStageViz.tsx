@@ -37,6 +37,7 @@ export default function TwoStageViz() {
       note="다시 그리기에 증류된 빠른 모델을 썼으므로 기각의 범위도 그 조건까지입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

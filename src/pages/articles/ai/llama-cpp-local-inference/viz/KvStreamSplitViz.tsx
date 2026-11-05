@@ -89,6 +89,7 @@ export default function KvStreamSplitViz() {
       note="slot 4개, 문서 6,000 token, 짧은 대화 500 token은 설명용 가정입니다. prompt cache와 context shift는 켜지 않았다고 둡니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

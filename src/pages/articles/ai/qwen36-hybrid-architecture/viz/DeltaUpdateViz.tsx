@@ -118,6 +118,7 @@ export default function DeltaUpdateViz() {
       note="γ=.9, 예측 3, value 5, 오차 2, β=.25, 쓰는 양 .5는 본문 값입니다. b 행 값, 두 번째 성분, KV 열 수 6은 설명용 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

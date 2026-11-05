@@ -45,6 +45,7 @@ export default function LegalityConditionsViz() {
       note="풀러의 영향력 있는 이론을 가상 과속 규칙에 적용한 그림입니다. 항목 하나의 작은 결함이 곧바로 모든 법적 효력을 없앤다는 보편 공식은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

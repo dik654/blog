@@ -55,6 +55,7 @@
   높이가 viewport를 넘지 않고, 단계 전환에 따른 높이 변화가 없으며, 카드 내부의 scrollWidth·scrollHeight
   넘침도 0인지 실제 브라우저에서 확인한다.
 - 모바일의 폭 맞춤 규칙은 canvas의 최상위 도표와 처음부터 `w-full`인 도표에만 적용한다. Viz 안의 모든 `svg`를 한꺼번에 `width: 100%`로 만들지 않는다. 연결 화살표·도형 glyph·아이콘처럼 고정 크기로 읽는 SVG는 선언한 폭과 높이를 유지하고, 회전한 뒤에도 전체 bounding box가 article 폭 안에 있어야 한다.
+- `useAnimatedScenes`를 쓰는 Viz는 키보드 입력을 받는 장면 루트에 `id={scenes.playbackId}`를 둔다. 앵커 id가 이미 있으면 `{ playbackId: id }`로 넘긴다. 이 id가 없으면 장면을 넘겨도 안쪽 스크롤이 맨 위로 돌아가지 않고, 화면 밖에서도 자동 재생이 멈추지 않는다. `audit:runtime`이 누락을 막는다.
 - 같은 Viz의 모든 장면에서 control button의 bounding box 변화는 2px 이내, frame top/left/width 변화는 2px 이내를 목표로 한다. Reduced motion 여부와 관계없이 layout shift 자체는 없어야 한다.
 
 ## 3. 수식 규칙

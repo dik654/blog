@@ -116,6 +116,7 @@ export default function RetentionTierViz() {
       note="우선순위 90·10은 retention 설정으로 붙였다고 가정한 값이고 35는 기본값입니다. 하한 30은 고정 원문의 C++ 기본값이며 host_cache_size를 켠 경우입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

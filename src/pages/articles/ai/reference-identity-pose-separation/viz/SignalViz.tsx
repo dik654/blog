@@ -37,6 +37,7 @@ export default function SignalViz() {
       note="한 인물·한 의상에서의 결과이며 다른 소재에서 같은 값이 나온다는 뜻은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

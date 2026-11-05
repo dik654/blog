@@ -54,6 +54,7 @@ export default function OccupancyWaveViz() {
       note="SM 8개와 block slot 2개는 그림을 위한 축소이며, 실제 slot 수는 register·shared memory·thread·block 한도의 최소값에서 나옵니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

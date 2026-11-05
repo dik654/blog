@@ -29,6 +29,7 @@ export default function DecisionViz() {
       note="판정 신호의 구성과 가중치는 조직마다 다르며 이 글은 권고값을 제시하지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

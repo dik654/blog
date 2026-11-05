@@ -27,6 +27,7 @@ export default function GateViz() {
       note="실패한 것은 이 세 방법이며 3차원 형태 제어 일반이 불가능하다는 뜻이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

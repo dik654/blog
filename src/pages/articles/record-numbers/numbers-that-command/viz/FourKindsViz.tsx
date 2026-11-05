@@ -58,6 +58,7 @@ export default function FourKindsViz() {
       note="조항과 문구는 함무라비 법전 196~204·220·225·273조의 것입니다. 네 종류로 가른 것은 이 글의 정리이며 법전에 그 꼴로 적혀 있지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

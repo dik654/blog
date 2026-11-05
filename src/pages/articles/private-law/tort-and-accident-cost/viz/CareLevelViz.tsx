@@ -58,6 +58,7 @@ export default function CareLevelViz() {
       note={`사고 손해를 ${LOSS}으로 고정하고 주의 수준을 네 단계로 줄인 예입니다. 실제로는 연속적이고 확률도 정확히 알 수 없습니다.`}
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -33,6 +33,7 @@ export default function PipelineViz() {
       note="비용 막대는 상대 비교를 위한 개념도이며 특정 제품의 측정값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

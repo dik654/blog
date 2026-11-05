@@ -86,6 +86,7 @@ export default function DiagnosisStepViz() {
       note="사례 A(100GiB ext4, 30GiB 로그가 열린 채 지워짐)를 입력으로 씁니다. 숫자는 설명용 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

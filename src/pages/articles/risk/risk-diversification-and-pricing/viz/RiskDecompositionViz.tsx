@@ -50,6 +50,7 @@ export default function RiskDecompositionViz() {
       note="평균 표준편차 30%, 평균 상관 0.3을 가정한 예시입니다. 막대 길이는 표준편차이고, 회색 구간은 분산을 쪼갠 값이 아니라 총 표준편차와 바닥 사이의 차이(%p)라는 점에 주의하세요. 분해 자체는 본문 식처럼 분산 단위에서 이루어집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

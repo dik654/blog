@@ -53,6 +53,7 @@ export default function ExchangeBalanceViz() {
       note="숫자는 Fisher 『The Purchasing Power of Money』 개정판 16~18쪽의 예시 그대로입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

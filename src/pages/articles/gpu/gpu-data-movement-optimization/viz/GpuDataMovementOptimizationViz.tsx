@@ -285,6 +285,7 @@ export default function GpuDataMovementOptimizationViz() {
       note="Tile당 load 1.2 µs, compute 0.8 µs를 가정한 산수이며 측정이 아닙니다. Shared memory 안의 stage 수와 barrier, register 안의 fragment 배치는 그리지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

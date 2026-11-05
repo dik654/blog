@@ -28,6 +28,7 @@ export default function EndpointViz() {
       note="주소 대역은 설명을 위한 예시이며 실제 구성은 계정·리전에 따라 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

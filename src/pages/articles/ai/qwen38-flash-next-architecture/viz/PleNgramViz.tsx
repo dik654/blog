@@ -29,6 +29,7 @@ export default function PleNgramViz() {
       note="head는 16개지만 그림에서는 8개만 그렸습니다. bigram과 trigram이 각각 8개씩입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

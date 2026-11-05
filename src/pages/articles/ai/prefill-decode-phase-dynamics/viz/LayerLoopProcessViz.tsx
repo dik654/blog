@@ -149,6 +149,7 @@ export default function LayerLoopProcessViz() {
       note="d는 위치 하나를 나타내는 벡터 길이입니다. 정규화·위치 회전 같은 세부 단계는 생략한 의사코드입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

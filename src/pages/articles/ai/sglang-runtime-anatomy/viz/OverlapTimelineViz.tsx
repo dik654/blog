@@ -95,6 +95,7 @@ export default function OverlapTimelineViz() {
       note="CPU 1ms+1ms, GPU 10ms는 설명용 가정입니다. CUDA graph·sampling 위치·복사 시간은 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

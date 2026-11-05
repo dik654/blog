@@ -54,6 +54,7 @@ export default function InterpretationCoreViz() {
       note="'공원에 차량 출입 금지'는 법철학에서 오래 쓰인 사고실험입니다. 실제 단어의 범위는 법령 정의와 사회의 통상적 용법에 따라 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -54,6 +54,7 @@ export default function WritePathViz() {
       note="(가정) dirtyable 메모리 12,288 MiB, dirty_background_ratio 10, dirty_expire_centisecs 3000, dirty_writeback_centisecs 500, ext4 기본 옵션(data=ordered, commit=5, delalloc), 장치 500 MB/s."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

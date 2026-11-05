@@ -35,6 +35,7 @@ export default function JurisdictionForceViz() {
       note="세 체계의 핵심 차이를 학습용으로 압축했습니다. 실제 사건에서는 관할, 심급, 법 분야와 판결 형식을 추가로 확인해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

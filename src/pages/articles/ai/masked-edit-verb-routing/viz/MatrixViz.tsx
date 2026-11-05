@@ -43,6 +43,7 @@ export default function MatrixViz() {
       note="같은 소스·같은 그림체 안에서만 비교할 수 있는 값입니다. 다른 그림체의 값과 나란히 놓으면 안 됩니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

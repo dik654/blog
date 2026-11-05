@@ -45,6 +45,7 @@ export default function FreeRidingViz() {
       note={`혜택 ${BENEFIT}·비용 ${COST}은 계산이 보이도록 고른 예시이며, 혜택이 모두에게 똑같이 나뉜다는 단순화 위에 있습니다.`}
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -49,6 +49,7 @@ export default function ShadowOfFutureViz() {
       note="R=3, T=5, P=1인 가상 사례입니다. 위반을 발견하고 대응할 수 있으며, 발각 뒤 경쟁 상태가 계속된다고 가정합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

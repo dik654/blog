@@ -50,6 +50,7 @@ export default function KnowledgeSplitViz() {
       note="앞 글과 같은 시장입니다. 실제로는 이 숫자들이 고정되어 있지도 않고 본인도 정확히 알지 못합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

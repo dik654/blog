@@ -29,6 +29,7 @@ export default function PowerViz() {
       note="여유율과 회로 산정 기준은 지역 전기 규정을 따르며 그림은 구조만 보여 줍니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

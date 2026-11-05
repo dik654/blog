@@ -22,7 +22,7 @@ export default function OptimizationProblemViz() {
   return <VizFrame eyebrow="같은 함수의 두 답" title="허용 구간 안에서 점수가 가장 낮은 점을 고른다"
     description="곡선은 실제 f(x)=(x−3)²+2입니다. 가로축의 선택과 세로축의 점수를 구별합니다."
     note="검은 빈 점 (3,2)은 제약 없는 답이고 강조 점 (2,3)은 [0,2] 안의 답입니다. 서로 다른 축의 단위와 화면 축척은 다릅니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="허용 범위에 따른 최소점과 최솟값" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="허용 범위에 따른 최소점과 최솟값" onKeyDown={scenes.onKeyDown}
       className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <svg viewBox="0 0 300 248" className="mx-auto h-auto w-full max-w-[340px]" aria-label="실제 제곱 점수 곡선과 구간 [0,2]">
         <line x1="34" y1="26" x2="34" y2="216" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />

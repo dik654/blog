@@ -32,6 +32,7 @@ export default function OverrulingThresholdViz() {
       note="미국 연방대법원의 헌법 판례 변경 요소를 중심으로 그린 개념도입니다. 영국과 한국은 변경 권한과 절차를 별도로 확인해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

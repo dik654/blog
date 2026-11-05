@@ -102,6 +102,7 @@ export default function LinkCountViz() {
       note="inode 번호 1311, PID 812, fd 7, 30GiB는 설명용 가정입니다. 열린 참조 수는 커널의 i_count를 단순화한 값입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

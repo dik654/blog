@@ -32,6 +32,7 @@ export default function ErasedColumnsViz() {
       note="돌의 상태와 지워진 단, 35개 조항이라는 추정은 C. H. W. Johns 영역본(1903년 판)의 머리말과 65조 뒤 편집자 주에 적힌 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

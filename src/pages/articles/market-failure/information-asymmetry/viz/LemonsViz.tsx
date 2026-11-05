@@ -54,6 +54,7 @@ export default function LemonsViz() {
       note="중고차 여섯 대로 줄인 예입니다. 판 쪽은 자기 차를 정확히 알고 산 쪽은 전혀 모른다고 둔 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

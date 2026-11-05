@@ -43,6 +43,7 @@ export default function AcceptQueueViz() {
       note="초당 600개 도착과 1초 정지는 설명용 가정입니다. 실제로는 handshake 마지막 ACK 단계에서 버려지는 연결도 섞일 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

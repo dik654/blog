@@ -54,6 +54,7 @@ export default function ComparativeAdvantageViz() {
       note="하루를 통째로 한 가지에만 썼을 때의 생산량으로 잡은 예입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

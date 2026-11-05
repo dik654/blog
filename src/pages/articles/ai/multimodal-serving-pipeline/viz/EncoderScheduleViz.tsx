@@ -94,6 +94,7 @@ export default function EncoderScheduleViz() {
       note="일곱 요청 모두 앞 1,376 token을 prefix cache에서 찾고 30 token만 남은 상태입니다. 예산·cache 8,192와 순서는 설명용 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

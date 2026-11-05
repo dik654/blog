@@ -120,6 +120,7 @@ export default function DiskAccountsViz() {
       note="100GiB ext4, 블록 4KiB, 예약 5%, inode 비율 16,384 byte는 설명용 가정입니다. 파일시스템 메타데이터 몫은 0으로 두었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -77,6 +77,7 @@ export default function EevdfPickViz() {
       note="기본 slice 0.75 ms(sysctl_sched_base_slice), weight는 sched_prio_to_weight[]의 nice 0 = 1024, nice 5 = 335입니다. 두 작업 모두 CPU만 쓰고 잠들지 않는다고 가정했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

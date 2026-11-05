@@ -411,7 +411,7 @@ export default function ServingArchitectureMatrixArticle() {
           gated_delta_net_state_shape와 kda_state_shape가 state의 head 차원을 divide(num_heads, tp_world_size)로 나눕니다. KDA의 recurrent state 기본 dtype은 float32입니다. K3의 MLA 층은 vllm/models/kimi_k3/nvidia/mla.py에서 head_size = kv_lora_rank + qk_rope_head_dim으로 576개를 저장합니다.
         </CitationBlock>
         <CitationBlock source="local-inference-lab/rtx6kpro · models/kimi-k25.md, benchmarks/results.md (커밋 1b6de11b, 2026-11-02)" citeKey={5} href="https://github.com/local-inference-lab/rtx6kpro" type="code">
-          8×RTX PRO 6000, K2.5 INT4, vLLM 단일 배치: BF16 KV·DCP1 90 tok/s, FP8 KV·DCP8 65 tok/s(P2P on), 44 tok/s(P2P off). FP8 KV·DCP8·gpu-util 0.93의 KV 용량 3,621,504 token. Discord 대화를 정리한 위키라 실행 환경 일부가 비어 있는 현장 경험 등급입니다.
+          8×RTX PRO 6000, K2.5 INT4, vLLM 단일 배치: BF16 KV·DCP1 90 tok/s, FP8 KV·DCP8 65 tok/s(P2P on), 44 tok/s(P2P off). FP8 KV·DCP8·GPU 메모리 사용 상한(--gpu-memory-utilization) 0.93의 KV 용량 3,621,504 token. Discord 대화를 정리한 위키라 실행 환경 일부가 비어 있는 현장 경험 등급입니다.
         </CitationBlock>
         <div className={prose}>
           <p>

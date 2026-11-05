@@ -86,6 +86,7 @@ export default function ShiftVsMoveViz() {
       note="사는 쪽과 파는 쪽이 여섯씩인 같은 예를 계단으로 옮긴 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

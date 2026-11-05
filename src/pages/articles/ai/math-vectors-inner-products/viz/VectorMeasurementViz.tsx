@@ -10,7 +10,7 @@ export default function VectorMeasurementViz() {
   const controller = useAnimatedScenes(scenes.length);
   const active = controller.active;
   return <VizFrame eyebrow="같은 이동을 세 번 읽기" title="가로 3 · 세로 4 · 직선 길이 5" description="한 칸을 두 축에서 같은 길이로 그렸습니다. 선택을 바꿔 전체와 두 성분을 비교하세요.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="같은 이동의 세 성분" onKeyDown={controller.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+    <div id={controller.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="같은 이동의 세 성분" onKeyDown={controller.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
     <svg className="mx-auto mt-4 block w-full max-w-[320px]" viewBox="0 0 300 300" role="img" aria-label="원점에서 (3,4)까지의 길이 5와 가로 3, 세로 4인 직각삼각형">
       {[1,2,3,4,5].map(i => <g key={i} stroke="currentColor" opacity=".1"><line x1={40+40*i} y1="30" x2={40+40*i} y2="250"/><line x1="40" y1={250-40*i} x2="260" y2={250-40*i}/></g>)}
       <g stroke="currentColor" opacity=".5"><line x1="40" y1="250" x2="270" y2="250"/><line x1="40" y1="250" x2="40" y2="25"/></g>

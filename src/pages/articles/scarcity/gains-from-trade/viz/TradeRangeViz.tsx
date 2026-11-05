@@ -67,6 +67,7 @@ export default function TradeRangeViz() {
       note="케이크 두 개를 한 번에 주고받는 경우로 고정한 예입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

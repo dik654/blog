@@ -86,6 +86,7 @@ export default function LoadSplitViz() {
       note="32 CPU 장면은 Gregg 글의 vmstat 출력입니다. 16 vCPU 세 장면의 task 수는 설명용 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

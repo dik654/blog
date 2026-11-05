@@ -9,7 +9,7 @@ const scenes=[
  {label:"두 곳 확인",points:[[0,1],[.5,.625],[1,.390625]],text:"출발점과 예상 끝점의 속도를 평균하면 같은 0.5초 간격에서도 0.625, 약 0.391이 됩니다. 각 간격에서 두 번 확인합니다."},
 ];
 export default function DecayStepsViz(){const c=useAnimatedScenes(scenes.length);const s=scenes[c.active];const sx=(x:number)=>42+244*x,sy=(y:number)=>236-190*y;const exact=Array.from({length:51},(_,i)=>{const x=i/50;return `${i?'L':'M'}${sx(x)} ${sy(Math.exp(-x))}`;}).join(' ');return <VizFrame eyebrow="같은 출발점 · 같은 1초" title="속도를 다시 읽는 시점이 경로를 바꾼다" description="가로는 시간, 세로는 남은 양입니다. 점선은 기준 곡선이고 색 선은 계산한 점들을 이은 선입니다." note="초당 감소 속도가 현재 양의 음수인 가정 사례입니다. 두 축의 물리 단위는 다르며 모든 장면에서 같은 눈금을 씁니다.">
-<div data-viz-canvas tabIndex={0} role="group" aria-label="감소 경로의 다섯 계산 장면" onKeyDown={c.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+<div id={c.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="감소 경로의 다섯 계산 장면" onKeyDown={c.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
 <svg viewBox="0 0 320 280" className="mx-auto block w-full max-w-[520px]" role="img" aria-label="연속 감소 곡선과 짧은 선분으로 계산한 경로">
 <path d="M42 25V236H303" fill="none" stroke="currentColor" strokeWidth="1" opacity=".5"/>
 {[0,.25,.5,.75,1].map((n,i)=><g key={i}><path d={`M${sx(n)} 236v4M38 ${sy(n)}h4`} stroke="currentColor" strokeWidth="1" opacity=".35"/><text x={sx(n)} y="255" textAnchor="middle" fontSize="10" fill="currentColor">{n}</text><text x="33" y={sy(n)+4} textAnchor="end" fontSize="10" fill="currentColor">{n}</text></g>)}

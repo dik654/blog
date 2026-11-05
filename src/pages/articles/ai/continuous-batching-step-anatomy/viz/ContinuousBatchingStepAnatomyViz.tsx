@@ -68,6 +68,7 @@ export default function ContinuousBatchingStepAnatomyViz() {
       note="한도 8, 요청 상한 4, C=10·D=2, 저장 공간 충분. 셋째 명단은 D 수용 직전입니다. (가정)"
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

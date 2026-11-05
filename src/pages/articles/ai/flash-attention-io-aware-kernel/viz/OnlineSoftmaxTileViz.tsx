@@ -99,6 +99,7 @@ export default function OnlineSoftmaxTileViz() {
       note="점수 [1, 3, 2, 5]와 값 [2, 4, 6, 8]은 본문의 가정이며 표시값은 소수 여섯째 자리에서 반올림했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

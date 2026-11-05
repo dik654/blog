@@ -56,6 +56,7 @@ export default function MathNumericalPrecisionStabilityViz() {
       note="수치는 IEEE 754 정의와 표준 softmax 안정화 기법을 단순화한 예시이며, 실제 하드웨어 rounding 결과는 구현마다 미세하게 다를 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

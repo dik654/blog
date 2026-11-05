@@ -25,7 +25,7 @@ function Glyph({ item, x }: { item: Item; x: number }) {
 }
 
 function CompetitionSceneViz({id,eyebrow,title,description,scenes}:{id:string;eyebrow:string;title:string;description:string;scenes:Scene[]}) {
-  const controls=useAnimatedScenes(scenes.length,2700); const scene=scenes[controls.active]; const gap=270/Math.max(scene.items.length-1,1);
+  const controls=useAnimatedScenes(scenes.length,2700, { playbackId: id }); const scene=scenes[controls.active]; const gap=270/Math.max(scene.items.length-1,1);
   return <VizFrame title={title} description={description} className="my-8"><div id={id} data-viz tabIndex={0} onKeyDown={controls.onKeyDown} className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6">
     <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">{eyebrow} · {String(controls.active+1).padStart(2,"0")}</p>
     <h3 className="mt-2 text-lg font-bold leading-7">{scene.title}</h3>

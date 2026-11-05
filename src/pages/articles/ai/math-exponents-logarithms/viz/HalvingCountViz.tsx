@@ -3,7 +3,7 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
 const scenes=[{label:"시작",value:"1",detail:"아직 절반으로 줄이지 않았습니다. 남은 양은 1이고 횟수는 0입니다."},{label:"한 번",value:"1/2",detail:"처음의 절반이 남았습니다. 양은 1/2이고 횟수는 1입니다."},{label:"두 번",value:"1/4",detail:"앞의 1/2에서 다시 절반만 남습니다. 양은 1/4이고 횟수는 2입니다."},{label:"세 번",value:"1/8",detail:"남은 양은 1/8입니다. 세 번의 절반 줄이기를 더해 횟수는 1+1+1=3입니다."}] as const;
 export default function HalvingCountViz(){const c=useAnimatedScenes(scenes.length);return <VizFrame eyebrow="같은 변화를 두 눈금으로 기록" title="남은 양은 곱하고 횟수는 더한다" description="위 막대의 전체 길이는 항상 1입니다. 아래는 같은 비율의 변화를 한 칸씩 셉니다." note="배율이 1/2일 때의 가정 사례입니다. 아래 눈금의 수를 확률로 읽지 않습니다.">
-<div data-viz-canvas tabIndex={0} role="group" aria-label="절반으로 줄이는 네 장면" onKeyDown={c.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+<div id={c.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="절반으로 줄이는 네 장면" onKeyDown={c.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
 <svg viewBox="0 0 320 230" className="mx-auto mt-4 block w-full max-w-[420px]" role="img" aria-label="길이가 절반씩 줄어드는 막대와 일정하게 늘어나는 횟수 눈금">
 <g fontSize="13" fill="currentColor"><text x="20" y="25">남은 양</text><text x="300" y="25" textAnchor="end">{scenes[c.active].value}</text></g>
 <rect x="20" y="45" width="280" height="28" fill="none" stroke="currentColor" strokeWidth="1" opacity=".3"/>

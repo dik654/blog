@@ -113,6 +113,7 @@ export default function NetworkNeedViz() {
       note="시간은 회선 속도만으로 나눈 이상값입니다. 실제 전송은 프로토콜 오버헤드, 혼잡, 호스트 복사 여부에 따라 더 깁니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -126,6 +126,7 @@ export default function ToolCallingLifecycleAndCostsViz() {
       note="400ms · 1,200ms 수치는 mechanism 을 보여 주는 계산된 예시이며 특정 provider 의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

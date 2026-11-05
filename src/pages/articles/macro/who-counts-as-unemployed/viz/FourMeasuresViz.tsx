@@ -65,6 +65,7 @@ export default function FourMeasuresViz() {
       note="LU1~LU4의 정의는 19차 ICLS 결의 73항 (c)입니다. 100명 보기는 설명을 위해 만든 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -29,6 +29,7 @@ export default function TwoRuinsViz() {
       note="사고실험과 '두 배'라는 표현은 투키디데스 『펠로폰네소스 전쟁사』 1권 10절의 것입니다. Crawley 영역본으로 읽었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -6,7 +6,7 @@ const scenes = [
 ] as const;
 export default function FatbinSelectionViz(){
  const state=useAnimatedScenes(scenes.length,2800);const s=scenes[state.active];
- return <div tabIndex={0} onKeyDown={state.onKeyDown} aria-label="배포 이미지와 GPU의 선택" className="my-8 outline-offset-4">
+ return <div id={state.playbackId} tabIndex={0} onKeyDown={state.onKeyDown} aria-label="배포 이미지와 GPU의 선택" className="my-8 outline-offset-4">
  <figure data-viz="fatbin-selection" className="m-0 flex flex-col rounded-xl border border-neutral-200 p-4 dark:border-neutral-800 sm:p-5" style={{height:"min(670px, calc(100svh - 140px))"}}>
   <figcaption className="mb-3 shrink-0 text-base font-semibold">같은 배포 파일을 어느 GPU가 받습니까?</figcaption>
   <div data-viz-canvas className="min-h-0 flex-1 overflow-y-auto pr-1">

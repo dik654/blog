@@ -12,7 +12,7 @@ const notes=[
 export default function CaptureSizePaddingViz(){
  const scenes=useAnimatedScenes(3,6000);const s=scenes.active;const n=counts[s];const padded=sizes.find(v=>v>=n);const total=padded??33;
  return <VizFrame eyebrow="크기 선택 · 가정" title="입력이 모두 들어가는 준비된 크기를 찾습니다" description="준비한 목록은 1·2·4·8·16·24·32토큰입니다. 채운 칸은 실제 입력이고 점선 칸은 추가 자리입니다." note="크기 조건만 보여 주는 그림입니다. 실제 재생은 모드와 요청 구성, 추가 자리의 주소·길이 처리도 맞아야 합니다.">
- <div data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="실제 토큰과 할당 자리 비교" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div id={scenes.playbackId} data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="실제 토큰과 할당 자리 비교" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
  <div className="flex flex-none flex-col py-1"><h4 className="font-bold">{titles[s]}</h4>
  <svg viewBox="0 0 340 245" role="img" aria-label={titles[s]+"의 실제 자리와 추가 자리"} className="mt-1 h-auto max-h-72 w-full">
  <text x="170" y="25" textAnchor="middle" className="fill-foreground text-[14px]">{padded?"실제 "+n+" · 추가 "+(padded-n):"최대 32보다 1토큰 많음"}</text>

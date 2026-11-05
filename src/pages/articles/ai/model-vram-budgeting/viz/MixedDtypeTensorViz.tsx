@@ -161,6 +161,7 @@ export default function MixedDtypeTensorViz() {
       note="Tensor payload만 셉니다. scale tensor·file header·alignment와 KV·runtime 공간은 들어 있지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

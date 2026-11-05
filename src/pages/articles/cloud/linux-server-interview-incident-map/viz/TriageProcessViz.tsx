@@ -64,6 +64,7 @@ export default function TriageProcessViz() {
       note="출력은 Gregg의 Netflix 글(2015-11-30)이 한 운영 서버에서 서로 다른 시각에 찍은 예시입니다. dmesg 줄은 다른 부팅 때의 기록입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

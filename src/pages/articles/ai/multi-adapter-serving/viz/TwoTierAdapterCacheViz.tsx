@@ -101,6 +101,7 @@ export default function TwoTierAdapterCacheViz() {
       note="7절의 가정을 따릅니다. 처음 네 장면은 max_cpu_loras를 비워 GPU와 같은 2로 둔 경우이고, 마지막 장면만 3으로 바꾼 비교입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

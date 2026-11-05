@@ -52,6 +52,7 @@ export default function SocialCostViz() {
       note="앞 세 글과 같은 시장에 만들 때마다 제삼자가 지는 값을 하나 더한 것입니다. 그 값을 정확히 안다고 둔 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

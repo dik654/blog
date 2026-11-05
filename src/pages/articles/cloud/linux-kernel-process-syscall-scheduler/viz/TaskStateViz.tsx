@@ -80,6 +80,7 @@ export default function TaskStateViz() {
       note="(가정) 스레드 네 개와 자식 프로세스 하나를 둔 웹 서버입니다. 상태 글자는 fs/proc/array.c의 task_state_array, 비트 값은 include/linux/sched.h를 따릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

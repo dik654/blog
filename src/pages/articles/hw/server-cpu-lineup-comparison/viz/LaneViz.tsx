@@ -32,6 +32,7 @@ export default function LaneViz() {
       note="장치별 레인 수와 소켓당 예산은 제품마다 다르며 여기서는 흔한 값을 씁니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

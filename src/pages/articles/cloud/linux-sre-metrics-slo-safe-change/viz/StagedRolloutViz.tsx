@@ -89,6 +89,7 @@ export default function StagedRolloutViz() {
       note="(가정) 1,000대·오류율 수치는 설명용입니다. 단계 비율 1 → 10 → 50 → 100%와 하루 bake는 흔한 예시이지 표준이 아닙니다. canary·control 정의는 SRE workbook 16장을 따랐습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

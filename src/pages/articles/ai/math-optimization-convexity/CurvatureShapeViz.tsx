@@ -22,7 +22,7 @@ export default function CurvatureShapeViz() {
   return <VizFrame eyebrow="제곱 함수의 두 직선" title="현은 곡선 위에, 접선은 곡선 아래에 놓인다"
     description="같은 f(x)=x²에서 두 끝을 이은 선과 한 점의 기울기를 맞춘 선을 비교합니다."
     note="곡선과 선은 실제 식으로 계산했습니다. 가로축과 세로축의 화면 축척은 다르며 작은 오차 0.01은 본문의 수치로 검산합니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="제곱 함수의 현과 접선 및 오차" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="제곱 함수의 현과 접선 및 오차" onKeyDown={scenes.onKeyDown}
       className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <svg viewBox="0 0 300 278" className="mx-auto h-auto w-full max-w-[310px]" aria-label="제곱 곡선 y=x²와 현 y=2x 및 접선 y=2x−1">
         <line x1="40" y1="34" x2="40" y2="252" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />

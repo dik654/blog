@@ -15,7 +15,7 @@ export default function PriceChoiceViz() {
   return <VizFrame eyebrow="같은 판매 기간" title="가격을 낮춘 계획에서 전체 이익까지 비교한다"
     description="새 판매 한 개의 가격뿐 아니라 앞의 세 개에 해당하는 수량의 가격 차이도 셉니다."
     note="(가정) 같은 물건·동일 가격·단위 비용 7이며 생산할 여력이 충분합니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="가격 10과 9의 판매 계획 비교" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="가격 10과 9의 판매 계획 비교" onKeyDown={scenes.onKeyDown}
       className="flex h-[37rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{SCENES[s]}</h4>

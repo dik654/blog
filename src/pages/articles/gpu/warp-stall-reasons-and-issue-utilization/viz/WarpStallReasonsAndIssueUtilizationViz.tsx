@@ -81,6 +81,7 @@ export default function WarpStallReasonsAndIssueUtilizationViz() {
       note="실제 sampler 는 매 clock 이 아니라 수십에서 수천 clock 간격으로 warp 하나만 뽑습니다. 여기서는 셈을 보이려고 모든 warp 의 모든 clock 을 표본으로 세었고, latency 값은 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

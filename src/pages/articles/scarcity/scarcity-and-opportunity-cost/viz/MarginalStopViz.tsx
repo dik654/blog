@@ -49,6 +49,7 @@ export default function MarginalStopViz() {
       note="벌어 주는 것이 판마다 줄고 드는 것이 판마다 느는 경우입니다. 두 값이 반대로 움직이지 않으면 멈출 자리가 이렇게 깔끔하게 잡히지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

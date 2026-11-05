@@ -40,6 +40,7 @@ export default function SegmentBatchViz() {
       note="vLLM v0.27.1 lora_kernel_metadata.py의 정렬·개수·누적합을 같은 네 token에 적용했습니다. base 전용 token(-1)은 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

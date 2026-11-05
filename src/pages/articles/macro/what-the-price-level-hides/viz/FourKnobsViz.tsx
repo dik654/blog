@@ -55,6 +55,7 @@ export default function FourKnobsViz() {
       note="네 경우 모두 Fisher 개정판 19~21쪽에 숫자와 함께 적혀 있는 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

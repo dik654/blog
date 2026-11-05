@@ -109,6 +109,7 @@ export default function SymptomCauseViz() {
       note="(가정) 서버 100대 위의 API, 30일 SLO 99.9%. 소진율 14.4(1시간 창)·6(6시간)·1(3일)의 다중 창 경보 표는 Kubernetes SRE 글에서 다룹니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

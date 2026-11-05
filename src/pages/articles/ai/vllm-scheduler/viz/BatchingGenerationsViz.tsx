@@ -68,6 +68,7 @@ export default function BatchingGenerationsViz() {
       note="Iteration 하나를 같은 길이로 두었고 prefill·decode 의 시간 차이, token budget, KV block 은 생략했습니다. 숫자는 본문의 예(40·120·200·400 token 을 40 으로 나눈 값)입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

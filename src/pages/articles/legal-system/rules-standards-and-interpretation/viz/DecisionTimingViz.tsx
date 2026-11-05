@@ -96,6 +96,7 @@ export default function DecisionTimingViz() {
       note="시속 100킬로미터와 빙판길은 두 방식의 차이를 드러내기 위한 가상 사례입니다. 실제 위반 여부는 적용 법령과 사실관계에 따라 달라집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

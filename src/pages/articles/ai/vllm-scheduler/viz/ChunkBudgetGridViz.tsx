@@ -64,6 +64,7 @@ export default function ChunkBudgetGridViz() {
       note="예산 5, 상한 4, P=12, R1·R2가 끝나지 않는다는 조건은 본문의 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

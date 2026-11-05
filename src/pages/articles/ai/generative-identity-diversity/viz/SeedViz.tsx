@@ -27,6 +27,7 @@ export default function SeedViz() {
       note="채택 기준은 별도 글이 정한 임계값을 씁니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

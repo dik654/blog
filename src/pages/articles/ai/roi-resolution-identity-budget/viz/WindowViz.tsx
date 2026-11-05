@@ -34,6 +34,7 @@ export default function WindowViz() {
       note="판정 임계값 0.40은 별도 글이 정한 값입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

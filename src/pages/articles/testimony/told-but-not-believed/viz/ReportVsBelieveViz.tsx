@@ -34,6 +34,7 @@ export default function ReportVsBelieveViz() {
       note="두 의무를 가른 문장과 그 범위는 헤로도토스 『역사』 7권 152절의 것입니다. Macaulay 영역본으로 읽었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

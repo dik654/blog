@@ -79,6 +79,7 @@ export default function KvCellArrayViz() {
       note="실제 n_ctx는 이보다 훨씬 크고 sequence 비트는 256개입니다. 16칸·두 대화는 설명용 축소입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

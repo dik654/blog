@@ -52,6 +52,7 @@ export default function SurplusViz() {
       note="앞 글과 같은 시장입니다. 사람마다의 금액을 같은 자로 더할 수 있다고 둔 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

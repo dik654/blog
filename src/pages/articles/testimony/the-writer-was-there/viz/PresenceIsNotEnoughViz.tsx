@@ -34,6 +34,7 @@ export default function PresenceIsNotEnoughViz() {
       note="두 실패와 저자의 자기 소개는 요세푸스 『유대 전쟁사』 서문 1절의 것입니다. Whiston 영역본으로 읽었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

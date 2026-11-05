@@ -36,6 +36,7 @@ export default function UpscaleViz() {
       note="한 소스에서의 비교이며 그림체와 열화 방식이 다르면 순위가 달라질 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

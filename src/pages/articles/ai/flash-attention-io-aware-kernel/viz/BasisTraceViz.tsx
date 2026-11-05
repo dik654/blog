@@ -10,7 +10,7 @@ const states=[
 export default function BasisTraceViz(){
  const scenes=useAnimatedScenes(states.length,5000);const s=states[scenes.active];
  return <VizFrame eyebrow="가정한 네 점수" title="두 합의 기준을 함께 바꿉니다" description="첫 조각의 합은 같고 다음 조각을 더하는 규칙만 바꿉니다." note="점수 [1,3,2,5]와 값 [2,4,6,8]의 실수 산술을 반올림해 표시합니다.">
- <div data-viz-canvas role="group" aria-label="분자와 분모의 기준 비교" tabIndex={0} onKeyDown={scenes.onKeyDown} className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div id={scenes.playbackId} data-viz-canvas role="group" aria-label="분자와 분모의 기준 비교" tabIndex={0} onKeyDown={scenes.onKeyDown} className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
  <div className="flex flex-none flex-col py-2"><h4 className="font-bold">{labels[scenes.active]}</h4>
  <svg viewBox="0 0 340 280" role="img" aria-label="옛 두 합을 보정하고 새 항을 더해 출력까지 나누는 과정" className="mt-3 h-auto max-h-72 w-full">
  <defs><marker id="flash20-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L7 4L1 7" fill="none" className="stroke-primary"/></marker></defs>

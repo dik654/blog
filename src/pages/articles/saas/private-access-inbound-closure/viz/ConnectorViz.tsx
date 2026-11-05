@@ -28,6 +28,7 @@ export default function ConnectorViz() {
       note="커넥터 수와 배치는 예시이며 제품별 재연결 동작은 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

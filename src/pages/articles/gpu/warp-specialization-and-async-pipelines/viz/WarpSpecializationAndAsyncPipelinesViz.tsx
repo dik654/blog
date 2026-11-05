@@ -100,6 +100,7 @@ export default function WarpSpecializationAndAsyncPipelinesViz() {
       note="Stage 4, tile 32 KB, k-tile 번호만 표시했습니다. 두 consumer warpgroup 을 하나로 합쳤고 empty barrier 의 phase 와 wgmma 의 commit·wait 묶음은 그리지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

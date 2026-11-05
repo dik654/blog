@@ -44,6 +44,7 @@ export default function LoadEmaViz() {
       note="스레드가 표본 시각에 맞춰 시작하고 매 표본에 잡힌다고 가정했습니다. Gregg 글은 같은 실험을 측정 그래프에서 약 0.62로 읽습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -7,17 +7,10 @@ export default function ReleaseGate() {
       <h2 className="mb-6 text-2xl font-bold">라이선스, 용량, 경로, SLO 순서로 출시 여부를 결정한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          성능을 재기 전에 먼저 물을 것이 있다. “이 카드를 이 용도로 써도 되는가?”다. GeForce 드라이버 라이선스(2025년 2월
-          25일판) 2.8조는 이 드라이버가 데이터센터 배포용으로 허락되지 않았다고 적고, 2.7조는 이 소프트웨어로 상업 호스팅
-          서비스를 제공하는 것을 막는다. 외부 고객에게 유료로 LLM을 서빙하는 일은 여기에 바로 걸린다. 48GB 개조 카드도
-          GeForce 드라이버로 돌기 때문에 이 조항을 피할 근거가 없다고 본다(해석).
+          성능을 재기 전에 먼저 “이 카드를 이 용도로 써도 되는가?”를 묻는다. GeForce 드라이버 라이선스(2025년 2월 25일판) 2.8조는 이 드라이버가 데이터센터 배포용으로 허락되지 않았다고 적고 2.7조는 이 소프트웨어로 상업 호스팅 서비스를 제공하는 것을 막는다. 외부 고객에게 유료로 LLM을 서빙하는 일은 여기에 바로 걸린다. 48GB 개조 카드도 GeForce 드라이버로 돌기 때문에 이 조항을 피할 근거가 없다고 본다(해석).
         </p>
         <p className="leading-7">
-          그래서 상용 서빙이라면 아래 측정을
-          시작하기 전에 법무 검토를 먼저 통과해야 하고, 통과하지 못하면 4090은 후보에서 빠진다. 조항 원문과 상용 노드를
-          RTX PRO 6000으로 짠 계산은{" "}
-          <Link to="/cs/gpu/pcie-blackwell-moe-node-build#source-geforce-license">PCIe Blackwell MoE 노드 구성</Link>에
-          정리했다. 개인 연구나 사내 실험처럼 이 조항 밖의 용도일 때만 다음 질문으로 넘어간다.
+          그래서 상용 서빙이라면 아래 측정을 시작하기 전에 법무 검토를 먼저 통과해야 하고 통과하지 못하면 4090은 후보에서 빠진다. 조항 원문과 상용 노드를 RTX PRO 6000으로 짠 계산은{" "} <Link to="/cs/gpu/pcie-blackwell-moe-node-build#source-geforce-license">PCIe Blackwell MoE 노드 구성</Link>에 정리했다. 개인 연구나 사내 실험처럼 이 조항 밖의 용도일 때만 다음 질문으로 넘어간다.
         </p>
         <p className="leading-7">
           그다음 질문은 “24GB에 안 들어가는가?”다. 그렇다면 48GB 한 장에 합쳐지는지 먼저 본다. 여러 24GB GPU에 나눠야
@@ -34,15 +27,12 @@ export default function ReleaseGate() {
           측정한다. 메모리 오류, Xid, 온도, 전력과 복구 시간도 장시간 기록한다.
         </p>
         <p className="leading-7">
-          A100 600GB/s와 H100 900GB/s를 4090의 63GB/s로 나눈 9.5·14.3배는 명목 양방향 인터페이스 비율이다.
-          애플리케이션 지연 배수가 아니다. 라이선스 단계를 통과한 용도라면 multi-tenant 여부나 “비공식 카드”라는 이름만으로
-          자동 탈락시키지 않는다. 목표 SLO와 지원 위험을 함께 통과시킨다.
+          A100 600GB/s와 H100 900GB/s를 4090의 63GB/s로 나눈 9.5·14.3배는 명목 양방향 인터페이스 비율이며 애플리케이션 지연 배수가 아니다. 라이선스 단계를 통과한 용도라면 multi-tenant 여부나 “비공식 카드”라는 이름만으로 자동 탈락시키지 않고 목표 SLO와 지원 위험을 함께 통과시킨다.
         </p>
         <div className="not-prose my-6 rounded-r-lg border-l-4 border-amber-400 bg-amber-50/60 p-4 dark:bg-amber-950/20">
           <p className="mb-1 font-semibold">💡 출시 판정 한 문장</p>
           <p className="text-sm leading-6">
-            라이선스가 그 용도를 허락하는지 먼저 확인하고, 48GB가 GPU 수를 줄여 통신을 없애는지 본 다음, 통신이 남으면 실제 호스트 경유 경로를 측정한 뒤,
-            최종적으로 목표 request profile의 p95·p99와 장시간 안정성이 통과할 때만 채택한다.
+            라이선스가 그 용도를 허락하는지 먼저 확인하고 48GB가 GPU 수를 줄여 통신을 없애는지 본 다음 통신이 남으면 실제 호스트 경유 경로를 측정한다. 최종적으로 목표 request profile의 p95·p99와 장시간 안정성이 통과할 때만 채택한다.
           </p>
         </div>
       </div>

@@ -32,6 +32,7 @@ function FlowConnector() {
 
 export default function ArticleConceptViz({ flow }: { flow: ConceptFlow }) {
   const {
+    playbackId,
     active,
     reducedMotion,
     setActive,
@@ -58,6 +59,7 @@ export default function ArticleConceptViz({ flow }: { flow: ConceptFlow }) {
 
   return (
     <figure
+      id={playbackId}
       data-viz="article-entry-flow"
       data-viz-keyboard
       tabIndex={0}

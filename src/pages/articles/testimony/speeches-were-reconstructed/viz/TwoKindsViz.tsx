@@ -34,6 +34,7 @@ export default function TwoKindsViz() {
       note="구분과 서술은 투키디데스 『펠로폰네소스 전쟁사』 1권 22절의 것입니다. Crawley 영역본으로 읽었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

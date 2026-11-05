@@ -105,6 +105,7 @@ export default function HybridStateGrowthViz() {
       note="Qwen3.6-27B · BF16 KV(token당 64 KiB) · logical tensor 크기입니다. Workspace·fragmentation·CUDA graph 예약은 넣지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

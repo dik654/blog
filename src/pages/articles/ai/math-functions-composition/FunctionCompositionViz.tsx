@@ -18,7 +18,7 @@ export default function FunctionCompositionViz() {
       description="가정 사례의 입력 2를 강조했습니다. 순서를 바꾸면 중간값과 최종 결과가 함께 달라집니다."
       note="나열한 수는 각 집합의 일부입니다. 여러 입력이 같은 출력으로 모여도 함수가 될 수 있습니다."
     >
-      <div data-viz-canvas tabIndex={0} role="group" aria-label="함수 합성 순서 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="함수 합성 순서 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <div className="grid grid-cols-3 gap-4 sm:gap-6">
           {values.map((column, index) => <div key={index} className={`min-w-0 border-y py-3 transition-opacity ${active >= index || reversed ? "border-primary opacity-100" : "border-border opacity-35"}`}>
             <p className="text-center text-xs font-semibold">{labels[index]}</p>

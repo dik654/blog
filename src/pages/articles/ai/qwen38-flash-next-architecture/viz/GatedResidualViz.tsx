@@ -235,6 +235,7 @@ export default function GatedResidualViz() {
       note="x·g·주입 계수는 범위를 보여 주기 위한 예시 값입니다. 실제 게이트는 토큰과 차원마다 다시 계산됩니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

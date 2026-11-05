@@ -36,6 +36,7 @@ export default function NormChainViz() {
       note="가상 사례를 단순화한 그림입니다. 실제 체계에는 조례·시행령·행정규칙·판례 등 더 많은 단계가 들어갈 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

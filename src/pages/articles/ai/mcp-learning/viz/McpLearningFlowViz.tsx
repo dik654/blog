@@ -142,7 +142,7 @@ const DIAGRAMS: Record<Mode, (props: { active: number; mobile: boolean }) => Rea
 
 export default function McpLearningFlowViz({ mode }: { mode: Mode }) {
   const flow = FLOWS[mode];
-  const controls = useAnimatedScenes(flow.labels.length, 6200);
+  const controls = useAnimatedScenes(flow.labels.length, 6200, { playbackId: flow.id });
   const mobile = useMobileDiagram();
   const Diagram = DIAGRAMS[mode];
   return <VizFrame eyebrow={flow.eyebrow} title={flow.title} description={flow.description} className="my-8">

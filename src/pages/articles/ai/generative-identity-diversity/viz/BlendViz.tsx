@@ -27,6 +27,7 @@ export default function BlendViz() {
       note="정체성 주입이 벡터 평균으로 구현된 경우의 결론입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

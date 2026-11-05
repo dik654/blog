@@ -92,6 +92,7 @@ export default function TritonKernelProgrammingAndCompilerViz() {
       note="칸 하나는 원소 32개입니다. Warp 배치, coalescing, 실제 메모리 트랜잭션은 그리지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

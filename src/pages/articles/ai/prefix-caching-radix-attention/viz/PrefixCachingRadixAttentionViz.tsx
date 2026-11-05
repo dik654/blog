@@ -17,7 +17,7 @@ export default function PrefixCachingRadixAttentionViz() {
   return <VizFrame eyebrow="가정한 세 요청의 기록" title="같은 앞 여섯 자리는 함께 가리킵니다"
     description="입력 번호와 기록을 저장한 자리를 구분하며 분기와 반환을 따라갑니다."
     note="한 자리씩 재사용, 같은 모델·재사용 영역, 순차 요청, 생성 기록 제외. 마지막 장면만 R3 경로의 사용 잠금을 유지한 별도 반환 조건입니다.">
-    <div data-viz-canvas role="group" tabIndex={0} aria-label="세 요청의 공통 기록과 사용 중인 경로" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas role="group" tabIndex={0} aria-label="세 요청의 공통 기록과 사용 중인 경로" onKeyDown={scenes.onKeyDown}
       className="flex min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex flex-none flex-col py-2">
         <h4 className="font-bold">{LABELS[active]}</h4>

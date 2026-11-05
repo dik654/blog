@@ -218,12 +218,10 @@ export default function ServingBenchmarkMethodologyArticle() {
             탐색하는 것이 바로 이 측정입니다.
           </p>
           <p>
-            에이전트 부하는 독립 요청의 도착률로 나타내기 어렵습니다. 한 세션이 답을 받아 도구를 실행한 뒤에야 다음 요청을 보내고, 같은 앞부분이 턴마다 다시 들어옵니다.
-            그래서 실제 세션 기록을 순서와 대기 시간까지 재생하고, 결과를 λ_max 대신 약속을 지키며 동시에 돌릴 수 있는 에이전트 수로 냅니다.
+            에이전트 부하는 독립 요청의 도착률로 나타내기 어렵습니다. 한 세션이 답을 받아 도구를 실행한 뒤에야 다음 요청을 보내고 같은 앞부분이 턴마다 다시 들어옵니다. 그래서 실제 세션 기록을 순서와 대기 시간까지 재생하고 결과를 λ_max 대신 약속을 지키며 동시에 돌릴 수 있는 에이전트 수로 냅니다.
           </p>
           <p>
-            독립 평가 AA-AgentPerf가 이 방식입니다. 코딩 에이전트 세션을 재생하며 요청 입력은 평균 약 27K 토큰, 출력 중앙값은 약 150토큰입니다. 판정은 요청별 출력
-            속도의 P25와 TTFT의 P95로 하고, 동시 에이전트 수를 지수로 늘린 뒤 이진 탐색으로 경계를 찾습니다.
+            독립 평가 AA-AgentPerf가 이 방식입니다. 코딩 에이전트 세션을 재생하며 요청 입력은 평균 약 27K 토큰, 출력 중앙값은 약 150토큰입니다. 판정은 요청별 출력 속도의 P25와 TTFT의 P95로 하고 동시 에이전트 수를 지수로 늘린 뒤 이진 탐색으로 경계를 찾습니다.
           </p>
           <p>
             등급 1은 P25 20 tokens/s 와 P95 TTFT 10 s, 등급 2는 60 tokens/s 와 5 s 입니다. 등급 1에서 H200 8장은 에이전트 11개, B300 8장은 144개를 받았습니다.
@@ -309,8 +307,7 @@ export default function ServingBenchmarkMethodologyArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-sm text-muted-foreground">
-            예시 S의 ITL 80 ms 는 초당 12.5토큰(계산)으로, MLPerf DeepSeek-R1 Server 기준과 같습니다. 대화형 예시로는 쓸 수 있지만 AA-AgentPerf 등급 1의 요청별 P25
-            20 tokens/s 보다 느려 코딩 에이전트의 S로는 부족합니다. 에이전트용 S는 load 절의 방식을 따릅니다.
+            예시 S의 ITL 80 ms 는 초당 12.5토큰(계산)으로 MLPerf DeepSeek-R1 Server 기준과 같습니다. 대화형 예시로는 쓸 수 있지만 AA-AgentPerf 등급 1의 요청별 P25 20 tokens/s 보다 느려 코딩 에이전트의 S로는 부족합니다. 에이전트용 S는 load 절의 방식을 따릅니다.
           </p>
         </div>
         <ProgressiveDetail

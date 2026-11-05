@@ -437,8 +437,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           없습니다.
         </p>
         <p>
-          MLA는 다릅니다. Token마다 훨씬 작은 latent vector 하나만 cache에 남깁니다. Decode에서는 그 latent를 head 차원으로 되돌리지 않고, 반대로
-          현재 query를 latent 공간으로 접어 latent를 그대로 읽습니다.
+          Token마다 훨씬 작은 latent vector 하나만 cache에 남기는 MLA는 다릅니다. Decode에서는 그 latent를 head 차원으로 되돌리지 않고 반대로 현재 query를 latent 공간으로 접어 latent를 그대로 읽습니다.
         </p>
 
         <h3 id="mla-vs-gqa" className="scroll-mt-20">
@@ -449,10 +448,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           저장 byte를 줄이고 읽을 때 별도 복원 연산이 없습니다.
         </p>
         <p>
-          MLA는 latent 차원을 훨씬 작게 둬 저장 byte를 더 크게 줄입니다. 대신 계산 모양이 바뀝니다. K 쪽 up-projection은 query 쪽으로, V 쪽
-          up-projection은 output projection 쪽으로 미리 흡수되므로{" "}
-          <Link to="/cs/ai/multi-head-latent-attention-mechanics#weight-absorption">weight absorption</Link> 뒤의 decode는 과거 token을 다시
-          펼치지 않습니다.
+          MLA는 latent 차원을 훨씬 작게 둬 저장 byte를 더 크게 줄이는 대신 계산 모양이 바뀝니다. K 쪽 up-projection은 query 쪽으로, V 쪽 up-projection은 output projection 쪽으로 미리 흡수되므로{" "} <Link to="/cs/ai/multi-head-latent-attention-mechanics#weight-absorption">weight absorption</Link> 뒤의 decode는 과거 token을 다시 펼치지 않습니다.
         </p>
         <p>
           그 결과 모든 query head가 576차원(latent 512 + 위치 key 64) KV &quot;head&quot; 하나를 함께 읽습니다. KV head가 1개인 MQA와 같은
@@ -478,14 +474,10 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
           따라오지 않을 수 있습니다.
         </p>
         <p>
-          Latent를 읽는 byte는 줄지만 query head 전부가 같은 latent에 512차원 내적을 하므로 byte당 연산이 늘어납니다. memory-bound였던 attention
-          step이 그만큼 compute 쪽으로 이동합니다. 복원 행렬곱이 늘어서가 아니라 공유 head 하나에 연산이 몰려서입니다.
+          Latent를 읽는 byte는 줄지만 query head 전부가 같은 latent에 512차원 내적을 하므로 byte당 연산이 늘어납니다. memory-bound였던 attention step이 그만큼 compute 쪽으로 이동합니다. 복원 행렬곱이 늘어서 그런 것은 아닙니다. 공유 head 하나에 연산이 몰려서 그렇습니다.
         </p>
         <p>
-          같은 &quot;KV head 1개&quot; 모양이 병렬 서빙의 용량도 정합니다. GQA는 KV head를 tensor parallel rank에 나눠 주지만 MLA는 나눌 head가
-          하나뿐이라 모든 rank가 같은 latent KV를 통째로 들고 있습니다. GPU를 8장 써도 MLA KV 용량은 한 장 몫이고, 이를 sequence 축으로 다시
-          나누는 방법은{" "}
-          <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 decode context parallel 글</Link>이 다룹니다.
+          같은 &quot;KV head 1개&quot; 모양이 병렬 서빙의 용량도 정합니다. GQA는 KV head를 tensor parallel rank에 나눠 주지만 MLA는 나눌 head가 하나뿐이라 모든 rank가 같은 latent KV를 통째로 들고 있습니다. GPU를 8장 써도 MLA KV 용량은 한 장 몫입니다. 이를 sequence 축으로 다시 나누는 방법은{" "} <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 decode context parallel 글</Link>을 보면 됩니다.
         </p>
         <p>
           MLA의 latent 압축 자체는{" "}

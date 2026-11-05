@@ -56,6 +56,7 @@ export default function BuiltTotalViz() {
       note="재료와 각 값은 헤로도토스 『역사』 7권 184~186절의 것입니다. Macaulay 영역본으로 읽었고 괄호 안 환산은 영역자 주석을 따랐습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

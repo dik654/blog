@@ -19,7 +19,7 @@ export default function ChainRateViz() {
   const scenes = useAnimatedScenes(SCENES.length);
   return (
     <VizFrame eyebrow="연결된 변화" title="작은 변화가 두 구간의 배율을 차례로 거칩니다" description="가정 사례의 2→7→49에서 현재 위치와 작은 변화량을 함께 추적합니다." note="첫 구간은 정확한 3배이고 둘째 구간의 14배는 u=7 근처에서의 근사입니다.">
-      <div data-viz-canvas tabIndex={0} role="group" aria-label="연쇄법칙 변화 배율 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="연쇄법칙 변화 배율 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <div className="grid grid-cols-3 gap-4 sm:gap-6">
           {COLUMNS.map((c,i) => <div key={c.label} className={`min-w-0 border-y py-4 text-center transition-opacity ${scenes.active >= i ? "border-primary opacity-100" : "border-border opacity-35"}`}>
             <p className="text-xs font-bold text-primary">{c.rule}</p><p className="mt-3 font-mono font-bold">{c.label}</p><p className="mt-3 font-mono text-[11px]">{c.delta}</p>

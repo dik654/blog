@@ -168,6 +168,7 @@ export default function HbmRoundTripViz() {
       note="위치 4,096개 · 성분 64개 · 값 2바이트 가정은 본문 5절과 같습니다. 출력 O와 함께 저장하는 행 통계 L은 작아서 칸으로 그리지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

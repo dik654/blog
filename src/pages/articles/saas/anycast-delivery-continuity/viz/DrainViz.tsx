@@ -28,6 +28,7 @@ export default function DrainViz() {
       note="주기와 횟수는 계산 방법을 보여 주기 위한 예시이며 권고값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

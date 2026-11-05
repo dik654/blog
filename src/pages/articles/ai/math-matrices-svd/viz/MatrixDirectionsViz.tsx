@@ -12,7 +12,7 @@ const controller=useAnimatedScenes(scenes.length); const active=controller.activ
 const enlarged=active>=2; const common=enlarged?9:3; const end=enlarged?[10,8]:[4,2];
 const px=(x:number)=>36+18*x;const py=(y:number)=>240-18*y;
 return <VizFrame eyebrow="두 부분으로 같은 계산 추적" title="함께 가는 부분은 3배 · 차이는 1배" description="선택을 바꾸어 두 이동을 이어 보세요. 모든 화면에서 가로·세로의 눈금과 크기는 같습니다." note="두 번째 이동은 첫 이동의 끝으로 옮겨 그렸습니다. 생략 화면의 빈 점은 원래 출력이고 채운 점은 근사 출력입니다.">
-<div data-viz-canvas role="group" tabIndex={0} aria-label="두 입력이 두 출력이 되는 네 장면" onKeyDown={controller.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+<div id={controller.playbackId} data-viz-canvas role="group" tabIndex={0} aria-label="두 입력이 두 출력이 되는 네 장면" onKeyDown={controller.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
 <svg viewBox="0 0 300 290" className="mx-auto block w-full max-w-[320px]" role="img" aria-label="가로 첫 칸, 세로 둘째 칸으로 그린 입력과 두 성분의 이동">
 <g stroke="currentColor" opacity=".15" strokeWidth="1">{[3,6,9].map(n=><g key={n}><line x1={px(n)} y1="30" x2={px(n)} y2="240"/><line x1="36" y1={py(n)} x2="252" y2={py(n)}/></g>)}</g>
 <g stroke="currentColor" opacity=".5" strokeWidth="1"><line x1="36" y1="240" x2="257" y2="240"/><line x1="36" y1="240" x2="36" y2="23"/></g>

@@ -69,6 +69,7 @@ export default function KvFootprintViz() {
       note="Qwen2.5-VL-7B의 28층·KV head 4·head 차원 128·BF16과 16 token block을 가정했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

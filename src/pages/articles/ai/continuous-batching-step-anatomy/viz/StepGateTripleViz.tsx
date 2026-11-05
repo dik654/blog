@@ -96,6 +96,7 @@ export default function StepGateTripleViz() {
       note="예산 8, 자리 4(또는 2), A·B가 1 token씩 먼저 쓴다는 조건은 본문의 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -37,6 +37,7 @@ export default function WhatTheNameAddsViz() {
       note="왕이 확정했다는 서술은 본문 끝 문장, 장 구분과 번호의 내력은 머리말과 65조 뒤 주의 것입니다. 네 질문은 이 글이 정리한 것이며 법전의 필수 정의가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

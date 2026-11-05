@@ -50,6 +50,7 @@ export default function BootHandoffViz() {
       note="initramfs를 쓰는 일반적인 x86 서버 경로입니다. 커널의 /init 선택 순서는 Linux v6.12 init/main.c를 따릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

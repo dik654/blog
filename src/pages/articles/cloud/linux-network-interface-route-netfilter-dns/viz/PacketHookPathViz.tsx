@@ -92,6 +92,7 @@ export default function PacketHookPathViz() {
       note="Linux v6.12 include/uapi/linux/netfilter.h의 enum과 net/ipv4/ip_input.c·ip_output.c의 NF_HOOK 호출 위치를 그대로 옮겼습니다. INGRESS 훅과 bridge 계층은 생략했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

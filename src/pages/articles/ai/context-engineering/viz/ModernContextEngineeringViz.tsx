@@ -37,7 +37,7 @@ function SceneFrame({
   notes: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 6200);
+  const controls = useAnimatedScenes(labels.length, 6200, { playbackId: id });
   return (
     <VizFrame eyebrow={eyebrow} title={title} description={description} className="my-8">
       <div

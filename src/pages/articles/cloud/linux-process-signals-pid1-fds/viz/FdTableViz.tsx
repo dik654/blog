@@ -95,6 +95,7 @@ export default function FdTableViz() {
       note="24칸의 구성과 soft limit 1,024는 설명용 가정입니다. 실제 값은 /proc/PID/fd와 /proc/PID/limits로 확인합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -91,6 +91,7 @@ export default function OomScoreViz() {
       note="A는 RSS 1,536 MiB와 page table 3 MiB, B는 RSS 512 MiB와 page table 1 MiB라고 가정했습니다. swap은 없습니다. 마지막 장면의 숫자는 fs/proc/base.c 식으로 환산한 값입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

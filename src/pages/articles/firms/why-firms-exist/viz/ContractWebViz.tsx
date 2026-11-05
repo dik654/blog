@@ -16,7 +16,7 @@ export default function ContractWebViz() {
     <VizFrame eyebrow="같은 상대에게 여섯 작업" title="반복해서 협상하는 부분과 나중에 정하는 부분을 나눈다"
       description="사람 수를 바꾸지 않고 계약과 작업 지시를 비교합니다. 이 그림의 여섯 작업도 설명을 위한 가정입니다."
       note="지시 권한은 약정과 법의 제한을 받습니다. 계약의 명칭이나 장수만으로 법적 관계를 판정하지 않습니다.">
-      <div data-viz-canvas tabIndex={0} role="group" aria-label="여섯 작업의 계약과 지시 비교" onKeyDown={scenes.onKeyDown}
+      <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="여섯 작업의 계약과 지시 비교" onKeyDown={scenes.onKeyDown}
         className="flex h-[37rem] min-h-[32rem] min-w-0 flex-col gap-5 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{s + 1}. {SCENES[s]}</h4>

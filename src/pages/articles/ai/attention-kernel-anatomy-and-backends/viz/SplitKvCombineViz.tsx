@@ -81,6 +81,7 @@ export default function SplitKvCombineViz() {
       note="3·3·2 분할과 값 1~8은 본문의 교육용 사례입니다. 실제 구현은 key 조각 단위로 나눕니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

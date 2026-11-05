@@ -110,6 +110,7 @@ export default function MemoryLedgerViz() {
       note="swap이 없는 서버를 가정했습니다. 커널 예약 160 MiB, zone low watermark 합 64 MiB, 앱이 자주 읽는 파일 1,024 MiB는 설명용 값입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

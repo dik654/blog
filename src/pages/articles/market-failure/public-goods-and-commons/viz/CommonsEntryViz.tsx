@@ -53,6 +53,7 @@ export default function CommonsEntryViz() {
       note="호수와 배 여덟 척으로 줄인 예입니다. 배마다 실력이 같고 한 척이 건지는 값이 척수에 따라서만 정해진다고 둔 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

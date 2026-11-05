@@ -45,6 +45,7 @@ export default function AgreementDecisionViz() {
       note="이 화면은 학습용 판정 절차입니다. 실제 조약 분석에서는 탐지 오류, 대응 비용, 국내 비준, 힘의 격차를 추가로 조사해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

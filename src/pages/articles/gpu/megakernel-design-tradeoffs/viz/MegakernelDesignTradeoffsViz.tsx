@@ -128,6 +128,7 @@ export default function MegakernelDesignTradeoffsViz() {
       note="시간(µs)·launch 3 µs·register 128 과 40·warp 51 과 16 은 본문의 계산 예를 그대로 옮긴 가정값입니다. Scheduler SM 과 shared memory page 는 그리지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

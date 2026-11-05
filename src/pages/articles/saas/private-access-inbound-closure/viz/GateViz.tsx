@@ -35,6 +35,7 @@ export default function GateViz() {
       note="네 항목은 이 글이 정리한 확인 틀이며 특정 제품의 점검 목록이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

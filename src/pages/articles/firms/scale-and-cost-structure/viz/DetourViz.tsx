@@ -17,7 +17,7 @@ export default function DetourViz() {
   return <VizFrame eyebrow="같은 부품, 세 방법" title="먼저 쓰는 돈과 개수만큼 더 쓰는 돈을 합친다"
     description="숫자는 같은 기간의 비용 단위입니다. 품질·생산량을 맞추고 세 방법 중 하나를 새로 선택한다고 가정합니다."
     note="(가정) 판매할 수량을 알고 가동 여력이 충분합니다. 재료비 등 생략한 비용은 세 방식에서 같으며 실제 업체의 견적이 아닙니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="수량별 세 생산 방법의 비용" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="수량별 세 생산 방법의 비용" onKeyDown={scenes.onKeyDown}
       className="flex h-[37rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         <h4 className="min-h-[3rem] text-base font-bold min-[390px]:min-h-[1.5rem] sm:min-h-0">{c.quantity}개 · 최저 {c.minimum} · 방법 {c.minimizers.join(" 또는 ")}</h4>

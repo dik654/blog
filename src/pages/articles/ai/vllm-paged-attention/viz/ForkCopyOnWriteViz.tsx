@@ -76,6 +76,7 @@ export default function ForkCopyOnWriteViz() {
       note="논문 Fig. 8의 절차를 B=16, 35-token prompt에 맞춰 옮긴 그림입니다. 원 논문의 fork 모형입니다. 현 고정 버전은 partial prefix hit의 CoW와 복사 완료 전 추가 ref도 별도로 구현합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

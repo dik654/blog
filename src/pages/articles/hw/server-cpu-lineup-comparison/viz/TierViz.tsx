@@ -35,6 +35,7 @@ export default function TierViz() {
       note="상대값은 계열 간 간격을 보여 주기 위한 것이며 특정 모델의 사양이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

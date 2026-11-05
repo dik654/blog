@@ -9,7 +9,7 @@ const scenes=[
  {input:3,output:4,label:"옆의 가운데",text:"1+3δ는 1번과 2번 자리의 가운데입니다. 짝수인 2번 자리 1+4δ로 올라갑니다."},
 ];
 export default function RoundingGridViz(){const c=useAnimatedScenes(scenes.length);const s=scenes[c.active];const x=(n:number)=>38+61*n;return <VizFrame eyebrow="같은 입력 · 명시한 저장 시점" title="빈 점에서 가까운 저장 자리로 간다" description="가로축은 1에서 더 간 양을 δ 단위로 표시합니다. 선의 기울기나 화살표 길이는 실행 시간을 뜻하지 않습니다." note="δ=1/2048인 가정 사례입니다. 자리 번호 0·1·2는 여기 보인 이웃 자리의 번호입니다.">
-<div data-viz-canvas tabIndex={0} role="group" aria-label="반올림 자리 선택" onKeyDown={c.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+<div id={c.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="반올림 자리 선택" onKeyDown={c.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
 <svg viewBox="0 0 320 220" className="mx-auto block w-full max-w-[550px]" role="img" aria-label={`${s.label}: 저장 직전 위치 ${s.input}δ, 저장 뒤 위치 ${s.output}δ`}>
 <path d="M20 130H300" stroke="currentColor" strokeWidth="1" opacity=".35"/>
 {[0,1,2,3,4].map(n=><g key={n}><path d={`M${x(n)} 126v8`} stroke="currentColor" opacity=".3"/><text x={x(n)} y="171" textAnchor="middle" fontSize="11" fill="currentColor">{n===0?"0":`${n}δ`}</text></g>)}

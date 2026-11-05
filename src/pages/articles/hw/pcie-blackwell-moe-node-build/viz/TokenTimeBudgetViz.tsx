@@ -94,6 +94,7 @@ export default function TokenTimeBudgetViz() {
       note="65·44·32·600·900은 rtx6kpro 위키의 현장 보고이고 반복 횟수와 오차가 적혀 있지 않습니다. 1.25ms와 µs 값은 이 글의 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

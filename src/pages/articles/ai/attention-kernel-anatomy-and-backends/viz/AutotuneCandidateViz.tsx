@@ -168,6 +168,7 @@ export default function AutotuneCandidateViz() {
       note="36→21→9는 속도 순위가 아닙니다. 앞의 두 감소는 실행 전에 적용한 조건이고, 실제 속도 비교는 마지막 단계입니다."
     >
       <div
+        id={scene.playbackId}
         role="group"
         tabIndex={0}
         aria-label="Triton autotune 후보 생성과 필터 과정"

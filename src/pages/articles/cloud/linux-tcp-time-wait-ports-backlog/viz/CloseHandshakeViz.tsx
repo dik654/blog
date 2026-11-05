@@ -55,6 +55,7 @@ export default function CloseHandshakeViz() {
       note="상태 이름은 커널 이름입니다. ss -tan의 State 열에는 ESTAB, FIN-WAIT-1, TIME-WAIT처럼 줄표로 찍힙니다. TIME_WAIT 60초는 Linux 상수 TCP_TIMEWAIT_LEN입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

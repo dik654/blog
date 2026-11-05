@@ -65,6 +65,7 @@ export default function LadderViz() {
       note="조항과 금액은 함무라비 법전 196~199·209~217조의 것입니다. C. H. W. Johns 영역본으로 읽었고, 1마나 = 60세켈 환산은 같은 판의 색인 주에 적힌 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

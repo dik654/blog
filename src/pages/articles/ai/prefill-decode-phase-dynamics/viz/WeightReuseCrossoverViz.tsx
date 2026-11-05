@@ -65,6 +65,7 @@ export default function WeightReuseCrossoverViz() {
       note="F=100(2+c) MFLOP, M=(140+2c) MB, 1 TFLOP/s·100 GB/s는 본문의 작은 모형 가정이며 GPU 측정값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

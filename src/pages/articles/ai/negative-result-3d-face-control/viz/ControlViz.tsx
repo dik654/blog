@@ -39,6 +39,7 @@ export default function ControlViz() {
       note="쌍별 평균이며 강도 0.85에서 비교했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

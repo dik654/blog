@@ -113,6 +113,7 @@ export default function CardBudgetViz() {
       note="공칭 96GB와 가중치 균등 분할을 가정한 계산입니다. 실제 카드는 97,887MiB로 보고되고 활성값 작업 공간이 따로 들어가므로 측정값과 몇십 퍼센트 차이가 납니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

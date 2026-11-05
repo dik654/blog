@@ -27,6 +27,7 @@ export default function CoreViz() {
       note="소켓 간 링크 대역폭은 제품마다 다르며 그림은 홉이 하나 늘어난다는 구조만 보여 줍니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

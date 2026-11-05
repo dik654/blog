@@ -266,7 +266,7 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
               { label: "200K 대화 수", expression: "3,621,504 ÷ 200,000", result: "18개", reason: "BF16 DCP1의 0.95개와 비교합니다." },
             ]}
             conclusion="같은 노드가 담는 200K 대화는 BF16 DCP1에서 0.95개, FP8 DCP8에서 18개입니다. 차이의 8배는 token 나눔, 2배 남짓은 byte 절반에서 옵니다."
-            caveats={["BF16 측정의 gpu-util 설정은 기록에 없어 두 자리(13.4 GB와 15.9 GB)가 다릅니다. 그래서 FP8 효과가 정확히 2배가 아니라 2.4배로 보입니다.", "자리 역산은 측정 token 수에 이론 byte를 곱한 값이라 실제 allocator 크기와 다를 수 있습니다(추정)."]}
+            caveats={["BF16 측정의 gpu-util(vLLM --gpu-memory-utilization, GPU 메모리 중 vLLM이 쓸 상한 비율) 설정은 기록에 없어 두 자리(13.4 GB와 15.9 GB)가 다릅니다. 그래서 FP8 효과가 정확히 2배가 아니라 2.4배로 보입니다.", "자리 역산은 측정 token 수에 이론 byte를 곱한 값이라 실제 allocator 크기와 다를 수 있습니다(추정)."]}
           />
           <div className={prose}>
             <p>

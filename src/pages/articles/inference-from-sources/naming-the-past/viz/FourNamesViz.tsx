@@ -58,6 +58,7 @@ export default function FourNamesViz() {
       note="네 이름은 Johns 영역본의 표제와 본문 끝 문장, 머리말에서 가져왔습니다. 머리말의 시간 간격은 학교 판본의 연대를 따로 대조하지 않아 사용하지 않습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

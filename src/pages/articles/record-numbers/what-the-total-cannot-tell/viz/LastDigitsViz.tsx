@@ -29,6 +29,7 @@ export default function LastDigitsViz() {
       note="총계와 식량 계산은 헤로도토스 7권 184~187절의 것이고, 영역자가 그 계산이 틀렸다고 주석에 적었습니다. 나눗셈을 다시 해 본 것은 이 글입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
