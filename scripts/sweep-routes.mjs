@@ -86,6 +86,9 @@ const VIEWPORTS = [
 ];
 
 const IGNORED_CONSOLE = [
+  // GPU 없는 CI 브라우저에서 3D Viz를 그릴 때 Chromium이 남기는 소프트웨어 렌더링 안내입니다.
+  /Automatic fallback to software WebGL has been deprecated/,
+  /GL Driver Message \(OpenGL, Performance/,
   /React DevTools/,
   /Download the React DevTools/,
   /\[vite\]/,
