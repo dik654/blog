@@ -6,8 +6,16 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "@/pages/articles/world-systems/NumericPath";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
+import AssetPurchasePathsViz from "./viz/AssetPurchasePathsViz";
 import DepositJourneyViz from "./viz/DepositJourneyViz";
+import DepositLimitViz from "./viz/DepositLimitViz";
 import LiquidityBranchViz from "./viz/LiquidityBranchViz";
+import LossInterestBranchViz from "./viz/LossInterestBranchViz";
+import PromiseMirrorViz from "./viz/PromiseMirrorViz";
+import ReserveCapViz from "./viz/ReserveCapViz";
+import RunLoopViz from "./viz/RunLoopViz";
+import TodayLaterViz from "./viz/TodayLaterViz";
+import TransferBranchViz from "./viz/TransferBranchViz";
 
 const BOE="https://www.bankofengland.co.uk/-/media/boe/files/quarterly-bulletin/2014/money-creation-in-the-modern-economy.pdf";
 const BIS="https://www.bis.org/publications/qr-202309/unpacking-international-banks-deposit-funding";
@@ -47,7 +55,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 <p className="leading-8">아래 그림의 첫 장면은 출발점입니다. ‘10 빌리기’를 누르면 나중에 받을 돈과 고객에게 갚을 돈만 늘어납니다. ‘6 보내기’에서는 A은행의 오늘 보낼 돈과 고객에게 갚을 돈이 같이 줄어듭니다. 이때 오른쪽 B은행에 같은 6이 나타나는지 확인하세요.</p>
 <p className="leading-8">‘4 갚기’에서는 이동 경로가 다릅니다. 다른 은행으로 4를 보내지 않습니다. A은행은 공장이 갚아야 할 금액을 4 줄이고 공장 통장에서도 4를 지웁니다. 판매자의 6은 건드리지 않습니다. 마지막에 A은행 고객 잔액 합이 다시 92가 되었다고 해서 처음 상태로 전부 돌아간 것은 아닙니다.</p>
 </div><DepositJourneyViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">그 차이는 A은행의 왼쪽에서 드러납니다. 처음에는 오늘 보낼 돈 20과 나중에 받을 돈 80이었지만 마지막에는 14와 86입니다. 합은 다시 100이어도 사용할 수 있는 시점이 달라졌습니다. B은행 고객에게 새로 남은 6까지 합치면 두 은행 고객의 통장 잔액은 출발점보다 6 많습니다.</p></div></section>
-<section id="why-two-records" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 새 통장 잔액의 반대편에는 새 약속이 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="why-two-records" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 새 통장 잔액의 반대편에는 새 약속이 있습니다</h2><PromiseMirrorViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">대출 직후 A은행이 가진 것은 공장에 10을 돌려 달라고 할 권리입니다. A은행이 새로 해야 할 일은 공장이 통장 잔액 10의 지급을 요구할 때 응하는 것입니다. 공장도 같은 약속의 반대편에 있습니다. 공장은 은행에 10의 지급을 요구할 수 있고, 은행에는 정한 때에 10을 갚아야 합니다.</p>
 <p className="leading-8">두 기록이 함께 생기므로 은행과 공장의 순재산이 그 순간 10씩 늘지는 않습니다. 쓸 수 있는 통장 잔액은 늘었지만, 돈을 빌린 사실도 남습니다. 새 기계를 들여 생산이 늘어나고 이익을 얻을지는 이후 사업의 결과입니다. 대출 계약을 적는 일과 새로운 부를 만드는 일을 같은 사건으로 계산할 수 없습니다.</p>
 <p className="leading-8">송금은 그 약속을 다른 은행의 약속으로 바꾸는 과정입니다. 판매자가 B은행의 통장 잔액을 받으려면 A은행 고객의 숫자만 줄여서는 부족합니다. B은행도 고객에게 지급할 의무를 받아들이는 대가를 받아야 합니다. 이 사례에서는 A가 가진 오늘 보낼 돈 6이 그 대가로 넘어갑니다.</p>
@@ -67,7 +75,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 <p className="leading-8">이처럼 은행이 대출과 함께 고객 예금 채무를 새로 기록하는 것을 예금 창조라고 부릅니다. 여기서 창조된 것은 고객이 지급에 사용할 은행의 채무입니다. 차주의 상환 의무가 사라진 것도, 중앙은행 준비금이 10 늘어난 것도 아닙니다.</p>
 <p className="leading-8">모형의 자본 8이 그대로인 이유는 수입을 벌어서가 아니라 자산과 부채가 같은 10만큼 늘었기 때문입니다. 실제 대출에는 수수료·거래원가·예상 신용손실 등의 별도 회계가 붙을 수 있습니다. ‘대출의 두 줄만 보면 자본 불변’이라는 결론을 모든 최초 인식 분개의 결론으로 확대하지 않습니다.</p>
 </div><NumericPath title="대출 한 건을 은행과 차주가 함께 기록합니다" steps={[{label:"A의 받을 권리",value:"+10",detail:"대출 80→90"},{label:"A의 지급 의무",value:"+10",detail:"예금 92→102"},{label:"차주의 두 기록",value:"10 / 10",detail:"통장 잔액과 갚을 원금"}]}/></section>
-<section id="transfer-repayment" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 송금은 은행을 바꾸고 원금 상환은 두 기록을 줄입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="transfer-repayment" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 송금은 은행을 바꾸고 원금 상환은 두 기록을 줄입니다</h2><TransferBranchViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">6을 송금하면 A의 준비금은 20→14, 예금은 102→96입니다. A의 대출은 90으로 남습니다. B은행에서는 준비금과 판매자 예금이 각각 6 늘어납니다. 따라서 두 은행의 준비금 증감 합은 −6+6=0, 예금 증감 합도 송금 단계만 보면 −6+6=0입니다.</p>
 <p className="leading-8">새 대출 이후 생긴 예금 10은 공장 통장의 4와 판매자 통장의 6으로 나뉘어 있습니다. 돈이 A은행을 떠났다는 말은 전체 예금 6이 없어졌다는 뜻이 아닙니다. 만약 판매자도 A은행 고객이었다면 고객별 잔액 6의 주인만 바꾸고 A의 총예금과 준비금은 그대로였을 것입니다.</p>
 <p className="leading-8">공장이 자기 A은행 예금으로 원금 4를 갚으면 A의 대출과 예금이 함께 4 줄어듭니다. 최종 장부는 14+86=92+8입니다. B의 추가 예금 6은 남아 있으므로 두 은행의 총예금은 출발점보다 6 많습니다. 이 계산은 새 대출 10에서 원금 상환 4를 뺀 결과와 같습니다.</p>
@@ -86,13 +94,13 @@ export default function ModernArticle(){return <div className="space-y-16">
 <tr className="border-t border-border"><td className="p-3">B · 수취</td><td className="p-3">준비금 6</td><td className="p-3">고객 예금 6</td></tr>
 <tr className="border-t border-border"><td className="p-3">A · 원금 상환</td><td className="p-3">고객 예금 4</td><td className="p-3">대출채권 4</td></tr>
 </tbody></table></div><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">A에서 예금 차변 6은 예금 부채가 줄었다는 뜻입니다. B의 예금 대변 6은 반대입니다. 거래별 차변·대변 합이 같아야 한다는 조건과, 거래 뒤 자산=부채+자본이라는 조건을 함께 확인할 수 있습니다. 이 표는 공식 공보의 장부 관계를 본문의 숫자로 옮긴 설명용 기록이며 특정 은행 전산의 계정 코드나 원장을 복제한 것이 아닙니다.</p></div></section>
-<section id="loss-interest" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 못 받은 원금과 갚은 원금은 다른 칸을 줄입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="loss-interest" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 못 받은 원금과 갚은 원금은 다른 칸을 줄입니다</h2><LossInterestBranchViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">8절의 최종 A은행에서 별도 분기를 시작합니다. 대출 86 중 아직 비용에 반영하지 않은 손실 3을 새로 인식한다면 순대출은 83, 자본은 5가 됩니다. 준비금 14와 예금 92는 그대로여서 14+83=92+5입니다. 차주가 실제로 예금 3을 지급한 거래가 없으므로 예금을 함께 지울 이유가 없습니다.</p>
 <p className="leading-8">실무에서는 예상 신용손실을 충당금으로 먼저 인식하고 이후 회수 기대가 없는 금액을 제각할 수 있습니다. 이미 충당금에 반영된 부분을 제각할 때 같은 손실을 다시 자본에서 빼면 이중 계산입니다. 총대출, 충당금, 순대출 중 어느 금액을 읽는지 확인해야 합니다. IFRS 9의 5.5.8은 필요한 손실충당금 조정을 손익에 반영하는 원칙을 다룹니다.</p>
 <p className="leading-8">다시 최종 A은행의 원래 상태로 돌아갑니다. 예금 1 이상을 보유한 A은행의 다른 차주가 이자 1을 자기 통장에서 낸다고 합시다. 앞의 공장은 잔액이 0이므로 추가 입금 없이 이 1을 낼 수 없습니다. 미수이자와 비용·세금을 생략한 현금 기준 모형에서 고객 예금은 92→91, 은행 이익을 포함한 자본은 8→9가 됩니다. 대출 원금 86은 줄지 않습니다. 실제 발생주의에서는 이미 인식한 미수이자 회수일 수도 있으므로 수취 시점에 이익을 또 적지 않습니다.</p>
 <p className="leading-8">은행이 이후 직원에게 급여를 지급하거나 배당을 지급하면 수취인의 예금은 다시 늘 수 있습니다. 따라서 이자 한 번의 분개를 보고 모든 이자 금액이 영구히 사회에서 사라진다고 말할 수 없습니다. 원금 상환, 이자 수익, 손실 인식은 각각 어느 권리와 의무가 변했는지 따로 추적해야 합니다.</p>
 </div><ExplainedFormula question="예금을 지급하지 않고 손실만 3 인식하면 어느 칸이 줄까요?" idea="아직 반영하지 않은 손실을 순대출과 자본에서 함께 차감합니다. 예금 92는 그대로입니다." formula={String.raw`E'=E-\ell`} annotatedFormula={String.raw`\begin{aligned}E'&=\underbrace{E-\ell}_{\text{추가 손실 차감}}\\8-3&=5\\14+83&=92+5\end{aligned}`} operations={[{expression:"86-3",annotation:["순대출 86에서","새로 인식한 손실 3 차감"]},{expression:"97-92",annotation:["자산 97에서 부채 92를 빼면","남은 자본은 5입니다."]}]} terms={[{symbol:"E",name:"기존 자본",description:"추가 손실을 반영하기 전의 장부 자본 8입니다."},{symbol:String.raw`\ell`,name:"추가 손실",description:"기존 충당금에 반영하지 않은 손실 3입니다."},{symbol:"E'",name:"남은 자본",description:"다른 변화를 생략하고 손실을 반영한 자본 5입니다."}]} assumptions={["세금과 다른 거래는 생략합니다.","이미 반영한 충당금에 대응하는 제각을 새 비용처럼 중복 계산하지 않습니다."]} interpretation="예금이 상환에 사용되지 않은 손실 사건입니다. 대출 잔액의 감소만으로 예금 소멸액을 추정할 수 없습니다."/><CitationBlock source="IFRS Interpretations Committee · 손실충당금과 손익 (2018-11)" citeKey={3} href={IFRS}>5.5.8의 손실충당금 조정과 총장부가·순장부가 정의를 확인합니다.</CitationBlock><CitationBlock source="IFRS ITG · 손실충당금 표시 (2015-12), 문단 5.4.4 논의" citeKey={10} href="https://www.ifrs.org/content/dam/ifrs/meetings/2015/december/itg/impairment-of-financial-instruments/ap10-presentation-of-the-loss-allowance.pdf">제각은 회수 기대가 없는 금액의 총장부가를 직접 줄이는 사건입니다. 이 자료는 ITG 논의 문서이며 기준서 자체를 대체하지 않습니다.</CitationBlock></section>
-<section id="other-creation" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 예금이 늘어나는 경로에는 자산 매입도 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="other-creation" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 예금이 늘어나는 경로에는 자산 매입도 있습니다</h2><AssetPurchasePathsViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">은행이 비은행 고객이 가진 채권 6을 사고 그 고객의 자기 은행 예금에 6을 지급하는 별도 거래를 생각해 봅시다. 은행 자산에는 채권 +6, 부채에는 예금 +6이 생깁니다. 새 대출은 없어도 예금이 늘 수 있습니다. 고객은 채권을 예금으로 교환했으므로 이것만으로 순재산이 6 증가하지는 않습니다.</p>
 <p className="leading-8">중앙은행이 은행 보유 채권 6을 사는 경우에는 은행의 채권 −6, 준비금 +6이 될 수 있습니다. 고객 예금의 변화는 이 거래 자체에 없습니다. 중앙은행이 비은행 고객의 채권을 은행을 통해 사면 은행의 준비금과 그 고객 예금이 함께 늘 수 있습니다. 매도자가 누구인지가 다른 것입니다.</p>
 <p className="leading-8">은행이 발행한 장기 채권을 비은행 고객이 자기 예금 6으로 사는 경우에는 은행 예금 부채 6이 다른 종류의 부채 6으로 바뀔 수 있습니다. BIS의 2023년 분석은 자산 매입·중앙은행 거래·자금 제공자와 상품의 교체를 함께 추적합니다. 그 자료의 넓은 ‘deposit funding’에는 repo와 은행 간 차입도 포함되므로 고객 통장 잔액과 같은 통계로 읽지 않습니다.</p>
@@ -107,9 +115,9 @@ export default function ModernArticle(){return <div className="space-y-16">
 <p className="leading-8">준비율 20%라면 돈이 다섯 배가 된다는 설명을 별도의 정적인 모형으로 읽어 보겠습니다. 은행 부문 준비금 R을 20에 고정하고, 같은 정의의 예금 D에 양의 준비율 r=0.2를 적용한다고 가정합니다. 필요한 준비금 rD가 보유 R을 넘지 않아야 한다면 D는 100을 넘을 수 없습니다.</p>
 <p className="leading-8">이 모형의 20%를 앞의 A은행에 실제 규제로 적용한 적은 없습니다. 억지로 매순간 적용하면 대출 직후 예금 102에는 준비금 20.4가 필요하므로 준비금 20인 상태는 조건을 충족하지 못합니다. 본문의 거래 원리와 이 별도 상한 모형의 가정을 섞어 숫자가 맞는 척하면 안 됩니다.</p>
 </div><ExplainedFormula question="고정 준비금 20으로 허용되는 예금의 상한은 무엇일까요?" idea="필요 준비금이 보유량 이하여야 한다는 조건을 양의 준비율로 나눕니다. 상한을 실제로 채우는 행동까지 가정하지 않습니다." formula={String.raw`rD\le R\Rightarrow D\le R/r\quad(r>0)`} annotatedFormula={String.raw`\begin{aligned}\underbrace{rD}_{\text{필요 준비금}}&\le R\\D&\le\underbrace{R/r}_{\text{예금 상한}}\quad(r>0)\\20/0.2&=100\end{aligned}`} operations={[{expression:String.raw`rD\le R`,annotation:["동일 준비율의 필요량을","고정 보유 준비금과 비교"]},{expression:String.raw`D\le R/r`,annotation:["r>0이므로 부등호 방향을 유지하며","양쪽을 준비율로 나눔"]}]} terms={[{symbol:"R",name:"보유 준비금",description:"모형 안에서 고정한 준비금 합계 20입니다."},{symbol:"D",name:"예금",description:"같은 준비율 적용 대상인 예금 합계입니다."},{symbol:"r",name:"준비율",description:"0보다 큰 동일 준비율 0.2입니다."}]} assumptions={["준비금과 예금의 정의, 준비율을 고정한 별도 정적 모형입니다.","초과 준비금을 남기거나 다른 제약이 걸리면 예금은 상한보다 작을 수 있습니다.","r=0이면 이 나눗셈을 할 수 없습니다."]} interpretation="D/R≤5이지만 예금이 자동으로 다섯 배 만들어진다는 뜻은 아닙니다. 현금 유출·다른 부채·준비금 공급·준비금 정의가 바뀌면 같은 단순식을 그대로 적용하지 않습니다."/>
-<div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">기존 예금이 92라면 이 고정 모형에서 더 허용되는 예금은 8입니다. 준비금 증가분만 따로 보고 언제나 예금 증가분이 그 다섯 배라고 결론 내려면 출발 상태와 새 상태에서 상한이 실제로 묶이는지까지 정해야 합니다. 부등식은 은행들이 그 한도까지 대출한다는 행동 법칙을 포함하지 않습니다.</p>
+<ReserveCapViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">기존 예금이 92라면 이 고정 모형에서 더 허용되는 예금은 8입니다. 준비금 증가분만 따로 보고 언제나 예금 증가분이 그 다섯 배라고 결론 내려면 출발 상태와 새 상태에서 상한이 실제로 묶이는지까지 정해야 합니다. 부등식은 은행들이 그 한도까지 대출한다는 행동 법칙을 포함하지 않습니다.</p>
 <p className="leading-8">r=0이면 0으로 나눌 수 없습니다. 이 조건만으로 유한한 예금 상한을 얻지 못한다는 뜻이며 무한 대출이 가능하다는 뜻이 아닙니다. 미국 연준 공식 안내는 2020년 3월 26일부터 지급준비율을 0으로 내렸다고 명시합니다. 그 제도에서도 결제 자금, 수익성, 자본과 유동성 관리가 필요합니다.</p></div><CitationBlock source="Federal Reserve · Reserve Requirements (2026-10-04 확인)" citeKey={5} href={"https://www.federalreserve.gov/monetarypolicy/reservereq.htm"}>해당 공식 자료의 설명 범위와 본문의 가정 사례를 함께 확인합니다.</CitationBlock></section>
-<section id="maturity-transformation" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 100의 자산을 가진 은행에도 오늘 6이 부족할 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="maturity-transformation" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 100의 자산을 가진 은행에도 오늘 6이 부족할 수 있습니다</h2><TodayLaterViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">
             다시 상환까지 끝난 A은행 14+86=92+8로 돌아옵니다. 예금 92 중 20을 보유한 고객들이 오늘 다른 은행으로 지급해 달라고 요구한다고 합시다. 바로 쓸 준비금은
             14여서 6이 부족합니다. 나중에 돌아올 대출 86을 장부에 갖고 있다는 사실만으로 오늘의 지급 지시가 완료되지는 않습니다.
@@ -123,7 +131,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 <p className="leading-8">이제 예금 20을 지급하면 준비금은 0, 예금은 72가 됩니다. 최종 장부는 0+76=72+4입니다. 지급 요구를 처리했지만 남은 주주의 손실 흡수 여력은 절반입니다. 더 많은 고객이 같은 상황을 예상해 서두르면 추가 급매가 필요해질 수 있습니다.</p>
 <p className="leading-8">다른 사람의 인출이 내 회수 가능성에 영향을 주면 먼저 인출할 유인이 생길 수 있습니다. 이 상호작용이 불안을 스스로 키우는 뱅크런의 경로입니다. 실제 부실 우려와 이런 상호작용은 함께 작동할 수 있습니다. 모든 뱅크런을 멀쩡한 은행에 대한 오해라고 설명하지 않습니다. BCBS의 2023년 보고서도 서로 다른 취약성과 신뢰 약화가 얽힌 사건들을 다룹니다.</p>
 </div><LiquidityBranchViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">그림의 마지막 장면은 급매 뒤에 돈을 더 빌린 상황이 아닙니다. 원래 상태로 돌아가 손실 없이 준비금 6을 빌린 별도 선택입니다. 예금 20을 지급한 뒤에는 대출 86, 예금 72, 새 차입금 6, 자본 8이 남습니다. 자본 손실을 피했지만 차입금을 정한 때 갚아야 하므로 조달 비용과 만기 위험이 사라지지는 않습니다.</p><p className="leading-8">여기서는 예금자별 잔액이나 파산 절차를 가정하지 않았습니다. 따라서 ‘몇 번째 예금자가 얼마를 받는다’는 숫자는 계산할 수 없습니다. 영업 중 지급의 순서와 영업정지 뒤 보험·채권 회수 절차도 구분해야 합니다.</p></div><CitationBlock source="BCBS · Report on the 2023 banking turmoil" citeKey={6} href={RUN}>해당 공식 자료의 설명 범위와 본문의 가정 사례를 함께 확인합니다.</CitationBlock></section>
-<section id="safety-net" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 보험은 손실 불안을 줄이고 유동성 대출은 지급 시점을 연결합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="safety-net" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 보험은 손실 불안을 줄이고 유동성 대출은 지급 시점을 연결합니다</h2><RunLoopViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">예금보험은 정해진 대상과 한도에서 은행이 갚지 못한 예금의 보호를 약속합니다. 그 약속과 지급 절차를 신뢰하는 고객은 남보다 먼저 찾지 못해 돈을 잃을 걱정을 덜 수 있습니다. 한도 밖 금액과 지급까지 돈을 쓰지 못할 우려는 남을 수 있으므로 모든 인출 유인이 없어지는 장치는 아닙니다.</p>
 <p className="leading-8">최종대부자 기능은 금융기관이 시장에서 당장 자금을 구하기 어려울 때 중앙은행이 조건에 따라 유동성을 공급하는 역할입니다. 이 사례에서는 적격 자산과 상환 능력 등 요건을 갖춘 A은행에 준비금 6을 빌려주는 선택을 생각할 수 있습니다. 담보 평가와 할인율, 적용 금리, 이용 자격은 제도마다 다릅니다. 자산 장부가 10이면 반드시 10을 빌릴 수 있는 것은 아닙니다.</p>
 <p className="leading-8">유동성을 빌린 것만으로 이미 발생한 대출 손실을 없애지는 못합니다. 지급 불능 문제에는 손실 배분·증자·정리 등 다른 조치가 필요할 수 있습니다. 위기 중 회수 가치가 불확실해 유동성 부족과 지급 능력 부족을 실시간으로 구분하기 어렵다는 점도 남습니다.</p>
@@ -131,6 +139,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 </div><CitationBlock source="Bank of England · 은행 자본·유동성·중앙은행 역할" citeKey={7} href={CAPITAL}>해당 공식 자료의 설명 범위와 본문의 가정 사례를 함께 확인합니다.</CitationBlock></section>
 <section id="korea" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">18. 한국 예금보호는 계좌 개수보다 금융기관과 상품을 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">2026년 10월 4일 확인한 금융위원회 안내에 따르면, 2025년 9월 1일부터 일반적인 보호 대상 예·적금은 금융기관별 1인당 원금과 소정의 이자를 합해 1억 원까지 보호됩니다. 그 이전 가입 상품도 적용 대상입니다. 은행의 소정의 이자는 약정이율과 예금보험공사 공시이율 중 낮은 이율을 기준으로 합니다.</p>
+</div><DepositLimitViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">
             이자를 생략하고 계산해 봅시다. 한 은행의 일반 보호 예금 두 계좌에 0.6억과 0.5억이 있으면 합계 1.1억 중 한도 안 금액은 1억입니다. 서로 다른 금융기관에 각각
             보유했다면 각 기관에서 0.6억과 0.5억을 한도와 비교합니다. 같은 은행의 지점을 나눠 방문했다고 서로 다른 기관이 되지는 않습니다.

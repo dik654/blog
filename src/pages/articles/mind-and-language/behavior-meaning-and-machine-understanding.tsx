@@ -5,6 +5,10 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import AttributionNestViz from "./behavior-meaning-and-machine-understanding/viz/AttributionNestViz";
+import BlackBoxViewViz from "./behavior-meaning-and-machine-understanding/viz/BlackBoxViewViz";
+import EvidenceClaimMapViz from "./behavior-meaning-and-machine-understanding/viz/EvidenceClaimMapViz";
+import ScoreGridViz from "./behavior-meaning-and-machine-understanding/viz/ScoreGridViz";
 
 export default function BehaviorMeaningAndMachineUnderstandingArticle() {
   return (
@@ -17,6 +21,7 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
       </LessonSection>
 
       <LessonSection id="black-box" level="B" title="2. 입력·처리·출력·내부 상태·환경을 나눕니다" bridge="겉에서 보는 시험과 안에서 일어나는 과정을 나눴습니다. 100문항 규칙실을 숫자로 고정합니다.">
+        <BlackBoxViewViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">입력은 중국어 질문 문자열입니다. 처리는 모양을 찾아 규칙표의 다음 쪽으로 이동하는 일입니다. 출력은 중국어 답 문자열입니다. 내부에는 규칙표, 메모, 작업자의 상태가 있고, 바깥에는 질문자와 실제 중국어 사용 환경이 있습니다.</p>
           <p className="leading-8">시험은 입력과 출력의 관계를 잘 잴 수 있습니다. 그러나 내부 표현이 무엇을 가리키는지, 새 상황에서 스스로 고칠 수 있는지, 답에 대한 경험이 있는지는 시험 설계에 따라 보이지 않을 수 있습니다.</p>
@@ -29,6 +34,7 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
       </LessonSection>
 
       <LessonSection id="case" level="0" title="3. 중국어 문답 100개를 규칙표로 처리합니다" bridge="높은 점수와 뜻을 모르는 작업자가 동시에 가능한 사례를 만들었습니다. 시스템 전체를 어디까지 셀지 봅니다.">
+        <ScoreGridViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">질문 100개 가운데 규칙표에 익숙한 형태가 80개이고 새로운 조합이 20개라고 합시다. 규칙실은 익숙한 질문 78개와 새 질문 12개, 모두 90개를 맞힙니다. 숫자는 논점을 드러내기 위한 가정입니다.</p>
           <p className="leading-8">작업자는 중국어 뜻을 모른 채 기호 모양만 바꿉니다. 그러나 규칙표를 만든 사람, 메모장, 입출력 장치까지 묶은 시스템은 중국어 질문에 안정적으로 답합니다. 작업자 개인의 무이해가 시스템 전체의 무이해를 곧장 증명하는지는 별도 논증이 필요합니다.</p>
@@ -83,6 +89,9 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
       <LessonSection id="comparison" level="6" title="9. 중국어 방은 기호 규칙만으로 의미가 생기는지 반문합니다" bridge="작업자의 구문 처리와 시스템 전체의 이해를 둘러싼 반론을 나눴습니다. 판단 범위를 정리합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">설이 1980년 학술지 『Behavioral and Brain Sciences』 3권 3호(417–424쪽)에 실은 논문 「Minds, Brains, and Programs」가 이 사고실험의 원 출전입니다. 설의 중국어 방 사고실험에서 중국어를 모르는 사람은 영어 규칙에 따라 중국어 기호를 조작해 밖에서는 자연스러운 답을 만듭니다. 설은 구문 규칙을 실행하는 사실만으로 의미 이해가 충분히 생기지 않는다고 주장합니다.</p>
+        </div>
+        <AttributionNestViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">대표 반론은 방 안 사람 하나가 아니라 규칙·기억·입출력을 합친 시스템 전체가 이해한다고 봅니다. 또 몸과 센서로 세계에 연결되거나 학습 과정이 포함되면 고정 규칙실과 다르다는 반론도 있습니다. 사고실험은 이 답들을 자동으로 끝내지 않고 이해를 어느 수준에 귀속할지 묻게 합니다.</p>
         </div>
         <SourceApplication source="Stanford Encyclopedia · Chinese Room Argument" excerpt="syntactic manipulation is not sufficient for meaning" application="규칙실의 90점은 공개 능력의 증거로 남지만, 기호가 무엇을 뜻하는지 설명하는 추가 관계가 필요한지 묻게 합니다." />
@@ -91,6 +100,7 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
       </LessonSection>
 
       <LessonSection id="limits" level="7" title="10. 행동·구현·학습·몸·의식을 서로 다른 주장으로 남깁니다" bridge="하나의 시험이나 사고실험으로 넓은 마음 개념을 닫지 않는 기준을 세웠습니다. 아래 질문으로 같은 90점을 다시 해석합니다.">
+        <EvidenceClaimMapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">현재 인공지능을 평가할 때도 같은 구분이 필요합니다. 정답률은 과제 능력, 내부 활성은 구현, 학습 자료와 상호작용은 의미 형성의 후보 경로, 자기 보고는 또 하나의 행동 증거입니다. 어느 하나를 의식의 직접 측정값으로 부르면 건너뛴 전제가 생깁니다.</p>
           <p className="leading-8">반대로 “통계로 다음 기호를 골랐다”는 구현 설명만으로 이해가 없다고 끝낼 수도 없습니다. 사람의 뇌도 물리 과정으로 작동한다는 사실이 곧 마음을 지우지 않습니다. 필요한 일은 시스템 수준, 능력 범위, 실패 반례, 세계와의 연결, 의식에 관한 추가 가정을 각각 밝히는 것입니다.</p>

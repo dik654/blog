@@ -1,0 +1,5311 @@
+{
+"note": "공개 글을 끝까지 읽어 글만으로 그려지지 않는 자리에 Viz를 넣는 작업의 진행 장부. 기준은 viz-design-standard.md 1.1절.",
+"order": "한글 분량 대비 Viz가 적은 글부터",
+"articles": [
+{
+"route": "ai/math-high-dimensional-geometry",
+"publicPath": "cs/ai/math-high-dimensional-geometry",
+"status": "done",
+"round": 0
+},
+{
+"route": "ai/math-numerical-precision-stability",
+"publicPath": "cs/ai/math-numerical-precision-stability",
+"status": "done",
+"round": 0
+},
+{
+"route": "crypto/ml-kem-and-noisy-equations",
+"publicPath": "cs/crypto/ml-kem-and-noisy-equations",
+"status": "done",
+"round": 0
+},
+{
+"route": "crypto/quantum-computing-and-cryptographic-risk",
+"publicPath": "cs/crypto/quantum-computing-and-cryptographic-risk",
+"status": "done",
+"round": 0
+},
+{
+"route": "crypto/quantum-key-distribution",
+"publicPath": "cs/crypto/quantum-key-distribution",
+"status": "done",
+"round": 0
+},
+{
+"route": "economic-history/gold-standard-depression-bretton-woods",
+"publicPath": "history/economic-history/gold-standard-depression-bretton-woods",
+"status": "done",
+"round": 0
+},
+{
+"route": "economic-history/industrial-revolution-wages-and-energy",
+"publicPath": "history/economic-history/industrial-revolution-wages-and-energy",
+"status": "done",
+"round": 0
+},
+{
+"route": "epistemology/knowledge-belief-and-luck",
+"publicPath": "philosophy/epistemology/knowledge-belief-and-luck",
+"status": "done",
+"round": 0
+},
+{
+"route": "gpu/amd-gpu-execution-and-hip",
+"publicPath": "cs/gpu/amd-gpu-execution-and-hip",
+"status": "done",
+"round": 0
+},
+{
+"route": "gpu/cuda-sync-streams",
+"publicPath": "cs/gpu/cuda-sync-streams",
+"status": "done",
+"round": 0
+},
+{
+"route": "institutions/evidence-measurement-and-causality",
+"publicPath": "economics/institutions/evidence-measurement-and-causality",
+"status": "done",
+"round": 0
+},
+{
+"route": "markets/covered-calls-and-income-funds",
+"publicPath": "finance/markets/covered-calls-and-income-funds",
+"status": "done",
+"round": 0
+},
+{
+"route": "markets/financial-products-and-claims",
+"publicPath": "finance/markets/financial-products-and-claims",
+"status": "done",
+"round": 0
+},
+{
+"route": "markets/funds-etfs-and-etns",
+"publicPath": "finance/markets/funds-etfs-and-etns",
+"status": "done",
+"round": 0
+},
+{
+"route": "property/commercial-lease-and-rent",
+"publicPath": "economics/property/commercial-lease-and-rent",
+"status": "done",
+"round": 0
+},
+{
+"route": "property/land-development-residual",
+"publicPath": "economics/property/land-development-residual",
+"status": "done",
+"round": 0
+},
+{
+"route": "property/shop-closure-and-restoration",
+"publicPath": "economics/property/shop-closure-and-restoration",
+"status": "done",
+"round": 0
+},
+{
+"route": "property/shop-transfer-and-goodwill",
+"publicPath": "economics/property/shop-transfer-and-goodwill",
+"status": "done",
+"round": 0
+},
+{
+"route": "ai/math-differential-equations-numerical-solvers",
+"publicPath": "cs/ai/math-differential-equations-numerical-solvers",
+"status": "done",
+"round": 1,
+"vizAdded": 15,
+"articleIssues": [
+"4절이 '그림의 가로축', '회색 점선', '마지막 장면'을 설명하지만 그 절에는 그림이 없고, 해당 DecayStepsViz는 1절 끝에 있습니다. 본문과 그림의 위치가 어긋나 보입니다.",
+"같은 디렉터리의 Overview, InitialValue, EulerMethod, HeunRungeKutta, Stability, OdeSdeBoundary, Applications.tsx는 ModernArticle이 import하지 않고, 경로 패턴 grep에서도 다른 참조가 나오지 않았습니다. 렌더되지 않는 파일로 보이며 내용도 읽었습니다."
+]
+},
+{
+"route": "blockchain/rwa-composition",
+"publicPath": "cs/blockchain/rwa-composition",
+"status": "done",
+"round": 1,
+"vizAdded": 8,
+"articleIssues": [
+"본문 오류로 의심되는 곳은 찾지 못했습니다. 같은 디렉터리의 Overview, AssetTypes, TokenizationFlow, DefiIntegration.tsx는 ModernArticle이 import하지 않고, 경로 패턴 grep에서도 참조가 나오지 않아 렌더되지 않는 파일로 보입니다. 그 안의 수치는 Viz에 쓰지 않았습니다."
+]
+},
+{
+"route": "economic-history/colonial-plantations-slavery-and-extraction",
+"publicPath": "history/economic-history/colonial-plantations-slavery-and-extraction",
+"status": "done",
+"round": 1,
+"vizAdded": 5,
+"articleIssues": [
+"3절 제목은 '사탕 100단위'인데 본문과 NumericPath는 '설탕'이라고 적는다.",
+"3절 NumericPath 제목은 '판매액 100에 잡히지 않은 비용'인데 단계에 적힌 값(100, 55, 45)은 장부에 기록된 금액이다.",
+"10절 '그 뒤로도 50년이 더'의 기준 연도가 불명확하다. Viz는 직전 연도 1838에 50을 더해 1888까지 점선으로 그렸으므로 저자 확인이 필요하다.",
+"7절은 3절의 도구·식량 10의 행선지를 적지 않는다. Viz는 그 사실을 장면 설명에 밝히고 흐리게 처리했다."
+]
+},
+{
+"route": "ai/word2vec-prediction-objectives",
+"publicPath": "cs/ai/word2vec-prediction-objectives",
+"status": "done",
+"round": 1,
+"vizAdded": 11,
+"articleIssues": [
+"4절 본문의 '아래 첫 장면', '세 번째 장면'은 ObjectiveCaseViz를 가리키는데 이 Viz는 1절, 즉 위에 있다. 4절 아래에는 해당 그림이 없다.",
+"1절의 정답 문단이 CBOW와 Skip-gram이라는 이름을 쓰지만 두 용어는 6절에서 정의된다.",
+"18절의 W[3] 셋째 값 1.05489635는 1+2×0.027448213=1.054896426과 끝자리가 다르다. float 관찰값의 반올림으로 보이지만 실행해 확인하지는 않았다. Viz는 소수 넷째 자리까지만 쓴다."
+]
+},
+{
+"route": "business/franchise-incentives",
+"publicPath": "economics/business/franchise-incentives",
+"status": "done",
+"round": 1,
+"vizAdded": 6,
+"articleIssues": [
+"4절 본문은 본부로 가는 150만 원을 '별도 화살표로 표시합니다'라고 하지만 바로 뒤 FlowRail은 세 카드에 글로 적을 뿐 별도 화살표가 없습니다.",
+"9절의 가맹비 3천만 원(가정)이 사례의 월매출 3천만 원과 같은 숫자여서 혼동될 수 있습니다. 오류는 아니며 Viz 장면 설명에서 다른 돈이라고 구분했습니다."
+]
+},
+{
+"route": "economic-history/agrarian-surplus-and-state",
+"publicPath": "history/economic-history/agrarian-surplus-and-state",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"4절의 '세 숫자가 같아야 하지만'에서 앞에 나온 값은 1180, 1200, 그리고 종자 100과 노동 대가 1000의 권리입니다. 세 번째 값이 하나로 정리되지 않으며 비상 50을 더해도 약속은 1150이고 잔량 50을 합해야 1200이 됩니다. Viz는 약속 1150과 빈칸 50으로 그렸습니다.",
+"9절 첫 문단은 분석 주체를 'Cuneiform Digital Library Initiative'로 쓰지만 인용 블록은 Monaco의 CDLJ 2005:1 논문이고 '저자'로 이어집니다. 주체 표기를 확인할 필요가 있어 보입니다."
+]
+},
+{
+"route": "institutions/culture-norms-and-coordination",
+"publicPath": "economics/institutions/culture-norms-and-coordination",
+"status": "done",
+"round": 1,
+"vizAdded": 3
+},
+{
+"route": "ai/disaggregated-prefill-decode-serving",
+"publicPath": "cs/ai/disaggregated-prefill-decode-serving",
+"status": "done",
+"round": 1,
+"vizAdded": 11,
+"articleIssues": [
+"§6 TermBreakdown and §14 refer to candidates 'A' and 'B', but §5, which first introduces them, never names them A and B. A reader of §6 has to infer which is which.",
+"§11 tags the lease example '(가정)' although 30 s and +20 s are the pinned version's code values. Only the signal times are illustrative, so the tag's scope is ambiguous. The Viz separates the two."
+]
+},
+{
+"route": "infrastructure/materials-waste-and-circularity",
+"publicPath": "economics/infrastructure/materials-waste-and-circularity",
+"status": "done",
+"round": 1,
+"vizAdded": 5,
+"articleIssues": [
+"#names의 제목은 '회수 수율'인데 본문과 앞선 설명은 '처리 수율'이라고 써서 용어가 다릅니다.",
+"#comparison: 제17조 의무율의 기준은 연간 출고량인데 사례는 사용 종료 발생량 100kg을 그대로 분모로 씁니다. '모두 대상 포장재'라는 가정은 있지만 출고량=발생량이라는 가정은 명시되지 않았습니다.",
+"ReviewPrompts가 '답: 7절/9절/10절'을 가리키지만 이 글의 h2에는 절 번호가 없습니다. 섹션 순서로 세면 맞습니다."
+]
+},
+{
+"route": "ai/inference-optimization-layers",
+"publicPath": "cs/ai/inference-optimization-layers",
+"status": "done",
+"round": 1,
+"vizAdded": 8,
+"articleIssues": [
+"#interactions: '읽기와 계산의 시간을 임의로 더해 얻은 결과가 아닙니다'는 앞에서 소개되지 않은 읽기·계산 합산을 가리켜 맥락이 끊겨 보입니다.",
+"#decision: '매번 10% 이내라는 조건'은 글의 앞에서 정의된 적 없이 처음 나옵니다.",
+"viz/InferenceOptimizationLayersViz.tsx는 자기 파일 외에 src 어디에서도 참조되지 않는 미사용 파일로 보입니다."
+]
+},
+{
+"route": "economic-history/decolonization-oil-shocks-and-debt",
+"publicPath": "history/economic-history/decolonization-oil-shocks-and-debt",
+"status": "done",
+"round": 1,
+"vizAdded": 5,
+"articleIssues": [
+"Section 8 title says it runs from 1945 to the 1970s oil shocks, but its third paragraph continues to 1996.",
+"Section 8 gives two 20% peak dates without reconciling them: the federal funds rate at end-1980 and the IMF chapter's June 1981. The Viz shows both as written.",
+"Section 8: '그 가운데 3분의 1 가까이' does not say whether the share applies to the 1980 figure or to the whole 1977-80 lending. The Viz keeps the same wording on the 1980 row and draws no slice."
+]
+},
+{
+"route": "philosophical-traditions/akan-personhood-community-and-agency",
+"publicPath": "philosophy/philosophical-traditions/akan-personhood-community-and-agency",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"Section 1 reads as ten households joining repairs plus one caring household and one refusing household, but section 3 makes those two part of the ten (8+1+1).",
+"Section 1 asks about both households having labor hours of 0, while section 3 has the caregiving household preparing meals, which belongs to the 식사·돌봄 20 hours. This may be intended as field labor only, but the wording does not say so.",
+"The article does not state whether the caregiving household supplies all 20 of the 식사·돌봄 hours; the Viz does not assign them.",
+"The first source's excerpt is just the entry title, 'Akan Philosophy of the Person', so it quotes no claim."
+]
+},
+{
+"route": "institutions/how-to-read-a-country",
+"publicPath": "economics/institutions/how-to-read-a-country",
+"status": "done",
+"round": 1,
+"vizAdded": 7,
+"articleIssues": [
+"#black-box 제목은 '사람·물건·돈·결정이 국경을 오갑니다'인데 본문은 결정이 국경을 넘는 경로를 설명하지 않는다. 그래서 BorderFlowViz에 결정 흐름을 그리지 않았다.",
+"검토 후 그리지 않은 자리: #picture(NumericPath가 이미 처리), #need p2 나라→도시→건물(한 문장으로 그려짐), #comparison 250/217 목록 대응과 #limits 수출·집값 및 위기 주장(글이 준 갈래만으로 충분하고 분기를 더 그리면 없는 내용을 지어내게 됨)."
+]
+},
+{
+"route": "philosophical-traditions/islamic-causation-reason-and-revelation",
+"publicPath": "philosophy/philosophical-traditions/islamic-causation-reason-and-revelation",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"7절 자연 인과 모형과 overviewFlow가 '산소'를 가까운 원인의 조건으로 쓰는데, 중세 논쟁의 모형을 설명하는 문맥이라 시대에 맞지 않을 수 있다. 근대적 예시임을 밝히는지 검토가 필요하다. Viz는 글의 문구를 그대로 따랐다.",
+"numericCase 제목 '불과 솜의 11번 실험'은 관찰이 10회이고 11번째는 예측이라 실험 수와 어긋난다.",
+"1절 '열 번 가까이 댔고'가 '거의 열 번'으로도 읽혀 '열 번 모두 탔다'와 혼동될 수 있다.",
+"검토 후 그리지 않은 자리: #case(NumericPath가 이미 있고 FourLayersViz가 층을 잡아 줌), #need·#names(전통 구분은 정성적이라 그리면 없는 차트가 됨), #comparison(이븐 시나와 이븐 루시드의 '한 자리' 차이는 글이 입장별로 배정하지 않아 그리면 지어내게 됨), #limits."
+]
+},
+{
+"route": "ai/agent-serving-slo-and-capacity",
+"publicPath": "cs/ai/agent-serving-slo-and-capacity",
+"status": "done",
+"round": 1,
+"vizAdded": 11,
+"articleIssues": [
+"6절 계산표와 해석은 200K 세션의 메모리 상한 18개와 128K 문맥 행의 속도 8~15개를 나란히 놓습니다. L을 128K로 맞추면 메모리 상한은 3,621,504 ÷ 128,000 = 28개입니다. TwoCapsViz는 글대로 '200K 세션', '128K 문맥 행'이라고 라벨만 붙였습니다.",
+"6절 K_pool 설명의 '수십 배 달라집니다'와 본문 숫자가 어긋납니다. 3,621,504 ÷ 190,000은 약 19배입니다.",
+"3절 '7분의 1 남짓'은 86.7 ÷ 11.6 = 약 7.5배라서 실제로는 7분의 1보다 약간 작습니다.",
+"7절 가짜 서버 시험의 '이론 상한과 같은 19'는 단일 요청 80 tok/s와 기준 20 tok/s만으로 재현되지 않습니다. 글에 가짜 서버의 모델이 없어 오류 여부는 판단하지 못했습니다. 절차 표의 가정 예시도 우연히 19로 끝나므로 측정 결과로 오해될 수 있습니다."
+]
+},
+{
+"route": "institutions/population-migration-and-care",
+"publicPath": "economics/institutions/population-migration-and-care",
+"status": "done",
+"round": 1,
+"vizAdded": 5
+},
+{
+"route": "global-history/cold-war-decolonization-and-globalization",
+"publicPath": "history/global-history/cold-war-decolonization-and-globalization",
+"status": "done",
+"round": 1,
+"vizAdded": 5,
+"articleIssues": [
+"7절은 원금과 이자가 '예산 15의 상환 칸'을 넘어선다고 쓰지만, 3절에서 이 칸은 '외채 상환과 필수 수입'을 합친 15다. 상환만의 몫은 글에 없다. Viz에는 '상환 칸 15 (외채 상환·필수 수입)'로 표기했다.",
+"7절 첫 문단은 수출 수입이 줄 때 상환 칸을 '넘어섭니다'라고 단정하지만, 3절의 같은 사례는 '줄 수 있습니다'로 조건부다. 차관 규모와 금리에 따라 달라질 수 있어 보인다. Viz는 7절 문장을 그대로 따랐다."
+]
+},
+{
+"route": "philosophical-traditions/gita-action-results-and-release",
+"publicPath": "philosophy/philosophical-traditions/gita-action-results-and-release",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"7절 제목은 '100의 결과를 준비·행위·외부 조건·태도로 나눠 봅니다'지만 3절의 100은 35+25+20+20으로 태도 없이 이미 다 찬다. bridge의 '두 장부'와는 맞는다. Viz는 숫자와 bridge를 따라 태도를 100 밖의 장부로 그렸으므로 제목을 글자 그대로 읽으면 어긋나 보일 수 있다.",
+"5절 제목의 '업의 사슬'은 해당 절에서 정의되지 않고, 6절도 카르마가 운명과 다르다고만 한다. Viz는 6절 해탈 설명의 '행위와 그 결과가 다시 행위를 낳는 되풀이'를 빌려 '여기서는 이 되풀이로 읽습니다'라고 표기했다."
+]
+},
+{
+"route": "global-history/world-wars-depression-and-mass-states",
+"publicPath": "history/global-history/world-wars-depression-and-mass-states",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"본문이 아닌 기존 NumericPath(공용 부품)가 병렬인 네 칸을 화살표로 이어, 3절의 '겹칠 수 있는 칸'이 순차 과정처럼 보입니다. 수정하지 않았습니다.",
+"7절은 3절의 네 칸 중 돌봄·필수 서비스 25가구의 전후 요구를 다루지 않습니다. 오류인지 의도인지는 판단하지 않았고, 새 Viz에는 '이 절에 따로 없음'으로 적었습니다.",
+"6절은 위임통치를 '패전국의 식민지'에 대한 제도로 쓰고 8절은 '옛 독일·오스만 영토'로 씁니다. 오스만 영토까지 식민지로 묶는 표현이 맞는지 확인이 필요해 보입니다. 외부 자료로 검증하지는 않았습니다."
+]
+},
+{
+"route": "blockchain/glamsterdam-block-execution",
+"publicPath": "cs/blockchain/glamsterdam-block-execution",
+"status": "done",
+"round": 1,
+"vizAdded": 6,
+"articleIssues": [
+"1절의 상태 기술은 2026-10-09 기준이고 이의 제기 마감이 2026-11-01입니다. 오늘(2026-11-07) 기준으로 마감이 지났으므로 갱신 여부를 확인할 필요가 있습니다. 현재 상태는 조회하지 않았습니다."
+]
+},
+{
+"route": "gpu/cuda-compilation-and-isa-analysis",
+"publicPath": "cs/gpu/cuda-compilation-and-isa-analysis",
+"status": "done",
+"round": 1,
+"vizAdded": 8,
+"articleIssues": [
+"No prose errors found. Offsets, bit arithmetic and model values were recomputed and match; the PTX and SASS traces were checked against the codebase files.",
+"viz/CudaCompilationAndIsaAnalysisViz.tsx is not imported by the article and holds an older FFMA/load-scheduling example unrelated to the current add case. Left untouched."
+]
+},
+{
+"route": "ai/word2vec-negative-sampling",
+"publicPath": "cs/ai/word2vec-negative-sampling",
+"status": "done",
+"round": 1,
+"vizAdded": 13,
+"articleIssues": [
+"§13 CitationBlock source string has a stray backtick: \"· `2.2–2.3, Eq4–5, Table1\". Likely a typo; not edited.",
+"No numeric errors found. I recomputed the RNG draws for seeds 43 and 0, table intervals, subsampling bits, g values, neu1e and the final rows; all match the prose."
+]
+},
+{
+"route": "philosophical-traditions/confucian-ritual-role-and-humane-rule",
+"publicPath": "philosophy/philosophical-traditions/confucian-ritual-role-and-humane-rule",
+"status": "done",
+"round": 1,
+"vizAdded": 3,
+"articleIssues": [
+"overviewFlow's title says '세 흐름' while section 2's title says '네 흐름'. These may refer to different groupings, but readers see both numbers in the same section."
+]
+},
+{
+"route": "blockchain/robinhood-chain-blob-demand",
+"publicPath": "cs/blockchain/robinhood-chain-blob-demand",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"Spacing typos in the prose: 'BPO로max', '작은blob', '충분히 채운blob', 'target14', '초과분4', and 'A20개' in the table caption.",
+"viz/BlobDemandViz.tsx (not created in this work) still holds 3일 평균 6.4 and 피크 17, while section 7 says the earlier 6.4 was not kept as an observation. A search of src found no importer of BlobDemandGapViz or BlobpoolPipelineViz, so it appears to be an orphan and was left untouched.",
+"Section 9's EIP-8070 status is dated 2026-10-18 with a review deadline of 2026-11-01. That deadline has passed as of today (2026-11-07), so the status may be stale. The dated wording is not itself wrong."
+]
+},
+{
+"route": "business/supply-chain-bargaining",
+"publicPath": "economics/business/supply-chain-bargaining",
+"status": "done",
+"round": 1,
+"vizAdded": 5
+},
+{
+"route": "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready",
+"publicPath": "cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready",
+"status": "done",
+"round": 1,
+"vizAdded": 9,
+"articleIssues": [
+"§7 lists nodes with disk or PID at dangerous levels as a case where the kubelet reports Ready=False. Suspected error: those states have their own conditions (DiskPressure, PIDPressure), and from my own knowledge, not checked against the article's codebase, they do not by themselves turn Ready False. NotReadyBranchViz leaves this example out.",
+"§4 gives the order as sandbox, then CNI, then CSI, then containers. Suspected error: from my own knowledge, also unchecked against the codebase, kubelet waits for volume mounts before creating the sandbox. PodOnNodeViz shows the four items without arrows or numbering, and its note keeps the article's wording without using order words like '다음'."
+]
+},
+{
+"route": "economic-history/trade-credit-and-long-distance-networks",
+"publicPath": "history/economic-history/trade-credit-and-long-distance-networks",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"3절의 점토판은 두 사람이 아슈르이디에게 은 6미나를 빚졌다고만 적습니다. 7절은 같은 6미나를 구매자가 물건값을 다 내지 못해 생긴 채무로 설명하지만, 글은 점토판이 그 원인을 적었다고 말하지 않습니다. 그래서 Viz는 '7절의 경로대로 따라갑니다'라고 표시했습니다.",
+"3절 둘째 문단의 '다만 ... 들어 있었습니다(8절). 그래도 누가 누구에게...'는 '같지 않습니다'에 이어지는 양보 접속이 어색합니다. 나중에 문장을 끼워 넣은 흔적으로 보입니다.",
+"8절은 '4절에서 말한 기록·증인·평판'이라고 하지만, 4절이 든 장치는 기록·증인·법정·평판 네 가지입니다. 법정이 빠졌는데, 오류라기보다 생략일 수 있습니다."
+]
+},
+{
+"route": "philosophy-of-science/evidence-models-and-causal-explanation",
+"publicPath": "philosophy/philosophy-of-science/evidence-models-and-causal-explanation",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"3절은 사고를 '사고가 난 날 25일, 그중 20일'로 세는데 7절은 같은 수를 '사고 25건', '20건', '약 5건'으로 적습니다. 하루에 한 건이라는 가정이 글에 없어 날과 건이 섞여 있습니다. Viz는 각 절의 단위를 그대로 따랐습니다(3절 Viz는 일, 7절 Viz는 건)."
+]
+},
+{
+"route": "ethics/consequence-duty-and-character",
+"publicPath": "philosophy/ethics/consequence-duty-and-character",
+"status": "done",
+"round": 1,
+"vizAdded": 3
+},
+{
+"route": "crypto/post-quantum-signatures",
+"publicPath": "cs/crypto/post-quantum-signatures",
+"status": "done",
+"round": 1,
+"vizAdded": 8,
+"articleIssues": [
+"Spacing typos between Korean and digits in the prose, such as 계수가256개인, 차수255, 설명용으로4, 8이7로, 구간2가1로, 절댓값이4, 생성과265–328행, FIPS204에는2026-07-31. Left unedited.",
+"The review prompt on why candidates are discarded despite the mask points to 8절, but the reason (the response range can reveal the secret) is given in §5; §8 gives the mechanism. Suspected pointer mismatch.",
+"Verify line numbers differ slightly: prose says the verify function starts checks at line 266, the citation says 265–328. Not necessarily an error, but I did not open the source to check."
+]
+},
+{
+"route": "philosophical-traditions/daoist-names-noncoercive-action-and-change",
+"publicPath": "philosophy/philosophical-traditions/daoist-names-noncoercive-action-and-change",
+"status": "done",
+"round": 1,
+"vizAdded": 2,
+"articleIssues": [
+"3절 NumericPath가 100 → 40 손실 → 60 → 85 도달을 한 줄로 이어, 다른 선택의 결과인 85가 60에서 나온 것처럼 읽힐 수 있습니다. 본문은 고치지 않았고 새 Viz가 두 선택을 나란히 보여 줍니다."
+]
+},
+{
+"route": "political-philosophy/consent-liberty-and-legitimate-power",
+"publicPath": "philosophy/political-philosophy/consent-liberty-and-legitimate-power",
+"status": "done",
+"round": 1,
+"vizAdded": 3,
+"articleIssues": [
+"3절 NumericPath가 100가구 → 찬성 60가구 → 야간 생활 의존 15가구로 이어져 15가구가 찬성 60 안에 있는 것처럼 읽힐 수 있습니다. 본문은 15가구가 반대 40 안에 있다고 말합니다.",
+"2절 제목과 본문은 결정·적용·이의 제기·수정의 네 자리를 말하지만 바로 뒤 FlowRail의 카드는 세 장입니다. 수정은 세 번째 카드의 받는 것에 합쳐져 있습니다."
+]
+},
+{
+"route": "philosophical-traditions/buddhist-aggregates-impermanence-and-not-self",
+"publicPath": "philosophy/philosophical-traditions/buddhist-aggregates-impermanence-and-not-self",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"오류라고 단정할 수는 없지만 서술 차이가 있습니다. 6절은 SN 22.59가 무상과 무아 사이에 괴로움을 따로 묻는 3단계 검사라고 하는데, 8절 산문은 통제 질문과 무상→동일시 질문만 적고 괴로움 단계를 따로 말하지 않습니다. Viz는 6절을 근거로 괴로움 칸을 넣고 노트에 6절이라고 밝혔습니다. 원문은 대조하지 않았습니다."
+]
+},
+{
+"route": "ai/math-variance-sampling",
+"publicPath": "cs/ai/math-variance-sampling",
+"status": "done",
+"round": 1,
+"vizAdded": 9
+},
+{
+"route": "banking/bank-balance-sheet-and-deposit-creation",
+"publicPath": "finance/banking/bank-balance-sheet-and-deposit-creation",
+"status": "done",
+"round": 1,
+"vizAdded": 8,
+"articleIssues": [
+"viz/BalanceSheetViz.tsx와 viz/BankRunViz.tsx는 이 저장소의 어떤 다른 파일도 import하지 않습니다(grep으로 확인). 두 파일은 본문과 어긋납니다. BalanceSheetViz는 대출 70·준비금 30을 쓰고 A은행은 20+80입니다. BankRunViz는 급매 손실 30%를 쓰고 '뱅크런의 원인은 부실이 아니라'라고 적는데, 16절은 모든 뱅크런을 오해로 설명하지 않는다고 합니다. 나중에 연결하면 모순이 생기므로 수정하거나 삭제를 검토해야 합니다.",
+"viz/LiquidityBranchViz.tsx의 aria-label은 '담보 차입'이지만 16절 본문의 해당 분기는 담보 없이 '준비금 6을 빌린' 선택으로만 적혀 있습니다."
+]
+},
+{
+"route": "mind-and-language/behavior-meaning-and-machine-understanding",
+"publicPath": "philosophy/mind-and-language/behavior-meaning-and-machine-understanding",
+"status": "done",
+"round": 1,
+"vizAdded": 4,
+"articleIssues": [
+"3절은 규칙실이 새 질문 12개를 맞힌다고 하는데, 7절은 '고정 규칙실은 표에 없는 질문에서 멈추고'라고 하며 새 조합 20개 중 12개를 맞히는 것을 학습 시스템의 성과로 적습니다. 같은 90점 구성이 어느 시스템의 것인지 불분명합니다. 그래서 7절 비교는 그리지 않았습니다.",
+"2절 FlowRail의 제목은 '대화 행동을 만드는 다섯 자리'인데 단계는 세 개(질문과 환경, 처리 시스템, 판정자)입니다.",
+"3절의 시스템에는 '규칙표를 만든 사람'이 포함되지만 9절 반론의 시스템은 '규칙·기억·입출력'입니다. AttributionNestViz는 9절의 구성을 따랐습니다."
+]
+},
+{
+"route": "ai/yarn-rope-extension",
+"publicPath": "cs/ai/yarn-rope-extension",
+"status": "done",
+"round": 1,
+"vizAdded": 5,
+"articleIssues": [
+"The locator fixture says the article follows the factor-4 case (32K to 128K), but most of the body's worked numbers use L=4096 to L'=32768 (s=8). Readers may not expect the switch.",
+"src/pages/articles/ai/yarn-rope-extension/Implementation.tsx is not imported by ModernArticle.tsx, so it looks like dead code. It also uses the same section id, implementation, as the DeploymentAndPapers section that is rendered.",
+"ExtensionAttempts says the common goal is to work beyond the trained length 'checkpoint를 다시 학습하지 않고', while the article elsewhere describes PI and YaRN as using continued training or fine-tuning. This is a possible wording tension.",
+"The existing rope-frequency-bands figure has bar widths of 92%, 62% and 34% that are not derived from any formula, and it does not state what the bar length measures."
+]
+},
+{
+"route": "reasoning/argument-and-counterexample",
+"publicPath": "philosophy/reasoning/argument-and-counterexample",
+"status": "done",
+"round": 1,
+"vizAdded": 4
+},
+{
+"route": "ai/rate-limiting-and-reliability-patterns",
+"publicPath": "cs/ai/rate-limiting-and-reliability-patterns",
+"status": "done",
+"round": 1,
+"vizAdded": 8,
+"articleIssues": [
+"Circuit breaker AlgorithmBlock: step 2 returns fail_fast whenever state == open, so the later step that moves open to half_open after cooldown is unreachable if the steps run in the listed order.",
+"Token bucket interpretation: it says B_max = 0 gives strict rate limiting with no burst, but under the article's formula min(0, B+r) keeps the bucket at 0, so a request with c > 0 could never be funded.",
+"Fault Tolerance boundary in TermBreakdown: it assigns '품질을 낮추지 않고 계속 응답하는 것' to graceful degradation, while the article defines graceful degradation as continuing at lower quality.",
+"Backoff formula question says 'N번째 재시도', but n counts retries already made, so n=3 (1.6초) is the 4th retry; this matches the 0.2/0.4/0.8 example only under that reading. Possible reader confusion rather than a clear error."
+]
+},
+{
+"route": "blockchain/robinhood-chain-settlement",
+"publicPath": "cs/blockchain/robinhood-chain-settlement",
+"status": "done",
+"round": 1,
+"vizAdded": 6
+},
+{
+"route": "markets/forwards-and-futures",
+"publicPath": "finance/markets/forwards-and-futures",
+"status": "todo"
+},
+{
+"route": "banking/central-bank-and-policy-transmission",
+"publicPath": "finance/banking/central-bank-and-policy-transmission",
+"status": "todo"
+},
+{
+"route": "cloud/linux-observability-proc-psi-perf-ebpf",
+"publicPath": "cs/cloud/linux-observability-proc-psi-perf-ebpf",
+"status": "todo"
+},
+{
+"route": "macro/global-capital-and-policy",
+"publicPath": "economics/macro/global-capital-and-policy",
+"status": "todo"
+},
+{
+"route": "gpu/sm-warp-scheduling-and-issue",
+"publicPath": "cs/gpu/sm-warp-scheduling-and-issue",
+"status": "todo"
+},
+{
+"route": "ai/math-random-variables-expectation",
+"publicPath": "cs/ai/math-random-variables-expectation",
+"status": "todo"
+},
+{
+"route": "global-history/conquest-disease-silver-and-oceanic-exchange",
+"publicPath": "history/global-history/conquest-disease-silver-and-oceanic-exchange",
+"status": "todo"
+},
+{
+"route": "global-history/revolutions-citizenship-and-industrial-empires",
+"publicPath": "history/global-history/revolutions-citizenship-and-industrial-empires",
+"status": "todo"
+},
+{
+"route": "banking/repo-and-collateral-funding",
+"publicPath": "finance/banking/repo-and-collateral-funding",
+"status": "todo"
+},
+{
+"route": "ai/speculative-decoding-variants",
+"publicPath": "cs/ai/speculative-decoding-variants",
+"status": "todo"
+},
+{
+"route": "institutions/media-attention-and-public-belief",
+"publicPath": "economics/institutions/media-attention-and-public-belief",
+"status": "todo"
+},
+{
+"route": "infrastructure/housing-land-and-supply",
+"publicPath": "economics/infrastructure/housing-land-and-supply",
+"status": "todo"
+},
+{
+"route": "risk/margin-collateral-and-leverage",
+"publicPath": "finance/risk/margin-collateral-and-leverage",
+"status": "todo"
+},
+{
+"route": "cloud/linux-sre-metrics-slo-safe-change",
+"publicPath": "cs/cloud/linux-sre-metrics-slo-safe-change",
+"status": "todo"
+},
+{
+"route": "blockchain/ethereum-future-roadmap",
+"publicPath": "cs/blockchain/ethereum-future-roadmap",
+"status": "todo"
+},
+{
+"route": "markets/securitization-and-tranches",
+"publicPath": "finance/markets/securitization-and-tranches",
+"status": "todo"
+},
+{
+"route": "global-history/empires-roads-taxes-and-law",
+"publicPath": "history/global-history/empires-roads-taxes-and-law",
+"status": "todo"
+},
+{
+"route": "institutions/healthcare-payment-systems",
+"publicPath": "economics/institutions/healthcare-payment-systems",
+"status": "todo"
+},
+{
+"route": "global-history/trade-religion-and-translation-networks",
+"publicPath": "history/global-history/trade-religion-and-translation-networks",
+"status": "todo"
+},
+{
+"route": "institutions/education-skills-and-signals",
+"publicPath": "economics/institutions/education-skills-and-signals",
+"status": "todo"
+},
+{
+"route": "macro/narratives-and-market-regimes",
+"publicPath": "economics/macro/narratives-and-market-regimes",
+"status": "todo"
+},
+{
+"route": "ai/math-gradient-descent-convergence",
+"publicPath": "cs/ai/math-gradient-descent-convergence",
+"status": "todo"
+},
+{
+"route": "institutions/insurance-risk-pooling",
+"publicPath": "economics/institutions/insurance-risk-pooling",
+"status": "todo"
+},
+{
+"route": "infrastructure/food-chain-and-prices",
+"publicPath": "economics/infrastructure/food-chain-and-prices",
+"status": "todo"
+},
+{
+"route": "cloud/linux-kernel-process-syscall-scheduler",
+"publicPath": "cs/cloud/linux-kernel-process-syscall-scheduler",
+"status": "todo"
+},
+{
+"route": "markets/swaps-and-credit-risk",
+"publicPath": "finance/markets/swaps-and-credit-risk",
+"status": "todo"
+},
+{
+"route": "cloud/linux-memory-page-cache-oom",
+"publicPath": "cs/cloud/linux-memory-page-cache-oom",
+"status": "todo"
+},
+{
+"route": "ai/word2vec",
+"publicPath": "cs/ai/word2vec",
+"status": "todo"
+},
+{
+"route": "cloud/linux-vfs-mount-page-cache-fsync",
+"publicPath": "cs/cloud/linux-vfs-mount-page-cache-fsync",
+"status": "todo"
+},
+{
+"route": "infrastructure/climate-risk-and-exposure",
+"publicPath": "economics/infrastructure/climate-risk-and-exposure",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-network-packet-path",
+"publicPath": "cs/cloud/kubernetes-network-packet-path",
+"status": "todo"
+},
+{
+"route": "business/shop-daily-operations",
+"publicPath": "economics/business/shop-daily-operations",
+"status": "todo"
+},
+{
+"route": "ai/subword-static-embeddings",
+"publicPath": "cs/ai/subword-static-embeddings",
+"status": "todo"
+},
+{
+"route": "ai/llm-dataset-engineering-and-cleaning",
+"publicPath": "cs/ai/llm-dataset-engineering-and-cleaning",
+"status": "todo"
+},
+{
+"route": "ai/retrieval-ranking-funnel",
+"publicPath": "cs/ai/retrieval-ranking-funnel",
+"status": "todo"
+},
+{
+"route": "infrastructure/transport-access-and-land-value",
+"publicPath": "economics/infrastructure/transport-access-and-land-value",
+"status": "todo"
+},
+{
+"route": "embedded/firmware-update-and-recovery",
+"publicPath": "electronics/embedded/firmware-update-and-recovery",
+"status": "todo"
+},
+{
+"route": "institutions/public-budget-and-taxes",
+"publicPath": "economics/institutions/public-budget-and-taxes",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-pod-states-crashloop-probes-events",
+"publicPath": "cs/cloud/kubernetes-pod-states-crashloop-probes-events",
+"status": "todo"
+},
+{
+"route": "ai/cuda-graph-capture",
+"publicPath": "cs/ai/cuda-graph-capture",
+"status": "todo"
+},
+{
+"route": "cloud/linux-containers-cgroup-namespace",
+"publicPath": "cs/cloud/linux-containers-cgroup-namespace",
+"status": "todo"
+},
+{
+"route": "cloud/linux-network-interface-route-netfilter-dns",
+"publicPath": "cs/cloud/linux-network-interface-route-netfilter-dns",
+"status": "todo"
+},
+{
+"route": "circuits/lumped-circuit-and-conservation",
+"publicPath": "electronics/circuits/lumped-circuit-and-conservation",
+"status": "todo"
+},
+{
+"route": "infrastructure/electricity-grid-and-power",
+"publicPath": "economics/infrastructure/electricity-grid-and-power",
+"status": "todo"
+},
+{
+"route": "ai/llm-monitoring-observability-and-drift",
+"publicPath": "cs/ai/llm-monitoring-observability-and-drift",
+"status": "todo"
+},
+{
+"route": "blockchain/giwa-chain",
+"publicPath": "cs/blockchain/giwa-chain",
+"status": "todo"
+},
+{
+"route": "infrastructure/water-utility-and-tariffs",
+"publicPath": "economics/infrastructure/water-utility-and-tariffs",
+"status": "todo"
+},
+{
+"route": "ai/prefix-caching-radix-attention",
+"publicPath": "cs/ai/prefix-caching-radix-attention",
+"status": "todo"
+},
+{
+"route": "banking/payment-clearing-settlement",
+"publicPath": "finance/banking/payment-clearing-settlement",
+"status": "todo"
+},
+{
+"route": "ai/optimizers",
+"publicPath": "cs/ai/optimizers",
+"status": "todo"
+},
+{
+"route": "ai/math-gradients-jacobians",
+"publicPath": "cs/ai/math-gradients-jacobians",
+"status": "todo"
+},
+{
+"route": "ai/launch-overhead-and-cpu-gpu-synchronization",
+"publicPath": "cs/ai/launch-overhead-and-cpu-gpu-synchronization",
+"status": "todo"
+},
+{
+"route": "ai/synthetic-data-and-data-flywheel",
+"publicPath": "cs/ai/synthetic-data-and-data-flywheel",
+"status": "todo"
+},
+{
+"route": "ai/parallelism-strategy-and-placement",
+"publicPath": "cs/ai/parallelism-strategy-and-placement",
+"status": "todo"
+},
+{
+"route": "embedded/serial-buses-and-tradeoffs",
+"publicPath": "electronics/embedded/serial-buses-and-tradeoffs",
+"status": "todo"
+},
+{
+"route": "ai/metric-selection-protocol",
+"publicPath": "cs/ai/metric-selection-protocol",
+"status": "todo"
+},
+{
+"route": "semiconductors/bands-and-doping",
+"publicPath": "electronics/semiconductors/bands-and-doping",
+"status": "todo"
+},
+{
+"route": "cloud/linux-tcp-time-wait-ports-backlog",
+"publicPath": "cs/cloud/linux-tcp-time-wait-ports-backlog",
+"status": "todo"
+},
+{
+"route": "ai/fft",
+"publicPath": "cs/ai/fft",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-shared-memory",
+"publicPath": "cs/gpu/cuda-shared-memory",
+"status": "todo"
+},
+{
+"route": "constitution/government-forms",
+"publicPath": "politics/constitution/government-forms",
+"status": "todo"
+},
+{
+"route": "gpu/megakernel-design-tradeoffs",
+"publicPath": "cs/gpu/megakernel-design-tradeoffs",
+"status": "todo"
+},
+{
+"route": "ai/reward-design-for-verifiable-rl",
+"publicPath": "cs/ai/reward-design-for-verifiable-rl",
+"status": "todo"
+},
+{
+"route": "firms/market-power-and-markup",
+"publicPath": "economics/firms/market-power-and-markup",
+"status": "todo"
+},
+{
+"route": "business/shop-fitout-and-opening",
+"publicPath": "economics/business/shop-fitout-and-opening",
+"status": "todo"
+},
+{
+"route": "market-failure/public-goods-and-commons",
+"publicPath": "economics/market-failure/public-goods-and-commons",
+"status": "todo"
+},
+{
+"route": "gpu/triton-kernel-programming-and-compiler",
+"publicPath": "cs/gpu/triton-kernel-programming-and-compiler",
+"status": "todo"
+},
+{
+"route": "ai/text-unicode-encoding",
+"publicPath": "cs/ai/text-unicode-encoding",
+"status": "todo"
+},
+{
+"route": "gpu/warp-stall-reasons-and-issue-utilization",
+"publicPath": "cs/gpu/warp-stall-reasons-and-issue-utilization",
+"status": "todo"
+},
+{
+"route": "ai/math-optimization-objectives",
+"publicPath": "cs/ai/math-optimization-objectives",
+"status": "todo"
+},
+{
+"route": "cloud/linux-disk-full-inode-deleted-files",
+"publicPath": "cs/cloud/linux-disk-full-inode-deleted-files",
+"status": "todo"
+},
+{
+"route": "ai/backprop-optimization",
+"publicPath": "cs/ai/backprop-optimization",
+"status": "todo"
+},
+{
+"route": "firms/why-firms-exist",
+"publicPath": "economics/firms/why-firms-exist",
+"status": "todo"
+},
+{
+"route": "embedded/scheduling-and-real-time",
+"publicPath": "electronics/embedded/scheduling-and-real-time",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-thread-hierarchy",
+"publicPath": "cs/gpu/cuda-thread-hierarchy",
+"status": "todo"
+},
+{
+"route": "ai/world-model-latent-planning",
+"publicPath": "cs/ai/world-model-latent-planning",
+"status": "todo"
+},
+{
+"route": "ai/evaluation-datasets-and-pipelines",
+"publicPath": "cs/ai/evaluation-datasets-and-pipelines",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-sre-slo-burn-rate-upgrades",
+"publicPath": "cs/cloud/kubernetes-sre-slo-burn-rate-upgrades",
+"status": "todo"
+},
+{
+"route": "ai/tool-calling-lifecycle-and-costs",
+"publicPath": "cs/ai/tool-calling-lifecycle-and-costs",
+"status": "todo"
+},
+{
+"route": "labor/wage-floor-natural-experiment",
+"publicPath": "economics/labor/wage-floor-natural-experiment",
+"status": "todo"
+},
+{
+"route": "ai/cross-entropy",
+"publicPath": "cs/ai/cross-entropy",
+"status": "todo"
+},
+{
+"route": "ai/llm-application-caching",
+"publicPath": "cs/ai/llm-application-caching",
+"status": "todo"
+},
+{
+"route": "ai/vae",
+"publicPath": "cs/ai/vae",
+"status": "todo"
+},
+{
+"route": "ai/prompt-engineering",
+"publicPath": "cs/ai/prompt-engineering",
+"status": "todo"
+},
+{
+"route": "ai/continuous-batching-step-anatomy",
+"publicPath": "cs/ai/continuous-batching-step-anatomy",
+"status": "todo"
+},
+{
+"route": "ai/diffusion-models",
+"publicPath": "cs/ai/diffusion-models",
+"status": "todo"
+},
+{
+"route": "ai/document-parsing-and-table-extraction",
+"publicPath": "cs/ai/document-parsing-and-table-extraction",
+"status": "todo"
+},
+{
+"route": "elections/electoral-systems",
+"publicPath": "politics/elections/electoral-systems",
+"status": "todo"
+},
+{
+"route": "money/time-value-and-discounting",
+"publicPath": "finance/money/time-value-and-discounting",
+"status": "todo"
+},
+{
+"route": "ai/math-complex-numbers-oscillations",
+"publicPath": "cs/ai/math-complex-numbers-oscillations",
+"status": "todo"
+},
+{
+"route": "embedded/timers-and-sampling",
+"publicPath": "electronics/embedded/timers-and-sampling",
+"status": "todo"
+},
+{
+"route": "devices/pn-junction-and-rectification",
+"publicPath": "electronics/devices/pn-junction-and-rectification",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-data-movement-optimization",
+"publicPath": "cs/gpu/gpu-data-movement-optimization",
+"status": "todo"
+},
+{
+"route": "semiconductors/yield-defect-and-packaging",
+"publicPath": "electronics/semiconductors/yield-defect-and-packaging",
+"status": "todo"
+},
+{
+"route": "p2p/kad-lookup",
+"publicPath": "cs/p2p/kad-lookup",
+"status": "todo"
+},
+{
+"route": "market-failure/information-asymmetry",
+"publicPath": "economics/market-failure/information-asymmetry",
+"status": "todo"
+},
+{
+"route": "embedded/mcu-memory-map-and-registers",
+"publicPath": "electronics/embedded/mcu-memory-map-and-registers",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-consensus",
+"publicPath": "cs/blockchain/cometbft-consensus",
+"status": "todo"
+},
+{
+"route": "devices/mosfet-regions-and-transfer",
+"publicPath": "electronics/devices/mosfet-regions-and-transfer",
+"status": "todo"
+},
+{
+"route": "blockchain/hyperliquid",
+"publicPath": "cs/blockchain/hyperliquid",
+"status": "todo"
+},
+{
+"route": "ai/image-video-lora-architecture",
+"publicPath": "cs/ai/image-video-lora-architecture",
+"status": "todo"
+},
+{
+"route": "gpu/hbm-stack-and-memory-requests",
+"publicPath": "cs/gpu/hbm-stack-and-memory-requests",
+"status": "todo"
+},
+{
+"route": "crypto/diffie-hellman",
+"publicPath": "cs/crypto/diffie-hellman",
+"status": "todo"
+},
+{
+"route": "crypto/elgamal",
+"publicPath": "cs/crypto/elgamal",
+"status": "todo"
+},
+{
+"route": "cloud/linux-server-interview-incident-map",
+"publicPath": "cs/cloud/linux-server-interview-incident-map",
+"status": "todo"
+},
+{
+"route": "ai/inference-failure-absorption",
+"publicPath": "cs/ai/inference-failure-absorption",
+"status": "todo"
+},
+{
+"route": "ai/multi-head-latent-attention-mechanics",
+"publicPath": "cs/ai/multi-head-latent-attention-mechanics",
+"status": "todo"
+},
+{
+"route": "ai/math-vectors-inner-products",
+"publicPath": "cs/ai/math-vectors-inner-products",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-register-pressure",
+"publicPath": "cs/gpu/cuda-register-pressure",
+"status": "todo"
+},
+{
+"route": "ai/fine-tuning-tradeoffs-forgetting-and-merging",
+"publicPath": "cs/ai/fine-tuning-tradeoffs-forgetting-and-merging",
+"status": "todo"
+},
+{
+"route": "constitution/constitutionalism-and-separation",
+"publicPath": "politics/constitution/constitutionalism-and-separation",
+"status": "todo"
+},
+{
+"route": "ai/vllm-spec-decode",
+"publicPath": "cs/ai/vllm-spec-decode",
+"status": "todo"
+},
+{
+"route": "elections/voting-paradoxes",
+"publicPath": "politics/elections/voting-paradoxes",
+"status": "todo"
+},
+{
+"route": "ai/agent-failure-modes-and-recovery",
+"publicPath": "cs/ai/agent-failure-modes-and-recovery",
+"status": "todo"
+},
+{
+"route": "gpu/ec-gpu-gen",
+"publicPath": "cs/gpu/ec-gpu-gen",
+"status": "todo"
+},
+{
+"route": "ai/adam-optimizer",
+"publicPath": "cs/ai/adam-optimizer",
+"status": "todo"
+},
+{
+"route": "embedded/interrupts-and-latency-budget",
+"publicPath": "electronics/embedded/interrupts-and-latency-budget",
+"status": "todo"
+},
+{
+"route": "blockchain/vdf",
+"publicPath": "cs/blockchain/vdf",
+"status": "todo"
+},
+{
+"route": "ai/region-agnostic-inference-routing",
+"publicPath": "cs/ai/region-agnostic-inference-routing",
+"status": "todo"
+},
+{
+"route": "risk/risk-diversification-and-pricing",
+"publicPath": "finance/risk/risk-diversification-and-pricing",
+"status": "todo"
+},
+{
+"route": "circuits/feedback-gain-and-stability",
+"publicPath": "electronics/circuits/feedback-gain-and-stability",
+"status": "todo"
+},
+{
+"route": "ai/model-artifact-registry",
+"publicPath": "cs/ai/model-artifact-registry",
+"status": "todo"
+},
+{
+"route": "ai/train-validation-test",
+"publicPath": "cs/ai/train-validation-test",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-witness-gen",
+"publicPath": "cs/gpu/gpu-witness-gen",
+"status": "todo"
+},
+{
+"route": "ai/embedding-model-fine-tuning",
+"publicPath": "cs/ai/embedding-model-fine-tuning",
+"status": "todo"
+},
+{
+"route": "blockchain/usdc-circle",
+"publicPath": "cs/blockchain/usdc-circle",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-practical-guide",
+"publicPath": "cs/isms-aml/isms-practical-guide",
+"status": "todo"
+},
+{
+"route": "risk/capital-requirements-and-systemic-risk",
+"publicPath": "finance/risk/capital-requirements-and-systemic-risk",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-controllers-reconcile-deployment-job",
+"publicPath": "cs/cloud/kubernetes-controllers-reconcile-deployment-job",
+"status": "todo"
+},
+{
+"route": "ai/math-functions-composition",
+"publicPath": "cs/ai/math-functions-composition",
+"status": "todo"
+},
+{
+"route": "ai/fast-weight-memory-and-chunkwise-recurrence",
+"publicPath": "cs/ai/fast-weight-memory-and-chunkwise-recurrence",
+"status": "todo"
+},
+{
+"route": "ai/deep-learning-overview",
+"publicPath": "cs/ai/deep-learning-overview",
+"status": "todo"
+},
+{
+"route": "ai/prefill-decode-phase-dynamics",
+"publicPath": "cs/ai/prefill-decode-phase-dynamics",
+"status": "todo"
+},
+{
+"route": "gpu/ec-gpu-ops",
+"publicPath": "cs/gpu/ec-gpu-ops",
+"status": "todo"
+},
+{
+"route": "ai/math-matrices-svd",
+"publicPath": "cs/ai/math-matrices-svd",
+"status": "todo"
+},
+{
+"route": "ai/attention-kernel-anatomy-and-backends",
+"publicPath": "cs/ai/attention-kernel-anatomy-and-backends",
+"status": "todo"
+},
+{
+"route": "semiconductors/wafer-and-planar-process",
+"publicPath": "electronics/semiconductors/wafer-and-planar-process",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-abci",
+"publicPath": "cs/blockchain/cometbft-abci",
+"status": "todo"
+},
+{
+"route": "circuits/storage-elements-and-transients",
+"publicPath": "electronics/circuits/storage-elements-and-transients",
+"status": "todo"
+},
+{
+"route": "governance/bureaucracy-and-implementation",
+"publicPath": "politics/governance/bureaucracy-and-implementation",
+"status": "todo"
+},
+{
+"route": "ai/linear-attention-and-state-space-models",
+"publicPath": "cs/ai/linear-attention-and-state-space-models",
+"status": "todo"
+},
+{
+"route": "circuits/steady-state-and-impedance",
+"publicPath": "electronics/circuits/steady-state-and-impedance",
+"status": "todo"
+},
+{
+"route": "circuits/frequency-shaping-and-bode",
+"publicPath": "electronics/circuits/frequency-shaping-and-bode",
+"status": "todo"
+},
+{
+"route": "ai/smoothquant-activation-smoothing",
+"publicPath": "cs/ai/smoothquant-activation-smoothing",
+"status": "todo"
+},
+{
+"route": "firms/scale-and-cost-structure",
+"publicPath": "economics/firms/scale-and-cost-structure",
+"status": "todo"
+},
+{
+"route": "business/shop-site-selection",
+"publicPath": "economics/business/shop-site-selection",
+"status": "todo"
+},
+{
+"route": "dispute-resolution/settlement-and-access",
+"publicPath": "law/dispute-resolution/settlement-and-access",
+"status": "todo"
+},
+{
+"route": "blockchain/aa-fundamentals",
+"publicPath": "cs/blockchain/aa-fundamentals",
+"status": "todo"
+},
+{
+"route": "ai/serving-memory-admission-and-preemption",
+"publicPath": "cs/ai/serving-memory-admission-and-preemption",
+"status": "todo"
+},
+{
+"route": "ai/inference-stack-standard-levels",
+"publicPath": "cs/ai/inference-stack-standard-levels",
+"status": "todo"
+},
+{
+"route": "elections/parties-and-interest-groups",
+"publicPath": "politics/elections/parties-and-interest-groups",
+"status": "todo"
+},
+{
+"route": "ai/experiment-tracking",
+"publicPath": "cs/ai/experiment-tracking",
+"status": "todo"
+},
+{
+"route": "circuits/resistance-and-power-dissipation",
+"publicPath": "electronics/circuits/resistance-and-power-dissipation",
+"status": "todo"
+},
+{
+"route": "semiconductors/doping-and-thermal-budget",
+"publicPath": "electronics/semiconductors/doping-and-thermal-budget",
+"status": "todo"
+},
+{
+"route": "ai/math-probability-expectation-variance",
+"publicPath": "cs/ai/math-probability-expectation-variance",
+"status": "todo"
+},
+{
+"route": "markets/equity-claims-and-valuation",
+"publicPath": "finance/markets/equity-claims-and-valuation",
+"status": "todo"
+},
+{
+"route": "devices/switching-energy-and-leakage",
+"publicPath": "electronics/devices/switching-energy-and-leakage",
+"status": "todo"
+},
+{
+"route": "ai/llm-gateway-and-model-routing",
+"publicPath": "cs/ai/llm-gateway-and-model-routing",
+"status": "todo"
+},
+{
+"route": "ai/moe-routing-and-load-balancing",
+"publicPath": "cs/ai/moe-routing-and-load-balancing",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-ipc",
+"publicPath": "cs/blockchain/filecoin-ipc",
+"status": "todo"
+},
+{
+"route": "ai/llm-evaluation-criteria-and-methods",
+"publicPath": "cs/ai/llm-evaluation-criteria-and-methods",
+"status": "todo"
+},
+{
+"route": "cloud/linux-process-signals-pid1-fds",
+"publicPath": "cs/cloud/linux-process-signals-pid1-fds",
+"status": "todo"
+},
+{
+"route": "ai/sliding-window-kv-and-attention-sinks",
+"publicPath": "cs/ai/sliding-window-kv-and-attention-sinks",
+"status": "todo"
+},
+{
+"route": "ai/mla-kv-replication-and-decode-context-parallel",
+"publicPath": "cs/ai/mla-kv-replication-and-decode-context-parallel",
+"status": "todo"
+},
+{
+"route": "ai/laya-system1-decision-model",
+"publicPath": "cs/ai/laya-system1-decision-model",
+"status": "todo"
+},
+{
+"route": "ai/momentum-optimizer",
+"publicPath": "cs/ai/momentum-optimizer",
+"status": "todo"
+},
+{
+"route": "macro/aggregation-and-composition",
+"publicPath": "economics/macro/aggregation-and-composition",
+"status": "todo"
+},
+{
+"route": "ai/ranking-metrics",
+"publicPath": "cs/ai/ranking-metrics",
+"status": "todo"
+},
+{
+"route": "ai/sparse-windowed-attention-patterns",
+"publicPath": "cs/ai/sparse-windowed-attention-patterns",
+"status": "todo"
+},
+{
+"route": "ai/llm-sampling-strategies",
+"publicPath": "cs/ai/llm-sampling-strategies",
+"status": "todo"
+},
+{
+"route": "ai/adaptive-hyperparameter-search",
+"publicPath": "cs/ai/adaptive-hyperparameter-search",
+"status": "todo"
+},
+{
+"route": "ai/tensor-and-pipeline-parallel-inference",
+"publicPath": "cs/ai/tensor-and-pipeline-parallel-inference",
+"status": "todo"
+},
+{
+"route": "ai/multi-fidelity-pruning",
+"publicPath": "cs/ai/multi-fidelity-pruning",
+"status": "todo"
+},
+{
+"route": "semiconductors/lithography-and-resolution",
+"publicPath": "electronics/semiconductors/lithography-and-resolution",
+"status": "todo"
+},
+{
+"route": "ai/search-based-reasoning-and-test-time-compute",
+"publicPath": "cs/ai/search-based-reasoning-and-test-time-compute",
+"status": "todo"
+},
+{
+"route": "ai/lexical-retrieval-bm25-inverted-index",
+"publicPath": "cs/ai/lexical-retrieval-bm25-inverted-index",
+"status": "todo"
+},
+{
+"route": "ai/math-exponents-logarithms",
+"publicPath": "cs/ai/math-exponents-logarithms",
+"status": "todo"
+},
+{
+"route": "ai/math-optimization-convexity",
+"publicPath": "cs/ai/math-optimization-convexity",
+"status": "todo"
+},
+{
+"route": "prices/surplus-and-efficiency",
+"publicPath": "economics/prices/surplus-and-efficiency",
+"status": "todo"
+},
+{
+"route": "private-law/contract-and-enforceable-promise",
+"publicPath": "law/private-law/contract-and-enforceable-promise",
+"status": "todo"
+},
+{
+"route": "market-failure/externalities-and-social-cost",
+"publicPath": "economics/market-failure/externalities-and-social-cost",
+"status": "todo"
+},
+{
+"route": "ai/sionic-eureka",
+"publicPath": "cs/ai/sionic-eureka",
+"status": "todo"
+},
+{
+"route": "business/business-model-cashflow",
+"publicPath": "economics/business/business-model-cashflow",
+"status": "todo"
+},
+{
+"route": "ai/agent-approval-and-sandbox",
+"publicPath": "cs/ai/agent-approval-and-sandbox",
+"status": "todo"
+},
+{
+"route": "ai/continual-learning-foundations",
+"publicPath": "cs/ai/continual-learning-foundations",
+"status": "todo"
+},
+{
+"route": "ai/agent-memory-lifecycle",
+"publicPath": "cs/ai/agent-memory-lifecycle",
+"status": "todo"
+},
+{
+"route": "semiconductors/interconnect-and-rc-delay",
+"publicPath": "electronics/semiconductors/interconnect-and-rc-delay",
+"status": "todo"
+},
+{
+"route": "polity/collective-choice-problem",
+"publicPath": "politics/polity/collective-choice-problem",
+"status": "todo"
+},
+{
+"route": "ai/inference-cost-and-capacity-planning",
+"publicPath": "cs/ai/inference-cost-and-capacity-planning",
+"status": "todo"
+},
+{
+"route": "labor/measuring-the-spread",
+"publicPath": "economics/labor/measuring-the-spread",
+"status": "todo"
+},
+{
+"route": "criminal-law/crime-and-punishment-purpose",
+"publicPath": "law/criminal-law/crime-and-punishment-purpose",
+"status": "todo"
+},
+{
+"route": "ai/visual-representation-tokenizers",
+"publicPath": "cs/ai/visual-representation-tokenizers",
+"status": "todo"
+},
+{
+"route": "ai/in-context-lora",
+"publicPath": "cs/ai/in-context-lora",
+"status": "todo"
+},
+{
+"route": "private-law/property-and-entitlement",
+"publicPath": "law/private-law/property-and-entitlement",
+"status": "todo"
+},
+{
+"route": "ai/serving-architecture-matrix",
+"publicPath": "cs/ai/serving-architecture-matrix",
+"status": "todo"
+},
+{
+"route": "scarcity/gains-from-trade",
+"publicPath": "economics/scarcity/gains-from-trade",
+"status": "todo"
+},
+{
+"route": "macro/why-per-head-stalls",
+"publicPath": "economics/macro/why-per-head-stalls",
+"status": "todo"
+},
+{
+"route": "ai/learning-curve-tracking",
+"publicPath": "cs/ai/learning-curve-tracking",
+"status": "todo"
+},
+{
+"route": "ai/vla-embodiment-gap",
+"publicPath": "cs/ai/vla-embodiment-gap",
+"status": "todo"
+},
+{
+"route": "scarcity/scarcity-and-opportunity-cost",
+"publicPath": "economics/scarcity/scarcity-and-opportunity-cost",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-pvc-pv-storageclass-csi",
+"publicPath": "cs/cloud/kubernetes-pvc-pv-storageclass-csi",
+"status": "todo"
+},
+{
+"route": "ai/llm-harness",
+"publicPath": "cs/ai/llm-harness",
+"status": "todo"
+},
+{
+"route": "macro/who-counts-as-unemployed",
+"publicPath": "economics/macro/who-counts-as-unemployed",
+"status": "todo"
+},
+{
+"route": "gpu/kzg-gpu",
+"publicPath": "cs/gpu/kzg-gpu",
+"status": "todo"
+},
+{
+"route": "ai/own-vs-rent-inference-capacity",
+"publicPath": "cs/ai/own-vs-rent-inference-capacity",
+"status": "todo"
+},
+{
+"route": "gpu/icicle-framework",
+"publicPath": "cs/gpu/icicle-framework",
+"status": "todo"
+},
+{
+"route": "ai/hyperparameter-tuning",
+"publicPath": "cs/ai/hyperparameter-tuning",
+"status": "todo"
+},
+{
+"route": "ai/reproducible-ml-execution",
+"publicPath": "cs/ai/reproducible-ml-execution",
+"status": "todo"
+},
+{
+"route": "prices/prices-as-information",
+"publicPath": "economics/prices/prices-as-information",
+"status": "todo"
+},
+{
+"route": "business/shop-unit-economics",
+"publicPath": "economics/business/shop-unit-economics",
+"status": "todo"
+},
+{
+"route": "ai/supervised-learning-loop",
+"publicPath": "cs/ai/supervised-learning-loop",
+"status": "todo"
+},
+{
+"route": "private-law/tort-and-accident-cost",
+"publicPath": "law/private-law/tort-and-accident-cost",
+"status": "todo"
+},
+{
+"route": "markets/options-and-asymmetric-payoffs",
+"publicPath": "finance/markets/options-and-asymmetric-payoffs",
+"status": "todo"
+},
+{
+"route": "cloud/linux-systemd-boot-change-incidents",
+"publicPath": "cs/cloud/linux-systemd-boot-change-incidents",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-pdp",
+"publicPath": "cs/blockchain/filecoin-pdp",
+"status": "todo"
+},
+{
+"route": "ai/multi-objective-hpo",
+"publicPath": "cs/ai/multi-objective-hpo",
+"status": "todo"
+},
+{
+"route": "ai/training-memory-budget",
+"publicPath": "cs/ai/training-memory-budget",
+"status": "todo"
+},
+{
+"route": "ai/cross-review-error-classes",
+"publicPath": "cs/ai/cross-review-error-classes",
+"status": "todo"
+},
+{
+"route": "gpu/warp-specialization-and-async-pipelines",
+"publicPath": "cs/gpu/warp-specialization-and-async-pipelines",
+"status": "todo"
+},
+{
+"route": "criminal-law/procedure-and-proof",
+"publicPath": "law/criminal-law/procedure-and-proof",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-fvm",
+"publicPath": "cs/blockchain/filecoin-fvm",
+"status": "todo"
+},
+{
+"route": "devices/mos-capacitor-and-inversion",
+"publicPath": "electronics/devices/mos-capacitor-and-inversion",
+"status": "todo"
+},
+{
+"route": "ai/flash-attention-io-aware-kernel",
+"publicPath": "cs/ai/flash-attention-io-aware-kernel",
+"status": "todo"
+},
+{
+"route": "gpu/msm-gpu-impl",
+"publicPath": "cs/gpu/msm-gpu-impl",
+"status": "todo"
+},
+{
+"route": "ai/kv-cache-quantization",
+"publicPath": "cs/ai/kv-cache-quantization",
+"status": "todo"
+},
+{
+"route": "money/money-as-a-claim",
+"publicPath": "finance/money/money-as-a-claim",
+"status": "todo"
+},
+{
+"route": "p2p/discv4",
+"publicPath": "cs/p2p/discv4",
+"status": "todo"
+},
+{
+"route": "polity/state-and-legitimacy",
+"publicPath": "politics/polity/state-and-legitimacy",
+"status": "todo"
+},
+{
+"route": "gpu/gemmini-pe-mac-dataflow",
+"publicPath": "cs/gpu/gemmini-pe-mac-dataflow",
+"status": "todo"
+},
+{
+"route": "ai/hyper-connections-residual-streams",
+"publicPath": "cs/ai/hyper-connections-residual-streams",
+"status": "todo"
+},
+{
+"route": "ai/llama-cpp-local-inference",
+"publicPath": "cs/ai/llama-cpp-local-inference",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-onchain-cloud",
+"publicPath": "cs/blockchain/filecoin-onchain-cloud",
+"status": "todo"
+},
+{
+"route": "testimony/the-writer-was-there",
+"publicPath": "history/testimony/the-writer-was-there",
+"status": "todo"
+},
+{
+"route": "ai/sglang-runtime-anatomy",
+"publicPath": "cs/ai/sglang-runtime-anatomy",
+"status": "todo"
+},
+{
+"route": "ai/search-space-design",
+"publicPath": "cs/ai/search-space-design",
+"status": "todo"
+},
+{
+"route": "prices/supply-demand-and-equilibrium",
+"publicPath": "economics/prices/supply-demand-and-equilibrium",
+"status": "todo"
+},
+{
+"route": "ai/multi-adapter-serving",
+"publicPath": "cs/ai/multi-adapter-serving",
+"status": "todo"
+},
+{
+"route": "ai/structured-pruning",
+"publicPath": "cs/ai/structured-pruning",
+"status": "todo"
+},
+{
+"route": "macro/what-the-price-level-hides",
+"publicPath": "economics/macro/what-the-price-level-hides",
+"status": "todo"
+},
+{
+"route": "ai/differential-attention",
+"publicPath": "cs/ai/differential-attention",
+"status": "todo"
+},
+{
+"route": "ai/qwen-korean-reasoning-posttraining",
+"publicPath": "cs/ai/qwen-korean-reasoning-posttraining",
+"status": "todo"
+},
+{
+"route": "ai/agent-verification",
+"publicPath": "cs/ai/agent-verification",
+"status": "todo"
+},
+{
+"route": "markets/bond-pricing-and-yield-curve",
+"publicPath": "finance/markets/bond-pricing-and-yield-curve",
+"status": "todo"
+},
+{
+"route": "ai/serving-latency-metrics-and-slo",
+"publicPath": "cs/ai/serving-latency-metrics-and-slo",
+"status": "todo"
+},
+{
+"route": "ai/serving-benchmark-methodology",
+"publicPath": "cs/ai/serving-benchmark-methodology",
+"status": "todo"
+},
+{
+"route": "ai/llm-guardrails-and-output-validation",
+"publicPath": "cs/ai/llm-guardrails-and-output-validation",
+"status": "todo"
+},
+{
+"route": "ai/context-instruction-boundaries",
+"publicPath": "cs/ai/context-instruction-boundaries",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-storacha",
+"publicPath": "cs/blockchain/filecoin-storacha",
+"status": "todo"
+},
+{
+"route": "ai/vector-search-and-ann-indexes",
+"publicPath": "cs/ai/vector-search-and-ann-indexes",
+"status": "todo"
+},
+{
+"route": "ai/activation-functions",
+"publicPath": "cs/ai/activation-functions",
+"status": "todo"
+},
+{
+"route": "ai/rl-foundations-for-llm-post-training",
+"publicPath": "cs/ai/rl-foundations-for-llm-post-training",
+"status": "todo"
+},
+{
+"route": "ai/engineering-lessons-ledger",
+"publicPath": "cs/ai/engineering-lessons-ledger",
+"status": "todo"
+},
+{
+"route": "ai/tensorrt-llm-kv-cache-and-kernels",
+"publicPath": "cs/ai/tensorrt-llm-kv-cache-and-kernels",
+"status": "todo"
+},
+{
+"route": "ai/rag-ingestion-and-chunking",
+"publicPath": "cs/ai/rag-ingestion-and-chunking",
+"status": "todo"
+},
+{
+"route": "ai/walk-forward-validation",
+"publicPath": "cs/ai/walk-forward-validation",
+"status": "todo"
+},
+{
+"route": "legal-system/what-makes-law-law",
+"publicPath": "law/legal-system/what-makes-law-law",
+"status": "todo"
+},
+{
+"route": "macro/what-ricardo-assumed",
+"publicPath": "economics/macro/what-ricardo-assumed",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-security-infra",
+"publicPath": "cs/isms-aml/isms-security-infra",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-types",
+"publicPath": "cs/blockchain/cometbft-types",
+"status": "todo"
+},
+{
+"route": "ai/prompt-injection-poisoning-and-data-protection",
+"publicPath": "cs/ai/prompt-injection-poisoning-and-data-protection",
+"status": "todo"
+},
+{
+"route": "ai/openclaw-assistant",
+"publicPath": "cs/ai/openclaw-assistant",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-incident-response",
+"publicPath": "cs/isms-aml/isms-incident-response",
+"status": "todo"
+},
+{
+"route": "gpu/poseidon-gpu",
+"publicPath": "cs/gpu/poseidon-gpu",
+"status": "todo"
+},
+{
+"route": "ai/harness-failure-ablation",
+"publicPath": "cs/ai/harness-failure-ablation",
+"status": "todo"
+},
+{
+"route": "ai/architecture-decision-records",
+"publicPath": "cs/ai/architecture-decision-records",
+"status": "todo"
+},
+{
+"route": "ai/competition-workflow",
+"publicPath": "cs/ai/competition-workflow",
+"status": "todo"
+},
+{
+"route": "legal-system/rules-standards-and-interpretation",
+"publicPath": "law/legal-system/rules-standards-and-interpretation",
+"status": "todo"
+},
+{
+"route": "ai/inference-runtime-anatomy",
+"publicPath": "cs/ai/inference-runtime-anatomy",
+"status": "todo"
+},
+{
+"route": "ai/competition-baseline",
+"publicPath": "cs/ai/competition-baseline",
+"status": "todo"
+},
+{
+"route": "gpu/rapidsnark-gpu",
+"publicPath": "cs/gpu/rapidsnark-gpu",
+"status": "todo"
+},
+{
+"route": "tee/tee-sidechannel",
+"publicPath": "cs/tee/tee-sidechannel",
+"status": "todo"
+},
+{
+"route": "ai/model-selection-bias",
+"publicPath": "cs/ai/model-selection-bias",
+"status": "todo"
+},
+{
+"route": "inference-from-sources/naming-the-past",
+"publicPath": "history/inference-from-sources/naming-the-past",
+"status": "todo"
+},
+{
+"route": "ai/agent-run-contract",
+"publicPath": "cs/ai/agent-run-contract",
+"status": "todo"
+},
+{
+"route": "ai/llm-as-a-judge",
+"publicPath": "cs/ai/llm-as-a-judge",
+"status": "todo"
+},
+{
+"route": "blockchain/uniswap-v2",
+"publicPath": "cs/blockchain/uniswap-v2",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-backup-recovery",
+"publicPath": "cs/isms-aml/isms-backup-recovery",
+"status": "todo"
+},
+{
+"route": "gpu/ntt-gpu-impl",
+"publicPath": "cs/gpu/ntt-gpu-impl",
+"status": "todo"
+},
+{
+"route": "ai/validation-feedback-audit",
+"publicPath": "cs/ai/validation-feedback-audit",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-arch-hopper",
+"publicPath": "cs/gpu/gpu-arch-hopper",
+"status": "todo"
+},
+{
+"route": "ai/regression-metrics",
+"publicPath": "cs/ai/regression-metrics",
+"status": "todo"
+},
+{
+"route": "governance/international-anarchy",
+"publicPath": "politics/governance/international-anarchy",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-memory-hierarchy-and-roofline",
+"publicPath": "cs/gpu/gpu-memory-hierarchy-and-roofline",
+"status": "todo"
+},
+{
+"route": "ai/qwen38-flash-next-architecture",
+"publicPath": "cs/ai/qwen38-flash-next-architecture",
+"status": "todo"
+},
+{
+"route": "ai/multimodal-serving-pipeline",
+"publicPath": "cs/ai/multimodal-serving-pipeline",
+"status": "todo"
+},
+{
+"route": "ai/agent-changelog-evidence",
+"publicPath": "cs/ai/agent-changelog-evidence",
+"status": "todo"
+},
+{
+"route": "ai/paired-experiment-design",
+"publicPath": "cs/ai/paired-experiment-design",
+"status": "todo"
+},
+{
+"route": "gpu/poly-ops-gpu",
+"publicPath": "cs/gpu/poly-ops-gpu",
+"status": "todo"
+},
+{
+"route": "testimony/told-but-not-believed",
+"publicPath": "history/testimony/told-but-not-believed",
+"status": "todo"
+},
+{
+"route": "inference-from-sources/the-gap-was-made",
+"publicPath": "history/inference-from-sources/the-gap-was-made",
+"status": "todo"
+},
+{
+"route": "ai/grouped-validation",
+"publicPath": "cs/ai/grouped-validation",
+"status": "todo"
+},
+{
+"route": "ai/claw-session",
+"publicPath": "cs/ai/claw-session",
+"status": "todo"
+},
+{
+"route": "ai/cross-validation",
+"publicPath": "cs/ai/cross-validation",
+"status": "todo"
+},
+{
+"route": "ai/oof-risk-estimation",
+"publicPath": "cs/ai/oof-risk-estimation",
+"status": "todo"
+},
+{
+"route": "ai/smoothie-qwen-weight-editing",
+"publicPath": "cs/ai/smoothie-qwen-weight-editing",
+"status": "todo"
+},
+{
+"route": "blockchain/webcat-frontend-integrity",
+"publicPath": "cs/blockchain/webcat-frontend-integrity",
+"status": "todo"
+},
+{
+"route": "ai/competition-submission-control",
+"publicPath": "cs/ai/competition-submission-control",
+"status": "todo"
+},
+{
+"route": "ai/motif-3-architecture",
+"publicPath": "cs/ai/motif-3-architecture",
+"status": "todo"
+},
+{
+"route": "ai/math-functions-derivatives-gradients",
+"publicPath": "cs/ai/math-functions-derivatives-gradients",
+"status": "todo"
+},
+{
+"route": "ai/sandbox-deployment-controls",
+"publicPath": "cs/ai/sandbox-deployment-controls",
+"status": "todo"
+},
+{
+"route": "ai/lstm",
+"publicPath": "cs/ai/lstm",
+"status": "todo"
+},
+{
+"route": "ai/vllm-paged-attention",
+"publicPath": "cs/ai/vllm-paged-attention",
+"status": "todo"
+},
+{
+"route": "ai/perceptron",
+"publicPath": "cs/ai/perceptron",
+"status": "todo"
+},
+{
+"route": "ai/onprem-k8s-inference-platform",
+"publicPath": "cs/ai/onprem-k8s-inference-platform",
+"status": "todo"
+},
+{
+"route": "blockchain/bft-theory",
+"publicPath": "cs/blockchain/bft-theory",
+"status": "todo"
+},
+{
+"route": "p2p/libp2p-gossipsub",
+"publicPath": "cs/p2p/libp2p-gossipsub",
+"status": "todo"
+},
+{
+"route": "record-numbers/numbers-that-command",
+"publicPath": "history/record-numbers/numbers-that-command",
+"status": "todo"
+},
+{
+"route": "ai/sandbox-runtime-isolation",
+"publicPath": "cs/ai/sandbox-runtime-isolation",
+"status": "todo"
+},
+{
+"route": "ai/agent-control-boundaries",
+"publicPath": "cs/ai/agent-control-boundaries",
+"status": "todo"
+},
+{
+"route": "ai/dinov3-self-supervised-backbone",
+"publicPath": "cs/ai/dinov3-self-supervised-backbone",
+"status": "todo"
+},
+{
+"route": "p2p/discv5",
+"publicPath": "cs/p2p/discv5",
+"status": "todo"
+},
+{
+"route": "record-numbers/how-the-army-was-counted",
+"publicPath": "history/record-numbers/how-the-army-was-counted",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-requests-limits-allocatable-qos",
+"publicPath": "cs/cloud/kubernetes-requests-limits-allocatable-qos",
+"status": "todo"
+},
+{
+"route": "p2p/libp2p-noise",
+"publicPath": "cs/p2p/libp2p-noise",
+"status": "todo"
+},
+{
+"route": "ai/multiview-fusion",
+"publicPath": "cs/ai/multiview-fusion",
+"status": "todo"
+},
+{
+"route": "ai/claw-permissions",
+"publicPath": "cs/ai/claw-permissions",
+"status": "todo"
+},
+{
+"route": "ai/robot-action-representations",
+"publicPath": "cs/ai/robot-action-representations",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-rollout-termination-pdb-drain-hpa",
+"publicPath": "cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa",
+"status": "todo"
+},
+{
+"route": "p2p/dht-security",
+"publicPath": "cs/p2p/dht-security",
+"status": "todo"
+},
+{
+"route": "ai/multimodal-retrieval-and-visual-grounding",
+"publicPath": "cs/ai/multimodal-retrieval-and-visual-grounding",
+"status": "todo"
+},
+{
+"route": "inference-from-sources/ruins-mislead",
+"publicPath": "history/inference-from-sources/ruins-mislead",
+"status": "todo"
+},
+{
+"route": "record-numbers/what-the-total-cannot-tell",
+"publicPath": "history/record-numbers/what-the-total-cannot-tell",
+"status": "todo"
+},
+{
+"route": "tee/tee-attestation",
+"publicPath": "cs/tee/tee-attestation",
+"status": "todo"
+},
+{
+"route": "ai/autoencoder",
+"publicPath": "cs/ai/autoencoder",
+"status": "todo"
+},
+{
+"route": "ai/fold-local-validation",
+"publicPath": "cs/ai/fold-local-validation",
+"status": "todo"
+},
+{
+"route": "ai/spiking-neural-networks",
+"publicPath": "cs/ai/spiking-neural-networks",
+"status": "todo"
+},
+{
+"route": "testimony/speeches-were-reconstructed",
+"publicPath": "history/testimony/speeches-were-reconstructed",
+"status": "todo"
+},
+{
+"route": "ai/llm-training-stages",
+"publicPath": "cs/ai/llm-training-stages",
+"status": "todo"
+},
+{
+"route": "ai/image-text-contrastive-pretraining",
+"publicPath": "cs/ai/image-text-contrastive-pretraining",
+"status": "todo"
+},
+{
+"route": "ai/expert-parallelism-moe-systems",
+"publicPath": "cs/ai/expert-parallelism-moe-systems",
+"status": "todo"
+},
+{
+"route": "ai/diffusion-language-models",
+"publicPath": "cs/ai/diffusion-language-models",
+"status": "todo"
+},
+{
+"route": "ai/attention-theory",
+"publicPath": "cs/ai/attention-theory",
+"status": "todo"
+},
+{
+"route": "p2p/libp2p-yamux",
+"publicPath": "cs/p2p/libp2p-yamux",
+"status": "todo"
+},
+{
+"route": "ai/inference-engine-design-axes",
+"publicPath": "cs/ai/inference-engine-design-axes",
+"status": "todo"
+},
+{
+"route": "ai/knowledge-graph-construction",
+"publicPath": "cs/ai/knowledge-graph-construction",
+"status": "todo"
+},
+{
+"route": "ai/claw-bash",
+"publicPath": "cs/ai/claw-bash",
+"status": "todo"
+},
+{
+"route": "blockchain/ipfs-filecoin-storage",
+"publicPath": "cs/blockchain/ipfs-filecoin-storage",
+"status": "todo"
+},
+{
+"route": "ai/vision-language-navigation",
+"publicPath": "cs/ai/vision-language-navigation",
+"status": "todo"
+},
+{
+"route": "ai/knowledge-distillation",
+"publicPath": "cs/ai/knowledge-distillation",
+"status": "todo"
+},
+{
+"route": "ai/model-vram-budgeting",
+"publicPath": "cs/ai/model-vram-budgeting",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-perf-analysis",
+"publicPath": "cs/gpu/cuda-perf-analysis",
+"status": "todo"
+},
+{
+"route": "ai/rnn",
+"publicPath": "cs/ai/rnn",
+"status": "todo"
+},
+{
+"route": "ai/neural-network",
+"publicPath": "cs/ai/neural-network",
+"status": "todo"
+},
+{
+"route": "ai/sam3-promptable-concept-segmentation",
+"publicPath": "cs/ai/sam3-promptable-concept-segmentation",
+"status": "todo"
+},
+{
+"route": "ai/vllm-scheduler",
+"publicPath": "cs/ai/vllm-scheduler",
+"status": "todo"
+},
+{
+"route": "blockchain/aave-v3",
+"publicPath": "cs/blockchain/aave-v3",
+"status": "todo"
+},
+{
+"route": "ai/modern-image-model-stack",
+"publicPath": "cs/ai/modern-image-model-stack",
+"status": "todo"
+},
+{
+"route": "ai/qwen-korean-consistency",
+"publicPath": "cs/ai/qwen-korean-consistency",
+"status": "todo"
+},
+{
+"route": "ai/domain-finetuning",
+"publicPath": "cs/ai/domain-finetuning",
+"status": "todo"
+},
+{
+"route": "ai/claw-cli",
+"publicPath": "cs/ai/claw-cli",
+"status": "todo"
+},
+{
+"route": "tee/tee-sealing",
+"publicPath": "cs/tee/tee-sealing",
+"status": "todo"
+},
+{
+"route": "ai/mixture-of-experts",
+"publicPath": "cs/ai/mixture-of-experts",
+"status": "todo"
+},
+{
+"route": "ai/vision-backbone-selection",
+"publicPath": "cs/ai/vision-backbone-selection",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-proofs",
+"publicPath": "cs/blockchain/filecoin-proofs",
+"status": "todo"
+},
+{
+"route": "saas/anycast-delivery-continuity",
+"publicPath": "cs/saas/anycast-delivery-continuity",
+"status": "todo"
+},
+{
+"route": "ai/query-transformation-and-adaptive-retrieval",
+"publicPath": "cs/ai/query-transformation-and-adaptive-retrieval",
+"status": "todo"
+},
+{
+"route": "ai/generative-measurement-controls",
+"publicPath": "cs/ai/generative-measurement-controls",
+"status": "todo"
+},
+{
+"route": "ai/sandbox-gpu-isolation",
+"publicPath": "cs/ai/sandbox-gpu-isolation",
+"status": "todo"
+},
+{
+"route": "ai/prediction-time-feature-availability",
+"publicPath": "cs/ai/prediction-time-feature-availability",
+"status": "todo"
+},
+{
+"route": "ai/lora-finetuning",
+"publicPath": "cs/ai/lora-finetuning",
+"status": "todo"
+},
+{
+"route": "ai/tabular-deep-learning",
+"publicPath": "cs/ai/tabular-deep-learning",
+"status": "todo"
+},
+{
+"route": "saas/private-access-inbound-closure",
+"publicPath": "cs/saas/private-access-inbound-closure",
+"status": "todo"
+},
+{
+"route": "ai/vision-language-model-architecture",
+"publicPath": "cs/ai/vision-language-model-architecture",
+"status": "todo"
+},
+{
+"route": "ai/sionic-glm-b300",
+"publicPath": "cs/ai/sionic-glm-b300",
+"status": "todo"
+},
+{
+"route": "ai/claw-compaction",
+"publicPath": "cs/ai/claw-compaction",
+"status": "todo"
+},
+{
+"route": "ai/claw-api-client",
+"publicPath": "cs/ai/claw-api-client",
+"status": "todo"
+},
+{
+"route": "ai/image-embedding-pipeline",
+"publicPath": "cs/ai/image-embedding-pipeline",
+"status": "todo"
+},
+{
+"route": "ai/open-r1",
+"publicPath": "cs/ai/open-r1",
+"status": "todo"
+},
+{
+"route": "ai/grammar-constrained-generation",
+"publicPath": "cs/ai/grammar-constrained-generation",
+"status": "todo"
+},
+{
+"route": "ai/rag-context-assembly-and-evaluation",
+"publicPath": "cs/ai/rag-context-assembly-and-evaluation",
+"status": "todo"
+},
+{
+"route": "ai/masked-edit-verb-routing",
+"publicPath": "cs/ai/masked-edit-verb-routing",
+"status": "todo"
+},
+{
+"route": "blockchain/initia-evm",
+"publicPath": "cs/blockchain/initia-evm",
+"status": "todo"
+},
+{
+"route": "ai/transformer-architecture",
+"publicPath": "cs/ai/transformer-architecture",
+"status": "todo"
+},
+{
+"route": "ai/removal-is-not-inpainting",
+"publicPath": "cs/ai/removal-is-not-inpainting",
+"status": "todo"
+},
+{
+"route": "ai/diffusion-transformer-architecture",
+"publicPath": "cs/ai/diffusion-transformer-architecture",
+"status": "todo"
+},
+{
+"route": "tee/tee-memory",
+"publicPath": "cs/tee/tee-memory",
+"status": "todo"
+},
+{
+"route": "ai/claw-mcp",
+"publicPath": "cs/ai/claw-mcp",
+"status": "todo"
+},
+{
+"route": "ai/vllm-serving",
+"publicPath": "cs/ai/vllm-serving",
+"status": "todo"
+},
+{
+"route": "ai/generative-identity-diversity",
+"publicPath": "cs/ai/generative-identity-diversity",
+"status": "todo"
+},
+{
+"route": "ai/vision-transformer",
+"publicPath": "cs/ai/vision-transformer",
+"status": "todo"
+},
+{
+"route": "blockchain/crypto-theory",
+"publicPath": "cs/blockchain/crypto-theory",
+"status": "todo"
+},
+{
+"route": "saas/edge-request-defense-pipeline",
+"publicPath": "cs/saas/edge-request-defense-pipeline",
+"status": "todo"
+},
+{
+"route": "ai/llm-serving-ops",
+"publicPath": "cs/ai/llm-serving-ops",
+"status": "todo"
+},
+{
+"route": "ai/multi-component-finetuning-vram",
+"publicPath": "cs/ai/multi-component-finetuning-vram",
+"status": "todo"
+},
+{
+"route": "ai/cfg-pushdown-automata",
+"publicPath": "cs/ai/cfg-pushdown-automata",
+"status": "todo"
+},
+{
+"route": "ai/feature-engineering",
+"publicPath": "cs/ai/feature-engineering",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-overview",
+"publicPath": "cs/isms-aml/isms-overview",
+"status": "todo"
+},
+{
+"route": "legal-system/precedent-and-legal-change",
+"publicPath": "law/legal-system/precedent-and-legal-change",
+"status": "todo"
+},
+{
+"route": "blockchain/pq-account",
+"publicPath": "cs/blockchain/pq-account",
+"status": "todo"
+},
+{
+"route": "p2p/libp2p-tcp",
+"publicPath": "cs/p2p/libp2p-tcp",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft",
+"publicPath": "cs/blockchain/cometbft",
+"status": "todo"
+},
+{
+"route": "ai/kv-cache-fundamentals",
+"publicPath": "cs/ai/kv-cache-fundamentals",
+"status": "todo"
+},
+{
+"route": "ai/claw-policy-engine",
+"publicPath": "cs/ai/claw-policy-engine",
+"status": "todo"
+},
+{
+"route": "ai/sentence-embeddings",
+"publicPath": "cs/ai/sentence-embeddings",
+"status": "todo"
+},
+{
+"route": "ai/evaluation-metrics",
+"publicPath": "cs/ai/evaluation-metrics",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-execution",
+"publicPath": "cs/blockchain/cometbft-execution",
+"status": "todo"
+},
+{
+"route": "ai/context-window-optimization",
+"publicPath": "cs/ai/context-window-optimization",
+"status": "todo"
+},
+{
+"route": "ai/imitation-learning-and-policy-generalization",
+"publicPath": "cs/ai/imitation-learning-and-policy-generalization",
+"status": "todo"
+},
+{
+"route": "ai/claw-hooks",
+"publicPath": "cs/ai/claw-hooks",
+"status": "todo"
+},
+{
+"route": "ai/quantization-formats-and-granularity",
+"publicPath": "cs/ai/quantization-formats-and-granularity",
+"status": "todo"
+},
+{
+"route": "ai/claw-subagent-orchestration",
+"publicPath": "cs/ai/claw-subagent-orchestration",
+"status": "todo"
+},
+{
+"route": "p2p/libp2p-quic",
+"publicPath": "cs/p2p/libp2p-quic",
+"status": "todo"
+},
+{
+"route": "ai/claw-task-team",
+"publicPath": "cs/ai/claw-task-team",
+"status": "todo"
+},
+{
+"route": "ai/rlhf",
+"publicPath": "cs/ai/rlhf",
+"status": "todo"
+},
+{
+"route": "blockchain/berachain",
+"publicPath": "cs/blockchain/berachain",
+"status": "todo"
+},
+{
+"route": "ai/claw-overview",
+"publicPath": "cs/ai/claw-overview",
+"status": "todo"
+},
+{
+"route": "ai/claw-file-ops",
+"publicPath": "cs/ai/claw-file-ops",
+"status": "todo"
+},
+{
+"route": "ai/qwen36-hybrid-architecture",
+"publicPath": "cs/ai/qwen36-hybrid-architecture",
+"status": "todo"
+},
+{
+"route": "blockchain/omni-octane",
+"publicPath": "cs/blockchain/omni-octane",
+"status": "todo"
+},
+{
+"route": "ai/ensemble-methods",
+"publicPath": "cs/ai/ensemble-methods",
+"status": "todo"
+},
+{
+"route": "blockchain/impl-groth16",
+"publicPath": "cs/blockchain/impl-groth16",
+"status": "todo"
+},
+{
+"route": "isms-aml/vasp-wallet-security",
+"publicPath": "cs/isms-aml/vasp-wallet-security",
+"status": "todo"
+},
+{
+"route": "tee/tee-tcb",
+"publicPath": "cs/tee/tee-tcb",
+"status": "todo"
+},
+{
+"route": "ai/mcp-server-operations",
+"publicPath": "cs/ai/mcp-server-operations",
+"status": "todo"
+},
+{
+"route": "ai/contrastive-evaluation",
+"publicPath": "cs/ai/contrastive-evaluation",
+"status": "todo"
+},
+{
+"route": "ai/roi-resolution-identity-budget",
+"publicPath": "cs/ai/roi-resolution-identity-budget",
+"status": "todo"
+},
+{
+"route": "ai/image-backbone-scaling",
+"publicPath": "cs/ai/image-backbone-scaling",
+"status": "todo"
+},
+{
+"route": "ai/latent-diffusion-guidance",
+"publicPath": "cs/ai/latent-diffusion-guidance",
+"status": "todo"
+},
+{
+"route": "ai/image-training-stages",
+"publicPath": "cs/ai/image-training-stages",
+"status": "todo"
+},
+{
+"route": "p2p/kademlia",
+"publicPath": "cs/p2p/kademlia",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-auth-management",
+"publicPath": "cs/isms-aml/isms-auth-management",
+"status": "todo"
+},
+{
+"route": "ai/claw-recovery",
+"publicPath": "cs/ai/claw-recovery",
+"status": "todo"
+},
+{
+"route": "p2p/libp2p",
+"publicPath": "cs/p2p/libp2p",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-matrix-multiply",
+"publicPath": "cs/gpu/cuda-matrix-multiply",
+"status": "todo"
+},
+{
+"route": "p2p/tls-fundamentals",
+"publicPath": "cs/p2p/tls-fundamentals",
+"status": "todo"
+},
+{
+"route": "ai/ptq-calibration",
+"publicPath": "cs/ai/ptq-calibration",
+"status": "todo"
+},
+{
+"route": "ai/sequence-modeling-tabular",
+"publicPath": "cs/ai/sequence-modeling-tabular",
+"status": "todo"
+},
+{
+"route": "ai/reference-identity-pose-separation",
+"publicPath": "cs/ai/reference-identity-pose-separation",
+"status": "todo"
+},
+{
+"route": "ai/agent-frameworks",
+"publicPath": "cs/ai/agent-frameworks",
+"status": "todo"
+},
+{
+"route": "ai/eda-workflow",
+"publicPath": "cs/ai/eda-workflow",
+"status": "todo"
+},
+{
+"route": "ai/code-mode-runtime-contracts",
+"publicPath": "cs/ai/code-mode-runtime-contracts",
+"status": "todo"
+},
+{
+"route": "blockchain/uniswap-v3",
+"publicPath": "cs/blockchain/uniswap-v3",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-p2p",
+"publicPath": "cs/blockchain/cometbft-p2p",
+"status": "todo"
+},
+{
+"route": "blockchain/rollup-fundamentals",
+"publicPath": "cs/blockchain/rollup-fundamentals",
+"status": "todo"
+},
+{
+"route": "ai/claw-tool-system",
+"publicPath": "cs/ai/claw-tool-system",
+"status": "todo"
+},
+{
+"route": "ai/pruning-recovery-deployment",
+"publicPath": "cs/ai/pruning-recovery-deployment",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-access-control",
+"publicPath": "cs/isms-aml/isms-access-control",
+"status": "todo"
+},
+{
+"route": "gpu/cutlass-gemm-hierarchy-and-cute-layouts",
+"publicPath": "cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts",
+"status": "todo"
+},
+{
+"route": "blockchain/consensus-mechanisms",
+"publicPath": "cs/blockchain/consensus-mechanisms",
+"status": "todo"
+},
+{
+"route": "blockchain/tendermint-bft",
+"publicPath": "cs/blockchain/tendermint-bft",
+"status": "todo"
+},
+{
+"route": "ai/compression-pipeline",
+"publicPath": "cs/ai/compression-pipeline",
+"status": "todo"
+},
+{
+"route": "ai/claw-telemetry",
+"publicPath": "cs/ai/claw-telemetry",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-concept-map",
+"publicPath": "cs/cloud/kubernetes-concept-map",
+"status": "todo"
+},
+{
+"route": "p2p/bittorrent",
+"publicPath": "cs/p2p/bittorrent",
+"status": "todo"
+},
+{
+"route": "blockchain/impl-field-arithmetic",
+"publicPath": "cs/blockchain/impl-field-arithmetic",
+"status": "todo"
+},
+{
+"route": "ai/negative-result-3d-face-control",
+"publicPath": "cs/ai/negative-result-3d-face-control",
+"status": "todo"
+},
+{
+"route": "isms-aml/vasp-unfair-trading",
+"publicPath": "cs/isms-aml/vasp-unfair-trading",
+"status": "todo"
+},
+{
+"route": "ai/ecod",
+"publicPath": "cs/ai/ecod",
+"status": "todo"
+},
+{
+"route": "ai/time-features",
+"publicPath": "cs/ai/time-features",
+"status": "todo"
+},
+{
+"route": "blockchain/stablecoin-overview",
+"publicPath": "cs/blockchain/stablecoin-overview",
+"status": "todo"
+},
+{
+"route": "ai/resnet",
+"publicPath": "cs/ai/resnet",
+"status": "todo"
+},
+{
+"route": "p2p/kubo",
+"publicPath": "cs/p2p/kubo",
+"status": "todo"
+},
+{
+"route": "ai/mcp-primitives",
+"publicPath": "cs/ai/mcp-primitives",
+"status": "todo"
+},
+{
+"route": "ai/gan",
+"publicPath": "cs/ai/gan",
+"status": "todo"
+},
+{
+"route": "ai/cnn",
+"publicPath": "cs/ai/cnn",
+"status": "todo"
+},
+{
+"route": "ai/image-probability-decisions",
+"publicPath": "cs/ai/image-probability-decisions",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-dev-security",
+"publicPath": "cs/isms-aml/isms-dev-security",
+"status": "todo"
+},
+{
+"route": "blockchain/pbft-deep",
+"publicPath": "cs/blockchain/pbft-deep",
+"status": "todo"
+},
+{
+"route": "blockchain/railgun-validation",
+"publicPath": "cs/blockchain/railgun-validation",
+"status": "todo"
+},
+{
+"route": "ai/dezero-advanced",
+"publicPath": "cs/ai/dezero-advanced",
+"status": "todo"
+},
+{
+"route": "ai/quantization",
+"publicPath": "cs/ai/quantization",
+"status": "todo"
+},
+{
+"route": "ai/qwen36-hybrid-runtime",
+"publicPath": "cs/ai/qwen36-hybrid-runtime",
+"status": "todo"
+},
+{
+"route": "isms-aml/vasp-custody-management",
+"publicPath": "cs/isms-aml/vasp-custody-management",
+"status": "todo"
+},
+{
+"route": "blockchain/proofs-snark",
+"publicPath": "cs/blockchain/proofs-snark",
+"status": "todo"
+},
+{
+"route": "isms-aml/aml-fds-deep",
+"publicPath": "cs/isms-aml/aml-fds-deep",
+"status": "todo"
+},
+{
+"route": "ai/claw-plugin",
+"publicPath": "cs/ai/claw-plugin",
+"status": "todo"
+},
+{
+"route": "ai/score-based-generative-models",
+"publicPath": "cs/ai/score-based-generative-models",
+"status": "todo"
+},
+{
+"route": "blockchain/hotstuff-deep",
+"publicPath": "cs/blockchain/hotstuff-deep",
+"status": "todo"
+},
+{
+"route": "ai/dezero-autodiff",
+"publicPath": "cs/ai/dezero-autodiff",
+"status": "todo"
+},
+{
+"route": "ai/arima",
+"publicPath": "cs/ai/arima",
+"status": "todo"
+},
+{
+"route": "ai/classification-metrics",
+"publicPath": "cs/ai/classification-metrics",
+"status": "todo"
+},
+{
+"route": "ai/context-engineering",
+"publicPath": "cs/ai/context-engineering",
+"status": "todo"
+},
+{
+"route": "blockchain/commonware-broadcast",
+"publicPath": "cs/blockchain/commonware-broadcast",
+"status": "todo"
+},
+{
+"route": "blockchain/da-validation",
+"publicPath": "cs/blockchain/da-validation",
+"status": "todo"
+},
+{
+"route": "ai/continued-pretraining",
+"publicPath": "cs/ai/continued-pretraining",
+"status": "todo"
+},
+{
+"route": "p2p/rqbit",
+"publicPath": "cs/p2p/rqbit",
+"status": "todo"
+},
+{
+"route": "ai/claw-worker-boot",
+"publicPath": "cs/ai/claw-worker-boot",
+"status": "todo"
+},
+{
+"route": "gpu/cutlass-collectives-and-tile-schedulers",
+"publicPath": "cs/gpu/cutlass-collectives-and-tile-schedulers",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-proof-pipeline",
+"publicPath": "cs/gpu/gpu-proof-pipeline",
+"status": "todo"
+},
+{
+"route": "blockchain/kohaku-provider-validation",
+"publicPath": "cs/blockchain/kohaku-provider-validation",
+"status": "todo"
+},
+{
+"route": "ai/diffusion-continuous-time",
+"publicPath": "cs/ai/diffusion-continuous-time",
+"status": "todo"
+},
+{
+"route": "blockchain/erasure-coding",
+"publicPath": "cs/blockchain/erasure-coding",
+"status": "todo"
+},
+{
+"route": "ai/dezero-nn",
+"publicPath": "cs/ai/dezero-nn",
+"status": "todo"
+},
+{
+"route": "ai/sparse-autoencoder",
+"publicPath": "cs/ai/sparse-autoencoder",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-mempool",
+"publicPath": "cs/blockchain/cometbft-mempool",
+"status": "todo"
+},
+{
+"route": "blockchain/impl-elliptic-curve",
+"publicPath": "cs/blockchain/impl-elliptic-curve",
+"status": "todo"
+},
+{
+"route": "ai/rag-pipeline",
+"publicPath": "cs/ai/rag-pipeline",
+"status": "todo"
+},
+{
+"route": "blockchain/da-theory",
+"publicPath": "cs/blockchain/da-theory",
+"status": "todo"
+},
+{
+"route": "isms-aml/aml-compliance",
+"publicPath": "cs/isms-aml/aml-compliance",
+"status": "todo"
+},
+{
+"route": "ai/cost-sensitive-thresholding",
+"publicPath": "cs/ai/cost-sensitive-thresholding",
+"status": "todo"
+},
+{
+"route": "ai/mcp-transports",
+"publicPath": "cs/ai/mcp-transports",
+"status": "todo"
+},
+{
+"route": "ai/triplet-metric-learning",
+"publicPath": "cs/ai/triplet-metric-learning",
+"status": "todo"
+},
+{
+"route": "ai/training-pipeline",
+"publicPath": "cs/ai/training-pipeline",
+"status": "todo"
+},
+{
+"route": "ai/supervised-contrastive-learning",
+"publicPath": "cs/ai/supervised-contrastive-learning",
+"status": "todo"
+},
+{
+"route": "ai/imbalanced-classification-evaluation",
+"publicPath": "cs/ai/imbalanced-classification-evaluation",
+"status": "todo"
+},
+{
+"route": "ai/embedding-evaluation",
+"publicPath": "cs/ai/embedding-evaluation",
+"status": "todo"
+},
+{
+"route": "ai/lstm-timeseries",
+"publicPath": "cs/ai/lstm-timeseries",
+"status": "todo"
+},
+{
+"route": "blockchain/impl-plonk",
+"publicPath": "cs/blockchain/impl-plonk",
+"status": "todo"
+},
+{
+"route": "blockchain/longest-chain",
+"publicPath": "cs/blockchain/longest-chain",
+"status": "todo"
+},
+{
+"route": "ai/seq2seq",
+"publicPath": "cs/ai/seq2seq",
+"status": "todo"
+},
+{
+"route": "ai/kimi-k3-architecture",
+"publicPath": "cs/ai/kimi-k3-architecture",
+"status": "todo"
+},
+{
+"route": "blockchain/evm-fundamentals",
+"publicPath": "cs/blockchain/evm-fundamentals",
+"status": "todo"
+},
+{
+"route": "ai/claw-config",
+"publicPath": "cs/ai/claw-config",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-kernel-fusion",
+"publicPath": "cs/gpu/cuda-kernel-fusion",
+"status": "todo"
+},
+{
+"route": "ai/image-classification-pipeline",
+"publicPath": "cs/ai/image-classification-pipeline",
+"status": "todo"
+},
+{
+"route": "blockchain/bullshark-deep",
+"publicPath": "cs/blockchain/bullshark-deep",
+"status": "todo"
+},
+{
+"route": "ai/gan-wasserstein-critics",
+"publicPath": "cs/ai/gan-wasserstein-critics",
+"status": "todo"
+},
+{
+"route": "ai/bi-encoder-retrieval",
+"publicPath": "cs/ai/bi-encoder-retrieval",
+"status": "todo"
+},
+{
+"route": "ai/agent-code-mode",
+"publicPath": "cs/ai/agent-code-mode",
+"status": "todo"
+},
+{
+"route": "ai/bert-mlm-corruption",
+"publicPath": "cs/ai/bert-mlm-corruption",
+"status": "todo"
+},
+{
+"route": "blockchain/commonware-simplex",
+"publicPath": "cs/blockchain/commonware-simplex",
+"status": "todo"
+},
+{
+"route": "ai/embedding-serving-contract",
+"publicPath": "cs/ai/embedding-serving-contract",
+"status": "todo"
+},
+{
+"route": "ai/claude-code",
+"publicPath": "cs/ai/claude-code",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-crypto",
+"publicPath": "cs/blockchain/cometbft-crypto",
+"status": "todo"
+},
+{
+"route": "blockchain/evm-advanced",
+"publicPath": "cs/blockchain/evm-advanced",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-privacy-lifecycle",
+"publicPath": "cs/isms-aml/isms-privacy-lifecycle",
+"status": "todo"
+},
+{
+"route": "blockchain/jolteon-ditto",
+"publicPath": "cs/blockchain/jolteon-ditto",
+"status": "todo"
+},
+{
+"route": "ai/regularization-practice",
+"publicPath": "cs/ai/regularization-practice",
+"status": "todo"
+},
+{
+"route": "blockchain/gossipbft",
+"publicPath": "cs/blockchain/gossipbft",
+"status": "todo"
+},
+{
+"route": "ai/grammar-tokenizer-decoding",
+"publicPath": "cs/ai/grammar-tokenizer-decoding",
+"status": "todo"
+},
+{
+"route": "blockchain/hotstuff2",
+"publicPath": "cs/blockchain/hotstuff2",
+"status": "todo"
+},
+{
+"route": "ai/pruning",
+"publicPath": "cs/ai/pruning",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-audit-checklist",
+"publicPath": "cs/isms-aml/isms-audit-checklist",
+"status": "todo"
+},
+{
+"route": "ai/structured-generation-serving",
+"publicPath": "cs/ai/structured-generation-serving",
+"status": "todo"
+},
+{
+"route": "isms-aml/aml-rba-deep",
+"publicPath": "cs/isms-aml/aml-rba-deep",
+"status": "todo"
+},
+{
+"route": "ai/domain-data-governance",
+"publicPath": "cs/ai/domain-data-governance",
+"status": "todo"
+},
+{
+"route": "ai/transfer-learning-practice",
+"publicPath": "cs/ai/transfer-learning-practice",
+"status": "todo"
+},
+{
+"route": "blockchain/tusk",
+"publicPath": "cs/blockchain/tusk",
+"status": "todo"
+},
+{
+"route": "isms-aml/aml-str-reporting",
+"publicPath": "cs/isms-aml/aml-str-reporting",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-privacy-policy",
+"publicPath": "cs/isms-aml/isms-privacy-policy",
+"status": "todo"
+},
+{
+"route": "blockchain/proofs-post",
+"publicPath": "cs/blockchain/proofs-post",
+"status": "todo"
+},
+{
+"route": "blockchain/proofs-porep",
+"publicPath": "cs/blockchain/proofs-porep",
+"status": "todo"
+},
+{
+"route": "ai/bert",
+"publicPath": "cs/ai/bert",
+"status": "todo"
+},
+{
+"route": "blockchain/lotus-mpool",
+"publicPath": "cs/blockchain/lotus-mpool",
+"status": "todo"
+},
+{
+"route": "ai/latent-variable-generative-models",
+"publicPath": "cs/ai/latent-variable-generative-models",
+"status": "todo"
+},
+{
+"route": "blockchain/impl-hash-commitment",
+"publicPath": "cs/blockchain/impl-hash-commitment",
+"status": "todo"
+},
+{
+"route": "blockchain/curve-stable",
+"publicPath": "cs/blockchain/curve-stable",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-lotus",
+"publicPath": "cs/blockchain/filecoin-lotus",
+"status": "todo"
+},
+{
+"route": "isms-aml/isms-encryption",
+"publicPath": "cs/isms-aml/isms-encryption",
+"status": "todo"
+},
+{
+"route": "ai/tokenizer",
+"publicPath": "cs/ai/tokenizer",
+"status": "todo"
+},
+{
+"route": "ai/distributional-semantics",
+"publicPath": "cs/ai/distributional-semantics",
+"status": "todo"
+},
+{
+"route": "isms-aml/aml-cdd-deep",
+"publicPath": "cs/isms-aml/aml-cdd-deep",
+"status": "todo"
+},
+{
+"route": "blockchain/autobahn-deep",
+"publicPath": "cs/blockchain/autobahn-deep",
+"status": "todo"
+},
+{
+"route": "blockchain/distributed-systems",
+"publicPath": "cs/blockchain/distributed-systems",
+"status": "todo"
+},
+{
+"route": "ai/data-augmentation",
+"publicPath": "cs/ai/data-augmentation",
+"status": "todo"
+},
+{
+"route": "ai/agent-sandbox-security",
+"publicPath": "cs/ai/agent-sandbox-security",
+"status": "todo"
+},
+{
+"route": "blockchain/narwhal-deep",
+"publicPath": "cs/blockchain/narwhal-deep",
+"status": "todo"
+},
+{
+"route": "ai/video-transformers",
+"publicPath": "cs/ai/video-transformers",
+"status": "todo"
+},
+{
+"route": "ai/quantized-model-deployment",
+"publicPath": "cs/ai/quantized-model-deployment",
+"status": "todo"
+},
+{
+"route": "ai/domain-task-finetuning",
+"publicPath": "cs/ai/domain-task-finetuning",
+"status": "todo"
+},
+{
+"route": "ai/mixup-cutmix",
+"publicPath": "cs/ai/mixup-cutmix",
+"status": "todo"
+},
+{
+"route": "p2p/content-addressing",
+"publicPath": "cs/p2p/content-addressing",
+"status": "todo"
+},
+{
+"route": "ai/image-augmentation-transforms",
+"publicPath": "cs/ai/image-augmentation-transforms",
+"status": "todo"
+},
+{
+"route": "ai/multi-agent-implementation",
+"publicPath": "cs/ai/multi-agent-implementation",
+"status": "todo"
+},
+{
+"route": "ai/simclr-infonce",
+"publicPath": "cs/ai/simclr-infonce",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-persistent-kernels",
+"publicPath": "cs/gpu/cuda-persistent-kernels",
+"status": "todo"
+},
+{
+"route": "ai/graphrag-community-and-multihop-search",
+"publicPath": "cs/ai/graphrag-community-and-multihop-search",
+"status": "todo"
+},
+{
+"route": "blockchain/drand",
+"publicPath": "cs/blockchain/drand",
+"status": "todo"
+},
+{
+"route": "ai/imbalance-resampling",
+"publicPath": "cs/ai/imbalance-resampling",
+"status": "todo"
+},
+{
+"route": "ai/incremental-parsing-tree-sitter",
+"publicPath": "cs/ai/incremental-parsing-tree-sitter",
+"status": "todo"
+},
+{
+"route": "ai/gan-conditional-evaluation",
+"publicPath": "cs/ai/gan-conditional-evaluation",
+"status": "todo"
+},
+{
+"route": "blockchain/commonware-deep-dive",
+"publicPath": "cs/blockchain/commonware-deep-dive",
+"status": "todo"
+},
+{
+"route": "ai/claude-code-instructions-memory",
+"publicPath": "cs/ai/claude-code-instructions-memory",
+"status": "todo"
+},
+{
+"route": "ai/qwen36-long-context-deployment",
+"publicPath": "cs/ai/qwen36-long-context-deployment",
+"status": "todo"
+},
+{
+"route": "blockchain/dydx",
+"publicPath": "cs/blockchain/dydx",
+"status": "todo"
+},
+{
+"route": "blockchain/cosmos-sdk",
+"publicPath": "cs/blockchain/cosmos-sdk",
+"status": "todo"
+},
+{
+"route": "ai/one-shot-llm-pruning",
+"publicPath": "cs/ai/one-shot-llm-pruning",
+"status": "todo"
+},
+{
+"route": "blockchain/evmos",
+"publicPath": "cs/blockchain/evmos",
+"status": "todo"
+},
+{
+"route": "ai/gan-training-dynamics",
+"publicPath": "cs/ai/gan-training-dynamics",
+"status": "todo"
+},
+{
+"route": "ai/normalizing-flows",
+"publicPath": "cs/ai/normalizing-flows",
+"status": "todo"
+},
+{
+"route": "ai/claude-code-subagents",
+"publicPath": "cs/ai/claude-code-subagents",
+"status": "todo"
+},
+{
+"route": "ai/imbalance-loss-weighting",
+"publicPath": "cs/ai/imbalance-loss-weighting",
+"status": "todo"
+},
+{
+"route": "blockchain/mysticeti",
+"publicPath": "cs/blockchain/mysticeti",
+"status": "todo"
+},
+{
+"route": "ai/context-provenance-freshness",
+"publicPath": "cs/ai/context-provenance-freshness",
+"status": "todo"
+},
+{
+"route": "ai/early-stopping",
+"publicPath": "cs/ai/early-stopping",
+"status": "todo"
+},
+{
+"route": "ai/imbalanced-data",
+"publicPath": "cs/ai/imbalanced-data",
+"status": "todo"
+},
+{
+"route": "ai/agent-devlog-patterns",
+"publicPath": "cs/ai/agent-devlog-patterns",
+"status": "todo"
+},
+{
+"route": "ai/constitutional-ai",
+"publicPath": "cs/ai/constitutional-ai",
+"status": "todo"
+},
+{
+"route": "blockchain/dag-consensus",
+"publicPath": "cs/blockchain/dag-consensus",
+"status": "todo"
+},
+{
+"route": "ai/bert-pretraining-objectives",
+"publicPath": "cs/ai/bert-pretraining-objectives",
+"status": "todo"
+},
+{
+"route": "ai/skills-anatomy",
+"publicPath": "cs/ai/skills-anatomy",
+"status": "todo"
+},
+{
+"route": "blockchain/uniswap-v4",
+"publicPath": "cs/blockchain/uniswap-v4",
+"status": "todo"
+},
+{
+"route": "p2p/quic-fundamentals",
+"publicPath": "cs/p2p/quic-fundamentals",
+"status": "todo"
+},
+{
+"route": "ai/weight-only-quantization",
+"publicPath": "cs/ai/weight-only-quantization",
+"status": "todo"
+},
+{
+"route": "blockchain/cometbft-state",
+"publicPath": "cs/blockchain/cometbft-state",
+"status": "todo"
+},
+{
+"route": "ai/deepfake-detection",
+"publicPath": "cs/ai/deepfake-detection",
+"status": "todo"
+},
+{
+"route": "blockchain/lotus-chain",
+"publicPath": "cs/blockchain/lotus-chain",
+"status": "todo"
+},
+{
+"route": "ai/unstructured-pruning",
+"publicPath": "cs/ai/unstructured-pruning",
+"status": "todo"
+},
+{
+"route": "ai/dpo",
+"publicPath": "cs/ai/dpo",
+"status": "todo"
+},
+{
+"route": "tee/intel-tdx",
+"publicPath": "cs/tee/intel-tdx",
+"status": "todo"
+},
+{
+"route": "blockchain/lotus-miner",
+"publicPath": "cs/blockchain/lotus-miner",
+"status": "todo"
+},
+{
+"route": "ai/kimi-k3-latent-moe",
+"publicPath": "cs/ai/kimi-k3-latent-moe",
+"status": "todo"
+},
+{
+"route": "ai/video-convolution-architectures",
+"publicPath": "cs/ai/video-convolution-architectures",
+"status": "todo"
+},
+{
+"route": "blockchain/filecoin-f3",
+"publicPath": "cs/blockchain/filecoin-f3",
+"status": "todo"
+},
+{
+"route": "ai/xml-prompting",
+"publicPath": "cs/ai/xml-prompting",
+"status": "todo"
+},
+{
+"route": "ai/video-clip-sampling",
+"publicPath": "cs/ai/video-clip-sampling",
+"status": "todo"
+},
+{
+"route": "ai/kimi-k3-sequence-mixer",
+"publicPath": "cs/ai/kimi-k3-sequence-mixer",
+"status": "todo"
+},
+{
+"route": "ai/dropout-regularization",
+"publicPath": "cs/ai/dropout-regularization",
+"status": "todo"
+},
+{
+"route": "ai/tabular-data-synthesis",
+"publicPath": "cs/ai/tabular-data-synthesis",
+"status": "todo"
+},
+{
+"route": "blockchain/consensus-comparison",
+"publicPath": "cs/blockchain/consensus-comparison",
+"status": "todo"
+},
+{
+"route": "blockchain/kohaku-provider",
+"publicPath": "cs/blockchain/kohaku-provider",
+"status": "todo"
+},
+{
+"route": "ai/cnn-receptive-fields",
+"publicPath": "cs/ai/cnn-receptive-fields",
+"status": "todo"
+},
+{
+"route": "ai/quantization-aware-training",
+"publicPath": "cs/ai/quantization-aware-training",
+"status": "todo"
+},
+{
+"route": "ai/weight-decay",
+"publicPath": "cs/ai/weight-decay",
+"status": "todo"
+},
+{
+"route": "ai/label-smoothing",
+"publicPath": "cs/ai/label-smoothing",
+"status": "todo"
+},
+{
+"route": "ai/deepfake-frequency-evidence",
+"publicPath": "cs/ai/deepfake-frequency-evidence",
+"status": "todo"
+},
+{
+"route": "ai/deepfake-video-decisions",
+"publicPath": "cs/ai/deepfake-video-decisions",
+"status": "todo"
+},
+{
+"route": "blockchain/compound-v3",
+"publicPath": "cs/blockchain/compound-v3",
+"status": "todo"
+},
+{
+"route": "ai/vision-task-spatial-contracts",
+"publicPath": "cs/ai/vision-task-spatial-contracts",
+"status": "todo"
+},
+{
+"route": "tee/arm-cca",
+"publicPath": "cs/tee/arm-cca",
+"status": "todo"
+},
+{
+"route": "ai/gradient-boosting",
+"publicPath": "cs/ai/gradient-boosting",
+"status": "todo"
+},
+{
+"route": "ai/augmentation-evaluation",
+"publicPath": "cs/ai/augmentation-evaluation",
+"status": "todo"
+},
+{
+"route": "ai/claude-code-permissions",
+"publicPath": "cs/ai/claude-code-permissions",
+"status": "todo"
+},
+{
+"route": "ai/generative-theory",
+"publicPath": "cs/ai/generative-theory",
+"status": "todo"
+},
+{
+"route": "tee/hw-security",
+"publicPath": "cs/tee/hw-security",
+"status": "todo"
+},
+{
+"route": "ai/deepfake-dataset-governance",
+"publicPath": "cs/ai/deepfake-dataset-governance",
+"status": "todo"
+},
+{
+"route": "ai/orpo",
+"publicPath": "cs/ai/orpo",
+"status": "todo"
+},
+{
+"route": "blockchain/commonware-crypto-p2p",
+"publicPath": "cs/blockchain/commonware-crypto-p2p",
+"status": "todo"
+},
+{
+"route": "blockchain/railgun",
+"publicPath": "cs/blockchain/railgun",
+"status": "todo"
+},
+{
+"route": "gpu/cfd-finite-volume-gpu",
+"publicPath": "cs/gpu/cfd-finite-volume-gpu",
+"status": "todo"
+},
+{
+"route": "ai/bert-task-heads",
+"publicPath": "cs/ai/bert-task-heads",
+"status": "todo"
+},
+{
+"route": "ai/claude-code-hooks",
+"publicPath": "cs/ai/claude-code-hooks",
+"status": "todo"
+},
+{
+"route": "p2p/nat-traversal",
+"publicPath": "cs/p2p/nat-traversal",
+"status": "todo"
+},
+{
+"route": "ai/mcp-protocol",
+"publicPath": "cs/ai/mcp-protocol",
+"status": "todo"
+},
+{
+"route": "ai/kto",
+"publicPath": "cs/ai/kto",
+"status": "todo"
+},
+{
+"route": "ai/cnn-translation-equivariance",
+"publicPath": "cs/ai/cnn-translation-equivariance",
+"status": "todo"
+},
+{
+"route": "blockchain/avalanche-consensus",
+"publicPath": "cs/blockchain/avalanche-consensus",
+"status": "todo"
+},
+{
+"route": "blockchain/pos-theory",
+"publicPath": "cs/blockchain/pos-theory",
+"status": "todo"
+},
+{
+"route": "p2p/gossip-fundamentals",
+"publicPath": "cs/p2p/gossip-fundamentals",
+"status": "todo"
+},
+{
+"route": "blockchain/bft-comparison",
+"publicPath": "cs/blockchain/bft-comparison",
+"status": "todo"
+},
+{
+"route": "ai/video-understanding",
+"publicPath": "cs/ai/video-understanding",
+"status": "todo"
+},
+{
+"route": "ai/kimi-k3-depth-routing",
+"publicPath": "cs/ai/kimi-k3-depth-routing",
+"status": "todo"
+},
+{
+"route": "tee/oasis",
+"publicPath": "cs/tee/oasis",
+"status": "todo"
+},
+{
+"route": "ai/contrastive-learning",
+"publicPath": "cs/ai/contrastive-learning",
+"status": "todo"
+},
+{
+"route": "ai/claude-code-checkpointing",
+"publicPath": "cs/ai/claude-code-checkpointing",
+"status": "todo"
+},
+{
+"route": "tee/dstack",
+"publicPath": "cs/tee/dstack",
+"status": "todo"
+},
+{
+"route": "blockchain/lotus-market",
+"publicPath": "cs/blockchain/lotus-market",
+"status": "todo"
+},
+{
+"route": "ai/lightgbm-efficient-trees",
+"publicPath": "cs/ai/lightgbm-efficient-trees",
+"status": "todo"
+},
+{
+"route": "tee/keylime",
+"publicPath": "cs/tee/keylime",
+"status": "todo"
+},
+{
+"route": "blockchain/lotus-state",
+"publicPath": "cs/blockchain/lotus-state",
+"status": "todo"
+},
+{
+"route": "ai/supervised-fine-tuning",
+"publicPath": "cs/ai/supervised-fine-tuning",
+"status": "todo"
+},
+{
+"route": "blockchain/commonware-storage",
+"publicPath": "cs/blockchain/commonware-storage",
+"status": "todo"
+},
+{
+"route": "ai/bert-input-packing",
+"publicPath": "cs/ai/bert-input-packing",
+"status": "todo"
+},
+{
+"route": "cloud/kubernetes-request-path-and-cka",
+"publicPath": "cs/cloud/kubernetes-request-path-and-cka",
+"status": "todo"
+},
+{
+"route": "ai/one-cycle-scheduling",
+"publicPath": "cs/ai/one-cycle-scheduling",
+"status": "todo"
+},
+{
+"route": "tee/amd-sev",
+"publicPath": "cs/tee/amd-sev",
+"status": "todo"
+},
+{
+"route": "ai/autoregressive-generative-models",
+"publicPath": "cs/ai/autoregressive-generative-models",
+"status": "todo"
+},
+{
+"route": "ai/deepfake-preprocessing-lineage",
+"publicPath": "cs/ai/deepfake-preprocessing-lineage",
+"status": "todo"
+},
+{
+"route": "ai/xgboost-tree-objective",
+"publicPath": "cs/ai/xgboost-tree-objective",
+"status": "todo"
+},
+{
+"route": "ai/gru",
+"publicPath": "cs/ai/gru",
+"status": "todo"
+},
+{
+"route": "ai/lr-scheduling",
+"publicPath": "cs/ai/lr-scheduling",
+"status": "todo"
+},
+{
+"route": "ai/cosine-restart-scheduling",
+"publicPath": "cs/ai/cosine-restart-scheduling",
+"status": "todo"
+},
+{
+"route": "ai/depthwise-separable-convolution",
+"publicPath": "cs/ai/depthwise-separable-convolution",
+"status": "todo"
+},
+{
+"route": "ai/lr-decay-policies",
+"publicPath": "cs/ai/lr-decay-policies",
+"status": "todo"
+},
+{
+"route": "ai/warmup-scheduling",
+"publicPath": "cs/ai/warmup-scheduling",
+"status": "todo"
+},
+{
+"route": "ai/catboost-ordered-learning",
+"publicPath": "cs/ai/catboost-ordered-learning",
+"status": "todo"
+},
+{
+"route": "blockchain/smr-theory",
+"publicPath": "cs/blockchain/smr-theory",
+"status": "todo"
+},
+{
+"route": "ai/reverse-mode-autodiff",
+"publicPath": "cs/ai/reverse-mode-autodiff",
+"status": "todo"
+},
+{
+"route": "ai/adversarial-density-ratios",
+"publicPath": "cs/ai/adversarial-density-ratios",
+"status": "todo"
+},
+{
+"route": "tee/intel-sgx",
+"publicPath": "cs/tee/intel-sgx",
+"status": "todo"
+},
+{
+"route": "tee/phala",
+"publicPath": "cs/tee/phala",
+"status": "todo"
+},
+{
+"route": "tee/op-tee",
+"publicPath": "cs/tee/op-tee",
+"status": "todo"
+},
+{
+"route": "ai/bptt",
+"publicPath": "cs/ai/bptt",
+"status": "todo"
+},
+{
+"route": "ai/rnn-language-model",
+"publicPath": "cs/ai/rnn-language-model",
+"status": "todo"
+},
+{
+"route": "blockchain/dai-maker",
+"publicPath": "cs/blockchain/dai-maker",
+"status": "todo"
+},
+{
+"route": "ai/llm-serving-capacity",
+"publicPath": "cs/ai/llm-serving-capacity",
+"status": "todo"
+},
+{
+"route": "blockchain/helios-types",
+"publicPath": "cs/blockchain/helios-types",
+"status": "todo"
+},
+{
+"route": "ai/hybrid-kv-cache-allocation",
+"publicPath": "cs/ai/hybrid-kv-cache-allocation",
+"status": "todo"
+},
+{
+"route": "gpu/hw-memory",
+"publicPath": "cs/gpu/hw-memory",
+"status": "todo"
+},
+{
+"route": "gpu/datacenter-site-readiness",
+"publicPath": "cs/gpu/datacenter-site-readiness",
+"status": "todo"
+},
+{
+"route": "ai/prompt-structured-output",
+"publicPath": "cs/ai/prompt-structured-output",
+"status": "todo"
+},
+{
+"route": "gpu/hw-network",
+"publicPath": "cs/gpu/hw-network",
+"status": "todo"
+},
+{
+"route": "ai/prompt-few-shot",
+"publicPath": "cs/ai/prompt-few-shot",
+"status": "todo"
+},
+{
+"route": "ai/prompt-reasoning",
+"publicPath": "cs/ai/prompt-reasoning",
+"status": "todo"
+},
+{
+"route": "gpu/ai-accelerator-vendor-comparison",
+"publicPath": "cs/gpu/ai-accelerator-vendor-comparison",
+"status": "todo"
+},
+{
+"route": "blockchain/helios-bootstrap",
+"publicPath": "cs/blockchain/helios-bootstrap",
+"status": "todo"
+},
+{
+"route": "gpu/server-cpu-lineup-comparison",
+"publicPath": "cs/gpu/server-cpu-lineup-comparison",
+"status": "todo"
+},
+{
+"route": "gpu/pcie-blackwell-moe-node-build",
+"publicPath": "cs/gpu/pcie-blackwell-moe-node-build",
+"status": "todo"
+},
+{
+"route": "blockchain/helios-state",
+"publicPath": "cs/blockchain/helios-state",
+"status": "todo"
+},
+{
+"route": "blockchain/helios-update",
+"publicPath": "cs/blockchain/helios-update",
+"status": "todo"
+},
+{
+"route": "blockchain/helios-consensus",
+"publicPath": "cs/blockchain/helios-consensus",
+"status": "todo"
+},
+{
+"route": "blockchain/helios-config",
+"publicPath": "cs/blockchain/helios-config",
+"status": "todo"
+},
+{
+"route": "blockchain/helios",
+"publicPath": "cs/blockchain/helios",
+"status": "todo"
+},
+{
+"route": "ai/agent-delegation-contracts",
+"publicPath": "cs/ai/agent-delegation-contracts",
+"status": "todo"
+},
+{
+"route": "ai/agent-extension-boundaries",
+"publicPath": "cs/ai/agent-extension-boundaries",
+"status": "todo"
+},
+{
+"route": "ai/agent-loop-foundations",
+"publicPath": "cs/ai/agent-loop-foundations",
+"status": "todo"
+},
+{
+"route": "ai/agent-plan-replanning",
+"publicPath": "cs/ai/agent-plan-replanning",
+"status": "todo"
+},
+{
+"route": "ai/agent-runtime-selection",
+"publicPath": "cs/ai/agent-runtime-selection",
+"status": "todo"
+},
+{
+"route": "ai/denoising-masked-autoencoders",
+"publicPath": "cs/ai/denoising-masked-autoencoders",
+"status": "todo"
+},
+{
+"route": "ai/gated-activations",
+"publicPath": "cs/ai/gated-activations",
+"status": "todo"
+},
+{
+"route": "ai/linear-autoencoder-pca",
+"publicPath": "cs/ai/linear-autoencoder-pca",
+"status": "todo"
+},
+{
+"route": "ai/lora-training-and-release",
+"publicPath": "cs/ai/lora-training-and-release",
+"status": "todo"
+},
+{
+"route": "ai/on-policy-distillation",
+"publicPath": "cs/ai/on-policy-distillation",
+"status": "todo"
+},
+{
+"route": "ai/reconstruction-anomaly-detection",
+"publicPath": "cs/ai/reconstruction-anomaly-detection",
+"status": "todo"
+},
+{
+"route": "ai/rectifier-activations",
+"publicPath": "cs/ai/rectifier-activations",
+"status": "todo"
+},
+{
+"route": "ai/self-distillation",
+"publicPath": "cs/ai/self-distillation",
+"status": "todo"
+},
+{
+"route": "ai/sequence-distillation",
+"publicPath": "cs/ai/sequence-distillation",
+"status": "todo"
+},
+{
+"route": "ai/softmax",
+"publicPath": "cs/ai/softmax",
+"status": "todo"
+},
+{
+"route": "blockchain/bplus-index-validation",
+"publicPath": "cs/blockchain/bplus-index-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/bplus-tree",
+"publicPath": "cs/blockchain/bplus-tree",
+"status": "todo"
+},
+{
+"route": "blockchain/eip4844-blob-fee",
+"publicPath": "cs/blockchain/eip4844-blob-fee",
+"status": "todo"
+},
+{
+"route": "blockchain/expected-consensus",
+"publicPath": "cs/blockchain/expected-consensus",
+"status": "todo"
+},
+{
+"route": "blockchain/fork-id",
+"publicPath": "cs/blockchain/fork-id",
+"status": "todo"
+},
+{
+"route": "blockchain/helios-execution",
+"publicPath": "cs/blockchain/helios-execution",
+"status": "todo"
+},
+{
+"route": "blockchain/lsm-engine-validation",
+"publicPath": "cs/blockchain/lsm-engine-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/lsm-tree",
+"publicPath": "cs/blockchain/lsm-tree",
+"status": "todo"
+},
+{
+"route": "blockchain/mdbx-internals",
+"publicPath": "cs/blockchain/mdbx-internals",
+"status": "todo"
+},
+{
+"route": "blockchain/mdbx-validation",
+"publicPath": "cs/blockchain/mdbx-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/merkle-patricia-trie",
+"publicPath": "cs/blockchain/merkle-patricia-trie",
+"status": "todo"
+},
+{
+"route": "blockchain/node-architecture",
+"publicPath": "cs/blockchain/node-architecture",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm",
+"publicPath": "cs/blockchain/prysm",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-attestation",
+"publicPath": "cs/blockchain/prysm-attestation",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-beacon-api",
+"publicPath": "cs/blockchain/prysm-beacon-api",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-beacon-db",
+"publicPath": "cs/blockchain/prysm-beacon-db",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-beacon-state",
+"publicPath": "cs/blockchain/prysm-beacon-state",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-block-processing",
+"publicPath": "cs/blockchain/prysm-block-processing",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-block-proposal",
+"publicPath": "cs/blockchain/prysm-block-proposal",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-bls",
+"publicPath": "cs/blockchain/prysm-bls",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-engine-api",
+"publicPath": "cs/blockchain/prysm-engine-api",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-epoch-processing",
+"publicPath": "cs/blockchain/prysm-epoch-processing",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-finality",
+"publicPath": "cs/blockchain/prysm-finality",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-forkchoice",
+"publicPath": "cs/blockchain/prysm-forkchoice",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-gossipsub",
+"publicPath": "cs/blockchain/prysm-gossipsub",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-p2p-libp2p",
+"publicPath": "cs/blockchain/prysm-p2p-libp2p",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-slot-processing",
+"publicPath": "cs/blockchain/prysm-slot-processing",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-ssz",
+"publicPath": "cs/blockchain/prysm-ssz",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-state-cache",
+"publicPath": "cs/blockchain/prysm-state-cache",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-sync",
+"publicPath": "cs/blockchain/prysm-sync",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-sync-committee",
+"publicPath": "cs/blockchain/prysm-sync-committee",
+"status": "todo"
+},
+{
+"route": "blockchain/prysm-validator-client",
+"publicPath": "cs/blockchain/prysm-validator-client",
+"status": "todo"
+},
+{
+"route": "blockchain/reth",
+"publicPath": "cs/blockchain/reth",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-alloy-primitives",
+"publicPath": "cs/blockchain/reth-alloy-primitives",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-blob-admission",
+"publicPath": "cs/blockchain/reth-blob-admission",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-blob-reorg-release",
+"publicPath": "cs/blockchain/reth-blob-reorg-release",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-blob-storage",
+"publicPath": "cs/blockchain/reth-blob-storage",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-block-execution",
+"publicPath": "cs/blockchain/reth-block-execution",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-block-execution-validation",
+"publicPath": "cs/blockchain/reth-block-execution-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-chainspec",
+"publicPath": "cs/blockchain/reth-chainspec",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-cli",
+"publicPath": "cs/blockchain/reth-cli",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-db",
+"publicPath": "cs/blockchain/reth-db",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-db-validation",
+"publicPath": "cs/blockchain/reth-db-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-eip1559",
+"publicPath": "cs/blockchain/reth-eip1559",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-eip1559-validation",
+"publicPath": "cs/blockchain/reth-eip1559-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-eip4844",
+"publicPath": "cs/blockchain/reth-eip4844",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-exex",
+"publicPath": "cs/blockchain/reth-exex",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-mev",
+"publicPath": "cs/blockchain/reth-mev",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-net",
+"publicPath": "cs/blockchain/reth-net",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-net-validation",
+"publicPath": "cs/blockchain/reth-net-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-payload-builder",
+"publicPath": "cs/blockchain/reth-payload-builder",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-payload-builder-validation",
+"publicPath": "cs/blockchain/reth-payload-builder-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-pipeline",
+"publicPath": "cs/blockchain/reth-pipeline",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-pipeline-validation",
+"publicPath": "cs/blockchain/reth-pipeline-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-precompiles",
+"publicPath": "cs/blockchain/reth-precompiles",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-precompiles-validation",
+"publicPath": "cs/blockchain/reth-precompiles-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-provider",
+"publicPath": "cs/blockchain/reth-provider",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-provider-validation",
+"publicPath": "cs/blockchain/reth-provider-validation",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-rpc",
+"publicPath": "cs/blockchain/reth-rpc",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-sync",
+"publicPath": "cs/blockchain/reth-sync",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-trie",
+"publicPath": "cs/blockchain/reth-trie",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-txpool",
+"publicPath": "cs/blockchain/reth-txpool",
+"status": "todo"
+},
+{
+"route": "blockchain/reth-txpool-validation",
+"publicPath": "cs/blockchain/reth-txpool-validation",
+"status": "todo"
+},
+{
+"route": "cloud/aws-clf-c02-fast-study",
+"publicPath": "cs/cloud/aws-clf-c02-fast-study",
+"status": "todo"
+},
+{
+"route": "cloud/aws-developer-cloudops-paths",
+"publicPath": "cs/cloud/aws-developer-cloudops-paths",
+"status": "todo"
+},
+{
+"route": "cloud/aws-saa-c03-fast-study",
+"publicPath": "cs/cloud/aws-saa-c03-fast-study",
+"status": "todo"
+},
+{
+"route": "cloud/azure-ai200-fast-study",
+"publicPath": "cs/cloud/azure-ai200-fast-study",
+"status": "todo"
+},
+{
+"route": "cloud/azure-architect-devops-paths",
+"publicPath": "cs/cloud/azure-architect-devops-paths",
+"status": "todo"
+},
+{
+"route": "cloud/azure-az104-fast-study",
+"publicPath": "cs/cloud/azure-az104-fast-study",
+"status": "todo"
+},
+{
+"route": "cloud/azure-az900-fast-study",
+"publicPath": "cs/cloud/azure-az900-fast-study",
+"status": "todo"
+},
+{
+"route": "cloud/cloud-certification-roadmap-2026",
+"publicPath": "cs/cloud/cloud-certification-roadmap-2026",
+"status": "todo"
+},
+{
+"route": "cloud/cloud-compute-selection",
+"publicPath": "cs/cloud/cloud-compute-selection",
+"status": "todo"
+},
+{
+"route": "cloud/cloud-foundations-responsibility-regions",
+"publicPath": "cs/cloud/cloud-foundations-responsibility-regions",
+"status": "todo"
+},
+{
+"route": "cloud/cloud-identity-access-hierarchy",
+"publicPath": "cs/cloud/cloud-identity-access-hierarchy",
+"status": "todo"
+},
+{
+"route": "cloud/cloud-networking-request-path",
+"publicPath": "cs/cloud/cloud-networking-request-path",
+"status": "todo"
+},
+{
+"route": "cloud/cloud-reliability-observability-iac",
+"publicPath": "cs/cloud/cloud-reliability-observability-iac",
+"status": "todo"
+},
+{
+"route": "cloud/cloud-storage-database-selection",
+"publicPath": "cs/cloud/cloud-storage-database-selection",
+"status": "todo"
+},
+{
+"route": "crypto/binary-field-proving",
+"publicPath": "cs/crypto/binary-field-proving",
+"status": "todo"
+},
+{
+"route": "crypto/bulletproofs",
+"publicPath": "cs/crypto/bulletproofs",
+"status": "todo"
+},
+{
+"route": "crypto/circom",
+"publicPath": "cs/crypto/circom",
+"status": "todo"
+},
+{
+"route": "crypto/constraint-systems",
+"publicPath": "cs/crypto/constraint-systems",
+"status": "todo"
+},
+{
+"route": "crypto/crt",
+"publicPath": "cs/crypto/crt",
+"status": "todo"
+},
+{
+"route": "crypto/crypto-primitives",
+"publicPath": "cs/crypto/crypto-primitives",
+"status": "todo"
+},
+{
+"route": "crypto/csprng",
+"publicPath": "cs/crypto/csprng",
+"status": "todo"
+},
+{
+"route": "crypto/discrete-log",
+"publicPath": "cs/crypto/discrete-log",
+"status": "todo"
+},
+{
+"route": "crypto/elliptic-curves",
+"publicPath": "cs/crypto/elliptic-curves",
+"status": "todo"
+},
+{
+"route": "crypto/extension-field-theory",
+"publicPath": "cs/crypto/extension-field-theory",
+"status": "todo"
+},
+{
+"route": "crypto/extension-fields",
+"publicPath": "cs/crypto/extension-fields",
+"status": "todo"
+},
+{
+"route": "crypto/fft",
+"publicPath": "cs/crypto/fft",
+"status": "todo"
+},
+{
+"route": "crypto/field-arithmetic",
+"publicPath": "cs/crypto/field-arithmetic",
+"status": "todo"
+},
+{
+"route": "crypto/finite-field-theory",
+"publicPath": "cs/crypto/finite-field-theory",
+"status": "todo"
+},
+{
+"route": "crypto/fri",
+"publicPath": "cs/crypto/fri",
+"status": "todo"
+},
+{
+"route": "crypto/frobenius-optimization",
+"publicPath": "cs/crypto/frobenius-optimization",
+"status": "todo"
+},
+{
+"route": "crypto/groth16",
+"publicPath": "cs/crypto/groth16",
+"status": "todo"
+},
+{
+"route": "crypto/halo2",
+"publicPath": "cs/crypto/halo2",
+"status": "todo"
+},
+{
+"route": "crypto/hash-theory",
+"publicPath": "cs/crypto/hash-theory",
+"status": "todo"
+},
+{
+"route": "crypto/hyperplonk",
+"publicPath": "cs/crypto/hyperplonk",
+"status": "todo"
+},
+{
+"route": "crypto/jolt",
+"publicPath": "cs/crypto/jolt",
+"status": "todo"
+},
+{
+"route": "crypto/karatsuba",
+"publicPath": "cs/crypto/karatsuba",
+"status": "todo"
+},
+{
+"route": "crypto/lagrange",
+"publicPath": "cs/crypto/lagrange",
+"status": "todo"
+},
+{
+"route": "crypto/libiop",
+"publicPath": "cs/crypto/libiop",
+"status": "todo"
+},
+{
+"route": "crypto/mpc",
+"publicPath": "cs/crypto/mpc",
+"status": "todo"
+},
+{
+"route": "crypto/nova",
+"publicPath": "cs/crypto/nova",
+"status": "todo"
+},
+{
+"route": "crypto/paillier-cryptosystem",
+"publicPath": "cs/crypto/paillier-cryptosystem",
+"status": "todo"
+},
+{
+"route": "crypto/pairing",
+"publicPath": "cs/crypto/pairing",
+"status": "todo"
+},
+{
+"route": "crypto/plonk",
+"publicPath": "cs/crypto/plonk",
+"status": "todo"
+},
+{
+"route": "crypto/plonky3",
+"publicPath": "cs/crypto/plonky3",
+"status": "todo"
+},
+{
+"route": "crypto/polycommit",
+"publicPath": "cs/crypto/polycommit",
+"status": "todo"
+},
+{
+"route": "crypto/poseidon-hash",
+"publicPath": "cs/crypto/poseidon-hash",
+"status": "todo"
+},
+{
+"route": "crypto/proofofsql",
+"publicPath": "cs/crypto/proofofsql",
+"status": "todo"
+},
+{
+"route": "crypto/prover-memory-and-verifier-cost",
+"publicPath": "cs/crypto/prover-memory-and-verifier-cost",
+"status": "todo"
+},
+{
+"route": "crypto/reed-solomon",
+"publicPath": "cs/crypto/reed-solomon",
+"status": "todo"
+},
+{
+"route": "crypto/risc0",
+"publicPath": "cs/crypto/risc0",
+"status": "todo"
+},
+{
+"route": "crypto/scroll-zkevm",
+"publicPath": "cs/crypto/scroll-zkevm",
+"status": "todo"
+},
+{
+"route": "crypto/shamir-secret-sharing",
+"publicPath": "cs/crypto/shamir-secret-sharing",
+"status": "todo"
+},
+{
+"route": "crypto/snark-overview",
+"publicPath": "cs/crypto/snark-overview",
+"status": "todo"
+},
+{
+"route": "crypto/sp1",
+"publicPath": "cs/crypto/sp1",
+"status": "todo"
+},
+{
+"route": "crypto/sparse-multiplication",
+"publicPath": "cs/crypto/sparse-multiplication",
+"status": "todo"
+},
+{
+"route": "crypto/stark-theory",
+"publicPath": "cs/crypto/stark-theory",
+"status": "todo"
+},
+{
+"route": "crypto/zk-theory",
+"publicPath": "cs/crypto/zk-theory",
+"status": "todo"
+},
+{
+"route": "economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence",
+"publicPath": "history/economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence",
+"status": "todo"
+},
+{
+"route": "economic-history/central-asia-pastoralism-irrigation-planning-and-corridors",
+"publicPath": "history/economic-history/central-asia-pastoralism-irrigation-planning-and-corridors",
+"status": "todo"
+},
+{
+"route": "economic-history/china-since-1800-households-markets-and-reform",
+"publicPath": "history/economic-history/china-since-1800-households-markets-and-reform",
+"status": "todo"
+},
+{
+"route": "economic-history/commercial-law-limited-liability-and-insolvency",
+"publicPath": "history/economic-history/commercial-law-limited-liability-and-insolvency",
+"status": "todo"
+},
+{
+"route": "economic-history/containers-value-chains-platforms-and-climate-transition",
+"publicPath": "history/economic-history/containers-value-chains-platforms-and-climate-transition",
+"status": "todo"
+},
+{
+"route": "economic-history/cooperatives-member-governance-and-surplus",
+"publicPath": "history/economic-history/cooperatives-member-governance-and-surplus",
+"status": "todo"
+},
+{
+"route": "economic-history/demography-family-economy-and-care",
+"publicPath": "history/economic-history/demography-family-economy-and-care",
+"status": "todo"
+},
+{
+"route": "economic-history/development-banks-mandates-credit-and-governance",
+"publicPath": "history/economic-history/development-banks-mandates-credit-and-governance",
+"status": "todo"
+},
+{
+"route": "economic-history/europe-serfdom-states-industrialization-and-integration",
+"publicPath": "history/economic-history/europe-serfdom-states-industrialization-and-integration",
+"status": "todo"
+},
+{
+"route": "economic-history/firms-banks-insurance-and-institutional-investors",
+"publicPath": "history/economic-history/firms-banks-insurance-and-institutional-investors",
+"status": "todo"
+},
+{
+"route": "economic-history/great-inflation-disinflation-and-financialization",
+"publicPath": "history/economic-history/great-inflation-disinflation-and-financialization",
+"status": "todo"
+},
+{
+"route": "economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring",
+"publicPath": "history/economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring",
+"status": "todo"
+},
+{
+"route": "economic-history/japan-money-banks-industry-and-catchup",
+"publicPath": "history/economic-history/japan-money-banks-industry-and-catchup",
+"status": "todo"
+},
+{
+"route": "economic-history/labor-bargaining-social-insurance-and-welfare-state",
+"publicPath": "history/economic-history/labor-bargaining-social-insurance-and-welfare-state",
+"status": "todo"
+},
+{
+"route": "economic-history/land-rights-enclosure-rent-and-urbanization",
+"publicPath": "history/economic-history/land-rights-enclosure-rent-and-urbanization",
+"status": "todo"
+},
+{
+"route": "economic-history/latin-america-exports-import-substitution-and-debt",
+"publicPath": "history/economic-history/latin-america-exports-import-substitution-and-debt",
+"status": "todo"
+},
+{
+"route": "economic-history/mena-land-debt-oil-and-diversification",
+"publicPath": "history/economic-history/mena-land-debt-oil-and-diversification",
+"status": "todo"
+},
+{
+"route": "economic-history/north-america-land-slavery-railroads-and-mass-production",
+"publicPath": "history/economic-history/north-america-land-slavery-railroads-and-mass-production",
+"status": "todo"
+},
+{
+"route": "economic-history/oceania-indigenous-land-settler-exports-and-island-economies",
+"publicPath": "history/economic-history/oceania-indigenous-land-settler-exports-and-island-economies",
+"status": "todo"
+},
+{
+"route": "economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance",
+"publicPath": "history/economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance",
+"status": "todo"
+},
+{
+"route": "economic-history/regional-gdp-household-income-and-within-country-inequality",
+"publicPath": "history/economic-history/regional-gdp-household-income-and-within-country-inequality",
+"status": "todo"
+},
+{
+"route": "economic-history/south-asia-markets-colonial-railways-and-development-state",
+"publicPath": "history/economic-history/south-asia-markets-colonial-railways-and-development-state",
+"status": "todo"
+},
+{
+"route": "economic-history/southeast-asia-ports-plantations-and-export-industrialization",
+"publicPath": "history/economic-history/southeast-asia-ports-plantations-and-export-industrialization",
+"status": "todo"
+},
+{
+"route": "economic-history/war-finance-public-debt-and-welfare-state-capacity",
+"publicPath": "history/economic-history/war-finance-public-debt-and-welfare-state-capacity",
+"status": "todo"
+},
+{
+"route": "global-history/agriculture-settlement-and-neolithic-tradeoffs",
+"publicPath": "history/global-history/agriculture-settlement-and-neolithic-tradeoffs",
+"status": "todo"
+},
+{
+"route": "global-history/cities-writing-rations-and-early-law",
+"publicPath": "history/global-history/cities-writing-rations-and-early-law",
+"status": "todo"
+},
+{
+"route": "global-history/human-dispersal-foraging-and-social-networks",
+"publicPath": "history/global-history/human-dispersal-foraging-and-social-networks",
+"status": "todo"
+},
+{
+"route": "global-history/monasteries-schools-manuscripts-and-knowledge-transmission",
+"publicPath": "history/global-history/monasteries-schools-manuscripts-and-knowledge-transmission",
+"status": "todo"
+},
+{
+"route": "global-history/open-web-platform-curation-and-digital-divides",
+"publicPath": "history/global-history/open-web-platform-curation-and-digital-divides",
+"status": "todo"
+},
+{
+"route": "global-history/pastoral-mobility-steppe-empires-and-settled-frontiers",
+"publicPath": "history/global-history/pastoral-mobility-steppe-empires-and-settled-frontiers",
+"status": "todo"
+},
+{
+"route": "gpu/ai-cluster-software-compatibility",
+"publicPath": "cs/gpu/ai-cluster-software-compatibility",
+"status": "todo"
+},
+{
+"route": "gpu/ai-cluster-storage-io",
+"publicPath": "cs/gpu/ai-cluster-storage-io",
+"status": "todo"
+},
+{
+"route": "gpu/ai-infrastructure-b300-128-blueprint",
+"publicPath": "cs/gpu/ai-infrastructure-b300-128-blueprint",
+"status": "todo"
+},
+{
+"route": "gpu/ai-infrastructure-commissioning-acceptance",
+"publicPath": "cs/gpu/ai-infrastructure-commissioning-acceptance",
+"status": "todo"
+},
+{
+"route": "gpu/b300-rack-power-cooling",
+"publicPath": "cs/gpu/b300-rack-power-cooling",
+"status": "todo"
+},
+{
+"route": "gpu/b300-switchless-network",
+"publicPath": "cs/gpu/b300-switchless-network",
+"status": "todo"
+},
+{
+"route": "gpu/cuda-basics",
+"publicPath": "cs/gpu/cuda-basics",
+"status": "todo"
+},
+{
+"route": "gpu/filecoin-gpu-proofs",
+"publicPath": "cs/gpu/filecoin-gpu-proofs",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-architecture",
+"publicPath": "cs/gpu/gpu-architecture",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-collective-network",
+"publicPath": "cs/gpu/gpu-collective-network",
+"status": "todo"
+},
+{
+"route": "gpu/gpu-interconnects",
+"publicPath": "cs/gpu/gpu-interconnects",
+"status": "todo"
+},
+{
+"route": "gpu/hw-gpu-comparison",
+"publicPath": "cs/gpu/hw-gpu-comparison",
+"status": "todo"
+},
+{
+"route": "gpu/hw-nvme-storage",
+"publicPath": "cs/gpu/hw-nvme-storage",
+"status": "todo"
+},
+{
+"route": "gpu/hw-power-cooling",
+"publicPath": "cs/gpu/hw-power-cooling",
+"status": "todo"
+},
+{
+"route": "gpu/hw-server-vs-desktop",
+"publicPath": "cs/gpu/hw-server-vs-desktop",
+"status": "todo"
+},
+{
+"route": "gpu/hw-storage-comparison",
+"publicPath": "cs/gpu/hw-storage-comparison",
+"status": "todo"
+},
+{
+"route": "gpu/kubernetes-vs-slurm-gpu-scheduling",
+"publicPath": "cs/gpu/kubernetes-vs-slurm-gpu-scheduling",
+"status": "todo"
+},
+{
+"route": "gpu/modded-rtx4090-moe-serving",
+"publicPath": "cs/gpu/modded-rtx4090-moe-serving",
+"status": "todo"
+},
+{
+"route": "gpu/msm-ntt",
+"publicPath": "cs/gpu/msm-ntt",
+"status": "todo"
+},
+{
+"route": "gpu/nvidia-nca-aiio-study-guide",
+"publicPath": "cs/gpu/nvidia-nca-aiio-study-guide",
+"status": "todo"
+},
+{
+"route": "gpu/rdma-roce",
+"publicPath": "cs/gpu/rdma-roce",
+"status": "todo"
+},
+{
+"route": "markets/bank-irrbb-alm-and-derivatives-hedging",
+"publicPath": "finance/markets/bank-irrbb-alm-and-derivatives-hedging",
+"status": "todo"
+},
+{
+"route": "markets/binomial-black-scholes-and-early-exercise",
+"publicPath": "finance/markets/binomial-black-scholes-and-early-exercise",
+"status": "todo"
+},
+{
+"route": "markets/black-scholes-pde-finite-difference-and-numerical-error",
+"publicPath": "finance/markets/black-scholes-pde-finite-difference-and-numerical-error",
+"status": "todo"
+},
+{
+"route": "markets/brownian-motion-ito-and-risk-neutral-pricing",
+"publicPath": "finance/markets/brownian-motion-ito-and-risk-neutral-pricing",
+"status": "todo"
+},
+{
+"route": "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
+"publicPath": "finance/markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
+"status": "todo"
+},
+{
+"route": "markets/ccp-default-management-hedging-auction-and-porting",
+"publicPath": "finance/markets/ccp-default-management-hedging-auction-and-porting",
+"status": "todo"
+},
+{
+"route": "markets/clearing-margin-and-default-waterfall",
+"publicPath": "finance/markets/clearing-margin-and-default-waterfall",
+"status": "todo"
+},
+{
+"route": "markets/collateral-operations-margin-calls-disputes-and-substitution",
+"publicPath": "finance/markets/collateral-operations-margin-calls-disputes-and-substitution",
+"status": "todo"
+},
+{
+"route": "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
+"publicPath": "finance/markets/collateral-optimization-eligibility-haircuts-and-liquidity",
+"status": "todo"
+},
+{
+"route": "markets/commodity-carry-convenience-yield-and-roll",
+"publicPath": "finance/markets/commodity-carry-convenience-yield-and-roll",
+"status": "todo"
+},
+{
+"route": "markets/commodity-grades-location-basis-and-physical-delivery",
+"publicPath": "finance/markets/commodity-grades-location-basis-and-physical-delivery",
+"status": "todo"
+},
+{
+"route": "markets/credit-derivatives-default-risk-and-tranches",
+"publicPath": "finance/markets/credit-derivatives-default-risk-and-tranches",
+"status": "todo"
+},
+{
+"route": "markets/credit-event-auction-orders-and-base-correlation-history",
+"publicPath": "finance/markets/credit-event-auction-orders-and-base-correlation-history",
+"status": "todo"
+},
+{
+"route": "markets/credit-tranche-base-correlation-and-default-auction",
+"publicPath": "finance/markets/credit-tranche-base-correlation-and-default-auction",
+"status": "todo"
+},
+{
+"route": "markets/cross-border-netting-enforceability-and-regulatory-recognition",
+"publicPath": "finance/markets/cross-border-netting-enforceability-and-regulatory-recognition",
+"status": "todo"
+},
+{
+"route": "markets/currency-hedging-forward-points-and-cross-currency-basis",
+"publicPath": "finance/markets/currency-hedging-forward-points-and-cross-currency-basis",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring",
+"publicPath": "finance/markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-complaints-dispute-resolution-and-evidence",
+"publicPath": "finance/markets/derivatives-complaints-dispute-resolution-and-evidence",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-investigation-audit-trail-and-legal-hold",
+"publicPath": "finance/markets/derivatives-investigation-audit-trail-and-legal-hold",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-market-abuse-position-limits-and-surveillance",
+"publicPath": "finance/markets/derivatives-market-abuse-position-limits-and-surveillance",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-product-approval-target-market-and-post-sale-monitoring",
+"publicPath": "finance/markets/derivatives-product-approval-target-market-and-post-sale-monitoring",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-sales-records-access-retention-and-deletion",
+"publicPath": "finance/markets/derivatives-sales-records-access-retention-and-deletion",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-suitability-disclosure-and-sales-practice",
+"publicPath": "finance/markets/derivatives-suitability-disclosure-and-sales-practice",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-tax-character-timing-and-jurisdiction",
+"publicPath": "finance/markets/derivatives-tax-character-timing-and-jurisdiction",
+"status": "todo"
+},
+{
+"route": "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation",
+"publicPath": "finance/markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation",
+"status": "todo"
+},
+{
+"route": "markets/equity-dispersion-implied-correlation-and-variance",
+"publicPath": "finance/markets/equity-dispersion-implied-correlation-and-variance",
+"status": "todo"
+},
+{
+"route": "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs",
+"publicPath": "finance/markets/equity-dispersion-pnl-attribution-and-rebalancing-costs",
+"status": "todo"
+},
+{
+"route": "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance",
+"publicPath": "finance/markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance",
+"status": "todo"
+},
+{
+"route": "markets/fractional-investment-trust-beneficiary-certificates",
+"publicPath": "finance/markets/fractional-investment-trust-beneficiary-certificates",
+"status": "todo"
+},
+{
+"route": "markets/hazard-rate-curve-recovery-and-credit-correlation",
+"publicPath": "finance/markets/hazard-rate-curve-recovery-and-credit-correlation",
+"status": "todo"
+},
+{
+"route": "markets/hedge-accounting-designation-effectiveness-and-rebalancing",
+"publicPath": "finance/markets/hedge-accounting-designation-effectiveness-and-rebalancing",
+"status": "todo"
+},
+{
+"route": "markets/implied-volatility-surface-skew-and-smile",
+"publicPath": "finance/markets/implied-volatility-surface-skew-and-smile",
+"status": "todo"
+},
+{
+"route": "markets/interest-rate-derivatives-from-fra-to-swaptions",
+"publicPath": "finance/markets/interest-rate-derivatives-from-fra-to-swaptions",
+"status": "todo"
+},
+{
+"route": "markets/japan-australia-retail-leverage-and-product-governance",
+"publicPath": "finance/markets/japan-australia-retail-leverage-and-product-governance",
+"status": "todo"
+},
+{
+"route": "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests",
+"publicPath": "finance/markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests",
+"status": "todo"
+},
+{
+"route": "markets/krx-derivatives-contract-orders-and-daily-settlement",
+"publicPath": "finance/markets/krx-derivatives-contract-orders-and-daily-settlement",
+"status": "todo"
+},
+{
+"route": "markets/livestock-futures-live-delivery-and-cash-settlement",
+"publicPath": "finance/markets/livestock-futures-live-delivery-and-cash-settlement",
+"status": "todo"
+},
+{
+"route": "markets/lme-metals-warrants-quality-storage-and-load-out",
+"publicPath": "finance/markets/lme-metals-warrants-quality-storage-and-load-out",
+"status": "todo"
+},
+{
+"route": "markets/local-stochastic-volatility-jumps-and-calibration",
+"publicPath": "finance/markets/local-stochastic-volatility-jumps-and-calibration",
+"status": "todo"
+},
+{
+"route": "markets/market-risk-backtesting-pnl-attribution-and-model-governance",
+"publicPath": "finance/markets/market-risk-backtesting-pnl-attribution-and-model-governance",
+"status": "todo"
+},
+{
+"route": "markets/minimum-variance-hedge-ratio-and-basis-risk",
+"publicPath": "finance/markets/minimum-variance-hedge-ratio-and-basis-risk",
+"status": "todo"
+},
+{
+"route": "markets/monte-carlo-path-dependent-pricing-and-variance-reduction",
+"publicPath": "finance/markets/monte-carlo-path-dependent-pricing-and-variance-reduction",
+"status": "todo"
+},
+{
+"route": "markets/multi-asset-options-correlation-and-rare-event-simulation",
+"publicPath": "finance/markets/multi-asset-options-correlation-and-rare-event-simulation",
+"status": "todo"
+},
+{
+"route": "markets/no-arbitrage-cost-of-carry-and-basis",
+"publicPath": "finance/markets/no-arbitrage-cost-of-carry-and-basis",
+"status": "todo"
+},
+{
+"route": "markets/option-greeks-volatility-and-dynamic-hedging",
+"publicPath": "finance/markets/option-greeks-volatility-and-dynamic-hedging",
+"status": "todo"
+},
+{
+"route": "markets/option-replication-and-put-call-parity",
+"publicPath": "finance/markets/option-replication-and-put-call-parity",
+"status": "todo"
+},
+{
+"route": "markets/option-strategies-and-structured-notes",
+"publicPath": "finance/markets/option-strategies-and-structured-notes",
+"status": "todo"
+},
+{
+"route": "markets/otc-clearing-reporting-and-bilateral-risk-mitigation",
+"publicPath": "finance/markets/otc-clearing-reporting-and-bilateral-risk-mitigation",
+"status": "todo"
+},
+{
+"route": "markets/otc-master-agreement-collateral-netting-and-cva",
+"publicPath": "finance/markets/otc-master-agreement-collateral-netting-and-cva",
+"status": "todo"
+},
+{
+"route": "markets/portfolio-compression-risk-tolerances-and-records",
+"publicPath": "finance/markets/portfolio-compression-risk-tolerances-and-records",
+"status": "todo"
+},
+{
+"route": "markets/short-rate-hjm-and-interest-rate-model-risk",
+"publicPath": "finance/markets/short-rate-hjm-and-interest-rate-model-risk",
+"status": "todo"
+},
+{
+"route": "markets/singapore-derivatives-records-complaints-and-tax-ledger",
+"publicPath": "finance/markets/singapore-derivatives-records-complaints-and-tax-ledger",
+"status": "todo"
+},
+{
+"route": "markets/swaption-annuity-volatility-quotes-and-cube",
+"publicPath": "finance/markets/swaption-annuity-volatility-quotes-and-cube",
+"status": "todo"
+},
+{
+"route": "markets/uncleared-initial-margin-simm-and-model-governance",
+"publicPath": "finance/markets/uncleared-initial-margin-simm-and-model-governance",
+"status": "todo"
+},
+{
+"route": "markets/us-derivatives-regulatory-map-and-customer-segregation",
+"publicPath": "finance/markets/us-derivatives-regulatory-map-and-customer-segregation",
+"status": "todo"
+},
+{
+"route": "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
+"publicPath": "finance/markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
+"status": "todo"
+},
+{
+"route": "markets/var-expected-shortfall-stress-and-model-risk",
+"publicPath": "finance/markets/var-expected-shortfall-stress-and-model-risk",
+"status": "todo"
+},
+{
+"route": "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",
+"publicPath": "finance/markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",
+"status": "todo"
+},
+{
+"route": "markets/xva-funding-margin-and-wrong-way-risk",
+"publicPath": "finance/markets/xva-funding-margin-and-wrong-way-risk",
+"status": "todo"
+},
+{
+"route": "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging",
+"publicPath": "finance/markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging",
+"status": "todo"
+},
+{
+"route": "p2p/iroh",
+"publicPath": "cs/p2p/iroh",
+"status": "todo"
+},
+{
+"route": "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control",
+"publicPath": "philosophy/philosophy-history/ancient-mediterranean-inquiry-virtue-and-control",
+"status": "todo"
+},
+{
+"route": "philosophy-history/classical-india-pramana-self-and-liberation",
+"publicPath": "philosophy/philosophy-history/classical-india-pramana-self-and-liberation",
+"status": "todo"
+},
+{
+"route": "philosophy-history/colonial-modernity-race-and-decolonization",
+"publicPath": "philosophy/philosophy-history/colonial-modernity-race-and-decolonization",
+"status": "todo"
+},
+{
+"route": "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation",
+"publicPath": "philosophy/philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation",
+"status": "todo"
+},
+{
+"route": "philosophy-history/early-modern-europe-doubt-experience-and-causality",
+"publicPath": "philosophy/philosophy-history/early-modern-europe-doubt-experience-and-causality",
+"status": "todo"
+},
+{
+"route": "philosophy-history/early-modern-india-new-nyaya-analysis-and-language",
+"publicPath": "philosophy/philosophy-history/early-modern-india-new-nyaya-analysis-and-language",
+"status": "todo"
+},
+{
+"route": "philosophy-history/existentialism-facticity-freedom-and-bad-faith",
+"publicPath": "philosophy/philosophy-history/existentialism-facticity-freedom-and-bad-faith",
+"status": "todo"
+},
+{
+"route": "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality",
+"publicPath": "philosophy/philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality",
+"status": "todo"
+},
+{
+"route": "philosophy-history/german-idealism-self-consciousness-recognition-and-history",
+"publicPath": "philosophy/philosophy-history/german-idealism-self-consciousness-recognition-and-history",
+"status": "todo"
+},
+{
+"route": "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding",
+"publicPath": "philosophy/philosophy-history/hermeneutics-part-whole-prejudice-and-understanding",
+"status": "todo"
+},
+{
+"route": "philosophy-history/indigenous-land-and-latin-american-liberation",
+"publicPath": "philosophy/philosophy-history/indigenous-land-and-latin-american-liberation",
+"status": "todo"
+},
+{
+"route": "philosophy-history/islamic-philosophy-translation-illumination-and-being",
+"publicPath": "philosophy/philosophy-history/islamic-philosophy-translation-illumination-and-being",
+"status": "todo"
+},
+{
+"route": "philosophy-history/logical-empiricism-observation-confirmation-and-theory-language",
+"publicPath": "philosophy/philosophy-history/logical-empiricism-observation-confirmation-and-theory-language",
+"status": "todo"
+},
+{
+"route": "philosophy-history/medieval-translation-reason-and-revelation",
+"publicPath": "philosophy/philosophy-history/medieval-translation-reason-and-revelation",
+"status": "todo"
+},
+{
+"route": "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology",
+"publicPath": "philosophy/philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology",
+"status": "todo"
+},
+{
+"route": "philosophy-history/ordinary-language-use-context-and-speech-acts",
+"publicPath": "philosophy/philosophy-history/ordinary-language-use-context-and-speech-acts",
+"status": "todo"
+},
+{
+"route": "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action",
+"publicPath": "philosophy/philosophy-history/song-ming-confucianism-pattern-heartmind-and-action",
+"status": "todo"
+},
+{
+"route": "philosophy-history/warring-states-china-care-ritual-and-standards",
+"publicPath": "philosophy/philosophy-history/warring-states-china-care-ritual-and-standards",
+"status": "todo"
+},
+{
+"route": "philosophy-topics/aesthetic-taste-judgment-and-context",
+"publicPath": "philosophy/philosophy-topics/aesthetic-taste-judgment-and-context",
+"status": "todo"
+},
+{
+"route": "philosophy-topics/consciousness-pain-and-other-minds",
+"publicPath": "philosophy/philosophy-topics/consciousness-pain-and-other-minds",
+"status": "todo"
+},
+{
+"route": "philosophy-topics/free-will-control-and-responsibility",
+"publicPath": "philosophy/philosophy-topics/free-will-control-and-responsibility",
+"status": "todo"
+},
+{
+"route": "philosophy-topics/identity-through-change",
+"publicPath": "philosophy/philosophy-topics/identity-through-change",
+"status": "todo"
+},
+{
+"route": "philosophy-topics/meaning-in-life-attraction-worth-and-commitment",
+"publicPath": "philosophy/philosophy-topics/meaning-in-life-attraction-worth-and-commitment",
+"status": "todo"
+},
+{
+"route": "philosophy-topics/reference-context-and-speech-acts",
+"publicPath": "philosophy/philosophy-topics/reference-context-and-speech-acts",
+"status": "todo"
+}
+]
+}

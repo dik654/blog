@@ -5,6 +5,15 @@ import ProgressiveDetail from "@/components/articles/progressive-detail";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import MeanErrorBoundViz from "./MeanErrorBoundViz";
 import SamplingNoiseViz from "./SamplingNoiseViz";
+import BackwardStepViz from "./viz/BackwardStepViz";
+import BSquaredCellsViz from "./viz/BSquaredCellsViz";
+import CenterShiftViz from "./viz/CenterShiftViz";
+import ChebyshevAreaViz from "./viz/ChebyshevAreaViz";
+import CovCompareViz from "./viz/CovCompareViz";
+import GradientCurvesViz from "./viz/GradientCurvesViz";
+import ImportanceAreaViz from "./viz/ImportanceAreaViz";
+import PairGridViz from "./viz/PairGridViz";
+import SixtyFourOrdersViz from "./viz/SixtyFourOrdersViz";
 const L19="https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/d569abb143b22f469a09ff218cb3383c_MIT6_041SCF13_L19.pdf";
 const RM="https://www.columbia.edu/~ww2040/8100F16/RM51.pdf";
 export default function VarianceSamplingArticle(){return <article className="space-y-16">
@@ -31,6 +40,7 @@ export default function VarianceSamplingArticle(){return <article className="spa
 <p>이 네 기록을 각각 한 장에 적고 같은 기회로 뽑는다고 보아도 계산은 같습니다. 점수 2인 카드는 두 장이며 서로 다른 기록입니다. 네 점수의 평균은 (3+2+2+1)/4=2점이고 가운데 2에서 뺀 차이는 1, 0, 0, −1점입니다.</p>
 <p>이 차이를 그냥 더하면 양쪽이 지워져 0입니다. 떨어진 정도를 남기려고 각 차이를 제곱하면 1, 0, 0, 1이 되고 이를 다시 같은 비중으로 평균하면 (1+0+0+1)/4=1/2입니다. 모든 점수가 2라면 이 계산은 0이므로 두 규칙을 구별할 수 있습니다.</p>
 <p>이제 한 장씩 되돌려 놓으며 두 번 뽑습니다. 첫째가 1점이고 둘째가 3점이면 이번 평균은 2점이지만, 둘 다 1점이면 1점이고 둘 다 3점이면 3점입니다. 두 번을 모았다고 해서 매번 정확히 2가 되지는 않습니다.</p>
+<PairGridViz />
 <p>가능한 기록 쌍은 4×4=16개이고 비중은 각각 1/16입니다. 평균이 1, 1.5, 2, 2.5, 3인 쌍의 수는 차례로 1, 4, 6, 4, 1개입니다. 가운데 2에 모이는 쌍이 가장 많지만 양끝도 여전히 가능합니다.</p>
 <p>쌍의 수를 직접 확인해 보겠습니다. 평균 1은 두 번 모두 1점인 기록을 뽑아야 하므로 한 쌍뿐입니다. 평균 1.5는 1점과 2점을 순서대로 뽑거나 반대로 뽑는데, 점수 2인 기록이 두 장이므로 각 순서에 두 쌍, 합해서 네 쌍입니다.</p>
 <p>평균 2는 두 종류의 경로로 나옵니다. 3점과 1점을 뽑는 두 순서와 2점인 두 기록 중 하나씩 고르는 네 순서를 합하면 여섯 쌍입니다. 평균 2.5와 3도 반대쪽에서 같은 방법으로 네 쌍과 한 쌍을 얻습니다.</p>
@@ -89,17 +99,20 @@ assumptions={["n−1의 불편성은 i.i.d. 표본과 유한한 모집단 분산
 </section>
 <section id="sample-correction" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">9 · 평균을 먼저 맞추면 제곱 거리 하나 분량을 덜 센다</h2>
+<CenterShiftViz />
 <p>왜 정확히 n−1일까요? 각 Zᵢ−μ를 (Zᵢ−Z̄ₙ)+(Z̄ₙ−μ)로 나누어 제곱합니다. 합을 내면 가운데 섞인 항에는 Σ(Zᵢ−Z̄ₙ)=0이 곱해져 사라집니다. 표본의 가운데를 옮겨 맞춘 만큼, 원래 평균에서 잰 거리보다 n(Z̄ₙ−μ)²가 작아집니다.</p>
 <ExplainedFormula question="n−1이라는 교정값을 기댓값으로 유도할 수 있나요?" idea="모집단 평균에서의 거리 합과 표본평균에서의 거리 합을 먼저 비교합니다. i.i.d. 평균의 분산 σ²/n을 대입하면 덜 센 양의 기댓값이 σ² 하나입니다." formula={String.raw`\sum_i(Z_i-\bar Z_n)^2=\sum_i(Z_i-\mu)^2-n(\bar Z_n-\mu)^2`}
 annotatedFormula={String.raw`\begin{gathered}\sum_i(Z_i-\bar Z_n)^2=\sum_i(Z_i-\mu)^2-n(\bar Z_n-\mu)^2\\\mathbb E\!\left[\sum_i(Z_i-\bar Z_n)^2\right]=n\sigma^2-n\frac{\sigma^2}{n}=(n-1)\sigma^2\\n=3:\quad \mathbb E[\text{거리 합}]=2\cdot\frac12=1\end{gathered}`}
 operations={[{expression:String.raw`n(\bar Z_n-\mu)^2`,annotation:["μ 대신 표본평균에서 재서 덜 센 거리","기댓값은 n·σ²/n=σ², 딱 하나 분량","n=3, σ²=1/2면 거리 합 기댓값 2·1/2=1"]}]}
 terms={[{symbol:"Σ(Zᵢ−Z̄ₙ)",name:"편차의 합",description:"같은 값들의 평균을 빼므로 언제나 0입니다."}]}
 assumptions={["n>1, 독립이고 같은 분포, 유한한 σ²입니다.","E[Z̄ₙ]=μ이며 Var(Z̄ₙ)=σ²/n이라는 평균의 계산은 다음 절에서 유도합니다."]} interpretation="분모 n으로 나눈 추정량의 기댓값은 (n−1)σ²/n입니다. 이것이 작다는 말은 원래 σ²를 추정할 때의 편향을 뜻합니다." />
+<SixtyFourOrdersViz />
 <p>같은 네 기록에서 세 번 뽑는 모든 순서 4³=64개를 직접 평균해도 확인됩니다. 분모 3의 값들을 평균하면 1/3이고 분모 2의 값들을 평균하면 1/2입니다. 앞에서 관측한 1·2·3 한 묶음의 추정값 1은 이 반복 평균 1/2와 다른 양입니다.</p>
 </section>
 <section id="mean-noise" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">10 · 평균의 분산은 왜 B가 아니라 B²로 나누나</h2>
 <p>같은 네 장에서 독립으로 B번 뽑은 Z₁부터 Z_B를 평균하면 그 평균의 기댓값은 선형성에 따라 여전히 2입니다. 흔들림은 먼저 합의 분산을 구한 뒤 1/B를 곱한 효과를 제곱하여 계산합니다. 거리를 1/B로 줄이면 제곱 거리는 1/B²가 됩니다.</p>
+<BSquaredCellsViz />
 <ExplainedFormula question="두 번 뽑은 평균의 흔들림은 얼마이고 B번이면 어떻게 되나요?" idea="평균에서의 편차를 제곱해 펼칩니다. 서로 독립인 두 편차의 곱은 기댓값이 0이라 섞인 항이 사라지고 B개의 분산만 남습니다." formula={String.raw`\operatorname{Var}(\bar Z_B)=\frac{1}{B^2}\sum_{i=1}^B\operatorname{Var}(Z_i)=\frac{\sigma^2}{B}`}
 annotatedFormula={String.raw`\begin{gathered}\bar Z_B=\frac1B\sum_i Z_i,\qquad \mathbb E[\bar Z_B]=\mu\\\operatorname{Var}(\bar Z_B)=\underbrace{\frac1{B^2}}_{\text{거리 배수의 제곱}}\underbrace{B\sigma^2}_{\text{독립 편차들의 합}}=\frac{\sigma^2}{B}\\B=2:\ \frac{1/2}{2}=\frac14,\quad B=16:\ \frac{1/2}{16}=\frac1{32}\end{gathered}`}
 operations={[{expression:String.raw`\mathbb E[(Z_i-\mu)(Z_j-\mu)]=\mathbb E[Z_i-\mu]\mathbb E[Z_j-\mu]=0\quad(i\ne j)`,annotation:["독립성으로 곱의 평균을 분리하며 각 편차의 평균은 0입니다."]}]}
@@ -112,6 +125,7 @@ assumptions={["독립이고 같은 유한 분산 σ²를 가진 값들을 같은
 <section id="law-of-large-numbers" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">11 · 오차가 클 확률의 상한과 실제 확률을 구별한다</h2>
 <p>평균이 2에서 0.5점 이상 벗어날 확률을 물어봅시다. 두 장 평균에서는 1·1.5·2.5·3이 해당하므로 그 비중은 (1+4+4+1)/16=5/8입니다. 분산 1/4만 알고도 이 확률에 상한을 줄 수 있지만 정확한 확률을 반드시 얻지는 않습니다.</p>
+<ChebyshevAreaViz />
 <p>오차가 ε 이상인 경우에는 오차 제곱도 ε² 이상입니다. 따라서 전체 제곱 오차의 평균은 그 사건의 확률에 ε²를 곱한 값보다 작을 수 없습니다. 양변을 ε²로 나누는 것이 체비쇼프 부등식(Chebyshev inequality)의 생각입니다.</p>
 <ExplainedFormula question="분산만으로 평균의 큰 오차 확률을 얼마나 제한할 수 있나요?" idea="큰 오차 사건이 제곱 오차 평균에 기여하는 최소량을 셉니다. i.i.d. 평균의 분산 σ²/B를 넣으면 고정된 허용 오차 밖의 확률 상한이 B와 함께 줄어듭니다." formula={String.raw`P(|\bar Z_B-\mu|\ge\varepsilon)\le\frac{\operatorname{Var}(\bar Z_B)}{\varepsilon^2}=\frac{\sigma^2}{B\varepsilon^2}`}
 annotatedFormula={String.raw`\begin{gathered}P(|\bar Z_B-\mu|\ge\varepsilon)\le\frac{\sigma^2}{B\varepsilon^2}\\\sigma^2=\frac12,\quad\varepsilon=\frac12:\quad \text{상한}=\frac2B\\B=2:\ 5/8\le1,\qquad B=16:\ P(\text{오차}\ge1/2)\le1/8\end{gathered}`}
@@ -127,6 +141,7 @@ assumptions={["공통 평균 μ와 유한 분산 σ²를 가진 i.i.d. 값입니
 <section id="gradient-estimator" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">12 · 같은 네 값을 일부 자료의 학습 방향으로 읽는다</h2>
 <p>이제 같은 숫자 3·2·2·1을 네 자료의 aᵢ로 둡니다. 조절할 숫자 θ를 조금 늘릴 때 자료 i의 손실이 얼마나 변하는지 나타내는 기울기를 사용합니다. ℓᵢ(θ)=(θ+aᵢ)²/2로 정하면 기울기는 θ+aᵢ입니다. 이 학습 사례의 숫자와 손실에는 별도 물리 단위를 부여하지 않습니다(가정).</p>
+<GradientCurvesViz />
 <p>전체 목표 L은 네 손실의 같은 비중 평균입니다. 모든 기울기를 같은 θ에서 계산하면 전체 기울기는 θ+2이고 특히 θ=0에서는 네 기울기가 방금 점수와 같은 3·2·2·1이 됩니다. 이 값을 일부만 뽑아 평균하는 것이 미니배치(mini-batch)의 확률적 기울기 추정량입니다.</p>
 <ExplainedFormula question="일부 자료의 기울기를 평균해도 전체 목표를 추정하나요?" idea="각 자료가 같은 확률로 선택되면 한 기울기의 기댓값이 전체 기울기의 평균입니다. 묶음에 대해 기댓값의 선형성을 적용합니다." formula={String.raw`g_B=\frac1B\sum_{j=1}^B\nabla\ell_{I_j}(\theta),\qquad \mathbb E[g_B\mid\theta]=\frac1N\sum_{i=1}^N\nabla\ell_i(\theta)=\nabla L(\theta)`}
 annotatedFormula={String.raw`\begin{gathered}L(\theta)=\frac1N\sum_i\ell_i(\theta),\quad g_B=\frac1B\sum_j\nabla\ell_{I_j}(\theta)\\\mathbb E[g_B\mid\theta]=\frac1N\sum_i\nabla\ell_i(\theta)=\nabla L(\theta)\\N=4,\ \nabla\ell_i=\theta+a_i:\quad \mathbb E[g_B\mid\theta]=\theta+2\end{gathered}`}
@@ -179,6 +194,7 @@ annotatedFormula={String.raw`\begin{gathered}\operatorname{Var}(\bar Z_B)=\frac{
 operations={[{expression:String.raw`B=2:\quad (1/2+1/2+2\cdot1/2)/4=1/2`,annotation:["두 자리라도 한 값을 복사하면 분산이 1/4로 줄지 않습니다."]}]}
 terms={[{symbol:"Cov",name:"공분산",description:"서로 다른 두 값의 중심에서의 편차를 곱해 평균한 양입니다."}]}
 assumptions={["유한한 두 번째 모멘트와 같은 비중의 평균입니다.","평균의 불편성과 공분산이 0이라는 조건은 구별합니다."]} interpretation="한 자료 번호 J를 모든 미니배치 자리에 복사해도 전체 기울기에 대해 불편할 수 있지만 분산은 한 자료의 값 그대로입니다." />
+<CovCompareViz />
 <p>반대로 네 장에서 되돌리지 않고 두 장을 고르면 다른 계산입니다. 가능한 카드 쌍 여섯 개의 평균은 2.5, 2.5, 2, 2, 1.5, 1.5입니다. 각각 비중 1/6으로 중심 2에서 잰 제곱 거리를 평균하면 1/6이라 독립으로 되돌려 뽑은 1/4보다 더 작습니다.</p>
 <ProgressiveDetail title="유한한 모집단에서 되돌리지 않는 추출의 교정은 무엇인가요?" preview="모집단 분산의 분모를 N으로 정의하면, 평균 분산 σ²/B에 (N−B)/(N−1)을 곱합니다.">
 <p>N&gt;1, 1≤B≤N인 N개의 고정 값에서 B개를 균등하게 비복원 추출하고 σ²를 N분모 모집단 분산으로 둡니다. 서로 다른 추출 자리의 공분산은 −σ²/(N−1)이고 이를 위 식에 넣으면 Var(Z̄_B)=(σ²/B)(N−B)/(N−1)입니다.</p>
@@ -188,6 +204,7 @@ assumptions={["유한한 두 번째 모멘트와 같은 비중의 평균입니�
 </section>
 <section id="sampling-weights" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">17 · 뽑는 비중이 틀어지거나 한 걸음이 반대로 갈 수 있다</h2>
+<ImportanceAreaViz />
 <p>같은 aᵢ=3·2·2·1에서 θ=0을 고정합시다. 첫 자료를 1/2, 나머지 세 자료를 각각 1/6 확률로 뽑으면 원래 기울기를 그대로 평균한 기댓값은 3/2+(2+2+1)/6=7/3입니다(가정). 목표인 균등 평균 2와 달라집니다. 이때 비교할 것은 각 자료가 받는 기대 기여의 비중과 목표의 1/4입니다.</p>
 <p>중요도 보정(importance correction)은 자료 i의 기울기에 목표 비중 1/4을 실제 선택 확률 qᵢ로 나눈 값을 곱합니다. 그러면 선택 확률 qᵢ와 곱해졌을 때 기대 기여의 비중이 다시 1/4이 됩니다. 어떤 자료를 전혀 뽑지 않으면서 그 자료의 기여를 이 나눗셈으로 복원할 수는 없습니다.</p>
 <ExplainedFormula question="다르게 뽑되 같은 전체 목표를 유지하려면 무엇을 곱하나요?" idea="실제로 뽑힐 비중과 보정 배수의 곱이 목표의 1/N이 되게 합니다. 이 보정은 중심을 맞추지만 작은 선택 확률의 큰 배수는 흔들림을 키울 수도 있습니다." formula={String.raw`\tilde g_I=\frac{\nabla\ell_I(\theta)}{Nq_I},\qquad\mathbb E_q[\tilde g_I]=\frac1N\sum_i\nabla\ell_i(\theta)`}
@@ -195,6 +212,7 @@ annotatedFormula={String.raw`\begin{gathered}\tilde g_I=\frac{\nabla\ell_I(\thet
 operations={[{expression:String.raw`(1/2)1.5+(1/6)3+(1/6)3+(1/6)1.5=2`,annotation:["보정된 값도 실제 q의 비중으로 평균해야 목표 2가 나옵니다."]}]}
 terms={[{symbol:"qᵢ",name:"선택 확률",description:"자료 i를 실제로 뽑는 확률입니다."}]}
 assumptions={["목표에 기여하는 모든 자료의 선택 확률이 양수이며 정확한 qᵢ를 사용합니다.","목표 손실은 자료 N개의 균등 평균이고 θ를 고정합니다."]} interpretation="다른 목표 가중치를 원한다면 먼저 그 목표부터 적어야 합니다. 모든 sampler 차이를 무조건 오류라고 부르지 않습니다." />
+<BackwardStepViz />
 <p>균등하게 뽑아 중심이 맞아도 이번 한 걸음의 손실은 커질 수 있습니다. θ=−1.5에서 전체 기울기는 0.5지만 aᵢ=1을 뽑으면 기울기는 −0.5입니다. 학습률 0.1로 빼면 θ는 −1.45가 됩니다. 바로 15절에서 원문 식에 넣은 같은 갱신입니다.</p>
 <p>전체 손실은 L(θ)=((θ+2)²+1/2)/2입니다. 바꾸기 전은 3/8=0.375이고 바꾼 뒤는 321/800=0.40125입니다. 손실이 늘었습니다. 이 반례는 불편성이 매번의 감소를 보장하지 않음을 보일 뿐 올바른 조건에서 얻는 장기 수렴까지 부정하지는 않습니다.</p>
 </section>

@@ -1,6 +1,18 @@
+import AfterBipolarTimelineViz from "./cold-war-decolonization-and-globalization/viz/AfterBipolarTimelineViz";
+import BudgetStringsViz from "./cold-war-decolonization-and-globalization/viz/BudgetStringsViz";
+import PolicySpaceViz from "./cold-war-decolonization-and-globalization/viz/PolicySpaceViz";
+import RailLayoutViz from "./cold-war-decolonization-and-globalization/viz/RailLayoutViz";
+import TwoAxesViz from "./cold-war-decolonization-and-globalization/viz/TwoAxesViz";
 import WorldHistoryArticle, { type WorldHistoryArticleData } from "./WorldHistoryArticle";
 
 const data: WorldHistoryArticleData = {
+  figures: {
+    case: { 1: <BudgetStringsViz /> },
+    picture: { 1: <TwoAxesViz /> },
+    need: { 0: <RailLayoutViz /> },
+    mechanism: { 0: <PolicySpaceViz /> },
+    limits: { 0: <AfterBipolarTimelineViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 1945년 뒤 세계는 미국과 소련 두 칸만으로 읽히지 않습니다", bridge: "냉전의 압력은 분명했지만 새로 독립한 국가들도 선택하고 연대했습니다. 독립·안보·개발·무역 규칙을 한 예산 장부에 놓습니다.", paragraphs: [
       "2차 세계대전 뒤 미국과 소련은 군사 동맹·원조·기술·선전을 통해 영향권을 넓혔습니다. 동시에 아시아·아프리카·카리브해의 식민지들은 독립을 얻었고, 중국 혁명과 한국전쟁·베트남전쟁·중동 전쟁처럼 냉전과 지역 갈등이 겹친 전쟁이 이어졌습니다.",

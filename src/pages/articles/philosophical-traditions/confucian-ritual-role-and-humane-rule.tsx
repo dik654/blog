@@ -1,6 +1,14 @@
+import HollowFormViz from "./confucian-ritual-role-and-humane-rule/viz/HollowFormViz";
+import ScarcityBoundaryViz from "./confucian-ritual-role-and-humane-rule/viz/ScarcityBoundaryViz";
+import TwoMeetingsViz from "./confucian-ritual-role-and-humane-rule/viz/TwoMeetingsViz";
 import TraditionArticle, { type TraditionArticleData } from "./TraditionArticle";
 
 const data: TraditionArticleData = {
+  figures: {
+    picture: { 0: <TwoMeetingsViz /> },
+    mechanism: { 0: <HollowFormViz /> },
+    comparison: { 0: <ScarcityBoundaryViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 예는 식사 자리의 순서처럼 작은 행동에서 시작합니다", bridge: "유가를 추상적인 복종 규칙으로 두지 않습니다. 부족한 곡물을 나누는 말투·절차·역할에서 출발합니다.", paragraphs: [
       "홍수 뒤 곡물 100자루만 남은 마을을 떠올려 보겠습니다. 누구에게 먼저 묻고, 씨앗과 당장 먹을 몫을 어떻게 나누며, 결정한 사람이 자기 몫을 얼마나 가져가는지가 공동체의 다음 행동을 바꿉니다.",

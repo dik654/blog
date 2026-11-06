@@ -1,4 +1,16 @@
-import WorldHistoryArticle, { type WorldHistoryArticleData } from "./WorldHistoryArticle";
+import { Fragment, type ReactNode } from "react";
+import LessonSection from "@/components/articles/lesson-section";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation";
+import FlowRail from "../world-systems/FlowRail";
+import NumericPath from "../world-systems/NumericPath";
+import ReviewPrompts from "../world-systems/ReviewPrompts";
+import SourceApplication from "../world-systems/SourceApplication";
+import type { WorldHistoryArticleData } from "./WorldHistoryArticle";
+import CarryoverTimelineViz from "./world-wars-depression-and-mass-states/viz/CarryoverTimelineViz";
+import CovenantTwoRulesViz from "./world-wars-depression-and-mass-states/viz/CovenantTwoRulesViz";
+import DemandBranchViz from "./world-wars-depression-and-mass-states/viz/DemandBranchViz";
+import HouseholdLedgerViz from "./world-wars-depression-and-mass-states/viz/HouseholdLedgerViz";
 
 const data: WorldHistoryArticleData = {
   sections: [
@@ -70,6 +82,46 @@ const data: WorldHistoryArticleData = {
   ],
 };
 
+/** 절 id와 문단 번호별로, 그 문단 바로 앞에 놓는 Viz입니다. */
+const VIZ_BEFORE_PARAGRAPH: Partial<Record<string, Record<number, ReactNode>>> = {
+  case: { 0: <HouseholdLedgerViz /> },
+  need: { 1: <CarryoverTimelineViz /> },
+  mechanism: { 0: <DemandBranchViz /> },
+  source: { 0: <CovenantTwoRulesViz /> },
+};
+
+/** 공용 WorldHistoryArticle과 같은 순서로 그리되, 문단 사이에 이 글의 Viz를 끼웁니다. */
 export default function WorldWarsDepressionAndMassStatesArticle() {
-  return <WorldHistoryArticle data={data} />;
+  return (
+    <div className="space-y-16">
+      {data.sections.map((section) => (
+        <LessonSection key={section.id} id={section.id} level={section.level} title={section.title} bridge={section.bridge}>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            {section.paragraphs.map((paragraph, index) => (
+              <Fragment key={paragraph}>
+                {VIZ_BEFORE_PARAGRAPH[section.id]?.[index]}
+                <p className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>{paragraph}</p>
+              </Fragment>
+            ))}
+          </div>
+          {section.id === "black-box" ? <FlowRail title={data.overviewFlow.title} steps={[...data.overviewFlow.steps]} /> : null}
+          {section.id === "case" ? <NumericPath title={data.numericCase.title} steps={[...data.numericCase.steps]} /> : null}
+          {section.id === "names" ? <TermBreakdown title={data.terms.title} items={[...data.terms.items]} /> : null}
+          {section.id === "source" ? (
+            <>
+              <SourceApplication source={data.sources[0].source} excerpt={data.sources[0].excerpt} application={data.sources[0].application} />
+              <CitationBlock source={data.sources[0].citation} citeKey={1} href={data.sources[0].href}>{data.sources[0].note}</CitationBlock>
+            </>
+          ) : null}
+          {section.id === "comparison" ? (
+            <>
+              <SourceApplication source={data.sources[1].source} excerpt={data.sources[1].excerpt} application={data.sources[1].application} />
+              <CitationBlock source={data.sources[1].citation} citeKey={2} href={data.sources[1].href}>{data.sources[1].note}</CitationBlock>
+            </>
+          ) : null}
+          {section.id === "limits" ? <ReviewPrompts questions={[...data.review]} /> : null}
+        </LessonSection>
+      ))}
+    </div>
+  );
 }

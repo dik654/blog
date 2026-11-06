@@ -4,6 +4,15 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import NodeFailureClockViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/NodeFailureClockViz";
+import FourParticipantsViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/FourParticipantsViz";
+import HeartbeatLanesViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/HeartbeatLanesViz";
+import NotReadyBranchViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/NotReadyBranchViz";
+import PartitionDuplicateViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/PartitionDuplicateViz";
+import PodOnNodeViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/PodOnNodeViz";
+import SchedulerFilterViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/SchedulerFilterViz";
+import TaintEffectsViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/TaintEffectsViz";
+import TimerOwnersViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/TimerOwnersViz";
+import ZoneEvictionViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/ZoneEvictionViz";
 import { codeRefs } from "./kubernetes-pod-to-node-scheduler-kubelet-notready/codeRefs";
 import { k8sPodNodeTrees } from "./kubernetes-pod-to-node-scheduler-kubelet-notready/fileTree";
 import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
@@ -40,6 +49,7 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 네 참여자가 Pod 객체 하나를 읽고 쓸 뿐, 서로 말을 걸지 않습니다</h2>
+          <FourParticipantsViz />
           <div className={prose}>
             <p>
               바깥에서 보면 Pod 하나의 여정에 네 참여자가 있습니다. API server는 Pod 객체를 etcd에 두어 읽기와 쓰기를 받습니다. scheduler는 nodeName이 비어 있는 Pod를 찾아 노드를 골라 그 이름을 적습니다.
@@ -58,6 +68,7 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
 
         <section id="small-case" data-teach-level="0" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. 세 노드 중 둘이 걸러지면 점수를 매기지 않고 남은 하나에 이름을 적습니다</h2>
+          <SchedulerFilterViz />
           <AlgorithmBlock
             title="가정부터 결과까지: web-x는 worker-2에 배치됩니다"
             input={["pod: web-x, requests cpu 500m, tolerations 없음, nodeName 비어 있음", "nodes: worker-1(taint maintenance:NoSchedule), worker-2(여유 1.5 CPU), worker-3(여유 0.2 CPU)"]}
@@ -102,9 +113,15 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
             <p>
               kubelet은 Pod spec을 읽어 컨테이너 런타임에 sandbox 생성을 요청한 다음 CNI로 네트워크를, CSI로 볼륨을 붙인 뒤 컨테이너를 시작합니다. 결과는 Pod의 <code>status</code>(phase, containerStatuses, conditions)에 다시 씁니다.
             </p>
+          </div>
+          <PodOnNodeViz />
+          <div className={prose}>
             <p>
               이 구조에서 "Pod가 노드에 있다"는 말의 뜻이 정해집니다. API server 쪽에서는 spec.nodeName이 그 노드라는 사실이며, 노드 쪽에서는 kubelet이 그 Pod를 읽어 런타임에 컨테이너를 만들었다는 사실입니다. 둘은 보통 몇 초 차이로 같아지지만, 노드가 죽으면 영영 어긋납니다. nodeName은 worker-2인데 컨테이너를 돌릴 kubelet이 없는 상태가 1절의 "Running으로 보이는 5분"입니다.
             </p>
+          </div>
+          <HeartbeatLanesViz />
+          <div className={prose}>
             <p>
               kubelet은 Pod 상태 외에 자기 노드의 상태도 씁니다. 두 종류입니다. Node 객체의 <code>status</code>에는 조건(Ready, MemoryPressure, DiskPressure, PIDPressure)과 Allocatable 같은 값을 적는데, 10초마다 계산하되 바뀐 것이 없으면 5분에 한 번만 씁니다.
             </p>
@@ -123,6 +140,7 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
 
         <section id="names" data-teach-level="2" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">5. 10초와 40초, 50초와 300초는 각각 다른 참여자가 정한 숫자입니다</h2>
+          <TimerOwnersViz />
           <div className={prose}>
             <p>
               앞 절의 숫자에 이름과 주인을 붙입니다. 모두 v1.37.1 기본값입니다. kubelet 설정 <code>nodeLeaseDurationSeconds</code>는 40이고 Lease에 적히는 유효 기간입니다. 갱신 간격은 이 값에 0.25를 곱한 10초입니다. 세 번 놓쳐도 Lease는 유효합니다. <code>nodeStatusUpdateFrequency</code> 10초는 status를 계산하는 주기, <code>nodeStatusReportFrequency</code> 5분은 변화가 없을 때 쓰는 주기입니다.
@@ -191,12 +209,14 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
             conclusion="삭제 시작까지 약 50 + 300 = 350초, 거기에 새 Pod가 Ready가 되는 시간이 더해져 서비스 관점의 복구는 6분이 넘습니다. 이 가운데 운영자가 바꿀 수 있는 가장 큰 항은 Pod별 tolerationSeconds입니다."
             caveats={["여러 노드가 함께 죽으면 축출 속도 제한이 걸립니다. 건강한 zone에서는 10초에 노드 하나(0.1/s)입니다. NotReady 노드가 3개 이상이고 zone의 55% 이상이면 비정상 zone으로 보아 100초에 하나(0.01/s)로 낮추고, 노드 50개 이하 클러스터에서는 축출을 멈춥니다. zone의 모든 노드가 NotReady면 control plane 쪽 문제로 보고 taint를 떼고 축출을 전부 멈춥니다. 세 노드 중 둘이 죽은 경우는 NotReady가 3개 미만이라 정상 zone으로 10초에 하나씩 지워집니다.", "StatefulSet Pod는 같은 이름을 다시 써야 하므로 옛 Pod가 Terminating으로 남아 있는 동안 대체 Pod가 생기지 않습니다. 노드가 확실히 죽었음을 운영자가 확인하고 강제 삭제해야 합니다.", "Lease만 갱신되고 status가 멈춘 노드는 건강한 것으로 봅니다. 반대로 status는 오는데 Lease가 멈추는 경우도 probe 시각이 갱신되어 건강합니다."]}
           />
+          <ZoneEvictionViz />
           {code("nlc-grace", "probe + 50초 판정과 Unknown 기록")}
           {code("eviction-rates", "축출 속도 0.1 · 0.01 · 50노드")}
         </section>
 
         <section id="taints-eviction" data-teach-level="4" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">7. NotReady는 상태가 아니라 "마지막 보고 뒤 얼마나 지났나"의 결과입니다</h2>
+          <NotReadyBranchViz />
           <div className={prose}>
             <p>
               <code>kubectl get nodes</code>의 STATUS 열 NotReady는 Ready 조건이 True가 아니라는 뜻 하나로 두 경우를 묶습니다. 첫째는 kubelet이 살아서 스스로 False를 보고한 경우입니다. 컨테이너 런타임이 죽었거나, CNI 플러그인이 준비되지 않았거나, 디스크·PID가 위험 수준인 노드가 여기 해당하고 reason도 kubelet이 적은 값입니다.
@@ -207,9 +227,15 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
             <p>
               두 경우의 진단이 다릅니다. False면 노드에 들어가 kubelet 로그와 런타임 상태를 봅니다. Unknown이면 노드 자체 또는 노드와 API server 사이 네트워크를 의심합니다. 노드 안에서는 컨테이너가 멀쩡히 돌고 있을 수 있습니다.
             </p>
+          </div>
+          <PartitionDuplicateViz />
+          <div className={prose}>
             <p>
               분단된 노드의 Pod는 300초 뒤 API server 쪽에서 삭제가 요청되지만 노드 안 컨테이너는 계속 돌므로, 같은 Pod가 두 노드에서 동시에 도는 구간이 생깁니다. 데이터베이스처럼 하나만 돌아야 하는 작업이 StatefulSet과 수동 확인을 요구하는 이유입니다.
             </p>
+          </div>
+          <TaintEffectsViz />
+          <div className={prose}>
             <p>
               taint의 두 effect도 구분합니다. NoSchedule taint는 scheduler의 Filter 단계에서 새 Pod를 막습니다. NoExecute taint는 taint eviction 컨트롤러가 이미 있는 Pod를 살펴 toleration이 없으면 바로, tolerationSeconds가 있으면 그 뒤에 삭제를 요청합니다.
             </p>

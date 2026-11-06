@@ -1,4 +1,16 @@
-import TraditionArticle, { type TraditionArticleData } from "./TraditionArticle";
+import { Fragment, type ReactNode } from "react";
+import LessonSection from "@/components/articles/lesson-section";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation";
+import FlowRail from "../world-systems/FlowRail";
+import NumericPath from "../world-systems/NumericPath";
+import ReviewPrompts from "../world-systems/ReviewPrompts";
+import SourceApplication from "../world-systems/SourceApplication";
+import type { TraditionArticleData } from "./TraditionArticle";
+import FourLayersViz from "./islamic-causation-reason-and-revelation/viz/FourLayersViz";
+import GhazaliRoutesViz from "./islamic-causation-reason-and-revelation/viz/GhazaliRoutesViz";
+import SeenVsNecessaryViz from "./islamic-causation-reason-and-revelation/viz/SeenVsNecessaryViz";
+import TwoModelsViz from "./islamic-causation-reason-and-revelation/viz/TwoModelsViz";
 
 const data: TraditionArticleData = {
   sections: [
@@ -71,4 +83,56 @@ const data: TraditionArticleData = {
   ],
 };
 
-export default function IslamicCausationReasonAndRevelationArticle() { return <TraditionArticle data={data} />; }
+/** 절 id → 그 절의 몇 번째 문단 바로 앞에 Viz를 둘지. TraditionArticle은 문자열 문단만 그려서 이 글의 본문 틀을 여기 둡니다. */
+const VIZ_BEFORE: Partial<Record<string, Record<number, ReactNode>>> = {
+  "black-box": { 0: <FourLayersViz /> },
+  picture: { 0: <SeenVsNecessaryViz /> },
+  mechanism: { 0: <TwoModelsViz /> },
+  source: { 2: <GhazaliRoutesViz /> },
+};
+
+function SectionProse({ id, paragraphs }: { id: string; paragraphs: readonly string[] }) {
+  const slots = VIZ_BEFORE[id] ?? {};
+  const cuts = [0, ...Object.keys(slots).map(Number).filter((index) => index > 0), paragraphs.length];
+  const className = id === "overview" ? "text-lg leading-8" : "leading-8";
+  return (
+    <>
+      {cuts.slice(0, -1).map((start, index) => (
+        <Fragment key={start}>
+          {slots[start]}
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            {paragraphs.slice(start, cuts[index + 1]).map((paragraph) => <p key={paragraph} className={className}>{paragraph}</p>)}
+          </div>
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+export default function IslamicCausationReasonAndRevelationArticle() {
+  return (
+    <div className="space-y-16">
+      {data.sections.map((section) => (
+        <LessonSection key={section.id} id={section.id} level={section.level} title={section.title} bridge={section.bridge}>
+          <SectionProse id={section.id} paragraphs={section.paragraphs} />
+          {section.id === "black-box" ? <FlowRail title={data.overviewFlow.title} steps={[...data.overviewFlow.steps]} /> : null}
+          {section.id === "case" ? <NumericPath title={data.numericCase.title} steps={[...data.numericCase.steps]} /> : null}
+          {section.id === "names" ? <TermBreakdown title={data.terms.title} items={[...data.terms.items]} /> : null}
+          {section.id === "source" ? (
+            <>
+              <SourceApplication source={data.sources[0].source} excerpt={data.sources[0].excerpt} application={data.sources[0].application} />
+              <CitationBlock source={data.sources[0].citation} citeKey={1} href={data.sources[0].href}>{data.sources[0].note}</CitationBlock>
+            </>
+          ) : null}
+          {section.id === "comparison" ? (
+            <>
+              <SourceApplication source={data.sources[1].source} excerpt={data.sources[1].excerpt} application={data.sources[1].application} />
+              <CitationBlock source={data.sources[1].citation} citeKey={2} href={data.sources[1].href}>{data.sources[1].note}</CitationBlock>
+            </>
+          ) : null}
+          {section.id === "limits" ? <ReviewPrompts questions={[...data.review]} /> : null}
+        </LessonSection>
+      ))}
+    </div>
+  );
+}

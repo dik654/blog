@@ -4,6 +4,13 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import CountryExplorer from "../world-systems/CountryExplorer";
 import { Link } from "react-router-dom";
+import BorderFlowViz from "./how-to-read-a-country/viz/BorderFlowViz";
+import DecisionLoopViz from "./how-to-read-a-country/viz/DecisionLoopViz";
+import FxRevaluationViz from "./how-to-read-a-country/viz/FxRevaluationViz";
+import PaymentOrderViz from "./how-to-read-a-country/viz/PaymentOrderViz";
+import PowerCostViz from "./how-to-read-a-country/viz/PowerCostViz";
+import SevenLedgersViz from "./how-to-read-a-country/viz/SevenLedgersViz";
+import StockFlowViz from "./how-to-read-a-country/viz/StockFlowViz";
 
 export default function Article() {
   return (
@@ -25,8 +32,12 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">사람·물건·돈·결정이 국경을 오갑니다</h2>
+        <BorderFlowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">안쪽에는 일하는 사람과 물건을 만드는 곳, 공동 서비스를 정하는 곳이 있습니다. 바깥에는 물건을 사는 고객과 부품을 파는 곳, 돈을 빌려주는 상대가 있습니다. 사람도 안팎으로 이동합니다. 이 흐름 중 하나가 막히면 나머지가 어떻게 달라질지가 첫 질문입니다.</p>
+        </div>
+        <DecisionLoopViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             규칙을 바꾸는 결정은 가게와 가계가 내는 비용을 바꿉니다. 바뀐 비용은 생산과 소비를 바꾸고 달라진 결과를 본 사람들이 다시 돈과 표를 움직입니다. 한 방향의 순서만 있는
             구조가 아니라 결과가 다음 결정을 바꾸는 반복입니다.
@@ -42,6 +53,9 @@ export default function Article() {
             (가정) A국의 한 생산 사슬이 1년 동안 외국에 물건 100을 팔고 그 물건에 들어간 외국산 부품에 60을 냅니다. 다른 중간 투입은 생략합니다. 단위는 모두 같은 외화의
             금액 단위입니다. 생산 사슬 안에서 나눌 잔액은 40입니다.
           </p>
+        </div>
+        <StockFlowViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             (가정) A국 기업들이 연말에 진 외화 부채의 잔액은 30이고 A국 정부는 같은 해 수입보다 지출을 5 더 했습니다. 여기서 30은 한 시점의 빚, 5는 한 해의 부족액입니다.
             수출 100과 함께 더해 135의 소득이라고 부를 수 없습니다.
@@ -63,6 +77,7 @@ export default function Article() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">전력 부족은 생산뿐 아니라 생활과 정치에도 닿습니다</h2>
+        <PowerCostViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">공장이 전기를 더 필요로 하면 설비와 연료를 확보해야 합니다. 누가 시설을 짓고 누가 요금을 정하는지에 따라 기업의 비용과 가계 부담이 달라집니다. 전력회사의 부족한 돈을 정부가 채우면 세금이나 차입까지 연결됩니다. 생산만 보아서는 비용을 떠안는 사람을 놓칩니다.</p>
           <p className="leading-8">
@@ -78,6 +93,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">일곱 장부는 따로 적고 서로 연결합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">이 글에서는 정치·법, 예산, 생산, 대외 거래, 생활 서비스, 정보, 기대를 ‘국가의 일곱 장부’라고 부릅니다. 공식 통계 분류 하나의 이름이 아니라 질문을 빠뜨리지 않기 위한 이 글의 분석 틀입니다. 모든 장부에 결정권자·돈을 내는 사람·손실을 받는 사람을 적습니다.</p>
+        </div>
+        <SevenLedgersViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">정치·법에는 누가 규칙을 바꾸고 누가 집행하는지 씁니다. 예산에는 정부의 수입·지출·빚을, 생산에는 노동과 재료가 무엇으로 바뀌는지 씁니다. 전기요금 사례라면 정부 결정이 기업과 소비자, 납세자의 장부로 이어집니다.</p>
           <p className="leading-8">
             대외 거래는 물건과 자금의 국경 이동, 생활 서비스는 주거·의료·교육·이동의 실제 접근성입니다. 정보는 사람들이 무엇을 보고 믿는 경로이고 기대는 그 믿음 때문에 오늘 바뀌는
@@ -91,7 +109,13 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">A국의 40이 생활과 상환 능력이 되려면 조건이 더 필요합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫째, 수출 100에서 수입 투입 60을 빼 40을 얻습니다. 이것은 생략한 다른 중간 투입이 없다는 가정의 생산 사슬 잔액입니다. 나라 전체의 생산을 다 센 값도, 세금과 이자까지 뺀 회사 순이익도 아닙니다.</p>
+        </div>
+        <PaymentOrderViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">둘째, 40이 임금과 자본의 몫으로 어떻게 나뉘는지 확인합니다. 소득이 생겼어도 실제 입금이 늦으면 곧 돌아오는 부채 30의 만기를 넘길 수 있습니다. 외화 수출대금의 수취일, 부채의 상환일과 보유 현금을 함께 놓아야 합니다.</p>
+        </div>
+        <FxRevaluationViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">(가정) 외화 1을 사는 데 자국 돈 1이 들다가 1.2가 들게 되면, 외화 부채 30의 자국 돈 환산액은 30에서 36이 됩니다. 6만큼 커집니다. 동시에 외화 수출 100과 부품값 60의 환산액도 달라집니다. 어떤 회사가 수출하고 어떤 회사가 빚을 졌는지 모르면 국가 합계로 순효과를 확정할 수 없습니다.</p>
           <p className="leading-8">셋째, 정부 적자 5가 전력 시설 때문인지 다른 지출 때문인지 봅니다. 시설이 제때 작동하고 사용료가 들어오는지에 따라 이후 비용과 생산이 달라집니다. 마지막으로 실제 임금·가격·서비스의 변화가 처음의 기대와 맞았는지 확인합니다.</p>
         </div>

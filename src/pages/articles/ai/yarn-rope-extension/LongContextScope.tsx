@@ -1,3 +1,5 @@
+import ExtrapolationDialViz from "./viz/ExtrapolationDialViz";
+
 const angleRows = [
   {
     dim: "i = 0 (가장 빠른 dimension)",
@@ -63,6 +65,8 @@ export default function LongContextScope() {
           ))}
         </div>
       </figure>
+
+      <ExtrapolationDialViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

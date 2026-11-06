@@ -1,6 +1,16 @@
+import EightSecondForkViz from "./buddhist-aggregates-impermanence-and-not-self/viz/EightSecondForkViz";
+import FiveProcessesViz from "./buddhist-aggregates-impermanence-and-not-self/viz/FiveProcessesViz";
+import ObservationGapViz from "./buddhist-aggregates-impermanence-and-not-self/viz/ObservationGapViz";
+import SnQuestionGridViz from "./buddhist-aggregates-impermanence-and-not-self/viz/SnQuestionGridViz";
 import TraditionArticle, { type TraditionArticleData } from "./TraditionArticle";
 
 const data: TraditionArticleData = {
+  figures: {
+    "black-box": { 0: <FiveProcessesViz /> },
+    case: { 1: <EightSecondForkViz /> },
+    mechanism: { 0: <ObservationGapViz /> },
+    source: { 0: <SnQuestionGridViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 모욕을 들은 한순간을 몸·느낌·지각·반응·의식으로 나눕니다", bridge: "무아를 사람은 존재하지 않는다는 구호로 시작하지 않습니다. 실제 경험에서 내가 붙잡은 것을 나눠 봅니다.", paragraphs: [
       "회의에서 누군가 내 제안을 비웃었다고 하겠습니다. 얼굴이 뜨거워지고 불쾌함이 생기며, 저 사람이 나를 무시했다고 알아차리고, 반박할 말을 준비하고, 이 모든 경험을 의식합니다. 우리는 이 묶음을 곧바로 ‘내가 모욕당했다’고 합칩니다.",

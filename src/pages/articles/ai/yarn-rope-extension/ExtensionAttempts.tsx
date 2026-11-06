@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
+import PiTradeoffViz from "./viz/PiTradeoffViz";
 
 const methods = [
   {
@@ -65,6 +66,8 @@ export default function ExtensionAttempts() {
         assumptions={["L′>L이고 s>1인 context extension 상황입니다."]}
         interpretation="PI는 학습 범위 밖을 그대로 extrapolation하는 대신 새 위치를 익숙한 좌표 구간에 넣습니다. 대가로 모든 frequency의 local resolution도 같은 비율로 줄어듭니다."
       />
+
+      <PiTradeoffViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

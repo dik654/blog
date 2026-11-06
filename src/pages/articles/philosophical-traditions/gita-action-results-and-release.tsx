@@ -1,6 +1,16 @@
+import FourClausesViz from "./gita-action-results-and-release/viz/FourClausesViz";
+import NoExitByStoppingViz from "./gita-action-results-and-release/viz/NoExitByStoppingViz";
+import TwoLedgersViz from "./gita-action-results-and-release/viz/TwoLedgersViz";
+import TwoPathsViz from "./gita-action-results-and-release/viz/TwoPathsViz";
 import TraditionArticle, { type TraditionArticleData } from "./TraditionArticle";
 
 const data: TraditionArticleData = {
+  figures: {
+    "black-box": { 0: <TwoPathsViz /> },
+    need: { 0: <NoExitByStoppingViz /> },
+    mechanism: { 0: <TwoLedgersViz /> },
+    source: { 0: <FourClausesViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 수확 결과를 다 가질 수 없는 농부의 선택에서 시작합니다", bridge: "『바가바드 기타』를 결과를 신경 쓰지 말라는 표어로 시작하지 않습니다. 해야 할 일과 통제할 수 없는 결과가 함께 있는 밭에서 출발합니다.", paragraphs: [
       "농부는 씨앗을 고르고 물길을 손보며 제때 일할 수 있습니다. 그러나 비의 양, 병충해, 이웃의 수로 관리와 시장 가격까지 혼자 정할 수는 없습니다. 수확을 원하지 않는다면 농사를 지을 이유가 없지만, 수확 전부를 자기 의지의 산물로 볼 수도 없습니다.",

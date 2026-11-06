@@ -2,6 +2,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import AgeGridViz from "./population-migration-and-care/viz/AgeGridViz";
+import CareLedgerViz from "./population-migration-and-care/viz/CareLedgerViz";
+import CareTimeMoneyViz from "./population-migration-and-care/viz/CareTimeMoneyViz";
+import CohortShiftViz from "./population-migration-and-care/viz/CohortShiftViz";
+import DependencyRatioViz from "./population-migration-and-care/viz/DependencyRatioViz";
 
 export default function Article() {
   return (
@@ -57,6 +62,8 @@ export default function Article() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">나이가 같아도 일할 수 있는 조건이 다릅니다</h2>
+        <AgeGridViz />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">연초 15–64세 60명 모두를 취업자로 세면 실제 45명보다 15명을 더 셉니다. 이 15명에는 공부하거나 구직하는 사람, 건강상 일을 못 하는 사람, 가족을 돌보는 사람이 있을 수 있습니다. 각각의 이유가 다르면 필요한 지원도 달라집니다.</p>
           <p className="leading-8">이주한 사람도 나이만으로 고용되지 않습니다. 언어·자격·거주지와 일자리 사이 거리, 합법적인 취업 권리와 고용주의 채용 조건이 맞아야 합니다. 이들이 가족과 함께 이동하면 학교·주택·돌봄 수요도 생깁니다.</p>
@@ -74,6 +81,11 @@ export default function Article() {
           <p className="leading-8">
             처음 인구에 태어난 사람과 들어온 사람을 더하고 사망한 사람과 떠난 사람을 빼는 것이 인구의 잔액·출입 장부입니다. 관측 기간의 길이와 거주자 정의가 같아야 계산이 맞습니다.
           </p>
+        </div>
+
+        <DependencyRatioViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">15–64세 인구를 분모로 두고 그 밖의 연령을 분자로 두는 비율을 여기서는 연령 부양비라고 부릅니다. UN의 표준 지표명으로는 총부양비(total dependency ratio)입니다. A 마을은 (20+20)/60×100=약 66.7입니다. 15–64세 100명당 다른 연령 66.7명이 있다는 뜻입니다. 65세 이상 모두가 경제적으로 의존한다는 뜻도, 15세부터 모두 취업한다는 뜻도 아닙니다.</p>
           <p className="leading-8">다른 사람의 생활과 능력을 유지하도록 제공하는 활동을 돌봄 노동이라고 부릅니다. 식사를 직접 돕는 일뿐 아니라 청소·준비처럼 간접적으로 돌보는 일도 있습니다. 임금을 받는지 여부와 실제 노동이 존재하는지는 구분합니다.</p>
         </div>
@@ -84,6 +96,11 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">102명이라는 결과와 가계의 1만원은 다른 경로에서 나옵니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">마을 장부는 100+2−1+3−2=102명입니다. 전입자가 모두 어린이라면 총수는 그대로 102명이지만 즉시 취업할 성인은 늘지 않습니다. 20/60/20은 연초 구성입니다. 연말 연령별 숫자는 사망·이동의 나이와 생일이 있어야 계산할 수 있습니다.</p>
+        </div>
+
+        <CareTimeMoneyViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             (가정) 가구가 돌봄 4시간 중 2시간을 외부 서비스에 맡깁니다. 요금은 시간당 1.5만원이고 비워진 2시간에 시간당 2만원의 유급 일을 할 수 있다고 놓습니다. 늘어난 수입은
             4만원, 늘어난 지출은 3만원이므로 차액은 1만원입니다. 세금과 통근비는 생략했습니다.
@@ -97,6 +114,11 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">UN은 같은 나이 집단을 한 해씩 앞으로 옮깁니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">UN의 WPP2024 방법론은 총인구에 일정한 증가율을 계속 곱하는 방식으로 끝나지 않습니다. 나이와 성별을 나눈 현재 인구에 출생·사망·이동을 적용해 다음 해를 만듭니다. A 마을의 102명을 학교 수요로 바꾸려면 바로 이 나이별 경로가 필요합니다.</p>
+        </div>
+
+        <CohortShiftViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             방법론의 출발점을 사례로 읽어 봅니다. 현재 10세인 집단 가운데 다음 해까지 살아남은 사람은 11세 집단으로 이동합니다. 새로 태어난 2명은 새 나이 집단에 들어가고 전입
             3명과 전출 2명은 각자의 나이 위치에 반영됩니다. 이 글에는 그 상세 나이가 없으므로 다음 해 학생 수를 지어내지 않습니다.
@@ -114,6 +136,11 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">ILO의 돌봄 범위에는 가정에서 보낸 4시간도 들어갑니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">ILO는 돌봄의 범위를 유급 서비스에 한정하지 않습니다. 가족과 공동체가 무급으로 맡는 활동도 포함합니다. A 가구의 4시간을 가계 지출이 없다는 이유로 0으로 처리하면 실제 제약을 지우게 됩니다.</p>
+        </div>
+
+        <CareLedgerViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">2시간이 유료 서비스로 옮겨가면 3만원의 거래가 새로 기록됩니다. 그러나 이전에도 같은 2시간의 돌봄이 있었습니다. 통계에 잡히는 돈의 증가와 돌봄의 양·품질 증가, 다른 일을 할 수 있는 시간 증가는 각각 측정해야 합니다.</p>
           <p className="leading-8">국가를 비교할 때는 공공 서비스의 이용 자격·대기·시간대, 가계 부담, 종사자의 근무조건을 확인합니다. 세금으로 낸 비용을 무료라고 지우거나, 값싼 돌봄의 조건을 제공자의 낮은 보수와 불안정한 지위에서 떼어 놓으면 부담의 이동을 놓칩니다.</p>
         </div>

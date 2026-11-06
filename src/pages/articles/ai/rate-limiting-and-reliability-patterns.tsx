@@ -7,6 +7,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import RateLimitingAndReliabilityPatternsViz from "./rate-limiting-and-reliability-patterns/viz/RateLimitingAndReliabilityPatternsViz";
+import BucketCompareViz from "./rate-limiting-and-reliability-patterns/viz/BucketCompareViz";
+import ConcurrencyPileViz from "./rate-limiting-and-reliability-patterns/viz/ConcurrencyPileViz";
+import DegradationOrderViz from "./rate-limiting-and-reliability-patterns/viz/DegradationOrderViz";
+import FailoverDegradeViz from "./rate-limiting-and-reliability-patterns/viz/FailoverDegradeViz";
+import PriorityAdmissionViz from "./rate-limiting-and-reliability-patterns/viz/PriorityAdmissionViz";
+import RetryScatterViz from "./rate-limiting-and-reliability-patterns/viz/RetryScatterViz";
+import SettlementPathViz from "./rate-limiting-and-reliability-patterns/viz/SettlementPathViz";
+import TpmReservationViz from "./rate-limiting-and-reliability-patterns/viz/TpmReservationViz";
 import {
   LlmOperationsPathLocator,
   LlmOperationsPathMapReturn,
@@ -65,6 +73,9 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             문제는 실패 직후 모든 client가 동시에 재시도하면 이미 힘든 backend가 더 힘들어진다는 점입니다. Retry with backoff는 이 문제를 줄이려고 재시도 사이
             대기 시간을 시도할 때마다 점점 늘립니다.
           </p>
+        </div>
+        <RetryScatterViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             대기 시간을 매번 두 배로 늘리는 exponential backoff가 널리 쓰입니다. 여기에 무작위 값(jitter)을 더해 여러 client의 재시도 시점이 정확히 겹치지
             않게 흩어 놓습니다.
@@ -171,6 +182,9 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             Request rate limit은 초당 요청 수를 셉니다. Token rate limit은 초당 소비·생성한 token 수를 셉니다. 같은 요청 수라도 요청마다 token
             수가 크게 다른 LLM 서비스에서는 token rate limit이 더 정확한 부하 지표입니다.
           </p>
+        </div>
+        <BucketCompareViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 상한을 실제로 구현하는 표준 알고리즘이 token bucket과 leaky bucket입니다. Token bucket은 일정 속도로 token을 채우는 통에서 요청마다
             token을 꺼내 씁니다. 통이 비면 요청을 막습니다. Leaky bucket은 요청을 큐에 담아 고정된 속도로만 흘려보내고 큐가 넘치면 초과분을 버립니다.
@@ -225,6 +239,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             줍니다. Burst를 넘는 요청은 지연되거나 즉시 오류로 종료됩니다.
           </CitationBlock>
         </div>
+        <ConcurrencyPileViz />
         <ProgressiveDetail
           title="Concurrency limit은 rate limit과 무엇이 다른가요"
           preview="Rate limit은 '초당 몇 건'을 세지만, concurrency limit은 '지금 동시에 진행 중인 요청이 몇 건'을 셉니다. 요청 하나가 오래 걸리는 LLM 서비스에서는 이 차이가 큽니다."
@@ -261,6 +276,9 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             수로 계산하며, 처리가 끝난 뒤 세는 과금 token과는 다른 값입니다. 추정에는 prompt, max_tokens, best_of가 들어가고, 이
             추정치가 분마다 초기화되는 누적 counter에 더해집니다.
           </p>
+        </div>
+        <TpmReservationViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             문서의 예처럼 분당 240,000 token 한도를 둡니다. Prompt 1,000 token에 max_tokens 4,000인 요청은 5,000으로 잡히므로
             분당 48건이면 한도가 찹니다.
@@ -284,6 +302,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
           conclusion="최대치 예약은 한도를 넘지 않게 지켜 주지만, 정산하지 않으면 실제 용량의 4분의 1만 씁니다."
           caveats={["진행 중 4건은 설명용 가정입니다.", "마지막 줄의 정산은 이 글이 제안하는 설계이며 Azure 문서는 정산을 적지 않습니다."]}
         />
+        <SettlementPathViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 손해를 줄이는 설계가 예약 뒤 정산입니다. 요청을 받을 때 5,000을 bucket에서 빼 두고, 끝나면 실제 1,200과의 차이
@@ -342,6 +361,9 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             글의 admission policy는 그보다 앞선 문 앞, 즉 요청이 스케줄러에
             들어가기도 전에 통째로 받을지 거절할지를 정하는 자리입니다.
           </p>
+        </div>
+        <PriorityAdmissionViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             LLM 서빙에서는 요청 등급을 미리 붙여 두면 이 순서를 기계적으로 정할 수 있습니다. llm-d의 InferenceObjective는 요청마다
             정수 priority를 붙이며, 값이 클수록 중요하고 음수도 허용합니다. 자원이 모자라 요청이 대기할 때 높은 priority를 항상 먼저
@@ -352,6 +374,9 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             거절하고, 0 이상인 요청은 이 검사를 건너뜁니다. EnableEviction을 켜면 높은 priority 요청이 포화로 막혔을 때 이미 실행 중인
             음수 priority 요청을 끊어 자리를 돌려받습니다. 이 설정의 기본값은 꺼져 있습니다.
           </p>
+        </div>
+        <DegradationOrderViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 장치로 저하 순서를 세 단계로 만들 수 있습니다. (가정) 몇 시간 늦어도 되는 일괄 요약 작업에 음수를 주어 포화 때 가장 먼저
             버리거나 끊습니다. 그래도 넘치면 작은 모델로 낮춰도 된다고 미리 동의한 요청을 작은 모델 묶음으로 돌립니다. 0 이상의
@@ -394,6 +419,9 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             retry·circuit breaker·rate limiting과 지금부터 볼 HA·fault tolerance·graceful degradation·failover가 함께
             쌓아 만드는 결과입니다.
           </p>
+        </div>
+        <FailoverDegradeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             High availability(HA)는 중복 구성으로 한 구성 요소가 죽어도 서비스 전체가 계속 응답하게 만드는 목표입니다. Fault tolerance는 장애가 발생해도
             시스템이 계속 정상적으로 동작하는 능력을 말합니다. Failover는 이 둘을 실제로 구현하는 절차로, 주 구성 요소가 죽으면 대기 중이던 예비 구성 요소로 트래픽을 옮깁니다.

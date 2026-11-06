@@ -5,6 +5,10 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CheckMatrixViz from "./argument-and-counterexample/viz/CheckMatrixViz";
+import ConditionRowsViz from "./argument-and-counterexample/viz/ConditionRowsViz";
+import StoreSplitViz from "./argument-and-counterexample/viz/StoreSplitViz";
+import TwoFormsViz from "./argument-and-counterexample/viz/TwoFormsViz";
 
 export default function ArgumentAndCounterexampleArticle() {
   return (
@@ -31,6 +35,9 @@ export default function ArgumentAndCounterexampleArticle() {
       <LessonSection id="case" level="0" title="3. 카드 결제 가게 100곳으로 빈틈을 찾습니다" bridge="카드 결제라는 한 특징만으로 업종을 맞힐 수 없는 수치 반례를 만들었습니다. 아직 이름을 붙이지 않고 모양만 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한 상권에 가게가 100곳 있다고 합시다. 전자제품 가게는 40곳이고 모두 카드 결제를 받습니다. 나머지 60곳 가운데 식당과 약국 50곳도 카드를 받습니다. 따라서 카드를 받는 가게는 모두 90곳입니다. 이 숫자는 추론 모양을 보기 위한 가정입니다.</p>
+        </div>
+        <StoreSplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">가게 A가 카드를 받는다는 사실만 알면 A는 90곳 중 하나입니다. 그중 전자제품 가게는 40곳뿐이고 다른 업종은 50곳입니다. “전자제품 가게이면 카드 결제”가 참이어도 “카드 결제이면 전자제품 가게”는 따라오지 않습니다.</p>
         </div>
         <NumericPath title="카드 결제에서 업종으로 거꾸로 갈 때 생기는 빈틈" steps={[
@@ -61,9 +68,11 @@ export default function ArgumentAndCounterexampleArticle() {
           { term: "타당성", description: "전제를 모두 참으로 놓았을 때 결론만 거짓인 경우가 없는 연결입니다.", example: "모든 E가 C이고 A가 E이면 A는 C입니다.", boundary: "현실의 전제가 참인지까지 보장하지 않습니다." },
           { term: "건전성", description: "연결이 타당하고 실제 전제도 모두 참인 논증입니다.", example: "폐점 규칙과 A의 입점 사실을 모두 확인한 경우입니다.", boundary: "숨은 전제와 말의 뜻이 바뀌지 않았는지도 따로 확인해야 합니다." },
         ]} />
+        <CheckMatrixViz />
       </LessonSection>
 
       <LessonSection id="mechanism" level="4" title="7. 같은 가게 사례를 두 추론 형식에 넣습니다" bridge="90곳과 40곳을 같은 형식 안에서 다시 계산했습니다. 오래된 원문이 이 구조를 어떻게 나누는지 확인합니다.">
+        <TwoFormsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫 형식은 “전자제품이면 카드 결제다. A는 전자제품이다. 그러므로 A는 카드 결제다”입니다. 첫 두 문장을 유지하면서 결론만 거짓으로 만들 수 없습니다. A가 전자제품 40곳 중 하나이면 카드 결제 90곳에도 반드시 들어갑니다.</p>
           <p className="leading-8">둘째 형식은 “전자제품이면 카드 결제다. A는 카드 결제다. 그러므로 A는 전자제품이다”입니다. A를 카드 결제를 받는 식당 50곳 중 하나로 고르면 두 전제는 참이고 결론만 거짓입니다. 이 한 곳이 반례가 되어 연결 전체를 무너뜨립니다.</p>
@@ -82,6 +91,9 @@ export default function ArgumentAndCounterexampleArticle() {
       <LessonSection id="comparison" level="6" title="9. 묵가의 원인 구분으로 조건을 더 세밀하게 봅니다" bridge="같은 ‘원인’이라는 말 안에서도 필요한 조건과 충분한 묶음을 나눴습니다. 현실 논증의 남는 한계를 정리합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">중국 묵가의 『묵자』 「경상」은 어떤 일이 생기기 전에 반드시 필요한 것을 이유나 원인으로 설명합니다. 같은 책의 해설 편인 「경설상(經說上)」은 이를 두 가지로 나눕니다. ‘작은 이유(소고, 小故)’는 있어도 반드시 그렇게 되지는 않지만 없으면 반드시 그렇게 되지 않는 필요 조건이고, ‘큰 이유(대고, 大故)’는 있으면 반드시 그렇게 되는 더 큰 원인 묶음입니다(有之必然，無之必不然). 이는 “카드 결제는 전자제품 가게이기 위한 조건인가”와 “카드 결제만으로 업종이 정해지는가”를 분리하는 데 도움이 됩니다.</p>
+        </div>
+        <ConditionRowsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">우리 사례에서 카드 결제는 전자제품 가게 40곳이 공통으로 가진 속성이지만, 다른 업종 50곳도 가집니다. 따라서 업종을 정하는 충분한 표지가 아닙니다. 필요한 조건과 충분한 조건을 바꾸어 말하는 순간 둘째 추론의 빈틈이 생깁니다.</p>
         </div>
         <SourceApplication source="Mozi · Canon I" excerpt="what it must get before it will come about" application="필요한 조건 하나를 찾았다는 사실과 그 조건만으로 결과가 정해진다는 주장을 나눠야 합니다." />

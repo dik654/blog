@@ -5,6 +5,10 @@ import FlowRail from "../world-systems/FlowRail";
 import SourceApplication from "../world-systems/SourceApplication";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import { codeRefs } from "./robinhood-chain-blob-demand/codeRefs";
+import BlobSlotsViz from "./robinhood-chain-blob-demand/viz/BlobSlotsViz";
+import ExcessCarryViz from "./robinhood-chain-blob-demand/viz/ExcessCarryViz";
+import GrowthPathViz from "./robinhood-chain-blob-demand/viz/GrowthPathViz";
+import SparseAreaViz from "./robinhood-chain-blob-demand/viz/SparseAreaViz";
 export default function RobinhoodChainBlobDemandArticle(){
  const sidebar=useCodeSidebar();
  return <><article className="space-y-14">
@@ -17,6 +21,7 @@ export default function RobinhoodChainBlobDemandArticle(){
 <FlowRail title="자료가 게시되고 집계되는 역할" steps={[{actor:"얼마를 게시하나",movement:"거래를 묶어 데이터를 올립니다.",receives:"게시 요청"},{actor:"얼마를 담았나",movement:"허용량 안에서 블록을 만듭니다.",receives:"블록별 개수"},{actor:"누구의 자료인가",movement:"같은 기간의 게시자를 분류합니다.",receives:"전체와 기여분"}]} />
 <p data-stage-bridge="black-box" className="text-sm text-muted-foreground">자료 게시와 집계의 역할에 네 블록을 넣어 봅니다.</p></section>
 <section id="case" data-teach-level="0" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">3. 18개가 들어간 블록과 평균 10개는 동시에 성립한다</h2>
+<BlobSlotsViz />
 <p>연속 네 블록에 18·10·6·6개의 blob이 들어갔다고 합시다. 총 40개를 4로 나누면 평균 10개입니다. 해당 기간 목표량 14개, 최대량 21개를 적용하면 첫 18개는 목표를 넘지만 허용 최대에는 못 미칩니다. 블록별 사용량은 모두 (가정)이며 실제 관측값과 구분합니다.</p>
 <p>같은 네 블록 중 특정 롤업 A가 14·2·2·2개를 게시했다면 A의 총 20개는 전체 40개의 50%입니다. 이 분류도 (가정)입니다. 첫 블록만 보면 14/18로 약 77.8%이므로 전체 기간의 50%와 다른 질문에 답합니다.</p>
 <p data-stage-bridge="case" className="text-sm text-muted-foreground">피크 18, 평균 10, 기간 기여 50%가 서로 다른 수라는 것을 같은 그림으로 확인합니다.</p></section>
@@ -35,6 +40,7 @@ export default function RobinhoodChainBlobDemandArticle(){
 <p><Link className="underline" to="/cs/blockchain/eip4844-blob-fee">초과 blob gas와 실제 비용 함수</Link>에서 가격 계산을 이어 읽을 수 있습니다.</p>
 <p data-stage-bridge="target-vs-average" className="text-sm text-muted-foreground">용어를 알았으니 18·10·6·6이 초과분과 분석 결과를 어떻게 바꾸는지 추적합니다.</p></section>
 <section id="robinhood-chain-concentration" data-teach-level="4" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">7. 같은 블록 범위에서 사용량과 게시자를 다시 계산한다</h2>
+<ExcessCarryViz />
 <p>시작 초과분을 0으로 두고 실행 비용에 연동된 하한 분기가 작동하지 않는다고 가정합니다. 18개 블록 뒤 초과분은 max(0,0+18−14)=4입니다. 이어 10개 뒤에는 max(0,4+10−14)=0, 이후 6개와 6개 뒤에도 0입니다. 이는 초과량의 교육용 환산 계산입니다. 실제 blob 최소가격은 gas 단위 정수 함수와 활성 포크의 update fraction으로 계산하므로 4를 곧바로 가격 4배라고 읽지 않습니다.</p>
 <p>EIP-7918은 실행 base fee에 비해 blob 가격이 낮으면 다른 증가식을 적용합니다. 같은 첫 18개에 그 조건이 성립하면 환산 초과분은 18×(21−14)/21=6입니다. 따라서 사용량 18·10·6·6만으로 실제 초과분 경로를 확정할 수 없습니다. 부모 블록의 실행·blob base fee와 활성 규칙도 필요합니다.</p>
 <CitationBlock source="EIP-7918 · Blob base fee bounded by execution cost" citeKey={6} href="https://eips.ethereum.org/EIPS/eip-7918">Final 원문의 calc_excess_blob_gas 분기를 대조했습니다. 일반 목표 차감 경로와 실행 비용에 연동된 하한 경로를 구분합니다.</CitationBlock>
@@ -56,6 +62,7 @@ export default function RobinhoodChainBlobDemandArticle(){
 <p data-stage-bridge="source" className="text-sm text-muted-foreground">실제 설정과 활성화 조건을 확인했습니다. 같은 18개를 노드가 받는 비용은 어떻게 줄이려는지 비교합니다.</p></section>
 <section id="bpo-sparse-blobpool" data-teach-level="6" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">9. 목표 상향과 전송 절감은 서로 다른 계산이다</h2>
 <p>EIP-8070은 2026-10-18 현재 Last Call 상태이며 검토 마감은 2026-11-01입니다. Glamsterdam의 meta EIP에서는 여전히 별도 Networking 목록에 있고 메인넷 적용 시각은 확정돼 있지 않습니다. 따라서 최종 표준이나 메인넷 배포로 읽으면 안 됩니다. 이 제안은 블록에 들어가기 전 자료를 모두 복제하던 부담을 일부 전체 제공자와 샘플을 받는 노드로 나눕니다.</p>
+<SparseAreaViz />
 <p>제안의 단순 모델에서 15% 확률로 전체를 받고 나머지 85%에서는 1/8을 받으면 평균은 0.15+0.85/8=0.25625입니다. 같은 18개 분량을 전체 수신 18 단위로 놓으면 평균 4.6125 단위입니다. 이는 확률적 payload 모델의 약 74.4% 감소이며, 개별 노드가 매번 그 양만 받거나 실제 전체 대역폭이 정확히 그만큼 감소한다는 측정 결과가 아닙니다.</p>
 <p>전체 제공자가 부족하거나 이웃 선택이 편향되면 자료를 얻는 가정이 깨집니다. 추가 표본·재요청·메시지·증명과 공격 방어 비용도 있습니다. BPO로max를 높여도 이 전송 최적화가 저절로 생기지 않고, 전송이 줄어도 target 상향 일정이 자동으로 결정되지는 않습니다.</p>
 <SourceApplication source="EIP-8070 · Abstract" excerpt="0.15 + 0.85/8 ~ 0.25" application="가정한 18개 분량에 0.25625를 곱해 4.6125를 얻습니다. 제안 모델의 평균 전송량이며 네 블록의 사용 개수 18·10·6·6 자체나 target14를 줄이는 식은 아닙니다." />
@@ -64,6 +71,7 @@ export default function RobinhoodChainBlobDemandArticle(){
 <p data-stage-bridge="bpo-sparse-blobpool" className="text-sm text-muted-foreground">18개 게시와 18개 분량의 전송 비용을 나눴습니다. 마지막으로 성장률과 시장 해석의 한계를 확인합니다.</p></section>
 <section id="reading-checklist" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 측정한 범위보다 큰 결론을 내리지 않는다</h2>
 <p>평균을 올린 체인이 확인돼도 그 수요가 유료 사용자·경제적 거래·지속 가능한 수익에서 나왔는지는 추가 자료가 필요합니다. 작은blob을 자주 올리는 방식과 충분히 채운blob을 드물게 올리는 방식도 개수만으로 같다고 평가할 수 없습니다.</p>
+<GrowthPathViz />
 <p>시작 평균 5에서 다섯 달 뒤 10이 됐다고 가정하면 월평균 복리 변화는 2의 5제곱근−1, 약 14.9%입니다. 이것은 가정한 두 끝점의 환산값입니다. 중간 변동이나 다음 다섯 달의 수요를 예측하지 않습니다.</p>
 <p>실제 사용량·활성 공급 설정·게시자 분류·측정 기간을 함께 제시해야 기여와 가격 압력을 검증할 수 있습니다. 본문 네 블록은 그 검증법을 익히는 예제이며 특정 날짜의 시장 기록을 대신하지 않습니다.</p>
 <div id="growth-rate" className="scroll-mt-20"><p>성장률은 같은 정의와 시간 간격의 두 집계값에만 적용합니다. 날짜별 원자료가 없으면 14.9%도 관측 결과로 인용하지 않습니다.</p></div>

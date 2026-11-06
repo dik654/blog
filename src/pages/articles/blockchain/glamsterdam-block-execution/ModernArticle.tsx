@@ -5,6 +5,12 @@ import SourceApplication from "../../world-systems/SourceApplication";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import BalIndexViz from "./viz/BalIndexViz";
+import CheckGatesViz from "./viz/CheckGatesViz";
+import DeliverySequenceViz from "./viz/DeliverySequenceViz";
+import ReadPrepOrderViz from "./viz/ReadPrepOrderViz";
+import SlotDependencyViz from "./viz/SlotDependencyViz";
+import TimeSplitViz from "./viz/TimeSplitViz";
 export default function GlamsterdamBlockExecutionArticle() { const sidebar=useCodeSidebar(); return <><article className="space-y-14">
 <section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">1. 같은 블록을 더 잘 전달하고 실행하려면 무엇을 바꿔야 하는가</h2>
 <p>
@@ -26,23 +32,23 @@ export default function GlamsterdamBlockExecutionArticle() { const sidebar=useCo
 <p data-stage-bridge="picture" className="text-sm text-muted-foreground">어떤 정보를 더 주려는지 보였습니다. 이 정보 없이 생기는 지연을 살펴봅니다.</p>
 </section>
 <section id="need" data-teach-level="2" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">5. 다음 거래가 읽을 위치를 모르면 준비를 뒤늦게 시작한다</h2>
-<p>거래를 하나씩 실행하다가 필요한 저장 칸을 처음 발견하면 그때 디스크 읽기를 기다립니다. 접근할 위치와 거래별 결과가 먼저 오면 데이터를 미리 읽고 여러 검증 작업을 준비할 수 있습니다. 그러나 목록을 보낸 사람이 거짓 90을 넣었는지 확인하는 일은 여전히 필요합니다.</p><p>
+<ReadPrepOrderViz /><p>거래를 하나씩 실행하다가 필요한 저장 칸을 처음 발견하면 그때 디스크 읽기를 기다립니다. 접근할 위치와 거래별 결과가 먼저 오면 데이터를 미리 읽고 여러 검증 작업을 준비할 수 있습니다. 그러나 목록을 보낸 사람이 거짓 90을 넣었는지 확인하는 일은 여전히 필요합니다.</p><TimeSplitViz /><p>
             또 블록을 제안하는 검증자가 무거운 거래 내용까지 모두 받아 즉시 실행해야 하면 합의 투표 전 시간이 짧아집니다. 거래 내용을 만들고 공개하는 책임을 분리하면 시간 배분을 바꿀
             수 있지만 자료를 숨기거나 늦게 보내는 경우까지 규칙으로 다뤄야 합니다.
           </p>
 <p data-stage-bridge="need" className="text-sm text-muted-foreground">접근 정보와 시간 배분이라는 두 문제가 생겼습니다. 각각의 제안 이름을 붙입니다.</p>
 </section>
 <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">6. BAL은 실행 자료이고 ePBS는 제작·제안의 규칙이다</h2>
-<p>블록 접근 목록(Block-Level Access List, BAL)은 실제로 읽거나 바꾼 상태와 거래 뒤 값을 담습니다. EIP-7928의 블록 접근 인덱스는 사전 시스템 처리가 0, 거래가 1부터 n, 사후 처리가 n+1입니다. 두 거래 사례에서는 T1=1·T2=2·사후=3입니다.</p><p>ePBS(EIP-7732)는 블록 내용을 만드는 builder와 합의 블록을 제안하는 proposer의 관계를 프로토콜 안에서 다룹니다. bid는 특정 내용과 지급 조건에 관한 서명한 약속이고 payload는 거래를 포함한 실제 실행 자료입니다. PTC는 정해진 시점에 약속한 자료가 보였는지 확인하는 위원회입니다.</p><p>
+<BalIndexViz /><p>블록 접근 목록(Block-Level Access List, BAL)은 실제로 읽거나 바꾼 상태와 거래 뒤 값을 담습니다. EIP-7928의 블록 접근 인덱스는 사전 시스템 처리가 0, 거래가 1부터 n, 사후 처리가 n+1입니다. 두 거래 사례에서는 T1=1·T2=2·사후=3입니다.</p><p>ePBS(EIP-7732)는 블록 내용을 만드는 builder와 합의 블록을 제안하는 proposer의 관계를 프로토콜 안에서 다룹니다. bid는 특정 내용과 지급 조건에 관한 서명한 약속이고 payload는 거래를 포함한 실제 실행 자료입니다. PTC는 정해진 시점에 약속한 자료가 보였는지 확인하는 위원회입니다.</p><p>
             ePBS가 BAL의 정확성을 대신 확인하지 않고 BAL이 제작자 지급을 집행하지도 않습니다. 두 기능을 같은 블록에 적용할 때도 각각의 역할과 증거를 따라가야 합니다.
           </p>
 <p data-stage-bridge="names" className="text-sm text-muted-foreground">이름을 두 문제에 연결했습니다. 이제 100→90→95가 들어간 블록의 전달과 검사를 추적합니다.</p>
 </section>
 <section id="mechanism" data-teach-level="4" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">7. 서명한 약속, 실제 내용, 접근 목록을 차례로 검사한다</h2>
-<p>
+<DeliverySequenceViz /><p>
             제작자는 T1·T2의 순서를 정하고 X의 90·95를 포함한 접근 목록과 실행 결과를 만듭니다. 그 실행 블록의 hash와 slot, 부모 블록, 지급 조건을 bid에
             넣습니다. 제안자는 적절한 bid를 합의 블록에 담고 제작자는 이에 대응하는 실제 payload를 공개합니다.
-          </p><p>
+          </p><CheckGatesViz /><p>
             PTC는 자료가 제때 보였는지와 관련 가용성을 확인합니다. 그것만으로 X=95의 계산을 모두 검사했다고 읽지 않습니다. 실행 검증은 거래 순서·이전 상태·가스와 실제 접근을
             확인하고 계산해 만든 목록을 블록이 약속한 hash와 대조합니다. 90 대신 89를 주장하거나 필요한 X를 누락했다면 받아들일 수 없습니다.
           </p><p>개발 명세의 bid 처리에서는 제작자 활성 상태·서명·지급 여력·slot·부모를 검사합니다. 예를 들어 지급 조건이 0.01 ETH라면 10,000,000 Gwei로 표현합니다. 이 숫자는 설명용이며 실제 입찰 시세가 아닙니다. 지급 처리와 실제 내용 공개가 따로 움직이므로 자료 미공개·지연에 관한 합의 규칙도 필요합니다.</p><CitationBlock source="EIP-7732 · ePBS" citeKey={2} href="https://eips.ethereum.org/EIPS/eip-7732">제안·제작 분리와 자료 도착 확인, 실행 검증의 시간 분리를 설명합니다. 2026-10-09 기준 Last Call(마감 2026-11-01) 상태의 제안입니다.</CitationBlock>
@@ -57,7 +63,7 @@ export default function GlamsterdamBlockExecutionArticle() { const sidebar=useCo
 <p data-stage-bridge="source" className="text-sm text-muted-foreground">약속을 검사하는 실물을 확인했습니다. 같은 두 거래의 실행 자료 검사와 비교합니다.</p>
 </section>
 <section id="comparison" data-teach-level="6" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">9. 접근 목록을 받더라도 실제 실행과 맞는지 확인한다</h2>
-<SourceApplication source="execution-specs · Amsterdam fork.py" excerpt={'raise InvalidBlock("Invalid block access list hash")'} application="X의 90·95로 실행해 만든 접근 목록의 hash가 제출된 블록의 hash와 다르면 이 경로로 거절합니다. 목록에 95라고 적혀 있다는 이유만으로 실제 T1·T2를 검증한 것으로 취급하지 않습니다." /><p>execution-specs commit a87891f7e69eab1f903233c61c5514d8c94bd5d1은 블록 본문을 적용해 목록을 만들고 hash를 대조합니다. EIP-7928은 자료를 이용한 병렬 읽기·거래 검증·상태 갱신의 가능성을 설명합니다. 참조 명세의 순차적 표현 자체를 실제 클라이언트 병렬 처리 성능으로 읽지 않습니다.</p><div className="flex flex-wrap gap-3"><CodeViewButton label="실행 결과와 BAL hash 대조" onClick={()=>sidebar.open("validate",codeRefs.validate)} /><CodeViewButton label="거래별 상태 변화 자료 구조" onClick={()=>sidebar.open("bal",codeRefs.bal)} /></div><p>T2가 X 대신 별도 칸 Y=50에 5를 더한다면 저장 칸 기준 결과는 X=90·Y=55입니다. 반면 원래 사례는 X=90을 T2의 입력으로 사용합니다. 전자는 독립 작업을 찾기 쉽고 후자는 중간값·검증 의존성을 관리해야 합니다. 실제 병렬성에는 공통 수수료 수령 계정 등 생략한 상태도 영향을 줍니다.</p><CitationBlock source="Ethereum execution-specs · pinned a87891f" citeKey={4} href="https://github.com/ethereum/execution-specs/blob/a87891f7e69eab1f903233c61c5514d8c94bd5d1/src/ethereum/forks/amsterdam/fork.py">계산한 목록의 hash와 블록 header를 대조하는 참조 구현입니다.</CitationBlock><CitationBlock source="EIP-7928 · Block-Level Access Lists" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7928">실제 접근·변화의 기록, 인덱스와 검증 조건을 설명합니다. 제안의 성능 가능성과 실측은 구분합니다.</CitationBlock>
+<SourceApplication source="execution-specs · Amsterdam fork.py" excerpt={'raise InvalidBlock("Invalid block access list hash")'} application="X의 90·95로 실행해 만든 접근 목록의 hash가 제출된 블록의 hash와 다르면 이 경로로 거절합니다. 목록에 95라고 적혀 있다는 이유만으로 실제 T1·T2를 검증한 것으로 취급하지 않습니다." /><p>execution-specs commit a87891f7e69eab1f903233c61c5514d8c94bd5d1은 블록 본문을 적용해 목록을 만들고 hash를 대조합니다. EIP-7928은 자료를 이용한 병렬 읽기·거래 검증·상태 갱신의 가능성을 설명합니다. 참조 명세의 순차적 표현 자체를 실제 클라이언트 병렬 처리 성능으로 읽지 않습니다.</p><div className="flex flex-wrap gap-3"><CodeViewButton label="실행 결과와 BAL hash 대조" onClick={()=>sidebar.open("validate",codeRefs.validate)} /><CodeViewButton label="거래별 상태 변화 자료 구조" onClick={()=>sidebar.open("bal",codeRefs.bal)} /></div><SlotDependencyViz /><p>T2가 X 대신 별도 칸 Y=50에 5를 더한다면 저장 칸 기준 결과는 X=90·Y=55입니다. 반면 원래 사례는 X=90을 T2의 입력으로 사용합니다. 전자는 독립 작업을 찾기 쉽고 후자는 중간값·검증 의존성을 관리해야 합니다. 실제 병렬성에는 공통 수수료 수령 계정 등 생략한 상태도 영향을 줍니다.</p><CitationBlock source="Ethereum execution-specs · pinned a87891f" citeKey={4} href="https://github.com/ethereum/execution-specs/blob/a87891f7e69eab1f903233c61c5514d8c94bd5d1/src/ethereum/forks/amsterdam/fork.py">계산한 목록의 hash와 블록 header를 대조하는 참조 구현입니다.</CitationBlock><CitationBlock source="EIP-7928 · Block-Level Access Lists" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7928">실제 접근·변화의 기록, 인덱스와 검증 조건을 설명합니다. 제안의 성능 가능성과 실측은 구분합니다.</CitationBlock>
 <p data-stage-bridge="comparison" className="text-sm text-muted-foreground">지급 약속과 실행 자료를 서로 다른 원본으로 확인했습니다. 마지막으로 개선 효과의 조건을 제한합니다.</p>
 </section>
 <section id="limits" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 병렬 실행 가능성과 실제 처리량 개선은 같지 않다</h2>

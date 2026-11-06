@@ -2,6 +2,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import StreetRecordViz from "./culture-norms-and-coordination/viz/StreetRecordViz";
+import DeviceFlowViz from "./culture-norms-and-coordination/viz/DeviceFlowViz";
+import DuesThresholdViz from "./culture-norms-and-coordination/viz/DuesThresholdViz";
 
 export default function Article() {
   return (
@@ -41,6 +44,7 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">깨끗해진 거리만 봐서는 누가 비용을 냈는지 알 수 없습니다</h2>
+        <StreetRecordViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">돈을 걷는 기록에는 10곳의 납부 여부가 남습니다. 청소 기록에는 언제 어디를 정리했는지 남습니다. 두 기록을 연결해야 납부 약속과 구매한 서비스가 맞는지 볼 수 있습니다.</p>
           <p className="leading-8">회비를 안 낸 가게도 같은 거리를 사용합니다. 청소 결과만으로 성실한 납부와 비용을 다른 사람에게 떠넘긴 행동을 구분할 수 없는 이유입니다. 그렇다고 미납이 언제나 고의인 것도 아니므로 사정을 확인할 절차가 필요합니다.</p>
@@ -51,6 +55,7 @@ export default function Article() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">분담·관찰·이의 절차가 각각 다른 문제를 해결합니다</h2>
+        <DeviceFlowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">분담 규칙은 얼마를 누구에게 걷는지 정합니다. 같은 2만원이 언제나 공정한 것은 아닙니다. 가게 크기와 이용량, 감당할 수 있는 정도를 고려할 것인지 구성원이 정해야 합니다. 규칙을 바꿀 사람이 누구인지도 함께 정합니다.</p>
           <p className="leading-8">관찰은 실제 납부와 청소를 확인합니다. 이의 절차는 기록이 틀렸거나 예외 사정이 있을 때 고치는 길입니다. 납부명단이 잘 보여도 반론할 수 없다면 억울한 기록이 계속 남을 수 있습니다.</p>
@@ -71,6 +76,7 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">미납이 2곳일 때와 3곳일 때 결과가 달라집니다</h2>
+        <DuesThresholdViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">모두 납부하면 10×2=20만원에서 16만원을 내고 4만원이 남습니다. 2곳이 미납하면 8×2=16만원으로 청소비만 충당합니다. 세 번째 가게도 내지 않으면 7×2=14만원이 되어 2만원이 부족합니다.</p>
           <p className="leading-8">돈을 걷는 담당자는 먼저 납부기록과 지급일을 대조합니다. 입금이 잘못 연결됐는지, 일시적 어려움이 있는지 확인하고 당사자에게 설명할 기회를 줍니다. 부족한 2만원을 임시로 누가 낼지와 나중에 어떻게 돌려받을지도 문서에 남깁니다.</p>

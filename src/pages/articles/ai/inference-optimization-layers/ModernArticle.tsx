@@ -9,6 +9,14 @@ import {CodeSidebar,CodeViewButton,useCodeSidebar} from "@/components/code";
 import {codeRefs,fileTrees,projectMetas} from "./codeRefs";
 import OptimizationBudgetViz from "./viz/OptimizationBudgetViz";
 import CriticalPathViz from "./viz/CriticalPathViz";
+import AmdahlCurveViz from "./viz/AmdahlCurveViz";
+import BatchShareViz from "./viz/BatchShareViz";
+import CombinedChangeViz from "./viz/CombinedChangeViz";
+import CumulativeDriftViz from "./viz/CumulativeDriftViz";
+import MeasureWindowViz from "./viz/MeasureWindowViz";
+import PaybackViz from "./viz/PaybackViz";
+import RegressionIntervalViz from "./viz/RegressionIntervalViz";
+import ReplicaCeilViz from "./viz/ReplicaCeilViz";
 import { ServingDecisionMapReturn, ServingDecisionSeriesLocator } from "../shared/ServingDecisionSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function OptimizationLayersArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><div className="space-y-16">
@@ -21,6 +29,7 @@ export default function OptimizationLayersArticle(){const sidebar=useCodeSidebar
 <section id="black-box" data-teach-level="B" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">2. 요청에서 결과와 청구까지 이어 봅니다</h2><div className={prose}>
 <p>큰 흐름의 입구에는 처리할 입력과 요구하는 답의 조건이 있습니다. 안쪽에서는 입력을 확인하고 관계를 계산한 뒤 값을 바꾸어 결과를 보냅니다. 출구에서 확인할 것은 답의 내용과 도착 시각입니다. 계산 장치를 얼마나 오래 확보했는지는 별도의 사용 기록과 청구서에서 확인합니다.</p>
 <p>안쪽 계산을 바꾸었다면 같은 입력이 여전히 허용한 답을 만드는지 먼저 봅니다. 답을 대충 만들어 시간이 줄었다면 그것은 조건을 바꾼 비교입니다. 일정한 오차를 허용하기로 했다면 그 허용 범위를 변경 전에 정해 두어야 합니다. 계산을 빨리 끝내는 일과 문제를 덜 푸는 일을 같은 개선으로 세지 않기 위해서입니다.</p>
+</div><MeasureWindowViz /><div className={prose}>
 <p>시간을 재는 시작과 끝도 필요합니다. 요청을 보낸 때부터 결과를 모두 받은 때까지 잴 수도 있고 안쪽 계산만 잴 수도 있습니다. 앞에서 기다린 시간을 빼거나 아직 끝나지 않은 일을 제출한 시점에 시계를 멈추면 다른 숫자가 나옵니다. 하나의 비교 안에서는 같은 시작과 끝을 지켜야 합니다.</p>
 <p>비용에는 또 다른 경계가 있습니다. 다른 요청과 계산을 함께 했다면 요청마다 같은 장치 시간을 전부 배정할 수 없습니다. 사용하지 않은 시간이 생겨도 장치를 계속 빌리고 있으면 그 시간의 요금은 남습니다. 먼저 요청의 경로를 정확히 읽고 그다음 사용 기록과 연결하겠습니다.</p>
 </div></section>
@@ -67,6 +76,7 @@ export default function OptimizationLayersArticle(){const sidebar=useCodeSidebar
 </div><ContentBoundary article="inference-optimization-layers" /></section>
 <section id="amdahl" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">8. 남겨 둔 60 ms가 전체 개선을 제한합니다</h2><div className={prose}>
 <p>전체 시간 T에서 바꿀 구간의 비율을 p라고 쓰겠습니다. 앞 사례에서는 40/100=0.4입니다. 그 구간을 s배 빠르게 하면 시간은 pT/s가 되고 나머지는 (1−p)T로 남습니다. 둘을 더해 새 시간을 얻고 원래 시간을 나누면 전체 가속 배수가 나옵니다. 이 고정 작업량의 관계를 Amdahl의 법칙으로 부릅니다.</p>
+</div><AmdahlCurveViz /><div className={prose}>
 <p>s=2이면 새 시간은 60+20=80 ms입니다. s=10이면 60+4=64 ms입니다. 아무리 큰 s를 넣어도 바꾸지 않은 60 ms는 남습니다. p=0.4인 이 사례의 극한은 100/60=5/3 배입니다. p가 1이면 남는 구간이 없어 같은 유한 상한을 적용할 수 없습니다.</p>
 </div><ExplainedFormula question="부분의 개선은 전체를 얼마나 바꾸나요?" idea="변하지 않은 시간과 빨라진 시간만 더합니다. 이 합을 사용할 수 있는 직렬·고정 비용 조건이 계산의 핵심입니다."
 formula={String.raw`T'=T((1-p)+p/s),\quad S=T/T'`}
@@ -78,6 +88,7 @@ interpretation="100 ms 중 40 ms를 2배로 줄이면 80 ms·1.25배이고 10배
 <div className={prose}><p>부분의 가속 배수만으로 후보의 우열을 정할 수도 없습니다. p=0.1인 구간을 100 배로 줄이면 전체는 1/0.901≈1.110 배입니다. p=0.5인 구간을 1.5 배로 줄이면 1/0.8333…=1.2 배입니다. p와 s를 함께 보아야 하며 어느 한쪽이 언제나 더 중요하다는 규칙은 없습니다.</p></div></section>
 <section id="interactions" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">9. 두 개선을 더하려면 서로 바꾸는 조건을 봅니다</h2><div className={prose}>
 <p>앞의 관계 계산을 40→20 ms로 줄이는 변경을 A라고 하겠습니다. 별도의 변경 B는 값 변환을 35→21 ms로 줄였다고 가정합니다. 두 변경이 서로 영향을 주지 않으면 15+20+21+10=66 ms입니다. 이 35→21은 설명용 관찰 가정이며 읽기와 계산의 시간을 임의로 더해 얻은 결과가 아닙니다.</p>
+</div><CombinedChangeViz /><div className={prose}>
 <p>둘을 함께 쓰려고 데이터 표현을 바꾸는 작업 8 ms가 새로 필요하다면 전체는 74 ms입니다. A와 B를 따로 잰 숫자를 더해 66 ms라고 보고하면 이 비용을 빠뜨립니다. A 적용 뒤 B의 대상 비율도 원래 35/100에서 35/80으로 달라집니다. 두 번째 변경의 출발점은 새 시간표입니다.</p>
 <p>하드웨어가 읽기와 계산을 수행하는 방식에 맞춰 알고리즘과 구현을 함께 정하는 것을 hardware-aware co-design이라고 부릅니다. <Link to="/cs/ai/flash-attention-io-aware-kernel">FlashAttention</Link>은 필요한 값을 작은 작업 공간에서 재사용하도록 계산 순서를 설계한 예입니다. 그 상세 원리와 실제 커널은 정본 글에서 이어 읽습니다.</p>
 <p>양자화는 바이트를 줄이는 동시에 변환 연산·커널 선택·품질을 바꿀 수 있습니다. 분리 서빙은 간섭과 기록 전송을 함께 바꿉니다. 같은 입력을 가진 요청을 모으는 배치는 재사용을 늘리지만 기다림을 늘릴 수도 있습니다. 기술 이름 하나마다 이득 하나가 고정되어 있지 않습니다.</p>
@@ -92,17 +103,20 @@ interpretation="100 ms 중 40 ms를 2배로 줄이면 80 ms·1.25배이고 10배
 </div></section>
 <section id="work-and-cost" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 요청 20개의 기다림과 한 번의 계산을 구별합니다</h2><div className={prose}>
 <p>이번에는 20개 요청을 한 번에 처리하는 별도 묶음 작업을 가정하겠습니다. 한 GPU가 묶음 전체를 처리하는 독점 작업 시간이 100→80 ms로 줄고 모든 요청의 결과 도착 시각도 그만큼 빨라집니다. 각 요청은 20 ms를 아꼈으므로 기다림 감소의 합은 20×20=400 request-ms입니다.</p>
+</div><BatchShareViz /><div className={prose}>
 <p>GPU가 덜 일한 시간은 묶음당 20 GPU-ms입니다. 같은 20 ms를 요청마다 하나씩 배정해 더하면 작업 시간을 20 배 크게 셉니다. 하루 200만 요청이 늘 20개씩 묶인다면 10만 묶음이고 절감된 독점 작업 시간은 2,000 GPU초입니다. 요청 지연에 요청 수를 곱한 40,000 초와 단위의 뜻이 다릅니다.</p>
 <p>이렇게 구한 독점 작업 감소도 현금 절감과는 다릅니다. GPU를 하루 종일 같은 수만큼 확보한다면 비어 있는 시간이 늘어도 임대료는 그대로일 수 있습니다. 남은 공간으로 더 많은 일을 처리하는 가치와 장치를 반납해 청구가 줄어드는 가치를 따로 기록합니다.</p>
 </div></section>
 <section id="capacity" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">12. 복사본 수는 정수로 줄어듭니다</h2><div className={prose}>
 <p>(별도 용량 가정) 같은 출력과 지연 조건에서 한 복사본의 처리 용량이 100→125 요청/s로 검증됐다고 합시다. 앞의 100 ms를 단순히 뒤집어 얻은 수가 아닙니다. 복사본당 GPU 하나를 쓰고 계획상 그 용량의 80%만 사용합니다. 복사본들이 서로 독립이고 메모리·최소 복제수 제약이 없다고 둡니다.</p>
+</div><ReplicaCeilViz /><div className={prose}>
 <p>부하가 180 요청/s라면 변경 전 한 복사본에 80 요청/s를 배정할 수 있어 세 개가 필요합니다. 변경 후에는 한 복사본에 100 요청/s를 배정해 두 개면 됩니다. 필요한 수를 계산한 뒤 올림한 결과입니다. 부하가 160 요청/s라면 변경 전후 모두 두 개이므로 같은 개선이 복사본 수를 줄이지 않습니다.</p>
 <p>부하가 하루 내내 같고 반납한 GPU 한 개의 요금이 실제로 사라지며 단가가 시간당 2 달러라고 가정하면 180 요청/s 사례는 하루 24×2=48 달러를 줄입니다. 160 요청/s 사례는 이 청구 기준에서 0 달러입니다. 시간당 2 달러는 설명용 값이며 특정 상품의 가격이 아닙니다.</p>
 <p>계획 이용률 80%는 지연 목표를 보장하는 법칙이 아닙니다. 요청 길이와 도착의 쏠림, 장애 대비 최소 수, 복사본 하나에 필요한 여러 GPU, 예약 계약이 있으면 필요한 수와 청구를 다시 계산합니다. 이미 낸 요금과 새 지출을 피한 금액도 같은 절감으로 중복 계산하지 않습니다.</p>
 </div></section>
 <section id="roi" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">13. 비용 회수는 실제로 줄어든 청구에서 계산합니다</h2><div className={prose}>
 <p>기존의 요청당 20 ms를 비용으로 바꾸려면 조건을 더 강하게 정해야 합니다. (별도 가정) 요청 하나마다 중복 배정되지 않은 독점 GPU 작업이 20 ms 줄고 그만큼의 청구량도 실제로 줄어든다고 하겠습니다. 하루 요청은 200만 건, 단가는 시간당 2 달러입니다. 이때에만 20 ms×200만=40,000 GPU초라는 계산을 사용합니다.</p>
+</div><PaybackViz /><div className={prose}>
 <p>하루 절감액은 40,000/3,600×2=약 22.22 달러입니다. 365일이면 약 8,111.11 달러입니다. 구현과 검증에 처음 40,000 달러를 쓰고 추가 유지비·할인·성장·잔존가치를 모두 0으로 둔다면 단순 회수에는 1,800일이 필요합니다. 같은 조건에서 트래픽만 100 배면 18일이지만 실제로 그 규모에서도 묶음과 단가가 같은지는 따로 확인해야 합니다.</p>
 <p>한 해 편익/비용은 약 0.2028입니다. 투자수익률은 순편익을 나누므로 (8,111.11−40,000)/40,000≈−79.72%입니다. 이 둘을 같은 ROI라는 이름으로 표시하면 손익분기 기준이 1인지 0인지 혼동됩니다. 기간과 비용 범위를 식 옆에 남깁니다.</p>
 <p>이 계산만으로 최적화를 하거나 하지 말아야 한다고 단정하지 않습니다. 더 빠른 응답의 업무 가치, 품질, 예상 유지 기간과 위험도 선택에 영향을 줍니다. 화폐로 환산할 근거가 없는 편익은 별도 지표로 남기고 임의의 GPU 단가를 곱하지 않습니다. 설정 하나를 바꾸는 작업도 검증·운영·되돌림 비용이 0이라고 가정할 수 없습니다.</p>
@@ -149,6 +163,7 @@ interpretation="원문 ROI 식의 퍼센트 표기에는 마지막에 100을 곱
 <section id="regression-gate" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 허용한 악화와 측정 불확실성을 따로 봅니다</h2><div className={prose}>
 <p>변경 뒤 성능이 나빠지는 일을 regression이라고 부릅니다. 허용할 악화의 크기는 제품의 요구로 정하고 실제 차이를 얼마나 정확히 알 수 있는지는 반복 측정으로 판단합니다. 두 기준을 ‘잡음의 두 배’라는 한 숫자로 합칠 보편 규칙은 없습니다.</p>
 <p>(가정) 다섯 조건을 짝지어 같은 요청 집합의 평균 완료시간을 비교했습니다. 기준은 98·100·102·99·101 ms, 변경 후는 100·103·104·102·103 ms입니다. 각 짝에서 변경 후−기준을 빼면 2·3·2·3·2 ms이며 평균 차이는 2.4 ms입니다. 이 다섯 값은 개별 요청의 꼬리 지연 표본이라고 바꾸어 부르지 않습니다.</p>
+</div><RegressionIntervalViz /><div className={prose}>
 <p>NIST e-Handbook 7.3.1.2의 paired observations 식은 짝차이의 평균에서 t값×차이 표준편차/√N만큼 더하고 뺍니다. 서로 독립인 정규 분포의 짝차이를 가정하고 N=5를 넣으면 표본분산 0.3, 표준오차√0.06≈0.24495 ms입니다. 자유도 4의 95% 양측 구간은 약 1.72–3.08 ms입니다.</p>
 </div><ExplainedFormula question="평균 2.4 ms 악화라는 추정에는 어느 범위의 불확실성이 있나요?" idea="같은 조건 안의 차이를 먼저 구한 뒤 그 차이들의 퍼짐으로 평균 차이의 불확실성을 계산합니다."
 formula={String.raw`\bar d\pm t_{1-\alpha/2,N-1}\frac{s_d}{\sqrt N}`}
@@ -168,6 +183,7 @@ interpretation="허용 악화가 3 ms라면 상한 3.08 ms가 3을 넘으므로 
 <section id="decision" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">21. 다음 변경은 새 시간표에서 시작합니다</h2><div className={prose}>
 <p>먼저 같은 입력에서 지킬 답의 조건과 지연 목표를 정하고 현재 요청 경로를 기록합니다. 후보마다 바뀌는 일, 추가되는 일, 겹침과 필요한 메모리를 적습니다. 직렬 가정이 맞으면 Amdahl식으로 기대 범위를 구하고 그렇지 않으면 의존 시간표를 다시 계산합니다.</p>
 <p>그다음 같은 조건의 대조로 지연·목표 안 처리량·품질을 확인합니다. 비용 판단에는 중복 없는 장치 작업량과 실제 청구 규칙을 연결합니다. 설정 이름이나 한 커널의 배수로 나머지 숫자를 대신하지 않습니다. 작은 시험에서 통과한 범위와 아직 확인하지 않은 부하를 남깁니다.</p>
+</div><CumulativeDriftViz /><div className={prose}>
 <p>변경마다 직전 버전만 비교하면 작은 악화를 쌓을 수 있습니다. 5%씩 세 번 느려지면 고정한 처음 기준보다 1.05³−1=15.7625% 나빠집니다. 매번 10% 이내라는 조건만으로는 이 누적을 막지 못합니다. 마지막 승인 기준과 비교하는 규칙도 함께 유지합니다.</p>
 <p>배포한 뒤에도 실제 부하와 청구, 성공한 업무의 단위를 다시 봅니다. 이전 버전으로 돌아갈 설정·모델·코드를 보존합니다. 앞의 100 ms 사례에서 배운 핵심은 한 가지입니다. 줄어든 20 ms의 위치와 단위를 알고 나서 다음 개선과 비용을 계산해야 합니다. 실제 부하 생성과 지표 검증은 <Link to="/cs/ai/serving-benchmark-methodology">서빙 벤치마크</Link>에서 이어갑니다.</p>
 </div></section>

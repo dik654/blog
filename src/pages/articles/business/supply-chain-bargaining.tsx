@@ -2,6 +2,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import BorderRouteViz from "./supply-chain-bargaining/viz/BorderRouteViz";
+import DenominatorViz from "./supply-chain-bargaining/viz/DenominatorViz";
+import DoubleCountViz from "./supply-chain-bargaining/viz/DoubleCountViz";
+import PriceSplitViz from "./supply-chain-bargaining/viz/PriceSplitViz";
+import TariffRoutesViz from "./supply-chain-bargaining/viz/TariffRoutesViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function SupplyChainBargainingArticle() {
@@ -27,6 +32,7 @@ export default function SupplyChainBargainingArticle() {
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3. 손님이 낸 100달러와 공장 출하 60달러를 구분한다</h2>
+        <PriceSplitViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">최종 소비가격 100달러를 제조단계 60달러, 이후 국제 물류 10달러, 판매·브랜드 단계 30달러로 나눕니다. 제조 60달러 안에는 다른 나라에서 들여온 부품 40달러와 조립국이 더한 20달러가 있습니다. 세금 등은 생략했으며 모두 (가정)입니다.</p>
           <p className="leading-7">40달러는 전부 다른 나라에서 더한 가치이고 조립국의 가치가 되돌아 들어온 부분은 없다고 놓습니다. 조립에는 이 부품 외에 별도 중간재 구매가 없으며 출하가격 60달러를 이 사례의 수출 통계 가격과 같게 둡니다. 현실의 공장 거래가격·세관 평가액·부가가치 통계가 항상 이렇게 일치하는 것은 아닙니다.</p>
@@ -37,6 +43,7 @@ export default function SupplyChainBargainingArticle() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 국경 화살표와 새로 더한 몫을 따로 표시한다</h2>
+        <BorderRouteViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">부품 40달러가 조립국에 들어와 20달러만큼 더해져 60달러가 됩니다. 뒤의 물류와 판매 몫을 붙여야 최종 100달러가 되므로 최종가격과 중간 국경 가격은 비교 기준이 다릅니다.</p>
         </div>
@@ -71,6 +78,7 @@ export default function SupplyChainBargainingArticle() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 통제 지점을 찾으면 이익이 어디에 남는지 보입니다</h2>
+        <DoubleCountViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">부품업체가 40달러를 받고 조립국 업체가 20달러를 더해 60달러에 출하합니다. 10달러 이동 비용을 거쳐 판매단계가 30달러를 더하면 고객 가격은 100달러가 됩니다. 40달러 부품과 60달러 완제품이 각각 국경을 넘었다고 두 수출액 합계 100달러를 전부 새로 만든 가치라 읽지 않습니다.</p>
           <p className="leading-7">
@@ -87,6 +95,7 @@ export default function SupplyChainBargainingArticle() {
           <p className="leading-7">출하가격 60달러를 수출 통계에 적는 일과 어느 나라가 얼마를 더했는지 적는 일은 다른 장부입니다. OECD의 부가가치 무역 안내는 다음을 별도 지표로 둡니다.</p>
         </div>
         <SourceApplication source="OECD TiVA · About, indicator list" excerpt="Domestic and foreign value added content of gross exports by exporting industry" application="단순 사례의 조립국 총수출 60달러를 외국 부품 40달러와 국내에서 더한 20달러로 나눕니다. 실제 통계는 부품 안에 재수입된 자국 가치 등이 섞이므로 기업 송장 하나의 뺄셈보다 넓은 산업연관 자료가 필요합니다." />
+        <DenominatorViz />
         <p className="mt-5 leading-7">여기서 조립국 수출의 국내 몫 비율은 20÷60으로 약 33.3%입니다. 최종 소비가격 100달러로 나눈 20%는 다른 분모의 숫자입니다. 물류의 10달러와 판매의 30달러도 그 회사가 사 쓴 중간 서비스 비용을 확인하기 전에는 전부 부가가치라고 부르지 않습니다.</p>
         <CitationBlock source="OECD TiVA · About, indicator list" citeKey={1} href="https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html">2026-10-04 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
@@ -98,6 +107,9 @@ export default function SupplyChainBargainingArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">세계은행의 국제 생산망 설명을 같은 100달러 제품에 적용하면 한 나라의 비용 상승이 다른 나라의 계약에 전달되는 경로를 볼 수 있습니다. 한국·미국·중국 같은 국가나 유럽이라는 지역 이름만으로 제조·설계·규제 역할을 고정하면 같은 나라 안 기업들의 서로 다른 권한을 놓칩니다.</p>
           <p className="leading-7">관세·수출통제·보조금·표준 인증은 특정 단계의 비용과 교체 가능성을 바꿉니다. 완제품을 들여오는 판매자가 과세가격 60달러에 10% 관세를 부담하는 경우를 추가로 가정해 봅시다. 실제 국가·품목의 세율이나 평가액을 제시한 것이 아니며 다른 세금과 비용 변화는 생략합니다.</p>
+        </div>
+        <TariffRoutesViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">여기서 과세가격 60달러는 운임을 뺀 금액이라고 가정합니다. WTO 관세평가협정 제8조 제2항은 수입항까지의 운송비, 적재·하역·취급비, 보험료를 과세가격에 넣을지 뺄지를 회원국이 법으로 정하게 하므로, 물류 10달러를 과세가격에 넣는 나라라면 같은 10% 관세가 70 × 0.1 = 7달러가 됩니다.</p>
           <p className="leading-7">운임을 빼는 나라라면 관세는 6달러입니다. 제조대금 60달러와 물류 10달러, 소비가격 100달러가 그대로라면 판매 단계에 남는 금액은 30달러에서 24달러가 됩니다. 60 + 10 + 6 + 24 = 100입니다. 반대로 판매 단계가 기존 30달러를 유지하고 추가 비용 전부를 고객에게 넘길 수 있다면 소비가격은 106달러가 됩니다. 어느 경로가 실제로 가능한지는 계약과 경쟁, 고객의 반응에 달립니다.</p>
           <p className="leading-7">미국 CBP 안내에서 수입 신고와 관세·세금·수수료에 최종 책임을 지는 주체는 importer of record입니다. 세관에 납부할 책임이 누구에게 있는지와 가격 조정을 거쳐 비용을 최종적으로 누가 떠안는지는 별도 질문입니다. 위의 6달러가 외국 공장에 자동 청구된다고 읽지 않습니다.</p>

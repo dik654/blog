@@ -5,6 +5,9 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import FiveChecksViz from "./consent-liberty-and-legitimate-power/viz/FiveChecksViz";
+import HouseholdVoteViz from "./consent-liberty-and-legitimate-power/viz/HouseholdVoteViz";
+import TacitConsentViz from "./consent-liberty-and-legitimate-power/viz/TacitConsentViz";
 
 export default function ConsentLibertyAndLegitimatePowerArticle() {
   return (
@@ -29,6 +32,7 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
       </LessonSection>
 
       <LessonSection id="case" level="0" title="3. 100가구의 야간 영업 규칙을 표결합니다" bridge="60대 40이라는 결과를 만들었습니다. 다음에는 수와 권리의 문제를 다른 칸에 놓습니다.">
+        <HouseholdVoteViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">100가구가 사는 단지에서 60가구는 밤 10시 뒤 상가 영업 금지에 찬성하고 40가구는 반대한다고 합시다. 찬성 가구는 수면 방해를 줄이고 싶습니다. 반대 가구 중 15가구는 야간 근무 뒤 식료품과 약을 사야 합니다.</p>
           <p className="leading-8">표결 결과는 60대 40이지만 판단은 끝나지 않습니다. 소음이라는 타인 피해를 줄이는 규칙인지, 불쾌하다는 이유로 다른 생활 방식을 막는 규칙인지, 약국 예외나 방음 같은 덜 제한적인 수단이 있는지 비교해야 합니다.</p>
@@ -64,6 +68,7 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
       </LessonSection>
 
       <LessonSection id="mechanism" level="4" title="7. 60대 40의 결과가 정당한 규칙이 되는 경로를 추적합니다" bridge="표결을 권한·이유·비례성·구제 절차와 연결했습니다. 로크의 원문에서 동의의 범위를 확인합니다.">
+        <FiveChecksViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫째, 관리 주체가 영업 허가를 전면 금지할 권한까지 위임받았는지 봅니다. 둘째, 소음 기록과 민원 시간을 공개해 왜 밤 10시인지 설명합니다. 셋째, 전면 금지보다 방음·주류 판매 제한·약국 예외처럼 덜 제한적인 수단을 비교합니다.</p>
           <p className="leading-8">넷째, 같은 소음을 내는 가게를 같은 기준으로 처리합니다. 다섯째, 15가구와 점포가 자료를 내고 재심을 청구할 통로를 둡니다. 60표는 결정을 시작하게 하지만 이 다섯 조건이 강제력의 범위를 정합니다.</p>
@@ -92,6 +97,9 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
       <LessonSection id="limits" level="7" title="10. 실제 동의·불평등·공공재가 단순 표결을 어렵게 만듭니다" bridge="표 수, 권한, 피해, 대안, 수정 통로를 함께 보는 기준을 세웠습니다. 아래 질문으로 같은 규칙을 다시 판단할 수 있습니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">현대 국가는 태어날 때 실제 계약서에 서명한 사람들만으로 만들어지지 않습니다. 이사할 수 있다는 말도 비용·국적·가족 때문에 충분한 동의가 아닐 수 있습니다. 묵시적 동의를 너무 넓게 잡으면 어떤 권력도 사후에 정당화됩니다.</p>
+        </div>
+        <TacitConsentViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">이 비판이 겨냥하는 넓은 기준은 로크 자신의 것입니다. 『통치론』 둘째 논고 §119는 명시적 동의와 묵시적 동의를 나눈 뒤, 그 정부 영토의 어느 부분이든 소유하거나 누리는 사람은 묵시적 동의를 한 것이라고 답합니다. 일주일 묵는 숙소나 큰길을 자유롭게 지나가는 일까지 포함되고, 로크의 표현으로는 “the very being of any one within the territories of that government”까지 닿습니다. 100가구 사례로 옮기면 동네 길을 한 번 지나간 방문자도 영업시간 규칙에 동의한 사람으로 세어지는 셈이라, 동의가 권력을 제한하는 힘을 잃습니다.</p>
           <p className="leading-8">돈과 시간의 차이는 참여의 질도 바꿉니다. 표는 한 사람에 하나여도 변호사, 언론, 로비, 자료에 접근하는 능력은 다릅니다. 그래서 정당성은 선거뿐 아니라 기본권, 행정 이유, 독립 심사, 정보 공개, 실제로 쓸 수 있는 이의 절차에서 반복해 확인해야 합니다.</p>
         </div>

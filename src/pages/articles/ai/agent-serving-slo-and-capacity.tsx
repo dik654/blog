@@ -8,6 +8,17 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CacheThrashViz from "./agent-serving-slo-and-capacity/viz/CacheThrashViz";
 import ConcurrencySweepViz from "./agent-serving-slo-and-capacity/viz/ConcurrencySweepViz";
+import BundleBudgetViz from "./agent-serving-slo-and-capacity/viz/BundleBudgetViz";
+import ClosedLoopViz from "./agent-serving-slo-and-capacity/viz/ClosedLoopViz";
+import DecodeStepViz from "./agent-serving-slo-and-capacity/viz/DecodeStepViz";
+import DenominatorSweepViz from "./agent-serving-slo-and-capacity/viz/DenominatorSweepViz";
+import KvPoolLayoutViz from "./agent-serving-slo-and-capacity/viz/KvPoolLayoutViz";
+import MarketTierAxisViz from "./agent-serving-slo-and-capacity/viz/MarketTierAxisViz";
+import RampBisectViz from "./agent-serving-slo-and-capacity/viz/RampBisectViz";
+import RequestShapeViz from "./agent-serving-slo-and-capacity/viz/RequestShapeViz";
+import TailPercentileViz from "./agent-serving-slo-and-capacity/viz/TailPercentileViz";
+import TwoCapsViz from "./agent-serving-slo-and-capacity/viz/TwoCapsViz";
+import WindowOverlapViz from "./agent-serving-slo-and-capacity/viz/WindowOverlapViz";
 
 /**
  * 에이전트 서빙 용량은 SLO를 지키는 동시 에이전트 수로 잽니다
@@ -76,6 +87,11 @@ export default function AgentServingSloAndCapacityArticle() {
           <p className="leading-7">
             합계를 동시 요청 수로 나누면 요청 하나의 평균 몫이 나옵니다. 86.7이던 몫이 8개에서 34.8, 16개에서 25.0, 32개에서 15.6, 64개에서 11.6으로 내려갑니다. 합계가 8.6배 커지는 동안 요청 하나의 몫은 7분의 1 남짓으로 줄었습니다.
           </p>
+        </div>
+
+        <DecodeStepViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             이유는 답을 한 토큰씩 만드는 단계에 있습니다. 서버는 걸음마다 모델 가중치를 메모리에서 읽는데, 요청이 여럿이면 한 번 읽은 가중치로 여러 요청의 다음 토큰을 함께 계산합니다. 합계는 늘지만 한 걸음이 길어져 각 요청은 더 천천히 받습니다. 이 단계가 왜 메모리 읽기에 묶이는지는{" "}
             <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">prefill과 decode의 차이</Link>에서 다룹니다.
@@ -160,6 +176,11 @@ export default function AgentServingSloAndCapacityArticle() {
           <p className="text-lg leading-8">
             채팅 서비스의 속도 기준을 에이전트에 그대로 가져오면 맞지 않습니다. 요청의 모양이 거의 반대이고 한 세션이 같은 서버를 수십 번 연달아 두드리기 때문입니다.
           </p>
+        </div>
+
+        <RequestShapeViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             먼저 모양입니다. 공개된 코딩 에이전트 기록에서 입력 대 출력 비는 Codex가 약 131 대 1, Manus가 약 100 대 1입니다. 매 호출이 지금까지의 대화와 도구
             결과를 통째로 다시 보내고 모델은 짧은 도구 호출이나 수정만 돌려주기 때문입니다.
@@ -198,6 +219,8 @@ export default function AgentServingSloAndCapacityArticle() {
             에이전트 서빙 벤치마크입니다.
           </p>
         </div>
+        <TailPercentileViz />
+
         <TermBreakdown
           title="역할을 본 뒤에 붙이는 이름"
           description="모두 요청 단위로 재고, 한 측정 단계의 모든 요청에서 백분위를 냅니다."
@@ -234,6 +257,8 @@ export default function AgentServingSloAndCapacityArticle() {
             },
           ]}
         />
+        <MarketTierAxisViz />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             등급 숫자는 실제 API 시장에서 나왔습니다. AA는 등급을 자사가 재는 공급자 속도 분포에서 정했다고 밝힙니다. 2026년 11월 3일 기준으로 1T급 오픈 MoE를 파는 저가 공급자의 P25는 초당 17~43토큰, 고속 공급자는 110~290토큰이었습니다.
@@ -277,6 +302,11 @@ export default function AgentServingSloAndCapacityArticle() {
             3절과 같은 8장 서버에서 Kimi K2.5를 돌려 봅니다. 가중치를 올리고 남은 KV 풀은 설정에 따라 크게 다릅니다. KV를 숫자당 1byte인 FP8로 저장하고 문맥을 8장에 나눠 담는
             설정에서는 3,621,504토큰이 들어갔습니다. 숫자당 2byte인 BF16으로 저장하고 나누지 않으면 약 19만 토큰이었습니다.
           </p>
+        </div>
+
+        <KvPoolLayoutViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             나누지 않으면 왜 이렇게 작을까요? K2.5가 쓰는 압축 attention은 KV를 head 하나 모양으로 저장해서, 텐서 병렬 8장이 같은 KV를 한 벌씩 복제해 들고 있습니다. 8장을 써도 KV 용량은 한 장 몫입니다. 이 복제와 그것을 푸는 방법은{" "}
             <Link to="/cs/ai/mla-kv-replication-and-decode-context-parallel">MLA KV 복제와 decode context parallel</Link>에서 자세히 다룹니다.
@@ -326,6 +356,8 @@ export default function AgentServingSloAndCapacityArticle() {
           ]}
           interpretation="큰 풀에서는 3,621,504를 200,000으로 나눠 18이 나오고, 32K 표의 속도 상한은 평균으로도 16~31 사이라 두 한계가 비슷합니다. 작은 풀이면 메모리 쪽이 1개 아래로 먼저 막힙니다. 읽으면 안 되는 것은 18이 곧 판매 가능한 수라는 결론입니다. 문맥이 128K 근처로 길어지면 속도 상한이 먼저 8~15 근처로 내려옵니다."
         />
+
+        <TwoCapsViz />
 
         <CalculationWalkthrough
           title="같은 서버에서 두 상한을 나란히 세기"
@@ -388,10 +420,20 @@ export default function AgentServingSloAndCapacityArticle() {
             측정은 동시 수를 단계로 나눠 진행합니다. 단계마다 궤적 30개 이상이 끝나고 모든 가상 에이전트가 궤적을 세 개 이상 마치며, 정상 상태 측정이 10분 이상이어야 합니다.
             모든 에이전트가 30초 이상 활동한 구간만 집계하고 단계 사이에는 앞에 다른 접두를 붙여 앞 단계의 KV를 재사용하지 못하게 합니다.
           </p>
+        </div>
+
+        <RampBisectViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             최대 동시 수는 지수적으로 늘리다가 처음 실패한 지점과 마지막 통과 지점 사이를 이분 탐색해 찾습니다. 동시 수가 몇 배 범위인지 모를 때 단계 수를 로그 수준으로 줄이는 방법입니다. 정상 구간의 뜻은{" "}
             <Link to="/cs/ai/serving-benchmark-methodology#protocol">준비 구간과 정상 구간</Link>에서 다뤘습니다.
           </p>
+        </div>
+
+        <ClosedLoopViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             같은 정의로 내 서버를 재기 위해 표준 라이브러리만 쓰는 재생 도구를 만들었습니다. 핵심은 닫힌 루프입니다. 세션은 응답을 받고, 기록된 대기만큼 쉬고, 도구 결과 크기의
             텍스트를 붙여 다음 요청을 보냅니다. 앞 턴의 실제 응답이 다음 요청에 들어가므로 문맥이 진짜로 자라고 서버의 접두 캐시와 KV 한계가 결과에 그대로 드러납니다.
@@ -446,6 +488,11 @@ export default function AgentServingSloAndCapacityArticle() {
             첫째 버그는 측정창 안에 끝난 요청이 너무 적을 때 생겼습니다. 동시 1 단계에서 30초 창에 요청이 9개만 끝나자, P25 속도는 기준을 넘었는데도 표본 수 조건에 걸려
             SLO 실패로 판정됐습니다. 이제는 최소 완료 수를 채울 때까지 측정창을 늘리고 그래도 모자라면 표본 부족으로 따로 표시합니다.
           </p>
+        </div>
+
+        <WindowOverlapViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             둘째 버그는 총 처리량을 완료된 요청의 출력으로만 센 것이었습니다. 동시 수가 클수록 창 경계에 걸친 긴 요청이 많아 합계가 낮게 잡혔고 그 합계는 다음 절의 비용 계산에
             분모로 들어갑니다. 이제는 창 안에서 실제로 생성된 몫만 비율로 셉니다.
@@ -619,6 +666,8 @@ export default function AgentServingSloAndCapacityArticle() {
           interpretation="같은 식에 X_SLO만 900에서 400으로 바꾸면 상한이 432k달러에서 229k달러로 47퍼센트 줄어듭니다. 읽어야 할 것은 결론을 가르는 것이 전기료보다 약속을 지키는 처리량과 가동률이라는 점입니다. 읽으면 안 되는 것은 229k달러를 지금 사도 되는 가격으로 쓰는 것입니다. 400은 측정이 아니라 3절 표에서 어림한 가정입니다."
         />
 
+        <BundleBudgetViz />
+
         <CalculationWalkthrough
           title="8장 서버 한 대, 3년, 가동률 50퍼센트의 상한"
           question="약속을 지키는 총 출력이 400 tok/s라면 장비에 최대 얼마까지 쓸 수 있을까요?"
@@ -638,6 +687,8 @@ export default function AgentServingSloAndCapacityArticle() {
             "가장 싼 API인 V4-Pro 할인 시간대와 견주면 거의 모든 시나리오에서 자체 운영이 집니다.",
           ]}
         />
+
+        <DenominatorSweepViz />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">

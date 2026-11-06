@@ -6,6 +6,14 @@ import SourceApplication from "../world-systems/SourceApplication";
 import { Link } from "react-router-dom";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs, fileTrees } from "./pq-sources/codeRefs";
+import BinBoundaryViz from "./post-quantum-signatures/viz/BinBoundaryViz";
+import CancellationViz from "./post-quantum-signatures/viz/CancellationViz";
+import HashChainViz from "./post-quantum-signatures/viz/HashChainViz";
+import MaskReuseViz from "./post-quantum-signatures/viz/MaskReuseViz";
+import MixedValuesViz from "./post-quantum-signatures/viz/MixedValuesViz";
+import ResponseRangeViz from "./post-quantum-signatures/viz/ResponseRangeViz";
+import SignLoopViz from "./post-quantum-signatures/viz/SignLoopViz";
+import TreePathViz from "./post-quantum-signatures/viz/TreePathViz";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
@@ -33,6 +41,7 @@ export default function Article() {
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3 · 비밀 [1,2]를 바로 보내지 않고 다른 값과 섞습니다</h2>
+        <MixedValuesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">모든 값을 17로 나눈다고 놓습니다(가정). 공개 표 A의 두 행은 [2,3]·[4,1], 비밀 s=[1,2], 작은 오류 e=[1,0]입니다. 공개 t=As+e는 [9,6]입니다.</p>
           <p className="leading-8">서명 때 새 마스크 y=[2,1]을 고르면 Ay=[7,9]입니다. 메시지와 이 약속을 함께 확인해 나온 challenge를 작은 예에서는 c=1이라고 놓습니다. 응답 z=y+cs는 [3,3]입니다.</p>
@@ -55,6 +64,7 @@ export default function Article() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5 · 비밀을 가렸더라도 공개값의 분포가 비밀을 말할 수 있습니다</h2>
+        <ResponseRangeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">마스크를 더했다는 이유만으로 안전해지는 것은 아닙니다. 공개할 응답의 범위가 비밀에 따라 달라지면 많은 서명이 비밀에 관한 정보를 줄 수 있습니다. 허용 조건을 벗어난 후보는 버리고 새 후보를 만들어야 합니다.</p>
           <p className="leading-8">
@@ -77,9 +87,13 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · [15,15]에서 [9,6]을 빼면 [6,9]가 남습니다</h2>
+        <CancellationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">작은 예제의 z=[3,3]에 A를 곱하면 [15,15]입니다. c=1이므로 ct=[9,6]을 빼서 [6,9]를 얻습니다.</p>
           <p className="leading-8">서명자가 만든 Ay=[7,9]에서 ce=[1,0]을 빼도 [6,9]입니다. 검증자가 비밀 s를 직접 받지 않아도 처음 약속과 연결된 값을 계산한다는 사실을 확인했습니다.</p>
+        </div>
+        <BinBoundaryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">설명용으로4 단위 구간의 번호만 읽으면 [7,9]와 [6,9]는 모두 [1,2]입니다. 하지만 8이7로 바뀌면 구간2가1로 변합니다. 실제 표준의 분해·반올림·힌트는 이러한 경계 차이를 정해진 규칙으로 처리합니다. 이 임의의4 단위 규칙이 FIPS 알고리즘은 아닙니다.</p>
           <p className="leading-8">실제 검증은 응답 크기와 힌트를 먼저 확인하고 재구성한 높은 부분과 메시지에서 challenge를 다시 만듭니다. 단순히 Az−ct를 계산했다는 사실만으로 서명 검증이 끝나지 않습니다.</p>
         </div>
@@ -88,6 +102,7 @@ export default function Article() {
       </section>
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">8 · 실제 코드는 후보를 여러 조건으로 걸러 냅니다</h2>
+        <SignLoopViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">PQClean 고정본의 sign.c 135행은 새 y를 뽑고 140행은 Ay를 계산합니다. 높은 부분과 메시지 요약을 해시해 challenge를 만들고 158–162행에서 z=y+cs1을 구성합니다.</p>
           <p className="leading-8">163행의 크기 검사에 걸리면 rej로 돌아갑니다. 작은 예에서 각 성분의 절댓값이4 미만이어야 한다고 가정하면 [3,3]은 통과하고 [4,3]은 실패합니다. 실제 코드는 GAMMA1−BETA와 다른 표준 상수를 사용합니다.</p>
@@ -103,8 +118,12 @@ export default function Article() {
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9 · SLH-DSA는 해시 사슬을 많은 나무에 묶습니다</h2>
+        <HashChainViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">해시 H를 네 번 적용한 H⁴(x)를 공개 끝값으로 놓습니다(가정). H²(x)를 보여 주면 검증자는 두 번 더 해시해 끝값을 확인할 수 있습니다. 그러나 이를 본 사람은 H³(x)도 만들 수 있습니다. 이 사슬 하나만으로 안전한 다회용 서명이 되지는 않습니다.</p>
+        </div>
+        <TreePathViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">실제 SLH-DSA는 여러 사슬의 숫자 표현에 checksum을 더하는 WOTS+와, 메시지 요약에서 선택한 비밀 요소를 인증하는 FORS를 사용합니다. 나무의 형제 해시들을 함께 주면 검증자가 선택된 잎에서 루트를 재계산할 수 있습니다. 여러 층의 나무인 hypertree는 하위 루트를 다음 층 서명에 연결합니다.</p>
           <p className="leading-8">도메인과 나무·층·위치별 주소를 해시에 결속해 다른 역할의 계산이 섞이지 않게 합니다. Stateless는 사용자가 다음 일회용 키 번호를 영속 카운터로 관리하는 방식이 아니라는 뜻이며 내부 일회용·제한 사용 요소를 무제한 재사용해도 된다는 뜻이 아닙니다.</p>
           <p className="leading-8">FIPS204 표2에서 ML-DSA-44의 공개 키는1,312바이트, 서명은2,420바이트입니다. FIPS205 표2의 SLH-DSA-128s는 공개 키32바이트, 서명7,856바이트입니다. 키가 작은 방식이 서명도 작다는 결론은 성립하지 않습니다.</p>
@@ -117,6 +136,7 @@ export default function Article() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10 · 서명 형식을 바꿔도 오래된 권한은 자동으로 사라지지 않습니다</h2>
+        <MaskReuseViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 마스크를 다른 challenge에 재사용하면 두 응답의 차이에서 마스크가 사라집니다. 장난감 식의 차이는 (c1−c2)s입니다. 실제 구현에서도 난수·내부 nonce·재시도 규칙을 임의로 바꾸지 않습니다.</p>
           <p className="leading-8">문서 서명은 내용이 사실이라는 증거가 아닙니다. 펌웨어는 올바르게 서명된 구버전일 수도 있으므로 하향 설치 방지와 키 폐기를 함께 검사합니다. 인증서·계정 복구·관리자 업그레이드가 예전 서명에 의존한다면 그 경로도 옮겨야 합니다.</p>

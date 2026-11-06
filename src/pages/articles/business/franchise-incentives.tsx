@@ -2,6 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ContractTimelineViz from "./franchise-incentives/viz/ContractTimelineViz";
+import LossThresholdViz from "./franchise-incentives/viz/LossThresholdViz";
+import MonthlySplitViz from "./franchise-incentives/viz/MonthlySplitViz";
+import TerritoryMapViz from "./franchise-incentives/viz/TerritoryMapViz";
+import UnpaidLaborViz from "./franchise-incentives/viz/UnpaidLaborViz";
+import WaitAndEscrowViz from "./franchise-incentives/viz/WaitAndEscrowViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function FranchiseIncentivesArticle() {
@@ -31,6 +37,9 @@ export default function FranchiseIncentivesArticle() {
         <h2 className="mb-6 text-2xl font-bold">3. 월 3천만 원에서 150만 원은 본부 몫으로 정해진다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">한 점포의 월매출은 3천만 원이고 본부에 매출의 5%를 냅니다. 재료는 1천만 원, 월세는 300만 원입니다. 모든 값은 가정입니다. 금액은 부가세를 제외한 같은 기준이며, 재료는 그달에 모두 사용하고, 판매대금 수령과 이 세 비용의 지급도 그달에 끝난다고 놓겠습니다. 임금·광고·공과금·세금은 아직 넣지 않았습니다.</p>
+        </div>
+        <MonthlySplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">본부 지급액은 150만 원입니다. 세 항목을 차감하면 점포에는 1천550만 원이 남지만 여기서 다른 운영비를 더 내야 합니다. 매출 연동 약정은 점주의 최종 이익과 별도로 받을 금액을 정합니다. 계산 기준이 정해졌다고 다른 비용보다 먼저 송금한다는 뜻은 아닙니다. 실제 지급일과 연체 조건은 계약에서 확인합니다.</p>
         </div>
 
@@ -57,6 +66,9 @@ export default function FranchiseIncentivesArticle() {
           <p className="leading-7">어느 지점에서나 같은 맛을 기대하게 하려면 재료와 작업 방법을 맞춰야 합니다. 그러나 본부가 지정한 재료가 비싸지면 점주는 다른 공급자로 바꾸어 원가를 낮추기 어려울 수 있습니다.</p>
           <p className="leading-7">점주의 서비스가 나쁘면 같은 간판을 가진 다른 가게의 평판도 손상됩니다. 반대로 본부가 가까이에 새 점포를 열면 기존 점주의 손님이 나뉠 수 있습니다. 품질 관리와 지역의 판매 기회를 어떤 계약으로 조정하는지가 비용보다 먼저 볼 질문입니다.</p>
           <p className="leading-7">한국에서는 이 질문의 일부를 법이 먼저 답합니다. 「가맹사업거래의 공정화에 관한 법률」(이하 가맹사업법) 제12조의4는 본부가 계약을 맺을 때 점주의 영업지역을 정해 계약서에 적도록 하고, 정당한 사유 없이 계약기간 중 그 영업지역 안에 같은 업종의 직영점이나 가맹점(계열회사 것 포함)을 내지 못하게 합니다.</p>
+        </div>
+        <TerritoryMapViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">예를 들어 계약서에 &ldquo;매장 반경 500m&rdquo;(가정)가 영업지역으로 적혔다면, 본부가 계약기간 중 300m 떨어진 곳에 같은 업종 매장을 내는 것은 정당한 사유가 없는 한 금지됩니다(2026-10-02 시행본, 2026-10-09 확인).</p>
         </div>
 
@@ -78,6 +90,9 @@ export default function FranchiseIncentivesArticle() {
         <h2 className="mb-6 text-2xl font-bold">7. 초기 가맹비보다 계약 전체의 현금흐름을 봅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">같은 달에 고객에게서 받은 3천만 원을 본부 150만 원, 재료 1천만 원, 월세 300만 원에 배분하면 1천550만 원이 남습니다. 직원 급여 등 실제 비용을 더 반영한 뒤, 점주가 일한 시간에 다른 곳에서 벌 수 있었던 돈도 비교합니다. 이 노동 대가는 사업 선택을 위한 기회비용입니다. 실제 지급하지 않은 점주 급여가 장부나 세금 계산에 자동으로 비용 처리된다는 뜻은 아닙니다.</p>
+        </div>
+        <ContractTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">계약 전에는 문을 열 때의 가맹·교육·장비 비용과 그 가맹금을 예치기관에 맡기는지, 운영 중의 로열티와 광고분담, 갱신 때의 시설 교체, 양도 때의 승인·교육 비용을 날짜별로 놓습니다. 지정품목 가격이 바뀔 때 통지와 협의가 어떻게 되는지, 광고비 집행 내역을 어떤 문서로 보는지도 질문합니다.</p>
           <p className="leading-7">마지막에는 영업지역과 온라인·배달 주문의 배분, 계약 기간과 갱신 조건을 읽습니다. 임대차가 먼저 끝나거나 본부 계약이 해지되면 간판 제거·재고 처분·장비 리스가 각각 어떻게 남는지 확인합니다. 본부의 최근 점포 증가뿐 아니라 양도·폐점 점주에게도 실제 비용을 물어야 합니다.</p>
           <p className="leading-7">갱신 때의 시설 교체 비용은 한국에서 점주 혼자 지는 돈이 아닐 수 있습니다. 가맹사업법 제12조의2는 본부가 대통령령으로 정한 정당한 사유 없이 점포환경개선을 강요하지 못하게 하고, 점주의 점포환경개선 비용 가운데 대통령령으로 정한 비용의 100분의 40 이내에서 대통령령이 정한 비율만큼을 본부가 부담하도록 합니다.</p>
@@ -91,6 +106,7 @@ export default function FranchiseIncentivesArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">3천만 원 매출의 5%라는 약속은 본부의 150만 원 수입과 점주의 생활비를 직접 연결하지 않습니다. 미국 FTC의 소비자 안내는 반복 지급 비용을 설명할 때 이 조건을 분명히 합니다.</p>
         </div>
+        <LossThresholdViz />
         <SourceApplication source="US FTC · Consumer Guide, Royalties" excerpt="even if you are losing money" application="직원 급여·광고·공과금 등 추가 비용이 1천550만 원을 넘으면 이 계산은 적자가 되지만, 매출 연동 약정의 150만 원은 자동으로 없어지지 않습니다. 실제 면제·유예 여부는 계약으로 확인합니다." />
         <CitationBlock source="US FTC · Consumer Guide, Royalties" citeKey={1} href="https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise">2026-10-04 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">로열티의 계산 기준을 확인했습니다. 예상 매출을 공시에서 찾는 방법을 봅니다.</p>
@@ -100,6 +116,9 @@ export default function FranchiseIncentivesArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">미국 FTC의 Franchise Rule이 적용되는 가맹 판매에서는 23개 항목의 Franchise Disclosure Document, 줄여서 FDD를 확인합니다. 면제 대상이 아닌 미국·미국령 점포 거래는 구속력 있는 계약에 서명하거나 본부·관계회사에 돈을 내기 최소 14일 전에 문서를 제공받아야 합니다. 16 CFR 436.2(a)의 14일은 달력일 기준입니다.</p>
           <p className="leading-7">한국에도 같은 구조의 숙려기간이 있습니다. 가맹사업법 제7조 제3항은 등록된 정보공개서와 인근 가맹점 현황 문서를 제공한 날부터 14일이 지나기 전에 본부가 가맹금을 받거나 가맹계약을 체결하는 것을 금지하고, 가맹희망자가 변호사나 가맹거래사(같은 법 제27조의 자격을 갖춘 가맹사업 자문인)의 자문을 받았다면 이 기간을 7일로 줄입니다.</p>
+        </div>
+        <WaitAndEscrowViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">제11조 제1항은 가맹계약서 내용을 담은 문서에도 같은 14일(자문 시 7일)을 적용합니다. 11월 2일(가정)에 정보공개서를 받은 사람에게 본부가 바로 다음 날 계약금을 받으면 이 금지에 걸립니다. 계약을 서두르자는 말보다 이 기간이 먼저입니다.</p>
           <p className="leading-7">돈을 낸 뒤의 보호 장치도 있습니다. 제6조의5 제1항에 따라 본부는 점주가 내는 가맹금을 대통령령으로 정한 기관에 예치하게 해야 합니다. 가맹비 3천만 원(가정)을 냈다면 그 돈은 원칙적으로 본부 계좌가 아니라 예치기관으로 가며, 본부가 제15조의2의 가맹점사업자피해보상보험계약 등을 맺은 경우에만 예외가 됩니다(가맹사업법 2026-10-02 시행본, 2026-10-09 확인).</p>
           <p className="leading-7">한국 공정거래위원회의 비교 화면에는 연간 평균 매출과 산정기준, 면적 3.3㎡당 매출, 계약종료·계약해지·명의변경이 구분되어 있습니다. 연매출을 12로 나누면 월평균으로 단위는 바꿀 수 있지만 성수기와 비수기는 사라집니다. 본문의 월 3천만 원과 비교하려면 조사 연도·면적·포함 점포·세금 포함 여부를 먼저 맞춰야 합니다. 명의변경만으로 가게가 폐점했다고 세어서도 안 됩니다.</p>
@@ -117,6 +136,9 @@ export default function FranchiseIncentivesArticle() {
         <h2 className="mb-6 text-2xl font-bold">10. 평균 매출이 높아도 점주 한 사람의 삶은 다를 수 있습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">평균에는 오래된 우량점과 신생점이 섞일 수 있습니다. 폐점한 점포가 표본에 없는지와 추정 방법도 확인해야 합니다. 현재 점주뿐 아니라 양도한 점주와 폐점한 점주에게도 이전·철거·남은 리스료 등 실제 종료 비용을 물어봅니다.</p>
+        </div>
+        <UnpaidLaborViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">장부상 이익이 같아도 점주와 가족의 노동시간이 다르면 사업의 매력은 다릅니다. 무급으로 일한 시간에 대체 직원을 쓰는 비용이나 다른 일을 할 때의 소득을 비교해야 합니다. 이 기회비용은 회계상 순이익에 반드시 기록되는 임금과 구별합니다. 다른 사람이 인수해 운영할 수익을 판단할 때 두 숫자를 함께 봅니다.</p>
           <p className="leading-7">브랜드 인지도가 손님을 모아도 임대료가 비싸거나 근처에 새 가맹점이 열리면 점주 몫은 줄어듭니다. 매출 예상은 계약 책임과 별개의 가정으로 읽어야 합니다.</p>
         </div>

@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
+import RelativeAngleViz from "./viz/RelativeAngleViz";
 
 const bands = [
   {
@@ -83,6 +84,8 @@ export default function RopeFoundation() {
         ]}
         interpretation="RoPE는 절대 position으로 각 vector를 회전시키지만 두 vector의 내적에서는 상대 거리를 드러냅니다. 이것이 ‘상대 위치를 반영한다’는 말의 정확한 뜻입니다."
       />
+
+      <RelativeAngleViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

@@ -5,6 +5,10 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import DrainageEstimateViz from "./evidence-models-and-causal-explanation/viz/DrainageEstimateViz";
+import FlagpoleAsymmetryViz from "./evidence-models-and-causal-explanation/viz/FlagpoleAsymmetryViz";
+import HundredDaysViz from "./evidence-models-and-causal-explanation/viz/HundredDaysViz";
+import TwoModelsViz from "./evidence-models-and-causal-explanation/viz/TwoModelsViz";
 
 export default function EvidenceModelsAndCausalExplanationArticle() {
   return (
@@ -29,6 +33,7 @@ export default function EvidenceModelsAndCausalExplanationArticle() {
       </LessonSection>
 
       <LessonSection id="case" level="0" title="3. 우산 판매와 사고 100일의 기록을 만듭니다" bridge="우산 판매가 훌륭한 신호이면서 나쁜 원인 후보가 되는 자료를 만들었습니다. 숨은 비를 그림 밖으로 꺼냅니다.">
+        <HundredDaysViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">100일 중 비가 온 날이 40일이라고 합시다. 우산이 많이 팔린 날은 42일이며, 그중 36일에 비가 왔습니다. 사고가 난 날은 25일이고, 그중 20일이 비 오는 날이었습니다. 숫자는 설명을 위한 가정입니다.</p>
           <p className="leading-8">우산 판매가 많은 42일 중 사고가 난 날이 18일, 판매가 적은 58일 중 사고가 난 날이 7일이라면 두 기록은 강하게 함께 움직입니다. 그러나 비가 우산 구매와 미끄러운 노면을 동시에 만든 경로가 이 상관을 설명할 수 있습니다.</p>
@@ -41,6 +46,7 @@ export default function EvidenceModelsAndCausalExplanationArticle() {
       </LessonSection>
 
       <LessonSection id="picture" level="1" title="4. 비와 우산 판매가 함께 움직이는 이유를 드러냅니다" bridge="공통 원인과 결과를 화살표로 분리했습니다. 설명이 예측보다 더 필요한 순간을 봅니다.">
+        <TwoModelsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫 모형은 ‘우산 판매 → 사고’입니다. 둘째 모형은 ‘비 → 우산 판매’와 ‘비 → 시야·노면 → 사고’입니다. 두 모형 모두 관측된 상관과 맞을 수 있지만, 우산 판매를 줄였을 때의 예측은 서로 다릅니다.</p>
           <p className="leading-8">비 오는 날 우산 가게를 닫는 실험은 사고 원인에 거의 손대지 못합니다. 배수, 조명, 제한 속도를 바꾸는 개입은 원인 후보 경로를 직접 건드립니다. 화살표의 방향은 숫자 표만 보고 자동으로 정해지지 않으므로 시간 순서와 배경 지식, 실험이 필요합니다.</p>
@@ -66,12 +72,16 @@ export default function EvidenceModelsAndCausalExplanationArticle() {
       <LessonSection id="mechanism" level="4" title="7. 우산 판매를 줄이는 개입과 비를 막는 개입을 비교합니다" bridge="같은 상관에서 서로 다른 개입 결과를 예측했습니다. 법칙에 맞는 설명도 방향을 놓칠 수 있는 반례를 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">우산 판매가 많은 날 사고 확률은 18/42≈43%, 적은 날은 7/58≈12%입니다. 이 차이는 경보에는 유용합니다. 하지만 판매를 42일 모두 0으로 만드는 개입을 해도 비 오는 40일과 젖은 노면은 남으므로 사고 25건이 같은 비율로 줄어든다는 근거는 없습니다.</p>
+        </div>
+        <DrainageEstimateViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">반대로 비 오는 날의 20건 가운데 절반이 미끄러운 노면 경로를 거친다는 추가 증거가 있고, 배수 개선이 그 경로를 절반 줄인다면 기대 감소는 약 5건입니다. 이 계산도 개입이 운전량을 바꾸지 않는다는 가정을 둡니다.</p>
           <p className="leading-8">따라서 인과 계산은 상관표보다 더 많은 가정을 요구합니다. 그 대신 어떤 조치가 왜 효과를 낼지, 효과가 없을 때 노면 경로·운전량·측정 오류 가운데 무엇을 다시 볼지 알려 줍니다.</p>
         </div>
       </LessonSection>
 
       <LessonSection id="source" level="5" title="8. 법칙만으로 만든 설명의 비대칭 문제를 확인합니다" bridge="참인 규칙에 현상을 넣는 것만으로 설명이 완성되지 않는 이유를 봤습니다. 개입과 모형 목적을 현대 논의와 비교합니다.">
+        <FlagpoleAsymmetryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">20세기 과학 설명의 연역·법칙 모형은 초기 조건과 일반 법칙에서 현상을 논리적으로 이끌어 내려고 했습니다. 그러나 깃대 높이와 태양 각도, 빛의 직진 법칙으로 그림자 길이를 이끌어 낼 수 있듯이, 같은 법칙과 그림자 길이로 깃대 높이도 이끌어 낼 수 있습니다. 앞의 도출은 설명처럼 보이지만 뒤의 도출은 깃대 높이를 설명하지 못합니다. 깃대가 그림자를 만들지 그림자가 깃대를 만들지는 않기 때문입니다. 논리적 도출만으로는 설명 방향을 고르기 어렵습니다.</p>
           <p className="leading-8">이 반례는 보통 실뱅 브롬버거(Sylvain Bromberger)의 것으로 불립니다. 웨슬리 새먼은 「Four Decades of Scientific Explanation」(1989, Minnesota Studies in the Philosophy of Science 13권) 47쪽에서 이를 “Bromberger's flagpole example”이라는 이름으로 소개하고, 원인이 결과를 설명할 뿐 그 반대는 아니라는 진단을 붙였습니다. 브롬버거가 1960년대에 쓴 원 논문들(1962·1963·1966)은 이 글에서 직접 열어 보지 않았습니다.</p>

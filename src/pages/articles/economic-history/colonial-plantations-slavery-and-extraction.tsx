@@ -5,6 +5,10 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import AbolitionTimelineViz from "./colonial-plantations-slavery-and-extraction/viz/AbolitionTimelineViz";
+import LedgerBoundaryViz from "./colonial-plantations-slavery-and-extraction/viz/LedgerBoundaryViz";
+import TwoSidesFlowViz from "./colonial-plantations-slavery-and-extraction/viz/TwoSidesFlowViz";
+import VoyageEstimateViz from "./colonial-plantations-slavery-and-extraction/viz/VoyageEstimateViz";
 
 export default function ColonialPlantationsSlaveryAndExtractionArticle() {
   return (
@@ -31,6 +35,9 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
       <LessonSection id="case" level="0" title="3. 사탕 100단위의 판매액을 네 몫으로 나눕니다" bridge="시장 장부에 보이는 100과 보이지 않는 손실을 분리했습니다. 가격이 비용을 모두 담는다는 가정을 깨 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">설탕 판매액이 100이라고 합시다. 운송·정제·보험에 35, 도구와 최소한의 식량에 10, 제국 세금에 10이 들고 소유주의 잔여가 45라고 놓습니다. 실제 역사 평균이 아니라 장부 경계를 보기 위한 가정입니다.</p>
+        </div>
+        <LedgerBoundaryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">이 장부에서 노예로 만든 사람의 임금 청구는 0입니다. 이동의 자유, 가족 분리, 폭력, 조기 사망도 비용 항목으로 잡히지 않습니다. 소유주의 45는 생산성이 높아서만 생긴 잔여가 아니라 어떤 청구권을 인정하지 않았는지에 따라 커졌습니다.</p>
         </div>
         <NumericPath title="판매액 100에 잡히지 않은 비용" steps={[
@@ -64,6 +71,7 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
       </LessonSection>
 
       <LessonSection id="mechanism" level="4" title="7. 100단위 매출이 대서양 양쪽에 다르게 남는 길을 추적합니다" bridge="판매액이 금융·산업 투자와 강제 노동의 손실로 동시에 이어지는 경로를 봤습니다. 항해 기록의 자료 범위를 확인합니다.">
+        <TwoSidesFlowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">판매액 100 가운데 35는 운송과 보험, 정제를 맡은 조직의 수입이 됩니다. 제국 재정은 세금 10을 받고 소유주는 잔여 45를 다시 투자할 수 있습니다. 같은 거래가 여러 지역의 자본 축적을 연결합니다.</p>
           <p className="leading-8">반대편에는 무임금 노동, 인구 손실, 토지 집중, 한두 수출품 의존이 남습니다. 이 결과는 판매액 합계에서 자동으로 빠지지 않습니다. 누가 어떤 자산과 기술을 쌓았고 누가 위험과 단일 작물 의존을 떠안았는지 따로 추적해야 합니다.</p>
@@ -76,6 +84,9 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
       <LessonSection id="source" level="5" title="8. 항해 기록이 보여 주는 수와 보여 주지 못하는 삶을 나눕니다" bridge="선박 단위 기록과 전체 추정치의 차이를 확인했습니다. 장기 영향 연구와 대조합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">SlaveVoyages는 선박이 출발하고 도착한 항구, 항해 연도, 배에 태워진 사람과 도착한 사람의 수를 모아 대서양 노예 무역을 복원합니다. 기록이 없는 항해와 불완전한 위치는 별도의 추정 자료와 방법 문서로 다룹니다.</p>
+        </div>
+        <VoyageEstimateViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">기록값과 추정값은 숫자부터 다릅니다. 이 데이터베이스를 지원한 미국 국립인문재단(NEH)의 소개에 따르면 기록된 항해는 57개 기여자의 자료에서 모은 34,948건입니다.</p>
           <p className="leading-8">기록에 빠진 항해까지 보정한 사이트의 추정(Estimates) 페이지는 아프리카를 떠나 아메리카로 끌려간 사람을 약 1,252만 명, 주로 아메리카에 내린 사람을 약 1,070만 명으로 봅니다. 두 추정치의 차이인 약 180만 명이 대서양 횡단 항해에서 숨진 사람의 규모입니다. NEH 소개는 이 생존자 수의 기간을 1526~1866년으로 적습니다.</p>
           <p className="leading-8">이 자료는 무역의 규모와 이동 경로, 항해 중 사망을 세는 데 강합니다. 그러나 노예로 만든 사람 각자의 삶은 모두 담지 못합니다. 항구 장부가 거래 주체의 기록인 만큼 당사자의 구술과 재판 기록, 편지, 발굴 자료를 함께 읽어야 합니다.</p>
@@ -99,6 +110,9 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
           <p className="leading-8">6절의 '노예제'와 다른 강제 노동의 차이는 법령 원문에서 드러납니다. 영국 1833년 노예제폐지법 전문은 식민지에서 '노예로 붙들린' 사람들을 해방하되, '그동안 그 노예의 노무를 받을 자격이 있던 사람들'에게 '그 노무에 대한 권리를 빼앗겨 입을 손실'을 보상한다고 적고, 24조에서 그 재원으로 2천만 파운드를 정합니다. 사람에 대한 권리가 보상받는 재산이었다는 뜻입니다(legislation.gov.uk 제정본, 확인일 2026-10-10).</p>
           <p className="leading-8">반면 영국령 인도의 1883년 이민법(Act XXI of 1883)은 '이민'을 '인도 밖 어느 나라에서 고용되어 노동하기로 하는 계약 아래' 배로 떠나는 것으로 정의하고, 36조에서 모든 이민 계약서 뒷면에 '노무의 성격·기간·조건과 보수'를 적게 했으며, 규칙에 딸린 계약 서식에는 '복무 기간'과 '귀환 여비에 관한 조건' 칸이 있습니다(1898년 캘커타 정부인쇄소 판, 확인일 2026-10-10).</p>
           <p className="leading-8">기간 계약 노동(indenture, 인덴처)은 사람을 소유하는 제도가 아니라 기간과 귀환 조항이 있는 계약이었습니다. 다만 그 조건을 누가 정했고 기간 중 이탈이 어떻게 다뤄졌는지는 이 글에서 원문으로 확인하지 않았습니다.</p>
+        </div>
+        <AbolitionTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">장부 밖으로 밀려난 청구권이 폐지 뒤에 어떻게 처리됐는지는 아이티 사례가 분명하게 보여 줍니다. 노예 반란으로 독립한 아이티에 프랑스 국왕 샤를 10세는 1825년 칙령으로 독립을 인정하는 대가 1억 5천만 프랑을 요구했고, 1838년 개정으로 남은 액수가 6천만 프랑으로 줄었습니다.</p>
           <p className="leading-8">아이티는 배상금에 그것을 갚으려 빌린 차입금과 이자까지 합친 1억 1,200만 프랑을 갚는 데 그 뒤로도 50년이 더 걸렸습니다. 돈은 노예로 일한 사람이 아니라 옛 소유주 쪽으로 갔습니다. 소유주의 잔여가 어떤 청구권을 인정하지 않았는지에 따라 커졌다는 이 글의 주장이 폐지 뒤에도 이어진 실례입니다.</p>
           <p className="leading-8">영국도 소유주에게 돈을 줬습니다. 영국 국립기록원 안내에 따르면 노예무역 폐지법은 1807년 3월 25일 통과돼 그해 5월 1일부터 아프리카 해안의 노예 거래를 금지했습니다. 노예제 자체는 1833년 노예제폐지법(Slavery Abolition Act 1833)에 따라 1834년 8월 1일 폐지됐지만, 도제(apprenticeship) 제도 때문에 많은 사람에게 강제 노동은 적어도 1838년까지 이어졌습니다. 국립기록원은 폐지 뒤 법률이 식민지 농장주에게 2천만 파운드를 보상금으로 줬다고 적습니다(확인일 2026-10-09).</p>

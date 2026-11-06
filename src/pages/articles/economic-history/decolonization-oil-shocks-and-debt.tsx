@@ -5,6 +5,11 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import DebtCrisisTimelineViz from "./decolonization-oil-shocks-and-debt/viz/DebtCrisisTimelineViz";
+import DebtInterestAreaViz from "./decolonization-oil-shocks-and-debt/viz/DebtInterestAreaViz";
+import MismatchViz from "./decolonization-oil-shocks-and-debt/viz/MismatchViz";
+import OilLedgerViz from "./decolonization-oil-shocks-and-debt/viz/OilLedgerViz";
+import PetrodollarLoopViz from "./decolonization-oil-shocks-and-debt/viz/PetrodollarLoopViz";
 
 export default function DecolonizationOilShocksAndDebtArticle() {
   return (
@@ -31,6 +36,9 @@ export default function DecolonizationOilShocksAndDebtArticle() {
       <LessonSection id="case" level="0" title="3. 수출 100과 석유 수입 40인 나라의 외화 장부를 봅니다" bridge="가격 충격이 흑자 10을 적자 30으로 바꾸는 장부를 만들었습니다. 정치적 권한과 지급 능력을 나눕니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한 나라가 원자재 수출로 외화 100을 벌고, 석유 40과 다른 물품 50을 수입한다고 합시다. 처음 무역수지는 100-(40+50)=10의 흑자입니다. 숫자는 작동 원리를 위한 가정입니다.</p>
+        </div>
+        <OilLedgerViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">석유 가격이 두 배가 되어 같은 양에 80을 내면 총수입은 130, 무역수지는 -30이 됩니다. 정부는 석유 사용을 줄이거나 수입을 줄이거나 환율을 바꾸거나 30을 빌려야 합니다. 어느 선택도 단기 비용 없이 끝나지 않습니다.</p>
         </div>
         <NumericPath title="석유 가격 충격이 외화 장부를 뒤집습니다" steps={[
@@ -50,11 +58,15 @@ export default function DecolonizationOilShocksAndDebtArticle() {
       <LessonSection id="need" level="2" title="5. 개발 투자는 필요했지만 빌린 통화와 금리가 위험을 만들었습니다" bridge="대출의 생산적 용도와 만기·통화 위험을 나눴습니다. 핵심 용어에 이름을 붙입니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">전력망·학교·항만·공장을 지으려면 오늘 큰돈이 들고 효과는 나중에 납니다. 국내 저축과 세수만으로 부족할 때 외채는 시간을 당겨 쓸 수 있게 합니다. 투자가 수출과 생산성을 키우면 미래 상환 재원도 생깁니다.</p>
+        </div>
+        <MismatchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">그러나 수익은 자국 통화로 나고 빚은 달러로 갚거나, 단기 변동금리로 장기 시설을 지으면 만기와 통화가 어긋납니다. 사업이 유익해도 세계 금리와 환율이 급변하면 현금 부족으로 중단될 수 있습니다.</p>
         </div>
       </LessonSection>
 
       <LessonSection id="names" level="3" title="6. 탈식민·교역조건·페트로달러 재순환·외채에 이름을 붙입니다" bridge="정치 변화, 가격 비율, 자금 흐름, 미래 의무를 분리했습니다. 싼 대출이 위기로 바뀌는 계산을 합니다.">
+        <PetrodollarLoopViz />
         <TermBreakdown title="독립 뒤 세계 경제를 읽는 네 이름" items={[
           { term: "탈식민", description: "식민 지배를 끝내고 정치적 자결과 독립 국가를 세우는 과정입니다.", example: "1945년 뒤 아시아·아프리카의 많은 영토가 독립합니다.", boundary: "식민 경제 구조와 불평등이 독립일에 모두 사라진다는 뜻은 아닙니다." },
           { term: "교역조건", description: "수출 가격과 수입 가격의 비율로, 같은 수출로 살 수 있는 수입량을 보여 줍니다.", example: "원자재 가격이 그대로인데 석유 가격이 두 배가 됩니다.", boundary: "수출입 물량과 국내 분배를 혼자 보여 주지 않습니다." },
@@ -64,6 +76,7 @@ export default function DecolonizationOilShocksAndDebtArticle() {
       </LessonSection>
 
       <LessonSection id="mechanism" level="4" title="7. 싼 대출이 금리 상승 뒤 부채 위기로 바뀌는 경로를 계산합니다" bridge="같은 빚의 이자가 6.5에서 15.6으로 뛰는 경로를 봤습니다. 탈식민과 석유 충격의 실제 순서를 확인합니다.">
+        <DebtInterestAreaViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">처음 외채가 100이고 금리가 5%라면 연 이자는 5입니다. 석유 부족 30을 빌리면 외채는 130, 같은 금리의 이자는 6.5가 됩니다. 수출 100으로 감당할 수 있다고 판단할 수 있습니다.</p>
           <p className="leading-8">이후 국제 금리가 12%(가정)로 오르면 이자는 15.6이 됩니다. 동시에 원자재 수출액이 100에서 80으로 떨어지면 이자/수출 비율은 6.5%에서 19.5%로 세 배가 됩니다. 원금을 갚기 전에도 외화 부족이 커집니다.</p>
@@ -75,6 +88,9 @@ export default function DecolonizationOilShocksAndDebtArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">유엔이 창설된 1945년에는 약 7억5천만 명이 식민 통치에 의존한 영토에 살았습니다. 1960년 유엔 총회 결의 1514는 식민지 민족의 자결과 독립을 선언했습니다. 정치적 독립이 빠르게 늘어난 시기와 새 국가가 산업·교육·보건 투자를 확대하려던 시기가 겹칩니다.</p>
           <p className="leading-8">1973~74년 석유 가격 급등은 비산유 개발도상국의 외화 부족을 키웠습니다. 산유국 달러가 국제 은행을 거쳐 대출로 재순환되며 당장의 조정을 늦췄지만 외채가 쌓였습니다. 1979년 뒤 두 번째 석유 충격과 높은 세계 금리, 수출 수요 둔화가 상환 조건을 바꿨습니다.</p>
+        </div>
+        <DebtCrisisTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">7절의 '금리 5%→12%' 가정을 실제 사건에 대 보면 순서가 이렇습니다. IMF의 1980년대 부채위기 장에 따르면 국제 은행의 순대출은 1977년 680억 달러에서 1980년 1,600억 달러로 늘었고, 그 가운데 3분의 1 가까이가 비산유 개발도상국으로 갔습니다. 1979년 10월 6일 폴 볼커 의장의 연방준비제도가 통화 긴축으로 방향을 바꿨고, 연방기금금리는 1980년 말 사상 최고인 20%에 이르렀습니다. IMF 장은 미국 금리가 1981년 6월 20%로 정점에 올랐다고 적습니다. 1982년 8월 멕시코 재무장관 헤수스 실바 에르소그가 당시 800억 달러에 이른 외채를 더는 갚을 수 없다고 통보하면서 위기가 본격화했습니다. 채권국의 대응은 1985년 제임스 베이커 미 재무장관의 '베이커 플랜'과 1989년 3월 니컬러스 브래디 재무장관의 '브래디 플랜'으로 이어졌고, IMF와 세계은행은 1996년 최빈 채무국 대상의 과다채무빈곤국(HIPC) 이니셔티브를 시작했습니다. 연도와 금리는 연방준비제도 역사 자료(Fed History의 'Anti-Inflation Measures'·'Latin American Debt Crisis')와 IMF HIPC 안내에서 확인했습니다(확인일 2026-10-09).</p>
         </div>
         <SourceApplication source="United Nations · Decolonization" excerpt="some 750 million people" application="1945년의 정치적 출발점을 확인하되, 독립한 여러 국가의 경제 구조가 같았다고 보지 않습니다." />

@@ -1,6 +1,12 @@
+import GateFeedbackViz from "./daoist-names-noncoercive-action-and-change/viz/GateFeedbackViz";
+import WaterSplitViz from "./daoist-names-noncoercive-action-and-change/viz/WaterSplitViz";
 import TraditionArticle, { type TraditionArticleData } from "./TraditionArticle";
 
 const data: TraditionArticleData = {
+  figures: {
+    case: { 0: <WaterSplitViz /> },
+    mechanism: { 0: <GateFeedbackViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 물을 더 밀수록 논에 덜 닿는 수문을 떠올립니다", bridge: "무위를 게으름으로 번역하기 전에 과한 개입이 흐름을 망치는 사례를 봅니다.", paragraphs: [
       "저수지의 물 100단위를 아래 논으로 보내야 합니다. 수문을 한 번에 끝까지 열면 흙이 무너지고 앞 논에 물이 몰려 60만 작물에 닿습니다. 조금씩 열어 흐름을 확인하면 85가 여러 논에 닿는다고 가정해 보겠습니다.",

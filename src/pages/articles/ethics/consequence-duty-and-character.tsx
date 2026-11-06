@@ -5,6 +5,9 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CostShapeViz from "./consequence-duty-and-character/viz/CostShapeViz";
+import LedgerForkViz from "./consequence-duty-and-character/viz/LedgerForkViz";
+import UniversalRuleViz from "./consequence-duty-and-character/viz/UniversalRuleViz";
 
 export default function ConsequenceDutyAndCharacterArticle() {
   return (
@@ -41,6 +44,7 @@ export default function ConsequenceDutyAndCharacterArticle() {
       </LessonSection>
 
       <LessonSection id="picture" level="1" title="4. 누가 무엇을 겪고 어떤 약속이 걸렸는지 펼칩니다" bridge="평균 비용 뒤에 숨은 분배와 정보 차이를 드러냈습니다. 세 질문이 각각 잡는 실패를 확인합니다.">
+        <CostShapeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">회수 비용 100만원은 회사, 배송 기사, 판매점, 식품을 다시 만들어야 하는 사람에게 나뉩니다. 미회수의 5000만원은 알레르기가 있는 고객 한 명에게 집중될 수 있습니다. 같은 기대값은 부담의 위치와 되돌릴 수 있는 정도를 말해 주지 않습니다.</p>
           <p className="leading-8">또한 회사만 성분 누락을 압니다. 고객은 정확한 표시를 전제로 구매했습니다. 회사가 침묵하면 고객이 자기 위험을 선택할 기회를 빼앗습니다. 마지막으로 이런 침묵이 한 번 허용되면 다음 담당자도 비용이 비슷하다는 이유로 숨기기 쉬워집니다.</p>
@@ -65,6 +69,9 @@ export default function ConsequenceDutyAndCharacterArticle() {
       <LessonSection id="mechanism" level="4" title="7. 도시락 100개의 결정을 세 번 계산합니다" bridge="같은 선택에서 세 관점이 요구하는 행동과 이유를 추적했습니다. 각 관점의 원문 표현을 확인합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">결과 장부는 평균 100만원에서 멈추지 않습니다. 피해가 생기면 5000만원이 한 사람에게 집중되고 되돌리기 어렵지만, 회수 비용은 여러 조직이 나누고 나중에 개선할 수 있습니다. 발생 확률이 2%가 아니라 0.5%여도 중증 피해와 회수 과정의 부작용을 함께 비교해야 합니다.</p>
+        </div>
+        <UniversalRuleViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">의무 장부에서는 “비용이 기대 손실 이상일 때 알려진 알레르기 정보를 숨겨도 된다”는 규칙을 모든 판매자가 써도 되는지 묻습니다. 그런 규칙이 공개되면 고객은 성분 표시를 믿을 수 없습니다. 고객을 자기가 고를 수 있는 사람으로 대하려면 즉시 정보와 선택지를 줘야 합니다.</p>
           <p className="leading-8">성품 장부는 회수 버튼만 누르고 끝나지 않습니다. 누락을 먼저 알리고, 원인을 기록하고, 다음 배치의 표시 검사를 고치며, 비용이 드는 사실을 핑계로 위험을 축소하지 않는 습관을 봅니다. 이 사례에서는 세 관점이 즉시 알림과 회수 쪽으로 모이지만, 이유는 서로 다릅니다.</p>
         </div>
@@ -84,6 +91,7 @@ export default function ConsequenceDutyAndCharacterArticle() {
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 세 관점이 같은 답을 낼 때와 갈릴 때를 나눕니다" bridge="결론이 같아도 이유가 다르고, 갈릴 때는 숨은 우선순위가 드러난다는 점을 확인했습니다. 숫자 밖의 책임을 정리합니다.">
+        <LedgerForkViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">도시락 사례에서는 중증 피해 예방, 정확한 정보 제공 의무, 정직한 조직 습관이 모두 회수를 지지할 수 있습니다. 이때 “어차피 결론이 같으니 이론은 필요 없다”고 하면 상황이 바뀌었을 때 무엇을 유지해야 하는지 모릅니다.</p>
           <p className="leading-8">예를 들어 회수 과정 자체가 더 큰 안전 위험을 만들거나, 두 환자 중 한 명만 도울 수 있거나, 지켜야 할 두 약속이 충돌하면 답이 갈릴 수 있습니다. 그때 피해의 분배, 침해할 수 없는 권리, 장기적인 성품과 제도를 어느 순서로 보았는지 적어야 다른 사람이 판단을 검토할 수 있습니다.</p>

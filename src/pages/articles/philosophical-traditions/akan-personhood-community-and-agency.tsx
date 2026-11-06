@@ -1,4 +1,5 @@
-import TraditionArticle, { type TraditionArticleData } from "./TraditionArticle";
+import type { TraditionArticleData } from "./TraditionArticle";
+import AkanArticleBody from "./akan-personhood-community-and-agency/AkanArticleBody";
 
 const data: TraditionArticleData = {
   sections: [
@@ -70,4 +71,4 @@ const data: TraditionArticleData = {
   ],
 };
 
-export default function AkanPersonhoodCommunityAndAgencyArticle() { return <TraditionArticle data={data} />; }
+export default function AkanPersonhoodCommunityAndAgencyArticle() { return <AkanArticleBody data={data} />; }

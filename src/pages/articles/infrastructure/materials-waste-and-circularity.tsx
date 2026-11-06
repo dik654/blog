@@ -2,6 +2,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import FundingGapViz from "./materials-waste-and-circularity/viz/FundingGapViz";
+import RatioDenominatorViz from "./materials-waste-and-circularity/viz/RatioDenominatorViz";
+import RecyclingObligationViz from "./materials-waste-and-circularity/viz/RecyclingObligationViz";
+import ReuseVsRecoveryViz from "./materials-waste-and-circularity/viz/ReuseVsRecoveryViz";
+import TwoFlowsViz from "./materials-waste-and-circularity/viz/TwoFlowsViz";
 
 export default function Article() {
   return (
@@ -64,6 +69,7 @@ export default function Article() {
       </section>
       <section id="names" data-teach-level="3" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">수거율·회수 수율·생산자 책임을 구분합니다</h2>
+        <RatioDenominatorViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             발생한 100kg 가운데 모은 80kg의 비율은 수거율 80%입니다. 수거한 80kg 가운데 회수한 60kg의 비율은 처리 수율 75%입니다. 처음 100kg을 분모로 계산하면
@@ -79,6 +85,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">60kg을 팔아 6만원을 받아도 처리비 12만원이 남습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">발생 100kg 중 80kg을 수거해 60kg을 회수했습니다. 80kg을 재활용했다고 적으면 실제 재료 회수 60kg보다 20kg을 과장합니다. 분류상 재활용의 인정 시점이 다른 제도와 비교할 때에는 법적 집계 정의도 함께 적어야 합니다.</p>
+        </div>
+        <FundingGapViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">회수품 60kg을 kg당 1000원에 팔면 6만원입니다. 수거 4만원+재처리 6만원+잔여물 2만원=12만원이므로 추가로 6만원의 재원이 필요합니다. 요금·생산자 부담·세금 등 누가 채울지 결정하지 않으면 운영이 계속되기 어렵습니다.</p>
           <p className="leading-8">(가정) 판매가격만 kg당 800원으로 떨어지면 수입은 4만 8000원이고 부족액은 7만 2000원입니다. 물질을 같은 60kg 회수했어도 재무 결과가 바뀝니다. 품질과 판로, 비용을 함께 봐야 하는 이유입니다.</p>
         </div>
@@ -89,6 +98,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">OECD 그림은 물건의 이동과 돈의 지급을 다르게 그립니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">OECD의 플라스틱 보고서 Figure 6.4는 제품·포장·폐기물의 흐름을 실선 블록 화살표로, 돈의 흐름을 점선으로 구분합니다. 이 구분을 100kg 사례에 적용하면 수거·처리·회수의 양과 판매·부담금의 금액을 같은 장부에 섞지 않게 됩니다.</p>
+        </div>
+        <TwoFlowsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">60kg을 누가 받아 어떤 용도에 썼는지 물질 경로에 적습니다. 6만원의 판매대금과 추가 재원을 누가 냈는지는 돈의 경로에 적습니다. 물건이 국경을 넘으면 운송·통관·실제 처리시설의 확인도 필요합니다.</p>
           <p className="leading-8">보고서의 그림은 이 사례의 75% 수율이나 12만원 비용을 뒷받침하는 실측이 아닙니다. 그런 수치는 재료·설비·지역별 자료로 채워야 합니다. 여기서는 서로 다른 흐름을 구분하는 도구를 가져옵니다.</p>
         </div>
@@ -105,6 +117,9 @@ export default function Article() {
           <p className="leading-8">실제 제도는 품목·보고 시점·실적 검증·미이행 책임을 정합니다. 60kg이 실제로 회수됐는지와 잔여물이 적정하게 처리됐는지 확인해야 돈을 납부한 사실을 환경 성과로 바꾸어 쓰지 않을 수 있습니다. 다른 나라에 적용할 때에는 현지 원문으로 이 항목을 다시 채웁니다.</p>
           <p className="leading-8">한국에서는 「자원의 절약과 재활용촉진에 관한 법률」이 이 항목을 채웁니다(2026-08-20 시행본, 2026-10-09 확인). 제16조에 따라 대통령령으로 정한 제품이나 포장재를 만들거나 수입한 사업자는 출고한 물건에서 나온 폐기물을 회수해 재활용할 의무를 집니다. 포장재라면 그 포장재를 써서 제품을 판 사업자도 같은 의무를 집니다.</p>
           <p className="leading-8">어떤 물건이 대상인지는 시행령 제18조가 정합니다. 사례의 100kg과 가장 가까운 것은 음식료품 등을 담은 포장재로, 종이팩과 유리병, 금속캔, 합성수지 포장재가 여기에 들어갑니다. 그 밖에 1회용 봉투와 쇼핑백, 수은전지 같은 전지류도 대상입니다.</p>
+        </div>
+        <RecyclingObligationViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">의무의 크기는 비율로 정합니다. 제17조는 기후에너지환경부장관이 제품·포장재별로 연간 출고량 중 재활용해야 하는 비율, 곧 재활용의무율을 고시하게 합니다. 사례의 100kg이 모두 대상 포장재이고 의무율이 70%라고 놓으면(가정) 재활용의무량은 70kg입니다. 실제로 회수한 60kg만 인정되면 10kg이 모자랍니다.</p>
           <p className="leading-8">생산자는 직접 회수·재활용하거나, 제16조제3항에 따라 재활용사업공제조합에 분담금을 내고 의무를 함께 이행합니다.</p>
           <p className="leading-8">의무를 다하지 못하면 제19조에 따라 재활용되지 않은 양의 재활용 비용에 그 30% 이하를 더한 재활용부과금을 냅니다. 사례의 처리비 12만원을 60kg으로 나눈 kg당 2,000원을 재활용 비용으로 쓰면(가정) 모자란 10kg의 비용은 2만원이고, 부과금은 2만원에서 2만 6,000원 사이입니다. 실제 의무율과 kg당 비용은 고시와 시행령의 산정 기준으로 확인합니다.</p>
@@ -116,6 +131,9 @@ export default function Article() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">덜 버리는 것과 더 많이 회수하는 것은 다른 성과입니다</h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        </div>
+        <ReuseVsRecoveryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             (가정) 재생재료 60kg을 새 원료와 같은 품질로 모두 쓸 수 있습니다. 새 제품의 필요량이 100kg이면 새 원료 40kg이 필요하지만 수요가 120kg으로 늘면 60kg이

@@ -5,6 +5,10 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ClaimVsGoodsViz from "./trade-credit-and-long-distance-networks/viz/ClaimVsGoodsViz";
+import FourFlowsViz from "./trade-credit-and-long-distance-networks/viz/FourFlowsViz";
+import RepaymentDelayViz from "./trade-credit-and-long-distance-networks/viz/RepaymentDelayViz";
+import SilkRelayViz from "./trade-credit-and-long-distance-networks/viz/SilkRelayViz";
 
 export default function TradeCreditAndLongDistanceNetworksArticle() {
   return (
@@ -17,6 +21,7 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
       </LessonSection>
 
       <LessonSection id="black-box" level="B" title="2. 물건·대금·정보·위험의 네 흐름을 나눕니다" bridge="한 번의 거래 안에 속도가 다른 네 흐름이 있음을 확인했습니다. 은 6미나의 상환 약속으로 내려갑니다.">
+        <FourFlowsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">주석과 직물은 대상과 배를 타고 움직입니다. 은과 금은 반대편으로 돌아오거나 다른 거래의 대금으로 쓰입니다. 가격·분쟁·통행 상황은 편지와 소문으로 늦게 전달됩니다. 도난·질병·전쟁·환율 변화의 손실은 투자자, 운송인, 상인 사이에 나뉩니다.</p>
           <p className="leading-8">네 흐름의 시점이 다르기 때문에 현금으로 즉시 맞바꾸는 거래만으로는 긴 거리를 버티기 어렵습니다. 먼저 물건을 넘기고 나중에 갚는 신용, 다른 도시에서 대신 행동하는 대리인, 무게와 순도를 비교하는 표준이 필요해집니다.</p>
@@ -41,6 +46,7 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
       </LessonSection>
 
       <LessonSection id="picture" level="1" title="4. 실물 이동과 장부의 약속이 다른 속도로 움직입니다" bridge="물건이 이미 소비된 뒤에도 청구권이 남는 구조를 확인했습니다. 거리와 시간이 만드는 필요를 봅니다.">
+        <ClaimVsGoodsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">직물은 이미 팔리고 주석은 다른 물건으로 가공될 수 있습니다. 그래도 점토판에는 은 6미나의 의무가 남습니다. 실물의 위치와 소유가 바뀌어도 장부의 청구권은 상환일까지 이어집니다.</p>
           <p className="leading-8">이 분리는 거래를 늘리지만 분쟁도 만듭니다. 빚진 사람이 죽거나 수확이 실패하거나 점토판 봉인이 깨졌을 때 누가 손실을 지는지 정해야 합니다. 기록, 증인, 법정, 평판은 물건을 직접 보고 있지 않아도 약속을 집행하는 장치입니다.</p>
@@ -66,6 +72,9 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
       <LessonSection id="mechanism" level="4" title="7. 6미나가 주석·직물·은으로 돌아오는 경로를 추적합니다" bridge="상품 이익보다 먼저 자금·시간·위험의 분배를 봤습니다. 실제 점토판의 물성과 문구를 확인합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">출발지의 가족이 직물과 주석을 제공하고 상인이 이를 카네시에서 팝니다. 구매자가 즉시 은을 다 내지 못하면 6미나 채무가 생깁니다. 다음 수확에서 2미나가 들어오고, 남은 4미나는 뒤 거래나 수확에서 결제됩니다.</p>
+        </div>
+        <RepaymentDelayViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫 상환이 늦어지면 상인은 귀환 대금을 마련하지 못하고 투자자도 다음 대상을 꾸리기 어렵습니다. 따라서 수익률만큼 상환 순서와 현금 시점이 중요합니다. 한 채무자의 실패가 동업자와 다음 거래로 번질 수 있습니다.</p>
           <p className="leading-8">반대로 여러 상인과 도시를 쓰면 한 길의 폐쇄를 우회할 수 있습니다. 교역망은 위험을 없애지 않고 누구에게, 어느 시점에 남길지 바꾸는 구조입니다.</p>
         </div>
@@ -83,6 +92,9 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
       <LessonSection id="comparison" level="6" title="9. 실크로드는 하나의 도로가 아니라 갈아타는 여러 망이었습니다" bridge="긴 거리의 교역을 단일 출발지와 목적지의 직통 거래로 보지 않았습니다. 이득과 위험의 불균등을 정리합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">오늘날 실크로드라고 부르는 연결은 1,500년 넘게 이어진 육상 길과 해상 항로의 묶음입니다. 비단만이 아니라 면직물, 향신료, 말, 유리, 도자기, 종교, 기술이 여러 중개 도시와 제국의 경계를 거쳤습니다.</p>
+        </div>
+        <SilkRelayViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">대부분의 상인이 중국에서 지중해까지 전 구간을 직접 간 것은 아닙니다. 물건은 구간마다 소유자와 운송 수단을 바꾸고, 언어와 통화도 달라졌습니다. 그래서 어느 한 제국의 흥망, 통행세, 전쟁, 항구 변화가 전체 망의 경로와 가격을 바꿀 수 있었습니다.</p>
         </div>
         <SourceApplication source="Xinru Liu · The Silk Roads: A Brief History with Documents" excerpt="overland trails and sea lanes" application="한 직선 도로 대신 여러 구간의 상인·도시·해상 항로가 물건과 정보를 넘기는 연결망으로 읽습니다." />

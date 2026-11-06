@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
+import AttentionScaleViz from "./viz/AttentionScaleViz";
+import FrequencyRetentionViz from "./viz/FrequencyRetentionViz";
 import YarnBandDecisionViz from "./viz/YarnBandDecisionViz";
 
 export default function YarnMethod() {
@@ -46,6 +48,8 @@ export default function YarnMethod() {
         </p>
       </div>
 
+      <FrequencyRetentionViz />
+
       <YarnBandDecisionViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -76,6 +80,8 @@ export default function YarnMethod() {
         assumptions={["0.1 ln(s)+1은 LLaMA·Llama 2 실험에 맞춘 YaRN 논문의 권장식입니다.", "library가 attention_factor를 이미 적용하면 사용자가 다시 곱하지 않습니다."]}
         interpretation="frequency interpolation만이 YaRN의 전부가 아닙니다. 논문에서 YaRN은 NTK-by-parts와 pre-softmax attention scaling을 합친 방법을 뜻합니다."
       />
+
+      <AttentionScaleViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
