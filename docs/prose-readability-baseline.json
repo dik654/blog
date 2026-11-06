@@ -2,7 +2,7 @@
   "description": "Known legacy prose-compression inventory keyed by route and source fingerprint. New or changed findings must be rewritten or explicitly re-reviewed; an entry is not a claim that prose quality is complete.",
   "findings": {
     "ai/claw-bash": {
-      "fingerprint": "8568100a6bdc078d",
+      "fingerprint": "5b710bf58a8255ef",
       "score": 138
     },
     "ai/claw-tool-system": {

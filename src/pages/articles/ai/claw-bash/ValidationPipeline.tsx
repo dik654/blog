@@ -61,14 +61,7 @@ export default function ValidationPipeline() {
           먼저 계산한 뒤 permission engine에 후보를 넘겨야 합니다. 이 판정이
           process 생성보다 앞에 있어야 deny가 실제 side effect를 막을 수 있습니다.
         </p>
-        <p>
-          <strong>Lexical check</strong>는 특정 token이나 pattern이 있는지 보는
-          검사이고, <strong>semantic check</strong>는 shell expansion과 executable
-          동작을 고려해 어떤 resource가 영향을 받는지 판단하는 검사입니다. 전자는
-          빠르고 설명하기 쉽지만 quote·environment variable·subshell·interpreter
-          내부 코드를 모두 이해하지 못합니다. 따라서 lexical allow를 semantic
-          safety의 증명으로 사용하지 않습니다.
-        </p>
+        <p><strong>Lexical check</strong>는 특정 token이나 pattern이 있는지 보는 검사이고 <strong>semantic check</strong>는 shell expansion과 executable 동작을 고려해 어떤 resource가 영향을 받는지 판단하는 검사입니다. 전자는 빠르고 설명하기 쉽지만 quote·environment variable·subshell·interpreter 내부 코드를 모두 이해하지 못합니다. 그래서 lexical allow를 semantic safety의 증명으로 사용하지 않습니다.</p>
       </div>
 
       <div className="not-prose my-8 grid min-w-0 gap-4 sm:grid-cols-2 lg:gap-6">
@@ -93,22 +86,8 @@ export default function ValidationPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Pinned production dispatch와 validation module은 같은 경로가 아닙니다</h3>
-        <p>
-          <strong>PINNED:</strong> 실제 tools dispatch는 input을 deserialize한 뒤
-          <code>tools/src/lib.rs</code> 안의 별도
-          <code>classify_bash_permission</code>을 호출합니다. 이 함수는 첫 token과
-          간단한 path heuristic으로 required mode를 정하고, enforcer가 주어진
-          경우에만 검사한 다음 <code>run_bash</code>를 호출합니다.
-        </p>
-        <p>
-          한편 <code>runtime/src/bash_validation.rs</code>에는 read-only, destructive
-          pattern, mode, <code>sed</code>, path와 command intent 검사가 구현돼
-          있습니다. <code>validate_command</code>는 mode → sed → destructive →
-          path 순서로 첫 non-Allow 결과를 반환합니다. 그러나 같은 pinned commit의
-          production code에서 이 함수를 호출하는 경로는 확인되지 않고, module
-          자체의 unit test만 확인됩니다. 따라서 아래 검사를 “현재 Bash executor가
-          모두 강제한다”고 설명하면 source 범위를 넘습니다.
-        </p>
+        <p><strong>PINNED:</strong> 실제 tools dispatch는 input을 deserialize한 뒤 <code>tools/src/lib.rs</code> 안의 별도 <code>classify_bash_permission</code>을 호출합니다. 이 함수는 첫 token과 간단한 path heuristic으로 required mode를 정하고 enforcer가 주어진 경우에만 검사한 다음 <code>run_bash</code>를 호출합니다.</p>
+        <p>한편 <code>runtime/src/bash_validation.rs</code>에는 read-only, destructive pattern, mode, <code>sed</code>, path와 command intent 검사가 구현돼 있습니다. <code>validate_command</code>는 mode → sed → destructive → path 순서로 첫 non-Allow 결과를 반환합니다. 그러나 같은 pinned commit의 production code에서 이 함수를 호출하는 경로는 확인되지 않고 module 자체의 unit test만 확인됩니다. 아래 검사를 “현재 Bash executor가 모두 강제한다”고 설명하면 source 범위를 넘습니다.</p>
       </div>
 
       <div
@@ -129,11 +108,7 @@ export default function ValidationPipeline() {
               <strong>문제:</strong> Shell string을 mode·destructive signal·path와
               intent 관점에서 검사할 project module이 필요합니다.
             </p>
-            <p>
-              <strong>기여:</strong> Pinned file은 read-only·mode·sed·destructive·path
-              validator, <code>CommandIntent</code> classifier와 first-non-Allow
-              pipeline을 제공합니다.
-            </p>
+            <p><strong>기여:</strong> Pinned file에는 read-only·mode·sed·destructive·path validator, <code>CommandIntent</code> classifier와 first-non-Allow pipeline이 들어 있습니다.</p>
             <p>
               <strong>가정:</strong> Commit
               b71afddae100ced324457337925a694686b8fef2의 module과 tests이며 함수의
@@ -143,31 +118,15 @@ export default function ValidationPipeline() {
               <strong>근거:</strong> 이 절의 lexical rule 종류, intent category와
               <code>validate_command</code> 내부 순서를 뒷받침합니다.
             </p>
-            <p>
-              <strong>비주장:</strong> 모든 shell grammar를 해석하고 이 pipeline이
-              Bash executor 앞에서 호출되며 Allow가 안전을 증명한다는 뜻은 아닙니다.
-            </p>
+            <p><strong>비주장:</strong> 모든 shell grammar를 해석하고 이 pipeline이 Bash executor 앞에서 호출되며 Allow가 안전을 증명한다고 주장하지 않습니다.</p>
           </div>
         </CitationBlock>
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Required mode 계산과 executor 앞 enforcement를 따로 시험합니다</h3>
-        <p>
-          Login edit처럼 WorkspaceWrite 이상이 필요한 command에서는 JSON input과
-          required mode, actor·workspace·policy generation을 policy input으로
-          보냅니다. <code>Some(PermissionEnforcer)</code>의 Allow만 executor로
-          진행하고 Deny는 typed reason을 남긴 채 process를 만들지 않습니다. Ask는
-          command 종류 전체가 아니라 action·actor·cwd·canonical target·expiry에
-          묶인 승인을 받은 뒤 다시 판정합니다.
-        </p>
-        <p>
-          Pinned <code>None</code> path는 검사를 건너뛸 수 있으므로 release
-          composition에서는 enforcer를 required dependency로 바꿉니다. Missing
-          enforcer, deny와 아직 소비되지 않은 ask는 모두 같은 negative invariant,
-          즉 executor call·child process·workspace change가 0이라는 조건을
-          만족해야 합니다.
-        </p>
+        <p>Login edit처럼 WorkspaceWrite 이상이 필요한 command에서는 JSON input과 required mode, actor·workspace·policy generation을 policy input으로 보냅니다. <code>Some(PermissionEnforcer)</code>의 Allow만 executor로 진행하고 Deny는 typed reason을 남긴 채 process를 만들지 않습니다. Ask는 action·actor·cwd·canonical target·expiry에 묶인 승인을 받은 뒤 다시 판정합니다. 이 승인이 command 종류 전체에 걸리지는 않습니다.</p>
+        <p>Pinned <code>None</code> path는 검사를 건너뛸 수 있으므로 release composition에서는 enforcer를 required dependency로 바꿉니다. Missing enforcer, deny와 아직 소비되지 않은 ask에는 모두 같은 negative invariant가 걸립니다. executor call·child process·workspace change가 0이어야 합니다.</p>
       </div>
 
       <div className="not-prose my-7 overflow-x-auto rounded-lg border border-border/70">
@@ -201,10 +160,7 @@ export default function ValidationPipeline() {
           있습니다. 규칙마다 차단하려는 effect, 오탐 fixture와 알려진 bypass를
           함께 관리해야 합니다.
         </p>
-        <p>
-          특히 warning을 반환하는 함수가 존재한다는 사실만으로 사람이 실제 warning을 봤거나 승인이 생성됐다고 볼 수 없습니다. dispatch가 결과를 소비하는지,
-          warning 상태에서 process 수가 0인지, 승인 뒤 arguments가 바뀌면 다시 판정하는지는 integration test로 확인합니다.
-        </p>
+        <p>특히 warning을 반환하는 함수가 존재하는 것만으로는 사람이 실제 warning을 봤거나 승인이 생성됐다고 볼 수 없습니다. dispatch가 결과를 소비하는지, warning 상태에서 process 수가 0인지, 승인 뒤 arguments가 바뀌면 다시 판정하는지는 integration test로 확인합니다.</p>
       </div>
 
       <div className="not-prose my-8">
@@ -213,21 +169,8 @@ export default function ValidationPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Canonical path를 한 번 계산해도 TOCTOU는 남습니다</h3>
-        <p>
-          요청 시점의 cwd와 target을 문자열 prefix로 비교하면 <code>..</code>,
-          <code>/work/app-old</code>처럼 비슷한 prefix와 symlink 때문에 workspace를
-          벗어날 수 있습니다. Existing path는 canonical component 단위로
-          비교하고, 아직 없는 output은 가장 가까운 existing parent와 새 component를
-          나눠 검증해야 합니다. 실행 파일도 <code>PATH</code>에서 실제로 resolve된
-          identity를 판정에 묶어야 합니다.
-        </p>
-        <p>
-          그러나 검사 뒤 process가 file을 열기 전에 symlink나 directory entry가
-          바뀌면, 검사한 대상과 실제 열린 대상이 달라지는
-          <strong> TOCTOU</strong>(time-of-check to time-of-use) race가 생깁니다.
-          Canonical string을 decision log에 남기는 일과 execution-time filesystem
-          boundary를 강제하는 일은 서로 다른 층입니다.
-        </p>
+        <p>요청 시점의 cwd와 target을 문자열 prefix로 비교하면 <code>..</code>,<code>/work/app-old</code>처럼 비슷한 prefix와 symlink 때문에 workspace를 벗어날 수 있습니다. Existing path는 canonical component 단위로 비교하고 아직 없는 output은 가장 가까운 existing parent와 새 component를 나눠 검증해야 합니다. 실행 파일도 <code>PATH</code>에서 실제로 resolve된 identity를 판정에 묶어야 합니다.</p>
+        <p>그러나 검사 뒤 process가 file을 열기 전에 symlink나 directory entry가 바뀌면 검사한 대상과 실제 열린 대상이 달라지는 <strong> TOCTOU</strong>(time-of-check to time-of-use) race가 생깁니다. Canonical string을 decision log에 남기는 일과 execution-time filesystem boundary를 강제하는 일은 서로 다른 층입니다.</p>
       </div>
 
       <div className="not-prose my-8">
@@ -252,11 +195,7 @@ export default function ValidationPipeline() {
               <strong>문제:</strong> Resource를 검사한 뒤 사용할 때까지 상태가
               바뀌면 승인한 대상과 실제 effect 대상이 달라질 수 있습니다.
             </p>
-            <p>
-              <strong>기여:</strong> CWE-367은 check와 use 사이 경쟁을 줄이고,
-              가능한 경우 동일한 handle이나 원자적 operation과 권한 경계를
-              사용하도록 안내합니다.
-            </p>
+            <p><strong>기여:</strong> CWE-367은 check와 use 사이 경쟁을 줄이고 가능한 경우 동일한 handle이나 원자적 operation과 권한 경계를 사용하도록 안내합니다.</p>
             <p>
               <strong>가정:</strong> 공격자나 동시 process가 symlink, directory
               entry 또는 resource state를 바꿀 수 있는 환경입니다.
@@ -275,20 +214,8 @@ export default function ValidationPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release gate는 연결 여부와 effect 부재를 함께 검사합니다</h3>
-        <p>
-          <strong>HARDENING:</strong> Release composition은 validated input, shell
-          program, canonical cwd·target, executable resolution, environment·policy
-          digest와 effect summary를 하나의 decision에 묶어야 합니다. Path는 가능한
-          경우 dirfd·handle 기반 API와 OS sandbox로 다시 제한하고, 해석하지 못한
-          expansion이나 target은 fail-closed 또는 더 좁은 sandbox로 보냅니다.
-        </p>
-        <p>
-          로그인 edit에서는 canonical root와 target을 check 시점에 기록합니다. 그 뒤에는 parent directory handle을 기준으로 descriptor-
-          relative open을 수행하고 symlink를 따라가지 않는 no-follow resolution을 씁니다. 새 파일은 가능한 경우 같은 directory에서 atomic
-          create·rename으로 반영합니다. decision의 resource identity와 실제 handle identity, policy generation과
-          before/after effect는 같은 receipt에 넣습니다. 이 절차도 platform별 API와 동시 attacker를 사용한 negative test 없이는 완전하다고
-          주장할 수 없습니다.
-        </p>
+        <p><strong>HARDENING:</strong> Release composition은 validated input, shell program, canonical cwd·target, executable resolution, environment·policy digest와 effect summary를 하나의 decision에 묶어야 합니다. Path는 가능한 경우 dirfd·handle 기반 API와 OS sandbox로 다시 제한하고 해석하지 못한 expansion이나 target은 fail-closed 또는 더 좁은 sandbox로 보냅니다.</p>
+        <p>로그인 edit에서는 canonical root와 target을 check 시점에 기록한 뒤 parent directory handle을 기준으로 descriptor- relative open을 수행하고 symlink를 따라가지 않는 no-follow resolution을 씁니다. 새 파일은 가능한 경우 같은 directory에서 atomic create·rename으로 반영합니다. decision의 resource identity와 실제 handle identity, policy generation과 before/after effect는 같은 receipt에 넣습니다. 이 절차도 platform별 API와 동시 attacker를 사용한 negative test 없이는 완전하다고 주장할 수 없습니다.</p>
         <p>
           다음 negative fixture는 단순히 error string을 확인하는 test가 아닙니다. Deny·malformed·Unknown 뒤 child process와
           workspace diff가 없고 허용한 로그인 search만 같은 cwd에서 실행됐다는 evidence까지 확인합니다.

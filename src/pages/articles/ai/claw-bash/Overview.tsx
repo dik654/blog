@@ -89,21 +89,8 @@ export default function Overview() {
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">
-          사용자가 “로그인 요청이 왜 401로 끝나는지 찾아 최소 수정하고 test해
-          주세요”라고 요청했다고 가정하겠습니다. 모델은 source를 찾기 위한
-          command를 만들 수 있지만, 문자열을 생성했다는 사실만으로 실행 권한을
-          얻지는 않습니다. 모델이 소유하는 것은 <strong>실행 제안</strong>이고,
-          filesystem·network·process effect를 허용하는 주체는 host runtime입니다.
-        </p>
-        <p>
-          이 글은 그 제안이 <strong>shell/argv 해석 → expansion과 path → 예상
-          effect → permission → process → typed observation → deterministic
-          test</strong>를 통과하는 순서를 추적합니다. 구현 사실은 독립 공개 Claw
-          Code의 commit <code>b71afdd…</code>에만 귀속합니다. 아래에서
-          <strong> PINNED</strong>는 그 snapshot에서 확인한 동작이고,
-          <strong> HARDENING</strong>은 안전한 release를 위해 추가할 계약입니다.
-        </p>
+        <p className="text-lg leading-8">사용자가 “로그인 요청이 왜 401로 끝나는지 찾아 최소 수정하고 test해 주세요”라고 요청했다고 가정하겠습니다. 모델은 source를 찾기 위한 command를 만들 수 있지만 문자열을 생성한 것만으로 실행 권한을 얻지는 않습니다. 모델이 소유하는 것은 <strong>실행 제안</strong>이고 filesystem·network·process effect를 허용하는 주체는 host runtime입니다.</p>
+        <p>이 글은 그 제안이 <strong>shell/argv 해석 → expansion과 path → 예상 effect → permission → process → typed observation → deterministic test</strong>를 통과하는 순서를 추적합니다. 구현 사실은 독립 공개 Claw Code의 commit <code>b71afdd…</code>에만 귀속합니다. 아래에서 <strong> PINNED</strong>는 그 snapshot에서 확인한 동작이고 <strong> HARDENING</strong>은 안전한 release를 위해 추가할 계약입니다.</p>
         <p>
           첫 후보는 <code>rg -n &quot;401|Unauthorized&quot; src tests</code>입니다. 여기에 <code>&gt; report.txt</code>가 붙으면
           file write가 생깁니다. <code>| sh</code>가 붙으면 search 결과가 다음 process의 code가 됩니다.
@@ -141,10 +128,7 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>로그인 오류 한 건이 남겨야 하는 일곱 artifact</h3>
-        <p>
-          앞의 네 단계는 아직 외부 effect가 없는 proposal·판정 구간입니다. 다섯 번째 단계에 와서야 처음 process가 생깁니다. 여섯 번째 observation은 “실행을
-          허가했다”는 기록이 아니라 실제로 관측한 결과입니다. 마지막 test가 같은 수정본과 cwd에서 통과해야 “401을 고쳤다”는 결론을 낼 수 있습니다.
-        </p>
+        <p>앞의 네 단계는 아직 외부 effect가 없는 proposal·판정 구간입니다. 다섯 번째 단계에 와서야 처음 process가 생깁니다. 여섯 번째 observation은 실제로 관측한 결과이고 “실행을 허가했다”는 기록과는 다릅니다. 마지막 test가 같은 수정본과 cwd에서 통과해야 “401을 고쳤다”는 결론을 낼 수 있습니다.</p>
       </div>
 
       <ol className="not-prose my-8 grid min-w-0 gap-4 sm:grid-cols-2 lg:gap-6">
@@ -175,36 +159,9 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>argv 실행과 shell string 실행은 서로 다른 API입니다</h3>
-        <p>
-          <strong>직접 argv 실행</strong>은 executable과 argument 배열을 host가
-          나눠 process API에 전달합니다. 이때 <code>|</code>, <code>&gt;</code>,
-          <code>$VAR</code>는 자동으로 shell 문법이 되지 않습니다. 반대로
-          <strong> shell string 실행</strong>은 문자열 하나를 shell interpreter에
-          넘기므로 quote 제거, parameter expansion, command substitution,
-          pipeline과 redirection이 shell 규칙에 따라 처리됩니다. 화면에 보인 첫
-          token만으로 실제 effect를 판단할 수 없는 이유입니다.
-        </p>
-        <p>
-          예를 들어 첫 제안인
-          <code>rg -n &quot;401|Unauthorized&quot; src tests</code>는 눈에 보이는
-          범위에서는 search입니다. 그러나
-          <code>rg ... &gt; report.txt</code>는 file write를 만들고,
-          <code>rg ... | sh</code>는 뒤쪽 process가 입력을 코드로 해석합니다.
-          <code>rg &quot;$(cat "$HOME/.token")&quot; .</code>처럼 expansion이 먼저
-          민감한 file을 읽을 수도 있습니다. 따라서 executable name, shell
-          program, expansion source와 effect target을 서로 다른 field로 다뤄야
-          합니다.
-        </p>
-        <p>
-          Direct 실행이라면 executable은 <code>rg</code>, argv는
-          <code>[&quot;-n&quot;, &quot;401|Unauthorized&quot;, &quot;src&quot;, &quot;tests&quot;]</code>로
-          네 argument가 그대로 전달됩니다. Pinned 경로에서는 이 전체 text가
-          <code>sh -lc</code>의 command string 한 개가 되고 shell이 quote 제거와
-          expansion을 소유합니다. 두 경우 모두 host current working directory와
-          inherited environment가 의미에 영향을 주므로 snapshot에 남겨야 합니다.
-          Direct argv와 sanitized environment를 선호하는 것은 hardening 선택이며,
-          pinned runtime이 이미 그렇게 실행한다는 설명이 아닙니다.
-        </p>
+        <p><strong>직접 argv 실행</strong>은 executable과 argument 배열을 host가 나눠 process API에 전달합니다. 이때 <code>|</code>, <code>&gt;</code>,<code>$VAR</code>는 자동으로 shell 문법이 되지 않습니다. 반대로 <strong> shell string 실행</strong>은 문자열 하나를 shell interpreter에 넘기므로 quote 제거, parameter expansion, command substitution, pipeline과 redirection이 shell 규칙에 따라 처리됩니다. 그래서 화면에 보인 첫 token만으로는 실제 effect를 판단할 수 없습니다.</p>
+        <p>예를 들어 첫 제안인 <code>rg -n &quot;401|Unauthorized&quot; src tests</code>는 눈에 보이는 범위에서는 search입니다. 그러나 <code>rg ... &gt; report.txt</code>는 file write를 만듭니다.<code>rg ... | sh</code>에서는 뒤쪽 process가 입력을 코드로 해석합니다.<code>rg &quot;$(cat "$HOME/.token")&quot; .</code>처럼 expansion이 먼저 민감한 file을 읽을 수도 있습니다. executable name, shell program, expansion source와 effect target은 서로 다른 field로 다뤄야 합니다.</p>
+        <p>Direct 실행이라면 executable은 <code>rg</code>, argv는 <code>[&quot;-n&quot;, &quot;401|Unauthorized&quot;, &quot;src&quot;, &quot;tests&quot;]</code>로 네 argument가 그대로 전달됩니다. Pinned 경로에서는 이 전체 text가 <code>sh -lc</code>의 command string 한 개가 되고 shell이 quote 제거와 expansion을 소유합니다. 두 경우 모두 host current working directory와 inherited environment가 의미에 영향을 주므로 snapshot에 남겨야 합니다. Direct argv와 sanitized environment를 선호하는 것은 hardening 선택이며 pinned runtime이 이미 그렇게 실행한다는 설명은 아닙니다.</p>
       </div>
 
       <div
@@ -221,11 +178,7 @@ export default function Overview() {
           href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html"
         >
           <div className="space-y-2 font-sans">
-            <p>
-              <strong>문제:</strong> Shell string은 공백으로 나눈 argv가 아니라
-              quoting, expansion, redirection과 compound command 규칙을 가진
-              언어입니다.
-            </p>
+            <p><strong>문제:</strong> Shell string은 quoting, expansion, redirection과 compound command 규칙이 있는 언어이고 공백으로 나눈 argv와는 다릅니다.</p>
             <p>
               <strong>기여:</strong> POSIX 명세는 token recognition, expansion,
               redirection, pipeline과 command execution의 공통 의미를 정의합니다.
@@ -238,10 +191,7 @@ export default function Overview() {
               <strong>근거:</strong> 첫 token이나 substring만으로 shell program의
               전체 effect를 증명할 수 없다는 일반 경계를 뒷받침합니다.
             </p>
-            <p>
-              <strong>비주장:</strong> POSIX 문법을 모두 parse하면 runtime 권한,
-              path race나 실행된 program 내부 effect까지 안전해진다는 뜻은 아닙니다.
-            </p>
+            <p><strong>비주장:</strong> POSIX 문법을 모두 parse하면 runtime 권한, path race나 실행된 program 내부 effect까지 안전해진다는 주장이 아닙니다.</p>
           </div>
         </CitationBlock>
       </div>
@@ -257,13 +207,7 @@ export default function Overview() {
           이 이름은 실제 file write가 확인됐다는 뜻이 아니라 pinned permission
           enum의 ordering에 맞춘 분류 결과입니다.
         </p>
-        <p>
-          Registry에 <code>PermissionEnforcer</code>가 주입돼 있으면 executor 전에
-          required mode를 비교하고 부족할 때 error를 반환합니다. 하지만 enforcer
-          인자는 <code>Option</code>이고, <code>execute_tool</code>은 enforcer 없이
-          같은 dispatch를 호출할 수 있습니다. 따라서 “Bash tool을 사용하면 모든
-          call path에서 permission이 강제된다”고 일반화할 수 없습니다.
-        </p>
+        <p>Registry에 <code>PermissionEnforcer</code>가 주입돼 있으면 executor 전에 required mode를 비교하고 부족할 때 error를 반환합니다. 하지만 enforcer 인자는 <code>Option</code>이고 <code>execute_tool</code>은 enforcer 없이 같은 dispatch를 호출할 수 있으므로 “Bash tool을 사용하면 모든 call path에서 permission이 강제된다”고 일반화할 수 없습니다.</p>
       </div>
 
       <div
@@ -299,36 +243,15 @@ export default function Overview() {
               classification·optional permission seam·runtime 호출 순서를
               뒷받침합니다.
             </p>
-            <p>
-              <strong>비주장:</strong> Heuristic이 shell semantics를 완전히
-              이해하고 모든 call path가 enforcer를 거치며 production security가
-              검증됐다는 뜻은 아닙니다.
-            </p>
+            <p><strong>비주장:</strong> Heuristic이 shell semantics를 완전히 이해하고 모든 call path가 enforcer를 거치며 production security가 검증됐다고 주장하지 않습니다.</p>
           </div>
         </CitationBlock>
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Runtime은 host cwd에서 최종적으로 sh -lc를 호출합니다</h3>
-        <p>
-          <strong>PINNED:</strong> <code>runtime/src/bash.rs</code>의 input에는
-          command, timeout, description, background와 sandbox override가 있지만
-          per-call <code>cwd</code> field는 없습니다. Runtime은 host process의
-          current directory를 읽고, Linux namespace launcher를 만들 수 있으면
-          <code>unshare … sh -lc command</code>를, 그렇지 않으면 바로
-          <code>sh -lc command</code>를 준비합니다. 즉 permission 판정에 사용한
-          cwd와 실행 시점의 cwd·environment가 같다는 보장은 별도 composition
-          contract에서 확인해야 합니다.
-        </p>
-        <p>
-          Foreground 결과는 stdout과 stderr를 각각 최대 16 KiB까지 보존하고,
-          non-zero exit는 <code>returnCodeInterpretation</code>, timeout은
-          <code>interrupted</code>와 structured timeout event, 요청·적용된 sandbox
-          상태는 <code>sandboxStatus</code>로 반환합니다. 하지만 stable attempt ID,
-          성공 시의 명시적 exit code, signal, 원본 출력 artifact digest, 실제
-          process tree 종료와 workspace rollback은 이 file에서 확인되지 않습니다.
-          따라서 timeout이나 error를 “아무 effect도 없었다”로 해석하면 안 됩니다.
-        </p>
+        <p><strong>PINNED:</strong> <code>runtime/src/bash.rs</code>의 input에는 command, timeout, description, background와 sandbox override가 있지만 per-call <code>cwd</code> field는 없습니다. Runtime은 host process의 current directory를 읽고 Linux namespace launcher를 만들 수 있으면 <code>unshare … sh -lc command</code>를, 그렇지 않으면 바로 <code>sh -lc command</code>를 준비합니다. 즉 permission 판정에 사용한 cwd와 실행 시점의 cwd·environment가 같다는 보장은 별도 composition contract에서 확인해야 합니다.</p>
+        <p>Foreground 결과는 stdout과 stderr를 각각 최대 16 KiB까지 보존합니다. non-zero exit는 <code>returnCodeInterpretation</code>, timeout은 <code>interrupted</code>와 structured timeout event, 요청·적용된 sandbox 상태는 <code>sandboxStatus</code>로 반환합니다. 하지만 stable attempt ID, 성공 시의 명시적 exit code, signal, 원본 출력 artifact digest, 실제 process tree 종료와 workspace rollback은 이 file에서 확인되지 않습니다. 따라서 timeout이나 error를 “아무 effect도 없었다”로 해석하면 안 됩니다.</p>
       </div>
 
       <div
@@ -349,11 +272,7 @@ export default function Overview() {
               <strong>문제:</strong> 허가된 shell string이 어떤 cwd·launcher로
               실행되고 timeout과 output이 어떤 형태로 돌아오는지 확인해야 합니다.
             </p>
-            <p>
-              <strong>기여:</strong> Pinned file은 <code>BashCommandInput</code>,
-              current-dir resolution, <code>sh -lc</code> preparation, foreground·background
-              branch, timeout·truncation과 <code>BashCommandOutput</code>을 제공합니다.
-            </p>
+            <p><strong>기여:</strong> Pinned file에는 <code>BashCommandInput</code>, current-dir resolution, <code>sh -lc</code> preparation, foreground·background branch, timeout·truncation과 <code>BashCommandOutput</code>이 들어 있습니다.</p>
             <p>
               <strong>가정:</strong> 같은 commit의 tools dispatch, config와
               sandbox status를 함께 읽으며 platform과 host environment를 고정된
@@ -383,11 +302,7 @@ export default function Overview() {
           같은 receipt에 연결합니다. 이 정보가 있어야 crash 뒤 재시도가 기존
           effect를 중복하는지 판단할 수 있습니다.
         </p>
-        <p>
-          로그인 사례의 deterministic test는 고정된 fixture로 401이 재현되고, 최소 수정 뒤 예상 status와 response body가 나오며, 관련 없는
-          workspace diff가 없다는 세 조건을 확인합니다. shell command가 exit 0이었다는 사실만 가지고 login 동작이 고쳐졌다고 결론내리지는 않습니다. 반대로
-          test timeout 뒤에도 child나 file mutation이 남을 수 있으므로 effect receipt를 먼저 reconciliation한 뒤 재실행합니다.
-        </p>
+        <p>로그인 사례의 deterministic test는 고정된 fixture로 401이 재현되고 최소 수정 뒤 예상 status와 response body가 나오며 관련 없는 workspace diff가 없다는 세 조건을 확인합니다. shell command의 exit 0만 보고 login 동작이 고쳐졌다고 결론내리지는 않습니다. 반대로 test timeout 뒤에도 child나 file mutation이 남을 수 있으므로 effect receipt를 먼저 reconciliation한 뒤 재실행합니다.</p>
       </div>
 
       <nav

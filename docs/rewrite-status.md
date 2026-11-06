@@ -4926,3 +4926,12 @@
 - 약어: 설정 이름을 줄인 표현은 `gpu-util` 하나뿐이었습니다. 사이트 특유 약어 14종의 풀이 후보 138건 중 숫자를 읽는 데 뜻이 필요한데 글 안에 풀이가 없는 25곳에 짧은 풀이를 넣었습니다. 블록체인 검증 글의 "운영 SLO" 같은 정형 표현과 선수 글을 전제로 한 GPU 시리즈의 약어는 남겼습니다. 풀이 판정은 정규식과 문맥 읽기로 했으므로 전수 보증은 아닙니다.
 - 윤문 후보: 공개 글의 `<p>` 본문을 shim 지표로 계산하면 route_hint heavy 8편, standard 144편입니다. 지표는 AI 티 위험도이며 윤문 이력을 뜻하지 않습니다. 대량 윤문은 비용 때문에 사용자 결정을 기다립니다.
 
+# 지표 상위 7편 윤문 (2026-11-06)
+
+- 사용자 결정: 윤문 후보 중 heavy를 먼저 처리하고 결과를 본 뒤 다음을 정한다. `kv-cache-fundamentals`는 새 문단을 이미 윤문해 뺐습니다.
+- 대상: `attention-kernel-anatomy-and-backends`, `claw-bash`, `math-variance-sampling`, `speculative-decoding-variants`, `vllm-spec-decode`, `word2vec-prediction-objectives`, `cuda-sync-streams`의 본문 `<p>` 674문단(110,953자). 표·목록·Viz 안의 문장은 다루지 않았습니다.
+- 윤문(humanize-korean v2.3, heavy): 진단 7콜, 윤문 18콜(15,000자 미만 2편은 단일 콜, 나머지는 청크), finalize 7콜로 439문단을 고쳤습니다. finalize가 원문보다 강해진 단정과 주어 변경 등 54곳을 되돌리거나 고쳤습니다.
+- 게이트: 문자 변경률 1.3~3.7%, 문장 터치율 32.6~50.1%. `cuda-sync-streams`의 `comma_segment_length`는 z +2.56 → +2.63으로 목표를 못 채웠습니다. `math-variance-sampling`과 `vllm-spec-decode`의 golden 각주 FAIL은 `(1+0+0+1)`, `(.3,0)` 같은 수식 괄호를 각주로 읽은 오탐이며, 문단별 수치·식별자 대조에서 불일치가 없었습니다.
+- 수치·식별자·마크업 대조에 걸린 3문단(`spec-variants` P101, `cuda-sync` P055·P059)은 읽어 보고 뜻이 같아 남겼습니다.
+- 함께 고친 결함: `claw-bash`에서 줄바꿈 때문에 조사와 `<code>`·`<strong>`이 붙어 보이던 22곳에 공백을 넣었습니다.
+- 남은 항목: `claw-bash`의 설명 호흡 점수는 138로 그대로입니다. 문장을 다듬어도 문단 구조와 내부 용어 밀도는 바뀌지 않으므로, 낮추려면 재작성이 필요합니다. baseline은 이 글의 지문만 갱신했습니다.
