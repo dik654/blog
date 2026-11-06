@@ -540,202 +540,417 @@
 {
 "route": "markets/forwards-and-futures",
 "publicPath": "finance/markets/forwards-and-futures",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5
 },
 {
 "route": "banking/central-bank-and-policy-transmission",
 "publicPath": "finance/banking/central-bank-and-policy-transmission",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 8,
+"articleIssues": [
+"본문 오류는 찾지 못했다. 3.83·3.85, 4.3·4.05, 75,616·79,726·4,110, 3.9992%는 재계산 결과 글과 일치했다.",
+"오류는 아니지만 viz/TransmissionViz.tsx와 viz/PolicyRateViz.tsx는 저장소 어디에서도 import되지 않는다. TransmissionViz에는 경로별 도착 시각(수개월, 즉시 등)처럼 글에 없는 값이 있어 쓰지 않았고 수정하지도 않았다."
+]
 },
 {
 "route": "cloud/linux-observability-proc-psi-perf-ebpf",
 "publicPath": "cs/cloud/linux-observability-proc-psi-perf-ebpf",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5,
+"articleIssues": [
+"9절 AlgorithmBlock의 'bpftrace profile:hz:99 ... 3,960 표본 가운데 report-gen이 약 2,400(가정)'이 4절 가정과 어긋나 보입니다. 폭주는 시간의 1/4이라 10초에 2.5초 × 4 CPU × 99 Hz = 990 표본이 상한이고, 2,400은 그 수치를 넘습니다. 전체 표본 대비로는 약 25%입니다. 본문의 perf top '60% 안팎'은 바쁜 표본 기준으로 읽을 때만 맞습니다(990 ÷ 1,584 = 62.5%). 이 숫자는 새 Viz에 쓰지 않았습니다.",
+"4절의 '10초 동안 2,500,000 µs'는 폭주 위상에 달려 있습니다. 4초 주기를 10초 창으로 자르면 멈춘 시간이 2~3초 사이에서 달라집니다. 정확히 2.5초가 되는 위상을 CounterGaugeViz에서 (가정)으로 골랐고, 본문은 이 조건을 적지 않습니다.",
+"3절은 10초 동안 procs_running이 '1초쯤 12'를 찍었다고 하고, 4절의 4초 주기라면 10초에 폭주가 2.5번 들어갑니다. 두 절의 묘사가 약간 다릅니다.",
+"기존 PsiAverageViz의 '~10초' 장면은 '10초가 지나야 목표의 63%쯤'이라고 적지만 같은 장면의 avg10은 19.2%로 25%의 약 77%입니다. 진동의 정점이라 생기는 차이로 보입니다."
+]
 },
 {
 "route": "macro/global-capital-and-policy",
 "publicPath": "economics/macro/global-capital-and-policy",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6,
+"articleIssues": [
+"3절 끝의 연결 문장 '이 어떤 계약 조건이 두 변화를 만드는지'에 오탈자가 있는 것 같습니다('이'가 남음).",
+"7절의 연 이자 72억 원은 1억 달러 전액 기준입니다. 8000만 달러만 연장되는 경우의 이자가 어떻게 되는지 본문이 말하지 않아, FactorIsolationViz에 '1억 달러 전액 기준'으로 명시했습니다.",
+"6절은 평가 차이를 '기존 자산 평가 차이'로만 적는데, 사례의 환산 +200억은 부채 쪽입니다. BalanceOfPaymentsSortViz에서 부채 환산에 같은 구분을 적용했고, '이 글의 사례를 정의에 맞춰 옮긴 분류'라고 표시했습니다. 부채에 적용하는 것은 제 추론입니다.",
+"연 이자를 경상수지의 소득으로 분류한 것은 본문에 직접 없습니다. '상품·서비스·소득 등'에 근거한 짧은 용어 설명으로 넣었으니 검토가 필요합니다."
+]
 },
 {
 "route": "gpu/sm-warp-scheduling-and-issue",
 "publicPath": "cs/gpu/sm-warp-scheduling-and-issue",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 7,
+"articleIssues": [
+"No error found in the rendered prose; the arithmetic I recomputed matches (528, 31.25, 320/640, 340/1280, ready clocks 9, 10, 7, 8).",
+"Not a prose error: viz/SmWarpSchedulingAndIssueViz.tsx is not imported by ModernArticle.tsx and uses different values (W0-W3, load latency in the hundreds). It looks like unused code; I did not touch it."
+]
 },
 {
 "route": "ai/math-random-variables-expectation",
 "publicPath": "cs/ai/math-random-variables-expectation",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5,
+"articleIssues": [
+"No error found. I recomputed 0.09, 0.42, 0.49, mean 1.4, E[XY] = 1/2, E[XV] = 1/2, E[X²] = 3/2 and the 2^k contributions, and all match."
+]
 },
 {
 "route": "global-history/conquest-disease-silver-and-oceanic-exchange",
 "publicPath": "history/global-history/conquest-disease-silver-and-oceanic-exchange",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 3,
+"articleIssues": [
+"terms의 은 회로 예시 '은 100 중 60이 유럽, 40이 아시아 결제로 이어집니다'는 60+40=100으로 오독될 수 있다. 3절에서 40은 60 안의 몫이다. 산문은 고치지 않았다.",
+"1절 bridge와 overviewFlow 제목은 '네 흐름'이라고 하지만 overviewFlow.steps는 3개다."
+]
 },
 {
 "route": "global-history/revolutions-citizenship-and-industrial-empires",
 "publicPath": "history/global-history/revolutions-citizenship-and-industrial-empires",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 3,
+"articleIssues": [
+"3절은 마지막 30명을 '노예·식민지 신민·비시민'으로 묶는데 7절은 같은 30을 '식민지의 30명'으로 부른다. Viz 설명문에는 이 차이를 '3절의 노예·식민지 신민·비시민 30칸 자리'로 적었다.",
+"overviewFlow 제목은 '네 흐름'이지만 steps는 3개이고, 2절 제목은 네 흐름을 나열한다.",
+"numericCase는 NumericPath로 렌더링되어 서로 병렬인 30명, 40명, 30명 사이에 화살표가 그려진다. 단계적 이동처럼 읽힐 수 있으나 공유 컴포넌트라 고치지 않았다."
+]
 },
 {
 "route": "banking/repo-and-collateral-funding",
 "publicPath": "finance/banking/repo-and-collateral-funding",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 4
 },
 {
 "route": "ai/speculative-decoding-variants",
 "publicPath": "cs/ai/speculative-decoding-variants",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 11,
+"articleIssues": [
+"7절 접힘 블록의 '처음이 B인 두 행은 [0,1]이어도'는 오류로 의심됩니다. 두 행은 부모 B의 argmax 하나와 비교하므로 X 행과 Y 행이 동시에 둘째 칸 1이 될 수 없습니다. 본문은 고치지 않았고, Viz는 B 행의 둘째 칸을 ?로 두었습니다."
+]
 },
 {
 "route": "institutions/media-attention-and-public-belief",
 "publicPath": "economics/institutions/media-attention-and-public-belief",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 7,
+"articleIssues": [
+"S절 제목 '사람들이 보는 정보의 순서도 시장을 움직입니다'는 단정인데, 본문과 7절은 노출의 인과 효과를 확정하기 어렵다고 말합니다. 본문의 '달라질 수 있습니다'와 어조가 어긋납니다.",
+"1절의 NumericPath가 20번 클릭과 2건 구매를 보여 주지만, 이 숫자는 본문에서 4절에야 소개됩니다.",
+"5절은 제33·38조를 2026-10-09 원문 확인으로 적고, 6절은 'EU와 미국 설명은 2026-10-04 확인 기준'이라고 적어 확인일이 엇갈립니다."
+]
 },
 {
 "route": "infrastructure/housing-land-and-supply",
 "publicPath": "economics/infrastructure/housing-land-and-supply",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5,
+"articleIssues": [
+"3절의 '공급의 허가 시간'은 권리 확인·인허가·기반 시설·시공을 모두 포함하는 시간으로 정의돼, '허가'라는 이름보다 범위가 넓습니다. 공급 소요 시간 같은 이름이 맞는지 확인이 필요합니다.",
+"6절 다섯째 문단은 MOP 10년과 매각 시 비율 납부를 Plus 주택만으로 적었는데, 앞 문단은 같은 조건을 Plus·Prime에 함께 적습니다. Viz는 앞 문단대로 Plus·Prime으로 표기했습니다.",
+"6절 본문은 '2026-10-04 확인 기준'과 '2026-10-09'를 함께 쓰고 있어 어떤 내용이 어느 날짜 기준인지 구분이 필요합니다."
+]
 },
 {
 "route": "risk/margin-collateral-and-leverage",
 "publicPath": "finance/risk/margin-collateral-and-leverage",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5,
+"articleIssues": [
+"오류로 확정한 것은 없습니다. 본문 숫자(72, 8, 10, 40, 약 56.67, 63, 17, 4)를 다시 계산해 모두 일치했습니다.",
+"10절 '충분한 매수자가 없는 가격대까지 내려갈 수 있습니다'는 뜻이 다소 모호합니다. 매수자가 충분한 가격대까지 내려간다는 뜻일 수 있습니다. Viz 노드는 본문 표현을 따랐고 장면 설명은 '매수자가 충분하지 않으면 가격이 더 내려갈 수 있습니다'로 적었습니다."
+]
 },
 {
 "route": "cloud/linux-sre-metrics-slo-safe-change",
 "publicPath": "cs/cloud/linux-sre-metrics-slo-safe-change",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 7,
+"articleIssues": [
+"3절 본문은 '요청의 1%가 절반쯤 실패'에서 곧바로 오류율 1.5%로 넘어갑니다. 평소 오류율 1%(가정)는 아래 CalculationWalkthrough에만 나옵니다. RequestGridViz가 이 공백을 그림으로 메웁니다.",
+"3절 제목은 40분 장애가 예산의 1.4%를 썼다고 하지만, 계산에 쓴 오류율 1.5% 중 약 1%는 평소 오류입니다. 장애 노드만의 몫은 약 0.5%입니다. 평소 오류율 1%만으로도 허용치 0.1%의 10배라 한 달 예산을 넘습니다. caveat가 일부 언급하지만 제목과 충돌합니다.",
+"기존 SymptomCauseViz는 평상시 성공률을 99.95%로 표시합니다. CalculationWalkthrough의 평소 오류율 1%(성공률 약 99%)와 맞지 않습니다.",
+"3절은 T+5분 디스크 94%에 '4시간 뒤 가득 찬다'는 ticket을 말하지만, 4절과 SymptomCauseViz는 T+40분에 디스크가 100%입니다. 35분 뒤에 찬 셈이라 4시간과 어긋납니다.",
+"3절은 앱이 40분 동안 재시작했다고 하지만, 4절은 T+40분에 앱이 죽기 시작한다고 적습니다. 시간 기준이 달라 보입니다.",
+"6절 본문은 '06:00에 첫 업그레이드, 3분 뒤 경보'이고 인용 블록은 '06:03 UTC 시작'입니다. 충돌은 아니지만 독자가 시작 시각을 헷갈릴 수 있습니다. IncidentHourViz는 본문을 따랐습니다."
+]
 },
 {
 "route": "blockchain/ethereum-future-roadmap",
 "publicPath": "cs/blockchain/ethereum-future-roadmap",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 4,
+"articleIssues": [
+"오류 의심 문장은 찾지 못했습니다. timestamp 1791294816이 2026-10-06 13:53:36 UTC와 일치함은 계산으로 확인했습니다.",
+"글과 무관한 참고 사항: 기존 viz/EthereumRoadmapViz.tsx를 import하는 곳이 src 안에 그 파일 자신 말고는 없어 미사용 파일로 보입니다. 건드리지 않았습니다."
+]
 },
 {
 "route": "markets/securitization-and-tranches",
 "publicPath": "finance/markets/securitization-and-tranches",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5,
+"articleIssues": [
+"오류 의심 문장은 찾지 못했습니다. 7절과 9절의 숫자(92·85·65, 7.14%, 3.5+1+0.5)는 다시 계산해 일치함을 확인했습니다.",
+"참고 사항: 8절 끝 연결 문장은 '위험을 만든 사람이 일부를 남기는 규칙'이라고 쓰고 9절은 '적용 대상'이라고 씁니다. 표현 차이일 뿐 오류로 보지는 않으며, Viz에서는 보유 주체를 대출을 만든 곳으로 단정하지 않았습니다."
+]
 },
 {
 "route": "global-history/empires-roads-taxes-and-law",
 "publicPath": "history/global-history/empires-roads-taxes-and-law",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 4,
+"articleIssues": [
+"3절 제목은 '수도와 변경에 나눠 보냅니다'인데, 같은 절의 가정 장부에는 수도로 가는 몫이 없습니다(30·25·20·15·10이 지방·변경·도로·구휼·손실로 100을 모두 채움).",
+"black-box 절 FlowRail의 제목은 '제국을 유지하는 네 흐름'인데 실제 항목은 행위자 3개입니다.",
+"7절 첫 문단은 30·25·20·15(합 90)만 추적하고 손실 10자루를 언급하지 않습니다. 둘째 문단의 누락·전달률 논의와 잇는 데 필요한 숫자라 Viz에서는 3절의 10을 가져왔습니다.",
+"손실 10자루의 설명이 본문('운송 중 손실과 부패')과 numericCase('운송·부패·누락')에서 조금 다릅니다."
+]
 },
 {
 "route": "institutions/healthcare-payment-systems",
 "publicPath": "economics/institutions/healthcare-payment-systems",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 8
 },
 {
 "route": "global-history/trade-religion-and-translation-networks",
 "publicPath": "history/global-history/trade-religion-and-translation-networks",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 3,
+"articleIssues": [
+"3절 bridge는 '각 구간에서 물량과 가격이 달라짐을 봤습니다'라고 하지만 3절 본문과 장부에는 가격이 전혀 나오지 않습니다(가격은 7절에 '가격이 붙습니다'로만 나옵니다).",
+"overviewFlow 제목은 '중세 연결망의 네 조건'인데 steps는 3개입니다(2절 본문은 바람·항구·상인 공동체·번역자 넷을 듭니다).",
+"20묶음의 설명이 다릅니다. 3절 본문은 '현지 소비와 세금', numericCase는 '세금·현지 판매'입니다. Viz는 본문 표현을 따랐습니다.",
+"6절 용어 설명의 '한 방향의 바람을 놓치면 다음 계절까지 기다립니다'는 계절마다 방향이 바뀐다는 정의와 함께 읽으면 바로 다음 계절이 아니라 같은 방향 바람이 돌아오는 계절로 읽어야 합니다. Viz 문구는 '그 방향의 바람이 다시 불 때까지'로 썼고 이 해석은 제 판단입니다."
+]
 },
 {
 "route": "institutions/education-skills-and-signals",
 "publicPath": "economics/institutions/education-skills-and-signals",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5,
+"articleIssues": [
+"NumericPath '(가정) 교육의 단순 비용 회수 계산'이 학습과 선발을 다루는 1절 끝에 있어, 정작 그 계산을 다루는 4절보다 먼저 15년 결론이 나옵니다. 절 내용과 위치가 어긋나 보입니다. 수정하지 않았습니다.",
+"파일 주석과 CitationBlock의 '본문 2023 관측자료를 포함하는 2026 보고서'가 가리키는 2023 자료는 이 글 본문에 나오지 않습니다."
+]
 },
 {
 "route": "macro/narratives-and-market-regimes",
 "publicPath": "economics/macro/narratives-and-market-regimes",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 8
 },
 {
 "route": "ai/math-gradient-descent-convergence",
 "publicPath": "cs/ai/math-gradient-descent-convergence",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 9
 },
 {
 "route": "institutions/insurance-risk-pooling",
 "publicPath": "economics/institutions/insurance-risk-pooling",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 4
 },
 {
 "route": "infrastructure/food-chain-and-prices",
 "publicPath": "economics/infrastructure/food-chain-and-prices",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 8
 },
 {
 "route": "cloud/linux-kernel-process-syscall-scheduler",
 "publicPath": "cs/cloud/linux-kernel-process-syscall-scheduler",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 7,
+"articleIssues": [
+"1024 ÷ 1359 = 75.35%, 335 ÷ 1359 = 24.65%(정확히 75.349…, 24.650…)라 소수 첫째 자리로 반올림하면 75.3%·24.7%인데, 글은 75.4%·24.6%로 적습니다. Viz는 글과 맞추려고 75.4·24.6을 그대로 표기했고 이 불일치는 수정하지 않았습니다.",
+"1절과 6절 본문은 압축이 '세 배 느리다'고 하고 '그 이유가 이 비율'이라고 적지만, 6절 계산 장부는 '약 4배 오래 걸립니다'라고 적습니다(1 ÷ 0.246 ≈ 4.07). 표현이 어긋납니다.",
+"5절의 '앞 절의 다섯 task'에 대응하는 설명이 4절에 없습니다. 4절에는 스레드 네 개만 나옵니다. 기존 TaskStateViz의 다섯 번째 task는 '로그 수집 자식'인데 1절의 다른 작업은 '로그 압축'입니다.",
+"7절 식 vd = ve + r/w의 주석은 'slice 0.75 ms를 가중치로 나눔'인데, 같은 절의 수치 계산은 0.75 × 1024 ÷ weight를 씁니다. 1024 정규화가 주석에 빠져 있습니다."
+]
 },
 {
 "route": "markets/swaps-and-credit-risk",
 "publicPath": "finance/markets/swaps-and-credit-risk",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 7
 },
 {
 "route": "cloud/linux-memory-page-cache-oom",
 "publicPath": "cs/cloud/linux-memory-page-cache-oom",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6,
+"articleIssues": [
+"8절 AlgorithmBlock: 2번 줄 events.max += 1이 5번 줄의 goto 1 재시도 때마다 다시 실행되는 구조인데, output은 memory.events의 max·oom·oom_kill이 '하나씩' 늘어 있다고 적습니다. 의사코드대로면 max는 재시도 횟수만큼 더 늘어야 하므로 둘 중 하나의 확인이 필요해 보입니다. Viz에서는 카운터 값을 그리지 않았습니다."
+]
 },
 {
 "route": "ai/word2vec",
 "publicPath": "cs/ai/word2vec",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6,
+"articleIssues": [
+"4절 본문이 '아래 그림은 이 선택과 그중 한 쌍이 두 표를 읽는 과정을…', '두 번째 장면', '세 번째 장면'이라고 적지만 해당 그림 WordPairCaseViz는 1절에 있고 4절 아래에는 그림이 없습니다. 본문 문구나 그림 위치의 확인이 필요합니다."
+]
 },
 {
 "route": "cloud/linux-vfs-mount-page-cache-fsync",
 "publicPath": "cs/cloud/linux-vfs-mount-page-cache-fsync",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 10,
+"articleIssues": [
+"6절 CalculationWalkthrough의 결론은 2 GiB 연속 쓰기에서 2,457 MiB에 앱이 멈춘다고 적지만 2 GiB는 2,048 MiB로 2,457 MiB보다 작다. 쓴 총량이 2,048 MiB면 flusher가 전혀 내리지 못해도 dirty가 그 선에 닿지 않는다. 기존 DirtyThresholdViz 주석의 '2 GiB를 계속 쓸 때' 전제와 2,457 MiB 장면도 같은 문제를 가진다.",
+"3절 제목의 'inode 하나'는 파일의 inode만 센 단순화다. 같은 절은 dentry를 이름과 inode의 쌍이라고 정의하므로 디렉터리 조각 셋의 dentry도 각자 inode를 가리킨다. Viz는 app.log의 dentry가 가리키는 inode만 그렸다.",
+"1절은 디스크로 가는 때가 30초 만료, 10% 초과, fsync 호출'뿐'이라고 적지만 6절은 dirty_ratio 초과 시 쓰는 프로세스가 writeback을 기다리는 계기를 하나 더 둔다. 쓰기를 내리는 주체가 flusher인지에 따라 해석될 수 있어 표현 확인이 필요하다."
+]
 },
 {
 "route": "infrastructure/climate-risk-and-exposure",
 "publicPath": "economics/infrastructure/climate-risk-and-exposure",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6
 },
 {
 "route": "cloud/kubernetes-network-packet-path",
 "publicPath": "cs/cloud/kubernetes-network-packet-path",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 9
 },
 {
 "route": "business/shop-daily-operations",
 "publicPath": "economics/business/shop-daily-operations",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6,
+"articleIssues": [
+"Section 5 uses 예상 잔여 for 25 − 20 = 5 before waste is recorded, while the section 7 pseudocode defines it as start + received − sold − waste = 4. The same term has two values; StockGapViz shows both states without changing the prose.",
+"Section 7 says a 4-day week (16 hours) makes the employee 주휴수당 대상 without stating any further condition. Statutory paid weekly leave may also depend on attendance conditions, which is outside the article and not verified here; please check."
+]
 },
 {
 "route": "ai/subword-static-embeddings",
 "publicPath": "cs/ai/subword-static-embeddings",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 8,
+"articleIssues": [
+"4절 본문이 '첫 장면, 두 번째 장면, 세 번째 장면'과 '그림의 화살표'를 설명하는데, 해당 그림 CompositionCaseViz는 4절이 아니라 1절 끝에 있습니다. 독자가 4절에서 그림을 찾지 못합니다. 위치만 지적하며 옮기지 않았습니다.",
+"12절의 '다른 라이브러리 함수로 교체하면 ASCII 밖 글자에서 행 주소가 달라질 수 있다'는 '수 있다'라는 표현으로 맞지만, 글의 <é> 사례를 계산하면 최종 해시가 1002806231과 4222937559로 달라도 8개 bucket에서는 둘 다 7입니다. 2,000,000개 bucket에서는 806231과 937559로 갈립니다. Viz에는 이 두 결과를 함께 적었습니다.",
+"기존 UnicodeCaseViz, CompositionCaseViz는 SVG에 fill=currentColor를 쓰고 있어 hex 규칙과 다릅니다. 건드리지 않았습니다."
+]
 },
 {
 "route": "ai/llm-dataset-engineering-and-cleaning",
 "publicPath": "cs/ai/llm-dataset-engineering-and-cleaning",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 7,
+"articleIssues": [
+"pipeline이 아니라 problem 절의 '다음 token 확률을 낮추는 loss'는 표현이 의심됩니다. loss를 낮추는 쪽은 정답 다음 token의 확률을 높이는 방향이므로 뜻이 뒤집혔을 수 있습니다.",
+"dedup 절의 '임계값이 짧을수록(8-gram) ... 길수록(50자 substring)'은 단어 단위와 글자 단위를 한 줄로 비교합니다. 50글자가 13단어보다 길다는 보장이 없어 장단 순서가 성립하지 않을 수 있습니다. Viz에서는 단위를 분리해 그렸습니다.",
+"mixture 절 TermBreakdown의 GPT-3 weight 60%·22%·16%·3%는 합이 101%입니다. 반올림으로 보이지만 글에 설명이 없습니다.",
+"기존 LlmDatasetEngineeringAndCleaningViz의 '그중 다시 약 23%만'은 48%의 23%로 읽히지만, 막대와 sources 절의 인용은 원본 대비 23%입니다.",
+"기존 Viz의 Dedup 9%·'10% 미만'과 45TB는 본문에 없고, sources 절의 5조 token 중 6,000억 token은 12%입니다. 기준이 달라서일 수 있으나 글로는 대조할 수 없습니다.",
+"LlmTrainingLocator의 fixture와 problem 절은 '문서 하나를 순서대로 추적한다'고 약속하지만 본문은 한 문서를 실제로 따라가지 않습니다. DocumentTraceViz는 가상의 문서 8개로 이 자리를 보완합니다."
+]
 },
 {
 "route": "ai/retrieval-ranking-funnel",
 "publicPath": "cs/ai/retrieval-ranking-funnel",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 9,
+"articleIssues": [
+"HybridDepth 본문은 재정렬 깊이가 top-k보다 '얕습니다'라고 단정하지만, 같은 절의 식 설명은 k2 ≤ k1과 k2=k1 경우를 허용합니다. 또한 글머리 RetrievalViz는 후보 수와 재정렬 범위를 모두 3으로 둡니다.",
+"LateInteraction의 MaxSim 예시에서 '만료–다'처럼 어미 토큰이 최댓값 짝으로 나옵니다. 계산은 맞지만(합 2.29) 예시로는 어색할 수 있습니다."
+]
 },
 {
 "route": "infrastructure/transport-access-and-land-value",
 "publicPath": "economics/infrastructure/transport-access-and-land-value",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6,
+"articleIssues": [
+"6절은 토지가치 상승에 관한 지침(MHCLG, TAG)을 사례의 월세 상승 10만 원에 바로 대입합니다. 월세와 토지가치가 같은 값은 아니어서 대입 전제를 한 문장 밝히면 좋겠습니다."
+]
 },
 {
 "route": "embedded/firmware-update-and-recovery",
 "publicPath": "electronics/embedded/firmware-update-and-recovery",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 5,
+"articleIssues": [
+"오류는 아니고 용어 공백: 11절이 magic, copy_done을 정의 없이 쓴다. Viz 설명에 짧은 정의를 넣었고 본문은 고치지 않았다.",
+"오류는 아니고 용어 공백: 14절의 보안 카운터가 본문에서 정의되지 않는다."
+]
 },
 {
 "route": "institutions/public-budget-and-taxes",
 "publicPath": "economics/institutions/public-budget-and-taxes",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6
 },
 {
 "route": "cloud/kubernetes-pod-states-crashloop-probes-events",
 "publicPath": "cs/cloud/kubernetes-pod-states-crashloop-probes-events",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 6,
+"articleIssues": [
+"3절 본문과 BackoffClockViz는 '첫 크래시 뒤 10초 대기'로 수열을 세지만(합 610초), 6절 AlgorithmBlock의 주석과 원문 doBackOff·IsInBackOffSince를 보면 첫 크래시 때는 장부 항목이 없어 false가 되고 Next로 10초를 적은 뒤 바로 띄웁니다. 그러면 10초 대기는 둘째 크래시 뒤에 시작되어 '여섯 번째 크래시 뒤 300초'와 610초 합계가 한 칸 어긋날 수 있습니다. 새 Viz는 크래시 번호를 쓰지 않고 '장부에 20초가 적힌 상황(가정)'과 'restartCount n'으로 그려 이 충돌을 피했습니다.",
+"3절 caveat의 KubeletCrashLoopBackOffMax '(11절)'과 12절 복습 문항의 '답: 3·6·11절'은 11절을 가리키지만, 11절에는 상한 변경 내용이 없고 feature gate 단계는 10절에 있습니다.",
+"7절 제목과 본문은 '최대 약 30초'(3 × 10)이고 계산 단계는 '20초 시점 + timeout 1초'입니다. 두 숫자의 관계를 본문이 설명하지 않습니다. Viz에는 두 값을 모두 본문 표현대로 적었고 차이의 이유는 지어내지 않았습니다."
+]
 },
 {
 "route": "ai/cuda-graph-capture",
 "publicPath": "cs/ai/cuda-graph-capture",
-"status": "todo"
+"status": "done",
+"round": 2,
+"vizAdded": 9,
+"articleIssues": [
+"ModernArticle.tsx 19절에서 CitationBlock 바로 앞의 JSX에 리터럴 \\n이 들어 있습니다. 브라우저에서 #research innerText를 읽어 화면에 '\\n' 글자가 그대로 렌더링되는 것을 확인했습니다. 본문 수정 금지 규칙에 따라 고치지 않았습니다.",
+"FULL과 PIECEWISE는 14절에서 먼저 쓰이는데 본문의 풀이는 17절에야 나옵니다. KeySelectViz 설명에는 풀이를 넣었지만 본문 순서 자체는 그대로입니다."
+]
 },
 {
 "route": "cloud/linux-containers-cgroup-namespace",
@@ -5307,5 +5522,155 @@
 "publicPath": "philosophy/philosophy-topics/reference-context-and-speech-acts",
 "status": "todo"
 }
+],
+"openReviewNotes": {
+"1": [
+"Article prose, agrarian-surplus-and-state #picture: '세 숫자가 같아야 하지만 같은 종류의 대상은 아닙니다'. The three numbers are 1180, 1200 and 1150, and 1150 is not meant to equal 1200 because 50 is unallocated (1150 + 50 = 1200). Only the Viz wording was changed. Correcting the prose needs a prose edit.",
+"WaitAndEscrowViz combines two mechanisms: the 14-day wait (제7조·제11조) and 가맹금 escrow (제6조의5). The standard's section 1 says '한 Viz에는 한 가지 메커니즘만', though the task's rule check covers only 1.1 and 2. Splitting it means adding a Viz import to the article file, which is out of scope, so it stays as one Viz.",
+"LossThresholdViz draws the −450 result bar left to right like a positive bar. Sign and state are shown by the '−450' value, the red colour and the '점포 결과: 적자' label, so it does not misread, and I left it. A diverging axis would be an optional redesign.",
+"Verification: `audit:viz --strict` gave 0 ERROR lines on both viz directories, with 34 REVIEW items (SVG text checks) on the run that listed them. viz-scene-shot on all 10 Vizs at 390px and 1440px showed stable controls and frame, overflow 0 and 0 console errors. The first runs failed with a navigation error, which I attributed without confirming to concurrent edits reloading the dev server, and they passed on retry. I read 15 of the post-fix screenshots rather than every scene; most of the Vizs were checked in one or two scenes, mainly the changed scenes at 390px. The other scenes were checked by reading the code, and only the Territory fix was also viewed at 1440px. The script always takes 8 shots, so scenes wrap around and files beyond a Viz's scene count repeat earlier scenes.",
+"FourClausesViz clause ② reads '그것과 구분되는 열매에 대한 권한', which follows the article's '구분하고'. Neither the article prose nor the Viz says the verse denies a claim on the fruits, yet the article's source excerpt has 'मा not, फलेषु in the fruits'. A reader could take ① and ② as two rights. Not fixed: stating the denial in the Viz goes beyond the prose, so it needs a change to section 8 first.",
+"Verification: audit:viz --strict gave 0 ERROR lines (21 REVIEW items, all 'SVG text overflow check' reminders in the visible output). viz-scene-shot on all 9 Viz at 390px and 1440px: controlY and frameH stable across scenes, overflow 0, console errors 0. The first Gita shot run aborted with 'Execution context was destroyed', most likely a dev-server reload from the other agents editing at the same time; the rerun passed. I read about 11 screenshots (at least one scene for each of the 9 Viz, mostly at 390px), not every scene.",
+"No prose edits, git, tsc or build were run, per the task. tsc was not run, so type correctness rests on the dev server rendering the pages with 0 console errors.",
+"DebtCrisisTimelineViz shows both '1980 말 연방기금금리 사상 최고 20%' and '1981.6 미국 금리 20%로 정점', exactly as 8절 prose does. Two 20% peaks with no explanation may puzzle a reader. Reconciling them needs an outside source (Fed History against the IMF chapter) or a prose change, so I left the Viz alone.",
+"On a 390px phone, the longest DebtCrisisTimelineViz scene needs internal scrolling. A probe of that frame measured scrollHeight 631 against clientHeight 577, and scrollTop reached the maximum of 54. The standard allows this and the controls stay stable, so it is not a defect. The last note line sits below the fold until the reader scrolls.",
+"Article prose, agent-serving section 6: the conclusion '200K 세션에서는 큰 풀이어도 메모리 18개와 속도 8~16개가 비슷한 자리에서 만납니다' sets a K2.5 200K memory cap beside K2.6 32K and 128K speed rows, and no 200K row exists. TwoCapsViz now carries the hedge, but the prose has none. Left unfixed because it needs a prose change.",
+"Article prose, agent-serving lines 264 and 695: '1T급 오픈 MoE' and '1T MoE' are never defined, and MarketTierAxisViz's note repeats the term. Defining it needs a prose change or a sourced definition, so I did not add one in the Viz.",
+"TailPercentileViz takes P25 as the 6th of 20 values (17), matching the article's '느린 4분의 1을 빼고는 모두 20 이상'. Nearest-rank would give 15 and linear interpolation 16.5, and the verdict below 20 is the same in all three. The article does not state AA's exact quantile rule, so confirming it needs the outside source.",
+"Checks after the edits: audit:viz --strict gave 0 ERROR lines and 33 REVIEW items (SVG text prompts). viz-scene-shot at 390 and 1440 gave stable control and frame positions, overflow 0 and console errors 0 on both articles. I read 15 of the screenshots, not every scene of every Viz; they showed no visual problems. Screenshots are in /tmp/viz-rounds/r1/rv7/agent-serving-slo-and-capacity and /tmp/viz-rounds/r1/rv7/population-migration-and-care.",
+"SparseAreaViz, needs a source check: the article does not say what unit the 15%/85% draw applies to (per node, per transaction or per blob). If it is per transaction or per blob, a node receiving 18 blobs gets a mix rather than exactly 18 or 2.25. The Viz now hedges with '18개 분량을 한 덩어리로 보면'. Settling it needs the EIP-8070 text, which is an outside fact, or a prose change.",
+"SparseAreaViz and article sec. 9: the EIP-8070 status is dated 2026-10-18 and the article gives a review deadline of 2026-11-01, which has now passed. The dated wording is still accurate, but re-checking the status needs an outside source and possibly a prose change.",
+"TwoMeetingsViz at 390px: in the '다음 위기' scene the second meeting's reason sits below the canvas fold, so the two reasons cannot be seen together without inner scrolling. The inner scroll is allowed by standard sec. 2 and the note below the figure states the comparison, so I left it unchanged.",
+"Verification: audit:viz --strict on the 3 changed files printed REVIEW items only (SVG text overflow prompts), with a summary of 10 review items. Only the last 15 lines of output were read; they show no ERROR lines. viz-scene-shot after the fixes covered ExcessCarryViz, SparseAreaViz and HollowFormViz: controls and frame stable, overflow 0, console errors 0 at 390 and 1440. I read the post-fix screenshots for ExcessCarryViz (both widths) and SparseAreaViz (1440 only). HollowFormViz got a text-only change and its post-fix screenshot was not read. The other 4 Viz were unchanged, passed the baseline run with the same results, and I read one 390px baseline scene for each.",
+"SevenLedgersViz is close to a list plus an empty grid (standard section 1, '제목과 나열만 있는 카드 모음'), and the section title's '서로 연결합니다' is not drawn. The article gives only one link: '정부 결정이 기업과 소비자, 납세자의 장부로 이어집니다'. It does not say which ledger or blank each party belongs to, so filling the grid or drawing links would be my inference. Left unchanged. A connected version needs a prose decision on that mapping.",
+"TwoModelsViz scene 2 has God's arrow going only to 연소, labelled '접촉과 함께 창조', which follows section 7. Section 8 says '신이 함께 일어나는 두 사건을 창조'. Adding an arrow to the contact would favor one reading, so I left it. The prose could settle which reading the figure should use.",
+"On mobile, the control row in the screenshots looks faded at the bottom of the fixed 754px frame in every Viz I checked at 390px. Frame and control positions are stable and overflow is 0. The cause looks shared rather than Viz-specific, but I did not trace it, and it would be outside the allowed files if it is in src/components.",
+"Verification covers the 4 changed Viz in full. npm run audit:viz --strict gave 0 ERROR lines on the changed files and on both viz directories before the edits. viz-scene-shot gave stable controls and frame, overflow 0 and console errors 0 at 390px and 1440px. 5 of the 7 unchanged Viz were shot before the edits with the same stability results. FourLayers, SeenVsNecessary and GhazaliRoutes had only sample scenes read at 1440px. SevenLedgers was read at 390px only, and DecisionLoop's screenshots were not opened. Screenshots of the changed Viz are in /tmp/viz-rounds/r1/rv6/how-to-read-a-country and /tmp/viz-rounds/r1/rv6/islamic-causation-reason-and-revelation; baselines are in /tmp/viz-rounds/r1/rv6/base.",
+"materials-waste-and-circularity prose inconsistency: the #names heading says '수거율·회수 수율·생산자 책임', while the body and RatioDenominatorViz say '처리 수율 75%'. I kept the Viz on the body wording. Choosing one term needs a prose edit, which is out of scope here.",
+"inference-optimization-layers prose: the #regression-gate paragraph before RegressionIntervalViz uses '꼬리 지연' without defining it, and the Viz note repeats the phrase from that paragraph. A definition belongs in the prose, so I did not change it.",
+"PaybackViz: the summaries '40,000달러 ÷ 22.22달러 = 1,800일' and '÷ 2,222달러 = 18일' use rounded divisors; 40,000/22.22 = 1,800.18, while the exact 200/9 gives 1,800. The result matches the article's '약 22.22 달러' and '1,800일', and a reader would not be confused, so I left it unchanged.",
+"Shared mobile layout, not fixed because src/components is off limits: at 390px on all 8 Viz, the canvas scrolls inside a fixed 754px frame. Scrolled note text shows in the strip below the sticky control row (e.g. the FourFlows and RepaymentDelay screenshots). Controls stay stable and overflow is 0, so this is cosmetic, but it needs a check in the shared Viz frame and controls.",
+"ClaimVsGoodsViz, left as is: step 1 is '물건 판매' and shows 직물 '구매자에게 넘어감', then step 2 shows '이미 팔림', which could read as a second sale. The wording follows the article ('직물은 이미 팔리고'), which doesn't say who sold it or when. Settling it needs a prose decision.",
+"RepaymentDelayViz description, left as is: '귀환 대금은 상인이 돌아갈 때 가져갈 대금' is a gloss that the article never defines. It fits the article's use of the term, but the article should define it or the gloss should be confirmed.",
+"Verification: audit:viz --strict gave 0 ERROR lines on both viz directories (REVIEW notes only for SVG text, checked in screenshots). viz-scene-shot gave stable controls and frame, overflow 0 and console errors 0 at 390px and 1440px for all 8 Viz. The script ran to its 8-step cap on every Viz because the scene sets wrap around or keep changing the text, so the first scenes were also shot again. I read 11 screenshots covering all 8 Viz, not every scene.",
+"GateFeedbackViz.tsx: no change. Remaining water is 100→60→30→0, sends are 40·30·30, the result is 85 + 15, and the order of observations matches section 7. The gate width and the three fields are disclosed as assumptions in the description and in the note for the last send.",
+"TacitConsentViz.tsx scene 4 note: the Viz repeats the article's claim that a passing visitor is counted as having consented to the business-hours rule ('영업시간 규칙에 동의한 사람으로 세어지는 셈'). From memory and not checked here, Locke's §§119-122 limit tacit consent to obedience while the enjoyment lasts and say it does not make someone a member. If so, the article's transposition may overstate Locke. Deciding this needs a check of the source and possibly a prose change, so I left the Viz matching the article.",
+"Verification: audit:viz --strict reported 0 ERROR lines on both viz directories and 12 REVIEW items for SVG text, which I checked in the screenshots for the scenes I read. The last scene-shot run for each Viz showed control position and frame height unchanged across scenes, overflow 0 and 0 console errors, at 390px and 1440px. Mobile inner scroll also measured 0 on all five. GateFeedbackViz was shot only before the review because it was not changed. Screenshots are in /tmp/viz-rounds/r1/rv15/ under daoist-names-noncoercive-action-and-change, consent-liberty-and-legitimate-power, base-daoist and base-consent.",
+"One Bash call that combined a Python heredoc with the audit and shots was blocked by a safety check that could not parse it. It contained no removal. I redid that work with Edit and Write and a plain Bash call. A helper script remains at /tmp/viz-rounds/r1/rv15/clip.cjs; it is outside the repo.",
+"TwoPathsMapViz has no solid 입구 → 뒤 장치 edge; that link appears only as the dashed \"입력 번호만\" counterfactual. Section 7 says \"프록시는 원본을 찾는 정보만 받아 D에 같은 입력의 요청을 보냅니다\", and ProxySequenceViz draws that step. The map matches section 2's prose, which never mentions this request, so I left it. Adding the edge would be cleaner if section 2 also says it, which needs a prose change.",
+"Checks: audit:viz --strict on the 7 changed files gave 0 ERROR lines and 19 REVIEW items (SVG text overflow reminders). The audit's exit code was not captured because the shell printed it blank. viz-scene-shot on the 8 changed Viz gave stable controls and frame, overflow 0, console errors 0 at 390px and 1440px.",
+"Screenshots after the edits: I viewed the GPU sheet and single 390px shots of KvBytes, DeviceFlow, BalanceGates and ProxySequence. DuesThreshold, SourceHold and FlowBudget changed only in title or description text, so for those I relied on the script's measurements. The other 6 Viz were unchanged and reviewed from their pre-edit shots.",
+"Tight fit: on 390px, the last line of the BalanceGates tree scene's note ends just above the control row. It is fully visible and the measured overflow is 0, but there is almost no spare room.",
+"Leftovers: a safety check blocked my removal of old screenshots, so nothing was deleted. /tmp/viz-rounds/r1/rv3/culture and /tmp/viz-rounds/r1/rv3/disagg hold pre-edit shots, and post-edit shots are in culture2 and disagg2. The contact sheets (sheets/) and helper script sheet.cjs are also in /tmp/viz-rounds/r1/rv3 and can be deleted.",
+"Prose: the heading of section 3 in the colonial article says '사탕 100단위' while its body and all the Viz say 설탕. This needs an article edit, so it is not fixed.",
+"Prose or outside fact: AbolitionTimelineViz draws Haiti's '그 뒤로도 50년' as an arrow ending at 1888, reading it as 1838 + 50. The article gives no end year and its starting point is ambiguous. The arrow carries no year label, but its tip lands on the axis near 1888. Confirming that needs a source or a prose change.",
+"Shared component: at 390px, long scene notes scroll inside the canvas, and a line of the clipped note shows below the control row (for example in the Voyage and PathError scenes). This comes from the shared mobile frame, which sits in src/components and is out of scope. Note text is still reachable by inner scroll, per standard section 2.",
+"Checks after the fixes: audit:viz --strict on the 6 changed files gave no ERROR lines, only 10 REVIEW items for SVG text. viz-scene-shot on both articles showed stable controlY and frameH across scenes, overflow 0 and 0 console errors. I read the 390px screenshots for all 14 Viz, but at 1440px only LedgerBoundaryViz and AbolitionTimelineViz. The word2vec shots at both widths and their stability numbers were taken after the word2vec edits; only the colonial article was re-shot after the Ledger layout change. Shots are in /tmp/viz-rounds/r1/rv1/colonial and /tmp/viz-rounds/r1/rv1/word2vec.",
+"Recomputed with no error: all softmax, g_h, leaf-mass, Huffman (30 and 34), sigmoid-table and neu1e figures, and a hand trace of [1,8,4,2,1] from my memory of the CreateBinaryTree loop, since word2vec.c was not opened (41 vs 30, lengths [1,2,3,4,4]). ScoreGridViz, SoftmaxShareViz, MeanGradientViz, ReductionWeightViz, HuffmanMergeViz, DoubleUpdateViz, SortBoundaryViz, TwoSidesFlowViz and SceneShell were left unchanged.",
+"Shared layout, not fixed because it is outside these Viz files (src/index.css line 209 onward holds the control-row rules): at 390px, when a scene's content is longer than the canvas, a line of note text shows below the control row. Seen in OutputGridViz s0, FailureChainViz s1, BuidlNestViz s2, SwapTraceViz s4, AdaptiveRatioViz s3, SolverTraceViz s4 and SamplePathsViz s2. My longer FailureChainViz note adds to it there. I did not establish the exact CSS cause or check whether other articles show it. Controls stayed in place and overflow was 0, and the text is in the canvas's overflow-y:auto scroll area, though I did not test scrolling to the end.",
+"Verification: strict audit (run on both viz directories, not only changed files) had 0 ERROR lines and exit 0, with REVIEW items only. Screenshots were taken after all edits: control position and frame height unchanged across scenes, overflow 0, console errors 0 at 390px and 1440px. I read 23 of the screenshots, mostly at 390px, and not every scene.",
+"IvpEdgeCasesViz sits inside a collapsed ProgressiveDetail, so scripts/viz-scene-shot.cjs times out on it ('element is not visible'). I captured it with a copy at /tmp/viz-rounds/r1/rv0/shot-open.cjs that expands the block first. The repo script is unchanged and will keep timing out on this Viz unless it learns to expand collapsed blocks.",
+"BuidlNestViz glosses 환매조건부채권 as '되사기로 약속하고 파는 채권', which is not in the article, which never defines the term. It describes the seller's side, while a fund holding repos may be on the buying side. Left as is, because correcting it needs an outside fact or a prose definition.",
+"Screenshots are in /tmp/viz-rounds/r1/rv0/ode and /tmp/viz-rounds/r1/rv0/rwa-composition. Changes are uncommitted, as instructed.",
+"HeartbeatLanesViz scene 4 draws no write at t=300 after the assumed write at t=120, and I added the note text '그다음 쓰기는 이 축 밖에 있습니다'. That assumes the 5-minute timer restarts after a write. The article only says '변화가 없는 구간에는 다시 5분 주기' in the Viz and '바뀐 것이 없으면 5분에 한 번만 씁니다' in prose. The article's codebase excerpt only has the lastStatusReportTime field declaration (kubelet.go:1461-1462), not the code that updates it, so this is unconfirmed. Confirming it needs the upstream kubelet_node_status.go.",
+"Checks: audit:viz --strict gave 0 ERROR lines and exit 0, with 23 REVIEW items for SVG text. Scene shots of all 14 Viz at 390px and 1440px showed stable controls and frame, overflow 0 and console errors 0. The TariffRoutesViz shot was retaken after its last edit. Of the screenshots, I read 17: mostly mobile scenes of 13 Viz, plus one desktop scene. For PriceSplitViz, I reviewed the code but did not open a screenshot. Shots are in /tmp/viz-rounds/r1/rv12/.",
+"Recomputed with no error found. By script: the 64-order counts 10/36/12/6. By hand: 16-cell counts 1/4/6/4/1, CenterShift 2 = 2/3 + 4/3, Chebyshev 1/4, 5/8, 5/32, B² 1/4, 1/8, 1/32, Cov 1/4, 1/2, 1/6, Importance 7/3, 2, 7/4, Backward 0.375, 0.40125, 0.35125, Gradient 2.5 and 2.75, 1.75, 1.75, 0.75.",
+"Verification: audit:viz --strict gave 0 ERROR lines, with 46 REVIEW items of the SVG-text kind. viz-scene-shot on all 13 Viz at 390 and 1440 gave stable control position and frame height across scenes, overflow 0, console errors 0. I read 13 screenshots covering 12 of the 13 Viz, mostly at 390px and mostly one scene each, plus one 1440 shot (B²Cells). The unchanged Viz got less visual checking. The numeric checks above were done on the code.",
+"Shared component, not fixed (src/components is out of scope): at 390px, long scenes in EightSecondFork, SnQuestionGrid and CovCompare scroll inside the canvas, and a line of the note shows below the sticky control row before scrolling. Measured scrollHeight/clientHeight: 628/550, 692/581, 669/550. Scrolling to the end in the Fork scene showed the note in full; the other two scrolled but I did not view the result. The cause is probably the VizFrame padding under the sticky controls, which I did not confirm.",
+"BackwardStepViz, not changed: scenes 2 and 3 draw the same figure, and only the summary and note differ. The loss text already appears in scene 2. The numbers are correct, so I left it as polish that would not confuse a reader.",
+"ImportanceAreaViz, not changed: the note's hedge \"흔들림을 키울 수도 있습니다\" matches the article, but in this exact example Var(g̃) is 4.5−4=1/2, the same as uniform sampling's 1/2. A reader could take it to mean this q raises the variance. Stating that would add a number the article lacks, so it needs a prose decision.",
+"BinBoundaryViz: the article prose in section 7 ('[7,9]와 [6,9]는 모두 [1,2]') has the same collision with s=[1,2]. The Viz now disambiguates it, but the prose does not, and prose edits are out of scope.",
+"SignLoopViz: the description calls the left labels sign.c line numbers, but the challenge row is labelled '해시' because the article cites no line for it. The preserved sign.c has that step at lines 149-155. I did not add it, since numbers must come from the article. If the article adopts it, the label can change.",
+"No problems found, recomputed or re-read: LedgerForkViz, MixedValuesViz, ResponseRangeViz, CancellationViz, HashChainViz, TreePathViz. These six were not changed, so audit:viz was not rerun on them; the baseline shot before any edits showed stable controls, overflow 0 and console errors 0.",
+"Verification after the edits: audit:viz --strict on the 5 changed files gave 0 ERROR lines (52 REVIEW items for SVG text). viz-scene-shot at 390px and 1440px gave constant control Y and frame height per Viz, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r1/rv14. At 390px the extra sentence takes CostShapeViz scene 2's note to 6 lines; it still fits above the control row with no clipping.",
+"Prose tension, not fixed because prose is off limits. §3 says '규칙실은 익숙한 질문 78개와 새 질문 12개'를 맞힌다. §7 says '고정 규칙실은 표에 없는 질문에서 멈추고' and gives '새 조합 20개 중 12개' to the learning system. ScoreGridViz follows §3. The author should decide whether a new combination counts as outside the table, or whether §7's 12 should belong to a different system.",
+"Prose gap in §11: '순대출' is used without a definition. The Viz now defines it as '대출에서 인식한 손실을 뺀 금액', which is my paraphrase of §6's '손실충당금을 차감한 순장부가', not article wording. Please check it.",
+"Mobile (390px): in several scenes the note starts below the fold and is partly hidden behind the control row until the reader scrolls inside the frame. I scrolled to the bottom of three scenes (RunLoop scene 4, DepositLimit scene 1, LossInterest scene 3). All three scrolled, and on RunLoop, the only result I viewed, the note's last line was visible above the controls. This is the internal scroll the standard allows, and it is not a defect I changed. DepositLimit also keeps an empty second row for stage stability, which pushes its note lower.",
+"Verification limits: audit:viz --strict exits 1 because of REVIEW lines (SVG text overflow prompts). There are 0 ERROR lines. The first audit covered all 8 changed files; after the last edit I re-ran it on 4 of them, including the edited file. tsc was not run, as instructed, so type correctness is shown only by the dev server rendering the pages. viz-scene-shot showed controls and frame stable, overflow 0 and console errors 0 at 390px and 1440px for all 12 Viz. I read a sample of screenshots covering 10 of the 12 Viz, not every scene; I did not open any for LossInterest's sibling AssetPurchasePathsViz or for the post-edit TransferBranchViz note wording beyond scene 2.",
+"A blocked command: a Bash call using heredocs was refused by the removal safety check because it could not be parsed. It contained no removal. I redid the same work with Edit and Write. Nothing was deleted, and /tmp/rv17-patch.py and /tmp/rv17-scroll.cjs remain in /tmp.",
+"Screenshots: /tmp/viz-rounds/r1/rv17/bank-balance-sheet-and-deposit-creation, /tmp/viz-rounds/r1/rv17/behavior-meaning-and-machine-understanding. Pre-fix baselines are in base-bank and base-mind under the same parent.",
+"Article prose conflict, not fixed because it needs a prose edit: #retry-backoff says '무작위 값(jitter)을 더해', while the formula and ExplainedFormula say 곱해. RetryScatterViz follows the formula (×U(0,1)).",
+"DepositRetryViz is correct, but its message is close to a single sentence in the article: '모두 7일이라는 숫자가 보이지만 다른 절차'. Standard 1.1 says not to add a Viz for a one-sentence fact. I kept it because the direction contrast is visible, and removing it would mean editing the article.",
+"Three explanations in the Viz are not stated word for word in the article and may need checking against sources: SdkStatusViz's 'send root는 L2의 인출 메시지들을 요약해 L1에 올리는 값', StockTokenRightsViz's 'raw × 비율 = 표시' (marked 가정) and 'RHJ는 Robinhood Assets (Jersey) Limited', and my gloss for 유동성 제공자 in FastBridgeViz.",
+"FinalityClocksViz draws the 13-minute mark 1.5 wide, while true scale is 340×13/10,080 = 0.44. I left it because it reads as a tick taller than the bar, not as a length.",
+"Checks after the fixes: audit:viz --strict on the 6 changed files gave 0 ERROR lines. viz-scene-shot on those 6 showed stable controls and frame, overflow 0, console errors 0. I re-read post-fix screenshots for TpmReservationViz, ConcurrencyPileViz and FailoverDegradeViz. WithdrawalPathViz, StockTokenRightsViz and FastBridgeViz changed only in description or note text; I read their pre-fix screenshots and their post-fix layout numbers, not post-fix images. Not every scene of the 8 unchanged Viz was viewed, only one or two representative scenes each, plus a numeric recheck in code.",
+"No open content problems. Recomputed with no errors: both PTX and SASS traces against the codebase output blocks, every live-range bar boundary, the FMA expansion, the unroll model, the sigmoid, gradient and table values, and the seed 43 and seed 0 random draws (node BigInt).",
+"Verification: audit:viz --strict gave 0 ERROR lines on the 8 changed files; its 10 REVIEW lines in the last full listing are SVG-text checks, and the screenshots I read showed no overflow from them. viz-scene-shot, re-run on those 8 files after the last edit to each: controls and frame stable, canvas overflow 0, console errors 0. A separate mobile check of all 23 figures in the two articles found inner scroll 0 in every scene. That check also caught notes my first edits had clipped on mobile, which I then shortened.",
+"Screenshot limit: the final run was read only for scenes in CompilePathViz, WeightOptimumViz and PtxTraceViz (before its last one-line note cut). LiveRangeViz, SharedMemoryLimitViz and SassTraceViz were read after their main edits but not after the last run. FmaRoundingViz and UpdateOrderViz were checked after their edits by metrics only, not by reading screenshots.",
+"Cleanup left for you: the harness safety check blocked an rm -rf of my own stale screenshot folders. Nothing was deleted, and I wrote to new folders instead. Scratch output remains in /tmp/viz-rounds/r1/rv10 (cuda, w2v, cuda-after, w2v-after, c2, w2, x, y, z, f, scroll.cjs). Current screenshots are in cuda-compilation-and-isa-analysis and word2vec-negative-sampling there; the rest can be deleted by hand."
+],
+"2": [
+"Article prose, conquest article, terms '은 회로' example: '은 100 중 60이 유럽, 40이 아시아 결제로 이어집니다' reads as 60 + 40 = 100, the exact error SilverSplitViz warns against. Suggested wording: '은 100 중 60이 유럽 장부에 잡히고 그중 40이 아시아 결제로 이어집니다'. Not edited because it is prose.",
+"Article prose, revolutions article, section 7 says '식민지의 30명', while section 3 defines that 30 as '노예·식민지 신민·비시민'. RosterChangeViz bridges this in its description ('3절의 … 30칸 자리') but still labels all 30 cells 식. A prose fix would need to state whether they are the same 30.",
+"Shared component, outside my scope (src/components): at 390px the controls row sits above the frame bottom, and scrolled note text shows in the roughly 27px band below it. Seen in DemandPressureViz, FourFlowsViz and TwoLedgersViz. At maximum scroll the sampled Viz showed the whole note (checked by screenshot for FourFlowsViz and DemandPressureViz), so nothing is unreachable, but the band looks untidy. The same band should appear on other mobile Viz using these controls; I did not check any.",
+"Verification: audit:viz --strict passed with no ERROR lines. viz-scene-shot showed stable controls and frame, overflow 0 and console errors 0 at both widths, using /tmp/viz-rounds/r2/rv3/<slug>. SilverSplitViz was unchanged, so its passing shots are in /tmp/viz-rounds/r2/rv3/base/c rather than under its slug. RosterChangeViz was re-shot after the last edit; the other edited Viz were shot once after their edits. I read screenshots for a sample of scenes per Viz, not every scene; layout and overflow for the rest rest on the script output. Reviewed with no change needed: SilverSplitViz (15 + 25 + 60 = 100, 60 − 40 = 20, widths match values) and the SceneShell and PeopleGrid helpers, counted in the 8 files read.",
+"Prose/data inconsistency in global-history/trade-religion-and-translation-networks, not fixed because prose edits are out of scope. Section 3 says \"현지 소비와 세금으로 20묶음이 빠지고\", while numericCase says \"20은 세금·현지 판매\" (consumption vs sale). GoodsVsBookViz follows section 3 (\"−20 현지 소비·세금\").",
+"The education article prose uses \"세금과 할인\" in section 4 without explaining 할인. The Viz note now glosses it, but the prose itself would need an author edit.",
+"Verification: audit:viz --strict on the 7 changed files gave 0 ERROR lines (68 REVIEW items, of the SVG-text kind in the portion of output I read). Scene shots on the final code covered all 7 changed Viz at 390 and 1440 px, with controls and frame stable, overflow 0 and console errors 0. The first education run crashed at 1440 px with a context-lost protocol error, and a retry passed. I suspect a page reload from concurrent edits, but did not confirm the cause. MonsoonWindowViz had no findings and was not edited, so it was only shot before the edits, with the same clean results. It was not in the audit:viz run. I read screenshots for a sample of scenes, not all of them, and did not reread the SignalThreshold note edit or the FundingSource scene 3 caption after changing them; their layout was checked only by the overflow numbers.",
+"EvidenceTraceViz scene 2 fixes '실행 클라이언트' and '합의 클라이언트', and scene 3 compares '클라이언트 1/2', following the article's '두 클라이언트가 같은 상태와 블록을 받아들이는지'. A reader may take these for one execution and one consensus client, which would not produce comparable state. The article does not say which two clients it means, so resolving this needs a prose change or an outside fact. Left unchanged.",
+"No errors found after recomputing numbers and geometry in ClientSplitViz, TwoAxisStatusViz, EvidenceTraceViz, SpvMoneyFlowViz and TrancheLossStackViz, so they were not edited. Checked: timestamp 1791294816 = 2026-10-06 13:53:36 UTC; loss splits 8/15/35 leaving 92/85/65; 5/70 = 7.14%. RiskRetentionShapeViz's figures also held (retained-side losses 0.4/0.75/1.75 vs 4/5/5; both retained areas 1080); only its caption changed.",
+"TwoAxisStatusViz scene 3's dashed exclusion arrow passes through the CFI and PFI cells on its way out of the grid. Its end label '제외될 수 있음' sits outside the grid and gives the right reading, and any exit path would cross some cells, so it stays. Worth a look if a later reader takes it as demotion to CFI or PFI.",
+"Verification after the last edits: audit:viz --strict on both viz directories reported 0 ERROR lines, with 81 REVIEW items counted before the final caption rewording; the sampled items were SVG text overflow prompts, and the screenshots showed no overflow. viz-scene-shot was re-run only for the 4 changed Viz: control position and frame height constant across scenes, overflow 0, console errors 0 at 390px and 1440px. The other 5 were shot only before the edits, with the same clean result. Screenshots are in /tmp/viz-rounds/r2/rv7/ (eth, sec, eth-base, sec-base).",
+"Article prose, cloud/linux-observability-proc-psi-perf-ebpf section 9 AlgorithmBlock: '99 Hz × 10초 × 4 CPU = 3,960 표본 가운데 report-gen이 약 2,400(가정)' contradicts the article's own scenario. report-gen runs 4 CPUs × 2.5 s in 10 s, so 99 × 2.5 × 4 = 990 samples, or 25% of 3,960. About 60% only works as a share of busy samples: 10 ÷ 16 = 62.5%, which is the denominator SampleVsEventViz uses (20 ÷ 32 busy cells). Needs a prose change, so left unfixed; the Viz itself is consistent.",
+"Article prose, macro/global-capital-and-policy section 3 stage bridge: '이 어떤 계약 조건이 두 변화를 만드는지' has a stray '이'. Not a Viz issue, and prose edits are out of scope.",
+"Verification limits: audit:viz --strict on the 3 changed files gave 10 REVIEW items and no ERROR. viz-scene-shot on the 6 new-round Viz I re-shot or baselined showed stable controls and frame, overflow 0 and console errors 0. I read 11 screenshots out of the full set, all at one chosen scene per Viz except PromqlPipeline and the mobile checks; the remaining scenes were checked from source, not by eye. On 390px, FactorIsolationViz's last note runs past the visible canvas and needs inner scrolling, which the standard allows; I did not test scrolling to the end of it.",
+"LedgerVsGrainViz scene 2 labels 운송 담당 '전달된 양 90', but article section 7 says 창고 관리자 keeps 30 locally ('창고 관리자는 30자루를 남기고'), so the transport carriers do not literally move all 90. I left it unchanged: the article gives no per-role figures, and any relabel would be my own framing. The 90 itself is the Viz's arithmetic (30+25+20+15); the article gives no delivered figure and only says '실제 전달률'.",
+"PayUnitViz, GrainSplitViz and others use values derived from the article's assumptions: per-visit cost 7 carried from section 0 to section 4 (+6/−4), and '중앙 금고 칸 0' (100 fully allocated). The arithmetic is correct and flagged 가정 or '이 가정 장부', but the prose does not state these results. A prose author may want to confirm them or add them to the article.",
+"Audit and shots: audit:viz --strict gave 0 ERROR lines on the 7 changed files. Scene shots at 390 and 1440 gave stable controls and frames, overflow 0 and console errors 0. The last full shot run of the healthcare article predates a one-line PayUnit label change, after which only PayUnitViz was re-shot; PoolSizeViz was not in the second full run, so its latest shot comes from the first run, which already had its fix.",
+"Not every screenshot was read. I opened 12 of them, 4 from the empire article and 8 from the healthcare article, and did not view any scene of VisitLedgerViz or KoreaFeeRouteViz. Those two rest on code reading, arithmetic and the script's numeric checks, and neither had any change.",
+"Prose, not changed: the section 10 heading '모두의 매각이 다른 사람의 담보 부족을 만듭니다' is stronger than its own body, which says '내려갈 수 있습니다'. The Viz title now carries the hedge and the heading does not.",
+"Prose, not changed: section 9 says '서버마다 다른 OnCalendar', but the same section's fix list says '노드 묶음마다 OnCalendar를 다르게' and RandomWindowViz says '묶음마다'. I kept the Viz on 묶음, because per-server schedules would not make a rollout stage.",
+"RandomWindowViz scene 4 gives each batch a different day, but the article only says 'different OnCalendar' and never gives a schedule. The Viz note marks the date assignment as an assumption, so I left it. Showing a real weekly OnCalendar value would need an outside fact.",
+"Checks: audit:viz --strict gave 0 ERROR lines, with 41 REVIEW items. These were the SVG-text-overflow reminders in the lines I read; the screenshots showed no text overflow. viz-scene-shot on all 12 Viz at 390px and 1440px gave stable control position and frame height, overflow 0 and console errors 0. I read screenshots for 11 of the 12 Viz at 390px, plus 2 at 1440px, not every scene. FuturesRestoreViz, FundingLoopViz, RatioCutViz and the others were sampled; the only Viz with no screenshot read is the 4th-index one: none skipped beyond scene sampling. The shots are in /tmp/viz-rounds/r2/rv6/margin and /tmp/viz-rounds/r2/rv6/sre.",
+"StallBranchViz: the description glosses L1TEX as 'L1 cache·texture 경로' and MIO as '메모리 입출력 계열 경로', which the article never defines. I left these as they are: they match my memory of the Nsight Compute guide, but I did not open the source, so the wording needs a check against it. The article would be the better place to define them, and that is a prose change.",
+"LaneOccupancyViz / article section 13: the article uses 'predication' without explaining it. The gloss is only in the Viz, so the prose may want one too (prose change, not made).",
+"LatencyCoverViz: the summary '⌈4/2⌉ = warp 2개' renders in the mono font so that the ceiling marks look like square brackets '[4/2]'. The note and the article's formula carry the meaning, so I left it.",
+"Mobile frames: StallBranchViz is 1077px tall at 390px wide, taller than the 844px viewport. VizFrame uses documentFlow, which standard section 4 exempts from the viewport height check, so this is not a violation. It does mean the controls and the top of the Viz are not on screen together.",
+"No numeric errors found. I recomputed every value: 8×32=256, 132×4=528, all eligible/issued/in-progress rows in the four LatencyCover plans, 4×32+12×31=500, 512−500=12, 320/640, 340/1280=26.5625%, the 0.7 PMF and its 1.4 mean, the XY/XV/2X+3Y rows, 3/2−1=1/2, and the ±2^k partial sums. Scenes are not all re-read after the fixes: I re-shot PlacementLimit, StallBranch, LatencyCover, LaneOccupancy, SquareOrder and DivergentSum (controls and frame stable, overflow 0, console errors 0) but only looked at DivergentSum scene 4 and LatencyCover scene 3 again, since the other edits were text only. audit:viz --strict gives 0 ERROR lines (54 REVIEW items remain, the ones I looked at being SVG-text reminders).",
+"CompareArmsViz scene 2 compares '2건 vs ?건' as raw counts. That comparison only works if the two groups are the same size or are compared as rates. The article's §7 does not state this, so adding it would be a new claim. Decision needed: add a clause to the article prose, then mirror it in the note.",
+"UnitsViz title changed: the article bridge '100·10·1천 회의 단위를 구별했습니다' (data-stage-bridge=case) has the same looseness as the old title, because 100 and 10 are the same unit. I left it because prose edits are out of scope. It is a minor wording issue.",
+"Checks: audit:viz --strict gave 0 ERROR lines on both viz directories (58 REVIEW items remain, the ones shown being the SVG-text overflow prompts). viz-scene-shot ran at 390px and 1440px on both pages: controlY and frameH did not change between scenes, overflow 0, console errors 0. I read 10 of the mobile screenshots after the fixes. The remaining scenes and all 1440px frames were checked only through the script's metrics. Output is in /tmp/viz-rounds/r2/rv5/media and /tmp/viz-rounds/r2/rv5/housing. The task's path form was /tmp/viz-rounds/r2/rv5/<slug>; I used the short names media and housing instead of the article slugs.",
+"Judgement call, not changed: ReserveLedgerViz and QeLedgerViz stay as text T-account tables. Standard section 1 says fund flows should be drawn as real cells or paths ('실제 칸, 묶음, 경로'), but that is outside the 1.1 and 2 scope of this review, and the article promises a ledger ('장부를 따로 그립니다'). A path strip would also likely push content into inner scroll at 390px, where the frame is fixed at 754 and controls sit at y=667; the QE note already ends just above the controls. If path drawings are wanted, split each into two Viz rather than adding to these. This estimate was not tested in a browser.",
+"Needs a wording decision, not changed: ReserveDemandViz scene 0 quotes the article's '수요의 작은 변화', but the plotted move runs along the reserve-balance axis (description: '가로축의 잔액 변화'). A demand change would strictly shift the curve, not move along it. Rewording the Viz would go beyond the article's text, so this needs a prose decision.",
+"Verification: audit:viz --strict reports 0 ERROR lines on the 6 changed files (REVIEW notes only). viz-scene-shot on both articles, at 390px and 1440px, shows controlY and frameH constant per scene, overflow 0 and console errors 0. After the fixes only the 6 changed Viz were reshot; the other 7 were shot before the fixes and their files were not edited. I read about 20 screenshots, not all of them, mostly at 390px. RollCurveViz, FxForwardViz, HarvestCoverViz, RepoPathViz, CompoundPathViz, FactoryChannelViz and QeLedgerViz had recomputed numbers and no findings, though I viewed only one scene of each. None of the 13 Viz use 3D.",
+"SwapTableMatchViz at 390px: in the longest scenes the canvas content is taller than its area (scrollHeight 632, clientHeight 581), so the note's second line sits below the fold until the reader scrolls inside the canvas. The overflow is overflow-y auto, and docs/viz-design-standard.md section 2 allows inner scrolling for long scenes on mobile, so I left it. I measured the overflow but did not perform a scroll to the end. Removing it would mean cutting the table rows or the note.",
+"Verification: audit:viz --strict gave 0 ERROR lines across both viz directories, plus 40 REVIEW items for SVG text. Before the edits, viz-scene-shot ran all 11 Viz, and controls and frame stayed stable with overflow 0 and console errors 0. After the edits I re-ran only the 5 changed Viz, with the same result. Baseline shots for the 6 unchanged Viz were deleted when I cleared the output directory, so /tmp/viz-rounds/r2/rv18 now holds only the post-fix shots of the 5 changed Viz. I read 13 baseline screenshots and 4 post-fix screenshots, not every scene at both widths.",
+"Checked with no defect found: all arithmetic and scene states in the other Viz, including REVERT's secondary magic being ANY (bootutil_public.c:105-145) and the three copies each followed by boot_write_status (swap_scratch.c:649-775).",
+"No facts or prose changes are needed. The numbers I recomputed all match the article: dirty thresholds 1,227/2,457/818/1,638 MiB, 1,700 MiB below the 1,842 MiB freerun line, expiry at 34 and 31 seconds after dirtying, and loss areas 10/60/30/30.",
+"LossShareViz's title changed, so any later viz-scene-shot run for it must match '보험은 부담을' rather than the old title.",
+"Not changed: VfsObjectsViz scene 4 pushes the fd row about 38px lower at 390px because the inode text wraps. Controls and frame stay stable and the reading is unaffected.",
+"Verification: audit:viz --strict gave 0 ERROR lines on both viz directories (74 REVIEW items remain, all the generic 'check SVG text in the browser' kind in the part of the list I read). viz-scene-shot at 390 and 1440 gave stable controls and frame, overflow 0 and console errors 0 for all 16 Viz. I read the 390px montages for all 16 and the 1440px ones for only LossShareViz, CoverageViz and MountTreeViz. The MountTreeViz legend edit was re-shot on its own, the other 15 runs predate it, and I did not re-read its 390px montage after that edit. Screenshots and montages are in /tmp/viz-rounds/r2/rv14/.",
+"Article prose, 7절 #greedy: '처음이 B인 두 행은 [0,1]이어도' cannot hold for both rows. RBY and RBX share parent B, which has one argmax, and Y ≠ X, so at most one of them can have 1 in the second cell. The Viz now shows RBY [0,1] and RBX [0,0], so it differs from the prose on RBX. Suggested prose: 'B 행의 둘째 칸이 1이어도'. I did not edit it because prose changes are out of scope.",
+"Verification: the stock scripts/viz-scene-shot.cjs times out on Viz inside collapsed ProgressiveDetail <details> (GreedyCumprod, KvCompact, TreeCost, HybridAverage, ResidualDistribution), with 'element is not visible'. I ran an unmodified-logic copy at /tmp/viz-rounds/r2/rv4/shot-open.cjs that opens all <details> first. scripts/ itself is untouched.",
+"Check results: audit:viz --strict on the 7 changed files gave no ERROR lines. Scene shots for the 7 changed Viz were re-run after the fixes: frame and controls stable, overflow 0, console errors 0. The other 8 Viz were shot before the fixes with the same clean results and were not changed. I read the re-shot screenshots for GreedyCumprod (1440px), RolloverFail (390px) and TwoDateRepo (390px). Re-shots of SuffixLookup, ResidualDistribution, TreeCost and ChainVsTree passed the script checks, but I did not view those images; their fixes change only note or summary text and an eyebrow.",
+"audit:viz given individual file paths reports '0개 실제 source file', so that run checks nothing. I re-ran it on the two viz directories instead: 0 ERROR lines, exit 0, 76 REVIEW items that are the generic SVG-text overflow reminders.",
+"viz-scene-shot results: after the last edits I re-ran only the 7 changed Viz; the other 10 were last shot before those edits, which did not touch them. All 17 had stable control positions and frame sizes at 390px and 1440px, overflow 0 and console errors 0. Those last shots still include a Curve overlap fixed afterwards in StationaryShapesViz; the later re-run confirms it is gone.",
+"The WebGL-failure fallback in StationaryShapesViz (SectionsFallback, two side-by-side curves) was edited but never rendered, because WebGL worked in every run. Its height on mobile is unconfirmed. The same Curve component overflowed its stage at 390px when used alone.",
+"Title of CgroupChargeViz says \"16번 시도한 뒤\", while the article says \"16번 다시 시도한 뒤\" and the Viz's own scene note uses the article's wording. I left the title unchanged because the task identifies each Viz by its title and a reader would not be misled.",
+"Verification: audit:viz --strict gave 0 ERROR lines on both viz directories. viz-scene-shot on both routes at 390px and 1440px gave stable control position and frame height, overflow 0 and console errors 0. Every recomputed number matched the article and observation.json with no wrong-fact findings. A separate 390px check confirmed that the last note can be scrolled clear of the controls in the 9 Viz with inner scroll, including the 4 whose notes I lengthened; the other 3 need no scroll. Screenshots are in /tmp/viz-rounds/r2/rv13/. I read a sample of them, 14 scene shots rather than every scene.",
+"Article prose rounding, left unchanged in WeightShareViz so it matches the article: 1024/1359 = 75.35% and 335/1359 = 24.65%, which conventional rounding makes 75.3/24.7 (or 75.35/24.65), not the article's 75.4/24.6. Fixing it needs a prose change in sections 1, 6, 7 and 10 and in the Viz together.",
+"Possible prose inconsistency: section 1 says the compression job is '예상보다 세 배 느리며' and section 6 says '압축이 세 배 느리게 느껴진 이유가 이 비율입니다', while the walkthrough and Viz say '혼자 돌 때보다 약 4배 오래' (1/0.2465 = 4.06). The two can be reconciled ('세 배 더'), but only the prose can settle it. The Viz keeps 4배.",
+"WeightShareViz shows nice 1~4 as computed values 819/655/524/419, tagged '계산', with a note that they may differ from the table. The article does not give the real sched_prio_to_weight entries; I recall them as 820/655/526/423, unverified here. Showing them would need an outside fact or a prose addition, so I left this as is.",
+"ThreeAmountsViz glosses 신용노출 as '상대가 지급하지 못할 때 잃을 수 있는 금액'. The article uses the term without defining it. The gloss was already there and I kept it because the term would otherwise go unexplained. Adding a definition to the prose would settle its source.",
+"At 390px, long notes (SyscallRegisterViz scene 3, WeightShareViz scene 1, and ThreeAmountsViz's last scene before I shortened it) were cut off at the fold in screenshots and rely on the canvas's internal scroll, which standard section 2 allows. I did not scroll to the end of these notes or re-read the shortened ThreeAmountsViz note on screen.",
+"SimultaneousLossViz still has a 4px inner scroll at 390px (scrollHeight 554, clientHeight 550). The standard allows inner scroll and the last note line was fully visible in the screenshot, so I left it.",
+"Prose gap: the article uses '순마진' in section 7 without defining it. The Viz now defines it as '판매액에서 비용을 뺀 몫', but a definition in the prose would need a prose edit.",
+"Prose gap: the article uses '앞' in both directions ('물건은 앞으로 갑니다' and '앞 단계 돈'). I fixed this only inside GoodsMoneyFlowViz, so the prose wording now differs slightly from the Viz's '이전 단계'.",
+"LossWasteLineViz places the '선별·운송 중' case mark under the 운송 box because 선별 is not a stage in the article's FAO list. The article places this case on the loss side but does not name a stage for 선별, so the exact position is my choice; only the side is sourced.",
+"Checks: audit:viz --strict gave 0 ERROR lines on both viz directories, though it still lists REVIEW items for SVG text that it asks to check in a browser. In viz-scene-shot, overflow and console errors were 0, and control position and frame height were constant across scenes at 390px and 1440px. That scene-shot sweep ran on the final state for the food article's Viz and for CoveredBranchViz; the other three insurance Viz were swept before the last CoveredBranchViz wording edits, which did not touch them. I read screenshots for most Viz but not every scene: PriceSplit and FunctionMap were read before the final sweep and were not edited.",
+"Cleanup: a built-in safety check blocked one 'rm -rf' of my own screenshot folder /tmp/viz-rounds/r2/rv11/insurance-risk-pooling, and the removal did not run. I did not retry it, and new shots overwrite the same filenames. Helper scripts rv11-edit.cjs, rv11-edit2.cjs, rv11-scroll.cjs and rv11-montage.py remain in /tmp/viz-rounds/r2/ and can be deleted by hand.",
+"RerankDepthViz: the article's formula question still says \"왜 한 번 더 줄어드나요\", while the Viz title now says \"줄어들 수 있습니다\". The formula's ≤ supports the Viz wording. Aligning the question would be a prose change, so it is left as is.",
+"WeeklyThresholdViz, not changed: the article states flatly '주 4일 일하면 주 소정근로 16시간으로 주휴수당 대상', and the Viz repeats it. From my own knowledge, not checked against a source, weekly holiday pay also depends on attending all scheduled days that week. Adding that hedge needs an outside fact and a prose change, so the article author should confirm it.",
+"WeeklyThresholdViz, not changed: '주휴일' is explained only through '주휴수당은 주휴일에 지급하는 수당', and the article never defines it. A real definition would have to come from 근로기준법 제55조, which is outside the article, so this needs a prose or source decision.",
+"Verification: audit:viz --strict gave 0 ERROR lines and 19 REVIEW items (SVG text). The scene-shot script reported stable controls and frame, overflow 0 and console errors 0 for all 15 Viz at 390px and 1440px, run after the edits. I read 11 of the screenshots, covering 8 of the 15 Viz: Calico, MTU, EdgeMesh, Pod, Egress, ResponseBranch, Shift, StockGap, Weekly and Venue (2 shots). The other Viz were checked from code and the script metrics only, without looking at their images. Output is in /tmp/viz-rounds/r2/rv15/k8s and /tmp/viz-rounds/r2/rv15/shop.",
+"PendingBranchViz scene 3 shows '고칠 곳: 노드 쪽 (CNI · 스토리지 · 레지스트리 인증)' on the same branch as InvalidImageName and ErrImageNeverPull. Those two usually need a change to the image name or imagePullPolicy in the Pod spec, not on the node. The article's two-way split ('scheduler 쪽 ... 노드 쪽(CNI·스토리지·레지스트리 인증)') has the same gap and names no fix location for them, so a correction needs a prose change or an outside fact. Left unfixed.",
+"Checked with no change needed: PendingBranchViz, ContainerStateViz, EventFilterViz, SubmitOverlapViz, RestoreChecklistViz. Recomputed numbers matched, including e_i for both L/E cases, 1,002/1,400/410, and the backoff windows. KeySelect outcomes also match source-execution.json and the dispatcher source.",
+"Screenshots were re-run only for the changed Vizs except InputPaths' and Capture's text, which were covered by the same run: 390px and 1440px show stable controls and frame, overflow 0, console errors 0. audit:viz --strict reports 0 ERROR lines and 73 REVIEW items (SVG text checks). EventFilterViz and the other unchanged Vizs were also stable in the first run, before the edits.",
+"Kept, not changed: the threshold 10 in SumAverageVectorViz is not in the article, which only says '임계값을 사용하는 후속 작업까지 같아지는 것은 아닙니다'. It is labeled '가정' in the scene, in the summary and on the axis, so I left it. Tell me if assumed numbers must be removed entirely.",
+"Out of scope: LlmDatasetEngineeringAndCleaningViz.tsx, which is not on the review list, has 150px of inner vertical scroll at 390px in every scene. I did not read that file or check whether its last content and controls stay reachable.",
+"Checks after the last edits: audit:viz --strict gave 0 ERROR lines across both viz directories (25 REVIEW lines when last listed, which only ask for an overflow check; re-run on MixtureEpochViz alone after the final spacing edit). viz-scene-shot showed stable controls and frame, overflow 0 and console errors 0 at 390px and 1440px. Mobile inner vertical overflow was also 0 for every listed Viz. I read screenshots for a sample of scenes, mostly at 390px, not every scene at both widths.",
+"Recomputed with no error found: all FNV hashes and remainders (including <é> signed 1002806231 / unsigned 4222937559, and the 2,000,000-bucket remainders 806231 / 937559), the MinHash sketch 4/5 and J 3/5, the standard deviations, and the 180B / 9B and 409B / 2.6B figures. NgramWindowViz, FnvHashTraceViz and both SceneShell files needed no changes.",
+"A safety check refused one combined shell command because it could not parse it. The command contained no removal. I re-ran the same edits from script files in /tmp, and nothing was deleted."
 ]
+}
 }

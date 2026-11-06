@@ -2,6 +2,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ClaimCheckViz from "./healthcare-payment-systems/viz/ClaimCheckViz";
+import DoubleCountViz from "./healthcare-payment-systems/viz/DoubleCountViz";
+import KoreaFeeRouteViz from "./healthcare-payment-systems/viz/KoreaFeeRouteViz";
+import MoneyPathViz from "./healthcare-payment-systems/viz/MoneyPathViz";
+import PayUnitViz from "./healthcare-payment-systems/viz/PayUnitViz";
+import PoolSizeViz from "./healthcare-payment-systems/viz/PoolSizeViz";
+import ThreeFunctionsViz from "./healthcare-payment-systems/viz/ThreeFunctionsViz";
+import VisitLedgerViz from "./healthcare-payment-systems/viz/VisitLedgerViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function HealthcarePaymentSystemsArticle() {
@@ -17,6 +25,7 @@ export default function HealthcarePaymentSystemsArticle() {
       </section>
       <section id="black-box" data-teaching-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">B · 미리 모은 돈과 창구에서 낸 돈이 병원에서 합쳐집니다</h2>
+        <MoneyPathViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사람들은 건강할 때부터 공동 재원에 돈을 냅니다. 아픈 사람이 치료받으면 지급 담당이 계약상 보장되는 진료를 확인해 병원에 보냅니다. 환자는 본인이 내야 할 부분을 따로 냅니다.</p>
           <p className="leading-8">병원은 받은 돈으로 의료진, 약품과 시설의 비용을 냅니다. 누가 진료를 결정하는지와 누가 대금을 주는지가 같지 않다는 점이 이 구조의 특징입니다.</p>
@@ -26,6 +35,7 @@ export default function HealthcarePaymentSystemsArticle() {
       </section>
       <section id="case" data-teaching-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">0 · 10만 원 진료에서 환자 2만 원과 다른 지급 8만 원이 합쳐집니다</h2>
+        <VisitLedgerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한 번의 진료에 의료기관이 받는 총액을 10만 원, 환자가 내는 금액을 2만 원, 공동 재원에서 지급하는 금액을 8만 원으로 놓습니다(가정). 이는 특정 국가의 본인부담률이 아닙니다.</p>
           <p className="leading-8">병원의 관련 비용을 7만 원으로 두면 차액은 3만 원입니다(가정). 이 비용에 시설 유지와 공통 인건비를 모두 넣었는지에 따라 3만 원의 의미도 달라집니다.</p>
@@ -34,6 +44,7 @@ export default function HealthcarePaymentSystemsArticle() {
       </section>
       <section id="picture" data-teaching-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1 · 지급자는 보장 대상과 가격을 확인합니다</h2>
+        <ClaimCheckViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">병원이 진료 기록과 청구 내역을 보내면 지급자는 자격과 보장 대상, 정한 가격을 확인합니다. 환자는 이미 2만 원을 냈습니다. 지급자는 별도로 8만 원을 보냅니다. 청구가 조정되거나 거절되면 실제 총지급이 10만 원과 달라질 수 있습니다.</p>
         </div>
@@ -42,6 +53,7 @@ export default function HealthcarePaymentSystemsArticle() {
       </section>
       <section id="need" data-teaching-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2 · 아픈 시점의 소득만으로 치료비를 감당하기 어렵습니다</h2>
+        <PoolSizeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">아플 때는 지출이 늘면서 일을 못 해 소득도 줄 수 있습니다. 미리 돈을 모아 두면 현재 아픈 사람의 비용을 여러 사람이 나눕니다. 건강한 사람과 아픈 사람을 어떤 범위에서 함께 묶는지가 보호의 크기를 바꿉니다.</p>
           <p className="leading-8">모은 돈이 같아도 병원에 지급하는 기준이 다르면 진료량이 달라질 수 있습니다. 치료를 늘릴 때 수입도 늘어나는지, 정해진 수입 안에서 비용을 감당해야 하는지에 따라 유인이 달라집니다.</p>
@@ -50,6 +62,7 @@ export default function HealthcarePaymentSystemsArticle() {
       </section>
       <section id="names" data-teaching-level="3" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3 · 재원 조달·위험 풀·구매라는 세 기능입니다</h2>
+        <ThreeFunctionsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">보험료와 세금 등으로 돈을 모으는 일이 재원 조달입니다. 여러 사람의 돈을 함께 관리해 아픈 사람의 부담을 나누는 것이 위험 풀 형성입니다.</p>
           <p className="leading-8">의료기관에 어떤 서비스를 얼마에 지불할지 정하는 일이 구매입니다. 이 세 가지가 의료 재정의 세 기능이며, 한 기관이 함께 맡을 수도 여러 기관이 나눌 수도 있습니다.</p>
@@ -59,6 +72,7 @@ export default function HealthcarePaymentSystemsArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 건수로 주는 돈과 묶어서 주는 돈은 다른 선택을 만듭니다</h2>
+        <PayUnitViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 조건의 진료를 두 번 제공하고 각각 10만 원을 받으면 병원 수입은 20만 원입니다. 환자 몫은 합계 4만 원, 공동 재원 지급은 16만 원입니다(가정). 진료 한 건마다 지급하는 방식을 건별 지급이라고 부릅니다.</p>
           <p className="leading-8">반대로 치료 과정 전체에 총 10만 원을 주기로 정하면 두 번 진료해도 수입이 20만 원으로 늘지 않습니다(가정). 이를 묶음 지급이라고 합니다. 정해진 사람을 돌보는 기간에 따라 금액을 주는 인두제도 있으며 지급 단위가 다릅니다.</p>
@@ -80,6 +94,9 @@ export default function HealthcarePaymentSystemsArticle() {
         <h2 className="mb-6 text-2xl font-bold">6 · 한국·잉글랜드·미국의 지급 규칙은 적용 범위부터 다릅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한국 국민건강보험공단은 급여 항목을 안내합니다. 비용 부담도 구분해 설명합니다. 사례의 20%를 실제 진료에 일괄 적용할 수 없고 급여 여부와 진료 종류 등을 확인해야 합니다.</p>
+        </div>
+        <KoreaFeeRouteViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">4절의 지급 방식으로 보면 한국은 건별 지급이 근간입니다. 건강보험심사평가원 안내에 따르면 한국은 의료보험 도입 때부터 진료 행위의 사용량과 가격으로 진료비를 지불하는 행위별수가제(fee-for-service)를 채택했고, 이를 보완하려고 질병군별 포괄수가제(DRG)와 요양병원·보건기관 등의 정액수가제를 함께 씁니다.</p>
           <p className="leading-8">포괄수가제는 7개 질병군에 대해 2013년 7월부터 전국 모든 의료기관에 적용됐습니다. 사례의 10만 원이 검사·처치 항목별 가격을 더한 값이면 행위별수가제, 같은 질병군 입원 한 건에 미리 정한 금액이면 포괄수가제에 해당합니다. 1절의 &lsquo;지급자 확인&rsquo;도 한국에서는 심평원의 심사와 국민건강보험공단의 지급으로 나뉩니다(<a className="text-sky-700 underline dark:text-sky-300" href="https://www.hira.or.kr/dummy.do?pgmid=HIRAA020028000000">심평원 수가제도 안내</a>, 2026-10-09 확인).</p>
           <p className="leading-8">미국 CMS의 fee schedule은 Original Medicare의 해당 서비스 지급표입니다. 사례의 10만 원처럼 서비스를 얼마에 살지 정하는 층의 규칙이며 미국 전체 민간보험 가격표가 아닙니다.</p>
@@ -93,6 +110,7 @@ export default function HealthcarePaymentSystemsArticle() {
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 비용을 줄였을 때 대기와 건강 결과도 확인합니다</h2>
+        <DoubleCountViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">환자 부담과 전체 의료비를 비교하려면 창구 지출 2만 원과 공동 지급 8만 원을 합쳐 10만 원으로 봅니다. 이미 모은 보험료를 같은 진료비에 또 더해서는 안 됩니다. 지급과 재원을 중복해 세기 때문입니다.</p>
           <p className="leading-8">총지급을 줄였어도 필요한 진료를 못 받거나 대기가 길어졌다면 비용 절감만으로 좋은 제도라고 할 수 없습니다. 반대로 같은 건강 결과를 더 적은 자원으로 얻었다면 효율이 좋아졌을 수 있습니다.</p>

@@ -1,6 +1,14 @@
 import WorldHistoryArticle, { type WorldHistoryArticleData } from "./WorldHistoryArticle";
+import DemandPressureViz from "./conquest-disease-silver-and-oceanic-exchange/viz/DemandPressureViz";
+import SilverSplitViz from "./conquest-disease-silver-and-oceanic-exchange/viz/SilverSplitViz";
+import TwoLedgersViz from "./conquest-disease-silver-and-oceanic-exchange/viz/TwoLedgersViz";
 
 const data: WorldHistoryArticleData = {
+  figures: {
+    case: { 0: <SilverSplitViz /> },
+    need: { 0: <DemandPressureViz /> },
+    mechanism: { 1: <TwoLedgersViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 1492년 뒤의 연결은 상품 교환만으로 설명되지 않습니다", bridge: "대양 연결을 배와 상품의 성공담으로 좁히지 않았습니다. 함께 움직인 네 흐름을 나눕니다.", paragraphs: [
       "15세기 말 뒤 대서양·태평양·인도양의 기존 망이 더 직접 연결되면서 사람, 작물, 동물, 병원체, 귀금속이 대륙 사이를 크게 움직였습니다. 유럽 제국의 정복과 아메리카 원주민 사회의 붕괴, 아프리카인의 강제 이주, 아시아의 은 수요가 한 체계 안에서 만났습니다.",

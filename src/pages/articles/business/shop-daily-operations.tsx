@@ -4,6 +4,12 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ShopDailyOperationsViz from "./ShopDailyOperationsViz";
+import MoneyWaterfallViz from "./shop-daily-operations/viz/MoneyWaterfallViz";
+import ShiftRecordViz from "./shop-daily-operations/viz/ShiftRecordViz";
+import StockGapViz from "./shop-daily-operations/viz/StockGapViz";
+import TwoDayLedgerViz from "./shop-daily-operations/viz/TwoDayLedgerViz";
+import VenueCriteriaViz from "./shop-daily-operations/viz/VenueCriteriaViz";
+import WeeklyThresholdViz from "./shop-daily-operations/viz/WeeklyThresholdViz";
 
 /** 공식 자료 확인: 2026-11-01. 주문·금액·정산 시점은 가정입니다. */
 export default function ShopDailyOperationsArticle() {
@@ -38,6 +44,9 @@ export default function ShopDailyOperationsArticle() {
         <h2 className="mb-6 text-2xl font-bold">3. 20건을 팔았지만 그날 통장에는 아직 들어오지 않는다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">작은 음식점이 하루 20건을 건당 8천 원에 전부 카드로 판매했다고 합시다. 시작 재료는 10개 분량, 새로 받은 재료는 15개 분량이며, 한 개 분량의 원가는 모두 2천 원입니다. 하루 끝에 4개 분량이 남고 1개 분량은 버렸습니다. 결제업체는 판매대금에서 2%를 떼어 이틀 뒤 보냅니다. 모든 숫자와 지급기한은 가정이며 세금 계산과 환불·보류·추가 조정은 생략합니다.</p>
+        </div>
+        <MoneyWaterfallViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">고객 결제는 16만 원, 수수료는 3천200원, 받을 돈은 15만6천800원입니다. 팔린 20개 재료비 4만 원과 폐기 1개 2천 원까지 차감한 중간 결과는 11만4천800원입니다. 아직 입금 전이므로 이 숫자가 오늘 통장에 생긴 돈은 아닙니다. 인건비·월세·세금도 남아 있습니다.</p>
           <p className="leading-7">이날 직원 한 사람이 실제 일한 시간은 4시간입니다. 근로 도중 30분의 휴게를 따로 줬고, 직원이 자유롭게 이용한 그 30분은 이 4시간과 별도로 기록했다고 놓겠습니다. 임금률과 유급 휴게·수당 등은 계약과 현지 규정에 맞춰 계산합니다.</p>
         </div>
@@ -60,8 +69,12 @@ export default function ShopDailyOperationsArticle() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5. 잔액만 보면 손실이 난 곳을 찾을 수 없다</h2>
+        <StockGapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">예상 잔여 5개가 실제로는 4개라면 1개 차이를 기록해야 합니다. 상해서 버린 것인지, 직원 식사인지, 주문을 기록하지 않은 것인지에 따라 다음날 조치가 달라집니다. 이 사례는 폐기 1개가 확인됐으므로 2천 원 손실로 처리합니다.</p>
+        </div>
+        <TwoDayLedgerViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">은행에 15만6천800원이 들어왔다고 16만 원 매출을 다시 추가로 기록하면 한 번 판 물건을 두 번 판 셈이 됩니다. 주문 자료는 판매를, 결제업체 자료는 차감액과 송금 대상을, 은행 자료는 실제 도착을 증명합니다.</p>
           <p className="leading-7">직원이 4시간 일했다면 손님이 없던 시간도 근로 여부와 계약에 따라 지급 대상이 될 수 있습니다. 매출액만으로 근무 시간을 재구성할 수 없으므로 출퇴근과 휴게 기록이 따로 필요합니다.</p>
         </div>
@@ -85,8 +98,14 @@ export default function ShopDailyOperationsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">영업 전에는 남은 재료 10개를 직접 보고 공급자에게 15개를 주문합니다. 받을 때 수량과 상태, 납품일과 보관 조건을 맞추고 거래명세와 세금 증빙을 연결합니다. 공급자가 늦을 때 대체 주문을 할 사람, 반품 가능한 조건, 다음 발주에 필요한 시간을 정해 둡니다.</p>
           <p className="leading-7">주방에서는 재료의 보관 온도와 사용기한을 확인하고 먼저 써야 할 재료부터 사용합니다. 이 사례에서는 20건을 제공하고 1개를 폐기했으므로 남는 것은 4개입니다. 폐기한 날짜와 이유를 남겨 과다 발주인지 보관 문제인지 다음 주문에서 고칩니다. 발주량을 판매량과 무조건 같게 두지 않고 입고까지 걸리는 날과 실제 변동을 반영합니다.</p>
+        </div>
+        <ShiftRecordViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">근무 전에는 할 일과 시간, 임금·지급일을 정한 계약을 주고받습니다. 출퇴근 시각과 실제 근로·휴게를 나눠 기록하고 휴게 제공 의무와 유급·무급 처리를 적용법으로 확인합니다. 이 사례의 4시간은 이미 실제 일한 시간으로 확인한 값이므로, 휴게라는 이름으로 다시 빼지 않습니다. 한국이라면 기준이 숫자로 정해져 있습니다.</p>
           <p className="leading-7">근로기준법 제54조는 근로시간이 4시간이면 30분 이상, 8시간이면 1시간 이상의 휴게를 근로시간 도중에 주고 근로자가 자유롭게 쓰게 하도록 정하며, 이 의무는 5인 미만 사업장에도 적용됩니다. 2026년 최저임금은 업종 구분 없이 시간급 10,320원이므로 이 직원의 4시간에는 최소 4 × 10,320 = 41,280원이 듭니다.</p>
+        </div>
+        <WeeklyThresholdViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">같은 직원이 주 4일 일하면 주 소정근로 16시간으로 주휴수당 대상이 되고, 주 3일(12시간)이면 4주 평균 주 15시간 미만이라 제18조 제3항에 따라 주휴일(제55조)과 연차휴가(제60조) 규정이 적용되지 않습니다. 근무일수는 가정이며, 2026-11-01 확인한 현행 근로기준법과 2026년 최저임금 공식 고시를 적용했습니다.</p>
           <p className="leading-7">급여일에는 근무기록에서 계산한 총액과 세금·보험 등의 적법한 공제, 실제 지급액을 맞추고 명세서를 전달합니다. 신규 입사와 퇴사 때 사회보험 신고 대상·기한도 근무형태에 맞춰 확인합니다.</p>
           <p className="leading-7">마감 때 판매 20건 16만 원을 결제방식별로 묶습니다. 결제업체의 정산 예정액 15만6천800원에 연결된 주문과 수수료 3천200원을 확인하고 이틀 뒤 은행에서 실제 입금을 찾습니다. 은행 도착을 확인하기 전에는 미입금으로 남깁니다. 배달 주문은 플랫폼 부담 할인과 점주 부담 할인, 광고·배달 비용과 환불을 따로 대조해야 하며 이 사례의 카드 2%를 그대로 쓰지 않습니다.</p>
@@ -136,6 +155,9 @@ export default function ShopDailyOperationsArticle() {
             않습니다.
           </p>
           <p className="leading-7">음식점은 재료를 세는 일과 안전하게 보관·조리하는 일을 함께 해야 합니다. 한국에서 적용되는 영업자 위생교육과 종사자 건강진단, 시설·영업자 준수사항을 관할 위생부서와 확인합니다. 냉장 설비 고장과 교차오염, 알레르기 문의처럼 고객 피해로 이어질 일은 매출 마감까지 기다리지 않고 영업 중 처리 책임자를 정합니다.</p>
+        </div>
+        <VenueCriteriaViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             화재·배상 보험은 계약의 보장 대상과 한도, 자기부담금·면책을 확인합니다. 법정 의무보험 여부와 임대차에서 약정한 보험은 별도이며 한국 다중이용업소 해당 여부에는
             면적·층·출입구 같은 조건이 있습니다. 음식점이면 영업장 바닥면적 합계 100㎡ 이상(지하층은 66㎡ 이상)이 기준이고,

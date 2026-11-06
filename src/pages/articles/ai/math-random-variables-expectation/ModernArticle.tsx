@@ -3,6 +3,10 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import RandomVariableMapViz from "./RandomVariableMapViz";
+import DivergentSumViz from "./viz/DivergentSumViz";
+import PmfMeanViz from "./viz/PmfMeanViz";
+import RowPairViz from "./viz/RowPairViz";
+import SquareOrderViz from "./viz/SquareOrderViz";
 const L5="https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/e49cdbaf3129125869700c46aa661fa1_MIT6_041SCF13_L05.pdf";
 const L7="https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/c0a406b218730ddb16326d695a895c57_MIT6_041SCF13_L07.pdf";
 export default function RandomVariablesExpectationArticle(){return <article className="space-y-16">
@@ -92,6 +96,7 @@ annotatedFormula={String.raw`\begin{gathered}\mathbb E[X]=\sum_\omega X(\omega)P
 operations={[{expression:String.raw`1\cdot\frac14+1\cdot\frac14=1\cdot(\frac14+\frac14)`,annotation:["HT와 TH의 기여를 같은 값 1과 합친 비중 1/2로 묶습니다."]}]}
 terms={[{symbol:"E[X]",name:"기댓값",description:"이 사례의 단위는 앞면 개수이며 확률 자체가 아닙니다."}]}
 assumptions={["유한 표본공간의 합입니다. 일반 이산 변수의 유한 기댓값에는 절댓값의 가중합이 유한해야 합니다.","확률의 합은 1이며 각 확률은 단위가 없는 비중입니다."]} interpretation="X가 개수이면 기댓값도 개수, 점수이면 기댓값도 점수입니다. 값의 단위를 확률의 단위로 바꾸지 않습니다." />
+<PmfMeanViz />
 <p>처음 사례에서는 기댓값 1과 최빈값 1이 우연히 같습니다. 각 던짐의 앞면 확률을 0.7로 바꾸고 두 던짐이 독립이라고 정하면 다릅니다(가정). X의 0·1·2 확률은 0.09·0.42·0.49이고 기댓값은 0.42+2×0.49=1.4입니다. 가장 큰 확률을 가진 최빈값은 2입니다.</p>
 <p>이때 1.4는 한 번의 실행에서 나올 수 있는 앞면 개수도 아닙니다. 더 작은 예로 첫 결과가 H이면 1, T이면 0을 주는 변수 U를 보세요. 공정한 던짐에서 E[U]=1/2지만 한 실행의 U는 0이나 1입니다. 기댓값은 다음 값을 맞히는 예언으로 정의하지 않습니다.</p>
 </section>
@@ -118,6 +123,7 @@ assumptions={["관련 변수의 절댓값 기댓값이 유한합니다.","X와 Y
 </section>
 <section id="product-boundary" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">12 · 곱에서는 같은 행의 짝이 결과에 남는다</h2>
+<RowPairViz />
 <p>같은 X와 Y를 이번에는 곱합니다. 네 행의 XY는 0,1,1,0이므로 E[XY]=1/2입니다. 각 기댓값을 먼저 곱하면 E[X]E[Y]=1입니다. X가 큰 행에서는 Y가 작다는 관계를 지우면 같은 답을 얻지 못합니다.</p>
 <p>X와 Y가 독립이고 각각 절댓값 기댓값이 유한하면 곱의 기댓값을 나눌 수 있습니다. 하지만 E[XY]=E[X]E[Y]라는 등식 하나를 확인했다고 독립을 역으로 결론 내리지는 않습니다. 독립은 모든 값의 조합에 대한 확률 관계입니다.</p>
 <p>같은 네 기록에서 V=(X−1)²를 만들면 값은 1,0,0,1입니다. E[V]=1/2이고 E[XV]=1/2라서 E[X]E[V]와 같습니다. 그러나 X=1이라고 알면 V는 반드시 0이므로 X와 V는 독립이 아닙니다. 곱의 평균 하나가 맞는 것만으로는 전체 관계를 알 수 없습니다.</p>
@@ -125,6 +131,7 @@ assumptions={["관련 변수의 절댓값 기댓값이 유한합니다.","X와 Y
 </section>
 <section id="square-boundary" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">13 · 먼저 제곱한 평균에는 원래 값의 흔들림이 남는다</h2>
+<SquareOrderViz />
 <p>X²는 네 기록에서 4,1,1,0입니다. 기댓값은 3/2입니다. 반면 X의 기댓값 1을 먼저 제곱하면 1입니다. 둘의 차이 1/2은 원래 평균에서 얼마나 떨어졌는지 제곱해 평균한 값과 같습니다.</p>
 <ExplainedFormula question="제곱과 기댓값의 순서를 바꾸면 언제 차이가 생기나요?" idea="평균에서의 편차를 제곱하면 음수가 될 수 없습니다. 그 평균이 두 계산의 차이를 나타내며 값의 흔들림이 없으면 차이도 0입니다."
 formula={String.raw`\mathbb E[X^2]-(\mathbb E[X])^2=\mathbb E[(X-\mathbb E[X])^2]\ge0`}
@@ -136,6 +143,7 @@ assumptions={["E[X²]가 유한합니다.","등호는 X가 확률 1로 같은 �
 <section id="limits" data-teach-level="7" className="space-y-6">
 <h2 className="text-2xl font-bold">14 · 평균의 존재와 반복의 조건까지 확인한다</h2>
 <p>이번 네 기록의 값은 모두 유한하고 개수도 유한하므로 기댓값을 계산하는 데 문제가 없습니다. 무한히 많은 값을 허용할 때는 값마다 확률이 작아진다는 사실만으로 충분하지 않습니다. 값과 확률을 곱한 기여가 끝없이 쌓일 수 있습니다.</p>
+<DivergentSumViz />
 <ProgressiveDetail title="매번 유한한 숫자가 나와도 평균은 무한하거나 정의되지 않을 수 있다" preview="작아지는 확률과 커지는 값의 곱을 실제로 계산해 유한 기댓값의 조건을 확인합니다.">
 <p>k=1,2,…에서 값 Z=2ᵏ에 확률 2⁻ᵏ를 준다고 합시다(가정). 확률의 합은 1/2+1/4+…=1입니다. 하지만 각 값의 평균 기여는 2ᵏ×2⁻ᵏ=1입니다. 기여를 모두 더하면 +∞이므로 유한한 평균은 없습니다.</p>
 <p>이번에는 +2ᵏ와 −2ᵏ에 각각 확률 2⁻⁽ᵏ⁺¹⁾를 줍니다(가정). 전체 확률은 여전히 1이지만 양의 기여 합과 음의 크기 합이 각각 무한합니다. 양음 한 쌍씩 지워 0이라고 하는 대칭 절단값은 기댓값을 정의하지 못합니다. +∞와 −∞를 임의로 상쇄하지 않습니다.</p>

@@ -5,6 +5,13 @@ import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import SymptomCauseViz from "./linux-sre-metrics-slo-safe-change/viz/SymptomCauseViz";
 import StagedRolloutViz from "./linux-sre-metrics-slo-safe-change/viz/StagedRolloutViz";
+import DownloadCutoffViz from "./linux-sre-metrics-slo-safe-change/viz/DownloadCutoffViz";
+import DriftTableViz from "./linux-sre-metrics-slo-safe-change/viz/DriftTableViz";
+import IncidentHourViz from "./linux-sre-metrics-slo-safe-change/viz/IncidentHourViz";
+import RandomWindowViz from "./linux-sre-metrics-slo-safe-change/viz/RandomWindowViz";
+import RequestGridViz from "./linux-sre-metrics-slo-safe-change/viz/RequestGridViz";
+import ThreeLoopsViz from "./linux-sre-metrics-slo-safe-change/viz/ThreeLoopsViz";
+import TwoPathsViz from "./linux-sre-metrics-slo-safe-change/viz/TwoPathsViz";
 import { codeRefs } from "./linux-sre-metrics-slo-safe-change/codeRefs";
 import { linuxSreTrees } from "./linux-sre-metrics-slo-safe-change/fileTree";
 
@@ -42,6 +49,7 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 관측·변경·노동, 세 고리가 한 서버 운영을 이룹니다</h2>
+          <ThreeLoopsViz />
           <div className={prose}>
             <p>
               바깥에서 보면 SRE식 서버 운영은 세 고리입니다. 관측 고리는 지표를 두 묶음으로 나눕니다. 사용자가 겪는 것(성공률·지연)을 SLI로 삼아 SLO 목표를 두고 그 목표가 깎이는 속도로
@@ -71,6 +79,9 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
               (가정) 서버 100대 위에서 초당 1,000 요청을 받는 API가 있습니다. SLI는 "성공한 요청 ÷ 전체 요청"이고 SLO는 30일 동안 99.9%입니다. 허용되는 실패는 0.1%입니다. 이것을
               시간으로 바꾸면 30 × 24 × 60 × 0.001 = 43.2분입니다. 한 달 동안 서비스가 완전히 멈춰도 되는 시간이 43.2분이라는 뜻이고, 이 몫을 오류 예산(error budget)이라고 부릅니다.
             </p>
+          </div>
+          <RequestGridViz />
+          <div className={prose}>
             <p>
               어느 날 한 노드의 로그 디스크가 가득 차서 그 노드의 앱이 40분 동안 재시작을 반복했습니다. 100대 중 1대라 요청의 1%가 그 노드로 갔고, 그 요청은 절반쯤 실패했다고 합시다. 전체
               성공률은 98.5%, 오류율 1.5%입니다. 허용 오류율 0.1%의 15배이므로 소진율(burn rate)은 15입니다. 이 속도가 1시간 이어지면 예산의 15 × 1 ÷ 720 = 2.08%가 사라집니다. 40분
@@ -173,6 +184,7 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
 
         <section id="change-path" data-teach-level="3" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">6. Datadog에는 변경 경로가 둘 있었고, 둘째 경로에는 문이 없었습니다</h2>
+          <TwoPathsViz />
           <div className={prose}>
             <p>
               Datadog의 사후 분석을 변경 경로라는 눈으로 다시 읽습니다. 첫째 경로는 조직의 파이프라인입니다. 새 코드·보안 패치·설정은 지역별, 클러스터별, 노드별로 들어가고 단계 사이에
@@ -185,6 +197,9 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
             <p>
               3월 7일 Ubuntu가 systemd CVE 패치(249.11-0ubuntu3.7)를 -security에 올렸고, 다음 날 06:00~07:00 UTC에 이 경로가 전 지역에서 동시에 그것을 설치했습니다.
             </p>
+          </div>
+          <IncidentHourViz />
+          <div className={prose}>
             <p>
               결과는 둘째 경로의 모양 그대로였습니다. 지역 사이에 아무 결합이 없는데도 모두 같은 한 시간에 바뀌었고, 바뀌지 않은 비교 대상이 없었습니다. 06:00에 첫 업그레이드가 돌고 3분 뒤 내부 모니터링이 경보를 올렸으며, 06:31에는 fleet의 상당 부분이 꺼져 사용자에게 보였습니다.
             </p>
@@ -254,6 +269,9 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
               SRE workbook 14장은 설정 변경에도 코드와 같은 규율을 요구합니다. 커밋 시점에 의미를 검증해 잘못된 설정을 막으며, 전역 일괄 반영을 피해 점진적으로 밀어 넣어 100% 중단 전에 멈출
               수 있게 하며, 되돌리기를 임시 수정보다 우선합니다. Kubernetes가 Pod를 한꺼번에 바꾸지 않고 rolling update를 쓰는 이유도 같은 문단에서 설명합니다.
             </p>
+          </div>
+          <DriftTableViz />
+          <div className={prose}>
             <p>
               drift의 흔한 출처는 셋입니다. 사람이 SSH로 들어가 고친 설정은 다음 배포 때 덮이거나 영원히 남아 그 노드만 다르게 만듭니다. 노드 안의 자동화(unattended-upgrades, dnf-automatic, cron)는 파이프라인 모르게 패키지를 바꿉니다. 재부팅은 메모리에만 있던 변경(sysctl, ip rule)을 지워 "원하는 상태"가 어디였는지를 되묻습니다.
             </p>
@@ -276,6 +294,7 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
 
         <section id="source" data-teach-level="5" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">9. 원문은 06:00과 60분을 세 줄로 적고, 배포판이 달라도 같은 창입니다</h2>
+          <RandomWindowViz />
           <div className={prose}>
             <p>
               Debian apt 저장소의 debian/apt-daily-upgrade.timer는 열두 줄입니다. OnCalendar=*-*-* 6:00, RandomizedDelaySec=60m, Persistent=true. Datadog 글이 인용한 파일이 이것이고, 이 세 줄이 "모든 노드가 06:00~07:00"을 만듭니다. 무작위 지연 60분은 한 서버 안에서는 분산이지만 fleet로 보면 한 시간 창에 전부가 들어옵니다.
@@ -283,6 +302,9 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
             <p>
               지역 사이의 상관관계를 끊으려면 지연이 아니라 서버마다 다른 OnCalendar이 필요한데, 그것이 곧 단계적 롤아웃입니다.
             </p>
+          </div>
+          <DownloadCutoffViz />
+          <div className={prose}>
             <p>
               apt-daily.timer(다운로드)는 06:00과 18:00에 최대 12시간 지연이라 사실상 하루 종일 흩어져 돕니다. 이 흩어짐이 Datadog에서 피해 범위를 줄였습니다. 새 systemd가 Google Cloud 저장소에 18:50 UTC에 올라왔는데, 18:00 다운로드를 그 전에 끝낸 노드는 다음 날 06:00 업그레이드 때 설치할 것이 없었기 때문입니다.
             </p>

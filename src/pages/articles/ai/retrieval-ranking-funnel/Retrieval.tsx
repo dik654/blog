@@ -1,4 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CandidateCeilingViz from "./viz/CandidateCeilingViz";
+import FilterOrderViz from "./viz/FilterOrderViz";
+import HnswLayerViz from "./viz/HnswLayerViz";
 
 export default function Retrieval() {
   return (
@@ -57,6 +60,7 @@ export default function Retrieval() {
         assumptions={["각 검색기의 후보 제한선과 누락 문서 처리 규칙을 고정합니다.", "RRF는 점수 보정을 요구하지 않지만 질의마다 최적의 관련성 순위를 보장하지는 않습니다.", "k와 후보 수는 검증 집합에서 정하고 시험 결과를 본 뒤 다시 고르지 않습니다."]}
         interpretation="k=60일 때 dense 1위·sparse 10위 문서는 1/61+1/70을 얻습니다. 두 목록 모두 상위에 있는 문서가 한 목록에서만 우연히 1위인 문서보다 유리해질 수 있습니다."
       />
+      <FilterOrderViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           검색 범위를 정하는 권한 조건은 첫 검색보다 앞에 와야 합니다. 접근 제어
@@ -77,6 +81,7 @@ export default function Retrieval() {
           합니다. 빠진 연결은 뒤의 재정렬기가 원문만 보고 복구할 수 없기 때문입니다.
         </p>
       </div>
+      <CandidateCeilingViz />
       <ExplainedFormula
         question="Reranker가 아무리 좋아도 첫 retrieval의 누락을 복구할 수 없는 이유는 무엇일까요?"
         idea={<>Reranker output은 candidate set의 부분집합입니다. 따라서 relevant set과의 교집합 크기는 candidate 단계보다 커질 수 없습니다.</>}
@@ -108,6 +113,7 @@ O_q&\subseteq C_q\\
           </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noreferrer">Dual encoder와 평가 조건 보기</a>
       </div>
+      <HnswLayerViz />
       <div id="reading-hnsw" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · HNSW</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">

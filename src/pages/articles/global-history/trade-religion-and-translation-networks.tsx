@@ -1,6 +1,14 @@
+import GoodsVsBookViz from "./trade-religion-and-translation-networks/viz/GoodsVsBookViz";
+import MonsoonWindowViz from "./trade-religion-and-translation-networks/viz/MonsoonWindowViz";
+import SilkRoadBundleViz from "./trade-religion-and-translation-networks/viz/SilkRoadBundleViz";
 import WorldHistoryArticle, { type WorldHistoryArticleData } from "./WorldHistoryArticle";
 
 const data: WorldHistoryArticleData = {
+  figures: {
+    "black-box": { 1: <MonsoonWindowViz /> },
+    mechanism: { 0: <GoodsVsBookViz /> },
+    source: { 1: <SilkRoadBundleViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 600~1500년의 세계는 고립된 대륙들의 정지 화면이 아니었습니다", bridge: "중세를 지역별 왕조 목록으로 나누지 않았습니다. 연결을 실제로 만든 네 조건을 봅니다.", paragraphs: [
       "600~1500년 사이 서아프리카의 금, 인도의 직물, 동남아시아의 향신료, 중국의 도자기와 비단은 육상·해상·사막 길을 여러 번 갈아탔습니다. 불교·이슬람·기독교와 수학·천문·의학 지식도 사람과 책을 따라 이동했습니다.",

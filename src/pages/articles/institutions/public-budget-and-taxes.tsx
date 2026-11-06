@@ -2,6 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import BalanceWaterfallViz from "./public-budget-and-taxes/viz/BalanceWaterfallViz";
+import CashCellsViz from "./public-budget-and-taxes/viz/CashCellsViz";
+import CashVsNetWorthViz from "./public-budget-and-taxes/viz/CashVsNetWorthViz";
+import FiscalBalanceLineViz from "./public-budget-and-taxes/viz/FiscalBalanceLineViz";
+import ForeignDebtViz from "./public-budget-and-taxes/viz/ForeignDebtViz";
+import TaxBurdenViz from "./public-budget-and-taxes/viz/TaxBurdenViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function PublicBudgetAndTaxesArticle() {
@@ -26,6 +32,7 @@ export default function PublicBudgetAndTaxesArticle() {
       </section>
       <section id="case" data-teaching-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">0 · 세금 80과 새 차입 20으로 지출 100을 맞춥니다</h2>
+        <CashCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">세금 80, 새로 빌린 돈 20이 들어온다고 놓습니다(가정). 의료 40, 교육 30, 도로 건설 20, 이자 10을 지급하면 총지출은 100입니다. 기존 빚의 원금 상환과 다른 수입은 없다고 단순화합니다.</p>
           <p className="leading-8">기초 부채가 200이었다면 새 차입으로 기말 부채는 220입니다(가정). 세금 80은 갚아야 할 빚이 아니지만 차입 20에는 계약상 상환 의무가 붙습니다.</p>
@@ -42,6 +49,7 @@ export default function PublicBudgetAndTaxesArticle() {
       </section>
       <section id="need" data-teaching-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2 · 현금 부족과 자산의 증가는 다른 사실입니다</h2>
+        <CashVsNetWorthViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">현금 장부는 약속한 날 대금을 지급할 수 있는지 알려 줍니다. 자산과 부채 장부는 돈을 써서 무엇이 남았는지 보여 줍니다. 도로가 남아도 공사 대금을 낼 현금이 없으면 지급 문제가 생깁니다.</p>
           <p className="leading-8">반대로 채권을 팔아 현금이 늘었다고 국가가 그만큼 부유해진 것은 아닙니다. 현금과 같은 크기의 상환 약속도 생겼기 때문입니다.</p>
@@ -59,6 +67,7 @@ export default function PublicBudgetAndTaxesArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 같은 해에 순운영수지 0과 순차입 20이 함께 나옵니다</h2>
+        <BalanceWaterfallViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">모든 발생과 지급이 그해에 일치하고 도로 감가상각과 자산 매각을 생략한다고 추가로 가정합니다. 수입은 세금 80, 비용은 의료 40+교육 30+이자 10=80이므로 순운영수지는 0입니다.</p>
           <p className="leading-8">도로의 비금융자산 순취득 20을 빼면 순융자·순차입은 −20입니다. 이를 새 채무 20으로 조달해 현금은 맞고 부채는 200에서 220으로 늘어납니다. 올해 현금 지출 100을 전부 비용이라고 써 순운영수지 −20이라 하면 다른 지표가 됩니다.</p>
@@ -80,7 +89,13 @@ export default function PublicBudgetAndTaxesArticle() {
         <h2 className="mb-6 text-2xl font-bold">6 · 중앙정부만 볼지 지방과 사회보험까지 볼지 정합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">IMF의 비교 자료에는 정부 수입·지출뿐 아니라 자산·부채와 금융 조달도 들어갑니다. 사례의 부채 220을 다른 나라와 비교하려면 중앙정부인지 지방정부와 사회보험을 포함한 일반정부인지 맞춰야 합니다.</p>
+          </div>
+        <FiscalBalanceLineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한국 공식 지표에서도 같은 선택이 수치를 가릅니다. 통계청 e-나라지표는 통합재정수지에서 국민연금·사학연금·고용보험·산재보험 같은 사회보장성기금의 수지를 뺀 값을 관리재정수지라고 정의합니다(2026-10-09 확인). 통합재정수지가 −10이고 사회보장성기금 수지가 +40이라면(가정) 관리재정수지는 −10 − 40 = −50입니다. 같은 해 재정을 두고 &lsquo;적자 10&rsquo;과 &lsquo;적자 50&rsquo;이 모두 맞는 말이 될 수 있으므로, 어느 지표인지부터 확인합니다.</p>
+          </div>
+        <TaxBurdenViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">세금을 법적으로 내는 사람과 경제적으로 부담하는 사람도 다를 수 있습니다. 판매자에게 세금 1을 부과한 뒤 가격을 0.6 올리고 다른 조건이 같다면 구매자가 0.6, 판매자가 0.4를 부담하는 가정이 됩니다. 실제 전가 비율은 수요와 공급 반응으로 확인합니다. 이것이 조세 부담과 공공 편익을 따로 보는 이유입니다.</p>
           <p className="leading-8">미국의 CBO는 의회의 예산 판단을 지원하는 분석 기관입니다. 다른 나라에서는 예산 승인 기관과 지방정부 권한이 다릅니다. 2026-10-04 확인한 국제 분류를 현지 예산 권한의 법으로 적용하지 않습니다.</p>
         </div>
@@ -91,6 +106,7 @@ export default function PublicBudgetAndTaxesArticle() {
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 부채의 통화와 만기가 재정 여력을 바꿉니다</h2>
+        <ForeignDebtViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">부채 220 중 외화 몫이 있다면 자국 통화가 약해질 때 같은 외화 원금의 자국 통화 부담이 늘 수 있습니다. 자국 통화 부채도 물가, 금리와 차환 조건의 제약을 받습니다.</p>
           <p className="leading-8">짧은 만기의 돈을 계속 빌려야 한다면 금리 상승과 차환 실패에 더 민감할 수 있습니다. 금리, 성장과 세입 기반을 함께 살펴야 같은 적자 20의 부담을 비교할 수 있습니다.</p>

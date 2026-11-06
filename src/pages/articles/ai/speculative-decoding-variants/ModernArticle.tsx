@@ -10,6 +10,17 @@ import MtpCostViz from "./viz/MtpCostViz";
 import MaskTable from "./MaskTable";
 import TreeMaskViz from "./viz/TreeMaskViz";
 import MtpChainViz from "./viz/MtpChainViz";
+import VerifyOffsetViz from "./viz/VerifyOffsetViz";
+import ChainVsTreeViz from "./viz/ChainVsTreeViz";
+import LayerSkipGridViz from "./viz/LayerSkipGridViz";
+import SuffixFrequencyViz from "./viz/SuffixFrequencyViz";
+import SuffixLookupViz from "./viz/SuffixLookupViz";
+import TimeLedgerViz from "./viz/TimeLedgerViz";
+import TreeCostViz from "./viz/TreeCostViz";
+import HybridAverageViz from "./viz/HybridAverageViz";
+import ResidualDistributionViz from "./viz/ResidualDistributionViz";
+import GreedyCumprodViz from "./viz/GreedyCumprodViz";
+import KvCompactViz from "./viz/KvCompactViz";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import {
@@ -71,6 +82,9 @@ export default function ModernArticle() {
       <h2 className="mb-6 text-2xl font-bold">3. R·A·Y 세 토큰을 한 번의 큰 모델 실행으로 확인합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">이미 네 토큰을 확정했다고 합시다. 값싼 부품은 다음 세 토큰으로 R·A·Y를 제안합니다. 평소 방식이라면 큰 모델은 R을 고르는 실행, R 뒤의 A를 고르는 실행, RA 뒤의 Y를 고르는 실행을 차례로 해야 합니다. 이 글에서 <strong>가정</strong> 표시는 논문 측정값이 아니라 설명을 위해 정한 입력과 숫자라는 뜻입니다.</p>
+        </div>
+      <VerifyOffsetViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">인과 언어 모델은 마지막으로 읽은 자리에서 다음 토큰의 점수를 냅니다. 앞 회차가 네 번째 토큰을 처리했을 때 이미 다섯 번째 자리의 점수를 만들었고, 생성 loop는 그 값을 다음 회차까지 보관합니다. 그래서 새 검증은 그 점수로 첫 후보 R부터 확인할 수 있습니다.</p>
         <p className="leading-8">이번에는 R·A·Y를 한 입력에 놓고 큰 모델을 한 번 실행합니다. 보관한 점수는 R을 확인하고, 이번 실행에서 R 자리의 계산은 A를, A 자리의 계산은 Y를 확인합니다. 셋이 연속으로 맞으면 큰 모델이 R·A·Y를 읽은 계산 기록도 함께 얻으므로 세 토큰을 문장에 붙일 수 있습니다.</p>
         <p className="leading-8">여기서 <strong>계산 기록</strong>은 앞 토큰을 다시 처음부터 계산하지 않도록 각 층이 남긴 key와 value입니다. 다음 회차는 이 기록을 앞 문장으로 삼아 이어서 계산합니다. 틀린 후보의 기록을 넘기면 실제로 확정되지 않은 문장을 읽게 되므로 승인한 경로의 기록만 남겨야 합니다. 이 기록의 정식 이름은 6절에서 붙이겠습니다.</p>
@@ -81,6 +95,7 @@ export default function ModernArticle() {
 
     <section id="structure" data-teach-level="1" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">4. 후보를 길게 쓸수록 첫 오답 뒤가 모두 버려집니다</h2>
+      <ChainVsTreeViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">한 줄 R·A·X만 준비했는데 큰 모델의 선택이 R·A·Y라면 마지막 자리에서 멈춥니다. R 뒤에 A와 B를 모두 준비하고 두 갈래 아래에 X와 Y를 준비했다면 같은 검증에서 R·A·Y 경로를 찾을 수 있습니다. 첫 후보 하나에 모든 다음 계산을 거는 위험을 여러 갈래로 나눈 셈입니다.</p>
         <p className="leading-8">하지만 갈래를 넓히면 큰 모델이 확인할 자리도 늘어납니다. 한 줄 세 자리 대신 시작점 하나, 다음 후보 둘, 그다음 후보 넷을 놓으면 새로 계산할 자리가 일곱 개가 됩니다. 세 토큰을 얻으려고 일곱 자리를 계산하는 셈입니다. (가정)</p>
@@ -156,14 +171,16 @@ export default function ModernArticle() {
 </div>
 <CodeViewButton label="mask·위치·경로 배열을 만드는 실제 함수" onClick={() => sidebar.open("buffers", codeRefs["buffers"])}/><CodeViewButton label="새 root와 후보를 모으는 원문" onClick={() => sidebar.open("root", codeRefs["root"])}/><CodeViewButton label="같은 깊이의 위치 번호를 적용하는 원문" onClick={() => sidebar.open("tree-forward", codeRefs["tree-forward"])}/>
         <span id="greedy" />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <GreedyCumprodViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">evaluate_posterior의 temperature 0 분기는 candidates의 둘째 칸부터 부모 위치의 argmax와 비교합니다. RAY 행의 비교 결과는 [1,1]이고 RAX는 [1,0]입니다. 처음이 B인 두 행은 [0,1]이어도 첫 실패 뒤를 확정할 수 없습니다.</p>
 <p className="leading-8">각 행의 비교값을 앞에서부터 곱하는 cumprod를 적용하면 [0,1]은 [0,0]이 되고 이후 합으로 연속 일치 길이를 구합니다. RAY의 2가 최대이므로 원문 순서의 행 번호 2를 선택합니다.</p>
 <p className="leading-8">이 검산은 가정한 점수를 넣어 실제 함수의 greedy 분기를 실행한 것입니다. PyTorch 대신 작은 Python 배열 대역을 사용했으며 모델 forward나 GPU를 실행하지 않았습니다. 이 결과는 함수 제어와 인덱스를 확인한 것이고 실제 언어 모델의 성능을 재현한 것은 아닙니다.</p>
 </div>
 <CodeViewButton label="첫 불일치 뒤를 제외하는 실제 함수" onClick={() => sidebar.open("greedy", codeRefs["greedy"])}/>
         <span id="commit" />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <KvCompactViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">update_inference_inputs는 선택 행의 retrieve_indices에서 accept_length+1개를 꺼내는데, root를 포함하기 때문에 2+1입니다. 꺼낸 [0,1,4]에 기존 길이 4를 더해 실제 KV 위치 [4,5,8]을 얻습니다.</p>
 <p className="leading-8">그 위치의 값을 임시로 읽은 뒤 기존 글 바로 뒤의 [4,5,6]에 copy_하고 current_length도 7로 갱신합니다. 이번 구현은 block table만 바꾸는 방식이 아니며 서로 떨어진 경로의 기록을 실제로 모읍니다.</p>
 <p className="leading-8">출력 목록에 RAY를 붙인 길이와 유효 KV 길이가 둘 다 7입니다. 함수는 Y 자리의 logits를 남겨 다음 바퀴에서 C를 고르게 합니다. 여기서 C를 이번 bonus로 추가했다고 적으면 출력과 저장 시점이 모두 한 칸 어긋납니다.</p>
@@ -194,6 +211,9 @@ export default function ModernArticle() {
 <CitationBlock citeKey={15} source="LayerSkip v4 — §4.1–4.3" href="https://arxiv.org/html/2404.16710v4">같은 R·A·Y의 앞 층 상태를 저장하는 이유를 논문의 self-drafting·verification·cache reuse에 연결합니다.</CitationBlock>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">고정 LayerSkip 494752e5의 forward_early는 앞 층의 hidden state를 exit_query_cache에 이어 붙입니다. 이름은 query cache이지만 여기서 보관하는 변수는 그 지점의 hidden_states입니다. 이 저장 공간까지 없다는 뜻으로 “추가 메모리 0”이라고 부를 수 없습니다.</p>
+</div>
+<LayerSkipGridViz />
+<div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">
             4층 중 첫 1층에서 두 후보 A·Y를 만든다고 합시다. 앞 층은 R과 A를 각각 처리해 두 상태를 쌓습니다. 검증의 forward_remainder는 마지막 Y의 앞 층도
             처리한 뒤 세 상태를 합쳐 나머지 3층으로 보냅니다. 앞 층 계산 3자리와 뒤 층 계산 3×3자리로 총 12개의 층·자리 작업입니다. (가정)
@@ -238,6 +258,9 @@ export default function ModernArticle() {
             두 번 모두 Y가 나왔습니다. 같은 RAY 후보를 학습 모델 대신 기록에서 얻는 예입니다. (가정)
           </p>
 <p className="leading-8">검색이 모델 실행보다 싸다면 왜 모든 요청에서 먼저 찾아보지 않을까요? 처음 보는 문장에는 맞는 과거 구간이 없고 구간을 찾더라도 과거에 자주 나온 글자가 기준 모델의 현재 선택과 같다는 보장이 없기 때문입니다.</p>
+</div>
+<SuffixFrequencyViz />
+<div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">R 다음 A의 빈도 비중은 6/8=.75이고 RAY 전체 경로의 비중은 .75×5/6=.625입니다. RB는 .25이고 RBY도 .25입니다. 네 후보를 이 순서로 꺼내면 부모 번호는 [-1,0,-1,2]이고 경로 비중의 합은 1.875입니다.</p>
 <p className="leading-8">
             최근 토큰 열의 끝부분과 같은 기록을 찾는 자료 구조를 suffix tree라고 합니다. SuffixDecoding은 현재 요청의 글과 과거 출력에서 후보를 찾고 관찰
@@ -248,6 +271,9 @@ export default function ModernArticle() {
 <CitationBlock citeKey={21} source="SuffixDecoding v3 — §3 conditional counts and SCORE" href="https://arxiv.org/html/2411.04975v3">과거 8개 글의 빈도를 원문의 C·D·SCORE에 대응했습니다. 이 추정치를 새 요청의 실제 수락 확률이라고 보장하지 않습니다.</CitationBlock>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">ArcticInference aca5d9a8의 C++ 원문을 그대로 컴파일해 앞의 8개 기록을 넣었습니다. ID는 R0·A1·B2·X3·Y4이고 기록 앞에는 9를 붙였습니다. 조회 문맥 [99,9,0], 후보 한도 4, 길이 계수 2를 사용했는데 99는 일치하지 않는 앞부분을 표시하는 가정값입니다.</p>
+</div>
+<SuffixLookupViz />
+<div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">원문은 최근 길이 1과 2를 조회하는데 길이 1이면 최대 2개, 길이 2이면 최대 4개를 제안할 수 있습니다. 실제 priority queue는 경로 비중이 큰 후보부터 꺼내며 그 반환은 [1,4,2,4], 부모 [-1,0,-1,2], 점수 1.875, 일치 길이 2였습니다.</p>
 <p className="leading-8">
             한 줄만 선택하는 분기를 사용하면 [1,4]와 점수 1.375를 얻습니다. 서로 다른 출력들이 같은 R 뒤의 A·Y를 자주 공유했기 때문입니다. 어떤 후보를 만들었는지와 최종
@@ -276,6 +302,9 @@ export default function ModernArticle() {
       <h2 className="mb-6 text-2xl font-bold">12. 이득은 이름이 아니라 한 회차의 시간 장부로 결정됩니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">변형이 달라도 비교식은 같습니다. 한 회차의 평균 확정 수를 E[Y], 평소 한 토큰 시간을 T₁, 후보 준비·target 검증·기록 정리 시간을 각각 T_d·T_v·T_c라고 쓰겠습니다. 전체 회차 시간 T는 T_d+T_v+T_c이고 T₁=1로 놓으면 속도 비 S는 E[Y]/T가 됩니다. (가정)</p>
+        </div>
+      <TimeLedgerViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">평균 1.85개를 확정해도 회차 시간이 1.016이면 약 1.82배지만 검증이 무거워져 2.016이 되면 약 0.92배입니다. 수락률이 높다는 사실만으로 빠르다고 결론낼 수 없는 이유입니다. (가정)</p>
         <p className="leading-8">후보 tree를 넓히면 Y가 늘 수 있지만 T도 늘어납니다. 같은 모델이라도 batch가 커져 GPU 계산이 가득 차면 여러 후보를 함께 확인하는 비용이 빠르게 커질 수 있습니다. 논문 이름이나 head 수보다 실제 요청 분포의 Y와 T를 재야 하는 이유입니다.</p>
       </div>
@@ -293,7 +322,8 @@ export default function ModernArticle() {
       </div>
       <ProgressiveDetail title="Tree·LayerSkip·MTP·batch·hybrid 비용 계산" preview="기존 숫자 예와 경계식을 공통 시간 장부에 대입합니다.">
         <span id="tree-cost" />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <TreeCostViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">후보 폭을 첫째 3, 둘째 2, 셋째 2로 늘리면 후보 수는 3+6+12=21이고 root 한 자리를 포함해 입력하면 22개입니다. 깊이 3의 한 줄 후보는 3개이며 같은 root 경계에서는 입력 4개입니다. 후보 수와 입력 수는 따로 셉니다.</p>
 <p className="leading-8">각 깊이에서 앞 경로가 맞았다는 조건 아래 다음 선택을 포함할 확률을 .89, .85, .8로 가정합시다. 첫 자리까지 맞을 확률은 .89, 둘째까지는 .89×.85=.7565, 셋째까지는 .6052이고 기본 한 출력까지 더한 평균은 3.2517입니다. (가정)</p>
 <p className="leading-8">이 곱셈은 조건부 확률의 연결이므로 깊이 사이의 독립을 추가로 가정하지 않습니다. 반면 각 자리의 주변 포함률 세 개만 알 때는 같은 곱을 사용할 수 없습니다. 한 줄에서 iid 수락률 .7을 가정한 평균 1+.7+.49+.343=2.533과도 조건이 다릅니다.</p>
@@ -334,6 +364,9 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">후보가 없는 경우를 단독 생성과 비교하겠습니다. 원래 한 글자에 25ms, 검색에 .02ms가 들고 그 밖의 일이 같다고 가정하면 새 시간은 25.02ms입니다. 개선 비 25/25.02≈.9992로 아주 작지만 손해이니 cache miss를 자동으로 무비용이라고 부를 수 없습니다. (가정)</p>
 <p className="leading-8">논문은 suffix 점수가 문턱보다 높으면 그 후보를 쓰고 그렇지 않으면 모델 기반 후보로 넘어가는 hybrid 방법도 설명합니다. 후자에서는 이미 쓴 검색 시간과 새 draft 시간을 함께 포함해야 합니다. 점수가 실제 수락 길이를 얼마나 잘 예상하는지도 부하와 입력 분포에서 확인합니다.</p>
+</div>
+<HybridAverageViz />
+<div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">두 종류의 회차가 60%와 40% 있다고 합시다. 첫 종류는 10ms에 4개, 둘째는 20ms에 2개를 확정합니다. 평균 출력은 3.2개, 평균 시간은 14ms이므로 단독 25ms를 기준으로 한 전체 개선 비는 3.2×25/14≈5.7143입니다. (가정)</p>
 <p className="leading-8">각 회차의 개선 비 10과 2.5를 비중대로 평균하면 7이지만 전체 처리 시간의 비와는 달라서 실제 합산 시간과 실제 확정 수를 비교해야 합니다. 종료·대기·조회 갱신·fallback 비용이 다르면 그 항목을 포함해 같은 장부를 다시 만듭니다.</p>
 </div>
@@ -352,6 +385,9 @@ export default function ModernArticle() {
 <ProgressiveDetail title="분포 보존 규칙은 왜 방법마다 다를까요?" preview="Medusa의 빠른 수락과 SpecInfer의 잔여 분포 갱신이 보장하는 범위를 구분합니다.">
 <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">Medusa의 typical·fast 분기는 후보 확률을 entropy에 따른 문턱과 비교하고 가장 긴 경로를 고릅니다. 논문도 이 방식에서 target 분포 일치를 필수 목표로 두지 않습니다. 본문의 작은 반례가 이 선택의 경계를 보여 줍니다. 품질 평가가 비슷했다는 보고는 확률 분포의 항등식과 구분해 읽습니다.</p>
+</div>
+<ResidualDistributionViz />
+<div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">SpecInfer의 Algorithm 2는 거부한 형제의 제안 분포를 현재 남은 분포에서 빼고 양수 부분을 다시 정규화한 뒤 다음 형제를 확인할 때도 그 갱신된 분포를 씁니다. 예를 들어 target (.7,.3), 첫 제안 (.4,.6)에서 거부하면 잔여 분포는 (1,0)입니다. 다음 형제에서도 원래 (.7,.3)을 그대로 쓰는 절차와 다릅니다.</p>
 <p className="leading-8">이 보장은 논문의 제안 선택·조건부 분포·중복 처리와 검증 규칙을 함께 지켰을 때 읽습니다. 서로 다른 sampler를 쓴 임의의 tree에 p/q 한 줄만 붙인다고 증명되지 않습니다. 같은 분포인 두 확률 모델에서는 정확한 단일 후보 수락률이 1입니다.</p>
 </div>

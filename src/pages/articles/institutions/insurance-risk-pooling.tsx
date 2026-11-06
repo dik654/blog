@@ -3,6 +3,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CoveredBranchViz from "./insurance-risk-pooling/viz/CoveredBranchViz";
+import DeductibleCapViz from "./insurance-risk-pooling/viz/DeductibleCapViz";
+import PoolLedgerViz from "./insurance-risk-pooling/viz/PoolLedgerViz";
+import SimultaneousLossViz from "./insurance-risk-pooling/viz/SimultaneousLossViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function InsuranceRiskPoolingArticle() {
@@ -27,6 +31,7 @@ export default function InsuranceRiskPoolingArticle() {
       </section>
       <section id="case" data-teaching-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">0 · 1천 명의 10만 원이 20명의 300만 원을 지급합니다</h2>
+        <PoolLedgerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">1천 명이 한 해 10만 원씩 내면 총 1억 원입니다(가정). 그해 20명에게 각 300만 원을 지급한다면 총 6천만 원이 나갑니다. 돈의 차이는 4천만 원입니다.</p>
           <p className="leading-8">이 4천만 원은 바로 순이익이 아닙니다. 운영비와 사고 조사비, 아직 보고되지 않은 지급 건을 처리해야 합니다. 실제 사고 인원도 매년 정확히 20명이라고 보장되지 않습니다.</p>
@@ -62,6 +67,7 @@ export default function InsuranceRiskPoolingArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 300만 원 손실에서 지급 230만 원과 부담 70만 원이 갈립니다</h2>
+        <DeductibleCapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫 사례의 300만 원은 보험금으로 약정된 금액이었습니다. 이제 같은 크기의 실제 손실에 다른 계약을 적용해 봅니다(가정). 자기부담금 20만 원을 먼저 빼고 지급 한도 230만 원을 적용하면, 280만 원 중 230만 원만 지급됩니다. 가입자에게 남는 손실은 70만 원입니다.</p>
           <p className="leading-8">20명이 이 조건의 사고를 겪으면 지급액은 4,600만 원입니다. 최초의 6천만 원보다 1,400만 원 적지만 가입자에게 그만큼 손실이 더 남습니다. 낮은 보험료만으로 유리한 계약인지 판단하기 어려운 이유입니다.</p>
@@ -81,6 +87,7 @@ export default function InsuranceRiskPoolingArticle() {
       </section>
       <section id="comparison" data-teaching-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">6 · 미국의 일반 주택보험과 홍수보험은 보장 범위가 다릅니다</h2>
+        <CoveredBranchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">미국 NFIP의 공식 안내는 일반적인 주택보험 대부분이 홍수 피해를 보장하지 않는다고 설명합니다. 사례의 300만 원 손실이 홍수 때문이라면 총손실부터 보기 전에 그 사고가 계약에 포함되는지 확인해야 합니다.</p>
           <p className="leading-8">이 미국 설명을 한국이나 다른 나라의 주택보험 약관에 그대로 적용할 수는 없습니다. 현지 감독기관 안내와 실제 증권의 보장 목록, 면책과 특별약정을 함께 읽습니다. 사회보험도 재원과 가입 의무, 급여 기준이 다른 별도 제도입니다.</p>
@@ -92,6 +99,7 @@ export default function InsuranceRiskPoolingArticle() {
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 동시에 500명이 손해를 입으면 인원수만으로 버틸 수 없습니다</h2>
+        <SimultaneousLossViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">최초 조건처럼 1인당 300만 원을 지급하는 사고가 500명에게 생기면 총 15억 원이 필요합니다(가정). 보험료 1억 원만으로는 부족합니다. 계약상 지급 약속을 지키려면 자본과 미리 쌓은 준비, 다른 보험자와 나누는 계약이 필요합니다.</p>
           <p className="leading-8">서로 독립적인 작은 사고를 많이 모을수록 실제 사고 비율이 예상 비율에 가까워지는 성질을 대수의 법칙이라고 합니다. 이 효과를 지역 전체 재난에 그대로 적용하면 안 됩니다. 가입 지역과 사고 원인의 집중, 지급 능력과 보장 중단 가능성을 함께 봅니다.</p>

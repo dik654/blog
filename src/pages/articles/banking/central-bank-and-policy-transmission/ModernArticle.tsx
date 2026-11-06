@@ -8,6 +8,14 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
 import FundingChoiceViz from "./viz/FundingChoiceViz";
 import ExpectedPathViz from "./viz/ExpectedPathViz";
+import CompoundPathViz from "./viz/CompoundPathViz";
+import FactoryChannelViz from "./viz/FactoryChannelViz";
+import ProviderSplitViz from "./viz/ProviderSplitViz";
+import QeLedgerViz from "./viz/QeLedgerViz";
+import RateChoiceLineViz from "./viz/RateChoiceLineViz";
+import RepoPathViz from "./viz/RepoPathViz";
+import ReserveDemandViz from "./viz/ReserveDemandViz";
+import ReserveLedgerViz from "./viz/ReserveLedgerViz";
 const BOK="https://www.bok.or.kr/portal/main/contents.do?menuNo=200294";
 const BOK26="https://www.bok.or.kr/portal/bbs/B0000156/view.do?menuNo=200754&nttId=10096935";
 const IORB="https://www.federalreserve.gov/monetarypolicy/iorb-faqs.htm";
@@ -47,6 +55,7 @@ export default function ModernArticle(){return <div className="space-y-16">
             설명을 위해 모든 금리를 가정하겠습니다. 어느 국가의 현재 금리표도 아닙니다. A은행은 6억 원을 하루 빌려야 하고 B은행은 같은 금액을 하루 맡길 수 있습니다. 중앙은행은
             자격을 갖춘 은행이 돈을 맡기면 연 4%를 주고 필요한 담보를 제공해 돈을 빌리면 연 5%를 받는다고 합시다.
           </p>
+<RateChoiceLineViz/>
 <p className="leading-8">
             두 은행은 이 거래에 실제로 접근할 수 있습니다. 기간은 하루로 같고 수수료·담보 비용·신용 위험 차이는 지금은 생략합니다. B는 중앙은행에 맡기기만 해도 4%를 받는데 A에게
             3%를 받고 빌려줄 이유가 없습니다. A도 5%로 빌릴 수 있는데 B에게 6%를 낼 이유가 없습니다.
@@ -87,6 +96,7 @@ export default function ModernArticle(){return <div className="space-y-16">
           </p>
 </div><TermBreakdown title="같은 사례에 붙이는 이름" items={[{term:"금리 회랑",description:"예치·차입의 다른 선택이 시장 거래에 영향을 주는 구조",example:"8·10절에서 접근 자격과 비용을 바꿉니다."},{term:"기간 프리미엄",description:"장기 보유 위험 등으로 기대 단기금리 경로와 장기 수익률 사이에 생기는 항",example:"12·13절에서 양수로 고정하지 않고 추정의 한계를 봅니다."},{term:"양적완화",description:"장기 자산 매입 등을 통해 금융 조건에 영향을 주는 정책",example:"15절에서 매도자별 장부와 정책 목적을 구분합니다."}]}/></section>
 <section id="cb-balance-sheet" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 중앙은행 대출과 은행 간 대출은 전체 장부에서 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<ReserveLedgerViz/>
 <p className="leading-8">A가 중앙은행에서 6을 빌리는 별도 분기를 그려 봅시다. 중앙은행에는 받을 대출 자산 +6과 A은행에게 지급할 준비금 부채 +6이 생깁니다. A에는 준비금 자산 +6과 중앙은행 차입 부채 +6이 생깁니다. 다른 거래가 없다면 은행 전체 준비금은 6 늘어납니다.</p>
 <p className="leading-8">중앙은행이 자기 통화 표시의 준비금 부채를 발행할 수 있다는 점은 중요합니다. 그렇다고 가치 있는 자산·담보·제도적 권한·물가와 환율의 제약을 무시해도 된다는 뜻은 아닙니다. 대출 손실 위험과 정책 목표, 어떤 상대에게 어떤 조건으로 공급할지는 따로 판단해야 합니다.</p>
 <p className="leading-8">중앙은행 장부에는 보유 증권·대출·외화자산과 발행 현금·준비금·정부 예금 등이 나타날 수 있습니다. 항목과 권한은 국가마다 다릅니다.</p>
@@ -107,6 +117,7 @@ export default function ModernArticle(){return <div className="space-y-16">
             이번에는 중앙은행의 4% 예치에 직접 접근할 수 없는 비은행 자금 제공자를 넣겠습니다. 그 사람에게 열려 있는 다른 투자 수익률이 3.8%이고 은행이 그 돈을 받아 4%에
             두려면 연율로 환산한 중개 비용 0.15%포인트가 든다고 가정합니다. 위험과 기간의 다른 차이는 생략합니다.
           </p>
+<ProviderSplitViz/>
 <p className="leading-8">은행이 3.83%를 주면 비용을 뺀 차이는 4−3.83−0.15=0.02%포인트입니다. 제공자도 3.8%보다 높은 수익을 받습니다. 따라서 4% 아래의 거래가 나타나도 두 사람이 모두 더 나은 선택을 했을 수 있습니다. 비용을 뺀 은행의 최대 지급 여력은 이 가정에서 3.85%입니다.</p>
 <p className="leading-8">미국 시장의 실제 기관·규제·거래 동기는 이 작은 모형보다 복잡합니다. 연준의 2025년 연구는 비은행 제공자와 중개 은행의 관계, 대차대조표 비용, 유동성 규제를 구분합니다. 시장 전체 평균만 보면 일부 은행이 느끼는 부족이 가려질 수 있다는 것도 설명합니다. 여기의 0.15%포인트를 그 연구의 추정치로 읽지는 않습니다.</p>
 <p className="leading-8">
@@ -115,8 +126,10 @@ export default function ModernArticle(){return <div className="space-y-16">
           </p>
 </div><CitationBlock source="Federal Reserve FEDS Notes (2025-03-28) · Monitoring Reserve Scarcity Through Nonbank Cash Lenders" citeKey={4} href={FED}>비은행 자금 제공자와 은행의 거래 동기·비용을 확인하며 본문의 비용 숫자는 가정으로 구분합니다.</CitationBlock></section>
 <section id="operation-procedure" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 부족분을 메울 때와 넉넉한 상태를 유지할 때의 수단</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<ReserveDemandViz/>
 <p className="leading-8">준비금이 빠듯한 운영에서는 수요의 작은 변화도 단기금리를 크게 움직일 수 있습니다. 중앙은행은 세금 납부, 정부 지출, 현금 인출, 만기 도래 거래 등이 준비금에 미치는 영향을 살펴 공급·흡수를 조절합니다. 목표보다 금리가 높아지는 이유가 부족분이라면 공급으로 압력을 줄일 수 있습니다.</p>
 <p className="leading-8">준비금이 충분한 운영에서는 은행이 조금 더 받거나 내놓아도 시장금리가 크게 변하지 않는 구간을 이용합니다. 부리 금리 등 관리금리가 중요한 기준이 됩니다. 이때 “준비금이 남으니 목표를 지키려면 반드시 모두 흡수해야 한다”는 결론은 성립하지 않습니다. 충분함도 무한함과 다르며 분포·규제·결제 수요에 따라 경계가 변합니다.</p>
+<RepoPathViz/>
 <p className="leading-8">
             RP는 증권을 지금 거래하고 나중에 반대 거래를 하기로 약정합니다. 중앙은행 관점의 RP매입은 오늘 준비금을 공급하고 만기에 회수하는 방향입니다. RP매각은 그 반대입니다.
             계속 새 거래로 갱신하면 공급이 이어질 수 있지만 개별 거래의 만기 구조가 없어지는 것은 아닙니다.
@@ -139,6 +152,7 @@ export default function ModernArticle(){return <div className="space-y-16">
             이 식을 “다르면 무조건 공짜 차익이 생기므로 같아진다”라고 증명하면 조건 하나가 빠집니다. 지금 3년 고정금리로 투자하는 것과 매년 단기로 투자해 다시 굴리는 것은 미래
             단기금리를 모를 때 같은 확정 지급액을 보장하지 않습니다. 차환할 때의 금리가 바뀌는 위험이 있기 때문입니다.
           </p>
+<CompoundPathViz/>
 <p className="leading-8">미래 각 1년 금리가 확실히 4.5%·4%·3.5%이며 거래·신용 비용이 없다고 가정하면 누적액을 직접 비교할 수 있습니다. 첫해에는 원금 1원에 1.045를 곱합니다. 둘째 해에는 그 결과에 1.04를, 셋째 해에는 다시 1.035를 곱합니다.</p>
 <p className="leading-8">따라서 3년 뒤 금액은 1원 × 첫해 성장배수 1.045 × 둘째 해 성장배수 1.04 × 셋째 해 성장배수 1.035입니다. 같은 결과를 주는 3년 연복리 수익률은 이 곱의 세제곱근에서 1을 뺀 약 3.9992%입니다. 산술 평균 4%와 가까워도 엄밀히 같지는 않습니다.</p>
 <p className="leading-8">
@@ -148,6 +162,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 <p className="leading-8">이 경계는 본문의 방향 예측을 버리라는 뜻이 아닙니다. 현재 금리 한 점보다 미래 경로 전체를 봐야 한다는 직관은 유용합니다. 다만 평균·복리·불확실성·프리미엄이라는 서로 다른 단계를 구분해야 숫자를 실제 가격으로 과신하지 않습니다.</p>
 </div></section>
 <section id="transmission-lag" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 같은 공장의 이자·수주·설비 주문을 따라갑니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<FactoryChannelViz/>
 <p className="leading-8">이후 공장이 기존 대출에 운전자금을 추가로 빌려 잔액 10억 원의 변동금리 대출을 가진 시점을 생각해 봅시다. 이 잔액이 전액 즉시 재조정된다고 가정합니다. 적용 금리가 연 6%에서 6.25%로 바뀌면 잔액이 1년 내내 같을 때 이자는 6,000만 원에서 6,250만 원으로 늘어납니다. 250만 원만큼 공장이 다른 지출에 쓸 여력이 줄 수 있습니다. 기존 고정금리 계약이라면 같은 날의 이자 청구액은 달라지지 않을 수 있습니다.</p>
 <p className="leading-8">공장이 새 설비를 주문할지도 따로 봅니다. 차입 비용과 할인율이 오르면 같은 예상 매출의 현재가치는 낮아질 수 있습니다. 고객도 소비와 주택 구입을 줄이면 공장의 수주 예상이 바뀝니다. 공장의 담보 가치가 내려가거나 은행이 위험을 크게 평가하면 대출의 가격뿐 아니라 승인 금액도 달라질 수 있습니다.</p>
 <p className="leading-8">
@@ -163,6 +178,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 <p className="leading-8">명목 대출금리가 올라도 예상 물가가 더 크게 오르면 물가를 고려한 차입 비용은 낮아질 수 있습니다. 반대로 물가 안정에 대한 신뢰가 높아지면 같은 명목금리에서도 판단이 달라집니다. 정책 효과를 이해하려면 발표 숫자뿐 아니라 기대·계약·대차대조표를 함께 추적해야 합니다.</p>
 </div><SourceApplication source="Bank of England (2024) · PDF 8쪽 Figure 1" excerpt="Inflation expectations channel" application="공장이 앞으로의 원가와 판매가격을 다시 예상하는 경로입니다. 그림 양쪽의 굵은 화살표는 기대와 환율이 물가에 직접 닿는 경로도 표시하며, 아래에 그려졌다는 이유로 항상 늦게 반응한다는 뜻은 아닙니다."/><CitationBlock source="Bank of England (2024) · About a rate of (general) interest, Figure 1" citeKey={7} href={BOEPDF}>실제 그림의 경로와 시간 순서를 제한하지 않는 주석을 함께 읽습니다.</CitationBlock><CitationBlock source="Bank of England (2024) · 파급경로 본문" citeKey={8} href={BOE}>영국의 제도·자료를 바탕으로 한 설명이며 모든 나라에 같은 크기와 시차를 대입하지 않습니다.</CitationBlock></section>
 <section id="balance-sheet-policy" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 채권을 누구에게 사는지에 따라 예금의 직접 변화가 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<QeLedgerViz/>
 <p className="leading-8">중앙은행이 장기 국채 등 자산을 대규모로 매입해 금융 조건에 영향을 주는 양적완화를 생각해 보겠습니다. 은행이 가진 채권 6을 준비금 6으로 교환하면 은행 자산의 구성이 바뀝니다. 고객 예금은 이 거래만으로 직접 늘지 않습니다.</p>
 <p className="leading-8">
             비은행 고객이 가진 채권 6을 은행을 통해 사는 경우는 다릅니다. 중앙은행이 은행의 준비금을 6 늘리고 은행이 고객 계좌에 6을 지급하면 준비금과 고객 예금이 함께 늘 수

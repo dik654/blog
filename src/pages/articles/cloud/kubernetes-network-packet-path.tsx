@@ -5,6 +5,15 @@ import { CitationBlock } from "@/components/ui/citation";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import KubernetesPacketPathViz from "./KubernetesPacketPathViz";
+import CalicoPathMapViz from "./kubernetes-network-packet-path/viz/CalicoPathMapViz";
+import CaptureReadingViz from "./kubernetes-network-packet-path/viz/CaptureReadingViz";
+import ConntrackPinViz from "./kubernetes-network-packet-path/viz/ConntrackPinViz";
+import EdgeMeshHopsViz from "./kubernetes-network-packet-path/viz/EdgeMeshHopsViz";
+import EgressSnatGateViz from "./kubernetes-network-packet-path/viz/EgressSnatGateViz";
+import MtuFitViz from "./kubernetes-network-packet-path/viz/MtuFitViz";
+import PodNamespaceVethViz from "./kubernetes-network-packet-path/viz/PodNamespaceVethViz";
+import ResponseBranchViz from "./kubernetes-network-packet-path/viz/ResponseBranchViz";
+import ServiceRewriteMomentViz from "./kubernetes-network-packet-path/viz/ServiceRewriteMomentViz";
 import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const codeClass =
@@ -262,6 +271,7 @@ export default function KubernetesNetworkPacketPathArticle() {
         title="Pod가 별도 주소를 보는 과정: namespace에서 veth까지"
         bridge="Pod에 주소가 생겨도 가상 Service 주소가 실제 server처럼 listen하는 것은 아닙니다. 그 때문에 다음 절에서는 virtual address가 실제 backend로 바뀌는 순간을 봅니다."
       >
+        <PodNamespaceVethViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 host에서 두 process가 모두 <code>eth0</code>이라는 이름을 써도 충돌하지 않게 하려면 각 process 묶음에 별도 network view가 필요합니다. Linux의 <strong>network namespace</strong>가 interface·route·neighbor table을 분리합니다. Pod 안 여러 container는 이 view를 함께 써서 같은 IP와 loopback을 공유합니다.</p>
           <p className="leading-8">Pod container가 재시작할 때마다 이 view가 사라지면 나머지 container의 주소도 흔들립니다. 그래서 sandbox 역할의 작은 container가 network namespace를 잡고 있고, runtime이 업무 container를 그 namespace에 넣습니다. 흔히 <strong>pause container</strong>라고 부르는 역할입니다.</p>
@@ -290,7 +300,13 @@ sudo crictl inspectp <pod-sandbox-id>`}</code></pre>
       >
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">Client가 <code>10.96.20.15:8080</code>으로 연결해도 그 주소를 가진 별도 process가 요청을 받아 다시 보내는 것은 아닙니다. <strong>Service</strong>는 selector와 Ready <strong>EndpointSlice</strong>를 연결하고, node의 데이터 플레인은 새 연결을 backend <code>10.244.2.34:8080</code>로 바꿉니다.</p>
+        </div>
+        <ServiceRewriteMomentViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">기본 kube-proxy iptables·nftables 경로에서는 packet의 목적지를 바꾸는 DNAT와 conntrack이 핵심입니다. 반면 eBPF 구현은 <code>connect()</code> 단계에서 socket 목적지를 먼저 바꿀 수도 있습니다. 결과 주소는 같아도 <code>tcpdump</code>에서 Service VIP가 보이는 위치가 달라질 수 있으므로 구현 mode부터 확인해야 합니다.</p>
+        </div>
+        <ConntrackPinViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">기존 연결은 첫 packet에서 선택한 backend와 conntrack state를 이어 씁니다. Endpoint나 정책을 바꾼 직후 같은 keep-alive 연결만 시험하면 새 규칙이 적용되지 않은 것처럼 보일 수 있으므로, 새 연결과 기존 연결을 나눠 확인합니다.</p>
           <p className="leading-8">DNAT 규칙이 커널의 어느 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#netfilter-hooks">netfilter hook</a>에 걸리는지, 그리고 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#conntrack">conntrack 장부</a>가 어떤 크기로 차고 언제 비는지는 Linux 쪽 글이 맡습니다. Pod가 종료될 때 EndpointSlice에서 빠지는 시각과 SIGTERM이 닿는 시각이 따로 움직이는 이유는 <a href="/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#termination-flow">종료 흐름</a>에서 봅니다.</p>
         </div>
@@ -317,6 +333,7 @@ cilium service list`}</code></pre>
         title="Calico 경로: 같은 노드·직접 라우팅·두 overlay를 가릅니다"
         bridge="Overlay는 원래 packet에 header를 더합니다. 그 때문에 node 간 연결이 살아 있어도 큰 packet만 사라질 수 있고, 다음 절에서 header 몫과 외부 송신의 주소 변환을 계산합니다."
       >
+        <CalicoPathMapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 node의 두 Pod는 host route와 두 veth를 지나므로 물리 NIC나 tunnel이 필요하지 않습니다. 다른 node라면 선택지가 갈립니다. Underlay가 Pod CIDR route를 알 수 있으면 원래 packet을 직접 보낼 수 있고, 알 수 없다면 node IP 사이의 outer packet으로 감쌉니다.</p>
           <p className="leading-8"><strong>IP-in-IP</strong>는 원래 IPv4 packet 앞에 IPv4 header를 하나 더 붙입니다. <strong>VXLAN</strong>은 Ethernet frame을 VXLAN·UDP·IP header로 감싸며 기본 UDP port <code>4789</code>를 씁니다. <strong>CrossSubnet</strong>은 같은 subnet의 node끼리는 직접 보내고 다른 subnet에서만 감싸 overhead를 줄입니다.</p>
@@ -382,12 +399,14 @@ spec:
           </table>
           </div>
         </div>
+        <MtuFitViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">물리망이 한 번에 <code>1500 B</code>까지만 운반하는데 안쪽 packet도 <code>1500 B</code>라면 outer header를 붙일 자리가 없습니다. IPv4 VXLAN의 <code>50 B</code>와 IPv4 IP-in-IP의 <code>20 B</code>를 같은 회계 경계에서 빼야 fragmentation이나 drop 없이 운반할 수 있습니다.</p>
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">여기서 1500은 node NIC에 적힌 값이 아니라 경로 가운데 가장 작은 한도입니다. VLAN tag나 WireGuard처럼 header를 더 붙이는 층이 있으면 그 몫도 같은 자리에서 뺍니다. 작은 ping은 되는데 큰 응답만 timeout이면 route가 아니라 이 한도와 ICMP 차단을 먼저 의심합니다. 1450은 외울 상수가 아니라 이 경로의 뺄셈 결과입니다.</p>
         </div>
+        <EgressSnatGateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">외부 송신의 source 변환도 항상 일어나지는 않습니다. Calico pool의 <code>natOutgoing</code>이 켜져 있고 목적지가 모든 Calico pool 밖에 있을 때 Pod source를 node IP로 masquerade합니다. 내부 사내망을 별도 비활성 pool로 등록해 NAT 대상에서 뺄 수도 있으므로, “Pod에서 외부로 나가면 무조건 SNAT”라고 외우지 않습니다.</p>
           <p className="leading-8">응답은 conntrack에 기록된 변환 관계를 따라 원래 Pod socket으로 돌아옵니다. 정책을 바꾼 뒤 이미 허용된 연결이 계속 통신할 수 있는 이유도 이 상태 추적과 관련됩니다. 새 연결과 기존 연결을 따로 시험해야 하는 이유입니다.</p>
@@ -443,10 +462,14 @@ spec:
         title="외부 진입과 service mesh는 CNI 뒤에 새 경계를 더합니다"
         bridge="Hop을 더했으면 각 hop에서 남길 증거도 늘어납니다. 다음 절에서는 선언, route, outer packet, policy, conntrack을 같은 시각에 모으는 runbook으로 닫습니다."
       >
+        <EdgeMeshHopsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8"><strong>NodePort</strong>는 node IP의 정해진 port에서 Service backend 선택으로 들어가는 문입니다. <strong>LoadBalancer</strong>는 cloud load balancer나 MetalLB 같은 구현이 외부 주소를 node 또는 Pod 경로와 잇습니다. MetalLB의 layer 2 mode와 BGP mode는 외부에서 그 주소까지 오는 방법이며, cluster 안의 Service backend 선택 전체를 대신하지 않습니다.</p>
           <p className="leading-8">HTTP host·path·header로 분기하려면 protocol-aware proxy가 필요합니다. Kubernetes의 <strong>Ingress</strong> API는 제거 예정은 아니지만 동결됐고, 새 기능에는 <strong>Gateway API</strong>가 권장됩니다. GatewayClass는 구현 종류, Gateway는 listener와 infrastructure, HTTPRoute는 application route를 나눠 조직의 책임 경계까지 API에 담습니다.</p>
           <p className="leading-8"><strong>Service mesh</strong>는 여기에 workload identity, mTLS, retry·timeout, L7 policy와 telemetry를 더합니다. Sidecar 방식은 Pod마다 proxy를 두고, 현재 Istio ambient 방식은 node별 L4 proxy와 필요할 때만 쓰는 L7 waypoint를 둡니다. 두 방식 모두 기본 Pod 연결과 Service 경로를 먼저 이해해야 새 proxy hop의 실패를 구분할 수 있습니다.</p>
+        </div>
+        <ResponseBranchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">따라서 404를 볼 때는 Gateway의 host와 route match, mesh의 L7 route, application route를 차례로 봅니다. SYN timeout이라면 그보다 앞선 외부 진입, Service, Pod route와 policy에서 첫 실패를 찾습니다. 응답 종류가 조사 시작점을 바꿉니다.</p>
         </div>
         <SourceApplication
@@ -468,6 +491,7 @@ spec:
         title="검증: 선언과 packet을 같은 시각에 맞춥니다"
         bridge="이 순서로 마지막 정상 지점을 찾았으면, 예전 실습의 기본값이 현재 cluster에서도 같은지 다시 확인해야 합니다."
       >
+        <CaptureReadingViz />
         <EvidenceRunbook />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">장애가 난 뒤 명령을 무작정 많이 실행하면 서로 다른 시각의 state가 섞입니다. 먼저 namespace·Pod·node·요청 시각을 고정하고, API 선언에서 kernel route와 packet capture로 내려갑니다. 각 단계는 정상 출력뿐 아니라 실패했을 때 다음에 볼 owner까지 기록합니다.</p>

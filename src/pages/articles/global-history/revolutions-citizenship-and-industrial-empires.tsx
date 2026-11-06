@@ -1,6 +1,14 @@
 import WorldHistoryArticle, { type WorldHistoryArticleData } from "./WorldHistoryArticle";
+import DeclarationRosterViz from "./revolutions-citizenship-and-industrial-empires/viz/DeclarationRosterViz";
+import FourFlowsViz from "./revolutions-citizenship-and-industrial-empires/viz/FourFlowsViz";
+import RosterChangeViz from "./revolutions-citizenship-and-industrial-empires/viz/RosterChangeViz";
 
 const data: WorldHistoryArticleData = {
+  figures: {
+    "black-box": { 1: <FourFlowsViz /> },
+    case: { 0: <DeclarationRosterViz /> },
+    mechanism: { 0: <RosterChangeViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 권리를 선언한 사람과 실제 시민으로 센 사람은 같지 않았습니다", bridge: "혁명을 좋은 원칙의 발표로만 보지 않았습니다. 주권과 배제, 동원과 제국을 함께 봅니다.", paragraphs: [
       "18세기 말부터 여러 혁명은 왕이 아니라 국민과 시민이 주권의 근원이라고 선언했습니다. 미국·프랑스·아이티·라틴아메리카의 혁명은 서로 영향을 주었지만 노예제, 재산, 성별, 인종에 따라 권리의 범위를 다르게 정했습니다.",

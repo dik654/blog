@@ -4,11 +4,11 @@
   "summary": {
     "publicArticles": 1012,
     "architectureCandidates": 175,
-    "dedicatedVisuals": 790,
-    "inlineVisuals": 557,
-    "customVisuals": 943,
-    "animatedMechanisms": 655,
-    "architectureWithoutAnimation": 53,
+    "dedicatedVisuals": 811,
+    "inlineVisuals": 571,
+    "customVisuals": 951,
+    "animatedMechanisms": 678,
+    "architectureWithoutAnimation": 51,
     "recursiveLocators": 385,
     "codeEvidenceLinked": 257,
     "sourceCitationLinked": 1003,
@@ -3111,7 +3111,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -4855,7 +4855,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -6326,14 +6326,14 @@
       "sourcePath": "src/pages/articles/banking/repo-and-collateral-funding.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/aa-fundamentals",
@@ -6966,14 +6966,14 @@
       "sourcePath": "src/pages/articles/blockchain/ethereum-future-roadmap.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/evm-advanced",
@@ -9015,7 +9015,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -9447,13 +9447,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/kubernetes-pod-states-crashloop-probes-events",
@@ -9607,7 +9607,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -9751,7 +9751,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -11225,11 +11225,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "embedded/interrupts-and-latency-budget",
@@ -11446,14 +11446,14 @@
       "sourcePath": "src/pages/articles/global-history/conquest-disease-silver-and-oceanic-exchange.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "global-history/empires-roads-taxes-and-law",
@@ -11462,14 +11462,14 @@
       "sourcePath": "src/pages/articles/global-history/empires-roads-taxes-and-law.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "global-history/human-dispersal-foraging-and-social-networks",
@@ -11542,14 +11542,14 @@
       "sourcePath": "src/pages/articles/global-history/revolutions-citizenship-and-industrial-empires.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "global-history/trade-religion-and-translation-networks",
@@ -11558,14 +11558,14 @@
       "sourcePath": "src/pages/articles/global-history/trade-religion-and-translation-networks.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "global-history/world-wars-depression-and-mass-states",
@@ -12646,14 +12646,14 @@
       "sourcePath": "src/pages/articles/infrastructure/climate-risk-and-exposure.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "infrastructure/electricity-grid-and-power",
@@ -12678,14 +12678,14 @@
       "sourcePath": "src/pages/articles/infrastructure/food-chain-and-prices.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "infrastructure/housing-land-and-supply",
@@ -12694,14 +12694,14 @@
       "sourcePath": "src/pages/articles/infrastructure/housing-land-and-supply.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "infrastructure/materials-waste-and-circularity",
@@ -12726,14 +12726,14 @@
       "sourcePath": "src/pages/articles/infrastructure/transport-access-and-land-value.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "infrastructure/water-utility-and-tariffs",
@@ -12774,14 +12774,14 @@
       "sourcePath": "src/pages/articles/institutions/education-skills-and-signals.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "institutions/evidence-measurement-and-causality",
@@ -12806,14 +12806,14 @@
       "sourcePath": "src/pages/articles/institutions/healthcare-payment-systems.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "institutions/how-to-read-a-country",
@@ -12838,14 +12838,14 @@
       "sourcePath": "src/pages/articles/institutions/insurance-risk-pooling.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "institutions/media-attention-and-public-belief",
@@ -12854,14 +12854,14 @@
       "sourcePath": "src/pages/articles/institutions/media-attention-and-public-belief.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "institutions/population-migration-and-care",
@@ -12886,14 +12886,14 @@
       "sourcePath": "src/pages/articles/institutions/public-budget-and-taxes.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "isms-aml/aml-cdd-deep",
@@ -13318,14 +13318,14 @@
       "sourcePath": "src/pages/articles/macro/global-capital-and-policy.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "macro/narratives-and-market-regimes",
@@ -13334,14 +13334,14 @@
       "sourcePath": "src/pages/articles/macro/narratives-and-market-regimes.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "macro/what-ricardo-assumed",
@@ -13974,14 +13974,14 @@
       "sourcePath": "src/pages/articles/markets/forwards-and-futures.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/fractional-investment-trust-beneficiary-certificates",
@@ -14374,14 +14374,14 @@
       "sourcePath": "src/pages/articles/markets/securitization-and-tranches.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/short-rate-hjm-and-interest-rate-model-risk",
@@ -14422,14 +14422,14 @@
       "sourcePath": "src/pages/articles/markets/swaps-and-credit-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/swaption-annuity-volatility-quotes-and-cube",
@@ -15718,14 +15718,14 @@
       "sourcePath": "src/pages/articles/risk/margin-collateral-and-leverage.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "risk/risk-diversification-and-pricing",

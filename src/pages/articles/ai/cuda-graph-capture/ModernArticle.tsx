@@ -10,6 +10,15 @@ import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 import CudaGraphTimelineViz from "./viz/CudaGraphTimelineViz";
 import CaptureSizePaddingViz from "./viz/CaptureSizePaddingViz";
 import StaticAddressReplayViz from "./viz/StaticAddressReplayViz";
+import SubmitOverlapViz from "./viz/SubmitOverlapViz";
+import GraphObjectsViz from "./viz/GraphObjectsViz";
+import CaptureVsReplayViz from "./viz/CaptureVsReplayViz";
+import WrapperBranchViz from "./viz/WrapperBranchViz";
+import KeySelectViz from "./viz/KeySelectViz";
+import SharedPoolViz from "./viz/SharedPoolViz";
+import BreakEvenViz from "./viz/BreakEvenViz";
+import InputPathsViz from "./viz/InputPathsViz";
+import RestoreChecklistViz from "./viz/RestoreChecklistViz";
 import {ExecutionKernelMapReturn,ExecutionKernelSeriesLocator} from "../shared/ExecutionKernelSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar();const code=(id:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(id,codeRefs[id])}/></div>;return <><ExecutionKernelSeriesLocator current="replay"/><div className="space-y-16">
@@ -60,7 +69,7 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <section id="timing" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">8. 겹치는 시간은 단순히 더하지 않습니다</h2><div className={prose}>
 <p>시간표를 일반식으로 쓰면 각 작업은 제출이 끝나고 앞 작업도 끝난 뒤 시작합니다. 시작 조건 둘 중 늦은 시각을 택하는 이유입니다. rᵢ를 i번째 작업의 준비 완료, eᵢ를 계산 완료로 두면 다음 식으로 네 작업을 순서대로 계산할 수 있습니다.</p></div>
 <ExplainedFormula question="다음 작업은 언제 끝날까요?" idea="작업이 도착해야 하고 앞 계산도 끝나야 합니다. 두 조건 중 늦은 시각에 계산 시간을 더합니다." formula={String.raw`r_i=iL,\quad e_i=\max(r_i,e_{i-1})+E`} annotatedFormula={String.raw`\begin{aligned}r_i&=iL,\quad e_0=0\\e_i&=\underbrace{\max(r_i,e_{i-1})}_{\text{두 조건을 기다림}}+E\\e_4&=\max(12,11)+2=14\end{aligned}`} operations={[{expression:String.raw`\max(r_i,e_{i-1})`,annotation:"제출 완료와 앞 작업 완료가 모두 충족되는 시각"},{expression:String.raw`+E`,annotation:"그 시각부터 현재 작업을 계산하는 시간"}]} terms={[{symbol:"L",name:"제출 시간",description:"가정한 작업 하나의 CPU 제출 완료 간격입니다."},{symbol:"E",name:"계산 시간",description:"이 모형에서 작업 하나가 GPU를 사용하는 시간입니다."},{symbol:"r_i,e_i",name:"준비와 완료",description:"i번째 작업이 도착한 시각과 결과가 나오는 시각입니다."}]} assumptions={["처음에는 빈 단일 실행열이고 네 작업이 직렬로 의존합니다.","CPU 제출은 서로 직렬이며 제출 종료 때 작업이 사용 가능해진다고 가정합니다. 실제 CUDA 내부의 시작 시각을 일반화하지 않습니다.","대기열 제한, 복사, 드라이버 변동과 다른 작업의 간섭을 생략합니다."]} interpretation="L=3, E=2이면 완료는 5·8·11·14 μs입니다. 매 작업 동기화할 때만 이 모형에서 N(L+E)=20 μs가 됩니다."/>
-<div className={prose}><p>가정한 graph 제출 시간이 G이면 첫 계산을 G에서 시작해 G+NE에 마칩니다. CPU가 덜 바빠졌다고 완료도 반드시 빨라지는 것은 아닙니다. L=2, E=3, G=2로 바꾸면 일반 제출과 재생 모두 첫 계산을 2 μs에 시작하고 14 μs에 끝납니다. CPU 제출 시간은 8에서 2 μs로 줄지만 이미 GPU 계산이 빈틈없이 이어집니다.</p>
+<SubmitOverlapViz /><div className={prose}><p>가정한 graph 제출 시간이 G이면 첫 계산을 G에서 시작해 G+NE에 마칩니다. CPU가 덜 바빠졌다고 완료도 반드시 빨라지는 것은 아닙니다. L=2, E=3, G=2로 바꾸면 일반 제출과 재생 모두 첫 계산을 2 μs에 시작하고 14 μs에 끝납니다. CPU 제출 시간은 8에서 2 μs로 줄지만 이미 GPU 계산이 빈틈없이 이어집니다.</p>
 <p>큰 사례 N=200, L=5 μs, E=2 μs에서도 이 구별이 필요합니다. 같은 비동기 모형의 완료는 1,002 μs이고 매 작업 동기화하면 1,400 μs입니다. G=10 μs인 재생의 410 μs는 같은 단순 모형의 계산입니다. 이 비율을 실제 GPU에서 측정한 가속비로 사용할 수 없습니다.</p></div></section>
 <section id="mechanics" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">9. 새 값은 기록에 남은 자리에 넣습니다</h2><div className={prose}>
 <p>PyTorch의 일반적인 정적 재생에서는 캡처한 kernel의 포인터 인수가 같은 가상 주소를 가리킵니다. 입력 A에 3이 있는 상태에서 캡처하고 재생했다면 답은 22입니다. Python 변수를 새 tensor B에 연결해도 저장된 인수 A는 자동으로 바뀌지 않습니다.</p>
@@ -69,9 +78,9 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <section id="graph-anatomy" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">10. 작업 목록과 실행 가능한 기록을 구별합니다</h2><div className={prose}>
 <p>CUDA의 <code>cudaGraph_t</code>는 node와 edge로 작업을 정의한 객체입니다. kernel뿐 아니라 복사 등의 작업도 node가 될 수 있습니다. 네 계산의 경우 앞 결과를 뒤에서 읽으므로 순서 의존성을 유지합니다. CUDA는 의존성을 지키며 작업을 실행하지만 독립 node를 항상 동시에 실행한다는 보장은 없습니다.</p>
 <p><code>cudaGraphExec_t</code>는 그 정의를 반복 실행할 수 있도록 준비한 객체입니다. 정의와 실행 준비를 분리하면 네 작업의 공통 준비를 매번 반복할 필요가 줄어듭니다. 실제 계산 네 번과 매회 graph 제출은 여전히 필요합니다.</p>
-<p>PyTorch 2.14의 기본 <code>keep_graph=False</code>에서는 캡처를 마칠 때 실행 준비를 합니다. True로 원래 정의를 남겨 두면 명시적으로 준비하거나 첫 재생에서 준비합니다. 원래 정의를 나중에 바꾼 경우 다시 준비해야 변경이 반영된다는 조건도 원문에 있습니다.</p></div>{code("torch-end","PyTorch · 캡처 종료와 실행 준비 분기")}
+</div><GraphObjectsViz /><div className={prose}><p>PyTorch 2.14의 기본 <code>keep_graph=False</code>에서는 캡처를 마칠 때 실행 준비를 합니다. True로 원래 정의를 남겨 두면 명시적으로 준비하거나 첫 재생에서 준비합니다. 원래 정의를 나중에 바꾼 경우 다시 준비해야 변경이 반영된다는 조건도 원문에 있습니다.</p></div>{code("torch-end","PyTorch · 캡처 종료와 실행 준비 분기")}
 <CitationBlock type="code" citeKey={1} source="NVIDIA CUDA Programming Guide §4.2.2 · 정의, 실행 준비, 실행" href="https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html#building-and-running-graphs">준비하는 객체와 실행하는 객체를 구별합니다. 이 글의 네 작업은 그 수명과 데이터 의존성을 설명하기 위한 가정입니다.</CitationBlock></section>
-<section id="stream-capture" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 캡처 중의 Python 실행과 GPU 기록은 다릅니다</h2><div className={prose}>
+<section id="stream-capture" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 캡처 중의 Python 실행과 GPU 기록은 다릅니다</h2><CaptureVsReplayViz /><div className={prose}>
 <p>작업 제출 순서를 유지하는 CUDA stream을 캡처 상태로 두면 그 stream에 제출한 작업이 기록됩니다. 우리의 함수는 Python에서 네 연산을 호출하지만 캡처한 GPU 작업 자체는 그 구간에서 실행하지 않습니다. 함수 안의 Python 카운터를 한 번 증가시켰다면 그 CPU 작업은 실행됩니다. 재생은 그 카운터를 자동으로 다시 증가시키지 않습니다.</p>
 <p>PyTorch의 context manager는 사용할 stream을 선택하고 캡처 시작과 종료를 감쌉니다. 인수를 생략하면 별도의 캡처용 stream을 만들며 사용자가 stream을 명시하는 경로도 있습니다. 원문은 시작 전 동기화와 메모리 정리를 수행합니다. 이 준비 비용을 매회 재생 비용과 섞으면 반복 실행의 이득을 잘못 잴 수 있습니다.</p>
 <p>처음 호출에서 필요한 초기화는 캡처 전에 실행해 둡니다. 다른 stream이 event를 통해 합류하면 캡처 종료 전에 원래 stream으로 다시 연결해야 합니다. 네 연산을 두 stream에 나누더라도 앞 결과를 읽는 관계는 event 의존성으로 보존해야 합니다.</p></div>{code("torch-context","PyTorch · stream 선택과 캡처 시작·종료")}
@@ -80,7 +89,7 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <p>vLLM v0.27.1의 <code>CUDAGraphWrapper</code>는 전달받은 실행 조건을 키로 기록을 찾습니다. 조건이 맞는 첫 호출에서는 캡처할 수 있는 시점인지 검사하고 입력 주소를 저장합니다. 이미 기록이 있으면 원래 함수를 다시 호출하지 않고 저장한 graph를 재생한 뒤 출력 참조를 돌려줍니다.</p>
 <p>입력 버퍼를 만들고 새 값을 복사하는 일은 이 wrapper 밖의 책임입니다. 따라서 A 대신 B를 인수로 넘기면 알아서 A로 복사해 준다고 해석할 수 없습니다. 이 버전의 주소 비교는 <code>VLLM_LOGGING_LEVEL=DEBUG</code>일 때 수행됩니다. 검사하지 않는 모드가 주소 변경을 올바르게 만들어 주는 것은 아닙니다.</p></div>
 {code("wrapper-capture","vLLM · 첫 조건의 주소와 기록 저장")}{code("wrapper-replay","vLLM · DEBUG 주소 검사와 재생")}
-<div className={prose}><p>원문 함수 몸체를 그대로 추출해 CPU에서 제어 분기를 실행했습니다. tensor와 graph는 대역 객체이며 GPU 호출은 하지 않았습니다. 같은 주소로 캡처 한 번과 재생 두 번을 요청하자 원래 함수 호출은 한 번, 재생 호출은 두 번이었습니다. 다른 주소는 DEBUG에서 거부됐고 검사를 끄면 재생 분기로 들어갔습니다. 이 관찰은 Python 분기만 확인하며 실제 장치의 메모리 안전성을 검증한 실행은 아닙니다.</p>
+<WrapperBranchViz /><div className={prose}><p>원문 함수 몸체를 그대로 추출해 CPU에서 제어 분기를 실행했습니다. tensor와 graph는 대역 객체이며 GPU 호출은 하지 않았습니다. 같은 주소로 캡처 한 번과 재생 두 번을 요청하자 원래 함수 호출은 한 번, 재생 호출은 두 번이었습니다. 다른 주소는 DEBUG에서 거부됐고 검사를 끄면 재생 분기로 들어갔습니다. 이 관찰은 Python 분기만 확인하며 실제 장치의 메모리 안전성을 검증한 실행은 아닙니다.</p>
 <p>실행 모드가 NONE이거나 wrapper의 모드와 다르면 원래 함수를 호출합니다. 기록할 조건 자체는 다음의 선택기가 정합니다. wrapper가 임의의 모양을 보고 항상 새 graph를 만들어 주는 구조로 읽으면 안 됩니다.</p></div>
 {code("wrapper-bypass","vLLM · 캡처 경로를 통과하지 않는 조건")}{code("observation","원문 분기 CPU 관찰 · 대역 객체와 실제 실행 범위")}</section>
 <section id="shape-padding" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">13. 다섯 토큰은 여덟 자리로 맞춥니다</h2><div className={prose}>
@@ -94,7 +103,7 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 {code("capture-config","vLLM · 캡처 크기의 설정 문서")}{code("padding-map","vLLM · 각 토큰 수를 준비된 크기로 대응")}</section>
 <section id="implementation" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. 크기 외의 조건도 함께 맞춥니다</h2><div className={prose}>
 <p>선택기는 토큰 수와 함께 요청 수, 모든 요청이 같은 길이인지 등의 조건을 <code>BatchDescriptor</code>로 묶습니다. 같은 5토큰이라도 한 요청의 긴 입력인지 여러 요청의 한 토큰씩인지에 따라 전체를 재생할 조건이 달라집니다. 선택기의 키에는 추가 어댑터 사용 조건도 포함됩니다.</p>
-<p>관찰 설정은 <code>FULL_AND_PIECEWISE</code>, 최대 요청 32개, 요청당 새 토큰 1개, 추가 어댑터 없음입니다. 입력과 생성이 섞일 수 있는 5토큰은 <code>PIECEWISE</code>의 토큰 8·요청 수 미지정 키를 찾았습니다. 길이가 균일한 생성 요청 5개는 <code>FULL</code>의 토큰 8·요청 8·균일함 키를 찾았습니다. 두 경로를 같은 5라는 숫자만으로 구분할 수 없습니다.</p></div>
+</div><KeySelectViz /><div className={prose}><p>관찰 설정은 <code>FULL_AND_PIECEWISE</code>, 최대 요청 32개, 요청당 새 토큰 1개, 추가 어댑터 없음입니다. 입력과 생성이 섞일 수 있는 5토큰은 <code>PIECEWISE</code>의 토큰 8·요청 수 미지정 키를 찾았습니다. 길이가 균일한 생성 요청 5개는 <code>FULL</code>의 토큰 8·요청 8·균일함 키를 찾았습니다. 두 경로를 같은 5라는 숫자만으로 구분할 수 없습니다.</p></div>
 {code("descriptor","vLLM · 실행 조건을 담는 실제 구조")}{code("dispatch-keys","vLLM · 전체와 부분 그래프의 키 준비")}{code("dispatch","vLLM · 허용 모드와 키를 차례로 검사")}
 <div className={prose}><p>FULL을 제외하고 같은 균일 입력을 보내면 요청 수와 균일 조건을 완화한 PIECEWISE 키를 찾습니다. 33토큰은 최대 32보다 크므로 그 전에 NONE을 돌려줍니다. 최대 32 graph에 33을 넣는 경로는 아닙니다. 여기서 NONE은 이 선택 범위의 graph를 사용하지 않는다는 뜻입니다.</p>
 <p>모든 실패가 자동으로 일반 실행으로 이어지지도 않습니다. 원문에서 mixed5를 보내면서 FULL만 허용하면 맞는 키가 없고 NONE도 허용되지 않아 assertion이 발생했습니다. 실제 원문 AST를 CPU에서 실행한 관찰은 키 초기화와 이 분기들을 포함합니다. kernel 지원 여부와 GPU 캡처 성공 여부는 별도의 조건입니다.</p></div></section>
@@ -108,11 +117,11 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <CitationBlock type="code" citeKey={3} source="PyTorch 2.14 · Data Dependent Control Flow / CUDA §4.2.3–4.2.4" href="https://docs.pytorch.org/docs/2.14/notes/cuda.html#data-dependent-control-flow">정적 재생 계약, 명시적 업데이트, 미리 구성한 조건부 실행을 구별합니다. 최신 기능의 존재만으로 사용 중인 backend가 모두 지원한다고 가정하지 않습니다.</CitationBlock></section>
 <section id="memory-pool" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">16. 여러 기록이 같은 공간을 쓸 때의 조건</h2><div className={prose}>
 <p>PyTorch는 캡처 중 할당한 공간의 가상 주소를 유지하려고 graph 전용 메모리 pool을 사용합니다. 기록 객체와 캡처에서 만든 tensor의 수명이 끝나기 전까지 필요한 주소가 살아 있어야 합니다. 입력 A처럼 밖에서 만든 tensor도 재생 전에 해제되지 않도록 관리합니다.</p>
-<p>(가정) 세 graph의 임시 작업 공간이 16·24·32 KiB이고 별도로 잡으면 합계 72 KiB입니다. 서로 동시에 실행하지 않고 필요한 수명 조건을 지키며 그 임시 공간을 완전히 재사용할 수 있다는 모형에서는 최대 32 KiB로 충분합니다. 실제 예약 메모리에는 살아 있는 출력과 allocator의 배치 등이 더해지므로 이 max 계산을 보장된 사용량으로 읽을 수 없습니다.</p>
+</div><SharedPoolViz /><div className={prose}><p>(가정) 세 graph의 임시 작업 공간이 16·24·32 KiB이고 별도로 잡으면 합계 72 KiB입니다. 서로 동시에 실행하지 않고 필요한 수명 조건을 지키며 그 임시 공간을 완전히 재사용할 수 있다는 모형에서는 최대 32 KiB로 충분합니다. 실제 예약 메모리에는 살아 있는 출력과 allocator의 배치 등이 더해지므로 이 max 계산을 보장된 사용량으로 읽을 수 없습니다.</p>
 <p>공식 문서는 같은 캡처 순서로 재생하고 동시 실행하지 않는 공유 조건을 설명합니다. 서로의 출력에 의존하지 않는 별도 graph는 동시 실행하지 않는 조건으로 공간을 공유할 수도 있습니다. 따라서 크기별 그래프를 반드시 캡처 순서로만 골라야 한다는 설명도 불완전합니다.</p>
 <p>공유한 공간의 출력은 다른 graph의 재생으로 덮일 수 있습니다. 앞 답 22를 남겨야 한다면 덮어쓰기 전에 별도 복사본이 필요합니다. 과거의 35개×200 MB=7 GB와 공유 후 200 MB 계산도 이런 임시 공간의 완전 재사용을 가정한 산술로만 성립합니다. 준비한 graph 수만으로 실제 메모리 절감량을 확정할 수 없습니다.</p></div>
 <CitationBlock type="code" citeKey={4} source="PyTorch 2.14 · Sharing memory across captures" href="https://docs.pytorch.org/docs/2.14/notes/cuda.html#sharing-memory-across-captures">재생 순서, 동시 실행, 출력 수명은 서로 다른 조건입니다. vLLM 원문도 공유 pool과 출력 참조의 수명을 함께 관리합니다.</CitationBlock></section>
-<section id="tradeoffs" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">17. 반복할수록 준비 비용을 나눠 냅니다</h2><div className={prose}>
+<section id="tradeoffs" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">17. 반복할수록 준비 비용을 나눠 냅니다</h2><BreakEvenViz /><div className={prose}>
 <p>(가정) 네 작업을 기록하고 준비하는 추가 비용이 40 μs라고 합시다. 일반 제출은 매회 14 μs, 재생은 매회 10 μs라면 R번의 총시간은 각각 14R과 40+10R입니다. 10번에서는 140 μs로 같고 11번에서는 154 μs와 150 μs이므로 재생 쪽이 4 μs 빠릅니다.</p>
 <p>순이득을 원하면 준비 비용을 매회 실제 절감량으로 나눈 값보다 반복 횟수가 커야 합니다. 정확히 나누어떨어졌을 때 올림값은 동률이므로 그때부터 더 빠르다고 표현하면 부정확합니다. 또한 GPU 계산과 CPU 제출이 겹치므로 CPU 제출에서 없앤 시간 전체가 지연 절감량은 아닙니다.</p></div>
 <ExplainedFormula question="언제 준비 비용보다 더 많이 아낄까요?" idea="같은 반복 횟수의 전체 완료 시간을 비교합니다. 추가 복사와 패딩을 포함한 매회 비용 차이를 분모에 넣습니다." formula={String.raw`C+RT_g<RT_e\iff R>C/(T_e-T_g)`} annotatedFormula={String.raw`\begin{aligned}C+RT_g&<RT_e\\R&>\frac{\underbrace{C}_{\text{추가 준비}}}{\underbrace{T_e-T_g}_{\text{매회 실제 절감}}}\\R&>40/(14-10)=10\end{aligned}`} operations={[{expression:String.raw`T_e-T_g`,annotation:"같은 측정 경계에서 일반 실행과 재생의 반복 비용 차이"},{expression:String.raw`R>C/(T_e-T_g)`,annotation:"누적 절감이 추가 준비 비용보다 커지는 조건"}]} terms={[{symbol:"C",name:"추가 준비",description:"비교 대상보다 추가로 드는 캡처·실행 준비 등 고정 비용입니다."},{symbol:"T_e,T_g",name:"반복 비용",description:"필요한 입력 복사와 출력 보존까지 포함해 같은 경계에서 잽니다."},{symbol:"R",name:"반복 횟수",description:"같은 준비를 재사용할 양의 정수 횟수입니다."}]} assumptions={["두 경로가 같은 결과를 만들고 반복 비용이 고정됩니다.","T_e가 T_g보다 클 때의 식입니다. 같거나 작으면 양의 준비 비용을 회수하지 못합니다."]} interpretation="가정한 40 μs와 4 μs 절감은 10회 동률·11회 순이득입니다. 가정한 400 μs와 8 μs 절감이라면 50회 동률·51회 순이득입니다."/>
@@ -124,13 +133,13 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <div className={prose}><p>2024년의 별도 NVIDIA 측정은 CPU가 graph 호출에 들어가서 반환할 때까지의 시간을 정의합니다. RTX3060·Xeon Silver4208·CUDA12.6에서 이미 업로드된 직선형 kernel graph의 반복 호출은 10개 이상 node에서 약 2.5 μs+node당 1 ns였다고 보고합니다. 이것은 모든 그래프·모든 세대에서 비용이 N과 무관하다는 정리가 아닙니다.</p>
 <p>그 원문은 첫 제출과 반복 제출, CPU 호출 구간과 장치 실행, 최종 완료 시간을 따로 비교합니다. 우리의 시간표도 어느 시각을 재는지 먼저 정하는 연습입니다. 실제 판단에서는 준비를 마친 반복과 첫 실행을 나누고 동일한 입력·동기화·결과 보존 범위로 비교합니다.</p></div>
 <CitationBlock type="code" citeKey={6} source="Hoffman·Oh · Constant Time Launch for Straight-Line CUDA Graphs · 2024" href="https://developer.nvidia.com/blog/constant-time-launch-for-straight-line-cuda-graphs-and-other-performance-enhancements/">반복 CPU 호출의 거의 일정한 비용은 구조·장치 세대·버전·업로드 상태를 지정한 결과입니다.</CitationBlock></section>
-<section id="research" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 복사 비용과 다시 시작하는 비용도 연구 대상입니다</h2><div className={prose}>
+<section id="research" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 복사 비용과 다시 시작하는 비용도 연구 대상입니다</h2><InputPathsViz /><div className={prose}>
 <p>2025년 PyGraph는 정적 자리에 큰 입력을 복사하는 비용이 graph의 이득을 줄일 수 있다는 문제를 다룹니다. 대응하는 kernel을 바꾸어 큰 데이터 대신 주소를 담은 작은 표를 갱신하는 parameter indirection을 사용하고 복사·관리 비용까지 측정해 graph를 쓸지 고릅니다. 우리의 A에 5를 복사하는 단계를 줄이려면 그 주소표를 읽도록 실제 kernel도 맞아야 합니다.</p>
 <p>같은 수치 사례에 적용하면 주소표가 A를 가리킬 때 입력 3의 답은 22이고 B를 가리킬 때 입력 5의 답은 30입니다. 이 비교는 논문의 방법을 설명하는 가정입니다. 일반 replay의 인수가 저절로 B로 바뀐 결과가 아니며 주소표를 읽는 kernel과 그 표의 갱신이 함께 필요합니다.</p>
 <p>논문의 PyTorch2.4·CUDA12.1·RTX A6000 실험은 183개 후보 중 graph의 이득을 받을 20개 과제를 선택했습니다. 작게 복사하는 경우에는 주소표를 옮기는 비용이 오히려 클 수 있다는 경계도 설명합니다. 이 연구 결과를 현재 PyTorch 모든 호출의 동작이나 모든 과제의 성능 보장으로 옮기지 않습니다.</p></div>
 <CitationBlock type="paper" citeKey={7} source="PyGraph: Robust Compiler Support for CUDA Graphs in PyTorch · 2503.19779v1 §5.3–6" href="https://arxiv.org/html/2503.19779v1">정적 입력 복사와 선택 비용을 분리한 연구입니다. 이 글에서는 원문 설계와 실험 범위를 읽었으며 해당 컴파일러를 재실행하지 않았습니다.</CitationBlock>
 <div className={prose}><p>2026년 Foundry는 새 프로세스를 띄울 때 graph를 다시 캡처하는 비용을 다룹니다. 네 작업의 연결만 저장해도 새 실행에서 A의 주소와 kernel 함수가 살아 있다는 보장은 없습니다. 논문은 주소 배치와 캡처 구간의 할당 기록, 필요한 kernel 바이너리를 함께 복원하고 같은 topology의 node 인수만 갱신합니다. 결과를 만드는 주소와 실행 문맥도 저장 대상입니다.</p>
-<p>우리의 입력 5를 새 프로세스에서 처리하려면 기록된 A의 주소 공간을 다시 확보하고 그 주소에 5를 준비하며 네 작업의 실행 코드도 복원해야 합니다. 이 조건을 만족시키면 같은 연산의 답 30을 기대할 수 있습니다. 주소 확보나 실행 코드의 호환성을 보장하지 못하면 연결 목록만 복사한 것으로 재생을 보장할 수 없습니다.</p>
+</div><RestoreChecklistViz /><div className={prose}><p>우리의 입력 5를 새 프로세스에서 처리하려면 기록된 A의 주소 공간을 다시 확보하고 그 주소에 5를 준비하며 네 작업의 실행 코드도 복원해야 합니다. 이 조건을 만족시키면 같은 연산의 답 30을 기대할 수 있습니다. 주소 확보나 실행 코드의 호환성을 보장하지 못하면 연결 목록만 복사한 것으로 재생을 보장할 수 없습니다.</p>
 <p>§6의 주 실험은 H200, CUDA13.1, vLLM0.11.2, PyTorch2.9와 512개 크기입니다. Qwen3-235B-A22B의 EP8·BF16 사례에서 650초→3.9초를 보고하지만 환경 초기화와 가중치 적재 시간을 제외한 조건입니다. 이 수치를 새 서버의 전체 기동 시간으로 소개하면 범위를 넘습니다. 본문의 vLLM0.27.1 원문 분기와도 별도의 연구 구현입니다.</p></div>
 <p className={prose}>두 연구를 앞선 조건과 연결해 봅시다. 15절의 일반 재생에서는 A에 값을 복사하고 명시적 CUDA 갱신은 허용된 인수를 직접 바꿉니다. PyGraph는 주소표를 읽게 kernel을 바꾸는 경로입니다. 새 값을 선택한다는 목적은 같아도 필요한 API와 실행 코드가 다릅니다.</p><p className={prose}>16절의 72→32 KiB는 같은 실행 환경에서 임시 공간을 재사용한다는 가정이었습니다. Foundry의 새 프로세스에서는 먼저 그 공간의 주소와 실행 문맥부터 복원해야 합니다. 어느 경우에도 앞 답 22가 덮이기 전에 보관하는 조건은 남으며 공간 재사용과 출력 보존 비용을 함께 계산합니다.</p>\n<CitationBlock type="paper" citeKey={8} source="Foundry: Template-Based CUDA Graph Context Materialization for Fast LLM Serving Cold Start · 2604.06664v1 §4–6" href="https://arxiv.org/html/2604.06664v1">같은 가상 주소와 kernel 복원, 고정한 KV 크기가 재시작 설계의 전제입니다. 원문 설계·평가를 검토했으며 Foundry의 실행이나 성능 재현을 주장하지 않습니다.</CitationBlock></section>
 <section id="limits" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">20. 같은 답과 같은 측정 범위를 먼저 확인합니다</h2><div className={prose}>

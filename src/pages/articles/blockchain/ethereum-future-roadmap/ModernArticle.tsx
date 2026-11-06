@@ -3,6 +3,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../../world-systems/FlowRail";
 import SourceApplication from "../../world-systems/SourceApplication";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import ClientSplitViz from "./viz/ClientSplitViz";
+import EvidenceTraceViz from "./viz/EvidenceTraceViz";
+import SpecGapViz from "./viz/SpecGapViz";
+import TwoAxisStatusViz from "./viz/TwoAxisStatusViz";
 export default function ModernEthereumFutureRoadmapArticle() { return <article className="space-y-14">
 <section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">1. 이름이 발표된 변화가 언제부터 내 거래의 규칙이 되는가</h2>
 <p>Ethereum의 새 기능은 연구 글, 표준 제안, 여러 구현의 시험을 거쳐 특정 네트워크의 규칙이 됩니다. 지갑과 서비스는 그중 어느 단계까지 왔는지 알아야 거래를 만들 수 있습니다. 이름이 로드맵에 올라갔다는 사실만으로 현재 거래에 새 규칙을 적용할 수는 없습니다.</p><p>이 글의 확인일은 2026-10-04입니다. Glamsterdam은 개발·시험 단계이며 Hegotá는 다음 계획 단계입니다. 활성화 날짜가 없는 칸은 미확정으로 남기고, 같은 날짜에 읽은 원문을 비교합니다.</p>
@@ -21,14 +25,17 @@ export default function ModernEthereumFutureRoadmapArticle() { return <article c
 <p data-stage-bridge="picture" className="text-sm text-muted-foreground">상태표가 같은 색의 로드맵보다 많은 차이를 드러냅니다. 이 차이를 무시할 때 생기는 문제를 봅니다.</p>
 </section>
 <section id="need" data-teach-level="2" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">5. 시험 성공과 서비스의 지원 가능성은 다른 질문이다</h2>
+<ClientSplitViz />
 <p>한 구현에서 거래가 통과해도 다른 클라이언트가 같은 결과를 내지 못하면 네트워크가 갈라질 수 있습니다. 또 블록 자료를 새 형식으로 만들었어도 지갑·탐색기·인덱서가 그 형식을 지원하지 않으면 사용자는 결과를 읽지 못합니다. 기능 출시에는 규칙의 합의와 도구 준비가 함께 필요합니다.</p><p>10월 4일 운영자는 테스트넷용 버전·설정·활성화 조건을 맞춥니다. 이전 규칙과 이후 규칙 양쪽에서 같은 거래를 시험할 자료도 준비합니다. 실패하면 로그와 재현 입력을 보존해 원인을 좁힙니다.</p>
 <p data-stage-bridge="need" className="text-sm text-muted-foreground">왜 단계가 필요한지 알았으니 제안 문서에서 실제로 사용하는 이름을 붙입니다.</p>
 </section>
 <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">6. 문서의 Review와 업그레이드의 SFI를 분리한다</h2>
+<TwoAxisStatusViz />
 <p>Draft·Review·Last Call·Final은 EIP 문서의 표준화 진행 상태입니다. Proposed for Inclusion(PFI), Considered for Inclusion(CFI), Scheduled for Inclusion(SFI), Included는 특정 업그레이드가 그 기능을 어떻게 다루는지 나타냅니다. 두 축을 한 줄의 성숙도 점수로 합치지 않습니다.</p><p>SFI는 포함하려는 강한 의도와 준비 조건을 뜻하지만 시험 중 문제가 생기면 제외될 수 있습니다. Included는 해당 업그레이드의 활성화를 가리킵니다. 따라서 Review인 EIP도 SFI일 수 있고, Final인 일반 문서라도 모든 네트워크에 새 기능이 활성화된 것은 아닙니다.</p><CitationBlock source="EIP-7723 · Network upgrade inclusion stages" citeKey={2} href="https://eips.ethereum.org/EIPS/eip-7723">확인일 Last Call. 문서의 EIP 상태와 특정 업그레이드의 포함 단계가 다름을 설명합니다.</CitationBlock>
 <p data-stage-bridge="names" className="text-sm text-muted-foreground">두 종류의 상태 이름을 구분했습니다. 같은 일정 확인을 실제 운영 순서로 따라갑니다.</p>
 </section>
 <section id="mechanism" data-teach-level="4" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">7. 제안에서 활성화 후 관측까지 한 줄로 추적한다</h2>
+<EvidenceTraceViz />
 <p>
             운영자는 먼저 EIP-7773에서 Sepolia와 메인넷 행을 나눕니다. 다음으로 시험에 사용할 실행·합의 클라이언트 릴리스와 fork 설정을 고정합니다. Sepolia에서
             활성화 경계 직전과 직후의 거래·블록을 기록하고 두 클라이언트가 같은 상태와 블록을 받아들이는지 확인합니다.
@@ -44,6 +51,7 @@ export default function ModernEthereumFutureRoadmapArticle() { return <article c
 <p data-stage-bridge="comparison" className="text-sm text-muted-foreground">현재와 미래에 같은 판정 기준을 적용했습니다. 증거를 읽을 때 놓치기 쉬운 조건을 짚습니다.</p>
 </section>
 <section id="formal-simplification" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 검사할 명제가 잘못되면 증명이 있어도 목표를 놓친다</h2>
+<SpecGapViz />
 <p>
             명세를 작게 만들면 구현과 시험이 다룰 조건을 줄일 수 있습니다. 형식 검증은 정한 가정 아래 어떤 성질이 유지되는지를 기계적으로 확인합니다. AI나 사람이 만든 증명 후보는
             검사기를 통과해야 하고 통과한 뒤에도 명세가 실제 원하는 기능과 일치하는지는 별도로 검토합니다.

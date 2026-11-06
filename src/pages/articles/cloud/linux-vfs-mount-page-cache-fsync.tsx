@@ -3,6 +3,16 @@ import CalculationWalkthrough from "@/components/articles/calculation-walkthroug
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import StackPathViz from "./linux-vfs-mount-page-cache-fsync/viz/StackPathViz";
+import VfsObjectsViz from "./linux-vfs-mount-page-cache-fsync/viz/VfsObjectsViz";
+import MountTreeViz from "./linux-vfs-mount-page-cache-fsync/viz/MountTreeViz";
+import MountPropagationViz from "./linux-vfs-mount-page-cache-fsync/viz/MountPropagationViz";
+import OverlayStackViz from "./linux-vfs-mount-page-cache-fsync/viz/OverlayStackViz";
+import CopyUpViz from "./linux-vfs-mount-page-cache-fsync/viz/CopyUpViz";
+import ExpiryWindowViz from "./linux-vfs-mount-page-cache-fsync/viz/ExpiryWindowViz";
+import DirtyableMemoryViz from "./linux-vfs-mount-page-cache-fsync/viz/DirtyableMemoryViz";
+import DataModeViz from "./linux-vfs-mount-page-cache-fsync/viz/DataModeViz";
+import BlockQueueViz from "./linux-vfs-mount-page-cache-fsync/viz/BlockQueueViz";
 import WritePathViz from "./linux-vfs-mount-page-cache-fsync/viz/WritePathViz";
 import DirtyThresholdViz from "./linux-vfs-mount-page-cache-fsync/viz/DirtyThresholdViz";
 import { codeRefs } from "./linux-vfs-mount-page-cache-fsync/codeRefs";
@@ -51,6 +61,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               바깥에서 보면 흐름은 여섯 칸입니다. 프로그램이 "/var/log/app.log"라는 이름으로 open()을 부르면 커널은 이름을 조각내 inode를 찾습니다. 그 경로가 어느 파일시스템에 속하는지는
               mount 표가 정합니다. write()는 그 inode의 page cache에 바이트를 적은 뒤 dirty 표시를 남깁니다. 나중에 커널 스레드가 dirty page를 블록 층으로 내려보내면 블록 층이 장치에 요청을 보내고 장치가 완료를 알립니다.
             </p>
+          </div>
+          <StackPathViz />
+          <div className={prose}>
             <p>
               첫 두 칸이 VFS(Virtual File System)입니다. ext4, xfs, tmpfs, overlay, nfs가 전부 다른 코드인데도 프로그램이 같은 open/read/write를 쓰는 이유가 이 층입니다. 셋째 칸이
               mount이며, 컨테이너 볼륨과 이미지 layer가 여기 걸립니다. 넷째·다섯째 칸이 page cache와 writeback이며 1절의 정전은 이 사이에서 났습니다. 여섯째 칸이 블록 층과
@@ -67,6 +80,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               open("/var/log/app.log")이 들어오면 커널은 경로를 "/", "var", "log", "app.log" 네 조각으로 나눠 조각마다 dentry(directory entry)를 찾습니다. dentry는 이름 하나와 그
               이름이 가리키는 inode의 쌍으로, RAM에만 있습니다. 디스크에 저장되지 않으며 오직 다음 조회를 빠르게 하려고 존재합니다. 이 dentry들의 모음이 dcache입니다.
             </p>
+          </div>
+          <VfsObjectsViz />
+          <div className={prose}>
             <p>
               조각마다 lookup_fast가 먼저 dcache를 봅니다. 네 조각이 모두 cache에 있으면 디스크를 한 번도 읽지 않은 채 inode까지 이어집니다. 없는 조각이 있으면 lookup_slow가 그
               파일시스템의 lookup()을 불러 디스크에서 디렉터리를 읽은 뒤 새 dentry를 cache에 넣습니다. 파일이 수백만 개인 디렉터리에서 ls가 느린 것은 이 느린 경로가 이름마다 불리기
@@ -94,6 +110,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               경로를 따라가다 어떤 dentry에 다른 파일시스템이 얹혀 있으면 커널은 그 지점에서 얹힌 파일시스템의 루트 dentry로 갈아탑니다. 어느 dentry 위에 무엇이 얹혔는지 적어 둔 것이
               mount 표이며, path-lookup 문서는 이 표가 dcache와 밀접하게 엮여 있다고 적습니다. /var/log가 별도 파티션이면 "log" 조각에서 ext4의 다른 superblock으로 넘어갑니다.
             </p>
+          </div>
+          <MountTreeViz />
+          <div className={prose}>
             <p>
               bind mount는 새 파일시스템 없이 같은 dentry 트리를 다른 지점에서 한 번 더 보이게 하는 mount입니다. mount --bind /data/logs /srv/app/logs를 부를 때 커널의 do_loopback이
               원본 mount 구조를 clone_mnt로 복제해 새 지점에 접붙입니다.
@@ -106,6 +125,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               기본으로는 그 디렉터리만 bind될 뿐 아래의 서브마운트는 따라오지 않습니다. MS_REC(mount --rbind)를 주면 재귀로 따라옵니다. 전파 유형은 그 뒤에 호스트에서 새로 마운트한 것이
               컨테이너 안에도 나타날지를 정합니다.
             </p>
+          </div>
+          <MountPropagationViz />
+          <div className={prose}>
             <p>
               shared면 양방향, private면 단절, slave면 호스트→컨테이너 한 방향입니다. 컨테이너 런타임의 기본은 private이며, Kubernetes volumeMount의
               mountPropagation: HostToContainer가 slave입니다.
@@ -128,6 +150,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               컨테이너 이미지는 layer 여러 장을 겹친 것입니다. 커널에서 이 겹침을 구현하는 파일시스템이 overlayfs입니다. mount -t overlay overlay -olowerdir=/l1:/l2:/l3,upperdir=/u,workdir=/w
               /merged처럼 읽기 전용 lower 여러 개와 쓰기 가능한 upper 하나를 합쳐 /merged 하나로 보여 줍니다.
             </p>
+          </div>
+          <OverlayStackViz />
+          <div className={prose}>
             <p>
               lowerdir은 오른쪽이 가장 아래 layer, 왼쪽이 가장 위입니다. 이미지의 base
               layer가 오른쪽 끝에, 마지막 RUN의 layer가 왼쪽 끝에 옵니다.
@@ -139,6 +164,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
             <p>
               1절의 두 번째 사건이 여기서 납니다. lower에 있는 100 MiB 파일에 한 줄을 덧붙이려고 쓰기 모드로 열면, overlayfs는 먼저 그 파일을 upper로 복사합니다.
             </p>
+          </div>
+          <CopyUpViz />
+          <div className={prose}>
             <p>
               이것이 copy_up이며 순서는
               부모 디렉터리 만들기 → 같은 메타데이터로 빈 파일 만들기 → 데이터 100 MiB 복사 → 확장 속성 복사입니다. 복사가 끝나야 한 줄이 적힙니다. 그다음부터는 upper의 일반 파일이라
@@ -171,11 +199,17 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               dirty page가 디스크로 내려가는 계기는 셋입니다. 첫째, 커널 flusher 스레드가 dirty_writeback_centisecs(기본 500 = 5초)마다 깨어나 dirty_expire_centisecs(기본 3,000 =
               30초)보다 오래된 page를 씁니다. 그래서 가만히 두면 30~35초 사이에 써집니다.
             </p>
+          </div>
+          <ExpiryWindowViz />
+          <div className={prose}>
             <p>
               둘째, dirty 합계가 dirty_background_ratio(기본 10%)를 넘는 순간 flusher가 즉시 쓰기 시작합니다.
               셋째, dirty 합계가 dirty_ratio(기본 20%)를 넘으면 쓰기를 하는 프로세스 자신이 balance_dirty_pages 안에서 멈춰 writeback을 기다립니다. 1절의 세 번째 사건, 공간이 남는데
               쓰기가 멈추는 현상이 이 셋째 계기입니다.
             </p>
+          </div>
+          <DirtyableMemoryViz />
+          <div className={prose}>
             <p>
               두 비율의 분모는 RAM 전체가 아닙니다. 커널 문서는 "빈 page와 회수 가능한 page를 더한 가용 메모리"라고 적으며, 코드는 빈 page에서 커널 예약을 뺀 값에 file LRU를 더합니다.
               anonymous page는 들어가지 않습니다. 그래서 앱이 메모리를 많이 쓰는 서버일수록 분모가 작아져 같은 양의 dirty page로도 20%에 더 빨리 이릅니다.
@@ -224,6 +258,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               fdatasync는 ②에서 "데이터를 다시 읽는 데 필요한 메타데이터"만 기다립니다. 크기 변경은 쓰되 mtime 갱신은 건너뜁니다. 로그처럼 덧붙이기만 하는 파일에서 fsync 대신
               fdatasync를 쓰면 저널 commit을 기다리는 일이 줄어듭니다.
             </p>
+          </div>
+          <DataModeViz />
+          <div className={prose}>
             <p>
               data=ordered가 "데이터를 저널링하지 않는데도" 크래시 뒤 쓰레기 데이터가 안 보이는 이유는 메타데이터 트랜잭션을 commit하기 전에 관련 데이터 블록을 먼저 쓰기 때문입니다.
               data=writeback은 이 순서를 지키지 않아 크기는 늘었는데 내용이 옛 블록인 파일이 생길 수 있으며, data=journal은 데이터까지 저널에 두 번 써서 가장 느립니다.
@@ -313,6 +350,9 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
             <p>
               writeback과 fsync가 내려보낸 요청은 블록 층의 큐에 들어가 합쳐진(merge) 뒤 장치로 나갑니다. 이 층을 보는 도구가 iostat -x이며 열의 정의는 sysstat의 man page에 있습니다.
             </p>
+          </div>
+          <BlockQueueViz />
+          <div className={prose}>
             <p>
               r/s·w/s는 초당 완료된 읽기·쓰기 요청 수, rkB/s·wkB/s는 그 양, rqm/s는 보내기 전에 합쳐진 요청 수입니다. 6절의 flusher가 연속된 dirty page를 모아 보내면 w/s는 낮은 대신
               wkB/s는 높으며 wareq-sz(평균 요청 크기)가 큽니다.

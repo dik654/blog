@@ -6,6 +6,11 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import UseGridViz from "./linux-observability-proc-psi-perf-ebpf/viz/UseGridViz";
 import PsiAverageViz from "./linux-observability-proc-psi-perf-ebpf/viz/PsiAverageViz";
+import ObservabilityLayersViz from "./linux-observability-proc-psi-perf-ebpf/viz/ObservabilityLayersViz";
+import BurstSecondsViz from "./linux-observability-proc-psi-perf-ebpf/viz/BurstSecondsViz";
+import CounterGaugeViz from "./linux-observability-proc-psi-perf-ebpf/viz/CounterGaugeViz";
+import SampleVsEventViz from "./linux-observability-proc-psi-perf-ebpf/viz/SampleVsEventViz";
+import PromqlPipelineViz from "./linux-observability-proc-psi-perf-ebpf/viz/PromqlPipelineViz";
 import { codeRefs } from "./linux-observability-proc-psi-perf-ebpf/codeRefs";
 import { linuxObservabilityTrees } from "./linux-observability-proc-psi-perf-ebpf/fileTree";
 
@@ -44,6 +49,7 @@ export default function LinuxObservabilityProcPsiPerfEbpfArticle() {
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 커널은 누적 카운터를 파일로 내놓고, 도구는 그 파일을 두 번 읽어 뺍니다</h2>
+          <ObservabilityLayersViz />
           <div className={prose}>
             <p>
               바깥에서 보면 리눅스 관측은 네 층입니다. 맨 아래에서 커널이 자원마다 누적 카운터를 유지합니다. CPU가 사용자 모드에서 보낸 tick 수, 디스크가 처리한 요청 수, 작업이 CPU를 기다린 나노초 같은 것입니다. 커널은 이 카운터를 /proc와 /sys 아래 텍스트 파일로 내놓습니다. 파일처럼 보이지만 디스크에 없는 가상 파일이라 읽을 때마다 커널이 그 순간의 값을 적어 줍니다.
@@ -152,6 +158,7 @@ export default function LinuxObservabilityProcPsiPerfEbpfArticle() {
 
         <section id="pressure-case" data-teach-level="1" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. 같은 10초를 PSI cpu 파일로 보면 25%가 기다렸습니다</h2>
+          <BurstSecondsViz />
           <div className={prose}>
             <p>
               이 서버의 폭주가 규칙적이라고 합시다. (가정) 12스레드짜리 배치 작업이 4초마다 1초씩 돌고, 나머지 3초는 웹 앱이 CPU의 20%를 씁니다. 폭주하는 1초 동안 4개 CPU는 모두
@@ -208,6 +215,9 @@ export default function LinuxObservabilityProcPsiPerfEbpfArticle() {
               프로세스 하나로 내려가면 /proc/&lt;pid&gt;/ 아래에 같은 구조가 반복됩니다. status 파일의 VmRSS가 메모리 사용량, nonvoluntary_ctxt_switches가 CPU를 빼앗긴 횟수,
               schedstat의 둘째 숫자가 run queue에서 기다린 누적 나노초입니다. PSI가 서버 전체의 포화라면 schedstat는 그 프로세스 하나의 포화입니다.
             </p>
+          </div>
+          <CounterGaugeViz />
+          <div className={prose}>
             <p>
               이 파일들은 크게 두 종류입니다. 부팅 뒤 계속 늘어나는 누적값(counter)은 두 번 읽어 빼야 하지만 그 순간의 값(gauge)은 그대로 읽습니다. /proc/stat의 cpu 줄과 PSI의
               total은 counter, procs_running·MemAvailable·PSI의 avg 줄은 gauge입니다. Prometheus가 지표 타입을 counter와 gauge로 나누는 이유가 이 구분과 같습니다.
@@ -326,6 +336,9 @@ export default function LinuxObservabilityProcPsiPerfEbpfArticle() {
               6절의 격자가 "CPU 포화"를 가리켰으니 다음 질문은 "무엇이 4초마다 1초씩 CPU를 다 쓰는가"입니다. 카운터는 여기서 멈춥니다. /proc/stat은 어느 프로세스인지 말하지 않고,
               top은 1초 평균이라 1초 폭주를 다른 프로세스와 섞어 보여 줍니다. 이 지점부터 표본화와 이벤트 추적으로 넘어갑니다.
             </p>
+          </div>
+          <SampleVsEventViz />
+          <div className={prose}>
             <p>
               perf top은 성능 카운터를 일정 빈도로 표본화해 그 순간 CPU에 있던 함수를 실시간으로 집계합니다. 매뉴얼의 설명은 한 줄입니다. "performance counter profile in real time." 기본은 시스템 전체이고 -F로 빈도를 정합니다. 운영 서버에서는 timer tick과 겹치지 않도록 99 Hz 같은 소수를 쓰는 것이 관례입니다.
             </p>
@@ -371,6 +384,9 @@ export default function LinuxObservabilityProcPsiPerfEbpfArticle() {
             <p>
               Grafana에서 보던 "CPU 40%" 그래프로 돌아갑니다. node_exporter v1.9.1의 cpu 수집기는 /proc/stat을 읽어 node_cpu_seconds_total{"{"}cpu, mode{"}"}라는 counter로 내보냅니다. mode 라벨은 user, nice, system, idle, iowait, irq, softirq, steal 여덟 가지입니다. 3절에서 손으로 한 뺄셈을 PromQL이 합니다.
             </p>
+          </div>
+          <PromqlPipelineViz />
+          <div className={prose}>
             <p>
               1 − avg(rate(node_cpu_seconds_total{"{"}mode="idle"{"}"}[1m]))이 흔히 쓰는 사용률이고, 이 서버에서 0.4입니다.
             </p>

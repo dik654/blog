@@ -6,6 +6,12 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import TaskStateViz from "./linux-kernel-process-syscall-scheduler/viz/TaskStateViz";
 import EevdfPickViz from "./linux-kernel-process-syscall-scheduler/viz/EevdfPickViz";
+import KernelFlowViz from "./linux-kernel-process-syscall-scheduler/viz/KernelFlowViz";
+import SyscallRegisterViz from "./linux-kernel-process-syscall-scheduler/viz/SyscallRegisterViz";
+import CloneShareViz from "./linux-kernel-process-syscall-scheduler/viz/CloneShareViz";
+import WeightShareViz from "./linux-kernel-process-syscall-scheduler/viz/WeightShareViz";
+import PickTreeViz from "./linux-kernel-process-syscall-scheduler/viz/PickTreeViz";
+import LoadGapViz from "./linux-kernel-process-syscall-scheduler/viz/LoadGapViz";
 import { codeRefs } from "./linux-kernel-process-syscall-scheduler/codeRefs";
 import { linuxKernelProcessTrees } from "./linux-kernel-process-syscall-scheduler/fileTree";
 
@@ -45,6 +51,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 프로그램은 부탁하고, 커널은 상태를 매기고, 스케줄러가 CPU를 나눕니다</h2>
+          <KernelFlowViz />
           <div className={prose}>
             <p>
               바깥에서 보면 흐름은 다섯 칸입니다. 프로그램이 파일을 읽고 싶으면 read()를 부릅니다. 그 호출은 CPU의 특권 모드를 바꾸는 명령 하나로 커널 코드에 들어가며, 커널이 일을 마친 뒤 같은 길로 돌아옵니다. 디스크를 기다려야 할 때 커널은 그 task를 잠재우고 다른 task를 CPU에 올립니다. 디스크의 답이 오면 잠든 task를 깨워 다시 줄에 세웁니다.
@@ -62,6 +69,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
 
         <section id="syscall-case" data-teach-level="0" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. read(3, buf, 4096)은 번호 0을 rax에 싣고 문을 두드립니다</h2>
+          <SyscallRegisterViz />
           <div className={prose}>
             <p>
               웹 서버 스레드가 glibc의 read(3, buf, 4096)을 부릅니다. glibc 래퍼는 시스템 콜 번호 0을 rax에, 인자 셋을 rdi·rsi·rdx에 넣은 뒤 syscall 명령을 실행합니다. 인자가
@@ -102,6 +110,9 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
             <p>
               웹 서버가 스레드를 네 개 만들었다고 했습니다. 커널 입장에서 pthread_create는 clone() 시스템 콜이며, fork()도 clone()입니다. 두 호출의 차이는 플래그 비트입니다.
             </p>
+          </div>
+          <CloneShareViz />
+          <div className={prose}>
             <p>
               CLONE_VM(0x100)은 주소 공간, CLONE_FILES(0x400)는 열린 파일 표, CLONE_SIGHAND(0x800)는 시그널 처리기를 공유한다는 뜻이며,
               CLONE_THREAD(0x10000)는 같은 thread group에 넣습니다. pthread_create는 넷을 모두 켜지만 fork는 모두 끕니다.
@@ -173,6 +184,9 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
               표의 주석은 설계 의도를 적습니다. nice 한 단계는 CPU 몫 약 10% 차이가 나도록 했으며, 두 작업이 서로 반대 방향으로 한 단계씩 움직이면 상대 거리가 약 25%가 되도록 곱수를
               1.25로 잡았습니다. 예전 스케줄러에서 nice가 timeslice 길이에 묶여 있어 nice 19가 충분히 약하지 않았던 문제를 가중치로 풀었다는 설명이 sched-nice-design 문서에 있습니다.
             </p>
+          </div>
+          <WeightShareViz />
+          <div className={prose}>
             <p>
               CPU 하나를 두고 두 작업이 쉬지 않고 겨루면 각자의 몫은 자기 가중치를 가중치 합으로 나눈 값입니다. 1절의 압축 작업(nice 5)이 웹 서버 스레드(nice 0) 하나와 같은 CPU에서 겨룰 때 335 ÷ 1359 = 24.6%를 받습니다. 압축이 세 배 느리게 느껴진 이유가 이 비율입니다.
             </p>
@@ -286,6 +300,9 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
               pick_eevdf(907–970행)는 두 조건을 트리 한 번 훑기로 해결합니다. 작업이 하나뿐이면 바로 돌려주며(918–919행), RUN_TO_PARITY가 켜진 상태에서 현재 작업이 아직 요청량을 다
               쓰지 않았으면 계속 돌립니다(925–931행).
             </p>
+          </div>
+          <PickTreeViz />
+          <div className={prose}>
             <p>
               그 뒤 왼쪽 서브트리의 최소 vruntime이 자격이 있으면 왼쪽으로(더 이른 마감), 없으면 현재 노드를 검사한 뒤 오른쪽으로 내려갑니다
               (935–962행). O(log n)에 "자격 있는 최단 마감"이 나옵니다.
@@ -339,6 +356,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">10. 볼 숫자는 r·b·cs와 상태 글자이고, 고칠 곳은 호출 횟수와 가중치입니다</h2>
+          <LoadGapViz />
           <div className={prose}>
             <p>
               1절의 세 숫자를 다시 읽습니다. CPU 사용률 40%는 CPU 2개 가운데 평균 0.8개가 바빴다는 뜻이며, load 3은 R과 D가 평균 세 개 있었다는 뜻입니다. 둘의 차이 2.2개가 디스크를

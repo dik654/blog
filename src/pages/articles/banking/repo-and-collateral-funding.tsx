@@ -2,6 +2,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CentralBankDirectionViz from "./repo-and-collateral-funding/viz/CentralBankDirectionViz";
+import MarginGapViz from "./repo-and-collateral-funding/viz/MarginGapViz";
+import RolloverFailViz from "./repo-and-collateral-funding/viz/RolloverFailViz";
+import TwoDateRepoViz from "./repo-and-collateral-funding/viz/TwoDateRepoViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -30,6 +34,7 @@ export default function Article() {
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3. 100억 원 자산에서 5%를 남기면 현금은 95억 원입니다</h2>
+        <TwoDateRepoViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">시장가치 100억 원의 국채를 주고 가치의 5%를 공제한 95억 원을 하루 빌린다고 합시다. 연 이율은 3.65%, 1년은 365일로 계산합니다. 모든 금액과 요율은 설명을 위한 가정입니다.</p>
 <p className="leading-8">하루 이자는 95억×0.0365÷365=95만 원입니다. 다음 날 95억95만 원을 지급하고 증권을 돌려받습니다. 증권값 전부를 빌려준 것이 아니므로 처음에는 5억 원의 가치 여유가 있습니다.</p>
@@ -70,6 +75,7 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 가격 하락과 공제율 상승을 동시에 계산합니다</h2>
+        <MarginGapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">거래 중 담보 가치가 90억 원으로 내려갔다고 합시다. 현금 채무는 단순히 95억 원이라고 두겠습니다. 5% 헤어컷으로 인정되는 금액은 85.5억 원입니다. 부족한 9.5억 원을 현금으로 갚거나 같은 인정률의 담보를 보충해야 합니다. 실제 계산에는 누적 이자와 계약의 최소 이체액도 들어갑니다.</p>
 <p className="leading-8">담보를 더 주는 방식이면 95÷0.95=100억 원의 총담보가 필요하므로 10억 원을 추가합니다. 계약에 따라 공제율을 다시 정하거나 새 거래를 맺으며 헤어컷까지 10%로 오르면 같은 90억 원 담보에서 허용액은 81억 원이고 현금 부족액은 14억 원입니다.</p>
@@ -90,6 +96,7 @@ export default function Article() {
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 중앙은행이 사는지 파는지에 따라 준비금 방향이 달라집니다</h2>
+        <CentralBankDirectionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">뉴욕 연방준비은행은 자신이 증권을 사서 나중에 되파는 레포 거래를 은행 준비금을 일시적으로 늘리는 거래로 설명합니다. 민간 차입자가 100억 원 증권을 넘기고 95억 원을 받는 사례와 현금 제공 방향이 같습니다. 상대방은 자금을 얻고 중앙은행은 증권을 받습니다.</p>
 <p className="leading-8">한국은행의 RP매입도 정해진 기간 동안 자금을 공급하는 데 쓰입니다. 반대로 중앙은행이 증권을 팔고 나중에 되사기로 하면 자금을 흡수하는 방향입니다. 미국·한국의 실제 적격 증권, 거래 상대방과 만기는 각각 공고를 확인해야 합니다.</p>
@@ -101,6 +108,7 @@ export default function Article() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 담보가 있어도 만기 연장과 처분 가격은 보장되지 않습니다</h2>
+        <RolloverFailViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">내일도 95억 원을 빌릴 수 있을 것으로 생각했는데 상대가 전액 연장을 거절하면 만기에는 95억95만 원을 구해야 합니다. 이때 환매와 연계한 매각이나 계약 종료 정산에서 증권을 90억 원으로만 평가받는다면 원금 기준으로 5억 원이 모자랍니다. 담보로 넘긴 증권을 차입자가 아무 조건 없이 먼저 팔 수 있다는 뜻은 아닙니다. 처음의 5% 여유가 실제 가격 하락 10%를 모두 막지 못한 것입니다.</p>
 <p className="leading-8">차입자가 어려워질 때 담보 발행자도 함께 어려워지면 보호가 더 약해질 수 있습니다. 담보 재사용 사슬과 법적 상계가 끊기는 경우도 확인해야 합니다. 장기 자산을 짧은 돈으로 보유할 때는 가격·헤어컷·만기 연장 실패를 따로 스트레스 계산에 넣습니다.</p>

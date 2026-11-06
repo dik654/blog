@@ -4,7 +4,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import AddressPageViz from "./linux-memory-page-cache-oom/viz/AddressPageViz";
+import AdjOverwhelmViz from "./linux-memory-page-cache-oom/viz/AdjOverwhelmViz";
+import CgroupChargeViz from "./linux-memory-page-cache-oom/viz/CgroupChargeViz";
+import MemoryCountsViz from "./linux-memory-page-cache-oom/viz/MemoryCountsViz";
 import MemoryLedgerViz from "./linux-memory-page-cache-oom/viz/MemoryLedgerViz";
+import OvercommitViz from "./linux-memory-page-cache-oom/viz/OvercommitViz";
+import PsiTimelineViz from "./linux-memory-page-cache-oom/viz/PsiTimelineViz";
 import OomScoreViz from "./linux-memory-page-cache-oom/viz/OomScoreViz";
 import { codeRefs } from "./linux-memory-page-cache-oom/codeRefs";
 import { linuxMemoryTrees } from "./linux-memory-page-cache-oom/fileTree";
@@ -35,6 +41,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 프로그램은 주소를 받고, 물리 page는 처음 쓸 때 붙습니다</h2>
+          <AddressPageViz />
           <div className={prose}>
             <p>
             바깥에서 보면 흐름은 다섯 칸입니다. 프로그램이 메모리를 요청하면 커널은 먼저 주소 범위만 내줍니다. 그 주소에 처음 값을 쓰는 순간 물리 page 하나가 붙습니다. 아무도
@@ -52,6 +59,9 @@ export default function LinuxMemoryPageCacheOomArticle() {
           <h2 className="mb-6 text-2xl font-bold">3. 빈 page 1.5 GiB인 서버는 새 프로그램에 10.7 GiB를 줄 수 있습니다</h2>
           <div className={prose}>
             <p>(가정) swap이 없는 16,384 MiB 서버의 장부입니다. 앱이 직접 쓰는 메모리가 4,608 MiB, 커널 내부 몫이 512 MiB, 회수할 수 있는 커널 캐시(slab)가 512 MiB, 파일 내용을 담은 page cache가 9,216 MiB이고, 아무도 쓰지 않는 빈 page가 1,536 MiB입니다.</p>
+          </div>
+          <MemoryCountsViz />
+          <div className={prose}>
             <p>
             경보는 (16,384 − 1,536) ÷ 16,384 = 90.6%를 "사용률"로 계산했습니다. 그러나 page cache는 디스크에 원본이 있는 파일 사본이라 앱이 메모리를
             더 원하면 커널이 비워서 넘겨줄 수 있습니다. 새 프로그램이 swap 없이 받을 수 있는 양을 추정한 값이 available이고 이 서버에서는 10,976 MiB입니다.
@@ -119,6 +129,9 @@ export default function LinuxMemoryPageCacheOomArticle() {
             등으로 직접 쓰는 page는 파일 원본이 없어 anonymous memory라고 부르며 swap이 없으면 내보낼 곳이 없습니다.
           </p>
             <p>page를 비워 빈 page를 만드는 일은 회수(reclaim)입니다. 빈 page가 low watermark 아래로 내려가면 커널 스레드 kswapd가 백그라운드에서 회수합니다. 그래도 부족하면 메모리를 요청한 프로세스가 직접 회수(direct reclaim)를 하며 기다립니다. 이 기다림이 4절의 지연입니다.</p>
+          </div>
+          <PsiTimelineViz />
+          <div className={prose}>
             <p>작업이 메모리 때문에 멈춘 시간의 비율은 PSI(Pressure Stall Information)라는 지표로 /proc/pressure/memory에 나옵니다. some 줄은 적어도 한 작업이 멈춰 있던 시간의 비율이고, full 줄은 일하던 작업 전부가 동시에 멈춘 시간의 비율입니다. full이 오래 높으면 커널 문서는 thrashing으로 봅니다. 이 비율이 2초마다 넣는 표본의 지수 평균으로 avg10·avg60·avg300에 쌓이는 과정은 <a href="/cs/cloud/linux-observability-proc-psi-perf-ebpf#psi-mechanism">관측 도구 글</a>에서 다룹니다.</p>
             <p>회수로도 요청을 채우지 못할 때 프로세스 하나를 골라 죽이는 커널 루틴이 OOM(out of memory) killer입니다. 서버 전체 RAM이 모자라면 전역 OOM, cgroup의 memory.max에 닿으면 그 cgroup 안의 OOM입니다. 4절의 서버가 마지막 장면에서 부른 것은 전역 OOM이고, 1절의 137은 cgroup OOM이었습니다.</p>
           </div>
@@ -138,6 +151,9 @@ export default function LinuxMemoryPageCacheOomArticle() {
             2절에서 물리 page는 처음 쓸 때 붙는다고 했습니다. 그래서 16 GiB 서버에서 프로세스가 8 GiB를 malloc해도 바로 실패하지 않습니다. 주소 범위만 약속했고 그중
             실제로 쓴 page만 RSS로 올라옵니다. 쓰지도 않을 메모리를 넉넉히 잡는 프로그램이 많아 이 방식이 RAM을 아낍니다.
           </p>
+          </div>
+          <OvercommitViz />
+          <div className={prose}>
             <p>
             약속한 총량이 RAM을 넘는 상태를 overcommit이라고 합니다. vm.overcommit_memory가 기본값 0이면 커널은 RAM과 swap을 합한 것보다 명백히 큰
             요청만 거절합니다. 1이면 무조건 약속합니다. 두 모드에서는 약속한 프로세스들이 실제로 page를 쓰기 시작해 RAM이 모자랄 때 비로소 문제가 드러나고 그때 해결책이 OOM
@@ -208,6 +224,9 @@ export default function LinuxMemoryPageCacheOomArticle() {
           <h2 className="mb-6 text-2xl font-bold">8. cgroup은 자기 page만 회수해 보고, 16번 실패하면 자기 안에서만 죽입니다</h2>
           <div className={prose}>
             <p>cgroup 안에서 page를 새로 쓸 때마다 커널은 그 page를 cgroup에 청구(charge)합니다. 청구 뒤에도 memory.max 아래면 그대로 통과합니다. 넘으면 노드 전체가 아니라 그 cgroup의 page만 회수합니다. 노드에 빈 RAM이 10 GiB 있어도 이 cgroup의 OOM은 막지 못합니다.</p>
+          </div>
+          <CgroupChargeViz />
+          <div className={prose}>
             <p>
             (가정) 장애 직전 A가 1,236 MiB, B가 512 MiB, cgroup의 로그 파일 cache가 300 MiB로 정확히 2,048 MiB였다고 합시다(page table과 공유 page는 7절 가정대로 서로 상쇄됩니다). A가 300
             MiB를 더 쓰는 동안은 cache 300 MiB가 회수되어 자리를 내줍니다. cache가 0이 된 뒤의 청구는 회수할 것이 없어 실패하고 16번 다시 시도한 뒤 cgroup
@@ -288,6 +307,9 @@ export default function LinuxMemoryPageCacheOomArticle() {
           <div className={prose}>
             <p>cgroup 하나의 OOM에서는 같은 컨테이너 안 프로세스들이 같은 adj를 받아 크기가 순서를 정했습니다. 노드 전체가 모자란 전역 OOM에서는 이야기가 달라집니다. kubelet은 컨테이너 프로세스마다 QoS class에 따라 oom_score_adj를 다르게 씁니다. requests와 limits로 QoS class가 정해지는 과정은 <a href="/cs/cloud/kubernetes-request-path-and-cka#overview">Kubernetes 요청 경로</a>에서 봅니다. 커널 OOM보다 먼저 움직이는 kubelet의 node-pressure eviction은 QoS가 아니라 requests 초과 여부와 Priority로 순서를 정하는데, 그 규칙은 <a href="/cs/cloud/kubernetes-requests-limits-allocatable-qos#eviction-order">requests와 limits 글</a>에 있습니다.</p>
             <p>Kubernetes v1.35.0의 pkg/kubelet/qos/policy.go는 Guaranteed에 −997, BestEffort에 1000을 줍니다. Burstable은 1000 − 1000 × memory request ÷ 노드 메모리이고, 결과를 3~999로 묶습니다. 16 GiB 노드에서 request 1 GiB인 Burstable 컨테이너는 1000 − 62 = 938입니다.</p>
+          </div>
+          <AdjOverwhelmViz />
+          <div className={prose}>
             <p>전역 OOM의 adj 한 칸은 4,194,304 ÷ 1000 = 4,194 page입니다. 이 단위가 크기 차이를 압도합니다. 아래 계산에서 3 GiB를 쓰는 Burstable X가 6 GiB를 쓰는 Guaranteed Y보다, 그리고 0.5 GiB를 쓰는 BestEffort Z보다 먼저 죽습니다. request를 실제 사용량보다 훨씬 낮게 적은 컨테이너가 가장 먼저 희생된다는 뜻입니다.</p>
           </div>
           <CalculationWalkthrough

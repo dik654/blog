@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import RerankDepthViz from "./viz/RerankDepthViz";
+import UnionViz from "./viz/UnionViz";
 
 export default function HybridDepth() {
   return (
@@ -54,6 +56,9 @@ export default function HybridDepth() {
           전략입니다. 두 검색을 각각 상위 k개까지 실행한 다음 결과를 합칩니다.
           가장 단순한 방법은 문서 ID 기준으로 중복을 지우는 후보 합집합입니다.
         </p>
+      </div>
+      <UnionViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           예를 들어 sparse top-5가 {"{d1,d2,d3,d4,d5}"}이고 dense top-5가{" "}
           {"{d3,d6,d1,d7,d8}"}이면, 두 목록 모두에 있는 d1과 d3를 한 번만
@@ -88,6 +93,7 @@ export default function HybridDepth() {
           encoder에 넣는 방식입니다.
         </p>
       </div>
+      <RerankDepthViz />
       <ExplainedFormula
         question="Rerank depth를 top-k retrieval보다 작게 자르면 candidate recall 상한이 왜 한 번 더 줄어드나요?"
         idea={<>위에서 본 candidate recall 상한은 candidate set 전체 크기를 기준으로 했습니다. Reranker가 실제로 읽는 범위를 그보다 작은 rerank depth로 자르면, 그 창 밖에 있던 정답은 reranker 품질과 무관하게 이미 제외된 상태입니다.</>}

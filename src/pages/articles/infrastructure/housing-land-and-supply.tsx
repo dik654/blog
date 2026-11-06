@@ -3,6 +3,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import DelayBranchViz from "./housing-land-and-supply/viz/DelayBranchViz";
+import ResidualStackViz from "./housing-land-and-supply/viz/ResidualStackViz";
+import SaleLeverageViz from "./housing-land-and-supply/viz/SaleLeverageViz";
+import SupplyPipelineViz from "./housing-land-and-supply/viz/SupplyPipelineViz";
+import TenureTimelineViz from "./housing-land-and-supply/viz/TenureTimelineViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function HousingLandAndSupplyArticle() {
@@ -27,6 +32,7 @@ export default function HousingLandAndSupplyArticle() {
       </section>
       <section id="case" data-teaching-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">0 · 판매 10억에서 다른 비용 7억을 빼면 3억이 남습니다</h2>
+        <ResidualStackViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">완성한 집의 예상 판매대금을 10억 원으로 놓습니다(가정). 공사 5억 원, 금융·허가·관련 비용 1억 원, 사업자가 요구하는 정상 이익 1억 원이 필요하면 토지에 지불할 수 있는 금액은 3억 원입니다. 세금과 시간 차이를 이 합계에 반영했다고 단순화합니다.</p>
           <p className="leading-8">3억은 이미 거래된 땅의 시세가 자동으로 따라오는 숫자가 아닙니다. 예상 판매가와 비용을 받아들일 때 사업자가 감당할 수 있는 최대 토지비를 계산한 값입니다.</p>
@@ -53,6 +59,9 @@ export default function HousingLandAndSupplyArticle() {
         <h2 className="mb-6 text-2xl font-bold">3 · 잔여가치·허가 지연·주거비 부담을 구분합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">판매가치에서 사업 비용과 정상 이익을 빼 토지에 남는 금액을 주택 토지 잔여가치라고 부릅니다. 앞의 3억 원이 이 값입니다.</p>
+        </div>
+        <SupplyPipelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">권리 확인과 인허가, 기반 시설, 시공 때문에 수요 증가가 입주로 이어지는 데 걸리는 시간이 공급의 허가 시간입니다. 허가 건수가 늘었다는 통계와 완공 물량은 다릅니다.</p>
           <p className="leading-8">가구가 실제 감당하는 주거비는 매매가나 월세 외에도 대출 이자, 관리비, 교통비에 걸칩니다. 주거비 부담의 분배를 보려면 가구 소득과 거주 권리도 함께 봅니다.</p>
         </div>
@@ -60,9 +69,13 @@ export default function HousingLandAndSupplyArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 지연으로 비용이 5천만 원 늘면 토지 여유는 줄어듭니다</h2>
+        <DelayBranchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">처음 판매 10억 원, 토지 외 비용·정상 이익 7억 원을 고정합니다. 허가나 공사 지연으로 금융·관리 비용이 5천만 원 늘면 토지에 남는 금액은 2억5천만 원입니다(가정). 토지를 아직 안 샀다면 제안 가격을 낮출 수 있습니다.</p>
           <p className="leading-8">이미 토지비 3억 원을 지급했다면 땅값을 소급해 줄일 수 없습니다. 판매가나 다른 비용이 그대로라면 요구했던 이익 1억 원 중 5천만 원을 잃습니다. 토지 거래 전 계산과 거래 후 손익은 다른 결정을 만듭니다.</p>
+        </div>
+        <SaleLeverageViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">판매 예상이 10억에서 9억으로 줄면 원래 조건에서도 토지 잔여가치는 2억입니다. 가격과 비용의 작은 변화가 마지막에 남는 토지 금액에는 큰 비율로 나타납니다.</p>
         </div>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">3억이 2억5천만 원으로 줄어드는 경로를 계산했습니다. 공식 평가 원칙과 연결합니다.</p>
@@ -84,6 +97,9 @@ export default function HousingLandAndSupplyArticle() {
           <p className="leading-8">싱가포르 정부는 일반적인 새 HDB 주택의 구매자가 99년 동안 주택 권리를 소유한다고 설명합니다. 이것은 거주할 때마다 임대료를 내는 단순 임차와 다릅니다. 기간이 없는 소유권과도 다릅니다.</p>
           <p className="leading-8">10억이라는 같은 판매금액을 비교하더라도 남은 기간과 처분 조건이 다르면 같은 권리를 산 것이 아닙니다. 이 글의 10억 가정에 HDB의 실제 가격이나 거래 자격을 대입한 것은 아닙니다.</p>
           <p className="leading-8">같은 99년 권리 안에서도 처분 조건이 갈립니다. 위 정부 설명은 &ldquo;2023년 3월 기준&rdquo;으로 쓰였고, 그 뒤 2024년 10월 분양분부터 HDB는 새 주택을 입지에 따라 Standard·Plus·Prime으로 나눴습니다.</p>
+        </div>
+        <TenureTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">팔기 전에 직접 살아야 하는 기간을 최소 거주 기간(MOP)이라고 부릅니다. HDB의 주택 안내 사이트 <a className="text-sky-700 underline dark:text-sky-300" href="https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/">MyNiceHome</a>은 Standard 주택에 MOP 5년, 그 뒤 집 전체 임대 허용, 되팔 때 보조금 환수 없음을 적습니다. Plus·Prime 주택에는 MOP 10년, 집 전체 임대 불가, 되팔 때 보조금 환수가 붙습니다.</p>
           <p className="leading-8">Standard 주택은 5년을 살면 팔 수 있지만 Plus 주택은 10년을 살아야 하고, 팔 때 받은 추가 보조금을 반영해 매각가의 일정 비율을 내야 합니다. 같은 99년 주택이라도 같은 값을 주고 산 권리의 내용이 달라지는 이유입니다. 같은 페이지는 2024년 10월 분양 이전에 공급된 주택에는 이 구분이 적용되지 않는다고 적습니다.</p>
           <p className="leading-8">hdb.gov.sg 원 페이지는 2026-10-09에도 자동 조회를 막아(403) 같은 정부 도메인의 MyNiceHome 안내(2026-06-24 갱신)로 확인했습니다.</p>

@@ -2,6 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import BasisResidualViz from "./swaps-and-credit-risk/viz/BasisResidualViz";
+import CashLegsViz from "./swaps-and-credit-risk/viz/CashLegsViz";
+import CdsPayoutViz from "./swaps-and-credit-risk/viz/CdsPayoutViz";
+import FixedTotalViz from "./swaps-and-credit-risk/viz/FixedTotalViz";
+import PrincipalTimelineViz from "./swaps-and-credit-risk/viz/PrincipalTimelineViz";
+import ThreeAmountsViz from "./swaps-and-credit-risk/viz/ThreeAmountsViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -29,6 +35,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">3. 10억 원의 4%와 6% 차이는 2000만 원입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">회사 대출 원금은 10억 원이고 해당 1년의 대출 이자율은 6%라고 합시다. 별도 계약에서 회사는 같은 10억 원에 대해 4%를 지급하고 6%를 받습니다. 날짜와 계산 기간이 같고 대출 가산금리는 없다는 가정입니다.</p>
+        </div>
+        <CashLegsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">은행에 6000만 원을 내고, 교환 상대에게서는 6000만−4000만=2000만 원을 순수취합니다. 합친 순지출은 4000만 원입니다. 10억 원을 다시 받아야 계산이 성립하는 것은 아닙니다.</p>
         </div>
 
@@ -38,6 +47,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">4. 같은 숫자를 곱해도 날짜와 기준이 다르면 어긋납니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">두 지급액에는 기준 금액, 이자율, 적용 기간과 지급 날짜가 들어갑니다. 회사가 갚는 이율과 받는 이율이 서로 다른 기준을 따르면 변하는 부분이 완전히 지워지지 않습니다.</p>
+        </div>
+        <BasisResidualViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">대출 6% 안에는 회사의 신용 때문에 추가된 1%가 있다고 합시다. 교환 계약에서 기준 5%만 받는다면 고정 4% 외에 1%가 남습니다. 똑같이 변하는 이자라고 부르는 것만으로 상쇄가 성립하지 않습니다.</p>
         </div>
 <FlowRail title="지급 약속의 내부 조건" steps={[{"actor": "얼마를 기준으로 하나?", "movement": "10억 원을 적습니다.", "receives": "이자 계산의 크기"}, {"actor": "어떤 비율을 쓰나?", "movement": "고정 4%와 같은 기준의 변동을 적습니다.", "receives": "두 지급액"}, {"actor": "언제 지급하나?", "movement": "같은 기간과 날짜를 맞춥니다.", "receives": "순지급 가능 여부"}]} />
@@ -64,6 +76,7 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 6%가 2%가 되어도 합친 부담은 4%입니다</h2>
+        <FixedTotalViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">처음 사례에서는 은행에 6000만 원, 스왑에서 2000만 원 순수취이므로 순지출 4000만 원입니다. 다음 기간 기준금리가 2%가 되면 은행에는 2000만 원, 스왑 상대에게는 4000만−2000만=2000만 원을 냅니다. 합계는 다시 4000만 원입니다.</p>
 <p className="leading-8">따라서 금리 상승을 막는 대가로 금리 하락의 이득도 포기합니다. 대출 원금·기준금리·기간이 같다는 조건이 깨지면 고정된 합계가 달라집니다. 분기마다 계산하면 연이율에 실제 기간 비율을 곱해야 합니다.</p>
@@ -84,8 +97,12 @@ export default function Article() {
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 신용 보호는 손실이 아니라 계약의 사건을 보고 지급합니다</h2>
+        <CdsPayoutViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">같은 10억 원 규모의 채권을 가진 사람이 CDS 보호를 샀다고 합시다. 신용 사건 뒤 채권 회수율이 40%라고 합시다. 현금결제 조건이 그 회수율을 사용한다면 채권에서 4억 원, CDS에서 6억 원을 받습니다. 정기 지급과 상대방 부도는 별도로 고려해야 합니다.</p>
+        </div>
+        <PrincipalTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">통화스왑에서는 10억 원과 약정 외화를 시작에 교환하고 만기에 되돌리는 구조가 있을 수 있습니다. 금리 스왑에서 원금이 움직이지 않는다는 설명을 통화스왑에 그대로 옮길 수 없습니다. 미국과 EU 모두 상품과 참여자에 따라 청산·담보 규칙이 다르므로 거래소 상장 여부만으로 규제 범위를 판단하지 않습니다.</p>
         </div>
 <SourceApplication source="CFTC · Swaps Report Data Dictionary, Credit Default Swaps" excerpt="should a credit event occur" application="10억 원 채권의 가정 회수율 40%에서 손실은 6억 원입니다. 계약이 정한 신용 사건과 결제 조건이 충족되고 보호 매도자가 지급해야 6억 원 보상이 실현됩니다." />
@@ -94,6 +111,7 @@ export default function Article() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 명목원금도 현재 시가도 최악의 손실과 같지 않습니다</h2>
+        <ThreeAmountsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">10억 원은 이자 계산 기준이고 당기 순수취액은 2000만 원입니다. 계약을 오늘 대체하는 비용은 앞으로 남은 지급들의 현재가치로 계산하므로 이 두 금액과 다시 다릅니다. BIS가 명목원금·총시가·상계 후 신용노출을 따로 집계하는 이유입니다.</p>
 <p className="leading-8">CDS 매도자가 지급하지 못하면 6억 원 보호는 약정에만 남습니다. 담보가 있어도 처분 가격·지급 지연·상계의 법적 효력을 확인해야 합니다. 채권 부도와 보호 매도자 부도가 함께 발생할 수도 있습니다. 두 위험을 따로 더한 계산으로는 이때의 손실을 놓칠 수 있습니다.</p>

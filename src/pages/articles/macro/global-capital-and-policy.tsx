@@ -3,6 +3,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import FxInterestAreaViz from "./global-capital-and-policy/viz/FxInterestAreaViz";
+import AdjustmentChannelViz from "./global-capital-and-policy/viz/AdjustmentChannelViz";
+import BalanceOfPaymentsSortViz from "./global-capital-and-policy/viz/BalanceOfPaymentsSortViz";
+import RolloverGapViz from "./global-capital-and-policy/viz/RolloverGapViz";
+import RegimeLanesViz from "./global-capital-and-policy/viz/RegimeLanesViz";
+import FactorIsolationViz from "./global-capital-and-policy/viz/FactorIsolationViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -30,6 +36,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">3. 1억 달러가 1000억 원에서 1200억 원으로 바뀝니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">회사가 1억 달러를 빌렸고 원화로만 수입을 얻는다고 합시다. 환율이 달러당 1000원에서 1200원으로 바뀝니다. 연 이자율은 4%에서 6%로 재설정되고 전액이 다음 해 만기라는 가정입니다. 실제 특정 국가나 회사의 수치가 아닙니다.</p>
+        </div>
+        <FxInterestAreaViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">원금 환산액은 1000억 원에서 1200억 원으로 200억 원 늘어납니다. 4%일 때 이자 400만 달러는 40억 원이지만 바뀐 조건의 600만 달러는 72억 원입니다. 원금 환산 증가와 매년 이자 증가를 따로 적어야 합니다.</p>
         </div>
 
@@ -46,6 +55,7 @@ export default function Article() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5. 환율을 붙잡으면 다른 곳에서 조정이 일어납니다</h2>
+        <AdjustmentChannelViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">돈의 교환 비율을 움직이게 두면 외국 돈을 원하는 사람과 공급하는 사람의 차이가 가격에 나타납니다. 일정한 비율을 지키려면 외국 돈을 직접 내놓거나 국내 돈의 양과 금리 조건을 조정해야 할 수 있습니다.</p>
 <p className="leading-8">돈의 국경 이동을 제한하는 제도는 급한 유출을 늦출 수 있지만 기업과 투자자의 거래 자유도 함께 줄입니다. 정책은 비용 없는 버튼이 아니라 어느 통로에 조정을 맡길지 정하는 선택입니다.</p>
@@ -57,6 +67,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">6. 통화 불일치와 만기 연장은 다른 노출입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">수입과 부채의 통화가 다른 상태를 통화 불일치라고 합니다. 만기 빚을 새 빚으로 바꾸는 것은 차환이며 이를 못 하는 위험이 차환 위험입니다. 외환보유액은 통화당국이 가진 사용 가능한 대외 자산의 주요 완충 장치입니다.</p>
+        </div>
+        <BalanceOfPaymentsSortViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">해외와 오간 거래를 묶은 장부가 국제수지입니다. 경상수지는 상품·서비스·소득 등의 거래를, 금융계정은 대외 금융자산과 부채의 거래를 기록합니다. 환율 변동에 따른 기존 자산 평가 차이는 거래 흐름과 구분합니다.</p>
 <p className="leading-8">외화를 장래 정한 가격에 사는 계약의 원리는 <Link to="/finance/markets/forwards-and-futures">선도와 선물</Link>에서, 기준금리 전달은 <Link to="/finance/banking/central-bank-and-policy-transmission">중앙은행 글</Link>에서 이어집니다.</p>
         </div>
@@ -65,6 +78,7 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 은행의 조건 변화가 회사의 투자 예산에 닿습니다</h2>
+        <RolloverGapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">은행이 다음 해 1억 달러 중 8000만 달러만 연장하겠다고 합시다. 회사는 나머지 2000만 달러를 구해야 하고 환율 1200원에서는 240억 원이 필요합니다. 여기에 연 이자 72억 원의 지급 일정도 맞춰야 합니다.</p>
 <p className="leading-8">회사의 사용 가능한 현금이 200억 원이면 원금 차환 공백만으로 40억 원이 부족합니다. 설비투자를 미루거나 자산을 팔 수 있고, 여러 회사가 동시에 움직이면 관련 산업의 수요와 자산가격이 변할 수 있습니다. 이는 가능한 전달 경로이며 모든 금리 인상의 실제 결과를 단정한 것은 아닙니다.</p>
@@ -85,6 +99,7 @@ export default function Article() {
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 같은 달러 빚도 통화 제도에 따라 조정 경로가 다릅니다</h2>
+        <RegimeLanesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">ECB는 유로 지역의 통화정책이 공동 제도임을 설명합니다. 같은 회사 사례를 유로 수입·달러 부채로 옮겨 봅시다. 유로와 달러의 교환 비율은 여전히 중요합니다. 회원국 정부가 자기 나라만의 정책금리를 정해 문제를 해결할 수는 없습니다.</p>
 <p className="leading-8">홍콩의 연계환율제는 달러와의 교환 비율을 정해진 범위에서 유지하는 제도입니다. 환율 움직임이 제한되는 대신 은행 자금과 금리의 조정 경로를 함께 봐야 합니다. 이는 원화가 1000원에서 1200원으로 움직이는 가정과 다른 정책 반응입니다.</p>
@@ -98,6 +113,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">10. 발표 뒤 움직인 가격이 모두 발표 때문에 움직인 것은 아닙니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">금리 인상이 예상보다 작으면 인상 당일에도 자산가격이 오를 수 있습니다. 동시에 원자재값·실적·지정학적 사건이 변할 수도 있습니다. 발표 전 예상과 발표 뒤 새 정보의 차이를 봐야 합니다.</p>
+        </div>
+        <FactorIsolationViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">정책의 영향을 검증하려면 결정 시각, 실제 차입 금리와 대출량, 환율, 영향을 덜 받는 회사의 반응을 함께 기록합니다. 1억 달러 사례에서도 환율 변화와 금리 변화, 차환 거절을 따로 바꾸어야 무엇이 부족 현금을 만들었는지 알 수 있습니다.</p>
         </div>
 

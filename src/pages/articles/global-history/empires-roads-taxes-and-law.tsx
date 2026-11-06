@@ -1,6 +1,16 @@
+import FourFlowsViz from "./empires-roads-taxes-and-law/viz/FourFlowsViz";
+import GrainSplitViz from "./empires-roads-taxes-and-law/viz/GrainSplitViz";
+import LawOverlapViz from "./empires-roads-taxes-and-law/viz/LawOverlapViz";
+import LedgerVsGrainViz from "./empires-roads-taxes-and-law/viz/LedgerVsGrainViz";
 import WorldHistoryArticle, { type WorldHistoryArticleData } from "./WorldHistoryArticle";
 
 const data: WorldHistoryArticleData = {
+  figures: {
+    "black-box": { 0: <FourFlowsViz /> },
+    case: { 0: <GrainSplitViz /> },
+    need: { 1: <LawOverlapViz /> },
+    mechanism: { 1: <LedgerVsGrainViz /> },
+  },
   sections: [
     { id: "overview", level: "S", title: "1. 지도에서 한 색으로 보이는 제국도 안쪽은 하나가 아니었습니다", bridge: "제국을 한 사람의 명령이 곧바로 닿는 공간으로 보지 않았습니다. 실제로 오간 네 흐름을 나눕니다.", paragraphs: [
       "기원전 수세기부터 서기 수세기 사이 페르시아·마우리아·한·로마 같은 큰 정치체는 서로 다른 언어와 관습을 가진 지역을 묶었습니다. 지도에서는 한 색이지만, 수도의 관리가 모든 마을을 직접 다스린 것은 아닙니다.",

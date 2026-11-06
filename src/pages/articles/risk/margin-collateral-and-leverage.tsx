@@ -3,6 +3,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CaseLedgerViz from "./margin-collateral-and-leverage/viz/CaseLedgerViz";
+import CureOptionsViz from "./margin-collateral-and-leverage/viz/CureOptionsViz";
+import FundingLoopViz from "./margin-collateral-and-leverage/viz/FundingLoopViz";
+import FuturesRestoreViz from "./margin-collateral-and-leverage/viz/FuturesRestoreViz";
+import RatioCutViz from "./margin-collateral-and-leverage/viz/RatioCutViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -30,6 +35,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">3. 100억 원이 90억 원이 되면 자기 몫은 절반입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">자기 돈 20억 원과 차입 80억 원으로 100억 원 자산을 샀다고 합시다. 대출 잔액은 자산 가치의 80% 이하여야 한다는 계약을 가정합니다. 이 비율은 설명용이며 특정 나라 주식 신용거래의 실제 허용 비율이 아닙니다.</p>
+        </div>
+        <CaseLedgerViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">자산이 90억 원으로 내려도 빚은 80억 원입니다. 남는 자기 몫은 10억 원으로 줄어듭니다. 계약상 대출 허용액은 90×80%=72억 원이므로 8억 원을 갚거나 그에 맞는 추가 자산을 넣어야 합니다.</p>
         </div>
 
@@ -48,6 +56,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">5. 팔기까지 시간이 걸리기 때문에 가치 전부를 빌려주지 않습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">대출자는 채무불이행을 확인한 즉시 자산을 같은 가격에 팔 수 있다고 장담하지 못합니다. 확인·매각 사이에 값이 더 떨어지고 수수료도 들어갈 수 있습니다. 그래서 인정 가치의 일부를 남겨 둡니다.</p>
+        </div>
+        <RatioCutViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">그 여유가 시장 불안 때 커지면 가격이 그대로여도 대출 한도가 줄어듭니다. 90억 원 자산의 허용 비율을 80%에서 70%로 낮춘다고 가정합니다. 한도가 72억 원에서 63억 원으로 줄어 추가 부담이 더 커집니다.</p>
         </div>
 
@@ -65,6 +76,7 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 현금 상환·추가 담보·매각은 필요한 금액이 다릅니다</h2>
+        <CureOptionsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">자산은 90억 원이고 빚은 80억 원입니다. 외부 현금 8억 원으로 빚을 갚으면 빚 72억 원이 되어 80% 기준에 맞습니다. 현금으로 빚을 줄이지 않고 같은 인정률의 자산을 더 맡긴다면 10억 원을 추가해야 합니다. 총담보 100억 원의 80%가 80억 원이기 때문입니다.</p>
 <p className="leading-8">보유 자산을 팔아 그 대금으로 빚을 갚는다면 8억 원 매도로는 부족합니다. 자산도 함께 줄기 때문입니다. x억 원을 팔면 빚은 80−x, 자산은 90−x이고 80−x=0.8×(90−x)를 풀면 x=40입니다. 매각 후 자산 50·빚 40으로 비율을 맞춥니다.</p>
@@ -87,6 +99,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">9. 선물은 자산을 사지 않아도 정산 현금이 필요합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">CME 원문은 증거금 잔액이 가격에 따라 차감·가산된다고 설명합니다. 이 글의 자산대출과 선물은 같은 계약이 아니지만 최종 수익 전에 현금이 필요하다는 공통점을 갖습니다.</p>
+        </div>
+        <FuturesRestoreViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">처음 10억 원을 선물 증거금으로 맡기고 손실 정산 4억 원이 나가 잔액이 6억 원이 되었다고 합시다. 유지 기준 7억 원 아래이면 처음 요구액 10억 원까지 복원해야 한다고 합시다. 이 조건에서 추가액은 1억 원이 아니라 4억 원입니다. 이 숫자는 CME의 실제 특정 상품 요율이 아닌 비교 가정입니다.</p>
 <p className="leading-8">한국·미국·EU의 고객 계좌는 담보 인정 자산과 매각·상계 규칙이 다릅니다. 국제 원칙은 공통 위험 관리 방향을 제시하지만 개별 고객의 납부 시간과 재산 보호는 해당 법과 계약이 정합니다.</p>
         </div>
@@ -96,6 +111,7 @@ export default function Article() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 모두의 매각이 다른 사람의 담보 부족을 만듭니다</h2>
+        <FundingLoopViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">여러 사람이 40억 원씩 팔려 하면 충분한 매수자가 없는 가격대까지 내려갈 수 있습니다. 그러면 아직 팔지 않은 투자자도 담보 가치 하락으로 추가 지급을 요구받습니다. 자금 부족과 거래 가격 하락이 서로를 키우는 고리입니다.</p>
 <p className="leading-8">반대로 만기와 통화가 맞는 현금 여유를 확보하면 강제 매각을 피할 시간이 생깁니다. 장부상 이익·집·장기채를 갖고 있다는 사실과 오늘 납부할 현금이 있다는 사실을 구분해야 합니다. 스트레스 계산에는 가격 하락과 인정 비율 하락을 동시에 넣습니다.</p>

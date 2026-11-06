@@ -4,6 +4,15 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import DescentDynamicsViz from "./DescentDynamicsViz";
+import BoundTermsViz from "./viz/BoundTermsViz";
+import BoundVsActualViz from "./viz/BoundVsActualViz";
+import DescentBoundViz from "./viz/DescentBoundViz";
+import GapContractionViz from "./viz/GapContractionViz";
+import OvershootViz from "./viz/OvershootViz";
+import RegradientViz from "./viz/RegradientViz";
+import StationaryShapesViz from "./viz/StationaryShapesViz";
+import StepFactorViz from "./viz/StepFactorViz";
+import StopSignalViz from "./viz/StopSignalViz";
 
 const MIT = "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-22-gradient-descent-downhill-to-a-minimum/";
 const BOYD = "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf";
@@ -24,12 +33,14 @@ export default function GradientDescentConvergenceArticle() {
       <h2 className="text-2xl font-bold">2 · 현재 위치와 기울기로 다음 위치를 만든다</h2>
       <p>점수를 입력의 제곱의 절반으로 정합니다(가정). 앞 글의 제곱 함수에 1/2을 곱한 새 예이며 현재 입력의 기울기가 입력값 자체가 됩니다. 입력 4에서는 점수 8, 기울기 4입니다. 가장 낮은 점수는 입력 0의 0입니다.</p>
       <p>계산 장치는 현재 위치를 받아 기울기를 구하고 그 기울기에 지정한 수를 곱해 현재 위치에서 뺍니다. 곱하는 수를 0.5로 정하면 첫 이동은 4의 절반인 2를 빼는 것이므로 다음 위치는 2입니다. 점수는 8에서 2로 줄어듭니다.</p>
+      <RegradientViz />
       <p>다음에는 새 위치 2에서 기울기를 다시 계산합니다. 처음의 기울기 4를 계속 쓰지 않습니다. 같은 규칙을 반복하면서 위치, 기울기, 점수가 매번 함께 바뀝니다.</p>
       <p>만약 처음의 기울기 4를 계속 사용하면 매번 2를 빼 4→2→0→−2로 갑니다. 가장 낮은 위치를 찾은 뒤에도 계속 지나칩니다. 현재 위치를 갱신하는 일과 그 위치의 기울기를 다시 평가하는 일이 한 묶음이어야 하는 이유입니다.</p>
     </section>
     <section id="case" data-teach-level="0" className="space-y-6">
       <h2 className="text-2xl font-bold">3 · 절반씩 빼면 4→2→1→0.5로 움직인다</h2>
       <div className="overflow-x-auto"><table className="w-full min-w-[470px] text-sm"><thead><tr><th className="p-3 text-left">현재 위치</th><th className="p-3 text-left">뺄 양</th><th className="p-3 text-left">다음 위치</th><th className="p-3 text-left">다음 점수</th></tr></thead><tbody>{[['4','0.5×4=2','2','2'],['2','0.5×2=1','1','0.5'],['1','0.5×1=0.5','0.5','0.125']].map(row=><tr key={row[0]} className="border-t border-border">{row.map((cell,i)=><td key={i} className="p-3">{cell}</td>)}</tr>)}</tbody></table></div>
+      <OvershootViz />
       <p>이동에 곱하는 수를 2로 바꾸면 같은 시작값 4에서 8을 빼므로 −4가 됩니다. 그곳의 기울기는 −4라 다음에는 −8을 빼고 다시 4로 옵니다. 위치는 바뀌지만 0까지의 거리 4와 점수 8은 그대로입니다.</p>
       <p>이번에는 3을 곱해 보겠습니다. 4에서 12를 빼 −8, 거기서 −24를 빼 16, 다시 48을 빼 −32가 됩니다. 0까지의 거리는 4→8→16→32로 커지고 점수도 8→32→128→512로 커집니다.</p>
       <p>셋 다 현재 기울기의 반대로 움직였습니다. 다른 것은 곱한 수 0.5, 2, 3뿐입니다. 내려가는 방향을 골랐다는 말과 실제 다음 값이 낮아졌다는 말은 이렇게 다른 결과를 가질 수 있습니다.</p>
@@ -82,15 +93,18 @@ export default function GradientDescentConvergenceArticle() {
         assumptions={["f(x)=x²/2인 1차원 quadratic의 exact recurrence입니다.", "다른 curvature에서는 안정 구간이 L에 따라 바뀝니다."]}
         interpretation="η=0.5는 factor 0.5, η=2는 −1, η=3은 −2이므로 각각 수축·진동·발산합니다."
       />
+      <StepFactorViz />
       <p>x₀=4처럼 0이 아닌 곳에서 시작하면 |1−η|&lt;1, 즉 0&lt;η&lt;2에서 0으로 수렴합니다. η=0은 위치를 그대로 두고 η=2는 같은 거리를 왕복합니다. η&gt;2는 부호를 바꾸며 거리를 키웁니다. 처음부터 x₀=0이라면 기울기도 0이라 이 모든 고정 η에서 그대로 0입니다.</p>
       <div className="overflow-x-auto"><table className="w-full min-w-[490px] text-sm"><thead><tr><th className="p-3 text-left">η</th><th className="p-3 text-left">배율 1−η</th><th className="p-3 text-left">위치 x₀→x₁→x₂→x₃</th></tr></thead><tbody>{[['0.5','0.5','4→2→1→0.5'],['1','0','4→0→0→0'],['1.5','−0.5','4→−2→1→−0.5'],['2','−1','4→−4→4→−4'],['3','−2','4→−8→16→−32']].map(row=><tr key={row[0]} className="border-t border-border">{row.map((cell,column)=><td key={column} className="p-3">{cell}</td>)}</tr>)}</tbody></table></div>
       <p>좌우를 번갈아 간다는 사실만으로 실패라고 판단하지 않습니다. η=1.5는 부호를 바꾸면서도 거리가 절반씩 줄어듭니다. 이 함수의 점수는 위치의 제곱에 비례하므로 거리 배율이 0.5이면 점수 배율은 0.25입니다. η=0.5의 점수 8→2→0.5→0.125도 같은 관계입니다.</p>
+      <DescentBoundViz />
       <p>앞 글의 하강 보조정리에 d=−η∇f를 넣으면 다음 값은 f(x)−η(1−Lη/2)‖∇f(x)‖² 이하입니다. 0&lt;η&lt;2/L이고 경로 전체에 같은 L을 적용할 수 있으면 기울기가 0이 아닌 곳에서 감소를 보장합니다. η=1/L은 그 감소량을 ‖∇f‖²/(2L)로 정리하기 쉬운 선택입니다.</p>
       <p>우리 f의 L=1에서는 1/L=1이라 한 번에 0으로 갑니다. 이 한 함수의 정확한 답을 모든 손실의 최적 보폭으로 일반화하지 않습니다. f=ax²/2, a&gt;0이면 반복 배율은 1−ηa이고 안정 범위도 0&lt;η&lt;2/a로 바뀝니다.</p>
     </section>
     <section id="convergence" data-teach-level="4" className="space-y-6">
       <h2 className="text-2xl font-bold">9 · 한 번의 감소와 현재 오차를 연결하면 반복 뒤의 경계가 나온다</h2>
       <p>현재 함수값과 최솟값의 차이를 Δₜ=f(xₜ)−f(x*)라고 하겠습니다. 전역에서 μ-강하게 볼록하고 L-매끄러우며 정확한 기울기와 η=1/L을 사용한다고 가정합니다. 최소점이 존재하고 0&lt;μ≤L이며 입력 공간은 제약 없는 유클리드 공간입니다.</p>
+      <GapContractionViz />
       <p>매끄러움은 다음 값이 적어도 ‖∇f‖²/(2L)만큼 줄어든다고 보장합니다. 강한 볼록성은 ‖∇f‖²≥2μΔₜ를 줍니다. 둘을 이어 넣으면 다음 오차는 Δₜ−(μ/L)Δₜ=(1−μ/L)Δₜ 이하입니다. 이 관계를 매번 반복하면 아래 경계가 됩니다.</p>
       <ExplainedFormula
         question="μ-strongly convex·L-smooth에서 η=1/L이면 objective gap이 왜 줄어들까요?"
@@ -106,6 +120,7 @@ export default function GradientDescentConvergenceArticle() {
         <p>강한 볼록성은 모든 y에 대해 f(y)≥f(x)+gᵀ(y−x)+(μ/2)‖y−x‖²를 줍니다. 여기서 g=∇f(x)입니다. 오른쪽을 y에 대해 최소화하면 y=x−g/μ에서 f(x)−‖g‖²/(2μ)가 됩니다. 따라서 최솟값 f(x*)도 이 하한 이상이고 Δ≤‖g‖²/(2μ)입니다.</p>
         <p>양변에 2μ를 곱하면 ‖g‖²≥2μΔ입니다. 입력에 별도 제약이 없는 경우의 유도이며 μ가 양수여야 나눌 수 있습니다. 기울기가 작을수록 오차도 작다는 연결을 이 전제가 제공합니다.</p>
       </ProgressiveDetail>
+      <BoundVsActualViz />
       <p>μ=2, L=8이면 한 번의 오차 비율 상한은 3/4이고 네 번 뒤에는 Δ₄≤(3/4)⁴Δ₀=(81/256)Δ₀입니다(가정). 81/256은 약 0.3164입니다. 이는 매번 오차가 정확히 3/4로 변한다는 주장이 아닙니다.</p>
       <p>실제 차이를 보기 위해 q(x,y)=x²+4y²의 (1,0)에서 η=1/8로 시작합니다(가정). 이 함수는 μ=2, L=8입니다. x는 매번 3/4배가 되고 y는 0이므로 네 번 뒤 점수는 (3/4)⁸=6561/65536, 약 0.1001입니다. 초기 오차 1의 상한 81/256보다 작습니다.</p>
       <p>원래 f=x²/2는 μ=L=1이라 η=1이면 한 번 뒤 오차가 0입니다. η=0.5의 4→2→1 경로에는 η=1/L이라는 방금 정한 정리의 전제가 맞지 않습니다. 그 경로는 8절의 정확한 반복식으로 별도 계산합니다.</p>
@@ -114,6 +129,7 @@ export default function GradientDescentConvergenceArticle() {
       <h2 className="text-2xl font-bold">10 · 실제 교재의 한 번 감소 식에 시작값 4를 대입한다</h2>
       <p><a className="font-semibold text-primary underline" href={MIT}>MIT 18.065 Lecture 22의 공식 요약</a>은 새 위치를 X=x−s(∂F/∂x)로 씁니다. 원문의 s를 이 글의 η에 맞추고 F=x²/2, x=4, s=0.5를 넣으면 X=4−0.5×4=2입니다. 같은 식을 새 x=2에서 다시 계산하면 X=1입니다.</p>
       <p><a className="font-semibold text-primary underline" href={`${BOYD}#page=480`}>Boyd·Vandenberghe 인쇄 466쪽 식 (9.17)</a>은 기울기 반대 방향의 보폭 t에 따른 함수값을 제한합니다. 여기서 원문의 t는 보폭이고 이 글의 반복 횟수 t와 다릅니다. 이 식에 대입할 때만 원문 t를 η로 읽겠습니다.</p>
+      <BoundTermsViz />
       <ExplainedFormula question="원문 식 (9.17)은 4에서 보폭 0.5로 이동한 점수를 어디까지 제한하나요?"
         idea={<>원문 M은 기울기 변화의 상한에 해당합니다. 이동의 선형 감소와 제곱 오차 여유를 같은 기울기 크기로 계산합니다.</>}
         formula={String.raw`\widetilde f(t)\le f(x)-t\lVert\nabla f(x)\rVert_2^2+\frac{Mt^2}{2}\lVert\nabla f(x)\rVert_2^2`}
@@ -130,6 +146,7 @@ export default function GradientDescentConvergenceArticle() {
     </section>
     <section id="stopping-boundary" data-teach-level="7" className="space-y-6">
       <h2 className="text-2xl font-bold">11 · 작은 기울기와 작은 이동은 서로 다른 종료 이유다</h2>
+      <StationaryShapesViz />
       <p>x², −x², x²−y²는 모두 원점에서 기울기가 0입니다. 그러나 첫 함수에서는 주변보다 낮고 둘째에서는 높습니다. 셋째는 x 방향으로 가면 커지고 y 방향으로 가면 작아지는 안장점입니다. 볼록성 등의 전제가 없으면 정지점이라는 사실만으로 전역 최소점이라고 할 수 없습니다.</p>
       <p>앞의 x=4, η=0.000001에서는 이동량이 0.000004지만 기울기 크기는 4입니다. 이동 허용오차를 0.00001로 정하면 작게 움직였다는 조건으로 멈추지만 기울기가 작다는 조건을 만족한 것은 아닙니다(가정). η와 실제 발동한 종료 조건을 함께 기록합니다.</p>
       <p>기울기 크기, 실제 이동량, 최대 반복 횟수 중 하나라도 정한 기준을 만족하면 끝내는 규칙을 사용할 수 있습니다. 이는 가능한 종료 정책 하나입니다. 세 조건이 같은 뜻이라는 말은 아니므로 실제로 어느 조건이 성립했는지 함께 확인합니다.</p>
@@ -145,6 +162,7 @@ export default function GradientDescentConvergenceArticle() {
         interpretation="어떤 조건으로 언제 멈췄는지 기록합니다. 새 데이터의 품질, 계산의 안정성, 소요 시간과 메모리는 사용 여부를 결정할 때 따로 평가합니다."
       />
       </ProgressiveDetail>
+      <StopSignalViz />
       <p>예를 들어 f=x²/2, x₀=4, η=0.5에서 기울기 허용오차 0.6을 두면 세 번 이동한 x=0.5에서 멈출 수 있습니다. 이때 점수 오차는 0.125입니다(가정). 반복 한도를 2로 먼저 두었다면 x=1과 점수 0.5에서 끝났을 것입니다. 종료 이유가 다르면 남은 오차도 다릅니다.</p>
       <p>제약이 있으면 단순한 이동이 허용 범위 밖으로 나갈 수 있고 미분 불가능한 곳에서는 사용할 기울기 규칙을 정해야 합니다. 일부 데이터의 기울기만 사용하는 학습, 계산 오차, 누적 상태를 쓰는 다른 최적화 방법에도 여기의 정확한 반복식을 그대로 붙이지 않습니다.</p>
       <p>학습을 멈춘 뒤에는 보지 않은 데이터의 품질과 필요한 안전 조건을 별도로 평가합니다. 선택한 모델의 버전과 설정을 남기고 실제 장치의 시간·메모리 제약을 확인한 뒤 문제가 생기면 돌아갈 모델도 정합니다. 수학적 반복의 종료만으로 이런 사용 조건이 충족되지는 않습니다.</p>

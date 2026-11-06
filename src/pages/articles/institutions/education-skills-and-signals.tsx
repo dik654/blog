@@ -3,6 +3,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import FundingSourceViz from "./education-skills-and-signals/viz/FundingSourceViz";
+import PaybackCellsViz from "./education-skills-and-signals/viz/PaybackCellsViz";
+import SelectionMixViz from "./education-skills-and-signals/viz/SelectionMixViz";
+import SignalThresholdViz from "./education-skills-and-signals/viz/SignalThresholdViz";
+import UkRepaymentBranchViz from "./education-skills-and-signals/viz/UkRepaymentBranchViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function EducationSkillsAndSignalsArticle() {
@@ -35,6 +40,7 @@ export default function EducationSkillsAndSignalsArticle() {
       </section>
       <section id="picture" data-teaching-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1 · 같은 사람이 일을 더 잘하게 됐는지 살핍니다</h2>
+        <SelectionMixViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">수업 전에는 못 풀던 작업을 수업 뒤에 풀면 실제 능력의 변화를 볼 단서가 됩니다. 하지만 학교에 들어오기 전부터 능력이 높은 사람이 더 많이 선발됐다면 졸업자와 비졸업자의 평균 임금 차이에는 그 차이도 섞입니다.</p>
         </div>
@@ -54,6 +60,9 @@ export default function EducationSkillsAndSignalsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">학습으로 실제 생산과 판단 능력이 달라지는 효과를 교육의 인적자본 축적이라고 부릅니다. 자격이 능력 정보를 고용주에게 전해 선택을 바꾸는 효과는 신호 효과입니다.</p>
           <p className="leading-8">이 개념은 Spence의 1973년 논문 「Job Market Signaling」(The Quarterly Journal of Economics 87권 3호, 355~374쪽)에서 나왔습니다.</p>
+        </div>
+        <SignalThresholdViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">자격이 신호가 되려면 조건이 하나 붙습니다. 고용주가 자격 보유자에게 임금을 모두 합쳐 1,200만 원 더 준다고 놓습니다. 같은 자격을 따는 데 능력이 높은 사람은 600만 원, 낮은 사람은 1,800만 원이 든다고 둡니다(가정). 높은 쪽은 600만 원을 남기고 낮은 쪽은 600만 원을 잃으므로 높은 쪽만 자격을 땁니다. 비용이 둘 다 600만 원이면 둘 다 따서 자격으로 두 사람을 구별할 수 없습니다. Spence는 358쪽 &ldquo;A Critical Assumption&rdquo; 소절에서 신호 비용이 생산 능력과 음의 상관을 가지지 않으면 신호가 지원자를 구별하지 못한다고 씁니다. 이 조건을 더 많은 숫자로 따라가는 설명은 <Link className="text-sky-700 underline dark:text-sky-300" to="/economics/market-failure/information-asymmetry#signaling">정보 비대칭 글의 신호 절</Link>에 있습니다.</p>
           <p className="leading-8">교육 때문에 포기한 다른 선택의 가치를 기회비용이라고 합니다. 사례에서는 1년 동안 벌지 못한 2천만 원이 해당합니다. 학비로 학교에 지급된 돈과는 다른 비용입니다.</p>
           <p className="leading-8">세 효과는 함께 존재할 수 있습니다. 학위가 신호로 쓰인다고 수업이 무용하다는 결론도, 임금이 올랐다고 모든 상승이 학습 효과라는 결론도 바로 나오지 않습니다.</p>
@@ -62,6 +71,7 @@ export default function EducationSkillsAndSignalsArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 3천만 원을 연 200만 원으로 나누면 15년입니다</h2>
+        <PaybackCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">학비 1천만 원과 포기 소득 2천만 원을 합한 3천만 원을 연 추가 임금 200만 원으로 나누면 단순 회수 기간은 15년입니다. 학비만 나눈 5년보다 길어졌습니다. 세금과 할인, 임금 성장과 실업을 생략한 계산입니다.</p>
           <p className="leading-8">추가 임금 200만 원이 매년 계속되고 교육을 받지 않았을 대안도 그대로라는 전제가 필요합니다. 교육 과정 중 퇴학하거나 다른 산업으로 이동하면 실제 경로가 달라집니다.</p>
@@ -73,6 +83,9 @@ export default function EducationSkillsAndSignalsArticle() {
         <h2 className="mb-6 text-2xl font-bold">5 · OECD의 교육 재정은 돈의 처음 출처를 구분합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">OECD의 2026 교육 재정 설명은 정부의 민간 이전 전후를 구분합니다. 학습자가 학비 1천만 원을 냈더라도 그 돈이 전부 가계에서 처음 나온 것인지는 별도 질문입니다.</p>
+        </div>
+        <FundingSourceViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">학비 중 정부 장학금이 400만 원이고 가계 자금이 600만 원이라고 추가로 놓습니다(가정). 학교 수입은 1천만 원으로 같고 초기 재원은 정부 400·가계 600으로 나뉩니다. 개인의 직접 부담 계산도 그만큼 바뀝니다.</p>
         </div>
         <SourceApplication source="OECD Education at a Glance 2026 · C1, Distribution by source of funds" excerpt="before government transfers to the private sector" application="학비1천만 원 중 정부 장학금400만 원·가계600만 원이면 학교의 수입과 초기 재원을 나눠 기록합니다. 포기한 소득2천만 원은 학교 수입이 아닙니다." />
@@ -83,6 +96,9 @@ export default function EducationSkillsAndSignalsArticle() {
         <h2 className="mb-6 text-2xl font-bold">6 · 영국의 소득 연계 상환은 대출 잔액만으로 월 부담을 정하지 않습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">영국 정부 안내는 해당 학자금 대출의 상환을 소득 기준과 연결합니다. 어떤 상환 계획인지, 소득이 기준을 넘는지에 따라 실제 현금 지급이 달라집니다. 다른 나라의 학비 대출이나 일반 대출에 같은 규칙을 적용할 수 없습니다.</p>
+        </div>
+        <UkRepaymentBranchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사례의 연 임금 증가 200만 원만 알아서는 상환액을 계산할 수 없습니다. 증가 전 총소득, 해당 계획의 기준과 비율을 더 알아야 합니다. 대출금이 학비를 먼저 내줬다고 교육 비용 자체가 사라진 것도 아닙니다.</p>
           <p className="leading-8">2026-10-04 확인한 OECD 재정 자료의 관측연도는 표마다 확인해야 합니다. 학위와 직업훈련, 공공 지원 비중이 다른 국가를 비교할 때 등록금만으로 개인 부담을 순위 매기지 않습니다.</p>
         </div>

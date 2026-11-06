@@ -4,6 +4,12 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import BackoffClockViz from "./kubernetes-pod-states-crashloop-probes-events/viz/BackoffClockViz";
+import BackoffWindowViz from "./kubernetes-pod-states-crashloop-probes-events/viz/BackoffWindowViz";
+import ContainerStateViz from "./kubernetes-pod-states-crashloop-probes-events/viz/ContainerStateViz";
+import EventFilterViz from "./kubernetes-pod-states-crashloop-probes-events/viz/EventFilterViz";
+import PendingBranchViz from "./kubernetes-pod-states-crashloop-probes-events/viz/PendingBranchViz";
+import PhaseVsStatusViz from "./kubernetes-pod-states-crashloop-probes-events/viz/PhaseVsStatusViz";
+import ProbeWindowViz from "./kubernetes-pod-states-crashloop-probes-events/viz/ProbeWindowViz";
 import ProbeStormViz from "./kubernetes-pod-states-crashloop-probes-events/viz/ProbeStormViz";
 import { codeRefs } from "./kubernetes-pod-states-crashloop-probes-events/codeRefs";
 import { k8sPodStatesTrees } from "./kubernetes-pod-states-crashloop-probes-events/fileTree";
@@ -52,6 +58,9 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             <p>
               공식 문서는 "Status, a kubectl display field for user intuition"을 phase와 혼동하지 말라고 note로 적어 두었습니다.
             </p>
+          </div>
+          <PhaseVsStatusViz />
+          <div className={prose}>
             <p>
               그래서 phase가 Pending인 Pod가 STATUS에는 ContainerCreating으로, phase가 Running인 Pod가 STATUS에는 CrashLoopBackOff로 나옵니다.
             </p>
@@ -106,6 +115,9 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
               여기서 막히면 event에 FailedCreatePodSandBox(CNI 실패), FailedMount(볼륨), Failed/ErrImagePull(이미지)이 남습니다. 공식 디버깅 문서는 이 상태를 Waiting이라 부르며 "가장 흔한 원인은 이미지 pull 실패"라고 적습니다.
             </p>
             <p>이미지 실패는 두 단어로 나타납니다. 방금 실패한 순간은 ErrImagePull, 재시도를 미루는 동안은 ImagePullBackOff입니다. 미루는 간격은 CrashLoopBackOff와 같은 장부 구조로 10초에서 시작해 300초까지 두 배씩 늘어납니다. 이미지 이름이 틀리면 InvalidImageName, imagePullPolicy가 Never인데 노드에 이미지가 없으면 ErrImageNeverPull이고 이 둘은 기다려도 낫지 않습니다.</p>
+          </div>
+          <PendingBranchViz />
+          <div className={prose}>
             <p>그러니 Pending을 보면 먼저 <code>kubectl get pod -o wide</code>로 NODE 열이 비었는지 봅니다. 비었으면 scheduler의 event를, 채워졌으면 그 노드 kubelet이 남긴 event를 읽습니다. 같은 Pending이라도 고칠 곳이 scheduler 쪽(requests·affinity·taint)인지 노드 쪽(CNI·스토리지·레지스트리 인증)인지가 이 한 열에서 갈립니다.</p>
           </div>
           {code("pending-waiting-doc", "Pending과 Waiting을 나눈 문서")}
@@ -119,6 +131,9 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             </p>
             <p>
               ContainerCreating, ImagePullBackOff, CrashLoopBackOff는 Waiting의 reason이고 OOMKilled, Error, Completed는 Terminated의 reason입니다. kubectl의 STATUS 열은 이 reason을 꺼내 보여 주는 것입니다.</p>
+          </div>
+          <ContainerStateViz />
+          <div className={prose}>
             <p>CrashLoopBackOff라는 reason은 kubelet의 컨테이너 런타임 관리자가 "아직 backoff 창 안이라 지금은 띄우지 않는다"고 판단할 때 돌려주는 오류의 이름입니다. 3절의 대기가 끝나 컨테이너를 띄우면 state는 Running이 되고 CrashLoopBackOff는 사라졌다가 다시 죽으면 돌아옵니다. 그래서 공식 문서는 CrashLoopBackOff를 상태라기보다 "backoff 지연 메커니즘이 작동 중"이라는 표시라고 설명합니다.</p>
             <p>RESTARTS 열은 containerStatuses[].restartCount의 합입니다. 재시작은 restartPolicy가 Always(기본)나 OnFailure일 때 kubelet이 같은 Pod 안에서 컨테이너를 새로 만드는 일이고, Pod를 다른 노드로 옮기는 일이 아닙니다. 옮기는 쪽은 <a href="/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#overview">Pod가 노드에 닿기까지</a>에서 다루는 컨트롤러의 일입니다.</p>
             <p>이 글이 다루는 단어 가운데 OOMKilled만은 kubelet이 아니라 커널이 만듭니다. 컨테이너가 memory limit에 닿아 커널 OOM killer가 SIGKILL을 보내면 런타임이 exit code 137과 reason OOMKilled를 기록하고 kubelet은 그것을 Terminated·lastState에 옮겨 적습니다.
@@ -140,6 +155,9 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             <p>
               참이면 Warning event <code>Back-off restarting failed container</code>를 남기고 ErrCrashLoopBackOff를 돌려줘 이번 sync에서는 띄우지 않습니다. 거짓이면 Next를 불러 다음 대기를 두 배(상한 300초)로 적어 두고 컨테이너를 띄웁니다. 그러니 "다음 대기"는 재시작이 성공한 뒤가 아니라 재시작 직전에 정해집니다.
             </p>
+          </div>
+          <BackoffWindowViz />
+          <div className={prose}>
             <p>만료 규칙은 Next와 IsInBackOffSince 둘 다에서 확인합니다. 기본 flowcontrol은 2 × 상한이 지나면 장부를 지우는데 kubelet은 HasExpiredFunc를 명시적으로 600초로 적었습니다. FinishedAt − 마지막 갱신 &gt; 600초, 곧 컨테이너가 마지막 재시작 뒤 10분 넘게 살다가 죽었으면 장부를 새로 만들어 10초부터 셉니다. 상한을 100초로 바꿔도 이 600초는 그대로입니다.</p>
           </div>
           <AlgorithmBlock
@@ -171,6 +189,9 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             <p>
               컨테이너가 스스로 죽지 않아도 kubelet이 죽이는 경로가 있습니다. livenessProbe입니다. probe의 네 필드 기본값은 API 기본값 함수에 있습니다. timeoutSeconds 1, periodSeconds 10, successThreshold 1, failureThreshold 3이고 initialDelaySeconds는 0입니다.
             </p>
+          </div>
+          <ProbeWindowViz />
+          <div className={prose}>
             <p>
               그러니 아무 숫자도 적지 않은 liveness는 10초마다 한 번씩 검사해 1초 안에 답이 없으면 실패로 세고, 연속 세 번 실패하면(최대 약 30초) 컨테이너를 죽여 재시작시킵니다.
             </p>
@@ -234,6 +255,9 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             <p>
               앞 절들의 단어가 "무엇"이라면 Event는 "왜"입니다. FailedScheduling의 Insufficient cpu, FailedMount의 볼륨 이름, Back-off restarting failed container, Unhealthy의 probe 응답 본문이 모두 Event의 message에 있습니다. 그런데 Event에는 세 가지 제약이 있어 그대로 읽으면 빠집니다.
             </p>
+          </div>
+          <EventFilterViz />
+          <div className={prose}>
             <p>
               첫째, 보존이 1시간입니다. kube-apiserver의 EventTTL 기본값이 1시간이라 etcd에서 지워집니다. 어제 밤의 CrashLoopBackOff 원인은 오늘 아침 kubectl로는 볼 수 없습니다. 장애 직후에 <code>kubectl get events -A --sort-by=.metadata.creationTimestamp</code>로 받아 두거나 event exporter로 로그 저장소에 흘려 두어야 합니다.
             </p>

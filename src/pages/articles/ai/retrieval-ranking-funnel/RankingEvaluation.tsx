@@ -1,4 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import MrrViz from "./viz/MrrViz";
+import PrecisionRecallViz from "./viz/PrecisionRecallViz";
 
 export default function RankingEvaluation() {
   return (
@@ -18,6 +20,9 @@ export default function RankingEvaluation() {
           Recall@k가 전체 정답 가운데 얼마나 찾았는지를 본다면 Precision@k는
           사용자가 실제로 보는 범위에 잡음이 얼마나 섞였는지를 봅니다.
         </p>
+      </div>
+      <PrecisionRecallViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           예를 들어 reranker의 top-5 output에서 1·2·4번째 문서가 relevant이고 3·5번째가 아니라면 Precision@5는 3/5=0.6입니다. 같은 top-5가
           relevant set 전체 4개 중 3개를 담았다면 Recall@5는 3/4=0.75입니다. 같은 결과를 두고 두 지표가 서로 다른 값을 줍니다.
@@ -27,6 +32,7 @@ export default function RankingEvaluation() {
           뒤 query 수로 나눈 평균입니다.
         </p>
       </div>
+      <MrrViz />
       <ExplainedFormula
         question="여러 query에 걸쳐 정답을 얼마나 빨리 찾는지는 어떻게 한 숫자로 요약할까요?"
         idea="Query마다 상위 결과에서 처음 나온 relevant 문서의 순위를 뒤집어 더하고 query 수로 나눕니다. 정답이 앞에 있을수록 1에 가깝고, 상위 결과에서 못 찾으면 그 query의 기여는 0입니다."

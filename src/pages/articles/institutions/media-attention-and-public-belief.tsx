@@ -2,6 +2,13 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CausalForksViz from "./media-attention-and-public-belief/viz/CausalForksViz";
+import CompareArmsViz from "./media-attention-and-public-belief/viz/CompareArmsViz";
+import FunnelCellsViz from "./media-attention-and-public-belief/viz/FunnelCellsViz";
+import MoneyRelationsViz from "./media-attention-and-public-belief/viz/MoneyRelationsViz";
+import ScreenInferenceViz from "./media-attention-and-public-belief/viz/ScreenInferenceViz";
+import TenSlotsViz from "./media-attention-and-public-belief/viz/TenSlotsViz";
+import UnitsViz from "./media-attention-and-public-belief/viz/UnitsViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function MediaAttentionAndPublicBeliefArticle() {
@@ -28,6 +35,9 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <h2 className="mb-6 text-2xl font-bold">0 · 100개 중 10개가 반복 보이는 화면을 가정합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">게시물 100개 가운데 선택된 10개가 이용자 화면에서 반복 노출된다고 놓습니다(가정). 광고주는 그 화면에서 광고 1천 회 노출을 1만 원에 샀다고도 놓습니다. 실제 플랫폼의 선택 방식이나 단가는 아닙니다.</p>
+        </div>
+        <UnitsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">광고 1천 회 노출은 1천 명이 봤다는 뜻이 아닙니다. 같은 사람에게 여러 번 나갈 수 있습니다. 게시물 10개의 비중과 광고 노출 수 역시 서로 다른 분모입니다.</p>
         </div>
         <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">100·10·1천 회의 단위를 구별했습니다. 화면의 선택 과정을 엽니다.</p>
@@ -36,6 +46,9 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <h2 className="mb-6 text-2xl font-bold">1 · 순서가 바뀌면 보지 못한 정보도 생깁니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">이용자의 화면이 한정돼 있으면 위에 놓인 게시물을 보는 동안 아래의 글은 읽지 못할 수 있습니다. 100개 중 10개를 반복 배치한 사례는 가시성이 골고루 배분되지 않았음을 보여 줍니다.</p>
+        </div>
+        <ScreenInferenceViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">반대 의견이 적게 보이는 이유는 실제 작성량이 적어서일 수도, 배치 기준 때문일 수도 있습니다. 화면만 보고 전체 게시물의 분포를 역으로 확정할 수 없습니다.</p>
         </div>
         <NumericPath title="(가정) 광고 노출에서 기록된 행동까지" steps={[{"label": "광고 노출", "value": "1천 회"}, {"label": "기록된 클릭", "value": "20번"}, {"label": "기록된 구매", "value": "2건"}]} />
@@ -60,6 +73,7 @@ export default function MediaAttentionAndPublicBeliefArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 1천 회 노출에서 20번 클릭과 2건 구매를 분리합니다</h2>
+        <FunnelCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">광고 1천 회 노출 뒤 20번 클릭과 2건 구매가 기록됐다고 놓습니다(가정). 노출 기준 클릭 비율은 20÷1,000=2%, 클릭 기준 구매 비율은 2÷20=10%입니다. 플랫폼은 약정대로 노출을 제공해 1만 원을 받고 광고주는 상품 판매의 결과를 봅니다.</p>
           <p className="leading-8">매출을 알더라도 제품 원가와 광고비를 빼야 이익을 계산합니다. 더 나아가 2건 모두 광고가 없었으면 일어나지 않았을 구매인지 확인해야 광고의 추가 효과를 알 수 있습니다.</p>
@@ -71,6 +85,9 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <h2 className="mb-6 text-2xl font-bold">5 · EU 원문은 추천의 주요 기준을 설명하게 합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">EU 디지털서비스법 제27조는 해당 온라인 플랫폼의 추천 시스템에 쓰이는 주요 기준을 이용자가 이해할 수 있게 설명하도록 규정합니다. 100개 중 10개를 고르는 기준에 관해 확인할 문서가 생기는 것입니다.</p>
+        </div>
+        <TenSlotsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 10칸을 채우는 방법은 둘로 나눌 수 있습니다. 지난주에 본 영상 기록으로 이용자의 관심사를 추정해 순서를 정할 수도 있고, 그런 기록 없이 최신순으로 채울 수도 있습니다(가정). 개인정보로 그 사람의 관심·행동 등을 평가하거나 예측하는 앞의 자동 처리를 프로파일링이라고 부릅니다(EU 개인정보보호규정 GDPR 제4조 4호).</p>
           <p className="leading-8">디지털서비스법 제38조는 큰 서비스에 이 선택권을 요구합니다. EU 안의 월평균 활성 이용자가 4,500만 명 이상이어서 초대형 온라인 플랫폼·검색엔진으로 지정된 서비스는 추천 시스템마다 프로파일링에 기반하지 않은 선택지를 적어도 하나 제공해야 합니다(제33조·제38조, 2026-10-09 원문 확인). 이용자가 10칸을 채우는 방식을 고를 수 있게 되지만, 그 선택지가 어떤 게시물을 보여 줄지까지 법이 정하지는 않습니다.</p>
           <p className="leading-8">이 규칙이 모든 게시물의 진위를 보증하거나 모든 나라의 서비스에 같은 방식으로 적용되는 것은 아닙니다. 적용 대상과 법의 예외, 서비스가 제공되는 관할을 먼저 확인합니다.</p>
@@ -83,6 +100,9 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <h2 className="mb-6 text-2xl font-bold">6 · 미국의 광고 관계 공개는 추천 기준 공개와 다른 질문입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">미국 FTC의 추천·보증 광고 안내는 소비자의 판단에 영향을 줄 수 있는 지급 관계를 명확히 알리는 문제를 다룹니다. 플랫폼의 표시 기능이 있다는 사실만으로 언제나 충분한 공개가 됐다고 보지는 않습니다.</p>
+        </div>
+        <MoneyRelationsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사례의 1만 원이 광고주가 플랫폼에 낸 돈인지, 제작자에게 따로 지급한 대가인지에 따라 확인할 관계가 다릅니다. 10개 중 한 게시물이 유료 후기라면 그 관계와 화면의 광고 거래를 분리해 읽습니다.</p>
           <p className="leading-8">EU와 미국 설명은 2026-10-04 확인 기준입니다. 한국이나 다른 나라에는 현지 광고·소비자보호 규정과 언론 소유, 공개 제도를 확인해야 합니다. 어느 나라에서도 공개 여부와 사실 검증은 별도의 작업입니다.</p>
         </div>
@@ -92,8 +112,12 @@ export default function MediaAttentionAndPublicBeliefArticle() {
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 같은 관심을 가진 비교 대상이 없으면 원인을 확정하기 어렵습니다</h2>
+        <CompareArmsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">광고를 본 사람이 2건 구매했어도 원래 살 생각이 있었을 수 있습니다. 노출 전 관심과 조건이 비슷한 사람들 중 광고를 본 경우와 보지 않은 경우를 비교해야 추가 효과를 좁혀 볼 수 있습니다. 무작위 배정도 실제 행동 차이와 측정 누락을 확인해야 합니다.</p>
+        </div>
+        <CausalForksViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">조회수 뒤에 주가가 올랐다면 기업 발표나 정책 변화가 둘 다 움직였을 수도 있습니다. 시점의 순서만으로 영상이 가격 상승의 원인이라고 단정할 수 없습니다.</p>
           <p className="leading-8">실제 검증에서는 원문과 발표일, 반대 자료, 주문과 자금의 변화를 나눠 기록합니다. 1천 회의 노출과 2건 구매를 전체 여론이나 지속적인 믿음의 변화로 확대하지 않습니다.</p>
         </div>

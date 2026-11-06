@@ -2,6 +2,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CoverageViz from "./climate-risk-and-exposure/viz/CoverageViz";
+import ExpectedLossViz from "./climate-risk-and-exposure/viz/ExpectedLossViz";
+import LeverMapViz from "./climate-risk-and-exposure/viz/LeverMapViz";
+import LossAreaViz from "./climate-risk-and-exposure/viz/LossAreaViz";
+import LossShareViz from "./climate-risk-and-exposure/viz/LossShareViz";
+import RiskFrameViz from "./climate-risk-and-exposure/viz/RiskFrameViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function ClimateRiskAndExposureArticle() {
@@ -34,6 +40,7 @@ export default function ClimateRiskAndExposureArticle() {
       </section>
       <section id="picture" data-teaching-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1 · 그곳에 있는 양과 손상 비율을 곱합니다</h2>
+        <LossAreaViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">B의 자산이 300이고 손상 비율이 20%면 300×0.20=60입니다. 자산을 절반으로 줄이면 같은 비율에서 30, 손상 비율을 절반으로 낮춰도 같은 자산에서 30입니다(가정). 서로 다른 조치가 같은 금액의 감소를 만들 수 있습니다.</p>
         </div>
@@ -42,6 +49,7 @@ export default function ClimateRiskAndExposureArticle() {
       </section>
       <section id="need" data-teaching-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2 · 개발 제한·방재·보험은 바꾸는 대상이 다릅니다</h2>
+        <LeverMapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">위험한 곳에 새 건물을 짓지 않으면 그곳에 놓이는 자산을 줄일 수 있습니다. 배수와 건물 보강은 같은 사건에서 손상될 비율을 낮출 수 있습니다. 각각의 비용과 주민이 이동할 때의 부담은 남습니다.</p>
           <p className="leading-8">보험금은 사고 뒤 복구에 쓸 돈을 나눠 주지만 사고 당시 건물이 손상되는 비율을 직접 낮추지는 않습니다. 경보와 대피는 인명 보호에 도움이 되므로 자산 손실만으로 가치를 평가할 수 없습니다.</p>
@@ -59,6 +67,7 @@ export default function ClimateRiskAndExposureArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · B의 손실 60은 보험과 남은 부담으로 나뉩니다</h2>
+        <LossShareViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">B의 손실 60 중 보험이 40을 지급하고 소유자가 20을 부담한다고 놓습니다(가정). 총물리 손실은 여전히 60입니다. 지급이 복구를 도울 수 있지만 보험금이 손상 자체를 없애지는 않습니다.</p>
           <p className="leading-8">다음 해에 보험료가 오르거나 보장 한도가 줄면 소유자의 지출과 잔여 부담이 커집니다. 대출자는 담보 복구 가능성과 보험 조건을 다시 살필 수 있습니다. 이 경로가 기후 손실의 금융 전달입니다.</p>
@@ -70,6 +79,9 @@ export default function ClimateRiskAndExposureArticle() {
         <h2 className="mb-6 text-2xl font-bold">5 · IPCC는 세 요소가 서로 작용한다고 설명합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">IPCC AR6 WGII의 그림 1.4는 위해, 노출, 취약성의 상호작용을 제시합니다. 사례에서 홍수를 같게 놓고도 노출과 손상 비율 때문에 10과 60이 달라졌다는 해석이 이 틀에 해당합니다.</p>
+        </div>
+        <RiskFrameViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 그림 캡션은 세 요소가 대응(responses)에 의해 형성된다고 덧붙이고, 그림 1.5는 대응이 위해·취약성·노출 각각을 조정하는 역할을 이번 평가의 새 강조점으로 둡니다. 4절에서 방재로 손상 비율을 20%에서 10%로 줄인 것과 보험이 40을 지급한 것이 그런 대응의 예입니다. IPCC 용어집은 기후 변화에 대한 사람의 대응에서도 위험이 생길 수 있다고 적으므로, 대응은 위험을 줄이기만 하는 장치로 볼 수 없습니다.</p>
           <p className="leading-8">다만 실제 피해는 물의 깊이와 지속 시간, 설비 위치에 따라 비선형으로 달라집니다. 100×10%라는 식은 이해를 위한 조건부 회계 예시이며 IPCC가 제시한 보편 피해 함수가 아닙니다.</p>
         </div>
@@ -79,6 +91,7 @@ export default function ClimateRiskAndExposureArticle() {
       </section>
       <section id="comparison" data-teaching-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">6 · UNDRR의 노출 정의에는 사람과 기반 시설도 있습니다</h2>
+        <CoverageViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">UNDRR은 위험 지역에 있는 사람, 주택과 기반 시설 등을 노출에 포함합니다. 따라서 사례의 자산 300만으로 지역 B의 위험 전체를 대표할 수 없습니다. 거주 인구, 병원 접근과 생활 기반도 따로 조사합니다.</p>
           <p className="leading-8">부유한 해안 도시와 자산가격이 낮은 농촌을 피해액만으로 순위 매기면 생계 손실과 회복 능력의 차이가 가려집니다. 회복 능력은 3절에서 본 취약성의 한 요소(대응·적응 능력)이고, UNDRR도 노출된 요소의 취약성과 역량을 노출과 결합해야 정량적 위험을 추정할 수 있다고 설명합니다. 국가 비교에서는 같은 통화가격 외에 인구·자산 대비 손실과 복구 기간을 맞춥니다.</p>
@@ -90,6 +103,7 @@ export default function ClimateRiskAndExposureArticle() {
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 과거에 안전했던 땅도 조건이 바뀌면 다시 봐야 합니다</h2>
+        <ExpectedLossViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 지역에 건물이 늘면 날씨가 그대로여도 노출이 커집니다. 배수 시설이 낡거나 보강되면 취약성이 바뀝니다. 기후 변화까지 있으면 과거 발생 빈도가 미래를 그대로 대표하지 않을 수 있습니다.</p>
           <p className="leading-8">연간 예상 손실을 계산하려면 다양한 사건의 확률과 각 사건의 손실을 함께 알아야 합니다. 이번 사건의 손실 60만으로 연 보험료나 대출 손실률을 정할 수 없습니다.</p>

@@ -3,6 +3,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CashSourceSortViz from "./narratives-and-market-regimes/viz/CashSourceSortViz";
+import CashVsRateViz from "./narratives-and-market-regimes/viz/CashVsRateViz";
+import CollateralChainViz from "./narratives-and-market-regimes/viz/CollateralChainViz";
+import DilutionShareViz from "./narratives-and-market-regimes/viz/DilutionShareViz";
+import DiscountedStreamViz from "./narratives-and-market-regimes/viz/DiscountedStreamViz";
+import FeedbackBranchViz from "./narratives-and-market-regimes/viz/FeedbackBranchViz";
+import ForecastRevisionViz from "./narratives-and-market-regimes/viz/ForecastRevisionViz";
+import ValueRecursionViz from "./narratives-and-market-regimes/viz/ValueRecursionViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -30,6 +38,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">3. 매년 100을 받던 기대가 150으로 높아집니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">회사 전체가 주주에게 매년 남길 현금 기대가 100에서 150으로 바뀌었다고 합시다. 기다림과 위험에 요구하는 연 수익률은 10%에서 8%로 낮아졌습니다. 첫 지급은 1년 뒤이고 같은 현금이 영원히 이어진다는 가정입니다.</p>
+<DiscountedStreamViz />
 <p className="leading-8">이 단순한 조건의 평가액은 100÷0.10=1000에서 150÷0.08=1875로 늘어납니다. 실제 첫해 현금은 105라고 둡니다. 숫자 150은 전망이고 105는 가정한 관측 결과이며 둘을 같은 사실로 쓰지 않습니다.</p>
         </div>
 
@@ -48,6 +57,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">5. 미래를 기다리는 동안 자금이 있어야 계획을 실행합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">공장이 현금을 벌기 전에 건설비를 내야 한다면 기대를 믿고 먼저 돈을 대는 사람이 필요합니다. 좋은 기술을 알아보는 일과 그 돈이 회수될 때까지 버티는 일은 연결되어 있습니다.</p>
+<FeedbackBranchViz />
 <p className="leading-8">가격 상승은 그 자금조달을 도울 수 있고, 자금조달은 실제 생산을 늘려 처음 기대를 일부 실현할 수 있습니다. 반대로 계획이 과장되어 수요보다 많은 설비를 만들면 나중의 실제 현금은 기대보다 낮아질 수 있습니다.</p>
         </div>
 
@@ -65,8 +75,11 @@ export default function Article() {
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 높아진 가격은 같은 투자비로 넘길 지분을 줄일 수 있습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+<ValueRecursionViz />
 <p className="leading-8">매년 현금이 일정한 경우 오늘 가치 V는 1년 뒤 현금 C와 그 뒤 가치 V를 합쳐 할인한 값입니다. V=(C+V)÷(1+r)를 정리하면 rV=C, 따라서 V=C÷r입니다. 이 관계는 매년 같은 현금이 계속되고 r이 양수인 가정에서 나옵니다.</p>
+<DilutionShareViz />
 <p className="leading-8">가치 1000인 회사가 새 현금 200을 공정한 가격으로 받으면 새 투자자 몫은 200÷1200≈16.67%입니다. 기존 회사 가치가 1875라고 평가되면 같은 200의 몫은 200÷2075≈9.64%입니다. 가치 상승은 같은 투자비를 더 적은 비율의 지분으로 조달할 여지를 줍니다.</p>
+<ForecastRevisionViz />
 <p className="leading-8">첫해 105만 들어와도 이후 매년 150이 가능하다고 여전히 믿으면 오늘 가치는 (105+1875)÷1.08≈1833.33입니다. 앞으로도 매년 105라고 전망을 바꾸면 105÷0.08=1312.5입니다. 첫해 실적 하나와 영구 전망 수정은 다른 판단입니다.</p>
         </div>
 
@@ -75,6 +88,7 @@ export default function Article() {
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">8. 현금이 늘어난 이유를 영업·투자·조달로 나눕니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+<CashSourceSortViz />
 <p className="leading-8">IAS 7은 현금흐름을 활동별로 구분해 보게 합니다. 실제 현금 105가 제품 판매에서 남았는지, 자산을 팔았는지, 새 투자자에게 받은 200인지에 따라 미래의 반복 가능성이 다릅니다.</p>
 <p className="leading-8">주주에게 남길 현금 105는 영업현금흐름이라는 표 하나를 그대로 가져온 값이 아닐 수 있습니다. 유지 투자·이자·세금·부채 상환과 새 차입을 어떤 범위로 처리했는지 명시해야 평가식의 분자와 주주 몫이 맞습니다.</p>
         </div>
@@ -86,6 +100,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">9. 믿음의 변화가 가격 하락을 키우려면 자금의 통로가 있어야 합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">BIS에 실린 뉴욕 연방준비은행 총재의 연설은 시장 유동성 악화가 자금조달을 더 어렵게 만들 수 있다고 설명합니다. 이것은 개별 기술의 실패를 증명하는 연구가 아니라 거래와 조달이 연결되는 경로의 설명입니다.</p>
+<CollateralChainViz />
 <p className="leading-8">1875를 담보 판단의 출발점으로 삼았다가 전망을 1312.5로 낮추면 같은 인정 비율에서도 빌릴 수 있는 돈이 30% 줄어듭니다. 실제로 이 가격을 담보로 쓰고 대출자가 재평가한다는 조건에서 강제 매각이 이어질 수 있습니다.</p>
 <p className="leading-8">국가별로 보조금을 정하는 권한, 예산 집행, 기관투자자의 투자 의무와 외국 돈의 이동 조건이 다릅니다. 같은 기술 뉴스에 대한 반응을 비교할 때는 누가 가격에 반응해 돈을 늘리거나 줄일 수 있는지를 먼저 조사합니다.</p>
         </div>
@@ -97,6 +112,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">10. 가격 밖에서 틀렸다고 말할 기준을 정합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">매년 현금 150이라는 전망이면 고객 수, 고객당 실제 회수액, 생산 원가, 유지 투자와 지급 시점을 적습니다. 정부가 시장을 키운다는 전망이면 발표 금액과 실제 예산 통과·집행·허가를 구분합니다. 가격이 올랐다는 사실만으로 이 항목들이 충족됐다고 판단하지 않습니다.</p>
+<CashVsRateViz />
 <p className="leading-8">첫해 105가 단순 지연인지 영구적인 낮은 수익인지도 별도의 가설입니다. 다음 기간의 수주 이행과 현금 회수로 비교할 시점을 정합니다. 할인율이 다시 10%가 되면 영구 현금 105의 가치는 1050이므로 실적 변화와 돈값 변화도 따로 계산해야 합니다.</p>
         </div>
 

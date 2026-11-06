@@ -1,4 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import EncoderCompareViz from "./viz/EncoderCompareViz";
+import MaxSimViz from "./viz/MaxSimViz";
 
 export default function LateInteraction() {
   return (
@@ -12,6 +14,9 @@ export default function LateInteraction() {
           계산해 두면서도, 교차 인코더처럼 질의와 문서를 토큰 단위로 비교하는
           절충안입니다. ColBERT가 이 방식을 대표합니다.
         </p>
+      </div>
+      <EncoderCompareViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           이중 인코더는 질의와 문서를 각각 하나의 벡터로 모은 뒤 두 벡터의 내적을
           구합니다. 문서 벡터를 미리 계산할 수 있어 빠르지만, 여러 토큰의 의미를
@@ -29,6 +34,7 @@ export default function LateInteraction() {
           비교해 가장 높은 값만 더합니다. 이 최댓값의 합을 MaxSim이라고 부릅니다.
         </p>
       </div>
+      <MaxSimViz />
       <ExplainedFormula
         question="Query와 문서를 각각 여러 벡터로 나타낼 때 relevance는 어떻게 한 점수로 모을까요?"
         idea={<>Query token마다 문서 token들 중 가장 비슷한 것을 찾고, 그 최댓값들을 모두 더합니다. 문서 쪽은 bi-encoder처럼 미리 계산해 둘 수 있고, 비교 자체는 cross-encoder보다 가볍습니다.</>}

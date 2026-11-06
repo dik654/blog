@@ -7,6 +7,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 import LlmDatasetEngineeringAndCleaningViz from "./llm-dataset-engineering-and-cleaning/viz/LlmDatasetEngineeringAndCleaningViz";
+import DocumentTraceViz from "./llm-dataset-engineering-and-cleaning/viz/DocumentTraceViz";
+import MinHashSketchViz from "./llm-dataset-engineering-and-cleaning/viz/MinHashSketchViz";
+import MinHashErrorViz from "./llm-dataset-engineering-and-cleaning/viz/MinHashErrorViz";
+import OverlapThresholdViz from "./llm-dataset-engineering-and-cleaning/viz/OverlapThresholdViz";
+import LabelSourceViz from "./llm-dataset-engineering-and-cleaning/viz/LabelSourceViz";
+import MixtureEpochViz from "./llm-dataset-engineering-and-cleaning/viz/MixtureEpochViz";
 
 /**
  * 데이터셋 엔지니어링은 필터링·dedup·mixture로 학습 데이터 품질을 만듭니다
@@ -73,6 +79,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             콘텐츠 필터링을 순서대로 적용해 3조 token 규모 공개 코퍼스를 만들었습니다.
           </p>
         </div>
+        <DocumentTraceViz />
         <AlgorithmBlock
           title="Raw corpus를 pretraining용 dataset으로 만드는 절차"
           input={[
@@ -138,12 +145,16 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             다른 문서까지 잡아내면 near-duplicate detection입니다. 표현은 달라도 뜻이 같은 문서를 embedding 유사도로 걸러내는 쪽이 semantic
             deduplication입니다.
           </p>
+        </div>
+        <MinHashSketchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Near-duplicate detection의 표준 도구는 Broder가 제안한 MinHash입니다. 문서를 k개 단어의 연속 부분열(shingle) 집합으로 바꿉니다. 각
             shingle 집합에 여러 개의 해시 함수를 적용해 그중 최솟값만 남기면 sketch가 나옵니다. 두 문서 sketch가 같은 해시 함수에서 일치한 비율로 Jaccard
             유사도를 추정합니다.
           </p>
         </div>
+        <MinHashErrorViz />
         <ExplainedFormula
           question="해시 함수를 몇 개 써야 MinHash 추정치를 얼마나 믿을 수 있는가"
           idea="각 해시 함수의 일치 여부는 참값 J를 평균으로 갖는 독립 시행이라, 시행 횟수 K가 늘수록 평균의 분산이 K에 반비례해 줄어듭니다."
@@ -172,6 +183,9 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             삼았습니다. GPT-4는 단어 단위 n-gram 대신 50글자 substring 일치로 바꿨고 Llama-2는 단어 대신 token 단위 10-gram(최대 4개 위치 skip
             허용)을 씁니다.
           </p>
+        </div>
+        <OverlapThresholdViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             임계값이 짧을수록(8-gram) 우연한 일치까지 contamination으로 잡아 false positive가 늘고 길수록(50자 substring) 놓치는 진짜 유출이 늘 수
             있습니다. 어느 임계값을 써도 문장을 바꿔 쓴 rephrasing 유출은 정확 일치 방식으로는 잡히지 않는다는 한계가 남습니다.
@@ -207,6 +221,9 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             5개 중 4개 task에서 crowd-worker를 앞섰고 비용은 건당 0.003달러 미만으로 MTurk보다 약 20배 저렴했습니다. 다만 이 결과는 트윗 기반 5개 task에
             한정되며 모든 annotation 작업에 일반화되지는 않습니다.
           </p>
+        </div>
+        <LabelSourceViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Weak supervision은 정답 label 없이 여러 개의 약한 규칙(labeling function)을 결합해 label을 추정하는 방법입니다. Ratner et
             al.의 Snorkel은 정확도가 제각각인 labeling function들의 출력을 노이즈 모델로 묶습니다. 전문가가 손으로 레이블링한 것보다 2.8배 빠르게 모델을
@@ -237,6 +254,9 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             여러 domain(web·code·academic 등) 데이터를 각각 얼마의 비율로 섞어 학습에 넣을지 정하는 것이 data mixture입니다. 그 데이터를 어떤 순서로
             모델에 보여줄지 정하면 data curriculum입니다.
           </p>
+        </div>
+        <MixtureEpochViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             GPT-3의 학습 데이터 구성을 보면 mixture 비율과 원본 비중이 서로 다릅니다. 필터링한 Common Crawl은 토큰 수로 전체의 약 82%를 차지하지만 학습
             mixture에서는 60% weight만 받아 300B token 학습 동안 0.44 epoch만 돕니다. 반대로 Wikipedia는 전체의 1%도 안 되지만 3%

@@ -3,6 +3,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CashTimingViz from "./forwards-and-futures/viz/CashTimingViz";
+import FxForwardViz from "./forwards-and-futures/viz/FxForwardViz";
+import HarvestCoverViz from "./forwards-and-futures/viz/HarvestCoverViz";
+import HedgeNetViz from "./forwards-and-futures/viz/HedgeNetViz";
+import RollCurveViz from "./forwards-and-futures/viz/RollCurveViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -65,9 +70,12 @@ export default function Article() {
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 현물 구매와 계약 손익을 합해야 고정된 가격이 보입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+<HedgeNetViz />
 <p className="leading-8">만기 밀값이 35만 원이면 제빵업자는 현물 100톤에 3500만 원을 낸 뒤 선도 차액 500만 원을 받습니다. 순지출은 3000만 원입니다. 25만 원이면 현물에 2500만 원, 계약 손실에 500만 원을 내어 같은 3000만 원이 됩니다.</p>
+<CashTimingViz />
 <p className="leading-8">선물이라면 30만→31만 원인 날 매수자는 100만 원을 받고 매도자는 100만 원을 냅니다. 이후 31만→35만 원이면 누적 추가 400만 원이 같은 방향으로 갑니다. 전체 차액 500만 원은 같아도 돈이 움직이는 날짜는 다릅니다.</p>
 <p className="leading-8">마지막 실제 밀값이 36만 원인데 정산 기준은 35만 원이라면 구매자는 3600만−500만=3100만 원을 냅니다. 위치나 품질의 차이가 고정하려던 대금에 100만 원을 남긴 것입니다.</p>
+<RollCurveViz />
 <p className="leading-8">선물형 펀드가 만기 직전의 밀 100톤 계약을 닫고 다음 만기 100톤으로 바꾸는 경우도 봅시다. 가까운 계약이 톤당 30만 원이고 다음 계약이 31만5000원이라고 가정합니다. 그다음 만기까지 현물이 30만 원에 머물고 새 선물도 그 가격에 수렴하면 매수 계약은 100×(30만−31만5000)=−150만 원입니다. 현물 가격이 제자리여도 계약 보유 손익은 음수입니다.</p>
 <p className="leading-8">계약 교체를 롤오버, 이 경로가 수익에 미치는 영향을 롤 수익이라고 합니다. 먼 만기의 선물가격이 더 높은 곡선은 콘탱고, 더 낮은 곡선은 백워데이션이라고 부릅니다. 31만5000원짜리 선물 계약을 새로 맺는 순간 차액 1만5000원이 곧바로 확정 손실이 되는 것은 아닙니다. 새 계약 가격이 이후 30만 원으로 내려온다는 가정이 손실을 만듭니다. 담보 현금의 이자와 보수까지 합해야 펀드 전체 성과가 됩니다.</p>
         </div>
@@ -89,6 +97,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">9. 농가의 위험 감소와 투기자의 위험 증가는 같은 계약에서 생깁니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">농가는 밀값 35만 원에서 현물 매출 3500만 원과 선물 손실 500만 원을 합쳐 3000만 원을 확보합니다. 밀을 전혀 보유하지 않은 매도자는 상쇄할 매출 없이 500만 원을 잃습니다. 계약 방향만으로 헤지 여부를 정할 수 없습니다.</p>
+<FxForwardViz />
 <p className="leading-8">한국과 미국의 거래소 상품은 계약 단위·최종결제·증거금 통화가 각각 다릅니다. 특히 외환 선도는 두 통화의 돈을 빌리고 맡기는 비용도 반영합니다. 달러당 1000원, 원화 연 4%, 달러 연 2%라면 1년 뒤 비용이 맞는 단순 가격은 1000×1.04÷1.02≈1019.61원입니다. 이는 자유로운 차입·예치와 거래비용 없음이라는 가정이며 실제 환율 예측값이 아닙니다.</p>
         </div>
 <SourceApplication source="CME · Performance Bonds/Margins FAQ" excerpt="debited and credited accordingly" application="30만 원에서 31만 원으로 변할 때 농가의 선물 계좌는 100만 원 감소합니다. 수확대금은 아직 없으므로 계좌 잔고와 납부 시한을 별도로 맞춰야 합니다." />
@@ -98,6 +107,7 @@ export default function Article() {
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 가격을 고정해도 수확과 현금의 위험은 남습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+<HarvestCoverViz />
 <p className="leading-8">가뭄으로 실제 수확이 60톤이면 100톤 판매 계약 중 40톤이 원래 사업을 넘어섭니다. 가격이 크게 오르면 줄어든 현물 수입으로 선물 손실을 다 메우지 못합니다. 수량 전망도 계약과 함께 갱신해야 합니다.</p>
 <p className="leading-8">중간 증거금을 못 내서 매도 계약을 닫으면 만기까지 계산했던 고정 대금은 실현되지 않습니다. 이 위험은 <Link to="/finance/risk/margin-collateral-and-leverage">담보와 현금 시점</Link>에서 이어집니다. 만기 연장을 위해 계약을 교체할 때도 새 가격과 거래비용을 다시 부담합니다.</p>
         </div>
