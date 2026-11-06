@@ -3,6 +3,20 @@ import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ButterflyCaseViz from "./viz/ButterflyCaseViz";
+import DirectionRulesViz from "./viz/DirectionRulesViz";
+import InverseRecoveryViz from "./viz/InverseRecoveryViz";
+import HalfTurnSharingViz from "./viz/HalfTurnSharingViz";
+import MagnitudePhaseViz from "./viz/MagnitudePhaseViz";
+import BinRotationViz from "./viz/BinRotationViz";
+import AliasSamplesViz from "./viz/AliasSamplesViz";
+import WindowZeroPadViz from "./viz/WindowZeroPadViz";
+import WindowLobesViz from "./viz/WindowLobesViz";
+import RecursionLevelsViz from "./viz/RecursionLevelsViz";
+import KissScratchViz from "./viz/KissScratchViz";
+import CircularWrapViz from "./viz/CircularWrapViz";
+import StftFramesViz from "./viz/StftFramesViz";
+import WhisperGridViz from "./viz/WhisperGridViz";
+import FnetMixerViz from "./viz/FnetMixerViz";
 import { fftCodeRefs } from "./codeRefs";
 const CT="https://web.stanford.edu/class/cme324/classics/cooley-tukey.pdf";
 export default function FFTArticle(){const sidebar=useCodeSidebar();return <article className="space-y-16">
@@ -22,12 +36,14 @@ export default function FFTArticle(){const sidebar=useCodeSidebar();return <arti
 <p>계산을 더 빠르게 나누는 일은 출력의 정의를 바꾸지 않습니다. 다만 컴퓨터는 유한한 자리수로 계산하므로 덧셈 순서가 달라지면 마지막 자리의 반올림은 달라질 수 있습니다. 수학적으로 같은 변환을 계산한다는 말과 모든 비트가 같다는 말은 따로 확인해야 합니다.</p></section>
 <section id="case" data-teach-level="0" className="space-y-6"><h2 className="text-2xl font-bold">3 · 1, 2, 3, 4에 네 가지 방향 규칙을 적용한다</h2>
 <p>초당 8번 기록해 1, 2, 3, 4를 얻었다고 합시다(가정). 첫 값의 시각을 0초로 잡으면 나머지는 1/8초, 2/8초, 3/8초에 기록했습니다. 네 칸에 배정한 시간 폭은 4/8=0.5초이고 첫 표본과 마지막 표본의 시각 차이는 3/8초입니다. 이 두 길이를 혼동하지 않겠습니다.</p>
+<DirectionRulesViz />
 <p>첫 번째 규칙은 아무것도 돌리지 않습니다. 네 값은 모두 오른쪽을 향하므로 가로 합은 1+2+3+4=10이고 세로 합은 0입니다. 결과를 두 성분으로 적으면 (10,0)입니다.</p>
 <p>두 번째 규칙은 위치가 한 칸 늘 때마다 오른쪽에서 아래쪽으로 90도씩 돌립니다. 네 값의 방향은 오른쪽, 아래쪽, 왼쪽, 위쪽입니다. 가로에서는 1−3=−2, 세로에서는 −2+4=2가 남습니다. 결과는 (−2,2)입니다.</p>
 <p>세 번째 규칙은 한 칸마다 180도씩 돌립니다. 방향은 오른쪽과 왼쪽을 번갈아 가므로 가로 합은 1−2+3−4=−2이고 세로 합은 0입니다. 네 번째 규칙은 한 칸마다 270도씩 돌립니다. 가로 합은 다시 −2지만 세로 합이 2−4=−2가 되어 (−2,−2)입니다.</p>
 <p>이렇게 얻은 네 결과는 (10,0), (−2,2), (−2,0), (−2,−2)입니다. 같은 네 입력에 네 규칙을 적용해 얻은 실제 결과입니다. 둘째와 넷째 결과는 가로가 같고 세로의 부호만 반대입니다.</p>
 <p>비교를 위해 입력이 모두 1이었다고 해 봅시다. 첫 합은 4입니다. 두 번째 규칙에서는 오른쪽과 왼쪽, 위쪽과 아래쪽이 각각 상쇄됩니다. 세 번째와 네 번째도 상쇄되어 나머지 합은 모두 0입니다. 일정한 기록은 첫 자리에만 남는다는 사실을 직접 확인했습니다.</p>
 <p>첫 합 10만 저장해서는 원래 네 값을 되찾지 못합니다. 4, 3, 2, 1도 같은 합을 만들기 때문입니다. 나머지 세 출력은 위치별 차이를 기록합니다. 전체 합과 위치별 차이를 함께 보관해야 입력의 순서를 구별할 수 있습니다.</p>
+<InverseRecoveryViz />
 <p>되돌리는 계산도 첫 위치부터 해 보겠습니다. 네 출력의 가로 성분을 그대로 더하면 10−2−2−2=4입니다. 세로 성분은 0+2+0−2=0으로 상쇄됩니다. 이 가로 합 4를 출력 개수 4로 나누면 첫 입력 1이 돌아옵니다. 다른 입력의 기여를 없애고 첫 입력만 네 번 모은 결과입니다.</p>
 <p>둘째 입력을 되찾을 때는 출력의 순서가 한 칸 늘 때마다 이번에는 위 방향으로 90도씩 돌립니다. 첫 출력은 (10,0)을 유지하고 둘째는 (−2,2)에서 (−2,−2)로 바뀝니다. 셋째는 반 바퀴 돌아 (2,0)이 되고 넷째는 세 번 돌아 (−2,2)가 됩니다. 네 가로 성분의 합은 8이고 세로 합은 0이라 4로 나누면 둘째 입력 2입니다.</p>
 <p>같은 방식으로 한 칸마다 반 바퀴 돌려 더하면 셋째 입력에 해당하는 가로 합 12가 남습니다. 한 칸마다 위 방향으로 270도씩 돌리면 넷째 입력의 가로 합 16이 남습니다. 각각 4로 나누면 3과 4입니다. 한 출력만 읽어 원래 한 위치를 얻는 것이 아니라 네 출력을 함께 사용합니다.</p>
@@ -41,6 +57,7 @@ export default function FFTArticle(){const sidebar=useCodeSidebar();return <arti
 <p>둘째 출력에서는 첫 묶음의 차 −2를 가로에 놓습니다. 둘째 묶음의 차 −2는 아래 방향으로 90도 돌려 세로 +2로 놓습니다. 더하면 (−2,2)이고 같은 두 값을 빼면 넷째 출력 (−2,−2)입니다. 한 번 돌린 값을 더하기와 빼기에 함께 썼습니다.</p>
 <p>그림의 선은 서로 다른 계산 사이에서 값을 전달하는 관계를 나타냅니다. 선이 교차한다고 두 값이 곱해지는 것은 아닙니다. 중간값 하나가 두 출력으로 가는 곳이 바로 다시 계산하지 않고 재사용하는 곳입니다.</p></section>
 <section id="why" data-teach-level="2" className="space-y-6"><h2 className="text-2xl font-bold">5 · 반 바퀴 떨어진 두 출력은 같은 중간값을 공유한다</h2>
+<HalfTurnSharingViz />
 <p>재사용은 우연한 숫자 덕분이 아닙니다. 한 출력에서 두 칸 떨어진 출력으로 옮기면 위치가 짝수인 값의 방향은 그대로이고 홀수인 값의 방향만 반대로 됩니다. 그래서 앞서 만든 두 묶음에서 한쪽은 유지하고 다른 쪽만 더하기에서 빼기로 바꿀 수 있습니다.</p>
 <p>우리 입력에서 1이나 4를 다른 수로 바꾸어도 이 방향 관계는 유지됩니다. 값이 달라지면 중간 합과 차는 달라지지만 같은 중간값을 두 출력에 쓰는 규칙은 그대로입니다. 정해진 회전의 주기에서 얻은 계산 절약입니다.</p>
 <p>입력이 여덟 개라면 짝수 위치 네 개와 홀수 위치 네 개를 각각 처리합니다. 각 네 개의 계산도 앞에서 본 두 묶음으로 나눌 수 있습니다. 길이가 절반이 되는 단계를 반복하고 마지막에 결과를 결합하면 됩니다. 두 입력을 완전히 따로 저장해야 하는지, 어느 순서로 읽을지는 실제 구현이 정합니다.</p>
@@ -67,6 +84,7 @@ assumptions={["예를 들어 x와 그 변환이 모두 절대 적분 가능하�
 </section>
 <section id="phase" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">8 · 막대 높이만 남기면 위치 정보가 사라진다</h2>
 <p>계수의 길이는 진폭 크기인 magnitude이고 방향은 phase입니다. −2+2i의 길이는 √8이고 방향은 3π/4입니다. −2−2i는 같은 길이에 방향만 다릅니다. 실수 입력에서는 X[N−k]가 X[k]의 켤레이므로 이 두 값이 짝을 이룹니다.</p>
+<MagnitudePhaseViz />
 <p>입력을 [1,4,3,2]로 바꾸면 출력은 [10,−2−2i,−2,−2+2i]입니다. 네 길이는 원래와 완전히 같지만 입력 순서는 다릅니다. 따라서 높이만 보이는 스펙트럼 그림은 유용한 요약이어도 일반적인 입력 복원에 충분하지 않습니다. 제곱한 길이인 power도 같은 정보를 잃습니다.</p>
 <ExplainedFormula question="표현을 바꿔도 제곱합은 어떻게 대응하나요?" idea="우리 순방향 변환은 정규화하지 않았으므로 계수의 제곱 크기 합에 1/N을 곱해야 입력의 제곱합과 같습니다." formula={String.raw`\sum_n|x[n]|^2=\frac1N\sum_k|X[k]|^2`}
 annotatedFormula={String.raw`\sum_{n=0}^{N-1}|x[n]|^2=\frac1N\sum_{k=0}^{N-1}|X[k]|^2,\qquad 1+4+9+16=\frac{100+8+4+8}{4}=30`}
@@ -75,8 +93,10 @@ terms={[{symbol:"|X[k]|^2",name:"계수의 제곱 크기",description:"물리적
 assumptions={["7절의 DFT 배율을 유지합니다."]} interpretation="이 Parseval 관계는 에너지 장부가 맞는지 확인하는 방법입니다. 제곱합 하나만 같다고 두 입력이 같아지는 것은 아닙니다." />
 </section>
 <section id="nyquist-boundary" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">9 · bin의 번호와 실제 진동수를 구별한다</h2>
+<BinRotationViz />
 <p>표본률 8 Hz, 길이 4라면 인접한 bin의 간격은 8/4=2 Hz입니다. 전체 복소 출력을 음수 주파수까지 표기하는 흔한 규약에서는 네 bin을 0, 2, −4, −2 Hz로 읽습니다. 마지막 자리를 6 Hz라고 적어도 표본 위의 회전은 −2 Hz와 같으므로 별개로 구별한 성분이 아닙니다.</p>
 <p>짝수 길이의 가운데 bin은 −4 Hz와 +4 Hz가 같은 표본 회전입니다. 실수 입력의 절반 스펙트럼은 이를 +4 Hz로 표시할 수 있습니다. 두 독립 bin이 있는 것은 아닙니다. 홀수 길이에는 정확히 표본률의 절반인 bin이 없습니다. 실수 입력의 DC와 짝수 길이의 이 가운데 계수는 실수입니다.</p>
+<AliasSamplesViz />
 <ExplainedFormula question="서로 다른 연속 진동이 왜 같은 표본을 만들 수 있나요?" idea="정수 표본 시각에서 회전 수가 정수만큼 더해져도 같은 위치로 돌아옵니다. 표본률만큼 떨어진 주파수는 같은 복소 표본을 만듭니다." formula={String.raw`e^{2\pi i(f+mf_s)n/f_s}=e^{2\pi i fn/f_s}`}
 annotatedFormula={String.raw`\begin{gathered}e^{2\pi i(f+mf_s)n/f_s}=e^{2\pi i fn/f_s},\quad m,n\in\mathbb Z\\f_s=8000:\quad\cos(2\pi\cdot7000n/8000)\\=\cos(2\pi n-2\pi n/8)=\cos(2\pi\cdot1000n/8000)\end{gathered}`}
 operations={[{expression:String.raw`\sin(\pi n)=0\quad(n\in\mathbb Z)`,annotation:["정확히 표본률의 절반인 사인파는 위상에 따라 표본이 모두 0이 됩니다. 경계를 무조건 포함한 복원 주장은 성립하지 않습니다."]}]}
@@ -85,7 +105,9 @@ assumptions={["기본 복원 정리는 신호의 대역이 엄격히 |f|<f_s/2�
 </section>
 <section id="window" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">10 · 창은 입력을 바꾸고 0 채우기는 평가 자리를 늘린다</h2>
 <p>긴 신호에서 유한한 구간을 선택하는 일은 그 밖의 값을 0으로 만드는 창을 곱하는 일입니다. 이 곱은 주파수 쪽에서 창의 스펙트럼과 섞입니다. 한 진동이 여러 bin에 퍼져 보이는 spectral leakage는 이런 유한 관측에서 생깁니다. 구간을 주기적으로 이어 붙였을 때의 불연속은 이를 이해하는 한 방법이지만 모든 경우를 끝점 값 하나로 판정할 수는 없습니다.</p>
+<WindowLobesViz />
 <p>양 끝의 비중을 줄이는 Hann 창은 직사각 창보다 먼 쪽으로 새는 side lobe를 낮추는 대신 중심의 main lobe를 넓힙니다. 가까운 두 진동을 구별하는 능력과 약한 성분을 보는 능력이 함께 달라집니다. 창을 바꿨다면 진폭 보정도 따로 확인해야 합니다.</p>
+<WindowZeroPadViz />
 <ExplainedFormula question="같은 네 표본에 창을 곱하면 무엇이 달라지나요?" idea="길이 4의 주기형 Hann을 각 위치에 곱합니다. 이 정의의 마지막 가중치는 0이 아니라 1/2입니다." formula={String.raw`w[n]=\tfrac12\left(1-\cos\frac{2\pi n}{N}\right)`}
 annotatedFormula={String.raw`\begin{gathered}w[n]=\tfrac12(1-\cos(2\pi n/N)),\quad 0\le n<N\\N=4:\quad w=[0,1/2,1,1/2],\quad xw=[0,1,3,2]\\\operatorname{DFT}(xw)=[6,-3+i,0,-3-i]\end{gathered}`}
 operations={[{expression:String.raw`2\cdot\tfrac12=1,\qquad4\cdot\tfrac12=2`,annotation:["두 번째와 네 번째 표본의 비중을 절반으로 줄입니다. 원래 입력의 무손실 표현을 계산한 것이 아닙니다."]}]}
@@ -110,6 +132,7 @@ assumptions={["0≤k<N/2입니다. 이 분할을 길이 1까지 반복하는 rad
 <p>이 작은 길이에서 원문 장부는 4(2+2)=16이고 직접 계산의 4²=16과 같습니다. 크기가 커질 때의 증가율이 핵심이며 길이 4부터 그 장부의 횟수가 반드시 줄어드는 것은 아닙니다. 실제 코드는 1이나 ±i와의 곱을 생략하거나 더하기로 바꾸기도 합니다.</p>
 </section>
 <section id="complexity" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">13 · 단계마다 N만큼 일하고 단계는 log₂N개다</h2>
+<RecursionLevelsViz />
 <p>radix-2는 길이 절반인 두 변환을 계산하고 길이 N에 비례하는 결합을 수행합니다. 각 단계 전체의 결합량은 N에 비례하고 길이가 1이 될 때까지 단계 수는 log₂N입니다. 그래서 직접 합산의 N² 증가율이 NlogN으로 바뀝니다.</p>
 <ExplainedFormula question="분할했는데 계산이 다시 N²개로 늘지 않는 이유는 무엇인가요?" idea="각 깊이에서 모든 작은 문제의 길이를 합하면 N입니다. 그 깊이가 log₂N개라 총 결합량은 Nlog₂N에 비례합니다." formula={String.raw`T(N)=2T(N/2)+cN`}
 annotatedFormula={String.raw`\begin{gathered}T(N)=2T(N/2)+cN,\quad N=2^m\\T(N)=\Theta(N\log_2N),\quad T(1)=\Theta(1)\\N=2^{20}:\quad N^2=2^{40},\quad N\log_2N=20\cdot2^{20}\end{gathered}`}
@@ -122,6 +145,7 @@ assumptions={["radix-2와 상수 시간 산술 모형을 사용합니다.","작�
 <p>고정한 KISS FFT commit e5e3fac46e0d94a8f8170c06706b7a4218828333의 C 원문에 같은 네 입력을 넣었습니다. 기본 float 형식을 쓰고 FIXED_POINT와 USE_SIMD는 정의하지 않았습니다. 공개 헤더의 한 복소 값은 r과 i 두 필드이고 내부 상태에는 길이, 역방향 여부, 분해 기록, 회전값 표가 있습니다.</p>
 <p><a href="https://github.com/mborgerding/kissfft/blob/e5e3fac46e0d94a8f8170c06706b7a4218828333/kiss_fft.c" className="text-primary underline">고정한 KISS FFT C 원문</a>과 헤더의 원본 파일, 라이선스를 아래 코드 패널과 함께 보존했습니다.</p>
 <CodeViewButton label="실제 상태와 배율 매크로" onClick={()=>sidebar.open("state",fftCodeRefs.state)} />
+<KissScratchViz />
 <p>kiss_fft_alloc(4,0,...)은 길이 4와 순방향을 저장하고 회전표를 만듭니다. kf_factor는 인수 4부터 시도하므로 분해 기록은 [4,1]입니다. kf_work는 p=4, m=1을 읽고 입력 네 값을 복사한 뒤 kf_bfly4를 부릅니다. 설명에서 사용한 두 단계의 radix-2 경로를 실제로 실행했다고 말하면 틀립니다.</p>
 <CodeViewButton label="실제 인수 선택과 분기" onClick={()=>sidebar.open("factor",fftCodeRefs.factor)} />
 <p>이 경로는 m=1이라 첫 회전값이 모두 1입니다. scratch[0], scratch[1], scratch[2]에는 2, 3, 4가 들어갑니다. 이어 scratch[5]=1−3=−2, 첫 출력의 임시 값은 1+3=4, scratch[3]=2+4=6, scratch[4]=2−4=−2가 됩니다.</p>
@@ -138,6 +162,7 @@ assumptions={["radix-2와 상수 시간 산술 모형을 사용합니다.","작�
 <p>실제 제품에서는 배열 길이와 할당 성공, 정밀도 범위, 입출력 배율과 메모리 한도를 함께 확인합니다. 수학의 가역성은 버퍼 범위를 벗어난 접근이나 유한 형식의 overflow까지 막아 주지 않습니다.</p>
 </section>
 <section id="convolution" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">16 · 필터를 적용할 때는 꼬리가 앞쪽으로 돌아오지 않게 한다</h2>
+<CircularWrapViz />
 <p>같은 입력 [1,2,3,4]에 현재 값에서 직전 값을 빼는 필터 h=[1,−1]을 적용해 봅시다(가정). 입력 밖은 0으로 놓으면 전체 선형 합성곱은 [1,1,1,1,−4]입니다. 마지막 −4는 입력이 끝난 다음 위치에 남은 필터의 기여입니다.</p>
 <p>길이 4 DFT끼리 곱하고 역변환하면 길이 4의 원형 합성곱 [-3,1,1,1]이 나옵니다. 마지막 −4가 첫 값 1에 돌아와 더해졌기 때문입니다. 이 결과는 원형 연산에는 맞지만 원하는 선형 연산에는 틀립니다.</p>
 <ExplainedFormula question="주파수별 곱셈으로 선형 합성곱을 계산하려면 무엇이 필요한가요?" idea="DFT의 기본 곱셈 정리는 원형 합성곱입니다. 선형 출력 전체가 들어갈 만큼 0을 채워야 앞뒤가 겹치지 않습니다." formula={String.raw`\operatorname{DFT}_M(x\circledast_Mh)=XH`}
@@ -150,6 +175,7 @@ assumptions={["두 입력을 같은 길이 M까지 0으로 채우고 7절과 맞
 </section>
 <section id="ai-usage" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">17 · 긴 음성은 짧은 구간을 옮겨 가며 변환한다</h2>
 <p>한 번의 DFT는 그 구간 전체를 섞습니다. 긴 음성에서 어느 시각에 어떤 소리가 났는지를 보려면 창을 옮기며 구간마다 계산합니다. 이 시간별 변환이 STFT입니다. 창의 길이는 한 번에 보는 범위를, hop은 다음 구간으로 옮기는 간격을 정합니다.</p>
+<StftFramesViz />
 <ExplainedFormula question="25 ms를 보면서 10 ms씩 옮긴다는 말은 무엇인가요?" idea="표본 수를 표본률로 나누면 시간입니다. 서로 다른 두 표본 수 N과 H가 서로 다른 역할을 합니다." formula={String.raw`S[m,k]=\sum_{n=0}^{N-1}x[mH+n]w[n]e^{-2\pi i kn/N}`}
 annotatedFormula={String.raw`\begin{gathered}S[m,k]=\sum_{n=0}^{N-1}x[mH+n]w[n]e^{-2\pi i kn/N}\\f_s=16000,\quad N=400,\quad H=160\\N/f_s=25\ \mathrm{ms},\quad H/f_s=10\ \mathrm{ms},\quad f_s/N=40\ \mathrm{Hz}\end{gathered}`}
 operations={[{expression:String.raw`1/16000=62.5\ \mathrm{\mu s},\qquad f_s/2=8000\ \mathrm{Hz}`,annotation:["표본 사이 시간과 이상적인 저역 표집의 경계를 함께 계산합니다. 40 Hz의 bin 간격과 8 kHz의 경계는 다른 양입니다."]}]}
@@ -160,6 +186,7 @@ assumptions={["각 구간에 같은 창을 곱합니다.","전체 파형으로 �
 <p>Whisper 논문 3쪽 §2.2는 16 kHz 입력과 25 ms 창, 10 ms 이동, 당시 80개 Mel 채널을 설명합니다. 앞 절의 400과 160은 이 시간을 표본 수로 바꾼 값입니다. 공식 구현에서 이 설정 다음에 이어지는 연산까지 확인하겠습니다.</p>
 <CitationBlock source="Whisper 논문 §2.2와 고정한 공식 구현" href="https://cdn.openai.com/papers/whisper.pdf" citeKey={2}><p>논문의 시간 설정을 그대로 대입하면 400/16000=0.025초, 160/16000=0.01초입니다. 공식 audio.py의 commit 86098128c0b4f24f0e2aa2994de830614b474227에는 N_FFT=400과 HOP_LENGTH=160이 있고 Mel 필터는 80개 또는 128개를 허용합니다.</p></CitationBlock>
 <CodeViewButton label="Whisper의 실제 창·제곱 크기·Mel·로그" onClick={()=>sidebar.open("whisper",fftCodeRefs.whisper)} />
+<WhisperGridViz />
 <p>원문은 Hann 창으로 torch.stft를 호출하고 abs() ** 2를 계산합니다. 변수 이름 magnitudes만 보고 길이 자체라고 읽으면 안 됩니다. 실제 값은 길이의 제곱입니다. 우리 작은 Hann 결과 [6,−3+i,0,−3−i]에서 전체 복소 배열의 제곱 크기는 [36,10,0,10]입니다. 실수 입력의 한쪽 스펙트럼만 쓰면 [36,10,0]입니다. 이는 길이 4에 연산 의미를 대입한 예이며 Whisper가 길이 4를 사용한다는 뜻은 아닙니다.</p>
 <p>stft[..., :-1]은 마지막 시간 구간을 제외합니다. 주파수 축의 마지막 bin을 없애는 코드가 아닙니다. PyTorch의 복소 STFT 출력에서 마지막 축은 시간 구간입니다. 입력 가장자리의 중심 정렬과 padding까지 포함한 형식은 사용하는 PyTorch 버전의 API와 함께 확인합니다.</p>
 <p><a href="https://docs.pytorch.org/docs/2.14/generated/torch.stft.html" className="text-primary underline">PyTorch 2.14 STFT 문서</a>는 복소 출력의 마지막 두 축을 주파수와 시간으로 정의합니다. 고정한 Whisper 원문은 중심 정렬과 정규화 인자를 따로 지정하지 않으므로 해당 실행 환경의 기본값도 함께 읽어야 합니다.</p>
@@ -168,6 +195,7 @@ assumptions={["각 구간에 같은 창을 곱합니다.","전체 파형으로 �
 </section>
 <section id="paper-fnet" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">19 · FNet은 같은 변환을 학습 가능한 선택 대신 섞기에 쓴다</h2>
 <p>FNet 논문 4299쪽 식 (3)은 입력의 숨은 차원과 위치 차원에 DFT를 차례로 적용한 뒤 실수 부분만 취합니다. 두 변환을 모두 끝낸 다음 실수 부분을 남긴다는 순서도 원문에 명시되어 있습니다. 입력에 따라 달라지는 attention 가중치를 계산하는 연산과는 다른 구조입니다.</p>
+<FnetMixerViz />
 <ExplainedFormula question="DFT가 가역이라면 FNet의 이 부분도 가역인가요?" idea="복소 변환 뒤의 실수 부분 선택은 별도의 정보 손실 연산입니다. 숨은 차원이 1인 작은 입력으로 그 차이를 확인합니다." formula={String.raw`y=\operatorname{Re}\!\left(\mathcal F_{seq}(\mathcal F_h(x))\right)`}
 annotatedFormula={String.raw`\begin{gathered}y=\operatorname{Re}\!\left(\mathcal F_{seq}(\mathcal F_h(x))\right)\\x=[1,2,3,4]^\top\in\mathbb R^{4\times1}:\quad y=[10,-2,-2,-2]^\top\\\operatorname{IDFT}_4(y)=[1,3,3,3]^\top\ne x\end{gathered}`}
 operations={[{expression:String.raw`\operatorname{Re}(-2+2i)=-2`,annotation:["허수 성분 +2를 버립니다. 이를 다시 0으로 채워 역변환해도 원래 입력을 되찾지 못합니다."]}]}

@@ -4,6 +4,11 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import MetricSelectionProtocolViz from "./MetricSelectionProtocolViz";
+import DataBoundaryViz from "./viz/DataBoundaryViz";
+import GuardrailPlaneViz from "./viz/GuardrailPlaneViz";
+import ConfusionWaffleViz from "./viz/ConfusionWaffleViz";
+import HierarchicalBootstrapViz from "./viz/HierarchicalBootstrapViz";
+import ApprovalBoundsViz from "./viz/ApprovalBoundsViz";
 import {
   MetricSelectionLocator,
   MetricSelectionReturn,
@@ -97,6 +102,7 @@ export default function MetricSelectionProtocolArticle() {
             않습니다.
           </p>
         </div>
+        <DataBoundaryViz />
         <ExplainedFormula
           question="가중치 학습, 정책 선택, 최종 승인의 정보 경계를 어떻게 분리하나요?"
           idea={
@@ -198,6 +204,7 @@ export default function MetricSelectionProtocolArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           주 지표보다 먼저 반드시 지킬 기준을 적용합니다
         </h2>
+        <GuardrailPlaneViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             P24-H는 비용 31로 가장 낮지만 최저 집단 recall이 0.74라서 사전 하한
@@ -403,6 +410,9 @@ outer_result_ref: outer-report-v3`}</code></pre>
             네 언어 집단에는 positive가 각각 5,000건 이상 있어야 합니다. 이 조건은
             결과를 보기 전에 정합니다.
           </p>
+        </div>
+        <ConfusionWaffleViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             전체 1,000건으로 정규화한 혼동행렬을 TP 102, FN 18, FP 50, TN 830이라고
             놓겠습니다. 전체 recall은 102÷120=0.85입니다. 실제 20만 건에서는
@@ -410,6 +420,9 @@ outer_result_ref: outer-report-v3`}</code></pre>
             있습니다. 놓침 비용을 2, 잘못된 경보 비용을 0.1로 두면 업무 비용은
             18×2+50×0.1=41입니다.
           </p>
+        </div>
+        <HierarchicalBootstrapViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             가장 약한 언어 집단은 positive 5,000건 중 4,100건을 잡아 recall이
             0.82이고, 그 95% Wilson 하한은 0.809라고 놓습니다. 각 고객 사례가
@@ -429,6 +442,7 @@ outer_result_ref: outer-report-v3`}</code></pre>
           </p>
         </div>
 
+        <ApprovalBoundsViz />
         <ExplainedFormula
           question="점추정이 기준을 넘는지만 보지 않고 최종 승인을 어떻게 판정하나요?"
           idea={

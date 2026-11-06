@@ -1,5 +1,14 @@
 import type { CodeRef } from "@/components/code/types";
 import ThreadAssignmentViz from "./viz/ThreadAssignmentViz";
+import BlockOrderViz from "./viz/BlockOrderViz";
+import ExecutionMapViz from "./viz/ExecutionMapViz";
+import PartialWarpViz from "./viz/PartialWarpViz";
+import AsyncErrorViz from "./viz/AsyncErrorViz";
+import RowMajorViz from "./viz/RowMajorViz";
+import BlockShapeViz from "./viz/BlockShapeViz";
+import LaneMaskViz from "./viz/LaneMaskViz";
+import SmLimitViz from "./viz/SmLimitViz";
+import ClusterPlacementViz from "./viz/ClusterPlacementViz";
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import CodePanel from "@/components/ui/code-panel";
@@ -62,6 +71,7 @@ export default function Article(){const sidebar=useCodeSidebar();return <div cla
     </section>
     <section id="why" data-teach-level="2" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">5. 고정된 크기로 나누면 장치가 남은 자원에 맞춰 배치할 수 있습니다</h2>
+      <BlockOrderViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
             모든 일을 하나의 거대한 묶음으로 만들면 함께 쓸 공간과 동시에 기다리는 작업 범위도 커집니다. 적당한 묶음 여러 개로 나누면 장치가 자원에 여유가 생길 때마다 다음 묶음을
@@ -73,6 +83,7 @@ export default function Article(){const sidebar=useCodeSidebar();return <div cla
     </section>
     <section id="names" data-teach-level="3" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">6. 작업표와 실행 장치의 역할에 이름을 붙입니다</h2>
+      <ExecutionMapViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
       </div>
 <div className="my-6 overflow-x-auto rounded-xl border"><table className="w-full table-fixed text-left text-sm leading-7"><caption className="sr-only">작업표와 실행 장치의 역할</caption><thead className="hidden sm:table-header-group"><tr><th className="w-[30%] p-3">앞에서 본 역할</th><th className="p-3">이름과 사례</th></tr></thead><tbody><tr className="block border-t sm:table-row"><th scope="row" className="block px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">배열 위치를 맡는 자리</th><td className="block break-words p-3 align-top sm:table-cell">논리적 작업 하나가 thread입니다. 이번에는 열두 thread를 만들고 열 개만 배열에 접근합니다.</td></tr><tr className="block border-t sm:table-row"><th scope="row" className="block px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">
@@ -84,6 +95,9 @@ export default function Article(){const sidebar=useCodeSidebar();return <div cla
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">주 프로그램이 block 3개와 block당 thread 4개를 제출합니다. 어느 SM에 block 2가 배치되든 blockIdx.x는 2이고 blockDim.x는 4입니다. Thread 1은 2×4+1=9를 계산합니다.</p>
         <p className="leading-8">9는 배열 길이 10보다 작으므로 두 입력의 9번 값을 읽습니다. 시작 주소에서 9×4=36바이트 떨어진 위치입니다. 9와 90을 더한 99를 결과 배열 9번에 씁니다. 내부 번호 2와 3은 각각 10과 11을 만들므로 배열 접근을 건너뜁니다.</p>
+        </div>
+      <PartialWarpViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Warp는 block 경계를 넘어서 합치지 않습니다. 따라서 thread 4개짜리 block 세 개는 각각 부분 warp 하나씩, 총 warp 3개로 실행됩니다. 전체 thread가 12개라는 이유로 warp 하나에 합쳐지지 않습니다. 작은 수는 위치를 설명하기 위한 가정이며 성능에 좋은 설정이라는 뜻은 아닙니다.</p>
       </div>
 
@@ -110,22 +124,30 @@ export default function Article(){const sidebar=useCodeSidebar();return <div cla
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">배열이 커져도 번호를 만드는 규칙은 같습니다. 예를 들어 block 3·크기 128·내부 번호 17은 401을 만듭니다. Block 2·크기 256·내부 번호 5는 517을 만들지만 배열 길이가 515면 접근해서는 안 됩니다.</p>
         <p className="leading-8">원본 샘플은 int로 충분한 작은 입력을 씁니다. 더 큰 입력에 맞춘 학습용 변형에서는 곱셈 전에 size_t처럼 충분히 넓은 형으로 바꿉니다. 곱한 뒤 형을 바꾸면 이미 생긴 정수 넘침을 되돌릴 수 없습니다.</p>
+        </div>
+      <AsyncErrorViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Launch 직후의 cudaGetLastError는 잘못된 실행 설정 같은 오류를 확인하는 데 씁니다. 비동기 계산 중의 접근 오류는 cudaDeviceSynchronize처럼 완료를 기다리는 지점에서도 확인해야 합니다. 앞선 비동기 오류가 뒤의 API에서 관측될 수 있으므로 각 호출의 반환값과 실행 순서를 함께 기록합니다.</p>
       </div>
 <ExplainedFormula question="다른 block의 같은 내부 번호를 어떻게 구별할까요?" idea="앞선 block들이 맡은 전체 길이를 건너뛴 뒤 현재 block 안의 위치를 더합니다." formula={String.raw`i=\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x`} annotatedFormula={String.raw`i=\underbrace{bB}_{\text{앞선 묶음의 길이}}+\underbrace{t}_{\text{묶음 안 위치}}`} operations={[{expression:"bB",annotation:["현재 block 앞에 b개가 있고 각각 B개 자리를 맡습니다."]},{expression:"+t",annotation:["그 시작 위치에서 t칸 더 이동합니다."]}]} terms={[{symbol:"b",name:"blockIdx.x",description:"현재 block의 번호입니다."},{symbol:"B",name:"blockDim.x",description:"각 block의 thread 수입니다."},{symbol:"t",name:"threadIdx.x",description:"block 안 thread 번호입니다."}]} assumptions={["1차원 작업표를 전제로 합니다.","곱셈과 덧셈을 담을 충분히 넓은 정수형을 사용해야 합니다.","계산한 후보 i가 배열 길이보다 작은지 따로 확인합니다."]} interpretation="주 사례는 2×4+1=9입니다. 확장 예에서 3×128+17=401이고, 2×256+5=517은 배열 길이 515의 밖입니다." /><CodePanel title="학습용 CUDA 조각: 넓은 번호형과 두 오류 확인 지점" code={vecAddCode} />
     </section>
     <section id="indexing-2d" data-teach-level="6" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">11. 두 축의 범위를 확인한 뒤 행 우선 주소를 만듭니다</h2>
+      <RowMajorViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">한 줄을 여러 행으로 넓혀도 앞선 구역의 길이를 건너뛴다는 규칙은 같습니다. 너비 5·높이 3의 배열에서 행 2·열 3은 원소 13번입니다. 둘 다 0부터 세며, 먼저 행 2&lt;3과 열 3&lt;5를 각각 검사합니다.</p>
         <p className="leading-8">원소 번호 13과 바이트 위치는 다릅니다. 4바이트 원소라면 시작점에서 52바이트 떨어져 있습니다. cudaMallocPitch처럼 행마다 여백이 있으면 너비에 원소 크기를 곱한 값 대신 반환된 실제 행 간격을 사용해야 합니다.</p>
         <p className="leading-8">아래는 밝기를 바꾸는 학습용 코드입니다. 1920×1080 입력을 32×8 block으로 덮으면 grid는 60×135이고 두 축 모두 남는 thread가 없습니다. 비정렬 크기도 다루려면 올림한 두 grid 축과 두 좌표의 경계 검사를 함께 유지합니다.</p>
+        </div>
+      <BlockShapeViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">16×16과 32×8은 모두 256 threads지만 같은 warp가 지나는 행은 달라질 수 있습니다. 한 행의 이웃 값을 읽는 데 유리한 모양과 주변 경계까지 복사하는 데 유리한 모양은 다를 수 있습니다. 직사각형·비배수 입력에서 정답을 먼저 확인한 뒤 실제 요청량과 시간을 비교합니다.</p>
       </div>
 <ExplainedFormula question="행과 열을 한 줄의 배열 위치로 어떻게 바꿀까요?" idea="먼저 각 축의 block 시작점에 내부 좌표를 더합니다. 그런 다음 지나온 행 전체의 길이에 현재 열을 더합니다." formula={String.raw`\begin{aligned}\mathrm{col}&=b_x B_x+t_x,\\\mathrm{row}&=b_y B_y+t_y,\\\mathrm{offset}&=\mathrm{row}\times W+\mathrm{col}.\end{aligned}`} annotatedFormula={String.raw`\begin{aligned}\mathrm{col}&=\underbrace{b_x B_x+t_x}_{\text{가로 시작점 + 가로 이동}},\\\mathrm{row}&=\underbrace{b_y B_y+t_y}_{\text{세로 시작점 + 세로 이동}},\\\mathrm{offset}&=\underbrace{\mathrm{row}\times W}_{\text{앞선 행의 원소 수}}+\mathrm{col}.\end{aligned}`} operations={[{expression:"b_xB_x+t_x",annotation:["가로 block 시작점에 block 안 가로 좌표를 더합니다."]},{expression:"b_yB_y+t_y",annotation:["세로 block 시작점에 block 안 세로 좌표를 더합니다."]},{expression:String.raw`\mathrm{row}\times W+\mathrm{col}`,annotation:["앞선 행마다 W개를 건너뛴 뒤 현재 열만큼 이동합니다."]}]} terms={[{symbol:"b_x,b_y",name:"block 좌표",description:"grid 안의 가로·세로 위치입니다."},{symbol:"B_x,B_y",name:"block 크기",description:"각 축의 thread 수입니다."},{symbol:"t_x,t_y",name:"thread 좌표",description:"block 안의 위치입니다."},{symbol:"W",name:"행 너비",description:"한 행에 연속 저장한 원소 수입니다."}]} assumptions={["같은 크기의 원소를 행 우선으로 연속 저장한 배열입니다.","row<H와 col<W를 각각 확인한 뒤 접근합니다.","행마다 빈 바이트가 있는 pitched allocation은 row×pitch+col×원소크기로 바이트 주소를 구합니다."]} interpretation="너비 5·높이 3에서 행 2·열 3은 2×5+3=13번입니다. 너비와 높이를 바꾸면 2×3+3=9로 잘못 찾습니다." /><CodePanel title="학습용 CUDA 조각: 행·열 경계와 밝기 변경" code={imageCode} />
     </section>
     <section id="warp-runtime" data-teach-level="6" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">12. 같은 warp의 조건이 갈려도 정답이 자동으로 틀리는 것은 아닙니다</h2>
+      <LaneMaskViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">명령을 함께 진행해도 lane마다 자기 값과 주소를 갖습니다. 같은 warp에서 짝수 번호만 덧셈을 한다면 홀수 lane은 그 명령에 참여하지 않습니다. 갈라진 경로를 나눠 실행하는 비용이 생길 수 있지만 각자의 조건을 지킨 결과는 올바를 수 있습니다.</p>
         <p className="leading-8">예를 들어 block 64 threads는 warp 두 개입니다. 그 block의 thread 37은 두 번째 warp의 lane 5입니다. 이 규칙은 block 안의 선형 번호에 적용하며, 서로 다른 block의 전체 배열 번호를 합쳐 warp를 만들지 않습니다.</p>
@@ -136,11 +158,15 @@ export default function Article(){const sidebar=useCodeSidebar();return <div cla
     <section id="placement" data-teach-level="6" className="scroll-mt-20">
       <span id="paper-cuda-thread-model" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">13. 묶음을 올릴 때는 thread 수와 저장 공간을 함께 셉니다</h2>
+      <SmLimitViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">256-thread block이 장치 한도 안에 있어도 register나 shared memory를 많이 쓰면 같은 SM에 머무는 block 수가 줄 수 있습니다. 반대로 아주 작은 block은 SM이 수용할 수 있는 block 개수 한도에 먼저 걸릴 수 있습니다.</p>
         <p className="leading-8">동시에 머무는 warp의 비율을 occupancy라고 부릅니다. 이 비율이 높아도 다음 명령의 입력을 기다리는 warp만 많다면 일을 내보내지 못합니다. Profiler의 eligible warps는 다음 명령을 실행할 준비가 된 warp를 확인하는 데 씁니다.</p>
         <p className="leading-8">장치에서 허용하는 block 크기 128·256·512를 비교한다면 같은 입력과 정답 조건을 씁니다. GPU와 compiler를 고정하고 컴파일 옵션도 같게 맞춥니다.</p>
         <p className="leading-8">먼저 register 수와 shared memory 사용량으로 자원 점유를 확인합니다. 이어서 달성한 occupancy와 eligible warps를 보고 메모리 처리량과 kernel 시간을 기록합니다. 실제 프로그램의 전송·완료 대기까지 포함한 시간도 비교합니다.</p>
+        </div>
+      <ClusterPlacementViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Compute capability 9.0부터는 선택적인 thread block cluster 계층도 있습니다. 같은 cluster의 block들은 같은 GPC에 함께 배치되도록 보장되지만 한 SM에 모두 놓인다는 뜻은 아닙니다. GridDim은 여전히 block 수를 나타냅니다.</p>
         <p className="leading-8">공식 문서의 portable cluster 크기는 최대 block 8개이며 작은 장치나 분할 설정은 더 작을 수 있습니다. 장치와 해당 kernel에서 가능한 크기를 조회해야 합니다. Cluster의 distributed shared memory를 사용할 때는 cluster 동기화로 다른 block의 공유 공간 수명과 접근 순서를 맞춰야 합니다. 이 기능을 모든 CUDA GPU의 기본 능력으로 가정하지 않습니다.</p>
       </div>

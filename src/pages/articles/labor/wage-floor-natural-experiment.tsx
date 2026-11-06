@@ -9,6 +9,14 @@ import SourceApplication from "../world-systems/SourceApplication";
 import TwoPredictionsViz from "./wage-floor-natural-experiment/viz/TwoPredictionsViz";
 import WageStopViz from "./wage-floor-natural-experiment/viz/WageStopViz";
 import MeasuredViz from "./wage-floor-natural-experiment/viz/MeasuredViz";
+import WageGridViz from "./wage-floor-natural-experiment/viz/WageGridViz";
+import RateIntervalViz from "./wage-floor-natural-experiment/viz/RateIntervalViz";
+import MonopsonyLinesViz from "./wage-floor-natural-experiment/viz/MonopsonyLinesViz";
+import FloorKinkViz from "./wage-floor-natural-experiment/viz/FloorKinkViz";
+import HoursByFloorViz from "./wage-floor-natural-experiment/viz/HoursByFloorViz";
+import IntegerTieViz from "./wage-floor-natural-experiment/viz/IntegerTieViz";
+import ParallelTrendViz from "./wage-floor-natural-experiment/viz/ParallelTrendViz";
+import ReanalysisMapViz from "./wage-floor-natural-experiment/viz/ReanalysisMapViz";
 import { laborPlan, numberLabel as f } from "./wage-floor-natural-experiment/model";
 function PlansTable({ hours, floor = 0 }: { hours: number[]; floor?: number }) {
   return <div className="my-6 overflow-x-auto"><table className="w-full text-left text-sm">
@@ -65,6 +73,7 @@ export default function WageFloorNaturalExperimentArticle() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 새 시간의 7과 다른 세 시간의 3을 함께 센다</h2>
+        <WageGridViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">시급 7의 계획에서는 새 시간에 7달러를 지급합니다. 앞의 세 시간에 해당하는 노동에도 시급이 6에서 7로 바뀌어 총 3달러를 더 지급합니다. 따라서 임금 합계 차이는 7 + 3 = 10입니다. 전체 비용을 먼저 적으면 어느 항목이 빠졌는지 바로 확인할 수 있습니다.</p>
           <p className="leading-7">그림의 마지막 단계에서 최저시급 9를 적용해 보세요. 두 계획의 시급이 모두 9가 되므로 앞의 세 시간에 해당하는 지급액은 서로 같습니다. 새 한 시간의 9만 더 지급하면 됩니다. 그래서 더 높은 시급과 더 작은 추가 비용이 동시에 나타납니다.</p>
@@ -104,6 +113,9 @@ export default function WageFloorNaturalExperimentArticle() {
         <h2 className="mb-6 text-2xl font-bold">7. 한 시간의 차이와 순간적인 변화율은 다르다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">노동시간을 n이라 하고 하루 수입을 B(n) = 13n − n²/2로 둡니다. 노동을 아주 조금 늘릴 때의 변화율은 v(n) = B′(n) = 13 − n입니다. 3시간에서의 변화율은 10이고 4시간에서는 9입니다. 실제 3시간에서 4시간으로 늘릴 때는 B(4) − B(3) = 9.5를 사용합니다.</p>
+        </div>
+        <RateIntervalViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">변화율이 직선으로 10에서 9까지 내려가므로 이 한 시간 구간의 수입 증가는 평균 변화율 9.5에 구간 길이 1을 곱한 값입니다. n번째 정수 단위의 수입이 곧 13 − n이라는 뜻이 아닙니다. 순간 변화율과 유한한 구간의 차이를 섞으면 이후 최적점도 달라집니다.</p>
           <p className="leading-7">노동이 늘수록 변화율이 내려가는 것은 이번 모형의 가정입니다. 고정된 조리대에서 서로 기다리는 상황을 떠올릴 수 있지만 모든 일에서 같은 모양은 아닙니다. 이 감소가 없어도 추가 수입이 비용보다 작거나 생산 한도가 있다면 유한한 고용 선택이 생길 수 있습니다.</p>
         </div>
@@ -141,6 +153,9 @@ export default function WageFloorNaturalExperimentArticle() {
         <h2 className="mb-6 text-2xl font-bold">9. 임금 총액을 미분하면 시급보다 큰 추가 비용이 나온다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">필요한 시급이 w(n) = n + 3이면 임금 총액은 W(n) = n(n + 3)입니다. 이를 미분한 2n + 3은 시급 n + 3보다 n만큼 큽니다. 시간을 조금 더 구할 때 기존 시간에 해당하는 지급액도 함께 늘기 때문입니다.</p>
+        </div>
+        <MonopsonyLinesViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">이익은 B − W = 10n − 3n²/2입니다. 최대점은 n = 10/3, 즉 3시간 20분입니다. 이때 시급은 19/3, 추가 수입 변화율과 임금 총액의 변화율은 모두 29/3입니다. 고용주는 시급과 추가 수입이 같아질 때까지 노동을 늘리지 않습니다. 전체 임금 증가를 비교해야 합니다.</p>
           <p className="leading-7">
             이번 이익식을 완전제곱으로 쓰면 전체 최대도 확인됩니다. 일반적인 매끄러운 내부 해에서 B′ = W′는 필요조건이며 정수 선택·최저임금으로 꺾인 점·생산 한도에서는 전체 값을
@@ -185,7 +200,13 @@ export default function WageFloorNaturalExperimentArticle() {
             최저시급을 F라 하면 지급 시급은 F와 n + 3 중 큰 값입니다. 따라서 임금 총액은 W_F(n) = n × max(F, n + 3)입니다. 원래 추가 비용 2n + 3과 F
             중 큰 값을 쓰는 방식은 틀립니다. 최저임금은 지급 시급에 적용되며 추가 비용은 바뀐 총액에서 다시 계산합니다.
           </p>
+        </div>
+        <FloorKinkViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">예를 들어 F = 9이면 6시간까지는 시급 9로 필요한 시간을 구할 수 있다고 가정합니다. 이 구간의 임금 총액은 9n이고 추가 비용은 9입니다. 6시간을 넘겨 더 구하려면 필요한 시급 n + 3이 9보다 높아져 총액은 다시 n(n + 3)이 됩니다. 두 식이 만나는 점에서는 좌우의 기울기를 나눠 봅니다.</p>
+        </div>
+        <HoursByFloorViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             전체 이익을 비교하면 최저시급이 19/3 이하일 때는 원래 10/3시간을 유지합니다. 그보다 높고 8 이하이면 F − 3시간을 고릅니다. 8부터 13까지는 13 − F시간으로
             줄며 13 이상에서는 0시간입니다. 처음에는 구할 수 있는 노동이 늘고 그 이후에는 높아진 시급 때문에 선택하는 노동이 줄어듭니다.
@@ -226,6 +247,7 @@ export default function WageFloorNaturalExperimentArticle() {
       </section>
       <section id="finite-units" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">11. 정수 인원에서는 동률을 숨기지 않는다</h2>
+        <IntegerTieViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">별도 사례로 첫 단위가 수입 12를, 둘째가 11을, 셋째가 10을 더한다고 둡니다. 이때 n개 단위의 총수입은 12 + 11 + … + (13 − n), 즉 12.5n − n²/2입니다. 앞의 연속 함수 B(n) = 13n − n²/2와 다른 함수입니다. 앞 함수의 n번째 한 시간 구간 수입은 13.5 − n입니다.</p>
           <p className="leading-7">이 별도 정수 사례에서 시급 8을 주어진 값으로 받으면 4단위와 5단위의 이익이 모두 10으로 같습니다. 필요한 시급 n + 3을 모두에게 지급하면 3단위의 이익 15가 최대이며 4단위에서는 14입니다. 정수 단위의 추가 수입 9와 추가 임금 10을 비교한 결과입니다.</p>
@@ -263,6 +285,9 @@ export default function WageFloorNaturalExperimentArticle() {
         <h2 className="mb-6 text-2xl font-bold">13. 비교 지역은 바뀌지 않았을 때의 경로를 대신한다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">방법을 작은 가정 숫자로 확인해 봅니다. 인상 지역의 평균이 20에서 21로, 비교 지역은 25에서 23으로 바뀌었다고 합시다. 두 변화의 차이는 (21 − 20) − (23 − 25) = 3입니다. 처음 평균이 20과 25로 다르다는 사실만으로 이 계산이 무효가 되는 것은 아닙니다.</p>
+        </div>
+        <ParallelTrendViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             정책이 없었더라도 인상 지역이 비교 지역처럼 2만큼 줄었다고 가정하면 인상 지역의 미인상 결과는 18입니다. 관측된 21과의 차이 3을 정책효과로 읽을 수 있습니다. 이
             반사실적 추세가 같다는 가정이 평행추세입니다. 인상 지역에만 별도로 수요 증가가 생겼다면 3에는 그 영향도 섞입니다.
@@ -301,6 +326,7 @@ export default function WageFloorNaturalExperimentArticle() {
       </section>
       <section id="measurement-and-reanalysis" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">15. 전화 응답과 급여 자료, 표본 선택도 검토 대상이다</h2>
+        <ReanalysisMapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             Neumark·Wascher의 1995년 NBER 작업논문은 230곳의 급여 기록을 이용해 전화 조사 자료를 재검토했습니다. 저자들은 전화 조사 쪽 고용 변화의 변동이 더 크며

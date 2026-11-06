@@ -7,6 +7,12 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import PriceChoiceViz from "./market-power-and-markup/viz/PriceChoiceViz";
 import MarkupViz from "./market-power-and-markup/viz/MarkupViz";
+import MarkupDenominatorViz from "./market-power-and-markup/viz/MarkupDenominatorViz";
+import RevenueChordViz from "./market-power-and-markup/viz/RevenueChordViz";
+import ProfitCurveViz from "./market-power-and-markup/viz/ProfitCurveViz";
+import DemandPointsViz from "./market-power-and-markup/viz/DemandPointsViz";
+import SurplusAreaViz from "./market-power-and-markup/viz/SurplusAreaViz";
+import ProfitLimitsViz from "./market-power-and-markup/viz/ProfitLimitsViz";
 import { sale, welfare } from "./market-power-and-markup/model";
 function SalesTable({ quantities }: { quantities: number[] }) {
   return <div className="my-6 overflow-x-auto"><table className="w-full text-left text-sm">
@@ -88,6 +94,9 @@ export default function MarketPowerAndMarkupArticle() {
             한계비용이 7입니다.
           </p>
           <p className="leading-7">물건을 정수 개씩만 팔 때 한 개 추가의 매출 차이와, 연속적인 수량에서 구한 미분값은 같은 개념으로 바로 대입할 수 없습니다. 위의 3개에서 4개로 갈 때 매출 차이는 6입니다. 뒤에서 미분으로 얻는 값 7과 5가 왜 이 차이와 다른지 확인합니다.</p>
+        </div>
+        <MarkupDenominatorViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">가격에서 한계비용을 뺀 차이를 가격으로 나눈 비율을 이 글의 마크업 지표로 씁니다. 10과 7의 차이 3을 가격 10으로 나누면 30%입니다. 비용 7을 분모로 삼는 3 ÷ 7, 약 42.9%의 원가 가산율과 구분합니다.</p>
           <p className="leading-7">이 30%라는 비율에는 이름이 있습니다. Abba Lerner가 1934년 논문(The Review of Economic Studies 1권 3호, 157~175쪽)에서 독점력의 척도로 제시해 러너 지수(Lerner index)라고 부릅니다.</p>
           <p className="leading-7">실증 연구는 같은 차이를 가격이 한계비용의 몇 배인지, 곧 μ = 가격 ÷ 한계비용으로 보고하는 경우가 많습니다. 사례에서는 μ = 10 ÷ 7 ≈ 1.43이고, 두 지표는 러너 지수 = 1 − 1/μ = 1 − 7/10 = 0.3으로 서로 바뀝니다.</p>
@@ -112,6 +121,9 @@ export default function MarketPowerAndMarkupArticle() {
         <h2 className="mb-6 text-2xl font-bold">8. 한 개를 더 파는 차이와 아주 작은 변화의 비율을 구분한다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">같은 기간의 모든 판매에 같은 가격을 적용하고 수요가 내려가는 상황에서는, 더 팔기 위해 가격을 낮출 때 앞의 수량에서도 받을 돈이 줄어듭니다. 이 때문에 양의 수량에서 아주 조금 더 팔아 늘어나는 수입의 비율은 현재 가격보다 작습니다.</p>
+        </div>
+        <RevenueChordViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">이번 매출은 R(q) = q(13 − q)입니다. 이를 미분하면 R′(q) = 13 − 2q가 됩니다. 3에서의 미분값은 7이고 4에서의 미분값은 5입니다. 3개에서 4개로 한 번에 늘린 차이 36 − 30 = 6은 이 두 끝점의 미분값과 다릅니다.</p>
           <p className="leading-7">수요가 직선이고 구간 길이가 1인 이번 사례에서는 두 끝점 미분값의 평균인 6이 그 구간의 매출 차이와 같습니다. 일반적인 수요에서도 항상 단순 평균을 쓰는 것은 아닙니다. 정수 수량을 비교할 때는 각 매출을 직접 빼면 됩니다.</p>
           <p className="leading-7">
@@ -139,6 +151,7 @@ export default function MarketPowerAndMarkupArticle() {
       </section>
       <section id="stopping-point" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 연속적인 수량에서는 이익식 전체로 최대점을 확인한다</h2>
+        <ProfitCurveViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">이번 이익은 매출 13q − q²에서 비용 7q를 뺀 6q − q²입니다. 이를 9 − (q − 3)²로 다시 쓰면 3에서 이익 9가 가장 크다는 것이 보입니다. 어떤 수량에서도 제곱한 값은 음수가 아니므로 앞뒤의 일부 수량만 확인한 결과가 아닙니다.</p>
           <p className="leading-7">미분으로도 같은 점을 찾을 수 있습니다. 이익의 변화율 6 − 2q가 0인 수량은 3입니다. 그때 한계수입 13 − 2 × 3은 한계비용 7과 같고 실제 가격은 수요식에 3을 넣어 10으로 읽습니다. 이익의 두 번째 미분이 −2이므로 이 사례의 내부 정지점은 유일한 최대점입니다.</p>
@@ -205,6 +218,7 @@ export default function MarketPowerAndMarkupArticle() {
       </section>
       <section id="elasticity-comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">12. 수요를 바꿀 때와 비용을 바꿀 때를 나눠 본다</h2>
+        <DemandPointsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             기본 수요 p = 13 − q와 다른 수요 p = 19 − 2q를 한계비용 7 아래에서 비교합니다. 두 관계는 모두 수량 6에서 가격 7을 지나지만 서로 다른 수요입니다. 두
@@ -218,6 +232,7 @@ export default function MarketPowerAndMarkupArticle() {
       </section>
       <section id="what-is-lost" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">13. 이전된 9와 일어나지 않은 거래의 가치 4.5를 나눈다</h2>
+        <SurplusAreaViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">같은 수요 p = 13 − q와 한계비용 7에서 가격 7에 수량 6을 거래하는 기준을 둡니다. 이때 소비자 잉여는 밑변 6, 높이 6인 삼각형의 넓이 18입니다. 이 글에서는 고정비가 없고 가격과 비용이 같으므로 생산자 잉여는 0입니다.</p>
           <p className="leading-7">
@@ -232,6 +247,7 @@ export default function MarketPowerAndMarkupArticle() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">14. 생산 한도·진입 비용·시장 제도가 있으면 다시 비교한다</h2>
+        <ProfitLimitsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">기본 수요에서 최대 2개만 만들 수 있다면 수량 3은 선택할 수 없습니다. 0부터 2까지 이익이 늘어나므로 2개를 만들고 가격 11을 받습니다. 그때 한계수입은 9이고 한계비용은 7로 서로 다릅니다. 생산 한도에 걸린 최대점에 MR = MC를 요구하면 답을 잃습니다.</p>
           <p className="leading-7">새로 영업을 시작할 때 피할 수 있는 고정비 10이 필요하고 생산하지 않으면 그 비용도 내지 않는 경우를 생각합니다. 운영 중 가장 큰 이익 9에서 10을 빼면 −1이므로 아무것도 하지 않는 0이 더 큽니다. 이미 회수 불가능하게 지출한 10이라면 계속 영업할 때 추가로 얻는 9와 이후 달라지는 비용을 비교해야 합니다.</p>

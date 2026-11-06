@@ -6,6 +6,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EvaluationDatasetsAndPipelinesViz from "./evaluation-datasets-and-pipelines/viz/EvaluationDatasetsAndPipelinesViz";
+import EdgeCaseMixViz from "./evaluation-datasets-and-pipelines/viz/EdgeCaseMixViz";
+import SampleSquareViz from "./evaluation-datasets-and-pipelines/viz/SampleSquareViz";
+import SliceWeightViz from "./evaluation-datasets-and-pipelines/viz/SliceWeightViz";
+import TrafficRouteViz from "./evaluation-datasets-and-pipelines/viz/TrafficRouteViz";
 import {
   EvaluationTrustPathLocator,
   EvaluationTrustPathMapReturn,
@@ -106,6 +110,9 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             정상 입력 분포의 경계에 있는 드문 입력이 edge case 이고 model 이 틀리도록 일부러 설계한 입력이 adversarial example 입니다. 두 종류를
             golden set 에 일부러 섞어 넣지 않으면 평범한 입력에서만 잘 도는 model 이 통과해 버립니다.
           </p>
+          </div>
+        <EdgeCaseMixViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             가정: golden set 200 개 중 20 개(10 %)를 edge case·adversarial 로 채웠습니다. 나머지
             180 개의 실패율은 6 % 인데 그 20 개에서는 실패율이 40 % 로, 평범한 example 만 봤다면
@@ -151,6 +158,9 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             slice 의 정확도는 50 % 떨어진 경우를 보고합니다. 국가별로 나눠 보지 않았다면 이
             회귀는 그대로 배포됐을 것입니다.
           </p>
+          </div>
+        <SliceWeightViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다른 slice 보다 유난히 나쁜 slice 를 failure slice 라고 부릅니다. 언어별로 나누면
             영어 95 %, 한국어 88 %, 자원이 적은 언어 72 % 로 갈리는데, 가중 평균은 90 % 근처라
@@ -227,6 +237,9 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             ML Test Score 논문도 validation 데이터는 항상 실제 serving 입력보다 오래됐고 서빙 시점의 정답 label 을 바로 알기 어려워 품질 측정 자체가
             어렵다고 지적합니다. 그래서 online 회귀를 잡으려면 별도 monitoring 이 필요합니다.
           </p>
+          </div>
+        <TrafficRouteViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             새 model 을 실 트래픽 일부에 A/B 분할 없이 붙여 관찰하는 방법이 shadow evaluation 입니다. 트래픽 10 % 에 candidate 를 붙이되 사용자에게는
             기존 model 응답을 그대로 보내고 candidate 의 지표만 기록하며 문제가 없으면 그 비율을 점점 늘립니다. ML Test Score 가 말하는 canary 가 이
@@ -236,6 +249,9 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             A/B testing 은 트래픽을 candidate 와 control 로 무작위 분할해 사용자가 실제로 candidate 응답을 받게 한 뒤 목표 지표의 차이가 우연보다 큰지
             유의성 검정으로 판정합니다. Shadow 와 달리 사용자 경험에 직접 영향을 줍니다.
           </p>
+          </div>
+        <SampleSquareViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Kohavi 등의 연구는 제곱 관계를 보고합니다. 감지하려는 효과가 절반이 되면 필요한 표본 수는 네 배가 됩니다. 이 때문에 대형 서비스의 실험 하나가 수백만 사용자에
             노출되고 한 회사가 연간 2 만 건이 넘는 실험을 동시에 돌리기도 합니다.

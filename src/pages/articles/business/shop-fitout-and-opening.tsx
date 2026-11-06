@@ -4,6 +4,9 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ShopFitoutAndOpeningViz from "./ShopFitoutAndOpeningViz";
+import HiddenRoutesViz from "./shop-fitout-and-opening/viz/HiddenRoutesViz";
+import MultiUseCheckViz from "./shop-fitout-and-opening/viz/MultiUseCheckViz";
+import TaxTypeThresholdViz from "./shop-fitout-and-opening/viz/TaxTypeThresholdViz";
 
 /** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopFitoutAndOpeningArticle() {
@@ -63,6 +66,7 @@ export default function ShopFitoutAndOpeningArticle() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5. 도면보다 먼저 확인할 것은 돌아가는 설비와 빠져나갈 길이다</h2>
+        <HiddenRoutesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">800만 원의 추가 작업을 벽 마감 뒤에 발견하면 완성한 부분을 뜯는 비용까지 생깁니다. 실제 장비가 요구하는 전력과 가스, 물이 들어오고 빠지는 경로, 냄새가 나가는 곳을 도면에 먼저 놓아야 합니다.</p>
           <p className="leading-7">손님 공간을 넓히려고 통로나 출입구를 줄이면 영업 안전과 시설기준을 함께 해칠 수 있습니다. 관할 부서와 소방서의 적용 요건을 설계 전에 확인하고 건물 관리자의 공사시간·자재 반입·폐기물 반출 규칙까지 공정에 넣습니다.</p>
@@ -91,6 +95,11 @@ export default function ShopFitoutAndOpeningArticle() {
             확인합니다. 시공사에게 받을 시험 결과와 도면, 장비 보증서도 잔금 조건에 연결합니다.
           </p>
           <p className="leading-7">30일 중 신고와 검사에 필요한 날짜를 따로 잡습니다. 음식점은 한국 식품위생법상 시설기준과 영업자 교육·종사자 건강진단 등의 적용 요건을 관할 위생부서에서 확인합니다. 소방 안전시설 완비증명과 의무보험은 다중이용업소 해당 여부 등에 따라 달라지므로 모든 작은 음식점에 똑같이 적용하지 않습니다.</p>
+        </div>
+
+        <MultiUseCheckViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">해당 여부는 숫자로 판정할 수 있습니다. 법제처 생활법령 안내(2026-09-15 기준 작성, 2026-11-01 확인)에 따르면 휴게음식점·제과점·일반음식점은 영업장 바닥면적 합계가 100㎡ 이상이면 다중이용업소이고, 영업장이 지하층에 있으면 66㎡ 이상부터 해당합니다.</p>
           <p className="leading-7">다만 영업장이 지상 1층이나 지상과 직접 닿는 층에 있고 주된 출입구가 건물 밖 지면과 바로 이어지면 면적과 관계없이 제외됩니다(내부 계단으로 이어진 복층 영업장은 이 예외에서 빠집니다). 예를 들어 2층 120㎡ 매장은 해당하고, 지하 70㎡ 매장도 해당하며, 길에서 바로 들어오는 1층 150㎡ 매장은 해당하지 않습니다(면적은 모두 가정).</p>
           <p className="leading-7">
@@ -108,6 +117,11 @@ export default function ShopFitoutAndOpeningArticle() {
         <h2 className="mb-6 text-2xl font-bold">8. 영업 신고와 사업자등록을 서로 다른 문서로 준비한다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">시설을 만들었으면 업종의 시설기준과 신고·허가를 확인해야 합니다. 세무서의 사업자등록은 납세자를 등록하는 절차이므로 시설을 영업에 써도 된다는 승인과 같지 않습니다.</p>
+        </div>
+
+        <TaxTypeThresholdViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">등록을 신청할 때 개인사업자는 과세유형도 고릅니다. 같은 국세청 안내에 따르면 연간 공급대가(부가세를 포함한 매출) 예상액이 1억400만 원 미만이면 간이과세자, 그 이상이면 일반과세자이며, 1억400만 원 미만이어도 간이과세를 적용받을 수 없는 사업자가 따로 정해져 있습니다.</p>
           <p className="leading-7">하루 매출 30만 원(가정)으로 360일 영업을 예상하면 연 1억800만 원이라 일반과세자이고, 하루 25만 원이면 9천만 원이라 제외 대상이 아닌 한 간이과세를 고를 수 있습니다. 유형은 4천800만 원 공사의 세금계산서를 받기 전, 등록 신청 단계에서 정해집니다(2026-11-01 확인).</p>
         </div>

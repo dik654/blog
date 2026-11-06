@@ -5,6 +5,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import PacketHookPathViz from "./linux-network-interface-route-netfilter-dns/viz/PacketHookPathViz";
 import DnsSearchNdotsViz from "./linux-network-interface-route-netfilter-dns/viz/DnsSearchNdotsViz";
+import TwoPlanesViz from "./linux-network-interface-route-netfilter-dns/viz/TwoPlanesViz";
+import VethBridgeViz from "./linux-network-interface-route-netfilter-dns/viz/VethBridgeViz";
+import LongestPrefixViz from "./linux-network-interface-route-netfilter-dns/viz/LongestPrefixViz";
+import ConntrackEntryViz from "./linux-network-interface-route-netfilter-dns/viz/ConntrackEntryViz";
+import ConntrackFillViz from "./linux-network-interface-route-netfilter-dns/viz/ConntrackFillViz";
+import PacketTraceViz from "./linux-network-interface-route-netfilter-dns/viz/PacketTraceViz";
 import { codeRefs } from "./linux-network-interface-route-netfilter-dns/codeRefs";
 import { linuxNetworkTrees } from "./linux-network-interface-route-netfilter-dns/fileTree";
 
@@ -33,6 +39,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 이름은 주소로, 주소는 경로로 바뀌고, 패킷은 훅을 지나 소켓에 닿습니다</h2>
+          <TwoPlanesViz />
           <div className={prose}>
             <p>
               바깥에서 보면 요청 하나는 두 평면을 지납니다. 이름 평면에서는 프로세스가 /etc/resolv.conf를 읽어 nameserver에 질의하고 IP 주소를 얻습니다. 데이터 평면에서는 그 주소로 보낸 패킷이 Pod의 eth0(veth 한쪽)을 나와 호스트의 veth 짝에서 수신된 뒤 bridge 또는 호스트 라우팅을 거쳐 노드 밖으로 나갑니다. 돌아오는 패킷은 반대 순서로 Pod 안 소켓에 닿습니다.
@@ -102,6 +109,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
 
         <section id="veth-bridge" data-teach-level="2" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">5. veth는 짝에게 건네고, bridge는 MAC 표를 보고 한 포트에만 건넵니다</h2>
+          <VethBridgeViz />
           <div className={prose}>
             <p>
               Pod가 만들어질 때 CNI bridge 플러그인은 Pod의 network namespace 안에서 veth 쌍을 만들고 한쪽(eth0)은 그 안에 두고 다른 쪽은 호스트 namespace로 옮긴 뒤 cni0 bridge의 포트로 붙입니다. 이때 hairpin 모드도 설정합니다.</p>
@@ -120,6 +128,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
 
         <section id="routing" data-teach-level="3" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">6. 라우팅 결정은 규칙 목록으로 표를 고르고, 표에서 가장 긴 prefix를 고릅니다</h2>
+          <LongestPrefixViz />
           <div className={prose}>
             <p>
               (가정) 노드의 main 표에 세 경로가 있습니다. 10.244.1.0/24 dev cni0(이 노드의 Pod), 10.244.0.0/16 dev tunl0(다른 노드의 Pod, 터널), default via 10.0.0.1 dev eth0. 목적지 10.244.1.9는 세 경로에 모두 맞지만 /24가 가장 길어 cni0로 갑니다.</p>
@@ -179,6 +188,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
 
         <section id="conntrack" data-teach-level="5" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. conntrack은 연결마다 항목 하나를 두며, 상한을 넘으면 새 연결의 첫 패킷을 버립니다</h2>
+          <ConntrackEntryViz />
           <div className={prose}>
             <p>
               NAT가 양방향으로 동작하려면 "이 응답은 어느 변환의 응답인가"를 기억해야 합니다. 그 기억이 conntrack 표입니다.</p>
@@ -186,6 +196,9 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
             <p>
               표의 크기는 두 값으로 정해집니다. nf_conntrack_buckets는 해시 버킷 수이고 기본값은 메모리 ÷ 16384를 1024~262144로 자른 값입니다. nf_conntrack_max는 항목 수 상한이고 기본값은 버킷 수와 같습니다.</p>
             <p>새 항목을 만들 때 상한을 넘으면 같은 버킷에서 오래된 항목을 하나 지워 보고(early_drop), 그것도 안 되면 -ENOMEM과 함께 dmesg에 "nf_conntrack: table full, dropping packet"을 남기며 그 패킷을 버립니다. 기존 연결은 멀쩡하고 새 연결의 첫 SYN만 사라지므로 증상은 '가끔 연결이 안 됨'입니다.</p>
+          </div>
+          <ConntrackFillViz />
+          <div className={prose}>
             <p>
               항목은 프로토콜 상태별 timeout이 지나야 사라집니다. TCP ESTABLISHED는 기본 432,000초(5일), TIME_WAIT는 120초입니다. 상대가 FIN 없이 사라진 연결의 항목은 5일 동안 자리를 차지합니다.</p>
             <p>아래 계산은 16 GiB 노드에서 그런 연결이 초당 100개씩 쌓일 때 표가 몇 분 만에 차는지를 셉니다. TIME_WAIT가 소켓 쪽에서 포트를 묶는 문제와 conntrack의 NAT 장부가 다른 표라는 점은 <a href="/cs/cloud/linux-tcp-time-wait-ports-backlog#conntrack">TCP 글의 conntrack 절</a>에 있습니다.</p>
@@ -246,6 +259,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
 
         <section id="kernel-source" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">10. 원문 한 벌로 Pod 패킷 하나를 끝까지 따라갑니다</h2>
+          <PacketTraceViz />
           <div className={prose}>
             <p>
               1절의 Pod가 api.example.com에 보내는 첫 SYN을 원문 순서로 놓습니다.</p>

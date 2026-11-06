@@ -4,7 +4,12 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { giwaNodeTree } from "./fileTrees";
+import DerivationPathViz from "./viz/DerivationPathViz";
+import GenerationCompareViz from "./viz/GenerationCompareViz";
+import HeadCursorsViz from "./viz/HeadCursorsViz";
 import ModernGiwaNodeViz from "./viz/ModernGiwaNodeViz";
+import ReorgRewindViz from "./viz/ReorgRewindViz";
+import UnsafePayoutViz from "./viz/UnsafePayoutViz";
 
 const GIWA_COMMIT = "dcb59ac76a2b1aa7ec5dbc236c03053895b040b8";
 const GIWA_DOCS = "https://docs.giwa.io/giwa-chain/en";
@@ -96,6 +101,8 @@ export default function ModernGiwaChainArticle() {
             op-reth 버전을 한 세대로 기록해야 합니다. 이 묶음을 여기서는
             <strong> network generation</strong>이라고 부릅니다.
           </p>
+
+          <GenerationCompareViz />
 
           <ExplainedFormula
             question="두 node가 같은 GIWA network generation을 실행한다고 언제 말할까?"
@@ -239,6 +246,8 @@ export default function ModernGiwaChainArticle() {
             rollup 규칙을 적용해 block 120의 payload를 다시 만듭니다.
           </p>
 
+          <DerivationPathViz />
+
           <p>
             여기서 op-node와 op-reth의 역할이 갈립니다. op-node는 입력의 순서와
             규칙을 해석해 payload를 정합니다. op-reth는 그 payload를 parent
@@ -310,6 +319,8 @@ export default function ModernGiwaChainArticle() {
             interpretation="Sequencer 응답이 같다는 사실만으로 safe parity가 성립하지 않습니다. L1에서 재구성한 payload, receipt와 state root가 모두 같아야 합니다."
           />
 
+          <ReorgRewindViz />
+
           <p>
             L1 reorg가 생기면 “최근 높이 몇 개를 지운다”로 처리하지 않습니다.
             op-node는 현재 L1 origin과 새 canonical chain의 공통 조상을 찾고, 그
@@ -351,6 +362,8 @@ export default function ModernGiwaChainArticle() {
               세 head는 같은 chain 위의 확인 위치입니다
             </h2>
           </header>
+
+          <HeadCursorsViz />
 
           <p>
             예제의 시작점은 unsafe 120, safe 118, finalized 115입니다. 이는
@@ -505,6 +518,8 @@ export default function ModernGiwaChainArticle() {
             ]}
             interpretation="Unsafe receipt가 성공이어도 앱 정책이 safe라면 승인은 0입니다. 승인이 1이어도 stablecoin 준비금과 상환 가능성까지 참이 되는 것은 아닙니다."
           />
+
+          <UnsafePayoutViz />
 
           <p>
             반례를 보면 경계가 선명합니다. App이 unsafe deposit T를 본 즉시 다른

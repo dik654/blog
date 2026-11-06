@@ -6,6 +6,13 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import CpuQuotaThrottleViz from "./linux-containers-cgroup-namespace/viz/CpuQuotaThrottleViz";
 import ContainerThreeAxesViz from "./linux-containers-cgroup-namespace/viz/ContainerThreeAxesViz";
+import WeightVsMaxViz from "./linux-containers-cgroup-namespace/viz/WeightVsMaxViz";
+import RatioKeptViz from "./linux-containers-cgroup-namespace/viz/RatioKeptViz";
+import MemoryLinesViz from "./linux-containers-cgroup-namespace/viz/MemoryLinesViz";
+import PsiSomeFullViz from "./linux-containers-cgroup-namespace/viz/PsiSomeFullViz";
+import NsproxySlotsViz from "./linux-containers-cgroup-namespace/viz/NsproxySlotsViz";
+import CapBitmapViz from "./linux-containers-cgroup-namespace/viz/CapBitmapViz";
+import SliceBucketViz from "./linux-containers-cgroup-namespace/viz/SliceBucketViz";
 import { codeRefs } from "./linux-containers-cgroup-namespace/codeRefs";
 import { linuxContainerTrees } from "./linux-containers-cgroup-namespace/fileTree";
 
@@ -85,6 +92,9 @@ export default function LinuxContainersCgroupNamespaceArticle() {
             <p>
               앞 절의 장치에 표준 이름을 붙입니다. 프로세스 집합의 자원 사용을 세고 제한하는 커널 기능이 cgroup(control group)이고, 지금 배포판이 쓰는 판은 v2입니다. v2는 /sys/fs/cgroup 아래 디렉터리 트리 하나이며, 디렉터리마다 cpu·memory·io·pids 같은 컨트롤러의 파일이 놓입니다. 프로세스는 정확히 한 디렉터리에 속하고, 디렉터리의 한도는 그 아래 모든 자손에 함께 적용됩니다.
             </p>
+          </div>
+          <WeightVsMaxViz />
+          <div className={prose}>
             <p>
               CPU 컨트롤러의 파일은 둘로 나뉩니다. cpu.weight는 경합할 때의 비율입니다. 기본 100이고 범위는 1~10000이며, 형제 cgroup A가 100·B가 300이면 CPU가 모자랄 때 1:3으로 나눕니다.</p>
             <p>놀고 있는 CPU는 weight와 무관하게 누구나 씁니다. cpu.max는 상한입니다. "$MAX $PERIOD" 두 숫자로 적고 기본값은 "max 100000"이라 주기만 있고 상한은 없습니다. 3절의 멈춤은 cpu.max만의 효과이고 weight는 관여하지 않았습니다.</p>
@@ -103,6 +113,9 @@ export default function LinuxContainersCgroupNamespaceArticle() {
             <p>
               Kubernetes의 resources 필드는 이 두 파일의 다른 이름입니다. kubelet은 requests.cpu를 먼저 cgroup v1 시절의 단위인 shares로 바꿉니다. 1 CPU = 1024 shares라 500m은 512, 1000m은 1024, 2000m은 2048입니다.</p>
             <p>cgroup v2 노드에서는 이 shares를 다시 [1, 10000] 범위의 cpu.weight로 눌러 넣습니다. limits.cpu는 quota로 바꿉니다. milliCPU × 100000 ÷ 1000이라 500m이 50000µs, 2 CPU가 200000µs입니다.</p>
+          </div>
+          <RatioKeptViz />
+          <div className={prose}>
             <p>
               쓰이는 식은 선형 변환 하나입니다. shares 2~262144를 weight 1~10000에 대응시키므로 512 shares는 weight 20, 1024는 39, 2048은 79가 됩니다. 커널은 이 weight를 받아 자기 기준(weight 100 = shares 1024)으로 다시 shares 205·399·809로 저장합니다. 숫자는 두 번 바뀌지만 Pod끼리의 비율 1:2:4는 그대로 남습니다. weight가 정하는 것은 비율뿐이기 때문입니다.
             </p>
@@ -157,6 +170,9 @@ export default function LinuxContainersCgroupNamespaceArticle() {
             <p>
               메모리 컨트롤러에도 두 종류의 선이 있습니다. memory.high를 넘으면 그 cgroup의 프로세스는 할당 때마다 직접 회수를 강제당해 느려지지만 OOM killer는 불리지 않습니다. 커널 문서는 이 보장을 한 문장으로 적습니다.</p>
             <p>극단적인 경우에는 high를 넘을 수도 있고, 그 넘침을 막는 마지막 벽이 memory.max입니다. max에 닿고 회수로 줄일 수 없으면 그 cgroup 안에서 OOM killer가 불려 점수가 가장 높은 프로세스가 SIGKILL을 받습니다.</p>
+          </div>
+          <MemoryLinesViz />
+          <div className={prose}>
             <p>
               (가정) memory.max 2 GiB, memory.high 1.8 GiB인 컨테이너가 있다면, 1.8 GiB를 넘는 순간부터 할당이 느려지고 PSI memory가 오르며 memory.events의 high 카운터가 늘어납니다. 운영자는 이 구간에서 경보를 받고 한도를 올리거나 재시작을 고를 수 있습니다. high 없이 max만 있으면 느려지는 구간 없이 바로 137을 만납니다.
             </p>
@@ -180,6 +196,9 @@ export default function LinuxContainersCgroupNamespaceArticle() {
             <p>
               3절의 12%와 6절의 느려짐은 사용률 지표에 나타나지 않습니다. 사용률은 쓴 양을 세고, 두 증상은 못 쓰고 기다린 시간이기 때문입니다. 그 시간을 세는 지표가 PSI(Pressure Stall Information)입니다. /proc/pressure/cpu·memory·io 세 파일이 시스템 전체를, cgroup 디렉터리의 cpu.pressure·memory.pressure·io.pressure가 그 cgroup을 보여 줍니다.
             </p>
+          </div>
+          <PsiSomeFullViz />
+          <div className={prose}>
             <p>
               형식은 두 줄입니다. some 줄은 적어도 한 작업이 그 자원 때문에 멈춰 있던 시간의 비율이고, full 줄은 일할 수 있는 작업 전부가 동시에 멈춘 비율입니다. avg10·avg60·avg300은 최근 10·60·300초의 비율이고 total은 누적 µs입니다. 메모리 글 4절의 서버가 자주 읽는 파일 page까지 비우며 버벅일 때 오르는 것이 memory의 full이고, 노드 CPU가 모자라 run queue에서 기다리는 시간이 cpu의 some입니다.
             </p>
@@ -198,6 +217,9 @@ export default function LinuxContainersCgroupNamespaceArticle() {
               1절의 옆 컨테이너가 다른 hostname을 보고 ps에 자기 프로세스만 보는 이유는 namespace입니다. namespace는 커널의 전역 자원 하나를 여러 벌로 만들어 프로세스마다 다른 벌을 보여 주는 장치입니다. 종류는 여덟입니다.</p>
             <p>mount namespace는 마운트 표를 따로 갖고 PID namespace는 프로세스 번호를 따로 셉니다. network namespace는 장치와 주소, 포트, 라우팅 표, netfilter 규칙을 한 벌로 갖습니다.</p>
             <p>UTS namespace는 hostname을 분리하고 IPC namespace는 System V IPC와 메시지 큐를 분리합니다. user namespace는 UID와 GID 대응을 바꾸고, cgroup namespace는 cgroup 루트를, time namespace는 boot clock과 monotonic clock의 오프셋을 바꿉니다.</p>
+          </div>
+          <NsproxySlotsViz />
+          <div className={prose}>
             <p>
               커널 안에서 프로세스는 struct nsproxy 하나를 가리키고 그 안에 uts, ipc, mnt, pid, net, time, cgroup 일곱 namespace의 포인터가 들어 있습니다(user namespace는 자격 증명 쪽에 따로 있습니다). 컨테이너의 첫 프로세스는 clone 때 CLONE_NEWNS·CLONE_NEWPID 같은 플래그로 이 포인터들 가운데 몇 개를 새 객체로 바꾼 프로세스입니다.</p>
             <p>바꾸지 않은 포인터는 호스트와 같은 객체를 가리킵니다. 그래서 Kubernetes Pod 안의 컨테이너들은 network·UTS·IPC를 공유하고(같은 sandbox에서 만든 포인터를 물려받음) mount·PID는 각자 새로 받습니다.</p>
@@ -221,6 +243,9 @@ export default function LinuxContainersCgroupNamespaceArticle() {
             <p>
               1절의 bind 실패는 세 번째 축입니다. 전통적인 유닉스에서는 UID 0이면 모든 것을 할 수 있었습니다. 리눅스는 그 "모든 것"을 capability라는 비트 41개(0~40)로 쪼갰습니다.</p>
             <p>프로세스는 다섯 집합(Permitted·Effective·Inheritable·Bounding·Ambient)을 갖고, /proc/PID/status의 CapEff가 지금 쓸 수 있는 비트를 16진수로 보여 줍니다. 1024 미만 포트에 bind하는 능력은 번호 10번 CAP_NET_BIND_SERVICE이고, bind()는 이 비트가 없으면 EACCES를 돌려줍니다.</p>
+          </div>
+          <CapBitmapViz />
+          <div className={prose}>
             <p>
               Kubernetes 문서의 기본 컨테이너 예제는 CapEff 00000000a80425fb를 보여 줍니다. 아래에서 이 숫자를 풀면 14개 비트가 켜져 있고 그 안에 10번이 들어 있습니다. 그래서 root로 도는 기본 컨테이너는 80번 포트에 bind할 수 있습니다.</p>
             <p>1절의 컨테이너는 runAsUser 1000으로 돌았기 때문에 실패했습니다. UID가 0이 아니면 execve 때 Permitted·Effective가 비워지므로, 필요한 비트 하나만 capabilities.add로 돌려주면 됩니다.</p>
@@ -257,6 +282,9 @@ export default function LinuxContainersCgroupNamespaceArticle() {
             <p>
               3절의 멈춤을 Linux v6.12 kernel/sched/fair.c에서 따라갑니다. cpu.max에 쓴 두 숫자는 core.c의 cpu_max_write → tg_set_cfs_bandwidth(9298행)로 들어가 task group의 cfs_bandwidth 구조체에 quota 50,000,000ns·period 100,000,000ns로 저장됩니다. quota는 1ms 이상, period는 1ms 이상 1초 이하여야 합니다(9291–9313행).
             </p>
+          </div>
+          <SliceBucketViz />
+          <div className={prose}>
             <p>
               실행 중인 스레드가 CPU를 쓸 때마다 스케줄러는 __account_cfs_rq_runtime(5812행)으로 그 CPU의 run queue가 가진 runtime_remaining에서 delta_exec를 뺍니다.</p>
             <p>0 이하가 되면 assign_cfs_rq_runtime이 cgroup 공용 통 cfs_b-&gt;runtime에서 slice 5ms를 꺼내 옵니다(5800–5808행). 통까지 비어 있으면 resched_curr로 현재 스레드를 내리고, 다음 스케줄 결정에서 check_cfs_rq_runtime(6488행)이 throttle_cfs_rq(5915행)를 불러 이 cgroup의 run queue 전체를 dequeue합니다. 1절의 네 스레드가 내려오는 순간입니다.</p>

@@ -1,4 +1,10 @@
 import { CitationBlock } from "@/components/ui/citation";
+import CostAreaViz from "./electricity-grid-and-power/viz/CostAreaViz";
+import PowerEnergyViz from "./electricity-grid-and-power/viz/PowerEnergyViz";
+import ShiftToNightViz from "./electricity-grid-and-power/viz/ShiftToNightViz";
+import ShortfallViz from "./electricity-grid-and-power/viz/ShortfallViz";
+import StorageRateViz from "./electricity-grid-and-power/viz/StorageRateViz";
+import TwoWayFlowViz from "./electricity-grid-and-power/viz/TwoWayFlowViz";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
@@ -17,6 +23,7 @@ export default function ElectricityGridAndPowerArticle() {
       </section>
       <section id="black-box" data-teaching-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">B · 만드는 곳에서 쓰는 곳까지 세 번 확인합니다</h2>
+        <TwoWayFlowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">만드는 곳은 그 시간에 얼마나 내보낼 수 있는지 알려 줍니다. 보내는 쪽은 길을 안전하게 통과할 수 있는 양을 확인합니다. 쓰는 곳은 도착한 양으로 기계를 돌리고 부족하면 다른 공급이나 생산 연기를 선택합니다.</p>
           <p className="leading-8">돈은 반대 방향으로 흘러갑니다. 쓰는 사람이 내는 돈으로 생산과 길의 유지 비용을 갚습니다. 어느 기관이 세 일을 나누어 맡든 이 세 기능은 모두 필요합니다.</p>
@@ -28,6 +35,9 @@ export default function ElectricityGridAndPowerArticle() {
         <h2 className="mb-6 text-2xl font-bold">0 · 한 시간에 100을 만들 수 있지만 80만 보낼 수 있습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">오후 한 시간 동안 한 발전소는 100MWh를 만들 수 있습니다. 먼 공장으로 보내는 길은 그 시간에 80MWh까지만 통과시킨다고 놓습니다(가정). 공장이 원하는 양은 100MWh입니다. 손실과 다른 이용자는 우선 생략합니다.</p>
+        </div>
+        <ShortfallViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">그 발전소에서 공장으로 도착할 양은 80MWh입니다. 나머지 20MWh는 공장 근처의 다른 공급원에서 구해야 합니다. 사용을 줄이는 선택도 있습니다. 100MWh를 먼저 만든 뒤 20MWh를 길에서 버린다는 뜻은 아닙니다. 미리 생산을 줄이는 선택도 있습니다.</p>
         </div>
         <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">100·80·20의 차이가 잡혔습니다. 다음 그림에서 보내는 쪽의 판단 하나를 엽니다.</p>
@@ -44,12 +54,16 @@ export default function ElectricityGridAndPowerArticle() {
         <h2 className="mb-6 text-2xl font-bold">2 · 안전 여유와 시간별 조정에도 돈이 듭니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">길을 무제한으로 사용하면 설비의 열과 운전 조건이 허용 범위를 벗어날 수 있습니다. 여분의 길이나 공급을 준비하는 이유는 평소 생산량을 키우는 것뿐 아니라 고장과 갑작스러운 수요에도 버티기 위해서입니다.</p>
+        </div>
+        <ShiftToNightViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">공장이 20MWh의 작업을 밤으로 옮기면 같은 길을 더 넓히지 않고도 일을 마칠 수 있습니다(가정). 대신 교대 인력과 납품 일정의 비용이 생깁니다. 가까운 저장 설비에 미리 채워 두어도 충전 손실과 설치비를 부담합니다.</p>
         </div>
         <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">길을 늘리거나 시간을 바꾸는 대가를 알았습니다. 이제 이 역할에 쓰는 이름을 붙입니다.</p>
       </section>
       <section id="names" data-teaching-level="3" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3 · 출력·사용량·접속을 다른 단위로 부릅니다</h2>
+        <PowerEnergyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">순간에 얼마나 빠르게 전기를 만들거나 쓰는지 나타내는 양이 전력이고 단위는 MW입니다. 그 상태를 얼마 동안 유지했는지 합친 에너지는 MWh로 적습니다. 100MW를 한 시간 유지하면 100MWh가 됩니다.</p>
           <p className="leading-8">전기를 장거리로 옮기는 길은 송전망입니다. 그 길에 새 발전소나 공장을 연결할 조건을 망 접속이라고 부릅니다. 이 사례의 접속 제약은 그 한 시간의 공급을 80MWh로 제한합니다.</p>
@@ -59,6 +73,7 @@ export default function ElectricityGridAndPowerArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 먼 발전 80과 가까운 발전 20을 합쳐 공급합니다</h2>
+        <CostAreaViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">먼 발전의 단가를 MWh당 5만 원, 공장 근처 대체 공급을 10만 원으로 둡니다(가정). 먼 곳에서 80MWh를 받아 400만 원, 가까운 곳에서 20MWh를 받아 200만 원을 냅니다. 에너지 조달비는 합계 600만 원입니다.</p>
           <p className="leading-8">길의 제약이 없어서 먼 곳에서 100MWh를 모두 살 수 있었다면 500만 원입니다. 두 조건의 차이 100만 원은 이 한 시간의 추가 조달비입니다. 이것만으로 송전선 건설비를 회수할 수 있는지는 아직 모릅니다. 연간 혼잡 시간과 공사비를 더 알아야 합니다.</p>
@@ -90,6 +105,7 @@ export default function ElectricityGridAndPowerArticle() {
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 싼 평균 요금이 필요한 순간의 공급을 보장하지 않습니다</h2>
+        <StorageRateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">저장 설비가 20MWh를 담을 수 있어도 한 시간에 5MW만 낼 수 있다면 그 시간의 부족 20MWh를 모두 채우지 못합니다(가정). 저장량과 방전 속도를 함께 확인해야 합니다.</p>
           <p className="leading-8">전력 가격과 공급 안정성의 경계는 계약상 받을 권리, 실제 연결 용량, 정전 때의 대체 수단에 있습니다. 낮은 평균 요금과 연간 발전량만으로 공장의 생산 손실을 추정할 수 없습니다.</p>

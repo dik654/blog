@@ -6,7 +6,11 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import GovernmentFormsViz from "./government-forms/viz/GovernmentFormsViz";
+import CoalitionFilterViz from "./government-forms/viz/CoalitionFilterViz";
+import CohabitationViz from "./government-forms/viz/CohabitationViz";
+import ConfidenceBranchViz from "./government-forms/viz/ConfidenceBranchViz";
 import PowerIndexViz from "./government-forms/viz/PowerIndexViz";
+import SurvivalOriginGridViz from "./government-forms/viz/SurvivalOriginGridViz";
 
 /**
  * 같은 권력분립에서 왜 다른 체계가 나옵니까
@@ -100,6 +104,11 @@ export default function GovernmentFormsArticle() {
             일상 절차로 열려 있다</strong>고 이해해야 합니다.
           </p>
 
+        </div>
+
+        <SurvivalOriginGridViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             다음으로 행정부가 의회와 별도의 선거 기원을 갖는지 묻습니다. 직접선거든
             선거인단을 거치든, 의회 다수와 별도로 정해진 대통령은 독자적인 임기를
@@ -284,6 +293,11 @@ export default function GovernmentFormsArticle() {
             신임·공급 합의, 표결 기권 같은 지원이 필요할 수 있습니다.
           </p>
 
+        </div>
+
+        <ConfidenceBranchViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             그래서 나당·다당 160석이 다른 정부를 세울 수 있다면 대통령제의 정책
             교착이 의원내각제에서는 정부 교체로 풀릴 수 있습니다. 다른 과반이
@@ -317,6 +331,8 @@ export default function GovernmentFormsArticle() {
           조건을 거칩니다. “의원내각제는 한 표결에 곧 무너진다”는 일반화를 막는
           실제 설계입니다.
         </CitationBlock>
+
+        <CoalitionFilterViz />
 
         <AlgorithmBlock
           title="단독 과반이 없을 때 정부가 서기까지의 절차"
@@ -492,6 +508,11 @@ export default function GovernmentFormsArticle() {
             누가 누구를 해임할 수 있는지를 조문에서 따로 찾아야 합니다.
           </p>
 
+        </div>
+
+        <CohabitationViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             가당 대통령의 정당이 의회 과반이면 대통령과 총리의 정치적 방향이
             겹칠 수 있습니다. 그러나 이것이 대통령이 언제나 모든 정책을 법적으로

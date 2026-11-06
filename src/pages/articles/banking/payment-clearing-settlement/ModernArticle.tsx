@@ -7,6 +7,14 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
 import SettlementCaseViz from "./viz/SettlementCaseViz";
 import LiquidityOrderViz from "./viz/LiquidityOrderViz";
+import RecordLayersViz from "./viz/RecordLayersViz";
+import NetShareViz from "./viz/NetShareViz";
+import FinalityTracksViz from "./viz/FinalityTracksViz";
+import BalanceLadderViz from "./viz/BalanceLadderViz";
+import BatchSumViz from "./viz/BatchSumViz";
+import UnwindViz from "./viz/UnwindViz";
+import FinalityReturnViz from "./viz/FinalityReturnViz";
+import PvpLinkViz from "./viz/PvpLinkViz";
 const PFMI="https://www.bis.org/publications/principles-financial-market-infrastructures.pdf";
 const BOK="https://www.bok.or.kr/portal/main/contents.do?menuNo=200347";
 const BOKHYBRID="https://www.bok.or.kr/portal/main/contents.do?menuNo=200727";
@@ -50,11 +58,13 @@ export default function ModernArticle(){return <div className="space-y-16">
 <p className="leading-8">각 지시 금액을 따로 결제하면 총액결제, 정해진 순포지션으로 결제하면 차액결제라고 합니다. 건별 처리를 실시간으로 하는 RTGS와 순액 처리를 미루어 정해진 시점에 하는 DNS를 구별하겠습니다. 결제최종성은 규칙과 법적 근거에 따라 최종 이전 또는 의무 이행이 확정되는 상태를 가리킵니다.</p>
 </div><TermBreakdown title="이미 본 동작에 붙이는 이름" items={[{term:"상계",description:"서로 대응하는 의무를 정해진 법적 조건에 따라 맞추는 처리",example:"A−10·B 0·C+10이라는 순포지션을 계산합니다."},{term:"결제최종성",description:"규칙과 법적 근거가 정한 최종 이전 또는 의무 이행의 확정",example:"지시를 더는 철회할 수 없는 시점과 구분합니다."},{term:"PvP",description:"한 통화의 최종 지급을 다른 통화의 최종 지급에 연결하는 조건",example:"15절에서 같은 14억 원과100만 달러에 적용합니다."}]}/></section>
 <section id="three-layers" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 지시 처리와 기관 간 의무 이행은 다른 기록입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<RecordLayersViz/>
 <p className="leading-8">여섯 지시를 접수할 때는 보낼 은행과 받을 은행, 금액, 중복 여부, 처리 자격을 확인합니다. 잘못된 지시는 처음부터 거절할 수 있습니다. 접수했다는 응답과 처리 대상으로 수락했다는 판단도 실제 시스템에서는 다른 메시지일 수 있습니다.</p>
 <p className="leading-8">이후 기록을 대조해 차이를 계산하면 A−10, B 0, C+10이 나옵니다. 이 표는 결제할 의무를 설명하지만 자금이 이미 넘어갔다는 증거는 아닙니다. 정해진 계정에서 처리되고 해당 시스템의 최종성 조건을 충족했는지까지 보아야 합니다.</p>
 <p className="leading-8">고객 예금도 별도입니다. B은행이 고객에게 먼저 이용 가능한 잔액을 표시했는지, 기관 사이 결제 뒤에 표시했는지는 그 서비스의 규칙에 달렸습니다. 고객 화면은 언제나 청산 전이고 은행 간 완료는 언제나 하루 뒤라는 순서를 모든 송금에 적용할 수 없습니다.</p>
 </div></section>
 <section id="netting-efficiency" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 총액과 순액의 차이를 같은 여섯 건으로 계산합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<NetShareViz/>
 <p className="leading-8">같은 여섯 건의 총액은 260이고 차액으로 옮길 금액은 10입니다. 여기서 상계로 줄인 지급량 비율을 1−10/260으로 정하면 25/26, 약 96.15%입니다. 이 글의 비율은 같은 지시 집합을 총액으로 옮길 때와 순액으로 옮길 때를 비교합니다.</p>
 <p className="leading-8">첫 두 건만 떼어 보면 총액 190, 순액 10이므로 1−10/190=18/19, 약 94.74%입니다. 지시 집합이 달라졌으므로 전체 여섯 건의 비율과 다릅니다. 거래가 없어 총액이 0일 때는 0으로 나눌 수 없어 이 비율을 정의하지 않습니다.</p>
 <p className="leading-8">순액 10은 모든 은행의 순포지션 절댓값을 그대로 더한 20과도 다릅니다. A의 지급 10과 C의 수취 10은 같은 이동을 양쪽에서 적은 것입니다. 한 번만 세려면 순지급 은행의 금액을 더하거나 순수취 은행의 금액을 더합니다.</p>
@@ -64,16 +74,19 @@ export default function ModernArticle(){return <div className="space-y-16">
             실제 기준 문서에서 완료 조건을 확인하겠습니다. 2012년 CPSS-IOSCO의 PFMI 원칙 8은 최종 이전과 아직 결제되지 않은 지시의 철회 가능 시점을 구별합니다. PDF
             인쇄쪽 64의 핵심 고려사항 1과3, 설명 3.8.1을 나란히 읽으면 두 시점을 같은 것으로 볼 수 없다는 점이 드러납니다.
           </p>
+<FinalityTracksViz/>
 <p className="leading-8">A의 순지급 10에 적용하면, 지시를 더는 철회할 수 없게 되었어도 10의 의무가 아직 이행되지 않았을 수 있습니다. 운영 규칙이 정한 최종 이전이 일어났는지를 따로 확인해야 합니다. PFMI는 실제 어느 나라 시스템에서 그 시각이 몇 시인지까지 대신 정해 주지 않습니다.</p>
 <p className="leading-8">원칙 9의 설명과 각주 96은 결제가 언제나 돈의 물리적 이동을 요구하지는 않는다는 점도 밝힙니다. 적법한 상계로 의무를 이행할 수 있고 상업은행이나 인프라 자체 장부를 쓰는 구조도 있습니다. 중앙은행 화폐를 사용할 수 있을 때의 권고와 모든 거래가 반드시 같은 장부를 쓴다는 주장을 구별해야 합니다.</p>
 </div><CitationBlock citeKey={1} source="CPSS-IOSCO · PFMI (2012), 원칙 8·9" href={PFMI}>인쇄쪽 64의 핵심 고려사항과3.8.1, 인쇄쪽 67의 원칙 9 및 각주 96을 실제 조건에 적용합니다. CPSS는 현재 CPMI의 이전 명칭입니다.</CitationBlock><SourceApplication source="PFMI 원칙 8 · 인쇄쪽 64" excerpt="3.8.1의 원문은 최종 이전을 ‘irrevocable and unconditional transfer’로 설명합니다. 핵심 고려사항 1·3은 최종 결제 시점과 미결제 지시의 철회 제한 시점을 각각 확인하도록 합니다." application="A의 10 지시가 더는 철회되지 않는다는 사실만으로10이 이미 최종 결제됐다고 단정할 수 없습니다. 이행된 의무와 남은 지시를 별도로 기록해야 합니다."/></section>
 <section id="rtgs-vs-dns" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 총 지급량 260과 최초 필요한 돈 120·100은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<BalanceLadderViz/>
 <p className="leading-8">이제 여섯 건을 ①→②→③→④→⑤→⑥ 순서로 하나씩 처리합니다. 처음 A 100·B 20·C 0을 놓으면 잔액은 (0,120,0)→(90,30,0)→(90,0,30)→(90,20,10)→(80,20,20)→(90,20,10)이 됩니다. 음수인 은행이 없으므로 모두 처리됩니다. 처음 준비한 합은 120입니다.</p>
 <p className="leading-8">같은 지시를 ①→③→④→②→⑤→⑥ 순서로 바꾸면 A 100·B 0·C 0으로 시작할 수 있습니다. A의 100을 받은 B가 먼저 C에게 30을 보내고 C가 20을 돌려주면 B는 다시 90을 갖습니다. 그때 A에게 90을 보낼 수 있습니다. 마지막 잔액은 A 90·B 0·C 10입니다.</p>
 <p className="leading-8">순서만 바꿨는데 최초 필요한 합이 120에서 100으로 줄었습니다. 총액 260은 그대로입니다. 추가 신용도 분할도 허용하지 않는 이 모형에서는 100 지시를 실행할 순간 어느 은행이 100을 가지고 있어야 하므로 전체 최초 잔액은 최소 100입니다. 위 순서가 그 하한을 실제로 달성합니다.</p>
 <p className="leading-8">RTGS의 빠른 최종 처리는 미결제 상태를 줄이는 데 도움이 됩니다. 그래도 처리 전 대기, 자금 부족, 전산 장애, 자금을 빌려준 쪽의 신용 위험까지 모두 없어지지는 않습니다. 실제 운영에서는 시간 제약과 우선순위, 일중 신용 및 담보 조건도 계산에 들어갑니다.</p>
 </div><LiquidityOrderViz/></section>
 <section id="hybrid-design" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 대기 지시를 묶어 처리할 조건을 실제 계산으로 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<BatchSumViz/>
 <p className="leading-8">이번에는 A 10·B 0·C 0만 있다고 합시다. 첫 100 지시는 보류됩니다. 여섯 건의 합산 변화는 A−10·B 0·C+10이므로 전부 함께 처리한 뒤 잔액은 A0·B 0·C 10입니다. 모든 지시가 유효하고 허용된 한도를 지키며 묶음 전체를 원자적으로 이행할 수 있다면 이 조합은 처리 후보가 됩니다.</p>
 <p className="leading-8">원자적이라는 말은 여기서 선택한 묶음을 전부 처리하거나 전부 보류한다는 뜻입니다. 100 지시 하나를 먼저 처리해서는 잔액 조건을 지킬 수 없습니다. ⑤번 A→C 10만 따로 처리하는 것은 가능하지만 그것으로 원래 묶음 전체의 이행이 보장되지는 않습니다.</p>
 <p className="leading-8">
@@ -93,11 +106,13 @@ assert candidate == {"A": 0, "B": 0, "C": 10}
 assert all(value >= 0 for value in candidate.values())`}</code></pre><CitationBlock citeKey={2} source="한국은행 · 한은금융망 운영" href={BOKHYBRID}>혼합형 기능의 목적과 참가 조건을 확인했습니다. 위 코드는 공개된 한은금융망 구현을 옮긴 것이 아닙니다.</CitationBlock></section>
 <section id="exposure" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 줄어든 지급량 250이 곧바로 위험액은 아닙니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">상계로 줄어든 250은 지급량의 차이입니다. 신용노출을 구하려면 부도 시점에 누구에게 어떤 청구권이 남는지를 따져야 합니다. 유효한 상계, 담보, 보증, 손실을 나누는 규칙에 따라 같은 총 지급량에서도 결과가 달라집니다. 250을 그대로 예상 손실로 적을 수 없습니다.</p>
+<UnwindViz/>
 <p className="leading-8">예를 들어 유효한 순액 의무가 A의 10만 남는 가정과, A가 실패하면 관련 지시를 제거하고 다시 계산하는 가정은 다릅니다. 후자의 규칙을 가정해 A가 들어간 네 건을 빼면 B→C30과 C→B 20이 남아 B가 10을 내야 합니다. 원래 순포지션 0이던 B에게 새 자금 수요가 생깁니다. 이는 특정 시스템의 현행 부도 규칙을 설명하는 예가 아닙니다.</p>
 <p className="leading-8">PFMI의3.7.3은 이런 되돌림이 나머지 참가자에게 유동성 부담과 대체 비용을 줄 수 있다고 설명합니다. 그래서 차액결제를 평가할 때는 담보의 가치뿐 아니라 필요한 순간 현금으로 바꿀 수 있는지도 보아야 합니다. 지급량을 얼마나 줄였는지 하나로 안전성의 순위를 정할 수는 없습니다.</p>
 </div></section>
 <section id="finality" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 원이체의 최종 처리와 별도 반환 청구를 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">A가 10을 최종적으로 보낸 뒤 A가 파산했다고 합시다. 뒤의 지급들이 그 10을 믿고 이어졌다면 앞 기록의 효력이 흔들릴 때 다른 거래도 영향을 받습니다. 최종성 규칙과 도산 법제는 이 지점을 다룹니다. 한국은행의 안내는 지정 시스템에 적용되는 법적 특칙을 설명하므로 일반 앱의 완료 알림 전체에 그대로 확장할 수는 없습니다.</p>
+<FinalityReturnViz/>
 <p className="leading-8">미국 FedNow의 2026년 4월 1일 시행 OC8 §7.1은 차변·대변을 기록한 시점과 수취 기관에 입금 통지를 보낸 시점 중 이른 때를 서비스의 최종성 기준으로 정합니다. 다른 시스템의 조회 화면에 잔액이 보였는지는 별개입니다. 이는 PFMI의 일반 원칙을 특정 서비스가 구체화한 사례입니다.</p>
 <p className="leading-8">잘못 보낸 돈을 돌려받는 문제는 원이체의 최종 처리와 나누어 봅니다. OC8 §9.6은 받은 지급을 반환할 때 새 자금이체를 시작하도록 설명합니다. 운영절차 v3.6 §15.2에서는 반환 요청 camt.056과 실제 반환 지급 pacs.004를 구분합니다. 요청을 보냈다는 사실만으로 반환이 완료되지는 않습니다.</p>
 <p className="leading-8">블록체인에도 이 구분이 유용합니다. 프로토콜 최종성은 합의 규칙과 고장·공격 가정 아래 기록의 되돌림을 다룹니다. 작업증명의 확률적 확인과 BFT 계열의 조건부 확정도 서로 다릅니다. 법적 최종성은 의무 이행과 권리 관계를 다루므로 토큰 거래에서는 두 층을 함께 확인해야 합니다.</p>
@@ -108,6 +123,7 @@ assert all(value >= 0 for value in candidate.values())`}</code></pre><CitationBl
 <p className="leading-8">두 지급의 운영 시간 차이는 이런 틈을 키울 수 있지만 원인은 단순한 시계 차이만이 아닙니다. 같은 시간대에서도 한쪽의 최종 지급이 다른 쪽과 연결되지 않으면 원금 위험이 남습니다. 각 통화가 반드시 각국 중앙은행 장부에서 직접 고객별로 이동해야 하는 것도 아닙니다.</p>
 </div></section>
 <section id="pvp" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 한쪽 최종 이전을 다른 쪽 이전에 묶습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<PvpLinkViz/>
 <p className="leading-8">두 지급을 연결해 원화의 최종 이전이 달러의 최종 이전을 조건으로 하도록 만들 수 있습니다. 이것이 외환동시결제, PvP의 핵심입니다. PFMI 원칙 12의 핵심 고려사항은 한쪽 의무가 최종 결제될 필요충분조건으로 다른 쪽의 최종 결제를 놓습니다.</p>
 <p className="leading-8">같은 14억 원과100만 달러에 적용하면 원화만 확정되고 달러는 약속으로 남는 결과를 허용하지 않아야 합니다. 이 조건은 연결된 교환의 원금 결제 위험을 없애는 기준입니다. 서로 다른 컴퓨터에서 메시지가 정확히 같은 물리적 순간에 도착해야 한다는 뜻은 아닙니다.</p>
 <p className="leading-8">CLSSettlement는 실제로 지급 지시를 연결해 처리하는 사례입니다. 서비스가 적용하는 통화·참가 자격·자금 공급과 운영 규칙 안에서 이 보장을 읽어야 합니다. 금액 상계로 필요한 자금을 줄이는 기능과 두 통화 지급을 조건으로 연결하는 기능도 서로 구별할 수 있습니다.</p>

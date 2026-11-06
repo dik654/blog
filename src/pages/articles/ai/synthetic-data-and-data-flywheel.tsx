@@ -6,6 +6,13 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SyntheticDataAndDataFlywheelViz from "./synthetic-data-and-data-flywheel/viz/SyntheticDataAndDataFlywheelViz";
+import SelfInstructGateViz from "./synthetic-data-and-data-flywheel/viz/SelfInstructGateViz";
+import EvolInstructBranchViz from "./synthetic-data-and-data-flywheel/viz/EvolInstructBranchViz";
+import RftFunnelViz from "./synthetic-data-and-data-flywheel/viz/RftFunnelViz";
+import PassAtKViz from "./synthetic-data-and-data-flywheel/viz/PassAtKViz";
+import DifficultyRouteViz from "./synthetic-data-and-data-flywheel/viz/DifficultyRouteViz";
+import MiningRoutesViz from "./synthetic-data-and-data-flywheel/viz/MiningRoutesViz";
+import FlywheelFatesViz from "./synthetic-data-and-data-flywheel/viz/FlywheelFatesViz";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 
 /**
@@ -64,6 +71,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             별도 model, 흔히 더 큰 proprietary model이 만든 output을 가져다 씁니다. 다른 한쪽인 self-generated data는 학습 대상 자신이거나 그와
             같은 계열의 model이 만든 output을 다시 그 model 학습에 넣습니다.
           </p>
+        </div>
+        <SelfInstructGateViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Self-Instruct는 self-generated data를 만드는 대표적인 절차입니다. 사람이 직접 쓴 175개의 seed task에서 출발해 instruction
             generation·classification task 식별·instance generation·filtering 네 단계를 반복합니다.
@@ -72,6 +82,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             매 라운드에서 새로 생성된 instruction은 기존 instruction과 ROUGE-L 유사도가 0.7 미만일 때만 task pool에 다시 들어갑니다. 그렇게
             175개였던 seed가 최종 52,445개의 instruction과 82,439개의 input-output instance로 불어납니다.
           </p>
+        </div>
+        <EvolInstructBranchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Evol-Instruct는 같은 self-generated 계열이지만 난이도를 직접 조작합니다. Alpaca의 52,000개 instruction을 seed로 놓습니다. 여기에
             In-Depth Evolving으로 제약 추가·deepening· concretizing·추론 단계 증가·입력 확장 다섯 방법 중 하나를 적용해 한 instruction을 더
@@ -120,6 +133,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             Verifier는 결정적이고 재현 가능합니다. 대신 규칙을 만들 수 있는 영역에서만 쓸 수 있습니다. model filtering은 어떤 작업에도 쓸 수 있지만 judge
             자체의 오차를 물려받습니다.
           </p>
+        </div>
+        <RftFunnelViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Yuan 등의 rejection sampling fine-tuning(RFT)은 이 절차의 구체적인 수치를 보여 줍니다. 문제 하나당 온도 0.7로 k=100개의
             reasoning path를 생성합니다. 그중 정답과 어긋나거나 계산이 틀린 경로는 verifier로 제거하고 같은 방정식 리스트를 쓰는 중복 경로는 하나만 남깁니다. 이렇게
@@ -140,6 +156,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             채점한 후보 전체를 저장하고 dedup하는 데이터 관리 비용입니다.
           </p>
         </div>
+        <PassAtKViz />
         <ExplainedFormula
           question="문제당 후보를 N개 생성하면 그중 하나가 verifier를 통과할 확률은 어떻게 커지나요?"
           idea="문제마다 정답 후보 c개를 이미 알고 있다면, n개 중 k개를 뽑았을 때 전부 오답일 경우의 수를 1에서 빼면 적어도 하나가 정답일 확률이 됩니다."
@@ -178,6 +195,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             한 문제에 여러 후보를 생성했을 때 그중 몇 개가 verifier를 통과했는지, 즉 pass rate로 난이도를 재는 것이 difficulty estimation입니다.
             pass rate가 낮을수록 현재 모델에게 그 문제는 어렵다는 뜻입니다. 이 값은 앞 절 best-of-N 채점에서 이미 계산해 둔 c/n과 같은 수치입니다.
           </p>
+        </div>
+        <DifficultyRouteViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             문제당 k=8개를 생성한 경우를 보겠습니다. 8개 모두 정답인 문제(pass rate 100%)는 지금 모델에게 이미 쉬운 문제입니다. 0개만 정답인 문제(pass rate
             0%)는 verifier 신호 자체가 없어 어느 후보를 남겨도 학습에 쓸 근거가 없습니다. 3개만 정답인 문제(pass rate 37.5%)는 정답과 오답이 함께 있어 두
@@ -218,6 +238,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             rate가 낮은 문제에 우선순위를 두고 더 많이 수집하는 전략입니다. 둘 다 difficulty estimation이 이미 계산해 둔 낮은 pass rate를 수집 대상을
             고르는 신호로 다시 씁니다.
           </p>
+        </div>
+        <MiningRoutesViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Success trajectory mining은 반대로 verifier를 통과한 성공 reasoning trace를 모아 SFT target으로 삼습니다. failure
             trajectory mining 쪽은 실패한 시도의 전체 trace를 중간 추론 단계까지 포함해 보존합니다. 그 실패가 어디서 갈렸는지 분석하거나 다음 학습 신호로 재활용할 수
@@ -259,6 +282,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             재투입 경로 자체를 가리키는 더 일반적인 용어는 data feedback loop입니다. 생성형 데이터가 아니어도 추천 시스템의 클릭 로그 같은 경우에 똑같이 씁니다. data
             flywheel은 그중에서도 model이 스스로 만든 데이터로 도는 경우를 부르는 구체적인 이름입니다.
           </p>
+        </div>
+        <FlywheelFatesViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Arena Learning은 이 순환으로 WizardLM-2를 개선했습니다. 한 라운드에서 배틀에 진 사례를 모아 다음 SFT·RL 데이터로 학습하면 다음 라운드 배틀에서는
             이전 약점이 메워진 자리에서 새로운 약점이 드러납니다. 그 약점이 다시 다음 라운드 데이터가 됩니다.

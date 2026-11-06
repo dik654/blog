@@ -6,6 +6,14 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import WarpStallReasonsAndIssueUtilizationViz from "./warp-stall-reasons-and-issue-utilization/viz/WarpStallReasonsAndIssueUtilizationViz";
+import SamplingAddressViz from "./warp-stall-reasons-and-issue-utilization/viz/SamplingAddressViz";
+import SampleSplitViz from "./warp-stall-reasons-and-issue-utilization/viz/SampleSplitViz";
+import ScoreboardPathViz from "./warp-stall-reasons-and-issue-utilization/viz/ScoreboardPathViz";
+import BarrierSamplesViz from "./warp-stall-reasons-and-issue-utilization/viz/BarrierSamplesViz";
+import EligibleCycleViz from "./warp-stall-reasons-and-issue-utilization/viz/EligibleCycleViz";
+import UtilizationProductViz from "./warp-stall-reasons-and-issue-utilization/viz/UtilizationProductViz";
+import SmOccupancyViz from "./warp-stall-reasons-and-issue-utilization/viz/SmOccupancyViz";
+import ReadingGateViz from "./warp-stall-reasons-and-issue-utilization/viz/ReadingGateViz";
 
 const NCU = "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html";
 const TRIAGE = "https://docs.nvidia.com/nsight-compute/ComputeTriage/index.html";
@@ -44,6 +52,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             1,000 active clock 동안 instruction 이 얼마나 issue 됐는지는 알려 주지만, 쉬었던
             clock 에 warp 들이 무엇을 기다렸는지는 말하지 못합니다.
           </p>
+          <SamplingAddressViz />
           <p>
             이 빈칸을 sampling 이 채웁니다. Nsight Compute 의 sampler 는 SM 마다 고정
             간격으로 active warp 하나를 무작위로 골라 program counter 와 scheduler 상태를
@@ -87,6 +96,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             instruction 을 넣는 queue 가 차 있으면 MIO 또는 LG throttle 입니다. 나머지는 instruction fetch, branch 해석, memory
             barrier 같은 드문 경우입니다.
           </p>
+          <SampleSplitViz />
           <p>
             수치로 읽어 보겠습니다. 한 scheduler가 관리한 active warp 표본 100개가 long
             scoreboard 60, short scoreboard 15, barrier 10, not selected 10, selected 5로
@@ -124,6 +134,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
           Long scoreboard 는 memory 를, barrier 는 형제 warp 를 기다립니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <ScoreboardPathViz />
           <p>
             Long 과 short 의 차이는 기다림의 길이가 아니라 경로에서 옵니다. Nsight Compute는
             L1TEX unit을 거치는 접근을 long scoreboard로 분류합니다. 여기에는 global,
@@ -153,6 +164,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             <code>__syncthreads()</code> 에 먼저 도착한 warp 는 형제 warp 가 모두 올 때까지
             issue 할 instruction 이 없고, 그 시간이 전부 barrier 표본으로 잡힙니다.
           </p>
+          <BarrierSamplesViz />
           <p>
             숫자로 보면 block 256 thread 는 warp 8개입니다. 그중 하나가 barrier 앞에서 100 clock 짜리 예외 경로를 돌면 나머지 7개는 그 100
             clock 을 barrier 에서 보내고 warp 8개의 표본 800개 가운데 700개가 barrier 로 찍힙니다. 문서는 이 경우를 barrier 앞의 갈라진 경로로
@@ -204,6 +216,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             못합니다. 따라서 eligible 수의 평균만으로 실제 issue activity를 정확히 복원할 수는
             없지만, 준비된 warp가 부족한지 판단하는 직접적인 단서는 됩니다.
           </p>
+          <EligibleCycleViz />
           <p>
             이해를 위해 cycle당 최대 한 번 issue하는 단순 모형을 쓰겠습니다. 평균 eligible이
             0.8이면 issue가 있었던 cycle 비율은 80%를 넘을 수 없습니다. Eligible이 2인 cycle과
@@ -267,11 +280,13 @@ R_{\mathrm{issue\ cycle}} &= \underbrace{\frac{C_{\mathrm{issued\ cycle}}}{C_{\m
             Issue active 는 그 active clock 가운데 scheduler 가 instruction 을 낸 비율이고 SM throughput 은 issue 된
             instruction 이 실행 pipe 의 peak 를 얼마나 채웠는지입니다.
           </p>
+          <UtilizationProductViz />
           <p>
             세 숫자는 곱으로 이어집니다. SM 이 elapsed 의 50% 만 active 였고 그 안에서 issue
             active 가 80% 였다면 elapsed 기준 issue 비율은 40% 입니다. Nsight Compute 의
             throughput metric 이 active 기준과 elapsed 기준을 따로 두는 이유가 이것입니다.
           </p>
+          <SmOccupancyViz />
           <p>
             SM utilization 이 낮은 원인은 stall 이 아닙니다. SM 132개인 GPU에 block 66개짜리 grid 를 띄우면 절반의 SM 은 처음부터 끝까지 비어
             있습니다. Block 수가 SM 수의 배수가 아니면 마지막 wave 에서 일부 SM 만 일하는 tail 이 생깁니다. 이때 issue active 는 높아도 chip 은 놀고
@@ -307,6 +322,7 @@ R_{\mathrm{issue\ cycle}} &= \underbrace{\frac{C_{\mathrm{issued\ cycle}}}{C_{\m
             Nsight Compute 결과는 위에서 아래로 읽습니다. Chip 이 비었는지, SM 의 scheduler 가 매 clock issue 했는지, eligible 이
             남아돌았는지를 차례로 확인한 뒤에야 가장 큰 stall reason 이 처방으로 이어집니다. 그 처방은 표본이 몰린 instruction 하나를 바꾸는 것으로 끝납니다.
           </p>
+          <ReadingGateViz />
           <p>
             Issue active 가 95% 인 kernel 에서 long scoreboard 60% 를 보고 memory 를 고치면 scheduler 는 이미 매 clock 일하고
             있었으므로 elapsed 는 줄지 않습니다. Tail 로 SM 절반이 놀던 kernel 에서 stall 을 고쳐도 chip 의 절반은 여전히 비어 있습니다. 순서를 바꾸면

@@ -6,6 +6,15 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ParallelismStrategyAndPlacementViz from "./parallelism-strategy-and-placement/viz/ParallelismStrategyAndPlacementViz";
+import PcieRouteViz from "./parallelism-strategy-and-placement/viz/PcieRouteViz";
+import PlacementMapViz from "./parallelism-strategy-and-placement/viz/PlacementMapViz";
+import LinkCostViz from "./parallelism-strategy-and-placement/viz/LinkCostViz";
+import PpMicrobatchViz from "./parallelism-strategy-and-placement/viz/PpMicrobatchViz";
+import ScalingViz from "./parallelism-strategy-and-placement/viz/ScalingViz";
+import RatioEfficiencyViz from "./parallelism-strategy-and-placement/viz/RatioEfficiencyViz";
+import OverlapTimelineViz from "./parallelism-strategy-and-placement/viz/OverlapTimelineViz";
+import DegreeSearchViz from "./parallelism-strategy-and-placement/viz/DegreeSearchViz";
+import KvSplitViz from "./parallelism-strategy-and-placement/viz/KvSplitViz";
 import {
   ParallelExecutionMapReturn,
   ParallelExecutionSeriesLocator,
@@ -78,6 +87,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
             <Link to="/cs/gpu/gpu-collective-network#infiniband">gpu-collective-network</Link> 글이
             소유합니다. 여기서는 각 계층의 대역폭과 latency 만 숫자로 씁니다.
           </p>
+        </div>
+        <PcieRouteViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             NVLink 가 없는 node 도 흔합니다. RTX PRO 6000 같은 PCIe 카드 8 장 서버는 GPU 끼리 PCIe switch 나 CPU root complex 로만 이어집니다. 같은
             switch 아래 두 장과 CPU socket 을 넘는 두 장은 경로가 달라 α 와 B 도 다릅니다.
@@ -118,6 +130,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Shard placement 는 통신이 잦은 축을 빠른 link 에 놓는 문제입니다
         </h2>
+        <PlacementMapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             mesh 의 각 좌표를 물리 GPU 에 대응시키는 일을 shard placement 라 부릅니다. mesh 가 TP 8 × PP 2 라고 해도 TP 그룹 여덟 장이 한 node
@@ -128,12 +141,18 @@ export default function ParallelismStrategyAndPlacementArticle() {
             줄어듭니다. 통신 횟수가 많은 축일수록 빠른 link 에 놓습니다. TP 는 layer 당 두 번이므로
             NVSwitch, PP 는 stage 당 한 번이므로 InfiniBand, DP 는 0 번이므로 어디든 됩니다.
           </p>
+        </div>
+        <LinkCostViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             70B FP16 을 8 × 80 GB node 두 대, 즉 16 GPU 에 놓는 후보 셋을 decode batch 64, hidden 8192
             의 all-reduce 1 MB 기준으로 비교합니다. 후보 A 는 TP 16 으로 all-reduce 의 ring 이 node
             경계를 두 번 지나 한 번에 약 52 μs, token 당 160 번이면 8.4 ms 입니다. weight 읽기 2.6 ms
             에 더해 TPOT 은 11 ms 이고 통신이 계산의 3 배입니다.
           </p>
+        </div>
+        <PpMicrobatchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             후보 B 는 TP 8 × PP 2 입니다. all-reduce 는 NVSwitch 안에서 한 번에 7 μs, token 당 1.1 ms 입니다. node 경계는 stage 사이
             activation 1 MB 가 한 번 지나 35 μs 입니다. 대신 한 token 이 두 stage 를 직렬로 지나 weight 읽기가 5.2 ms 씩 두 번이라 TPOT 은
@@ -169,6 +188,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
             GPU 를 N 배로 늘리면 이상적으로는 N 배 이득이 나옵니다. 그중 실제로 얻은 비율이 scaling efficiency 입니다. 문제 크기를 고정하고 시간이 얼마나 줄었는지
             재면 strong scaling, GPU 수에 비례해 문제를 키우고 시간이 그대로인지 재면 weak scaling 입니다. 둘은 같은 배치에 대해 다른 값을 냅니다.
           </p>
+        </div>
+        <ScalingViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             추론에서 TP 는 strong scaling 의 축입니다. 요청 하나의 batch 를 고정한 채 GPU 를 늘려
             token 당 시간을 줄입니다. 앞 절의 후보 C 에서 TP 8 은 GPU 한 장에 다 들어간다고 가정한
@@ -239,11 +261,17 @@ export default function ParallelismStrategyAndPlacementArticle() {
             빨라집니다. 비율이 1 근처를 넘으면 병목이 link 로 옮겨 가 GPU 를 더 넣어도 token 당 시간이 줄지 않습니다. 후보 A 가 후보 C 보다 GPU 는 두 배인데
             느린 이유가 그것입니다.
           </p>
+        </div>
+        <RatioEfficiencyViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             비율을 줄이는 방법은 통신을 계산 뒤에 숨기는 것입니다. Communication–compute overlap 은 한 layer 의 all-reduce 를 다음 GEMM 과
             다른 CUDA stream 에 올려 동시에 돌리는 기법입니다. 겹쳐진 비율 o 만큼 통신 시간이 사라집니다. 앞 글의 Ring Attention 이 KV 전송을
             attention 계산 뒤에 숨긴 것이 그 예입니다.
           </p>
+        </div>
+        <OverlapTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             겹치려면 의존성이 없어야 합니다. TP 의 all-reduce 결과는 바로 다음 layer 의 입력이라 그
             layer 와는 겹칠 수 없고, GEMM 을 chunk 로 잘라 앞 chunk 의 all-reduce 를 뒤 chunk 의 GEMM 과
@@ -296,6 +324,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Degree 는 memory 로 TP 를, node 로 PP 를, 남는 GPU 로 DP 를 정합니다
         </h2>
+        <DegreeSearchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             지금까지의 규칙을 한 절차로 묶으면 순서가 정해집니다. 먼저 replica 하나가 들어가는 최소 GPU 수를 memory 로 구합니다. 그 수가 node 안에 들어가면 TP 로
@@ -312,6 +341,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
           <p>
             &quot;PP 가 TP 만큼 빠르다&quot;는 근거로 인용되는 MLX 결과는 batch 1 이었습니다. PP 는 한 사용자를 빠르게 하지 않으므로 PCIe node 에서 TP 와 PP 중 무엇이 나은지는 동시성을 걸고 TP 8 과 TP 4 × PP 2 를 같은 부하로 재서 정합니다.
           </p>
+        </div>
+        <KvSplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Model 구조도 갈림길입니다. MLA 의 압축 KV 는 TP rank 마다 복제되어 KV 예산 K 를 TP 로 나눌 수 없으므로 MLA model 은 DCP 를 함께 켜 KV 를 sequence 축으로 나눕니다. GQA model 은 KV head 수까지는 TP 로 KV 가 나뉩니다.
           </p>

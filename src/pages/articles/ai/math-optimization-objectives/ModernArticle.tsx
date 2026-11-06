@@ -2,6 +2,12 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OptimizationProblemViz from "./OptimizationProblemViz";
+import CoordinateClipViz from "./CoordinateClipViz";
+import LocalGlobalViz from "./LocalGlobalViz";
+import OpenIntervalViz from "./OpenIntervalViz";
+import PenaltyViz from "./PenaltyViz";
+import StandardFormViz from "./StandardFormViz";
+import TwoMinimizersViz from "./TwoMinimizersViz";
 
 const BOYD = "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf#page=141";
 const MIT = "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-22-gradient-descent-downhill-to-a-minimum/";
@@ -53,6 +59,7 @@ export default function OptimizationObjectivesArticle() {
     <section id="feasible-set" data-teach-level="4" className="space-y-6">
       <h2 className="text-2xl font-bold">7 · 제약을 벌점으로 바꾸면 허용되지 않은 값이 다시 후보가 된다</h2>
       <p>C=[0,2]는 두 조건 x≥0과 x≤2를 동시에 만족하는 집합입니다. 48GiB 제한도 같은 역할입니다. 목적함수가 낮더라도 규칙을 어기면 제외하는 조건을 강제 제약(hard constraint)이라고 부릅니다.</p>
+      <PenaltyViz />
       <p>상한 위반을 허용하되 점수에 벌점을 더하는 방식도 있습니다. 원래 f(x)에 max(0,x−2)²를 더한다고 해 보겠습니다(가정). x=2에서는 총점 3이고 x=2.5에서는 원래 점수 2.25에 벌점 0.25를 더해 총점 2.5입니다. 위반한 2.5가 오히려 유리합니다.</p>
       <p>x&gt;2에서 이 새 점수는 2(x−2.5)²+2.5로 정리됩니다. 따라서 새 문제의 최소점은 2.5입니다. x≤2에서는 벌점이 0이고 원래 점수가 적어도 3이므로 더 좋은 후보도 없습니다. 이 계산은 유한한 벌점 하나가 강제 제약과 같은 결과를 보장하지 않는 반례입니다.</p>
       <p>반대로 x≥3과 x≤2를 동시에 요구하면 가능한 실수가 없어 C가 공집합입니다. 이때 이동 간격이나 탐색 횟수를 바꿔도 답은 생기지 않습니다. 서로 충돌하는 규칙을 먼저 수정해야 합니다. 실제 메모리 제한처럼 반드시 지켜야 하는 조건은 최종 선택에서도 별도로 확인합니다.</p>
@@ -82,7 +89,9 @@ export default function OptimizationObjectivesArticle() {
         assumptions={["1차원 closed interval과 convex quadratic 예시입니다.", "일반 constraint에서는 단순 clipping이 정확한 projection이 아닐 수 있습니다."]}
         interpretation="Objective가 같아도 feasible set이 바뀌면 정답 위치와 minimum value가 함께 바뀝니다."
       />
+      <CoordinateClipViz />
       <p>이 예에서 구간 끝으로 잘라 내는 계산이 통하는 이유는 f가 3과의 거리의 제곱이기 때문입니다. 임의의 문제에서 제약 없는 답을 각 좌표별로 자르면 된다는 규칙은 아닙니다. 두 값에 각각 0≤x≤1, 0≤y≤1과 함께 x+y≤1을 요구하면 (1,1)은 좌표별 범위 안이지만 합 규칙을 어깁니다(가정).</p>
+      <TwoMinimizersViz />
       <p>최소점이 여러 개일 수도 있습니다. 다른 함수 q(x)=(x²−1)²에서는 −1과 1이 모두 점수 0을 만듭니다(가정). argmin q={'{−1,1}'}이고 min q=0입니다. 최소점의 집합과 점수 하나를 구별하는 이유입니다.</p>
       <p>이제 이 선택·평가·제약을 실제 교재의 표준 형태에 옮겨 같은 답을 다시 확인하겠습니다.</p>
     </section>
@@ -98,6 +107,7 @@ export default function OptimizationObjectivesArticle() {
         assumptions={['원문의 일반적인 문제 표현을 이 글의 가정 사례에 적용했습니다.','함수의 정의역은 모두 실수이며 제약을 만족하는 집합은 [0,2]입니다.']}
         interpretation="x=2는 제약 둘을 만족하고 점수 3을 만듭니다. 허용 구간의 다른 값은 점수 3보다 작아질 수 없으므로 원문이 정의한 최적점입니다." />
       <p>같은 127쪽에서 원문은 최적값 p*를 가능한 점수들의 inf로 정의합니다. inf는 그 값에 실제로 도달하는 선택이 없어도 정의하는 가장 큰 하한입니다. 이 예는 x=2에서 값 3을 달성하므로 p*=min f=3입니다. 원문 128쪽의 최적점 정의는 “허용된 x*이고 f₀(x*)=p*”라는 두 조건을 함께 요구합니다.</p>
+      <StandardFormViz />
       <p>§4.1.2의 Example 4.2는 구간 조건 lᵢ≤xᵢ≤uᵢ를 lᵢ−xᵢ≤0, xᵢ−uᵢ≤0으로 바꿉니다. 앞에서 l=0, u=2를 넣어 얻은 −x≤0, x−2≤0과 정확히 같은 변환입니다. 원문의 기호를 외우기보다 각 식이 허용 여부와 점수 중 무엇을 계산하는지 확인합니다.</p>
       <div id="paper-optimization-model"><CitationBlock source="Boyd & Vandenberghe · Convex Optimization" citeKey={1} href={BOYD}><Evidence problem="Objective·constraint·optimality를 하나의 수학 문제로 명시하는 방법" contribution="Decision variable, feasible set, optimal value를 분리하는 표준 형태" assumptions="책에서 선언한 convex-analysis 조건과 각 theorem의 domain" scope="Optimization problem formulation과 convex optimality" notClaim="모든 비convex 문제를 clipping이나 closed form으로 풀 수 있다는 보장이 아님" /></CitationBlock></div>
       <div id="paper-quadratic-objective"><CitationBlock source="MIT 18.065 · Gradient Descent" citeKey={2} href={MIT}><Evidence problem="Quadratic objective의 minimum과 반복 경로를 기하로 이해하는 문제" contribution="Level set·gradient·minimum을 작은 행렬 예와 연결" assumptions="강의가 둔 differentiable quadratic 조건" scope="Quadratic optimization의 입문 기하" notClaim="제약 solver나 deep-network global optimum의 일반 보장이 아님" /></CitationBlock></div>
@@ -105,8 +115,10 @@ export default function OptimizationObjectivesArticle() {
     </section>
     <section id="boundaries" data-teach-level="7" className="space-y-6">
       <h2 className="text-2xl font-bold">10 · 최솟값의 존재와 실제 목표까지 따로 확인한다</h2>
+      <OpenIntervalViz />
       <p>같은 f에서 가능 집합을 [0,2)로 바꾸면 2는 제외됩니다(가정). x=1.9의 점수는 3.21, x=1.99에서는 3.0201입니다. 2에 가까이 가면 점수도 3에 가까워지지만 허용된 어떤 x도 3을 만들지 못합니다. 하한은 3이어도 최소점과 최솟값은 존재하지 않습니다. 교재가 일반적인 최적값을 min 대신 inf로 쓰는 이유입니다.</p>
       <p>주변에서 가장 낮은 위치와 전체에서 가장 낮은 위치도 다릅니다. 전자를 국소 최소점(local minimizer), 후자를 전역 최소점(global minimizer)이라고 합니다. 가능 집합이 주어졌다면 두 비교 모두 허용된 점들 사이에서 합니다. 앞의 [0,2] 문제는 구간 전체를 비교했으므로 2가 전역 최소점입니다.</p>
+      <LocalGlobalViz />
       <p>다른 예로 r(x)=min((x+1)²+1,(x−2)²)을 생각해 보겠습니다(가정). −1 근처에서는 첫 식이 더 작아 −1의 점수 1이 주변 최솟값입니다. 하지만 x=2에서 둘째 식은 0이므로 더 좋은 선택이 있습니다. 한 위치 주변에서 개선이 안 된다는 사실만으로 전체 최적을 보장할 수 없습니다.</p>
       <p>목적함수가 원하는 제품 가치를 얼마나 잘 나타내는지도 별도 문제입니다. 답변 길이만 최소화하면 모든 질문에 빈 문자열을 내는 모델이 점수 0을 얻을 수 있습니다(가정). 실제로는 답변의 유용성이 사라집니다. 길이 감소와 함께 정답률을 평가하고 필요한 품질 조건을 명시해야 합니다. 수학적으로 점수를 잘 낮춘 결과가 목표를 잘 표현한 문제에서 나온 것인지는 따로 검증합니다.</p>
       <p>다음 글에서는 <a className="font-semibold text-primary underline" href="/cs/ai/math-optimization-convexity">볼록성과 매끄러움</a>이 주변과 전체의 관계를 어떻게 제한하는지 살핍니다. 이어 <a className="font-semibold text-primary underline" href="/cs/ai/math-gradient-descent-convergence">경사하강법의 반복</a>으로 실제 위치를 이동합니다.</p>

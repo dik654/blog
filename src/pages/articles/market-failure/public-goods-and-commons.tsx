@@ -7,6 +7,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import VerticalSumViz from "./public-goods-and-commons/viz/VerticalSumViz";
 import CommonsEntryViz from "./public-goods-and-commons/viz/CommonsEntryViz";
+import ReportVsTruthViz from "./public-goods-and-commons/viz/ReportVsTruthViz";
+import CatchVsBoatCostViz from "./public-goods-and-commons/viz/CatchVsBoatCostViz";
+import EntryFeeStopViz from "./public-goods-and-commons/viz/EntryFeeStopViz";
+import SinglePriceViz from "./public-goods-and-commons/viz/SinglePriceViz";
+import FourCellsQuantityViz from "./public-goods-and-commons/viz/FourCellsQuantityViz";
 
 /**
  * 빼놓을 수 없으면 아무도 내지 않고, 줄어드는 것이면 너무 빨리 씁니다
@@ -206,6 +211,11 @@ export default function PublicGoodsAndCommonsArticle() {
             보겠습니다.
           </p>
 
+        </div>
+
+        <ReportVsTruthViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             먼저 <strong>신고한 만큼 걷는</strong> 방식입니다. 둘째 가로등에서
             참값이 가 5, 나 3, 다 2이고 합이 10이라 9보다 큽니다. 세우는 것이
@@ -344,6 +354,11 @@ export default function PublicGoodsAndCommonsArticle() {
             <strong>그 자리에서 호수가 남기는 것은 0입니다.</strong>
           </p>
 
+        </div>
+
+        <CatchVsBoatCostViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             네 척일 때 남던 16이 통째로 사라졌습니다. 잡은 물고기가 줄어서가
             아니라 잡는 데 쓴 배 값이 잡은 값만큼 불어나서입니다.
@@ -445,6 +460,11 @@ export default function PublicGoodsAndCommonsArticle() {
             여기까지의 문제가 전부 빼놓을 수 없다는 데서 나왔으니 빼놓을 수 있게 만들면 풀리겠다고 생각하게 됩니다. 절반은 맞습니다.
           </p>
 
+        </div>
+
+        <EntryFeeStopViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             호수부터 보겠습니다. 주인을 정해 배 한 척에 4씩 받게 하면 한 척이
             건지는 값에서 배 값과 입어료를 빼고 남아야 들어오므로 네 척에서
@@ -460,6 +480,11 @@ export default function PublicGoodsAndCommonsArticle() {
             4이고 다 합치면 22인데 드는 값은 18입니다. 세우는 것이 맞습니다.
           </p>
 
+        </div>
+
+        <SinglePriceViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             이제 요금을 매겨 받는다고 해 보겠습니다. 한 값으로 받으면 그 값보다
             낮게 치는 사람은 빠집니다. 4를 받으면 셋이 다 내지만 12뿐이고, 7을
@@ -490,6 +515,8 @@ export default function PublicGoodsAndCommonsArticle() {
             사람을 내보냅니다.</strong>
           </p>
         </div>
+
+        <FourCellsQuantityViz />
 
         <AlgorithmBlock
           title="네 칸 가운데 어디인지에 따라 무엇이 어긋나는지가 정해집니다"

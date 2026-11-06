@@ -6,7 +6,16 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import AcceptQueueViz from "./linux-tcp-time-wait-ports-backlog/viz/AcceptQueueViz";
 import CloseHandshakeViz from "./linux-tcp-time-wait-ports-backlog/viz/CloseHandshakeViz";
+import ConntrackTableViz from "./linux-tcp-time-wait-ports-backlog/viz/ConntrackTableViz";
+import FinTimeoutViz from "./linux-tcp-time-wait-ports-backlog/viz/FinTimeoutViz";
+import FixSlotsViz from "./linux-tcp-time-wait-ports-backlog/viz/FixSlotsViz";
+import FourTupleViz from "./linux-tcp-time-wait-ports-backlog/viz/FourTupleViz";
+import LateSegmentViz from "./linux-tcp-time-wait-ports-backlog/viz/LateSegmentViz";
+import PortCycleViz from "./linux-tcp-time-wait-ports-backlog/viz/PortCycleViz";
 import PortPoolViz from "./linux-tcp-time-wait-ports-backlog/viz/PortPoolViz";
+import PortScanViz from "./linux-tcp-time-wait-ports-backlog/viz/PortScanViz";
+import TriageTreeViz from "./linux-tcp-time-wait-ports-backlog/viz/TriageTreeViz";
+import TwoQueuesViz from "./linux-tcp-time-wait-ports-backlog/viz/TwoQueuesViz";
 import { codeRefs } from "./linux-tcp-time-wait-ports-backlog/codeRefs";
 import { tcpTrees } from "./linux-tcp-time-wait-ports-backlog/fileTree";
 
@@ -36,6 +45,9 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
           <h2 className="mb-6 text-2xl font-bold">2. 커널은 연결 하나를 주소 네 개의 묶음으로 기억합니다</h2>
           <div className={prose}>
             <p>바깥에서 보면 프로그램은 connect()로 연결을 열고 close()로 닫을 뿐입니다. 그 사이 커널은 연결마다 출발 IP, 출발 포트, 목적 IP, 목적 포트 네 값을 묶어 table에 넣습니다. 들어온 packet이 어느 연결의 것인지 이 네 값으로 찾습니다.</p>
+          </div>
+          <FourTupleViz />
+          <div className={prose}>
             <p>클라이언트가 고르는 값은 출발 포트 하나뿐입니다. 출발 IP는 나가는 인터페이스가, 목적지는 호출 대상이 정합니다. 그래서 같은 upstream으로 가는 연결끼리는 출발 포트만으로 서로를 구분해야 합니다.</p>
             <p>서버 쪽은 모양이 다릅니다. listen() 중인 소켓 하나가 포트 8080을 지키고, handshake 중인 연결과 handshake를 마치고 accept()를 기다리는 연결을 두 줄에 세웁니다. 연결이 끝나도 서버의 8080은 그대로라서 서버는 포트가 바닥나지 않습니다.</p>
             <p>이 글은 연결을 열고 닫는 자리만 봅니다. 혼잡 제어, 재전송 알고리즘, 버퍼 크기 조정은 다루지 않습니다. 클라우드 방화벽과 경로 문제는 <a href="/cs/cloud/cloud-networking-request-path#mechanism">요청 경로 추적</a>에서 먼저 봅니다. 소켓이 왜 fd 하나로 보이고 packet이 인터페이스에서 라우팅 표와 netfilter 훅을 지나 그 소켓에 닿는 길은 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#netfilter-hooks">네트워크 기초 글</a>이 맡습니다.</p>
@@ -51,6 +63,9 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
           </p>
             <p>연결이 끝날 때마다 출발 포트 하나가 TIME_WAIT 소켓에 묶여 60초 동안 돌아오지 않습니다. 1초에 600칸, 10초에 6,000칸이 묶입니다. 60초를 채우기 전에 풀려나는 칸은 없으므로 묶인 칸은 시간에 비례해 늘어납니다.</p>
             <p>기본 출발 포트 범위는 32768부터 60999까지입니다. 양 끝을 포함해 28,232개입니다. 28,232 ÷ 600 ≈ 47.05이므로 47초가 지나면 32칸만 남고, 48번째 초에는 600개 중 32개만 포트를 받습니다.</p>
+          </div>
+          <PortCycleViz />
+          <div className={prose}>
             <p>칸은 묶인 지 정확히 60초 뒤에 풀리므로 어느 초에 열 수 있는 수는 60초 전 그 초에 연 수와 같습니다. 49번째 초부터 60번째 초까지 12초 동안은 풀리는 칸이 없어 600개가 모두 실패합니다.</p>
             <p>61번째 초부터는 첫 초에 묶인 600칸이 풀리면서 다시 47초 동안 600개씩 열리고 같은 모양이 60초마다 되풀이됩니다. 평균으로 보면 초당 28,232 ÷ 60 ≈ 470개가 상한이고 실패는 초당 약 130개이지만, 실제로는 매 60초 가운데 약 13초 동안 연결이 전부 막히는 모습으로 나타납니다. 이 주기는 요청률을 낮추기 전까지 계속됩니다.</p>
           </div>
@@ -95,6 +110,9 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
             마지막 ACK가 사라지면 서버는 FIN을 다시 보냅니다. 클라이언트가 이미 연결을 지웠다면 그 FIN에 RST로 답하게 되어 서버 쪽에서는 정상 종료가 오류로 바뀝니다.
             TIME_WAIT 소켓은 그 FIN에 ACK를 다시 보내고 타이머를 새로 겁니다.
           </p>
+          </div>
+          <LateSegmentViz />
+          <div className={prose}>
             <p>둘째 이유는 같은 4-tuple로 바로 새 연결을 열 때입니다. 네트워크 어딘가에 늦게 도착할 옛 연결의 segment가 남아 있으면 새 연결의 데이터로 잘못 받아들여질 수 있습니다. RFC 9293은 이것을 연결의 incarnation 문제로 설명하고 TIME_WAIT가 재사용 속도를 제한한다고 적습니다.</p>
             <p>RFC는 TIME_WAIT 길이를 2 × MSL로 정하고 MSL을 2분으로 둡니다. Linux는 이 4분 대신 60초 상수를 씁니다. 서버의 TIME_WAIT는 같은 클라이언트가 더 큰 순서 번호나 새 timestamp로 SYN을 보내면 받아 줍니다. 그래서 TIME_WAIT 때문에 포트가 막히는 쪽은 대개 먼저 끊은 클라이언트입니다.</p>
             <p>half-open 연결은 반대 방향의 문제입니다. 한쪽이 재부팅이나 장애로 연결을 잊었는데 다른 쪽은 여전히 ESTABLISHED로 믿는 상태입니다. RFC 9293은 어느 쪽이든 데이터를 보내려 하면 RST로 드러난다고 적습니다. 보낼 데이터가 없으면 keepalive 같은 별도 확인이 있어야 발견됩니다.</p>
@@ -143,6 +161,7 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
 
         <section id="port-search" data-teach-level="4" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">7. connect()는 짝수 포트부터 훑고 4-tuple이 겹치지 않는 첫 포트를 고릅니다</h2>
+          <PortScanViz />
           <div className={prose}>
             <p>출발 포트를 정하지 않은 connect()는 커널의 __inet_hash_connect로 들어갑니다. 함수는 출발 IP·목적 IP·목적 포트의 hash로 table_perturb라는 칸 하나를 고르고, 그 칸의 값에 hash를 더해 범위 안의 시작 위치를 정합니다. 짝수 포트를 한 바퀴 돈 뒤 홀수 포트를 돕니다. 칸의 값은 연결이 성공할 때마다 훑은 거리만큼 앞으로 밀리므로 같은 목적지라도 다음 연결은 조금 뒤에서 찾기 시작합니다.</p>
             <p>후보 포트마다 두 번 묻습니다. 먼저 그 포트에 bind()나 listen()한 소켓이 있으면 건너뜁니다. 없으면 후보 포트로 만든 4-tuple이 이미 연결 table에 있는지 확인합니다. 같은 4-tuple의 TIME_WAIT 소켓이 있으면 tcp_tw_reuse 판정을 통과할 때만 그 자리를 넘겨받습니다.</p>
@@ -178,6 +197,9 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
           <div className={prose}>
             <p>포트 고갈을 검색하면 net.ipv4.tcp_fin_timeout을 10초로 내리라는 조언이 자주 나옵니다. v6.12 소스에서 타이머 계산에 이 값을 쓰는 곳은 tcp_fin_time() 하나이고(getsockopt TCP_LINGER2가 기본값을 알려 줄 때도 읽습니다), 그 결과는 FIN_WAIT_2를 얼마나 기다릴지에만 쓰입니다. 커널 문서도 이 값을 고아 연결이 FIN_WAIT_2에 머무는 시간이라고 정의합니다.</p>
             <p>tcp.h 126행은 TCP_TIMEWAIT_LEN을 60*HZ로 정의합니다. sysctl이 아니라 컴파일된 상수입니다. tcp_minisocks.c의 tcp_time_wait()는 넘겨받은 시간을 쓰다가도 상태가 TIME_WAIT이면 348–349행에서 그 값을 TCP_TIMEWAIT_LEN으로 덮어씁니다.</p>
+          </div>
+          <FinTimeoutViz />
+          <div className={prose}>
             <p>FIN_WAIT_2를 짧게 하면 무엇이 달라질까요? 프로그램이 close()한 뒤 상대가 FIN을 끝내 보내지 않는 고아 연결이 더 빨리 정리됩니다. 상대가 FIN을 보내면 그 순간 진짜 TIME_WAIT로 바뀌고 타이머는 다시 60초로 걸립니다. 3절의 사례에서는 서버가 수 ms 안에 FIN을 보내므로 TIME_WAIT 수가 달라지지 않습니다.</p>
             <p>tcp.c의 주석은 FIN_WAIT_2를 1분 뒤 끊는 동작이 RFC를 일부러 어긴 것이라고 밝힙니다. 상대가 FIN을 보내지 않으면 이쪽 소켓이 영원히 남는 문제 때문입니다. 면접에서 'tcp_fin_timeout으로 TIME_WAIT를 줄인다'고 답하면 이 구분을 묻는 후속 질문을 받기 쉽습니다.</p>
           </div>
@@ -198,6 +220,7 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
             <p>CPU 사용률이 50%인데 지연이 두 배가 됐다는 면접 질문에 이 경로가 하나의 답이 됩니다. 평균 CPU는 한가해 보여도 짧은 정지 동안 줄이 넘치면 일부 요청만 1초씩 늦어져 꼬리 지연이 커집니다.</p>
           </div>
           <AcceptQueueViz />
+          <TwoQueuesViz />
           <div className={prose}>
             <p>handshake 중인 연결이 서는 SYN 대기열도 있습니다. v6.12에서는 이 줄도 같은 backlog 값과 비교합니다. 차면 syncookies(기본 1)가 켜져 있으므로 연결 상태를 저장하지 않고 순서 번호에 정보를 담은 SYN-ACK로 답합니다. 이때 dmesg에 'Possible SYN flooding on port'가 찍힙니다.</p>
             <p>커널 문서는 cookie가 공격 대비책이지 정상 요청이 많은 서버를 버티게 하는 수단이 아니라고 적습니다. 공격이 아닌데 이 경고가 보이면 backlog와 accept 속도를 고치라는 뜻입니다. tcp_max_syn_backlog는 cookie를 끈 경우 마지막 4분의 1을 이미 아는 상대에게 남기는 데 쓰입니다.</p>
@@ -230,6 +253,9 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
           <h2 className="mb-6 text-2xl font-bold">10. 포트 고갈의 해법은 식의 어느 자리를 바꾸느냐에 따라 비용이 다릅니다</h2>
           <div className={prose}>
             <p>6절의 상한 kP ÷ T에서 λ를 줄이거나 k·P를 늘리거나 실질 T를 줄이면 됩니다. 같은 600개/초 사례에 넣어 하나씩 봅니다.</p>
+          </div>
+          <FixSlotsViz />
+          <div className={prose}>
             <p>
             가장 근본적인 답은 연결을 재사용하는 것입니다. HTTP keep-alive connection pool에 연결 32개를 열어 두고 요청을 그 위로 보내면 새 연결은 pool이
             줄거나 idle timeout이 지날 때만 생깁니다. λ가 600에서 한 자릿수로 떨어지고 handshake 비용도 함께 사라집니다. 대신 upstream이 끊은 연결을
@@ -278,6 +304,9 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
           <h2 className="mb-6 text-2xl font-bold">11. 중간에 NAT가 있으면 conntrack table이 세 번째 장부가 됩니다</h2>
           <div className={prose}>
             <p>클라이언트와 서버 사이에 netfilter NAT를 쓰는 호스트가 있으면, 그 호스트는 연결마다 conntrack 항목을 하나 만들어 주소 변환과 응답 경로를 기억합니다. Kubernetes Service와 SNAT가 이 장부를 쓰는 경로는 <a href="/cs/cloud/kubernetes-network-packet-path#mtu-egress">Kubernetes 패킷 경로의 MTU·SNAT·conntrack</a>에서 다뤘습니다. 장부의 크기가 RAM으로 정해지고 항목이 어느 netfilter 훅에서 만들어지는지는 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#conntrack">네트워크 기초 글의 conntrack 절</a>에 있습니다.</p>
+          </div>
+          <ConntrackTableViz />
+          <div className={prose}>
             <p>이 장부에도 TIME_WAIT가 있지만 시간이 다릅니다. 커널 문서의 nf_conntrack_tcp_timeout_time_wait 기본값은 120초입니다. 600개/초면 항목 72,000개가 남습니다. 64비트에서 메모리가 4GiB를 넘으면 nf_conntrack_max 기본값은 262,144라서 아직 여유가 있습니다.</p>
             <p>같은 계산으로 초당 약 2,184개를 넘으면 120초 동안 쌓인 항목이 상한에 닿습니다. 커널은 먼저 같은 hash 칸의 확인되지 않은 항목을 지워 자리를 만들고, 못 만들면 새 연결의 packet을 버리며 dmesg에 'nf_conntrack: table full, dropping packet'을 찍습니다.</p>
             <p>이때 gc가 깨어나 개수가 상한의 95% 아래로 내려갈 때까지 TIME_WAIT·FIN_WAIT·CLOSE 같은 끝나 가는 TCP 항목을 지웁니다. 그래서 항목 대부분이 TIME_WAIT라면 버려짐은 짧게 몰렸다 풀리고, 상한이 단단한 벽이 되는 것은 ESTABLISHED처럼 지울 수 없는 항목이 table을 채웠을 때입니다. 어느 쪽이든 애플리케이션은 오류 대신 SYN 재전송으로 늦어진 응답을 봅니다.</p>
@@ -289,6 +318,7 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
 
         <section id="triage" data-teach-level="7" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">12. 증상에서 어느 장부가 찼는지 명령 세 개로 가릅니다</h2>
+          <TriageTreeViz />
           <div className={prose}>
             <p>면접에서 'SSH가 안 된다'나 '지연이 두 배'를 받으면 먼저 어느 쪽의 장부가 찼는지 가릅니다. 클라이언트에서 connect()가 오류로 끝나는지, 서버에서 응답이 늦는지가 첫 갈림길입니다.</p>
             <p>클라이언트에서 EADDRNOTAVAIL이 보이면 ss -tan state time-wait로 TIME_WAIT 소켓의 목적지 분포를 봅니다. 한 목적지에 28,000개 가까이 몰려 있으면 3절의 상황입니다. /proc/net/sockstat의 tw 값으로 전체 수를 빠르게 셀 수 있습니다. nstat의 TcpExtTCPTimeWaitOverflow가 늘고 있다면 tcp_max_tw_buckets에 닿아 TIME_WAIT를 건너뛰는 중입니다.</p>

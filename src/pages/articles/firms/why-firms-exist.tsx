@@ -6,7 +6,11 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import BoundaryViz from "./why-firms-exist/viz/BoundaryViz";
+import ContractCountViz from "./why-firms-exist/viz/ContractCountViz";
 import ContractWebViz from "./why-firms-exist/viz/ContractWebViz";
+import MarginalStairViz from "./why-firms-exist/viz/MarginalStairViz";
+import RenegotiationViz from "./why-firms-exist/viz/RenegotiationViz";
+import SetupCurveViz from "./why-firms-exist/viz/SetupCurveViz";
 import { choices } from "./why-firms-exist/model";
 
 function CostTable({ scenarios }: { scenarios: { label: string; outside: number; setup?: number }[] }) {
@@ -117,6 +121,9 @@ export default function WhyFirmsExistArticle() {
         <h2 className="mb-6 text-2xl font-bold">9. Coase의 원문은 시장을 사용하는 비용부터 묻는다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">Coase의 1937년 논문 390쪽은 시장의 가격을 알아보고 거래를 성립시키는 활동에 비용이 든다는 점에서 출발합니다. 이어지는 391~392쪽에서는 반복 계약의 일부를 줄이면서 일정 범위 안의 세부 지시를 뒤로 미루는 관계를 설명합니다. 이때 계약과 권한의 한계가 사라지는 것은 아닙니다.</p>
+        </div>
+        <ContractCountViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             논문은 장기 공급 계약에서 앞일을 전부 구체화하기 어려운 문제도 함께 다룹니다. 그래서 회사의 존재를 여섯 사람이 모두 서로 계약하면 15개이고 가운데 한 사람을 더 두면
             6개라는 그림으로 증명할 수는 없습니다. 그 계산에는 모든 사람 쌍이 계약하고 관리자를 한 명 더 둔다는 가정이 들어 있습니다.
@@ -166,6 +173,7 @@ b=3.5:\quad4-3.5=0.5
       </section>
       <section id="what-moves" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">11. 회사가 커졌어도 안쪽이 좋아진 것은 아닐 수 있다</h2>
+        <MarginalStairViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             밖의 비용이 5가 되면 네 개와 다섯 개가 20으로 최저입니다. 밖의 비용이 2가 되면 한 개와 두 개가 11로 최저입니다. 아래 표에서 안으로 들인 개수별 비용을 비교할 수
@@ -184,6 +192,7 @@ b=3.5:\quad4-3.5=0.5
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">12. 설립비가 생기면 첫 작업만 보고 멈출 수 없다</h2>
+        <SetupCurveViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">하나라도 안에서 처리하려면 처음에 5를 더 내야 한다고 가정해 봅니다. 밖의 비용은 4로 되돌립니다. 아래 표처럼 첫 작업만 들이면 24에서 26으로 오르지만 세 개나 네 개를 묶어 들이면 23으로 낮아집니다. 첫 변화가 양수라는 이유만으로 전부 밖에 두면 최저를 놓칩니다.</p>
           <p className="leading-7">안쪽 추가 비용이 항상 5이고 밖은 항상 4인 경우도 봅니다. 내부 비용이 올라가지 않아도 전부 밖에 두는 것이 가장 쌉니다. 반대로 안이 항상 3이면 이 사례의 여섯 일은 모두 안에서 처리합니다. 비용이 증가하지 않는다는 사실만으로 세상의 모든 거래가 한 기업에 들어간다고 결론 낼 수는 없습니다.</p>
@@ -201,6 +210,9 @@ b=3.5:\quad4-3.5=0.5
         <h2 className="mb-6 text-2xl font-bold">13. 전용 설비가 필요하면 밖의 비용 b가 4에서 5로 오른다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">여섯 일을 이 조립업체의 부품에만 맞는 전용 설비로 처리해야 한다고 바꿔 봅니다(가정). 공급자가 그 설비를 들이면 다른 고객에게는 거의 쓸 데가 없습니다. 조립업체도 설비가 없는 다른 공급자로 옮기면 처음부터 다시 맞춰야 합니다. 설비 하나 때문에 양쪽이 서로에게 묶입니다.</p>
+        </div>
+        <RenegotiationViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">묶인 상태에서 규격이 바뀌면 비용이 생깁니다. 주문 두 번에 한 번꼴로 규격이 바뀌고, 바뀔 때마다 늘어난 이득을 누가 얼마나 가져갈지 흥정하는 데 2가 든다고 놓습니다(가정). 작업 하나의 기대 재협상 비용은 2 × 1/2 = 1입니다. 밖의 비용은 탐색 1, 협상 1, 확인 2에 재협상 1이 더해져 b = 5가 됩니다. 안에서는 규격 변경을 지시로 맞추므로 이 1이 생기지 않는다고 둡니다(가정).</p>
           <p className="leading-7">b = 5를 넣고 11절과 같은 방식으로 합계를 다시 계산합니다. 안에 들인 작업의 비용을 앞에서부터 더하고, 남은 작업 수에 5를 곱해 더합니다.</p>
         </div>

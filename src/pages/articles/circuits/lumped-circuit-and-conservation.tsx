@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BalanceGraphViz from "./lumped-circuit-and-conservation/viz/BalanceGraphViz";
 import CircuitWalkViz from "./lumped-circuit-and-conservation/viz/CircuitWalkViz";
+import JunctionChargeViz from "./lumped-circuit-and-conservation/viz/JunctionChargeViz";
+import LoopHeightViz from "./lumped-circuit-and-conservation/viz/LoopHeightViz";
+import LumpedLimitsViz from "./lumped-circuit-and-conservation/viz/LumpedLimitsViz";
+import ParallelLayoutViz from "./lumped-circuit-and-conservation/viz/ParallelLayoutViz";
+import PlateBoundaryViz from "./lumped-circuit-and-conservation/viz/PlateBoundaryViz";
+import PowerAreaViz from "./lumped-circuit-and-conservation/viz/PowerAreaViz";
+import SharedDropViz from "./lumped-circuit-and-conservation/viz/SharedDropViz";
 
 import NumericPath from "../world-systems/NumericPath";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
@@ -31,12 +39,12 @@ return <div className="space-y-16">
 
 <section id="picture" data-teach-level="1" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">4. 갈림길과 되돌아오는 길을 그립니다</h2>
-<NumericPath title="한 길이 둘로 갈라졌다가 다시 만납니다" steps={[{"label": "주는 쪽", "value": "아래 0 → 위 12", "detail": "양끝의 차이를 유지합니다."}, {"label": "첫 부품", "value": "12 → 아직 모르는 값", "detail": "모든 흐름이 여기를 지납니다."}, {"label": "두 갈래", "value": "같은 위·아래 점", "detail": "두 부품이 나눠 흐르게 합니다."}, {"label": "되돌아오는 길", "value": "기준 0", "detail": "두 흐름이 다시 합쳐집니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">그림의 세 번째 칸에는 옆으로 나란한 두 길이 들어 있습니다. 두 부품을 차례로 지나는 한 길이라는 뜻이 아닙니다. 어느 갈래를 택하든 위와 아래의 출발점·도착점이 같다는 것이 핵심입니다.</p><p className="leading-7">아래쪽을 0이라 부르는 것은 비교 기준을 고른 것입니다. 모든 점에 같은 수를 더해 적어도 두 점 사이의 차이는 그대로입니다. 계산에 필요한 것은 이 차이이므로, 기준점을 하나 정하면 같은 값을 중복해서 찾지 않아도 됩니다.</p></div>
+<NumericPath title="한 길이 둘로 갈라졌다가 다시 만납니다" steps={[{"label": "주는 쪽", "value": "아래 0 → 위 12", "detail": "양끝의 차이를 유지합니다."}, {"label": "첫 부품", "value": "12 → 아직 모르는 값", "detail": "모든 흐름이 여기를 지납니다."}, {"label": "두 갈래", "value": "같은 위·아래 점", "detail": "두 부품이 나눠 흐르게 합니다."}, {"label": "되돌아오는 길", "value": "기준 0", "detail": "두 흐름이 다시 합쳐집니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">그림의 세 번째 칸에는 옆으로 나란한 두 길이 들어 있습니다. 두 부품을 차례로 지나는 한 길이라는 뜻이 아닙니다. 어느 갈래를 택하든 위와 아래의 출발점·도착점이 같다는 것이 핵심입니다.</p></div><ParallelLayoutViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">아래쪽을 0이라 부르는 것은 비교 기준을 고른 것입니다. 모든 점에 같은 수를 더해 적어도 두 점 사이의 차이는 그대로입니다. 계산에 필요한 것은 이 차이이므로, 기준점을 하나 정하면 같은 값을 중복해서 찾지 않아도 됩니다.</p></div>
 </section>
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 갈림길 조건 하나로는 답이 정해지지 않습니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">입구의 6이 두 출구로 나뉜다는 사실만 알면 3과 3도, 2와 4도 합은 같습니다. 어떤 분배가 가능한지는 두 출구의 부품 성질을 함께 봐야 합니다. 같은 양끝 차이에서 같은 부품 두 개라면 흐름도 같아야 합니다.</p><p className="leading-7">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">입구의 6이 두 출구로 나뉜다는 사실만 알면 3과 3도, 2와 4도 합은 같습니다. 어떤 분배가 가능한지는 두 출구의 부품 성질을 함께 봐야 합니다. 같은 양끝 차이에서 같은 부품 두 개라면 흐름도 같아야 합니다.</p></div><SharedDropViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             그렇다고 출구만 보고 전체를 정할 수는 없습니다. 첫 부품을 지나는 양이 늘면 거기서 쓰는 차이도 커져 뒤의 갈림길에 남는 차이가 줄어듭니다. 오른쪽을 바꿨는데 왼쪽까지 바뀌는
             연결이 여기 있습니다.
           </p><p className="leading-7">그래서 세 가지를 함께 씁니다. 부품 하나에서 차이와 흐름을 잇는 관계, 갈림길에서 양을 맞추는 조건, 한 바퀴에서 차이를 맞추는 조건입니다. 각각의 역할이 보였으니 이제 실제 측정량의 이름과 단위를 붙일 수 있습니다.</p></div>
@@ -103,6 +111,7 @@ return <div className="space-y-16">
             나간 전류를 맞춥니다.
           </p>
         </div>
+        <BalanceGraphViz />
         <ExplainedFormula
           question="갈림길 전압 V를 아직 모를 때 어떻게 구합니까?"
           idea="각 전류를 전압과 저항으로 바꾸고, 갈림길의 유입과 유출을 같게 둡니다."
@@ -150,6 +159,9 @@ return <div className="space-y-16">
             흐르므로 6−3−3=0 mA입니다. 이 갈림길 조건을 키르히호프의 전류
             법칙이라고 부릅니다.
           </p>
+        </div>
+        <JunctionChargeViz />
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             전류가 갈라진다는 말은 전자 하나가 둘로 쪼개진다는 뜻이 아닙니다.
             일정 시간 동안 경계 안으로 들어온 전하의 총량이 두 출구로 나간
@@ -170,6 +182,7 @@ return <div className="space-y-16">
           assumptions={["갈림길에 따로 모델링하지 않은 전하 축적이 없습니다.", "모든 갈래를 빠짐없이 경계에 포함합니다."]}
           interpretation="두 출구 중 하나가 3 mA라면 나머지도 3 mA여야 합니다."
         />
+        <PlateBoundaryViz />
         <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             Kirchhoff가 1845년에 다룬 대상은 이 세 저항이 아닙니다. 정상 상태의
@@ -195,6 +208,7 @@ return <div className="space-y-16">
 
 <section id="loop" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 원문의 한 바퀴 조건에 12·6·6을 넣습니다</h2>
+<LoopHeightViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             아래 기준점에서 전원을 지나면 12 V 올라갑니다. 첫 저항을 지날 때
@@ -230,6 +244,7 @@ return <div className="space-y-16">
 <section id="power" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 에너지의 합으로 별도 검산합니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 6.002 Lecture 2의 9쪽은 전류가 전압의 양의 단자로 들어가는 방향을 택한 뒤 <code>power consumed by element e = vi</code>라고 적습니다. 같은 방향으로 읽은 저항의 v·i는 소비 전력이 양수입니다. 전원은 에너지를 내보내므로 소비 전력 규칙으로 세면 음수가 됩니다. <a href="https://live.ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/99b2a662083d1b1f487c55ea0f0d0220_6002_l2.pdf#page=9" target="_blank" rel="noopener noreferrer">원문 9쪽의 방향 약속</a>을 먼저 정하고, 아래에서는 공급량과 소비량을 각각 양수의 크기로 비교하겠습니다.</p></div>
+<PowerAreaViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             전압은 전하 1 C당 에너지이고 전류는 1초당 전하입니다. 둘을 곱하면
@@ -268,6 +283,9 @@ return <div className="space-y-16">
             일어나는 전파 지연이 관심 시간에 비해 작고, 회로 밖 유도 효과나
             빠뜨린 전하 축적도 작을 때 이 그림이 잘 맞습니다.
           </p>
+        </div>
+        <LumpedLimitsViz />
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             길게 뻗은 전송선에 빠른 신호를 보내면 선의 한쪽과 다른 쪽이 같은
             순간에 같은 상태가 아닙니다. 그때 선을 저항 없는 한 줄로 접으면

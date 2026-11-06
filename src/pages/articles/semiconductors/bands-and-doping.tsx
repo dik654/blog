@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BandDiagramViz from "./bands-and-doping/viz/BandDiagramViz";
 import CarrierCountViz from "./bands-and-doping/viz/CarrierCountViz";
+import CarrierLadderViz from "./bands-and-doping/viz/CarrierLadderViz";
+import ChargeBalanceViz from "./bands-and-doping/viz/ChargeBalanceViz";
+import DopantSiteViz from "./bands-and-doping/viz/DopantSiteViz";
+import HoleMotionViz from "./bands-and-doping/viz/HoleMotionViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -25,7 +30,9 @@ return <div className="space-y-16">
 
 <section id="case" data-teach-level="0" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">3. 1 cm³의 두 조각에서 10¹⁰개와 10¹⁶개를 비교합니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">기준 조각 A는 300 K의 순수 실리콘입니다. 움직이는 전자와 양전하처럼 셀 빈자리가 각각 약 10¹⁰개입니다. 이 농도 10¹⁰ cm⁻³는 MIT 6.012 강의안의 교육용 기준값을 사용합니다. 정확히 모든 온도에 적용되는 재료 상수는 아닙니다.</p><p className="leading-7">조각 B에는 전자를 내놓기 쉬운 원자 10¹⁶개/cm³를 넣고 거의 모두 작동한다고 <strong>가정</strong>합니다. 부피가 1 cm³이므로 총 원자 수도 10¹⁶개입니다. 그러면 움직이는 전자는 약 10¹⁶개, 빈자리는 약 10⁴개로 계산됩니다.</p><p className="leading-7">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">기준 조각 A는 300 K의 순수 실리콘입니다. 움직이는 전자와 양전하처럼 셀 빈자리가 각각 약 10¹⁰개입니다. 이 농도 10¹⁰ cm⁻³는 MIT 6.012 강의안의 교육용 기준값을 사용합니다. 정확히 모든 온도에 적용되는 재료 상수는 아닙니다.</p><p className="leading-7">조각 B에는 전자를 내놓기 쉬운 원자 10¹⁶개/cm³를 넣고 거의 모두 작동한다고 <strong>가정</strong>합니다. 부피가 1 cm³이므로 총 원자 수도 10¹⁶개입니다. 그러면 움직이는 전자는 약 10¹⁶개, 빈자리는 약 10⁴개로 계산됩니다.</p></div>
+<CarrierLadderViz />
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             전자 수는 A보다 백만 배 많습니다. 다만 실리콘 원자 밀도 약 5×10²²개/cm³와 비교하면 넣은 원자는 약 500만 개 중 1개꼴입니다. 적은 원자 변화가 이동 전하
             수에서는 크게 늘어나는 이유를 살펴보겠습니다.
           </p></div>
@@ -49,6 +56,7 @@ return <div className="space-y-16">
 
 <section id="states" data-teach-level="3" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">6. 가능한 상태의 묶음에 에너지띠라는 이름을 붙입니다</h2>
+<BandDiagramViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             실리콘 원자 하나의 전자만 그리면 왜 고체 전체가 전류를 흘리는지
@@ -89,6 +97,7 @@ return <div className="space-y-16">
 
 <section id="intrinsic" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">7. 기준 조각 A에서 두 이동 전하를 함께 셉니다</h2>
+<HoleMotionViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             온도가 0 K보다 높으면 일부 전자가 결합 상태를 떠나 움직일 수 있는
@@ -128,6 +137,7 @@ return <div className="space-y-16">
 
 <section id="dopants" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">8. 조각 B에 전자를 내놓는 원자를 넣습니다</h2>
+<DopantSiteViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             이제 둘째 조각 B를 만듭니다. 실리콘 자리 일부에 인처럼 바깥 전자가
@@ -211,7 +221,7 @@ return <div className="space-y-16">
 
 <section id="source" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 원문의 평형식과 중성 조건을 같은 사례에 대입합니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 강의안 9쪽은 열평형에서 <code>G₀=R₀</code>를 놓고 <code>n₀p₀=nᵢ²</code>로 연결합니다. 14쪽의 도너가 우세한 근사는 <code>n₀≈Nd, p₀≈nᵢ²/Nd</code>입니다. 원문의 예는 Nd=10¹⁷ cm⁻³입니다. 이 글은 같은 관계에 가정한 10¹⁶을 넣어 전자 약 10¹⁶과 정공 약 10⁴ cm⁻³를 얻었습니다.</p><p className="leading-7">중성 조건을 더 정확히 쓰면 완전히 이온화한 도너만 있는 균일한 벌크에서 <code>n=p+Nd</code>입니다. 따라서 n을 Nd와 정확히 같은 값이라고 쓰면 작은 p를 빠뜨립니다. 여기서는 10⁴가 10¹⁶보다 매우 작아 그 차이를 무시한 근사입니다.</p><p className="leading-7">억셉터 2×10¹⁵ cm⁻³도 함께 완전히 이온화했다면 <code>n+Na=p+Nd</code>입니다. 같은 근사에서 n≈Nd−Na=8×10¹⁵이고 p≈10²⁰/(8×10¹⁵)=1.25×10⁴ cm⁻³가 됩니다. 원자 개수를 더하는 대신 양·음 전하가 서로 보상하는 양을 뺍니다.</p><p className="leading-7">Wilson의 1931년 원문 460쪽은 “bands of allowed energies”와 “bands of disallowed energies”를 구분합니다. 그 문장은 가능한 에너지 상태의 구조를 설명합니다. 위의 300 K 농도 계산은 뒤의 강의안과 본문 가정을 연결한 것이며 Wilson 논문의 실리콘 측정값으로 읽지 않습니다.</p></div><CitationBlock source="MIT 6.012 Lecture 2 (2005), 9·13·14·17쪽" citeKey={4} href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/e1a94598c1fd641fc15636a9ad14de1a_lec2.pdf">원문의 열평형식과 충분히 이온화한 도너·억셉터 근사를 본문의 두 조각에 적용합니다. 보상 도핑과 가정 수치는 전하 중성 조건을 추가해 계산했습니다.</CitationBlock>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 강의안 9쪽은 열평형에서 <code>G₀=R₀</code>를 놓고 <code>n₀p₀=nᵢ²</code>로 연결합니다. 14쪽의 도너가 우세한 근사는 <code>n₀≈Nd, p₀≈nᵢ²/Nd</code>입니다. 원문의 예는 Nd=10¹⁷ cm⁻³입니다. 이 글은 같은 관계에 가정한 10¹⁶을 넣어 전자 약 10¹⁶과 정공 약 10⁴ cm⁻³를 얻었습니다.</p></div><ChargeBalanceViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">중성 조건을 더 정확히 쓰면 완전히 이온화한 도너만 있는 균일한 벌크에서 <code>n=p+Nd</code>입니다. 따라서 n을 Nd와 정확히 같은 값이라고 쓰면 작은 p를 빠뜨립니다. 여기서는 10⁴가 10¹⁶보다 매우 작아 그 차이를 무시한 근사입니다.</p><p className="leading-7">억셉터 2×10¹⁵ cm⁻³도 함께 완전히 이온화했다면 <code>n+Na=p+Nd</code>입니다. 같은 근사에서 n≈Nd−Na=8×10¹⁵이고 p≈10²⁰/(8×10¹⁵)=1.25×10⁴ cm⁻³가 됩니다. 원자 개수를 더하는 대신 양·음 전하가 서로 보상하는 양을 뺍니다.</p><p className="leading-7">Wilson의 1931년 원문 460쪽은 “bands of allowed energies”와 “bands of disallowed energies”를 구분합니다. 그 문장은 가능한 에너지 상태의 구조를 설명합니다. 위의 300 K 농도 계산은 뒤의 강의안과 본문 가정을 연결한 것이며 Wilson 논문의 실리콘 측정값으로 읽지 않습니다.</p></div><CitationBlock source="MIT 6.012 Lecture 2 (2005), 9·13·14·17쪽" citeKey={4} href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/e1a94598c1fd641fc15636a9ad14de1a_lec2.pdf">원문의 열평형식과 충분히 이온화한 도너·억셉터 근사를 본문의 두 조각에 적용합니다. 보상 도핑과 가정 수치는 전하 중성 조건을 추가해 계산했습니다.</CitationBlock>
 </section>
 
 <section id="boundaries" data-teach-level="7" className="scroll-mt-20">

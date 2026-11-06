@@ -6,6 +6,12 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TritonKernelProgrammingAndCompilerViz from "./triton-kernel-programming-and-compiler/viz/TritonKernelProgrammingAndCompilerViz";
+import TileShareViz from "./triton-kernel-programming-and-compiler/viz/TileShareViz";
+import StageMemoryViz from "./triton-kernel-programming-and-compiler/viz/StageMemoryViz";
+import MatmulTileViz from "./triton-kernel-programming-and-compiler/viz/MatmulTileViz";
+import TwoLedgersViz from "./triton-kernel-programming-and-compiler/viz/TwoLedgersViz";
+import LoweringStagesViz from "./triton-kernel-programming-and-compiler/viz/LoweringStagesViz";
+import VectorizeLayoutViz from "./triton-kernel-programming-and-compiler/viz/VectorizeLayoutViz";
 
 /**
  * Triton: block 프로그래밍 모델·autotune·MLIR 컴파일·specialization
@@ -120,12 +126,18 @@ m &= (o<N)
             warp, 즉 32 × num_warps 개 thread 로 실행됩니다. <code>num_stages</code> 는 K 루프처럼
             반복되는 load 를 몇 단계 앞서 미리 읽을지 정하는 software pipelining 깊이입니다.
           </p>
+</div>
+        <TileShareViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Matmul tile을 M 128행 × N 128열 × K 깊이 32로 잡으면 출력은 128×128=16,384개입니다.
             num_warps=8이면 8 warp × warp마다 32 thread = 256 thread가 출력을 나눕니다. Warp 하나는
             16,384÷8=2,048개, thread 하나는 16,384÷256=64개 fp32 accumulator를 register에 둡니다.
             num_warps를 4로 줄이면 128 thread가 나누므로 thread마다 128개가 되어 register 압박이 커집니다.
           </p>
+</div>
+        <StageMemoryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             num_stages = 3 이면 K 루프의 A tile(128 × 32)과 B tile(32 × 128)을 3단계 분량,
             A와 B tile은 단계마다 각각 128×32와 32×128, 합계 8,192개 값을 가집니다. FP16 값마다 2바이트이고 3단계를 보관하므로 3단계 × 단계마다 8,192개 × 값마다 2바이트 = 49,152바이트, 곧 48KiB를 shared memory에 미리 올려 둡니다. 단계를 늘릴수록
@@ -163,6 +175,7 @@ m &= (o<N)
             동안 accumulate 되는 출력 인자를 되돌리는 안전장치입니다.
           </p>
         </div>
+        <MatmulTileViz />
         <AlgorithmBlock
           title="Triton matmul kernel 한 program instance 의 흐름"
           input={["a_ptr, b_ptr, c_ptr 와 M, N, K, stride 들 (runtime 인자)", "BLOCK_SIZE_M, BLOCK_SIZE_N, BLOCK_SIZE_K, GROUP_SIZE_M (tl.constexpr)", "num_warps, num_stages (launch meta-parameter)"]}
@@ -213,6 +226,9 @@ m &= (o<N)
             따라서 variant 수는 “autotune key 수 × config 수”로 고정되지 않고, 실제 JIT cache
             key가 몇 종류로 갈렸는지로 세어야 합니다.
           </p>
+</div>
+        <TwoLedgersViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 두 shape가 autotune key는 다르지만 dtype·runtime 속성이 같고 같은 config
             6개를 평가한다면, 두 번째 탐색은 앞에서 만든 6개 binary를 다시 실행할 수 있습니다.
@@ -243,6 +259,7 @@ m &= (o<N)
         <h2 className="mb-6 text-2xl font-bold">
           Compiler 가 IR 을 단계별로 낮추며 schedule 을 대신 정합니다
         </h2>
+        <LoweringStagesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Triton compiler 는 MLIR 위에 지어진 여러 단계의 lowering 입니다. Python AST 가 Triton IR(ttir)이 되고 GPU 배치 정보가 붙은
@@ -281,6 +298,9 @@ m &= (o<N)
             schedule 을 언어에서 없앴습니다. Block 크기와 num_warps 만 받고 나머지 배치와 순서를 compiler 가 dataflow 분석으로 정하는 것이 Triton
             의 schedule abstraction 입니다. 대가는 그 결정을 손으로 뒤집을 자리가 거의 없다는 점입니다.
           </p>
+</div>
+        <VectorizeLayoutViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Automatic vectorization 은 이 흐름의 결과물입니다. Layout 이 한 thread 에 연속 원소
             여러 개를 배정하고 pointer 정렬과 16 배수 specialization 이 보장되면, LLVM 으로 낮출

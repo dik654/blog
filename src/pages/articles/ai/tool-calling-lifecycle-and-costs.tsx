@@ -4,6 +4,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ToolCallingLifecycleAndCostsViz from "./tool-calling-lifecycle-and-costs/viz/ToolCallingLifecycleAndCostsViz";
+import ToolRoundTripViz from "./tool-calling-lifecycle-and-costs/viz/ToolRoundTripViz";
+import CallIdMatchViz from "./tool-calling-lifecycle-and-costs/viz/CallIdMatchViz";
+import TokenSubtotalViz from "./tool-calling-lifecycle-and-costs/viz/TokenSubtotalViz";
+import RetryBranchViz from "./tool-calling-lifecycle-and-costs/viz/RetryBranchViz";
+import BackoffWaitViz from "./tool-calling-lifecycle-and-costs/viz/BackoffWaitViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import {
   codeRefs,
@@ -36,6 +41,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           2. 필요한 조회를 골라 실행하고 결과를 다시 읽습니다
         </h2>
+        <ToolRoundTripViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             모델에게 가능한 조회의 이름과 사용법을 알려 줍니다. 모델은 어느
@@ -234,6 +240,9 @@ export default function Article() {
             합시다. 실행 환경은 각 입력과 권한을 확인한 뒤 세 조회를 시작합니다.
             (가정)
           </p>
+        </div>
+        <CallIdMatchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             부산 결과가 먼저 와도 c2에, 서울 결과는 c1에, 제주 결과는 c3에
             연결합니다. 모두 약 400ms에 끝난다는 가정에서는 조회 구간이 약
@@ -324,6 +333,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           9. 2,654는 입력의 부분합이며 최종 요금이 아닙니다
         </h2>
+        <TokenSubtotalViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             작은 사례의 10개 기능 설명은 2,000 token, 이전 결과 2개는 300 token,
@@ -427,6 +437,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           10. 대기 간격을 늘리기 전에 반복해도 안전한지 봅니다
         </h2>
+        <RetryBranchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             인자가 잘못됐으면 인자를 고치고 권한이 없으면 권한 범위에 맞는
@@ -434,6 +445,9 @@ export default function Article() {
             외부 변경이 있었다면 실제 결과와 중복 실행 방지 조건을 먼저
             확인합니다. 오류 코드만으로 재시도를 허용하지 않습니다.
           </p>
+        </div>
+        <BackoffWaitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             대기 시작값 0.5초, 최대 2초, 최대 재시도 4회를 가정하면 k=0·1·2·3의
             대기는 0.5·1·2·2초입니다. 대기 합은 5.5초이며 실제 호출 시간은

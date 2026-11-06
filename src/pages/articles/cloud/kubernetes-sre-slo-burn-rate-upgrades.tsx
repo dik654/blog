@@ -5,6 +5,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import BurnRateWindowViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/BurnRateWindowViz";
+import BudgetAreaViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/BudgetAreaViz";
+import BudgetLedgerViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/BudgetLedgerViz";
+import BurnSlopeViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/BurnSlopeViz";
+import DnsOutageViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/DnsOutageViz";
+import IpRangeViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/IpRangeViz";
+import MeasurePointViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/MeasurePointViz";
+import SelectorMatchViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/SelectorMatchViz";
+import VersionSkewViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/VersionSkewViz";
 import { codeRefs } from "./kubernetes-sre-slo-burn-rate-upgrades/codeRefs";
 import { kubernetesSreTrees } from "./kubernetes-sre-slo-burn-rate-upgrades/fileTree";
 import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
@@ -166,10 +174,16 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               이 속도로는 budget이 30일 ÷ 25 = 1.2일 만에 바닥납니다.
             </p>
+            </div>
+          <BudgetAreaViz />
+          <div className={prose}>
             <p>
               그렇다면 몇 배부터 사람을 깨워야 할까요? Workbook은 거꾸로 정합니다. 1시간 창 안에서 한 달 budget의 2%를 썼다면 깨울 만하다고 먼저 정한 뒤, 그 소비를 만드는 burn rate를 계산합니다. 소비한 budget 비율 = burn rate ×
               창 길이 ÷ SLO 기간이므로 burn rate = 0.02 × 720시간 ÷ 1시간 = 14.4입니다. 6시간 창에서 5%면 6, 3일 창에서 10%면 1입니다.
             </p>
+            </div>
+          <BurnSlopeViz />
+          <div className={prose}>
             <p>
               세 숫자 14.4·6·1은 서로 다른 급함을 나타냅니다. 14.4배는 몇 시간 안에 budget이 끝나는 속도라 Page, 6배는 닷새 안이라 역시 Page, 1배는 정확히 한 달이라 다음 근무일에 볼 Ticket입니다. 우리 장애의 25배는 첫 줄을 넘습니다.
             </p>
@@ -224,6 +238,9 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               SRE 책은 사용자 대면 시스템에서 네 가지만 잴 수 있다면 지연(latency), 트래픽(traffic), 오류(errors), 포화(saturation)를 재라고 적으면서 이를 four golden signals라 부릅니다. SLI는 보통 이 가운데 지연과 오류에서 고릅니다. 포화는 원인 층의 신호입니다. 손으로 반복하는 운영 작업은 toil, 사고 뒤에 쓰는 보고서는 postmortem이라 부르며 각각 10절과 11절에서 다룹니다.
             </p>
+            </div>
+          <MeasurePointViz />
+          <div className={prose}>
             <p>
               이름이 붙었으니 다시 Kubernetes로 돌아옵니다. SLI는 어디서 잴까요? Pod 안의 앱 지표는 Pod가 죽으면 같이 사라지며, Pod가 Service에서 빠진 동안의 실패는 세지 못합니다. 그래서 SLI는 Ingress·Gateway나 Service 앞단처럼 사용자 쪽에서 가장 가까운 지점에서 잽니다. Pod가 Service 뒤에 붙었다 빠지는 경로는 <a href="/cs/cloud/kubernetes-network-packet-path#overview">Kubernetes 패킷 경로</a>에 있습니다.
             </p>
@@ -276,6 +293,9 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               loveholidays의 GKE cluster에서는 배포가 멈추고 새 Pod 절반이 Pending이었습니다. Pod의 Event는 "0/256 nodes are available: 1 node(s) were unschedulable, 173 Insufficient memory, 214 node(s) didn't match node selector, 87 Insufficient cpu"였습니다.
             </p>
+            </div>
+          <IpRangeViz />
+          <div className={prose}>
             <p>
               증상은 자원 부족이라 Cluster Autoscaler가 노드를 더 만들어야 했지만, 원인은 Pod용 IP 범위 /16(65,536개)을 노드당 /24(256개)씩 미리 떼어 주는 규칙이었습니다. 65,536 ÷ 256 = 256노드가 상한이었는데, 팀은 노드당 Pod 110개 기준으로 65,536 ÷ 110 ≈ 595노드를 기대했습니다. 자원 지표를 아무리 봐도 IP 상한은 나오지 않습니다.
             </p>
@@ -317,6 +337,9 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               error budget은 경보의 분모일 뿐 아니라 변경의 허가증입니다. SRE 책은 분기 SLO 99.999%인 서비스에서 어떤 문제가 예상 요청의 0.0002%를 실패시키면 그 분기 budget의 20%를 쓴 것이라고 계산하고, budget이 남아 있는 한 새 release를 내보내다가 budget이 소진되면 release를 멈춰 테스트와 복원력에 투자한다고 적습니다. 제품팀과 SRE가 협상 대신 숫자로 결정하게 만드는 장치입니다.
             </p>
+            </div>
+          <BudgetLedgerViz />
+          <div className={prose}>
             <p>
               3절의 서비스에 적용해 봅니다. 월초에 budget 259만 개가 있습니다. 10분짜리 장애가 3.47%를 쓴 데다 배포 중 rollout이 잘못되어 또 5%를 썼다면 남은 budget은 91.5%입니다. 아직 배포할 수 있습니다. 그런데 셋째 주에
               큰 장애로 80%를 더 썼다면 남은 11.5%로 월말까지 버텨야 하므로 새 기능 배포는 멈춥니다. 그 달 남은 변경은 복원력을 높이는 것(PDB 추가, probe 수정, limit 조정)으로 제한합니다.
@@ -324,6 +347,9 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               이 규칙이 작동하려면 budget을 세는 monitoring이 cluster 밖에 있어야 합니다. Zalando의 보고서가 적은 기여 요인이 정확히 이것입니다. cluster 안의 monitoring이 cluster DNS에 의존해 함께 멈춘 탓에 사람이 알아채기까지 시간이 걸렸습니다. 후속 조치도 cluster 밖에서의 경보와 호출 실패 시 직접 escalation이었습니다. SLI를 재는 지점을 사용자 가까이 두라는 5절의 규칙과 같은 이유입니다.
             </p>
+            </div>
+          <DnsOutageViz />
+          <div className={prose}>
             <p>
               같은 보고서의 다른 기여 요인은 Kubernetes 기본 DNS 설정이었습니다. Pod의 resolv.conf는 ndots:5라서 점이 5개 미만인 외부 이름을 조회할 때마다 search 도메인을 먼저 붙여 봅니다. 여기에 Node.js가 결과를 캐시하지 않아 외부 이름 하나에 DNS 질의 10번이 나갔습니다.
             </p>
@@ -347,6 +373,9 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               kube-controller-manager·kube-scheduler는 1단계까지 오래될 수 있으며 kubectl은 위아래 1단계입니다.
             </p>
+            </div>
+          <VersionSkewViz />
+          <div className={prose}>
             <p>
               이 규칙에서 순서가 나옵니다. 먼저 kube-apiserver를 한 minor 올립니다. 그 다음 controller-manager와 scheduler, 그 다음 노드를 drain한 뒤 kubelet, 마지막으로 kube-proxy입니다. 문서는 kubelet의 minor 업그레이드를 제자리에서 하는 것은 지원하지 않는다고 적습니다.
             </p>
@@ -368,6 +397,9 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               규칙을 다 지켜도 업그레이드는 cluster마다 다른 곳에서 터집니다. Reddit은 가장 오래되고 큰 cluster를 1.23에서 1.24로 올리다 314분을 멈췄습니다.
             </p>
+            </div>
+          <SelectorMatchViz />
+          <div className={prose}>
             <p>
               Calico route reflector의 nodeSelector와 peerSelector가 label node-role.kubernetes.io/master를 가리켰는데, 1.20대에 master가 control-plane으로 바뀐 뒤 1.24에서 실행 중인 cluster에서도 master label이 제거되어 selector가 노드 0개에 매칭됐습니다. route reflector가 사라지자 Pod 간 경로 전파가 멈췄습니다.
             </p>

@@ -2,6 +2,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import BillLedgerViz from "./water-utility-and-tariffs/viz/BillLedgerViz";
+import ConservationGapViz from "./water-utility-and-tariffs/viz/ConservationGapViz";
+import ShortfallViz from "./water-utility-and-tariffs/viz/ShortfallViz";
+import TariffReachViz from "./water-utility-and-tariffs/viz/TariffReachViz";
+import TariffShapeViz from "./water-utility-and-tariffs/viz/TariffShapeViz";
 
 /** teach-system S→B→0…7. 공식 문서 확인 2026-10-04, 사례 수치는 가정. */
 export default function WaterUtilityAndTariffsArticle() {
@@ -28,6 +33,9 @@ export default function WaterUtilityAndTariffsArticle() {
         <h2 className="mb-6 text-2xl font-bold">0 · 공급 비용 90을 가구 80과 지원 10으로 나눕니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한 해 정수·운영에 60, 배관 교체에 30이 필요하다고 놓습니다(가정). 서비스에 필요한 자원은 합계 90입니다. 정부가 취약 가구를 대신해 요금 10을 낸다고 합시다. 가구는 80, 정부는 10을 내서 공급자가 90을 받습니다.</p>
+        </div>
+        <BillLedgerViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">지원금 10이 같은 요금을 대신 내는 돈이라면 서비스 비용에 다시 더해 100이라고 쓰면 안 됩니다. 별도 연결 공사나 지원 행정에 실제로 10이 들었다면 그때 추가 자원 비용으로 계산합니다.</p>
         </div>
         <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">90의 서비스 비용과 10의 부담 이전을 구별했습니다. 돈이 합쳐지는 지점을 엽니다.</p>
@@ -42,6 +50,7 @@ export default function WaterUtilityAndTariffsArticle() {
       </section>
       <section id="need" data-teaching-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2 · 사용량이 줄어도 묻힌 관의 비용은 남습니다</h2>
+        <ConservationGapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">집들이 물을 아끼면 처리에 쓰는 전력과 약품 일부는 줄어듭니다. 이미 설치한 관은 계속 교체하고 수리해야 합니다. 필요한 인력도 같은 비율로 줄지 않습니다. 사용한 양만큼만 받는 구조에서는 절수가 수입을 먼저 줄일 수도 있습니다.</p>
           <p className="leading-8">요금을 낮추려고 교체 30을 미루면 올해 수입과 지출은 맞을 수 있습니다. 그러나 설비 상태가 나빠지면 누수와 단수의 비용이 뒤로 넘어갑니다. 현재 이용자와 미래 이용자의 부담까지 함께 보는 이유입니다.</p>
@@ -59,8 +68,12 @@ export default function WaterUtilityAndTariffsArticle() {
       </section>
       <section id="mechanism" data-teaching-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 요금 60만 받고 지원 10을 받아도 20이 모자랍니다</h2>
+        <ShortfallViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">가구 수입 80과 정부 지급 10이면 서비스 90을 충당합니다. 가구 수입을 60으로 낮추고 지원은 10에 두면 총수입은 70, 부족액은 20입니다(가정). 지원을 더 받거나 다른 수입을 마련하지 않으면 교체나 운영을 줄여야 합니다.</p>
+        </div>
+        <TariffShapeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사용량과 무관하게 받는 기본 금액을 늘리면 수입은 안정되지만 적게 쓰는 집의 부담이 커질 수 있습니다. 사용량별 가격을 높이면 절수를 유도할 수 있지만 가구원 수가 많은 저소득 가구가 불리할 수 있습니다.</p>
           <p className="leading-8">어떤 요금표든 수도 서비스의 전체 비용을 사라지게 하지는 않습니다. 요금·세금·차입 중 누가 언제 부담할지를 바꾸므로 차입을 쓰면 뒤의 상환 재원도 적습니다.</p>
         </div>
@@ -89,6 +102,7 @@ export default function WaterUtilityAndTariffsArticle() {
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 낮은 요금이 누구에게 도착하는지 확인합니다</h2>
+        <TariffReachViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">이미 연결된 집의 요금을 낮추면 물을 많이 쓰는 집이 더 큰 금액을 지원받을 수 있습니다. 연결되지 않은 집은 여전히 다른 판매자에게 더 비싸게 물을 살 수 있습니다. 연결비 지원과 매달 요금 지원은 서로 다른 문제를 풉니다.</p>
           <p className="leading-8">부담 가능성과 안정 공급을 함께 보려면 가구 소득 대비 청구액, 수질, 공급 시간, 누수와 미연결 가구를 봅니다. 낮은 요금만으로 공정성을 판정할 수 없습니다.</p>

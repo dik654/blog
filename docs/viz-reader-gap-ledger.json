@@ -955,202 +955,416 @@
 {
 "route": "cloud/linux-containers-cgroup-namespace",
 "publicPath": "cs/cloud/linux-containers-cgroup-namespace",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 7,
+"articleIssues": [
+"8절 '표의 마지막 열이 중요합니다': 이 절 본문에는 표가 없습니다. 인용 블록이 언급하는 man-page 표를 가리키는 것으로 보입니다.",
+"7절 '3절의 12%와 6절의 느려짐은 사용률 지표에 나타나지 않습니다': 12%는 사용률 값 자체이므로 '3절의 멈춤'을 뜻하는 것으로 보입니다.",
+"10절 AlgorithmBlock: 의사코드는 amount = min(slice 5000, 통.runtime)인데, 주석은 마지막 10,000을 넷이 2,500씩 나눠 받는다고 적습니다. 이 식대로면 두 run queue가 5,000씩 받고 나머지 둘은 0을 받습니다. SliceBucketViz는 주석과 12.5ms 수치를 따르고 '글의 설명대로', '수 ms 어긋날 수 있습니다'라고 표시했습니다.",
+"10절 '1절의 네 스레드가 내려오는 순간': 네 스레드는 1절이 아니라 3절의 가정입니다.",
+"9절: UID가 0이 아니면 execve 때 Permitted·Effective가 비워진다고 적은 뒤, capabilities.add 하나로 bind가 된다고 합니다. ambient 또는 파일 capability 없이 Effective에 비트가 남는지 본문이 설명하지 않아 확인이 필요합니다. CapBitmapViz 마지막 장면은 글의 결론을 그대로 따릅니다.",
+"9절 '1절의 컨테이너는 runAsUser 1000으로 돌았기 때문에': 1절에는 runAsUser가 나오지 않습니다."
+]
 },
 {
 "route": "cloud/linux-network-interface-route-netfilter-dns",
 "publicPath": "cs/cloud/linux-network-interface-route-netfilter-dns",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 6,
+"articleIssues": [
+"7절 제목과 1절 '훅 다섯 자리 가운데 세 개': 본문의 나열대로면 세 개를 지나는 것은 전달 패킷(PRE_ROUTING·FORWARD·POST_ROUTING)뿐입니다. 내 주소로 온 패킷(PRE_ROUTING·LOCAL_IN)과 이 호스트가 만든 패킷(LOCAL_OUT·POST_ROUTING)은 둘입니다. 기존 PacketHookPathViz 제목도 같은 표현을 씁니다."
+]
 },
 {
 "route": "circuits/lumped-circuit-and-conservation",
 "publicPath": "electronics/circuits/lumped-circuit-and-conservation",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 10
 },
 {
 "route": "infrastructure/electricity-grid-and-power",
 "publicPath": "economics/infrastructure/electricity-grid-and-power",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 8,
+"articleIssues": [
+"7절 첫 문장의 '한 시간에 5MW만 낼 수 있다면'은 MW가 이미 빠르기 단위라 '한 시간에'와 겹쳐 3절의 MW/MWh 구별과 어긋나 보일 수 있습니다. 본문은 고치지 않았고, Viz는 5 MW를 그 한 시간 동안 유지해 5MWh가 나오는 것으로 그렸습니다."
+]
 },
 {
 "route": "ai/llm-monitoring-observability-and-drift",
 "publicPath": "cs/ai/llm-monitoring-observability-and-drift",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 9,
+"articleIssues": [
+"The annotatedFormula for sampling contains the typo “걸힐 확률”; “걸릴 확률” appears to be intended.",
+"Token section interpretation: T_total−TTFT excludes the TTFT portion, which the article says includes queue, yet it says lower throughput with unchanged model latency points to queue·network overhead. Queue time is not in this throughput denominator, so the causal claim looks doubtful.",
+"Sampling formula assumption: “이 식은 균일 sampling의 하한 추정치” is ambiguous. Under its independence assumption the formula is the exact miss probability for uniform sampling, and mixing in tail sampling would make it an upper bound on misses.",
+"R_tok uses N in the numerator while the generation interval holds N−1 gaps, so 1/ITL (about 79.7/s) and 256/3.2 (80/s) differ slightly. The article does not mention this."
+]
 },
 {
 "route": "blockchain/giwa-chain",
 "publicPath": "cs/blockchain/giwa-chain",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 5,
+"articleIssues": [
+"The term table defines ⪯ as “왼쪽 block이 오른쪽 block의 canonical ancestor”, but safe and finalized can sit at the same block (the existing Viz has finalized reach 120). “조상이거나 같음” would be stricter."
+]
 },
 {
 "route": "infrastructure/water-utility-and-tariffs",
 "publicPath": "economics/infrastructure/water-utility-and-tariffs",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 5,
+"articleIssues": [
+"4절 3문단 '차입을 쓰면 뒤의 상환 재원도 적습니다'의 '적습니다'는 뜻이 모호합니다. '함께 적어 둡니다'인지 '재원이 적다'인지 불분명합니다. 본문은 고치지 않았고 Viz에도 넣지 않았습니다."
+]
 },
 {
 "route": "ai/prefix-caching-radix-attention",
 "publicPath": "cs/ai/prefix-caching-radix-attention",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 11,
+"articleIssues": [
+"23절 첫 문단의 '답: 11절'은 앞 질문(page 크기 4면 hit이 어디서 끊기는가)의 답이 9·10절에 있어 어긋납니다. 11절은 뒤 질문(전체 8이 똑같은 경우)만 답합니다.",
+"21절의 18%와 29%는 반올림 값입니다(4,000/22,000=18.18%, 6,300/22,000=28.64%). 오류는 아니며 Viz도 본문 표기를 따랐습니다."
+]
 },
 {
 "route": "banking/payment-clearing-settlement",
 "publicPath": "finance/banking/payment-clearing-settlement",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 8,
+"articleIssues": [
+"Several places in the prose are missing a space, such as 'A0·B 0', '14억 원과100만', '3.8.1' preceded by '과', and '이때14억'. Not edited.",
+"viz/NettingViz.tsx and viz/SettlementLayerViz.tsx are in the article directory, but a repo-wide grep of src found them referenced only by their own files. I left them unused. SettlementLayerViz's notes state flatly that the customer balance updates immediately and that the transfer is irreversible from the central-bank move, which is stronger than this article's hedged prose.",
+"The prose in section 10 says '어느 은행이 100을 가지고 있어야' although the 100 instruction is specifically A→B, so the sender is A. The lower bound of 100 still holds. The Viz keeps the article's wording."
+]
 },
 {
 "route": "ai/optimizers",
 "publicPath": "cs/ai/optimizers",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 7,
+"articleIssues": [
+"Section 4's transition sentence ('갱신 순서가 고정됐습니다... 이 상태들에 이름을 붙입니다') is followed by four more paragraphs on denominators before section 5, so the transition sits in the middle of the section.",
+"The existing SgdUpdateViz in section 1 uses 'update #42 · batch 32', which is unrelated to the article's 2-and-6 case. It also needs inner scrolling: canvas overflow of 49px at 390 wide and 79px at 1440 wide. Measured, not changed."
+]
 },
 {
 "route": "ai/math-gradients-jacobians",
 "publicPath": "cs/ai/math-gradients-jacobians",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 6
 },
 {
 "route": "ai/launch-overhead-and-cpu-gpu-synchronization",
 "publicPath": "cs/ai/launch-overhead-and-cpu-gpu-synchronization",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 11
 },
 {
 "route": "ai/synthetic-data-and-data-flywheel",
 "publicPath": "cs/ai/synthetic-data-and-data-flywheel",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 7,
+"articleIssues": [
+"The flywheel AlgorithmBlock computes p̂ ← pass_rate(kept) after quality_threshold. Pass rate is defined earlier as c/n over all scored candidates; computed on kept candidates only, it could approach 1 and break the 0<p̂<1 filter.",
+"k is used inconsistently. The difficulty section and RFT use k for the number generated (k=8, k=100), while the pass@k formula uses n for generated and k for selected. The n annotation itself says 'RFT 실험에서는 k=100까지 씀'. PassAtKViz uses n=8 and varies k.",
+"The ExplainedFormula question and interpretation say raising N makes the probability rise monotonically, but the formula's direct variable is k with n and c fixed. Raising n also changes c, so the claim needs that premise.",
+"'문제당 100개 후보 중 verifier를 통과한 상위 20%' can read as 20 of 100, while the TermBreakdown says '채점 통과 후보 중 상위 20%'. RftFunnelViz follows the TermBreakdown reading.",
+"'difficulty estimation은 데이터 생성 자체보다 추론 비용이 더 듭니다' has no supporting number, and the article says the pass rate is the value already computed during best-of-N scoring. Please check it.",
+"The existing SyntheticDataAndDataFlywheelViz note says pass-rate filtering applies to '남은 후보', which repeats the first issue above."
+]
 },
 {
 "route": "ai/parallelism-strategy-and-placement",
 "publicPath": "cs/ai/parallelism-strategy-and-placement",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 9,
+"articleIssues": [
+"The existing ParallelismStrategyAndPlacementViz contradicts itself on candidate B: CompareBars prints 'R 0.11' (1.1/10.4) and 11.5 ms, while its NOTES say B 0.22 and the prose says 11.6 ms. I did not edit it.",
+"Candidate B TPOT by arithmetic is 10.4 + 1.1 + 0.035 = 11.535 ms, which rounds to 11.5, not the prose's '약 11.6 ms'.",
+"The prose says all-reduce takes '약 52 μs' with 8.4 ms per token, but 52 × 160 = 8.32 ms. 8.4 ms comes from 15 + 1.875 × 20 = 52.5 μs. LinkCostViz shows 52.5 and notes that the article writes about 52.",
+"'TP 그룹이 두 node 에 걸치게 rank 를 배정하면 통신량은 후보 A 와 같아집니다': the article's own formula gives 15 + 1.75 × 20 = 50 μs for a split TP 8 versus 52.5 μs for TP 16, so it is close rather than equal. PlacementMapViz keeps the article's wording.",
+"'microbatch 둘을 겹치면 throughput 은 두 배' holds in steady state. The bubble formula (p−1)/(m+p−1) cited in the ProgressiveDetail gives 1/3 for p=2, m=2 over a finite run. PpMicrobatchViz shows one fill slot and then one token every 5.2 ms."
+]
 },
 {
 "route": "embedded/serial-buses-and-tradeoffs",
 "publicPath": "electronics/embedded/serial-buses-and-tradeoffs",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 9
 },
 {
 "route": "ai/metric-selection-protocol",
 "publicPath": "cs/ai/metric-selection-protocol",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 5,
+"articleIssues": [
+"오류가 아니라 공백 의심: recall과 positive를 본문 문장에서 정의하지 않는다. 102÷120=0.85 계산이 사실상 첫 설명이다. 본문은 수정하지 않았고 새 Viz 안에서만 정의했다.",
+"오류가 아니라 공백: P29의 비용 35와 P24-H의 p95 91ms는 기존 MetricSelectionProtocolViz에만 있고 본문 문장에는 없다. 새 GuardrailPlaneViz는 이 기존 Viz의 값을 사용했다."
+]
 },
 {
 "route": "semiconductors/bands-and-doping",
 "publicPath": "electronics/semiconductors/bands-and-doping",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 5,
+"articleIssues": [
+"§11 끝부분 문장 '농도가 예상과 다르면 이온화와 보상 도핑을 농도는 맞는데 전도도가 다르면 이동도와 산란을 먼저 봅니다.'는 '보상 도핑을' 뒤에 서술어나 쉼표가 빠진 것으로 보입니다."
+]
 },
 {
 "route": "cloud/linux-tcp-time-wait-ports-backlog",
 "publicPath": "cs/cloud/linux-tcp-time-wait-ports-backlog",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 9,
+"articleIssues": [
+"§9 'handshake의 마지막 ACK...' 문단의 '서버의 요청 소켓은 SYN 대기열에 남지만 클라이언트는 연결이 됐다고 믿지만 서버에는 소켓이 없는, 짧은 half-open 상태입니다.'는 '지만'이 겹치고, 요청 소켓이 남는다고 한 직후 '서버에는 소켓이 없는'이라고 해 완성된 소켓을 뜻하는지 불분명합니다.",
+"§7 '3절의 48번째 초에는 28,232개 후보가 모두 같은 4-tuple의 TIME_WAIT가 있음으로 떨어집니다.'는 3절의 '48번째 초에 600개 중 32개는 포트를 받는다'는 설명과 어긋납니다. 모두 떨어지는 것은 그 32개가 나간 뒤입니다. Viz에는 '32개 뒤'로 적었습니다."
+]
 },
 {
 "route": "ai/fft",
 "publicPath": "cs/ai/fft",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 14
 },
 {
 "route": "gpu/cuda-shared-memory",
 "publicPath": "cs/gpu/cuda-shared-memory",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 9
 },
 {
 "route": "constitution/government-forms",
 "publicPath": "politics/constitution/government-forms",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 4,
+"articleIssues": [
+"Existing GovernmentFormsViz (not edited) says '다당 20석의 선택이 통과를 가름' and step 0 calls 다당's side the first fork. By the article's own numbers, 가+나 (280) also passes P without 다당, so this holds only if 나당 opposes, which the prose states as a condition."
+]
 },
 {
 "route": "gpu/megakernel-design-tradeoffs",
 "publicPath": "cs/gpu/megakernel-design-tradeoffs",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 6,
+"articleIssues": [
+"Shared memory prose and TermBreakdown: '213 kB 를 ... 32 KB page 7개'. 32 KB × 7 = 224 KB, which exceeds 213 kB (32 KiB × 7 is about 229 kB). 16 KiB × 13 = 212,992 B is consistent. Only the page size 32 KB is used in the new Viz; the count 7 is left out.",
+"'operator 당 평균 32~47개': 13,867 ÷ 293 = 47.3 matches the upper end, and the article does not explain the lower end of 32.",
+"Formula terms define N_K as kernel count minus 1, then give 'Llama-1B 는 약 100, Qwen3-8B 는 293', which are the kernel counts themselves, not boundaries.",
+"Existing MegakernelDesignTradeoffsViz (not edited) calls the counter wait 4 µs and says it is t_sync, but its result panel uses 'sync 1 + reg 3'. The register scene also ends at 35 µs while the result says 36 µs."
+]
 },
 {
 "route": "ai/reward-design-for-verifiable-rl",
 "publicPath": "cs/ai/reward-design-for-verifiable-rl",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 6,
+"articleIssues": [
+"6절 표의 셀에 띄어쓰기가 빠져 있습니다: '100개 중50개 통과', '마지막0점'. 본문은 수정하지 않았습니다.",
+"1절의 기존 RewardDesignForVerifiableRlViz는 S1~S6, 세 rollout이 멈춘 자리, 진척 비율 reward, 'S3까지 갔다면 0.5' 같은 값을 쓰는데 이 글의 본문에는 이 수치와 예시가 없습니다. 이번 작업 범위 밖이라 수정하지 않았습니다."
+]
 },
 {
 "route": "firms/market-power-and-markup",
 "publicPath": "economics/firms/market-power-and-markup",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 6
 },
 {
 "route": "business/shop-fitout-and-opening",
 "publicPath": "economics/business/shop-fitout-and-opening",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 3
 },
 {
 "route": "market-failure/public-goods-and-commons",
 "publicPath": "economics/market-failure/public-goods-and-commons",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 5,
+"articleIssues": [
+"본문 ExplainedFormula(congestion)의 idea는 '뒤의 것이 언제나 큽니다'라고 하지만, 배가 1척일 때 Δ전체(1)=7과 Δ한 척(1)=7로 같다. '언제나'는 2척 이상에서만 맞다.",
+"revelation 절 첫 방식에서 참값 신고 시 10을 걷고 드는 값은 9인데, 남는 1의 처리를 본문이 말하지 않는다. 이 때문에 Viz의 '낼 돈' 행에는 합을 적지 않았다."
+]
 },
 {
 "route": "gpu/triton-kernel-programming-and-compiler",
 "publicPath": "cs/gpu/triton-kernel-programming-and-compiler",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 6,
+"articleIssues": [
+"launch-and-autotune의 num_stages 문단이 'K 루프의 A tile(128 × 32)과 B tile(32 × 128)을 3단계 분량, A와 B tile은 단계마다 각각…'으로 문장이 끊기고 내용이 겹칩니다. 편집 잔여물로 보입니다.",
+"jit-specialization은 16의 배수 여부를 고정 규칙으로 외우지 말라고 경고합니다. 그런데 같은 절의 다음 문단과 compiler-pipeline의 vectorization 문단은 '16 배수 specialization'을 조건처럼 씁니다. 표현이 서로 약간 충돌합니다.",
+"본문은 cache key를 '첫째·둘째·셋째' 세 부분으로 나열하고, 뒤의 TermBreakdown은 '네 층'이라고 합니다. Launch option이 네 번째 층으로 번호 없이 나옵니다."
+]
 },
 {
 "route": "ai/text-unicode-encoding",
 "publicPath": "cs/ai/text-unicode-encoding",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 11,
+"articleIssues": [
+"4절의 '아래 첫 장면은 원문입니다'가 가리키던 TextCaseViz는 1절에 있어서 위치가 맞지 않았습니다. 새 FourRulersViz를 그 자리에 넣어 문장과 맞췄고, 본문은 고치지 않았습니다.",
+"text-unicode-encoding/ 안의 Overview.tsx, BitsBytes.tsx, CodePoints.tsx, Utf8.tsx, Normalization.tsx, Offsets.tsx, Applications.tsx와 viz/TextUnitStackViz.tsx, viz/NormalizationChoiceViz.tsx는 ModernArticle.tsx에서 불러오지 않아 렌더되지 않습니다. 읽기는 했지만 구버전 잔여물로 보여 sectionsRead에는 ModernArticle의 21절만 셌습니다."
+]
 },
 {
 "route": "gpu/warp-stall-reasons-and-issue-utilization",
 "publicPath": "cs/gpu/warp-stall-reasons-and-issue-utilization",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 8,
+"articleIssues": [
+"TermBreakdown (Not selected example): '표본의 30% 가 not selected 면 매 clock 후보가 평균 둘 이상입니다' depends on the number of active warps. With 2 active warps, 30% is 0.6 warps not selected per clock, so about 1.6 candidates including the selected one. The claim looks suspect as a general statement.",
+"#sm-utilization: '세 숫자는 곱으로 이어집니다' is followed by an example that multiplies only two numbers (50% x 80%). SM throughput is a percentage of pipe peak and no value is given, so the three-way product is not shown. The Viz notes that the value is absent."
+]
 },
 {
 "route": "ai/math-optimization-objectives",
 "publicPath": "cs/ai/math-optimization-objectives",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 6
 },
 {
 "route": "cloud/linux-disk-full-inode-deleted-files",
 "publicPath": "cs/cloud/linux-disk-full-inode-deleted-files",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 7,
+"articleIssues": [
+"10절의 '앞 절과 같은 sparse 파일'은 같은 10절의 앞 문단을 가리키는 것으로 보입니다.",
+"10절은 '/proc/812/fd/7'로 자른 열린 채 지워진 파일을 말하면서 'ls에 보이는 크기'를 쓰는데, 이 파일은 이름이 없어 ls로 직접 볼 수 없을 수 있습니다. Viz는 본문 표현을 그대로 따랐습니다.",
+"4절이 '사례 A로 돌아갑니다'라고 쓰지만 앞 절에서 '사례 A'라는 이름을 붙인 적이 없습니다."
+]
 },
 {
 "route": "ai/backprop-optimization",
 "publicPath": "cs/ai/backprop-optimization",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 8,
+"articleIssues": [
+"12절의 '네 동작'에 해당하는 항목이 문단에서 dropout, clipping, AdamW 셋만 이름으로 나옵니다. 넷째가 backward인지 불분명합니다.",
+"Overview 전반에 '공유 값를' 조사 오류가 반복됩니다(값을이 맞음). 12절 '별도의 감쇠 규칙로'도 '규칙으로'의 오타로 보입니다."
+]
 },
 {
 "route": "firms/why-firms-exist",
 "publicPath": "economics/firms/why-firms-exist",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 4
 },
 {
 "route": "embedded/scheduling-and-real-time",
 "publicPath": "electronics/embedded/scheduling-and-real-time",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 5
 },
 {
 "route": "gpu/cuda-thread-hierarchy",
 "publicPath": "cs/gpu/cuda-thread-hierarchy",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 11,
+"articleIssues": [
+"본문 오류는 찾지 못했습니다. 8·10·11절의 수(1000/256→4 blocks·1024 threads, 401, 517, 13, 52, 1920/32=60, 1080/8=135)를 다시 계산했고 모두 일치합니다.",
+"오류는 아니지만 Overview.tsx, Indexing1D.tsx, Indexing2D.tsx, BuiltinVars.tsx, viz/ThreadHierarchyViz.tsx는 ModernArticle에서 import되지 않습니다. 진입 파일은 ModernArticle만 내보내므로 이 파일들은 렌더되지 않는 것으로 보입니다. 저장소 전체가 아니라 이 글 디렉터리와 src/content만 검색한 결과입니다.",
+"6절에 내용 없는 prose div가 하나 남아 있습니다. 렌더 결과에는 영향이 없어 그대로 두었습니다."
+]
 },
 {
 "route": "ai/world-model-latent-planning",
 "publicPath": "cs/ai/world-model-latent-planning",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 10,
+"articleIssues": [
+"본문 수치 오류는 찾지 못했습니다. 4절의 10.24·1.44·0.64와 3절의 16·4·0을 다시 계산했고 모두 일치합니다.",
+"확인 필요: 8절과 9절의 CitationBlock이 서로 다른 출처(jepa.py 코드와 arXiv 논문)에 같은 citeKey={2}를 쓰고 있습니다. 의도인지 판단하지 못해 고치지 않았습니다.",
+"5절의 '그럴듯한 다음 화면' 문단에는 Viz를 넣지 않았습니다. 9절 붕괴 Viz와 겹치고, 본문에 없는 이유를 그림이 끌어들일 위험이 있기 때문입니다."
+]
 },
 {
 "route": "ai/evaluation-datasets-and-pipelines",
 "publicPath": "cs/ai/evaluation-datasets-and-pipelines",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 4,
+"articleIssues": [
+"The deployment section says ML Test Score's canary 'is this method' (shadow, users keep receiving the old model's response), while the citation describes canary as routing part of traffic to the new model. These may be different things; please check.",
+"The regression criterion is written '1 % 이상 하락' in the prose and '1 %p 이내' in the TermBreakdown, so the unit differs. The absolute criterion is an error rate ('오차 5 % 미만').",
+"The same slice is called '기타 언어' in the intro and overview Viz and '자원이 적은 언어' in the slice section.",
+"The existing EvaluationDatasetsAndPipelinesViz scene 4 shows 'p < 0.001', a number that appears nowhere in the article. I did not change it."
+]
 },
 {
 "route": "cloud/kubernetes-sre-slo-burn-rate-upgrades",
 "publicPath": "cs/cloud/kubernetes-sre-slo-burn-rate-upgrades",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 8,
+"articleIssues": [
+"§4 prose says 14.4× exhausts the budget 'within a few hours' (몇 시간 안에), but the same section's walkthrough says 50 hours, about 2 days. The Viz uses 50 hours.",
+"§3 walkthrough and figure caption say the budget ends after '29 more' identical incidents, but 2,592,000 ÷ 90,000 = 28.8 total incidents. So the 29th incident overall, meaning 28 more, exhausts it.",
+"§8's heading and the SRE book summary say release stops when the budget runs out, while the worked example stops feature deploys with 11.5% left and gives no threshold.",
+"§6 says a long-window-only alert keeps ringing 'about 50 minutes' after a 10-minute incident ends, but the pseudocode output says until minute 75. From the incident's end at minute 20 that is 55 minutes.",
+"§7's Reddit paragraph presents the OPA webhook timeout and the label cause as two layers but does not state how the label cause produced the webhook timeout. The Viz therefore draws no causal arrow between them."
+]
 },
 {
 "route": "ai/tool-calling-lifecycle-and-costs",
 "publicPath": "cs/ai/tool-calling-lifecycle-and-costs",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 5,
+"articleIssues": [
+"Section 8 ends '공식 문서의 반환 구조를 2026-10-04에 확인했습니다. (가정)', which attaches (가정) to a sentence stating a verification that was done.",
+"Section 10's formula interpretation says '상한에 도달하면 중단', but the wait cap d_max is already reached at k=2 and retries continue at k=3. The stopping condition is k_max, so '상한' reads as ambiguous here.",
+"Section 9 paragraph 1 marks the whole sum (354 included) as (가정), while paragraph 3 says 354 is a real row from the Claude docs mapped onto the example. The two sentences carry different status.",
+"The existing ToolCallingLifecycleAndCostsViz timing scene draws the sequential and parallel rows at the same total width despite 1,200ms versus 400ms, and it calls the assumed 400ms lookup time RTT.",
+"The existing ToolCallingLifecycleAndCostsViz validation scene says failures go to backoff retry within the maximum count, omitting the failure-type and safe-to-repeat checks that section 10 requires."
+]
 },
 {
 "route": "labor/wage-floor-natural-experiment",
 "publicPath": "economics/labor/wage-floor-natural-experiment",
-"status": "todo"
+"status": "done",
+"round": 3,
+"vizAdded": 8
 },
 {
 "route": "ai/cross-entropy",
@@ -5671,6 +5885,81 @@
 "Checks after the last edits: audit:viz --strict gave 0 ERROR lines across both viz directories (25 REVIEW lines when last listed, which only ask for an overflow check; re-run on MixtureEpochViz alone after the final spacing edit). viz-scene-shot showed stable controls and frame, overflow 0 and console errors 0 at 390px and 1440px. Mobile inner vertical overflow was also 0 for every listed Viz. I read screenshots for a sample of scenes, mostly at 390px, not every scene at both widths.",
 "Recomputed with no error found: all FNV hashes and remainders (including <é> signed 1002806231 / unsigned 4222937559, and the 2,000,000-bucket remainders 806231 / 937559), the MinHash sketch 4/5 and J 3/5, the standard deviations, and the 180B / 9B and 409B / 2.6B figures. NgramWindowViz, FnvHashTraceViz and both SceneShell files needed no changes.",
 "A safety check refused one combined shell command because it could not parse it. The command contained no removal. I re-ran the same edits from script files in /tmp, and nothing was deleted."
+],
+"3": [
+"I2cArbitrationViz, needs prose or an outside fact: the Viz shows SDA reading LOW when one controller sends 1 and the other sends 0, but neither the Viz nor the article says why LOW wins. The article only says \"HIGH를 보냈는데 SDA가 LOW로 보이면\". Explaining it needs the open-drain / wired-AND fact, which the article does not state, so I did not add it. Suggested fix: one sentence in the #i2c prose, then a matching line in the Viz.",
+"Verification: audit:viz --strict gave 0 ERROR lines and 27 REVIEW items, all generic SVG text prompts. viz-scene-shot ran on both articles at 390px and 1440px: control Y and frame height were constant across scenes, overflow 0, console errors 0. I read 13 of the 390px screenshots for the riskier scenes, not every scene or the 1440px set. Screenshots are in /tmp/viz-rounds/r3/rv7/serial and /tmp/viz-rounds/r3/rv7/metric.",
+"No problem found after recomputing, no change: I2cCellCountViz, I2cTurnViz, SdkRestartStateViz, BusWiringViz, DataBoundaryViz, ApprovalBoundsViz. The checks included 63칸, 157.5 µs, the ACK owners, RESTART = first && restart_on_next, Wilson .809 and the track positions. SdkRestartStateViz's logic was checked against the article text and my recollection of the Pico SDK; I did not open the codebase copy.",
+"Checked and left as is: WeightShareViz scene 3 keeps the half-and-half cell widths while the highlighted box is the equal-weight result 2.6. The numbers are correct and both boxes are labelled. Showing both strips could push the note down on the 390px frame, so I left it.",
+"Not verified: the FedNow (OC8 §7.1, §9.6, operating procedures §15.2) and PFMI claims were checked against the article text only, not the source documents, because the Vizes must take their claims from the article.",
+"Verification: all recomputed numbers in the 15 Vizes matched the article, including ladder balances, cumulative sums, 25/26, 18/19, the (θ−1)² points and tangent, the padding denominators and 2×8×4. audit:viz --strict on the 6 changed files gave 12 REVIEW lines for SVG text and no ERROR lines. I re-ran viz-scene-shot on those 6 Vizes at 390px and 1440px: controls and frame stable, overflow 0, console errors 0. I read the 390px sheets for all 6 after the changes, except the later scenes of FinalityReturnViz and LossCurveStepViz. Those scenes' only edits are the title and description, which the scenes I read show. I did not read the 1440px screenshots.",
+"Article §9 and CapBitmapViz scene 6 (\"10번 하나만 → bind 가능\"): the claim \"필요한 비트 하나만 capabilities.add로 돌려주면 됩니다\" is probably incomplete. From memory, not checked here: execve as non-root clears Permitted and Effective unless the binary has file capabilities or the capability is in the Ambient set, and Kubernetes capabilities.add does not set Ambient, so add alone often does not make bind work. Some runtimes also set ip_unprivileged_port_start=0, which makes the case moot. The article itself lists Ambient but does not use it here. This needs an outside source and a prose change, so the Viz is unchanged.",
+"Article §7 and PsiSomeFullViz scene 4: \"systemd-oomd가 ... 근거가 이 트리거입니다\". From memory, not checked: systemd-oomd reads the avg values in memory.pressure periodically and does not register a PSI poll() trigger. Check this against the systemd source. If it is wrong, both the prose and the Viz note must change.",
+"Article §10 pseudocode against its note, shown in SliceBucketViz scene 3: `amount = min(slice 5000, 통.runtime)` with 10,000 left gives 5,000 to each of the first two run queues and 0 to the other two, but the note says \"넷이 2,500씩 나눠 받아\". The Viz follows the note, says \"글의 설명대로\" and keeps the caveat that timing can differ. The numbers can only be reconciled in the prose.",
+"Article §10 prose on the reply path (\"라우팅 결정이 10.244.1.0/24 dev cni0를 골라 bridge → ...\") omits FORWARD and POST_ROUTING, which §7's rule implies and PacketTraceViz now shows. Consider adding them to the prose.",
+"The article's \"숫자는 두 번 바뀌지만\" (§5) stays as written, counted from shares. The Viz title no longer uses that count, so the two do not conflict.",
+"Checks: audit:viz --strict gave 0 ERROR lines, and 31 REVIEW items remain. scene-shot on all 13 Viz at 390px and 1440px gave stable controlY and frame height per scene, overflow 0 and console errors 0. I read 13 screenshots, not every scene of every Viz. At 390px the longer notes scroll inside the canvas, which the standard allows, and I did not scroll to the end of them in the browser. My added text lengthens a few of these. The output is in /tmp/viz-rounds/r3/rv0/{containers,network}. The path differs from the requested <slug> form because I used short directory names.",
+"Article prose, left unedited as instructed: electricity-grid section 7 says '한 시간에 5MW만 낼 수 있다면', which mixes a rate with a time window ('5MW로 한 시간' would be cleaner). The Viz itself uses 5 MW × 1시간.",
+"Article prose never defines '혼잡' (grid sections 4 and 7 context), or '정상 상태' and '전도율' (lumped section 8 and citation). I glossed them only inside the Viz. Those glosses are my plain-language wording, not article text, so a prose pass may want to define them there.",
+"No wrong numbers found on recomputation in the other Viz: BalanceGraph (12−V = V or 1.5V gives 6 V, 4.8 V), PowerArea (36+18+18=72), CostArea (400+200, 600−500=100) and StorageRate (20÷5=4). JunctionCharge, ParallelLayout and TwoWayFlow also needed no change. CircuitSketch, ArrowHead and both SceneShell files were read and left unchanged.",
+"Checks after changes: audit:viz --strict on the 9 changed files printed no ERROR lines, only REVIEW items. viz-scene-shot on those 9 Viz: frame and controls stable per scene at 390 and 1440, overflow 0, console errors 0, docScrollW equal to viewport. The other Viz were shot before the fixes with the same results. I read 390 montages of all 14 Viz before the fixes. After the fixes I read SharedDrop, PlateBoundary and ShiftToNight at 390 and LumpedLimits at 1440. For LoopHeight, PowerEnergy, CostArea, StorageRate and Shortfall the edits were text-only and their re-shots were checked only by the script's metrics, not by reading the images.",
+"Prose, out of scope for this pass: section 9 of the TCP article reads '서버의 요청 소켓은 SYN 대기열에 남지만 클라이언트는 연결이 됐다고 믿지만 서버에는 소켓이 없는, 짧은 half-open 상태입니다.' The doubled '~지만' is awkward and needs a prose edit. TwoQueuesViz scene 4 uses the clearer wording.",
+"Verification: audit:viz --strict on both viz directories gave 0 ERROR lines. viz-scene-shot ran after the final edits for the 9 Viz changed in that last pass or the one before it, and for TriageTree, at 390px and 1440px: controls and frame stable, overflow 0, console errors 0. The other 5 Viz (ChargeBalance, DopantSite, LateSegment, FinTimeout, ConntrackTable) had no edits and passed in the first run. I read only the 390px contact sheets, not the 1440px frames. After the final edits I re-read 5 sheets (FourTuple, PortCycle, PortScan, FixSlots, CarrierLadder); BandDiagram, HoleMotion, TwoQueues and TriageTree sheets were read only before those final edits, which did not touch them. TriageTree's last edit was a text change visible in that sheet.",
+"Prose, no change made: the article puts TPOT for candidate B at '약 11.6 ms', but 10.4 + 1.1 + 0.035 = 11.535, which rounds to 11.5. PpMicrobatchViz quotes the article's figure as written.",
+"Prose, no change made: the article uses k for candidates generated ('문제당 k=8개를 생성', 'k=100') and for the subset picked in pass@k, where n is the generated count. PassAtKViz uses n=8 to match the formula, so its notation differs from the next section's wording.",
+"Prose, no change made: the article's general sentence '비율이 작으면 ... TP 를 더 올리면 빨라집니다' sits beside candidates C and A, where raising TP crosses a node and slows things down. It should probably say 'within the same link tier'. The Viz is corrected, but the sentence is not.",
+"Prose ambiguity: '상위 20%' is applied to 'verifier를 통과한' candidates, and a pure pass/fail verifier gives no ranking. RftFunnelViz applies 20% after dedup to the assumed 25, which is an ordering the article does not state. The result is labelled (가정) and marked as separate from the RFT figures.",
+"Glosses not stated in the article, kept or added as term explanations: 'CPU 쪽 PCIe 연결부' for root complex (added) and the ROUGE-L description in SelfInstructGateViz (existing). A fact check against a source could confirm them.",
+"Verification: audit:viz --strict gave 0 ERROR lines, with REVIEW items for SVG text only. Scene shots at 390 and 1440 showed controls and frame stable, overflow 0 and console errors 0. After the last edit, only EvolInstructBranchViz was re-shot. I read 390px sheets for all 16 Viz, plus the final Evol scene 4 shot, but only one 1440 sheet (OverlapTimelineViz). The other 1440 layouts were checked by metrics only.",
+"Output paths: shots are in /tmp/viz-rounds/r3/rv6/synthetic and /tmp/viz-rounds/r3/rv6/parallelism, not in directories named after the full slugs. An rm of old Evol shots was blocked by the safety check and is not needed, because the shots were overwritten in place.",
+"No prose changes are needed and no outside facts were required.",
+"scripts/viz-scene-shot.cjs cannot capture FirstVsRepeatViz because it sits in a collapsed ProgressiveDetail: the script times out with 'element is not visible'. I checked it with a temporary script in /tmp/viz-rounds/r3/ that opens the detail first. At 390 and 1440 the controls and frame were stable across both scenes, docScrollW equalled the viewport, and there were 0 console errors. That script did not measure the canvas overflow value.",
+"Scope of the checks: the numbers and claims in ItemReadPathViz and EventPathsViz were compared with the article text, not with the pinned PyTorch sources in codebase/.",
+"Verification: audit:viz --strict gave 0 ERROR lines on both viz directories, and it was re-run on FirstVsRepeatViz after the final edit. The other 16 Viz at 390 and 1440 had stable controls and frame, overflow 0 and 0 console errors. I read about 20 mobile screenshots, mainly scenes with visual risk, plus the desktop metrics. I did not view every scene at both widths. Screenshots are in /tmp/viz-rounds/r3/rv5/m and /tmp/viz-rounds/r3/rv5/l, not separate per-article slug folders.",
+"FnetMixerViz: the term \"숨은 차원\" is not defined in the Viz or in article section 19 (\"입력의 숨은 차원과 위치 차원\"). The article gives no definition to draw on, so a fix needs a prose addition. Left unchanged.",
+"Verification: audit:viz --strict on both viz directories reported 0 ERROR lines. The first scene-shot run covered all 23 Viz and later fixes were reshot, except that BankConflictViz's description change and the BankGrid fixes had not all landed in the first run. All runs showed stable controls and frame, overflow 0 and console errors 0. I read every Viz's desktop shots. I read mobile shots only for WindowZeroPad, DirectionRules, BlockMap and BankPadding. The Whisper, CircularWrap, Stft and BankConflict fixes were checked on desktop shots; their mobile runs passed the metrics but I did not read those images.",
+"No wrong numbers turned up beyond the note above. I recomputed DFT and inverse rotations, zero-padded lengths, Hann output, sector and bank arithmetic, boundary coordinates and the kf_bfly4 scratch values. The kf_bfly4 check was against the article's text and my memory of the KISS FFT source: the local path I grepped (codebase/kissfft/kiss_fft.c) does not exist, so I did not compare it with the pinned file.",
+"Screenshots read at 390px only, one to three scenes per Viz. Not viewed: MonitoringLayers, TwoClocks scenes other than the Queue scene, QueueDepth, and all 1440px shots. For those, coverage is the numeric checks (controls and frame stable, overflow 0, console errors 0). The Drift and ErrorTriage layout changes were re-measured and re-shot, but I did not open the new images, so the final look of those two is not eyeballed. The first Drift screenshot read failed on a wrong filename and I did not retry it.",
+"Recomputed with no error found and left unchanged: TokenGaps (3.2s, 80 token/s, 12.5ms, about 71 token/s), SamplingMiss (90.5%, 13.5%, exactly 100 sampled cells, neither failure cell 613 or 1437 in the sample), Queue (4/4, 8/8, 8/4), SpanTree (780−300=480), ErrorTriage (62+21+17=100), GPU (52/80=65%). QueueDepthTimeViz, TwoClocksViz and SpanTreeViz needed no edits.",
+"Audit: audit:viz --strict gives no ERROR lines. The 58 REVIEW items are the generic 'check SVG text overflow in the browser' prompt, which the browser overflow check answered.",
+"Prose question, not changed: the article calls the uniform-sampling formula a \"하한 추정치\" (lower-bound estimate). (1−pr)^N is the probability of missing, and error-based tail sampling lowers that probability, so uniform sampling gives an upper bound on the miss risk rather than a lower one. The Viz does not repeat this wording, but the prose may need review.",
+"Prose question, not changed: the Viz notes reference '본문' (for example, '본문 아래 식'), which relies on the Viz keeping its current position relative to the formula.",
+"ICacheViz.tsx and SmemPageViz.tsx: no problems found, no changes. Recomputed: 12 KiB/16 B = 768, 128 KiB/16 B = 8,192, 11 and 1 switches, 13 pages, and the A/B/C/D/E page and time cells.",
+"Shared shell, not fixed (out of scope): at 390px, note text scrolls behind the semi-transparent control row inside the Viz stage, so partial lines show through. It comes from the VizFrame/control styling under src/components, which I was told not to edit. All text is reachable by scrolling, and frame and control positions were stable.",
+"CoalitionFilterViz at 390px, not fixed: the status '불필요한 당 없음' wraps to two lines, so rows grow about 8px in that scene and the content inside the stage shifts slightly. The controlY and frameH logged per scene did not change.",
+"Verification: audit:viz --strict gave 0 ERROR lines (REVIEW items only). viz-scene-shot gave stable controls and frame, overflow 0 and console errors 0 at 390 and 1440 for the 8 changed Viz. ICacheViz and SmemPageViz were unchanged and were last shot before the fixes. I read screenshots of selected scenes, not every scene. I did not check the post-edit scene of RegisterBudgetViz by eye, only the pre-edit one and the log. No type check was run, as instructed.",
+"Prose, not fixed: section 2 of the warp article says \"12개가량이 L1TEX 경로의 결과를\" right after SampleSplitViz, one section before L1TEX is explained. The Viz no longer uses the term before it is explained, but the prose still does.",
+"Prose, not fixed: the warp article uses eligible in section 2's term list and the barrier paragraph before section 4 defines it. It also never defines occupancy. I glossed both only inside BarrierSamplesViz.",
+"Checks after the edits: audit:viz --strict gave 0 ERROR lines and 96 REVIEW items (SVG text, checked in the screenshots I read). viz-scene-shot at 390 and 1440 gave stable controls and frames, overflow 0 and 0 console errors for all 14 Viz. I read a sample of 20 screenshots, not every scene, and no dark-theme screenshots. Screenshots are in /tmp/viz-rounds/r3/rv14/{warp,opt}.",
+"No wrong numbers were found. These recomputed correctly and needed no change: the 38/2/12/48 counts and their ratios; group-mean signals; R(3)=30, R(4)=36, R′=7 and 5; profit table 8/9/8/5; optima (3,10), (3,13), (2,11) with 30%, 46.15%, 18.18%; elasticities 10/3, 13/6, 11/2; Lerner 0.17 and 0.38; surplus pieces 4.5+9+4.5; limits 8, −1, 9.",
+"Left unfixed on purpose in DemandPointsViz: the faint dashed p = 19 − 2q line crosses the \"수량 3 · 가격 10\" and \"수량 2 · 가격 11\" labels in scenes 1 and 3. It is low-contrast and the labels stay readable.",
+"Left unfixed on purpose in SurplusAreaViz: scenes 4 and 5 draw the same picture and differ only in the summary and note. The three pieces are already visible, so a reader should not be confused.",
+"Mobile still needs a little inner scrolling in some Viz (fits within 754px frame, controls sticky, scrollHeight minus clientHeight): PassCount 14px, RewardLoop about 10px, ProfitCurve 31px, DemandPoints 5px, SurplusArea 35px. The standard allows this, and the note's last line can sit under the controls until scrolled. The probe measured these sizes but did not scroll each Viz to its end.",
+"Verification: audit:viz --strict gave 0 ERROR lines (REVIEW items only, for SVG text). All 12 Viz had stable controls and frame across scenes, overflow 0 and console errors 0 at 390px and 1440px. Screenshots are in /tmp/viz-rounds/r3/rv11/reward and /tmp/viz-rounds/r3/rv11/markup. I viewed a sample of scenes rather than all of them, and did not view dark mode.",
+"Title change: the AsyncErrorViz title now differs from the task list ('launch 직후뿐 아니라'). A search of src, docs and scripts found no other use of the old string.",
+"Outside fact, gpu/cuda-thread-hierarchy: ClusterPlacementViz defines GPC as 'SM 여러 개를 묶은 상위 처리 구역', but the article uses GPC without defining it. I kept the definition because readers need it and it matches my understanding of NVIDIA's terms, but I did not check it against a source. Prose could define GPC, and 'portable' in 'portable cluster' is also undefined there; both need a prose edit.",
+"Numbers not in the article: BlockShapeViz's edge counts of 60 and 76 (2(16+16)−4, 2(32+8)−4), CandidateTreeViz's 8 predictions, HorizonStripViz's 16 and 8 predictions, and RolloutConcatViz's 1+4+4=9 example. The arithmetic checks out and the hypothetical values are marked as assumptions (edge counts as counted from the figure), so I left them. An author may want to confirm they should stay.",
+"Forward reference, ai/world-model-latent-planning: HorizonStripViz's last scene names the LeWM paper's appendix D in section 7, before the prose introduces LeWM in sections 8–9. It carries a pointer ('9절에서 볼'), so I kept it. Removing that dependence would mean moving the scene or changing prose.",
+"Verification: audit:viz --strict gave 0 ERROR lines (59 REVIEW items remain, SVG-text checks among them). viz-scene-shot ran on all 18 scene Vizzes at 390px and 1440px: control position and frame height stayed the same across scenes, overflow was 0, console errors were 0. I read 18 of the 288 screenshots (mostly 390px, one at 1440px) rather than all of them, and did not re-read the re-shot PartialWarpViz and ObstacleMapViz images after the final edits (a one-word description change and a dot color).",
+"PaperNotationViz and article section 10 write the 1986 paper's weight as wᵢⱼ. From memory, the paper indexes it w_ji (x_j = Σ y_i w_ji). I did not check the PDF, so this is unverified. Fixing it needs an outside fact and a prose change, so I left both as they are. Check naturebp.pdf p.534-535.",
+"Article section 12 prose still says \"leaf gradient\" with no explanation in this article. I removed the term from the Viz note only, because prose edits are out of scope.",
+"Article section 10 says ls shows \"다시 30GiB\". Strictly the size is 30GiB plus what was written, which SparseTruncateViz's value now shows. Its summary and note keep the article's rounded \"30GiB\", so the prose could be tightened to match.",
+"Checks on the final code: audit:viz --strict on the 8 changed files gave 0 ERROR lines (15 REVIEW items for SVG text). viz-scene-shot on both articles at 390px and 1440px showed control position and frame height unchanged across scenes, overflow 0 and console errors 0. I read screenshots for all 15 Viz, mostly at 390px, with 1440px sheets only for ReservedRuler, Logrotate and ScoreWiring plus one InodeThreshold shot. Screenshots are in /tmp/viz-rounds/r3/rv15/linux-disk-full-inode-deleted-files, /tmp/viz-rounds/r3/rv15/backprop-optimization and /tmp/viz-rounds/r3/rv15/sheets. No problems found in InodeThresholdViz, MountHiddenViz, IowaitOverlapViz, GradientGridViz, SoftmaxJacobianViz, PaperNotationViz (apart from the index question above) or StorageDirectionViz. I recomputed the numbers these Viz depend on, by script or by hand, and they match the article.",
+"Prose, kubernetes-sre-slo-burn-rate-upgrades section 4: \"14.4배는 몇 시간 안에 budget이 끝나는 속도\" contradicts 720 ÷ 14.4 = 50시간 (약 2일). The same article's calculation walkthrough and BurnSlopeViz both say 50시간. This needs a prose edit, so it was not changed.",
+"Prose, evaluation-datasets-and-pipelines #deployment: after describing shadow (응답을 버림), the article says \"ML Test Score 가 말하는 canary 가 이 방식입니다\". Its own citation describes canary only as sending part of the traffic to the new model, and a canary normally serves real responses to users. Checking this needs the paper and possibly a prose change. TrafficRouteViz follows the article's shadow definition and does not use the word canary.",
+"Not checked against outside sources: DnsOutageViz and SelectorMatchViz numbers and claims were checked only against the article's own text and quoted excerpts, not the original postmortems. Whether monitoring failed at the same moment as CoreDNS in Zalando's report is therefore unconfirmed, so the Viz says only what the article says.",
+"SampleSquareViz: the new caption states the large-sample premise but does not say that 16 per group is too small for it; the article's formula has no small-sample correction. The Viz still shows ≈16, labelled as an illustrative starting point, because the correct value would need an outside fact.",
+"Verification: npm run -s audit:viz -- --strict was run on the 5 changed files, with no ERROR lines (0 by grep). viz-scene-shot was rerun on those 5 at 390px and 1440px: controls and frame stable, overflow 0, console errors 0, docScrollW equal to the viewport. Screenshots of the changed Vizzes were read at 390px, and BurnSlopeViz also at 1440px. The 7 unchanged Vizzes were shot before the fixes with the same clean result, and their 390px screenshots were read. Screenshots are in /tmp/viz-rounds/r3/rv18/. In BurnSlopeViz at later scenes, the labels still cross the faint gray lines of earlier scenes; they stay readable, so this was left as is.",
+"Article prose, tool-calling section 10: the interpretation says '상한에 도달하면 중단하고 실행 결과의 확인 여부까지 반환합니다'. Here 상한 can only mean the retry count (k_max), yet the same formula block uses 상한 for d_max ('대기 시간 상한'). BackoffWaitViz correctly says '상한은 대기 길이를 자를 뿐 재시도를 멈추지는 않습니다', so the Viz and this sentence appear to contradict each other. Suggested prose fix: '최대 횟수에 도달하면 중단하고'. Not changed because article prose is out of scope.",
+"Mobile (390px): SVG labels at fontSize 11 render at about 10px. They are readable and overflow is 0, so I left them. They are small in the denser charts, such as the outside-the-bar boxes in TokenSubtotalViz.",
+"Verification: audit:viz --strict gave no ERROR lines on the 8 changed files, only the standing REVIEW notes about SVG text. viz-scene-shot at 390px and 1440px gave stable control position and frame height per Viz across all scenes, canvas overflow 0 and 0 console errors. Viz numbers matched recomputation against the article and model.ts. Screenshots are in /tmp/viz-rounds/r3/rv19/{tool,tool2,labor,sheets}. The task's per-article <slug> folders were not used: I wrote to tool and labor.",
+"Article prose, not fixed because prose edits are out of scope. In #launch-and-autotune the sentence 'K 루프의 A tile(128 × 32)과 B tile(32 × 128)을 3단계 분량, A와 B tile은 단계마다 각각…' is garbled. The arithmetic is right (3×8,192×2=49,152) and StageMemoryViz matches it.",
+"Article prose, not fixed because prose edits are out of scope. §18 uses 'A와 B' without saying what they are, and A is also the first letter of the running example. RoundTripViz's last scene repeats these labels because the article gives no other names.",
+"Article prose, not fixed because prose edits are out of scope. The article uses '원문' for both the input text and the C source. I fixed this only in BoundaryStateViz; §15 and §17 prose still mix the two senses.",
+"Unsupported by this article: StageMemoryViz's description defines SM as 'GPU의 계산 코어 단위'. This article only links to the shared-memory article for SM and never defines it. I kept it as a glossary line, but it was not checked against that linked article.",
+"Outside this review's list: at 1440px, '무엇을 한 칸으로 셌나요' and '내용은 같아도 시작 위치는 이동합…' in text-unicode-encoding scroll inside the canvas (781/705 and 756/705). I did not change them.",
+"Screenshots at 390px were read for 15 of the 17 Viz: all but NormalizePathViz and LoweringStagesViz before their last edits, then one final scene each for those two. Montages for the three text-unicode Viz whose edits were re-shot (NormalizePathViz, BoundaryStateViz, RoundTripViz) predate only the NormalizePathViz recolour. At 1440px only StageMemoryViz was opened; the other 16 rely on the script's numbers.",
+"Checks after the last edits: audit:viz --strict reported 0 ERROR lines on all changed paths. Controls and frame were stable, overflow 0 and console errors 0 at both widths. Those shot numbers cover only the Viz I re-ran; the unchanged Viz (SameNumber, FourRulers, MoveMap, ByteBits, Utf8Split, IterateWalk, SurrogateSplit, ReadPipeline, VectorizeLayout) were last measured on the first pass, also clean. Shots are in /tmp/viz-rounds/r3/rv13/{triton,unicode,lower}."
 ]
 }
 }

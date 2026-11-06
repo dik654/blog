@@ -5,7 +5,16 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import DriftWhichChangedViz from "./llm-monitoring-observability-and-drift/viz/DriftWhichChangedViz";
+import ErrorTriageViz from "./llm-monitoring-observability-and-drift/viz/ErrorTriageViz";
+import GpuTimeMemoryViz from "./llm-monitoring-observability-and-drift/viz/GpuTimeMemoryViz";
 import LlmMonitoringObservabilityAndDriftViz from "./llm-monitoring-observability-and-drift/viz/LlmMonitoringObservabilityAndDriftViz";
+import MonitoringLayersViz from "./llm-monitoring-observability-and-drift/viz/MonitoringLayersViz";
+import QueueDepthTimeViz from "./llm-monitoring-observability-and-drift/viz/QueueDepthTimeViz";
+import SamplingMissViz from "./llm-monitoring-observability-and-drift/viz/SamplingMissViz";
+import SpanTreeViz from "./llm-monitoring-observability-and-drift/viz/SpanTreeViz";
+import TokenGapsViz from "./llm-monitoring-observability-and-drift/viz/TokenGapsViz";
+import TwoClocksViz from "./llm-monitoring-observability-and-drift/viz/TwoClocksViz";
 import {
   LlmOperationsPathLocator,
   LlmOperationsPathMapReturn,
@@ -69,6 +78,9 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             infra 자원입니다. Input monitoring은 들어오는 prompt와 context의 분포를, output monitoring은 나가는 completion의 분포와
             형식을 봅니다.
           </p>
+        </div>
+        <MonitoringLayersViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             층을 나누는 이유는 같은 증상이라도 층마다 원인이 다르기 때문입니다. p95 latency가 늘었다면 system monitoring은 GPU utilization과 queue
             depth를 보고 input monitoring은 prompt 길이 분포가 길어졌는지를 봅니다. 둘 다 “느려졌다”는 같은 production 증상을 만들지만 고치는 방법은
@@ -108,6 +120,9 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             대응), p(y|X)가 바뀌면 real concept drift입니다. LLM 맥락에서 X는 prompt·context,
             y는 사용자가 만족할 정답이나 그 정답의 판정 기준입니다.
           </p>
+        </div>
+        <DriftWhichChangedViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 지난달 평균 prompt 길이가 200 token이었는데 이번 달 600 token으로
             늘었다면 이것은 data drift입니다. 같은 질문 형식인데 사용자가 기대하는 답의 형식이
@@ -177,6 +192,9 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             trace(외부 API나 함수 호출), agent trace(여러 generation·tool 호출을 묶는 상위
             루프)로 나뉜 자식 span이 붙습니다.
           </p>
+        </div>
+        <SpanTreeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 “이 코드의 버그를 찾아줘”라는 요청은 request span 아래 retrieval
             span(관련 파일 검색) → generation span(원인 분석 생성) → tool span(테스트 실행)
@@ -255,6 +273,9 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             TPOT로 latency를 시간 축에서 나눴습니다. 이 글이 추가하는 것은 <em>누구의
             시계로 재는가</em>라는 축입니다.
           </p>
+        </div>
+        <TwoClocksViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Model latency breakdown은 GPU forward 계산만(prefill 계산 + decode 계산) 잽니다. Application latency
             breakdown은 여기에 gateway routing, queue 대기, network 전송까지 더한 사용자 체감 전체 시간을 잽니다. 같은 요청이라도 두 시계는 다른 숫자를
@@ -266,6 +287,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             입니다. 같은 모델이라도 batch 크기나 KV cache 압박에 따라 이 값은 달라집니다.
           </p>
         </div>
+        <TokenGapsViz />
         <ExplainedFormula
           question="TTFT와 output token 수가 주어졌을 때 전체 latency와 token throughput은 어떻게 계산되나요?"
           idea="전체 latency는 첫 token까지 걸린 TTFT에 나머지 token 사이 간격(ITL)을 더한 값이고, throughput은 실제로 만든 output token 수를 그 생성 구간 시간으로 나눈 비율입니다."
@@ -304,12 +326,16 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           GPU 자원 신호와 queue 신호는 system monitoring 층의 두 축입니다
         </h2>
+        <GpuTimeMemoryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             GPU utilization monitoring은 GPU가 실제로 연산 중인 시간 비율을 잽니다. GPU memory monitoring은 KV
             cache·weight·activation이 차지한 메모리 양을 잽니다. 두 신호는 같은 GPU에서 나오지만 병목이 다릅니다. Utilization은 낮은데 memory가 가득
             찼다면 batch를 못 키워서 GPU를 놀리고 있다는 뜻입니다.
           </p>
+        </div>
+        <QueueDepthTimeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Queue depth는 지금 처리를 기다리는 요청 수입니다. Queue time은 한 요청이 그 줄에서 실제로 기다린 시간입니다. Queue depth가 늘어도 처리 속도가
             함께 빨라지면 queue time은 늘지 않을 수 있습니다. 두 지표를 같이 봐야 “밀리고 있다”를 확인할 수 있습니다.
@@ -342,6 +368,9 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             지표만 남기는 절충입니다. Sampling rate를 낮추면 비용은 줄지만 드문 실패를 잡을
             확률도 함께 줄어듭니다.
           </p>
+        </div>
+        <ErrorTriageViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Error classification은 실패한 요청을 timeout, invalid output, tool failure, upstream 5xx 같은 원인별 범주로 나누는
             절차입니다. 같은 “실패율 2%”도 timeout이 대부분이면 queue·GPU 문제이고 invalid output이 대부분이면 model이나 prompt 문제로 원인이
@@ -352,6 +381,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             해당하는 sampled trace를 열어 “그 요청에서 어느 span이 실패를 만들었는지”를 확인하는 순서로 진행합니다.
           </p>
         </div>
+        <SamplingMissViz />
         <ExplainedFormula
           question="Sampling rate를 낮추면 드문 실패를 놓칠 위험은 얼마나 커지나요?"
           idea="실패율이 낮은 사건일수록 표본에 한 번도 걸리지 않을 확률이 커집니다. 요청 N개 중 sampling rate r로 뽑았을 때, 발생률 p인 실패가 표본에 한 번도 안 걸릴 확률은 기하적으로 줄어듭니다."

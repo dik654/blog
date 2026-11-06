@@ -10,6 +10,17 @@ import {codeRefs,fileTrees,projectMetas} from "./codeRefs";
 import SubmissionTimelineViz from "./viz/SubmissionTimelineViz";
 import SyncScopeStreamsViz from "./viz/SyncScopeStreamsViz";
 import InflightDepthViz from "./viz/InflightDepthViz";
+import ValueNeedBranchViz from "./viz/ValueNeedBranchViz";
+import FirstRoundTraceViz from "./viz/FirstRoundTraceViz";
+import StartRuleViz from "./viz/StartRuleViz";
+import SubmissionShapesViz from "./viz/SubmissionShapesViz";
+import IntervalBottleneckViz from "./viz/IntervalBottleneckViz";
+import FirstVsRepeatViz from "./viz/FirstVsRepeatViz";
+import MeasureSpanViz from "./viz/MeasureSpanViz";
+import ItemReadPathViz from "./viz/ItemReadPathViz";
+import EventPathsViz from "./viz/EventPathsViz";
+import CopyLifetimeViz from "./viz/CopyLifetimeViz";
+import ReplaySameEndViz from "./viz/ReplaySameEndViz";
 import {ExecutionKernelMapReturn,ExecutionKernelSeriesLocator} from "../shared/ExecutionKernelSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><ExecutionKernelSeriesLocator current="submission"/><div className="space-y-16">
@@ -23,6 +34,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
             큰 흐름은 세 부분입니다. 준비하는 쪽이 다음 작업을 정하고 전달한 작업은 순서를 기다리며 계산하는 쪽이 앞의 결과를 이용해 실행합니다. 작업 지시를 받은 것만으로 답이
             생기지는 않습니다. 답을 읽으려는 쪽은 그 답을 만드는 계산까지 끝났는지 확인해야 합니다.
           </p>
+</div><ValueNeedBranchViz /><div className={prose}>
 <p>다음 작업이 앞 결과에 2를 곱하는 일이라고 해 보겠습니다. 준비하는 쪽이 앞 결과의 숫자를 직접 알 필요는 없습니다. 어디에 결과가 놓일지와 그 뒤에 실행하라는 순서를 전달하면 됩니다. 계산하는 쪽은 실제로 2를 곱할 때 앞 결과를 읽습니다.</p>
 <p>앞 결과가 18이면 멈추고 아니면 계속하라는 결정은 다릅니다. 그 결정을 준비하는 쪽에서 한다면 18인지 알 때까지 다음 작업을 확정할 수 없습니다. 계산에 데이터가 필요한 때와 다음 지시를 고르기 위해 데이터가 필요한 때를 나누면 어떤 기다림을 겹칠 수 있는지 보입니다.</p>
 </div></section>
@@ -32,6 +44,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
             한 회의 준비에는 2 μs가 들고 연산 하나의 지시를 전달하는 데는 3 μs가 든다고 둡니다. 각 계산 자체는 2 μs입니다. 지시가 완전히 전달된 뒤에만 계산을 시작할 수
             있습니다. 두 계산은 앞뒤 관계가 있어 동시에 실행하지 않지만 전달과 계산은 겹칠 수 있습니다.
           </p>
+</div><FirstRoundTraceViz /><div className={prose}>
 <p>첫 회에서 준비는 0–2 μs, 첫 지시 전달은 2–5 μs입니다. 첫 계산은 5–7 μs에 실행되어 4를 만듭니다. 두 번째 지시는 5–8 μs에 전달하므로 첫 계산과 겹칩니다. 8 μs에 두 번째 계산을 시작해 10 μs에 답 8을 얻습니다.</p>
 <p>전달하는 쪽은 두 번째 지시를 보낸 8 μs부터 다음 회를 준비할 수 있습니다. 앞 계산은 10 μs에 끝나지만 다음 계산이 쓸 결과의 자리는 미리 정해져 있습니다. 아직 값 8을 직접 읽지 못했다는 이유만으로 다음 지시를 만들 수 없는 것은 아닙니다.</p>
 <p>여기서 8이라는 숫자는 두 번 등장합니다. 데이터 8은 첫 회의 답이고 8 μs는 두 번째 지시를 다 보낸 시각입니다. 우연히 숫자가 같을 뿐이며 데이터 8을 사용할 수 있는 시각은 10 μs입니다. 값의 변화와 시간표를 따로 따라가겠습니다.</p>
@@ -42,7 +55,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 <p>이미 정해진 두 연산의 목록을 한 번에 전달할 수도 있다고 가정해 보겠습니다. 목록 전달 비용만 1 μs로 바꾸면 첫 회 준비 0–2 μs 뒤 목록을 2–3 μs에 전달합니다. 계산은 3–5·5–7 μs에 이어집니다. 계산 두 개가 하나로 합쳐진 것은 아닙니다.</p>
 <p>그 목록을 미리 보내는 세 회는 7·11·15 μs에 끝납니다. 매회 끝날 때까지 기다리면 7·14·21 μs입니다. 기다림이 남아 있어도 하나씩 전달하며 기다리던 30 μs보다는 빠릅니다. 어떤 비용을 줄였는지 보려면 기다림의 유무와 전달 방식 두 조건을 따로 바꾸어야 합니다.</p>
 </div></section>
-<section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 두 시계를 맞추는 규칙이 필요합니다</h2><div className={prose}>
+<section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 두 시계를 맞추는 규칙이 필요합니다</h2><StartRuleViz /><div className={prose}>
 <p>계산을 시작하는 조건은 두 가지입니다. 지시가 도착해야 하고 앞 계산도 끝나야 합니다. 첫 회 두 번째 계산에서는 앞 결과가 7 μs에 준비되지만 지시는 8 μs에 도착합니다. 늦은 쪽인 8 μs까지 기다리는 규칙이 결과를 올바르게 만듭니다.</p>
 <p>목록을 함께 전달한 경우에는 두 지시가 모두 3 μs에 도착해 있습니다. 그래도 두 번째 계산은 첫 결과가 나오는 5 μs부터 시작합니다. 빨리 전달한다는 것이 앞뒤 계산 순서를 없앤다는 뜻은 아닙니다. 전달이 충분히 빠르면 기다림의 원인이 계산 쪽으로 이동합니다.</p>
 <p>준비하는 쪽이 답을 읽을 때도 규칙이 필요합니다. 첫 회의 답 8을 8 μs에 읽으려 하면 아직 계산이 끝나지 않았습니다. 10 μs까지 기다려야 올바른 값을 읽습니다. 읽는 일을 줄이려면 그 값 없이 다음 일을 결정할 수 있는지부터 확인해야 합니다.</p>
@@ -73,19 +86,21 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 <p>CUDA Graph로 두 kernel을 묶어 제출하는 시간을 1 μs로 둡니다. 첫 준비 0–2 μs와 제출 2–3 μs 뒤 GPU는 3–5·5–7 μs에 계산합니다. CPU는 3–5 μs에 다음 회를 준비하고 5–6 μs에 다음 기록을 제출합니다. 두 번째 회는 앞 계산이 끝나는 7 μs부터 11 μs까지 실행됩니다.</p>
 <p>세 번째 기록은 8–9 μs에 제출되고 GPU는 11–15 μs에 계산합니다. CPU 제출 종료 9 μs를 전체 완료시간으로 보고하면 아직 실행하지 않은 구간을 빠뜨립니다. Graph replay latency라고 쓸 때도 host 호출의 길이인지 마지막 GPU 작업 완료까지인지 경계를 적어야 합니다.</p>
 <p>매회 완료를 기다리는 graph 실행은 7·14·21 μs에 끝납니다. 동기화가 있어도 eager의 10·20·30 μs보다 빠릅니다. 다만 미리 제출한 graph의 마지막 완료 15 μs까지 줄이지는 못합니다. CPU 준비, 제출, 결과 대기를 따로 보아야 남은 비용을 찾을 수 있습니다.</p>
+</div><SubmissionShapesViz /><div className={prose}>
 <p>Fusion은 kernel을 합쳐 전달 횟수와 중간 데이터 이동 등을 바꾸고 batch는 한 작업에 넣는 데이터 양을 바꿉니다. Graph는 이 사례처럼 kernel을 그대로 두고 반복 제출 경로를 줄일 수 있습니다. 셋을 모두 “kernel당 CPU 비용은 같고 분모만 커진다”로 설명하면 바뀐 실행 내용과 새 비용을 놓칩니다.</p>
 </div></section>
 <section id="finite-and-steady" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">10. 첫 완료시간과 반복 간격은 다른 식입니다</h2><div className={prose}>
 <p>같은 일을 여러 번 하는 경우에도 첫 결과는 첫 launch를 기다려야 합니다. 준비 시간 S, kernel 수 N, kernel당 제출 시간 L과 실행 시간 E를 가정하겠습니다. j번째 제출 완료가 S+jL이라면 그 계산은 이 시각과 앞 계산 완료 중 늦은 때에 시작합니다.</p>
 </div><ExplainedFormula question="빈 실행열에 제출한 한 회는 정확히 언제 끝날까요?" idea="첫 계산은 준비와 첫 제출 뒤에 시작합니다. 이후 계산의 간격은 제출 L과 실행 E 중 긴 쪽입니다." formula={String.raw`r_j=S+jL,\quad e_j=\max(r_j,e_{j-1})+E,\quad T_1=S+L+E+(N-1)\max(L,E)`} annotatedFormula={String.raw`\begin{aligned}r_j&=S+jL\\e_0&=0\\e_j&=\max(r_j,e_{j-1})+E\\T_1&=\underbrace{S+L+E}_{\text{첫 계산 완료}}\\&\quad +(N-1)\max(L,E)\end{aligned}`} operations={[{expression:String.raw`\max(r_j,e_{j-1})`,annotation:"지시와 앞 결과가 모두 준비된 때를 선택"},{expression:String.raw`S+L+E+(N-1)\max(L,E)`,annotation:"첫 완료에 나머지 동일 계산의 간격을 더함"}]} terms={[{symbol:"S,L,E",name:"세 시간",description:"회별 CPU 준비, kernel당 CPU 제출, kernel당 GPU 실행 시간입니다. 모두 같은 시간 단위를 씁니다."},{symbol:"N,j",name:"계산 개수와 순서",description:"N은 양의 정수이고 j는 1부터 N까지입니다."},{symbol:"r_j,e_j,T_1",name:"제출과 완료",description:"j번째 제출 완료, j번째 실행 완료, 빈 실행열에서 첫 회 전체 완료입니다."}]} assumptions={["같은 실행시간 E인 N개 kernel이 단일 stream에 순서대로 들어갑니다.","지시가 제출 완료 때 도착하며 초기화·복사·동기화 호출 자체의 추가 비용은 제외합니다."]} interpretation="S=2, L=3, E=2, N=2이면 첫 완료는 2+3+2+3=10 μs입니다. 매회 이 완료를 기다린다면 같은 10 μs를 다시 씁니다."/>
-<div className={prose}><p>미리 정해진 일을 무한히 앞서 제출할 수 있는 이상 모형의 장기 평균 완료 간격은 max(S+NL, NE)입니다. CPU 한 회 제출량과 GPU 한 회 실행량 중 큰 값이 처리율을 제한하기 때문입니다. 이 식은 첫 결과 지연을 뜻하지 않습니다. 시간의 변동, 다음 답을 보고 고르는 분기, 유한한 미완료 작업 한도가 생기면 그대로 적용하지 않습니다.</p>
+<IntervalBottleneckViz /><div className={prose}><p>미리 정해진 일을 무한히 앞서 제출할 수 있는 이상 모형의 장기 평균 완료 간격은 max(S+NL, NE)입니다. CPU 한 회 제출량과 GPU 한 회 실행량 중 큰 값이 처리율을 제한하기 때문입니다. 이 식은 첫 결과 지연을 뜻하지 않습니다. 시간의 변동, 다음 답을 보고 고르는 분기, 유한한 미완료 작업 한도가 생기면 그대로 적용하지 않습니다.</p>
 <p>우리 사례에서는 CPU 8 μs와 GPU 4 μs를 비교해 간격 8 μs입니다. Graph의 장기 간격은 max(S+G, NE)이며 G=1이면 max(3,4)=4 μs입니다. 첫 graph 완료는 S+G+NE=7 μs입니다. 그래서 세 회 완료가 7·11·15 μs로 나옵니다.</p>
 </div><ProgressiveDetail title="300개 kernel 사례에서는 첫 실행도 항상 빨라질까요?" preview="가정한 graph 제출 비용이 첫 eager 제출보다 크면 첫 결과는 늦고 반복 간격은 짧아질 수 있습니다.">
+<FirstVsRepeatViz />
 <p>(가정) S=1 ms, N=300, L=0.005 ms이며 각 kernel의 E는 2/300 ms로 같습니다. E가 L보다 크므로 첫 완료는 1+0.005+2=3.005 ms입니다. 미리 제출한 반복 간격은 max(2.5,2)=2.5 ms이고 세 회 완료는 3.005·5.505·8.005 ms입니다.</p>
 <p>Graph 제출 G를 0.06 ms로 두면 첫 완료는 1+0.06+2=3.06 ms입니다. 첫 결과는 0.055 ms 늦지만 반복 간격은 max(1.06,2)=2 ms여서 세 회 완료가 3.06·5.06·7.06 ms입니다. 매회 완료를 기다리는 경우에는 eager 3.005 ms와 graph 3.06 ms가 반복되므로 이 조건에서 graph가 더 느립니다.</p>
 <p>처음부터 GPU 계산 합계를 4 ms로 바꾸면 첫 eager 완료는 5.005 ms입니다. 제출 비용 1.5 ms가 장기 처리율을 제한하지 않는다고 해서 첫 제출 지연까지 모두 숨는 것은 아닙니다. 실제 token 간격에는 샘플링과 전송 등도 들어갈 수 있어 이 모형의 완료 간격을 그대로 사용자의 TPOT라고 부르지 않습니다.</p>
 </ProgressiveDetail></section>
-<section id="measurement" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 측정 시작과 끝을 먼저 표시합니다</h2><div className={prose}>
+<section id="measurement" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 측정 시작과 끝을 먼저 표시합니다</h2><MeasureSpanViz /><div className={prose}>
 <p>기본 eager 세 회에서 동기화 없는 CPU 타이머를 제출 직전부터 마지막 호출 반환까지 재면 24 μs입니다. 마지막 결과 완료까지 기다려 재면 26 μs입니다. GPU kernel 시간의 합은 12 μs입니다. 더 작은 숫자를 얻었다는 것만으로 같은 작업을 더 빨리 마쳤다고 주장할 수 없습니다.</p>
 <p>전체 0–26 μs 범위에서 GPU가 계산한 비율은 12/26=6/13, 약 46.15%입니다. 첫 준비의 영향을 뺀 이 모형의 반복 구간에서는 회마다 4/8=50%입니다. 단순히 제출 L=5 μs·실행 E=4 μs만 반복하고 다른 준비가 없는 별도 모형의 장기 비율은 4/5=80%입니다. 서로 다른 구간과 조건의 비율을 섞지 않습니다.</p>
 <p>CUDA event는 실행열에 기록한 두 시점 사이의 경과시간을 재는 데 쓸 수 있습니다. 그 사이에 GPU가 다음 지시나 의존성을 기다린 시간도 들어갈 수 있으므로 kernel 실행시간의 합과 같다고 가정하지 않습니다. 완료 확인을 한 뒤 시간을 읽고 CPU 벽시계와 event가 각각 어느 범위를 측정하는지 기록합니다.</p>
@@ -93,7 +108,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 </div><CitationBlock type="code" citeKey={1} source="NVIDIA CUDA Runtime 13.4 · Event Management / PyTorch 2.14 CUDA semantics" href="https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__EVENT.html">Event는 기록 사이의 경과시간을 계산합니다. 이 글의 24·26·12 μs는 실측이 아닌 설명용 시간표이며 event API로 측정한 결과가 아닙니다.</CitationBlock></section>
 <section id="source-item" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">12. 한 값을 읽는 호출은 어디서 기다릴까요?</h2><div className={prose}>
 <p>실제 PyTorch 2.14.0의 <code>item</code>부터 읽겠습니다. 원문 revision은 <code>2b3ec34829036a65cd9d1398ea72a0167dc37470</code>으로 고정했습니다. 이 함수는 원소가 하나인지 검사한 뒤 일반 tensor를 <code>_local_scalar_dense</code>로 넘깁니다. 희소 tensor와 양자화 tensor에는 별도 분기가 있으므로 여기서는 일반 CUDA scalar 하나를 다룹니다.</p>
-</div>{code("item","PyTorch · item에서 한 원소 확인과 분기")}<div className={prose}>
+</div>{code("item","PyTorch · item에서 한 원소 확인과 분기")}<ItemReadPathViz /><div className={prose}>
 <p>CUDA 구현은 CPU에 원소 하나를 담을 공간을 만들고 현재 stream에서 GPU 값을 그곳으로 복사합니다. 이 CPU 공간은 복사에 쓰기 좋게 페이지를 고정한 pinned memory입니다. 원문의 size는 1이고 pin_memory는 true입니다. 복사 후 그 한 원소를 읽어 CPU 쪽 Scalar로 돌려줍니다.</p>
 <p>핵심은 복사 helper의 이름만이 아니라 내부 두 줄입니다. CUDA 분기는 <code>cudaMemcpyAsync</code>를 호출한 다음 <code>cudaStreamSynchronize</code>를 호출합니다. 비동기 복사를 제출해도 곧바로 그 stream을 기다린 뒤 읽는 구조입니다. 원문의 앞쪽에는 ROCm 조건 분기도 있으며 일부 장치의 직접 읽기 경로 역시 stream 완료 확인을 거칩니다.</p>
 </div>{code("scalar","PyTorch · 한 값을 옮기는 CPU 자리와 현재 stream")}{code("copy-sync","PyTorch · 비동기 복사 뒤 실제 완료 대기")}<div className={prose}>
@@ -106,7 +121,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 <p>반면 <code>A.wait_stream(B)</code>는 CPU가 B의 답을 읽는 호출이 아닙니다. B에 완료 표시인 event를 기록하고 A의 이후 작업이 그 표시를 기다리도록 연결합니다. CPU는 이후 코드를 계속 진행할 수 있습니다. 호출 이후 B에 새로 추가한 모든 미래 작업까지 자동으로 기다리는 뜻도 아닙니다.</p>
 <p>따라서 “동기화가 queue를 모두 비운다”는 설명은 너무 넓습니다. 어떤 CPU 대기는 A의 선행 작업만 대상으로 하고 어떤 의존성은 CPU를 세우지 않고 GPU 실행열끼리 연결합니다. 같은 wait라는 단어를 만나면 누가 무엇의 완료를 기다리는지부터 확인합니다.</p>
 </div><SyncScopeStreamsViz />{code("stream-wait","PyTorch · wait_stream의 기록과 의존성 연결")}</section>
-<section id="source-events" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. wait와 synchronize는 다른 native 함수로 갑니다</h2><div className={prose}>
+<section id="source-events" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. wait와 synchronize는 다른 native 함수로 갑니다</h2><EventPathsViz /><div className={prose}>
 <p>Event는 어느 실행 지점까지 끝났는지 표시하는 객체입니다. Python <code>event.wait(A)</code>는 native의 wait에 A를 전달합니다. 연결된 C++ 함수는 <code>CUDAEvent.block(A)</code>를 호출하고 그 안에서는 <code>cudaStreamWaitEvent</code>로 A의 작업 순서를 연결합니다. block이라는 메서드 이름만 보고 CPU를 세운다고 판단하면 이 경로를 잘못 읽게 됩니다.</p>
 </div>{code("event-python","PyTorch · Event의 record·wait·synchronize")}{code("event-native","PyTorch · Python 메서드와 C++ 연결")}{code("event-wait","PyTorch · block이 실행열에 넣는 의존성")}<div className={prose}>
 <p><code>event.synchronize()</code>는 다른 경로입니다. 이미 생성한 event이면 <code>cudaEventSynchronize</code>를 불러 그 지점의 완료까지 CPU가 기다립니다. A의 마지막 작업 뒤 기록한 event는 이 가정에서 26 μs까지의 A를 나타냅니다. 별개의 B가 50 μs까지 실행 중이라는 이유만으로 그 event의 범위가 장치 전체로 넓어지지는 않습니다.</p>
@@ -121,6 +136,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 <section id="copy-overlap" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">16. 복사를 예약한 것과 복사가 끝난 것은 다릅니다</h2><div className={prose}>
 <p>메모리 복사도 제출과 완료를 구분해야 합니다. <code>non_blocking=True</code>로 CPU가 일찍 돌아왔다고 GPU가 사용할 입력이 이미 다 도착한 것은 아닙니다. 같은 stream의 뒤 계산은 복사 순서를 지키지만 다른 stream에서 그 입력을 읽으려면 필요한 의존성을 연결해야 합니다.</p>
 <p>복사와 독립 계산이 실제로 겹치려면 그 작업들을 함께 처리할 하드웨어 여유가 있어야 합니다. PyTorch 공식 예시는 pinned CPU 메모리, 별도 stream, 사용 가능한 복사 엔진 조건에서 겹침을 보여 줍니다. pinned와 non_blocking 두 옵션만 적는 것으로 모든 코드의 겹침이 보장되지는 않습니다.</p>
+</div><CopyLifetimeViz /><div className={prose}>
 <p>수명도 중요합니다. CPU에서 GPU로 옮기는 pinned 원본을 복사 완료 전에 덮어쓰면 GPU가 잘못된 값을 받을 수 있습니다. GPU에서 CPU로 비동기 복사한 결과는 완료를 확인하기 전에 CPU 계산에 사용하면 안 됩니다. CPU 호출 반환이 각 버퍼를 안전하게 읽고 쓰는 시각을 대신하지 않습니다.</p>
 <p>원래 pageable 메모리를 <code>pin_memory()</code>로 바꾸는 호출 자체에도 CPU 복사 비용이 있습니다. 매번 직전에 고정하는 작업이 이득을 없앨 수도 있으므로 미리 준비한 pinned 버퍼를 쓰는 경우와 비용을 나누어 잽니다. 이 역시 해당 입력과 실행 조건의 측정으로 판단합니다.</p>
 </div><ProgressiveDetail title="cudaMemcpy는 언제 CPU에 돌아오나요?" preview="방향과 host 메모리 종류에 따라 반환 조건이 다릅니다. pageable 복사를 전부 같은 동작으로 설명할 수 없습니다.">
@@ -144,7 +160,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 <p>추가 작업이 공유 상태를 갱신하거나 난수를 소비하거나 메모리를 계속 잡고 있을 수 있습니다. 종료를 한 회 늦게 읽는 설계라면 어떤 결과를 유효한 것으로 표시할지와 추가 작업의 부작용을 함께 통제해야 합니다. “판정을 GPU로 옮긴다”는 말도 그 판정이 이후 작업의 실행과 출력에 어떻게 연결되는지까지 설명해야 해결책이 됩니다.</p>
 <p>따라서 불필요한 로그용 값 읽기는 빈도를 줄일 수 있지만 다음 행동을 결정하는 값 읽기는 의미를 보존하는 재설계가 필요할 수 있습니다. 앞 결과를 CPU가 알 필요가 없다는 기본 사례의 전제와 실제 서빙의 종료 조건을 먼저 대조합니다.</p>
 </div></section>
-<section id="replay-diagnosis" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">20. 시간이 같아도 같은 경로라는 뜻은 아닙니다</h2><div className={prose}>
+<section id="replay-diagnosis" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">20. 시간이 같아도 같은 경로라는 뜻은 아닙니다</h2><ReplaySameEndViz /><div className={prose}>
 <p>Graph를 켰는데 시간이 같으면 먼저 측정 범위와 실제 경로를 확인합니다. (다른 가정) 준비 S=2 μs, 제출 L=1 μs, 계산 E=3 μs, 두 kernel, graph 제출 G=1 μs로 바꾸겠습니다. Eager와 graph 모두 세 회의 완료가 9·15·21 μs입니다. CPU 제출은 12에서 9 μs로 줄지만 GPU 계산이 진행 속도를 제한해 마지막 완료는 같습니다.</p>
 <p>이 반례 때문에 “켜도 느리니 graph가 선택되지 않았다”고 확정할 수 없습니다. Host의 graph 제출 호출, 실제 선택한 실행 경로, GPU에서 실행한 작업, 결과 일치를 함께 봅니다. Graph 한 번에 여러 kernel이 들어갈 수 있으므로 GPU kernel 행이 여러 개라는 사실도 fallback의 증거가 아닙니다.</p>
 <p>캡처 중 허용되지 않는 호출로 생긴 오류, 재생은 했지만 주소나 경로가 맞지 않아 잘못된 결과, 실행 조건이 맞지 않아 graph 경로를 선택하지 않은 경우를 구분합니다. 이 세 현상이 어떤 빈도로 발생하는지는 이 글에서 측정하지 않았습니다. 조건 불일치가 항상 조용한 fallback으로 끝나는 것도 아닙니다.</p>

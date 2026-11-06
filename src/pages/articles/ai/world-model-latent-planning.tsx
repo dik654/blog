@@ -11,6 +11,15 @@ import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./world-model-latent-planning/codeRefs";
 
 import WorldPlanningViz from "./research-audit-sources/WorldPlanningViz";
+import ModelLoopViz from "./world-model-latent-planning/viz/ModelLoopViz";
+import CandidateTreeViz from "./world-model-latent-planning/viz/CandidateTreeViz";
+import BlindRunViz from "./world-model-latent-planning/viz/BlindRunViz";
+import CemPlaneViz from "./world-model-latent-planning/viz/CemPlaneViz";
+import HorizonStripViz from "./world-model-latent-planning/viz/HorizonStripViz";
+import RolloutConcatViz from "./world-model-latent-planning/viz/RolloutConcatViz";
+import CollapseMapViz from "./world-model-latent-planning/viz/CollapseMapViz";
+import LatentSpreadViz from "./world-model-latent-planning/viz/LatentSpreadViz";
+import ObstacleMapViz from "./world-model-latent-planning/viz/ObstacleMapViz";
 import {
   WorldModelPlanningLocator,
   WorldModelPlanningMapReturn,
@@ -33,6 +42,7 @@ export default function Article(){
     </section>
     <section id="black-box" data-teach-level="B" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">2 · 현재 관측과 행동을 받아 다음 관측의 표현을 예측한다</h2>
+      <ModelLoopViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">실제 시스템의 입력은 이미지나 센서 관측과 행동입니다. 관측을 숫자 묶음 z로 바꾸는 부품이 있고, 그 숫자와 행동 a로 다음 숫자를 예상하는 부품이 있습니다. 이 표현이 목표 비교에 충분한 정보를 담아야 계획에 쓸 수 있습니다.</p>
         <p className="leading-8">계획기는 여러 행동 열을 모델 안에서 실행해 비용이 작은 후보를 고릅니다. 실제 환경은 선택한 행동을 실행하고 새로운 관측을 돌려줍니다. 모델 안의 예측값과 센서가 관측한 값은 서로 다른 출처입니다.</p>
@@ -42,6 +52,7 @@ export default function Article(){
     </section>
     <section id="case" data-teach-level="0" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">3 · 두 번 오른쪽으로 가는 후보의 예측 비용은 0이다</h2>
+      <CandidateTreeViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">가정 모형 x′=x+a에서 시작 0, 목표 2입니다. [−1,−1]의 마지막 위치는 −2라서 제곱거리 (−2−2)²=16입니다. [−1,+1]과 [+1,−1]은 마지막 0이므로 비용 4입니다. [+1,+1]은 마지막 2이므로 비용 0입니다.</p>
         <p className="leading-8">이 계산에서 가장 좋은 후보는 [+1,+1]입니다. 아직 실제 물체를 움직이지는 않았습니다. 후보 수와 예측 길이를 늘리면 더 많은 미래를 비교할 수 있지만 모델 호출과 메모리, 계획 시간이 함께 늘어납니다.</p>
@@ -51,6 +62,7 @@ export default function Article(){
     </section>
     <section id="picture" data-teach-level="1" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">4 · 모델의 1.0을 실제 관측 0.8로 교체한다</h2>
+      <BlindRunViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">첫 행동 +1 뒤 모델은 위치 1.0을 예상하지만 가정한 실제 환경은 0.8을 돌려줍니다. 두 번째 행동까지 눈을 감고 실행하면 실제 위치는 1.6입니다. 처음 예측한 2와 0.4만큼 차이가 납니다.</p>
         <p className="leading-8">새 관측 0.8을 다시 관측을 숫자로 바꾸는 부품에 넣으면 다음 계획은 그곳에서 시작합니다. 아래 표는 같은 네 후보를 새 출발점에서 다시 비교합니다. 피드백이 오차를 드러내지만 모델의 편향이나 부족한 후보를 저절로 없애지는 않습니다.</p>
@@ -79,7 +91,13 @@ export default function Article(){
       <h2 className="mb-6 text-2xl font-bold">7 · 후보를 고르는 동안 모델 가중치는 고정한다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">먼저 현재 관측과 목표를 같은 encoder로 표현합니다. 각 후보를 predictor에 순서대로 넣고 마지막 표현과 목표 표현의 제곱거리를 비교합니다. 네 후보를 전부 센 우리의 가정 사례와 달리 큰 연속 행동 공간에서는 일부 후보만 표본으로 뽑습니다.</p>
+        </div>
+      <CemPlaneViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">예를 들어 비용이 낮은 후보 두 개가 [+1,+1]과 [+1,−1]이라면 두 행동 좌표의 평균은 [+1,0]입니다. CEM은 이런 elite 통계를 다음 표본 분포에 사용합니다. 비용이 같은 후보를 고르는 방식과 탐색 분산도 결과를 바꾸며 전역 최적해를 보장하지 않습니다.</p>
+        </div>
+      <HorizonStripViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">계획 중 고치는 것은 행동 열의 후보 분포입니다. Predictor의 학습된 parameter를 매 후보마다 다시 학습하는 것이 아닙니다. 계획을 실행할 때 몇 행동을 먼저 쓸지 K와 미래를 몇 단계 볼지 H를 구별합니다. 이 글의 상호작용은 H=2, K=1입니다.</p>
       </div>
 <ExplainedFormula question={"왜 두 행동을 실행하기 전에 비교할 수 있을까?"} idea={"현재 상태에 후보 행동을 차례로 넣어 미래 상태를 예측한 뒤, 마지막 상태와 목표의 거리를 비용으로 삼습니다."} formula={"\\hat z_{t+1}=f(\\hat z_t,a_t),\\quad J(a_{0:H-1})=\\|\\hat z_H-z_g\\|_2^2"} annotatedFormula={String.raw`\begin{gathered}\hat z_{t+1}=f(\hat z_t,a_t),\quad J(a_{0:H-1})=\|\hat z_H-z_g\|_2^2\\[8pt]J=\underbrace{\|\hat z_H-z_g\|_2^2}_{\text{예측한 마지막 상태와 목표의 제곱거리}}\end{gathered}`} operations={[{"expression": "f(\\hat z_t,a_t)", "annotation": ["현재 예측과 이번 행동으로 다음 상태를 만듭니다. 다음 단계는 실제 관측이 아니라 이 예측에서 이어집니다."]}, {"expression": "\\|\\hat z_H-z_g\\|_2^2", "annotation": ["목표와 각 좌표의 차이를 제곱해 더합니다. 이 비용이 실제 성공을 잘 반영하는지는 별도 조건입니다."]}]} terms={[{"symbol": "z_0,z_g", "name": "시작·목표 표현", "description": "이 글의 가정 모형은 z=x인 1차원 표현입니다."}, {"symbol": "a_t", "name": "행동", "description": "후보당 두 번의 −1 또는 +1 이동을 비교합니다."}, {"symbol": "H", "name": "예측 길이", "description": "H=2이며 실제 제어에서는 시간 간격과 action block을 함께 지정합니다."}]} assumptions={["가정 모형 f(x,a)=x+a를 사용합니다. 실제 LeWM의 학습된 latent는 미터 좌표가 아닙니다.", "후보 선택은 관측된 환경 밖의 정확성이나 제약 만족을 자동으로 보장하지 않습니다."]} interpretation={"시작 0, 목표 2에서 [−1,−1]은 마지막 −2와 비용 16, [−1,+1]과 [+1,−1]은 마지막 0과 비용 4, [+1,+1]은 마지막 2와 비용 0입니다."} />
@@ -88,6 +106,7 @@ export default function Article(){
     </section>
     <section id="source" data-teach-level="5" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">8 · 공식 rollout은 예측 표현을 다음 입력에 붙인다</h2>
+      <RolloutConcatViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">논문 저자의 le-wm commit 8edfeb3에서 rollout은 predictor의 다음 latent를 emb에 이어 붙입니다. criterion은 마지막 예측과 목표의 좌표별 제곱 차이를 합해 후보마다 비용 하나를 만듭니다. 이름이 mse_loss여도 reduction="none" 뒤 sum을 하므로 단순 평균이라고 읽지 않습니다.</p>
         <p className="leading-8">이 API의 의미를 확인하려고 latent를 z=x 한 차원으로 줄인 우리 가정을 넣으면 [+1,+1]의 마지막 예측 2와 목표 2에서 비용은 0입니다. [−1,−1]의 마지막 −2에서는 비용 16입니다. 실제 학습된 LeWM의 192차원 표현을 이 자리 숫자로 대체했다는 뜻은 아닙니다.</p>
@@ -98,8 +117,12 @@ export default function Article(){
     </section>
     <section id="comparison" data-teach-level="6" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">9 · 예측 오차 0도 모든 표현이 같다면 쓸모없다</h2>
+      <CollapseMapViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">서로 다른 위치 −1, 0, 1을 encoder가 모두 z=0으로 바꾸고 predictor도 0을 내면 다음 표현의 예측 오차는 0입니다. 그러나 어느 행동과 목표도 구별할 수 없습니다. 표현 붕괴라고 부르는 실패이며 예측 loss만 최소화하면 이런 쉬운 해법이 생길 수 있습니다.</p>
+        </div>
+      <LatentSpreadViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">LeWM은 latent prediction loss에 SIGReg를 더해 표현 분포가 등방 Gaussian과 맞도록 제약합니다. 모두 0이면 관측별 변화가 없으므로 이 분포 조건을 충족하지 않습니다. 단순히 분산만 크게 만드는 것과 같지 않으며 finite batch·projection으로 계산하는 실제 regularizer의 가정을 확인해야 합니다.</p>
         <p className="leading-8">V-JEPA 2의 비디오 표현 학습과 V-JEPA 2-AC의 action-conditioned 후속 학습은 구별됩니다. LeWM의 작은 환경별 end-to-end 학습과도 같은 훈련 설정이 아닙니다. 둘은 표현을 예측해 행동을 비교한다는 연결은 공유하지만 데이터·구조·붕괴 방지 방법을 그대로 교환할 수 없습니다.</p>
       </div>
@@ -111,6 +134,9 @@ export default function Article(){
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">1단계 예측 오차, 긴 rollout 오차, 후보 행동의 순위, 실제 closed-loop 성공률을 따로 잽니다. 시작·목표 분포, 카메라 변화, action 시간 간격, H·K, 후보 수·반복 수와 계획 wall-clock도 함께 기록합니다.</p>
         <p className="leading-8">2026-09-30의 The Planning Limits of Latent World Models는 예측 정확도뿐 아니라 목표가 계획 범위 안에 있는지 따져 봅니다. 짧은 예측이 완벽하다고 합시다. 그래도 먼 목표를 향해 지금 우회해야 하는 행동의 가치를 못 드러낼 수 있습니다. 논문의 특정 환경 결과를 모든 world model의 불가능성으로 확대하지 않습니다.</p>
+        </div>
+      <ObstacleMapViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">우리의 2단계 모델이 틀림없이 정확하다고 합시다. 목표가 20단계 뒤 장애물 너머에 있습니다. 이때 네 후보의 마지막 거리만으로 최선 경로를 고르지 못할 수 있습니다. 이 경계에서 더 긴 예측이 필요한지 판단합니다. 가까운 subgoal이나 별도 value, 제약 모델이 필요한지도 살핍니다.</p>
         <p className="leading-8">예측해 보세요. K를 H와 같게 두면 언제 다시 관측할까요? 이번 계획 전체를 실행한 뒤입니다. 도중 오차를 반영하는 빈도와 계획 비용의 교환을 7절의 H·K 구분으로 설명할 수 있어야 합니다.</p>
       </div>

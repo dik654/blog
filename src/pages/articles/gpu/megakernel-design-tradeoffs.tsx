@@ -5,7 +5,13 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CutPointViz from "./megakernel-design-tradeoffs/viz/CutPointViz";
+import ICacheViz from "./megakernel-design-tradeoffs/viz/ICacheViz";
 import MegakernelDesignTradeoffsViz from "./megakernel-design-tradeoffs/viz/MegakernelDesignTradeoffsViz";
+import RegisterBudgetViz from "./megakernel-design-tradeoffs/viz/RegisterBudgetViz";
+import SmemPageViz from "./megakernel-design-tradeoffs/viz/SmemPageViz";
+import SyncLayersViz from "./megakernel-design-tradeoffs/viz/SyncLayersViz";
+import TaskLoopViz from "./megakernel-design-tradeoffs/viz/TaskLoopViz";
 
 const MPK = "https://arxiv.org/abs/2512.22219";
 const HAZY = "https://hazyresearch.stanford.edu/blog/2025-05-27-no-bubbles";
@@ -148,6 +154,11 @@ export default function MegakernelDesignTradeoffsArticle() {
             input chunk 만 끝나면 시작합니다. Kernel 경계였다면 앞 operator 의 마지막 block 까지 기다렸을 시간이 겹치고 이것이 cross-operator
             pipelining 입니다.
           </p>
+        </div>
+
+        <SyncLayersViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             Block 안의 동기화는 다른 층입니다. FlashAttention-3 는 한 block 안에서
             producer warpgroup 이 TMA 로 data 를 나르고 consumer warpgroup 둘이 GEMM 과
@@ -164,6 +175,8 @@ export default function MegakernelDesignTradeoffsArticle() {
             만든 셈이라, megakernel 은 task 단위 counter 를 씁니다.
           </p>
         </div>
+        <TaskLoopViz />
+
         <AlgorithmBlock
           title="Worker SM 의 device-side task loop"
           input={[
@@ -192,6 +205,11 @@ export default function MegakernelDesignTradeoffsArticle() {
             않습니다. 이것이 kernel resource lifetime 이고 megakernel 에서는 그 lifetime 이 forward 전체라서 가장 무거운 task 의 요구가
             모든 task 의 예산이 됩니다.
           </p>
+        </div>
+
+        <RegisterBudgetViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             Register 부터 봅니다. Task 가 switch 로 갈라져 live range 가 서로 겹치지 않으면
             kernel 의 register 수는 task 별 요구의 최대값입니다. MPK 는 per-thread register
@@ -210,6 +228,11 @@ export default function MegakernelDesignTradeoffsArticle() {
             255 를 넘어 spill 이 납니다. 그 경로는{" "}
             <Link to="/cs/gpu/cuda-register-pressure#spill-path">register spill</Link> 글이 다룹니다.
           </p>
+        </div>
+
+        <SmemPageViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             Shared memory 는 반대로 시간에 따라 나눠 쓸 수 있습니다. Hazy Research 는 H100 의 213 kB 를 16 KiB page 13개로, MPK 는 32
             KB page 로 나눠(H100 에서 7개) task 가 필요한 만큼 빌리고 돌려줍니다. 이것이 cross-operator shared-memory reuse 이고 앞 task
@@ -236,6 +259,11 @@ export default function MegakernelDesignTradeoffsArticle() {
             instruction cache 128 KiB 를 측정했습니다. SASS instruction 하나가 16 byte 이니 L0 는 instruction 약 768개, L1 은
             약 8,192개입니다. Hopper 의 값은 NVIDIA 가 공개하지 않아 이 글은 Volta 수치로 셉니다.
           </p>
+        </div>
+
+        <ICacheViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             GEMM mainloop 하나가 unroll 뒤 수천 instruction 이면 그 하나로 L0 를 넘고, operator 열 개면 L1 도 넘습니다. Task 마다 hot
             loop 는 L0 에 맞아야 miss 없이 돌며 task 가 바뀌는 순간의 miss 는 L1 에서 채우면 수십 clock, L2 까지 가면 수백 clock 입니다. 같은 종류의
@@ -290,6 +318,11 @@ export default function MegakernelDesignTradeoffsArticle() {
             2026년 10월의 <em>One Megakernel is Not Enough</em> 는 시험한 13개 model·batch 조합에서 최선이 2~4개 megakernel 또는 완전한
             conventional graph였고, 하나의 monolith가 아니었다고 자기보고합니다.
           </p>
+        </div>
+
+        <CutPointViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <ol>
             <li><strong>Graph:</strong> operator kernel 이 충분히 크고 host launch 만 줄이면 될 때.</li>
             <li><strong>하나의 megakernel:</strong> 짧고 비슷한 task가 많고, counter·자원 공유 비용보다 없앤 경계가 클 때.</li>

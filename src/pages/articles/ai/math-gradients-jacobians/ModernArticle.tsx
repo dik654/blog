@@ -4,6 +4,12 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import SensitivityShapeViz from "./SensitivityShapeViz";
+import GradientProjectionViz from "./viz/GradientProjectionViz";
+import JacobianRowsViz from "./viz/JacobianRowsViz";
+import ProductResidualViz from "./viz/ProductResidualViz";
+import CoordinateOnlyTrapViz from "./viz/CoordinateOnlyTrapViz";
+import UnitRescaleViz from "./viz/UnitRescaleViz";
+import JvpVjpFlowViz from "./viz/JvpVjpFlowViz";
 
 const MIT_MULTIVARIABLE = "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/pages/2.-partial-derivatives/part-b-chain-rule-gradient-and-directional-derivatives/";
 const MATRIX_CALCULUS = "https://arxiv.org/abs/1802.01528v3";
@@ -126,6 +132,7 @@ export default function GradientsJacobiansArticle() {
           interpretation="Unit direction 가운데 gradient와 같은 방향이 dot product를 가장 크게 만들고, 반대 방향이 local decrease를 가장 크게 만듭니다."
         />
         <p>왜 각 기여를 더할까요. 현재 점에서 f가 미분 가능하면 작은 이동의 변화는 4Δx+3Δy에 이동 길이보다 빨리 줄어드는 오차를 더한 것입니다. Δx=t·u₁, Δy=t·u₂를 넣고 t로 나눈 뒤 t→0으로 보내면 4u₁+3u₂가 남습니다. 이것이 내적 ∇f·u입니다.</p>
+        <GradientProjectionViz />
         <p>기울기의 길이는 √(4²+3²)=5입니다. 같은 길이의 방향 중 ∇f와 나란한 (4/5,3/5)가 변화율 5를, 반대인 (−4/5,−3/5)가 −5를 만듭니다. 앞의 (3/5,4/5)는 방향이 조금 달라 4.8이었던 것입니다.</p>
         <ProgressiveDetail title="왜 다른 단위 방향은 5보다 큰 변화율을 만들 수 없을까" preview="코시–슈바르츠 부등식으로 내적의 절댓값은 두 길이의 곱을 넘지 않습니다. 단위 방향에서는 상한이 기울기 길이 5입니다.">
           <p><a className="font-semibold text-primary underline" href="/cs/ai/math-vectors-inner-products#cauchy-schwarz">코시–슈바르츠 부등식</a>은 |∇f·u|≤‖∇f‖‖u‖입니다. ‖u‖=1로 정했으므로 상한은 5입니다. 같은 방향일 때 +5, 반대일 때 −5로 등호가 성립합니다. 기울기가 0이면 모든 방향의 1차 변화율도 0이며, 감소 방향 하나를 이 정보만으로 고를 수 없습니다.</p>
@@ -153,6 +160,8 @@ export default function GradientsJacobiansArticle() {
           assumptions={["이 글은 output-by-input Jacobian convention을 사용합니다.", "Δx가 충분히 작고 F가 해당 점에서 differentiable합니다."]}
           interpretation="Jacobian은 숫자 표가 아니라 작은 input vector를 작은 output vector로 보내는 local function입니다."
         />
+        <JacobianRowsViz />
+        <ProductResidualViz />
         <p>
             같은 입력 변화 v=(0.01,−0.02)를 곱하면 첫 행은 0.01−0.02=−0.01, 둘째 행은 3×0.01+2×(−0.02)=−0.01입니다. 예측 결과는
             (4.99,5.99)입니다. 실제 결과 (4.99,5.9898)와 둘째 성분에서 −0.0002 차이가 나는데 곱을 전개할 때 생략한 ΔxΔy=0.01×(−0.02)입니다.
@@ -183,12 +192,15 @@ export default function GradientsJacobiansArticle() {
       </section>
       <section id="boundaries" data-teach-level="7" className="space-y-6">
         <h2 className="text-2xl font-bold">11 · 좌표별 비율만 있거나 단위를 바꾸면 무엇이 달라질까</h2>
+        <CoordinateOnlyTrapViz />
         <p>편미분이 모두 있어도 전체 함수가 미분 가능한 것은 아닙니다. r(x,y)=xy/(x²+y²)로 두되 원점의 값만 0으로 정해 봅시다(가정). 두 좌표축에서는 항상 값이 0이라 원점의 두 편미분도 0입니다. 그러나 x=y=t≠0으로 접근하면 값이 늘 1/2입니다. 원점에서 연속조차 아니므로 작은 이동을 하나의 선형식과 더 작은 오차로 설명할 수 없습니다.</p>
+        <UnitRescaleViz />
         <p>
             어느 방향을 빠르게 줄일지도 좌표 단위에 영향을 받습니다. 첫 사례의 x를 z=100x로 다시 표시하면 같은 함수는 f(z/100,y)=z²/10000+3y입니다(가정). 같은
             위치는 (z,y)=(200,−1)이고 기울기 성분은 (0.04,3)입니다. 원래의 (4,3)과 크기 순서가 바뀌었지만 z의 1 이동은 x의 0.01 이동과 같은 변화입니다.
             비율 0.04×1=4×0.01도 같습니다. 단위를 맞춰 재척도화하거나 이동 거리를 재는 기준을 명시해야 두 방향을 같은 기준으로 비교할 수 있습니다.
           </p>
+        <JvpVjpFlowViz />
         <p>JVP는 입력 변화 v를 앞으로 보내 결과 변화 Jv를 구합니다. VJP는 결과 쪽에 부여한 비중 w를 받아 입력 쪽 기여 wᵀJ를 구합니다. 위의 J에서 출력 비중을 w=(2,−1)로 두면 wᵀJ=(−1,0)입니다(가정). 두 결과를 2F₁−F₂로 합친 값의 입력별 민감도입니다. 입력 쪽 .01과 −.02를 넣은 JVP와 시작하는 벡터의 의미가 다릅니다.</p>
         <p>일반적으로 J가 m행 n열이면 JVP의 v는 입력 쪽 길이 n, Jv는 출력 쪽 길이 m입니다. VJP의 w는 출력 쪽 길이 m이고 wᵀJ는 입력 쪽 길이 n인 행벡터입니다. 열벡터로 돌려주면 Jᵀw라고 씁니다. VJP도 계산을 역순으로 따라가며 필요한 기여만 합칠 수 있어 전체 J 저장이 필수는 아닙니다.</p>
         <p>그 역순 전달을 실제 계산 경로에서 누적하는 방법은 <a className="font-semibold text-primary underline" href="/cs/ai/reverse-mode-autodiff">역방향 자동미분</a>에서 설명합니다. 이렇게 얻은 기울기를 얼마만큼의 변경으로 바꿀지는 <a className="font-semibold text-primary underline" href="/cs/ai/optimizers">옵티마이저</a>의 역할입니다.</p>

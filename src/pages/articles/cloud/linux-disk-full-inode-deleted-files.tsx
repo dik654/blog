@@ -8,6 +8,13 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import DiskAccountsViz from "./linux-disk-full-inode-deleted-files/viz/DiskAccountsViz";
 import LinkCountViz from "./linux-disk-full-inode-deleted-files/viz/LinkCountViz";
 import DiagnosisStepViz from "./linux-disk-full-inode-deleted-files/viz/DiagnosisStepViz";
+import InodeThresholdViz from "./linux-disk-full-inode-deleted-files/viz/InodeThresholdViz";
+import UnlinkTraceViz from "./linux-disk-full-inode-deleted-files/viz/UnlinkTraceViz";
+import ReservedRulerViz from "./linux-disk-full-inode-deleted-files/viz/ReservedRulerViz";
+import SparseTruncateViz from "./linux-disk-full-inode-deleted-files/viz/SparseTruncateViz";
+import MountHiddenViz from "./linux-disk-full-inode-deleted-files/viz/MountHiddenViz";
+import LogrotateViz from "./linux-disk-full-inode-deleted-files/viz/LogrotateViz";
+import IowaitOverlapViz from "./linux-disk-full-inode-deleted-files/viz/IowaitOverlapViz";
 import { codeRefs } from "./linux-disk-full-inode-deleted-files/codeRefs";
 import { diskFullTrees } from "./linux-disk-full-inode-deleted-files/fileTree";
 
@@ -52,6 +59,9 @@ export default function LinuxDiskFullArticle() {
             블록은 100GiB를 4KiB로 나눈 26,214,400칸입니다. 그중 5%인 1,310,720칸, 곧 5GiB는 root용 예약입니다. inode는 공간 16,384
             byte마다 하나를 만들기 때문에 6,553,600개입니다. 두 수는 포맷할 때 정해지고(예약 비율은 tune2fs -m으로 나중에 바꿀 수 있습니다) inode 비율은 나중에 바꿀 수 없다고 mke2fs 문서가 경고합니다.
           </p>
+          </div>
+          <InodeThresholdViz />
+          <div className={prose}>
             <p>
             이 숫자에서 바로 나오는 사실이 하나 있습니다. 공간을 inode 수로 나누면 16KiB이므로 파일의 평균 크기가 16KiB보다 작으면 블록보다 inode가 먼저 바닥납니다.
             작은 세션 파일이나 캐시 파일을 수백만 개 만드는 서버가 9절의 사례입니다.
@@ -147,6 +157,7 @@ export default function LinuxDiskFullArticle() {
 
         <section id="unlink-trace" data-teach-level="5" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">7. rm은 이름만 지우고, 블록은 마지막 iput이 돌려줍니다</h2>
+          <UnlinkTraceViz />
           <div className={prose}>
             <p>
             Linux 6.12의 순서로 사례 A를 따라갑니다. rm은 unlinkat 시스템 콜을 부르고 fs/namei.c의 do_unlinkat이 경로를 찾은 뒤 inode에 참조
@@ -190,6 +201,9 @@ export default function LinuxDiskFullArticle() {
           <h2 className="mb-6 text-2xl font-bold">8. 예약 5%는 일반 사용자에게만 먼저 바닥납니다</h2>
           <div className={prose}>
             <p>사례 A에서 df는 Used 95G에 Avail 0을 보였습니다. 95와 0을 더해도 100이 안 되는 이유가 예약 블록입니다. tune2fs 문서는 블록 일부를 특권 프로세스용으로 떼어 두는 목적을 두 가지로 적습니다. 단편화를 줄이는 것과, 일반 프로세스가 더 쓰지 못할 때도 syslogd 같은 시스템 데몬이 계속 동작하게 하는 것입니다.</p>
+          </div>
+          <ReservedRulerViz />
+          <div className={prose}>
             <p>df는 statfs가 돌려준 두 빈칸을 다르게 씁니다. coreutils 9.5의 df.c는 Used를 전체에서 f_bfree(root 기준 빈칸)를 뺀 값으로, Avail을 f_bavail(일반 사용자 기준 빈칸)로 정합니다(961–974행). ext4_statfs는 f_bavail을 f_bfree에서 예약 블록을 뺀 값으로 채우고 음수면 0으로 막습니다(super.c 6815–6818행).</p>
           </div>
           <ExplainedFormula
@@ -297,9 +311,16 @@ export default function LinuxDiskFullArticle() {
             조치는 두 갈래입니다. 서비스를 다시 띄울 수 있으면 재시작이 가장 깨끗합니다. fd가 닫히면서 7절의 경로로 블록이 돌아옵니다. 재시작이 어렵다면 /proc/812/fd/7을
             열어 크기를 0으로 자릅니다. proc_pid_fd(5)대로 이 항목은 실제 파일을 가리키는 링크라서 이름이 없는 파일에도 이 경로로 닿을 수 있습니다.
           </p>
+          </div>
+          <SparseTruncateViz />
+          <div className={prose}>
             <p>자르기에는 대가가 있습니다. 파일이 O_APPEND로 열려 있지 않다면 프로세스는 다음 쓰기를 원래 위치인 30GiB 지점에 합니다. (가정) 그러면 앞부분이 비어 있는 sparse 파일이 되어 실제 블록은 적지만 ls에 보이는 크기는 다시 30GiB가 됩니다. du와 du --apparent-size가 다른 값을 보이는 이유입니다.</p>
+          </div>
+          <MountHiddenViz />
+          <div className={prose}>
             <p>du와 df의 차이가 있는데 lsof +L1이 아무것도 내지 않는다면 mount 아래에 가려진 파일을 의심합니다. (가정) /var/log를 별도 디스크로 mount하기 전에 원래 디렉터리에 쌓인 파일은 mount에 가려 du가 보지 못하지만 루트 파일시스템의 블록은 차지합니다. 같은 파일시스템을 다른 경로에 bind mount해 그 아래를 직접 세어 봅니다.</p>
           </div>
+          <LogrotateViz />
           <div className={prose}>
             <p>
             사례 A가 생긴 근본 원인은 대개 로그 회전 설정입니다. logrotate의 create 방식은 로그 파일 이름을 바꾸고 같은 이름으로 새 파일을 만듭니다. 애플리케이션이
@@ -345,6 +366,7 @@ export default function LinuxDiskFullArticle() {
             conclusion="NVMe에서는 %util보다 await와 aqu-sz가 평소보다 얼마나 커졌는지를 봅니다."
             caveats={["숫자는 설명용 가정입니다.", "%iowait는 CPU가 놀고 있으면서 디스크 요청이 걸려 있던 시간 비율이라 CPU가 바쁘면 디스크가 느려도 낮게 나옵니다."]}
           />
+          <IowaitOverlapViz />
           <div className={prose}>
             <p>
             %iowait도 자주 오해됩니다. iostat 문서는 이 값을 CPU가 놀고 있는 동안 처리되지 않은 디스크 요청이 있던 시간의 비율로 정의합니다. 디스크가 얼마나 바쁜지가

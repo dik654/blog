@@ -10,6 +10,12 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./reward-design-for-verifiable-rl/codeRefs";
 import RewardDesignForVerifiableRlViz from "./reward-design-for-verifiable-rl/viz/RewardDesignForVerifiableRlViz";
+import PassCountViz from "./reward-design-for-verifiable-rl/viz/PassCountViz";
+import RewardLoopViz from "./reward-design-for-verifiable-rl/viz/RewardLoopViz";
+import ScoreAxesViz from "./reward-design-for-verifiable-rl/viz/ScoreAxesViz";
+import GroupSignalViz from "./reward-design-for-verifiable-rl/viz/GroupSignalViz";
+import PotentialPathViz from "./reward-design-for-verifiable-rl/viz/PotentialPathViz";
+import ProcessTraceViz from "./reward-design-for-verifiable-rl/viz/ProcessTraceViz";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 
 export default function Article(){
@@ -44,6 +50,7 @@ export default function Article(){
     </section>
     <section id="case" data-teach-level="0" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">3 · 통과 50개 중 정답은 38개다</h2>
+      <PassCountViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">정답 40개에서 통과 38개·탈락 2개, 오답 60개에서 통과 12개·탈락 48개입니다. 통과율은 50/100=50%이고 실제 정답률은 40/100=40%입니다. 두 비율은 다른 질문에 답합니다.</p>
         <p className="leading-8">통과한 답의 정답 비율은 38/50=76%입니다. 반면 실제 정답을 놓치지 않는 비율은 38/40=95%입니다. 보상 평균만 보고 모델이 50%를 해결한다고 주장하면 잘못 통과한 12개를 성공으로 세게 됩니다.</p>
@@ -53,6 +60,7 @@ export default function Article(){
     </section>
     <section id="picture" data-teach-level="1" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">4 · 보상 오류도 최적화 경로를 따라 확대될 수 있다</h2>
+      <RewardLoopViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">문제→응답 생성→채점→유리한 응답의 확률 증가→새 응답 생성의 고리가 반복됩니다. 틀린 답 12개가 우연한 오류라면 노이즈가 되고 특정 형식이나 행동으로 반복 재현할 수 있으면 모델이 그 경로를 학습할 수 있습니다.</p>
         <p className="leading-8">학습 때 사용한 답 추출 규칙과 확인용 문제를 평가에도 그대로 쓰면 이 오류가 두 곳에서 함께 숨을 수 있습니다. 독립된 정답 검수와 새로운 확인용 문제, 실패 사례의 분류를 두어 최적화한 지표와 실제 작업 성공을 다시 비교합니다.</p>
@@ -76,7 +84,7 @@ export default function Article(){
       <span id="outcome-vs-process" className="scroll-mt-20" />
       <span id="reward-shape-and-calibration" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">6 · 언제 점수를 주는지와 무엇을 채점하는지는 다른 축이다</h2>
-      <div className="overflow-x-auto"><table className="min-w-[640px] w-full text-left text-sm"><thead><tr><th>이미 본 역할</th><th>이름과 뜻</th><th>이 글의 값·조건</th></tr></thead><tbody><tr><td className="min-w-[180px] p-3">답에 붙이는 학습용 점수·점수를 만드는 검사</td><td className="min-w-[180px] p-3">Reward · verifier</td><td className="min-w-[180px] p-3">100개 중50개 통과</td></tr><tr><td className="min-w-[180px] p-3">응답에서 답을 뽑는 규칙·확인용 문제</td><td className="min-w-[180px] p-3">Parser · test</td><td className="min-w-[180px] p-3">추출 오류와 문제 누락을 따로 검사</td></tr><tr><td className="min-w-[180px] p-3">점수를 드물게·자주 주기</td><td className="min-w-[180px] p-3">Sparse · dense</td><td className="min-w-[180px] p-3">마지막0점·여섯 단계별 점수</td></tr><tr><td className="min-w-[180px] p-3">마지막 결과·중간 행동을 채점</td><td className="min-w-[180px] p-3">Outcome · process</td><td className="min-w-[180px] p-3">빈도와 다른 축</td></tr><tr><td className="min-w-[180px] p-3">0/1·정도에 따른 점수</td><td className="min-w-[180px] p-3">Binary · continuous reward</td><td className="min-w-[180px] p-3">점수의 척도도 별도 선택</td></tr><tr><td className="min-w-[180px] p-3">점수와 관측 성공률을 맞대어 확인</td><td className="min-w-[180px] p-3">Calibration, 보정 상태 확인</td><td className="min-w-[180px] p-3">학습과 별도 표본 사용</td></tr><tr><td className="min-w-[180px] p-3">규칙으로 확인한 보상으로 학습</td><td className="min-w-[180px] p-3">RLVR: reinforcement learning with verifiable rewards</td><td className="min-w-[180px] p-3">검사 범위 밖의 정답은 보장하지 않음</td></tr></tbody></table></div><div className="prose prose-neutral max-w-none dark:prose-invert">
+      <div className="overflow-x-auto"><table className="min-w-[640px] w-full text-left text-sm"><thead><tr><th>이미 본 역할</th><th>이름과 뜻</th><th>이 글의 값·조건</th></tr></thead><tbody><tr><td className="min-w-[180px] p-3">답에 붙이는 학습용 점수·점수를 만드는 검사</td><td className="min-w-[180px] p-3">Reward · verifier</td><td className="min-w-[180px] p-3">100개 중50개 통과</td></tr><tr><td className="min-w-[180px] p-3">응답에서 답을 뽑는 규칙·확인용 문제</td><td className="min-w-[180px] p-3">Parser · test</td><td className="min-w-[180px] p-3">추출 오류와 문제 누락을 따로 검사</td></tr><tr><td className="min-w-[180px] p-3">점수를 드물게·자주 주기</td><td className="min-w-[180px] p-3">Sparse · dense</td><td className="min-w-[180px] p-3">마지막0점·여섯 단계별 점수</td></tr><tr><td className="min-w-[180px] p-3">마지막 결과·중간 행동을 채점</td><td className="min-w-[180px] p-3">Outcome · process</td><td className="min-w-[180px] p-3">빈도와 다른 축</td></tr><tr><td className="min-w-[180px] p-3">0/1·정도에 따른 점수</td><td className="min-w-[180px] p-3">Binary · continuous reward</td><td className="min-w-[180px] p-3">점수의 척도도 별도 선택</td></tr><tr><td className="min-w-[180px] p-3">점수와 관측 성공률을 맞대어 확인</td><td className="min-w-[180px] p-3">Calibration, 보정 상태 확인</td><td className="min-w-[180px] p-3">학습과 별도 표본 사용</td></tr><tr><td className="min-w-[180px] p-3">규칙으로 확인한 보상으로 학습</td><td className="min-w-[180px] p-3">RLVR: reinforcement learning with verifiable rewards</td><td className="min-w-[180px] p-3">검사 범위 밖의 정답은 보장하지 않음</td></tr></tbody></table></div><ScoreAxesViz /><div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Sparse/dense는 점수의 빈도이고 outcome/process는 채점 대상입니다. 최종 결과를 한 번 채점하면 sparse outcome이고 중간 행동을 자주 검사하면 dense process입니다. 중간 검사는 일부 단계에만 둘 수도 있어 두 분류가 완전히 같은 것은 아닙니다.</p>
         <p className="leading-8">Binary reward는 0/1이고 continuous reward는 정도를 표현합니다. 연속 점수라고 자동으로 더 정확하거나 더 보정된 것은 아닙니다. Calibration은 점수와 관측 성공률의 관계를 별도 표본에서 확인하는 작업입니다.</p>
         <p className="leading-8">RLVR은 자동으로 검증 가능한 규칙을 보상에 사용하는 방식입니다. 사람 선호 모델을 쓰지 않아도 검증기 자체의 범위와 오류를 확인해야 합니다. <Link to="/cs/ai/open-r1#reward-system">Open-R1의 reward 구성 정본</Link>과 이어집니다.</p>
@@ -89,9 +97,13 @@ export default function Article(){
       <span id="hacking" className="scroll-mt-20" />
       <span id="shaping" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">7 · 그룹의 점수가 모두 같으면 상대 신호가 사라진다</h2>
+      <GroupSignalViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">앞의 100개에서 네 응답을 뽑아 작은 묶음을 만든다고 합시다 (가정). 네 응답의 reward가 [0,0,0,0]이면 평균을 뺀 값은 모두 0입니다. [1,1,1,1]도 같습니다. 순수한 group-relative advantage는 서로 무엇을 더 강화할지 구별하지 못합니다. 기존 모델과 멀어지는 정도를 벌하는 별도의 손실 항까지 0이 된다는 뜻은 아닙니다.</p>
         <p className="leading-8">통과·탈락을 둘씩 뽑은 [0,0,1,1]이면 평균 0.5를 빼 [−0.5,−0.5,0.5,0.5]가 됩니다. 양수 신호를 받은 두 답 중 하나가 앞의 잘못 통과한 12개에 속한다면 오답도 강화하는 방향이 됩니다. 표준편차로 나누는지와 어떤 추정량을 쓰는지는 trainer 설정에 따릅니다. 보상을 나누는 규칙과 실제 loss를 같은 버전으로 확인해야 합니다.</p>
+      </div>
+      <PotentialPathViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">중간 점수를 더해 학습을 돕는 reward shaping의 한 방법은 γΦ(s′)−Φ(s)를 기존 reward에 더하는 것입니다. 경로를 따라 할인합을 구하면 중간 potential이 상쇄됩니다. γ=1로 두고 상태에 붙이는 보조값인 potential이 0→0.5→0.2→0이면 변화량 0.5−0.3−0.2=0입니다 (가정). 반면 방문마다 +0.5를 주면 순환만으로 양의 점수가 생깁니다.</p>
         <p className="leading-8">이 정책 보존 설명은 같은 할인율과 적절한 종료 상태 조건을 둔 이론입니다. 임의의 과정 점수나 LLM judge의 선호를 더하는 것까지 자동으로 보존하지 않습니다.</p>
       </div>
@@ -115,6 +127,7 @@ export default function Article(){
       <span id="paper-concrete-problems" className="scroll-mt-20" />
       <span id="paper-reward-shaping" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">9 · 과정 oracle과 learned judge는 다른 증거를 준다</h2>
+      <ProcessTraceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">VPR의 식 (2)는 각 상태·행동에 verifier V(sₜ,aₜ)를 적용해 그 결과를 과정 reward로 둡니다. 여섯 행동의 검사 결과가 [1,1,0,1,1,0]이면 어느 시점이 통과하지 못했는지 여섯 값으로 보존됩니다. 단순 합계 4만 남기면 위치 정보가 다시 사라집니다.</p>
         <p className="leading-8">논문의 Sudoku 사례는 유일한 정답 격자와 현재 칸의 값을 비교합니다. 이는 형식만 맞는 풀이 설명이나 임의의 실제 업무 행동을 모두 판정할 수 있다는 뜻이 아닙니다. Tic-Tac-Toe·Minesweeper도 각 환경의 검색·제약·belief 조건에 의존합니다.</p>
