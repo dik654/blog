@@ -2,6 +2,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import DemolitionSupportCapViz from "./shop-closure-and-restoration/viz/DemolitionSupportCapViz";
+import DepositSettlementCellsViz from "./shop-closure-and-restoration/viz/DepositSettlementCellsViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopClosureAndRestorationArticle() {
@@ -32,6 +34,7 @@ export default function ShopClosureAndRestorationArticle() {
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3. 맡긴 3천만 원에서 400만 원과 600만 원을 정산한다</h2>
+        <DepositSettlementCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">돌려받을 보증금 3천만 원, 미납 월세 400만 원, 복구 견적 600만 원인 점포를 둡니다. 임대인이 복구 비용을 처리하고 점주에게 돌려줄 돈에서 600만 원을 공제하기로 유효하게 합의했다고 가정합니다. 월세 공제 400만 원도 확정됐다면 3천만 − 400만 − 600만 = 2천만 원을 반환받습니다. 금액과 정산 조건은 모두 (가정)입니다.</p>
           <p className="leading-7">고객 환불·임금·세금·대출은 이 계산에 넣지 않았습니다. 따라서 보증금 정산서의 2천만 원이 폐업 뒤 점주에게 최종적으로 남는 순현금이라고 단정할 수 없습니다. 600만 원이 단지 견적이라면 공제 가능성과 실제 정산액부터 확인합니다.</p>
@@ -128,6 +131,7 @@ export default function ShopClosureAndRestorationArticle() {
           <p className="leading-7">보증금 정산표의 금액은 이 글의 가정입니다. 실제로는 임대차 계약, 인도 당시 상태, 공사 견적, 합의서, 지역 판례와 세무 기준으로 각각 확인해야 합니다.</p>
           <p className="leading-7">재고를 다른 사업으로 옮기거나 버리는 방식, 직원 퇴직 정산, 리스 장비 반납, 고객 개인정보가 담긴 계정 폐기는 서로 다른 계약과 법의 문제입니다. 폐업 신고 수리 화면 한 장을 모든 채무가 사라졌다는 증거로 쓰지 않습니다.</p>
           <p className="leading-7">철거비 지원도 확정 전에는 돌려받을 돈에 넣지 않습니다. 중소벤처기업부의 2025년 1월 영상 03:50에는 최대 400만 원이, 같은 해 7월 영상 01:53에는 400만 원에서 600만 원으로의 변경이 표시됩니다. 두 화면과 게시기관의 자막 전사를 대조하면 두 발표 사이에 지원 한도가 확대됐음을 알 수 있습니다. 7월 30일 보도자료는 확대 한도의 적용을 2025년 7월 11일 이후 폐업과 연결합니다.</p>
+          <DemolitionSupportCapViz />
           <p className="leading-7">2026년 1월 19일 공고(한국 소상공인시장진흥공단, 『희망리턴패키지 원스톱폐업지원』)는 한도를 두 개 겹쳐 둡니다. 하나는 폐업일에 따른 최대한도로, 2023-01-01~2025-07-10에 폐업했으면 400만 원, 2025-07-11 이후 폐업했으면 600만 원입니다. 다른 하나는 전용면적 3.3㎡당 20만 원입니다. 지원액은 두 한도 중 작은 값을 넘지 못하고, 전자세금계산서의 공급가액만 인정해 부가세는 빠집니다.</p>
           <p className="leading-7">이 사례의 점포가 2025-09-30에 폐업했고 인정 전용면적이 33㎡라고 가정하면 폐업일 한도는 600만 원, 면적 한도는 33 ÷ 3.3 × 20만 = 200만 원이므로 min(600만, 200만) = 200만 원이 상한입니다. 같은 33㎡ 점포가 2025-03-10에 폐업했다면 min(400만, 200만) = 200만 원으로 결과가 같습니다.</p>
           <p className="leading-7">면적이 99㎡(가정)라면 면적 한도가 99 ÷ 3.3 × 20만 = 600만 원으로 커져, 폐업일이 2025-03-10이면 min(400만, 600만) = 400만 원, 2025-09-30이면 600만 원이 상한이 됩니다. 어느 경우든 이 금액은 신청할 수 있는 상한일 뿐 지급 확정액은 아닙니다.</p>

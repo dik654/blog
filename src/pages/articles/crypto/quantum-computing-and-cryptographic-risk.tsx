@@ -4,6 +4,9 @@ import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import { Link } from "react-router-dom";
+import MarkAndReflectViz from "./quantum-computing-and-cryptographic-risk/viz/MarkAndReflectViz";
+import PeriodCellsViz from "./quantum-computing-and-cryptographic-risk/viz/PeriodCellsViz";
+import SecondIterationViz from "./quantum-computing-and-cryptographic-risk/viz/SecondIterationViz";
 
 export default function Article() {
   return (
@@ -39,6 +42,7 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 표시할 때는 부호만 바꾸고 다음 연산에서 차이를 키웁니다</h2>
+        <MarkAndReflectViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫 칸의 값만 −0.5로 바꿉니다. 나머지는 그대로 0.5입니다. 아직 네 값의 제곱은 모두 0.25이므로 측정 결과의 분포는 바뀌지 않았습니다.</p>
           <p className="leading-8">그다음 전체 평균을 기준으로 각 값을 반대편으로 옮깁니다. 이때 첫 칸과 다른 칸이 다르게 움직입니다. 부호 차이는 다음 연산에서 더하고 빼는 데 쓰입니다.</p>
@@ -75,6 +79,9 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">표시 직후 진폭은 [−0.5, 0.5, 0.5, 0.5]이고 평균은 0.25입니다. 평균의 두 배에서 각 값을 빼면 첫 칸은 0.5−(−0.5)=1, 나머지는 0.5−0.5=0입니다. 측정하면 00을 얻습니다.</p>
           <p className="leading-8">이 표시와 반사의 반복이 Grover 검색의 핵심입니다. 일반적인 비구조적 검색에서 필요한 판정 질의 수가 후보 수의 제곱근 규모로 줄어듭니다. 한 질의의 실제 회로 시간과 전체 경과 시간은 따로 계산해야 합니다.</p>
+        </div>
+        <SecondIterationViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">많이 반복할수록 항상 좋은 것은 아닙니다. 이 사례에서 두 번째 반복을 하면 [−1,0,0,0]의 평균 −0.25를 거쳐 [0.5,−0.5,−0.5,−0.5]가 됩니다. 정답 확률이 다시 0.25로 떨어집니다.</p>
         </div>
 
@@ -90,6 +97,7 @@ export default function Article() {
           <p className="leading-8">항상 한 번에 성공하지는 않습니다. 고른 밑이 서로소인지, 찾은 주기가 짝수인지, 마지막 최대공약수가 자명한 1이나 15인지 확인합니다. 큰 수의 회로와 오류 정정 비용까지 여기서 직접 실행한 것은 아닙니다.</p>
         </div>
 
+        <PeriodCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">양자 부분도 같은 15와 밑 2로 좁혀 봅니다. 첫 기록 공간을 0부터255까지 똑같이 준비하고 각 지수 a에 대해 2ᵃ mod15를 둘째 공간에 기록합니다(가정). 256은 15² 이상·2×15² 미만인 2의 거듭제곱입니다. 설명을 위해 둘째 공간을 측정해1이 나온 가지를 고르면 첫 공간에는 0·4·8·…·252의64개 지수가 남습니다.</p>
           <p className="leading-8">양자 푸리에 변환은 이렇게 일정 간격으로 떨어진 진폭들을 위상이 다른 파동 성분으로 바꿉니다. 이 이상적 사례의 첫 공간을 측정하면 0·64·128·192 중 하나가 나옵니다. 64를 얻었다면 64/256=1/4에서 분모4를 주기 후보로 읽고 2⁴ mod15=1로 검산합니다. 그 뒤 앞의 최대공약수 계산을 적용합니다.</p>

@@ -3,6 +3,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ApCreationArbitrageViz from "./funds-etfs-and-etns/viz/ApCreationArbitrageViz";
+import DailyResetExposureViz from "./funds-etfs-and-etns/viz/DailyResetExposureViz";
+import LeveragedPathsViz from "./funds-etfs-and-etns/viz/LeveragedPathsViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -65,6 +68,7 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 100원의 괴리는 거래할 수 있을 때 줄어듭니다</h2>
+        <ApCreationArbitrageViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">투자자는 ETF 한 좌를 1만100원에 삽니다. AP가 같은 자산 바스켓을 한 좌당 1만 원에 조달했다고 합시다. 설정·매도 비용이 60원이라면 좌당 40원의 차익이 남습니다. 이 가정에서는 새 ETF 매도가 늘고 괴리를 줄이는 힘이 생깁니다.</p>
 <p className="leading-8">비용이 130원이거나 기초시장이 휴장이라 자산을 살 수 없으면 그 거래가 성립하지 않습니다. AP의 존재는 언제나 NAV에 팔 수 있다는 보증이 아닙니다. 처음 투자자는 마지막에 1만1000원에 팔아 900원을 받습니다.</p>
@@ -91,8 +95,10 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">9. 발행자 약속과 일일 목표를 원문에서 읽습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">미국 ETN 안내는 아래처럼 발행자 채무임을 명시합니다. 한국에서도 상장명만 보지 말고 투자설명서의 발행자·신탁재산·만기·중도상환 조건을 확인해야 합니다. 미국 자료의 세금상 장점을 한국 거주자에게 그대로 옮길 수 없습니다.</p>
+<DailyResetExposureViz />
 <p className="leading-8">지수가 100에서 110으로 오른 뒤 100으로 돌아온다고 합시다. 하루 2배 목표를 정확히 따른 상품은 100→120→98.18이 됩니다. 둘째 날 지수 수익률은 −10÷110≈−9.09%이므로 상품은 120×(1−18.18%)≈98.18입니다. 같은 기간 지수 수익 0%의 두 배인 0%와 다릅니다. 모두 비용을 뺀 가정입니다.</p>
 <p className="leading-8">이 2배 목표는 매일 바뀐 펀드 재산을 기준으로 다시 맞춥니다. 첫날 재산 100의 두 배인 노출 200으로 시작합니다. 재산이 120이 되면 다음 날 목표 노출은 240입니다. 지수가 제자리로 돌아와도 더 커진 노출로 둘째 날 하락을 겪기 때문에 98.18이 남습니다. 일일 재설정이 없는 단순 차입과는 계산 기준이 다릅니다.</p>
+<LeveragedPathsViz />
 <p className="leading-8">같은 지수 100→110→100에서 일일 3배는 100→130→94.55입니다. 반대 방향을 목표로 하는 인버스 −1배는 100→90→98.18, −2배는 100→80→94.55, −3배는 100→70→89.09입니다. 각 날 지수 수익률에 목표 배수를 곱해 전날 펀드 가치에 적용한 값입니다. 비용과 추적 오차는 제외했습니다. 서로 반대인 상품도 이 왕복 경로에서는 둘 다 손실입니다.</p>
 <p className="leading-8">실제 TQQQ와 SQQQ의 2026년 9월 28일 요약설명서는 Nasdaq-100의 하루 성과에 각각 +3배와 −3배를 목표로 합니다. TQQQ의 “three times (3x) the daily performance”에서 daily가 기간 조건입니다. 여러 날 보유가 언제나 손실이라는 뜻도 아닙니다. 지수가 100→110→121로 연속 상승하면 가정한 일일 2배 상품은 100→120→144입니다. 누적 44%는 지수 누적 21%의 두 배 42%보다 큽니다.</p>
 <p className="leading-8">자기 돈 100에 빌린 돈 100을 더해 지수 자산 200을 샀다고 합시다. 수량을 고정하면 다른 경로가 됩니다. 지수가 100→110→100일 때 자산은 200→220→200이고 빚을 뺀 자기 몫은 100→120→100입니다. 재설정을 안 했기 때문입니다. 실제 차입에는 이자와 <Link to="/finance/risk/margin-collateral-and-leverage">담보 부족에 따른 상환 요구</Link>가 있고 펀드 안의 파생계약에도 비용과 상대방 위험이 있습니다.</p>

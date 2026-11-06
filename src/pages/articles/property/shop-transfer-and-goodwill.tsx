@@ -2,6 +2,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import BalanceConditionsViz from "./shop-transfer-and-goodwill/viz/BalanceConditionsViz";
+import SettlementBarsViz from "./shop-transfer-and-goodwill/viz/SettlementBarsViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopTransferAndGoodwillArticle() {
@@ -44,7 +46,8 @@ export default function ShopTransferAndGoodwillArticle() {
           </p>
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">4. 세 사람의 약속이 잔금 지급으로 모이게 그린다</h2>
+        <h2 className="mb-6 text-2xl font-bold">4. 세 약속이 잔금 지급으로 모이게 그린다</h2>
+        <BalanceConditionsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">새 점주가 돈을 내는 화살표 앞에는 물건 인도만 있어서는 부족합니다. 공간을 사용할 수 있다는 약속과 영업을 이어갈 조건까지 모여야 대금을 전부 지급할 근거가 생깁니다.</p>
         </div>
@@ -86,6 +89,7 @@ export default function ShopTransferAndGoodwillArticle() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 자산양도·임대차·채무·영업 신고를 각각 닫습니다</h2>
+        <SettlementBarsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">3천300만 원 제안을 받은 새 점주는 먼저 2천만 원 시설과 300만 원 재고를 목록으로 받습니다. 리스·담보·소유권 유보가 있는지와 수리 이력을 확인합니다. 약정한 단가로 인수일 재고를 셌더니 250만 원이고 다른 조건은 같다면 총액은 2천만 + 250만 + 1천만 = 3천250만 원입니다. 먼저 낸 300만 원을 빼면 잔금은 2천950만 원입니다. 사용기한이 지난 물건을 제외할지와 수량 차이를 어떻게 반영할지도 미리 합의해야 합니다.</p>
           <p className="leading-7">

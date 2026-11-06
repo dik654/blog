@@ -5,6 +5,8 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import MachineThresholdViz from "./industrial-revolution-wages-and-energy/viz/MachineThresholdViz";
+import WeeklyCostCellsViz from "./industrial-revolution-wages-and-energy/viz/WeeklyCostCellsViz";
 
 export default function IndustrialRevolutionWagesAndEnergyArticle() {
   return (
@@ -41,6 +43,7 @@ export default function IndustrialRevolutionWagesAndEnergyArticle() {
       </LessonSection>
 
       <LessonSection id="picture" level="1" title="4. 기업의 선택과 노동자의 생활 장부를 분리합니다" bridge="기계가 수익성 있는가와 사람이 더 잘 사는가를 다른 장부로 두었습니다. 두 결과가 벌어지는 이유를 봅니다.">
+        <WeeklyCostCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">기업 장부에는 주당 비용 100과 90의 차이가 보입니다. 노동자 장부에는 남은 4명의 임금, 일자리를 잃거나 다른 일을 찾은 6명의 소득, 노동 시간, 식품과 집세, 가족 구성원의 일, 사고와 오염이 들어갑니다.</p>
           <p className="leading-8">기계가 총생산을 늘려도 초기에는 이윤과 설비 투자가 먼저 늘 수 있습니다. 노동 수요가 새 직무에서 커지고 협상력이 바뀌어야 임금이 뒤따를 수 있습니다. 그래서 생산성 그래프와 생활 수준 그래프의 시점과 단위를 맞춰야 합니다.</p>
@@ -64,6 +67,7 @@ export default function IndustrialRevolutionWagesAndEnergyArticle() {
       </LessonSection>
 
       <LessonSection id="mechanism" level="4" title="7. 같은 기계가 두 지역에서 다른 선택이 되는 이유를 계산합니다" bridge="주급이 8.33을 넘을 때 기계가 유리해지는 손익 문턱을 구했습니다. 역사 연구의 가설과 대조합니다.">
+        <MachineThresholdViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">주급을 w라고 하면 사람 방식은 10w, 기계 방식은 35+15+4w=50+4w입니다. 기계가 더 싸려면 50+4w&lt;10w이므로 w&gt;50/6≈8.33입니다. 다른 조건이 같을 때 임금이 이 문턱을 넘으면 노동을 아끼는 투자의 유인이 생깁니다.</p>
           <p className="leading-8">석탄비가 15에서 35로 오르면 기계의 고정 비용은 70이 되고 문턱은 70/6≈11.67로 올라갑니다. 그래서 높은 임금만으로는 충분하지 않고 기계와 에너지가 상대적으로 싸야 합니다. 실제 기업은 생산량, 품질, 고장, 자금조달, 시장 확대도 함께 봅니다.</p>

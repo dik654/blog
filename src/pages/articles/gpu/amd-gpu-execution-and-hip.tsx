@@ -4,6 +4,9 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs, fileTrees } from "@/pages/articles/gpu/gpu-execution-sources/codeRefs";
+import LaneGroupingViz from "./amd-gpu-execution-and-hip/viz/LaneGroupingViz";
+import LaneMemoryPathViz from "./amd-gpu-execution-and-hip/viz/LaneMemoryPathViz";
+import LdsBankViz from "./amd-gpu-execution-and-hip/viz/LdsBankViz";
 
 /** teach-system S→B→0…7. Same 64-element trace; official source snapshots pinned. */
 export default function Article() {
@@ -38,6 +41,7 @@ export default function Article() {
     </section>
     <section id="picture" data-teach-level="1" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">4 · 함께 진행하는 범위가 바뀌면 서로 값을 건네는 규칙도 바뀝니다</h2>
+      <LaneGroupingViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">각 작업이 자기 입력만 더하는 이번 사례에서는 묶음이 달라도 답이 같습니다. 그러나 이웃 값을 합치거나 어느 작업이 조건을 만족했는지 모으는 코드는 함께 진행하는 범위에 의존합니다.</p>
         <p className="leading-8">0부터 31까지의 참여만 표현하는 32비트 표식을 그대로 쓰면 32부터 63까지를 표현할 자리가 없습니다. 64개를 한 묶음으로 쓰는 장치에 옮길 때 이런 숨은 가정을 찾아야 합니다.</p>
@@ -79,9 +83,11 @@ export default function Article() {
     </section>
     <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">7 · CDNA4에서는 37번이 64개 wavefront의 37번 lane입니다</h2>
+      <LaneMemoryPathViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">MI350X·MI355X의 CDNA4를 대상으로 64 threads block 1개를 제출한다고 놓습니다. 이 block은 64개 lane으로 이루어진 wavefront 1개를 이룹니다. 37번 lane은 입력 A와 B의 148바이트 위치를 읽습니다. 각 lane의 load 결과는 VGPR에 놓이고 벡터 덧셈 뒤 결과를 씁니다. 공통 주소의 일부나 동일한 제어 값에는 스칼라 경로를 사용할 수 있지만 실제 배정은 compiler 결과로 확인합니다.</p>
         <p className="leading-8">CDNA4에서는 CU의 L1 뒤에 XCD별 L2가 있습니다. 그다음 메모리 쪽 Infinity Cache와 제어기를 지나 HBM으로 갑니다. Cache에서 찾으면 다음 단계의 읽기를 줄입니다. NVIDIA의 32바이트 sector 계산을 AMD의 실제 전송 규칙이라고 옮겨 적지 않습니다. 64개 유효 읽기 256바이트와 특정 계층의 거래량은 다른 수치입니다.</p>
+        <LdsBankViz />
         <p className="leading-8">CDNA4 백서 2258402-C의 9쪽은 LDS를 160KB라고 명시합니다. 비교할 CDNA3까지의 LDS는 bank가 32개이고, bank마다 32비트(4바이트) 항목을 512개씩 담았습니다. bank 수, bank당 항목 수, 항목 크기를 차례로 곱하면 64KB가 나옵니다.</p>
       </div>
       <NumericPath title="CDNA3 LDS 용량을 단위별로 곱하기" steps={[{"label": "bank 수", "value": "32개"}, {"label": "× bank당 항목 512개", "value": "16,384개", "detail": "LDS 전체의 32비트 칸 수"}, {"label": "× 항목당 4바이트", "value": "65,536바이트", "detail": "1KB=1,024바이트로 나누면 64KB"}]} />

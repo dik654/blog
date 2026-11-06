@@ -5,6 +5,10 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { precisionCodeRefs } from "./codeRefs";
 import RoundingGridViz from "./viz/RoundingGridViz";
+import GapPerRangeViz from "./viz/GapPerRangeViz";
+import HalfFloatBitsViz from "./viz/HalfFloatBitsViz";
+import CancellationGridViz from "./viz/CancellationGridViz";
+import BroadcastCellsViz from "./viz/BroadcastCellsViz";
 
 export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar();return <article className="space-y-16">
 <div id="overview" />
@@ -69,6 +73,7 @@ export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar
 <section id="precision" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">7 · 저장하는 소수부 10 bit에 숨은 1이 더해진다</h2>
 <p>양의 정규수는 (1+소수부)×2ᴱ로 적습니다. 앞의 1은 정규화하면 항상 있으므로 따로 저장하지 않습니다. 저장한 소수부 비트 수는 f입니다. 이 1까지 센 이진 정밀도는 p=f+1이므로 두 값을 구별해야 합니다. FP16은 f=10이지만 p=11입니다.</p>
+<GapPerRangeViz />
 <ExplainedFormula question="자리 간격과 한 번의 반올림 오차는 같은 값인가요?" idea="[1,2)에서 소수부를 한 칸 올리면 2의 −f제곱만큼 움직입니다. 최근접 반올림은 보통 그 반 칸 안에서 선택합니다."
 formula={String.raw`p=f+1,\quad\varepsilon=2^{-f},\quad u=\varepsilon/2=2^{-p},\quad\operatorname{gap}_{[2^E,2^{E+1})}=2^{E-f}`}
 annotatedFormula={String.raw`\begin{gathered}p=f+1,\quad\varepsilon=\underbrace{2^{-f}}_{\text{1에서 위쪽 한 칸}},\quad u=\underbrace{2^{-p}}_{\text{상대 오차 상한}}\\\operatorname{gap}_{[2^E,2^{E+1})}=2^{E-f}\\f=10:\quad\varepsilon=2^{-10}=2\delta,\quad u=2^{-11}=\delta\end{gathered}`}
@@ -101,6 +106,7 @@ assumptions={["각 q₁₆에서 최근접 짝수 반올림을 수행합니다."
 </section>
 <section id="code-rounding" data-teach-level="5" className="space-y-6">
 <h2 className="text-2xl font-bold">10 · 코드의 0.5 비교에 같은 가운데 값을 넣는다</h2>
+<HalfFloatBitsViz />
 <p>실제 함수는 양의 유한 입력을 1 이상 2 미만의 부분과 지수로 나눕니다. 1+δ에서는 지수가 0입니다. 정규수 분기에서 지수에 15를 더하고 선행 1을 뺀 뒤 소수부에 1024를 곱합니다. 따라서 반올림 직전 값은 정확히 0.5입니다.</p>
 <p>원문의 <code>bits</code>는 이 값의 정수 부분이므로 0입니다. 남은 부분이 0.5보다 큰지, 또는 0.5와 같으면서 bits가 홀수인지 검사합니다. 이번에는 둘 다 거짓이므로 0을 유지합니다. 지수 15를 열 자리 왼쪽으로 옮겨 합치면 0x3c00이 됩니다.</p>
 <p>1+3δ를 넣으면 같은 위치의 값이 1.5이고 bits는 1입니다. 남은 0.5와 홀수 조건이 함께 참이어서 bits를 2로 올립니다. 결과는 0x3c02입니다. 코드에 정수로 자르는 단계가 있어도 최종 저장 규칙은 단순 버림이 아닙니다. 뒤의 조건문까지 읽어야 합니다.</p>
@@ -146,6 +152,7 @@ assumptions={["유한하고 비어 있지 않은 입력이라는 조건을 유�
 </section>
 <section id="cancellation" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">14 · 큰 두 모멘트가 같아지면 작은 분산이 지워진다</h2>
+<CancellationGridViz />
 <p>두 값 [10000,10002]의 평균은 10001이고 모집단 분산은 1입니다(가정). 각 단계의 결과를 FP32로 저장하면서 평균 제곱을 빼는 식으로 계산해 봅시다. 두 번째 값의 정확한 제곱 100040004는 저장할 때 100040000이 됩니다.</p>
 <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-3">계산</th><th className="p-3">FP32로 저장한 값</th></tr></thead><tbody>{[
 ["두 입력의 제곱","100000000, 100040000"],["제곱들의 평균 E[X²]","100020000"],["평균의 제곱 E[X]²","100020000"],["두 저장값의 차","0"],["입력에서 평균을 먼저 빼기","−1, 1"],["그 차를 제곱해 평균 내기","1"],
@@ -156,6 +163,7 @@ assumptions={["유한하고 비어 있지 않은 입력이라는 조건을 유�
 </section>
 <section id="shape" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">15 · 정확하게 더해도 잘못 짝지으면 아홉 값이 나온다</h2>
+<BroadcastCellsViz />
 <p>이제 a에는 [1,2,3]을 세로로, b에는 [10,20,30]을 가로로 놓습니다(가정). 의도한 답이 같은 위치끼리 더한 [11,22,33]이라 해도, 축의 크기만 보고 조합하는 연산은 다른 답을 만들 수 있습니다. 이 축 크기 목록을 shape라고 부릅니다.</p>
 <p>NumPy의 broadcasting 규칙은 오른쪽 축부터 맞추며 크기가 같거나 둘 중 하나가 1이면 허용합니다. a의 (3,1)에 b의 (3,)를 맞출 때 b는 비교상 (1,3)처럼 취급됩니다. 첫 축에서는 3과 1, 끝 축에서는 1과 3이므로 결과 크기는 (3,3)입니다.</p>
 <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr>{["a의 값","b=10","b=20","b=30"].map(s=><th key={s} className="p-3">{s}</th>)}</tr></thead><tbody>{[1,2,3].map(a=><tr key={a} className="border-t border-border"><th className="p-3">{a}</th>{[10,20,30].map(b=><td key={b} className="p-3">{a+b}</td>)}</tr>)}</tbody></table></div>

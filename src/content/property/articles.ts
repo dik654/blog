@@ -68,7 +68,7 @@ export const propertyArticles: Article[] = [
   },
   {
     "id": "picture",
-    "title": "4. 세 사람의 약속이 잔금 지급으로 모이게 그린다"
+    "title": "4. 세 약속이 잔금 지급으로 모이게 그린다"
   },
   {
     "id": "need",

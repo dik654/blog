@@ -5,6 +5,9 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import GettierForkViz from "./knowledge-belief-and-luck/viz/GettierForkViz";
+import NearbyMinutesViz from "./knowledge-belief-and-luck/viz/NearbyMinutesViz";
+import TwoPathsViz from "./knowledge-belief-and-luck/viz/TwoPathsViz";
 
 export default function KnowledgeBeliefAndLuckArticle() {
   return (
@@ -41,6 +44,7 @@ export default function KnowledgeBeliefAndLuckArticle() {
       </LessonSection>
 
       <LessonSection id="picture" level="1" title="4. 정답과 판단 경로를 두 줄로 놓습니다" bridge="정답 일치와 사실 추적을 따로 그렸습니다. 근거를 더해도 문제가 남는 이유를 봅니다.">
+        <TwoPathsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">정상 시계에서는 실제 시간이 톱니와 전자 신호를 움직이고 그 결과가 바늘에 표시됩니다. 민아의 눈과 판단은 그 표시를 따라갑니다. 사실이 표시를 만들고 표시가 믿음을 만든 한 줄의 경로입니다.</p>
           <p className="leading-8">멈춘 시계에서는 고장이 4:00이라는 표시를 고정했고, 실제 시간이 별도로 흘러 4:00에 도착했습니다. 표시와 사실이 같은 원인에서 오지 않았습니다. 화면에 같은 숫자가 나타나도 두 경로의 구조는 다릅니다.</p>
@@ -59,11 +63,12 @@ export default function KnowledgeBeliefAndLuckArticle() {
           { term: "믿음", description: "당사자가 어떤 문장을 참이라고 받아들이는 상태입니다.", example: "민아는 지금 4시라고 판단합니다.", boundary: "입 밖으로 말하지 않아도 믿음일 수 있고, 말한다고 실제로 믿는 것은 아닐 수 있습니다." },
           { term: "참", description: "믿은 문장이 바깥 사실과 맞는 조건입니다.", example: "실제 시각도 4시입니다.", boundary: "참이라는 결과만으로 그 사람이 어떻게 맞혔는지는 알 수 없습니다." },
           { term: "정당화", description: "그 믿음을 가질 만한 이유나 절차가 있다는 뜻입니다.", example: "평소 정확한 시계를 눈으로 확인했습니다.", boundary: "근거가 있어도 숨은 고장 때문에 사실과 어긋날 수 있습니다." },
-          { term: "인식적 행운", description: "근거와 사실의 연결이 끊겼는데 우연한 사정이 결론을 참으로 만든 경우입니다.", example: "멈춘 바늘과 실제 시간이 하루에 한 번 겹칩니다.", boundary: "모든 우연이 지식을 없애는 것은 아니므로 어떤 연결을 끊는 행운인지 밝혀야 합니다." },
+          { term: "인식적 행운", description: "근거와 사실의 연결이 끊겼는데 우연한 사정이 결론을 참으로 만든 경우입니다.", example: "멈춘 바늘도 실제 시간과 겹치는 순간에는 맞는 시각을 가리킵니다.", boundary: "모든 우연이 지식을 없애는 것은 아니므로 어떤 연결을 끊는 행운인지 밝혀야 합니다." },
         ]} />
       </LessonSection>
 
       <LessonSection id="mechanism" level="4" title="7. 12시 정각의 같은 시계 사례를 끝까지 추적합니다" bridge="참·믿음·근거를 통과하고도 사실 추적에서 실패하는 경로를 확인했습니다. 게티어의 원래 문제로 옮겨갑니다.">
+        <NearbyMinutesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사례를 12시로 바꿔 같은 검사를 해도 결과는 같습니다. 민아가 12시라고 믿으니 믿음 조건을 통과합니다. 실제로 12시이므로 참 조건도 통과합니다. 평소 작동한다고 생각할 이유가 있는 시계를 봤으므로 어느 정도의 정당화도 있습니다.</p>
           <p className="leading-8">그러나 11시 59분에 봤다면 멈춘 시계는 12시를 가리켜 틀립니다. 12시 1분에도 틀립니다. 정상 시계였다면 두 경우 모두 바늘이 실제 시간을 따라 바뀌었을 것입니다. 작은 변화에 쉽게 거짓이 되는 이유는 민아의 판단이 현재 시각이 아니라 고장 난 바늘을 따라갔기 때문입니다.</p>
@@ -72,6 +77,7 @@ export default function KnowledgeBeliefAndLuckArticle() {
       </LessonSection>
 
       <LessonSection id="source" level="5" title="8. 게티어의 짧은 반례가 세 조건을 흔듭니다" bridge="정당화·참·믿음의 합이 충분하지 않다는 원래 질문을 확인했습니다. 대표적인 보완책들이 무엇을 고치는지 비교합니다.">
+        <GettierForkViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">에드먼드 게티어의 1963년 논문은 제목 자체로 “정당화된 참인 믿음이 지식인가”를 묻고, 세 조건을 갖추었지만 지식이라고 보기 어려운 사례를 제시했습니다. 핵심은 단순한 찍기가 아니라, 그럴듯한 근거에서 한 단계 잘못 갔다가 별도의 우연으로 결론이 참이 되는 구조입니다.</p>
           <p className="leading-8">논문의 두 번째 사례를 따라가면 그 구조가 보입니다. 스미스에게는 존스가 포드 차를 가졌다고 믿을 강한 증거가 있습니다. 이 믿음을 f라고 부릅니다. 스미스는 친구 브라운이 지금 어디 있는지 전혀 모르면서도 f에서 “존스가 포드를 가졌거나 브라운이 바르셀로나에 있다”라는 선언 문장 h를 이끌어 내 받아들입니다. 실제로는 존스에게 포드가 없고, 우연히 브라운이 바르셀로나에 있습니다. 그래서 h는 참이고, 스미스는 h를 믿으며, 좋은 증거에서 연역했으니 정당화도 있습니다. 그런데 h를 참으로 만든 것은 스미스가 전혀 몰랐던 브라운의 위치입니다.</p>

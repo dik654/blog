@@ -2,6 +2,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ConvertedDepositThresholdViz from "./commercial-lease-and-rent/viz/ConvertedDepositThresholdViz";
+import LeaseCashStaircaseViz from "./commercial-lease-and-rent/viz/LeaseCashStaircaseViz";
+import TenantProtectionLadderViz from "./commercial-lease-and-rent/viz/TenantProtectionLadderViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function CommercialLeaseAndRentArticle() {
@@ -29,6 +32,7 @@ export default function CommercialLeaseAndRentArticle() {
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3. 3천만 원을 맡기고 매달 200만 원씩 3년 쓴다</h2>
+        <LeaseCashStaircaseViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">점주가 시작할 때 3천만 원을 맡기고 3년 동안 월 200만 원을 내는 계약을 둡니다. 월별 금액은 같고 무상 사용 기간은 없습니다. 별도 관리비·세금·공사비는 제외합니다. 계약 종료 때 공제할 채무가 없고 공간도 약정대로 돌려주면 맡긴 3천만 원을 전액 반환하는 사례입니다. 모두 (가정)입니다.</p>
           <p className="leading-7">36개월의 사용 대가는 200만 원 × 36 = 7천200만 원입니다. 처음 맡기는 3천만 원까지 합치면 지급한 현금은 1억200만 원이고, 마지막에 3천만 원을 돌려받으면 순지급액은 7천200만 원입니다. 시작할 때 맡겨야 할 돈 3천만 원은 첫 달 사용료와 공사비까지 포함한 전체 개업 자금이 아닙니다.</p>
@@ -92,10 +96,12 @@ export default function CommercialLeaseAndRentArticle() {
             요건을 연결합니다.
           </p>
         </div>
-        <SourceApplication source="한국 상가건물 임대차보호법 제3조 제1항" excerpt="그 다음 날부터 제3자에 대하여 효력이 생긴다" application="3천만 원을 맡기는 점주는 실제 공간을 인도받은 사실과 등록 신청의 사업장 표시를 맞춥니다. 이 조항의 효력과 보증금을 남보다 먼저 돌려받는 요건은 별개이므로 선순위 권리·확정일자·적용 범위도 함께 확인합니다." />
+        <TenantProtectionLadderViz />
+        <SourceApplication source="한국 상가건물 임대차보호법 제3조 제1항" excerpt="그 다음 날부터 제3자에 대하여 효력이 생긴다" application="3천만 원을 맡기는 점주는 실제 공간을 인도받은 사실과 등록 신청의 사업장 표시를 맞춥니다. 이 조항의 효력과 보증금을 남보다 먼저 돌려받는 요건은 별개이므로 선순위 권리·확정일자(관할 세무서장이 임대차계약서에 받아 두는 날짜)·적용 범위도 함께 확인합니다." />
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           <p className="leading-7">건물을 인도받고 사업자등록을 신청하면 그다음 날부터 제3자에게 임대차의 효력을 주장할 수 있습니다. 이를 대항력이라고 합니다. 제3조 제2항은 건물을 넘겨받은 사람이 임대인의 지위를 승계한다고 규정합니다. 계약서에 서명했다는 사실만으로 이 요건이 모두 갖춰지는 것은 아닙니다.</p>
           <p className="leading-7">경매·공매에서 후순위 권리자나 다른 채권자보다 먼저 받을 권리인 우선변제권은 제5조의 별도 요건을 봅니다. 위 요건에 확정일자가 더 필요하며 법의 적용 범위도 확인해야 합니다. 제2조는 보증금 규모에 따른 일반 적용 범위를 정하면서 제3조 등 일부 조항은 그 범위를 넘는 임대차에도 적용합니다. 대항력이 있다는 사실만으로 제5조의 적용이나 3천만 원 전액 회수를 보장하지는 않습니다. 전액 회수 여부는 선순위 권리와 실제 배당 재원에 달려 있습니다.</p>
+          <ConvertedDepositThresholdViz />
           <p className="leading-7">적용 범위는 보증금만 보고 정하지 않습니다. 월세가 있으면 월세에 100을 곱해 보증금에 더한 금액으로 비교하며, 이 합계를 환산보증금이라고 부릅니다(시행령 제2조 제3항의 &ldquo;1분의 100&rdquo;). 이 글의 사례는 3천만 원 + 200만 원 × 100 = 2억3천만 원입니다.</p>
           <p className="leading-7">2026-07-01 시행 시행령 제2조의 기준액은 서울특별시 9억 원, 과밀억제권역(서울 제외)과 부산광역시 6억9천만 원, 광역시 등 5억4천만 원, 그 밖의 지역 3억7천만 원이므로 2억3천만 원은 어느 지역에서도 기준 안에 듭니다(2026-10-09 확인).</p>
           <p className="leading-7">기준을 넘는 경우를 하나 더 놓아 보겠습니다. 서울에서 보증금 1억 원, 월세 900만 원(가정)이면 1억 원 + 900만 원 × 100 = 10억 원으로 9억 원을 넘습니다. 이때도 제2조 제3항이 나열한 제3조 대항력, 제10조 제1항·제2항·제3항 본문의 갱신요구, 제10조의2부터 제10조의9까지(권리금 회수 기회 보호 포함), 제11조의2, 제19조는 그대로 적용됩니다. 반면 그 목록에 없는 제5조 우선변제권과 제11조 증액 제한은 적용되지 않습니다.</p>

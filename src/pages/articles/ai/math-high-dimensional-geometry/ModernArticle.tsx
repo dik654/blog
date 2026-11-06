@@ -6,6 +6,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { projectionCodeRefs } from "./codeRefs";
 import RepeatedCoordinatesViz from "./viz/RepeatedCoordinatesViz";
+import ProjectionDirectionViz from "./viz/ProjectionDirectionViz";
+import RelativeSpreadViz from "./viz/RelativeSpreadViz";
+import CircleOneCoordinateViz from "./viz/CircleOneCoordinateViz";
 const JL="https://cseweb.ucsd.edu/~dasgupta/papers/jl.pdf";
 const ID="https://arxiv.org/pdf/2104.08894";
 export default function HighDimensionalGeometryArticle(){const sidebar=useCodeSidebar();return <article className="space-y-16">
@@ -69,11 +72,13 @@ annotatedFormula={String.raw`\begin{gathered}\operatorname{dist}(x,y)=\lVert x-y
 operations={[{expression:String.raw`f(p(t))=(t+t+t+t)/2=2t`,annotation:["출력에서도 |2t−2s|=2|t−s|입니다.","여섯 쌍뿐 아니라 이 직선의 모든 점 쌍에서 같습니다."]}]}
 terms={[{symbol:"D",name:"입력 좌표 수",description:"일반 식의 합에 들어가는 항의 수입니다."},{symbol:"t−s",name:"직선 위의 매개값 차이",description:"네 좌표가 같은 차이를 공유합니다."},{symbol:"dist",name:"두 점 사이 거리",description:"좌표 수 D와 이름을 구별해 적습니다."}]}
 assumptions={["비교할 좌표의 단위를 맞췄습니다. 단위가 다른 측정값을 그대로 섞으면 거리의 의미가 달라집니다.","거리를 정의하는 데 좌표의 독립성은 필요 없습니다. 독립성은 다음 절의 확률 계산에 쓰입니다."]} interpretation="일반적인 실수 x,y의 거리 식과 특별한 직선 p(t)의 계산을 구별합니다. 이 직선에서 z=2t를 받은 뒤 (z/2,z/2,z/2,z/2)로 복원할 수 있습니다." />
+<ProjectionDirectionViz />
 <p>첫 칸만 고르면 출력 t의 거리는 |t−s|이므로 순서는 유지되지만 절대 길이는 절반입니다. 첫째와 둘째 좌표의 차이를 √2로 나누는 다른 사영은 항상 0입니다. 이 사영의 방향도 길이 1이지만 데이터가 변하는 방향과 직각이어서 정보를 잃습니다. 출력 크기나 방향의 길이만 확인해서는 부족합니다.</p>
 </section>
 <section id="concentration" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">8 · 독립적인 무작위 좌표에서는 제곱거리의 상대 요동이 줄어든다</h2>
 <p>이 절에서는 입력을 바꿉니다. 두 점의 모든 좌표를 서로 독립적으로 뽑고 각 좌표가 확률 1/2로 0 또는 1이라고 정합니다(가정). 한 좌표의 두 값은 확률 1/2로 다르므로 차이의 제곱도 확률 1/2로 1, 나머지는 0입니다. 이 0·1 항들을 더한 H가 두 점의 제곱거리입니다.</p>
+<RelativeSpreadViz />
 <p>H의 평균은 D/2이고 분산은 D/4입니다. 독립인 항의 분산이 더해지기 때문입니다. 표준편차는 √D/2이므로 평균으로 나눈 상대 표준편차는 정확히 1/√D입니다. 여기서 말한 정확한 비율은 거리 √H가 아니라 제곱거리 H에 관한 것입니다.</p>
 <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-3">좌표 수 D</th><th className="p-3">H의 평균</th><th className="p-3">H의 표준편차</th><th className="p-3">상대 표준편차</th></tr></thead><tbody>{[["4","2","1","50%"],["1000","500","약 15.811","약 3.162%"]].map((row,i)=><tr key={i} className="border-t border-border">{row.map((cell,j)=><td key={j} className="p-3">{cell}</td>)}</tr>)}</tbody></table></div>
 <p>H가 평균의 (1±η) 안에 있으면 거리 √H는 √(D/2)에 대해 √(1±η) 범위에 있습니다. 따라서 제곱거리의 집중은 거리의 집중으로 이어집니다. 하지만 평균의 제곱근을 거리의 평균이라고 동일시하거나 상대 표준편차의 상수가 그대로라고 주장하지는 않습니다.</p>
@@ -122,7 +127,7 @@ assumptions={["n≥2인 유한 점 집합과 0<ε<1을 고정합니다.","이 �
 <h2 className="text-2xl font-bold">12 · 실제로 변하는 자유도와 추정한 숫자의 범위를 구별한다</h2>
 <p>p(t)=(t,t,t,t)에서 t를 모든 실수로 움직이면 네 좌표 안의 직선입니다. 자유롭게 바꾸는 값이 하나라 내재 차원은 1입니다. 이 직선을 잰 표본 행렬에서 평균을 빼고 rank를 구해도 1입니다. 평균을 빼는 이유는 위치의 이동과 변하는 방향을 구분하기 위해서입니다.</p>
 <p>비선형 모양에서는 선형 rank와 내재 차원이 다를 수 있습니다. 원 (cosθ,sinθ)은 각도 하나로 국소적으로 움직이므로 내재 차원이 1입니다. 하지만 원 위의 점들은 평면의 두 방향을 펼치므로 충분히 여러 방향의 표본을 모은 행렬의 rank는 2입니다. 원 전체를 하나의 직선 방향으로만 표현할 수는 없습니다.</p>
-<p>Pope 등의 ICLR 2021 논문 표 1은 ImageNet의 한 image는 세로 224칸 × 가로 224칸 × 칸마다 색 channel 3개 = 150,528개 색상 좌표를 사용합니다. Pope 등의 ICLR 2021 논문 표 1은 이런 자료에서 내재 차원을 추정합니다. 이웃 수를 3, 5, 10, 20으로 바꿀 때 결과는 각각 26, 38, 43, 43입니다. 여기서 이웃 수는 JL의 출력 차원 k와 다른 설정입니다. MNIST의 추정값 7, 11, 12, 13도 같은 표에 있습니다.</p>
+<p>ImageNet의 한 image는 세로 224칸 × 가로 224칸 × 칸마다 색 channel 3개 = 150,528개 색상 좌표를 사용합니다. Pope 등의 ICLR 2021 논문 표 1은 이런 자료에서 내재 차원을 추정합니다. 이웃 수를 3, 5, 10, 20으로 바꿀 때 결과는 각각 26, 38, 43, 43입니다. 여기서 이웃 수는 JL의 출력 차원 k와 다른 설정입니다. MNIST의 추정값 7, 11, 12, 13도 같은 표에 있습니다.</p>
 <p>추정기는 가까운 이웃까지의 거리 비를 사용합니다. 논문 식 (2)는 각 점의 이웃 거리 로그 비를 평균한 뒤 역수를 취합니다. 주변의 밀도가 거의 일정하다는 가정과 매끄러운 자료 생성 조건 등이 필요하며 이웃 수가 바뀌면 편향과 변동도 달라집니다. 이 숫자는 자료와 추정법에 묶인 실험 결과입니다.</p>
 <p>이 연구는 별도로 생성 모델이 만든 자료에서 추정법을 점검한 뒤 실제 이미지 자료에도 적용했습니다. ImageNet의 26–43을 생성 모델 실험에만 해당하는 값으로 읽는 것도 틀립니다. 반대로 이 추정치를 모든 이미지의 확정된 자유도나 정확한 복원에 충분한 좌표 수로 읽을 수도 없습니다.</p>
 <div id="paper-intrinsic-dimension"><CitationBlock source="Pope et al. · ICLR 2021, §3 식 (2), 표 1" citeKey={3} href={ID}>실제 표의 이웃 수와 추정치를 함께 읽습니다. 이미지 자료의 결과와 추정 도구를 점검한 별도 생성 자료 실험을 구분하며 최적 압축 폭으로 바꾸어 주장하지 않습니다.</CitationBlock></div>
@@ -133,6 +138,7 @@ assumptions={["n≥2인 유한 점 집합과 0<ε<1을 고정합니다.","이 �
 <p>모델 안에서 입력을 변환해 얻는 표현을 잠재 표현(latent representation)이라고 부릅니다. 반드시 원래 입력보다 차원이 낮거나 각 좌표의 의미를 사람이 읽을 수 있는 것은 아닙니다. 중간 좌표 수를 제한하는 병목(bottleneck)은 구조적 제약입니다. 낮은 rank의 두 행렬로 표현하는 방법은 낮은 계수 표현(low-rank representation)입니다.</p>
 <p>우리 사례에서는 z=2t를 중간의 한 칸으로 쓰고 z를 2로 나누어 네 칸에 복사하는 규칙으로 정확히 되돌릴 수 있습니다. 반면 같은 한 칸을 첫째와 둘째 좌표의 차이로 정하면 모두 0이라 복원에 실패합니다. 좋은 표현이 존재하는 것과 학습 과정이 그 표현을 찾는 것은 다른 주장입니다.</p>
 <p>MNIST 입력 784칸을 중간 32칸으로 줄이는 모델을 생각할 수 있습니다(설계 가정). 32가 논문의 MNIST 추정치 7–13보다 크다는 수치 비교만으로 복원 품질이 보장되지는 않습니다. ImageNet의 추정치 26–43과 비교하면 32는 그 범위 안에 있으며 모든 추정값보다 크지도 않습니다. 서로 다른 자료의 수치를 같은 압축 보장으로 묶지 않습니다.</p>
+<CircleOneCoordinateViz />
 <ProgressiveDetail title="자유도 1인 원도 연속적인 한 칸으로 완전히 펼 수는 없다" preview="국소적인 자유도와 전체 모양을 손실 없이 표현하는 좌표 수는 다를 수 있습니다.">
 <p>원의 가로 좌표만 남기면 (0,1)과 (0,−1)이 모두 0이 됩니다. 더 일반적으로 원 전체에서 실수 한 칸으로 가는 연속 함수가 모든 점을 구별한다고 가정해 봅시다. 원은 닫히고 유한한 모양이므로 그 함수에는 최솟값과 최댓값이 있습니다. 두 값을 만드는 점 사이에는 원을 따라 가는 서로 다른 두 호가 있습니다.</p>
 <p>연속성 때문에 각 호는 최솟값과 최댓값 사이의 모든 값을 지나야 합니다. 그 사이의 한 값을 고르면 두 호의 서로 다른 점에서 같은 출력이 생겨 가정과 모순입니다. 각도 하나로 적는 방법도 전체 원에서는 어디선가 끊기는 경계를 둡니다. 내재 차원 1이라는 사실만으로 전역적인 연속 무손실 표현 한 칸이 보장되지는 않습니다.</p>

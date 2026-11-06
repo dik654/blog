@@ -2,6 +2,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import AssignmentCellsViz from "./evidence-measurement-and-causality/viz/AssignmentCellsViz";
+import DiffGapViz from "./evidence-measurement-and-causality/viz/DiffGapViz";
 
 export default function Article() {
   return (
@@ -38,6 +40,7 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">A의 변화에서 B의 변화를 한 번 더 뺍니다</h2>
+        <DiffGapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">A는 8−10=−2이고 B는 9−10=−1입니다. 두 변화의 차이는−2−(−1)=−1kWh/가구·일입니다. 음수는 이 계산에서 사용량이 추가로 줄었다는 방향입니다.</p>
           <p className="leading-8">이 1을 장치 효과로 읽으려면 A도 장치가 없었다면 B와 같은 1만큼 줄었을 것이라는 조건이 필요합니다. 그림의 마지막 값은 산술 결과를 보여줍니다. 그 조건이 현실에서 맞는지는 별도 증거가 필요합니다.</p>
@@ -97,6 +100,7 @@ export default function Article() {
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">무작위 배정은 참여한 사람들의 개입을 정하는 절차입니다</h2>
+        <AssignmentCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">ICH E9의 무작위 배정 설명은 원래 임상시험 설계에 관한 것입니다. 여기서는 그 비교 원리를 전력 장치의 가정 실험에 적용합니다. 20가구가 모인 뒤 A와 B에 10가구씩 나눌 때 사전에 정한 무작위 절차를 쓰면 개인의 선택과 담당자의 선호가 배정을 정하지 않게 할 수 있습니다.</p>
           <p className="leading-8">배정은 이미 모인 20가구를 어떻게 나누는지에 관한 절차입니다. 전국에서 누가 이 20가구에 들어오는지를 정하는 표본 추출과 다릅니다. 무작위 배정만으로 전국의 모든 가구를 대표하지는 않습니다.</p>

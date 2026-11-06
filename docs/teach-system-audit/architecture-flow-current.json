@@ -4,11 +4,11 @@
   "summary": {
     "publicArticles": 1011,
     "architectureCandidates": 175,
-    "dedicatedVisuals": 748,
-    "inlineVisuals": 542,
-    "customVisuals": 930,
-    "animatedMechanisms": 612,
-    "architectureWithoutAnimation": 56,
+    "dedicatedVisuals": 761,
+    "inlineVisuals": 548,
+    "customVisuals": 936,
+    "animatedMechanisms": 625,
+    "architectureWithoutAnimation": 55,
     "recursiveLocators": 385,
     "codeEvidenceLinked": 257,
     "sourceCitationLinked": 1002,
@@ -10230,14 +10230,14 @@
       "sourcePath": "src/pages/articles/crypto/ml-kem-and-noisy-equations.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/mpc",
@@ -10422,14 +10422,14 @@
       "sourcePath": "src/pages/articles/crypto/quantum-computing-and-cryptographic-risk.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/quantum-key-distribution",
@@ -10886,14 +10886,14 @@
       "sourcePath": "src/pages/articles/economic-history/gold-standard-depression-bretton-woods.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "economic-history/great-inflation-disinflation-and-financialization",
@@ -10934,14 +10934,14 @@
       "sourcePath": "src/pages/articles/economic-history/industrial-revolution-wages-and-energy.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "economic-history/japan-money-banks-industry-and-catchup",
@@ -11302,14 +11302,14 @@
       "sourcePath": "src/pages/articles/epistemology/knowledge-belief-and-luck.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ethics/consequence-duty-and-character",
@@ -11686,14 +11686,14 @@
       "sourcePath": "src/pages/articles/gpu/amd-gpu-execution-and-hip.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "gpu/b300-rack-power-cooling",
@@ -12774,14 +12774,14 @@
       "sourcePath": "src/pages/articles/institutions/evidence-measurement-and-causality.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "institutions/healthcare-payment-systems",
@@ -13942,14 +13942,14 @@
       "sourcePath": "src/pages/articles/markets/financial-products-and-claims.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/forwards-and-futures",
@@ -13990,14 +13990,14 @@
       "sourcePath": "src/pages/articles/markets/funds-etfs-and-etns.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "markets/hazard-rate-curve-recovery-and-credit-correlation",
@@ -15558,14 +15558,14 @@
       "sourcePath": "src/pages/articles/property/commercial-lease-and-rent.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "property/land-development-residual",
@@ -15574,14 +15574,14 @@
       "sourcePath": "src/pages/articles/property/land-development-residual.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "property/shop-closure-and-restoration",
@@ -15590,14 +15590,14 @@
       "sourcePath": "src/pages/articles/property/shop-closure-and-restoration.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "property/shop-transfer-and-goodwill",
@@ -15606,14 +15606,14 @@
       "sourcePath": "src/pages/articles/property/shop-transfer-and-goodwill.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "reasoning/argument-and-counterexample",

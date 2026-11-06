@@ -6,6 +6,10 @@ import SourceApplication from "../world-systems/SourceApplication";
 import { Link } from "react-router-dom";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs, fileTrees } from "./pq-sources/codeRefs";
+import CancelCellsViz from "./ml-kem-and-noisy-equations/viz/CancelCellsViz";
+import DecapsBranchViz from "./ml-kem-and-noisy-equations/viz/DecapsBranchViz";
+import LatticeOffsetViz from "./ml-kem-and-noisy-equations/viz/LatticeOffsetViz";
+import ModRingViz from "./ml-kem-and-noisy-equations/viz/ModRingViz";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
@@ -64,6 +68,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">6 · ML-KEM의 성분은 수 하나가 아니라 다항식입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">오류가 섞인 선형 관계를 학습하는 문제를 Learning with Errors, 줄여서 LWE라고 부릅니다. 앞의 표와 벡터는 역할을 보여 주기 위한 축소판입니다.</p>
+        </div>
+        <LatticeOffsetViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">격자는 몇 개의 기준 벡터를 정수 배수로 더해 만든 점들의 배열입니다. 작은 오류는 정확한 점에서 조금 벗어난 위치를 만듭니다. 이 그림은 이름을 이해하는 직관이며 모든 격자 문제가 어렵다는 뜻은 아닙니다.</p>
           <p className="leading-8">ML-KEM은 다항식을 성분으로 갖는 Module-LWE 구조를 씁니다. FIPS203의 다항식의 계수 개수 n은 256(차수255 이하), 계수의 나눗수 q는 3329이며 x의 256제곱+1로 다항식을 줄입니다. 모듈 차원 k는 2·3·4 중 하나입니다.</p>
           <p className="leading-8">k 말고도 표준이 함께 고르는 숫자가 네 개 더 있습니다. FIPS203 표 2(인쇄 39쪽)에서 ML-KEM-768은 k=3, η1=2, η2=2, du=10, dv=4입니다. η(에타)는 비밀과 오류 다항식의 계수를 뽑는 폭입니다. η=2이면 각 계수는 −2부터 2 사이의 작은 정수로 나옵니다.</p>
@@ -76,9 +83,13 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 6에서 16을 빼면 나머지 7, 따라서 비트1입니다</h2>
+        <CancelCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">송신자가 임시 r=[1,1]을 고르고 첫 부분의 오류 e1=[0,1], 둘째 오류 e2=0으로 놓습니다. A를 전치해 r에 곱하면 [6,4]이고 오류를 더한 첫 값 u는 [6,5]입니다.</p>
           <p className="leading-8">비트1을 8로 나타냅니다. 둘째 값 v는 t·r+8=9+6+8=23이므로 17로 나눈 나머지 6입니다. 보내는 값은 u=[6,5]와 v=6입니다.</p>
+        </div>
+        <ModRingViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">수신자는 s·u=1×6+2×5=16을 계산합니다. v−s·u는 −10이고 mod17에서 7입니다. 원 위의 거리로 비교하면 0보다 8에 가까워 비트1을 복원합니다.</p>
           <p className="leading-8">상쇄 뒤 오류는 e·r+e2−s·e1입니다. 이 사례에서는 1+0−2=−1이므로 중심8에서 하나 작은7이 남습니다. 이 등식의 상쇄는 정상 복원의 직관을 주며 암호의 안전성 증명은 아닙니다.</p>
         </div>
@@ -87,6 +98,7 @@ export default function Article() {
       </section>
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">8 · 원문 코드는 복원 뒤 같은 캡슐을 다시 만들어 봅니다</h2>
+        <DecapsBranchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">FIPS203의 내부 복원 절차는 캡슐에서 복원한 메시지와 공개 키의 해시로 후보 키와 재암호화 난수를 다시 만듭니다. 재생성한 캡슐이 받은 것과 같아야 정상 후보 키를 선택합니다.</p>
           <p className="leading-8">고정한 PQClean의 kem.c 146행은 메시지를 복원하고 150행은 후보 재료를 해시합니다. 153행은 재암호화, 155행은 캡슐 비교입니다. 158행은 비밀 z와 받은 캡슐에서 대체 키를 만들고 161행은 일치할 때만 정상 키를 복사합니다.</p>

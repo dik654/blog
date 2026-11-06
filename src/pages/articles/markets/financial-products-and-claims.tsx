@@ -3,6 +3,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ConditionalPayoffViz from "./financial-products-and-claims/viz/ConditionalPayoffViz";
+import DepositLimitUnitsViz from "./financial-products-and-claims/viz/DepositLimitUnitsViz";
+import RepaymentCellsViz from "./financial-products-and-claims/viz/RepaymentCellsViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -66,6 +69,7 @@ export default function Article() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 같은 연 6%라도 갚는 일정에 따라 총이자가 다릅니다</h2>
+        <RepaymentCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">1000만 원을 만기에 갚으면 1년 내내 원금이 남아 이자가 60만 원입니다. 매달 원금을 같은 금액씩 갚는다고 바꿔 봅시다. 첫 달 원금은 1000만 원이고 마지막 달 이자를 매길 원금은 83만3333원입니다. 월 이율을 0.5%로 단순화하면 총이자는 0.5%×1000만×(12+11+…+1)÷12=32만5000원입니다.</p>
 <p className="leading-8">매달 원금과 이자를 합친 지급액을 같게 만드는 방식은 또 다릅니다. 남은 원금에 이자를 먼저 계산하고 같은 지급액에서 이를 뺀 나머지가 원금을 줄입니다. 금리뿐 아니라 총지급액·중도상환 비용·변동금리 재설정과 월별 감당 가능액을 비교해야 합니다.</p>
@@ -80,6 +84,7 @@ export default function Article() {
 <p className="leading-8">SEC는 구조화증권을 채권 요소와 내장 파생 요소의 결합으로 설명합니다. 사례의 1000만 원 원금 약속과 상승 참여율·상한은 각각 다른 역할입니다. 발행자 지급 능력과 지수 조건을 함께 봐야 합니다.</p>
 <p className="leading-8">연금도 같은 방식으로 읽습니다. DOL이 구분하는 DB는 산식으로 약속한 급여, DC는 계좌 적립액과 운용 결과가 중심입니다. 가정한 DC 적립금 1000만 원이 900만 원으로 줄면 미래 지급 재원이 줄어듭니다. DB의 약속한 급여가 같은 운용 손실만큼 자동으로 줄지는 않습니다. 다만 적립 부족과 지급 주체의 건전성을 봐야 합니다.</p>
 <p className="leading-8">한국의 ELS는 주식·주가지수 등의 조건으로 지급액이 달라지는 주가연계증권입니다. DLS는 금리나 환율, 원자재·신용 사건 등 다른 조건을 붙이는 파생결합증권을 가리킵니다. ELB·DLB는 만기 원금 지급을 약속하는 파생결합사채로 구별하지만 그 약속은 발행자의 지급 능력에 의존합니다. 미국 문서의 ELN은 주가연계 채무라는 표현입니다. 한국의 어느 한 상품 분류와 이름만으로 같다고 볼 수 없습니다.</p>
+<ConditionalPayoffViz />
 <p className="leading-8">손실 문턱을 가진 설명용 계약을 생각해 봅시다. 투자액은 1000만 원입니다. 최종 기준가격이 처음의 60% 이상이면 1060만 원을 받습니다. 60% 미만이면 원금에 최종 가격 비율을 곱해 받는다고 정합니다. 최종 61%에서는 1060만 원이지만 59%에서는 590만 원입니다. 두 가격의 작은 차이가 지급액 470만 원 차이를 만듭니다. 이는 단순화한 가정입니다. 실제 ELS는 중간 관측일의 조기상환이나 기간 중 장벽 통과 조건이 붙을 수 있습니다. 여러 자산 중 최저 성과를 쓰기도 합니다.</p>
 <p className="leading-8">앞의 50% 참여·10% 상한 계약과 이 손실 문턱 계약은 모두 조건부 지급이지만 손실 모습은 다릅니다. 한국거래소에 공시된 2026년 DB 드림빅 제92회 ELB 설명서도 발행자 지급불능과 만기 전 현금화 위험을 구분합니다. 만기에 1000만 원을 약속받아도 급한 중도상환 때는 960만 원으로 평가될 수 있습니다. 발행자가 실패해도 원금 손실이 날 수 있습니다. 960만 원은 설명용 가정입니다.</p>
 <p className="leading-8">연금 안의 TDF, 타깃데이트펀드는 목표 연도에 가까워지며 자산 배분을 바꾸는 상품입니다. 가정한 배분이 주식 80%·채권 20%에서 40%·60%로 바뀐다고 합시다. 주식이 20% 하락하고 채권이 그대로일 때 단순 손실은 16%에서 8%로 줄어듭니다. 배분 변화 경로가 글라이드패스입니다. 같은 목표 연도라도 경로와 보수가 다르고 목표일의 원금이나 생활비를 보장하지 않습니다. 계좌의 세제 혜택과 안에 담긴 상품의 손실은 별개입니다.</p>
@@ -93,6 +98,7 @@ export default function Article() {
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 예금 보호는 같은 창구의 모든 상품에 붙지 않습니다</h2>
+        <DepositLimitUnitsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">한국은 2025년 9월 1일부터 일반적인 보호 대상 예금의 한도가 원금과 이자를 합해 1억 원으로 올라갔습니다. 한도는 같은 금융회사 안의 보호 대상 예금을 합산해 적용하므로 같은 은행의 계좌를 나누어도 한도가 늘지 않고, 여러 금융회사에 나눠 맡기면 회사마다 따로 적용됩니다.</p>
 <p className="leading-8">다만 같은 금융회사 안에서도 퇴직연금(DC형과 IRP 등에서 예금 같은 보호상품으로 운용하는 금액), 연금저축, 사고보험금은 사회보장적 성격 때문에 일반 예금과 별도로 각각 1억 원 한도를 적용합니다(금융위원회 2025-07-22 보도자료). 펀드처럼 지급액이 운용실적에 연동되는 상품은 보호 대상이 아닙니다.</p>

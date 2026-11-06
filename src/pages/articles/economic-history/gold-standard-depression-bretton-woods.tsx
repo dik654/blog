@@ -5,6 +5,9 @@ import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import BrettonWoodsLinksViz from "./gold-standard-depression-bretton-woods/viz/BrettonWoodsLinksViz";
+import DeficitRegimeBranchViz from "./gold-standard-depression-bretton-woods/viz/DeficitRegimeBranchViz";
+import GoldCoverCellsViz from "./gold-standard-depression-bretton-woods/viz/GoldCoverCellsViz";
 
 export default function GoldStandardDepressionBrettonWoodsArticle() {
   return (
@@ -29,6 +32,7 @@ export default function GoldStandardDepressionBrettonWoodsArticle() {
       </LessonSection>
 
       <LessonSection id="case" level="0" title="3. 금 100단위와 국외 지급 20단위의 압박을 계산합니다" bridge="한 해의 적자가 준비자산 비율을 어떻게 바꾸는지 고정했습니다. 고정된 값과 움직일 수 있는 값을 나눕니다.">
+        <GoldCoverCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한 나라가 금 준비자산 100단위를 가지고 자국 통화 500단위를 발행했다고 합시다. 통화 5단위를 금 1단위로 바꿔 준다는 약속입니다. 올해 국외 수입·이자 지급이 수출·소득 유입보다 금 20단위만큼 많고 새 차입이 없다면 준비자산은 80으로 줄어듭니다.</p>
           <p className="leading-8">통화량이 그대로 500이면 금 1단위당 통화가 5에서 6.25로 늘어나 약속의 여유가 줄어듭니다. 같은 20단위 유출이 한 번 더 생기면 금은 60입니다. 이 숫자는 조정 구조를 보여 주는 가정이며 실제 금본위제가 언제나 고정 준비율로 움직였다는 뜻은 아닙니다.</p>
@@ -64,6 +68,7 @@ export default function GoldStandardDepressionBrettonWoodsArticle() {
       </LessonSection>
 
       <LessonSection id="mechanism" level="4" title="7. 같은 20단위 적자가 세 제도에서 어떻게 처리되는지 봅니다" bridge="적자 크기가 같아도 환율·국제대출·자본 이동 규칙이 비용의 경로를 바꾼다는 점을 추적했습니다. 실제 연표를 확인합니다.">
+        <DeficitRegimeBranchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">엄격한 금 교환 약속을 유지하고 새 차입이 없다면 준비자산 100에서 20을 내줍니다. 금리 인상과 신용 축소로 수입과 국내 가격을 낮춰 다음 적자를 줄이려 할 수 있습니다. 조정 비용은 실업과 채무 부담으로 나타날 수 있습니다.</p>
           <p className="leading-8">조정 가능한 고정환율과 국제 지원 아래에서는 20을 일시적으로 빌려 준비자산 감소를 늦출 수 있습니다. 문제가 한 해의 충격이 아니라 계속되는 가격 차이라면 공식 비율을 바꿀 수 있습니다. 대신 지원 조건과 다른 나라의 동의가 정책 범위를 정합니다.</p>
@@ -75,7 +80,7 @@ export default function GoldStandardDepressionBrettonWoodsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">IMF의 국제 통화 체제 역사 자료는 주요 통화가 1870~1880년대에 금본위제로 옮겨 갔고, 제1차 세계대전까지 체제가 이어졌다고 정리합니다. 전쟁 뒤에는 수정된 형태로 복원됐지만 전후 디플레이션과 대공황기의 경제·정치 압력을 견디지 못하고 1930년대에 무너졌습니다.</p>
           <p className="leading-8">이 연표는 모든 나라가 같은 제도에 같은 기간 참여했다는 뜻이 아닙니다. 영국은 1925년 4월 말 금본위로 돌아갔다가 1931년 9월 금 교환을 중단했고, 미국은 1933년 4월 20일 루스벨트 대통령의 포고로 금본위를 공식 정지했습니다. 금 블록 국가들의 시점은 또 달랐고, 원자재 수출국은 가격 급락과 지급 압력을 먼저 겪기도 했습니다.</p>
-          <p className="leading-8">이탈 시점이 왜 중요한지는 4절의 장부로 읽을 수 있습니다. 금 교환을 지키는 동안에는 준비자산 유출을 국내 긴축으로 막아야 했고, 이탈한 나라는 그 제약에서 먼저 벗어났습니다.</p>
+          <p className="leading-8">이탈 시점이 왜 중요한지는 3절의 장부로 읽을 수 있습니다. 금 교환을 지키는 동안에는 준비자산 유출을 국내 긴축으로 막아야 했고, 이탈한 나라는 그 제약에서 먼저 벗어났습니다.</p>
           <p className="leading-8">나라별 이탈 시점과 경기 회복의 관계를 비교한 대표 연구가 Barry Eichengreen과 Jeffrey Sachs의 「1930년대의 환율과 경기 회복(Exchange Rates and Economic Recovery in the 1930s)」(Journal of Economic History 45(4), 1985)입니다. 초록에 따르면 이 연구는 1930년대의 통화 절하가 먼저 시작한 나라에 이득이 됐음을 보이고, 개별 절하가 이웃에 준 영향은 부정적이었지만 여러 나라가 함께 절하했다면 서로에게 이득이 될 수 있었다고 봅니다. 이 글은 초록만 확인했고 나라별 추정치는 옮기지 않았습니다.</p>
         </div>
         <SourceApplication source="IMF · Reserve Accumulation and International Monetary Stability" excerpt="collapse in the 1930s" application="준비자산 20의 유출을 국내 긴축만으로 막으려는 약속은 여러 나라가 동시에 침체를 겪을 때 정치적으로 유지하기 더 어려워집니다." />
@@ -83,6 +88,7 @@ export default function GoldStandardDepressionBrettonWoodsArticle() {
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 1944년의 조정 가능한 고정환율이 무엇을 바꿨는지 봅니다" bridge="브레턴우즈가 고정환율을 그대로 복원하지 않고 대출·조정·자본 이동의 여지를 둔 이유를 확인했습니다. 국가별 차이와 후속 붕괴의 범위를 정리합니다.">
+        <BrettonWoodsLinksViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">1944년 44개국 대표는 전간기의 초인플레이션과 디플레이션, 금본위제 붕괴, 경쟁적 평가절하와 무역 제한을 겪은 뒤 새 체제를 설계했습니다. 달러를 금에 연결하고 다른 통화는 달러에 고정하되, 지속적인 국제수지 문제에는 비율을 조정할 수 있게 했습니다.</p>
           <p className="leading-8">그 조건은 1944년 7월 22일 채택된 IMF 협정문 4조 5항에 적혀 있습니다. 회원국은 근본적 불균형(fundamental disequilibrium)을 바로잡기 위해서만 통화의 평가 변경을 제안할 수 있고, 변경은 기금과 협의한 뒤에만 할 수 있었습니다. 처음 평가에서 누적 변경이 10% 이내면 기금은 이의를 제기하지 않았고, 그다음 10%까지는 동의하거나 반대할 수 있되 회원국이 요청하면 72시간 안에 태도를 밝혀야 했으며, 그 이상은 더 긴 검토 기간을 가졌습니다(세계금위원회가 공개한 1944년 협정문 발췌본).</p>

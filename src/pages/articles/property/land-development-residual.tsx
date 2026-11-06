@@ -2,6 +2,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CashDepthViz from "./land-development-residual/viz/CashDepthViz";
+import ResidualBarViz from "./land-development-residual/viz/ResidualBarViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function LandDevelopmentResidualArticle() {
@@ -42,6 +44,7 @@ export default function LandDevelopmentResidualArticle() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 나중의 수입과 먼저 확정할 비용을 연결한다</h2>
+        <CashDepthViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">매각대금의 화살표는 공사 뒤에 도착합니다. 토지대금과 공사비의 지급일을 따로 놓으면 한 시점의 뺄셈으로는 부족한 중간 자금이 보입니다.</p>
         </div>
@@ -84,6 +87,7 @@ export default function LandDevelopmentResidualArticle() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 소유권·허가·인프라·시간을 각각 확인합니다</h2>
+        <ResidualBarViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">처음에는 100억 원에 팔 수 있는 용도와 면적을 계획 도면으로 확인합니다. 소유권과 실제 경계, 도로 접근, 오염과 기존 점유자의 권리를 조사해 땅을 실제로 쓸 수 있는지 봅니다. 지역 계획과 기반시설 연결 조건을 확인한 뒤 비용 70억 원의 항목을 채웁니다.</p>
           <p className="leading-7">설계·인허가와 공사, 기반시설, 세금·금융·판매, 예비비를 지급 시점에 놓습니다. 여기서 70억 원은 공사비 하나가 아니라 토지를 제외한 비용의 합계입니다. 토지와 취득에 남은 15억 원을 계산한 뒤에는 허가·자금조달·토질 조사 결과에 따른 계약 진행 조건과 불성립 시 계약금 처리를 정합니다.</p>

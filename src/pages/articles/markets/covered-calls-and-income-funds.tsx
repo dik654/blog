@@ -6,6 +6,11 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CoveredCallPayoffViz from "./covered-calls-and-income-funds/viz/CoveredCallPayoffViz";
+import DistributionSourceViz from "./covered-calls-and-income-funds/viz/DistributionSourceViz";
+import NavDecayDistributionViz from "./covered-calls-and-income-funds/viz/NavDecayDistributionViz";
+import NetCashFxViz from "./covered-calls-and-income-funds/viz/NetCashFxViz";
+import SellRatioViz from "./covered-calls-and-income-funds/viz/SellRatioViz";
+import StrikePositionViz from "./covered-calls-and-income-funds/viz/StrikePositionViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -96,10 +101,13 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">미국 QYLD의 2026년 3월 1일 요약설명서는 주식 바스켓과 한 달 지수 콜을 결합합니다. 콜의 행사가격은 대개 현재 지수와 같거나 그보다 높게 정하고(설명서 표현은 “generally at or above the prevailing market price”), 만기 하루 전에 거래량가중평균가격으로 닫습니다. 결제는 현금으로 하며 행사는 만기일에 가능합니다.</p>
 <p className="leading-8">따라서 예시의 개별주식 100주가 조기 배정되는 경로를 그대로 옮길 수 없습니다. 아래 만기 정산 문구에 예시를 경제적으로 대응시키면 120에서 지수 콜 정산 부담은 단위당 15입니다.</p>
+<StrikePositionViz />
 <p className="leading-8">행사가를 현재 가격 부근에 놓는 방식은 등가격(ATM)입니다. 행사가를 더 위에 놓는 방식은 외가격(OTM)입니다. 같은 만기·변동성 등 조건에서 105보다 높은 행사가를 고른다고 합시다. 보통 받은 프리미엄은 줄고 보유자가 남길 상승 구간은 늘어납니다. 만기까지 남은 날이 0인 옵션을 쓰는 0DTE 방식은 하루마다 이 경계를 다시 정합니다. 짧은 만기에는 작은 가격 변화로 의무가 빠르게 변하고 거래비용도 누적됩니다.</p>
+<SellRatioViz />
 <p className="leading-8">매도 비율도 손익을 바꿉니다. 200주에 100주분 콜 하나만 팔면 50%입니다. 예시를 주당으로 환산하면 받은 돈은 1.5달러이고 주가 120에서 전체 주식 한 주당 20−7.5+1.5=14달러가 남습니다. 100% 매도의 8달러보다 상승 참여가 큽니다. 보유량보다 더 많이 팔면 초과 수량은 주식으로 덮이지 않습니다. 서로 다른 주식과 지수를 결합하면 가격 차이도 남습니다.</p>
 <p className="leading-8">실제 펀드의 비율은 이름이 아니라 설명서로 확인합니다. QYLD 요약설명서(2026-03-01)가 비율로 정한 것은 총자산의 “at least 80%”를 기초지수인 Cboe NASDAQ-100 BuyWrite V2 지수의 증권에 투자한다는 하한이고, 이 80% 정책은 주주에게 60일 전 서면 통지를 하면 바꿀 수 있습니다.</p>
 <p className="leading-8">펀드가 주식을 직접 보유하는 대신 스왑이나 주가연계 채무인 ELN을 이용할 수도 있습니다. JEPI(JPMorgan Equity Premium Income ETF)의 2026년 8월 31일 팩트시트는 ELN의 유동성 위험과 신용·상대방 위험을 적습니다. 기초지수가 올라도 채무를 갚을 상대가 실패하면 약정 성과를 다 받지 못할 수 있습니다. 같은 QYLD 이름의 유럽 UCITS 상품은 공식 페이지에서 합성 운용을 명시하므로 미국판의 법적 구조와 구별합니다.</p>
+<DistributionSourceViz />
 <p className="leading-8">QYLD의 2026년 9월 24일 19a 공시에서는 주당 분배금 0.1767달러를 순투자소득 0.0022달러와 자본환급 추정액 0.1745달러로 나눴습니다. 공시는 잠정 분류이며 최종 세무 신고 자료가 아니라고 밝힙니다. 자본환급이라는 분류만으로 투자 손실을 계산할 수는 없습니다. 7절의 NAV 100→88·분배 12 사례처럼 최종 자산과 현금을 합쳐 실제 성과를 별도로 계산해야 합니다.</p>
         </div>
 <SourceApplication source="QYLD · 2026 Summary Prospectus, Principal Investment Strategies" excerpt="be settled in cash" application="같은 100 단위·행사가105·만기120 가정에서는 초과15×100=1500달러를 현금으로 정산합니다. 실제 QYLD는 지수 계약 승수와 만기 전 청산 규칙을 사용합니다." />
@@ -111,8 +119,10 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">10. 분배 이후에도 하락·재매도·세금·환율이 남습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">90달러로 하락한 뒤 더 낮은 가격 근처에서 새 콜을 팔았다고 합시다. 이후 반등에서는 상승분이 일찍 제한될 수 있습니다. 매달 받은 프리미엄을 단순히 더해서 이전 고점을 회복한다고 가정할 수 없습니다. 분배정책이 같아도 프리미엄은 변동성과 남은 시간에 따라 달라집니다.</p>
+<NetCashFxViz />
 <p className="leading-8">세전 분배금 300달러에 설명용 세금 45달러와 거래비용 5달러를 가정하면 현금은 250달러입니다. 이 세금은 특정 국가의 실제 적용세율이 아닙니다. 펀드 NAV와 공시 성과에 이미 반영된 운용보수를 투자자 계산에서 다시 빼면 비용을 중복 집계합니다. 원화 총수익은 환율도 곱해야 합니다. 달러 자산 총수익이 8%이고 달러당 원화가 10% 하락하면 비용 전 원화 수익은 1.08×0.90−1=−2.8%입니다.</p>
 <p className="leading-8">미국 원천소득의 외국인 원천징수는 소득 분류와 조세조약, W-8BEN 등 서류에 따라 달라집니다. 미국의 자본환급 분류를 한국 거주자의 비과세 판정으로 복사해서는 안 됩니다. 한국에서는 해외상장 상품 직접 보유와 국내 설정 펀드, 일반계좌와 연금계좌의 과세를 구분합니다. 국세청의 국내 펀드 외국납부세액공제 안내도 적용 대상을 국내 설정 펀드 등으로 정하고 있습니다.</p>
+<NavDecayDistributionViz />
 <p className="leading-8">한국에서는 종목명에 붙은 숫자를 같은 방식으로 다시 계산해야 합니다. 1만 원짜리 커버드콜 ETF가 매달 그달 NAV의 1%를 분배하고 NAV는 매달 5%씩 내린다고 해 봅니다. 분배금은 1월 100원, 2월 95원, 12월 57원으로 함께 줄고, 열두 달 합계는 연 12%로 보이는 1,200원이 아니라 919원입니다.</p>
 <p className="leading-8">이 표는 금융감독원이 2024년 7월 26일 배포한 소비자경보(주의 등급, 2024-26호)에 실린 사례입니다. 경보는 종목명의 분배율을 운용사가 제시하는 목표로 보고, 사전에 약정된 확정적 수익이 아니라고 적었습니다.</p>
 <p className="leading-8">같은 경보는 분배율이 분배기준일 NAV 대비 분배금이라 투자원금과 무관하다고 덧붙였습니다. 종목명의 “프리미엄”은 콜옵션을 팔고 받는 옵션 프리미엄일 뿐 우수한 상품이라는 뜻이 아니라는 점도 밝혔습니다.</p>

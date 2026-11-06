@@ -3,6 +3,13 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### 글만으로 그려지지 않는 자리에 Viz 추가: 첫 묶음 16편 (2026-11-06)
+
+- 범위: Viz가 드문 16편에 47개, 커버드콜 9~10절에 5개를 더했다. 3D는 이번 묶음에서 0개다. 이 묶음 지시문에 글당 1~3개 안내가 있어 뒤쪽 절 누락 여부를 2차로 다시 읽어야 한다. 전수 검토는 아직 아니다.
+- 대상: `markets/funds-etfs-and-etns`, `markets/financial-products-and-claims`, `property/shop-closure-and-restoration`, `property/commercial-lease-and-rent`, `property/land-development-residual`, `property/shop-transfer-and-goodwill`, `crypto/quantum-computing-and-cryptographic-risk`, `crypto/ml-kem-and-noisy-equations`, `ai/math-high-dimensional-geometry`, `ai/math-numerical-precision-stability`, `gpu/amd-gpu-execution-and-hip`, `gpu/cuda-sync-streams`, `economic-history/gold-standard-depression-bretton-woods`, `economic-history/industrial-revolution-wages-and-energy`, `institutions/evidence-measurement-and-causality`, `epistemology/knowledge-belief-and-luck`.
+- 검수: 글별 작성자가 390px·1440px 장면 측정과 스크린샷을 확인했다. 작성자와 분리된 검토자가 47개 파일을 본문과 대조해 10건을 찾았고 모두 고쳤다.
+- 본문에서 찾았으나 고치지 않은 후보: `ai/math-high-dimensional-geometry` 12절의 깨진 문장, `epistemology/knowledge-belief-and-luck`의 멈춘 시계 "하루에 한 번" 표현, `gold-standard` 8절의 "4절의 장부" 참조, `property/commercial-lease-and-rent`에서 정의되지 않은 확정일자, `property/shop-transfer-and-goodwill` 4절 제목의 "세 사람".
+
 ### 글만으로 그려지지 않는 자리에 Viz 추가: 시범 2편 (2026-11-06)
 
 - 요구: 공개 글을 하나씩 읽어 상상이 막히는 자리에 Viz를 넣고, 깊이와 회전이 답의 일부면 three.js 3D로 보인다. 기준은 `viz-design-standard.md` 1.1절과 계약 4장에 병합했다.
