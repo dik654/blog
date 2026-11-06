@@ -9,6 +9,15 @@ import GapPerRangeViz from "./viz/GapPerRangeViz";
 import HalfFloatBitsViz from "./viz/HalfFloatBitsViz";
 import CancellationGridViz from "./viz/CancellationGridViz";
 import BroadcastCellsViz from "./viz/BroadcastCellsViz";
+import AccumulationPathViz from "./viz/AccumulationPathViz";
+import AccumulatorFormatViz from "./viz/AccumulatorFormatViz";
+import RoundTripChainViz from "./viz/RoundTripChainViz";
+import FormatTradeoffViz from "./viz/FormatTradeoffViz";
+import SubnormalGapViz from "./viz/SubnormalGapViz";
+import SoftmaxShiftViz from "./viz/SoftmaxShiftViz";
+import LogSoftmaxPathViz from "./viz/LogSoftmaxPathViz";
+import BroadcastTensorViz from "./viz/BroadcastTensorViz";
+import LossScalingViz from "./viz/LossScalingViz";
 
 export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar();return <article className="space-y-16">
 <div id="overview" />
@@ -38,6 +47,7 @@ export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar
 <p>1에 δ를 더한 정확한 값은 첫 자리와 다음 자리의 한가운데입니다. 두 자리의 번호를 0과 1로 매기면 짝수인 0번, 즉 1을 저장합니다. 다시 δ를 더할 때 출발점도 저장된 1입니다. 같은 선택을 한 번 더 하므로 결과가 또 1입니다.</p>
 <p>작은 두 항을 먼저 더하면 δ+δ=2δ입니다. 이 작은 값 자체는 지금의 방식으로 정확하게 저장할 수 있습니다. 그 뒤 1에 더한 1+2δ도 허용된 자리에 있으므로 그대로 남습니다. 최종값은 1.0009765625입니다.</p>
 <p>세 입력 1, δ, δ는 모두 정확하게 저장됩니다. 처음 데이터를 읽는 순간부터 틀렸던 사례가 아닙니다. 첫 번째 방식에서는 중간 합 1+δ를 저장하는 순간 차이를 버렸습니다. 두 번째 방식은 그 중간 합을 만들지 않아 같은 손실을 피했습니다.</p>
+<AccumulationPathViz />
 <p>처음 방식의 최종값과 정확한 합의 차이는 −2δ입니다. 한 번의 작은 손실이 다음 단계의 출발값을 바꾸어 끝까지 남았습니다. 앞에서 잃은 δ를 기억해 두는 별도 자리가 없으므로 두 번째 저장이 그것을 알아서 돌려주지 않습니다.</p>
 <p>작은 항을 네 번 연속 더해도 매번 같은 1에서 다시 출발합니다(가정). 반면 네 항을 먼저 모으면 4δ가 되어 두 칸을 이동할 수 있습니다. ‘작은 항은 언제나 무시해도 된다’는 판단이 위험한 이유입니다. 각각 작아도 합은 읽어야 할 차이가 될 수 있습니다.</p>
 </section>
@@ -50,6 +60,7 @@ export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar
 <h2 className="text-2xl font-bold">5 · 저장 공간을 아끼는 선택이 계산 경로에도 들어온다</h2>
 <p>어떤 구간의 모든 실수를 각각 다른 상태로 저장하려면 무한히 많은 자리가 필요합니다. 실제 메모리에는 정해진 수의 상태만 들어가므로 표현할 값을 고릅니다. 1이나 δ처럼 정확히 놓이는 수와 1+δ처럼 사이에 놓이는 수가 함께 생깁니다.</p>
 <p>저장 상태를 늘리면 같은 구간의 자리를 더 촘촘히 만들 수 있습니다. 대신 숫자 하나를 저장하고 옮기는 데 더 많은 공간이 필요합니다. 많은 숫자를 반복해 읽고 쓰는 계산에서는 이 비용이 중요합니다. 공간이 두 배라는 사실만으로 전체 실행 시간이 두 배라고 결론 내리지는 않습니다.</p>
+<AccumulatorFormatViz />
 <p>원래의 저장 방식을 유지하면서 중간 합만 더 촘촘한 자리에서 보관하는 선택도 있습니다. 첫 합 1+δ를 지킬 수 있다면 다음 δ를 더해 1+2δ에 도착하고, 마지막 저장 때도 그 값을 남길 수 있습니다. 입력의 저장 방식만으로 전체 계산의 정밀도를 판단할 수 없는 이유입니다.</p>
 <p>덧셈을 여러 작업에 나누면 작은 항을 묶는 순서도 달라질 수 있습니다. 식에 적힌 항이 같다는 사실과 중간 저장 순서가 같다는 사실을 구별해야 합니다. 결과의 마지막 몇 자리가 달라졌다면 어떤 값이 어느 자리에서 합쳐졌는지 먼저 확인합니다.</p>
 <p>더 촘촘한 저장도 문제의 의미까지 고쳐 주지는 않습니다. 서로 같은 사람의 두 값을 더해야 하는데 다른 사람의 값과 짝지었다면, 각각을 더 정확히 더해도 잘못된 짝은 그대로입니다. 뒤에서는 이 문제를 정확한 정수 아홉 개로 따로 확인합니다.</p>
@@ -96,6 +107,7 @@ assumptions={["각 q₁₆에서 최근접 짝수 반올림을 수행합니다."
 </section>
 <section id="code-storage" data-teach-level="5" className="space-y-6">
 <h2 className="text-2xl font-bold">9 · 실제 Python에서 두 바이트로 저장하고 다시 읽는다</h2>
+<RoundTripChainViz />
 <p>재현 코드는 CPython 3.9.6에서 실행했습니다. <code>struct.pack('&gt;e', x)</code>는 x를 큰 바이트부터 오는 binary16 두 바이트로 저장합니다. <code>struct.unpack('&gt;e', ...)[0]</code>으로 읽어 q₁₆을 만듭니다. 저장 변환 사이의 덧셈은 Python의 일반 실수 계산이며 GPU의 FP16 덧셈을 실행한 실험은 아닙니다.</p>
 <p>고정한 CPython v3.9.6 원문에서 큰 바이트 순서의 형식 표는 문자 e를 <code>bp_halffloat</code>에 연결합니다. 이 함수는 <code>pack_halffloat</code>를 부르고, 값을 C의 double로 읽어 <code>_PyFloat_Pack2</code>에 넘깁니다. 이 경로에서 실제로 두 바이트를 만드는 부분을 다음 절에서 봅니다.</p>
 <CodeViewButton onClick={()=>sidebar.open("dispatch",precisionCodeRefs.dispatch)} label="실제 형식 표와 호출 경로" />
@@ -121,7 +133,9 @@ assumptions={["각 q₁₆에서 최근접 짝수 반올림을 수행합니다."
 ["FP16","5 / 10","11 / 약 3.31","2⁻¹⁰","65504"],
 ["BF16","8 / 7","8 / 약 2.41","2⁻⁷","(2−2⁻⁷)2¹²⁷"],
 ].map((r,i)=><tr key={i} className="border-t border-border">{r.map((s,j)=><td key={j} className="p-3 align-top">{s}</td>)}</tr>)}</tbody></table></div>
+<FormatTradeoffViz />
 <p>BF16의 지수 범위는 FP32와 같은 규모이고 두 형식의 최소 양의 정규수는 2⁻¹²⁶입니다. 하지만 최대 유한값은 각각 약 3.3895×10³⁸과 3.4028×10³⁸로 다릅니다. 같은 지수 bit 수가 모든 표현값과 양 끝점의 일치를 뜻하지는 않습니다. BF16은 FP16보다 넓은 크기를 다루되 같은 1 근처에서는 간격이 더 큽니다.</p>
+<SubnormalGapViz />
 <p>FP16의 최소 양의 정규수는 2⁻¹⁴입니다. 그 아래에서는 숨은 선행 1을 쓰지 않는 subnormal 표현으로 간격 2⁻²⁴를 유지하며 0에 다가갑니다. 실행 예제에서 2⁻²⁴는 남지만 그 절반 2⁻²⁵는 짝수 쪽인 0으로 저장됩니다. 이 구간에 정규수의 상대 오차 한계를 그대로 적용할 수는 없습니다.</p>
 <p>저장 형식에서 정의 가능한 아주 작은 값과 실제 장치가 연산에 남기는 값도 구별합니다. 예를 들어 Google Cloud TPU 문서는 FP32에서 BF16으로 변환할 때 subnormal을 0으로 바꾼다고 명시합니다. 이를 모든 BF16 장치의 공통 동작으로 넓히지 않습니다.</p>
 <CitationBlock source="Kalamkar 외, A Study of BFLOAT16 for Deep Learning Training · Table 1과 Figure 1" citeKey={2} href="https://arxiv.org/html/1905.12322v3#S3">표의 저장 필드 1/8/7과 1/5/10을 가져와 위의 간격과 유한 최대값을 직접 계산했습니다. 원문 그림의 BF16 입력·FP32 누산 흐름은 입력 저장과 중간 합의 형식을 구별하는 예입니다. 이 논문의 특정 학습 결과를 모든 모델의 정확도 보장으로 사용하지 않습니다.</CitationBlock>
@@ -130,6 +144,7 @@ assumptions={["각 q₁₆에서 최근접 짝수 반올림을 수행합니다."
 <section id="stability" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">12 · 큰 지수를 만들기 전에 공통 크기를 뺀다</h2>
 <p>이번 입력은 [1000,1001,1002]입니다(가정). 각 수에 지수 함수를 적용하고 그 합으로 나누어 비중을 구하려 합니다. 이 계산을 softmax라고 부릅니다. exp(1000)은 FP32는 물론 일반적인 binary64 범위도 넘습니다. 무한대를 돌려주는 연산에서는 inf/inf가 NaN으로 이어질 수 있고, Python의 <code>math.exp(1000)</code>은 실제로 OverflowError를 냈습니다.</p>
+<SoftmaxShiftViz />
 <ExplainedFormula question="큰 공통 크기를 빼도 왜 같은 비중인가요?" idea="수학적으로 분자와 분모에 공통인 exp(m)을 약분합니다. 실제로 거대한 exp(m)을 만들 필요는 없습니다."
 formula={String.raw`\operatorname{softmax}(x)_i=\frac{e^{x_i}}{\sum_j e^{x_j}}=\frac{e^{x_i-m}}{\sum_j e^{x_j-m}},\quad m=\max_j x_j`}
 annotatedFormula={String.raw`\begin{gathered}\operatorname{softmax}(x)_i=\frac{e^{x_i}}{\sum_j e^{x_j}}=\underbrace{\frac{e^{x_i-m}}{\sum_j e^{x_j-m}}}_{\text{공통 크기를 빼고 계산}},\quad m=\max_j x_j\\{}[1000,1001,1002]-1002=[-2,-1,0]\end{gathered}`}
@@ -141,6 +156,7 @@ assumptions={["입력은 비어 있지 않고 모두 유한합니다. 무한대�
 </section>
 <section id="underflow" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">13 · 작은 비중이 0이 되면 로그는 따로 계산한다</h2>
+<LogSoftmaxPathViz />
 <p>입력 [0,−1000]은 이미 최댓값이 0입니다(가정). 실행 환경에서 exp(−1000)은 0으로 반올림됩니다. 분모에는 1이 남지만 두 번째 비중은 0입니다. 그 비중에 나중에 로그를 취하면 원래의 유한한 로그값을 얻지 못합니다.</p>
 <ExplainedFormula question="아주 작은 비중을 먼저 만들지 않고 로그값을 구할 수 있나요?" idea="나눗셈의 로그를 차로 바꾸고 지수와 로그가 지워지는 항을 먼저 정리합니다."
 formula={String.raw`\log\operatorname{softmax}(x)_i=(x_i-m)-\log\sum_j e^{x_j-m}`}
@@ -168,6 +184,7 @@ assumptions={["유한하고 비어 있지 않은 입력이라는 조건을 유�
 <p>NumPy의 broadcasting 규칙은 오른쪽 축부터 맞추며 크기가 같거나 둘 중 하나가 1이면 허용합니다. a의 (3,1)에 b의 (3,)를 맞출 때 b는 비교상 (1,3)처럼 취급됩니다. 첫 축에서는 3과 1, 끝 축에서는 1과 3이므로 결과 크기는 (3,3)입니다.</p>
 <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr>{["a의 값","b=10","b=20","b=30"].map(s=><th key={s} className="p-3">{s}</th>)}</tr></thead><tbody>{[1,2,3].map(a=><tr key={a} className="border-t border-border"><th className="p-3">{a}</th>{[10,20,30].map(b=><td key={b} className="p-3">{a+b}</td>)}</tr>)}</tbody></table></div>
 <p>위 정수와 덧셈 결과는 FP16에도 정확히 들어갑니다. 더 정밀한 형식으로 바꿔도 아홉 조합은 그대로입니다. 둘 다 원소가 세 개라는 사실과 축 배치가 같다는 사실은 다릅니다. 같은 위치끼리 더하려면 둘 다 (3,) 또는 둘 다 (3,1)로 맞추는 등 의도한 축 계약을 명시해야 합니다.</p>
+<BroadcastTensorViz />
 <p>(3,4)+(5,)는 끝의 4와 5가 다르고 어느 쪽도 1이 아니므로 이 규칙으로 합칠 수 없습니다. 반면 (32,128,768)+(768,)는 마지막 축이 같아 각 위치의 768개 값에 같은 가로 목록을 더할 수 있습니다. 규칙이 허용하는지와 그 짝짓기가 의도인지 각각 확인합니다.</p>
 <CitationBlock source="NumPy 2.0 사용자 안내 · General broadcasting rules" citeKey={4} href="https://numpy.org/doc/2.0/user/basics.broadcasting.html">원문의 오른쪽 정렬과 같음 또는 1이라는 조건을 세 shape에 직접 적용했습니다. 표의 정수 합은 Python으로 검산했으며 여기서 NumPy를 실행한 결과라고 주장하지 않습니다. broadcasting 설명을 입력 배열을 반드시 물리적으로 복사한다는 의미로 읽지도 않습니다.</CitationBlock>
 </section>
@@ -175,6 +192,7 @@ assumptions={["유한하고 비어 있지 않은 입력이라는 조건을 유�
 <h2 className="text-2xl font-bold">16 · 입력·연산·누산·출력의 형식을 따로 확인한다</h2>
 <p>자동 혼합 정밀도는 일부 연산을 낮은 정밀도로 실행하고 민감한 연산에는 다른 형식을 사용하는 정책입니다. 낮은 정밀도가 빠른지는 장치와 실제 연산에 달려 있습니다. 입력을 FP16으로 저장했다는 사실만으로 곱셈과 합산과 출력 저장이 전부 FP16이라고 단정할 수 없습니다.</p>
 <p>FP16은 BF16보다 같은 크기에서 자리가 촘촘하지만 표현할 크기의 범위가 좁습니다. BF16은 범위를 넓히면서 같은 구간의 정밀도를 줄입니다. 어떤 연산에 어떤 형식을 쓰는지는 프레임워크 버전, 장치, 연산 종류와 구현을 함께 봐야 합니다. ‘큰 값이면 BF16을 고르면 끝’이라는 규칙으로 정확도를 보장할 수 없습니다.</p>
+<LossScalingViz />
 <p>작은 기울기가 0이 되는 것을 줄이려고 손실에 배율을 곱한 뒤 기울기를 되돌리는 방법을 손실 스케일링이라고 합니다. 이는 작은 값이 머무는 범위를 조정합니다. 이미 1+δ를 1로 저장하면서 버린 차이를 나중에 되찾는 방법은 아닙니다. 가중치나 누산값을 더 넓게 유지하는 선택과 목적을 구분합니다.</p>
 <p><a className="text-primary underline" href="https://docs.pytorch.org/docs/2.14/amp.html" target="_blank" rel="noreferrer">PyTorch 2.14 AMP의 연산별 안내</a>에서 실제 장치의 autocast 대상과 출력 형식을 확인할 수 있습니다. 이 글의 저장 변환 실험은 해당 정책이나 GPU 처리 시간을 측정한 실험이 아닙니다.</p>
 <p>이어 볼 내용은 <Link className="text-primary underline" to="/cs/ai/training-pipeline#loop">학습 루프의 혼합 정밀도</Link>, <Link className="text-primary underline" to="/cs/ai/quantization#error-shape">정수 격자의 반올림과 clipping</Link>, <Link className="text-primary underline" to="/cs/ai/math-matrices-svd#matrix-map">행렬이 요구하는 입력·출력 차원</Link>입니다. 같은 저장 문제를 재사용하되 각각의 연산 계약에서 다시 확인합니다.</p>

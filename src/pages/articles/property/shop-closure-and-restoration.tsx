@@ -2,8 +2,15 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import CapChangeTimelineViz from "./shop-closure-and-restoration/viz/CapChangeTimelineViz";
+import CashGapTimelineViz from "./shop-closure-and-restoration/viz/CashGapTimelineViz";
+import ClosureLanesViz from "./shop-closure-and-restoration/viz/ClosureLanesViz";
+import DeductionBranchViz from "./shop-closure-and-restoration/viz/DeductionBranchViz";
 import DemolitionSupportCapViz from "./shop-closure-and-restoration/viz/DemolitionSupportCapViz";
 import DepositSettlementCellsViz from "./shop-closure-and-restoration/viz/DepositSettlementCellsViz";
+import EstimateVsSupportViz from "./shop-closure-and-restoration/viz/EstimateVsSupportViz";
+import ReturnStateLayersViz from "./shop-closure-and-restoration/viz/ReturnStateLayersViz";
+import SupportGateViz from "./shop-closure-and-restoration/viz/SupportGateViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopClosureAndRestorationArticle() {
@@ -78,6 +85,7 @@ export default function ShopClosureAndRestorationArticle() {
         <h2 className="mb-6 text-2xl font-bold">6. 돈의 정리와 공간의 정리를 구분하는 말</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">서로 주고받을 돈과 근거를 맞추어 잔액을 확정하는 일이 정산입니다. 보증금 3천만 원과 인정된 공제액을 맞추는 장부가 그 예입니다.</p>
+          <ReturnStateLayersViz />
           <p className="leading-7">약정된 상태로 공간을 돌려놓는 일이 원상복구입니다. 무조건 빈 콘크리트 상태를 뜻하지 않으며 입주 상태와 계약, 나중의 합의 및 적용 법을 함께 봅니다.</p>
           <p className="leading-7">영업 종료를 관청과 세무서에 알리는 일이 폐업 신고입니다. 신고의 수리와 고객·직원·임대인에게 남은 채무의 소멸은 서로 다른 문제입니다.</p>
         </div>
@@ -87,8 +95,10 @@ export default function ShopClosureAndRestorationArticle() {
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 폐업 장부는 고객·직원·공급자·임대인·관청별로 닫습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <ClosureLanesViz />
           <p className="leading-7">먼저 마지막 주문일과 선불권 환불 방법을 고객에게 알리고 미완료 주문을 정리합니다. 재고·장비는 소유자를 확인해 판매·반환·폐기를 결정합니다. 리스 장비는 업체에 반납 조건과 중도 종료 금액을 확인해 철거할 물건에서 제외합니다.</p>
           <p className="leading-7">직원의 마지막 근무일과 퇴직 정산을 기록합니다. 한국 근로기준법 제36조는 원칙적으로 사유 발생일부터 14일 이내 금품 청산을 요구하며 특별한 사정과 당사자 합의로 기일을 연장할 수 있습니다. 폐업이 해고예고 등 모든 고용 절차를 면제하는 것은 아니므로 해당 요건도 따로 확인합니다.</p>
+          <CashGapTimelineViz />
           <p className="leading-7">반환액과 별도로 지급 날짜도 계산해야 합니다. 예를 들어 보증금이 돌아오기 전에 지급하기로 한 임금·환불 합계가 300만 원이고 현재 통장 잔액이 100만 원이라면 그날 필요한 돈은 200만 원이 부족합니다. 나중에 보증금 2천만 원이 들어온다는 사실이 앞선 지급 기한을 저절로 바꾸지는 않습니다. 이 300만·100만 원과 지급 순서는 추가 (가정)입니다.</p>
           <p className="leading-7">임대차 종료 통지 기간을 확인한 뒤 임대인과 남길 시설·제거할 시설을 서면으로 맞춥니다. 철거 견적 600만 원에는 수량과 단가, 폐기물 반출·처리, 전기·가스 차단, 배관 마감과 간판 제거를 나눠 적습니다. 처리업체의 적법한 처리 범위와 반출 증빙을 확인합니다.</p>
           <p className="leading-7">점주가 복구하는 계약이면 공사 전후 사진과 하자를 확인한 뒤 점포를 인도합니다. 임대인이 복구 비용을 처리하는 사례라면 인도 상태와 600만 원 정산의 범위·기한을 합의한 문서로 확인합니다. 보증금 3천만 원에서 미납 400만 원과 복구 600만 원을 공제한 정산서에는 같은 복구비를 점주가 이미 따로 지급하지 않았는지도 표시합니다. 합의되지 않은 견적을 확정 채무로 적지 않습니다.</p>
@@ -114,6 +124,7 @@ export default function ShopClosureAndRestorationArticle() {
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 원상복구 범위는 계약·인도 상태·관할 판례를 함께 봅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <DeductionBranchViz />
           <p className="leading-7">한국 대법원 2002다52657은 실제로 복구할 의사 없이 시설을 이용해 재임대하는 사실관계에서 복구비 공제를 판단했습니다. 이전 점주가 설치한 시설을 물려받은 가게라면 시설을 받은 상태와 복구 특약도 별도로 확인해야 합니다.</p>
           <p className="leading-7">호주 NSW도 계약 때 반환할 상태를 확인하도록 안내하지만 한국 판결의 결론이 그대로 적용되는 것은 아닙니다. 복구 의무의 결론은 관할 법과 계약 내용에 근거해 확인합니다.</p>
         </div>
@@ -130,13 +141,16 @@ export default function ShopClosureAndRestorationArticle() {
           <p className="leading-7">새 점주가 시설을 원해도 임대인이 새 임대차를 승인하지 않으면 인도가 막힐 수 있습니다. 임대인이 그대로 쓰겠다고 해도 기존 점주의 미납금과 고객 채무는 없어지지 않습니다. 각 의무의 종료 조건과 날짜를 따로 확인해야 합니다.</p>
           <p className="leading-7">보증금 정산표의 금액은 이 글의 가정입니다. 실제로는 임대차 계약, 인도 당시 상태, 공사 견적, 합의서, 지역 판례와 세무 기준으로 각각 확인해야 합니다.</p>
           <p className="leading-7">재고를 다른 사업으로 옮기거나 버리는 방식, 직원 퇴직 정산, 리스 장비 반납, 고객 개인정보가 담긴 계정 폐기는 서로 다른 계약과 법의 문제입니다. 폐업 신고 수리 화면 한 장을 모든 채무가 사라졌다는 증거로 쓰지 않습니다.</p>
+          <CapChangeTimelineViz />
           <p className="leading-7">철거비 지원도 확정 전에는 돌려받을 돈에 넣지 않습니다. 중소벤처기업부의 2025년 1월 영상 03:50에는 최대 400만 원이, 같은 해 7월 영상 01:53에는 400만 원에서 600만 원으로의 변경이 표시됩니다. 두 화면과 게시기관의 자막 전사를 대조하면 두 발표 사이에 지원 한도가 확대됐음을 알 수 있습니다. 7월 30일 보도자료는 확대 한도의 적용을 2025년 7월 11일 이후 폐업과 연결합니다.</p>
           <DemolitionSupportCapViz />
           <p className="leading-7">2026년 1월 19일 공고(한국 소상공인시장진흥공단, 『희망리턴패키지 원스톱폐업지원』)는 한도를 두 개 겹쳐 둡니다. 하나는 폐업일에 따른 최대한도로, 2023-01-01~2025-07-10에 폐업했으면 400만 원, 2025-07-11 이후 폐업했으면 600만 원입니다. 다른 하나는 전용면적 3.3㎡당 20만 원입니다. 지원액은 두 한도 중 작은 값을 넘지 못하고, 전자세금계산서의 공급가액만 인정해 부가세는 빠집니다.</p>
           <p className="leading-7">이 사례의 점포가 2025-09-30에 폐업했고 인정 전용면적이 33㎡라고 가정하면 폐업일 한도는 600만 원, 면적 한도는 33 ÷ 3.3 × 20만 = 200만 원이므로 min(600만, 200만) = 200만 원이 상한입니다. 같은 33㎡ 점포가 2025-03-10에 폐업했다면 min(400만, 200만) = 200만 원으로 결과가 같습니다.</p>
           <p className="leading-7">면적이 99㎡(가정)라면 면적 한도가 99 ÷ 3.3 × 20만 = 600만 원으로 커져, 폐업일이 2025-03-10이면 min(400만, 600만) = 400만 원, 2025-09-30이면 600만 원이 상한이 됩니다. 어느 경우든 이 금액은 신청할 수 있는 상한일 뿐 지급 확정액은 아닙니다.</p>
+          <SupportGateViz />
           <p className="leading-7">같은 공고에는 상한 계산 전에 걸러지는 조건도 있습니다. 2023-01-01 이후 폐업한 경우만 지원하고, 점포철거비는 주민등록번호 기준 1회만 받을 수 있습니다. 국세청에 사업자등록이 된 업체를 통해 철거해야 하며 점주가 스스로 철거하면 지원하지 않습니다. 지원금을 받은 날부터 3년 동안은 같은 장소에서 다시 창업하는 것이 제한됩니다(2026-01-19 공고, 2026-10-09 확인).</p>
           <p className="leading-7">공고의 정산 서류에는 공사내역서와 세금계산서 또는 카드전표, 업체에 지급한 사실을 확인할 자료, 철거 전후 사진 등이 들어갑니다. 임대인이 보증금에서 600만 원을 공제한 정산서만으로 이 조건을 갖췄다고 볼 수 없습니다. 직접 업체에 지급한 경로에서도 지원 대상과 인정 비용을 따로 심사받아야 합니다.</p>
+          <EstimateVsSupportViz />
           <p className="leading-7">따라서 견적 600만 원에서 영상의 최대 지원금 600만 원을 바로 빼지 않습니다. 33㎡ 사례의 상한은 200만 원이고, 그마저 신청 시점 공고의 대상 공사·폐업일·1회 한정 여부와 심사 결과를 확인한 뒤에 정해집니다. 지원금 지급일도 보증금 반환일과 따로 적습니다. 위 계산은 2026년 1월 공고를 읽는 예이며 이후 변경 여부와 남은 예산까지 확인한 현재 신청 결과는 아닙니다.</p>
         </div>
 

@@ -4,6 +4,14 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import AssignmentCellsViz from "./evidence-measurement-and-causality/viz/AssignmentCellsViz";
 import DiffGapViz from "./evidence-measurement-and-causality/viz/DiffGapViz";
+import AfterAssignmentViz from "./evidence-measurement-and-causality/viz/AfterAssignmentViz";
+import ConfounderForkViz from "./evidence-measurement-and-causality/viz/ConfounderForkViz";
+import MeanScatterViz from "./evidence-measurement-and-causality/viz/MeanScatterViz";
+import MeterSplitViz from "./evidence-measurement-and-causality/viz/MeterSplitViz";
+import ParallelCheckViz from "./evidence-measurement-and-causality/viz/ParallelCheckViz";
+import PipelineFaultViz from "./evidence-measurement-and-causality/viz/PipelineFaultViz";
+import RepeatScaleViz from "./evidence-measurement-and-causality/viz/RepeatScaleViz";
+import SameOneViz from "./evidence-measurement-and-causality/viz/SameOneViz";
 
 export default function Article() {
   return (
@@ -23,6 +31,7 @@ export default function Article() {
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">대상을 고르고 재고 비교한 뒤 주장을 만듭니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <PipelineFaultViz />
           <p className="leading-8">현실의 집과 사용 행동을 관찰해 수치로 기록합니다. 그중 비교할 집과 기간을 정하고 차이를 계산합니다. 마지막에 그 차이가 장치 때문에 생겼는지, 다른 집에도 적용할 수 있는지 판단합니다.</p>
           <p className="leading-8">대상을 고르는 단계에서 특정 집만 모이면 처음부터 범위가 좁아집니다. 재는 방법이 달라져도 차이가 생깁니다. 계산식이 맞다는 이유만으로 앞 단계의 문제가 사라지지는 않습니다.</p>
         </div>
@@ -67,6 +76,7 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 조건에서 반복한 값이 서로 가까운 성질을 반복성이라고 부릅니다. 측정결과에 남은 불확실성은 반복 변동뿐 아니라 교정·환경·방법의 정보도 포함합니다. 화면이 0.1kWh 단위로 표시된다고 전체 불확실성이±0.1kWh라고 결론 낼 수 없습니다.</p>
           <p className="leading-8">A가 장치를 설치하지 않았다면 어떤 결과를 얻었을지를 반사실이라고 부릅니다. 같은 집의 같은 시각에 설치와 미설치를 모두 관찰할 수 없으므로 다른 집단이나 설계로 이 값을 추정합니다.</p>
+          <ConfounderForkViz />
           <p className="leading-8">장치 선택과 사용량에 함께 영향을 주는 절약 성향처럼 원인을 뒤섞는 요인을 교란이라고 부릅니다. 측정 오류, 교란, 우연한 표본 차이는 서로 다른 문제입니다. 한 가지 절차로 모두 해결되지 않습니다.</p>
         </div>
 
@@ -75,8 +85,10 @@ export default function Article() {
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">추가감소 1을 원인으로 읽을 수 있는 조건을 적습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <ParallelCheckViz />
           <p className="leading-8">먼저 A의 단순 감소 2와 B의 감소 1을 같은 단위로 계산합니다. 이어 A도 개입 없이 B와 같은 추세를 따랐을 것이라고 가정해 추가감소 1을 얻습니다. 이전 여러 기간의 움직임과 측정 조건을 보는 것이 이 가정을 검토하는 데 도움을 줍니다. 과거가 비슷했다고 미래 가정까지 증명되는 것은 아닙니다.</p>
           <p className="leading-8">두 집단 각각의 전후 변화를 구한 뒤 그 차이를 다시 빼는 이 계산, 곧 −2 − (−1) = −1을 이중차분(difference-in-differences)이라고 부르고, A도 개입 없이 B와 같은 추세를 따랐으리라는 가정을 평행 추세(parallel trends) 가정이라고 부릅니다. 문헌과 교과서에서 같은 설계를 찾을 때 쓰는 이름입니다.</p>
+          <SameOneViz />
           <p className="leading-8">A만 집을 비우는 시간이 늘었다면 추가감소에는 그 변화가 섞입니다. 이 경우 B의 1을 빼는 계산은 맞아도 장치 효과라는 해석은 흔들립니다. 재실시간을 관측하고 더 적절한 비교 또는 새 실험을 설계해야 합니다.</p>
           <p className="leading-8">
             두 집단 사이에 장치 사용법이 퍼지거나 B도 다른 절약 장치를 달았다면 비교 조건이 다시 바뀝니다. 누가 어떤 개입을 받았는지 기록해야 하는 이유입니다. 계산은 같은 사례를
@@ -89,8 +101,10 @@ export default function Article() {
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">NIST의 반복 조건을 계기 기록에 적용합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <RepeatScaleViz />
           <p className="leading-8">(가정) 같은 대상을 같은 조건에서 재어 8.0·8.1·7.9kWh를 얻었다면 평균은 8.0kWh입니다. 값이 가까워 보인다는 것만으로 실제 사용량이 정확히 8.0이라고 확정할 수 없습니다. 기준 계기와의 비교와 측정 절차가 필요합니다.</p>
           <p className="leading-8">NIST TN1297의 반복성 설명은 방법·관찰자·계기·장소·짧은 반복 기간 같은 조건을 명시합니다. 이 조건은 원인 비교에 들어가는 숫자가 어떻게 만들어졌는지 확인하게 합니다. 여러 날 실제 사용량이 다른 값을 동일 대상을 반복 측정한 값과 혼동하지 않습니다.</p>
+          <MeterSplitViz />
           <p className="leading-8">(가정) A에서만 계기를 교체해 이후 값이 0.5kWh 낮게 기록되었다면 관측된 추가감소 1 중 0.5가 측정 변화일 수 있습니다. 교정정보로 그 영향을 확인한 뒤 계산해야 합니다. 나머지 0.5도 동시 변화가 없다는 조건을 따로 검토해야 장치와 연결할 수 있습니다.</p>
         </div>
 
@@ -104,6 +118,7 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">ICH E9의 무작위 배정 설명은 원래 임상시험 설계에 관한 것입니다. 여기서는 그 비교 원리를 전력 장치의 가정 실험에 적용합니다. 20가구가 모인 뒤 A와 B에 10가구씩 나눌 때 사전에 정한 무작위 절차를 쓰면 개인의 선택과 담당자의 선호가 배정을 정하지 않게 할 수 있습니다.</p>
           <p className="leading-8">배정은 이미 모인 20가구를 어떻게 나누는지에 관한 절차입니다. 전국에서 누가 이 20가구에 들어오는지를 정하는 표본 추출과 다릅니다. 무작위 배정만으로 전국의 모든 가구를 대표하지는 않습니다.</p>
+          <AfterAssignmentViz />
           <p className="leading-8">작은 집단은 우연히 다를 수 있고 배정 뒤 탈락과 측정 누락도 생깁니다. 누가 빠졌는지와 어떤 결과를 분석할지 미리 정해 기록해야 합니다. 이후 잘 나온 가구만 골라 평균을 다시 내면 처음의 비교 근거가 달라집니다.</p>
         </div>
 
@@ -114,6 +129,7 @@ export default function Article() {
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">효과의 크기·불확실성·적용 범위를 함께 보고합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <MeanScatterViz />
           <p className="leading-8">현재 사례로 확실히 계산한 것은 두 평균 변화의 차이−1kWh/가구·일입니다. 개별 관측값과 변동성, 표본의 의존 구조가 없으므로 이 차이의 통계적 불확실성을 계산할 수 없습니다. 평균이 다르다는 사실만으로 우연을 배제했다고 말하지 않습니다.</p>
           <p className="leading-8">20가구의 짧은 기간 결과는 공장·다른 계절·다른 요금 체계에서 같을지 별도 확인해야 합니다. 개입 비용과 유지, 행동 변화까지 비교하면 실용적인 선택이 가능합니다. 효과가 조금 있어도 비용을 넘는지는 또 다른 질문입니다.</p>
           <p className="leading-8">

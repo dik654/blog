@@ -3,8 +3,17 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import AmortizationSplitViz from "./financial-products-and-claims/viz/AmortizationSplitViz";
 import ConditionalPayoffViz from "./financial-products-and-claims/viz/ConditionalPayoffViz";
+import ContractCashflowViz from "./financial-products-and-claims/viz/ContractCashflowViz";
+import DcDbLossViz from "./financial-products-and-claims/viz/DcDbLossViz";
+import DepositLatticeViz from "./financial-products-and-claims/viz/DepositLatticeViz";
 import DepositLimitUnitsViz from "./financial-products-and-claims/viz/DepositLimitUnitsViz";
+import DerivativeNamesGridViz from "./financial-products-and-claims/viz/DerivativeNamesGridViz";
+import ElbExitsViz from "./financial-products-and-claims/viz/ElbExitsViz";
+import GlidePathLossViz from "./financial-products-and-claims/viz/GlidePathLossViz";
+import MmfFeeBranchViz from "./financial-products-and-claims/viz/MmfFeeBranchViz";
+import ReitWaterfallViz from "./financial-products-and-claims/viz/ReitWaterfallViz";
 import RepaymentCellsViz from "./financial-products-and-claims/viz/RepaymentCellsViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
@@ -32,6 +41,7 @@ export default function Article() {
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3. 1000만 원을 맡긴 경우와 1000만 원을 빌린 경우를 비교합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+<ContractCashflowViz />
 <p className="leading-8">1000만 원을 연 4%로 1년 맡기면 약속대로 지급될 때 1040만 원을 받습니다. 같은 1000만 원을 연 6%로 1년 빌려 끝에 한 번에 갚으면 1060만 원을 냅니다. 세금·수수료·월별 날짜 차이는 생략한 가정입니다.</p>
 <p className="leading-8">또 다른 계약은 1000만 원으로 산 자산이 900만 원이 되면 그 결과를 고객이 받습니다. 마지막 계약은 정해진 사고가 생겨야 지급합니다. 같은 1000만 원이지만 돈이 생기는 조건이 네 가지로 다릅니다.</p>
         </div>
@@ -72,6 +82,7 @@ export default function Article() {
         <RepaymentCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">1000만 원을 만기에 갚으면 1년 내내 원금이 남아 이자가 60만 원입니다. 매달 원금을 같은 금액씩 갚는다고 바꿔 봅시다. 첫 달 원금은 1000만 원이고 마지막 달 이자를 매길 원금은 83만3333원입니다. 월 이율을 0.5%로 단순화하면 총이자는 0.5%×1000만×(12+11+…+1)÷12=32만5000원입니다.</p>
+<AmortizationSplitViz />
 <p className="leading-8">매달 원금과 이자를 합친 지급액을 같게 만드는 방식은 또 다릅니다. 남은 원금에 이자를 먼저 계산하고 같은 지급액에서 이를 뺀 나머지가 원금을 줄입니다. 금리뿐 아니라 총지급액·중도상환 비용·변동금리 재설정과 월별 감당 가능액을 비교해야 합니다.</p>
 <p className="leading-8">1000만 원짜리 구조화증권이 만기에 원금과 지수 상승의 50%를 지급하되 수익 상한이 10%라는 가정을 둡니다. 지수가 30% 올라도 계산 수익 15%에 상한을 적용해 지급액은 1100만 원입니다. 발행자 부도나 중도 매각 가격은 이 만기 계산으로 해결되지 않습니다.</p>
         </div>
@@ -82,11 +93,15 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">8. 원금 보장이라는 문구도 지급자의 약속입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">SEC는 구조화증권을 채권 요소와 내장 파생 요소의 결합으로 설명합니다. 사례의 1000만 원 원금 약속과 상승 참여율·상한은 각각 다른 역할입니다. 발행자 지급 능력과 지수 조건을 함께 봐야 합니다.</p>
+<DcDbLossViz />
 <p className="leading-8">연금도 같은 방식으로 읽습니다. DOL이 구분하는 DB는 산식으로 약속한 급여, DC는 계좌 적립액과 운용 결과가 중심입니다. 가정한 DC 적립금 1000만 원이 900만 원으로 줄면 미래 지급 재원이 줄어듭니다. DB의 약속한 급여가 같은 운용 손실만큼 자동으로 줄지는 않습니다. 다만 적립 부족과 지급 주체의 건전성을 봐야 합니다.</p>
+<DerivativeNamesGridViz />
 <p className="leading-8">한국의 ELS는 주식·주가지수 등의 조건으로 지급액이 달라지는 주가연계증권입니다. DLS는 금리나 환율, 원자재·신용 사건 등 다른 조건을 붙이는 파생결합증권을 가리킵니다. ELB·DLB는 만기 원금 지급을 약속하는 파생결합사채로 구별하지만 그 약속은 발행자의 지급 능력에 의존합니다. 미국 문서의 ELN은 주가연계 채무라는 표현입니다. 한국의 어느 한 상품 분류와 이름만으로 같다고 볼 수 없습니다.</p>
 <ConditionalPayoffViz />
 <p className="leading-8">손실 문턱을 가진 설명용 계약을 생각해 봅시다. 투자액은 1000만 원입니다. 최종 기준가격이 처음의 60% 이상이면 1060만 원을 받습니다. 60% 미만이면 원금에 최종 가격 비율을 곱해 받는다고 정합니다. 최종 61%에서는 1060만 원이지만 59%에서는 590만 원입니다. 두 가격의 작은 차이가 지급액 470만 원 차이를 만듭니다. 이는 단순화한 가정입니다. 실제 ELS는 중간 관측일의 조기상환이나 기간 중 장벽 통과 조건이 붙을 수 있습니다. 여러 자산 중 최저 성과를 쓰기도 합니다.</p>
+<ElbExitsViz />
 <p className="leading-8">앞의 50% 참여·10% 상한 계약과 이 손실 문턱 계약은 모두 조건부 지급이지만 손실 모습은 다릅니다. 한국거래소에 공시된 2026년 DB 드림빅 제92회 ELB 설명서도 발행자 지급불능과 만기 전 현금화 위험을 구분합니다. 만기에 1000만 원을 약속받아도 급한 중도상환 때는 960만 원으로 평가될 수 있습니다. 발행자가 실패해도 원금 손실이 날 수 있습니다. 960만 원은 설명용 가정입니다.</p>
+<GlidePathLossViz />
 <p className="leading-8">연금 안의 TDF, 타깃데이트펀드는 목표 연도에 가까워지며 자산 배분을 바꾸는 상품입니다. 가정한 배분이 주식 80%·채권 20%에서 40%·60%로 바뀐다고 합시다. 주식이 20% 하락하고 채권이 그대로일 때 단순 손실은 16%에서 8%로 줄어듭니다. 배분 변화 경로가 글라이드패스입니다. 같은 목표 연도라도 경로와 보수가 다르고 목표일의 원금이나 생활비를 보장하지 않습니다. 계좌의 세제 혜택과 안에 담긴 상품의 손실은 별개입니다.</p>
         </div>
 <SourceApplication source="SEC · Investor Bulletin: Structured Notes, What are Structured Notes?" excerpt="a bond component and an embedded derivative" application="1000만 원의 원금 지급 약속과 지수 상승 50% 참여·수익 상한 10%를 나눕니다. 지수 30% 상승에서도 1100만 원 지급이며, 발행자 신용 위험은 별도입니다." />
@@ -103,6 +118,7 @@ export default function Article() {
 <p className="leading-8">한국은 2025년 9월 1일부터 일반적인 보호 대상 예금의 한도가 원금과 이자를 합해 1억 원으로 올라갔습니다. 한도는 같은 금융회사 안의 보호 대상 예금을 합산해 적용하므로 같은 은행의 계좌를 나누어도 한도가 늘지 않고, 여러 금융회사에 나눠 맡기면 회사마다 따로 적용됩니다.</p>
 <p className="leading-8">다만 같은 금융회사 안에서도 퇴직연금(DC형과 IRP 등에서 예금 같은 보호상품으로 운용하는 금액), 연금저축, 사고보험금은 사회보장적 성격 때문에 일반 예금과 별도로 각각 1억 원 한도를 적용합니다(금융위원회 2025-07-22 보도자료). 펀드처럼 지급액이 운용실적에 연동되는 상품은 보호 대상이 아닙니다.</p>
 <p className="leading-8">1000만 원 1년 4% 예금의 1040만 원은 해당 보호 대상이고 다른 합산 예금이 없다는 조건에서 한도 이내입니다. 원금 9900만 원과 보호 대상 이자 400만 원이면 합계는 1억300만 원입니다. 기본 한도를 넘는 300만 원은 그 한도 안에 포함되지 않습니다.</p>
+<DepositLatticeViz />
 <p className="leading-8">미국 FDIC의 기본 한도 25만 달러는 예금자와 가입 은행, 소유권 범주를 기준으로 적용합니다. EU의 10만 유로 보호도 해당 예금자와 은행을 기준으로 따집니다. 자격을 갖춘 예금에 적용하는 제도이므로 같은 은행에서 산 펀드나 주식, 구조화증권의 시장 손실에는 적용되지 않습니다.</p>
         </div>
 <SourceApplication source="금융위원회 · 2025-09-01 예금보호한도 시행" excerpt="예금보호한도 1억원(원금 및 이자 포함)" application="1000만 원 예금과 이자 40만 원은 다른 합산 상품이 없다면 1040만 원입니다. 원금만 보고 보호 여부를 판단하지 않고 같은 회사의 보호 대상 금액을 합산합니다." />
@@ -112,9 +128,11 @@ export default function Article() {
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 배당률과 약정금리만으로 위험을 줄 세울 수 없습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+<ReitWaterfallViz />
 <p className="leading-8">리츠가 임대료 100을 받아도 운영비 30·이자 20·수선 지출 25가 있다면 단순 현금 잔여는 25입니다. 법적 배당 기준과 세무상 이익은 이 현금 계산과 다를 수 있습니다. 배당을 차입이나 자산 매각으로 보충했다면 같은 지급률이 계속될지 확인해야 합니다. 이 수치는 비교를 위한 가정입니다.</p>
 <p className="leading-8">보험에서는 <Link to="/economics/institutions/insurance-risk-pooling">사건·면책·공동 부담</Link>을 확인합니다. 연금계좌는 인출 조건과 담긴 상품을 보고, 구조화증권은 만기 지급과 중도 매각, 발행자 부도를 따로 봅니다. 예금으로 묶인 돈도 생활비에 필요한 날짜보다 늦게 풀리면 비용이 생깁니다. 권리와 손실, 필요한 날짜를 맞춘 뒤 수익을 비교해야 합니다.</p>
 <p className="leading-8">단기 국채나 기업의 단기 채무를 담는 MMF는 보유 자산의 이자에서 비용을 뺀 결과를 투자자에게 돌려줍니다. 1000만 원어치 펀드 지분이 신용 손실 등으로 995만 원이 되면 5만 원 손실입니다. 단기라는 사실만으로 은행 예금 보호가 붙지 않습니다. 예금형 현금 계좌와 이름이 비슷해도 실제 법적 상품을 확인합니다.</p>
+<MmfFeeBranchViz />
 <p className="leading-8">미국 MMF도 유형에 따라 고정 또는 변동 NAV를 씁니다. 개인용·정부 MMF 대부분은 좌당 1.00달러의 고정 NAV를 목표로 하고, 기관용 prime·tax-exempt MMF는 NAV를 변동시켜야 합니다. 환매 조건도 유형마다 다릅니다.</p>
 <p className="leading-8">SEC가 2023년 7월 12일 채택한 개정은 환매를 일시 중단하는 게이트 조항을 없애고, 기관용 prime·tax-exempt MMF에는 하루 순환매가 순자산의 5%를 넘으면 유동성 수수료를 의무로 물리게 했습니다(유동성 비용이 미미한 경우 제외). 정부 MMF가 아닌 펀드는 이사회가 판단하면 재량으로 수수료를 물릴 수 있습니다.</p>
 <p className="leading-8">채권 펀드의 <Link to="/finance/markets/bond-pricing-and-yield-curve#duration">금리 민감도</Link>와 해외 자산의 <Link to="/finance/markets/funds-etfs-and-etns#limits">환헤지 여부</Link>는 지급 통화를 읽는 과정에서 확인합니다. 지급률을 높인 <Link to="/finance/markets/covered-calls-and-income-funds">커버드콜</Link>은 상승 권리를 판 대가가 섞이고, <Link to="/finance/markets/securitization-and-tranches">유동화</Link>는 같은 대출 손실을 받는 순서를 나눕니다. 상품명이 달라도 어떤 돈에서 지급받는지로 연결할 수 있습니다.</p>

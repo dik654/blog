@@ -5,7 +5,7 @@ import VizFrame from "@/components/viz/VizFrame";
 
 /**
  * 본문 대응: #source — 환산보증금을 지역별 기준액과 비교하고, 넘으면 어떤 조항이 남고 빠지는지.
- * 환산보증금 = 보증금 + 월세 × 100. 기준액은 2026-07-01 시행 시행령 제2조, 조항 목록은 법 제2조 제3항으로 본문과 같습니다.
+ * 환산보증금 = 보증금 + 월세 × 100. 맨 위 막대에서 어두운 칸이 보증금, 밝은 칸이 월세 × 100입니다. 기준액은 2026-07-01 시행 시행령 제2조, 조항 목록은 법 제2조 제3항으로 본문과 같습니다.
  */
 const REGIONS = [
   { name: "서울특별시", limit: 9, text: "9억" },
@@ -17,7 +17,7 @@ const REGIONS = [
 const W = 340;
 const LEFT = 8;
 const RIGHT = 14;
-const TOP = 24;
+const TOP = 52;
 const ROW = 44;
 const BAR = 12;
 const H = TOP + ROW * REGIONS.length + 24;
@@ -39,10 +39,12 @@ const SCENES = [
 const KEPT = ["제3조 대항력", "제10조 제1·2·3항 본문 갱신요구", "제10조의2~제10조의9 (권리금 회수 기회 보호 포함)", "제11조의2", "제19조"] as const;
 const DROPPED = ["제5조 우선변제권", "제11조 증액 제한"] as const;
 
-function ThresholdChart({ value, label, color, focusFirstOnly }: { value: number; label: string; color: string; focusFirstOnly: boolean }) {
+function ThresholdChart({ value, deposit, label, sumText, color, focusFirstOnly }: { value: number; deposit: number; label: string; sumText: string; color: string; focusFirstOnly: boolean }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto h-auto w-full max-w-[560px]" role="img" aria-label={`환산보증금 ${label}과 지역별 기준액 비교`}>
-      <text x={Math.min(px(value), W - RIGHT)} y={14} textAnchor={value > 5 ? "end" : "middle"} fontSize={13} fontWeight={700} fill={color}>{label}</text>
+      <text x={LEFT} y={14} fontSize={13} fontWeight={700} fill={color}>{sumText}</text>
+      <rect x={px(0)} y={22} width={px(deposit) - px(0)} height={BAR + 4} fill={TEXT_COLOR} stroke={TEXT_COLOR} strokeWidth={1} />
+      <rect x={px(deposit)} y={22} width={px(value) - px(deposit)} height={BAR + 4} fill={color} opacity={0.3} stroke={color} strokeWidth={1} />
       {REGIONS.map((region, index) => {
         const y = TOP + ROW * index;
         const dim = focusFirstOnly && index > 0;
@@ -96,8 +98,8 @@ export default function ConvertedDepositThresholdViz() {
           active={active}
           className="mt-3"
           scenes={[
-            <ThresholdChart key="case" value={2.3} label="2억3천만" color={CASE_COLOR} focusFirstOnly={false} />,
-            <ThresholdChart key="over" value={10} label="10억" color={OVER_COLOR} focusFirstOnly />,
+            <ThresholdChart key="case" value={2.3} deposit={0.3} label="2억3천만" sumText="보증금 3천만 + 월세×100 2억 = 2억3천만" color={CASE_COLOR} focusFirstOnly={false} />,
+            <ThresholdChart key="over" value={10} deposit={1} label="10억" sumText="보증금 1억 + 월세×100 9억 = 10억" color={OVER_COLOR} focusFirstOnly />,
             <div key="split" className="mx-auto grid w-full max-w-[620px] gap-3 text-sm sm:grid-cols-2">
               <div className="rounded-lg border border-border bg-background px-3 py-2.5">
                 <p className="font-bold">그대로 적용</p>

@@ -8,6 +8,10 @@ import SourceApplication from "../world-systems/SourceApplication";
 import GettierForkViz from "./knowledge-belief-and-luck/viz/GettierForkViz";
 import NearbyMinutesViz from "./knowledge-belief-and-luck/viz/NearbyMinutesViz";
 import TwoPathsViz from "./knowledge-belief-and-luck/viz/TwoPathsViz";
+import RepairSitesViz from "./knowledge-belief-and-luck/viz/RepairSitesViz";
+import SafetyRangeViz from "./knowledge-belief-and-luck/viz/SafetyRangeViz";
+import SlotSwapViz from "./knowledge-belief-and-luck/viz/SlotSwapViz";
+import TenClocksViz from "./knowledge-belief-and-luck/viz/TenClocksViz";
 
 export default function KnowledgeBeliefAndLuckArticle() {
   return (
@@ -34,6 +38,7 @@ export default function KnowledgeBeliefAndLuckArticle() {
       <LessonSection id="case" level="0" title="3. 멈춘 시계 열 개 중 하나가 우연히 맞습니다" bridge="10개 중 하나가 맞는 순간과 정상 시계가 계속 맞는 경우를 분리했습니다. 두 줄의 경로로 그려봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">벽에 같은 모양의 시계 열 개가 있고 모두 멈췄다고 합시다. 각 시계는 1시부터 10시까지 서로 다른 정각에 멈췄습니다. 민아는 지금이 몇 시인지 모르고 4시에 멈춘 시계 하나를 믿었습니다. 실제 시각도 우연히 4시였습니다.</p>
+          <TenClocksViz />
           <p className="leading-8">민아는 “지금 4시다”라고 믿고, 눈앞의 시곗바늘이라는 평소 좋은 근거도 갖고 있으며, 문장도 참입니다. 그러나 10개 중 다른 시계를 골랐거나 1분 뒤에 봤다면 틀렸습니다. 이 숫자는 판단 구조를 보기 위한 가정입니다.</p>
         </div>
         <NumericPath title="정답까지 갔지만 사실을 따라간 것은 아닌 경로" steps={[
@@ -81,6 +86,7 @@ export default function KnowledgeBeliefAndLuckArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">에드먼드 게티어의 1963년 논문은 제목 자체로 “정당화된 참인 믿음이 지식인가”를 묻고, 세 조건을 갖추었지만 지식이라고 보기 어려운 사례를 제시했습니다. 핵심은 단순한 찍기가 아니라, 그럴듯한 근거에서 한 단계 잘못 갔다가 별도의 우연으로 결론이 참이 되는 구조입니다.</p>
           <p className="leading-8">논문의 두 번째 사례를 따라가면 그 구조가 보입니다. 스미스에게는 존스가 포드 차를 가졌다고 믿을 강한 증거가 있습니다. 이 믿음을 f라고 부릅니다. 스미스는 친구 브라운이 지금 어디 있는지 전혀 모르면서도 f에서 “존스가 포드를 가졌거나 브라운이 바르셀로나에 있다”라는 선언 문장 h를 이끌어 내 받아들입니다. 실제로는 존스에게 포드가 없고, 우연히 브라운이 바르셀로나에 있습니다. 그래서 h는 참이고, 스미스는 h를 믿으며, 좋은 증거에서 연역했으니 정당화도 있습니다. 그런데 h를 참으로 만든 것은 스미스가 전혀 몰랐던 브라운의 위치입니다.</p>
+          <SlotSwapViz />
           <p className="leading-8">이 반례는 두 전제 위에 섭니다. 첫째, 거짓인 명제도 정당하게 믿을 수 있습니다(f는 거짓이지만 증거는 좋았습니다). 둘째, 정당하게 믿는 명제에서 논리적으로 따라 나오는 명제를 연역해 받아들이면 그 결론도 정당화됩니다(h는 f에서 따라 나옵니다). 민아의 경우에는 “이 시계가 가고 있다”는 거짓 믿음이 f 자리에, 실제 시각이 우연히 4시였다는 사실이 바르셀로나의 브라운 자리에 놓입니다. 논문의 첫 번째 사례(취직할 사람의 주머니에 동전 열 개가 있다는 믿음)도 같은 구조입니다. 포드·바르셀로나 문장은 Stanford 철학백과 The Analysis of Knowledge가 인용한 원문과 대조했습니다(2026-10-09 확인).</p>
         </div>
         <SourceApplication source="Gettier · Analysis 23(6), 1963" excerpt="Is Justified True Belief Knowledge?" application="민아의 판단은 믿음·참·정당화를 각각 통과하는 듯하지만 고장과 실제 시각의 우연한 일치가 남습니다." />
@@ -89,6 +95,7 @@ export default function KnowledgeBeliefAndLuckArticle() {
 
       <LessonSection id="comparison" level="6" title="9. 신뢰성·안전성·지적 성품은 다른 곳을 고칩니다" bridge="한 가지 정답 대신 서로 다른 수선 위치를 비교했습니다. 어느 기준도 쉽게 닫히지 않는 경계를 남깁니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <RepairSitesViz />
           <p className="leading-8">신뢰성 접근은 믿음을 만든 과정이 대체로 참을 내는지 묻습니다. 안전성 접근은 가까운 상황에서도 같은 방식의 믿음이 쉽게 거짓이 되지 않는지 묻습니다. 덕 인식론은 사람이 진실을 찾는 지적 능력과 성품 때문에 참에 도달했는지 봅니다.</p>
           <p className="leading-8">멈춘 시계 사례에서 세 접근은 모두 고장 난 표시와 사실의 우연한 만남을 문제 삼지만 설명의 초점이 다릅니다. 정상 시계 과정의 신뢰도를 볼지, 11시 59분이라는 가까운 경우를 볼지, 민아의 확인 습관과 능력을 볼지에 따라 필요한 추가 정보가 달라집니다.</p>
         </div>
@@ -98,6 +105,7 @@ export default function KnowledgeBeliefAndLuckArticle() {
 
       <LessonSection id="limits" level="7" title="10. 지식의 경계는 하나의 네 번째 조건으로 닫히지 않습니다" bridge="지식 주장의 강도를 근거와 오류 가능성에 맞추는 법을 남겼습니다. 같은 시계 사례로 세 질문에 답할 수 있습니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <SafetyRangeViz />
           <p className="leading-8">안전성을 지나치게 강하게 요구하면 정상적인 지각도 “혹시 정교한 속임수가 있었을 수 있다”는 이유로 탈락합니다. 반대로 과정의 평균 신뢰도만 보면 평소 좋은 시계가 오늘 멈춘 예외를 놓칩니다. 기준은 오류 가능성을 0으로 만드는 장치가 아니라, 어떤 실패를 허용하고 어떤 실패를 막는지 밝히는 장치입니다.</p>
           <p className="leading-8">뉴스, 연구 결과, AI의 답을 읽을 때도 “참인가” 다음에 “어떤 방법으로 나왔는가”와 “조금 다른 입력에서도 같은 방법이 맞는가”를 묻습니다. 확인하지 못한 부분은 안다고 단정하기보다 믿음의 근거와 불확실성을 함께 적는 편이 정확합니다.</p>
         </div>

@@ -2,9 +2,16 @@ import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import ClaimsTriangleViz from "./commercial-lease-and-rent/viz/ClaimsTriangleViz";
 import ConvertedDepositThresholdViz from "./commercial-lease-and-rent/viz/ConvertedDepositThresholdViz";
+import DividendOrderViz from "./commercial-lease-and-rent/viz/DividendOrderViz";
+import ExchangeDirectionViz from "./commercial-lease-and-rent/viz/ExchangeDirectionViz";
+import FloorRecordLayersViz from "./commercial-lease-and-rent/viz/FloorRecordLayersViz";
 import LeaseCashStaircaseViz from "./commercial-lease-and-rent/viz/LeaseCashStaircaseViz";
+import RenewalRentCapViz from "./commercial-lease-and-rent/viz/RenewalRentCapViz";
+import RenewalWindowViz from "./commercial-lease-and-rent/viz/RenewalWindowViz";
 import TenantProtectionLadderViz from "./commercial-lease-and-rent/viz/TenantProtectionLadderViz";
+import VacancyYearCellsViz from "./commercial-lease-and-rent/viz/VacancyYearCellsViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function CommercialLeaseAndRentArticle() {
@@ -44,6 +51,7 @@ export default function CommercialLeaseAndRentArticle() {
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 사용할 권리와 반환할 돈은 반대 방향으로 움직인다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <ExchangeDirectionViz />
           <p className="leading-7">처음에는 돈과 공간을 주고받지만 마지막에는 점포 인도와 맡긴 돈의 정산을 다시 맞춥니다. 월별 지급만 기록하면 반환과 복구 책임이 그림에서 빠집니다.</p>
         </div>
         <FlowRail
@@ -59,7 +67,9 @@ export default function CommercialLeaseAndRentArticle() {
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5. 시작 상태를 남겨야 마지막 날의 약속을 판단할 수 있다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <FloorRecordLayersViz />
           <p className="leading-7">처음부터 있던 바닥과 점주가 나중에 설치한 바닥이 섞이면 어느 상태로 돌려줄지 다툴 수 있습니다. 계약 전 사진과 도면을 함께 확인하는 일이 마지막 공제액을 판단할 기준이 됩니다.</p>
+          <VacancyYearCellsViz />
           <p className="leading-7">3년 안에 회수할 수 없는 시설을 설치하려면 연장 가능성과 조건을 검토해야 합니다. 건물주도 월 200만 원 전부를 순수익으로 쓸 수는 없습니다. 다음 점주를 못 찾아 두 달 비는 별도의 1년을 가정하면, 12개월 내내 받았을 2천400만 원에서 400만 원이 빠져 2천만 원을 받습니다. 여기에 수선·세금·이자 등을 더 빼야 합니다. 앞의 3년 계약에 공실 두 달을 넣은 계산은 아닙니다.</p>
         </div>
 
@@ -100,6 +110,7 @@ export default function CommercialLeaseAndRentArticle() {
         <SourceApplication source="한국 상가건물 임대차보호법 제3조 제1항" excerpt="그 다음 날부터 제3자에 대하여 효력이 생긴다" application="3천만 원을 맡기는 점주는 실제 공간을 인도받은 사실과 등록 신청의 사업장 표시를 맞춥니다. 이 조항의 효력과 보증금을 남보다 먼저 돌려받는 요건은 별개이므로 선순위 권리·확정일자(관할 세무서장이 임대차계약서에 받아 두는 날짜)·적용 범위도 함께 확인합니다." />
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           <p className="leading-7">건물을 인도받고 사업자등록을 신청하면 그다음 날부터 제3자에게 임대차의 효력을 주장할 수 있습니다. 이를 대항력이라고 합니다. 제3조 제2항은 건물을 넘겨받은 사람이 임대인의 지위를 승계한다고 규정합니다. 계약서에 서명했다는 사실만으로 이 요건이 모두 갖춰지는 것은 아닙니다.</p>
+          <DividendOrderViz />
           <p className="leading-7">경매·공매에서 후순위 권리자나 다른 채권자보다 먼저 받을 권리인 우선변제권은 제5조의 별도 요건을 봅니다. 위 요건에 확정일자가 더 필요하며 법의 적용 범위도 확인해야 합니다. 제2조는 보증금 규모에 따른 일반 적용 범위를 정하면서 제3조 등 일부 조항은 그 범위를 넘는 임대차에도 적용합니다. 대항력이 있다는 사실만으로 제5조의 적용이나 3천만 원 전액 회수를 보장하지는 않습니다. 전액 회수 여부는 선순위 권리와 실제 배당 재원에 달려 있습니다.</p>
           <ConvertedDepositThresholdViz />
           <p className="leading-7">적용 범위는 보증금만 보고 정하지 않습니다. 월세가 있으면 월세에 100을 곱해 보증금에 더한 금액으로 비교하며, 이 합계를 환산보증금이라고 부릅니다(시행령 제2조 제3항의 &ldquo;1분의 100&rdquo;). 이 글의 사례는 3천만 원 + 200만 원 × 100 = 2억3천만 원입니다.</p>
@@ -115,7 +126,9 @@ export default function CommercialLeaseAndRentArticle() {
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 갱신과 양도는 국가별로 따로 확인해야 합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <RenewalWindowViz />
           <p className="leading-7">한국에서는 임차인이 언제 갱신을 요구했는지와 거절 사유를 함께 봅니다. 제10조는 종료 6개월 전부터 1개월 전까지의 요구, 처음 기간을 포함한 총 10년 한도, 차임 연체 등 예외를 규정합니다. 모든 계약이 자동으로 10년 보장된다는 뜻은 아닙니다. 제10조의4가 보호하는 것도 일정 요건에서의 권리금 회수 기회입니다. 새 점주에게 받을 금액 자체를 건물주가 보장하는 제도가 아닙니다.</p>
+          <RenewalRentCapViz />
           <p className="leading-7">갱신되는 계약의 월세도 마음대로 올릴 수는 없습니다. 제10조 제3항은 갱신된 계약의 차임과 보증금이 제11조의 범위에서 증감할 수 있다고 하고, 시행령 제4조는 증액 청구가 청구 당시 차임이나 보증금의 100분의 5를 넘지 못하게 합니다.</p>
           <p className="leading-7">사례의 월세 200만 원이면 210만 원까지, 보증금 3천만 원이면 3천150만 원까지가 한 번에 청구할 수 있는 상한입니다. 앞의 서울 10억 원 사례처럼 환산보증금이 기준을 넘으면 갱신요구권은 있어도 이 5% 상한은 적용되지 않으므로, 증액 폭은 계약과 협의로 정해집니다(2026-10-09 확인한 현행 법·시행령 기준).</p>
           <p className="leading-7">영국 잉글랜드·웨일스에서는 1954년 법의 사업 임차 갱신권이 적용되는지, 계약을 맺기 전에 정해진 절차로 갱신권을 배제했는지를 확인합니다. 한국의 10년 기준을 옮겨 쓸 수 없습니다. 2026-10-04 확인한 Law Commission 페이지에는 같은 해 9월 16일 끝난 2차 의견 수렴의 답변을 분석 중이라고 나옵니다. 그 페이지의 개정 제안은 현재 시행 규칙과 구별해서 읽어야 합니다.</p>
@@ -134,6 +147,7 @@ export default function CommercialLeaseAndRentArticle() {
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 권리금과 보증금, 시설값은 서로 다른 청구권입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <ClaimsTriangleViz />
           <p className="leading-7">장사가 잘되는 곳에서 새 점주가 기존 점주에게 돈을 준다 해도 그 돈이 임대인에게 낸 보증금은 아닙니다. 시설을 샀어도 임대인이 새 임대차를 거절할 수 있는 조건과 법적 제한을 따로 봐야 합니다.</p>
           <p className="leading-7">원상복구 조항도 무조건 벽을 전부 헐라는 뜻으로 읽을 수 없습니다. 최초 인도 상태, 이후 합의, 실제 철거 의사, 적용 법과 관련 판례를 대조해야 합니다. 새 점주에게 시설을 팔았다는 사실만으로 기존 점주의 임대차 채무나 복구 의무가 모두 사라지는 것도 아닙니다.</p>
         </div>

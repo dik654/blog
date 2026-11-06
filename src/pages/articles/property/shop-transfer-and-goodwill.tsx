@@ -3,6 +3,14 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import BalanceConditionsViz from "./shop-transfer-and-goodwill/viz/BalanceConditionsViz";
+import CustomerNoticeViz from "./shop-transfer-and-goodwill/viz/CustomerNoticeViz";
+import CutoverCashViz from "./shop-transfer-and-goodwill/viz/CutoverCashViz";
+import DepositTriangleViz from "./shop-transfer-and-goodwill/viz/DepositTriangleViz";
+import FoodLawWindowViz from "./shop-transfer-and-goodwill/viz/FoodLawWindowViz";
+import GoodwillCheckViz from "./shop-transfer-and-goodwill/viz/GoodwillCheckViz";
+import LeaseThreeChecksViz from "./shop-transfer-and-goodwill/viz/LeaseThreeChecksViz";
+import PaybackMonthsViz from "./shop-transfer-and-goodwill/viz/PaybackMonthsViz";
+import PriceEvidenceViz from "./shop-transfer-and-goodwill/viz/PriceEvidenceViz";
 import SettlementBarsViz from "./shop-transfer-and-goodwill/viz/SettlementBarsViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
@@ -34,6 +42,7 @@ export default function ShopTransferAndGoodwillArticle() {
         <h2 className="mb-6 text-2xl font-bold">3. 3천300만 원을 시설과 재고와 미래 손님으로 나눈다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">시설 2천만 원, 판매할 재고 300만 원, 기존 손님이 계속 올 가능성에 1천만 원을 주는 거래를 둡니다. 총액은 3천300만 원입니다. 보증금·세금·중개비와 인수 뒤 운영 자금은 제외합니다. 실제 거래 통계나 세법상 배분이 아닌 설명용 가격 합의 (가정)입니다.</p>
+          <PriceEvidenceViz />
           <p className="leading-7">2천만 원 시설은 장비 번호와 소유자, 작동 상태를 확인합니다. 300만 원 재고는 수량과 사용기한을 셉니다. 마지막 1천만 원은 미래 기대이므로 과거 매출 자료와 새 임대료를 검토해도 확정 현금으로 바뀌지 않습니다.</p>
           <p className="leading-7">
             새 점주가 먼저 300만 원을 지급하고 정한 인수 조건을 확인한 날 나머지 3천만 원을 지급하기로 합의했다고 가정합니다. 재고 금액은 그날 실제 수량과 미리 합의한 단가로 다시
@@ -92,13 +101,16 @@ export default function ShopTransferAndGoodwillArticle() {
         <SettlementBarsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">3천300만 원 제안을 받은 새 점주는 먼저 2천만 원 시설과 300만 원 재고를 목록으로 받습니다. 리스·담보·소유권 유보가 있는지와 수리 이력을 확인합니다. 약정한 단가로 인수일 재고를 셌더니 250만 원이고 다른 조건은 같다면 총액은 2천만 + 250만 + 1천만 = 3천250만 원입니다. 먼저 낸 300만 원을 빼면 잔금은 2천950만 원입니다. 사용기한이 지난 물건을 제외할지와 수량 차이를 어떻게 반영할지도 미리 합의해야 합니다.</p>
+          <GoodwillCheckViz />
           <p className="leading-7">
             1천만 원 영업상 이점은 신고 매출, 카드·배달 정산과 계좌 입금을 여러 기간에 걸쳐 맞춰 검토합니다. 기존 임대료 대신 새 임대료를 넣고 점주와 가족의 노동을 대체할 임금을
             차감합니다. 양도 전 할인행사가 만든 일시적 매출과 미사용 선불권을 별도 표시합니다.
           </p>
           <p className="leading-7">계약에는 임대인 동의 또는 새 임대차, 필요한 영업 지위승계·신고, 가맹본부와 장비 소유자의 승인 등을 거래에 맞춰 조건으로 둡니다. 어떤 자료로 완료를 판단할지, 조건이 언제까지 실패하면 먼저 낸 300만 원을 누가 언제 반환할지 정합니다. 영업의 실제 이전과 신고 수리, 잔금의 순서도 업종에 맞춰 정해야 합니다. 필요한 절차를 계약서 한 문장으로 대신하거나 이미 약정한 지급을 임의로 미루는 방식은 아닙니다.</p>
+          <FoodLawWindowViz />
           <p className="leading-7">예를 들어 한국 음식점의 영업자 지위를 승계했다면 식품위생법 제39조 제3항에 따라 승계한 날부터 1개월 이내에 그 사실을 신고해야 합니다. 같은 법 제78조는 종전 영업자에게 내려진 행정 제재처분의 효과가 그 처분기간이 끝난 날부터 1년간 양수인에게 승계되고, 진행 중인 절차도 양수인에게 계속할 수 있다고 정합니다.</p>
-          <p className="leading-7">다만 양수인이 양수할 때 그 처분이나 위반 사실을 알지 못했음을 증명하면 승계되지 않습니다. 장비가 잘 작동하는지에 더해 위반·처분 이력을 인수 전에 확인해 두어야 그 증명도 할 수 있습니다(2026-10-08 시행판, 2026-10-09 확인).</p>
+          <p className="leading-7">다만 양수인이 양수할 때 그 처분이나 위반 사실을 알지 못했음을 증명하면 승계되지 않습니다. 장비가 잘 작동하는지에 더해 위반·처분 이력도 인수 전에 확인합니다. 확인에서 이력이 나오지 않았다면 그 기록이 몰랐다는 자료가 될 수 있습니다. 이력이 나오면 이미 알게 된 것이므로 이 예외에 기대기 어렵고, 가격과 계약 조건에서 다룹니다(2026-10-08 시행판, 2026-10-09 확인).</p>
+          <CutoverCashViz />
           <p className="leading-7">인수일에는 장비 시험과 재고 수량, 열쇠·전화·계정 접근 권한을 확인해 서명합니다. 카드와 배달 대금은 주문일과 입금일이 다르므로 인수 전 주문의 정산·환불을 누가 맡는지 정합니다. 사업 양도의 실질에 따라 고용관계와 채무의 승계가 문제 될 수 있어 직원 동의와 정산 책임을 계약서 문장만으로 임의 소멸시켜서는 안 됩니다.</p>
         </div>
         <CitationBlock source="한국 식품위생법 제39조·제78조" citeKey={5} href="https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=285339&amp;joNo=0039&amp;joBrNo=00&amp;docCls=jo&amp;urlMode=lsScJoRltInfoR">2026-10-08 시행판(법률 제21525호)의 제39조 제3항 1개월 이내 신고와 제78조의 처분기간 종료 후 1년 승계·선의 증명 예외를 2026-10-09 확인했습니다. 이전 링크(lsiSeq=277149)는 조문 없이 머리말만 보여 교체했습니다. 음식점의 영업 이전 여부와 필요한 절차는 실제 거래 내용에 맞춰 판단합니다.</CitationBlock>
@@ -111,6 +123,7 @@ export default function ShopTransferAndGoodwillArticle() {
           <p className="leading-7">이 사례의 영업상 이점 1천만 원에 단골 관리 자료가 포함된다면 어떤 정보를 어떤 목적으로 넘기는지 확인합니다. 한국 개인정보 보호법 제27조는 영업양도 때 정보주체에게 알릴 사항을 규정합니다.</p>
         </div>
         <SourceApplication source="한국 개인정보 보호법 제27조 제1항" excerpt="해당 정보주체에게 알려야 한다" application="같은 양도계약에서 시설·재고 목록과 고객정보 이전 여부를 나눠 적습니다. 기존 점주는 법이 정한 방법으로 이전 사실, 받는 사람의 이름·주소·전화번호 등 연락처, 이전을 원하지 않을 때의 조치 방법·절차를 미리 알려야 합니다." />
+        <CustomerNoticeViz />
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           <p className="leading-7">새 점주가 정보를 받았을 때의 의무도 있습니다. 제27조 제2항은 지체 없이 알리도록 하되 기존 점주가 제1항에 따라 이미 알린 경우를 예외로 둡니다. 제3항은 이전 당시 본래 목적으로만 이용하거나 제공하도록 합니다. 가격에 고객 관계를 포함했다고 해서 명단을 다른 사업의 광고에 자유롭게 쓰게 되는 것은 아닙니다.</p>
         </div>
@@ -122,6 +135,7 @@ export default function ShopTransferAndGoodwillArticle() {
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 한국의 권리금 회수 보호와 호주의 lease assignment는 제도가 다릅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <LeaseThreeChecksViz />
           <p className="leading-7">한국 상가건물 임대차보호법 제10조의4는 종료 6개월 전부터 종료 때까지 일정한 방해행위를 금지합니다. 차임 연체 등의 예외와 새 임차인의 지급 능력 등에 관한 정당한 거절 사유도 함께 규정합니다. 따라서 시설과 미래 기대에 값을 합의한 것, 법의 보호를 받는 것, 새 임대차가 성립하는 것은 각각 확인할 문제입니다.</p>
           <p className="leading-7">
             호주 NSW의 소매 임대차 양도 안내는 임대인에게 서면으로 동의를 요청하고 기존 임대 조건과 양도인의 공개 문서를 새 임차인·임대인에게 제공하는 절차를 설명합니다. 양도 뒤
@@ -141,9 +155,11 @@ export default function ShopTransferAndGoodwillArticle() {
         <h2 className="mb-6 text-2xl font-bold">10. 과거 매출이 앞으로의 영업권 가치를 보장하지 않습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">기존 점주의 노동시간, 할인행사, 배달 앱 리뷰, 상권 변화가 빠지면 과거 매출은 새 점주의 매출과 다를 수 있습니다. 신규 임대료가 오르면 같은 매출에도 새 점주의 이익은 줄어듭니다.</p>
+          <PaybackMonthsViz />
           <p className="leading-7">같은 가게가 재료·고용 인력·점주 노동의 대체 임금·월세 등 운영 비용을 반영한 뒤 매달 100만 원을 남길 것이라고 가정해 봅시다. 새 월세만 50만 원 오르면 남는 돈은 50만 원입니다. 미래 기대에 준 1천만 원만 나눠도 단순 회수기간은 10개월에서 20개월로 늘어납니다.</p>
           <p className="leading-7">이 금액이 매달 같다는 가정이며 세금·이자·시설값 회수와 돈의 시간가치는 제외합니다. 전체 3천300만 원의 투자 평가나 적정 권리금 계산은 아닙니다.</p>
           <p className="leading-7">양도가 불가능하거나 가격이 너무 낮으면 폐업과 원상복구 비용을 비교합니다. 기존 점주에게는 최고가 제안보다 잔금 확실성과 임대차 종료 책임 해제가 중요할 수 있습니다.</p>
+          <DepositTriangleViz />
           <p className="leading-7">양도가 성립해도 기존 점주의 임대차 책임이 끝나는지, 보증금은 임대인에게서 누가 돌려받는지, 양수인의 신규 보증금은 언제 지급되는지 세 사람의 계약서에서 대조합니다. 명의만 바꾸고 채무 정산을 놓치지 않도록 마지막 거래일과 인수 이후의 첫 거래일을 정해 매출과 비용을 갈라 기록합니다.</p>
         </div>
 

@@ -4,6 +4,14 @@ import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import { Link } from "react-router-dom";
+import AttackBranchViz from "./quantum-computing-and-cryptographic-risk/viz/AttackBranchViz";
+import FactorFromPeriodViz from "./quantum-computing-and-cryptographic-risk/viz/FactorFromPeriodViz";
+import HarvestTimelineViz from "./quantum-computing-and-cryptographic-risk/viz/HarvestTimelineViz";
+import JointProductViz from "./quantum-computing-and-cryptographic-risk/viz/JointProductViz";
+import LogicalPatchViz from "./quantum-computing-and-cryptographic-risk/viz/LogicalPatchViz";
+import ResourceMapViz from "./quantum-computing-and-cryptographic-risk/viz/ResourceMapViz";
+import ShorChecksViz from "./quantum-computing-and-cryptographic-risk/viz/ShorChecksViz";
+import ShotsGridViz from "./quantum-computing-and-cryptographic-risk/viz/ShotsGridViz";
 import MarkAndReflectViz from "./quantum-computing-and-cryptographic-risk/viz/MarkAndReflectViz";
 import PeriodCellsViz from "./quantum-computing-and-cryptographic-risk/viz/PeriodCellsViz";
 import SecondIterationViz from "./quantum-computing-and-cryptographic-risk/viz/SecondIterationViz";
@@ -33,6 +41,7 @@ export default function Article() {
       </section>
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3 · 네 칸을 처음에는 똑같이 준비합니다</h2>
+        <ShotsGridViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">00·01·10·11 네 후보 중 00이 정답이라고 놓습니다(가정). 각 후보에 0.5라는 중간값을 부여합니다. 이 값을 제곱한 0.25가 측정 확률이고 네 확률의 합은 1입니다.</p>
           <p className="leading-8">400회 반복하면 각 후보의 기대 횟수는 100회입니다. 기대 횟수는 실제 빈도를 정확히 보장하는 숫자가 아닙니다. 정답을 많이 얻으려면 이 네 중간값을 바꿔야 합니다.</p>
@@ -68,6 +77,9 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">중간값을 진폭이라고 합니다. 일반적으로 복소수이고 측정 확률은 절댓값의 제곱입니다. 전체 확률이 1이 되도록 정규화합니다. 이번 예제는 이해를 위해 실수 진폭만 사용합니다.</p>
           <p className="leading-8">두 결과를 갖는 기본 상태 단위는 큐비트입니다. 두 큐비트의 공동 상태를 00·01·10·11 순서로 나타냈습니다. 여러 결과의 진폭을 함께 갖는 상태를 중첩, 진폭이 더해지거나 상쇄되는 효과를 간섭이라고 합니다.</p>
+        </div>
+        <JointProductViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">상태를 바꾸는 이상적 게이트는 전체 확률을 보존합니다. 여기서 다루는 순수 상태에서 얽힘은 여러 큐비트의 공동 상태를 각자의 상태 곱으로 나눌 수 없는 경우입니다. 그것만으로 메시지가 빛보다 빠르게 전달되지는 않습니다.</p>
           <p className="leading-8">실제 관측에서는 측정 기저와 반복 횟수를 함께 남깁니다. 다른 방향으로 측정하거나 결맞음이 사라진 장치에서는 여기서 계산한 확률과 다른 분포가 나올 수 있습니다.</p>
         </div>
@@ -90,10 +102,14 @@ export default function Article() {
       </section>
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">8 · 원 논문의 연산과 15의 반복 길이를 연결합니다</h2>
+        <FactorFromPeriodViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">인수분해의 작은 사례로 15와 밑 2를 고릅니다(가정). 2의 거듭제곱을 15로 나눈 나머지는 1·2·4·8·1입니다. 네 번 뒤 처음으로 돌아오므로 주기는 4입니다.</p>
           <p className="leading-8">주기의 절반인 2를 지수로 쓰면 4를 얻습니다. 4−1과 15의 최대공약수는 3이고 4+1과 15의 최대공약수는 5입니다. 3×5=15로 검산합니다. 이 부분은 일반 컴퓨터에서 하는 후처리입니다.</p>
           <p className="leading-8">Shor 알고리즘은 큰 수에서도 이 주기 정보를 얻는 양자 절차를 구성합니다. 주기를 상태의 위상에 기록하고 푸리에 변환과 측정으로 주기에 관한 값을 얻은 뒤 고전적으로 복원합니다. 나머지 반복을 이 예제처럼 하나씩 손으로 나열하는 방법과 비용 구조가 다릅니다.</p>
+        </div>
+        <ShorChecksViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">항상 한 번에 성공하지는 않습니다. 고른 밑이 서로소인지, 찾은 주기가 짝수인지, 마지막 최대공약수가 자명한 1이나 15인지 확인합니다. 큰 수의 회로와 오류 정정 비용까지 여기서 직접 실행한 것은 아닙니다.</p>
         </div>
 
@@ -116,7 +132,13 @@ export default function Article() {
           <p className="leading-8">물리 오류율 10⁻³, 평면 연결 등의 초전도 장치 가정에서 50만 개 미만의 물리 큐비트와 분 단위 시간을 추정합니다. 이는 그런 장치를 실제로 만들고 암호를 해독했다는 보고가 아닙니다. 숨긴 회로에 관한 검증 자료와, 하드웨어가 가정대로 동작한다는 증거도 구분해야 합니다.</p>
           <p className="leading-8">8절의 15 인수분해를 2048비트 RSA 정수로 키운 추정은 별도 논문에 있습니다. Gidney(2025-05-21, arXiv 2505.15917)는 잡음 있는 물리 큐비트 100만 개 미만으로 2048비트 RSA 정수를 1주 미만에 인수분해할 수 있다고 추정합니다.</p>
           <p className="leading-8">장치 가정은 최근접 연결의 정사각 격자, 균등 게이트 오류율 0.1%, 표면 부호 주기 1 µs, 제어 시스템 반응 시간 10 µs입니다. 같은 저자가 공저한 2019년 추정은 큐비트 2천만 개·8시간이었으므로, 이번 추정은 큐비트를 약 20분의 1로 줄이는 대신 시간을 늘린 선택입니다.</p>
+        </div>
+        <ResourceMapViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">두 추정을 나란히 놓으면 RSA-2048은 100만 개 미만·1주 미만, secp256k1 이산로그는 50만 개 미만·분 단위입니다. 두 논문 모두 물리 오류율 0.1%(10⁻³)와 평면 격자 연결을 가정하지만 회로 구성과 시간 계산은 따로 했습니다. 따라서 이 숫자는 같은 기계로 두 문제를 푸는 비교가 아니라 각 논문의 가정 안에서 읽어야 합니다. 어느 쪽도 그런 장치가 이미 있다는 보고가 아닙니다.</p>
+        </div>
+        <LogicalPatchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">논리 큐비트는 알고리즘이 다루는 계산 단위이며 실제 장치에서는 오류 정정으로 논리 오류율을 충분히 낮추어 구현합니다. 실제 잡음 있는 물리 큐비트 여러 개와 반복 검사를 이용해 그 동작을 지탱합니다. 필요한 배수는 오류율·정정 코드·연결·요구 정확도에 따라 달라집니다.</p>
           <p className="leading-8">서로 다른 논문에서 가장 작은 큐비트 수와 가장 짧은 시간만 골라 합칠 수는 없습니다. 소자 종류와 게이트 속도, 정정 일정이 다르면 존재하지 않는 기계의 사양이 됩니다.</p>
         </div>
@@ -129,9 +151,13 @@ export default function Article() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10 · 키 교환·서명·해시·광학 통신은 바꿔야 할 이유가 다릅니다</h2>
+        <AttackBranchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">RSA의 인수분해 가정(9절의 2048비트 추정)과 Diffie–Hellman·타원곡선 계열의 이산로그 가정은 Shor의 영향을 받습니다. ECDSA·BLS 서명과 이산로그 기반 증명·커밋도 각각 검토해야 합니다. 초기 설정에서 비밀을 삭제했더라도 공개 군 원소의 이산로그를 계산하는 능력이 생기는 문제는 남습니다.</p>
           <p className="leading-8">Grover의 검색 개선을 모든 암호의 보안 수치가 똑같이 절반이 된다는 규칙으로 쓰면 안 됩니다. 해시의 원상 찾기와 충돌 찾기는 다른 문제이고 병렬화·메모리·회로 비용도 다릅니다.</p>
+        </div>
+        <HarvestTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">장기간 비밀이어야 하는 통신은 지금 기록한 암호문을 미래에 푸는 상황을 고려합니다. 서명에서는 공개키 노출과 새로운 승인 위조가 문제입니다. 키만 바꾸고 인증서·펌웨어·복구·백업 경로에 예전 서명이 남아 있으면 전환이 끝난 것이 아닙니다.</p>
           <p className="leading-8">양자내성암호인 PQC는 일반 컴퓨터에서 계산합니다. 양자키분배인 QKD는 물리 신호로 공유 비밀을 만드는 별도 체계입니다. 아래 글에서 각각의 방정식·서명·통신 경로를 이어갑니다.</p>
         </div>

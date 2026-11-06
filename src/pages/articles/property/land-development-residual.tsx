@@ -3,7 +3,14 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import CashDepthViz from "./land-development-residual/viz/CashDepthViz";
+import CashViewMatchViz from "./land-development-residual/viz/CashViewMatchViz";
+import CheckOrderViz from "./land-development-residual/viz/CheckOrderViz";
+import ContractBranchViz from "./land-development-residual/viz/ContractBranchViz";
+import CostScopeViz from "./land-development-residual/viz/CostScopeViz";
+import DelayInterestViz from "./land-development-residual/viz/DelayInterestViz";
 import ResidualBarViz from "./land-development-residual/viz/ResidualBarViz";
+import ResidualWaterfallViz from "./land-development-residual/viz/ResidualWaterfallViz";
+import ValuationDateViz from "./land-development-residual/viz/ValuationDateViz";
 
 /** 공식 자료 확인: 2026-10-04. 금액 사례는 본문에 표시한 가정입니다. */
 export default function LandDevelopmentResidualArticle() {
@@ -36,6 +43,7 @@ export default function LandDevelopmentResidualArticle() {
         <h2 className="mb-6 text-2xl font-bold">3. 100억 원에서 70억 원과 15억 원을 뺀다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">완공한 상태의 매각액 100억 원, 토지를 제외한 공사·금융·판매 등 개발비 70억 원, 개발업자가 요구하는 이익 15억 원을 둡니다. 같은 기준일의 가격·비용 수준을 사용하고 월별 지급 시점의 할인은 생략한 단순 사업 예산입니다. 금액과 사업은 모두 (가정)이며 계산 결과를 오늘의 토지 시장가격으로 쓰지는 않습니다.</p>
+          <ResidualWaterfallViz />
           <p className="leading-7">100억 원에서 70억 원과 15억 원을 빼면 토지와 그 취득에 쓸 수 있는 잔여는 15억 원입니다. 공사 등을 합친 비용이 80억 원이 되면 잔여는 5억 원으로 줄어듭니다. 원래 15억 원을 토지 매도자에게 모두 줄 수 있다는 뜻은 아닙니다.</p>
           <p className="leading-7">취득에 드는 세금·법률·중개 비용 합계가 별도로 2억 원이라고 가정하면 매도자에게 배정할 예산은 15억 − 2억 = 13억 원입니다. 2억 원은 특정 국가의 세율을 적용한 값이 아닙니다. 요구 이익 15억 원도 확정 수입이나 외부에 지급할 청구서가 아니라 개발업자가 남기려는 목표입니다.</p>
         </div>
@@ -87,16 +95,19 @@ export default function LandDevelopmentResidualArticle() {
       </section>
       <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 소유권·허가·인프라·시간을 각각 확인합니다</h2>
-        <ResidualBarViz />
+        <CheckOrderViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">처음에는 100억 원에 팔 수 있는 용도와 면적을 계획 도면으로 확인합니다. 소유권과 실제 경계, 도로 접근, 오염과 기존 점유자의 권리를 조사해 땅을 실제로 쓸 수 있는지 봅니다. 지역 계획과 기반시설 연결 조건을 확인한 뒤 비용 70억 원의 항목을 채웁니다.</p>
           <p className="leading-7">설계·인허가와 공사, 기반시설, 세금·금융·판매, 예비비를 지급 시점에 놓습니다. 여기서 70억 원은 공사비 하나가 아니라 토지를 제외한 비용의 합계입니다. 토지와 취득에 남은 15억 원을 계산한 뒤에는 허가·자금조달·토질 조사 결과에 따른 계약 진행 조건과 불성립 시 계약금 처리를 정합니다.</p>
+          <ResidualBarViz />
           <p className="leading-7">같은 계획에서 매각액만 90억 원으로 낮추면 90 − 70 − 15 = 5억 원이 토지·취득 예산으로 남습니다. 비용만 80억 원으로 올려도 100 − 80 − 15 = 5억 원입니다. 두 일이 함께 생기면 90 − 80 − 15 = −5억 원입니다. 이 값은 토지의 실제 거래가격이 음수라는 뜻이 아니라 이 조건에서 양의 토지대금을 내면서 목표 이익까지 남길 예산이 없다는 뜻입니다.</p>
+          <DelayInterestViz />
           <p className="leading-7">이번에는 회수가 6개월 늦어지는 경우를 봅니다. 그동안 대출 잔액 50억 원이 유지되고 연 8%의 단리만 추가된다면 이자는 50억 × 0.08 × 6/12 = 2억 원입니다. 수수료·추가 관리비·복리는 제외한 (가정)입니다. 비용 합계가 72억 원이 되므로 목표 이익 15억 원을 유지할 토지·취득 예산은 13억 원으로 줄어듭니다.</p>
           <p className="leading-7">
             이미 토지와 취득에 15억 원을 썼다면 과거 지급액은 저절로 줄지 않습니다. 같은 지연에서 실제 남는 돈은 100 − 72 − 15 = 13억 원으로 계산합니다. 앞 계산에서는
             이익 15억 원을 고정해 토지 예산을 구했습니다. 이번에는 토지 지출 15억 원을 고정해 이익을 구했습니다.
           </p>
+          <CashViewMatchViz />
           <p className="leading-7">월별 현금을 할인해 평가할 때는 누구에게 돌아가는 돈인지도 맞춥니다. RICS 부록 B1.2.8~9는 차입금과 이자를 제외한 사업 현금을 사업의 목표 수익률로 평가하는 방식과, 차입·상환·이자를 반영한 자기자본 현금을 그 위험에 맞춰 평가하는 방식을 구분합니다. 이 글의 금융비 포함 70억 원과 정액 목표 이익 15억 원에 임의의 할인율을 덧붙여 완성된 평가로 처리하지 않습니다.</p>
         </div>
 
@@ -108,8 +119,10 @@ export default function LandDevelopmentResidualArticle() {
           <p className="leading-7">잔여법은 예상한 완공 가치에서 비용과 요구이익을 빼 토지 취득에 쓸 수 있는 돈을 계산합니다. RICS가 2019년 10월 펴내 2020년 2월 1일부터 발효한 『Valuation of development property』 6.1.1절, 인쇄 24쪽에 실린 원문을 그대로 읽습니다.</p>
           <p className="leading-7">처음에는 guidance note(지침)로 나왔지만 2026-10-09 확인한 RICS 현행 페이지는 같은 문서를 Professional Standard(전문 표준)로 분류합니다. 식과 용어 정의는 바뀌지 않았습니다.</p>
         </div>
+        <CostScopeViz />
         <SourceApplication source="RICS Valuation of development property · 6.1.1, p.24" excerpt="gross development value (GDV) - total development costs (including profit) = residual land value" application="100−(70+15)=15억 원입니다. 인용한 식은 비용에 이익을 포함하므로 70억 원과 15억 원을 각각 한 번 뺍니다. 반면 이 지침의 용어집은 total development cost를 토지와 이익 제외로 정의합니다. 표 제목만 보지 말고 해당 식의 포함 범위를 확인합니다." />
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
+          <ValuationDateViz />
           <p className="leading-7">이 뺄셈만으로 시점 조정까지 끝난 것은 아닙니다. 지침 부록 B3은 기본 잔여모형의 완공 시점 잔여를 평가일로 환산하고 취득 부대비용을 빼는 과정을 설명합니다. 할인 현금흐름 방식은 시점별 현금의 현재가치에서 출발합니다. 위 15억 원과 매도자 예산 13억 원은 계산 순서를 보여 주는 단순 예산으로 읽어야 합니다.</p>
         </div>
         <CitationBlock source="RICS Valuation of development property · 2019(2020-02-01 발효)" citeKey={1} href="https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf">실제 PDF의 용어집, 6.1~6.3절, 7.1절, 부록 B1.2.8~9와 B3을 확인했습니다. 인쇄 24쪽의 식도 화면으로 대조했습니다. 이 PDF 표지는 guidance note 1판이고, 2026-10-09 RICS 현행 페이지는 같은 문서를 Professional Standard로 분류합니다.</CitationBlock>
@@ -142,6 +155,7 @@ export default function LandDevelopmentResidualArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">도로가 새로 나면 접근성이 좋아질 수 있지만 사업비 분담이나 토지 수용, 입지 경쟁도 바뀝니다. 허가 가능성이 높아도 공사비와 금융비가 오르면 땅에 남는 몫이 줄어듭니다.</p>
           <p className="leading-7">토지 등기와 경계가 맞는지 확인합니다. 오염과 기존 임차인의 권리, 설정된 담보권도 조사해야 합니다. 이를 빼먹은 잔여 계산은 숫자가 맞아도 실행할 수 없는 계획이 됩니다.</p>
+          <ContractBranchViz />
           <p className="leading-7">계약 전에 허가와 금융 조달에 실패했을 때 계약을 해제하고 어느 돈을 돌려받을지 정합니다.</p>
         </div>
 

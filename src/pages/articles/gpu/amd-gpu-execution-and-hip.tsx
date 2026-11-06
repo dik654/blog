@@ -7,6 +7,12 @@ import { codeRefs, fileTrees } from "@/pages/articles/gpu/gpu-execution-sources/
 import LaneGroupingViz from "./amd-gpu-execution-and-hip/viz/LaneGroupingViz";
 import LaneMemoryPathViz from "./amd-gpu-execution-and-hip/viz/LaneMemoryPathViz";
 import LdsBankViz from "./amd-gpu-execution-and-hip/viz/LdsBankViz";
+import ByteTotalViz from "./amd-gpu-execution-and-hip/viz/ByteTotalViz";
+import SharedPerLaneViz from "./amd-gpu-execution-and-hip/viz/SharedPerLaneViz";
+import WarpSizeTargetViz from "./amd-gpu-execution-and-hip/viz/WarpSizeTargetViz";
+import VgprPressureViz from "./amd-gpu-execution-and-hip/viz/VgprPressureViz";
+import BoundsCheckViz from "./amd-gpu-execution-and-hip/viz/BoundsCheckViz";
+import BallotWidthViz from "./amd-gpu-execution-and-hip/viz/BallotWidthViz";
 
 /** teach-system S→B→0…7. Same 64-element trace; official source snapshots pinned. */
 export default function Article() {
@@ -33,6 +39,7 @@ export default function Article() {
     </section>
     <section id="case" data-teach-level="0" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">3 · 64명을 32명씩 묶으면 둘이고 64명씩 묶으면 하나입니다</h2>
+      <ByteTotalViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">원소 하나가 4바이트인 64개 배열 두 개를 더합니다(가정). 두 입력 512바이트를 읽고 결과 256바이트를 써서 유효 데이터 768바이트와 덧셈 64번이 필요합니다. 64개 작업을 한 협력 묶음으로 제출합니다.</p>
         <p className="leading-8">명령을 함께 진행할 단위가 32개면 두 묶음, 64개면 한 묶음입니다. 32개 단위에서 37번은 둘째 묶음의 5번입니다. 64개 단위에서는 첫째 묶음의 37번입니다. 묶음 수가 절반이라는 사실은 실행 시간이 절반이라는 증거가 아닙니다.</p>
@@ -51,6 +58,7 @@ export default function Article() {
     </section>
     <section id="need" data-teach-level="2" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">5 · 공통 명령은 공유하고 값은 각자 보관합니다</h2>
+      <SharedPerLaneViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">한 묶음이 같은 동작을 수행하면 명령을 가져오고 해석하는 일을 함께할 수 있습니다. 대신 각 작업은 서로 다른 입력과 중간값을 갖습니다. 모든 작업에 같은 값과 작업마다 다른 값의 저장소를 구별하면 불필요한 복제를 줄일 수 있습니다.</p>
         <p className="leading-8">
@@ -76,6 +84,7 @@ export default function Article() {
           </tbody>
         </table>
       </div>
+      <WarpSizeTargetViz />
       <p className="leading-8">실행 폭은 대상 환경에서 확인해야 합니다. ROCm 7.0의 HIP 문서는 gfx9의 warpSize를 64, gfx10 이상을 32로 설명하며 gfx10 이상에서 64를 지원하지 않는다고 명시합니다. RDNA ISA가 표현할 수 있는 wave64와 이 HIP runtime의 지원 범위는 구별해야 합니다. 이식 코드에서는 상수 대신 장치의 warpSize를 확인합니다.</p>
       <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
             대응하는 역할과 실제 자원 배치의 차이를 구별했습니다. 실제 64개 요청을 CU 안으로 보냅니다.
@@ -94,6 +103,7 @@ export default function Article() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">bank 하나가 한 번에 32비트, 곧 4바이트를 읽으므로 32개 bank가 한 클록에 함께 읽는 양은 32×4 = 128바이트입니다. 이 기준에서 CDNA4는 bank 수를 늘려 용량을 160KB로 키우고 “doubles the read bandwidth to 256 bytes per clock”, 곧 클록당 읽기 대역폭을 256바이트로 두 배 늘렸습니다.</p>
         <p className="leading-8">그래서 CDNA3의 64KB·32 banks 규칙을 MI355X에 그대로 대입하지 않습니다. 서로 다른 주소가 동시에 같은 bank 자원을 요구하면 접근이 나뉠 수 있습니다. 백서는 CDNA4의 정확한 bank 수를 적지 않으므로 bank 수와 명령별 읽기 묶음은 target의 ISA 문서와 측정으로 확인합니다. 단순히 CUDA용 padding 하나를 복사해서 끝내지 않습니다.</p>
+        <VgprPressureViz />
         <p className="leading-8">VGPR 사용량이 커지면 동시에 머물 수 있는 wave 수가 줄거나 private scratch로 spill될 수 있습니다. LDS를 많이 쓰는 block도 상주 자원을 제한합니다. 64개를 더하는 코드에 불필요한 임시 배열을 추가하면 덧셈 수가 그대로여도 느려질 수 있습니다.</p>
         <p className="leading-8">공유 공간을 사용하는 변형에서는 모든 필요 thread가 block barrier에 참여해야 합니다. 한 wave라는 이유로 동기화와 메모리 가시성 규칙을 생략하지 않습니다. 비동기 copy도 제출·완료·소비를 구별하며 target이 제공하는 명령과 runtime의 의미를 확인합니다.</p>
       </div>
@@ -101,6 +111,7 @@ export default function Article() {
     </section>
     <section id="source" data-teach-level="5" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">8 · AMD 예제의 2차원 번호도 64×1로 놓으면 37을 만듭니다</h2>
+      <BoundsCheckViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">고정 commit cdf9d101…의 HIP-Examples vectoradd_float는 x와 y를 계산합니다. 이어 i = y×width + x로 1차원 주소를 만듭니다. 이 글의 64개를 width 64·height 1, block 64×1로 놓으면 37번은 x=37·y=0, 따라서 i = 37입니다. 입력 b[37]과 c[37]을 더해 출력 a[37]에 씁니다.</p>
         <p className="leading-8">원본 예제의 기본 입력은 1024×1024이고 block은 16×16입니다. 64×1은 함수 규칙에 대입한 학습 사례입니다. 원본은 i&lt;width×height를 검사합니다. 일반적인 2차원 비정렬 폭에서는 x&lt;width와 y&lt;height를 각각 검사하는 것과 다릅니다. 바뀐 크기로 실제로 수정할 때는 축별 경계와 launch를 함께 검증해야 합니다.</p>
@@ -115,6 +126,7 @@ export default function Article() {
         <p className="leading-8">CUDA 원문의 64×0 + 37과 HIP 원문의 0×64 + 37은 같은 위치를 가리킵니다. 독립적인 덧셈이라 답을 보존하기 쉽습니다.</p>
         <p className="leading-8">HIPIFY 문서는 “HIPIFY does not automatically convert all CUDA code into HIP code seamlessly”라고 적어, 지원 목록 밖의 구문은 사람이 검사해야 한다고 밝힙니다.</p>
         <p className="leading-8">이 글은 inline PTX와 상수 32에 기댄 lane mask를 그 검사 후보로 꼽지만, HIPIFY 문서에서 inline PTX를 명시한 문장은 2026-10-09 기준 확인하지 못했습니다. 특정 라이브러리 구현의 성능까지 자동 변환하지는 않습니다.</p>
+        <BallotWidthViz />
         <p className="leading-8">32비트 mask가 실제로 어디서 깨지는지는 HIP 문서가 보여 줍니다. HIP의 <code>__ballot</code>은 각 lane의 조건을 비트 하나씩 모은 값을 <code>unsigned long long</code>으로 돌려줍니다.</p>
         <p className="leading-8">HIP 문서는 이 차이를 “the __ballot and __activemask built-ins in HIP have a 64-bit return value (unlike the 32-bit value returned by the CUDA built-ins)”라고 적습니다.</p>
         <p className="leading-8">37번 lane의 조건은 결과의 37번 비트에 들어갑니다. CUDA 코드처럼 이 값을 32비트 변수에 받으면 0–31번 비트만 남으므로 37번 lane의 참여가 사라집니다.</p>

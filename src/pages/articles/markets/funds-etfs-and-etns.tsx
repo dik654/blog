@@ -4,8 +4,15 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ApCreationArbitrageViz from "./funds-etfs-and-etns/viz/ApCreationArbitrageViz";
+import ClaimLayersViz from "./funds-etfs-and-etns/viz/ClaimLayersViz";
 import DailyResetExposureViz from "./funds-etfs-and-etns/viz/DailyResetExposureViz";
+import DepositTierViz from "./funds-etfs-and-etns/viz/DepositTierViz";
+import DesignationWindowViz from "./funds-etfs-and-etns/viz/DesignationWindowViz";
+import EtnRecoveryViz from "./funds-etfs-and-etns/viz/EtnRecoveryViz";
+import FxAreaViz from "./funds-etfs-and-etns/viz/FxAreaViz";
 import LeveragedPathsViz from "./funds-etfs-and-etns/viz/LeveragedPathsViz";
+import PremiumLimitLineViz from "./funds-etfs-and-etns/viz/PremiumLimitLineViz";
+import PremiumReturnViz from "./funds-etfs-and-etns/viz/PremiumReturnViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -32,6 +39,7 @@ export default function Article() {
       <section id="case" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3. 1만 원어치 자산을 1만100원에 삽니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
+<PremiumReturnViz />
 <p className="leading-8">자산 묶음 전체의 가치가 비용과 빚을 뺀 뒤 1억 원이라고 합시다. 이를 1만 좌로 나눴습니다. 한 좌에 대응하는 자산은 1만 원입니다. 거래 화면에서 한 좌를 1만100원에 사고, 나중에 자산 가치와 거래가격이 모두 1만1000원이 되었다고 둡니다. 모든 수치는 가정이며 세금과 분배금은 제외합니다.</p>
 <p className="leading-8">투자자가 번 금액은 1만1000−1만100=900원입니다. 자산은 10% 올랐지만 투자 수익률은 900÷1만100≈8.91%입니다. 처음에 자산 가치보다 100원을 더 낸 영향입니다.</p>
         </div>
@@ -72,9 +80,12 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">투자자는 ETF 한 좌를 1만100원에 삽니다. AP가 같은 자산 바스켓을 한 좌당 1만 원에 조달했다고 합시다. 설정·매도 비용이 60원이라면 좌당 40원의 차익이 남습니다. 이 가정에서는 새 ETF 매도가 늘고 괴리를 줄이는 힘이 생깁니다.</p>
 <p className="leading-8">비용이 130원이거나 기초시장이 휴장이라 자산을 살 수 없으면 그 거래가 성립하지 않습니다. AP의 존재는 언제나 NAV에 팔 수 있다는 보증이 아닙니다. 처음 투자자는 마지막에 1만1000원에 팔아 900원을 받습니다.</p>
+<EtnRecoveryViz />
 <p className="leading-8">같은 가격에 산 ETN이 약정대로 1만1000원을 지급해도 수익은 비용 전 900원입니다. 그러나 발행자가 부도나 계약 청구액의 40%만 회수한다는 별도 가정을 넣으면 4400원을 받고 5700원을 잃습니다. 이 40%는 시장 전망이 아니라 법적 청구권 차이를 드러내는 가정입니다.</p>
+<PremiumLimitLineViz />
 <p className="leading-8">위의 AP 차익거래는 미국식 설명입니다. 한국 상장 ETF·ETN에는 괴리 폭에 규정상 선이 따로 그어져 있습니다. 순자산가치(ETN은 지표가치)가 1만 원인 상품이라면 2026-10-09 현재 국내 기초자산은 시장가격 1만200원, 해외 기초자산은 1만500원이 그 선입니다.</p>
 <p className="leading-8">괴리율은 시장가격에서 순자산가치(ETN은 지표가치)를 뺀 값을 그 가치로 나눈 비율이고, 음수이면 절댓값을 씁니다. 그래서 1만100원 사례의 괴리율은 1%입니다. 한국거래소 유가증권시장 업무규정 제20조의4는 호가를 내어 거래를 받쳐 주는 유동성공급자(LP)에게 이 괴리율이 2%(해외 기초자산 5%)를 넘지 않도록 호가를 내라고 정합니다.</p>
+<DesignationWindowViz />
 <p className="leading-8">투자유의종목 기준도 이 비율에 묶여 있습니다. 같은 업무규정의 시행세칙(제134조의5·제134조의6)에 따르면 장 종료 시 실시간 괴리율의 절댓값이 그 비율의 2배 이상이면 거래소가 지정을 예고할 수 있습니다. 예고 뒤 10매매거래일 안에 다시 그 요건에 해당하면 다음 매매거래일에 투자유의종목으로 지정합니다. 1만 원짜리 국내 기초자산 상품이라면 괴리율 4%, 곧 1만400원이 그 선입니다.</p>
 <p className="leading-8">지정된 종목은 거래소가 매매 체결 방법을 달리 정할 수 있고(업무규정 제38조의2), 세칙 기준에 해당하면 매매거래를 정지할 수도 있습니다(제26조). 이 숫자는 바뀌어 왔습니다. 금융위원회 2020년 5월 18일 보도자료가 “규정상 괴리율 의무 범위”라고 부른 값은 3%(해외 6%)였고 투자유의 기준은 그 두 배인 6%(해외 12%)였습니다. 지금의 2%·5% 조문에는 2026년 8월·9월 개정 표시가 붙어 있습니다.</p>
         </div>
@@ -103,6 +114,7 @@ export default function Article() {
 <p className="leading-8">실제 TQQQ와 SQQQ의 2026년 9월 28일 요약설명서는 Nasdaq-100의 하루 성과에 각각 +3배와 −3배를 목표로 합니다. TQQQ의 “three times (3x) the daily performance”에서 daily가 기간 조건입니다. 여러 날 보유가 언제나 손실이라는 뜻도 아닙니다. 지수가 100→110→121로 연속 상승하면 가정한 일일 2배 상품은 100→120→144입니다. 누적 44%는 지수 누적 21%의 두 배 42%보다 큽니다.</p>
 <p className="leading-8">자기 돈 100에 빌린 돈 100을 더해 지수 자산 200을 샀다고 합시다. 수량을 고정하면 다른 경로가 됩니다. 지수가 100→110→100일 때 자산은 200→220→200이고 빚을 뺀 자기 몫은 100→120→100입니다. 재설정을 안 했기 때문입니다. 실제 차입에는 이자와 <Link to="/finance/risk/margin-collateral-and-leverage">담보 부족에 따른 상환 요구</Link>가 있고 펀드 안의 파생계약에도 비용과 상대방 위험이 있습니다.</p>
 <p className="leading-8">한국에서는 일일 2배 같은 레버리지 상품을 사기 전에 넘어야 할 문턱이 있습니다. 기본예탁금은 증권사가 매매 주문을 받기 전에 계좌에 맡겨 두도록 요구하는 최소 금액입니다. 유가증권시장 업무규정 제87조의2는 기초자산 가격이나 지수 변화에 1배를 넘는 배율(음의 배율 포함)로 연동하는 ETF·ETN을 개인이 매수할 때 증권사가 이 돈을 미리 받도록 정합니다.</p>
+<DepositTierViz />
 <p className="leading-8">금액은 시행세칙 제111조의3이 단계로 나눕니다. 1단계는 1천만 원 미만(면제 포함), 2단계는 1천만 원, 3단계는 1천만 원 초과 3천만 원 이하입니다. 개인이 이 상품을 거래할 계좌를 처음 열 때는 2단계나 3단계를 적용해야 하므로 첫 계좌라면 최소 1천만 원입니다. 2026년에 허용된 단일종목 레버리지 ETF·ETN은 3천만 원 이상을 현금으로만 받습니다.</p>
 <p className="leading-8">사전교육은 거래소 규정 밖에서 운영됩니다. 금융위원회 2026년 4월 21일 보도자료는 국내상장·해외상장 레버리지 ETF·ETN에 투자하려면 1시간 사전교육을 받아야 하고, 단일종목 상품에는 1시간 심화교육이 더해진다고 적었습니다. 2020년 5월 18일 발표가 함께 밝힌 신용거래 제외와 위탁증거금 100%는 2026-10-09 현재 규정 원문으로 다시 확인하지 못했습니다.</p>
 
@@ -122,8 +134,10 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">1만100원에 산 직후 살 사람이 제시한 가격이 1만 원뿐이면 지수가 그대로여도 즉시 팔 때 100원을 잃습니다. 여기에 보수·세금·환율·분배금 재투자 방식이 실제 수익을 바꿉니다.</p>
 <p className="leading-8">분산된 펀드도 특정 산업이나 통화에 몰려 있으면 그 위험을 함께 집니다. 매수 전에 기초자산, 법적 청구 대상, NAV 대비 체결가, 설정 중단 조건과 총비용을 확인해야 합니다. 장중 NAV 추정치도 휴장한 기초시장의 옛 가격을 쓸 수 있습니다.</p>
+<ClaimLayersViz />
 <p className="leading-8">기초자산을 직접 보유하는 실물 방식과 계약 상대방에게 지수 성과를 받는 합성 방식도 구별합니다. 합성 ETF에서는 펀드 재산의 지분을 가지면서 그 재산 안의 스왑 상대방 위험을 집니다. 담보와 위험한도는 적용 규정·설명서에 따라 다릅니다. 발행자 채무 자체를 사는 ETN과 동일한 청구권으로 취급할 수 없습니다.</p>
 <p className="leading-8">채권 ETF의 금리 민감도는 <Link to="/finance/markets/bond-pricing-and-yield-curve#duration">수정 듀레이션</Link>으로 읽습니다. 수정 듀레이션 5인 1000만 원 자산에 수익률이 1%포인트 올랐다고 합시다. 가격 변화의 일차 근사는 −5%, 약 −50만 원입니다. 큰 변화에서는 근사가 어긋나고 신용위험도 남습니다. 일반적인 채권 ETF는 만기가 돌아오는 채권을 갈아 넣습니다. 따라서 특정 채권 한 장을 만기까지 보유하는 조건과 다릅니다. 만기매칭형 ETF는 해당 청산 계획을 따로 봅니다.</p>
+<FxAreaViz />
 <p className="leading-8">환노출 상품에서 달러 자산이 10% 올라도 달러당 원화가 10% 내리면 원화 가치는 1.10×0.90=0.99, 즉 −1%입니다. 환헤지 상품은 <Link to="/finance/markets/forwards-and-futures#comparison">외환 선도 등의 계약</Link>으로 통화 변동을 줄이지만 헤지 비용과 조정 시차가 남습니다. 원화로 거래된다는 사실만으로 환위험이 사라지지 않습니다.</p>
 <p className="leading-8">원자재 선물형 ETF는 현물이 그대로여도 만기를 교체하는 경로에서 수익이 달라질 수 있습니다. <Link to="/finance/markets/forwards-and-futures#mechanism">밀 100톤의 만기 교체 사례</Link>에서 이를 계산합니다. 옵션을 팔아 현금을 지급하는 ETF는 <Link to="/finance/markets/covered-calls-and-income-funds">커버드콜의 손익과 분배 재원</Link>을 따로 확인해야 합니다.</p>
         </div>

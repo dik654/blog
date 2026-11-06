@@ -6,6 +6,18 @@ import SourceApplication from "../world-systems/SourceApplication";
 import { Link } from "react-router-dom";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs, fileTrees } from "./pq-sources/codeRefs";
+import CapsuleBytesViz from "./ml-kem-and-noisy-equations/viz/CapsuleBytesViz";
+import CompressBinsViz from "./ml-kem-and-noisy-equations/viz/CompressBinsViz";
+import ErrorGridViz from "./ml-kem-and-noisy-equations/viz/ErrorGridViz";
+import FailureExponentViz from "./ml-kem-and-noisy-equations/viz/FailureExponentViz";
+import ForwardSecrecyViz from "./ml-kem-and-noisy-equations/viz/ForwardSecrecyViz";
+import InputBoundaryViz from "./ml-kem-and-noisy-equations/viz/InputBoundaryViz";
+import KemMessagesViz from "./ml-kem-and-noisy-equations/viz/KemMessagesViz";
+import ModuleShapeViz from "./ml-kem-and-noisy-equations/viz/ModuleShapeViz";
+import PolyWrapViz from "./ml-kem-and-noisy-equations/viz/PolyWrapViz";
+import PublicValueCalcViz from "./ml-kem-and-noisy-equations/viz/PublicValueCalcViz";
+import SecretToTrafficViz from "./ml-kem-and-noisy-equations/viz/SecretToTrafficViz";
+import SwapSumViz from "./ml-kem-and-noisy-equations/viz/SwapSumViz";
 import CancelCellsViz from "./ml-kem-and-noisy-equations/viz/CancelCellsViz";
 import DecapsBranchViz from "./ml-kem-and-noisy-equations/viz/DecapsBranchViz";
 import LatticeOffsetViz from "./ml-kem-and-noisy-equations/viz/LatticeOffsetViz";
@@ -26,6 +38,7 @@ export default function Article() {
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2 · 공개값 하나와 캡슐 하나로 같은 비밀에 도착합니다</h2>
+        <KemMessagesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">수신자는 자신만 보관할 값과 남에게 줄 값을 한 쌍으로 만듭니다. 송신자는 공개값과 새 난수를 이용해 비밀과 캡슐을 만듭니다. 수신자는 캡슐과 자신만 아는 값으로 비밀을 복원합니다.</p>
           <p className="leading-8">이 절차가 상대의 이름까지 확인해 주지는 않습니다. 중간에서 공개값을 다른 사람의 것으로 바꾸면 다른 상대와 비밀을 만들 수 있습니다. 신원 확인은 뒤에서 다시 연결합니다.</p>
@@ -38,6 +51,9 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">3 · 17로 나누는 작은 계산을 준비합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">모든 수를 17로 나눈 나머지로 계산합니다(가정). 공개 표 A의 두 행은 [2,3]과 [4,1]입니다. 비밀 s는 [1,2], 작은 오류 e는 [1,0]입니다.</p>
+        </div>
+        <PublicValueCalcViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">공개값 t의 첫 성분은 2×1+3×2+1=9, 둘째는 4×1+1×2+0=6입니다. 남에게 A와 t=[9,6]을 줍니다. 이 두 차원 예는 안전한 암호가 아니라 곱과 오류의 역할을 보여 주는 장난감입니다.</p>
         </div>
 
@@ -45,6 +61,7 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4 · 두 계산의 큰 부분은 같고 작은 차이만 남습니다</h2>
+        <SwapSumViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">보내는 쪽도 임시 비밀을 고릅니다. 공개 표를 뒤집어 곱한 값과, 공개값 t에 임시 비밀을 곱한 값을 함께 보냅니다. 각 값에는 작은 오류와 전달할 비트가 들어갑니다.</p>
           <p className="leading-8">수신자가 첫 값에 자기 비밀을 곱해 둘째 값에서 빼면 공통으로 들어간 큰 곱이 사라집니다. 남은 값이 0 근처인지 8 근처인지를 보고 비트 하나를 읽습니다.</p>
@@ -54,6 +71,7 @@ export default function Article() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5 · 오류를 빼 버리면 풀기 쉬운 관계가 드러납니다</h2>
+        <ErrorGridViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             오류가 없다면 공개된 표와 결과로 비밀을 푸는 정확한 연립방정식이 됩니다. 차원이 충분히 클 때 작은 오류가 섞인 관계를 풀기 어렵다는 성질을 사용합니다. 아무 잡음을 많이
@@ -72,8 +90,15 @@ export default function Article() {
         <LatticeOffsetViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">격자는 몇 개의 기준 벡터를 정수 배수로 더해 만든 점들의 배열입니다. 작은 오류는 정확한 점에서 조금 벗어난 위치를 만듭니다. 이 그림은 이름을 이해하는 직관이며 모든 격자 문제가 어렵다는 뜻은 아닙니다.</p>
+        </div>
+        <ModuleShapeViz />
+        <PolyWrapViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">ML-KEM은 다항식을 성분으로 갖는 Module-LWE 구조를 씁니다. FIPS203의 다항식의 계수 개수 n은 256(차수255 이하), 계수의 나눗수 q는 3329이며 x의 256제곱+1로 다항식을 줄입니다. 모듈 차원 k는 2·3·4 중 하나입니다.</p>
           <p className="leading-8">k 말고도 표준이 함께 고르는 숫자가 네 개 더 있습니다. FIPS203 표 2(인쇄 39쪽)에서 ML-KEM-768은 k=3, η1=2, η2=2, du=10, dv=4입니다. η(에타)는 비밀과 오류 다항식의 계수를 뽑는 폭입니다. η=2이면 각 계수는 −2부터 2 사이의 작은 정수로 나옵니다.</p>
+        </div>
+        <CompressBinsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">du와 dv는 캡슐의 두 부분 u와 v를 계수당 몇 비트로 압축해 보낼지를 정합니다. dv=4이면 0부터 3328까지를 16칸으로 나눠 보내므로 한 칸 폭이 3329/16≈208이고, 반올림으로 생기는 오차는 최대 약 104입니다. 압축이 아낀 크기만큼 이 오차가 앞의 작은 오류에 더해집니다.</p>
           <p className="leading-8">공개 표는 짧은 씨앗에서 재생성하고 다항식 곱에는 NTT라는 변환을 이용합니다. 압축은 캡슐 크기를 줄이는 대신 복원 오차를 더합니다. 17의 예제는 다항식·압축·난수 분포를 모두 생략했습니다.</p>
           <p className="leading-8">KEM은 Key-Encapsulation Mechanism의 약자입니다. 새 공유 비밀을 만드는 기능이지 임의의 문서 전체를 직접 암호화하거나 작성자를 인증하는 서명 기능이 아닙니다.</p>
@@ -103,6 +128,9 @@ export default function Article() {
           <p className="leading-8">FIPS203의 내부 복원 절차는 캡슐에서 복원한 메시지와 공개 키의 해시로 후보 키와 재암호화 난수를 다시 만듭니다. 재생성한 캡슐이 받은 것과 같아야 정상 후보 키를 선택합니다.</p>
           <p className="leading-8">고정한 PQClean의 kem.c 146행은 메시지를 복원하고 150행은 후보 재료를 해시합니다. 153행은 재암호화, 155행은 캡슐 비교입니다. 158행은 비밀 z와 받은 캡슐에서 대체 키를 만들고 161행은 일치할 때만 정상 키를 복사합니다.</p>
           <p className="leading-8">우리 예제의 7→비트1은 이 경로의 첫 복원 단계에만 대응합니다. 실제 코드는 ML-KEM-768의 큰 다항식·압축·해시를 사용하므로 u=[6,5]를 C 함수에 넣는 테스트 벡터가 아닙니다.</p>
+        </div>
+        <InputBoundaryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">정상 길이의 부정한 캡슐을 처리할 때 내부 불일치 여부를 그대로 알려 주지 않는 방법이 암묵적 거절입니다. 바깥의 길이·키 검사 실패와 이 내부 처리까지 모두 같은 오류라고 뭉뚱그리면 안 됩니다.</p>
         </div>
 <p className="mb-5 leading-8">이 C 함수는 길이 인자를 받지 않으며 정해진 길이의 버퍼와 검사된 키를 전제로 합니다. FIPS203 §7.3의 캡슐·복호 키 길이 및 키 안의 공개 키 해시 검사는 호출부나 라이브러리의 입력 경계에서 별도로 충족해야 합니다. 이 함수의 재암호화 비교를 표준의 전체 입력 검사라고 읽지 않습니다.</p>
@@ -115,9 +143,13 @@ export default function Article() {
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9 · 1,088바이트 캡슐은 32바이트 비밀을 위한 것입니다</h2>
+        <CapsuleBytesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">FIPS203 표3의 ML-KEM-768은 공개 키 1,184바이트, 복호 키 2,400바이트, 캡슐 1,088바이트, 공유 비밀 32바이트입니다. 이름의 768을 AES 키 길이나 양자 보안 비트 수로 읽지 않습니다.</p>
           <p className="leading-8">512·768·1024는 서로 다른 파라미터 묶음의 이름입니다. 각각 NIST 보안 범주1·3·5를 목표로 하며 자원 모형과 공격 종류를 무시한 단일 비트 숫자로 환산하지 않습니다.</p>
+        </div>
+        <SecretToTrafficViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">공유 비밀은 통신의 문맥과 함께 키 파생 절차에 들어가고 이후 대칭키 암호로 데이터를 보호합니다. 인증서·서명 등으로 공개 키의 상대를 확인하고 대화 기록과 선택한 알고리즘도 결속해야 합니다.</p>
           <p className="leading-8">FIPS203은 기능과 파라미터를, SP800-227은 KEM 사용의 조합과 검사를 읽는 출발점입니다. 표준을 읽은 사실이나 공개 구현의 존재가 특정 제품의 인증을 뜻하지 않습니다.</p>
         </div>
@@ -130,7 +162,13 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">10 · 작은 오류·정상 난수·인증된 상대가 모두 필요합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">작은 예에서 둘째 오류 e2를 −4로 바꾸면 남은 값은 7−4=3입니다. 8보다0에 가까워 비트0으로 잘못 읽습니다.</p>
+        </div>
+        <FailureExponentViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">실제 표준은 6절의 η·du·dv를 함께 정해 이 실패 가능성을 수치로 묶습니다. FIPS203 표 1(인쇄 15쪽)이 적은 복호 실패율, 즉 정상적으로 만든 키와 캡슐인데도 복원한 비밀 K′이 K와 달라질 확률은 ML-KEM-512 2<sup>−138.8</sup>, ML-KEM-768 2<sup>−164.8</sup>(약 2.5×10<sup>−50</sup>), ML-KEM-1024 2<sup>−174.8</sup>입니다. 이 값은 해시 함수와 XOF(출력 길이를 원하는 만큼 늘릴 수 있는 해시)가 균등 무작위 함수처럼 동작한다는 가정 아래 계산한 것입니다.</p>
+        </div>
+        <ForwardSecrecyViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">상대의 공개 키를 인증하지 않으면 공격자와 정상적으로 비밀을 만들 수 있습니다. 장기 복호 비밀키가 유출되면 저장된 캡슐도 다시 분석할 수 있으므로 전방 비밀성은 임시 키 사용과 삭제를 포함한 전체 프로토콜의 성질입니다.</p>
           <p className="leading-8">기존 방식과 PQC를 함께 쓰는 hybrid 구성도 두 바이트열을 아무렇게나 잇는 것으로 끝나지 않습니다. 결합 함수·인증·알고리즘 협상·하향 전환 방지를 명세대로 구성해야 합니다.</p>
           <p className="leading-8">실장에서는 난수 품질, 입력 검증, 일정한 실행 시간, 전력·오류 주입 등의 부채널을 확인합니다. 이 글은 고정 소스의 경로와 작은 산술을 확인했으며 실제 장치의 부채널 안전성이나 FIPS 준수 여부는 검증하지 않았습니다.</p>
