@@ -5,6 +5,7 @@ import FlowRail from "../world-systems/FlowRail";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CoveredCallPayoffViz from "./covered-calls-and-income-funds/viz/CoveredCallPayoffViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -39,6 +40,7 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 손익을 주식과 판매 약속의 두 줄로 나눕니다</h2>
+        <CoveredCallPayoffViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">주식 장부에는 마지막 주가에서 100달러를 뺀 금액이 들어갑니다. 판매 약속의 장부에는 처음 받은 3달러가 있습니다. 마지막 주가가 105달러를 넘으면 그 초과분은 포기해야 합니다. 둘을 더한 뒤 100주를 곱합니다.</p>
 <p className="leading-8">주가 120달러에서 주식만 보면 주당 20달러 이익입니다. 그러나 105달러에 넘기기로 했으므로 주당 15달러의 상승분은 상대에게 갑니다. 받은 3달러까지 더해 내 몫은 주당 8달러입니다.</p>

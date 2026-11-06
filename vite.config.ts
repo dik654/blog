@@ -18,6 +18,7 @@ export default defineConfig({
         manualChunks(id) {
           // 벤더 라이브러리 분할
           if (id.includes('node_modules')) {
+            if (id.includes('node_modules/three/')) return 'vendor-three';
             if (id.includes('framer-motion')) return 'vendor-framer';
             if (id.includes('recharts') || id.includes('d3')) return 'vendor-charts';
             if (id.includes('mafs')) return 'vendor-mafs';

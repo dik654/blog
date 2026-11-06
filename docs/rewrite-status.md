@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### 글만으로 그려지지 않는 자리에 Viz 추가: 시범 2편 (2026-11-06)
+
+- 요구: 공개 글을 하나씩 읽어 상상이 막히는 자리에 Viz를 넣고, 깊이와 회전이 답의 일부면 three.js 3D로 보인다. 기준은 `viz-design-standard.md` 1.1절과 계약 4장에 병합했다.
+- 공통: `src/components/viz/Scene3DCanvas.tsx`. three.js는 화면 근처에서만 불러오고, 화면 밖에서는 프레임을 멈추며, WebGL이 없으면 2D 그림으로 바꾼다.
+- `crypto/quantum-key-distribution`: `SiftingRecordsViz`(#case, 12→8→6칸), `PolarizationMeasureViz`(#picture, 3D 측정 장면). 기록 숫자는 표와 같은 `signalRecords.ts`를 쓴다.
+- `markets/covered-calls-and-income-funds`: `CoveredCallPayoffViz`(#picture). −700·600·800달러와 손익분기 97은 본문 사례에서 계산했다.
+- 검수: 390px·1440px에서 4장면 전환 시 frame과 조작부 위치 변화 0px, 콘솔 오류 0건, 문서 가로 넘침 없음. 3D는 화면 밖 프레임 호출 0회. reduced motion과 WebGL 실패 경로는 코드만 있고 브라우저로 시험하지 않았다.
+- 상태: 시범 2편만 끝났다. 공개 글 전수 검토는 시작 전이다.
+
 ### 서빙 PCIe·MLA·에이전트 보강 로컬 검증 완료 (2026-11-03)
 
 - **메인 병합과 보류 3건(2026-11-03 오후)**: 메인 커밋 76fdedc8 위로 리베이스했다. 공유 레지스트리 충돌 7곳은 메인 쪽 형식을 살리고 이 브랜치의 새 항목만 붙였으며, 생성 장부 두 개는 `--write`로 다시 만들었다. 그 뒤 C1·A16(4090 출시 게이트 라이선스 단계)과 A17(PCIe 노드의 GPUDirect RDMA 확인과 `NCCL_NET_GDR_READ` 비교)을 반영했다. 감사 17종과 build(NODE_OPTIONS 8192, RSS 6.6GB)가 통과했고, sweep 7 route × 2 viewport는 실패 0이다. 바뀐 Viz 두 개는 390·1440 화면으로 확인했다.

@@ -5,22 +5,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
-
-// 교육용 측정 기록입니다. 실험 데이터나 보안 인증 결과가 아닙니다.
-const signals = [
-  [1, 0, "+", "+", 0, "보관"],
-  [2, 1, "×", "×", 1, "검사 공개"],
-  [3, 0, "+", "×", 1, "제외"],
-  [4, 1, "×", "×", 1, "보관"],
-  [5, 0, "+", "+", 1, "보관 · 오류"],
-  [6, 1, "×", "+", 0, "제외"],
-  [7, 1, "+", "+", 1, "보관"],
-  [8, 1, "×", "×", 1, "보관"],
-  [9, 0, "+", "×", 0, "제외"],
-  [10, 0, "×", "×", 0, "검사 공개"],
-  [11, 1, "+", "×", 0, "제외"],
-  [12, 0, "×", "×", 0, "보관"],
-] as const;
+import PolarizationMeasureViz from "./quantum-key-distribution/viz/PolarizationMeasureViz";
+import SiftingRecordsViz from "./quantum-key-distribution/viz/SiftingRecordsViz";
+import { SIGNAL_RECORDS } from "./quantum-key-distribution/viz/signalRecords";
 
 export default function Article() {
   return (
@@ -52,12 +39,13 @@ export default function Article() {
           <p className="leading-8">보내는 사람 A와 받는 사람 B가 빛 신호 12개를 주고받습니다(가정). 신호마다 무작위로 고른 0 또는 1을 담습니다. 두 사람은 각자 + 또는 ×라는 두 방향 묶음 중 하나를 무작위로 고릅니다. 검출과 측정 기록을 정한 다음 방향을 비교합니다. 같은 묶음을 쓴 기록만 남깁니다.</p>
           <p className="leading-8">아래는 설명을 위해 만든 결과입니다. 12개가 모두 검출됐고 같은 묶음을 쓴 8개 중 1개에 오류가 생겼다고 놓았습니다. 실제 실험의 거리·속도·잡음을 측정한 표는 아닙니다.</p>
         </div>
+        <SiftingRecordsViz />
         <figure className="my-7">
           <figcaption className="mb-3 text-sm leading-7 text-neutral-600 dark:text-neutral-300">가정 기록 · +/×는 방향 선택, 0/1은 값입니다. 오른쪽 처리는 기저 비교와 검사 표본 선택 후의 결과입니다. 오류 위치는 독자를 위해 함께 표시했습니다.</figcaption>
           <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-700">
             <table className="w-full min-w-[620px] text-center text-sm">
               <thead className="bg-neutral-100 dark:bg-neutral-900"><tr>{["신호 번호", "A 값", "A 방향", "B 방향", "B 값", "처리"].map((label) => <th className="px-4 py-3 font-semibold" key={label}>{label}</th>)}</tr></thead>
-              <tbody>{signals.map((row) => <tr key={row[0]} className="border-t border-neutral-200 dark:border-neutral-700">{row.map((cell, index) => <td key={index} className="px-4 py-3">{cell}</td>)}</tr>)}</tbody>
+              <tbody>{SIGNAL_RECORDS.map((row) => <tr key={row[0]} className="border-t border-neutral-200 dark:border-neutral-700">{row.map((cell, index) => <td key={index} className="px-4 py-3">{cell}</td>)}</tr>)}</tbody>
             </table>
           </div>
         </figure>
@@ -70,6 +58,7 @@ export default function Article() {
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 같은 방향으로 재면 읽히고, 다른 방향이면 결과가 갈립니다</h2>
+        <PolarizationMeasureViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">+에서는 가로를 0, 세로를 1로 정합니다. ×에서는 가로에서 45° 기울인 방향을 0, 135° 방향을 1로 정합니다. 이 각도는 빛이 진행하는 방향에 수직인 평면에서 두 장치가 맞춘 기준입니다.</p>
           <p className="leading-8">이상적인 장치에서 가로 신호를 +로 재면 0을 얻습니다. 같은 신호를 ×로 재면 0과 1이 각각 절반의 확률로 나옵니다. 신호 하나에서 두 방향의 답을 모두 확실하게 읽어 낼 수는 없습니다.</p>
