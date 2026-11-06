@@ -309,7 +309,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             1,800 tokens/s를 낸다고 가정합니다.
           </p>
           <p>
-            405B는 BF16 weight가 H100 8장 서버 한 대에 들어가지 않아 Llama 3 논문이 두
+            405B는 매개변수당 2byte인 BF16 weight가 H100 8장 서버 한 대에 들어가지 않아 Llama 3 논문이 두
             서버의 16장에 나눠 올렸습니다. 이 replica가 1,000 tokens/s를 낸다고 둡니다. 세 처리량은 모두 가정이므로 실제로는{" "}
             <Link to="/cs/ai/serving-benchmark-methodology#reproducibility">λ sweep</Link>으로 다시 재야 합니다.
           </p>
@@ -451,7 +451,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           </p>
           <p>
             확장 정책에는 서비스 대기와 준비 시간이 드러나는 지표가 필요합니다. CPU 사용률만으로
-            충분한지, 대기열 길이·KV 사용량·TTFT 가운데 무엇이 실제 SLO 위반을 먼저 알리는지는
+            충분한지, 대기열 길이·KV 사용량·첫 토큰까지 걸린 시간(TTFT) 가운데 무엇이 실제 SLO 위반을 먼저 알리는지는
             부하 시험으로 확인합니다. 새 복사본이 가중치를 읽고 준비를 마치는 데 걸린 실측 시간이
             길다면, 반응형 확장만으로는 늦을 수 있으므로 예상 수요보다 먼저 늘리는 정책을 함께
             검토합니다.

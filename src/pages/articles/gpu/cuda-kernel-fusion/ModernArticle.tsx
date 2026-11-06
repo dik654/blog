@@ -30,7 +30,7 @@ export default function ModernCudaKernelFusionArticle() {
         </header>
         <p data-teach-level="S" className="text-lg leading-8 text-foreground/90">
           한 문장으로 말하면, kernel fusion은 여러 계산을 무조건 크게 합치는 기술이 아니라
-          <strong> 중간 배열의 HBM 왕복을 없애도 새 자원 비용보다 이익이 큰 가장 작은 경계</strong>를 찾는 기술입니다.
+          <strong> 중간 배열의 GPU 메모리(HBM) 왕복을 없애도 새 자원 비용보다 이익이 큰 가장 작은 경계</strong>를 찾는 기술입니다.
         </p>
         <p data-teach-level="B">
           32 MiB FP16 배열에 <span className="whitespace-nowrap">scale → GELU → clamp</span>를 차례로 적용한다고 해보겠습니다.

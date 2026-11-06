@@ -129,7 +129,7 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
             또는 FLUX 2 계열 autoencoder가 있고 생성 backbone은 rectified-flow Transformer입니다.
           </p>
           <p>
-            Final backbone은 single-stream을 택했습니다. 그 안에서 attention에는 GQA와 gated sigmoid attention이, FFN에는
+            Final backbone은 single-stream을 택했습니다. 그 안에서 attention에는 K/V를 묶어 줄이는 GQA와 gated sigmoid attention이, FFN에는
             SwiGLU가 들어갑니다. Normalization은 zero-centered RMSNorm과 QKNorm으로, 위치 표현은 3D axial RoPE로 잡았습니다.
           </p>
           <p>

@@ -69,7 +69,7 @@ export default function InferenceEngineDesignAxesArticle() {
               끝까지 가면 KV에는 200 + 300 = 500 token이 쌓입니다. (가정)
             </p>
             <p>
-              모델은 Llama 3 8B 모양으로 둡니다. 층 32개, KV head 8개, head 크기 128에 BF16을 쓰면 token 하나의 KV는 128 KiB, 층 하나만 보면 4 KiB입니다.
+              모델은 Llama 3 8B 모양으로 둡니다. 층 32개, KV head 8개, head 크기 128에 숫자당 2byte인 BF16을 쓰면 token 하나의 KV는 128 KiB, 층 하나만 보면 4 KiB입니다.
               이 값을 곱셈으로 푸는 장부는 4절에 있고, 일반적인 계산 방법은 <Link to="/cs/ai/kv-cache-fundamentals">KV cache 기초</Link>에 있습니다.
             </p>
             <p>

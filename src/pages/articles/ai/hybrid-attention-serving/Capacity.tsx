@@ -264,7 +264,7 @@ C_{max} &\le \left\lfloor\frac{N_{capacity}}{L_{request}}\right\rfloor
         <p>
           따라서 운영 상한은 maximum-concurrency 한 줄만으로 확정하지 않습니다.
           실제 prompt 길이 분포를 넣고 active sequence를 늘리면서 GPU KV usage,
-          preemption, TTFT와 inter-token latency를 함께 봅니다.
+          preemption, 첫 토큰까지 걸린 시간(TTFT)과 inter-token latency를 함께 봅니다.
         </p>
         <p>
           <code>max_num_seqs</code>는 cache를 새로 만드는 옵션이 아니라

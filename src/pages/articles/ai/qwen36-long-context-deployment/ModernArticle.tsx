@@ -303,7 +303,7 @@ d_{rope}
           <p className="leading-8">
             가중치 byte와 GB·GiB를 계산하는 일반 절차는{" "}
             <Link to="/cs/ai/model-vram-budgeting">모델 VRAM 계산</Link>이
-            정본입니다. Qwen3.6 공식 BF16 payload는 51.75 GiB라 48 GiB 한 장에는
+            정본입니다. Qwen3.6 공식 BF16(숫자당 2byte) payload는 51.75 GiB라 48 GiB 한 장에는
             KV 이전부터 들어가지 않습니다. 공식 mixed-FP8 payload는 약 28.75
             GiB입니다.
           </p>

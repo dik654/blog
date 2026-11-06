@@ -72,7 +72,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             합쳐야 합니다. 이쪽이 row parallelism 입니다.
           </p>
           <p>
-            Megatron-LM은 MLP의 첫 GEMM을 열(column) 방향으로 자릅니다. 둘째 GEMM은 행(row) 방향으로 자릅니다. 그 사이의 GeLU 때문입니다. 첫 GEMM 을 row 로 자르면
+            Megatron-LM은 MLP의 첫 행렬곱(GEMM)을 열(column) 방향으로 자릅니다. 둘째 GEMM은 행(row) 방향으로 자릅니다. 그 사이의 GeLU 때문입니다. 첫 GEMM 을 row 로 자르면
             GeLU(X₁A₁ + X₂A₂) 를 계산하기 전에 부분합을 합쳐야 하지만 column 으로 자르면 GeLU(XA₁) 과 GeLU(XA₂) 를 따로 적용해도 결과가 같습니다. 그
             열 조각이 둘째 GEMM 의 row 입력으로 그대로 들어갑니다.
           </p>
@@ -248,7 +248,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             대역폭이 남는다고 한 사용자가 빨라지지는 않습니다. 그 사용자의 token 은 두 node 의 stage 를 차례로 지나고 hop latency 가 더해집니다. PP 가 주는 것은 한 replica 가 쓸 수 있는 VRAM 이고 속도는 microbatch 가 찰 때 throughput 으로만 돌아옵니다.
           </p>
           <p>
-            용량 때문에 PP 가 필요한 예가 DeepSeek-R1 FP8 입니다. 체크포인트가 688.6 GB 라 RTX PRO 6000 8 장(768 GB)에 가중치는 들어가도 KV 를 둘
+            용량 때문에 PP 가 필요한 예가 DeepSeek-R1 FP8(숫자당 1byte) 입니다. 체크포인트가 688.6 GB 라 RTX PRO 6000 8 장(768 GB)에 가중치는 들어가도 KV 를 둘
             자리가 거의 없어 2 node PP 2 가 거론됩니다. 595 GB 인 Kimi K2.5 INT4 는 한 node 에 들어가므로 PP 가 필수는 아닙니다.
           </p>
           <p>

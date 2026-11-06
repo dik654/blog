@@ -306,7 +306,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
             GPU 수로 두고 PP 를 node 수로 두라고 적습니다. NVLink 가 없는 node 에서는 TP 대신 PP 를 쓰라고도 합니다.
           </p>
           <p>
-            마지막 권고는 규칙으로 굳히지 않습니다. RTX PRO 6000 8 장 PCIe node 에서 Kimi K2.5 를 실제로 서빙한 현장 기록은 TP 8 에 DCP 8 을 더한
+            마지막 권고는 규칙으로 굳히지 않습니다. RTX PRO 6000 8 장 PCIe node 에서 Kimi K2.5 를 실제로 서빙한 현장 기록은 TP 8 에 decode context parallel(DCP) 8 을 더한
             구성이었습니다. 단일 스트림은 P2P 를 켜면 65, 끄면 44 tok/s 였고 node 하나에 model 이 들어갔습니다.
           </p>
           <p>

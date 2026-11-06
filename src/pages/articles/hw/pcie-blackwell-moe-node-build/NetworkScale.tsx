@@ -60,7 +60,7 @@ export default function NetworkScale() {
           </p>
           <p>
             망이 실제로 일하는 것은 앞뒤 단계를 나눌 때입니다. 프롬프트를 읽는 노드와 토큰을 내는 노드를 따로 두면 앞 노드가 만든 기억을 뒤 노드로 넘겨야 합니다. 200K 토큰
-            대화면 그 기억이 기가바이트 단위라서 여기서 처음으로 RDMA와 400G가 값을 합니다.
+            대화면 그 기억이 기가바이트 단위라서 여기서 처음으로 원격 메모리를 직접 읽고 쓰는 RDMA와 400G가 값을 합니다.
           </p>
         </div>
 
@@ -96,7 +96,7 @@ export default function NetworkScale() {
             때문입니다.
           </p>
           <p>
-            NCCL에도 하나 짚을 값이 있습니다. NCCL_NET_GDR_READ의 기본값은 NVLink가 있는 플랫폼에서만 1이고 나머지는 0입니다. 이 노드처럼 PCIe만 있으면 직접 1로 적어야 송신 쪽도 카드 메모리를 직접 읽습니다.
+            GPU 통신 라이브러리 NCCL에도 하나 짚을 값이 있습니다. NCCL_NET_GDR_READ의 기본값은 NVLink가 있는 플랫폼에서만 1이고 나머지는 0입니다. 이 노드처럼 PCIe만 있으면 직접 1로 적어야 송신 쪽도 카드 메모리를 직접 읽습니다.
           </p>
           <p>
             노드를 넘는 expert 분산(wide-EP)은 이 노드에서 보류합니다. DeepEP의 빠른 모드는 노드 안 NVLink를 전제하고, 8장 PCIe 노드에서 초기화가 실패한 이슈가 열려 있습니다. pplx는 vLLM에서 빠졌고, 남는 allgather_reducescatter는 토큰을 모든 rank에 모으므로 참여 노드가 늘수록 트래픽이 커집니다. llm-d의 wide-EP 가이드도 H200·B200과 모든 NIC 사이 RDMA 조건에서만 검증됐습니다.

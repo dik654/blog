@@ -159,7 +159,7 @@ export default function MoeVramServingTradeoff() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          그래서 &quot;1T MoE가 32B처럼 decode한다&quot;는 말은 단일 스트림 지연에만 맞습니다. 동시성이 높아지면 step당 읽기는 거의 1T 쪽이고 대신 그 읽기를 B개 token이 나눠 냅니다. 처리량은 결국 전체 weight 읽기와 expert GEMM이 얼마나 꽉 차는지로 정해집니다.
+          그래서 &quot;1T MoE가 32B처럼 decode한다&quot;는 말은 단일 스트림 지연에만 맞습니다. 동시성이 높아지면 step당 읽기는 거의 1T 쪽이고 대신 그 읽기를 B개 token이 나눠 냅니다. 처리량은 결국 전체 weight 읽기와 expert 행렬곱(GEMM)이 얼마나 꽉 차는지로 정해집니다.
         </p>
         <p className="leading-8">
           이 전환이 없는 dense model은 batch와 무관하게 step마다 전체를 읽고 batch가 커질수록 token당 몫만 줄어듭니다. MoE는 batch 1에서 dense보다 훨씬 가볍게 시작해 batch가 커질수록 dense와 같은 장부로 수렴합니다.

@@ -96,7 +96,7 @@ export default function Article(){
       <h2 className="mb-6 text-2xl font-bold">7 · 평균 바이트와 가장 늦은 GPU를 함께 본다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">GPU마다 2048개 token을 처리하면 dispatch의 논리 payload는 2048×2×4096×2B=32MiB이고 combine까지 64MiB입니다. 균등 배정에서 1/8이 로컬이라는 가정이면 기대 remote 왕복은 56MiB입니다. 실제 routing count와 node별 전송 공유로 이 기대값을 검증해야 합니다.</p>
-        <p className="leading-8">56MiB를 가정한 유효 단방향 50GB/s로 나누면 1.174ms입니다. 450GB/s라면 약 0.130ms입니다. 양방향 합산 peak를 단방향 수치로 대입하면 안 됩니다. FP8 dispatch와 BF16 combine도 서로 같은 바이트라는 가정을 깨므로 scale·metadata까지 따로 셉니다.</p>
+        <p className="leading-8">56MiB를 가정한 유효 단방향 50GB/s로 나누면 1.174ms입니다. 450GB/s라면 약 0.130ms입니다. 양방향 합산 peak를 단방향 수치로 대입하면 안 됩니다. FP8(1byte) dispatch와 BF16(2byte) combine도 서로 같은 바이트라는 가정을 깨므로 scale·metadata까지 따로 셉니다.</p>
         <p className="leading-8">균형이면 GPU 하나가 4096개 expert 입력을 받습니다. 세 행렬의 연산은 입력 하나당 6×4096×11008 FLOP이므로 합계 약 1.108TFLOP입니다. 가정한 유효 600TFLOP/s에서는 약 1.847ms입니다. 가장 바쁜 GPU가 1.75배를 받으면 그 계산만 약 3.232ms로 늘어납니다.</p>
         <p className="leading-8">한 token의 dispatch→계산→combine은 의존하는 순서입니다. 많은 chunk의 서로 다른 단계를 겹치면 처리량이 좋아질 수 있지만 통신도 SM·메모리 자원을 씁니다. 두 시간의 max는 이상적인 겹침의 하한이며 실제 한 layer의 완료 시간을 보장하지 않습니다.</p>
       </div>
@@ -174,9 +174,9 @@ export default function Article(){
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">2048개를 32개 token으로 줄이면 논리 dispatch는 512KiB입니다. 전송량과 expert 계산은 줄어도 count 교환·launch·동기화의 고정 비용은 같은 비율로 줄지 않습니다. 단지 batch가 절반이 됐다는 이유만으로 메모리 병목이 됐다고 판정하지 말고 실제 분해 시간을 확인합니다.</p>
         <p className="leading-8">측정에는 모델·routing 분포·dtype·padding, GPU·node·NIC, 단방향 유효 대역폭, 라이브러리 commit, 평균과 p99 완료시간을 남깁니다. 평균 균형이 좋아도 순간 hot expert가 꼬리를 늦출 수 있습니다. <Link to="/cs/gpu/gpu-collective-network">collective 통신 정본</Link>과 <Link to="/cs/ai/serving-benchmark-methodology">서빙 측정 정본</Link>에서 이어집니다.</p>
-        <p className="leading-8">반대로 EP가 이득을 내는 조건도 batch에서 나옵니다. 동시 요청이 늘면 한 layer가 읽는 expert가 합집합으로 늘고 expert마다 들어오는 token도 늘어 expert GEMM이 찹니다. batch가 작으면 expert마다 token이 몇 개뿐이라 교환의 고정 비용만 남습니다.</p>
+        <p className="leading-8">반대로 EP가 이득을 내는 조건도 batch에서 나옵니다. 동시 요청이 늘면 한 layer가 읽는 expert가 합집합으로 늘고 expert마다 들어오는 token도 늘어 expert 행렬곱(GEMM)이 찹니다. batch가 작으면 expert마다 token이 몇 개뿐이라 교환의 고정 비용만 남습니다.</p>
         <p className="leading-8">공개 수치가 그 운영점을 보여 줍니다. vLLM 블로그의 wide-EP는 H200 한 장당 출력 약 2,200 tok/s였는데 차트 조건이 EP rank당 동시 요청 256개였습니다. 요청 하나로 나누면 약 8.6 tok/s입니다(계산).</p>
-        <p className="leading-8">GPU당 처리량 헤드라인은 이렇게 요청당 한 자릿수 속도에서 나오곤 합니다. 요청당 속도에 SLO가 걸린 서빙이라면 그 운영점이 SLO 안에 있는지부터 확인합니다. batch와 expert 합집합의 계산은 <Link to="/cs/ai/model-vram-budgeting#moe-vram-serving-tradeoff">MoE decode read 장부</Link>에 있습니다.</p>
+        <p className="leading-8">GPU당 처리량 헤드라인은 이렇게 요청당 한 자릿수 속도에서 나오곤 합니다. 요청당 속도에 서비스 목표(SLO)가 걸린 서빙이라면 그 운영점이 SLO 안에 있는지부터 확인합니다. batch와 expert 합집합의 계산은 <Link to="/cs/ai/model-vram-budgeting#moe-vram-serving-tradeoff">MoE decode read 장부</Link>에 있습니다.</p>
         <p className="leading-8">예측해 보세요. token 37의 두 expert를 모두 GPU 0으로 옮기면 무엇이 사라질까요? 그 token의 원격 왕복은 줄지만 weight 저장과 expert 계산 및 결합 자체는 남습니다. 3절에서 센 바이트의 경계로 답할 수 있습니다.</p>
       </div>
 

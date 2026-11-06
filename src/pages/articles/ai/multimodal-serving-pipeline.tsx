@@ -401,7 +401,7 @@ export default function MultimodalServingPipelineArticle() {
             </p>
             <p>
               encoder를 GPU 여러 장에 어떻게 나눌지도 따로 정합니다. mm_encoder_tp_mode 기본값 weights는 언어 모델처럼 encoder 가중치를 나눕니다. data로 바꾸면 각 GPU가
-              encoder 전체를 들고 사진 묶음을 나눠 처리합니다. 문서는 TP 8에서 처리량과 TTFT가 약 10% 좋아졌다는 측정을 적지만, 모델별 구현이 필요하고 메모리가 조금 늘어납니다.
+              encoder 전체를 들고 사진 묶음을 나눠 처리합니다. 문서는 TP 8에서 처리량과 첫 토큰까지 걸린 시간(TTFT)이 약 10% 좋아졌다는 측정을 적지만, 모델별 구현이 필요하고 메모리가 조금 늘어납니다.
             </p>
             <p>
               encoder를 아예 다른 서버로 떼어 내는 구성도 있습니다. SGLang은 --encoder-only 서버와 --language-only 서버를 나누고 --encoder-transfer-backend로 embedding을

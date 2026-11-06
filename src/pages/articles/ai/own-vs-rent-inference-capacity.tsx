@@ -385,7 +385,7 @@ export default function OwnVsRentInferenceCapacityArticle() {
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
-            자체 호스팅 쪽은 가격을 넣지 않고 거꾸로 셉니다. PRO 6000 서버판의 중고 시세는 2026년 7월에서 10월 사이 약 66퍼센트 올랐습니다. 특정 가격으로 낸 결론은 금방 낡으므로 SLO를 지키는 처리량과 가동률을 정하고 API와 비용이 같아지는 최대 시스템 가격을 구합니다.
+            자체 호스팅 쪽은 가격을 넣지 않고 거꾸로 셉니다. PRO 6000 서버판의 중고 시세는 2026년 7월에서 10월 사이 약 66퍼센트 올랐습니다. 특정 가격으로 낸 결론은 금방 낡으므로 서비스 목표(SLO)를 지키는 처리량과 가동률을 정하고 API와 비용이 같아지는 최대 시스템 가격을 구합니다.
           </p>
 
           <p className="leading-7">

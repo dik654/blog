@@ -59,7 +59,7 @@ export default function KubernetesFleet() {
           LLM request는 prompt와 output 길이가 달라 service time의 분산이
           큽니다. GPU utilization이 높지 않아도 긴 prefill이 decode를
           지연시키거나 KV budget 때문에 새 sequence가 waiting에 남을 수
-          있습니다. 반대로 utilization이 높더라도 TTFT와 TPOT SLO를 지키고
+          있습니다. 반대로 utilization이 높더라도 TTFT와 TPOT 서비스 목표(SLO)를 지키고
           있다면 즉시 scale할 이유는 없습니다. Queue length와 queue time을
           사용자 SLI와 함께 보는 이유입니다.
         </p>

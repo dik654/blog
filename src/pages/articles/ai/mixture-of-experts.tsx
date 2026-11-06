@@ -340,7 +340,7 @@ export default function MixtureOfExpertsArticle() {
           </p>
           <p className="leading-8">
             그렇다고 “Top-1이 언제나 더 빠르다”거나 “Top-2가 언제나 더 정확하다”고 단정할 수는 없습니다. 같은 k라도 expert
-            GEMM 크기, all-to-all 구현, token batch, capacity policy가 달라지면 system cost가 달라지기 때문입니다.
+            행렬곱(GEMM) 크기, all-to-all 구현, token batch, capacity policy가 달라지면 system cost가 달라지기 때문입니다.
           </p>
           <p className="leading-8">
             여기서 말하는 expert는 router가 골라야만 계산되는 <strong>routed expert</strong>입니다. 일부 MoE는 이와 별도로 router 선택과 무관하게 모든 token이 항상 통과하는 <strong>shared expert</strong>를 둡니다. Shared expert의 출력은 top-k 합이 아니라 그대로 더해지며, routed expert를 더 잘게 나누고 shared expert를 분리하는 설계는{" "}

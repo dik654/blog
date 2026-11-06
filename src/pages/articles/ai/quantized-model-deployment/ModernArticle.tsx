@@ -19,7 +19,7 @@ export default function QuantizedModelDeploymentArticle() {
             Model 크기를 볼 때 첫 직관은{" "}
             <strong>parameter count × parameter당 byte</strong>입니다. 27B
             BF16은 약 54 GB라서 48 GB 카드 한 장에 raw weights조차 들어가지
-            않습니다. FP8이면 약 27 GB부터 시작하지만 mixed-dtype tensor·scale
+            않습니다. 숫자당 1byte인 FP8이면 약 27 GB부터 시작하지만 mixed-dtype tensor·scale
             metadata·KV·workspace를 더해야 합니다.
           </p>
           <p>
