@@ -338,7 +338,7 @@
     },
     {
       "route": "ai/agent-approval-and-sandbox",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#에이전트-글-주제-중심-재편-시범-승인과-샌드박스-2026-11-06"
     }
   ]
