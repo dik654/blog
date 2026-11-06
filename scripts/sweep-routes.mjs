@@ -72,6 +72,11 @@ function publicPathOf(route) {
   return `${domain}/${route}`;
 }
 if (routes.length === 0) {
+  // route 수가 조각 수보다 적으면 빈 조각이 생깁니다. 검사할 것이 없을 뿐 실패가 아닙니다.
+  if (shardOption) {
+    console.log(`이 조각(${shardOption})에 배정된 route가 없어 건너뜁니다.`);
+    process.exit(0);
+  }
   console.error("검사할 route 가 없습니다.");
   process.exit(1);
 }
