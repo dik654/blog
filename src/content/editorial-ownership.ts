@@ -30475,6 +30475,26 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "secondary-source", rule: "rtx6kpro 위키 수치는 현장 경험으로 표시하고 조건(P2P, KV dtype, DCP, gpu-util)과 함께만 인용한다." },
     ],
   },
+  "agent-approval-and-sandbox": {
+    title: "승인과 샌드박스 글이 소유하는 범위",
+    owns: [
+      "승인과 샌드박스가 서로를 대신하지 못하는 이유",
+      "명령 문자열과 자식 프로세스 실제 효과의 간격",
+      "경계 밖 실행 요청과 분류기 자동 심사의 자리",
+      "구현별 기본값을 비교하는 틀과 2026-11-06 기준 비교표",
+    ],
+    reuses: [
+      { label: "에이전트 루프의 제안과 실행", href: "/cs/ai/agent-loop-foundations" },
+      { label: "시스템 호출 경로별 격리 수준", href: "/cs/ai/sandbox-runtime-isolation#runtime-spectrum" },
+      { label: "외부 전송 목적지 통제", href: "/cs/ai/sandbox-deployment-controls#egress" },
+      { label: "Namespace와 Container 기초", href: "/cs/ai/agent-sandbox-security" },
+      { label: "피해 범위와 최소 권한", href: "/cs/ai/agent-control-boundaries#blast-radius" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "기본값과 동작은 각 구현의 공식 문서와 고정 커밋의 소스를 2026-11-06에 대조했다. Claude Code, Cursor, Antigravity는 소스가 공개되지 않아 문서로만 확인했다." },
+      { kind: "project-claim", rule: "명령 5개와 숨은 전송은 설명을 위해 정한 가정이며, 피해 건수는 이 다섯 명령 안에서 센 값이다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

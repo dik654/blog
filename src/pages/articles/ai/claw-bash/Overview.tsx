@@ -87,6 +87,10 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">
         Bash는 모델의 문자열을 host의 실제 effect로 바꾸는 경계입니다
       </h2>
+        <p className="not-prose mb-6 border-l-2 border-primary/60 pl-4 text-sm leading-6 text-muted-foreground">
+          이 글은 claw-code의 2026-08-06 커밋을 읽은 사례입니다. 그 뒤로 2026-11-06까지 177개 커밋이 더 쌓였으므로 지금 동작과 다를 수 있습니다.
+          승인과 샌드박스의 공통 원리와 현행 구현 비교는 <Link to="/cs/ai/agent-approval-and-sandbox">승인과 샌드박스</Link> 글에서 먼저 볼 수 있습니다.
+        </p>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">사용자가 “로그인 요청이 왜 401로 끝나는지 찾아 최소 수정하고 test해 주세요”라고 요청했다고 가정하겠습니다. 모델은 source를 찾기 위한 command를 만들 수 있지만 문자열을 생성한 것만으로 실행 권한을 얻지는 않습니다. 모델이 소유하는 것은 <strong>실행 제안</strong>이고 filesystem·network·process effect를 허용하는 주체는 host runtime입니다.</p>

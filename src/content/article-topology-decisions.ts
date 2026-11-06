@@ -4220,6 +4220,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "본문·식·Viz·연습문제가 AA-AgentPerf 티어 20/60/180, H200×8 11·B300×8 144, 900→9 tok/s, 98.85%→16.78% 붕괴를 같은 값으로 쓰는지로 판정한다.",
   },
+  "ai/agent-approval-and-sandbox": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-11-06",
+    rationale:
+      "승인과 샌드박스가 서로를 대신하지 못하는 이유 하나를 묻는 글이다. 사례, 구조, 이름, 추적, 원문, 구현 비교가 같은 명령 5개를 쓰므로 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "본문·Viz·연습문제가 명령 5개, 피해 3→1→1→0건, 물음 0→2→0→1번을 같은 값으로 쓰는지로 판정한다.",
+  },
 };
 
 /**
@@ -4227,6 +4236,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/agent-approval-and-sandbox": "d779fa75de19ae2c",
   "gpu/pcie-blackwell-moe-node-build": "1a4785b4ab194f64",
   "ai/tensor-and-pipeline-parallel-inference": "70a9b40db82b06fe",
   "ai/mla-kv-replication-and-decode-context-parallel": "a54daaf064754b88",
@@ -4507,11 +4517,11 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/removal-is-not-inpainting": "ce9ea692a6e199d0",
   "ai/masked-edit-verb-routing": "f3b12fb469f1ba8b",
   "ai/generative-measurement-controls": "d1dc7cf5c7caffb2",
-  "ai/claw-bash": "bf22d14e31b49a4d",
+  "ai/claw-bash": "980773bd47e44d42",
   "ai/claw-cli": "fef3e181a0921f63",
   "ai/claw-compaction": "85fb2e29578a4bef",
   "ai/claw-overview": "54338db509409889",
-  "ai/claw-permissions": "214dbb529274cccc",
+  "ai/claw-permissions": "fde7bd003415513d",
   "ai/claw-session": "cbcc7c0e39c3bc6b",
   "ai/claw-worker-boot": "f9191c745d76c11f",
   "ai/llm-serving-ops": "58c53da4c3e32026",

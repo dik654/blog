@@ -42861,6 +42861,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition: "노드 사이에 PP 경계나 독립 복제본을 더하면 가중치 대비 KV 자리와 동시 처리 용량은 늘지만, 한 token의 층을 차례로 거쳐야 하므로 요청 하나의 decode 속도는 늘지 않는다는 구분입니다.",
     canonicalHref: "/cs/ai/serving-architecture-matrix#node-case",
   },
+  "agent-approval-sandbox-separation": {
+    id: "agent-approval-sandbox-separation",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent approval · sandbox separation",
+    aliases: ["Approval vs Sandbox", "승인과 샌드박스의 분리"],
+    definition:
+      "실행 전에 명령 문자열을 보고 돌려도 되는지 정하는 승인과, 실행 중에 프로세스가 건드릴 파일과 네트워크를 운영체제로 제한하는 샌드박스는 입력이 달라 서로를 대신하지 못한다는 구분입니다. 승인은 의도를 보지만 실제 동작을 못 보고, 샌드박스는 실제 동작을 보지만 의도를 못 봅니다.",
+    canonicalHref: "/cs/ai/agent-approval-and-sandbox#why-two",
+  },
+  "command-string-effect-gap": {
+    id: "command-string-effect-gap",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Command string · runtime effect gap",
+    aliases: ["Hidden Subprocess Effect", "명령 문자열과 실제 효과의 차이"],
+    definition:
+      "승인 화면에 보이는 명령 한 줄과 그 명령이 낳는 자식 프로세스의 실제 효과가 다를 수 있다는 간격입니다. npm test처럼 이름이 멀쩡한 명령도 의존성의 스크립트가 파일을 읽어 외부로 보낼 수 있으며, 실행 전 심사는 아직 일어나지 않은 동작을 볼 수 없습니다.",
+    canonicalHref: "/cs/ai/agent-approval-and-sandbox#why-two",
+  },
+  "sandbox-escalation-request": {
+    id: "sandbox-escalation-request",
+    kind: "method",
+    domain: "computer-science",
+    label: "Sandbox escalation request",
+    aliases: ["Unsandboxed Retry", "경계 밖 실행 요청"],
+    definition:
+      "벽 안에서 실패한 명령을 벽 밖에서 다시 실행해도 되는지 묻는 절차입니다. 승인되면 그 실행에는 샌드박스가 없으므로 실행 전 심사가 유일한 관문으로 남습니다.",
+    canonicalHref: "/cs/ai/agent-approval-and-sandbox#names",
+  },
+  "classifier-approval-review": {
+    id: "classifier-approval-review",
+    kind: "method",
+    domain: "computer-science",
+    label: "Classifier approval review",
+    aliases: ["Auto Mode Classifier", "Auto-review", "분류기 자동 심사"],
+    definition:
+      "사람 대신 별도의 모델이 에이전트의 동작을 심사해 허용 여부를 정하는 방식입니다. 물음 횟수를 줄이지만 실행 전 심사의 자리를 대신할 뿐 샌드박스가 되지는 않으며, 판단이 확률적이라 결과를 미리 단정할 수 없습니다.",
+    canonicalHref: "/cs/ai/agent-approval-and-sandbox#names",
+  },
+  "agent-sandbox-default-posture": {
+    id: "agent-sandbox-default-posture",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Agent sandbox default posture",
+    aliases: ["Sandbox Default", "샌드박스 기본 태세"],
+    definition:
+      "에이전트 구현이 처음 실행될 때 벽이 켜져 있는지, 벽 안의 네트워크와 읽기 범위가 어떤지, 무엇을 묻는지를 묶은 기본값입니다. 벽을 먼저 세우는 구현과 심사로 시작하는 구현은 남는 위험이 다르며 값은 버전에 따라 바뀌므로 기준일과 함께 읽습니다.",
+    canonicalHref: "/cs/ai/agent-approval-and-sandbox#comparison",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -88018,6 +88068,14 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "architecture-serving-cost-profile", to: "scale-out-capacity-vs-stream-speed", relation: "produces", reason: "네트워크 질문의 답이 노드를 늘릴 때 무엇이 좋아지고 무엇이 그대로인지로 정리됩니다." },
   { from: "mla-kv-tp-replication", to: "kv-shard-replication-factor", relation: "prerequisite", reason: "MLA가 TP rank마다 통째로 복제되는 특수한 경우를 KV head 수와 DCP 조각 수의 일반식으로 넓힙니다." },
   { from: "decode-context-parallel", to: "kv-shard-replication-factor", relation: "optimizes", reason: "DCP 조각 수 D가 분모에 들어가 MLA의 8벌 사본을 다시 1벌로 되돌립니다." },
+  { from: "agent-observation-action-loop", to: "agent-approval-sandbox-separation", relation: "prerequisite", reason: "에이전트 루프의 제안과 실행 사이에 두 관문이 어디 놓이는지 알아야 구분이 성립합니다." },
+  { from: "blast-radius-least-privilege-boundary", to: "agent-approval-sandbox-separation", relation: "extends", reason: "피해 범위를 미리 좁히는 원칙을 실행 전과 실행 중의 두 관문으로 나눠 적용합니다." },
+  { from: "command-string-effect-gap", to: "agent-approval-sandbox-separation", relation: "prerequisite", reason: "문자열과 실제 효과의 간격이 있어야 심사만으로 부족한 이유가 설명됩니다." },
+  { from: "linux-namespace-resource-view", to: "agent-approval-sandbox-separation", relation: "prerequisite", reason: "프로세스에 걸린 제한을 자식이 물려받는다는 전제의 바탕입니다." },
+  { from: "agent-approval-sandbox-separation", to: "sandbox-escalation-request", relation: "produces", reason: "두 관문을 나누면 벽 안에서 실패한 일을 어떻게 넘길지 묻는 절차가 생깁니다." },
+  { from: "agent-approval-sandbox-separation", to: "classifier-approval-review", relation: "extends", reason: "분류기는 심사 자리를 자동화한 것이므로 벽과의 구분을 그대로 물려받습니다." },
+  { from: "agent-approval-sandbox-separation", to: "agent-sandbox-default-posture", relation: "evaluates", reason: "구현의 기본값을 두 관문 중 무엇을 먼저 켰는지로 비교합니다." },
+  { from: "egress-allowlist-enforcement", to: "agent-sandbox-default-posture", relation: "constrains", reason: "벽 안의 네트워크 기본값은 목적지 통제 방식의 한 설정입니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

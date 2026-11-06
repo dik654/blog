@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import PolicyViz from "./viz/PolicyViz";
@@ -56,6 +57,10 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">
         권한은 모델의 제안을 실제 effect로 바꾸기 전에 host가 내리는 결정입니다
       </h2>
+        <p className="not-prose mb-6 border-l-2 border-primary/60 pl-4 text-sm leading-6 text-muted-foreground">
+          이 글은 claw-code의 2026-08-06 커밋을 읽은 사례입니다. 그 뒤로 2026-11-06까지 177개 커밋이 더 쌓였으므로 지금 동작과 다를 수 있습니다.
+          승인과 샌드박스의 공통 원리와 현행 구현 비교는 <Link to="/cs/ai/agent-approval-and-sandbox">승인과 샌드박스</Link> 글에서 먼저 볼 수 있습니다.
+        </p>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>

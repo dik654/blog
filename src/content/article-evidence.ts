@@ -23038,4 +23038,18 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "구현 이슈", label: "vLLM #48898 · NVFP4 TP8 정렬 버그", href: "https://github.com/vllm-project/vllm/issues/48898", note: "SM120 NVFP4 MoE를 TP8로 나눌 때 출력이 깨지는 열린 버그." },
     { kind: "구현 이슈", label: "vLLM #47990 · SM120 CUTLASS FP8 N=576 실패", href: "https://github.com/vllm-project/vllm/issues/47990", note: "DeepSeek FP8 경로가 latent projection에서 실패하는 열린 버그." },
   ],
+  "ai/agent-approval-and-sandbox": [
+    { kind: "핵심 논문", label: "OpenAI · Codex Sandboxing (공식 문서)", href: "https://learn.chatgpt.com/docs/sandboxing", note: "샌드박스와 승인의 분리, 생성 명령의 경계 상속 근거" },
+    { kind: "핵심 논문", label: "OpenAI · Agent approvals & security (공식 문서)", href: "https://learn.chatgpt.com/docs/agent-approvals-security", note: "on-request 동작, 기본 네트워크 꺼짐, .git 보호, untrusted 폐지 근거" },
+    { kind: "핵심 논문", label: "Anthropic · Claude Code Sandboxing (공식 문서)", href: "https://code.claude.com/docs/en/sandboxing", note: "기본 꺼짐, 읽기 범위, 허용 도메인, 샌드박스 밖 부품, 플랫폼 근거" },
+    { kind: "핵심 논문", label: "Anthropic · Claude Code Permission modes (공식 문서)", href: "https://code.claude.com/docs/en/permission-modes", note: "auto 모드와 분류기, 기본 시작 모드 근거" },
+    { kind: "핵심 논문", label: "Cursor · Run modes (공식 문서)", href: "https://cursor.com/docs/agent/security/run-modes", note: "Auto-review, Allowlist, Run Everything 근거" },
+    { kind: "핵심 논문", label: "Cursor · sandbox.json reference (공식 문서)", href: "https://cursor.com/docs/reference/sandbox", note: "networkPolicy 기본 deny와 사설망 차단 근거" },
+    { kind: "핵심 논문", label: "Google · Antigravity Terminal sandbox (공식 문서)", href: "https://antigravity.google/docs/sandbox", note: "운영체제별 기술과 프리셋별 동작 근거" },
+    { kind: "핵심 논문", label: "Google · Gemini CLI sandbox (v0.67.0 소스 문서)", href: "https://github.com/google-gemini/gemini-cli/blob/3fd7d263466b9e5d30b2da1ebf85dae956a0fb86/docs/cli/sandbox.md", note: "활성화 방법과 Seatbelt 기본 프로필 근거" },
+    { kind: "핵심 논문", label: "OpenCode · V2 Permissions (공식 문서)", href: "https://opencode.ai/v2/docs/permissions/", note: "기본 정책 전체 허용 근거" },
+    { kind: "핵심 논문", label: "OpenClaw · Sandboxing (v2026.11.1 소스 문서)", href: "https://github.com/openclaw/openclaw/blob/7302f00ac3eea8d12f84b3591fb451564a7fed7e/docs/gateway/sandboxing.md", note: "기본 꺼짐과 완전한 경계가 아니라는 문서 표현 근거" },
+    { kind: "핵심 논문", label: "OpenHands · Security (공식 문서)", href: "https://docs.openhands.dev/sdk/guides/security", note: "확인 정책 세 가지 근거" },
+    { kind: "핵심 논문", label: "claw-code · sandbox.rs (v0.1.11 소스)", href: "https://github.com/ultraworkers/claw-code/blob/ab8561dc378150e9e65868233dd872937aa68299/rust/crates/runtime/src/sandbox.rs", note: "Linux unshare 전용과 네트워크 격리 기본값 근거" },
+  ],
 };
