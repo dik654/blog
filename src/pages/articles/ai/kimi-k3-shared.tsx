@@ -1,4 +1,4 @@
-import type { KeyboardEvent, ReactNode } from "react";
+import { useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 
 export function LessonHeader({
   number,
@@ -130,6 +130,17 @@ export function StoryShell({
   onKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
   children: ReactNode;
 }) {
+  const sceneRegion = useRef<HTMLDivElement>(null);
+  // 장면을 넘기면 탭은 그 자리에 두고 새 장면의 첫 줄을 탭 바로 아래로 가져옵니다.
+  useLayoutEffect(() => {
+    const region = sceneRegion.current;
+    const figure = region?.parentElement;
+    const tabs = figure?.querySelector("div[data-viz-controls]");
+    if (!region || !figure || !tabs) return;
+    const hidden = tabs.getBoundingClientRect().bottom - region.getBoundingClientRect().top;
+    if (hidden > 0) figure.scrollTop -= hidden;
+  }, [step]);
+
   return (
     <figure
       id={playbackId}
@@ -185,7 +196,7 @@ export function StoryShell({
           ))}
         </div>
       </figcaption>
-      <div data-viz-live-only className="min-w-0 p-4 sm:p-6">
+      <div ref={sceneRegion} data-story-scene-region data-viz-live-only className="min-w-0 p-4 sm:p-6">
         {children}
       </div>
       <ol className="static-reading-only space-y-3 border-t border-border px-5 py-4 text-sm leading-6">

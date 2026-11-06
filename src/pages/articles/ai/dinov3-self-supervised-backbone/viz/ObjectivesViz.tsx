@@ -30,7 +30,7 @@ export default function ObjectivesViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="두 학습 목표"
       title="한 장에 하나, 그리고 자리마다 하나"
       description="같은 teacher에서 나오지만 비교하는 단위가 다릅니다."

@@ -39,7 +39,7 @@ function TracePlayer({ children }: { children: (active: number) => ReactNode }) 
   });
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="예측 하나 추적"
       title="점수가 같아도 보정·결합·기준을 거치면 행동은 달라집니다"
       description="pred-184가 raw score에서 검토 대기 상태로 바뀌는 네 결정을 차례로 확인합니다."

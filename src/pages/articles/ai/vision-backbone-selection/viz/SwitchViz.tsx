@@ -27,7 +27,7 @@ export default function SwitchViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="교체 비용"
       title="성능 차이가 이 비용을 넘는지가 실제 기준입니다"
       description="백본을 바꿀 때 순서대로 일어나는 일입니다."

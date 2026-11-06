@@ -33,7 +33,7 @@ export default function ProbeViz() {
   ];
   const score = (c: (typeof cand)[number]) => c.acc - 0.15 * c.rho - 0.1 * c.cost;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="최소 실측"
       title="조건을 맞추지 않으면 설정을 비교하게 됩니다"
       description="후보 두 개를 같은 데이터로 재는 과정을 단계별로 봅니다."

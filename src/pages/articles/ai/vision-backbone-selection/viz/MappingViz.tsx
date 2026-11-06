@@ -27,7 +27,7 @@ export default function MappingViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="후보 좁히기"
       title="세 질문이면 계열이 정해집니다"
       description="과제를 좁히는 순서를 분기로 그렸습니다."

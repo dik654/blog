@@ -29,7 +29,7 @@ export default function GateViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="판단 순서"
       title="순서를 뒤집으면 되돌리기 어려워집니다"
       description="네 단계가 각각 무엇을 확정하는지 보여 줍니다."

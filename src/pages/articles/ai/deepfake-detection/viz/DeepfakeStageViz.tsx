@@ -41,7 +41,7 @@ export default function DeepfakeStageViz({
   const active = controls.active;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow={eyebrow}
       title={title}
       description={description}

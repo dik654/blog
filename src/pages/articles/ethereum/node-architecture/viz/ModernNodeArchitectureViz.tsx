@@ -686,7 +686,7 @@ function NodeArchitectureMap({ scene, sceneId, reducedMotion, generic = false }:
 export function SystemBlackBoxViz() {
   const scene = nodeMapScenes[0];
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="전체 아키텍처"
       title="한 프로그램은 거래를 계산하고, 다른 프로그램은 기록을 고릅니다"
       description="송금 결과를 계산하는 일과 여러 후보 가운데 따를 기록을 고르는 일을 나눠야 두 판단의 실패를 서로 구별할 수 있습니다."
@@ -859,7 +859,7 @@ export function EngineBoundaryViz() {
   }, [setTracePlaying]);
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Engine API 추적"
       title="새 블록 후보가 검증되고 선택되는 왕복"
       canvasClassName="p-4 sm:p-6"
@@ -903,7 +903,7 @@ export function SystemSettledViz() {
   };
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="전체 구조로 돌아오기"
       title="선택의 근거와 적용된 실행 상태가 서로 다른 저장소에 남습니다"
       description="합의 저장소는 head·safe·finalized를 결정한 후보와 투표를 보존합니다. 실행 저장소는 계산 결과와 함께 전달받아 적용한 포인터를 보존합니다. 재수신 처리 방식은 구현과 요청 상태에 따라 따로 확인해야 합니다."
@@ -1026,7 +1026,7 @@ function DrilldownRegion({
 
 export function ArchitectureLearningPathsViz() {
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="다음 글"
       title="첫 지도에서 궁금한 영역을 고릅니다"
       description="각 글은 새로운 구조를 다시 만들지 않습니다. 첫 지도와 같은 합의 P2P·CL·Engine API·EL·실행 P2P 좌표에서 한 영역만 확대합니다."

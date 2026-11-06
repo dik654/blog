@@ -27,7 +27,7 @@ export default function LateFusionViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="표현 단계 결합"
       title="빠진 관측은 가중치의 분모에서부터 제외합니다"
       description="관측별 표현을 만든 뒤, 측면 카메라가 빠진 같은 상품 묶음에서 가중합을 계산합니다."

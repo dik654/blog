@@ -356,6 +356,62 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
     max-height: 42rem !important;
   }
 
+  /*
+   * 조작부가 장면 위에 있는 story는 figure 하나가 스크롤을 맡습니다. 제목과 설명은
+   * 스크롤되어 사라지고 재생 버튼과 장면 탭만 위에 붙어 장면 칸을 넓게 씁니다.
+   */
+  html.js-enabled figure[data-viz="animated-story"] {
+    --story-play-height: 2.75rem;
+    display: flex;
+    height: calc(100svh - 5rem);
+    max-height: calc(100svh - 5rem);
+    min-height: 0 !important;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    touch-action: pan-y;
+  }
+
+  html.js-enabled figure[data-viz="animated-story"] > figcaption,
+  html.js-enabled figure[data-viz="animated-story"] > figcaption > div:first-child {
+    display: contents;
+  }
+
+  html.js-enabled figure[data-viz="animated-story"] > figcaption > div:first-child > div {
+    flex: 0 0 auto;
+    padding: 1.25rem 1.25rem 1rem;
+  }
+
+  html.js-enabled figure[data-viz="animated-story"] [data-viz-controls] {
+    position: sticky;
+    z-index: 2;
+    flex: 0 0 auto;
+    margin: 0;
+    background: var(--background);
+  }
+
+  html.js-enabled figure[data-viz="animated-story"] button[data-viz-controls] {
+    top: 0;
+    height: var(--story-play-height);
+    width: 100%;
+    border-inline: 0;
+  }
+
+  html.js-enabled figure[data-viz="animated-story"] div[data-viz-controls] {
+    top: var(--story-play-height);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  html.js-enabled figure[data-viz="animated-story"] > [data-story-scene-region] {
+    flex: 0 0 auto;
+  }
+
+  html.js-enabled figure[data-viz="animated-story"] > p {
+    display: none;
+  }
+
   figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-canvas],
   figure[data-viz="lesson-flow-v4"]:has([data-viz-controls]) > [data-viz-canvas] {
     height: auto !important;

@@ -31,7 +31,7 @@ export default function FrozenEvalViz() {
   const headHeight = step === 2 ? 54 : 20;
   const trainBackbone = step === 3;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="평가 조건"
       title="무엇을 학습시키느냐가 결론의 주어를 바꿉니다"
       description="같은 backbone이라도 어디까지 학습을 허용하느냐에 따라 점수가 말해 주는 내용이 달라집니다."

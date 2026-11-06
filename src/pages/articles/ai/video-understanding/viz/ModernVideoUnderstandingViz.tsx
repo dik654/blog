@@ -163,7 +163,7 @@ function Scene({
     autoPlay: false,
   });
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow={eyebrow}
       title={title}
       description={description}

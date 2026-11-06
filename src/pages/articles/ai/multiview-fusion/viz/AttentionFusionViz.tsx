@@ -21,7 +21,7 @@ export default function AttentionFusionViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5600, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="토큰 단계 결합"
       title="공간 관계를 오래 남기면 관측 사이 연결과 비용을 함께 봐야 합니다"
       description="패치의 주소, 관측 간 조회, 제곱으로 늘어나는 쌍, 누락 검사까지 같은 상품 묶음으로 추적합니다."

@@ -34,7 +34,7 @@ export default function GramViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Gram anchoring"
       title="관계 행렬만 맞추고 값은 놓아둡니다"
       description="패치 6개로 줄인 그림입니다. 실제로는 이미지 한 장의 패치 수만큼 한 변이 늘어납니다."

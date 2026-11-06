@@ -23,7 +23,7 @@ function Scene({ id, eyebrow, title, description, labels, notes, children }: Sce
   const active = controls.reducedMotion ? labels.length - 1 : controls.active;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow={eyebrow}
       title={title}
       description={description}

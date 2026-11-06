@@ -38,7 +38,7 @@ export default function CollapseViz() {
   const step = scenes.active;
   const contrast = [1, 0.55, 0.12, 0.12][step];
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="dense feature 붕괴"
       title="무관한 패치까지 비슷해지면 국소성이 흐려집니다"
       description="한 이미지 안 패치 8개의 유사도 행렬을 단계별로 그렸습니다. 진할수록 닮은 쌍입니다."

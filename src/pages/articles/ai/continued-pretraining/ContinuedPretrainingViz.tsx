@@ -18,7 +18,7 @@ function TraceScene({ id, labels, notes, children }: TraceSceneProps) {
   const active = controls.reducedMotion ? labels.length - 1 : controls.active;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="한 번의 학습 흐름"
       title="전문 문서가 선택된 체크포인트로 바뀌는 네 단계"
       description="전문 문서를 넣는 것만으로 끝나지 않습니다. 코퍼스 경계를 고정하고, 토큰을 섞고, 같은 목표로 학습한 뒤 일반 능력 회귀가 작은 체크포인트를 남깁니다."
@@ -173,7 +173,7 @@ export function CorpusMixtureViz() {
   const cells = Array.from({ length: 10 }, (_, index) => index < 8 ? "domain" : "replay");
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="토큰 혼합"
       title="열 칸을 세면 λ=0.8의 뜻이 보입니다"
       description="전문 문서와 일반 replay가 한 배치에서 차지하는 노출 비중을 먼저 보고, 같은 비율을 loss에 적용합니다."
@@ -223,7 +223,7 @@ export function PerplexityChoiceViz() {
   const tokens = ["특허", "청구항", "반도체", "소자"] as const;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Perplexity 계산"
       title="관측한 네 token에 모두 0.25를 줬다면 PPL은 4입니다"
       description="같은 tokenizer와 채점 위치에서 관측 token의 확률을 log cost로 바꾸고 평균한 뒤 다시 지수로 되돌립니다."
@@ -272,7 +272,7 @@ export function CheckpointFrontierViz() {
   ] as const;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Checkpoint 선택"
       title="마지막 checkpoint보다 회귀 예산 안의 checkpoint를 남깁니다"
       description="두 checkpoint의 domain gain은 비슷하지만 general forgetting은 열 배 차이 납니다. 허용 회귀 1을 먼저 적용합니다."

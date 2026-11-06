@@ -27,7 +27,7 @@ export default function AxesViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="선택 전체 경로"
       title="요청 한 건이 후보와 비용을 차례로 좁힙니다"
       description="재생하거나 장면을 골라 상품 사진 요청이 기술 선택으로 바뀌는 순서를 따라갑니다."

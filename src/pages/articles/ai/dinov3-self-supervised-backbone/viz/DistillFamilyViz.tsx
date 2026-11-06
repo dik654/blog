@@ -37,7 +37,7 @@ export default function DistillFamilyViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="사후 단계"
       title="큰 모델 하나에서 배포 계열이 갈라집니다"
       description="파라미터 수는 공개된 값이고 상자 너비는 비교를 위해 압축했습니다."

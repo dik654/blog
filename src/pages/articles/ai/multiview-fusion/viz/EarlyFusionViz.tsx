@@ -27,7 +27,7 @@ export default function EarlyFusionViz() {
     ["입력", step >= 3 ? "6 × H × W" : "결합 전"],
   ] as const;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="입력 단계 결합"
       title="같은 좌표를 가리키는 센서값만 채널로 쌓습니다"
       description="이 경로는 여러 각도의 사진을 포개는 방법이 아니라, 보정된 센서가 같은 위치를 볼 때 쓰는 방법입니다."

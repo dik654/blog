@@ -72,6 +72,8 @@ jobs:
 
       - name: Check all public articles in a real browser
         shell: bash
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
           pages_root="$(mktemp -d)"
           ln -s "$GITHUB_WORKSPACE/dist" "$pages_root/blog"
@@ -100,6 +102,32 @@ jobs:
           done
 
           status=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || status=1
+          done
+          [ "$status" = 0 ] || exit "$status"
+
+          # 바뀐 글의 Viz는 장면을 넘겨 frame과 버튼 흔들림까지 잰다.
+          if [ -z "$BEFORE_SHA" ] || [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] \
+            || ! git fetch --quiet --depth=1 origin "$BEFORE_SHA"; then
+            echo "비교할 이전 커밋이 없어 Viz 흔들림 검사를 건너뜁니다."
+            exit 0
+          fi
+          node scripts/changed-viz-routes.mjs "$BEFORE_SHA" "$GITHUB_SHA" > changed-viz-routes.txt
+          mapfile -t routes < changed-viz-routes.txt
+          if [ "${#routes[@]}" = 0 ]; then
+            echo "바뀐 글이 없어 Viz 흔들림 검사를 건너뜁니다."
+            exit 0
+          fi
+          pids=()
+          for shard in 0 1 2 3; do
+            node scripts/sweep-routes.mjs "${routes[@]}" \
+              --shard "$shard/4" \
+              --no-screenshot \
+              --base http://127.0.0.1:4173/blog \
+              --out "output/playwright/ci-changed-viz/shard-$shard" &
+            pids+=("$!")
+          done
           for pid in "${pids[@]}"; do
             wait "$pid" || status=1
           done

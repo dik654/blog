@@ -9,7 +9,7 @@ const STEPS = [
 
 export default function CheckpointParityViz() {
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Checkpoint parity"
       title="같은 입력을 두 구현에 넣고 모든 class logit을 비교합니다"
       description="Weight를 읽었다는 메시지가 아니라 입력 계약부터 출력 vector까지 같은지 확인합니다."

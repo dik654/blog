@@ -38,7 +38,7 @@ export default function OverviewViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="관측 묶음 만들기"
       title="따로 도착한 파일을 한 상품의 입력으로 묶습니다"
       description="재생하거나 장면을 골라 파일, 상품 식별자, 누락 상태, 학습·검증 분리가 차례로 생기는 과정을 봅니다."

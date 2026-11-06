@@ -73,7 +73,7 @@
 
 - 코드 검사: gradient, 굵은 stroke, 과도한 radius/shadow, SVG 긴 텍스트를 찾는다.
 - 브라우저 검사: 데스크톱과 모바일에서 text overflow, label-box, label-line, canvas overflow를 확인한다.
-- 장면 전환 검사: 첫 장면·가장 큰 장면·마지막 장면에서 frame과 control button bounding box를 기록해 위치·크기가 2px 넘게 변하지 않는지 확인한다. 또한 frame bottom과 control row가 viewport 안에 동시에 들어오는지 검사한다.
+- 장면 전환 검사: 첫 장면·가장 큰 장면·마지막 장면에서 frame과 control button bounding box를 기록해 위치·크기가 2px 넘게 변하지 않는지 확인한다. 또한 frame bottom과 control row가 viewport 안에 동시에 들어오는지 검사한다. 긴 인과 설명을 문서 스크롤로 읽도록 `documentFlow`를 명시한 Viz는 viewport 높이 검사에서 제외하고 흔들림 검사만 적용한다. `!h-auto`로 고정 높이를 풀 때는 반드시 `documentFlow`를 함께 쓴다.
 - 스크린샷 검사: 좌표 검사를 통과해도 실제 폰트가 벗어날 수 있으므로 렌더 결과를 직접 본다.
 - 한 화면이 빽빽하면 글자를 줄이지 않고 Viz를 둘로 나눈다.
 

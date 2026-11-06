@@ -244,6 +244,7 @@ async function measureViz(page) {
         scenes,
         frameHeight: baseFrame.h,
         fitsViewport: baseFrame.h <= window.innerHeight,
+        documentFlow: Boolean(canvas.closest("figure")?.hasAttribute("data-viz-document-flow")),
         maxFrameDelta,
         maxButtonDelta,
         scrolled,
@@ -427,7 +428,7 @@ for (const route of routes) {
       for (const viz of result.viz) {
         const label = `viz#${viz.index}(${viz.name})`;
         if (viz.maxFrameDelta > 2 || viz.maxButtonDelta > 2) result.issues.push(`${label} shifts frame ${viz.maxFrameDelta}px / buttons ${viz.maxButtonDelta}px`);
-        if (!viz.fitsViewport) result.issues.push(`${label} frame ${viz.frameHeight}px taller than viewport ${viewport.height}px`);
+        if (!viz.fitsViewport && !viz.documentFlow) result.issues.push(`${label} frame ${viz.frameHeight}px taller than viewport ${viewport.height}px`);
         if (viz.canvasHorizontalOverflow) result.issues.push(`${label} canvas horizontal overflow`);
         if (!viz.reachableEnd) result.issues.push(`${label} cannot scroll to its final content`);
         if (!viz.controlVisibleAtEnd) result.issues.push(`${label} controls are hidden at the end of the scroll area`);

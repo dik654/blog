@@ -4902,3 +4902,12 @@
 - 검수: lint, 전역 감사 15개, `audit:runtime`, build가 통과했습니다. 소스 지문이 Viz의 `id` 한 줄로 바뀐 topology 77건과 prose baseline 2건(점수 동일)은 지문만 갱신했습니다. 바뀐 Viz 385개에 `audit:viz --strict`를 돌렸고 exit 0입니다.
 - 남은 위험: 화면 근처에서 동기 측정이 일어나 scroll anchoring이 없는 브라우저(일부 Safari)에서는 위에서 내려오지 않고 아래에서 올라올 때 문단이 한 번 밀릴 수 있습니다. Safari 실기기는 확인하지 않았습니다.
 
+# Viz 잔여 결함 정리와 CI 흔들림 검사 (2026-11-06)
+
+- 사용자 결정: 명시적 `documentFlow` Viz는 viewport 높이 검사에서 제외하고, Kimi 공용 컴포넌트는 고친다. CI는 Viz를 바꾼 글의 흔들림을 잰다. 기준은 `viz-design-standard.md`에 병합했습니다.
+- `!h-auto`로 고정 높이를 풀던 VizFrame 49개(35개 파일)에 `documentFlow`를 명시했습니다. 앞 커밋의 sticky가 이들에서 버튼 줄을 viewport 아래에 띄우던 회귀도 함께 해결됩니다.
+- `StoryShell`(`animated-story`): 모바일에서 figure 하나가 스크롤을 맡고 재생 버튼과 장면 탭만 위에 붙습니다. 장면을 넘기면 탭은 그대로 두고 새 장면 첫 줄을 탭 바로 아래로 맞춥니다. 390px에서 장면 전환 전후 탭 위치가 같음을 재고 화면을 확인했습니다.
+- `useAnimatedScenes`: margin을 실제 위치에 맞을 때까지 반복 조정해 여백 상쇄로 남던 3~9px을 없앴고, 루트가 스스로 스크롤할 때 위치를 잘못 재던 오류를 고쳤습니다.
+- CI: `scripts/changed-viz-routes.mjs`가 import 경로로 바뀐 글을 찾아 sweep을 돌립니다. 공용 Viz 코드나 전역 CSS가 바뀌면 catalog 표본 약 60개를 더합니다. 이전 커밋이 없거나 가져올 수 없으면 건너뜁니다. 취소된 배포 실행이 다뤘어야 할 변경은 다음 실행의 비교 범위에 들어오지 않으므로, 공용 코드를 크게 바꿀 때는 `--catalog` 전수 검사를 따로 돌립니다.
+- 검수: 로컬 전수 sweep 1,011 route × 2 viewport 실패 0, lint, 전역 감사 15개, `audit:runtime`, 바뀐 Viz `audit:viz --strict`, build 통과.
+

@@ -29,7 +29,7 @@ export default function PipelineViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="학습 전체 흐름"
       title="라벨 없는 학습이 네 단계로 나뉩니다"
       description="재생하거나 장면을 고른 뒤, 같은 이미지가 목표·규제·배포 모델로 바뀌는 순서를 따라갑니다."

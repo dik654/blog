@@ -163,7 +163,7 @@ export default function VisionTransformerTraceViz() {
   const controls = useAnimatedScenes(LABELS.length, 5200, { loop: false, autoPlay: false });
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="이미지 하나 추적"
       title="224×224×3 이미지가 길이 197의 token sequence로 바뀝니다"
       description="재생하거나 장면을 고른 뒤, 같은 이미지의 shape가 어디에서 바뀌는지 왼쪽부터 따라갑니다."

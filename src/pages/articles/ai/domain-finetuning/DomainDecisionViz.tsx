@@ -27,7 +27,7 @@ function Scene({ id, eyebrow, title, description, labels, notes, children }: Sce
   const active = controls.reducedMotion ? labels.length - 1 : controls.active;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow={eyebrow}
       title={title}
       description={description}
@@ -168,7 +168,7 @@ const GAP_ROWS = [
 
 export function GapOwnershipMap() {
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="State boundary"
       title="같은 ‘도메인 성능 저하’도 잘못된 상태의 위치가 다릅니다"
       description="왼쪽 실패에서 시작해 상태 저장 위치와 그 상태를 바꾸는 개입을 같은 행으로 읽습니다."

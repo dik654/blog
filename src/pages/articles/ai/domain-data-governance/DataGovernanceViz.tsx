@@ -18,7 +18,7 @@ function TraceScene({ id, labels, notes, children }: TraceSceneProps) {
   const active = controls.reducedMotion ? labels.length - 1 : controls.active;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="한 데이터의 주장 경로"
       title="열두 visit row가 배포 가능한 주장으로 바뀌는 네 단계"
       description="Row를 세기 전에 공유 원인을 찾고, 그 원인을 split 사이에서 격리합니다. 이어서 삭제 가능한 lineage와 평가 근거가 있는 slice만 남깁니다."
@@ -129,7 +129,7 @@ const PATIENTS = ["A", "B", "C", "D"] as const;
 
 export function GroupTimeSplitViz() {
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Group·time split"
       title="행을 무작위로 나누면 같은 환자가 정답 쪽에도 남습니다"
       description="파란 칸은 train, 붉은 칸은 test입니다. 같은 환자의 visit이 양쪽에 있으면 새 환자 일반화를 측정할 수 없습니다."
@@ -180,7 +180,7 @@ export function RightsLineageViz() {
   ] as const;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="권리와 삭제 lineage"
       title="출처 URL 하나가 아니라 파생물과 모델까지 이어지는 경로를 남깁니다"
       description="권리 조건이 바뀌거나 삭제 요청이 들어오면 오른쪽 산출물에서 왼쪽 source까지 왕복할 수 있어야 합니다."
@@ -212,7 +212,7 @@ export function EvidenceCoverageViz() {
   const cells = Array.from({ length: 12 }, (_, index) => ({ id: index + 1, count: index < 9 ? 30 + index : 11 + index, pass: index < 9 }));
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="평가 근거 범위"
       title="열두 cell 중 독립 group이 충분한 아홉 cell만 주장 범위에 둡니다"
       description="설명용 최소 근거 수는 30입니다 [A]. Row 수가 아니라 cell마다 고유한 환자·family·lot 같은 group 수를 셉니다."

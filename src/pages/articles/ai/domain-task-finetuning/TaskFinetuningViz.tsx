@@ -18,7 +18,7 @@ function TraceScene({ id, labels, notes, children }: TraceSceneProps) {
   const active = controls.reducedMotion ? labels.length - 1 : controls.active;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="한 번의 행동 학습"
       title="의료 문장 하나가 검증된 JSON 행동으로 바뀌는 네 단계"
       description="예시를 저장하는 것만으로 끝나지 않습니다. 입력과 정답 계약을 고정하고, 정답 token만 채점하며, 업데이트 범위를 정한 뒤 네 행동 gate를 모두 통과시킵니다."
@@ -134,7 +134,7 @@ export function DemonstrationContractViz() {
   ] as const;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Demonstration 계약"
       title="한 예시 안에 입력·정답·거절·채점 규칙을 함께 둡니다"
       description="문장과 정답만 모으면 모호한 경우의 행동이 빠집니다. 학습 전부터 근거가 없을 때의 출력과 평가 규칙까지 같은 revision으로 고정합니다."
@@ -170,7 +170,7 @@ export function ResponseMaskViz() {
   ] as const;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Response-only loss"
       title="Mask가 0인 prompt도 읽지만 평균 loss에서는 빠집니다"
       description="여섯 칸은 실제 tokenizer 결과가 아니라 계산을 보여 주는 설명용 묶음 [A]입니다. 뒤의 세 response 묶음만 채점합니다."
@@ -207,7 +207,7 @@ export function UpdateScopeViz() {
   ] as const;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="Parameter 범위"
       title="같은 SFT loss라도 gradient를 적용할 위치는 따로 고릅니다"
       description="강조된 칸은 개념적인 trainable 영역입니다. 칸 수를 실제 parameter 비율이나 성능 순위로 해석하지 않습니다."
@@ -245,7 +245,7 @@ export function BehaviorReleaseViz() {
   ] as const;
 
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="행동 release gate"
       title="형식 점수가 높아도 사실성 gate가 실패하면 출시하지 않습니다"
       description="모든 값은 비보상 gate의 동작을 보여 주는 가정 [A]입니다. 평균 점수 하나가 실패한 행동을 상쇄하지 못하게 합니다."

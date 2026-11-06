@@ -35,7 +35,7 @@ export default function CapabilityViz() {
   const step = scenes.active;
   const shown = step === 3 ? [0, 1, 2] : [step];
   return (
-    <VizFrame
+    <VizFrame documentFlow
       eyebrow="능력 프로필"
       title="하나가 모든 축에서 높지는 않습니다"
       description="각 계열이 학습 목표로부터 얻은 강점을 네 축으로 비교합니다."

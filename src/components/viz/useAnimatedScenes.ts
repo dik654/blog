@@ -36,16 +36,20 @@ function findStableStage(root: HTMLElement | null) {
   return { root, controls };
 }
 
+/** 장면 루트가 스스로 스크롤해도 변하지 않는, 루트 내용 기준의 조작부 위치입니다. */
+function controlsOffset(root: HTMLElement, controls: HTMLElement) {
+  return controls.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop;
+}
+
 /** 현재 장면의 조작부 위치와 장면 높이를, 앞서 예약한 값을 지운 자연 상태로 잽니다. */
 function measureNaturalStage(root: HTMLElement, controls: HTMLElement) {
   root.style.minHeight = "";
   controls.style.marginTop = "";
   // sticky가 canvas 끝에 붙들린 위치가 아니라 문서 흐름의 위치를 잽니다.
   controls.style.position = "static";
-  const rootRect = root.getBoundingClientRect();
   const natural = {
-    controlsTop: controls.getBoundingClientRect().top - rootRect.top,
-    height: rootRect.height,
+    controlsTop: controlsOffset(root, controls),
+    height: root.getBoundingClientRect().height,
   };
   controls.style.position = "";
   return natural;
@@ -85,16 +89,17 @@ export function useAnimatedScenes(
     // 동기 측정에 잡히지 않는 장면(exit 애니메이션 뒤 mount 등)을 만나면 기준을 올립니다.
     reserved.controlsTop = Math.max(reserved.controlsTop, natural.controlsTop);
     reserved.height = Math.max(reserved.height, natural.height);
-    const gap = reserved.controlsTop - natural.controlsTop;
-    if (gap > 0.5) {
-      const margin = Number.parseFloat(getComputedStyle(controls).marginTop) || 0;
-      controls.style.marginTop = `${margin + gap}px`;
-      // margin은 앞 요소의 아래 여백과 상쇄될 수 있어 실제 위치로 한 번 더 맞춥니다.
+    let remaining = reserved.controlsTop - natural.controlsTop;
+    if (remaining > 0.5) {
+      let margin = Number.parseFloat(getComputedStyle(controls).marginTop) || 0;
       controls.style.position = "static";
-      const moved = controls.getBoundingClientRect().top - root.getBoundingClientRect().top;
+      // margin은 앞 요소의 아래 여백과 상쇄되어 그 값을 넘어야 움직이므로 실제 위치를 보며 맞춥니다.
+      for (let attempt = 0; attempt < 8 && Math.abs(remaining) > 0.5; attempt += 1) {
+        margin += remaining;
+        controls.style.marginTop = `${margin}px`;
+        remaining = reserved.controlsTop - controlsOffset(root, controls);
+      }
       controls.style.position = "";
-      const remaining = reserved.controlsTop - moved;
-      if (Math.abs(remaining) > 0.5) controls.style.marginTop = `${margin + gap + remaining}px`;
     }
     root.style.minHeight = `${reserved.height}px`;
   }, [playbackId]);
