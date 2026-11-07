@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ReparamPathViz from "./viz/ReparamPathViz";
 
 const contracts = [
   ["Encoder", "x → μ, log σ²", "분산을 양수로 만들기 쉽고 numerical range를 다루기 위해 log-variance를 출력한다."],
@@ -12,6 +13,8 @@ export default function ReparamTrick() {
       <h2 className="mb-6 text-2xl font-bold">
         Reparameterization은 sampling의 randomness를 입력 noise로 옮긴다
       </h2>
+
+      <ReparamPathViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">

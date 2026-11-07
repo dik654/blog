@@ -5,6 +5,12 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AgentFailureModesAndRecoveryViz from "./agent-failure-modes-and-recovery/viz/AgentFailureModesAndRecoveryViz";
+import CheckpointBoundaryViz from "./agent-failure-modes-and-recovery/viz/CheckpointBoundaryViz";
+import DriftThresholdViz from "./agent-failure-modes-and-recovery/viz/DriftThresholdViz";
+import KeyContractViz from "./agent-failure-modes-and-recovery/viz/KeyContractViz";
+import RecoveryBranchViz from "./agent-failure-modes-and-recovery/viz/RecoveryBranchViz";
+import ResponseLostViz from "./agent-failure-modes-and-recovery/viz/ResponseLostViz";
+import SameKeyRetryViz from "./agent-failure-modes-and-recovery/viz/SameKeyRetryViz";
 
 export default function Article() {
   return (
@@ -76,6 +82,9 @@ export default function Article() {
             처리됐지만 응답이 돌아오는 중 연결이 끊겼다고 합시다. 이 사례는
             가정입니다. (가정)
           </p>
+        </div>
+        <ResponseLostViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             원하는 최종 청구액은 10,000원입니다. 실행 여부를 모르고 새 요청으로
             다시 청구하면 20,000원이 될 수 있습니다. 첫 확인에서 기록이 안
@@ -235,6 +244,9 @@ export default function Article() {
             없음은 outcome=unknown으로 기록합니다. 조회가 일시적으로 빈 결과를
             돌려줘도 원래 요청이 실행되지 않았다는 보장은 아직 없습니다. (가정)
           </p>
+        </div>
+        <SameKeyRetryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             서비스가 같은 키와 같은 인자에 대한 중복 실행 방지를 보장하고 키가
             유효한 기간 안이라면 pay-42를 유지해 재요청할 수 있습니다. 첫 요청의
@@ -273,6 +285,7 @@ export default function Article() {
           >
             <q>regardless of whether it succeeds or fails</q>
           </CitationBlock>
+          <KeyContractViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               pay-42의 첫 실행 결과가 저장됐다면 같은 키 재요청은 그 결과를
@@ -284,6 +297,7 @@ export default function Article() {
             </p>
           </div>
         </div>
+        <RecoveryBranchViz />
         <AlgorithmBlock
           title="실행 결과가 불명확한 요청 복구 (의사코드)"
           input={[
@@ -348,6 +362,9 @@ export default function Article() {
             연결합니다. 사전에 이미 허용된 작업의 권한을 매번 새로 묻는 것과는
             다릅니다. (가정)
           </p>
+        </div>
+        <CheckpointBoundaryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             파일 저장 지점으로 돌아가도 이미 전송한 메시지나 처리한 청구는
             사라지지 않습니다. 외부 서비스의 취소·보상 절차가 따로 필요합니다.
@@ -360,6 +377,7 @@ export default function Article() {
             식별자를 잃으면 안전하게 이어갈 위치를 찾기 어렵습니다.
           </p>
         </div>
+        <DriftThresholdViz />
         <ProgressiveDetail
           title="작은 이탈을 더하는 식으로 실제 실패를 예측할 수 있나요?"
           preview="합계식은 가정한 비음수 이탈량의 누적을 보여 주는 학습용 모델이며, agent의 실제 실패율을 추정한 법칙은 아닙니다."

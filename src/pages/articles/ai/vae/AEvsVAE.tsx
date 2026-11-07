@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import LatentContractViz from "./viz/LatentContractViz";
 
 export default function AEvsVAE() {
   return (
@@ -6,6 +7,8 @@ export default function AEvsVAE() {
       <h2 className="mb-6 text-2xl font-bold">
         Autoencoder와 VAE는 latent code에 묻는 질문이 다르다
       </h2>
+
+      <LatentContractViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">

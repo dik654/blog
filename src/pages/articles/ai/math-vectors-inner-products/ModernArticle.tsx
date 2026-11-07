@@ -4,6 +4,14 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { CitationBlock } from "@/components/ui/citation-block";
 import VectorMeasurementViz from "./viz/VectorMeasurementViz";
+import DirectionLengthViz from "./viz/DirectionLengthViz";
+import VectorAdditionViz from "./viz/VectorAdditionViz";
+import DistanceDifferenceViz from "./viz/DistanceDifferenceViz";
+import DotVersusCosineViz from "./viz/DotVersusCosineViz";
+import ProjectionScaleViz from "./viz/ProjectionScaleViz";
+import ShadowBoundViz from "./viz/ShadowBoundViz";
+import EpsFloorViz from "./viz/EpsFloorViz";
+import PerceptronBoundViz from "./viz/PerceptronBoundViz";
 const OPENSTAX="https://openstax.org/books/calculus-volume-3/pages/2-3-the-dot-product";
 const NORMALIZE="https://docs.pytorch.org/docs/2.8/generated/torch.nn.functional.normalize.html";
 const COSINE="https://docs.pytorch.org/docs/2.8/generated/torch.nn.functional.cosine_similarity.html";
@@ -29,6 +37,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
 <h2 className="text-2xl font-bold">3 · 3²+4²로 길이 5를 구하고 가로 이동 3을 떼어 낸다</h2>
 <p>가로 3과 세로 4는 서로 직각입니다. 두 이동을 한 직선으로 이으면 그 길이의 제곱은 3²+4²=25이고 길이는 √25=5입니다. 가로와 세로를 차례로 걸은 거리 3+4=7과 출발점에서 곧장 간 거리 5는 다른 경로를 잰 값입니다.</p>
 <p>전체 이동을 가로 부분과 나머지로 나누면 (3,4)=(3,0)+(0,4)입니다. 두 부분을 더하면 원래 이동이 복원됩니다. 가로 부분만 보관하면 세로의 4는 사라지므로 이 계산은 원래 정보를 모두 보존하지 않습니다.</p>
+<DirectionLengthViz/>
 <p>방향을 반대로 돌린 (−3,−4)도 길이는 5입니다. 길이를 구할 때 제곱한 덕분에 음수 이동을 더할 수 있지만 어느 쪽으로 갔는지는 최종 답에서 사라집니다. 반대로 모든 이동량을 두 배로 하면 (6,8)이 되고 길이도 10으로 늘어납니다. 방향을 돌리는 변화와 크기만 늘리는 변화를 구별해 두겠습니다.</p>
 </section>
 <section id="picture" data-teach-level="2" className="space-y-6">
@@ -46,6 +55,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
 <h2 className="text-2xl font-bold">6 · 숫자 하나는 스칼라, 순서 있는 좌표 묶음은 벡터다</h2>
 <p>온도 20이나 학습률 0.01처럼 숫자 하나로 나타내는 양을 <strong>스칼라(scalar)</strong>라고 합니다. 여러 좌표를 정해진 순서로 묶어 함께 계산하는 대상을 <strong>벡터(vector)</strong>라고 합니다. 좌표의 수가 <strong>차원(dimension)</strong>입니다. (키, 몸무게, 나이)는 3차원이고 768개의 수로 표현한 문서도 768차원 벡터입니다. 숫자가 많아져도 순서와 의미를 보존해야 한다는 조건은 같습니다.</p>
 <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-2">앞에서 한 계산</th><th className="p-2">이름</th><th className="p-2">결과</th></tr></thead><tbody>{[["전체 길이를 잽니다.","노름(norm)","길이 5"],["대응 좌표를 곱해 더합니다.","내적(dot product)","숫자 하나"],["기준선에 평행한 부분만 남깁니다.","투영(projection)","이동 (3,0)"]].map((row,index)=><tr key={index} className="border-t border-border">{row.map((cell,column)=><td key={column} className="p-2">{cell}</td>)}</tr>)}</tbody></table></div>
+<VectorAdditionViz/>
 <ExplainedFormula
         question="벡터를 더하거나 스칼라 배율로 늘리면 각 좌표는 어떻게 바뀔까요?"
         idea={<>같은 위치의 좌표끼리 더합니다. 양수인 스칼라 배율을 모든 좌표에 곱하면 방향을 유지하면서 크기를 바꿀 수 있습니다.</>}
@@ -78,6 +88,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
         assumptions={["좌표축이 서로 직교하고 같은 배율로 측정된 유클리드 공간을 사용합니다.", "노름에는 L1·L∞ 등 여러 종류가 있으므로 아래첨자 2를 생략했을 때 문맥을 확인합니다."]}
         interpretation="노름은 벡터의 전체 크기를 한 값으로 줄이지만 방향 정보는 없앱니다. (3,4)와 (−3,−4)는 방향은 반대여도 L2 노름은 모두 5입니다."
       />
+<DistanceDifferenceViz/>
 <p>두 점 p=(1,2), q=(4,6) 사이의 거리는 먼저 차이 q−p=(3,4)를 구해 계산합니다. 따라서 거리는 ‖q−p‖=5입니다. 반대 순서 p−q=(−3,−4)를 써도 거리는 같습니다. 입력의 노름이 R 이하라는 조건은 모든 입력이 원점에서 거리 R 안에 있다는 뜻입니다.</p>
 </section>
 <section id="dot-product" data-teach-level="5" className="space-y-6">
@@ -97,6 +108,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
         assumptions={["두 벡터가 같은 차원과 좌표계를 사용합니다.", "각도 식은 유클리드 내적 공간에서 0이 아닌 벡터에 사용합니다."]}
         interpretation="내적 0은 이 좌표계에서 두 방향이 서로 직각이라는 뜻입니다. 두 벡터 중 하나가 0 벡터인 경우에는 각도를 정의할 수 없으므로 '90도'라고 해석하지 않습니다."
       />
+<DotVersusCosineViz/>
 <p>길이의 영향을 제거한 값이 <strong>코사인 유사도(cosine similarity)</strong>입니다. 두 벡터가 모두 0이 아닐 때 내적을 두 노름의 곱으로 나눕니다. a=(2,0), b=(5,0), c=(−3,0)이라면 a·b=10, a·c=−6이고 길이는 각각 2, 5, 3입니다. 따라서 코사인 값은 10/(2×5)=1과 −6/(2×3)=−1입니다.</p>
 <p>길이가 100인 벡터와 길이가 1인 같은 방향 벡터의 내적은 100입니다. 길이를 더 늘리면 내적도 커지지만 방향의 일치는 이미 최대입니다. 내적이 크다는 사실을 곧바로 의미가 더 비슷하다는 말로 바꾸면 안 됩니다. 학습된 표현에서 노름 자체가 정보를 담는다면 길이를 나누는 과정도 신중히 선택해야 합니다.</p>
 </section>
@@ -117,11 +129,13 @@ export default function VectorsInnerProductsArticle(){return <article className=
         assumptions={["기준 벡터 v는 0 벡터가 아니어야 합니다.", "수직 성분은 u−projᵥ(u)로 남으며 투영 하나가 원래 벡터 전체를 보존하지는 않습니다.", ]}
         interpretation="u=(3,4)는 x축으로 3, x축에 수직인 방향으로 4를 가집니다. 남은 (0,4)와 가로 기준 (1,0)의 내적은 0입니다. 두 성분을 더하면 원래 (3,4)로 돌아옵니다."
       />
+<ProjectionScaleViz/>
 <p>기준을 v=(2,0)으로 바꾸면 내적은 6, 분모는 4입니다. 계수 1.5에 (2,0)을 곱하므로 결과는 여전히 (3,0)입니다. 분모 없이 내적 6에 기준을 바로 곱했다면 (12,0)이 됩니다. 기준의 크기를 두 번 반영한 결과라 기준 길이의 제곱으로 나누어야 합니다.</p>
 <p>이 식을 직접 얻으려면 투영을 cv라고 놓습니다. 남은 u−cv가 v와 직각이려면 (u−cv)·v=0이어야 하므로 c=(u·v)/(v·v)입니다. 투영의 길이는 |u·v|/‖v‖이며 부호 있는 방향 성분 (u·v)/‖v‖와는 구별합니다.</p>
 </section>
 <section id="cauchy-schwarz" data-teach-level="5" className="space-y-6">
 <h2 className="text-2xl font-bold">10 · 한 방향의 성분은 전체 길이를 넘지 못한다</h2>
+<ShadowBoundViz/>
 <p>길이 5인 (3,4)의 가로 부분 길이는 3입니다. 기준을 다른 방향으로 돌려도 그림자의 길이가 전체 길이 5보다 길어질 수는 없습니다. 이 관계를 두 벡터의 내적으로 적은 것이 <strong>코시–슈바르츠 부등식(Cauchy–Schwarz inequality)</strong>입니다.</p>
 <ExplainedFormula
         question="두 벡터의 내적은 얼마나 커질 수 있을까요?"
@@ -146,6 +160,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
 <p><a href={OPENSTAX} target="_blank" rel="noreferrer">OpenStax Calculus Volume 3 §2.3</a>의 식 (2.3)은 대응하는 좌표의 곱합, 식 (2.4)는 두 길이와 각도의 관계를 보여 줍니다. 실제 식 (2.6)은 projᵤv=(u·v/‖u‖²)u입니다. 원문에서는 u가 기준이고 v가 대상이라 이 글의 문자 역할과 반대입니다.</p>
 <p>원문의 기준 u에 (2,0), 대상 v에 (3,4)를 넣어 봅시다. 분자는 6, 분모는 4이므로 (6/4)(2,0)=(3,0)입니다. 9절과 문자는 달라도 같은 계산입니다. 원문의 식 (2.7)은 (u·v)/‖u‖라는 부호 있는 성분이므로 그 절댓값을 취해야 투영의 길이가 됩니다.</p>
 <p>실제 라이브러리에서는 아주 작은 분모를 다루는 규칙까지 확인해야 합니다. <a href={NORMALIZE} target="_blank" rel="noreferrer">PyTorch 2.8의 normalize</a>는 기본 p=2일 때 v/max(‖v‖, eps)를 사용하며 기본 eps는 10⁻¹²입니다. 분모에 eps를 더하는 식이 아닙니다. 노름이 eps보다 작으면 분모를 eps로 올립니다.</p>
+<EpsFloorViz/>
 <p>v=(3×10⁻¹⁴, 4×10⁻¹⁴)는 길이가 5×10⁻¹⁴입니다. 기본 eps로 문서의 식을 계산하면 결과는 (0.03,0.04)이고 길이는 0.05입니다(가정). 함수 이름이 normalize여도 이 작은 입력에서는 길이 1이 되지 않습니다. v=(3,4)라면 분모가 5여서 (0.6,0.8), 길이 1이 됩니다.</p>
 <p><a href={COSINE} target="_blank" rel="noreferrer">같은 버전의 cosine_similarity</a>는 두 노름 각각을 eps 이상으로 제한한 뒤 곱합니다. 기본 eps는 10⁻⁸입니다. x₁=(3×10⁻¹⁰,4×10⁻¹⁰), x₂=(1,0)을 넣으면 분자는 3×10⁻¹⁰, 분모는 10⁻⁸×1이라 값은 0.03입니다(가정). 두 벡터의 기하학적 코사인 0.6과 다릅니다. 이 수치는 문서의 식을 대입한 계산이며 라이브러리를 실행해 얻은 측정값은 아닙니다.</p>
 <p>0벡터를 넣으면 이 문서식의 출력은 0입니다. 계산 결과가 존재한다는 사실이 0벡터에 방향을 만들어 주지는 않습니다. 투영의 기준이 0일 때도 이 수치 처리 규칙을 가져와 수학적 방향이 정의된 것처럼 해석하지 않습니다.</p>
@@ -156,6 +171,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
 <h2 className="text-2xl font-bold">12 · 내적의 전진량과 전체 길이를 묶으면 학습 횟수도 제한할 수 있다</h2>
 <p>같은 계산은 <Link to="/cs/ai/perceptron#convergence">퍼셉트론</Link>의 분류 점수 w·x, <Link to="/cs/ai/neural-network#forward">신경망</Link>의 가중합, <Link to="/cs/ai/attention-theory#self-attention">어텐션</Link>의 질문·키 비교에 쓰입니다. 가중합은 내적에 편향을 더하고 어텐션은 점수의 크기를 차원의 제곱근으로 보정합니다. 계산이 같아도 학습 목적과 출력의 의미는 각 모델에서 확인해야 합니다.</p>
 <p>내적과 노름은 계산 횟수의 증명에도 함께 쓰입니다. 퍼셉트론이 틀린 분류를 고칠 때 올바른 방향으로는 충분히 전진하면서 전체 길이는 제한된 속도로만 늘어난다고 합시다. 방향 성분이 전체 길이를 넘지 못하므로 이런 수정이 무한히 계속될 수는 없습니다.</p>
+<PerceptronBoundViz/>
 <p>구체적으로 입력 길이의 상한 R=5, 정답 경계에서 확보한 최소 여유 γ=1이라면 아래 전제에서 수정 횟수는 25 이하입니다(가정). 실제 횟수가 반드시 25라는 뜻은 아닙니다. 0에서 시작하는 초기값, 분리 가능한 데이터, 양수인 여유, 길이 상한을 모두 확인해야 합니다.</p>
 <ProgressiveDetail title="퍼셉트론 수정 횟수의 전체 증명" preview="내적은 수정마다 γ 이상 전진하고 길이 제곱은 R² 이하로 늘어납니다. 두 관계를 묶어 M≤(R/γ)²를 얻습니다.">
 <div className="space-y-6">

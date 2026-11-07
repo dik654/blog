@@ -5,7 +5,13 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CacheKeySlotViz from "./llm-application-caching/viz/CacheKeySlotViz";
+import CacheSkipMapViz from "./llm-application-caching/viz/CacheSkipMapViz";
 import LlmApplicationCachingViz from "./llm-application-caching/viz/LlmApplicationCachingViz";
+import LookupBranchViz from "./llm-application-caching/viz/LookupBranchViz";
+import ThresholdConeViz from "./llm-application-caching/viz/ThresholdConeViz";
+import TtlTimelineViz from "./llm-application-caching/viz/TtlTimelineViz";
+import WarmLruViz from "./llm-application-caching/viz/WarmLruViz";
 import {
   LlmOperationsPathLocator,
   LlmOperationsPathMapReturn,
@@ -70,6 +76,9 @@ export default function LlmApplicationCachingArticle() {
             retrieval, embedding, tool result 다섯 종류가 “무엇을 캐싱하는가”라는 한 축으로
             나뉩니다.
           </p>
+        </div>
+        <CacheSkipMapViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Exact-match cache는 요청 문자열 자체가 완전히 같을 때만 저장된 응답을
             돌려줍니다. Semantic cache는 문자열이 달라도 의미가 비슷하면 hit으로
@@ -140,6 +149,9 @@ export default function LlmApplicationCachingArticle() {
             Semantic cache에서 hit을 인정하는 기준선이 threshold입니다. 새 요청의 embedding과 저장된 요청의 embedding 사이 similarity 점수가
             이 값 이상이어야 hit이 됩니다. Cosine similarity를 쓴다면 보통 0과 1 사이 값으로, 예를 들어 0.95 이상만 hit으로 받아들이는 식입니다.
           </p>
+        </div>
+        <ThresholdConeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Threshold를 낮추면 더 많은 요청이 비슷하다고 인정되어 hit rate는 올라가지만 의미가 실제로 다른 질문까지 hit으로 묶일 위험이 커집니다. “서울 인구는?”과
             “서울 면적은?”은 문장 구조가 비슷해 similarity 점수가 높게 나올 수 있지만 정답은 전혀 다릅니다.
@@ -193,6 +205,7 @@ export default function LlmApplicationCachingArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Cache key가 넓으면 staleness가, 좁으면 hit rate가 줄어듭니다
         </h2>
+        <CacheKeySlotViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Cache key는 저장된 값을 다시 찾아올 때 쓰는 식별자입니다. Exact-match
@@ -204,6 +217,9 @@ export default function LlmApplicationCachingArticle() {
             저장된 값을 더 이상 쓰지 못하게 지우거나 무효로 표시하는 일을 cache invalidation이라 합니다. 방식은 두 가지를 함께 씁니다. 원본 데이터가 바뀌었을 때
             명시적으로 지우는 쪽과, 일정 시간이 지나면 자동으로 무효가 되는 TTL(time to live) 쪽입니다.
           </p>
+        </div>
+        <TtlTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             TTL은 값이 유효하다고 보는 최대 시간입니다. TTL을 짧게 잡으면 오래된 값을
             돌려줄 위험, 즉 cache staleness는 줄지만 그만큼 자주 miss가 나서 hit rate도
@@ -216,6 +232,7 @@ export default function LlmApplicationCachingArticle() {
             cache는 TTL을 며칠 단위로 길게 잡아도 staleness 위험이 크지 않습니다.
           </p>
         </div>
+        <LookupBranchViz />
         <AlgorithmBlock
           title="요청 하나가 cache key 생성부터 hit/miss 처리까지 지나는 절차"
           input={["incoming request", "exact-match store", "semantic store(threshold τ)", "TTL 설정"]}
@@ -309,6 +326,9 @@ export default function LlmApplicationCachingArticle() {
             캐시 용량이 가득 찼을 때 무엇을 먼저 지울지는 eviction 정책이 정합니다. 그 정책 가운데 LRU(least recently used)는 가장 오랫동안 조회되지 않은
             항목부터 지우는 방식으로, “최근에 쓰인 항목이 곧 다시 쓰일 가능성이 높다”는 가정에 기댑니다.
           </p>
+        </div>
+        <WarmLruViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Warming은 캐시를 채우는 시작점을, LRU는 캐시가 넘칠 때 비우는 순서를
             정하므로 서로 반대 방향의 절차입니다. Warming으로 채운 항목도 오래 조회되지

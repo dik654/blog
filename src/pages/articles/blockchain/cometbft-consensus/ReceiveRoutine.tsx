@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import InputLoopViz from "./viz/InputLoopViz";
 
 export default function ReceiveRoutine({
   onCodeRef,
@@ -10,6 +11,7 @@ export default function ReceiveRoutine({
   return (
     <section id="receive-routine" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Peer message와 local vote와 timeout은 한 loop에서 차례로 상태를 바꿉니다</h2>
+      <InputLoopViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Round 0의 proposal timeout과 뒤늦게 도착한 block part가 서로 다른 goroutine에서 곧바로 RoundState를 바꾼다면 결과가

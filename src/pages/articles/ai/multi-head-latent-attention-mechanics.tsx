@@ -6,6 +6,13 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MultiHeadLatentAttentionMechanicsViz from "./multi-head-latent-attention-mechanics/viz/MultiHeadLatentAttentionMechanicsViz";
+import CacheCellCountViz from "./multi-head-latent-attention-mechanics/viz/CacheCellCountViz";
+import LatentBottleneckViz from "./multi-head-latent-attention-mechanics/viz/LatentBottleneckViz";
+import RotationFoldViz from "./multi-head-latent-attention-mechanics/viz/RotationFoldViz";
+import PositionPathViz from "./multi-head-latent-attention-mechanics/viz/PositionPathViz";
+import ConcatDotViz from "./multi-head-latent-attention-mechanics/viz/ConcatDotViz";
+import AbsorptionRegroupViz from "./multi-head-latent-attention-mechanics/viz/AbsorptionRegroupViz";
+import TradeoffPathViz from "./multi-head-latent-attention-mechanics/viz/TradeoffPathViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
@@ -48,6 +55,9 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             projection으로 복원합니다. 그런데 decode에서 매 step마다 이 복원을 다시 하면 압축한 의미가 없어지므로 DeepSeek-V2는 복원 행렬을
             query·output 쪽으로 옮겨 접어 두는 방법을 함께 제시했습니다.
           </p>
+        </div>
+        <CacheCellCountViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             수치로 봅니다. DeepSeek-V2(236B)는 d_model=5120, head 128개, head 차원 128을 씁니다. 표준 방식이라면 layer 하나가 token
             하나마다 128 head × head마다 128개 값 × K·V 2종류 = 32,768개 원소를 cache해야 합니다. MLA는 이것을 latent 차원 512와 위치 전용 차원 64를 더한 576개 원소로
@@ -78,6 +88,9 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             MLA는 압축을 두 단계로 나눕니다. token의 hidden state h_t를 작은 latent c_t^KV로 내리는 단계는 down-projection입니다. 그
             latent에서 head별 key·value를 다시 만드는 단계는 up-projection입니다. 캐시에 남는 것은 첫 단계의 결과 하나뿐입니다.
           </p>
+        </div>
+        <LatentBottleneckViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             KV down projection은 W^DKV라는 하나의 행렬로 h_t를 d_c 차원 latent로 내립니다. K와 V를 따로 내리지 않고 같은 latent를 공유하는 것이
             핵심이라 압축률이 head 수만큼 곱으로 커집니다.
@@ -138,11 +151,17 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             그런데 이 회전을 k_t^C 에 바로 적용하면 뒤에서 볼 weight absorption 이 깨집니다.
             그래서 MLA 는 위치 정보를 압축 경로 밖의 작은 벡터로 따로 만듭니다.
           </p>
+        </div>
+        <RotationFoldViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이유는 회전 자체가 위치 t마다 달라지는 행렬이라는 데 있습니다. k_t^C=W^UK c_t^KV에 RoPE 회전 R(t)를 곱하면 결과는 R(t)W^UK c_t^KV가
             됩니다. 이 R(t)W^UK는 t마다 다른 행렬이라 미리 한 번 W^Q 쪽으로 접어 재사용할 수 없습니다. 매 위치마다 다시 곱해야 하면 absorption의 이득이
             사라집니다.
           </p>
+        </div>
+        <PositionPathViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             해법은 위치 항을 latent를 거치지 않는 별도 경로로 빼는 것입니다. query 쪽은 head마다 다른 작은 벡터를, key 쪽은 모든 head가 공유하는 벡터 하나를
             hidden state에서 직접 만들고 여기에만 RoPE를 적용합니다.
@@ -178,6 +197,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           최종 attention 점수는 content 끼리의 내적과 위치끼리의 내적을 더한 값입니다
         </h2>
+        <ConcatDotViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             query와 key는 각각 content 부분과 위치 부분을 이어 붙인 벡터입니다. 두 벡터를 이어 붙이고 내적을 하면 결과는 이어 붙인 부분끼리의 내적을 각각 구해 더한 값과
@@ -217,6 +237,9 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             학습이 끝나면 W^UK, W^UV는 고정됩니다. 이 두 행렬을 다른 행렬과 미리 곱해 접어 두는 재결합이 weight absorption입니다. content 점수와 출력이
             행렬곱의 결합 순서를 바꿔도 같은 값이라는 사실만으로 성립하며, 추가 학습은 필요 없습니다.
           </p>
+        </div>
+        <AbsorptionRegroupViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             query-side absorption은 content 점수 계산에 씁니다. q_t^C·k_t^C = q_t^C·(W^UK c_j^KV)인데, 이를 (W^UK^T
             q_t^C)·c_j^KV로 다시 묶으면 과거 token마다 k_j^C를 만들 필요 없이 캐시된 c_j^KV를 latent 공간에서 바로 상대할 수 있습니다.
@@ -271,6 +294,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Absorption 은 메모리 왕복을 줄이는 대신 head당 곱셈을 늘리는 교환입니다
         </h2>
+        <TradeoffPathViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             MLA 는 공짜가 아닙니다. Content 점수의 내적을 128차원에서 512차원으로 늘려

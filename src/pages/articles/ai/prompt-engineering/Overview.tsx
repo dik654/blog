@@ -3,6 +3,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import { PromptContractViz } from "./viz/PromptContractViz";
+import InstructionEvidenceViz from "./viz/InstructionEvidenceViz";
+import RequestGateViz from "./viz/RequestGateViz";
 
 export default function Overview() {
   return (
@@ -27,6 +29,7 @@ export default function Overview() {
           <li><strong>어디서 멈추거나 거부하나:</strong> constraints와 abstention</li>
           <li><strong>무엇을 내고 누가 통과시키나:</strong> output과 completion criteria</li>
         </ul>
+        <RequestGateViz />
         <p>
           상담원용 고객 문의 요약이라면 원문만 evidence로 사용합니다. Output은 issue·urgency·근거 인용으로 나눕니다. 근거가 없으면 추측 대신 unknown을
           반환합니다. Schema validator는 field와 type을, 인용 검사는 실제 span 존재를 판정합니다.
@@ -77,6 +80,7 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Instruction과 evidence를 같은 문장 덩어리에 섞지 않는다</h3>
+        <InstructionEvidenceViz />
         <p>
           Prompt 안에는 model이 따라야 할 instruction과 분석할 user input·retrieved
           document·quotation이 함께 들어옵니다. 이들을 label과 delimiter로 나누지

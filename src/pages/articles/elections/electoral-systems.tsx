@@ -9,6 +9,12 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import ElectoralSystemsViz from "./electoral-systems/viz/ElectoralSystemsViz";
 import DivisorViz from "./electoral-systems/viz/DivisorViz";
+import DivisorCompareViz from "./electoral-systems/viz/DivisorCompareViz";
+import LsqSquaresViz from "./electoral-systems/viz/LsqSquaresViz";
+import MixedSeatsViz from "./electoral-systems/viz/MixedSeatsViz";
+import SeatRoomViz from "./electoral-systems/viz/SeatRoomViz";
+import SurplusVotesViz from "./electoral-systems/viz/SurplusVotesViz";
+import ThresholdViz from "./electoral-systems/viz/ThresholdViz";
 
 /**
  * 표를 의석으로 바꾸는 규칙이 결과를 정합니다
@@ -87,6 +93,11 @@ export default function ElectoralSystemsArticle() {
             줍니다.
           </p>
 
+        </div>
+
+        <SeatRoomViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             먼저 한 선거구에서 몇 명을 뽑는지가 의석을 나눌 수 있는 범위를
             정합니다. 한 명만 뽑으면 한 자리를 여러 정당에 나눠 줄 수 없습니다.
@@ -102,6 +113,11 @@ export default function ElectoralSystemsArticle() {
             결과를 정하는 셈입니다.
           </p>
 
+        </div>
+
+        <ThresholdViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             봉쇄조항은 어떤 정당이 배분에 참여할 수 있는지 먼저 가리고, 투표 방식은
             유권자가 정당과 후보 가운데 무엇을 고르는지 바꿉니다. 따라서 네 선택 중
@@ -201,6 +217,11 @@ export default function ElectoralSystemsArticle() {
               정당의 의석은 세 석으로 줄어듭니다.
             </p>
 
+          </div>
+
+          <SurplusVotesViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               이유는 단순합니다. 다수제에서 이기는 데 필요한 것은 1등이지 큰 표차가
               아닙니다. 어느 선거구에서 90 대 5로 이겨도 한 석입니다. 다른
@@ -282,6 +303,8 @@ export default function ElectoralSystemsArticle() {
 
         <DivisorViz />
 
+        <DivisorCompareViz />
+
         <CitationBlock
           source="European Parliamentary Research Service · Understanding the d’Hondt method (2024)"
           citeKey={2}
@@ -307,6 +330,11 @@ export default function ElectoralSystemsArticle() {
             수 있습니다.
           </p>
 
+        </div>
+
+        <LsqSquaresViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             각 정당의 득표율에서 의석률을 빼면 어긋난 정도가 나옵니다. 이 차이를
             그대로 더하면 남는 쪽과 모자라는 쪽이 서로 지워져 언제나 0이 됩니다.
@@ -470,6 +498,11 @@ export default function ElectoralSystemsArticle() {
             따라 나눠 비례성을 보완합니다.
           </p>
 
+        </div>
+
+        <MixedSeatsViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             섞는 방법은 크게 둘로 나뉩니다. 지역구 의석과 비례 의석을 따로 계산해
             더하면, 지역구에서 생긴 불비례는 비례 의석 수만큼만 줄어듭니다. 반대로

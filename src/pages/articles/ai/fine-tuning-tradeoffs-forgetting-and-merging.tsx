@@ -6,6 +6,11 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TaskArithmeticMergeViz from "./fine-tuning-tradeoffs-forgetting-and-merging/viz/TaskArithmeticMergeViz";
+import OverfitCurveViz from "./fine-tuning-tradeoffs-forgetting-and-merging/viz/OverfitCurveViz";
+import ReplayBatchViz from "./fine-tuning-tradeoffs-forgetting-and-merging/viz/ReplayBatchViz";
+import BasinInterpolationViz from "./fine-tuning-tradeoffs-forgetting-and-merging/viz/BasinInterpolationViz";
+import TaskVectorPlaneViz from "./fine-tuning-tradeoffs-forgetting-and-merging/viz/TaskVectorPlaneViz";
+import CheckpointUtilityViz from "./fine-tuning-tradeoffs-forgetting-and-merging/viz/CheckpointUtilityViz";
 
 /**
  * ai/fine-tuning-tradeoffs-forgetting-and-merging
@@ -131,6 +136,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             예를 들어 같은 분류 task에서 정제 데이터 2,000건으로 held-out 정확도 91%가 나왔다고 해 봅시다. 여기서 중복과 오라벨이 섞인 원본 20,000건을 그대로
             쓰면 정확도가 87%로 오히려 떨어지는 경우가 흔히 보고됩니다. 데이터를 10배 늘렸는데 품질 저하가 그 이득을 상쇄한 것입니다.
           </p>
+          <OverfitCurveViz />
           <p>
             분포가 좁을수록 생기는 또 다른 위험이 fine-tuning overfitting입니다. 모델이 학습 데이터의 특정 문구·순서·길이 패턴을 암기해 버리면 같은 의미라도 표현만
             다른 held-out 입력에서 성능이 갑자기 나빠집니다. Epoch을 늘릴수록 train loss는 계속 줄어드는데 held-out 정확도는 어느 지점부터 꺾이는 곡선으로
@@ -193,6 +199,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             Forgetting evaluation은 그 측정 방법입니다. 목표 task와 무관한 held-out general benchmark 점수를 fine-tuning 전후로 비교해
             하락폭을 숫자 하나로 남깁니다. 이 절 앞부분에서 68%가 61%로 떨어진 폭이 바로 그 값입니다.
           </p>
+          <ReplayBatchViz />
           <p>
             Data replay는 완화 방법 중 가장 직접적입니다. Fine-tuning 배치 안에 원래 general instruction 데이터를 일정 비율 섞어 모델이 새 목표만
             보지 않고 옛 분포도 계속 보게 만듭니다. 예를 들어 domain 데이터에 general 데이터를 10% 섞으면 앞의 7%p 하락이 2%p까지 줄어드는 식으로 보고됩니다.
@@ -247,6 +254,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             Model merging은 같은 base에서 서로 다른 목적으로 fine-tuning한 여러 checkpoint를 재학습 없이 하나로 합칩니다. 가장 단순한 형태는 weight
             interpolation, 곧 여러 checkpoint의 parameter를 좌표별로 평균 내는 방식입니다.
           </p>
+          <BasinInterpolationViz />
           <p>
             Weight interpolation이 작동하려면 두 checkpoint가 같은
             loss landscape의 연결된 낮은 지점(basin)에 있어야 합니다.
@@ -310,6 +318,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
           ]}
           interpretation="λΣτ_t를 base에 그대로 더한다는 것은 재학습 없이 여러 fine-tuning 결과를 한 checkpoint로 합칠 수 있다는 뜻입니다. 동시에 task 수가 늘거나 두 task가 상충하는 방향으로 학습됐다면 이 합이 한쪽 task 성능을 깎을 수 있다는 한계도 함께 읽어야 합니다."
         />
+        <TaskVectorPlaneViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 base를 원점 (0, 0)으로 두는 2차원 toy 예에서 domain fine-tuning이 τ_domain=(0.6, −0.2)로, style fine-
@@ -371,6 +380,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             비율·learning rate schedule·epoch 수를 각각 하나씩 원래 값에서 바꿔 checkpoint selection에 쓸 두 지표가 어떻게 움직이는지 비교합니다.
           </p>
         </div>
+        <CheckpointUtilityViz />
         <AlgorithmBlock
           title="목표 task 성능과 forgetting을 함께 반영하는 checkpoint 선택"
           input={[

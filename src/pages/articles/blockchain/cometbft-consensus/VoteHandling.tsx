@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import PowerThresholdViz from "./viz/PowerThresholdViz";
 
 export default function VoteHandling({
   onCodeRef,
@@ -10,6 +11,7 @@ export default function VoteHandling({
   return (
     <section id="vote-handling" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Vote power가 문턱을 넘는 순간 다음 state 함수가 호출됩니다</h2>
+      <PowerThresholdViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
       <p>
         B의 prevote가 마지막으로 추가돼 B41의 power가 75가 되는 순간 <code>addVote</code>는 단순 count를 반환하지 않습니다.

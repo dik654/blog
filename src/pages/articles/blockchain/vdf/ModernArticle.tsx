@@ -6,6 +6,11 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { chiaVdfTree } from "./fileTrees";
 import VdfEvaluationViz from "./VdfEvaluationViz";
+import ExponentRingViz from "./viz/ExponentRingViz";
+import NWesolowskiViz from "./viz/NWesolowskiViz";
+import ProofLongDivisionViz from "./viz/ProofLongDivisionViz";
+import QuotientGridViz from "./viz/QuotientGridViz";
+import SequentialChainViz from "./viz/SequentialChainViz";
 
 const VDF_PAPER = "https://eprint.iacr.org/2018/601.pdf";
 const VDF_SURVEY = "https://eprint.iacr.org/2018/712.pdf";
@@ -108,6 +113,8 @@ export default function ModernArticle() {
             순서를 알기 어려운 군과 construction의 보안 가정을 더해, 지수를 군의
             순서로 줄여 건너뛰는 우회도 막습니다.
           </p>
+          <SequentialChainViz />
+
           <p>
             여기서 <strong>순차적이라는 말은 CPU 한 core만 쓴다는 뜻이 아닙니다.</strong>
             한 번의 큰 정수·군 연산 내부는 thread·SIMD·ASIC으로 더 빠르게 만들 수
@@ -117,6 +124,8 @@ export default function ModernArticle() {
             초가 아니라 연산 횟수이고, 실제 지연은 배포할 evaluator의 초당 반복 수를
             따로 재서 정해야 합니다.
           </p>
+
+          <ExponentRingViz />
 
           <ExplainedFormula
             question="Repeated squaring 한 경로에서 매 단계는 무엇을 받는가?"
@@ -209,6 +218,8 @@ export default function ModernArticle() {
             하나입니다.
           </p>
 
+          <QuotientGridViz />
+
           <ExplainedFormula
             question="Verifier는 2^T번의 제곱 대신 무엇을 확인하는가?"
             idea={
@@ -270,6 +281,8 @@ export default function ModernArticle() {
             ]}
             interpretation="설명용 mod 17 예시에서 π=3³=10, ℓ=5, r=1이므로 10⁵·3 mod 17=1=y입니다. 이 등식은 산술을 확인할 뿐 mod 17을 안전한 VDF로 만들지는 않습니다."
           />
+
+          <ProofLongDivisionViz />
 
           <AlgorithmBlock
             title="큰 q를 저장하지 않고 π=g^q를 만드는 의사코드"
@@ -393,6 +406,8 @@ export default function ModernArticle() {
             입력으로 씁니다.
             <code>D</code>와 <code>iters</code>는 검증 API의 별도 입력입니다.
           </p>
+          <NWesolowskiViz />
+
           <p>
             Chia는 긴 평가 구간을 여러 증명으로 잇는 n-Wesolowski 경로도
             제공합니다. 여기서 확인하는 <code>VerifyWesolowskiProof</code>는 그

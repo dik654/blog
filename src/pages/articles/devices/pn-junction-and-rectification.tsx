@@ -2,6 +2,12 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import JunctionBiasViz from "./pn-junction-and-rectification/viz/JunctionBiasViz";
+import ChargeBoundaryViz from "./pn-junction-and-rectification/viz/ChargeBoundaryViz";
+import ClosedLoopViz from "./pn-junction-and-rectification/viz/ClosedLoopViz";
+import BarrierBiasViz from "./pn-junction-and-rectification/viz/BarrierBiasViz";
+import ExponentLadderViz from "./pn-junction-and-rectification/viz/ExponentLadderViz";
+import TermCrossViz from "./pn-junction-and-rectification/viz/TermCrossViz";
+import TurnOnCurveViz from "./pn-junction-and-rectification/viz/TurnOnCurveViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -31,7 +37,7 @@ return <div className="space-y-16">
 
 <section id="picture" data-teach-level="1" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">4. 퍼지는 전하와 제자리에 남는 전하를 나눕니다</h2>
-<NumericPath title="붙인 뒤 생기는 경계의 변화" steps={[{"label": "붙이기 전", "value": "왼쪽 정공 · 오른쪽 전자", "detail": "각 영역에서 많은 이동 전하가 다릅니다."}, {"label": "서로 건너기", "value": "전자 ← · 정공 →", "detail": "농도가 높은 쪽에서 낮은 쪽으로 퍼집니다."}, {"label": "경계에 남기", "value": "왼쪽 − · 오른쪽 +", "detail": "원자 자리에 고정된 전하가 드러납니다."}, {"label": "이동을 되돌리기", "value": "오른쪽 → 왼쪽 전기장", "detail": "처음 퍼지는 흐름에 맞서는 효과가 생깁니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">전자와 정공이 만날 때 없어지는 것은 이동 가능한 전자·정공 쌍입니다. 전체 전하가 사라지는 것은 아닙니다. 결정 속에 고정된 이온은 함께 건너가지 않으므로 경계 양쪽의 전하 분포가 바뀝니다.</p><p className="leading-7">
+<NumericPath title="붙인 뒤 생기는 경계의 변화" steps={[{"label": "붙이기 전", "value": "왼쪽 정공 · 오른쪽 전자", "detail": "각 영역에서 많은 이동 전하가 다릅니다."}, {"label": "서로 건너기", "value": "전자 ← · 정공 →", "detail": "농도가 높은 쪽에서 낮은 쪽으로 퍼집니다."}, {"label": "경계에 남기", "value": "왼쪽 − · 오른쪽 +", "detail": "원자 자리에 고정된 전하가 드러납니다."}, {"label": "이동을 되돌리기", "value": "오른쪽 → 왼쪽 전기장", "detail": "처음 퍼지는 흐름에 맞서는 효과가 생깁니다."}]} /><ChargeBoundaryViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">전자와 정공이 만날 때 없어지는 것은 이동 가능한 전자·정공 쌍입니다. 전체 전하가 사라지는 것은 아닙니다. 결정 속에 고정된 이온은 함께 건너가지 않으므로 경계 양쪽의 전하 분포가 바뀝니다.</p><p className="leading-7">
             오른쪽의 양전하와 왼쪽의 음전하가 만드는 전기장은 정공을 왼쪽으로, 전자를 오른쪽으로 움직이게 합니다. 앞서 농도 차이 때문에 퍼지던 방향과 반대입니다. 두 움직임이 어떻게
             맞서는지 보면 평형을 설명할 수 있습니다.
           </p></div>
@@ -39,7 +45,7 @@ return <div className="space-y-16">
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 한쪽으로 퍼지는 설명만으로는 평형이 나오지 않습니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">농도 차이로 퍼지는 흐름만 세면 전하는 계속 건너가기만 합니다. 그러나 건너간 결과로 남은 고정 전하가 전기장을 만들고 반대 흐름도 생깁니다. 두 효과가 맞는 곳에서 바깥 단자의 순전류가 0이 됩니다.</p><p className="leading-7">따라서 순전류 0을 내부 전기장 0과 같은 뜻으로 읽을 수 없습니다. 내부의 두 흐름이 상쇄될 수 있기 때문입니다. 접합의 장벽만 따로 떼어 작은 전지처럼 쓰려 해도 접촉 부분까지 포함한 열평형 회로에는 지속적인 전류가 생기지 않습니다.</p><p className="leading-7">이제 두 흐름과 경계에 이름을 붙이겠습니다. 그 뒤 바깥 전압을 걸어 이 균형을 바꾸는 장면으로 넘어갑니다.</p></div>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">농도 차이로 퍼지는 흐름만 세면 전하는 계속 건너가기만 합니다. 그러나 건너간 결과로 남은 고정 전하가 전기장을 만들고 반대 흐름도 생깁니다. 두 효과가 맞는 곳에서 바깥 단자의 순전류가 0이 됩니다.</p></div><ClosedLoopViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">따라서 순전류 0을 내부 전기장 0과 같은 뜻으로 읽을 수 없습니다. 내부의 두 흐름이 상쇄될 수 있기 때문입니다. 접합의 장벽만 따로 떼어 작은 전지처럼 쓰려 해도 접촉 부분까지 포함한 열평형 회로에는 지속적인 전류가 생기지 않습니다.</p><p className="leading-7">이제 두 흐름과 경계에 이름을 붙이겠습니다. 그 뒤 바깥 전압을 걸어 이 균형을 바꾸는 장면으로 넘어갑니다.</p></div>
 </section>
 
 <section id="diffusion" data-teach-level="3" className="scroll-mt-20">
@@ -86,6 +92,7 @@ return <div className="space-y-16">
 
 <section id="bias" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">7. 같은 경계에 +0.5·+0.6·−0.5 V를 차례로 겁니다</h2>
+<BarrierBiasViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             정공이 많은 왼쪽 단자를 전원에서 더 높은 전위에 놓으면, 바깥
@@ -173,11 +180,12 @@ return <div className="space-y-16">
 
 <section id="ratio" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 같은 원문의 지수 항으로 약 48배를 검산합니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">Shockley 원문 461쪽 식 (4.22)의 마지막 줄은 <code>I₀(v₀)=(Ips+Ins)[e^(qv₀/kT)−1]</code>입니다. 원문은 단위 면적을 기준으로 전류를 다룹니다. 예를 들어 앞선 454쪽 식 (3.12)는 이를 전류 밀도라고 명시합니다. 전체 단자 전류로 바꾸려면 균일한 접합 면적을 곱해야 합니다. 본문의 Is는 그 면적까지 포함한 총 포화 전류를 1 pA로 가정한 값입니다.</p><p className="leading-7">두 순방향 전압의 비를 쓰면 같은 Is는 약분됩니다. 정확한 비는 [e^(0.6/0.02585)−1]/[e^(0.5/0.02585)−1]입니다. 두 지수 항이 1보다 매우 커서 −1을 무시하면 e^((0.6−0.5)/0.02585)=e^3.8685≈47.87입니다. 본문에서 약 47.9배 또는 약 48배라 쓴 값입니다.</p><p className="leading-7">이 근사는 두 순방향 전류가 기준 전류보다 충분히 클 때 맞습니다. 0 V 근처에서 −1을 버리면 전류가 0이 되어야 하는 조건을 잃습니다. −0.5 V에서는 반대로 지수 항이 매우 작아 I≈−Is가 됩니다. 원문의 같은 식에서 서로 다른 항이 남는 결과입니다.</p></div>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">Shockley 원문 461쪽 식 (4.22)의 마지막 줄은 <code>I₀(v₀)=(Ips+Ins)[e^(qv₀/kT)−1]</code>입니다. 원문은 단위 면적을 기준으로 전류를 다룹니다. 예를 들어 앞선 454쪽 식 (3.12)는 이를 전류 밀도라고 명시합니다. 전체 단자 전류로 바꾸려면 균일한 접합 면적을 곱해야 합니다. 본문의 Is는 그 면적까지 포함한 총 포화 전류를 1 pA로 가정한 값입니다.</p></div><ExponentLadderViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">두 순방향 전압의 비를 쓰면 같은 Is는 약분됩니다. 정확한 비는 [e^(0.6/0.02585)−1]/[e^(0.5/0.02585)−1]입니다. 두 지수 항이 1보다 매우 커서 −1을 무시하면 e^((0.6−0.5)/0.02585)=e^3.8685≈47.87입니다. 본문에서 약 47.9배 또는 약 48배라 쓴 값입니다.</p></div><TermCrossViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">이 근사는 두 순방향 전류가 기준 전류보다 충분히 클 때 맞습니다. 0 V 근처에서 −1을 버리면 전류가 0이 되어야 하는 조건을 잃습니다. −0.5 V에서는 반대로 지수 항이 매우 작아 I≈−Is가 됩니다. 원문의 같은 식에서 서로 다른 항이 남는 결과입니다.</p></div>
 </section>
 
 <section id="limits" data-teach-level="7" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 켜짐의 기준과 이상식의 범위를 분리합니다</h2>
+<TurnOnCurveViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             흔히 ‘0.6 V가 되면 켜진다’고 외우지만 0.5 V에서도 이 가상

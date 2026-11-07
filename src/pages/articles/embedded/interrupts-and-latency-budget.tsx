@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import DoubleClearViz from "./interrupts-and-latency-budget/viz/DoubleClearViz";
+import EventBitMapViz from "./interrupts-and-latency-budget/viz/EventBitMapViz";
 import InterruptLatencyViz from "./interrupts-and-latency-budget/viz/InterruptLatencyViz";
+import LatencyWaterfallViz from "./interrupts-and-latency-budget/viz/LatencyWaterfallViz";
+import MergedEdgesViz from "./interrupts-and-latency-budget/viz/MergedEdgesViz";
+import ShortIsrViz from "./interrupts-and-latency-budget/viz/ShortIsrViz";
+import TwoRecordsViz from "./interrupts-and-latency-budget/viz/TwoRecordsViz";
 
 import NumericPath from "../world-systems/NumericPath";
 import TeachCode from "./mcu-memory-map-and-registers/TeachCode";
@@ -20,18 +26,20 @@ return <div className="space-y-16">
 
 <section id="case" data-teach-level="0" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">3. 일곱 구간을 더하면 493 µs입니다</h2>
+<LatencyWaterfallViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">시간은 전부 설명용 <strong>가정</strong>입니다. 입력 변화를 검출하는 데 5 µs, 다른 일 때문에 기다리는 데 40 µs, 처리 함수로 진입하는 데 8 µs, 사건을 접수하는 데 20 µs가 듭니다. 이 지점은 처음 신호에서 73 µs 뒤입니다.</p><p className="leading-7">읽을 작업을 깨우는 데 40 µs를 더 쓰고 센서와의 거래에 300 µs, 받은 값의 계산에 80 µs를 씁니다. 끝나는 시점은 493 µs입니다. 1 ms=1000 µs의 마감까지 507 µs가 남습니다. 일곱 구간은 겹치지 않는 시간 구간의 상한으로 가정했습니다.</p></div>
 </section>
 
 <section id="picture" data-teach-level="1" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">4. 사건 기록과 처리 대기 기록은 서로 다른 곳에 있습니다</h2>
-<NumericPath title="같은 입력을 두 기록으로 넘기기" steps={[{"label": "핀 쪽", "value": "변화가 있었다는 비트", "detail": "입력이 다시 낮아져도 사건이 남을 수 있습니다."}, {"label": "처리 순서를 고르는 쪽", "value": "처리할 요청이 있음", "detail": "허용·우선순위를 보고 실행 차례를 고릅니다."}, {"label": "짧은 접수 함수", "value": "원인 확인과 작업 전달", "detail": "원래 사건 상태를 소거하고 읽을 일을 남깁니다."}, {"label": "일반 작업", "value": "실제 읽기와 계산", "detail": "긴 거래를 마친 뒤 결과를 사용할 수 있습니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+<NumericPath title="같은 입력을 두 기록으로 넘기기" steps={[{"label": "핀 쪽", "value": "변화가 있었다는 비트", "detail": "입력이 다시 낮아져도 사건이 남을 수 있습니다."}, {"label": "처리 순서를 고르는 쪽", "value": "처리할 요청이 있음", "detail": "허용·우선순위를 보고 실행 차례를 고릅니다."}, {"label": "짧은 접수 함수", "value": "원인 확인과 작업 전달", "detail": "원래 사건 상태를 소거하고 읽을 일을 남깁니다."}, {"label": "일반 작업", "value": "실제 읽기와 계산", "detail": "긴 거래를 마친 뒤 결과를 사용할 수 있습니다."}]} /><TwoRecordsViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             처리 함수에 들어왔다는 사실만으로 핀 쪽의 기록이 지워지는 것은 아닙니다. 두 기록은 다른 위치에 있습니다. 핀 쪽의 원인이 계속 남으면 처리할 요청이 다시 생길 수 있습니다.
           </p></div>
 </section>
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 짧게 접수하는 일과 오래 읽는 일을 나눕니다</h2>
+<ShortIsrViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">처리 함수 안에서 300 µs의 센서 거래까지 기다리면 낮은 우선순위의 다른 사건이 더 오래 기다릴 수 있습니다. 여기서는 20 µs 안에 접수하고 일반 작업으로 넘깁니다. 넘겼다는 말은 끝냈다는 뜻이 아니므로 뒤의 40·300·80 µs도 마감 계산에 넣습니다.</p><p className="leading-7">사건 비트를 지우는 주체도 하나로 정해야 합니다. 라이브러리가 이미 지웠는데 사용자 코드가 다시 지우면 그 사이에 들어온 새 사건을 지울 수 있습니다. 실제 함수의 호출 순서를 확인해야 어디까지 직접 처리할지 정할 수 있습니다.</p></div>
 </section>
 
@@ -60,7 +68,7 @@ return <div className="space-y-16">
 
 <section id="source-enable" data-teach-level="5" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 원문은 콜백을 먼저 등록한 뒤 사건 전달을 켭니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">Pico SDK 2.2.0의 고정 commit a1438dff에서 gpio_set_irq_enabled_with_callback의 198–203행을 봅니다. GPIO2와 상승 에지, enabled=true를 넣으면 현재 코어의 콜백을 먼저 정합니다. 다음에 핀의 사건 허용을 켜고 마지막에 IO_IRQ_BANK0를 켭니다.</p></div><TeachCode codeKey="irqEnable" label="콜백 등록과 사건 허용의 실제 순서" /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">Pico SDK 2.2.0의 고정 commit a1438dff에서 gpio_set_irq_enabled_with_callback의 198–203행을 봅니다. GPIO2와 상승 에지, enabled=true를 넣으면 현재 코어의 콜백을 먼저 정합니다. 다음에 핀의 사건 허용을 켜고 마지막에 IO_IRQ_BANK0를 켭니다.</p></div><TeachCode codeKey="irqEnable" label="콜백 등록과 사건 허용의 실제 순서" /><EventBitMapViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             GPIO2의 상승 에지 값은 8이고 GPIO 사건 표에서는 각 핀에 네 비트씩 배정합니다. 따라서 이 핀의 상승 에지는 INTR[0]의 4×2+3=11번 비트, 마스크
             0x800입니다. 반면 NVIC로 가는 IO_IRQ_BANK0의 IRQ 번호는 13입니다. 핀 번호 2·사건 비트 11·IRQ 번호 13은 서로 다른 위치를 고릅니다.
           </p><p className="leading-7">허용을 켜는 내부 함수는 이전에 남은 에지 상태를 먼저 지웁니다. 따라서 “이미 기록된 모든 사건을 이어 받아 처리한다”는 동작으로 가정하면 안 됩니다. 초기화 시점에 센서가 사건을 내보내도 되는지도 함께 정해야 합니다.</p></div>
@@ -71,7 +79,7 @@ return <div className="space-y-16">
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">원문 기본 처리기는 현재 코어의 허용된 사건 상태를 읽습니다. 핀마다 네 비트씩 꺼내 GPIO2에서 events=8을 얻으면 gpio_acknowledge_irq(2,8)을 실행하고 그다음 callback(2,8)을 부릅니다. 사용자가 등록한 콜백은 이미 접수된 사건을 전달받습니다.</p></div><TeachCode codeKey="irqDispatch" label="상태 읽기·소거·콜백 호출 원문" /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             실제 소거 함수에 두 값을 넣으면 정수 나눗셈 gpio/8의 몫은 0이고 event_mask&lt;&lt;(4×(gpio%8))은 8&lt;&lt;8=0x800입니다. 이 값을
             INTR[0]에 씁니다. 해당 에지 비트는 1을 쓰면 지워지는 방식이므로 상태를 0으로 만들려고 0을 쓰는 것과 다릅니다.
-          </p></div><TeachCode codeKey="irqAck" label="GPIO2 에지 비트를 지우는 실제 쓰기" /><CitationBlock source="Pico SDK 2.2.0 · gpio.c 153–170행, gpio.h 573–576행" citeKey={3} href="https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_gpio/gpio.c#L153-L170">고정 원문의 기본 처리기와 acknowledge 함수에 gpio=2,event=8을 대입합니다. 원시 처리기의 소거 책임은 기본 콜백과 구별합니다.</CitationBlock><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">기본 콜백 안에서 같은 에지 비트를 무조건 다시 지우지 않습니다. 첫 소거 이후 새 에지가 들어왔다면 두 번째 소거가 새 기록을 없앨 수 있습니다. 반대로 원시 처리기를 직접 등록한 경로는 SDK 기본 처리기 대신 자신이 원인 확인과 소거를 맡습니다. 어느 경로를 쓰는지 먼저 고정해야 합니다.</p></div>
+          </p></div><TeachCode codeKey="irqAck" label="GPIO2 에지 비트를 지우는 실제 쓰기" /><CitationBlock source="Pico SDK 2.2.0 · gpio.c 153–170행, gpio.h 573–576행" citeKey={3} href="https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_gpio/gpio.c#L153-L170">고정 원문의 기본 처리기와 acknowledge 함수에 gpio=2,event=8을 대입합니다. 원시 처리기의 소거 책임은 기본 콜백과 구별합니다.</CitationBlock><DoubleClearViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">기본 콜백 안에서 같은 에지 비트를 무조건 다시 지우지 않습니다. 첫 소거 이후 새 에지가 들어왔다면 두 번째 소거가 새 기록을 없앨 수 있습니다. 반대로 원시 처리기를 직접 등록한 경로는 SDK 기본 처리기 대신 자신이 원인 확인과 소거를 맡습니다. 어느 경로를 쓰는지 먼저 고정해야 합니다.</p></div>
 </section>
 
 <section id="budget" data-teach-level="6" className="scroll-mt-20">
@@ -98,6 +106,7 @@ return <div className="space-y-16">
 
 <section id="limits" data-teach-level="7" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">13. 에지 비트 하나는 사건 횟수나 최악 시간의 증명서가 아닙니다</h2>
+<MergedEdgesViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             첫 에지 비트가 1인 동안 같은 에지가 여러 번 더 들어오면 상태는 여전히 1일 수 있습니다. ISR에서 횟수를 하나 올려도 그 전에 합쳐진 사건까지 복원하지는 못합니다. 모든
             사건이 중요하다면 센서가 보관하는 순번·FIFO나 별도 하드웨어 계수·캡처를 고려해야 합니다. 단순한 “읽을 일 있음” 표시는 새 값 하나가 필요하다는 의미로만 쓰는 경우가

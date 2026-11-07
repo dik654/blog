@@ -1,4 +1,7 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
+import FailureLayerViz from "./viz/FailureLayerViz";
+import PairedTraceViz from "./viz/PairedTraceViz";
+import PhrasingRobustnessViz from "./viz/PhrasingRobustnessViz";
 import { PromptRegressionViz } from "./viz/PromptContractViz";
 
 export default function AntiPatterns() {
@@ -46,6 +49,7 @@ export default function AntiPatterns() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>실패 원인에 맞는 계층을 고친다</h3>
+        <FailureLayerViz />
         <p>
           Vague instruction은 objective와 completion criteria를 고칩니다. 근거 부족에는 RAG나 tool을 붙이고 syntax 실패에는 schema와
           constrained decoding을 적용합니다. 권한 오류나 data exfiltration 위험은 prompt 문장을 늘리는 대신 runtime policy에서 차단해야
@@ -63,6 +67,7 @@ export default function AntiPatterns() {
           뜻이 같은 지시를 다른 문장으로 바꿔 썼을 뿐인데 완료율이나 형식 준수율이 달라집니다. 이것이 prompt sensitivity입니다. 예를 들어 “표를 만들어라”와 “표
           형식으로 정리해라”가 같은 model에서 성공률 92%와 71%로 갈릴 수 있습니다.
         </p>
+        <PhrasingRobustnessViz />
         <p>
           Prompt robustness는 이 변동을 줄이는 설계 목표입니다. 같은 요청을 표현만 바꾼 문장 서너 개로 evaluation set을 만들어 평균과 최저 성공률을 함께
           보고하거나 여러 표현의 출력을 실제로 ensemble해 다수결로 답을 고르는 방식으로 확보합니다.
@@ -76,6 +81,7 @@ export default function AntiPatterns() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Prompt·model 구성을 함께 버전 관리합니다</h3>
+        <PairedTraceViz />
         <p>
           Failure trace를 versioned eval case로 저장하고 prompt 한 요소만 바꿔 paired
           comparison을 수행합니다. Trace에는 prompt hash뿐 아니라 model snapshot,

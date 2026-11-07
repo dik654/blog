@@ -5,6 +5,12 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import AdapterScopeMap from "./image-video-lora-architecture/viz/AdapterScopeMap";
+import ImagePipelineScopeViz from "./image-video-lora-architecture/viz/ImagePipelineScopeViz";
+import ProjectionLayoutViz from "./image-video-lora-architecture/viz/ProjectionLayoutViz";
+import SpaceTimeAttentionViz from "./image-video-lora-architecture/viz/SpaceTimeAttentionViz";
+import PatternMatchViz from "./image-video-lora-architecture/viz/PatternMatchViz";
+import SignalAdapterViz from "./image-video-lora-architecture/viz/SignalAdapterViz";
+import FpsMotionViz from "./image-video-lora-architecture/viz/FpsMotionViz";
 import {
   GenerativeControlLocator,
   GenerativeControlMapReturn,
@@ -63,6 +69,7 @@ export default function ImageVideoLoraArchitectureArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Image LoRA는 먼저 denoiser 안의 실제 module을 찾습니다
         </h2>
+        <ImagePipelineScopeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Text-to-image pipeline에는 보통 image를 latent로 바꾸는 autoencoder,
@@ -71,6 +78,9 @@ export default function ImageVideoLoraArchitectureArticle() {
             denoiser입니다. 학습 시 매 step의 prediction loss가 직접 통과하는
             component이기 때문입니다.
           </p>
+        </div>
+        <ProjectionLayoutViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             그렇다고 모든 denoiser가 같은 module 이름을 쓰는 것은 아닙니다. U-Net은 spatial block과 attention을 섞을 수 있고 DiT는
             transformer block을 중심으로 구성합니다. Fused QKV를 쓰는 model과 Q·K·V가 분리된 model도 다릅니다. 그래서 설정 문자열을 복사하기 전에
@@ -132,6 +142,7 @@ export default function ImageVideoLoraArchitectureArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Video LoRA는 “무엇이 움직이는가”를 별도 경로로 추적합니다
         </h2>
+        <SpaceTimeAttentionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Video model의 input은 한 장이 아니라 여러 frame으로 이어진 clip입니다.
@@ -139,6 +150,9 @@ export default function ImageVideoLoraArchitectureArticle() {
             시간 경로가 분리돼 있다면, 어느 쪽을 학습하느냐에 따라 adapter의 의미도
             appearance와 motion으로 갈립니다.
           </p>
+        </div>
+        <PatternMatchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             최신 video DiT는 이 구분이 module 이름에 그대로 드러나지 않을 수도
             있습니다. Joint space-time attention을 쓰거나 audio·video branch와
@@ -185,6 +199,7 @@ export default function ImageVideoLoraArchitectureArticle() {
             },
           ]}
         />
+        <SignalAdapterViz />
         <div id="paper-motiondirector" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="MotionDirector — ECCV 2024"
@@ -221,6 +236,7 @@ export default function ImageVideoLoraArchitectureArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           한 장의 품질이 아니라 clip 전체와 target 범위를 함께 검증합니다
         </h2>
+        <FpsMotionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Image LoRA의 training sample은 image와 caption으로 시작할 수 있지만 video LoRA의 sample은 clip 길이, frame rate,

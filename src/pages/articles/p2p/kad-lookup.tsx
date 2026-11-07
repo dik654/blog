@@ -3,6 +3,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import KadIterativeLookupViz from "./kademlia/viz/KadIterativeLookupViz";
+import MergeStepsViz from "./kad-lookup/viz/MergeStepsViz";
+import RandomTargetViz from "./kad-lookup/viz/RandomTargetViz";
+import RefreshOrderViz from "./kad-lookup/viz/RefreshOrderViz";
+import SlotTimelineViz from "./kad-lookup/viz/SlotTimelineViz";
 
 export default function KadLookupArticle() {
   return (
@@ -61,6 +65,7 @@ export default function KadLookupArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           응답 하나가 오면 중복을 빼고 가까운 k개를 다시 고릅니다
         </h2>
+        <MergeStepsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             첫 응답만 실제 숫자로 계산해 보겠습니다. 기존 거리는
@@ -193,6 +198,7 @@ export default function KadLookupArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           geth v1.17.8은 round 장벽 없이 빈 query slot을 즉시 채웁니다
         </h2>
+        <SlotTimelineViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             논문을 설명할 때는 “한 round에 α명에게 묻는다”고 말하기 쉽습니다.
@@ -280,6 +286,7 @@ export default function KadLookupArticle() {
           빈 주소록은 bootnode로 시작하지만, bootnode가 정답을 보장하지는
           않습니다
         </h2>
+        <RefreshOrderViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Lookup은 seed가 하나도 없으면 즉시 빈 결과로 끝납니다. 그래서 geth
@@ -288,6 +295,9 @@ export default function KadLookupArticle() {
             target lookup을 세 번 수행해 다른 거리 구간의 연락처를 다시
             표본화합니다.
           </p>
+        </div>
+        <RandomTargetViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 release의 table source는 DB seed를 최대 30개, 최근 5일 이내로
             조회합니다. Discv4 target이 512-bit public key이고 table ID는 그

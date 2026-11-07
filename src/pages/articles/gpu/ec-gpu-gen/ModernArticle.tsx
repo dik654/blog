@@ -2,6 +2,11 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { EcGpuGenArtifactViz } from "./viz/ModernEcGpuGenViz";
+import AmortizedTimeViz from "./viz/AmortizedTimeViz";
+import ArtifactLifecycleViz from "./viz/ArtifactLifecycleViz";
+import FieldDedupViz from "./viz/FieldDedupViz";
+import LimbPackingViz from "./viz/LimbPackingViz";
+import ParityCheckViz from "./viz/ParityCheckViz";
 
 const ECGPU = "https://github.com/filecoin-project/ec-gpu/tree/16d38ef6715fb1a4968986d3a5635f8bcac6c984";
 const BELLPERSON = "https://github.com/filecoin-project/bellperson/tree/728306c8ee52f53dbd55ea02557affcdfb546ae7";
@@ -22,6 +27,7 @@ export default function ModernEcGpuGenArticle() {
       <header><p className="text-sm font-semibold text-primary">01 · 입력 계약</p><h2 className="mt-2 text-2xl font-bold">입력으로 받은 값과 생성기가 계산한 값을 먼저 나눈다</h2></header>
       <p>고정한 소스의 <code>GpuField</code>는 이름과 <code>one</code>, <code>r2</code>, <code>modulus</code>를 little-endian <code>u32</code> 배열로 제공합니다. 확장 field라면 하위 field 이름도 줍니다. 곡선 계수나 생성점 좌표까지 이 trait가 모두 준다고 말하면 실제 API와 다릅니다.</p>
       <p>더 중요한 경계가 있습니다. 생성기는 <code>R²</code>를 다시 계산하지 않습니다. 입력의 <code>r2</code> 배열을 그대로 32-bit word로 쓰거나 두 개씩 묶어 64-bit word로 만듭니다. 반면 Montgomery reduction에 쓰는 <code>INV</code>는 modulus의 낮은 word에서 backend 폭마다 계산합니다.</p>
+      <LimbPackingViz />
       <ExplainedFormula question="u32 word 8개인 입력은 두 backend에서 어떻게 달라질까?" idea={<>CUDA 경로는 32-bit word를 그대로 쓰고, OpenCL 경로는 인접한 두 word를 little-endian 64-bit limb 하나로 묶습니다. 값은 같고 source의 배열 모양만 달라집니다.</>} formula={String.raw`\begin{aligned}L_{32}&=n=8\\L_{64}&=n/2=4\\q_j&=m_{2j}+2^{32}m_{2j+1}\\\operatorname{INV}_w&=-p_0^{-1}\bmod 2^w\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}L_{32}&=\underbrace{n}_{\text{입력 u32 word 수}}=8\\L_{64}&=\underbrace{n/2}_{\text{두 word를 한 limb로}}=4\\q_j&=\underbrace{m_{2j}+2^{32}m_{2j+1}}_{\text{little-endian pair packing}}\\\operatorname{INV}_w&=\underbrace{-p_0^{-1}\bmod 2^w}_{\text{backend 폭별로 계산}}\end{aligned}`}
       operations={[
@@ -49,6 +55,7 @@ export default function ModernEcGpuGenArticle() {
     .add_multiexp::<G2Affine, Fp2>();
 
 ec_gpu_gen::generate(&source_builder);`}</code></pre>
+      <FieldDedupViz />
       <p>따라서 artifact의 입력은 “BLS12-381” 같은 이름 하나가 아닙니다. 어떤 field와 연산 묶음을 등록했는지, 어느 ec-gpu revision의 template을 썼는지, 어떤 compiler와 target을 골랐는지가 모두 결과를 바꿉니다.</p>
       <ExplainedFormula question="생성된 kernel artifact의 identity에는 어떤 입력이 모두 들어가야 할까?" idea={<>Field 값뿐 아니라 template revision, operation set, backend, compiler flags와 target architecture가 달라지면 실행 artifact도 달라집니다. 이 tuple을 hash해 cache와 benchmark의 key로 사용합니다.</>} formula={String.raw`K=H(F,\,C,\,O,\,R_t,\,B,\,V_c,\,A,\,\Phi)`}
       annotatedFormula={String.raw`K=H(\underbrace{F,\,C}_{\text{field·curve 값}},\,\underbrace{O,\,R_t}_{\text{연산 set·template}},\,\underbrace{B,\,V_c,\,A,\,\Phi}_{\text{backend·compiler·target·flags}})`}
@@ -72,9 +79,11 @@ ec_gpu_gen::generate(&source_builder);`}</code></pre>
 
     <section id="artifact-lifecycle" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Artifact 생애주기</p><h2 className="mt-2 text-2xl font-bold">생성 소스와 컴파일 결과를 함께 보존한다</h2></header>
+      <ArtifactLifecycleViz />
       <p>공식 integration에서 CUDA는 build 과정에 fatbin을 만들고, OpenCL은 source를 생성해 runtime에 compile합니다. 생성 경로는 내부 환경 변수로 artifact 위치를 전달하고 <code>program!</code> macro가 device별 program을 만듭니다. 그러므로 “같은 Rust binary”만 기록하면 OpenCL driver가 만든 binary, 선택된 device와 runtime options를 재현할 수 없습니다.</p>
       <p>Build log에는 field/curve type, ec-gpu commit, Cargo feature set을 남깁니다. 생성한 source digest, compiler command·stderr, artifact digest도 같은 기록에 묶습니다.</p>
       <p>Runtime log에는 backend, device UUID/name, driver, loaded artifact key를 남깁니다. Kernel entry와 fallback 이유도 기록합니다. Build 실패를 빈 source나 오래된 cache로 숨기지 않고, 실패시키거나 승인된 CPU 경로로 전환합니다.</p>
+      <AmortizedTimeViz />
       <ExplainedFormula question="Codegen 변경이 전체 실행 시간에 이득인지 build·startup·steady-state를 어떻게 나눌까?" idea={<>Build-time compile, 첫 program creation, 반복 kernel 실행은 서로 다른 사용자가 지불합니다. 배포 빈도와 process lifetime을 고정해 amortized cost를 계산합니다.</>} formula={String.raw`T_{amort}=\frac{T_{build}}{D}+\frac{T_{startup}}{R}+T_{steady}`}
       annotatedFormula={String.raw`T_{amort}=\underbrace{\frac{T_{build}}{D}}_{\text{build 비용 분담}}+\underbrace{\frac{T_{startup}}{R}}_{\text{초기화 비용 분담}}+\underbrace{T_{steady}}_{\text{warm 실행}}`}
       operations={[
@@ -95,6 +104,7 @@ ec_gpu_gen::generate(&source_builder);`}</code></pre>
     <section id="runtime-dispatch" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Runtime 선택</p><h2 className="mt-2 text-2xl font-bold">같은 Program API라도 검증은 backend마다 따로 한다</h2></header>
       <p>ec-gpu는 <code>cuda</code>와 <code>opencl</code> feature를 지원하고, 둘 다 활성화되면 runtime framework selection을 제공합니다. 그러나 CUDA fatbin과 OpenCL runtime source compile은 artifact lifecycle이 다르며, integer overflow·shift·address-space·work-group semantics가 source 언어와 compiler에서 같다는 보장도 없습니다.</p>
+      <ParityCheckViz />
       <p>Parity test는 CPU, CUDA, OpenCL에 같은 field와 point 입력을 넣습니다. 출력은 canonical form으로 되돌린 뒤 비교합니다.</p>
       <ul className="list-disc space-y-2 pl-6">
         <li>Field: 0, p−1, 긴 carry, canonical 범위 밖의 입력</li>

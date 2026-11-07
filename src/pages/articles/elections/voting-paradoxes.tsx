@@ -8,6 +8,11 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import CondorcetCycleViz from "./voting-paradoxes/viz/CondorcetCycleViz";
 import MedianVoterViz from "./voting-paradoxes/viz/MedianVoterViz";
+import ArrowProofViz from "./voting-paradoxes/viz/ArrowProofViz";
+import BordaShiftViz from "./voting-paradoxes/viz/BordaShiftViz";
+import ConditionsMapViz from "./voting-paradoxes/viz/ConditionsMapViz";
+import RunoffMonotonicityViz from "./voting-paradoxes/viz/RunoffMonotonicityViz";
+import TwoAxisMedianViz from "./voting-paradoxes/viz/TwoAxisMedianViz";
 
 /**
  * 규칙을 아무리 잘 골라도 남는 문제가 있습니다
@@ -225,6 +230,8 @@ export default function VotingParadoxesArticle() {
           </p>
         </div>
 
+        <BordaShiftViz />
+
         <ProgressiveDetail
           title="셋째 안만 옮겼는데 가와 나의 승패가 왜 바뀔까요?"
           preview="점수제는 모든 순위의 위치를 점수로 바꾸므로, 다의 위치도 가와 나의 점수 차이에 들어갑니다."
@@ -242,6 +249,8 @@ export default function VotingParadoxesArticle() {
             <strong> 무관한 대안으로부터의 독립</strong>이 깨진 예입니다.
           </p>
         </ProgressiveDetail>
+
+        <RunoffMonotonicityViz />
 
         <ProgressiveDetail
           title="이긴 후보를 더 좋아했는데도 정말 질 수 있을까요?"
@@ -308,6 +317,11 @@ export default function VotingParadoxesArticle() {
             없습니다.
           </p>
 
+        </div>
+
+        <ConditionsMapViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             처음의 사례는 이 충돌을 눈앞에 보여 줍니다. 쌍별 다수결은 전원일치,
             두 안만 보고 비교하기, 한 사람에게 맡기지 않기를 지킵니다. 대신 모든
@@ -336,6 +350,11 @@ export default function VotingParadoxesArticle() {
             집단을 하나 잡습니다.
           </p>
 
+        </div>
+
+        <ArrowProofViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <ol className="leading-7">
             <li>최소 집단이 두 명 이상이라고 가정하고 두 묶음으로 나눕니다.</li>
             <li>
@@ -524,6 +543,11 @@ export default function VotingParadoxesArticle() {
             사례에서는 그 계산 결과가 고리였습니다.
           </p>
 
+        </div>
+
+        <TwoAxisMedianViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             한 축이라는 전제도 강합니다. 세금은 낮게 원하지만 복지는 높게 원하는
             사람처럼 쟁점이 둘 이상이면 모든 선택지를 같은 한 줄에 놓기

@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import TimeoutBudgetViz from "./viz/TimeoutBudgetViz";
 
 export default function Timeout({
   onCodeRef,
@@ -21,6 +22,7 @@ export default function Timeout({
       <div className="not-prose my-4 flex flex-wrap gap-3">
         <CodeViewButton label="handleTimeout()" onClick={() => onCodeRef("handle-timeout", codeRefs["handle-timeout"])} />
       </div>
+      <TimeoutBudgetViz />
       <ExplainedFormula
         question="Round가 반복될수록 정상 message를 기다릴 예산을 어떻게 늘릴까요?"
         idea={<>초기 timeout에 round별 delta를 더하는 단순 schedule은 network delay가 안정된 뒤 언젠가 기다림이 실제 delay를 넘도록 만듭니다. Step별 base와 delta는 따로 둡니다.</>}

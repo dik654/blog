@@ -7,6 +7,11 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import LoadSplitViz from "./linux-server-interview-incident-map/viz/LoadSplitViz";
 import TriageProcessViz from "./linux-server-interview-incident-map/viz/TriageProcessViz";
 import LoadEmaViz from "./linux-server-interview-incident-map/viz/LoadEmaViz";
+import SwapCountViz from "./linux-server-interview-incident-map/viz/SwapCountViz";
+import LoadCounterScopeViz from "./linux-server-interview-incident-map/viz/LoadCounterScopeViz";
+import LoadCrossingViz from "./linux-server-interview-incident-map/viz/LoadCrossingViz";
+import SleepMarkViz from "./linux-server-interview-incident-map/viz/SleepMarkViz";
+import SshGateViz from "./linux-server-interview-incident-map/viz/SshGateViz";
 import { codeRefs } from "./linux-server-interview-incident-map/codeRefs";
 import { linuxLoadTrees } from "./linux-server-interview-incident-map/fileTree";
 
@@ -173,6 +178,9 @@ export default function LinuxServerInterviewIncidentMapArticle() {
           <h2 className="mb-6 text-2xl font-bold">5. 리눅스는 1993년부터 디스크를 기다리는 task도 부하로 셉니다</h2>
           <div className={prose}>
             <p>다른 운영체제의 부하 숫자는 CPU를 쓰거나 기다리는 수만 세는 경우가 많습니다. 리눅스도 처음에는 그랬습니다. 1993년 10월 Matthias Urlichs가 커널 메일링 리스트에 "Load average broken ?"이라는 글과 함께 고친 코드를 올리면서 바뀌었습니다.</p>
+          </div>
+          <SwapCountViz />
+          <div className={prose}>
             <p>그가 든 예는 이렇습니다. 빠른 swap 디스크를 느린 디스크로 바꾸면 서버는 더 힘들어지는데 부하 숫자는 오히려 내려가니 직관에 어긋난다는 것입니다. task들이 CPU 대신 느린 디스크 앞에서 기다리게 되기 때문입니다. 그는 swap이나 빠른 I/O를 기다리는 task도 자원을 쓰고 있다고 보고 이 수를 더하게 했습니다.</p>
             <p>
             그 결과 리눅스의 load average는 CPU 부하가 아니라 시스템 전체의 수요가 됐습니다. Gregg는 2017년 글에서 이 역사를 추적한 뒤 리눅스 load는 스레드
@@ -195,6 +203,9 @@ export default function LinuxServerInterviewIncidentMapArticle() {
             vmstat의 r 열이 그 길이입니다.
           </p>
             <p>신호를 받아도 깨지 않고 디스크 응답이나 일부 lock 같은 사건만 기다리는 잠을 끊김 없는 잠(uninterruptible sleep)이라고 부릅니다. ps의 상태 열에 D로 찍혀서 흔히 D state라고 합니다. load는 이 D task를 모두 셉니다.</p>
+          </div>
+          <LoadCounterScopeViz />
+          <div className={prose}>
             <p>vmstat의 b 열은 이름이 비슷해도 다른 수입니다. /proc/stat의 procs_blocked, 곧 I/O 완료를 기다리는 task 수를 보여 줍니다. 디스크를 기다리는 D task는 대개 b에도 들어가지만 lock을 기다리는 D task는 load만 올리고 b에는 나오지 않습니다. 그래서 load는 대략 r과 D의 합이고, D 전체는 ps -eo state의 D를 세어 확인합니다.</p>
             <p>4절의 점검 원칙에는 Gregg가 붙인 이름이 있습니다. 모든 자원마다 사용률(utilization), 포화(saturation), 오류(errors)를 확인하는 방법이라 머리글자를 따서 USE Method라고 부릅니다. 세 load 값은 1분, 5분, 15분 창의 평균처럼 불리지만 실제로는 아래 식의 감쇠 상수 이름입니다.</p>
           </div>
@@ -228,6 +239,9 @@ export default function LinuxServerInterviewIncidentMapArticle() {
           </p>
             <p>첫 표본은 0 × 1884 + 2048 × 164 = 335,872에 2,047을 더해 2048로 나눈 164입니다. load로는 164 ÷ 2048 = 0.08입니다. 다음 표본은 164 × 1884 + 335,872 + 2,047을 2048로 나눈 315입니다. 매번 1.0까지 남은 거리의 약 8%만 다가갑니다.</p>
             <p>12번째 표본, 곧 60초 뒤의 값은 1,299입니다. /proc/loadavg는 여기에 10을 더해 소수 둘째 자리까지 찍으므로 0.63이 보입니다. Gregg는 같은 실험을 측정 그래프에서 읽어 약 0.62로 적었습니다. 정수 계산으로는 표본 11개면 0.60, 12개면 0.63이라 그래프 값과 딱 맞는 표본 수는 없습니다. LOAD_FREQ가 5초보다 1 tick 길어 12번째 표본은 60초를 조금 넘긴 뒤에 찍힙니다.</p>
+          </div>
+          <LoadCrossingViz />
+          <div className={prose}>
             <p>스레드가 끝나도 값은 바로 0이 되지 않습니다. 1,299에서 수 0을 12번 섞으면 474, 곧 0.23이 남습니다. 이때 15분 값은 0.06이라 1분 값이 아직 더 큽니다. 같은 계산을 이어 가면 스레드가 끝나고 약 155초(표본 31개) 뒤에야 1분 값 93이 15분 값 101 아래로 내려갑니다. 늦게 접속해 1분 값이 15분 값보다 낮다면 이미 지나간 사건의 꼬리를 보는 중일 수 있다는 Gregg의 말이 이 감쇠에서 나옵니다.</p>
           </div>
           <CalculationWalkthrough
@@ -261,6 +275,7 @@ export default function LinuxServerInterviewIncidentMapArticle() {
           {code("load-definition", "load average의 커널 정의")}
           {code("fold-active", "CPU 하나가 보태는 수")}
           {code("global-load", "5초마다 세 값에 섞기")}
+          <SleepMarkViz />
           <div className={prose}>
             <p>D 줄의 수는 kernel/sched/core.c의 __schedule에서 생깁니다. 6622–6625행은 CPU를 내놓는 task가 UNINTERRUPTIBLE이면서 NOLOAD도 FROZEN도 아닐 때만 load에 보탤 잠으로 표시합니다. kernel/sched/sched.h 2773–2774행이 그 표시를 보고 nr_uninterruptible을 올리고, core.c 3665–3666행은 깨어날 때 내립니다.</p>
             <p>vmstat의 b는 다른 길로 나옵니다. sched.h 2776–2778행은 in_iowait가 켜진 task만 rq의 nr_iowait를 올리고, fs/proc/stat.c 177–183행이 그 합 nr_iowait()를 procs_blocked로 찍습니다. lock을 기다리는 D task는 첫 표시만 받고 둘째 표시는 받지 않으므로 load에는 들어가도 b에는 없습니다.</p>
@@ -288,6 +303,9 @@ export default function LinuxServerInterviewIncidentMapArticle() {
           <h2 className="mb-6 text-2xl font-bold">9. 면접 답변은 질문 → 첫 명령 → 가설 → 단기·장기 조치로 짭니다</h2>
           <div className={prose}>
             <p>Google 가이드의 장애 추적 시간에서 면접관이 보는 것은 명령 자체보다 순서입니다. 가이드는 어떤 확인 질문을 하는지, 다음에 어떤 명령을 치는지, 단기와 장기 조치가 무엇인지를 묻는다고 적습니다. 아래 세 답은 이 틀에 이 글의 원칙을 넣어 본 예시입니다. (가정)</p>
+          </div>
+          <SshGateViz />
+          <div className={prose}>
             <p>첫 문제는 원격 서버에 SSH가 안 된다는 신고입니다. 확인 질문은 전부 안 되는지 한 사람만 안 되는지, 언제부터인지입니다. 경로를 바깥에서 안으로 좁힙니다. 이름이 맞는 주소로 풀리는지, 22번 포트까지 TCP가 닿는지, 서버 안의 sshd가 떠 있고 인증 로그에 거절이 찍히는지를 차례로 봅니다.</p>
             <p>단기 조치는 실패한 첫 관문만 고치는 것입니다. 방화벽이었다면 그 규칙 하나를 되돌립니다. 장기 조치는 그 관문을 바깥에서 검사하는 감시를 다는 것입니다. 경로를 관문별로 나누는 방법은 <a href="/cs/cloud/cloud-networking-request-path#overview">요청 경로 추적</a>에서 이미 다뤘습니다.</p>
             <p>

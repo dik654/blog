@@ -6,6 +6,15 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import GpuDataMovementOptimizationViz from "./gpu-data-movement-optimization/viz/GpuDataMovementOptimizationViz";
+import TierTimeViz from "./gpu-data-movement-optimization/viz/TierTimeViz";
+import StagingSplitViz from "./gpu-data-movement-optimization/viz/StagingSplitViz";
+import LdmatrixLaneViz from "./gpu-data-movement-optimization/viz/LdmatrixLaneViz";
+import BankConflictViz from "./gpu-data-movement-optimization/viz/BankConflictViz";
+import RoundTripLedgerViz from "./gpu-data-movement-optimization/viz/RoundTripLedgerViz";
+import PrefetchDistanceViz from "./gpu-data-movement-optimization/viz/PrefetchDistanceViz";
+import PipelineGanttViz from "./gpu-data-movement-optimization/viz/PipelineGanttViz";
+import KernelSumMaxViz from "./gpu-data-movement-optimization/viz/KernelSumMaxViz";
+import StageRingViz from "./gpu-data-movement-optimization/viz/StageRingViz";
 
 /**
  * Data movement 최적화: global→shared→register 경로와 overlap
@@ -41,6 +50,9 @@ export default function GpuDataMovementOptimizationArticle() {
             제품 사양의 TB/s로 비교하는 별도 memory tier가 아니라 instruction의
             operand가 놓이는 곳이므로 같은 방식으로 대역폭을 나누지 않습니다.
           </p>
+        </div>
+        <TierTimeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             같은 tile을 세 층에서 따라가 봅니다. 128×32 fp16 tile은
             8 KiB입니다. Chip 전체 HBM 상한을 132개 SM에 똑같이 나눈 단순
@@ -85,6 +97,9 @@ export default function GpuDataMovementOptimizationArticle() {
             Shared-memory staging 은 global memory 의 조각을 shared memory 에 한 번 내려놓고 여러 warp 가 여러 번 읽게 하는 방식입니다. 각
             warp 가 필요한 값을 global 에서 직접 읽으면 같은 값이 warp 수만큼 HBM 을 오가지만 staging 을 거치면 HBM 은 한 번만 읽습니다.
           </p>
+        </div>
+        <StagingSplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             GEMM 에서 세어 봅니다. Threadblock tile 128×128 을 warp 4개가 2×2 로 나누면 A 의 한 행 조각을 N 방향의 warp 2개가, B 의 한 열
             조각을 M 방향의 warp 2개가 씁니다. Staging 없이 읽으면 A·B 가 각각 두 번 HBM 을 오가고 staging 을 하면 한 번입니다. K 를 32 씩 도는
@@ -122,6 +137,9 @@ export default function GpuDataMovementOptimizationArticle() {
             명령 수와 bank conflict 입니다. Shared memory 는 충분히 빠르지만 warp 가 내는 load 명령 하나하나가 issue slot 을 쓰기 때문에 같은
             byte 를 더 적은 명령으로 올리는 것이 목표가 됩니다.
           </p>
+        </div>
+        <LdmatrixLaneViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <code>ldmatrix</code> 가 그 명령입니다. Warp 의 32 lane 이 8개 행의 주소를 나눠 주면
             8×8 fp16 행렬 하나를 lane 마다 2개씩 register 에 나눠 담고, <code>.x4</code> 는 그런 행렬
@@ -142,6 +160,9 @@ export default function GpuDataMovementOptimizationArticle() {
             <Link to="/cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts#swizzle">swizzled layout</Link> 이
             소유합니다.
           </p>
+        </div>
+        <BankConflictViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Bank conflict 는 이 층의 숨은 비용입니다. ldmatrix 가 읽는 8개 행이 같은 bank 에
             놓이면 명령 하나가 8 clock 에 걸쳐 실행되어 명령 수를 줄인 이득이 사라집니다. Bank
@@ -161,6 +182,9 @@ export default function GpuDataMovementOptimizationArticle() {
             shared memory 에 있는 동안 다음 연산을 이어 붙이면 이 왕복이 사라지며 이것을 memory traffic elimination 이라 부릅니다. 계산은 그대로이고
             byte 만 줄어듭니다.
           </p>
+        </div>
+        <RoundTripLedgerViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             GEMM 뒤에 bias 와 GELU 가 오는 경우를 셉니다. M = N = K = 4096, bf16 이면 출력 C 는
             32 MiB입니다. 세 kernel로 나누면 GEMM이 C를 쓰고(32), bias
@@ -208,6 +232,9 @@ export default function GpuDataMovementOptimizationArticle() {
             도착을 barrier로 확인하는 shared-memory software pipeline과,
             도착을 보장하지 않는 program-issued L2 cache hint를 구분합니다.
           </p>
+        </div>
+        <PrefetchDistanceViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Shared-memory software prefetch의 GPU 형태는 다음 tile의 load를 현재 tile의 계산보다 먼저
             내는 것입니다. Tile 하나의 계산 C 동안 load L 을 숨기려면 ⌈L/C⌉ 개 tile 앞서 요청해야
@@ -263,6 +290,9 @@ export default function GpuDataMovementOptimizationArticle() {
             Memory pipeline overlap 은 한 tile 의 load 와 다른 tile 의 계산, 또 다른 tile 의 store 가 같은 시간에 진행되는 상태입니다. 겹침이
             없으면 시간은 이동 시간과 계산 시간의 합이고 완전히 겹치면 둘 중 큰 쪽입니다. 이 차이가 data movement 최적화의 둘째 손잡이입니다.
           </p>
+        </div>
+        <PipelineGanttViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Tile 하나의 load가 1.2 µs, 계산이 0.8 µs라고 합시다. 순서대로
             하면 tile당 2.0 µs이고 100 tile에 200 µs입니다. 이상적인 2-stage
@@ -270,6 +300,9 @@ export default function GpuDataMovementOptimizationArticle() {
             0.8 µs가 필요하므로 총 120.8 µs입니다. 정상 구간의 cadence는
             max(1.2, 0.8)=1.2 µs지만 시작과 끝은 숨길 수 없습니다.
           </p>
+        </div>
+        <KernelSumMaxViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             같은 식을 kernel 전체에 적용하면 roofline과 같은 상한 비교가 됩니다.
             앞 절의 GEMM은 출력 traffic 160 MiB가 약 50.1 µs, GEMM 계산이
@@ -318,6 +351,7 @@ T_{\text{overlap}} &\approx \underbrace{\max\!\left(\frac{B}{\mathrm{BW}},\ \fra
           assumptions={["이동과 계산이 서로 다른 hardware 자원을 쓰고 한쪽이 다른 쪽의 issue slot 을 빼앗지 않는다고 가정합니다.", "BW 와 P 는 상한이며 achieved 값은 profiler 로 따로 재야 합니다. 이 식은 어느 쪽이 병목인지의 방향만 줍니다."]}
           interpretation="겹침이 완전하면 시간은 roofline 의 max 로 내려오고, 그 뒤로는 max 안에서 큰 항을 줄여야 합니다. B/BW 가 크면 byte 를 줄이고 F/P 가 크면 계산이 병목이므로, 같은 kernel 에서 두 손잡이 중 어느 쪽을 당길지가 이 식에서 정해집니다."
         />
+        <StageRingViz />
         <AlgorithmBlock
           title="Load–compute–store software pipeline (tile T 개, stage S, register accumulator)"
           input={["tiles[0..T): global memory 의 입력 tile 열", "smem[S]: 입력 tile 을 받는 shared memory ring 과 stage 마다 full·empty barrier", "acc: thread 당 register accumulator, out_frag: 다음 store 를 기다리는 register 조각", "load(k, s): tile k 를 stage s 로 옮기는 asynchronous copy (cp.async 또는 TMA)"]}

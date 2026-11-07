@@ -5,7 +5,10 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AmendmentGatesViz from "./constitutionalism-and-separation/viz/AmendmentGatesViz";
+import JudicialLayerViz from "./constitutionalism-and-separation/viz/JudicialLayerViz";
 import PaperBindsViz from "./constitutionalism-and-separation/viz/PaperBindsViz";
+import SeparationRoutesViz from "./constitutionalism-and-separation/viz/SeparationRoutesViz";
 import VetoPlayerViz from "./constitutionalism-and-separation/viz/VetoPlayerViz";
 
 /**
@@ -163,7 +166,11 @@ export default function ConstitutionalismAndSeparationArticle() {
             때문입니다. 그래서 규칙 만들기, 집행하기, 다툼을 판정하기를 서로 다른 책임 경로에
             둡니다.
           </p>
+        </div>
 
+        <SeparationRoutesViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             그래서 기능을 셋으로 가릅니다. 일반적인 규칙을 정하는 입법, 개별
             사안에 그 규칙을 적용해 실행하는 행정, 다툼이 생겼을 때 규칙에 맞는지
@@ -300,7 +307,11 @@ export default function ConstitutionalismAndSeparationArticle() {
               정한 것을 다수결로 뽑히지 않은 쪽이 뒤집는다는 점에서 긴장이
               생깁니다.
             </p>
+          </div>
 
+          <JudicialLayerViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               이 긴장을 푸는 흔한 답은 층을 나누는 것입니다. 지금의 다수가 정한 것을 뒤집는 근거가 더 앞선 시점의 더 큰 합의, 곧 헌법이라는 설명입니다. 심사 기관은 자기 뜻을
               관철하는 것이 아니라 그 합의를 대신 읽는 자리입니다.
@@ -349,7 +360,11 @@ export default function ConstitutionalismAndSeparationArticle() {
             이 장치가 필요한 이유는 분명합니다. 바꾸기 쉬우면 힘을 쥔 쪽이 제약을 먼저 없애고 나서 원하는 것을 하면 됩니다. 문턱을 높이면 그 우회로가 막히고 1절의 선이 실제로 선
             역할을 하게 됩니다.
           </p>
+        </div>
 
+        <AmendmentGatesViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             대가는 앞 절과 닮았지만 같은 계산은 아닙니다. 여러 기관·지역·국민투표의 동의를
             더 요구하면 별도 거부 지점이 늘 수 있고, 한 의회 안에서 과반을 3분의 2로 높이면

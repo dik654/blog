@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import ConflictVoteViz from "./viz/ConflictVoteViz";
 
 export default function Byzantine({
   onCodeRef,
@@ -11,6 +12,7 @@ export default function Byzantine({
   return (
     <section id="byzantine" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">상충 vote는 Commit을 덮어쓰지 않고 Evidence 경로로 분리합니다</h2>
+      <ConflictVoteViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           A가 h41/r1/precommit에서 B41과 다른 BlockID에 모두 서명했다면 <code>addVote</code>는

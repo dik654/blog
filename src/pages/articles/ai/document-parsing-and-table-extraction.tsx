@@ -5,6 +5,10 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import DocumentParsingAndTableExtractionViz from "./document-parsing-and-table-extraction/viz/DocumentParsingAndTableExtractionViz";
+import OcrPathsViz from "./document-parsing-and-table-extraction/viz/OcrPathsViz";
+import ReadingOrderViz from "./document-parsing-and-table-extraction/viz/ReadingOrderViz";
+import TableChunkBoundaryViz from "./document-parsing-and-table-extraction/viz/TableChunkBoundaryViz";
+import TableLinesViz from "./document-parsing-and-table-extraction/viz/TableLinesViz";
 
 /**
  * 문서 구조 파싱: layout·reading order·OCR·표 추출과 linearization
@@ -67,6 +71,9 @@ export default function DocumentParsingAndTableExtractionArticle() {
             Layout parsing은 문서를 title·paragraph·table 같은 영역으로 나누는 작업이고 reading order detection은 그 영역들을 사람이 실제로
             읽는 순서로 정렬하는 작업입니다. 이 둘을 합쳐 문서의 전체 구조를 뽑아내는 과정을 document structure extraction이라고 부릅니다.
           </p>
+        </div>
+        <ReadingOrderViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             PDF는 텍스트를 저장한 순서가 화면에 보이는 순서와 다를 수 있습니다. 2단 컬럼 페이지에서 왼쪽 컬럼 문단을 채 읽기 전에 오른쪽 컬럼으로 건너뛰면 왼쪽 마지막 문장과
             오른쪽 첫 문장이 그대로 이어 붙어 전혀 다른 문장이 만들어집니다.
@@ -79,6 +86,9 @@ export default function DocumentParsingAndTableExtractionArticle() {
             PDF parsing은 페이지 안 문자·선·이미지의 좌표를 읽어 냅니다. HTML parsing은 태그 구조를 DOM tree, 즉 요소를 부모·자식 관계로 나타낸 트리로
             바꿉니다. DOM tree는 태그 자체가 계층을 담고 있어 PDF보다 순서 복원이 쉽지만 rowspan·colspan 같은 표 셀 구조는 HTML에서도 따로 해석해야 합니다.
           </p>
+        </div>
+        <TableLinesViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             pdfplumber는 그래픽 선이나 단어 정렬로 암시된 선을 찾아 그 교차점을 표 셀 경계로 잡는
             방식으로 PDF 안의 표 영역을 감지합니다. 이 감지 결과가 다음 절에서 다룰 table
@@ -109,6 +119,9 @@ export default function DocumentParsingAndTableExtractionArticle() {
             기술입니다. 일반 OCR은 문자열만 뽑아내고 그 문자가 원래 어느 영역, 예를 들어
             제목인지 표인지는 버립니다.
           </p>
+        </div>
+        <OcrPathsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             스캔된 표 이미지를 일반 OCR로 그대로 읽으면 셀마다 있던 숫자가 한 줄로 이어져 "2024 Q1 120 Q2 150"처럼 어느 숫자가 어느 열에 속했는지 문자열만으로는 알
             수 없습니다.
@@ -243,6 +256,9 @@ export default function DocumentParsingAndTableExtractionArticle() {
             않고 표 전체나 최소한 행 단위로 나눕니다. Unstructured의 chunking 전략은 표 요소를 다른 요소와 절대 합치지 않고 최대 크기를 넘으면 표 전용
             TableChunk로만 나눕니다.
           </p>
+        </div>
+        <TableChunkBoundaryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             고정 길이 512 token 규칙을 표에 그대로 적용하면 헤더 행은 앞 chunk에 남고 데이터 행 절반은 다음 chunk로 넘어갑니다. 뒤 chunk만 읽는 검색에서는 숫자가
             무슨 열인지 알 수 없습니다. Structure-preserving chunking은 표를 통째로 한 chunk에 두거나 쪼개더라도 row-level

@@ -5,6 +5,13 @@ import FlowRail from "../world-systems/FlowRail";
 import SourceApplication from "../world-systems/SourceApplication";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import { HyperCoreEvmViz } from "./hyperliquid/viz/HyperliquidBoundaryViz";
+import FillFeeViz from "./hyperliquid/viz/FillFeeViz";
+import UnknownResponseViz from "./hyperliquid/viz/UnknownResponseViz";
+import CctpDepositViz from "./hyperliquid/viz/CctpDepositViz";
+import CancelFillOrderViz from "./hyperliquid/viz/CancelFillOrderViz";
+import MarginLadderViz from "./hyperliquid/viz/MarginLadderViz";
+import Hip3BoundaryViz from "./hyperliquid/viz/Hip3BoundaryViz";
+import Hip4PayoffViz from "./hyperliquid/viz/Hip4PayoffViz";
 import { codeRefs } from "./hyperliquid/codeRefs";
 
 const DOCS = "https://hyperliquid.gitbook.io/hyperliquid-docs";
@@ -26,6 +33,7 @@ export default function HyperliquidArticle() {
   <section id="case" data-teach-level="0" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">3. 0.1개를 주문해도 처음에는 0.04개만 체결된다</h2>
    <p>계정에 1,000 USDC가 있고 BTC 가격 50,000달러 이하에서 0.1개를 사겠다고 요청합니다. 먼저 팔려는 물량이 0.04개뿐이면 2,000달러어치가 체결되고 0.06개는 기다립니다. 나중에 남은 0.06개도 같은 가격에 체결된다고 합시다. 최종 계약 금액은 5,000달러입니다. 모두 (가정)입니다.</p>
+   <FillFeeViz />
    <p>확인일의 기본 0등급 무기한 계약 요율은 상대 주문을 즉시 가져가면 0.045%, 대기 주문이 나중 체결되면 0.015%입니다. 할인·소개·builder 추가비가 없는 일반 시장을 가정하면 처음 비용은 2,000×0.045%=0.90 USDC, 나중 비용은 3,000×0.015%=0.45 USDC입니다. 합계 1.35 USDC를 빼면 가격 손익과 펀딩 전 잔액은 998.65 USDC입니다.</p>
    <CitationBlock source="Hyperliquid · Fees, perps fee tiers" citeKey={1} href={`${DOCS}/trading/fees`}>2026-10-18 기본 0등급 요율. 계정 할인·시장 종류·실제 userFees와 builder 조건에 따라 달라집니다.</CitationBlock>
    <p data-stage-bridge="case" className="text-sm text-muted-foreground">0.04와 0.06의 두 체결이 하나의 0.1 주문으로 연결돼야 합니다. 화면에서 찾을 기록을 그립니다.</p>
@@ -33,6 +41,7 @@ export default function HyperliquidArticle() {
   <section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">4. 주문 번호와 체결 기록으로 잔량을 따라간다</h2>
    <FlowRail title="(가정) 주문 0.1 → 체결 0.04 → 대기 0.06 → 전체 체결 0.1" steps={[{actor:"얼마를 요청했나",movement:"0.1개, 최대 50,000달러를 보냅니다.",receives:"주문 식별자"},{actor:"얼마가 남았나",movement:"0.04개 체결 뒤 잔량 0.06개를 확인합니다.",receives:"체결 기록과 대기 주문"},{actor:"돈이 얼마나 달라졌나",movement:"나머지 체결과 총수수료 1.35를 맞춥니다.",receives:"포지션 0.1, 잔액 998.65"}]} />
+   <UnknownResponseViz />
    <p>응답을 못 받았다면 0.1개를 새로 주문하기 전에 기존 주문 번호나 직접 붙인 식별자로 조회합니다. 취소 요청을 보내는 동안 0.06개 일부가 먼저 체결될 수도 있으므로 최종 체결량과 남은 양을 다시 맞춥니다.</p>
    <p data-stage-bridge="picture" className="text-sm text-muted-foreground">요청을 보내는 사이에도 거래는 계속됩니다. 그래서 한 주문을 여러 기록으로 확인해야 합니다.</p>
   </section>
@@ -53,11 +62,15 @@ export default function HyperliquidArticle() {
   </section>
   <section id="mechanism" data-teach-level="4" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">7. 담보가 들어오고 주문이 체결된 뒤에도 검사는 계속된다</h2>
+   <CctpDepositViz />
    <p>먼저 1,000 USDC가 거래할 계정과 담보 구역에 실제로 반영됐는지 확인합니다. 현재 공식 USDC 문서는 CCTP를 권장하고 기존 Arbitrum Bridge2를 deprecated로 표시합니다. CCTP의 출발지 소각, 발행자 인증, 도착지 발행과 HyperCore 반영을 구별합니다. 예전 bridge의 입금 시간과 최소액을 CCTP에 적용하지 않습니다.</p>
    <p>지갑은 BTC 시장에서 50,000 이하로 0.1개를 사는 Gtc 요청과 nonce를 승인합니다. HyperCore는 요청의 형식과 위험 조건을 확인하고 0.04개 체결과 0.06개 대기를 기록합니다. 이후 0.06개가 체결되면 두 fill의 합 0.1과 총수수료 1.35를 포지션·잔액과 맞춥니다.</p>
+   <CancelFillOrderViz />
    <div id="consensus" className="scroll-mt-20"><p>HyperBFT의 공통 순서 안에서 체결과 취소 중 무엇이 먼저 적용됐는지가 정해집니다. 합의가 전 세계 사용자의 실제 클릭 시각을 알아내거나 모든 주문에 동일한 네트워크 지연을 보장하는 것은 아닙니다. 핵심 거래 엔진 전체의 소스가 공개됐다고 가정하지 않습니다.</p></div>
+   <MarginLadderViz />
    <div id="margin-liquidation" className="scroll-mt-20"><p>이후 미실현 손실 700 USDC, 펀딩 순지급 20 USDC, 유지 요구액 300 USDC라고 가정하면 계정 가치는 1,000−1.35−700−20=278.65입니다. 요구액보다 21.35 부족합니다. 300은 설명용 값이며 실제 요구액은 자산·규모 구간·mark price로 다시 계산합니다.</p></div>
    <p>공식 청산 규칙은 먼저 주문장에서 포지션을 닫으려 시도합니다. 정리에 실패하고 계정 가치가 유지 요구액의 2/3 아래로 내려가면 backstop 인수 경로가 열립니다. 이 사례의 단순 기준은 200이므로 278.65는 아직 그 아래가 아닙니다. 실제 주문장 가격과 평가가격은 달라질 수 있고 큰 포지션에는 부분 청산 규칙도 있습니다.</p>
+   <Hip3BoundaryViz />
    <p>HIP-3 시장은 외부 운영자가 가격 자료·계약조건·레버리지 한도와 종료를 정합니다. 운영자 DEX마다 기본 담보 계산과 주문장, 설정을 나눕니다. 다만 자격을 갖춘 자산은 운영자가 cross margin을 한 번 켜면 되돌릴 수 없습니다. 이 경우 서로 다른 운영자의 DEX 사이에도 위험이 이어질 수 있으므로 독립 담보라는 단순 가정을 그대로 적용하면 안 됩니다. 확인일 문서는 500k HYPE 예치와 최소 183일 조건을 명시합니다. 운영자가 haltTrading을 보내면 주문 취소와 현재 mark price 정산이 일어납니다. 따라서 시장 이름만 보고 일반 BTC 시장과 책임이 같다고 읽지 않습니다. 잘못된 운영의 예치금 삭감은 사용자 손실 보상과 같은 약속이 아닙니다.</p>
    <CitationBlock source="Hyperliquid · USDC" citeKey={3} href={`${DOCS}/for-developers/api/usdc`}>CCTP 권장과 legacy bridge의 상태를 2026-10-18 확인했습니다.</CitationBlock>
    <CitationBlock source="Hyperliquid · Liquidations" citeKey={4} href={`${DOCS}/trading/liquidations`}>주문장 청산, 유지 요구액 2/3의 backstop, cross·isolated 범위를 확인합니다.</CitationBlock>
@@ -77,6 +90,7 @@ export default function HyperliquidArticle() {
   </section>
   <section id="comparison" data-teach-level="6" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">9. HIP-4는 같은 주문장 위에서도 지급 구조가 다르다</h2>
+   <Hip4PayoffViz />
    <p>1,000 USDC 중 60을 써 Yes 100개를 개당 0.60에 산다고 합시다. 결과가 Yes면 100, No면 0을 받아 수수료 전 손익은+40 또는−60입니다. 나머지 940은 이 단순 사례에서 사용하지 않았습니다. 이는 BTC 0.1 무기한 계약의 5,000달러 노출과 다른 지급 구조입니다.</p>
    <SourceApplication source="Hyperliquid · HIP-4, Overview" excerpt="does not involve leverage or liquidations" application="Yes 100개를 60에 산 사례는 정한 범위의 결과 지급을 미리 담보합니다. 앞의 BTC 계약처럼 가격 손실이 유지 요구액을 넘겨 포지션을 청산하는 경로와 구별합니다. 담보가 충분하다는 사실은 Yes가 나올 가능성이나 60 회수를 보장하지 않습니다." />
    <p>HIP-4 문서는 Yes가 settleFraction, No가 1−settleFraction을 받는 구조와 둘을 합친 주문장을 설명합니다. 따라서 Yes 0.60 매수는 No 0.40 매도와 대응합니다. 이진 결과의 0·1 정산 외에 일반 범위 정산도 있으므로 상품의 실제 조건을 읽습니다.</p>

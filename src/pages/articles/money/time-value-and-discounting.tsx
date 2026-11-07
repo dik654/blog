@@ -7,6 +7,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TimeValueAndDiscountingViz from "./time-value-and-discounting/viz/TimeValueAndDiscountingViz";
 import DiscountFactorViz from "./time-value-and-discounting/viz/DiscountFactorViz";
+import CompoundSeedsViz from "./time-value-and-discounting/viz/CompoundSeedsViz";
+import NpvLadderViz from "./time-value-and-discounting/viz/NpvLadderViz";
+import AnnuitySumViz from "./time-value-and-discounting/viz/AnnuitySumViz";
+import IrrCurveViz from "./time-value-and-discounting/viz/IrrCurveViz";
+import NewtonTangentViz from "./time-value-and-discounting/viz/NewtonTangentViz";
+import RealRateViz from "./time-value-and-discounting/viz/RealRateViz";
 
 /**
  * 지금의 1만 원과 1년 뒤의 1만 원은 다른 값입니다
@@ -91,6 +97,11 @@ export default function TimeValueAndDiscountingArticle() {
             7,625원이 됩니다. 차이는 7,625원이고 해가 갈수록 더 커집니다.
           </p>
 
+        </div>
+
+        <CompoundSeedsViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             앞의 방식이 단리, 뒤가 <strong>복리</strong>입니다. 복리는 이자를
             다시 굴린다는 뜻이고, 계산으로는 매 기간 같은 비율을 곱한다는
@@ -261,6 +272,11 @@ export default function TimeValueAndDiscountingArticle() {
             <strong>순현재가치</strong>입니다.
           </p>
 
+        </div>
+
+        <NpvLadderViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             판단 기준은 단순합니다. 순현재가치가 0보다 크면 이 사업은 같은 위험으로 다른 데 굴렸을 때보다 낫고 0보다 작으면 못합니다. 여기서 &ldquo;다른 데&rdquo;의
             기준이 바로 할인율이므로 순현재가치는 절대적인 좋고 나쁨이 아니라 비교 대상 대비 판정입니다.
@@ -338,6 +354,8 @@ export default function TimeValueAndDiscountingArticle() {
             </p>
           </div>
 
+        <AnnuitySumViz />
+
         <ProgressiveDetail
           title="매기 같은 금액이 들어오면 왜 식이 짧아지는가?"
           preview="할인계수의 합이 공비 1/(1+r)인 등비수열이라 닫힌 형태로 정리됩니다."
@@ -376,6 +394,11 @@ export default function TimeValueAndDiscountingArticle() {
             할인율을 가져오지 않고 현금흐름 자체에서 뽑아내기 때문입니다.
           </p>
 
+        </div>
+
+        <IrrCurveViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             문제는 이 값을 손으로 풀 수 없다는 데 있습니다. 식이 r에 대한 고차 다항식이라 일반적인 해법이 없어 수치적으로 찾아야 합니다. 다행히 현금흐름이 처음 한 번 나가고 그
             뒤로 계속 들어오는 형태라면 순현재가치가 r에 대해 단조 감소하므로 해가 하나뿐이고 찾기도 쉽습니다.
@@ -386,6 +409,8 @@ export default function TimeValueAndDiscountingArticle() {
             수익률&rdquo;인지 말할 수 없게 됩니다. 규모가 다른 두 사업을 내부수익률만으로 줄 세우는 것도 위험합니다.
           </p>
         </div>
+
+        <NewtonTangentViz />
 
         <AlgorithmBlock
           title="내부수익률을 수치적으로 찾는 절차"
@@ -469,6 +494,11 @@ export default function TimeValueAndDiscountingArticle() {
             써야 하는 쪽은 대개 실질 쪽입니다.
           </p>
 
+        </div>
+
+        <RealRateViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             둘의 관계는 흔히 &ldquo;명목에서 물가상승률을 빼면 실질&rdquo;이라고 간단히 씁니다. 정확한 관계는 뺄셈이 아니라 나눗셈이지만 두 값이 작을 때는 차이가 미미해
             뺄셈으로 근사합니다. 물가가 두 자릿수로 오르는 상황에서는 이 근사가 눈에 띄게 어긋납니다.

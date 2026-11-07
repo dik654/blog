@@ -4,11 +4,11 @@
   "summary": {
     "publicArticles": 1012,
     "architectureCandidates": 175,
-    "dedicatedVisuals": 813,
-    "inlineVisuals": 583,
-    "customVisuals": 951,
-    "animatedMechanisms": 686,
-    "architectureWithoutAnimation": 50,
+    "dedicatedVisuals": 814,
+    "inlineVisuals": 594,
+    "customVisuals": 952,
+    "animatedMechanisms": 700,
+    "architectureWithoutAnimation": 49,
     "recursiveLocators": 385,
     "codeEvidenceLinked": 257,
     "sourceCitationLinked": 1003,
@@ -1751,7 +1751,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -2087,7 +2087,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -2535,13 +2535,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/imbalance-loss-weighting",
@@ -3079,7 +3079,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -3943,7 +3943,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -5815,7 +5815,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -6535,7 +6535,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -7401,11 +7401,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/impl-elliptic-curve",
@@ -8951,7 +8951,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -9687,7 +9687,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -9769,11 +9769,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "constitution/government-forms",
@@ -9943,13 +9943,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/discrete-log",
@@ -9974,14 +9974,14 @@
       "sourcePath": "src/pages/articles/crypto/elgamal.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/elliptic-curves",
@@ -10633,11 +10633,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "devices/pn-junction-and-rectification",
@@ -10649,11 +10649,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "devices/switching-energy-and-leakage",
@@ -11241,11 +11241,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "embedded/mcu-memory-map-and-registers",
@@ -11257,11 +11257,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "embedded/scheduling-and-real-time",
@@ -11305,11 +11305,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "epistemology/knowledge-belief-and-luck",
@@ -11977,11 +11977,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "gpu/ec-gpu-ops",
@@ -12169,11 +12169,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "gpu/hw-gpu-comparison",
@@ -14729,11 +14729,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "p2p/kademlia",
@@ -15913,11 +15913,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "tee/amd-sev",

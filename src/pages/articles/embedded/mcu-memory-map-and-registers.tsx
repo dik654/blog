@@ -2,6 +2,12 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MemoryMappedGpioViz from "./mcu-memory-map-and-registers/viz/MemoryMappedGpioViz";
+import BitValueViz from "./mcu-memory-map-and-registers/viz/BitValueViz";
+import AddressOffsetViz from "./mcu-memory-map-and-registers/viz/AddressOffsetViz";
+import PinConditionsViz from "./mcu-memory-map-and-registers/viz/PinConditionsViz";
+import SdkCallStateViz from "./mcu-memory-map-and-registers/viz/SdkCallStateViz";
+import WriteRaceViz from "./mcu-memory-map-and-registers/viz/WriteRaceViz";
+import ReadbackViz from "./mcu-memory-map-and-registers/viz/ReadbackViz";
 
 import NumericPath from "../world-systems/NumericPath";
 import TeachCode from "./mcu-memory-map-and-registers/TeachCode";
@@ -23,6 +29,7 @@ return <div className="space-y-16">
 
 <section id="case" data-teach-level="0" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">3. 5번을 고르는 0x20을 정해진 주소에 씁니다</h2>
+<BitValueViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">0부터 세는 번호 5만 고르려면 이진수에서 그 자리에 1을 둡니다. 값은 2⁵=32, 16진수로 0x20입니다. 칩의 GPIO 번호 5를 말하며 보드 커넥터의 물리적인 다섯 번째 핀을 뜻하지 않습니다.</p><p className="leading-7">이 칩에서 출력 값을 높이는 주소는 0xD0000014입니다. 기능과 출력 허용을 알맞게 준비한 뒤 이 주소에 0x20을 쓰면 5번에 저장한 출력 값이 1이 됩니다. 외부 회로 연결과 시작 상태는 설명용 <strong>가정</strong>입니다. 리셋 뒤 다른 기능이 이 핀을 구동하지 않는 초기 설정을 따라갑니다. 주소·비트 대응은 공식 자료에서 확인한 RP2040의 규칙입니다.</p><p className="leading-7">같은 0x20을 0xD0000018에 쓰면 선택한 출력 값이 0이 됩니다. 값 하나가 늘 같은 동작을 뜻하는 것은 아닙니다. 어느 주소에 보냈는지가 동작을 정합니다.</p></div>
 </section>
 
@@ -46,6 +53,7 @@ return <div className="space-y-16">
 
 <section id="map" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">7. 기준 주소와 오프셋을 더해 동작 주소를 찾습니다</h2>
+<AddressOffsetViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
    <p className="leading-7">RP2040 공식 표에서 SIO의 기준 주소는 <code>0xD0000000</code>입니다. 출력 비트를 세우는 <code>GPIO_OUT_SET</code>의 오프셋은 <code>0x014</code>이므로 주소는 <code>0xD0000014</code>입니다. 끄는 <code>GPIO_OUT_CLR</code>는 오프셋 <code>0x018</code>, 주소 <code>0xD0000018</code>입니다. 출력 방향을 켜는 <code>GPIO_OE_SET</code>는 <code>0xD0000024</code>입니다.</p>
    <p className="leading-7">이 주소의 값은 보통 RAM에 저장된 일반 변수와 의미가 다릅니다. <code>OUT_SET</code>에 쓴 1비트는 출력 래치의 해당 자리만 세우라는 명령이고, 0으로 쓴 자리는 건드리지 않습니다. 같은 32비트 쓰기라도 어느 주소인지에 따라 하드웨어 동작이 달라집니다.</p>
@@ -64,6 +72,7 @@ return <div className="space-y-16">
 
 <section id="mux" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 핀의 기능 선택과 출력 허용은 별도로 맞춥니다</h2>
+<PinConditionsViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
    <p className="leading-7">GPIO5의 기능 선택 레지스터는 IO_BANK0의 <code>GPIO5_CTRL</code>이고 주소는 기준 <code>0x40014000</code>에 오프셋 <code>0x02C</code>를 더한 <code>0x4001402C</code>입니다. SIO 기능을 선택한 뒤 출력 허용을 켜야 SIO 출력 래치가 핀에 영향을 줍니다. 실제 C 코드에서는 SDK의 <code>gpio_set_function</code>, <code>gpio_set_dir</code>가 이 설정을 수행합니다. 함수마다 바꾸는 비트가 다릅니다. 특히 기능 선택 함수는 기존 CTRL의 모든 비트를 보존하지 않으므로 아래 원문에서 그 범위를 확인하겠습니다.</p>
    <p className="leading-7">교육용으로 레지스터를 직접 쓴다면 <code>GPIO_OE_SET</code> 주소 <code>0xD0000024</code>에 <code>0x20</code>을 써서 출력 방향을 허용할 수 있습니다. 한 칩의 메모리 맵을 다른 MCU에 그대로 옮기면 주소와 비트 의미가 맞지 않습니다.</p>
@@ -73,6 +82,7 @@ return <div className="space-y-16">
 
 <section id="source-init" data-teach-level="5" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 실제 gpio_init(5)는 출력부터 끈 뒤 낮은 값을 준비합니다</h2>
+<SdkCallStateViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">아래는 Pico SDK 2.2.0의 고정 commit a1438dff 원문입니다. gpio.c의 273–277행에 gpio=5를 넣어 읽으면 출력 방향을 입력으로 바꾼 뒤 gpio_put(5,0)으로 출력 래치를 낮춥니다. 마지막에 GPIO_FUNC_SIO를 선택합니다. 함수가 끝나도 출력 방향은 아직 입력입니다.</p></div><TeachCode codeKey="init" label="초기화 함수 실제 원문" /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">같은 파일의 gpio_set_function은 패드 입력을 허용하고 패드의 출력 금지를 해제합니다. 그다음 GPIO5_CTRL에 기능 선택을 쓰며 다른 override 필드는 0으로 둡니다. 기존 강제 입력·출력 상태까지 보존한다고 가정하면 안 됩니다. 풀업·풀다운은 다른 패드 제어 필드이므로 이 CTRL 쓰기와 구분합니다.</p></div><TeachCode codeKey="select" label="기능 선택이 바꾸는 실제 비트" /><CitationBlock source="Raspberry Pi Pico SDK 2.2.0 · commit a1438dff" citeKey={3} href="https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_gpio/gpio.c">원본 gpio.c와 gpio.h 전체 및 LICENSE.TXT를 보존했습니다. 초기화·기능 선택·출력 쓰기의 실제 분기에 GPIO5를 대입합니다.</CitationBlock>
 </section>
 
@@ -92,6 +102,7 @@ return <div className="space-y-16">
 
 <section id="race" data-teach-level="7" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">13. 한 비트 쓰기는 충돌을 줄이지만 핀의 소유권까지 정하지 않습니다</h2>
+<WriteRaceViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">다른 상황을 가정해 보겠습니다. 전체 출력 값이 0x01인데 두 코어가 동시에 이 값을 읽습니다. 하나는 5번을 세우려 0x21을 만들고 다른 하나는 6번을 세우려 0x41을 만듭니다. 전체 값을 덮어쓰면 나중 값이 먼저 세운 비트를 잃게 할 수 있습니다.</p><p className="leading-7">
             각 코어가 SET 주소에 0x20과 0x40만 쓰면 하드웨어가 선택한 자리만 바꾸므로 결과는 0x61입니다. 그러나 두 코어가 같은 5번을 서로 세우고 내리면 최종 결과는 쓰기
             순서에 좌우됩니다. 원자적 비트 변경이 어느 프로그램의 의도가 우선인지 결정해 주지는 않습니다.
@@ -100,6 +111,7 @@ return <div className="space-y-16">
 
 <section id="readback" data-teach-level="7" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">14. 출력 래치를 읽는 것과 핀 입력을 읽는 것은 다릅니다</h2>
+<ReadbackViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
    <p className="leading-7"><code>GPIO_OUT</code>를 읽으면 마지막에 설정한 출력 래치 값을 확인합니다. 실제 핀 입력을 샘플링하는 <code>GPIO_IN</code>은 별도 레지스터입니다. 외부 회로, 패드 설정, 핀 기능이 다르면 출력 래치가 1이어도 핀에서 예상한 전압을 보지 못할 수 있습니다. 주소에 쓰기만 성공했다고 장치가 실제로 반응했다고 결론 내리지 않습니다.</p>
    <p className="leading-7">SET·CLR 같은 별도 주소는 출력 레지스터를 읽고 값을 고쳐 다시 쓰는 동안 다른 코어가 같은 값을 바꾸는 충돌도 피하는 데 도움이 됩니다. RP2040의 두 코어가 함께 만지는 핀이라면 소유 규칙을 따로 정해야 합니다.</p>

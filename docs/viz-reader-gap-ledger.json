@@ -1369,192 +1369,388 @@
 {
 "route": "ai/cross-entropy",
 "publicPath": "cs/ai/cross-entropy",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 10,
+"articleIssues": [
+"§15 ExplainedFormula operation: writes y=1 and calls it the first class, while §14 numbers classes from 0 ([0,0,1,2]). The numbering is inconsistent; the value 0.313262 is correct when the first class is the target.",
+"§18 second paragraph says Q gives A zero, but its example Q=(1,0) gives zero to the second event. The example events are not named A, so the Viz uses 첫째/둘째."
+]
 },
 {
 "route": "ai/llm-application-caching",
 "publicPath": "cs/ai/llm-application-caching",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6,
+"articleIssues": [
+"§4 heading says a wide key shrinks staleness and a narrow key shrinks hit rate, but the prose attributes those trade-offs to TTL length and never explains the key width claim. The Viz does not assert the heading's claim.",
+"§3 formula operation says normalizing gives a '0~1 범위' similarity. Cosine similarity can range from −1 to 1; the prose's '보통 0과 1 사이' is the safer wording.",
+"§2 TermBreakdown example '파리의 수도는?' looks wrong, since Paris is itself a capital. It was probably meant to be a question about France.",
+"The opening LlmApplicationCachingViz draws Retrieval as a third lookup layer, while the §4 AlgorithmBlock has only exact and semantic stores followed by execute. The two pictures of the order do not match.",
+"§5 interpretation renders 62% as '10건 중 6건', which is a rounded reading of 6.2 in 10."
+]
 },
 {
 "route": "ai/vae",
 "publicPath": "cs/ai/vae",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 7
 },
 {
 "route": "ai/prompt-engineering",
 "publicPath": "cs/ai/prompt-engineering",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"The anti-pattern section's 92% and 71% for two phrasings carry no source and no label saying they are illustrative. The sentence is hedged with 'can', and the Viz says they are the article's example, not a measurement."
+]
 },
 {
 "route": "ai/continuous-batching-step-anatomy",
 "publicPath": "cs/ai/continuous-batching-step-anatomy",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"§9 says preemption returns the token balance when an already allocated request is removed. In the article's pinned scheduler.py (L590-615) that refund exists only in the PRIORITY policy branch; the other branch pops the tail of running without a refund. The prose does not state this condition. RunningOrderViz marks the choice of removing A as (가정).",
+"§8 says '기존의 큰 사례', but this article has not introduced that case earlier, so a first-time reader has no referent.",
+"vLLM, Orca and Sarathi-Serve citations all use citeKey={1}. Possibly a numbering mistake; I did not check how CitationBlock uses the key."
+]
 },
 {
 "route": "ai/diffusion-models",
 "publicPath": "cs/ai/diffusion-models",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 8,
+"articleIssues": [
+"§03 ExplainedFormula interpretation says the w_t=1 reweighting increases the contribution of low noise levels. From memory, Ho et al. say the simplified objective down-weights small t, which is the opposite. The article's own w_t form βₜ²/(2σₜ²αₜ(1−ᾱₜ)) is also consistent with larger weights at small t under typical schedules. I did not check the paper here, and no Viz repeats the claim.",
+"§03 says the bound splits into 'T개의 독립 항', but L_T + (t=2..T, which is T−1 terms) + L₀ gives T+1 terms. ElboChainViz shows 5 chips at T=4 and states no count.",
+"αₜ has two meanings: αₜ=1−βₜ in §01, but signal scale (√ᾱₜ in the earlier notation) in §02 and §04 (x̂₀=(xₜ−σₜε̂)/αₜ and αₜx₀).",
+"§02 says prediction error is amplified by 1/αₜ, but from the stated x̂₀ formula the ε̂ error is multiplied by σₜ/αₜ. No Viz draws this.",
+"§01 says linear removes signal too quickly 'in the last few steps'. The curve drawn with assumed β 0.0001→0.02 is already near 0 from about 0.8T, so the wording may fit poorly. The Viz says only that little signal remains in that interval."
+]
 },
 {
 "route": "ai/document-parsing-and-table-extraction",
 "publicPath": "cs/ai/document-parsing-and-table-extraction",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"The table-structure prose says row 2 is '빈칸·Q1·Q2' with no rowspan on 지표. The existing DocumentParsingAndTableExtractionViz and the rowspan entry in TermBreakdown treat 지표 as rowspan=2, so the two descriptions of one example table differ.",
+"'병합 셀·헤더가 섞인 표는 위치를 맞혀도 내용까지 맞히기가 그만큼 더 어렵습니다' draws a causal claim about merged-cell tables from two overall scores (0.9849, 0.8243). The numbers quoted do not isolate merged-cell tables.",
+"The sources section says linearization accuracy figures come from the papers, but the body and citations give only structure-recognition scores (GriTS_Top, AccCon, TEDS) and no linearization accuracy figure."
+]
 },
 {
 "route": "elections/electoral-systems",
 "publicPath": "politics/elections/electoral-systems",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 8,
+"articleIssues": [
+"The TermBreakdown titled '선거 결과를 함께 만드는 네 가지 선택' lists only three items (선거구 크기, 당선 결정 방식, 봉쇄조항). The fourth choice named in the prose, the ballot type (투표 방식), is missing."
+]
 },
 {
 "route": "money/time-value-and-discounting",
 "publicPath": "finance/money/time-value-and-discounting",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6,
+"articleIssues": [
+"In the #annuity ProgressiveDetail, '금리가 오르면 대괄호 값이 작아져' looks wrong. The bracket [1−(1+r)^(−T)] grows with r (T=3: 0.2062 at 8%, 0.3425 at 15%). What shrinks is the bracket divided by r (2.577 to 2.283). I did not edit the prose, and the Viz does not repeat the claim."
+]
 },
 {
 "route": "ai/math-complex-numbers-oscillations",
 "publicPath": "cs/ai/math-complex-numbers-oscillations",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 12,
+"articleIssues": [
+"Section 4 says '아래 그림에서 색 점은 현재 위치입니다', but no figure followed it; the nearest figure was QuarterTurnViz in section 1. ShadowReadViz now sits right after that sentence, so it reads correctly and the prose is unchanged.",
+"Not a prose error: the sibling files Overview.tsx, Radians.tsx, UnitCircle.tsx, ComplexPlane.tsx, EulerFormula.tsx, RootsOfUnity.tsx, Applications.tsx and the older viz files RadianMeasureViz, UnitCircleViz and RotationCoordinatesViz are not imported by the rendered ModernArticle.tsx. I read them but did not count them in sectionsRead, and left them untouched."
+]
 },
 {
 "route": "embedded/timers-and-sampling",
 "publicPath": "electronics/embedded/timers-and-sampling",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 7
 },
 {
 "route": "devices/pn-junction-and-rectification",
 "publicPath": "electronics/devices/pn-junction-and-rectification",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6,
+"articleIssues": [
+"§8 ExplainedFormula의 첫 I(0.5 V) 단계 설명 '지수식에 가정한 1 pA를 곱하고 1을 뺍니다'와 idea의 '포화 전류를 곱한 뒤 역방향 기준 항을 뺍니다'는 I=Is(e^(V/VT)−1)의 순서와 다르게 읽힐 수 있습니다. 괄호 안에서 1을 뺀 뒤 1 pA를 곱하는 식입니다.",
+"§6의 '앞 글의 가정인 각 영역 10¹⁶ cm⁻³ 도핑과 300 K'는 같은 조건이 이 글 §3에도 가정으로 나오므로, '앞 글'이 어느 글을 가리키는지 확인이 필요합니다."
+]
 },
 {
 "route": "gpu/gpu-data-movement-optimization",
 "publicPath": "cs/gpu/gpu-data-movement-optimization",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 9,
+"articleIssues": [
+"#overlap 마지막 문단이 '아래 Viz는 세 층 사이를 tile이 흐르며...'라고 하지만 그 Viz(GpuDataMovementOptimizationViz)는 #data-movement 절, 곧 위에 있고 같은 문단 끝은 '앞에서 본 Viz'라고 부릅니다. 지시어가 어긋나 보입니다. 이번에 그 문단 뒤에 StageRingViz가 들어가므로 '아래 Viz'가 더 헷갈릴 수 있습니다.",
+"#prefetching의 ⌈L/C⌉는 L=1.2, C=0.8이면 거리 2(stage 3)로 load를 숨긴다고 읽히는 반면, #overlap의 정상 구간 max(1.2, 0.8)=1.2와 '남은 병목은 load'는 load가 tile 하나씩 이어 흐르는 모델입니다. 앞은 L을 지연, 뒤는 처리량으로 쓰는 듯합니다. 예시가 2-stage라 오류는 아니지만 두 절을 함께 읽으면 헷갈릴 수 있어, PrefetchDistanceViz에는 'load 요청끼리 겹쳐 진행(가정)'을 명시했습니다."
+]
 },
 {
 "route": "semiconductors/yield-defect-and-packaging",
 "publicPath": "electronics/semiconductors/yield-defect-and-packaging",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5
 },
 {
 "route": "p2p/kad-lookup",
 "publicPath": "cs/p2p/kad-lookup",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 4,
+"articleIssues": [
+"geth-lookup 절은 shutdown drain을 'goroutine이 막힌 채 남는 일을 피하는 종료 순서'로 설명한다. 그러나 함께 저장된 lookup.go 51행은 replyCh를 alpha 크기 버퍼로 만들고 queries는 alpha를 넘지 않으므로, send가 막히지 않을 수 있어 이 이유가 맞는지 의심된다. 그래서 이 자리에는 Viz를 넣지 않았다.",
+"AlgorithmBlock의 'C와 D가 끝나면 F와 G를 바로 묻습니다'는 E를 언급하지 않는다. 기존 KadIterativeLookupViz는 G·E·F가 slot에 함께 있는 장면을 보여 주고, 이 상태는 B의 timeout이 C의 답보다 먼저 올 때만 성립한다. 본문은 B의 timeout 시점을 정하지 않아 새 Viz에서는 A의 답 다음으로 두고 (가정)으로 표시했다."
+]
 },
 {
 "route": "market-failure/information-asymmetry",
 "publicPath": "economics/market-failure/information-asymmetry",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 4,
+"articleIssues": [
+"TermBreakdown의 '산 쪽이 2배로 치면' 예시가 '나온 여섯 대의 평균이 10.5이고 그 두 배인 21'이라고 적었다. 10.5는 이미 1.5배한 산 쪽 평균이다. 판 쪽 평균은 7이고 2배는 14이다. 14도 12를 넘으므로 결론은 같다. CollapseFactorViz는 7과 14를 쓰므로 바로 아래 본문 숫자와 다르다.",
+"hidden-action 절의 '자기부담을 50 이상으로 두면 위험을 덜어 주는 일을 절반 넘게 못 하게 됩니다'는 정확히 50일 때 절반이다. Viz에서는 공식 해석의 '절반 이상을 본인에게 남겨야'라는 표현을 썼다."
+]
 },
 {
 "route": "embedded/mcu-memory-map-and-registers",
 "publicPath": "electronics/embedded/mcu-memory-map-and-registers",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6
 },
 {
 "route": "blockchain/cometbft-consensus",
 "publicPath": "cs/blockchain/cometbft-consensus",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"viz/CometBFTConsensusTraceViz.tsx scene 8: the precommit field reads \"HB41 ↔ 다른 BlockID\". \"HB41\" looks like a typo for \"B41\". Same scene: the prevote field reads \"Commit 유지\", which is not a prevote value. Not edited.",
+"RoundState.tsx says +2/3 nil releases the existing lock, and the code panel excerpt in codeRefsPrecommit.ts agrees. I recall newer upstream versions possibly changing this, but could not check it against the pinned v0.40.0 source because the local state.go is a short excerpt. Worth checking; low confidence.",
+"Older files viz/ReceiveRoutineViz, RoundStateViz, VoteHandlingViz, TimeoutViz and ContextViz (with their Data and Steps files) are not imported by any section of this article. Left untouched."
+]
 },
 {
 "route": "devices/mosfet-regions-and-transfer",
 "publicPath": "electronics/devices/mosfet-regions-and-transfer",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 3,
+"articleIssues": [
+"기존 MosfetRegionsViz의 포화 사례 문구 '여분 전압은 잘록한 끝에 주로 걸립니다'는 8절의 '그보다 높은 양끝 전압은 잘록해진 부분에 주로 걸리고'와 다릅니다. 잘록한 끝에 걸리는 것은 여분 전압 자체가 아니라 1.0 V를 넘는 초과분이어서 Viz 문구의 오류로 보입니다. 수정하지 않았습니다.",
+"9절 첫 문장은 '앞 절에서 드레인 끝의 전자 층이 잘록해지는 상태를'이라고 하지만, '핀치오프'라는 이름은 앞 절이 아니라 9절에서 처음 나옵니다. 읽기에 혼동될 수 있으며, 수정하지 않았습니다."
+]
 },
 {
 "route": "blockchain/hyperliquid",
 "publicPath": "cs/blockchain/hyperliquid",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 7,
+"articleIssues": [
+"띄어쓰기 오류로 보이는 곳이 세 군데 있습니다: 9절 '손익은+40', 8절 'action ID1', 10절 복습 문항 '278.65와200'. 수정하지 않았습니다.",
+"'builder'와 7절의 '유지 요구액', '펀딩'은 글에서 정의되지 않습니다. Viz에서 유지 요구액과 펀딩은 짧게 정의했고, builder는 글의 표현 그대로 두었습니다.",
+"HyperliquidBoundaryViz는 파일에 export되어 있지만 글에서 쓰지 않습니다. 기존 상태이며 수정하지 않았습니다."
+]
 },
 {
 "route": "ai/image-video-lora-architecture",
 "publicPath": "cs/ai/image-video-lora-architecture",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6
 },
 {
 "route": "gpu/hbm-stack-and-memory-requests",
 "publicPath": "cs/gpu/hbm-stack-and-memory-requests",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6,
+"articleIssues": [
+"Section 7 (and its stage bridge) says '이번 원소 번호 37은 논리 주소의 148바이트 offset' as if element 37 were already introduced, but this article never introduces it. 37x4 = 148 is correct arithmetic; the case seems to be carried over from a sibling article."
+]
 },
 {
 "route": "crypto/diffie-hellman",
 "publicPath": "cs/crypto/diffie-hellman",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6
 },
 {
 "route": "crypto/elgamal",
 "publicPath": "cs/crypto/elgamal",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6
 },
 {
 "route": "cloud/linux-server-interview-incident-map",
 "publicPath": "cs/cloud/linux-server-interview-incident-map",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6,
+"articleIssues": [
+"이상 없음에 가까움: 7절의 정수 계산을 Python으로 다시 구현해 대조했고 164, 315, 1,299, 474, 378, 132, 표본 31개째 93 대 101이 본문과 일치했습니다. 본문 오류로 의심되는 곳은 찾지 못했습니다."
+]
 },
 {
 "route": "ai/inference-failure-absorption",
 "publicPath": "cs/ai/inference-failure-absorption",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"기존 FleetSizeViz의 여덟 대 장면은 '여덟 달에 한 번쯤'이라 적지만 본문 해석은 6,335시간을 '아홉 달에 한 번'이라 적습니다. 6,335시간은 약 264일, 약 8.7개월이라 두 표현이 어긋납니다. 고치지 않았습니다.",
+"접힌 상세의 '두 사이트에 나누면 어느 쪽이든 한 사이트에 과반이 몰립니다'는 멤버 수가 홀수일 때만 맞습니다. 2+2로 나누면 어느 사이트에도 과반이 없고 어느 쪽을 잃어도 쓰기가 멈춥니다. '양쪽 상실을 모두 견디는 배치는 없다'는 결론은 그대로 성립합니다. Viz는 멤버 3개로 가정해 그렸습니다.",
+"마지막 절의 '두 축 가운데 하나'는 이 글 본문에서 두 축을 정의하지 않습니다. FailureLadderViz의 eyebrow와 앞 글에 기대고 있습니다."
+]
 },
 {
 "route": "ai/multi-head-latent-attention-mechanics",
 "publicPath": "cs/ai/multi-head-latent-attention-mechanics",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 7,
+"articleIssues": [
+"Line 83: sharing one latent is said to make the compression ratio grow by a factor of the head count. Sharing K and V looks like a factor of 2, and the head-count effect comes from the latent not being per head. Suspected wording error.",
+"Line 147 and the idea text on line 153 read as if both position vectors come directly from the hidden state, but the formula and algorithm build q_t^R from c_t^Q. The Viz follows the formula.",
+"Line 232: the first expression, (W^UK c_t^{Q→K})^T c_j^KV, uses an undefined symbol, and its dimensions appear not to match a 512-dimensional c_j^KV.",
+"Line 245: 'latent 576개 원소' includes the 64 position elements, so it is not all latent."
+]
 },
 {
 "route": "ai/math-vectors-inner-products",
 "publicPath": "cs/ai/math-vectors-inner-products",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 8,
+"articleIssues": [
+"The route renders only ModernArticle.tsx; I found no use of Overview.tsx, Vectors.tsx, Norm.tsx, DotProduct.tsx, Projection.tsx, CauchySchwarz.tsx or Applications.tsx from that file. Projection.tsx says eps is added to the denominator, which contradicts section 11 of the rendered article (max(‖v‖, eps), not addition). It appears not to reach readers."
+]
 },
 {
 "route": "gpu/cuda-register-pressure",
 "publicPath": "cs/gpu/cuda-register-pressure",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 9,
+"articleIssues": [
+"'구역' has two meanings: section 3 '한 작업 구역' means the SM, while sections 7 and 8 '네 구역' means its four inner parts. The existing AllocationPackingViz caption '한 구역의 64자리' uses the first sense, right after prose that uses '안쪽의 네 공간'.",
+"Section 8 says '반올림을 생략한 21 warps', but 21 comes from skipping the per-zone floor (65,536÷3,072=21.33, then floored), so rounding down still happens. '구역별 내림을 생략한' may be more accurate.",
+"viz/RegisterLiveRangeViz.tsx and viz/OccupancyWaveViz.tsx are not imported anywhere in src; a grep found only the files themselves. I left them untouched."
+]
 },
 {
 "route": "ai/fine-tuning-tradeoffs-forgetting-and-merging",
 "publicPath": "cs/ai/fine-tuning-tradeoffs-forgetting-and-merging",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"The merging section says '평균이 방향을 무디게 섞는 데 비해 task arithmetic은 방향을 그대로 보존'. In the article's toy numbers the two-checkpoint average (0.25, 0.15) lies on the same ray as the sum (0.5, 0.3) and equals λ=0.5, so the direction is the same and only the length differs. The existing TaskArithmeticMergeViz note makes the same contrast; TaskVectorPlaneViz states the arithmetic.",
+"The mitigation section says '이 절 앞부분에서 68%가 61%로', but that example is in the previous section (forgetting)."
+]
 },
 {
 "route": "constitution/constitutionalism-and-separation",
 "publicPath": "politics/constitution/constitutionalism-and-separation",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 3,
+"articleIssues": [
+"checks 절 operations의 '거부권자를 한 명 늘릴 때마다 구간이 더 좁아지기만 하고 넓어지지는 않습니다'는 엄밀하지 않을 수 있습니다. 새 거부권자의 승인 구간이 기존 교집합을 포함하면 구간이 그대로이므로 '좁아지거나 그대로'가 정확해 보입니다. 같은 글의 Tsebelis 인용 블록은 '넓어지지 않는다'고 적습니다. 본문은 고치지 않았습니다."
+]
 },
 {
 "route": "ai/vllm-spec-decode",
 "publicPath": "cs/ai/vllm-spec-decode",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 9,
+"articleIssues": [
+"ModernArticle.tsx의 12절에서 서로 다른 출처인 Gloeckle et al.과 SpecInfer v4의 CitationBlock이 같은 citeKey={20}을 씁니다. 번호 충돌일 수 있습니다.",
+"Overview.tsx, DraftVerify.tsx, CostModel.tsx, EagleMtp.tsx와 viz의 SpecCycleViz 등 옛 Viz는 ModernArticle 경로에서 쓰이지 않는 것으로 보입니다(vllm-spec-decode 디렉터리 안 grep 기준). 렌더되는 13개 절만 sectionsRead로 셌고, 옛 파일도 읽었지만 Viz를 넣지 않았습니다.",
+"Leviathan Table 4와 Chen et al.의 보고 수치는 원문과 대조하지 않았습니다. 글 안의 산수(2.7731, 2.952, 4.328911, 2.951424, 1.05408, 1.848733, .840333, 14.4243)는 다시 계산해 일치를 확인했습니다."
+]
 },
 {
 "route": "elections/voting-paradoxes",
 "publicPath": "politics/elections/voting-paradoxes",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5
 },
 {
 "route": "ai/agent-failure-modes-and-recovery",
 "publicPath": "cs/ai/agent-failure-modes-and-recovery",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6,
+"articleIssues": [
+"All four CitationBlocks use citeKey={1} (Stripe, Anthropic, arXiv, LangChain), so citation numbering may collide. Not edited.",
+"The existing AgentFailureModesAndRecoveryViz says retry is the only automatically safe path and that idempotent means retry. The article's sections 7 and 8 also require a confirmed server guarantee, a valid key and remaining retries, and say a key alone does not make retry safe. The simplification may overstate this. Not edited."
+]
 },
 {
 "route": "gpu/ec-gpu-gen",
 "publicPath": "cs/gpu/ec-gpu-gen",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"Section 03's interpretation says 'Kernel 30ms만 보고', but the same formula defines T_steady, the 30ms figure, as warm transfer, kernel and sync together. The Viz says '30ms만 보면' to avoid the conflict; prose unchanged.",
+"Overview.tsx, Codegen.tsx, OpenclCuda.tsx and BellpersonIntegration.tsx exist in the article directory, but ModernArticle.tsx does not import them, so they do not render. Only the rendered 6 sections were read to the end and counted; of these files, only the first 30 lines of Overview.tsx were seen."
+]
 },
 {
 "route": "ai/adam-optimizer",
 "publicPath": "cs/ai/adam-optimizer",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5
 },
 {
 "route": "embedded/interrupts-and-latency-budget",
 "publicPath": "electronics/embedded/interrupts-and-latency-budget",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 6
 },
 {
 "route": "blockchain/vdf",
 "publicPath": "cs/blockchain/vdf",
-"status": "todo"
+"status": "done",
+"round": 4,
+"vizAdded": 5,
+"articleIssues": [
+"The ExplainedFormula question in #wesolowski says \"Verifier는 2^T번의 제곱 대신\", but repeated squaring is T squarings reaching exponent 2^T, so this probably should read T번. Not edited.",
+"The AlgorithmBlock repeatUntil text in #wesolowski says \"2^T의 T개 bit\". 2^T has T+1 binary digits; the count of T rounds is right if the leading 1 is treated as the initial r=1. Minor wording only, not edited."
+]
 },
 {
 "route": "ai/region-agnostic-inference-routing",
@@ -5960,6 +6156,89 @@
 "Outside this review's list: at 1440px, '무엇을 한 칸으로 셌나요' and '내용은 같아도 시작 위치는 이동합…' in text-unicode-encoding scroll inside the canvas (781/705 and 756/705). I did not change them.",
 "Screenshots at 390px were read for 15 of the 17 Viz: all but NormalizePathViz and LoweringStagesViz before their last edits, then one final scene each for those two. Montages for the three text-unicode Viz whose edits were re-shot (NormalizePathViz, BoundaryStateViz, RoundTripViz) predate only the NormalizePathViz recolour. At 1440px only StageMemoryViz was opened; the other 16 rely on the script's numbers.",
 "Checks after the last edits: audit:viz --strict reported 0 ERROR lines on all changed paths. Controls and frame were stable, overflow 0 and console errors 0 at both widths. Those shot numbers cover only the Viz I re-ran; the unchanged Viz (SameNumber, FourRulers, MoveMap, ByteBits, Utf8Split, IterateWalk, SurrogateSplit, ReadPipeline, VectorizeLayout) were last measured on the first pass, also clean. Shots are in /tmp/viz-rounds/r3/rv13/{triton,unicode,lower}."
+],
+"4": [
+"Prose error, left unedited because article prose is out of scope. In the TermBreakdown of information-asymmetry.tsx (line 252), the 2x example says '값 12를 불러도 나온 여섯 대의 평균이 10.5이고 그 두 배인 21이 12를 넘습니다'. The sellers' mean is (2+4+6+8+10+12)/6 = 7, and doubling gives 14. The 10.5 is the 1.5x buyer mean, so the 1.5 multiplier gets applied before the doubling. CollapseFactorViz correctly shows 7 x 2 = 14, so the Viz and the prose now disagree. Suggested prose: '평균이 7이고 그 두 배인 14가 12를 넘습니다'.",
+"RandomTargetViz's title changed, so its data-viz-name changed too. A grep of src, scripts and docs found the old title only in the Viz file, but any workflow list outside those folders that matches on the old wording needs updating.",
+"Checks run after the fixes: audit:viz --strict had 0 ERROR lines on the two viz directories. It still prints REVIEW items for SVG text, including in the pre-existing SignalCostViz. viz-scene-shot showed controls and frame stable, overflow 0 and console errors 0 at 390px and 1440px for all 8 Vizzes. On mobile, long notes such as SlotTimelineViz scene 5 scroll inside the canvas. I measured that scene: with the canvas scrolled to the end, the note's bottom meets the top of the controls.",
+"The dev server on 5206 was already running and I did not start it. The re-labelled text appeared in the screenshots, so it was serving these edits.",
+"Hip3BoundaryViz.tsx: the line joins whole DEX boxes that also list 주문장 and 설정, so a reader could take cross margin to link those too. The article says only \"위험이 이어질 수 있\"다 and does not say which parts connect or whether both DEXes need the setting, so a sharper picture needs the HIP-3 source. I left it unchanged; the Viz keeps the article's hedged wording.",
+"FillFeeViz.tsx description: \"builder 추가비\" and CctpDepositViz.tsx note: \"deprecated\" are unglossed, and the article prose does not gloss them either. Glossing them needs a prose decision or an outside definition.",
+"CctpDepositViz.tsx: station 1's idle text \"1,000 보유\" is never rendered because scene 0 already marks the burn as done. It is harmless dead data and the reader sees nothing wrong, so I did not change it.",
+"Verification: audit:viz --strict on the 4 changed files gave 0 ERROR lines and 39 REVIEW items (SVG text checks). viz-scene-shot on both articles at 390px and 1440px gave stable controlY and frameH across scenes, overflow 0 and console errors 0. On mobile, long scene notes are clipped behind the controls until scrolled inside the canvas; this comes from the shared SceneShell/VizFrame layout, is the internal scroll the design standard allows, and was not changed. I read 13 screenshots covering all ten Viz at one size or the other, not every scene: 5 in the MOSFET article and 8 in Hyperliquid. No visual defects found. The scene-shot output is in /tmp/viz-rounds/r4/rv9/.",
+"Article section 7 says generally '주소는 어느 장치의 어느 동작인지, 값의 비트는 어느 핀인지 고릅니다', but section 9's GPIO5_CTRL selects the pin by address. AddressOffsetViz now scopes this to SIO, but the prose needs the same qualifier, and prose edits are out of scope.",
+"RoundState.tsx prose describes only three precommit outcomes, while the Viz now also shows the relock and unlock branch from the article's code panel (officialCodeRefs.ts, enterPrecommit). The prose could mention it if the two should match exactly.",
+"The GPIO5_CTRL '전용 주소' wording comes from the register name and the article's '기능 선택 레지스터' sentence. I did not check it against the datasheet.",
+"'코어' (WriteRaceViz) and 'block part' (InputLoopViz) are not defined in the article either. I left them because the reader likely knows them and a definition would need a prose or scope decision.",
+"Nothing to fix in BitValueViz or InputLoopViz: the numbers and order hold (2⁵=32=0x20, 0x01|0x20=0x21, peer, internal and timeout inputs going through WAL to the handler). No change to these two.",
+"Checks: audit:viz --strict on the changed paths gave no ERROR lines, only 3 REVIEW notes on SVG text in TimeoutBudgetViz. viz-scene-shot ran on all 11 Viz at 390px and 1440px: controls and frame stable, overflow 0, console errors 0. I read 8 of the screenshots, covering 7 of the 11 Viz; I did not view screenshots of BitValueViz, InputLoopViz, ConflictVoteViz or the 390px TimeoutBudgetViz. I did not capture dark mode, so the dark-mode label fix is checked from the code only. On mobile, the longest notes in SdkCallStateViz and VoteBranchViz scroll inside the canvas and reach the control row (SdkCallStateViz's note ends exactly at the control's top edge). Screenshots are under /tmp/viz-rounds/r4/rv8/.",
+"Article prose, gpu-data-movement-optimization.tsx #overlap: '아래 Viz 는 세 층 사이를 tile 이 흐르며 겹침이 생기는 순서를 보여 줍니다. 앞에서 본 Viz의 마지막 장면이...' appears to mean GpuDataMovementOptimizationViz in the first section, but the next Viz below is now StageRingViz, and it does not show three tiers. This needs a prose change, so I did not make it.",
+"Shared component, 390px width: in the screenshots, note text in long scenes scrolls under the control row and shows again below it (StagingSplitViz scene 4, PrefetchDistanceViz scene 3, CriticalAreaViz scene 4, ClusteringGridViz scene 1). Control position and frame height stayed stable and overflow was 0. It comes from the shared mobile frame in src/components, which is out of scope. I did not check whether it reaches the end of the scroll.",
+"Verification: `audit:viz --strict` on both viz directories printed no ERROR lines, only 82 existing REVIEW items. `viz-scene-shot` for all 14 Viz, run after the fixes, showed stable controls and frame, overflow 0 and console errors 0 at 390px and 1440px. I read screenshots of every scene at 1440px, but at 390px only one scene each for six Viz.",
+"'항복' is used in BarrierBiasViz and TermCrossViz, and the article prose never defines it ('큰 역전압에서는 항복도 일어날 수 있습니다'). A definition needs a prose change or an outside fact, so I left it for the author.",
+"'전기화학적 균형' remains undefined in article section 6. I removed it from the Viz only; defining it needs a prose change.",
+"No problems found in WaveOverlapViz, JitterRecordViz, FilterOrderViz, AliasFoldViz, RescheduleBranchViz, AdcReadyTimingViz, ChargeBoundaryViz, ExponentLadderViz or TermCrossViz. I recomputed these values: 2.65/1.341/0.841/2.459/1.959/0.65 V for both signals; 1.270 V; a 0.071 V drop; 0.251/0.683/1.86/5.05/12.03 mA; ratios 47.87 and 2.383; 3.98e-9; 0.476/0.536/0.595 V. The delta branches match time.c lines 184-189, and the adc_read steps match adc.h lines 176-179.",
+"Checks after the fixes: audit:viz --strict on the 4 changed files gave 0 ERROR lines and 29 REVIEW items, which are SVG-text overflow reminders. viz-scene-shot on the 4 changed Viz showed controls and frame stable, overflow 0 and console errors 0. Before the fixes, all 13 Viz had the same stable results. I read screenshots after the fixes for ClosedLoopViz and TurnOnCurveViz only; I did not re-read the BarrierBiasViz or ScheduleDriftViz shots because their edits were text-only outside the SVG. Screenshots are in /tmp/viz-rounds/r4/rv5.",
+"Article prose, llm-application-caching.tsx: the ExplainedFormula annotation says normalization gives a \"0~1 범위의 각도 유사도\", but cosine similarity ranges from -1 to 1. The article's own \"보통 0과 1 사이\" is the correct hedge. Needs a prose edit, so left unfixed.",
+"Article prose, llm-application-caching.tsx: the heading \"Cache key가 넓으면 staleness가, 좁으면 hit rate가 줄어듭니다\" is not supported by the section, whose body only argues that an option missing from the key returns a response made under other conditions. CacheKeySlotViz follows the body. Needs a prose edit.",
+"Article prose, cross-entropy ModernArticle.tsx: 경사하강 appears in the section 12 interpretation text without a definition. I only explained it inside the Viz note.",
+"Not independently verified: the PyTorch line numbers (265, 273, 288-299) and the claim that the probability-target path divides by the observation count in ColumnPickViz and DenominatorViz. They match the article text, but I did not check them against the source. The binary32 result in StableOrderViz was recomputed: 1e8+ln3 rounds to 1e8, then gives 0, versus 1.0986123.",
+"Verification status: audit:viz --strict reported no ERROR lines on the changed files (14 REVIEW items for SVG text). viz-scene-shot was stable on every scene with overflow 0 and console errors 0. The last run of cross-entropy shots came before the final edit, which touched only CacheKeySlotViz in the caching article; the caching Vizs changed in this review were reshot after it.",
+"I read screenshots for a sample of scenes at 390px and 1440px, not every scene.",
+"No prose or fact changes are needed. Recomputed with no errors: SeatRoom D'Hondt 5·4·1; Threshold 44.9·41.8·13.3; map B 396/369/135 and surplus 84/37; DivisorCompare 4·4·1 → 5·4·1 and 4·4·2 (10th quotient 79.2 vs 45); LSq 50.2/22.3/3.7; Mixed 8·8·2, 5·2·2, 12.8.",
+"Shared component, not edited (src/components is off limits): at 390px, note text scrolling in the canvas stays visible in the strip below the sticky control row (e.g. ReadingOrder scene 1). Scrolling to the end was tested on 4 Viz (OCR, chunk, divisor, mixed): the inner scroll moves all the way down, and the OCR end screenshot shows its last note line above the controls.",
+"Out of scope, not changed: ElectoralSystemsViz.tsx, an existing Viz, colours 나당 #f59e0b and 다당 #10b981, while the new Viz use #d97706 and #059669 from parties.ts. The hues are close enough that party identity still reads.",
+"Prose, cannot edit, continuous-batching section 9: '이미 배정했던 요청을 빼면 해당 토큰 잔액도 되돌립니다' does not limit the refund to the PRIORITY branch. In pinned scheduler.py L590-615 the refund is only in that branch. The `running-allocation` code ref highlights L616-639, which excludes the refund lines, while its annotation says '회수된 토큰도 별도로 처리합니다'. The prose should carry the qualifier and the highlight should include L590-613. RunningOrderViz's title '빼낸 요청의 몫은 돌아옵니다' relies on this and was kept, since the prose says the same.",
+"Prose, cannot edit, diffusion §03 ExplainedFormula idea: 'T개의 독립 항으로 쪼개집니다' does not match the formula. L_T + Σ_{t=2..T} (T−1 terms) + L_0 = T+1 terms, and ElboChainViz correctly draws 5 chips for T=4. The prose should say T+1.",
+"Prose, cannot edit, diffusion §03 intro: 'evidence lower bound(ELBO)를 대신 최소화' has the wrong direction. The ELBO is maximized, and what is minimized is its negative, L_vlb. ElboChainViz says only '하한을 칸마다 나눕니다' and takes no direction, so it was not changed.",
+"Prose, cannot edit, diffusion article notation: §01 defines αₜ=1−βₜ, but §02 (x̂₀=(xₜ−σₜε̂)/αₜ) and §04 (xₜ−αₜx₀) use αₜ to mean √ᾱₜ. ScoreArrowViz now flags this locally, but the article needs a stated notation switch.",
+"Mobile, not fixed: at 390px, BackboneContractViz's first scene note is cut at the control row and needs the canvas's inner scroll. The standard allows this and the script reports overflow 0, but the longer note and new arrows made it tighter. I did not scroll to the end of the note in a browser.",
+"Verification scope: the final scene-shot run covered 9 of the 13 Viz (the 8 changed files plus PrefillChunkCountViz). PlannedVsOutputViz, ProgressReservationViz, ScheduleShapeViz and ElboChainViz were unchanged and only captured in the baseline run, which showed stable controls and frames, overflow 0 and console errors 0. Screenshots actually read: ParallelChildrenViz, ClosedFormScaleViz, BackboneContractViz, NoiseReparamViz, RunningOrderViz and ScoreArrowViz after the edits; ProgressReservationViz, PlannedVsOutputViz, ScheduleShapeViz, ElboChainViz and EmaTrackViz at baseline (EmaTrackViz was not re-read after its text-only edit); PrefillChunkCountViz (unchanged) after the edits. CumulativeScheduleViz's screenshots were not read; only its scene-shot metrics were checked. Strict audit reported 0 ERROR lines; its REVIEW lines ask for SVG overflow checks in the browser.",
+"Left as is: PolarProductViz gives the angles only as text in the summaries and draws the arrows to scale, with no angle arcs. π/3, −π/6 and π/6 are correct and nothing misreads, and arcs would crowd the area near the origin.",
+"Left as is: in RealSignalViz the X₃ path crosses the x tick label \"3\", which stays legible, and removing the tick would lose the 3+3 reading.",
+"Checks: all figures recomputed with no wrong-fact findings. `audit:viz --strict` on both viz directories shows 0 ERROR lines (only REVIEW items). `viz-scene-shot` shows stable controls and frame, overflow 0 and 0 console errors at 390 and 1440. After the fixes, only the 9 changed Viz were re-shot; the other 9 were shot before the fixes, and none of their files changed.",
+"Article gap, ec-gpu-gen #artifact-lifecycle: the prose says recording only the Rust binary cannot reproduce \"OpenCL driver가 만든 binary, 선택된 device와 runtime options\". The Runtime log list that follows (backend, device UUID/name, driver, loaded artifact key, kernel entry, fallback 이유) has no runtime options and no digest of the driver-built binary. ArtifactLifecycleViz follows the article's list, and I softened only its label. Closing the gap needs a prose change, and possibly a check against the ec-gpu source.",
+"Shared component, not changed: at 390px the sticky control row in the VizFrame/AnimatedSceneControls stack lets scrolled note text show in the strip below the buttons, for example \"command·stderr\" in ArtifactLifecycleViz. Control and frame positions stay stable and overflow is 0, so this is cosmetic, but the fix belongs in src/components, which is out of scope.",
+"Checks, all on the final files: strict audit:viz reports no ERROR lines (REVIEW lines only, for SVG text). viz-scene-shot ran at 390px and 1440px: controlY and frameH are constant across scenes, canvas overflow is 0, console errors are 0, and docScrollW equals the viewport. Shots are in /tmp/viz-rounds/r4/rv17/. I viewed the 390px montages for all 10 Viz and the 1440px montage for AmortizedTimeViz before its recolor; the recolored bar was viewed at 390px only. The other 1440px screenshots were captured but not viewed, so at that width only the script's metrics back them.",
+"No changes needed after recomputing the numbers and checking the prose: FieldDedupViz (5 attempts, 3 fields), LedgerTraceViz (−0.02, 0.007996, bar scales), WeightShareViz (0.19, 0.001999, shares summing to 1, the disclosed minimum bar width), and LerpLineViz (cut spacing and new-mean positions).",
+"MitmSplitViz scene 5 and its article section use 'MAC' ('서명 또는 미리 공유한 인증 키의 MAC') without defining it anywhere in the article. A gloss would need an outside definition or a prose change, so I left it.",
+"Checks after the changes: audit:viz --strict gave no ERROR lines (0 in the full run on both viz directories, none in the final re-run on the six changed files). viz-scene-shot gave stable controls and frame, overflow 0 and console errors 0 at 390 and 1440 for all 12 Viz. The six edited Viz were re-shot after the final edits. Desktop screenshots were read for all 12 before the last two edits, and the mobile sheets for three of them plus ThreeProblemsViz (MitmSplitViz, MaskRoundTripViz, NonceReuseViz). Mobile sheets for the other eight were generated but not read. After the last two edits I read one screenshot each of SecretLifetimeViz (desktop leak scene) and SquareListLeakViz (desktop scene 3). The final re-shots of the other four edited Viz and the 4→2 arrowhead in SquareListLeakViz were not read.",
+"No wrong-fact problems found. I recomputed the ring values, the 11/11 split of residues, all hops, the 42-cell row and column ends, the inverses, the tamper results and the MITM values 6 and 15. I also reran the HKDF experiment in Node, and both keys match the article (a0d369b9…9265e27, 0e7f6976…fdc6290).",
+"Prose ordering in VAELoss.tsx: the paragraph ending '대입하면 아래 식을 얻습니다' refers to the KL K_j formula. Next come ElboGapViz, the ELBO formula and KlShapeViz, and only then that K_j formula. The reader sees the wrong formula first under '아래 식'. The ELBO formula already separated them before this Viz was added. This needs a prose change or a move in the article, so I left it.",
+"The gloss 'context pollution(불필요한 문장이 문맥을 채우는 일)' in FailureLayerViz is my own short definition, because the article uses the term without defining one. 'guardrail(되돌리는 기준선)' and 'rollback(이전 구성으로 복귀)' are glosses in the same sense, though the article's '넘으면 rollback합니다' supports them. Defining these terms in the prose would be a cleaner source.",
+"CollapseCheckViz SwapTest box: '①과 ②가 다름 → 이 시험은 collapse를 의심할 근거가 되지 않습니다' is the logical complement of the article's sentence, not something the article states. The article gives only the '거의 변하지 않는다면' direction. The wording is conservative and I kept it, but the prose could state this direction too.",
+"Verification: audit:viz --strict gave 0 ERROR lines on the 7 changed Vizes. viz-scene-shot on those 7 showed stable controls and frame heights, canvas overflow 0 and console errors 0 at 390px and 1440px. An extra inner-scroll check at 390px, on each Viz's default scene only, also gave 0 for all of them. The 5 unchanged Vizes passed the same scene-shot check in the baseline run. I removed nothing; my temporary scripts remain at /tmp/vr1-*.",
+"Reviewed with no findings: ElboGapViz, KlShapeViz, CollapseCheckViz numbers, RequestGateViz and InstructionEvidenceViz. Arithmetic I recomputed: ELBO terms and gap for q₀ = 0.5, 0.65, 0.8, 0.95; K_j = 0.5, 0.318, 0.807, 0.443 summing to 0.943; IWAE bounds −0.511, −0.255, −0.107, −0.046; BCE 0.580.",
+"No wrong-fact defects found. Recomputed: waterfall 5,45,53,73,113,413,493 and 1000−493=507; 53+440=493; 8<<8=0x800 at bit 4×2+3=11; 3^k mod 17 ring and chain 3,9,13,16,1; 16=3·5+1; 10⁵·3 mod 17=1; long division r 1,2,4,3,1, b 0,0,1,1, π 1,1,1,3,10.",
+"MergedEdgesViz has 3px of internal canvas overflow at 390px (580 vs 577). Nothing is hidden in practice, so I left it.",
+"SequentialChainViz notes keep the article's untranslated 'evaluator' and 'thread·SIMD·ASIC'. The article never glosses them either, so a gloss should be decided in the prose first; I did not change them.",
+"Verification: audit:viz --strict gave 0 ERROR lines (the only output shown was REVIEW items). viz-scene-shot gave controls and frame stable, canvas overflow 0 and console errors 0 at 390px and 1440px. Screenshots were read only at 390px; the 1440px ones were checked by script metrics only. The last run re-shot only ExponentRingViz, and the scroll measurement was rerun for both widths on the vdf page.",
+"SectorCellsViz, WidthRateViz, FlowVsFirstValueViz, PointerChaseViz, PatternMatchViz and SignalAdapterViz: no problems found and no edits. I recomputed 32/4=8배, 31×8+1=249, 16×64=32×32=1024, 1024×8/8=1024GB/s, 8×1.024=8.192TB/s, 768/1024=0.75ns and 8×9=72 against the code and the article.",
+"Verification: audit:viz --strict over both viz directories gave 0 ERROR lines. viz-scene-shot on the changed Viz gave constant controlY and frameH across scenes at 390 and 1440, overflow 0 and console errors 0. The dev server was already running on port 5206 from this worktree. The scene-shot output for the six changed Viz is in /tmp/viz-rounds/r4/rv10/image-video-lora-architecture and /tmp/viz-rounds/r4/rv10/hbm-stack-and-memory-requests; pre-fix shots of all 12 are in lora-base and hbm-base in the same folder. I read the post-fix mobile (390) screenshots; desktop shots were checked only through the script's numbers, not by eye.",
+"Judgement call left as is: SpaceTimeAttentionViz keeps a faint grey audio row in the spatial, temporal and joint scenes, although a video-only model has no audio. It reads as inactive and keeps coordinates fixed for the cross-modal scene, so I did not remove it.",
+"Checks after the final edits: audit:viz --strict on the 6 changed files gave 0 ERROR lines, only REVIEW notes about SVG text. Across all 11 Viz at 390px and 1440px, the control position and frame height stayed the same in every scene, canvas overflow was 0, document scroll width matched the viewport, and there were 0 console errors. Shots: /tmp/viz-rounds/r4/rv16/voting and /tmp/viz-rounds/r4/rv16/agent.",
+"Screenshots read: all 11 Viz at 390px, before the last small text and border edits. At 1440px I read only ConditionsMapViz, TwoAxisMedianViz, RecoveryBranchViz and KeyContractViz. The other 7 desktop layouts were checked by the script's numbers only.",
+"Not tested: at 390px, long notes in ConditionsMapViz, TwoAxisMedianViz, SameKeyRetryViz, KeyContractViz, RecoveryBranchViz, ArrowProofViz and BordaShiftViz are clipped at the first view and rely on the canvas's inner scroll, which section 2 of the standard allows. I did not scroll to confirm the last line is reachable. Dark mode was not rendered either.",
+"No wrong-fact findings: I recomputed the Borda scores (6/7/2, then 8/7/0, with 가 over 나 3:2 both times), the runoff counts (40/31/29 to 69:31, and 44/27/29 to 56:44), the two-axis distances (5.66/8.49, 4/2.83, 4/2.83) and the drift totals (0.30 = τ at step 6, 0.35 > τ at step 7, 0.40 at step 8). All match the article.",
+"No 3D is used in these 11 Viz, so the 3D rules did not apply.",
+"ResponseLostViz, CheckpointBoundaryViz, BordaShiftViz, ConditionsMapViz and ArrowProofViz were reviewed and needed no changes.",
+"QuorumSiteViz is inside a closed ProgressiveDetail, so scripts/viz-scene-shot.cjs cannot capture it: it timed out with 'element is not visible'. I shot it with a temporary copy of the script (/tmp/viz-rounds/r4/rv12/shot-open.cjs) that opens every details element first. Result: controls and frame stable, overflow 0, console errors 0. I did not change this Viz. Fixing the official script is outside this task, because scripts may not be edited.",
+"Article prose, inference-failure-absorption: '두 사이트에 나누면 어느 쪽이든 한 사이트에 과반이 몰립니다' holds for odd member counts such as the Viz's assumed 3 (2+1). With 4 members split 2+2, neither site has a majority, and losing either site stops writes. The heading claim that no placement survives losing either site still holds. Changing that sentence needs a prose edit, so I left it.",
+"SleepMarkViz at 390px: the canvas scrolls internally (client height 523, scroll height 706), and the note starts below the control row until scrolled. Scrolling reaches the end and the controls stay visible, which the standard's rule for screens under 640px allows, so I left it.",
+"audit:viz --strict gave no ERROR lines on the changed files, only REVIEW notes about SVG text. I checked those in screenshots at 390px and 1440px. Control position, frame height and overflow stayed stable in every scene, and console errors were 0.",
+"No wrong-fact errors were found. Recomputed figures match the article: 7→2 and 10=10, 8+22=30, b=18, 60+70+80+90=300, the 90→55→300 cascade, 440−400=40, 150>100, 72≤100, 28 unused, 2/3 and 1/3 quorum. All task counts, balances and member counts are assumed values and are marked (가정) in the Viz text.",
+"Not a Viz content problem, outside my scope, not investigated: at 390px the shared scene controls in the screenshots look faint, showing only prev, play and next glyphs, while docs/viz-design-standard.md asks for a 3-column 이전 / 번호 / 다음 row plus a play button. These controls come from src/components, which I may not edit.",
+"Screenshot artifact, not from these files: one 390px shot of SharedSpillBranchViz (cuda/390-8-...-s0.png) caught a Vite error overlay for ai/math-vectors-inner-products/viz/VectorAdditionViz.tsx, a file outside my scope. A retake about 20 seconds later rendered cleanly (/tmp/viz-rounds/r4/rv14/cuda2). Other shots in that first post-fix run may have caught the overlay too; I read only the three noted here. The owner of that file should confirm it compiles.",
+"Check limitation, vLLM Viz inside collapsed ProgressiveDetail: scripts/viz-scene-shot.cjs times out on these (\"element is not visible\", first on KernelScanViz) because the figure is hidden until opened. I checked them with an unedited-logic copy at /tmp/viz-rounds/r4/rv15/shot.cjs, which opens all details first and stops at 7 shots. It covered all 9 vLLM Viz before the fixes, and the 5 changed ones after. The official script ran only on the 3 constitution Viz and BreakEvenViz. Controls and frame were stable, overflow 0, console errors 0 at 390px and 1440px in every run. scripts/ is off limits, so the script is unchanged.",
+"Unrelated build error: one AmendmentGatesViz run hit a Vite error overlay from a concurrent edit in src/pages/articles/ai/math-vectors-inner-products/viz (DistanceDifferenceViz.tsx, VectorAdditionViz.tsx: Adjacent JSX elements). The overlay cleared on retry and those screenshots were discarded. Those files are not mine and I did not touch them.",
+"Audit: audit:viz --strict gave 0 ERROR lines on the 8 changed files; the 18 review items include the expected SVG text checks. Screenshots of the final state are under /tmp/viz-rounds/r4/rv15/constitutionalism-and-separation and /tmp/viz-rounds/r4/rv15/vllm-spec-decode.",
+"No changes needed: BatchPositionsViz, BufferLengthViz, TailSumViz and DynamicDepthViz. Their numbers and order match the article when recomputed. KernelScanViz's \"읽지 않음\" for pos 3 and its no-bonus result also match the `if not rejected` branches in codebase rejection_sampler.py lines 804-846.",
+"Prose, multi-head-latent-attention-mechanics.tsx (#weight-absorption): the term entry for (W^UK)^T says \"미리 한 번 곱해 두면 매 decode step 재사용합니다\", but the annotated formula and AlgorithmBlock compute q' per new token per head (\"새 토큰마다 한 번\"). I aligned the Viz with the algorithm. The article's wording needs a prose edit, which is out of scope.",
+"Prose, same formula: the first form, (W^UK c_t^{Q→K})^T c_j^KV, does not type-check as written. W^UK c has d_h dimensions and c_j has d_c (128 vs 512), and c_t^{Q→K} is never defined. Only the second form, ((W^UK)^T q_t^C)^T c_j^KV, is consistent. Not changed because it needs a prose edit.",
+"Prose, same article (#kv-projection): \"캐시에 남는 것은 첫 단계의 결과 하나뿐입니다\" and the term entry \"캐시에 남는 유일한 것\" conflict with 512+64=576 elsewhere. I scoped this in the Viz only.",
+"Shared component, not edited (src/components is off limits): while a canvas scrolls internally on mobile, content can show below the sticky control row. In the baseline shots, \"놓입니다.\" appeared under the controls in DistanceDifferenceViz. I removed the overflow in these Viz, so it no longer shows here (rechecked DirectionLength, VectorAddition, Distance, Shadow, CacheCellCount, LatentBottleneck, Absorption, Tradeoff, Eps). The sticky behaviour itself remains for any other Viz that overflows. The fit check ran on the opening scene only, but scene stacks reserve the tallest scene's height.",
+"Verification: audit:viz --strict on both viz directories gave exit 0 and no ERROR lines. viz-scene-shot on both articles at 390 and 1440 gave 0 console errors, 0 horizontal overflow, and stable control Y and frame height across scenes. The vectors article's full run predates a one-word note change in ShadowBoundViz, which was then reshot alone; its tail output was only read at 1440 (stable, 0 errors), and the 390 run's metrics were cut off by the tail. Final-state screenshots read: Tradeoff and CacheCellCount (MLA scene). The other fixed Viz were read in shots taken before small note edits or, for LatentBottleneck, not re-read after its title and note change (fit check only).",
+"Screenshots are in /tmp/viz-rounds/r4/rv13/multi-head-latent-attention-mechanics and /tmp/viz-rounds/r4/rv13/math-vectors-inner-products. The mla and vec folders beside them are pre-fix baselines. Helper scripts are in /tmp/rv13tools. All can be deleted."
 ]
 }
 }

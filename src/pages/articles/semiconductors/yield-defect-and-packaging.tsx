@@ -2,6 +2,11 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import YieldDefectViz from "./yield-defect-and-packaging/viz/YieldDefectViz";
+import DenominatorViz from "./yield-defect-and-packaging/viz/DenominatorViz";
+import CriticalAreaViz from "./yield-defect-and-packaging/viz/CriticalAreaViz";
+import DefectCountGridViz from "./yield-defect-and-packaging/viz/DefectCountGridViz";
+import WaferCandidatesViz from "./yield-defect-and-packaging/viz/WaferCandidatesViz";
+import ClusteringGridViz from "./yield-defect-and-packaging/viz/ClusteringGridViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -35,7 +40,7 @@ return <div className="space-y-16">
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 면적과 분모를 나누어야 실패 원인을 잘못 셈하지 않습니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">다이의 바깥 면적을 그대로 위험 면적으로 넣으면 결함의 크기와 실제 배선 간격을 빠뜨립니다. 먼저 어떤 결함이 어느 위치에서 고장을 내는지 정해야 밀도에 곱할 면적을 고를 수 있습니다.</p><p className="leading-7">또 다음 단계의 98%를 처음 1000개에 바로 곱하면 앞 단계에서 탈락한 다이를 다시 포함합니다. 두 통과율의 분모를 연결해야 합니다. 이미 결함을 피한 다이 중 다음 조건도 통과하는 비율을 곱하는 순서입니다.</p></div>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">다이의 바깥 면적을 그대로 위험 면적으로 넣으면 결함의 크기와 실제 배선 간격을 빠뜨립니다. 먼저 어떤 결함이 어느 위치에서 고장을 내는지 정해야 밀도에 곱할 면적을 고를 수 있습니다.</p></div><DenominatorViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">또 다음 단계의 98%를 처음 1000개에 바로 곱하면 앞 단계에서 탈락한 다이를 다시 포함합니다. 두 통과율의 분모를 연결해야 합니다. 이미 결함을 피한 다이 중 다음 조건도 통과하는 비율을 곱하는 순서입니다.</p></div>
 </section>
 
 <section id="names" data-teach-level="3" className="scroll-mt-20">
@@ -46,7 +51,7 @@ return <div className="space-y-16">
 <section id="area" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">7. 고장을 만드는 위치를 모아 1 cm²로 가정합니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
-   <p className="leading-7">입자가 웨이퍼에 있어도 모든 위치가 같은 위험은 아닙니다. 두 선을 이어 붙이거나 한 선을 끊을 수 있는 위치가 더 위험합니다. 특정 크기의 결함이 기능 고장을 만들 수 있는 위치를 모은 면적이 <strong>임계 면적 A<sub>c</sub></strong>입니다. 가상 1 cm²는 다이의 바깥 치수를 그대로 뜻하지 않습니다.</p>
+   </div><CriticalAreaViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">입자가 웨이퍼에 있어도 모든 위치가 같은 위험은 아닙니다. 두 선을 이어 붙이거나 한 선을 끊을 수 있는 위치가 더 위험합니다. 특정 크기의 결함이 기능 고장을 만들 수 있는 위치를 모은 면적이 <strong>임계 면적 A<sub>c</sub></strong>입니다. 가상 1 cm²는 다이의 바깥 치수를 그대로 뜻하지 않습니다.</p>
    <p className="leading-7">다이의 기능 검사에서 양품이 되는 비율과 속도·전력 같은 사양까지 통과하는 비율도 구분합니다. 이 글의 첫 계산은 임계 면적에 치명적 점 결함이 0개일 확률만 다룹니다.</p>
    <p className="leading-7"><em>다이가 커졌다는 말만으로 임계 면적이 정확히 몇 배인지 결정할 수 없습니다.</em></p>
   </div><CitationBlock source="MIT OpenCourseWare 2.830J/6.780J, Lecture 10, ‘Yield Modeling’ (2008), 원본 6–7·14·17·19·23·25·30쪽" citeKey={1} href="https://ocw.mit.edu/courses/2-830j-control-of-manufacturing-processes-sma-6303-spring-2008/4aff1e21de13870355ef44dbe71f45c6_lecture10.pdf">MIT 공식 강의안은 기능·파라미터 수율을 구분하고 결함 밀도, 임계 면적, 공간적으로 독립인 점 결함의 포아송 모형과 그 한계를 설명합니다. 아래 면적·밀도는 강의의 측정 데이터가 아닙니다.</CitationBlock>
@@ -55,7 +60,7 @@ return <div className="space-y-16">
 <section id="poisson" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">8. 평균 0.1개에서 결함 0개 확률을 계산합니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
-   <p className="leading-7">결함 밀도 D<sub>0</sub>가 0.1개/cm²이고 임계 면적 A<sub>c</sub>가 1 cm²이면, 한 다이에 들어올 것으로 기대되는 결함 수 λ=D<sub>0</sub>A<sub>c</sub>=0.1개입니다. 평균이 0.1개라고 해서 다이마다 0.1개의 결함이 있는 것은 아닙니다. 많은 다이에 0개, 일부에 1개 이상인 분포의 평균입니다.</p>
+   </div><DefectCountGridViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">결함 밀도 D<sub>0</sub>가 0.1개/cm²이고 임계 면적 A<sub>c</sub>가 1 cm²이면, 한 다이에 들어올 것으로 기대되는 결함 수 λ=D<sub>0</sub>A<sub>c</sub>=0.1개입니다. 평균이 0.1개라고 해서 다이마다 0.1개의 결함이 있는 것은 아닙니다. 많은 다이에 0개, 일부에 1개 이상인 분포의 평균입니다.</p>
    <p className="leading-7">서로 무관하게 흩어진 점 결함이 임계 면적에 하나만 들어와도 기능을 잃는다고 가정하면, 결함이 0개일 확률은 Y=e<sup>−λ</sup>=e<sup>−0.1</sup>≈0.9048입니다. 가상 후보 다이 1000개가 각각 이 조건을 가진다면 결함 모형상 양품의 <strong>기댓값</strong>은 약 904.8개입니다. 실제 시험에서 0.8개의 다이가 나온다는 뜻도, 한 번의 생산 결과를 보장한다는 뜻도 아닙니다.</p>
    <p className="leading-7"><em>포아송 계산은 평균 결함 수에서 0개일 확률로 넘어가는 단계입니다.</em></p>
   </div><YieldDefectViz /><ExplainedFormula question="임계 면적에 치명적 점 결함이 하나도 없을 확률은?" idea="평균 결함 수를 결함 밀도와 임계 면적의 곱으로 구하고 포아송 분포의 0개 확률 e⁻λ를 계산합니다." formula={String.raw`Y_0=e^{-D_0A_c}`} annotatedFormula={String.raw`Y_0=e^{-\underbrace{D_0A_c}_{\text{평균 결함 수}}}`} operations={[{expression:String.raw`\lambda=0.1\,\mathrm{cm^{-2}}\times1\,\mathrm{cm^2}=0.1`,annotation:"단위 면적당 평균 결함 수에 임계 면적을 곱합니다."},{expression:String.raw`Y_0=e^{-0.1}\approx0.9048`,annotation:"임계 면적 안에 0개일 포아송 확률입니다."},{expression:String.raw`1000Y_0\approx904.8`,annotation:"1000개 후보의 결함 모형상 양품 기댓값입니다."}]} terms={[{symbol:"D₀",name:"평균 결함 밀도",description:"가정한 0.1개/cm²입니다."},{symbol:"A_c",name:"임계 면적",description:"결함이 생기면 기능을 잃는 위치의 가상 1 cm²입니다."},{symbol:"Y₀",name:"결함 0개 확률",description:"전체 공정·패키징 수율과는 다릅니다."}]} assumptions={["점 결함이 공간적으로 독립이고 평균 밀도가 일정합니다.","임계 면적에 결함 하나가 생기면 기능 고장이 납니다."]} interpretation="가상 결함 0개 확률은 약 90.48%이며, 1000개 후보의 양품 기댓값은 약 904.8개입니다." />
@@ -70,7 +75,7 @@ return <div className="space-y-16">
 <h2 className="mb-6 text-2xl font-bold">10. 위험 면적과 밀도를 바꾸되 후보 수와 구별합니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
    <p className="leading-7">결함 밀도 0.1개/cm²를 그대로 두고 임계 면적만 4 cm²로 가정하면 평균은 0.4개, 결함 0개 확률은 e<sup>−0.4</sup>≈67.03%입니다. 반대로 면적 1 cm²를 유지하고 결함 밀도만 0.2개/cm²로 두면 e<sup>−0.2</sup>≈81.87%입니다. 밀도와 임계 면적은 곱으로 들어가므로 어느 쪽을 줄이든 이 단순 모형의 확률을 올립니다.</p>
-   <p className="leading-7">이 두 면적 사례를 같은 웨이퍼에서 후보 다이 1000개씩이라고 비교하면 안 됩니다. 물리적 다이 크기와 가장자리 손실이 달라지면 웨이퍼에 놓이는 후보 수부터 달라집니다. 여기서는 한 다이의 결함 회피 확률만 비교합니다.</p>
+   </div><WaferCandidatesViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">이 두 면적 사례를 같은 웨이퍼에서 후보 다이 1000개씩이라고 비교하면 안 됩니다. 물리적 다이 크기와 가장자리 손실이 달라지면 웨이퍼에 놓이는 후보 수부터 달라집니다. 여기서는 한 다이의 결함 회피 확률만 비교합니다.</p>
    <p className="leading-7"><em>한 다이의 통과 확률과 웨이퍼 한 장의 후보 개수를 따로 봅니다.</em></p>
   </div>
 </section>
@@ -92,7 +97,7 @@ return <div className="space-y-16">
             선폭·저항·속도처럼 연속적인 사양 변화도 포아송의 0개 확률 하나로 설명할 수 없습니다. 공정에서는 결함 지도, 웨이퍼 시험, 조립 뒤 시험을 함께 보고 수율 손실의 위치를
             찾습니다.
           </p>
-   <p className="leading-7">뭉침이 숫자를 어떻게 바꾸는지는 같은 평균으로 바로 비교할 수 있습니다. 8절의 평균 결함 수 λ=0.1은 그대로 두고, 결함이 고르게 흩어진 경우와 몇몇 다이에 몰린 경우를 나란히 놓겠습니다. 이미 죽은 다이에 결함이 하나 더 떨어지면 추가로 잃는 다이가 없습니다. 그래서 평균이 같아도 뭉칠수록 결함 0개인 다이가 조금 더 남습니다.</p>
+   </div><ClusteringGridViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">뭉침이 숫자를 어떻게 바꾸는지는 같은 평균으로 바로 비교할 수 있습니다. 8절의 평균 결함 수 λ=0.1은 그대로 두고, 결함이 고르게 흩어진 경우와 몇몇 다이에 몰린 경우를 나란히 놓겠습니다. 이미 죽은 다이에 결함이 하나 더 떨어지면 추가로 잃는 다이가 없습니다. 그래서 평균이 같아도 뭉칠수록 결함 0개인 다이가 조금 더 남습니다.</p>
    <p className="leading-7">7절에서 인용한 MIT 2.830J Lecture 10이 이 차이를 식으로 적습니다. PDF 19쪽의 <strong>Murphy 수율 모형</strong>은 결함 밀도 D가 웨이퍼마다 다르다고 보고 Y=∫e<sup>−A₀D</sup>f(D)dD처럼 밀도 분포 f(D)로 포아송 확률을 평균합니다. 모든 웨이퍼의 밀도가 D₀ 하나라면 원래 포아송 식으로 돌아갑니다. PDF 23쪽은 f(D)에 감마 분포를 넣은 <strong>음이항(negative binomial) 모형</strong>을 제시하고, 분포 모양을 정하는 α를 군집(cluster) 매개변수라고 부릅니다. α가 크면 밀도의 흩어짐이 작아 뭉침이 적고, PDF 25쪽처럼 α→∞에서 포아송 식과 같아집니다. 같은 쪽은 α를 실측으로 정해야 하며 일반적인 메모리·마이크로프로세서에서 1.5~2라고 적습니다.</p>
   </div><ExplainedFormula question="평균 결함 수 0.1이 같을 때 결함이 뭉치면 결함 0개 확률은 얼마나 달라지는가?" idea="평균 결함 수 λ=D₀A_c를 군집 매개변수 α로 나눈 만큼 1에 더하고 −α제곱을 취합니다. α가 작을수록 뭉침이 강합니다." formula={String.raw`Y=\left(1+\frac{D_0A_c}{\alpha}\right)^{-\alpha}`} annotatedFormula={String.raw`Y=\left(1+\frac{\overbrace{D_0A_c}^{\text{평균 결함 수 }\lambda}}{\underbrace{\alpha}_{\text{군집 매개변수}}}\right)^{-\alpha}`} operations={[{expression:String.raw`\lambda=0.1\,\mathrm{cm^{-2}}\times1\,\mathrm{cm^2}=0.1`,annotation:"8절과 같은 평균 결함 수를 씁니다."},{expression:String.raw`\alpha=1:\ (1+0.1)^{-1}\approx0.9091`,annotation:"강하게 뭉친 경우(가정)입니다. 1/(1+λ)와 같습니다."},{expression:String.raw`\alpha=5:\ (1+0.02)^{-5}\approx0.9057`,annotation:"덜 뭉친 경우(가정)로, 포아송 0.9048에 가까워집니다."},{expression:String.raw`\lambda=0.4,\ \alpha=1:\ 1/1.4\approx0.7143`,annotation:"10절의 4 cm² 면적에서는 포아송 0.6703과의 차이가 약 4.4%p로 커집니다."}]} terms={[{symbol:"D₀",name:"평균 결함 밀도",description:"가정한 0.1개/cm²입니다."},{symbol:"A_c",name:"임계 면적",description:"8절과 같은 가상 1 cm²입니다."},{symbol:"α",name:"군집 매개변수",description:"작을수록 결함이 일부 다이에 몰립니다. α→∞이면 포아송과 같습니다."},{symbol:"Y",name:"결함 0개 확률",description:"뭉침을 반영한 결함 모형상 수율이며 사양 탈락은 포함하지 않습니다."}]} assumptions={["α=1·α=5는 비교를 위한 가정이며 실제 공정의 α는 실측으로 정합니다.","임계 면적에 결함 하나가 생기면 고장이라는 8절의 가정은 그대로 둡니다."]} interpretation="λ=0.1에서는 포아송 90.48%, α=5 90.57%, α=1 90.91%로 차이가 작지만, λ=0.4에서는 포아송 67.03%와 α=1 71.43%로 벌어집니다. 다이가 크거나 결함이 많을수록 뭉침을 무시한 포아송 식이 수율을 더 낮게 추정합니다." /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
    <p className="leading-7">이제 회로가 만들어지고 시험을 거친 뒤, 칩을 쓰는 사람의 입장에서 안쪽을 제어하는 법을 볼 차례입니다. 다음 임베디드 글은 메모리 주소로 주변 장치의 레지스터를 읽고 쓰는 한 동작에서 시작합니다.</p>

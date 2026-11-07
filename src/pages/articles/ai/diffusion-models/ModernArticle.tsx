@@ -12,6 +12,14 @@ import {
   LearningTerm,
 } from "../diffusion-shared";
 import DiffusionTrainingViz from "./DiffusionTrainingViz";
+import BackboneContractViz from "./viz/BackboneContractViz";
+import ClosedFormScaleViz from "./viz/ClosedFormScaleViz";
+import CumulativeScheduleViz from "./viz/CumulativeScheduleViz";
+import ElboChainViz from "./viz/ElboChainViz";
+import EmaTrackViz from "./viz/EmaTrackViz";
+import NoiseReparamViz from "./viz/NoiseReparamViz";
+import ScheduleShapeViz from "./viz/ScheduleShapeViz";
+import ScoreArrowViz from "./viz/ScoreArrowViz";
 import {
   DiffusionLearningLocator,
   DiffusionLearningMapReturn,
@@ -106,6 +114,7 @@ x_t&=\underbrace{s_t+n_t}_{\text{두 contribution을 합성}}
           kicker="여러 step을 한 식으로 접기"
           title="Cumulative schedule은 임의 noise level을 한 번에 만든다"
         />
+        <CumulativeScheduleViz />
         <LearningTerm
           name="Cumulative noise schedule"
           shape="αₜ=1−βₜ · ᾱₜ=∏ₛ₌₁ᵗαₛ"
@@ -113,6 +122,7 @@ x_t&=\underbrace{s_t+n_t}_{\text{두 contribution을 합성}}
           example="β₁=0.1, β₂=0.2면 ᾱ₂=0.9×0.8=0.72이고 noise variance는 0.28입니다."
           boundary="Gaussian family가 합성에 닫혀 있기 때문에 가능한 closed form입니다. 임의의 corruption에서 같은 식이 나오지 않습니다."
         />
+        <ClosedFormScaleViz />
         <ExplainedFormula
           question="왜 α를 여러 번 곱하고, 마지막 noise scale에는 √(1−ᾱₜ)를 쓸까요?"
           idea="매 step 남는 signal variance 비율을 모두 곱하면 원본이 남긴 총 variance가 됩니다. 전체 unit variance에서 그 몫을 빼면 누적 noise variance가 됩니다."
@@ -164,6 +174,7 @@ x_t&=\underbrace{s_t+n_t}_{\text{두 항을 합성}}
           ]}
           interpretation="ᾱₜ=0.64이면 signal scale은 0.8, noise scale은 0.6입니다. x₀=2, ε=−1이면 xₜ=1.0입니다."
         />
+        <ScheduleShapeViz />
         <LearningTerm
           name="Schedule 모양 선택 - linear vs cosine"
           shape="linear: beta_t가 t에 비례해 균등 증가 / cosine: 누적 signal이 cos^2 곡선을 따름"
@@ -186,6 +197,7 @@ x_t&=\underbrace{s_t+n_t}_{\text{두 항을 합성}}
           example="ε̂를 얻으면 x̂₀=(xₜ−σₜε̂)/αₜ로 바꿀 수 있지만 αₜ가 작으면 prediction error도 1/αₜ만큼 증폭됩니다."
           boundary="두 target이 algebraically convertible해도 finite precision, weighting, network capacity에서 같은 학습 문제가 되지는 않습니다."
         />
+        <BackboneContractViz />
         <LearningTerm
           name="Diffusion backbone contract"
           shape="(noisy tensor, time, optional condition) → same-shaped target"
@@ -259,6 +271,7 @@ e&=\underbrace{\lVert r\rVert_2^2}_{\text{residual square magnitude}}\\
           mean-matching 문제로 바꾼 뒤 model이 mean 대신 noise를 예측하도록
           reparameterize한 결과가 바로 <code>L_ε</code>입니다.
         </p>
+        <ElboChainViz />
         <ExplainedFormula
           question="log p_θ(x₀)를 직접 최적화하지 못하면 어떤 대안을 쓰나요?"
           idea="고정된 forward q를 importance distribution으로 써서 log p_θ(x₀)의 lower bound를 만듭니다. Bayes rule로 q(xₜ|x_{t-1})을 q(x_{t-1}|xₜ,x₀)로 바꿔치면 곱이 telescoping되어 T개의 독립 항으로 쪼개집니다."
@@ -322,6 +335,7 @@ L_0&=\underbrace{-\log p_\theta(x_0\mid x_1)}_{\text{마지막 discrete reconstr
           example="μ̃ₜ = (√ᾱ_{t-1}βₜ)/(1−ᾱₜ)·x₀ + (√αₜ(1−ᾱ_{t-1}))/(1−ᾱₜ)·xₜ, β̃ₜ = (1−ᾱ_{t-1})/(1−ᾱₜ)·βₜ"
           boundary="이 닫힌 형태는 forward process가 정확히 Gaussian Markov chain일 때만 성립합니다."
         />
+        <NoiseReparamViz />
         <ExplainedFormula
           question="왜 model이 mean μ_θ 대신 noise ε_θ를 예측하도록 바꿔 쓰나요?"
           idea="q(x_{t-1}|xₜ,x₀)와 p_θ(x_{t-1}|xₜ)를 같은 분산의 Gaussian으로 두면 KL은 평균 차이의 제곱과 같습니다. Closed-form posterior mean을 xₜ와 ε만의 식으로 바꾸고 model도 같은 형태로 재구성하면, 남는 항이 정확히 noise-prediction squared error입니다."
@@ -385,6 +399,7 @@ L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rV
           식을 그대로 코드로 옮긴 것입니다 — 위에서 이미 정의한 기호(x₀,
           ᾱₜ, ε, ε_θ) 그대로 씁니다.
         </p>
+        <EmaTrackViz />
         <AlgorithmBlock
           title="Training — 한 gradient step (수렴할 때까지 반복)"
           input={["x₀ ~ 학습 데이터", "T, {β₁,…,β_T} (고정 noise schedule)"]}
@@ -458,6 +473,7 @@ L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rV
           kicker="Noise prediction을 방향장으로 읽기"
           title="Gaussian score는 현재 point를 conditional center 쪽으로 가리킨다"
         />
+        <ScoreArrowViz />
         <LearningTerm
           name="Gaussian noise–score identity"
           shape="conditional score = −ε / noise standard deviation"

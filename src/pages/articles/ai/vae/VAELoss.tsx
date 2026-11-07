@@ -1,4 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ElboGapViz from "./viz/ElboGapViz";
+import KlShapeViz from "./viz/KlShapeViz";
+import ReconScaleViz from "./viz/ReconScaleViz";
 
 export default function VAELoss() {
   return (
@@ -21,6 +24,7 @@ export default function VAELoss() {
           scaled MSE 형태가 되고, Bernoulli likelihood에서는 binary cross-entropy
           형태가 된다.
         </p>
+        <ReconScaleViz />
         <p>
           Sum과 mean reduction, image dimension, variance 설정에 따라 KL과의
           상대 scale도 달라집니다. 따라서 서로 다른 구현에서 나온 숫자를 그대로
@@ -77,6 +81,8 @@ export default function VAELoss() {
         </p>
       </div>
 
+      <ElboGapViz />
+
       <ExplainedFormula
         question="계산하기 어려운 log evidence를 어떤 objective로 낮춰 학습할까?"
         idea={<>approximate posterior q를 도입해 Jensen inequality를 적용하면, decoder의 data fit과 posterior–prior KL로 계산 가능한 lower bound가 나옵니다.</>}
@@ -109,6 +115,8 @@ export default function VAELoss() {
         assumptions={["qφ의 support가 posterior 계산에 필요한 영역을 덮고 Jensen inequality를 적용합니다.", "training code가 loss를 최소화한다면 보통 −ELBO를 구현합니다."]}
         interpretation="ELBO와 log evidence의 차이는 KL(qφ(z|x)‖pθ(z|x))입니다. 따라서 encoder family가 true posterior를 잘 근사할수록 bound가 tight해집니다."
       />
+      <KlShapeViz />
+
       <ExplainedFormula
         question="standard normal prior와 diagonal Gaussian posterior의 KL을 sampling 없이 어떻게 계산할까?"
         idea={<>두 Gaussian의 KL 공식을 dimension별로 적용하면 mean displacement, variance와 log-volume 차이의 합으로 정리됩니다.</>}

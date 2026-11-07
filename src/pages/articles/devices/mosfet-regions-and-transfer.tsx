@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MosfetRegionsViz from "./mosfet-regions-and-transfer/viz/MosfetRegionsViz";
+import MosfetStructureViz from "./mosfet-regions-and-transfer/viz/MosfetStructureViz";
+import ChannelProfileViz from "./mosfet-regions-and-transfer/viz/ChannelProfileViz";
+import ChargeAreaCurrentViz from "./mosfet-regions-and-transfer/viz/ChargeAreaCurrentViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -43,7 +46,7 @@ return <div className="space-y-16">
 
 <section id="terminals" data-teach-level="3" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">6. 조절·공급·수집·바탕의 역할에 이름을 붙입니다</h2>
-<div className="overflow-x-auto"><table className="w-full min-w-[320px] text-left text-sm"><thead><tr><th className="p-3">먼저 본 역할</th><th className="p-3">이름</th><th className="p-3">이 사례의 연결</th></tr></thead><tbody><tr><td className="p-3">절연층 너머 표면 전하를 조절</td><td className="p-3">게이트</td><td className="p-3">1.5 V</td></tr><tr><td className="p-3">전자를 공급하는 끝</td><td className="p-3">소스</td><td className="p-3">0 V</td></tr><tr><td className="p-3">전자를 받아들이는 끝</td><td className="p-3">드레인</td><td className="p-3">0.2→1.0→1.5 V</td></tr><tr><td className="p-3">표면 아래의 실리콘 바탕</td><td className="p-3">바디</td><td className="p-3">소스와 같은 0 V</td></tr></tbody></table></div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">p형 실리콘 표면의 양쪽에 전자가 많은 n형 영역을 만듭니다. 표의 소스와 드레인이 그 영역에 연결됩니다. 위쪽 게이트는 절연층을 사이에 두므로 전자를 직접 통과시키는 공급 단자가 아닙니다.</p><p className="leading-7">이 조건에서 전자는 소스에서 드레인으로 이동합니다. 양의 관습 전류는 그 반대 방향인 드레인에서 소스로 셉니다. 이 글의 양수 드레인 전류는 그 관습을 따릅니다. 바디가 다른 전위에 있으면 표면 전하가 생기는 기준도 바뀔 수 있으므로 연결 조건을 명시했습니다.</p></div>
+<div className="overflow-x-auto"><table className="w-full min-w-[320px] text-left text-sm"><thead><tr><th className="p-3">먼저 본 역할</th><th className="p-3">이름</th><th className="p-3">이 사례의 연결</th></tr></thead><tbody><tr><td className="p-3">절연층 너머 표면 전하를 조절</td><td className="p-3">게이트</td><td className="p-3">1.5 V</td></tr><tr><td className="p-3">전자를 공급하는 끝</td><td className="p-3">소스</td><td className="p-3">0 V</td></tr><tr><td className="p-3">전자를 받아들이는 끝</td><td className="p-3">드레인</td><td className="p-3">0.2→1.0→1.5 V</td></tr><tr><td className="p-3">표면 아래의 실리콘 바탕</td><td className="p-3">바디</td><td className="p-3">소스와 같은 0 V</td></tr></tbody></table></div><MosfetStructureViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">p형 실리콘 표면의 양쪽에 전자가 많은 n형 영역을 만듭니다. 표의 소스와 드레인이 그 영역에 연결됩니다. 위쪽 게이트는 절연층을 사이에 두므로 전자를 직접 통과시키는 공급 단자가 아닙니다.</p><p className="leading-7">이 조건에서 전자는 소스에서 드레인으로 이동합니다. 양의 관습 전류는 그 반대 방향인 드레인에서 소스로 셉니다. 이 글의 양수 드레인 전류는 그 관습을 따릅니다. 바디가 다른 전위에 있으면 표면 전하가 생기는 기준도 바뀔 수 있으므로 연결 조건을 명시했습니다.</p></div>
 </section>
 
 <section id="channel" data-teach-level="4" className="scroll-mt-20">
@@ -56,6 +59,9 @@ return <div className="space-y-16">
             높은지를 <strong>여분 전압</strong>으로 부르겠습니다. 예제의
             1.5 V에서 0.5 V를 빼면 여분 전압은 1.0 V입니다.
           </p>
+        </div>
+        <ChannelProfileViz />
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             채널은 어디서나 같은 두께의 전자 층이 아닙니다. 소스 쪽을
             0 V로 두면 그곳에는 여분 전압 1.0 V가 온전히 걸립니다.
@@ -118,6 +124,9 @@ return <div className="space-y-16">
             여기의 C′<sub>ox</sub>와 단위가 다릅니다. 이 글은 k 전체를
             1 mA/V²로 <strong>가정</strong>합니다.
           </p>
+        </div>
+        <ChargeAreaCurrentViz />
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             조금 더 펼치면, 소스에서 거리 y만큼 간 자리의 전위 V(y)는
             0에서 시작해 드레인에서 V<sub>DS</sub>가 됩니다. 그 자리의

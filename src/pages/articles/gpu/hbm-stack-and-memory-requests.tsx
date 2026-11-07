@@ -6,6 +6,12 @@ import SourceApplication from "@/pages/articles/world-systems/SourceApplication"
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs, fileTrees } from "@/pages/articles/gpu/gpu-execution-sources/codeRefs";
 import HbmPhysicalViz from "./gpu-execution-sources/HbmPhysicalViz";
+import SectorCellsViz from "./hbm-stack-and-memory-requests/viz/SectorCellsViz";
+import RowStateViz from "./hbm-stack-and-memory-requests/viz/RowStateViz";
+import WidthRateViz from "./hbm-stack-and-memory-requests/viz/WidthRateViz";
+import FlowVsFirstValueViz from "./hbm-stack-and-memory-requests/viz/FlowVsFirstValueViz";
+import LayersWidthViz from "./hbm-stack-and-memory-requests/viz/LayersWidthViz";
+import PointerChaseViz from "./hbm-stack-and-memory-requests/viz/PointerChaseViz";
 
 /** teach-system S→B→0…7. Same 64-element trace; official source snapshots pinned. */
 export default function Article() {
@@ -32,6 +38,9 @@ export default function Article() {
       <h2 className="mb-6 text-2xl font-bold">3 · 유효 128바이트를 읽어도 필요한 조각은 4개 또는 32개입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">4바이트 원소 64개를 갖는 배열 두 개를 더합니다(가정). 두 입력 512바이트와 출력 256바이트, 덧셈 64번이 기준입니다. 그중 32개 작업이 입력 하나를 읽는 순간만 확대합니다.</p>
+      </div>
+      <SectorCellsViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">NVIDIA의 32바이트 요청 조각 규칙을 적용하고 시작 주소가 128바이트에 정렬됐다고 놓습니다. 32개가 연속 원소를 읽으면 128바이트가 4 조각에 들어갑니다. 각 작업의 원소 번호가 8씩 증가하면 주소 간격은 32바이트여서 32 조각에 걸립니다. 유효한 값은 둘 다 128바이트입니다. 뒤 사례는 최소 249개 원소가 들어 있는 넓은 입력에서 32개를 고르는 변형이며 64개 배열 밖을 읽으라는 뜻이 아닙니다.</p>
       </div>
       <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">4개와 32개는 같은 128바이트를 요청하는 두 방식입니다. 이제 저장 장치의 실제 형태를 봅니다.</p>
@@ -75,6 +84,7 @@ export default function Article() {
     </section>
     <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">7 · 요청을 합친 뒤에도 행을 열고 기다리는 동작이 남습니다</h2>
+      <RowStateViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">앞의 64개 덧셈은 유효 512바이트를 읽고 256바이트를 씁니다. 먼저 작업별 주소가 모이고 cache를 조회합니다. Cache에서 찾지 못한 요청은 메모리 제어기로 내려갑니다. 제어기는 실제 주소를 해석해 해당 channel과 bank의 대기열에 넣습니다.</p>
         <p className="leading-8">필요한 행이 이미 열려 있으면 그 행의 열을 읽을 수 있습니다. 다른 행이 열렸다면 기존 행을 닫는 precharge와 새 행을 여는 activate가 필요합니다. 읽기 명령 뒤 데이터가 통로를 지나 돌아옵니다. Refresh가 필요한 구역은 정해진 타이밍을 지켜야 합니다. 다른 bank의 작업과 겹칠 수 있는 정도는 제품과 controller에 달려 있습니다.</p>
@@ -86,10 +96,14 @@ export default function Article() {
     </section>
     <section id="source" data-calculation-explained data-teach-level="5" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">8 · HBM3의 1024비트 폭에 가정한 속도를 곱합니다</h2>
+      <WidthRateViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Synopsys의 HBM3 PHY 설명은 16개의 64비트 channel과 32개의 32비트 pseudo-channel을 제시합니다. 두 표현 모두 총 데이터 폭 1024비트입니다. 여기서는 선 하나당 초당 8기가비트를 보낸다고 놓습니다(속도는 계산 가정).</p>
         <p className="leading-8">8Gb/s는 실제 제품 값과 회로 상한 사이에 놓인 가정입니다. AMD CDNA4 백서 11쪽은 MI350 계열에 대해 “The HBM3E memory interfaces operate at 8 Gbps”라고 적으므로 MI355X의 선당 속도는 이 가정과 같습니다. 반면 Synopsys가 공개한 PHY IP는 HBM3를 “data rates up to 9600 Mbps”, 곧 선당 9.6Gb/s까지, HBM4를 선당 12Gb/s까지 지원한다고 적습니다. PHY 상한은 회로가 감당하는 최댓값이며 특정 GPU가 실제로 쓰는 속도가 아닙니다.</p>
         <p className="leading-8">데이터 선 1,024개 × 선마다 8Gb/s = 8,192Gb/s이고, 1바이트가 8비트이므로 8로 나누면 1,024GB/s입니다. 곧 스택 하나의 이론상 대역폭은 1.024TB/s입니다. 8개 스택을 같은 조건으로 동시에 쓰면 8.192TB/s가 됩니다. 이것은 신호 데이터 폭으로 구한 상한입니다. Refresh·명령 대기·읽기 쓰기 전환·접근 불균형을 차감한 측정값은 아닙니다.</p>
+      </div>
+      <FlowVsFirstValueViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">64개 덧셈의 768바이트를 1.024TB/s로 나누면 0.75ns입니다. 이 값은 데이터가 통로를 가득 채워 흐르는 정상 상태의 물량 비율입니다. 한 kernel이나 첫 응답이 0.75ns에 끝난다는 예측은 아닙니다. 요청과 주소 해석, 행 동작, 돌아오는 대기가 별도로 있습니다.</p>
       </div>
       <SourceApplication source="Synopsys HBM3 PHY ·interface features" excerpt="16 independent 64-bit memory channels" application="16×64 = 1024비트. 가정한 8Gb/s/pin을 곱하고 8로 나누면 스택당 1.024TB/s입니다. 유효 768바이트를 나눈 0.75ns를 응답 지연으로 오해하지 않습니다." /><CitationBlock source="Synopsys HBM3 PHY ·interface features" citeKey={1} href="https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-phy.html">Synopsys HBM3 PHY ·interface features</CitationBlock>
@@ -110,6 +124,8 @@ export default function Article() {
     </section>
     <section id="limits" data-teach-level="7" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">10 · 메모리 사양은 서로 다른 단위로 읽어야 합니다</h2>
+      <LayersWidthViz />
+      <PointerChaseViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">층 수가 늘어나는 것은 주로 용량과 패키지 구성의 변화입니다. 외부 폭과 pin 속도가 유지되면 층 수에 비례해 대역폭이 늘지 않습니다. 작은 pointer chasing처럼 다음 주소가 직전 값에 의존하는 작업은 넓은 통로를 채우지 못하고 지연에 묶일 수 있습니다.</p>
         <p className="leading-8">HBM4의 2048비트 구조에 HBM3의 1024비트·16 channels를 그대로 복사하지 않습니다. 공개 표준·PHY 지원과 메모리 제품 생산, GPU 제품 출하는 서로 다른 확인 사항입니다. 실제 부품 선택에는 제조사 part number와 revision, 지원 controller를 함께 기록합니다.</p>

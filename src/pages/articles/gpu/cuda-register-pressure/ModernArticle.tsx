@@ -11,6 +11,15 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
 import AllocationPackingViz, { RegisterOccupancyCurve } from "./viz/AllocationPackingViz";
 import TailOccupancyViz from "./viz/TailOccupancyViz";
+import ReservationRoundingViz from "./viz/ReservationRoundingViz";
+import ExecutionNestingViz from "./viz/ExecutionNestingViz";
+import ZoneRemainderViz from "./viz/ZoneRemainderViz";
+import ValueReuseViz from "./viz/ValueReuseViz";
+import OccupancyStatesViz from "./viz/OccupancyStatesViz";
+import TimeAverageViz from "./viz/TimeAverageViz";
+import SlotVsWarpDenominatorViz from "./viz/SlotVsWarpDenominatorViz";
+import SpillHierarchyViz from "./viz/SpillHierarchyViz";
+import SharedSpillBranchViz from "./viz/SharedSpillBranchViz";
 import { codeRefs, fileTrees } from "./codeRefs";
 const PRACTICES="https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html#calculating-occupancy";
 const GUIDE="https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html";
@@ -31,7 +40,7 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
             때문입니다.
           </p>
 </div><NumericPath title="함께 배치할 수 있는 일을 구하는 과정" steps={[{label:"필요한 칸",value:"한 사람의 보존할 값"},{label:"예약",value:"정해진 단위로 묶음 확보"},{label:"입장 가능",value:"통째로 들어가는 묶음 수"}]}/></section>
-<section id="case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 한 사람당 37칸을 쓰는 같은 일을 128명 또는 320명씩 묶습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">한 작업 구역에 저장칸 65,536개가 있고 한 사람당 37칸을 쓴다고 놓습니다. 32명분을 예약할 때는 37×32=1,184칸이 필요하지만, 공간을 256칸 단위로 내어 주므로 1,280칸을 예약합니다. 96칸은 배정 단위 때문에 남습니다.</p>
+<section id="case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 한 사람당 37칸을 쓰는 같은 일을 128명 또는 320명씩 묶습니다</h2><ReservationRoundingViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">한 작업 구역에 저장칸 65,536개가 있고 한 사람당 37칸을 쓴다고 놓습니다. 32명분을 예약할 때는 37×32=1,184칸이 필요하지만, 공간을 256칸 단위로 내어 주므로 1,280칸을 예약합니다. 96칸은 배정 단위 때문에 남습니다.</p>
 <p className="leading-8">
             같은 일을 128명씩 묶으면 32명분이 4개이고 320명씩 묶으면 10개입니다. 함께 움직이는 한 묶음의 사람을 둘로 나눠 빈 공간에 넣지는 못합니다. 이 숫자는 공식 문서의
             계산 사례이며 실제 프로그램의 속도 측정값은 아닙니다. 정확한 대상과 원문은 8절에서 확인합니다.
@@ -44,6 +53,7 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
 <p className="leading-8">묶음은 함께 쓰는 공간과 서로 기다리는 규칙을 가집니다. 그래서 빈자리 수를 모두 더한 값만으로 입장 여부를 정하지 않습니다. 한 묶음을 함께 놓을 수 있는지가 필요합니다. 이제 저장칸과 작업 묶음을 실제 GPU 용어로 부릅니다.</p>
 </div></section>
 <section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 저장칸과 작업 묶음에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">계산을 따라가는 최소 작업 단위를 thread라고 합니다. NVIDIA GPU는 32개 thread를 warp로 묶고, 여러 warp를 포함하는 block을 한 SM에 배치합니다. SM은 이 작업들을 실행하며 저장 자원을 제공하는 처리 구역입니다.</p>
+<ExecutionNestingViz/>
 <p className="leading-8">
             한 thread의 값을 가까이 보관하는 32-bit 저장칸이 register이고 SM이 제공하는 전체 칸이 register file입니다. 한 값을 만든 뒤 마지막으로 사용할
             때까지 보존해야 하는 구간을 live range라고 합니다. 다음 표에서 앞서 본 역할과 이름을 짝지어 봅니다.
@@ -62,6 +72,7 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
 <ExplainedFormula question="배정 단위가 있는 register 공간에 몇 block이 들어갈까요?" idea="warp 하나의 예약량을 먼저 올림하고, 네 구역별로 들어갈 warp 수를 내림합니다. 마지막에 block당 warp 수로 나눠 통째로 들어가는 block만 셉니다." formula={String.raw`\begin{aligned}A&=256\lceil32R/256\rceil\\W_R&=4\lfloor16384/A\rfloor\\B_R&=\lfloor W_R/\lceil T/32\rceil\rfloor\end{aligned}`} annotatedFormula={String.raw`\begin{aligned}A&=\underbrace{256\lceil32R/256\rceil}_{\text{warp 예약량 올림}}\\[3pt]W_R&=\underbrace{4\lfloor16384/A\rfloor}_{\text{네 구역별 수용량 합}}\\[3pt]B_R&=\underbrace{\lfloor W_R/\lceil T/32\rceil\rfloor}_{\text{온전한 block 수}}\end{aligned}`} operations={[{expression:String.raw`256\lceil32R/256\rceil`,annotation:["32명 요구량을","256칸 단위로 예약"]},{expression:String.raw`4\lfloor16384/A\rfloor`,annotation:["한 구역에서 내린 뒤","네 구역을 합침"]},{expression:String.raw`\lfloor W_R/\lceil T/32\rceil\rfloor`,annotation:["block당 warp 수로 나눠","완전한 묶음만 남김"]}]} terms={[{symbol:"R",name:"thread당 register 수",description:"이 사례는37입니다. 소스 변수 개수 대신 실제 배정 보고의 수를 입력합니다."},{symbol:"A",name:"warp당 예약량",description:"256개 단위로 올린32-bit칸 수입니다."},{symbol:"W_R",name:"register만 본 warp 용량",description:"배정 가능한 최대warp 용량이며 block을 놓은 실제warp 수와 다릅니다."},{symbol:"T",name:"block의 thread 수",description:"128 또는320입니다."},{symbol:"B_R",name:"register만 본 block 수",description:"이 제약만 허용하는 수이며 다른 자원이 더 낮출 수 있습니다."}]} assumptions={["CC7.0의 네 구역·256개 배정 단위를 사용하는 설명 모형입니다.","Block/thread 최대치, block당 register 검사, shared memory 등 나머지 launch 조건은 별도입니다."]} interpretation="37개에서A=1280,W_R=48입니다. T=128이면B_R=12,T=320이면B_R=4입니다. 범용GPU occupancy API의 전체 구현을 대체하지 않습니다."/>
 <AlgorithmBlock title="자원 제약을 순서대로 계산하는 의사코드" input={["대상GPU 속성·컴파일된 함수의 사용량","T threads/block과 동적shared memory"]} steps={[{code:"launch 제한을 검사하고 대상의 배정 단위를 적용한다",note:"Thread/block/register 한도를 넘는 설정은 실행할 수 없습니다."},{code:"각 자원이 허용하는 block 수를 계산한다",note:"Register·shared memory·warp·block 한도를 같은block 단위로 바꿉니다. 대상에 따라 추가 제한도 있습니다."},{code:"B = 모든 block 한도의 최솟값",note:"하나의 자원이라도 먼저 부족하면 그 수까지만 놓습니다."},{code:"W = B × ceil(T / warpSize)",note:"대상의 최대warp 수로 나눠 theoretical occupancy를 구합니다."}]} output="배치 가능한 상한. 실제 시간은 별도로 측정합니다."/>
 <RegisterOccupancyCurve/>
+<ZoneRemainderViz/>
 <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             64 registers/thread는 warp당 2048개라 32 warps, 128개는 4096개라 16 warps의 단순 register 상한입니다. 96개는 warp당
             3072개이고 구역별 5개씩 총 20 warps입니다. 이를 256-thread block의 8 warps씩 묶으면 2 blocks·16 warps, 25%가 됩니다. 반올림을
@@ -71,16 +82,19 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
             실제 물리 register 수를 변수 선언문에서 그대로 세기는 어렵습니다. 값을 다 읽었다면 같은 칸에 다음 값을 놓을 수 있고 상수나 짧은 계산은 보관 대신 다시 계산할 수도
             있습니다. 앞의 선택은 레지스터 재사용(register reuse)입니다. 뒤의 선택은 재계산(rematerialization)입니다.
           </p>
+<ValueReuseViz/>
 <p className="leading-8">예를 들어 x=7에서 a=x+1=8, y=2a=16을 차례로 계산하고 x를 다시 쓰지 않는다고 가정합니다. 설명용 값 배치에서는 x의 마지막 사용 뒤 그 칸을 a에 줄 수 있습니다. 이와 달리 마지막에 a+x를 구하려면 x=7을 계속 보존해야 합니다. 실제 명령 선택과 인자·주소 register까지 포함한 배정 수는 대상 컴파일 결과로 확인합니다.</p>
 <p className="leading-8">base+i×stride 주소를 다시 만드는 선택도 입력들이 아직 남아 있어야 가능합니다. 재계산은 추가 명령과 의존을 만들므로 무조건 싸지 않습니다. 부동소수점 계산을 옮기거나 합치는 최적화는 반올림과 프로그램 의미의 제약도 지켜야 합니다.</p>
 <p className="leading-8">Kernel 여러 개를 합치면 중간 메모리 왕복을 줄일 수 있지만, 앞 결과를 뒤 계산까지 보존하며 다른 중간값과 구간이 겹칠 수 있습니다. 각 kernel의 register 수를 더하거나 최댓값만 취해 합친 kernel의 배정을 정할 수는 없습니다. <Link to="/cs/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations">컴파일과 실제 명령의 대응</Link>에서 그 결과를 읽는 방법을 이어 봅니다.</p>
 </div></section>
-<section id="residency" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 배치 가능한 상한과 실제 활동량을 구별합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">자원 한도로 계산한 최대 배치 비율이 theoretical occupancy입니다. 실행 중에는 실제로 남아 있는 active warp 수를 같은 하드웨어 최대치와 비교해 achieved occupancy를 관측합니다. 수집 구간과 cycle 분모는 profiler metric 정의를 따라야 합니다.</p>
+<section id="residency" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 배치 가능한 상한과 실제 활동량을 구별합니다</h2><OccupancyStatesViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">자원 한도로 계산한 최대 배치 비율이 theoretical occupancy입니다. 실행 중에는 실제로 남아 있는 active warp 수를 같은 하드웨어 최대치와 비교해 achieved occupancy를 관측합니다. 수집 구간과 cycle 분모는 profiler metric 정의를 따라야 합니다.</p>
 <p className="leading-8">배치된 warp가 있어도 다음 입력을 기다리면 명령을 내지 못합니다. 따라서 active warp와 지금 명령을 낼 수 있는 eligible warp는 다릅니다. <Link to="/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard">명령 발행 글의 준비 조건</Link>을 함께 보면 높은 occupancy인데도 발행이 비는 상황을 설명할 수 있습니다.</p>
 <p className="leading-8">낮은 theoretical 값은 가능한 배치 수를 제한하지만 언제나 고쳐야 하는 결함은 아닙니다. 값의 재사용이나 독립된 계산이 충분한 kernel은 낮은 occupancy에서도 필요한 처리율을 얻을 수 있습니다. 조정의 목적은 주어진 일을 더 빨리 끝내는 것입니다.</p>
 </div></section>
 <section id="occupancy-wave" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 마지막 일감이 적으면 자리가 남아도 채울 수 없습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">앞의 96 registers/thread·256-thread block 설정은 한 SM에 block 2개, warp 16개를 허용합니다. 이 설정을 SM 4개에 적용하고 block 10개가 같은 시간 동안 일한다고 가정합니다. 첫 회차에는 8개, 다음 회차에는 남은 2개를 배치합니다(가정).</p>
+<TimeAverageViz/>
 <p className="leading-8">하드웨어 분모는 4×64=256 warps입니다. 첫 회차의 64 warps는 25%, 다음의 16 warps는 6.25%입니다. 두 회차의 시간이 같고 모든 SM을 전체 경과 시간으로 평균 내면 (25+6.25)/2=15.625%입니다. 이를 특정 Nsight metric의 출력값이라고 부르지는 않습니다. SM이 활동한 cycle만 분모로 삼으면 비어 있는 시간의 취급이 달라집니다.</p>
+<SlotVsWarpDenominatorViz/>
 <p className="leading-8">
             원래의 큰 예도 같은 방식입니다. 132 SM에 2 blocks씩이면 264개 자리이고 grid 300 blocks는 두 번째에 36개를 남깁니다. 36/264=13.636%는
             그 회차의 block 자리 이용률입니다. 그것만으로 하드웨어 최대 warp 대비 occupancy가 13.636%라고 할 수는 없습니다.
@@ -92,6 +106,7 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
             저장하지만 실제 저장 공간은 device memory에 있습니다. 이름의 local은 thread의 주소 범위를 가리킵니다.
           </p>
 <p className="leading-8">각 thread가 반복마다 4-byte 값 하나를 정확히 한 번 저장하고 한 번 읽는다고 가정합니다. 2²⁰ threads가 1,000번 반복하면 한 방향의 요청량은 1,048,576 thread × thread마다 1,000회 × 회마다 4바이트 = 4,194,304,000바이트입니다. 저장과 읽기 두 방향을 합치면 8,388,608,000바이트입니다. 8.388608 GB 또는 7.8125 GiB입니다(가정).</p>
+<SpillHierarchyViz/>
 <p className="leading-8">이 합은 실행한 local 읽기·쓰기의 논리 byte입니다. L1에서 처리한 접근도 명령과 내부 대역폭을 쓰지만 모든 byte가 DRAM으로 내려가지는 않습니다. L1 miss가 L2에서 처리될 수도 있습니다. 실제 전송량은 메모리 계층별로 따로 확인합니다.</p>
 <p className="leading-8">가령 양방향 8.388608 GB가 모두 DRAM을 통과하고 그 전송에 유효 3 TB/s를 얻는다고 추가 가정하면 전송량÷대역폭은 약 2.7962 ms입니다. 다른 계산과 겹치거나 실제 전송량·대역폭이 달라질 수 있으므로 kernel에 그 시간만큼 추가된다는 보장은 없습니다.</p>
 <p className="leading-8">
@@ -103,6 +118,7 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
             CUDA 13은 opt-in으로 spill을 shared memory에 먼저 놓는 경로를 추가했습니다. 가까운 공간을 활용하면 local 경로의 비용을 줄일 기회가 생기지만
             block당 shared memory 사용량이 늘어 다른 block의 입장을 막을 수 있습니다.
           </p>
+<SharedSpillBranchViz/>
 <p className="leading-8">고정한 PTX ISA 9.0 §12.3의 지시문은 .pragma "enable_smem_spilling";입니다. shared 공간이 부족하면 남은 spill은 local 경로로 갑니다. 따라서 local spill 보고가 0이어도 모든 값이 register에 있다는 뜻은 아닙니다.</p>
 <p className="leading-8">이 버전의 대상 조건은 sm_75 이상입니다. 앞서 계산한 CC 7.0 사례에는 이 기능을 그대로 켤 수 없습니다. 함수별 분리 컴파일, device debug, 재귀가 있는 해당 모드, 동적 shared memory, setmaxnreg 사용에는 제한이 있습니다. Launch bounds는 공간 추정을 위해 권장되며 문법상의 필수 입력이라고 바꾸어 말하지 않습니다.</p>
 <p className="leading-8">예를 들어 지원 대상에서 비어 있던 shared 공간을 spill에 쓰는 선택을 검토한다면 새 shared 사용량으로 occupancy를 다시 계산해야 합니다. local 전송이 줄어든 이득과 동시 배치가 줄어든 비용을 실제 실행 시간으로 비교합니다.</p>

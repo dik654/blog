@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import VoteBranchViz from "./viz/VoteBranchViz";
 
 export default function RoundState({
   onCodeRef,
@@ -22,6 +23,7 @@ export default function RoundState({
           <CodeViewButton label="enterNewRound()" onClick={() => onCodeRef("enter-new-round", codeRefs["enter-new-round"])} />
           <CodeViewButton label="defaultDoPrevote()" onClick={() => onCodeRef("enter-prevote", codeRefs["enter-prevote"])} />
         </div>
+        <VoteBranchViz />
         <h3>Round 1에서 B41을 받아도 먼저 검증한 뒤 prevote합니다</h3>
         <p>
           B가 B41을 제안하면 consensus의 <code>ValidateBlock</code>과 application의 <code>ProcessProposal</code>을 모두 통과해야

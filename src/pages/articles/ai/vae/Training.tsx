@@ -3,6 +3,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import CollapseCheckViz from "./viz/CollapseCheckViz";
+import IwaeLadderViz from "./viz/IwaeLadderViz";
 
 const loop = [
   ["Forward", "μ·log σ² → z sample → decoder likelihood parameter"],
@@ -100,6 +102,7 @@ export default function Training({
           KL warm-up과 free bits, decoder capacity 조절은 collapse를 완화할 수 있습니다. 각 방법이 ELBO와 representation에 주는
           trade-off는 따로 validation합니다.
         </p>
+        <CollapseCheckViz />
         <p>
           예를 들어 두 latent dimension의 KL이 <code>(0.40, 0.30)</code>인
           checkpoint A와 <code>(0.001, 0.002)</code>인 checkpoint B를 비교해
@@ -165,6 +168,7 @@ export default function Training({
           estimator이고, concave한 log에 Jensen inequality를 적용하면 그 평균의
           log 기대값이 <code>log pθ(x)</code>보다 작거나 같아집니다.
         </p>
+        <IwaeLadderViz />
         <p>
           K=1에서는
           바로 ELBO가 되지만, q가 posterior의 어떤 영역에 probability 0을 두면

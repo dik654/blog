@@ -5,8 +5,12 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CollapseFactorViz from "./information-asymmetry/viz/CollapseFactorViz";
+import DeductibleCrossViz from "./information-asymmetry/viz/DeductibleCrossViz";
 import LemonsViz from "./information-asymmetry/viz/LemonsViz";
 import SignalCostViz from "./information-asymmetry/viz/SignalCostViz";
+import SignalThresholdViz from "./information-asymmetry/viz/SignalThresholdViz";
+import UnravelCrossViz from "./information-asymmetry/viz/UnravelCrossViz";
 
 /**
  * 한쪽만 아는 것이 있으면 값이 평균을 말합니다
@@ -134,7 +138,11 @@ export default function InformationAsymmetryArticle() {
             값 아래로 치는 사람만 내놓습니다. 그러니 부른 값이 나오는 차의
             범위를 정합니다.
           </p>
+        </div>
 
+        <UnravelCrossViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             값 2를 부르면 첫째 차만 나오고 그 차의 값어치는 3입니다. 3이 2보다
             크니 산 쪽은 냅니다. 값 6을 부르면 세 대가 나오고 평균이 6이라
@@ -221,6 +229,8 @@ export default function InformationAsymmetryArticle() {
           ]}
           interpretation="판 쪽의 값이 2, 4, 6, 8, 10, 12이고 산 쪽이 1.5배로 친다고 하겠습니다. 값 2에서는 한 대가 나와 평균이 3이고, 값 6에서는 세 대가 나와 평균이 6이라 아직 맞습니다. 값 8에서는 네 대가 나오는데 평균이 7.5라 값에 못 미칩니다. 그래서 값이 6에서 멈춰 세 대만 거래되고, 나오지 않은 세 대에서 4, 5, 6을 더한 15가 사라집니다. 여기서 읽어야 할 것은 사라진 쪽이 좋은 쪽이라는 점입니다. 값이 평균에 붙으면 평균보다 나은 것은 언제나 손해를 보고 물러납니다. 읽으면 안 되는 것은 이런 시장이 반드시 통째로 무너진다는 결론입니다. 논문의 연속형 예에서는 아무것도 거래되지 않지만 그것은 가장 나쁜 물건의 값이 0까지 내려가 있기 때문이고, 여기처럼 바닥이 2에서 끊기면 절반이 남습니다."
         />
+
+        <CollapseFactorViz />
 
         <TermBreakdown
           title="얼마나 무너지는지는 두 숫자가 정합니다"
@@ -330,6 +340,8 @@ export default function InformationAsymmetryArticle() {
           비용으로 나눈 값이 못하는 쪽의 비율보다 작아야 한다는 것입니다.
         </CitationBlock>
 
+        <SignalThresholdViz />
+
         <AlgorithmBlock
           title="가려내는 장치가 서는지 확인하는 절차"
           input={[
@@ -378,7 +390,11 @@ export default function InformationAsymmetryArticle() {
             숫자로 두겠습니다. 손해가 100이고, 주의하면 사고 확률이 0.1, 주의를
             안 하면 0.3입니다. 주의하는 데 10이 듭니다.
           </p>
+        </div>
 
+        <DeductibleCrossViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             보험이 없으면 계산이 간단합니다. 주의하면 기대 손해 10에 주의 비용
             10을 더해 20이고, 안 하면 30입니다. <strong>주의합니다.</strong>

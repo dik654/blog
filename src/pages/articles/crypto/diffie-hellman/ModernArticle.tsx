@@ -5,6 +5,12 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import DHFlowViz from "./viz/DHFlowViz";
+import DirectionKeysViz from "./viz/DirectionKeysViz";
+import MitmSplitViz from "./viz/MitmSplitViz";
+import RepeatMultiplyViz from "./viz/RepeatMultiplyViz";
+import SecretLifetimeViz from "./viz/SecretLifetimeViz";
+import SwapOrderViz from "./viz/SwapOrderViz";
+import ThreeProblemsViz from "./viz/ThreeProblemsViz";
 
 export default function ModernDH() { return <article className="space-y-14">
  <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 처음 만난 두 컴퓨터가 같은 비밀을 가지려면</h2>
@@ -19,6 +25,7 @@ export default function ModernDH() { return <article className="space-y-14">
   <p>관찰자는 규칙과 양쪽 공개값을 모두 봅니다. 하지만 각자 숨긴 수를 모릅니다. 비밀이 어디에 있는지부터 구별해야 공개값을 숨기는 일과 계산 규칙을 비밀로 만드는 일을 혼동하지 않습니다.</p>
  </section>
  <section id="case" data-teach-level="0" className="space-y-5"><h2 className="text-2xl font-bold">3. 8과 19를 교환해 양쪽에서 2를 얻습니다</h2>
+  <RepeatMultiplyViz />
   <p>
             설명용으로 5를 반복해서 곱한 뒤 23으로 나눈 나머지를 쓰겠습니다(가정). Alice는 6번 곱해 공개값 8을 만들고 Bob은 15번 곱해 19를 만듭니다. 예를 들어
             5²=25의 나머지는 2이고 5⁴의 나머지는 4이므로 5⁶의 나머지는 4×2=8입니다.
@@ -36,12 +43,13 @@ export default function ModernDH() { return <article className="space-y-14">
  <section id="names" data-teach-level="3" className="space-y-5"><h2 className="text-2xl font-bold">6. 공개값·공유값·인증에 이름을 붙입니다</h2>
   <p>반복 계산을 시작하는 5를 생성원 g, 숨긴 6·15를 비밀 지수 a·b, 공개한 8·19를 A·B라고 씁니다. mod 23은 23으로 나눈 나머지를 뜻합니다. 양쪽이 얻은 2는 공유값 Z이며 실제 암호화에 넣을 바이트 열쇠와는 구별합니다.</p>
   <p>이 교환이 <strong>DH 키 합의</strong>입니다. 대화마다 새 비밀을 만들면 ephemeral DH라고 부릅니다. 상대 신원과 대화 내용을 확인하는 것은 인증, 공유값에서 용도별 열쇠를 만드는 함수는 KDF입니다. 예측할 수 없는 비밀을 만드는 방법은 <Link to="/cs/crypto/csprng">암호용 난수 생성기</Link>에서 다룹니다.</p>
-  <div id="security" className="space-y-4 scroll-mt-20"><p>세 가지 계산 문제도 구분합니다. A에서 a를 찾는 문제는 이산로그 문제(DLP)입니다. A·B만으로 공유값을 만드는 문제는 계산 DH 문제(CDH)입니다. 어떤 후보가 그 공유값인지 구별하는 문제는 판별 DH 문제(DDH)입니다. 이 이름들의 정확한 정의는 <Link to="/cs/crypto/discrete-log#applications">이산로그 가정 설명</Link>과 연결됩니다.</p><p>
+  <div id="security" className="space-y-4 scroll-mt-20"><ThreeProblemsViz /><p>세 가지 계산 문제도 구분합니다. A에서 a를 찾는 문제는 이산로그 문제(DLP)입니다. A·B만으로 공유값을 만드는 문제는 계산 DH 문제(CDH)입니다. 어떤 후보가 그 공유값인지 구별하는 문제는 판별 DH 문제(DDH)입니다. 이 이름들의 정확한 정의는 <Link to="/cs/crypto/discrete-log#applications">이산로그 가정 설명</Link>과 연결됩니다.</p><p>
             DLP를 풀면 CDH를 풀 수 있고 CDH를 풀면 계산 결과와 후보를 비교해 DDH도 판정할 수 있습니다. 반대로 DLP가 어렵다는 이유만으로 CDH가 어렵다고 결론낼 수는
             없습니다. CDH는 어려운데 DDH 판정은 쉬운 공간도 있으므로 보안 주장은 정확한 공간과 문제를 지정해야 합니다.
           </p></div>
  </section>
  <section id="protocol" data-teach-level="4" className="space-y-5"><h2 className="text-2xl font-bold">7. 6번과 15번의 순서가 바뀌어도 총 90번입니다</h2>
+  <SwapOrderViz />
   <p>Alice는 Bob이 15번 곱해 만든 값에 다시 6번을 적용합니다. 총 지수는 15×6=90입니다. Bob의 계산도 6×15=90입니다. 중간마다 나머지를 취해도 곱셈의 최종 나머지는 같으므로 양쪽이 5⁹⁰의 나머지 2에 도달합니다.</p>
   <ExplainedFormula question="왜 공개값 8·19에서 같은 결과가 나오나요?" idea="상대가 반복한 횟수와 자신이 반복하는 횟수를 곱하면 두 계산의 총 지수가 같습니다." formula={String.raw`Z=B^a=(g^b)^a=g^{ab}=A^b\pmod p`} annotatedFormula={String.raw`\begin{aligned}Z&=\underbrace{(g^b)^a}_{\text{Bob의 값에 Alice 비밀 적용}}\\&=\underbrace{g^{ab}}_{\text{15×6=6×15}}\\&=\underbrace{(g^a)^b}_{\text{반대쪽도 같은 계산}}\end{aligned}`} operations={[{expression:String.raw`(g^b)^a`,annotation:["19⁶ mod 23을 계산합니다.","19²=16, 19⁴=3이므로 3×16의 나머지는 2입니다."]},{expression:String.raw`(g^a)^b`,annotation:["8¹⁵ mod 23을 계산합니다.","8·18·2·4의 나머지도 2입니다."]}]} terms={[{symbol:"p,g",name:"공개 계산 설정",description:"사례에서 p=23, g=5입니다. 실제로는 크기·공간·인코딩까지 합의합니다."},{symbol:"a,b",name:"비밀 지수",description:"Alice의 6과 Bob의 15이며 실제 비밀은 예측 불가능하게 새로 만듭니다."},{symbol:"A,B",name:"공개값",description:"5⁶의 나머지 8과 5¹⁵의 나머지 19입니다."},{symbol:"Z",name:"공유값",description:"양쪽 결과 2이며 이후 KDF의 입력 재료입니다."}]} assumptions={["양쪽이 같은 계산 공간과 공개 설정을 씁니다.","정확성 등식은 상대의 신원이나 관찰자에 대한 보안성을 증명하지 않습니다."]} interpretation="타원곡선에서는 거듭제곱 대신 점을 반복해서 더하며 [a]([b]G)=[ab]G=[b]([a]G)라는 같은 구조를 사용합니다." />
   <DHFlowViz />
@@ -65,12 +73,14 @@ export default function ModernDH() { return <article className="space-y-14">
   <div id="paper-rfc7748-x25519"><CitationBlock source="RFC 7748 · §§5, 6.1, 7" citeKey={2} href="https://www.rfc-editor.org/rfc/rfc7748.html">바이트 처리·공개값·공유값·모든 바이트가 0인 결과의 의미를 확인했습니다. 공개값을 인증하는 절차와 실제 대화의 KDF는 별도로 필요합니다.</CitationBlock></div>
  </section>
  <section id="authenticated-transcript" data-teach-level="6" className="space-y-5"><h2 className="text-2xl font-bold">10. 중간자는 같은 등식으로 6과 15를 따로 만듭니다</h2>
+  <MitmSplitViz />
   <p>8·19 사례로 돌아갑니다. Mallory가 Alice에게 Bob의 19 대신 자신이 만든 10=5³ mod 23을 보낸다고 합시다(가정). Alice는 10⁶ mod 23=6을 얻고 Mallory도 Alice의 8로 8³ mod 23=6을 계산합니다.</p>
   <p>Bob에게는 Alice의 8 대신 17=5⁷ mod 23을 보냅니다. Bob의 17¹⁵ mod 23과 Mallory의 19⁷ mod 23은 모두 15입니다. Alice 쪽 공유값은 6, Bob 쪽은 15이며 Mallory는 둘을 모두 압니다. 각 구간에서 같은 열쇠를 가졌는지 확인하는 절차까지 성공할 수 있습니다.</p>
   <p>이를 막으려면 신뢰할 수 있는 인증 키로 상대의 신원과 대화 기록을 확인해야 합니다. 기록에는 프로토콜 버전, 선택한 알고리즘, Alice·Bob의 신원과 역할, 공개 설정, A=8·B=19를 빠짐없이 넣습니다. 서명 또는 미리 공유한 인증 키의 MAC을 검증하면 공격자가 19를 10으로 바꾼 기록은 같은 승인을 통과하지 못합니다.</p>
   <p>역할을 빼면 보낸 내용을 반대로 되돌리는 공격, 신원을 빼면 서로 다른 상대와 합의했다고 믿는 문제, 협상 내용을 빼면 약한 알고리즘으로 바꾸는 문제가 남을 수 있습니다. 문자열을 단순히 이어 붙여 경계가 모호해지지 않도록 길이와 순서를 정한 인코딩도 필요합니다. 열쇠 확인은 이 인증 문맥 안에서 수행해야 합니다.</p>
  </section>
  <section id="kdf-key-schedule" data-teach-level="6" className="space-y-5"><h2 className="text-2xl font-bold">11. 같은 공유값에도 보내는 방향을 붙여 열쇠를 나눕니다</h2>
+  <DirectionKeysViz />
   <p>
             공유값 2를 그대로 암호화 키로 넣을 수는 없습니다. 필요한 길이와 형태로 바꾸고 보내는 방향과 용도를 구별해야 합니다. HKDF는 먼저 입력 재료를 모아 PRK를 만들고 그
             PRK와 용도 정보로 필요한 길이의 키를 만듭니다. RFC 5869 §3.3은 DH 입력에서 첫 단계를 생략하지 않도록 설명합니다.
@@ -81,6 +91,7 @@ export default function ModernDH() { return <article className="space-y-14">
   <div id="paper-rfc5869-hkdf"><CitationBlock source="RFC 5869 · §§2–3, 부록 A.1" citeKey={3} href="https://www.rfc-editor.org/rfc/rfc5869.html">추출·확장 순서와 info의 문맥 구분을 확인했습니다. 난수 생성, 상대 인증, 비밀 폐기는 이 함수 밖의 책임입니다.</CitationBlock></div>
  </section>
  <section id="ephemeral-lifecycle" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">12. 과거 대화를 지키려면 임시 비밀을 남기지 않습니다</h2>
+  <SecretLifetimeViz />
   <p>대화마다 새 a·b를 만들고 인증용 장기 서명 키와 분리합니다. 성공하거나 실패한 뒤에는 임시 비밀과 필요가 끝난 공유값을 지웁니다. 이후 장기 서명 키가 유출돼도 과거 임시 비밀을 복원할 수 없다면 녹음해 둔 과거 통신을 그 키 하나로 풀지 못합니다. 이 성질을 전방향 안전성이라고 부릅니다.</p>
   <p>가상머신 스냅샷이나 오류 덤프에 a=6이 남으면 공개된 19와 함께 과거 공유값 2를 다시 계산할 수 있습니다. 난수 상태를 복제한 두 프로세스가 같은 비밀을 만드는 경우도 확인해야 합니다. 세션 재개용 티켓과 저장한 평문은 각각 별도의 보관·폐기 정책이 필요합니다.</p>
   <p>이 설명은 고전 계산 공격을 기준으로 합니다. 충분한 규모의 양자 컴퓨터가 이산로그를 풀 수 있는 상황에는 X25519도 같은 보호를 제공하지 않습니다. <Link to="/cs/crypto/quantum-computing-and-cryptographic-risk">양자 계산과 암호 위험</Link>에서 알고리즘의 가정과 실제 기계의 조건을 구분합니다.</p>

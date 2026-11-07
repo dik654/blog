@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import FailureLadderViz from "./inference-failure-absorption/viz/FailureLadderViz";
 import FleetSizeViz from "./inference-failure-absorption/viz/FleetSizeViz";
+import LayerTimeViz from "./inference-failure-absorption/viz/LayerTimeViz";
+import SaturationCascadeViz from "./inference-failure-absorption/viz/SaturationCascadeViz";
+import QuotaLedgerViz from "./inference-failure-absorption/viz/QuotaLedgerViz";
+import QuorumSiteViz from "./inference-failure-absorption/viz/QuorumSiteViz";
 import {
   InferenceOperationsMapReturn,
   InferenceOperationsSeriesLocator,
@@ -91,6 +95,11 @@ export default function InferenceFailureAbsorptionArticle() {
             시간이 있습니다.
           </p>
 
+        </div>
+
+        <LayerTimeViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             그 시간이 계층마다 자릿수로 다릅니다. 한 클러스터 안에서 파드를 다시
             고르는 것은 밀리초입니다. 리전 게이트웨이가 다른 클러스터로 넘기는
@@ -296,6 +305,11 @@ export default function InferenceFailureAbsorptionArticle() {
             가니 그 파드는 숨을 돌립니다.
           </p>
 
+        </div>
+
+        <SaturationCascadeViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             그런데 빠진 파드의 몫이 남은 파드로 갑니다. 그 파드들도 이미 바빴으
             므로 차례로 같은 임계를 넘습니다. 하나씩 빠지다 전부 빠집니다.
@@ -417,6 +431,11 @@ export default function InferenceFailureAbsorptionArticle() {
             비용보다 큽니다.
           </p>
 
+        </div>
+
+        <QuotaLedgerViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             잔액과 한도는 뒤쪽입니다. 낡은 값으로 계속 받으면 쓴 만큼 못 받게
             됩니다. 그래서 여기는 열어 두는 쪽이 아니라 닫는 쪽으로 기울여야
@@ -483,6 +502,11 @@ export default function InferenceFailureAbsorptionArticle() {
               사이트에 나누면 어느 쪽이든 한 사이트에 과반이 몰립니다.
             </p>
 
+          </div>
+
+          <QuorumSiteViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               그러면 과반이 없는 쪽이 사라지는 경우는 견디지만, 과반이 있는 쪽이
               사라지면 쓰기가 멈춥니다. 두 리전을 두었다고 두 리전 장애를 모두
