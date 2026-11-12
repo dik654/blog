@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import FloorViz from "./viz/FloorViz";
+import FloorSurvivalViz from "./viz/FloorSurvivalViz";
 
 export default function RoundtripFloor() {
   return (
@@ -58,6 +59,10 @@ export default function RoundtripFloor() {
         프레임)였고, 별도의 네 스타일 소스에서는 같은 오토인코더가 0.49에서 2.88까지 흩어졌습니다. 바닥값은
         이미지에 의존하므로 다른 그림에서 잰 값을 차감하면 안 됩니다.
       </CitationBlock>
+
+      <div className="mt-8">
+        <FloorSurvivalViz />
+      </div>
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">

@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { AttestationViz } from "../tee-foundations-viz";
+import FreshnessBindingViz from "./viz/FreshnessBindingViz";
+import PairedGateViz from "./viz/PairedGateViz";
 
 export default function ModernTeeAttestationArticle() {
   return (
@@ -38,6 +40,7 @@ export default function ModernTeeAttestationArticle() {
 
       <section id="freshness-binding" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Freshness와 binding</p><h2 className="mt-2 text-2xl font-bold">Nonce는 quote 안에 들어가고 secret은 검증한 channel·workload에 묶여야 한다</h2></header>
+        <FreshnessBindingViz />
         <p>Relying party는 예측하기 어려운 nonce를 발급하고 verifier는 evidence 안에 그 challenge가 들어 있는지 확인합니다. Nonce를 서명되지 않은 별도 field로 비교하거나 오래 재사용하면 공격자가 예전 evidence를 붙일 수 있습니다.</p>
         <p>검증 뒤 key를 평문 HTTP response로 보내는 것도 잘못입니다. Evidence의 application data나 검증한 workload public key를 TLS session에 묶어, 검증한 대상과 secret을 받는 대상을 같게 만듭니다.</p>
         <ExplainedFormula
@@ -81,6 +84,7 @@ export default function ModernTeeAttestationArticle() {
         <p>
           기초 여섯 문제는 세 역할, 네 artifact, signature와 appraisal, nonce, channel binding, vendor normalization을 다룹니다. 심화 네 문제는 replayed nonce, expired collateral, missing claim, policy rollback, verifier/relying-party 분리를 설계합니다.
         </p>
+        <PairedGateViz />
         <aside className="rounded-lg border border-border bg-card p-5 text-sm leading-6 text-muted-foreground"><strong className="text-foreground">Paired gate:</strong> 같은 raw evidence corpus·trust anchors·clock·policy에서 valid, bad signature, reused nonce, altered measurement, old TCB, debug, expired collateral, unknown vendor field를 재생합니다. Decision·reason·raw digest·parser/policy version·latency를 비교하고 false accept 0을 hard gate로 둡니다. Candidate failure 시 prior verifier binary·reference manifest·collateral snapshot으로 rollback합니다.</aside>
       </section>
     </article>

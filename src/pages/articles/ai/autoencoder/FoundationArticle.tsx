@@ -4,6 +4,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { AutoencoderFoundationViz } from "./viz/ModernAutoencoderViz";
+import TiedWeightsViz from "./viz/TiedWeightsViz";
+import BcePenaltyViz from "./viz/BcePenaltyViz";
 import AutoencoderSeriesLocator from "./shared/AutoencoderSeriesLocator";
 
 export default function FoundationArticle() {
@@ -47,6 +49,7 @@ export default function FoundationArticle() {
         { symbol: "k", name: "Latent dimension", description: "Decoder에 전달되는 coordinate 수입니다." },
         { symbol: "θ,φ", name: "Trainable parameters", description: "Encoder와 decoder가 loss를 함께 받는 parameter입니다." },
       ]} assumptions={["Input과 reconstruction의 shape·좌표 의미가 대응합니다.", "Decoder에는 z 밖의 input shortcut이 없습니다."]} interpretation="k<n은 가장 단순한 capacity 제약입니다. Overcomplete model은 corruption·sparsity 같은 다른 제약이 필요할 수 있습니다." />
+      <TiedWeightsViz />
       <TermBreakdown title="Encoder·decoder weight를 묶을지(tied) 따로 둘지(untied)" items={[
         {
           term: "Tied weights (W_d = W_e^T)",
@@ -76,6 +79,7 @@ export default function FoundationArticle() {
         { symbol: "n", name: "Feature count", description: "Sample 하나에서 비교하는 coordinate 수입니다." },
         { symbol: "x̂", name: "Reconstruction", description: "Decoder가 만든 input-shaped prediction입니다." },
       ]} assumptions={["Feature scale과 missing-value policy가 고정되어 있습니다.", "MSE 해석에서는 coordinate noise scale을 같게 둡니다."]} interpretation="작은 MSE는 해당 좌표 scale에서 가깝다는 뜻입니다. Perceptual similarity나 downstream usefulness까지 자동으로 뜻하지 않습니다." />
+      <BcePenaltyViz />
       <ExplainedFormula
         question="Coordinate가 [0,1] 확률처럼 해석될 때 loss는 MSE와 무엇이 달라지나요?"
         idea={

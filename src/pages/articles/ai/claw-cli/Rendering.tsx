@@ -1,4 +1,6 @@
 import MarkdownViz from "./viz/MarkdownViz";
+import EventSequenceReducerViz from "./viz/EventSequenceReducerViz";
+import StableBoundaryBufferViz from "./viz/StableBoundaryBufferViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 
@@ -85,6 +87,8 @@ export default function Rendering() {
           </table>
         </div>
 
+        <EventSequenceReducerViz />
+
         <ExplainedFormula
           question="Event가 재전송되거나 순서가 바뀔 수 있을 때 같은 화면 상태를 어떻게 재현할까?"
           idea={<>화면을 직접 덧그리지 않고, 이전 state와 다음 event를 입력으로 받는 결정적 reducer를 둡니다. Sequence가 이미 적용한 값 이하이면 duplicate로 무시하고, 다음 번호가 건너뛰면 gap을 복구한 뒤 적용합니다.</>}
@@ -110,6 +114,7 @@ export default function Rendering() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           부분 Markdown은 안정된 경계까지만 확정한다
         </h3>
+        <StableBoundaryBufferViz />
         <p>
           text delta는 backtick 하나나 링크의 여는 괄호에서 끊길 수 있습니다. 줄바꿈만 기다리는 방식도 코드 블록과 긴 단락에서는 지연이 커집니다. 실용적인 구현은 누적
           버퍼를 유지하면서 parser가 확정할 수 있는 block 경계까지만 화면에 반영하고 나머지는 임시 텍스트로 보여줍니다. 스트림이 끝나면 남은 버퍼를 한 번 더 parse해 최종

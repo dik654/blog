@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import OverviewViz from "./viz/OverviewViz";
+import NextTokenPathViz from "./viz/NextTokenPathViz";
 
 const FOUNDATIONS = [
   ["tokenizer", "/cs/ai/tokenizer", "문자열을 token ID로 나누는 규칙"],
@@ -79,6 +80,8 @@ export default function Overview() {
           </div>
         ))}
       </dl>
+
+      <NextTokenPathViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>

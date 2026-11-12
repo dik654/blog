@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AttentionPipelineViz from "./viz/AttentionPipelineViz";
+import WeightedSumPlaneViz from "./viz/WeightedSumPlaneViz";
 
 export default function Overview() {
   return (
@@ -57,6 +58,8 @@ export default function Overview() {
         assumptions={["softmax가 적용되는 축은 source/key position i입니다.", "mask가 있으면 softmax 전에 허용하지 않는 score에 −∞를 더합니다."]}
         interpretation="attention은 score·normalize·aggregate 세 단계입니다. Weight는 value를 섞는 coefficient이지, 그 자체가 모델의 완전한 인과 설명은 아닙니다."
       />
+
+      <WeightedSumPlaneViz />
 
       <ExplainedFormula
         question="Score 두 개가 log 2와 0일 때 실제 weight와 context vector는 어떻게 계산될까?"

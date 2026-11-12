@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import OverflowSplitViz from "./viz/OverflowSplitViz";
 
 export default function MultiGpuVramStrategies() {
   return (
@@ -9,7 +10,9 @@ export default function MultiGpuVramStrategies() {
         <p className="leading-8">
           Known floor가 device 하나의 usable capacity를 넘으면 세 갈래로 대응합니다. Weight를 두 GPU에 나누는 방식은 2-way 구성입니다. 일부를 CPU host memory로 내리는 방식은 offloading입니다. GPU와 host가 처음부터 큰 주소 공간을 공유하는 방식은 unified/large memory입니다.
         </p>
-
+      </div>
+      <OverflowSplitViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="two-way-gpu-configuration" className="scroll-mt-20">
           2-way 구성은 weight 지분을 줄이되 통신을 더합니다
         </h3>

@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { IpfsFilecoinBoundaryViz } from "./IpfsFilecoinBoundaryViz";
+import LatencyBreakdownViz from "./viz/LatencyBreakdownViz";
+import ReachabilityGridViz from "./viz/ReachabilityGridViz";
+import RetrievalAttemptViz from "./viz/RetrievalAttemptViz";
 
 const IPFS_REV = "3000be69497e47c399cdb719440d0809f085388b";
 const KUBO_COMMIT = "acc53c093810a8fe9a4bc2f023f0b1e0c1d629b5";
@@ -191,6 +194,8 @@ export default function ModernIpfsFilecoinStorage() {
           </h2>
         </header>
 
+        <RetrievalAttemptViz />
+
         <p>
           Delegated routing이나 DHT는 CID를 제공한다고 광고한 peer 후보를
           돌려줍니다. 현재 Routing V1은 주소와 transfer protocol을 filter할 수
@@ -205,6 +210,8 @@ export default function ModernIpfsFilecoinStorage() {
           HTTP 200을 돌려줘도 받은 block의 multihash가 요청한 CID와 다르면
           실패입니다.
         </p>
+
+        <LatencyBreakdownViz />
 
         <ExplainedFormula
           question="파일 한 건을 505ms에 받았다면 어디서 시간이 들었는지 어떻게 찾을까?"
@@ -322,6 +329,8 @@ export default function ModernIpfsFilecoinStorage() {
           꺼내오지 못하는 상태”나 “cache에는 있지만 장기 보관 약속은 없는 상태”를
           놓치게 됩니다.
         </p>
+
+        <ReachabilityGridViz />
 
         <ExplainedFormula
           question="독립 경로 두 곳이 각각 90% 확률로 응답한다면 최소 한 곳의 응답 확률은?"

@@ -1,6 +1,7 @@
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TensorShapeTraceViz from "./viz/TensorShapeTraceViz";
+import InitVarianceViz from "./viz/InitVarianceViz";
 
 export default function Forward() {
   return (
@@ -125,6 +126,11 @@ export default function Forward() {
           뉴런들이 같은 값을 냅니다. 같은 기울기까지 받으므로 서로 다른 역할로
           갈라지기 어렵습니다.
         </p>
+      </div>
+
+      <InitVarianceViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           (가정) 서로 독립이고 분산이 1인 입력이 100개 있습니다. 이를 분산 1인
           가중치와 곱해 더하면 활성화 전 값의 분산은 약 100까지 커질 수

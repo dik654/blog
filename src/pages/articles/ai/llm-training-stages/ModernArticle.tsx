@@ -6,6 +6,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 import TrainingStageFlowViz from "./viz/TrainingStageFlowViz";
+import AgentTrajectoryViz from "./viz/AgentTrajectoryViz";
+import LimitInterventionViz from "./viz/LimitInterventionViz";
 
 const postTrainingSignals = [
   ["SFT", "좋은 demonstration response", "Response token NLL", "/cs/ai/supervised-fine-tuning"],
@@ -142,6 +144,7 @@ export default function LlmTrainingStagesArticle() {
         <LessonHeader number="03" eyebrow="Trajectory learning" title="Agentic training의 sample은 prompt–answer 한 쌍이 아니라 action과 observation이 이어지는 trajectory다">
           Tool call이 environment를 바꾸면 다음 state도 달라집니다. Repository test, shell exit status, 생성한 document처럼 관측 가능한 결과를 verifier가 채점하고, 실패한 decision 뒤의 복구 경로까지 학습 data가 될 수 있습니다.
         </LessonHeader>
+        <AgentTrajectoryViz />
         <AlgorithmBlock
           title="Agentic trajectory rollout과 verifier feedback"
           input={["goal x", "policy πθ", "isolated environment E", "tool schema A", "episode budget B", "outcome verifier V"]}
@@ -167,6 +170,7 @@ export default function LlmTrainingStagesArticle() {
         <LessonHeader number="04" eyebrow="Soft·hard limit" title="어디가 paradigm의 hard limit인지는 성능 곡선이 아니라 개입 실험으로 판단해야 한다">
           “Soft limit”과 “hard limit”은 편리한 대화 표현이지 합의된 학술 분류가 아닙니다. 더 좋은 data·search·RL·harness로 계속 개선되는지, architecture나 learning rule을 바꾸어야만 실패가 사라지는지는 같은 budget의 intervention을 비교해야 알 수 있습니다.
         </LessonHeader>
+        <LimitInterventionViz />
         <TermLesson
           name="Paradigm-limit evidence boundary"
           oneLine="현재 recipe의 최적화 부족과 model·learning paradigm이 만드는 구조적 제약을 관측만으로 성급히 구분하지 않는 근거 규칙입니다."

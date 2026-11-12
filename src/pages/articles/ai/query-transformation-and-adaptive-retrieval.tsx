@@ -10,6 +10,7 @@ import {
   QueryTransformationReturn,
 } from "./query-transformation-and-adaptive-retrieval/QueryTransformationLocator";
 import QueryTransformationAndAdaptiveRetrievalViz from "./query-transformation-and-adaptive-retrieval/viz/QueryTransformationAndAdaptiveRetrievalViz";
+import HydeNeighborViz from "./query-transformation-and-adaptive-retrieval/viz/HydeNeighborViz";
 import {
   CragThresholdViz,
   DecisionOwnerViz,
@@ -174,6 +175,9 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
             그 문서의 벡터와 가까운 실제 문서를 찾는 방법이{" "}
             <strong>가상 문서 임베딩(HyDE)</strong>입니다.
           </p>
+        </div>
+        <HydeNeighborViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             순서는 질문 → 가상 답변 → 가상 답변의 임베딩 → 실제 문서 검색입니다.
             저자들은 가상 답변에 잘못된 세부 내용이 들어갈 수 있음을 인정하고,

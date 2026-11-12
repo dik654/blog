@@ -1,4 +1,5 @@
 import InitViz from "./viz/InitViz";
+import InitRerunViz from "./viz/InitRerunViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const ownershipRows = [
@@ -189,6 +190,7 @@ export default function Init() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           재실행해도 사용자 편집을 지우지 않아야 한다
         </h3>
+        <InitRerunViz />
         <p>
           안전한 init은 idempotent해야 합니다. 같은 버전과 같은 입력으로 다시 실행하면 새 변경이 없어야 합니다. 도구가 생성한 block에는 marker와 schema
           version을 남겨 자기 영역만 갱신합니다. marker 밖의 사용자 편집이나 알 수 없는 기존 설정은 자동 덮어쓰지 말고 conflict로 보고합니다. pinned

@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { FilecoinProofStackViz } from "./FilecoinProofStackViz";
+import PhaseChainViz from "./viz/PhaseChainViz";
+import AcceptGateViz from "./viz/AcceptGateViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { filProofsTree } from "./fileTree";
@@ -201,6 +203,7 @@ export default function ModernFilecoinProofs() {
               파일 이름이 같아도 같은 proof 작업이라고 할 수 있을까요?
             </h2>
           </header>
+          <PhaseChainViz />
           <p>
             PC1 labels를 다른 sector의 PC2에 넣거나, 오래된 parameter cache로
             proof를 만들면 type 이름만 같아도 같은 작업이 아닙니다. Envelope에는
@@ -353,6 +356,7 @@ export default function ModernFilecoinProofs() {
               </p>
             </li>
           </ul>
+          <AcceptGateViz />
           <p>
             Decode, statement 구성, parameter와 verification key 승인, 암호학적
             검증이 모두 성공해야 비로소 proof receipt를 승인합니다.

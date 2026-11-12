@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ThresholdViz from "./viz/ThresholdViz";
+import RejectLoopViz from "./viz/RejectLoopViz";
 
 export default function IdentityMetric() {
   return (
@@ -76,7 +77,13 @@ export default function IdentityMetric() {
           임계값이 모델의 성질이 아니라 그 모델에서 측정해 정하는 값이라는 앞의 주장이 여기서 한 번 더
           확인됩니다.
         </p>
+      </div>
 
+      <div className="mt-8">
+        <RejectLoopViz />
+      </div>
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           방향에 주의할 점이 하나 있습니다. 새 얼굴을 뱅크에 넣을지 판단하는 거절 루프는 임계값 미만일 때만
           채택하므로, 임계값이 낮을수록 엄격합니다. 0.28은 진짜 남남을 중복으로 보고 버리고 있었습니다.

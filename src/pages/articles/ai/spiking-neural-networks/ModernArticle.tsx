@@ -4,6 +4,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { EvidenceGrid } from "../kimi-k3-shared";
+import BpttUnrollViz from "./viz/BpttUnrollViz";
 import EnergyBoundaryViz from "./viz/EnergyBoundaryViz";
 import HebbianLocalViz from "./viz/HebbianLocalViz";
 import SpikeLifecycleViz from "./viz/SpikeLifecycleViz";
@@ -363,6 +364,7 @@ export default function SpikingNeuralNetworksArticle() {
           4. 셋째 발화의 오차는 셋째 시점에서 끝나지 않고 이전 전압까지 거슬러
           갑니다
         </h2>
+        <BpttUnrollViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             목표 발화열이 <code>[1,0,0,0,1]</code>인데 뉴런이

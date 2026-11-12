@@ -3,6 +3,7 @@ import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import PresenceViz from "./viz/PresenceViz";
+import PresenceWiringViz from "./viz/PresenceWiringViz";
 
 export default function PresenceHead({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -68,6 +69,8 @@ export default function PresenceHead({ onCodeRef }: { onCodeRef: (key: string, r
         <CodeViewButton onClick={() => onCodeRef("presence-token", codeRefs["presence-token"])} />
         <span className="text-xs text-muted-foreground">토큰 정의부터 레이어별 logit까지</span>
       </div>
+
+      <PresenceWiringViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">

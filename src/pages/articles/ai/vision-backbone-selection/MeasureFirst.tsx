@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProbeViz from "./viz/ProbeViz";
+import PairedSeedViz from "./viz/PairedSeedViz";
+import VariantRatioViz from "./viz/VariantRatioViz";
 
 export default function MeasureFirst() {
   return (
@@ -27,6 +29,8 @@ export default function MeasureFirst() {
           두고 비교해야 합니다.
         </p>
       </div>
+
+      <VariantRatioViz />
 
       <AlgorithmBlock
         title="후보 백본 비교용 최소 실측"
@@ -82,6 +86,7 @@ export default function MeasureFirst() {
           </tfoot>
         </table>
       </div>
+      <PairedSeedViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           Seed 1의 A와 seed 1의 B처럼 같은 조건끼리 차이를 먼저 구합니다. 위

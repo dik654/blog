@@ -5,6 +5,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import SybilAttackViz from "./dht-security/viz/SybilAttackViz";
 import EclipseAttackViz from "./dht-security/viz/EclipseAttackViz";
+import AdmissionLedgerViz from "./dht-security/viz/AdmissionLedgerViz";
+import RevalidationViz from "./dht-security/viz/RevalidationViz";
 
 const GETH_TABLE =
   "https://github.com/ethereum/go-ethereum/blob/v1.17.10/p2p/discover/table.go";
@@ -231,6 +233,7 @@ export default function DhtSecurityArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           geth v1.17.10은 입장·대기실·생존 확인에서 서로 다른 문을 둡니다
         </h2>
+        <AdmissionLedgerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이제 Alice가 실제 geth v1.17.10이라고 가정합니다. 버킷은 16개의 live
@@ -285,6 +288,8 @@ export default function DhtSecurityArticle() {
           repeatUntil="Fast·slow 목록에서 무작위 node 하나씩 골라 PING하고, endpoint sequence가 높아졌으면 새 ENR를 요청합니다."
           output="live entry, bounded replacement, 또는 단계가 드러나는 reject"
         />
+
+        <RevalidationViz />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>

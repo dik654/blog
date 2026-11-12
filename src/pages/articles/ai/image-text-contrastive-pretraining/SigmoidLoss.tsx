@@ -3,6 +3,7 @@ import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import SigmoidViz from "./viz/SigmoidViz";
+import LogitBiasViz from "./viz/LogitBiasViz";
 
 export default function SigmoidLoss({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -83,6 +84,11 @@ export default function SigmoidLoss({ onCodeRef }: { onCodeRef: (key: string, re
           거의 전부 음성에서 옵니다. 모델은 일단 모든 쌍을 "아니다"라고 답하는 쪽으로 빠르게 이동하고, 그
           상태에서 양성 신호를 다시 끌어올리는 데 시간이 걸립니다.
         </p>
+      </div>
+
+      <LogitBiasViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
 
         <p className="leading-7">
           편향 항은 이 불균형을 상수 하나로 흡수합니다. 모든 로짓에 같은 값을 더하므로 유사도의 상대 관계는

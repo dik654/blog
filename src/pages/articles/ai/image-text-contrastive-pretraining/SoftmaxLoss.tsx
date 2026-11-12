@@ -3,6 +3,7 @@ import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import SoftmaxViz from "./viz/SoftmaxViz";
+import TemperatureScaleViz from "./viz/TemperatureScaleViz";
 
 export default function SoftmaxLoss({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -76,6 +77,7 @@ export default function SoftmaxLoss({ onCodeRef }: { onCodeRef: (key: string, re
       <h3 id="temperature-scale" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         온도를 학습시키는 이유
       </h3>
+      <TemperatureScaleViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           코사인 유사도는 -1에서 1 사이입니다. 이 값을 그대로 소프트맥스에 넣으면 분포가 거의 평평해서 양성과

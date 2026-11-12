@@ -11,6 +11,11 @@ import MultimodalRetrievalAndVisualGroundingViz, {
   DocumentRetrievalPathComparison,
   GroundingPrimitiveComparison,
 } from "./multimodal-retrieval-and-visual-grounding/viz/MultimodalRetrievalAndVisualGroundingViz";
+import CosinePlaneViz from "./multimodal-retrieval-and-visual-grounding/viz/CosinePlaneViz";
+import ClipBatchMatrixViz from "./multimodal-retrieval-and-visual-grounding/viz/ClipBatchMatrixViz";
+import MaxSimViz from "./multimodal-retrieval-and-visual-grounding/viz/MaxSimViz";
+import LocationBinViz from "./multimodal-retrieval-and-visual-grounding/viz/LocationBinViz";
+import CropZoomLoopViz from "./multimodal-retrieval-and-visual-grounding/viz/CropZoomLoopViz";
 
 /**
  * Text query로 이미지를 고른 뒤, 선택된 이미지 안의 위치를 찾는 경로를 추적합니다.
@@ -49,6 +54,7 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Cosine similarity로 후보 세 장의 순서를 정합니다
         </h2>
+        <CosinePlaneViz />
         <ExplainedFormula
           question="q=(1,0)인 query와 후보 A=(0.8,0.6)의 cosine similarity는 얼마인가요?"
           idea="두 벡터를 길이 1로 정규화했다고 가정하면 cosine similarity는 내적과 같습니다. 같은 계산을 B와 C에도 반복해 가장 큰 점수를 고릅니다."
@@ -98,6 +104,7 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
             짝이 아닌 조합은 멀어지게 합니다.
           </p>
         </div>
+        <ClipBatchMatrixViz />
         <AlgorithmBlock
           title="CLIP이 같은 batch에서 진짜 짝을 찾도록 학습하는 순서"
           input={[
@@ -162,6 +169,9 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
             바꿉니다. 이 표현은 검색 결과를 사람이 읽고 인용하기 쉽지만, 표의 배치나 그림처럼
             text만으로 옮기기 어려운 정보가 중간에 줄어들 수 있습니다.
           </p>
+        </div>
+        <MaxSimViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             ColPali는 문서 페이지 이미지를 PaliGemma에 넣고 patch마다 128차원 벡터를 만듭니다.
             Query token마다 가장 잘 맞는 page patch를 고르는 MaxSim 점수를 더해 페이지 순위를
@@ -198,6 +208,9 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
             해상도에 비례해 출력과 계산이 커집니다. 따라서 정밀도가 높다는 이유만으로 모든 작업에
             mask가 필요한 것은 아닙니다.
           </p>
+        </div>
+        <LocationBinViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             Kosmos-2는 224px 이미지를 가로와 세로 각각 32개 bin으로 나눕니다. Bounding box 좌표를
             32×32=1,024개의 location token으로 양자화해 text sequence 안에 넣습니다. 이 방식은
@@ -235,6 +248,7 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
           output="종료 조건을 만족한 답, 또는 다음에 더 좁혀 볼 영역"
           repeatUntil="확신도가 기준을 넘거나 더 좁힐 영역이 없을 때까지"
         />
+        <CropZoomLoopViz />
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             예를 들어 “표 3행의 값은?”이라는 질문은 전체 페이지를 한 번에 볼 때 글자가 너무 작을

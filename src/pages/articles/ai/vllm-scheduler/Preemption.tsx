@@ -6,6 +6,7 @@ import { codeRefs } from "./codeRefs";
 import PreemptRecomputeViz from "./viz/PreemptRecomputeViz";
 import BatchingGenerationsViz from "./viz/BatchingGenerationsViz";
 import SchedulerKnobViz from "./viz/SchedulerKnobViz";
+import StepOverlapTimelineViz from "./viz/StepOverlapTimelineViz";
 const WASTE_TERMS = [
   {
     symbol: "n_r^{before}",
@@ -193,6 +194,7 @@ C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
         <h2 className="mb-6 text-2xl font-bold">
           13. 겹친 5ms도 CPU 자원은 사용합니다
         </h2>
+        <StepOverlapTimelineViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             선택과 준비에 CPU 5ms, 실제 계산에 GPU 20ms가 든다고 합시다. 직렬

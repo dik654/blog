@@ -9,6 +9,9 @@ import {
   PerfReleaseViz,
   ProfilerDecisionViz,
 } from "./viz/ModernPerfViz";
+import RooflinePointViz from "./viz/RooflinePointViz";
+import ActiveElapsedViz from "./viz/ActiveElapsedViz";
+import CounterPairViz from "./viz/CounterPairViz";
 
 const PRACTICES =
   "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html";
@@ -199,6 +202,7 @@ export default function ModernCudaPerfAnalysisArticle() {
           ]}
           interpretation="고정 fixture에서는 p=0.6, r=2이므로 새 시간은 0.4+0.6/2=0.7입니다. Kernel은 60ms에서 30ms로 절반이 되지만 전체 요청은 100ms에서 70ms가 되어 speedup은 약 1.43×입니다."
         />
+        <RooflinePointViz />
         <ExplainedFormula
           question="Kernel이 memory roof와 compute roof 중 어디에 먼저 닿을까요?"
           idea={
@@ -287,6 +291,7 @@ export default function ModernCudaPerfAnalysisArticle() {
             높은 값을 대표합니다. 따라서 top-line 값만 보고 처방하지 말고 breakdown을
             열어 실제로 높은 unit을 확인해야 합니다.
           </p>
+          <ActiveElapsedViz />
           <p>
             같은 metric에도 active와 elapsed 두 기준이 있습니다. Active는 unit이
             실제로 일한 cycle만 세고, elapsed는 kernel 전체 cycle을 셉니다. Active
@@ -370,6 +375,7 @@ export default function ModernCudaPerfAnalysisArticle() {
           <h3 className="break-keep text-balance text-xl font-bold">
             Counter 하나가 아니라 서로 다른 질문의 counter를 함께 읽습니다
           </h3>
+          <CounterPairViz />
           <p>
             DRAM throughput 89%만 보면 HBM이 바쁘다는 사실까지만 압니다. 여기에
             L2 hit 20%를 함께 놓으면 L2 요청의 많은 부분이 HBM으로 내려간다는

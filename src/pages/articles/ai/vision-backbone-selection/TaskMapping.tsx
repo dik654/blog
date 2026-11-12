@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import MappingViz from "./viz/MappingViz";
+import ConcatScaleViz from "./viz/ConcatScaleViz";
 
 const ROWS = [
   {
@@ -99,6 +100,7 @@ export default function TaskMapping() {
             다른 방법은 정렬 단계를 따로 붙이는 것입니다. 백본은 하나로 두고 텍스트 쪽만 맞추면 색인은 한 벌로
             끝나지만, 정렬 품질이 그 단계의 데이터에 달려 있어 별도 평가가 필요합니다.
           </p>
+          <ConcatScaleViz />
           <p className="leading-7">
             어느 쪽이든 두 벡터를 그냥 이어 붙이는 방식은 피하는 편이 낫습니다. 차원만 늘고 거리 계산에서 한쪽이
             지배하기 쉬우며, 각 부분의 스케일을 맞추는 일이 또 다른 조정 대상이 됩니다. 색인 설계 자체가

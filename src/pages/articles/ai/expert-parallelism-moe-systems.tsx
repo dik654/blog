@@ -13,6 +13,9 @@ import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./research-audit-sources/codeRefs";
 import ExpertRouteCaseViz from "./expert-parallelism-moe-systems/viz/ExpertRouteCaseViz";
 import ExpertParallelismMoeSystemsViz from "./expert-parallelism-moe-systems/viz/ExpertParallelismMoeSystemsViz";
+import DispatchLayoutViz from "./expert-parallelism-moe-systems/viz/DispatchLayoutViz";
+import OverlapTimelineViz from "./expert-parallelism-moe-systems/viz/OverlapTimelineViz";
+import NodeVisitViz from "./expert-parallelism-moe-systems/viz/NodeVisitViz";
 import {
   ParallelExecutionMapReturn,
   ParallelExecutionSeriesLocator,
@@ -64,6 +67,7 @@ export default function Article(){
     </section>
     <section id="picture" data-teach-level="1" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">4 · 입력을 보내고 결과를 원래 위치로 돌려놓는다</h2>
+      <DispatchLayoutViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">GPU g에 expert 8g부터 8g+7을 두면 expert 번호를 8로 나눈 몫이 목적 GPU입니다. 13은 1, 42는 5입니다. Dispatch는 목적지별로 입력을 모으고, 도착한 입력을 expert별 연속 구간으로 배치합니다.</p>
         <p className="leading-8">각 expert가 자기 구간을 계산한 뒤 combine이 원래 token 위치로 결과를 돌려보냅니다. 입력 순서를 섞었다면 원래 위치로 되돌릴 metadata가 필요합니다. 잘못된 handle을 재사용하면 바이트 수가 맞아도 다른 token의 결과를 합칠 수 있습니다.</p>
@@ -98,6 +102,9 @@ export default function Article(){
         <p className="leading-8">GPU마다 2048개 token을 처리하면 dispatch의 논리 payload는 2048×2×4096×2B=32MiB이고 combine까지 64MiB입니다. 균등 배정에서 1/8이 로컬이라는 가정이면 기대 remote 왕복은 56MiB입니다. 실제 routing count와 node별 전송 공유로 이 기대값을 검증해야 합니다.</p>
         <p className="leading-8">56MiB를 가정한 유효 단방향 50GB/s로 나누면 1.174ms입니다. 450GB/s라면 약 0.130ms입니다. 양방향 합산 peak를 단방향 수치로 대입하면 안 됩니다. FP8(1byte) dispatch와 BF16(2byte) combine도 서로 같은 바이트라는 가정을 깨므로 scale·metadata까지 따로 셉니다.</p>
         <p className="leading-8">균형이면 GPU 하나가 4096개 expert 입력을 받습니다. 세 행렬의 연산은 입력 하나당 6×4096×11008 FLOP이므로 합계 약 1.108TFLOP입니다. 가정한 유효 600TFLOP/s에서는 약 1.847ms입니다. 가장 바쁜 GPU가 1.75배를 받으면 그 계산만 약 3.232ms로 늘어납니다.</p>
+      </div>
+      <OverlapTimelineViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">한 token의 dispatch→계산→combine은 의존하는 순서입니다. 많은 chunk의 서로 다른 단계를 겹치면 처리량이 좋아질 수 있지만 통신도 SM·메모리 자원을 씁니다. 두 시간의 max는 이상적인 겹침의 하한이며 실제 한 layer의 완료 시간을 보장하지 않습니다.</p>
       </div>
 <FactorStructureViz
@@ -137,6 +144,7 @@ export default function Article(){
       <span id="paper-deepspeed-moe" className="scroll-mt-20" />
       <span id="paper-deepseek-v3" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">9 · 전송 공유와 expert 복제는 서로 다른 비용을 바꾼다</h2>
+      <NodeVisitViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">8개 node에 top-8을 독립 균등 배정한다고 단순화하면 방문 node의 기대 개수는 8×(1−(7/8)⁸)≈5.251입니다. 같은 node의 expert들에게 한 입력을 공유할 수 있다면 node 간 입력 복사 수가 expert 수 8보다 작아질 수 있습니다. 선택을 node 4개 이내로 제한하면 이 상한도 줄지만 동일 품질은 별도 검증입니다.</p>
         <p className="leading-8">뜨거운 expert를 복제하면 입력을 다른 GPU로 나눌 수 있습니다. 대신 weight 메모리와 복제 계획, 학습 시 weight·gradient 일치 비용이 생깁니다. 반면 capacity를 넘긴 token을 버리는 방식은 계산 대상 자체를 바꾸므로 같은 의미의 최적화가 아닙니다. Factor 2라는 숫자만으로 실제 buffer 절반이 항상 padding이라고 단정할 수도 없습니다.</p>

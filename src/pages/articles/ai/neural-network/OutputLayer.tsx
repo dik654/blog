@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PredictionContractViz from "./viz/PredictionContractViz";
+import SigmoidReadoutViz from "./viz/SigmoidReadoutViz";
 
 export default function OutputLayer() {
   return (
@@ -20,6 +21,11 @@ export default function OutputLayer() {
           학습할 때는 제한 없는 점수인 <strong>로짓(logit)</strong>을 먼저
           만들고, 시그모이드(sigmoid)로 0과 1 사이의 수로 바꿀 수 있습니다.
         </p>
+      </div>
+
+      <SigmoidReadoutViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           (가정) 은닉값 합에 4를 곱하고 6을 빼면 네 로짓은
           <code>[−2,2,2,−2]</code>입니다. 시그모이드를 적용하면 약

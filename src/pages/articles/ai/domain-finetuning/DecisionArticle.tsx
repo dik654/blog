@@ -13,6 +13,7 @@ import {
   InterventionFunnelViz,
 } from "./DomainDecisionViz";
 import { DOMAIN_ADAPTATION_FIXTURE as FIXTURE } from "./calculations";
+import ObjectiveUpdateAxesViz from "./viz/ObjectiveUpdateAxesViz";
 
 const STATE_BOUNDARIES = [
   {
@@ -134,6 +135,11 @@ export default function DomainAdaptationDecisionArticle() {
             input과 원하는 response의 예시로 행동을 학습합니다. 세 이름은 서로 다른
             상태와 학습 신호를 가리킵니다.
           </p>
+        </div>
+
+        <ObjectiveUpdateAxesViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             PEFT는 또 다른 축입니다. LoRA처럼 base weight 대부분을 고정하고 작은
             update만 학습하는 방법은 “무엇을 학습할지”가 아니라 “어느 parameter를

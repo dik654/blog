@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
+import ShellStringEffectViz from "./viz/ShellStringEffectViz";
 import ValidationStagesViz from "./viz/ValidationStagesViz";
 
 const executionTrace = [
@@ -163,6 +164,11 @@ export default function Overview() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>argv 실행과 shell string 실행은 서로 다른 API입니다</h3>
+      </div>
+
+      <ShellStringEffectViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p><strong>직접 argv 실행</strong>은 executable과 argument 배열을 host가 나눠 process API에 전달합니다. 이때 <code>|</code>, <code>&gt;</code>,<code>$VAR</code>는 자동으로 shell 문법이 되지 않습니다. 반대로 <strong> shell string 실행</strong>은 문자열 하나를 shell interpreter에 넘기므로 quote 제거, parameter expansion, command substitution, pipeline과 redirection이 shell 규칙에 따라 처리됩니다. 그래서 화면에 보인 첫 token만으로는 실제 effect를 판단할 수 없습니다.</p>
         <p>예를 들어 첫 제안인 <code>rg -n &quot;401|Unauthorized&quot; src tests</code>는 눈에 보이는 범위에서는 search입니다. 그러나 <code>rg ... &gt; report.txt</code>는 file write를 만듭니다.<code>rg ... | sh</code>에서는 뒤쪽 process가 입력을 코드로 해석합니다.<code>rg &quot;$(cat "$HOME/.token")&quot; .</code>처럼 expansion이 먼저 민감한 file을 읽을 수도 있습니다. executable name, shell program, expansion source와 effect target은 서로 다른 field로 다뤄야 합니다.</p>
         <p>Direct 실행이라면 executable은 <code>rg</code>, argv는 <code>[&quot;-n&quot;, &quot;401|Unauthorized&quot;, &quot;src&quot;, &quot;tests&quot;]</code>로 네 argument가 그대로 전달됩니다. Pinned 경로에서는 이 전체 text가 <code>sh -lc</code>의 command string 한 개가 되고 shell이 quote 제거와 expansion을 소유합니다. 두 경우 모두 host current working directory와 inherited environment가 의미에 영향을 주므로 snapshot에 남겨야 합니다. Direct argv와 sanitized environment를 선호하는 것은 hardening 선택이며 pinned runtime이 이미 그렇게 실행한다는 설명은 아닙니다.</p>

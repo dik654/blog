@@ -3,6 +3,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { YamuxBackpressureViz, YamuxStackViz } from "./viz/ModernYamuxViz";
+import FailureScopeViz from "./viz/FailureScopeViz";
+import FrameWireViz from "./viz/FrameWireViz";
+import StreamOpenViz from "./viz/StreamOpenViz";
+import WindowLedgerViz from "./viz/WindowLedgerViz";
 
 export default function ModernYamuxArticle() {
   return (
@@ -43,6 +47,7 @@ export default function ModernYamuxArticle() {
             SYN은 새 줄을 만들고 ACK는 상대가 그 줄을 보았다고 알립니다
           </h2>
         </header>
+        <StreamOpenViz />
         <p>
           Client인 Alice는 홀수 stream ID, server인 Bob은 짝수 ID를 사용합니다. Alice가
           stream 1의 첫 DATA 또는 WINDOW_UPDATE에 SYN을 붙이면 Bob은 ACK나 RST로
@@ -93,6 +98,7 @@ export default function ModernYamuxArticle() {
           stream의 sender backpressure로 바꾸는 지점입니다.
         </p>
         <YamuxBackpressureViz />
+        <WindowLedgerViz />
         <ExplainedFormula
           question="Receiver가 지금 돌려줄 WINDOW_UPDATE는 몇 byte일까요?"
           idea={<>지금까지 받은 byte에서 아직 application buffer에 남은 byte를 빼면 실제로 소비된 양입니다. 그 값이 현재 최대 창의 절반보다 작으면 frame을 자주 보내지 않기 위해 아직 update하지 않습니다.</>}
@@ -192,6 +198,7 @@ export default function ModernYamuxArticle() {
             한 stream의 credit 정체는 격리되지만 socket 정체는 모두에게 번집니다
           </h2>
         </header>
+        <FrameWireViz />
         <p>
           Stream 1의 send window가 0이어도 stream 3에 credit가 있으면 connection은 stream
           3의 frame을 보낼 수 있습니다. 현재 구현은 한 DATA payload를 기본 최대 16 KiB로
@@ -273,6 +280,7 @@ export default function ModernYamuxArticle() {
             RST는 한 줄을 버리고 GO_AWAY·I/O error는 연결 전체를 닫습니다
           </h2>
         </header>
+        <FailureScopeViz />
         <p>
           Stream 1의 RST는 그 request와 partial payroll buffer만 실패시킵니다. Stream 3은
           connection이 건강하고 자기 credit가 남아 있으면 계속 진행할 수 있습니다. 반면

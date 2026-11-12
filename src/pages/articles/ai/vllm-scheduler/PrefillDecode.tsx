@@ -4,6 +4,8 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import ChunkBudgetGridViz from "./viz/ChunkBudgetGridViz";
+import KvHeadBlockViz from "./viz/KvHeadBlockViz";
+import ServiceShareViz from "./viz/ServiceShareViz";
 const CHUNK_TERMS = [
   {
     symbol: "P",
@@ -153,6 +155,9 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
             heap 정렬 규칙으로 다시 넣습니다. 선점한 요청은 언제나 맨 앞이라는
             설명은 priority 정책에 맞지 않습니다.
           </p>
+        </div>
+        <KvHeadBlockViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             빈 KV 블록이 200개인데 앞 요청에는 500개가 필요하고 뒤 요청은
             20개면 앞의 할당 실패에서 순회가 멈추는 경로에서는 둘 다 기다립니다.
@@ -208,6 +213,7 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
         <h2 className="mb-6 text-2xl font-bold">
           11. 요청 두 개와 입력 세 개가 같은 서비스를 뜻하지는 않습니다
         </h2>
+        <ServiceShareViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             R1·R2가 사용자 X의 요청이고 P가 사용자 Y의 요청이라고 합시다. 입력

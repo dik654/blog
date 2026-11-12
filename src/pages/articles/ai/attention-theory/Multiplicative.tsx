@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AttentionScoreChoiceViz from "./viz/AttentionScoreChoiceViz";
+import ScaledSoftmaxViz from "./viz/ScaledSoftmaxViz";
 
 export default function Multiplicative() {
   return (
@@ -50,6 +51,11 @@ export default function Multiplicative() {
         </p>
 
         <h3>왜 √dₖ로 나누는가</h3>
+      </div>
+
+      <ScaledSoftmaxViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Query와 key의 성분이 평균 0, 분산 1이며 서로 독립이라는 단순한 가정
           아래에서 내적의 분산은 차원 <code>dₖ</code>에 비례한다. 차원이 커질수록

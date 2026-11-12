@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import BatchViz from "./viz/BatchViz";
+import ChunkRingViz from "./viz/ChunkRingViz";
 
 export default function BatchAndNegatives() {
   return (
@@ -59,6 +60,7 @@ export default function BatchAndNegatives() {
           title="조각 단위 계산이 정확히 무엇을 바꾸나요"
           preview="손실 값은 같고 메모리 상한만 달라집니다. 모든 유사도를 동시에 들고 있지 않아도 합을 완성할 수 있기 때문입니다."
         >
+          <ChunkRingViz />
           <p className="leading-7">
             칸마다 독립인 손실은 전체 합이 부분 합의 합입니다. 그래서 장치 A가 가진 이미지들과 장치 B가 가진
             문장들의 조각만 계산해 더하고, 표현을 다음 장치로 넘겨 같은 일을 반복하면 전체 손실이 완성됩니다.

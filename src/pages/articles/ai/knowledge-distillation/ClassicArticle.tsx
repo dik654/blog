@@ -3,6 +3,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import TemperatureOddsViz from "./viz/TemperatureOddsViz";
+import GapRecoveryViz from "./viz/GapRecoveryViz";
+import KlDirectionViz from "./viz/KlDirectionViz";
+import FeatureBridgeViz from "./viz/FeatureBridgeViz";
 import ScopeTaxonomy from "./ScopeTaxonomy";
 import DistillationPathLocator, {
   DistillationMapReturn,
@@ -70,6 +74,7 @@ export default function ClassicDistillationArticle() {
             만든다
           </h2>
         </header>
+        <TemperatureOddsViz />
         <p>
           Logit은 softmax 전 class score입니다. 큰 score 하나가 probability를
           독점하면 non-target class 관계가 보이지 않습니다. 모든 logit 차이를
@@ -157,6 +162,7 @@ export default function ClassicDistillationArticle() {
           유지한 채 완만해진 확률에도 teacher가 학습한 class 간 관계가 담겨
           있다는 뜻입니다.
         </p>
+        <GapRecoveryViz />
         <p>
           음성 인식 실험에서도 같은 패턴이 나옵니다. Baseline 단일 모델은 test frame accuracy 58.9%·WER 10.9%였고 model 10개 ensemble은
           61.1%·10.7%까지 좋아졌습니다. 그 ensemble의 soft target으로 distillation한 단일 모델은 60.8%·10.7%를 냈습니다. ensemble이 만든
@@ -337,6 +343,7 @@ T^2\frac{\partial L_t}{\partial z_{s,k}}&=\underbrace{O(1)}_{\text{hard loss와 
             </p>
           </section>
         </div>
+        <KlDirectionViz />
         <p>
           두 값은 같은 분포를 비교해도 다릅니다. 고전 식의 forward KL은 teacher가
           중요하게 본 class를 student가 놓치는 일을 크게 벌주며, reverse KL로 순서를
@@ -381,6 +388,7 @@ T^2\frac{\partial L_t}{\partial z_{s,k}}&=\underbrace{O(1)}_{\text{hard loss와 
             Feature를 비교하려면 좌표부터 맞춰야 합니다
           </h2>
         </header>
+        <FeatureBridgeViz />
         <p>
           (가정) Teacher 24층·1024 channel과 student 12층·384 channel은 좌표계가
           다릅니다. 어느 layer와 token을 대응할지 정하고 student feature를

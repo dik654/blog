@@ -1,5 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 
+import CrashReconcileViz from "./viz/CrashReconcileViz";
+import ProcessTreeTimeoutViz from "./viz/ProcessTreeTimeoutViz";
 import SandboxViz from "./viz/SandboxViz";
 
 const boundaries = [
@@ -132,6 +134,11 @@ export default function Sandbox() {
         </p>
 
         <h3>Timeout은 observation이지 descendant process cleanup의 증거가 아닙니다</h3>
+      </div>
+
+      <ProcessTreeTimeoutViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           <strong>PINNED:</strong> Foreground path는 requested milliseconds로
           <code>command.output()</code> future를 감싸고 deadline을 넘으면 interrupted
@@ -193,6 +200,11 @@ export default function Sandbox() {
         <p>observation은 process created, timeout signaled, force killed, descendants remaining을 각각 구분하고 final exit/signal과 output truncation도 별도 항목으로 둡니다. cleanup 중 host가 crash하면 stable task identity로 다시 조회해 종료를 이어 가되 effect 완료 여부를 모른 채 login test나 edit를 곧바로 중복 실행하지는 않습니다.</p>
 
         <h3>Crash 뒤에는 먼저 effect를 reconciliation하고 같은 command를 재실행합니다</h3>
+      </div>
+
+      <CrashReconcileViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>Login command가 <code>src/auth.ts</code> 수정은 끝냈지만 test 중 timeout되고 result 저장 전에 host가 crash했다고 가정하겠습니다. Planned operation ID와 canonical command·cwd·environment digest, authorization receipt가 durable해야 이 attempt를 다시 찾을 수 있습니다. 저장된 result가 없다는 이유만으로 edit가 실행되지 않았다고 판단하면 안 됩니다. 완료 상태는 ambiguous입니다.</p>
         <p>복구 시 stable idempotency key로 process-group·cleanup status를 조회하고 workspace before/after digest와 실제 diff를 effect receipt로 재구성합니다. child가 남으면 먼저 정리합니다. edit가 이미 적용됐으면 같은 mutation을 blindly rerun하지 않고 deterministic login test만 새 attempt로 실행합니다. 상태를 판정할 수 없거나 안전한 compensation이 없으면 baseline worktree를 폐기하거나 사람에게 escalation합니다. 이 계약은 exactly-once를 보장하지 않고 reconciliation 뒤 중복 effect를 줄입니다.</p>
 

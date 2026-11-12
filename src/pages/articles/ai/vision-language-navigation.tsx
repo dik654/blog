@@ -6,6 +6,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import VisionLanguageNavigationViz from "./vision-language-navigation/viz/VisionLanguageNavigationViz";
+import ActionSpaceMapViz from "./vision-language-navigation/viz/ActionSpaceMapViz";
+import TwoLevelRewardViz from "./vision-language-navigation/viz/TwoLevelRewardViz";
 import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "./shared/EmbodiedVisionLocator";
 import EmbodiedProcessOverviewViz from "./shared/EmbodiedProcessOverviewViz";
 
@@ -56,6 +58,11 @@ export default function VisionLanguageNavigationArticle() {
             이 가정을 없앴습니다. Agent가 실제 물리 environment에서 low-level action(전진·회전)만으로 움직여야 하는 훨씬 어려운 설정이 되고 여기서 성능이
             크게 떨어짐을 보였습니다.
           </p>
+        </div>
+
+        <ActionSpaceMapViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Waypoint prediction은 이 low-level action과 완전히 연속적인 이동 사이의 spectrum을
             메웁니다. 한쪽 끝은 고정 거리(0.25m)·고정 방향으로만 움직이는 VLN-CE 표준 action을
@@ -194,6 +201,7 @@ export default function VisionLanguageNavigationArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Two-level alignment는 계획과 제어를 서로 다른 reward로 정렬합니다
         </h2>
+        <TwoLevelRewardViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             "어디로 갈지"를 정하는 고수준 계획과 "어떻게 그곳에 갈지"를 정하는 저수준 제어를 하나의

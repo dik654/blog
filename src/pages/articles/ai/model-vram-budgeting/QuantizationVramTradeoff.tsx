@@ -1,6 +1,7 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BlockScaleBitsViz from "./viz/BlockScaleBitsViz";
 
 const BIT_WIDTH_TERMS = [
   { symbol: "b_{payload}", name: "payload bit", description: "Q8은 8bit, NVFP4는 4bit(E2M1)입니다." },
@@ -13,6 +14,9 @@ export default function QuantizationVramTradeoff() {
     <section id="quantization-vram-tradeoff" className="scroll-mt-20 space-y-7">
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h2>Q8과 NVFP4는 같은 payload+scale 공식의 다른 지점입니다</h2>
+      </div>
+      <BlockScaleBitsViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Q8과 NVFP4는 payload bit에 block마다 붙는 scale bit을 원소 수로 나눠 더한 같은 공식 위의 두 지점입니다. 서로 다른 계열로 갈라 볼 필요가 없습니다.
           Q8은 8bit payload에 32개 원소당 scale 1개를 더해 평균 8.5bit/parameter가 되고 NVFP4는 4bit payload에 16개 원소당 scale

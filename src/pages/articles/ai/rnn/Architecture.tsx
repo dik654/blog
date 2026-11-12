@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
 import RNNUnrollViz from "./viz/RNNUnrollViz";
+import StackedRnnGridViz from "./viz/StackedRnnGridViz";
 
 export default function Architecture() {
   return (
@@ -41,6 +42,8 @@ C_{\rm forward}
         assumptions={["output projection과 embedding parameter는 제외한 vanilla RNN cell만 셉니다.", "dense matrix multiplication을 기준으로 한 차수 표기입니다."]}
         interpretation="T가 늘어도 parameter 수는 그대로지만 latency와 activation memory는 늘어납니다. 특히 ht가 h(t-1)을 기다려야 하므로 time axis 병렬화가 제한됩니다."
       />
+
+      <StackedRnnGridViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>layer depth와 time depth는 다른 축이다</h3>

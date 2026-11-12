@@ -7,6 +7,9 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./mixture-of-experts/codeRefs";
 import { mixtureOfExpertsTree } from "./mixture-of-experts/fileTree";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
+import DispatchCombineViz from "./mixture-of-experts/viz/DispatchCombineViz";
+import CapacityOverflowViz from "./mixture-of-experts/viz/CapacityOverflowViz";
+import ParamLedgerViz from "./mixture-of-experts/viz/ParamLedgerViz";
 
 const experts = [
   { label: "E₁", topic: "공통 표현", load: 7, selected: true },
@@ -388,6 +391,11 @@ export default function MixtureOfExpertsArticle() {
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>선택된 token은 expert별로 모았다가 다시 원래 순서로 돌아온다</h3>
+        </div>
+
+        <DispatchCombineViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             실제 accelerator에서는 token 하나마다 작은 FFN을 따로 호출하지 않습니다. Top-k assignment를 expert별로 정렬해 연속 buffer를
             만들고(dispatch) expert FFN을 큰 batched GEMM으로 실행한 뒤 결과를 원 token position으로 되돌려 합치는(gather 또는 combine)
@@ -443,6 +451,8 @@ export default function MixtureOfExpertsArticle() {
           ]}
           interpretation="예를 들어 m=8, k=2, n=4이면 q=4입니다. 최대 load가 7이라면 peak ratio는 1.75이고, 평균 compute가 같아도 가장 느린 expert가 step을 끌 수 있습니다."
         />
+
+        <CapacityOverflowViz />
 
         <ExplainedFormula
           question="균등 load보다 여유를 둔 expert buffer가 넘치면 몇 개의 assignment를 따로 처리해야 할까요?"
@@ -599,6 +609,8 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           ]}
           interpretation="n을 늘리고 k를 유지하면 total capacity를 크게 늘리면서 token별 expert 경로는 비슷하게 유지할 수 있습니다. 대신 weight memory와 routing·communication complexity는 커집니다."
         />
+
+        <ParamLedgerViz />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">

@@ -6,6 +6,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DiffusionLanguageRefinementViz from "./diffusion-language-models/viz/DiffusionLanguageRefinementViz";
+import ForwardMaskingViz from "./diffusion-language-models/viz/ForwardMaskingViz";
+import RuntimeCacheViz from "./diffusion-language-models/viz/RuntimeCacheViz";
 import {
   DiffusionLearningLocator,
   DiffusionLearningMapReturn,
@@ -44,6 +46,7 @@ export default function DiffusionLanguageModelsArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Forward process는 token마다 남길지 MASK로 보낼지 독립적으로 고릅니다
         </h2>
+        <ForwardMaskingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Clean sequence <code>x</code>에서 noise time <code>t∈[0,1]</code>를 뽑고,
@@ -158,6 +161,7 @@ export default function DiffusionLanguageModelsArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           병렬 token 예측은 가능하지만 매 step 전체 문맥을 다시 읽는 비용이 있습니다
         </h2>
+        <RuntimeCacheViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Full-sequence masked diffusion은 한 forward에서 여러 token을 채울 수 있습니다. 다음 reverse step에서는 token 상태가 여러

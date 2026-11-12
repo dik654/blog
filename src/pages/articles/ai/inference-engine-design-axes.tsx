@@ -9,6 +9,7 @@ import InferenceEngineDesignAxesViz from "./inference-engine-design-axes/viz/Inf
 import KvUnitTailViz from "./inference-engine-design-axes/viz/KvUnitTailViz";
 import PrefixReuseUnitViz from "./inference-engine-design-axes/viz/PrefixReuseUnitViz";
 import OverlapStepViz from "./inference-engine-design-axes/viz/OverlapStepViz";
+import KvLayerLayoutViz from "./inference-engine-design-axes/viz/KvLayerLayoutViz";
 import { codeRefs } from "./inference-engine-design-axes/codeRefs";
 import { engineTrees } from "./inference-engine-design-axes/fileTree";
 import { ExecutionKernelMapReturn, ExecutionKernelSeriesLocator } from "./shared/ExecutionKernelSeriesLocator";
@@ -112,6 +113,7 @@ export default function InferenceEngineDesignAxesArticle() {
             conclusion="저장 단위는 요청당 최대 한 단위만 낭비하고, 그 몫은 500 token 요청에서 2.4%입니다."
             caveats={["vLLM과 TensorRT-LLM의 block 크기는 설정으로 바꿀 수 있습니다.", "llama.cpp의 읽는 범위는 여러 대화가 cell을 나눠 쓰면 더 넓어집니다."]}
           />
+          <KvLayerLayoutViz />
           <div className={prose}>
             <p>
               단위가 같은 512칸이어도 층을 담는 방식은 다릅니다. TensorRT-LLM의 block 하나는 32개 층의 K·V를 모두 담아 32 token × 128 KiB = 4 MiB가 한 덩어리입니다.

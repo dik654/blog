@@ -7,6 +7,7 @@ import {
   SandboxBoundaryMapReturn,
 } from "../shared/SandboxBoundaryLocator";
 import SandboxGpuIsolationViz from "./viz/SandboxGpuIsolationViz";
+import CombinationReceiptViz from "./viz/CombinationReceiptViz";
 
 export default function SandboxGpuIsolationArticle() {
   return (
@@ -155,6 +156,7 @@ export default function SandboxGpuIsolationArticle() {
           example="H100과 특정 드라이버·runsc가 통과해도 A6000이나 B300과 다른 드라이버 조합은 별도로 확인합니다."
           boundary="공식 지원 목록과 실제 장비의 검증 결과는 서로 대신하지 않습니다."
         />
+        <CombinationReceiptViz />
         <ExplainedFormula
           question="왜 GPU 지원 여부를 각 경계의 AND로 계산할까요?"
           idea="GPU가 보이더라도 드라이버 ABI·런타임 중개·IOMMU·리셋 중 하나가 실패하면 장치 수명주기가 완성되지 않기 때문입니다."

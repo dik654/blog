@@ -12,6 +12,8 @@ fs.mkdirSync(outDir, { recursive: true });
   for (const [w, h] of [[390, 844], [1440, 1000]]) {
     const ctx = await b.newContext({ viewport: { width: w, height: h } });
     const p = await ctx.newPage();
+    // 다른 편집으로 개발 서버가 다시 불러오면 측정이 끊기므로 HMR 연결을 막습니다.
+    if (p.routeWebSocket) await p.routeWebSocket(/.*/, () => {});
     const errs = [];
     p.on("console", (m) => {
       if (m.type() === "error" && !/favicon|404/.test(m.text())) errs.push(m.text().slice(0, 200));

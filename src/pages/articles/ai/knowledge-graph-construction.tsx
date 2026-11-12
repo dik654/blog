@@ -10,6 +10,8 @@ import {
 } from "./knowledge-graph-construction/KnowledgeGraphConstructionLocator";
 import EntityResolutionFunnelViz from "./knowledge-graph-construction/viz/EntityResolutionFunnelViz";
 import KnowledgeGraphConstructionViz from "./knowledge-graph-construction/viz/KnowledgeGraphConstructionViz";
+import MultiHopPathViz from "./knowledge-graph-construction/viz/MultiHopPathViz";
+import VersionSwitchViz from "./knowledge-graph-construction/viz/VersionSwitchViz";
 
 /**
  * Knowledge Graph 구축
@@ -253,6 +255,7 @@ SET r.source_id = "d-22",
             </div>
           ))}
         </div>
+        <VersionSwitchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             추출 결과는 staging에 쓰고 schema 제약, 필수 provenance와 중복 키를
@@ -314,6 +317,7 @@ SET r.source_id = "d-22",
         <h2 className="mb-6 text-2xl font-bold">
           이 글의 출력은 다음 글의 검색 입력이 됩니다
         </h2>
+        <MultiHopPathViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             이제 “tenant-a 사용자가 모바일 앱에서 보고한 오류”처럼 문서 하나에

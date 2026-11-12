@@ -4,6 +4,7 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import SelfAttentionTensorViz from "./viz/SelfAttentionTensorViz";
+import CausalScoreGridViz from "./viz/CausalScoreGridViz";
 
 export default function SelfAttention({
   onCodeRef,
@@ -97,6 +98,11 @@ export default function SelfAttention({
           각 head가 언제나 “문법 담당”, “공참조 담당”처럼 사람이 읽을 수 있는 기능 하나로 갈리지는 않는다. 다만 서로 다른 projection을 사용하므로 하나의
           attention map만 쓸 때보다 여러 관계를 병렬로 표현할 여지가 생긴다.
         </p>
+      </div>
+
+      <CausalScoreGridViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Training compute만 보면 score matrix 계산은 대략
           <code>O(n²d)</code>이고 attention probability의 materialization은

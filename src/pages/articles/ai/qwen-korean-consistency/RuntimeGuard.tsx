@@ -1,4 +1,5 @@
 import RuntimeGuardViz from "./viz/RuntimeGuardViz";
+import SpanRoutingViz from "./viz/SpanRoutingViz";
 
 const CALIBRATION = [
   ["true positive", "예기치 않은 언어 전환을 잡고 retry·review로 보냅니다."],
@@ -66,6 +67,8 @@ export default function RuntimeGuard() {
 function findHanSpans(fields): ScriptFinding[] { /* ... */ }`}
         </pre>
       </div>
+
+      <SpanRoutingViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>

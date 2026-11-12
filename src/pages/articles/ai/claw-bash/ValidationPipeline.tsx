@@ -2,6 +2,8 @@ import { CitationBlock } from "@/components/ui/citation";
 
 import BannedPatternsViz from "./viz/BannedPatternsViz";
 import PathEscapeCheckViz from "./viz/PathEscapeCheckViz";
+import PinnedDispatchViz from "./viz/PinnedDispatchViz";
+import ToctouRaceViz from "./viz/ToctouRaceViz";
 
 const validationLedger = [
   {
@@ -86,6 +88,11 @@ export default function ValidationPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Pinned production dispatch와 validation module은 같은 경로가 아닙니다</h3>
+      </div>
+
+      <PinnedDispatchViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p><strong>PINNED:</strong> 실제 tools dispatch는 input을 deserialize한 뒤 <code>tools/src/lib.rs</code> 안의 별도 <code>classify_bash_permission</code>을 호출합니다. 이 함수는 첫 token과 간단한 path heuristic으로 required mode를 정하고 enforcer가 주어진 경우에만 검사한 다음 <code>run_bash</code>를 호출합니다.</p>
         <p>한편 <code>runtime/src/bash_validation.rs</code>에는 read-only, destructive pattern, mode, <code>sed</code>, path와 command intent 검사가 구현돼 있습니다. <code>validate_command</code>는 mode → sed → destructive → path 순서로 첫 non-Allow 결과를 반환합니다. 그러나 같은 pinned commit의 production code에서 이 함수를 호출하는 경로는 확인되지 않고 module 자체의 unit test만 확인됩니다. 아래 검사를 “현재 Bash executor가 모두 강제한다”고 설명하면 source 범위를 넘습니다.</p>
       </div>
@@ -170,6 +177,11 @@ export default function ValidationPipeline() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Canonical path를 한 번 계산해도 TOCTOU는 남습니다</h3>
         <p>요청 시점의 cwd와 target을 문자열 prefix로 비교하면 <code>..</code>,<code>/work/app-old</code>처럼 비슷한 prefix와 symlink 때문에 workspace를 벗어날 수 있습니다. Existing path는 canonical component 단위로 비교하고 아직 없는 output은 가장 가까운 existing parent와 새 component를 나눠 검증해야 합니다. 실행 파일도 <code>PATH</code>에서 실제로 resolve된 identity를 판정에 묶어야 합니다.</p>
+      </div>
+
+      <ToctouRaceViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>그러나 검사 뒤 process가 file을 열기 전에 symlink나 directory entry가 바뀌면 검사한 대상과 실제 열린 대상이 달라지는 <strong> TOCTOU</strong>(time-of-check to time-of-use) race가 생깁니다. Canonical string을 decision log에 남기는 일과 execution-time filesystem boundary를 강제하는 일은 서로 다른 층입니다.</p>
       </div>
 

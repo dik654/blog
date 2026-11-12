@@ -1,6 +1,8 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import DrainViz from "./viz/DrainViz";
+import FlapViz from "./viz/FlapViz";
+import HeadroomViz from "./viz/HeadroomViz";
 
 export default function HealthAndDrain() {
   return (
@@ -61,13 +63,19 @@ export default function HealthAndDrain() {
           빼기가 성립하려면 두 가지가 필요합니다. 분배기가 "새 연결은 주지 말고 기존 연결은 유지"라는 중간 상태를 표현할 수 있어야 하고 남은 연결이 실제로 끝날 때까지 기다릴 최대
           시간이 정해져 있어야 합니다. 그 시간이 지나면 남은 연결은 끊고 진행합니다.
         </p>
+      </div>
 
+      <HeadroomViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           한 대를 뺄 때 남은 서버가 그 몫을 받을 수 있어야 한다는 조건도 같이 따라옵니다. 평소 사용률이 높으면
           한 대를 빼는 순간 남은 서버가 한계에 닿아 연쇄적으로 아파집니다. 그래서 빼기는 용량 여유가 있을 때만
           안전한 절차입니다.
         </p>
       </div>
+
+      <FlapViz />
 
       <div className="mt-6">
         <ProgressiveDetail
