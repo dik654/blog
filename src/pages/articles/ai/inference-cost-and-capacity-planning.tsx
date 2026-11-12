@@ -9,6 +9,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import InferenceCostAndCapacityPlanningViz from "./inference-cost-and-capacity-planning/viz/InferenceCostAndCapacityPlanningViz";
 import TierMixFleetViz from "./inference-cost-and-capacity-planning/viz/TierMixFleetViz";
 import GpuHeadroomStackViz from "./inference-cost-and-capacity-planning/viz/GpuHeadroomStackViz";
+import TcoBuildupViz from "./inference-cost-and-capacity-planning/viz/TcoBuildupViz";
+import Fp8WeightFitViz from "./inference-cost-and-capacity-planning/viz/Fp8WeightFitViz";
+import ReservedOnDemandViz from "./inference-cost-and-capacity-planning/viz/ReservedOnDemandViz";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import { ServingDecisionMapReturn, ServingDecisionSeriesLocator } from "./shared/ServingDecisionSeriesLocator";
 
@@ -149,6 +152,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             아니라 전력·냉각·공간·운영 인력도 포함합니다. GPU 8장 서버를 $250,000에 사서
             4년 내내 쓴다고 가정하겠습니다.
           </p>
+        </div>
+        <TcoBuildupViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             총 사용 가능 시간은 4년 × 해마다 8,760시간 × 서버마다 GPU 8장 = 280,320
             GPU-h입니다. 장비비는 $250,000 ÷ 280,320 GPU-h ≈ $0.89/GPU-h입니다.
@@ -367,6 +373,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             self-attention 매개변수와 첫·마지막 layer는 BF16으로 남겼습니다. 이 방식은 두 서버 BF16과 비교해 prefill 처리량이 최대
             50% 올랐다고 보고합니다.
           </p>
+        </div>
+        <Fp8WeightFitViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             이 혼합 정밀도 weight가 서버 한 대에 들어가는지는 논문 Table 3의 405B 숫자로 직접 셀 수 있습니다. Model dimension
             16,384, attention head 128개, KV head 8개, FFN dimension 53,248이면 layer마다 attention 매개변수가 약 5.7억 개,
@@ -415,6 +424,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             비용은 계약이 다르지만, 계속 필요한 기본 용량과 일부 시간에만 필요한 추가 용량을
             나누어 계산한다는 원리는 같습니다.
           </p>
+        </div>
+        <ReservedOnDemandViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             그래서 하루 종일 필요한 기본 부하는 약정 용량으로, 낮에만 필요한 최대 부하는
             온디맨드 용량으로 채웁니다. 기본 부하는 GPU 6장 × $1.2/GPU-h × 720시간 =

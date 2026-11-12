@@ -4,6 +4,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import IdentityGuidanceViz from "./viz/IdentityGuidanceViz";
+import TwoStageViz from "./viz/TwoStageViz";
 
 export default function Applications({
   onCodeRef,
@@ -23,6 +25,8 @@ export default function Applications({
           추가합니다.
         </p>
       </div>
+
+      <IdentityGuidanceViz />
 
       <ExplainedFormula
         title="Identity guidance — CFG와 같은 구조, 다른 조건을 토글"
@@ -87,6 +91,8 @@ export default function Applications({
           과정에 걸쳐 부담하지 않고 identity가 자리 잡는 초반 단계에만 집중시키는 two-stage serving으로 나눕니다.
         </p>
       </div>
+
+      <TwoStageViz />
 
       <AlgorithmBlock
         title="ID-LoRA — two-stage inference"

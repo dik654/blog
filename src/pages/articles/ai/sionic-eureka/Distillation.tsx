@@ -4,6 +4,7 @@ import {
 } from "@/content/sionic-eureka";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import TemperatureViz from "./viz/TemperatureViz";
 
 export default function Distillation() {
   return (
@@ -59,6 +60,9 @@ P_i^S=\underbrace{\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}}_{\text{student 후�
           ]}
           interpretation="낮은 temperature는 teacher가 높게 둔 후보의 차이를 더 강조합니다. KL은 embedding 좌표 자체가 아니라 현재 후보 목록 안의 상대 점수 분포를 전달합니다."
         />
+        <div className="not-prose my-6">
+          <TemperatureViz />
+        </div>
         <p className="leading-7">
           Student score는 cosine similarity이고 loss는 query별 후보군 안에서 teacher와 student의 분포를 맞춥니다. 이 실험에서는 in-batch
           negative를 loss에 더하지 않아 저장한 teacher 후보와 student 후보의 support를 일치시켰습니다 <strong>[M]</strong>. Temperature가 작을수록 상위 후보의 차이가 더

@@ -7,6 +7,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { logarithmCodeRefs } from "./codeRefs";
 import HalvingCountViz from "./viz/HalvingCountViz";
+import CoinBranchViz from "./viz/CoinBranchViz";
+import PartialBaseChangeViz from "./viz/PartialBaseChangeViz";
+import UnderflowLineViz from "./viz/UnderflowLineViz";
 const LOG_DEFINITION="https://openstax.org/books/college-algebra-2e/pages/6-3-logarithmic-functions";
 const LOG_RULES="https://openstax.org/books/college-algebra-2e/pages/6-5-logarithmic-properties";
 const PYTHON_MATH="https://docs.python.org/3.9/library/math.html";
@@ -38,6 +41,7 @@ export default function ExponentsLogarithmsArticle(){const sidebar=useCodeSideba
 <p>절반으로 2000번 줄이면 분모는 2를 2000번 곱한 수입니다. 이런 양을 작은 소수로 직접 쓰는 대신 절반으로 줄인 횟수 2000을 보관할 수 있습니다. 2001번 줄인 양이 그보다 다시 절반이라는 사실도 두 횟수의 차이 1에서 읽을 수 있습니다.</p>
 <p>이 방법이 원래 양을 크게 바꾸어 만드는 것은 아닙니다. 같은 양의 다른 기록입니다. 계산 장치가 아주 작은 소수를 구별하지 못하더라도 횟수 쪽의 기록은 아직 구별할 수 있습니다. 다만 마지막에 원래 작은 소수로 되돌려 저장하면 같은 표현 범위에 다시 막힐 수 있습니다.</p>
 <p>정확히 절반의 거듭 반복이 아닌 값도 있습니다. 1/3은 한 번 줄인 1/2과 두 번 줄인 1/4 사이에 있습니다. 이를 표현하려면 횟수를 정수에만 묶지 않고 1과 2 사이의 수로 넓혀야 합니다. 실제 확률은 이런 중간 값도 많이 사용합니다.</p>
+<CoinBranchViz />
 <p>앞면 가능성 1/2이라는 숫자만 보고 무조건 세 번 곱하면 안 됩니다. 한 번 던진 결과를 세 칸에 그대로 복사한다면 각 칸의 앞면 가능성은 1/2이지만 세 칸 모두 앞면일 가능성도 1/2입니다. 두 번째와 세 번째 칸에서 새로운 선택이 없기 때문입니다. 계산 규칙과 그 규칙에 넣을 값의 조건을 함께 확인해야 합니다.</p>
 </section>
 <section id="names" data-teach-level="3" className="space-y-6"><h2 className="text-2xl font-bold">6 · 배율, 적용 정도, 거꾸로 묻는 계산에 이름을 붙인다</h2>
@@ -79,6 +83,7 @@ export default function ExponentsLogarithmsArticle(){const sidebar=useCodeSideba
 <p>자연상수 e≈2.71828을 밑으로 쓰는 로그는 ln이라고 적습니다. x=bʸ에 밑 a의 로그를 취하면 logₐx=y·logₐb입니다. b≠1이라 분모가 0이 아니므로 나누어 y를 구할 수 있습니다.</p>
 <ExplainedFormula question="계산기가 주는 자연로그로 밑 2의 값을 어떻게 구할까요?" idea="같은 양의 로그를 기준 배율 하나의 로그로 나눕니다. 이번 1/8은 자연로그에서 −3ln2이므로 ln2로 나누면 −3입니다." formula={String.raw`\log_b x=\frac{\log_a x}{\log_a b}`} annotatedFormula={String.raw`\begin{gathered}\log_b x=\frac{\log_a x}{\log_a b}\\[8pt]\log_2(1/8)=\frac{\underbrace{\ln(1/8)}_{-3\ln2}}{\underbrace{\ln2}_{\text{기준 배율의 값}}}=-3\end{gathered}`} operations={[{expression:String.raw`\log_2 8=\ln8/\ln2=3`,annotation:["같은 변환을 8에도 대입합니다."]},{expression:String.raw`-\ln(1/8)=3\ln2\approx2.079442`,annotation:["음의 로그로 측정한 비용은 자연로그 단위에서 이 값입니다."]}]} terms={[{symbol:"a, b",name:"두 기준 밑",description:"양수이며 1이 아닌 두 값입니다."},{symbol:String.raw`\log_a b`,name:"단위 변환의 분모",description:"기준 배율 b를 밑 a에서 읽은 고정된 수입니다."},{symbol:"x",name:"원래 양",description:"단위를 바꾸어도 x 자체는 변하지 않습니다."}]} assumptions={["x>0, a>0, b>0이며 a와 b는 모두 1이 아닙니다.","값의 순서를 보존하는 양의 변환인지 보려면 분모의 부호도 확인합니다."]} interpretation="밑 2와 e는 모두 1보다 커서 변환 계수 1/ln2가 양수입니다. 그러나 밑 1/2로 바꾸면 ln(1/2)가 음수라 값의 부호와 순서가 뒤집힙니다." />
 <p>한 사건의 음의 로그를 밑 2로 재면 단위는 bit, 자연로그로 재면 nat입니다. 확률 1/8의 비용은 3 bit 또는 3ln2≈2.079442 nat입니다. 두 단위 사이의 양의 상수배는 단독 목적함수의 최솟값을 만드는 위치를 보존합니다. 함수값의 크기는 달라집니다.</p>
+<PartialBaseChangeViz />
 <p>미분값도 같은 상수배가 되므로 같은 학습률을 사용한 한 번의 이동은 달라질 수 있습니다. 다른 비용과 더할 때 한 항의 밑만 바꾸면 전체의 공통 상수배가 아닙니다. 그 항이 차지하는 상대 비중이 바뀌어 최적 위치도 달라질 수 있습니다.</p>
 <ProgressiveDetail title="한 비용만 단위를 바꾸면 최적 위치가 달라지는 예" preview="한 사건의 음의 로그 비용에 θ²를 더합니다. 첫 항만 1/ln2배 하면 두 항의 균형이 바뀝니다."><div className="space-y-5"><p>설명용 모형에서 q(θ)=exp(−(θ−1)²)로 두면 q는 0보다 크고 1 이하입니다(가정). 자연로그 비용 −lnq=(θ−1)²에 추가 비용 θ²를 더하면 미분은 2(θ−1)+2θ이고 최소 위치는 θ=1/2입니다.</p><p>첫 항만 밑 2로 바꾸면 (θ−1)²/ln2+θ²입니다. 미분을 0으로 놓으면 θ=1/(1+ln2)≈0.590616입니다. 두 식 모두 양의 이차항을 가지므로 이 위치가 각각 유일한 최소입니다. 전체 식을 같은 양의 상수로 곱한 경우와 구별해야 합니다.</p></div>
 
@@ -104,6 +109,7 @@ export default function ExponentsLogarithmsArticle(){const sidebar=useCodeSideba
 <p>아래 예제는 이 글에서 작성한 Python 코드입니다. 로컬 CPython 3.9.6에서 실행했고 float의 밑은 2, 유효 숫자는 이진수 53자리였습니다. 이 환경의 작은 양수를 표현하는 방식과 결과를 기록한 것이며 모든 언어와 장비의 마지막 자리가 같다는 주장은 아닙니다.</p>
 <CodeViewButton label="직접 실행한 확률과 로그 비교 예제" onClick={()=>sidebar.open("experiment",logarithmCodeRefs["experiment"])} />
 <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-3">실행한 식</th><th className="p-3">기록한 결과</th></tr></thead><tbody>{[["0.5 ** 3","0.125"],["math.log(0.125, 2)","−3.0"],["0.5 ** 2000","0.0"],["2000 * math.log(0.5)","약 −1386.294361"],["2001 * math.log(0.5)","약 −1386.987508"],["math.exp(2000 * math.log(0.5))","0.0"]].map((row,i)=><tr key={i} className="border-t border-border">{row.map((cell,j)=><td key={j} className="p-3 align-top font-mono text-xs">{cell}</td>)}</tr>)}</tbody></table></div>
+<UnderflowLineViz />
 <p>수학적으로 2⁻²⁰⁰⁰은 양수입니다. 이 환경에서 가장 작은 양수 float는 2⁻¹⁰⁷⁴인데 그보다 훨씬 작아 직접 계산하면 0으로 반올림됩니다. 이를 언더플로(underflow)라고 합니다. sys.float_info.min은 가장 작은 정규 양수 2⁻¹⁰²²이며 모든 양수 중 최솟값은 아닙니다. 더 작은 비정규 값까지 포함한 최솟값은 math.ulp(0.0)으로 확인했습니다.</p>
 <p>반면 2000·ln(0.5)=−2000·ln2는 이 범위에서 충분히 표현할 수 있습니다. 2001번의 로그값과도 구별됩니다. 이미 0이 된 곱에 나중에 math.log를 적용하면 ValueError가 나므로 먼저 로그로 바꾸어 더해야 합니다. 이 기록을 exp로 원래 확률에 되돌리면 다시 0이 되는 것도 표에서 확인했습니다.</p>
 <p>원래 확률의 합을 구할 때는 로그값을 그냥 더할 수 없습니다. 두 로그값이 s₁, s₂라면 합의 로그는 ln(exp(s₁)+exp(s₂))입니다. 지수 계산이 너무 작거나 커질 수 있으므로 실제로는 크기 보정도 필요합니다. 이 log-sum-exp와 <Link to="/cs/ai/softmax">softmax의 최댓값 빼기</Link>는 곱을 로그의 합으로 옮기는 규칙과 구분합니다.</p>

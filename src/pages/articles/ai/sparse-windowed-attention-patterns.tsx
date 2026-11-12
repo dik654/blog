@@ -6,6 +6,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SparseWindowedAttentionPatternsViz from "./sparse-windowed-attention-patterns/viz/SparseWindowedAttentionPatternsViz";
+import ReceptiveFieldStackViz from "./sparse-windowed-attention-patterns/viz/ReceptiveFieldStackViz";
+import RollingBufferViz from "./sparse-windowed-attention-patterns/viz/RollingBufferViz";
+import HybridKvTotalViz from "./sparse-windowed-attention-patterns/viz/HybridKvTotalViz";
+import NsaBranchesViz from "./sparse-windowed-attention-patterns/viz/NsaBranchesViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
@@ -67,6 +71,9 @@ export default function SparseWindowedAttentionPatternsArticle() {
             봅니다. Attention 이 보는 폭은 i 가 커져도 w 로 일정합니다. 한 layer 의 attention FLOP 과 그 layer 가 저장해야 하는 KV 폭이 모두 n
             이 아니라 w 에 비례합니다.
           </p>
+        </div>
+        <ReceptiveFieldStackViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Mistral 7B 는 W=4096, layer 32 개에 이 패턴을 씁니다. 한 layer 는 4096 개 밖의 token 을 보지 못하지만 layer 를 쌓으면 정보가 한
             칸씩 더 멀리 전달됩니다. k 번째 layer 까지 쌓은 뒤의 이론적 수신 범위(receptive field)는 W×k 이고 32 layer 전부를 지나면 약 131,072
@@ -97,6 +104,7 @@ export default function SparseWindowedAttentionPatternsArticle() {
           assumptions={["Causal window(과거 w 개만)를 기준으로 하며, dilation 이나 layer 별로 다른 w 는 다음 절에서 따로 다룹니다.", "FLOP 은 QK·PV matmul만 세고 global token 이나 random key 는 다음 절에서 더합니다."]}
           interpretation="n=32,768, w=4096 이면 FLOP 은 dense 대비 8분의 1이고, 이는 Mistral 7B 논문이 보고한 32K sequence 에서의 KV cache 8배 절감과 같은 비율입니다. 수신 범위는 32 layer 뒤 131,072 로 sequence 전체보다 넓지만, layer 8개를 지나야 그 32K 를 겨우 덮습니다."
         />
+        <RollingBufferViz />
         <AlgorithmBlock
           title="Rolling-buffer KV cache 갱신 (Mistral SWA)"
           input={["새 token 위치 i 의 K_i, V_i", "고정 크기 W 인 순환 buffer K_buf, V_buf"]}
@@ -227,6 +235,9 @@ export default function SparseWindowedAttentionPatternsArticle() {
             128K 같은 긴 문맥에서 실제로 그 길이를 통째로 저장하는 layer 는 global layer
             뿐입니다.
           </p>
+        </div>
+        <HybridKvTotalViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 절감을 산수로 확인해 보면, layer 30 개 중 5 개가 global(n=32,768), 25 개가
             local(w=1024)인 5:1 구성의 KV 총량은 all-global 대비{" "}
@@ -273,6 +284,9 @@ export default function SparseWindowedAttentionPatternsArticle() {
             입력 내용과 무관합니다. Native Sparse Attention(NSA)은 이 결정을 학습 가능한
             연산으로 바꿔, 어떤 block 을 볼지를 매 query 마다 content 기반으로 고릅니다.
           </p>
+        </div>
+        <NsaBranchesViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             NSA 가 함께 돌리는 branch 는 셋입니다. 첫째는 block 32개를 stride 16으로 묶는 압축 branch입니다. 둘째는 압축 단계의 attention score로 중요도를
             매겨 크기 64인 block 16개를 고르는 선택 branch입니다. 셋째는 최근 512 token을 보는 sliding-window branch입니다.

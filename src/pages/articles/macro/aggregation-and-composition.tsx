@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ThriftParadoxViz from "./aggregation-and-composition/viz/ThriftParadoxViz";
 import MultiplierLeakViz from "./aggregation-and-composition/viz/MultiplierLeakViz";
+import HiddenDistributionViz from "./aggregation-and-composition/viz/HiddenDistributionViz";
 
 /**
  * 한 사람에게 맞는 답이 모두에게 맞지는 않습니다
@@ -353,7 +354,11 @@ export default function AggregationAndCompositionArticle() {
             앞 세 절은 모두의 소득을 하나의 숫자로 다뤘습니다. 편리하지만 대가가
             있습니다. 같은 총액이 전혀 다른 모양에서 나올 수 있습니다.
           </p>
+        </div>
 
+        <HiddenDistributionViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             다섯 사람을 두겠습니다. 한쪽은 20씩 고르게 받고, 다른 쪽은 60, 20,
             10, 5, 5로 받습니다. 총액은 둘 다 100이고 평균도 둘 다 20입니다.

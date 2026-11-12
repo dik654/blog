@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import NegativePositionViz from "./viz/NegativePositionViz";
 
 export default function Training({
   onCodeRef,
@@ -88,6 +89,11 @@ export default function Training({
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Reference를 '과거'로 명시하는 negative position</h3>
+      </div>
+
+      <NegativePositionViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Context를 이어붙이기만 하면{" "}
           <Link to="/cs/ai/yarn-rope-extension#rope-foundation">RoPE</Link>

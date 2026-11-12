@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ComparativeAdvantageViz from "./gains-from-trade/viz/ComparativeAdvantageViz";
+import TradeBundleViz from "./gains-from-trade/viz/TradeBundleViz";
 import TradeRangeViz from "./gains-from-trade/viz/TradeRangeViz";
 
 /**
@@ -254,6 +255,11 @@ export default function GainsFromTradeArticle() {
           <p className="leading-7">
             답은 무엇을 만들었는지가 바뀌었다는 데 있습니다. 교환할 수 있으면 각자가 자기가 싸게 만드는 쪽에 시간을 몰 수 있고 같은 시간에서 더 많은 것이 나옵니다.
           </p>
+        </div>
+
+        <TradeBundleViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
 
           <p className="leading-7">
             숫자로 확인해 보겠습니다. 가온이 케이크 2개를 직접 만들면 빵 4판을

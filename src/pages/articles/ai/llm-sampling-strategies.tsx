@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LlmSamplingStrategiesViz from "./llm-sampling-strategies/viz/LlmSamplingStrategiesViz";
+import TopKVersusTopPViz from "./llm-sampling-strategies/viz/TopKVersusTopPViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
@@ -250,6 +251,7 @@ export default function LlmSamplingStrategiesArticle() {
             값입니다.
           </CitationBlock>
         </div>
+        <TopKVersusTopPViz />
         <TermBreakdown
           title="Top-k 와 top-p 의 차이"
           description="둘 다 분포를 자르고 재정규화하지만, 무엇을 고정하는지가 다릅니다."

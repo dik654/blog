@@ -5,6 +5,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import WindowBlockReleaseViz from "./sliding-window-kv-and-attention-sinks/viz/WindowBlockReleaseViz";
 import SinkRingViz from "./sliding-window-kv-and-attention-sinks/viz/SinkRingViz";
+import MiddleBlockReleaseViz from "./sliding-window-kv-and-attention-sinks/viz/MiddleBlockReleaseViz";
 import { codeRefs } from "./sliding-window-kv-and-attention-sinks/codeRefs";
 import { swaTrees } from "./sliding-window-kv-and-attention-sinks/fileTree";
 import {
@@ -194,6 +195,9 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
             미리 떼어 둡니다. 요청의 KV는 그대로 두고 주소 목록만 바꾸는 방식입니다.
           </p>
             <p>셋째는 gpt-oss처럼 KV 없이 head마다 학습한 값을 softmax 분모에 더하는 sink입니다. 이 경우 서버가 남길 token이 없습니다. 창 층은 3절처럼 block을 돌려주면 됩니다. 같은 모델의 짝수 층에만 창이 걸리는 것도 같은 파일 157–168행에서 확인할 수 있습니다.</p>
+          </div>
+          <MiddleBlockReleaseViz />
+          <div className={prose}>
             <p>vLLM에는 비슷한 모양의 관리자가 하나 더 있습니다. R-SWA용 RSWAManager는 prompt 앞부분을 남기고 prompt 끝과 현재 decode 창 사이의 가운데 block만 돌려줍니다. prompt 100, block 16, 창 64, 계산 500이면 7번부터 26번까지 block 20개입니다. 앞을 남기고 가운데를 비운다는 점에서 sink + 창과 닮았지만 남기는 앞부분이 prompt 전체라는 점이 다릅니다.</p>
           </div>
           {code("static-sink-table", "block table 앞에 sink block 끼우기")}

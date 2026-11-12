@@ -3,6 +3,9 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ProgressCoordinateViz } from "../experiment-tracking/viz/ModernExperimentViz";
+import AxisChoiceViz from "./viz/AxisChoiceViz";
+import ToleranceWindowViz from "./viz/ToleranceWindowViz";
+import RestartBranchViz from "./viz/RestartBranchViz";
 export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 곡선의 높이를 보기 전에 가로축이 무엇인지 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             두 학습 실행의 손실을 비교하려고 그래프를 열었습니다. 둘 다 100번째 점이라고 해서 같은 양을 학습한 것은 아닙니다. 기록을 남긴 횟수와 실제 모델을 바꾼 횟수, 처리한
             자료의 양은 다를 수 있습니다.
@@ -22,7 +25,7 @@ export default function Article() { return <div className="space-y-16"><section 
 
 <section id="inside-observation" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 점 하나에도 진행과 평가와 실행 정체를 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>각 점에 모델 상태의 식별자와 갱신 수, 처리 토큰, 경과 시간을 기록합니다. 평가 자료의 버전과 어떤 행을 포함했는지, 손실의 평균 방식도 연결합니다. loss라는 같은 이름만으로 같은 계산이라고 가정하지 않습니다.</p><p>시간에는 학습만 셌는지 평가와 저장·복구까지 포함했는지 적습니다. 여러 번 작은 묶음을 누적한 뒤 한 번 갱신했다면 기록 호출 수나 작은 묶음 수와 실제 갱신 수는 다릅니다.</p></div></section>
 
-<section id="why-axes" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 같은 갱신 번호와 같은 진행률도 같은 자원량은 아닙니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="why-axes" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 같은 갱신 번호와 같은 진행률도 같은 자원량은 아닙니다</h2><AxisChoiceViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             갱신 250회에서 A는 25만토큰, B는 100만토큰을 봅니다. 같은 번호를 비교하면 본 자료의 양이 4배 다른 효과가 섞입니다. 진행 축을 토큰으로 바꾸면 적어도 이 차이를
             드러낼 수 있습니다. (가정)
           </p><p>
@@ -104,7 +107,7 @@ export default function Article() { return <div className="space-y-16"><section 
           interpretation="예산200만토큰이라면 A의102만은진행률0.51, B의98만은0.49입니다. A의갱신1020과 B의245, 시간120초와150초, 손실0.42와0.39를 각각 원래 좌표와 보존합니다."
         /></section>
 
-<section id="comparison-boundary" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 가장 가까운 점을 골라도 허용폭 검사는 남습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="comparison-boundary" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 가장 가까운 점을 골라도 허용폭 검사는 남습니다</h2><ToleranceWindowViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             A에 90만의 0.43과 102만의 0.42가 있고 B에 98만의 0.39와 110만의 0.38이 있다고 합시다.100만과의 거리는 A에서 10만·2만, B에서
             2만·10만이므로 102만과 98만을 고릅니다. 둘 다 허용 3만 안이고 관측 차이는 0.03입니다. (가정)
           </p><p>
@@ -184,7 +187,7 @@ export default function Article() { return <div className="space-y-16"><section 
             간주하지 않습니다.
           </p></div></div></section>
 
-<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 과거 상태에서 다시 시작한 실행은 새 경로로 남깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>체크포인트가 과거 갱신 상태라면 복구 뒤 모델의 진척 좌표가 이전 관측보다 뒤로 갈 수 있습니다. 새 실행이나 분기로 연결하고 이미 소비한 토큰과 시간을 별도로 남깁니다. 같은 자료를 다시 처리한 비용을 없애거나 원래 관측을 덮어쓰지 않습니다.</p><p>한 실행 경로에서도 같은 갱신에 여러 평가를 할 수 있으므로 관측 번호와 모델 진척은 서로 다른 값입니다. 패딩 포함 여부·누적 배치·분산 작업자 간 중복 집계 규칙을 고정하고 보고할 때 목표와 실제 관측의 잔차를 함께 적습니다.</p></div><ContentBoundary article="learning-curve-tracking" /></section>
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 과거 상태에서 다시 시작한 실행은 새 경로로 남깁니다</h2><RestartBranchViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>체크포인트가 과거 갱신 상태라면 복구 뒤 모델의 진척 좌표가 이전 관측보다 뒤로 갈 수 있습니다. 새 실행이나 분기로 연결하고 이미 소비한 토큰과 시간을 별도로 남깁니다. 같은 자료를 다시 처리한 비용을 없애거나 원래 관측을 덮어쓰지 않습니다.</p><p>한 실행 경로에서도 같은 갱신에 여러 평가를 할 수 있으므로 관측 번호와 모델 진척은 서로 다른 값입니다. 패딩 포함 여부·누적 배치·분산 작업자 간 중복 집계 규칙을 고정하고 보고할 때 목표와 실제 관측의 잔차를 함께 적습니다.</p></div><ContentBoundary article="learning-curve-tracking" /></section>
 
 <section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 곡선의 같은 위치가 같은 의미인지 확인했나요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             갱신당 1,000토큰과 4,000토큰이면 100만토큰에서 각각 몇 번 갱신했나요? (답: 3절)

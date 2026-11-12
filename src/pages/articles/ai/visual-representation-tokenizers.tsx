@@ -5,6 +5,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import VisualRepresentationMap from "./visual-representation-tokenizers/viz/VisualRepresentationMap";
+import LatentGridViz from "./visual-representation-tokenizers/viz/LatentGridViz";
+import InvarianceViz from "./visual-representation-tokenizers/viz/InvarianceViz";
 import {
   DiffusionLearningLocator,
   DiffusionLearningMapReturn,
@@ -45,6 +47,7 @@ export default function VisualRepresentationTokenizersArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Reconstruction latent는 계산량을 줄이는 대신 복원 상한을 만듭니다
         </h2>
+        <LatentGridViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Latent diffusion의 autoencoder는 image <code>x</code>를 더 작은 spatial
@@ -109,6 +112,7 @@ N_z&=\underbrace{\frac{H}{f}\frac{W}{f}}_{\substack{\text{두 공간축을 각�
         <h2 className="mb-6 text-2xl font-bold">
           Semantic encoder는 pixel 복사보다 task에 필요한 불변성을 배웁니다
         </h2>
+        <InvarianceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Semantic representation은 같은 object를 crop하거나 조명을 바꿔도 비슷한

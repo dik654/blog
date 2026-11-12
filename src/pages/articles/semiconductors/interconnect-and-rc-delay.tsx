@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import InterconnectDelayViz from "./interconnect-and-rc-delay/viz/InterconnectDelayViz";
+import RcPathsViz from "./interconnect-and-rc-delay/viz/RcPathsViz";
+import CountOrderViz from "./interconnect-and-rc-delay/viz/CountOrderViz";
+import LengthDoublingViz from "./interconnect-and-rc-delay/viz/LengthDoublingViz";
+import StepThresholdViz from "./interconnect-and-rc-delay/viz/StepThresholdViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -32,6 +36,7 @@ return <div className="space-y-16">
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 전체 용량을 선 끝에 몰면 시작 쪽 경로를 잘못 셉니다</h2>
+<RcPathsViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">120 fF 전부를 700 Ω 뒤에 놓으면 시작 쪽 50 fF도 선 저항 200 Ω을 거친다고 가정하게 됩니다. 이때 생기는 추가 항은 200 Ω×50 fF=10 ps입니다. 그래서 84 ps는 이 두 점 근사에서 구한 74 ps보다 큽니다.</p><p className="leading-7">
             반대로 선의 저항만 더하고 용량을 빠뜨리면 출력을 보내는 소자가 새로 떠안은 100 fF를 계산에서 빠뜨립니다. 각 저항과 그 저항을 거쳐 충전하는 용량을 대응시켜야 두 실수를
             피할 수 있습니다.
@@ -66,11 +71,13 @@ return <div className="space-y-16">
 
 <section id="source" data-teach-level="5" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 원문의 π 식에 같은 네 값을 직접 넣습니다</h2>
+<CountOrderViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 6.884 강의안 12쪽은 <code>Rdriver×Cw/2+(Rdriver+Rw)×(Cw/2+Cload)</code>로 두 경로를 셉니다. 시작 쪽에는 500 Ω×50 fF=25 ps, 끝 쪽에는 (500+200) Ω×(50+20) fF=49 ps를 대입합니다. 합은 74 ps로 앞 계산과 같습니다.</p><p className="leading-7">앞 절은 저항을 기준으로 60+14를 더했고 원문 식은 용량의 위치를 기준으로 25+49를 더했습니다. 식을 전개하면 모두 <code>Rdriver(Cw+Cload)+Rw(Cw/2+Cload)</code>입니다. 같은 회로를 어떤 순서로 세는지 바꾼 것이므로 결과가 일치해야 합니다.</p><p className="leading-7">원문 13쪽의 장비·공정 수치는 이 가상의 네 값과 다릅니다. 본문은 12쪽의 연결 관계와 식을 가져와 별도 수치에 적용했습니다. 같은 식이라는 이유로 74 ps를 원문의 측정 결과라고 쓰지 않습니다.</p></div>
 </section>
 
 <section id="length" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 길이를 두 배로 늘리면 전체는 158 ps입니다</h2>
+<LengthDoublingViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
       <p className="leading-7">같은 단면과 주변 구조를 가정하고 길이만 두 배로 하면 배선은 400 Ω·200 fF입니다. 출력 저항 항은 500 Ω×(200+20) fF=110 ps, 배선 저항 항은 400 Ω×(100+20) fF=48 ps입니다. 합계 158 ps로 기준의 약 2.14배입니다.</p>
       <p className="leading-7">식의 <strong>배선 자체 항 R<sub>w</sub>C<sub>w</sub>/2</strong>만 떼면 기준 10 ps에서 40 ps로 네 배입니다. 길이가 두 배일 때 R과 C가 각각 두 배여서 곱이 네 배가 됩니다. 그러나 전체 74→158 ps에는 길이에 비례하는 출력 저항×배선 용량과 배선 저항×입력 용량, 길이와 무관한 출력 저항×입력 용량도 섞여 있습니다. 전체 지연을 네 배라고 말할 수 없는 이유입니다.</p>
@@ -92,6 +99,7 @@ return <div className="space-y-16">
 
 <section id="limits" data-teach-level="7" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">12. 정확한 도착 시각은 실제 파형과 배치에서 다시 구합니다</h2>
+<StepThresholdViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             배선을 생략한 가장 단순한 500 Ω·20 fF 회로에서도 RC=10 ps와 50% 도달 시각은 다릅니다. 이상적인 순간 전압 변화에 대해 50% 도달 시각은
             RC×ln2≈6.93 ps입니다. 배선을 더한 여러 저장점의 회로의 첫 모멘트에 이 계수 하나를 곱해 정확한 답이라고 할 수는 없습니다.

@@ -11,6 +11,9 @@ import ExpertUnionViz from "./serving-architecture-matrix/viz/ExpertUnionViz";
 import KvPlacementViz from "./serving-architecture-matrix/viz/KvPlacementViz";
 import NetworkDemandViz from "./serving-architecture-matrix/viz/NetworkDemandViz";
 import NodeFitViz from "./serving-architecture-matrix/viz/NodeFitViz";
+import ContextShareViz from "./serving-architecture-matrix/viz/ContextShareViz";
+import TwoNodePpViz from "./serving-architecture-matrix/viz/TwoNodePpViz";
+import TokenTimeViz from "./serving-architecture-matrix/viz/TokenTimeViz";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -173,6 +176,9 @@ export default function ServingArchitectureMatrixArticle() {
             들고 다니고 10층만 KV를 남깁니다. gpt-oss-120b는 36층 가운데 18층이 최근 128 token만 봅니다. Kimi K3는 93층 가운데 69층이 요약 행렬을,
             24층만 latent 기록을 씁니다.
           </p>
+        </div>
+        <ContextShareViz />
+        <div className={prose}>
           <p>요약 행렬은 문맥이 1K든 1M이든 크기가 같습니다. Qwen3.6-35B-A3B의 한 층은 value head 32개마다 128 × 128 행렬이라 FP32로 2MiB이고, 30층이면 요청당 약 63MB입니다. K3는 head 96개에 69층이라 FP32로 약 434MB입니다. 문맥이 길어질수록 이 고정 몫보다 길이 비례 몫이 훨씬 커집니다.</p>
         </div>
         <ExplainedFormula
@@ -369,6 +375,7 @@ export default function ServingArchitectureMatrixArticle() {
           conclusion="같은 노드에서 상주 가능한 128K 에이전트는 1개에서 142개까지 벌어지고, K2.5처럼 배치 하나로 20배가 바뀌는 행도 있습니다. 장비를 정하기 전에 모델의 구조를 먼저 읽어야 하는 이유입니다."
           caveats={["상주 가능 수는 위쪽 경계입니다. 요청당 속도 기준을 지키는 동시 처리 수는 측정해야 압니다.", "prefix 공유로 여러 에이전트가 같은 앞부분을 쓰면 실제 자리는 더 남습니다."]}
         />
+        <TwoNodePpViz />
         <div className={prose}>
           <p>
             빠른 노드 간 네트워크로 두 번째 노드를 붙여 PP 경계 하나를 노드 사이에 두면 가중치는 여전히 한 벌이고 늘어난 691.2GB는 모두 기록 자리가 됩니다. K2.5는
@@ -427,6 +434,9 @@ export default function ServingArchitectureMatrixArticle() {
         <div className={prose}>
           <p>다섯 숫자는 이 구조가 이 장비에 들어갈 수 있는지를 알려 줄 뿐, 엔진이 그 경로를 이 GPU에서 제대로 실행하는지는 알려 주지 않습니다. RTX PRO 6000은 SM120 계열이라 데이터센터 Blackwell과 kernel 지원이 다릅니다. 근거 문서가 확인한 열린 버그만 해도 몇 개가 행 하나를 통째로 막습니다.</p>
           <p>예를 들어 vLLM #48898은 NVFP4 MoE를 TP8로 나눌 때 장마다의 행렬 폭이 32의 배수가 아니면 출력이 깨지는 문제이고, #47990은 DeepSeek FP8의 CUTLASS 경로가 576 폭의 latent projection에서 실패하는 문제입니다. 둘 다 열려 있어서 DeepSeek-V3/R1 행은 계산상 들어가도 이 노드에서 실서빙된 보고를 찾지 못했습니다.</p>
+        </div>
+        <TokenTimeViz />
+        <div className={prose}>
           <p>속도 쪽도 표 밖에 있습니다. 3절의 대역폭 상한은 초당 400 token이 넘었지만 실제 단일 스트림은 65~101 token입니다. 차이의 큰 몫은 122번의 합치기와 kernel 실행 지연입니다. P2P를 켜고 끈 측정(65 대 44)을 token당 시간으로 바꾸면 15.4ms 대 22.7ms이고, 차이 7.3ms를 122로 나누면 합치기 한 번에 약 60μs가 늘어난 셈입니다(추정, 차이를 모두 통신 탓으로 둠).</p>
           <p>
             같은 위키는 동시 처리량을 최대로 만드는 설정이 반대로 P2P를 끄는 쪽이라고 적습니다. 요청 하나의 지연과 노드 전체의 처리량은 서로 다른 설정을 원합니다. 이 표로 후보를

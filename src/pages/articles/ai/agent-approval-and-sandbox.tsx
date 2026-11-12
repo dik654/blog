@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import GateMatrixViz from "./agent-approval-and-sandbox/viz/GateMatrixViz";
 import InheritedBoundaryViz from "./agent-approval-and-sandbox/viz/InheritedBoundaryViz";
+import WallGapsViz from "./agent-approval-and-sandbox/viz/WallGapsViz";
 
 /**
  * 에이전트 승인과 샌드박스는 서로를 대신하지 못합니다
@@ -324,6 +325,9 @@ export default function AgentApprovalAndSandboxArticle() {
         <h2 className="mb-6 text-2xl font-bold">9. 둘을 다 켜도 남는 빈틈과 고르는 기준</h2>
         <div className="prose prose-neutral prose-code:before:content-none prose-code:after:content-none max-w-none dark:prose-invert">
           <p className="text-lg leading-8">앞 표의 피해 0건은 다섯 명령 안에서 센 숫자이고 안전 보증이 아닙니다. 사람이 물음마다 바르게 거부한다는 가정부터 깨지기 쉽고 벽에도 뚫린 곳이 있습니다.</p>
+        </div>
+        <WallGapsViz />
+        <div className="prose prose-neutral prose-code:before:content-none prose-code:after:content-none mt-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             가장 흔한 빈틈은 벽 밖에서 도는 부품입니다. Claude Code 문서는 샌드박스가 셸 명령을 감쌀 뿐이고 내장 파일 도구, 훅, 로컬 MCP 서버는 그 밖에서 돈다고 적습니다. 셸만 막았다고 에이전트 전체를 막은 것이 아닙니다.
           </p>

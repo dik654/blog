@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TwoRatiosViz from "./why-per-head-stalls/viz/TwoRatiosViz";
 import CheckLoopViz from "./why-per-head-stalls/viz/CheckLoopViz";
+import WhatBrokeViz from "./why-per-head-stalls/viz/WhatBrokeViz";
 
 /**
  * 총량이 늘어도 한 사람 몫은 제자리일 수 있습니다
@@ -332,7 +333,11 @@ export default function WhyPerHeadStallsArticle() {
             깨졌는지 짚는 것</strong>입니다. 뒤쪽이 쓸모 있는 이유는 고리 자체는 여전히 옳기 때문입니다. 세 가정이 다
             성립하면 지금도 같은 결론이 나옵니다.
           </p>
+        </div>
 
+        <WhatBrokeViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             깨진 것은 둘입니다. 첫째, 거두는 양이 더하기로만 늘지 않았습니다. 같은 땅에서 거두는 양 자체가 바뀌었고 그 변화는
             더해지는 것이 아니라 곱해지는 쪽에 가까웠습니다. 둘째, 한 사람 몫이 늘었을 때 사람 수가 그만큼 늘지 않았습니다.

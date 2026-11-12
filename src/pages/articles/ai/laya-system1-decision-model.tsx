@@ -9,6 +9,10 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import LayaSystem1DecisionModelViz from "./laya-system1-decision-model/viz/LayaSystem1DecisionModelViz";
 import LayaDecisionPathViz from "./laya-system1-decision-model/viz/LayaDecisionPathViz";
 import ScoringRuleViz from "./laya-system1-decision-model/viz/ScoringRuleViz";
+import RlcdSampleViz from "./laya-system1-decision-model/viz/RlcdSampleViz";
+import CalibrationViz from "./laya-system1-decision-model/viz/CalibrationViz";
+import RouterCascadeViz from "./laya-system1-decision-model/viz/RouterCascadeViz";
+import BenchmarkBaselineViz from "./laya-system1-decision-model/viz/BenchmarkBaselineViz";
 import LayaPathLocator, { LayaPathReturn } from "./laya-system1-decision-model/LayaPathLocator";
 import { codeRefs } from "./laya-system1-decision-model/codeRefs";
 import { layaTrees } from "./laya-system1-decision-model/fileTree";
@@ -253,6 +257,7 @@ export default function LayaSystem1DecisionModelArticle() {
               쪽으로 logit을 옮깁니다. 아래 절차의 note는 표본 2개짜리 작은 예를 따라갑니다. 코드의 기본값은 4개입니다.
             </p>
           </div>
+          <RlcdSampleViz />
           <AlgorithmBlock
             title="RLCD 한 batch (train.py rlcd_loss)"
             input={["질문 하나의 logit (no 0.0, yes 0.4)", "정답 yes, 표본 수 S, noise 크기 σ = 0.4"]}
@@ -299,6 +304,7 @@ export default function LayaSystem1DecisionModelArticle() {
               질문의 확률로 문턱을 정하면 안 됩니다.
             </p>
           </div>
+          <CalibrationViz />
           <CalculationWalkthrough
             title="temperature와 ECE"
             question="T = 1.983은 확률을 얼마나 낮추고, 보정이 잘 됐는지는 어떻게 재나요?"
@@ -329,6 +335,9 @@ export default function LayaSystem1DecisionModelArticle() {
               Hugging Face 저장소에는 checkpoint가 셋 있습니다. English(ModernBERT-large, 421M, 512 token), multilingual(mmBERT-base, 322M, 1024 token, 8,192까지
               확장), typed-decisions(English를 네 가지 업무 흐름으로 미세조정)입니다. Router는 이 중 하나를 요청마다 고릅니다.
             </p>
+          </div>
+          <RouterCascadeViz />
+          <div className={prose}>
             <p>
               카드는 English checkpoint가 크메르어에서 정답률 0.000을 내면서 확신은 0.952였다고 적습니다. 틀리면서도 확신하므로 확신도 문턱으로는 걸러지지
               않습니다. 그래서 Router는 forward 전에 실행할 checkpoint를 따로 고릅니다. v0.4.15에서는 <code>model</code>, <code>task</code>, 선택적으로 켠 업무 자동
@@ -353,6 +362,7 @@ export default function LayaSystem1DecisionModelArticle() {
 
         <section id="benchmarks" data-teach-level="7" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">성능 경계</h2>
+          <BenchmarkBaselineViz />
           <div className={prose}>
             <p>
               카드가 앞세우는 0.766은 typed-decisions 과제의 학습 분할로 미세조정한 checkpoint의 정확도입니다. 같은 2,000개 결정에서 기본 English checkpoint는 0.362,

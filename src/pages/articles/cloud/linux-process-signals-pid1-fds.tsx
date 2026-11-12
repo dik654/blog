@@ -9,6 +9,8 @@ import ZombieTableViz from "./linux-process-signals-pid1-fds/viz/ZombieTableViz"
 import StopSequenceViz from "./linux-process-signals-pid1-fds/viz/StopSequenceViz";
 import SignalVerdictViz from "./linux-process-signals-pid1-fds/viz/SignalVerdictViz";
 import FdTableViz from "./linux-process-signals-pid1-fds/viz/FdTableViz";
+import TiniTreeViz from "./linux-process-signals-pid1-fds/viz/TiniTreeViz";
+import SigMaskDecodeViz from "./linux-process-signals-pid1-fds/viz/SigMaskDecodeViz";
 import { codeRefs } from "./linux-process-signals-pid1-fds/codeRefs";
 import { linuxProcTrees } from "./linux-process-signals-pid1-fds/fileTree";
 
@@ -320,6 +322,9 @@ $ ps -o pid,comm -p 7
               exec 뒤에는 같은 PID 1에서 python이 돕니다. 그러나 이제 python이 UNKILLABLE인 PID 1이고, 5절에서 본 대로 Python은
               SIGTERM 처리기를 기본으로 두지 않습니다. 7절의 세 조건이 그대로 맞아 SIGTERM은 여전히 버려집니다.
             </p>
+          </div>
+          <TiniTreeViz />
+          <div className={prose}>
             <p>
               둘째는 docker run --init이나 tini입니다. tini README는 tini가 자식 하나를 띄워 기다리면서 좀비를 거두고 신호를 전달한다고 적습니다. 그런데 start.sh를 그대로 두면
               트리는 tini(PID 1) → sh start.sh(PID 2) → python입니다. tini.c 533행은 기본으로 직계 자식 하나에만 kill을 보내므로 SIGTERM은 sh가 받습니다. trap이 없는
@@ -496,6 +501,7 @@ $ cat /proc/sys/fs/nr_open                   # RLIMIT_NOFILE 천장
               각각 막은 신호, 무시하는 신호, 처리기를 둔 신호의 16진 마스크입니다. 신호 N은 N − 1번째 비트이므로 SIGTERM 15는 0x4000 자리입니다.
             </p>
           </div>
+          <SigMaskDecodeViz />
           <pre className={pre}>{`$ docker exec shop-api grep -E 'SigIgn|SigCgt' /proc/1/status
 SigIgn: 0000000000000000
 SigCgt: 0000000000010002      # 0x4000 비트가 없음 → SIGTERM 처리기 없음 (예시 출력)

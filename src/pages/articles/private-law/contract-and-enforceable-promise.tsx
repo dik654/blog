@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PromiseFilterViz from "./contract-and-enforceable-promise/viz/PromiseFilterViz";
 import BreachIncentiveViz from "./contract-and-enforceable-promise/viz/BreachIncentiveViz";
+import DefaultRuleViz from "./contract-and-enforceable-promise/viz/DefaultRuleViz";
 
 /**
  * 어떤 약속을 법이 지켜 줍니까
@@ -285,7 +286,11 @@ export default function ContractAndEnforceablePromiseArticle() {
             그런데 적을 수 없습니다. 일어날 수 있는 일을 전부 떠올릴 수 없고 떠올려도 전부 적으면 협상이 끝나지 않습니다. 앞 글의 계산이 여기서 다시 나옵니다. 미리 적어 두는
             비용과 그때 가서 정하는 비용을 견주는 문제이고, 계약 당사자에게는 사안이 한 건뿐이라 미리 적는 쪽이 대체로 비쌉니다.
           </p>
+        </div>
 
+        <DefaultRuleViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             그래서 계약에는 반드시 빈칸이 남습니다. 그 빈칸을 법이 대신 메워 두고 당사자가 다르게 정하면 그쪽을 따릅니다. 미리 적지 않아도 되는 기본값을 제공하는 것입니다.
           </p>

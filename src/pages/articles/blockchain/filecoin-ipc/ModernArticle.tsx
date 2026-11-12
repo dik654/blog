@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { IpcFinalityViz } from "./IpcFinalityViz";
+import ParentFinalityCheckViz from "./viz/ParentFinalityCheckViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { ipcTree } from "./fileTrees";
@@ -254,6 +255,7 @@ export default function ModernFilecoinIpc() {
             식은 고정한 Fendermint provider의 proposal 검사와 storage
             transition을 함께 읽은 조건입니다.
           </aside>
+          <ParentFinalityCheckViz />
           <ExplainedFormula
             question="Child validator는 parent finality proposal을 무엇과 비교할까?"
             idea={

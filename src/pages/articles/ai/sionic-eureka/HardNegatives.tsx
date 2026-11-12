@@ -4,6 +4,7 @@ import {
 } from "@/content/sionic-eureka";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import MarginFilterViz from "./viz/MarginFilterViz";
 
 export default function HardNegatives() {
   return (
@@ -73,6 +74,9 @@ export default function HardNegatives() {
           ]}
           interpretation="후보가 positive와 지나치게 비슷하면 어렵더라도 negative로 확정하지 않습니다. Margin이 너무 크면 유용한 hard negative가 사라지고 너무 작으면 false negative가 섞입니다."
         />
+        <div className="not-prose my-6">
+          <MarginFilterViz />
+        </div>
         <p className="leading-7">
           이 부등식은 candidate가 positive보다 margin 이상 낮을 때만 negative로 채택한다는 뜻입니다. 고정 similarity threshold보다 query
           난이도에 적응하지만 margin과 mining encoder가 바뀌면 후보 분포도 바뀝니다. Model version, corpus snapshot, K, margin,

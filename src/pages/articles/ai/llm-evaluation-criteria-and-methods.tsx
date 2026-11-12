@@ -6,6 +6,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import FunctionalVsSemanticViz from "./llm-evaluation-criteria-and-methods/viz/LlmEvaluationCriteriaAndMethodsViz";
+import BertScoreMatchViz from "./llm-evaluation-criteria-and-methods/viz/BertScoreMatchViz";
+import PairwiseCycleViz from "./llm-evaluation-criteria-and-methods/viz/PairwiseCycleViz";
 import {
   EvaluationTrustPathLocator,
   EvaluationTrustPathMapReturn,
@@ -131,6 +133,7 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
             contextual embedding 으로 바꾼 뒤 상대 문장에서 가장 가까운 token 과 코사인 유사도를 매칭해 recall·precision·F1 을 계산합니다.
           </p>
         </div>
+        <BertScoreMatchViz />
         <ExplainedFormula
           question="BERTScore 의 F1 은 어떻게 계산되나요?"
           idea="각 token 을 상대 문장에서 코사인 유사도가 가장 높은 token 과 매칭해, 정답 token 기준 평균(recall)과 생성 token 기준 평균(precision)을 낸 뒤 조화평균합니다."
@@ -264,6 +267,9 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
             입니다. 절대 점수가 없어도 두 model 의 상대적 우열을 알 수 있습니다. 척도 차이가 없어 pointwise 보다 일관적이라고 보고되지만 후보가 n 개면 비교 쌍이 최대
             C(n,2) 개로 늘어납니다.
           </p>
+        </div>
+        <PairwiseCycleViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Ranking evaluation 은 여러 후보를 한 번에 순서로 매깁니다. Pairwise 승수를 모아
             순위를 매길 수도, judge 에게 후보 목록을 통째로 주고 순서를 받을 수도 있습니다.

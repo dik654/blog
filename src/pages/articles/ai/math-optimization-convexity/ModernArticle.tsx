@@ -3,6 +3,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import CurvatureShapeViz from "./CurvatureShapeViz";
+import FlatTangentViz from "./viz/FlatTangentViz";
+import SlopeTriangleViz from "./viz/SlopeTriangleViz";
+import ValleyStepViz from "./viz/ValleyStepViz";
 
 const BOYD = "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf";
 const MIT = "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-22-gradient-descent-downhill-to-a-minimum/";
@@ -67,6 +70,7 @@ export default function OptimizationGeometryArticle() {
       />
       <p>제곱을 전개하면 현에서 곡선을 뺀 값은 λx²+(1−λ)y²−[λx+(1−λ)y]²=λ(1−λ)(x−y)²입니다. 0≤λ≤1이므로 세 인수가 모두 0 이상입니다. 따라서 임의의 두 점과 모든 섞는 비율에서 볼록성 부등식이 성립합니다.</p>
       <p>입력의 정의역도 볼록한 집합이어야 합니다. 두 입력을 고르면 그 사이의 모든 입력 역시 허용되어야 한다는 뜻입니다. 여기서는 모든 실수이므로 이 조건을 만족합니다. 두 점의 계산값만 확인하고 정의역의 구멍을 무시할 수는 없습니다.</p>
+      <FlatTangentViz />
       <p>미분 가능한 볼록 함수에서는 f(y)≥f(x)+∇f(x)ᵀ(y−x)가 모든 두 점에서 성립합니다. 한 점의 접선 예측이 전체 함수의 아래쪽 경계입니다. 따라서 ∇f(x)=0이면 모든 y에 대해 f(y)≥f(x)이고 그 x는 전역 최소점입니다. 제약 없는 f=x²의 x=0이 이 경우입니다.</p>
       <p>이 결론은 “기울기가 0인 점이 있다면 최적이다”라는 조건부 결론입니다. 최소점이 반드시 존재한다거나 어떤 반복법이 빠르게 찾는다는 결론은 아닙니다. 앞 글의 구간 경계 최적점처럼 제약이 있으면 기울기가 0이 아닌 곳도 답이 될 수 있습니다.</p>
     </section>
@@ -85,6 +89,7 @@ export default function OptimizationGeometryArticle() {
         interpretation="이 식은 다음 점의 exact value가 아니라 local linear model이 틀릴 수 있는 최대 범위를 줍니다."
       />
       <p>같은 x=1, d=0.1에 L=2를 넣으면 상한은 1+2×0.1+(2/2)×0.1²=1.21입니다. 실제 값도 1.21이라 이 예에서는 등호입니다. d=0.01이면 오차 상한은 0.0001로 앞의 계산과 일치합니다.</p>
+      <SlopeTriangleViz />
       <p>1/2은 임의의 여유 계수가 아닙니다. 출발점에서는 기울기 차이가 0이고 이동 경로의 끝에서는 최대 L‖d‖입니다. 거리에 따라 커지는 이 차이를 누적하면 밑변 ‖d‖, 높이 L‖d‖인 삼각형 넓이 L‖d‖²/2가 됩니다.</p>
       <ProgressiveDetail title="경로를 적분해 오차의 1/2을 유도하면" preview="전체 이동의 비율 t를 0부터 1까지 늘립니다. 출발 기울기와의 차이는 Lt‖d‖를 넘지 않으므로 그 기여를 적분합니다.">
         <p>여러 입력에서는 기울기 차이와 이동의 내적을 <a className="font-semibold text-primary underline" href="/cs/ai/math-vectors-inner-products#cauchy-schwarz">Cauchy–Schwarz 부등식</a>으로 제한합니다. 두 벡터의 내적 크기는 각각의 길이를 곱한 값보다 클 수 없다는 관계입니다.</p>
@@ -114,6 +119,7 @@ export default function OptimizationGeometryArticle() {
         assumptions={["0<μ≤L인 strongly convex·smooth objective입니다.", "이 ratio만으로 모든 optimizer의 wall-clock을 예측하지 않습니다."]}
         interpretation="κ가 1에 가까우면 방향별 굽음이 균일하고, κ가 크면 fixed scalar step의 진전이 느려질 수 있습니다."
       />
+      <ValleyStepViz />
       <p>위 함수에서 간격 1/L=0.01로 기울기 반대 방향으로 움직이면 (1,1)은 (0.99,0)이 됩니다. 급한 y 방향은 한 번에 0이 되지만 x 방향은 0.01만 줄었습니다. 반대로 간격 1을 쓰면 (1,1)→(0,−99)라 y 방향으로 크게 벗어납니다. 같은 간격이 두 방향에 다르게 작용합니다.</p>
       <p>L=12, μ=3이면 κ=4입니다. κ는 초 단위 실행 시간이 아니라 선택한 좌표와 거리 기준에서의 변화 규모 비율입니다. 느슨한 L이나 μ를 쓰면 κ도 실제 굽음 비율보다 큰 상한일 수 있습니다. 어느 상수를 사용했는지도 함께 적습니다.</p>
       <p>좌표를 z=10y로 바꾸면 같은 q는 (x²+z²)/2가 되어 새 좌표의 μ=L=1입니다. 함수가 나타내는 원래 문제는 같아도 두 좌표의 한 단위가 의미하는 이동은 달라졌습니다. κ는 좌표 변환과 무관한 고정 속성이나 모든 계산법의 성능 점수가 아닙니다.</p>

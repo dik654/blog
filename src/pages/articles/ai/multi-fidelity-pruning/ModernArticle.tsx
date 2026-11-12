@@ -3,6 +3,9 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { MultiFidelityViz } from "../hyperparameter-tuning/viz/ModernHpoViz";
+import LateBloomerViz from "./viz/LateBloomerViz";
+import PruneAuditViz from "./viz/PruneAuditViz";
+import ResourceGridViz from "./viz/ResourceGridViz";
 export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 모든 후보를 끝까지 돌리기 전에 일부에 자원을 더 줍니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>설정이 많으면 모두 같은 시간 동안 학습시키기 어렵습니다. 짧게 실행한 결과로 계속 볼 후보를 고르면 자원을 아낄 수 있지만 늦게 좋아지는 후보를 놓칠 수도 있습니다.</p><p>이 글은 아홉 후보를 세 후보, 한 후보로 줄이는 과정을 추적합니다. 남긴 후보의 학습량과 실제 추가 비용을 따로 계산하고 멈춘 후보 중 어떤 가능성을 잃었는지 확인합니다.</p></div><p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>상위 1/3만 남기면 후보 수는 9→3→1로 줄어들까요?</li><li>살아남은 후보의 누적 자원 목표는 1→3→9단위로 늘어날까요?</li><li>3단위에서 멈춘 B가 9단위에서도 나빴다고 확정할 수 있을까요?</li></ol><p>답은 <strong>예, 예, 아니요</strong>입니다. 적은 자원에서의 순위로 비용을 줄이는 대신 늦게 좋아지는 후보를 잘못 중단할 가능성을 함께 측정해야 합니다.</p><MultiFidelityViz /><ContentBoundary article="multi-fidelity-pruning" /></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 같은 진척에서 비교하고 일부만 더 학습합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>모든 후보를 정한 첫 지점까지 실행합니다. 같은 시험으로 점수를 비교해 일부를 남기고 남은 후보에게 다음 지점까지 자원을 줍니다. 중단 기록도 보존하며 일부는 끝까지 확인해 정책의 놓침을 조사합니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>공통 진척 좌표를 정한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>같은 지점의 점수를 비교한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>일부 후보만 다음 지점으로 보낸다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>중단 후보의 놓친 가능성을 조사한다</span></li></ol></section>
@@ -97,7 +100,7 @@ export default function Article() { return <div className="space-y-16"><section 
           interpretation="9개를1단위에서 시작하고 η=3이면9@1 →3@3 →1@9입니다. n_jr_j는 각 단계 후보의 누적 목표량 합이고 재개 시 새로 쓰는 비용의 합이 아닙니다."
         /></section>
 
-<section id="resource-accounting" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 누적 목표 9와 새로 쓰는 6을 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="resource-accounting" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 누적 목표 9와 새로 쓰는 6을 구분합니다</h2><ResourceGridViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             모델 상태를 보존해 이어 학습한다고 합시다. 첫 단계는 9×1=9단위, 다음은 3×(3−1)=6단위, 마지막은 1×(9−3)=6단위입니다. 실제 추가 학습량 합은
             21단위입니다. 모두 9단위까지 학습하는 81단위보다 60단위 적습니다. (가정)
           </p><p>
@@ -113,7 +116,7 @@ export default function Article() { return <div className="space-y-16"><section 
             다른 초기 후보 수와 자원의 조합도 반복하며 이 한 경로가 Hyperband 전체는 아닙니다. (가정)
           </p></div></div></section>
 
-<section id="false-prune-audit" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 멈춘 표본 20개 중 4개를 놓쳤다면 분모는 20입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>완료된 사전 실험 곡선에 중단 규칙을 적용하면 어느 후보를 잘랐을지 재현할 수 있습니다. 실제 중단 후보 일부를 따로 끝까지 실행해도 놓침을 조사할 수 있습니다. 같은 최종 품질 기준과 필수 조건을 먼저 정합니다.</p><p>
+<section id="false-prune-audit" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 멈춘 표본 20개 중 4개를 놓쳤다면 분모는 20입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>완료된 사전 실험 곡선에 중단 규칙을 적용하면 어느 후보를 잘랐을지 재현할 수 있습니다. 실제 중단 후보 일부를 따로 끝까지 실행해도 놓침을 조사할 수 있습니다. 같은 최종 품질 기준과 필수 조건을 먼저 정합니다.</p></div><PruneAuditViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             중단 100개 중 무작위로 고른 20개를 끝까지 실행했더니 4개가 채택 가능했다고 합시다. 관측 비율은 4/20=20%입니다. 나머지 80개는 관측하지 않았으므로 4/100으로
             나누거나 전체 놓친 수가 4라고 쓰지 않습니다. (가정)
           </p><p>
@@ -180,7 +183,7 @@ export default function Article() { return <div className="space-y-16"><section 
             수 없는 이유입니다. 여기의 20개 표본 감사는 그 위험을 확인하기 위한 별도 운영 설계이며 논문이 20%라는 값을 보장하거나 이 감사 비율을 제안했다는 뜻은 아닙니다.
           </p></div></div></section>
 
-<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 늦게 좋아지는 후보와 재개 상태를 따로 검사합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 늦게 좋아지는 후보와 재개 상태를 따로 검사합니다</h2><LateBloomerViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             3단위 점수 0.63으로 멈춘 B를 따로 끝까지 실행했더니 0.85라고 합시다. 최종 채택 기준 0.80을 통과하므로 이 감사에서는 놓친 후보입니다. 초기 순위만으로 최종
             순위를 보장할 수 없으며 유예 기간과 중단 강도를 조절할 근거가 됩니다. (가정)
           </p><p>이어 학습할 때 모델 가중치만 복구하고 갱신기·난수·스케줄 상태를 잃으면 처음부터 같은 절차를 이어 간 것이 아닐 수 있습니다. 갱신 수의 절약과 실제 시간·복구 비용도 따로 보고 최종 후보는 정한 전체 예산과 독립 평가에서 확인합니다.</p></div></section>

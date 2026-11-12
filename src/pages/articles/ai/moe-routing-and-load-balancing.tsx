@@ -5,6 +5,9 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BiasSelectCombineViz from "./moe-routing-and-load-balancing/viz/BiasSelectCombineViz";
+import CapacityFactorViz from "./moe-routing-and-load-balancing/viz/CapacityFactorViz";
+import LossProductViz from "./moe-routing-and-load-balancing/viz/LossProductViz";
 import MoeRoutingAndLoadBalancingViz from "./moe-routing-and-load-balancing/viz/MoeRoutingAndLoadBalancingViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
@@ -75,6 +78,7 @@ export default function MoeRoutingAndLoadBalancingArticle() {
             확률입니다.
           </p>
         </div>
+        <LossProductViz />
         <ExplainedFormula
           question="Router가 expert 하나에 쏠릴 때 load balancing loss는 그 쏠림을 어떻게 수치로 벌점화하나요?"
           idea="배정 비율 f_i는 하드 카운트라 미분할 수 없지만 평균 확률 P_i는 미분 가능합니다. 두 값을 곱해 더하면 완전히 균등할 때 최솟값을 가지므로, 이 항을 language-model loss에 더하면 쏠린 expert의 확률을 낮추는 gradient가 생깁니다."
@@ -119,6 +123,9 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
             free balancing은 loss를 건드리지 않고 top-k 선택에만 쓰는 점수에 expert별 bias를 더합니다. 과부하 expert는 bias를 내려 다음 step에
             덜 뽑히게 하고 부족한 expert는 bias를 올립니다.
           </p>
+        </div>
+        <BiasSelectCombineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 bias는 combine 단계의 가중치에 들어가지 않습니다. Top-k를 고를 때만 점수에 더해지고 선택된 expert의 출력을 합칠 때는 원래 확률을 씁니다. 그래서
             bias를 아무리 키워도 model이 실제로 배우는 mixture weight는 왜곡되지 않습니다.
@@ -193,6 +200,7 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
             버려집니다.
           </p>
         </div>
+        <CapacityFactorViz />
         <ProgressiveDetail
           title="φ를 키우면 drop은 줄지만 padding과 GEMM 낭비가 늘어납니다"
           preview="φ=1.0은 평균만큼만 받아 초과 전부를 버리고, φ=2.0은 거의 안 버리지만 buffer 절반이 빈 자리로 GEMM을 함께 태웁니다. Drop과 padding 사이에 공짜 지점은 없습니다."

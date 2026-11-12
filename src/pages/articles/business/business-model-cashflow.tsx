@@ -2,6 +2,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import BusinessCashflowViz from "./BusinessCashflowViz";
+import GoodsMoneyRouteViz from "./business-model-cashflow/viz/GoodsMoneyRouteViz";
 
 /** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
 export default function BusinessModelCashflowArticle() {
@@ -43,6 +44,8 @@ export default function BusinessModelCashflowArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">고객에게 가는 물건과 판매자에게 돌아오는 돈은 반대 방향이며 날짜도 다릅니다. 아래 그림에서 두 날짜의 간격을 지우면 판매가 늘어날 때 먼저 준비할 돈이 사라져 보입니다.</p>
         </div>
+
+        <GoodsMoneyRouteViz />
         <p className="mt-4 border-l border-border pl-4 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
           첫 그림의 D−7에서는 재고와 선지출이, D0에서는 매출과 정산받을 권리가, D+14에서는 실제 입금이 바뀌었습니다. 같은 묶음이라도 세 상태는 한날에 바뀌지 않습니다.
         </p>

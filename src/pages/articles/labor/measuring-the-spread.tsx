@@ -7,6 +7,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LorenzCurveViz from "./measuring-the-spread/viz/LorenzCurveViz";
 import BowAndAreaViz from "./measuring-the-spread/viz/BowAndAreaViz";
+import AxisSwapViz from "./measuring-the-spread/viz/AxisSwapViz";
+import TrapezoidSumViz from "./measuring-the-spread/viz/TrapezoidSumViz";
+import GapNettingViz from "./measuring-the-spread/viz/GapNettingViz";
 
 /**
  * 벌어진 정도는 표가 아니라 곡선으로 잽니다
@@ -178,6 +181,9 @@ export default function MeasuringTheSpreadArticle() {
           <p className="leading-7">위 그림의 두 번째 장면은 그가 쓴 자료(214쪽 표)를 지금의 관례대로 다시 그린 것입니다. 프로이센에서 1892년에는 아래 70.1%가 전체 소득의
             41.2%를 가졌는데 1901년에는 아래 60.5%가 31.7%를 가졌습니다. 1901년 선이 1892년 선보다 아래에
             놓입니다. 그래서 더 쏠렸다고 읽습니다.</p>
+        </div>
+        <AxisSwapViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">Lorenz 자신의 218쪽 그림은 세로축이 사람 수의 비율(Percents of Number),
             가로축이 소득의 비율(Percents of Total Income)로 지금과 두 축이 바뀌어 있어 같은 곡선이 대각선 위쪽으로 휩니다.
             217쪽 본문은 어느 축에 무엇을 놓을지 정하지 않았으므로, 축을 바꿔도 활이 더 휠수록 더 쏠렸다는 읽기 규칙은 같습니다.</p>
@@ -276,6 +282,8 @@ export default function MeasuringTheSpreadArticle() {
           ]}
         />
 
+        <TrapezoidSumViz />
+
         <AlgorithmBlock
           title="자료에서 이 숫자를 구하는 절차"
           input={[
@@ -331,6 +339,11 @@ export default function MeasuringTheSpreadArticle() {
             아래 절반까지는 둘째 경우가 더 많이 받았습니다. 가장 가난한 사람이 6달러가 아니라 8달러를 받기 때문입니다. 위
             절반으로 가면 첫째 경우가 앞섭니다. 둘째 경우의 위쪽 셋이 14, 14, 16으로 몰려 있는 탓입니다. <strong>두 곡선이 가운데에서 엇갈립니다.</strong>
           </p>
+        </div>
+
+        <GapNettingViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
 
           <p className="leading-7">
             이 상태에서 넓이 비를 계산하면 첫째가 0.120, 둘째가 0.144로

@@ -9,6 +9,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import TensorAndPipelineParallelInferenceViz from "./tensor-and-pipeline-parallel-inference/viz/TensorAndPipelineParallelInferenceViz";
 import PipelineBubbleGridViz from "./tensor-and-pipeline-parallel-inference/viz/PipelineBubbleGridViz";
 import RingAttentionBlockViz from "./tensor-and-pipeline-parallel-inference/viz/RingAttentionBlockViz";
+import CollectiveChunksViz from "./tensor-and-pipeline-parallel-inference/viz/CollectiveChunksViz";
+import LatencyBandwidthBoundaryViz from "./tensor-and-pipeline-parallel-inference/viz/LatencyBandwidthBoundaryViz";
+import PpSerialDecodeViz from "./tensor-and-pipeline-parallel-inference/viz/PpSerialDecodeViz";
+import DecodeTpotSplitViz from "./tensor-and-pipeline-parallel-inference/viz/DecodeTpotSplitViz";
 import {
   ParallelExecutionMapReturn,
   ParallelExecutionSeriesLocator,
@@ -136,6 +140,9 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             <Link to="/cs/gpu/gpu-collective-network#collective-rank-semantics">collective rank semantics</Link>{" "}
             글이 소유하고, 여기서는 parallel 추론이 쓰는 세 가지만 봅니다.
           </p>
+        </div>
+        <CollectiveChunksViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             All-reduce 는 rank 마다 N 개 값을 내고 모든 rank 가 원소별 합 N 개를 똑같이 받습니다.
             Reduce-scatter 는 같은 합을 계산하되 결과를 rank 수만큼 등분해 각 rank 가 자기 index 의
@@ -147,6 +154,9 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             끼울 수 있어서입니다. sequence parallel 절에서 보듯 all-reduce 하나를 reduce-scatter 와 all-gather 로 바꾸면 추가 통신 없이 그
             사이의 LayerNorm 을 sequence 축으로 나눌 수 있습니다.
           </p>
+        </div>
+        <LatencyBandwidthBoundaryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             비용은 두 항으로 셉니다. byte 가 0 이어도 남는 collective communication latency α 와, byte n 을 communication
             bandwidth B 로 나눈 전송 시간입니다. 작은 message 는 α 가, 큰 message 는 n/B 가 지배합니다. 그 경계가 n = αB 입니다. B 가 900
@@ -228,6 +238,9 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             token 의 latency 는 stage 시간의 합에 hop 세 번이 더해진 값입니다. 같은 8 GPU 를 TP 8 로 쓰면 각 GPU 가 weight 의 8 분의 1 만
             읽어 step 이 8 분의 1 로 줄지만 PP 8 은 8 분의 1 짜리 step 여덟 개를 직렬로 지납니다.
           </p>
+        </div>
+        <PpSerialDecodeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             숫자로 보면 70B FP16 을 PP 8 로 두면 stage 마다 17.5 GB 를 읽어 3.35 TB/s 에서 5.2 ms 입니다. 한 token 은 여덟 stage 를 지나
             약 42 ms 가 됩니다. TP 8 은 5.2 ms 에 all-reduce 약 1 ms 를 더한 6 ms 남짓입니다. 이것이 PP latency penalty 입니다.
@@ -436,6 +449,9 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             70B 모델의 80개 layer가 layer마다 collective 2회를 수행하고 collective마다 고정 시작 비용 α=5μs가 든다고 잡으면,
             token마다 <code>80 layer × layer마다 2회 × 회마다 5μs = 800μs</code>입니다. 단위를 바꾸면 0.8ms입니다.
           </p>
+        </div>
+        <DecodeTpotSplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             전송 byte에 비례하는 시간까지 더하면 통신 시간은 약 1ms입니다. Weight 읽기 5.2ms에 더하면 TPOT은 6ms대이고 통신이
             그 중 약 16% 입니다. TP 를 16 으로 올려 weight 읽기를 2.6 ms 로 줄여도 통신은 줄지 않아

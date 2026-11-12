@@ -7,6 +7,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { AgentDecisionPathLocator, AgentDecisionPathMapReturn } from "./shared/AgentDecisionPathLocator";
 import SearchBasedReasoningAndTestTimeComputeViz from "./search-based-reasoning-and-test-time-compute/viz/SearchBasedReasoningAndTestTimeComputeViz";
+import BestOfNCeilingViz from "./search-based-reasoning-and-test-time-compute/viz/BestOfNCeilingViz";
+import TreeEvaluationCountViz from "./search-based-reasoning-and-test-time-compute/viz/TreeEvaluationCountViz";
 
 /**
  * Test-time compute: best-of-N · tree search · self-correction
@@ -79,6 +81,9 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
             Best-of-N 에서는 model 이 같은 prompt 로 N 개의 candidate 를 서로 독립적으로 생성하고 verifier 가 매긴 점수가 가장 높은 하나를 고릅니다.
             후보 사이에 정보 교환이 없어 tree search 보다 구현이 단순합니다.
           </p>
+        </div>
+        <BestOfNCeilingViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             N 을 늘리면 후보 중 정답이 하나라도 있을 확률(pass@N)은 오릅니다. 그 정답을 실제로 골라내는 일은 verifier 의 정확도에 달려 있습니다. Verifier 가
             완벽하지 않으면 pass@N 만큼 정답률이 오르지 않습니다.
@@ -147,6 +152,9 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
             Tree search 는 매 depth 마다 유지 중인 상태 각각에서 k 개의 다음 단계 후보(생각)를 만듭니다. Evaluator 가 점수를 매기면 상위 b 개만 다음
             depth 로 넘어갑니다. Best-of-N 과 달리 중간 상태를 평가해 방향을 바꿀 수 있습니다.
           </p>
+        </div>
+        <TreeEvaluationCountViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Tree of Thoughts 의 Game of 24 실험은 b=5, k=5, depth d=3 을 썼습니다. Root 에서 k=5 개 생각을 평가해 b=5 개를 남기고 이후
             두 depth 는 유지 중인 b=5 개 상태마다 k=5 개씩 새로 만들어 평가합니다.

@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PoliticsMapViz from "./collective-choice-problem/viz/PoliticsMapViz";
 import FreeRidingViz from "./collective-choice-problem/viz/FreeRidingViz";
+import GoodsGridViz from "./collective-choice-problem/viz/GoodsGridViz";
 
 /**
  * 각자 고르면 되는 일과 하나로 정해야 하는 일은 다릅니다
@@ -93,6 +94,8 @@ export default function CollectiveChoiceProblemArticle() {
             않습니다.
           </p>
         </div>
+
+        <GoodsGridViz />
 
         <TermBreakdown
           title="두 기준으로 네 칸이 나옵니다"

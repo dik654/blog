@@ -7,6 +7,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import WhyStateProsecutesViz from "./crime-and-punishment-purpose/viz/WhyStateProsecutesViz";
 import DeterrenceViz from "./crime-and-punishment-purpose/viz/DeterrenceViz";
+import SeverityLedgerViz from "./crime-and-punishment-purpose/viz/SeverityLedgerViz";
+import MarginalDeterrenceViz from "./crime-and-punishment-purpose/viz/MarginalDeterrenceViz";
 
 /** 하나의 가상 절도 사건을 법의 사전 정의, 유죄 판단, 형벌 목적, 억제 계산에 차례로 통과시킨다. */
 export default function CrimeAndPunishmentPurposeArticle() {
@@ -181,6 +183,7 @@ export default function CrimeAndPunishmentPurposeArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           같은 곱이라도 적발 가능성과 엄벌은 같은 정책이 아닙니다
         </h2>
+        <SeverityLedgerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             H 사례에서 최종 확률이 5%로 떨어지면 D(S)=30인 기대 제재는 1.5가
@@ -216,6 +219,7 @@ export default function CrimeAndPunishmentPurposeArticle() {
           <h3 className="mb-4 mt-12 text-xl font-bold">
             H가 이미 훔치기로 했다면 무엇이 다음 행동을 막습니까
           </h3>
+          <MarginalDeterrenceViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               가상 사례를 한 단계 더 진행하겠습니다. H가 물건을 든 순간 경비원을

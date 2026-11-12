@@ -7,6 +7,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PropertyReachViz from "./property-and-entitlement/viz/PropertyReachViz";
 import PropertyOrLiabilityViz from "./property-and-entitlement/viz/PropertyOrLiabilityViz";
+import BundleViz from "./property-and-entitlement/viz/BundleViz";
+import HoldoutViz from "./property-and-entitlement/viz/HoldoutViz";
+import CompensationGapViz from "./property-and-entitlement/viz/CompensationGapViz";
 
 /**
  * 소유는 무엇을 주고 무엇을 요구합니까
@@ -144,6 +147,11 @@ export default function PropertyAndEntitlementArticle() {
           <p className="leading-7">
             묶음으로 보면 풀립니다. 쓰는 권능, 거기서 나오는 것을 가져가는 권능, 남을 배제하는 권능, 넘기거나 없앨 권능이 각각 있고 이것들을 떼어 다른 사람에게 줄 수 있습니다.
           </p>
+        </div>
+
+        <BundleViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 
           <p className="leading-7">
             세를 주는 것은 쓰는 권능을 기간을 정해 넘기는 것이고 담보로 잡히는 것은 갚지 않을 때 팔아 값을 받을 권능을 넘기는 것입니다. 나머지는 그대로 두고 필요한 조각만 옮깁니다.
@@ -273,6 +281,11 @@ export default function PropertyAndEntitlementArticle() {
             놓입니다. 전부 협상이 구조적으로 막히는 구간을 다루는 장치입니다.
           </p>
 
+        </div>
+
+        <HoldoutViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             도로나 철도를 놓으려고 땅을 모으는 경우가 대표적입니다. 필요한 필지가 많아질수록 한 사람이 버티는 것만으로 전체가 멈추고 그 사람은 자기 땅의 가치가 아니라 사업 전체의
             가치를 요구할 수 있게 됩니다.
@@ -336,6 +349,7 @@ export default function PropertyAndEntitlementArticle() {
             기준으로 삼습니다. 그런데 오래 산 집이나 대를 이어 온 땅처럼 그
             사람에게만 있는 가치는 그 기준에 들어오지 않습니다.
           </p>
+          <CompensationGapViz />
           <p className="leading-7">
             그래서 물어 주는 값은 구조적으로 실제 손실보다 작게 나오는 경향이 있습니다. 앞 절 식의 오차 항이 한쪽으로 치우쳐 있다는 뜻이고 그 치우침이 클수록 동의 없는 이전의 문턱을
             높게 잡아야 합니다.

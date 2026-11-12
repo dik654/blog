@@ -7,6 +7,9 @@ import {
   RankingMetricReturn,
 } from "../shared/MetricDecisionPathLocator";
 import RankingMetricFlowViz from "./RankingMetricFlowViz";
+import NdcgRescoreViz from "./viz/NdcgRescoreViz";
+import GainDepthFlipViz from "./viz/GainDepthFlipViz";
+import QueryWeightingViz from "./viz/QueryWeightingViz";
 
 export default function RankingMetricsArticle() {
   return (
@@ -135,6 +138,11 @@ export default function RankingMetricsArticle() {
             기존 판정 집합에는 A=3, B=0, C=2만 있고 D는 없습니다. D는 관련도
             0인 문서가 아니라 아직 판정하지 않은 문서입니다.
           </p>
+        </div>
+
+        <NdcgRescoreViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             D를 0으로 간주한 채 계산하면 기존 시스템 [A,B,C]의 NDCG@3은
             0.956, 후보 시스템 [D,A,C]은 0.665가 됩니다. 이때 판정된 관련도
@@ -237,6 +245,8 @@ export default function RankingMetricsArticle() {
           </div>
         </div>
 
+        <GainDepthFlipViz />
+
         <div className="not-prose mt-8 grid gap-5 border-y border-border py-5 text-sm leading-6 lg:grid-cols-2">
           <div>
             <p className="font-bold">이득 변환이 승자를 바꿀 수 있습니다.</p>
@@ -275,6 +285,8 @@ export default function RankingMetricsArticle() {
             합칩니다.
           </p>
         </div>
+
+        <QueryWeightingViz />
 
         <ExplainedFormula
           question="후보 시스템이 질의 종류별 평균에서는 지고 요청 횟수별 평균에서는 이기는 이유는 무엇입니까?"

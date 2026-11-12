@@ -11,6 +11,8 @@ import KvPoolPerCardViz from "./mla-kv-replication-and-decode-context-parallel/v
 import RankBytesViz from "./mla-kv-replication-and-decode-context-parallel/viz/RankBytesViz";
 import DcpDecodeStepViz from "./mla-kv-replication-and-decode-context-parallel/viz/DcpDecodeStepViz";
 import CapacityGridViz from "./mla-kv-replication-and-decode-context-parallel/viz/CapacityGridViz";
+import DcpSpeedTradeViz from "./mla-kv-replication-and-decode-context-parallel/viz/DcpSpeedTradeViz";
+import GqaVsMlaPerCardViz from "./mla-kv-replication-and-decode-context-parallel/viz/GqaVsMlaPerCardViz";
 import { codeRefs } from "./mla-kv-replication-and-decode-context-parallel/codeRefs";
 import { mlaDcpTrees } from "./mla-kv-replication-and-decode-context-parallel/fileTree";
 
@@ -343,6 +345,7 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
 
         <section id="costs" data-teach-level="7" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">10. 8배의 자리는 속도와 안정성으로 값을 치릅니다</h2>
+          <DcpSpeedTradeViz />
           <div className={prose}>
             <p>첫 비용은 단일 요청 속도입니다. 같은 위키에서 FP8 KV, TRITON_MLA의 DCP1은 79 tok/s, DCP8은 65 tok/s입니다. 다른 사용자의 backend 비교표도 FP8 79 대 68, BF16 78 대 67로 DCP가 약 11~14 tok/s를 깎습니다. (현장 경험)</p>
             <p>
@@ -429,6 +432,7 @@ export default function MlaKvReplicationAndDecodeContextParallelArticle() {
 
         <section id="other-architectures" data-teach-level="7" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">12. 다른 attention 구조는 다른 축으로 KV를 줄입니다</h2>
+          <GqaVsMlaPerCardViz />
           <div className={prose}>
             <p>GQA부터 봅니다. Qwen3-235B-A22B는 94층, KV head 4개, head 폭 128이라 token 하나의 KV가 BF16 192,512 byte로 K2.5의 2.7배입니다. 그런데 TP8에서는 head 하나씩 두 장이 나눠 들어 장마다 48,128 byte로, K2.5의 70,272 byte보다 작습니다. (계산)</p>
             <p>

@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SocialCostViz from "./externalities-and-social-cost/viz/SocialCostViz";
 import CoaseViz from "./externalities-and-social-cost/viz/CoaseViz";
+import PricingInViz from "./externalities-and-social-cost/viz/PricingInViz";
 
 /**
  * 장부에 적히지 않은 비용은 누가 냅니까
@@ -221,7 +222,11 @@ export default function ExternalitiesAndSocialCostArticle() {
             문제가 값에 빠진 항이라면 답도 거기에 있습니다. 빠진 만큼을 값에
             얹으면 장부가 실제와 같아집니다.
           </p>
+        </div>
 
+        <PricingInViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             한 개당 2를 물리면 만드는 쪽의 장부가 6, 7, 8, 9, 10, 11이 됩니다.
             5편에서 이미 계산한 상황입니다. 값이 8로 움직이고 세 개가 만들어

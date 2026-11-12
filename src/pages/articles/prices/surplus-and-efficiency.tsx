@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SurplusViz from "./surplus-and-efficiency/viz/SurplusViz";
 import PriceCapViz from "./surplus-and-efficiency/viz/PriceCapViz";
+import TaxWedgeViz from "./surplus-and-efficiency/viz/TaxWedgeViz";
 
 /**
  * 거래가 만든 값은 누구에게 갑니까
@@ -315,7 +316,11 @@ export default function SurplusAndEfficiencyArticle() {
               같은 시장에 한 개당 4의 세금을 붙여 보겠습니다. 파는 쪽이 내는
               것으로 하면 드는 값이 전부 4씩 올라간 것과 같습니다.
             </p>
+          </div>
 
+          <TaxWedgeViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               새 균형은 값 9에 둘입니다. 사는 쪽이 내는 값은 7에서 9로 2 올랐고 파는 쪽이 실제로 받는 값은 7에서 5로 2 내렸습니다. 세금 4가 정확히 반반으로 나뉩니다.
             </p>

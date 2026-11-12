@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LithographyViz from "./lithography-and-resolution/viz/LithographyViz";
+import PatternTransferViz from "./lithography-and-resolution/viz/PatternTransferViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -47,6 +48,7 @@ return <div className="space-y-16">
 
 <section id="transfer" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">7. 120 nm 창의 무늬를 감광막에서 아래 층으로 옮깁니다</h2>
+<PatternTransferViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
    <p className="leading-7">웨이퍼 위에 빛에 반응하는 <strong>감광막</strong>을 바르고, 무늬가 담긴 레티클을 통해 빛을 비춥니다. 광학계가 그 무늬를 줄여 감광막에 기록합니다. 이후 굽고 현상하면 선택한 부분이 씻겨 나가 창이 생깁니다. 그 창을 통해 아래 막을 식각하거나 필요한 물질을 바꾸고, 남은 감광막은 제거합니다. 앞 글의 ‘산화막 창’은 이 단계들을 거쳐 아래 산화막에 실제로 옮겨진 결과입니다.</p>
    <p className="leading-7">

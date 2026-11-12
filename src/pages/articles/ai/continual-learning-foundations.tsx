@@ -6,6 +6,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ReplayBufferForgettingViz from "./continual-learning-foundations/viz/ReplayBufferForgettingViz";
+import EwcPullbackViz from "./continual-learning-foundations/viz/EwcPullbackViz";
+import ProgressiveColumnsViz from "./continual-learning-foundations/viz/ProgressiveColumnsViz";
+import CadenceStalenessViz from "./continual-learning-foundations/viz/CadenceStalenessViz";
 
 /**
  * ai/continual-learning-foundations
@@ -189,6 +192,7 @@ export default function ContinualLearningFoundationsArticle() {
           ]}
           interpretation="F_i가 큰 parameter일수록 페널티 항의 가중치가 커져 task B를 학습해도 거의 움직이지 못하고, F_i가 작은 parameter는 자유롭게 새 task에 맞춰집니다. 한 모델 안에서 parameter마다 stability와 plasticity를 다르게 배분한다는 뜻이며, task 수가 늘어날수록 페널티가 겹쳐 쌓여 plasticity 자체가 줄어드는 한계가 있습니다."
         />
+        <EwcPullbackViz />
         <AlgorithmBlock
           title="Task A 이후 EWC로 task B를 학습하는 절차"
           input={[
@@ -216,6 +220,7 @@ export default function ContinualLearningFoundationsArticle() {
           task 수가 크게 늘어난 경우까지 같은 정도로 일반화한다는 주장은
           아닙니다.
         </CitationBlock>
+        <ProgressiveColumnsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Parameter isolation은 아예 간섭을 없애려는 전략입니다. Task마다 서로 다른 parameter 부분집합을 쓰게 하거나, dynamic architecture
@@ -320,6 +325,9 @@ export default function ContinualLearningFoundationsArticle() {
             모델이 아는 사실이 실제와 어긋나는 knowledge freshness 문제가
             커집니다.
           </p>
+        </div>
+        <CadenceStalenessViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 가격이나 재고처럼 하루 단위로 바뀌는 정보를 다루는
             서비스에서 주 단위로만 재학습하면, 최대 6일치 변화가 반영되지

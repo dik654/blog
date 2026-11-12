@@ -10,6 +10,7 @@ import EmbeddingPathLocator, {
   EmbeddingMapReturn,
 } from "./sentence-embeddings/EmbeddingPathLocator";
 import LexicalRetrievalBm25InvertedIndexViz from "./lexical-retrieval-bm25-inverted-index/viz/LexicalRetrievalBm25InvertedIndexViz";
+import Bm25SaturationViz from "./lexical-retrieval-bm25-inverted-index/viz/Bm25SaturationViz";
 
 const LUCENE_IDF_SOURCE = `protected float idf(long docFreq, long docCount) {
   return (float) Math.log(1 + (docCount - docFreq + 0.5D) / (docFreq + 0.5D));
@@ -160,6 +161,7 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
 
       <section id="bm25-saturation-and-length-norm" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">BM25는 반복의 기여를 누르고 긴 문서를 보정합니다</h2>
+        <Bm25SaturationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             D1의 <code>충전</code>은 두 번 나왔지만 한 번 나온 token의 정확히 두 배로 채점하지 않습니다. 빈도가 커질수록 추가 기여를 줄이는 성질을 term frequency saturation이라고 합니다. 또한 같은 한 번이라도 길이 6인 D3에서는 길이 3인 D1보다 작은 기여를 줍니다. 이를 document length normalization이라고 합니다.

@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import NdcgViz from "./viz/NdcgViz";
 
 const slices = [
   ["언어·도메인", "한국어/영어, 법률/의료/금융/과학/코드 등"],
@@ -49,6 +50,9 @@ export default function Evaluation() {
           ]}
           interpretation="NDCG@10이 높으면 judged relevant 문서를 상위에 잘 놓았다는 뜻입니다. 관련 문서가 누락된 incomplete judgment나 특정 slice의 실패까지 평균 하나가 보여주지는 않습니다."
         />
+        <div className="not-prose my-6">
+          <NdcgViz />
+        </div>
         <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {slices.map(([name, detail]) => (
             <div key={name} className="rounded-xl border bg-card p-4">
