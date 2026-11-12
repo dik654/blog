@@ -6,6 +6,10 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { matrixCodeRefs } from "./codeRefs";
 import MatrixDirectionsViz from "./viz/MatrixDirectionsViz";
+import OutputCollapseViz from "./viz/OutputCollapseViz";
+import ChainOrderCostViz from "./viz/ChainOrderCostViz";
+import DroppedSquaresViz from "./viz/DroppedSquaresViz";
+import FactorStorageViz from "./viz/FactorStorageViz";
 const SVD_DOC="https://docs.pytorch.org/docs/2.8/generated/torch.linalg.svd.html";
 const MIT_SVD="https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/d273f75ee2552a5c3c35ccab37e5edce_MIT18_06SCF11_Ses3.5sum.pdf";
 const MIT_LOW="https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-7-eckart-young-the-closest-rank-k-matrix-to-a/";
@@ -41,6 +45,7 @@ export default function MatricesSvdArticle(){const sidebar=useCodeSidebar(); ret
 <section id="need" data-teach-level="2" className="space-y-6">
 <h2 className="text-2xl font-bold">5 · 큰 표를 줄이려면 어떤 변화가 사라지는지 알아야 한다</h2>
 <p>입력과 출력이 각각 천 칸이면 각 출력이 각 입력을 얼마나 반영할지 정하는 숫자가 백만 개 필요합니다. 여러 칸이 비슷한 방식으로 움직인다면 공유하는 몇 가지 변화만 계산해 저장량을 줄일 여지가 생깁니다. 다만 실제로 그런 반복이 있는지 먼저 확인해야 합니다.</p>
+<OutputCollapseViz />
 <p>앞 사례에서는 두 칸이 함께 변하는 부분 하나만 남겼습니다. 이 선택은 출력의 평균을 보존하지만 차이를 지웁니다. 입력이 (1,−1)과 (−1,1)인 두 경우를 구별해야 한다면 둘 다 (0,0)이 되어 실패합니다. 작은 변화라는 이유만으로 쓸모없는 변화라고 판단할 수 없습니다.</p>
 <p>모든 부분을 보존하면 출력을 거꾸로 읽어 입력도 찾을 수 있습니다. (10,8)의 평균 9를 3으로 나누면 입력의 평균 3입니다. 두 출력의 차이 2는 그대로 전달됐으므로 그 절반인 1을 평균에 더하고 빼면 입력 (4,2)가 돌아옵니다. 두 변화의 배율이 모두 0이 아니기 때문에 가능한 계산입니다.</p>
 <p>함께 변하는 부분만 남겼을 때는 이 복원이 불가능합니다. 입력 (4,2), (3,3), (2,4)는 모두 평균이 3이라 같은 출력 (9,9)가 됩니다. 출력의 평균에서 입력의 평균은 찾을 수 있지만 어떤 쌍을 넣었는지는 알 수 없습니다. 줄인 결과가 비슷해 보인다는 사실과 원래 정보를 되찾을 수 있다는 사실은 다릅니다.</p>
@@ -81,6 +86,7 @@ annotatedFormula={String.raw`\underbrace{A}_{p\times m}\underbrace{B}_{m\times n
 operations={[{expression:String.raw`AB=\begin{bmatrix}2&2\\1&4\end{bmatrix}`,annotation:["B가 둘째 입력을 두 배로 만들어 A의 둘째 열 기여가 두 배가 됩니다."]},{expression:String.raw`BA=\begin{bmatrix}2&1\\2&4\end{bmatrix}`,annotation:["A의 출력을 B가 바꾸므로 이번에는 둘째 행이 두 배가 됩니다."]}]}
 terms={[{symbol:"r",name:"중간 좌표",description:"B의 출력이면서 A의 입력인 같은 칸을 가리킵니다."},{symbol:"AB",name:"합성한 행렬",description:"입력에는 B가 먼저, A가 다음으로 작용합니다."},{symbol:"p×n",name:"최종 크기",description:"n칸 입력을 p칸 출력으로 보내는 표입니다."}]}
 assumptions={["공유하는 가운데 차원이 같아야 합니다.","각 축의 자료 의미도 같아야 실제 계산을 연결할 수 있습니다."]} interpretation="A가 3×2이고 B가 2×4라면 AB는 3×4입니다. BA는 가운데 4와 3이 달라 정의되지 않습니다. 정사각 행렬의 작은 사례와 일반 크기를 모두 확인합니다." />
+<ChainOrderCostViz />
 <p>정확한 실수 연산에서는 (PQ)R=P(QR)이지만 계산량은 다를 수 있습니다. P가 10×100, Q가 100×5, R이 5×50이면 왼쪽 묶음은 5000+2500=7500번, 오른쪽 묶음은 25000+50000=75000번의 곱셈을 씁니다. 일반적인 밀집 곱의 곱셈 수를 센 것이며 실행 시간 측정은 아닙니다. 유한 정밀도에서는 묶음 순서에 따라 반올림 결과도 달라질 수 있습니다.</p>
 </section>
 <section id="rank-basis" data-teach-level="4" className="space-y-6">
@@ -120,6 +126,7 @@ assumptions={["유한 차원 실수 행렬을 사용합니다. 복소수에서�
 <h2 className="text-2xl font-bold">12 · 큰 방향 하나를 남기면 (9,9)가 되고 차이가 사라진다</h2>
 <p>원래 A에서 배율 3인 첫 방향만 남기면 A₁=3q₁q₁ᵀ=[[1.5,1.5],[1.5,1.5]]입니다. x=(4,2)에 적용하면 (9,9)입니다. 생략한 부분 A−A₁은 [[0.5,−0.5],[−0.5,0.5]]이고 같은 입력에서 (1,−1)을 만듭니다.</p>
 <p>표 전체의 차이를 한 수로 재는 프로베니우스 노름(Frobenius norm)은 모든 칸의 제곱을 더한 뒤 제곱근을 취합니다. 이번 차이는 √(4×0.5²)=1입니다. 다른 차이 표 E=[[1,2],[0,2]]라면 √(1+4+0+4)=3입니다. 모든 칸을 같은 비중으로 세므로 중요한 행이나 희귀 집단의 가치를 자동으로 반영하지 않습니다.</p>
+<DroppedSquaresViz />
 <ExplainedFormula question="방향을 k개까지 남길 때 표의 제곱 오차를 가장 작게 만드는 선택은 무엇일까요?" idea="큰 특잇값부터 남긴 근사는 버린 값들의 제곱합을 오차로 갖습니다. 같은 rank 제한을 가진 모든 행렬과 비교해도 이보다 작아질 수 없다는 것이 Eckart–Young 정리입니다."
 formula={String.raw`A_k=\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad\min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2`}
 annotatedFormula={String.raw`\begin{gathered}\begin{gathered}A_k=\sum_{i=1}^{k}\sigma_i u_i v_i^\top\\\min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2\\=\sum_{i>k}\sigma_i^2\end{gathered}\\[8pt]\underbrace{A_1=3q_1q_1^\top}_{\text{큰 방향 하나 보존}},\qquad\underbrace{\lVert A-A_1\rVert_F^2=1^2}_{\text{버린 배율의 제곱}}\end{gathered}`}
@@ -133,6 +140,7 @@ assumptions={["전체 실수 행렬을 알고 정확한 SVD를 사용합니다."
 <p>σᵢ²가 큰 순서일 때 Σᵢσᵢ²pᵢ의 최댓값은 앞 k개에 pᵢ=1을 두는 값입니다. 작은 가중치 쪽의 양을 아직 덜 찬 큰 가중치 쪽으로 옮기면 합이 줄지 않기 때문입니다. 그러므로 어떤 B도 버린 특잇값의 제곱합보다 오차를 낮출 수 없습니다. Aₖ는 이 하한을 달성합니다.</p>
 <p>스펙트럴 노름은 길이 1인 입력이 만드는 출력 길이의 최댓값입니다. k가 전체 작은 차원보다 작을 때 v₁부터 vₖ₊₁이 펼치는 공간에는 B가 0으로 보내는 단위벡터 z가 있습니다. 이 공간의 차원은 k+1인데 B의 rank는 k 이하이기 때문입니다. 따라서 ‖(A−B)z‖=‖Az‖≥σₖ₊₁입니다. Aₖ의 차이는 가장 큰 남은 배율이 정확히 σₖ₊₁이므로 이 하한도 달성합니다. 모든 방향을 남기면 두 오차는 0입니다.</p>
 </div></ProgressiveDetail>
+<FactorStorageViz />
 <p>Aₖ를 BC로 저장할 때 B=UₖΣₖ는 m×k, C=Vₖᵀ는 k×n입니다. Σₖ를 B에 흡수하면 저장할 숫자는 k(m+n)개입니다. 천×천에서 k=10이면 백만 개가 2만 개로 줄어 50배 차이입니다(가정). 이번 2×2에서 k=1이면 원래 4개와 근사의 4개가 같아 저장 이득은 없습니다. k(m+n)&lt;mn인지 확인해야 합니다.</p>
 </section>
 <section id="source-paper" data-teach-level="6" className="space-y-6">

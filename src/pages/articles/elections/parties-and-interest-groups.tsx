@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import PartyFunctionViz from "./parties-and-interest-groups/viz/PartyFunctionViz";
+import MedianConvergenceViz from "./parties-and-interest-groups/viz/MedianConvergenceViz";
 import RentSeekingViz from "./parties-and-interest-groups/viz/RentSeekingViz";
 
 /**
@@ -151,6 +152,7 @@ export default function PartiesAndInterestGroupsArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           2. 한 축에서는 두 큰 정당이 가운데로 밀립니다
         </h2>
+        <MedianConvergenceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             세 정당 중 두 곳이 큰 정당이고, 유권자 집단 아홉 개가 정책 축의

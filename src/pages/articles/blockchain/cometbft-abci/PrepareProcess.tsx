@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import CandidateCacheViz from "./viz/CandidateCacheViz";
 
 export default function PrepareProcess({
   onCodeRef,
@@ -74,6 +75,9 @@ export default function PrepareProcess({
           Proposer 자신도 ProcessProposal을 호출할 수 있지만, failure 상황에서는 이전 Prepare 결과가 도착하거나 Process가 호출되지 않을 수도
           있습니다. 따라서 “Prepare 직후 Process가 정확히 한 번 온다”는 순서에 correctness를 의존하면 안 됩니다.
         </p>
+      </div>
+      <CandidateCacheViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Candidate state는 block hash로 격리한 cache입니다</h3>
         <p>
           Prepare나 Process에서 B41을 미리 실행하면 FinalizeBlock을 빠르게 끝낼 수 있습니다. 그러나 한 height에서 여러 round와 proposal이 생길 수

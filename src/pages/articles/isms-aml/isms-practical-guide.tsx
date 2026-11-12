@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import IsmsFoundationsViz from "./isms-foundations-viz";
+import DbAccessTraceViz from "./isms-practical-guide/viz/DbAccessTraceViz";
+import WithdrawalTraceViz from "./isms-practical-guide/viz/WithdrawalTraceViz";
+import LeaverCoverageViz from "./isms-practical-guide/viz/LeaverCoverageViz";
 
 const KISA_GUIDE = "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do";
 const VASP_REPORTING = "https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lspttninfSeq=167095";
@@ -88,6 +91,7 @@ export default function IsmsPracticalGuide() {
 
       <section id="access-db" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">DB 접근은 개인 계정·승인 session·query 결과를 한 trace로 묶습니다</h2>
+        <DbAccessTraceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             운영자가 DB에 직접 접속해야 한다면 개인 identity로 bastion이나 DB access
@@ -154,6 +158,9 @@ export default function IsmsPracticalGuide() {
             확인합니다. Key 생성 ceremony부터 backup, shard·device 보관, rotation, 파기까지
             한 사람이 모두 맡지 않도록 담당자와 증인을 나눕니다.
           </p>
+        </div>
+        <WithdrawalTraceViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             출금 trace는 request ID에서 시작해 고객 인증, risk/FDS 판단, 승인자, unsigned
             transaction digest, signer attestation으로 이어집니다. 이후 broadcast hash,
@@ -169,6 +176,7 @@ export default function IsmsPracticalGuide() {
 
       <section id="audit-evidence" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">증적은 캡처 파일이 아니라 모집단에서 결론까지 재현하는 record입니다</h2>
+        <LeaverCoverageViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 심사기간의 퇴직자 계정 회수를 확인한다고 해보겠습니다. HR 퇴직자

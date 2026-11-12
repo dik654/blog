@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { WitnessFrontierViz } from "./WitnessFrontierViz";
+import WorkSpanScheduleViz from "./WorkSpanScheduleViz";
 
 const CIRCOM = "https://github.com/iden3/circom/tree/ad44e915a12bb047b05745c2884aad9cc8326bc6";
 const OU = "https://eprint.iacr.org/2023/657";
@@ -39,6 +40,7 @@ export default function ModernGpuWitnessArticle() {
 
     <section id="frontier-schedule" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Frontier schedule</p><h2 className="mt-2 text-2xl font-bold">같은 level의 node 수보다 전체 work와 긴 dependency chain을 함께 본다</h2></header>
+      <WorkSpanScheduleViz />
       <p>
             GPU는 frontier가 넓을 때 유리하지만 한 signal의 긴 recurrence는 threads를 늘려도 사라지지 않습니다. 따라서 “constraint 수가
             크다”만으로 GPU 적합성을 판단하지 않고 compiler가 만든 witness instructions의 work와 span을 측정합니다.

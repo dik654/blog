@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ThermalBudgetViz from "./doping-and-thermal-budget/viz/ThermalBudgetViz";
+import ProfileSpreadViz from "./doping-and-thermal-budget/viz/ProfileSpreadViz";
+import BudgetSquaresViz from "./doping-and-thermal-budget/viz/BudgetSquaresViz";
+import JunctionVsWidthViz from "./doping-and-thermal-budget/viz/JunctionVsWidthViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -27,7 +30,7 @@ return <div className="space-y-16">
 
 <section id="picture" data-teach-level="1" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">4. 같은 원자 수가 더 넓은 깊이에 나뉩니다</h2>
-<NumericPath title="같은 양을 두 번 가열하기" steps={[{"label": "시작", "value": "표면 근처에 모임", "detail": "아직 깊은 곳에는 적습니다."}, {"label": "첫 가열", "value": "폭 척도120 nm", "detail": "표면의 꼭대기가 낮아지고 안쪽 농도가 늘어납니다."}, {"label": "둘째 가열", "value": "폭 척도약208 nm", "detail": "새 원자 없이도 분포가 더 넓어집니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+<NumericPath title="같은 양을 두 번 가열하기" steps={[{"label": "시작", "value": "표면 근처에 모임", "detail": "아직 깊은 곳에는 적습니다."}, {"label": "첫 가열", "value": "폭 척도120 nm", "detail": "표면의 꼭대기가 낮아지고 안쪽 농도가 늘어납니다."}, {"label": "둘째 가열", "value": "폭 척도약208 nm", "detail": "새 원자 없이도 분포가 더 넓어집니다."}]} /><ProfileSpreadViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             깊이를 가로축으로 두고 그 깊이의 농도를 세로축으로 그리면 곡선 아래 넓이가 넣은 총량에 대응합니다. 같은 양을 더 깊게 나누면 표면의 높이가 내려갑니다. 낮아진 꼭대기만 보고
             원자가 사라졌다고 판단하지 않습니다.
           </p><p className="leading-7">특정한 깊이를 고정해서 보면 변화가 다를 수 있습니다. 처음에는 거의 도달하지 못했던 곳으로 원자가 들어오면 그곳의 농도는 올라갑니다. 표면과 깊은 곳의 농도를 함께 읽어야 합니다.</p></div>
@@ -35,7 +38,7 @@ return <div className="space-y-16">
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 시간만 더하면 두 가열 상태의 차이를 놓칩니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">같은 시간이라도 원자가 움직이기 쉬운 조건에서는 더 많이 퍼집니다. 따라서 첫 3600초와 다음 1800초를 단순히 합친 5400초만으로는 결과를 구할 수 없습니다. 각 상태에서 퍼지기 쉬운 정도를 시간에 곱해야 합니다.</p><p className="leading-7">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">같은 시간이라도 원자가 움직이기 쉬운 조건에서는 더 많이 퍼집니다. 따라서 첫 3600초와 다음 1800초를 단순히 합친 5400초만으로는 결과를 구할 수 없습니다. 각 상태에서 퍼지기 쉬운 정도를 시간에 곱해야 합니다.</p></div><BudgetSquaresViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             이 곱의 단위는 길이의 제곱입니다. 그래서 두 단계의 곱끼리는 더할 수 있지만 각각 계산한 길이 120 nm와 다른 길이를 그대로 더하지는 않습니다. 합을 구한 다음 제곱근을
             취하는 순서가 필요합니다.
           </p></div>
@@ -75,7 +78,7 @@ return <div className="space-y-16">
 
 <section id="source" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 같은 곡선의 총량과 두 깊이의 농도를 검산합니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 6.774 강의 전사 PDF 3쪽은 가우스 확산 가정에서 각 단계의 D×t를 더하는 절차를 설명합니다. 여기에 첫 3.6×10⁻¹¹ cm²와 다음 7.2×10⁻¹¹ cm²를 넣으면 B=1.08×10⁻¹⁰ cm²입니다. 이 값으로 a=2√B≈207.85 nm를 얻었습니다.</p><p className="leading-7">이 글은 실리콘 표면을 z=0, 안쪽을 양의 깊이로 둡니다. 원자 손실이 없는 한쪽 영역의 총량은 <code>∫₀∞C(z)dz=Q</code>이고, 가우스 곡선은 <code>C(z)=Q/√(πB) × exp[−z²/(4B)]</code>입니다. MIT 6.774 전사 PDF 6쪽의 관계 Q=Cₛ√(πDt)와 같은 정규화입니다. 양쪽으로 퍼지는 문제에서는 총량을 세는 영역이 달라 앞계수를 바꿔야 합니다.</p><p className="leading-7">첫 표면 농도를 1로 나누어 표시하면 두 단계 뒤 표면 농도는 √(3.6×10⁻¹¹/1.08×10⁻¹⁰)=1/√3≈0.577입니다. z=240 nm에서 첫 농도는 exp[−(240/120)²]=exp(−4)≈0.018입니다. 두 단계 뒤 같은 깊이에서는 (1/√3)×exp(−4/3)≈0.152입니다. 두 값 모두 첫 표면 농도로 나누었으므로 직접 비교할 수 있습니다.</p><p className="leading-7">120 nm와 약 208 nm는 농도가 각 단계 표면의 1/e로 내려가는 깊이입니다. 이를 접합 깊이로 부르려면 부족합니다. 예를 들어 첫 표면 농도가 반대 종류의 일정한 배경 농도보다 100배라고 추가로 가정하면, 만나는 깊이는 120√ln100≈258 nm입니다. 같은 가정의 두 단계 뒤에는 207.85√ln(100/√3)≈419 nm입니다. 여기서도 배경과 같아지는 위치를 따로 풀었습니다.</p></div>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 6.774 강의 전사 PDF 3쪽은 가우스 확산 가정에서 각 단계의 D×t를 더하는 절차를 설명합니다. 여기에 첫 3.6×10⁻¹¹ cm²와 다음 7.2×10⁻¹¹ cm²를 넣으면 B=1.08×10⁻¹⁰ cm²입니다. 이 값으로 a=2√B≈207.85 nm를 얻었습니다.</p><p className="leading-7">이 글은 실리콘 표면을 z=0, 안쪽을 양의 깊이로 둡니다. 원자 손실이 없는 한쪽 영역의 총량은 <code>∫₀∞C(z)dz=Q</code>이고, 가우스 곡선은 <code>C(z)=Q/√(πB) × exp[−z²/(4B)]</code>입니다. MIT 6.774 전사 PDF 6쪽의 관계 Q=Cₛ√(πDt)와 같은 정규화입니다. 양쪽으로 퍼지는 문제에서는 총량을 세는 영역이 달라 앞계수를 바꿔야 합니다.</p><p className="leading-7">첫 표면 농도를 1로 나누어 표시하면 두 단계 뒤 표면 농도는 √(3.6×10⁻¹¹/1.08×10⁻¹⁰)=1/√3≈0.577입니다. z=240 nm에서 첫 농도는 exp[−(240/120)²]=exp(−4)≈0.018입니다. 두 단계 뒤 같은 깊이에서는 (1/√3)×exp(−4/3)≈0.152입니다. 두 값 모두 첫 표면 농도로 나누었으므로 직접 비교할 수 있습니다.</p></div><JunctionVsWidthViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">120 nm와 약 208 nm는 농도가 각 단계 표면의 1/e로 내려가는 깊이입니다. 이를 접합 깊이로 부르려면 부족합니다. 예를 들어 첫 표면 농도가 반대 종류의 일정한 배경 농도보다 100배라고 추가로 가정하면, 만나는 깊이는 120√ln100≈258 nm입니다. 같은 가정의 두 단계 뒤에는 207.85√ln(100/√3)≈419 nm입니다. 여기서도 배경과 같아지는 위치를 따로 풀었습니다.</p></div>
 </section>
 
 <section id="supply" data-teach-level="6" className="scroll-mt-20">

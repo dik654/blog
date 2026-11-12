@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ResistancePowerViz from "./resistance-and-power-dissipation/viz/ResistancePowerViz";
+import CircuitLayoutViz from "./resistance-and-power-dissipation/viz/CircuitLayoutViz";
+import CircuitReduceViz from "./resistance-and-power-dissipation/viz/CircuitReduceViz";
+import RatingThresholdViz from "./resistance-and-power-dissipation/viz/RatingThresholdViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -30,7 +33,7 @@ return <div className="space-y-16">
 
 <section id="picture" data-teach-level="1" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">4. 함께 지나는 길과 나눠 지나는 길을 구분합니다</h2>
-<NumericPath title="바꾼 회로의 연결" steps={[{"label": "주는 쪽", "value": "12 V", "detail": "전체 연결 양끝에 걸립니다."}, {"label": "공통 길", "value": "첫 1 kΩ", "detail": "갈림길 이전에 모두 지납니다."}, {"label": "두 갈래", "value": "2 kΩ ∥ 1 kΩ", "detail": "두 길의 위·아래 점이 같습니다."}, {"label": "돌아오는 쪽", "value": "기준 0 V", "detail": "두 흐름이 다시 합쳐집니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+<NumericPath title="바꾼 회로의 연결" steps={[{"label": "주는 쪽", "value": "12 V", "detail": "전체 연결 양끝에 걸립니다."}, {"label": "공통 길", "value": "첫 1 kΩ", "detail": "갈림길 이전에 모두 지납니다."}, {"label": "두 갈래", "value": "2 kΩ ∥ 1 kΩ", "detail": "두 길의 위·아래 점이 같습니다."}, {"label": "돌아오는 쪽", "value": "기준 0 V", "detail": "두 흐름이 다시 합쳐집니다."}]} /><CircuitLayoutViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             첫 부품 뒤의 두 갈래는 같은 두 점을 공유합니다. 따라서 그 두 점 사이 차이는 같고 지나가는 양은 두 갈래를 합칩니다. 첫 부품과 갈림길 전체는 차례로 지나므로 같은 총량이
             통과하고 양끝 차이를 더합니다.
           </p><p className="leading-7">이 두 가지 연결을 구분하면 어떤 값을 더해야 하는지가 보입니다. 다음 절에서는 왜 저항값을 모든 자리에서 그냥 더할 수 없는지 확인합니다.</p></div>
@@ -59,6 +62,9 @@ return <div className="space-y-16">
 <h2 className="mb-6 text-2xl font-bold">7. 두 갈래를 줄이고 다시 펼쳐 7.2·2.4·4.8을 얻습니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">원래 회로의 두 2 kΩ은 같은 갈림길과 접지에 닿으므로 각자 6 V를 받습니다. 각각 3 mA가 흘러 합 6 mA입니다. 두 길을 전원 쪽에서 하나로 줄이면 6 V에 6 mA가 흐르는 1 kΩ과 같습니다. 이 <strong>병렬 합성</strong>은 전압이 같고 전류가 더해진다는 사실에서 나옵니다. 1/R<sub>eq</sub>=1/R<sub>2</sub>+1/R<sub>3</sub>라는 역수식은 그 문장을 기호로 적은 것입니다.</p>
+        </div>
+        <CircuitReduceViz />
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">따라서 원래 회로는 첫 1 kΩ과 두 갈래의 등가 1 kΩ이 직렬로 놓인 2 kΩ입니다. 12 V÷2 kΩ=6 mA, 첫 저항의 6 V를 빼면 갈림길도 6 V입니다. 이제 오른쪽을 1 kΩ으로 바꾸면 두 갈래의 등가는 2/3 kΩ, 전체는 5/3 kΩ입니다. 전원에서 7.2 mA가 흐르고 첫 1 kΩ에 7.2 V가 걸리므로 갈림길은 4.8 V입니다. 왼쪽은 4.8 V÷2 kΩ=2.4 mA, 오른쪽은 4.8 V÷1 kΩ=4.8 mA입니다.</p>
           <p className="leading-7"><em>오른쪽 길이 쉬워진 만큼 첫 부품의 전압 강하가 커져, 왼쪽에 남는 전압은 6 V에서 4.8 V로 줄었습니다.</em></p>
         </div>
@@ -110,7 +116,7 @@ return <div className="space-y-16">
 
 <section id="rating" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 실제 표의 두 허용값을 같은 단위로 비교합니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">Vishay 공식 데이터시트 2쪽의 D11/CRCW0603 e3 열은 <code>P70: 0.10 W / 0.125 W</code>로 표준·확장 동작을 구분합니다. 두 값을 mW로 바꾸면 100과 125입니다. 표의 열 제목과 동작 조건까지 읽어야 어떤 값을 적용하는지 결정할 수 있습니다.</p></div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">Vishay 공식 데이터시트 2쪽의 D11/CRCW0603 e3 열은 <code>P70: 0.10 W / 0.125 W</code>로 표준·확장 동작을 구분합니다. 두 값을 mW로 바꾸면 100과 125입니다. 표의 열 제목과 동작 조건까지 읽어야 어떤 값을 적용하는지 결정할 수 있습니다.</p></div><RatingThresholdViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">계산으로 51.84 mW를 알았다면 실제 부품표의 허용 전력과 비교합니다. 예를 들어 Vishay의 D11/CRCW0603 e3 두꺼운 막 저항은 1 kΩ을 만들 수 있는 저항 범위를 포함합니다. 2026년 4월 개정 데이터시트 2쪽은 이 크기의 <strong>표준 동작</strong>에 70 °C 기준 전력 0.10 W, 확장 동작에 0.125 W를 따로 표시합니다. 본문 회로의 첫 부품 51.84 mW는 표준 0.10 W보다 낮습니다. 그러나 그 사실만으로 어떤 기판·주변 온도에서도 안전하다고 결론낼 수는 없습니다.</p>
           <p className="leading-7">같은 가상 1 kΩ을 갈림길 없이 12 V에 직접 연결하면 12²/1000=0.144 W, 즉 144 mW입니다. 표준 0.10 W를 넘고 확장 0.125 W도 넘습니다. 제품의 전압 한계와 저항 허용차도 따로 확인해야 합니다. 1쪽의 설명은 부품 표면 온도가 허용치를 넘지 않아야 정격 전력을 쓸 수 있고, 온도 상승은 기판을 포함한 열저항에 달렸다고 밝힙니다. 이처럼 저항값 1 kΩ과 전력 정격 0.10 W는 서로 다른 질문에 답합니다.</p>
           <p className="leading-7"><em>첫 부품의 51.84 mW는 이 데이터시트의 표준 정격보다 낮지만, 12 V 직결의 144 mW는 그 정격을 넘습니다.</em></p>

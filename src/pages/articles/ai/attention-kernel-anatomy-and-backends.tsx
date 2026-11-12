@@ -14,6 +14,10 @@ import AttentionArithmeticViz from "./attention-kernel-anatomy-and-backends/viz/
 import AttentionTrafficViz from "./attention-kernel-anatomy-and-backends/viz/AttentionTrafficViz";
 import AutotuneCandidateViz from "./attention-kernel-anatomy-and-backends/viz/AutotuneCandidateViz";
 import SplitKvCombineViz from "./attention-kernel-anatomy-and-backends/viz/SplitKvCombineViz";
+import DecodeAlignmentViz from "./attention-kernel-anatomy-and-backends/viz/DecodeAlignmentViz";
+import OverlapBudgetViz from "./attention-kernel-anatomy-and-backends/viz/OverlapBudgetViz";
+import GreedyScheduleViz from "./attention-kernel-anatomy-and-backends/viz/GreedyScheduleViz";
+import BackendSelectViz from "./attention-kernel-anatomy-and-backends/viz/BackendSelectViz";
 import {codeRefs,fileTrees,projectMetas} from "./attention-kernel-anatomy-and-backends/codeRefs";
 import {ExecutionKernelMapReturn,ExecutionKernelSeriesLocator} from "./shared/ExecutionKernelSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
@@ -88,7 +92,7 @@ export default function Article(){
 <AttentionArithmeticViz />
 <ExplainedFormula question="같은 조각의 두 종류 비용은 어떻게 기록하나요?" idea="행렬곱의 곱셈·덧셈 수와 지수 호출 수를 각각 셉니다. 서로 다른 단위를 임의로 합치지 않습니다." formula={String.raw`F_{\rm mm}=4B_rB_cd,\quad E_{\exp}=B_rB_c`} annotatedFormula={String.raw`\begin{aligned}F_{\rm mm}&=\underbrace{4B_rB_cd}_{\text{두 행렬곱}}\\E_{\exp}&=\underbrace{B_rB_c}_{\text{점수 칸 수}}\\B_r&=B_c=d=2\\F_{\rm mm}&=32,\quad E_{\exp}=4\end{aligned}`} operations={[{expression:String.raw`2B_rB_cd`,annotation:["각 결과 칸의 d개 곱·합을 세어","한 행렬곱 비용을 얻음"]},{expression:String.raw`B_rB_c`,annotation:["점수 칸마다 필요한","지수 호출을 별도로 셈"]}]} terms={[{symbol:"B_r,B_c",name:"조각의 두 변",description:"관심 위치 수와 비교 위치 수입니다."},{symbol:"d",name:"행의 성분 수",description:"사례에서는 2입니다."},{symbol:"F_mm, E_exp",name:"연산 수와 호출 수",description:"FLOP와 지수 호출이라는 서로 다른 단위입니다."}]} assumptions={["곱셈·덧셈을 각각 1 FLOP로 세는 통상 행렬곱 장부입니다.","마스크·최대·합산·주소 계산·시작 비용을 포함한 전체 실행시간이 아닙니다."]} interpretation="동일한 조각을 처리해도 어떤 연산기를 기다리는지에 따라 최적의 배치가 달라집니다."/>
 </section>
-<section id="causal" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">8 · 10조각과 36개 연결을 원문 범위에 대입한다</h2><div className={prose}>
+<section id="causal" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">8 · 10조각과 36개 연결을 원문 범위에 대입한다</h2><DecodeAlignmentViz/><div className={prose}>
 <p>같은 길이의 입력을 같은 크기로 나눈 경우, 0부터 센 관심 묶음 i는 비교 묶음 0부터 i까지 읽습니다. 대각선 아래는 전부 허용되고 대각선 조각만 원소별로 가립니다. 하지만 길이가 다르거나 조각 크기가 다르면 이 간단한 삼각형 설명만으로는 부족합니다.</p>
 <p>고정 FlashAttention 소스는 범위 계산에 실제 key 길이−실제 query 길이를 더하는데 마지막 한 위치의 decode에서는 이 차이가 8−1=7입니다. 관심 행의 로컬 번호 0에 원래 위치 7이 대응하므로 여덟 key를 읽는 범위가 나옵니다. 로컬 번호끼리만 비교하면 첫 key만 남기는 잘못된 마스크가 됩니다.</p>
 <p>원문은 query 조각 번호를 blockIdx.x에서 직접 읽고 내부 key 조각은 뒤에서 앞으로 순회합니다. key 순회 방향, 실행할 block의 번호, 물리 실행 장치의 배정 순서는 다른 문제이므로 이 코드를 “무거운 query 조각부터 GPU에 배정한다”는 뜻으로 읽으면 안 됩니다.</p>
@@ -240,6 +244,9 @@ export default function Article(){
 </section>
 <section id="pipeline" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">14 · 한 조각의 의존성과 여러 조각의 겹치기를 나눈다</h2><div className={prose}>
 <p>같은 조각에서는 QK 점수가 나와야 softmax를 계산하고 그 가중치가 있어야 PV를 계산합니다. 이 의존성을 지운 채 세 단계가 동시에 끝난다고 할 수 없습니다. 다른 행이나 다음 조각의 독립적인 작업을 준비해야 서로 다른 연산기의 일을 겹칠 수 있습니다.</p>
+</div>
+<OverlapBudgetViz/>
+<div className={prose}>
 <p>가정한 여러 일감의 총 행렬곱 처리량 예산이 2시간 단위, 지수 처리량 예산이 1단위라면 직렬 합은 3입니다. 서로 다른 장치에서 완전히 겹친다고 치면 이상적인 자원 하한은 max(2,1)=2입니다. 시작과 종료 구간, 의존성, 버퍼와 다른 연산까지 포함하면 실제 완료시간이 2라고 보장할 수 없습니다.</p>
 <p>FA3 논문은 H100의 FP16 행렬곱 989TFLOP/s와 지수 약 3.9조 회/s를 비교합니다. d=128의 점수 한 칸당 행렬곱 512 FLOP를 전자로 나누면 약 0.518ps, 지수 한 호출을 후자로 나누면 약 0.256ps가 나옵니다. 이 값들은 GPU 전체 최고 처리량으로 나눈 자원 예산이어서 개별 지수 명령의 지연시간과는 다릅니다.</p>
 <p>두 예산을 직렬로 더하면 지수 항의 비중이 약 1/3입니다. d=64에서는 행렬곱 항이 절반이 되어 두 항이 거의 같아집니다. 최대값·합산·이동·실제 활용률을 뺀 이 비교는 겹치기를 시도할 이유를 설명하는 데까지만 쓰며 softmax가 항상 실행시간의 정확한 1/3이라고 측정한 값으로 읽지 않습니다.</p>
@@ -250,7 +257,7 @@ export default function Article(){
 {term:"두 계산 묶음이 번갈아 다른 일을 하기 → pingpong scheduling",description:"한 묶음의 softmax와 다른 묶음의 행렬곱을 겹칩니다. 버퍼와 순서 제약은 남습니다."}
 ]}/><div id="paper-flashattention-3" className="scroll-mt-24"><CitationBlock source="Shah 외 · FlashAttention-3 v2, §3.2와 실험 부록" citeKey={2} href="https://arxiv.org/html/2407.08608v2">저자는 Hopper 경로의 비동기 배치와 FP8 기법을 제안합니다. H100 80GB SXM5의 설정에서 FP16 최고 약 740TFLOP/s, FP8 약 1.2PFLOP/s를 보고하며 이전 구현 대비 1.5–2배를 제시합니다. 겹치기만의 비교와 전체 결과를 구별해야 합니다.</CitationBlock></div>
 </section>
-<section id="scheduling" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">15 · 긴 일감부터 놓는 설명은 배정 주체를 밝혀야 한다</h2><div className={prose}>
+<section id="scheduling" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">15 · 긴 일감부터 놓는 설명은 배정 주체를 밝혀야 한다</h2><GreedyScheduleViz/><div className={prose}>
 <p>가정한 동일 작업자 세 명에게 길이 [1,2,3,4]의 일을 현재 누적량이 가장 작은 작업자부터 배정해 봅니다. 오름차순으로 주면 마지막 길이 4가 길이 1 뒤에 붙어 종료시각이 5입니다. 내림차순으로 주면 4, 3, 2를 먼저 맡기고 길이 1을 2 뒤에 붙여 종료시각이 4입니다.</p>
 <p>이 계산은 이상적인 일감 배정 모형입니다. FlashInfer 논문 Algorithm 1에서는 긴 KV 조각들을 정렬하고 추정 비용이 작은 CTA 작업 큐에 넣습니다. CTA는 thread block에 해당하는 소프트웨어 일감 묶음이어서 CPU가 실제 SM 번호를 고정해 배정한다는 해석까지는 나아가지 않습니다.</p>
 <p>논문의 plan 단계는 길이 정보를 받아 작업 큐와 부분 출력의 합치기 위치를 만듭니다. GPU workspace에 계획과 부분 결과를 두고 attention과 contraction kernel이 사용합니다. run은 CUDA Graph에 담을 수 있어도 CPU의 plan 자체는 그 그래프 밖에서 실행합니다. 같은 길이 조건의 여러 층에서 계획을 재사용할 수 있습니다.</p>
@@ -266,6 +273,9 @@ export default function Article(){
 </section>
 <section id="backend-source" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">17 · vLLM은 명시한 부적합 구현을 예외로 처리한다</h2><div className={prose}>
 <p>vLLM v0.27.1의 selector는 head_size, dtype, KV cache 형식, 마스크 관련 조건 등을 묶어 현재 플랫폼에 넘깁니다. CUDA 경로의 validate_configuration은 지원하지 않는 항목의 이유를 모읍니다. 고정한 commit은 6e448d0이며 원문 파일 전체를 보존했습니다.</p>
+</div>
+<BackendSelectViz/>
+<div className={prose}>
 <p>CUDA 선택 함수는 selected_backend가 있으면 그 후보만 검사하고 부적합 이유가 있으면 ValueError를 냅니다. 지정이 없을 때에만 후보 목록을 검사해 통과한 후보 중 priority가 가장 작은 것을 고릅니다. 전부 부적합하면 이때도 예외입니다.</p>
 <p>원문 함수 몸체를 CPU에서 실행하되 실제 GPU 능력과 후보의 지원 판정은 가짜 값으로 넣어 제어 흐름을 확인했습니다. A=FLASH_ATTN은 head_size 미지원, B=FLASHINFER는 지원으로 두자 자동 선택은 B, A 명시 선택은 예외였습니다. 이 실험으로 알 수 있는 것은 제어 흐름까지이고 실제 설치된 두 backend의 지원 여부나 속도는 다루지 않습니다.</p>
 <p>같은 원문의 비-MLA 우선순위에서 capability major=10이고 causal이면 FLASHINFER가 먼저지만 같은 major라도 non-causal이면 FLASH_ATTN이 먼저입니다. 우선순위 목록은 버전과 조건에 묶인 정책이라 매 요청마다 모든 후보의 속도를 재서 정하지 않습니다. 함수 중간 주석보다 실제 예외와 반환 분기를 따라야 합니다.</p>

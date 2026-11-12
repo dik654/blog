@@ -7,6 +7,9 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import DetourViz from "./scale-and-cost-structure/viz/DetourViz";
 import DifferentiationViz from "./scale-and-cost-structure/viz/DifferentiationViz";
+import AverageSplitViz from "./scale-and-cost-structure/viz/AverageSplitViz";
+import SunkCostViz from "./scale-and-cost-structure/viz/SunkCostViz";
+import CostLinesViz from "./scale-and-cost-structure/viz/CostLinesViz";
 import { methodCosts } from "./scale-and-cost-structure/model";
 
 function MethodTable({ quantities }: { quantities: number[] }) {
@@ -70,6 +73,7 @@ export default function ScaleAndCostStructureArticle() {
       </section>
       <section id="need" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5. 방법을 바꾸지 않아도 평균은 내려갈 수 있다</h2>
+        <AverageSplitViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">B를 그대로 사용할 때 20개의 전체 비용은 140, 평균은 7입니다. 100개의 전체 비용은 460, 평균은 4.6입니다. 설비도 부품마다 쓰는 4도 바꾸지 않았지만 처음의 60을 나누는 개수가 늘어 평균이 낮아졌습니다.</p>
           <p className="leading-7">따라서 평균비용이 내려간 것을 모두 방법 변경의 결과로 설명할 수는 없습니다. 같은 B 안에서 준비 비용을 더 많은 물량에 나누는 변화와 100개 주문에서 B의 460 대신 C의 400을 선택하는 변화가 함께 있을 수 있습니다.</p>
@@ -94,6 +98,7 @@ export default function ScaleAndCostStructureArticle() {
       </section>
       <section id="roundabout" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7. 60을 내기 전의 선택과 이미 낸 뒤의 선택은 다르다</h2>
+        <SunkCostViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">아직 어느 설비도 갖추지 않았다면 20개 주문에 B를 선택해 먼저 60을 쓰고 가공하면서 80을 더 씁니다. 합계 140을 회수할 수 있는지는 판매가격과 대금 지급일을 따로 알아야 합니다. 가장 싼 생산 방법이라는 말은 주문 자체가 이익을 낸다는 말과 다릅니다.</p>
           <p className="leading-7">이제 B의 60을 이미 지출했고 돌려받을 수 없으며 새 주문 5개를 처리할 여력이 남았다고 가정합니다. 그 주문 때문에 추가로 쓰는 돈은 4 × 5 = 20입니다. A를 새로 선택해 50을 쓰는 것보다 작습니다. 이미 쓴 60을 이 주문의 추가 비용에 다시 넣어 80과 50을 비교하면 이후 선택이 달라집니다.</p>
@@ -135,6 +140,7 @@ export default function ScaleAndCostStructureArticle() {
       </section>
       <section id="all-methods" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9. 더 비싼 설비라는 이름만으로 차례대로 넘어가지 않는다</h2>
+        <CostLinesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             기본 사례의 최저 방법은 10개 미만에서 A, 10개 초과 80개 미만에서 B, 80개 초과에서 C입니다. 10개와 80개에서는 각각 두 방법이 동률입니다. 이는 이 세

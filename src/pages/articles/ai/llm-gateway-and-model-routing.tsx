@@ -5,6 +5,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LlmGatewayAndModelRoutingViz from "./llm-gateway-and-model-routing/viz/LlmGatewayAndModelRoutingViz";
+import RouterFilterViz from "./llm-gateway-and-model-routing/viz/RouterFilterViz";
+import CascadeCostViz from "./llm-gateway-and-model-routing/viz/CascadeCostViz";
 import {
   LlmOperationsPathLocator,
   LlmOperationsPathMapReturn,
@@ -111,6 +113,9 @@ export default function LlmGatewayAndModelRoutingArticle() {
             context 길이나 tool 지원 여부를 만족하는 후보만 남깁니다. Policy-based routing은 tenant별 예산이나 data region 같은 조직 규칙으로
             후보를 제한합니다.
           </p>
+        </div>
+        <RouterFilterViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 다섯 기준은 서로 배타적이지 않고 실무에서는 여러 개를 겹쳐 씁니다.{" "}
             <Link to="/cs/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
@@ -145,6 +150,9 @@ export default function LlmGatewayAndModelRoutingArticle() {
             Confidence-based escalation은 각 model의 응답에 확신도를 매겨 그 값이 미리 정한 기준보다 낮을 때만 다음 model로 넘어가는 판단 규칙입니다.
             확신도가 충분하면 저렴한 model의 응답을 그대로 쓰고 상위 model은 아예 호출하지 않습니다.
           </p>
+        </div>
+        <CascadeCostViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 방식은 모든 요청에 가장 비싼 model을 쓰는 것과 모든 요청에 가장 싼 model만 쓰는 것 사이의 절충입니다. 쉬운 요청은 싼 model이 이미 확신 있게 답하므로
             비싼 model 호출을 건너뛰고 어려운 요청만 비싼 model로 넘어갑니다.

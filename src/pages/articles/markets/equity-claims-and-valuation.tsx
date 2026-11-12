@@ -7,6 +7,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ClaimLadderViz from "./equity-claims-and-valuation/viz/ClaimLadderViz";
 import GordonSensitivityViz from "./equity-claims-and-valuation/viz/GordonSensitivityViz";
+import DividendSeriesViz from "./equity-claims-and-valuation/viz/DividendSeriesViz";
+import LeverageSplitViz from "./equity-claims-and-valuation/viz/LeverageSplitViz";
 
 /**
  * 주주는 아무것도 약속받지 못한 대신 남는 것을 전부 갖습니다
@@ -137,6 +139,7 @@ export default function EquityClaimsAndValuationArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 2. 같은 사업이라도 빚을 섞으면 주주 몫의 진폭이 커집니다
         </h2>
+        <LeverageSplitViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             자산 100억 원으로 연 8억 원을 버는 회사가 있습니다. 전부 자기 돈이면 주주 수익률은 8%입니다. 그런데 50억을 연 5%에 빌려 썼다면 이자 2.5억을 빼고 5.5억이
@@ -266,6 +269,11 @@ export default function EquityClaimsAndValuationArticle() {
             할인 식 자체는 달라지지 않습니다. 주주가 받을 현금을 시점마다 적고 할인해 더하면 됩니다. 문제는 그 현금흐름에 끝이 없다는 데 있습니다. 회사는 만기가 없으므로 배당은
             원칙적으로 영원히 이어집니다.
           </p>
+        </div>
+
+        <DividendSeriesViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
 
           <p className="leading-7">
             무한히 더할 수는 없으니 모양을 가정합니다. 가장 단순하게는 배당이 매년 일정한 비율로 늘어난다고 가정합니다. 그러면 2편에서 본 등비급수가 되어 무한한 합이 짧은 식 하나로

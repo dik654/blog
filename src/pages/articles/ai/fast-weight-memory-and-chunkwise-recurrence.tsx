@@ -10,6 +10,10 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./fast-weight-memory-and-chunkwise-recurrence/codeRefs";
 import FastWeightMemoryAndChunkwiseRecurrenceViz from "./fast-weight-memory-and-chunkwise-recurrence/viz/FastWeightMemoryAndChunkwiseRecurrenceViz";
+import MemoryInterferenceViz from "./fast-weight-memory-and-chunkwise-recurrence/viz/MemoryInterferenceViz";
+import DeltaCorrectionViz from "./fast-weight-memory-and-chunkwise-recurrence/viz/DeltaCorrectionViz";
+import TriangularCorrectionViz from "./fast-weight-memory-and-chunkwise-recurrence/viz/TriangularCorrectionViz";
+import GateOutcomePlaneViz from "./fast-weight-memory-and-chunkwise-recurrence/viz/GateOutcomePlaneViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 export default function Article(){
@@ -39,6 +43,7 @@ export default function Article(){
     <section id="case" data-teach-level="0" className="scroll-mt-20">
       <span id="associative-memory" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">3 · 첫 주소를 읽으면 (2, 1.8)이 나온다</h2>
+      <MemoryInterferenceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">저장할 값의 각 숫자와 주소의 각 숫자를 하나씩 곱하고 두 쌍의 결과를 더하면 M=[[2,0],[1.8,2.4]]입니다. 첫 열은 k₁로 읽는 결과이므로 Mk₁=(2,1.8)입니다. 두 번째 쌍의 주소가 첫 주소와 0.6만큼 겹쳐 0.6×3=1.8이 섞였습니다.</p>
         <p className="leading-8">k₂로 읽으면 (1.2,3)입니다. 두 주소가 서로 겹치는 방향이 없을 때에는 서로의 값이 섞이지 않지만 실제로는 제한된 차원에 많은 정보를 넣습니다. 작은 행렬의 절약과 간섭은 같은 설계에서 함께 생깁니다.</p>
@@ -48,6 +53,7 @@ export default function Article(){
     </section>
     <section id="picture" data-teach-level="1" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">4 · 현재 읽기와 목표의 차이만 다시 쓴다</h2>
+      <DeltaCorrectionViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">k₁의 새 목표가 (5,0)이면 현재 읽기 (2,1.8)을 빼 오차 (3,−1.8)을 얻습니다. 이 오차를 k₁ 방향에 더하면 첫 열만 바뀌어 M=[[5,0],[0,2.4]]가 됩니다.</p>
         <p className="leading-8">이후 k₁은 정확히 (5,0)을 읽습니다. 그러나 k₂는 (3,1.92)를 읽습니다. 첫 주소를 고친 영향이 내적 0.6만큼 두 번째 읽기에도 전해졌기 때문입니다. 선택적으로 쓴다는 말이 다른 기억을 모두 보존한다는 보장은 아닙니다.</p>
@@ -82,6 +88,9 @@ export default function Article(){
       <h2 className="mb-6 text-2xl font-bold">7 · 의존성을 작은 삼각 연립방정식으로 묶는다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">단위 key에 β=1을 쓰면 목표값으로 대체됩니다. 먼저 α=0.1을 적용한다면 기존 읽기 (2,1.8)이 (0.2,0.18)로 줄고 그 상태에 대한 새 오차를 계산해야 합니다. decay 전의 읽기를 빼면 다른 식이 됩니다.</p>
+      </div>
+      <TriangularCorrectionViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">병렬화 계산에서는 같은 두 쌍을 초기 기억 M₀=0부터 순서대로 쓴다고 둡니다. decay 없이 실제 correction을 u₁,u₂라고 합시다. u₁=β₁v₁이고 u₂=β₂v₂−β₂(k₂·k₁)u₁입니다. β=1인 위 사례는 u₁=(2,0), u₂=(−1.2,3)입니다. 따라서 u₂+0.6u₁=v₂라는 하삼각 연립식으로 한 chunk의 corrections를 구할 수 있습니다.</p>
         <p className="leading-8">대각선 아래만 채우고 나머지는 0인 행렬 L의 항을 Lᵢⱼ=βᵢ(kᵢ·kⱼ)로 놓으면 (I+L)U=diag(β)V입니다. 부호는 더하기입니다. 역행렬을 명시적으로 만들 필요 없이 앞서 구한 행부터 대입해 푸는 삼각 해법이나 같은 의존성을 행렬곱으로 묶는 변환으로 풀고 chunk 사이에서 상태를 넘깁니다. 초기 기억이 0이 아니면 그 읽기 항도 반영합니다. gate가 있으면 누적 decay와 축 배치까지 포함해야 합니다.</p>
         <p className="leading-8">4096 token을 64개씩 묶으면 chunk는 64개입니다 (가정). 각 chunk의 끝상태를 64번 계산하며, 다음 chunk로 넘기는 내부 경계는 63개입니다. chunk 내부 연산과 동기화도 남습니다. 전체 길이는 n으로 둡니다. 묶음 크기는 C=64이고 기억 폭은 d=128입니다. 이때 단순 비용 항 nCd와 nd²의 비는 C/d=0.5입니다 (가정). 이는 두 항의 규모 비교이며 실제 FLOPs가 정확히 50% 증가하거나 64배 빨라진다는 실측 결과가 아닙니다.</p>
@@ -105,6 +114,7 @@ export default function Article(){
     </section>
     <section id="comparison" data-teach-level="6" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">9 · GDN2는 지울 성분과 쓸 성분을 다른 축에서 조절한다</h2>
+      <GateOutcomePlaneViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">같은 M과 k₁, 목표 (5,0)에 α=1, erase b=(0.25,1), write w=(0.5,1)을 넣습니다. 지울 읽기는 M(b⊙k₁)=(0.5,0.45), 넣을 값은 w⊙v=(2.5,0)입니다. correction=(2,−0.45)을 쓰면 k₁의 결과는 (4,1.35)입니다.</p>
         <p className="leading-8">기존 scalar β=0.5는 지우기와 쓰기 둘 다 절반으로 묶어 결과 (3.5,0.9)를 만듭니다. GDN2는 두 일을 서로 다른 channel에서 정할 수 있습니다. 더 자유로운 표현이 생긴 것이며 모든 과제에서 더 좋거나 다른 key의 간섭이 없어졌다는 보장은 아닙니다.</p>

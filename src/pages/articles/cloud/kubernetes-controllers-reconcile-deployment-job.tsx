@@ -4,6 +4,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReconcileRolloutViz from "./kubernetes-controllers-reconcile-deployment-job/viz/ReconcileRolloutViz";
+import ControllerLayersViz from "./kubernetes-controllers-reconcile-deployment-job/viz/ControllerLayersViz";
+import LevelTriggeredViz from "./kubernetes-controllers-reconcile-deployment-job/viz/LevelTriggeredViz";
+import ClaimPodsViz from "./kubernetes-controllers-reconcile-deployment-job/viz/ClaimPodsViz";
 import {
   JobBackoffTimelineViz,
   RolloutBoundsViz,
@@ -41,6 +44,7 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 세 층이 각자 한 가지 숫자만 맞춥니다</h2>
+          <ControllerLayersViz />
           <div className={prose}>
             <p>
               바깥에서 보면 Deployment 하나에 세 층이 있습니다. 맨 위 Deployment는 "어떤 Pod template을 몇 개"라는 목표를 들고 있습니다. 가운데 ReplicaSet은 template 한 벌과 개수 하나를 들고 그 개수를 맞춥니다.
@@ -124,6 +128,9 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
             <p>
               앞 절의 과정에 표준 이름을 붙입니다. 객체의 <code>spec</code>에 적힌 것이 desired state(목표 상태), <code>status</code>와 실제 하위 객체들이 current state(현재 상태)입니다. 둘의 차이를 줄이는 행동을 한 번 하고 끝나는 함수가 reconcile이며, 그 함수를 변화가 있을 때마다 다시 부르는 전체가 control loop입니다. Deployment 컨트롤러와 ReplicaSet 컨트롤러는 각각 자기 객체 종류의 reconcile을 돕니다.
             </p>
+          </div>
+          <LevelTriggeredViz />
+          <div className={prose}>
             <p>
               컨트롤러가 "Pod 삭제 사건"을 받아서 "하나 만든다"로 반응했다면 edge-triggered입니다. Kubernetes 컨트롤러는 그렇게 쓰지 않습니다. 사건은 workqueue에 객체의 key만 넣는 신호일 뿐이며, 꺼낸 뒤에는 캐시에서 현재 상태를 통째로 다시 읽어 목표와 비교합니다.
             </p>
@@ -161,6 +168,9 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
             <p>
               그래서 Pod의 image를 <code>kubectl edit</code>로 바꾸면 그 Pod는 바뀐 채로 남아 있다가, 나중에 지워져 다시 만들어질 때 template대로 돌아옵니다. 애초에 Pod spec은 대부분 불변이라 바꿀 수 있는 필드도 image, activeDeadlineSeconds, terminationGracePeriodSeconds, tolerations 추가 정도입니다.
             </p>
+          </div>
+          <ClaimPodsViz />
+          <div className={prose}>
             <p>
               라벨은 다릅니다. Pod의 <code>app=web</code> 라벨을 <code>app=web-debug</code>로 바꾸면 ReplicaSet의 selector에서 벗어납니다. 다음 reconcile에서 ClaimPods는 "내가 소유하지만 selector가 안 맞는 Pod"를 보고 ownerReferences를 지워 놓아줍니다.
             </p>

@@ -3,6 +3,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import ProbabilityTreeViz from "./ProbabilityTreeViz";
+import AreaGridViz from "./viz/AreaGridViz";
+import DependenceMosaicViz from "./viz/DependenceMosaicViz";
+import UrnChainViz from "./viz/UrnChainViz";
 const L1="https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/ff296575da32c406c2e56131e1e38997_MIT6_041SCF13_L01.pdf";
 const L2="https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a1462fa23de9d08c0dfd233a57278fed_MIT6_041SCF13_L02.pdf";
 const L3="https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a2015627268f4846eb3b1368623ce46f_MIT6_041SCF13_L03.pdf";
@@ -70,6 +73,7 @@ export default function ProbabilityExperimentsArticle(){return <article classNam
 <section id="outcomes" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">7 · 같은 네 기록에서 확률의 합과 중복을 검사한다</h2>
 <p>표본공간은 Ω=&#123;HH,HT,TH,TT&#125;입니다. 비중이 모두 음수가 아니며 합은 4×1/4=1입니다. 정확히 한 번 앞면인 사건 A의 확률은 P(A)=P(HT)+P(TH)=1/2입니다. 아무 기록도 포함하지 않는 공집합 ∅도 사건이며 확률은 0입니다.</p>
+<AreaGridViz />
 <p>첫 앞면 사건 U=&#123;HH,HT&#125;와 둘째 앞면 사건 V=&#123;HH,TH&#125;는 HH에서 겹칩니다. 합집합의 확률은 P(U∪V)=P(U)+P(V)−P(U∩V)=1/2+1/2−1/4=3/4입니다. 교집합을 한 번 빼는 것은 HH를 두 번 더했기 때문입니다.</p>
 <p>이제 각 던짐의 앞면 확률을 0.7로 바꾸고 두 던짐은 서로 독립이라고 정합니다(가정). 네 기록은 HH 0.49, HT 0.21, TH 0.21, TT 0.09이며 합은 1입니다. 정확히 한 번 앞면일 확률은 0.42입니다. 같은 두 칸이라는 이유로 1/2라고 계산하면 틀립니다.</p>
 <p>첫 던짐의 앞면 확률만 0.7이라고 알려 주면 이 표를 완성할 수 없습니다. 두 번째의 확률과 두 결과의 관계도 필요합니다. 같은 동전이라는 말 역시 구체적인 시행 조건을 대신하지 못하므로 여기서는 두 가정을 명시했습니다.</p>
@@ -94,6 +98,7 @@ annotatedFormula={String.raw`\begin{gathered}P(y_1,y_2,y_3)=\underbrace{P(y_1)}_
 operations={[{expression:String.raw`P(A\cap B)=P(B)P(A\mid B)`,annotation:["조건부확률 식 양쪽에 P(B)를 곱해 두 사건의 결합확률을 되찾습니다."]}]}
 terms={[{symbol:"yᵢ",name:"순서가 있는 결과",description:"i번째 기록이나 token입니다."},{symbol:"연쇄법칙",name:"chain rule",description:"앞의 기록을 조건으로 둔 비율을 차례로 곱하는 항등식입니다."}]}
 assumptions={["사용하는 각 조건부확률의 이전 기록 확률이 양수입니다.","조건부 비율을 단순한 주변 확률로 바꾸려면 해당 독립 조건이 추가로 필요합니다."]} interpretation="언어 모델도 앞 token을 조건으로 다음 token의 확률을 곱합니다. 항등식이 맞는 것과 모델이 각 비율을 정확히 추정하는 것은 별개입니다." />
+<UrnChainViz />
 <p>빨강 2개와 파랑 1개 중 두 개를 되돌려 놓지 않고 뽑는 경우를 보겠습니다(가정). 첫 빨강은 2/3이지만 그 뒤에는 빨강 1개와 파랑 1개라서 다음 빨강은 1/2입니다. 두 번 빨강일 확률은 (2/3)(1/2)=1/3입니다. 조건을 지우고 (2/3)²=4/9로 바꾸면 앞 추출이 바꾼 구성을 놓칩니다.</p>
 </section>
 <section id="source-formulas" data-teach-level="5" className="space-y-6">
@@ -114,6 +119,7 @@ annotatedFormula={String.raw`\begin{gathered}A\cap B=\varnothing,\quad P(A)>0,\ 
 operations={[{expression:String.raw`P(A\cap B)=P(A)P(B)`,annotation:["이 곱의 등식이 독립의 정의입니다. 조건부확률로 나누지 않아 확률 0인 사건에도 적용됩니다."]}]}
 terms={[{symbol:"∅",name:"공집합",description:"동시에 해당하는 기록이 하나도 없습니다."}]}
 assumptions={["배타적 사건이 독립일 수 없다는 결론에는 두 확률이 모두 양수라는 조건이 필요합니다.","한 사건의 확률이 0이면 교집합 확률도 0이므로 곱의 등식이 성립할 수 있습니다."]} interpretation="독립은 결합확률의 관계이고 배타성은 기록 집합의 겹침 관계입니다. 같은 의미의 두 이름으로 바꿔 쓰지 않습니다." />
+<DependenceMosaicViz />
 <p>각 던짐이 반반이라는 사실만으로도 부족합니다. HH, HT, TH, TT에 각각 3/8, 1/8, 1/8, 3/8을 주어 봅시다(가정). 첫 H와 둘째 H의 확률은 여전히 각각 1/2이지만 HH는 3/8로 곱 1/4과 다릅니다. 첫 H를 알면 둘째 H의 비율은 3/4로 올라갑니다.</p>
 </section>
 <section id="conditional-independence" data-teach-level="6" className="space-y-6">

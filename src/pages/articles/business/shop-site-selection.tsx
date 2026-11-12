@@ -2,6 +2,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ShopSiteSelectionViz from "./ShopSiteSelectionViz";
+import UseClassViz from "./shop-site-selection/viz/UseClassViz";
 
 /** 공식 자료 확인: 2026-11-01. 금액 사례는 본문에 표시한 가정입니다. */
 export default function ShopSiteSelectionArticle() {
@@ -112,6 +113,9 @@ export default function ShopSiteSelectionArticle() {
             호주 정부의 창업 안내에 따라 위치를 고를 때 비용, 고객 접근성, 시설, 지방정부의 허용 사항을 함께 확인합니다. 한국 음식점도 건축물 용도와 식품위생 시설기준, 지역의 세부
             요건을 계약 전에 따져야 합니다. 임대인이 허용해도 관청의 신고가 자동으로 되는 것은 아닙니다.
           </p>
+        </div>
+        <UseClassViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">건축물 용도는 숫자로 먼저 걸러집니다. 법제처 생활법령 「음식점 영업이 가능한 입지」(2026-11-01 확인)에 따르면 휴게음식점·제과점은 같은 건물에서 그 용도로 쓰는 바닥면적 합계가 300㎡ 미만이면 제1종 근린생활시설, 300㎡ 이상이면 제2종 근린생활시설이어야 하고, 일반음식점은 제2종 근린생활시설에 해당합니다(「건축법 시행령」 별표 1).</p>
           <p className="leading-7">후보 점포가 건축물대장에 제1종 근린생활시설로 올라 있고 바닥면적이 120㎡(가정)라면, 커피와 빵을 파는 휴게음식점은 들어갈 수 있지만 술과 식사를 파는 일반음식점은 그대로는 들어갈 수 없습니다. 용도가 맞지 않으면 「건축법」 제19조에 따라 허가를 받거나 신고하는 용도변경을 먼저 거쳐야 하므로, 그 기간과 비용도 계약 전에 확인합니다.</p>
           <p className="leading-7">소상공인365의 공식 서비스 개시 자료는 입지평가·배달정보 분석과 매출·유동인구 등을 제공한다고 설명합니다. 이런 자료로 후보지를 좁힌 뒤, 이 글의 가정인 입장률 5%와 구매율 40%를 현장에서 별도로 확인합니다.</p>

@@ -8,6 +8,9 @@ import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import SourceApplication from "../../world-systems/SourceApplication";
 import { codeRefs, teachFileTree } from "./teachCodeRefs";
+import CumulativeLimitViz from "./viz/CumulativeLimitViz";
+import UserOpPathViz from "./viz/UserOpPathViz";
+import Delegation7702Viz from "./viz/Delegation7702Viz";
 
 export default function ModernAA() {
  const sidebar=useCodeSidebar();
@@ -48,6 +51,7 @@ export default function ModernAA() {
   <section id="need" data-teach-level="2" className="space-y-5">
    <h2 className="text-2xl font-bold">5. 서명이 맞아도 금액과 상대를 확인해야 합니다</h2>
    <p>임시 열쇠의 서명만 확인하면 Bob 대신 공격자에게 200개를 보내는 요청도 통과할 수 있습니다. 이 사례의 계정은 서명과 함께 받을 사람, 호출할 자산 프로그램, 전송 동작, 금액, 만료 시각을 검사해야 합니다.</p>
+   <CumulativeLimitViz />
    <p>40을 보낸 뒤 다른 요청이 70을 더 보내려 한다면 40+70=110으로 한도 100을 넘습니다. 각각의 금액이 100 이하인지만 보는 검사로는 이를 막지 못합니다. 동시에 들어온 요청도 최종 상태에서 순서대로 검사하고 같은 누적 장부를 갱신해야 합니다.</p>
    <p>권한 검사가 없으면 돈을 빼앗기고 비용 확보가 없으면 전달자가 남의 계산 비용을 떠안을 수 있습니다. 그래서 보낼 권한과 비용을 부담할 약속을 각각 검증합니다.</p>
   </section>
@@ -60,6 +64,7 @@ export default function ModernAA() {
   <section id="erc4337" data-teach-level="4" className="space-y-5">
    <h2 className="text-2xl font-bold">7. 7번 요청이 접수에서 실제 송금으로 갑니다</h2>
    <p>Alice의 요청에는 계정 주소, nonce 7, USDC 프로그램의 Bob에게 40 보내기 호출과 비용 조건이 들어갑니다. 서명은 이 내용뿐 아니라 체인 ID와 EntryPoint 주소에도 연결돼야 합니다. 다른 체인이나 다른 처리 계약에서 같은 승인을 재사용하지 않기 위해서입니다.</p>
+   <UserOpPathViz />
    <p>Bundler는 먼저 실행을 모의해 서명·예치금·허용된 검증 규칙을 확인합니다. 이를 통과하면 자신의 대기 목록에 넣을 수 있습니다. 제출 직전에 다시 검사하고 <code>handleOps</code>라는 바깥 거래로 요청들을 제출합니다. UserOperation 자체와 이 바깥 거래는 별도의 객체입니다.</p>
    <p>EntryPoint는 계정에 검증을 요청하고 nonce 7을 확인합니다. 대납자의 예치금과 승인도 확인한 뒤 계정의 실행 함수를 호출합니다. 계정은 USDC에 전송을 요청하며 성공 후 잔액은 160·40이 됩니다. 정산 결과에서 성공 여부와 실제 비용을 확인해야 전체 경로가 끝납니다.</p>
    <p>처음 모의했을 때 남은 한도가 100이어도 먼저 포함된 다른 요청이 80을 썼다면 40은 이제 초과입니다. ERC-7562는 검증 과정에서 읽는 상태와 사용하는 연산 등에 제한을 두어 많은 요청을 한꺼번에 무효화하는 공격을 줄입니다. 이 제한이 계정의 송금 권한을 대신 설계해 주지는 않습니다.</p>
@@ -97,6 +102,7 @@ export default function ModernAA() {
   <section id="native-aa" data-teach-level="6" className="space-y-5">
    <h2 className="text-2xl font-bold">10. EIP-7702는 기존 주소에 실행할 코드를 연결합니다</h2>
    <p>ERC-4337은 요청을 묶어 계약으로 처리하는 경로입니다. EIP-7702는 기존 EOA 주소에 어떤 코드를 실행할지 연결하는 규칙입니다. Alice가 기존 주소를 유지하면서 위 기능을 쓰려면 코드 위임과 요청 처리 경로가 함께 사용될 수 있습니다. 코드 연결만으로 session key나 ERC-4337 호환성이 자동 완성되지는 않습니다.</p>
+   <Delegation7702Viz />
    <p>2026-10-04 확인한 EIP-7702는 Final이며 type-4 거래의 승인 목록을 규정합니다. 승인 항목에는 체인 ID, 위임할 코드의 주소, authority의 nonce와 서명이 들어갑니다. 서명 입력은 <code>keccak256(0x05 || rlp([chain_id,address,nonce]))</code>입니다. 0x05는 승인 용도를 구별하고 RLP는 세 값을 순서가 정해진 바이트로 인코딩합니다.</p>
    <p>체인 ID가 0이면 여러 체인에서 유효하도록 허용한 예외입니다. 같은 주소의 코드·초기 설정이 다른 체인에서 같다는 뜻은 아닙니다. 이 승인 nonce는 7번 UserOperation의 순서열과 구별해야 합니다. 승인 자료에 Bob·USDC 40이 직접 들어 있지 않으므로 위임한 계정 코드가 실제 송금 권한을 별도로 확인해야 합니다.</p>
    <SourceApplication source="EIP-7702 · Behavior" excerpt="the processed delegation indicators is not rolled back" application="Alice의 코드 연결 승인이 처리된 뒤 40개 송금이 실패해도 코드 연결 자체가 자동으로 사라진다고 가정하지 않습니다. 거래 실패 표시만 보고 기존 지갑 상태로 돌아왔다고 판단하면 다음 요청의 권한을 잘못 읽게 됩니다." />

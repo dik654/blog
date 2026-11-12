@@ -2,6 +2,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import AppHashOffsetViz from "./viz/AppHashOffsetViz";
+import SideEffectReplayViz from "./viz/SideEffectReplayViz";
 
 export default function FinalizeCommit({
   onCodeRef,
@@ -45,6 +47,7 @@ export default function FinalizeCommit({
         assumptions={["모든 correct node가 같은 ordered input과 application version/configuration을 사용합니다.", "Map iteration·floating behavior·clock·randomness·remote API처럼 결과가 갈리는 입력을 제거하거나 consensus input에 포함합니다.", "Commitment collision resistance를 가정하며 AppHash가 비어 있거나 application-specific일 수 있는 protocol 범위를 따릅니다."]}
         interpretation="같은 S_{h-1}와 B_h인데 A_h가 다르면 consensus order는 같아도 replicated application state가 갈라진 것입니다. AppHash 일치는 external notification이 exactly once 실행됐다는 뜻은 아닙니다."
       />
+      <AppHashOffsetViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>A41은 B41이 아니라 다음 block header에 들어갑니다</h3>
         <p>
@@ -86,6 +89,7 @@ export default function FinalizeCommit({
           ))}
         </div>
       </div>
+      <SideEffectReplayViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>외부 side effect는 application state와 별도 receipt가 필요합니다</h3>
         <p>

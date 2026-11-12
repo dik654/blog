@@ -7,6 +7,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RequestJourneyViz from "./region-agnostic-inference-routing/viz/RequestJourneyViz";
 import RetryBoundaryViz from "./region-agnostic-inference-routing/viz/RetryBoundaryViz";
+import TwoPathsViz from "./region-agnostic-inference-routing/viz/TwoPathsViz";
+import CostFeedbackViz from "./region-agnostic-inference-routing/viz/CostFeedbackViz";
+import TimeoutKindsViz from "./region-agnostic-inference-routing/viz/TimeoutKindsViz";
 import {
   InferenceDeploymentMapReturn,
   InferenceDeploymentSeriesLocator,
@@ -93,7 +96,11 @@ export default function RegionAgnosticInferenceRoutingArticle() {
             모델을 몇 개 띄울지입니다. 뒤쪽은 15분에 한 번만 다시 계산해도
             충분합니다.
           </p>
+        </div>
 
+        <TwoPathsViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             그래서 둘을 다른 경로에 둡니다. 컨트롤러는 설정을 밀어 넣을 뿐
             요청이 지나가는 길에 서 있지 않습니다. 컨트롤러가 죽어도 마지막
@@ -289,7 +296,11 @@ export default function RegionAgnosticInferenceRoutingArticle() {
             그다음이 지금 감당할 수 있는지, 그다음이 얼마나 기다리는지입니다.
             원가는 마지막입니다.
           </p>
+        </div>
 
+        <CostFeedbackViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             원가를 앞으로 올리면 되먹임이 생깁니다. 최근 처리한 토큰 수로 나눈
             평균 원가를 쓰면 트래픽이 몰린 풀이 싸 보이고, 싸 보이니까 더
@@ -454,7 +465,11 @@ export default function RegionAgnosticInferenceRoutingArticle() {
               추론 응답은 수십 초에서 몇 분까지 이어집니다. 그 사이 토큰이 잠시
               안 나오는 구간이 생기면 중간의 로드밸런서가 연결을 끊습니다.
             </p>
+          </div>
 
+          <TimeoutKindsViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               그래서 게이트웨이가 유휴 구간에 SSE 주석을 주기적으로 보냅니다.
               다만 이것으로 해결되는 것은 유휴 제한뿐입니다. 전체 요청 시간에

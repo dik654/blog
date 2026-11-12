@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RepresentationDepthViz from "./viz/RepresentationDepthViz";
+import XorRepresentationViz from "./viz/XorRepresentationViz";
 
 const DEEP_LEARNING_REVIEW = "https://www.nature.com/articles/nature14539";
 const DEPTH_PAPER = "https://arxiv.org/abs/1602.04485";
@@ -17,7 +18,7 @@ export default function DeepLearningOverviewArticle(){return <article className=
 <p className="leading-8">전체 장치는 세 부분으로 읽으면 됩니다. 먼저 켜짐과 꺼짐을 숫자로 받습니다. 가운데에서는 이 숫자를 다른 숫자 묶음으로 바꿉니다. 마지막에서는 바뀐 숫자로 답 하나를 계산합니다. 우리가 고를 것은 가운데와 마지막 계산에 쓰이는 숫자입니다.</p><NumericPath title="원래 입력을 바로 판정하지 않고 중간 계산을 거칩니다" steps={[{label:"무엇을 관측했나",value:"(1, 1)"},{label:"어떻게 바꿔 적나",value:"(2, 1)"},{label:"어떤 답을 내나",value:"0"}]} /><p className="leading-8">중간 결과 (2, 1)이 왜 필요한지는 아직 몰라도 됩니다. 입력이 들어오는 곳과 답을 읽는 곳 사이에 바꿔 적는 단계가 있다는 구조를 잡은 뒤, 그 단계 안을 열어 보겠습니다.</p>
 </section>
 <section id="case" data-teach-level="0" className="space-y-6"><h2 className="text-2xl font-bold">3. 네 입력을 같은 계산 규칙으로 처리해 봅니다</h2>
-<p className="leading-8">매번 예외 규칙을 따로 적는 대신, 두 입력을 더한 값과 그 합에서 1을 뺀 값을 나란히 만듭니다. 음수가 나온 칸은 0으로 바꿉니다. 마지막 답은 첫째 칸에서 둘째 칸의 두 배를 빼서 구합니다.</p><p className="leading-8">(0, 0)은 합이 0이므로 먼저 (0, −1)이 되고, 음수를 지우면 (0, 0)이 됩니다. (0, 1)과 (1, 0)은 모두 (1, 0)이 됩니다. (1, 1)은 (2, 1)이 됩니다. 마지막 계산 결과는 차례로 0, 1, 1, 0으로 처음 요구한 답과 같습니다.</p><p className="leading-8">숫자를 이렇게 바꾸면 마지막 단계가 같은 규칙으로 네 입력을 처리합니다. 이 결과가 성립한 이유를 보려면 음수를 0으로 만든 동작을 따로 살펴봐야 합니다.</p>
+<p className="leading-8">매번 예외 규칙을 따로 적는 대신, 두 입력을 더한 값과 그 합에서 1을 뺀 값을 나란히 만듭니다. 음수가 나온 칸은 0으로 바꿉니다. 마지막 답은 첫째 칸에서 둘째 칸의 두 배를 빼서 구합니다.</p><XorRepresentationViz /><p className="leading-8">(0, 0)은 합이 0이므로 먼저 (0, −1)이 되고, 음수를 지우면 (0, 0)이 됩니다. (0, 1)과 (1, 0)은 모두 (1, 0)이 됩니다. (1, 1)은 (2, 1)이 됩니다. 마지막 계산 결과는 차례로 0, 1, 1, 0으로 처음 요구한 답과 같습니다.</p><p className="leading-8">숫자를 이렇게 바꾸면 마지막 단계가 같은 규칙으로 네 입력을 처리합니다. 이 결과가 성립한 이유를 보려면 음수를 0으로 만든 동작을 따로 살펴봐야 합니다.</p>
 </section>
 <section id="shape" data-teach-level="1" className="space-y-6"><h2 className="text-2xl font-bold">4. 음수를 지우는 동작이 입력 사이의 관계를 바꿉니다</h2>
 <p className="leading-8">가운데 계산을 세 부분으로 열어 보겠습니다. 두 입력의 합을 복사하는 부분, 둘째 칸에서 1을 빼는 부분, 음수만 0으로 바꾸는 부분입니다. 각 부분은 각각 무엇을 함께 볼지, 어느 지점부터 반응할지, 그 지점 전후에 어떤 다른 규칙을 적용할지를 정합니다.</p><NumericPath title="(0, 0)을 넣었을 때 중간 숫자가 바뀌는 위치" steps={[{label:"합을 두 칸에",value:"(0, 0)"},{label:"둘째 칸에서 1을",value:"(0, −1)"},{label:"음수만 0으로",value:"(0, 0)"}]} /><p className="leading-8">앞의 두 부분만 있으면 입력을 곱하고 더하는 한 번의 계산으로 합칠 수 있습니다. 마지막 부분은 음수인지에 따라 규칙이 달라져서 그렇게 합칠 수 없습니다. 이제 각 부분을 뺐을 때 무엇이 깨지는지 확인하겠습니다.</p>

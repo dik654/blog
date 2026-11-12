@@ -3,6 +3,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import FunctionCompositionViz from "./FunctionCompositionViz";
+import DomainRangeViz from "./viz/DomainRangeViz";
+import AssociativityViz from "./viz/AssociativityViz";
 
 const OPENSTAX = "https://openstax.org/books/precalculus-2e/pages/1-4-composition-of-functions";
 const CALCULUS = "https://openstax.org/books/calculus-volume-1/pages/1-1-review-of-functions";
@@ -70,6 +72,7 @@ export default function MathFunctionsCompositionArticle() {
       </section>
       <section id="shape" data-teach-level="4" className="space-y-6">
         <h2 className="text-2xl font-bold">7 · 선언한 출력 집합과 실제 나오는 값은 다르다</h2>
+        <DomainRangeViz />
         <p>f를 실수에서 실수로 가는 제곱 함수라고 선언하면 정의역과 공역은 모두 실수 전체입니다. 그러나 제곱 결과는 음수가 될 수 없으므로 치역은 0 이상의 실수입니다. 공역은 허용한 출력 집합이고, 치역은 실제로 도달하는 부분입니다.</p>
         <p>
             실수 제곱근 √x는 입력 x≥0에서 정의됩니다. 음수를 넣어 실수 답이 나오지 않는 것은 선언된 정의역 밖의 값을 넣었기 때문입니다. 전체 입력 중 일부에서만 정의한 규칙을
@@ -117,6 +120,7 @@ export default function MathFunctionsCompositionArticle() {
       </section>
       <section id="boundaries" data-teach-level="7" className="space-y-6">
         <h2 className="text-2xl font-bold">10 · 괄호를 바꾸는 것과 실행 순서를 바꾸는 것은 다르다</h2>
+        <AssociativityViz />
         <p>g(f(2))는 f를 먼저 계산하므로 2→4→13입니다. f(g(2))의 49와 다릅니다. 이런 식으로 두 함수를 맞바꾸어도 결과가 같아야 교환법칙이 성립하는데, 일반적인 합성에서는 성립하지 않습니다.</p>
         <p>세 함수를 묶는 괄호만 바꾸면 어떨까요. f∘(g∘h)와 (f∘g)∘h는 둘 다 x→h(x)→g(h(x))→f(g(h(x))) 순서입니다. 모든 연결이 정의되는 입력에서 결과가 같으므로 결합법칙은 성립합니다. 계산 순서를 바꾸지 않고 묶는 위치만 바꾼 것입니다.</p>
         <p>

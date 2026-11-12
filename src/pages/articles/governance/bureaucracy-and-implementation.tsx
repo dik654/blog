@@ -8,6 +8,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import ImplementationChainViz from "./bureaucracy-and-implementation/viz/ImplementationChainViz";
 import MeasurementDistortionViz from "./bureaucracy-and-implementation/viz/MeasurementDistortionViz";
+import ChecklistBranchViz from "./bureaucracy-and-implementation/viz/ChecklistBranchViz";
 
 /**
  * 배달 차량 1,000대를 20일 안에 점검하라는 한 도시의 결정이 집행 조직과
@@ -195,6 +196,11 @@ export default function BureaucracyAndImplementationArticle() {
             누가 검사해도 비슷한 답이 나오고, 차량 소유자도 이의를 제기할 근거를
             얻습니다.
           </p>
+        </div>
+
+        <ChecklistBranchViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             하지만 새 방식으로 개조한 차량이 목록의 모든 수치를 통과하면서도
             위험한 흔적을 보일 수 있습니다. 검사관이 목록 밖을 볼 수 없으면 그

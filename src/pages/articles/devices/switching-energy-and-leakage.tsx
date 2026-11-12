@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SwitchingEnergyViz from "./switching-energy-and-leakage/viz/SwitchingEnergyViz";
+import ChargeAreaViz from "./switching-energy-and-leakage/viz/ChargeAreaViz";
+import ActivityCountViz from "./switching-energy-and-leakage/viz/ActivityCountViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -46,6 +48,7 @@ return <div className="space-y-16">
 
 <section id="energy-ledger" data-teach-level="4" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">7. 33 pC와 108.9 pJ의 행방을 끝까지 좇습니다</h2>
+<ChargeAreaViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">충전하는 내내 공급 전압은 3.3 V이므로 공급원이 내는 에너지는 3.3 V×33 pC=108.9 pJ입니다. 그중 54.45 pJ가 용량에 저장되고, 나머지 54.45 pJ는 위쪽 소자의 저항성 경로에서 열로 사라집니다. 출력이 내려갈 때 공급원은 이 이상 모형에서 새 에너지를 내지 않습니다. 저장된 54.45 pJ가 아래쪽 소자에서 열이 됩니다. 따라서 출력의 0→1→0 <strong>완전한 한 주기</strong>에는 공급원에서 108.9 pJ가 나오고, 결국 모두 열이 됩니다.</p>
           <p className="leading-7">이 장부는 ‘충전 때 공급한 에너지’와 ‘순간에 용량에 저장된 에너지’를 구분합니다. 충전의 마지막만 찍어 저장 에너지 ½CV²를 스위칭 에너지로 쓰면 한 주기 비용을 절반으로 계산하게 됩니다. 여기서 출력 1은 3.3 V, 0은 0 V입니다.</p>
@@ -79,6 +82,7 @@ return <div className="space-y-16">
 
 <section id="activity" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 원문의 주기당 비용을 초당 횟수로 바꿉니다</h2>
+<ActivityCountViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">기준 주기 1 MHz라고 해서 출력도 매번 0→1→0을 마치지는 않습니다. 여기서는 <strong>활동률 α</strong>를 ‘기준 주기 중 완전한 출력 한 쌍이 일어나는 비율’로 정의합니다. α=0.1이면 초당 100만 기준 주기 중 10만 번만 완전한 출력 주기가 생깁니다. 그래서 평균 동적 전력은 108.9 pJ×10만/s=10.89 µW입니다. 문헌에 따라 α를 0→1 전환 횟수/클록 주기로 정의하기도 합니다. 두 정의 모두 이 사례에서는 10만 번의 충전을 세지만, α를 토글 총수로 바꾸고 같은 식을 쓰면 두 배 오류가 납니다.</p>
           <p className="leading-7">한쪽 상태에서 멈춘 이상적인 상보형 회로는 직접적인 공급선 길이 끊어져 정적 전력이 0입니다. 실제 소자는 문턱 아래 전류와 접합·절연층을 통한 누설이 남습니다. 이 글의 대기 공급 전류 1 µA는 <strong>가정</strong>이며 온도, 공정, 전압, 입력 상태가 바뀌면 달라집니다. 3.3 V×1 µA=3.3 µW이므로 단순 합은 10.89+3.3=14.19 µW입니다.</p>

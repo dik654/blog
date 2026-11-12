@@ -7,6 +7,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import SmoothquantActivationSmoothingViz from "./smoothquant-activation-smoothing/viz/SmoothquantActivationSmoothingViz";
 import GemmScaleAxisViz from "./smoothquant-activation-smoothing/viz/GemmScaleAxisViz";
+import SmoothingPlacementViz from "./smoothquant-activation-smoothing/viz/SmoothingPlacementViz";
 import { codeRefs } from "./smoothquant-activation-smoothing/codeRefs";
 import { smoothquantTrees } from "./smoothquant-activation-smoothing/fileTree";
 import QuantizationPathLocator, { QuantizationMapReturn } from "./quantization/QuantizationPathLocator";
@@ -232,6 +233,9 @@ export default function SmoothquantActivationSmoothingArticle() {
               mit-han-lab/smoothquant commit c61476d의 smooth.py 18–45행 smooth_ln_fcs가 6절의 식을 그대로 실행합니다. 함수는 LayerNorm 하나와 그
               출력을 받는 Linear 목록, 보정한 채널별 최댓값을 받습니다. 29–32행이 weight의 입력 채널별 최댓값을 구하고 34–39행이 s를 계산합니다.
             </p>
+          </div>
+          <SmoothingPlacementViz />
+          <div className={prose}>
             <p>
               PyTorch Linear의 weight는 (출력, 입력) 모양이라 dim=0의 최댓값이 입력 채널별 max|W_j|입니다. q·k·v처럼 같은 입력을 받는 Linear가 여럿이면
               셋의 최댓값을 다시 max로 묶어 s 하나를 공유합니다. X는 하나인데 s가 Linear마다 다르면 LayerNorm을 한 가지로 나눌 수 없기 때문입니다.

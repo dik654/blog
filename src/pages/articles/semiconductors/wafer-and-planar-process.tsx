@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PlanarProcessViz from "./wafer-and-planar-process/viz/PlanarProcessViz";
+import MarginShiftViz from "./wafer-and-planar-process/viz/MarginShiftViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -88,7 +89,7 @@ return <div className="space-y-16">
 
 <section id="alternatives" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 같은 단면의 폭과 정렬을 바꿔 검산합니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">옆으로 퍼지는 거리를 한쪽 5 µm라고 새로 가정하면 p형 표면 폭은 100+5+5=110 µm입니다. 중앙 80 µm 창을 유지하면 한쪽 거리는 (110−80)/2=15 µm입니다. 접촉 주변 거리는 커지지만 p형 영역 자체도 더 넓어지므로 옆 소자와의 간격까지 자동으로 좋아지는 것은 아닙니다.</p><p className="leading-7">처음의 104 µm p형 폭으로 돌아와 접촉 창만 100 µm로 넓히면 한쪽 거리는 (104−100)/2=2 µm입니다. 이 창이 가운데에서 오른쪽으로 3 µm 치우친다고 추가로 가정하면 오른쪽 남는 거리는 2−3=−1 µm입니다. 단순 기하에서 창이 경계를 1 µm 넘어갑니다.</p><p className="leading-7">첫 80 µm 창의 12 µm도 똑같이 정렬 오차와 확산 편차를 빼서 판단해야 합니다. 평균 폭이 맞는지와 가장 가까운 접합이 계속 덮이는지는 서로 다른 검사입니다.</p></div>
+<MarginShiftViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">옆으로 퍼지는 거리를 한쪽 5 µm라고 새로 가정하면 p형 표면 폭은 100+5+5=110 µm입니다. 중앙 80 µm 창을 유지하면 한쪽 거리는 (110−80)/2=15 µm입니다. 접촉 주변 거리는 커지지만 p형 영역 자체도 더 넓어지므로 옆 소자와의 간격까지 자동으로 좋아지는 것은 아닙니다.</p><p className="leading-7">처음의 104 µm p형 폭으로 돌아와 접촉 창만 100 µm로 넓히면 한쪽 거리는 (104−100)/2=2 µm입니다. 이 창이 가운데에서 오른쪽으로 3 µm 치우친다고 추가로 가정하면 오른쪽 남는 거리는 2−3=−1 µm입니다. 단순 기하에서 창이 경계를 1 µm 넘어갑니다.</p><p className="leading-7">첫 80 µm 창의 12 µm도 똑같이 정렬 오차와 확산 편차를 빼서 판단해야 합니다. 평균 폭이 맞는지와 가장 가까운 접합이 계속 덮이는지는 서로 다른 검사입니다.</p></div>
 </section>
 
 <section id="limits" data-teach-level="7" className="scroll-mt-20">

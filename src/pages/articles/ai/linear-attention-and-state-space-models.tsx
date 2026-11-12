@@ -6,6 +6,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LinearAttentionAndStateSpaceModelsViz from "./linear-attention-and-state-space-models/viz/LinearAttentionAndStateSpaceModelsViz";
+import KernelOrderViz from "./linear-attention-and-state-space-models/viz/KernelOrderViz";
+import RankOneUpdateViz from "./linear-attention-and-state-space-models/viz/RankOneUpdateViz";
+import CapacityOverlapViz from "./linear-attention-and-state-space-models/viz/CapacityOverlapViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
@@ -64,6 +67,9 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             씁니다. Similarity(q, k)를 φ(q)·φ(k)로 정의하면 곱셈의 결합법칙에 따라 key와 value를 먼저 묶은 φ(K)ᵀV를 계산해 두고 그 결과를 query마다
             재사용할 수 있습니다.
           </p>
+        </div>
+        <KernelOrderViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 순서 교환이 계산량을 바꿉니다. 원래 attention은 query n개마다 key n개와의 유사도를 전부 계산해 O(n²)이 들지만 φ(K)ᵀV를 먼저 만들면 query는
             그 결과 하나만 읽으면 되므로 전체 비용이 O(n)으로 줄어듭니다.
@@ -118,6 +124,7 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           고정 크기 state 하나로 다음 token 출력을 계산합니다
         </h2>
+        <RankOneUpdateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Causal linear attention은 φ(K)ᵀV의 누적을 위치마다 순서대로 쌓는 대신, 그 누적을
@@ -246,6 +253,7 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           고정 state는 용량을 넘는 문맥에서 서로 다른 사실을 겹쳐씁니다
         </h2>
+        <CapacityOverlapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             d×d state가 표현할 수 있는 독립적인 key-value 연관의 수는 대략 d²개로 제한됩니다. 문맥에 담긴 사실 수가 이 용량을 넘어서면 서로 다른 연관이 같은

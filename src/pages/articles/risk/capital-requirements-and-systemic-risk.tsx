@@ -7,6 +7,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ContagionViz from "./capital-requirements-and-systemic-risk/viz/ContagionViz";
 import CapitalBufferViz from "./capital-requirements-and-systemic-risk/viz/CapitalBufferViz";
+import WeightFloorViz from "./capital-requirements-and-systemic-risk/viz/WeightFloorViz";
+import ProcyclicalityViz from "./capital-requirements-and-systemic-risk/viz/ProcyclicalityViz";
 
 /**
  * 은행에만 미리 자본을 쌓으라고 하는 이유는 손실이 번지기 때문입니다
@@ -288,6 +290,7 @@ export default function CapitalRequirementsAndSystemicRiskArticle() {
           <h3 className="mb-4 mt-12 text-xl font-bold">
             분모를 줄이는 것과 위험을 줄이는 것은 다릅니다
           </h3>
+          <WeightFloorViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               가중치가 낮은 자산으로 옮기면 실제 위험이 그대로여도 비율이 올라갑니다. 그래서 규제는 위험을 반영한 비율 하나만 두지 않고 가중치를 전혀 쓰지 않는 단순 비율을 바닥으로
@@ -409,6 +412,7 @@ export default function CapitalRequirementsAndSystemicRiskArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           이 규제는 스스로 새 문제를 만들고, 그 자리에서 그물이 닫힙니다
         </h2>
+        <ProcyclicalityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             자본비율을 지키라는 요구는 나쁠 때 더 아프게 작동합니다. 경기가 나빠져 자산이 깎이면 분자인 자본이 줄고 동시에 대출의 위험 가중치가 올라 분모가 커집니다. 비율을 맞추려면

@@ -10,6 +10,7 @@ import {
   default as EmbeddingPathLocator,
 } from "./sentence-embeddings/EmbeddingPathLocator";
 import EmbeddingModelFineTuningViz from "./embedding-model-fine-tuning/viz/EmbeddingModelFineTuningViz";
+import MatryoshkaPrefixViz from "./embedding-model-fine-tuning/viz/MatryoshkaPrefixViz";
 
 /**
  * Embedding fine-tuning: 정답 쌍이 검색 순위가 되는 과정
@@ -195,6 +196,9 @@ L_i&=\underbrace{-\log p(d_i\mid q_i)}_{\text{정답 확률이 낮을수록 커�
         <h2 className="mb-6 break-keep text-2xl font-bold">
           차원을 잘라 쓸 계획이라면 학습할 때부터 그 길이로 loss를 계산합니다
         </h2>
+
+        <MatryoshkaPrefixViz />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             일반 768차원 embedding의 앞 128차원을 나중에 임의로 잘라 쓴다고 해서 그

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ImpedanceViz from "./steady-state-and-impedance/viz/ImpedanceViz";
+import PartsSumViz from "./steady-state-and-impedance/viz/PartsSumViz";
+import PhasorViz from "./steady-state-and-impedance/viz/PhasorViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -27,7 +29,7 @@ return <div className="space-y-16">
 
 <section id="picture" data-teach-level="1" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">4. 같은 흐름이 지나도 두 부품의 전압은 다르게 움직입니다</h2>
-<NumericPath title="두 부품 중 저장하는 쪽의 차이를 읽습니다" steps={[{"label": "입력 양끝", "value": "최대 5 V", "detail": "한 주기는 약 6.28 ms입니다."}, {"label": "저항", "value": "현재 전류에 비례", "detail": "같은 순간의 흐름을 바로 반영합니다."}, {"label": "축전기", "value": "쌓인 전하를 반영", "detail": "전하가 들어온 이력이 전압에 남습니다."}, {"label": "출력 읽기", "value": "축전기 양끝", "detail": "크기와 봉우리 시각을 비교합니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">두 부품은 한 길에 있어 같은 전류가 흐릅니다. 저항의 전압은 그 순간 전류에 비례하지만, 축전기의 전압은 들어온 전하가 쌓인 상태를 반영합니다. 전류가 가장 클 때 축전기 전압도 가장 크다고 둘 수 없는 이유입니다.</p><p className="leading-7">
+<NumericPath title="두 부품 중 저장하는 쪽의 차이를 읽습니다" steps={[{"label": "입력 양끝", "value": "최대 5 V", "detail": "한 주기는 약 6.28 ms입니다."}, {"label": "저항", "value": "현재 전류에 비례", "detail": "같은 순간의 흐름을 바로 반영합니다."}, {"label": "축전기", "value": "쌓인 전하를 반영", "detail": "전하가 들어온 이력이 전압에 남습니다."}, {"label": "출력 읽기", "value": "축전기 양끝", "detail": "크기와 봉우리 시각을 비교합니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">두 부품은 한 길에 있어 같은 전류가 흐릅니다. 저항의 전압은 그 순간 전류에 비례하지만, 축전기의 전압은 들어온 전하가 쌓인 상태를 반영합니다. 전류가 가장 클 때 축전기 전압도 가장 크다고 둘 수 없는 이유입니다.</p></div><PartsSumViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             순간 전압의 합은 언제나 입력과 맞아야 합니다. 그러나 두 부품이 각자 가장 큰 순간은 다를 수 있어 각 부품의 최대 진폭을 그대로 더하면 입력의 최대 진폭과 맞지 않습니다.
             늦고 빠른 정도를 같이 보관해야 합니다.
           </p></div>
@@ -85,7 +87,7 @@ return <div className="space-y-16">
 
 <section id="divider" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 원문의 전압 분배에 같은 두 부품을 넣습니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">원문 8쪽의 분배식은 <code>VC=Vi·ZC/(ZR+ZC)</code>입니다. 두 부품에 같은 전류가 흐르므로 전체 전압에 출력 부품의 몫을 곱합니다. 분자와 분모에 jωC를 곱하면 분자는 1, 분모는 1+jωRC가 되어 앞서 예고한 출력식을 얻습니다.</p></div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">원문 8쪽의 분배식은 <code>VC=Vi·ZC/(ZR+ZC)</code>입니다. 두 부품에 같은 전류가 흐르므로 전체 전압에 출력 부품의 몫을 곱합니다. 분자와 분모에 jωC를 곱하면 분자는 1, 분모는 1+jωRC가 되어 앞서 예고한 출력식을 얻습니다.</p></div><PhasorViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">저항 1 kΩ과 축전기 −j1000 Ω을 직렬로 놓았으므로 전체는 1000−j1000 Ω입니다. 복소평면에서 이 값의 길이는 √(1000²+1000²)≈1414 Ω입니다. 입력 최대 진폭 5 V를 나누면 전류 최대 진폭은 약 3.54 mA입니다. 축전기 양단의 출력은 그 전류에 −j1000 Ω을 곱하므로 최대 진폭이 3.54 V가 됩니다. 저항과 축전기를 각각 별도의 실수 1000 Ω으로 취급하면 각도를 놓칩니다.</p>
           <p className="leading-7">더 짧게는 축전기 몫 Z<sub>C</sub>/(R+Z<sub>C</sub>)=1/(1+jωRC)을 입력에 곱합니다. ωRC=1일 때 분모 1+j의 크기는 √2, 각도는 +45°입니다. 따라서 출력÷입력의 크기는 1/√2≈0.707, 출력 각도는 −45°입니다. 5 V×0.707≈3.54 V가 앞 계산과 맞습니다.</p>
           <p className="leading-7"><em>실수 저항 분배를 복소수로 옮기면 크기와 지연을 같은 계산에서 얻습니다.</em></p>

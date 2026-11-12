@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SplitBoundaryViz from "./SplitBoundaryViz";
+import CandidateSelectionViz from "./CandidateSelectionViz";
+import MeanLeakViz from "./MeanLeakViz";
 
 const ESL = "https://hastie.su.domains/ElemStatLearn/";
 const CV_PAPER = "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/";
@@ -31,6 +33,7 @@ export default function TrainValidationTestArticle(){return <article className="
 <p className="leading-8">Parameter를 배우는 첫 800명이 train set입니다. 후보를 고르는 다음 200명이 validation set이며, 선택 종료 뒤 최종 평가에 쓰는 마지막 200명이 test set입니다. Validation으로 학습 속도나 계산 구조, 저장 시점 중 무엇을 쓸지 고르는 것도 정상적인 선택입니다.</p><p className="leading-8">비율이 아니라 어떤 의사결정에 정보를 주는지가 이름을 정합니다. 이제 처음의 A와 B를 이 이름으로 부르며 최종 보고까지 이어 보겠습니다.</p>
 </section>
 <section id="selection-feedback" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">7. B를 선택한 뒤 마지막 200명에서 44번 틀렸습니다</h2>
+<CandidateSelectionViz />
 <p className="leading-8">Train의 오답률 A=10%, B=15%, validation의 오답률 A=20%, B=15%를 보고 B를 선택합니다. 이 결과가 후보 선택으로 돌아간 경로를 validation selection feedback이라고 부릅니다. B를 고른 뒤 구조, 학습 절차, 판정 기준을 고정하고 test를 열었더니 200명 중 44명을 틀렸습니다 (가정). 최종 관측 오답률은 22%입니다.</p><p className="leading-8">여기서 test의 22%가 마음에 들지 않아 판정 기준을 조절하면 test-set reuse contamination, 최종 평가 자료의 재사용 문제가 생깁니다. 조정 자체를 금지하는 뜻은 아닙니다. 그 자료를 이제 선택에 사용했다고 기록하고, 새로 고친 규칙의 독립 평가에는 별도의 보지 않은 자료를 남겨야 합니다.</p><p className="leading-8">최초 test 열람 시각, 본 지표, 그 뒤 바꾼 설정과 수정 이유를 기록하면 최종 보고가 어느 규칙을 평가한 것인지 추적할 수 있습니다. 오류 수정이라도 test 결과를 계기로 바꾸었다면 그 의존 관계를 남깁니다. 선택용 자료에서는 시도 횟수, 후보의 변경 내역, 무작위 시작값, 마지막으로 동결한 선택 규칙도 함께 기록합니다.</p><AlgorithmBlock title="학습·후보 선택·최종 보고 분리 (의사코드)" input={["서로 다른 1,200명, 사람 ID별 800/200/200 분리 (가정)","후보 A와 B, 사전 선택 기준: validation 오답률 최소"]} steps={[{code:"train 800명으로 A와 B를 각각 학습"},{code:"validation 200명에서 A의 오답 40, B의 오답 30을 계산"},{code:"B를 선택하고 전처리·학습·판정 규칙을 고정"},{code:"test 200명에서 고정한 B의 오답 44를 집계"},{code:"44 / 200 = 0.22를 보고; 이후 적응이 있으면 새 평가 자료 확보"}]} output="선택 기록 B, 고정된 평가 대상, 관측 test 오답률 22%" /><p className="leading-8">처음 사진 수에서 최종 오답률까지 같은 사례가 이어졌습니다. 이 경계를 공식 문서의 실제 문구에 적용해 보겠습니다.</p>
 </section>
 <section id="source-choice" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">8. 공식 문서의 ‘모델 선택에 쓰지 않는다’를 사례에 적용합니다</h2>
@@ -40,6 +43,7 @@ export default function TrainValidationTestArticle(){return <article className="
           </p><blockquote className="border-l-2 border-primary pl-5 leading-8">Test data should never be used to make choices about the model.</blockquote><p className="leading-8">우리 사례에서 22%를 본 뒤 B의 판정 기준을 바꾸는 행동이 이 문구가 제한하는 선택에 해당합니다. θ를 직접 갱신하지 않았더라도 예측 결과를 만드는 규칙이 test 정보에 반응했기 때문입니다. 원래 선택이 끝난 B의 22%와, test를 보며 수정한 새 규칙의 점수를 같은 독립 평가로 합치지 않습니다.</p><a href="https://scikit-learn.org/stable/common_pitfalls.html#data-leakage" target="_blank" rel="noreferrer" className="text-primary underline">원문: Common pitfalls, 12.2 Data leakage</a><p className="leading-8">정답을 이용한 선택뿐 아니라 입력을 변환하는 준비 과정에서도 정보가 샐 수 있습니다. 같은 800/200/200 경계를 그 준비 과정까지 따라갑니다.</p>
 </section>
 <section id="source-preprocessing" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">9. 입력의 평균을 구할 때도 같은 경계를 유지합니다</h2>
+<MeanLeakViz />
 <p className="leading-8">사진에서 구한 한 숫자의 train 평균이 10, validation 평균이 20, test 평균이 30이라고 합시다 (가정). 각 입력에서 평균을 빼기로 했다면, 학습 때 쓸 평균은 첫 800명의 10입니다. 세 묶음을 합쳐 평균을 구하면 (800×10+200×20+200×30)/1,200=15가 되어 test의 분포가 학습 준비에 이미 영향을 줍니다.</p><p className="leading-8">같은 공식 문서 12.2절의 짧은 규칙은 “never call fit on the test data”입니다. 여기서 fit은 자료에서 변환 규칙이나 모델 숫자를 배우는 호출입니다. Test 값 30을 변환할 때 train에서 구한 평균 10을 적용하면 20이고, test를 포함해 다시 배운 평균 15를 적용하면 15입니다. 후자는 원래의 독립 평가 절차와 다른 계산입니다.</p><p className="leading-8">Validation이나 test에는 train에서 배운 같은 변환을 적용합니다. 변환 자체를 생략하면 학습 때와 입력 좌표가 달라집니다. 공식 문서 12.1절과 12.2.1절이 구분하는 fit_transform과 transform의 역할도 각각 규칙을 배우며 적용하기, 배운 규칙만 적용하기입니다.</p><a href="https://scikit-learn.org/stable/common_pitfalls.html#how-to-avoid-data-leakage" target="_blank" rel="noreferrer" className="text-primary underline">원문: 12.1 전처리 일관성, 12.2.1 정보 누출 방지</a><p className="leading-8">파일 경계만 지키면 충분하지 않은 이유가 드러났습니다. 마지막으로 관측 점수의 차이가 무엇을 말하고 무엇을 말하지 않는지 살펴봅니다.</p>
 </section>
 <section id="generalization" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">10. 점수 차이는 진단의 출발점이고 원인의 증명은 아닙니다</h2>

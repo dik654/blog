@@ -6,6 +6,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SettlementRangeViz from "./settlement-and-access/viz/SettlementRangeViz";
 import ShadowOfJudgmentViz from "./settlement-and-access/viz/ShadowOfJudgmentViz";
+import NoOverlapViz from "./settlement-and-access/viz/NoOverlapViz";
+import AccessCostViz from "./settlement-and-access/viz/AccessCostViz";
 
 /** 경보기 분쟁 하나로 합의 범위, 재판 선택, 법의 그림자와 접근 격차를 추적한다. */
 export default function SettlementAndAccessArticle() {
@@ -144,6 +146,7 @@ export default function SettlementAndAccessArticle() {
         <h2 className="mb-6 break-keep text-2xl font-bold">
           합의가 깨지는 이유는 고집보다 대안값이 겹치지 않기 때문일 수 있습니다
         </h2>
+        <NoOverlapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             M이 새 증거를 보고 승소 가능성을 90%로 올려 보는데 V는 여전히 30%로
@@ -233,6 +236,7 @@ export default function SettlementAndAccessArticle() {
         <h2 className="mb-6 break-keep text-2xl font-bold">
           권리가 있어도 법원에 갈 수 없다면 협상 대안은 약해집니다
         </h2>
+        <AccessCostViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             M의 승소 전망과 청구액이 그대로인데, 자료 확보와 대리 비용 때문에

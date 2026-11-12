@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BodeViz from "./frequency-shaping-and-bode/viz/BodeViz";
+import LogAxisViz from "./frequency-shaping-and-bode/viz/LogAxisViz";
+import WaveLagViz from "./frequency-shaping-and-bode/viz/WaveLagViz";
+import SlopeViz from "./frequency-shaping-and-bode/viz/SlopeViz";
+import OutputSwapViz from "./frequency-shaping-and-bode/viz/OutputSwapViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -40,6 +44,7 @@ return <div className="space-y-16">
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 열 배 간격을 같은 거리로 그리는 이유가 있습니다</h2>
+<LogAxisViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">15.915에서 159.15까지와 159.15에서 1591.5까지는 모두 열 배 증가입니다. 단순한 Hz 차이로 가로 거리를 정하면 두 번째 구간이 열 배 길어져 느린 쪽 변화가 좁은 곳에 몰립니다. 같은 배수를 같은 거리에 놓으면 여러 속도 범위를 함께 읽기 쉽습니다.</p><p className="leading-7">출력 비도 1, 0.1, 0.01처럼 넓어질 수 있습니다. 같은 배율의 감소를 같은 세로 간격으로 놓으면 작은 값의 변화도 보입니다. 그래서 가로와 세로의 눈금을 바꿉니다. 눈금이 바뀌어도 원래 출력 전압은 그대로입니다.</p><p className="leading-7">이제 통과하는 방향과 두 눈금의 이름을 붙이겠습니다. 이름을 읽은 뒤에는 언제든 원래 4.98·3.54·0.50 V로 되돌아올 수 있어야 합니다.</p></div>
 </section>
 
@@ -54,7 +59,7 @@ return <div className="space-y-16">
       <p className="leading-7">RC=1 ms이므로 입력 각주파수 ω에 대해 ωRC=1이 되는 곳은 ω<sub>c</sub>=1000 rad/s입니다. 보통 쓰는 반복 빈도로 바꾸면 f<sub>c</sub>=ω<sub>c</sub>/(2π)≈159.15 Hz입니다. 이 지점을 <strong>차단 주파수</strong> 또는 경계 주파수라 부릅니다. ‘차단’은 출력이 0이 된다는 뜻이 아닙니다.</p>
       <p className="leading-7">축전기 양단 출력 비는 H=1/(1+jωRC)입니다. 경계에서는 크기가 1/√2≈0.707이므로 5 V 최대 진폭은 약 3.54 V로 남습니다. 출력은 입력보다 45° 늦습니다. 같은 회로를 시간으로 보면 1 ms의 저장 과정이고, 반복 입력으로 보면 약 159 Hz에서 변화가 두드러지는 것입니다.</p>
       <p className="leading-7"><em>경계는 ‘꺼지는 곳’이 아니라 출력 진폭이 저주파 기준의 약 70.7%가 되는 곳입니다.</em></p>
-    </div><ExplainedFormula question="1 kΩ·1 µF에서 경계 주파수와 출력 최대 진폭은?" idea="저장 시간 RC의 역수를 각주파수 경계로 바꾸고, 복소 전압 분배의 크기를 읽습니다." formula={String.raw`\omega_c=\frac{1}{RC}`} annotatedFormula={String.raw`\underbrace{\omega_c}_{\text{경계 각주파수}}=\frac{1}{RC}`} operations={[{expression:String.raw`RC=1\,\mathrm{ms}`,annotation:"1 kΩ×1 µF입니다."},{expression:String.raw`f_c=\frac{1000}{2\pi}\approx159.15\,\mathrm{Hz}`,annotation:"각주파수 1000 rad/s를 Hz로 바꿉니다."},{expression:String.raw`5/\sqrt2\approx3.54\,\mathrm V`,annotation:"5 V 최대 진폭의 약 70.7%가 남습니다."}]} terms={[{symbol:"R,C",name:"저항·용량",description:"이 글의 가상값 1 kΩ·1 µF입니다."},{symbol:String.raw`\omega_c`,name:"경계 각주파수",description:"ωRC=1이 되는 속도, 단위 rad/s입니다."},{symbol:"f_c",name:"경계 빈도",description:"1초에 반복하는 횟수, 단위 Hz입니다."}]} assumptions={["5 V는 최대 진폭이고 출력은 무부하 축전기 양단에서 읽습니다.","이상적인 일정한 R·C와 정현파 정상 상태를 가정합니다."]} interpretation="159 Hz 부근에서 출력은 0이 아니라 약 3.54 V 최대 진폭입니다." /><CitationBlock source="MIT OpenCourseWare 6.002, Lecture 18, ‘Filters’ (Fall 2000 자료), 2–3쪽" citeKey={1} href="https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/d4e136975654a01f7fc2c9b49196d376_6002_l18.pdf">원본 2–3쪽은 저항·축전기 분배식과 축전기 출력의 저역 통과 회로를 제시합니다. 1 kΩ·1 µF·5 V와 159.15 Hz는 강의 자료의 실험값이 아니라 이 글의 가정 계산입니다.</CitationBlock><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">세 속도에서 ωRC는 0.1, 1, 10입니다. 따라서 출력 비 1/√(1+(ωRC)²)는 각각 약 0.9950, 0.7071, 0.09950입니다. 5 V를 곱하면 처음의 4.98·3.54·0.50 V를 얻습니다. 입력보다 늦는 각도는 −arctan(ωRC)이므로 −5.7°·−45°·−84.3°입니다.</p></div>
+    </div><ExplainedFormula question="1 kΩ·1 µF에서 경계 주파수와 출력 최대 진폭은?" idea="저장 시간 RC의 역수를 각주파수 경계로 바꾸고, 복소 전압 분배의 크기를 읽습니다." formula={String.raw`\omega_c=\frac{1}{RC}`} annotatedFormula={String.raw`\underbrace{\omega_c}_{\text{경계 각주파수}}=\frac{1}{RC}`} operations={[{expression:String.raw`RC=1\,\mathrm{ms}`,annotation:"1 kΩ×1 µF입니다."},{expression:String.raw`f_c=\frac{1000}{2\pi}\approx159.15\,\mathrm{Hz}`,annotation:"각주파수 1000 rad/s를 Hz로 바꿉니다."},{expression:String.raw`5/\sqrt2\approx3.54\,\mathrm V`,annotation:"5 V 최대 진폭의 약 70.7%가 남습니다."}]} terms={[{symbol:"R,C",name:"저항·용량",description:"이 글의 가상값 1 kΩ·1 µF입니다."},{symbol:String.raw`\omega_c`,name:"경계 각주파수",description:"ωRC=1이 되는 속도, 단위 rad/s입니다."},{symbol:"f_c",name:"경계 빈도",description:"1초에 반복하는 횟수, 단위 Hz입니다."}]} assumptions={["5 V는 최대 진폭이고 출력은 무부하 축전기 양단에서 읽습니다.","이상적인 일정한 R·C와 정현파 정상 상태를 가정합니다."]} interpretation="159 Hz 부근에서 출력은 0이 아니라 약 3.54 V 최대 진폭입니다." /><CitationBlock source="MIT OpenCourseWare 6.002, Lecture 18, ‘Filters’ (Fall 2000 자료), 2–3쪽" citeKey={1} href="https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/d4e136975654a01f7fc2c9b49196d376_6002_l18.pdf">원본 2–3쪽은 저항·축전기 분배식과 축전기 출력의 저역 통과 회로를 제시합니다. 1 kΩ·1 µF·5 V와 159.15 Hz는 강의 자료의 실험값이 아니라 이 글의 가정 계산입니다.</CitationBlock><WaveLagViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">세 속도에서 ωRC는 0.1, 1, 10입니다. 따라서 출력 비 1/√(1+(ωRC)²)는 각각 약 0.9950, 0.7071, 0.09950입니다. 5 V를 곱하면 처음의 4.98·3.54·0.50 V를 얻습니다. 입력보다 늦는 각도는 −arctan(ωRC)이므로 −5.7°·−45°·−84.3°입니다.</p></div>
 </section>
 
 <section id="db" data-teach-level="5" className="scroll-mt-20">
@@ -70,6 +75,7 @@ return <div className="space-y-16">
 <h2 className="mb-6 text-2xl font-bold">9. 원문 식으로 정확한 곡선과 근사 기울기를 대조합니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
       <p className="leading-7">가로축의 한 칸을 주파수 열 배인 <strong>한 decade</strong>로 놓고, 세로축에 dB와 위상을 각각 표시한 그림이 <strong>보드 선도</strong>입니다. 이 회로에서 0.1f<sub>c</sub>는 약 −0.043 dB·−5.7°, f<sub>c</sub>는 −3.01 dB·−45°, 10f<sub>c</sub>는 −20.043 dB·−84.3°입니다. 열 배씩 오른쪽으로 갈수록 축전기 출력이 작아지고 더 늦습니다.</p>
+    </div><SlopeViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
       <p className="leading-7">경계보다 훨씬 위에서는 |H|≈1/(ωRC)라서 주파수를 열 배 올리면 출력 비가 거의 10분의 1, 약 −20 dB가 됩니다. 하지만 f<sub>c</sub>에서 10f<sub>c</sub>까지는 −3.01에서 −20.043 dB로 약 −17.03 dB 차이입니다. <strong>−20 dB/dec는 높은 주파수의 근사 기울기</strong>입니다. 10f<sub>c</sub>에서 100f<sub>c</sub>로 가면 약 −19.96 dB만큼 바뀌어 근사치에 가까워집니다.</p>
       <p className="leading-7"><em>기울기를 쓸 때는 정확한 곡선과 멀리서 그은 근사선을 구분합니다.</em></p>
     </div><BodeViz /><CitationBlock source="MIT OpenCourseWare 6.002, Lecture 17, ‘The Impedance Model’ (Fall 2000 자료), 4쪽" citeKey={2} href="https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf">공식 강의안 4쪽의 RC 전달 함수와 진폭·위상 식을 주파수별로 계산했습니다. dB 수치와 −17.03 dB 비교는 그 식에 본문 가정값을 대입한 결과입니다.</CitationBlock><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
@@ -80,6 +86,7 @@ return <div className="space-y-16">
 
 <section id="other-output" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 원문의 연결 그림에서 출력 부품을 바꿔 봅니다</h2>
+<OutputSwapViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
       <p className="leading-7">같은 1 kΩ과 1 µF라도 입력에서 축전기를 먼저 지나 저항을 접지에 잇고, 저항 양단에서 출력을 읽으면 <strong>고역 통과 필터</strong>가 됩니다. 전류가 아주 천천히 바뀌면 축전기 임피던스의 크기가 커서 저항에 전압이 거의 남지 않습니다. 빨라지면 저항 출력이 입력에 가까워집니다. 새로운 출력 비는 jωRC/(1+jωRC)입니다.</p>
       <p className="leading-7">0.1f<sub>c</sub>, f<sub>c</sub>, 10f<sub>c</sub>에서 저항 출력의 진폭 비는 각각 약 0.0995, 0.707, 0.995입니다. 경계는 여전히 약 159 Hz이며, 어느 쪽을 출력으로 삼는지가 통과 방향을 결정합니다. 실제 측정에는 부하와 신호원의 저항이 붙을 수 있어 이 단순 수치가 변합니다.</p>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import FeedbackViz from "./feedback-gain-and-stability/viz/FeedbackViz";
+import CrossoverBodeViz from "./feedback-gain-and-stability/viz/CrossoverBodeViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -74,7 +75,7 @@ return <div className="space-y-16">
             한 연결이 오히려 흔들림을 키울 수 있습니다. ‘음의’는 배선의 빼기 부호이며 모든 주파수에서 항상 안정이라는 보증은 아닙니다.
           </p>
       <p className="leading-7"><em>증폭기의 이득뿐 아니라 돌아오는 데 걸리는 각도도 한 바퀴 계산해야 합니다.</em></p>
-    </div><CitationBlock source="Texas Instruments / Burr-Brown, Graeme, ‘Feedback Plots Define Op Amp AC Performance’, 1–2쪽" citeKey={2} href="https://www.ti.com/lit/an/sboa015/sboa015.pdf">공식 자료는 열린 증폭기 이득과 1/β 곡선의 만나는 위치, 추가 극이 더하는 위상 지연, 루프 이득이 −1에 가까울 때의 발진 조건을 설명합니다. 본문의 10·100 rad/s 두 극은 설명을 위해 만든 모델입니다.</CitationBlock><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">원문 1쪽의 두 곡선은 |A|와 1/β입니다. 두 값이 같다는 조건은 |Aβ|=1과 같습니다. 가정한 두 극 모델의 크기를 넣으면 (1+(ω/10)²)(1+(ω/100)²)=(100β)²입니다. 이 식에서 ω를 구하면 두 곡선이 만나는 속도를 얻습니다.</p><p className="leading-7">ω²을 x로 두어 전개하면 x²+10100x+1000000[1−(100β)²]=0입니다. 양의 해를 택하고 제곱근을 취합니다. β=0.1에서는 x≈6108.07, 따라서 ω≈78.15 rad/s입니다. β=0.5에서는 x≈45194.4, 따라서 ω≈212.59 rad/s입니다. 표시 자리수에 따라 아래의 반올림은 약간 달라질 수 있습니다.</p></div>
+    </div><CitationBlock source="Texas Instruments / Burr-Brown, Graeme, ‘Feedback Plots Define Op Amp AC Performance’, 1–2쪽" citeKey={2} href="https://www.ti.com/lit/an/sboa015/sboa015.pdf">공식 자료는 열린 증폭기 이득과 1/β 곡선의 만나는 위치, 추가 극이 더하는 위상 지연, 루프 이득이 −1에 가까울 때의 발진 조건을 설명합니다. 본문의 10·100 rad/s 두 극은 설명을 위해 만든 모델입니다.</CitationBlock><CrossoverBodeViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">원문 1쪽의 두 곡선은 |A|와 1/β입니다. 두 값이 같다는 조건은 |Aβ|=1과 같습니다. 가정한 두 극 모델의 크기를 넣으면 (1+(ω/10)²)(1+(ω/100)²)=(100β)²입니다. 이 식에서 ω를 구하면 두 곡선이 만나는 속도를 얻습니다.</p><p className="leading-7">ω²을 x로 두어 전개하면 x²+10100x+1000000[1−(100β)²]=0입니다. 양의 해를 택하고 제곱근을 취합니다. β=0.1에서는 x≈6108.07, 따라서 ω≈78.15 rad/s입니다. β=0.5에서는 x≈45194.4, 따라서 ω≈212.59 rad/s입니다. 표시 자리수에 따라 아래의 반올림은 약간 달라질 수 있습니다.</p></div>
 </section>
 
 <section id="margin" data-teach-level="6" className="scroll-mt-20">

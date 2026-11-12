@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import StorageTransientViz from "./storage-elements-and-transients/viz/StorageTransientViz";
+import ChargingSlopeViz from "./storage-elements-and-transients/viz/ChargingSlopeViz";
+import RemainingGapGridViz from "./storage-elements-and-transients/viz/RemainingGapGridViz";
+import ResistanceDoubleViz from "./storage-elements-and-transients/viz/ResistanceDoubleViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -41,7 +44,7 @@ return <div className="space-y-16">
 
 <section id="why" data-teach-level="2" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 유한한 속도로 채우므로 시간이 듭니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">0에서 5 V로 올리려면 전하 5 µC를 옮겨야 합니다. 시간이 아주 짧을수록 같은 양을 옮길 전류는 커져야 합니다. 그러나 이 회로의 첫 순간 전류는 5 mA이고 그 뒤에는 더 작아집니다. 시간이 0인 동안 유한한 전하를 한꺼번에 옮길 수 없습니다.</p><p className="leading-7">계속 5 mA로 채운다고 가정하면 1 ms에 5 µC가 들어갈 것입니다. 실제로는 채워지는 동안 전류가 줄기 때문에 1 ms에 5 V에 도착하지 않습니다. 이전 값과 남은 차이를 매 순간 함께 계산해야 하는 이유입니다.</p><p className="leading-7">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">0에서 5 V로 올리려면 전하 5 µC를 옮겨야 합니다. 시간이 아주 짧을수록 같은 양을 옮길 전류는 커져야 합니다. 그러나 이 회로의 첫 순간 전류는 5 mA이고 그 뒤에는 더 작아집니다. 시간이 0인 동안 유한한 전하를 한꺼번에 옮길 수 없습니다.</p></div><ChargingSlopeViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">계속 5 mA로 채운다고 가정하면 1 ms에 5 µC가 들어갈 것입니다. 실제로는 채워지는 동안 전류가 줄기 때문에 1 ms에 5 V에 도착하지 않습니다. 이전 값과 남은 차이를 매 순간 함께 계산해야 하는 이유입니다.</p><p className="leading-7">
             이제 저장 부품과 그 성질에 이름을 붙이고 같은 1 ms를 식으로 얻겠습니다.
           </p></div>
 </section>
@@ -93,7 +96,7 @@ return <div className="space-y-16">
         />
         <CitationBlock source="MIT OpenCourseWare 6.002, Lecture 12, ‘Capacitors and First-Order Systems’ (Fall 2000 자료), 4–5·10–11쪽" citeKey={1} href="https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf">
           원본 강의안 4–5쪽의 q=Cv·i=C dv/dt·저장 에너지, 10–11쪽의 RC 시간 상수와 초기 조건을 확인했습니다. 이 글의 5 V·1 kΩ·1 µF는 강의안 실험값이 아니라 같은 원리를 따라 계산한 가정입니다.
-        </CitationBlock><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">최종값에서 1% 이내라는 조건은 남은 비율 e^(−t/τ)가 0.01 이하라는 뜻입니다. 로그를 취하면 t≥τ ln100≈4.605τ입니다. 이 회로에서는 약 4.605 ms 뒤부터 4.95 V 이상이 됩니다. 3τ에서 약 5%가 남는다는 설명과도 일치합니다.</p></div>
+        </CitationBlock><RemainingGapGridViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">최종값에서 1% 이내라는 조건은 남은 비율 e^(−t/τ)가 0.01 이하라는 뜻입니다. 로그를 취하면 t≥τ ln100≈4.605τ입니다. 이 회로에서는 약 4.605 ms 뒤부터 4.95 V 이상이 됩니다. 3τ에서 약 5%가 남는다는 설명과도 일치합니다.</p></div>
 </section>
 
 <section id="inductor" data-teach-level="6" className="scroll-mt-20">
@@ -133,6 +136,7 @@ return <div className="space-y-16">
 
 <section id="boundary" data-teach-level="7" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">10. 저항을 늘렸을 때 두 시간이 반대로 바뀌는 이유를 봅니다</h2>
+<ResistanceDoubleViz />
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">두 회로의 1 ms는 우연히 같게 고른 가정입니다. 저항을 2 kΩ으로 늘리고 저장 부품을 그대로 두면 축전기 회로의 τ=RC는 2 ms로 길어집니다. 전하가 들어오는 길이 더 막히기 때문입니다. 인덕터 회로의 τ=L/R은 0.5 ms로 짧아집니다. 이 회로는 저항이 더 클수록 최종 전류도 5 V/2 kΩ=2.5 mA로 작아집니다. 같은 ‘저항 증가’라도 무엇을 저장해 어떤 상태를 보는지에 따라 시간의 방향이 다릅니다.</p>
           <p className="leading-7">실제 축전기는 누설과 직렬 저항, 인덕터는 권선 저항과 코어 포화가 있습니다. 스위치를 매우 빠르게 바꾸거나 배선이 길면 기생 성분도 보입니다. 여기의 지수식은 저장 부품 하나와 일정한 저항·전원을 둔 첫 차수 회로에서 출발한 값입니다. 저장 요소가 둘이면 서로 에너지를 주고받아 흔들리기도 하므로 지수 하나로 충분하지 않습니다.</p>

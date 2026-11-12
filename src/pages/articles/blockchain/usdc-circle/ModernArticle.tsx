@@ -4,6 +4,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { usdcCodeRefs } from "./codeRefs";
 import { cctpTree, stablecoinTree } from "./fileTrees";
+import CctpDestinationChecksViz from "./viz/CctpDestinationChecksViz";
 import UsdcLifecycleViz from "./viz/UsdcLifecycleViz";
 
 const STABLECOIN_COMMIT = "fc85788bc7c23cefe3df1a757133048bfddadeaa";
@@ -360,6 +361,8 @@ export default function ModernUsdcArticle() {
             }
           />
         </div>
+
+        <CctpDestinationChecksViz />
 
         <p>
           Base의 <code>MessageTransmitterV2</code>는 attester signature, destination

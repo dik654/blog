@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { EcGpuOpsMappingViz } from "./viz/ModernEcGpuOpsViz";
+import CarryChainViz from "./viz/CarryChainViz";
+import BucketSumViz from "./viz/BucketSumViz";
 
 const ECGPU = "https://github.com/filecoin-project/ec-gpu/tree/16d38ef6715fb1a4968986d3a5635f8bcac6c984";
 const CUDA = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html";
@@ -38,6 +40,7 @@ export default function ModernEcGpuOpsArticle() {
 
     <section id="fp-montgomery" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Carry 순서</p><h2 className="mt-2 text-2xl font-bold">부분곱은 함께 만들 수 있어도 carry는 다음 자리로 이어진다</h2></header>
+      <CarryChainViz />
       <p>L×L limb 곱셈은 여러 부분곱을 만들지만, 같은 output column의 합은 앞 column carry를 받아야 확정됩니다. Accumulator가 넘치지 않는 범위를 확인하고 필요하면 중간 reduction을 넣습니다.</p>
       <p>CUDA의 <code>add.cc</code>/<code>addc</code> 계열이나 high-half 곱셈이 target에서 어떻게 내려갔는지도 확인합니다. 소스 이름만 믿지 않고 disassembly와 경계 입력 벡터를 함께 봅니다.</p>
       <ExplainedFormula question="한 output limb와 다음 carry는 이전 carry에 어떻게 의존할까?" idea={<>같은 radix column의 partial products와 이전 carry를 합한 t에서 낮은 w bits를 현재 limb로 남기고 나머지를 다음 column으로 넘깁니다. 따라서 carry chain을 무시한 lane-parallel add는 틀립니다.</>} formula={String.raw`\begin{aligned}t_k&=c_k+\sum_{i+j=k}a_i b_j\\z_k&=t_k\bmod 2^w\\c_{k+1}&=\left\lfloor t_k/2^w\right\rfloor\end{aligned}`}
@@ -86,6 +89,7 @@ export default function ModernEcGpuOpsArticle() {
     <section id="msm-mapping" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · MSM 작업 배치</p><h2 className="mt-2 text-2xl font-bold">한 work item은 자기 window와 bucket 구간만 갱신한다</h2></header>
       <p>고정 multiexp kernel은 global ID를 window와 point group으로 풉니다. 이 두 값으로 읽을 scalar bit 위치, point 범위, bucket slice가 정해집니다.</p>
+      <BucketSumViz />
       <p>Scalar digit이 0이면 건너뜁니다. 0이 아니면 index를 1 줄여 대응 bucket에 mixed-add합니다. 마지막에는 bucket을 뒤에서부터 누적해 이 window와 group의 partial result를 만듭니다.</p>
       <ExplainedFormula question="Global work-item ID가 어떤 MSM window와 group을 맡는지 어떻게 풀어낼까?" idea={<>Windows를 빠르게 변하는 축으로 두면 나머지가 window, 몫이 같은 point chunk를 처리할 group이 됩니다. Host와 kernel이 같은 num_windows를 써야 bucket slice가 겹치지 않습니다.</>} formula={String.raw`\begin{aligned}window&=gid\bmod W\\group&=\left\lfloor gid/W\right\rfloor\\B&=2^c-1\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}window&=\underbrace{gid\bmod W}_{\text{읽을 digit 위치}}\\group&=\underbrace{\left\lfloor gid/W\right\rfloor}_{\text{맡을 point 묶음}}\\B&=\underbrace{2^c-1}_{\text{0 제외 bucket 수}}\end{aligned}`}

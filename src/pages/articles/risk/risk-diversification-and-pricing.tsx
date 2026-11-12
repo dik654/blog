@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RiskDecompositionViz from "./risk-diversification-and-pricing/viz/RiskDecompositionViz";
 import DiversificationCurveViz from "./risk-diversification-and-pricing/viz/DiversificationCurveViz";
+import VarianceStepsViz from "./risk-diversification-and-pricing/viz/VarianceStepsViz";
+import TwoAssetMixViz from "./risk-diversification-and-pricing/viz/TwoAssetMixViz";
+import CovarianceGridViz from "./risk-diversification-and-pricing/viz/CovarianceGridViz";
+import CapmBuildViz from "./risk-diversification-and-pricing/viz/CapmBuildViz";
 
 /**
  * 나눠서 없앨 수 있는 위험에는 아무도 대가를 주지 않습니다
@@ -80,7 +84,11 @@ export default function RiskDiversificationAndPricingArticle() {
             방법이 평균에서 벗어난 정도를 제곱해 평균 낸 값, 곧{" "}
             <strong>분산</strong>입니다.
           </p>
+        </div>
 
+        <VarianceStepsViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             제곱을 쓰는 이유는 둘입니다. 위로 벗어난 것과 아래로 벗어난 것이 서로 상쇄되지 않게 하고 크게 벗어난 경우에 더 큰 무게를 주기 위해서입니다. 제곱한 값은 단위가 달라지므로
             제곱근을 취해 원래 단위로 되돌린 것이 표준편차입니다.
@@ -135,7 +143,11 @@ export default function RiskDiversificationAndPricingArticle() {
             두 자산을 반씩 담으면 기대 수익률은 두 값의 평균이 됩니다. 그런데 위험은 평균이 되지 않습니다. 한쪽이 나쁠 때 다른 쪽이 괜찮은 경우가 섞여 들어가면서 합친 것의 변동이
             각각의 평균보다 작아집니다.
           </p>
+        </div>
 
+        <TwoAssetMixViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             얼마나 작아지는지는 두 자산이 함께 움직이는 정도, 곧 상관이
             정합니다. 완전히 같은 방향으로 움직이면 줄어드는 것이 없고, 서로
@@ -213,6 +225,7 @@ export default function RiskDiversificationAndPricingArticle() {
           <h3 className="mb-4 mt-12 text-xl font-bold">
             자산 수를 늘리면 무엇이 사라지고 무엇이 남는가
           </h3>
+          <CovarianceGridViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               앞 식을 자산 N개로 넓히면 항이 두 묶음으로 갈립니다. 각자의 분산이
@@ -334,7 +347,11 @@ export default function RiskDiversificationAndPricingArticle() {
             베타가 1이면 시장과 같은 만큼, 2면 두 배로 움직입니다. 베타가 0에 가까운 자산은 시장이 어떻게 되든 자기 길을 가므로 피할 수 없는 위험을 거의 지지 않습니다. 그래서
             요구 수익률도 낮습니다.
           </p>
+        </div>
 
+        <CapmBuildViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             여기까지 오면 r을 쓸 수 있습니다. 위험을 전혀 지지 않을 때의 수익률에
             베타만큼의 위험 보상을 더하는 것입니다. 2편부터 비워 두었던 자리가

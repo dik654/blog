@@ -7,6 +7,7 @@ import {
   ModelArtifactRegistryReturn,
 } from "../shared/ModelDeliveryPathLocator";
 import ModelArtifactRegistryViz from "./ModelArtifactRegistryViz";
+import AliasPinViz from "./viz/AliasPinViz";
 
 export default function ModelArtifactRegistryArticle() {
   return (
@@ -169,6 +170,7 @@ export default function ModelArtifactRegistryArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           3. 움직이는 Champion을 승인 순간의 v21로 바꿔 적습니다
         </h2>
+        <AliasPinViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <code>Champion</code>은 운영에 쓸 모델을 사람이 읽기 쉽게 나타내는
