@@ -6,6 +6,11 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EmbodimentGapViz from "./viz/EmbodimentGapViz";
 import SystemBoundaryViz from "./viz/SystemBoundaryViz";
+import DataScaleViz from "./viz/DataScaleViz";
+import ActionTokenViz from "./viz/ActionTokenViz";
+import ComponentChainViz from "./viz/ComponentChainViz";
+import PixelRayViz from "./viz/PixelRayViz";
+import ControlTickViz from "./viz/ControlTickViz";
 import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "../shared/EmbodiedVisionLocator";
 
 function EvidenceTag({ children }: { children: string }) {
@@ -64,6 +69,9 @@ export default function ModernArticle() {
             58억 5천만 쌍을 공개했지만, 이 글이 다루는 OpenVLA·Octo의 robot demonstration은 각각 97만·80만
             trajectory에 그칩니다.
           </p>
+        </div>
+        <DataScaleViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             Robot data scarcity, 즉 자릿수로 3~4자리 차이 나는 이 격차가 VLM의 world knowledge를 그대로
             재사용해야 하는 이유입니다.
@@ -153,6 +161,9 @@ export default function ModernArticle() {
             image region으로 학습했지만 robot은 continuous joint velocity·6-DoF pose·gripper force라는 전혀
             다른 action space를 요구합니다.
           </p>
+        </div>
+        <ActionTokenViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             RT-2는 각 action 차원을 256개 bin으로 이산화하고 8개 차원(6-DoF pose delta·gripper·episode 종료)을
             언어 vocabulary의 token ID로 재사용해 이 정렬 문제를 text token 공간 안에서 풀었습니다.
@@ -301,6 +312,9 @@ export default function ModernArticle() {
             OK-Robot처럼 VLM, navigation, grasp primitive를 조합한 system은 foundation model이 모든 low-level dynamics를
             직접 예측하지 않아도 open-world task를 시도할 수 있음을 보여 줍니다.
           </p>
+        </div>
+        <ComponentChainViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             동시에 component success를 곱하면 end-to-end success가 급격히
             낮아진다는 현실도 드러냅니다. 이것은 CFD에서 AI가 solver를 대체하기보다 적절한 solver와 조건을 선택하게 하는 경계와 닮았지만 물리 실행의 error
@@ -343,6 +357,8 @@ export default function ModernArticle() {
             환원하지 못합니다.
           </p>
         </div>
+
+        <PixelRayViz />
 
         <ExplainedFormula
           question="선택한 image pixel과 depth를 camera-frame 3D point로 어떻게 바꾸나요?"
@@ -424,6 +440,9 @@ p_w&=\underbrace{T_{wc}p_c}_{\text{world·map frame으로 변환}}
       <section id="closed-loop-release" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>5단계 · Release는 closed-loop trajectory로 판정합니다</h2>
+        </div>
+        <ControlTickViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             Mobile navigation은 observe→infer→move를 계속 반복하므로 waypoint가 맞아도 inference·planning latency가 길면 이미 다른
             위치의 observation을 사용하게 됩니다.

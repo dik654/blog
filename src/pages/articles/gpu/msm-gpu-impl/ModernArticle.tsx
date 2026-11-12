@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ModernMsmGpuViz } from "./ModernMsmGpuViz";
+import WindowSplitViz from "./viz/WindowSplitViz";
+import BucketWorkspaceViz from "./viz/BucketWorkspaceViz";
 
 const SPPARK = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/pippenger.cuh";
 const SPPARK_SORT = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/msm/sort.cuh";
@@ -25,6 +27,7 @@ export default function ModernMsmGpuArticle() {
     <section id="work-plan" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Work plan</p><h2 className="mt-2 text-2xl font-bold">Scalar를 window 작업표로 바꾼다</h2></header>
       <p>Pinned sppark의 <code>breakdown</code> kernel은 scalar를 Booth-encoded signed digits로 만들며, <code>window_size</code>는 입력 수에 따라 폭을 고릅니다. 따라서 c=16 같은 숫자를 보편 최적값으로 두지 않고 scalar bit length, points 수, available memory, implementation SHA와 함께 receipt로 남깁니다.</p>
+      <WindowSplitViz />
       <ExplainedFormula question="Scalar를 c-bit window 작업으로 어떻게 나눌까?" idea={<>각 scalar를 radix 2^c의 signed digits로 나타내면 window마다 같은 절댓값 digit을 bucket 하나에 모을 수 있습니다.</>} formula={String.raw`s_i=\sum_{j=0}^{W-1}d_{i,j}2^{cj},\qquad W=\left\lceil\frac{\ell}{c}\right\rceil`}
       annotatedFormula={String.raw`s_i=\sum_{j=0}^{W-1}\underbrace{d_{i,j}}_{\text{signed digit}}\underbrace{2^{cj}}_{\text{window 자리값}},\qquad W=\underbrace{\left\lceil\frac{\ell}{c}\right\rceil}_{\text{scalar를 덮는 window 수}}`}
       operations={[
@@ -44,6 +47,7 @@ export default function ModernMsmGpuArticle() {
     <section id="bucket-ownership" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Bucket ownership</p><h2 className="mt-2 text-2xl font-bold">같은 bucket에는 owner 하나만 둔다</h2></header>
       <p>Point addition은 단일 scalar atomic add가 아닙니다. sppark snapshot은 custom sort가 digit과 원래 index를 정렬하고, <code>accumulate</code>가 정렬된 구간을 읽어 bucket을 만듭니다. 다른 구현은 thread-local buckets나 partition 후 merge를 택할 수 있지만, 그 선택을 sppark의 사실로 섞지 않습니다.</p>
+      <BucketWorkspaceViz />
       <ExplainedFormula question="Bucket workspace의 상한을 어떻게 예산할까?" idea={<>Window와 partition마다 non-zero bucket point를 보관한다고 가정하면 bucket 수와 내부 point bytes의 곱으로 기본 storage를 잡습니다.</>} formula={String.raw`B_{bucket}=W\,G\,(2^{c-1})\,s_P`}
       annotatedFormula={String.raw`B_{bucket}=\underbrace{W\,G}_{\text{window×partition}}\,\underbrace{(2^{c-1})}_{\text{group당 bucket}}\,\underbrace{s_P}_{\text{device point bytes}}`}
       operations={[

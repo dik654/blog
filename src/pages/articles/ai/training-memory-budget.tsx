@@ -3,7 +3,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ActivationCheckpointViz from "./training-memory-budget/viz/ActivationCheckpointViz";
+import CheckpointIntervalViz from "./training-memory-budget/viz/CheckpointIntervalViz";
 import TrainingMemoryBudgetViz from "./training-memory-budget/viz/TrainingMemoryBudgetViz";
+import ZeroShardingViz from "./training-memory-budget/viz/ZeroShardingViz";
 
 const stateRows = [
   ["계산용 가중치", "BF16·FP16 weight", "2B × 1,000", "2,000B"],
@@ -335,6 +337,9 @@ export default function TrainingMemoryBudgetArticle() {
             <code>x₇·x₈·x₉</code>을 복원합니다. 이 저장과 재계산의 교환이
             <strong>활성값 체크포인팅(activation checkpointing)</strong>입니다.
           </p>
+        </div>
+        <CheckpointIntervalViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             간격을 <code>k</code>로 두면 계속 보관할 기준점은 대략
             <code>n/k</code>개입니다. 현재 구간을 복원하는 동안에는 최대
@@ -457,6 +462,9 @@ export default function TrainingMemoryBudgetArticle() {
             단위로는 약 111.76GiB입니다. 입력을 한 토큰만 넣어도 이 모델 상태는
             먼저 필요하며, 활성값과 임시 공간은 그 위에 더해집니다.
           </p>
+        </div>
+        <ZeroShardingViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             자료 병렬 GPU 네 장에 같은 학습기를 복제하면 각 GPU가 16바이트
             장부를 그대로 가질 수 있습니다. <strong>ZeRO</strong>는 이 중복을

@@ -7,6 +7,12 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import NumericPath from "@/pages/articles/world-systems/NumericPath";
 import WarpSpecializationAndAsyncPipelinesViz from "./warp-specialization-and-async-pipelines/viz/WarpSpecializationAndAsyncPipelinesViz";
+import RegisterBudgetViz from "./warp-specialization-and-async-pipelines/viz/RegisterBudgetViz";
+import AsyncCopyCountViz from "./warp-specialization-and-async-pipelines/viz/AsyncCopyCountViz";
+import WgmmaTileViz from "./warp-specialization-and-async-pipelines/viz/WgmmaTileViz";
+import StageTimelineViz from "./warp-specialization-and-async-pipelines/viz/StageTimelineViz";
+import MbarrierPhaseViz from "./warp-specialization-and-async-pipelines/viz/MbarrierPhaseViz";
+import PingPongViz from "./warp-specialization-and-async-pipelines/viz/PingPongViz";
 
 function StageBudgetViz() {
   return (
@@ -76,6 +82,9 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             다만 producer 128개 thread가 모두 놀고 있는 것은 아닙니다. 그 안의 warp들은 mainloop
             load, tile scheduling, epilogue load 같은 역할로 다시 갈리고, mainloop의 TMA 발행 자체는 뽑힌 lane 하나가 맡습니다.
           </p>
+        </div>
+        <RegisterBudgetViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Register 재분배가 이 구조를 완성합니다. SM의 register 65,536개를 384 thread가 똑같이 나누면 thread당 약 170개입니다.
           </p>
@@ -127,6 +136,9 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             device 의 thread 하나가 <code>cp.async.bulk.tensor</code> 한 명령으로 그 map 이 가리키는
             tensor 의 box 하나를 통째로 옮깁니다.
           </p>
+        </div>
+        <AsyncCopyCountViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Tensor map 이 곧 TMA descriptor 로, 원소 형식, 1~5 차원의 크기와 stride, 한 번에 옮길 box 의 각 차원 크기(차원당 256 이하),
             swizzle 방식, 경계 밖 채움값을 담습니다. 128×64 bf16 box 는 16 KB 이므로 A·B 한 stage 32 KB 가 명령 2개입니다. cp.async 의
@@ -172,6 +184,9 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             accumulator 만 register 에 둡니다. 그래서 consumer 는 stage 가 도착하면{" "}
             <code>ldmatrix</code> 없이 바로 명령을 낼 수 있습니다.
           </p>
+        </div>
+        <WgmmaTileViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             숫자를 넣어 봅니다. Threadblock tile은 M 128행 × N 128열 × K 깊이 64입니다. Consumer warpgroup 2개가 M 방향을
             나누면 각각 M 64행 × N 128열을 맡습니다. <code>wgmma.m64n128k16</code> 한 번은 K를 16만큼 진행하므로 K 64÷16=4번 냅니다.
@@ -206,6 +221,9 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             0, 1, 2 를 차례로 채우고 S−1 을 지나면 다시 0 으로 돌아오며 consumer 는 그 뒤를 같은 순서로 따라갑니다. Stage 2개가 double buffering,
             3개가 triple buffering 이고, S 개로 일반화한 것이 이 pipeline 입니다.
           </p>
+        </div>
+        <StageTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Tile 하나의 load 가 L 만큼 걸리고 계산이 C 만큼 걸리면 consumer 가 한 tile 을 계산하는 동안 producer 는 L/C 개 tile 의 load 를
             날려 두어야 다음 tile 이 제때 도착합니다. 그 tile 들과 지금 계산 중인 tile 을 합쳐 S 는 ⌈L/C⌉ + 1 이상이어야 합니다. Stage 수를 정하는 산수는
@@ -267,6 +285,9 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
             consumer 가 다 읽었음을 producer 에게 알립니다. mbarrier 는 shared memory 에 놓인 64 bit 객체로, 도착 횟수와 기다리는 byte 수를
             세다가 둘 다 채워지면 phase 가 뒤집힙니다.
           </p>
+        </div>
+        <MbarrierPhaseViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             TMA 와 짝을 이루는 것이 transaction byte 입니다. Producer thread 는 full barrier 에{" "}
             <code>expect_tx 32768</code> 로 도착하며 32 KB 가 올 것이라고 적고, TMA hardware 는 copy 를
@@ -322,6 +343,9 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
             드러나고 나머지는 max(L, C) 씩 갑니다. T = 64, L = 1.2 µs, C = 0.3 µs 면 96 µs 가 1.2 + 64×1.2 ≈ 78 µs 로 줄어듭니다.
             여기서 남은 병목은 L 이므로 HBM traffic 을 줄이는 쪽으로 넘어가야 합니다.
           </p>
+        </div>
+        <PingPongViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             같은 원리를 consumer 끼리 적용한 것이 CUTLASS 의 ping-pong schedule 입니다. Consumer warpgroup 두 개가 서로 다른 output
             tile 을 맡고 한쪽이 mainloop 의 wgmma 를 내는 동안 다른 쪽이 epilogue 를 하도록 ordered barrier 로 차례를 강제합니다. Tensor

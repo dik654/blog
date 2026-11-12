@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ThreeGatesViz from "./who-counts-as-unemployed/viz/ThreeGatesViz";
 import FourMeasuresViz from "./who-counts-as-unemployed/viz/FourMeasuresViz";
+import TwoDeclinesViz from "./who-counts-as-unemployed/viz/TwoDeclinesViz";
 
 /**
  * 실업자는 세 조건을 통과한 사람으로 정의됩니다
@@ -361,7 +362,11 @@ export default function WhoCountsAsUnemployedArticle() {
             앞 글의 식이 네 자리를 적어 두어 물어야 할 목록을 만들었듯이,{" "}
             <strong>세 조건이 여기서 같은 일을 합니다.</strong>
           </p>
+        </div>
 
+        <TwoDeclinesViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             기준 문서 자신이 답을 하나 내놓습니다. 넷 중 둘 이상을
             보라는 것입니다. 실업률만 내려가고 더 넓은 지표가 그대로이면 사람이

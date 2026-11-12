@@ -9,6 +9,8 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./gemmini-pe-mac-dataflow/codeRefs";
 import { gemminiPeMacDataflowTree } from "./gemmini-pe-mac-dataflow/fileTree";
 import GemminiPeMacDataflowViz from "./gemmini-pe-mac-dataflow/viz/GemminiPeMacDataflowViz";
+import PropFlipTimelineViz from "./gemmini-pe-mac-dataflow/viz/PropFlipTimelineViz";
+import ReuseAxisViz from "./gemmini-pe-mac-dataflow/viz/ReuseAxisViz";
 
 /**
  * PE 한 칸: 같은 MAC 배선을 OS와 WS가 공유합니다
@@ -89,6 +91,9 @@ export default function GemminiPeMacDataflowArticle() {
             <code>in_a</code>로 들어갑니다. 중요한 차이는 <code>mac_unit.io.in_c := b</code>입니다. 여기의 b는 위에서
             들어온 partial sum이며, MAC 결과는 <code>out_b</code>로 다음 PE에 전달되어 다른 weight 항을 계속 더합니다.
           </p>
+        </div>
+        <ReuseAxisViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             따라서 WS에서 고정 weight B₀₀=5는 A의 여러 출력 행에 재사용됩니다. 행 0의 a=2와 partial sum 11을
             받아 21을 만들고, 뒤이어 행 1의 a=4와 partial sum 13을 받아 33을 만듭니다. 반면 OS의 고정 partial sum은
@@ -161,6 +166,7 @@ export default function GemminiPeMacDataflowArticle() {
             onClick={() => sidebar.open("double-buffer", codeRefs["double-buffer"])}
           />
         </div>
+        <PropFlipTimelineViz />
         <AlgorithmBlock
           title="prop 선택이 바뀐 첫 유효 사이클을 찾는 절차"
           input={["propagate 신호(prop)", "이 신호가 유효한지(valid)"]}

@@ -3,6 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TrainingLoopViz from "./TrainingLoopViz";
+import LossCurveStepViz from "./viz/LossCurveStepViz";
 
 const DLB = "https://www.deeplearningbook.org/contents/ml.html";
 const AUTODIFF = "https://jmlr.org/papers/v18/17-468.html";
@@ -75,6 +76,7 @@ export default function SupervisedLearningLoopArticle(){return <article classNam
 <p className="leading-8">실제 라이브러리의 미분은 여러 계산의 변화율을 이어 계산합니다. 그 내부 경로는 <a href="/cs/ai/reverse-mode-autodiff" className="text-primary underline">역방향 자동미분</a>에서 이어서 살펴봅니다.</p>
 </section>
 <section id="limits" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">11. 손실 감소가 보장하는 범위를 확인합니다</h2>
+<LossCurveStepViz />
 <p className="leading-8">이동 크기를 1로 바꾸면 같은 g=−2.5에서 θ′=3.5가 됩니다. 새 예측은 3.5와 7, 개별 손실은 1.125와 4.5, 평균은 2.8125로 처음의 1.25보다 커집니다. 현재 변화율의 반대 방향이라는 조건만으로 큰 이동 뒤의 손실 감소가 보장되지는 않습니다.</p><p className="leading-8">0.1을 쓴 원래 예에서 손실이 줄었다고 처음 보지 않은 자료까지 잘 맞힌다는 결론도 나오지 않습니다. 틀린 정답을 학습하거나 실제 사용 때와 다른 입력을 보면 연습 점수와 실제 성능이 갈라집니다. 학습·선택·최종 평가 자료를 나누는 이유는 <a href="/cs/ai/train-validation-test" className="text-primary underline">다음 글</a>에서 확인합니다.</p><h3 className="text-xl font-semibold">읽은 내용으로 예측해 보세요</h3><ol className="list-decimal space-y-3 pl-6"><li>두 행의 기여를 평균하지 않고 더하면서 이동 크기 0.1을 유지하면 새 θ는 얼마일까요? (답: 8절)</li><li>θ=1.25를 고정한 뒤 입력 3을 넣을 때 정답이나 backward가 필요할까요? (답: 10절)</li><li>같은 첫 기울기에 이동 크기 1을 쓰면 손실은 왜 오히려 커질까요? (답: 11절)</li></ol>
 </section>
 </article>;}

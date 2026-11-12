@@ -2,6 +2,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import BasisTraceViz from "./flash-attention-io-aware-kernel/viz/BasisTraceViz";
 import OnlineSoftmaxTileViz from "./flash-attention-io-aware-kernel/viz/OnlineSoftmaxTileViz";
 import HbmRoundTripViz from "./flash-attention-io-aware-kernel/viz/HbmRoundTripViz";
+import LanePartialSumViz from "./flash-attention-io-aware-kernel/viz/LanePartialSumViz";
+import ConditionalRescaleViz from "./flash-attention-io-aware-kernel/viz/ConditionalRescaleViz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
@@ -126,7 +128,9 @@ export default function Article(){
         <p className="leading-8">이어 옛 부분합에 이 배율을 곱해 현재 조각의 합에 더합니다. 여기서 코드의 row_sum 하나를 곧바로 행 전체의 ℓ로 읽으면 안 됩니다.</p>
         <p className="leading-8">사이드바는 고정한 commit의 파일 원문 전체입니다. 이 일반 함수에서는 한 행을 네 실행 스레드가 나누어 처리합니다. 스레드 하나의 몫을 lane이라고 부릅니다. online_softmax 안의 최대값은 네 lane 사이에서 합치지만 합계는 아직 각 lane의 부분합입니다. 다음 절의 FA4 특수 경로는 이 배치를 그대로 사용하지 않습니다.</p>
       </div>
-<CodeViewButton label="공식 소스 · online_softmax 213–251행" onClick={() => sidebar.open("softmax", codeRefs.softmax)} /><SourceApplication source={"공식 코드의 갱신식"} excerpt={"row_sum[r] * row_scale[r]"} application={"이 식은 lane별 부분합에 적용됩니다. 네 부분합을 마지막에 더하면 1.135335×e⁻²+e⁻³+1≈1.203438입니다."} /><CitationBlock source={"공식 코드의 갱신식"} citeKey={2} href={"https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert">
+<CodeViewButton label="공식 소스 · online_softmax 213–251행" onClick={() => sidebar.open("softmax", codeRefs.softmax)} /><SourceApplication source={"공식 코드의 갱신식"} excerpt={"row_sum[r] * row_scale[r]"} application={"이 식은 lane별 부분합에 적용됩니다. 네 부분합을 마지막에 더하면 1.135335×e⁻²+e⁻³+1≈1.203438입니다."} /><CitationBlock source={"공식 코드의 갱신식"} citeKey={2} href={"https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock>
+      <LanePartialSumViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">(가정) 산술을 확인하려고 각 조각의 첫 항은 레인 0(lane 0)에 둡니다. 둘째 항은 레인 1(lane 1)에 두고 나머지 두 레인의 합은 0으로 둡니다. 첫 부분합은 [e⁻²,1,0,0]입니다. 둘째까지 처리하면 [e⁻⁴+e⁻³,e⁻²+1,0,0], 약 [0.068103,1.135335,0,0]이 됩니다. 이는 부분합의 논리적 배정이며 실제로 지원되는 작은 GPU 배열 배치를 실행한 결과는 아닙니다.</p>
         <p className="leading-8">finalize의 width=4 합산이 이 네 값을 합쳐 1.203438을 만듭니다. 추가 가중치와 별도 배율을 쓰지 않는 이번 조건에서 반환값은 그 역수입니다. 이후 row_sum 저장 칸은 로그 지수합으로 덮어씁니다. 같은 변수도 함수 진입 전의 부분합과 종료 뒤의 통계가 다릅니다.</p>
         <p className="leading-8">
@@ -140,6 +144,7 @@ export default function Article(){
     </section>
     <section id="comparison" data-teach-level="6" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">9 · FA4는 지수 계산과 온칩 이동도 함께 겹친다</h2>
+      <ConditionalRescaleViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">같은 네 점수에서 둘째 조각을 반드시 기준 5로 옮길 필요는 없습니다. 기준 3을 유지하면 ℓ=1.135335+e⁻¹+e²≈8.892271이고 u≈65.590396입니다. 비율은 여전히 7.376113입니다. 다만 큰 지수를 계속 허용하면 overflow가 생기므로 기준 갱신 조건과 dtype의 범위를 함께 지켜야 합니다.</p>
         <p className="leading-8">고정 원문의 SoftmaxSm100.update_row_max_from_local은 실제 조건을 보여 줍니다. 점수를 이미 조정한 이 사례에서는 (3−5)log₂e≈−2.885390을 계산합니다. 임계값을 가정상 3으로 두면 −2.885390≥−3이므로 기준 3과 배율 1을 유지합니다. 임계값 2에서는 조건이 거짓이어서 기준 5와 배율 e⁻²를 반환합니다.</p>

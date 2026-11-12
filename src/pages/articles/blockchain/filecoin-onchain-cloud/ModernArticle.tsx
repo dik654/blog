@@ -7,6 +7,9 @@ import {
   PaymentRailViz,
   PeriodStateViz,
 } from "./OnchainCloudFlowViz";
+import PieceRangeViz from "./viz/PieceRangeViz";
+import SettlementCursorViz from "./viz/SettlementCursorViz";
+import LockupAdmissionViz from "./viz/LockupAdmissionViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import {
@@ -171,6 +174,7 @@ export default function ModernFilecoinOnchainCloud() {
               }
             />
           </div>
+          <PieceRangeViz />
           <TermBreakdown
             title="Dataset generation을 고정하는 필드"
             description="필드 이름을 한꺼번에 외우지 않습니다. 각 줄에서 ‘무엇을 식별하는가’와 ‘무엇까지는 보장하지 않는가’를 확인합니다."
@@ -491,6 +495,7 @@ export default function ModernFilecoinOnchainCloud() {
             ]}
           />
           <PeriodStateViz />
+          <SettlementCursorViz />
           <p>
             이제 세 상태를 정산과 연결할 수 있습니다. Proven period의 epoch는
             금액에 기여합니다. Faulted period는 금액 기여가 0이지만 판정이
@@ -661,6 +666,7 @@ export default function ModernFilecoinOnchainCloud() {
             위험을 낮춥니다. 다만 proof 실패에도 무조건 지급되는 보험이나
             protocol 전체의 solvency 보장은 아닙니다.
           </p>
+          <LockupAdmissionViz />
           <ExplainedFormula
             question="새 storage rate를 적용하기 전에 필요한 자금 여유를 어떻게 생각할까?"
             idea={

@@ -4,6 +4,8 @@ import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OptionPayoffChart from "./OptionPayoffChart";
+import ProtectivePutViz from "./options-and-asymmetric-payoffs/viz/ProtectivePutViz";
+import RepeatedPremiumViz from "./options-and-asymmetric-payoffs/viz/RepeatedPremiumViz";
 
 /** 공식 자료 확인: 2026-10-04. 별도 표시한 숫자 사례는 설명용 가정입니다. */
 export default function Article() {
@@ -69,6 +71,9 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">만기 콜 매수자는 주가가 100보다 높을 때만 차액을 얻습니다. 높지 않으면 행사 가치가 0이고 어느 경우든 처음 지급한 8은 돌려받지 않습니다. 그래서 90과 100에서는 −8, 108에서는 0, 120에서는 12, 200에서는 92입니다.</p>
 <p className="leading-8">매도자는 정확히 반대입니다. 120일 때 받은 8에서 차액 20을 빼 −12입니다. 주식을 보유하지 않은 콜 매도자는 주가 상승에 따라 손실이 계속 커집니다. 이미 주식을 가진 매도자는 주가 상승 이익과 옵션 손실을 합쳐야 하므로 위험 모양이 달라집니다.</p>
+        </div>
+<ProtectivePutViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">행사가격 100인 풋을 8에 산 별도 사례에서 주가 90이면 행사 가치 10, 순이익 2입니다. 100에 산 주식과 이 풋을 함께 보유하면 총투입은 108입니다. 만기 자산 가치는 최소 100이므로 만기 순손실 바닥은 −8입니다. 실제 비용과 행사 방식은 추가해야 합니다.</p>
         </div>
 <ExplainedFormula question="만기 콜을 산 사람의 순손익은 얼마인가요?" idea="100보다 비싸질 때만 차액을 선택하고, 어느 경우든 먼저 낸 8을 뺍니다." formula={String.raw`\Pi=\max(S_T-K,0)-c`} annotatedFormula={String.raw`\Pi=\max(S_T-K,0)-c`} operations={[{"expression": "\\max(S_T-K,0)", "annotation": "유리할 때만 행사한 차액"}, {"expression": "c", "annotation": "처음 낸 권리 가격"}]} terms={[{"symbol": "S_T", "name": "만기 가격", "description": "같은 단위의 90·108·120 등"}, {"symbol": "K", "name": "행사가격", "description": "사례의 100"}, {"symbol": "c", "name": "프리미엄", "description": "사례의 8"}]} interpretation="120을 넣으면 20−8=12이며 손익분기점은 108입니다." assumptions={["만기까지 보유", "단위 1", "이자·세금·수수료 제외"]} /><OptionPayoffChart />
@@ -97,6 +102,7 @@ export default function Article() {
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 자주 받는 작은 이익만 보면 드문 큰 손실을 놓칩니다</h2>
+<RepeatedPremiumViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">콜 매도자가 8을 10번 벌어 80을 쌓아도 한 번 주가 200에서 92를 잃으면 합계는 −12입니다. 반대로 매수자도 매번 8씩 지출하면 큰 상승 한 번이 와도 누적 비용을 회수하지 못할 수 있습니다. 각 거래의 확률과 규모를 함께 봐야 합니다.</p>
 <p className="leading-8">만기 전 매도자는 추가 담보나 조기 배정을 만날 수 있습니다. 실제 계약 승수·행사 방식·결제 시점과 다른 보유 자산을 합쳐 판단해야 합니다. 옵션의 의미는 손익을 원하는 모양으로 바꾸는 데 있고, 위험을 공짜로 지우는 데 있지 않습니다.</p>

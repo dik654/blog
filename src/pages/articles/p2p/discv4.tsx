@@ -4,6 +4,9 @@ import CalculationWalkthrough from "@/components/articles/calculation-walkthroug
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Discv4LookupViz from "./discv4/Discv4LookupViz";
+import PacketLayoutViz from "./discv4/PacketLayoutViz";
+import AmplificationGateViz from "./discv4/AmplificationGateViz";
+import NeighborsMatcherViz from "./discv4/NeighborsMatcherViz";
 
 export default function Discv4Article() {
   return (
@@ -110,6 +113,10 @@ export default function Discv4Article() {
             "1280 byte는 discv4 packet 상한입니다. Ethernet MTU나 IP·UDP header를 이 장부에 더하지 않았습니다.",
           ]}
         />
+
+        <div className="not-prose my-8">
+          <PacketLayoutViz />
+        </div>
 
         <ExplainedFormula
           question="맨 앞 hash와 뒤 signature는 서로 무엇을 확인할까요?"
@@ -241,6 +248,13 @@ export default function Discv4Article() {
             <code>to</code>에는 Bob이 관측한 Alice의 UDP envelope address가
             들어가 NAT 바깥 주소를 아는 데도 쓰입니다.
           </p>
+        </div>
+
+        <div className="not-prose my-8">
+          <AmplificationGateViz />
+        </div>
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             그러나 Bob이 Alice에게 큰 NEIGHBORS 응답을 보내려면 반대 방향
             proof가 필요합니다. Bob이 PING H_B를 보내고 Alice가 H_B를 담은
@@ -312,6 +326,10 @@ export default function Discv4Article() {
             "다른 client revision의 packet 분할 상수는 해당 source에서 다시 확인해야 합니다.",
           ]}
         />
+
+        <div className="not-prose my-8">
+          <NeighborsMatcherViz />
+        </div>
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>

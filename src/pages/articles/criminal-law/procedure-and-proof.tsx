@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TwoErrorsViz from "./procedure-and-proof/viz/TwoErrorsViz";
 import ProofThresholdViz from "./procedure-and-proof/viz/ProofThresholdViz";
+import EvidenceGatesViz from "./procedure-and-proof/viz/EvidenceGatesViz";
 
 /** 같은 H 사건으로 두 오류, 장난감 문턱 모형, 법적 증명 기준, 증거 규칙을 분리한다. */
 export default function ProcedureAndProofArticle() {
@@ -196,6 +197,7 @@ export default function ProcedureAndProofArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           증거의 힘과 증거를 쓸 수 있는지는 별도 문턱입니다
         </h2>
+        <EvidenceGatesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             H의 보관함에서 물건이 나왔다는 정보가 강해 보여도, 어떻게 찾았는지를

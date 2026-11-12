@@ -3,18 +3,21 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ParetoSelectionViz } from "../hyperparameter-tuning/viz/ModernHpoViz";
+import CandidateScreenViz from "./viz/CandidateScreenViz";
+import ToleranceCycleViz from "./viz/ToleranceCycleViz";
+import UnitSumViz from "./viz/UnitSumViz";
 export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 정확도와 속도와 메모리 사이에서 선택 이유를 남깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>손실이 가장 낮은 모델이 너무 느리거나 장치에 들어가지 않을 수 있습니다. 반대로 빠르지만 오차가 큰 모델도 있습니다. 서로 다른 숫자를 한 점수로 더하기 전에 어떤 후보를 쓸 수 있고 무엇을 더 중요하게 볼지 정해야 합니다.</p><p>이 글은 네 후보를 실제 한도에서 걸러낸 뒤 모든 면에서 뒤지는 후보를 제외합니다. 남은 두 후보 중 무엇을 고르는지는 별도의 사용 목적에 따라 설명합니다.</p></div><p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>메모리 한도가 16GB이면 18GB인 D는 손실이 가장 낮아도 제외될까요?</li><li>A=(0.20,10,4)는 B=(0.22,12,5)를 모든 축에서 지배할까요?</li><li>A는 손실과 메모리가 더 좋은 C=(0.18,15,3)도 지배할까요?</li></ol><p>답은 <strong>예, 예, 아니요</strong>입니다. 필수 한도를 먼저 적용하고, 남은 후보의 Pareto 관계와 실제 사용 목적을 분리해 선택해야 합니다.</p><ParetoSelectionViz /><ContentBoundary article="multi-objective-hpo" /></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 필수 한도를 검사한 뒤 서로 나은 점이 있는 후보를 남깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>모든 후보를 같은 조건으로 측정하고 필수 한도를 어긴 후보를 뺍니다. 어떤 후보보다 모든 목표가 나쁘거나 같은데 하나는 더 나쁜 후보를 제외합니다. 남은 후보는 반복 측정과 사전에 정한 선택 기준으로 검토합니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>단위와 측정 조건을 고정한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>필수 자원·운영 한도를 적용한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>모든 면에서 뒤지는 후보를 제외한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>남은 상충 관계에서 선택 이유를 남긴다</span></li></ol></section>
 
-<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 메모리로 D를 빼고 A와 C 사이의 선택을 남깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보의 값은 손실·지연·메모리 순서입니다. A는(0.20,10ms,4GB), B는(0.22,12ms,5GB), C는(0.18,15ms,3GB), D는(0.16,9ms,18GB)라고 합시다. 모두 작을수록 좋고 같은 측정 조건입니다. (가정)</p><p>
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 메모리로 D를 빼고 A와 C 사이의 선택을 남깁니다</h2><CandidateScreenViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보의 값은 손실·지연·메모리 순서입니다. A는(0.20,10ms,4GB), B는(0.22,12ms,5GB), C는(0.18,15ms,3GB), D는(0.16,9ms,18GB)라고 합시다. 모두 작을수록 좋고 같은 측정 조건입니다. (가정)</p><p>
             메모리는 16GB 이하, 지연은 100ms 이하가 필수라고 정합니다. D는 메모리 때문에 제외됩니다. A는 B보다 세 값이 모두 작습니다. C는 A보다 손실과 메모리가 좋지만
             지연은 길어 A와 C가 함께 남습니다. (가정)
           </p></div></section>
 
 <section id="inside-objectives" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 목표값과 허용 여부와 선호를 다른 칸에 둡니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>각 측정값의 단위와 방향을 기록합니다. 손실·지연·메모리는 이번 예에서 모두 최소화하지만 처리량처럼 큰 값이 좋은 지표도 있습니다. 비교 전에 그 방향을 맞춥니다.</p><p>16GB 한도와 더 적은 메모리를 선호하는 것은 다른 역할입니다. 한도는 후보를 사용할 수 있는지 정하고 목표값은 사용할 수 있는 후보 사이의 차이를 보여 줍니다. 숫자가 좋은 다른 축으로 필수 위반을 상쇄하지 않습니다.</p></div></section>
 
-<section id="why-separate" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 0.18과 15와 3을 더하면 단위 선택이 결과를 바꿉니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="why-separate" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 0.18과 15와 3을 더하면 단위 선택이 결과를 바꿉니다</h2><UnitSumViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             손실과 밀리초와 기가바이트를 근거 없이 더하면 단위를 바꾸는 것만으로 순위가 달라질 수 있습니다. 지연 15ms를 0.015초로 쓰면 실제 모델은 같은데 합산 숫자가 크게
             바뀝니다. (가정)
           </p><p>가중 합을 쓰려면 단위와 척도, 교환할 수 있는 가치에 대한 근거를 정합니다. 그 선택 전에 각 목표를 나란히 보관하면 한 축의 개선 때문에 다른 축에서 무엇을 포기하는지 확인할 수 있습니다.</p></div></section>
@@ -144,7 +147,7 @@ export default function Article() { return <div className="space-y-16"><section 
           interpretation="10회 중 6회만 A가 B를 지배하면 frontier에서 B를 즉시 제거하기보다 두 후보의 uncertainty와 slice trade-off를 더 확인합니다."
         /></section>
 
-<section id="tolerance-boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 허용폭을 넣은 비교는 순환할 수도 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="tolerance-boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 허용폭을 넣은 비교는 순환할 수도 있습니다</h2><ToleranceCycleViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             작은 차이를 무시하는 실용적 비교와 표준 지배를 섞지 않습니다. 모든 축에서 a≤b+1이고 적어도 한 축에서 a가 b보다 1을 초과해 작으면 좋다고 부르는 별도 규칙을 생각해
             봅시다. (가정)
           </p><p>

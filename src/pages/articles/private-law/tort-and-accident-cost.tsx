@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CausalChainCutViz from "./tort-and-accident-cost/viz/CausalChainCutViz";
 import CareLevelViz from "./tort-and-accident-cost/viz/CareLevelViz";
 import LiabilityRuleViz from "./tort-and-accident-cost/viz/LiabilityRuleViz";
 
@@ -273,7 +274,11 @@ export default function TortAndAccidentCostArticle() {
             이어진 손해가 어디까지인지를 정해야 합니다. 여기서 끊지 않으면 사슬이
             끝없이 이어집니다.
           </p>
+        </div>
 
+        <CausalChainCutViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             사고로 다쳐 일을 못 하고, 일을 못 해 계약을 어기고, 그 때문에 거래처가
             손해를 보고, 그 거래처의 직원이 일자리를 잃습니다. 전부 그 사고에서

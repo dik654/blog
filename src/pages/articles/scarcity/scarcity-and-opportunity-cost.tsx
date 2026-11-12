@@ -7,6 +7,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OpportunityCostViz from "./scarcity-and-opportunity-cost/viz/OpportunityCostViz";
 import MarginalStopViz from "./scarcity-and-opportunity-cost/viz/MarginalStopViz";
+import PpfSlopeViz from "./scarcity-and-opportunity-cost/viz/PpfSlopeViz";
+import SunkCostLedgerViz from "./scarcity-and-opportunity-cost/viz/SunkCostLedgerViz";
 
 /**
  * 무엇을 포기할지부터 정해야 합니다
@@ -198,7 +200,11 @@ export default function ScarcityAndOpportunityCostArticle() {
               조합은 빵 8판과 케이크 0개에서 시작해 빵 0판과 케이크 4개까지
               이어집니다.
             </p>
+          </div>
 
+          <PpfSlopeViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               이 조합들을 이은 선을 생산가능곡선이라고 부릅니다. 선 안쪽은 시간을
               남긴 것이라 아깝고, 선 바깥쪽은 8시간으로는 닿지 않습니다.
@@ -359,7 +365,11 @@ export default function ScarcityAndOpportunityCostArticle() {
             없습니다. 지금 굽는다면 5가 더 들고 20을 받습니다. 굽지 않으면 아무
             일도 일어나지 않습니다.
           </p>
+        </div>
 
+        <SunkCostLedgerViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             굽는 쪽이 15만큼 낫습니다. 전체로 보면 −30 + 15라 여전히 손해지만 굽지 않으면 −30이므로 손해가 더 큽니다. 30은 두 줄 모두에 적혀 있어 비교에서 지워집니다.
           </p>

@@ -5,6 +5,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { pdpTree } from "./fileTrees";
 import { PdpChallengeViz } from "./PdpChallengeViz";
+import DetectionCurveViz from "./viz/DetectionCurveViz";
+import LogicalArrayViz from "./viz/LogicalArrayViz";
+import PeriodRulesViz from "./viz/PeriodRulesViz";
 
 const PDP_COMMIT = "4d6b30f95845ca5ef35f9430a3a3f435af54d291";
 const CURIO_COMMIT = "409a2ab3510d65f22ae31ba1afddc911f4b315d7";
@@ -53,6 +56,8 @@ export default function ModernFilecoinPdp() {
               정해집니다
             </h2>
           </header>
+
+          <LogicalArrayViz />
 
           <p>
             예제 dataset에는 A가 먼저, B가 다음으로 등록돼 있습니다. A는 leaf
@@ -286,6 +291,8 @@ export default function ModernFilecoinPdp() {
             </h2>
           </header>
 
+          <PeriodRulesViz />
+
           <p>
             PDPVerifier는 leaf와 path를 검증한 뒤 listener의
             <code> possessionProven</code>을 부릅니다. 기본 listener인
@@ -309,6 +316,8 @@ export default function ModernFilecoinPdp() {
               }
             />
           </div>
+
+          <DetectionCurveViz />
 
           <ExplainedFormula
             question="데이터의 10%를 잃은 제공자를 한 period에 찾을 가능성은?"

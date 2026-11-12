@@ -6,6 +6,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import KvByteLedgerViz from "./kv-cache-quantization/viz/KvByteLedgerViz";
 import Fp8GridSnapViz from "./kv-cache-quantization/viz/Fp8GridSnapViz";
 import ScaleGranularityViz from "./kv-cache-quantization/viz/ScaleGranularityViz";
+import IntVsFp8GridViz from "./kv-cache-quantization/viz/IntVsFp8GridViz";
 import { codeRefs } from "./kv-cache-quantization/codeRefs";
 import { kvQuantTrees } from "./kv-cache-quantization/fileTree";
 import {
@@ -83,6 +84,7 @@ export default function KvCacheQuantizationArticle() {
 
         <section id="why-scale" data-teach-level="2" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">5. FP8은 비율 없이도 저장되지만 448을 넘는 값은 잘립니다</h2>
+          <IntVsFp8GridViz />
           <div className={prose}>
             <p>비율을 1로 두면 어떨까요? 8비트 부동소수점은 지수 자리가 있어 0.47은 0.46875, −1.3은 −1.25, 3.1은 3.0, 12.0은 12로 저장됩니다. 상대 오차가 몇 %에 머뭅니다. 값의 크기가 달라져도 칸 간격이 함께 커지고 작아지기 때문입니다. 그래서 FP8 KV는 보정 없이 켜도 바로 망가지지 않습니다.</p>
             <p>8비트 정수는 사정이 다릅니다. 정수 칸은 −127부터 127까지 간격 1로 고정이라 비율 1로 넣으면 0.47은 0, −1.3은 −1이 됩니다. 비율을 4.0÷127로 잡으면 작은 값은 잘 맞지만 12.0은 127에서 잘려 4.0으로 돌아옵니다. 정수 형식에서는 비율이 칸 간격 자체를 정하므로 보정이 필수입니다.</p>

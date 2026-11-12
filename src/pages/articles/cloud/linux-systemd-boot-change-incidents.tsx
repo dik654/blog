@@ -11,6 +11,8 @@ import RuleFlushViz from "./linux-systemd-boot-change-incidents/viz/RuleFlushViz
 import NetworkdStartViz from "./linux-systemd-boot-change-incidents/viz/NetworkdStartViz";
 import StartLimitViz from "./linux-systemd-boot-change-incidents/viz/StartLimitViz";
 import IncidentTimelineViz from "./linux-systemd-boot-change-incidents/viz/IncidentTimelineViz";
+import OrderingRequirementViz from "./linux-systemd-boot-change-incidents/viz/OrderingRequirementViz";
+import ChangePathViz from "./linux-systemd-boot-change-incidents/viz/ChangePathViz";
 import { codeRefs } from "./linux-systemd-boot-change-incidents/codeRefs";
 import { systemdIncidentTrees } from "./linux-systemd-boot-change-incidents/fileTree";
 
@@ -173,6 +175,9 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
               a는 시작합니다. Requires=는 더 강한 요구지만 b가 실패했을 때 a를 시작하지 않는 것은 After=b도 함께 적었을 때입니다. 요구 관계는 순서를 정하지 않으므로
               After=가 없으면 a와 b는 동시에 시작하고 b의 실패를 기다리지 않습니다.
             </p>
+          </div>
+          <OrderingRequirementViz />
+          <div className={prose}>
             <p>
               그래서 네트워크가 실제로 설정된 뒤에 떠야 하는 서비스는 두 줄을 함께 적습니다. network-online.target을 Wants=로 끌어오고 After=로 그 뒤에 섭니다. network.target은 네트워크
               관리 프로그램이 스스로 끌어오는 수동적인 지점이라 주소 설정이 끝났다는 보장이 없습니다.
@@ -410,6 +415,9 @@ RestartSec=2                    # 기본값은 100ms`}</code></pre>
               staging, 가장 작은 지역의 한 zone, 그다음 지역으로 넓히고 단계 사이에 1주에서 한 달을 기다립니다. 22.04 자체도 이렇게 2022년 11월부터 천천히
               퍼졌습니다.
             </p>
+          </div>
+          <ChangePathViz />
+          <div className={prose}>
             <p>
               그런데 기본 OS 이미지에 예전 보안 업데이트 경로가 켜져 있었습니다. 이 경로는 배포 도구를 거치지 않고 모든 노드에서 같은 시각에 패키지를 설치했습니다. 패키지 설치는
               데몬을 실행 중에 재시작하는 일이고 4절에서 본 대로 그것은 부팅 시험이 한 번도 지나가지 않은 경로입니다.

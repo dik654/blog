@@ -12,6 +12,8 @@ import AdmissionPolicyViz from "./sglang-runtime-anatomy/viz/AdmissionPolicyViz"
 import RatioRetractViz from "./sglang-runtime-anatomy/viz/RatioRetractViz";
 import RetractOrderViz from "./sglang-runtime-anatomy/viz/RetractOrderViz";
 import OverlapTimelineViz from "./sglang-runtime-anatomy/viz/OverlapTimelineViz";
+import KvTwoLevelPoolViz from "./sglang-runtime-anatomy/viz/KvTwoLevelPoolViz";
+import PageGranularityViz from "./sglang-runtime-anatomy/viz/PageGranularityViz";
 import { codeRefs } from "./sglang-runtime-anatomy/codeRefs";
 import { sglangRuntimeTrees } from "./sglang-runtime-anatomy/fileTree";
 import {
@@ -178,6 +180,7 @@ export default function SglangRuntimeAnatomyArticle() {
 
         <section id="kv-pool" data-teach-level="5" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. 칸 번호 표와 층별 KV 배열을 원문에서 봅니다</h2>
+          <KvTwoLevelPoolViz />
           <div className={prose}>
             <p>
               고정한 SGLang commit 4560da5의 memory_pool.py 374–408행에서 ReqToTokenPool은 (size+1, max_context_len) 모양의 int32 tensor를 만듭니다. 덧붙인
@@ -187,6 +190,9 @@ export default function SglangRuntimeAnatomyArticle() {
               같은 파일 2518–2529행의 _kv_buffer_shapes는 기본 NHD 배치에서 (size+page_size, head_num, head_dim)을 돌려줍니다. 2574–2582행은 이 모양으로
               층마다 K tensor 하나와 V tensor 하나를 만듭니다. 칸 번호 i는 모든 층 배열의 i번째 행을 가리킵니다.
             </p>
+          </div>
+          <PageGranularityViz />
+          <div className={prose}>
             <p>
               vLLM은 같은 일을 block table로 합니다. 요청의 논리 block을 16칸짜리 물리 block에 잇고, attention이 그 table을 따라 읽습니다. 201칸이 필요한
               요청은 block 13개, 즉 208칸을 잡아 7칸이 빕니다. page 1인 SGLang은 201칸만 씁니다.

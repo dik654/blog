@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import KnowledgeSplitViz from "./prices-as-information/viz/KnowledgeSplitViz";
 import PriceSignalViz from "./prices-as-information/viz/PriceSignalViz";
+import StaleDataViz from "./prices-as-information/viz/StaleDataViz";
 
 /**
  * 가격은 아무도 갖지 않은 지식을 옮깁니다
@@ -309,7 +310,11 @@ export default function PricesAsInformationArticle() {
           <p className="leading-7">
             시장에서는 이 문제가 다르게 풀립니다. 낮게 부르면 못 사고 높게 부르면 못 팝니다. 말이 아니라 행동으로 답하게 되어 있어서 거짓으로 답하면 자기가 손해를 봅니다.
           </p>
+        </div>
 
+        <StaleDataViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             그리고 자료는 계속 바뀝니다. 모으는 데 걸린 시간만큼 낡은 자료로 계산하게 되고 그 사이에 바뀐 사정은 다음 주기까지 반영되지 않습니다.
           </p>

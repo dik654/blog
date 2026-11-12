@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { IcicleRuntimeViz } from "./IcicleRuntimeViz";
+import AsyncLifetimeViz from "./viz/AsyncLifetimeViz";
+import DispatcherGridViz from "./viz/DispatcherGridViz";
+import SpeedupBoundaryViz from "./viz/SpeedupBoundaryViz";
 
 const SHA = "6c77775961b0e4dc2be359feec1ac11536c18043";
 const RUNTIME = `https://github.com/ingonyama-zk/icicle/blob/${SHA}/icicle/src/runtime.cpp`;
@@ -24,6 +27,7 @@ export default function ModernIcicleArticle() {
     <section id="backend-dispatch" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Backend dispatch</p><h2 className="mt-2 text-2xl font-bold">Dispatcher를 먼저 고르고 active device 구현을 찾는다</h2></header>
       <p>Pinned runtime은 thread-local active device를 관리하며 dynamically loaded backend가 제공하는 device API를 통해 allocate·copy·sync를 호출합니다.</p>
+      <DispatcherGridViz />
       <p>여기서 실제 code 구조를 정확히 구분해야 합니다. Primitive·field/curve 조합이 dispatcher의 종류를 먼저 정하고, 그 dispatcher 내부 map은 active device type 문자열로 concrete function을 찾습니다. 즉 “CUDA backend가 설치됐다”와 “BN254 NTT dispatcher에 CUDA 구현이 등록됐다”는 다른 조건입니다.</p>
       <ExplainedFormula question="한 ICICLE 호출이 어느 구현으로 가는지 어떻게 표현할까?" idea={<>Primitive·field/curve로 dispatcher family가 이미 정해진 뒤 active device type으로 그 안의 concrete function을 찾습니다. Revision은 lookup key가 아니라 배포 receipt에 따로 남깁니다.</>} formula={String.raw`I_{p,f}=\mathcal{R}_{p,f}[d]`}
       annotatedFormula={String.raw`\underbrace{I_{p,f}}_{\text{호출할 구현}}=\underbrace{\mathcal{R}_{p,f}}_{\text{primitive·field별 dispatcher}}[\underbrace{d}_{\text{active device type}}]`}
@@ -43,6 +47,7 @@ export default function ModernIcicleArticle() {
 
     <section id="memory-stream" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Memory and stream</p><h2 className="mt-2 text-2xl font-bold">GPU가 끝낼 때까지 buffer를 유지한다</h2></header>
+      <AsyncLifetimeViz />
       <p>Rust wrapper의 HostSlice·DeviceSlice는 위치를 구분하고 copy/copy_async 경로를 제공합니다. Async 함수가 반환됐다는 사실은 GPU가 buffer 사용을 끝냈다는 뜻이 아닙니다. Event 또는 stream synchronization이 완료되기 전에 input을 덮거나 output을 읽거나 allocation을 해제하면 race가 생깁니다.</p>
       <ExplainedFormula question="Async buffer를 언제 재사용할 수 있을까?" idea={<>마지막 write와 모든 consumers가 같은 stream order 또는 event dependency로 완료된 뒤에만 재사용합니다.</>} formula={String.raw`t_{reuse}(b)\ge\max_{o\in C(b)}t_{done}(o)`}
       annotatedFormula={String.raw`\underbrace{t_{reuse}(b)}_{\text{buffer 재사용 시각}}\ge\underbrace{\max_{o\in C(b)}t_{done}(o)}_{\text{마지막 consumer 완료}}`}
@@ -90,6 +95,7 @@ export default function ModernIcicleArticle() {
         <li><strong>같은 시간 경계:</strong> cold load와 warm steady state를 나누고 H2D·kernel·D2H·sync·verify, peak memory, median·p95를 함께 기록합니다.</li>
         <li><strong>배포 receipt:</strong> Core·backend·wrapper·driver revision과 config·input·verified output digest를 남겨 rollback 가능한 후보만 release합니다.</li>
       </ol>
+      <SpeedupBoundaryViz />
       <ExplainedFormula question="Backend 교체의 end-to-end speedup은 어떻게 계산할까?" idea={<>같은 verified workload에서 load·transfer·sync·fallback을 포함한 전체 시간을 reference와 candidate에 동일하게 적용합니다.</>} formula={String.raw`S_{e2e}=\frac{T_{ref}^{load}+T_{ref}^{run}+T_{ref}^{verify}}{T_{cand}^{load}+T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}+T_{verify}}`}
       annotatedFormula={String.raw`S_{e2e}=\frac{\underbrace{T_{ref}^{load}+T_{ref}^{run}+T_{ref}^{verify}}_{\text{reference 전체 시간}}}{\underbrace{T_{cand}^{load}+T_{H2D}+T_{kernel}+T_{D2H}+T_{sync}+T_{verify}}_{\text{candidate 전체 시간}}}`}
       operations={[

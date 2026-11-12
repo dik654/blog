@@ -5,6 +5,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import VolumeStaircaseViz from "./kubernetes-pvc-pv-storageclass-csi/viz/VolumeStaircaseViz";
 import NodeFailureVolumeClockViz from "./kubernetes-pvc-pv-storageclass-csi/viz/NodeFailureVolumeClockViz";
+import StagePublishViz from "./kubernetes-pvc-pv-storageclass-csi/viz/StagePublishViz";
+import SyncUnboundBranchViz from "./kubernetes-pvc-pv-storageclass-csi/viz/SyncUnboundBranchViz";
+import BindWritesViz from "./kubernetes-pvc-pv-storageclass-csi/viz/BindWritesViz";
+import ReclaimPathsViz from "./kubernetes-pvc-pv-storageclass-csi/viz/ReclaimPathsViz";
 import { codeRefs } from "./kubernetes-pvc-pv-storageclass-csi/codeRefs";
 import { kubernetesStorageTrees } from "./kubernetes-pvc-pv-storageclass-csi/fileTree";
 import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
@@ -162,6 +166,9 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
             <p>
               Kubernetes는 이 호출을 직접 하지 않고 객체와 sidecar로 간접화합니다. PVC가 생기면 external-provisioner가 StorageClass의 parameters를 CreateVolumeRequest.parameters에 담아 CreateVolume을 부르고 PV 객체를 만듭니다.</p>
             <p>Pod가 노드에 묶이면 attach-detach 컨트롤러가 VolumeAttachment 객체를 만들고, external-attacher가 그 객체를 보고 ControllerPublishVolume을 불러 status.attached를 true로 바꿉니다. NFS처럼 붙인다는 개념이 없는 드라이버는 CSIDriver 객체에 attachRequired: false를 적어 이 계단을 통째로 건너뜁니다.</p>
+          </div>
+          <StagePublishViz />
+          <div className={prose}>
             <p>
               노드에서는 kubelet이 두 번 마운트합니다. MountDevice가 NodeStageVolume을 불러 디스크를 포맷하고 노드 전역 staging 경로에 한 번 마운트하고, SetUpAt이 Pod마다 NodePublishVolume을 불러 그 staging 경로를 Pod의 volumes 디렉터리에 bind mount합니다.</p>
             <p>같은 노드에서 Pod 두 개가 같은 PV를 쓰면 stage는 한 번, publish는 두 번입니다. RWO가 Pod 단위가 아니라 노드 단위인 이유가 이 두 겹 구조에 있습니다. bind mount 자체가 커널에서 무엇인지는 <a href="/cs/cloud/linux-vfs-mount-page-cache-fsync#overview">VFS·mount 글</a>이 설명합니다.</p>
@@ -178,10 +185,16 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
           <div className={prose}>
             <p>
               Kubernetes v1.37.1 pkg/controller/volume/persistentvolume/pv_controller.go의 syncUnboundClaim(332행부터)이 묶이지 않은 PVC를 처리하는 본체입니다.</p>
+          </div>
+          <SyncUnboundBranchViz />
+          <div className={prose}>
             <p>338행이 StorageClass에서 WaitForFirstConsumer 여부를 읽고, 344행이 이미 있는 Available PV 가운데 용량·접근 모드·클래스가 맞는 것을 찾습니다. 3절의 Immediate 사례는 여기서 PV를 못 찾아 아래로 내려갑니다.</p>
             <p>
               354~363행은 PVC에 storageClassName이 없으면 기본 클래스를 채우고 sync를 다시 시작합니다. 그다음 switch가 세 갈래입니다.</p>
             <p>366~370행은 WaitForFirstConsumer이고 노드 주석이 없으면 이벤트만 남기고, 371~380행은 클래스가 있으면 provisionClaim으로 비동기 프로비저닝을 시작하며, 381~382행은 둘 다 아니면 FailedBinding "no persistent volumes available for this claim and no storage class is set"을 남깁니다. 4절의 세 가지 Pending 이유가 이 세 줄입니다.</p>
+          </div>
+          <BindWritesViz />
+          <div className={prose}>
             <p>
               PV를 찾았거나 만들어졌으면 1095행 bind가 네 번 저장합니다. PV.spec.claimRef(1105행), PV phase Bound(1111행), PVC.spec.volumeName과 bind-completed 주석(1117행), PVC phase Bound(1123행) 순입니다.</p>
             <p>어느 저장이 실패해도 함수는 돌아가고 다음 syncClaim이 남은 단계를 이어서 합니다. 4절의 "두 포인터"가 실제로는 네 번의 API 쓰기라는 점이 kubectl get pv와 get pvc의 STATUS가 몇 초 어긋나 보이는 이유입니다.</p>
@@ -249,6 +262,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
 
         <section id="reclaim-protection" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">9. PVC를 지워도 디스크가 남는지는 누가 PV를 만들었는지에 달렸습니다</h2>
+          <ReclaimPathsViz />
           <div className={prose}>
             <p>
               같은 PV인데 기본값이 다른 자리가 있습니다. 관리자가 직접 만든 PV는 reclaimPolicy를 비우면 Retain이고(core/v1 defaults.go 328~330행), StorageClass가 동적으로 만든 PV는 클래스의 reclaimPolicy를 따르며 클래스에 적지 않으면 Delete입니다. 그래서 동적 프로비저닝 환경에서 PVC를 지우면 대개 디스크도 사라지고, 정적 PV를 쓰는 환경에서는 PV가 Released로 남습니다.

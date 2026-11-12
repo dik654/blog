@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { TuningContractViz } from "./viz/ModernHpoViz";
+import BudgetSelectionViz from "./viz/BudgetSelectionViz";
+import HitProbabilityViz from "./viz/HitProbabilityViz";
 export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 같은 시험을 거친 설정을 고르고 새 시험으로 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>학습률이나 모델의 깊이를 바꾸면 결과도 바뀝니다. 여러 설정을 시험했을 때 가장 좋았던 숫자만 남기면 얼마나 많은 시도를 했고 어떤 조건으로 골랐는지 알 수 없습니다.</p><p>이 글은 설정 세 개를 같은 조건에서 비교해 하나를 고르는 과정을 따릅니다. 선택에 쓰는 시험과 선택이 끝난 뒤 성능을 보고할 시험을 나누고 전체 탐색 비용을 함께 계산합니다.</p></div></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 조건을 정하고 시험하고 고른 뒤 별도로 평가합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>비교할 자료와 계산법, 후보당 학습량과 종료 조건을 먼저 정합니다. 그 안에서 여러 설정을 실행해 점수를 모으고 가장 좋은 후보를 고릅니다. 고른 절차를 고정한 뒤 선택에 사용하지 않은 자료로 평가합니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>자료·평가법·학습량을 고정한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>후보들을 실행하며 누적 비용을 센다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>선택용 점수로 한 후보를 고른다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>닫아 둔 자료로 최종 절차를 평가한다</span></li></ol></section>
@@ -27,7 +29,7 @@ export default function Article() { return <div className="space-y-16"><section 
 
 <section id="tuning-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 설정 묶음과 실행과 선택용 평가에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>시험 전에 정하는 학습률 같은 값이 hyperparameter이고 그 묶음이 configuration입니다. 학습 중 자료를 보고 바뀌는 모델 가중치는 parameter입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Trial", "description": "한 설정을 정해진 자료·학습량·seed 정책으로 평가하는 실행입니다.", "boundary": "실패와 재시도는 별도 실행 이력으로 보존합니다."}, {"term": "Study", "description": "같은 목적과 공간 개정 아래 모은 실행과 선택의 이력입니다.", "boundary": "점수 계산법이나 범위를 바꾸면 개정 사실을 남깁니다."}, {"term": "Validation", "description": "여러 후보 중 무엇을 고를지 판단하는 평가입니다.", "boundary": "여러 번 고르는 데 쓴 최저 점수를 독립 평가처럼 해석하지 않습니다."}, {"term": "Outer evaluation", "description": "선택이 끝날 때까지 쓰지 않은 자료에서 고정된 절차를 평가합니다.", "boundary": "결과를 보고 다시 바꾸면 그 자료도 선택에 쓰인 것입니다."}]} /><TuningContractViz /></section>
 
-<section id="selection-contract" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 후보별 10을 누적해 30을 확인한 뒤 B를 고릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="selection-contract" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 후보별 10을 누적해 30을 확인한 뒤 B를 고릅니다</h2><BudgetSelectionViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             세 실행의 비용을 더하면 10+10+10=30 GPU분입니다. 각 후보 비용이 30보다 작다는 검사만으로는 전체 예산을 지킬 수 없습니다. 같은 비용의 넷째 후보를 추가하면
             40이 됩니다. 실패한 실행이 자원을 썼다면 그 비용도 합칩니다. (가정)
           </p><p>
@@ -98,7 +100,7 @@ export default function Article() { return <div className="space-y-16"><section 
           interpretation="A/B/C를 각10 GPU분으로 유효하게 평가하면 누적30이고 S_T={A,B,C}입니다. 손실0.24·0.20·0.22에서 B를 고른 뒤 별도 독립 평가0.23을 보고합니다."
         /></section>
 
-<section id="trial-budget" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 좋은 영역을 놓칠 확률에서 탐색 횟수를 계산합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="trial-budget" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 좋은 영역을 놓칠 확률에서 탐색 횟수를 계산합니다</h2><HitProbabilityViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             각 무작위 추첨이 목표를 만족하는 영역에 들어갈 확률을 0.05라고 가정합니다. 한 번 놓칠 확률은 0.95입니다. 같은 분포에서 독립적으로 세 번 뽑으면 모두 놓칠 확률은
             0.95³이고 한 번 이상 맞힐 확률은 1−0.95³=0.142625입니다. (가정)
           </p><p>

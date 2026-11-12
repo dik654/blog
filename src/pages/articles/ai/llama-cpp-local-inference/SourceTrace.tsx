@@ -1,4 +1,5 @@
 import { CodeViewButton } from "@/components/code";
+import FaTileSkipViz from "./viz/FaTileSkipViz";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -74,6 +75,7 @@ export default function SourceTrace({ code }: Props) {
           </p>
         </div>
         <CodeViewButton label="cell마다 0 또는 −∞를 쓰는 mask" onClick={() => code("kq-mask")} />
+        <FaTileSkipViz />
         <div className={prose}>
           <p>
             지운 칸을 kernel이 건너뛰는지도 확인했습니다. CUDA FlashAttention 경로는 mask를 끝에서부터 256칸 tile 단위로 보며 모두 −∞인 tile만 계산 범위에서

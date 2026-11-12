@@ -6,6 +6,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ReviewRoundsViz from "./cross-review-error-classes/viz/ReviewRoundsViz";
 import ClaimTraceViz from "./cross-review-error-classes/viz/ClaimTraceViz";
+import SameRulerViz from "./cross-review-error-classes/viz/SameRulerViz";
+import QuorumSplitViz from "./cross-review-error-classes/viz/QuorumSplitViz";
 
 /**
  * 검증이 잡아낸 것은 지식이 아니라 비교의 모양이었습니다
@@ -87,7 +89,11 @@ export default function CrossReviewErrorClassesArticle() {
             가장 많았고 가장 먼저 지적된 유형입니다. 양쪽 다 맞게 계산했는데
             같은 자로 재지 않은 채 견줍니다.
           </p>
+        </div>
 
+        <SameRulerViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             한 표에서는 한쪽만 가동률로 나누고 다른 쪽은 정가를 그대로 두었습니다.
             차이가 8퍼센트로 보였는데 같은 자로 나누면 81퍼센트였습니다.
@@ -166,7 +172,11 @@ export default function CrossReviewErrorClassesArticle() {
             적었습니다. 그 중복 제거는 배경 병합에 기대는 것이라 보장이 아닙니다.
             돈을 다루는 줄에 쓸 수 없습니다.
           </p>
+        </div>
 
+        <QuorumSplitViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             다른 자리에서는 두 지역에 저장소를 나누면 이중화된다고 적었습니다.
             과반이 필요한 저장소는 두 곳에 나누면 한쪽 상실만 견딥니다.

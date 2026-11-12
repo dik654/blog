@@ -9,6 +9,8 @@ import CalculationWalkthrough from "@/components/articles/calculation-walkthroug
 import BreakEvenCapexViz from "./own-vs-rent-inference-capacity/viz/BreakEvenCapexViz";
 import CostCurveViz from "./own-vs-rent-inference-capacity/viz/CostCurveViz";
 import DenominatorViz from "./own-vs-rent-inference-capacity/viz/DenominatorViz";
+import AgentApiCostViz from "./own-vs-rent-inference-capacity/viz/AgentApiCostViz";
+import CostLeverViz from "./own-vs-rent-inference-capacity/viz/CostLeverViz";
 import {
   InferenceOperationsMapReturn,
   InferenceOperationsSeriesLocator,
@@ -369,6 +371,8 @@ export default function OwnVsRentInferenceCapacityArticle() {
           interpretation="출력 단가가 같은 두 API라도 캐시 입력 단가가 다르면 에이전트 부하의 실비용은 몇 배 벌어집니다. 그래서 API 가격을 출력 단가 한 줄로 옮겨 적으면 자체 호스팅과의 비교가 처음부터 어긋납니다."
         />
 
+        <AgentApiCostViz />
+
         <CalculationWalkthrough
           title="입력:출력 비에 따라 출력 1M당 API 실비용"
           question="출력 단가 $2.50인 K2.5 API는 에이전트 부하에서 출력 100만 토큰당 얼마일까요?"
@@ -446,7 +450,11 @@ export default function OwnVsRentInferenceCapacityArticle() {
             자를 맞추고 나면 어느 항목이 결론을 흔드는지가 보입니다. 직관과 좀
             다릅니다.
           </p>
+        </div>
 
+        <CostLeverViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             전력은 토큰당 원가의 5에서 15퍼센트입니다. 하드웨어 상각이 60에서
             75퍼센트이고 나머지가 상면과 네트워크와 운영입니다. 전기요금이

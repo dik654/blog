@@ -6,6 +6,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import HyperConnectionsResidualStreamsViz from "./hyper-connections-residual-streams/viz/HyperConnectionsResidualStreamsViz";
+import ReadMixWriteViz from "./hyper-connections-residual-streams/viz/ReadMixWriteViz";
+import SinkhornStepsViz from "./hyper-connections-residual-streams/viz/SinkhornStepsViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
@@ -129,6 +131,7 @@ export default function HyperConnectionsResidualStreamsArticle() {
             절에서 보듯 이 행렬에 제약이 없으면 층을 쌓을수록 문제가 생깁니다.
           </p>
         </div>
+        <ReadMixWriteViz />
         <ExplainedFormula
           question="한 층에서 n개 stream 을 어떻게 읽고 섞고 다시 쓰나요?"
           idea="n개 stream을 가중합해 층 하나가 받을 입력을 만들고, 층 출력은 다시 n개 stream에 나눠 쓰며, 그와 별도로 기존 stream끼리도 섞습니다."
@@ -177,6 +180,7 @@ export default function HyperConnectionsResidualStreamsArticle() {
             투영합니다.
           </p>
         </div>
+        <SinkhornStepsViz />
         <ExplainedFormula
           question="학습된 mixing 행렬을 어떻게 doubly-stochastic 행렬로 만드나요?"
           idea="모든 원소를 지수화해 양수로 만든 뒤, 행 합과 열 합으로 번갈아 나누는 과정을 여러 번 반복해 행·열 합이 모두 1인 행렬로 수렴시킵니다."

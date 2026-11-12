@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MosSurfaceViz from "./mos-capacitor-and-inversion/viz/MosSurfaceViz";
+import ChargeVoltageViz from "./mos-capacitor-and-inversion/viz/ChargeVoltageViz";
+import SupplyPathViz from "./mos-capacitor-and-inversion/viz/SupplyPathViz";
 
 import NumericPath from "../world-systems/NumericPath";
 
@@ -171,7 +173,7 @@ return <div className="space-y-16">
 
 <section id="source-supply" data-teach-level="6" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">9. 원문이 둔 전자 공급 조건까지 같이 가져옵니다</h2>
-<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 강의안 23쪽의 <code>qN*=−Cox*(vGB−VT)</code>에 앞서 구한 3.453×10⁻³ F/m²와 여분 전압 0.5 V를 넣으면 −1.7265×10⁻³ C/m²입니다. 면적 10⁻¹⁰ m²를 곱해 −0.17265 pC를 얻고, 전자 한 개의 전하량으로 나누면 약 1.078×10⁶개입니다. 별표가 있는 면적당 식을 총 전하로 바꾼 경로입니다.</p><p className="leading-7">같은 자료 4쪽은 그림의 n+ 영역을 잊으면 안 된다고 하면서 “we will need electrons, and they will come from there”라고 적습니다. 이 글도 전자 공급 영역을 바탕과 같은 전위에 둔 조건을 가정했습니다. 절연층 위 전극은 전기장으로 제어하고, 전자는 이 공급 경로를 통해 표면에 모입니다. <a href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf#page=4" target="_blank" rel="noopener noreferrer">원문 4쪽의 구조와 주석</a>을 식의 조건과 함께 읽어야 합니다.</p><p className="leading-7">
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 강의안 23쪽의 <code>qN*=−Cox*(vGB−VT)</code>에 앞서 구한 3.453×10⁻³ F/m²와 여분 전압 0.5 V를 넣으면 −1.7265×10⁻³ C/m²입니다. 면적 10⁻¹⁰ m²를 곱해 −0.17265 pC를 얻고, 전자 한 개의 전하량으로 나누면 약 1.078×10⁶개입니다. 별표가 있는 면적당 식을 총 전하로 바꾼 경로입니다.</p></div><SupplyPathViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">같은 자료 4쪽은 그림의 n+ 영역을 잊으면 안 된다고 하면서 “we will need electrons, and they will come from there”라고 적습니다. 이 글도 전자 공급 영역을 바탕과 같은 전위에 둔 조건을 가정했습니다. 절연층 위 전극은 전기장으로 제어하고, 전자는 이 공급 경로를 통해 표면에 모입니다. <a href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf#page=4" target="_blank" rel="noopener noreferrer">원문 4쪽의 구조와 주석</a>을 식의 조건과 함께 읽어야 합니다.</p><p className="leading-7">
             위의 약 108만 개는 새 전압에서 충분히 전하를 공급받은 정적 계산입니다. 공급이 늦거나 전압을 너무 빨리 바꾼 실제 구조라면 같은 시간에 이 숫자에 도달했다고 할 수
             없습니다. 전하 수를 계산한 뒤에는 그 전하가 도착하는 시간도 확인해야 합니다.
           </p></div>
@@ -189,7 +191,7 @@ return <div className="space-y-16">
             붙잡힌 전하가 있어 같은 전극 전압이 같은 표면 전하를 늘 만들지는 않습니다. 절연층 재료와 두께, 온도, 동작 속도를 함께 봐야 합니다.
           </p>
           <p className="leading-7"><em>0.173 pC는 강한 반전의 정적 근삿값입니다. 충전 시간·누설·계면 전하를 따지면 실제 스위치 판단으로 넘어갈 수 있습니다.</em></p>
-        </div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">다른 가정을 고정하고 두께만 5 nm로 줄인 이상 용량은 약 0.691 pF입니다. 같은 0.5 V 여분 전압의 전하도 두 배가 됩니다. 실제 소자에서는 문턱과 누설·공급 속도가 함께 바뀔 수 있어 이 값은 조건부 비교입니다.</p><p className="leading-7">
+        </div><ChargeVoltageViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">다른 가정을 고정하고 두께만 5 nm로 줄인 이상 용량은 약 0.691 pF입니다. 같은 0.5 V 여분 전압의 전하도 두 배가 됩니다. 실제 소자에서는 문턱과 누설·공급 속도가 함께 바뀔 수 있어 이 값은 조건부 비교입니다.</p><p className="leading-7">
             또 문턱은 전자가 하나도 없다가 갑자기 생기는 선이 아닙니다. 약한 반전에서 강한 반전으로 넘어가는 기준이며 여기의 선형 전하식은 강한 반전에서 추가 전하를 근사합니다. 그
             범위를 벗어나면 표면 전하를 더 자세한 모델로 구해야 합니다.
           </p></div>

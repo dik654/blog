@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ModernKzgGpuViz } from "./ModernKzgGpuViz";
+import LiveBytesViz from "./viz/LiveBytesViz";
 
 const KZG = "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf";
 const CKZG = "https://github.com/ethereum/c-kzg-4844/tree/e125905e5e01186e6ccb7a0ced4845bf7eddbcfe";
@@ -22,6 +23,7 @@ export default function ModernKzgGpuArticle() {
       <header><p className="text-sm font-semibold text-primary">01 · SRS residency</p><h2 className="mt-2 text-2xl font-bold">SRS를 검증된 immutable artifact로 올린다</h2></header>
       <p>Structured reference string(SRS)은 [τ⁰]G,[τ¹]G,… points입니다. 이 글의 release loader는 외부 encoding을 해석하고 point-on-curve·subgroup·길이와 digest를 확인한 뒤 backend 내부 point layout으로 변환합니다.</p>
       <p>외부 compressed bytes와 device Jacobian/affine bytes는 다르므로 고정 GB 수치를 encoding 설명 없이 일반화하지 않습니다. 또한 c-kzg의 bundled trusted setup처럼 신뢰를 전제로 한 loader와 임의 외부 SRS를 검증하는 loader를 같은 경계로 부르지 않습니다.</p>
+      <LiveBytesViz />
       <ExplainedFormula question="고정 SRS와 한 KZG job의 peak live bytes를 어떻게 예산할까?" idea={<>항상 resident인 SRS prefix에 scalar, quotient, MSM workspace와 outputs가 동시에 살아 있는 구간을 더합니다.</>} formula={String.raw`B_{live}=n s_P+n s_F+n_qs_F+B_{MSM}+B_{out}+B_{runtime}`}
       annotatedFormula={String.raw`B_{live}=\underbrace{n s_P}_{\text{상주 SRS prefix}}+\underbrace{n s_F+n_qs_F}_{\text{계수·quotient}}+\underbrace{B_{MSM}}_{\text{MSM 작업 공간}}+\underbrace{B_{out}+B_{runtime}}_{\text{출력·runtime}}`}
       operations={[

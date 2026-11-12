@@ -4,6 +4,7 @@ import CalculationWalkthrough from "@/components/articles/calculation-walkthroug
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import LayerOffloadViz from "./viz/LayerOffloadViz";
+import OffloadTrafficViz from "./viz/OffloadTrafficViz";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -42,6 +43,7 @@ export default function Offload({ code }: Props) {
           conclusion="-ngl 25로 층 8~31과 출력층이 GPU에서 4,851MB를 쓰고, 층 0~7과 embedding은 CPU에 남습니다."
           caveats={["실제 버퍼 크기와 정렬, 텐서별로 섞인 형식 때문에 서버가 출력하는 값과 다를 수 있습니다.", "서버의 --fit 기본값은 지정하지 않은 인자를 기기 메모리에 맞게 조정합니다."]}
         />
+        <OffloadTrafficViz />
         <div className={prose}>
           <p>
             CPU에 남은 층 0~7은 decode 때 CPU가 계산합니다. 매 step마다 그 층의 가중치를 PCIe로 GPU에 옮기는 방식이 아닙니다. 층 사이 경계에서는 token마다 4,096개짜리

@@ -8,6 +8,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ClaimNetworkViz from "./money-as-a-claim/viz/ClaimNetworkViz";
 import MoneyAsAClaimViz from "./money-as-a-claim/viz/MoneyAsAClaimViz";
 import BarterCostViz from "./money-as-a-claim/viz/BarterCostViz";
+import AggregateFilterViz from "./money-as-a-claim/viz/AggregateFilterViz";
 
 /**
  * 돈은 물건이 아니라 남이 갚아야 할 약속입니다
@@ -358,6 +359,7 @@ export default function MoneyAsAClaimArticle() {
           <h3 className="mb-4 mt-12 text-xl font-bold">
             무엇을 넣고 뺄지는 발행자와 보유자를 먼저 갈라야 정해집니다
           </h3>
+          <AggregateFilterViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               지표를 만들 때 반드시 지켜야 하는 규칙이 하나 있습니다. 돈을 세는

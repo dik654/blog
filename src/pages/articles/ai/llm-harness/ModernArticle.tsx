@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { HarnessBoundaryViz } from "./viz/ModernHarnessViz";
+import PingCountViz from "./viz/PingCountViz";
+import RepairCheckViz from "./viz/RepairCheckViz";
 
 export default function Article() {
   return (
@@ -75,6 +77,9 @@ export default function Article() {
             요청은 프로젝트 측정 기록의 exact-32 조건과 같습니다. 출력 검산의
             전개는 설명을 위한 예입니다.
           </p>
+        </div>
+        <PingCountViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             PING은 4글자이므로 문자열 부분은 4×32=128글자입니다. 사이의 공백은
             31개라서 전체 길이는 159글자입니다. 마지막에 공백이나 설명을
@@ -309,6 +314,7 @@ export default function Article() {
           repeatUntil="필수 validator가 모두 통과하거나 retry budget이 끝나 사람에게 근거·미완료 항목과 함께 넘길 때까지 반복합니다."
           output="versioned artifact + validator receipt + unresolved violations"
         />
+        <RepairCheckViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             반복 결과가 31개라면 실패한 개수 조건을 고치고 문자열·구분자·추가

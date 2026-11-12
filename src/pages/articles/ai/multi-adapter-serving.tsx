@@ -12,6 +12,9 @@ import SegmentBatchViz from "./multi-adapter-serving/viz/SegmentBatchViz";
 import AdapterMemoryViz from "./multi-adapter-serving/viz/AdapterMemoryViz";
 import SoftPromptKvViz from "./multi-adapter-serving/viz/SoftPromptKvViz";
 import TwoTierAdapterCacheViz from "./multi-adapter-serving/viz/TwoTierAdapterCacheViz";
+import ExpandIoViz from "./multi-adapter-serving/viz/ExpandIoViz";
+import AdmissionCountViz from "./multi-adapter-serving/viz/AdmissionCountViz";
+import CacheKeyViz from "./multi-adapter-serving/viz/CacheKeyViz";
 import { codeRefs } from "./multi-adapter-serving/codeRefs";
 import { adapterTrees } from "./multi-adapter-serving/fileTree";
 import {
@@ -276,6 +279,7 @@ export default function MultiAdapterServingArticle() {
             assumptions={["Punica 논문의 식이며 실제 kernel의 tile·cache 재사용은 반영하지 않은 하한 모형입니다.", "원문 I/O 식의 마지막 항은 n×h1×h2로 인쇄되어 있으며 앞 줄의 정의에 맞춰 h_i·h_o로 읽었습니다."]}
             interpretation="524,288 FLOP ÷ 426,112 byte ≈ 1.23 FLOP/byte입니다. 네 token이 모두 같은 adapter면 n=1이라 I/O가 163,968 byte로 줄어 3.20이 됩니다. 논문이 그린 A100 경계(312 TFLOP/s ÷ 1.935 TB/s ≈ 161)보다 훨씬 낮아 두 경우 모두 메모리 읽기에 묶입니다."
           />
+          <ExpandIoViz />
           <div className={prose}>
             <p>
               token마다 따로 계산하면 같은 A를 두 번 읽어 n 자리에 4가 들어갑니다. 원소는 16,448 + 262,144 = 278,592개, 557,184 byte입니다. 구간으로 묶은 426,112
@@ -404,6 +408,9 @@ export default function MultiAdapterServingArticle() {
               GPU 슬롯이 넷인데 한 step에 다섯 종류의 adapter가 들어오면 그 step은 실행할 수 없습니다. 그래서 요청을 batch에 넣는 단계에서 adapter 종류를 셉니다. 두
               엔진은 같은 문제를 조금 다르게 셉니다.
             </p>
+          </div>
+          <AdmissionCountViz />
+          <div className={prose}>
             <p>
               vLLM scheduler.py 724–737행은 이번 step에 이미 max_loras종류가 들어갔고 새 요청의 adapter가 그 안에 없으면 그 요청을 건너뜁니다. max_loras=2이고 대기열이
               A, B, C, A 순서라면 A와 B가 들어가고 C는 건너뛰며 마지막 A는 들어갑니다. 멈추지 않고 다음 요청을 계속 봅니다.
@@ -506,6 +513,7 @@ export default function MultiAdapterServingArticle() {
 
         <section id="cache-key" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">13. prefix cache의 key에 adapter와 가상 token의 정체가 들어가야 합니다</h2>
+          <CacheKeyViz />
           <div className={prose}>
             <p>
               두 요청이 같은 system prompt로 시작하면 앞부분의 KV를 재사용하는 것이 <Link to="/cs/ai/prefix-caching-radix-attention#block-hash">prefix cache</Link>입니다.

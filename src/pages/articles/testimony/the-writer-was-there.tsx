@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import PresenceIsNotEnoughViz from "./the-writer-was-there/viz/PresenceIsNotEnoughViz";
 import SplitTheTextViz from "./the-writer-was-there/viz/SplitTheTextViz";
+import WitnessDirectionViz from "./the-writer-was-there/viz/WitnessDirectionViz";
 
 /**
  * 한쪽에서 싸운 사람이 적은 기록을 읽는 법
@@ -245,6 +246,11 @@ export default function TheWriterWasThereArticle() {
             불쌍히 여겼다고 적습니다. 성을 치는 일도 스스로 자주 늦추어 그
             일을 꾸민 자들에게 회개할 틈을 주려 했다고 씁니다.
           </p>
+        </div>
+
+        <WitnessDirectionViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
 
           <p className="leading-7">
             증인으로 적국의 사령관을 세우는 일은 생각해 볼 만한 선택입니다.

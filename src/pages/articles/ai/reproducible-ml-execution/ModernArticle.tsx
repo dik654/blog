@@ -7,6 +7,7 @@ import {
   ReproducibleMlExecutionReturn,
 } from "../shared/ModelDeliveryPathLocator";
 import ReproducibleMlExecutionViz from "./ReproducibleMlExecutionViz";
+import ToleranceBandViz from "./viz/ToleranceBandViz";
 
 export default function ReproducibleMlExecutionArticle() {
   return (
@@ -83,6 +84,7 @@ export default function ReproducibleMlExecutionArticle() {
             여러 seed의 지표는 분포로, 출시 결정은 중요 구간의 행동 기준으로 봅니다.
           </p>
         </div>
+        <ToleranceBandViz />
         <ExplainedFormula
           question="기준값 100.00과 재실행값 100.08을 절대 오차 0.01, 상대 오차 0.001로 비교하면 통과하나요?"
           idea={

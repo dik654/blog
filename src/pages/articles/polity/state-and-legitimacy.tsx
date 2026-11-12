@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MonopolyViz from "./state-and-legitimacy/viz/MonopolyViz";
 import ComplianceThresholdViz from "./state-and-legitimacy/viz/ComplianceThresholdViz";
+import StateCapacityViz from "./state-and-legitimacy/viz/StateCapacityViz";
 
 /**
  * 강제력을 한 곳에 몰아주고 정당성으로 묶습니다
@@ -291,6 +292,11 @@ export default function StateAndLegitimacyArticle() {
             이라 합니다.
           </p>
 
+        </div>
+
+        <StateCapacityViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             능력은 크게 셋으로 나뉩니다. 사회를 들여다보는 정보 역량, 걷는 징세 역량, 그리고 결정을 물리적으로 관철하는 집행 역량입니다. 셋은 서로 맞물려 있어서 정보가 없으면 걷을
             수 없고 걷지 못하면 집행할 자원이 없습니다.

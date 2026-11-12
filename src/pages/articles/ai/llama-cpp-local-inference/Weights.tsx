@@ -5,6 +5,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Q4KBlockViz from "./viz/Q4KBlockViz";
 import Q4KIntegerDotViz from "./viz/Q4KIntegerDotViz";
+import Dp4aLaneViz from "./viz/Dp4aLaneViz";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -100,6 +101,7 @@ export default function Weights({ code }: Props) {
           assumptions={["예시는 작은 블록 하나에 값 4개만 넣은 축소입니다. 실제 블록은 32개입니다.", "활성값을 int8로 바꾸며 생기는 반올림 오차는 0으로 두었습니다."]}
           interpretation="정수 곱의 합과 정수 합만 있으면 블록 하나의 결과가 나옵니다. 이 식은 같은 값을 다르게 계산하는 순서이며 양자화 자체의 오차를 줄이지 않습니다."
         />
+        <Dp4aLaneViz />
         <div className={prose}>
           <p>
             정수 곱의 합은 dp4a라는 GPU 명령 하나가 맡습니다. 32비트 레지스터 두 개를 byte 네 칸씩으로 보고 네 쌍을 곱해 더한 뒤 누적값에 더합니다. 위 76이 dp4a

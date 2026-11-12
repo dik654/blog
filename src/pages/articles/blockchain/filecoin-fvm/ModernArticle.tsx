@@ -5,6 +5,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { FvmExecutionViz } from "./FvmExecutionViz";
 import { fvmTree } from "./fileTrees";
+import CallScopeViz from "./viz/CallScopeViz";
+import FailureBranchViz from "./viz/FailureBranchViz";
 
 const FIP30 =
   "https://github.com/filecoin-project/FIPs/blob/56863b13e62685f8e8e6b2b2f5048ba142263031/FIPS/fip-0030.md";
@@ -246,6 +248,7 @@ export default function ModernFilecoinFvm() {
             events와 state-access tracker의 transaction을 시작하고 actor A를
             호출합니다.
           </p>
+          <CallScopeViz />
           <p>
             A가 B를 부른 뒤 성공하지 못하면 이 actor-call transaction에 임시로
             쌓인 변경과 events를 되돌립니다. 그러나 transaction 밖에서 먼저
@@ -480,6 +483,7 @@ export default function ModernFilecoinFvm() {
             state tree가 blockstore에 기록되고 final state-root CID가 나옵니다.
             따라서 R₁이 만들어진 시점과 Sfinal이 만들어진 시점은 다릅니다.
           </p>
+          <FailureBranchViz />
           <p>
             사전 검사 실패는 actor를 호출하지 않고 조기 ApplyRet을 만들 수
             있습니다. Actor의 non-success exit는 actor-call 변경을 되돌린

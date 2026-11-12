@@ -7,6 +7,7 @@ import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLoca
 import CompressionTaxonomy from "./CompressionTaxonomy";
 import PruningGranularity from "./PruningGranularity";
 import SparseKernelExecution from "./SparseKernelExecution";
+import RetentionAreaViz from "./viz/RetentionAreaViz";
 
 export default function StructuredPruningArticle() {
   return (
@@ -62,6 +63,7 @@ export default function StructuredPruningArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           앞 layer의 output 축과 뒤 layer의 input 축을 같은 계약으로 줄입니다
         </h2>
+        <RetentionAreaViz />
         <ExplainedFormula
           question="Input·output width를 각각 75% 남기면 주된 dense 계산은 얼마나 남나요?"
           idea={
