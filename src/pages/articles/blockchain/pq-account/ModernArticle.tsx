@@ -5,6 +5,11 @@ import FlowRail from "../../world-systems/FlowRail";
 import SourceApplication from "../../world-systems/SourceApplication";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import { pinnedCodeRefs as codeRefs } from "./pinnedCodeRefs";
+import LedgerSplitViz from "./viz/LedgerSplitViz";
+import NonceLayoutViz from "./viz/NonceLayoutViz";
+import HandleOpsBranchViz from "./viz/HandleOpsBranchViz";
+import AuthorityPathsViz from "./viz/AuthorityPathsViz";
+import DualSignaturePolicyViz from "./viz/DualSignaturePolicyViz";
 
 const SOURCE = "https://github.com/eth-infinitism/account-abstraction/tree/1c6b669d0eea734e09a87e095ba15e076151718a";
 export default function ModernArticle() {
@@ -32,6 +37,7 @@ export default function ModernArticle() {
   <section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">4. 잔액·예치금·요청 순번이 바뀌는 시점을 나눈다</h2>
    <div className="overflow-x-auto"><table className="w-full min-w-[590px] text-sm"><caption className="mb-3 text-left">설명용 성공 사례. 잔액 단위는 ETH입니다.</caption><thead><tr><th className="p-3 text-left">상태</th><th className="p-3">A 송금 잔액</th><th className="p-3">A 비용 예치금</th><th className="p-3">B</th><th className="p-3">다음 순번</th></tr></thead><tbody>{[["시작","1","0.020","0","7"],["검증·비용 예약","1","0.017 + 예약 0.003","0","8 (잠정)"],["송금·정산 완료","0.9","0.019","0.1","8"]].map(row=><tr key={row[0]} className="border-t">{row.map(cell=><td key={cell} className="p-3 align-top">{cell}</td>)}</tr>)}</tbody></table></div>
+   <LedgerSplitViz />
    <p>검증 도중의 변경은 상위 거래가 되돌아가면 취소됩니다. 성공한 뒤 세 잔액을 더하면 1.019 ETH입니다. 지급한 비용 0.001 ETH를 더하면 처음 합계 1.02 ETH와 맞습니다. “전송 완료”라는 표시 대신 이 이동과 해당 요청의 성공 여부를 대조합니다.</p>
    <p data-stage-bridge="picture" className="text-sm text-muted-foreground">수량과 순번의 변화가 보였습니다. 이제 같은 서명을 두 번 쓰거나 실패를 성공으로 읽을 때 생기는 문제를 봅니다.</p>
   </section>
@@ -44,6 +50,7 @@ export default function ModernArticle() {
   <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">6. 요청 객체, EntryPoint, 예치금, nonce의 이름</h2>
    <p>계정이 검증할 상위 요청 객체가 UserOperation입니다. 제출을 맡는 bundler는 이를 모아 EntryPoint의 handleOps를 부르는 일반 체인 거래를 보냅니다. 계정은 validateUserOp로 권한 결과를 돌려줍니다. 승인된 callData가 계정의 execute로 이어집니다.</p>
+   <NonceLayoutViz />
    <p>nonce는 재사용을 막는 값입니다. 이 구현은 상위 192비트 key와 하위 64비트 sequence를 나눠 계정·key별 순번을 관리합니다. 본문의 7→8은 key=0에서의 sequence 변화입니다. deposit은 EntryPoint가 관리하는 비용 예치금, prefund는 실행 전 예약할 비용이며 송금할 0.1 ETH와 구분됩니다.</p>
    <p>gas는 실행 자원을 계산하는 단위이고 단위당 가격을 곱해 비용을 구합니다. 1 Gwei는 10억분의 1 ETH입니다. 본문의 계정은 일반적으로 배포된 계정이며, 별도의 서명 집계·paymaster 비용 후원·EIP-7702 위임은 사용하지 않습니다.</p>
    <p>양자내성 서명 중 ML-DSA는 NIST FIPS 204의 표준입니다. 계정 검증 코드를 바꿀 수 있다는 성질과 ML-DSA를 해당 체인에서 실행할 수 있다는 성질은 별개입니다. 서명 원리는 <Link className="underline" to="/cs/crypto/post-quantum-signatures">양자내성 서명</Link>, 위협의 원리는 <Link className="underline" to="/cs/crypto/quantum-computing-and-cryptographic-risk">양자 계산과 암호 위험</Link>으로 이어집니다.</p>
@@ -61,6 +68,7 @@ export default function ModernArticle() {
    <p>모든 검증을 마치면 EntryPoint가 A의 callData를 호출합니다. A의 execute가 자기 잔액에서 B에게 0.1 ETH를 보냅니다. 여기까지가 송금 잔액을 바꾸는 단계입니다.</p>
    <p>다음은 비용 정산입니다. 사전·검증·실행·정산 비용과 해당하는 penalty까지 반영한 청구 gas를 100,000, 적용 가격을 10 Gwei로 가정하면 0.001 ETH입니다. 정산은 이 금액을 청구하고 0.002 ETH를 deposit에 환급합니다.</p>
    <p>마지막에는 요청별 UserOperationEvent의 success와 actualGasCost를 읽습니다. 이 결과를 송금 잔액, 비용 예치금, nonce와 맞춰야 실행과 정산이 모두 맞았는지 알 수 있습니다.</p>
+   <HandleOpsBranchViz />
    <div className="overflow-x-auto"><table className="w-full min-w-[570px] text-sm"><caption className="mb-3 text-left">실패한 층위에 따라 남는 결과가 다릅니다.</caption><thead><tr><th className="p-3 text-left">실패</th><th className="p-3 text-left">확인할 결과</th></tr></thead><tbody>{[["잘못된 서명·nonce·prefund","AA24·AA25·AA21 등의 원인과 상위 revert를 구분. 전체 revert면 계정 nonce·deposit 변경도 취소"],["검증 후 수신자 호출 실패","bundle이 성공하면 요청 success=false여도 nonce 8과 해당 실행 시도 비용은 남을 수 있음"],["bundler의 사전 검사 거절","온체인 포함 전의 실패. 요청 receipt가 생겼거나 B가 0.1을 받았다고 표시하지 않음"]].map(row=><tr key={row[0]} className="border-t">{row.map(cell=><td key={cell} className="p-3 align-top">{cell}</td>)}</tr>)}</tbody></table></div>
    <p>전체 bundle 거래가 revert해도 제출자의 체인 거래 gas는 발생할 수 있습니다. 이는 되돌아간 계정 deposit 청구와 다른 비용입니다. 실행 실패 때의 실제 수수료 역시 성공 사례의 0.001과 같다고 단정하지 않고 요청별 기록을 읽습니다.</p>
    <p data-stage-bridge="account-abstraction-validation" className="text-sm text-muted-foreground">같은 순번 7이 어느 실패에서 남고 되돌아가는지 확인했습니다. 공개 원본에서 이 분기들을 직접 찾습니다.</p>
@@ -79,6 +87,7 @@ export default function ModernArticle() {
    <h2 className="text-2xl font-bold">9. 서명 표준·체인 실행 능력·전환 권한을 따로 확인한다</h2>
    <div id="paper-fips204" className="scroll-mt-20 space-y-3"><p>FIPS 204는 ML-DSA의 키 생성·서명·검증과 인코딩을 정합니다. ML-DSA-44의 공개키는 1,312바이트, 서명은 2,420바이트입니다. 비교용 ECDSA 서명을 65바이트로 두면 서명만 2,355바이트 늘어납니다. 이 차이는 gas나 검증 시간의 측정값이 아닙니다.</p><p>바이트 크기를 확인한 다음에는 서로 같은 규칙으로 서명하고 검증하는지 봅니다. 사용할 표준과 매개변수 묶음, 키와 context, pure/prehash 방식을 고정해야 합니다. 실제 verifier도 그 규칙에 맞는 바이트를 읽어야 합니다.</p><CitationBlock source="NIST FIPS 204 · 최종 표준과 Table 2" citeKey={3} href="https://nvlpubs.nist.gov/nistpubs/fips/nist.fips.204.pdf">Table 2의 ML-DSA-44 공개키·서명 크기를 확인했습니다. 표준 알고리즘의 크기이며 EVM 배포 비용·보안 인증을 뜻하지 않습니다.</CitationBlock></div>
    <div id="paper-erc7562" className="scroll-mt-20 space-y-3"><p>ERC-7562는 bundler가 검증 코드의 환경 의존·저장소 접근·과도한 자원 사용을 제한하는 규칙을 다룹니다. signature가 bytes라는 사실만으로 임의의 verifier가 모든 bundler에서 수락되지는 않습니다. 이 체인에 맞는 bytecode 또는 허용된 precompile, calldata 한도, 검증 gas와 사전 검사 지원을 확인해야 합니다. 이 글은 ML-DSA의 EVM gas를 측정하지 않았습니다.</p><CitationBlock source="ERC-7562 · Account Abstraction Validation Scope Rules" citeKey={4} href="https://eips.ethereum.org/EIPS/eip-7562">2026-10-04의 환경 opcode·저장소·precompile 접근 규칙입니다. 특정 verifier의 호환성을 대신 인증하지 않습니다.</CitationBlock></div>
+   <AuthorityPathsViz />
    <p>공개 SimpleAccount의 _validateSignature는 ECDSA.recover를 사용합니다. 더구나 owner가 execute를 직접 호출할 수 있고 업그레이드도 owner 권한에 연결됩니다. 이 함수를 ML-DSA로 바꾸더라도 옛 owner 직접 실행·복구·업그레이드 경로가 남으면 계정 전체가 양자내성으로 바뀐 것이 아닙니다.</p>
    <CodeViewButton label="ECDSA와 owner 직접 실행 경로" onClick={()=>sidebar.open("owner",codeRefs.owner)} />
    <SourceApplication source="NIST CSWP 39upd1 · Crypto agility의 정의" excerpt="while preserving security and ongoing operations" application="0.1 ETH 요청의 검증자를 교체할 때 기존 순번 7의 연속성, 예치금 0.02와 새 verifier 비용, 잃어버린 키를 복구하는 권한까지 함께 유지해야 합니다. 새 알고리즘 이름만 기록해서는 송금의 보안과 운영을 보존했다고 할 수 없습니다." />
@@ -87,6 +96,7 @@ export default function ModernArticle() {
   </section>
   <section id="migration-release" data-teach-level="7" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">10. 새 서명 실패와 복구 때도 허용한 권한만 돈을 움직이게 한다</h2>
+   <DualSignaturePolicyViz />
    <p>전환 중 두 서명을 모두 요구하는 AND 정책을 가정합시다. 같은 nonce 7·0.1 ETH 요청에서 ECDSA=1, ML-DSA=0이면 결과는 0이므로 실행을 허용하지 않습니다. 어느 하나만 통과하면 되는 OR 정책과 결과가 다릅니다. AND는 한 검증의 실패에도 송금이 막히므로 키 백업과 복구 가능성도 함께 시험해야 합니다.</p>
    <p>이전 검사는 알고리즘에서 시작해 실제 송금 결과까지 이어집니다. 각 단계에서 무엇을 바꿔 시험했는지 남깁니다.</p>
    <ol className="list-decimal space-y-3 pl-6 leading-8">

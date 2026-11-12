@@ -22,7 +22,7 @@
       "score": 43
     },
     "ai/claw-compaction": {
-      "fingerprint": "4e28a3ceccde9e12",
+      "fingerprint": "a5ad78fae2cbec9e",
       "score": 42
     },
     "ai/claw-permissions": {
@@ -34,7 +34,7 @@
       "score": 15
     },
     "ai/claw-api-client": {
-      "fingerprint": "7313146083b73126",
+      "fingerprint": "cffa59baa066b7df",
       "score": 40
     },
     "gpu/ec-gpu-gen": {
@@ -134,7 +134,7 @@
       "score": 28
     },
     "ai/llm-serving-ops": {
-      "fingerprint": "69346b9863acb66f",
+      "fingerprint": "64d9823dc07f6785",
       "score": 28
     },
     "blockchain/cometbft-consensus": {
@@ -562,7 +562,7 @@
       "score": 14
     },
     "ai/claw-policy-engine": {
-      "fingerprint": "48bb1ea9a91bf31b",
+      "fingerprint": "58616ea68d628538",
       "score": 12
     },
     "ai/claw-recovery": {
@@ -626,7 +626,7 @@
       "score": 12
     },
     "ai/claw-mcp": {
-      "fingerprint": "fd655121c006580b",
+      "fingerprint": "b22be076cea0f3a6",
       "score": 10
     },
     "ai/claw-task-team": {

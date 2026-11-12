@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BlockContractViz from "./viz/BlockContractViz";
+import ParamBudgetViz from "./viz/ParamBudgetViz";
+import ResidualGradientViz from "./viz/ResidualGradientViz";
 
 export default function FeedForward() {
   return (
@@ -118,6 +120,11 @@ export default function FeedForward() {
           dimension)이고, depth는 그 block을 몇 번 쌓는지 정하는 layer
           수(model depth)입니다.
         </p>
+      </div>
+
+      <ParamBudgetViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           예를 들어 d_model=4096, layer 32개, head 32개(head dimension
           128)인 decoder-only model을 생각해 봅시다. Attention 한 layer의
@@ -150,6 +157,11 @@ export default function FeedForward() {
           역전파에서 y=x+F(x)의 x에 대한 Jacobian은 I+∂F/∂x로, 항등 항 I가
           그대로 남아 F가 작아도 gradient가 완전히 사라지지 않습니다.
         </p>
+      </div>
+
+      <ResidualGradientViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           예를 들어 32개 layer 각각의 update가 gradient를 0.9배로 줄인다면,
           residual 없이 F만 곱했을 때는 0.9³²≈0.034로 3.4%만 남습니다.

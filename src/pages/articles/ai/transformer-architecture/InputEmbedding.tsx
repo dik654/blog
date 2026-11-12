@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PositionSignalViz from "./viz/PositionSignalViz";
+import SinusoidScaleViz from "./viz/SinusoidScaleViz";
 
 export default function InputEmbedding() {
   return (
@@ -30,6 +31,8 @@ export default function InputEmbedding() {
           의미를 대신하는 것이 아니라 이 순서 구분에 필요한 좌표를 추가한다.
         </p>
       </div>
+
+      <SinusoidScaleViz />
 
       <ExplainedFormula
         question="Sinusoidal encoding은 하나의 position을 여러 시간 척도로 어떻게 표현하는가?"

@@ -5,7 +5,10 @@ import {
   StructuredGenerationLocator,
   StructuredGenerationMapReturn,
 } from "../shared/StructuredGenerationLocator";
+import DecodingMaskStepViz from "./viz/DecodingMaskStepViz";
+import DerivationStepsViz from "./viz/DerivationStepsViz";
 import { FormalLanguageViz } from "./viz/ModernGrammarViz";
+import XGrammarCheckSplitViz from "./viz/XGrammarCheckSplitViz";
 
 export default function GrammarConstrainedGenerationArticle() {
   return (
@@ -114,6 +117,7 @@ export default function GrammarConstrainedGenerationArticle() {
             },
           ]}
         />
+        <DerivationStepsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 <code>S ⇒ array ⇒ [ value ] ⇒ [ 0 ]</code>처럼 start
@@ -129,6 +133,7 @@ export default function GrammarConstrainedGenerationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Grammar가 다음 token 후보를 미리 걸러내면 decoding을 제약합니다
         </h2>
+        <DecodingMaskStepViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Derivation은 완성된 string이 유효한지 사후에 판정하는 절차였습니다.
@@ -227,6 +232,7 @@ export default function GrammarConstrainedGenerationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           XGrammar는 이 검사를 vocabulary 규모에서 감당하게 만듭니다
         </h2>
+        <XGrammarCheckSplitViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Grammar-constrained decoding을 그대로 구현하면 매 step마다 vocabulary 전체 token을 하나씩 grammar에 넣어 봐야 합니다. 수만 개

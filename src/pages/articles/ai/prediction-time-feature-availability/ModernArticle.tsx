@@ -6,6 +6,8 @@ import {
   FeatureAvailabilityReturn,
 } from "../shared/EvaluationContractPathLocator";
 import PredictionTimeFeatureFlowViz from "./PredictionTimeFeatureFlowViz";
+import CutoffFilterViz from "./CutoffFilterViz";
+import RevisionJoinViz from "./RevisionJoinViz";
 
 export default function PredictionTimeFeatureArticle() {
   return (
@@ -50,6 +52,9 @@ export default function PredictionTimeFeatureArticle() {
           <p>
             <code>recent_risk</code>라는 숫자만 저장하면 왜 검사 결과가 빠졌는지 알 수 없습니다. 환자와 원본 기록의 식별자, 사건·도착 시각, 집계 구간, 결합 규칙, 누락 대체 규칙과 버전을 함께 남겨야 합니다. 그래야 10시 입력과 10시 20분 뒤 다시 조회한 입력이 왜 다른지 설명할 수 있습니다.
           </p>
+        </div>
+        <CutoffFilterViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <pre aria-label="예측 시점에 사용할 기록을 고르는 설명용 SQL">
             <code>{`-- 같은 환자의 원본 기록만 찾습니다.\nWHERE patient_id = :patient_id\n-- 예측 뒤에 일어난 사건을 먼저 제외합니다.\n  AND event_at <= :cutoff\n-- 과거 사건이어도 늦게 도착한 기록은 제외합니다.\n  AND available_at <= :cutoff\n-- 벽시계가 같다면 고정한 snapshot 위치까지만 읽습니다.\n  AND commit_offset <= :cutoff_offset`}</code>
           </pre>
@@ -116,6 +121,9 @@ export default function PredictionTimeFeatureArticle() {
           <p>
             도착 시각을 지켜도 전체 자료로 미리 학습한 scaler, 미래 수정본을 읽는 최신값 결합, 배치와 온라인에서 서로 다른 누락 대체 규칙이 남을 수 있습니다. 원본 도착 경계, fold 안에서만 학습한 상태, 시점 일치 결합(point-in-time join), 배치·온라인 동등성을 서로 다른 검사로 유지해야 합니다.
           </p>
+        </div>
+        <RevisionJoinViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Feast 0.66.0의 공식 문서는 기본 시점 일치 결합이 사건 시각만 제한하며, 당시 실제로 존재한 수정본까지 제한하려면 <code>filter_by_created_timestamp=True</code>가 필요하다고 구분합니다. 이 옵션도 생성 시각 필드가 실제 도착 시각을 뜻한다는 전제가 있어야 합니다. BigQuery의 공식 함수 역시 대상별 입력 마감에 맞는 feature timestamp를 요구합니다.
           </p>

@@ -9,6 +9,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ImitationLearningAndPolicyGeneralizationViz from "./imitation-learning-and-policy-generalization/viz/ImitationLearningAndPolicyGeneralizationViz";
 import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "./shared/EmbodiedVisionLocator";
 import EmbodiedProcessOverviewViz from "./shared/EmbodiedProcessOverviewViz";
+import RandomizationCoverageViz from "./imitation-learning-and-policy-generalization/viz/RandomizationCoverageViz";
 
 export default function ImitationLearningAndPolicyGeneralizationArticle() {
   return (
@@ -298,6 +299,8 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
             },
           ]}
         />
+
+        <RandomizationCoverageViz />
 
         <ProgressiveDetail
           title="데이터를 늘렸는데도 실패가 남는 두 사례"

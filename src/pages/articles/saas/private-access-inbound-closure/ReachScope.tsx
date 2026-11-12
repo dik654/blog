@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ScopeViz from "./viz/ScopeViz";
+import LateralTrustViz from "./viz/LateralTrustViz";
 
 export default function ReachScope() {
   return (
@@ -88,6 +89,9 @@ export default function ReachScope() {
       <h3 id="lateral-reach" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         내부를 신뢰하면 한 번의 통과가 전부를 엽니다
       </h3>
+
+      <LateralTrustViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           문제를 키우는 것은 경로 자체가 아니라 그 경로를 통과한 요청을 다르게 대우하는 관행입니다. 많은 내부

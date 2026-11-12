@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import QLoraDetailViz from "./viz/QLoraDetailViz";
+import QloraPeakShareViz from "./viz/QloraPeakShareViz";
 
 export default function QLoRA() {
   return (
@@ -53,6 +54,7 @@ y&=\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x\\
         assumptions={["Base quantizer·block size·scale dtype·compute dtype·kernel을 함께 기록합니다.", "Frozen base에 gradient/optimizer state를 만들지 않는지 runtime에서 확인합니다.", "Dequantized weight는 원래 full-precision W와 같지 않으므로 full-precision LoRA와 paired quality를 비교합니다."]}
         interpretation="GPU에는 4-bit code만 영구 저장하더라도 matmul 경로는 bf16 값을 사용하거나 fused dequantize를 수행할 수 있습니다. Adapter는 그 위에서 학습되며 base code는 바뀌지 않습니다."
       />
+      <div className="not-prose my-8"><QloraPeakShareViz /></div>
       <ExplainedFormula
         question="QLoRA가 peak memory를 줄이는 항과 그대로 남는 항을 어떻게 구분할까요?"
         idea={<>Base storage, quantization metadata, adapter parameter·gradient·optimizer, activation과 workspace를 별도 장부로 더합니다. Parameter bit만 계산하면 activation peak와 temporary dequant workspace를 놓칩니다.</>}

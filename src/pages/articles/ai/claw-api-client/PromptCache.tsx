@@ -1,4 +1,6 @@
 import PromptCacheViz from "./viz/PromptCacheViz";
+import PrefixMatchViz from "./viz/PrefixMatchViz";
+import TokenWeightedViz from "./viz/TokenWeightedViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 
@@ -75,6 +77,10 @@ export default function PromptCache() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           변하지 않는 내용을 앞에, 매번 바뀌는 내용을 뒤에 둔다
         </h3>
+        <div className="not-prose my-8">
+          <PrefixMatchViz />
+        </div>
+
         <p className="leading-7">
           일반적으로 stable tool schema, system instruction, 긴 reference
           context를 앞쪽에 두고 timestamp, request ID와 이번 user input을 뒤에
@@ -125,6 +131,10 @@ export default function PromptCache() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           hit rate보다 token-weighted 비용을 본다
         </h3>
+        <div className="not-prose my-8">
+          <TokenWeightedViz />
+        </div>
+
         <p className="leading-7">
           짧은 prefix 열 번 hit와 매우 긴 prefix 한 번 miss를 단순 request hit
           rate로 비교하면 실제 비용을 놓칩니다. uncached input, cache read,

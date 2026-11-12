@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SFTBoundaryViz from "./viz/SFTBoundaryViz";
+import GlobalBatchViz from "./viz/GlobalBatchViz";
 
 const decisions = [
   ["Checkpoint", "base · instruct · distilled 중 어느 policy에서 시작하는가"],
@@ -121,6 +122,11 @@ Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{학습할 token 수}}\\
         </p>
 
         <h3>YAML 숫자를 복사하기 전에 token budget을 다시 계산한다</h3>
+      </div>
+
+      <GlobalBatchViz />
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-8">
           Open-R1 recipe는 특정 checkpoint와 GPU topology의 실행 예시입니다. GPU 수를 바꾸면 per-device batch와 gradient
           accumulation을 조정해 global batch를 유지합니다.

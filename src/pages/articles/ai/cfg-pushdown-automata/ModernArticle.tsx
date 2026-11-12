@@ -8,6 +8,8 @@ import {
   StructuredGenerationMapReturn,
 } from "../shared/StructuredGenerationLocator";
 import { PushdownStackViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
+import CfgToPdaTraceViz from "./viz/CfgToPdaTraceViz";
+import GlrForkViz from "./viz/GlrForkViz";
 
 export default function CfgPushdownAutomataArticle() {
   return (
@@ -182,6 +184,7 @@ export default function CfgPushdownAutomataArticle() {
           output="stack과 w가 동시에 비면 accept, 아니면 reject"
           repeatUntil="Stack이 비거나 더 이상 적용할 규칙이 없을 때까지 반복합니다."
         />
+        <CfgToPdaTraceViz />
         <p className="text-sm leading-7 text-muted-foreground">
           Nonterminal 선택(어떤 production을 고를지)이 여러 개일 수 있어 이 construction은 원래 비결정적(nondeterministic)입니다. 실제 top-
           down parser는 다음 몇 토큰을 미리 보는 lookahead로 이 선택을 결정적으로 좁히거나 여러 선택지를 동시에 추적합니다 — 다음 section의 grammar-
@@ -214,6 +217,9 @@ export default function CfgPushdownAutomataArticle() {
             parsing table로 다음 action(shift 또는 reduce)을 결정적으로 골라
             stack을 하나만 유지합니다.
           </p>
+        </div>
+        <GlrForkViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             문법이 모호해 같은 lookahead에서 다음 action이 둘 이상이면 LR
             table은 충돌합니다. <strong>GLR parsing</strong>은 이 지점에서

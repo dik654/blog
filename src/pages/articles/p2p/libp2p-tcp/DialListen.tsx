@@ -1,4 +1,5 @@
 import AlgorithmBlock from "@/components/ui/algorithm-block";
+import InboundAdmissionViz from "./viz/InboundAdmissionViz";
 
 export default function DialListen() {
   return (
@@ -23,6 +24,9 @@ export default function DialListen() {
           Timeout, refusal, unreachable, cancellation은 서로 다른 label로 남기고, future를
           버렸을 때 socket과 timer도 사라지는지 확인합니다.
         </p>
+      </div>
+      <InboundAdmissionViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Listen은 local multiaddr를 bind하고 OS가 정한 실제 address를
           <code>NewAddress</code>로 알립니다. 예를 들어 port 0을 요청하면 advertised port는

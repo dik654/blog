@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import TrainingRecipeViz from "./viz/TrainingRecipeViz";
+import WarmupScheduleViz from "./viz/WarmupScheduleViz";
 
 export default function Training() {
   return (
@@ -23,6 +24,8 @@ export default function Training() {
           어떤 failure를 막는지, checkpoint resume 때 어떤 state를 보존하는지 봅니다.
         </p>
       </div>
+
+      <WarmupScheduleViz />
 
       <ExplainedFormula
         question="Warmup 이후 learning rate를 왜 step 수의 제곱근에 반비례하게 낮추는가?"

@@ -7,6 +7,7 @@ import { codeRefs } from "./codeRefs";
 import { cometbftTree } from "./fileTrees";
 import { officialCometBFTCodeRefs } from "./officialCodeRefs";
 import CometBFTArchFlowViz from "./viz/CometBFTArchFlowViz";
+import CrashReplayViz from "./viz/CrashReplayViz";
 
 const COMMIT = "0880b4d378f347ab16e54ec677ff50d803f37d62";
 const SOURCE = `https://github.com/cometbft/cometbft/tree/${COMMIT}`;
@@ -124,6 +125,7 @@ export default function Overview() {
           transaction을 다시 제출할 수 있습니다. +2/3 precommit은 모았지만 block bytes가 없으면 consensus state는 그 hash의 parts를
           받을 때까지 application 실행으로 넘어가지 않습니다.
         </p>
+        <CrashReplayViz />
         <p>
           Application Commit 뒤 CometBFT State를 저장하기 전에 멈춘 경우는 더 조심해야 합니다. Restart handshake는 BlockStore와
           저장된 FinalizeBlock response, application height·AppHash, CometBFT State를 비교해 빠진 단계를 재생합니다.

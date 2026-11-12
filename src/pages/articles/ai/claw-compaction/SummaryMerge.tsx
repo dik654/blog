@@ -1,4 +1,5 @@
 import ContinuousMergeViz from "./viz/ContinuousMergeViz";
+import FlattenMergeViz from "./viz/FlattenMergeViz";
 import MergeSummaryViz from "./viz/MergeSummaryViz";
 
 const ACTUAL_MERGE = [
@@ -87,6 +88,8 @@ export default function SummaryMerge() {
           </div>
         ))}
       </div>
+
+      <FlattenMergeViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>두 번째 cycle을 작은 예제로 펼쳐 봅니다</h3>

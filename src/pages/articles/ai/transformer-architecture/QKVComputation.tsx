@@ -4,6 +4,7 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import AttentionContractViz from "./viz/AttentionContractViz";
+import CausalMaskRowViz from "./viz/CausalMaskRowViz";
 
 export default function QKVComputation({
   onCodeRef,
@@ -91,6 +92,11 @@ export default function QKVComputation({
           Softmax에 들어가기 전의 scaled dot-product 원값을 attention logit이라 부릅니다. 거기에 mask를 더한 뒤 row마다 softmax를 적용해 합이
           1인 확률표로 만든 것이 attention matrix입니다. 이름은 둘이지만 같은 [n,n] tensor의 값이 계산 도중 바뀐 것뿐입니다.
         </p>
+      </div>
+
+      <CausalMaskRowViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Query가 두 번째 token(&quot;사람을&quot;) 위치이고 세 key와의 scaled score(logit)가 각각 1.0, 2.0, 3.0이라고 합시다. 이
           query는 causal mask 때문에 세 번째(미래) key를 볼 수 없습니다. 그래서 mask가 그 자리에 −∞를 더해 logit을 [1.0, 2.0, −∞]로 만듭니다.

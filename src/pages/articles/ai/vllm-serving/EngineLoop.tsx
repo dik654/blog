@@ -8,6 +8,7 @@ import RequestLifecycleViz from "./viz/RequestLifecycleViz";
 import PrefillDecodeViz from "./viz/PrefillDecodeViz";
 import IterationSlotTraceViz from "./viz/IterationSlotTraceViz";
 import ResourceGateViz from "./viz/ResourceGateViz";
+import SchedulerStepViz from "./viz/SchedulerStepViz";
 const FEASIBILITY_TERMS = [
   {
     symbol: "n_{tok}",
@@ -250,6 +251,9 @@ M_{KV}^{need} &\le \underbrace{M_{KV}^{free}}_{\text{동시에 만족할 상한}
             않았습니다. 516–523행에서 아직 계산하지 않은 token 수를 구하고 남은
             token_budget으로 제한합니다.
           </p>
+        </div>
+        <SchedulerStepViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             사례의 두 번째 실행에서 A는 num_tokens_with_spec=6,
             num_computed_tokens=4, num_output_placeholders=0입니다. 차이는 2이고

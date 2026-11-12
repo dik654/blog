@@ -4,6 +4,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { codeRefs } from "./codeRefs";
 import ResizeViz from "./viz/ResizeViz";
+import AliasingViz from "./viz/AliasingViz";
 
 export default function Preprocessing({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -45,7 +46,11 @@ export default function Preprocessing({ onCodeRef }: { onCodeRef: (key: string, 
           결과가 달라집니다. 정규화를 먼저 하고 리사이즈하면 보간이 평균을 뺀 값 위에서 일어나 가장자리 처리가
           달라지기 때문입니다.
         </p>
+      </div>
 
+      <AliasingViz />
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           축소할 때 계단 현상을 줄이는 처리를 켜는지도 실제로 영향을 줍니다. 고해상도 사진을 224픽셀로 줄이면
           픽셀을 버리는 양이 많은데, 이 처리를 끄면 가는 무늬가 엉뚱한 패턴으로 바뀌어 그 자체가 특징처럼

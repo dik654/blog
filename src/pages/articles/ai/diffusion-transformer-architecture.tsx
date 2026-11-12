@@ -6,6 +6,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DiffusionTransformerBlockViz from "./diffusion-transformer-architecture/viz/DiffusionTransformerBlockViz";
+import PatchTokenGridViz from "./diffusion-transformer-architecture/viz/PatchTokenGridViz";
+import SamplingCostViz from "./diffusion-transformer-architecture/viz/SamplingCostViz";
+import StreamTopologyViz from "./diffusion-transformer-architecture/viz/StreamTopologyViz";
 import {
   DiffusionLearningLocator,
   DiffusionLearningMapReturn,
@@ -31,6 +34,9 @@ export default function DiffusionTransformerArchitectureArticle() {
             Text를 생성하는 decoder-only LLM과 block이 닮았어도 objective와 output contract는
             다릅니다.
           </p>
+        </div>
+        <PatchTokenGridViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             먼저 latent grid를 patch로 잘라 token sequence로 바꿉니다. 64×64 latent를 2×2 patch로 자르면 32×32, 즉 1024 token이
             됩니다. Patch를 4×4로 키우면 token은 256개로 줄지만 한 token이 더 넓은 공간을 뭉칩니다. Patch size는 attention 비용과 detail
@@ -126,6 +132,7 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
         <h2 className="mb-6 text-2xl font-bold">
           Single·dual·joint stream은 text와 image가 만나는 위치를 다르게 고릅니다
         </h2>
+        <StreamTopologyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Text token과 image token은 길이와 통계가 다릅니다. Dual-stream 설계는 modality별 weight로 먼저 처리한 뒤 attention에서 정보를
@@ -179,6 +186,7 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
         <h2 className="mb-6 text-2xl font-bold">
           Backbone이 빨라도 여러 번 호출하는 sampling 비용은 별도로 남습니다
         </h2>
+        <SamplingCostViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             DiT forward 한 번의 비용은 token 수·width·depth·attention kernel에 좌우됩니다.

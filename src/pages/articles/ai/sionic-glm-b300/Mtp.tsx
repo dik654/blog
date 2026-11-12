@@ -1,5 +1,6 @@
 import { GLM_B300_PROJECT_MEASUREMENTS as M } from "@/content/sionic-glm-b300";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import MtpCycleViz from "./viz/MtpCycleViz";
 
 export default function Mtp() {
   const a = M.acceptanceRegression;
@@ -9,6 +10,9 @@ export default function Mtp() {
         MTP: forward를 없애지 않고 여러 token에 나눠 쓴다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div className="not-prose my-6">
+          <MtpCycleViz />
+        </div>
         <p className="leading-7">
           일반 decode는 main model forward마다 다음 token 하나를 확정한다. MTP 기반 speculative decoding은 model-native draft
           path가 future token 후보를 만들고 main model이 여러 위치를 한 번에 검증한다.</p>

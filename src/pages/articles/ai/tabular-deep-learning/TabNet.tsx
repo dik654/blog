@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TabNetViz from "./viz/TabNetViz";
+import TabNetPriorViz from "./viz/TabNetPriorViz";
 
 export default function TabNet() {
   return (
@@ -104,6 +105,8 @@ x^{(s)}&=\underbrace{M^{(s)}\odot x}_{\text{이번 step이 읽을 입력}}.
         ]}
         interpretation="Mask가 0이면 그 feature는 현재 step 입력에서 제거됩니다. 그러나 뒤의 nonlinear block과 correlated feature가 있으므로 mask 숫자를 곧바로 원인 효과로 읽을 수는 없습니다."
       />
+
+      <TabNetPriorViz />
 
       <ExplainedFormula
         question="Relaxation parameter γ는 이미 선택한 feature의 재사용 가능성을 어떻게 바꿀까?"

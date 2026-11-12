@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OverviewViz from "./viz/OverviewViz";
+import TwoClockCutoffViz from "./viz/TwoClockCutoffViz";
+import SplitBoundaryViz from "./viz/SplitBoundaryViz";
 
 export default function Overview() {
   return (
@@ -22,6 +24,9 @@ export default function Overview() {
           <li>8월 1일 14:20의 연체 처리 결과를 09:00 prediction row에 넣어도 될까요?</li>
           <li>같은 고객이 train과 validation에 섞여도 random split이면 leakage가 자동으로 사라질까요?</li>
         </ol>
+      </div>
+      <TwoClockCutoffViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           세 답은 모두 <strong>아니요</strong>입니다. Event time과 available time이
           모두 cutoff 이하여야 하며, 반복 고객은 배포 단위에 맞는 group·time
@@ -86,6 +91,9 @@ x_j(e,t_0)&=\underbrace{g_j\!\left(\mathcal R(e,t_0)\right)}_{\text{허용된 re
           feature 생성 과정으로 들어간 경우를 뜻합니다. 전체 dataset 평균으로 결측값을 채우거나 validation label을 target encoding에 포함하면
           <em> split leakage</em>가 생깁니다.
         </p>
+      </div>
+      <SplitBoundaryViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           예측 뒤의 event를 집계하면 <em>temporal leakage</em>, 결과 처리 column을 원인처럼 쓰면 <em>target proxy leakage</em>입니다. 무작위
           split은 사용자나 시간이 반복되는 문제에서 이 관계를 자동으로 끊지 못합니다.

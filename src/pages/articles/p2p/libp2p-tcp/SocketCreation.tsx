@@ -1,3 +1,5 @@
+import PortReuseFallbackViz from "./viz/PortReuseFallbackViz";
+
 export default function SocketCreation() {
   return (
     <section id="socket-creation" className="mb-16 scroll-mt-20">
@@ -22,6 +24,9 @@ export default function SocketCreation() {
           <code>Config::port_reuse(true)</code>가 아니라 Bob에게 거는 이 dial의
           <code>DialOpts::port_use</code>가 결정합니다.
         </p>
+      </div>
+      <PortReuseFallbackViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           재사용하려던 local address가 사라져 <code>AddrNotAvailable</code>이 나면 source는
           그 socket을 버리고 새 port로 한 번 다시 dial합니다. 따라서 “reuse를 요청했다”와

@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { MetricContractViz } from "./viz/ModernEvaluationViz";
+import ReducerVoteViz from "./viz/ReducerVoteViz";
 
 export default function EvaluationMetricsArticle() {
   return (
@@ -170,6 +171,7 @@ export default function EvaluationMetricsArticle() {
             먼저 각 환자 안에서 줄이고, 환자 세 명을 평균해야 합니다.
           </p>
         </div>
+        <ReducerVoteViz />
         <ExplainedFormula
           question="반복 관측이 많은 unit이 전체 점수를 독점하지 않게 어떻게 집계하나요?"
           idea={

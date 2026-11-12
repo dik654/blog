@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { McpCorrelationViz, McpLifecycleViz } from "./viz/ModernMcpViz";
+import FrameCheckViz from "./viz/FrameCheckViz";
+import BridgeCallPathViz from "./viz/BridgeCallPathViz";
+import RetryTimelineViz from "./viz/RetryTimelineViz";
 
 function Lead({ children }: { children: React.ReactNode }) {
   return <p className="text-lg leading-8 text-foreground/90">{children}</p>;
@@ -79,6 +82,7 @@ export default function ModernMcpArticle() {
 
       <section id="stdio-jsonrpc" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Transport와 correlation</p><h2 className="mt-2 text-2xl font-bold">Byte frame을 읽는 것과 올바른 response를 받는 것은 다르다</h2></header>
+        <FrameCheckViz />
         <p>
           Pinned <code>McpStdioProcess</code>의 JSON-RPC helper는 <code>Content-Length</code> header와 빈 줄 뒤에 지정된 byte 수를 읽는 frame을 사용합니다. 그 안의 JSON을 parse한 다음에도 <code>jsonrpc</code>가 <code>2.0</code>인지, response ID가 보낸 request ID와 같은지 검사합니다. Frame length가 맞아도 ID가 2인데 기다리던 ID가 3이면 그 결과를 <code>docs.search</code>의 답으로 받아들이지 않습니다.
         </p>
@@ -98,6 +102,7 @@ export default function ModernMcpArticle() {
         <p>
           Claw는 server와 tool 이름을 정규화해 <code>mcp__server__tool</code> 형태의 qualified name을 만듭니다. <code>docs/search</code>는 <code>mcp__docs__search</code>가 됩니다. 이 namespacing은 서로 다른 server의 <code>search</code>가 이름만으로 충돌하는 문제를 줄이지만, normalize 결과 충돌·server reload·schema 변경까지 자동 해결하지는 않습니다.
         </p>
+        <BridgeCallPathViz />
         <p>
           Bridge는 server가 Connected인지, 발견 목록에 tool이 있는지 확인한 다음 manager를 통해 호출합니다. Pinned call path는 별도
           current-thread runtime을 만들고 discovery를 다시 수행한 뒤 tool을 호출하고 manager를 shutdown합니다. registry에 보인 장기 연결과
@@ -113,6 +118,7 @@ export default function ModernMcpArticle() {
 
       <section id="degraded-release" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">04 · Degraded와 배포</p><h2 className="mt-2 text-2xl font-bold">Timeout 뒤 retry는 새 request identity와 old response 처리를 함께 설계한다</h2></header>
+        <RetryTimelineViz />
         <p>
           Timeout, EOF, 잘못된 version·ID, child 종료는 모두 “검색 결과 없음”과 다릅니다. Manager가 connection을 reset하거나 한 번
           retry하더라도 첫 attempt가 실제 server에서 effect를 냈을 가능성을 지울 수는 없습니다. Read-only search와 write tool은 같은 retry

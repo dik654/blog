@@ -4,6 +4,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ModernCryptoTheoryViz from "./viz/ModernCryptoTheoryViz";
+import NonceReuseViz from "./viz/NonceReuseViz";
+import AtomicStoreViz from "./viz/AtomicStoreViz";
+import SecurityGameViz from "./viz/SecurityGameViz";
+import ReductionViz from "./viz/ReductionViz";
 
 export default function ModernCryptoTheoryArticle() {
   return <article className="space-y-14 [&_p]:leading-8 [&_h2]:text-2xl [&_h2]:font-bold [&_section]:space-y-5">
@@ -37,6 +41,7 @@ export default function ModernCryptoTheoryArticle() {
     <section id="why-parts" data-teach-level="2">
       <h2>5. 내용을 가리는 계산만으로는 부족합니다</h2>
       <p>사용처를 검사에 넣지 않으면 가게 A용 지시를 가게 B에서 해석할 여지가 생깁니다. 지시 번호를 기억하지 않으면 공격자는 이미 승인된 묶음을 그대로 재전송할 수 있습니다. 도착한 바이트가 진짜라는 사실과 지금 실행해도 된다는 판단을 분리하는 이유입니다.</p>
+      <NonceReuseViz />
       <p>한 비밀 아래 보호 계산의 구분 값을 재사용하는 것도 문제입니다. 일부 널리 쓰이는 방식에서는 서로 다른 두 내용을 같은 가림 값으로 덮게 되어 두 내용의 관계가 드러납니다. 한쪽 원문을 아는 공격자가 다른 원문까지 알아낼 수 있습니다. 구체적인 피해는 선택한 방식에 달려 있습니다.</p>
       <p>네트워크에서 사본을 두 번 받는 것 자체가 새 보호 계산을 두 번 한 것은 아닙니다. 송신자의 구분 값 중복 방지와 수신자의 중복 실행 방지를 각각 구현해야 합니다. 이 역할들에 이제 표준 이름을 붙이겠습니다.</p>
     </section>
@@ -51,6 +56,7 @@ export default function ModernCryptoTheoryArticle() {
     <section id="request-trace" data-teach-level="4">
       <h2>7. 7번 지시를 복원한 다음에도 처리 이력을 봅니다</h2>
       <p>민수는 비밀 K, N=7, P=<code>pay=30</code>, A=<code>shop=A</code>로 암호화합니다. 7은 설명용 정수이며 실제 호출에는 알고리즘이 요구하는 바이트 길이로 인코딩합니다. 암호문 바이트를 손으로 지어내지는 않겠습니다. 이 글은 특정 라이브러리 실행 결과를 주장하지 않습니다.</p>
+      <AtomicStoreViz />
       <p>지연은 받은 N, A, C와 자신이 가진 K를 복호화에 넣습니다. 유효한 입력이면 <code>pay=30</code>을 얻습니다. 잔액 100원과 실행 권한을 확인한 뒤 70원으로 바꾸면서 7번을 처리했다고 함께 기록합니다. 이 두 기록을 따로 저장하다 장애가 나면 같은 지시를 다시 실행할 수 있으므로 하나의 일관된 저장 작업으로 묶습니다.</p>
       <AlgorithmBlock title="송금 수신의 개념 절차 (의사코드)" input={["K: 허가된 상대와 공유한 키", "N=7, A='shop=A', C: 수신한 보호 묶음", "balance=100, processed: 처리 이력 (가정)"]} steps={[{code:"P ← AEAD_DECRYPT(K, N, A, C)",note:"실패를 반환하면 아래 단계를 실행하지 않습니다."},{code:"지시의 형식·사용처·권한을 검증한다",note:"복호화 성공 자체가 송금 권한을 주지는 않습니다."},{code:"원자적 저장 작업을 시작한다"},{code:"processed에 (키 세대, 지시 번호 7)가 있으면 거절한다"},{code:"balance ≥ 30을 확인하고 balance ← balance − 30"},{code:"processed에 (키 세대, 7)를 추가하고 저장을 확정한다"}]} output="첫 수신: 70원. 같은 지시 재수신: 70원 유지." />
       <p>원자적 저장은 전부 반영하거나 전부 취소하는 저장 방식입니다. 7번 지시의 결과가 70원에 머무는 이유는 암호 검사와 이 저장 절차가 함께 있기 때문입니다. 원문 표준이 어느 부분을 규정하는지 확인하겠습니다.</p>
@@ -64,6 +70,7 @@ export default function ModernCryptoTheoryArticle() {
     </section>
     <section id="security-game" data-teach-level="6">
       <h2>9. 한 번 맞힌 결과와 보안 주장은 다릅니다</h2>
+      <SecurityGameViz />
       <p>공격자가 30원과 90원 지시 중 무엇이 보호되었는지 맞히게 합니다. 사용처와 길이는 같게 맞추고 둘 중 하나를 같은 확률로 고릅니다. 아무 정보가 없어도 절반은 맞습니다. 공격자가 무엇을 볼 수 있고 어떤 추가 암호화·복호화를 요청할 수 있는지도 먼저 정해야 공정한 비교가 됩니다.</p>
       <ExplainedFormula question="우연히 맞힐 확률보다 얼마나 더 잘 구분할까요?" idea="성공확률에서 정보가 없는 기준 1/2을 빼고 방향을 없애기 위해 절댓값을 취합니다." formula={String.raw`Adv_{\mathcal A}(\lambda)=\left|\Pr[b'=b]-\frac12\right|`} annotatedFormula={String.raw`Adv_{\mathcal A}(\lambda)=\underbrace{\left|\Pr[b'=b]-\frac12\right|}_{\text{동일 확률 추측과의 격차}}`} operations={[{expression:String.raw`\Pr[b'=b]`,annotation:["공격자의 추측과 실제 선택이 일치할 확률입니다."]},{expression:String.raw`\frac12`,annotation:["두 지시를 똑같은 확률로 고른 경우의 기준입니다."]}]} terms={[{symbol:"𝒜",name:"공격자",description:"게임이 허용한 시간·메모리·질의 안에서 추측합니다."},{symbol:"λ",name:"보안 매개변수",description:"키와 입력 크기의 계열을 정합니다."},{symbol:"b, b′",name:"실제 선택과 추측",description:"30원 또는 90원에 대응하는 두 선택입니다."}]} assumptions={["선택 b는 균등하고 두 메시지는 같은 길이입니다.","공격자가 볼 정보와 추가 질의, 시간·메모리 한도를 고정합니다.","문헌에 따라 advantage를 두 배로 정의하므로 정의를 비교해야 합니다."]} interpretation="성공확률이 0.51이라고 가정하면 격차는 0.01입니다. 100번 중 51번 맞힌 실험만으로 실제 성공확률이 0.51이라고 확정하지는 못합니다." />
       <div id="paper-goldwasser-micali"><CitationBlock source="Goldwasser–Micali · Probabilistic Encryption" citeKey={1} type="paper" href="https://doi.org/10.1016/0022-0000(84)90070-9"><p>확률적 암호화 연구는 무엇을 숨긴다는 것인지 계산 능력이 제한된 공격자를 기준으로 정의합니다. 위 식은 이 글에서 채택한 구분 게임의 표기이며 해당 논문의 식을 그대로 인용한 것은 아닙니다. 복호화의 정확성과 기밀성 증명을 나눠 읽는 이론적 근거로 사용합니다.</p></CitationBlock></div>
@@ -72,6 +79,7 @@ export default function ModernCryptoTheoryArticle() {
     </section>
     <section id="assumption-composition" data-teach-level="7">
       <h2>10. 계산의 가정과 실제 사용 조건을 함께 지켜야 합니다</h2>
+      <ReductionViz />
       <p>계산적 보안은 정해진 자원 안에서 공격 성공률이 작다는 주장입니다. 환원 증명은 암호를 깨는 공격자를 부품으로 사용해 어렵다고 가정한 수학 문제를 푸는 프로그램을 구성합니다. 예를 들어 성공확률이 100분의 1로 줄어드는 환원이라면 공격자의 0.01 격차로 얻는 문제 풀이 성공 기여는 0.0001 수준입니다(가정). 이 손실과 늘어난 계산 시간을 빼고 보안 강도를 말할 수 없습니다.</p>
       <p>정보 이론적 보안은 계산 능력을 무한히 주어도 지정한 관찰에서 비밀 정보를 얻지 못한다는 뜻입니다. 메시지 길이만큼 균등한 비밀을 한 번만 쓰는 일회용 패드가 대표적입니다. 비밀을 재사용하거나 생성·전달 과정이 새면 그 전제가 사라집니다. 한 부품의 성질이 전체 서비스로 자동 확대되는 것도 아닙니다.</p>
       <p>사용 맥락도 별도로 고정합니다. <code>approve:30</code>이라는 같은 바이트를 한 서비스에서는 30원 지출 승인으로, 다른 서비스에서는 권한 30개 부여로 해석하면 서명이 유효해도 의도가 달라집니다(가정). 프로토콜·버전·사용처를 명확하게 인코딩해 서명 대상에 포함하는 방법을 도메인 분리라고 합니다. 같은 키를 여러 용도로 쓰는 문제와 nonce 중복 문제를 이 이름 하나로 모두 해결할 수는 없습니다.</p>

@@ -5,6 +5,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import CosmosCoreLocator, { CosmosCoreMapReturn } from "../CosmosCoreLocator";
 import BlockExecutorTraceViz from "./viz/BlockExecutorTraceViz";
+import AppHashLagViz from "./viz/AppHashLagViz";
 import { codeRefs } from "./codeRefs";
 import { cometbftExecutionTree } from "./fileTrees";
 
@@ -72,6 +73,9 @@ export default function ModernCometBFTExecutionArticle() {
               호출합니다. 첫 단계인 <code>Block.ValidateBasic</code>은 block 내부 형식과 hash 관계를 검사합니다. 그다음 현재 C40의
               version, chain ID, 다음 height, LastBlockID와 Header commitment를 대조합니다.
             </p>
+          </div>
+          <AppHashLagViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               B41 Header의 AppHash는 B41 실행 결과 A41이 아니라 <strong>실행 전 commitment A40</strong>이어야 합니다. A41은 다음
               B42 Header에 들어갑니다. 같은 방식으로 ValidatorsHash와 ConsensusHash, LastResultsHash도 C40이 기억하는 이전 결과와

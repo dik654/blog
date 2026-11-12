@@ -5,6 +5,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { codeRefs } from "./codeRefs";
 import PoolingViz from "./viz/PoolingViz";
+import PatchIndexCostViz from "./viz/PatchIndexCostViz";
 
 export default function Pooling({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -71,6 +72,8 @@ export default function Pooling({ onCodeRef }: { onCodeRef: (key: string, ref: C
           내려야 합니다.
         </p>
       </div>
+
+      <PatchIndexCostViz />
 
       <div className="mt-6">
         <ProgressiveDetail

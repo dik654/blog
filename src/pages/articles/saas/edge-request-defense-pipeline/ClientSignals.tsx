@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SignalViz from "./viz/SignalViz";
+import ThresholdCostViz from "./viz/ThresholdCostViz";
 
 export default function ClientSignals() {
   return (
@@ -51,6 +52,8 @@ export default function ClientSignals() {
           같은 확인을 거칩니다.
         </p>
       </div>
+
+      <ThresholdCostViz />
 
       <ExplainedFormula
         question="임계를 어디에 둘지 어떻게 정합니까"

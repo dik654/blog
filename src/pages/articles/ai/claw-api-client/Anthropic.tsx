@@ -1,4 +1,6 @@
 import AnthropicSseViz from "./viz/AnthropicSseViz";
+import BlockBufferViz from "./viz/BlockBufferViz";
+import SseFramingViz from "./viz/SseFramingViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const streamState = [
@@ -69,6 +71,10 @@ export default function Anthropic() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           SSE parser는 transport framing과 provider event를 분리한다
         </h3>
+        <div className="not-prose my-8">
+          <SseFramingViz />
+        </div>
+
         <p className="leading-7">
           HTTP chunk 하나가 SSE event 하나라는 보장은 없습니다. byte stream을
           SSE framing 규칙에 따라 event로 만든 뒤, <code>event</code>와
@@ -123,6 +129,10 @@ export default function Anthropic() {
           error가 오면 해당 tool call은 incomplete로 폐기하고 executor에 넘기지
           않습니다.
         </p>
+        <div className="not-prose my-8">
+          <BlockBufferViz />
+        </div>
+
         <p className="leading-7">
           예를 들어 block 0의 조각이 <code>{`{"path":"src/`}</code>, block
           1의 조각이 <code>{`{"query":"auth"}`}</code>, 다시 block 0의

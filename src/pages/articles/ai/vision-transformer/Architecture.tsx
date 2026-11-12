@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ArchitectureViz from "./viz/ArchitectureViz";
+import AttentionScoreAreaViz from "./viz/AttentionScoreAreaViz";
 
 export default function Architecture() {
   return (
@@ -40,6 +41,7 @@ export default function Architecture() {
         assumptions={["설명을 위한 공통 loss 형태이며 DeiT의 hard/soft distillation과 inference head 결합 세부 설정을 구분합니다.", "Teacher architecture·checkpoint·training data와 augmentation이 전체 recipe 일부입니다.", "Teacher가 틀리는 slice에서는 student도 같은 오류를 전수받을 수 있습니다."]}
         interpretation="Distillation token은 attention 연산 자체를 바꾼 것이 아니라 서로 다른 supervision source를 token·head로 분리한 interface입니다."
       />
+      <AttentionScoreAreaViz />
       <ExplainedFormula
         question="Swin의 window attention은 global attention의 pair 수를 얼마나 줄일까?"
         idea={<>N개 token 전체를 서로 비교하면 N² score가 필요합니다. 각 window에 M²개 token이 있고 window 수가 N/M²라면 score 수는 window당 M⁴, 전체 N·M²에 비례합니다.</>}

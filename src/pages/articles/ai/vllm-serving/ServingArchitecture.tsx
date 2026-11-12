@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EngineBoundaryViz from "./viz/EngineBoundaryViz";
 import ParallelLayoutViz from "./viz/ParallelLayoutViz";
+import LatencyTimelineViz from "./viz/LatencyTimelineViz";
 const LATENCY_TERMS = [
   {
     symbol: "t_{queue}",
@@ -104,6 +105,7 @@ export default function ServingArchitecture() {
         <h2 className="mb-6 text-2xl font-bold">
           9. A의 첫 출력 45ms와 전체 65ms를 나눠 읽습니다
         </h2>
+        <LatencyTimelineViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             A가 대기한 시간은 10ms, 입력을 처리한 시간은 30ms, 접수·전달에 든

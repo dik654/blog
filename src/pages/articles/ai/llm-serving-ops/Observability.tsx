@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SignalControlViz from "./viz/SignalControlViz";
+import DiffInDiffViz from "./viz/DiffInDiffViz";
 
 const signals = [
   [
@@ -141,6 +142,8 @@ export default function Observability() {
           자동화이지만 결과를 되먹이지 않으면 closed-loop가 아닙니다.
         </p>
       </div>
+
+      <DiffInDiffViz />
 
       <ExplainedFormula
         question="한 번의 운영 변경이 실제로 사용자 SLI를 개선했다고 언제 말할 수 있는가?"

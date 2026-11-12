@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import WhenDLWinsViz from "./viz/WhenDLWinsViz";
+import ErrorCorrelationViz from "./viz/ErrorCorrelationViz";
 
 export default function WhenDLWins() {
   return (
@@ -52,6 +53,11 @@ export default function WhenDLWins() {
             판정에 넣습니다.
           </li>
         </ol>
+      </div>
+
+      <ErrorCorrelationViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           GBDT와 neural model의 error가 실제로 다를 때는 ensemble이 이득일 수
           있습니다. 그러나 평균 점수 두 개만 보고 고정 비율 blending을 걸면 같은

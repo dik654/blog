@@ -11,6 +11,7 @@ import VisionLanguageModelArchitectureViz, {
   MultimodalPathBoundary,
   VlmConnectorComparison,
 } from "./vision-language-model-architecture/viz/VisionLanguageModelArchitectureViz";
+import VisualInsertionPointViz from "./vision-language-model-architecture/viz/VisualInsertionPointViz";
 
 /**
  * 한 이미지가 visual token이 되어 LLM 입력에 합류하는 경로를 추적합니다.
@@ -183,6 +184,9 @@ export default function VisionLanguageModelArchitectureArticle() {
           모델마다 연결 부품과 삽입 위치가 다릅니다
         </h2>
         <VlmConnectorComparison />
+        <div className="mt-8">
+          <VisualInsertionPointViz />
+        </div>
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             LLaVA는 visual token을 text token 앞뒤에 이어 붙이므로 LLM 구조를 크게 바꾸지 않습니다.

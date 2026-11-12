@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import DecisionViz from "./viz/DecisionViz";
+import FailDirectionViz from "./viz/FailDirectionViz";
 
 export default function PerRequestDecision() {
   return (
@@ -70,6 +71,8 @@ export default function PerRequestDecision() {
           절은 그 수명이 접근 구조의 성질을 어떻게 바꾸는지만 다뤘습니다.
         </p>
       </div>
+
+      <FailDirectionViz />
 
       <div className="mt-6">
         <ProgressiveDetail

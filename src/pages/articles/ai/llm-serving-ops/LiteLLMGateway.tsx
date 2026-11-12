@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import GatewayPolicyViz from "./viz/GatewayPolicyViz";
 import RetryBoundaryViz from "./viz/RetryBoundaryViz";
+import RetryAmplificationViz from "./viz/RetryAmplificationViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -70,6 +71,11 @@ export default function LiteLLMGateway({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Retry 횟수보다 먼저 전체 deadline을 한곳에서 소유한다</h3>
+      </div>
+
+      <RetryAmplificationViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Client, gateway와 provider SDK가 각각 세 번씩 재시도하면 장애 중 backend 부하는 곱으로 커집니다. 더구나 앞선 시도가 이미 오래 기다렸다면 마지막
           시도는 성공하더라도 사용자의 deadline을 넘깁니다. 그래서 전체 deadline은 최상위 계층이 소유하고 하위 계층에는 남은 시간과 허용 시도 수를 전달하는 편이 안전합니다.

@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { TeeMemoryViz } from "../tee-foundations-viz";
+import MemoryPropertyViz from "./viz/MemoryPropertyViz";
+import PayrollPacketBoundaryViz from "./viz/PayrollPacketBoundaryViz";
 
 export default function ModernTeeMemoryArticle() {
   return (
@@ -17,6 +19,7 @@ export default function ModernTeeMemoryArticle() {
       <section id="private-shared" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · Private와 shared</p><h2 className="mt-2 text-2xl font-bold">I/O 경계에서는 host가 준 bytes를 다시 untrusted input으로 취급한다</h2></header>
         <p>Private page는 특정 enclave, VM 또는 realm에 귀속됩니다. 접근할 때 memory controller가 key를 고르고 CPU가 소유자와 주소 변환을 확인합니다. Shared page는 host나 device와 통신하려고 명시적으로 공개한 영역입니다.</p>
+        <PayrollPacketBoundaryViz />
         <p>Payroll packet은 shared buffer에서 길이와 형식을 검사한 뒤 private buffer로 복사합니다. 결과를 내보낼 때도 private state를 직접 가리키는 pointer 대신 새 protocol message를 만듭니다.</p>
         <div className="grid gap-3 md:grid-cols-2">
           {[
@@ -53,6 +56,7 @@ export default function ModernTeeMemoryArticle() {
           assumptions={["XEX-like 직관을 위한 모형이며 실제 vendor algorithm·metadata layout은 해당 specification을 따릅니다.", "Key·tweak reuse와 address canonicalization이 platform 규칙대로 동작합니다.", "Encryption만으로 freshness·ownership·replay resistance를 결론내리지 않습니다."]}
           interpretation="a≠b이면 보통 T(a)≠T(b)이므로 같은 P도 다른 ciphertext가 됩니다. 그러나 공격자가 old ciphertext와 metadata를 함께 replay할 수 있는지는 별도의 integrity·version 구조가 결정합니다."
         />
+        <MemoryPropertyViz />
         <p>기밀성은 평문 관찰을 어렵게 하고, 무결성은 허가받지 않은 변경을 탐지하거나 차단합니다. 예전의 유효한 block을 현재 상태로 되돌리는 공격은 최신성 검사가 막습니다.</p>
         <p>제품마다 방법도 다릅니다. 어떤 제품은 암호학적 integrity tree를 쓰고, 다른 제품은 page 소유권과 주소 검증을 결합합니다. 따라서 “memory encryption 지원”이라는 한 줄에서 이 세 성질을 모두 추론하면 안 됩니다.</p>
       </section>

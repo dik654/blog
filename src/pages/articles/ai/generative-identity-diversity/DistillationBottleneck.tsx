@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import DistillViz from "./viz/DistillViz";
+import DescriptionGridViz from "./viz/DescriptionGridViz";
 
 export default function DistillationBottleneck() {
   return (
     <section id="distillation-bottleneck" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">어휘가 천장이라던 진단이 사실은 가중치 문제였습니다</h2>
+      <DescriptionGridViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           성별 둘, 나이 셋, 얼굴형 셋, 이목구비 넷을 조합해 일흔두 개 묘사를 만들고 한 모델에서 각각 하나씩 생성했습니다. 채택된 인물은 열여덟 명이었고 2211쌍 중 215쌍이

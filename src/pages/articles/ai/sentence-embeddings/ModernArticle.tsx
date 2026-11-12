@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import EmbeddingPathLocator, { EmbeddingMapReturn } from "./EmbeddingPathLocator";
 import { SentenceVectorViz } from "./viz/ModernSentenceEmbeddingViz";
+import MaskPoolingPlotViz from "./viz/MaskPoolingPlotViz";
+import CosineDirectionViz from "./viz/CosineDirectionViz";
 
 export default function SentenceEmbeddingsArticle() {
   return <div className="space-y-16">
@@ -27,6 +29,7 @@ export default function SentenceEmbeddingsArticle() {
     <section id="pooling" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Mask pooling은 빈 칸을 빼고 실제 token만 평균합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>문장 A가 세 token이고 문장 B가 다섯 token이면 batch tensor는 둘 다 다섯 칸을 갖습니다. A의 뒤 두 칸은 정보가 아니라 shape를 맞추는 padding입니다. Mask를 곱하는 이유는 이 빈 state가 합에 기여하지 못하게 하기 위해서이고, mask 합으로 나누는 이유는 문장 길이가 달라도 <em>valid token 한 개당 평균</em>을 만들기 위해서입니다.</p></div>
+      <MaskPoolingPlotViz />
       <ExplainedFormula question="Padding을 제외한 token state 세 개에서 sentence vector를 어떻게 만드나요?" idea={<p>
             Mask가 1인 state만 합해 valid-token 수로 평균합니다. Norm으로 한 번 더 나눠 vector 길이를 1로 만들면 내적을 방향 유사도로 읽을 수 있습니다.
           </p>} formula={String.raw`\mathbf h_{\rm pool}=\frac{\sum_t m_t\mathbf h_t}{\sum_t m_t},\quad \mathbf z=\frac{\mathbf h_{\rm pool}}{\lVert\mathbf h_{\rm pool}\rVert_2}`} annotatedFormula={String.raw`\begin{aligned}\mathbf s&=\underbrace{\sum_{t=1}^{T}m_t\mathbf h_t}_{\text{PAD는 0으로 지우고 valid state만 합산}}\\&n=\underbrace{\sum_{t=1}^{T}m_t}_{\text{실제 token 수를 세어 길이 차이를 제거}}\\\mathbf h_{\rm pool}&=\underbrace{\mathbf s/n}_{\text{valid token 한 개당 평균을 계산}}\\\mathbf z&=\underbrace{\mathbf h_{\rm pool}/\lVert\mathbf h_{\rm pool}\rVert_2}_{\text{크기를 1로 맞춰 방향만 비교}}\end{aligned}`} operations={[
@@ -59,6 +62,7 @@ export default function SentenceEmbeddingsArticle() {
 
     <section id="similarity" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Cosine은 학습한 관계의 방향 점수이지 사실성 판정이 아닙니다</h2>
+      <CosineDirectionViz />
       <ExplainedFormula question="두 unit embedding의 cosine score는 왜 내적 하나로 계산할 수 있나요?" idea={<p>일반 cosine은 내적을 두 vector 크기로 나눕니다. 앞 단계에서 두 길이를 모두 1로 만들었으므로 분모가 1이 되어 내적만 남습니다.</p>} formula={String.raw`\cos(\mathbf z_q,\mathbf z_d)=\frac{\mathbf z_q^\top\mathbf z_d}{\lVert\mathbf z_q\rVert_2\lVert\mathbf z_d\rVert_2}=\mathbf z_q^\top\mathbf z_d`} annotatedFormula={String.raw`\begin{aligned}c&=\underbrace{\frac{\mathbf z_q^\top\mathbf z_d}{\lVert\mathbf z_q\rVert_2\lVert\mathbf z_d\rVert_2}}_{\substack{\text{방향 정렬을 재고}\\\text{vector 길이는 제거}}}\\\lVert\mathbf z_q\rVert_2&=\lVert\mathbf z_d\rVert_2=\underbrace{1}_{\text{앞 단계에서 unit화}}\\s(q,d)&=\underbrace{\mathbf z_q^\top\mathbf z_d}_{\substack{\text{분모가 1이므로}\\\text{내적만 계산}}}\end{aligned}`} operations={[
         { expression: String.raw`\mathbf z_q^\top\mathbf z_d`, annotation: ["같은 dimension 성분끼리 곱해 더하고", "두 방향이 얼마나 정렬됐는지 계산"] },
         { expression: String.raw`\lVert\mathbf z_q\rVert_2\lVert\mathbf z_d\rVert_2`, annotation: ["각 vector 크기의 곱으로 나눠", "길이가 score를 키우는 효과 제거"] },

@@ -9,6 +9,8 @@ import {
   RagContextAssemblyReturn,
 } from "./rag-context-assembly-and-evaluation/RagContextAssemblyLocator";
 import RagContextAssemblyAndEvaluationViz from "./rag-context-assembly-and-evaluation/viz/RagContextAssemblyAndEvaluationViz";
+import ContextPrecisionWalkViz from "./rag-context-assembly-and-evaluation/viz/ContextPrecisionWalkViz";
+import FirstFailureChainViz from "./rag-context-assembly-and-evaluation/viz/FirstFailureChainViz";
 import {
   RagExperimentBoundsViz,
   RagMetricsMapViz,
@@ -196,6 +198,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           interpretation="설정 위치와 공용 기기 주의는 지지되지만 ‘다시는 로그인할 필요가 없다’는 문장은 지지되지 않습니다. 원 논문 명칭은 faithfulness이며, 일반적으로 groundedness라고도 부릅니다."
         />
 
+        <ContextPrecisionWalkViz />
         <ExplainedFormula
           question="관련 근거가 검색 순위 앞쪽에 놓였는지는 어떻게 계산하나요?"
           idea={
@@ -282,6 +285,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           지표는 신호이고, 첫 실패는 단계별 기록이 확인합니다
         </h2>
+        <FirstFailureChainViz />
         <AlgorithmBlock
           title="q-732의 첫 실패 찾기"
           input={[

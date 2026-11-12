@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AggregationViz from "./viz/AggregationViz";
+import PointInTimeWindowViz from "./viz/PointInTimeWindowViz";
 
 export default function Aggregation() {
   return (
@@ -15,6 +16,9 @@ export default function Aggregation() {
           recency는 마지막 사건과의 거리를 나타냅니다. 같은 groupby 문법이라도
           서로 다른 업무 가설을 측정합니다.
         </p>
+      </div>
+      <PointInTimeWindowViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           가장 중요한 계약은 cutoff time입니다. 예측 시점 뒤의 event까지 groupby하면 미래 누출이 생기므로 각 row마다 그 시점 이전 기록만 사용하는 point-in-
           time join을 구성합니다. Validation entity의 label이 training aggregation에 들어가지 않도록 split도 이 계산보다 먼저 확정합니다.

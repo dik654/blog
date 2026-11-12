@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
+import DistinguishingTestViz from "./precedent-and-legal-change/viz/DistinguishingTestViz";
 import JurisdictionForceViz from "./precedent-and-legal-change/viz/JurisdictionForceViz";
 import OverrulingThresholdViz from "./precedent-and-legal-change/viz/OverrulingThresholdViz";
 import PrecedentChainViz from "./precedent-and-legal-change/viz/PrecedentChainViz";
+import RetroactivityTimelineViz from "./precedent-and-legal-change/viz/RetroactivityTimelineViz";
 
 /** 앞 사건의 이유가 다음 사건에서 어떤 힘을 갖고, 어떻게 바뀌는지 설명합니다. */
 export default function PrecedentAndLegalChangeArticle() {
@@ -174,6 +176,11 @@ export default function PrecedentAndLegalChangeArticle() {
             닿지 않는다고 설명하면 앞 판례를 유지하면서 적용 범위를 좁힐 수
             있습니다.
           </p>
+        </div>
+
+        <DistinguishingTestViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             반대로 색상이나 제조사처럼 판결 이유와 무관한 차이를 내세우면 사실상
             판례를 피하면서도 구별이라고 부르는 셈입니다. 구별이 반복되어 예외가
@@ -219,6 +226,7 @@ export default function PrecedentAndLegalChangeArticle() {
           <h3 className="mb-4 mt-12 text-xl font-bold">
             바뀐 판단이 과거의 모든 사건을 자동으로 다시 여는 것은 아닙니다
           </h3>
+          <RetroactivityTimelineViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               판례를 바꾼 사건, 아직 재판 중인 비슷한 사건, 이미 확정된 사건은

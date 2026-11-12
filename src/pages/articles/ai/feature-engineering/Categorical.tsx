@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CategoricalViz from "./viz/CategoricalViz";
+import TargetEncodingCalcViz from "./viz/TargetEncodingCalcViz";
 
 export default function Categorical() {
   return (
@@ -25,6 +26,8 @@ export default function Categorical() {
           out-of-fold 또는 ordered statistics를 쓰고, validation과 test에는 training mapping만 적용합니다.
         </p>
       </div>
+
+      <TargetEncodingCalcViz />
 
       <ExplainedFormula
         question="Target encoding에서 자기 label을 보지 않으면서 드문 category의 평균을 안정화하려면 어떻게 할까?"

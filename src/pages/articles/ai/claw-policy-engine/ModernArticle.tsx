@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { GreenContractViz, PolicyEvaluationViz } from "./viz/ModernPolicyViz";
+import ActionCollectionViz from "./viz/ActionCollectionViz";
+import StaleReviewViz from "./viz/StaleReviewViz";
 
 function Lead({ children }: { children: React.ReactNode }) {
   return <p className="text-lg leading-8 text-foreground/90">{children}</p>;
@@ -35,6 +37,7 @@ export default function ModernPolicyArticle() {
         <p>
           <code>PolicyRule</code>은 name, condition, action, priority를 가집니다. Engine은 priority가 작은 rule부터 stable하게 정렬한 뒤 각 condition을 boolean으로 평가합니다. And·Or·Not, green level, stale branch, blocker, review, scoped diff, retry, approval token 같은 조건이 있지만 <strong>Unknown</strong>이라는 세 번째 값은 없습니다. 필요한 field가 없을 때 fail-closed인지, false로 취급되는지는 각 condition 코드를 확인해야 합니다.
         </p>
+        <ActionCollectionViz />
         <p>
           Match한 rule의 action은 모두 결과에 들어가며 <code>Chain</code>은 안쪽 action을 평평하게 펼칩니다. Priority는 실행 순서를 정할 뿐 허용·거부의 우선순위를 자동 중재하지 않습니다. 같은 context에서 MergeToDev와 Block이 모두 match하면 현재 evaluator만으로 둘 중 하나가 사라지지 않습니다. 충돌 matrix와 최종 enforcer가 별도로 필요합니다.
         </p>
@@ -54,6 +57,7 @@ export default function ModernPolicyArticle() {
           있습니다. 그렇다고 이 구조체 자체가 immutable event snapshot이라는 뜻은 아니며 각 field에 source artifact·revision·timestamp가
           붙어 있다는 뜻도 아닙니다.
         </p>
+        <StaleReviewViz />
         <p>
           예를 들어 <code>green_contract_satisfied=true</code>만 전달되면 누가 어느 commit에서 어떤 test command를 실행했는지 evaluator는 알 수 없습니다. Review approved도 현재 diff revision과 결속되지 않으면 review 뒤 변경된 code를 merge할 수 있습니다. Context를 만들 때 repository SHA, policy generation, evidence digest와 각 producer identity를 묶고, action executor가 같은 snapshot을 소비하는지 확인해야 합니다.
         </p>

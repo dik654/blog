@@ -1,5 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import PhaseTransitionViz from "./viz/PhaseTransitionViz";
+import PreserveBoundaryViz from "./viz/PreserveBoundaryViz";
+import RecoveryRetryViz from "./viz/RecoveryRetryViz";
 
 const ACTUAL_STEPS = [
   [
@@ -132,6 +134,11 @@ export default function CompactPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>ToolUse와 ToolResult는 둘을 한 쌍으로 보존합니다</h3>
+      </div>
+
+      <PreserveBoundaryViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Message 배열을 최근 N개에서 기계적으로 자르면 경계 첫 message가
           <code>ToolResult</code>일 수 있습니다. 그러면 provider는 앞선 assistant
@@ -189,6 +196,11 @@ guard 결과: boundary를 한 칸 앞당겨 ToolUse부터 보존`}
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Recovery retry는 줄어드는 payload와 같은 요청 identity를 함께 지켜야 합니다</h3>
+      </div>
+
+      <RecoveryRetryViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           CLI recovery는 <code>context_window</code>, “no parseable body”, decode
           failure 같은 문자열도 context overflow 후보로 분류합니다. 그 뒤 최근

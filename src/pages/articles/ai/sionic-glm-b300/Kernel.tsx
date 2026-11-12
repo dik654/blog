@@ -3,6 +3,8 @@ import {
   GLM_B300_SOURCE_LINKS,
 } from "@/content/sionic-glm-b300";
 import TmemSource from "./TmemSource";
+import SplitKViz from "./viz/SplitKViz";
+import TmemOverlapViz from "./viz/TmemOverlapViz";
 
 export default function Kernel() {
   const q = M.liveQuantKernel;
@@ -16,6 +18,9 @@ export default function Kernel() {
         <h3 className="mt-0 mb-3 text-xl font-semibold">
           1. 작은 GEMM의 병렬성
         </h3>
+        <div className="not-prose my-6">
+          <SplitKViz />
+        </div>
         <p className="leading-7">
           batch-1 gate/up projection처럼 output tile 수가 적으면 CTA가 적어 많은
           SM이 memory request를 내지 못한다. 이때 Split-K는 reduction 비용을
@@ -48,6 +53,9 @@ export default function Kernel() {
         <h3 className="mt-8 mb-3 text-xl font-semibold">
           2. tcgen05와 TMEM pipeline
         </h3>
+        <div className="not-prose my-6">
+          <TmemOverlapViz />
+        </div>
         <p className="leading-7">
           Blackwell의 tcgen05 MMA는 한 thread가 instruction을 issue하고 accumulator를 TMEM에 둔다. TMEM은 TMA와 다른 on-chip
           tensor memory다. accumulator를 register file 밖에 두면 register pressure를 줄이고 load·MMA·epilogue를 겹칠 여지가

@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EvaluationContractViz from "./viz/EvaluationContractViz";
+import EvalUncertaintyViz from "./viz/EvalUncertaintyViz";
 
 export default function Evaluation() {
   return (
@@ -89,6 +90,8 @@ c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{verifier 통과면 1}}\
         ]}
         interpretation="K를 늘리면 추정 variance는 줄일 수 있지만 policy가 바뀌는 것은 아닙니다. Score를 비교할 때 K·temperature·top-p·max token과 verifier를 함께 고정해야 합니다."
       />
+
+      <EvalUncertaintyViz />
 
       <ExplainedFormula
         question="작은 benchmark의 accuracy uncertainty를 어떻게 함께 표시하는가?"

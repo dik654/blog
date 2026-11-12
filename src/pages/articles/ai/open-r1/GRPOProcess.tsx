@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OnlineLoopViz from "./viz/OnlineLoopViz";
+import ClipSurrogateViz from "./viz/ClipSurrogateViz";
+import LossAggregationViz from "./viz/LossAggregationViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -110,6 +112,11 @@ export default function GRPOProcess({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Advantage가 정해져도 policy를 얼마나 움직일지는 별도 문제다</h3>
+      </div>
+
+      <ClipSurrogateViz />
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-8">
           Rollout을 만든 old policy와 update할 policy의 token probability 비율을 쓰면 이미 probability가 크게 달라진 token이
           update를 지배하지 않도록 clipping합니다.
@@ -194,6 +201,11 @@ c_{i,t}&=\underbrace{\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)}_{\te
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>긴 reasoning에서는 loss normalization도 학습 신호다</h3>
+      </div>
+
+      <LossAggregationViz />
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-8">
           Original sample-level aggregation은 response length bias를 만들 수
           있다는 후속 분석이 나왔고, DAPO는 group 전체 active token 수로 나누는

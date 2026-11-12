@@ -1,4 +1,5 @@
 import DataLineageViz from "./viz/DataLineageViz";
+import DataFunnelViz from "./viz/DataFunnelViz";
 
 export default function DataPipeline() {
   return (
@@ -22,6 +23,11 @@ export default function DataPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Dataset 숫자는 generation 수와 unique problem 수를 구분한다</h3>
+      </div>
+
+      <DataFunnelViz />
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-8">
           OpenR1-Math-220k update는 약 40만 problem에 두 답씩, 총 80만 trace를 생성한 뒤 correctness filtering을 거쳐 약 22만
           problem의 trace를 남겼습니다. 그 과정을 공개했습니다.

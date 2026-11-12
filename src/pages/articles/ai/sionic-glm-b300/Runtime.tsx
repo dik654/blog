@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AmdahlSplitViz from "./viz/AmdahlSplitViz";
 
 const patches = [
   ["CUDA Graph", "반복 decode 경로의 CPU launch overhead를 줄인다"],
@@ -27,6 +28,9 @@ export default function Runtime() {
           왕복한다. MTP로 draft depth가 늘면 GPU 계산 외에 scheduler와 CPU synchronization도 더 자주 드러난다. 따라서 end-to-end 결과는
           GEMM µs의 합으로 예측할 수 없다.
         </p>
+        <div className="not-prose my-6">
+          <AmdahlSplitViz />
+        </div>
         <ExplainedFormula
           question="한 kernel을 크게 가속했는데도 전체 forward가 조금만 빨라질 수 있는 이유는 무엇인가?"
           idea={

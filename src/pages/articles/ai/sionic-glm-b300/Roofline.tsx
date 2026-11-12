@@ -5,6 +5,7 @@ import {
   GLM_B300_SOURCE_LINKS,
 } from "@/content/sionic-glm-b300";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import RooflineShapeViz from "./viz/RooflineShapeViz";
 
 const ms = (value: number) => value.toFixed(2);
 
@@ -15,6 +16,9 @@ export default function Roofline() {
         먼저 연산량이 아니라 데이터 이동량을 계산한다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div className="not-prose my-6">
+          <RooflineShapeViz />
+        </div>
         <p className="leading-7">
           GPU 연산이 느린지 메모리 이동이 느린지 구분하려면 두 양을 같은 시간
           단위로 바꿔야 한다. Roofline model은 연산량을 이동한 byte로 나눈

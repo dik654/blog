@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import IsmsFoundationsViz from "./isms-foundations-viz";
+import RemediationReachViz from "./isms-overview/viz/RemediationReachViz";
+import RiskMatrixViz from "./isms-overview/viz/RiskMatrixViz";
+import ScopeBoundaryViz from "./isms-overview/viz/ScopeBoundaryViz";
 
 const KISA_GUIDE =
   "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do";
@@ -56,6 +59,11 @@ export default function IsmsOverview() {
             매출액 100억원 이상, 전년도 일일평균 이용자 100만명 이상인 자 등을 규정하지만, 금융회사 예외와 사업 구조를 함께 읽어야 합니다. 숫자 하나만 보고 해당 여부를 확정하지
             말고 법인, 서비스, 매출 산정 범위와 통지 내용을 확인해야 합니다. 의무대상이 아니어도 자율 신청은 가능합니다.
           </p>
+        </div>
+
+        <ScopeBoundaryViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             인증범위(scope)는 회사 이름과 같은 말이 아닙니다. 대상 서비스와 이를 운영하는
             조직·사람, 애플리케이션·서버·네트워크·데이터를 경계로 고정한 것입니다.
@@ -124,6 +132,8 @@ export default function IsmsOverview() {
           interpretation="퇴직 계정 악용의 L=3, 개인정보 대량조회 영향 I=4라면 R=12입니다. 통제 적용 뒤 L이 1로 낮아졌다고 평가하면 잔여위험은 4이지만, 실제 회수 표본·접속 차단 test·로그를 근거로 L을 다시 판정해야 하며 숫자만 낮춰서는 안 됩니다."
         />
 
+        <RiskMatrixViz />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>통제 후에는 잔여위험과 처리 결정을 기록합니다</h3>
           <p>
@@ -178,6 +188,11 @@ export default function IsmsOverview() {
             승인·변경·회수 기록을 대조하거나, 설정 화면과 실제 차단 결과, log의 시간과 보관 상태를 함께 확인합니다. 제출용 캡처와 운영 원본이 다르면 오히려 재현성과 신뢰성이
             떨어집니다.
           </p>
+        </div>
+
+        <RemediationReachViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             결함이 나오면 증상만 수정하지 않습니다. 요구사항과 직접 원인, 근본 원인을 찾고
             같은 원인이 영향을 준 자산·기간·계정을 조사합니다. 그 뒤 수정, 보상통제,

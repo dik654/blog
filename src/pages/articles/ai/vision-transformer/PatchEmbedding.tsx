@@ -3,6 +3,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import ConvPatchProjectionViz from "./viz/ConvPatchProjectionViz";
+import PositionResizeViz from "./viz/PositionResizeViz";
 
 export default function PatchEmbedding({
   onCodeRef,
@@ -60,6 +62,7 @@ Z_0&=\underbrace{[e_{\mathrm{cls}};e_1;\ldots;e_N]}_{\text{[CLS]+patch N개}}\in
           onCodeRef("class-token-concat", codeRefs["class-token-concat"])
         }
       />
+      <ConvPatchProjectionViz />
       <ExplainedFormula
         question="Patch를 펼쳐 matrix와 곱하는 구현을 Conv2d 한 층으로 바꿀 수 있는 이유는 무엇일까?"
         idea={<>Kernel size와 stride를 P로 둔 convolution은 각 P×P 영역을 겹치지 않게 읽습니다. D개 kernel의 weight를 E의 D개 output column과 같은 순서로 놓으면 동일한 dot product를 grid 전체에서 수행합니다.</>}
@@ -104,6 +107,9 @@ y_{r,s,d}&=\underbrace{k_d^\top v_{r,s}+b_d}_{\text{patch 하나의 d번째 좌�
       />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 id="position-resize" className="scroll-mt-24">해상도를 바꾸면 position grid도 달라집니다</h3>
+      </div>
+      <PositionResizeViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           224px·P=16 checkpoint의 14×14 position grid를 384px 입력의 24×24 grid에 그대로 더할 수는 없습니다. Class token을
           spatial grid에서 분리하고 patch position만 2D interpolation한 뒤 다시 붙입니다. 보간은 기존 위치 신호를 새 좌표로 옮길 뿐 새 위치 관계를

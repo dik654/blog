@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import PacketViz from "./viz/PacketViz";
+import FingerprintChoiceViz from "./viz/FingerprintChoiceViz";
 
 export default function PacketLayer() {
   return (
@@ -34,6 +35,7 @@ export default function PacketLayer() {
       <h3 id="fingerprint-rule" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         표본에서 지문을 만들어 규칙으로 내립니다
       </h3>
+      <FingerprintChoiceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           분석기가 하는 일은 표본 패킷들에서 공통되는 필드 조합을 찾는 것입니다. 출발지 포트, 패킷 길이, 프로토콜 플래그처럼 여러 필드의 조합을 만들어 봅니다. 그중 공격 트래픽만 잘

@@ -11,6 +11,7 @@ import {
   MiniEvmReceiptBoundaryViz,
   MiniEvmTransactionViz,
 } from "./viz/ModernInitiaEvmViz";
+import BranchNestingViz from "./viz/BranchNestingViz";
 
 const SHA = "27e60c548f3e2868f6e6b3cf6456fc9289ce7950";
 const REPO = `https://github.com/initia-labs/minievm/tree/${SHA}`;
@@ -218,6 +219,7 @@ export default function ModernInitiaEvmArticle() {
 
         <section id="release" className="mb-16 scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">실패 지점마다 어떤 후보 state가 버려지는지 구분해야 합니다</h2>
+          <BranchNestingViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               ABI decode나 signer 검사가 실패하면 precompile snapshot이 되돌아가 queue가 생기지 않습니다. EVM이 REVERT해도 child queue는 parent로

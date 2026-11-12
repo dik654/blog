@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import FleetCapacityViz from "./viz/FleetCapacityViz";
+import LittleAreaViz from "./viz/LittleAreaViz";
 
 const placement = [
   ["Hardware", "GPU model · memory · MIG profile"],
@@ -111,6 +112,11 @@ export default function KubernetesFleet() {
         <h3 id="paper-little-law" className="scroll-mt-20">
           Little의 원 논문이 보장한 것: 안정된 긴 관측 구간의 세 평균은 연결됩니다
         </h3>
+      </div>
+
+      <LittleAreaViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           <a href="https://pubsonline.informs.org/doi/10.1287/opre.9.3.383">
             A Proof for the Queuing Formula: L = λW

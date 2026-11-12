@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
+import ReadyTimelineViz from "./viz/ReadyTimelineViz";
 
 export default function UpgradeChain() {
   return (
@@ -41,6 +42,8 @@ export default function UpgradeChain() {
           <li>Overload에서 pending inbound, established connection과 substream limit를 각각 관측합니다.</li>
         </ul>
       </div>
+
+      <ReadyTimelineViz />
 
       <CalculationWalkthrough
         title="Alice가 Bob의 Swarm-ready connection을 얻는 시간 장부"

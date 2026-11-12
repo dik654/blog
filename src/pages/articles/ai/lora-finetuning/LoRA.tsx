@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import LoraMatrixViz from "./viz/LoraMatrixViz";
+import LowRankShapeViz from "./viz/LowRankShapeViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -52,6 +53,7 @@ s&=\frac{\alpha}{r}
         assumptions={["Target은 affine/linear weight이고 bias 학습 여부를 별도로 기록합니다.", "Matrix 곱 순서와 library의 A/B naming·fan-in/fan-out convention을 확인합니다.", "Dropout이 있다면 training adapter branch에만 적용되는 위치와 inference 동작을 고정합니다."]}
         interpretation="din=dout=4096, r=8이면 A는 8×4096, B는 4096×8입니다. Base output과 같은 4096차원 update가 만들어지므로 두 값을 더할 수 있습니다."
       />
+      <div className="not-prose my-8"><LowRankShapeViz /></div>
       <ExplainedFormula
         question="왜 r이 작으면 parameter는 크게 줄고 update 자유도도 제한될까요?"
         idea={<>Full matrix는 din·dout개의 값을 가지지만 두 adapter는 r(din+dout)개만 가집니다. 또한 행렬 곱 BA의 rank는 A와 B 각각의 rank보다 클 수 없으므로 최대 r입니다.</>}

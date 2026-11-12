@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import TwoStageViz from "./viz/TwoStageViz";
+import GateMapViz from "./viz/GateMapViz";
 
 export default function TwoStageRejected() {
   return (
@@ -35,6 +36,11 @@ export default function TwoStageRejected() {
           지운 물건을 되살린 결과가 최고점을 받은 셈입니다.
         </p>
 
+      </div>
+
+      <GateMapViz />
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           왜 막지 못했는지도 분명합니다. 이 방식은 어디를 바꿀지는 강제하지만 무엇을 그릴지는 강제하지 않습니다. 경계 띠에서 시작한 생성이 안쪽으로 번질 여지가 남아 있었습니다. 그
           여지를 사전지식이 채웠습니다.
