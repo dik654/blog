@@ -5,6 +5,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import HandshakeFlowViz from "./discv5/viz/HandshakeFlowViz";
 import SessionKeyViz from "./discv5/viz/SessionKeyViz";
+import PacketLayoutViz from "./discv5/viz/PacketLayoutViz";
+import DistanceShelfViz from "./discv5/viz/DistanceShelfViz";
+import NodesSplitViz from "./discv5/viz/NodesSplitViz";
 
 const WIRE_SPEC =
   "https://github.com/ethereum/devp2p/blob/e0091d1140bddce2a9805047b94110d3ad439e6e/discv5/discv5-wire.md";
@@ -80,6 +83,7 @@ export default function Discv5Article() {
         <h2 className="mb-6 text-2xl font-bold">
           Header masking은 위장이며, 실제 보안은 body의 AES-GCM이 맡습니다
         </h2>
+        <PacketLayoutViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Discv5 packet은 <code>masking-iv || masked-header || message</code>
@@ -397,6 +401,7 @@ export default function Discv5Article() {
         <h2 className="mb-6 text-2xl font-bold">
           FINDNODE는 목표 ID가 아니라 Bob 기준 거리 선반을 요청합니다
         </h2>
+        <DistanceShelfViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Session이 생겼으니 Alice는 보류했던 <code>R₁</code>을 실행할 수
@@ -407,6 +412,11 @@ export default function Discv5Article() {
             달라”는 요청을 받습니다. Distance 0만 Bob 자신의 현재 ENR를 달라는
             특수값입니다.
           </p>
+        </div>
+
+        <NodesSplitViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Bob은 요청 거리와 맞고 local liveness policy를 통과한 record를 모아
             NODES로 답합니다. 권장 result 상한은 16개입니다. 각 NODES에는 같은

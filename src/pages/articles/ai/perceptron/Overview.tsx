@@ -3,6 +3,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
 import PerceptronViz from "./viz/PerceptronViz";
+import BoundaryUpdateViz from "./viz/BoundaryUpdateViz";
 
 export default function Overview() {
   return (
@@ -184,6 +185,8 @@ export default function Overview() {
           ]}
           interpretation="(가정) w=(0.5,0.5), b=−0.7입니다. 그러면 (1,0)의 점수는 −0.2라 0이고, (1,1)의 점수는 0.3이라 1입니다. 이 출력은 확률이 아닙니다."
         />
+
+        <BoundaryUpdateViz />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>

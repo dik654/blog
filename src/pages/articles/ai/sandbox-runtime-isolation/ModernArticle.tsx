@@ -7,6 +7,7 @@ import {
   SandboxBoundaryMapReturn,
 } from "../shared/SandboxBoundaryLocator";
 import SandboxRuntimeIsolationViz from "./viz/SandboxRuntimeIsolationViz";
+import SeccompArgumentViz from "./viz/SeccompArgumentViz";
 
 export default function SandboxRuntimeIsolationArticle() {
   return (
@@ -61,6 +62,7 @@ export default function SandboxRuntimeIsolationArticle() {
           필터와 별도 커널을 구분합니다. 허용된 호출은 여전히 호스트 커널이
           처리합니다.
         </LessonHeader>
+        <SeccompArgumentViz />
         <TermLesson
           name="시스템 호출 필터"
           oneLine="Seccomp BPF는 호출 번호와 인자를 보고 실행·오류 반환·로그·프로세스 종료 같은 동작을 고릅니다."

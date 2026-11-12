@@ -1,9 +1,11 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BindingCheckViz from "./viz/BindingCheckViz";
 
 export default function KeypairSigning() {
   return (
     <section id="keypair-signing" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Identity binding은 “이 Noise key를 이 PeerId가 승인했다”를 증명합니다</h2>
+      <BindingCheckViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           각 peer는 새 Noise static keypair를 만들고 static public key 앞에 spec이 정한 prefix를 붙인 bytes를 장기 libp2p

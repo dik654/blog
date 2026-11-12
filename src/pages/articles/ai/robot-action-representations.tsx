@@ -6,6 +6,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RobotActionRepresentationsViz from "./robot-action-representations/viz/RobotActionRepresentationsViz";
+import MultimodalAverageViz from "./robot-action-representations/viz/MultimodalAverageViz";
+import FlowMatchingPathViz from "./robot-action-representations/viz/FlowMatchingPathViz";
+import Pi0ChunkTimingViz from "./robot-action-representations/viz/Pi0ChunkTimingViz";
 import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "./shared/EmbodiedVisionLocator";
 import EmbodiedProcessOverviewViz from "./shared/EmbodiedProcessOverviewViz";
 
@@ -201,6 +204,7 @@ b&=\underbrace{\left\lfloor r\,(B-1) \right\rfloor}_{\text{bin 개수를 곱하�
         <h2 className="mb-6 text-2xl font-bold">
           Diffusion·flow head는 평균 대신 분포에서 표본을 뽑습니다
         </h2>
+        <MultimodalAverageViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Action 값 하나를 regression으로 맞히는 policy는 두 가지 정답이 동시에 그럴듯할 때(컵을
@@ -213,12 +217,17 @@ b&=\underbrace{\left\lfloor r\,(B-1) \right\rfloor}_{\text{bin 개수를 곱하�
             DDPM으로 하고 추론은 DDIM으로 10 step만 밟아 약 0.1초 지연으로 하나의 action chunk를 생성합니다. 실행 길이(action horizon)는 여러
             task에서 8 step 근처가 가장 좋았습니다.
           </p>
+        </div>
+        <Pi0ChunkTimingViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             π0는 diffusion 대신 flow matching으로 같은 문제를 풉니다. Action chunk 길이 H=50에서 시작해 50Hz 로봇은 0.5초, 20Hz 로봇은
             0.8초마다 새 chunk를 추론합니다. 추론은 순수 noise에서 시작해 10번의 integration step만 밟으면 됩니다. 저자 측정으로 RTX 4090에서 전체
             inference가 약 73ms(약 13~14Hz)입니다.
           </p>
         </div>
+
+        <FlowMatchingPathViz />
 
         <ExplainedFormula
           question="Flow matching action head는 무엇을 regression해 continuous action distribution을 배우나요?"

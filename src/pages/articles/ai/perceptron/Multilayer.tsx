@@ -1,4 +1,5 @@
 import MultilayerViz from "./viz/MultilayerViz";
+import HiddenSpaceViz from "./viz/HiddenSpaceViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Multilayer() {
@@ -19,6 +20,9 @@ export default function Multilayer() {
           함수를 둡니다. 이렇게 입력 공간을 단계적으로 다시 표현합니다. 단순히
           뉴런 수를 늘리는 것으로는 되지 않습니다.
         </p>
+      </div>
+      <HiddenSpaceViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           예를 들어 두 은닉 뉴런이 OR과 NAND에 가까운 중간 특성값을 만듭니다.
           출력층이 둘을 AND처럼 결합하면 XOR을 구성할 수 있습니다. 실제

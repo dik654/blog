@@ -3,6 +3,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { GossipPathViz, ScoreViz } from "./viz/ModernGossipsubViz";
+import MeshBandViz from "./viz/MeshBandViz";
+import PeerSetViz from "./viz/PeerSetViz";
+import McacheViz from "./viz/McacheViz";
+import ValidationBranchViz from "./viz/ValidationBranchViz";
 
 export default function ModernGossipsubArticle() {
   return (
@@ -105,6 +109,7 @@ export default function ModernGossipsubArticle() {
             1초마다 mesh를 고치고 최근 message ID만 mesh 밖에 알립니다
           </h2>
         </header>
+        <MeshBandViz />
         <p>
           기본 heartbeat는 첫 5초 뒤 시작해 1초 간격으로 실행됩니다. Topic별 mesh 목표는
           6, 부족 기준은 5, 과잉 기준은 12입니다. Peer가 5명보다 적으면 목표 6까지 GRAFT하고,
@@ -146,12 +151,14 @@ export default function ModernGossipsubArticle() {
             "Topic별 override와 peer score 설정이 있으면 숫자와 선택 대상이 달라집니다.",
           ]}
         />
+        <PeerSetViz />
         <p>
           Heartbeat는 mesh 밖 eligible peer에도 IHAVE를 보냅니다. 기본으로 최소 6명 또는
           non-mesh peer의 25% 중 큰 쪽을 고릅니다. Bob이 모르는 ID를 IWANT로 요청하면 Alice는
           cache에 남은 full message를 보냅니다. IWANT 뒤 기본 3초 안에 message가 오지 않으면
           broken promise가 local peer score penalty가 될 수 있습니다.
         </p>
+        <McacheViz />
         <p>
           Message cache는 기본 5 heartbeat bucket을 보관하고 최근 3 bucket의 ID를 gossip합니다.
           Duplicate cache는 기본 60초입니다. 두 cache는 목적과 수명이 다릅니다. Message cache가
@@ -268,6 +275,7 @@ export default function ModernGossipsubArticle() {
           false입니다. 즉 별도로 켜지 않으면 protocol 검사를 통과한 received message는 local
           event로 전달되고 mesh로 자동 forward됩니다.
         </p>
+        <ValidationBranchViz />
         <p>
           Manual application validation을 켜면 message는 memcache에서 기다립니다. Payroll
           schema, publisher authorization, timestamp, application signature와 CID 형식을 검사한

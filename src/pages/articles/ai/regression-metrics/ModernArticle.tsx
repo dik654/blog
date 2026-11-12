@@ -7,6 +7,8 @@ import {
   RegressionMetricReturn,
 } from "../shared/MetricDecisionPathLocator";
 import RegressionMetricDecisionViz from "./RegressionMetricDecisionViz";
+import ResidualCostViz from "./ResidualCostViz";
+import CostCurveViz from "./CostCurveViz";
 
 export default function RegressionMetricsArticle() {
   return (
@@ -63,6 +65,7 @@ export default function RegressionMetricsArticle() {
 
       <section id="residual-penalty" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">MAE는 오차 크기를 더하고, RMSE는 큰 오차를 먼저 제곱합니다</h2>
+        <ResidualCostViz />
         <ExplainedFormula
           question="예측값을 0분에서 25분으로 바꾸면 두 지표는 어떻게 달라집니까?"
           idea={
@@ -125,6 +128,7 @@ export default function RegressionMetricsArticle() {
 
       <section id="bayes-act" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">절댓값 비용은 중앙값을, 제곱 비용은 평균을 고릅니다</h2>
+        <CostCurveViz />
         <ExplainedFormula
           question="같은 네 값에서 최적 예측이 0분과 25분으로 갈리는 이유는 무엇입니까?"
           idea={

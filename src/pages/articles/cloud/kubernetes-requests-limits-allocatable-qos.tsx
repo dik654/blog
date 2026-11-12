@@ -5,6 +5,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import AllocatableLedgerViz, { AllocatableFormulaViz } from "./kubernetes-requests-limits-allocatable-qos/viz/AllocatableLedgerViz";
 import ThrottlePeriodViz from "./kubernetes-requests-limits-allocatable-qos/viz/ThrottlePeriodViz";
+import QosClassViz from "./kubernetes-requests-limits-allocatable-qos/viz/QosClassViz";
+import MemoryLimitPathViz from "./kubernetes-requests-limits-allocatable-qos/viz/MemoryLimitPathViz";
+import AdmissionPathViz from "./kubernetes-requests-limits-allocatable-qos/viz/AdmissionPathViz";
 import { codeRefs } from "./kubernetes-requests-limits-allocatable-qos/codeRefs";
 import { k8sResourcesTrees } from "./kubernetes-requests-limits-allocatable-qos/fileTree";
 import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
@@ -145,6 +148,9 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
           <h2 className="mb-6 text-2xl font-bold">5. 예약은 requests, 상한은 limits, 노드 몫은 Allocatable입니다</h2>
           <div className={prose}>
             <p>앞 절의 숫자에 표준 이름을 붙입니다. 컨테이너가 확보해 달라는 양은 requests이고 scheduler의 Filter 단계와 노드 장부에만 쓰입니다. 컨테이너가 넘을 수 없는 양은 limits이고 kubelet이 cgroup에 쓰는 값입니다. 노드가 Pod 전체에 내주는 양은 Allocatable이고 Capacity에서 예약과 eviction 하한을 뺀 값입니다.</p>
+          </div>
+          <QosClassViz />
+          <div className={prose}>
             <p>requests와 limits의 조합이 Pod의 QoS class를 정합니다. 모든 컨테이너가 cpu와 memory 둘 다 request와 limit을 0보다 크게 적고 서로 같으면 Guaranteed입니다. 그렇지 않으면서 어느 컨테이너든 request나 limit이 하나라도 있으면 Burstable, 아무것도 없으면 BestEffort입니다. 4절의 Pod는 requests만 적었으니 Burstable입니다.</p>
             <p>QoS class는 세 곳에서 쓰입니다. kubelet이 컨테이너 프로세스의 oom_score_adj를 Guaranteed −997, BestEffort 1000, Burstable은 request 비율로 정하는 데 쓰고(<a href="/cs/cloud/linux-memory-page-cache-oom#kubernetes-qos">계산은 리눅스 메모리 글 11절</a>).
             </p>
@@ -190,6 +196,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
 
         <section id="memory-limit" data-teach-level="3" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">7. memory limit은 멈추지 않고 137로 끝냅니다. 그것도 바로는 아닙니다</h2>
+          <MemoryLimitPathViz />
           <div className={prose}>
             <p>
               memory limit은 kubelet이 cgroup의 <code>memory.max</code>에 그대로 씁니다. 컨테이너가 이 값에 닿으면 커널은 먼저 그 cgroup의 page cache를 회수하고 회수할 것이 없으면 cgroup 안에서 OOM killer를 불러 프로세스 하나(또는 oom.group이 켜져 있으면 전부)에 SIGKILL을 보냅니다.
@@ -249,6 +256,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
 
         <section id="admission" data-teach-level="4" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">9. Deployment는 있는데 Pod가 없다면 admission에서 403으로 막혔을 수 있습니다</h2>
+          <AdmissionPathViz />
           <div className={prose}>
             <p>requests·limits는 Pod가 API 서버에 들어오는 순간에도 검사됩니다. namespace에 LimitRange가 있으면 admission controller가 빠진 request·limit에 기본값을 채우고 범위를 벗어난 값을 403 Forbidden으로 거절합니다. 검사는 Pod admission 때만 하므로 LimitRange를 나중에 바꿔도 이미 도는 Pod는 그대로입니다.</p>
             <p>ResourceQuota는 namespace 합계를 제한합니다. 새 Pod의 requests를 더했을 때 quota를 넘으면 역시 403으로 거절되고 Pod 객체 자체가 생기지 않습니다. cpu·memory quota가 걸린 namespace에서 requests·limits를 적지 않은 Pod는 생성이 거부될 수 있어 LimitRange로 기본값을 채워 두는 것이 보통입니다.</p>

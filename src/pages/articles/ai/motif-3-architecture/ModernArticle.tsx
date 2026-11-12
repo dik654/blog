@@ -8,6 +8,10 @@ import {
   ModelArchitectureCaseLocator,
   ModelArchitectureCaseMapReturn,
 } from "../shared/ModelArchitectureCaseLocator";
+import ExpertRoutingViz from "./viz/ExpertRoutingViz";
+import GdlaHeadsViz from "./viz/GdlaHeadsViz";
+import MhcFlowViz from "./viz/MhcFlowViz";
+import MopdSignalViz from "./viz/MopdSignalViz";
 import MotifGdlaViz from "./viz/MotifGdlaViz";
 
 const configRows = [
@@ -33,6 +37,7 @@ export default function Motif3ArchitectureArticle() {
         <ol className="list-decimal space-y-2 pl-6"><li>전체 314B 가운데 한 token이 활성화하는 parameter는 약 13.2B일까요?</li><li>희소층마다 routed expert 384개를 모두 계산할까요?</li><li>16개 noise head를 네 번 대응시키면 64개 signal head와 같은 묶음 수가 될까요?</li></ol>
         <p>답은 <strong>예, 아니요, 예</strong>입니다. 전체 가중치 상주량, token당 활성 계산량, GDLA의 head 대응 관계를 서로 다른 장부로 읽어야 합니다.</p>
         <ContentBoundary article="motif-3-architecture" />
+        <ExpertRoutingViz />
         <TermLesson
           name="Motif 3 system configuration"
           oneLine="314B weight capacity 가운데 token마다 약 13.2B를 활성화하고, GDLA·modified mHC·Expert-Specific PolyNorm·MTP와 7개 specialist의 MOPD를 조합한 decoder-only MoE입니다."
@@ -58,6 +63,7 @@ export default function Motif3ArchitectureArticle() {
           <TermLesson name="MLA latent KV compression" oneLine="Token의 key와 value 정보를 작은 joint latent cKV로 내린 뒤 필요할 때 head representation으로 확장하는 cache 설계입니다." shape="xₜ → [cKVₜ ; rotary keyₜ] → normalized latent → K,V heads" example="Motif 3의 query/KV low-rank dimension은 1,024/512이고 expanded KV heads는 16개입니다." boundary="Low-rank compression은 정보 손실·projection compute와 맞바꾸며 모든 model에서 같은 cache 감소율을 보장하지 않습니다." />
           <TermLesson name="Grouped Differential Attention" oneLine="Signal query head를 noise query head보다 더 많이 두고, 작은 noise-head 집합의 output을 group마다 반복해 차분하는 attention입니다." shape="64 signal heads − λₜ ⊙ Repeat₄(16 noise heads)" example="g=4이면 80 query heads 중 signal 64개, noise 16개가 됩니다." boundary="두 map을 빼는 것을 실제 음향 noise source 분리나 causal relevance 증명으로 읽지 않습니다." />
         </div>
+        <GdlaHeadsViz />
         <ExplainedFormula
           question="64개 signal head와 16개 noise head는 어떻게 같은 shape로 차분될까요?"
           idea="Noise output 하나를 group 안의 signal head 네 개에 반복하고, 각 signal head가 현재 token에서 예측한 0–1 계수로 suppression 양을 정합니다."
@@ -107,6 +113,7 @@ export default function Motif3ArchitectureArticle() {
           일반 residual은 직전 state와 sublayer update를 더합니다. mHC는 네 residual stream을 하나의 sublayer input으로 줄이고, sublayer output을 다시 네 stream에 배분하면서 기존 stream끼리도 doubly-stochastic matrix로 섞습니다.
         </LessonHeader>
         <TermLesson name="Modified manifold-constrained hyper-connections" oneLine="네 parallel residual stream의 pre·residual·post mapping을 token마다 만들되 residual matrix의 모든 행·열 합을 1로 제한하는 연결 구조입니다." shape="4 streams → Hpre reduction → F → Hpost broadcast + Hres stream mixing" example="Motif 3는 post multiplier st를 training 중 2에서 1로 낮춰 반복 amplification 범위를 (0,2)에서 (0,1)로 옮깁니다." boundary="Doubly-stochastic constraint가 loss convergence나 모든 depth의 안정성을 자동 증명하지 않으며 mapping 계산·memory 비용이 추가됩니다." />
+        <MhcFlowViz />
         <ExplainedFormula
           question="한 sublayer 뒤 네 residual stream은 어떤 두 경로를 합칠까요?"
           idea="첫 경로는 기존 stream을 convex mixing하고, 둘째 경로는 pre-map으로 고른 sublayer input을 계산한 뒤 post-map으로 네 stream에 다시 배분합니다."
@@ -165,6 +172,7 @@ export default function Motif3ArchitectureArticle() {
           Motif 3는 여섯 domain teacher를 GRPO로, software-engineering teacher 하나를 SFT로 만듭니다. 마지막 MOPD에서는 general SFT model이 rollout을 만들고 prompt domain의 teacher가 그 rollout의 선택 token에 부여한 log probability를 제공합니다.
         </LessonHeader>
         <TermLesson name="Motif 3 selected-token MOPD" oneLine="Full vocabulary KL 대신 student가 실제 sample한 token 하나에 대한 teacher·old-student log-probability 차이를 token별 distillation signal로 쓰는 multi-teacher OPD 변형입니다." shape="student rollout yₜ → domain teacher log πT(yₜ|hₜ) → ICE-POP weight → student update" example="Agentic prompt는 agent teacher, math prompt는 math teacher로 route하며 environment reward와 reference KL은 MOPD loss에서 제외합니다." boundary="일반 MOPD가 항상 chosen-token scalar만 쓰는 것은 아닙니다. Motif 3 보고서의 구체적 구현 선택입니다." />
+        <MopdSignalViz />
         <ExplainedFormula
           question="Motif 3 MOPD는 sampled token 하나에서 어떤 방향의 update를 만들까요?"
           idea="Teacher가 old student보다 sampled token을 더 지지하면 positive signal, 덜 지지하면 negative signal을 만들고, generation·old policy mismatch가 허용 범위인 token만 사용합니다."

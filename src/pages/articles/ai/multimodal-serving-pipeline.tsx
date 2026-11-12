@@ -10,6 +10,9 @@ import KvFootprintViz from "./multimodal-serving-pipeline/viz/KvFootprintViz";
 import EncoderScheduleViz from "./multimodal-serving-pipeline/viz/EncoderScheduleViz";
 import PrefixKeyViz from "./multimodal-serving-pipeline/viz/PrefixKeyViz";
 import EncoderCacheSlotViz from "./multimodal-serving-pipeline/viz/EncoderCacheSlotViz";
+import R2TraceViz from "./multimodal-serving-pipeline/viz/R2TraceViz";
+import EncoderCacheRefViz from "./multimodal-serving-pipeline/viz/EncoderCacheRefViz";
+import EncoderPlacementViz from "./multimodal-serving-pipeline/viz/EncoderPlacementViz";
 import { codeRefs } from "./multimodal-serving-pipeline/codeRefs";
 import { multimodalTrees } from "./multimodal-serving-pipeline/fileTree";
 import {
@@ -216,6 +219,7 @@ export default function MultimodalServingPipelineArticle() {
 
         <section id="trace" data-teach-level="4" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">7. R2의 사진이 encoder를 건너뛰는 경로를 따라갑니다</h2>
+          <R2TraceViz />
           <div className={prose}>
             <p>
               R1이 사진 P와 질문 A를 보냈고 이미 처리 중이라고 하겠습니다. R2가 같은 사진 P에 질문 B를 붙여 들어옵니다. 입구의 processor는 P의 픽셀로 mm hash를 계산하고
@@ -238,6 +242,7 @@ export default function MultimodalServingPipelineArticle() {
 
         <section id="encoder-cache" data-teach-level="5" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. encoder cache는 사진마다 지금 쓰는 요청을 셉니다</h2>
+          <EncoderCacheRefViz />
           <div className={prose}>
             <p>
               vLLM v0.27.1 commit 6e448d0의 encoder_cache_manager.py에서 EncoderCacheManager는 mm hash마다 그 결과를 쓰는 요청 ID 집합을 둡니다. 95–122행
@@ -390,6 +395,7 @@ export default function MultimodalServingPipelineArticle() {
 
         <section id="placement" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">12. CPU 전처리 cache와 encoder 배치는 다른 손잡이입니다</h2>
+          <EncoderPlacementViz />
           <div className={prose}>
             <p>
               processor cache는 GPU에 가기 전 CPU에서 만든 전처리 결과를 남깁니다. config/multimodal.py 138–146행에서 기본 크기는 4 GiB이고 API 프로세스와 engine

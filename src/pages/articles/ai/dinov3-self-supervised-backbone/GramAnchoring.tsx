@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { codeRefs } from "./codeRefs";
 import GramViz from "./viz/GramViz";
+import GramScheduleViz from "./viz/GramScheduleViz";
+import HiResGramViz from "./viz/HiResGramViz";
 
 export default function GramAnchoring({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -78,6 +80,7 @@ export default function GramAnchoring({ onCodeRef }: { onCodeRef: (key: string, 
       <h3 id="gram-teacher" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         기준 teacher는 언제 세우고 언제 갱신합니까
       </h3>
+      <GramScheduleViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           Gram 손실은 계산량을 아끼기 위해 100만 번의 기본 학습이 끝난 뒤 refinement 단계에서 켭니다. 그러나 최초
@@ -91,7 +94,11 @@ export default function GramAnchoring({ onCodeRef }: { onCodeRef: (key: string, 
           설정은 이 갱신을 최대 세 번 수행합니다. 따라서 시작 시점, 최초 기준 체크포인트, 갱신 시점은 서로 다른
           값입니다. 논문이 비교한 10만·20만 teacher는 비슷했고 100만 teacher는 더 나빴습니다.
         </p>
+      </div>
 
+      <HiResGramViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           한 가지 장치가 더 있습니다. 기준 특징을 만들 때 Gram teacher에는 두 배 해상도의 이미지를 넣고, 나온 특징
           맵을 bicubic 보간으로 절반 크기로 줄입니다. 같은 패치 격자에 대해 더 촘촘히 본 결과를 부드럽게 줄인 값이

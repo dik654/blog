@@ -1,9 +1,11 @@
 import { CitationBlock } from "@/components/ui/citation";
+import XxDhViz from "./viz/XxDhViz";
 
 export default function HandshakeFlow() {
   return (
     <section id="handshake-flow" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">XX의 세 메시지는 key secrecy와 authentication을 단계적으로 늘립니다</h2>
+      <XxDhViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           첫 메시지 <code>→ e</code>는 initiator의 ephemeral public key만 보내므로 아직

@@ -1,5 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ForkRewindFlowViz from "./viz/ForkRewindFlowViz";
+import MessageCopyForkViz from "./viz/MessageCopyForkViz";
 
 const ACTUAL_FORK_FIELDS = [
   ["새로 생성", "session_id · created_at_ms · updated_at_ms"],
@@ -92,6 +93,13 @@ export default function ForkCompaction() {
           branch name을 provenance로 붙입니다. 원본 session은 바뀌지 않으며
           fork된 session은 새 persistence path에 저장됩니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <MessageCopyForkViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           이 정보는 “어느 session에서 갈라졌는가”를 설명합니다. 그러나 “부모의 어느 immutable revision을 공통 base로 삼았는가”를 가리키는 pointer는
           아닙니다. 복제한 messages 이후에 양쪽이 바뀌어도 shared event history나 copy-on-write storage가 관리되는 구조는 아닙니다.

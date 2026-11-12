@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { MultiviewFusionMapReturn } from "./MultiviewFusionLocator";
 import AttentionFusionViz from "./viz/AttentionFusionViz";
+import AttentionPairBlocksViz from "./viz/AttentionPairBlocksViz";
 
 export default function AttentionFusion() {
   return (
@@ -44,6 +45,7 @@ export default function AttentionFusion() {
         assumptions={["메타데이터 cᵥ는 각 토큰의 원래 관측과 함께 이동합니다.", "서로 다른 단위의 위치·pose·시각은 명시적인 정규화 또는 embedding을 거칩니다.", "단순 합이 충분한지는 과제별 제거 실험으로 확인하며 기하학적 대응을 자동 보장한다고 가정하지 않습니다."]}
         interpretation="이 토큰은 ‘무엇이 보였는가’뿐 아니라 ‘어느 카메라의 어느 위치에서 언제 보였는가’를 함께 표현합니다. 다만 pose embedding을 넣었다는 사실만으로 정확한 3차원 대응 관계가 학습된 것은 아닙니다."
       />
+      <AttentionPairBlocksViz />
       <ExplainedFormula
         question="모든 관측 토큰을 한 sequence에 넣으면 왜 비용이 빠르게 커질까?"
         idea={<>전체 attention 점수 행렬은 모든 query와 key 쌍을 다룹니다. 관측별 유효 토큰을 더한 Ntotal에 대해 쌍 수가 Ntotal²이므로 관측 수까지 제곱에 들어갑니다.</>}

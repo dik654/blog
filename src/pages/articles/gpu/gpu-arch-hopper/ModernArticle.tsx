@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ClusterScopeViz, HopperPipelineViz } from "./viz/ModernHopperViz";
+import PipelineTimelineViz from "./viz/PipelineTimelineViz";
+import ClusterDsmViz from "./viz/ClusterDsmViz";
 
 const TUNING = "https://docs.nvidia.com/cuda/archive/12.8.1/hopper-tuning-guide/index.html";
 const GUIDE = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html";
@@ -35,6 +37,7 @@ export default function ModernHopperArticle(){return <article className="space-y
     <p>선출된 한 thread가 tile 좌표와 함께 transfer를 발행하면 hardware가 주소 생성과 data movement를 진행합니다. Consumer는 transaction barrier가 약속된 byte의 도착을 알린 뒤 shared tile을 사용합니다.</p>
     <p><strong>WGMMA</strong>는 이 tile을 소비하는 Hopper의 warpgroup-level matrix instruction입니다. 연속한 네 warp, 즉 128 threads가 함께 <code>D = A × B + C</code>를 발행합니다.</p>
     <p>B operand는 shared memory descriptor에서 읽고 A는 shared memory 또는 registers에서 올 수 있습니다. Accumulator C·D는 warpgroup의 registers에 나뉘어 놓입니다. 즉 TMA가 Tensor Core 안으로 data를 직접 밀어 넣는 것이 아닙니다. <strong>TMA가 shared tile을 준비하고 barrier가 소유권을 넘긴 뒤 WGMMA가 그 tile을 읽습니다.</strong></p>
+    <PipelineTimelineViz />
     <ExplainedFormula question="두 단계 pipeline이 steady state에서 tile 하나당 얼마나 걸리는지 어떻게 근사할까?" idea={<>Load와 compute를 겹치면 매 tile마다 둘을 더하지 않고 더 느린 단계가 cadence를 정합니다. 처음 채우기와 마지막 비우기 비용은 별도로 남습니다.</>} formula={String.raw`\begin{aligned}T_{stage}&=\max(T_{copy},T_{compute})\\[3pt]T_{pipe}&\approx T_{fill}+(L-1)T_{stage}+T_{drain}\end{aligned}`}
     annotatedFormula={String.raw`\begin{aligned}T_{stage}&=\underbrace{\max(T_{copy},T_{compute})}_{\text{느린 단계가 cadence}}\\[3pt]T_{pipe}&\approx\underbrace{T_{fill}}_{\text{처음 채우기}}+\underbrace{(L-1)T_{stage}}_{\text{나머지 tile}}+\underbrace{T_{drain}}_{\text{마지막 비우기}}\end{aligned}`}
     operations={[
@@ -62,6 +65,7 @@ export default function ModernHopperArticle(){return <article className="space-y
     <p><strong>Thread block cluster</strong>는 여러 blocks를 같은 GPC 안에서 함께 scheduling할 수 있는 optional hierarchy입니다. Cluster 안의 block은 다른 block의 shared-memory 주소를 rank로 mapping해 접근할 수 있습니다.</p>
     <p>이 주소 공간이 <strong>DSM(Distributed Shared Memory)</strong>입니다. Chip 전체가 공유하는 cache가 아니라, 정해진 cluster와 lifetime 안에서만 쓰는 협력 범위입니다.</p>
     <ClusterScopeViz />
+    <ClusterDsmViz />
     <p>
             Histogram bin이나 working set이 block shared memory 하나에는 크지만 cluster 합산 capacity에는 맞는 경우가 후보입니다.
           </p>

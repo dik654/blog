@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import SafetyLivenessViz from "./viz/SafetyLivenessViz";
+import VoteCountViz from "./viz/VoteCountViz";
 export default function SafetyLiveness(){return <div className="space-y-12 [&_section]:space-y-5 [&_p]:leading-8">
 <section id="timing-source" data-teach-level="6"><h2 className="text-2xl font-bold">9. 통신이 늦어져도 안전성 조건은 지워지지 않습니다</h2>
 <p>A·B와 C·D 사이의 메시지가 오래 막혔다고 놓습니다. A·B만으로는 필요한 세 표를 모을 수 없습니다. 이때 새 주문이 확정되지 않는 것과 서로 다른 주문 상태가 동시에 확정되는 것은 다른 사건입니다. 첫 번째를 피하려고 두 표만으로 확정하면 3절의 반례를 다시 만들 수 있습니다.</p>
 <CitationBlock source="Dwork–Lynch–Stockmeyer (1988), §1.2, p.290" citeKey={2} href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf"><p>원문 안전 조건은 “no two correct processors should ever reach disagreement”입니다. 같은 페이지는 메시지 지연 조건이 결국 회복될 때 결정 종료를 요구하는 조건과 이를 구분합니다.</p></CitationBlock>
 <p>이를 주문 7에 적용하면 A가 X를 확정한 뒤 C가 Y를 확정하는 일은 통신이 얼마나 늦었는지와 관계없이 금지됩니다. 반면 네트워크가 계속 끊겨 A·B·C가 서로 세 표를 모으지 못하면 진행을 보장할 시간 조건이 아직 성립하지 않은 것입니다. 안정화 시점은 검증자가 임의로 선언해 다른 사람의 과거 서명을 무시할 수 있는 값이 아닙니다.</p>
 <AlgorithmBlock title="한 단계의 동의 묶음 검사 (의사코드)" input={["명단 {A,B,C,D}, 필요한 수 q=3 (가정)","기대한 문맥 = (프로토콜, 주문7, 진행차수, 단계, 후보X)","도착한 서명 메시지 목록"]} steps={[{code:"seen ← 빈 집합"},{code:"각 메시지 m의 정확한 바이트 인코딩과 서명을 검사한다"},{code:"발신자가 명단에 없거나 m의 문맥이 기대한 문맥과 다르면 거절한다"},{code:"seen에 이미 있는 발신자는 표 수에 다시 더하지 않는다"},{code:"검증한 발신자를 seen에 추가한다"},{code:"|seen| ≥ 3이면 해당 단계의 동의 근거를 반환한다"}]} output="검증된 서명자 집합. 이것만으로 어떤 단계에서나 최종 확정해도 된다는 뜻은 아닙니다." />
+<VoteCountViz />
 <p>입력이 A·B·D라면 크기는 3입니다. A의 표를 세 번 받아도 크기는 1입니다. 같은 D가 X와 Y에 서명하면 위반 증거로 보존하지만 D의 존재를 없었던 것으로 지우고 장애 허용 수를 임의로 다시 계산하지 않습니다.</p>
 <p>이 단계에서 확인한 것은 올바른 동의 묶음입니다. 그 묶음이 잠금이나 확정에 어떤 영향을 미치는지는 선택한 프로토콜의 상태 전이 규칙으로 이어집니다.</p></section>
 <section id="safety-liveness" data-teach-level="7"><h2 className="text-2xl font-bold">10. 대표를 바꿀 때도 이전 결정 근거를 이어받습니다</h2>

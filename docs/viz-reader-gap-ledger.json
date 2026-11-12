@@ -3191,202 +3191,382 @@
 {
 "route": "ai/validation-feedback-audit",
 "publicPath": "cs/ai/validation-feedback-audit",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"The existing ValidationFeedbackViz (imported from cross-validation) states 'pairwise agreement는 .8' without the tie-exclusion condition. This is consistent with the 0.8 here but drops the denominator rule that §7 adds. Not edited."
+]
 },
 {
 "route": "gpu/gpu-arch-hopper",
 "publicPath": "cs/gpu/gpu-arch-hopper",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2,
+"articleIssues": [
+"The existing HopperPipelineViz step text says 'A도 보통 이 예시처럼 shared memory에서 옵니다'. The prose only says A can come from shared memory or registers, so '보통' is an unsupported frequency claim. Not edited.",
+"gpu-arch-hopper/ contains Cluster.tsx, Overview.tsx, SmStructure.tsx, TMA.tsx and TransformerEngine.tsx, which ModernArticle.tsx (the rendered article) does not import. I read only the rendered ModernArticle sections. These files appear to be dead code."
+]
 },
 {
 "route": "ai/regression-metrics",
 "publicPath": "cs/ai/regression-metrics",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2
 },
 {
 "route": "governance/international-anarchy",
 "publicPath": "politics/governance/international-anarchy",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1
 },
 {
 "route": "gpu/gpu-memory-hierarchy-and-roofline",
 "publicPath": "cs/gpu/gpu-memory-hierarchy-and-roofline",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"The viz directory already holds two unused files, GpuMemoryHierarchyAndRooflineViz.tsx and RooflineRidgeChart.tsx, that the article does not import. RooflineRidgeChart uses H100 figures that are not in the article. I left both untouched.",
+"The two existing RooflineArithmeticViz elements in sections 7 and 9 render after the data-stage-bridge paragraph, at the end of each section, rather than before the prose they explain. I did not move them."
+]
 },
 {
 "route": "ai/qwen38-flash-next-architecture",
 "publicPath": "cs/ai/qwen38-flash-next-architecture",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2,
+"articleIssues": [
+"In QsaIndex.tsx #qsa-budget the sentence '희소해지는 시점이 문맥 길이 약 8K 부근이라는 뜻입니다' contradicts the article's own numbers. The budget is 512 blocks × 4 = 2,048 tokens, so selection starts dropping blocks once there are 513 complete blocks, at 2,052 tokens. The 2,000-versus-8,000 example only brackets that boundary. The new Viz uses the arithmetic, not the 8K wording.",
+"Possible small mismatch in GatedResidual.tsx. Two low-rank gates of 655만 each (2×10,240×320) give 1,311만 per layer, but the article says 1,319만. The difference may come from norm or inject tensors the article does not list. I could not check this without the code."
+]
 },
 {
 "route": "ai/multimodal-serving-pipeline",
 "publicPath": "cs/ai/multimodal-serving-pipeline",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"§8 para 3: '사진 구간 끝인 1,385가 이미 계산된 위치를 넘으면 참조를 놓습니다' reads as 1,385 > computed, but scheduler.py 2137–2139 releases when start+length (1,385) <= num_computed_tokens, i.e. when the computed position reaches/passes 1,385. The Viz says '계산된 위치가 사진 구간 끝 1,385를 지나면'."
+]
 },
 {
 "route": "ai/agent-changelog-evidence",
 "publicPath": "cs/ai/agent-changelog-evidence",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2
 },
 {
 "route": "ai/paired-experiment-design",
 "publicPath": "cs/ai/paired-experiment-design",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3
 },
 {
 "route": "gpu/poly-ops-gpu",
 "publicPath": "cs/gpu/poly-ops-gpu",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"ModernArticle does not import the legacy section files in poly-ops-gpu/ (CosetNtt.tsx, MultiEval.tsx, Overview.tsx, PolyDiv.tsx). They do not render, so I did not count them as sections."
+]
 },
 {
 "route": "testimony/told-but-not-believed",
 "publicPath": "history/testimony/told-but-not-believed",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1
 },
 {
 "route": "inference-from-sources/the-gap-was-made",
 "publicPath": "history/inference-from-sources/the-gap-was-made",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2,
+"articleIssues": [
+"본문이 아닌 기존 Viz 쪽 문제: ErasedColumnsViz의 '16단 · 1,114행', '28단', '샤마시'는 본문에 없는 수치와 이름이다. ThreeFiltersViz의 '번호 대신 다른 기호를 붙임'은 본문의 '번호를 붙여 순서 안에 넣지 않고 본문 끝에 따로'보다 구체적이다. 둘 다 수정하지 않았다."
+]
 },
 {
 "route": "ai/grouped-validation",
 "publicPath": "cs/ai/grouped-validation",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3
 },
 {
 "route": "ai/claw-session",
 "publicPath": "cs/ai/claw-session",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4
 },
 {
 "route": "ai/cross-validation",
 "publicPath": "cs/ai/cross-validation",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3
 },
 {
 "route": "ai/oof-risk-estimation",
 "publicPath": "cs/ai/oof-risk-estimation",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3
 },
 {
 "route": "ai/smoothie-qwen-weight-editing",
 "publicPath": "cs/ai/smoothie-qwen-weight-editing",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2
 },
 {
 "route": "blockchain/webcat-frontend-integrity",
 "publicPath": "cs/blockchain/webcat-frontend-integrity",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1
 },
 {
 "route": "ai/competition-submission-control",
 "publicPath": "cs/ai/competition-submission-control",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"The existing SubmissionControlViz (imported from competition-workflow) uses an example of 20 uploads with B_used=6 and the phrases 'decision-changing feedback' and 'holdout' before section 7 introduces the 20-send example. It is a shared component, so it was not edited.",
+"In section 7 the 20-send example has a category '나머지 8회' that is never defined. The 20-cell split was not drawn because of this, and because the sum 4+2+6+8=20 is already clear from the text."
+]
 },
 {
 "route": "ai/motif-3-architecture",
 "publicPath": "cs/ai/motif-3-architecture",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"The existing MotifGdlaViz figure has no data-viz-name, so the scene-shot script does not count it (figures=4 on this page counts only the new Viz). This was observed and left unchanged.",
+"The article does not say which 2 of the 53 layers are dense or which layer the full/sliding-window schedule starts on. No layer-stack Viz was drawn so as not to invent positions.",
+"The phrase '반복 amplification 범위를 (0,2)에서 (0,1)로' leaves unclear which quantity the range applies to. The Viz does not depict the 2→1 annealing."
+]
 },
 {
 "route": "ai/math-functions-derivatives-gradients",
 "publicPath": "cs/ai/math-functions-derivatives-gradients",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"The live article is ModernArticle.tsx alone. Overview.tsx, Functions.tsx, Limits.tsx, Derivatives.tsx, ChainRule.tsx, PartialGradient.tsx, Nonsmooth.tsx and Applications.tsx in the same directory, and the viz files ChangeReadingViz, LocalLinearViz, ChainRuleViz and GradientDirectionViz, are not imported by it. They look like unused legacy files. I read them but did not count them as rendered sections."
+]
 },
 {
 "route": "ai/sandbox-deployment-controls",
 "publicPath": "cs/ai/sandbox-deployment-controls",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1,
+"articleIssues": [
+"The existing SandboxDeploymentControlsViz note for 'API 허용' says the API server checks RBAC verb·resource·namespace and that '네 조건이 맞아서 200'. The article's formula allow(q)=T∧G∧R∧V∧N has five conditions, including the API group. The count may be inconsistent."
+]
 },
 {
 "route": "ai/lstm",
 "publicPath": "cs/ai/lstm",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"Variants.tsx(GRUFlowViz 사용)와 viz/GradientRetentionViz·LSTMStateContractViz·LSTMStepTraceViz·RecurrentChoiceViz는 lstm.tsx가 렌더하지 않아 페이지에 나오지 않습니다. 렌더되는 Overview·Gates·CellState 세 절만 읽고 작업했습니다.",
+"Gates.tsx의 forget bias 문단은 forget bias 1의 근거로 'Jozefowicz 등의 대규모 architecture 탐색'을 듭니다. 그런데 바로 위 논문 해설 제목은 'LSTM: A Search Space Odyssey'(Greff 등의 논문 제목)이고 본문은 Jozefowicz 등이라고 적습니다. 저자 표기와 논문 제목이 서로 맞지 않을 수 있습니다."
+]
 },
 {
 "route": "ai/vllm-paged-attention",
 "publicPath": "cs/ai/vllm-paged-attention",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2,
+"articleIssues": [
+"8절 ExplainedFormula의 interpretation과 operations는 비교 대상으로 '최대 context 8,192 slot'을 듭니다. 본문 문단은 같은 비교에 '최대 2,048칸'을 쓰고, 기존 FragmentationViz는 '64칸 (가정)'을 씁니다. 세 숫자가 같은 사례 안에서 일관되지 않습니다.",
+"14절 ExplainedFormula operations는 '두 값 차이 7.71%p'라고 적습니다. 90−82.29=7.71이므로 계산은 맞습니다. 다만 같은 절 본문은 1,200-token 예에서 15.6%p를 쓰므로, 7.71%p가 35-token 사례의 값이라는 점을 독자가 구분해야 합니다.",
+"기존 vLLM Viz 다섯 개(AllocationContractViz·BlockLifecycleViz·FragmentationViz·PrefixScopeViz 등)는 VizFrame이나 장면 조작부를 쓰지 않는 정적 figure입니다. 손대지 않았습니다."
+]
 },
 {
 "route": "ai/perceptron",
 "publicPath": "cs/ai/perceptron",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"Convergence §6 '왜 R/γ의 제곱이 나오는가': the step to Mγ ≤ R√M silently assumes that the weights start at 0 and are updated only on mistakes, where y·wᵀx ≤ 0. That condition is what bounds ‖w‖² ≤ MR². The text does not state either assumption."
+]
 },
 {
 "route": "ai/onprem-k8s-inference-platform",
 "publicPath": "cs/ai/onprem-k8s-inference-platform",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2,
+"articleIssues": [
+"TwoLevelScheduling §'이 사슬 구조 때문에 tokenizer가 맞지 않으면' and the CalculationWalkthrough say the selector cannot find the cached pod (expected hit 0) when its tokenizer differs from the engine's. If the selector writes its index and hashes new requests with the same tokenizer of its own, its index lookups still match each other. The mismatch would then make the selector's prediction disagree with the engine's real cache rather than drop it to 0, unless the index is filled from engine-side token IDs. My Viz shows only the chain mechanism, a request that differs at token 10, and does not repeat the tokenizer claim."
+]
 },
 {
 "route": "blockchain/bft-theory",
 "publicPath": "cs/blockchain/bft-theory",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"The existing FaultyThresholdViz (§8) uses certificates {A,B,C} and {B,C,D} with overlap {B,C}. The prose and ExplainedFormula use A·B·D and B·C·D with overlap B·D. The figure and the text contradict each other in the same section.",
+"The existing ByzantineModelViz example 'A←vote(x), B←vote(y)' does not match the prose just above it, where D sends vote(7,X) to A and vote(7,Y) to C.",
+"viz/ContextViz*.tsx files are not rendered by any section. Their data uses different examples (n=5, f=1 and 'n=3 다수결 불가'). They are harmless but stale."
+]
 },
 {
 "route": "p2p/libp2p-gossipsub",
 "publicPath": "cs/p2p/libp2p-gossipsub",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"Suspected, not verified against source: the article says PRUNE happens at '12명 이상' (14 ≥ high 12). As I recall, rust-libp2p prunes only when the mesh is strictly larger than mesh_n_high (>12). The viz follows the article and avoids using exactly 12 as a scene."
+]
 },
 {
 "route": "record-numbers/numbers-that-command",
 "publicPath": "history/record-numbers/numbers-that-command",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 0
 },
 {
 "route": "ai/sandbox-runtime-isolation",
 "publicPath": "cs/ai/sandbox-runtime-isolation",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1,
+"articleIssues": [
+"The existing top Viz (SandboxRuntimeIsolationViz) and the TermLesson use Mount·DAC·LSM without defining them. I defined them only inside the new Viz.",
+"The ExplainedFormula operations label the last term G_s∧G_c∧G_o, while annotatedFormula names the same terms G_security, G_compat and G_cost. It is a naming mismatch inside the formula block, and I did not edit it."
+]
 },
 {
 "route": "ai/agent-control-boundaries",
 "publicPath": "cs/ai/agent-control-boundaries",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1,
+"articleIssues": [
+"Section 8 prose names the source section 'Where to use agents', but the CitationBlock source label says 'When to use agents'. The two section names disagree.",
+"The existing ControlBoundaryViz imported from llm-harness uses notes ('Deploy·delete·payment', 'diff·approval·rollback receipt', 'canary') that this article's prose does not mention. I left it untouched."
+]
 },
 {
 "route": "ai/dinov3-self-supervised-backbone",
 "publicPath": "cs/ai/dinov3-self-supervised-backbone",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"PostHoc.tsx has an existing prose <table> with min-w-[520px] that does not use ResponsiveVizTable. It is not part of a Viz, so I left it unchanged.",
+"The article never states that '/16' means 16-pixel patches. PositionBoxViz defines it briefly where it uses 512÷16 and 768÷16."
+]
 },
 {
 "route": "p2p/discv5",
 "publicPath": "cs/p2p/discv5",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"The article's own numbers imply something it does not address. With geth v1.17.8's 1000-byte record budget and worst-case 300 B ENRs, 3 records fit per packet, so 16 records need ceil(16/3) = 6 NODES packets. That is more than the receiver's local total cap of 5 that the article also states. The caveat mentions '4개 또는 6개' (4 or 6) but never ties 6 to the cap of 5."
+]
 },
 {
 "route": "record-numbers/how-the-army-was-counted",
 "publicPath": "history/record-numbers/how-the-army-was-counted",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1,
+"articleIssues": [
+"Existing EnclosureCountViz scene 4 says '보병 170만' (infantry), while the article prose and the citation say '육군 전체' (the whole land army, 'one hundred and seventy myriads' of the land army).",
+"Existing WhereItCanSlipViz scene 4 lists '170회 채웠다는 서술을 읽는다' (reading a statement that there were 170 fills). The source as quoted does not state 170 fills explicitly; 170 is inferred from 170 myriads.",
+"Existing EnclosureCountViz and WhereItCanSlipViz use min-w-[30rem] SVGs. I did not touch them."
+]
 },
 {
 "route": "cloud/kubernetes-requests-limits-allocatable-qos",
 "publicPath": "cs/cloud/kubernetes-requests-limits-allocatable-qos",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"Existing ThrottlePeriodViz scene 4 cites 'liveness probe의 timeoutSeconds 기본 1초', which the article prose never states (outside fact inside a Viz; not edited).",
+"§7 '메모리는 넘어도 잠깐 살다가 죽습니다': in cgroup v2, memory.max is a hard charge limit, so usage does not run past it. The docs' 'reactively' wording is about when the kill happens, not about exceeding the limit. Suspected imprecision; the new Viz does not draw usage going past the line."
+]
 },
 {
 "route": "p2p/libp2p-noise",
 "publicPath": "cs/p2p/libp2p-noise",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 4,
+"articleIssues": [
+"HandshakeFlow para 3 says '메시지 2 payload … sender가 아직 responder를 인증하기 전'. The sender of message 2 is the responder; it has not yet authenticated the initiator, whose static key only arrives in message 3. Likely should read 'initiator를'.",
+"The unrendered data files contradict the prose: HandshakeFlowData round 3 says '이 시점에 양측 모두 인증 완료' (the article separates identity verification), and KeypairSigningData step 1 calls the signed Noise static key an ephemeral key 'made each session'. Neither renders; neither was edited."
+]
 },
 {
 "route": "ai/multiview-fusion",
 "publicPath": "cs/ai/multiview-fusion",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 2
 },
 {
 "route": "ai/claw-permissions",
 "publicPath": "cs/ai/claw-permissions",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"Overview.tsx: in the text 'OS 격리는' followed by a newline and then <a href=\"/cs/ai/agent-sandbox-security\">, JSX drops the whitespace, so it renders as '격리는에이전트 sandbox 보안' with no space."
+]
 },
 {
 "route": "ai/robot-action-representations",
 "publicPath": "cs/ai/robot-action-representations",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 3,
+"articleIssues": [
+"pose-and-text-actions: the article says the action is 8-dimensional (6-DoF delta pose + gripper + episode termination), but the example string \"1 128 91 241 5 101 127\" has only 7 integers. The CitationBlock repeats the same example.",
+"continuous-vs-discrete vs. the formula: the prose gives a bin width of 1/256 of the range (about 0.8mm for 20cm), but the formula floor((a−a_min)/(a_max−a_min)·(B−1)) actually spaces bins at range/(B−1) = 20cm/255 ≈ 0.784mm. The difference is tiny but the two descriptions do not match exactly."
+]
 },
 {
 "route": "cloud/kubernetes-rollout-termination-pdb-drain-hpa",
 "publicPath": "cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa",
-"status": "todo"
+"status": "done",
+"round": 9,
+"vizAdded": 1,
+"articleIssues": [
+"Section 7 (rollout-progress): it says that with replicas 4 \"새 1개가 실패하고 옛 3개가 살아 있어 서비스는 75%로 돕니다\". By section 3's own numbers, though, maxSurge 1 allows up to 5 Pods, so once the old ReplicaSet drops to 3 the new ReplicaSet can grow to 2. The new count is likely 2, not 1 (suspected; I did not check against code)."
+]
 },
 {
 "route": "p2p/dht-security",
@@ -7187,6 +7367,63 @@
 "InPlaceSwapViz: rev3 gives 0,4,2,6,1,5,3,7. Swapping once gives x0 x4 x2 x6 x1 x5 x3 x7, and swapping in sequence at every i returns the identity order. The buffer is 8×32=256B, using s_F=32B from section 04. No change.",
 "StageTileViz: I recomputed the pairs for s=0,1,2 with the article's formula and they are correct. The traffic figures 2×8×32×3=1,536B and 2×8×32×2=1,024B are correct, and the fused model is labelled as an assumption.",
 "audit:viz --strict: no ERROR lines. There are 4 REVIEW notes for SVG text in StageTileViz; the screenshots show no overflow. viz-scene-shot at 390 and 1440 for both articles: controlY and frameH stable across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r8/rv19/isms-backup-recovery and /tmp/viz-rounds/r8/rv19/ntt-gpu-impl."
+],
+"9": [
+"Two screenshot runs for the-gap-was-made did not finish, so CopyPathViz has no complete 1440px set. They failed with 'Execution context was destroyed' or 'Cannot find context' because the page kept reloading during the runs, likely from other agents editing files on the same dev server. The 390px run measured all 8 shots of CopyPathViz as stable: controlY 581, frameH 754, overflow 0, console errors 0. 1440px shots s0 to s3 saved. CopyPathViz is unchanged in this review.",
+"No errors found after recomputing NumberGapViz. 65+35=100 and 66 to 99 is 34 numbers; 65+30=95 and 66 to 94 is 29 numbers. These match the article: \"번호 차이는 35이지만 그 사이에 빠진 번호 66~99는 34개\" and \"30개로 보았다면 같은 조항이 95조\". The Viz labels 30 as the article's own assumption and labels 35 as an estimate, not a count.",
+"No errors found in CopyPathViz. It shows one step versus two steps (two arrows), as in the article: \"전해지는 과정이 한 단계 … 한 단계가 더 있습니다\". It does not order the erasure and the copy in time, which keeps the article's hedge: \"나중인지 먼저인지는 알 수 없습니다\".",
+"audit:viz --strict on SameDemandViz.tsx passed with no ERROR lines. SameDemandViz screenshots at 390px and 1440px measured stable: controlY and frameH constant, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r9/rv5/.",
+"TamperCasesViz '+hash' and 'manifest' scenes: the server also changes the HTML, so WEBCAT's resource check on /index.html would fail as well. The check list only shows 'R app.js hash'. The verdict is still correct because R fails either way, so I left it alone; renaming the row to 'R resource hash' is a possible polish.",
+"TamperCasesViz and the smoothie Viz on mobile (390px): the scene note sits partly under the control row in SceneShell's layout. That is shared shell behaviour in each article's viz/SceneShell, not these Viz files; the screenshot script reported overflow 0 and stable controls.",
+"Numbers I recomputed that matched: S(0.5) gives 0.708 for s=2, 0.630 for s=10 and 0.574 for s=100. softmax(4,2,0) = (0.867, 0.117, 0.016); softmax(2,2,0) = (0.468, 0.468, 0.063); for (2,0,-2) to (2,0,-1), token 3 goes from 0.016 to 0.042. The values the Viz itself calls assumptions (s=2 and s=100, the uniform 0.5 coefficient, the negative-logit example, signer key held outside the server) are all labelled as assumptions.",
+"No defects found that warranted an edit. Every number checks out against the article. PatientWeightViz: weights 1/4 per record give 1 x 1/4 = 0.25, and per person C's three records get 1/6 each with D's one record at 1/2, giving (0+1)/2 = 0.50 (article #small-case: '기록마다 같은 무게를 주면 1/4=0.25이고 사람마다 같은 무게를 주면 (0+1)/2=0.50'). OofSwapViz: 20 x 0.2 = 4, 80 x 0.4 = 32, and (4+32)/100 = 0.36, against the plain mean 0.30 (#small-case). FoldWeightViz: 0.5x0.2 + 0.5x0.4 = 0.30, 0.2x0.2 + 0.8x0.4 = 0.36, and 1/40 is 4 times 1/160 (#why-weight). PooledAucViz: each fold has one pair ranked correctly, so AUC 1. Pooled, the pairs are 0.2>0.1, 0.2<0.8, 0.9>0.1 and 0.9>0.8, so 3/4 = 0.75 (#boundary: '[0.1,0.2]와 [0.8,0.9] ... pooled AUC는 0.75'). SplitFamilyGridViz roles match #split-family, and each scene note explains K-fold and walk-forward in the same place it uses the term.",
+"Possible polish, left alone because it is a judgment call: in SplitFamilyGridViz scene 0 ('일반 K-fold', summary '행을 섞어 일부를 평가로'), a cell is defined as a bundle of one subject's records for one period, yet whole cells go to evaluation. Real row-level K-fold would also split rows inside one cell, which is even more leakage than the picture shows. The scene note's leakage claim still holds. Changing this would mean redefining what a cell is, so it was not edited.",
+"Verification: npm run -s audit:viz -- --strict on all 6 files gave only REVIEW items about SVG text and no ERROR lines. viz-scene-shot ran for all 5 Viz at 390 and 1440 px. Control Y and frame height were stable in every scene (667/754 and 710/864), with overflow 0 and console errors 0. The first OofSwapViz run failed because the page navigated mid-run ('Execution context was destroyed'); the rerun passed. Screenshots are in /tmp/viz-rounds/r9/rv7/cross-validation and /tmp/viz-rounds/r9/rv7/oof-risk-estimation. I read the 390 px final-scene shot of each Viz (the first scene for FoldWeightViz) and saw no clipping or overlap.",
+"The article's claim that 'RuntimeDefault가 ptrace 같은 일부 호출을 막아도' (TermLesson example; the Viz repeats it in scene 3) needs an outside source. As far as I know, the Docker/containerd default seccomp profiles have allowed ptrace on kernel 4.8 and later. If so, ptrace is a weak example of a blocked call, and a call like mount, kexec_load or bpf would be a safer one. This would need a change to the prose and a source, so I did not change the Viz. Fix the prose first, then the Viz.",
+"Scope: I checked only SeccompArgumentViz, the one new Viz listed. record-numbers/numbers-that-command had no new Viz in the task list, so I did not review it.",
+"Verification: audit:viz --strict passed. Scene shots at 390 and 1440 had stable controls and frame, overflow 0 and console errors 0. The first run at 1440 failed with an 'Execution context was destroyed' navigation error, probably a reload caused by other agents' edits, and the rerun was clean. At 390 px the verdict scene scrolls inside the canvas. This is the intended mobile layout, not overflow.",
+"HornerChainViz, scene 2, says '원래 계수만으로는 h₀를 h₁과 동시에 계산할 수 없으므로'. This matches the article's own interpretation ('h0를 h1과 동시에 원래 a만으로 계산할 수 없습니다') and is true within the Horner recurrence. Outside it, f(z) can be evaluated directly from the powers of z, so the absolute wording overstates. Tightening it needs a prose change, which is out of scope for this review.",
+"ThroughputCountViz: the description defines S (the end-to-end speedup ratio), but no scene shows a value for S, because the article gives no T_e2e numbers. I left it as is; adding values would mean inventing numbers.",
+"LadderUpdateViz.tsx: no defect found. loss = 1 − 0.74 = 0.26 gives threshold 0.25; A's 0.24 < 0.25 updates the public value and the threshold becomes 0.23; C's 0.25 ≥ 0.23 keeps 0.24. This matches section 8.",
+"ClusterDsmViz.tsx: no defect found. bin 9 → rank floor(9/4) = 2, and 16 bins / 4 per block = 4 blocks. The scope and cost caveats (remote DSM access costs more than local, cluster residency can limit scheduling, compare against a global-memory baseline) match section 03.",
+"Checks: npm run audit:viz --strict printed no ERROR lines, only REVIEW notes about SVG text. Scene shots at 390px and 1440px for all 5 Viz: frame and control positions stable across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r9/rv0/validation-feedback-audit and /tmp/viz-rounds/r9/rv0/gpu-arch-hopper; I read them and saw no visual overlap.",
+"No wrong-fact or misleading findings. I recomputed every number. ResidualCostViz: residuals [0,0,0,+100] and [-25,-25,-25,+75]; absolute sums 100 and 150, so MAE is 25 and 37.5; squared sums 10,000 and 7,500, so RMSE is 50 and about 43.30; D4's share is 75/150=50% and 5,625/7,500=75%. All of these match the article's interpretation, 'MAE=25, RMSE=50 ... MAE=37.5, MSE=1875, RMSE≈43.30'. CostCurveViz: Σ|y−a| = 3a+(100−a) = 100+2a, so it is 100 at a=0 and 300 at a=100, and the slope is +2 per minute as the note says. Σ(y−a)² = 4a²−200a+10,000 is 10,000 at a=0, 7,500 at a=25 (the minimum) and 30,000 at a=100. The y-axis ticks and the minimum labels agree with these values. RatificationOverlapViz: the ranges 2~4, 3~5 and overlap 3~4, the rejection of 2 ships by B and 5 ships by A, the '4척을 넘으면 의회가 부결한다' ceiling and the 2-only / 5-only case with no overlap all quote the article's #limits ProgressiveDetail prose word for word.",
+"The repo script node scripts/viz-scene-shot.cjs did not give usable results for these Viz. For regression-metrics it found figures=0 at 390px, so mobile was never checked. For international-anarchy it timed out because the Viz sits inside a collapsed ProgressiveDetail and is 'not visible'. I checked instead with my own Playwright script, /tmp/rv1scripts/shot.cjs, which opens collapsed details only inside the article and steps through every scene at 390px and 1440px. All three Viz: control-row offset and frame height identical in every scene, no horizontal overflow, no document-level horizontal scroll, 0 console errors. At 390px each canvas scrolls vertically inside itself (18px, 105px and 153px), which section 2 of the standard allows for the mobile frame. Screenshots are in /tmp/viz-rounds/r9/rv1/{regression-metrics/a,regression-metrics/b,international-anarchy}. The script may need a fix for collapsed-detail and mobile figure discovery, but scripts are out of scope for me.",
+"audit:viz --strict on the three files reported no ERROR lines. It flagged only four REVIEW items, all short SVG axis and tick labels in CostCurveViz, and the screenshots show none of them overflowing.",
+"No wrong-fact errors found. I rechecked the rest against the article text: GroupSplitViz (2·2·3·1 rows; {A,B}∩{C,D}=∅; moving r5 gives {A,B,C}∩{C,D}={C} with 5 and 3 rows), HospitalBoundaryViz (the hospital placement and B·D's hospital are marked as assumptions), ReconcileViz (completed/failed/unknown conditions match ConversationRuntime prose lines 241-249) and AliasResolveViz (explicit ID is rejected on mismatch; the alias searches other workspaces and loads with a note).",
+"On mobile (390px), the notes of MessageCopyForkViz and AliasResolveViz run below the visible area. They sit in the shell's inner overflow-y scroll area (scrollHeight 580 vs 554 and 600 vs 550), which the 640px-and-below rule allows. I did not check by hand that the end of each note can be reached by scrolling.",
+"In AliasResolveViz scene 2 the step labels sit side by side, with ② on the left and ① on the right, so they read out of order left to right. They are numbered, so I left them as they are.",
+"Checks: audit:viz --strict on the changed files reports 0 ERROR lines. viz-scene-shot ran for all 7 Viz at 390px and 1440px: control position and frame height did not change between scenes, horizontal overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r9/rv6/grouped-validation and /tmp/viz-rounds/r9/rv6/claw-session.",
+"Prose, src/pages/articles/ai/multimodal-serving-pipeline.tsx line 256: '사진 구간 끝인 1,385가 이미 계산된 위치를 넘으면 참조를 놓습니다' states the condition the wrong way round. The codebase condition is `start_pos + num_tokens (=1,385) <= num_computed_tokens`, so the reference is released when the computed position reaches 1,385. This needs a prose edit, which is out of scope.",
+"At 390px, the R2TraceViz stage is taller than VizFrame's fixed frame (frameH 754). In the screenshots the zoom labels and the readout row ('그중 사진 자리 9') sit under the control strip until scrolled inside the frame. The audit reports overflow 0, and this is shared VizFrame/SceneShell behaviour (src/components), so I left it alone.",
+"Rechecked with no change needed. R2TraceViz: 1,406 = 15+1+1,369+1+20, hit 86×16 = 1,376, 30 remaining = 9+1+20, block 87 ends at 1,392. EncoderPlacementViz: 4 GiB × 2 = 8 GiB, weights 1/4 per GPU vs full weights in data mode, ~10% at TP 8 hedged as the doc author's measurement. ReleaseStateViz: entry stays in Unreleased through check and merge and moves to v1.4.0 only after the deploy is confirmed. All match the article.",
+"Verification: audit:viz --strict printed no ERROR lines (only SVG-text REVIEW items in R2TraceViz, all fitting in the screenshots). viz-scene-shot for all 5 Viz at 390 and 1440: controlY and frameH constant across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r9/rv3/{multimodal-serving-pipeline,agent-changelog-evidence}/.",
+"ExpertRoutingViz: the grid's 9 of 385 experts (≈2.3%) sits next to the 13.2B/314B ≈ 4.2% active-parameter bar. A reader may expect the two ratios to match. The usual reason they differ is that attention, dense layers and embeddings are always active, but the article never says this, so the fix needs an outside fact or prose. Left unchanged.",
+"LadderViz scene 1 labels publishing A's 0.26 '직전 공개값으로 둠(가정)'. In Blum–Hardt Algorithm 1, R0 = ∞, so the first loss is always published (rounded to η). The article does not state this, so the label stays hedged as an assumption rather than citing the algorithm.",
+"Checks run. All arithmetic was recomputed and is correct: 13.2/314 = 4.20%; mHC u = 2.0, H_res rows 1.6/2.3/2.7/3.4 with every row and column summing to 1, next streams 1.85/2.40/2.80/3.45; MOPD ln2 = 0.69, ln0.25 = −1.39, ln2.5 = 0.92; Ladder thresholds 0.25 and 0.23; ledger 0+1+1+0 = 2 at limit 2. audit:viz --strict printed 0 ERROR lines (REVIEW items only). Scene shots at 390px and 1440px: frame and control positions are constant in every scene, horizontal overflow is 0, console errors are 0. Screenshots are in /tmp/viz-rounds/r9/rv9/competition-submission-control and /tmp/viz-rounds/r9/rv9/motif-3-architecture.",
+"Prose in QsaIndex.tsx (#qsa-budget, the paragraph after QsaBudgetThresholdViz) says '희소해지는 시점이 문맥 길이 약 8K 부근이라는 뜻입니다'. By the article's own numbers (budget 2048 ÷ 4 = 512 blocks; topk(min(512, n))), selection starts dropping blocks at 513 complete blocks, which is 2,052 tokens, well below 8K. The Viz shows the correct 2,048/2,052 threshold, so it conflicts with this sentence. It is a prose fix and outside this task's scope.",
+"RooflineCeilingViz at 390px: in scene 4 the left-arrow label 'byte↑' sits close to the '62.5G' y-tick label (about 12px vertical gap). It is still readable in the screenshot, so I left it unchanged.",
+"AddressSectorsViz, RooflineCeilingViz and BelowRoofBranchViz: I recomputed every number (4/5/8/32 sectors and 100/80/50/12.5%; 1/12 × 1TB/s = 83.3G with the ridge at 1 FLOP/B; branch content matches §9–10). QsaBudgetThresholdViz checked out too (500/512/2000/65536 blocks, 25.6%, 0.78%, 2,052-token threshold). I found no defects in these four.",
+"ControlTraceViz: no defect found. I checked 6−2=4 reads left, 2/20 files read, the check-pass assumption and the prod-1 rejection against §3 ('읽기 최대 6회, 검사는 2개 … (가정)') and §7 prose. Workflow, agent loop and checkpoint are defined in §6, before the Viz. Audit and screenshots are clean.",
+"GramScheduleViz: numbers match the article: 100만 base steps, the 10만·20만 checkpoints were 'similar', 100만 was 'worse', and updates come every 1만 steps up to 3 times. The 20만+ decline band is labelled as not showing magnitude. Polish not applied: at 390 px the '0' and '10만' tick labels sit close together ('0 10만') but are still readable. The scene that shows all three update boxes lit pairs them with the summary '최대 3회', so it does not claim exactly three.",
+"PositionBoxViz: 512/16=32 and 768/16=48 (4:6 drawn), the [-1,1] box and the 0.5x–2x jitter all match the PostHoc prose. '/16' is explained inside the Viz note ('패치 한 변이 16픽셀인 /16 모델'). No change.",
+"SquareErrorViz description says '그림은 실제 비율로 그렸습니다'. At Δx=0.01 the bands and the corner are 0.48 units wide but are drawn with a 1-unit stroke, so they look bigger than true scale. The scene note already says the corner is marked only by a circle, so I left this unchanged.",
+"Checks: audit:viz --strict on all 4 files gives 0 ERROR lines (only REVIEW notes about SVG text). viz-scene-shot at 390 and 1440 for /cs/ai/math-functions-derivatives-gradients and /cs/ai/sandbox-deployment-controls: control row Y and frame height are constant across scenes, overflow is 0, console errors are 0. Screenshots are in /tmp/viz-rounds/r9/rv10/math-functions-derivatives-gradients and /tmp/viz-rounds/r9/rv10/sandbox-deployment-controls.",
+"All five Viz were checked against the article text. PermutationCheckViz is correct: (2+5+8)/3=5, [2,5,8]→[8,2,5] follows the article's permutation [정면,측면,위쪽]→[위쪽,정면,측면], and the values are labelled as assumed. TokenLifecycleViz matches the article: default max_uses 1, consume moves the token to Consumed, a different branch gives scope mismatch, a different executor gives unauthorized delegate, and the ledger is marked as not wired. CrashConsumeViz matches the article's consume-before/after trade-off and the completed/failed/unknown branches, and it is labelled as hardening, not a pinned implementation. The other PrecedenceTraceViz scenes agree with the six-step precedence table.",
+"Minor point not changed. When one TokenLifecycleViz check fails, it still marks the other checks with ✓. The article does not say in what order verify runs its checks or whether it stops at the first failure, so the marks may suggest that every check is evaluated. Fixing this needs the source order from approval_tokens.rs, which is an outside fact. The 'approver: 사용자' label is also an illustrative name that the description does not list as assumed.",
+"Verification results. audit:viz --strict found no ERROR lines (only REVIEW notes on SVG text). viz-scene-shot ran for all five Viz at 390 and 1440: the controls and frame stayed stable in every scene, overflow was 0 and there were 0 console errors. In the 390px screenshots the scene shell's sticky control row covers the lower part of the stage at the moment of capture. That comes from the shared ClawSceneShell/FusionSceneShell, which is outside these files.",
+"Shared mobile layout, not a Viz-level bug and outside my scope (src/components): at 390px, scenes 2 and 3 of FusedGateSplitViz and scenes 1 and 3 of PrefixReuseCountViz are taller than the fixed mobile stage. The note scrolls inside the canvas, and part of its text shows under or behind the control row (see /tmp/viz-rounds/r9/rv11/lstm/390-1-*-s3.png). The scene-shot script reports overflow 0, and the controls and frame stay at the same position in every scene.",
+"Verified as correct with no change: FusedGateSplit scene 3 (i,f,g,o read as i,f,o,g swaps the candidate and output-gate slots, matching the article's assumption). CellPaths' indirect path Cₜ₋₁→hₜ₋₁→gates→Cₜ (supported by h_t=o_t⊙tanh(C_t) in Overview.tsx and the CellState text \"Gate 자체도 h와 C의 함수\"). Truncation arrows 8→5 with credit 4 and memory 8 steps, labeled as assumptions. PrefixReuseCount numbers: 63×10=630, 62+10=72, 288/350=82.29%, 8928/12000=74.4%, 90−74.4=15.6%p, 15.6/74.4=21.0%. ReplicaRouting hits under round-robin assignment (index % replicas): 9/10, 8/10, 2/10, matching section 15.",
+"audit:viz --strict on the changed file reported only REVIEW lines for SVG text and no ERROR lines. Scene shots for all 6 Viz at 390 and 1440 had stable controlY and frameH, overflow 0 and 0 console errors.",
+"Pi0ChunkTimingViz scene 04 says the roughly 73ms inference covers all 10 integration steps. The article puts '10번의 integration step' and '전체 inference가 약 73ms' in the same paragraph but never says one contains the other. This matches the π0 paper's timing breakdown, but confirming it, or making the article say it, needs a source check or a prose change, so I left it unchanged.",
+"MultimodalAverageViz and DrainRetryViz: I rechecked the numbers and found nothing wrong. The average control/end points (100+260)/2=180 and (148+212)/2=180 put the average path straight into the cup. Allowed is 4−3=1, then 3−3=0, then 4−3=1. 20 min ÷ 5 s = 240. At 390px both viz use the shared SceneShell pattern: a fixed frame with internal scroll and sticky controls. Controls and frame stayed stable across scenes, overflow 0, console errors 0.",
+"audit:viz --strict printed only REVIEW lines for SVG text (no ERROR lines). I checked overflow in the screenshots under /tmp/viz-rounds/r9/rv19/ and there was none.",
+"DistanceShelfViz: I recomputed every number and found nothing to fix. Bob 10110010 ⊕ x 10010111 = 00100101, highest 1 at position 6, so d=6. Each shelf ID's distance from Bob matches its shelf (8,8,7,6,6,6,5,4). The 4th returned record, 10100000, is at d=5 and is correctly rejected. Nodes at d=6 share the prefix 100 with x, so they are closer to x, as the scene implies.",
+"AccumulatedErrorViz: I found nothing to fix. 100×170=17,000, the line crosses 1만 at the 100th fill (100×100), 170×9,900=1,683,000, and 1,700,000−1,683,000=17,000. The 9,900 value and the 100-per-fill example are marked as assumptions. The direction (an overestimated density gives a record higher than the actual count) matches the article.",
+"Shared SceneShell (not edited): at 1440px the note area scrolls inside the frame, so long notes such as NodesSplit scenes 2 and 4 show only their first two lines until scrolled. Controls and frame stayed stable (2px or less) and overflow was 0 in every scene, and this pattern was already there.",
+"Checked and correct, left unchanged. MemoryLimitPathViz matches §7: 0.82 + 0.18 = 1.0 at memory.max, then reclaim, OOM kill, 137/OOMKilled, then the global-OOM candidate, and its hedges ('reactively', bar lengths are assumptions) are kept. FrameSplitViz arithmetic is right: 2^16−1 = 65,535; 65,535−1,024 = 64,511; 100,000−64,511 = 35,489. XxDh line endpoints are right: es is initiator e to responder s, se is initiator s to responder e. QoS oom_score_adj values (−997, 1000, request ratio) match §5.",
+"Mobile screenshots at 390px show the scene note scrolling inside the canvas, under the control row. This is the stable-stage inner-scroll pattern the standard allows below 640px. Controls and frame stayed the same across scenes, with 0 overflow and 0 console errors.",
+"Six of the eight files were changed. MemoryLimitPathViz.tsx and the two SceneShell.tsx copies were not changed, so they were not audited or re-checked."
 ]
 }
 }

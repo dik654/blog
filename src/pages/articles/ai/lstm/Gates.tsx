@@ -2,6 +2,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import FusedGateSplitViz from "./viz/FusedGateSplitViz";
+import ForgetBiasDecayViz from "./viz/ForgetBiasDecayViz";
 
 export default function Gates({
   onCodeRef,
@@ -23,6 +25,8 @@ export default function Gates({
           그만큼 gate network 자체의 gradient는 작아진다.
         </p>
       </div>
+
+      <FusedGateSplitViz />
 
       <ExplainedFormula
         question="한 timestep에서 보존·기록·공개 비율을 어떤 입력으로 계산할까?"
@@ -81,6 +85,11 @@ g_t&=\underbrace{\tanh(a_g)}_{\text{부호 있는 후보값}}
           등의 대규모 architecture 탐색에서는 forget bias 1이 중요한 baseline 개선으로 관찰됐다. 다만 framework 기본값과 normalization,
           sequence reset policy가 다르므로 모든 task의 고정 정답으로 사용하지 않는다.
         </p>
+      </div>
+
+      <ForgetBiasDecayViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           예를 들어 다른 logit contribution이 0일 때 bias 1은 f=σ(1)≈0.731을
           만든다. 한 step에서는 꽤 큰 값처럼 보이지만 20-step direct retention은

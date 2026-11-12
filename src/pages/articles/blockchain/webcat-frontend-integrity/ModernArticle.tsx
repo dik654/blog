@@ -3,6 +3,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import WebcatLocator, { WebcatMapReturn } from "./WebcatLocator";
 import WebcatIntegrityViz from "./viz/WebcatIntegrityViz";
+import TamperCasesViz from "./viz/TamperCasesViz";
 
 export default function ModernWebcatFrontendIntegrityArticle() {
   return (
@@ -103,6 +104,7 @@ export default function ModernWebcatFrontendIntegrityArticle() {
         <p>
           <code>/app.js</code>의 hash가 다르거나 manifest signature, threshold, timestamp, CSP, enrollment 검증 중 하나가 실패하면 전용 오류 화면으로 이동합니다. 오류 코드는 실패 단계를 구분합니다. 따라서 최종 결과는 “경고만 남기고 계속 실행”이 아니라 page load 차단입니다.
         </p>
+        <TamperCasesViz />
         <div className="not-prose space-y-px bg-border p-px" aria-label="HTTPS, SRI, CSP와 WEBCAT이 확인하는 경계">
           {[
             ["HTTPS", "사용자와 서버 사이 채널", "서버가 개발자 승인 bytes를 보냈는지는 모릅니다."],

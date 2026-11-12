@@ -1,5 +1,9 @@
 import { RooflineArithmeticViz } from "@/components/articles/calculation-structure-gallery";
 import { Link } from "react-router-dom";
+import AddressSectorsViz from "@/pages/articles/gpu/gpu-memory-hierarchy-and-roofline/viz/AddressSectorsViz";
+import RooflineCeilingViz from "@/pages/articles/gpu/gpu-memory-hierarchy-and-roofline/viz/RooflineCeilingViz";
+import BytesInFlightViz from "@/pages/articles/gpu/gpu-memory-hierarchy-and-roofline/viz/BytesInFlightViz";
+import BelowRoofBranchViz from "@/pages/articles/gpu/gpu-memory-hierarchy-and-roofline/viz/BelowRoofBranchViz";
 import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "@/pages/articles/world-systems/NumericPath";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
@@ -38,6 +42,7 @@ export default function Article() {
     </section>
     <section id="picture" data-teach-level="1" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">4 · 연속 128바이트는 32바이트 조각 4개에 들어갑니다</h2>
+      <AddressSectorsViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">첫 32개 작업이 각각 4바이트를 읽으면 유효량은 128바이트입니다. 시작 주소가 128바이트 경계에 맞으면 32바이트씩 4 조각에 걸립니다. 시작 위치가 4바이트 어긋나면 5 조각 160바이트 범위에 걸려 128/160=80%가 유효한 부분입니다.</p>
         <p className="leading-8">각 작업이 원소 하나씩 건너뛰는 간격 2이면 조각 8개, 256바이트 범위입니다. 간격 8이면 조각 32개, 1024바이트 범위입니다. 같은 128바이트를 사용해도 주소가 흩어질수록 요청에 걸리는 조각이 늘어납니다. 아래 계층에서 실제로 읽는 양은 아직 계산하지 않았습니다. 간격 8의 변형에는 최소 249개 원소가 있는 입력이 필요합니다. 64개짜리 원본 배열 밖을 읽으라는 뜻은 아닙니다.</p>
@@ -84,12 +89,19 @@ export default function Article() {
       <span id="roofline-bound" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">7 · 1/12 FLOP/B에 1TB/s를 곱하면 약 83.3GFLOP/s입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">같은 64개 덧셈에서 계산량은 64 FLOP이고 유효 읽기·쓰기는 768바이트입니다. 따라서 연산 강도는 64 FLOP ÷ 768바이트 = 1/12 FLOP/B입니다. 이 유효량이 실제 DRAM 이동량과 같다고 가정하겠습니다.</p><p className="leading-8">대역폭 상한 1TB/s는 초당 10¹²바이트입니다. 여기에 바이트마다 1/12 FLOP를 곱하면 초당 계산 상한은 10¹² byte/s × 1/12 FLOP/byte = 약 83.3GFLOP/s입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
+        <p className="leading-8">같은 64개 덧셈에서 계산량은 64 FLOP이고 유효 읽기·쓰기는 768바이트입니다. 따라서 연산 강도는 64 FLOP ÷ 768바이트 = 1/12 FLOP/B입니다. 이 유효량이 실제 DRAM 이동량과 같다고 가정하겠습니다.</p>
+      </div>
+      <RooflineCeilingViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">대역폭 상한 1TB/s는 초당 10¹²바이트입니다. 여기에 바이트마다 1/12 FLOP를 곱하면 초당 계산 상한은 10¹² byte/s × 1/12 FLOP/byte = 약 83.3GFLOP/s입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
         <p className="leading-8">같은 계산을 시간으로 보면 64÷10¹² =0.064ns의 계산 물량과 768÷10¹² =0.768ns의 이동 물량을 비교합니다. 더 큰 0.768ns는 포화된 장치의 처리량 모델입니다. 64개만 제출한 실제 kernel이 그 시간에 완료된다는 예측은 아닙니다. 요청 시작과 메모리 응답을 기다리는 시간이 남습니다.</p>
         <p className="leading-8">
             계산 상한과 이동 상한이 만나는 점은 1TFLOP/s÷1TB/s =1FLOP/B입니다. 이를 ridge point라고 부릅니다. 같은 경계의 실제 byte가 늘면 연산 강도는
             왼쪽으로 이동합니다. Cache 재사용으로 HBM byte가 줄면 HBM 기준의 연산 강도는 오른쪽으로 이동할 수 있습니다.
           </p>
+      </div>
+      <BytesInFlightViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">한 요청의 평균 왕복 시간을 500ns로 가정합니다. 1TB/s를 지속하려면 평균 500000바이트, 즉 500KB가 처리 중이어야 합니다. 처리량 × 평균 대기 시간으로 구한 평균 진행 중 데이터량입니다. 64개 예의 768바이트만으로는 이 정상 상태를 채울 수 없습니다. 독립 요청을 늘리지 못하면 지연이 성능을 제한합니다.</p>
         <p className="leading-8">실측 유효 768바이트를 1μs에 처리했다면 유효 대역폭은 0.768GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.</p>
       </div>
@@ -126,6 +138,7 @@ export default function Article() {
     <section id="limits" data-teach-level="7" className="scroll-mt-20">
       <span id="latency-launch-bound" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">10 · 상한에 못 미치는 이유에 따라 다음 실험을 고릅니다</h2>
+      <BelowRoofBranchViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">작은 kernel 1000개를 순차 제출하고 각각의 추가 launch 비용이 4μs라면 시작 비용만 4ms입니다(가정). 이 경우 요청 byte를 조금 줄이는 것보다 launch 수를 줄이는 실험이 유용할 수 있습니다. 다만 fusion은 register와 shared memory를 늘릴 수 있습니다. Spill이나 상주 자원 감소도 생길 수 있으므로 전체 시간을 다시 잽니다.</p>
         <p className="leading-8">다음 주소가 이전 읽기 값에 달려 있으면 넓은 메모리 통로도 놀 수 있습니다. 이때 독립 작업을 늘리거나 의존 경로를 바꾸는 실험을 합니다. 반대로 이미 대역폭을 채웠다면 작업 수를 더 늘리는 것만으로 바이트당 시간이 줄지 않습니다.</p>

@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { ControlBoundaryViz } from "../llm-harness/viz/ModernHarnessViz";
+import ControlTraceViz from "./viz/ControlTraceViz";
 
 export default function Article() {
   return (
@@ -183,6 +184,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           7. 6회 탐색과 2개 검사를 지나 대상 1개를 확인합니다
         </h2>
+        <ControlTraceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             읽기 1회째에서 연결 파일을 발견하고 2회째에서 원인을 찾았다고 합시다. Agent loop는 관측에 따라 두 번째 파일을 골랐고 읽기 예산은 6−2=4회 남습니다. 수정 뒤

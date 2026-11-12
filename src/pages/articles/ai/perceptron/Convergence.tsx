@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MarginViz from "./viz/MarginViz";
+import MistakeBoundViz from "./viz/MistakeBoundViz";
 import { Link } from "react-router-dom";
 
 export default function Convergence() {
@@ -147,6 +148,11 @@ export default function Convergence() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>왜 R/γ의 제곱이 나오는가</h3>
+      </div>
+
+      <MistakeBoundViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           오분류가 한 번 일어날 때마다 새 가중치는 정답 경계 방향으로 적어도
           γ만큼 전진합니다. 따라서 M번 틀린 뒤 그 방향으로 전진한 양은 최소

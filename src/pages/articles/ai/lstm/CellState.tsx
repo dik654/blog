@@ -1,9 +1,13 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CellPathsViz from "./viz/CellPathsViz";
+import TruncationHorizonViz from "./viz/TruncationHorizonViz";
 
 export default function CellState() {
   return (
     <section id="cell-state" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Direct gradient path는 forget gate의 누적으로 읽는다</h2>
+
+      <CellPathsViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -57,6 +61,11 @@ R_{k\to t}
           Gate network와 recurrent projection을 지나는 다른 Jacobian 경로에서는 exploding gradient가 생길 수 있어 gradient
           clipping을 함께 사용한다.
         </p>
+      </div>
+
+      <TruncationHorizonViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Truncated BPTT를 적용하면 state는 더 오래 전달하더라도 gradient는 detach
           boundary를 넘어 학습되지 않는다. 따라서 inference memory horizon과

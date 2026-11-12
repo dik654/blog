@@ -6,6 +6,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import TerminationRaceViz from "./kubernetes-rollout-termination-pdb-drain-hpa/viz/TerminationRaceViz";
 import HpaCalculatorViz from "./kubernetes-rollout-termination-pdb-drain-hpa/viz/HpaCalculatorViz";
+import DrainRetryViz from "./kubernetes-rollout-termination-pdb-drain-hpa/viz/DrainRetryViz";
 import { RolloutBoundsViz } from "./kubernetes-controllers-reconcile-deployment-job/viz/ControllerFormulaViz";
 import { codeRefs } from "./kubernetes-rollout-termination-pdb-drain-hpa/codeRefs";
 import { kubernetesRolloutTrees } from "./kubernetes-rollout-termination-pdb-drain-hpa/fileTree";
@@ -239,6 +240,9 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
             <p>
               1절의 멈춘 drain으로 갑니다. (가정) checkout에 minAvailable: 3인 PDB가 있습니다. PDB 컨트롤러는 Ready이고 삭제 중이 아닌 Pod를 세어 currentHealthy를 구하고, desiredHealthy 3을 빼 DisruptionsAllowed를 status에 적습니다. 4개가 Ready면 1입니다.</p>
             <p>kubectl drain은 노드의 Pod마다 Eviction 하위 자원을 호출하고, API 서버는 DisruptionsAllowed가 0이면 429 Too Many Requests "Cannot evict pod as it would violate the pod's disruption budget"으로 거절합니다.</p>
+          </div>
+          <DrainRetryViz />
+          <div className={prose}>
             <p>
               첫 Pod는 축출됩니다. 그 Pod가 삭제되는 동안 currentHealthy는 3이라 DisruptionsAllowed가 0이고, 같은 노드의 두 번째 checkout Pod에 대한 Eviction은 429입니다. drain은 그 429를 받으면 5초 자고 다시 묻습니다.</p>
             <p>정상이라면 ReplicaSet이 다른 노드에 새 Pod를 만들고 그것이 Ready가 되어 currentHealthy가 4로 돌아오면 다음 축출이 허용됩니다. 1절의 20분은 새 Pod가 Ready가 되지 못한 경우입니다. 이미지 pull 실패든 readiness probe 실패든, Ready가 안 늘면 429만 반복되고 drain의 기본 timeout은 무한입니다.</p>

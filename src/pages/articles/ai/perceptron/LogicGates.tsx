@@ -1,4 +1,5 @@
 import LogicGateViz from "./viz/LogicGateViz";
+import GateBoundaryViz from "./viz/GateBoundaryViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function LogicGates() {
@@ -19,6 +20,9 @@ export default function LogicGates() {
           경계를 학습한다는 사실은 작은 진리표로 확인할 수 있습니다.
         </p>
         <h3 className="text-xl font-semibold mt-6 mb-3">게이트별 수치 조합</h3>
+      </div>
+      <GateBoundaryViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           예를 들어 <strong>AND</strong>에는 <code>w₁=0.5</code>,{" "}
           <code>w₂=0.5</code>, <code>b=−0.7</code>을 둘 수 있습니다. 두 입력이

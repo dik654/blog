@@ -5,6 +5,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ErasedColumnsViz from "./the-gap-was-made/viz/ErasedColumnsViz";
 import ThreeFiltersViz from "./the-gap-was-made/viz/ThreeFiltersViz";
+import NumberGapViz from "./the-gap-was-made/viz/NumberGapViz";
+import CopyPathViz from "./the-gap-was-made/viz/CopyPathViz";
 
 /**
  * 조항 번호가 65에서 100으로 건너뜁니다
@@ -120,7 +122,10 @@ export default function TheGapWasMadeArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 2. 조항 번호 안에 추정값이 들어 있습니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+
+        <NumberGapViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             65조 뒤의 주는 사라진 내용을 적은 뒤 한 줄을 덧붙입니다. 셰일이
             사라진 부분을 35개 조항으로 추정했고 그를 따라 100조부터 다시
@@ -283,6 +288,8 @@ export default function TheGapWasMadeArticle() {
             뒤의 사본에서 읽은 것은 같은 자격이 아닙니다.</strong>
           </p>
         </div>
+
+        <CopyPathViz />
 
         <ProgressiveDetail
           title="자격이 다르다는 것이 왜 중요한가"

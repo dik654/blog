@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import ScaleCurveViz from "./viz/ScaleCurveViz";
+import SoftmaxRenormViz from "./viz/SoftmaxRenormViz";
 
 export default function SmoothieQwen() {
   return (
@@ -28,6 +30,13 @@ export default function SmoothieQwen() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>질문: risk가 0에서 1로 커질 때 얼마만큼 낮춥니까?</h3>
+      </div>
+
+      <div className="not-prose my-8">
+        <ScaleCurveViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           모든 관련 token에 같은 계수를 곱하면, 명백한 목표 문자와 우연히 그
           문자를 만들 수 있는 subword 조각을 똑같이 벌점 줍니다. 논문은 risk가
@@ -83,6 +92,10 @@ export default function SmoothieQwen() {
         </p>
 
         <h3>행을 줄여도 확률은 vocabulary 전체에서 다시 계산됩니다</h3>
+      </div>
+
+      <div className="not-prose my-8">
+        <SoftmaxRenormViz />
       </div>
 
       <ExplainedFormula

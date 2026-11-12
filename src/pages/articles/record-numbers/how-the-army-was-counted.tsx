@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import EnclosureCountViz from "./how-the-army-was-counted/viz/EnclosureCountViz";
 import WhereItCanSlipViz from "./how-the-army-was-counted/viz/WhereItCanSlipViz";
+import AccumulatedErrorViz from "./how-the-army-was-counted/viz/AccumulatedErrorViz";
 
 /**
  * 170만이라는 수가 어떤 절차로 나왔는지 적혀 있습니다
@@ -268,6 +269,8 @@ export default function HowTheArmyWasCountedArticle() {
         </div>
 
         <WhereItCanSlipViz />
+
+        <AccumulatedErrorViz />
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">

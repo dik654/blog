@@ -1,5 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
 import SessionStateViz from "./viz/SessionStateViz";
+import AliasResolveViz from "./viz/AliasResolveViz";
 
 const PERSISTENCE_PATHS = [
   [
@@ -114,6 +115,13 @@ export default function SessionControl() {
           거부합니다. 이 분리는 같은 이름의 session file이 여러 project에서
           충돌하는 문제를 줄이지만 tenant authorization은 아닙니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <AliasResolveViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           <code>latest</code>·<code>last</code>·<code>recent</code> 같은 alias는
           현재 namespace에 유효한 session이 없으면 다른 workspace까지 검색하고,

@@ -1,4 +1,5 @@
 import { CitationBlock } from "@/components/ui/citation";
+import PrecedenceTraceViz from "./viz/PrecedenceTraceViz";
 
 const MODES = [
   [
@@ -134,6 +135,10 @@ export default function Policy() {
             </p>
           </div>
         ))}
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <PrecedenceTraceViz />
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">

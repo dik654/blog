@@ -1,10 +1,12 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import FaultyThresholdViz from "./viz/FaultyThresholdViz";
+import QuorumRangeViz from "./viz/QuorumRangeViz";
 export default function FaultyThreshold(){return <section id="faulty-threshold" data-teach-level="5" className="space-y-5 [&_p]:leading-8"><h2 className="text-2xl font-bold">8. 두 묶음의 겹침에 정직한 사람이 남아야 합니다</h2>
 <p>전체 n명 중 임의 행동을 하는 사람이 최대 f명이고 한 판정에 q명의 동의가 필요하다고 놓습니다. q명씩 두 묶음이 있으면 합계 2q에서 전체 인원 n을 뺀 만큼은 반드시 중복됩니다. 그 수가 f보다 커야 겹친 사람을 모두 거짓말하는 사람으로 채울 수 없습니다.</p>
 <FaultyThresholdViz />
 <ExplainedFormula question="두 결정의 서명자 중 정직한 사람이 반드시 겹치려면 몇 명이 필요할까요?" idea="두 집합의 합집합은 전체 n명을 넘지 않으므로 교집합은 최소 2q−n명입니다. 이 최소값이 장애 허용 수 f를 넘어야 합니다." formula={String.raw`|Q_1\cap Q_2|\ge 2q-n>f`} annotatedFormula={String.raw`|Q_1\cap Q_2|\ge\underbrace{2q-n}_{\text{두 묶음에서 반드시 겹치는 수}}>\underbrace{f}_{\text{모두 악의적일 수 있는 최대 수}}`} operations={[{expression:String.raw`2q-n`,annotation:["서명자 수 두 묶음을 더한 뒤 전체 명단 크기를 뺍니다."]},{expression:String.raw`f`,annotation:["겹친 집합의 전부를 장애 참여자로 채울 수 없는지 비교합니다."]}]} terms={[{symbol:"n",name:"전체 참여자",description:"같은 표 무게를 갖는 고정 명단의 크기입니다."},{symbol:"f",name:"장애 허용 수",description:"임의 행동을 하는 참여자의 최대 수입니다."},{symbol:"q",name:"필요 동의 수",description:"해당 판정에 필요한 서로 다른 유효 서명자 수입니다."}]} assumptions={["같은 명단·주문·단계의 서명을 비교합니다.","정직한 사람은 프로토콜이 금지한 모순된 서명이나 잠금 위반을 하지 않습니다."]} interpretation="n=4, f=1, q=3이면 6−4=2>1입니다. A·B·D와 B·C·D에는 B와 D가 겹칩니다. q=2면 최소 겹침은 0이라 정직한 겹침을 보장하지 못합니다." />
+<QuorumRangeViz />
 <p>진행하려면 f명이 모두 침묵해도 나머지 n−f명만으로 필요한 q를 채울 수 있어야 하므로 q≤n−f입니다. 안전 조건 2q&gt;n+f와 함께 쓰면 2(n−f)&gt;n+f, 따라서 n&gt;3f가 됩니다. 최소 정수 설정은 n=3f+1, q=2f+1입니다. f=1에서는 네 명 중 세 명이라는 원래 사례로 돌아옵니다.</p>
 <div id="paper-dls-bft"><CitationBlock source="Dwork–Lynch–Stockmeyer (1988), Table I, p.291" citeKey={2} href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf"><p>원문 표의 인증된 Byzantine 장애와 부분 동기 통신 조건에는 최소 참여자 수 3t+1이 적혀 있습니다. 원문의 장애 수 t를 사례의 1로 놓으면 4입니다. 같은 표의 다른 동기성 조건에서는 결과가 달라지므로 3f+1을 모든 인증된 합의 모델에 적용하지 않습니다.</p></CitationBlock></div>
 <p>지분이 다른 참여자는 인원 대신 무게를 계산해야 합니다. 100개 키 중 한 운영자가 표 무게 40%를 통제하면 키 수의 분산으로 그 위험을 없앨 수 없습니다. 명단 변경 시점과 표 무게의 기준 상태, 경계에서의 반올림도 모두 같은 규칙으로 정해야 합니다.</p>

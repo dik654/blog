@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ThreeAccountsViz from "./told-but-not-believed/viz/ThreeAccountsViz";
 import ReportVsBelieveViz from "./told-but-not-believed/viz/ReportVsBelieveViz";
+import SameDemandViz from "./told-but-not-believed/viz/SameDemandViz";
 
 /**
  * 믿지 않는 이야기도 적는다고 그는 규칙으로 적었습니다
@@ -102,6 +103,8 @@ export default function ToldButNotBelievedArticle() {
             무엇이든 겪는 편을 택했기 때문이라는 이유까지 함께 옮깁니다.
           </p>
         </div>
+
+        <SameDemandViz />
 
         <TermBreakdown
           title="세 설명이 가리키는 책임"

@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import QsaIndexViz from "./viz/QsaIndexViz";
+import QsaBudgetThresholdViz from "./viz/QsaBudgetThresholdViz";
 
 export default function QsaIndex({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -88,7 +89,11 @@ export default function QsaIndex({ onCodeRef }: { onCodeRef: (key: string, ref: 
           토큰입니다. 여기에 아직 4개가 차지 않은 꼬리 토큰이 최대 3개 붙어 한 질의가 보는 위치는 최대
           2051개가 됩니다.
         </p>
+      </div>
 
+      <QsaBudgetThresholdViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           문맥이 예산보다 짧으면 선택은 아무것도 버리지 않습니다. 8,000 토큰 문맥이라면 완전한 블록이
           2,000개라 512개만 남지만, 2,000 토큰 문맥에서는 블록이 500개뿐이라 전부 선택됩니다. 희소해지는

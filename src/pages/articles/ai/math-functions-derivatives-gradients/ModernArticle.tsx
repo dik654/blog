@@ -5,6 +5,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import ChainRateViz from "./viz/ChainRateViz";
 import SecantTangentViz from "./viz/SecantTangentViz";
+import SquareErrorViz from "./viz/SquareErrorViz";
+import BranchSumViz from "./viz/BranchSumViz";
+import SubgradientLinesViz from "./viz/SubgradientLinesViz";
 
 const MIT_DIFFERENTIATION = "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/pages/1.-differentiation/";
 const MATRIX_CALCULUS = "https://arxiv.org/abs/1802.01528";
@@ -130,6 +133,7 @@ export default function DerivativeChainRuleArticle() {
           assumptions={["f가 x 근처에서 미분 가능하고 Δx가 충분히 작습니다.", "곡률이 크거나 Δx가 커지면 생략한 higher-order error가 커집니다."]}
           interpretation="f(x)=x², x=3, Δx=0.1이면 9.6을 예측하고 실제 9.61과 0.01 차이가 납니다."
         />
+        <SquareErrorViz />
         <p>간격을 0.01로 줄이면 예측은 9.06, 실제는 9.0601이라 오차도 0.0001로 줄어듭니다. 반대로 간격을 1로 늘리면 예측 15와 실제 16의 차이가 1입니다. 이 제곱 함수에서는 생략한 항이 정확히 (Δx)²여서 차이를 직접 계산할 수 있습니다. 모든 함수의 오차가 같은 제곱식이라는 뜻은 아닙니다.</p>
         <p>한 단계의 작은 변화는 예측할 수 있습니다. 같은 생각을 2→7→49의 두 단계에 적용하겠습니다.</p>
       </section>
@@ -165,6 +169,7 @@ export default function DerivativeChainRuleArticle() {
           </p>
           <p>둘째 식에 첫째 식을 넣고 h≠0으로 나누면 Δy/h=a[b+ε(h)]+[b+ε(h)]δ(k)입니다. h가 줄면 k도 줄고 두 오차 항이 사라져 ab가 남습니다. 중간 변화 k가 0이어도 k로 나누지 않았으므로 같은 결론입니다.</p>
         </ProgressiveDetail>
+        <BranchSumViz />
         <p>
             분기했다 합쳐지는 계산은 경로별 기여를 더합니다. 같은 입력을 u=3x+1과 v=x²에 보내 y=u+v로 합치면 x=2에서 경로 배율은 3과 4입니다(가정). 같은 Δx가
             양쪽에 들어가므로 Δy≈3Δx+4Δx=7Δx입니다. 한 경로 안에서는 곱하고 여러 경로가 합쳐질 때는 더합니다.
@@ -184,6 +189,7 @@ export default function DerivativeChainRuleArticle() {
       <section id="nonsmooth" data-teach-level="7" className="space-y-6">
         <h2 className="text-2xl font-bold">11 · 모서리에서 코드가 고른 값은 유일한 미분값이 아니다</h2>
         <p>음수는 0으로 바꾸고 양수는 그대로 두는 ReLU를 0에서 살펴봅니다. 왼쪽에서 움직일 때 출력 변화는 0이지만 오른쪽에서는 입력과 같은 만큼 변합니다. 좌우 기울기가 0과 1로 달라 표준 미분계수가 없습니다.</p>
+        <SubgradientLinesViz />
         <p>
             이 모서리 아래에 놓이는 직선을 생각하면 가능한 기울기는 0부터 1까지입니다. 기울기 s인 직선 sx가 음수 쪽에서도 0 아래에 있으려면 s≥0이고 양수 쪽에서 x 아래에
             있으려면 s≤1이어야 합니다. 함수를 아래에서 받치는 이런 기울기를 부분기울기(subgradient), 가능한 집합을 부분미분집합(subdifferential)이라고 부릅니다.

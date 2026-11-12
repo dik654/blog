@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import CodePanel from "@/components/ui/code-panel";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
+import PrefixBlockViz from "./viz/PrefixBlockViz";
 
 /** llm-d-router 907c5fe8의 prefixhash/hashing.go 103–129행을 고치지 않고 옮긴 원문 */
 const HASHING_SOURCE = String.raw`// computeBlockHashes hashes a prompt in blocks of blockSizeTokens tokens, the
@@ -76,6 +77,11 @@ export default function TwoLevelScheduling() {
           요청을 보냈는지 pod별 LRU index에 적어 둡니다. 다음 요청이 오면 같은 hash를 index에서 찾아 pod마다 이미 계산돼 있을 것으로
           예상되는 token 수를 냅니다.
         </p>
+      </div>
+
+      <PrefixBlockViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Block 크기의 기본값이자 최솟값은 64 token입니다. 300 token 입력은 (300 − 1) ÷ 64 + 1 = 5개 block, 곧 64·64·64·64·44
           token으로 나뉩니다.

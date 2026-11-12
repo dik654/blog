@@ -7,6 +7,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import AgreementDecisionViz from "./international-anarchy/viz/AgreementDecisionViz";
 import AnarchyStructureViz from "./international-anarchy/viz/AnarchyStructureViz";
+import RatificationOverlapViz from "./international-anarchy/viz/RatificationOverlapViz";
 import ShadowOfFutureViz from "./international-anarchy/viz/ShadowOfFutureViz";
 
 /**
@@ -324,6 +325,7 @@ export default function InternationalAnarchyArticle() {
           title="두 나라가 합의했는데 왜 국내 의회 때문에 다시 협상해야 할까요?"
           preview="국제 협상에서 가능한 숫자와 국내에서 통과 가능한 숫자가 겹쳐야 실제 합의가 됩니다."
         >
+          <RatificationOverlapViz />
           <p className="leading-7">
             순찰선 상한을 두고 A국 의회는 2~4척만 받아들이고, B국의 연립정부는
             3~5척만 받아들인다고 가정하겠습니다. 국제 협상에서 합의할 수 있는

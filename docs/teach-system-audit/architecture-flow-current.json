@@ -4,11 +4,11 @@
   "summary": {
     "publicArticles": 1012,
     "architectureCandidates": 175,
-    "dedicatedVisuals": 821,
-    "inlineVisuals": 635,
+    "dedicatedVisuals": 822,
+    "inlineVisuals": 644,
     "customVisuals": 959,
-    "animatedMechanisms": 734,
-    "architectureWithoutAnimation": 47,
+    "animatedMechanisms": 744,
+    "architectureWithoutAnimation": 43,
     "recursiveLocators": 385,
     "codeEvidenceLinked": 257,
     "sourceCitationLinked": 1003,
@@ -103,7 +103,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -889,11 +889,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/claw-plugin",
@@ -951,13 +951,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/claw-subagent-orchestration",
@@ -3335,7 +3335,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -3865,11 +3865,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/multi-adapter-serving",
@@ -4007,7 +4007,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -4263,13 +4263,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/prediction-time-feature-availability",
@@ -4775,7 +4775,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -4967,7 +4967,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -5351,7 +5351,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -6039,7 +6039,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -6441,11 +6441,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/bplus-index-validation",
@@ -12041,11 +12041,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "gpu/gpu-architecture",
@@ -12118,14 +12118,14 @@
       "sourcePath": "src/pages/articles/gpu/gpu-memory-hierarchy-and-roofline.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "gpu/gpu-proof-pipeline",
@@ -12457,11 +12457,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "gpu/poseidon-gpu",
@@ -14793,11 +14793,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "p2p/libp2p-noise",
@@ -14809,11 +14809,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "p2p/libp2p-quic",

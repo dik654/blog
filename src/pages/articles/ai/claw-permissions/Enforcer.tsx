@@ -1,5 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import EnforcerViz from "./viz/EnforcerViz";
+import TokenLifecycleViz from "./viz/TokenLifecycleViz";
+import CrashConsumeViz from "./viz/CrashConsumeViz";
 
 const DISPATCH_TRACE = [
   [
@@ -142,6 +144,13 @@ export default function Enforcer() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Approval token은 범위·실행자·수명을 가진 예외 record입니다</h3>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <TokenLifecycleViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Pinned ledger의 <code>ApprovalScope</code>는 policy와 action, 선택적인
           repository와 branch를 묶습니다. Grant는 승인한 actor와 실행할 actor를
@@ -198,6 +207,13 @@ export default function Enforcer() {
         </p>
 
         <h3>실행 성공과 승인 소비는 crash에서도 연결돼야 합니다</h3>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <CrashConsumeViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Edit가 실제로 적용된 직후 process가 죽으면 tool result는 없지만 effect는 남을 수 있습니다. 재개할 때 approval을 다시 쓰고 edit를 blind
           replay하면 중복 effect가 생깁니다. Stable operation ID, planned operation, before/after digest, status

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import DistillFamilyViz from "./viz/DistillFamilyViz";
+import PositionBoxViz from "./viz/PositionBoxViz";
 
 const FAMILY = [
   { name: "ViT-S", params: "21M", note: "가장 작은 배포용" },
@@ -28,7 +29,11 @@ export default function PostHoc() {
           넣어 여러 입력 크기를 한 단계 안에서 보게 합니다. 이 단계에서 기준 역할은 가장 큰 7B 모델이 맡아,
           해상도가 바뀌는 동안 패치 관계가 흐트러지지 않게 붙잡습니다.
         </p>
+      </div>
 
+      <PositionBoxViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           위치 정보 설계가 이 적응을 가능하게 합니다. 패치 좌표를 [-1, 1] 상자 안의 값으로 정규화해 두 패치의
           상대 위치로 attention에 편향을 주고, 학습 중에는 그 상자를 0.5배에서 2배 사이로 무작위로 늘렸다 줄입니다.

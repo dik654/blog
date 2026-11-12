@@ -3,6 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MultiviewFusionLocator from "./MultiviewFusionLocator";
 import OverviewViz from "./viz/OverviewViz";
+import PermutationCheckViz from "./viz/PermutationCheckViz";
 
 export default function Overview() {
   return (
@@ -53,6 +54,7 @@ X_i&=\underbrace{\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i}}_{\text{관측·유효�
         assumptions={["하나의 Xᵢ에 들어간 관측은 판정값 yᵢ가 가리키는 같은 대상·사건에 속합니다.", "유효성 표시와 메타데이터는 실제 예측 시점에도 같은 규칙으로 만들 수 있습니다.", "관측 수 Vᵢ가 고정인지 가변인지, 나열 순서가 의미인지 따로 선언합니다."]}
         interpretation="멀티뷰 데이터의 최소 단위는 사진 한 장이 아니라 관측 묶음 Xᵢ입니다. 따라서 학습·검증·시험 자료도 같은 상품의 관측과 파생본이 서로 다른 구간으로 새지 않도록 상품 식별자 단위로 나눕니다."
       />
+      <PermutationCheckViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           고정 카메라 번호처럼 자리가 의미라면 순서 있는 묶음으로 다루고 카메라 ID를 보존합니다. 반대로

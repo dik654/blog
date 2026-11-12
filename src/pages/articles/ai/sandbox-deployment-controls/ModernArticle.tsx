@@ -7,6 +7,7 @@ import {
   SandboxBoundaryMapReturn,
 } from "../shared/SandboxBoundaryLocator";
 import SandboxDeploymentControlsViz from "./viz/SandboxDeploymentControlsViz";
+import WorkVolumeLifetimeViz from "./viz/WorkVolumeLifetimeViz";
 
 const podPolicyYaml = `# 이 Pod가 사용할 Kubernetes 신원입니다.
 serviceAccountName: agent-reader
@@ -247,6 +248,7 @@ export default function SandboxDeploymentControlsArticle() {
           example="생성 중간 파일은 /work에만 쓰고 애플리케이션·설정 경로 수정은 거절합니다."
           boundary="readOnlyRootFilesystem은 메모리 실행·외부 저장소·이미 열린 volume·노드 디스크 압력을 막지 않습니다."
         />
+        <WorkVolumeLifetimeViz />
         <TermLesson
           name="Pod 수명에 묶인 emptyDir"
           oneLine="Pod가 노드에 배치될 때 생기고 그 Pod가 제거될 때 함께 삭제되며, 같은 Pod 안의 컨테이너 재시작을 지나서도 남는 volume입니다."

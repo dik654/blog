@@ -3,6 +3,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
 import PleNgramViz from "./viz/PleNgramViz";
+import DilatedConvStateViz from "./viz/DilatedConvStateViz";
 
 export default function PleNgram({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -52,7 +53,11 @@ export default function PleNgram({ onCodeRef }: { onCodeRef: (key: string, ref: 
           갈래마다 게이트를 계산한 뒤 통과시킵니다. 어휘 조합 신호가 문맥과 무관하게 항상 같은 세기로 들어오는
           것을 막는 장치입니다.
         </p>
+      </div>
 
+      <DilatedConvStateViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           마지막으로 확장 depthwise convolution이 국소 문맥을 더합니다. 커널 4에 확장 간격 3이므로 상태 길이는
           9 토큰이고, 이 값은 요청마다 따로 보관해야 합니다. n-gram 조회용 직전 토큰 2개까지 합치면 이 층 하나가

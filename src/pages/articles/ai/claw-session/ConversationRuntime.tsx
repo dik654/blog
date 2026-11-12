@@ -1,5 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import TurnLoopViz from "./viz/TurnLoopViz";
+import CrashCutViz from "./viz/CrashCutViz";
+import ReconcileViz from "./viz/ReconcileViz";
 
 const PINNED_LOOP = [
   [
@@ -195,6 +197,10 @@ export default function ConversationRuntime() {
         </p>
       </div>
 
+      <div className="not-prose my-8 min-w-0">
+        <CrashCutViz />
+      </div>
+
       <div className="not-prose my-7 grid min-w-0 gap-3 lg:grid-cols-2">
         {CRASH_CUTS.map(([cut, known, resume]) => (
           <article
@@ -224,6 +230,13 @@ export default function ConversationRuntime() {
           identity로 effect를 시도하고, 가능한 경우 status 조회나 before/after
           digest를 포함한 receipt를 돌려줍니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <ReconcileViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Resume 시 after digest가 일치하면 <strong>completed</strong>로 판정해
           기존 effect에 result를 연결하고 다시 수정하지 않습니다. Before

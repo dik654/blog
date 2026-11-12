@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import GroupViz from "./viz/GroupViz";
+import RolloutCapacityViz from "./viz/RolloutCapacityViz";
 
 export default function GroupReplica() {
   return (
@@ -76,6 +77,8 @@ export default function GroupReplica() {
           옮기거나, 복제본 수를 먼저 늘리거나, 갱신을 더 잘게 나누는 것입니다.
         </p>
       </div>
+
+      <RolloutCapacityViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">

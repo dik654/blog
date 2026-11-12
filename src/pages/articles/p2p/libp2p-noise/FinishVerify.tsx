@@ -1,6 +1,7 @@
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
+import FrameSplitViz from "./viz/FrameSplitViz";
 
 export default function FinishVerify() {
   return (
@@ -18,6 +19,9 @@ export default function FinishVerify() {
           Outbound의 target Bob 비교와 inbound admission은 이 output을 받은 상위 owner가
           맡습니다.
         </p>
+      </div>
+      <FrameSplitViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Transport phase에서는 각 message를 2-byte big-endian length와 ciphertext로
           framing합니다. 최대 message size와 AEAD tag도 검사합니다.

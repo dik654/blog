@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ModernPolyOpsViz } from "./ModernPolyOpsViz";
+import PointwiseMeaningViz from "./viz/PointwiseMeaningViz";
+import HornerChainViz from "./viz/HornerChainViz";
+import ThroughputCountViz from "./viz/ThroughputCountViz";
 
 const SPPARK_NTT = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/ntt/ntt.cuh";
 const CKZG = "https://github.com/ethereum/c-kzg-4844/blob/e125905e5e01186e6ccb7a0ced4845bf7eddbcfe/src/ckzg.c";
@@ -25,6 +28,9 @@ export default function ModernPolyOpsGpuArticle() {
       <header><p className="text-sm font-semibold text-primary">01 · Form/domain tag</p><h2 className="mt-2 text-2xl font-bold">Kernel input을 bytes가 아니라 typed polynomial artifact로 받는다</h2></header>
       <div className="space-y-3">
         <p>Coefficient a_i는 monomial basis의 가중치입니다. Evaluation y_j는 특정 domain point에서 polynomial이 갖는 값입니다.</p>
+      </div>
+      <PointwiseMeaningViz />
+      <div className="space-y-3">
         <p>같은 N field elements라도 pointwise multiplication은 evaluation form에서 convolution을 뜻합니다. Coefficient form에서는 단순 coefficient별 곱일 뿐입니다. Domain root와 coset generator가 다르면 evaluation form끼리도 호환되지 않습니다.</p>
       </div>
       <ExplainedFormula question="Polynomial buffer artifact를 어떤 identity로 구분할까?" idea={<>값 digest뿐 아니라 field·form·domain·order·generation을 묶어 같은 길이의 다른 의미를 분리합니다.</>} formula={String.raw`A=H(\mathrm{field}\|\mathrm{form}\|N\|\mathrm{domain}\|\mathrm{order}\|\mathrm{gen}\|H(\mathrm{bytes}))`}
@@ -69,6 +75,7 @@ export default function ModernPolyOpsGpuArticle() {
 
     <section id="recurrence-map" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Recurrence map</p><h2 className="mt-2 text-2xl font-bold">Horner는 앞 결과가 끝나야 다음 계수를 계산한다</h2></header>
+      <HornerChainViz />
       <div className="space-y-3">
         <p>임의의 point 한 곳에서 하는 Horner evaluation과 (f−y)/(X−z) synthetic division은 높은 coefficient의 결과를 다음 coefficient가 소비합니다. 그래서 “coefficient마다 thread 하나”로 단순 분할하면 recurrence가 깨집니다.</p>
         <p>여러 polynomials·points를 batch하거나 prefix-style 알고리즘을 고를 수 있습니다. 어느 쪽이든 추가 pass·workspace와 crossover를 실제로 측정해야 합니다.</p>
@@ -111,6 +118,7 @@ export default function ModernPolyOpsGpuArticle() {
         <p>Zero, constant, max-degree와 N=1을 검사합니다. Wrong form/domain/order, coset g=0, unsupported N, non-zero division remainder와 aliasing도 넣습니다.</p>
         <p>CPU reference와 coset round trip, direct evaluation, f=(X−z)q+r identity를 먼저 맞춥니다. 그다음 H2D·twist·NTT·pointwise·INTT·recurrence·D2H를 분리 측정합니다.</p>
       </div>
+      <ThroughputCountViz />
       <ExplainedFormula question="Polynomial kernel 후보의 useful throughput을 어떻게 기록할까?" idea={<>검증된 logical elements만 세고 전체 pipeline 및 kernel-chain 시간을 별도로 둡니다.</>} formula={String.raw`R_{elem}=\frac{B\,N_{valid}}{t_{kernel}},\qquad S=\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}`}
       annotatedFormula={String.raw`R_{elem}=\frac{\underbrace{B\,N_{valid}}_{\text{검증된 element}}}{\underbrace{t_{kernel}}_{\text{kernel chain}}},\qquad S=\frac{\underbrace{T_{reference}^{e2e}}_{\text{reference 전체}}}{\underbrace{T_{candidate}^{e2e}}_{\text{전송 포함 GPU 전체}}}`}
       operations={[
