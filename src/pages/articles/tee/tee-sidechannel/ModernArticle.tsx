@@ -1,3 +1,6 @@
 import SecurityReleaseArticle from "../security-release-article";
+import PrimeProbeViz from "./viz/PrimeProbeViz";
+import TransientTraceViz from "./viz/TransientTraceViz";
+import WelchSampleViz from "./viz/WelchSampleViz";
 // Static contract index for the catalog audit: id="overview" id="leakage-model" id="spectre-cache" id="mitigation-release" id="paper-spectre" id="paper-cache-aes" id="paper-intel-timing-guidance"
-export default function ModernTeeSidechannelArticle(){return <SecurityReleaseArticle article="tee-sidechannel"/>;}
+export default function ModernTeeSidechannelArticle(){return <SecurityReleaseArticle article="tee-sidechannel" detailsViz={<><PrimeProbeViz/><TransientTraceViz/></>} formulaViz={<WelchSampleViz/>}/>;}

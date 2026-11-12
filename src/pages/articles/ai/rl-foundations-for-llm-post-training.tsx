@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 import RlFoundationsForLlmPostTrainingViz from "./rl-foundations-for-llm-post-training/viz/RlFoundationsForLlmPostTrainingViz";
+import OnOffPolicyDataViz from "./rl-foundations-for-llm-post-training/viz/OnOffPolicyDataViz";
 
 /**
  * Policy Gradient는 Return의 Credit을 Action 확률 변화로 바꿉니다
@@ -95,6 +96,9 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
             learning 은 과거의 자신이나 별도 behavior policy 가 만든 trajectory 를 재사용해도 됩니다. 이 구분은 같은 환경 상호작용 하나를 몇 번까지 다시
             써도 되는지를 가릅니다.
           </p>
+        </div>
+        <OnOffPolicyDataViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             On-policy 방식은 batch 를 한 번 쓰고 나면 policy 가 이미 바뀌었으므로 그 batch 를 버리고 새로 rollout 해야 합니다. Trajectory
             2,048 개를 뽑아 update 를 몇 epoch 반복한 뒤 그대로 버린다면 환경 상호작용 한 번당 얻는 gradient step 수가 적어 표본 효율이 낮습니다.

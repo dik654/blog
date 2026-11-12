@@ -4,6 +4,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { VerificationLayersViz } from "../llm-harness/viz/ModernHarnessViz";
+import RequiredGateViz from "./viz/RequiredGateViz";
 
 export default function Article() {
   return (
@@ -228,6 +229,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           8. 필수 실패는 다른 점수로 상쇄하지 않습니다
         </h2>
+        <RequiredGateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 글은 산출물·경로·외부 변경·예산을 필수 조건으로 정하고 AND로 묶습니다. 테스트가 아직 26/27이면 산출물 조건은 0이고 다른 세 항목이 1이어도

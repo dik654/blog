@@ -1,3 +1,4 @@
+import { Fragment, type ReactNode } from "react";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
@@ -464,7 +465,10 @@ function Evidence({ item, index }: { item: Citation; index: number }) {
   );
 }
 
-export default function IsmsOperationsArticle({ article }: { article: ArticleKey }) {
+/** 선택 항목: 본문 문단 바로 앞에 끼울 Viz. 키는 `first:0`, `second:1`처럼 절과 문단 순번입니다. 넘기지 않으면 기존 화면과 같습니다. */
+type VizBefore = Partial<Record<`${"first" | "second"}:${number}`, ReactNode>>;
+
+export default function IsmsOperationsArticle({ article, vizBefore }: { article: ArticleKey; vizBefore?: VizBefore }) {
   const config = CONFIG[article];
 
   return (
@@ -485,7 +489,12 @@ export default function IsmsOperationsArticle({ article }: { article: ArticleKey
           <p className="text-sm font-semibold text-primary">01 · 기준과 경계</p>
           <h2 className="mt-2 text-2xl font-bold">{config.firstTitle}</h2>
         </header>
-        {config.firstBody.map((paragraph) => <p key={paragraph} className="leading-7">{paragraph}</p>)}
+        {config.firstBody.map((paragraph, index) => (
+          <Fragment key={paragraph}>
+            {vizBefore?.[`first:${index}`]}
+            <p className="leading-7">{paragraph}</p>
+          </Fragment>
+        ))}
         <div className="grid gap-3 md:grid-cols-2">
           {config.controls.map(([tag, title, body]) => (
             <div key={tag} className="min-w-0 rounded-lg border border-border p-4">
@@ -502,7 +511,12 @@ export default function IsmsOperationsArticle({ article }: { article: ArticleKey
           <p className="text-sm font-semibold text-primary">02 · 실행과 계산</p>
           <h2 className="mt-2 text-2xl font-bold">{config.secondTitle}</h2>
         </header>
-        {config.secondBody.map((paragraph) => <p key={paragraph} className="leading-7">{paragraph}</p>)}
+        {config.secondBody.map((paragraph, index) => (
+          <Fragment key={paragraph}>
+            {vizBefore?.[`second:${index}`]}
+            <p className="leading-7">{paragraph}</p>
+          </Fragment>
+        ))}
         <ExplainedFormula
           question={config.question}
           idea={config.idea}

@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { RapidsnarkBoundaryViz } from "./RapidsnarkBoundaryViz";
+import CoefficientAccumulateViz from "./viz/CoefficientAccumulateViz";
 
 const RAPID_README = "https://github.com/iden3/rapidsnark/blob/2921b0eb33369f4d329a6902e97959246b802e6c/README.md";
 const RAPID_IO = "https://github.com/iden3/rapidsnark/blob/2921b0eb33369f4d329a6902e97959246b802e6c/src/prover.cpp";
@@ -42,6 +43,7 @@ export default function ModernRapidsnarkGpuArticle() {
 
     <section id="cpu-stage-map" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Current CPU stage map</p><h2 className="mt-2 text-2xl font-bold">현재 경로는 MSM→계수 누적→FFT→MSM H→proof다</h2></header>
+      <CoefficientAccumulateViz />
       <p><code>groth16.cpp</code>는 먼저 witness와 A·B1·B2·C queries의 CPU MSM을 호출합니다. Coefficients를 thread pool로 a,b arrays에 누적하고 c=a·b를 만듭니다.</p>
       <p>그다음 a/b/c 각각에 inverse FFT→coset shift→FFT를 적용해 (ab−c) evaluations를 계산합니다. 마지막 H MSM 뒤 random r,s와 verification-key points를 결합해 A∈G1, B∈G2, C∈G1 proof를 만듭니다.</p>
       <ExplainedFormula question="Pinned source의 thread-pool coefficient accumulation은 어떤 수학 값을 만든다고 읽을까?" idea={<>Sparse R1CS/QAP coefficient records가 가리키는 domain slot에 witness와 coefficient의 곱을 더합니다.</>} formula={String.raw`a_c\mathrel{+}=w_s\,\alpha_{c,s},\qquad b_c\mathrel{+}=w_s\,\beta_{c,s}`}

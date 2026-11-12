@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ModernNttGpuViz } from "./ModernNttGpuViz";
+import InPlaceSwapViz from "./viz/InPlaceSwapViz";
+import StageTileViz from "./viz/StageTileViz";
 
 const SPPARK_KERNEL = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/ntt/kernels.cu";
 const SPPARK_NTT = "https://github.com/supranational/sppark/blob/17278d74295392f9813f009300b257a688422b7a/ntt/ntt.cuh";
@@ -37,6 +39,7 @@ export default function ModernNttGpuArticle() {
         {symbol:"g",name:"Group index",description:"길이 2h인 butterfly group 번호입니다."},
         {symbol:"i_0,i_1",name:"Input indices",description:"한 butterfly가 읽고 쓰는 두 array indices입니다."},
       ]} assumptions={["N은 field가 지원하는 2의 거듭제곱 domain이며 t<N/2입니다.","이 index 식은 radix-2 설명용입니다. Pinned sppark의 mixed-radix launch details를 같은 식으로 단정하지 않습니다."]} interpretation="N=8,s=1이면 h=2입니다. t=3은 j=1,g=1이므로 indices (5,7)을 처리합니다." />
+      <StageTileViz />
       <div className="space-y-3">
         <p>Shared memory에 여러 stages를 묶으면 global traffic이 줄어듭니다. 대신 block 안 barrier, shared capacity와 bank mapping이 새 제약으로 붙습니다.</p>
         <p>Tile 밖 stage에는 kernel boundary나 검증된 global synchronization이 필요합니다. Block barrier만으로는 grid 전체 순서를 만들지 못합니다.</p>
@@ -75,6 +78,7 @@ export default function ModernNttGpuArticle() {
         {symbol:"r",name:"Bit position",description:"0부터 k−1까지 순회하는 index입니다."},
         {symbol:"rev_k(i)",name:"Bit-reversed index",description:"k bits의 순서를 뒤집어 얻은 position입니다."},
       ]} assumptions={["N=2^k이고 index는 정확히 k bits로 zero-pad합니다.","CT/GS 및 in/out ordering 계약에 따라 별도 permutation pass가 필요 없을 수도 있지만 output tag는 남깁니다."]} interpretation="N=8,k=3에서 i=3=011₂이면 rev₃(i)=110₂=6입니다." />
+      <InPlaceSwapViz />
       <div className="space-y-3">
         <p>In-place permutation은 pair를 한 번만 swap해야 합니다. Out-of-place permutation에는 별도 buffer와 read/write traffic이 듭니다.</p>
         <p>Pinned kernels에는 작은 domain용 direct bit reversal과 shared memory를 쓰는 큰 domain path가 모두 있습니다. 그래서 “bit reverse는 항상 CPU 전처리”라고 일반화하지 않습니다.</p>

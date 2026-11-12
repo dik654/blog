@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { RunContractViz } from "../llm-harness/viz/ModernHarnessViz";
+import RunTraceViz from "./viz/RunTraceViz";
 
 export default function Article() {
   return (
@@ -171,6 +172,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           7. 같은 파일을 고치고 두 폭을 검사해 넘깁니다
         </h2>
+        <RunTraceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             실행 기록 run=layout-1에 목표와 /repo/page.css의 시작 버전을 넣습니다. 문서 읽기는 자료를 찾는 행동이고 파일 쓰기는 별도 capability 검사

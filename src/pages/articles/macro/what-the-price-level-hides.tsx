@@ -7,6 +7,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ExchangeBalanceViz from "./what-the-price-level-hides/viz/ExchangeBalanceViz";
 import FourKnobsViz from "./what-the-price-level-hides/viz/FourKnobsViz";
+import PriceDoubledPathsViz from "./what-the-price-level-hides/viz/PriceDoubledPathsViz";
+import ResidualVelocityViz from "./what-the-price-level-hides/viz/ResidualVelocityViz";
 
 /**
  * 값이 올랐다는 말은 네 자리 중 어디가 움직였는지를 말하지 않습니다
@@ -283,7 +285,9 @@ export default function WhatThePriceLevelHidesArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           부품 4. 이 식은 무엇이 무엇을 움직였는지 말하지 않습니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <PriceDoubledPathsViz />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             값이 두 배가 되었다고 해 봅시다. 식을 보면 가능한 경우가 여럿입니다.
             가진 돈이 두 배가 되었을 수도 있고 손 바뀜이 두 배가 되었을 수도 있고 오간 물건이 절반이 되었을 수도 있습니다. 셋이 섞여 있을 수도
@@ -345,6 +349,8 @@ export default function WhatThePriceLevelHidesArticle() {
           ]}
           output="네 자리의 변화 배수 — 다만 손 바뀜은 관찰이 아니라 역산된 값"
         />
+
+        <ResidualVelocityViz />
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">

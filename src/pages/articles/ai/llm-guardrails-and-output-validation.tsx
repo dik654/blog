@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { AgentSafetyPathLocator, AgentSafetyPathMapReturn } from "./shared/AgentSafetyPathLocator";
 import LlmGuardrailsAndOutputValidationViz from "./llm-guardrails-and-output-validation/viz/LlmGuardrailsAndOutputValidationViz";
+import ThresholdSplitViz from "./llm-guardrails-and-output-validation/viz/ThresholdSplitViz";
 
 /**
  * 가드레일은 요청·응답·실행을 따로 검사합니다
@@ -142,6 +143,7 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
             나빠집니다. 반대로 threshold를 높이면 false positive는 줄지만 false negative가 늘어 실제 위험이 새 나갑니다.
           </p>
         </div>
+        <ThresholdSplitViz />
         <ExplainedFormula
           question="Threshold 하나를 바꾸면 precision·recall이 왜 반대로 움직이는가"
           idea="Guardrail이 위험하다고 예측한 것 중 실제로 위험한 비율이 precision, 실제 위험 요청 중 guardrail이 잡아낸 비율이 recall입니다"

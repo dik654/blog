@@ -8,6 +8,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import DecisionTimingViz from "./rules-standards-and-interpretation/viz/DecisionTimingViz";
 import RuleOrStandardViz from "./rules-standards-and-interpretation/viz/RuleOrStandardViz";
 import InterpretationCoreViz from "./rules-standards-and-interpretation/viz/InterpretationCoreViz";
+import GapAnalogyBranchViz from "./rules-standards-and-interpretation/viz/GapAnalogyBranchViz";
 
 /**
  * 법은 언제 구체적인 답을 정할까요?
@@ -358,7 +359,11 @@ export default function RulesStandardsAndInterpretationArticle() {
             적용할 조문 자체가 없을 수 있습니다. 이때 먼저 물을 것은 입법자가
             빠뜨린 빈칸인지, 일부러 규율하지 않은 영역인지입니다.
           </p>
+        </div>
 
+        <GapAnalogyBranchViz />
+
+        <div className="prose prose-neutral mt-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             빠뜨린 빈칸이라면 비슷한 사안을 다루는 조문을 가져와 적용할 수
             있습니다. 이것이 <strong>유추 적용</strong>입니다. 두 사안이 그

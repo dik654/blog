@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { PoseidonKernelViz } from "./PoseidonKernelViz";
+import RoundLaneViz from "./viz/RoundLaneViz";
+import TreeFrontierViz from "./viz/TreeFrontierViz";
 
 const POSEIDON = "https://www.usenix.org/system/files/sec21-grassi.pdf";
 const FILECOIN = "https://spec.filecoin.io/algorithms/crypto/poseidon/";
@@ -46,6 +48,7 @@ export default function ModernPoseidonGpuArticle() {
 
     <section id="round-kernel" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · 한 round의 경로</p><h2 className="mt-2 text-2xl font-bold">상수 더하기→S-box→mix 순서를 그대로 지킨다</h2></header>
+      <RoundLaneViz />
       <p>한 state를 thread 하나가 소유할지, coordinates를 여러 lanes가 나눌지는 batch와 width, register pressure와 matrix traffic을 재서 정합니다.</p>
       <p>Full round는 모든 coordinates에 S-box를 적용하고, partial round는 profile이 지정한 coordinate에만 적용합니다. Cross-thread mix가 있으면 producer values가 준비된 뒤 barrier가 필요합니다.</p>
       <p>ICICLE v4.0.0 문서는 batch hash와 domain tag를 설명하지만, CUDA kernel 내부 schedule의 보편 최적성을 증명하지는 않습니다.</p>
@@ -71,6 +74,7 @@ export default function ModernPoseidonGpuArticle() {
 
     <section id="batch-tree" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Batch와 tree</p><h2 className="mt-2 text-2xl font-bold">같은 level은 함께 돌리고 부모는 child를 기다린다</h2></header>
+      <TreeFrontierViz />
       <p>
             첫 level에는 hashes가 많아 GPU가 충분히 찹니다. root에 가까워질수록 jobs는 줄어듭니다. Parent는 ordered children이 모두 준비된 뒤에야
             실행합니다. Leaf와 internal node의 domain과 arity, 마지막 incomplete group의 padding rule이 다르면 같은 leaves에서도 다른

@@ -8,6 +8,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import BondCashflowViz from "./bond-pricing-and-yield-curve/viz/BondCashflowViz";
 import PriceYieldCurveViz from "./bond-pricing-and-yield-curve/viz/PriceYieldCurveViz";
 import YieldCurveShapeViz from "./bond-pricing-and-yield-curve/viz/YieldCurveShapeViz";
+import YtmNewtonViz from "./bond-pricing-and-yield-curve/viz/YtmNewtonViz";
+import ReinvestmentViz from "./bond-pricing-and-yield-curve/viz/ReinvestmentViz";
+import DurationBalanceViz from "./bond-pricing-and-yield-curve/viz/DurationBalanceViz";
 
 /**
  * 채권 가격과 수익률은 같은 정보를 반대 방향으로 적은 것입니다
@@ -201,6 +204,8 @@ export default function BondPricingAndYieldCurveArticle() {
           </p>
         </div>
 
+        <YtmNewtonViz />
+
         <AlgorithmBlock
           title="시장 가격에서 만기수익률을 찾는 절차"
           input={[
@@ -241,7 +246,11 @@ export default function BondPricingAndYieldCurveArticle() {
               이자를 전부 같은 수익률로 다시 굴릴 수 있어야 하기 때문입니다.
               식이 모든 항에 같은 y를 쓴다는 사실이 곧 그 가정입니다.
             </p>
+          </div>
 
+          <ReinvestmentViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               현실에서 금리는 움직입니다. 받은 이자를 더 낮은 금리로 굴리면 실현 수익률은 만기수익률보다 낮아지고 더 높은 금리로 굴리면 높아집니다. 만기까지 들고 있어도 결과가
               달라집니다.
@@ -263,7 +272,11 @@ export default function BondPricingAndYieldCurveArticle() {
             이제 첫 질문에 답할 차례입니다. 금리가 1%포인트 오를 때 가격이 0.9% 떨어지는 채권이 있고 18% 떨어지는 채권이 있습니다. 차이는 돈이 언제 들어오느냐에서 생깁니다.
             늦게 들어올수록 할인의 영향을 더 오래 받기 때문입니다.
           </p>
+        </div>
 
+        <DurationBalanceViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             그래서 각 현금흐름이 가격에 기여하는 비중을 가중치로 삼아 시점의
             평균을 구합니다. 이 평균을 <strong>듀레이션</strong>이라 하고,

@@ -6,6 +6,10 @@ import OpenClawRequestTraceViz from "./viz/OpenClawRequestTraceViz";
 import OpenClawSessionViz from "./viz/OpenClawSessionViz";
 import OpenClawRuntimeViz from "./viz/OpenClawRuntimeViz";
 import OpenClawToolDeliveryViz from "./viz/OpenClawToolDeliveryViz";
+import BindingPriorityViz from "./viz/BindingPriorityViz";
+import WaitTimeoutViz from "./viz/WaitTimeoutViz";
+import ToolGateViz from "./viz/ToolGateViz";
+import AmbiguousSendViz from "./viz/AmbiguousSendViz";
 
 function Evidence({
   id,
@@ -120,6 +124,11 @@ export default function OpenClawAssistantArticle() {
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Binding은 접근 제어가 아닙니다</h3>
+        </div>
+
+        <BindingPriorityViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Binding은 channel·account·peer·guild·team·role 같은 이미 확인된 사실을 비교해 Agent를 고릅니다. 더 구체적인 match가 우선하고, 같은 구체성에서는 config에 먼저 나온 binding이 이깁니다. 채널이 메시지를 받아들였는지는 pairing·allowlist·account 정책이 먼저 결정합니다.
           </p>
@@ -214,6 +223,11 @@ if terminal.status == "timeout":
           <p>
             Runtime은 준비된 prompt와 허용된 tool 목록을 받아 실행합니다. 모델이 tool call을 만들더라도 실제 호출 가능 여부와 실행 위치는 다음 절의 policy가 따로 판단합니다.
           </p>
+        </div>
+
+        <WaitTimeoutViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <code>agent.wait</code>의 기본 대기 시간 안에 결과가 없으면 <code>status: timeout</code>만 돌아올 수 있습니다. 이는 기다림만 끝난 것이므로 같은 <code>runId</code>를 다시 조회합니다. 반대로 runtime의 실행 예산 초과나 명시적 취소는 실제 실행을 끝내는 별도 상태입니다.
           </p>
@@ -254,6 +268,11 @@ if terminal.status == "timeout":
             <li><strong>Sandbox:</strong> 허용된 tool을 sandbox backend와 host 중 어디에서 실행합니까?</li>
             <li><strong>Elevated:</strong> 보통 sandbox에서 실행할 <code>exec</code>를 승인 조건 아래 host나 node에서 실행해도 됩니까?</li>
           </ul>
+        </div>
+
+        <ToolGateViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <code>deny</code>가 항상 우선합니다. Elevated는 <code>exec</code> 전용 실행 위치 예외이며 금지된 tool을 되살리지 않습니다. Sandbox를 사용해도 Gateway 프로세스는 host에 남습니다. 또한 기본 sandbox mode는 off이므로, “OpenClaw를 설치했다”는 사실만으로 tool이 container 안에서 실행된다고 가정할 수 없습니다.
           </p>
@@ -278,6 +297,8 @@ openclaw sandbox explain --json`}</code></pre>
             <tbody>{FAILURE_ROWS.map((row) => <tr key={row[0]} className="border-b border-border">{row.map((cell, index) => <td key={cell} className={`px-3 py-3 ${index === 0 ? "font-bold" : ""}`}>{cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
+
+        <AmbiguousSendViz />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>

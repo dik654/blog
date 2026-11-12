@@ -8,6 +8,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ServingBenchmarkMethodologyViz from "./serving-benchmark-methodology/viz/ServingBenchmarkMethodologyViz";
 import SteadyStateWindowViz from "./serving-benchmark-methodology/viz/SteadyStateWindowViz";
 import QueueFillViz from "./serving-benchmark-methodology/viz/QueueFillViz";
+import MeasureScopeViz from "./serving-benchmark-methodology/viz/MeasureScopeViz";
+import LoadLoopViz from "./serving-benchmark-methodology/viz/LoadLoopViz";
 import { ServingDecisionMapReturn, ServingDecisionSeriesLocator } from "./shared/ServingDecisionSeriesLocator";
 
 /**
@@ -53,6 +55,9 @@ export default function ServingBenchmarkMethodologyArticle() {
             ‘벤치마크’라도 어느 경계부터 어느 경계까지 시간을 쟀는지가 다릅니다. 범위가 좁으면
             원인을 찾기 쉽고, 범위가 넓으면 사용자가 겪는 결과에 가까워집니다.
           </p>
+        </div>
+        <MeasureScopeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Attention kernel 의 실행 시간을 batch 32, sequence 2k 에서 1.8 ms 로 재는 식입니다. 이렇게 kernel 하나나 decode step
             하나처럼 구성 요소 하나만 떼어 재는 것이 microbenchmark 입니다. Scheduler 나 network 는 들어 있지 않습니다. 병목이 어느 kernel 인지 가릴
@@ -217,6 +222,9 @@ export default function ServingBenchmarkMethodologyArticle() {
             곡선은 식으로 구하지 않고 λ 를 sweep 하며 잽니다. MLPerf Server scenario 가 Poisson 도착으로 latency 조건을 만족하는 최대 λ 를 이진
             탐색하는 것이 바로 이 측정입니다.
           </p>
+        </div>
+        <LoadLoopViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             에이전트 부하는 독립 요청의 도착률로 나타내기 어렵습니다. 한 세션이 답을 받아 도구를 실행한 뒤에야 다음 요청을 보내고 같은 앞부분이 턴마다 다시 들어옵니다. 그래서 실제 세션 기록을 순서와 대기 시간까지 재생하고 결과를 λ_max 대신 약속을 지키며 동시에 돌릴 수 있는 에이전트 수로 냅니다.
           </p>

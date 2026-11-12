@@ -7,6 +7,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import InferenceRuntimeAnatomyViz from "./inference-runtime-anatomy/viz/InferenceRuntimeAnatomyViz";
 import ShardLoadPathViz from "./inference-runtime-anatomy/viz/ShardLoadPathViz";
+import MemoryReuseViz from "./inference-runtime-anatomy/viz/MemoryReuseViz";
+import EagerLazyTimelineViz from "./inference-runtime-anatomy/viz/EagerLazyTimelineViz";
 import {
   InferenceRuntimeMapReturn,
   InferenceRuntimeSeriesLocator,
@@ -168,6 +170,9 @@ export default function InferenceRuntimeAnatomyArticle() {
             split-K 누적 buffer, sampling 의 logits 정렬 buffer 가 여기에 들어갑니다. 크기가 batch 와 sequence 길이의 최대값에서 정해지므로
             runtime 은 최대 shape 로 한 번 돌려 본 peak 를 workspace 예약분으로 잡습니다.
           </p>
+        </div>
+        <MemoryReuseViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Memory reuse 는 그 peak 를 작게 유지하는 방법입니다. layer 1 의 activation 은 layer 2 가 끝나면 필요 없으므로 같은 주소를 layer 3
             이 다시 씁니다. caching allocator 가 이를 자동으로 해 주지만 크기가 조금씩 다르면 block 이 쪼개집니다. vLLM 이 warmup 에서 큰 shape 를
@@ -289,6 +294,9 @@ export default function InferenceRuntimeAnatomyArticle() {
             시간입니다. graph 의 동작 원리는{" "}
             <Link to="/cs/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 글이 소유합니다.
           </p>
+        </div>
+        <EagerLazyTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Eager initialization 은 이 모든 준비를 ready 신호 전에 끝냅니다. lazy initialization 은 실제로 그 shape 나 kernel 이
             필요해질 때 준비합니다. eager 는 cold start 가 길지만 첫 요청부터 latency 가 균일하고 lazy 는 ready 가 빠르지만 초기 요청 몇 개가

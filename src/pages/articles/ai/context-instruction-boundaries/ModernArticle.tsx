@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { InstructionBoundaryViz } from "../context-engineering/viz/ModernContextEngineeringViz";
+import RequestTraceViz from "./viz/RequestTraceViz";
+import ExecutionPathsViz from "./viz/ExecutionPathsViz";
 import { ContextStatePathLocator, ContextStatePathMapReturn } from "../shared/ContextStatePathLocator";
 
 export default function Article() {
@@ -180,6 +182,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           7. 형식이 맞아도 권한이 없으면 100건은 나가지 않습니다
         </h2>
+        <RequestTraceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             입력은 user_request=이메일 요약, data=email-1입니다. 외부 문장을
@@ -331,6 +334,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           9. 재시도와 다른 실행 경로도 같은 검사를 거쳐야 합니다
         </h2>
+        <ExecutionPathsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             직접 호출은 막았지만 다른 작업자나 확장 기능이 같은 전송을 할 수

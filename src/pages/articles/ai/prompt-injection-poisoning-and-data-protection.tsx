@@ -6,6 +6,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import { AgentSafetyPathLocator, AgentSafetyPathMapReturn } from "./shared/AgentSafetyPathLocator";
 import PromptInjectionPoisoningAndDataProtectionViz from "./prompt-injection-poisoning-and-data-protection/viz/PromptInjectionPoisoningAndDataProtectionViz";
+import PoisoningTimeViz from "./prompt-injection-poisoning-and-data-protection/viz/PoisoningTimeViz";
+import CredentialScopeViz from "./prompt-injection-poisoning-and-data-protection/viz/CredentialScopeViz";
+import PiiMinimizationViz from "./prompt-injection-poisoning-and-data-protection/viz/PiiMinimizationViz";
 
 /**
  * Prompt injection은 지시가 오는 경로로, poisoning은 오염 시점으로 갈립니다
@@ -128,6 +131,7 @@ export default function PromptInjectionPoisoningAndDataProtectionArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           학습 데이터 오염
         </h2>
+        <PoisoningTimeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Data poisoning은 model 학습이나 fine-tuning corpus에 악성 샘플을 섞어 넣는 training-time 공격입니다. 배포 뒤 특정 입력에서 공격자가
@@ -173,6 +177,9 @@ export default function PromptInjectionPoisoningAndDataProtectionArticle() {
             data exfiltration이라 부릅니다. Credential isolation은 agent가 쓰는 자격증명을 최소 범위로 나눠 발급하는 사전 대응입니다. 한
             injection이 성공해도 유출 가능한 자격증명 범위가 그만큼 좁아집니다.
           </p>
+        </div>
+        <CredentialScopeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 agent 하나에 조직 전체 API 토큰 하나만 주면, 그 agent가 처리하는
             어떤 문서의 injection이든 성공하면 조직 전체 자원에 접근할 수 있습니다.
@@ -243,6 +250,9 @@ export default function PromptInjectionPoisoningAndDataProtectionArticle() {
             PII(개인식별정보)는 이름·이메일·전화번호처럼 개인을 특정할 수 있는 정보입니다. PII detection은 이 정보를 정규식이나 NER(개체명 인식) model로
             찾아냅니다. data minimization은 애초에 필요한 최소한의 필드만 수집·전달·보관해 탐지가 놓친 PII까지 노출 범위를 줄이는 사전 설계입니다.
           </p>
+        </div>
+        <PiiMinimizationViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이메일처럼 형식이 일정한 값은 정규식으로 찾기 쉽지만, “공일공에 일이삼사”처럼 문장으로
             풀어 쓴 전화번호는 같은 규칙을 피할 수 있습니다. 문맥을 읽는 NER model을 더해도 흔한 사람

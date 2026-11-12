@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { StorachaReceiptViz } from "./StorachaReceiptViz";
+import UcanScopeViz from "./viz/UcanScopeViz";
+import ShardRangeViz from "./viz/ShardRangeViz";
+import FilecoinPipelineViz from "./viz/FilecoinPipelineViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { ucantoTree, w3upTree } from "./fileTree";
@@ -91,6 +94,7 @@ export default function ModernStoracha() {
             resource에서, 어떤 일을, 어떤 조건으로 허용했는가”를 서명한 사슬로
             나타냅니다.
           </p>
+          <UcanScopeViz />
           <p>
             서비스는 invocation 서명, issuer와 audience, 만료 시점과 proof
             chain을 확인합니다. 그 뒤 요청한 Space와 ability가 상위 위임 범위를
@@ -380,6 +384,7 @@ export default function ModernStoracha() {
               Root CID만으로 여러 shard 안의 block 위치를 찾을 수는 없습니다
             </h2>
           </header>
+          <ShardRangeViz />
           <p>
             큰 DAG가 여러 CAR shard로 나뉘면 root CID만으로는 원하는 block이
             어느 shard의 몇 번째 byte에 있는지 알 수 없습니다. Sharded DAG
@@ -503,6 +508,7 @@ export default function ModernStoracha() {
               업로드 성공과 Filecoin deal 진행 상태는 같은 완료가 아닙니다
             </h2>
           </header>
+          <FilecoinPipelineViz />
           <p>
             w3-filecoin 흐름에서 Storefront는 piece를 받고, Aggregator는 작은
             piece들을 큰 aggregate로 묶으며, Dealer는 storage provider와 deal을

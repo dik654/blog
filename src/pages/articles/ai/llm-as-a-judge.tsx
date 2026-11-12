@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import PositionBiasViz from "./llm-as-a-judge/viz/LlmAsAJudgeViz";
+import PositionConsistencyViz from "./llm-as-a-judge/viz/PositionConsistencyViz";
 import {
   EvaluationTrustPathLocator,
   EvaluationTrustPathMapReturn,
@@ -111,6 +112,9 @@ export default function LlmAsAJudgeArticle() {
             체계적 오차입니다. 가장 뚜렷한 예가 position bias 로, 같은 두 답변을 A·B 순서만
             바꿔 다시 넣어도 judge 의 승자가 바뀌는 현상입니다.
           </p>
+        </div>
+        <PositionConsistencyViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             MT-Bench 논문은 같은 답변 쌍의 순서를 바꿔 두 번 판정했을 때 GPT-4 가 두 판정에서
             같은 답을 고른 비율(consistency)이 65.0%, 먼저 제시된 쪽을 고른 비율이 30.0% 라고

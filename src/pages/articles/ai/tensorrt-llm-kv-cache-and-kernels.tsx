@@ -8,6 +8,9 @@ import PoolLayoutViz from "./tensorrt-llm-kv-cache-and-kernels/viz/PoolLayoutViz
 import PartialReuseCopyViz from "./tensorrt-llm-kv-cache-and-kernels/viz/PartialReuseCopyViz";
 import RetentionTierViz from "./tensorrt-llm-kv-cache-and-kernels/viz/RetentionTierViz";
 import XqaGroupViz from "./tensorrt-llm-kv-cache-and-kernels/viz/XqaGroupViz";
+import IfbTensorOrderViz from "./tensorrt-llm-kv-cache-and-kernels/viz/IfbTensorOrderViz";
+import AttentionPathViz from "./tensorrt-llm-kv-cache-and-kernels/viz/AttentionPathViz";
+import OffloadThresholdViz from "./tensorrt-llm-kv-cache-and-kernels/viz/OffloadThresholdViz";
 import { codeRefs } from "./tensorrt-llm-kv-cache-and-kernels/codeRefs";
 import { engineTrees } from "./tensorrt-llm-kv-cache-and-kernels/fileTree";
 import { ExecutionKernelMapReturn, ExecutionKernelSeriesLocator } from "./shared/ExecutionKernelSeriesLocator";
@@ -154,6 +157,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               vLLM에서 continuous batching이라고 부르는 같은 개념입니다. 기본 원리는{" "}
               <a href="/cs/ai/continuous-batching-step-anatomy#step-unit">continuous batching의 step 단위</a>에서 봅니다.
             </p>
+          </div>
+          <IfbTensorOrderViz />
+          <div className={prose}>
             <p>
               TensorRT-LLM의 in-flight batching에는 규칙이 하나 더 있습니다. 입력 tensor 안에서 프롬프트를 처리하는 context 단계
               token이 생성 단계 token보다 앞에 와야 합니다. 요청 S0·S2가 context, S1이 생성이라면 S0과 S2의 token을 먼저 놓고
@@ -355,6 +361,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               하한의 기본값에는 문서와 코드의 차이가 있습니다. 공식 문서는 기본값이 35이고 35보다 낮으면 내리지 않는다고 적습니다. 고정 원문의 evictionPolicy.cpp
               34행은 C++ 기본값을 30으로 두고 155–156행은 우선순위가 하한 이상이면 내릴 수 있다고 판정합니다. Python 설정 설명은 하한보다 커야 한다고 적습니다.
             </p>
+          </div>
+          <OffloadThresholdViz />
+          <div className={prose}>
             <p>
               기본 우선순위 35인 block은 세 표현 어디에서나 내려가므로
               기본 설정에서는 차이가 드러나지 않습니다. 우선순위를 30~34로 직접 준 block만 버전에 따라 결과가 달라질 수 있습니다.
@@ -381,6 +390,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               cache에 쓰고, cache 전체와 attention을 계산합니다. FP8 KV를 쓰면 쓰기 전에 양자화도 합니다. 문제는 이 일을 몇 번의
               kernel 호출로 나누느냐입니다.
             </p>
+          </div>
+          <AttentionPathViz />
+          <div className={prose}>
             <p>
               TensorRT-LLM의 attention op는 이 일을 하나의 custom op 안에 둡니다. context 단계에서는 attentionOp.cpp 1832–1898행이
               bias, RoPE 계수, KV cache 버퍼, 양자화 출력 버퍼를 한 parameter 묶음에 담아 invokeQKVPreprocessing 한 번으로 넘깁니다.

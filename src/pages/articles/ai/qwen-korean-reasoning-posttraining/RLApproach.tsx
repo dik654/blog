@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import GroupAdvantageViz from "./viz/GroupAdvantageViz";
+import RewardMixViz from "./viz/RewardMixViz";
+import StdNormalizationViz from "./viz/StdNormalizationViz";
 
 const SNAPSHOT = [
   ["출발 checkpoint", "Smoothie Qwen3 14B"],
@@ -71,6 +74,9 @@ export default function RLApproach() {
         </p>
 
         <h3>2단계: 서로 다른 목적을 하나의 reward로 합칩니다</h3>
+      </div>
+      <RewardMixViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           정답 여부만 reward로 주면 형식과 언어가 흔들릴 수 있고, 언어 일관성만
           주면 한국어로 쓴 오답이 높은 점수를 받을 수 있습니다. 논문은 네
@@ -112,6 +118,9 @@ export default function RLApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>3단계: 같은 질문의 12개 후보를 평균보다 나은지 비교합니다</h3>
+      </div>
+      <GroupAdvantageViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           GRPO는 하나의 질문에서 여러 candidate를 sampling하고 각 reward가 group 평균보다 높은지 낮은지로 update 방향을 정합니다. 절대 reward가
           높더라도 같은 질문의 다른 후보가 모두 더 높으면 그 후보는 상대적으로 나쁜 예입니다. 이 연구에서는 질문당 12 rollouts를 사용했습니다.
@@ -149,6 +158,9 @@ export default function RLApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Dr.GRPO가 뺀 두 정규화 항의 의미</h3>
+      </div>
+      <StdNormalizationViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           원 논문이 채택한 Dr.GRPO는 group reward의 표준편차로 advantage를 나누지
           않고, objective의 response-length normalization도 제거합니다. 논문은

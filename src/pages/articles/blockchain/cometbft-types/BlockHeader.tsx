@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import AppHashLagViz from "./viz/AppHashLagViz";
 
 export default function BlockHeader({
   onCodeRef,
@@ -44,6 +45,9 @@ export default function BlockHeader({
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>왜 AppHash는 한 높이 늦게 보일까요?</h3>
+      </div>
+      <AppHashLagViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Height <code>h</code>의 header는 proposal 전에 만들어져야 하므로 block <code>h</code> 실행 결과를 미리 담을
           수 없습니다. 따라서 header의 AppHash·LastResultsHash는 이전 block을 적용한 receipt이고, block

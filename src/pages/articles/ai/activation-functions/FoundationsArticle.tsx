@@ -7,6 +7,8 @@ import ActivationFamilyFlowViz from "./viz/ActivationFamilyFlowViz";
 import NumericPath from "../../world-systems/NumericPath";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ActivationCurve from "./viz/ActivationCurve";
+import HeightSlopeViz from "./viz/HeightSlopeViz";
+import ForwardBackwardTraceViz from "./viz/ForwardBackwardTraceViz";
 
 export default function ActivationFoundationsArticle(){return <article className="space-y-16">
 <section id="overview" data-teach-level="S" className="space-y-6"><h2 className="text-2xl font-bold">1. 앞으로 보낼 값과 뒤로 보낼 변화율을 함께 고릅니다</h2>
@@ -16,6 +18,7 @@ export default function ActivationFoundationsArticle(){return <article className
 <p className="leading-8">앞 방향에서는 2를 받아 정해진 곡선의 높이를 다음 계산에 전달합니다. 뒤 방향에서는 다음 계산이 보낸 변화율 3을 받아, 지금 곡선의 기울기를 곱해 앞 계산에 돌려보냅니다. 같은 곡선의 높이와 기울기가 서로 다른 일을 합니다.</p><NumericPath title="같은 위치에서 앞 출력과 뒤 변화율을 계산합니다" steps={[{label:"현재 입력",value:"2"},{label:"곡선의 높이",value:"0.880797"},{label:"곡선의 기울기",value:"0.104994"},{label:"뒤의 3을 곱하기",value:"0.314981"}]} /><p className="leading-8">이 수치는 뒤에서 정의할 부드러운 0–1 곡선의 계산값입니다. 입력 2가 어느 지점에서 어떤 비율로 바뀌는지 한 단계씩 열어 보겠습니다.</p>
 </section>
 <section id="case" data-teach-level="0" className="space-y-6"><h2 className="text-2xl font-bold">3. 입력을 조금 움직였을 때 출력이 얼마나 움직이는지 봅니다</h2>
+<HeightSlopeViz />
 <p className="leading-8">선택한 변환은 입력의 부호를 반대로 한 값에 지수를 취한 뒤, 그 결과에 1을 더하고 역수를 구합니다. 입력 2에서는 e^(−2)≈0.135335, 1을 더하면 1.135335, 역수는 약 0.880797입니다. 이 변환은 입력이 커질수록 출력이 1에 가까워지지만 1을 넘지 않습니다.</p><p className="leading-8">입력을 2에서 아주 조금 움직일 때 출력이 변하는 비율은 약 0.104994입니다. 뒤 계산의 오차가 출력 한 단위에 3만큼 반응한다면 입력 쪽 반응은 3×0.104994≈0.314981입니다. 이 곱셈은 두 연속 변화의 비율을 연결하는 계산입니다.</p><p className="leading-8">앞 방향의 값 0.880797과 뒤 방향에 곱할 0.104994를 혼동하지 않는 것이 첫 계산 목표입니다. 상자 안에는 무엇을 저장하거나 다시 계산할지가 남아 있습니다.</p>
 <p className="leading-8">입력 2의 출력 0.880797은 다음 계산에 전달할 값입니다. 반면 기울기 0.104994는 입력을 아주 조금 바꿨을 때 출력이 얼마나 바뀌는지 나타냅니다. 출력이 크다고 변화도 반드시 큰 것은 아닙니다. 이 두 숫자를 뒤바꾸면 앞쪽으로 전달할 변화율도 달라집니다.</p><p className="leading-8">같은 곡선의 입력을 0으로 옮기면 출력은 0.5, 기울기는 0.25입니다. 입력 10에서는 출력이 약 0.999955까지 커지지만 기울기는 약 0.000045로 작아집니다 (가정). 곡선의 높이와 그 자리의 기울기를 따로 보는 이유입니다.</p></section>
 <section id="parts" data-teach-level="1" className="space-y-6"><h2 className="text-2xl font-bold">4. 출력을 만드는 규칙과 기울기를 읽는 규칙을 구분합니다</h2>
@@ -28,6 +31,7 @@ export default function ActivationFoundationsArticle(){return <article className
 <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th>먼저 본 역할</th><th>이름</th><th>이번 사례</th></tr></thead><tbody><tr><td>층 사이에서 값을 비선형으로 바꾸는 함수</td><td>Activation function · 활성함수</td><td>2를 다른 값으로 바꿈</td></tr><tr><td>활성함수에 넣기 전 입력</td><td>Pre-activation z</td><td>2</td></tr><tr><td>뒤 변화율에 곱할 현재 기울기</td><td>Local derivative</td><td>0.104994</td></tr><tr><td>부호를 보고 0 또는 1을 고름</td><td>Step function · 계단 함수</td><td>2→1</td></tr><tr><td>0–1 사이의 비율로 부드럽게 바꿈</td><td>Sigmoid</td><td>2→0.880797</td></tr><tr><td>−1–1 범위에서 부호를 남김</td><td>Tanh</td><td>2→0.964028</td></tr></tbody></table></div><ActivationFamilyFlowViz mode="foundations" /><p className="leading-8">이 이름을 붙인 뒤에도 높이와 기울기를 같은 입력 위치에서 읽는 원칙은 같습니다. 다음 절은 입력 2가 만들어지는 곳부터 뒤 변화율까지 한 번에 연결합니다.</p>
 </section>
 <section id="trace" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">7. 입력 2의 앞 계산과 뒤 계산을 이어 봅니다</h2>
+<ForwardBackwardTraceViz />
 <p className="leading-8">입력 x=2에 가중치 W=1과 이동량 b=0을 적용하면 z=2가 됩니다 (가정). Sigmoid로 a≈0.880797을 다음 계산에 전달합니다. 뒤에서 dL/da=3을 받으면 da/dz≈0.104994를 곱해 dL/dz≈0.314981을 얻습니다.</p><ExplainedFormula
         question="Affine layer 뒤에 activation을 둔 한 단계는 무엇을 계산하는가?"
         idea={<>먼저 입력 feature를 weight와 bias로 섞어 pre-activation을 만들고, nonlinear response curve를 적용해 다음 layer의 표현을 만듭니다.</>}

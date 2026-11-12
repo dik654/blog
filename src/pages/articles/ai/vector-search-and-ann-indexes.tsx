@@ -11,6 +11,7 @@ import EmbeddingPathLocator, {
 import VectorSearchAndAnnIndexesViz, {
   VectorMetricEquivalenceViz,
 } from "./vector-search-and-ann-indexes/viz/VectorSearchAndAnnIndexesViz";
+import PqLookupTableViz from "./vector-search-and-ann-indexes/viz/PqLookupTableViz";
 
 /**
  * 개념 글입니다. q-17 한 건을 같은 좌표 → exact → IVF → PQ → top-k까지 추적합니다.
@@ -211,6 +212,7 @@ export default function VectorSearchAndAnnIndexesArticle() {
           assumptions={["d는 m으로 나누어떨어집니다.", "중심표와 문서 식별자 저장량은 식에서 제외했습니다."]}
           interpretation="m=8, nbits=8이면 벡터 하나의 PQ 코드는 8바이트입니다."
         />
+        <PqLookupTableViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             검색 때는 q-17의 각 조각과 중심표 사이 거리를 먼저 계산해 작은 조회표를 만듭니다. 후보 문서의 코드 여덟 개로 이 표를 조회해 합하면 원본 벡터를 복원하지 않고도 근사 거리를 얻습니다. 이를 비대칭 거리 계산이라고 부릅니다.

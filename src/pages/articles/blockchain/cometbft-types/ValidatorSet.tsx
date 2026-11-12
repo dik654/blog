@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import ProposerPriorityLineViz from "./viz/ProposerPriorityLineViz";
 
 export default function ValidatorSet({
   onCodeRef,
@@ -52,6 +53,9 @@ export default function ValidatorSet({
           운영 로그에는 “현재 set”, “다음 set”, “commit을 검증한 historical set”을 구분해 적고 height와 hash를 함께 남깁니다.
           최신 set으로 과거 commit을 검증하면 정상 서명을 잘못 거부할 수 있습니다.
         </p>
+      </div>
+      <ProposerPriorityLineViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           숫자를 작게 잡아 보겠습니다. power가 3과 1이고 priority는 둘 다 0입니다. 첫 round에 power를 더하면 3과 1이 됩니다.
           첫 validator를 고른 뒤 total power 4를 빼면 priority는 -1과 1이 됩니다.

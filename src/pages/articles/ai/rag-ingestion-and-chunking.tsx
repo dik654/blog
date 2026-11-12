@@ -10,6 +10,9 @@ import {
   RagIngestionReturn,
 } from "./rag-ingestion-and-chunking/RagIngestionLocator";
 import RagIngestionAndChunkingViz from "./rag-ingestion-and-chunking/viz/RagIngestionAndChunkingViz";
+import OverlapBoundaryViz from "./rag-ingestion-and-chunking/viz/OverlapBoundaryViz";
+import SemanticThresholdViz from "./rag-ingestion-and-chunking/viz/SemanticThresholdViz";
+import RevisionSwapViz from "./rag-ingestion-and-chunking/viz/RevisionSwapViz";
 
 export default function RagIngestionAndChunkingArticle() {
   return (
@@ -125,6 +128,7 @@ export default function RagIngestionAndChunkingArticle() {
           ]}
           interpretation="시작점은 0, 450, 900이고 구간은 [0,500), [450,950), [900,1,000)입니다. 480~530 문장은 두 번째 chunk에 온전히 들어가지만, overlap이 없으면 두 chunk에 나뉩니다."
         />
+        <OverlapBoundaryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Overlap은 경계 손실을 줄이지만 없애지는 않습니다. 경계를 가로지르는
@@ -159,6 +163,9 @@ export default function RagIngestionAndChunkingArticle() {
             거리가 크게 벌어지는 지점을 경계 후보로 삼습니다. 결과 chunk의
             길이는 같지 않지만, 화제가 바뀌는 곳에서 나눌 수 있습니다.
           </p>
+        </div>
+        <SemanticThresholdViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             LlamaIndex의 <code>SemanticSplitterNodeParser</code>는
             <code>buffer_size</code>만큼 문장을 묶어 비교하고, 이웃 묶음 사이
@@ -227,6 +234,7 @@ export default function RagIngestionAndChunkingArticle() {
 
       <section id="pipeline" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">증분 반영</h2>
+        <RevisionSwapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             원문 revision을 키로 삼으면 바뀐 문서만 다시 처리할 수 있습니다.

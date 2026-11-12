@@ -11,6 +11,10 @@ import ServingLatencyMetricsAndSloViz from "./serving-latency-metrics-and-slo/vi
 import LatencyPercentileHistogramViz from "./serving-latency-metrics-and-slo/viz/LatencyPercentileHistogramViz";
 import SloWindowBudgetViz from "./serving-latency-metrics-and-slo/viz/SloWindowBudgetViz";
 import TokenArrivalGapsViz from "./serving-latency-metrics-and-slo/viz/TokenArrivalGapsViz";
+import E2eSplitViz from "./serving-latency-metrics-and-slo/viz/E2eSplitViz";
+import P2pReversalViz from "./serving-latency-metrics-and-slo/viz/P2pReversalViz";
+import PercentileDefinitionViz from "./serving-latency-metrics-and-slo/viz/PercentileDefinitionViz";
+import EventMetricRulesViz from "./serving-latency-metrics-and-slo/viz/EventMetricRulesViz";
 import {
   ServingEngineMapReturn,
   ServingEngineSeriesLocator,
@@ -34,7 +38,7 @@ export default function Article() {
 <section id="metrics" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 1초와 327ms를 더하고 네 간격으로 나눕니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             네 간격의 평균을 TPOT(Time per Output Token)라고 부릅니다. 이 사례에서는 327/4=81.75ms입니다. 첫 토큰까지 1초에 이후 네 간격을 더하면
             E2E=1+4×0.08175=1.327초가 됩니다. (가정)
-          </p><p>
+          </p></div><E2eSplitViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             200토큰 응답으로 길이를 바꿔 보겠습니다. 첫 도착 1초, 이후 평균 50ms라면 간격은 199개이므로 10.95초입니다. 평균을 30ms로 줄이면 6.97초이고 첫 도착만
             0.3초로 줄이면 10.25초입니다. 응답 길이가 길수록 뒤의 간격 합이 커집니다. (가정)
           </p><p>TTFT에는 전송과 대기, 입력 처리, 첫 출력의 전달이 함께 들어갑니다. 이 한 값으로 대기열 때문인지 긴 입력 때문인지 가릴 수는 없습니다. 원인을 찾을 때는 <Link to="/cs/ai/vllm-serving#latency-accounting">같은 요청의 단계별 시각</Link>으로 돌아갑니다.</p></div><ExplainedFormula
@@ -61,7 +65,7 @@ export default function Article() {
             대상과 측정 구간을 함께 적습니다. (가정)
           </p><p>
             한 번의 계산에서 각 요청에 한 토큰씩 준다고 합시다. 동시에 처리하는 요청을 늘리면 한 번에 나오는 토큰 수도 늘지만 계산 시간이 길어질 수 있습니다. 아래는 요청 수에 따라 출력 간격이 늘어나는 측정값을 가정한 예입니다. (가정)
-          </p><table><thead><tr><th>동시에 처리하는 요청</th><th>각 사용자의 출력 간격</th><th>서버 전체 출력</th></tr></thead><tbody><tr><td>1개</td><td>20ms</td><td>50토큰/s</td></tr><tr><td>8개</td><td>28ms</td><td>약 286토큰/s</td></tr><tr><td>32개</td><td>50ms</td><td>640토큰/s</td></tr></tbody></table><p>서버 합계는 늘었지만 각 사용자가 다음 토큰을 기다리는 시간도 길어졌습니다. 이는 주어진 측정값에서 생기는 latency–throughput trade-off입니다. 장비나 구현을 개선하면 둘 다 좋아질 수도 있습니다. 묶음 크기를 늘릴수록 항상 처리량이 커진다는 법칙은 아닙니다.</p><p>요청을 받는 속도가 처리 능력에 가까워지면 대기가 늘 수 있습니다. <Link to="/cs/ai/llm-serving-ops#paper-little-law">Little의 법칙</Link>은 안정된 계의 평균 개수와 도착률·체류 시간을 연결하며 90%에서 반드시 급격히 나빠진다는 임계값을 주지는 않습니다. 실제 입력 길이와 도착 분포에서 부하를 올리며 측정해야 합니다.</p><p>위 표는 가정이지만 현장 기록에서도 같은 구분이 필요합니다. RTX PRO 6000 8장에 Kimi K2.5를 올리고 40K 토큰 문맥 요청 100개를 동시에 돌린 커뮤니티 기록은 서버 합계 약 900토큰/s입니다. 요청 하나로 나누면 약 9토큰/s이고 간격으로는 약 111ms(계산)입니다. (현장 경험)</p><p>같은 기록에서 GPU끼리 직접 주고받는 P2P 경로를 켜면 합계가 약 600토큰/s, 요청당 약 6토큰/s로 내려가는데 요청 하나만 돌릴 때는 P2P를 켠 쪽이 65 대 44토큰/s로 빠릅니다. 동시 처리량에 좋은 설정과 한 사람의 속도에 좋은 설정이 서로 반대입니다. (현장 경험)</p><p>K2.6을 32K 문맥에서 동시 64개로 잰 다른 기록은 합계 742토큰/s, 요청당 약 11.6토큰/s입니다. 추측 디코딩을 켜고 종료 토큰을 무시한 측정이라 실제 대화와는 다릅니다. 자주 인용되는 985와 5,816토큰/s는 입력을 포함한 합계라 출력만 보면 281과 1,650입니다.</p><p>그래서 용량의 분모로는 합계의 최댓값 대신 요청별 속도 약속을 지키는 동시성에서 잰 합계를 씁니다. 코딩 에이전트처럼 요청별 하위 25% 속도가 20토큰/s 이상이어야 한다면 900토큰/s 기록은 기준에 미달합니다. 그 기준과 측정 절차는 <Link to="/cs/ai/agent-serving-slo-and-capacity">에이전트 서빙의 SLO와 용량</Link>에 정리돼 있습니다.</p></div><ExplainedFormula
+          </p><table><thead><tr><th>동시에 처리하는 요청</th><th>각 사용자의 출력 간격</th><th>서버 전체 출력</th></tr></thead><tbody><tr><td>1개</td><td>20ms</td><td>50토큰/s</td></tr><tr><td>8개</td><td>28ms</td><td>약 286토큰/s</td></tr><tr><td>32개</td><td>50ms</td><td>640토큰/s</td></tr></tbody></table><p>서버 합계는 늘었지만 각 사용자가 다음 토큰을 기다리는 시간도 길어졌습니다. 이는 주어진 측정값에서 생기는 latency–throughput trade-off입니다. 장비나 구현을 개선하면 둘 다 좋아질 수도 있습니다. 묶음 크기를 늘릴수록 항상 처리량이 커진다는 법칙은 아닙니다.</p><p>요청을 받는 속도가 처리 능력에 가까워지면 대기가 늘 수 있습니다. <Link to="/cs/ai/llm-serving-ops#paper-little-law">Little의 법칙</Link>은 안정된 계의 평균 개수와 도착률·체류 시간을 연결하며 90%에서 반드시 급격히 나빠진다는 임계값을 주지는 않습니다. 실제 입력 길이와 도착 분포에서 부하를 올리며 측정해야 합니다.</p><p>위 표는 가정이지만 현장 기록에서도 같은 구분이 필요합니다. RTX PRO 6000 8장에 Kimi K2.5를 올리고 40K 토큰 문맥 요청 100개를 동시에 돌린 커뮤니티 기록은 서버 합계 약 900토큰/s입니다. 요청 하나로 나누면 약 9토큰/s이고 간격으로는 약 111ms(계산)입니다. (현장 경험)</p></div><P2pReversalViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 기록에서 GPU끼리 직접 주고받는 P2P 경로를 켜면 합계가 약 600토큰/s, 요청당 약 6토큰/s로 내려가는데 요청 하나만 돌릴 때는 P2P를 켠 쪽이 65 대 44토큰/s로 빠릅니다. 동시 처리량에 좋은 설정과 한 사람의 속도에 좋은 설정이 서로 반대입니다. (현장 경험)</p><p>K2.6을 32K 문맥에서 동시 64개로 잰 다른 기록은 합계 742토큰/s, 요청당 약 11.6토큰/s입니다. 추측 디코딩을 켜고 종료 토큰을 무시한 측정이라 실제 대화와는 다릅니다. 자주 인용되는 985와 5,816토큰/s는 입력을 포함한 합계라 출력만 보면 281과 1,650입니다.</p><p>그래서 용량의 분모로는 합계의 최댓값 대신 요청별 속도 약속을 지키는 동시성에서 잰 합계를 씁니다. 코딩 에이전트처럼 요청별 하위 25% 속도가 20토큰/s 이상이어야 한다면 900토큰/s 기록은 기준에 미달합니다. 그 기준과 측정 절차는 <Link to="/cs/ai/agent-serving-slo-and-capacity">에이전트 서빙의 SLO와 용량</Link>에 정리돼 있습니다.</p></div><ExplainedFormula
           question="Batch 크기 B 에서 tokens/s 와 ITL 은 같은 양에서 어떻게 갈라지나요?"
           idea="한 decode step 시간 t(B) 는 batch 안 모든 요청이 공유합니다. 그 값을 요청 하나가 보면 ITL 이고, 서버 전체가 보면 B 개 token 을 t(B) 마다 낸 throughput 입니다."
           formula={String.raw`\mathrm{ITL}(B)=t(B),\qquad \mathrm{tokens/s}(B)=\frac{B}{t(B)},\qquad \mathrm{RPS}=\frac{N_{\text{done}}}{T}`}
@@ -86,7 +90,7 @@ export default function Article() {
           </p><p>
             정렬 순위로 누적 비율의 위치를 읽는 값을 percentile이라고 합니다. 여기서는 p%에 해당하는 순위를 올림해 그 값을 읽는 nearest-rank를 씁니다. 그 정의에서
             P95는 1.45초이며 적어도 95%가 이 값 이하입니다. 동점이 있으면 정확히 95%라고 할 수는 없습니다.
-          </p><p>
+          </p></div><PercentileDefinitionViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             NumPy 기본 선형 보간은 0부터 세는 위치 0.95×99=94.05를 씁니다. 95번째 1.45초와 96번째 1.7초 사이 5%이므로 1.4625초입니다. 두 값 모두 아래
             1.5초 기준을 통과하지만 정의를 섞어 보고하면 비교가 바뀝니다. (가정)
           </p><p>
@@ -117,7 +121,7 @@ export default function Article() {
             원문의 st는 client 전송 전의 시각이고 timestamp는 메시지를 읽은 시각입니다. 이 버전은 choices가 있으면 빈 content인 첫 이벤트도 TTFT를 정할
             수 있습니다. 또 usage 메시지를 포함한 timestamp가 most_recent_timestamp를 갱신하므로 마지막 내용 토큰과 latency의 끝이 달라질 수
             있습니다.
-          </p><p>
+          </p></div><EventMetricRulesViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             NVIDIA의 GenAI-Perf 문서는 뒤 응답의 토큰 수로 나눈 값을 사용합니다. 위 묶음에서는 40ms와 287/3≈95.667ms입니다. 이는 묶음 안의 실제 생성
             간격을 복원한 것이 아닙니다. 두 값을 단순 평균하면 약 67.833ms이며 토큰 수로 가중한 81.75ms와 다릅니다. (가정)
           </p></div><CodeViewButton label="고정 원문: 수신 이벤트와 시각 갱신" onClick={() => sidebar.open("client-events", codeRefs["client-events"])} /><div id="paper-genai-perf" className="mt-8 scroll-mt-20"><CitationBlock source="NVIDIA GenAI-Perf · Metrics" citeKey={1} href="https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html#metrics"><q>divided by the number of generated tokens of the latter response</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>

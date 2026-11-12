@@ -30,7 +30,7 @@
       "score": 42
     },
     "blockchain/filecoin-storacha": {
-      "fingerprint": "ff537b223265c599",
+      "fingerprint": "04d80034293e6690",
       "score": 15
     },
     "ai/claw-api-client": {
@@ -935,6 +935,10 @@
     },
     "p2p/iroh": {
       "fingerprint": "dbf712adacd64e9d",
+      "score": 6
+    },
+    "isms-aml/isms-backup-recovery": {
+      "fingerprint": "70c8c53b3db09828",
       "score": 6
     }
   }

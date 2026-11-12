@@ -6,6 +6,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DifferentialAttentionViz from "./differential-attention/viz/DifferentialAttentionViz";
+import GroupedNoiseViz from "./differential-attention/viz/GroupedNoiseViz";
+import HeadWidthViz from "./differential-attention/viz/HeadWidthViz";
+import LambdaInitViz from "./differential-attention/viz/LambdaInitViz";
 import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
@@ -173,6 +176,7 @@ export default function DifferentialAttentionArticle() {
           assumptions={["λ 는 같은 층의 모든 head 가 공유합니다.", "λinit 은 (0,1) 구간이며 층이 깊어질수록 1에 가까워지는 형태로 저자가 정했습니다."]}
           interpretation="layer 1 은 λinit=0.2 로 시작해 noise 를 약하게 지우고, layer 6 은 λinit≈0.67 로 더 적극적으로 지웁니다. 깊은 층일수록 초기값이 0.8 에 가까워집니다."
         />
+        <LambdaInitViz />
         <AlgorithmBlock
           title="한 differential attention head 의 forward"
           input={["X ∈ R^{N×d_model}", "W^Q, W^K, W^V ∈ R^{d_model×2d} (head 하나 몫)", "λ (층 공유 스칼라), λinit (층별 상수)"]}
@@ -185,7 +189,8 @@ export default function DifferentialAttentionArticle() {
           repeatUntil="같은 층의 h = d_model/2d 개 head 가 같은 λ 를 공유하며 이 절차를 병렬로 반복합니다."
           output="headOut ∈ R^{N×2d}, h개를 이어붙인 뒤 W^O 로 최종 projection"
         />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <HeadWidthViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             Head 하나가 값 두 벌을 계산하므로 같은 파라미터·연산 예산을 맞추려면 head 수를 줄여야 합니다. 저자의 3B model 은 hidden 3072, head dim
             128 에서 표준 Transformer 가 24 head(3072/128)를 쓰는 자리에 differential attention 은 12 head(3072/256)만 둡니다.
@@ -250,6 +255,9 @@ export default function DifferentialAttentionArticle() {
             decode 에서 얼마나 많은 KV 를 저장·전송하는지를 바꾸는 memory 축입니다. 두 축은 서로
             다른 병목을 풀므로 하나가 다른 하나의 상위 호환은 아닙니다.
           </p>
+        </div>
+        <GroupedNoiseViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
             Head 마다 signal·noise query 를 같은 수만큼 두면 noise 추정에 signal 만큼의 계산을
             씁니다. Motif 3 가 쓰는 grouped differential attention 은 이 비대칭을 겨냥해 signal
