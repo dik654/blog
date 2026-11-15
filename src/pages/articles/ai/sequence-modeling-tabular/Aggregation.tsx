@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AggregationViz from "./viz/AggregationViz";
+import TransitionCountViz from "./viz/TransitionCountViz";
 
 export default function Aggregation() {
   return (
@@ -32,6 +33,10 @@ export default function Aggregation() {
           transition probability를 살펴봅니다. 예를 들어 <code>A→B</code> 횟수는
           전체 A·B count만으로는 보이지 않는 짧은 순서를 보존합니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <TransitionCountViz />
       </div>
 
       <ExplainedFormula

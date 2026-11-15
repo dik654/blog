@@ -6,7 +6,7 @@
       "score": 138
     },
     "ai/claw-tool-system": {
-      "fingerprint": "7f9cc01e83b3ff93",
+      "fingerprint": "a28ba96018ebcfcc",
       "score": 81
     },
     "ai/claw-session": {
@@ -14,7 +14,7 @@
       "score": 72
     },
     "ai/claw-overview": {
-      "fingerprint": "d0f59ed5c120fc1c",
+      "fingerprint": "6490a39780efc293",
       "score": 69
     },
     "ai/openclaw-assistant": {
@@ -130,7 +130,7 @@
       "score": 5
     },
     "ai/claw-file-ops": {
-      "fingerprint": "a3791092a489c5e7",
+      "fingerprint": "ac31ad71cb5c1c51",
       "score": 28
     },
     "ai/llm-serving-ops": {
@@ -450,11 +450,11 @@
       "score": 18
     },
     "ai/claw-hooks": {
-      "fingerprint": "f64d577a6e86ce73",
+      "fingerprint": "202816fa2bd4b269",
       "score": 16
     },
     "ai/rlhf": {
-      "fingerprint": "f13d2760900246c3",
+      "fingerprint": "15e8848343b5c728",
       "score": 16
     },
     "ai/vae": {
@@ -566,7 +566,7 @@
       "score": 12
     },
     "ai/claw-recovery": {
-      "fingerprint": "ba309741c1e4a4c6",
+      "fingerprint": "35133465b50b6f3d",
       "score": 12
     },
     "ai/image-training-stages": {
@@ -630,7 +630,7 @@
       "score": 10
     },
     "ai/claw-task-team": {
-      "fingerprint": "83f898dd4246a4e6",
+      "fingerprint": "b8ecfe267282b113",
       "score": 10
     },
     "ai/knowledge-distillation": {
@@ -834,7 +834,7 @@
       "score": 7
     },
     "ai/claw-subagent-orchestration": {
-      "fingerprint": "0e28a17e101c0b2c",
+      "fingerprint": "acb794b143cf6fb0",
       "score": 6
     },
     "ai/continued-pretraining": {

@@ -1,4 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
+import VersionGuardViz from "./viz/VersionGuardViz";
+import IdempotentCreateViz from "./viz/IdempotentCreateViz";
 
 const registryRecords = [
   {
@@ -72,6 +74,13 @@ export default function Registry() {
           task를 만들 때 필수 field와 scope를 검증하고 참조한 dependency가 존재하는지, cycle이 생기지 않는지 확인합니다. 단일 task의 self-
           reference 검사만으로는 여러 task에 걸친 cycle이 잡히지 않습니다. graph 전체를 기준으로 봐야 하는 이유입니다.
         </p>
+</div>
+
+        <div className="not-prose my-8 min-w-0">
+          <IdempotentCreateViz />
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           client가 같은 create 요청을 재시도할 수 있으므로 idempotency key도 받습니다. 순차 번호만 발급하면 timeout 뒤 재시도에서 같은 작업이 두 개
           생깁니다. 생성 성공과 event 발행도 같은 transaction 경계로 묶거나 outbox를 사용해 누락을 줄입니다.
@@ -80,6 +89,13 @@ export default function Registry() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           assign은 조회와 갱신을 한 operation으로 만든다
         </h3>
+</div>
+
+        <div className="not-prose my-8 min-w-0">
+          <VersionGuardViz />
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           “다음 pending task를 찾고 나중에 worker를 기록”하면 두 scheduler가 같은 task를 가져갑니다. expected status와 version을 조건으로
           compare-and-set하거나 storage transaction 안에서 owner와 lease를 함께 갱신하는 편이 안전합니다.

@@ -5,6 +5,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { CalibrationPipelineViz } from "../quantization/viz/ModernQuantizationViz";
+import PtqGroupScaleViz from "./viz/PtqGroupScaleViz";
+import PtqOutlierRangeViz from "./viz/PtqOutlierRangeViz";
+import PtqWorstSliceViz from "./viz/PtqWorstSliceViz";
 
 export default function PtqCalibrationArticle() {
   return (
@@ -104,6 +107,7 @@ export default function PtqCalibrationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Scale을 공유하는 범위가 error·metadata·kernel layout을 함께 바꿉니다
         </h2>
+        <PtqGroupScaleViz />
         <ExplainedFormula
           question="4096 weights를 group 128로 나누면 scale metadata가 왜 늘어나나요?"
           idea={
@@ -169,6 +173,9 @@ export default function PtqCalibrationArticle() {
             calibration dataset입니다. Dynamic quantization은 이 표본을 따로
             두지 않는 대신 매 호출마다 관측 비용을 지불합니다.
           </p>
+        </div>
+        <PtqOutlierRangeViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             문제는 이 calibration dataset이 정한 range 안에{" "}
             <strong>outlier activation</strong>이 있을 때 생깁니다. 특정
@@ -205,6 +212,7 @@ export default function PtqCalibrationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           평균 대신 layer와 traffic slice의 최악 포화를 찾습니다
         </h2>
+        <PtqWorstSliceViz />
         <ExplainedFormula
           question="Calibration range가 실제 입력을 덮는지 어떻게 측정하나요?"
           idea={

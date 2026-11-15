@@ -11,6 +11,7 @@ import {
   BerachainFailureViz,
   BerachainRewardLifecycleViz,
 } from "./viz/ModernBerachainViz";
+import VaultAccrualViz from "./viz/VaultAccrualViz";
 
 const BEACON_SHA = "0a91d178147821bb41b7e1de092b0a501236b4ee";
 const RETH_SHA = "aa9bc73ffd49305ce0953c22b38f2affcbdabbd4";
@@ -190,6 +191,8 @@ export default function ModernBerachainArticle() {
             ]}
             interpretation="한 block의 vault path 1.305 WBERA 중 Vault A 몫은 0.6525이고, 그 기간의 Alice 지분이 10%라면 고립한 기여분은 0.06525 WBERA입니다. 실제 chain에서는 notification이 계속 겹치므로 earned(account)의 누적 상태를 읽어야 합니다."
           />
+
+          <VaultAccrualViz />
 
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>

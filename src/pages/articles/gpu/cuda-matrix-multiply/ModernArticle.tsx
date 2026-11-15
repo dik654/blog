@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { GemmDataflowViz, GemmMeasurementViz, GemmReleaseViz, TileReuseViz } from "./viz/ModernGemmViz";
+import NaiveRereadViz from "./viz/NaiveRereadViz";
+import EdgeTileViz from "./viz/EdgeTileViz";
 
 const GUIDE = "https://docs.nvidia.com/cuda/archive/13.4.2/cuda-programming-guide/02-basics/writing-cuda-kernels.html";
 const PRACTICES = "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html";
@@ -36,6 +38,7 @@ export default function ModernCudaMatrixMultiplyArticle() {
           { symbol: "K", name: "Reduction 길이", description: "각 output이 수행하는 multiply-accumulate 횟수입니다." },
           { symbol: "F", name: "정의한 FLOP 수", description: "일반 dense GEMM의 대략적 연산량이며 FMA를 2 FLOPs로 셉니다." },
         ]} assumptions={["A·B·C는 row-major dense matrix이고 shape가 M×K, K×N, M×N으로 맞습니다.", "FMA를 2 FLOPs로 세며 padding·epilogue·index 연산은 제외합니다."]} interpretation="M=N=K=4이면 output 16개가 각각 4번 곱하고 더해 약 128 FLOPs입니다. 이 수는 실제 실행 instruction 수나 Tensor Core throughput을 그대로 뜻하지 않습니다." />
+        <NaiveRereadViz />
         <p>
             나이브 kernel에서는 각 output thread가 A row와 B column을 global memory에서 읽습니다. Cache가 일부 중복을 흡수하기는 해도 재사용을
             명시적으로 보장하지는 않습니다. B의 column access는 data layout에 따라 coalescing도 나빠지기 쉽습니다. 코드는 단순하지만 큰 K에서
@@ -59,6 +62,7 @@ export default function ModernCudaMatrixMultiplyArticle() {
           { symbol: "s", name: "원소 byte 수", description: "FP32라면 4 bytes입니다." },
           { symbol: "I_{tile}", name: "Tile-level arithmetic intensity 근사", description: "해당 stage의 requested global bytes 대비 계산량입니다." },
         ]} assumptions={["A·B tile을 각 K stage에서 한 번씩 global memory에서 읽고 C store·cache·edge overhead를 생략합니다.", "각 loaded value가 block 안에서 T번 유효하게 재사용된다고 가정합니다."]} interpretation="T=4, FP32이면 약 1 FLOP/byte이고 T=32이면 약 8 FLOP/byte입니다. 실제 arithmetic intensity는 cache, C read/write, partial tile, data type과 compiler lowering 때문에 profiler traffic으로 다시 계산해야 합니다." />
+        <EdgeTileViz />
         <p>행렬 크기가 T의 배수가 아니면 마지막 block의 일부 load와 output은 범위를 벗어납니다. 각 load를 predicate하고 out-of-range shared slot에는 0을 넣은 뒤, store도 <code>row&lt;M && col&lt;N</code>일 때만 수행해야 합니다. 단순히 block 전체를 건너뛰면 유효한 edge output까지 잃고, 일부 thread만 barrier에 도달하면 block이 진행하지 못할 수 있습니다.</p>
         <div id="paper-cuda-programming-guide"><CitationBlock type="code" citeKey={1} source="NVIDIA CUDA Programming Guide 13.4.2" href={GUIDE}><p><strong>문제:</strong> CUDA block cooperation, shared memory, barrier와 execution configuration의 정확한 의미가 필요합니다.</p><p><strong>핵심 아이디어:</strong> Block 안 threads가 shared storage를 사용하고 명시적 synchronization으로 producer–consumer 단계를 맞춥니다.</p><p><strong>중요 가정:</strong> Toolkit 13.4.2 문서와 target compute capability·device limits를 함께 확인합니다.</p><p><strong>근거 범위:</strong> Shared memory가 block scratchpad이고 <code>__syncthreads()</code>가 모든 block thread의 도달과 앞선 memory access 가시성을 맞추는 공식 semantics입니다.</p><p><strong>일반화 금지:</strong> 특정 tile 크기나 shared-memory kernel이 모든 GPU·shape에서 빠르다는 보장은 아닙니다.</p></CitationBlock></div>
       </section>

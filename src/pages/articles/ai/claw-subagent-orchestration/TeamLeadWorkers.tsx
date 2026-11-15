@@ -1,4 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
+import CancellationPropagationViz from "./viz/CancellationPropagationViz";
+import WorkUnitOwnershipViz from "./viz/WorkUnitOwnershipViz";
 
 const responsibilities = [
   {
@@ -65,6 +67,9 @@ export default function TeamLeadWorkers() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           병렬성은 dependency와 write ownership으로 제한한다
         </h3>
+        <div className="not-prose my-8 min-w-0">
+          <WorkUnitOwnershipViz />
+        </div>
         <p className="leading-7">
           서로 다른 문서를 조사하거나 겹치지 않는 module을 수정하는 작업은
           병렬화하기 쉽습니다. 반면 같은 file, schema, migration을 건드리는
@@ -93,6 +98,9 @@ export default function TeamLeadWorkers() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           취소는 worker process와 권한까지 전파한다
         </h3>
+        <div className="not-prose my-8 min-w-0">
+          <CancellationPropagationViz />
+        </div>
         <p className="leading-7">
           사용자가 목표를 바꾸거나 main agent가 작업을 중단하면 queued job만 지우는 것으로는 부족합니다. 실행 중인 worker와 child process,
           temporary credential, writable workspace까지 함께 회수해야 합니다. 늦게 도착한 결과에는 generation ID를 붙여 현재 작업에 잘못 섞이지

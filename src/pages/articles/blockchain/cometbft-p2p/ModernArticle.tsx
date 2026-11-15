@@ -5,6 +5,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import CosmosCoreLocator, { CosmosCoreMapReturn } from "../CosmosCoreLocator";
 import P2PTransactionTraceViz from "./viz/P2PTransactionTraceViz";
+import ChannelSchedulerViz from "./viz/ChannelSchedulerViz";
+import RecvRoutineBlockingViz from "./viz/RecvRoutineBlockingViz";
 import { codeRefs } from "./codeRefs";
 import { cometbftP2PTree } from "./fileTrees";
 
@@ -77,6 +79,8 @@ export default function ModernCometBFTP2PArticle() {
           <div className="not-prose my-6 flex flex-wrap gap-3">
             <CodeViewButton label="Peer.Send와 queue 원문" onClick={() => sidebar.open("send-queue", codeRefs["send-queue"])} />
           </div>
+
+          <ChannelSchedulerViz />
 
           <ExplainedFormula
             question="Consensus와 mempool channel이 동시에 밀려오면 다음 packet은 어디에서 고릅니까?"
@@ -156,6 +160,9 @@ export default function ModernCometBFTP2PArticle() {
               <code>MsgBytesFilter</code>가 raw bytes를 먼저 검사하고, protobuf unmarshal과 wrapper 해제 뒤 source peer를 포함한
               <code>Envelope</code>를 <code>Reactor.Receive</code>에 넘깁니다.
             </p>
+          </div>
+          <RecvRoutineBlockingViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               이 Receive 호출은 MConnection의 같은 <code>recvRoutine</code>에서 실행됩니다. 따라서 Reactor가 오래 멈추면 그 peer
               connection의 다음 packet read도 멈춥니다. 다른 peer는 별도 MConnection routine을 가지지만 같은 peer의 다른 channel은 이

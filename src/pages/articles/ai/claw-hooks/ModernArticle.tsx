@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { HookLifecycleViz, HookProtocolViz } from "./viz/ModernHooksViz";
+import ResultCompositionViz from "./viz/ResultCompositionViz";
+import CancellationTreeViz from "./viz/CancellationTreeViz";
 
 function Lead({ children }: { children: React.ReactNode }) {
   return <p className="text-lg leading-8 text-foreground/90">{children}</p>;
@@ -73,6 +75,7 @@ export default function ModernHooksArticle() {
         <p>
           Exit 0의 stdout이 비어 있으면 기본 결과로 계속 진행합니다. JSON object라면 <code>decision: "block"</code>, <code>continue: false</code>, <code>permissionDecision</code>, <code>permissionDecisionReason</code>, <code>updatedInput</code> 등을 읽습니다. 일반 text는 message로 보존하며, JSON처럼 보이지만 parsing에 실패한 출력은 diagnostic으로 다뤄집니다. “형식이 틀리면 자동 deny”라는 fail-closed 규칙은 이 source에서 확인되지 않습니다.
         </p>
+        <ResultCompositionViz />
         <p>
           여러 결과를 합칠 때 message와 diagnostic은 모으지만 permission override·이유·updated input은 뒤의 값이 앞의 값을 덮습니다. 다만 어느 hook이 Deny·Failed·Cancelled를 반환하면 즉시 멈추므로 그 뒤 hook은 실행되지 않습니다. 따라서 <strong>Deny &gt; Ask &gt; Allow</strong>라는 격자 병합도, 모든 hook을 실행한 뒤 가장 제한적인 값을 택하는 방식도 아닙니다.
         </p>
@@ -84,6 +87,7 @@ export default function ModernHooksArticle() {
 
       <section id="cancellation" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · 취소와 격리</p><h2 className="mt-2 text-2xl font-bold">Child를 kill하고 wait해도 process tree와 외부 effect가 사라졌다고 단정할 수 없다</h2></header>
+        <CancellationTreeViz />
         <p>
           Runner는 abort signal을 주기적으로 확인하고 취소되면 direct child에 kill을 요청한 뒤 wait합니다. 이것은 zombie child를 줄이는 중요한 절차지만, shell이 이미 만든 descendant가 같은 process group으로 묶였는지, file·network effect가 완료됐는지, stdout 일부가 남았는지는 별도 문제입니다. 특히 <code>sh -lc</code> 안에서 background process를 시작하면 direct child 종료와 전체 job 종료가 같지 않을 수 있습니다.
         </p>

@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ContentBoundary from "@/components/articles/content-boundary";
 import EdaCaseViz from "./viz/EdaCaseViz";
+import GroupSplitViz from "./viz/GroupSplitViz";
 
 export default function Overview() {
   return (
@@ -20,6 +21,9 @@ export default function Overview() {
           <li>같은 고객의 반복 주문을 random row split하면 고객 정보 누출을 막을 수 있을까요?</li>
           <li>장비 slice의 결측률이 40%이면 그 행을 바로 삭제하거나 평균으로 채워도 될까요?</li>
         </ol>
+      </div>
+      <div className="not-prose my-8"><GroupSplitViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           세 답은 모두 <strong>아니요</strong>입니다. 전체 평균은 slice 집중을
           숨길 수 있고, 반복 entity는 group boundary를 지켜야 합니다. 결측은

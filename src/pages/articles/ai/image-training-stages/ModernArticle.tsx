@@ -6,6 +6,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ImageClassificationPathLocator, {
   ImageClassificationMapReturn,
 } from "../image-classification-pipeline/ImageClassificationPathLocator";
+import BatchAccumulationViz from "./viz/BatchAccumulationViz";
 import {
   ImageTrainingStageViz,
   StageFailureBoundaryViz,
@@ -178,6 +179,7 @@ export default function ImageTrainingStagesArticle() {
 
       <section id="resolution-stage" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">해상도 전환</h2>
+        <BatchAccumulationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             160px에서 320px로 바꾸면 픽셀 수가 네 배가 되어 한 GPU에 넣을 수

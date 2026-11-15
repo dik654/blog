@@ -31,6 +31,15 @@ const KEEP_2026_11_03 = (
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "ai/claw-tool-system": {
+    action: "keep",
+    rationale:
+      "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: 도구 시스템과 디스패치: 등록부터 권한 판정까지",
+    sharedGate:
+      "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    status: "reviewed",
+    reviewedAt: "2026-11-16",
+  },
   "ai/vision-transformer": {
     "action": "keep",
     "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: Vision Transformer: Image에서 Patch Sequence까지",
@@ -4404,6 +4413,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/claw-tool-system": "2c96aa7fe492ac28",
   "ai/vision-transformer": "04aa668d37e33c4e",
   "ai/feature-engineering": "eea4105005f1814c",
   "ai/cfg-pushdown-automata": "9ba59e5e617661c9",
@@ -4435,7 +4445,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/agent-serving-slo-and-capacity": "7414aa8a17fcce29",
   "ai/vector-search-and-ann-indexes": "074b08a4474c7a6d",
   "ai/lexical-retrieval-bm25-inverted-index": "31baaed3b72db969",
-  "ai/image-training-stages": "20ded1bf15e7dd02",
+  "ai/image-training-stages": "40c348d4922deb00",
   "ai/domain-finetuning": "886d7ab65ef7380a",
   "ai/embedding-model-fine-tuning": "a9181340467d466a",
   "ai/regularization-practice": "70bd499ad13bf51a",
@@ -4475,7 +4485,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/multimodal-serving-pipeline": "f09a4103833e38ac",
   "ai/sglang-runtime-anatomy": "c30589bbc6e41fc8",
   "ai/sliding-window-kv-and-attention-sinks": "9a0cbccc5f2a8572",
-  "ai/ptq-calibration": "df9ff399e556a27c",
+  "ai/ptq-calibration": "8ad1bbb6290be8fa",
   "ai/structured-pruning": "7d99b272e6864b8b",
   "ai/smoothquant-activation-smoothing": "05269cb25ee4d367",
   "ai/tensorrt-llm-kv-cache-and-kernels": "8e42a0a0fb46c963",
@@ -4624,7 +4634,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/optimizers": "a401cf74a0549ba8",
   "ai/rectifier-activations": "e34376d48f9d220e",
   "ai/vllm-serving": "aedf3d0cfb09f665",
-  "blockchain/rollup-fundamentals": "eb9ef0170efde5b7",
+  "blockchain/rollup-fundamentals": "d6d9c10bd3446a2a",
   "blockchain/stablecoin-overview": "c2364153df3233b8",
   "semiconductors/bands-and-doping": "7780fb83fe6837ec",
   "ai/agent-failure-modes-and-recovery": "d222d343c332cdae",
@@ -4705,14 +4715,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/negative-result-3d-face-control": "ab8cf11af5b019d3",
   "ai/generative-identity-diversity": "c635673f200685a6",
   "ai/reference-identity-pose-separation": "07f8a24d75697f8b",
-  "ai/roi-resolution-identity-budget": "d1d12b5d4cd1722d",
+  "ai/roi-resolution-identity-budget": "fe13eea7b1f09abc",
   "ai/removal-is-not-inpainting": "99837c730fe54862",
   "ai/masked-edit-verb-routing": "f3b12fb469f1ba8b",
   "ai/generative-measurement-controls": "babb5abf660e3fce",
   "ai/claw-bash": "89ca19715d091062",
   "ai/claw-cli": "d68f47da7f209708",
   "ai/claw-compaction": "659f19f765b54d61",
-  "ai/claw-overview": "54338db509409889",
+  "ai/claw-overview": "e1c0617803c46c11",
   "ai/claw-permissions": "ca7fdd3ce036d58f",
   "ai/claw-session": "e93c290272d035e7",
   "ai/claw-worker-boot": "f9191c745d76c11f",
@@ -4750,7 +4760,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/rdma-roce": "921e0faae3141df9",
   "ai/rag-pipeline": "f044c41ba8171d18",
   "ai/smoothie-qwen-weight-editing": "4a5ad858ccc62fc9",
-  "ai/sequence-modeling-tabular": "bab5a17e48d5bf11",
+  "ai/sequence-modeling-tabular": "e7aa6f00c3774552",
   "ai/sionic-eureka": "3d86963157bb2517",
   "ai/sionic-glm-b300": "c8b52fd9e99879ba",
   "ai/skills-anatomy": "17b4df05e00b94d6",
@@ -4802,7 +4812,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-engine-api": "97fc3e69823881f9",
   "blockchain/commonware-deep-dive": "e52779a7bbd2cc35",
   "blockchain/commonware-simplex": "6648846c934c07c9",
-  "blockchain/berachain": "5e532516c9cba1e8",
+  "blockchain/berachain": "b40781e022657611",
   "blockchain/evmos": "582e84d3a2095317",
   "elections/electoral-systems": "6d5dce259e4159ab",
   "blockchain/commonware-broadcast": "fb43bccdacf88df0",
@@ -4915,7 +4925,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/kubernetes-vs-slurm-gpu-scheduling": "dcf1d4cf5172684e",
   "gpu/cfd-finite-volume-gpu": "3fad1100200cd912",
   "gpu/cuda-kernel-fusion": "8174d357aef27299",
-  "gpu/cuda-matrix-multiply": "524536e1c767191b",
+  "gpu/cuda-matrix-multiply": "7327f1d888279ef1",
 "crypto/constraint-systems":"180451df5e454382",
 "crypto/fri":"ac11504ca83c08d9",
 "crypto/jolt":"ce2cf82725d8cb32",

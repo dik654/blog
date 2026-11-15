@@ -1,4 +1,5 @@
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
+import PingTimelineViz from "./viz/PingTimelineViz";
 
 export default function ConnectionPoll() {
   return (
@@ -24,6 +25,8 @@ export default function ConnectionPoll() {
           각 실패가 올바른 owner로 돌아가고 stale connection·task·timer가 남지 않아야 합니다.
         </p>
       </div>
+
+      <PingTimelineViz />
 
       <CalculationWalkthrough
         title="한 Ping trace의 시간 장부"

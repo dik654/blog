@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { QuicFlowViz, QuicStackViz } from "./viz/ModernQuicViz";
+import HolePunchRaceViz from "./viz/HolePunchRaceViz";
 
 export default function ModernLibp2pQuicArticle() {
   return (
@@ -112,6 +113,7 @@ export default function ModernLibp2pQuicArticle() {
           active listener를 모두 요구합니다. 같은 remote address에 active attempt가 있으면
           두 번째 시도를 거부합니다.
         </p>
+        <HolePunchRaceViz />
         <p>
           Source의 puncher는 64 random bytes를 UDP로 보내고 10~200ms 사이의 random delay 뒤
           반복합니다. Default handshake timeout은 5초입니다. 그 사이 matching inbound QUIC

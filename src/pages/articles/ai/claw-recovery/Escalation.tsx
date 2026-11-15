@@ -1,5 +1,6 @@
 import EscalationTemplateVarsViz from "./viz/EscalationTemplateVarsViz";
 import EscalationViz from "./viz/EscalationViz";
+import IncidentKeyViz from "./viz/IncidentKeyViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const evidenceFields = [
@@ -75,6 +76,9 @@ export default function Escalation() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           incident key로 알림을 묶고 acknowledgement를 추적한다
         </h3>
+        <div className="not-prose my-8 min-w-0">
+          <IncidentKeyViz />
+        </div>
         <p className="leading-7">
           같은 lane과 target만 기준으로 cooldown을 두면 failure가 바뀌었는데도 알림을 놓칠 수 있습니다. 반대로 같은 incident가 여러 lane에서 중복
           전송되기도 합니다. incident key는 service와 failure fingerprint, affected resource, time window로 만들고 update는

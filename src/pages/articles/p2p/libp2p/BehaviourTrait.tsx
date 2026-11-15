@@ -1,4 +1,5 @@
 import { CitationBlock } from "@/components/ui/citation";
+import OwnershipViz from "./viz/OwnershipViz";
 
 export default function BehaviourTrait({ title }: { title?: string }) {
   return (
@@ -12,6 +13,9 @@ export default function BehaviourTrait({ title }: { title?: string }) {
           특정 connection의 substream negotiation은 Behaviour가 직접 poll하지 않고
           connection별 Handler에 맡깁니다.
         </p>
+      </div>
+      <OwnershipViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           고정 사례에서 Behaviour는 “Bob에게 nonce 7 Ping이 pending”이라는 요청
           상태를 소유합니다. Bob과 연결되지 않았다면 <code>ToSwarm::Dial</code>을,

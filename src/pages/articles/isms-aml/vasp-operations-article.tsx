@@ -1,6 +1,9 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { Fragment, type ComponentType } from "react";
+import IntentDigestViz from "./vasp-wallet-security/viz/IntentDigestViz";
+import WithdrawalStatesViz from "./vasp-wallet-security/viz/WithdrawalStatesViz";
 
 type ArticleKey =
   | "vasp-custody-management"
@@ -43,6 +46,11 @@ type Config = {
   assumptions: readonly string[];
   interpretation: string;
   citations: readonly Citation[];
+  /** 선택: 본문 문단 번호 바로 앞에 넣을 Viz. 없으면 기존 렌더와 같습니다. */
+  vizBeforeParagraph?: {
+    first?: Readonly<Record<number, ComponentType>>;
+    second?: Readonly<Record<number, ComponentType>>;
+  };
 };
 
 const FSC_LAW = "https://www.fsc.go.kr/po020201/83937";
@@ -130,6 +138,7 @@ const CONFIG: Record<ArticleKey, Config> = {
       { id: "paper-fsc-vasp-wallet", title: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: FSC_LAW, problem: "이용자 자산의 안전한 보관과 손실 대응 경계를 현행 기준에서 확인해야 합니다.", contribution: "콜드월렛 비율·보험/공제/준비금 등 국내 보호조치의 공식 설명을 제공합니다.", assumptions: "2026-11-02 현행 규정과 실제 wallet·보험·준비금 scope를 다시 확인합니다.", scope: "국내 VASP 이용자 자산 보호의 상위 운영 경계입니다.", notClaim: "특정 HSM·MPC·multisig architecture나 한계값을 승인하지 않습니다." },
       { id: "paper-fatf-vasp-wallet", title: "FATF · Updated Guidance for VA and VASPs", href: FATF_VASP, problem: "Wallet transaction과 고객·counterparty 위험을 지속적으로 통제해야 합니다.", contribution: "VASP risk-based controls와 ongoing monitoring의 국제 원칙을 제공합니다.", assumptions: "국내 법령·chain 위험·service model과 함께 적용합니다.", scope: "VASP의 일반 risk-control 원칙입니다.", notClaim: "FATF가 특정 key ceremony·signer·blockchain finality 정책을 정했다는 뜻은 아닙니다." },
     ],
+    vizBeforeParagraph: { first: { 1: IntentDigestViz }, second: { 0: WithdrawalStatesViz } },
   },
   "vasp-unfair-trading": {
     key: "vasp-unfair-trading",
@@ -186,8 +195,8 @@ export default function VaspOperationsArticle({ article }: { article: ArticleKey
   const c = CONFIG[article];
   return <article className="space-y-14">
     <section id="overview" className="space-y-6"><p className="text-sm font-semibold text-primary">{c.eyebrow}</p><h2 className="text-3xl font-bold tracking-tight">{c.title}</h2><p className="text-lg leading-8">{c.lead}</p><aside className="rounded-lg border border-border p-4 text-sm leading-6">{c.boundary}</aside><Flow config={c}/><ContentBoundary article={c.key}/></section>
-    <section id={c.firstId} className="space-y-5"><p className="text-sm font-semibold text-primary">01 · 개념과 통제 경계</p><h2 className="text-2xl font-bold">{c.firstTitle}</h2>{c.firstBody.map((p) => <p key={p} className="leading-7">{p}</p>)}</section>
-    <section id={c.secondId} className="space-y-5"><p className="text-sm font-semibold text-primary">02 · 계산과 운영 증거</p><h2 className="text-2xl font-bold">{c.secondTitle}</h2>{c.secondBody.map((p) => <p key={p} className="leading-7">{p}</p>)}<ExplainedFormula question={c.question} idea={c.idea} formula={c.formula} mobileFormula={c.mobileFormula} annotatedFormula={c.annotatedFormula} operations={c.operations} terms={c.terms} assumptions={c.assumptions} interpretation={c.interpretation}/>{c.citations.map((item, index) => <Evidence key={item.id} item={item} index={index}/>)}</section>
+    <section id={c.firstId} className="space-y-5"><p className="text-sm font-semibold text-primary">01 · 개념과 통제 경계</p><h2 className="text-2xl font-bold">{c.firstTitle}</h2>{c.firstBody.map((p, i) => { const Viz = c.vizBeforeParagraph?.first?.[i]; return <Fragment key={p}>{Viz ? <Viz/> : null}<p className="leading-7">{p}</p></Fragment>; })}</section>
+    <section id={c.secondId} className="space-y-5"><p className="text-sm font-semibold text-primary">02 · 계산과 운영 증거</p><h2 className="text-2xl font-bold">{c.secondTitle}</h2>{c.secondBody.map((p, i) => { const Viz = c.vizBeforeParagraph?.second?.[i]; return <Fragment key={p}>{Viz ? <Viz/> : null}<p className="leading-7">{p}</p></Fragment>; })}<ExplainedFormula question={c.question} idea={c.idea} formula={c.formula} mobileFormula={c.mobileFormula} annotatedFormula={c.annotatedFormula} operations={c.operations} terms={c.terms} assumptions={c.assumptions} interpretation={c.interpretation}/>{c.citations.map((item, index) => <Evidence key={item.id} item={item} index={index}/>)}</section>
     <section id={c.releaseId} className="space-y-5"><p className="text-sm font-semibold text-primary">03 · 실패 주입과 release gate</p><h2 className="text-2xl font-bold">정상 예시보다 누락·우회·외부 effect의 불확실성을 먼저 시험합니다</h2><div className="overflow-hidden rounded-lg border border-border">{c.failures.map(([fault, oracle]) => <div key={fault} className="grid grid-cols-[minmax(0,.7fr)_minmax(0,1.3fr)] gap-3 border-b border-border p-4 text-sm last:border-b-0"><strong>{fault}</strong><span className="min-w-0 break-words text-muted-foreground">{oracle}</span></div>)}</div><p className="leading-7">Base와 candidate는 같은 사건·기간·policy·code·key/model generation에서 비교합니다. Missing·unknown은 pass가 아니며 owner, reviewer, source digest, canary와 rollback receipt를 하나의 release record로 남깁니다.</p><h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3><p className="leading-7">기초 6문제는 용어·흐름·작은 계산을, 심화 4문제는 반례·실패 주입·독립 검증·rollback을 묻습니다. 각 답의 전제와 비보장은 위 절에서 직접 찾을 수 있습니다.</p></section>
   </article>;
 }

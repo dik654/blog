@@ -1,10 +1,12 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import StackingViz from "./viz/StackingViz";
+import OofFoldFillViz from "./viz/OofFoldFillViz";
 
 export default function Stacking() {
   return (
     <section id="stacking" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Stacking은 처음 보는 행의 prediction을 학습합니다</h2>
+      <OofFoldFillViz />
       <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
           Base model은 row i가 속한 fold를 빼고 학습합니다. 각 training row i는 그 model에게서 prediction을 받습니다. Model이 M개라면 이

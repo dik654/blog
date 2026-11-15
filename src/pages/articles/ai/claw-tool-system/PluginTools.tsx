@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import PluginArchViz from "./viz/PluginArchViz";
 import PluginVsMcpViz from "./viz/PluginVsMcpViz";
+import GenerationPinViz from "./viz/GenerationPinViz";
 
 const ADAPTER_CONTRACT = [
   ["Definition", "qualified name · description · input/output schema"],
@@ -113,6 +114,13 @@ export default function PluginTools() {
         </p>
 
         <h3>N세대 call은 N세대 schema와 executor로 끝냅니다</h3>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <GenerationPinViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Turn 시작 시 모델에 schema N을 보여 줬는데 <code>tools/list_changed</code>나
           plugin reload로 N+1이 나왔다면, 이미 생성된 call을 N+1 validator와

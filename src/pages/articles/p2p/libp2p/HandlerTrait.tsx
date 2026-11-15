@@ -1,4 +1,5 @@
 import { CitationBlock } from "@/components/ui/citation";
+import SubstreamScopeViz from "./viz/SubstreamScopeViz";
 
 export default function HandlerTrait({ title }: { title?: string }) {
   return (
@@ -11,6 +12,9 @@ export default function HandlerTrait({ title }: { title?: string }) {
           <code>OutboundSubstreamRequest</code>를 반환합니다. 고정 사례에서는
           connection 42의 Handler가 nonce 7과 Ping upgrade를 함께 보관합니다.
         </p>
+      </div>
+      <SubstreamScopeViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Muxer가 stream을 열고
           multistream-select가 <code>/ipfs/ping/1.0.0</code> 같은 protocol ID를 합의하면

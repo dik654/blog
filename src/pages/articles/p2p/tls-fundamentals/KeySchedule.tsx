@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import TLSKeyScheduleViz from "./viz/TLSKeyScheduleViz";
+import TLSKeyUpdateViz from "./viz/TLSKeyUpdateViz";
 
 export default function KeySchedule() {
   return (
@@ -117,6 +118,11 @@ K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnoth
           application traffic secret과 exporter, resumption master secret이
           갈라집니다.
         </p>
+      </div>
+      <div className="not-prose my-8">
+        <TLSKeyUpdateViz />
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           KeyUpdate는 현재 application traffic secret에서 다음
           세대를 만들고 이전 세대를 지운 뒤 과거 레코드를 보호합니다. 그러나

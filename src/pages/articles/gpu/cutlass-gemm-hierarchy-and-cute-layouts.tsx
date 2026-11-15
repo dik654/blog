@@ -12,6 +12,10 @@ import CutlassGemmHierarchyAndCuteLayoutsViz, {
   SwizzleBanksViz,
   TvPartitionViz,
 } from "./cutlass-gemm-hierarchy-and-cute-layouts/viz/CutlassGemmHierarchyAndCuteLayoutsViz";
+import ALayoutViz from "./cutlass-gemm-hierarchy-and-cute-layouts/viz/ALayoutViz";
+import DivideTileViz from "./cutlass-gemm-hierarchy-and-cute-layouts/viz/DivideTileViz";
+import LaneFragmentViz from "./cutlass-gemm-hierarchy-and-cute-layouts/viz/LaneFragmentViz";
+import ThreadShareViz from "./cutlass-gemm-hierarchy-and-cute-layouts/viz/ThreadShareViz";
 
 /**
  * CUTLASS GEMM 계층과 CuTe layout: tile·fragment·swizzle·copy atom
@@ -98,6 +102,9 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             을 4개씩, C 는 16×8 fp32 를 4개씩 나눠 듭니다. 이 조각을 fragment 라 부르고, 어느
             lane 이 어느 원소를 드는지는 명령이 고정합니다.
           </p>
+        </div>
+        <LaneFragmentViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Lane 번호를 4로 나눈 몫이 행, 나머지가 열 쌍을 정합니다. C fragment 에서 lane 5 는 몫 1, 나머지 1 이므로 행 1 의 열 2·3 과 행 9 의 열
             2·3 을 듭니다. 이 규칙이 아래 CuTe 절의 thread-value layout 으로 그대로 적히며 이 글의 Viz 는 tile 이 좁혀져 lane 하나의 fragment
@@ -241,6 +248,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             Tiling 은 합성의 특수한 경우입니다. Layout 을 tiler 로 나누면(logical divide) 각
             축이 tile 안의 좌표와 tile 번호의 두 mode 로 갈라집니다.
           </p>
+        </div>
+        <DivideTileViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 열 우선 <code>(128,128):(1,128)</code> 을 <code>(16,8)</code> tile 로 나누면{" "}
             <code>((16,8),(8,16)):((1,128),(16,1024))</code> 가 됩니다. 앞 mode 가 16×8 tile 안의
@@ -273,6 +283,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             <code>(32,4)</code> 와 곱하면 한 번의 copy 가 32×32 조각을 덮고, 128×32 tile 은 M 방향으로
             4번이면 끝납니다.
           </p>
+        </div>
+        <ThreadShareViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Partitioning 은 이 TV layout 으로 tensor 를 잘라 thread 하나의 몫만 남기는
             연산입니다. <code>partition_S</code> 에 thread 번호를 주면 그 thread 가 옮길
@@ -297,6 +310,9 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             Atom 을 thread layout 으로 펼친 것이 TiledCopy·TiledMMA 이고, 이 둘이 mainloop 의{" "}
             <code>copy</code> 와 <code>gemm</code> 호출에 들어갑니다.
           </p>
+        </div>
+        <ALayoutViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <code>m16n8k16</code> atom 의 A layout 은 CuTe 소스에{" "}
             <code>((4,8),(2,2,2)):((32,1),(16,8,128))</code> 로 적혀 있습니다. Thread mode (4,8) 은

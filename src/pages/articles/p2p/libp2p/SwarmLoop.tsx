@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ConnectionTraceViz from "./viz/ConnectionTraceViz";
+import PollFairnessViz from "./viz/PollFairnessViz";
 
 export default function SwarmLoop() {
   return (
@@ -67,6 +68,9 @@ export default function SwarmLoop() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>공정성은 고정 poll 순서만으로 보장되지 않습니다</h3>
+      </div>
+      <PollFairnessViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           v0.57.1 source는 한 loop에서 Behaviour, connection pool, listener 순으로
           poll합니다. Behaviour나 Handler가 계속 <code>Ready</code>를 내는 workload는

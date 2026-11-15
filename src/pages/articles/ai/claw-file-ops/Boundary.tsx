@@ -1,5 +1,6 @@
 import PathAttackVectorsViz from "./viz/PathAttackVectorsViz";
 import SymlinkEscapeViz from "./viz/SymlinkEscapeViz";
+import CheckUseRaceViz from "./viz/CheckUseRaceViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const platformRisks = [
@@ -95,6 +96,9 @@ export default function Boundary() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           canonicalize와 open 사이의 race를 줄인다
         </h3>
+        <div className="not-prose my-8">
+          <CheckUseRaceViz />
+        </div>
         <p className="leading-7">
           공격자가 검사 뒤 symlink를 교체하면 canonicalize 결과가 안전해도 실제
           open은 boundary 밖으로 갈 수 있습니다. Linux에서는 threat model에 따라

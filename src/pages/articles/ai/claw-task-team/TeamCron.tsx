@@ -1,5 +1,6 @@
 import TeamCronViz from "./viz/TeamCronViz";
 import { CitationBlock } from "@/components/ui/citation";
+import CronOverlapViz from "./viz/CronOverlapViz";
 
 const schedulerRules = [
   {
@@ -111,6 +112,13 @@ export default function TeamCron() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           이전 run이 끝나지 않았을 때의 동작을 정한다
         </h3>
+</div>
+
+        <div className="not-prose my-8 min-w-0">
+          <CronOverlapViz />
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           maintenance와 dependency update는 실행 시간이 schedule 간격보다 길 수
           있습니다. job마다 <code>skip</code>, <code>queue</code>,

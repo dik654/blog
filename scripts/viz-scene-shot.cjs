@@ -28,6 +28,13 @@ fs.mkdirSync(outDir, { recursive: true });
       const title = names[i] || "";
       if (titles.length && !titles.some((t) => title.includes(t))) continue;
       const f = (await p.$$("figure[data-viz-name]"))[i];
+      // ProgressiveDetail처럼 접힌 details 안의 Viz도 같은 검사를 받을 수 있게
+      // 상위 details를 바깥쪽까지 모두 연 뒤 위치와 크기를 측정합니다.
+      await f.evaluate((el) => {
+        for (let d = el.closest("details"); d; d = d.parentElement?.closest("details")) {
+          d.open = true;
+        }
+      });
       await f.scrollIntoViewIfNeeded();
       await p.waitForTimeout(titles.length ? 1800 : 300);
       const group = await f.$('[role="group"][tabindex="0"]');

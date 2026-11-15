@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import IsmsFoundationsViz from "./isms-foundations-viz";
+import PhishingRelayViz from "./isms-auth-management/viz/PhishingRelayViz";
+import SaltViz from "./isms-auth-management/viz/SaltViz";
+import LeaverRevocationViz from "./isms-auth-management/viz/LeaverRevocationViz";
 
 const KISA_GUIDE = "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do";
 const SAFE_MEASURES = "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000281400&chrClsCd=010201";
@@ -40,6 +43,11 @@ export default function IsmsAuthManagement() {
             것이고 cryptographic key와 OTP device는 가진 것입니다. 비밀번호와 보안질문을
             함께 물어도 같은 종류이므로 MFA가 아닙니다.
           </p>
+        </div>
+        <div className="not-prose my-8 min-w-0">
+          <PhishingRelayViz />
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             비밀번호와 TOTP는 서로 다른 두 요소입니다. 하지만 사용자가 TOTP를 phishing
             site에 입력하면 공격자가 실시간으로 중계할 수 있습니다. WebAuthn/FIDO2처럼
@@ -85,6 +93,11 @@ export default function IsmsAuthManagement() {
             blocklist로 거르고 password manager와 붙여넣기를 허용합니다. Username이나
             서비스명처럼 이 서비스에서 쉽게 짐작할 수 있는 값도 함께 차단합니다.
           </p>
+        </div>
+        <div className="not-prose my-8 min-w-0">
+          <SaltViz />
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Offline attack은 password DB를 훔친 공격자가 로그인 서버를 거치지 않고 후보를
             계산하는 상황입니다. 계정별 random salt는 같은 password의 hash를 서로 다르게
@@ -167,6 +180,11 @@ export default function IsmsAuthManagement() {
             SoD conflict를 다시 계산합니다. Leaver event가 오면 interactive login뿐 아니라
             active session, refresh token, API key와 SSH key도 폐기해야 합니다.
           </p>
+        </div>
+        <div className="not-prose my-8 min-w-0">
+          <LeaverRevocationViz />
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             VPN certificate, cloud role, database grant, SaaS account, shared secret도 정해진
             SLA 안에 회수합니다. 결과를 알 수 없는 항목은 성공으로 처리하지 않고 connector별

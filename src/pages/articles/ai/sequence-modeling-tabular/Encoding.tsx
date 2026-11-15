@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EncodingViz from "./viz/EncodingViz";
+import TruncationPolicyViz from "./viz/TruncationPolicyViz";
 
 export default function Encoding() {
   return (
@@ -93,6 +94,13 @@ export default function Encoding() {
           attention과 pooling에서 제외합니다. Max length를 줄이면 memory는
           절약되지만 잘린 event는 복구되지 않습니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <TruncationPolicyViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           최근 L개 유지, 균등 sampling, 중요 event 보존, 오래된 구간의
           hierarchical summary가 어떤 target evidence를 버리는지 length slice와

@@ -1,5 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import CrateGraphViz from "./viz/CrateGraphViz";
+import DependencyDirectionViz from "./viz/DependencyDirectionViz";
+import PermissionBranchViz from "./viz/PermissionBranchViz";
 
 const CRATE_ROLES = [
   {
@@ -115,6 +117,13 @@ export default function CrateMap() {
           <code>ToolExecutor</code> contract를 실제 executor와 test double이
           각각 구현할 수 있습니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <DependencyDirectionViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           “runtime이 tool을 호출한다”는 실행 순서와 “tools crate가 runtime type에 의존한다”는 compile-time 방향은 반대처럼 보일 수 있습니다.
           전자는 control flow이고 후자는 source dependency입니다. Runtime이 concrete tool을 import하지 않고 interface를 호출하면 의존성
@@ -142,6 +151,13 @@ export default function CrateMap() {
         </p>
 
         <h3>Registry, permission, executor는 연속되지만 같은 판정이 아닙니다</h3>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <PermissionBranchViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Registry discovery는 <code>edit_file</code>이라는 이름이 실제 등록됐는지와
           input이 schema에 맞는지를 확인합니다. 그다음 permission layer가 현재

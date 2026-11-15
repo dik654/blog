@@ -7,6 +7,8 @@ import DefiDexLocator, { DefiDexMapReturn } from "../DefiDexLocator";
 import { officialUniswapV3CodeRefs } from "./officialCodeRefs";
 import { uniswapV3Tree } from "./fileTrees";
 import { PriceEncodingViz, UniswapV3LifecycleViz } from "./viz/UniswapV3LifecycleViz";
+import TokenCompositionViz from "./viz/TokenCompositionViz";
+import FeeInsideViz from "./viz/FeeInsideViz";
 
 const TAG_OBJECT = "ef64f51d0f0dca5346c903484f3e6a771dd69d59";
 const COMMIT = "e3589b192d0be27e100cd0daaf6c97204fdb1899";
@@ -82,6 +84,8 @@ export default function ModernUniswapV3Article() {
           interpretation="tick, sqrtPriceX96과 UI 가격은 서로 다른 장부가 아니라 같은 가격을 쓰는 방식입니다. 어느 하나를 바꿔 계산하면 나머지도 같은 방향과 반올림 규칙으로 다시 확인해야 합니다."
         />
 
+        <TokenCompositionViz />
+
         <ExplainedFormula
           question="현재 √P=2일 때 Alice의 구간에는 token0과 token1이 얼마씩 있습니까?"
           idea="범위 안에서는 오른쪽 경계까지 남은 역수 거리가 token0, 왼쪽 경계에서 이동한 제곱근 거리가 token1의 몫을 정합니다."
@@ -151,6 +155,7 @@ export default function ModernUniswapV3Article() {
           넘을 때 더하거나 뺄 양은 <strong>liquidityNet</strong>에 저장합니다. 같은 경계에는 수수료 누적값이
           어느 쪽에서 생겼는지 가르는 <strong>feeGrowthOutside</strong>도 있습니다.
         </p>
+        <FeeInsideViz />
         <p>
           첫 step의 수수료 약 0.0903은 Alice의 60만 활성일 때 생깁니다. 경계를 넘은 뒤 약 0.0297은
           Alice 60과 Bob 40이 함께 활성일 때 생기므로 60:40으로 나뉩니다. 설명용 연속값으로 Alice는 약

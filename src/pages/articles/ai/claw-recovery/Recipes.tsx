@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import PartialRecoveryLedgerViz from "./viz/PartialRecoveryLedgerViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const recipeParts = [
@@ -140,6 +141,9 @@ export default function Recipes() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           partial recovery는 성공이 아니라 새 state다
         </h3>
+        <div className="not-prose my-8 min-w-0">
+          <PartialRecoveryLedgerViz />
+        </div>
         <p className="leading-7">
           여러 step 중 일부만 적용됐다면 <code>PartiallyRecovered</code>에
           적용된 action, 남은 side effect와 rollback 방법을 기록합니다. 다음

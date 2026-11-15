@@ -1,5 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ReadWriteViz from "./viz/ReadWriteViz";
+import StaleEditViz from "./viz/StaleEditViz";
 
 const operations = [
   ["read_file", "읽기", "offset과 limit으로 필요한 구간만 가져옵니다."],
@@ -37,6 +38,7 @@ export default function Overview() {
           <li><code>replace_all=false</code>이면 두 match를 모두 거부할까요, 아니면 첫 occurrence를 바꿀까요?</li>
           <li>Expected digest만 추가하면 temporary file·atomic rename과 path race 문제까지 함께 해결될까요?</li>
         </ol>
+        <StaleEditViz />
         <ReadWriteViz />
 
         <div id="paper-claw-file-ops-source" className="scroll-mt-24">

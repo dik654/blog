@@ -1,4 +1,5 @@
 import MissingViz from "./viz/MissingViz";
+import MissingSliceGridViz from "./viz/MissingSliceGridViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Missing() {
@@ -16,6 +17,7 @@ export default function Missing() {
         </p>
       </div>
       <div className="not-prose my-8"><MissingViz /></div>
+      <div className="not-prose my-8"><MissingSliceGridViz /></div>
       <ExplainedFormula
         question="전체 결측률 10%가 특정 장비의 결측 집중을 왜 숨길 수 있을까요?"
         idea={<>결측 indicator를 만들고 전체뿐 아니라 시간·장비·label slice마다 평균을 계산합니다. 분모가 달라지므로 전체 100/1,000과 특정 장비 80/200을 따로 보고해야 합니다.</>}

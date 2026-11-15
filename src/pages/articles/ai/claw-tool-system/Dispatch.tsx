@@ -1,5 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import DispatchViz from "./viz/DispatchViz";
+import TimeoutRetryViz from "./viz/TimeoutRetryViz";
+import ToolDagViz from "./viz/ToolDagViz";
 
 const CALL_ENVELOPE = [
   ["Identity", "turn ID · call ID · attempt · tool name · source version/instance"],
@@ -120,6 +122,13 @@ export default function Dispatch() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Timeout·cancel·retry는 이미 생긴 effect부터 확인합니다</h3>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <TimeoutRetryViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Read가 timeout된 경우에는 같은 snapshot에서 bounded retry할 수 있지만,
           edit가 timeout됐다고 무조건 반복하면 patch가 두 번 적용될 수 있습니다.
@@ -133,6 +142,13 @@ export default function Dispatch() {
         </p>
 
         <h3>병렬화는 tool 이름이 아니라 dependency DAG로 결정합니다</h3>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <ToolDagViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           고정 사례를 DAG로 쓰면 <code>read_file(auth.ts)</code>와
           <code>grep_search(401)</code>은 같은 immutable workspace snapshot을 보므로

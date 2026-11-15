@@ -1,4 +1,5 @@
 import CorrelationViz from "./viz/CorrelationViz";
+import CorrelationShapeViz from "./viz/CorrelationShapeViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Correlation() {
@@ -16,6 +17,7 @@ export default function Correlation() {
         </p>
       </div>
       <div className="not-prose my-8"><CorrelationViz /></div>
+      <div className="not-prose my-8"><CorrelationShapeViz /></div>
       <ExplainedFormula
         question="Pearson correlation은 두 변수의 선형 동행을 어떤 단위 없는 값으로 만들까요?"
         idea={<>각 값에서 평균을 뺀 deviation의 곱을 더하고, 두 변수의 deviation 크기로 나눕니다. 단위를 제거해 −1에서 1 사이의 선형 동행을 요약하지만 원인 방향이나 비선형 관계는 남기지 않습니다.</>}

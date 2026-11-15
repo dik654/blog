@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import RoiViz from "./viz/RoiViz";
+import MaskPolarityViz from "./viz/MaskPolarityViz";
 
 export default function RoiCrop() {
   return (
@@ -53,6 +54,7 @@ export default function RoiCrop() {
           title="그러면 마스크는 무조건 좁게 잡는 것이 맞습니까"
           preview="동작에 따라 다릅니다. 부위 편집과 사실감 올리기는 좁게, 물건 교체는 넓게 잡아야 합니다."
         >
+          <MaskPolarityViz />
           <p className="leading-7">
             눈썹이나 코처럼 기존 형태를 바꾸는 편집에서는 좁을수록 좋습니다. 바꿀 대상 밖의 픽셀이 재생성
             범위에 들어가면 그만큼 인물이 흔들립니다.

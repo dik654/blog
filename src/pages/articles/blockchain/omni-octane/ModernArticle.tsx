@@ -7,6 +7,9 @@ import CosmosEvmLocator, { CosmosEvmMapReturn } from "../CosmosEvmLocator";
 import { codeRefs } from "./codeRefs";
 import { omniTree } from "./fileTrees";
 import { OctaneEvidenceBoundaryViz, OctanePayloadTraceViz } from "./viz/ModernOctaneViz";
+import PrepareBuildViz from "./viz/PrepareBuildViz";
+import EngineStatusPathViz from "./viz/EngineStatusPathViz";
+import EventBranchViz from "./viz/EventBranchViz";
 
 const SHA = "9864f25fa9bcb473ee34d2442012fc5fbd2683ea";
 const REPO = `https://github.com/omni-network/omni/tree/${SHA}`;
@@ -83,6 +86,7 @@ export default function ModernOctaneArticle() {
 
         <section id="proposal-build" className="mb-16 scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">Payload ID는 build를 다시 찾는 표식이지 block 영수증이 아닙니다</h2>
+          <PrepareBuildViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               Height 101 proposer는 keeper의 execution head H100과 현재 block header의 AppHash A100을 읽습니다. 다음 proposer라고
@@ -139,6 +143,7 @@ export default function ModernOctaneArticle() {
         <section id="validate-finalize" className="mb-16 scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">Candidate 검증과 canonical head 전진은 서로 다른 단계입니다</h2>
           <OctaneEvidenceBoundaryViz />
+          <EngineStatusPathViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               ProcessProposal 경로는 module authority, ordered withdrawals, no-witness rule, fee recipient, parent H100, block number,
@@ -202,6 +207,7 @@ export default function ModernOctaneArticle() {
 
         <section id="event-release" className="mb-16 scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">Finalized log는 event마다 별도 branch에서 적용됩니다</h2>
+          <EventBranchViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               FCU가 성공하면 Octane은 등록된 processor의 address·topics로 EP101 logs를 가져와 log index 순으로 정렬합니다. 각 event는

@@ -1,6 +1,8 @@
 import { CitationBlock } from "@/components/ui/citation";
 import FrameworkArchViz from "./viz/FrameworkArchViz";
 import LangGraphDetailViz from "./viz/LangGraphDetailViz";
+import ReducerMergeViz from "./viz/ReducerMergeViz";
+import InterruptReplayViz from "./viz/InterruptReplayViz";
 
 export default function LangChain() {
   return (
@@ -54,6 +56,13 @@ export default function LangChain() {
         <p>
           Graph가 업무 흐름의 정답을 발견하는 것은 아닙니다. 개발자가 정의한 state machine을 실행하고 전이 상태를 추적할 뿐입니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <ReducerMergeViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Node는 state 전체를 마음대로 고치기보다 update를 반환합니다. 같은 field에 update가
           들어오면 <strong>reducer</strong>가 기존 값과 새 값을 어떻게 합칠지 정합니다. 예를
@@ -110,6 +119,13 @@ export default function LangChain() {
           File handle, open database transaction, live HTTP response 같은 process-local object는 다른 worker가 복원하기
           어렵습니다. 대신 stable ID와 필요한 data를 저장하고 connection 같은 dependency는 runtime context에서 다시 주입합니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <InterruptReplayViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Replay가 가능하면 side effect는 idempotent해야 한다</h3>
         <p>
           과거 checkpoint에서 replay하면 이전 node 결과는 건너뛸 수 있지만 checkpoint 뒤의

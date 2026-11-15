@@ -1,5 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import OnlineOfflineViz from "./viz/OnlineOfflineViz";
+import KlTradeoffViz from "./viz/KlTradeoffViz";
+import PpoClipViz from "./viz/PpoClipViz";
+import GaeWeightViz from "./viz/GaeWeightViz";
 
 export default function PPO() {
   return (
@@ -18,6 +21,8 @@ export default function PPO() {
       </div>
 
       <OnlineOfflineViz />
+
+      <KlTradeoffViz />
 
       <ExplainedFormula
         question="Reward를 높이면서 SFT policy에서 무제한으로 멀어지는 것을 어떻게 제어할까?"
@@ -48,6 +53,8 @@ J(\theta)
         interpretation="KL은 reward hacking을 판별하는 detector가 아니라 policy drift의 비용입니다. 잘못된 reward를 reference 근처에서 최적화하는 shortcut까지 자동으로 막아 주지는 않습니다."
       />
 
+      <PpoClipViz />
+
       <ExplainedFormula
         question="같은 rollout batch를 여러 epoch 학습할 때 policy가 한 번에 너무 크게 바뀌는 것을 어떻게 제한할까?"
         idea={<>PPO는 새 policy와 rollout을 만든 old policy의 token probability ratio를 사용합니다. Advantage 방향의 update는 허용하되 ratio가 1±ε 밖으로 나가면 surrogate benefit을 잘라, 한 batch에서 더 밀어붙일 유인을 줄입니다.</>}
@@ -77,6 +84,8 @@ L^{CLIP}
         assumptions={["Clipping은 objective의 일부이며 모든 parameter-space 변화에 대한 엄밀한 trust region은 아닙니다.", "Sequence 끝에서만 나오는 reward를 token별 advantage로 바꾸는 계산은 아래 GAE 식이 담당합니다."]}
         interpretation="Clipped term은 update 안정성을 위한 장치입니다. ε를 특정 상수로 외우기보다 KL, clip fraction, reward와 capability regression을 함께 보며 정합니다."
       />
+
+      <GaeWeightViz />
 
       <ExplainedFormula
         question="Sequence 끝에서만 나오는 reward를 각 token의 advantage Â_t로 어떻게 나누나요?"

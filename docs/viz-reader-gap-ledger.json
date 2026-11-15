@@ -4300,202 +4300,359 @@
 {
 "route": "ai/claw-hooks",
 "publicPath": "cs/ai/claw-hooks",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2,
+"articleIssues": [
+"The live article is ModernArticle.tsx. The sibling files Overview.tsx, PrePost.tsx, PermissionOverride.tsx and ShellExecution.tsx are not imported by claw-hooks.tsx. They also contradict the live text: they say pre-hook results combine as Deny > Prompt > Allow and that later hooks cannot undo earlier ones, while ModernArticle says later values overwrite earlier ones and that this is not lattice merging. Overview.tsx also lists UserPromptSubmit, but ModernArticle confirms only three events. This is dead code, but it is misleading if it is ever reused.",
+"The table in #result-composition has a fixed min-w-[720px] (pre-existing, not changed)."
+]
 },
 {
 "route": "ai/quantization-formats-and-granularity",
 "publicPath": "cs/ai/quantization-formats-and-granularity",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"The overview uses id=\"overview\" on both the outer <div> and the inner <section> (duplicate DOM id).",
+"In #zero-point-symmetry, 'symmetric 쪽이 code 절반을 버리지 않습니다' for weight [-3,3] gives no comparison case, so it is unclear what would waste half the codes. The ExplainedFormula interpretation instead talks about a one-sided [0,6] range. Separately, with the article's unsigned [0,255] convention, an asymmetric [0,6] range gets z=0, which conflicts with the heading's rule 'z=0 means symmetric'.",
+"The E2M1 magnitude list (0, 0.5, 1, 1.5, 2, 3, 4, 6) used in CodeSpacingViz is the format's definition. The article states only '0부터 6까지 여덟 개 값'."
+]
 },
 {
 "route": "ai/claw-subagent-orchestration",
 "publicPath": "cs/ai/claw-subagent-orchestration",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2,
+"articleIssues": [
+"Overview's orchestrationFlow cards and TeamLeadWorkers' responsibilities cards were left as they are. The existing Viz (TeamLeadFlowViz, AgentSelectionViz, AgentScoreChartViz, GuardrailsViz) are static card grids that largely repeat those cards. That is not an error in the text, but it is redundant."
+]
 },
 {
 "route": "p2p/libp2p-quic",
 "publicPath": "cs/p2p/libp2p-quic",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1,
+"articleIssues": [
+"The route renders only ModernArticle.tsx (sections overview, identity-stream, hole-punching, release). The legacy section files in the libp2p-quic directory (Overview, DialMechanism, HolePunching, QuinnIntegration) are not imported by the route. I did not read them in full, and they were not edited.",
+"Section 02 prose calls the timeout the 'Default handshake timeout 5초', while the AlgorithmBlock calls it the '5s punch timeout'. The Viz uses the prose term 'handshake timeout 5초'. These may be the same value under two names; I could not confirm that from the article."
+]
 },
 {
 "route": "ai/claw-task-team",
 "publicPath": "cs/ai/claw-task-team",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 4,
+"articleIssues": [
+"Overview·Registry 본문은 happy path를 'Pending → Assigned → Running'으로 쓰지만 기존 TaskStatusViz는 두 번째 상태를 'Leased'로 표기해 상태 이름이 다릅니다.",
+"Overview 문단 순서상 '이 글에서 PINNED는…' 설명 이전에 TaskStatusViz가 나오며, 새 Viz들은 본문 HARDENING 권고(CAS, idempotency key, overlap 정책)를 그린 것이지 pinned source 구현 확인이 아님을 Viz 설명에 따로 적지는 않았습니다(본문과 기존 note가 구분을 담당)."
+]
 },
 {
 "route": "ai/rlhf",
 "publicPath": "cs/ai/rlhf",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 4,
+"articleIssues": [
+"PPO의 GAE 용어 설명 r_t: 'LLM RLHF에서는 마지막 token에서만 0이 아니고 중간 step은 보통 KL penalty만 있습니다'는 '0이 아닌 곳은 마지막뿐'과 '중간에 KL penalty가 있다'가 서로 어긋납니다. reward model 점수가 마지막에만 있다는 뜻으로 보이며, Viz는 그렇게 표기했습니다.",
+"rlhf/viz/MethodChoiceViz.tsx가 존재하지만 어느 섹션에서도 import되지 않습니다(손대지 않음)."
+]
 },
 {
 "route": "blockchain/berachain",
 "publicPath": "cs/blockchain/berachain",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1,
+"articleIssues": [
+"The article renders only ModernArticle.tsx. Overview.tsx, PoLArchitecture.tsx, BeaconKitArch.tsx, BlockLifecycleSteps.tsx, PoLSteps.tsx, viz/PoLFlowViz.tsx and viz/BeaconKitCompareViz.tsx in the same directory are not imported by the rendered article. They look like legacy files and I left them untouched."
+]
 },
 {
 "route": "ai/claw-overview",
 "publicPath": "cs/ai/claw-overview",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"Possible contradiction in the existing CrateGraphViz.tsx. Its rule line says '의존 방향은 CLI / harness → runtime → provider / tools'. The prose says 'tools는 runtime contract를 사용하지만 runtime crate는 tools crate에 의존하지 않습니다', which means the compile-time dependency is tools → runtime. The 'CORE → PORT' label may be meant as call direction, but the rule explicitly says '의존 방향'. I did not edit it."
+]
 },
 {
 "route": "ai/claw-file-ops",
 "publicPath": "cs/ai/claw-file-ops",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 4,
+"articleIssues": [
+"Boundary.tsx says the pinned wrapper falls back to a lexical parent when parent canonicalization fails, but Overview.tsx describes the hardening approach of canonicalizing the nearest existing parent. They describe different things, so this is consistent, but a reader could mistake one for the other. Not an error.",
+"Overview.tsx asks three prediction questions but never states the answers in prose. The answers now appear only in the new StaleEditViz and in the ReadWrite section text."
+]
 },
 {
 "route": "ai/qwen36-hybrid-architecture",
 "publicPath": "cs/ai/qwen36-hybrid-architecture",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1,
+"articleIssues": [
+"The #division-of-labor section says the 16 Attention layers let the model find any token 'exactly' (정확히 다시 찾아 올 수 있습니다). This is stronger than the rest of the article, whose hedges say quality is not guaranteed. It may be worth softening."
+]
 },
 {
 "route": "blockchain/omni-octane",
 "publicPath": "cs/blockchain/omni-octane",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"The existing OctanePayloadTraceViz event scene uses 3 events with 2/3 applied (L1 panic), while the #event-release formula uses 5 observed and 4 written. Both are illustrative assumptions but use different counts; the new EventBranchViz follows the formula's 5/4."
+]
 },
 {
 "route": "ai/ensemble-methods",
 "publicPath": "cs/ai/ensemble-methods",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"The PracticeViz ledger marks A+C '채택' at 15 ms, while the Practice ExplainedFormula interpretation says C should be excluded under a 12 ms hard SLA. The table states no SLA, so this is not strictly a contradiction, but readers may see the two as conflicting."
+]
 },
 {
 "route": "blockchain/impl-groth16",
 "publicPath": "cs/blockchain/impl-groth16",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1
 },
 {
 "route": "isms-aml/vasp-wallet-security",
 "publicPath": "cs/isms-aml/vasp-wallet-security",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2
 },
 {
 "route": "tee/tee-tcb",
 "publicPath": "cs/tee/tee-tcb",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2,
+"articleIssues": [
+"Section 04 says '기초 여섯 문제 … 심화 네 문제'. ModernArticle.tsx does not render any problem set, so these problems seem to be missing or to live elsewhere.",
+"The tee-tcb directory still holds unused older section and viz files (Overview.tsx, TcbCompare.tsx, viz/MeasuredBootViz.tsx, etc.). ModernArticle.tsx does not import them. Not changed."
+]
 },
 {
 "route": "ai/mcp-server-operations",
 "publicPath": "cs/ai/mcp-server-operations",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1,
+"articleIssues": [
+"The shared McpLearningFlowViz (mode=operations, shown at the top of this article) uses operation ID 'tenant7:ticket:42'. The article's TermBreakdown example uses 'create-ticket:tenant7:request42'. The two examples do not match. The shared component was not edited."
+]
 },
 {
 "route": "ai/contrastive-evaluation",
 "publicPath": "cs/ai/contrastive-evaluation",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 0
 },
 {
 "route": "ai/roi-resolution-identity-budget",
 "publicPath": "cs/ai/roi-resolution-identity-budget",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1,
+"articleIssues": [
+"RoiCrop.tsx paragraph 5 ('넘으면 크롭을 줄이는 것이 아니라 크롭 안에서 대상이 차지하는 비율을 유지한 채 예산에 맞춥니다') reads as downscaling the whole crop to the budget. The paragraph just before it says this kind of downscaling shrinks the target, so the two conflict, and it is unclear what operation is meant. I left it undrawn.",
+"This is not in the prose: the existing UpscaleViz scene 4 maps each purpose to a method (크게→확대 전용, 되살리기→복원 전용, 빠르게→보간법). The article prose only says the preview path uses no compute device and does not state the other two mappings."
+]
 },
 {
 "route": "ai/image-backbone-scaling",
 "publicPath": "cs/ai/image-backbone-scaling",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1
 },
 {
 "route": "ai/latent-diffusion-guidance",
 "publicPath": "cs/ai/latent-diffusion-guidance",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1,
+"articleIssues": [
+"The NAG paragraph describes the clamp (τ) and the α blend without numbers or an exact blend formula, so I did not draw it to avoid inventing values.",
+"The pixel→latent 64× reduction and the release AND gate are already clear from the existing LatentPipelineViz, the formula and the prose, so I added nothing there."
+]
 },
 {
 "route": "ai/image-training-stages",
 "publicPath": "cs/ai/image-training-stages",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 1
 },
 {
 "route": "p2p/kademlia",
 "publicPath": "cs/p2p/kademlia",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2
 },
 {
 "route": "isms-aml/isms-auth-management",
 "publicPath": "cs/isms-aml/isms-auth-management",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"The rendered article is the single file isms-auth-management.tsx. The directory isms-auth-management/{Overview,PasswordPolicy,AccountLifecycle}.tsx and its viz/*.tsx files are not imported anywhere. Those orphans contain facts that are not in the live article, such as a 30-minute lockout and a 5-attempt limit. I did not use them or edit them."
+]
 },
 {
 "route": "ai/claw-recovery",
 "publicPath": "cs/ai/claw-recovery",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 4
 },
 {
 "route": "p2p/libp2p",
 "publicPath": "cs/p2p/libp2p",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 6
 },
 {
 "route": "gpu/cuda-matrix-multiply",
 "publicPath": "cs/gpu/cuda-matrix-multiply",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2
 },
 {
 "route": "p2p/tls-fundamentals",
 "publicPath": "cs/p2p/tls-fundamentals",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3
 },
 {
 "route": "ai/ptq-calibration",
 "publicPath": "cs/ai/ptq-calibration",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"coverage interpretation writes '전체 .01%' with a leading dot; it probably means 0.01%.",
+"The existing CalibrationPipelineViz (shared quantization file, not edited) labels '영어·짧은 입력 0.01% clipped' as a separate slice. The coverage interpretation uses 0.01% as the overall rate, so readers may take the two figures as the same thing."
+]
 },
 {
 "route": "ai/sequence-modeling-tabular",
 "publicPath": "cs/ai/sequence-modeling-tabular",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3
 },
 {
 "route": "ai/reference-identity-pose-separation",
 "publicPath": "cs/ai/reference-identity-pose-separation",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 0
 },
 {
 "route": "ai/agent-frameworks",
 "publicPath": "cs/ai/agent-frameworks",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2,
+"articleIssues": [
+"agent-frameworks/Comparison.tsx (with ComparisonDetailViz) is not imported by agent-frameworks.tsx, so the whole '00 · 후보 비교' section never renders. Its header also reuses the number '00' that Overview already uses. I read it but added nothing to it."
+]
 },
 {
 "route": "ai/eda-workflow",
 "publicPath": "cs/ai/eda-workflow",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 4,
+"articleIssues": [
+"The existing DistributionViz, CorrelationViz, HypothesisViz and MissingViz are plain divs, not VizFrame. The scene-shot tool counted only 5 figures on the page. This is not an error in the prose, only a note."
+]
 },
 {
 "route": "ai/code-mode-runtime-contracts",
 "publicPath": "cs/ai/code-mode-runtime-contracts",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"Section 03 ExplainedFormula: annotatedFormula names the sets K and U, but operations[1] writes E_known ∪ E_unknown and the terms define E_unknown. The same sets appear under two notations."
+]
 },
 {
 "route": "blockchain/uniswap-v3",
 "publicPath": "cs/blockchain/uniswap-v3",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2
 },
 {
 "route": "blockchain/cometbft-p2p",
 "publicPath": "cs/blockchain/cometbft-p2p",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2
 },
 {
 "route": "blockchain/rollup-fundamentals",
 "publicPath": "cs/blockchain/rollup-fundamentals",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3
 },
 {
 "route": "ai/claw-tool-system",
 "publicPath": "cs/ai/claw-tool-system",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3
 },
 {
 "route": "ai/pruning-recovery-deployment",
 "publicPath": "cs/ai/pruning-recovery-deployment",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 3,
+"articleIssues": [
+"#mask-invariant 수식은 후보 weight를 W−ηg로 쓰면서 momentum state U를 별도로 갱신합니다. 아래 해석과 새 Viz는 U가 W update에 들어가 제거한 값이 되살아날 수 있다고 설명하므로, momentum·Adam 경로에서는 U가 W에 반영되는 식을 보여 줘야 둘이 연결됩니다. 이번 라운드는 본문 불변 범위라 고치지 않았습니다."
+]
 },
 {
 "route": "isms-aml/isms-access-control",
 "publicPath": "cs/isms-aml/isms-access-control",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 2
 },
 {
 "route": "gpu/cutlass-gemm-hierarchy-and-cute-layouts",
 "publicPath": "cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts",
-"status": "todo"
+"status": "done",
+"round": 12,
+"vizAdded": 4
 },
 {
 "route": "blockchain/consensus-mechanisms",
@@ -7881,6 +8038,17 @@
 "Checks after the fixes: audit:viz --strict passed for the 3 changed files. viz-scene-shot at 390 px and 1440 px for DualSignaturePolicy, PortReuseFallback, InboundAdmission and ReadyTimeline: control and frame positions stayed the same in every scene, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r11/rv15/{pq-account,libp2p-port,libp2p-inbound,libp2p-ready}.",
 "Checked with no change needed: CfgToPdaTraceViz. Each stack step matches the AlgorithmBlock push-reverse rule, and the reject branch is right ('입력 4글자가 남음'). TwoClockCutoffViz: the use/exclude verdicts match the Overview text (7/24 신용등급 B, 거래 12건, 8/1 14:20 연체 처리), and the missing times are marked '글에 시각 없음'. SplitBoundaryViz: random split puts all 3 customers on both sides, group split puts customer 2 entirely in V, time split puts period 4 in V, and the hedge says the same customer can appear on both sides. TargetEncodingCalcViz: plain mean (1+0)/2 = 0.5; with F1 excluded S=0, N=1, μ=(0+1)/2=0.5; α=1 gives 0.5/2 = 0.25, α=0 gives 0, α=3 gives 1.5/4 = 0.375. The rows match CategoricalViz. The two SceneShell files are identical to each other.",
 "Minor, not changed: in TwoClockCutoffViz the '거래 12건' record is drawn as one event/arrival pair placed before the 7/24 credit-grade arrival. The article only says the 12 transactions happened before the cutoff, but the axis is labeled as order-only and each record has its own track."
+],
+"12": [
+"No defects found, so no edits were made. CompoundScalingViz: I recomputed every number and they match the article's 'α=1.2, β=1.1, γ=1.15' and its depth-linear, width/resolution-squared approximation. 1.2×1.21=1.452; ×1.3225=1.92027; 1.92027²≈3.6874. At φ=2 the axes are 1.44, 1.21 and 1.3225, and the compute effects are 1.44, 1.1⁴=1.4641 and 1.15⁴≈1.749. Every bar fits under the MAX=4 scale. The hedges are kept: the φ=1 depth-scene note reads '글의 근사에서', and the φ=2 note says '근사 계산일 뿐 실제 지연은 따로 측정'.",
+"GuidanceExtrapolationViz: I checked the εu=2, εc=1.5 example against the article ('w=1에서 1.5, w=3에서 0.5'). The difference is −0.5, and w=0, 1 and 3 give 2, 1.5 and 0.5. The arrowheads point left (negative direction), with tips at x(EU+(i+1)·DIFF). The article's boundary hedge ('높일 수 있지만 saturation·artifact·diversity loss') is kept in the w=3 note.",
+"Gates: audit:viz --strict printed no ERROR lines, only REVIEW notes for the SVG text. viz-scene-shot at 390 and 1440 kept the control row and frame size the same in every scene, with overflow 0 and console errors 0. In the 390px screenshot of the φ=2 scene, the note text is cut off at the bottom edge of the stage. Since the tool reported overflow 0, this is probably the stage's own scroll area allowed by the standard, but I could not confirm that by scrolling in a browser.",
+"Article ai/contrastive-evaluation had no new Viz in this assignment, so I did not review it.",
+"PcrExtendOrderViz: no fix needed. I checked every fold: the swapped order gives H(H(PCR₀‖H(A))‖H(firmware)), the label says '보통 다른 PCR₂', and 'event log is needed' matches the article's interpretation. Both the article and the Viz use one sequence of extends. Real TPMs put firmware and bootloader in different PCR indices (for example PCR0 and PCR4), and 'PCR₀ (초기값)' could be confused with the register PCR[0]. Correcting this would need an outside fact and a prose change, so I left it.",
+"AppraisalGateViz: of the six release-gate cases, 'altered PCR' has no scene. It would stop at Authenticity, the quote signature check. Adding it would add a scene and was not needed to fix anything.",
+"The audit run is clean: audit:viz --strict printed no ERROR lines, only 4 REVIEW notes about SVG text in QapDivisibilityViz. In the screenshots that text does not overflow.",
+"The scene-shot run at 390px and 1440px is stable for all three Viz: control Y and frame height do not change between scenes, overflow is 0 and there are 0 console errors.",
+"At 390px the lower content of the longer scenes (the QAP row table, WithdrawalStates cards 05 and 06 and the retry boxes) scrolls inside the fixed stage, which standard section 2 allows. The scripted shots only show the top of the stage, and I did not check by hand that the inner area scrolls all the way to its last item."
 ]
 }
 }

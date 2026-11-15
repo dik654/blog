@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { CitationBlock } from "@/components/ui/citation";
 import { codeRefs } from "./codeRefs";
+import DialRaceViz from "./viz/DialRaceViz";
 
 export default function TransportTrait({ onCodeRef }: { title?: string; onCodeRef?: (key: string, ref: CodeRef) => void }) {
   return (
@@ -15,6 +16,9 @@ export default function TransportTrait({ onCodeRef }: { title?: string; onCodeRe
           listen address나 inbound connection 같은 <code>TransportEvent</code>를
           올립니다. 이 단계는 Ping nonce 7의 의미를 모릅니다.
         </p>
+      </div>
+      <DialRaceViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           중요한 점은 <code>dial</code> 호출과 실제 연결 시작이 같은 순간이 아니라는
           것입니다. v0.57.1의 trait 계약은 반환한 future가 처음 poll될 때부터 일을

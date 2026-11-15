@@ -1,4 +1,6 @@
 import StaleBranchViz from "./viz/StaleBranchViz";
+import BranchDivergenceViz from "./viz/BranchDivergenceViz";
+import ExpectedShaPushViz from "./viz/ExpectedShaPushViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const branchSignals = [
@@ -80,6 +82,9 @@ export default function StaleBranch() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           behind와 diverged를 구분한다
         </h3>
+        <div className="not-prose my-8 min-w-0">
+          <BranchDivergenceViz />
+        </div>
         <p className="leading-7">
           target보다 뒤처진 commit 수만 보면 branch 자체의 새 commit과 merge-base를 놓칩니다. ahead·behind를 모두 계산하고 open PR과
           conflict preview, protected branch 여부까지 확인합니다. behind가 크다는 이유만으로 rebase를 시작하지는 않습니다.
@@ -97,6 +102,9 @@ export default function StaleBranch() {
           conflict가 나면 abort하고 conflict list와 candidate resolution을 artifact로 남긴 뒤 owner나 recovery workflow에
           전달합니다.
         </p>
+        <div className="not-prose my-8 min-w-0">
+          <ExpectedShaPushViz />
+        </div>
         <p className="leading-7">
           자동으로 conflict를 해결한 경우에도 affected test와 diff review를
           통과하기 전에는 remote branch를 force-push하지 않습니다. force

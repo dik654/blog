@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import IsmsFoundationsViz from "./isms-foundations-viz";
+import ReviewReconcileViz from "./isms-access-control/viz/ReviewReconcileViz";
+import ZonePathViz from "./isms-access-control/viz/ZonePathViz";
 
 const KISA_GUIDE = "https://www.isms-p.or.kr/ntcn/rcsrm/selectGnrlRcsrmList.do";
 const SAFE_MEASURES = "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000281400&chrClsCd=010201";
@@ -107,6 +109,9 @@ export default function IsmsAccessControl() {
             승인합니다. Rule 이름만 믿지 않고 양방향 test와 packet·flow log로 실제
             reachability를 확인합니다.
           </p>
+        </div>
+        <ZonePathViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             외부 운영자는 MFA가 적용된 VPN으로 들어옵니다. 관리되는 device인지 확인한 뒤
             bastion을 거쳐 승인된 production target에 짧은 session으로 접속하게 할 수 있습니다.
@@ -153,6 +158,9 @@ export default function IsmsAccessControl() {
             실제 이어지는지 표본을 재생합니다.
           </p>
           <h3>권한 review는 모집단 대조로 수행합니다</h3>
+        </div>
+        <ReviewReconcileViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             IAM export, DB catalog, HR roster, privileged access tool을 같은 cutoff로 맞춥니다.
             그 결과에서 orphan, shared, dormant, direct grant, role conflict, 만료 초과를

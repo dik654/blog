@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ReadRangeViz from "./viz/ReadRangeViz";
 
 const currentOperations = [
   ["read_file", "10 MB 이하 text를 line offset·limit으로 반환한다"],
@@ -46,6 +47,9 @@ export default function ReadWrite() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           read_file의 offset과 limit은 line 기준이다
         </h3>
+        <div className="not-prose my-8">
+          <ReadRangeViz />
+        </div>
         <p className="leading-7">
           구현은 전체 text를 읽고 <code>lines()</code>로 나눈 뒤 zero-based offset에서
           최대 limit개 line을 선택합니다. 결과의 <code>startLine</code>은 사람이

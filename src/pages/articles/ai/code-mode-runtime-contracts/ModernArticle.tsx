@@ -5,6 +5,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { CodeModeRuntimeViz } from "../code-mode-viz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
+import ReleaseGateViz from "./viz/ReleaseGateViz";
+import RetrySetViz from "./viz/RetrySetViz";
+import TimeoutTimelineViz from "./viz/TimeoutTimelineViz";
 
 export default function CodeModeRuntimeContractsArticle() {
   return (
@@ -83,6 +86,7 @@ export default function CodeModeRuntimeContractsArticle() {
           example="team,count,topIssueUrl만 최대 50 rows·32 KiB로 내보내고 source call IDs와 truncation flag를 붙입니다."
           boundary="Schema-valid result가 factual·complete·authorized하다는 뜻은 아니며 truncation은 빠진 데이터가 있음을 알려야 합니다."
         />
+        <ReleaseGateViz />
         <ExplainedFormula
           question="결과를 model 경계 밖으로 내보낼 때 무엇을 동시에 제한해야 할까요?"
           idea="허용 field를 고른 뒤 민감값을 제거하고, 행과 byte 두 budget을 모두 통과한 결과만 receipt와 함께 반환합니다."
@@ -152,6 +156,7 @@ export default function CodeModeRuntimeContractsArticle() {
           example="Write 1·2 성공 뒤 write 3 timeout이면 1·2를 반복하지 않고 3의 receipt를 조회한 뒤 resume합니다."
           boundary="Try/catch와 program 재실행만으로 exactly-once effect나 cross-service transaction이 생기지 않습니다."
         />
+        <RetrySetViz />
         <ExplainedFormula
           question="Program retry 전에 어떤 external effects를 다시 실행해도 되는지 어떻게 고를까요?"
           idea="전체 plan에서 committed receipt가 있는 effect를 빼고, unknown outcome은 조회·조정한 뒤에만 retry set에 넣습니다."
@@ -255,6 +260,7 @@ export default function CodeModeRuntimeContractsArticle() {
           example="listIssues·getIssue 등 12개 함수만 노출하면 fs.unlink·net.connect를 포함한 나머지 수백 개 API는 이름 자체가 program에서 보이지 않습니다."
           boundary="Blocklist는 새 위험 API가 늘 때마다 갱신해야 하지만, allowlist도 capability binding의 계정·자원 scope 검사를 대신하지는 않습니다."
         />
+        <TimeoutTimelineViz />
         <TermLesson
           name="Sandbox execution timeout budget"
           oneLine="Program 실행에 최대 시간을 두고 그 시간을 넘기면 sandbox process를 강제 종료한 뒤 model에는 timeout error만 반환하는 실행 한도입니다."

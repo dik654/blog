@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import TLSHandshakeViz from "./viz/TLSHandshakeViz";
+import TLSMitmViz from "./viz/TLSMitmViz";
 
 export default function Handshake() {
   return (
@@ -16,6 +17,11 @@ export default function Handshake() {
           조합을 선택하고 자기 X25519 공개값을 보냅니다. 두 끝점은 같은 shared
           secret을 계산합니다.
         </p>
+      </div>
+      <div className="not-prose my-8">
+        <TLSMitmViz />
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           하지만 이것만으로 상대가 진짜
           <code>api.example</code>인지는 알 수 없습니다. 중간자가 양쪽과 별도의

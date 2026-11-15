@@ -4,6 +4,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import QuantizationPathLocator, { QuantizationMapReturn } from "./quantization/QuantizationPathLocator";
 import QuantizationFormatsAndGranularityViz from "./quantization-formats-and-granularity/viz/QuantizationFormatsAndGranularityViz";
+import CodeSpacingViz from "./quantization-formats-and-granularity/viz/CodeSpacingViz";
+import ZeroPointMappingViz from "./quantization-formats-and-granularity/viz/ZeroPointMappingViz";
+import ScaleCountViz from "./quantization-formats-and-granularity/viz/ScaleCountViz";
 
 /**
  * 양자화 숫자 형식과 granularity: 비트 폭과 스케일 단위
@@ -86,6 +89,9 @@ export default function QuantizationFormatsAndGranularityArticle() {
             floating-point format으로, 1bit sign에 2bit exponent·1bit
             mantissa(E2M1)를 더해 0부터 6까지 여덟 개 값을 표현합니다.
           </p>
+        </div>
+        <CodeSpacingViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             같은 4bit인 INT4는 16개 code를 균일 간격으로 나눕니다. 반면 NVFP4는 0 근처를 촘촘히 나누고 큰 값 쪽은 성기게 나눠 더 넓은 dynamic range를
             얻습니다.
@@ -214,6 +220,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
           ]}
           interpretation="Weight처럼 원점 대칭 분포는 symmetric(z=0)이 code space를 낭비 없이 쓰지만, ReLU 이후 activation처럼 값이 [0, 6] 같은 한쪽으로 치우친 range면 asymmetric(z≠0)이 같은 bit 수로 더 촘촘한 step을 만듭니다."
         />
+        <ZeroPointMappingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             예를 들어 activation range가 [-2, 6]이고 8bit code가 [0, 255]면 scale=8/255≈0.0314, zero-
@@ -243,6 +250,9 @@ export default function QuantizationFormatsAndGranularityArticle() {
             scale을 두고, 그 block scale들을 다시 tensor 하나의 scale로
             정규화하는 second-level scaling을 더합니다.
           </p>
+        </div>
+        <ScaleCountViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             4096×4096 weight matrix(원소 16,777,216개)라면 per-tensor는
             scale 1개, per-channel(4096개 출력 channel)은 scale 4096개가

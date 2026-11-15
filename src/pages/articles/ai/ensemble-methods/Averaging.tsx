@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AveragingViz from "./viz/AveragingViz";
+import PercentileRankViz from "./viz/PercentileRankViz";
 
 export default function Averaging() {
   return (
@@ -48,6 +49,8 @@ export default function Averaging() {
         ]}
         interpretation="두 모델 prediction이 .2와 .8이고 weights가 .25와 .75라면 ensemble은 .65입니다. Simplex 안에서는 .2–.8 범위를 벗어나지 않습니다."
       />
+
+      <PercentileRankViz />
 
       <ExplainedFormula
         question="점수 scale을 믿을 수 없고 순서만 결합하려면 각 모델의 rank를 어떻게 같은 범위로 맞출까요?"

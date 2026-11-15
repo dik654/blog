@@ -1,4 +1,5 @@
 import ValidationViz from "./viz/ValidationViz";
+import EffectiveScopeViz from "./viz/EffectiveScopeViz";
 
 const validationMoments = [
   {
@@ -64,6 +65,13 @@ export default function Validation() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           scope는 path pattern에서 실제 capability로 resolve한다
         </h3>
+</div>
+
+        <div className="not-prose my-8 min-w-0">
+          <EffectiveScopeViz />
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           task의 include·exclude pattern과 team policy, worker capability를 합쳐 effective scope를 계산합니다. exclude가
           include보다 우선합니다. symlink와 canonical path를 반영한 뒤 executor가 같은 scope를 강제합니다.

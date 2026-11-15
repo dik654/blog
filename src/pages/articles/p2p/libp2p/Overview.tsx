@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ConnectionTraceViz from "./viz/ConnectionTraceViz";
+import TransportPathsViz from "./viz/TransportPathsViz";
 
 export default function Overview() {
   return (
@@ -57,6 +58,9 @@ export default function Overview() {
           <code>(PeerId, StreamMuxerBox)</code>는 이 앞 단계가 모두 끝났다는 계약이지,
           Kademlia나 GossipSub가 이미 실행됐다는 뜻은 아닙니다.
         </p>
+      </div>
+      <TransportPathsViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           QUIC은 TLS 기반 인증과 stream multiplexing을 transport 내부에서 제공하므로
           외부 upgrade 조립 위치가 다릅니다. 그러나 Swarm 위에서는 두 경로 모두

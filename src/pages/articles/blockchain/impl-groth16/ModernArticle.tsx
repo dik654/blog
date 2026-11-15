@@ -7,6 +7,7 @@ import Groth16ImplementationViz, {
   Groth16VerifierViz,
   Groth16VisibilityViz,
 } from "./Groth16ImplementationViz";
+import QapDivisibilityViz from "./viz/QapDivisibilityViz";
 import ZkFromScratchLocator, {
   ZkFromScratchMapReturn,
 } from "../impl-field-arithmetic/ZkFromScratchLocator";
@@ -136,6 +137,8 @@ export default function ModernGroth16ImplementationArticle() {
           ]}
           interpretation="R1CS는 3과 5를 특별 취급하지 않습니다. 같은 circuit에 다른 만족하는 witness를 넣어도 같은 행 구조를 사용합니다."
         />
+
+        <QapDivisibilityViz />
 
         <ExplainedFormula
           question="여러 R1CS 행이 만족됐다는 사실을 QAP에서는 어떻게 한 식으로 나타냅니까?"

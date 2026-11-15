@@ -1,4 +1,5 @@
 import SearchViz from "./viz/SearchViz";
+import OffsetChurnViz from "./viz/OffsetChurnViz";
 
 const outputModes = [
   ["files_with_matches", "match가 있는 path를 반환하며 기본 limit은 250개다"],
@@ -86,6 +87,9 @@ export default function Search() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           Offset은 cursor가 아니며 repository 변경을 감지하지 않는다
         </h3>
+        <div className="not-prose my-8">
+          <OffsetChurnViz />
+        </div>
         <p className="leading-7">
           <code>head_limit</code>과 <code>offset</code>은 만들어진 vector에
           <code>skip</code>과 <code>truncate</code>를 적용합니다. Query digest,

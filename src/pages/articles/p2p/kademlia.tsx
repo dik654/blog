@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import GethBucketFoldViz from "./kademlia/viz/GethBucketFoldViz";
+import LogDistRangeViz from "./kademlia/viz/LogDistRangeViz";
 import RoutingTableViz from "./kademlia/viz/RoutingTableViz";
 import XORDistanceViz from "./kademlia/viz/XORDistanceViz";
 
@@ -168,6 +170,9 @@ export default function KademliaArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           k-bucket은 거리 구간마다 다음에 물어볼 연락처를 제한된 수만 보관합니다
         </h2>
+        <div className="not-prose my-8">
+          <LogDistRangeViz />
+        </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <strong>
@@ -190,6 +195,11 @@ export default function KademliaArticle() {
             <code>bucketSize=16</code>, <code>maxReplacements=10</code>, lookup
             concurrency <code>alpha=3</code>을 사용합니다.
           </p>
+        </div>
+        <div className="not-prose my-8">
+          <GethBucketFoldViz />
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Geth는 256개 LogDist를 256개 array slot에 그대로 두지 않습니다.
             <code>nBuckets=256/15=17</code>,

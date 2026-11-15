@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RewardCompressionViz from "./viz/RewardCompressionViz";
+import BradleyTerryViz from "./viz/BradleyTerryViz";
 
 export default function RewardModel() {
   return (
@@ -20,6 +21,8 @@ export default function RewardModel() {
       </div>
 
       <RewardCompressionViz />
+
+      <BradleyTerryViz />
 
       <ExplainedFormula
         question="Pairwise preference를 reward model의 probability와 loss로 어떻게 바꿀까?"

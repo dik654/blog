@@ -1,4 +1,5 @@
 import DistributionViz from "./viz/DistributionViz";
+import IqrFenceViz from "./viz/IqrFenceViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function Distribution() {
@@ -21,6 +22,7 @@ export default function Distribution() {
         </p>
       </div>
       <div className="not-prose my-8"><DistributionViz /></div>
+      <div className="not-prose my-8"><IqrFenceViz /></div>
       <ExplainedFormula
         question="오른쪽 꼬리가 긴 값에서 IQR로 확인할 후보 경계는 어떻게 계산할까요?"
         idea={<>가운데 50%를 덮는 Q3−Q1을 scale로 삼고, 양끝에서 그 1.5배보다 멀리 있는 값을 review 후보로 표시합니다. 이는 삭제 명령이 아니라 원자료와 생성 과정을 다시 볼 우선순위입니다.</>}

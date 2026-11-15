@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ParityFlowViz from "./viz/ParityFlowViz";
 import PythonSubsystemsViz from "./viz/PythonSubsystemsViz";
+import CanonicalizationViz from "./viz/CanonicalizationViz";
 
 const COMPARISON_SURFACES = [
   ["Request", "같은 login fixture, workspace snapshot, model/tool catalog와 permission mode"],
@@ -68,6 +69,13 @@ export default function PythonLayer() {
           <li>tool call 순서, deny·allow 판정, 최종 diff와 test receipt를 비교합니다.</li>
           <li>mismatch가 나면 한쪽 expected output을 바로 덮지 않고 contract owner가 원인을 분류합니다.</li>
         </ol>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <CanonicalizationViz />
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Canonicalization은 다른 값을 억지로 같게 만드는 작업이 아닙니다. 매번
           달라지는 UUID와 timestamp는 각각 <code>$RUN_ID</code>와

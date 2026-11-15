@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import WhyEnsembleViz from "./viz/WhyEnsembleViz";
+import CorrelationVarianceViz from "./viz/CorrelationVarianceViz";
 
 export default function Overview() {
   return (
@@ -44,6 +45,8 @@ export default function Overview() {
           meta-model을 학습해도 결합 단계에 평가 정보가 새어 들어갑니다.
         </p>
       </div>
+
+      <CorrelationVarianceViz />
 
       <ExplainedFormula
         question="여러 모델의 평균이 줄이는 오류는 각 모델 수보다 무엇에 달려 있을까요?"

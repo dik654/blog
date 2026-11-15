@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TLSRecordViz from "./viz/TLSRecordViz";
+import TLSNonceXorViz from "./viz/TLSNonceXorViz";
 
 export default function RecordProtocol() {
   return (
@@ -19,6 +20,11 @@ export default function RecordProtocol() {
           nonce를 바꿉니다. Header는 암호화하지 않지만 associated data로
           인증하므로 content와 함께 변조를 검출합니다.
         </p>
+      </div>
+      <div className="not-prose my-8">
+        <TLSNonceXorViz />
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           이제 같은 사례의 서버가 보내는 여섯 번째 보호 레코드를 보겠습니다. 이
           traffic key에서 순번은 0부터 시작하므로 <code>i=5</code>가 여섯

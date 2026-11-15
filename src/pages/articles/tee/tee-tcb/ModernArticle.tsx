@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { MeasuredBootViz } from "../tee-foundations-viz";
+import AppraisalGateViz from "./viz/AppraisalGateViz";
+import PcrExtendOrderViz from "./viz/PcrExtendOrderViz";
 
 export default function ModernTcbArticle() {
   return (
@@ -35,6 +37,7 @@ export default function ModernTcbArticle() {
 
       <section id="secure-measured-boot" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Secure vs measured boot</p><h2 className="mt-2 text-2xl font-bold">실행을 막는 것과 실행한 것을 기록하는 것은 다른 동작이다</h2></header>
+        <PcrExtendOrderViz />
         <p>
           Secure Boot는 signature와 allow/revoke policy를 검사해 다음 image의 실행 여부를 결정합니다. Measured Boot는 선택된
           firmware·configuration·bootloader·kernel event의 digest를 순서대로 PCR에 extend하고 event log에 설명을 남깁니다. 허용된
@@ -76,6 +79,7 @@ export default function ModernTcbArticle() {
           <li><strong>3. Replay:</strong> Event log를 같은 PCR 초기값부터 순서대로 replay해 signed PCR과 일치하는지 봅니다.</li>
           <li><strong>4. Meaning:</strong> 각 digest·configuration을 versioned reference manifest와 비교하고 revoke·minimum TCB 정책을 적용합니다.</li>
         </ol>
+        <AppraisalGateViz />
         <p>
           Log와 PCR이 서로 맞는다는 것은 “일관되게 기록됐다”는 뜻이지 “좋은 software였다”는 뜻이 아닙니다. 공격자가 악성 image를 측정해 정직하게 보고할 수도 있습니다. 반대로 reference manifest가 최신 정상 update를 포함하지 않으면 false reject가 생깁니다. 그래서 reference value의 서명·owner·validity window·rollback 절차도 TCB 운영에 포함됩니다.
         </p>

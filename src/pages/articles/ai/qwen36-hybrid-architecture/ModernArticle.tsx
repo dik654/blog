@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CacheStateViz from "./viz/CacheStateViz";
 import DeltaUpdateViz from "./viz/DeltaUpdateViz";
+import GqaKvBytesViz from "./viz/GqaKvBytesViz";
 import HybridScheduleViz from "./viz/HybridScheduleViz";
 import {
   HybridSequenceMapReturn,
@@ -226,6 +227,8 @@ export default function ModernArticle() {
             },
           ]}
         />
+
+        <GqaKvBytesViz />
 
         <div id="kv-bytes" className="scroll-mt-20">
           <ExplainedFormula

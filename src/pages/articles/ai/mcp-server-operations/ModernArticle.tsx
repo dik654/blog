@@ -3,6 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import RetryReceiptTimelineViz from "./viz/RetryReceiptTimelineViz";
 import McpLearningFlowViz from "../mcp-learning/viz/McpLearningFlowViz";
 import { McpRequestPathLocator, McpRequestPathMapReturn } from "../shared/McpRequestPathLocator";
 
@@ -34,7 +35,9 @@ export default function ModernArticle() {
       </section>
 
       <section id="retry-receipt" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Timeout 뒤에는 영수증을 찾습니다</h2><p className="leading-8">
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Timeout 뒤에는 영수증을 찾습니다</h2></div>
+        <RetryReceiptTimelineViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
             Client가 response를 못 받았어도 server는 ticket을 이미 만들었을 수 있습니다. 같은 요청을 새 identity로 다시 보내면 ticket이 두 개
             생깁니다. Write tool은 stable operation ID를 받고 effect receipt를 저장하며 retry에서는 먼저 기존 receipt를 조회해야 합니다.
           </p></div>

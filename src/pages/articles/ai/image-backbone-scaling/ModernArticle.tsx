@@ -10,6 +10,7 @@ import {
   ImageBackboneBudgetViz,
   RuntimeFrontierViz,
 } from "./viz/ImageBackboneBudgetViz";
+import { CompoundScalingViz } from "./viz/CompoundScalingViz";
 
 function ResolutionLedger() {
   const rows = [
@@ -290,6 +291,7 @@ export default function ImageBackboneScalingArticle() {
           ]}
           interpretation="φ=1에서 1.2 × 1.1² × 1.15² = 1.92027이므로 한 단계의 convolutional compute가 약 2배가 됩니다. 이는 균형 있게 후보를 만드는 heuristic이지, 목표 GPU에서 가장 빠른 모델을 정하는 공식은 아닙니다."
         />
+        <CompoundScalingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             세 축을 함께 키운다는 말은 세 축의 효과가 같다는 뜻이 아닙니다.

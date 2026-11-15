@@ -11,6 +11,7 @@ import {
   LearningTerm,
 } from "../diffusion-shared";
 import LatentPipelineViz from "./LatentPipelineViz";
+import { GuidanceExtrapolationViz } from "./viz/GuidanceExtrapolationViz";
 import {
   DiffusionLearningLocator,
   DiffusionLearningMapReturn,
@@ -235,6 +236,7 @@ g_c&=\underbrace{w\,d_c}_{\text{condition 방향을 scale}}\\
           ]}
           interpretation="w=1이면 εc와 정확히 같습니다. w=0이면 εu이고, w>1은 conditional 방향을 extrapolate합니다."
         />
+        <GuidanceExtrapolationViz />
         <LearningTerm
           name="Classifier guidance (CFG 이전 방식)"
           shape="ŝ = ∇log p(xₜ) + w·∇_{xₜ} log p(y|xₜ)"

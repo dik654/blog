@@ -3,6 +3,9 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLocator";
 import { PruningRecoveryViz } from "../pruning/viz/ModernPruningViz";
+import AmdahlBoundViz from "./viz/AmdahlBoundViz";
+import MaskStateViz from "./viz/MaskStateViz";
+import RollbackRevisionViz from "./viz/RollbackRevisionViz";
 
 export default function PruningRecoveryDeploymentArticle() {
   return (
@@ -126,6 +129,7 @@ export default function PruningRecoveryDeploymentArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Update가 끝난 뒤 같은 mask를 weight와 state에 다시 적용합니다
         </h2>
+        <MaskStateViz />
         <ExplainedFormula
           question="Momentum이 제거한 weight를 되살리지 못하게 하려면 어떤 순서가 필요한가요?"
           idea={
@@ -188,6 +192,7 @@ export default function PruningRecoveryDeploymentArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           적격 operator와 실제 선택된 sparse tactic을 분리해서 셉니다
         </h2>
+        <AmdahlBoundViz />
         <ExplainedFormula
           question="일부 operator만 빨라질 때 전체 latency 상한은 어떻게 읽나요?"
           idea={
@@ -262,6 +267,7 @@ export default function PruningRecoveryDeploymentArticle() {
         <h2 className="mb-4 text-2xl font-bold">
           롤백은 mask를 되돌리는 일이 아니라 검증된 artifact로 트래픽을 돌리는 일입니다
         </h2>
+        <RollbackRevisionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             새 artifact는 별도 revision으로 올리고 일부 요청만 보내 quality·오류율·peak memory·지연시간을 확인합니다. 기준을 통과하기 전에는 active release가 바뀌지 않으며, 승격 뒤 문제가 생기면 router가 참조하는 revision을 직전 artifact로 되돌리고 새 replica를 drain합니다.

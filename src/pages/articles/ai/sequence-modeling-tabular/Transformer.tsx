@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TransformerViz from "./viz/TransformerViz";
+import MaskedMeanViz from "./viz/MaskedMeanViz";
 
 export default function Transformer() {
   return (
@@ -116,6 +117,10 @@ export default function Transformer() {
           학습해 모읍니다. 어느 방식이 맞는지는 target의 evidence가 어디에
           놓이는지에 따라 달라집니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <MaskedMeanViz />
       </div>
 
       <ExplainedFormula
