@@ -5,6 +5,7 @@ import type { CodeRef } from "@/components/code/types";
 import KohakuProviderLocator, { KohakuProviderMapReturn } from "../kohaku-provider/KohakuProviderLocator";
 import { kohakuProviderCodeRefs } from "../kohaku-provider/codeRefsReal";
 import KohakuValidationViz from "./viz/KohakuValidationViz";
+import ReceiptPollingTimelineViz from "./viz/ReceiptPollingTimelineViz";
 
 const KOHAKU_SHA = "b4ad096ef738a06f3f7025aa2870875527f9e6c7";
 
@@ -117,6 +118,7 @@ export default function KohakuProviderValidationArticle({ onCodeRef }: Props) {
 
       <section id="receipt-wait" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Receipt 대기는 포함 여부만 확인합니다</h2>
+        <ReceiptPollingTimelineViz />
         <p>
           <MARK>O</MARK>alpha.13의 raw·Helios·Colibri 기본값은 100ms polling과 10초 timeout입니다. Shared loop는 한 RPC가 끝난 뒤 다음 interval을 기다리므로 poll이 겹치지 않습니다.
         </p>

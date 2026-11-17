@@ -98,7 +98,7 @@
       "score": 31
     },
     "ai/lstm-timeseries": {
-      "fingerprint": "bf4b95944c9fc753",
+      "fingerprint": "8a5eab7d1d815b16",
       "score": 30
     },
     "ai/multi-agent-implementation": {
@@ -206,7 +206,7 @@
       "score": 26
     },
     "blockchain/impl-plonk": {
-      "fingerprint": "f851553f5031bc78",
+      "fingerprint": "19a0dcb7b181d718",
       "score": 6
     },
     "blockchain/pos-theory": {
@@ -322,7 +322,7 @@
       "score": 21
     },
     "ai/claw-config": {
-      "fingerprint": "4abce669950d7d3b",
+      "fingerprint": "320a76bf1508a80b",
       "score": 20
     },
     "ai/supervised-fine-tuning": {
@@ -518,8 +518,8 @@
       "score": 14
     },
     "blockchain/longest-chain": {
-      "fingerprint": "85ea671589bc8eb2",
-      "score": 14
+      "fingerprint": "09e2ac7a657761bc",
+      "score": 8
     },
     "blockchain/merkle-patricia-trie": {
       "fingerprint": "e4a4d5f708a602ec",

@@ -1,11 +1,14 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LeakageBoundaryViz from "./viz/LeakageBoundaryViz";
+import RollingFoldViz from "./viz/RollingFoldViz";
+import PinballLossViz from "./viz/PinballLossViz";
 
 export default function Training() {
   return (
     <section id="training" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">누출은 window 모양이 아니라 정보의 시점으로 판정한다</h2>
       <LeakageBoundaryViz />
+      <RollingFoldViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
             전체 시계열로 scaler를 fit하거나 window를 먼저 만든 뒤 무작위로 나누면 미래 구간의 level과 target이 train에 섞인다. 먼저 raw timeline에
@@ -33,6 +36,7 @@ export default function Training() {
         <h3>Loss는 어떤 point 또는 distribution을 예측하는지 정한다</h3>
         <p>MSE를 최소화한 point forecast는 조건부 평균, MAE는 조건부 중앙값을 겨냥한다. 수요처럼 비대칭 비용이 있거나 prediction interval이 필요하면 여러 quantile의 pinball loss나 명시적인 likelihood를 사용한다. Horizon별 중요도가 다르면 평균 하나로 뭉개지 말고 weight와 horizon별 error를 함께 공개한다.</p>
       </div>
+      <PinballLossViz />
       <ExplainedFormula
         question="서로 다른 horizon과 비대칭 비용을 하나의 학습 objective로 어떻게 표현할까?"
         idea={<>Horizon h마다 업무 중요도 wₕ를 두고, quantile τ보다 실제값이 큰지 작은지에 따라 다른 기울기의 pinball loss를 적용합니다.</>}

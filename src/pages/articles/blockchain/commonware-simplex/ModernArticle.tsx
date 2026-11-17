@@ -11,6 +11,8 @@ import {
   SimplexFailureViz,
   SimplexFinalizationViz,
 } from "./viz/ModernCommonwareSimplexViz";
+import ConflictingQuorumViz from "./viz/ConflictingQuorumViz";
+import CrashRecoveryViz from "./viz/CrashRecoveryViz";
 
 const digest = "hash(encode(Random(42)))";
 
@@ -89,6 +91,7 @@ export default function ModernCommonwareSimplexArticle() {
           ]}
           interpretation="n=4, f=1이면 q=3입니다. 세 명짜리 두 quorum은 최소 두 명이 겹치며, 그중 적어도 한 명은 honest이므로 같은 phase의 충돌하는 certificate를 막는 기반이 됩니다."
         />
+        <ConflictingQuorumViz />
       </section>
 
       <section id="certification" className="space-y-5 scroll-mt-20">
@@ -138,6 +141,7 @@ export default function ModernCommonwareSimplexArticle() {
         <p>
           Application이 실제로 <code>false</code>를 반환하거나 timer가 끝나면 현재 term은 nullify 경로로 갑니다. 서로 다른 세 nullify vote가 모이면 nullification이 되고, 다음 시작점은 일반식으로 <code>next_term_start(v)</code>입니다.
         </p>
+        <CrashRecoveryViz />
         <p>
           하지만 certification result channel이 끊겨 <code>RecvError</code>가 나면 코드는 이를 <code>false</code>로 바꾸지 않습니다. 주석이 밝히듯 실패로 가정하면 notarization은 있지만 certification이 영원히 없어 view를 빠져나오지 못할 수 있습니다. Sync된 결과는 journal에서 replay하고, 기록되지 않은 결과는 restart 뒤 다시 요청합니다.
         </p>

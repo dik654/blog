@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CheckpointViz from "./viz/CheckpointViz";
+import ResumeCompareViz from "./viz/ResumeCompareViz";
 
 export default function Checkpoint() {
   return (
@@ -36,6 +37,11 @@ export default function Checkpoint() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Resume 가능성은 새 process에서 비교해야 합니다</h3>
+      </div>
+      <div className="not-prose my-8">
+        <ResumeCompareViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           같은 초기 상태 C로 K+M updates를 연속 실행한 reference를 먼저
           만듭니다. 다른 실행은 K updates 뒤 저장한 다음 process를 완전히

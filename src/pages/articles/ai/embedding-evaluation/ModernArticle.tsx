@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import EmbeddingPathLocator, { EmbeddingMapReturn } from "../sentence-embeddings/EmbeddingPathLocator";
 import { EmbeddingEvaluationViz } from "../sentence-embeddings/viz/ModernSentenceEmbeddingViz";
+import NdcgRankDiscountViz from "./viz/NdcgRankDiscountViz";
+import ParetoDominanceViz from "./viz/ParetoDominanceViz";
 
 export default function EmbeddingEvaluationArticle() {
   return <div className="space-y-16">
@@ -34,6 +36,7 @@ export default function EmbeddingEvaluationArticle() {
 
     <section id="metrics" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Recall은 정답 coverage를, NDCG는 중요한 정답의 위치를 봅니다</h2>
+      <NdcgRankDiscountViz />
       <ExplainedFormula question="Relevant 문서가 여러 개일 때 top-k 결과를 어떻게 두 축으로 읽나요?" idea={<p>
             Recall은 relevant set 중 top-k 안에 들어온 비율입니다. NDCG는 각 문서의 relevance gain을 rank가 내려갈수록 할인해 더한 뒤 가능한
             이상적 순서의 값으로 나눕니다.
@@ -54,6 +57,7 @@ export default function EmbeddingEvaluationArticle() {
 
     <section id="release" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Required slice를 통과한 뒤 품질·latency·memory·storage의 frontier를 고릅니다</h2>
+      <ParetoDominanceViz />
       <ExplainedFormula question="점수가 높은 model이 더 느리고 큰 경우 어떤 후보를 release하나요?" idea={<p>
             필수 slice threshold를 모두 통과한 후보만 feasible set에 넣습니다. 그 안에서 품질은 더 높고 비용은 더 낮은 후보가 다른 후보를 지배하면 열등 후보를
             제거합니다.

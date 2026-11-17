@@ -1,6 +1,9 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import PeerDasLayoutViz from "./viz/PeerDasLayoutViz";
+import SamplingDecayViz from "./viz/SamplingDecayViz";
 import TwoDErasureViz from "./viz/TwoDErasureViz";
+import TwoDRecoveryViz from "./viz/TwoDRecoveryViz";
 
 export default function TwoDimensional() {
   return (
@@ -19,6 +22,8 @@ export default function TwoDimensional() {
         </p>
       </div>
       <TwoDErasureViz />
+      <TwoDRecoveryViz />
+      <SamplingDecayViz />
 
       <ExplainedFormula
         question="전체 cell의 β가 숨겨졌을 때 s번 sample로 한 번 이상 숨김을 만날 확률은 얼마일까요?"
@@ -98,6 +103,9 @@ export default function TwoDimensional() {
           fraud/data-availability proof 계열과 Celestia 설계에서 중요한
           구성입니다.
         </p>
+      </div>
+      <PeerDasLayoutViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           반면 EIP-7594 PeerDAS는 EIP-4844 blob의 각 행을
           <strong>1차원 erasure-code로 확장</strong>합니다. 이어 여러 행에서

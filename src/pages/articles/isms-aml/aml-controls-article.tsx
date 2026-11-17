@@ -1,6 +1,8 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { Fragment, type ReactNode } from "react";
+import HanulCaseBranchViz from "./aml-compliance/viz/HanulCaseBranchViz";
 
 type ArticleKey =
   | "aml-compliance"
@@ -32,6 +34,8 @@ type Config = {
   secondId: string;
   secondTitle: string;
   secondBody: readonly string[];
+  /** 선택: secondBody의 해당 문단 바로 앞에 넣을 Viz. 없으면 기존 렌더와 같습니다. */
+  secondBodyViz?: { beforeParagraph: number; node: ReactNode };
   releaseId: string;
   stages: readonly Row[];
   controls: readonly Row[];
@@ -76,6 +80,7 @@ const CONFIG: Record<ArticleKey, Config> = {
       "고객 record에는 identity와 실제소유자, 목적·자금 원천, 위험 분류, 검토 시점과 근거를 version으로 묶습니다. 거래 record는 payer·payee·amount·asset·time·channel·jurisdiction과 원장 receipt를 가집니다. Case는 어떤 alert가 어떤 고객·거래·규칙 revision에서 생겼고 누가 무엇을 검토했는지 연결합니다. 이 세 식별자가 끊기면 신고 narrative도, 사후 재현도 약해집니다.",
       "법과 감독 지침은 최소 의무를 정하지만 detector threshold와 workflow는 기관의 위험평가·상품·고객·지역에 맞게 설계합니다. 규칙 hit 수를 AML 성과로 쓰지 않고, 누락·오탐·case aging·품질 review·신고 후 보완 요청·통제 예외를 함께 봅니다. 모델이나 vendor score는 증거 중 하나이지 합리적 의심을 자동 선고하는 법적 oracle이 아닙니다.",
     ],
+    secondBodyViz: { beforeParagraph: 0, node: <HanulCaseBranchViz /> },
     secondId: "cdd-monitor-str",
     secondTitle: "CDD profile을 거래 모니터링의 비교 기준으로 쓰고 case에서 신고 여부를 판단한다",
     secondBody: [
@@ -494,7 +499,12 @@ export default function AmlControlsArticle({ article }: { article: ArticleKey })
 
       <section id={config.secondId} className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · 실행·수치 예·근거</p><h2 className="mt-2 text-2xl font-bold">{config.secondTitle}</h2></header>
-        {config.secondBody.map((paragraph) => <p key={paragraph} className="leading-7">{paragraph}</p>)}
+        {config.secondBody.map((paragraph, index) => (
+          <Fragment key={paragraph}>
+            {config.secondBodyViz?.beforeParagraph === index ? config.secondBodyViz.node : null}
+            <p className="leading-7">{paragraph}</p>
+          </Fragment>
+        ))}
         <ExplainedFormula question={config.question} idea={config.idea} formula={config.formula} annotatedFormula={config.annotatedFormula} operations={config.operations} terms={config.terms} assumptions={config.assumptions} interpretation={config.interpretation} />
         {config.citations.map((item, index) => <Evidence key={item.id} item={item} index={index} />)}
       </section>

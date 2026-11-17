@@ -8,6 +8,9 @@ import {
   LearningTerm,
 } from "../diffusion-shared";
 import ContinuousTransportViz from "./ContinuousTransportViz";
+import FlowCrossingViz from "./viz/FlowCrossingViz";
+import MarginalPathsViz from "./viz/MarginalPathsViz";
+import SolverErrorViz from "./viz/SolverErrorViz";
 import {
   DiffusionLearningLocator,
   DiffusionLearningMapReturn,
@@ -101,6 +104,7 @@ d x_t&=\underbrace{b_{\rm rev}dt+n_t}_{\text{drift와 randomness를 합성}}
           kicker="Randomness를 velocity로 옮기기"
           title="Probability-flow ODE는 같은 marginal을 deterministic path로 운반한다"
         />
+        <MarginalPathsViz />
         <LearningTerm
           name="Probability-flow ODE"
           shape="drift = f − ½g² score · Brownian term 없음"
@@ -176,6 +180,7 @@ v_t&=\underbrace{f(x_t,t)-c_t}_{\text{deterministic flow field}}\\
           example="직선 path xₜ=(1−t)x₀+tx₁의 target velocity는 u=x₁−x₀입니다."
           boundary="Path와 endpoint coupling은 설계 선택입니다. Score-SDE objective와 자동으로 같은 식이나 같은 trajectory가 아닙니다."
         />
+        <FlowCrossingViz />
         <ExplainedFormula
           question="왜 endpoint를 직선으로 보간하면 target velocity가 x₁−x₀가 될까요?"
           idea="Time t의 coefficient만 미분합니다. x₀의 coefficient는 −1, x₁의 coefficient는 +1이므로 두 endpoint의 displacement가 일정한 velocity가 됩니다."
@@ -250,6 +255,7 @@ u_t&=\underbrace{\frac{d x_t}{dt}=x_1-x_0}_{\text{일정한 endpoint displacemen
           example="Heun 4 step은 보통 8 NFE입니다. CFG 두 branch를 따로 실행하면 실제 compute ledger를 추가로 적어야 합니다."
           boundary="Network size·resolution·batch·precision·kernel이 다르면 NFE만으로 latency를 비교할 수 없습니다."
         />
+        <SolverErrorViz />
         <ExplainedFormula
           question="왜 sample error를 solver error 하나로 부르지 않고 field·discretization·compute 항으로 나눌까요?"
           idea="더 작은 step은 numerical approximation을 개선하지만 잘못 학습한 velocity를 고치지 않습니다. 반대로 정확한 field도 너무 거친 solver에서는 trajectory를 놓칩니다."

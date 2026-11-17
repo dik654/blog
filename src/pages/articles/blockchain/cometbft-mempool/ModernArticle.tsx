@@ -5,6 +5,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import CosmosCoreLocator, { CosmosCoreMapReturn } from "../CosmosCoreLocator";
 import MempoolLifecycleViz from "./viz/MempoolLifecycleViz";
+import CallbackRaceViz from "./viz/CallbackRaceViz";
+import ReapCeilingViz from "./viz/ReapCeilingViz";
+import CommitLockViz from "./viz/CommitLockViz";
+import RecheckCursorViz from "./viz/RecheckCursorViz";
 import { codeRefs } from "./codeRefs";
 import { cometbftMempoolTree } from "./fileTrees";
 
@@ -68,6 +72,9 @@ export default function ModernCometBFTMempoolArticle() {
               optional <code>preCheck</code>, application connection과 TxKey cache를 차례로 확인합니다. 새 key면
               <code>CheckTxAsync</code>를 호출합니다.
             </p>
+          </div>
+          <CallbackRaceViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               응답 callback은 application Code와 <code>postCheck</code>를 본 뒤 <code>isFull</code>을 다시 호출합니다. 그러나 이 두 번째
               검사와 <code>addTx</code>는 하나의 원자 연산이 아닙니다. 공식 코드의 주석도 “한도 초과 가능성을 줄인다”고만 말합니다.
@@ -131,6 +138,9 @@ export default function ModernCometBFTMempoolArticle() {
               Accepted transaction은 <code>CList</code> 뒤에 붙고 TxKey map과 raw byte counter가 함께 갱신됩니다. 순서는 이 node의 도착과 callback
               완료 순서에 좌우됩니다. 다른 node는 다른 순서와 다른 membership을 가질 수 있습니다.
             </p>
+          </div>
+          <ReapCeilingViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               <code>ReapMaxBytesMaxGas</code>는 앞에서부터 transaction을 읽습니다. Block data에 들어갈 protobuf encoded size와
               <code>GasWanted</code>를 각각 누적하고, 어느 ceiling을 넘긴 마지막 transaction은 반환 slice에서 뺍니다. Raw tx byte 합만
@@ -156,6 +166,7 @@ export default function ModernCometBFTMempoolArticle() {
 
         <section id="recheck" className="mb-16 scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">Commit과 Update가 끝날 때까지 old-state admission을 끼워 넣지 않습니다</h2>
+          <CommitLockViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               BlockExecutor는 mempool write lock을 잡고 pending application CheckTx callback을 <code>FlushAppConn</code>으로 끝냅니다. 그다음
@@ -178,6 +189,9 @@ export default function ModernCometBFTMempoolArticle() {
               B41의 다른 transaction이 Carol의 잔액을 사용했다면 X40에서 통과한 T2가 X41에서는 실패할 수 있습니다. Recheck callback은
               시작할 때 잡은 cursor와 end 사이에서 응답 transaction을 찾고 invalid transaction을 pool에서 지웁니다.
             </p>
+          </div>
+          <RecheckCursorViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               응답이 늦거나 빠지면 cursor는 순서대로 찾는 동안 일부 entry를 건너뛸 수 있습니다. <code>RecheckTimeout</code>이 지나면 state를
               done으로 바꾸며 늦게 온 응답은 버립니다. Timeout은 “남은 transaction이 모두 valid”라는 영수증이 아닙니다.

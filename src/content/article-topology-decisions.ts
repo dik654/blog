@@ -31,6 +31,27 @@ const KEEP_2026_11_03 = (
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "blockchain/erasure-coding": {
+    "action": "keep",
+    "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: 이레이저 코딩 이론: RS, 2D 코딩, DAS",
+    "sharedGate": "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    "status": "reviewed",
+    "reviewedAt": "2026-11-07"
+  },
+  "blockchain/cometbft-crypto": {
+    "action": "keep",
+    "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: CometBFT v0.40 crypto: vote signature·Merkle·TMHash",
+    "sharedGate": "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    "status": "reviewed",
+    "reviewedAt": "2026-11-07"
+  },
+  "ai/lstm-timeseries": {
+    "action": "keep",
+    "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: LSTM 시계열 예측: window 설계부터 검증까지",
+    "sharedGate": "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    "status": "reviewed",
+    "reviewedAt": "2026-11-07"
+  },
   "ai/resnet": {
     "action": "keep",
     "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: ResNet: 잔차 연결이 깊은 네트워크를 학습시키는 법",
@@ -4427,6 +4448,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "blockchain/erasure-coding": "74a10aab7d1352d0",
+  "blockchain/cometbft-crypto": "b319bef372ce4dc5",
+  "ai/lstm-timeseries": "15491dc1e3895ece",
   "ai/resnet": "a9a830038b0deec4",
   "ai/compression-pipeline": "d5de8a8b3a594120",
   "ai/claw-tool-system": "2c96aa7fe492ac28",
@@ -4464,7 +4488,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/image-training-stages": "40c348d4922deb00",
   "ai/domain-finetuning": "886d7ab65ef7380a",
   "ai/embedding-model-fine-tuning": "a9181340467d466a",
-  "ai/regularization-practice": "70bd499ad13bf51a",
+  "ai/regularization-practice": "f9c989e79d78922f",
   "ai/dropout-regularization": "6719495808ed42e2",
   "ai/weight-decay": "0f13f76d0c655fae",
   "ai/early-stopping": "4c24da0ef878a0e0",
@@ -4671,7 +4695,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/supervised-learning-loop": "9a748f6f0a9bbd71",
   "ai/train-validation-test": "d1a398e9a669a437",
   "blockchain/crypto-theory": "fdc2d47a72dcdff4",
-  "blockchain/evm-fundamentals": "48c9ad132b5994f1",
+  "blockchain/evm-fundamentals": "55abc58307d35ae8",
   "crypto/discrete-log": "3a45605b7fb5946c",
   "institutions/public-budget-and-taxes": "f057ae0657e01afb",
   "institutions/media-attention-and-public-belief": "a8db6a4a4243c20e",
@@ -4774,7 +4798,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/hw-server-vs-desktop": "84c512ac4266b56e",
   "gpu/hw-storage-comparison": "22b11a004d64f545",
   "gpu/rdma-roce": "921e0faae3141df9",
-  "ai/rag-pipeline": "f044c41ba8171d18",
+  "ai/rag-pipeline": "afd90bcdf6a41d4a",
   "ai/smoothie-qwen-weight-editing": "4a5ad858ccc62fc9",
   "ai/sequence-modeling-tabular": "e7aa6f00c3774552",
   "ai/sionic-eureka": "3d86963157bb2517",
@@ -4782,7 +4806,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/skills-anatomy": "17b4df05e00b94d6",
   "ai/time-features": "b72517b5a7136e53",
   "ai/tabular-deep-learning": "30abceb6a73094b6",
-  "ai/training-pipeline": "6d098fc2041d2daa",
+  "ai/training-pipeline": "57056ca991b2c0a0",
   "ai/transfer-learning-practice": "b8726991e17f6f32",
   "ai/cosine-restart-scheduling": "808bbc71017f6f35",
   "ai/lr-decay-policies": "839a6b518defcb0e",
@@ -4805,7 +4829,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/cometbft-abci": "c6636011f3386a57",
   "blockchain/cometbft": "eb8e2c54269f5b02",
   "blockchain/cometbft-consensus": "82873d72447d57b4",
-  "blockchain/da-theory": "960f47b88c2342b7",
+  "blockchain/da-theory": "dd45804466d93b39",
   "blockchain/da-validation": "33ce13130f29cd88",
   "blockchain/railgun": "2c7b61b18f7dbd43",
   "blockchain/railgun-validation": "4ab28cdeaed12fc4",
@@ -4815,7 +4839,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/helios-types": "46c29258550fa707",
   "blockchain/helios-config": "fc7c798862d9a44c",
   "blockchain/kohaku-provider": "45293bde30e8f34c",
-  "blockchain/kohaku-provider-validation": "a650c8c45407202a",
+  "blockchain/kohaku-provider-validation": "804e54d011802203",
   "blockchain/webcat-frontend-integrity": "59719df63bc576ee",
   "blockchain/prysm-ssz": "c2a4f98ee687d361",
   "blockchain/prysm-bls": "c3786ab1bbf27a0c",
@@ -4827,7 +4851,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-beacon-api": "97588793938e2aa3",
   "blockchain/prysm-engine-api": "97fc3e69823881f9",
   "blockchain/commonware-deep-dive": "e52779a7bbd2cc35",
-  "blockchain/commonware-simplex": "6648846c934c07c9",
+  "blockchain/commonware-simplex": "38dc68405f698c4e",
   "blockchain/berachain": "b40781e022657611",
   "blockchain/evmos": "582e84d3a2095317",
   "elections/electoral-systems": "6d5dce259e4159ab",
@@ -4940,7 +4964,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/cutlass-collectives-and-tile-schedulers": "8417d2bd567426d4",
   "gpu/kubernetes-vs-slurm-gpu-scheduling": "dcf1d4cf5172684e",
   "gpu/cfd-finite-volume-gpu": "3fad1100200cd912",
-  "gpu/cuda-kernel-fusion": "8174d357aef27299",
+  "gpu/cuda-kernel-fusion": "6771c890ad4a3ef1",
   "gpu/cuda-matrix-multiply": "7327f1d888279ef1",
 "crypto/constraint-systems":"180451df5e454382",
 "crypto/fri":"ac11504ca83c08d9",

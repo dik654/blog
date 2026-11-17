@@ -1,6 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { DittoFallbackViz, JolteonDittoFailureTable, JolteonPathViz, JolteonTimeoutViz } from "./viz/ModernJolteonDittoViz";
+import TimeoutFloorViz from "./viz/TimeoutFloorViz";
+import TwoChainShapeViz from "./viz/TwoChainShapeViz";
 
 export default function ModernJolteonDittoArticle() {
   return (
@@ -27,6 +29,7 @@ export default function ModernJolteonDittoArticle() {
         <p>
           B10의 표는 round 11의 주 노드에게 모이고 QC10이 됩니다. Round 11의 제안 B11이 QC10을 부모 인증서로 사용하면 복제본은 qchigh를 QC10까지 올리고 B11에 투표합니다. QC11이 만들어져 B10과 B11이 모두 인증되면, 두 블록이 직접 이어지고 round도 10·11로 연속인지 확인한 뒤 B10과 그 조상을 커밋합니다.
         </p>
+        <TwoChainShapeViz />
         <ExplainedFormula
           question="n=4, f=1에서 QC는 몇 표가 필요하고, two-chain은 무엇을 확인합니까?"
           idea={<>QC에는 서로 다른 복제본 2f+1곳의 표가 필요합니다. 커밋할 때는 인증 블록이 두 개라는 사실만 보지 않고, 두 블록이 부모·자식이며 round가 정확히 하나 차이 나는지도 확인합니다.</>}
@@ -61,6 +64,7 @@ export default function ModernJolteonDittoArticle() {
         <p>
           주 노드가 멈추면 각 복제본은 round와 qchigh를 담은 timeout 메시지를 모든 복제본에게 보냅니다. 같은 round의 timeout 2f+1개가 모이면 TC가 됩니다. 다음 주 노드는 TC에 들어 있는 QC 가운데 가장 높은 것을 선택하고, 그 블록을 잇는 제안과 TC 전체를 함께 보냅니다. 그래서 정상 round의 통신은 선형이지만 장애 뒤 view 변경 제안은 O(n) 크기이고 전체 전달량은 O(n²)이 됩니다.
         </p>
+        <TimeoutFloorViz />
         <p>
           TC와 QC의 정족수는 같지만 역할은 다릅니다. QC는 한 블록이 투표 정족수를 얻었다는 증거이고, TC는 장애 round 뒤 새 제안이 TC 안의 가장 높은 QC보다 낮아질 수 없게 하는 증거입니다. TC만 보고 블록을 커밋하거나, TC에서 임의의 낮은 QC를 골라 제안하면 안전 규칙을 잃습니다.
         </p>

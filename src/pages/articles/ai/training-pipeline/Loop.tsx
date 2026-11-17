@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LoopViz from "./viz/LoopViz";
+import AccumulationClockViz from "./viz/AccumulationClockViz";
+import AmpClipOrderViz from "./viz/AmpClipOrderViz";
 
 export default function Loop() {
   return (
@@ -23,6 +25,11 @@ export default function Loop() {
           <code>inference_mode()</code>는 autograd 기록을 끕니다. 따라서 둘은
           서로 대신하지 않습니다.
         </p>
+      </div>
+      <div className="not-prose my-8">
+        <AccumulationClockViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Scheduler·logging·checkpoint 주기를 “step”으로 적는다면 그 step이
           micro-batch iteration인지 optimizer update인지 반드시 밝혀야 합니다.
@@ -105,6 +112,10 @@ export default function Loop() {
           <code>half()</code>로 바꾸는 기능이 아닙니다. FP16의 작은 gradient가
           0으로 사라지는 문제를 줄이기 위해 loss scaling을 사용할 수 있습니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <AmpClipOrderViz />
       </div>
 
       <ExplainedFormula

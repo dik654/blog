@@ -14,6 +14,7 @@ import {
   SupConBatchViz,
 } from "./SupervisedContrastiveViz";
 import { SUPCON_BATCH_FIXTURE } from "./calculations";
+import PositiveCountViz from "./viz/PositiveCountViz";
 
 const POSITIVE_MASK_ALGORITHM = {
   input: [
@@ -315,6 +316,7 @@ export default function SupervisedContrastiveArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           5. Two-view batch와 label의 의미를 바꾸면 경계도 달라집니다
         </h2>
+        <PositiveCountViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             논문의 기본 구성에서는 원본마다 view가 두 개입니다. 어떤 anchor를

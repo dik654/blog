@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { WorkspaceHarnessViz } from "./viz/ModernClaudeCodeViz";
+import { ProposalBranchViz } from "./viz/ProposalBranchViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { claudeCodeTree } from "./fileTree";
@@ -72,6 +73,7 @@ export default function ClaudeCodeArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Gather context → act → verify가 observation마다 반복됩니다
         </h2>
+        <ProposalBranchViz />
         <ExplainedFormula
           question="Model의 제안이 어떻게 다음 workspace state가 되나요?"
           idea={

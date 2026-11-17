@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ImbalanceEvaluationViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import CalibrationGapWeightViz from "./viz/CalibrationGapWeightViz";
+import PrevalenceAlertMixViz from "./viz/PrevalenceAlertMixViz";
 import {
   ImbalancedClassificationLocator,
   ImbalancedClassificationMapReturn,
@@ -157,6 +159,7 @@ export default function ImbalancedClassificationEvaluationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           TPR·FPR이 같아도 prevalence가 낮아지면 precision은 내려갑니다
         </h2>
+        <PrevalenceAlertMixViz />
         <ExplainedFormula
           question="TPR=.8, FPR=.1일 때 prevalence .5와 .01의 precision이 왜 달라지나요?"
           idea={
@@ -239,6 +242,7 @@ export default function ImbalancedClassificationEvaluationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Calibration은 probability bin의 예측과 실제 빈도를 맞춥니다
         </h2>
+        <CalibrationGapWeightViz />
         <ExplainedFormula
           question="Bin별 calibration error는 어떤 두 값을 비교하나요?"
           idea={

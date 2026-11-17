@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BottleneckAttentionBridgeViz from "./viz/BottleneckAttentionBridgeViz";
+import AttentionScoreGridViz from "./viz/AttentionScoreGridViz";
 
 export default function Limitations() {
   return (
@@ -51,6 +52,11 @@ export default function Limitations() {
           대신 self-attention score matrix라는 다른 scaling 비용이 붙는다.
           “attention이 긴 문장을 해결했다”는 말만으로 serving trade-off까지 판단할 수 없다.
         </p>
+      </div>
+
+      <AttentionScoreGridViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           예를 들어 source 길이 S=40, target 길이 T=10이면 step별 attention은 10×40=400개의 compatibility score를 만들고 40개의
           encoder state를 memory에 유지한다. Fixed context는 마지막 state 하나만

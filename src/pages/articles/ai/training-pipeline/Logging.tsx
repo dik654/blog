@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LoggingViz from "./viz/LoggingViz";
+import MetricPoolingViz from "./viz/MetricPoolingViz";
 
 export default function Logging() {
   return (
@@ -31,6 +32,11 @@ export default function Logging() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Batch metric의 평균이 dataset metric과 같지는 않습니다</h3>
+      </div>
+      <div className="not-prose my-8">
+        <MetricPoolingViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           크기가 64인 batch와 마지막 크기 5인 batch의 accuracy를 단순 평균하면
           두 batch에 같은 weight가 실립니다. Token task에서는 padding 양이 다른

@@ -5,6 +5,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import McpLearningFlowViz from "../mcp-learning/viz/McpLearningFlowViz";
 import { McpRequestPathLocator, McpRequestPathMapReturn } from "../shared/McpRequestPathLocator";
+import HeaderBodyCheckViz from "./viz/HeaderBodyCheckViz";
+import LifetimeLanesViz from "./viz/LifetimeLanesViz";
+import StdioFramingViz from "./viz/StdioFramingViz";
 
 export default function ModernArticle() {
   return (
@@ -24,7 +27,9 @@ export default function ModernArticle() {
       </section>
 
       <section id="stdio" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>stdio는 child process를 잇습니다</h2><p className="leading-8">Host가 command를 실행하고 child의 stdin으로 request를 쓰며 stdout에서 response를 읽습니다. Protocol byte와 diagnostic text가 섞이면 framing이 깨지므로 log는 stderr로 보냅니다. Child가 local이라는 사실은 낮은 latency를 설명할 수 있지만 안전한 sandbox를 의미하지는 않습니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>stdio는 child process를 잇습니다</h2></div>
+        <StdioFramingViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">Host가 command를 실행하고 child의 stdin으로 request를 쓰며 stdout에서 response를 읽습니다. Protocol byte와 diagnostic text가 섞이면 framing이 깨지므로 log는 stderr로 보냅니다. Child가 local이라는 사실은 낮은 latency를 설명할 수 있지만 안전한 sandbox를 의미하지는 않습니다.</p></div>
         <TermBreakdown title="Local stdio 연결의 형태" items={[
           { term: "Child process", description: "Host가 시작하고 종료를 관찰하는 server process입니다.", example: "IDE가 formatter MCP server를 workspace마다 시작합니다.", boundary: "같은 machine에 있어도 filesystem·network 권한을 제한해야 합니다." },
           { term: "stdin", description: "Host client가 server에 protocol message를 쓰는 입력 pipe입니다.", example: "tools/call JSON-RPC message를 frame 단위로 씁니다.", boundary: "Shell command 문자열이나 secret을 무심코 합치지 않습니다." },
@@ -34,7 +39,9 @@ export default function ModernArticle() {
       </section>
 
       <section id="streamable-http" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>HTTP는 요청마다 POST합니다</h2><p className="leading-8">Remote endpoint에서는 TLS·OAuth·Origin·tenant isolation과 gateway 정책이 추가됩니다. <code>MCP-Protocol-Version</code>, <code>Mcp-Method</code>, named operation의 <code>Mcp-Name</code>은 body를 전부 읽기 전에 route를 고르게 돕습니다. Server는 header와 JSON-RPC body가 같은 method·name을 말하는지 다시 검사합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>HTTP는 요청마다 POST합니다</h2></div>
+        <HeaderBodyCheckViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">Remote endpoint에서는 TLS·OAuth·Origin·tenant isolation과 gateway 정책이 추가됩니다. <code>MCP-Protocol-Version</code>, <code>Mcp-Method</code>, named operation의 <code>Mcp-Name</code>은 body를 전부 읽기 전에 route를 고르게 돕습니다. Server는 header와 JSON-RPC body가 같은 method·name을 말하는지 다시 검사합니다.</p></div>
         <TermBreakdown title="HTTP request에서 따로 확인할 네 층" items={[
           { term: "Connection", description: "TLS endpoint와 Origin이 예상한 배포 경계인지 확인합니다.", boundary: "암호화된 연결만으로 caller 권한이 증명되지는 않습니다." },
           { term: "Authorization", description: "Token issuer·audience·scope와 resource ACL을 확인합니다.", boundary: "Tool description이나 serverInfo는 credential이 아닙니다." },
@@ -44,7 +51,9 @@ export default function ModernArticle() {
       </section>
 
       <section id="lifetimes" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>수명을 나눕니다</h2><p className="leading-8">
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>수명을 나눕니다</h2></div>
+        <LifetimeLanesViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
             Request-scoped SSE는 한 request의 여러 response event를 운반합니다. 그 stream을 닫아 cancellation 의사를 알릴 수 있지만 이미
             외부 system에 생긴 effect까지 되돌리지는 않습니다. Resource update를 계속 받는 subscription은 별도 장기 channel이며 request
             response와 같은 수명으로 묶지 않습니다.

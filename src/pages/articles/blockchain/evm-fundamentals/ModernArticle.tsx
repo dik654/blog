@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { teachCodeRefs } from "./teachCodeRefs";
 import { EvmStepTraceViz, EvmFailureViz } from "./viz/ModernEvmFundamentalsViz";
+import ByteCursorViz from "./viz/ByteCursorViz";
+import NestedRevertViz from "./viz/NestedRevertViz";
 import EvmPathLocator, { EvmMapReturn } from "../evm-shared/EvmPathLocator";
 export default function ModernEvmFundamentalsArticle() {
  const sidebar=useCodeSidebar();
@@ -25,6 +27,7 @@ export default function ModernEvmFundamentalsArticle() {
  <p>현재 위치를 잊으면 같은 명령을 반복하거나 숫자 2를 명령으로 잘못 읽을 수 있습니다. 예산을 기록하지 않으면 반복문이 컴퓨터 자원을 끝없이 사용합니다. 장부의 중간 변경을 되돌릴 기록이 없으면 실패한 프로그램도 돈이나 권한을 바꾼 채 끝날 수 있습니다.</p>
  <p>각 저장소가 필요한 이유는 값의 사용 시점과 되돌릴 범위가 다르기 때문입니다. 다음 절에서는 이것이 실제 명령 형식과 어떻게 연결되는지 봅니다.</p></section>
  <section id="why-parts" data-teach-level="2"><h2>5. 명령 바이트와 숫자 바이트를 구분해야 합니다</h2>
+ <ByteCursorViz />
  <p>명령 ‘한 바이트 숫자를 올려라’ 다음에는 숫자 한 바이트가 붙습니다. 따라서 2를 올리는 명령을 실행한 뒤 위치를 한 칸만 옮기면 숫자 2 자체를 다음 명령으로 잘못 읽습니다. 두 칸을 건너뛰어 다음 지시로 가야 합니다. 덧셈 명령에는 뒤따르는 숫자가 없으므로 한 칸만 이동합니다.</p>
  <p>임시 공간과 장부를 분리하면 2+3이라는 계산 결과를 만들기만 하는 것과 그것을 실제 계정 상태에 저장하는 것을 구분할 수 있습니다. 뒤에서 실패하면 해당 호출의 장부 변경은 취소하지만 이미 사용한 계산 비용까지 전부 돌려주는 것은 아닙니다.</p>
  <p>이제 위치와 저장소, 비용에 이름을 붙이면 실제 코드의 변수도 읽을 수 있습니다.</p></section>
@@ -56,6 +59,7 @@ export default function ModernEvmFundamentalsArticle() {
  <EvmFailureViz />
  <p>STOP과 RETURN은 현재 호출을 정상 종료합니다. REVERT는 해당 호출의 상태 변경을 취소하면서 반환 데이터를 남기는 명시적 실패입니다. gas 부족·알 수 없는 명령·꺼낼 값 부족은 예외 종료로 처리됩니다. 고정한 구현은 예외 종료에서 남은 gas를 0으로 만들고 REVERT에서는 그 줄을 실행하지 않습니다. 두 실패 모두 해당 호출의 변경을 복구합니다.</p>
  <CodeViewButton label="예외·REVERT·상태 복구 원문" onClick={()=>sidebar.open("failure",teachCodeRefs.failure)} />
+ <NestedRevertViz />
  <p>하위 호출이 실패해도 상위 호출이 실패 표시를 확인하고 계속할 수 있습니다. 반대로 상위 호출까지 실패하면 앞서 성공한 하위 호출의 변경도 취소될 수 있습니다. 자세한 생성·중첩 호출은 <Link to="/cs/blockchain/evm-advanced">EVM 심화</Link>에서 같은 책임을 확장합니다.</p>
  <p>새 실행기를 검증할 때는 2+3, 256비트 넘침, 스택 부족, memory 확장, storage 쓰기 뒤 REVERT, 하위 호출 gas 부족을 같은 fork의 시험 입력으로 비교합니다. 종료 상태·사용 gas·로그·최종 상태 루트가 모두 맞아야 합니다. 두 클라이언트의 시험을 이 글에서 실제 실행했다고 주장하지 않습니다.</p>
  <ul className="list-disc space-y-3 pl-6"><li>ADD 뒤 스택에 5가 남으면 storage와 반환 데이터에도 5가 기록될까요? (답: 7절)</li><li>같은 프로그램의 시작 예산이 8이면 어느 명령에서 실패할까요? (답: 10절)</li><li>하위 호출의 REVERT가 항상 거래 전체를 실패시킬까요? (답: 11절)</li></ul>

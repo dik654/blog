@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ProofPipelineDagViz } from "./viz/ModernProofPipelineViz";
+import DoubleBufferOverlapViz from "./viz/DoubleBufferOverlapViz";
+import EndToEndSpeedupViz from "./viz/EndToEndSpeedupViz";
 
 const GROTH16 = "https://eprint.iacr.org/2016/260";
 const PLONK = "https://eprint.iacr.org/2019/953";
@@ -73,6 +75,7 @@ export default function ModernGpuProofPipelineArticle() {
 
     <section id="overlap" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Overlap</p><h2 className="mt-2 text-2xl font-bold">서로 독립인 transfer·kernel만 stream으로 겹치고 critical path를 측정한다</h2></header>
+      <DoubleBufferOverlapViz />
       <p>Double buffering은 chunk k의 kernel 동안 chunk k+1을 전송할 수 있을 때 유효합니다. 같은 buffer를 쓰거나 transcript barrier 뒤에만 생성되는 data는 겹칠 수 없습니다.</p>
       <p>Copy engine 수, pageable/pinned host memory, stream ordering과 kernel resource contention도 실제 overlap을 제한합니다. 그래서 API enqueue 시각이 아니라 profiler timeline과 completion event를 확인합니다.</p>
       <ExplainedFormula question="겹침이 있는 pipeline 시간을 단순 stage 합과 어떻게 구분할까?" idea={<>DAG의 각 stage 완료 시각은 predecessor 중 가장 늦은 완료 뒤 자신의 measured duration을 더해 구합니다. 전체 시간은 sink 중 가장 늦은 완료입니다.</>} formula={String.raw`\begin{aligned}E(v)&=d(v)+\max_{u\in pred(v)}E(u)\\T_{critical}&=\max_{v\in sinks}E(v)\end{aligned}`}
@@ -102,6 +105,7 @@ export default function ModernGpuProofPipelineArticle() {
         <li><strong className="text-foreground">유효 작업:</strong> MSM/NTT units, occupancy·stall, verified proofs/hour와 energy</li>
       </ul>
       <p>같은 circuit·batch·SRS·backend SHA·clock에서 CPU, hybrid와 GPU 후보를 paired 비교합니다.</p>
+      <EndToEndSpeedupViz />
       <ExplainedFormula question="Pipeline throughput과 speedup을 어떤 end-to-end 경계에서 계산해야 할까?" idea={<>검증을 통과한 proofs 수만 useful output으로 세고, baseline과 candidate 모두 같은 input 준비부터 verifier receipt까지 시간을 사용합니다.</>} formula={String.raw`R_{proof}=\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{baseline}^{e2e}}{T_{candidate}^{e2e}}`}
       annotatedFormula={String.raw`R_{proof}=\frac{\underbrace{N_{verified}}_{\text{검증 통과 proof}}}{\underbrace{T_{wall}}_{\text{입력→verifier receipt}}},\qquad S=\frac{\underbrace{T_{baseline}^{e2e}}_{\text{기존 전체 경로}}}{\underbrace{T_{candidate}^{e2e}}_{\text{새 전체 경로}}}`}
       operations={[

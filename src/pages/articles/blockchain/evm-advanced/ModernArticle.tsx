@@ -5,6 +5,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import EvmPathLocator, { EvmMapReturn } from "../evm-shared/EvmPathLocator";
 import NestedCallFrameTraceViz from "./viz/NestedCallFrameTraceViz";
 import { CallContextMatrixViz, CreateLifecycleViz } from "./viz/ModernEvmAdvancedViz";
+import MemoryExpansionCostViz from "./viz/MemoryExpansionCostViz";
+import FailurePropagationBranchViz from "./viz/FailurePropagationBranchViz";
 
 export default function ModernEvmAdvancedArticle() {
   return (
@@ -98,6 +100,8 @@ export default function ModernEvmAdvancedArticle() {
           주소 충돌 검사를 통과한 뒤에야 init code를 child frame에서 실행합니다. 정상 <code>RETURN</code>의 bytes가 runtime code로 저장됩니다. init frame이 <code>REVERT</code>하거나 예외 종료하면 계정 생성과 그 프레임 안의 상태 변경은 취소됩니다.
         </p>
 
+        <MemoryExpansionCostViz />
+
         <ExplainedFormula
           question="높은 memory offset 하나가 왜 예상보다 많은 gas를 쓸까요?"
           idea={<>Memory는 마지막으로 접근한 byte만 만드는 것이 아니라 그 위치를 포함하는 word까지 확장됩니다. 새 누적 비용에서 이미 낸 누적 비용을 뺀 만큼을 이번 연산 전에 지불합니다.</>}
@@ -149,6 +153,8 @@ export default function ModernEvmAdvancedArticle() {
           ]}
           output="상위 stack의 success 값 + 상위 return-data buffer + 성공한 경우에만 남는 child state"
         />
+
+        <FailurePropagationBranchViz />
 
         <p>
           <code>REVERT</code>와 예외 종료는 모두 해당 프레임의 상태 변경을 되돌리지만 남은 gas와 반환 데이터 처리까지 같지는 않습니다. 이 글의 사례에서는 Checker의 금지된 <code>SSTORE</code>가 예외 종료하고, Implementation이 받은 실패를 <code>REVERT</code>로 전파합니다. Proxy는 다시 그 실패를 처리해 정상 종료합니다.

@@ -1,6 +1,8 @@
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
 import TrainingViz from "./viz/TrainingViz";
+import LogSumExpViz from "./viz/LogSumExpViz";
+import ResumeTimelineViz from "./viz/ResumeTimelineViz";
 
 export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
@@ -14,6 +16,9 @@ export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: 
           effective batch를 만들 의도가 없다면 이전 스텝의 gradient를 반드시 비워야 합니다. 평가 구간에서는 그래프 기록과 dropout을 끄고 파라미터 update를
           실행하지 않습니다.
         </p>
+      </div>
+      <LogSumExpViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Mean squared error는 기존 Sub, Pow, Sum, Div 연산을 조합해 구현할 수 있어 자동 미분의 composability를 보여 줍니다. 반면 softmax
           cross-entropy는 logits에서 행별 최댓값을 빼는 log-sum-exp trick을 적용하고 forward와 backward를 한 Function으로 묶으면 수치
@@ -27,6 +32,9 @@ export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: 
           optimizer step, train/eval mode를 저장해 같은 조건에서 결과가 재현되는지 확인하면 학습 실패가 데이터 문제인지 자동 미분이나 상태 관리 문제인지 빠르게
           분리됩니다.
         </p>
+      </div>
+      <ResumeTimelineViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Resume test에서는 연속 20 step과 12 step 뒤 checkpoint를 저장하고 새
           process에서 8 step을 이어간 결과를 나란히 비교합니다. Parameter뿐 아니라

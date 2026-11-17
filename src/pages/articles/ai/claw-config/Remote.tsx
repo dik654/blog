@@ -1,3 +1,4 @@
+import SeqAckResumeViz from "./viz/SeqAckResumeViz";
 import RemoteViz from "./viz/RemoteViz";
 import WsProtocolViz from "./viz/WsProtocolViz";
 import { CitationBlock } from "@/components/ui/citation";
@@ -93,6 +94,7 @@ export default function Remote() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           아래 protocol은 현재 근거가 아니라 다음 hardening 계약이다
         </h3>
+        <SeqAckResumeViz />
         <p className="leading-7">
           장시간 연결에서는 network가 끊긴 뒤 같은 event가 다시 오거나 일부가 빠질 수 있습니다. 이때 protocol version, session·request
           identity와 monotonic sequence를 가진 envelope가 있어야 duplicate와 gap을 구분할 수 있습니다. receiver의 마지막 처리

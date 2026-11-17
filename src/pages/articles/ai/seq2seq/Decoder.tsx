@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AutoregressiveDecodeViz from "./viz/AutoregressiveDecodeViz";
+import BeamScoreViz from "./viz/BeamScoreViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -21,6 +22,8 @@ export default function Decoder({
           본질적으로 순차적이며 EOS나 최대 길이에 도달할 때 끝난다.
         </p>
       </div>
+
+      <BeamScoreViz />
 
       <ExplainedFormula
         question="Prefix 하나를 확장할 때 decoder state와 sequence score는 어떻게 갱신될까?"

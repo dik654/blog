@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import Gf7RecoveryViz from "./viz/Gf7RecoveryViz";
 import RSCodingViz from "./viz/RSCodingViz";
 
 export default function ReedSolomon() {
@@ -18,6 +19,7 @@ export default function ReedSolomon() {
         </p>
       </div>
       <RSCodingViz />
+      <Gf7RecoveryViz />
 
       <ExplainedFormula
         question="서로 다른 k개의 평가점이 왜 차수 k-1 이하 다항식을 하나로 결정할까요?"

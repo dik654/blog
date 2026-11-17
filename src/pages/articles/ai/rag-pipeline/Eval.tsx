@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EvalViz from "./viz/EvalViz";
+import RecallOrderViz from "./viz/RecallOrderViz";
+import CitationLinkViz from "./viz/CitationLinkViz";
 
 export default function Eval() {
   return (
@@ -9,6 +11,7 @@ export default function Eval() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p><strong>Recall@k</strong>는 필요한 문서 가운데 top-k가 몇 개를 회수했는지 봅니다. <strong>NDCG@k</strong>는 관련성이 높은 문서를 앞에 배치했는지 평가하며, 높은 순위에 더 큰 가치를 주고 이상적인 순서의 DCG로 나눠 0과 1 사이로 정규화합니다. Candidate recall이 낮으면 generation 실험을 멈추고 retrieval부터 고칩니다.</p>
       </div>
+      <RecallOrderViz />
       <ExplainedFormula
         question="한 질문에 정답 문서가 여러 개일 때 top-k가 얼마나 회수했는지 어떻게 계산할까요?"
         idea={<>정답 문서 집합과 검색된 top-k의 교집합을 전체 정답 수로 나눕니다. 하나만 gold로 두면 다른 정답 문서를 false negative로 잘못 셀 수 있습니다.</>}
@@ -42,6 +45,7 @@ export default function Eval() {
             않았는지를 봅니다.
           </p>
       </div>
+      <CitationLinkViz />
       <ExplainedFormula
         question="인용이 많다는 사실과 인용이 정확하고 빠짐없다는 사실을 어떻게 구분할까요?"
         idea={<>답변을 검증 가능한 atomic claim으로 나누고 각 citation의 support를 판정합니다. Precision은 붙인 인용 중 맞는 비율이고, recall은 근거가 필요한 주장 중 올바른 인용이 연결된 비율입니다.</>}

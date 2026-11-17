@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ForecastWindowViz from "./viz/ForecastWindowViz";
+import WindowStrideViz from "./viz/WindowStrideViz";
 
 export default function Overview() {
   return (
@@ -22,6 +23,7 @@ export default function Overview() {
         <p>답은 <strong>예, 아니요, 예</strong>입니다. Forecast origin에서 실제로 알 수 없는 미래 target이나 사후 집계값을 넣으면 leakage가 됩니다.</p>
       </div>
       <ContentBoundary article="lstm-timeseries" />
+      <WindowStrideViz />
       <ExplainedFormula
         question="연속된 시계열 하나를 LSTM이 학습할 input–target sample로 어떻게 바꿀까?"
         idea={<>Forecast origin t를 하나 고른 뒤 그 이전 L개 step을 input으로, 그 다음 H개 step을 target으로 묶습니다. Origin을 stride S만큼 이동하면 다음 sample이 생깁니다.</>}

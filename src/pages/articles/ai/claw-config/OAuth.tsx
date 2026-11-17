@@ -1,3 +1,4 @@
+import PkceStateCheckViz from "./viz/PkceStateCheckViz";
 import OAuthFlowViz from "./viz/OAuthFlowViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
@@ -60,6 +61,7 @@ export default function OAuth() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           PKCE와 state는 서로 다른 공격을 막는다
         </h3>
+        <PkceStateCheckViz />
         <p className="leading-7">
           client는 충분히 긴 random <code>code_verifier</code>를 만들고,
           <code>base64url(SHA-256(code_verifier))</code>를

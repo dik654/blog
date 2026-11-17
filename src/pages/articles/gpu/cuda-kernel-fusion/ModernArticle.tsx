@@ -8,6 +8,9 @@ import {
   FusionShapeViz,
   FusionTrafficViz,
 } from "./viz/FusionDecisionViz";
+import FlashTileViz from "./viz/FlashTileViz";
+import GraphVsFusionViz from "./viz/GraphVsFusionViz";
+import LiveRangeViz from "./viz/LiveRangeViz";
 
 const PRACTICES =
   "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html";
@@ -194,6 +197,7 @@ export default function ModernCudaKernelFusionArticle() {
             HBM·launch 절감과 resource·scheduling 손실을 한 장부에 둔다
           </h2>
         </header>
+        <LiveRangeViz />
         <p>
           서로 성격이 다른 stages를 계속 합치면 A output의 live range와 B·C temporaries가 겹칩니다. Thread당 register와 block shared
           memory가 늘어 resident warps가 줄어듭니다. 더 심하면 spill이 생깁니다. Instruction footprint, dependency, divergence와
@@ -312,6 +316,7 @@ export default function ModernCudaKernelFusionArticle() {
             FlashAttention은 model 전체 Megakernel이 아니다
           </h2>
         </header>
+        <FlashTileViz />
         <p>
           Naive attention은 QKᵀ, softmax, PV 사이의 큰 attention matrix를 HBM에 materialize하기도 합니다. FlashAttention은
           Q·K·V tiles를 on-chip memory에 stage하고 online softmax와 V 곱을 tile budget 안에서 연결해 full matrix HBM 왕복을
@@ -496,6 +501,7 @@ export default function ModernCudaKernelFusionArticle() {
           </a>
           에서 이어집니다.
         </p>
+        <GraphVsFusionViz />
         <p>
           CUDA graph는 fusion과 경쟁하지 않고 다른 병목을 줄입니다. Fusion이 줄이는 것은 kernel 사이의 HBM traffic과 GPU 실행 시간입니다. CUDA
           graph 쪽은 짧은 kernel을 여러 개 낼 때 매번 드는 CPU launch 제출 비용을 줄입니다.

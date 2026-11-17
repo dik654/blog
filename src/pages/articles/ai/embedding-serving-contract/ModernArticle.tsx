@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import EmbeddingPathLocator, { EmbeddingMapReturn } from "../sentence-embeddings/EmbeddingPathLocator";
 import { EmbeddingArtifactViz } from "../sentence-embeddings/viz/ModernSentenceEmbeddingViz";
+import TokenBudgetViz from "./viz/TokenBudgetViz";
+import IndexSizeViz from "./viz/IndexSizeViz";
 
 export default function EmbeddingServingContractArticle() {
   return <div className="space-y-16">
@@ -36,6 +38,7 @@ export default function EmbeddingServingContractArticle() {
 
     <section id="truncation" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Maximum length는 원문 길이가 아니라 직렬화가 끝난 token 예산입니다</h2>
+      <TokenBudgetViz />
       <ExplainedFormula question="Instruction과 special token이 먼저 자리를 쓰면 본문은 얼마나 남나요?" idea={<p>
             전체 encoder limit에서 special token과 instruction token을 먼저 뺍니다. 남은 content budget, 그리고 원문 token 수 가운데
             실제로 보존한 수의 비율을 따로 계산합니다.
@@ -53,6 +56,7 @@ export default function EmbeddingServingContractArticle() {
 
     <section id="index-artifact" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Index 크기와 배포 세대를 함께 기록합니다</h2>
+      <IndexSizeViz />
       <ExplainedFormula question="문서 vector의 원자료와 실제 ANN index는 각각 얼마나 차지하나요?" idea={<p>
             문서 수마다 dimension 개수만큼 scalar를 저장합니다. 각 scalar가 차지하는 byte를 곱하면 raw
             payload가 됩니다. 실제 index에는 ANN graph와 운영 metadata가 더해집니다.

@@ -1,4 +1,5 @@
 import FailureModesViz from "./viz/FailureModesViz";
+import SplitMergeViz from "./viz/SplitMergeViz";
 
 export default function Limitations() {
   return (
@@ -27,6 +28,9 @@ export default function Limitations() {
           같은 held-out activation corpus에서 width와 random seed만 바꾼 SAE를 여러 개 학습합니다. 그다음 decoder direction의
           cosine similarity와 example별 activation overlap을 나란히 비교합니다.
         </p>
+      </div>
+      <SplitMergeViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           한 feature가 두 directions로 갈라졌다면 split으로 분류합니다. 여러 feature가 하나로 모였다면 merge입니다. 이 비교에서도 model·hook·normalization과 sparsity 또는 LM loss recovery 조건을 맞춥니다.
         </p>

@@ -1,3 +1,5 @@
+import CleanupOrderViz from "./viz/CleanupOrderViz";
+import InitGenerationViz from "./viz/InitGenerationViz";
 import BootTimingViz from "./viz/BootTimingViz";
 import BootstrapViz from "./viz/BootstrapViz";
 import { CitationBlock } from "@/components/ui/citation";
@@ -62,6 +64,7 @@ export default function Bootstrap() {
           config, plugin manifest와 executable의 신뢰 여부를 평가합니다. 여기까지는 가능한 한 process 생성이나 network 요청 없이 끝내는 편이
           좋습니다.
         </p>
+        <InitGenerationViz />
         <p className="leading-7">
           신뢰 결정이 끝난 뒤에만 provider 연결, plugin enable, MCP spawn과 hook 등록을 시작합니다. 이 작업들은 서로 독립적이면 병렬화할 수 있지만 취소
           signal과 initialization generation을 공유해야 이전 실행에서 늦게 도착한 결과가 새 runtime에 섞이지 않습니다.
@@ -104,6 +107,7 @@ export default function Bootstrap() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           부분 초기화에는 역순 cleanup이 필요하다
         </h3>
+        <CleanupOrderViz />
         <p className="leading-7">
           MCP process를 시작한 뒤 provider 인증이 실패하면 이미 열린 child process, socket과 임시 callback server를 닫아야 합니다. 각
           initializer가 cleanup handle을 반환하게 하고 실패나 cancellation에서는 생성의 역순으로 정리하면 누락을 줄일 수 있습니다. credential과

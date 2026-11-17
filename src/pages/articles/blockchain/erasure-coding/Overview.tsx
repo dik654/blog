@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { Link } from "react-router-dom";
 import ErasureObjectTraceViz from "./viz/ErasureObjectTraceViz";
+import RateOverheadViz from "./viz/RateOverheadViz";
 
 export default function Overview() {
   return (
@@ -46,6 +47,7 @@ export default function Overview() {
       </div>
       <ContentBoundary article="erasure-coding" />
       <ErasureObjectTraceViz />
+      <RateOverheadViz />
 
       <ExplainedFormula
         question="(10,6) code는 저장 공간을 얼마나 더 쓰고 몇 개의 erasure를 견딜까요?"

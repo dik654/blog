@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ChunkingViz from "./viz/ChunkingViz";
+import SpanCoverageViz from "./viz/SpanCoverageViz";
 
 export default function Chunking() {
   return (
@@ -14,6 +15,7 @@ export default function Chunking() {
           </p>
         <p>Parent–child 방식은 작은 child로 검색 정밀도를 확보한 뒤, 그 child가 속한 더 큰 parent를 generation context로 복원합니다. 이때 overlap이 크다고 정답 coverage가 자동으로 좋아지지는 않습니다. 중복 chunk가 top-k를 차지해 서로 다른 근거를 밀어낼 수 있기 때문입니다.</p>
       </div>
+      <SpanCoverageViz />
       <ExplainedFormula
         question="Chunk 길이가 정답을 실제로 보존하는지 어떻게 계산할까요?"
         idea={<>평가 질문마다 사람이 표시한 정답 근거 span을 두고, 검색 또는 parent 복원 뒤 prompt에 남은 문자 구간과의 교집합을 잽니다. 여러 구간의 합집합을 사용해야 overlap을 두 번 세지 않습니다.</>}

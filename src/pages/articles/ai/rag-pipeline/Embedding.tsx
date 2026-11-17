@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EmbeddingViz from "./viz/EmbeddingViz";
+import AliasSwitchViz from "./viz/AliasSwitchViz";
 
 export default function Embedding() {
   return (
@@ -13,6 +14,9 @@ export default function Embedding() {
             query prefix, truncation, normalization을 바꾸면 기존 문서
             vector와 새 query vector의 내적을 해석할 근거가 사라집니다.
           </p>
+      </div>
+      <AliasSwitchViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
             기존 active index는 보존하고 새 version으로 corpus를 다시
             encode해 shadow index를 만듭니다. Exact-search subset의 ANN

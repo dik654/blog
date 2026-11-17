@@ -6,6 +6,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { KimiAxisViz } from "../kimi-k3-viz";
+import LayerStackViz from "./viz/LayerStackViz";
+import RankSplitViz from "./viz/RankSplitViz";
 import {
   ModelArchitectureCaseLocator,
   ModelArchitectureCaseMapReturn,
@@ -44,6 +46,7 @@ export default function KimiK3ArchitectureArticle() {
         <LessonHeader number="02" eyebrow="공식 숫자를 흐름으로 읽기" title="69 KDA와 24 MLA는 93개 hybrid block이 아니라 93개 main layer다">
           공개 구성은 23개의 <code>3 KDA + 1 MLA</code> block 뒤에 마지막 MLA 하나를 둡니다. 식을 component 수의 장부로 읽습니다.
         </LessonHeader>
+        <LayerStackViz />
         <ExplainedFormula question="왜 KDA는 23×3이고 MLA는 23×1에 1을 더할까요?" idea="각 hybrid block 안의 layer 종류를 먼저 세고, block 밖에 따로 있는 final MLA를 마지막에 더합니다." formula={String.raw`L_{\rm KDA}=23\times3=69,\quad L_{\rm MLA}=23\times1+1=24`} annotatedFormula={String.raw`\begin{aligned}L_{\rm KDA}&=\underbrace{23\times3}_{\substack{\text{KDA 3개를}\text{23번 배치}}}=69\\L_{\rm MLA,block}&=\underbrace{23\times1}_{\text{block 안 MLA}}=23\\L_{\rm MLA}&=\underbrace{L_{\rm MLA,block}+1}_{\text{마지막 MLA 추가}}=24\\L_{\rm main}&=\underbrace{69+24}_{\text{main layer 합계}}=93\end{aligned}`} operations={[{expression:String.raw`23\times3`,annotation:["block 수와 block당 KDA를 곱해","recurrent layer 수 계산"]},{expression:String.raw`23\times1+1`,annotation:["block 안 MLA에 final MLA를 더해","global layer 수 계산"]},{expression:String.raw`69+24`,annotation:["두 layer 종류를 합쳐","main depth 93 확인"]}]} terms={[{symbol:String.raw`L_{\rm KDA}`,name:"KDA layer count",description:"고정 recurrent state를 갱신하는 main layer 수입니다."},{symbol:String.raw`L_{\rm MLA}`,name:"MLA layer count",description:"causal token memory를 직접 조회하는 main layer 수입니다."}]} assumptions={["Embedding과 output head를 main-layer 93 계산에 넣지 않습니다.","공식 공개 configuration을 그대로 셉니다."]} interpretation="총 93층 중 sequence length에 따라 KV cache가 늘어나는 global MLA 경로는 24층입니다. KDA state 비용은 별도로 계산해야 합니다." />
         <TermLesson name="공개 configuration receipt" oneLine="모델명 대신 layer·width·expert·context·dtype를 version과 함께 고정한 재현 장부입니다." shape="2.8T total · 104B active · 93 layers · 896 experts · 1,048,576 context" example="Inference memory를 계산할 때 total parameter와 token당 active parameter를 분리하고, MXFP4 weight와 runtime state를 별도 항으로 둡니다." boundary="표의 수치는 품질·latency·가용 VRAM을 자동으로 보장하지 않습니다. Runtime kernel과 batching 조건이 필요합니다." />
       </section>
@@ -61,6 +64,9 @@ export default function KimiK3ArchitectureArticle() {
             나머지 69개 KDA층은 token이 늘어도 커지지 않는 request당 state를 둡니다. config의 KDA는 head 96개, head 폭 128이라 층마다
             128×128 행렬 96개입니다. 짧은 request를 많이 띄우면 이 고정 몫이 쌓입니다.
           </p>
+        </div>
+        <RankSplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             두 몫은 tensor parallel에서도 다르게 나뉩니다. vLLM main(커밋 4c45411)의 K3 구현은 MLA cache를 KV head 1개로 등록하므로 rank마다
             같은 latent가 복제됩니다. KDA state는 head 96개를 TP로 나눕니다. 복제되는 MLA KV를 token 축으로 다시 나누는 설정이 decode context

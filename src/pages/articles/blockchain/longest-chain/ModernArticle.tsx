@@ -6,6 +6,10 @@ import {
   ReorgImplementationPseudocodeViz,
   NakamotoReorgTraceViz,
 } from "./viz/ModernLongestViz";
+import WorkTargetViz from "./viz/WorkTargetViz";
+import CatchUpDecayViz from "./viz/CatchUpDecayViz";
+import ConfirmationDeficitViz from "./viz/ConfirmationDeficitViz";
+import CommonPrefixViz from "./viz/CommonPrefixViz";
 
 export default function ModernLongestChainArticle() {
   return (
@@ -39,6 +43,8 @@ export default function ModernLongestChainArticle() {
         </header>
 
         <ChainworkImplementationViz />
+
+        <WorkTargetViz />
 
         <ExplainedFormula
           question="Target이 다른 block을 높이가 아닌 하나의 work 단위로 어떻게 비교할까요?"
@@ -100,6 +106,8 @@ export default function ModernLongestChainArticle() {
 
         <FinalityBoundaryViz />
 
+        <CatchUpDecayViz />
+
         <ExplainedFormula
           question="공격 분기가 관찰 시점에 z work-step 뒤처졌다면 언젠가 동률에 닿을 확률은 얼마일까요?"
           idea={<>다음 work event를 정직한 쪽이 얻을 확률을 p, 공격자가 얻을 확률을 q라고 두면 deficit은 한 칸 멀어지거나 가까워지는 random walk가 됩니다. q&lt;p일 때 z에서 0에 닿을 확률은 (q/p)^z입니다. q=0.1, p=0.9, z=6이면 약 1.88×10⁻⁶입니다.</>}
@@ -124,6 +132,8 @@ export default function ModernLongestChainArticle() {
           interpretation="이 식은 이미 z만큼 뒤처진 시점부터의 eventual catch-up입니다. 정직한 체인에 z개가 붙는 동안 공격자가 만든 block 수까지 평균내는 whitepaper의 Poisson double-spend 계산과 같은 값으로 읽으면 안 됩니다."
         />
 
+        <ConfirmationDeficitViz />
+
         <p>
           Bitcoin whitepaper는 수신자가 z개의 새 block을 기다리는 동안 공격자가 얼마나 전진했는지를 Poisson 분포로 평균낸 뒤, 남은 deficit에서의 catch-up 확률을 합합니다. 따라서 UI의 “6 confirmations”와 위 식의 “현재 deficit 6”은 자동으로 같은 입력이 아닙니다. 공격자 share, 전파 조건과 계산 시작 시점을 고정하지 않은 확인 숫자만으로 위험을 말할 수 없습니다.
         </p>
@@ -143,6 +153,8 @@ export default function ModernLongestChainArticle() {
           <p className="text-sm font-semibold text-primary">03 · 공통 접두사와 실패</p>
           <h2 className="text-2xl font-bold">깊은 과거가 같아진다는 말은 어떤 전제에서만 맞을까요?</h2>
         </header>
+
+        <CommonPrefixViz />
 
         <p>
           두 정직한 노드가 가진 chain에서 최근 k개 block을 잘라냈을 때 더 오래된 부분이 같다면 k-common-prefix 성질을 만족합니다. 이는 모든 미래에 절대로 갈라지지 않는다는 뜻이 아니라, 정해진 실행 구간과 security parameter에서 실패 확률이 작다는 명제입니다. Backbone 분석은 이를 정직한 chain이 계속 자라는 <strong>chain growth</strong>, 충분한 정직한 block이 남는 <strong>chain quality</strong>와 함께 다룹니다.

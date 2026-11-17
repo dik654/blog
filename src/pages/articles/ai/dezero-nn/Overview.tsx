@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import DezeroExecutionPathViz from "../shared/DezeroExecutionPathViz";
+import ParameterTraversalViz from "./viz/ParameterTraversalViz";
 
 export default function Overview() {
   return (
@@ -25,6 +26,9 @@ export default function Overview() {
           구현을 따라갈 때는 매 단계마다 shape test와 수치 gradient check를 유지합니다. forward 값이 맞아도 broadcasting이나 gradient 누적이
           틀릴 수 있기 때문입니다. 이 기본 학습 루프가 안정적으로 동작한 다음에야 시퀀스 상태, normalization, dropout 같은 기능을 추가할 수 있습니다.
         </p>
+      </div>
+      <ParameterTraversalViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Model의 parameter 탐색은 하위 Layer를 등록 순서대로 재귀 순회하되 같은 parameter identity를 두 번 update하지 않아야 합니다. 이름만 같은
           다른 tensor와 두 경로가 공유하는 같은 tensor를 구분하고 checkpoint에는 stable parameter ID와 shape, dtype, 순서를 manifest로

@@ -11,6 +11,10 @@ import ZkFromScratchLocator, {
   ZkFromScratchMapReturn,
 } from "../impl-field-arithmetic/ZkFromScratchLocator";
 import { plonkTree } from "./fileTrees";
+import SynthesisShapeViz from "./viz/SynthesisShapeViz";
+import PermutationProductViz from "./viz/PermutationProductViz";
+import QuotientSplitViz from "./viz/QuotientSplitViz";
+import BatchOpeningViz from "./viz/BatchOpeningViz";
 import { officialPlonkCodeRefs } from "./officialCodeRefs";
 
 const PLONK_PAPER = "https://eprint.iacr.org/2019/953";
@@ -145,6 +149,7 @@ export default function ModernPlonkImplementationArticle() {
             ))}
           </div>
         </div>
+        <SynthesisShapeViz />
         <p>
           <code>Compiler::compile</code>은 <code>C::default()</code>로 circuit을 합성합니다. 이때 필요한 것은
           실제 3과 4가 아니라 같은 순서의 rows, public-input positions와 copy wiring입니다. 행 수를 2의
@@ -176,6 +181,7 @@ export default function ModernPlonkImplementationArticle() {
           뒤에는 ζ가 이어집니다.
         </p>
 
+        <PermutationProductViz />
         <ExplainedFormula
           question="Copy constraint가 모두 맞으면 permutation 누적곱은 왜 1로 돌아옵니까?"
           idea={<>Identity 위치표와 실제 copy 위치표가 같은 witness multiset을 가리키면 행별 비율이 전체에서 상쇄됩니다.</>}
@@ -200,6 +206,7 @@ export default function ModernPlonkImplementationArticle() {
           interpretation="값이 같은지만 확인하는 것이 아니라, 어느 row의 어느 wire가 같은 변수인지까지 permutation argument가 묶습니다."
         />
 
+        <QuotientSplitViz />
         <ExplainedFormula
           question="Gate·copy·public-input 관계는 어떻게 하나의 quotient가 됩니까?"
           idea={<>각 관계를 transcript challenge로 결합한 뒤 domain에서 0이어야 하는 식을 vanishing polynomial로 나눕니다.</>}
@@ -254,6 +261,7 @@ export default function ModernPlonkImplementationArticle() {
           ))}
         </div>
 
+        <BatchOpeningViz />
         <ExplainedFormula
           question="ζ와 ζω의 batched openings는 마지막 pairing에서 어떻게 하나로 묶입니까?"
           idea={<>두 opening commitment를 u로 결합하고, 약정과 평가값으로 만든 F−E를 같은 pairing product에 넣습니다.</>}

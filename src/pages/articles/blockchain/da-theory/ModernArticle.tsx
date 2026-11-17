@@ -4,6 +4,11 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import DataAvailabilityLocator, { DataAvailabilityMapReturn } from "./DataAvailabilityLocator";
 import { DAArchitectureViz, DataAvailabilityTraceViz, ErasureGridViz } from "./viz/ModernDAViz";
+import RsCurveViz from "./viz/RsCurveViz";
+import BlobSidecarViz from "./viz/BlobSidecarViz";
+import PeerDasColumnViz from "./viz/PeerDasColumnViz";
+import CelestiaSquareViz from "./viz/CelestiaSquareViz";
+import SamplingMissViz from "./viz/SamplingMissViz";
 
 function Boundary({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -97,6 +102,7 @@ export default function ModernDAArticle() {
       <section id="erasure-code" className="space-y-5 scroll-mt-20">
         <p className="text-xs font-bold text-primary">복원 규칙</p>
         <h2 className="break-keep text-2xl font-bold">Reed–Solomon은 원본 복사본이 아니라 다항식의 추가 평가값을 만듭니다</h2>
+        <RsCurveViz />
         <p>
           유한체 위에서 D0~D3 네 값을 지나는 3차 이하 다항식을 정하고, 다른 네 지점에서 값을 더 계산하면 P4~P7을 얻습니다. 이를 (8,4) 코드라고 부릅니다. Code rate는 4÷8=1/2이고, 원본 대비 추가 공간은 (8−4)÷4=1입니다.
         </p>
@@ -108,6 +114,7 @@ export default function ModernDAArticle() {
       <section id="eip4844" className="space-y-6 scroll-mt-20">
         <p className="text-xs font-bold text-primary">전체 수신 단계</p>
         <h2 className="break-keep text-2xl font-bold">EIP-4844는 blob을 별도 운반하지만 합의 노드는 sidecar 전체를 받습니다</h2>
+        <BlobSidecarViz />
         <p>
           Type-3 거래에는 blob 원문 대신 versioned hash 목록이 들어갑니다. Blob, KZG commitment와 proof는 합의 계층의 sidecar로 함께 전파됩니다. EVM contract는 blob byte를 직접 읽지 않고, 거래의 versioned hash와 sidecar commitment가 연결됐는지를 확인합니다.
         </p>
@@ -158,6 +165,7 @@ export default function ModernDAArticle() {
       <section id="peerdas" className="space-y-5 scroll-mt-20">
         <p className="text-xs font-bold text-primary">Ethereum의 부분 수신</p>
         <h2 className="break-keep text-2xl font-bold">PeerDAS는 각 blob 행을 가로로 늘리고 같은 위치를 열로 묶습니다</h2>
+        <PeerDasColumnViz />
         <p>
           각 blob은 하나의 행이 되고 1차원 Reed–Solomon 확장으로 가로 길이가 두 배가 됩니다. 여러 blob 행의 같은 cell 번호를 세로로 모은 것이 data column입니다. 노드는 ID에서 정해지는 custody column을 보관하고, 블록마다 다른 column을 peer에게 요청합니다.
         </p>
@@ -176,6 +184,7 @@ export default function ModernDAArticle() {
       <section id="celestia" className="space-y-5 scroll-mt-20">
         <p className="text-xs font-bold text-primary">행과 열을 함께 늘리는 구조</p>
         <h2 className="break-keep text-2xl font-bold">Celestia 계열은 원본 정사각형의 행과 열을 모두 확장합니다</h2>
+        <CelestiaSquareViz />
         <p>
           4×4 원본 16칸에서 시작해 각 행을 8칸으로 늘리고, 그 결과의 각 열도 8칸으로 늘리면 8×8의 64칸이 됩니다. 전체 code rate는 16÷64=1/4입니다. 가로와 세로 모두에 복원 관계가 생기므로 좌표 단위의 표본과 행·열 복원을 사용합니다.
         </p>
@@ -194,6 +203,7 @@ export default function ModernDAArticle() {
       <section id="sampling" className="space-y-6 scroll-mt-20">
         <p className="text-xs font-bold text-primary">표본 확률</p>
         <h2 className="break-keep text-2xl font-bold">표본 성공률은 숨긴 비율과 요청 독립성을 적었을 때만 의미가 있습니다</h2>
+        <SamplingMissViz />
         <ExplainedFormula
           question="전체의 f 비율을 숨겼을 때 s번 표본이 모두 숨김을 놓칠 확률은 얼마입니까?"
           idea={<>한 번의 균등한 표본이 숨기지 않은 영역에 떨어질 확률은 1−f입니다. 같은 조건에서 서로 독립인 표본 s개가 모두 숨김을 비껴갈 확률은 이를 s번 곱합니다.</>}

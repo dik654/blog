@@ -8,6 +8,7 @@ import {
   CurveProfileViz,
   PairingBoundaryViz,
 } from "./CurveImplementationViz";
+import FiniteCurveDoublingViz from "./viz/FiniteCurveDoublingViz";
 import ZkFromScratchLocator, {
   ZkFromScratchMapReturn,
 } from "../impl-field-arithmetic/ZkFromScratchLocator";
@@ -147,6 +148,7 @@ export default function ModernCurveImplementationArticle() {
         <h2 className="break-keep text-2xl font-bold">
           P를 두 배로 만들면 (5,1)이 (6,3)이 됩니다
         </h2>
+        <FiniteCurveDoublingViz />
         <p>
           작은 곡선에서는 affine 기울기로 결과를 손으로 확인할 수 있습니다. 실제 반복 연산에서는 매 덧셈마다
           field inverse를 구하지 않도록 Jacobian <code>(X:Y:Z)</code>를 사용하고, 출력 경계에서 affine으로 돌아옵니다.

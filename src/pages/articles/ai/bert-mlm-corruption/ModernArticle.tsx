@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertMlmViz } from "../bert/viz/ModernBertViz";
 import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
+import AlignedTensorsViz from "./viz/AlignedTensorsViz";
+import NestedSplitViz from "./viz/NestedSplitViz";
 
 export default function BertMlmArticle() {
   return (
@@ -64,6 +66,7 @@ export default function BertMlmArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           15%를 먼저 고르고 그 안에서 80·10·10으로 나눕니다
         </h2>
+        <NestedSplitViz />
         <ExplainedFormula
           question="10,000 token에서 branch별 기대 개수는 왜 1,200·150·150인가요?"
           idea={
@@ -135,6 +138,7 @@ export default function BertMlmArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Loss는 corrupted input 전체를 조건으로 원래 token만 복원합니다
         </h2>
+        <AlignedTensorsViz />
         <ExplainedFormula
           question="왜 loss 합은 모든 위치가 아니라 M에만 있나요?"
           idea={

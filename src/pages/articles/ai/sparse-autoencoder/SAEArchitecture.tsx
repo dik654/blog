@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import QualityFrontierViz from "./viz/QualityFrontierViz";
+import SparsityGateViz from "./viz/SparsityGateViz";
 export default function SAEArchitecture(){return <section id="sae-architecture" className="mb-16 scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Reconstruction과 sparsity는 서로 다른 실패를 막는다</h2><div className="prose prose-neutral dark:prose-invert max-w-none"><p className="leading-7">
             Reconstruction만 최적화하면 넓은 latent를 모두 써서 activation을 복사할 수 있고 sparsity만 강하게 요구하면 대부분을 0으로 만들어 정보를
             잃는다. L1-ReLU SAE는 encoder activation의 절댓값 합에 벌점을 주어 두 목표를 한 loss에서 맞바꾼다.
@@ -10,7 +11,7 @@ operations={[
   { expression: String.raw`\operatorname{ReLU}(W_e(\mathbf x-\mathbf b_d)+\mathbf b_e)`, annotation: ["decoder bias를 뺀 activation을", "m개 feature score로 넓힌 뒤", "ReLU로 음수 score를 0으로"] },
   { expression: String.raw`W_d\mathbf z+\mathbf b_d`, annotation: ["켜진 latent의 decoder 방향을", "합쳐 원래 d차원으로 되돌립니다"] },
   { expression: String.raw`\|\mathbf x-\widehat{\mathbf x}\|_2^2+\lambda\|\mathbf z\|_1`, annotation: ["복원만 보면 latent를 다 써서 복사,", "sparsity만 보면 다 0으로 정보 손실", "λ가 그 사이 operating point를 정함"] },
-]} terms={[{symbol:"W_e",name:"encoder",description:"Activation을 m개의 candidate feature score로 투영합니다."},{symbol:"W_d",name:"dictionary",description:"각 latent를 원래 d차원 space의 decoder direction으로 되돌립니다."},{symbol:String.raw`\lambda`,name:"sparsity weight",description:"Reconstruction과 active magnitude 사이의 operating point를 정합니다."}]} assumptions={["Decoder column scale을 통제하지 않으면 z를 작게, decoder를 크게 만들어 L1 penalty를 우회할 수 있습니다.","Training corpus가 분석하려는 activation distribution을 충분히 대표해야 합니다."]} interpretation="L1은 differentiable하지만 작은 진짜 activation까지 줄이는 shrinkage bias가 있습니다. 따라서 λ 하나의 결과를 정답으로 보지 않고 sparsity–reconstruction frontier에서 여러 checkpoint를 비교합니다."/><div className="prose prose-neutral dark:prose-invert max-w-none"><h3>Sparsity 방법마다 계약이 다르다</h3><p>
+]} terms={[{symbol:"W_e",name:"encoder",description:"Activation을 m개의 candidate feature score로 투영합니다."},{symbol:"W_d",name:"dictionary",description:"각 latent를 원래 d차원 space의 decoder direction으로 되돌립니다."},{symbol:String.raw`\lambda`,name:"sparsity weight",description:"Reconstruction과 active magnitude 사이의 operating point를 정합니다."}]} assumptions={["Decoder column scale을 통제하지 않으면 z를 작게, decoder를 크게 만들어 L1 penalty를 우회할 수 있습니다.","Training corpus가 분석하려는 activation distribution을 충분히 대표해야 합니다."]} interpretation="L1은 differentiable하지만 작은 진짜 activation까지 줄이는 shrinkage bias가 있습니다. 따라서 λ 하나의 결과를 정답으로 보지 않고 sparsity–reconstruction frontier에서 여러 checkpoint를 비교합니다."/><div className="prose prose-neutral dark:prose-invert max-w-none"><h3>Sparsity 방법마다 계약이 다르다</h3></div><SparsityGateViz/><div className="prose prose-neutral dark:prose-invert max-w-none"><p>
             L1 shrinkage를 줄이려는 쪽이 Gated SAE다. feature가 켜질지와 켜진 뒤 크기를 별도 경로로 추정한다. JumpReLU는 학습한 threshold를 넘을
             때만 activation을 통과시키며 threshold gradient에는 별도 estimator가 필요하다. Top-K는 sample마다 score가 큰 K개만 남겨 L0를
             직접 고정한다. sparsity tuning은 쉬워지지만 모든 sample에 같은 K가 적절하다는 가정을 둔다.

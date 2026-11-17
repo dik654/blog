@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import EmbeddingPathLocator, { EmbeddingMapReturn } from "../sentence-embeddings/EmbeddingPathLocator";
 import { BiEncoderFlowViz } from "../sentence-embeddings/viz/ModernSentenceEmbeddingViz";
+import ForwardCountViz from "./viz/ForwardCountViz";
+import CandidateCeilingViz from "./viz/CandidateCeilingViz";
 
 export default function BiEncoderRetrievalArticle() {
   return <div className="space-y-16">
@@ -25,6 +27,7 @@ export default function BiEncoderRetrievalArticle() {
 
     <section id="offline-index" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Offline index는 공짜가 아니라 query마다 반복하지 않기로 한 계산입니다</h2>
+      <ForwardCountViz />
       <ExplainedFormula question="Corpus M개를 검색할 때 cross-encoder와 bi-encoder는 online에서 무엇을 계산하나요?" idea={<p>Cross-encoder는 query가 달라질 때마다 M개 pair를 모두 forward합니다. Bi-encoder는 document forward를 corpus generation 때 끝내고 online에는 query forward와 ANN search만 남깁니다.</p>} formula={String.raw`C_{\rm cross}(q)=\sum_{j=1}^{M}C_{\rm pair}(q,d_j),\quad C_{\rm bi}(q)=C_q+C_{\rm ANN}`} annotatedFormula={String.raw`\begin{aligned}C_{\rm cross}(q)&=\underbrace{\sum_{j=1}^{M}C_{\rm pair}(q,d_j)}_{\substack{\text{query마다}\\\text{M pair 반복}}}\\C_{\rm offline}(g)&=\underbrace{\sum_{j=1}^{M}C_d(d_j)}_{\substack{\text{generation마다}\\\text{문서 계산 선불}}}\\C_{\rm bi}(q)&=\underbrace{C_q}_{\text{query 1회}}+\underbrace{C_{\rm ANN}(q,g)}_{\text{index 탐색}}\end{aligned}`} operations={[
         { expression: String.raw`\sum_{j=1}^{M}C_{\rm pair}(q,d_j)`, annotation: ["query를 각 document와 결합하고", "M번의 pair-forward 비용을 누적"] },
         { expression: String.raw`\sum_{j=1}^{M}C_d(d_j)`, annotation: ["query와 무관한 document 계산을", "corpus generation마다 한 번 선불"] },
@@ -44,6 +47,7 @@ export default function BiEncoderRetrievalArticle() {
         { term: "Candidate set", description: "첫 retriever가 corpus에서 가져와 다음 단계에 넘긴 k개 document입니다." },
         { term: "Reranker", description: "Candidate 내부 pair를 더 정교하게 읽고 순서만 다시 매기는 두 번째 model입니다.", boundary: "별도 retrieval을 하지 않는 한 candidate 밖 문서는 추가할 수 없습니다." },
       ]} />
+      <CandidateCeilingViz />
       <ExplainedFormula question="첫 단계가 정답을 하나도 가져오지 못했다면 reranker가 복구할 수 있나요?" idea={<p>Reranker 출력은 candidate set 안의 문서로만 구성됩니다. 따라서 candidate와 relevant set의 교집합이 비어 있으면 순서를 아무리 바꿔도 relevant 문서가 생기지 않습니다.</p>} formula={String.raw`\mathcal R_q\cap C_k(q)=\varnothing\Rightarrow\mathcal R_q\cap\operatorname{Rerank}(C_k(q))=\varnothing`} annotatedFormula={String.raw`\begin{aligned}\underbrace{\operatorname{Docs}(\operatorname{Rerank}(C_k(q)))\subseteq C_k(q)}_{\text{reranker는 받은 candidate 안에서만 순서를 변경}}\\\underbrace{\mathcal R_q\cap C_k(q)=\varnothing}_{\text{첫 단계가 relevant document를 하나도 전달하지 않음}}\\\Longrightarrow\quad\underbrace{\mathcal R_q\cap\operatorname{Rerank}(C_k(q))=\varnothing}_{\text{순서 변경만으로 새 정답을 만들 수 없음}}\end{aligned}`} operations={[
         { expression: String.raw`\operatorname{Rerank}(C_k)\subseteq C_k`, annotation: ["출력 문서 집합을 candidate의 subset으로 제한해", "두 번째 단계의 권한을 고정"] },
         { expression: String.raw`\mathcal R_q\cap C_k(q)`, annotation: ["정답 집합과 후보 집합을 교차해", "첫 단계가 전달한 정답 수를 계산"] },

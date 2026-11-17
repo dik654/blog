@@ -2,6 +2,7 @@ import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import LinearViz from "./viz/LinearViz";
+import LinearShapeGridViz from "./viz/LinearShapeGridViz";
 
 export default function LinearLayer({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
@@ -49,6 +50,7 @@ N_{\mathrm{param}}&=\underbrace{2\cdot3+3=9}_{\text{W 원소 + b 원소}}.
         ]}
         interpretation="Forward output은 4×3이고 trainable parameter는 9개입니다. Backward에서 dW는 2×3, db는 길이 3, dX는 4×2여야 합니다."
       />
+      <LinearShapeGridViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>backward는 두 개의 행렬곱으로 돌아갑니다</h3>
         <p>

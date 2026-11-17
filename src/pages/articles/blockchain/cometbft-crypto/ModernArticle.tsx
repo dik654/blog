@@ -5,6 +5,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import CosmosCoreLocator, { CosmosCoreMapReturn } from "../CosmosCoreLocator";
 import { CryptoEvidenceBoundaryViz, CryptoEvidenceTraceViz } from "./viz/ModernCryptoViz";
+import { TxProofTreeViz } from "./viz/TxProofTreeViz";
+import { VerifyStopViz } from "./viz/VerifyStopViz";
 import { codeRefs } from "./codeRefs";
 import { cometbftCryptoTree } from "./fileTrees";
 
@@ -66,6 +68,9 @@ export default function ModernCometBFTCryptoArticle() {
               그대로 반환하지 않고, 각 TxHash 앞에 <code>0x00</code>을 붙여 다시 leaf hash를 만듭니다. Inner node는
               <code>0x01 || left || right</code>를 해시합니다.
             </p>
+          </div>
+          <TxProofTreeViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               세 transaction의 tree는 균형을 맞추기 위해 임의로 정렬하지 않습니다. 입력 순서를 유지한 채 가장 큰 2의 거듭제곱인 2에서
               <code>[T1,T2]</code>와 <code>[T3]</code>로 나눕니다. 따라서 T1 proof의 aunt 순서는 L2, L3이고, index 0·total 3이
@@ -178,6 +183,7 @@ export default function ModernCometBFTCryptoArticle() {
             <CodeViewButton label="DataHash·Header hash 원문" onClick={() => sidebar.open("header-datahash", codeRefs["header-datahash"])} />
             <CodeViewButton label="TxProof.Validate 원문" onClick={() => sidebar.open("tx-merkle-proof", codeRefs["tx-merkle-proof"])} />
           </div>
+          <VerifyStopViz />
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <h3>검증 실패도 멈춘 경계에 따라 의미가 다릅니다</h3>
             <ul>

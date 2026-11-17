@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TrainInferenceGapViz from "./viz/TrainInferenceGapViz";
+import TeacherForcingMaskViz from "./viz/TeacherForcingMaskViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -13,6 +14,7 @@ export default function Training({
     <section id="training" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Teacher forcing은 정답 prefix로 학습합니다</h2>
       <TrainInferenceGapViz />
+      <TeacherForcingMaskViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

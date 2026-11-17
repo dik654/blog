@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ThresholdPolicyViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import FeasibleThresholdViz from "./viz/FeasibleThresholdViz";
 import {
   ImbalancedClassificationLocator,
   ImbalancedClassificationMapReturn,
@@ -169,6 +170,7 @@ export default function CostSensitiveThresholdingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Capacity 안에서 비용이 가장 낮은 threshold를 고릅니다
         </h2>
+        <FeasibleThresholdViz />
         <ExplainedFormula
           question="하루 alert K개와 minimum recall rmin을 동시에 지키는 threshold는 어떻게 고르나요?"
           idea={

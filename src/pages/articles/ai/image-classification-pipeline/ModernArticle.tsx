@@ -9,6 +9,7 @@ import {
   BaselineReceiptViz,
   ImageIdentityViz,
 } from "./viz/ImageDataBoundaryViz";
+import PairedReleaseViz from "./viz/PairedReleaseViz";
 
 export default function ImageClassificationDataBoundaryArticle() {
   return (
@@ -207,6 +208,7 @@ for train_index, valid_index in splitter.split(files, labels, groups):
             },
           ]}
         />
+        <PairedReleaseViz />
         <ExplainedFormula
           question="Candidate가 baseline보다 좋아졌다고 말하려면 무엇을 같은 짝으로 비교하나요?"
           idea={

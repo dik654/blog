@@ -4,6 +4,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { CodeModeProgramViz } from "../code-mode-viz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
+import TokenLedgerViz from "./viz/TokenLedgerViz";
 
 export default function AgentCodeModeArticle() {
   return (
@@ -107,6 +108,7 @@ export default function AgentCodeModeArticle() {
           example="Security label·unassigned 조건으로 issue를 줄여 team별 count만 반환합니다."
           boundary="Model 노출은 줄어도 sandbox log·exception·trace에서 민감정보가 새어 나갈 수 있습니다."
         />
+        <TokenLedgerViz />
         <ExplainedFormula
           question="Program token을 추가하고도 Code Mode의 model token 이동이 더 작아지는 조건은 무엇일까요?"
           idea="반복 loop는 매 round의 prompt·schema·result·다음 판단을 더합니다. Code Mode는 discovery·program·final result를 한 번 내고 중간 data를 runtime 안에 둡니다."

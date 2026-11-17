@@ -6,6 +6,7 @@ import {
   BullsharkOrderingViz,
   BullsharkVariantViz,
 } from "./viz/ModernBullsharkViz";
+import SubDagFlattenViz from "./viz/SubDagFlattenViz";
 
 export default function ModernBullsharkArticle() {
   return (
@@ -105,6 +106,8 @@ export default function ModernBullsharkArticle() {
         <p>
           여기에는 별도의 “author 기준 정렬”이 없습니다. 같은 라운드 안의 순서는 정렬된 부모 digest를 따라간 DFS 방문 순서가 안정 정렬 뒤에도 유지됩니다. 따라서 로컬 네트워크 도착 순서나 <code>HashMap</code> 순회를 합의 규칙으로 사용한다고 설명하면 실제 코드와 달라집니다. 자료구조의 순서 보장이 바뀌면 결과도 다시 검증해야 합니다.
         </p>
+        <SubDagFlattenViz />
+
         <p>
           L2 하위 DAG를 먼저 출력하면 <code>state.update</code>가 작성자별 마지막 커밋 라운드를 올립니다. 이어서 L4를 펼칠 때 이미 처리한 인증서는 제외되어 같은 인증서가 두 번 나오지 않습니다. 각 새 인증서에는 전역 <code>consensus_index</code>가 붙고, 마지막 커밋 상태와 digest가 저장됩니다. 이 출력은 인증서 순서이며, 인증서가 가리키는 배치 원문을 가져와 거래를 실행한 결과는 아닙니다.
         </p>

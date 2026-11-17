@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ModelChoiceViz from "./viz/ModelChoiceViz";
+import MaseViz from "./viz/MaseViz";
 
 export default function Applications() {
   return (
@@ -25,6 +26,7 @@ export default function Applications() {
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1016/S0169-2070(00)00065-0" target="_blank" rel="noreferrer">원 논문의 origin·window·recalibration 구분 보기</a>
       </div>
+      <MaseViz />
       <ExplainedFormula
         question="단위와 크기가 다른 여러 series의 MAE를 naive forecast와 어떻게 비교할까?"
         idea={<>MASE는 test absolute error를 train 구간에서 m step 전 값을 그대로 쓴 seasonal-naive 예측의 평균 absolute error로 나눕니다(m=1이면 한 step 전 값을 쓰는 naive). 원 단위를 제거하면서 단순 기준선 대비 난도를 함께 반영합니다.</>}

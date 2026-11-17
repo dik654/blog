@@ -3,6 +3,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import WassersteinConstraintViz from "./WassersteinConstraintViz";
+import CriticGapViz from "./viz/CriticGapViz";
+import GradientPenaltyViz from "./viz/GradientPenaltyViz";
+import SpectralNormViz from "./viz/SpectralNormViz";
 import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 export default function WassersteinCriticsArticle() {
@@ -91,6 +94,7 @@ d_f&\le b_x
           example="Point mass δ₀와 δ₂에서는 f(x)=−x가 gap 2를 만들어 이동 거리 2에 도달합니다."
           boundary="Constraint가 없으면 cf로 scale을 키워 supremum이 발산합니다. Critic output은 sigmoid probability가 아닙니다."
         />
+        <CriticGapViz />
         <ExplainedFormula
           question="왜 expectation을 빼고 그중 supremum을 찾을까요?"
           idea={
@@ -175,6 +179,7 @@ W_1(p_r,p_g)&=\underbrace{\sup_{\lVert f\rVert_L\le1}\Delta_f}_{\text{slope 제�
           example="Norm 1.5와 λ=10이면 penalty는 10×0.5²=2.5입니다."
           boundary="Sampled interpolation의 soft penalty이며 global 1-Lipschitz 증명이 아닙니다."
         />
+        <GradientPenaltyViz />
         <ExplainedFormula
           question="왜 gradient norm에서 1을 빼고 square할까요?"
           idea={
@@ -266,6 +271,7 @@ e(\widehat x)&=\underbrace{(s(\widehat x)-1)^2}_{\text{target 1과의 square dev
           example="diag(3,1)을 3으로 나누면 diag(1,1/3)이 됩니다."
           boundary="Power iteration은 근사이며 activation·residual·branch를 포함한 전체 network의 tight constant는 별도 회계가 필요합니다."
         />
+        <SpectralNormViz />
         <ExplainedFormula
           question="왜 largest singular value로 weight 전체를 나눌까요?"
           idea={

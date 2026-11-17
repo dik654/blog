@@ -3,6 +3,9 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { GeneralizationDiagnosisViz } from "./viz/ModernRegularizationViz";
+import GapScaleViz from "./viz/GapScaleViz";
+import OverfitTrajectoryViz from "./viz/OverfitTrajectoryViz";
+import PairedSeedViz from "./viz/PairedSeedViz";
 import {
   RegularizationFamilyLocator,
   RegularizationFamilyMapReturn,
@@ -25,6 +28,7 @@ export default function RegularizationDiagnosisArticle() {
     </section>
     <section id="gap" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Gap은 같은 시점·같은 loss의 두 평균을 빼서 만듭니다</h2>
+      <GapScaleViz />
       <ExplainedFormula question="관측 gap은 어떤 두 값을 왜 빼서 만들까요?" idea={<p>
             Validation에서 보지 못한 data의 오차를 봅니다. 여기서 이미 fitting에 사용한 train 오차를 기준선으로 제거합니다. 두 값의 차이가 시간에 따라 커지는지
             추적합니다.
@@ -39,6 +43,7 @@ export default function RegularizationDiagnosisArticle() {
     </section>
     <section id="audit" data-teach-level="failure" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">원인 감사가 끝나기 전에는 regularizer를 고르지 않습니다</h2>
+      <OverfitTrajectoryViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           네 원인을 배제하고 training error도 낮은 채 gap만 계속 커진다면 그
@@ -63,6 +68,7 @@ export default function RegularizationDiagnosisArticle() {
     </section>
     <section id="ablation" data-teach-level="practice" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">한 번에 한 축만 바꿔 이득과 부작용을 함께 비교합니다</h2>
+      <PairedSeedViz />
       <ExplainedFormula question="Regularizer의 효과를 baseline과 공정하게 어떻게 비교할까요?" idea={<p>
             같은 seed마다 regularized run에서 baseline metric을 빼 paired change를 만듭니다. 평균 gain뿐 아니라 train fit·worst
             slice·calibration·cost를 함께 봅니다.
