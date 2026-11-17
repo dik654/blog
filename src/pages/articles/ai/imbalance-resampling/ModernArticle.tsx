@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ResamplingGeometryViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import SplitOrderLeakageViz from "./viz/SplitOrderLeakageViz";
 import {
   ImbalancedClassificationLocator,
   ImbalancedClassificationMapReturn,
@@ -90,6 +91,7 @@ export default function ImbalanceResamplingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Split을 먼저 만들고 각 fold의 train subset에서 sampler를 fit합니다
         </h2>
+        <SplitOrderLeakageViz />
         <ExplainedFormula
           question="Cross-validation에서 sampling leakage가 없다는 조건을 어떻게 표현하나요?"
           idea={

@@ -5704,202 +5704,329 @@
 {
 "route": "ai/imbalance-resampling",
 "publicPath": "cs/ai/imbalance-resampling",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "ai/incremental-parsing-tree-sitter",
 "publicPath": "cs/ai/incremental-parsing-tree-sitter",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 4
 },
 {
 "route": "ai/gan-conditional-evaluation",
 "publicPath": "cs/ai/gan-conditional-evaluation",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "blockchain/commonware-deep-dive",
 "publicPath": "cs/blockchain/commonware-deep-dive",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2,
+"articleIssues": [
+"The #failure section uses a raw <table> with min-w-[760px] inside overflow-x-auto. This is not a prose error and I left it untouched, but it falls short of the ResponsiveVizTable / no-fixed-wide-width convention."
+]
 },
 {
 "route": "ai/claude-code-instructions-memory",
 "publicPath": "cs/ai/claude-code-instructions-memory",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "ai/qwen36-long-context-deployment",
 "publicPath": "cs/ai/qwen36-long-context-deployment",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 0
 },
 {
 "route": "blockchain/dydx",
 "publicPath": "cs/blockchain/dydx",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "blockchain/cosmos-sdk",
 "publicPath": "cs/blockchain/cosmos-sdk",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "ai/one-shot-llm-pruning",
 "publicPath": "cs/ai/one-shot-llm-pruning",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "blockchain/evmos",
 "publicPath": "cs/blockchain/evmos",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "ai/gan-training-dynamics",
 "publicPath": "cs/ai/gan-training-dynamics",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 3
 },
 {
 "route": "ai/normalizing-flows",
 "publicPath": "cs/ai/normalizing-flows",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 3
 },
 {
 "route": "ai/claude-code-subagents",
 "publicPath": "cs/ai/claude-code-subagents",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "ai/imbalance-loss-weighting",
 "publicPath": "cs/ai/imbalance-loss-weighting",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "blockchain/mysticeti",
 "publicPath": "cs/blockchain/mysticeti",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "ai/context-provenance-freshness",
 "publicPath": "cs/ai/context-provenance-freshness",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "ai/early-stopping",
 "publicPath": "cs/ai/early-stopping",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1,
+"articleIssues": [
+"The article never says what b is at the first evaluation, before any best exists. The Viz treats eval 1 as the initial best and marks this '(가정)'.",
+"The TermBreakdown says δ=.01 makes .375 'not sufficiently better ... 할 수 있습니다'. Under the article's own rule m_j<b−δ, .375<.37 is false, so it is never an improvement. The hedge is looser than the formula. The Viz states the formula result and attributes it to the formula.",
+"The existing EarlyStoppingMechanismViz (shared from regularization-practice, not edited) has bar heights that do not follow the loss values, and its note line is clipped at the bottom in the 1440px screenshot."
+]
 },
 {
 "route": "ai/imbalanced-data",
 "publicPath": "cs/ai/imbalanced-data",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "ai/agent-devlog-patterns",
 "publicPath": "cs/ai/agent-devlog-patterns",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "ai/constitutional-ai",
 "publicPath": "cs/ai/constitutional-ai",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1,
+"articleIssues": [
+"In ConstitutionalAI.tsx, the SL-CAI input list names a 'Helpful-only로 먼저 학습된 초기 model' that writes the draft, while the fine-tune step trains the 'pretrained model'. This matches the paper, but the step note never says that two different models are involved, which can confuse readers. The Viz states it explicitly; the prose is unchanged."
+]
 },
 {
 "route": "blockchain/dag-consensus",
 "publicPath": "cs/blockchain/dag-consensus",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 3
 },
 {
 "route": "ai/bert-pretraining-objectives",
 "publicPath": "cs/ai/bert-pretraining-objectives",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "ai/skills-anatomy",
 "publicPath": "cs/ai/skills-anatomy",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1,
+"articleIssues": [
+"The rendered page is only ModernArticle.tsx. The older section files (Overview.tsx, Format.tsx, Loading.tsx, Execution.tsx, Registry.tsx) are not imported by the route. They hold different, partly overlapping prose, including the Codex 2% / 8,000-character budget, which never reaches readers. This is not a prose error, just dead files."
+]
 },
 {
 "route": "blockchain/uniswap-v4",
 "publicPath": "cs/blockchain/uniswap-v4",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1,
+"articleIssues": [
+"The rendered page is only ModernArticle.tsx. The unrendered legacy viz/HookAddressViz.tsx says '상위 10비트' (bits 159-150) set the hook flags, which contradicts the article's v4.0.0 code ref: the lower 14 bits. It is dead code, but someone could reuse it by mistake."
+]
 },
 {
 "route": "p2p/quic-fundamentals",
 "publicPath": "cs/p2p/quic-fundamentals",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "ai/weight-only-quantization",
 "publicPath": "cs/ai/weight-only-quantization",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "blockchain/cometbft-state",
 "publicPath": "cs/blockchain/cometbft-state",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1,
+"articleIssues": [
+"끝의 확인 질문 3번은 'B42·S41·A41과 B42·S42·A41'을 비교하라고 하지만, 본문 #replay가 State만 앞선 예로 드는 조합은 B42·S42·A40입니다. B42·S42·A41은 본문에서 따로 설명하지 않습니다. 오류는 아닐 수 있지만 질문과 본문의 예가 서로 다릅니다.",
+"기존 Viz와 본문(서론 문장, StateRecoveryViz, RecoveryDecisionViz, StateSyncBoundaryViz)에서는 사실 오류를 찾지 못했습니다."
+]
 },
 {
 "route": "ai/deepfake-detection",
 "publicPath": "cs/ai/deepfake-detection",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "blockchain/lotus-chain",
 "publicPath": "cs/blockchain/lotus-chain",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 3,
+"articleIssues": [
+"Overview says peer candidate is head 103, and the existing ModernChainSyncViz collects 'B99 → B100 → B101 → B103' (skips 102) but ends with 'new head B101'. #head-reorg uses B101 as the new head with 3 applies. Candidate 103 and adopted head B101 look inconsistent.",
+"Overview.tsx, StateComputation.tsx and TipsetValidation.tsx (with ContextViz, StateViz, SyncDetailViz) exist in the article directory, but lotus-chain.tsx renders only ModernArticle. I treated them as unrendered and did not count them in sectionsRead."
+]
 },
 {
 "route": "ai/unstructured-pruning",
 "publicPath": "cs/ai/unstructured-pruning",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 3
 },
 {
 "route": "ai/dpo",
 "publicPath": "cs/ai/dpo",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1,
+"articleIssues": [
+"alignment-methods/DPO.tsx (shared, rendered in this article): the last prose paragraph switches to 한다체 ('읽어야 한다', '확장하지 않는다') while the rest of the article uses 합니다체. This is a style inconsistency only, and I did not edit it."
+]
 },
 {
 "route": "tee/intel-tdx",
 "publicPath": "cs/tee/intel-tdx",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2,
+"articleIssues": [
+"The route renders only the shared vendor-tee-article template (intel-tdx/ModernArticle.tsx → VendorTeeArticle). The section files in intel-tdx/ (Overview, TdModule, Memory, etc.) and the older viz/ components are not rendered by this route.",
+"Unrendered intel-tdx/TdModule.tsx says 'TDG.VP.ENTER로 TD에 진입합니다'. As far as I know, host-side entry is a SEAMCALL (TDH.VP.ENTER), and TDG.* are guest TDCALL leaves. This is suspect but not edited, and it is not on the rendered page.",
+"In the template's intel-tdx config the lifecycle says 'TDH.MNG / MEM' and the actor table says 'SEAMCALL', with no definition of TDREPORT vs quote. This is not an error, just thinly explained."
+]
 },
 {
 "route": "blockchain/lotus-miner",
 "publicPath": "cs/blockchain/lotus-miner",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 3,
+"articleIssues": [
+"lotus-miner.tsx renders only ModernArticle. Overview.tsx, SectorLifecycle.tsx and WinningPoSt.tsx in the same directory, and their older Viz, are not imported by the rendered page, so they look like dead code (not edited)."
+]
 },
 {
 "route": "ai/kimi-k3-latent-moe",
 "publicPath": "cs/ai/kimi-k3-latent-moe",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "ai/video-convolution-architectures",
 "publicPath": "cs/ai/video-convolution-architectures",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1
 },
 {
 "route": "blockchain/filecoin-f3",
 "publicPath": "cs/blockchain/filecoin-f3",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 1,
+"articleIssues": [
+"FilecoinF3TraceViz labels its chain T98→T100→T101, while the prose and formulas use B→C→D for the same base/proposal idea. These are two naming schemes for one concept and could confuse a reader. I did not change either."
+]
 },
 {
 "route": "ai/xml-prompting",
 "publicPath": "cs/ai/xml-prompting",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 4,
+"articleIssues": [
+"BasicTagsViz (existing) Valid nesting card example '<docs><doc>…</doc></docs>' and BasicTagsDetailViz list '<task>'/'<context>' as tags, while Overview prose stresses there is no standard <task>/<context> dictionary — consistent in spirit but could read as a recommended vocabulary.",
+"ParsingDetailViz (existing) says '<age>old</age>도 통과할 수 있음' at the well-formed level, while the prose uses a different running example (refund amount -100); this is not an error, just a separate example."
+]
 },
 {
 "route": "ai/video-clip-sampling",
 "publicPath": "cs/ai/video-clip-sampling",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 0
 },
 {
 "route": "ai/kimi-k3-sequence-mixer",
 "publicPath": "cs/ai/kimi-k3-sequence-mixer",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 3,
+"articleIssues": [
+"In §00 the interpretation's arithmetic is internally consistent: e uses S_{t−1}k=2, not αS_{t−1}=1, so the result is 1+.5=1.5. A reader may still assume the retained value is used; the Viz makes this explicit. No prose error found.",
+"I did not add a Viz for the 93-layer schedule ([KDA×3→MLA]×23 + final MLA = 69+24 = 93), because the existing SequenceMixerViz and the TermLesson already state it."
+]
 },
 {
 "route": "ai/dropout-regularization",
 "publicPath": "cs/ai/dropout-regularization",
-"status": "todo"
+"status": "done",
+"round": 16,
+"vizAdded": 2
 },
 {
 "route": "ai/tabular-data-synthesis",
@@ -8668,6 +8795,52 @@
 "ReducerRetryViz: I found no factual errors. Checksums 8b2/a41/c07 match MultiAgentRequestFlowViz lines 32-34. The list counts 1→5 and set counts 1,2,3,3,3 are correct, and the conflict case follows the prose ('같은 결과 ID에 서로 다른 식별값이 오면 충돌로 처리'). One minor point I left alone: in the conflict scene the status row still shows t-02 'success'. The article defines only pending/success/timeout/failed, so a separate conflict status would need a prose decision.",
 "BoxCornerVisibilityViz: r_vis is computed on the axis-aligned bbox, as in the article formula area(B'∩C)/area(B'). For the rotated diamond itself, the visible fraction would be about 0.96, not 0.85. The Viz follows the article's definition. Saying in the text that the ratio is bbox-based rather than object-shape-based would be a prose change.",
 "viz-scene-shot reports 8 scene captures per Viz, but each has only 5 scenes. Controls and frame were stable across all of them (controlY 667/653, overflow 0, console errors 0). At 390px the scene notes extend into the canvas's internal scroll area, which the standard allows. All 12 remaining audit:viz items are REVIEW notes for SVG text with no ERROR lines, and the screenshots show none of that text overflowing."
+],
+"16": [
+"No problems found in /Users/dylan/code/projects/blog-moe-serving/src/pages/articles/ai/claude-code-instructions-memory/viz/AgentsMdBranchViz.tsx. Each of the three branches matches the article prose. Default: 'working directory 위에 CLAUDE.md나 CLAUDE.local.md가 있으면 그것을 읽고 AGENTS.md는 생략합니다'. Both: 'Project instructions를 claude-md-and-agents-md로 정합니다'. Import: '또는 CLAUDE.md에서 @AGENTS.md를 import합니다'. The version 'v2.1.277 이상' and the note that instructions do not change permissions both agree with the article and its interpretation line.",
+"Minor, not changed: the inline 3-button selector repeats the bottom scene controls. The controls stay stable (controlY 581 at 390px and 647 at 1440px, the same in every scene), overflow is 0 and there are 0 console errors. On 390px the note paragraph sits under the controls and is reached by scrolling inside the canvas, which docs/viz-design-standard.md line 62 allows. Removing the duplicate selector would be layout polish, not a fix for reader confusion.",
+"The qwen36-long-context-deployment article has no new Viz in this task's list, so nothing there was reviewed.",
+"CaiTwoPhaseViz still shows 'PPO 등' without explaining it. The article does not explain PPO either ('PPO 등 RL 알고리즘'). Explaining it would need an outside fact or a change to the prose, so I left it.",
+"Verification after the edits: audit:viz --strict passed for both files. viz-scene-shot at 390px and 1440px showed stable controlY and frameH in every scene, overflow 0 and 0 console errors. Screenshots are in /tmp/viz-rounds/r16/rv9/agent-devlog-patterns and /tmp/viz-rounds/r16/rv9/constitutional-ai.",
+"IndexerReplayViz (dydx): 'transient store' appears in scene 1 and the column subtitle with no explanation. The article prose ('이 event는 transient store에 모입니다') never defines it either. A gloss (store cleared at the end of each block) would be a fact from outside the article, so it needs a prose decision.",
+"CheckStateCarryViz says 'MsgSend 송금 10은 CheckTx에서 실행하지 않습니다' and labels the request box 'ante만 실행'. The article implies this ('성공한 ante 변경은 ... check state에 누적') but never states it. It matches SDK BaseApp, where runMsgs skips handlers in check mode. It is correct, but the article text does not back it explicitly.",
+"RunTxBranchViz scene B is titled 'message 실패', but with the article's numbers (ante 30 + message 50 = 80 ≤ 80) the limit is first crossed in the post-handler (+5 → 85). This follows the article, whose table says 'MESSAGE 실패' and whose formula says 'limit 80이면 message child를 합치지 않음'. The gas bar shows the crossing in the post segment. If the article should say the failure happens at the post-handler step, that is a prose change.",
+"Verification: audit:viz --strict passed. Scene shots at 390 and 1440 showed stable controlY/frameH across scenes, overflow 0 and console errors 0 for all three Viz. Mobile scenes scroll inside the frame, so the lower boxes are not in the top-of-frame screenshots.",
+"Checked and found no fault: early-stopping. The losses .42,.38,.39,.40,.41 and δ=0, P=2 give b=.42,.38,.38,.38,.38 and c=0,0,1,2,3. Stop happens at the first c>P, which is eval 5, and eval 2 is returned. Both match the article's \"eval 5에서 bad counter가 3이 되어 멈춘 뒤 ... eval 2 snapshot\". In the δ scene, .38−.01=.37 and .375 is not below .37, so it is a bad event. This matches the TermBreakdown example and m_j<b−δ.",
+"Checked and found no fault: PrevalenceSplitViz. Each cell is 10 people and 5 of 100 cells are positive, so 50/1,000 = 5%, accuracy is 950/1,000 = 95% and recall is 0/50 = 0. This matches the article's \"accuracy는 95%지만 positive recall은 0\" and its sampling claim.",
+"Checked and found no fault: ScoreLayersViz. All 2×6 = 12 pairs are ordered correctly. The .7–.9 bin averages (.88+.84+.76+.72)/4 = .80 with 2 of 4 positive, which is .50 and matches the article's \"AUC가 좋아도 C(.8)=.5일 수 있고\". At τ=.5 there are 4 alerts and 2 are positive; at τ=.8 there are 2 alerts. The points and the τ values are labelled as assumed. The AUC definition shown in the Viz is the standard one; the article uses AUC without defining it.",
+"Screen check: audit:viz --strict gives no ERROR lines (REVIEW only). In the scene shots, control position and frame height stay stable in every scene, overflow is 0 and there are 0 console errors at 390 and 1440. Screenshots are in /tmp/viz-rounds/r16/rv8/{early-stopping,imbalanced-prev,imbalanced-score}.",
+"Possible layout issue in shared code, not changed: at 390px in the PrevalenceSplitViz shots, the scene note shows below the control row and is cut off at the frame edge. It may be inside a scroll area; the shot does not show. This comes from the shared SceneShell/VizFrame layout, and SceneShell is identical across these articles, so I did not change it within this review's scope.",
+"Checked with no change needed. FidGapViz: (0−2)²+0=4 matches the article's 'N(0,1)과 N(2,1)… FID=4'. The σg=2 scene is labeled as an assumption, and its covariance term is 1+4−2·√(1·4)=1, which is correct. The plotted peaks match the stated σ. PrecisionRecallModesViz: I recomputed the geometry. Adjacent mode centres are 2·62·sin22.5°≈47.5 apart, more than 2·17, so the circles do not overlap. All 8 COLLAPSE points fall inside modes 0 and 1, giving P 8/8 and R 2/8. In ARTIFACT, 4 points sit on mode centres 0, 2, 4 and 6, and the other 4 are outside every circle (nearest distance is over 40px), giving P 4/8 and R 4/8. The caption keeps the article's hedge ('mode collapse와 호환'). VerifyBranchViz: the false/true/certificate-verify branches match application/actor.rs (Success(false) returns false, Random returns true, Bridge returns finalization.verify(... other_network ...)).",
+"Minor, left as is: in PrecisionRecallModesViz the description calls generated samples '주황 사각형', but samples outside a circle are drawn as red outlined squares with a slash. The legend line '□ 원 밖 표본' explains them, so I did not change it.",
+"At 390px, the 8 scene screenshots for every Viz in both articles show the scene note partly underneath the control row. This comes from the shared VizFrame/SceneShell layout, which I may not edit (src/components). The script reports overflow 0 and stable controls.",
+"GradientPathViz D step (scene 1): the x̃ = G(z) box is outlined orange as 'reached' by backprop. The orange arrow does stop at the detach line between G and x̃, and the note says '역전파는 φ까지만 가고 θ에는 닿지 않습니다', so the conclusion the reader gets is right. Strictly, though, a detached tensor gets no ∂loss/∂x̃ in PyTorch, so the highlighted box overstates where gradients are computed. I left it as is because the article's prose ('generated value만 쓰고 G graph를 끊으며') does not say where gradients stop at that level of detail.",
+"GradientPathViz on mobile (390px): the SVG renders at about 0.83 scale, so the 9px chip subtitles ('기울기 안 옴', '입력 기울기는 통과') and the ∂loss/∂x̃ label come out at about 7.5px. That is above the 7px minimum but hard to read. I left it unchanged; enlarging them would mean redoing the chip layout.",
+"Checks with no findings. Bilinear numbers: (1,1)→(0.7,1.3); radius 1.41→1.99 after 8 steps and →3.35 after 20; ×√1.09 = 1.044 per step; 16.7° per step, 334° after 20; (x−ηy)²+(y+ηx)² = (1+η²)(x²+y²); the spiral turns counterclockwise. Density numbers: Φ(1)−Φ(0.5) = 0.150; without correction 0.300 (total area 2); peak 0.399→0.199. Folding numbers: two pieces of 0.150 each = 0.300; one branch counts 0.50 of the total. GradientPath batch shapes match the article's Term ('64×128, 64×3×64×64, 64×1'). All of these agree with the article.",
+"Audit: npm run audit:viz --strict over both viz directories gives 0 ERROR lines (REVIEW items only). viz-scene-shot at 390 and 1440 for all 4 figures: controlY and frameH stay stable across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r16/rv5/gan-training-dynamics and /tmp/viz-rounds/r16/rv5/normalizing-flows.",
+"No defects found that need a fix. DagParentOverlapViz: the parent sets {A1,B1,C1} and {B1,C1,D1} and the overlap 3+3-4=2=f+1 match the article ('A2가 A1·B1·C1을, B2가 B1·C1·D1을 고르더라도', 2q-n=6-4=2). The note about A1/D1 order needing a separate ordering rule matches the article's interpretation.",
+"DagAnchorVoteViz: two votes B3,C3 >= f+1=2 for a direct commit, and one vote < 2 means wait. Both match 'B3와 C3의 두 edge면 조건을 만족'. The indirect commit and the skip through the next anchor match '경로를 확인해 중간 앵커를 commit하거나 안전하게 건너뜁니다'. The vote counts stay consistent across scenes: in scenes 2-4 only B3 points to A2, so the parents A3/C3/D3 in scene 4 cannot reach A2. Each node that is an assumption (C4, single vote, sort rule) is labeled as an assumption.",
+"DagCausalLineViz: A2's reachable set A1,B1,C1, and D1 excluded, follow from the same parent set. The (round, author) tie-break is labeled as an assumption, which matches the article's hedge '구체적인 tie-break는 구현별 자료구조까지 확인해야 합니다'. Possible polish, not applied: D1 is drawn in red in scene 3 even though it is a valid block. The note says this ('유효한 인증 블록이지만'), so I left it.",
+"PairConstructionViz and RtdLabelViz: NSP is A→B vs A→R and SOP is A→B vs B→A, matching the TermBreakdown examples. RTD has 8 tokens; minus [CLS],[SEP],[PAD] that leaves 5 eligible positions, against 2 MLM-selected positions. The accidental-original position is shown as r=1 under r_i=1[x̃_i=x_i], with the implementation-convention hedge kept. All of this matches the article formula and the 'Label convention' boundary.",
+"Checks: audit:viz --strict gave 0 ERROR (6 REVIEW lines only, for SVG text overflow). viz-scene-shot at 390 and 1440 showed controlY/frameH stable on every scene, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r16/rv10/dag-consensus and /tmp/viz-rounds/r16/rv10/bert-pretraining-objectives; I read them and saw no visual problems.",
+"SubtreeReuseViz at 390px: the 13-node tree scales down to about 6–7 CSS px text (390-3-...-s2.png). It is readable and has no overflow, but range labels like [11,15) are small. Fixing it would need a different mobile layout (vertical or scroll), which is a design change and not a factual fix. Not changed.",
+"No problems found in the other three files after recomputing their numbers. SplitOrderLeakageViz: √5≈2.24, √32≈5.66, (2.25,3.5), (3,5), and the intersections/Q in each scene. CstAstViz: 8 rule nodes + 5 tokens = 13; AST has 5 nodes. ErrorRecoveryViz: scene order matches the #error-recovery prose. LexerAutomatonViz: 16 characters and 8 tokens. SubtreeReuseViz: 6 nodes to re-parse and 7 reuse candidates; all byte ranges recomputed.",
+"NestingOrderViz checked with no defect found. Correct order: pair lines request 0→4 and input 1→3, so the input pair sits inside the request pair. Crossed order: request 0→3 and input 1→4; the red request riser at x=350 cuts the input line at y=20, so the lines really cross. The token marked as the culprit is </request> in slot 4. The open-box list (request, input) and the verdicts match the article: '<request><input>환불</request></input>은 두 element가 교차하므로 parser가 거부합니다'.",
+"OutputGateRoutingViz checked with no defect found. The gate order is size/frame→parse→allowlist/schema→domain/evidence→policy→typed result, as in the article. Each case's next route matches the prose: framing error is recorded, not silently dropped; a parse error gets one regeneration with error location and expected root; a missing field gets regenerated with only that field named; an unknown product ID goes to evidence re-search, abstention or human review; a missing permission means the side effect does not run. The retry, token and latency budget hedge is shown in both the description and the last note.",
+"UntrustedEntityViz checked with no defect found. Arithmetic: a0 through a9 is 10 declarations; level k holds 10^k copies, so a1=10 and a9=10^9=1,000,000,000 'ha'. The '×10 per level' assumption is labeled 가정. XXE, DTD and SSRF are each explained inside the scene before they are relied on. The defense list matches the article's parser-hardening paragraph.",
+"ai/video-clip-sampling: the task lists this article but gives no new Viz file for it, so nothing there was reviewed.",
+"Checks: audit:viz --strict on all four files passed (no ERROR). In viz-scene-shot at 390px and 1440px, controlY and frameH stayed constant across scenes, overflow was 0 and console errors were 0. Screenshots were saved to /tmp/viz-rounds/r16/rv18/xml-prompting and showed no visual problems.",
+"CommitOrderViz.tsx needed no changes. I checked all five scenes against the article's order (input copy → bounds/schema 검증 → protected computation → private commit → 최소 output copy) and its record fields (operation ID·page identity·generation·result digest). The commit counts are correct in every scene: 1, 0, 2 (duplicate), 1, and 0 applications to the reassigned page. The Viz's own description labels op#7 and gen 3/4 as assumptions.",
+"MeasurementTimelineViz on mobile (390px): in scene 2 the long note text continues inside the stage's internal scroll area. The scene-shot script reported overflow 0 and stable controls. This was already the case before my edit.",
+"Checks run: audit:viz --strict has 0 ERROR lines on both changed files. viz-scene-shot for all three Viz at 390 and 1440 shows the same control Y and frame height in every scene, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r16/rv15/{dpo,intel-tdx-commit,intel-tdx-meas}/.",
+"Verified with no change needed. DeltaWrite: 2·1=2, .5·2=1, 4−2=2, .25·2·1=.5, 1+.5=1.5. CumulativeRetention: 0.9^10≈.349, 0.9^47≈.00708 > e^-5≈.00674 > 0.9^48≈.00636, 0.9^100≈2.66e-5. The log axis and the shaded range from 1 down to e^-5 are correct. UpdateOrder: A then B gives (1,0) then (.5,.5); B then A gives (0,.5) then (1,.25). Read with the A key that is .5 versus 1. DropoutSpread: mean .75·8/3=2, variance 1+1/3=4/3=(p/q)h². Bar heights share one scale, and eval is drawn as probability 1. NonlinearMean: f(8/3)=5/3, E[f]=1.25, f(2)=1.",
+"Checks: audit:viz --strict found 0 ERROR lines. viz-scene-shot ran for all 5 Viz at 390 and 1440 px. Controls and frame stayed stable, overflow was 0 and console errors were 0. Screenshots are in /tmp/viz-rounds/r16/rv19/{kimi-k3-sequence-mixer,dropout-regularization}.",
+"On mobile, the longer DeltaWrite note in the last scene runs past the visible area and has to be scrolled inside the canvas. The other long notes already work this way: the shell's StableSceneStack scrolls, and the tool measured overflow 0. No action taken.",
+"SealingMilestoneViz: no defect found. It has the same five steps in the same order as the paragraph in #sealing-jobs, and 'active' is set only on the ProveCommit scene. The glosses for CommD and CommR (data commitment / replica commitment) and for the challenge seed are standard Filecoin terms that the article prose does not define. I left them in, but they come from outside the article.",
+"LeaseFencingViz: no defect found. Fence numbers 17 and 18 are marked as assumptions, and the sequence (lease expires, B is accepted, A's late result is rejected, then actor/mpool is queried by J before sending) matches the first paragraph of #scheduler.",
+"SoftCapViz: every number was recomputed. 4·tanh(0.25)=0.98, 4·tanh(2.5)=3.95, 25·tanh(0.4)=9.50, 25·tanh(2)=24.10, and the product is 95.1, which is at most 100. The curves are drawn from the real function. No defect found.",
+"QuantileBalanceViz: every number was recomputed. With q=8·1/4=2 and p=0.75, the 6th and 7th sorted values are 0.5 and 0.8, giving a cutoff of 0.65, and -0.4 and -0.2, giving -0.3. Shifting by b=-0.65 and b=+0.3 leaves exactly 2 points above 0 for each expert. The 'currently selected 5 and 0' counts also check out. No defect found.",
+"In both scene shells on mobile (390px), the per-scene note runs below the visible stage and sits behind the fixed control row until the reader scrolls inside the frame. SoftCap and SealingMilestone are the clearest cases. The standard allows this internal scrolling, and scene-shot reports overflow 0 and stable controls. Checking it further would mean changing the shared shell or src/components, which this task excludes."
 ]
 }
 }

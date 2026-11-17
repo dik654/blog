@@ -7,6 +7,8 @@ import {
   RegularizationFamilyLocator,
   RegularizationFamilyMapReturn,
 } from "../shared/RegularizationFamilyLocator";
+import DropoutSpreadViz from "./viz/DropoutSpreadViz";
+import NonlinearMeanViz from "./viz/NonlinearMeanViz";
 
 export default function DropoutRegularizationArticle() {
   return <div className="space-y-16">
@@ -46,6 +48,7 @@ export default function DropoutRegularizationArticle() {
     </section>
     <section id="mask" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Inverted scaling은 평균을 보존하고 분산을 추가합니다</h2>
+      <DropoutSpreadViz />
       <ExplainedFormula question="왜 mask를 곱하고 다시 q로 나눌까요?" idea={<p>
             mask를 곱하면 일부 경로가 사라집니다. 평균이 q배 작아지므로 q로 나눠 평균만 원래 h로 되돌립니다. 대신 어떤 forward는 0이 되고 어떤 forward는 큰 값이
             되어 noise가 생깁니다.
@@ -69,6 +72,7 @@ export default function DropoutRegularizationArticle() {
     </section>
     <section id="boundary" data-teach-level="failure" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">평균 보존이 nonlinear network의 출력 보존을 뜻하지 않습니다</h2>
+      <NonlinearMeanViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Dropout 뒤 ReLU·normalization·attention이 있으면 <code>E[f(h̃)]</code>와 <code>f(E[h̃])</code>는 일반적으로 다릅니다. 이미 underfit인 모델, normalization과 강하게 결합된 위치, pretrained fine-tuning에서는 p를 낮추거나 쓰지 않는 후보도 같은 budget으로 비교합니다.</p></div>
       <div id="paper-dropout" className="not-prose mt-8 scroll-mt-24"><CitationBlock source="Srivastava et al. — Dropout" citeKey={1} type="paper" href="https://www.jmlr.org/papers/v15/srivastava14a.html">Training-time random unit removal과 test-time scaled-network 근사를 제안합니다. 논문의 supervised benchmark가 모든 modern architecture와 training recipe의 개선을 보장하지는 않습니다.</CitationBlock></div>
     </section>

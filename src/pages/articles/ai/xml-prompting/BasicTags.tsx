@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import BasicTagsViz from "./viz/BasicTagsViz";
 import BasicTagsDetailViz from "./viz/BasicTagsDetailViz";
+import NestingOrderViz from "./viz/NestingOrderViz";
 
 export default function BasicTags() {
   return (
@@ -24,6 +25,13 @@ export default function BasicTags() {
           XML document 전체를 parser로 읽으려면 가장 바깥에 하나의 root element가 있어야
           합니다. 여러 블록은 <code>&lt;request&gt;...&lt;/request&gt;</code> 같은 root 아래에 둡니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <NestingOrderViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           중첩은 마지막에 연 상자를 먼저 닫는 순서를 지켜야 합니다. 이를
           <strong> proper nesting</strong>이라고 합니다.

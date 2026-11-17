@@ -1,5 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
 import HandshakeViz from "./viz/HandshakeViz";
+import PacketNumberSpaceViz from "./viz/PacketNumberSpaceViz";
 
 export default function Handshake() {
   return (
@@ -27,6 +28,9 @@ export default function Handshake() {
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Packet-number space를 나누는 이유</h3>
+      </div>
+      <PacketNumberSpaceViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           아직 Handshake key가 없는 Initial 단계와 1‑RTT 단계가 같은 번호 장부를
           쓰면 ACK와 key 수명을 섞기 쉽습니다. 그래서 Initial, Handshake,

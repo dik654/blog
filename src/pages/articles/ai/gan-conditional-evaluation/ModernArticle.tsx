@@ -3,6 +3,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import GanEvaluationViz from "./GanEvaluationViz";
+import FidGapViz from "./FidGapViz";
+import PrecisionRecallModesViz from "./PrecisionRecallModesViz";
 import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 export default function GanConditionalEvaluationArticle() {
@@ -108,6 +110,7 @@ export default function GanConditionalEvaluationArticle() {
           example="1D N(0,1)과 N(2,1)은 covariance가 같고 mean gap square가 4라 FID=4입니다."
           boundary="Encoder·resize·sample count·reference split에 의존하며 memorization과 condition correctness를 단독 증명하지 않습니다."
         />
+        <FidGapViz />
         <ExplainedFormula
           question="FID는 왜 mean 차이와 covariance 차이를 함께 더할까요?"
           idea={
@@ -179,6 +182,7 @@ export default function GanConditionalEvaluationArticle() {
           example="8개 target mode 중 2개에서만 선명한 sample을 만들면 precision은 높고 recall은 낮을 수 있습니다."
           boundary="Classifier confusion-matrix precision/recall과 같은 정의가 아니며 manifold approximation에 의존합니다."
         />
+        <PrecisionRecallModesViz />
         <ExplainedFormula
           question="왜 quality와 coverage를 한 scalar로 합치기 전에 따로 기록할까요?"
           idea={

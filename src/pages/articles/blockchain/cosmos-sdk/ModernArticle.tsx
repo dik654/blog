@@ -7,6 +7,8 @@ import CosmosCoreLocator, { CosmosCoreMapReturn } from "../CosmosCoreLocator";
 import { cosmosTree } from "./fileTrees";
 import { officialCosmosCodeRefs } from "./officialCodeRefs";
 import { CosmosTxViz, ExecutionModeViz } from "./viz/ModernCosmosSDKViz";
+import CheckStateCarryViz from "./viz/CheckStateCarryViz";
+import RunTxBranchViz from "./viz/RunTxBranchViz";
 
 const COMMIT = "64fd208a11fb54f7ffdca1a1290c2cfbbc254e49";
 const SOURCE = `https://github.com/cosmos/cosmos-sdk/tree/${COMMIT}`;
@@ -53,6 +55,7 @@ export default function ModernCosmosSDKArticle() {
 
       <section id="baseapp" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">같은 transaction을 실행해도 mode마다 쓰는 장부가 다릅니다</h2>
+        <CheckStateCarryViz />
         <p>
           BaseApp의 <code>stateManager</code>는 CheckTx와 FinalizeBlock이 같은 root를 직접 고치지 않게
           mode별 state를 나눕니다. 중요한 점은 CheckTx를 곧바로 버리는 simulation으로 보면 안 된다는 것입니다.
@@ -85,6 +88,7 @@ export default function ModernCosmosSDKArticle() {
 
       <section id="runtx-pipeline" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Ante와 message는 한 transaction 안에서도 서로 다른 child branch를 씁니다</h2>
+        <RunTxBranchViz />
         <p>
           <code>RunTx</code>는 먼저 ante 전용 cache를 만듭니다. Ante가 실패하면 이 cache를 버립니다. 성공하면
           fee 차감과 sequence 증가를 현재 mode의 parent에 합친 뒤, message 전용 cache를 새로 만듭니다.

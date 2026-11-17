@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ParsingViz from "./viz/ParsingViz";
 import ParsingDetailViz from "./viz/ParsingDetailViz";
+import OutputGateRoutingViz from "./viz/OutputGateRoutingViz";
+import UntrustedEntityViz from "./viz/UntrustedEntityViz";
 
 export default function Parsing() {
   return (
@@ -75,6 +77,10 @@ export default function Parsing() {
         <ParsingDetailViz />
       </div>
 
+      <div className="not-prose my-8">
+        <OutputGateRoutingViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Retry는 실패 원인과 최대 횟수가 정해진 복구 경로다</h3>
         <p>
@@ -101,6 +107,13 @@ export default function Parsing() {
         </p>
 
         <h3>Untrusted XML은 DTD와 external entity부터 차단한다</h3>
+      </div>
+
+      <div className="not-prose my-8">
+        <UntrustedEntityViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           XML의 <strong>entity</strong>는 이름을 다른 text로 치환하는 기능입니다.
           Parser가 untrusted document의 DTD와 external entity를 허용하면 entity가

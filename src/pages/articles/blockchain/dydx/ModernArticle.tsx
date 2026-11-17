@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DefiDexLocator, { DefiDexMapReturn } from "../DefiDexLocator";
 import { AuthorityViz, DydxOrderLifecycleViz, OrderPathViz } from "./viz/ModernDydxViz";
+import IndexerReplayViz from "./viz/IndexerReplayViz";
 import { officialDydxCodeRefs } from "./officialCodeRefs";
 import { dydxTree } from "./fileTrees";
 
@@ -161,6 +162,7 @@ export default function ModernDydxArticle() {
         <h2 className="break-keep text-2xl font-bold">
           조회 화면은 확정 상태를 다시 펼친 파생 장부입니다
         </h2>
+        <IndexerReplayViz />
         <p>
           Protocol은 transaction event마다 subtype과 version, bytes, block 안의 순서를 붙입니다. 이 event는
           transient store에 모입니다. EndBlocker에서 <code>ProduceBlock</code>이 한 block의 event 묶음을 만들고

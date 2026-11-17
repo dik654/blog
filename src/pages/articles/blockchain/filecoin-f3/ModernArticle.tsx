@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { CertificateCatchupViz, FilecoinF3TraceViz } from "./viz/ModernFilecoinF3Viz";
+import ForkChoiceFenceViz from "./viz/ForkChoiceFenceViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { f3Tree } from "./fileTrees";
@@ -70,6 +71,7 @@ export default function ModernFilecoinF3Article() {
             중간 instance를 건너뛰거나 stale table을 섞으면 마지막 trusted 상태에서 멈춥니다.
           </p>
       <CertificateCatchupViz />
+      <ForkChoiceFenceViz />
       <ExplainedFormula question="Finalized checkpoint F가 생긴 뒤 EC head 후보는 어떤 순서로 고르는가?" idea={<>먼저 candidate branch가 F와 그 ancestors를 정확히 포함하는지 boolean fence로 거릅니다. 그 다음 통과한 valid branches 안에서만 EC chain weight의 argmax를 계산합니다. 더 무겁다는 이유로 fence를 먼저 넘을 수는 없습니다.</>} formula={String.raw`Head=\underset{B\in Valid:\;F\preceq B}{\operatorname{argmax}}\;W_{EC}(B)`}
       annotatedFormula={String.raw`Head=\underbrace{\underset{B\in Valid:\;F\preceq B}{\operatorname{argmax}}}_{\text{F fence 통과 branch만}}\;\underbrace{W_{EC}(B)}_{\text{EC weight 최대}}`}
       operations={[

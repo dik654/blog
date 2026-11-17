@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import DPOObjective from "../alignment-methods/DPO";
 import AlignmentPipelineViz from "../alignment-methods/viz/AlignmentPipelineViz";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
+import LogRatioMarginViz from "./viz/LogRatioMarginViz";
 
 export default function ModernArticle() {
   return (
@@ -49,6 +50,7 @@ export default function ModernArticle() {
             { term: "Reference · πref", description: "현재 policy가 어느 방향으로 얼마나 이동했는지 재는 고정 checkpoint입니다.", example: "보통 같은 tokenizer·template를 쓰는 SFT checkpoint입니다.", boundary: "Reference에 가깝다는 사실이 안전성이나 사실성을 보장하지 않습니다." },
           ]}
         />
+        <LogRatioMarginViz />
       </section>
 
       <DPOObjective />

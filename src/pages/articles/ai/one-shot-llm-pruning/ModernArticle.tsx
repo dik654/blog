@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLocator";
 import { OneShotLlmPruningViz } from "../pruning/viz/ModernPruningViz";
+import OutputErrorViz from "./viz/OutputErrorViz";
+import WandaRowMaskViz from "./viz/WandaRowMaskViz";
 
 export default function OneShotLlmPruningArticle() {
   return (
@@ -56,6 +58,7 @@ export default function OneShotLlmPruningArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Activation은 “작은 weight가 실제 output에 얼마나 쓰이는가”를 바꿉니다
         </h2>
+        <WandaRowMaskViz />
         <ExplainedFormula
           question="Wanda가 왜 |w|에 input norm을 곱하나요?"
           idea={
@@ -114,6 +117,7 @@ export default function OneShotLlmPruningArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           SparseGPT는 지운 뒤 남은 weight를 조정해 원래 layer output에 맞춥니다
         </h2>
+        <OutputErrorViz />
         <ExplainedFormula
           question="왜 weight 차이 E만 보지 않고 X를 곱한 output error를 보나요?"
           idea={

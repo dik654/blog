@@ -12,6 +12,7 @@ import {
   TemporalReceptiveSpanViz,
   VideoConvolutionOverviewViz,
 } from "./viz/VideoConvolutionArchitecturesViz";
+import StrideJumpViz from "./viz/StrideJumpViz";
 
 const RECEPTIVE_FIELD_CODE = `function temporalReceptiveSteps(layers) {
   // 아직 한 input position만 보므로 receptive field와 jump를 1에서 시작합니다.
@@ -101,6 +102,9 @@ export default function VideoConvolutionArchitecturesArticle() {
             원본에서 input 한 칸이 source frame 두 칸이므로 4×2=8 frame gaps,
             시간으로는 8/30초입니다.
           </p>
+        </div>
+        <StrideJumpViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             여기서 <code>r</code>은 output 하나가 연결한 input position 수이고,
             <code> j</code>는 인접 output 두 개의 시작점이 input에서 몇 칸

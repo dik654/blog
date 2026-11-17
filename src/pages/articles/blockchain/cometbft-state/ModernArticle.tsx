@@ -5,6 +5,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import CosmosCoreLocator, { CosmosCoreMapReturn } from "../CosmosCoreLocator";
 import { RecoveryDecisionViz, StateRecoveryViz, StateSyncBoundaryViz } from "./viz/ModernStateViz";
+import CrashPointViz from "./viz/CrashPointViz";
 import { codeRefs } from "./codeRefs";
 import { cometbftStateTree } from "./fileTrees";
 
@@ -63,6 +64,9 @@ export default function ModernCometBFTStateArticle() {
               <code>FinalizeBlock</code>으로 F42를 계산한 뒤 F42를 State Store DB에 저장합니다. 그다음 application <code>Commit</code>을
               호출하고 마지막에 <code>state.AppHash=X42</code>인 S42를 저장합니다.
             </p>
+          </div>
+          <CrashPointViz />
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               이 순서는 여러 DB를 하나의 원자 transaction으로 묶지 않습니다. 대신 어느 지점에서 종료돼도 BlockStore가 State보다 두 칸
               이상 앞서지 않도록 하고, application Commit 뒤에는 F42를 남겨 State만 복구할 수 있게 합니다.

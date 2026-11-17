@@ -6,6 +6,10 @@ import {
   StructuredGenerationMapReturn,
 } from "../shared/StructuredGenerationLocator";
 import { IncrementalParserViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
+import LexerAutomatonViz from "./viz/LexerAutomatonViz";
+import CstAstViz from "./viz/CstAstViz";
+import SubtreeReuseViz from "./viz/SubtreeReuseViz";
+import ErrorRecoveryViz from "./viz/ErrorRecoveryViz";
 
 export default function IncrementalParsingTreeSitterArticle() {
   return (
@@ -68,6 +72,9 @@ export default function IncrementalParsingTreeSitterArticle() {
             transition을 허용하면 <strong>nondeterministic finite
             automaton(NFA)</strong>입니다.
           </p>
+        </div>
+        <LexerAutomatonViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <span id="lexer-tokenization" className="scroll-mt-20" />
           <p>
             <strong>Lexer</strong>는 원본 문자열을 한 글자씩 훑어
@@ -93,6 +100,9 @@ export default function IncrementalParsingTreeSitterArticle() {
             의미 단위만 남기고 괄호 같은 구분자를 지운 것이{" "}
             <strong>abstract syntax tree(AST)</strong>입니다.
           </p>
+        </div>
+        <CstAstViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <code>1 + 2 * 3</code>을 CST는 <code>expr → term</code>,{" "}
             <code>term → factor</code> 같은 규칙과 괄호 자리까지 그대로
@@ -107,6 +117,7 @@ export default function IncrementalParsingTreeSitterArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           바뀌지 않은 subtree를 재사용해 feedback을 빠르게 갱신합니다
         </h2>
+        <SubtreeReuseViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             전체 file을 매 keystroke마다 처음부터 해석하지 않습니다. old tree에 edit 위치를 반영하고 다시 parse합니다. Parser는 영향을 받지 않은
@@ -127,6 +138,9 @@ export default function IncrementalParsingTreeSitterArticle() {
             decoder는 이런 prefix에서 다음에 올 수 없는 token을 금지하는 것이
             목적입니다.
           </p>
+        </div>
+        <ErrorRecoveryViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <strong>Error recovery</strong>는 문법을 어기는 구간이 있어도
             parser 전체를 중단시키지 않고, 그 구간만 error node로 표시한 뒤

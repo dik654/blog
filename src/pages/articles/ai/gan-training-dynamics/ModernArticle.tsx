@@ -3,6 +3,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import AdversarialDynamicsViz from "./AdversarialDynamicsViz";
+import BilinearSpiralViz from "./viz/BilinearSpiralViz";
+import GradientPathViz from "./viz/GradientPathViz";
 import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 export default function GanTrainingDynamicsArticle() {
@@ -32,6 +34,7 @@ export default function GanTrainingDynamicsArticle() {
           n="01"
           title="Detach는 tensor를 버리는 것이 아니라 이번 step의 parameter 경계를 정한다"
         />
+        <GradientPathViz />
         <Term
           name="Detach boundary"
           shape="D step: G(z).detach() · G step: through D"
@@ -105,6 +108,7 @@ export default function GanTrainingDynamicsArticle() {
           example="G의 step sequence aₙ이 D의 bₙ보다 점점 작아지는 local analysis를 생각합니다."
           boundary="고정 Adam learning rate의 finite run이 정리의 감소 step-size·boundedness·stability 전제를 자동 만족하지 않습니다."
         />
+        <BilinearSpiralViz />
         <ExplainedFormula
           question="왜 가장 단순한 bilinear game도 원점으로 곧장 내려가지 않을까요?"
           idea={

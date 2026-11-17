@@ -4,6 +4,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ImbalanceDecisionViz } from "./viz/ModernImbalanceViz";
+import PrevalenceSplitViz from "./viz/PrevalenceSplitViz";
+import ScoreLayersViz from "./viz/ScoreLayersViz";
 import {
   ImbalancedClassificationLocator,
   ImbalancedClassificationMapReturn,
@@ -36,6 +38,9 @@ export default function ImbalancedDataArticle() {
               바뀔까요?
             </li>
           </ol>
+        </div>
+        <PrevalenceSplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             답은 <strong>예, 아니요, 아니요</strong>입니다. Accuracy는 negative
             950명을 맞혀 95%지만 positive 50명은 하나도 못 찾아 recall이
@@ -153,6 +158,7 @@ export default function ImbalancedDataArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Ranking·probability·decision은 각각 다른 질문입니다
         </h2>
+        <ScoreLayersViz />
         <ExplainedFormula
           question="한 score가 좋은지 세 층으로 어떻게 분리하나요?"
           idea={

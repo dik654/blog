@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLocator";
 import { UnstructuredPruningViz } from "../pruning/viz/ModernPruningViz";
+import MovementDirectionViz from "./viz/MovementDirectionViz";
+import StorageBreakEvenViz from "./viz/StorageBreakEvenViz";
 
 export default function UnstructuredPruningArticle() {
   return (
@@ -61,6 +63,7 @@ export default function UnstructuredPruningArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           0을 생략한 대신 주소표를 저장한다는 비용부터 계산합니다
         </h2>
+        <StorageBreakEvenViz />
         <ExplainedFormula
           question="Sparse payload가 dense보다 작아지는 density는 어떻게 구하나요?"
           idea={
@@ -132,6 +135,7 @@ export default function UnstructuredPruningArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           현재 크기 대신 task를 배우며 움직이는 방향을 봅니다
         </h2>
+        <MovementDirectionViz />
         <ExplainedFormula
           question="왜 gradient와 weight를 곱하나요?"
           idea={

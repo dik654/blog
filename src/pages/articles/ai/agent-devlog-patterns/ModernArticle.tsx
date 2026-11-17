@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { RecordRoutingViz } from "../devlog-learning-viz";
+import PromotionGateViz from "./viz/PromotionGateViz";
 
 export default function ModernArticle() {
   return <article className="space-y-16">
@@ -18,6 +19,7 @@ export default function ModernArticle() {
     </section>
     <section id="promotion" className="scroll-mt-20 space-y-7">
       <LessonHeader number="03" eyebrow="조건부 조합" title="모든 작업을 모든 문서로 승격하지 않습니다">대부분의 작은 수정은 검증된 Changelog에서 끝납니다. 장기 선택과 재사용 규칙이 실제로 생겼을 때만 다음 정본을 만듭니다.</LessonHeader>
+      <PromotionGateViz />
       <TermLesson name="Promotion threshold" oneLine="관찰은 artifact로, 검증된 notable change는 Changelog로, 장기 제약을 만드는 선택은 ADR로, scope·exception·test를 가진 현재 원칙은 Lessons로 올리는 조건입니다." shape="capture → verify → publish change → decision? → reusable rule?" example="Guard 수정만이면 Changelog에서 끝나고 storage layout 전환이 있을 때만 ADR-005가 생깁니다." boundary="문서가 중요해 보인다는 이유나 template checklist만으로 승격하지 않습니다." />
     </section>
     <section id="agent-review" className="scroll-mt-20 space-y-7">

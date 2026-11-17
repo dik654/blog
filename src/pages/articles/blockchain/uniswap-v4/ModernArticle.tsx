@@ -6,6 +6,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import DefiDexLocator, { DefiDexMapReturn } from "../DefiDexLocator";
 import { uniswapV4Tree } from "./fileTrees";
 import { officialUniswapV4CodeRefs } from "./officialCodeRefs";
+import HookFlagBitsViz from "./viz/HookFlagBitsViz";
 import UniswapV4FlowViz from "./viz/UniswapV4FlowViz";
 
 const COMMIT = "e50237c43811bd9b526eff40f26772152a42daba";
@@ -118,6 +119,7 @@ export default function ModernUniswapV4Article() {
 
       <section id="hook-permission-boundary" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Hook 주소는 실행 지점을 표시하지만 그 코드가 안전하다는 인증서는 아닙니다</h2>
+        <HookFlagBitsViz />
         <p>
           Hook 주소의 하위 14비트는 initialize, 유동성 변경, swap, donate 전후의 어느 callback을 호출할지
           나타냅니다. 별도 flag가 있으면 hook가 swap이나 유동성 변경의 delta를 보완해 반환할 수도 있습니다.

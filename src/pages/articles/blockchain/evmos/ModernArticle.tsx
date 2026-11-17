@@ -11,6 +11,8 @@ import {
   EvmosIbcBoundaryViz,
   EvmosTransactionViz,
 } from "./viz/ModernEvmosViz";
+import IbcCallbackBranchViz from "./viz/IbcCallbackBranchViz";
+import NestedCommitViz from "./viz/NestedCommitViz";
 
 const EVMOS_SHA = "eca13ef2521a9ef13c32e80b1b147230bdb155b5";
 const RPC_SOURCE = `https://github.com/evmos/evmos/blob/${EVMOS_SHA}/rpc/backend/call_tx.go`;
@@ -135,6 +137,7 @@ export default function ModernEvmosArticle() {
 
         <section id="evm-cache" className="mb-16 scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">StateDB Commit은 block Commit이 아니라 임시 branch 안의 기록입니다</h2>
+          <NestedCommitViz />
 
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
@@ -209,6 +212,11 @@ export default function ModernEvmosArticle() {
               local block receipt와 remote chain의 credit는 같은 영수증이 아닙니다. Source chain send, relayer proof, destination
               <code>OnRecvPacket</code>, acknowledgement 또는 timeout을 각각 확인해야 합니다.
             </p>
+          </div>
+
+          <IbcCallbackBranchViz />
+
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p>
               v20 middleware는 먼저 underlying ICS-20 <code>OnRecvPacket</code>을 실행합니다. Error acknowledgement이면 그대로
               반환하고, 성공 acknowledgement일 때만 ERC-20 keeper conversion을 이어갑니다.

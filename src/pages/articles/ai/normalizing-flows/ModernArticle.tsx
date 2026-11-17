@@ -5,6 +5,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { normalizingFlowsTree } from "./fileTree";
+import DensityStretchViz from "./viz/DensityStretchViz";
+import FoldingBranchViz from "./viz/FoldingBranchViz";
 import { FlowChangeViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
 import {
   GenerativeFamilyLocator,
@@ -72,6 +74,7 @@ export default function NormalizingFlowsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Jacobian을 곱하는 이유는 probability mass를 보존하기 위해서입니다
         </h2>
+        <DensityStretchViz />
         <ExplainedFormula
           question="x=2z처럼 공간이 늘어날 때 왜 inverse Jacobian을 density에 곱하나요?"
           idea={
@@ -151,6 +154,7 @@ export default function NormalizingFlowsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Exact likelihood의 대가는 가역성 제약입니다
         </h2>
+        <FoldingBranchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             x=z²는 z와 −z가 같은 x로 가므로 bijection이 아닙니다. 한 inverse

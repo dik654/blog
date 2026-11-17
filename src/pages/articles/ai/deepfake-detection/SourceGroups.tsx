@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import SourceGroupViz from "./viz/SourceGroupViz";
+import SwapGroupViz from "./viz/SwapGroupViz";
 
 export default function SourceGroups() {
   return (
@@ -15,6 +16,9 @@ export default function SourceGroups() {
           그래서 파일을 나누기 전에 각 파일을 원본 영상과 등장 인물의 group key로
           되돌립니다.
         </p>
+      </div>
+      <SwapGroupViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           이 글의 단순한 한 사람 사례에서는 <code>(source clip, identity)</code> 쌍이면
           충분합니다. 여러 사람이 나오거나 source 얼굴과 target 얼굴이 다른 조작에서는

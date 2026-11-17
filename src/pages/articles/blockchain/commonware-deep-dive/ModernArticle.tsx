@@ -5,6 +5,8 @@ import { codeRefs } from "./codeRefs";
 import { commonwareTree } from "./fileTrees";
 import CommonwareOverviewLocator, { CommonwareOverviewMapReturn } from "./CommonwareOverviewLocator";
 import CommonwareOverviewFlowViz from "./viz/ModernCommonwareOverviewViz";
+import BridgeWiringViz from "./viz/BridgeWiringViz";
+import VerifyBranchViz from "./viz/VerifyBranchViz";
 
 const owners = [
   ["Runtime Context", "작업과 자원의 생애", "하위 context, 연결, 난수 공급원과 각 실행 주체의 범위를 만듭니다."],
@@ -91,6 +93,7 @@ export default function ModernArticle() {
 
       <section id="assembly" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Runtime Context 안에서 실행 주체를 조립한다</h2>
+        <BridgeWiringViz />
         <p>
           Validator는 먼저 indexer에 연결하고 인증 P2P network를 만듭니다. 이어서 channel 0에는 vote, 1에는 certificate, 2에는 resolver 메시지를 등록합니다. Application을 만들 때 받은 mailbox는 Simplex 설정의 <code>automaton</code>·<code>relay</code>·<code>reporter</code> 세 자리에 함께 들어갑니다.
         </p>
@@ -124,6 +127,7 @@ export default function ModernArticle() {
 
       <section id="verification" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">검증할 때 블록 원문을 다시 읽는다</h2>
+        <VerifyBranchViz />
         <p>
           다른 validator가 받은 proposal에는 digest만 있습니다. Application의 verify 경로는 <code>GetBlock(digest)</code>를 indexer에 보내 원문을 되찾습니다. 블록이 없으면 false를 반환하고, <code>Random</code> 블록이면 true를 반환합니다.
         </p>

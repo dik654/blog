@@ -1,4 +1,5 @@
 import AlgorithmBlock from "@/components/ui/algorithm-block";
+import CaiTwoPhaseViz from "../constitutional-ai/viz/CaiTwoPhaseViz";
 
 export default function ConstitutionalAI() {
   return (
@@ -14,6 +15,8 @@ export default function ConstitutionalAI() {
           explicit principles와 AI feedback으로 대체한 설계로 읽는 편이 정확하다.
         </p>
       </div>
+
+      <CaiTwoPhaseViz />
 
       <AlgorithmBlock
         title="SL-CAI — critique·revise를 반복해 supervised data를 만든다"

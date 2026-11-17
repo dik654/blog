@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertObjectiveViz } from "../bert/viz/ModernBertViz";
+import { PairConstructionViz, RtdLabelViz } from "./viz/ObjectiveExampleViz";
 import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
 
 export default function BertObjectivesArticle() {
@@ -38,6 +39,7 @@ export default function BertObjectivesArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           NSP는 다음/random 문서, SOP는 같은 문서의 정상/역순을 분류합니다
         </h2>
+        <PairConstructionViz />
         <TermBreakdown
           title="두 segment-level objective"
           items={[
@@ -140,6 +142,7 @@ export default function BertObjectivesArticle() {
             },
           ]}
         />
+        <RtdLabelViz />
         <ExplainedFormula
           question="왜 RTD는 MLM보다 더 많은 위치에 supervision을 줄 수 있나요?"
           idea={

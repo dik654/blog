@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import AdvancedTagsViz from "./viz/AdvancedTagsViz";
 import AdvancedTagsDetailViz from "./viz/AdvancedTagsDetailViz";
+import PositionVsIdViz from "./viz/PositionVsIdViz";
 
 export default function AdvancedTags() {
   return (
@@ -11,6 +12,10 @@ export default function AdvancedTags() {
 
       <div className="not-prose my-8">
         <AdvancedTagsViz />
+      </div>
+
+      <div className="not-prose my-8">
+        <PositionVsIdViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

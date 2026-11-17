@@ -5,6 +5,7 @@ import {
   MysticetiDecisionPseudocodeViz,
   MysticetiEvidenceBoundaryViz,
 } from "./viz/ModernMysticetiViz";
+import FirstSupportVoteViz from "./viz/FirstSupportVoteViz";
 
 export default function ModernMysticetiArticle() {
   return (
@@ -39,6 +40,8 @@ export default function ModernMysticetiArticle() {
         <p>
           아닙니다. 첫 정족수는 L이 다른 충돌 블록과 동시에 인증되지 못하게 합니다. 두 번째 정족수는 충분한 검증자가 그 인증 사실까지 보았다는 확인입니다. 그래서 “L을 지지한 작성자”와 “L의 지지 정족수를 본 인증서 블록 작성자”를 따로 셉니다.
         </p>
+        <FirstSupportVoteViz />
+
         <p>
           Byzantine 지도자가 같은 자리에서 L과 L′을 만들 수도 있습니다. 이때 다음 블록 하나가 둘을 모두 투표한 것처럼 세면 두 후보가 같은 지분을 재사용합니다. Mysticeti는 인과 과거를 정해진 순서로 훑어 그 작성자가 해당 자리에서 처음 지지한 블록 하나만 투표로 인정합니다. 로컬 도착 순서는 노드마다 다르므로 기준으로 쓰지 않습니다.
         </p>

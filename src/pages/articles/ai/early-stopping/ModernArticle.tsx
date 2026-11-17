@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import LossTrajectoryCounterViz from "./viz/LossTrajectoryCounterViz";
 import { EarlyStoppingMechanismViz } from "../regularization-practice/viz/ModernRegularizationViz";
 import {
   RegularizationFamilyLocator,
@@ -48,6 +49,7 @@ export default function EarlyStoppingArticle() {
     </section>
     <section id="state-machine" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Metric을 비교해 best 또는 bad counter 하나만 갱신합니다</h2>
+      <LossTrajectoryCounterViz />
       <ExplainedFormula question="각 validation event에서 state는 어떻게 바뀌나요?" idea={<p>
             loss 최소화 기준에서는 새 metric이 best에서 δ보다 더 내려가야 개선입니다. 개선이면 best를 저장하고 counter를 0으로 돌립니다. 아니면 counter만
             1 올립니다.

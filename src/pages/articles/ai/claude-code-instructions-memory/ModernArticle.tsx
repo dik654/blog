@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { InstructionMemoryViz } from "../claude-code/viz/ModernClaudeCodeViz";
+import AgentsMdBranchViz from "./viz/AgentsMdBranchViz";
 
 export default function ClaudeCodeInstructionsMemoryArticle() {
   return (
@@ -158,6 +159,9 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
             아닙니다. Compaction 뒤에도 필요한 규칙은 짧고 구체적인
             instruction으로 유지하고 실제 context를 점검합니다.
           </p>
+        </div>
+        <AgentsMdBranchViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Claude Code v2.1.277 이상은 <code>AGENTS.md</code>를 project instruction으로 직접 읽을 수 있습니다. 기본값에서는 working directory
             위에 <code>CLAUDE.md</code>나 <code>CLAUDE.local.md</code>가 있으면 그것을 읽고 <code>AGENTS.md</code>는 생략합니다.

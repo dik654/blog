@@ -9,6 +9,7 @@ import LoadingViz from "./viz/LoadingViz";
 import OverviewViz from "./viz/OverviewViz";
 import RegistryViz from "./viz/RegistryViz";
 import SkillRequestTraceViz from "./viz/SkillRequestTraceViz";
+import SkillTriggerCountViz from "./viz/SkillTriggerCountViz";
 
 const skillExample = `---
 name: gh-fix-ci
@@ -163,6 +164,7 @@ export default function SkillsAnatomyArticle() {
             거절과 검사 실패도 서로 다른 상태로 남겨야 다음 조치를 고를 수 있습니다.
           </p>
         </div>
+        <SkillTriggerCountViz />
         <ExplainedFormula
           question="Skill 선택과 작업 완료를 어떻게 나눠 측정합니까?"
           idea="먼저 적용해야 하는 요청과 적용하면 안 되는 요청을 표시합니다. 선택 결과에서 잘 고른 TP, 잘못 끼어든 FP, 놓친 FN을 세어 routing을 보고, 선택된 작업의 test 통과와 부작용은 별도 지표로 봅니다."

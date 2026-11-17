@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { SubagentHandoffViz } from "../claude-code/viz/ModernClaudeCodeViz";
+import ParallelMergeViz from "./viz/ParallelMergeViz";
 
 export default function ClaudeCodeSubagentsArticle() {
   return (
@@ -134,6 +135,7 @@ export default function ClaudeCodeSubagentsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           병렬화는 input과 output이 독립일 때만 이득입니다
         </h2>
+        <ParallelMergeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             UI 오류 경로 조사와 server log 조사는 read-only로 나눌 수 있습니다.

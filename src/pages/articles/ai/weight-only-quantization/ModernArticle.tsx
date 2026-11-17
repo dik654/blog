@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { WeightOnlyMethodViz } from "../quantization/viz/ModernQuantizationViz";
+import OutputErrorViz from "./viz/OutputErrorViz";
+import EquivalentScalingViz from "./viz/EquivalentScalingViz";
 
 export default function WeightOnlyQuantizationArticle() {
   return (
@@ -66,6 +68,7 @@ export default function WeightOnlyQuantizationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Weight 차이보다 실제 layer output 차이를 줄입니다
         </h2>
+        <OutputErrorViz />
         <ExplainedFormula
           question="왜 ‖W-Ŵ‖보다 ‖XW-XŴ‖를 최소화하나요?"
           idea={
@@ -135,6 +138,7 @@ export default function WeightOnlyQuantizationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           GPTQ와 AWQ는 같은 목적에 다른 보정 경로를 씁니다
         </h2>
+        <EquivalentScalingViz />
         <ExplainedFormula
           question="AWQ의 equivalent scaling은 왜 function을 유지할 수 있나요?"
           idea={

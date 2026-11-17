@@ -162,7 +162,7 @@ function VendorFlow({ config }: { config: VendorConfig }) {
   );
 }
 
-export default function VendorTeeArticle({ vendor }: { vendor: VendorKey }) {
+export default function VendorTeeArticle({ vendor, commitViz, measurementViz }: { vendor: VendorKey; commitViz?: ReactNode; measurementViz?: ReactNode }) {
   const config = CONFIG[vendor];
   return (
     <article className="space-y-14">
@@ -191,11 +191,13 @@ export default function VendorTeeArticle({ vendor }: { vendor: VendorKey }) {
         <ol className="grid gap-3 md:grid-cols-2">
           {config.lifecycle.map(([tag, title, body], index) => <li key={tag} className="rounded-lg border border-border p-4"><p className="text-xs font-bold text-primary">{String(index + 1).padStart(2, "0")} · {tag}</p><p className="mt-2 font-semibold">{title}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p></li>)}
         </ol>
+        {commitViz}
         <p>안전한 구현은 <strong>input copy → bounds/schema 검증 → protected computation → private commit → 최소 output copy</strong> 순서를 지킵니다. Timeout이나 crash가 어느 단계에서 발생했는지 operation ID·page identity·generation·result digest로 남겨야 재시작 뒤 중복 commit과 잘못된 page 재사용을 막을 수 있습니다.</p>
       </section>
 
       <section id="measurement-attestation" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Measurement와 attestation</p><h2 className="mt-2 text-2xl font-bold">{config.identity}를 업무 authorization으로 확대하지 않는다</h2></header>
+        {measurementViz}
         <p>{config.identityBoundary}</p>
         <ExplainedFormula
           question="같은 page bytes라도 주소·순서·type이 달라진 build를 왜 다른 identity로 볼 수 있는가?"

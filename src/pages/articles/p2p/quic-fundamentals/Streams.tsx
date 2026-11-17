@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import StreamMuxViz from "./viz/StreamMuxViz";
+import FlowCreditViz from "./viz/FlowCreditViz";
 
 export default function Streams() {
   return (
@@ -24,6 +25,7 @@ export default function Streams() {
       <div className="not-prose my-8">
         <StreamMuxViz />
       </div>
+      <FlowCreditViz />
       <ExplainedFormula
         question="Sender가 receiver memory를 넘지 않도록 어느 범위까지 보낼 수 있을까요?"
         idea={

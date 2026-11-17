@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { LossSignalViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import FocalChainViz from "./viz/FocalChainViz";
+import WeightedRiskViz from "./viz/WeightedRiskViz";
 import {
   ImbalancedClassificationLocator,
   ImbalancedClassificationMapReturn,
@@ -88,6 +90,7 @@ export default function ImbalanceLossWeightingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Class weight는 class별 sample loss 합을 다시 배분합니다
         </h2>
+        <WeightedRiskViz />
         <ExplainedFormula
           question="Positive example에 weight 9를 주면 batch risk는 어떻게 바뀌나요?"
           idea={
@@ -154,6 +157,7 @@ export default function ImbalanceLossWeightingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Focal loss는 target probability로 easy example의 배점을 줄입니다
         </h2>
+        <FocalChainViz />
         <ExplainedFormula
           question="γ=2에서 pt=.9와 pt=.2의 focal factor가 왜 .01과 .64인가요?"
           idea={

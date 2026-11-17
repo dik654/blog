@@ -6,6 +6,7 @@ import {
   DAGStateBoundaryViz,
   DAGTransactionTraceViz,
 } from "./viz/ModernDAGConsensusViz";
+import { DagAnchorVoteViz, DagCausalLineViz, DagParentOverlapViz } from "./viz/DagGraphViz";
 
 function BoundaryNote({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -52,6 +53,8 @@ export default function ModernDAGConsensusArticle() {
         <p>
           인증서 서명자 가운데 적어도 f+1명은 정상입니다. Narwhal의 정상 검증자는 필요한 데이터를 보관하고 요청받으면 제공하므로 Cert(A1)은 A1과 그 인과적 과거를 나중에 회수할 수 있다는 근거가 됩니다. 그러나 현재 검증자가 payload를 이미 가지고 있다는 뜻은 아니며, 영구 보관이나 애플리케이션 유효성도 별도 문제입니다.
         </p>
+        <DagParentOverlapViz />
+
         <p>
           다음 라운드 블록은 이전 라운드 인증서 가운데 최소 n−f=2f+1개를 부모로 참조합니다. A2가 A1·B1·C1을, B2가 B1·C1·D1을 고르더라도 두 부모 집합은 겹칩니다. 이 겹침이 각 검증자의 DAG가 완전히 갈라지는 것을 막는 재료가 됩니다.
         </p>
@@ -96,6 +99,8 @@ export default function ModernDAGConsensusArticle() {
         <p>
           이 글은 저자들이 별도로 정리한 부분 동기식 Bullshark 버전으로 정상 경로를 설명합니다. 이 버전에서는 짝수 라운드마다 미리 정한 검증자의 블록을 앵커로 봅니다. 라운드 2의 앵커가 A2라면 라운드 3 블록이 A2를 가리키는 edge 하나가 A2에 대한 표 하나입니다.
         </p>
+        <DagAnchorVoteViz />
+
         <p>
           어떤 검증자의 로컬 DAG에서 A2를 가리키는 서로 다른 작성자의 블록이 f+1개 이상 보이면 A2를 직접 commit합니다. n=4, f=1에서는 B3와 C3의 두 edge면 조건을 만족합니다. 이후 더 높은 앵커를 결정할 때는 그 앵커에서 이전 앵커로 내려가는 경로를 확인해 중간 앵커를 commit하거나 안전하게 건너뜁니다.
         </p>
@@ -131,6 +136,8 @@ export default function ModernDAGConsensusArticle() {
         </header>
 
         <DAGArrivalOrderCounterexampleViz />
+
+        <DagCausalLineViz />
 
         <p>
           A1과 B1 사이에 edge가 없다면 둘은 동시에 유효할 수 있습니다. 한 검증자는 A1을 먼저 받고 다른 검증자는 B1을 먼저 받을 수 있으므로 로컬 도착 순서는 합의 결과가 될 수 없습니다. 앵커 A2가 결정되면 각 검증자는 A2에서 도달할 수 있고 아직 처리하지 않은 블록을 모은 뒤 프로토콜과 구현이 고정한 결정적 규칙으로 같은 순서를 만듭니다. 구체적인 tie-break는 구현별 자료구조까지 확인해야 합니다.
