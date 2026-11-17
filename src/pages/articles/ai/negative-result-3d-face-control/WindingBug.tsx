@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
+import BackfaceViz from "./viz/BackfaceViz";
 import WindingViz from "./viz/WindingViz";
 
 export default function WindingBug() {
@@ -23,7 +24,11 @@ export default function WindingBug() {
           코는 분명히 있었습니다. 그다음 그 면들이 카메라를 향하는지 — 앞쪽에 있는 면 5,986개 중 법선이
           카메라를 향한 것이 0개였습니다.
         </p>
+      </div>
 
+      <BackfaceViz />
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           면 감김 순서가 뒤집혀 있었습니다. 래스터라이저가 앞면을 버리고 뒤통수 안쪽을 그리고 있었던
           것입니다. 진폭을 아무리 키워도 보일 리가 없었습니다.

@@ -6,6 +6,8 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { cnnTree } from "./fileTree";
 import { CnnOperatorViz } from "./viz/ModernCnnViz";
+import LocalProductViz from "./viz/LocalProductViz";
+import OutputGeometryViz from "./viz/OutputGeometryViz";
 import {
   VisionFoundationLocator,
   VisionMapReturn,
@@ -70,6 +72,7 @@ export default function CnnFoundationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Window와 kernel의 같은 좌표를 곱해 output 한 칸을 만듭니다
         </h2>
+        <LocalProductViz />
         <ExplainedFormula
           question="왜 CNN output cell은 local patch와 kernel의 곱을 더한 값인가요?"
           idea={
@@ -149,6 +152,7 @@ export default function CnnFoundationArticle() {
           Kernel span을 놓고 stride만큼 이동할 수 있는 시작점 수가 output
           크기입니다
         </h2>
+        <OutputGeometryViz />
         <ExplainedFormula
           question="Input 높이 H에서 output 높이를 어떻게 계산하나요?"
           idea={

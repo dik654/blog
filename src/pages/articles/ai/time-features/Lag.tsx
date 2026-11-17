@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LagViz from "./viz/LagViz";
+import LagWindowViz from "./viz/LagWindowViz";
 
 export default function Lag() {
   return (
@@ -10,6 +11,10 @@ export default function Lag() {
 
       <div className="not-prose my-8">
         <LagViz />
+      </div>
+
+      <div className="not-prose my-8">
+        <LagWindowViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

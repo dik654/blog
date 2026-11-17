@@ -14,6 +14,7 @@ import ZkFromScratchLocator, {
   ZkFromScratchMapReturn,
 } from "./ZkFromScratchLocator";
 import { arkworksFieldTree } from "./fileTrees";
+import LowWordShiftViz from "./viz/LowWordShiftViz";
 import { officialCodeRefs } from "./officialCodeRefs";
 
 const ARK_FP =
@@ -272,6 +273,7 @@ export default function ModernFieldImplementationArticle() {
           곱셈은 p의 배수를 더해 낮은 word를 없앱니다
         </h2>
         <MontgomeryLedgerViz />
+        <LowWordShiftViz />
         <p>
           내부 값 <code>2</code>와 <code>1</code>의 곱 <code>T=2</code>에{" "}
           <code>6p</code>를 더해도 mod 13 값은 바뀌지 않습니다. 그런데 합계 80은

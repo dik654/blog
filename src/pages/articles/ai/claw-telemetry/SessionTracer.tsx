@@ -1,4 +1,5 @@
 import SessionStatsViz from "./viz/SessionStatsViz";
+import SamplingViz from "./viz/SamplingViz";
 
 const spanRows = [
   [
@@ -100,6 +101,7 @@ export default function SessionTracer() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           sampling은 비용 절감이지 무작위 삭제가 아니다
         </h3>
+        <SamplingViz />
         <p>
           모든 정상 trace를 장기간 보존할 필요는 없습니다. 다만 오류·권한 거부·느린 요청까지 같은 확률로 버리면 조사에 필요한 표본이 사라집니다. 시작 전에 정하는 head
           sampling은 저렴하지만 결과를 모르고 완료 후 결정하는 tail sampling은 오류와 고지연 trace를 고르는 대신 buffering 비용이 듭니다. 보안 감사 이벤트와

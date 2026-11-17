@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import McpLearningFlowViz from "../mcp-learning/viz/McpLearningFlowViz";
+import ListCacheTimelineViz from "./viz/ListCacheTimelineViz";
 import { McpRequestPathLocator, McpRequestPathMapReturn } from "../shared/McpRequestPathLocator";
 
 export default function ModernArticle() {
@@ -43,6 +44,7 @@ export default function ModernArticle() {
 
       <section id="list-cache" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>목록과 권한을 나눕니다</h2><p className="leading-8"><code>tools/list</code>는 안정된 순서와 TTL을 제공해 prompt cache를 덜 흔들 수 있습니다. 하지만 cache는 “이 사용자가 지금도 이 tool을 실행할 수 있다”는 권한 영수증이 아닙니다. Tenant·user·role·server revision을 cache key에 넣고 call 시점에 다시 검사합니다.</p></div>
+        <ListCacheTimelineViz />
         <ExplainedFormula
           question="Cache가 언제 만료되는지와 call-time authorization을 어떻게 분리하는가?"
           idea={<>목록은 받은 시각에 TTL을 더해 재조회 시점을 정합니다. 실행 가능 여부는 그 식에 넣지 않고 매 call의 현재 policy로 별도 판정합니다.</>}

@@ -4,6 +4,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { KuboGcViz, KuboReceiptViz } from "./viz/ModernKuboViz";
+import GatewayVerifyViz from "./viz/GatewayVerifyViz";
+import ReleaseTraceViz from "./viz/ReleaseTraceViz";
 
 const KUBO_BITSWAP =
   "https://github.com/ipfs/kubo/blob/v0.43.1/core/node/bitswap.go";
@@ -287,6 +289,7 @@ export default function ModernKuboArticle() {
         <h2 className="mb-6 text-2xl font-bold">
           Gateway의 HTTP 200과 end-to-end content 검증은 같은 영수증이 아닙니다
         </h2>
+        <GatewayVerifyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             일반 path gateway가 UnixFS 파일을 풀어 HTTP body로 돌려주면, 그
@@ -332,6 +335,11 @@ export default function ModernKuboArticle() {
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>한 trace로 묶어야 하는 release test</h3>
+        </div>
+
+        <ReleaseTraceViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             먼저 Alice가 <code>A·B·C</code>를 add하고 provide queue에 넣은 시각을
             기록합니다. 이어서 Bob이 후보를 발견하고 <code>P1</code>에서 timeout이

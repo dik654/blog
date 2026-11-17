@@ -4,6 +4,14 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { Fragment, type ComponentType } from "react";
 import IntentDigestViz from "./vasp-wallet-security/viz/IntentDigestViz";
 import WithdrawalStatesViz from "./vasp-wallet-security/viz/WithdrawalStatesViz";
+import LedgerJoinViz from "./vasp-custody-management/viz/LedgerJoinViz";
+import ColdRatioBasisViz from "./vasp-custody-management/viz/ColdRatioBasisViz";
+import PorInclusionViz from "./vasp-custody-management/viz/PorInclusionViz";
+import WithdrawalLifecycleViz from "./vasp-custody-management/viz/WithdrawalLifecycleViz";
+import InfoAccessTimelineViz from "./vasp-unfair-trading/viz/InfoAccessTimelineViz";
+import LateCancelGenerationViz from "./vasp-unfair-trading/viz/LateCancelGenerationViz";
+import SpoofReconstructionViz from "./vasp-unfair-trading/viz/SpoofReconstructionViz";
+import AlertQueueBacklogViz from "./vasp-unfair-trading/viz/AlertQueueBacklogViz";
 
 type ArticleKey =
   | "vasp-custody-management"
@@ -99,6 +107,7 @@ const CONFIG: Record<ArticleKey, Config> = {
       { id: "paper-fsc-vasp-custody", title: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: FSC_LAW, problem: "국내 이용자 자산 보관비율과 산정·유지 시점을 확인해야 합니다.", contribution: "경제적 가치 기준 80% 이상 콜드월렛 보관과 일일 산정·상시 유지 경계를 설명합니다.", assumptions: "2026-11-02 현행 법령·감독규정과 사업자 사실관계를 준법 owner가 재확인합니다.", scope: "대한민국 VASP의 이용자 자산 보관 관련 공식 설명입니다.", notClaim: "80%가 모든 국가의 보편값이거나 PoR·지급능력·key safety를 자동 증명한다는 뜻은 아닙니다." },
       { id: "paper-fatf-vasp-custody", title: "FATF · Updated Guidance for VA and VASPs", href: FATF_VASP, problem: "외부 수탁·wallet·거래 통제를 고객 위험과 책임에 연결해야 합니다.", contribution: "VASP risk-based control과 third-party 관계의 국제 정책 경계를 제공합니다.", assumptions: "국내 법령과 실제 custody 역할·계약·위험평가를 함께 적용합니다.", scope: "FATF의 VASP risk-control 원칙에 한정합니다.", notClaim: "특정 wallet architecture·PoR 방식·custodian 제품을 승인하지 않습니다." },
     ],
+    vizBeforeParagraph: { first: { 0: LedgerJoinViz, 1: ColdRatioBasisViz }, second: { 0: PorInclusionViz, 1: WithdrawalLifecycleViz } },
   },
   "vasp-wallet-security": {
     key: "vasp-wallet-security",
@@ -180,6 +189,7 @@ const CONFIG: Record<ArticleKey, Config> = {
       { id: "paper-fsc-market-surveillance", title: "금융위원회 · 가상자산 이상거래 상시감시 현장점검", href: FSC_SURVEILLANCE, problem: "거래소의 이상거래 상시감시와 당국 통보 책임을 구분해야 합니다.", contribution: "가격·거래량 감시, 예방조치, 의심거래 통보의 국내 공식 운영 경계를 설명합니다.", assumptions: "2026-11-02 현행 법령과 거래소별 업무규정·권한을 재확인합니다.", scope: "대한민국 가상자산거래소의 이상거래 상시감시입니다.", notClaim: "Alert나 거래소 심리가 위법·유죄·부당이득을 자동 확정한다는 뜻은 아닙니다." },
       { id: "paper-fsc-unfair-results", title: "금융위원회 · 가상자산 불공정거래 조사 2년 성과", href: FSC_RESULTS, problem: "감시·혐의통보·조사·조치의 실제 authority chain을 구분해야 합니다.", contribution: "2026년 현재 조사 전담조직·거래소 상시감시·혐의 확인 뒤 조사 흐름을 공식 설명합니다.", assumptions: "보도자료의 집계 시점과 개별 사건 사실관계를 구분합니다.", scope: "2024-07-19 법 시행 뒤 국내 조사 운영의 공개 snapshot입니다.", notClaim: "공개 건수·평균 부당이득을 모든 사건의 base rate나 detector 성능으로 일반화하지 않습니다." },
     ],
+    vizBeforeParagraph: { first: { 0: InfoAccessTimelineViz, 1: LateCancelGenerationViz }, second: { 0: SpoofReconstructionViz, 1: AlertQueueBacklogViz } },
   },
 };
 

@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BudgetViz from "./viz/BudgetViz";
+import WeightShrinkViz from "./viz/WeightShrinkViz";
 export default function Budget() {
   return (
     <section id="budget" className="mb-16 scroll-mt-20">
@@ -26,6 +27,7 @@ export default function Budget() {
           fragmentation도 확인합니다.
         </p>
       </div>
+      <WeightShrinkViz />
       <ExplainedFormula
         question="Device memory로 동시에 유지할 수 있는 요청 수를 어떻게 1차 계산할까요?"
         idea={

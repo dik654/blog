@@ -11,6 +11,7 @@ import {
   BroadcastCacheViz,
   BroadcastFlowViz,
 } from "./viz/ModernCommonwareBroadcastViz";
+import CacheLifecycleViz from "./viz/CacheLifecycleViz";
 
 export default function ModernCommonwareBroadcastArticle() {
   const sidebar = useCodeSidebar();
@@ -115,6 +116,7 @@ export default function ModernCommonwareBroadcastArticle() {
         <p>
           <code>Closed</code>는 local endpoint 종료입니다. <code>Backoff</code>는 overflow policy가 처리한 local pressure입니다. Network receiver 자체의 오류는 Engine loop를 끝낼 수 있고, 한 frame의 decode 오류는 그 frame만 버리고 loop를 계속합니다. Subscriber가 receiver를 drop하면 waiter cleanup 대상이 됩니다.
         </p>
+        <CacheLifecycleViz />
         <p>
           Item을 받았어도 cache에 남지 않을 수 있습니다. Sender가 latest.primary 밖이면 waiter는 응답받지만 cache insert 결과는 <code>Ineligible</code>입니다. 같은 peer의 duplicate digest는 deque 앞쪽으로 이동하고, peer가 primary 집합에서 빠지면 그 peer의 모든 reference를 줄입니다.
         </p>

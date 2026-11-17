@@ -7,6 +7,8 @@ import {
   BitTorrentPieceLedgerViz,
   BitTorrentTrustFlowViz,
 } from "./bittorrent/viz/ModernBitTorrentViz";
+import InfoHashHandshakeViz from "./bittorrent/viz/InfoHashHandshakeViz";
+import PieceRetryViz from "./bittorrent/viz/PieceRetryViz";
 
 export default function BitTorrentArticle() {
   return (
@@ -60,6 +62,7 @@ export default function BitTorrentArticle() {
             Tracker·DHT 응답은 연락처이고, handshake는 torrent 확인입니다
           </h2>
         </header>
+        <InfoHashHandshakeViz />
         <p>
           v1의 <code>info_hash</code>는 metainfo 안 <code>info</code> dictionary가 원래
           bencode된 byte의 SHA-1입니다. 파일 내용만 hash한 값이 아닙니다. 파일 이름·길이·
@@ -184,6 +187,7 @@ export default function BitTorrentArticle() {
             Timeout은 block을 다시 맡기고, hash mismatch는 piece 승인을 취소합니다
           </h2>
         </header>
+        <PieceRetryViz />
         <p>
           Bitfield와 HAVE는 상대가 어느 piece를 보유한다고 알리는 메시지입니다. 내가
           interested 상태이고 상대가 unchoke했다면 scheduler가 아직 비어 있는 offset을

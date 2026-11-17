@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { BellpersonSnarkViz } from "./BellpersonSnarkViz";
+import BatchLatencyViz from "./viz/BatchLatencyViz";
+import DensityMaskViz from "./viz/DensityMaskViz";
+import ProverPathViz from "./viz/ProverPathViz";
 
 const PROVER =
   "https://github.com/filecoin-project/bellperson/blob/fd8f0dc3568589cd4d0f78bc5cd652fb6e6ee2c5/src/groth16/prover/mod.rs";
@@ -65,6 +68,7 @@ export default function ModernProofsSnark() {
             Assignment에는 왜 비공개 답 외에 A·B·C와 density도 들어갈까요?
           </h2>
         </header>
+        <DensityMaskViz />
         <p>
           회로를 실행하면 공개 입력, 비공개 답과 각 제약식의 A·B·C 평가값이 같은
           순서로 생깁니다. Bellperson의 <code>ProvingAssignment</code>는 이
@@ -180,6 +184,7 @@ export default function ModernProofsSnark() {
             Native와 SupraSeal은 요청마다 자동으로 고르는 선택지일까요?
           </h2>
         </header>
+        <ProverPathViz />
         <p>
           아닙니다. 현재 소스에서는 <code>cuda-supraseal</code> feature를 켜서
           빌드하면 SupraSeal module이, 끄면 native module이 연결됩니다. 요청이
@@ -310,6 +315,7 @@ export default function ModernProofsSnark() {
           원래 공개 입력과 verification key로 독립 검증해야 “요청 8개가
           성공했다”고 말할 수 있습니다.
         </p>
+        <BatchLatencyViz />
         <ExplainedFormula
           question="Batch latency에서 무엇을 분리해 기록해야 할까?"
           idea={

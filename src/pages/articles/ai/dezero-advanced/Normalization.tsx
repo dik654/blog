@@ -2,6 +2,7 @@ import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import NormViz from "./viz/NormViz";
+import NormAxisViz from "./viz/NormAxisViz";
 
 export default function Normalization({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
@@ -9,6 +10,7 @@ export default function Normalization({ onCodeRef }: { onCodeRef: (key: string, 
     <section id="normalization" data-teach-level="2" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">LayerNorm은 각 샘플의 feature 축을 정규화합니다</h2>
       <div className="not-prose my-8"><NormViz onOpenCode={open} /></div>
+      <div className="not-prose my-8"><NormAxisViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           LayerNorm은 마지막 feature 축에서 평균과 분산을 구한 뒤 <code>(x-mean)/sqrt(var+eps)</code>로 값을 정규화합니다. 배치 전체의 통계를 사용하는 BatchNorm과 달리 샘플마다 독립적으로 계산하므로, 배치 크기나 시퀀스 길이가 달라도 같은 규칙을 적용할 수 있습니다.

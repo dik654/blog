@@ -3,6 +3,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { RqbitPipelineViz, RqbitRangeViz } from "./viz/ModernRqbitViz";
+import FastResumeSampleViz from "./viz/FastResumeSampleViz";
+import PieceStateViz from "./viz/PieceStateViz";
+import PieceStealOrderViz from "./viz/PieceStealOrderViz";
 
 export default function ModernRqbitArticle() {
   return (
@@ -59,6 +62,7 @@ export default function ModernRqbitArticle() {
           owner peer와 시작 시각이 있습니다. Pause할 때도 in-flight piece를 queue로 되돌린
           뒤 <code>ChunkTracker</code>로 바꾸므로, 사라진 task가 piece를 영원히 점유하지 않습니다.
         </p>
+        <PieceStealOrderViz />
         <p>
           선택 순서는 단순한 “첫 peer에게 하나 배정”이 아닙니다. 새 peer의 평균 piece 시간이
           4초라면 먼저 40초 이상 걸린 다른 owner의 piece를 steal할 수 있는지 봅니다. 없으면
@@ -179,6 +183,7 @@ export default function ModernRqbitArticle() {
           request가 날아갈 수 있습니다. 실제 outstanding byte는 남은 piece, choke,
           response와 option에 따라 더 작습니다.
         </p>
+        <PieceStateViz />
         <p>
           Piece message가 오면 rqbit는 per-piece write lock을 잡고 chunk를 storage에 씁니다.
           <code>mark_chunk_downloaded</code>가 Completed를 반환하면 PieceTracker의 in-flight
@@ -311,6 +316,7 @@ export default function ModernRqbitArticle() {
           ]}
         />
         <RqbitRangeViz />
+        <FastResumeSampleViz />
         <p>
           Runtime에서 새로 받은 piece는 이 hash gate를 통과합니다. 다만 process restart의
           fast-resume은 모든 HAVE piece를 매번 전부 다시 hash하지 않습니다. v9.0.1은 file마다

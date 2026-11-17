@@ -1,4 +1,5 @@
 import TelemetryArchViz from "./viz/TelemetryArchViz";
+import QueueDropViz from "./viz/QueueDropViz";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 
@@ -151,6 +152,7 @@ export default function Overview() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           관측 시스템의 장애를 실행 장애로 키우지 않는다
         </h3>
+        <QueueDropViz />
         <p>
           느린 exporter를 기다리느라 agent loop가 멈추면 telemetry가 서비스 장애를 확대합니다. queue 상한과 batch 크기를 정하고 retry budget과
           drop 우선순위도 미리 잡아 둡니다. 보안 감사 이벤트에는 진행률 이벤트보다 높은 우선순위를 둡니다. drop과 export failure도 metric으로 남겨야 “아무 오류가

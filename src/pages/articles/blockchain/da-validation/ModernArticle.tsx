@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation-block";
 import DataAvailabilityLocator, { DataAvailabilityMapReturn } from "../da-theory/DataAvailabilityLocator";
 import DataAvailabilityValidationViz from "./viz/DataAvailabilityValidationViz";
+import PieceCoverageViz from "./viz/PieceCoverageViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -68,6 +69,7 @@ export default function ModernArticle() {
 
       <section id="baseline" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">정상 기준선</h2>
+        <PieceCoverageViz />
         <p>
           설명용 (8,4) fixture는 원본 D0~D3과 복원용 P4~P7을 만들고, 서로 다른 peer가 D1·P4·P6·P7을 마감 전에 돌려줍니다. 네 조각의 proof가 모두 통과하고, 복원한 D0~D3의 digest가 원본과 같아야 합니다.
         </p>

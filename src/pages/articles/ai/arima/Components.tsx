@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ArmaMemoryViz from "./viz/ArmaMemoryViz";
+import ImpulseResponseViz from "./viz/ImpulseResponseViz";
 
 export default function Components() {
   return (
@@ -38,6 +39,8 @@ export default function Components() {
         assumptions={["Innovation은 serially uncorrelated하며 보통 constant variance를 가정합니다.", "AR polynomial의 root가 unit circle 밖에 있어야 causal stationarity, MA root가 밖에 있어야 invertible representation을 얻습니다."]}
         interpretation="p와 q는 기억 길이를 그대로 뜻하지 않습니다. 반복되는 AR dynamics는 p보다 긴 impulse response를 만들고, invertible MA는 관측 가능한 과거로 innovation을 복원하게 해 줍니다."
       />
+
+      <ImpulseResponseViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Stationarity와 invertibility는 coefficient 크기만 보는 규칙이 아니다</h3>

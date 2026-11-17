@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TemporalValidationViz from "./viz/TemporalValidationViz";
+import AcfPacfViz from "./viz/AcfPacfViz";
 
 export default function Modeling() {
   return (
@@ -29,6 +30,8 @@ export default function Modeling() {
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1093/biomet/65.2.297" target="_blank" rel="noreferrer">원 논문의 statistic과 finite-sample 보정 보기</a>
       </div>
+
+      <AcfPacfViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>ACF와 PACF는 식별 규칙이 아니라 diagnostic이다</h3>

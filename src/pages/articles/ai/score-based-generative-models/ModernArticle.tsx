@@ -7,6 +7,8 @@ import {
   GenerativeFamilyLocator,
   GenerativeFamilyMapReturn,
 } from "../shared/GenerativeFamilyLocator";
+import GaussianScoreSlopeViz from "./viz/GaussianScoreSlopeViz";
+import NoiseToScoreViz from "./viz/NoiseToScoreViz";
 
 export default function ScoreBasedGenerativeModelsArticle() {
   return (
@@ -67,6 +69,7 @@ export default function ScoreBasedGenerativeModelsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Gaussian score의 minus는 중심 반대편이 아니라 중심 쪽을 가리킵니다
         </h2>
+        <GaussianScoreSlopeViz />
         <ExplainedFormula
           question="Standard Gaussian에서 score가 왜 −x가 되나요?"
           idea={
@@ -190,6 +193,7 @@ q_\sigma(x\mid x_0)&=\underbrace{N(x_0,\sigma^2 I)}_{\text{x0 주변에 Gaussian
         <h2 className="mb-5 text-2xl font-bold">
           Diffusion에서는 예측한 noise를 뒤집고 noise scale로 나눕니다
         </h2>
+        <NoiseToScoreViz />
         <ExplainedFormula
           question="왜 sθ=−εθ/√(1−ᾱₜ)에서 minus와 나눗셈이 모두 필요한가요?"
           idea={

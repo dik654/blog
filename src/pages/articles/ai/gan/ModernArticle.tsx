@@ -7,6 +7,8 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { ganTree } from "./fileTree";
 import GanGameViz from "./GanGameViz";
+import OptimalDiscriminatorViz from "./viz/OptimalDiscriminatorViz";
+import GeneratorSignalViz from "./viz/GeneratorSignalViz";
 import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 const ORIGINAL = "https://arxiv.org/abs/1406.2661";
@@ -106,6 +108,7 @@ export default function GanFoundationsArticle() {
           example="Real score 0.8, fake score 0.2라면 현재 D는 두 batch를 쉽게 나눕니다."
           boundary="Finite D score는 calibrated density ratio나 두 분포가 같다는 증명이 아닙니다."
         />
+        <OptimalDiscriminatorViz />
         <ExplainedFormula
           question="Ideal discriminator는 왜 real density를 두 density의 합으로 나눌까요?"
           idea={
@@ -161,6 +164,7 @@ export default function GanFoundationsArticle() {
           example="D=0.01이면 logit gradient magnitude가 약 0.99라 초기 signal이 강합니다."
           boundary="한 step의 gradient 개선이지 global convergence나 mode coverage 보장이 아닙니다."
         />
+        <GeneratorSignalViz />
         <ExplainedFormula
           question="왜 D(G(z))에 negative log를 취할까요?"
           idea={

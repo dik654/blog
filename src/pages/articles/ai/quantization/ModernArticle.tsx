@@ -4,6 +4,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import QuantizationPathLocator, { QuantizationMapReturn } from "./QuantizationPathLocator";
 import { QuantizerNumberLineViz } from "./viz/ModernQuantizationViz";
+import ScaleTradeoffViz from "./viz/ScaleTradeoffViz";
 
 export default function QuantizationArticle() {
   return (
@@ -146,6 +147,7 @@ export default function QuantizationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Range 안의 반올림과 밖의 포화를 다른 오차로 봅니다
         </h2>
+        <ScaleTradeoffViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Range를 넓히면 outlier clipping은 줄지만 같은 bit 수에서 눈금 간격이

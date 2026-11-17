@@ -4,6 +4,9 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import BlockFamilyViz from "./viz/BlockFamilyViz";
+import BottleneckCostViz from "./viz/BottleneckCostViz";
+import BatchNormAxesViz from "./viz/BatchNormAxesViz";
+import ActivationPlacementViz from "./viz/ActivationPlacementViz";
 
 export default function Architecture({
   onCodeRef,
@@ -36,6 +39,8 @@ export default function Architecture({
       </div>
 
       <BlockFamilyViz />
+
+      <BottleneckCostViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Bottleneck은 parameter를 무조건 줄이는 장치가 아니다</h3>
@@ -126,6 +131,8 @@ export default function Architecture({
         interpretation="B가 C보다 충분히 작을 때 비싼 3×3 연산을 줄일 수 있습니다. Torchvision의 expansion 4처럼 외부·내부 width 계약을 확인해야 실제 비용을 정확히 비교할 수 있습니다."
       />
 
+      <BatchNormAxesViz />
+
       <ExplainedFormula
         question="BatchNorm은 각 channel의 activation을 어떻게 정규화하고, 왜 학습 가능한 γ·β를 다시 곱하나요?"
         idea={
@@ -181,6 +188,11 @@ y_i&=\underbrace{\gamma\hat x_i+\beta}_{\text{학습 가능한 scale·shift로 �
         <p className="leading-8">
           Original ResNet v1은 residual과 shortcut을 더한 뒤 ReLU를 적용합니다.
         </p>
+      </div>
+
+      <ActivationPlacementViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Identity Mappings 논문의 pre-activation ResNet v2는 normalization과 ReLU를 convolution 앞에 두어 addition 뒤의 identity path를 더 직접적으로 유지했습니다. 두 구현은
           checkpoint-compatible하지 않습니다. “BN 순서만 조금 바꾼 것” 이상으로 forward·backward mapping 자체가 달라집니다.

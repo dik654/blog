@@ -1,5 +1,7 @@
 import ModelPricingViz from "./viz/ModelPricingViz";
 import UsageTrackerViz from "./viz/UsageTrackerViz";
+import CostBreakdownViz from "./viz/CostBreakdownViz";
+import BudgetReserveViz from "./viz/BudgetReserveViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 
@@ -126,6 +128,8 @@ export default function Usage() {
           있습니다.
         </p>
 
+        <CostBreakdownViz />
+
         <ExplainedFormula
           question="한 model attempt의 token usage를 당시 가격표로 어떻게 추정할까?"
           idea={<>Input·output·cache read·cache write를 하나의 token 합계로 뭉치지 않고 각 billable category와 단가를 곱합니다. Retry가 새 response를 만들면 별도 attempt 비용으로 더합니다.</>}
@@ -176,6 +180,7 @@ export default function Usage() {
         <h3 className="text-xl font-semibold mt-8 mb-3">
           budget warning과 hard limit을 분리한다
         </h3>
+        <BudgetReserveViz />
         <p>
           경고는 현재 추정 비용이 threshold를 넘으면 보여주면 됩니다. hard limit은 사정이 다릅니다. 동시 요청 때문에 쉽게 초과합니다. 요청을 시작할 때 예상 최대 비용을
           reserve하고 완료 후 실제 usage로 정산합니다. timeout이나 취소 때 reservation을 언제 해제할지도 미리 정해 둡니다. 팀 환경에서는 일일 한도뿐 아니라

@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ForecastContractViz from "./viz/ForecastContractViz";
 import DifferencingViz from "./viz/DifferencingViz";
+import DifferencingRoundTripViz from "./viz/DifferencingRoundTripViz";
 
 export default function Overview() {
   return (
@@ -53,6 +54,8 @@ export default function Overview() {
       />
 
       <DifferencingViz />
+
+      <DifferencingRoundTripViz />
 
       <ExplainedFormula
         question="추세가 있는 level series를 ARMA가 다룰 변화량으로 어떻게 바꿀까?"

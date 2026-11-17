@@ -1,6 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { PbftNormalViz, PbftPredicateViz, PbftRecoveryViz, PbftTestTable } from "./viz/ModernPbftViz";
+import EquivocationViz from "./viz/EquivocationViz";
+import WatermarkViz from "./viz/WatermarkViz";
 
 export default function ModernPbftArticle() {
   return (
@@ -24,6 +26,7 @@ export default function ModernPbftArticle() {
           <p className="text-sm font-semibold text-primary">01 · 정상 처리</p>
           <h2 className="mt-2 text-2xl font-bold">PREPARE와 COMMIT은 서로 다른 질문에 답합니다</h2>
         </header>
+        <EquivocationViz />
         <p>
           PRE-PREPARE는 주 노드가 요청을 어느 순번에 놓았는지 알립니다. 백업은 서명과 요청 해시를 먼저 확인합니다. 이어서 현재 view와 맞는지, 허용된 순번 범위 안에 있는지, 같은 자리에 다른 요청을 이미 받지 않았는지를 검사합니다. 조건을 모두 통과한 백업만 PREPARE를 보냅니다. 그래서 잘못된 주 노드가 같은 순번에 두 요청을 나눠 보내도 정상 복제본은 두 요청을 모두 지지하지 않습니다.
         </p>
@@ -75,6 +78,7 @@ export default function ModernPbftArticle() {
         <p>
           요청이 실행되지 않은 채 타이머가 끝나면 복제본은 다음 view로 이동합니다. 1999년 논문의 단순화된 절차에서 새 주 노드는 자기 것을 포함한 VIEW-CHANGE <code>2f+1</code>개를 모읍니다. 각 순번에 prepared 증거가 있으면 가장 높은 이전 view의 값을 고릅니다. 증거가 없는 빈 순번에는 아무 동작도 하지 않는 null 요청을 넣습니다. 백업도 같은 입력으로 결과를 다시 계산하므로 새 주 노드가 증거를 빼거나 다른 값을 끼워 넣을 수 없습니다.
         </p>
+        <WatermarkViz />
         <p>
           체크포인트는 오래된 프로토콜 기록을 안전하게 지우는 기준입니다. 같은 순번과 상태 해시에 CHECKPOINT <code>2f+1</code>개가 모이면 안정된 체크포인트가 됩니다. 그때 낮은 watermark를 올리고 이전 기록을 정리할 수 있습니다. 상태 자체를 잃은 복제본은 인증된 상태를 다시 받은 뒤 해시를 확인하고, 체크포인트 이후 요청을 재생해야 합니다.
         </p>

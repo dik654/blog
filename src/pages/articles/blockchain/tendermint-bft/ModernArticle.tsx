@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { TendermintFailureTable, TendermintLockTraceViz, TendermintRoundViz } from "./viz/ModernTendermintViz";
+import QuorumOverlapViz from "./viz/QuorumOverlapViz";
 
 export default function ModernTendermintArticle() {
   return <article className="space-y-14">
@@ -33,6 +34,7 @@ export default function ModernTendermintArticle() {
       <header><p className="text-sm font-semibold text-primary">02 · 라운드를 건너는 잠금</p><h2 className="mt-2 text-2xl font-bold">새 제안이 왔다는 이유만으로 이전 블록을 버리면 두 결과가 생길 수 있습니다</h2></header>
       <p>PoLC는 같은 높이와 라운드에서 특정 블록 또는 nil에 모인 3분의 2 초과 1차 투표 묶음입니다. 검증자가 0라운드에서 A의 PoLC를 보고 A에 잠겼다면, 1라운드 제안자가 근거 없이 B를 보내도 A를 지킵니다. B로 바꾸려면 기존 잠금 라운드보다 높고 현재 라운드보다 낮은 B의 PoLC를 실제 표와 함께 확인해야 합니다.</p>
       <TendermintLockTraceViz />
+      <QuorumOverlapViz />
       <p>왜 이렇게 복잡한가요? 한 블록이 이미 결정되었다면 그 2차 투표 정족수와 충돌 블록의 1차 투표 정족수는 정직한 투표권을 공유해야 합니다. 정직한 검증자가 정당한 더 높은 근거 없이는 잠금을 바꾸지 않으므로 충돌 블록이 다시 정족수를 얻는 길이 막힙니다. 반대로 아직 결정되지 않고 잠금만 갈라졌다면, 더 높은 라운드의 PoLC를 전달해 오래된 잠금을 안전하게 한쪽으로 모을 수 있습니다.</p>
       <div id="paper-cometbft-consensus"><CitationBlock source="CometBFT v0.38.25 Specification — Byzantine Consensus Algorithm" citeKey={2} href="https://github.com/cometbft/cometbft/blob/v0.38.25/spec/consensus/consensus.md"><p><strong>문제:</strong> 높이·라운드·단계마다 제안, 1차·2차 투표, 결정과 라운드 전환 조건을 구현 가능한 상태 기계로 규정합니다.</p><p><strong>기여:</strong> 3분의 2 초과, PoLC, 잠금 변경, 공통 종료 조건과 타임아웃의 의미를 명시합니다.</p><p><strong>전제와 범위:</strong> v0.38.25 태그의 규격입니다. 다른 버전의 코드 경로와 같다고 가정하지 않습니다.</p></CitationBlock></div>
     </section>

@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TailSelectionViz from "./viz/TailSelectionViz";
 import AggregationContractViz from "./viz/AggregationContractViz";
+import EcodScoreWalkViz from "./viz/EcodScoreWalkViz";
 
 export default function Algorithm() {
   return (
@@ -61,6 +62,8 @@ export default function Algorithm() {
       />
 
       <TailSelectionViz />
+
+      <EcodScoreWalkViz />
 
       <ExplainedFormula
         question="원 ECOD 논문은 feature contribution을 row score로 어떻게 합칠까?"

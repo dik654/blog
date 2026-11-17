@@ -10,6 +10,7 @@ import {
   DecisionDefinitionViz,
   ProbabilityDecisionTraceViz,
 } from "./viz/ProbabilityDecisionTraceViz";
+import TemperatureSweepViz from "./viz/TemperatureSweepViz";
 
 function CalibrationCandidateLedger() {
   const examples = [
@@ -196,6 +197,7 @@ export default function ImageProbabilityDecisionsArticle() {
           </p>
         </div>
         <CalibrationCandidateLedger />
+        <TemperatureSweepViz />
         <ExplainedFormula
           question="보정 집합에서 고른 temperature는 pred-184의 probability를 어떻게 바꿉니까?"
           idea={

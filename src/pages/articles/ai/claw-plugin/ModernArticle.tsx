@@ -2,6 +2,10 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { PluginExecutionViz, PluginRegistryViz } from "./viz/ModernPluginViz";
+import LifecycleOrderViz from "./viz/LifecycleOrderViz";
+import ProcessBoundaryViz from "./viz/ProcessBoundaryViz";
+import RegistryAggregationViz from "./viz/RegistryAggregationViz";
+import ReloadGenerationViz from "./viz/ReloadGenerationViz";
 
 function Lead({ children }: { children: React.ReactNode }) {
   return <p className="text-lg leading-8 text-foreground/90">{children}</p>;
@@ -35,6 +39,7 @@ export default function ModernPluginArticle() {
         <p>
           Pinned 구현은 Builtin, Bundled, External 세 종류를 구분합니다. External manifest는 <code>.claude-plugin/plugin.json</code>에서 name·version·description·permissions·defaultEnabled·hooks·lifecycle·tools·commands를 읽습니다. 필수 문자열, 중복 permission·entry, tool input schema, command path를 검증하지만 package signature나 publisher 신뢰까지 확인한다는 뜻은 아닙니다.
         </p>
+        <RegistryAggregationViz />
         <p>
           Registry는 plugin ID로 정렬하고 enabled plugin의 hook과 tool만 모읍니다. Tool은 plugin별 namespace를 붙이지 않고 definition name으로 합치므로 두 enabled plugin이 <code>auth_lint</code>를 정의하면 aggregation이 오류로 끝납니다. 조용한 last-wins가 아니라 충돌을 드러내는 점은 좋지만, duplicate plugin ID와 설치 source 우선순위가 모든 경로에서 하나의 generation으로 고정되는지는 별도 확인이 필요합니다.
         </p>
@@ -52,6 +57,7 @@ export default function ModernPluginArticle() {
           Tool manifest는 <code>read-only</code>, <code>workspace-write</code>, <code>danger-full-access</code> 중 하나를 요구합니다. 값을 생략하면 pinned parser의 default는 가장 강한 <code>danger-full-access</code>입니다. 그러나 <code>PluginTool.execute</code> 자체는 이 label을 검사하는 permission enforcer를 호출하지 않고 command와 args로 process를 시작합니다. 따라서 label이 있다는 사실과 unauthorized execution이 불가능하다는 주장을 분리해야 합니다.
         </p>
         <PluginExecutionViz />
+        <ProcessBoundaryViz />
         <p>
           Input JSON은 stdin으로 쓰고 <code>CLAWD_PLUGIN_ID</code>, <code>CLAWD_PLUGIN_NAME</code>, <code>CLAWD_TOOL_NAME</code>, <code>CLAWD_TOOL_INPUT</code> environment를 추가합니다. Plugin root가 있으면 current directory와 <code>CLAWD_PLUGIN_ROOT</code>도 설정합니다. 부모 environment는 기본적으로 상속되고 stdout·stderr를 모아 process 종료까지 기다리며, 이 함수에서는 timeout·output limit·process group·sandbox가 보이지 않습니다.
         </p>
@@ -64,6 +70,7 @@ export default function ModernPluginArticle() {
 
       <section id="lifecycle" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Lifecycle과 degraded</p><h2 className="mt-2 text-2xl font-bold">Initialize는 정방향, shutdown은 역방향이지만 rollback transaction은 아니다</h2></header>
+        <LifecycleOrderViz />
         <p>
           Registry initialize는 enabled plugin을 정렬된 순서대로 validate하고 init command를 실행합니다. Shutdown은 반대 순서로
           실행합니다. Dependency를 쌓은 역순으로 내리는 기본 원칙에는 맞지만 세 번째 plugin init이 실패했을 때 앞의 두 plugin을 자동으로 rollback했다는
@@ -86,6 +93,7 @@ export default function ModernPluginArticle() {
           assumptions={["Expected 집합과 version이 deployment manifest에 고정되어 있습니다.", "Ready는 단순 enabled가 아니라 validation·init·health를 통과한 상태입니다.", "Plugin별 중요도와 기능 대체 가능성은 이 단순 비율에 반영하지 않습니다."]}
           interpretation="0.667만 보고 서비스를 열면 필수 auth-lint가 빠진 상태를 놓칠 수 있습니다. 필수 capability별 readiness와 degraded 허용 정책을 함께 기록해야 합니다."
         />
+        <ReloadGenerationViz />
         <p>
           별도 lifecycle module의 healthcheck·degraded type도 active registry와 실제로 연결되는지 확인해야 합니다. “타입이 있다”와 “모든 plugin call 전에 health generation을 검사한다”는 다른 주장입니다. Reload할 때는 model이 본 old schema와 새 executor가 섞이지 않도록 old generation을 drain하거나 stale call을 거부해야 합니다.
         </p>

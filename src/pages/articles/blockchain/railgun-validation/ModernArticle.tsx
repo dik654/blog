@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation-block";
 import RailgunLocator, { RailgunMapReturn } from "../railgun/RailgunLocator";
 import RailgunValidationViz from "./viz/RailgunValidationViz";
+import RailgunNoteStateViz from "./viz/RailgunNoteStateViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -65,6 +66,7 @@ export default function ModernArticle() {
 
       <section id="baseline" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">가장 작은 기준선</h2>
+        <RailgunNoteStateViz />
         <p>Tree 0의 leaf 23에 값 10인 note를 만들고 root R100을 고정합니다. Private transfer로 값 6인 수신 note와 값 4인 거스름 note를 만든 뒤 아래 세 receipt를 같은 run ID로 남깁니다.</p>
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3">
           {[

@@ -7,6 +7,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import HybridRuntimeFlowViz from "./viz/HybridRuntimeFlowViz";
 import RequestMemoryMixViz from "./viz/RequestMemoryMixViz";
 import SpeculativeCommitViz from "./viz/SpeculativeCommitViz";
+import TpRankSplitViz from "./viz/TpRankSplitViz";
 import {
   HybridSequenceMapReturn,
   HybridSequenceSeriesLocator,
@@ -239,6 +240,9 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
             vLLM main(커밋 4c45411, 2026-11-03)에서 Qwen3.6은 linear attention층에 Gated DeltaNet 구현을, full attention층에
             Qwen3-Next의 attention 구현을 씁니다. 두 구현이 TP를 다루는 규칙을 코드에서 직접 읽었습니다.
           </p>
+        </div>
+        <TpRankSplitViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             Delta state는 value head 축으로 나뉩니다. state 모양이 (value head ÷ TP, 128, 128)이고 convolution state도 채널을 TP로
             나눕니다. Qwen3.6-27B는 value head 48개, key head 16개라 TP8이면 rank마다 value head 6개, key head 2개를 맡습니다.

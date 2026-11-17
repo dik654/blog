@@ -3,6 +3,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ConceptOwnerMapViz from "./kubernetes-concept-map/viz/ConceptOwnerMapViz";
 import CapacityGapViz from "./kubernetes-concept-map/viz/CapacityGapViz";
 import KubernetesBranchMapViz from "./kubernetes-concept-map/viz/KubernetesBranchMapViz";
+import SharedRecordViz from "./kubernetes-concept-map/viz/SharedRecordViz";
 import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
@@ -76,6 +77,7 @@ export default function KubernetesConceptMapArticle() {
             </div>
           ))}
         </div>
+        <SharedRecordViz />
         <div className={prose}>
           <p>
             Kubernetes는 한 프로그램이 컨테이너를 직접 띄우는 도구가 아닙니다. 사용자가 API에 원하는 상태를 저장하면 controller가 필요한 Pod 객체를 만들고, scheduler가 Node를 고르고, 그 Node의 kubelet이 컨테이너·네트워크·볼륨을 준비합니다. EndpointSlice controller는 준비 검사를 통과한 Pod 주소를 요청 대상 목록에 반영하고, Node의 데이터 경로가 실제 요청을 전달합니다.

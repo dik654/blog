@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { WorkerBootPathViz, WorkerEvidenceViz } from "./viz/ModernWorkerBootViz";
+import PromptReplayViz from "./viz/PromptReplayViz";
+import TrustGateBranchViz from "./viz/TrustGateBranchViz";
 
 const SNAPSHOT = "b71afddae100ced324457337925a694686b8fef2";
 const WORKER_SOURCE = `https://github.com/ultraworkers/claw-code/blob/${SNAPSHOT}/rust/crates/runtime/src/worker_boot.rs`;
@@ -60,6 +62,7 @@ export default function ModernWorkerBootArticle() {
 
       <section id="trust-gate" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · Trust gate</p><h2 className="mt-2 text-2xl font-bold">Pinned 구현은 path allowlist와 terminal cue로 trust 질문을 판별한다</h2></header>
+        <TrustGateBranchViz />
         <p>
           Worker를 만들 때 registry는 <code>cwd</code>가 trusted root와 맞는지 확인해 <code>trust_auto_resolve</code>를 정합니다. 이후 화면에서 trust 문구를 찾으면 <code>TrustRequired</code> event를 남기며, allowlist에 맞은 worker는 gate를 자동으로 풀고 다시 <code>Spawning</code>으로 돌아갑니다. 수동 승인도 <code>resolve_trust</code>가 현재 status를 검사한 뒤 처리합니다.
         </p>
@@ -90,6 +93,7 @@ export default function ModernWorkerBootArticle() {
 
       <section id="prompt-delivery" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Prompt delivery</p><h2 className="mt-2 text-2xl font-bold">Ready에서만 보내지만 replay가 exactly-once를 만들지는 않는다</h2></header>
+        <PromptReplayViz />
         <p>
           Pinned <code>send_prompt</code>는 status가 <code>ReadyForPrompt</code>가 아니면 거부합니다. 전송할 때 attempt 수를 늘리고 <code>prompt_in_flight</code>, 전송 시각, 마지막 prompt와 expected task receipt를 기록한 뒤 <code>Running</code>으로 바꿉니다. 이후 화면에 prompt가 shell에서 echo되거나 관찰한 cwd·receipt가 기대값과 다르면 misdelivery로 분류합니다.
         </p>

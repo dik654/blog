@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RollingViz from "./viz/RollingViz";
+import EmaWeightViz from "./viz/EmaWeightViz";
 
 export default function Rolling() {
   return (
@@ -97,6 +98,10 @@ export default function Rolling() {
         ]}
         interpretation="Rolling mean 값만 저장하지 말고 window count와 freshness를 함께 두면 sparse history와 실제 낮은 level을 구분하기 쉽습니다."
       />
+
+      <div className="not-prose my-8">
+        <EmaWeightViz />
+      </div>
 
       <ExplainedFormula
         question="EMA는 과거를 모두 쓰면서 최근 값에 더 큰 비중을 어떻게 줄까?"

@@ -13,6 +13,8 @@ import StreamKBalanceViz, {
   StageBudgetViz,
   TileSchedulerViz,
 } from "./cutlass-collectives-and-tile-schedulers/viz/CutlassCollectivesAndTileSchedulersViz";
+import RasterSwizzleViz from "./cutlass-collectives-and-tile-schedulers/viz/RasterSwizzleViz";
+import StreamKFixupViz from "./cutlass-collectives-and-tile-schedulers/viz/StreamKFixupViz";
 
 /**
  * CUTLASS collective·tile scheduler·Stream-K·cluster
@@ -205,6 +207,9 @@ S &= \Bigl\lfloor \frac{\underbrace{C_{smem} - C_{carve}}_{\text{epilogue 등을
             epilogue 를 마무리할 수 있고 ping-pong schedule 은 consumer warp group 둘에 다른 tile 을 주어 한쪽의 epilogue 를 다른 쪽의
             MMA 뒤에 숨깁니다. Threadblock 이 tile 마다 새로 뜨면 이 겹침이 없습니다.
           </p>
+        </div>
+        <RasterSwizzleViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Linear tile 번호를 (m, n) 좌표로 푸는 순서도 scheduler 의 일입니다. Raster order 가 N 방향이면 같은 A 행 조각을 쓰는 tile 이 연달아
             배정되고 swizzle 크기 k 는 tile 번호를 k개씩 묶어 2차원 덩어리로 돌게 해 같은 시간에 L2 에 있는 A·B 조각의 재사용을 높입니다. 이 swizzle 은 앞
@@ -269,6 +274,9 @@ S &= \Bigl\lfloor \frac{\underbrace{C_{smem} - C_{carve}}_{\text{epilogue 등을
             그런데 10은 tile당 반복 4의 배수가 아닙니다. Worker 구간을 [0,10), [10,20)…으로
             자르면 tile 2·7·12·17이 worker 경계에 걸립니다.
           </p>
+        </div>
+        <StreamKFixupViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             CUTLASS 의 sm90 Stream-K scheduler 에서는 tile 의 마지막 k 구간을 맡지 않은 unit 이 accumulator 를 global workspace
             에 쓰고 barrier 를 k-iteration 수만큼 올립니다. 마지막 구간을 맡은 unit 은 그 barrier 를 기다렸다가 partial 을 읽어 더한 뒤

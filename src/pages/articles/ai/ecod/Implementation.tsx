@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BatchDependenceViz from "./viz/BatchDependenceViz";
 
 const api = [
   ["fit(X_train)", "training score를 계산하고 X_train을 저장한 뒤 threshold_와 labels_를 만듭니다."],
@@ -73,6 +74,11 @@ print(detector.get_params())`}</code></pre>
           <code>X_train</code>과 새 입력을 concatenate한 뒤 ECDF와 skewness를 다시 계산하고
           새 row 부분만 반환합니다.
         </p>
+      </div>
+
+      <BatchDependenceViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           따라서 같은 row라도 함께 넣은 test batch 구성에 따라 score가 달라질 수
           있습니다. 낮은 latency의 immutable scoring model이나 진정한 incremental

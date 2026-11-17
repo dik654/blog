@@ -1,6 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CompressionPipelineReturn } from "./CompressionPipelineLocator";
 import BenchmarkViz from "./viz/BenchmarkViz";
+import InteractionViz from "./viz/InteractionViz";
+import ParetoViz from "./viz/ParetoViz";
 export default function Benchmark() {
   return (
     <section id="benchmark" className="mb-16 scroll-mt-20">
@@ -23,6 +25,9 @@ export default function Benchmark() {
           생성 모델은 prefill과 decode를 나누고,
           deterministic quality run과 representative sampling run을 구분합니다.
         </p>
+      </div>
+      <InteractionViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Baseline, A, B, A+B를 모두 남겨야 결합 이득이 단일 효과의 합인지 알 수 있습니다. Quality guardrail을 통과한 후보만 resource
           frontier에 올리며 더 느리고 더 크면서 품질도 낮은 후보는 제거합니다.
@@ -86,6 +91,7 @@ I_{A,B}&=\underbrace{\Delta_{AB}-\Delta_A-\Delta_B.}_{\text{합보다 더·덜 �
         ]}
         interpretation="Throughput이 baseline 100, A 130, B 120, A+B 145라면 interaction은 145−130−120+100=−5입니다. 결합은 빨라졌지만 단일 gain의 합보다 5만큼 덜 얻었습니다."
       />
+      <ParetoViz />
       <ExplainedFormula
         question="Quality와 system cost가 여러 축일 때 한 숫자로 억지로 합치지 않고 어떻게 후보를 남길까요?"
         idea={

@@ -4,6 +4,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { ClassificationMetricViz } from "../evaluation-metrics/viz/ModernEvaluationViz";
+import ModelAThresholdViz from "./viz/ModelAThresholdViz";
+import BrierRegretViz from "./viz/BrierRegretViz";
 
 export default function ClassificationMetricsArticle() {
   return (
@@ -37,6 +39,7 @@ export default function ClassificationMetricsArticle() {
             <li>False negative 비용이 20배면 accuracy가 가장 높은 threshold가 최선일까요?</li>
           </ol>
         </div>
+        <ModelAThresholdViz />
         <ClassificationMetricViz />
         <TermBreakdown
           title="한 model을 평가하는 세 층"
@@ -82,6 +85,7 @@ export default function ClassificationMetricsArticle() {
             성질을 잃습니다.
           </p>
         </div>
+        <BrierRegretViz />
         <ExplainedFormula
           question="Brier loss는 왜 실제 probability p를 그대로 보고하도록 유도하나요?"
           idea={

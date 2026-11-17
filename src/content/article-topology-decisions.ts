@@ -31,6 +31,20 @@ const KEEP_2026_11_03 = (
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "ai/resnet": {
+    "action": "keep",
+    "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: ResNet: 잔차 연결이 깊은 네트워크를 학습시키는 법",
+    "sharedGate": "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    "status": "reviewed",
+    "reviewedAt": "2026-11-07"
+  },
+  "ai/compression-pipeline": {
+    "action": "keep",
+    "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: 모델 경량화 파이프라인",
+    "sharedGate": "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    "status": "reviewed",
+    "reviewedAt": "2026-11-07"
+  },
   "ai/claw-tool-system": {
     action: "keep",
     rationale:
@@ -4413,6 +4427,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/resnet": "a9a830038b0deec4",
+  "ai/compression-pipeline": "d5de8a8b3a594120",
   "ai/claw-tool-system": "2c96aa7fe492ac28",
   "ai/vision-transformer": "04aa668d37e33c4e",
   "ai/feature-engineering": "eea4105005f1814c",
@@ -4458,7 +4474,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "cloud/linux-process-signals-pid1-fds": "7dfcec5bf9c26aa8",
   "cloud/linux-disk-full-inode-deleted-files": "f6076e642b087785",
   "cloud/linux-systemd-boot-change-incidents": "748e82140e18b3fc",
-  "cloud/kubernetes-concept-map": "850c56644e8ce5d5",
+  "cloud/kubernetes-concept-map": "c9e9a544ba6a0af3",
   "cloud/kubernetes-controllers-reconcile-deployment-job": "02555f09762caaca",
   "cloud/kubernetes-pod-states-crashloop-probes-events": "f541a8e9bd033851",
   "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": "0317d21f5171b921",
@@ -4635,14 +4651,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/rectifier-activations": "e34376d48f9d220e",
   "ai/vllm-serving": "aedf3d0cfb09f665",
   "blockchain/rollup-fundamentals": "d6d9c10bd3446a2a",
-  "blockchain/stablecoin-overview": "c2364153df3233b8",
+  "blockchain/stablecoin-overview": "03c8db3380ab87c0",
   "semiconductors/bands-and-doping": "7780fb83fe6837ec",
   "ai/agent-failure-modes-and-recovery": "d222d343c332cdae",
   "ai/context-instruction-boundaries": "745d7a65149b54c5",
   "ai/llm-harness": "a97bb2e408c85d6e",
   "ai/tool-calling-lifecycle-and-costs": "abe4f740fd64c105",
   "blockchain/bft-theory": "d1852fd36088cafb",
-  "blockchain/consensus-mechanisms": "f8b2471f7838552a",
+  "blockchain/consensus-mechanisms": "29c853703bee3109",
   "blockchain/node-architecture": "5aa3110ba0a711cb",
   "ai/agent-control-boundaries": "108c7f45713eb760",
   "ai/agent-delegation-contracts": "6d94dc17872f1ddc",
@@ -4712,7 +4728,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "devices/mosfet-regions-and-transfer": "609b17079e16a8b0",
   "devices/mos-capacitor-and-inversion": "7ef8a5265be2d6c4",
   "devices/pn-junction-and-rectification": "1affd113f57d2b57",
-  "ai/negative-result-3d-face-control": "ab8cf11af5b019d3",
+  "ai/negative-result-3d-face-control": "85ae1d8ad3f8505d",
   "ai/generative-identity-diversity": "c635673f200685a6",
   "ai/reference-identity-pose-separation": "07f8a24d75697f8b",
   "ai/roi-resolution-identity-budget": "fe13eea7b1f09abc",
@@ -4725,7 +4741,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/claw-overview": "e1c0617803c46c11",
   "ai/claw-permissions": "ca7fdd3ce036d58f",
   "ai/claw-session": "e93c290272d035e7",
-  "ai/claw-worker-boot": "f9191c745d76c11f",
+  "ai/claw-worker-boot": "81ab5517f6b237f4",
   "ai/llm-serving-ops": "3a50ba3a6878756c",
   "ai/multiview-fusion": "ebed6af40e066afb",
   "ai/deepfake-detection": "eb63ba4cd831e4d8",
@@ -4764,7 +4780,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/sionic-eureka": "3d86963157bb2517",
   "ai/sionic-glm-b300": "c8b52fd9e99879ba",
   "ai/skills-anatomy": "17b4df05e00b94d6",
-  "ai/time-features": "3c7a9cb6593912b7",
+  "ai/time-features": "b72517b5a7136e53",
   "ai/tabular-deep-learning": "30abceb6a73094b6",
   "ai/training-pipeline": "6d098fc2041d2daa",
   "ai/transfer-learning-practice": "b8726991e17f6f32",
@@ -4790,9 +4806,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/cometbft": "eb8e2c54269f5b02",
   "blockchain/cometbft-consensus": "82873d72447d57b4",
   "blockchain/da-theory": "960f47b88c2342b7",
-  "blockchain/da-validation": "e38d59ace70ff117",
+  "blockchain/da-validation": "33ce13130f29cd88",
   "blockchain/railgun": "2c7b61b18f7dbd43",
-  "blockchain/railgun-validation": "f8b75a2b5a875a04",
+  "blockchain/railgun-validation": "4ab28cdeaed12fc4",
   "blockchain/helios": "7e5db745e3f3bc99",
   "blockchain/helios-bootstrap": "a36d6c1eb6d3fcea",
   "blockchain/helios-execution": "5a6a1dc6b6784ee4",
@@ -4815,7 +4831,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/berachain": "b40781e022657611",
   "blockchain/evmos": "582e84d3a2095317",
   "elections/electoral-systems": "6d5dce259e4159ab",
-  "blockchain/commonware-broadcast": "fb43bccdacf88df0",
+  "blockchain/commonware-broadcast": "f6af774b731edbba",
   "blockchain/commonware-crypto-p2p": "32735f9bfea380ec",
   "blockchain/commonware-storage": "7a6433f3d1a008ad",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
@@ -4921,7 +4937,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/ai-infrastructure-b300-128-blueprint": "f70eb784c384db94",
   "gpu/ai-infrastructure-commissioning-acceptance": "be2772f1fcb5a890",
   "gpu/b300-rack-power-cooling": "4d994e2cf03d3516",
-  "gpu/cutlass-collectives-and-tile-schedulers": "410d7a5d7d495657",
+  "gpu/cutlass-collectives-and-tile-schedulers": "8417d2bd567426d4",
   "gpu/kubernetes-vs-slurm-gpu-scheduling": "dcf1d4cf5172684e",
   "gpu/cfd-finite-volume-gpu": "3fad1100200cd912",
   "gpu/cuda-kernel-fusion": "8174d357aef27299",

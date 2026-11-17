@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LeakageViz from "./viz/LeakageViz";
+import PurgeGapViz from "./viz/PurgeGapViz";
 
 export default function Leakage() {
   return (
@@ -20,6 +21,13 @@ export default function Leakage() {
           available했던 data만 학습한 뒤 다음 horizon을 평가합니다. Model refit
           주기와 feature state update 주기도 production과 맞춰야 합니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <PurgeGapViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Label horizon이 길거나 entity가 중복되면 train label interval과
           validation input 시점이 겹칠 수 있습니다. 이때는 업무 의존성에 따라

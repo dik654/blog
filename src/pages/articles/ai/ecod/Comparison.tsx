@@ -1,4 +1,5 @@
 import EvaluationBoundaryViz from "./viz/EvaluationBoundaryViz";
+import MarginalBlindSpotViz from "./viz/MarginalBlindSpotViz";
 
 const methods = [
   ["ECOD", "feature별 marginal tail", "Global tail anomaly와 빠른 contribution 확인", "feature 조합·local anomaly·중복 signal"],
@@ -11,6 +12,8 @@ export default function Comparison() {
   return (
     <section id="comparison" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">ECOD가 틀리는 모양을 먼저 그리고 detector와 평가를 고른다</h2>
+
+      <MarginalBlindSpotViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           ECOD는 적어도 한 feature의 tail에 anomaly가 드러날 때 자연스럽다. 개별 marginal에서는 평범한데 조합만 비정상인 row, 정상 cluster 안의

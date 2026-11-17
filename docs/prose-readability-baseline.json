@@ -222,7 +222,7 @@
       "score": 25
     },
     "ai/arima": {
-      "fingerprint": "96ae0f88622ee131",
+      "fingerprint": "f3e0c2da7fae3090",
       "score": 24
     },
     "blockchain/cometbft-abci": {
@@ -274,7 +274,7 @@
       "score": 23
     },
     "ai/claw-plugin": {
-      "fingerprint": "8bd236a8a965dc57",
+      "fingerprint": "7fe1f86de89a3041",
       "score": 22
     },
     "blockchain/bft-comparison": {
@@ -338,8 +338,8 @@
       "score": 20
     },
     "blockchain/impl-field-arithmetic": {
-      "fingerprint": "fd8c2819eb2d9229",
-      "score": 20
+      "fingerprint": "1b0bedd016e045de",
+      "score": 8
     },
     "blockchain/lotus-mpool": {
       "fingerprint": "251777cf4620ee86",
@@ -378,7 +378,7 @@
       "score": 18
     },
     "ai/claw-telemetry": {
-      "fingerprint": "f9dc64e8d1aaaeba",
+      "fingerprint": "81cb43203034d605",
       "score": 18
     },
     "ai/training-pipeline": {
@@ -474,7 +474,7 @@
       "score": 16
     },
     "ai/claw-worker-boot": {
-      "fingerprint": "7f0fd01de2069ea4",
+      "fingerprint": "53da0c891973cc3d",
       "score": 15
     },
     "ai/compression-pipeline": {

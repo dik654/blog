@@ -1,6 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PoWMiningViz from "./viz/PoWMiningViz";
 import PoWFlowViz, { PoWVerificationPseudocodeViz } from "./viz/PoWFlowViz";
+import HashTargetGridViz from "./viz/HashTargetGridViz";
+import ForkWorkViz from "./viz/ForkWorkViz";
 
 export default function ProofOfWork() {
   return (
@@ -17,6 +19,7 @@ export default function ProofOfWork() {
       </div>
 
       <PoWMiningViz />
+      <HashTargetGridViz />
       <ExplainedFormula
         question="Target이 작아질수록 평균 시도 수는 어떻게 변할까?"
         idea="가능한 출력 중 허용되는 출력의 비율을 셉니다. 실패한 뒤에도 같은 조건으로 다시 시도하면 평균 시도 횟수는 성공확률의 역수가 됩니다."
@@ -50,6 +53,9 @@ export default function ProofOfWork() {
       <PoWFlowViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>유효한 블록 두 개가 생기면 누적 작업량을 비교합니다</h3>
+      </div>
+      <ForkWorkViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           지연 때문에 X와 Y가 같은 부모에서 갈라질 수 있습니다. Bitcoin 계열에서는 유효한 작업 증거가 나타내는 작업량을 누적해 더 큰 가지를 따릅니다. 각 블록의 난이도가 다르면 블록 개수만 비교할 수 없습니다. X 쪽에 동등 난이도의 작업 두 개가 더 쌓이고 Y 쪽에는 하나가 쌓였다면 그 조건 아래 X 쪽 누적량이 큽니다.
         </p>

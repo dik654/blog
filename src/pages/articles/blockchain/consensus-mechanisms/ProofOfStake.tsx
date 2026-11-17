@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import PoSValidatorViz from "./viz/PoSValidatorViz";
 import PoSFlowViz from "./viz/PoSFlowViz";
+import StakeQuorumViz from "./viz/StakeQuorumViz";
 export default function ProofOfStake(){return <section id="pos" data-teach-level="6" className="space-y-6 [&_p]:leading-8">
 <h2 className="text-2xl font-bold">9. 지분 40이면 D가 매번 제안자가 될까요?</h2>
 <p>같은 네 참여자가 10·20·30·40의 자원을 프로토콜에 담보로 등록했다고 놓습니다(가정). 이 지분으로 제안할 기회와 투표 무게를 정합니다. 실제로 검증에 참여하는 사람은 검증자(validator)입니다. 블록을 내놓을 사람은 제안자(proposer)입니다. 누가 선택되는지는 현재 상태와 검증 가능한 무작위 선택 규칙에 따릅니다.</p>
@@ -16,6 +17,7 @@ export default function ProofOfStake(){return <section id="pos" data-teach-level
         epoch=current_epoch, root=get_block_root(state, current_epoch)
     )
     state.justification_bits[0] = Boolean(True)`}</code></pre></CitationBlock></div>
+<StakeQuorumViz />
 <p>같은 조건에 합계 지분 100, 올바른 대상 투표 지분 70을 대응시키면 70×3=210이 100×2=200 이상이라 이 판정을 통과합니다. 60이면 180이어서 통과하지 않습니다. 코드 뒤의 finalization 분기는 이전에 정당화된 지점과 시점 간격을 다시 확인합니다. 이 예는 유효 투표로 집계되기 위한 서명·출발 지점·시점 검사를 이미 통과했다고 가정합니다.</p>
 <p>현재 head를 고르는 fork choice와 finality, 위반한 서명에 경제적 손실을 부과하는 slashing은 각각의 규칙입니다. 슬래싱은 같은 역할·시점에서 모순되는 서명처럼 객관적으로 검증 가능한 위반 증거를 다룹니다. 단순 오프라인 벌점과도 구분합니다.</p>
 <div id="paper-gasper"><CitationBlock source="Combining GHOST and Casper (Gasper)" citeKey={2} href="https://arxiv.org/abs/2003.03052"><p>블록 가지를 선택하는 규칙과 책임을 물을 수 있는 확정을 결합한 이론적 근거입니다. 정직한 지분과 메시지 시점에 관한 전제 아래 안전성과 진행 가능성을 분석합니다. 특정 클라이언트의 최신 모든 업그레이드, 키 보관이나 처리량 측정까지 보장하는 논문은 아닙니다.</p></CitationBlock></div>

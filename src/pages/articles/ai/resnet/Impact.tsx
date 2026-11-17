@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import InterpretationViz from "./viz/InterpretationViz";
+import ResidualPathsViz from "./viz/ResidualPathsViz";
 
 export default function Impact() {
   return (
@@ -40,6 +41,8 @@ export default function Impact() {
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/1712.09913" target="_blank" rel="noreferrer">원 논문의 시각화 방법·비교 보기</a>
       </div>
+
+      <ResidualPathsViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>“얕은 network의 ensemble”은 유용한 후속 관점이지 정의가 아니다</h3>

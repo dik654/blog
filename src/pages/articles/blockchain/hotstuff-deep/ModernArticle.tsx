@@ -1,6 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { HotstuffChainViz, HotstuffFailureTable, HotstuffRecoveryViz, HotstuffSafeVoteViz } from "./viz/ModernHotstuffViz";
+import NewViewCountViz from "./viz/NewViewCountViz";
+import ThreeChainLinkViz from "./viz/ThreeChainLinkViz";
 
 export default function ModernHotstuffArticle() {
   return (
@@ -55,6 +57,7 @@ export default function ModernHotstuffArticle() {
         <p>
           n=4, f=1에서는 같은 블록과 view를 가리키는 유효한 표 3개가 QC를 만듭니다. Threshold signature를 사용하면 이 표들을 하나의 짧은 서명으로 표현할 수 있습니다. 그래도 누가 표를 보냈는지, 어느 위원회와 view의 표인지, 어떤 블록 해시를 가리키는지는 계속 검증해야 합니다.
         </p>
+        <ThreeChainLinkViz />
         <p>
           Chained HotStuff는 연속된 블록이 앞선 QC를 운반하게 해 여러 논리 단계를 겹쳐 처리합니다. B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모에 연결되면 B10이 commit됩니다. B13이 B11을 건너뛰거나 형제 블록의 QC를 들고 오면 높이가 연속이어도 three-chain이 아닙니다.
         </p>
@@ -78,6 +81,7 @@ export default function ModernHotstuffArticle() {
         <p>
           주 노드가 멈추면 pacemaker가 복제본을 다음 view로 보냅니다. 새 주 노드는 유효한 NEW-VIEW 2f+1개를 모아 그 안에서 가장 높은 QC를 고릅니다. 그리고 그 QC가 인증한 블록을 부모로 새 제안을 만듭니다. 각 복제본은 새 주 노드에게 보고 하나를 보냅니다. 새 주 노드는 모은 표를 QC 하나로 만들어 배포하므로 주 노드 교체의 인증자 수를 선형으로 구성할 수 있습니다.
         </p>
+        <NewViewCountViz />
         <p>
           여기서 선형이라는 말은 논문이 세는 인증자 수를 가리킵니다. 블록 본문 전체의 바이트 수와 서명 검증 CPU는 별도입니다. 잘못된 주 노드가 연속돼 여러 view를 거칠 때의 전체 비용도 언제나 O(n)은 아닙니다. 비교할 때는 인증자 수와 메시지 수, payload 바이트, 암호 연산을 따로 측정해야 합니다.
         </p>

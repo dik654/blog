@@ -2,6 +2,7 @@ import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import DropEmbedViz from "./viz/DropEmbedViz";
+import EmbeddingScatterViz from "./viz/EmbeddingScatterViz";
 
 export default function DropoutEmbedding({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
@@ -13,6 +14,9 @@ export default function DropoutEmbedding({ onCodeRef }: { onCodeRef: (key: strin
         <p>
           Inverted dropout은 학습 중 확률 <code>p</code>로 원소를 0으로 만들고, 남은 값에 <code>1/(1-p)</code>를 곱해 출력의 기댓값을 유지합니다. backward에서도 같은 mask를 사용해야 하므로 forward에서 생성한 mask를 저장합니다. 평가 모드에서는 무작위성을 제거하고 입력을 그대로 반환합니다.
         </p>
+      </div>
+      <div className="not-prose my-8"><EmbeddingScatterViz /></div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Embedding은 정수 ID에 해당하는 weight 행을 선택하는 lookup입니다. one-hot vector와 전체 행렬을 곱하는 대신 필요한 행만 읽으므로 계산량이
           줄어듭니다. backward는 forward에서 사용한 ID를 기억했다가 해당 행에 gradient를 scatter-add하며 같은 ID가 여러 번 나오면 기여를 합산합니다.

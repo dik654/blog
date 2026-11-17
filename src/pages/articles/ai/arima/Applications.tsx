@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ExtensionChoiceViz from "./viz/ExtensionChoiceViz";
+import SeasonalLagViz from "./viz/SeasonalLagViz";
 
 export default function Applications() {
   return (
@@ -18,6 +19,8 @@ export default function Applications() {
           frequency와 다르면 plot과 domain schedule에서 period를 확인해야 한다.
         </p>
       </div>
+
+      <SeasonalLagViz />
 
       <ExplainedFormula
         question="비계절 dynamics와 s주기 계절 dynamics를 한 ARIMA operator에 어떻게 결합할까?"

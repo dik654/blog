@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { Fragment, type ReactNode } from "react";
 
 type ArticleKey =
   | "aml-fds-deep"
@@ -264,7 +265,10 @@ function Evidence({ item, index }: { item: Citation; index: number }) {
   );
 }
 
-export default function ComplianceEvidenceArticle({ article }: { article: ArticleKey }) {
+/** 선택: 본문 문단 앞에 넣을 Viz. key는 "first-0"·"second-1"처럼 절과 문단 순서입니다. 없으면 기존과 같게 그립니다. */
+type VizBefore = Partial<Record<string, ReactNode>>;
+
+export default function ComplianceEvidenceArticle({ article, vizBefore }: { article: ArticleKey; vizBefore?: VizBefore }) {
   const config = CONFIG[article];
   return (
     <article className="space-y-14">
@@ -278,13 +282,13 @@ export default function ComplianceEvidenceArticle({ article }: { article: Articl
 
       <section id={config.firstId} className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · 개념과 증거 경계</p><h2 className="mt-2 text-2xl font-bold">{config.firstTitle}</h2></header>
-        {config.firstBody.map((paragraph) => <p key={paragraph} className="leading-7">{paragraph}</p>)}
+        {config.firstBody.map((paragraph, index) => <Fragment key={paragraph}>{vizBefore?.[`first-${index}`]}<p className="leading-7">{paragraph}</p></Fragment>)}
         <div className="grid gap-3 md:grid-cols-2">{config.controls.map(([tag, title, body]) => <div key={tag} className="min-w-0 rounded-lg border border-border p-4"><p className="text-xs font-bold tracking-[.08em] text-primary">{tag}</p><p className="mt-2 font-semibold">{title}</p><p className="mt-2 break-words text-sm leading-6 text-muted-foreground">{body}</p></div>)}</div>
       </section>
 
       <section id={config.secondId} className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · 실행·계산·근거</p><h2 className="mt-2 text-2xl font-bold">{config.secondTitle}</h2></header>
-        {config.secondBody.map((paragraph) => <p key={paragraph} className="leading-7">{paragraph}</p>)}
+        {config.secondBody.map((paragraph, index) => <Fragment key={paragraph}>{vizBefore?.[`second-${index}`]}<p className="leading-7">{paragraph}</p></Fragment>)}
         <ExplainedFormula question={config.question} idea={config.idea} formula={config.formula} annotatedFormula={config.annotatedFormula} operations={config.operations} terms={config.terms} assumptions={config.assumptions} interpretation={config.interpretation} />
         {config.citations.map((item, index) => <Evidence key={item.id} item={item} index={index} />)}
       </section>
