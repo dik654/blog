@@ -3,6 +3,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import RailgunLocator, { RailgunMapReturn } from "./RailgunLocator";
 import RailgunStateTraceViz, { RailgunVisibilityViz } from "./viz/RailgunStateTraceViz";
+import BoundParamsBindingViz from "./viz/BoundParamsBindingViz";
+import ContractCommitViz from "./viz/ContractCommitViz";
 
 const CONTRACT_COMMIT = "30da51509975013720529ec146c3cecc0f87088b";
 const CIRCUIT_COMMIT = "0aa2d13763a9fcfbb7b7ea9c02e004e71f1394bb";
@@ -136,6 +138,7 @@ inputs[2 + nullifiersLength + i] = uint256(transaction.commitments[i]);
 
 // 5. 위 공개 신호와 private witness의 관계를 Groth16으로 확인합니다.
 valid = verifyProof(verifyingKey, transaction.proof, inputs);`}</code></pre>
+        <BoundParamsBindingViz />
         <p>
           받는 사람이 암호문을 열어 새 note를 찾으려면 ciphertext가 필요합니다. Ciphertext를 proof와 무관한 별도 payload로 취급하면 유효한 proof에 다른 수신자 자료를 바꿔 붙이는 경계가 생깁니다. 이 소스에서는 <code>hashBoundParams</code>가 그 연결을 맡습니다.
         </p>
@@ -162,6 +165,7 @@ ciphertext[offset] = transaction.boundParams.commitmentCiphertext[i];
 
 // 4. 모든 transaction 검사가 끝난 뒤 새 leaf를 tree에 넣습니다.
 insertLeaves(commitments);`}</code></pre>
+        <ContractCommitViz />
         <p>
           중간의 <code>require</code>가 실패하면 EVM transaction 전체가 revert되므로 nullifier만 남거나 commitment만 들어가는 부분 성공은 없어야 합니다. 다만 Wallet이 event를 중간까지만 읽어 로컬 잔액을 잘못 보여 주는 문제는 별도입니다. On-chain source of truth와 wallet mirror를 구분해야 합니다.
         </p>

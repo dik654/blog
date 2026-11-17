@@ -1,2 +1,3 @@
 import PlatformTeeArticle from "../platform-tee-article";
-export default function ModernDstackArticle(){return <PlatformTeeArticle platform="dstack"/>;}
+import KeyContextViz from "./viz/KeyContextViz";
+export default function ModernDstackArticle(){return <PlatformTeeArticle platform="dstack" slots={{ beforeFormula: <KeyContextViz /> }}/>;}

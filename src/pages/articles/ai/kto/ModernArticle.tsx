@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import KTOObjective from "../alignment-methods/KTO";
 import AlignmentPipelineViz from "../alignment-methods/viz/AlignmentPipelineViz";
+import KtoUtilityViz from "./viz/KtoUtilityViz";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 
 export default function ModernArticle() {
@@ -20,6 +21,9 @@ export default function ModernArticle() {
         <AlignmentPipelineViz mode="kto" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8"><strong>Binary feedback</strong>은 response 하나에 desirable 또는 undesirable label을 붙인 기록입니다. 같은 prompt의 두 답이 동시에 있어야 하는 pairwise preference와 형태가 다릅니다.</p>
+        </div>
+        <KtoUtilityViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">KTO는 현재 policy가 reference보다 그 response를 얼마나 더 선호하는지 log-ratio로 계산합니다. Batch에서 추정한 KL을 <strong>reference point</strong>로 두고, desirable은 그 기준보다 위로, undesirable은 아래로 이동하도록 utility 방향을 나눕니다.</p>
         </div>
         <ContentBoundary article="kto" />

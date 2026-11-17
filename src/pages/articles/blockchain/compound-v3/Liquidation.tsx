@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import ModernCometViz from "./viz/ModernCometViz";
+import AskDiscountViz from "./viz/AskDiscountViz";
 
 export default function Liquidation() {
   return (
@@ -11,6 +12,7 @@ export default function Liquidation() {
         <p>담보 판매 조건이 열리면 별도 구매자가 <code>buyCollateral</code>을 실행해 할인된 담보를 삽니다. 부실 계정을 닫는 사람과 protocol inventory를 사는 사람이 분리된 구조입니다.</p>
       </div>
       <ModernCometViz mode="liquidation" />
+      <AskDiscountViz />
       <ExplainedFormula
         question="Protocol이 보유한 collateral의 ask discount는 어떻게 정해질까요?"
         idea="Asset liquidation factor가 남긴 haircut 여유에 storeFrontPriceFactor를 곱해 discount를 만들고 oracle price에서 뺍니다. Buyer는 baseAmount와 minAmount를 함께 고정합니다."

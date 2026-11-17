@@ -7,6 +7,10 @@ import {
   CfdVerificationViz,
   FiniteVolumePipelineViz,
 } from "./viz/CfdPipelineViz";
+import CflReachViz from "./viz/CflReachViz";
+import ConvergenceOrderViz from "./viz/ConvergenceOrderViz";
+import FaceGatherViz from "./viz/FaceGatherViz";
+import HaloOverlapViz from "./viz/HaloOverlapViz";
 
 const NASA_NAVIER_STOKES =
   "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/navier-strokes-equation/";
@@ -216,6 +220,7 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
             GPU가 빨라도 explicit time step의 물리 거리 제한은 사라지지 않습니다
           </h2>
         </header>
+        <CflReachViz />
         <p>
           Explicit scheme에서 한 update가 참조하는 stencil보다 정보가 더 멀리
           이동하면 numerical domain of dependence가 physical propagation을
@@ -282,6 +287,7 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
             Cell loop는 병렬이어도 face gather와 global coupling이 병목을 정합니다
           </h2>
         </header>
+        <FaceGatherViz />
         <p>
           고정 사례의 cell 네 개는 이웃이 단순하지만 실제 unstructured mesh는
           face owner/neighbour index를 따라 두 cell state를 간접적으로 모읍니다.
@@ -290,6 +296,7 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           있습니다.
         </p>
         <CfdGpuMappingViz />
+        <HaloOverlapViz />
         <p>
           Flux와 residual을 fuse하면 face state의 HBM round trip을 줄일 수 있지만
           reconstruction temporary·register·shared-memory lifetime이 늘어날 수
@@ -342,6 +349,7 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           묻습니다. Residual convergence 하나로 세 주장을 합치지 않습니다.
         </p>
         <CfdVerificationViz />
+        <ConvergenceOrderViz />
         <ul data-teach-level="6" className="space-y-3 pl-5 text-sm leading-7">
           <li>
             <strong>Conservation:</strong> Internal face contribution이 owner와

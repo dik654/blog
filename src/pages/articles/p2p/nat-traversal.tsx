@@ -2,9 +2,12 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import HolePunchViz from "./nat-traversal/viz/HolePunchDetailViz";
+import DcutrUpgradeViz from "./nat-traversal/viz/DcutrUpgradeViz";
 import ICEViz from "./nat-traversal/viz/ICEViz";
 import NATTypesViz from "./nat-traversal/viz/NATTypesViz";
+import PairPriorityOrderViz from "./nat-traversal/viz/PairPriorityOrderViz";
 import STUNViz from "./nat-traversal/viz/STUNViz";
+import TrickleTimingViz from "./nat-traversal/viz/TrickleTimingViz";
 import TURNViz from "./nat-traversal/viz/TURNViz";
 
 export default function NatTraversalArticle() {
@@ -321,6 +324,8 @@ export default function NatTraversalArticle() {
           </p>
         </div>
 
+        <PairPriorityOrderViz />
+
         <div className="not-prose my-8">
           <ICEViz />
         </div>
@@ -357,6 +362,8 @@ export default function NatTraversalArticle() {
           repeatUntil="각 component에 selected pair가 생기거나 checklist가 실패할 때까지 scheduled check를 반복합니다."
           output="selected_pair = direct srflx pair, 또는 direct 실패 시 relay pair"
         />
+
+        <TrickleTimingViz />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -448,6 +455,11 @@ export default function NatTraversalArticle() {
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>ICE와 DCUtR은 같은 생각을 쓰지만 같은 프로토콜은 아닙니다</h3>
+        </div>
+
+        <DcutrUpgradeViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             ICE는 후보·credential·checklist·nomination을 정의합니다. Libp2p
             DCUtR은 이미 Circuit Relay로 연결된 peer들이 그 relay stream에서

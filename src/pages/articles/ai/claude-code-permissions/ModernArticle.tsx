@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { PermissionDecisionViz } from "../claude-code/viz/ModernClaudeCodeViz";
+import PrecedenceLadderViz from "./viz/PrecedenceLadderViz";
+import HookLayerViz from "./viz/HookLayerViz";
 
 export default function ClaudeCodePermissionsArticle() {
   return (
@@ -68,6 +70,7 @@ export default function ClaudeCodePermissionsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Deny → ask → allow를 순서 있는 판정으로 읽습니다
         </h2>
+        <PrecedenceLadderViz />
         <ExplainedFormula
           question="한 tool call c의 permission 결과는 어떤 순서로 정해지나요?"
           idea={
@@ -138,6 +141,7 @@ export default function ClaudeCodePermissionsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Permission은 OS·container·network sandbox 전체가 아닙니다
         </h2>
+        <HookLayerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             File tool rule만으로 Bash subprocess의 모든 file 접근을 막았다고 볼 수 없습니다. Credential scope·filesystem sandbox·network

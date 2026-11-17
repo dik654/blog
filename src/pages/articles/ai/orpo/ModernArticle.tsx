@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ORPOObjective from "../alignment-methods/ORPO";
 import AlignmentPipelineViz from "../alignment-methods/viz/AlignmentPipelineViz";
+import OrpoOddsGapViz from "./viz/OrpoOddsGapViz";
 import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 
 export default function ModernArticle() {
@@ -37,6 +38,7 @@ export default function ModernArticle() {
             { term: "Rejected odds", description: "같은 prompt에서 덜 선호된 response의 odds입니다.", example: "Chosen log-odds에서 rejected log-odds를 뺍니다.", boundary: "쉬운 rejected만 두면 length·style shortcut이 생깁니다." },
             { term: "λ", description: "Imitation loss와 preference separation의 상대 scale입니다.", example: "λ sweep에서 quality·margin·regression을 함께 봅니다.", boundary: "논문 default를 model 규모와 data가 달라도 그대로 쓰지 않습니다." },
           ]} />
+        <OrpoOddsGapViz />
       </section>
 
       <ORPOObjective />

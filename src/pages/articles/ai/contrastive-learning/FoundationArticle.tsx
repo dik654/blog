@@ -8,6 +8,7 @@ import {
   PairMeaningOverviewViz,
   ProjectionHandoffViz,
 } from "./viz/ModernContrastiveViz";
+import UnitNormalizeGeometryViz from "./viz/UnitNormalizeGeometryViz";
 
 const PAIR_RECEIPT_CODE = `type PairRelation = "positive" | "negative" | "unknown";
 
@@ -126,6 +127,8 @@ export default function ContrastiveLearningFoundationArticle() {
             <code> z</code>가 됩니다.
           </p>
         </div>
+
+        <UnitNormalizeGeometryViz />
 
         <CalculationWalkthrough
           title="Projection을 unit vector로 바꾸는 계산"

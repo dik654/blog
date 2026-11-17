@@ -1,4 +1,5 @@
 import PoStFlowViz from "./viz/PoStFlowViz";
+import ProofJobRecordViz from "./viz/ProofJobRecordViz";
 
 export default function PoSt() {
   return (
@@ -37,6 +38,9 @@ export default function PoSt() {
           sector snapshot과 challenge set을 남깁니다. Proof parameter와
           submission inclusion, verification result도 함께 기록합니다.
         </p>
+      </div>
+      <ProofJobRecordViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Missing, invalid, late와 reorged proof는 서로 다른 상태입니다. Node
           restart 뒤 chain state와 local job state를 맞춰야 중복 제출과 누락된

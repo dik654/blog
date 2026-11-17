@@ -1,6 +1,9 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { AutobahnLaneCutViz, BFTAxisTableViz, BFTSameTraceViz } from "./viz/ModernBFTComparisonViz";
+import AutobahnBacklogCutViz from "./viz/AutobahnBacklogCutViz";
+import HotStuffChainViz from "./viz/HotStuffChainViz";
+import QuorumOverlapViz from "./viz/QuorumOverlapViz";
 
 function Note({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -80,6 +83,8 @@ export default function ModernBFTComparisonArticle() {
         <p>
           HotStuff의 제안은 새 블록과 부모, 부모를 정당화하는 QC를 함께 운반합니다. 복제본은 제안이 현재 lock의 가지를 연장하거나, 더 높은 view의 유효한 QC가 다른 가지를 정당화할 때만 투표합니다. n=4, f=1에서는 같은 블록과 view를 가리키는 표 세 개가 QC가 됩니다. 하지만 QC 하나는 그 블록이 인증됐다는 뜻이지 곧바로 커밋됐다는 뜻이 아닙니다.
         </p>
+        <HotStuffChainViz />
+
         <p>
           Chained HotStuff에서는 B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모를 이어야 B10을 커밋할 수 있습니다. 주 노드가 멈추면 pacemaker가 view를 전진시키고 새 주 노드는 NEW-VIEW 2f+1개 안에서 가장 높은 유효 QC를 찾습니다. 이 QC가 가리키는 가지를 잇는 제안을 만든 뒤에도 각 복제본은 자신의 lock과 safe-vote 조건을 다시 검사합니다.
         </p>
@@ -116,6 +121,8 @@ export default function ModernBFTComparisonArticle() {
         <p>
           주 노드가 멈춰도 lane의 data 전파는 계속될 수 있습니다. Timeout 2f+1개로 만든 TC에는 각 복제본의 highQC와 highProp이 들어갑니다. 다음 주 노드는 TC에서 가장 높은 PrepareQC와 f+1회 나타난 proposal을 비교해 이전 view에서 커밋됐을 수 있는 cut을 보존합니다.
         </p>
+        <AutobahnBacklogCutViz />
+
         <p>
           따라서 장애가 끝난 뒤 합의는 길어진 각 lane 전체를 다시 제안하지 않고 최신 tip을 가리킬 수 있습니다. 다만 누락된 payload를 실제로 받는 SYNC 비용은 사라지지 않습니다.
         </p>
@@ -133,6 +140,8 @@ export default function ModernBFTComparisonArticle() {
           <p className="text-sm font-semibold text-primary">04 · 비교</p>
           <h2 className="mt-2 text-2xl font-bold">안전성은 먼저 통과하고, 성능은 같은 조건에서 나눠 잽니다</h2>
         </header>
+
+        <QuorumOverlapViz />
 
         <ExplainedFormula
           question="Equal-weight BFT에서 두 commit quorum이 적어도 한 정상 복제본을 공유하려면 교집합은 얼마나 커야 할까요?"

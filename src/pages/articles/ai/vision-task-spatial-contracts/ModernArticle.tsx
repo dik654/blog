@@ -7,6 +7,7 @@ import {
   VisionFoundationLocator,
   VisionMapReturn,
 } from "../shared/VisionFoundationLocator";
+import StrideGridViz from "./viz/StrideGridViz";
 
 export default function VisionTaskArticle() {
   return (
@@ -123,6 +124,7 @@ export default function VisionTaskArticle() {
           Downsampling으로 지운 작은 물체와 경계는 head가 저절로 복원하지
           못합니다
         </h2>
+        <StrideGridViz />
         <TermBreakdown
           title="보존해야 할 spatial evidence"
           items={[

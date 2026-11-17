@@ -7,6 +7,10 @@ import {
   ConsensusRequestTraceViz,
   ConsensusSelectionFlowViz,
 } from "./viz/ModernConsensusComparisonViz";
+import CriticalPathOverlapViz from "./viz/CriticalPathOverlapViz";
+import PowForkReorgViz from "./viz/PowForkReorgViz";
+import QuorumIntersectionViz from "./viz/QuorumIntersectionViz";
+import SamplingPollViz from "./viz/SamplingPollViz";
 
 export default function ModernConsensusComparisonArticle() {
   return <article className="space-y-14">
@@ -36,12 +40,14 @@ export default function ModernConsensusComparisonArticle() {
         <h2 className="mt-2 text-2xl font-bold">Validator 한 표와 hash power 한 단위는 왜 같은 표가 아닐까요?</h2>
       </header>
       <ConsensusFamilyMatrixViz />
+      <QuorumIntersectionViz />
       <p>
         Classical BFT는 고정된 검증자 명부에서 서명된 표를 모읍니다. 명부는 epoch마다 바뀔 수 있습니다. 프로토콜마다 lock과 view change 방식은 다르지만, 같은 slot에서 충돌하는 quorum certificate를 만들지 못하게 하는 교집합이 핵심입니다.
       </p>
       <p>
         DAG-BFT는 payload 전파를 ordering 경로와 분리하는 경우가 많습니다. 이때 batch를 여러 노드가 보관했다는 data certificate와 anchor의 순서를 확정했다는 증거는 서로 다릅니다. 전자가 생겼다고 실행 순서까지 결정된 것은 아닙니다.
       </p>
+      <SamplingPollViz />
       <p>
         Nakamoto PoW는 “노드 몇 대”보다 유효한 work가 얼마나 누적됐는지를 비교합니다. 열린 참여를 hash power라는 비용에 연결하고, 더 많은 누적 work를 가진 유효한 chain을 선택합니다. Sampling 계열은 작은 peer 표본을 여러 번 뽑아 선호와 confidence를 갱신합니다. 따라서 sample size, threshold, 연속 성공 횟수와 표본 전제가 결과의 일부입니다.
       </p>
@@ -62,6 +68,7 @@ export default function ModernConsensusComparisonArticle() {
       <p>
         DLS의 partial synchrony는 두 모형을 구분합니다. 하나는 메시지 지연 상한이 있지만 그 값을 모르는 경우이고, 다른 하나는 알려진 상한이 알 수 없는 시점 이후부터 성립하는 경우입니다. 논문이 실제 인터넷의 GST 시각이나 timeout 값을 정해 주는 것은 아닙니다.
       </p>
+      <PowForkReorgViz />
       <p>
         PoW network가 갈라지면 양쪽 branch에 work가 쌓일 수 있습니다. 연결이 돌아온 뒤 더 큰 누적 work를 가진 유효한 chain을 채택하면서 다른 branch의 낮은 깊이 거래가 되돌아갈 수 있습니다. Sampling 계열의 오류 확률은 반복 표본과 adversary model에서 나오므로, PoW의 attacker catch-up 확률과 같은 식이나 같은 “99.9% finality” 열에 넣으면 안 됩니다.
       </p>
@@ -91,6 +98,7 @@ export default function ModernConsensusComparisonArticle() {
         <h2 className="mt-2 text-2xl font-bold">합계가 같은 240ms인데 왜 최적화할 곳이 다를까요?</h2>
       </header>
       <ConsensusLatencyPathViz />
+      <CriticalPathOverlapViz />
       <ExplainedFormula
         question="Client가 실제로 기다린 시간을 어떻게 나누어야 병목을 찾을 수 있습니까?"
         idea={<>Batch 대기, data와 ordering의 critical path, deterministic execution, finality policy, queue를 구분합니다. Data와 order가 병렬이라면 두 구간을 모두 더하지 않고 실제로 더 오래 걸린 critical path만 셉니다.</>}

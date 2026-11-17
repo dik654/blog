@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { GenerativeMapViz } from "./viz/ModernGenerativeTheoryViz";
+import LikelihoodToNllViz from "./viz/LikelihoodToNllViz";
 import {
   GenerativeFamilyLocator,
   GenerativeFamilyMapReturn,
@@ -95,6 +96,7 @@ export default function GenerativeTheoryArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Likelihood는 한 축이고, 생성 품질 전체가 아닙니다
         </h2>
+        <LikelihoodToNllViz />
         <ExplainedFormula
           question="여러 observation에 model이 준 probability를 어떻게 하나의 학습 점수로 모으나요?"
           idea={

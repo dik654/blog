@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { LightGBMEfficiencyViz } from "../gbm-viz";
+import EfbOffsetBundleViz from "./viz/EfbOffsetBundleViz";
+import LeafGrowthViz from "./viz/LeafGrowthViz";
 import {
   TabularModelFamilyLocator,
   TabularModelFamilyMapReturn,
@@ -111,6 +113,7 @@ export default function LightGBMEfficientTreesArticle() {
           One-hot처럼 대부분 0인 columns가 같은 row에서 겹치지 않으면 서로 다른
           bin range를 배정해 한 bundled coordinate로 운반할 수 있습니다.
         </LessonHeader>
+        <EfbOffsetBundleViz />
         <TermLesson
           name="Exclusive Feature Bundling · EFB"
           oneLine="동시 non-zero 충돌이 드문 sparse features를 서로 다른 offset 범위에 배치해 effective column 수를 줄이는 방법입니다."
@@ -129,6 +132,7 @@ export default function LightGBMEfficientTreesArticle() {
           budget에서 training loss를 빨리 줄일 수 있지만 한 branch가 깊어질 수
           있습니다.
         </LessonHeader>
+        <LeafGrowthViz />
         <TermLesson
           name="Leaf-wise tree growth"
           oneLine="현재 estimated gain이 가장 큰 terminal leaf에 다음 split budget을 배분하는 비대칭 성장 규칙입니다."

@@ -3,13 +3,15 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { AugmentationEvaluationViz } from "../data-augmentation/viz/ModernAugmentationViz";
+import CandidateScorecardViz from "./viz/CandidateScorecardViz";
+import TtaInverseMapViz from "./viz/TtaInverseMapViz";
 
 export default function AugmentationEvaluationArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Augmentation 평가는 실행 가능한 policy에서 시작합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
             “강한 augmentation 사용”은 재현 가능한 설명이 아닙니다. Operation과 parameter 범위, 확률과 순서, input unit·target
             map·seed까지 한 artifact로 고정해야 어떤 training distribution을 비교했는지 알 수 있습니다.
-          </p><p>
+          </p></div><CandidateScorecardViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             후보 A를 <code>flip p=.5 → brightness ±.1 → normalize v3</code>, seed 17로 고정했다고 합시다. Baseline의 clean
             accuracy는 .84이고 후보 A는 .86이지만, 고정 low-light slice는 .75에서 .71로 떨어졌습니다. TTA 네 view를 켜면 .73으로
             회복하지만 p95 latency가 12ms에서 31ms가 됩니다.
@@ -26,7 +28,7 @@ export default function AugmentationEvaluationArticle() {
 
     <section id="clean-robust" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Clean 성능과 robustness 성능은 서로 다른 질문에 답합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Stochastic augmented validation을 매번 새로 뽑으면 model quality와 transform 난이도·seed가 섞입니다. Clean validation은 원래 task 품질을, fixed low-light·blur·crop slice는 특정 shift에서의 robustness를 답합니다. 두 metric은 별도 column과 confidence interval로 보고합니다.</p></div></section>
 
-    <section id="tta" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">TTA는 좌표를 되돌린 뒤 합치는 ensemble입니다</h2><ExplainedFormula question="여러 augmented view의 spatial prediction을 왜 바로 평균하지 않고 inverse map을 적용하나요?" idea={<p>각 view에서 나온 mask·box·heatmap은 서로 다른 좌표에 있습니다. 먼저 각 output을 원래 input 좌표로 되돌린 뒤 같은 위치끼리 평균합니다.</p>} formula={String.raw`\bar p(x)=\frac1K\sum_{k=1}^{K}T_k^{-1}\!\left(f_\theta(T_k(x))\right)`} annotatedFormula={String.raw`\begin{aligned}x_k&=\underbrace{T_k(x)}_{\text{k번째 label-preserving view 생성}}\\p_k&=\underbrace{f_\theta(x_k)}_{\text{각 view 좌표에서 prediction 계산}}\\p_k^{\rm base}&=\underbrace{T_k^{-1}(p_k)}_{\text{spatial output을 원래 좌표로 복원}}\\\bar p(x)&=\underbrace{\frac1K\sum_{k=1}^{K}p_k^{\rm base}}_{\text{같은 좌표의 K개 prediction을 평균}}\end{aligned}`} operations={[
+    <section id="tta" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">TTA는 좌표를 되돌린 뒤 합치는 ensemble입니다</h2><TtaInverseMapViz/><ExplainedFormula question="여러 augmented view의 spatial prediction을 왜 바로 평균하지 않고 inverse map을 적용하나요?" idea={<p>각 view에서 나온 mask·box·heatmap은 서로 다른 좌표에 있습니다. 먼저 각 output을 원래 input 좌표로 되돌린 뒤 같은 위치끼리 평균합니다.</p>} formula={String.raw`\bar p(x)=\frac1K\sum_{k=1}^{K}T_k^{-1}\!\left(f_\theta(T_k(x))\right)`} annotatedFormula={String.raw`\begin{aligned}x_k&=\underbrace{T_k(x)}_{\text{k번째 label-preserving view 생성}}\\p_k&=\underbrace{f_\theta(x_k)}_{\text{각 view 좌표에서 prediction 계산}}\\p_k^{\rm base}&=\underbrace{T_k^{-1}(p_k)}_{\text{spatial output을 원래 좌표로 복원}}\\\bar p(x)&=\underbrace{\frac1K\sum_{k=1}^{K}p_k^{\rm base}}_{\text{같은 좌표의 K개 prediction을 평균}}\end{aligned}`} operations={[
       {expression:String.raw`T_k(x)`,annotation:["고정된 k번째 view를 만들어","추가 inference input 생성"]},
       {expression:String.raw`f_\theta(T_k(x))`,annotation:["각 view를 같은 model에 넣어","view 좌표의 prediction 생성"]},
       {expression:String.raw`T_k^{-1}(p_k)`,annotation:["flip·crop·scale을 역으로 적용해","모든 spatial output을 base 좌표에 정렬"]},

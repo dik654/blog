@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { TabularSynthesisViz } from "../data-augmentation/viz/ModernAugmentationViz";
+import ConstraintScopeViz from "./viz/ConstraintScopeViz";
+import SplitLocalInterpolationViz from "./viz/SplitLocalInterpolationViz";
 import {
   DataAugmentationPracticeLocator,
   DataAugmentationPracticeMapReturn,
@@ -82,6 +84,7 @@ export default function TabularDataSynthesisArticle() {
           Constraint ledger는 invalid row를 만든 뒤 눈으로 찾는 일을 실행
           규칙으로 바꿉니다
         </h2>
+        <ConstraintScopeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             각 rule에는 식, 적용 entity, 허용 오차, failure action을 둡니다.
@@ -97,6 +100,7 @@ export default function TabularDataSynthesisArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           먼저 split하고, training fold의 정보만으로 fit하고 sample합니다
         </h2>
+        <SplitLocalInterpolationViz />
         <ExplainedFormula
           question="SMOTE형 interpolation을 하더라도 왜 neighbor와 λ가 training fold 안에 갇혀야 하나요?"
           idea={

@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PoRFlowViz from "./viz/PoRFlowViz";
+import MissProbabilityViz from "./viz/MissProbabilityViz";
 
 export default function PoR() {
   return (
@@ -20,6 +21,7 @@ export default function PoR() {
         </p>
       </div>
       <PoRFlowViz />
+      <MissProbabilityViz />
       <ExplainedFormula
         question="File block의 20%가 사라졌을 때 k개를 균등 독립 표본으로 뽑아 한 개 이상 탐지할 확률은?"
         idea="모든 sample이 남아 있는 80%에서 나올 확률을 먼저 구한 뒤 1에서 뺍니다. 실제 PoR theorem은 sampling뿐 아니라 encoding·authenticator·extractor 조건을 더합니다."

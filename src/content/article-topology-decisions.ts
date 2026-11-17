@@ -31,6 +31,13 @@ const KEEP_2026_11_03 = (
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "blockchain/pos-theory": {
+    "action": "keep",
+    "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: 저장 증명 이론: PoR, PoRep, PoSt",
+    "sharedGate": "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    "status": "reviewed",
+    "reviewedAt": "2026-11-07"
+  },
   "ai/distributional-semantics": {
     "action": "keep",
     "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: 분포 의미론: 동시 발생 행렬에서 단어 벡터까지",
@@ -4455,6 +4462,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "blockchain/pos-theory": "ce8c9b1317a17d0e",
   "ai/distributional-semantics": "ac2f2c155d094526",
   "blockchain/erasure-coding": "74a10aab7d1352d0",
   "blockchain/cometbft-crypto": "b319bef372ce4dc5",
@@ -4498,9 +4506,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/embedding-model-fine-tuning": "a9181340467d466a",
   "ai/regularization-practice": "f9c989e79d78922f",
   "ai/dropout-regularization": "b3d4242cb6d24bd4",
-  "ai/weight-decay": "0f13f76d0c655fae",
+  "ai/weight-decay": "861e3eb1afdb2a4f",
   "ai/early-stopping": "1d40968235c2ed36",
-  "ai/label-smoothing": "cea8427f1735834a",
+  "ai/label-smoothing": "9ec999426bf34639",
   "cloud/linux-memory-page-cache-oom": "d2a2cc805fcb4cb5",
   "cloud/linux-tcp-time-wait-ports-backlog": "cf0791d96b2d0a87",
   "cloud/linux-process-signals-pid1-fds": "7dfcec5bf9c26aa8",
@@ -4778,8 +4786,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/multiview-fusion": "ebed6af40e066afb",
   "ai/deepfake-detection": "14a6d6d7ccaa14af",
   "ai/deepfake-preprocessing-lineage": "5acfe7bec3ba52c3",
-  "ai/deepfake-frequency-evidence": "713256f5b259bc5d",
-  "ai/deepfake-video-decisions": "ec6f074eceb541e8",
+  "ai/deepfake-frequency-evidence": "797debfc09f7ed7e",
+  "ai/deepfake-video-decisions": "3748e891756ebee7",
   "ai/deepfake-dataset-governance": "0af621e37fadb823",
   "ai/open-r1": "bfd9be254e19e45c",
   "ai/openclaw-assistant": "9143909e934ae83b",
@@ -4839,14 +4847,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/cometbft-consensus": "82873d72447d57b4",
   "blockchain/da-theory": "dd45804466d93b39",
   "blockchain/da-validation": "33ce13130f29cd88",
-  "blockchain/railgun": "2c7b61b18f7dbd43",
+  "blockchain/railgun": "e32ca92976e206cf",
   "blockchain/railgun-validation": "4ab28cdeaed12fc4",
   "blockchain/helios": "7e5db745e3f3bc99",
   "blockchain/helios-bootstrap": "a36d6c1eb6d3fcea",
   "blockchain/helios-execution": "5a6a1dc6b6784ee4",
   "blockchain/helios-types": "46c29258550fa707",
   "blockchain/helios-config": "fc7c798862d9a44c",
-  "blockchain/kohaku-provider": "45293bde30e8f34c",
+  "blockchain/kohaku-provider": "c618f95fbc9f807c",
   "blockchain/kohaku-provider-validation": "804e54d011802203",
   "blockchain/webcat-frontend-integrity": "59719df63bc576ee",
   "blockchain/prysm-ssz": "c2a4f98ee687d361",
@@ -4864,7 +4872,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/evmos": "f8cd4c222b72834b",
   "elections/electoral-systems": "6d5dce259e4159ab",
   "blockchain/commonware-broadcast": "f6af774b731edbba",
-  "blockchain/commonware-crypto-p2p": "32735f9bfea380ec",
+  "blockchain/commonware-crypto-p2p": "103f1da613c0b664",
   "blockchain/commonware-storage": "7a6433f3d1a008ad",
   "blockchain/prysm-epoch-processing": "cd9a4969c425b758",
   "blockchain/prysm-block-processing": "ca4684e1646441f4",
@@ -4971,7 +4979,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/b300-rack-power-cooling": "4d994e2cf03d3516",
   "gpu/cutlass-collectives-and-tile-schedulers": "8417d2bd567426d4",
   "gpu/kubernetes-vs-slurm-gpu-scheduling": "dcf1d4cf5172684e",
-  "gpu/cfd-finite-volume-gpu": "3fad1100200cd912",
+  "gpu/cfd-finite-volume-gpu": "f276483d53f7b462",
   "gpu/cuda-kernel-fusion": "6771c890ad4a3ef1",
   "gpu/cuda-matrix-multiply": "7327f1d888279ef1",
 "crypto/constraint-systems":"180451df5e454382",

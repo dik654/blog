@@ -7,6 +7,8 @@ import {
   RegularizationFamilyLocator,
   RegularizationFamilyMapReturn,
 } from "../shared/RegularizationFamilyLocator";
+import SgdDecayStepViz from "./viz/SgdDecayStepViz";
+import AdamL2VsAdamWViz from "./viz/AdamL2VsAdamWViz";
 
 export default function WeightDecayArticle() {
   return <div className="space-y-16">
@@ -25,6 +27,7 @@ export default function WeightDecayArticle() {
     </section>
     <section id="sgd-equivalence" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Plain SGD에서 L2 gradient는 multiplicative shrink로 정리됩니다</h2>
+      <SgdDecayStepViz />
       <ExplainedFormula question="왜 quadratic penalty가 weight를 일정 비율 줄이나요?" idea={<p>L2 penalty를 미분하면 λw입니다. Scalar learning rate의 SGD 식에 넣고 current weight 항끼리 묶으면 (1−ηλ)w가 됩니다.</p>} formula={String.raw`w^+=(1-\eta\lambda)w-\eta g`} annotatedFormula={String.raw`\begin{aligned}g_{\mathrm{L2}}&=\underbrace{\lambda w}_{\text{원점 방향 당김}}\\g_{\mathrm{total}}&=\underbrace{g+g_{\mathrm{L2}}}_{\text{task와 penalty 결합}}\\w^+&=\underbrace{(1-\eta\lambda)w}_{\text{weight 비율 축소}}\\&\quad-\underbrace{\eta g}_{\text{task gradient step}}\end{aligned}`} operations={[
         { expression: String.raw`\nabla_w\frac\lambda2\lVert w\rVert^2=\lambda w`, annotation: ["quadratic 크기 penalty를 미분해", "현재 weight 방향의 당김을 만듦"] },
         { expression: String.raw`(1-\eta\lambda)w`, annotation: ["현재 weight 항을 묶어", "step별 multiplicative shrink로 표현"] },
@@ -36,6 +39,7 @@ export default function WeightDecayArticle() {
     </section>
     <section id="adamw" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">AdamW는 task direction만 adaptive하게 만들고 shrink는 밖에 둡니다</h2>
+      <AdamL2VsAdamWViz />
       <ExplainedFormula question="왜 Adam의 L2와 AdamW direct decay가 다를까요?" idea={<p>λw를 Adam gradient 안에 넣으면 moment와 coordinate별 denominator가 penalty까지 바꿉니다. AdamW는 task gradient로 만든 adaptive direction과 동일 group의 direct shrink를 마지막에 합칩니다.</p>} formula={String.raw`w^+=(1-\eta\lambda)w-\eta\widehat m/(\sqrt{\widehat v}+\epsilon)`} annotatedFormula={String.raw`\begin{aligned}w_{\mathrm{decay}}&=\underbrace{(1-\eta\lambda)w}_{\text{direct shrink}}\\d_{\mathrm{task}}&=\underbrace{\frac{\widehat m(g)}{\sqrt{\widehat v(g)}+\epsilon}}_{\text{task 방향만 조정}}\\w^+&=\underbrace{w_{\mathrm{decay}}-\eta d_{\mathrm{task}}}_{\text{두 경로를 마지막에 결합}}\end{aligned}`} operations={[
         { expression: String.raw`(1-\eta\lambda)w`, annotation: ["모든 coordinate의 current weight에", "group 안에서 같은 shrink factor 적용"] },
         { expression: String.raw`\widehat m(g)/(\sqrt{\widehat v(g)}+\epsilon)`, annotation: ["task gradient의 방향과 scale만", "moment history로 precondition"] },

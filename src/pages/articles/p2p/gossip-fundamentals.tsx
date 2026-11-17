@@ -5,6 +5,7 @@ import EpidemicViz from "./gossip-fundamentals/viz/EpidemicViz";
 import ProtocolCompareViz from "./gossip-fundamentals/viz/ProtocolCompareViz";
 import GossipSubMeshViz from "./gossip-fundamentals/viz/GossipSubMeshViz";
 import ReliabilityViz from "./gossip-fundamentals/viz/ReliabilityViz";
+import MeanFieldRoundsViz from "./gossip-fundamentals/viz/MeanFieldRoundsViz";
 
 export default function GossipFundamentalsArticle() {
   return (
@@ -104,6 +105,9 @@ export default function GossipFundamentalsArticle() {
           ]}
           interpretation="초기에는 informed 비율이 빠르게 늘 수 있다는 직관을 줍니다. 실제 GossipSub의 도착시간·완전 전달률이나 O(log N)을 이 식 하나로 보장하지 않습니다."
         />
+        <div className="not-prose my-8">
+          <MeanFieldRoundsViz />
+        </div>
         <div className="not-prose my-6 rounded-xl border border-border/70 bg-muted/20 p-4 text-sm leading-6">
           <p className="font-semibold">여덟 node·fanout 2를 식에 넣어 보기</p>
           <ol className="mt-2 list-decimal space-y-1 pl-5 text-foreground/75">

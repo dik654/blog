@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { BoostingFunctionViz } from "../gbm-viz";
+import LeafStepViz from "./viz/LeafStepViz";
+import ShrinkageRoundsViz from "./viz/ShrinkageRoundsViz";
 import {
   TabularModelFamilyLocator,
   TabularModelFamilyMapReturn,
@@ -47,6 +49,7 @@ export default function GradientBoostingArticle() {
           example="면적 60㎡ 이하는 3억, 초과는 6억을 출력하면 두 구간을 가진 regression tree입니다."
           boundary="Leaf value는 probability가 아니라 additive logit일 수 있고 missing·category routing은 구현마다 다릅니다."
         />
+        <LeafStepViz />
         <ExplainedFormula
           question="왜 모든 leaf 값을 더하지 않고 sample이 속한 leaf 하나만 남을까요?"
           idea="Leaf region은 서로 겹치지 않게 input 공간을 나눕니다. Indicator는 x가 속한 region에서만 1이므로 정확히 한 상수 값만 output에 남습니다."
@@ -177,6 +180,7 @@ export default function GradientBoostingArticle() {
           작은 η는 tree 하나의 목소리를 낮추므로 보통 더 많은 round가
           필요합니다. Validation curve는 그 조합에서 ensemble 길이를 선택합니다.
         </LessonHeader>
+        <ShrinkageRoundsViz />
         <TermLesson
           name="Boosting shrinkage · early stopping"
           oneLine="새 tree update의 step size와 independent validation에서 선택한 best round를 함께 관리하는 ensemble-length 계약입니다."

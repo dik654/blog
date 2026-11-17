@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ModernCometViz from "./viz/ModernCometViz";
+import RateCurvesViz from "./viz/RateCurvesViz";
 
 export default function CometArchitecture() {
   return (
@@ -27,6 +28,7 @@ export default function CometArchitecture() {
         interpretation="Scale을 1로 단순화하면 p=1,000,I_s=1.05는 1,050 supply이고 p=−500,I_b=1.08은 −540 borrow입니다. Borrow principal을 floor로 역산하면 작은 부채가 사라질 수 있어 source는 ceil을 사용합니다."
       />
       <ModernCometViz mode="rate" />
+      <RateCurvesViz />
       <ExplainedFormula
         question="Comet의 supply와 borrow rate는 utilization에서 어떻게 갈라질까요?"
         idea="두 curve가 U를 공유하지만 각각 base·kink·low/high slope를 가집니다. Aave처럼 borrow rate×U×(1−reserve factor)로 supply rate를 유도한다고 가정하지 않습니다."

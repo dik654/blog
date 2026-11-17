@@ -1,4 +1,5 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import SpectrumBarsViz from "./viz/SpectrumBarsViz";
 import SpectrumTraceViz from "./viz/SpectrumTraceViz";
 
 export default function Spectrum() {
@@ -13,6 +14,9 @@ export default function Spectrum() {
           반복되므로 위치별 곱은 모두 <code>+1</code>이고 합은 8입니다. 공간에서 흩어져
           보이던 반복이 주파수 좌표에서는 하나의 큰 값으로 모입니다.
         </p>
+      </div>
+      <SpectrumBarsViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           이 계산은 입력을 다른 좌표로 표현할 뿐입니다. 실제 얼굴 crop에는 많은 방향과
           반복 횟수가 함께 들어 있고, 어느 막대가 생성 과정 때문에 생겼는지는 별도

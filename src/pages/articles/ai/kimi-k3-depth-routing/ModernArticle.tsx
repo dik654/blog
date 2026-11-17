@@ -4,6 +4,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { DepthRoutingViz } from "../kimi-k3-viz";
+import BlockSourceBoundViz from "./viz/BlockSourceBoundViz";
 import {
   ModelArchitectureCaseLocator,
   ModelArchitectureCaseMapReturn,
@@ -24,6 +25,7 @@ export default function KimiK3DepthRoutingArticle() {
     </section>
     <section id="block-bound" className="space-y-6">
       <LessonHeader number="02" eyebrow="93개 source를 모두 들고 있지 않기" title="Block AttnRes는 최대 12층의 결과를 한 source로 묶는다">Full 방식은 layer 수에 비례해 source state가 늘어납니다. K3는 93 main layer를 8개 block으로 묶고 block output과 embedding만 장기 source로 둡니다.</LessonHeader>
+      <BlockSourceBoundViz />
       <TermLesson name="Block AttnRes state bound" oneLine="Layer별 depth source를 block-level representation으로 묶어 long-lived source state를 layer 수 L 대신 block 수 N에 비례시키는 구현입니다." shape="93 layers ÷ max 12 layers/block → 8 block sources + embedding" example="Hidden width d라면 Full source order는 약 93d, block-level 장기 source는 약 9d입니다." boundary="이는 source-state 비례 비교이지 model 전체 memory가 93/9로 줄었다는 뜻이 아니며 block 내부 개별 layer 선택 자유도도 줄어듭니다." />
       <ExplainedFormula question="왜 93층을 12층 block으로 묶으면 8개 block source가 될까요?" idea="마지막 block이 12층을 다 채우지 않아도 필요하므로 floor가 아니라 ceiling을 사용합니다. 여기에 embedding source 하나를 더합니다." formula={String.raw`N=\left\lceil L/B\right\rceil,\quad M_{\rm source}\propto(N+1)d`} annotatedFormula={String.raw`\begin{aligned}N&=\underbrace{\left\lceil\frac{93}{12}\right\rceil}_{\substack{\text{남은 층도 세도록}\text{올림}}}=8\\S_{\rm block}&=\underbrace{N}_{\text{block source}}=8\\S_{\rm total}&=\underbrace{S_{\rm block}+1}_{\text{embedding 추가}}=9\\M_{\rm source}&\propto\underbrace{S_{\rm total}d}_{\text{source state 차수}}=9d\end{aligned}`} operations={[{expression:String.raw`\lceil93/12\rceil`,annotation:["layer 수를 block capacity로 나누고 올림해","partial 마지막 block 포함"]},{expression:String.raw`N+1`,annotation:["block source에 embedding을 더해","long-lived source 수 계산"]},{expression:String.raw`S\times d`,annotation:["source 개수에 hidden width를 곱해","source-state 크기의 차수 계산"]}]} terms={[{symbol:String.raw`L`,name:"Main-layer count",description:"Block으로 묶을 전체 layer 수입니다."},{symbol:String.raw`B`,name:"Maximum block depth",description:"Source 하나로 합칠 최대 layer 수입니다."},{symbol:String.raw`d`,name:"Hidden width",description:"각 source representation의 coordinate 수입니다."}]} assumptions={["Key/value projection과 optimizer·activation memory는 비교에서 제외합니다.","마지막 partial block도 source 하나를 만듭니다."]} interpretation="93d 대 9d는 depth-source storage의 order 비교입니다. Total parameter·KV cache·MoE state까지 같은 비율로 줄지 않습니다." />
     </section>

@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PoRepFlowViz from "./viz/PoRepFlowViz";
+import ReplicaIdentityBranchViz from "./viz/ReplicaIdentityBranchViz";
 
 export default function PoRep() {
   return (
@@ -20,6 +21,7 @@ export default function PoRep() {
         </p>
       </div>
       <PoRepFlowViz />
+      <ReplicaIdentityBranchViz />
       <ExplainedFormula
         question="같은 data D라도 replica identity가 다르면 무엇이 달라져야 할까?"
         idea="Replica-specific encoding은 D와 identifier를 함께 입력으로 받아 encoded replica R과 commitment를 만듭니다. Security는 단순 함수 표기보다 해당 construction의 encoding·space·sequentiality assumptions에 있습니다."

@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { LabelSmoothingMechanismViz } from "../regularization-practice/viz/ModernRegularizationViz";
+import LossTermsViz from "./viz/LossTermsViz";
+import MixupSmoothingViz from "./viz/MixupSmoothingViz";
 import {
   RegularizationFamilyLocator,
   RegularizationFamilyMapReturn,
@@ -54,6 +56,7 @@ export default function LabelSmoothingArticle() {
     </section>
     <section id="loss" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Cross-entropy는 모든 class의 target 질량으로 log probability를 가중합니다</h2>
+      <LossTermsViz />
       <ExplainedFormula question="Soft target은 loss에서 어떻게 사용되나요?" idea={<p>
             Model logit을 softmax probability로 바꾸고 각 class의 log probability에 smoothed target 질량을 곱해 더합니다.
           </p>} formula={String.raw`\mathcal L=-\sum_k\widetilde y_k\log p_k`} annotatedFormula={String.raw`\begin{aligned}p_k&=\underbrace{\frac{e^{z_k}}{\sum_j e^{z_j}}}_{\text{logit을 합이 1인 model probability로 변환}}\\\mathcal L&=-\underbrace{\sum_{k=1}^{K}\widetilde y_k\log p_k}_{\text{target 질량으로 class별 surprise를 가중 평균}}\end{aligned}`} operations={[
@@ -67,6 +70,7 @@ export default function LabelSmoothingArticle() {
     </section>
     <section id="composition" data-teach-level="failure" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Mixup과 함께 쓰면 이름이 아니라 최종 target을 계산합니다</h2>
+      <MixupSmoothingViz />
       <ExplainedFormula question="Mixup 뒤 smoothing을 적용하면 probability mass는 어디로 가나요?" idea={<p>
             두 one-hot target을 λ로 섞고 그 결과 전체를 다시 (1−ε)만큼 유지한 뒤 uniform ε/K를 더합니다.
           </p>} formula={String.raw`\widetilde y=(1-\epsilon)(\lambda y_a+(1-\lambda)y_b)+\epsilon\mathbf1/K`} annotatedFormula={String.raw`\begin{aligned}y_{\mathrm{mix}}&=\underbrace{\lambda y_a+(1-\lambda)y_b}_{\text{두 sample target을 mix}}\\y_{\mathrm{kept}}&=\underbrace{(1-\epsilon)y_{\mathrm{mix}}}_{\text{mixed target을 유지}}\\y_{\mathrm{uniform}}&=\underbrace{\epsilon\mathbf1/K}_{\text{모든 class에 분배}}\\\widetilde y&=\underbrace{y_{\mathrm{kept}}+y_{\mathrm{uniform}}}_{\text{최종 soft target 결합}}\end{aligned}`} operations={[

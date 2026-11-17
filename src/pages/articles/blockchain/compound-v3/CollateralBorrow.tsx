@@ -1,9 +1,11 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import FactorBufferViz from "./viz/FactorBufferViz";
 
 export default function CollateralBorrow() {
   return (
     <section id="collateral-borrow" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 break-keep text-2xl font-bold">추가 차입은 막혔는데 왜 바로 청산되지는 않을까요?</h2>
+      <FactorBufferViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>새 base borrow·collateral withdrawal은 <code>borrowCollateralFactor</code>로 계산한 capacity를 넘을 수 없습니다. Liquidation은 더 높은 <code>liquidateCollateralFactor</code>로 별도 liquidity sum을 계산합니다. 이 사이 buffer 덕분에 governance가 borrow factor를 낮춰도 기존 account가 즉시 liquidatable이 되지 않을 수 있습니다.</p>
       </div>

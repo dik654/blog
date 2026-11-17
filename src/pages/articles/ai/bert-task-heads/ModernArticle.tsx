@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertTaskHeadViz } from "../bert/viz/ModernBertViz";
 import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
+import HeadAxisViz from "./viz/HeadAxisViz";
+import RetrievalCostViz from "./viz/RetrievalCostViz";
 
 export default function BertTaskHeadsArticle() {
   return (
@@ -123,6 +125,7 @@ export default function BertTaskHeadsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Token과 span task는 sequence length 축을 보존합니다
         </h2>
+        <HeadAxisViz />
         <ExplainedFormula
           question="NER와 extractive QA는 어느 output shape를 만들까요?"
           idea={
@@ -186,6 +189,7 @@ export default function BertTaskHeadsArticle() {
           Cross-encoder는 pair interaction을, bi-encoder는 vector 재사용을
           선택합니다
         </h2>
+        <RetrievalCostViz />
         <TermBreakdown
           title="Retrieval의 두 계산 경로"
           items={[

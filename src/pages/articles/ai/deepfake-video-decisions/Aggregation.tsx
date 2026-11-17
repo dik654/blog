@@ -1,11 +1,13 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AggregationTraceViz from "./viz/AggregationTraceViz";
+import ScoreTimelineViz from "./viz/ScoreTimelineViz";
 
 export default function Aggregation() {
   return (
     <section id="aggregation" data-teach-level="4" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">같은 여섯 점수를 합치는 규칙만 바꿔 봅니다</h2>
       <AggregationTraceViz />
+      <ScoreTimelineViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           유효 점수는 0.12·0.18·0.35·0.82·0.76·0.14입니다. 모두 평균하면 짧은 강한

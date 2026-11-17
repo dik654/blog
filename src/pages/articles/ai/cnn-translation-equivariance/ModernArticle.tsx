@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { EquivarianceViz } from "../cnn/viz/ModernCnnViz";
+import ShiftGridViz from "./viz/ShiftGridViz";
 import {
   VisionFoundationLocator,
   VisionMapReturn,
@@ -110,6 +111,7 @@ export default function CnnEquivarianceArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Stride와 경계는 한 pixel 이동 관계를 깰 수 있습니다
         </h2>
+        <ShiftGridViz />
         <TermBreakdown
           title="반례를 먼저 확인"
           items={[

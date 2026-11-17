@@ -6,6 +6,7 @@ import type { CodeRef } from "@/components/code/types";
 import KohakuProviderLocator, { KohakuProviderMapReturn } from "./KohakuProviderLocator";
 import { kohakuProviderCodeRefs } from "./codeRefsReal";
 import { KohakuProviderTraceViz, KohakuSignerBoundaryViz } from "./viz/ModernKohakuProviderViz";
+import KohakuFailureBoundaryViz from "./viz/KohakuFailureBoundaryViz";
 
 const KOHAKU_SHA = "b4ad096ef738a06f3f7025aa2870875527f9e6c7";
 
@@ -108,6 +109,7 @@ export default function ModernKohakuProviderArticle({ onCodeRef }: Props) {
 
       <section id="failure-boundary" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">설계된 실패는 자동 downgrade가 아니라 오류입니다</h2>
+        <KohakuFailureBoundaryViz />
         <p>
           고정한 Helios adapter는 <code>executionRpc</code>가 없으면 초기화를 거부합니다. Helios client 생성이나 <code>waitSynced()</code>가 실패해도 Provider를 반환하지 않습니다. 우회 경로의 fetch·JSON decode·RPC error도 호출 오류로 전파됩니다. 이 소스에는 실패한 Helios 요청을 다른 backend로 조용히 바꾸는 fallback이 없습니다.
         </p>

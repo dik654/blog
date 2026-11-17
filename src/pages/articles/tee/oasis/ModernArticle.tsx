@@ -1,2 +1,4 @@
 import PlatformTeeArticle from "../platform-tee-article";
-export default function ModernOasisArticle(){return <PlatformTeeArticle platform="oasis"/>;}
+import OasisCommitmentCompareViz from "./viz/OasisCommitmentCompareViz";
+import OasisReceiptFlowViz from "./viz/OasisReceiptFlowViz";
+export default function ModernOasisArticle(){return <PlatformTeeArticle platform="oasis" slots={{ beforeSequence: <OasisReceiptFlowViz />, beforeFormula: <OasisCommitmentCompareViz /> }}/>;}

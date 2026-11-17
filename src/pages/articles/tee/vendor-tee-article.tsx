@@ -162,7 +162,7 @@ function VendorFlow({ config }: { config: VendorConfig }) {
   );
 }
 
-export default function VendorTeeArticle({ vendor, commitViz, measurementViz }: { vendor: VendorKey; commitViz?: ReactNode; measurementViz?: ReactNode }) {
+export default function VendorTeeArticle({ vendor, lifecycleViz, commitViz, measurementViz }: { vendor: VendorKey; lifecycleViz?: ReactNode; commitViz?: ReactNode; measurementViz?: ReactNode }) {
   const config = CONFIG[vendor];
   return (
     <article className="space-y-14">
@@ -188,6 +188,7 @@ export default function VendorTeeArticle({ vendor, commitViz, measurementViz }: 
 
       <section id="memory-lifecycle" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Memory와 call lifecycle</p><h2 className="mt-2 text-2xl font-bold">Page state와 외부 I/O를 commit 순서로 추적한다</h2></header>
+        {lifecycleViz}
         <ol className="grid gap-3 md:grid-cols-2">
           {config.lifecycle.map(([tag, title, body], index) => <li key={tag} className="rounded-lg border border-border p-4"><p className="text-xs font-bold text-primary">{String(index + 1).padStart(2, "0")} · {tag}</p><p className="mt-2 font-semibold">{title}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p></li>)}
         </ol>

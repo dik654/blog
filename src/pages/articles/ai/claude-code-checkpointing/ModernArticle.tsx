@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { CheckpointBoundaryViz } from "../claude-code/viz/ModernClaudeCodeViz";
+import RecoverableSetViz from "./viz/RecoverableSetViz";
 
 export default function ClaudeCodeCheckpointingArticle() {
   return (
@@ -65,6 +66,7 @@ export default function ClaudeCodeCheckpointingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Recoverable effect는 file effect와 tracked path의 교집합입니다
         </h2>
+        <RecoverableSetViz />
         <ExplainedFormula
           question="어떤 effect가 checkpoint rewind만으로 복구되나요?"
           idea={

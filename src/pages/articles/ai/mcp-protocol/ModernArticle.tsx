@@ -5,6 +5,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import McpLearningFlowViz from "../mcp-learning/viz/McpLearningFlowViz";
 import { McpRequestPathLocator, McpRequestPathMapReturn } from "../shared/McpRequestPathLocator";
+import AdapterCountViz from "./viz/AdapterCountViz";
+import SelfDescribingRequestViz from "./viz/SelfDescribingRequestViz";
 
 export default function ModernArticle() {
   return (
@@ -20,6 +22,7 @@ export default function ModernArticle() {
           <p className="text-lg leading-8">AI 애플리케이션이 파일·issue tracker·database를 쓰려면 기능을 찾고, 인자를 보내고, 결과를 되돌려 받아야 합니다. 서비스마다 서로 다른 adapter를 만들면 host와 service 조합이 늘 때 연결 코드도 빠르게 늘어납니다.</p>
           <p className="leading-8"><strong>Model Context Protocol(MCP)</strong>은 이 연결에서 반복되는 message 형태를 맞춥니다. 기능의 업무 의미, 실제 권한, 사용자 승인과 sandbox까지 대신 결정하지는 않습니다. 먼저 “통신 규약”과 “보안 정책”을 분리해 두어야 뒤의 개념이 섞이지 않습니다.</p>
         </div>
+        <AdapterCountViz />
         <p className="font-semibold">방금 본 흐름으로 세 가지를 확인해 보세요.</p>
         <ol className="list-decimal space-y-2 pl-6"><li>Host 3개와 service 4개를 전용 연결하면 최대 12종의 adapter가 필요할까요?</li><li>공통 protocol 경계에 각각 한 번씩 맞추면 단순 모델에서 7종으로 줄어들까요?</li><li>MCP message를 해석할 수 있다는 사실만으로 파일 변경 권한도 생길까요?</li></ol>
         <p>답은 <strong>예, 예, 아니요</strong>입니다. MCP는 반복되는 연결 형식을 맞추며, 실제 실행 권한과 승인·격리는 host와 server가 별도로 판정합니다.</p>
@@ -61,6 +64,9 @@ export default function ModernArticle() {
       <section id="request-envelope" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>요청이 자신을 설명합니다</h2>
+        </div>
+        <SelfDescribingRequestViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             2026-07-28 core에서는 이전의 initialize session 대신 요청이 자신을 설명합니다. 요청마다 protocol version·client
             information·capability를 함께 보내므로 다른 worker가 받아도 이전 connection memory 없이 해석할 수 있습니다.

@@ -6,6 +6,7 @@ import {
   AvalanchePollUpdatePseudocodeViz,
   AvalanchePollTraceViz,
 } from "./viz/ModernAvalancheConsensusViz";
+import ByzantineSampleTailViz from "./viz/ByzantineSampleTailViz";
 
 export default function ModernAvalancheConsensusArticle() {
   return (
@@ -43,6 +44,8 @@ export default function ModernAvalancheConsensusArticle() {
         <p>
           따라서 B가 3표를 얻은 세 번째 장면에서는 preference는 바뀌지만 confidence는 0입니다. 응답이 늦은 validator는 자동으로 반대 vote가 되지 않습니다. 집계된 수가 threshold에 못 미치면 unsuccessful poll처럼 counter가 초기화됩니다.
         </p>
+
+        <ByzantineSampleTailViz />
 
         <ExplainedFormula
           question="N명 중 F명이 Byzantine일 때 k명 표본에 Byzantine validator가 alpha명 이상 들어올 한 번의 확률은 얼마일까요?"

@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { ReceptiveFieldViz } from "../cnn/viz/ModernCnnViz";
+import DilationGapViz from "./viz/DilationGapViz";
+import StackedSpanViz from "./viz/StackedSpanViz";
 import {
   VisionFoundationLocator,
   VisionMapReturn,
@@ -61,6 +63,7 @@ export default function CnnReceptiveArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Stride와 kernel span을 층마다 누적합니다
         </h2>
+        <StackedSpanViz />
         <ExplainedFormula
           question="여러 convolution을 쌓았을 때 input span을 어떻게 누적하나요?"
           idea={
@@ -144,6 +147,7 @@ export default function CnnReceptiveArticle() {
           Dilation은 span을 넓히지만 중간 좌표를 모두 읽는 dense kernel은
           아닙니다
         </h2>
+        <DilationGapViz />
         <TermBreakdown
           title="k=3, dilation=2의 형태"
           items={[

@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { QATLoopViz } from "../quantization/viz/ModernQuantizationViz";
+import FakeQuantStaircaseViz from "./viz/FakeQuantStaircaseViz";
+import SteGateViz from "./viz/SteGateViz";
 
 export default function QuantizationAwareTrainingArticle() {
   return (
@@ -73,6 +75,7 @@ export default function QuantizationAwareTrainingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Forward는 계단형 quantizer를 그대로 통과합니다
         </h2>
+        <FakeQuantStaircaseViz />
         <ExplainedFormula
           question="Fake quantization은 왜 quantize 뒤 곧바로 dequantize하나요?"
           idea={
@@ -135,6 +138,7 @@ export default function QuantizationAwareTrainingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Backward는 round를 그대로 미분하지 않습니다
         </h2>
+        <SteGateViz />
         <ExplainedFormula
           question="Round의 derivative가 0인데 gradient를 어떻게 전달하나요?"
           idea={

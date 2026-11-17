@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { HookLifecycleViz } from "../claude-code/viz/ModernClaudeCodeViz";
+import GateResolutionViz from "./viz/GateResolutionViz";
 
 export default function ClaudeCodeHooksArticle() {
   return (
@@ -70,6 +71,7 @@ export default function ClaudeCodeHooksArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Event·matcher·if가 모두 맞을 때 handler를 실행합니다
         </h2>
+        <GateResolutionViz />
         <ExplainedFormula
           question="Concrete event input x가 hook handler까지 도달하는 조건은 무엇인가요?"
           idea={

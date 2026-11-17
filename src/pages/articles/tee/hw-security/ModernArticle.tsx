@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { HardwareBoundaryViz } from "../tee-foundations-viz";
+import ReleaseDecisionViz from "./viz/ReleaseDecisionViz";
+import TrustChainRecoveryViz from "./viz/TrustChainRecoveryViz";
 
 const propertyRows = [
   ["기밀성", "Host가 payroll key와 평문을 읽지 못하는가", "Memory encryption·access control", "Workload가 스스로 log에 key를 쓰는 경우"],
@@ -54,6 +56,7 @@ export default function ModernHardwareSecurityArticle() {
 
       <section id="roots-resilience" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Root와 resilience</p><h2 className="mt-2 text-2xl font-bold">Root of Trust는 작고 고정된 시작점이며 보호·탐지·복구가 함께 있어야 한다</h2></header>
+        <TrustChainRecoveryViz />
         <p>Root of Trust(RoT)는 모든 software를 무조건 신뢰한다는 뜻이 아닙니다. 첫 검증이나 첫 측정을 수행하는 최소 시작점입니다. Boot ROM이나 CPU의 hardware-backed key가 다음 firmware를 검증하고, 그 firmware가 다시 다음 단계를 검증하거나 측정합니다.</p>
         <p>서명 확인에 성공했어도 runtime이 계속 정상이라는 보장은 없습니다. 따라서 firmware 보호뿐 아니라 변경 탐지와 정상 상태로 되돌리는 복구 경로가 함께 필요합니다.</p>
         <ul className="grid gap-3 md:grid-cols-3">
@@ -77,6 +80,7 @@ export default function ModernHardwareSecurityArticle() {
           <div className="rounded-lg border border-border p-5"><h3 className="font-semibold">Secure Boot</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">다음 component의 서명과 policy를 확인해 실행을 허용하거나 거부합니다. 실제 선택된 sequence의 설명서는 아닙니다.</p></div>
           <div className="rounded-lg border border-border p-5"><h3 className="font-semibold">Attestation</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">측정된 상태와 freshness evidence를 원격 verifier에게 전달합니다. 최종 authorization은 relying party policy가 합니다.</p></div>
         </div>
+        <ReleaseDecisionViz />
         <p>Payroll 사례에서는 먼저 image와 TCB 기준값의 버전을 고정합니다. 그다음 최신 attestation을 검증하고, 통과했을 때만 session key를 해당 channel에 묶어 지급합니다. Debug가 켜졌거나 patch 최소선보다 낮거나 기준 manifest가 없으면 지급하지 않습니다.</p>
         <p>Host가 실행을 멈춘 경우는 따로 봐야 합니다. Secret 미지급에는 성공했지만 서비스 가용성에는 실패했으므로, 보안 성공으로 한데 묶지 않고 별도 상태로 기록합니다.</p>
       </section>

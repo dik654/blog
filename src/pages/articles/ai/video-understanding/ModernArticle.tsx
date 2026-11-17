@@ -10,6 +10,7 @@ import {
   VideoObservationViz,
   VideoSampleRateViz,
 } from "./viz/ModernVideoUnderstandingViz";
+import StrideTradeoffViz from "./viz/StrideTradeoffViz";
 
 export default function VideoUnderstandingArticle() {
   return (
@@ -146,6 +147,9 @@ observed_seconds = end_seconds - start_seconds`}</code></pre>
             10번 봅니다. 같은 16개 관측점이 1.5초를 덮는다는 duration 계산과는 다른
             질문입니다.
           </p>
+        </div>
+        <StrideTradeoffViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Stride를 늘리면 같은 frame budget으로 더 긴 시간을 덮지만 초당 관측 횟수는
             줄어듭니다. 긴 사건을 보는 coverage와 빠른 변화를 구분하는 temporal resolution

@@ -12,6 +12,11 @@ import {
   CommonwareP2PBoundaryViz,
   CommonwareP2PFlowViz,
 } from "./viz/ModernCommonwareP2PViz";
+import {
+  CommonwareFailureStopViz,
+  CommonwareLocalSubmissionViz,
+  CommonwareTimestampWindowViz,
+} from "./viz/CommonwareStopPointViz";
 
 export default function ModernCommonwareCryptoP2PArticle() {
   const sidebar = useCodeSidebar();
@@ -48,6 +53,7 @@ export default function ModernCommonwareCryptoP2PArticle() {
         <p>
           Syn과 SynAck의 transcript에는 namespace, dialer·listener 역할, 양쪽 identity, timestamp, ephemeral public keys와 shared secret이 순서대로 결합됩니다. 각자의 long-term key signature와 양방향 confirmation이 모두 맞아야 cipher를 반환합니다.
         </p>
+        <CommonwareTimestampWindowViz />
         <p>
           Timestamp는 현재 시각에서 <code>max_handshake_age</code>를 뺀 하한부터 <code>synchrony_bound</code>를 더한 상한 직전까지 허용합니다. 너무 오래됐거나 지나치게 미래인 handshake는 signature가 맞아도 거절합니다. 전체 handshake에는 별도 timeout도 적용됩니다.
         </p>
@@ -82,6 +88,7 @@ export default function ModernCommonwareCryptoP2PArticle() {
 
       <section id="local-submission" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Alice의 send는 local queue에 넣는 단계까지만 확인합니다</h2>
+        <CommonwareLocalSubmissionViz />
         <p>
           Channel sender는 message size를 검사하고 recipient별 rate limiter를 확인한 뒤, channel과 payload를 한 번 encode하여 shared router mailbox에 넣습니다. 모든 recipient가 현재 rate-limited이면 <code>check</code>는 가장 이른 재시도 시각을 돌려주고, 기본 <code>Sender::send</code> 경로는 실제로 시도한 recipient 목록과 local admission 결과를 기준으로 끝납니다.
         </p>
@@ -148,6 +155,7 @@ export default function ModernCommonwareCryptoP2PArticle() {
       <section id="failure-boundaries" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">실패는 멈춘 경계에 따라 서로 다른 상태를 남깁니다</h2>
         <CommonwareP2PBoundaryViz />
+        <CommonwareFailureStopViz />
         <p>
           Wrong identity, 오래된 timestamp, signature·confirmation 불일치와 AEAD 오류는 session 실패입니다. Alice의 rate limit과 router mailbox overflow는 local submission 실패입니다.
         </p>
