@@ -31,6 +31,13 @@ const KEEP_2026_11_03 = (
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "ai/distributional-semantics": {
+    "action": "keep",
+    "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: 분포 의미론: 동시 발생 행렬에서 단어 벡터까지",
+    "sharedGate": "본문의 사례 숫자와 새 Viz의 숫자가 같은 계산으로 일치하는지 대조합니다.",
+    "status": "reviewed",
+    "reviewedAt": "2026-11-07"
+  },
   "blockchain/erasure-coding": {
     "action": "keep",
     "rationale": "본문은 그대로 두고 읽기를 돕는 Viz만 더해 파일 줄 수가 검토 기준을 넘었습니다. 글의 질문과 학습 단위는 바뀌지 않았습니다. 질문: 이레이저 코딩 이론: RS, 2D 코딩, DAS",
@@ -4448,6 +4455,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/distributional-semantics": "ac2f2c155d094526",
   "blockchain/erasure-coding": "74a10aab7d1352d0",
   "blockchain/cometbft-crypto": "b319bef372ce4dc5",
   "ai/lstm-timeseries": "15491dc1e3895ece",
@@ -4807,14 +4815,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/time-features": "b72517b5a7136e53",
   "ai/tabular-deep-learning": "30abceb6a73094b6",
   "ai/training-pipeline": "57056ca991b2c0a0",
-  "ai/transfer-learning-practice": "b8726991e17f6f32",
+  "ai/transfer-learning-practice": "0c48b9e478adf655",
   "ai/cosine-restart-scheduling": "808bbc71017f6f35",
   "ai/lr-decay-policies": "839a6b518defcb0e",
   "ai/lr-scheduling": "949722efcce0b22a",
   "ai/one-cycle-scheduling": "c4fdb6f778d80a5a",
   "ai/warmup-scheduling": "d79d143e13104812",
   "ai/transformer-architecture": "19c7e9b7d3c99411",
-  "ai/tokenizer": "976eedd79bd13071",
+  "ai/tokenizer": "f39154a70707a7db",
   "ai/vae": "135d0e2dc34f4a45",
   "ai/vllm-paged-attention": "71708ac98fa9d9fa",
   "ai/vllm-spec-decode": "64f4206cf3ba4f8d",
@@ -4823,7 +4831,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/query-transformation-and-adaptive-retrieval": "6c02f504f04be1fb",
   "ai/rag-context-assembly-and-evaluation": "dbb1bf89ee135c4c",
   "ai/knowledge-graph-construction": "352cd39f5a5032a0",
-  "ai/graphrag-community-and-multihop-search": "bd317ddb459c472d",
+  "ai/graphrag-community-and-multihop-search": "265d2598bb60f90d",
   "ai/model-vram-budgeting": "a37231f651446809",
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "c6636011f3386a57",
@@ -4900,12 +4908,12 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/mpc": "07f3cf355d38676f",
   "gpu/cuda-basics": "41615071ec176bec",
   "gpu/gpu-arch-hopper": "6d8e8dc5a7fe4e61",
-  "gpu/cuda-persistent-kernels": "c8286c15236f5c24",
+  "gpu/cuda-persistent-kernels": "ac071d156a1c6dc9",
   "gpu/cuda-register-pressure": "3dc3969caad020cb",
   "isms-aml/isms-security-infra": "d551fbdec8983e70",
   "ai/lora-finetuning": "13d78c92561da3fc",
   "ai/lora-training-and-release": "9887191b7009e2d0",
-  "ai/multi-agent-implementation": "c2b3777be97f2835",
+  "ai/multi-agent-implementation": "f481afb228912999",
   "ai/prediction-time-feature-availability": "4bd1e30ea86d0a59",
   "ai/regression-metrics": "0308db9bf503e917",
   "ai/ranking-metrics": "4c601a18c72d83f2",

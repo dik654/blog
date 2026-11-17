@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
+import LockWaitViz from "./viz/LockWaitViz";
+import VoteRouteViz from "./viz/VoteRouteViz";
 import { Hotstuff2CommitViz, Hotstuff2EntryDecisionViz, Hotstuff2EntryViz, Hotstuff2FailureTable } from "./viz/ModernHotstuff2Viz";
 
 export default function ModernHotstuff2Article() {
@@ -24,6 +26,7 @@ export default function ModernHotstuff2Article() {
           <p className="text-sm font-semibold text-primary">01 · 두 번의 정족수 확인</p>
           <h2 className="mt-2 text-2xl font-bold">첫 인증서는 블록을, 이중 인증서는 그 인증서를 다시 확인합니다</h2>
         </header>
+        <VoteRouteViz />
         <p>
           View 20의 주 노드는 B20을 제안하고 첫 번째 표를 모읍니다. 서로 다른 복제본 3대의 표가 모이면 C20(B20)이 됩니다. 주 노드는 이 인증서를 prepare 메시지로 방송합니다. 이를 검증한 복제본은 B20을 잠그고 C20(B20)에 대한 두 번째 표를 view 21의 주 노드에게 보냅니다.
         </p>
@@ -73,6 +76,7 @@ export default function ModernHotstuff2Article() {
         <p>
           느린 진입 경로를 잠금 보고서 2t+1개로 상태 인증서를 만들어 방송하는 방식으로 이해하면 안 됩니다. 그런 보고서 묶음을 모든 복제본에게 보내면 한 view의 전달량이 O(n²)으로 커집니다. HotStuff-2는 주 노드가 Ppc + Δ를 기다려 모든 정상 복제본의 잠금 보고가 도착하도록 한 뒤, 그중 가장 높은 인증서 하나만 제안에 넣습니다.
         </p>
+        <LockWaitViz />
         <p>
           Ppc는 pacemaker가 정상 복제본을 같은 view로 모으는 데 허용하는 시간 차이입니다. 논문이 예로 든 RareSync와 Lewis-Pye 계열에서는 Ppc = 2Δ로 둡니다. GST 전에는 이 시간이 실제 전달을 보장하지 않으므로 진행이 멈출 수 있습니다. 그러나 어떤 경우에도 복제본은 제안의 인증서가 자신의 lock보다 낮으면 투표하지 않습니다.
         </p>

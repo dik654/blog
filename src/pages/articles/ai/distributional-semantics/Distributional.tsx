@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ContextMatrixViz from "./viz/ContextMatrixViz";
 import WeightingViz from "./viz/WeightingViz";
+import WindowCountViz from "./viz/WindowCountViz";
 
 export default function Distributional() {
   return (
@@ -23,6 +24,8 @@ export default function Distributional() {
           문서의 주제 관계인지는 별도로 검증해야 합니다.
         </p>
       </div>
+
+      <WindowCountViz />
 
       <ExplainedFormula
         question="Corpus token sequence에서 word–context matrix의 한 cell은 어떻게 누적되는가?"

@@ -12,6 +12,8 @@ import ZkFromScratchLocator, {
 } from "../impl-field-arithmetic/ZkFromScratchLocator";
 import { zkHashTree } from "./fileTrees";
 import { officialHashCodeRefs } from "./officialCodeRefs";
+import LeafGuessViz from "./viz/LeafGuessViz";
+import MerkleIndexTreeViz from "./viz/MerkleIndexTreeViz";
 
 const ARK_SOURCE =
   "https://github.com/arkworks-rs/crypto-primitives/tree/7816710fc19cd4d18d6239785dac8937d7b9b3ce";
@@ -162,6 +164,7 @@ export default function ModernHashCommitmentArticle() {
         <h2 className="break-keep text-2xl font-bold">
           index 2의 낮은 bit부터 읽으면 c의 좌우 위치가 정해집니다
         </h2>
+        <MerkleIndexTreeViz />
         <p>
           이 글의 설명용 tree v1은 leaf를 <code>00 || u32be(length) || data</code>, inner node를
           <code>01 || left || right</code>로 hash합니다. 네 leaf <code>a·b·c·d</code>에서 c의 index는
@@ -230,6 +233,7 @@ export default function ModernHashCommitmentArticle() {
         <h2 className="break-keep text-2xl font-bold">
           Root가 inclusion을 묶어도 leaf 내용을 자동으로 숨기지는 않습니다
         </h2>
+        <LeafGuessViz />
         <p>
           Proof가 통과하면 <code>c</code>가 특정 schema와 root의 index 2에 포함됐다는 사실을 확인할 수 있습니다.
           하지만 leaf 후보가 작다면 공격자는 후보마다 같은 leaf hash와 path를 계산해 내용을 맞힐 수 있습니다.

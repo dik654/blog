@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MethodBridgeViz from "./viz/MethodBridgeViz";
 import EvaluationBoundaryViz from "./viz/EvaluationBoundaryViz";
+import ShiftedPmiViz from "./viz/ShiftedPmiViz";
 
 export default function NeuralApproach() {
   return (
@@ -81,6 +82,11 @@ export default function NeuralApproach() {
           0으로 놓으면 positive data 확률과 k배 noise 확률의 log-odds가 나옵니다.
           Noise가 context marginal일 때 이 값은 PMI−log k로 정리됩니다.
         </p>
+      </div>
+
+      <ShiftedPmiViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           고양이–반려 PMI≈0.439에 k=5를 대입하면 0.439−log 5≈−1.170입니다.
           양의 PMI pair도 negative class prior를 반영한 최적 score에서는 음수가

@@ -3,6 +3,11 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { Fragment, type ReactNode } from "react";
 import HanulCaseBranchViz from "./aml-compliance/viz/HanulCaseBranchViz";
+import ProportionalBranchViz from "./aml-rba-deep/viz/ProportionalBranchViz";
+import ResidualExposureViz from "./aml-rba-deep/viz/ResidualExposureViz";
+import FilingStateViz from "./aml-str-reporting/viz/FilingStateViz";
+import OwnershipChainViz from "./aml-cdd-deep/viz/OwnershipChainViz";
+import TravelRuleChannelViz from "./aml-cdd-deep/viz/TravelRuleChannelViz";
 
 type ArticleKey =
   | "aml-compliance"
@@ -36,6 +41,8 @@ type Config = {
   secondBody: readonly string[];
   /** 선택: secondBody의 해당 문단 바로 앞에 넣을 Viz. 없으면 기존 렌더와 같습니다. */
   secondBodyViz?: { beforeParagraph: number; node: ReactNode };
+  /** 선택: ExplainedFormula 바로 앞에 넣을 Viz. 없으면 기존 렌더와 같습니다. */
+  formulaViz?: ReactNode;
   releaseId: string;
   stages: readonly Row[];
   controls: readonly Row[];
@@ -174,6 +181,8 @@ const CONFIG: Record<ArticleKey, Config> = {
       "Travel Rule은 VASP 사이 가상자산 이전에 송·수신인 정보를 거래와 함께 전달·보존하는 별도 information-sharing control입니다. On-chain address만으로 자연인 identity가 증명되는 것은 아니므로 originator·beneficiary identity, VASP·wallet type, transfer ID와 message receipt를 묶고 최소 정보·암호화·access·retention을 적용합니다.",
       "2022년 최초 시행 안내에는 100만 원 기준이 있었습니다. 2026년 8월 11일 의결된 시행령 개정안은 이 기준 폐지와 해외 VASP·개인지갑 거래 통제를 예고했지만, 조항별 시행일이 같지 않습니다. 2026-11-02 현재에는 의결 내용과 실제 시행 조문을 구분하고, 거래 시점에 효력이 있는 법령·감독규정을 release마다 확인합니다.",
     ],
+    secondBodyViz: { beforeParagraph: 3, node: <TravelRuleChannelViz /> },
+    formulaViz: <OwnershipChainViz />,
     releaseId: "cdd-release",
     stages: [
       ["IDENTIFY", "주장과 권한 수집", "자연인·법인·대리인의 identity와 관계 목적을 수집합니다."],
@@ -277,6 +286,8 @@ const CONFIG: Record<ArticleKey, Config> = {
       "한울무역에는 indirect owner source와 해외 상대방 invoice, 자금 원천을 추가하고, 분할송금 pattern의 case threshold와 review SLA를 강화할 수 있습니다. 반면 이미 법으로 요구되는 실제소유자 확인이나 STR 의무를 residual score가 낮다는 이유로 생략할 수 없습니다. 통제마다 해결하는 scenario와 남는 blind spot을 명시합니다.",
       "모델·정책 변경은 time-based holdout과 고객·지역·상품 slice에서 base와 candidate를 비교합니다. High-risk miss, alert precision, case age, customer friction, analyst capacity, override와 drift를 같이 보고 owner가 canary·rollback을 승인합니다. Score cutoff를 정한 calibration data와 같은 data로 성능을 확정하지 않습니다.",
     ],
+    secondBodyViz: { beforeParagraph: 0, node: <ProportionalBranchViz /> },
+    formulaViz: <ResidualExposureViz />,
     releaseId: "rba-release",
     stages: [
       ["SCENARIO", "행위자·경로·피해", "구체 자금세탁 시나리오와 population·source를 정의합니다."],
@@ -356,6 +367,7 @@ const CONFIG: Record<ArticleKey, Config> = {
       "Narrative는 ‘수상하다’ 대신 누가, 언제, 얼마를, 누구에게, 어떤 방식으로 거래했고 무엇이 known profile과 달랐는지, 어떤 설명·자료를 확인했으며 왜 충분하지 않았는지를 씁니다. 사실과 추론을 분리하고 source transaction과 document reference를 붙입니다. Detector score나 typology 이름만 복사하지 않습니다.",
       "Decision maker는 close, 추가 정보, monitoring 강화, STR 제출과 별도 계정·거래 조치를 각각 권한과 근거로 결정합니다. STR 제출 여부는 need-to-know로 제한합니다. 고객 문의에는 신고 사실을 드러내지 않는 승인 문구를 사용하되 정상 고객 서비스와 법적 권리까지 무조건 막지 않습니다.",
     ],
+    secondBodyViz: { beforeParagraph: 1, node: <FilingStateViz /> },
     secondId: "report-evidence-confidentiality",
     secondTitle: "제출 payload·증거 reference·confidentiality·보존과 재전송 상태를 하나의 receipt로 닫는다",
     secondBody: [
@@ -505,6 +517,7 @@ export default function AmlControlsArticle({ article }: { article: ArticleKey })
             <p className="leading-7">{paragraph}</p>
           </Fragment>
         ))}
+        {config.formulaViz ?? null}
         <ExplainedFormula question={config.question} idea={config.idea} formula={config.formula} annotatedFormula={config.annotatedFormula} operations={config.operations} terms={config.terms} assumptions={config.assumptions} interpretation={config.interpretation} />
         {config.citations.map((item, index) => <Evidence key={item.id} item={item} index={index} />)}
       </section>

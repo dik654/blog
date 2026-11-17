@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LangGraphViz from "./viz/LangGraphViz";
+import ReducerRetryViz from "./viz/ReducerRetryViz";
+import CheckpointResumeViz from "./viz/CheckpointResumeViz";
 
 export default function LangGraph() {
   return <section id="langgraph" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">LangGraph의 병렬 상태 합치기</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
@@ -8,7 +10,7 @@ export default function LangGraph() {
           </p><p>
             덮어쓰기, 목록 추가, 집합 합치기, 단일 작성자는 결과가 서로 다릅니다. 여러 분기가 같은 상태 항목에 쓰기 전에 어떤 방식을
             사용할지 정해야 합니다.
-          </p><p>
+          </p></div><div className="not-prose my-8"><ReducerRetryViz /></div><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             분기를 실행할 때는 작업 ID마다 <code>pending·success·timeout·failed</code> 상태와 결과 식별값을 저장합니다. 작업 ID를 키로
             쓰는 집합 리듀서는 재시도로 같은 결과가 다시 와도 한 번만 반영합니다. 같은 결과 ID에 서로 다른 식별값이 오면 충돌로 처리합니다.
           </p><p>
@@ -28,7 +30,7 @@ export default function LangGraph() {
     { expression: String.raw`\rho(x,\rho(a,b))`, annotation: ["결합법칙: branch 결과를 어떻게", "묶어 합쳐도 join state가 같습니다"] },
     { expression: String.raw`\rho(a,x)`, annotation: ["교환법칙: worker 도착 순서가", "바뀌어도 결과가 같습니다"] },
     { expression: String.raw`\rho(\rho(x,a),a)`, annotation: ["멱등성: 같은 receipt가 두 번 와도", "set union은 한 번만 반영", "list append라면 중복이 생깁니다"] },
-  ]} terms={[{symbol:"rho",name:"reducer",description:"현재 channel 값과 branch update를 새 state로 합치는 함수입니다."},{symbol:"x",name:"accumulated state",description:"Join 전까지 저장된 기존 channel 값입니다."},{symbol:"a,b",name:"parallel updates",description:"같은 super-step 또는 retry에서 들어온 worker 결과입니다."}]} assumptions={["순서가 의미 있는 log는 commutative set이 아니라 stable event ID와 ordered reducer를 사용합니다.","같은 artifact ID의 내용 충돌은 조용히 dedup하지 않고 conflict로 올립니다.","Reducer property를 unit/property test하고 framework default overwrite를 그대로 가정하지 않습니다."]} interpretation="Set union은 같은 receipt가 retry로 두 번 와도 결과가 같지만 list append는 중복됩니다. Ordered history가 필요하면 event ID·sequence와 dedup 규칙을 따로 둡니다."/><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+  ]} terms={[{symbol:"rho",name:"reducer",description:"현재 channel 값과 branch update를 새 state로 합치는 함수입니다."},{symbol:"x",name:"accumulated state",description:"Join 전까지 저장된 기존 channel 값입니다."},{symbol:"a,b",name:"parallel updates",description:"같은 super-step 또는 retry에서 들어온 worker 결과입니다."}]} assumptions={["순서가 의미 있는 log는 commutative set이 아니라 stable event ID와 ordered reducer를 사용합니다.","같은 artifact ID의 내용 충돌은 조용히 dedup하지 않고 conflict로 올립니다.","Reducer property를 unit/property test하고 framework default overwrite를 그대로 가정하지 않습니다."]} interpretation="Set union은 같은 receipt가 retry로 두 번 와도 결과가 같지만 list append는 중복됩니다. Ordered history가 필요하면 event ID·sequence와 dedup 규칙을 따로 둡니다."/><div className="not-prose my-8"><CheckpointResumeViz /></div><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             Checkpointer는 정해진 경계의 상태를 저장합니다. 노드를 실행하는 도중의 값까지 저장하지는 않습니다. 따라서 중단 뒤 다시 시작하면
             해당 노드가 처음부터 실행될 수 있습니다.
           </p><p>

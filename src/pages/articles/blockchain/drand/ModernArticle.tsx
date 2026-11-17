@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DrandRoundViz from "./DrandRoundViz";
+import BeaconVerifyGateViz from "./viz/BeaconVerifyGateViz";
+import ThresholdCurveViz from "./viz/ThresholdCurveViz";
 
 const DRAND_CRYPTO = "https://docs.drand.love/docs/cryptography/";
 const DRAND_SOURCE =
@@ -64,6 +66,7 @@ export default function ModernArticle() {
           scheme은 이전 signature도 포함합니다. Chain·scheme·round가 다른
           shares를 한 묶음으로 섞으면 안 됩니다.
         </p>
+        <ThresholdCurveViz />
         <ExplainedFormula
           question="t개의 partial signatures가 어떻게 하나의 signature가 될까요?"
           idea={
@@ -169,6 +172,7 @@ export default function ModernArticle() {
           genesis time과 period도 함께 고정해야 round와 message 형식을 정확히
           재구성할 수 있습니다.
         </p>
+        <BeaconVerifyGateViz />
         <p>
           응답을 받으면 expected round와 received round를 먼저 비교합니다. 이어
           scheme에 맞는 message와 BLS signature를 검증합니다. 마지막으로

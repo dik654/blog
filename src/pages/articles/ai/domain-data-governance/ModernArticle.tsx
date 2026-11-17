@@ -11,6 +11,7 @@ import {
   GroupTimeSplitViz,
   RightsLineageViz,
 } from "./DataGovernanceViz";
+import TimeCutoffViz from "./TimeCutoffViz";
 
 export default function DomainDataGovernanceArticle() {
   return (
@@ -76,6 +77,11 @@ export default function DomainDataGovernanceArticle() {
             교집합은 비어도 환자 ID의 교집합은 비어 있지 않습니다. 오른쪽처럼 환자 D의 세
             visit을 모두 test에 두어야 새 환자라는 배포 질문에 가까워집니다.
           </p>
+        </div>
+
+        <TimeCutoffViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             미래 사건을 예측하려면 group 격리만으로 충분하지 않습니다. Training에서 사용한
             가장 늦은 event가 test의 가장 이른 event보다 앞서야 합니다. Diagnosis 뒤에

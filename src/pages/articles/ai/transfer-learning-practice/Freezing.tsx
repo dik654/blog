@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import FreezingViz from "./viz/FreezingViz";
+import BufferDriftViz from "./viz/BufferDriftViz";
+import ResumeParityViz from "./viz/ResumeParityViz";
 
 export default function Freezing() {
   return (
@@ -138,6 +140,9 @@ export default function Freezing() {
         ]}
         interpretation="Fixed feature extractor를 원한다면 parameter flag뿐 아니라 backbone module mode와 buffer 전후 checksum을 검사합니다."
       />
+      <div className="not-prose my-8">
+        <BufferDriftViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Running mean을 0에서 시작하고 α=0.1, 두 batch mean을 10과 20으로
@@ -159,6 +164,11 @@ export default function Freezing() {
           Modern architecture와 충분한 target data가 있다면 처음부터 안정적인
           full fine-tuning이 오히려 단순할 수도 있습니다.
         </p>
+      </div>
+      <div className="not-prose my-8">
+        <ResumeParityViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Resume test는 unfreeze 경계 직전 checkpoint를 저장하는 데서
           시작합니다. 연속 실행과 새 process 복원 실행에 같은 다음 batch를 넣고

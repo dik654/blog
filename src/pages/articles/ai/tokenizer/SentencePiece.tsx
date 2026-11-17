@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import UnigramViz from "./viz/UnigramViz";
+import ViterbiTableViz from "./viz/ViterbiTableViz";
 
 export default function SentencePiece() {
   return (
@@ -97,6 +98,8 @@ export default function SentencePiece() {
           때문입니다.
         </p>
       </div>
+
+      <ViterbiTableViz />
 
       <AlgorithmBlock
         title="Viterbi 최적 분할 — 문자열 X를 최대 log-probability 경로로 나누기"

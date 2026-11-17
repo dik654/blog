@@ -1,5 +1,6 @@
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
+import DnsLinkChainViz from "./viz/DnsLinkChainViz";
 import ResolutionViz from "./viz/ResolutionViz";
 
 export default function Resolution() {
@@ -82,6 +83,9 @@ export default function Resolution() {
           사용 여부, resolver와 cache 정책, domain recovery를 별도로 판단해야
           합니다.
         </p>
+      </div>
+      <DnsLinkChainViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           DNSLink는 다른 DNSLink나 IPNS path를 가리킬 수도 있습니다. Gateway는
           추가 path segment를 보존하고 recursion limit을 둬야 합니다. 어느 이름

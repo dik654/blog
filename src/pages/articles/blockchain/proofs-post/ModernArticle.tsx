@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { PoStDeadlineViz } from "./PoStDeadlineViz";
+import DeadlineSlackViz from "./viz/DeadlineSlackViz";
+import PartitionSplitViz from "./viz/PartitionSplitViz";
 
 const POST_SPEC =
   "https://github.com/filecoin-project/specs/blob/a95002835b34d4042c007feda3fecf5e68e79dfa/content/algorithms/pos/post.md";
@@ -68,6 +70,7 @@ export default function ModernPoSt() {
           같은 순서로 구성합니다. 이어서 partition별 vanilla proof와 SNARK
           proof를 만듭니다.
         </p>
+        <PartitionSplitViz />
         <p>
           Sector가 2,341개이고 예제 profile의 한 partition이 2,000개를 받는다면
           partition은 두 개입니다. 2,000은 설명용 값이므로 실제 값은 registered
@@ -338,6 +341,7 @@ export default function ModernPoSt() {
           included로 기록합니다. Reorg나 replacement가 생기면 reverted·retry
           분기로 돌아갑니다.
         </p>
+        <DeadlineSlackViz />
         <ExplainedFormula
           question="Deadline 안에 완료할 운영 여유는 어떻게 계산할까?"
           idea={

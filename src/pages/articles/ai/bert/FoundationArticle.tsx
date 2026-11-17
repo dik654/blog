@@ -6,6 +6,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { bertTree } from "./fileTree";
 import { BertVisibilityViz } from "./viz/ModernBertViz";
+import { BertMaskGridViz } from "./viz/BertMaskGridViz";
 import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
 
 export default function BertFoundationArticle() {
@@ -70,6 +71,7 @@ export default function BertFoundationArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Visibility mask가 어떤 key를 읽을지 먼저 결정합니다
         </h2>
+        <BertMaskGridViz />
         <ExplainedFormula
           question="BERT query i는 어느 key에 attention weight를 줄 수 있나요?"
           idea={

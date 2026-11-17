@@ -8,6 +8,7 @@ import {
   GraphRagSearchReturn,
 } from "./graphrag-community-and-multihop-search/GraphRagSearchLocator";
 import GraphragCommunityAndMultihopSearchViz from "./graphrag-community-and-multihop-search/viz/GraphragCommunityAndMultihopSearchViz";
+import ModularityBreakdownViz from "./graphrag-community-and-multihop-search/viz/ModularityBreakdownViz";
 import {
   CommunityReportBuildViz,
   GlobalAndDriftViz,
@@ -134,6 +135,7 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
           ]}
           interpretation="원래 분할은 Q=0.21875입니다. E401을 C-A로 옮겨 모바일 앱 하나가 떨어진 분할은 Q=-0.03125이므로, 이 작은 예에서는 원래 분할이 안쪽 관계를 더 잘 모읍니다."
         />
+        <ModularityBreakdownViz />
         <div className="not-prose my-8">
           <CitationBlock
             source="Traag, Waltman, van Eck — From Louvain to Leiden (2019)"

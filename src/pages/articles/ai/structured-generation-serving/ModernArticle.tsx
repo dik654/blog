@@ -7,6 +7,9 @@ import {
   StructuredGenerationMapReturn,
 } from "../shared/StructuredGenerationLocator";
 import { StructuredServingViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
+import BatchStateViz from "./viz/BatchStateViz";
+import ConstraintCostViz from "./viz/ConstraintCostViz";
+import TokenizerMismatchViz from "./viz/TokenizerMismatchViz";
 
 export default function StructuredGenerationServingArticle() {
   return (
@@ -73,6 +76,7 @@ export default function StructuredGenerationServingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Dynamic schema는 cache hit보다 cache identity가 먼저입니다
         </h2>
+        <TokenizerMismatchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Request A의 weather/search union과 B의 payment/refund union은 전체 grammar가 다릅니다. 공통 string·number rule을
@@ -152,6 +156,9 @@ export default function StructuredGenerationServingArticle() {
             overhead</strong>는 vocabulary 크기와 token 길이에 비례해
             커집니다.
           </p>
+          <div className="not-prose">
+            <ConstraintCostViz />
+          </div>
           <p>
             예를 들어 vocabulary가 32,000개면 순진하게는 step마다 최대 32,000번의 state 전이를 검사해야 합니다. Token 전이를 미리 compile해 두면
             decoding 중에는 이 전이표를 조회만 하면 되므로 매 step 비용이 compile 시점의 1회 비용으로 옮겨 갑니다.
@@ -163,6 +170,7 @@ export default function StructuredGenerationServingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Artifact는 공유해도 matcher state는 sequence마다 따로 갑니다
         </h2>
+        <BatchStateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Compiled grammar는 여러 request가 읽기 전용으로 공유할 수 있습니다. 그러나 generated prefix가 다르면 allowed set도 다르므로

@@ -16,6 +16,7 @@ import {
   SIMCLR_BATCH_FIXTURE,
   TEMPERATURE_RATIO_FIXTURE,
 } from "./calculations";
+import SimilarityMaskViz from "./viz/SimilarityMaskViz";
 
 const SYMMETRIC_LOSS_PSEUDOCODE = `function simclrLoss(
   cosine: number[][],
@@ -111,6 +112,7 @@ export default function SimCLRInfoNCEArticle() {
             분모에 남겨 가장 쉬운 정답을 추가하는 구현 오류가 생깁니다.
           </p>
         </div>
+        <SimilarityMaskViz />
         <div className="not-prose my-7 border-y border-border py-4">
           <p className="mb-3 text-xs font-bold text-muted-foreground">자기 자신을 제외하고 양방향 loss를 평균하는 TypeScript 형태의 의사코드</p>
           <pre className="overflow-x-auto bg-muted/25 p-4 text-[12px] leading-6"><code>{SYMMETRIC_LOSS_PSEUDOCODE}</code></pre>

@@ -6,6 +6,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import DefiDexLocator, { DefiDexMapReturn } from "../DefiDexLocator";
 import { curveStableTree } from "./fileTrees";
 import { officialCurveStableCodeRefs } from "./officialCodeRefs";
+import DepegInventoryViz from "./viz/DepegInventoryViz";
 import ModernCurveStableViz from "./viz/ModernCurveStableViz";
 
 const COMMIT = "2abe778f40206a6c0fd108a0a53ad3266cbedeee";
@@ -191,6 +192,8 @@ export default function ModernCurveStableArticle() {
 
       <section id="amplification-risk" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">A는 곡선을 바꾸지만 peg와 손실 위험을 없애지는 않습니다</h2>
+
+        <DepegInventoryViz />
         <p>
           A가 클수록 균형 부근의 같은 거래에서 출력이 constant-sum에 가까워집니다. 그러나 한 자산의 외부
           가치가 1에서 0.8로 떨어져도 pool이 한동안 1에 가까운 교환 비율을 유지하면, 거래자는 약한 자산을 넣고

@@ -5,6 +5,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { QuantizedDeploymentViz } from "../quantization/viz/ModernQuantizationViz";
+import PartialSpeedupViz from "./viz/PartialSpeedupViz";
+import ResidentLedgerViz from "./viz/ResidentLedgerViz";
 
 export default function QuantizedModelDeploymentArticle() {
   return (
@@ -147,6 +149,7 @@ export default function QuantizedModelDeploymentArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Weights와 context-dependent state를 따로 합산합니다
         </h2>
+        <ResidentLedgerViz />
         <ExplainedFormula
           question="Weight-only quantization 뒤 peak VRAM이 4분의 1이 아닌 이유는 무엇인가요?"
           idea={
@@ -214,6 +217,7 @@ export default function QuantizedModelDeploymentArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           압축률과 request speedup을 분리해 release합니다
         </h2>
+        <PartialSpeedupViz />
         <ExplainedFormula
           question="Low-bit kernel이 2배 빨라도 전체가 왜 2배보다 느릴 수 있나요?"
           idea={

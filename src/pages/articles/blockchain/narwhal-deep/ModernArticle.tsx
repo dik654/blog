@@ -1,6 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { NarwhalBatchTraceViz, NarwhalFailureViz, NarwhalStateViz, NarwhalVerificationPseudocodeViz } from "./viz/ModernNarwhalViz";
+import ParentQuorumDagViz from "./viz/ParentQuorumDagViz";
 
 function BoundaryNote({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -77,6 +78,8 @@ export default function ModernNarwhalArticle() {
           <p className="text-sm font-semibold text-primary">02 · 투표와 인증서</p>
           <h2 className="text-2xl font-bold">같은 H8에 서로 다른 유효 투표가 모여야 DAG vertex가 됩니다</h2>
         </header>
+
+        <ParentQuorumDagViz />
 
         <p>
           H8을 받은 primary는 작성자 서명만 확인하지 않습니다. 올바른 epoch인지, author가 committee 구성원인지, payload의 worker id가 유효한지, parents가 직전 라운드에서 정족수 power를 이루는지, 그리고 자기 worker가 <code>(d7, worker 0)</code>을 실제로 보관하는지 확인합니다. 부모나 payload가 빠졌으면 헤더 처리를 잠시 멈추고 자료를 가져옵니다.

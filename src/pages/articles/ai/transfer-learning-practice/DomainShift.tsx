@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DomainShiftViz from "./viz/DomainShiftViz";
+import NegativeTransferGuardrailViz from "./viz/NegativeTransferGuardrailViz";
 
 export default function DomainShift() {
   return (
@@ -169,6 +170,11 @@ export default function DomainShift() {
           amplification을 추적합니다. 그리고 labeled target holdout에서
           adaptation 전후를 비교합니다.
         </p>
+      </div>
+      <div className="not-prose my-8">
+        <NegativeTransferGuardrailViz />
+      </div>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Negative transfer는 “adaptation을 했는데 기대만큼 오르지 않았다”는
           막연한 표현이 아니라 기준선보다 중요한 평가축이 악화된 경우를

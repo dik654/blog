@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { PoRepPipelineViz } from "./PoRepPipelineViz";
+import CommRTreeViz from "./viz/CommRTreeViz";
+import LabelDependencyViz from "./viz/LabelDependencyViz";
+import SealSlackViz from "./viz/SealSlackViz";
 
 const SEAL =
   "https://github.com/filecoin-project/rust-fil-proofs/blob/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/filecoin-proofs/src/api/seal.rs";
@@ -197,6 +200,7 @@ export default function ModernPoRep() {
             PC1 labels는 PC2에서 어떤 결과로 바뀔까요?
           </h2>
         </header>
+        <LabelDependencyViz />
         <p>
           SDR label은 한 node의 이전-layer와 graph parents에 순차 의존합니다.
           PC2는 이 labels로 data를 encoding한 뒤 TreeC와 TreeRLast를 만들고
@@ -279,6 +283,7 @@ export default function ModernPoRep() {
           ]}
           interpretation="한 parent label이 stale이면 뒤의 dependent labels와 commitments가 연쇄적으로 바뀝니다. Layer dependency를 무시한 병렬화는 같은 PoRep가 아닙니다."
         />
+        <CommRTreeViz />
         <ExplainedFormula
           question="PC2의 두 tree commitments는 최종 CommR과 어떻게 연결될까?"
           idea={
@@ -537,6 +542,7 @@ export default function ModernPoRep() {
           실패하면 이전 binary, parameter, cache schema로 돌아가며 미완성
           cache는 재사용하지 않습니다.
         </p>
+        <SealSlackViz />
         <ExplainedFormula
           question="Seal job이 on-chain window 전에 끝날 여유를 어떻게 계산할까?"
           idea={

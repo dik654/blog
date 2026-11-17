@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { AugmentationContractViz } from "./viz/ModernAugmentationViz";
+import ExpectationAverageViz from "./viz/ExpectationAverageViz";
+import TargetMapPairViz from "./viz/TargetMapPairViz";
 
 export default function DataAugmentationFoundationArticle() {
   return (
@@ -44,6 +46,7 @@ export default function DataAugmentationFoundationArticle() {
 
       <section id="target-map" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">Input transform T와 target map τ는 한 장의 receipt입니다</h2>
+        <TargetMapPairViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Classification label은 그대로일 수 있지만 detection box와 segmentation mask는 그렇지 않습니다. Random angle을 image와
@@ -55,6 +58,7 @@ export default function DataAugmentationFoundationArticle() {
 
       <section id="objective" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">허용한 변화는 training objective의 expectation이 됩니다</h2>
+        <ExpectationAverageViz />
         <ExplainedFormula
           question="한 원본 sample이 transformation distribution 전체의 학습 신호가 되는 동안 각 연산은 무엇을 하나요?"
           idea={<p>

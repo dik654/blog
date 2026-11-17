@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { ImageTransformViz } from "../data-augmentation/viz/ModernAugmentationViz";
+import BoxCornerVisibilityViz from "./viz/BoxCornerVisibilityViz";
 
 export default function ImageAugmentationTransformsArticle() {
   return <div className="space-y-16">
@@ -43,7 +44,7 @@ export default function ImageAugmentationTransformsArticle() {
       </div>
     </section>
 
-    <section id="visibility" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Box는 두 점이 아니라 네 corner를 옮기고 visibility를 다시 계산합니다</h2><ExplainedFormula question="Affine transform과 crop 뒤 annotation을 유지할지 어떻게 계산하나요?" idea={<p>네 corner에 같은 map을 적용해 새 box를 만들고 canvas와 교차시킨 뒤, 변환된 box 중 보이는 면적 비율을 계산합니다.</p>} formula={String.raw`p_j'=Ap_j+t,\quad B'=\operatorname{bbox}(\{p_j'\}_{j=1}^4),\quad r_{\rm vis}=\operatorname{area}(B'\cap C)/\operatorname{area}(B')`} annotatedFormula={String.raw`\begin{aligned}q_j&=\underbrace{Ap_j}_{\text{회전·scale·shear}}\\p_j'&=\underbrace{q_j+t}_{\text{crop·translation 추가}}\\B'&=\underbrace{\operatorname{bbox}(\{p_j'\}_{j=1}^{4})}_{\text{네 corner의 min·max}}\\B_{\rm clip}&=\underbrace{B'\cap C}_{\text{canvas 안으로 clip}}\\a_{\rm visible}&=\underbrace{\operatorname{area}(B_{\rm clip})}_{\text{보이는 면적}}\\a_{\rm object}&=\underbrace{\operatorname{area}(B')}_{\text{변환 뒤 전체 면적}}\\r_{\rm vis}&=\underbrace{a_{\rm visible}/a_{\rm object}}_{\text{visible ratio}}\end{aligned}`} operations={[
+    <section id="visibility" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Box는 두 점이 아니라 네 corner를 옮기고 visibility를 다시 계산합니다</h2><BoxCornerVisibilityViz/><ExplainedFormula question="Affine transform과 crop 뒤 annotation을 유지할지 어떻게 계산하나요?" idea={<p>네 corner에 같은 map을 적용해 새 box를 만들고 canvas와 교차시킨 뒤, 변환된 box 중 보이는 면적 비율을 계산합니다.</p>} formula={String.raw`p_j'=Ap_j+t,\quad B'=\operatorname{bbox}(\{p_j'\}_{j=1}^4),\quad r_{\rm vis}=\operatorname{area}(B'\cap C)/\operatorname{area}(B')`} annotatedFormula={String.raw`\begin{aligned}q_j&=\underbrace{Ap_j}_{\text{회전·scale·shear}}\\p_j'&=\underbrace{q_j+t}_{\text{crop·translation 추가}}\\B'&=\underbrace{\operatorname{bbox}(\{p_j'\}_{j=1}^{4})}_{\text{네 corner의 min·max}}\\B_{\rm clip}&=\underbrace{B'\cap C}_{\text{canvas 안으로 clip}}\\a_{\rm visible}&=\underbrace{\operatorname{area}(B_{\rm clip})}_{\text{보이는 면적}}\\a_{\rm object}&=\underbrace{\operatorname{area}(B')}_{\text{변환 뒤 전체 면적}}\\r_{\rm vis}&=\underbrace{a_{\rm visible}/a_{\rm object}}_{\text{visible ratio}}\end{aligned}`} operations={[
       {expression:String.raw`Ap_j+t`,annotation:["corner를 같은 coordinate map으로 옮겨","image와 annotation을 동기화"]},
       {expression:String.raw`\operatorname{bbox}(\{p_j'\})`,annotation:["네 transformed corner의 min/max를 찾아","새 axis-aligned box 생성"]},
       {expression:String.raw`B'\cap C`,annotation:["canvas와 교차시켜","화면 밖 좌표를 제거"]},

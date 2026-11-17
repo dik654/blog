@@ -7,6 +7,8 @@ import {
   DataAugmentationPracticeLocator,
   DataAugmentationPracticeMapReturn,
 } from "../shared/DataAugmentationPracticeLocator";
+import CutMixClipViz from "./viz/CutMixClipViz";
+import MosaicAnnotationViz from "./viz/MosaicAnnotationViz";
 
 export default function MixupCutMixArticle() {
   return (
@@ -157,6 +159,7 @@ export default function MixupCutMixArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           CutMix는 nominal λ가 아니라 clip 뒤 실제 mask 면적을 사용합니다
         </h2>
+        <CutMixClipViz />
         <ExplainedFormula
           question="Patch를 붙인 뒤 target weight를 왜 mask 면적으로 다시 계산하나요?"
           idea={
@@ -248,6 +251,7 @@ export default function MixupCutMixArticle() {
           Mosaic은 네 image를 붙이는 그림보다 annotation composition이
           본체입니다
         </h2>
+        <MosaicAnnotationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             각 tile마다 resize matrix와 offset이 다릅니다. 그래서

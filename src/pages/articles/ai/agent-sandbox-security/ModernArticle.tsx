@@ -5,6 +5,8 @@ import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { AGENT_SECURITY_SOURCES } from "@/content/agent-sandbox-security";
 import { ContainerBoundaryViz } from "../sandbox-security-viz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
+import AttackPathViz from "./viz/AttackPathViz";
+import NamespaceViewViz from "./viz/NamespaceViewViz";
 
 export default function AgentSandboxSecurityArticle() {
   return (
@@ -44,6 +46,7 @@ export default function AgentSandboxSecurityArticle() {
           PID·mount·network namespace를 한꺼번에 외우지 말고, 같은 host 자원을
           서로 다른 view로 보여 주는 한 가지 역할부터 잡습니다.
         </LessonHeader>
+        <NamespaceViewViz />
         <TermLesson
           name="Linux namespace resource view"
           oneLine="Namespace는 process가 볼 PID·mount·network interface·hostname·user ID 같은 자원의 view를 분리합니다."
@@ -170,6 +173,7 @@ export default function AgentSandboxSecurityArticle() {
           example="metadata IP 접근 신호가 있고, token 응답·control-plane write 권한·외부 POST가 모두 가능하면 credential theft 경로가 완성됩니다."
           boundary="이 Boolean model은 확률이나 CVSS를 계산하지 않으며, 아직 찾지 못한 우회 경로가 없다고 보장하지 않습니다."
         />
+        <AttackPathViz />
         <ExplainedFormula
           question="왜 한 경로의 edge availability를 모두 곱할까요?"
           idea="각 a(e)를 0 또는 1로 두면 곱은 Boolean AND처럼 동작합니다. Edge 하나라도 차단되면 그 경로의 곱이 0이 되어 impact까지 이어지지 않습니다."

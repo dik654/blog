@@ -11,6 +11,7 @@ import {
   LotusReleaseBundleViz,
   LotusSuiteTraceViz,
 } from "./viz/ModernLotusSuiteViz";
+import RecoveryCheckViz from "./viz/RecoveryCheckViz";
 
 const LOTUS_RELEASE = "https://github.com/filecoin-project/lotus/releases/tag/v1.38.3";
 const LOTUS_SOURCE = "https://github.com/filecoin-project/lotus/tree/29d72bdf77d13e6e3e20264d7a9167feb2a41ab0";
@@ -91,6 +92,7 @@ export default function ModernFilecoinLotusArticle() {
         <p>
           실행 중에는 <code>stillOwned</code>를 확인합니다. 소유권을 잃은 노드가 같은 체인 메시지나 파일 변경을 계속 만들면 중복 외부 효과가 생길 수 있기 때문입니다. 성공한 작업은 active table에서 지우고 history에 남깁니다. 재시도 가능한 실패는 <code>owner_id</code>를 다시 비우고 retry 수를 올립니다.
         </p>
+        <RecoveryCheckViz />
         <p>
           예를 들어 node 27이 TreeR 계산을 마친 직후 종료됐다고 하겠습니다. 재시작한 scheduler는 DB 행만 보고 proof와 체인 메시지가 모두 끝났다고 판단하면 안 됩니다. 저장 경로의 artifact digest, 제출한 message CID, Lotus receipt를 차례로 대조한 뒤 누락된 단계부터 다시 시작해야 합니다.
         </p>

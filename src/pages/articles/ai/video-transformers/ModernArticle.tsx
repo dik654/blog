@@ -11,6 +11,7 @@ import {
   VideoMaeTubeMaskViz,
   VideoTransformerOverviewViz,
 } from "./viz/VideoTransformersViz";
+import ScoreMatrixAreaViz from "./viz/ScoreMatrixAreaViz";
 
 const TUBELET_CODE = `function makeTubeletGrid(frames, height, width, depth, patch) {
   // Sampled frame을 depth장씩 묶어 시간 위치 수를 구합니다.
@@ -238,6 +239,9 @@ export default function VideoTransformersArticle() {
             attention을 수행하고, 그 결과를 같은 시간의 공간 격자로 다시 모아
             spatial attention을 수행합니다.
           </p>
+        </div>
+        <ScoreMatrixAreaViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             두 단계를 지나면 먼 시간·공간 정보가 전달될 수 있지만, joint의 모든
             space-time pair를 한 번에 계산한 것은 아닙니다. 아래 pair 수는 이

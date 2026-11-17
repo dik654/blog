@@ -11,6 +11,8 @@ import {
   ShutdownReleaseViz,
   WorkAssignmentViz,
 } from "./viz/PersistentQueueViz";
+import PublicationOrderViz from "./viz/PublicationOrderViz";
+import TicketTimelineViz from "./viz/TicketTimelineViz";
 
 const PERSISTENT_THREADS = "https://doi.org/10.1109/InPar.2012.6339596";
 const PROGRAMMING =
@@ -220,6 +222,7 @@ export default function ModernCudaPersistentKernelArticle() {
           ]}
           interpretation="이 fixture에서는 static 16ms보다 dynamic scheduling 9ms가 유리해 보입니다. 그러나 task가 모두 1ms이고 ticket이 5%라면 chunk나 static이 다시 유리할 수 있습니다."
         />
+        <TicketTimelineViz />
         <p>
           Chunked dynamic은 atomic 한 번에 <code>k</code>개를 가져가 ticket 수를
           대략 1/<code>k</code>로 줄이는 대신 최대 <code>k</code> tasks만큼
@@ -262,6 +265,7 @@ export default function ModernCudaPersistentKernelArticle() {
             결과를 먼저 쓰고 신호를 공개한 뒤, 네 worker 모두의 종료를 증명합니다
           </h2>
         </header>
+        <PublicationOrderViz />
         <p>
           Atomic ticket만 있다고 descriptor와 output이 올바른 순서로 보이는 것은
           아닙니다. Producer는 payload를 먼저 쓴 뒤 ready·tail을 release로

@@ -2,7 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PruningPathLocator, { PruningMapReturn } from "./PruningPathLocator";
+import MaskProductViz from "./viz/MaskProductViz";
 import { PruningMaskViz } from "./viz/ModernPruningViz";
+import RemovalUnitViz from "./viz/RemovalUnitViz";
 
 export default function PruningArticle() {
   return (
@@ -74,6 +76,7 @@ export default function PruningArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Mask를 weight 위에 올려 실제 남은 연결을 만듭니다
         </h2>
+        <MaskProductViz />
         <ExplainedFormula
           question="Weight 10개 중 4개를 남겼다는 말을 식으로 어떻게 고정하나요?"
           idea={
@@ -147,6 +150,7 @@ export default function PruningArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           그다음 “무엇을 한 단위로 지우는가”를 선택합니다
         </h2>
+        <RemovalUnitViz />
         <TermBreakdown
           title="제거 단위가 바꾸는 실행 형태"
           items={[

@@ -7,6 +7,8 @@ import {
   GenerativeFamilyLocator,
   GenerativeFamilyMapReturn,
 } from "../shared/GenerativeFamilyLocator";
+import ElboGapViz from "./viz/ElboGapViz";
+import MarginalAreaViz from "./viz/MarginalAreaViz";
 
 export default function LatentVariableGenerativeModelsArticle() {
   return (
@@ -67,6 +69,7 @@ export default function LatentVariableGenerativeModelsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           z를 보지 못했으므로 가능한 설명을 모두 가중해 더합니다
         </h2>
+        <MarginalAreaViz />
         <ExplainedFormula
           question="왜 p(x)를 구할 때 latent별 conditional과 prior를 곱한 뒤 더하나요?"
           idea={
@@ -181,6 +184,7 @@ p_\theta(x)&=\underbrace{\int p_\theta(x,z)\,dz}_{\text{직접 계산 불가능�
           ]}
           interpretation="이 부등식은 q가 무엇이든 항상 성립합니다 — q가 true posterior에 가까울수록 bound가 tight해질 뿐입니다. 아래 식은 이 bound와 log evidence의 정확한 차이를 보여줍니다."
         />
+        <ElboGapViz />
         <ExplainedFormula
           question="ELBO는 왜 log evidence보다 작고, 그 차이는 무엇인가요?"
           idea={

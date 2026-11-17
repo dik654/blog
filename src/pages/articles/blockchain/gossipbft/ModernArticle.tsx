@@ -6,6 +6,7 @@ import {
   GpbftRecoveryPseudocodeViz,
   GpbftRequestTraceViz,
 } from "./viz/ModernGpbftViz";
+import { QuorumOverlapViz, RoundStructureViz } from "./viz/QuorumMapViz";
 
 export default function ModernGossipBftArticle() {
   return (
@@ -87,6 +88,8 @@ export default function ModernGossipBftArticle() {
           interpretation="이 규격에서는 ‘2/3를 엄격히 초과’가 아닙니다. W=120에서 80은 통과하고 79는 실패합니다. 다른 프로토콜의 >2/3 표기와 섞으면 경계값 test가 틀어집니다."
         />
 
+        <QuorumOverlapViz />
+
         <p>
           그러면 정확히 80인 두 정족수가 서로 다른 값을 지지할 수 있지 않을까요? 두 집합의 투표권을 더한 뒤 전체 120을 빼면 최소 교집합이
           나옵니다. 교집합이 모두 Byzantine일 수 없게 만드는 전제와, 정직한 참여자가 충돌하는 표를 만들지 않는 단계 규칙을 함께 써야 합니다.
@@ -115,6 +118,7 @@ export default function ModernGossipBftArticle() {
         />
 
         <h3 className="text-xl font-semibold">다섯 이름은 한 줄로 늘어선 다섯 번의 투표가 아닙니다</h3>
+        <RoundStructureViz />
         <p>
           round 0에서는 <strong>QUALITY → PREPARE → COMMIT</strong>으로 진행합니다. QUALITY는 입력 체인의 어느 접두사까지 충분히
           지지받는지 찾아 후보 집합을 만듭니다.

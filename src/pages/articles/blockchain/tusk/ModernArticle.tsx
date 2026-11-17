@@ -6,6 +6,7 @@ import {
   TuskOrderingPseudocodeViz,
   TuskWaveTraceViz,
 } from "./viz/ModernTuskViz";
+import ArrivalOrderViz from "./viz/ArrivalOrderViz";
 
 export default function ModernTuskArticle() {
   return (
@@ -93,6 +94,9 @@ export default function ModernTuskArticle() {
         <p>
           L2의 지지만 확인하고 L2부터 출력하면 L1의 기록을 잃습니다. Tusk는 현재 지도자에서 직전 확정 지점으로 거슬러 가며 연결된 과거 지도자를 찾습니다. L2에서 L1로 가는 경로가 있으므로 L1을 먼저 후보 목록에 넣고, 각 지도자의 아직 출력하지 않은 인과 조상을 정해진 순서로 펼칩니다.
         </p>
+
+        <ArrivalOrderViz />
+
         <p>
           로컬 도착 순서는 사용할 수 없습니다. 같은 인증서를 모두 받았더라도 네트워크 지연 때문에 A 노드와 B 노드의 도착 순서는 다를 수 있기 때문입니다. 부모 식별자와 라운드처럼 모든 정직한 노드가 다시 계산할 수 있는 값으로 순서를 정하고, 이미 출력한 인증서는 중복으로 내보내지 않아야 합니다.
         </p>
