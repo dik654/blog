@@ -4,6 +4,8 @@ import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { AgentLoopViz } from "./viz/ModernAgentPatternViz";
+import LoopTraceViz from "./viz/LoopTraceViz";
+import WriteOutcomeViz from "./viz/WriteOutcomeViz";
 
 export default function Article() {
   return (
@@ -116,6 +118,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           5. 말로 고쳤다고 해도 파일은 그대로일 수 있습니다
         </h2>
+        <WriteOutcomeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 행동을 고르는 쪽이 수정 내용을 제안했어도 실행 담당자가 쓰기를
@@ -231,6 +234,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           7. 읽기·수정·측정 세 번을 같은 기록으로 잇습니다
         </h2>
+        <LoopTraceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             처음 state에는 viewport=390, document=430, remaining=6을 둡니다. 첫

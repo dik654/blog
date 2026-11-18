@@ -5,6 +5,7 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmBeaconAPILocator, { PrysmBeaconAPIMapReturn } from "./PrysmBeaconAPILocator";
 import PrysmBeaconAPIFlowViz from "./viz/PrysmBeaconAPIFlowViz";
+import RootSplitViz from "./viz/RootSplitViz";
 
 const requestFixture = [
   ["METHOD", "GET", "조회만 수행하는 HTTP method"],
@@ -137,6 +138,7 @@ export default function ModernArticle() {
           <div className="min-w-0 bg-background p-4"><span className="text-[9px] font-bold text-muted-foreground">execution_optimistic</span><strong className="mt-2 block text-sm">이 state의 execution payload가 아직 낙관 상태인가</strong><p className="mt-2 text-xs leading-5 text-muted-foreground"><code>head</code>이면 node의 현재 optimistic mode를 다시 조회합니다.</p></div>
           <div className="min-w-0 bg-background p-4 ring-2 ring-inset ring-primary"><span className="text-[9px] font-bold text-primary">finalized</span><strong className="mt-2 block text-sm">이 state를 만든 block이 finalized인가</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">State의 latest block header를 hash한 block root로 묻습니다.</p></div>
         </div>
+        <RootSplitViz />
         <p>
           <code>BlockRootFromState</code>는 latest block header의 <code>state_root</code>가 비어 있으면 현재 state의 HashTreeRoot로 보완한 뒤 header를 hash합니다. 따라서 응답의 <code>data.root</code>와 finality lookup의 key는 모두 32-byte root지만 같은 root가 아닙니다.
         </p>

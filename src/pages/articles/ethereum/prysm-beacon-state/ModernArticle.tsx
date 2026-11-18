@@ -8,6 +8,7 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmBeaconStateLocator, { PrysmBeaconStateMapReturn } from "./PrysmBeaconStateLocator";
 import PrysmBeaconStateFlowViz from "./viz/PrysmBeaconStateFlowViz";
+import BalanceMerklePathViz from "./viz/BalanceMerklePathViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -151,6 +152,7 @@ export default function ModernArticle() {
           <div className="flex items-center justify-center bg-background px-2 text-muted-foreground" aria-hidden>→</div>
           <div className="min-w-0 bg-background p-4"><span className="text-[9px] font-bold text-muted-foreground">STATE PATH</span><strong className="mt-1 block text-xs">새 state root R₁</strong><p className="mt-2 text-[10px] leading-4 text-muted-foreground">Balances field leaf의 ancestor 갱신</p></div>
         </div>
+        <BalanceMerklePathViz />
         <p>
           Balances FieldTrie가 공유 중이면 B용 trie view를 먼저 분기합니다. 새 chunk와 그 조상으로 Balances field root를 만든 다음, BeaconState container의 Balances leaf를 교체하고 top-level 조상을 다시 계산합니다. 변경되지 않은 sibling subtree는 같은 schema와 generation 안에서 재사용합니다.
         </p>

@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import PeriodHandoffViz from "./viz/PeriodHandoffViz";
 
 interface Props { title: string; onCodeRef: (key: string, ref: CodeRef) => void }
 
@@ -42,6 +43,7 @@ export default function CommitteeLifecycle({ title, onCodeRef }: Props) {
         ]}
         interpretation="Slot 8,191은 period 0, slot 8,192는 period 1입니다. 따라서 8,192에서 나온 signature를 period 0 committee로 검증하면 안 됩니다. 약 27.3시간은 교체 주기일 뿐 checkpoint 안전 기간이 아닙니다."
       />
+      <PeriodHandoffViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Period 경계에서는 두 committee를 함께 바꿉니다</h3>
         <p>

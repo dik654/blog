@@ -7,6 +7,8 @@ import EthereumP2PPathLocator, {
   EthereumP2PMapReturn,
 } from "../shared/EthereumP2PPathLocator";
 import ForkIdHandshakeTraceViz from "./viz/ForkIdHandshakeTraceViz";
+import ForkIdPlacementViz from "./viz/ForkIdPlacementViz";
+import ThreeWayForkViz from "./viz/ThreeWayForkViz";
 import {
   ForkBoundaryViz,
   ForkHashTraceViz,
@@ -91,6 +93,7 @@ export default function ModernForkIdArticle() {
         <p>
           두 노드의 hash가 같아도 원격이 알린 다음 fork가 이미 로컬 head를 지났다면 원격 소프트웨어가 낡았을 수 있으므로 거절합니다. 반대로 다음 fork가 아직 오지 않았다면 미래 일정이 달라도 지금은 갈라졌다고 단정하지 않습니다.
         </p>
+        <ForkIdPlacementViz />
         <p>
           Hash가 다를 때는 원격 값이 로컬의 과거 fork sequence 중 하나인지, 또는 로컬이 알고 있는 future fork를 적용하면 원격 값에 도달하는지 확인합니다. 둘 중 하나로 설명되면 한쪽이 동기화 중인 경우로 받아들이고, 어느 방향으로도 설명할 수 없으면 거절합니다. 양쪽이 각각 같은 결론에 도달해야 반복 연결을 피할 수 있습니다.
         </p>
@@ -133,6 +136,7 @@ export default function ModernForkIdArticle() {
         <p>
           Schedule이 5와 10이면 head 4, 5, 9, 10에서 식별자가 어떻게 바뀌는지 먼저 고정합니다. 경계 바로 전과 정확한 경계에서 기대값을 확인해야 <code>&lt;</code>와 <code>≤</code>를 뒤바꾼 구현을 찾을 수 있습니다. 숫자의 endian을 바꾸거나 같은 block을 두 번 넣은 경우도 별도 반례가 됩니다.
         </p>
+        <ThreeWayForkViz />
         <p>
           EIP-2124만으로 같은 미래 block에서 서로 다른 규칙을 선택한 3-way fork를 완전히 구분할 수는 없습니다. Fork ID에는 규칙 이름이 아니라 fork 숫자가 들어가기 때문입니다. 이 한계는 peer identity나 추가 네트워크 식별을 별도로 다뤄야 하는 이유입니다.
         </p>

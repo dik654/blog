@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
 import ConsensusTraceViz from "./viz/ConsensusTraceViz";
+import PositionBindingViz from "./viz/PositionBindingViz";
 
 interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 
@@ -22,6 +23,9 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
           <code>u-8193</code>의 signature가 맞다는 사실은 update를 만든 committee가 attested header에 서명했다는 뜻입니다. 그러나 finality branch와
           next-committee branch가 맞는지, 참여가 Store를 전진시킬 만큼 충분한지, 더 새로운 finalized header인지도 따로 확인해야 합니다.
         </p>
+      </div>
+      <PositionBindingViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           참여 bit는 사람 수가 아니라 512칸인 sync committee 목록의 position을 셉니다. Protocol의 committee 추출 과정에서는 같은 validator가 여러
           position에 들어갈 수 있으므로, 구현은 bit와 public key를 position별로 결속하고 임의로 중복 제거하지 않습니다.

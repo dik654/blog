@@ -2,6 +2,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { CitationBlock } from "@/components/ui/citation";
 import { Link } from "react-router-dom";
+import ResumeTimelineViz from "./viz/ResumeTimelineViz";
+import RequantizeGridViz from "./viz/RequantizeGridViz";
 
 export default function Practice() {
   return (
@@ -84,6 +86,7 @@ export default function Practice() {
             </tbody>
           </table>
         </div>
+        <ResumeTimelineViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Transformers Trainer의 현재 공식 경로에서는 checkpoint 디렉터리를 지정해
@@ -174,6 +177,7 @@ W'&=W+sBA
         assumptions={["Inference에서 adapter dropout이 꺼져 있고 같은 bias·dtype·operator를 사용합니다.", "Base revision과 target module shape가 학습 시점과 일치합니다.", "Quantization·rounding·different accumulation이 들어가면 bitwise equality가 아니라 tolerance와 task metric으로 비교합니다."]}
         interpretation="Unmerged output과 merged output의 logit max error를 먼저 검사한 뒤 task metric·latency를 비교합니다. 여러 adapter를 동적으로 바꿔야 한다면 merge 이점과 routing 유연성을 맞바꿉니다."
       />
+      <RequantizeGridViz />
       <ExplainedFormula
         question="QLoRA adapter를 merge한 뒤 왜 ‘원래 4-bit base에 adapter만 더했다’고 볼 수 없을까요?"
         idea={<>Quantizer Q는 rounding과 clipping이 있는 비선형 연산이므로 일반적으로 덧셈을 보존하지 않습니다. Dequantize한 base에 delta를 더한 뒤 다시 quantize하면 새로운 code·scale·오차를 가진 artifact가 됩니다.</>}

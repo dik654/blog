@@ -1,6 +1,7 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import BitsMergeViz from "./viz/BitsMergeViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -163,6 +164,7 @@ export default function PoolInclusion({ onCodeRef }: Props) {
         <h3 className="text-xl font-semibold mt-6 mb-3">
           포함 관계와 겹치는 bit를 구분한다
         </h3>
+        <BitsMergeViz />
         <p>
           같은 AttestationData에서 A의 bits가 <code>{`{1,4,7}`}</code>, C가
           <code>{`{1,4}`}</code>이면 A가 C를 subsume하므로 C는 별도 block 후보로

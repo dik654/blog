@@ -3,6 +3,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import HeliosLocator, { HeliosMapReturn } from "./HeliosLocator";
 import HeliosTrustTraceViz from "./viz/HeliosTrustTraceViz";
+import LatestPinViz from "./viz/LatestPinViz";
 
 const HELIOS_SHA = "43a8c9f3cdda41a6f383c4db41d9a83f102638b1";
 const CONSENSUS_SPECS_SHA = "5fa6edcca8ab4cf548653e6680b17b9d3e04d225";
@@ -74,6 +75,7 @@ export default function Overview({ title: _title }: { title: string }) {
       <section id="request-path" className="space-y-5 scroll-mt-20">
         <p className="text-xs font-bold text-primary">Request path</p>
         <h2 className="break-keep text-2xl font-bold">잔액 요청은 block을 먼저 고정한 뒤 같은 hash에 proof를 요청합니다</h2>
+        <LatestPinViz />
         <p>
           Local JSON-RPC가 <code>eth_getBalance(A, latest)</code>를 받으면 Node는 latest block이 지나치게 오래되지 않았는지 확인합니다. 이어 Execution provider가 block을 얻고 그 header hash를 <code>eth_getProof</code>의 block ID로 사용합니다. Provider가 돌려준 숫자와 proof를 서로 다른 latest 시점에서 가져오지 않게 하는 경계입니다.
         </p>

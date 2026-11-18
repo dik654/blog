@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import BplusValidationViz from "./viz/BplusValidationViz";
+import BplusBoundaryInputViz from "./viz/BplusBoundaryInputViz";
 
 const LABEL = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-block border border-primary/40 px-1.5 py-0.5 align-middle text-[9px] font-black text-primary">{children}</span>
@@ -53,6 +54,7 @@ export default function ModernArticle() {
 
       <section id="experiment" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">경계 입력, 중간 종료, 재시작 대조 순서로 검사합니다</h2>
+        <BplusBoundaryInputViz />
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-2">
           {[
             ["01 · 작은 경계", "Empty·root-only, capacity−1·capacity·capacity+1과 ascending·descending·random·duplicate 입력을 재생합니다."],

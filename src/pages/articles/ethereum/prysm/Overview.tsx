@@ -6,6 +6,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { SERIES_READING_PATHS } from "@/content/series-reading-paths";
 import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
+import EngineVerdictViz from "./viz/EngineVerdictViz";
+import HeadFinalityPointersViz from "./viz/HeadFinalityPointersViz";
 import PrysmArchitectureViz from "./viz/PrysmArchitectureViz";
 
 const OWNERS = [
@@ -143,6 +145,7 @@ export default function Overview() {
         <h2 className="break-keep text-2xl font-bold">
           상태 계산에 성공했는데, 왜 아직 head가 아닙니까?
         </h2>
+        <HeadFinalityPointersViz />
         <p>
           State transition은 “이 parent 위에 B352를 적용하면 S352가 나온다”를
           답합니다. Fork choice는 여러 유효한 branch 가운데 attestation weight와
@@ -188,6 +191,7 @@ export default function Overview() {
         <h2 className="break-keep text-2xl font-bold">
           Engine이 SYNCING인데 후보를 남기는 이유는 무엇입니까?
         </h2>
+        <EngineVerdictViz />
         <p>
           SYNCING은 “유효하다”가 아니라 “execution client가 아직 판정을 끝내지
           못했다”는 뜻입니다. Consensus transition과 data availability가

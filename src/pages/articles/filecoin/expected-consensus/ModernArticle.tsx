@@ -11,6 +11,7 @@ import {
   SortitionDistributionViz,
   TipsetCompatibilityViz,
 } from "./viz/ModernExpectedConsensusViz";
+import NullEpochGapViz from "./viz/NullEpochGapViz";
 
 const LOTUS_COMMIT = "29d72bdf77d13e6e3e20264d7a9167feb2a41ab0";
 const LOTUS_SOURCE = `https://github.com/filecoin-project/lotus/tree/${LOTUS_COMMIT}`;
@@ -191,6 +192,7 @@ export default function ModernExpectedConsensusArticle() {
         <p>
           EC head가 X에서 Y로 바뀌면 node는 공통 조상 뒤 X의 tipsets를 revert하고 Y의 tipsets를 apply합니다. 송금 M5가 X에만 있었다면 잔액과 실행 결과도 새 head 기준으로 되돌아갑니다. 따라서 사용자 API는 <code>received</code>, <code>validated</code>, <code>EC head included</code>, <code>F3 finalized</code>를 따로 보여 줘야 합니다.
         </p>
+        <NullEpochGapViz />
         <p>
           한 epoch에 당첨자가 없으면 빈 tipset을 만들지 않습니다. 다음 block의 height는 둘 이상 증가할 수 있고, timestamp와 VM의 cron·state 전이는 건너뛴 epoch 수를 반영합니다. Tipset 개수와 epoch 차이를 같다고 가정하면 parent time과 상태 실행을 잘못 재현하게 됩니다.
         </p>

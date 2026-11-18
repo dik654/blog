@@ -4,6 +4,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import CodePanel from "@/components/ui/code-panel";
 import { CitationBlock } from "@/components/ui/citation";
 import { ExtensionAuthorityViz } from "./viz/ModernAgentPatternViz";
+import GuardrailTimingViz from "./viz/GuardrailTimingViz";
+import ThreePathTraceViz from "./viz/ThreePathTraceViz";
 import modelSource from "./extensionBoundaryModel.ts?raw";
 import { runExtensionBoundary } from "./extensionBoundaryModel";
 
@@ -84,6 +86,9 @@ export default function ExtensionBoundariesArticle() {
         <h2 className="mb-5 text-2xl font-bold">6. Guardrail은 실행 전후의 정책 경계를 소유합니다</h2>
         <div className={prose}>
           <p>사례의 tool input Guardrail은 정규화된 resource가 <code>prod/customers</code>이고 approval이 <code>APR-42</code>인지 확인합니다. 둘 중 하나라도 다르면 executor를 부르기 전에 거부합니다. 승인 없는 실행에서 <code>effectStarted</code>가 false여야 하는 이유입니다.</p>
+        </div>
+        <GuardrailTimingViz />
+        <div className={prose}>
           <p>검사를 agent와 동시에 돌리면 지연은 줄 수 있지만 거부가 나오기 전에 model이 token을 쓰거나 tool이 시작될 수 있습니다. 부작용을 절대로 먼저 시작하면 안 되는 경계라면 blocking 검사가 필요합니다. 어느 시점의 어떤 Guardrail인지가 “Guardrail이 있다”는 말보다 중요합니다.</p>
         </div>
       </section>
@@ -108,6 +113,7 @@ export default function ExtensionBoundariesArticle() {
             </tbody>
           </table>
         </div>
+        <ThreePathTraceViz />
         <div className={prose}>
           <p>거부와 불합격은 같은 실패가 아닙니다. denied는 effect 전에 멈췄고, rejected는 effect 뒤 결과가 기준을 통과하지 못했습니다. 후자는 rollback·격리·사람 escalation 같은 복구 상태를 추가로 가져야 합니다.</p>
         </div>

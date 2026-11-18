@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { DelegationOwnershipViz } from "./viz/ModernAgentPatternViz";
+import MergeLedgerViz from "./viz/MergeLedgerViz";
 
 export default function Article() {
   return (
@@ -204,6 +205,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           7. 제출 식별자로 중복을 빼고 네 문제를 남깁니다
         </h2>
+        <MergeLedgerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             A는 receipt=A1, sources=doc1:r1, issues=&#123;x,y,z&#125;를, B는

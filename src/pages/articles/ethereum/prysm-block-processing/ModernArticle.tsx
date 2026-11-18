@@ -8,6 +8,8 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmBlockProcessingLocator, { PrysmBlockProcessingMapReturn } from "./PrysmBlockProcessingLocator";
 import PrysmBlockProcessingFlowViz from "./viz/PrysmBlockProcessingFlowViz";
+import OperationOrderViz from "./viz/OperationOrderViz";
+import InvalidSuffixPruneViz from "./viz/InvalidSuffixPruneViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -131,6 +133,7 @@ return postState, isValidPayload`}</code></pre>
             <tbody>{operationRows.map(([family, claim, writes]) => <tr key={family} className="border-b border-border/70"><td className="p-3 font-mono text-xs text-primary">{family}</td><td className="p-3">{claim}</td><td className="p-3 text-muted-foreground">{writes}</td></tr>)}</tbody>
           </table>
         </div>
+        <OperationOrderViz />
         <p>
           예를 들어 validator 7의 slashing과 voluntary exit가 같은 block에 있다면 slashing handler가 먼저 validator 상태와 exit 정보를 바꿉니다. 뒤 exit handler는 바뀐 state를 읽습니다.
         </p>
@@ -223,6 +226,7 @@ return postState, isValidPayload`}</code></pre>
         <p>
           세 경계를 통과하면 post-state를 저장하고 fork-choice store에 node를 넣습니다. Engine이 이미 VALID였다면 <code>SetOptimisticToValid</code>로 표시를 해제합니다. SYNCING이면 optimistic 상태를 유지한 채 vote weight와 ancestry 판단의 후보가 됩니다. 이것은 해당 block이 곧바로 head가 되거나 finalized됐다는 뜻이 아닙니다.
         </p>
+        <InvalidSuffixPruneViz />
         <p>
           나중에 EL이 INVALID를 반환하면 Prysm은 <code>latestValidHash</code>를 기준으로 invalid suffix를 찾고 block과 영향을 받은 후손의 state·fork-choice entry를 제거합니다.
         </p>

@@ -7,6 +7,7 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmBlockProposalLocator, { PrysmBlockProposalMapReturn } from "./PrysmBlockProposalLocator";
 import PrysmBlockProposalFlowViz from "./viz/PrysmBlockProposalFlowViz";
+import SignBeforeCheckViz from "./viz/SignBeforeCheckViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -209,6 +210,7 @@ return candidate`}</code></pre>
         <p>
           Validator client는 beacon node가 돌려준 block을 proposer domain으로 서명합니다. Prysm v7.3.1은 같은 proposer role과 public key의 동시 실행을 lock으로 묶고, 서명 뒤 local slashing-protection database의 <code>SlashableProposalCheck</code>를 통과한 block만 제출합니다.
         </p>
+        <SignBeforeCheckViz />
         <p>
           호출 순서를 정확히 보면 block signature는 local slashing check보다 먼저 만들어집니다. 따라서 이 check는 이미 생긴 signature를 지우는 장치가 아니라 conflicting proposal의 제출을 막는 마지막 local gate입니다. 같은 key를 여러 validator client나 외부 signer에서 동시에 운용한다면 이 한 프로세스의 lock만으로 전역 중복 서명을 막을 수 없습니다.
         </p>

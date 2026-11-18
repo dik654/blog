@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import LsmValidationViz from "./viz/LsmValidationViz";
+import StallDefaultsViz from "./viz/StallDefaultsViz";
 
 const LABEL = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-block border border-primary/40 px-1.5 py-0.5 align-middle text-[9px] font-black text-primary">{children}</span>
@@ -22,6 +23,7 @@ export default function ModernArticle() {
 
       <section id="environment" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">환경과 요구사항을 한 run manifest에 먼저 고정합니다</h2>
+        <StallDefaultsViz />
         <p><LABEL>O</LABEL>RocksDB commit <code>2dc6bc5</code>의 소스 기본값은 write buffer 64MiB, write buffer 최대 2개, L0 slowdown 20개, stop 36개, pending compaction soft 64GiB, hard 256GiB입니다. 이 값의 존재는 대상 workload에 적합하다는 증거가 아닙니다.</p>
         <p><LABEL>A</LABEL>각 run은 engine commit과 build flags, 모든 DB·column-family options, filesystem과 mount option, 장치 모델·firmware, CPU·메모리, 자료 digest, operation trace와 seed를 기록합니다. Cache warm 상태와 compression 전후 byte 계층도 고정하지 않으면 두 결과를 같은 실험으로 비교할 수 없습니다.</p>
         <div className="not-prose overflow-x-auto border-y border-border">

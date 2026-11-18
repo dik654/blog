@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { CitationBlock } from "@/components/ui/citation";
 import { codeRefs } from "./codeRefs";
+import SyncAdvanceViz from "./viz/SyncAdvanceViz";
 
 interface Props { title: string; onCodeRef: (key: string, ref: CodeRef) => void }
 
@@ -9,6 +10,7 @@ export default function SyncLoop({ title, onCodeRef }: Props) {
   return (
     <section id="sync-loop" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
+      <SyncAdvanceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           처음 동기화할 때 <code>sync</code>는 Store를 초기화하고 checkpoint로 bootstrap한 뒤 update 목록을 차례로 검증·적용합니다. 마지막에

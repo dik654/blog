@@ -7,6 +7,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmBlsLocator, { PrysmBlsMapReturn } from "./PrysmBlsLocator";
+import AggregateFactorViz from "./viz/AggregateFactorViz";
+import BatchWeightViz from "./viz/BatchWeightViz";
 import PrysmBlsFlowViz from "./viz/PrysmBlsFlowViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
@@ -176,6 +178,7 @@ export default function ModernArticle() {
           <CodeViewButton onClick={() => sidebar.open("bls-fast-aggregate", codeRefs["bls-fast-aggregate"])} />
           <span className="text-xs text-muted-foreground">Prysm의 같은-message FastAggregateVerify 경로</span>
         </div>
+        <AggregateFactorViz />
         <p>
           같은 slot이라는 이유만으로 같은 signing root가 되지는 않습니다. Attestation data나 domain이 하나라도 다르면 public key를 먼저 하나로 더하는 FastAggregateVerify 전제가 깨집니다. 그 경우 각 <code>(public key, signing root)</code> 쌍을 보존하는 AggregateVerify 또는 독립 signature batch 경로가 필요합니다.
         </p>
@@ -207,6 +210,7 @@ export default function ModernArticle() {
           <CodeViewButton onClick={() => sidebar.open("bls-verbose-fallback", codeRefs["bls-verbose-fallback"])} />
           <span className="text-xs text-muted-foreground">무작위 가중 검증과 실패 뒤 개별 확인은 서로 다른 단계입니다.</span>
         </div>
+        <BatchWeightViz />
         <p>
           Prysm의 <code>SignatureBatch.VerifyVerbosely()</code>는 먼저 batch 전체를 검사하고, 실패하면 각 signature를 단일 Verify로 다시 확인해 설명과 invalid item을 모읍니다. 이 동작은 실패 원인을 찾지만 공격 입력에서 추가 계산을 발생시킵니다. 어떤 batch 크기와 fallback 정책이 운영 deadline을 지키는지는 이 개념 글이 정할 수 없으며 실제 workload를 고정한 실무 실험의 질문입니다.
         </p>

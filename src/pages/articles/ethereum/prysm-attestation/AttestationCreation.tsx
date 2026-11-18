@@ -1,6 +1,8 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import DutyTimingViz from "./viz/DutyTimingViz";
+import SlashingIntervalViz from "./viz/SlashingIntervalViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -100,6 +102,7 @@ export default function AttestationCreation({ onCodeRef }: Props) {
         <h3 className="text-xl font-semibold mt-6 mb-3">
           고정 사례: reorg와 늦은 block이 겹친 slot
         </h3>
+        <DutyTimingViz />
         <p className="leading-7">
           Dependent root D1에서 validator 17이 slot 352, committee 2, position
           17 duty를 받았다고 합시다. 서명 전에 dependent root가 D2로 바뀌면 D1의
@@ -119,6 +122,7 @@ export default function AttestationCreation({ onCodeRef }: Props) {
         <h3 className="text-xl font-semibold mt-6 mb-3">
           Slashing Protection — EIP-3076
         </h3>
+        <SlashingIntervalViz />
         <div className="not-prose space-y-3 my-4">
           <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
             <p className="text-xs font-bold text-foreground/70 mb-2">

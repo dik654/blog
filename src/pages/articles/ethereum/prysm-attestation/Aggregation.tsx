@@ -2,6 +2,7 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import SubnetGridViz from "./viz/SubnetGridViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -88,6 +89,8 @@ export default function Aggregation({ onCodeRef }: Props) {
           선택하고, ENR의 <code>attnets</code> bitfield를 이용해 필요한 peer를
           찾는다.
         </p>
+
+        <SubnetGridViz />
 
         <ExplainedFormula
           question="Slot 352의 committee 2 투표는 64개 attestation subnet 중 어디로 갈까요?"

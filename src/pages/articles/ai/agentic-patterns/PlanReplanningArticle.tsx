@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { PlanReplanningViz } from "./viz/ModernAgentPatternViz";
+import VersionReopenViz from "../agent-plan-replanning/viz/VersionReopenViz";
+import WiringErrorViz from "../agent-plan-replanning/viz/WiringErrorViz";
 
 export default function Article() {
   return (
@@ -185,6 +187,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           7. 버전 3을 4로 바꾸며 연결된 결과만 다시 엽니다
         </h2>
+        <VersionReopenViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             첫 기록은 A(output=schema:v3), B(input=schema:v3, output=client:r1), C(input=client:r1, pass),
@@ -276,6 +279,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">
           9. 계획의 연결이 틀리면 재계획도 틀립니다
         </h2>
+        <WiringErrorViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             어떤 작업이 어느 자료를 읽었는지 빠뜨리면 영향을 받는 결과를

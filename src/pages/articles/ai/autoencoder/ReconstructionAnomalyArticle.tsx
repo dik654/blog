@@ -6,6 +6,8 @@ import AutoencoderSeriesLocator, {
   AutoencoderMapReturn,
 } from "./shared/AutoencoderSeriesLocator";
 import { ReconstructionAnomalyViz } from "./viz/ModernAutoencoderViz";
+import ResidualScoreViz from "./viz/ResidualScoreViz";
+import ThresholdOverlapViz from "./viz/ThresholdOverlapViz";
 
 const OWNERSHIP = [
   {
@@ -192,6 +194,7 @@ export default function ReconstructionAnomalyArticle() {
 
       <section id="threshold" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">검증하고 정하기</h2>
+        <ResidualScoreViz />
         <ExplainedFormula
           question="Sample의 점수를 어떻게 경보로 바꿀까요?"
           idea={
@@ -251,6 +254,7 @@ export default function ReconstructionAnomalyArticle() {
 
       <section id="failure" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">겹침부터 확인</h2>
+        <ThresholdOverlapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             [A] 가장 작은 기준선은 <strong>고정 checkpoint + 고정 전처리 + 한 가지 점수식 +

@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import EthereumStatePathLocator, { EthereumStateMapReturn } from "../state-shared/EthereumStatePathLocator";
 import MptProofTraceViz, { StateRootNestingViz } from "./viz/MptProofTraceViz";
+import HexPrefixPackingViz from "./viz/HexPrefixPackingViz";
+import ProofOutcomeViz from "./viz/ProofOutcomeViz";
 
 export default function ModernArticle() {
   return (
@@ -53,6 +55,8 @@ export default function ModernArticle() {
             <dd className="mt-2 break-keep text-sm leading-6">마지막 남은 경로 조각과 그 key의 value를 가집니다.</dd>
           </div>
         </dl>
+
+        <HexPrefixPackingViz />
 
         <p>
           Extension과 leaf의 경로에는 compact hex-prefix를 붙입니다. 첫 flag nibble은 이 node가 leaf인지 extension인지, 경로 길이가 홀수인지 짝수인지를 함께 나타냅니다. 예를 들어 홀수 길이 leaf 경로 <code>[1,2,3,4,5]</code>는 flag 3을 앞에 붙여 <code>31 23 45</code>가 됩니다. 짝수 길이 extension 경로 <code>[a,b]</code>는 flag 0과 padding 0을 붙여 <code>00 ab</code>가 됩니다.
@@ -117,6 +121,8 @@ export default function ModernArticle() {
           <p className="text-sm font-semibold text-primary">03 · 실패</p>
           <h2 className="text-2xl font-bold">Node가 없다는 말과 계정이 없다는 증명은 다릅니다</h2>
         </header>
+
+        <ProofOutcomeViz />
 
         <p>
           포함 증명은 root에서 시작해 key 경로를 모두 소비하고 마지막 leaf value까지 이어져야 합니다. 중간 node 하나가 빠졌거나, 무관한 leaf를 보냈거나, child hash와 bytes가 맞지 않으면 결과는 “계정 없음”이 아니라 “증명이 불완전하거나 잘못됨”입니다.

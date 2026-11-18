@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
+import MptPathConsumeViz from "./viz/MptPathConsumeViz";
 
 interface Props {
   title: string;
@@ -71,6 +72,8 @@ export default function MptTraversal({ title, onCodeRef: _onCodeRef }: Props) {
         ]}
         interpretation="Verify=true는 정확히 R·x·y·proof tuple의 포함 또는 부재만 말합니다. 그 block이 현재 optimistic head인지 finalized head인지는 부모 consensus 상태가 따로 결정합니다."
       />
+
+      <MptPathConsumeViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Branch·extension·leaf는 path를 소비하는 방식이 다릅니다</h3>

@@ -2,6 +2,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "./StorageEngineLocator";
 import LsmLifecycleViz from "./viz/LsmLifecycleViz";
+import WalDurabilityViz from "./viz/WalDurabilityViz";
+import ReadCandidatesViz from "./viz/ReadCandidatesViz";
+import LevelTierViz from "./viz/LevelTierViz";
 
 export default function ModernArticle() {
   return (
@@ -28,6 +31,7 @@ export default function ModernArticle() {
         <p>
           첫 요청 <code>Put(A, 7)</code>은 설명용 sequence 41을 받습니다. WAL은 아직 SSTable에 들어가지 않은 변경을 재시작 뒤 다시 적용할 수 있게 남깁니다. Memtable은 같은 항목을 메모리의 정렬 구조에 넣어 다음 write와 read가 즉시 사용할 수 있게 합니다. Memtable이 기준에 닿으면 immutable 상태로 동결되고, 새 memtable이 후속 쓰기를 받는 동안 백그라운드 작업이 기존 내용을 SSTable로 flush합니다.
         </p>
+        <WalDurabilityViz />
         <p>
           여기서 “WAL에 썼다”와 “전원 손실 뒤에도 남는다”는 같은 말이 아닙니다. RocksDB의 non-sync write는 운영체제 버퍼에 WAL을 넘긴 뒤 반환할 수 있어 프로세스만 죽는 경우에는 복구할 수 있지만, 장비 전원 손실에서는 최근 변경이 사라질 수 있습니다. <code>sync=true</code>는 반환 전 persistent storage까지 밀어내는 경계를 요청합니다. WAL을 끈 write는 memtable이 flush되기 전에 프로세스가 죽어도 잃을 수 있습니다.
         </p>
@@ -78,6 +82,7 @@ export default function ModernArticle() {
             </tbody>
           </table>
         </div>
+        <ReadCandidatesViz />
         <p>
           Tombstone은 빈 값이 아니라 “이 시점부터 이전 값을 보이지 않게 하라”는 항목입니다. Tombstone을 확인하고도 더 오래된 파일의 A=7을 반환하면 삭제한 값이 되살아납니다. 반대로 활성 snapshot에 A@52가 필요한 동안 compaction이 그 항목을 지우면 snapshot 55의 결과가 바뀝니다.
         </p>
@@ -91,6 +96,7 @@ export default function ModernArticle() {
         <p>
           Flush가 반복되면 같은 키 범위의 sorted run이 늘어납니다. Compaction은 여러 run을 key와 sequence 순서로 병합해 새 SSTable을 만들고, 활성 snapshot이나 더 낮은 level의 값에 필요하지 않은 version과 tombstone만 제거합니다. 새 파일을 manifest에 안전하게 설치하기 전에는 기존 입력 파일을 없앨 수 없습니다.
         </p>
+        <LevelTierViz />
         <p>
           Leveled compaction은 level 내부의 키 범위 겹침을 강하게 제한해 한 번의 point read가 확인할 파일과 중복 공간을 줄이는 대신, 큰 다음 level과 겹치는 바이트를 반복해 다시 쓸 수 있습니다. Tiered 계열은 비슷한 크기의 run을 늦게 합쳐 쓰기 증폭을 줄일 수 있지만 읽을 run 수와 임시 공간이 늘어날 수 있습니다. 어느 쪽이 낫다는 답은 입력 분포와 read/write 비율 없이 정해지지 않습니다.
         </p>

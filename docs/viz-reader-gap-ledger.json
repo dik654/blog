@@ -6747,202 +6747,374 @@
 {
 "route": "blockchain/helios-state",
 "publicPath": "cs/blockchain/helios-state",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"The task names src/pages/articles/blockchain/helios-state.tsx, but the actual source is src/pages/articles/ethereum/helios-state.tsx and helios-state/ (route key blockchain/helios-state comes from src/content/blockchain/articlesEthereum2.ts). Edits were made there.",
+"The helios-state/ directory contains unrendered section files (AccountProof.tsx, Eip1186.tsx, ErrorCases.tsx, ProofCaching.tsx, RlpDecode.tsx, StorageProof.tsx) and old viz files (MptTraversalViz, ProofDBViz, OverviewViz, ProofTraceViz and their Steps/Data). ProofDBVizData says the cache key is (address, block_number), which contradicts the article's (address, block_hash). They are not rendered, so they were left untouched."
+]
 },
 {
 "route": "blockchain/helios-update",
 "publicPath": "cs/blockchain/helios-update",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"The task names src/pages/articles/blockchain/helios-update.tsx, but the actual source is src/pages/articles/ethereum/helios-update.tsx and helios-update/. Edits were made there.",
+"For the relevant next committee, finality and same-period finality rungs, the article lists the order but not which side wins, so the Viz does not invent a direction. For readers, it may help to state in the prose 'the side that has it wins'."
+]
 },
 {
 "route": "blockchain/helios-consensus",
 "publicPath": "cs/blockchain/helios-consensus",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 4
 },
 {
 "route": "blockchain/helios-config",
 "publicPath": "cs/blockchain/helios-config",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 4,
+"articleIssues": [
+"NetworkConfig.tsx table uses min-w-[42rem] and Decision.tsx table uses min-w-[48rem] with overflow-x-auto rather than ResponsiveVizTable. This is pre-existing and was not changed, since those are prose tables outside my Viz."
+]
 },
 {
 "route": "blockchain/helios",
 "publicPath": "cs/blockchain/helios",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1,
+"articleIssues": [
+"The existing TrustBoundaryTable and the result-boundary table use min-w-[56rem]/min-w-[48rem] raw <table> elements rather than ResponsiveVizTable (pre-existing, not changed).",
+"The existing HeliosTrustTraceViz says 'TRUST PATH · 시작과 12초 주기 update', but the article prose never states a 12-second period (pre-existing, not changed)."
+]
 },
 {
 "route": "ai/agent-delegation-contracts",
 "publicPath": "cs/ai/agent-delegation-contracts",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1,
+"articleIssues": [
+"§3 says 'A의 제출물을 두 번 받았을 때도 결과가 7건으로 늘어나면 안 됩니다' without showing where 7 comes from (4 + A's 3 re-added); the Viz shows the arithmetic, but the prose leaves it implicit.",
+"§10's second question cites '(답: 5절)' for the doc2:r2 case. §5 covers it only as 'B가 최신 문서를 임의로 읽었다면', and doc2:r1 as the pinned revision appears only in §7."
+]
 },
 {
 "route": "ai/agent-extension-boundaries",
 "publicPath": "cs/ai/agent-extension-boundaries",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"The §8 table in ExtensionBoundariesArticle.tsx uses min-w-[680px] inside overflow-x-auto rather than ResponsiveVizTable. This is existing article markup and I did not change it.",
+"Shared helper: I added /Users/dylan/code/projects/blog-moe-serving/src/pages/articles/ai/agentic-patterns/viz/SceneShell.tsx, copied verbatim from the covered-calls SceneShell. It exports a default component plus a type interface."
+]
 },
 {
 "route": "ai/agent-loop-foundations",
 "publicPath": "cs/ai/agent-loop-foundations",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2
 },
 {
 "route": "ai/agent-plan-replanning",
 "publicPath": "cs/ai/agent-plan-replanning",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"8절(reflection)에 id=\"plan-validation\" 앵커가 있지만 plan validation(실행 전 순환·입력·자원 확인)은 5절에서 설명되고 8절은 Reflexion 기억 갱신을 다룸 — 앵커 위치가 내용과 어긋나 보임",
+"6절의 기존 PlanReplanningViz는 Task A·Artifact v3·Task B·Replan의 영문 일반 도식이고 본문 사례의 D(보존)를 보이지 않음 — 수정하지 않음"
+]
 },
 {
 "route": "ai/agent-runtime-selection",
 "publicPath": "cs/ai/agent-runtime-selection",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1,
+"articleIssues": [
+"Comparison.tsx 첫머리 ComparisonDetailViz가 header('00 · 후보 비교' h2)보다 앞에 놓여 절 제목 전에 그림이 먼저 나옴 — 수정하지 않음",
+"Crew/Flow 분리 문단의 '해석이 필요한 좁은 단계'가 A-104 환불 흐름에서 어느 단계인지 본문에 명시되지 않음"
+]
 },
 {
 "route": "ai/denoising-masked-autoencoders",
 "publicPath": "cs/ai/denoising-masked-autoencoders",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1
 },
 {
 "route": "ai/gated-activations",
 "publicPath": "cs/ai/gated-activations",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"§9 prose: 'coordinate-wise로 곱은 뒤' looks like a typo for '곱한 뒤'.",
+"§8 intro says GELU/SiLU multiply x by a '0–1 gate', while §9 stresses that the SiLU output itself is not a 0–1 probability. The two statements are consistent (ratio vs product), but a reader may still find the wording confusing."
+]
 },
 {
 "route": "ai/linear-autoencoder-pca",
 "publicPath": "cs/ai/linear-autoencoder-pca",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2
 },
 {
 "route": "ai/lora-training-and-release",
 "publicPath": "cs/ai/lora-training-and-release",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 4,
+"articleIssues": [
+"Practice.tsx의 기존 체크포인트 표가 min-w-[760px] 고정 폭 <table>이다(이번에 건드리지 않음). 모바일에서는 가로 스크롤이 생긴다.",
+"기존 PracticeWorkflowViz와 DataFormatViz는 장면 조작이 없는 정적 figure이고 data-viz-name이 없어 viz-scene-shot 목록에 잡히지 않는다(수정하지 않음)."
+]
 },
 {
 "route": "ai/on-policy-distillation",
 "publicPath": "cs/ai/on-policy-distillation",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 3,
+"articleIssues": [
+"#state-mismatch paragraph after the λ formula contrasts 'λ=1 … student rollout 분포' with 'λ=0 … teacher distribution(또는 고정 데이터)만 그대로 모방'. This mixes the prefix/state distribution with the target. The article's own formula block says the teacher provides the target at every λ, so 'teacher distribution' on the λ=0 side may mislead.",
+"The sibling section file knowledge-distillation/OnPolicy.tsx, which is not rendered on this route, uses per-token reverse KL D_KL(p_θ‖p_T). This article's #teacher-feedback uses forward KL D_KL(q_t‖p_s). That may be intentional, but readers of both pages see opposite directions without comment."
+]
 },
 {
 "route": "ai/reconstruction-anomaly-detection",
 "publicPath": "cs/ai/reconstruction-anomaly-detection",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2
 },
 {
 "route": "ai/rectifier-activations",
 "publicPath": "cs/ai/rectifier-activations",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2
 },
 {
 "route": "ai/self-distillation",
 "publicPath": "cs/ai/self-distillation",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1
 },
 {
 "route": "ai/sequence-distillation",
 "publicPath": "cs/ai/sequence-distillation",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2
 },
 {
 "route": "ai/softmax",
 "publicPath": "cs/ai/softmax",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 3
 },
 {
 "route": "blockchain/bplus-index-validation",
 "publicPath": "cs/blockchain/bplus-index-validation",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1,
+"articleIssues": [
+"The source file lives under src/pages/articles/ethereum/, not blockchain/.",
+"The existing environment table in the article uses min-w-[42rem] inside overflow-x-auto (pre-existing; not touched)."
+]
 },
 {
 "route": "blockchain/bplus-tree",
 "publicPath": "cs/blockchain/bplus-tree",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 5,
+"articleIssues": [
+"The route key says blockchain/ but the source files are under src/pages/articles/ethereum/bplus-tree (articlesEthereum3.ts imports @/pages/articles/ethereum/bplus-tree). I edited the ethereum/ files.",
+"No factual errors found in the prose. The page-layout ExplainedFormula numbers check out: floor(4000/24)=166; 1,000,000/200=5,000; 5,000/160=31.25 → 32; 1+ceil(log_160 5000)=3."
+]
 },
 {
 "route": "blockchain/eip4844-blob-fee",
 "publicPath": "cs/blockchain/eip4844-blob-fee",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1
 },
 {
 "route": "blockchain/expected-consensus",
 "publicPath": "cs/blockchain/expected-consensus",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1
 },
 {
 "route": "blockchain/fork-id",
 "publicPath": "cs/blockchain/fork-id",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 3,
+"articleIssues": [
+"#validation first paragraph: the case 'same hash, but remote FORK_NEXT is already at or below local head' is rejected '원격 소프트웨어가 낡았을 수 있으므로'. In that case the local node passed the block without applying the remote's announced fork, so it may be the local side (or a diverging config) that is out of date. The AlgorithmBlock note's 'stale peer' wording has the same issue. Suspected, not verified against EIP-2124 text in this session; the Viz avoids stating a cause for this case.",
+"Live article entry is src/pages/articles/blockchain/fork-id.tsx, which re-exports ethereum/fork-id/ModernArticle. Overview.tsx, PowToPos.tsx, CRC32ENR.tsx and TestDesign.tsx in that folder are not rendered by the live route, so they were read but not edited."
+]
 },
 {
 "route": "blockchain/helios-execution",
 "publicPath": "cs/blockchain/helios-execution",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"Route file is src/pages/articles/ethereum/helios-execution.tsx; there is no blockchain/helios-execution file. Live sections are Overview, ExecutionTrace and RpcMethods. Many files in helios-execution/viz (GetLogsViz, SendTxViz, etc. and the GetBalance/GetLogs section files) are not rendered by the live route. Nothing was found wrong in the live prose."
+]
 },
 {
 "route": "blockchain/lsm-engine-validation",
 "publicPath": "cs/blockchain/lsm-engine-validation",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1,
+"articleIssues": [
+"The route key is blockchain/lsm-engine-validation, but the source is at src/pages/articles/ethereum/lsm-engine-validation."
+]
 },
 {
 "route": "blockchain/lsm-tree",
 "publicPath": "cs/blockchain/lsm-tree",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 4,
+"articleIssues": [
+"The route key is blockchain/lsm-tree, but the source lives at src/pages/articles/ethereum/lsm-tree(.tsx). The public path cs/blockchain/lsm-tree renders it, so this is not an error, just a naming mismatch.",
+"Unused legacy Viz files sit in lsm-tree/viz (OverviewViz, WriteFlowViz, ReadFlowViz, CompactionViz, CompactionStallViz, LsmVsBtreeViz). The article does not import them. I left them untouched."
+]
 },
 {
 "route": "blockchain/mdbx-internals",
 "publicPath": "cs/blockchain/mdbx-internals",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2
 },
 {
 "route": "blockchain/mdbx-validation",
 "publicPath": "cs/blockchain/mdbx-validation",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 0
 },
 {
 "route": "blockchain/merkle-patricia-trie",
 "publicPath": "cs/blockchain/merkle-patricia-trie",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2
 },
 {
 "route": "blockchain/node-architecture",
 "publicPath": "cs/blockchain/node-architecture",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 0
 },
 {
 "route": "blockchain/prysm",
 "publicPath": "cs/blockchain/prysm",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 3
 },
 {
 "route": "blockchain/prysm-attestation",
 "publicPath": "cs/blockchain/prysm-attestation",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 5,
+"articleIssues": [
+"AttestationCreation.tsx 고정 사례: \"같은 epoch라는 이유로 A의 cache를 재사용하면 안 됩니다\" refers to an undefined \"A\". It probably means the D1-based cache. The Viz says \"앞의 cache\" instead.",
+"AttestationCreation.tsx CheckAttestationSafety step 3 maps \"past가 현재를 감쌈 → ErrSurroundingVote / 현재가 past를 감쌈 → ErrSurroundedVote\". The naming direction looks inverted and should be checked against Prysm source. The Viz deliberately does not show these two error names.",
+"Aggregation.tsx: the A=16 term description says \"v1.6.1에서\", but the citation is consensus-specs v1.7.0-beta.4. This is a possible version mismatch."
+]
 },
 {
 "route": "blockchain/prysm-beacon-api",
 "publicPath": "cs/blockchain/prysm-beacon-api",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1
 },
 {
 "route": "blockchain/prysm-beacon-db",
 "publicPath": "cs/blockchain/prysm-beacon-db",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"#cache-boundary says SaveROBlocks puts updated entries into the block cache after db.Update. The included source (codebase/.../kv/blocks.go lines 62-64) returns early when the `cache` argument is false, so the cache loop and its risk apply only when caching is requested. The article does not mention this condition.",
+"#pruning says the deletes happen in one write transaction and that slot index and cache cleanup come '이어서'. In the included source, that cleanup sits inside the same db.Update callback, which is why a context-cancel nil return skips it. The prose leaves open whether the cleanup belongs to the same transaction."
+]
 },
 {
 "route": "blockchain/prysm-beacon-state",
 "publicPath": "cs/blockchain/prysm-beacon-state",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1,
+"articleIssues": [
+"The article files live at src/pages/articles/ethereum/prysm-beacon-state (not blockchain/). The public path /cs/blockchain/prysm-beacon-state renders them.",
+"I found no factual errors in the prose. Minor: the #state-root and dirty-path sections never say that the SSZ list root also mixes in the list length. That is outside this task, so it was only noted and not drawn."
+]
 },
 {
 "route": "blockchain/prysm-block-processing",
 "publicPath": "cs/blockchain/prysm-block-processing",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"The article files live at src/pages/articles/ethereum/prysm-block-processing (not blockchain/). The public path /cs/blockchain/prysm-block-processing renders them.",
+"The #operations table lists 'Proposer / attester slashing' as one row. The existing top flow Viz says 'proposer slashing부터'. These are consistent, but the prose never says which kind of slashing the validator 7 example is. I left it generic as 'slashing'.",
+"I did not add a Viz for the parallel validation join. The existing top flow Viz (scene 3) and the pseudo-code block already cover it."
+]
 },
 {
 "route": "blockchain/prysm-block-proposal",
 "publicPath": "cs/blockchain/prysm-block-proposal",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 1,
+"articleIssues": [
+"The task gave src/pages/articles/blockchain/prysm-block-proposal.tsx, but the real files are at src/pages/articles/ethereum/prysm-block-proposal(.tsx). I worked there. The public route is cs/blockchain/prysm-block-proposal.",
+"The existing failure-boundary <table> in ModernArticle.tsx uses min-w-[760px] inside overflow-x-auto. I left it alone: it is not a Viz and not mine to change."
+]
 },
 {
 "route": "blockchain/prysm-bls",
 "publicPath": "cs/blockchain/prysm-bls",
-"status": "todo"
+"status": "done",
+"round": 19,
+"vizAdded": 2,
+"articleIssues": [
+"The task gave src/pages/articles/blockchain/prysm-bls, but the real files are at src/pages/articles/ethereum/prysm-bls(.tsx). The public route is cs/blockchain/prysm-bls.",
+"Overview.tsx, SignVerify.tsx, BatchVerification.tsx and BlstBinding.tsx in prysm-bls/ are not imported by ModernArticle. They look like legacy files that do not render, so I did not read them as article sections.",
+"Self-check Q3 names 'MultipleAggregateVerify', while the body and the citation say VerifyMultipleSignatures / SignatureBatch. This may be a naming inconsistency. I did not check it against the source."
+]
 },
 {
 "route": "blockchain/prysm-engine-api",
@@ -9284,6 +9456,67 @@
 "All numbers recomputed and correct. RepairTailLatencyViz: mean 1.10, 1.145, 1.19 and 1.37s; nearest-rank 19th of 20 gives p95 = 1.10s at k=1 and 2.00s at k>=2; constrained 1.3 + 0.1 = 1.4s. TrafficMatrixViz: 64 - 8 = 56 cells, 7 per column. LeafSpinePathViz: 800/800 = 1.00:1; 800/600 = 1.33:1; 3·2·2·1 and 3·3·2 splits of the 100G flows give the loads shown, matching NetworkBudgetViz. No wrong-fact found.",
 "RepairTailLatencyViz title claim '5%를 넘으면' only holds for nearest-rank p95 with N=20; interpolated percentile would give 1.145s at k=1. The Viz's description defines p95 as the 19th request, so it's left as is.",
 "Verification: audit:viz --strict gives 0 ERROR on both changed files. viz-scene-shot at 390 and 1440 gives stable controlY and frameH across all scenes, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r18/rv16/prompt-structured-output and /tmp/viz-rounds/r18/rv16/hw-network."
+],
+"19": [
+"LatestPinViz last scene note says 'Account·storage proof를 그 header의 state root R에 대조'. This follows the article's code comment ('5. Account와 storage proof를 그 header의 root에 대조합니다'). But the excerpt calls `verify_storage_proof(&proof)` without R, and storage proofs are normally checked against the account's storage root, not R. Fixing it needs an outside fact and a change to the article prose, so the Viz was left matching the article.",
+"GatedCellTraceViz and the article prose show 1.462118 for 2·σ(1). The exact value is 2×0.7310585786=1.4621171572, which rounds to 1.462117; 1.462118 comes from doubling the already-rounded 0.731059. The sum 2.268941 is correct either way. I left the Viz matching the article, because fixing it means changing the prose in sections 1, 2, 3 and 7.",
+"Checked and found no problem. GatedCellTraceViz: σ(±1)=0.731059/0.268941; v=(2,−3) and (−2,3) from Wv=diag(2,3); products 0.806824, 0.537883 and 2.193176; sums 2.268941 and 2.731059. ParamCountViz: 2×3+3×2=12, 2×3+2×3+3×2=18 (+50%), 2×2×3=12, and the bars use one shared 0–18 scale. MaskedPatchFlowViz: N=16, |M|=12, |V|=4, encoder gets V only, decoder gets 4 z plus 12 m in original order, loss is (1/12)·Σ over M. All of these match the article's #masking formula and assumptions, and the assumed values are labeled as assumptions.",
+"Verification: audit:viz --strict passed on the changed file. In viz-scene-shot for all 3 Viz at 390 and 1440 px, controls and frame stayed fixed across scenes, overflow was 0 and console errors were 0. In the 390 px screenshot of MaskedPatchFlowViz scene 4 the decoder lane is only partly visible above the control row. It sits inside the stage's internal scroll area, which the standard allows on mobile, so I did not change it.",
+"GuardrailTimingViz: the red 'before the deny verdict' bars differ from the blue bars in other scenes mainly by color. The red verdict line and its '거부 판정' label, plus the scene note, carry the meaning in text, so I left it. The tool bar is about 31 viewBox px wide, too narrow for a readable inline label.",
+"Checks: audit:viz --strict on all 4 files gave no ERROR lines, only 10 REVIEW notes on SVG text. viz-scene-shot at 390 and 1440 for all 4 Viz: controlY and frameH stay constant across scenes, overflow 0, console errors 0. I looked at screenshots of the changed scenes and the GuardrailTiming and ThreePath scenes: no clipping.",
+"SharedWeightFlipViz.tsx: I recomputed every number and found nothing wrong. The closed path contributes 4×0 = 0 and the open path 4×3 = 12. The update is 1 − 0.1×12 = −0.2. The re-run gives −0.2×(−2) = 0.4, so the gate opens, and −0.2×3 = −0.6, so it closes. The (가정) labels and the hedge '좋은 학습이라는 뜻은 아닙니다' match the article.",
+"TwoGradientsViz.tsx: the other numbers check out. Forward 0.01×(−2) = −0.02. Toward the input 4×0.01 = 0.04, and toward a 4×(−2) = −8. For the positive input the input side gets 4×1 = 4, which matches section 7's '뒤로 가는 값 (0.04,4)'. The shared-a sum −8 + 0 = −8 matches the article's '(가정)'.",
+"The article prose itself mixes notations: section 9 uses z for the input in the formula and y for the input in the paragraph after the Viz. I fixed this only inside the Viz. Making the prose consistent needs an article edit, which this task does not allow.",
+"Checks: audit:viz --strict reported 0 ERROR lines, only REVIEW notices for SVG text. viz-scene-shot ran at 390px and 1440px for all 3 Viz. Control position and frame height did not change between scenes, overflow was 0 and there were 0 console errors. Screenshots are in /tmp/viz-rounds/r19/rv8/rectifier-activations/ and /tmp/viz-rounds/r19/rv8/self-distillation/, and I looked at them. Labels are not clipped, and the R bracket correctly spans −1 to 5.",
+"Facts checked and correct, no change: leaf [1,2,3,4,5] plus flag 3 gives 3 1 2 3 4 5, packed as 31 23 45 (3 bytes). Extension [a,b] plus flag 0 and padding 0 gives 0 0 a b, packed as 00 ab (2 bytes). These match article line 62. In ProofOutcome, all five scenes (inclusion, empty slot 2, a7 vs a8 mismatch, missing branch, slot 1 reference mismatch) follow article lines 128 and 131 and the aside. The order of the marks agrees with the AlgorithmBlock steps.",
+"On the 390px mobile view the ProofOutcome verdict box sits below the fold of the fixed-height stage and is reached by scrolling inside the canvas. viz-design-standard section 2 allows this inner scroll for multi-scene Viz. Controls stayed fixed across scenes (controlY constant), and the check reported overflow 0 and 0 console errors.",
+"FakeExponentialTermsViz: I recomputed every number with the spec's integer loop (Python) and found no fault. With n=1,048,576 and d=11,684,671 the terms are 11,684,671 / 1,048,576 / 47,049 / 1,407 / 31, then 0 (the intermediate floors are 94,098, 4,222, 126 and 2). The sum is 12,781,734 and dividing by d gives 1. The gap to 2d=23,369,342 is 10,587,608 (the Viz says '1,000만 이상'). Excess 61×131,072 gives 23,162,645, which divides to 1. Excess 62 gives 23,423,935, which divides to 2. These match the article: '0~61개분은 1, 62개분부터 2'. The axis maximum of 24,000,000 is above every bar. Controls stay at the same height in every scene (567 at 390px, 522 at 1440px). Overflow is 0 and there are 0 console errors. No changes made.",
+"FakeExponentialTermsViz, minor and left as is: the description says '합이 d를 넘으면 가격 1', but a₀ = d, so the sum is always at least d and the price is at least 1. '이상' would be more exact, but no reader is misled by it.",
+"audit:viz --strict: 0 ERROR lines for both files. It reports 7 REVIEW items on SVG text in FakeExponentialTermsViz, and the screenshots show no clipping at 390px or 1440px. NullEpochGapViz is a single static scene: overflow 0, 0 console errors.",
+"RetokenizeMaskViz numbers t=1..11 over the whole serialized line (template markers, prompt, response and padding), so the summed terms are ℓ6..ℓ9. The article's formula is ambiguous here: it writes u_{1:L_s}=Tok_s(y_t), the teacher text only, with the prompt in c, yet sums m_t over t=1..L_s. Making the indices agree needs a prose or formula decision in the article. The Viz matches the prose 'Prompt와 teacher response를 student chat template로 serialize한 뒤 ... mask 1'.",
+"MaxShiftViz has no color legend for candidate 1 (blue) and candidate 2 (orange), while SharedTotalViz has one. The order is readable from the '2/3, 1/3' labels, so I left it as is.",
+"Checked and found correct: CoverageGap |.4−.1|+|.4−.7|+0=.6, half=.3; SharedTotal 2/3,1/3 → 1/2,1/2; MaxShift (2,1)/3 = (1,1/2)/(3/2); Temperature curve 2^(1/T)/(2^(1/T)+1) gives 0.8 at T=1/2, 0.667 at T=1 and 0.586 at T=2, matching the article. audit:viz --strict showed no ERROR lines (REVIEW items only). Screenshot runs showed stable controls and frame, overflow 0 and console errors 0 at 390 and 1440 px.",
+"VersionReopenViz.tsx: I found no wrong facts. All four scenes match the article's §7 records (A schema:v3→v4, B·C reopened, D guide:r1 kept, the '만약 안내 화면도 자료에 의존했다면' branch), and I made no changes.",
+"Checks: audit:viz --strict passed with no ERROR lines. Scene shots for all three Viz at 390 and 1440 had stable controls and frame height, overflow 0 and console errors 0. In the 390px screenshots the bottom control bar covers the last row of content (CrashResume's refund chips, VersionReopen's task D). This looks like SceneShell's shared sticky control layout or the screenshot viewport, not these files, so I did not touch it.",
+"No issues found in BestUpdateLadderViz or ForceUpdateBranchViz after checking them against the article and the pinned source (update_ordering.rs). The rung order matches is_better_update. The 2/3 arithmetic checks out: 3×342=1,026≥1,024 and 3×341=1,023<1,024. The 300/320 case is under 2/3 on both sides (900 and 960 are both below 1,024). Older attested slot wins and earlier signature slot wins, as the source does. The force_update conditions also match the source: current_slot > finalized + period, best_valid_update is present, and when the candidate's finalized slot is ≤ the Store's, the attested header goes into the finalized slot.",
+"Side note, outside the files I could edit: the unused helios-state/ProofCaching.tsx says the cache key is (address, block_number), while ProofDB.tsx (which is rendered) and the Viz say (address, block_hash). ProofCaching.tsx is not imported by helios-state.tsx, so readers do not see it. I did not edit it.",
+"I made no edits. ReaderHorizonViz.tsx follows the article's formula 'reuse(p) only after retiredTx(p) < min readerTx(r)' with R_active={100,103}. Horizon stays at 100 while the writer goes to 105, which matches 'min(100,103)=100' and '새 commit 105가 있어도 바뀌지 않음'. After R1 ends, min(103)=103, so only retiredTx 101 and 102 become candidates (both < 103) and 103-105 are kept. The separator sits at x(103)-24=224, which falls between the right edge of box 102 (222) and the left edge of box 103 (226), so it is placed correctly. The assumption that every commit retires some pages is labeled '(가정)'.",
+"Not changed, outside fact needed. Under the strict '<' in the article's formula, pages retired at 103 are kept while R2 is pinned at 103. A reader could argue R2's own graph no longer contains them. The Viz copies the article's formula exactly, and the shell note already says '정확한 GC 비교 규칙은 고정한 libmdbx release의 구현에 따릅니다'. Settling this would take a libmdbx source check, so it is left open.",
+"ByteOrderViz.tsx checks out. 256 = 1×256+0 gives little-endian bytes 00 01, and 2 gives 02 00, matching the article's '256을 little-endian bytes 00 01, 숫자 2를 02 00'. The first bytes differ (00 < 02), so the stored order is 256, 2 and the numeric order is 2, 256. The article's hedge is kept as '이 두 값에서는' and '달라질 수 있습니다'.",
+"Checks. audit:viz --strict on both files gave REVIEW lines only and no ERROR. viz-scene-shot at 390 and 1440 gave stable control Y and frame height in every scene, overflow 0, and 0 console errors. Shots are in /tmp/viz-rounds/r19/rv14/mdbx-horizon and /tmp/viz-rounds/r19/rv14/mdbx-byte.",
+"At 390px the scene-note text shows partly under the control row in the screenshot. That comes from the shared VizFrame and scene-control layout in src/components, which I was not allowed to edit, and the stability metrics are fine. Not changed.",
+"blockchain/mdbx-validation has no new Viz in this list, so I did not review it.",
+"StallDefaultsViz.tsx: the write buffer row (64MiB × 최대 2개) sits in a Viz titled '기본 write-stall 경계는 같은 지표 위의 두 단계입니다', but it is shown with no stall boundary. The article (#environment) lists it only as a source default and never says how it relates to stalls. Saying that a full set of write buffers stops writes would be an outside fact, so the row was left as is.",
+"Checked with no change needed. LevelTierViz: L1 i–p (indices 8–15) overlaps exactly the 3 L2 files f–j, k–o and p–t. Key k (index 10) is covered by one file per level. The tiered scenes have hedged notes that match the article's '줄일 수 있지만 ... 늘어날 수 있습니다'. WalDurabilityViz: all five scenes match the #write-path paragraph (non-sync / process crash / power loss / sync=true / WAL off). StallDefaultsViz: the numbers 20/36 and 64/256 GiB (256/64 = 4배) match the article. Both axis maxima are disclosed as assumptions. Screenshots: /tmp/viz-rounds/r19/rv13/lsm-tree and /tmp/viz-rounds/r19/rv13/lsm-engine-validation.",
+"Checked and correct, no change: ResidualScoreViz numbers. Squared residuals sum to 1.62, and 1.62/12 = 0.135 > 0.1. Sensor 5 is 1.44/1.62 = 88.9% of that sum. With sensor 9 at 10 in its raw unit, the sum is 101.61: sensor 9 is 98.4% and sensor 5 is 1.4%. ThresholdOverlapViz counts: normal 100, anomaly 20. τ=9 gives 23 false alarms / 1 miss, τ=12 gives 4 / 6, the strong-decoder case gives 4 / 15 (anomalies moved exactly 3 bins), and the seasonal case gives 4 + 8 moved = 12 / 6. TeacherInterfaceViz probabilities sum to 1.00 and ln 0.10 = -2.30. The scene claims in PrefixSourceViz and TeacherRoutingViz match OnPolicyArticle #state-mismatch and #multi-teacher.",
+"Polish, left as is: in PrefixSourceViz scene 4 (λ), the b=0 curve leaves token B (the end of the prefix) but the b=1 curve leaves the '?' target slot, not X. The scene note makes the meaning clear, so I did not change it.",
+"Shell-level, not fixed: on 390px, some long scene notes are clipped inside the note box. Examples are PrefixSourceViz scene 4, TeacherRoutingViz scene 1 and TeacherInterfaceViz scene 3. The scene-shot tool reports overflow 0, so the box probably scrolls. This is shared KdSceneShell/SceneShell behavior under src/components scope, outside what I was allowed to edit.",
+"CacheFlagViz scene 5 and the article's #cache-boundary prose do not say that the cache loop only runs when SaveROBlocks is called with cache=true (blocks.go:62 'if !cache { return err }'). Adding that qualifier would need a prose change, or a fact from the codebase that the article never states, so I left it unchanged.",
+"RootSplitViz has no defects. I checked it against the metadata.go BlockRootFromState source (it fills the state_root if empty or zero-hash, then runs header.HashTreeRoot) and against the article's #root, #state and #metadata text. I changed nothing.",
+"AggregateFactorViz scene 3 shows the aggregate size bar as '−' when the signing roots differ. A reader could take this to mean the signatures cannot be summed at all, but the formula line in the same scene shows σ₁+σ₂+σ₃ still being computed. Calling the sum a 96 B aggregate under AggregateVerify would need a claim the article does not make, so I left it unchanged. All other numbers check out: 96×3=288 B going to 96 B, the scalar factoring, and the pairing equation all match the #aggregation formula.",
+"BatchWeightViz numbers and claims check out. The unweighted sum is 0+Δ−Δ=0 and the weighted sum is r₂Δ−r₃Δ=(r₂−r₃)Δ. randBitsEntropy=64 matches blst/signature.go:7. When the batch fails, VerifyVerbosely re-Verifies every item (signature_batch.go:19-39), so 'batch 1회 + 단일 Verify 3회' and the PASS-with-no-individual-Verify scene are correct. No changes beyond the legend.",
+"Checks after the edits: audit:viz --strict passed on both changed files with no ERROR lines. viz-scene-shot at 390 px and 1440 px gave a stable control position and frame height in every scene, overflow 0 and 0 console errors. Screenshots are in /tmp/viz-rounds/r19/rv19/{prysm-block-proposal,prysm-bls-batch,prysm-bls-agg}.",
+"I recomputed all the numbers and found no wrong-fact errors. RankOneMapViz: z = 0.1+0.1 = 0.2 (0.4 when E is doubled), x̂ = (0.1, −0.1), M = ED = [[0.5,−0.5],[−0.5,0.5]], and A′M = (0.1, −0.1). LineAngleErrorViz: the total error is 0.02+0.02·sin2θ, so 0.02, 0.04 and 0 at 0°, 45° and −45°. MaskDenominatorViz: 30/30 = 1.0, 30/100 = 0.30, 30/40 = 0.75. TruncationPackingViz: 6 answer tokens kept when cutting from the front, 2 when cutting from the back, and the B→A attention cells are 7×5 = 35. ResumeTimelineViz: 57,632−57,600 = 32 and 2,000−1,801 = 199. RequantizeGridViz: 8.4/7 = 1.2 and round(1.0/1.2) = 1, giving 1.2.",
+"ResumeTimelineViz scene 3 mirrors the article's failure output 'step 1800 → 1, cursor 57,600 → 0'. If step 1 is a reading after the first update, the cursor would strictly be 32, not 0. Fixing this needs a prose change, so I left it as written.",
+"RequantizeGridViz keeps the same legend in every scene. The orange 'q_W + Q(sBA)' entry has no matching mark in scene 3. I left it, because a constant legend keeps the layout stable between scenes.",
+"Checks: audit:viz --strict found 0 ERROR lines. viz-scene-shot ran at 390 and 1440 px for all 6 Viz: controls and frame were stable in every scene, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r19/rv6/linear-autoencoder-pca and /tmp/viz-rounds/r19/rv6/lora-training-and-release.",
+"BplusHeightFoldViz scene 04 (polish, not fixed): the dashed connectors from the root and parent run through the row labels 'parent 32장' and '② 읽음'. They are still readable and the reading stays correct, so I left the geometry alone.",
+"BplusComparatorMismatchViz (polish, not fixed): the middle branch label '20…40' does not say whether 20 and 40 are included. The left label '≤ 20' and the leaf contents [21,35,39] imply (20,40], and the article only gives separators [20, 40]. Pinning down inclusivity would be an outside assumption, so I left it.",
+"BplusSplitCascadeViz and BplusDeleteRebalanceViz: no defects found. Split checks: [10,20,30,40] plus 25 splits into [10,20] and [25,30,40]; the parent goes from 3 to 4 children and the root from 3 to 4; the path grows from 3 to 4 pages only when the root splits. Delete checks: borrowing moves the boundary from 20 to 25; merging gives [10,25,30] and the parent goes from 2 edges to 1; the root is then removed and the path drops from 2 pages to 1. The PostgreSQL nbtree qualifier from the article is kept. BplusSceneShell uses StableSceneStack, and controlY/frameH stayed constant across every scene at 390px and 1440px with 0 console errors.",
+"audit:viz --strict on the two changed files printed no ERROR lines. Screenshots are in /tmp/viz-rounds/r19/rv10/{bplus-tree,bplus-index-validation}{,-after}.",
+"No other errors found. I rechecked these numbers: PositionBinding bits at positions 0,1,3,4,5,7 give p=6 with 5 distinct validators, PK_A has 6 terms, and the dedup shift starts at position 2. 342 = ceil(1024/3), as in VerifyTrace. Period: floor(8191/8192)=0, floor(8192/8192)=1, floor(8193/8192)=1, and 32×256=8192. The four readiness conditions in SocketSyncOverlap are correct. The CheckpointFileCrash ladder is explicit → file of exactly 32 bytes → default. 'Temp file ... 없으므로' in CheckpointFileCrash is stronger than the article's '보이지 않습니다', but the code-ref note in codeRefsReal.ts says '이 구현에 없습니다', so I left it.",
+"Checks after the edits: audit:viz --strict passed on all changed files. viz-scene-shot at 390 and 1440 for all 6 Viz showed stable controlY and frame height, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r19/rv1/helios-consensus and /tmp/viz-rounds/r19/rv1/helios-config.",
+"Checked and found correct, no change needed: ForkIdPlacementViz's five verdicts match the article's AlgorithmBlock and EIP-2124. (H₅,10) at local head 12 is accepted: past hash, and next equals the following local fork 10. (H₅,7) is rejected because next does not match and no future fork remains. (H₁₀,0) at local head 9 is accepted: applying the known future fork 10 gives H₁₀. (X,0) is rejected. ThreeWayForkViz's tuples at head 9 and 12, and the A↔C reject / A↔B pass at head 12, recompute correctly. LogReceiptRootViz's six steps follow the #get-logs prose in order.",
+"LogReceiptRootViz scene 6 draws 'Verifiable API: receipt별 proof' without the article's hedge ('받을 수도 있습니다'). The scene note keeps the hedge. I left the drawn label as is: adding the hedge risks overflowing the 360-wide SVG line, and the label still accurately describes that provider path.",
+"Verification: audit:viz --strict on the changed files gave only REVIEW lines (SVG text) and no ERROR lines. viz-scene-shot results: at 390 and 1440 the control Y and frame height stayed constant across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r19/rv12/{fork-id-placement,fork-id-three,helios-log}.",
+"EngineVerdictViz, VALID scene: B353 stays dashed (optimistic) after B352 turns VALID. The reasoning is that B352's VALID does not judge B353's own payload. The article only says \"나중에 VALID가 오면 표시를 풀고\" about B352, so a sentence in the prose saying what happens to descendants would back this up. That is a prose change, so I did not make it.",
+"Checked and found correct: SubnetGridViz arithmetic (352 mod 32 = 0 gives u 2 → subnet 2; 353 gives 4×1+2 = 6; 367 gives 4×15+2 = 62; 368 gives 4×16+2 = 66, and 66 mod 64 = 2; the 128 cells = 32 slots × c=4, and the row labels run 352 to 380 in steps of 4). SlashingIntervalViz surround checks (9<10 and 11<12; 8<10 and 11<13; 11→12 against 10→11 passes) against the article's source_a < source_b AND target_b < target_a. DutyTimingViz event order against the article's D1/D2 and due-time paragraphs. BitsMergeViz sets A={1,4,7}, C={1,4}, B={4,8}.",
+"SubnetGridViz title says \"64를 넘으면\", but the wrap actually starts at u=64 (reaching 64, not passing it). The grid's \"u 64~127 → 다시 subnet 0~63\" label makes this clear, so I left the title alone.",
+"Verification: audit:viz --strict on both viz directories printed no ERROR lines (21 REVIEW items, all SVG-text overflow checks). The viz-scene-shot runs at 390 and 1440 showed controls and frame stable in every scene, overflow 0 and 0 console errors on /cs/blockchain/prysm and /cs/blockchain/prysm-attestation. Screenshots are in /tmp/viz-rounds/r19/rv16/prysm and /tmp/viz-rounds/r19/rv16/prysm-attestation.",
+"InvalidSuffixPruneViz description defines latestValidHash as 'EL이 아직 유효하다고 보는 가장 최근 조상의 payload hash'. That matches the Engine API spec, but the article only says 'latestValidHash를 기준으로 invalid suffix를 찾고' and never defines it. I left it because it is correct and explains the term before it is used. Grounding it in the article would need a prose change.",
+"BalanceMerklePathViz leaves out the SSZ List length mix-in on the Balances field root. The Viz no longer claims each node is a pure hash of two children, and its note says the real tree depth is different. Naming mix_in_length would need an outside fact the article does not have.",
+"BalanceMerklePathViz is cramped at 390px. The scene 3 note is longer than the fixed stage and has to be scrolled inside the canvas, as the shared SceneShell is designed to allow (overflow 0, controls stable), and the SVG labels render at about 7-8px. This was already the case and is within the internal-scroll rule. Making them bigger would mean splitting the scene or changing SceneShell, which is outside this task's scope.",
+"OperationOrderViz and InvalidSuffixPruneViz: I found nothing wrong. The family order matches the article's operationRows table (Slashings, Attestations, Deposits/Exits, BLS change, Execution requests), and the claim that exit reads the post-slashing state matches the #operations text. Removing 352/353/354 while keeping 353b matches 'block과 영향을 받은 후손'. audit:viz --strict found 0 ERROR lines; scene-shot reported stable controls and frame, overflow 0 and console errors 0 for all three. Screenshots are in /tmp/viz-rounds/r19/rv18/."
 ]
 }
 }

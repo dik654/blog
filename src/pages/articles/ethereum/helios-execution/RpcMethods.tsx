@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import LogReceiptRootViz from "./viz/LogReceiptRootViz";
 import RpcTrustMap from "./viz/RpcTrustMap";
 
 interface Props {
@@ -61,6 +62,9 @@ export default function RpcMethods({ onCodeRef }: Props) {
         className="prose prose-neutral mt-10 max-w-none scroll-mt-24 dark:prose-invert"
       >
         <h3>Log는 Bloom이 아니라 receipt bytes와 receipts root로 확인합니다</h3>
+      </div>
+      <LogReceiptRootViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Header의 logs Bloom은 address나 topic이 없을 가능성을 빠르게 거르는
           색인입니다. False positive가 가능하므로 그 자체로 log membership

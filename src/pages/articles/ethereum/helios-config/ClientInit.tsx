@@ -2,6 +2,7 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
 import { codeRefsReal } from "./codeRefsReal";
+import SocketSyncOverlapViz from "./viz/SocketSyncOverlapViz";
 
 interface Props {
   title: string;
@@ -29,6 +30,9 @@ export default function ClientInit({ title, onCodeRef }: Props) {
             onClick={() => onCodeRef("helios-client-new", codeRefsReal["helios-client-new"])}
           />
         </p>
+      </div>
+      <SocketSyncOverlapViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           따라서 socket과 sync는 순차 단계가 아니라 겹쳐 진행됩니다. Port가 먼저 열릴 수 있다는 점이 이 글의 운영 경계입니다.
         </p>

@@ -5,6 +5,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmBeaconDBLocator, { PrysmBeaconDBMapReturn } from "./PrysmBeaconDBLocator";
+import CacheFlagViz from "./viz/CacheFlagViz";
+import PruneCancelViz from "./viz/PruneCancelViz";
 import PrysmBeaconDBFlowViz from "./viz/PrysmBeaconDBFlowViz";
 
 const fixture = [
@@ -149,6 +151,7 @@ export default function ModernArticle() {
 
       <section id="cache-boundary" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Cache 경계</h2>
+        <CacheFlagViz />
         <p>
           <code>SaveROBlocks</code>는 <code>db.Update</code> 호출이 돌아온 뒤 <code>updated</code>가 true인 entry를 block cache에 넣습니다. 그러나 현재 v7.3.1 코드는 <code>err</code>가 nil인지 확인하기 전에 cache loop로 들어갑니다. Batch 앞쪽 entry가 <code>updated=true</code>가 된 뒤 뒤쪽 entry에서 오류가 나면 bbolt transaction은 rollback되지만 앞쪽 entry의 flag는 남을 수 있습니다.
         </p>
@@ -174,6 +177,7 @@ export default function ModernArticle() {
         <p>
           Gloas execution payload envelope는 beacon block root가 아니라 execution payload block hash로 key를 잡습니다. Source에도 secondary index나 cursor scan 같은 별도 pruning mechanism이 필요하다는 TODO가 남아 있습니다. “Historical prune이 모든 관련 object를 지운다”고 확대하면 안 됩니다.
         </p>
+        <PruneCancelViz />
         <p>
           또 callback 안에서 context 취소를 만나면 현재 코드는 오류가 아닌 <code>nil</code>을 반환합니다. 이미 삭제한 entry가 있는 시점이라면 transaction이 그 부분까지 commit될 수 있고, 뒤의 slot-index/cache cleanup은 실행되지 않습니다. 이 역시 실제 장애 경로를 고정한 test가 필요한 지점입니다.
         </p>

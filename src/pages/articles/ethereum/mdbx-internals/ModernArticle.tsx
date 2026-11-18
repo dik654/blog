@@ -2,6 +2,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import MdbxGenerationViz from "./viz/MdbxGenerationViz";
+import ReaderHorizonViz from "./viz/ReaderHorizonViz";
+import ByteOrderViz from "./viz/ByteOrderViz";
 
 export default function ModernArticle() {
   return (
@@ -75,6 +77,7 @@ export default function ModernArticle() {
           assumptions={["이 식은 page 수명 경계를 설명하는 모형입니다.", "Reader slot·process liveness와 정확한 GC 비교 규칙은 고정한 libmdbx release의 구현에 따릅니다.", "Page 재사용 가능 여부와 stable-media durability를 같은 의미로 쓰지 않습니다."]}
           interpretation="Active reader가 100과 103이면 가장 오래된 snapshot은 100입니다. Writer가 105까지 진행해도 txid 100이 볼 수 있는 page는 R1이 끝나기 전 재사용하지 않습니다. 오래 열린 reader는 free-page 회수를 늦춰 map과 working set을 키울 수 있습니다."
         />
+        <ReaderHorizonViz />
         <p>이 제약은 snapshot isolation의 비용입니다. Long reader가 끝나지 않으면 writer가 retired page를 곧바로 되돌려 쓰지 못하고 새 page를 더 필요로 할 수 있습니다. “Reader와 writer가 서로 막지 않는다”는 말은 page 수명과 공간 비용까지 서로 무관하다는 뜻이 아닙니다.</p>
       </section>
 
@@ -98,6 +101,7 @@ export default function ModernArticle() {
           </div>
         </figure>
         <p>이 값들은 unordered set이나 application array가 아닙니다. Duplicate comparator가 순서를 정하고 cursor operation은 같은 key 안에서 다음 value로 갈지, 다음 key로 갈지를 구분합니다. Key/value type, byte encoding, table flags와 comparator가 함께 persisted schema가 됩니다.</p>
+        <ByteOrderViz />
         <p>예를 들어 숫자 256을 little-endian bytes <code>00 01</code>, 숫자 2를 <code>02 00</code>으로 저장하면서 lexicographic byte comparator를 쓰면 사람이 기대한 numeric ordering과 달라질 수 있습니다. 같은 bytes라도 codec과 comparator 계약이 달라지면 point lookup과 iteration 결과가 달라집니다.</p>
       </section>
 

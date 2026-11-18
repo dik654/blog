@@ -3,6 +3,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { LinearPcaViz } from "./viz/ModernAutoencoderViz";
+import RankOneMapViz from "./viz/RankOneMapViz";
+import LineAngleErrorViz from "./viz/LineAngleErrorViz";
 import AutoencoderSeriesLocator, { AutoencoderMapReturn } from "./shared/AutoencoderSeriesLocator";
 
 export default function LinearPcaArticle() {
@@ -23,6 +25,7 @@ export default function LinearPcaArticle() {
     </section>
     <section id="rank-k" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">두 행렬을 하나로</h2>
+      <RankOneMapViz />
       <ExplainedFormula question="왜 두 network의 학습을 low-rank matrix approximation으로 바꿀 수 있을까요?" idea={<p>
             Linear encoder와 decoder의 곱을 M 하나로 묶습니다. 중간 dimension k가 합성 map의 rank 상한을 만들고 남는 문제는 X를 가장 잘 복원하는
             rank-k M을 고르는 일입니다.
@@ -38,6 +41,7 @@ export default function LinearPcaArticle() {
     </section>
     <section id="theorem" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">PCA와 만나는 지점</h2>
+      <LineAngleErrorViz />
       <ExplainedFormula question="최소 reconstruction error를 만드는 부분공간은 무엇일까요?" idea={<p>X의 SVD에서 큰 singular value가 실어 나르는 방향부터 k개 남기면 버리는 energy가 최소입니다.</p>} formula={String.raw`X=U\Sigma V^\top,\quad \operatorname{span}(M^*)=\operatorname{span}(V_k)`} annotatedFormula={String.raw`\begin{aligned}X&=\underbrace{U\Sigma V^\top}_{\text{직교 방향·크기로 분해}}\\V_k&=\underbrace{[v_1,\ldots,v_k]}_{\text{큰 singular 방향 k개}}\\\operatorname{span}(M^*)&=\underbrace{\operatorname{span}(V_k)}_{\text{최적 부분공간이 일치}}\end{aligned}`} operations={[
         { expression: String.raw`U\Sigma V^\top`, annotation: ["sample·feature geometry를", "직교 방향과 singular magnitude로 분해"] },
         { expression: String.raw`V_k`, annotation: ["복원 energy가 큰 방향부터", "k개만 보존"] },

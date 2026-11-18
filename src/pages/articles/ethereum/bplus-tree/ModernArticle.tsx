@@ -2,6 +2,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import BplusLifecycleViz from "./viz/BplusLifecycleViz";
+import BplusHeightFoldViz from "./viz/BplusHeightFoldViz";
+import BplusComparatorMismatchViz from "./viz/BplusComparatorMismatchViz";
+import BplusSplitCascadeViz from "./viz/BplusSplitCascadeViz";
+import BplusDeleteRebalanceViz from "./viz/BplusDeleteRebalanceViz";
 
 export default function ModernArticle() {
   return (
@@ -40,6 +44,7 @@ export default function ModernArticle() {
           assumptions={["Key 길이와 page 형식, prefix compression과 fill factor가 고정되어 있습니다.", "Root도 cold page라고 세며 cache hit는 별도로 다룹니다.", "설명용 용량 계산이며 실제 latency 측정값이 아닙니다."]}
           interpretation="보수적으로 fanout 160과 leaf 용량 200을 쓰면 100만 entries는 5,000 leaves, 32 parent pages, 1 root로 접힙니다. Root·parent·leaf가 모두 cold라면 point lookup 경로는 3 pages입니다."
         />
+        <BplusHeightFoldViz />
         <p>최소 fanout이 <code>m</code>이고 root를 제외한 page가 그 조건을 지킨다면, 깊이가 하나 늘 때 가리킬 수 있는 leaf 수가 <code>m</code>배가 됩니다. 그래서 높이는 entry 수가 아니라 그 수의 로그에 비례합니다. Variable-length key나 낮은 fill factor는 실제 fanout을 낮춥니다.</p>
       </section>
 
@@ -50,12 +55,15 @@ export default function ModernArticle() {
           <div className="bg-background p-4"><strong className="text-sm">Point 35</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">Root [20│40] → 가운데 child → leaf [21,35,39] → 35 확인</p></div>
           <div className="bg-background p-4"><strong className="text-sm">Range [35,62]</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">35가 있는 leaf까지 한 번 내려간 뒤 right sibling을 따라 62에서 멈춤</p></div>
         </div>
+        <BplusComparatorMismatchViz />
         <p>Range 비용은 대략 tree 높이와 결과가 걸친 leaf page 수의 합입니다. Build와 lookup이 comparator·collation·null·duplicate 순서, inclusive·exclusive endpoint를 똑같이 해석해야 합니다. 두 경로의 순서가 다르면 존재하는 key가 다른 child에 놓여 도달할 수 없거나 range 결과가 뒤섞입니다.</p>
       </section>
 
       <section id="updates" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Split은 새 page와 parent 경계를 함께 공개해야 합니다</h2>
+        <BplusSplitCascadeViz />
         <p>Leaf 용량이 4일 때 <code>[10,20,30,40]</code>에 25를 넣으면 먼저 <code>[10,20,25,30,40]</code>이 됩니다. 이를 <code>[10,20]</code>과 <code>[25,30,40]</code>으로 나누고 parent에 새 right leaf의 경계 25와 downlink를 올립니다. Parent도 넘치면 같은 변화가 위로 전파되고, root가 나뉠 때만 모든 leaf 경로가 함께 한 단계 길어집니다.</p>
+        <BplusDeleteRebalanceViz />
         <p>교과서적인 삭제 모형에서는 minimum occupancy 아래로 내려간 page가 sibling에서 entry를 빌리고 parent 경계를 고치거나, 빌릴 수 없으면 합쳐서 parent edge를 줄입니다. Root child가 하나만 남으면 높이를 줄일 수 있습니다. 이때 보존할 핵심은 전체 key 순서, 정한 점유율 경계와 모든 leaf의 같은 깊이입니다.</p>
         <p>실제 제품의 삭제 정책은 다를 수 있습니다. PostgreSQL nbtree는 high key와 right link를 쓰는 Lehman–Yao 계열이며, VACUUM에서 부분적으로 찬 두 page를 일반적인 교과서식으로 합치지 않고 완전히 빈 page를 삭제합니다. 따라서 generic merge 그림과 특정 제품의 구현을 구분해야 합니다.</p>
       </section>

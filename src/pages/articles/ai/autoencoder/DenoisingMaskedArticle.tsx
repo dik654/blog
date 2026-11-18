@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { DenoisingMaskedViz } from "./viz/ModernAutoencoderViz";
+import MaskedPatchFlowViz from "./viz/MaskedPatchFlowViz";
 import AutoencoderSeriesLocator, { AutoencoderMapReturn } from "./shared/AutoencoderSeriesLocator";
 
 export default function DenoisingMaskedArticle() {
@@ -40,6 +41,7 @@ export default function DenoisingMaskedArticle() {
 
     <section id="masking" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">보이는 조각만 계산</h2>
+      <MaskedPatchFlowViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Image를 patch로 나누고 mask set <code>M</code>을 고릅니다. MAE에서는 visible patch만 무거운 encoder에 보내고, lightweight decoder가 mask token과 visible representation을 받아 missing content를 복원합니다.</p></div>
       <ExplainedFormula question="Masking이 계산량과 학습 target을 어떻게 동시에 바꿀까요?" idea={<p>Encoder workload는 visible set V로 줄이고, loss는 숨긴 set M에 집중합니다. 같은 mask ratio라도 modality·patch size에 따라 정보량이 다릅니다.</p>} formula={String.raw`V=\{1,\dots,N\}\setminus M,\quad \mathcal L_{\rm mask}=\frac1{|M|}\sum_{i\in M}\lVert x_i-\hat x_i\rVert_2^2`} annotatedFormula={String.raw`\begin{aligned}V&=\underbrace{\{1,\ldots,N\}\setminus M}_{\text{encoder가 볼 patch 선택}}\\e_i&=\underbrace{\lVert x_i-\hat x_i\rVert_2^2}_{\text{숨긴 patch의 복원 오차}}\\\mathcal L_{\rm mask}&=\underbrace{\frac1{|M|}\sum_{i\in M}e_i}_{\text{masked patch만 평균}}\end{aligned}`} operations={[
         { expression: String.raw`\{1,\dots,N\}\setminus M`, annotation: ["전체 patch에서 mask를 제외해", "encoder가 볼 visible set 생성"] },

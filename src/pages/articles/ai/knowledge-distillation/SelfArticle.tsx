@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import InheritanceGapViz from "./viz/InheritanceGapViz";
 import DistillationPathLocator, {
   DistillationMapReturn,
 } from "./DistillationPathLocator";
@@ -126,6 +127,7 @@ export default function SelfDistillationArticle() {
           Student가 teacher와 더 많이 일치해도 둘이 함께 틀릴 수 있습니다. 그래서 agreement 변화 ΔA와 accuracy 변화 ΔQ를 frozen holdout에서
           같은 percentage-point 단위로 잽니다.
         </p>
+        <InheritanceGapViz />
         <ExplainedFormula
           question="Agreement는 올랐지만 accuracy가 떨어진 세대를 어떻게 표시하는가?"
           idea={

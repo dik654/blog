@@ -1,6 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import DataFormatViz from "./viz/DataFormatViz";
+import MaskDenominatorViz from "./viz/MaskDenominatorViz";
+import TruncationPackingViz from "./viz/TruncationPackingViz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -51,6 +53,7 @@ export default function Data({
           onClick={() => onCodeRef("double-bos-fix", codeRefs["double-bos-fix"])}
         />
       </div>
+      <MaskDenominatorViz />
       <ExplainedFormula
         question="Assistant 답변만 학습할 때 prompt token을 loss에서 어떻게 제외할까요?"
         idea={<>각 token에 0/1 mask를 두고 assistant target 위치만 negative log-likelihood 합과 분모에 포함합니다. 분모도 mask 합을 써야 prompt가 긴 example 때문에 평균 scale이 달라지지 않습니다.</>}
@@ -74,6 +77,7 @@ Z&=\sum_{t=1}^{T}m_t,\qquad m_t\in\{0,1\}\\
         interpretation="전체 100 token 중 assistant target 30개만 mask=1이면 loss는 그 30개 NLL의 평균입니다. Prompt 70개는 context로 읽지만 직접 맞히도록 채점하지 않습니다."
       />
       <div className="not-prose my-8"><DataFormatViz /></div>
+      <TruncationPackingViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Truncation은 긴 prompt의 앞부분, 최신 user 요청과 assistant answer 가운데

@@ -3,6 +3,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
 import { codeRefsReal } from "./codeRefsReal";
+import CheckpointFileCrashViz from "./viz/CheckpointFileCrashViz";
+import FallbackPluralityViz from "./viz/FallbackPluralityViz";
 
 interface Props {
   title: string;
@@ -50,6 +52,7 @@ export default function Persistence({ title, onCodeRef }: Props) {
         />
       </div>
 
+      <CheckpointFileCrashViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Checkpoint 선택 순서</h3>
         <p>
@@ -72,7 +75,9 @@ export default function Persistence({ title, onCodeRef }: Props) {
           Crash 도중 12 bytes만 남으면 다음 시작에서 조용히 default checkpoint로 돌아갈 수 있습니다. 이 동작을 crash-safe
           persistence로 부르면 안 됩니다.
         </p>
-
+      </div>
+      <FallbackPluralityViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Fallback의 실제 조건</h3>
         <p>
           Initial sync가 실패하면 <code>load_external_fallback=true</code>일 때 외부 목록을 먼저 사용하고, 그렇지 않으면서 단일

@@ -3,6 +3,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import PrefixSourceViz from "./viz/PrefixSourceViz";
+import TeacherInterfaceViz from "./viz/TeacherInterfaceViz";
+import TeacherRoutingViz from "./viz/TeacherRoutingViz";
 import DistillationPathLocator, {
   DistillationMapReturn,
 } from "./DistillationPathLocator";
@@ -39,6 +42,7 @@ export default function OnPolicyDistillationArticle() {
             고정 prefix A→B와 student가 만든 A→X는 서로 다른 학습 상태다
           </h2>
         </header>
+        <PrefixSourceViz />
         <p>
           Autoregressive decoding에서는 방금 생성한 token이 다음 input이 됩니다.
           고정 teacher sequence에서만 학습하면 student의 실수 뒤에 어떤 token을
@@ -239,6 +243,7 @@ export default function OnPolicyDistillationArticle() {
             Teacher는 prompt domain에서 고릅니다
           </h2>
         </header>
+        <TeacherRoutingViz />
         <p>
           Math·instruction·SWE teacher를 checkpoint 평균으로 합치면
           representation 정렬을 가정하게 됩니다. Policy-space integration은
@@ -346,6 +351,7 @@ export default function OnPolicyDistillationArticle() {
             Motif 3는 선택 token의 log-probability를 썼습니다
           </h2>
         </header>
+        <TeacherInterfaceViz />
         <p>
           Motif 3의 MOPD는 general SFT student가 on-policy trajectory를
           만듭니다. Prompt domain에 맞는 일곱 specialist 중 하나는 각 sampled

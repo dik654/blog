@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import ComparisonDetailViz from "./viz/ComparisonDetailViz";
+import CrashResumeViz from "../agent-runtime-selection/viz/CrashResumeViz";
 
 const RUNTIME_BOUNDARIES = [
   {
@@ -256,6 +257,8 @@ export default function Comparison() {
           아래 항목은 채택 결과가 아니라 동일 조건 실험 계획입니다.
         </p>
       </div>
+
+      <CrashResumeViz />
 
       <ProgressiveDetail
         title="같은 조건으로 비교할 실패와 지표"

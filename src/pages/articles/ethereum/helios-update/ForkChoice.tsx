@@ -2,6 +2,8 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { CitationBlock } from "@/components/ui/citation";
 import { codeRefs } from "./codeRefs";
+import BestUpdateLadderViz from "./viz/BestUpdateLadderViz";
+import ForceUpdateBranchViz from "./viz/ForceUpdateBranchViz";
 
 interface Props {
   title: string;
@@ -12,6 +14,8 @@ export default function ForkChoice({ title, onCodeRef }: Props) {
   return (
     <section id="candidate-order" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
+
+      <BestUpdateLadderViz />
 
       <div
         id="best-update"
@@ -40,6 +44,8 @@ export default function ForkChoice({ title, onCodeRef }: Props) {
           }
         />
       </div>
+
+      <ForceUpdateBranchViz />
 
       <div
         id="force-update"

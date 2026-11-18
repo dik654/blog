@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import RetokenizeMaskViz from "./viz/RetokenizeMaskViz";
+import CoverageGapViz from "./viz/CoverageGapViz";
 import DistillationPathLocator, {
   DistillationMapReturn,
 } from "./DistillationPathLocator";
@@ -35,6 +37,7 @@ export default function SequenceDistillationArticle() {
             학습한다
           </h2>
         </header>
+        <RetokenizeMaskViz />
         <p>
           같은 문자열도 tokenizer마다 token 수와 index가 다릅니다. Prompt와 teacher response를 student chat template로
           serialize한 뒤 response·tool argument처럼 학습할 위치만 mask 1로 둡니다.
@@ -194,6 +197,7 @@ export default function SequenceDistillationArticle() {
           ]}
           interpretation="목표 (.4,.4,.2), accepted (.1,.7,.2)이면 차이 합 .6의 절반인 G=.3입니다. 전체 수가 많아도 첫 slice coverage가 부족합니다."
         />
+        <CoverageGapViz />
         <div id="paper-sequence-kd">
           <CitationBlock
             source="Kim & Rush — Sequence-Level Knowledge Distillation"

@@ -11,6 +11,7 @@ import RethEip4844Locator, {
 } from "../reth-eip4844/RethEip4844Locator";
 import BlobFeeCurveChart from "./BlobFeeCurveChart";
 import BlobFeeTraceViz from "./BlobFeeTraceViz";
+import FakeExponentialTermsViz from "./FakeExponentialTermsViz";
 import { codeRefs } from "./codeRefs";
 import { eip4844BlobFeeTree } from "./fileTree";
 
@@ -155,6 +156,7 @@ export default function ModernBlobFee() {
           assumptions={["음수가 아닌 정수와 양수 fraction을 사용합니다.", "중간 나눗셈을 실수 계산 하나로 합치거나 마지막에만 반올림하지 않습니다."]}
           interpretation="이 fixture의 자식 기본료는 1 wei/blob gas이고 Blob 하나의 프로토콜 요금은 131,072 wei입니다. excess가 8개분으로 늘었지만 정수 가격은 아직 그대로입니다."
         />
+        <FakeExponentialTermsViz />
         <BlobFeeCurveChart />
         <p>
           로컬에서 Geth와 같은 정수 반복을 실행해 BPO2의 경계를 확인했습니다. excess
