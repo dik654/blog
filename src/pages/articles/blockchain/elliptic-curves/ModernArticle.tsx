@@ -5,6 +5,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ModernCurveViz from "./viz/ModernCurveViz";
+import DoubleDataflowViz from "./viz/DoubleDataflowViz";
+import SubgroupCycleViz from "./viz/SubgroupCycleViz";
+import PrecompileInputViz from "./viz/PrecompileInputViz";
 import { codeRefs,fileTrees } from "./codeRefs";
 const PIN="https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c";
 export default function ModernEllipticCurves(){const sidebar=useCodeSidebar();return <article className="space-y-14 [overflow-wrap:anywhere]">
@@ -57,6 +60,7 @@ export default function ModernEllipticCurves(){const sidebar=useCodeSidebar();re
 </section>
 <section id="source" data-teach-level="6" className="space-y-5"><h2 className="text-2xl font-bold">10. 원본 두 배 함수의 중간값도 같은 2P로 돌아옵니다</h2>
 <p>이번 예를 그대로 실행하려고 좌표 체를 F₁₇, 반복 횟수의 체를 F₁₉, a=b=2, 생성점을 (5,1)로 정의했습니다. 원문은 arkworks의 커밋 7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c입니다. ark-ec와 ark-ff는 0.5.0이며 같은 저장소의 ark-bn254는 0.5.0-alpha.0입니다. 수학 예의 매개변수는 이 글이 정의했고 덧셈 함수는 고정 원본입니다.</p>
+<DoubleDataflowViz/>
 <p>Projective의 double_in_place에서 a=0인 빠른 분기를 건너뛰고 일반 분기를 읽습니다. 입력은 (X,Y,Z)=(5,1,1)입니다. XX=X²=8, YY=Y²=1, YYYY=1, ZZ=Z²=1이 됩니다. 이어 S=2((X+YY)²−XX−YYYY)=3이고 M=3XX+aZZ²=9입니다.</p>
 <p>원문 다음 줄에 넣으면 새 X=M²−2S=7, 새 Z=2YZ=2, 새 Y=M(S−X)−8YYYY=7입니다. 즉 원시 출력은 (7,7,2)입니다. 9절처럼 나누면 x=7·13≡6, y=7·15≡3이므로 손으로 계산한 2P=(6,3)과 같습니다.</p>
 <CodeViewButton label="XX·S·M과 실제 대입 줄 열기" onClick={()=>sidebar.open("double",codeRefs["double"])} />
@@ -71,6 +75,7 @@ export default function ModernEllipticCurves(){const sidebar=useCodeSidebar();re
 <p>check는 두 조건을 함께 확인해 (1,1)을 거부합니다. 반면 O는 유효한 군 원소이므로 이 검사에서 통과합니다. SEC 1의 공개키 검사는 O를 거부하지만 모든 군 연산 입력이 공개키는 아닙니다. 항등원을 허용할지는 해당 프로토콜의 역할까지 읽어 정해야 합니다.</p>
 </section>
 <section id="subgroup" data-teach-level="6" className="space-y-5"><h2 className="text-2xl font-bold">12. 곡선 위여도 원하는 반복 주기에 속하지 않을 수 있습니다</h2>
+<SubgroupCycleViz/>
 <p>이 경계만 보기 위해 같은 F₁₇에서 다른 곡선 y²=x³+2x를 씁니다. 이 곡선은 O까지 20개 점을 가집니다. G=(9,4)를 더하면 (8,16), (8,1), (9,13), O로 돌아오므로 위수는 r=5입니다. 전체 점 수 20을 r로 나눈 h=4를 cofactor라고 합니다.</p>
 <p>T=(0,0)도 이 두 번째 곡선 위에 있지만 두 번 더하면 O입니다. 그래서 [5]T=T≠O이고 위수 5 부분군에는 속하지 않습니다. 앞 절의 첫 곡선에는 (0,0)이 없었습니다. 방정식을 바꾼 별도 반례라는 점을 유지해야 합니다.</p>
 <p>[4]T를 계산해 원하는 부분군으로 옮기는 cofactor clearing을 하면 이번에는 O가 됩니다. 원래 입력이 그 부분군에 속하는지 검사해 거부하는 것과 입력을 다른 점으로 바꾸는 것은 다른 동작입니다. O를 금지하는 응용이라면 변환 뒤에도 그 조건을 확인해야 합니다.</p>
@@ -98,6 +103,7 @@ export default function ModernEllipticCurves(){const sidebar=useCodeSidebar();re
 <p>SEC 1의 변환 규칙과 공개키 검사는 서로 다른 절입니다. 점으로 해석할 수 있는 O와 공개키로 허용할 수 있는 O도 같은 질문이 아닙니다. 먼저 바이트 규칙을 확인하고 그 다음 사용 목적의 조건을 적용합니다.</p>
 </section>
 <section id="precompile" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">16. Ethereum의 짧은 입력은 함수마다 다르게 처리합니다</h2>
+<PrecompileInputViz/>
 <p id="paper-eip196-g1">EIP-196의 G1 덧셈은 x·y를 각각 32바이트 큰 자리 우선으로 읽고 (0,0)을 O로 사용합니다. 두 점의 기본 입력은 128바이트지만 짧으면 오른쪽을 0으로 채우고 남는 바이트는 무시합니다. 따라서 (1,2)만 담은 64바이트 입력은 둘째 점 O를 더해 같은 (1,2)를 돌려줍니다. 빈 입력도 실패가 아니라 O의 덧셈이 됩니다.</p>
 <p>좌표가 p 이상이거나 곡선에 맞지 않으면 거부합니다. 반면 scalar multiplication의 32바이트 정수는 r 미만이어야 한다는 조건이 없습니다. r+1을 유효한 G1 점에 곱해도 같은 점으로 돌아옵니다. 좌표의 범위 검사와 반복 횟수의 입력 범위를 섞지 않습니다.</p>
 <p id="paper-eip197-bn254">EIP-197의 페어링은 192바이트씩 G1·G2 쌍을 읽습니다. 길이가 그 배수가 아니면 실패하며 빈 입력은 빈 곱이므로 1을 돌려줍니다. G2의 각 Fₚ² 좌표 a·u+b는 a, b 순서로 전송됩니다. Ark의 c0+c1·u 내부 배열을 그대로 복사하면 순서가 뒤집힐 수 있습니다. 출력은 Gₜ 전체 바이트가 아니라 관계 성립 여부를 나타내는 32바이트 값입니다.</p>

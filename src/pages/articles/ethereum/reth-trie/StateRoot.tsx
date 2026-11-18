@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import OverlayReadViz from "./viz/OverlayReadViz";
 
 export default function StateRoot({
   onCodeRef,
@@ -66,6 +67,7 @@ export default function StateRoot({
         ]}
         interpretation="A의 balance만 바뀌어도 account RLP와 A path의 ancestor root가 달라집니다. 다른 subtree hash는 재사용할 수 있지만 계산된 root가 header와 다르면 최적화 여부와 무관하게 block을 거절해야 합니다."
       />
+      <OverlayReadViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Base snapshot과 hashed overlay를 결합합니다</h3>
         <p>

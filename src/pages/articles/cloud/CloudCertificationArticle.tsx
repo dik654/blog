@@ -268,11 +268,14 @@ export default function CloudCertificationArticle({
   data,
   visualFirst = false,
   sectionLead,
+  paragraphLead,
 }: {
   data: CloudCertificationArticleData;
   visualFirst?: boolean;
   /** 선택: 절 본문 문단 바로 앞에 둘 Viz. 넘기지 않으면 기존 렌더와 같습니다. */
   sectionLead?: Partial<Record<SectionId, ReactNode>>;
+  /** 선택: 절 안 특정 문단(0부터 센 번호) 바로 앞에 둘 Viz. 넘기지 않으면 기존 렌더와 같습니다. */
+  paragraphLead?: Partial<Record<SectionId, Partial<Record<number, ReactNode>>>>;
 }) {
   return (
     <div className="space-y-16">
@@ -286,13 +289,26 @@ export default function CloudCertificationArticle({
         >
           {visualFirst ? <SectionVisuals data={data} section={section} overviewFlowFirst /> : null}
           {sectionLead?.[section.id] ?? null}
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
-            {section.paragraphs.map((paragraph) => (
-              <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>
-                {renderInlineLinks(paragraph)}
-              </p>
-            ))}
-          </div>
+          {paragraphLead?.[section.id] ? (
+            section.paragraphs.map((paragraph, index) => (
+              <div key={paragraph}>
+                {paragraphLead[section.id]?.[index] ?? null}
+                <div className="prose prose-neutral max-w-none dark:prose-invert">
+                  <p className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>
+                    {renderInlineLinks(paragraph)}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="prose prose-neutral max-w-none dark:prose-invert">
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>
+                  {renderInlineLinks(paragraph)}
+                </p>
+              ))}
+            </div>
+          )}
           {!visualFirst ? <SectionVisuals data={data} section={section} overviewFlowFirst={false} /> : null}
           {section.id === "source" ? (
             <>

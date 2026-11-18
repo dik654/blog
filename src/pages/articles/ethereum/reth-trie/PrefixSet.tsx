@@ -2,6 +2,8 @@ import { CodeViewButton } from "@/components/code";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import StorageNestViz from "./viz/StorageNestViz";
+import KeySpreadViz from "./viz/KeySpreadViz";
 
 export default function PrefixSet({
   onCodeRef,
@@ -52,6 +54,7 @@ export default function PrefixSet({
         ]}
         interpretation="Keccak-256 key는 B=32이므로 64 nibbles입니다. 이것이 database node를 항상 64개 읽는다는 뜻은 아니며 shared prefix·extension·cache가 실제 작업량을 바꿉니다."
       />
+      <StorageNestViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Account와 storage의 dirty 범위를 따로 둡니다</h3>
         <p>
@@ -60,6 +63,9 @@ export default function PrefixSet({
         <p>
           Account 삭제와 storage 전체 삭제는 key 하나를 바꾸는 작업과 다릅니다. 기존 하위 경로가 사라지므로 별도 marker와 전체 하위 트리 처리 경계를 사용합니다.
         </p>
+      </div>
+      <KeySpreadViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Prefix가 적다는 사실만으로 빠르다고 단정하지 않습니다</h3>
         <p>
           가까운 key 여러 개는 ancestor를 많이 공유하지만 흩어진 key는 root

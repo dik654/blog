@@ -3,6 +3,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import R1CSRowViz from "./viz/R1CSRowViz";
+import QAPPointsViz from "./viz/QAPPointsViz";
+import ReorderViz from "./viz/ReorderViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -51,6 +54,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="r1cs" data-teach-level="4" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">7. 두 계수 행이 같은 값 묶음을 읽습니다</h2>
+<R1CSRowViz />
 <p className="leading-8">z의 순서는(1,x,y,w,v)입니다. 첫 행 A=(0,1,0,0,0), B=(0,0,0,1,0), C=(0,0,0,0,1)을 곱하면 3,4,12가 나옵니다. 둘째 행 A=(0,0,0,1,1), B=(1,0,0,0,0), C=(0,0,1,0,0)에서는 16,1,16이 나옵니다.</p>
 <p className="leading-8">출력만 15로 바꾸면 첫 행은 통과하지만 둘째 행의 차이가 1이 됩니다. 둘째 행을 아예 만들지 않았다면 이 오류는 잡히지 않습니다. 증명 생성 성공보다 제약의 의미를 먼저 점검해야 하는 이유입니다.</p>
 <p className="leading-8">0또는 1이어야 하는 값 b에는 b(b−1)=0을 넣을 수 있습니다. 체에는 영인자가 없으므로 둘 중 하나가 0이어야 합니다. 이 줄이 없으면 b=2도 가능한 값이며 선택 연산을 기대한 회로에서 의미가 달라질 수 있습니다.</p>
@@ -59,6 +63,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="qap" data-teach-level="5" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">8. 두 점에서 0이면 두 인수로 나누어떨어집니다</h2>
+<QAPPointsViz />
 <p className="leading-8">첫 행을 X=1, 둘째 행을 X=2에 놓습니다. 앞서 얻은 왼쪽 값은 3과 16, 오른쪽 값은 4와 1, 결과값은 12와 16입니다. 각 두 점을 잇는 일차식은 A(X)=13X+7, B(X)=−3X+7, C(X)=4X+8입니다. 모두 17로 나눈 나머지에서 해석합니다.</p>
 <p className="leading-8">A(X)B(X)−C(X)를 전개하면 12X²+15X+7입니다. 두 행의 점을 0으로 만드는 t(X)=(X−1)(X−2)에 12를 곱하면 같은 식이 됩니다. 따라서 몫 h=12입니다. 두 등식의 만족을 하나의 정확한 다항식 나눗셈으로 옮겼습니다.</p>
 <p className="leading-8">이는 임의의 실수 비율을 구한 것이 아닙니다. X=1,2에서 각각 0이라는 사실로부터 서로 다른 두 인수 X−1과 X−2가 나누어떨어집니다. 반대로 두 인수의 곱으로 나누어떨어지면 두 점에서 0이므로 원래 두 행을 복원할 수 있습니다.</p>
@@ -68,6 +73,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="source" data-teach-level="6" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">9. 원문에서 벡터 순서가 다르면 계수도 함께 옮깁니다</h2>
 <p className="leading-8">Nova 논문의 R1CS 정의는 Z=(W,x,1) 순서를 씁니다. 이 글의(1,x,y,w,v)와 다릅니다. 같은 사례를 원문 순서로 적으면 W=(4,12), 공개 x=(3,16), Z=(4,12,3,16,1)입니다.</p>
+<ReorderViz />
 <p className="leading-8">첫 행은 A가 세 번째 자리 3, B가 첫 번째 자리 4, C가 두 번째 자리 12를 읽습니다. 둘째 행은 A가 첫째와 둘째 자리를 더하고 B는 마지막 1, C는 네 번째 16을 읽습니다. 표기만 바꾸어도 계수를 같이 바꾸면 결과는 0,0으로 유지됩니다.</p>
 <div id="source-r1cs"><CitationBlock source="Nova §4, Definition10, PDF p.13" citeKey={1} href="https://eprint.iacr.org/2021/370.pdf"><p className="leading-8">원문: <q>Z = (W, x, 1)</q></p><p className="leading-8">Z=(4,12,3,16,1)로 재배열하고 계수 위치도 옮기면 3×4=12와(4+12)×1=16이 보존됩니다.</p></CitationBlock></div><div id="paper-pinocchio-qap"><CitationBlock source="Pinocchio: Nearly Practical Verifiable Computation (2013)" citeKey={2} href="https://eprint.iacr.org/2013/279.pdf"><p className="leading-8"><strong>문제:</strong> 긴 계산을 공개 검증할 때 같은 계산을 반복하는 비용을 줄입니다.</p><p className="leading-8"><strong>기여:</strong> 산술 회로의 관계를 QAP와 암호 검증으로 연결합니다.</p><p className="leading-8"><strong>전제:</strong> 정확한 컴파일과 논문의 회로별 준비·암호 가정을 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 논문의 당시 구현과 애플리케이션 평가입니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 빠진 범위 조건을 발견하거나 모든 구현의 동일 속도를 보장하지 않습니다.</p></CitationBlock></div>
 <p data-stage-bridge="source" className="text-sm leading-7 text-muted-foreground">원문 기호와 실제 데이터 순서를 맞췄습니다. 마지막으로 압축과 업무 의미의 경계를 봅니다.</p>

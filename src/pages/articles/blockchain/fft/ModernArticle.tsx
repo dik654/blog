@@ -5,6 +5,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import ButterflyNetworkViz from "./viz/ButterflyNetworkViz";
+import RootCycleViz from "./viz/RootCycleViz";
+import FoldLengthViz from "./viz/FoldLengthViz";
 
 export default function ModernNTT() { return <article className="space-y-14">
  <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 같은 계산 규칙을 여러 위치에서 빠르게 읽으려면</h2>
@@ -40,6 +43,7 @@ export default function ModernNTT() { return <article className="space-y-14">
   <ExplainedFormula question="위치 4와 −4의 결과는 어떤 중간값을 공유하나요?" idea="두 위치의 제곱이 같아 E와 O의 결과를 한 번씩만 구합니다. 홀수 부분에 곱하는 위치의 부호가 달라져 합과 차로 두 출력을 만듭니다." formula={String.raw`y_k=E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k`} annotatedFormula={String.raw`\begin{gathered}E(-1)=15,\quad O(-1)=15\\t=\underbrace{4\cdot15\bmod17}_{\text{홀수 부분의 배율 적용}}=9\\y_1=15+9=7\pmod{17}\\y_3=15-9=6\end{gathered}`} operations={[{expression:String.raw`t=\omega^kO_k`,annotation:["홀수 차수 항에서 밖으로 꺼냈던 x를 다시 곱합니다.","이 배율을 twiddle factor라 합니다."]},{expression:String.raw`E_k+t,\quad E_k-t`,annotation:["같은 중간값에서 원래 위치와 반대 위치의 결과를 함께 만듭니다."]}]} terms={[{symbol:"Eₖ, Oₖ",name:"절반 크기의 결과",description:"ω²의 거듭제곱 위치에서 E와 O를 평가합니다."},{symbol:"t",name:"배율을 곱한 홀수 부분",description:"사례의 k=1에서는 4×15 mod17=9입니다."}]} assumptions={["n은 짝수이고 ω의 위수가 정확히 n입니다. ω^(n/2)=−1이 됩니다.","두 갈래로 끝까지 나누는 radix-2는 n이 2의 거듭제곱일 때 사용합니다."]} interpretation="ω²의 위수는 n/2이므로 각 작은 문제도 같은 종류의 변환입니다. 짝수 길이의 원시 단위근이 존재하면 체의 특성은 2가 아니어서 1과 −1이 구분됩니다." />
  </section>
  <section id="trace" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">9. 네 계수를 나누고 합쳐 같은 네 결과를 확인합니다</h2>
+  <ButterflyNetworkViz />
   <AlgorithmBlock title="F₁₇의 길이 4 변환 한 번을 끝까지 계산하기" input={["계수 [1,2,3,4], 원시 단위근 4, 출력 위치 순서 [1,4,16,13]"]} steps={[{code:"even=[1,3]; odd=[2,4]",note:"짝수·홀수 계수로 나눕니다. 작은 변환의 근은 4²=16입니다."},{code:"E=[1+3,1-3]=[4,15]; O=[2+4,2-4]=[6,15]",note:"각 길이 2 변환은 합과 차를 계산합니다."},{code:"k=0: t=1*6; y[0]=4+t=10; y[2]=4-t=15",note:"위치 1과 −1의 출력을 얻습니다."},{code:"k=1: t=4*15 mod17=9; y[1]=15+t=7; y[3]=15-t=6",note:"위치 4와 −4의 출력을 얻습니다."}]} output="[10,7,15,6]. 3절에서 각 위치에 직접 넣은 결과와 같습니다." />
   <p>길이 2 계산 두 개에서 버터플라이 두 번, 마지막 결합에서 두 번으로 모두 네 번입니다. 일반적인 길이 n에서는 단계마다 n/2개의 묶음이 있고 단계는 log₂n개입니다. 길이 8이면 단계마다 네 번씩 세 단계, 모두 12번입니다.</p>
   <p>따라서 T(n)=2T(n/2)+O(n)=O(n log n)입니다. 버터플라이 수와 정확한 곱셈 명령 수는 구분합니다. 배율이 1일 때 곱셈을 생략하거나 여러 단계를 합치는 구현에 따라 실제 연산 수가 달라집니다.</p>
@@ -53,6 +57,7 @@ export default function ModernNTT() { return <article className="space-y-14">
   <div id="paper-cooley-tukey"><CitationBlock source="Cooley & Tukey (1965) · pp. 297–298, 식 (3), (6)–(7)" citeKey={2} href="https://doi.org/10.1090/S0025-5718-1965-0178586-1">원문의 보조 배열을 같은 짝수·홀수 결과에 대응했습니다. 원문에서 세는 복소수 연산 수를 현대 유한체 커널의 명령 수나 실행 시간으로 옮기지 않습니다.</CitationBlock></div>
  </section>
  <section id="unit-root" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">11. 길이에 맞는 반복 주기가 체 안에 있어야 합니다</h2>
+  <RootCycleViz />
   <p>F₁₇의 0 아닌 값은 16개입니다. 이 곱셈군의 부분군 크기는 16의 약수이므로 평가 주기의 길이도 16을 나눠야 합니다. 4번 만에 돌아오는 근 4를 길이 8에 쓰면 위치가 두 번 반복되어 여덟 계수를 구별할 수 없습니다.</p>
   <ExplainedFormula question="길이 8을 원하면 어떤 근을 만들 수 있나요?" idea="전체 0 아닌 값을 방문하는 생성원에서 일정한 간격으로 이동하면 더 작은 정확한 주기를 만듭니다." formula={String.raw`n\mid(p-1),\qquad\omega=g^{(p-1)/n}`} annotatedFormula={String.raw`\begin{gathered}p=17,\quad g=3,\quad n=8\\\omega=3^{16/8}=9\\9^4=16\ne1,\quad9^8=1\end{gathered}`} operations={[{expression:String.raw`1,9,13,15,16,8,4,2`,annotation:["9를 반복해서 곱하면 이 여덟 위치를 방문한 뒤 1로 돌아옵니다.","4제곱이 1이 아니므로 위수가 8의 더 작은 약수일 수 없습니다."]}]} terms={[{symbol:"g",name:"전체 곱셈군의 생성원",description:"사례의 3은 위수가 16입니다."},{symbol:"ω",name:"선택한 길이의 근",description:"길이 8의 사례에서는 9입니다. 본문 길이 4의 근 4와 구분합니다."},{symbol:"s",name:"2의 인수가 들어간 횟수",description:"p−1=2ˢq에서 q가 홀수일 때의 s를 2-adicity라 합니다."}]} assumptions={["p는 소수이며 g의 위수가 p−1임을 확인합니다.","길이가 p−1을 나눠야 하고 실제 구현이 그 길이의 알고리즘을 지원해야 합니다."]} interpretation="17−1=16=2⁴이므로 F₁₇의 2-adicity는 4입니다. 이 체의 곱셈 부분군을 사용하는 radix-2 길이는 최대 16입니다. 4²=16, 4⁴=1은 길이 4만 확인하며 길이 8의 근이 되지는 않습니다." />
   <p>생성원 g의 위수가 p−1이면 g^((p−1)/n)을 d번 곱해 1이 될 조건은 p−1이 d(p−1)/n을 나누는 것입니다. 가장 작은 양의 d가 n이므로 원하는 위수를 얻습니다. 일반 유한체 Fq에서는 같은 조건의 p−1을 q−1로 바꿉니다.</p>
@@ -65,6 +70,7 @@ export default function ModernNTT() { return <article className="space-y-14">
  <section id="zk-usage" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">13. 곱의 길이를 확보한 뒤 같은 위치끼리 곱합니다</h2>
   <p>A=1+x²와 B=1+x를 곱하면 1+x+x²+x³입니다. 결과 계수 네 개가 필요하므로 두 입력을 길이 4로 맞춰 [1,0,1,0]과 [1,1,0,0]으로 적습니다. 같은 근 4로 변환하면 [2,0,2,0]과 [2,5,0,14]입니다.</p>
   <ExplainedFormula question="평가값끼리 곱한 뒤 원래 계수로 돌아올 수 있나요?" idea="같은 위치에서 A(x)B(x)는 두 평가값의 곱입니다. 충분한 위치를 확보했다면 역변환으로 곱의 계수를 구합니다." formula={String.raw`n\ge L_A+L_B-1,\qquad c=\mathrm{INTT}(\mathrm{NTT}(a)\odot\mathrm{NTT}(b))`} annotatedFormula={String.raw`\begin{gathered}(2,0,2,0)\odot(2,5,0,14)\\=\underbrace{(4,0,0,0)}_{\text{같은 위치의 값끼리 곱함}}\\\mathrm{INTT}(4,0,0,0)\\=\underbrace{(1,1,1,1)}_{\text{곱의 네 계수}}\end{gathered}`} operations={[{expression:String.raw`L_A+L_B-1=3+2-1=4`,annotation:["곱의 최고차수는 2+1=3이라 네 계수가 필요합니다.","체가 지원하는 길이 중 결과를 모두 담는 길이를 고릅니다."]}]} terms={[{symbol:"L_A, L_B",name:"입력 계수 개수",description:"사례의 원래 입력 길이는 3과 2입니다."},{symbol:"⊙",name:"위치별 곱",description:"같은 근과 같은 순서로 얻은 평가값을 곱합니다."}]} assumptions={["두 입력과 역변환은 체·근·배열 순서·정규화를 공유합니다.","길이는 결과를 담기에 충분하고 실제 체에 그 위수의 근이 있어야 합니다."]} interpretation="원문의 Pollard §3(i)도 곱의 차수 합보다 큰 변환 길이를 고르고 남은 입력 계수를 0으로 채웁니다. 식 (4)~(5)의 위치별 곱은 일반적으로 순환 곱이며 길이가 충분할 때 원하는 다항식 곱과 같아집니다." />
+  <FoldLengthViz />
   <p>같은 F₁₇에서 길이 2의 위치 1·−1만 사용하면 A의 값은 [2,2], B의 값은 [2,0]입니다. 곱 [4,0]을 되돌리면 [2,2], 즉 2+2x입니다. 이 두 위치에서는 x²=1이라 x² 항이 상수항에, x³ 항이 x 항에 합쳐집니다. 빠르게 계산해도 잃어버린 계수 구분은 돌아오지 않습니다.</p>
   <p>길이 3에서 x³=1로 줄인다는 대수적 예도 만들 수 있습니다. 같은 곱은 2+x+x²로 줄어듭니다. 다만 3은 16을 나누지 않으므로 F₁₇ 안에는 필요한 3차 단위근이 없습니다. 이 나머지 식을 F₁₇에서 길이 3 NTT를 실행한 결과라고 부르면 안 됩니다.</p>
   <p>정확하다는 말은 체 안에서의 정확성입니다. 정수 8×3=24를 mod17로 계산하면 7이므로 원래 정수 24와는 다릅니다. 정수 곱까지 복원하려면 결과 계수의 절댓값 상한을 알고 충분히 큰 소수나 여러 소수의 <Link to="/cs/crypto/crt">중국인의 나머지 정리</Link>를 사용해야 합니다. Pollard §3(ii)는 이 범위를 별도로 다룹니다.</p>

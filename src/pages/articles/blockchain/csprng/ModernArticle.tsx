@@ -4,6 +4,10 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ContentBoundary from "@/components/articles/content-boundary";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import SeedCandidatesViz from "./viz/SeedCandidatesViz";
+import MinEntropySplitViz from "./viz/MinEntropySplitViz";
+import DrbgStateViz from "./viz/DrbgStateViz";
+import StateCompromiseViz from "./viz/StateCompromiseViz";
 
 export default function ModernCSPRNG(){return <article className="space-y-14">
  <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 길고 복잡한 문자열도 시작값을 알면 예측할 수 있습니다</h2>
@@ -19,6 +23,7 @@ export default function ModernCSPRNG(){return <article className="space-y-14">
             잘못 만든 서버가 0·1·2·3·4·5·6·7 중 하나를 같은 확률로 고르고 그 값을 한 바이트로 넣어 매번 32바이트를 출력한다고 합시다(가정). 실제로 고른 값은 3입니다.
             출력은 256비트지만 가능한 첫 출력은 많아야 여덟 개입니다.
           </p>
+  <SeedCandidatesViz />
   <p>공격자가 시작 규칙과 생성 알고리즘을 알면 여덟 값을 모두 넣어 결과를 만들어 볼 수 있습니다. 관찰한 첫 출력과 맞는 후보를 찾으면 다음 출력도 같은 순서로 계산합니다. 파일에 32바이트가 들어 있다는 사실은 처음 모르는 값이 256비트였다는 뜻이 아닙니다.</p>
   <p>아래 실험에서 시작값 3의 첫 출력은 <code className="break-all">323e5e202f68ea77d88dbbd02dd0787f241a79d81ec20ae51d31d908385fafe5</code>입니다. 두 번째는 <code className="break-all">dbf1992042283c482ab1b9a0675176aef8a4baae702a0dc1e938110f0dbfea03</code>입니다. 둘 다 복잡해 보이지만 후보 여덟 개를 실행하면 찾을 수 있습니다.</p>
  </section>
@@ -38,6 +43,7 @@ export default function ModernCSPRNG(){return <article className="space-y-14">
  <section id="entropy-source" data-teach-level="4" className="space-y-5"><h2 className="text-2xl font-bold">7. 가장 잘 맞힐 수 있는 한 번의 추측을 셉니다</h2>
   <p>여덟 시작값이 같은 확률이면 가장 유리한 한 번의 추측도 성공률은 1/8입니다. 공정한 비트 세 개의 경우의 수가 2³=8이므로 이 불확실성을 3비트로 표현할 수 있습니다. 어떤 값이 절반 확률로 나오면 그 값을 먼저 추측할 성공률은 1/2로 높아집니다.</p>
   <ExplainedFormula question="가장 흔한 값의 확률을 몇 비트로 표현하나요?" idea="가장 쉬운 한 번의 추측이 공정한 몇 비트를 맞히는 것과 같은 확률인지 계산합니다." formula={String.raw`p_{max}=\max_x\Pr[X=x],\qquad H_\infty(X)=-\log_2 p_{max}`} annotatedFormula={String.raw`\begin{aligned}p_{max}&=\underbrace{\max_x\Pr[X=x]}_{\text{최대 추측 확률}}\\H_\infty(X)&=-\log_2 p_{max}\end{aligned}`} operations={[{expression:String.raw`p_{max}=1/8`,annotation:["같은 확률의 여덟 후보에서는","어느 것을 먼저 골라도 1/8입니다."]},{expression:String.raw`-\log_2(1/8)=3`,annotation:["1/8=2⁻³이므로 3비트입니다.","32바이트 출력 길이와 다른 양입니다."]}]} terms={[{symbol:"X",name:"비밀 입력",description:"공격자가 아는 환경 정보를 반영한 시작값 분포입니다."},{symbol:"p_{max}",name:"최대 확률",description:"가장 먼저 추측할 값이 맞을 확률입니다."},{symbol:String.raw`H_\infty`,name:"최소 엔트로피",description:"가장 쉬운 단일 추측의 성공률을 비트로 표현한 값입니다."}]} assumptions={["이 절의 0~7 사례는 정확히 여덟 후보가 같은 확률이라는 가정입니다.","공격자가 추가로 아는 정보와 표본 사이의 의존성을 함께 고려합니다."]} interpretation="pmax=1/8만 안다고 전체 후보가 반드시 여덟 개라고 결론내릴 수는 없습니다. 하나의 확률이 1/8이고 나머지 확률이 아주 많은 값에 퍼진 분포도 가능합니다." />
+  <MinEntropySplitViz />
   <p>따라서 최소 엔트로피를 모든 분포의 평균 탐색 횟수나 전체 후보 수와 동일시하지 않습니다. 본문의 여덟 후보 열거는 후보 집합까지 지정했기에 가능합니다. 가능한 값이 정확히 256개인 균등한 8비트 seed라면 같은 논리로 256번 안에 모두 시험할 수 있습니다. 256비트 출력이라고 2²⁵⁶개 입력이 생기지는 않습니다.</p>
   <p>입력 하나를 복사해 1,024개 표본으로 만들면 표본 수만 커집니다. 서로 독립인지 확인하지 않은 표본의 비트 수를 더해서는 안 됩니다. 해시로 정리해도 새 불확실성을 만들 수 없습니다. 잡음이 멈추거나 한 값으로 쏠리는 고장을 찾는 반복 횟수·비율 검사는 필요하지만 모든 공격자에 대한 예측 불가능성을 증명하지는 않습니다.</p>
   <div id="paper-nist-entropy-source"><CitationBlock source="NIST SP 800-90B · Entropy Sources" citeKey={1} href="https://csrc.nist.gov/pubs/sp/800/90/b/final">원천 모델·최소 엔트로피 추정·conditioning·지속적인 고장 검사의 범위를 확인했습니다. 실제 환경과 재시작 조건의 평가를 표본 수나 출력 길이로 대체하지 않습니다.</CitationBlock></div>
@@ -51,6 +57,7 @@ export default function ModernCSPRNG(){return <article className="space-y-14">
   <p>NIST SP 800-90A Rev.1 §10.1.2의 HMAC_DRBG를 읽겠습니다. HMAC은 비밀 키와 자료를 받아 정해진 길이의 값을 계산하는 함수입니다. SHA-256을 쓰면 내부 K와 V는 각각 32바이트입니다. 같은 키와 자료에서는 같은 결과가 나오므로 비밀 입력과 상태 보호가 중요합니다.</p>
   <p>원문 초기화는 K를 모두 0인 바이트, V를 모두 1인 바이트로 시작합니다. 실제 seed_material은 entropy_input·nonce·personalization_string을 연결해 만듭니다. 아래 실험은 갱신 계산만 보려고 seed_material 자리에 한 바이트 0x03을 넣었습니다. 이 입력은 규격의 충분한 엔트로피·초기화 조건을 충족하지 않으며 승인된 난수 생성기로 사용할 수 없습니다.</p>
   <AlgorithmBlock title="SP 800-90A Rev.1 §§10.1.2.2–10.1.2.5에 따른 계산 순서" input={["교육용 seed_material=0x03, SHA-256, K=0x00 32개, V=0x01 32개"]} steps={[{code:"K = HMAC(K, V || 0x00 || seed_material)",note:"원문의 Update 첫 단계입니다. ||는 바이트 연결입니다."},{code:"V = HMAC(K, V)",note:"방금 갱신한 K를 사용합니다."},{code:"K = HMAC(K, V || 0x01 || seed_material); V = HMAC(K,V)",note:"입력 자료가 있으므로 0x01을 사용하는 두 번째 부분도 수행합니다."},{code:"reseed_counter = 1; V = HMAC(K,V); output = V",note:"추가 입력 없이 32바이트를 요청한 첫 generate입니다."},{code:"(K,V) = Update(빈 자료,K,V); reseed_counter += 1",note:"출력 뒤에도 상태를 갱신합니다. 빈 자료이면 Update의 0x01 부분은 생략합니다."}]} output="첫 출력 323e…afe5. 같은 상태에서 다음 요청을 진행하면 dbf1…ea03." />
+  <DrbgStateViz />
   <p>초기 갱신 뒤 K는 <code>1d6c5843…c4264db</code>, V는 <code>7b8ea210…a984918</code>로 시작하고 끝납니다. 원문의 generate 순서에 이 상태를 넣으면 3절의 첫 출력이 나옵니다. 출력 뒤 갱신을 포함해 다음 요청을 처리하면 두 번째 출력이 나옵니다.</p>
   <p>
             이 과정을 별도 Python 교육용 구현으로 실행했습니다. 0~7을 각각 한 바이트로 넣어 얻은 첫 출력 여덟 개는 모두 달랐고 공개된 첫 출력과 일치한 후보는 3
@@ -60,6 +67,7 @@ export default function ModernCSPRNG(){return <article className="space-y-14">
   <div id="paper-nist-drbg"><CitationBlock source="NIST SP 800-90A Rev.1 · §10.1.2" citeKey={3} href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf">원문의 초기화·Update·Generate 순서를 교육용 입력에 적용했습니다. 2026-10-04 공식 페이지는 Rev.1 Final과 Rev.2 Draft를 구분하며 이 글은 Rev.1의 식을 지정해 읽습니다.</CitationBlock></div>
  </section>
  <section id="state-lifecycle" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">10. 상태를 읽힌 뒤에는 새로 모르는 재료가 필요합니다</h2>
+  <StateCompromiseViz />
   <p>현재 상태에서 예전 상태를 거꾸로 찾기 어렵게 만들고 이전 값을 지웠다면 과거 출력 보호를 기대할 수 있습니다. 이것을 backtracking resistance라고 부릅니다. 그러나 현재 K·V를 읽은 공격자는 이후의 결정적인 계산을 그대로 따라갑니다. 과거 보호와 미래 회복은 다른 질문입니다.</p>
   <p>미래 출력을 다시 보호하려면 공격자가 모르는 새 재료를 받아 안전하게 reseed해야 합니다. 알려진 시각·프로세스 번호·컨테이너 이름만 추가해도 복사본과 출력은 달라질 수 있지만 상태를 아는 공격자에게 비밀이 생긴 것은 아닙니다. 상태를 갱신하는 연산만 반복해도 자동 회복되지 않습니다.</p>
   <p>가상머신 이미지·스냅샷·프로세스 복제에는 난수 상태도 들어갈 수 있습니다. 운영체제와 라이브러리가 복제·부팅·복구를 어떻게 처리하는지 확인해야 합니다. 출력이 두 번 달랐다는 시험은 중복을 찾는 데 도움이 되지만 상태를 모르는 공격자에 대한 보안 증명은 아닙니다.</p>

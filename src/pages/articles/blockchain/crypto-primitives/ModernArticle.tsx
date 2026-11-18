@@ -4,6 +4,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import ReceiptProofViz from "./viz/ReceiptProofViz";
+import PedersenHidingViz from "./viz/PedersenHidingViz";
+import ToyRoundViz from "./viz/ToyRoundViz";
+import VerifyGatesViz from "./viz/VerifyGatesViz";
 import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 const RFC="https://www.rfc-editor.org/rfc/rfc8032.html";
 const TREE="https://www.rfc-editor.org/rfc/rfc9162.html#section-2.1";
@@ -54,7 +57,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </div></section>
 <section id="pedersen" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 값을 숨기는 것과 바꾸지 못하게 하는 것이 갈리는 예</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">위수가 19인 작은 점 G를 쓰고 H=2G라고 공개했다고 합시다. 값 v와 무작위 값 r로 C=vG+rH를 만듭니다. v=3, r=4라면 C=11G입니다. 그런데 v=5, r=3도 11G입니다. 한 결과를 다른 값으로 열 수 있으므로 binding이 깨졌습니다.</p>
-<p className="leading-8">그런데 고정된 v마다 r을 0부터 18까지 균등하게 고르면 v+2r은 19개의 나머지를 한 번씩 모두 지납니다. C의 분포는 v와 무관하게 균등합니다. 따라서 이 모형에서는 H와 G의 관계를 알더라도 한 약정의 완전한 hiding은 유지됩니다. 두 성질을 하나로 묶어 판단하면 이 차이를 놓칩니다.</p>
+</div><PedersenHidingViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">그런데 고정된 v마다 r을 0부터 18까지 균등하게 고르면 v+2r은 19개의 나머지를 한 번씩 모두 지납니다. C의 분포는 v와 무관하게 균등합니다. 따라서 이 모형에서는 H와 G의 관계를 알더라도 한 약정의 완전한 hiding은 유지됩니다. 두 성질을 하나로 묶어 판단하면 이 차이를 놓칩니다.</p>
 <p className="leading-8">실제 Pedersen 약정의 binding에는 충분히 큰 소수 위수 군에서 G와 H 사이의 이산로그를 아무도 알지 못한다는 등의 가정이 필요합니다. 같은 r을 두 약정에 재사용하면 차이 C₁−C₂=(v₁−v₂)G가 남아 두 값의 관계가 드러납니다. 각각의 한 값 분포와 여러 약정의 공동 정보도 구별해야 합니다.</p>
 </div><ExplainedFormula question="같은 결과를 두 값으로 열 수 있나요?" idea="H=2G라는 관계를 알면 r의 변화로 v의 변화를 상쇄할 수 있습니다." formula={String.raw`C=vG+rH`} annotatedFormula={String.raw`\begin{aligned}C&=vG+rH\\H&=2G\\3G+4H&=11G\\5G+3H&=11G\end{aligned}`} operations={[{expression:"3+2×4=11",annotation:"처음 여는 값은 3과 4입니다."},{expression:"5+2×3=11",annotation:"다른 값 5와 3도 같은 점에 도착합니다."}]} terms={[{symbol:"G,H",name:"군의 점",description:"이 작은 예에서는 H=2G가 알려져 있습니다."},{symbol:"v,r",name:"값과 무작위 스칼라",description:"19로 나눈 나머지로 취급합니다."}]} assumptions={["위수가 19인 작은 군은 설명용이며 안전하지 않습니다.","hiding의 분포 논증은 r을 독립적으로 균등하게 고를 때입니다."]} interpretation="binding 실패와 한 약정의 hiding 유지가 동시에 가능합니다."/></section>
 <section id="absence" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 빈 칸을 증명하려면 빈 값의 뜻부터 정해야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -65,7 +68,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <section id="poseidon" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 증명 회로에서는 해시의 안쪽 계산 비용이 달라집니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">영수증 경로를 영지식 증명 안에서 확인하려면 해시 계산 자체를 회로의 연산으로 표현해야 합니다. 비트 연산을 체의 덧셈·곱셈으로 풀어 쓰면 비용이 커질 수 있습니다. Poseidon은 이런 환경에서 체의 원소를 직접 섞는 연산을 사용합니다. 지금까지 얻은 SHA-256 루트를 Poseidon의 결과라고 바꾸어 부를 수는 없습니다.</p>
 <p className="leading-8">안쪽 연산을 보기 위해 별도의 작은 두 칸 모형을 만들겠습니다. 17로 나눈 나머지에서 입력 (3,4)에 상수 (1,2)를 더하면 (4,6)입니다. 두 칸을 모두 세제곱하면 (13,12)입니다. 행렬의 첫 줄을 (1,2), 둘째 줄을 (3,4)로 두어 섞으면 (3,2)가 됩니다.</p>
-<p className="leading-8">같은 (4,6)에서 첫 칸만 세제곱하면 (13,6)이고 같은 행렬을 곱한 결과는 (8,12)입니다. 모든 칸에 비선형 연산을 쓰는 full round와 한 칸에만 쓰는 partial round의 차이를 이 숫자로 볼 수 있습니다. 부분 라운드에서도 뒤의 선형 혼합은 두 칸에 적용합니다.</p>
+</div><ToyRoundViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">같은 (4,6)에서 첫 칸만 세제곱하면 (13,6)이고 같은 행렬을 곱한 결과는 (8,12)입니다. 모든 칸에 비선형 연산을 쓰는 full round와 한 칸에만 쓰는 partial round의 차이를 이 숫자로 볼 수 있습니다. 부분 라운드에서도 뒤의 선형 혼합은 두 칸에 적용합니다.</p>
 <p className="leading-8">이 모형의 세제곱은 gcd(3,16)=1이므로 체 전체에서 순열입니다. 행렬의 행렬식은 −2≡15로 0이 아니며 모든 1×1 성분도 0이 아니어서 2×2 MDS 조건을 만족합니다. 실제로 289개 입력을 전부 계산해 두 모형 모두 289개 서로 다른 출력임을 확인했습니다. 그러나 이것은 보안성 검사가 아닙니다. 논문은 MDS인 것만으로 충분하지 않아 추가적인 구조적 공격 조건을 검사합니다.</p>
 </div><CodeViewButton label="두 작은 라운드와 289개 입력 전수 계산" onClick={()=>sidebar.open("round",codeRefs["round"])}/><CitationBlock source="Poseidon · USENIX Security 2021, 2.2–2.3절" href={POSEIDON} citeKey={2}>상수 더하기·비선형 층·혼합의 역할을 읽고 설명용 F₁₇ 모형으로 대입했습니다. 이 모형의 상수·행렬·라운드 수는 실제 Poseidon 매개변수가 아닙니다.</CitationBlock></section>
 <section id="capacity" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 일부 출력을 버리는 것과 비밀을 숨기는 것은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -103,7 +106,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </div><CodeViewButton label="missing raise를 그대로 보존한 출판본" onClick={()=>sidebar.open("verify",codeRefs["verify"])}/><CodeViewButton label="길이·메시지·S 범위의 실제 실패 검사" onClick={()=>sidebar.open("negative",codeRefs["negative"])}/><CitationBlock source="RFC 8032 · Verified Erratum 5930" href="https://www.rfc-editor.org/errata/eid5930" citeKey={5}>공식 정오표와 출판본의 차이를 읽고 65바이트 입력으로 재현했습니다.</CitationBlock></section>
 <section id="authority" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. 서명식의 성공과 가게의 승인을 분리합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">더 강한 경계도 확인할 수 있습니다. Ed25519 항등원 O의 인코딩은 01 뒤에 0이 31바이트인 값입니다. 공개키 A=O, 서명의 R=O, S=0을 주면 S·G=R+hA는 메시지가 무엇이든 O=O가 됩니다. 정확한 64바이트 길이를 지켜도 원문 예제는 이 식을 통과시킵니다.</p>
-<p className="leading-8">이것이 등록된 정상 가게 키의 서명을 위조했다는 뜻은 아닙니다. 공개키 자체를 항등원으로 바꾸어 넣은 것입니다. 이번 서비스는 외부에서 등록한 예상 공개키 d75a9801…와 비교하므로 이 입력을 거부합니다. 기대한 배치 번호도 별도로 비교합니다. 7절 마지막 질문의 답은 서명식과 형식만으로 업무상 승인을 결론 내릴 수 없다는 것입니다.</p>
+</div><VerifyGatesViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">이것이 등록된 정상 가게 키의 서명을 위조했다는 뜻은 아닙니다. 공개키 자체를 항등원으로 바꾸어 넣은 것입니다. 이번 서비스는 외부에서 등록한 예상 공개키 d75a9801…와 비교하므로 이 입력을 거부합니다. 기대한 배치 번호도 별도로 비교합니다. 7절 마지막 질문의 답은 서명식과 형식만으로 업무상 승인을 결론 내릴 수 없다는 것입니다.</p>
 <p className="leading-8">실제 프로토콜은 공개키 등록, 항등원·작은 위수 점의 허용 여부, 하위군 검사, 재생 방지와 키 폐기 시점을 명시해야 합니다. 예제의 길이 검사 함수를 덧붙였다고 이런 정책까지 구현되지는 않습니다. 이 글의 authorize는 예상 키와 예상 메시지를 외부에서 받는 작은 정책 예일 뿐입니다.</p>
 </div><CodeViewButton label="항등원 식의 성공과 등록 키 정책의 거부" onClick={()=>sidebar.open("policy",codeRefs["policy"])}/></section>
 <section id="variants" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">20. Ed25519의 변형과 검증식 선택도 입력 규칙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">

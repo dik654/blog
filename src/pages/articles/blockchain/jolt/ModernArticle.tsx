@@ -3,6 +3,8 @@ import { codeRefs, fileTree } from "./codeRefsPinned";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import OneHotSelectViz from "./viz/OneHotSelectViz";
+import TwistGammaViz from "./viz/TwistGammaViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { const sidebar = useCodeSidebar(); return <><article className="space-y-16">
@@ -29,6 +31,7 @@ export default function Article() { const sidebar = useCodeSidebar(); return <><
 </section>
 <section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">4. 주소는 한 칸만 1인 선택 벡터로 표현할 수 있습니다</h2>
+<OneHotSelectViz />
 <p className="leading-8">위치 1을 읽는 선택은 [0,1,0,0]입니다. 메모리 [0,3,4,0]와 자리별로 곱해 더하면 3만 남습니다. 위치 2의 [0,0,1,0]은 4를 남기고 위치 3의 [0,0,0,1]은 변화량 7을 그 칸에만 더합니다.</p>
 <p className="leading-8">선택 벡터를 임의로 두면 두 칸을 한꺼번에 선택하거나 분수처럼 섞을 수 있습니다. 각 값이 0 또는 1이고 합이 1이라는 조건까지 검사해야 주소 하나를 뜻합니다.</p>
 <ZkCaseDiagram title="같은레지스터읽기와쓰기" steps={["[0,3,4,0]", "위치 1→3 · 위치 2→4", "위치 3에 7 → [0,3,4,7]"]} arrows={["선택벡터", "변화량 7"]} />
@@ -53,6 +56,7 @@ export default function Article() { const sidebar = useCodeSidebar(); return <><
 <h2 className="text-2xl font-bold">7. 덧셈 7과 메모리 변화 7을 서로 다른 조건으로 묶습니다</h2>
 <p className="leading-8">고정한 tracer의 ADD.exec는 두 레지스터 값을 wrapping_add로 더하고 목적 레지스터에 씁니다. 3과 4이면 7입니다. 64비트 최댓값에 1을 더하면 0으로 되돌아오므로 일반 정수 덧셈과 기계 명령의 결과를 구분해야 합니다.</p>
 <p className="leading-8">lookup 변환도 입력에 XLEN 비트 마스크를 씌우며 ADD의 결과는 같은 wrapping_add와 마스크로 계산합니다. 입력은 더 넓은 u128 합으로 lookup 위치를 만들 수 있으므로 결과 7과 테이블 주소의 표현이 같은 타입이라고 가정하지 않습니다.</p>
+<TwistGammaViz />
 <p className="leading-8">메모리에서는 목적 위치 3의 이전 값 0에 변화량 7을 더해 결과 7을 얻습니다. Twist 검사에서는 읽기·쓰기 주장들을 질문 γ의 거듭제곱으로 묶습니다. 작은 가정 γ=2에서 목적 결과 7, 첫 읽기 3, 둘째 읽기 4를 합치면 7+2×3+4×4=29입니다. 주소별 선택과 이전 값·변화량으로 계산한 쪽도 29여야 합니다.</p>
 <CodeViewButton label="ADD.exec · 실제 레지스터 실행" onClick={() => sidebar.open("jolt-exec", codeRefs["jolt-exec"])} />
 <p data-stage-bridge="lookup-sumcheck" className="text-sm leading-7 text-muted-foreground">명령의 7과 메모리의 29가 맡는 역할을 구분했습니다. 코드의 원문 연산에 사례를 넣습니다.</p>

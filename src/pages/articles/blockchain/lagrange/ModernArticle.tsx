@@ -6,6 +6,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import LagrangeFormulaViz from "./viz/LagrangeFormulaViz";
+import TraceAtThreeViz from "./viz/TraceAtThreeViz";
+import SamePointsViz from "./viz/SamePointsViz";
 
 export default function ModernLagrange(){return <article className="space-y-14">
  <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 세 기록에서 계산 규칙을 다시 찾으려면</h2>
@@ -37,6 +39,7 @@ export default function ModernLagrange(){return <article className="space-y-14">
   <LagrangeFormulaViz />
  </section>
  <section id="trace" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">8. 입력 3에서는 기저값 1·14·3으로 16을 얻습니다</h2>
+  <TraceAtThreeViz />
   <p>같은 기저에 3을 넣으면 ℓ₀(3)=2×1/2=1입니다. ℓ₁(3)=−3×1=14, ℓ₂(3)=3×2/2=3입니다. 따라서 L(3)=1×1+4×14+9×3=84의 나머지 16입니다. 계수식에 직접 대입한 9+6+1=16과 같습니다.</p>
   <p>왜 2차 이하에서는 다른 답이 없을까요? 같은 세 표본을 지나는 두 식이 있다면 그 차이는 0·1·2에서 모두 0입니다. 그러나 0 아닌 2차 이하 다항식은 서로 다른 근을 세 개 가질 수 없습니다. 그러므로 차이는 0이며 두 식은 같습니다. 기저 합이 존재를 보이고 근의 개수에 대한 논리가 유일성을 보입니다.</p>
  </section>
@@ -57,6 +60,7 @@ export default function ModernLagrange(){return <article className="space-y-14">
   <ExplainedFormula question="여러 위치의 조건 C(h)=0을 한 나눗셈 조건으로 바꾸려면?" idea="C가 각 h에서0이면 x−h가 인수입니다. 서로 다른 위치의 인수들이 서로소이므로 곱 전체가 C를 나눕니다. 반대로 그 곱이 인수이면 각 위치에 대입해0이 됩니다." formula={String.raw`Z_H(x)=\prod_{h\in H}(x-h),\quad [\forall h\in H:C(h)=0]\iff C=QZ_H`} annotatedFormula={String.raw`\begin{gathered}Z_H(x)=\underbrace{x(x-1)(x-2)}_{\text{세 위치마다 0인 인수}}\\C(x)=\underbrace{Z_H(x)(x+4)}_{\text{나눗셈 나머지 0}}\\C(3)=\underbrace{6\cdot7}_{\text{표본 밖의 값}}=8\pmod{17}\end{gathered}`} operations={[{expression:String.raw`C=QZ_H`,annotation:["나머지가0인 다항식 나눗셈입니다.","사례에서는 몫Q=x+4입니다."]},{expression:String.raw`C(h)=Q(h)Z_H(h)=0`,annotation:["H 안의 모든 h에서는 Z_H(h)=0입니다.","H 밖에서0이라는 결론은 나오지 않습니다."]}]} terms={[{symbol:"H",name:"검사할 위치 집합",description:"사례는 서로 다른0·1·2입니다."},{symbol:"Z_H",name:"소멸 다항식",description:"각 위치를 근으로 갖는 인수의 곱입니다."},{symbol:"C,Q",name:"조건식과 몫",description:"같은 체의 다항식이며 C를 Z_H로 나눈 나머지를 검사합니다."}]} assumptions={["H의 위치는 서로 다르며 모든 식은 같은 체의 다항식입니다.","조건식의 차수나 사전 고정, 도전값 선택 같은 암호 전제는 별도로 확인합니다."]} interpretation="C=Z_H(x)(x+4)는 표본에서 모두0이지만 C(3)=8입니다. C에1을 더하면 표본에서 모두1이 되어 같은 나눗셈 검사를 통과하지 못합니다." />
  </section>
  <section id="boundaries" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">12. 세 점이 같아도 더 높은 차수의 규칙은 다릅니다</h2>
+  <SamePointsViz />
   <p>L에 Z_H를 더한 규칙도 0·1·2에서 1·4·9입니다. 그러나 입력3에서는 L(3)+Z_H(3)=16+6의 나머지5가 됩니다. 16과 다릅니다. 세 점이 하나로 정한다는 주장은 2차 이하라는 조건을 포함합니다.</p>
   <p>같은 위치를 두 번 적는 것도 문제입니다. (1,2)와 (1,3)은 같은 입력에서 서로 다른 값을 요구해 함수가 될 수 없습니다. 같은 (1,2)를 반복한 경우에는 새 독립 조건이 늘지 않으며 기저의 분모도0이 됩니다. 먼저 중복을 처리하고 서로 다른 표본 수로 차수 조건을 정해야 합니다.</p>
   <p>관측값 하나가 틀려도 보간은 그것을 통과하는 다른 식을 만들 수 있습니다. 세 점을 통과했다는 사실은 기록의 진위나 암호 증명의 건전성을 확인한 결과가 아닙니다. 다항식 약속, 차수 제한, 무작위 도전값과 실패 확률은 <Link to="/cs/crypto/zk-theory">증명 프로토콜</Link>에서 함께 다룹니다.</p>

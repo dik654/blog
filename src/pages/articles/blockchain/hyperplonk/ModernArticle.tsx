@@ -4,6 +4,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import HyperPlonkZeroCheckViz from "./HyperPlonkZeroCheckViz";
+import MleOutsidePointViz from "./viz/MleOutsidePointViz";
+import SumcheckRoundsViz from "./viz/SumcheckRoundsViz";
 import { codeRefs } from "./codeRefs";
 import { hyperplonkTree } from "./fileTree";
 
@@ -232,6 +234,8 @@ export default function ModernHyperPlonkArticle() {
             <code>χ_b</code>를 만들고, 각 corner 값을 가중치로 더합니다.
           </p>
 
+          <MleOutsidePointViz />
+
           <ExplainedFormula
             question="네 table values를 두 변수 MLE로 어떻게 확장하나요?"
             idea="각 Boolean point b에서만 1인 equality basis χ_b를 만들고 table value를 곱해 더합니다."
@@ -385,6 +389,8 @@ export default function ModernHyperPlonkArticle() {
             보겠습니다. 네 corner의 합은 1입니다. Prover는 네 값을 보내는 대신 둘째
             변수를 0·1로 더한 한 변수 식을 보냅니다.
           </p>
+
+          <SumcheckRoundsViz />
 
           <ExplainedFormula
             question="g(b₁,b₂)=b₁b₂의 합 1을 두 round로 어떻게 줄이나요?"

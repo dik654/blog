@@ -6,6 +6,9 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import { codeRefs, fileTrees } from "./codeRefs";
+import InversePairsViz from "./viz/InversePairsViz";
+import FrobeniusMirrorViz from "./viz/FrobeniusMirrorViz";
+import PowerWalkViz from "./viz/PowerWalkViz";
 
 export default function ModernArticle(){const sidebar=useCodeSidebar();return <article className="space-y-14">
 <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 세 숫자로 안 되는 계산에 새 원소를 붙입니다</h2>
@@ -26,6 +29,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <a
 </section>
 <section id="need" data-teach-level="2" className="space-y-5"><h2 className="text-2xl font-bold">5. 원소 수를 늘려도 0 아닌 값으로 나눌 수 있어야 합니다</h2>
 <p>제곱해서 2가 되는 값이 원래 세 숫자 안에는 없었습니다. 새 원소를 붙이면 이전 공간에서 풀 수 없었던 식의 해를 다룰 수 있습니다. 암호의 다항식 계산이나 페어링에서도 필요한 계산 공간을 이렇게 넓힙니다.</p>
+<InversePairsViz />
 <p>하지만 u²=1을 택하면 (u−1)(u+1)=0이 됩니다. 두 칸 표현에서 u−1과 u+1은 각각 [2,1]과 [1,1]이므로 둘 다 0이 아닙니다. 앞의 값으로 나누어도 된다면 다른 값이 0이라는 모순이 생깁니다. 새 규칙을 고를 때 나눗셈이 유지되는 이유가 필요합니다.</p>
 </section>
 <section id="names" data-teach-level="3" className="space-y-5"><h2 className="text-2xl font-bold">6. 원래 체와 확장체, 기약 다항식을 구분합니다</h2>
@@ -81,6 +85,7 @@ interpretation="최소다항식이 두 더 작은 식의 곱이라면 u를 넣�
 <div id="paper-ark-extension"><CitationBlock source="ark-ff 0.5.0 · 7ad88c46 · quadratic_extension.rs" citeKey={2} href="https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/quadratic_extension.rs">고정 원문의 두 계수, 실제 차수 2 곱셈 분기와 역원을 읽고 자체 F₉ 설정에서 실행했습니다. 원문 파일과 자체 검증 프로그램은 코드 패널에서 구분합니다.</CitationBlock></div>
 </section>
 <section id="frobenius" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">11. 세제곱은 둘째 계수의 부호를 바꿉니다</h2>
+<FrobeniusMirrorViz />
 <p>F₃에서는 (a+bu)³의 중간 전개 계수 3이 0입니다. a³=a, b³=b이고 u³=2u이므로 결과는 a+2bu입니다. 같은 입력 1+u는 1+2u로 바뀌고 한 번 더 세제곱하면 1+u로 돌아옵니다.</p>
 <ExplainedFormula question="세제곱 두 번이 왜 원래 값으로 돌아오나요?" idea="각 계수는 F₃에서 그대로이고 u의 계수에 2가 붙습니다. 두 번 적용하면 배율 2²=1 mod3이 됩니다."
 formula={String.raw`\begin{gathered}\varphi(a+bu)=(a+bu)^3=a+2bu\\\varphi^2(a+bu)=a+4bu=a+bu\end{gathered}`}
@@ -109,6 +114,7 @@ assumptions={["두 단계 모두 실제 유한 차수의 체 확장입니다.","
 <section id="basis" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">13. 같은 체라도 두 칸의 의미는 달라질 수 있습니다</h2>
 <p>v=1+u를 새 기저 원소로 택해 봅시다. u=v−1이므로 a+bu=(a−b)+bv입니다. 같은 1+u는 1,u 기저에서는 [1,1]이고 1,v 기저에서는 [0,1]입니다. [1,1]을 그대로 새 기저에서 읽으면 1+v=2+u가 되어 다른 값입니다.</p>
 <p>v²=2u이고 v²+v+2=0이므로 v의 최소다항식은 X²+X+2입니다. v는 F₃ 안에 없으므로 최소 차수는 1이 아니며 2입니다. 두 구성이 모두 아홉 원소를 가진다는 사실은 바이트를 그대로 주고받아도 된다는 약속이 아닙니다.</p>
+<PowerWalkViz />
 <p>또 체를 생성하는 원소와 0 아닌 원소를 거듭제곱으로 모두 만드는 원소는 다릅니다. u만 붙이면 F₉ 전체를 표현할 수 있지만 u⁴=1이고 u²=2라서 곱셈 위수는 4입니다. 반면 v²=2u, v⁴=2, v⁸=1이므로 v의 위수는 8입니다. 곱셈군 전체의 생성원을 원시원소라고 부릅니다.</p>
 <p>기저나 규칙이 바뀌면 곱셈뿐 아니라 Frobenius 표, 계수 순서와 바이트 형식도 바꿔야 합니다. 같은 원소 수는 계산 구조를 옮기는 동형이 존재한다는 뜻이며 주어진 바이트 해석이 자동으로 같다는 뜻은 아닙니다.</p>
 </section>

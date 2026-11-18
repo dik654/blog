@@ -8,6 +8,9 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import { codeRefs, fileTrees } from "./codeRefs";
+import ByteOrderViz from "./viz/ByteOrderViz";
+import RedcBitsViz from "./viz/RedcBitsViz";
+import CarryDropViz from "./viz/CarryDropViz";
 
 export default function ModernFieldArithmetic(){const sidebar=useCodeSidebar();return <article className="space-y-14">
 <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 같은 답을 계산하되 저장하는 숫자를 바꿉니다</h2>
@@ -50,6 +53,7 @@ export default function ModernFieldArithmetic(){const sidebar=useCodeSidebar();r
 </section>
 <section id="representation" data-teach-level="4" className="space-y-5"><h2 className="text-2xl font-bold">7. 여러 자리 정수와 바이트 순서를 따로 읽습니다</h2>
 <ExplainedFormula question="64비트 두 자리에 [5,1]이 있으면 어떤 정수인가요?" idea="첫 자리는 그대로, 다음 자리는 2⁶⁴배 해서 더합니다. 각 자리의 위치가 값에 주는 배율을 복원합니다." formula={String.raw`x=\sum_{i=0}^{L-1}\ell_i2^{64i}`} annotatedFormula={String.raw`\begin{gathered}[\ell_0,\ell_1]=[5,1]\\x=5+1\cdot2^{64}\\=18446744073709551621\end{gathered}`} operations={[{expression:String.raw`\ell_i2^{64i}`,annotation:["i번째 limb를 그 자리의 크기만큼 옮깁니다.","각 limb는 0부터 2⁶⁴−1 사이입니다."]}]} terms={[{symbol:"L",name:"limb 개수",description:"소수와 구현에 맞춰 정합니다. 모든 체가 네 자리를 쓰는 것은 아닙니다."},{symbol:"ℓᵢ",name:"i번째 자리",description:"여기서는 낮은 자리부터 배열에 저장합니다."}]} assumptions={["64비트 limb를 낮은 자리부터 저장하는 표현입니다.","복원한 정수가 일반 값인지 Montgomery 저장값인지 별도로 표시합니다."]} interpretation="같은 배열이라도 그 안에 aR mod p를 담았다면 바로 외부 정수 a가 되지 않습니다. 먼저 계산용 배율을 되돌려야 합니다." />
+<ByteOrderViz />
 <p>바이트 순서도 별도 약속입니다. 두 바이트 [0x05,0x01]은 little-endian으로 읽으면 5+256=261이고 big-endian으로 읽으면 5×256+1=1281입니다. 내부 limb가 낮은 자리부터 있다는 사실만으로 외부 통신 형식까지 정해지지 않습니다.</p>
 <p>정규 입력만 받는 F₁₇ 디코더는 17을 거부해야 합니다. 17을 0으로 줄여 받으면 0과 17이라는 서로 다른 입력이 같은 값이 됩니다. 어떤 생성자는 의도적으로 나머지를 계산하므로 두 기능을 구분해 사용합니다.</p>
 </section>
@@ -62,6 +66,7 @@ export default function ModernFieldArithmetic(){const sidebar=useCodeSidebar();r
 </section>
 <section id="redc" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">9. 17의 배수를 더해 낮은 다섯 비트를 0으로 만듭니다</h2>
 <p>p′는 pp′≡−1 mod R을 만족하도록 미리 정합니다. p=17과 R=32에서는 p′=15입니다. 17×15=255가 32로 나눈 나머지 31, 즉 −1이기 때문입니다.</p>
+<RedcBitsViz />
 <ExplainedFormula question="T=21을 어떻게 32로 정확히 나눌 수 있나요?" idea="낮은 비트를 없애 줄 p의 배수를 고릅니다. p의 배수를 더하므로 mod p의 의미는 유지되고, R로 나누면 역원 배율이 적용됩니다." formula={String.raw`\begin{gathered}m=(Tp')\bmod R\\u=(T+mp)/R\\\operatorname{REDC}(T)=\begin{cases}u-p&u\ge p\\u&u<p\end{cases}\end{gathered}`} annotatedFormula={String.raw`\begin{gathered}m=21\cdot15\bmod32=27\\T+mp=21+27\cdot17=480\\u=480/32=15\end{gathered}`} operations={[{expression:String.raw`T+mp\equiv T-T=0\pmod R`,annotation:["m의 선택 때문에 R로 정확히 나누어떨어집니다."]},{expression:String.raw`uR\equiv T\pmod p`,annotation:["더한 mp는 p의 배수입니다.","R의 역원을 곱하면 u≡TR⁻¹ mod p입니다."]}]} terms={[{symbol:"p′",name:"낮은 자리 취소 상수",description:"p의 음의 역원을 R로 줄인 값입니다."},{symbol:"m",name:"더할 p의 배수",description:"0≤m<R로 고릅니다."},{symbol:"u",name:"정확한 나눗셈 결과",description:"최종 범위보다 클 수 있어 p를 한 번 뺍니다."}]} assumptions={["0≤T<pR이며 gcd(p,R)=1입니다.","T+mp의 상위 비트가 잘리지 않게 계산합니다."]} interpretation="T<pR과 m<R에서 0≤T+mp<2pR이므로 0≤u<2p입니다. 따라서 p를 많아야 한 번 빼면 0≤결과<p가 됩니다. 범위 증명이 한 번의 보정을 정당화합니다." />
 <p>두 내부 입력이 각각 p보다 작으면 T&lt;p²&lt;pR이므로 이 조건을 만족합니다. 범위를 무시해 T=1088=2×17×32를 넣으면 m=0, u=34이고 한 번 빼도 17이 남습니다. 이 값은 정규 범위 밖이므로 같은 보정 규칙을 임의의 입력에 쓸 수 없습니다.</p>
 <FactorStructureViz
@@ -137,6 +142,7 @@ export default function ModernFieldArithmetic(){const sidebar=useCodeSidebar();r
 <div id="paper-eip-197-field"><CitationBlock source="EIP-197 · Definition of the groups, Encoding" citeKey={3} href="https://eips.ethereum.org/EIPS/eip-197">좌표의 법과 군 위수, 32바이트 big-endian 규칙을 실제 값의 역할에 대응했습니다. 이 글은 pairing 연산 전체를 실행한 검증이 아닙니다.</CitationBlock></div>
 </section>
 <section id="carry" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">14. 넘친 자리와 구현의 분기를 함께 확인합니다</h2>
+<CarryDropViz />
 <p>정규 값 두 개의 합은 2p보다 작으므로 p를 한 번 빼면 됩니다. 하지만 합의 넘친 비트를 먼저 버리면 이 논리가 깨집니다. p=17에서 16+16=32의 답은 15입니다. 5비트 저장 공간에서 넘친 1을 버려 0으로 만든 뒤 비교하면 잘못된 0을 돌려줍니다.</p>
 <p>실제 코드도 add_with_carry의 결과와 modulus에 남는 비트가 있는지를 구분합니다. 뺄셈의 빌림과 곱셈 중간값의 상위 자리 역시 버릴 수 없습니다. REDC의 수학적 범위 증명과 실제 저장 공간의 범위 증명을 모두 지켜야 합니다.</p>
 <p>여러 limb의 곱셈은 곱을 더하는 작업과 낮은 자리를 지우는 작업을 반복해서 엮을 수 있습니다. 원문은 이를 CIOS라고 설명합니다. 이 기본 경로의 N개 64비트 자리에서는 바깥 반복문이 N번 돌며, 본문의 한 limb 사례는 한 번입니다. 네 limb나 32비트 구현의 반복 수를 모든 체에 공통인 숫자로 읽지 않습니다.</p>

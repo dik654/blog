@@ -5,6 +5,9 @@ import RethTxpoolLocator, { RethTxpoolMapReturn } from "./RethTxpoolLocator";
 import { rethTxpoolV281Tree } from "./fileTree";
 import { RETH_TXPOOL_PROJECT_META, rethTxpoolCodeRefs } from "./modernCodeRefs";
 import RethTxpoolLifecycleViz from "./viz/RethTxpoolLifecycleViz";
+import TxStateBitsViz from "./viz/TxStateBitsViz";
+import BestHeadsViz from "./viz/BestHeadsViz";
+import ReorgOldOnlyViz from "./viz/ReorgOldOnlyViz";
 
 export default function ModernArticle() {
   const sidebar = useCodeSidebar();
@@ -48,6 +51,7 @@ export default function ModernArticle() {
             ].map((row) => <tr key={row[0]} className="border-t border-border">{row.map((cell) => <td key={cell} className="px-3 py-3">{cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
+        <TxStateBitsViz />
         <p>Reth는 <code>NO_NONCE_GAPS</code>, <code>ENOUGH_BALANCE</code>, <code>ENOUGH_FEE_CAP_BLOCK</code> 같은 조건을 <code>TxState</code> 비트로 보존합니다. 이렇게 해야 head가 바뀌었을 때 왜 기다리는지를 잃지 않고 영향을 받은 sender와 fee 조건만 다시 계산할 수 있습니다.</p>
         <p>중요한 차이는 v2.8.1에 <code>Blob</code> 서브풀이 따로 있다는 점입니다. 예전 세 서브풀 그림은 현재 구현을 충분히 설명하지 못합니다. Blob 거래는 consensus 형식과 pooled sidecar의 크기·보존 경로도 다르므로 일반 BaseFee 대기 거래와 같은 메모리 정책으로 단순화하면 안 됩니다.</p>
         <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open("subpool-state", rethTxpoolCodeRefs["subpool-state"])} /><span className="text-xs text-muted-foreground">state.rs L3–48·L143–205 · 네 서브풀 결정</span></div>
@@ -84,6 +88,7 @@ export default function ModernArticle() {
             ["04", "Unlock", "T7을 내보낸 뒤 T8 활성"],
           ].map(([step, title, body]) => <div key={step} className="bg-background p-4"><span className="text-[9px] font-bold text-primary">{step}</span><strong className="mt-2 block text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}
         </div>
+        <BestHeadsViz />
         <p><code>TransactionOrdering</code>은 거래 하나의 priority를 계산합니다. 기본 <code>CoinbaseTipOrdering</code>은 현재 base fee를 기준으로 계산한 effective tip을 사용합니다. 그러나 이 trait이 nonce 순서를 보장하는 것은 아닙니다. <code>BestTransactions</code> iterator가 sender별 independent head만 후보 집합에 넣고, nonce N을 내보낸 뒤 N+1을 해제합니다.</p>
         <p>Payload builder는 이 iterator가 준 순서를 그대로 무조건 포함하지 않습니다. Block gas, blob gas, 실행 실패와 builder 정책을 적용하며, 어떤 sender의 head를 invalid로 표시하면 그 descendants도 건너뜁니다. Pool ordering은 후보 제공 계약이고 canonical inclusion 보장이 아닙니다.</p>
         <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open("ordering-policy", rethTxpoolCodeRefs["ordering-policy"])} /><span className="text-xs text-muted-foreground">ordering.rs L39–85 · priority 정책</span><CodeViewButton onClick={() => sidebar.open("sender-head-order", rethTxpoolCodeRefs["sender-head-order"])} /><span className="text-xs text-muted-foreground">best.rs L87–120·L206–248 · nonce-safe iterator</span></div>
@@ -101,6 +106,7 @@ export default function ModernArticle() {
           ].map(([title, body]) => <div key={title} className="bg-background p-3"><strong className="text-xs">{title}</strong><p className="mt-2 text-[10px] leading-4 text-muted-foreground">{body}</p></div>)}
         </div>
         <p>정상 commit에서는 새 block에 포함된 거래를 제거하고 changed account와 다음 block fee를 반영합니다. T7이 포함돼 Alice nonce가 8이 되면 T8은 새 sender head가 될 수 있습니다. 반대로 fee가 올라가면 Pending이 BaseFee나 Blob으로 내려갈 수도 있습니다.</p>
+        <ReorgOldOnlyViz />
         <p>Reorg에서는 new branch의 state와 mined set을 pool에 먼저 적용합니다. Old branch에만 있던 거래는 consensus 형식에서 pooled 형식으로 복원하고, blob 거래라면 sidecar를 다시 결합한 뒤 <code>add_external_transactions</code> 경로로 보냅니다. 따라서 “한 번 valid였으니 그대로 되살린다”가 아니라 새 canonical state에서 다시 검증합니다.</p>
         <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open("reorg-reinjection", rethTxpoolCodeRefs["reorg-reinjection"])} /><span className="text-xs text-muted-foreground">maintain.rs L382–435 · update 후 old-only 재검증</span></div>
       </section>

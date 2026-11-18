@@ -4,15 +4,15 @@
   "summary": {
     "publicArticles": 1012,
     "architectureCandidates": 175,
-    "dedicatedVisuals": 867,
-    "inlineVisuals": 836,
-    "customVisuals": 1003,
-    "animatedMechanisms": 839,
-    "architectureWithoutAnimation": 19,
+    "dedicatedVisuals": 888,
+    "inlineVisuals": 855,
+    "customVisuals": 1010,
+    "animatedMechanisms": 869,
+    "architectureWithoutAnimation": 15,
     "recursiveLocators": 385,
     "codeEvidenceLinked": 257,
     "sourceCitationLinked": 1003,
-    "architectureWithoutCustomVisual": 1
+    "architectureWithoutCustomVisual": 0
   },
   "articles": [
     {
@@ -8710,14 +8710,14 @@
       "sourcePath": "src/pages/articles/ethereum/reth-trie.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/reth-txpool",
@@ -8727,7 +8727,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -8743,7 +8743,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
@@ -9190,14 +9190,14 @@
       "sourcePath": "src/pages/articles/cloud/aws-clf-c02-fast-study.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/aws-developer-cloudops-paths",
@@ -9206,14 +9206,14 @@
       "sourcePath": "src/pages/articles/cloud/aws-developer-cloudops-paths.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/aws-saa-c03-fast-study",
@@ -9222,14 +9222,14 @@
       "sourcePath": "src/pages/articles/cloud/aws-saa-c03-fast-study.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/azure-ai200-fast-study",
@@ -9238,14 +9238,14 @@
       "sourcePath": "src/pages/articles/cloud/azure-ai200-fast-study.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/azure-architect-devops-paths",
@@ -9254,14 +9254,14 @@
       "sourcePath": "src/pages/articles/cloud/azure-architect-devops-paths.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/azure-az104-fast-study",
@@ -9270,14 +9270,14 @@
       "sourcePath": "src/pages/articles/cloud/azure-az104-fast-study.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/azure-az900-fast-study",
@@ -9286,14 +9286,14 @@
       "sourcePath": "src/pages/articles/cloud/azure-az900-fast-study.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/cloud-certification-roadmap-2026",
@@ -9302,14 +9302,14 @@
       "sourcePath": "src/pages/articles/cloud/cloud-certification-roadmap-2026.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/cloud-compute-selection",
@@ -9318,14 +9318,14 @@
       "sourcePath": "src/pages/articles/cloud/cloud-compute-selection.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/cloud-foundations-responsibility-regions",
@@ -9334,14 +9334,14 @@
       "sourcePath": "src/pages/articles/cloud/cloud-foundations-responsibility-regions.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/cloud-identity-access-hierarchy",
@@ -9350,14 +9350,14 @@
       "sourcePath": "src/pages/articles/cloud/cloud-identity-access-hierarchy.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/cloud-networking-request-path",
@@ -9366,14 +9366,14 @@
       "sourcePath": "src/pages/articles/cloud/cloud-networking-request-path.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/cloud-reliability-observability-iac",
@@ -9382,14 +9382,14 @@
       "sourcePath": "src/pages/articles/cloud/cloud-reliability-observability-iac.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/cloud-storage-database-selection",
@@ -9398,14 +9398,14 @@
       "sourcePath": "src/pages/articles/cloud/cloud-storage-database-selection.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "cloud/kubernetes-concept-map",
@@ -9831,7 +9831,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -9847,7 +9847,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -9863,7 +9863,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -9881,11 +9881,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/crt",
@@ -9895,13 +9895,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/crypto-primitives",
@@ -9926,14 +9926,14 @@
       "sourcePath": "src/pages/articles/blockchain/csprng.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/diffie-hellman",
@@ -9958,14 +9958,14 @@
       "sourcePath": "src/pages/articles/blockchain/discrete-log.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/elgamal",
@@ -9993,11 +9993,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/extension-field-theory",
@@ -10006,14 +10006,14 @@
       "sourcePath": "src/pages/articles/blockchain/extension-field-theory.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/extension-fields",
@@ -10023,13 +10023,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/fft",
@@ -10038,14 +10038,14 @@
       "sourcePath": "src/pages/articles/blockchain/fft/index.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/field-arithmetic",
@@ -10054,14 +10054,14 @@
       "sourcePath": "src/pages/articles/blockchain/field-arithmetic.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/finite-field-theory",
@@ -10070,14 +10070,14 @@
       "sourcePath": "src/pages/articles/blockchain/finite-field-theory.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/fri",
@@ -10089,11 +10089,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/frobenius-optimization",
@@ -10103,13 +10103,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/groth16",
@@ -10119,7 +10119,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -10135,7 +10135,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -10167,7 +10167,7 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
@@ -10185,11 +10185,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/karatsuba",
@@ -10199,13 +10199,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/lagrange",
@@ -10215,13 +10215,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "crypto/libiop",

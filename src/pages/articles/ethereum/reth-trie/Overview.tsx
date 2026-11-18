@@ -3,6 +3,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import RethStateFlowViz from "../reth-state-flow-viz";
+import TrieKeyPathViz from "./viz/TrieKeyPathViz";
+import TrieDirtyPathViz from "./viz/TrieDirtyPathViz";
 
 export default function Overview({
   onCodeRef: _,
@@ -34,6 +36,7 @@ export default function Overview({
       </div>
       <ContentBoundary article="reth-trie" />
       <RethStateFlowViz mode="trie" />
+      <TrieKeyPathViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>먼저 key를 16진수 길로 바꿉니다</h3>
         <p>
@@ -50,6 +53,9 @@ export default function Overview({
           긴 node는 hash reference로 들어가므로 “변경 leaf 하나=hash 하나”가
           아닙니다.
         </p>
+      </div>
+      <TrieDirtyPathViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>이 글의 고정 사례</h3>
         <p>
           Parent root가 <code>r100</code>인 state에서 account A의 balance만

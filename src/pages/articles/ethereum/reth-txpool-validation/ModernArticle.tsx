@@ -5,6 +5,9 @@ import RethTxpoolLocator, { RethTxpoolMapReturn } from "../reth-txpool/RethTxpoo
 import { rethTxpoolV281Tree } from "../reth-txpool/fileTree";
 import { RETH_TXPOOL_PROJECT_META, rethTxpoolCodeRefs } from "../reth-txpool/modernCodeRefs";
 import RethTxpoolValidationViz from "./viz/RethTxpoolValidationViz";
+import NonceLifecycleViz from "./viz/NonceLifecycleViz";
+import ReplacementBumpViz from "./viz/ReplacementBumpViz";
+import SameSizeReceiptViz from "./viz/SameSizeReceiptViz";
 
 const LABEL = ({ children }: { children: ReactNode }) => <span className="mr-2 inline-block border border-primary/40 px-1.5 py-0.5 align-middle text-[9px] font-black text-primary">{children}</span>;
 
@@ -53,11 +56,14 @@ export default function ModernArticle() {
           ["Pool", "sender/nonce·subpool·replacement·eviction"],
           ["소비", "builder yield index·mined/reorg event"],
         ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}</div>
+        <SameSizeReceiptViz />
         <p><LABEL>A</LABEL>최종 pool 크기만 비교하지 않습니다. 같은 크기라도 T7이 BaseFee 대신 Pending에 들어갔거나 T8이 선행 거래보다 먼저 builder에 보였다면 동작이 다릅니다. Event 순서와 reason, sender dependency를 transaction hash에 연결해야 첫 차이를 찾을 수 있습니다.</p>
       </section>
 
       <section id="experiment" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">입구 공격과 canonical 변화가 겹치는 순서까지 재생합니다</h2>
+        <NonceLifecycleViz />
+        <ReplacementBumpViz />
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-2">{[
           ["01 · Admission 분기", "잘못된 signature·chain ID·oversize는 Invalid, provider 장애는 Error가 되며 어느 것도 pool에 남지 않는지 확인합니다."],
           ["02 · Nonce dependency", "Alice T8을 먼저 보내고 T7을 나중에 보내 T8이 Queued에서 정확히 승격되는지 확인합니다."],

@@ -3,6 +3,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import FoldTableViz from "./viz/FoldTableViz";
+import SamplingMissViz from "./viz/SamplingMissViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -29,6 +31,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">4. 서로 반대인 위치가 같은 새 위치로 모입니다</h2>
+<FoldTableViz />
 <p className="leading-8">1과 16, 2와 15처럼 서로 반대인 위치를 한 쌍으로 잡습니다. 각 쌍을 제곱하면 같은 위치가 되므로 16개의 칸이 8개로 줄어듭니다. 값은 단순 평균이 아니라 앞서 구한 두 부분을 나중에 받은 숫자로 섞어 만듭니다.</p>
 <p className="leading-8">위치 4와 13은 새 위치 16에서 만납니다. 다음 검사에서는 두 입력값 10·11과 결과 12를 함께 읽고 동일한 계산이 성립하는지 확인합니다.</p>
 <ZkCaseDiagram title="16칸의 두 위치를 8칸의 한 위치로" steps={["4↦10 · 13↦11", "짝수 부분 2 · 홀수 부분 2", "16↦2+5×2=12"]} arrows={["합·차로 분리", "나중에 받은 5"]} />
@@ -60,6 +63,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="soundness" data-teach-level="5" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">8. 원문은 부호와의 거리를 기준으로 거절 확률을 정의합니다</h2>
 <p className="leading-8">FRI 원문은 차수 d가 ρN보다 작은 다항식의 평가표를 정의합니다. 사례에서는 N=16, ρ=3/16으로 놓으면 차수 2가 2&lt;3을 만족합니다. 모든 칸이 같은 낮은 차수 함수에서 나온 정상 표는 받아들여야 합니다.</p>
+<SamplingMissViz />
 <p className="leading-8">거짓 표의 네 칸이 틀렸다고 고정하고 16칸 중 독립적으로 세 번 뽑는 단순 검사를 상상해 봅시다. 세 번 모두 틀린 칸을 놓칠 확률은(12/16)³=27/64입니다. 같은 위치를 세 번 반복하면 12/16일 뿐입니다. 이 계산은 고정된 오류 집합의 표본추출 예이며 FRI 전체 건전성 정리가 아닙니다.</p>
 <p className="leading-8">실제 FRI에서는 여러 단계의 접기, 부호까지의 거리, 질문들의 상관관계와 마지막 차수 검사까지 함께 분석합니다. 따라서 한 줄의(1−δ)ᵠ만으로 구현의 보안 비트를 선언할 수 없습니다.</p>
 <div id="source-fri-definition"><CitationBlock source="Fast Reed–Solomon IOP of Proximity · §1, PDF p.2" citeKey={1} href="https://drops.dagstuhl.de/storage/00lipics/lipics-vol107-icalp2018/LIPIcs.ICALP.2018.14/LIPIcs.ICALP.2018.14.pdf"><p className="leading-8">원문: <q>degree d &lt; ρN</q></p><p className="leading-8">N=16,ρ=3/16이면 2&lt;3이므로 예제 f의 평가표는 정의한 부호에 속합니다.</p></CitationBlock></div><div id="paper-fri"><CitationBlock source="Fast Reed–Solomon IOP of Proximity (ICALP2018)" citeKey={2} href="https://drops.dagstuhl.de/storage/00lipics/lipics-vol107-icalp2018/LIPIcs.ICALP.2018.14/LIPIcs.ICALP.2018.14.pdf"><p className="leading-8"><strong>문제:</strong> 긴 평가표가 낮은 차수 부호에 가까운지 적게 읽고 검사합니다.</p><p className="leading-8"><strong>기여:</strong> 재귀적인 표 축소와 근접성 분석을 제공합니다.</p><p className="leading-8"><strong>전제:</strong> 정의한 체·평가 영역·거리·질문 모델을 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 원문의 정리와 매개변수별 분석입니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 프로그램 의미, 영지식 또는 단순 독립표본 식만으로 전체 보안을 보장하지 않습니다.</p></CitationBlock></div>

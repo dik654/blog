@@ -5,6 +5,11 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import HashJourneyViz from "./viz/HashJourneyViz";
+import LengthExtensionViz from "./viz/LengthExtensionViz";
+import PaddingBlockViz from "./viz/PaddingBlockViz";
+import Sha3PadPositionViz from "./viz/Sha3PadPositionViz";
+import SpongeStateViz from "./viz/SpongeStateViz";
+import StreamingStateViz from "./viz/StreamingStateViz";
 import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 const PIN="https://github.com/RustCrypto/hashes/tree/f6c786d72ed4d37a32dcd32daa2e7277dd4683e1";
 export default function ModernArticle(){const sidebar=useCodeSidebar();return <div className="space-y-16 [overflow-wrap:anywhere]">
@@ -36,7 +41,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">이전 상태와 한 블록을 받아 새 상태로 만드는 계산은 압축 함수입니다. 이런 함수를 차례로 연결하는 구조를 Merkle–Damgård 방식이라고 부릅니다. SHA-256의 블록은 512비트이고 연결 상태는 256비트입니다. 이를 h₀=IV, hᵢ=C(hᵢ₋₁,mᵢ), H(M)=hₖ로 적습니다. mᵢ는 패딩을 마친 i번째 블록이고 k는 그 블록 수입니다. 여기서 압축은 원본을 복원하는 파일 압축이라는 뜻이 아닙니다.</p>
 <p className="leading-8">SHA-3는 더 큰 내부 상태의 일부에 입력을 섞고 그 상태 전체를 바꿉니다. 직접 입출력하는 부분은 입력 영역(rate)입니다. 나머지는 보호 영역(capacity)입니다. 이 방식은 스펀지 구조이며 뒤에서 같은 abc를 넣어 비교합니다.</p>
 </div></section>
-<section id="padding" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 표준의 24비트를 실제 64바이트에 맞춥니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="padding" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 표준의 24비트를 실제 64바이트에 맞춥니다</h2><PaddingBlockViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">FIPS 180-4의 5.1.1절은 abc 자체를 패딩 예로 사용합니다. 원래 길이 24 뒤에 1비트, 0비트 423개, 길이를 적은 64비트를 붙입니다. 앞의 80은 1비트와 0비트 일곱 개이므로 남은 416비트가 52개의 00 바이트와 정확히 대응합니다.</p>
 <p className="leading-8">패딩 전 입력이 55바이트이면 끝 표시 1바이트와 길이 8바이트를 더해 64바이트 한 블록에 들어갑니다. 56바이트이면 이 공간이 부족해 두 블록이 필요합니다. 64바이트를 정확히 채운 입력도 패딩을 생략하지 않으므로 마지막에 한 블록이 더 생깁니다.</p>
 <p className="leading-8">이번에 검산한 길이 55, 56, 63, 64, 65바이트의 패딩 후 블록 수는 각각 1, 2, 2, 2, 2입니다. 길이를 기록한다고 어떤 패딩된 메시지도 다른 것의 접두어가 될 수 없다는 뜻은 아닙니다. 그 잘못된 결론이 왜 위험한지 12절에서 같은 abc로 확인합니다.</p>
@@ -52,7 +57,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">마지막 라운드의 a부터 h를 그대로 내보내는 것도 아닙니다. 원문 43–50행은 각 값을 라운드 시작 전 상태에 더합니다. 이렇게 얻은 여덟 32비트 값을 큰 자리부터 바이트로 쓰면 전체 결과는 <code>ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad</code>입니다.</p>
 <p className="leading-8">보존한 compact 원문과 상수 파일은 수정하지 않고 별도 Rust 호출 예제에서 컴파일했습니다. rustc 1.93.0으로 abc와 일곱 경계 입력을 실행해 Python의 독립 라운드 계산 및 hashlib 결과와 맞췄습니다. 이 실행은 선택한 compact 함수의 실행이며 이 컴퓨터의 전체 라이브러리가 항상 이 경로를 선택한다는 주장은 아닙니다.</p>
 </div><CodeViewButton label="원문의 16칸 순환 배열" onClick={()=>sidebar.open("schedule",codeRefs["schedule"])}/><CodeViewButton label="마지막 상태 더하기와 블록 반복" onClick={()=>sidebar.open("feedforward",codeRefs["feedforward"])}/><CodeViewButton label="실제로 컴파일한 별도 호출 예제" onClick={()=>sidebar.open("native",codeRefs["native"])}/></section>
-<section id="streaming" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. a 다음 bc를 받아도 최종 길이는 24비트입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="streaming" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. a 다음 bc를 받아도 최종 길이는 24비트입니다</h2><StreamingStateViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">같은 abc를 한 번에 보내거나 a 다음 bc로 보내면 최종 입력 바이트열은 같습니다. 마지막까지 같은 상태를 유지하고 끝낼 때 한 번만 패딩하면 결과도 같습니다. 반대로 a를 끝내 얻은 해시와 bc를 끝내 얻은 해시를 이어 붙이면 별개의 두 계산 결과이며 abc의 해시가 아닙니다.</p>
 <p className="leading-8">원문의 Sha256VarCore에는 여덟 상태값과 처리한 전체 블록 수 block_len이 있습니다. 아직 64바이트가 안 된 부분은 바깥 버퍼가 보관합니다. 마지막 단계의 bit_len은 8×(버퍼에 남은 바이트 수+64×처리한 블록 수)입니다. abc에서는 8×(3+64×0)=24입니다.</p>
 <p className="leading-8">길이 64바이트를 이미 처리했다면 버퍼가 비어도 원래 길이는 512비트입니다. 따라서 버퍼 길이만 보고 0길이 메시지의 패딩을 붙이면 잘못된 결과가 됩니다. 원문은 총길이를 len64_padding_be에 넘겨 마지막 블록을 만들고 결과를 to_be_bytes로 출력합니다.</p>
@@ -82,12 +87,13 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </section>
 <section id="length-extension" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. H(key || abc)를 인증값으로 쓰면 뒤를 잇는 경로가 생깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">이번에는 자기 컴퓨터 안의 작은 검증자를 가정합니다. 설명용 키는 key! 네 바이트이고 메시지는 abc입니다. 검증자가 SHA-256(key || 메시지)만 인증값으로 비교한다고 합시다. 공격자는 일반적으로 키를 모르더라도 그 길이를 맞히고 기존 32바이트 결과를 알면 다음 계산을 시도할 수 있습니다.</p>
+</div><LengthExtensionViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">원래 키와 메시지의 길이는 7바이트입니다. 여기에 붙는 패딩은 57바이트라 처리한 길이가 64바이트가 됩니다. 기존 결과는 이 시점의 전체 연결 상태이므로 여덟 u32로 읽어 새 시작 상태로 사용할 수 있습니다. 뒤에 느낌표 !를 붙이고 총길이를 65바이트로 잡아 계산을 이어 갑니다.</p>
 <p className="leading-8">검증자에게 보낼 새 메시지는 abc와 그 57바이트 패딩과 !를 합친 61바이트입니다. 검증자는 앞에 자기 키 4바이트를 붙여 65바이트를 해시합니다. 로컬 실행에서 이 결과가 기존 결과로부터 이어 계산한 값과 정확히 같았습니다. 단순히 abc! 네 바이트를 보낸 경우와는 다른 메시지입니다.</p>
 <p className="leading-8">이 예에서 원래 패딩된 바이트열은 새 메시지를 패딩한 바이트열의 앞부분입니다. 따라서 SHA-256 패딩을 “어떤 두 입력도 접두어로 겹치지 않게 한다”고 설명하면 틀립니다. 길이 기록은 필요하지만 이 인증 방식의 길이 확장을 막지는 못합니다.</p>
 <p className="leading-8">HMAC은 키를 넣는 안쪽과 바깥쪽 계산을 따로 구성합니다. 같은 로컬 입력에서 기존 HMAC을 SHA-256 상태처럼 연장한 값은 새 메시지의 HMAC과 달랐습니다. 이 한 실행이 HMAC의 보안 증명은 아니며, 실패 원인을 확인한 예입니다. 실사용 인증에는 검토된 HMAC이나 명시적인 키 기반 방식을 사용하고 키·태그 길이·재생 방지 조건을 별도로 정합니다.</p>
 </div><CodeViewButton label="자기 컴퓨터에서 실행한 길이 확장과 HMAC 비교" onClick={()=>sidebar.open("extension",codeRefs["extension"])}/></section>
-<section id="sponge" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. SHA-3에서는 같은 abc를 1600비트 상태에 넣습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="sponge" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. SHA-3에서는 같은 abc를 1600비트 상태에 넣습니다</h2><SpongeStateViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">SHA3-256의 상태는 1600비트, 즉 64비트 값 25개입니다. 처음에는 모두 0입니다. 그중 앞의 1088비트인 136바이트가 입출력 구간이고 나머지 512비트는 직접 입출력하지 않습니다. 이것이 rate 1088, capacity 512라는 뜻입니다. 전체 폭 t=r+c=1600이며 한 블록의 흡수는 S←P(S XOR (mᵢ || 0ᶜ))로 적습니다. 앞부분에만 입력을 더한 뒤 P가 전체 상태를 바꿉니다.</p>
 <p className="leading-8">abc 세 바이트 뒤에 06을 넣고 마지막 입출력 바이트에 80을 XOR합니다. 이번 한 블록은 abc 3바이트, 06 한 바이트, 00 131바이트, 80 한 바이트로 136바이트입니다. 처음 여덟 바이트를 little-endian으로 읽은 첫 값은 0000000006636261이고 17번째 값은 8000000000000000입니다.</p>
 <p className="leading-8">입력 블록은 상태의 앞부분에 XOR되고 상태 전체가 24라운드 순열을 거칩니다. 마지막에는 앞부분의 바이트를 읽어 32바이트를 얻습니다. 이번 결과는 <code>3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532</code>입니다. SHA-256과 입력과 출력 길이는 같지만 계산 규칙이 달라 결과가 다릅니다.</p>
@@ -101,6 +107,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </div><CodeViewButton label="직접 만든 24라운드 모형과 비교" onClick={()=>sidebar.open("keccak-model",codeRefs["keccak-model"])}/><CitationBlock source="NIST FIPS 202 · 3.2절, Algorithm 7·8·9, 6.1절" href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf" citeKey={2}>상태 배치·다섯 단계·흡수와 출력·SHA3-256의 suffix를 읽고 같은 바이트를 대입했습니다.</CitationBlock></section>
 <section id="source-sponge" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 원문의 06과 마지막 80이 들어가는 위치를 맞춥니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">같은 RustCrypto commit의 sha3 패키지는 0.12.0입니다. 원문에서 Sha3_256의 입력 영역(rate)은 U136입니다. 출력 길이는 U32이며, 패딩 상수는 06입니다. update는 absorb_u64_le로 입력을 흡수하고 finalize_into는 pad 뒤에 f1600을 한 번 적용한 다음 read_state를 부릅니다.</p>
+</div><Sha3PadPositionViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">pad 원문에서 현재 위치가 3이면 word_offset=3/8=0, byte_offset=3%8=3입니다. 따라서 06을 첫 64비트 값의 24번째 비트부터 XOR합니다. 다음 줄은 state[136/8−1], 즉 state[16]의 최상위 비트를 XOR합니다. abc에서 계산한 두 값과 정확히 맞습니다.</p>
 <p className="leading-8">현재 위치가 135이면 두 연산이 마지막 바이트를 함께 바꾸어 06 XOR 80=86이 됩니다. 입력이 이미 136바이트를 채웠다면 그 블록을 먼저 처리하고 새 패딩 블록이 필요합니다. 135와 136의 차이는 단순히 00 한 바이트를 덜 붙이는 정도가 아닙니다.</p>
 <p className="leading-8">pad와 read_state 원문도 수정하지 않고 Rust에서 실행했습니다. 이 작은 호출 예제는 State1600과 위치만 제공하는 SpongeCursor 대체 형식을 명시적으로 두었습니다. 실제 cursor의 흡수나 keccak 의존성의 f1600은 연결하지 않았습니다. 따라서 여기의 네이티브 확인 범위는 패딩 위치와 little-endian 출력이며 전체 sha3 API 실행은 아닙니다.</p>

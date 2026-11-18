@@ -5,6 +5,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import MultiplyMapViz from "./viz/MultiplyMapViz";
+import PowerCycleViz from "./viz/PowerCycleViz";
+import ZeroCountViz from "./viz/ZeroCountViz";
 
 export default function ModernFiniteField(){return <article className="space-y-14">
  <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 작은 값 안에서 나눗셈까지 되돌릴 수 있을까요?</h2>
@@ -23,6 +26,7 @@ export default function ModernFiniteField(){return <article className="space-y-1
   <FlowRail title="6÷3 요청 한 번의 계산" steps={[{actor:"요청",movement:"값 6을 3으로 나누며 기준은 7로 고정합니다.",receives:"6, 3, 기준 7"},{actor:"되돌리는 값",movement:"3에 곱해 1이 되는 값을 찾습니다.",receives:"3×5의 나머지가 1이므로 5"},{actor:"곱하고 정리",movement:"6×5=30에서 7의 배수를 뺍니다.",receives:"결과 2, 다시 3을 곱하면 6"}]} />
  </section>
  <section id="need" data-teach-level="2" className="space-y-5"><h2 className="text-2xl font-bold">5. 기준을 8로 바꾸면 같은 되돌리기가 막힙니다</h2>
+  <MultiplyMapViz />
   <p>8로 나눈 나머지를 사용하면 2×4=8이 0이 됩니다. 두 값 모두 0이 아닌데 곱은 0입니다. 2에 어떤 정수를 곱해도 짝수이므로 8로 나눈 나머지 1을 만들지 못합니다.</p>
   <p>2×1과 2×5의 나머지는 둘 다 2입니다. 곱셈이 서로 다른 입력을 같은 결과로 보내므로 결과를 보고 입력을 하나로 되찾을 수 없습니다. 값의 개수를 유한하게 제한했다는 사실만으로 모든 나눗셈이 가능해지지는 않습니다.</p>
  </section>
@@ -46,6 +50,7 @@ export default function ModernFiniteField(){return <article className="space-y-1
   <div id="paper-hac-field"><CitationBlock source="HAC §2.4.4, Algorithm 2.142; §2.6" citeKey={1} href="https://cacr.uwaterloo.ca/hac/about/chap2.pdf">원문의 역원 절차에 같은 3·7을 대응했습니다. §2.6의 유한체 구조와 기약 다항식 표현은 뒤의 더 큰 계산 공간을 설명하는 근거입니다.</CitationBlock></div>
  </section>
  <section id="multiplicative-order" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">10. 같은 값을 반복해서 곱하면 1로 돌아옵니다</h2>
+  <PowerCycleViz />
   <p>F₇에서 3을 반복해 곱하면 3·2·6·4·5·1 순서로 돌아옵니다. 처음 1이 되는 거듭제곱은 여섯 번째입니다. 이 길이를 원소의 위수라고 하며 여섯 개의 0 아닌 값을 모두 방문하는 3을 생성원이라고 합니다.</p>
   <p>반면 2의 거듭제곱은 2·4·1만 방문합니다. 위수 3은 전체 크기 6을 나눕니다. 반복 주기가 만드는 작은 묶음으로 전체 곱셈군을 겹치지 않게 나눌 수 있기 때문에 일반적으로도 원소의 위수는 군의 크기를 나눕니다. 유한체의 0 아닌 원소 전체는 한 생성원의 거듭제곱으로 표현되는 순환군입니다.</p>
   <ExplainedFormula question="p−1번 곱해서 1이라는 확인만으로 생성원인가요?" idea="짧은 반복 주기에 갇히지 않았는지 검사해야 합니다. p−1의 서로 다른 소인수 q마다 (p−1)/q제곱이 1이 아닌지 확인합니다." formula={String.raw`g\text{ generates }\mathbb F_p^*\iff\forall q\text{ prime},\ q\mid(p-1):g^{(p-1)/q}\ne1`} annotatedFormula={String.raw`\begin{aligned}p-1&=6=2\cdot3\\3^{6/2}&=\underbrace{3^3\bmod7}_{\text{주기 3으로 끝나는가}}=6\ne1\\3^{6/3}&=\underbrace{3^2\bmod7}_{\text{주기 2로 끝나는가}}=2\ne1\end{aligned}`} operations={[{expression:String.raw`(p-1)/q`,annotation:["전체 주기의 소인수 하나를 빼 짧은 주기를 검사합니다.","모든 서로 다른 소인수에 대해 확인합니다."]}]} terms={[{symbol:"g",name:"생성원 후보",description:"0 아닌 값이며 사례는 3입니다."},{symbol:"q",name:"전체 크기의 소인수",description:"6의 서로 다른 소인수는 2·3입니다."},{symbol:"p−1",name:"0 아닌 원소 수",description:"F₇에서는 6이며 생성원은 이 위수를 가집니다."}]} assumptions={["소수 p와 p−1의 소인수들을 알고 있습니다.","g^(p−1)=1만으로 생성원이라 판정하지 않습니다."]} interpretation="진짜 위수가 p−1의 더 작은 약수라면 빠진 소인수 q 하나에 대해 위수가 (p−1)/q도 나눕니다. 그러면 검사값이 1이 되므로 이 검사들이 모든 짧은 주기를 배제합니다." />
@@ -62,6 +67,7 @@ export default function ModernFiniteField(){return <article className="space-y-1
   <ExplainedFormula question="왜 2차인 x²−1은 일곱 위치 모두에서 0일 수 없나요?" idea="각 근의 일차 인수를 하나씩 떼면 차수가 하나씩 줄어듭니다. 차수보다 많은 서로 다른 인수의 곱이 0 아닌 다항식을 나눌 수는 없습니다." formula={String.raw`R\ne0,\ \deg R=d\quad\Longrightarrow\quad\#\{r:R(r)=0\}\le d`} annotatedFormula={String.raw`\begin{gathered}R(x)=\underbrace{(x-1)(x+1)}_{\text{두 일차 인수}}\\\{r\in\mathbb F_7:R(r)=0\}\\=\underbrace{\{1,6\}}_{\text{서로 다른 두 근}}\end{gathered}`} operations={[{expression:String.raw`x-r\mid R(x)`,annotation:["r에서 0이면 x−r로 나누었을 때 상수 나머지가 0입니다.","다른 근에서는 이미 뗀 인수가 0이 아니므로 다음 인수를 뗄 수 있습니다."]}]} terms={[{symbol:"R",name:"0 아닌 다항식",description:"모든 계수가 0인 식은 제외합니다."},{symbol:"d",name:"차수",description:"사례의 가장 높은 지수는 2입니다."},{symbol:"r",name:"근",description:"식에 넣었을 때 0이 되는 체의 값입니다."}]} assumptions={["같은 체의 다항식이며 R은 영다항식이 아닙니다.","근은 중복 횟수와 구분해 서로 다른 값의 개수를 셉니다."]} interpretation="영다항식은 모든 위치에서 0이므로 전제에서 제외합니다. x⁷−x도 F₇의 모든 위치에서 0이지만 0 아닌 7차식입니다. 차수가 체의 크기만큼 크면 일곱 근이 있다는 사실과 모순되지 않습니다." />
  </section>
  <section id="schwartz-zippel" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">13. 거짓 규칙이 무작위 검사를 통과할 확률을 셉니다</h2>
+  <ZeroCountViz />
   <p>두 규칙이 같다는 주장을 확인할 때 차이 R을 만듭니다. R=x²−1이라는 거짓 주장이라면 F₇에서 고른 한 위치가 1이나 6일 때만 0으로 보입니다. 일곱 위치를 같은 확률로 고르면 거짓 통과 확률은 2/7입니다. R을 먼저 고정하고 위치를 나중에 골라야 합니다.</p>
   <ExplainedFormula question="변수가 여러 개여도 차수로 거짓 통과를 제한할 수 있나요?" idea="한 변수에 관한 최고차항의 계수가 우연히 0이 되는 경우와, 그렇지 않아 남은 일변수 식에 근 개수 제한을 쓰는 경우를 나눕니다." formula={String.raw`R\not\equiv0,\ \deg R\le d,\ r\xleftarrow{\$}S^m\quad\Longrightarrow\quad\Pr[R(r)=0]\le\min(1,d/|S|)`} annotatedFormula={String.raw`\begin{gathered}\Pr[R(r)=0]\le\underbrace{d/|S|}_{\text{차수/후보 수}}\\R=x^2-1,\ S=\mathbb F_7\\\Pr=\underbrace{2/7}_{\text{일곱 중 두 근}}\end{gathered}`} operations={[{expression:String.raw`(d-k)/|S|+k/|S|=d/|S|`,annotation:["최고차항 계수가 사라질 확률과 남은 식의 근 확률을 합칩니다.","앞의 계수에는 변수 수에 대한 귀납을 사용합니다."]}]} terms={[{symbol:"d",name:"총차수",description:"여러 변수에서는 각 항의 지수 합 중 가장 큰 값입니다."},{symbol:"S",name:"선택할 값의 집합",description:"각 좌표를 같은 집합에서 독립·균등하게 선택합니다."},{symbol:"m",name:"변수 수",description:"R=x²−1은 1, R=xy는 2입니다."}]} assumptions={["0 아닌 R을 무작위 위치를 알기 전에 고정합니다.","모든 좌표를 독립적이고 균등하게 선택합니다. d/|S|≥1이면 유용한 작은 오류 보장이 아닙니다."]} interpretation="R(x,y)=xy를 F₇²에서 검사하면 x=0인 7쌍과 y=0인 7쌍에서 겹치는(0,0)을 빼 13/49가 통과합니다. 총차수 2의 상한 2/7=14/49보다 작습니다." />
   <p>

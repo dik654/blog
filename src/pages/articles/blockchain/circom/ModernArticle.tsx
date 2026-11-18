@@ -4,6 +4,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CircomConstraintViz from "./CircomConstraintViz";
+import ArtifactDriftViz from "./viz/ArtifactDriftViz";
+import R1csRowViz from "./viz/R1csRowViz";
 import { codeRefs } from "./codeRefs";
 import { circomTree } from "./fileTree";
 
@@ -196,6 +198,8 @@ export default function ModernCircomArticle() {
             </h2>
           </header>
 
+          <R1csRowViz />
+
           <p>
             설명을 위해 witness 순서를 <code>z=(1,a,b,out)</code>으로 놓겠습니다.
             실제 serialized 순서는 compiler가 만든 symbol·R1CS artifact에서 확인해야
@@ -385,6 +389,8 @@ export default function ModernCircomArticle() {
               </tbody>
             </table>
           </div>
+
+          <ArtifactDriftViz />
 
           <p>
             Manifest에는 compiler commit, source hash, compile flags, field, R1CS와

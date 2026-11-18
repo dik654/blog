@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import CycleRingViz from "./viz/CycleRingViz";
 
 export default function Overview() {
   return <div className="space-y-12 [&_section]:space-y-5 [&_p]:leading-8 [&_h2]:text-2xl [&_h2]:font-bold">
@@ -31,6 +32,7 @@ export default function Overview() {
     <section id="parts" data-teach-level="1">
       <h2>4. 계산 규칙에는 나머지 기준과 한 번의 이동이 함께 있습니다</h2>
       <p>이 문제를 정하려면 세 가지 질문에 답해야 합니다. 어떤 값들을 쓰는가, 한 번에 무엇을 곱하는가, 몇 번 만에 처음 값으로 돌아오는가입니다. 같은 17을 쓰더라도 3 대신 4를 곱하면 1 → 4 → 16 → 13 → 1의 네 값만 돌게 됩니다.</p>
+      <CycleRingViz />
       <p>3을 곱하는 경우에는 16번 뒤 1로 돌아옵니다. 그래서 반복 횟수 5와 21은 같은 결과 5를 만듭니다. 공개된 결과로 정수 전체에서 유일한 횟수를 찾는 문제가 아닙니다. 한 바퀴 안의 어느 위치인지 찾는 문제입니다.</p>
       <p>이 세 질문이 정해져야 찾는 답의 범위도 정해집니다. 규칙을 임의로 고를 수 없는 이유를 확인한 뒤 표준 이름을 붙이겠습니다.</p>
     </section>

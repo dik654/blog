@@ -6,6 +6,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ModernFrobeniusViz from "./viz/ModernFrobeniusViz";
+import F9CycleViz from "./viz/F9CycleViz";
+import PowLoopViz from "./viz/PowLoopViz";
+import FinalExpStepsViz from "./viz/FinalExpStepsViz";
 import { codeRefs, fileTrees } from "./codeRefs";
 
 export default function ModernFrobeniusArticle(){const sidebar=useCodeSidebar();return <article className="space-y-14">
@@ -45,6 +48,7 @@ assumptions={["소수 특성인 체에서 같은 연산을 사용합니다.","�
 <p>합성수 6의 나머지에서 같은 말을 기계적으로 적용하면 안 됩니다. (1+1)⁶의 나머지는 4인데 1⁶+1⁶의 나머지는 2입니다. 앞 증명에서 어떤 수를 특성인 소수 p로 두었는지가 실제 조건입니다.</p>
 </section>
 <section id="cycle" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">8. 두 번 돌아오는 이유와 먼저 고정되는 값을 구분합니다</h2>
+<F9CycleViz />
 <p>F₃의 a와 b는 세제곱해도 그대로입니다. u³=2u이므로 φ(a+bu)=a+2bu입니다. 다시 적용하면 a+4bu=a+bu입니다. 같은 x는 1+u→1+2u→1+u의 순서로 돌아옵니다.</p>
 <ExplainedFormula question="확장 차수 k와 원복 횟수는 어떤 관계인가요?" idea="0 아닌 원소는 크기 pᵏ−1의 곱셈군에 들어 있으므로 pᵏ−1제곱이 1입니다. 0도 따로 확인하면 모든 값의 pᵏ제곱이 자기 자신입니다."
 formula={String.raw`\varphi^j(x)=x^{p^j},\quad\varphi^k(x)=x`}
@@ -81,6 +85,7 @@ assumptions={["모든 행렬과 좌표의 계산은 mod 3입니다.","새 기저
 <div id="paper-arkworks-frobenius-source"><CitationBlock source="arkworks algebra · 7ad88c46 · Frobenius의 층별 호출" citeKey={1} href="https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/quadratic_extension.rs">고정 원문의 아래 계수 호출과 표의 선택에 작은 사례를 넣어 실제 실행했습니다. Fq12의 degree 12와 power mod 12는 별도 모델 파일에서 확인합니다. 구체 상수는 같은 commit의 곡선 설정과 함께 사용합니다.</CitationBlock></div>
 </section>
 <section id="why-free" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">11. 줄어든 것은 일반 거듭제곱이며 남은 일도 있습니다</h2>
+<PowLoopViz />
 <p>원문의 일반 pow는 결과를 1로 시작하고 지수의 첫 1비트부터 읽습니다. 비트마다 한 번 제곱하고 그 비트가 1이면 입력을 곱합니다. 지수 3은 이진수 11이므로 코드에 적힌 순서로는 제곱 두 번과 곱 두 번입니다. 처음 1을 처리하는 단순한 연산도 이 장부에 포함됩니다.</p>
 <CodeViewButton label="원본 일반 거듭제곱 반복 · 319–330행" onClick={()=>sidebar.open("pow",codeRefs.pow)} />
 <p>큰 BN254의 바탕 소수 p는 254비트이고 1비트가 111개입니다. 같은 반복문은 코드 수준에서 제곱 254회와 곱 111회를 호출합니다. 이는 기계어 명령 수나 실측 시간 비율이 아닙니다. 컴파일러와 아래층의 제곱·곱셈 구현 비용은 별도로 봐야 합니다.</p>
@@ -104,6 +109,7 @@ annotatedFormula={String.raw`\begin{gathered}p^{12}-1=(p^6-1)(p^6+1)\\p^6+1=(p^2
 operations={[{expression:String.raw`a=\varphi^6(x)\,x^{-1}`,annotation:["첫 인수 p⁶−1을 켤레와 한 번의 역원으로 처리합니다."]},{expression:String.raw`b=\varphi^2(a)\,a`,annotation:["둘째 인수 p²+1을 p²제곱과 곱으로 처리합니다."]},{expression:String.raw`b^H`,annotation:["남은 hard part는 따로 거듭제곱해야 합니다."]}]}
 terms={[{symbol:"E",name:"전체 마지막 지수",description:"(p¹²−1)/r입니다. 값의 크기를 기준량으로 나누는 비율 해석이 아니라 정수 지수의 분해입니다."},{symbol:"H",name:"남은 지수",description:"r이 p⁴−p²+1을 나누므로 정수입니다."}]}
 assumptions={["대상은 차수 12이며 r이 해당 cyclotomic 인수를 나누는 구성입니다.","입력은 0이 아니며 기저와 Frobenius 표가 맞습니다."]} interpretation="Frobenius는 p의 거듭제곱 부분을 빠르게 처리합니다. 남은 H와 전체 페어링 계산을 없애지는 않습니다." />
+<FinalExpStepsViz />
 <p>첫 인수를 처리한 a는 앞 절의 y처럼 노름 1입니다. 이후 거듭제곱과 곱으로 만든 값에도 그 성질이 유지되어 역원을 켤레로 바꿀 수 있습니다. 제곱 최적화에도 부분군 조건을 사용하므로 임의의 Fq12 값에 전용 함수를 무조건 적용하면 안 됩니다.</p>
 <div id="paper-final-exponentiation"><CitationBlock source="Scott et al. · On the final exponentiation · §§3,5" citeKey={2} href="https://eprint.iacr.org/2008/490">원문 3절의 세 인수와 노름 1 조건, 5절의 BN 매개변수와 지수 계수를 읽었습니다. 작은 x의 노름 변환과 다음 절의 실제 BN254 지수에 적용합니다. 논문의 특정 연산 장부나 당시 속도 개선율을 현재 기기의 측정값으로 사용하지 않습니다.</CitationBlock></div>
 </section>

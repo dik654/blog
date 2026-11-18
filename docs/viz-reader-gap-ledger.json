@@ -7475,202 +7475,359 @@
 {
 "route": "blockchain/reth-trie",
 "publicPath": "cs/blockchain/reth-trie",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 6,
+"articleIssues": [
+"reth-trie/OverviewData.ts, StateRootData.ts, PrefixSetData.ts, ParallelData.ts and the existing reth-trie/viz/* files (ContextViz, PrefixSetDetailViz, TrieCalculationViz) are not imported by any rendered section; they look like dead code (not edited)."
+]
 },
 {
 "route": "blockchain/reth-txpool",
 "publicPath": "cs/blockchain/reth-txpool",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"The existing RethTxpoolLifecycleViz note says 'base fee 42→20.5 gwei', but 20.5 gwei appears nowhere in the article prose.",
+"The ordering section's grid and lifecycle scene list Alice T7 as an exposed independent head next to Bob T4, but the classification example places T7 in BaseFee (40 < 42 gwei). BaseFee is not Pending, so the ordering example assumes a base-fee drop that the prose never states.",
+"Only ModernArticle.tsx is rendered; Overview.tsx, Validation.tsx, Subpool.tsx, Ordering.tsx and the older viz files (TxPoolViz, SubpoolDetailViz, etc.) appear unused (not edited)."
+]
 },
 {
 "route": "blockchain/reth-txpool-validation",
 "publicPath": "cs/blockchain/reth-txpool-validation",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"#baseline paragraph uses T7/T8 and the subpool names BaseFee/Pending before the article introduces them. Alice T7/T8 first appear in #experiment item 02, and subpools are never defined in prose. The new Viz explains them where first used, but the prose order is unchanged.",
+"Experiment 03 does not say whether a replacement exactly at the bump boundary is accepted. The Viz keeps this undetermined and does not assert it."
+]
 },
 {
 "route": "cloud/aws-clf-c02-fast-study",
 "publicPath": "cs/cloud/aws-clf-c02-fast-study",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"The shared template CloudCertificationArticle.tsx already had the optional sectionLead prop. I used it without modifying the template.",
+"§9 says Network ACL is a '양방향 규칙' without explaining stateless versus stateful. The Viz adds the definition, but the prose leaves the term unexplained."
+]
 },
 {
 "route": "cloud/aws-developer-cloudops-paths",
 "publicPath": "cs/cloud/aws-developer-cloudops-paths",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"The cloudEngineeringDepth.ts sources list for this article cites the DVA 'developer-associate-02' guide (checked 2026-10-08), while the prose says new candidates should use DVA-C03. This may be a stale source; not edited.",
+"The 5-minute detection and 10-minute rollback targets in §3 do not say their starting point (from deployment or from detection); the Viz leaves this open."
+]
 },
 {
 "route": "cloud/aws-saa-c03-fast-study",
 "publicPath": "cs/cloud/aws-saa-c03-fast-study",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 5,
+"articleIssues": [
+"The NumericPath in §3 labels the targets 'RPO 15분' and 'RTO 60분', but the article never defines RPO or RTO. The new timeline Viz now defines them, but the prose and data still do not."
+]
 },
 {
 "route": "cloud/azure-ai200-fast-study",
 "publicPath": "cs/cloud/azure-ai200-fast-study",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"§3: in '이 가운데 문서 갱신 5건', it is unclear whether the 5 updates are part of the 40 cache misses or of all 100 requests. The NumericPath card shows 100→60→40→5 as one chain. Because of this ambiguity I did not draw a split Viz for this section.",
+"sources[0].href points to study-guides/ab-200, but the AI-200 entry in cloudEngineeringDepth.ts uses study-guides/ai-200. One of the two links is probably a typo."
+]
 },
 {
 "route": "cloud/azure-architect-devops-paths",
 "publicPath": "cs/cloud/azure-architect-devops-paths",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"§1 frames this as a structure-versus-delivery split, but section 8's AZ-305 weights and the examScope card group them differently. That is not an error. No factual errors found, but I did not check the AZ-305/AZ-400 weights against the official guides."
+]
 },
 {
 "route": "cloud/azure-az104-fast-study",
 "publicPath": "cs/cloud/azure-az104-fast-study",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3
 },
 {
 "route": "cloud/azure-az900-fast-study",
 "publicPath": "cs/cloud/azure-az900-fast-study",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 2
 },
 {
 "route": "cloud/cloud-certification-roadmap-2026",
 "publicPath": "cs/cloud/cloud-certification-roadmap-2026",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 1,
+"articleIssues": [
+"Section 3 says '평일 1시간과 주말 5시간씩 네 주, 모두 40시간'. The 40 hours only works if 5 hours is the weekend total (4 × (5×1 + 5) = 40). If '씩' means 5 hours per weekend day, the total is 4 × (5 + 10) = 60. The wording is ambiguous."
+]
 },
 {
 "route": "cloud/cloud-compute-selection",
 "publicPath": "cs/cloud/cloud-compute-selection",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 2
 },
 {
 "route": "cloud/cloud-foundations-responsibility-regions",
 "publicPath": "cs/cloud/cloud-foundations-responsibility-regions",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"4절('건물 하나의 고장과 지역 전체의 고장')은 장애 범위를 다루는데, 공유 템플릿이 이 절('picture') 뒤에 '운영 부담에 맞는 서비스 층' DecisionMatrix를 렌더해 절 주제와 맞지 않습니다. 이 결정표는 내용상 5절에 더 가깝습니다(템플릿 배치 문제이며 수정하지 않았습니다)."
+]
 },
 {
 "route": "cloud/cloud-identity-access-hierarchy",
 "publicPath": "cs/cloud/cloud-identity-access-hierarchy",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"3절의 비교('사람별 부여 36결정' 대 '역할 묶음 3개')에서 역할을 쓰더라도 사람-역할 멤버십 결정은 여전히 남습니다. 본문이 이 점을 말하지 않아 비교가 과장되어 읽힐 수 있습니다(오류라기보다 단순화)."
+]
 },
 {
 "route": "cloud/cloud-networking-request-path",
 "publicPath": "cs/cloud/cloud-networking-request-path",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"numericCase.title uses '10.0.0.0/24' without explaining the /24 notation. Prose and NumericPath give only '256개', so a reader who has never seen CIDR cannot connect /24 to 256.",
+"The overview says some clients received a public address and others a private one, but no section later comes back to explain that symptom. The #source lab block (Private Endpoint public vs private IP) is the closest tie-in."
+]
 },
 {
 "route": "cloud/cloud-reliability-observability-iac",
 "publicPath": "cs/cloud/cloud-reliability-observability-iac",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"The overview's 47-minute outage and the case section's RTO of 60 minutes are both (가정), but the article never relates them. A reader may wonder whether 47 minutes met the target. I did not draw any relation, because the article gives none."
+]
 },
 {
 "route": "cloud/cloud-storage-database-selection",
 "publicPath": "cs/cloud/cloud-storage-database-selection",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 4
 },
 {
 "route": "crypto/binary-field-proving",
 "publicPath": "cs/crypto/binary-field-proving",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 7
 },
 {
 "route": "crypto/bulletproofs",
 "publicPath": "cs/crypto/bulletproofs",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3
 },
 {
 "route": "crypto/circom",
 "publicPath": "cs/crypto/circom",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 2
 },
 {
 "route": "crypto/constraint-systems",
 "publicPath": "cs/crypto/constraint-systems",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3
 },
 {
 "route": "crypto/crt",
 "publicPath": "cs/crypto/crt",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 4,
+"articleIssues": [
+"Not an error in the rendered article: crt/CryptoUsage.tsx, Overview.tsx and NumericalExample.tsx are not imported by ModernArticle.tsx. CryptoUsage.tsx still says 'RSA … 속도 약 4배 향상', which contradicts §12 ('항상 정확히 네 배 빠르다는 결론은 나오지 않습니다') if it is ever re-rendered. The same applies to the unused constraint-systems/Overview, R1CS, QAP and R1CSGadgets files."
+]
 },
 {
 "route": "crypto/crypto-primitives",
 "publicPath": "cs/crypto/crypto-primitives",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 4
 },
 {
 "route": "crypto/csprng",
 "publicPath": "cs/crypto/csprng",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 5,
+"articleIssues": [
+"§9: the truncated hashes '1d6c5843…c4264db' and '7b8ea210…a984918' end in 7 hex characters, an odd number of nibbles. This may be a truncation slip. I copied them into the Viz exactly as written."
+]
 },
 {
 "route": "crypto/discrete-log",
 "publicPath": "cs/crypto/discrete-log",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"The route key crypto/discrete-log is served from src/pages/articles/blockchain/discrete-log.tsx and blockchain/discrete-log/. No src/pages/articles/crypto/discrete-log file exists. I edited the blockchain/ files.",
+"The shared crypto-foundations-viz 'bsgs-grid' and 'power-cycle' captions use a lowercase y and the English words order/generator, while the prose uses Y and 위수/생성원. This is minor terminology drift and I did not edit that file."
+]
 },
 {
 "route": "crypto/elliptic-curves",
 "publicPath": "cs/crypto/elliptic-curves",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"§18 ReviewPrompts says '(답: 10절)' for whether (3,8,2) and (5,1,1) are different points. The comparison and normalization of those two triples are in §9 (#jacobian); §10 normalizes (7,7,2) instead.",
+"The route key crypto/elliptic-curves is served from src/pages/articles/blockchain/elliptic-curves.tsx and blockchain/elliptic-curves/ModernArticle.tsx. No src/pages/articles/crypto/elliptic-curves file exists."
+]
 },
 {
 "route": "crypto/extension-field-theory",
 "publicPath": "cs/crypto/extension-field-theory",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3
 },
 {
 "route": "crypto/extension-fields",
 "publicPath": "cs/crypto/extension-fields",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3
 },
 {
 "route": "crypto/fft",
 "publicPath": "cs/crypto/fft",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"Article files are at src/pages/articles/blockchain/fft/ (route registered in src/content/blockchain/articlesZkpMath.ts), not src/pages/articles/crypto/fft as the task stated.",
+"No prose errors found: recomputed f(4)=313→7, f(−4)=−215→6, the butterfly trace, INTT [4,8,12,16]×13 and the length-2 product [2,2]. All match."
+]
 },
 {
 "route": "crypto/field-arithmetic",
 "publicPath": "cs/crypto/field-arithmetic",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"Article files are at src/pages/articles/blockchain/field-arithmetic/ (route via src/content/blockchain/articlesZkpMath.ts), not src/pages/articles/crypto/field-arithmetic.",
+"No prose errors found: recomputed 7→3, 5→7, REDC(21)=15 (m=27, 480/32), enter/leave traces (m=4, 12, 15), mixed-input REDC(49)=1→8 and T=1088→17. All match.",
+"Unused legacy viz files remain in both viz directories (not imported by ModernArticle). Left untouched."
+]
 },
 {
 "route": "crypto/finite-field-theory",
 "publicPath": "cs/crypto/finite-field-theory",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3
 },
 {
 "route": "crypto/fri",
 "publicPath": "cs/crypto/fri",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 2
 },
 {
 "route": "crypto/frobenius-optimization",
 "publicPath": "cs/crypto/frobenius-optimization",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3
 },
 {
 "route": "crypto/groth16",
 "publicPath": "cs/crypto/groth16",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 4
 },
 {
 "route": "crypto/halo2",
 "publicPath": "cs/crypto/halo2",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 1
 },
 {
 "route": "crypto/hash-theory",
 "publicPath": "cs/crypto/hash-theory",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 5
 },
 {
 "route": "crypto/hyperplonk",
 "publicPath": "cs/crypto/hyperplonk",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"The existing HyperPlonkZeroCheckViz scene 3 writes the gate as f(x)=q·X(x)⁵−Y(x), while the article prose and formula use q_L·W_1⁵−W_2. The notation is inconsistent but means the same thing (not edited)."
+]
 },
 {
 "route": "crypto/jolt",
 "publicPath": "cs/crypto/jolt",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 3,
+"articleIssues": [
+"The article is wired as blockchain/jolt.tsx, which renders jolt/ModernArticle.tsx. Overview.tsx and Sumcheck.tsx and their Data and Annotations files in the same directory are not rendered by this route. I read them but did not add Viz to them.",
+"Spaces are missing in the prose: '축약 메모리는[0,3,4,0]에서[0,3,4,7]로', 'to_lookup_output은x.wrapping_add', and 'commit47130f3' in the CitationBlock sources.",
+"The existing ZkCaseDiagram title '같은레지스터읽기와쓰기' has no spaces. It also says 레지스터 where the surrounding prose says 저장 위치."
+]
 },
 {
 "route": "crypto/karatsuba",
 "publicPath": "cs/crypto/karatsuba",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 4
 },
 {
 "route": "crypto/lagrange",
 "publicPath": "cs/crypto/lagrange",
-"status": "todo"
+"status": "done",
+"round": 21,
+"vizAdded": 2
 },
 {
 "route": "crypto/libiop",
@@ -9733,6 +9890,64 @@
 "One gap I did not fix in the Viz because it comes from the article itself. UnwindOrderViz follows the article's 5-stage #unwind cards. The v2.8.1 order table in #order lists more stages after Merkle execute (Transaction Lookup, Storage/Account History, Prune, Finish), and a real reverse unwind would start from those, not from Merkle. Scene 02's note hedges with '다섯 stage 중', but making the table and the cards agree needs a prose change.",
 "Desktop screenshots show the long scene notes cut off at the sticky control row. This is the intended scrolling canvas from src/index.css (canvas overflow-y:auto, sticky controls), the same for every Viz, and not a defect in these files. The scene-shot run reported stable controls and frame and overflow 0 at both 390px and 1440px.",
 "Checks: `npm run -s audit:viz -- --strict` on RangeParityViz.tsx gave 0 ERROR lines and 6 REVIEW lines for SVG text. Scene-shot results: rangeparity, commitcrash and unwind each had controlY/frameH constant across scenes, overflow 0 and 0 console errors. Screenshots are in /tmp/viz-rounds/r20/rv16/{rangeparity,commitcrash,unwind}/."
+],
+"21": [
+"The ArtifactDriftViz 'public [out]' node has no incoming arrow, and the 'source만 바뀌면' scene does not say whether the schema stays valid after a source edit. The article does not say either, so I left it unmarked rather than invent a claim.",
+"In the last R1csRowViz scene, the column names (out, a, b) for the real witness [1,12,3,4] are inferred from the values (12=out, 3=a, 4=b). The article says only that the witness was [1,12,3,4]. The note already hedges that the coefficient placement is assumed. Confirming the real order needs the .sym output, which is outside this review.",
+"Checks run: audit:viz --strict gave 0 ERROR lines (10 REVIEW-level SVG text notices only). viz-scene-shot ran for /cs/crypto/bulletproofs and /cs/crypto/circom at 390 and 1440. Control Y and frame height were constant across all scenes, overflow was 0 and console errors were 0. Screenshots are in /tmp/viz-rounds/r21/rv9/{bulletproofs,circom}.",
+"ExamPathViz: the Azure scene draws AZ-900 → AZ-400 (DevOps) as one dotted 'continues' link, with no prerequisite shown. The Microsoft DevOps Engineer Expert certification is generally understood to also need an associate prerequisite (AZ-104 or the retired AZ-204's associate cert). The article does not say this, so I did not add it. It needs an official-source check and possibly a prose change in section 6 or 9.",
+"Checks passed for all three files: audit:viz --strict has 0 ERROR lines (only REVIEW notes on SVG text, checked in the screenshots). viz-scene-shot at 390 and 1440 px shows stable controlY and frameH in every scene, overflow 0, console errors 0, docScrollW equal to the viewport. Screenshots are in /tmp/viz-rounds/r21/rv5/cloud-certification-roadmap-2026 and /tmp/viz-rounds/r21/rv5/cloud-compute-selection.",
+"ConnectionPathViz title '네 연결은 출발점과 지나는 길이 다릅니다': VPN Gateway and ExpressRoute both start at '회사 망 (가정)', and every starting point is an assumption. So the 'different starting points' half of the title is not strictly true for all four. I counted this as polish and left the title alone. A retitle such as '네 연결은 지나는 길이 다릅니다' would remove it.",
+"ConnectionPathViz relies on two short definitions the article does not state: VPN Gateway's tunnel runs over the public internet, and ExpressRoute skips the public internet (article 9절 only says '암호화된 터널' and '통신사 기반 사설 연결'). They are standard Azure facts and the file's doc comment labels them as definitions. If the article should be the only source, a prose addition is needed. I did not change this.",
+"AvailabilityPlacementViz defines fault and update domains ('전원과 네트워크 스위치를 함께 쓰는 하드웨어 묶음' / '계획된 유지 관리 때 함께 재시작되는 묶음') using outside facts; the article only names them. They are correct by Microsoft docs, but the article prose does not contain them.",
+"Checks passed: npm run -s audit:viz -- --strict reported no ERROR lines on all 7 files (both SceneShell copies plus the 5 Viz). viz-scene-shot showed controlY and frameH constant across every scene at 390 and 1440, overflow 0, console errors 0, and docScrollW equal to the viewport. Screenshots are in /tmp/viz-rounds/r21/rv4/azure-az900-fast-study and /tmp/viz-rounds/r21/rv4/azure-az104-fast-study.",
+"Numbers and facts verified against azureData.ts and cloudEngineeringDepth.ts: 10+10=20 resources (dev/prod); 8+4=12 (web/data); Contributor and Reader come from the 유효 권한 term example; 10.20.1.7, 52.1.2.3 and 10.20.1.0/24 VirtualNetwork come from the azureAz104Depth example output (marked as not measured); Policy at management group for the region deny comes from 7절; two zones come from 3절.",
+"InOutPathMapViz scene 4 (polish, left unchanged): the ✕ for an outside-initiated connection sits on the edge from outside to the relay, but the claim being made is that the relay does not forward that connection inward to the app. The scene summary '바깥 → 출구 중계 → 앱 ✕' makes this clear enough, so I did not redraw the edge.",
+"PrivateEndpointDnsViz (polish, left unchanged): the arrows run from the DNS box to each endpoint, which simplifies 'the client connects to the address it resolved'. The boxes are labelled '이름 조회 / DNS', the article uses the same 'name points to address' framing, and the numbers 10.20.1.7, 52.1.2.3, connect=0.021/5.001 and total=0.084/5.001 match the 8절 example output exactly.",
+"Checked and found correct: the 0–127 / 128–255 split and .140 sitting in the back zone; the timeline coordinates for 11:30–14:15; 1,440 = 96 × 15; 12:00 + 120 min = 14:00, which is 60 min past 13:00; 4/20 = 20% with the picked request #11 among the failed ones; and the order 지표 → 추적 → 로그, which matches the algorithm step.",
+"Verification: audit:viz --strict passed on both changed files with no ERROR lines. viz-scene-shot ran at 390 and 1440 for all 6 Viz: controls and frame did not move between scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r21/rv7/cloud-networking-request-path and /tmp/viz-rounds/r21/rv7/cloud-reliability-observability-iac.",
+"StorageNestViz scene 4: the note also mentions account deletion, which removes the leaf rather than changing its storage-root field. The figure shows only the storage wipe, and the added sentence names that case explicitly. Drawing account deletion separately would need facts beyond what the article says.",
+"BestHeadsViz scene 2 glosses effective tip as '블록 생산자에게 돌아가는 거래당 몫'. The article uses 'effective tip' without defining it. I left this as a standard definition; whether to define it in the prose is a prose decision.",
+"ExpertPrereqMapViz states 'AZ-104 → Administrator Associate' and 'AZ-204 → Developer Associate' in its description and diagram. The article implies these links (\"AZ-104 실습과 자격\", \"Expert 자격에는 AZ-104 등 선행 Associate 자격\") but never states them outright. They are correct Microsoft facts. If strict article-only sourcing is required, the article prose should add one sentence; I did not edit the prose.",
+"Checked with no change needed: SyncWaitViz 40 − 3 = 37 s and axis sx (8px/s); TraceJoinViz 7450/8100 = 92%, normal 820/120/640 and failure 8100/7450 with no model line, matching cloudEngineeringDepth.ts azureAi200Depth.normal/failure; polyline endpoints match t-42 cells; CanaryStepViz 10 cells of 100 = 10%, 90 old; TwoRegionsOneDeployViz scene states match 1절. Audit: 0 ERROR lines on the changed files. Scene shots at 390/1440: controlY/frameH stable across all scenes, overflow 0, console errors 0 (/tmp/viz-rounds/r21/rv3/azure-ai200-fast-study, /tmp/viz-rounds/r21/rv3/azure-architect-devops-paths).",
+"ReplacementBumpViz shows a single '수수료' axis. Reth's real price-bump check applies the percentage to both max fee and priority fee, so the picture simplifies it. The Viz already marks the fee 10 / bump 10% values as assumptions and points to PriceBumpConfig, but saying both fee fields are checked would need an outside fact the article does not state. I left it unchanged.",
+"CostToolTimelineViz shows Cost Explorer only on the 'past months' cells, following the article's '이미 생긴 비용과 사용 추세'. In reality Cost Explorer also shows the current month and forecasts. Showing that would add an outside fact, so I left it unchanged.",
+"audit:viz --strict on the changed file reports only REVIEW items (SVG text), no ERROR. The screenshot script ran on both articles. Both widths (390 and 1440) show stable control Y and frame height across scenes, overflow 0 and console errors 0. On mobile, notes scroll inside the canvas, which the standard allows. Screenshots are in /tmp/viz-rounds/r21/rv1/aws-clf-c02-fast-study and /tmp/viz-rounds/r21/rv1/reth-txpool-validation.",
+"MessagingDirectionViz SQS scene (not changed): the chips read 1,2,3 left to right, so 3 sits next to the consumer, while the Kinesis scene reads 4,3,2,1 with 1 next to the consumer. Side by side, a reader could take SQS to hand out the newest message first. The article only says Kinesis '순서 있는 스트림 처리에 맞습니다' and says nothing about SQS ordering. Picking an order for SQS would need an outside fact, so I left it.",
+"All 8 Viz were checked against awsData.ts. QueueBurst backlog: 0,0,6,12,9,6,3,0; 26 in, 26 out; under first-in-first-out the last job from slot 4 is done in slot 7, a 3-slot wait. VerbTally counts are 13:7 and 10:10. RPO example: 30 − 15 = 15 minutes over. The section references (4절 decision table, 6절 term examples) are correct. No other wrong facts were found.",
+"Checks: audit:viz --strict on the two changed files gave 0 ERROR lines. Scene shots at 390px and 1440px for both articles (/tmp/viz-rounds/r21/rv2/aws-saa-c03-fast-study and /tmp/viz-rounds/r21/rv2/aws-developer-cloudops-paths) kept controls and frame stable in every scene, with overflow 0 and console errors 0.",
+"AzureOverlayViz scene '역할을 붙이는 자리': the note and caption say a role assignment ties '주체 + 역할 정의 + 범위' together, but nothing in the picture stands for the role definition. Only the principal (그룹) and the scopes ①–④ are drawn. Adding a role-definition element would need a layout change beyond a review fix, so I left it.",
+"AzureOverlayViz scene 0: the caption says each subscription is linked to one tenant (article: '한 테넌트와 연결됩니다'), but no line or arrow connects the subscriptions to the tenant box. The link appears only in text. I left this as is.",
+"No wrong-fact errors found. I rechecked all the arithmetic: 80/50=1.6→2 (capacity 100, 20 spare); 260/50=5.2→6 (capacity 300, 40 spare); 4 servers idle; 8/4/1/8 resources reached; the gate order matches the 7절 algorithm (자격→상위 경계→명시적 거부→명시적 허용→감사).",
+"Checks after the fixes: audit:viz --strict shows no ERROR lines, only 9 REVIEW notes about SVG text in FailureScopeViz, and the screenshots show no overflow. viz-scene-shot for all 6 Viz at 390px and 1440px: control row Y and frame height identical across every scene, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r21/rv6/cloud-foundations-responsibility-regions and /tmp/viz-rounds/r21/rv6/cloud-identity-access-hierarchy.",
+"RedundancyScopeViz description defines 가용 영역 as '한 지역 안에서 전원·냉각·네트워크를 따로 쓰는 데이터센터 묶음'. The article uses the term without defining it, so this definition comes from outside the article. It matches the definitions AWS and Azure publish, so I kept it. If only article-sourced claims are allowed, the article prose needs to define it.",
+"WeightedErrorViz and the article both use 'zerocheck' without defining it. The note follows the article's wording ('실제 zerocheck는 … sumcheck로 줄이고'), so defining it is a prose change.",
+"Checked and found correct: F16 Fan–Paar arithmetic (11×6=15, 13×6=5, the roots of t²+t are only 0 and 1, u²+u=1), eq weights 15/10/12/8 and 15⊕10=5, the MLE corner values, the carry chain for 11+6=17, the 2GB/200KB = 10,000 → 100:1 side ratio, and the redundancy-scope copy and failure geometry. Scene-shot: frame and controls stable, overflow 0 and console errors 0 on all 11 Viz at 390 and 1440. Audit after the fixes: 0 ERROR lines. Unfixed cosmetic issues: in SumcheckFoldViz the dashed square outline shows through the translucent dots, and in AccessUnitViz the 거래 bracket ends at y=148 while the 결제 row ends at y=156. Neither changes how the figure reads.",
+"Checked and left as is: the numbers in all seven Viz match the article. Pedersen: r=(c−v)·10 mod 19 gives 4 for v=3 and 3 for v=5, both landing on cell 11. Toy round: 4³≡13, 6³≡12, (13,12)→(3,2) and (13,6)→(8,12) mod 17. MinEntropy: 1/8→3 bits, 1/2→1 bit, 1/256→8 bits. HMAC_DRBG: the Update and generate steps follow the order in the article's AlgorithmBlock. The PedersenHidingViz, SeedCandidatesViz, MinEntropySplitViz, StateCompromiseViz and both SceneShell.tsx files have no confirmed defects.",
+"Minor, not changed: in the '균등한 8비트 seed' scene of MinEntropySplitViz, the blue pmax cell is about 1/256 of the bar and barely visible. The label 'pmax 1/256' and the stat tile carry the reading, so a reader is unlikely to be confused.",
+"Verification: audit:viz --strict passed for the 3 changed files. viz-scene-shot ran at 390 and 1440 for all 7 Viz in /cs/crypto/crypto-primitives and /cs/crypto/csprng. Control Y and frame height were constant across scenes, overflow was 0 and there were 0 console errors. Screenshots are in /tmp/viz-rounds/r21/rv11/{crypto-primitives,csprng}.",
+"I recomputed every number and found nothing wrong. constraint-systems: A·z, B·z and C·z give 3,4,12 and 16,1,16, and the output-15 case gives 16·1−15=1. A(X)=13X+7, B(X)=−3X+7 and C(X)=4X+8 hit the row values at X=1 and X=2. (13X+7)(−3X+7)−(4X+8) ≡ 12X²+15X+7 ≡ 12(X−1)(X−2) mod 17. The output-15 line 3X+9 gives C(1)=12 and C(2)=15, and the value at X=2 is 1. The Nova permutation (1,3,16,4,12)→(4,12,3,16,1) and where the coefficients move both match section 9's prose. crt: the residues of 35, 70, 21, 15, 140, 63, 30, 233 and 23 are correct. The candidates 2, 9, 16, 23, 30 leave remainders 2, 4, 1, 3, 0 mod 5, and h=3. The meets 14, 32, 50 are 18 apart. The fault run gives h=1, m=9, 9^5 mod 35=4 and gcd(−14,35)=7.",
+"QAPPointsViz scene 4 (output 15) uses C(X)=3X+9. Section 8's prose does not state this; it follows from section 7's output-15 case. The arithmetic is correct and I left it unchanged.",
+"Audit (strict): 0 ERROR lines. Screenshots for all 7 Viz at 390px and 1440px: controls and frame stable across scenes, overflow 0, console errors 0. Output is in /tmp/viz-rounds/r21/rv10/constraint-systems and /tmp/viz-rounds/r21/rv10/crt.",
+"Checked with no problems found. InversePairs: I worked out every u²=2 inverse (u·2u=2u²=4≡1; (1+u)(2+u)=2+3u+2≡1; (1+2u)(2+2u)=2+6u+8≡1; 1·1 and 2·2). For u²=1, the four 1±u-type cells have no inverse, and [2,1]·[1,1]=u²−1=0, matching §5 and §14. FrobeniusMirror: φ(a+bu)=a+2bu per §11, the six b≠0 cells differ under the [1,1] table per §14, and the line drawn between rows b=1 and b=2 is correct. PowerWalk: u→u,2,2u,1 and v→1+u,2u,1+2u,2,2+2u,u,2+u,1, matching §13 (v²=2u, v⁴=2, v⁸=1). Fp6Fold: the slots [ad+ξ(ce+bf), ae+bd+ξcf, af+be+cd] equal the source's x=ce+bf, and (1+3u)(9+u)=9+28u+3u²=6+28u with u²=−1, per §3 and §10. VShift: v·(C0+C1v+C2v²)=[ξC2,C0,C1], and [0,6+28u,0]→[0,0,6+28u] per §11. ByteLayout: in ark, bytes 128=4×32 and 160=5×32 are the first little-endian bytes of v² and uv². In EIP-197, 6+28u = 28·i+6, so a=28 goes in bytes 0–31 (last byte 31) and b=6 in bytes 32–63 (last byte 63), per §14.",
+"Polish not fixed because the cause is outside the Viz: in VShiftViz, the subscript digits in C₀/C₁/C₂ fall back to a different font, so C₀ looks lower than C₁. It is readable and the meaning is unchanged.",
+"All numbers were recomputed and found correct, so nothing was changed for facts. MultiplyMap: 3·{0..6} mod 7 = {0,3,6,2,5,1,4}, a bijection with 5→1; 2·i mod 8 never gives 1,3,5,7; 2×1 ≡ 2×5 ≡ 2. PowerCycle: ring order is 3^k = 1,3,2,6,4,5; 2 = 3², so ×2 is two steps; orbit of 2 is {1,2,4}. ZeroCount: the zeros of x²−1 mod 7 are {1,6}; xy has 13 zero cells out of 49, against the bound 14/49. FoldTable: f(4)=10 and f(13)=11; folding with β=5 gives g(T)=T+13 and the 8 cells 14,0,5,12,4,15,11,9; folding again with β=3 gives 16 in all four cells. SamplingMiss: 0.75, 0.5625 and 0.421875 = 27/64. FoldTableViz needed no change.",
+"At 390px, ZeroCountViz scenes 2 and 3 cut their note text at the bottom of the fixed-height stage, so it has to be scrolled inside the canvas. This is the shared SceneShell's built-in scroll for the mobile stage (overflow 0, controls stable), not a change from this round. I left it, because changing it would mean touching SceneShell or shortening the article-derived notes.",
+"The audit (audit:viz --strict) printed only REVIEW lines for SVG text and no ERROR lines. viz-scene-shot showed steady control row and frame positions across scenes at both 390 and 1440, with overflow 0 and 0 console errors. Screenshots are in /tmp/viz-rounds/r21/rv15/{ff-mult,ff-power,ff-zero,fri-fold,fri-sampling}.",
+"LimbCombineViz (no change made; not an error): The viz goes straight from line 191 to line 199 and leaves out line 194 of toom22_mul.c, `cy += mpn_add (pp + 2 * n, pp + 2 * n, n, vinf + n, s + t - n)`, which adds H(vinf) into pp[2]. The article prose (11절, \"188행 ... 191행 ... 199행\") also leaves it out. In this case H(vinf)=0, so pp[2]=672 either way and every number shown is correct. The scene-3 note still ties the layout to (B²+B)z₂, and that only holds for a z₂ that spans two limbs once line 194 has run. Adding a 194 step would need an article prose change, so I left it for the article owner.",
+"All other numbers were recomputed and are consistent with the article. Carries: 2652→26|52, 2840+26=2866→28|66, 672+28=700→7|00 = 7,006,652. Counterexample: 672·10⁴−1760·100+2652 = 6,546,652, short by 460,000 = 4600×100. Limbs: 0+672=672, 672+2652=3324, 3324−484=2840. Recursion levels: 8, 12, 18, 27 versus 8²=64. Cost ratio 3/4+4/n: 1.25, 1, 0.875 at n=8/16/32 (80/64, 256/256, 896/1024). Lagrange at input 3: ℓ values 1, 14, 3; products 1, 56, 27; sum 84 = 4·17+16. SamePoints: L+Z_H at x=3 is (16+6) mod 17 = 5; Z_H is 0, 0, 0, 6 at x=0..3.",
+"Checks: audit:viz --strict on the changed file reported no ERROR lines. viz-scene-shot ran on /cs/crypto/karatsuba and /cs/crypto/lagrange at 390px and 1440px. Control Y and frame height stayed constant across scenes, overflow was 0 and console errors were 0. Screenshots are in /tmp/viz-rounds/r21/rv19/karatsuba and /tmp/viz-rounds/r21/rv19/lagrange.",
+"I recomputed every number and found none wrong. MleOutsidePointViz: χ(2,3)=(2,−3,−4,6); the products are 6, −12, −48, 6, summing to −48, which is 3 in F17; at r=(1,0), χ=(0,0,1,0) and the value is 12. SumcheckRoundsViz: p₁=t with 0+1=1 and p₁(2)=2; p₂=2t with 0+2=2 and p₂(3)=6=g(2,3). OneHotSelectViz: reads give 3 and 4; the write gives [0,3,4,7]; [0,1,1,0] gives 7 with sum 2; [0,½,½,0] gives 3.5. TwistGammaViz: 7+2·3+4·4=29 on both sides. All of these match the article text in #multilinear, #sumcheck, #picture, #lookup-sumcheck and #artifact.",
+"The two SceneShell.tsx files are byte-identical. They keep the stable stage, and the controls do not move between scenes: controlY/frameH were constant across all scenes at 390 and 1440, overflow was 0 and there were 0 console errors.",
+"audit:viz --strict printed no ERROR lines. The remaining REVIEW items are SVG-text overflow reminders, and I checked them against the screenshots in /tmp/viz-rounds/r21/rv18/{hyperplonk,jolt}.",
+"Not changed: FinalExpStepsViz scene 3 says 'p²제곱은 Frobenius 두 번으로'. This matches the article's φ² notation (§8: 'φ 두 번은 x의 p²제곱'). In arkworks it is a single frobenius_map(2) table call. The article prose does not say which one, so the wording was left as it is.",
+"Not changed: EvalDomainViz's description says '16절의 실제 Rust 실행에서 관측한 배열'. The arrays are quoted in §17 and come from the §16 call example, so the line is accurate. Left unchanged.",
+"Checked and correct: QapLinesViz (U=9X−6, V=8X−4, W=132X−120, UV−W=72T; for w=5, V=7X−2 and UV−W=63X²−192X+132=63T−3X+6, with error 3 at X=1 and 0 at X=2), SetupSplitViz (d=(0,92,4,95,17) from τ=5, L₁(5)=−3, L₂(5)=4; ×29 gives (0,42,15); 771≡64, 584≡79, 864≡56, 6210≡49), F9CycleViz (b=1↔2 swap, b=0 row fixed), PowLoopViz (1→1→1+u→2u→1+2u, 2 squarings and 2 multiplications; 254/111). Nothing was changed in these four.",
+"Verification: audit:viz --strict passed on the 3 changed files. viz-scene-shot at 390 and 1440 for all three changed Viz and for QapLines and F9: controlY and frameH stable across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r21/rv16/.",
+"Checked by recomputing every number and found correct: PaddingBlockViz (3→52 zeros, 1 block; 55→0, 1; 56→63, 2; 64→55, 2; matches the article's 1,2,2,2,2), LengthExtensionViz (4+3+57=64; 1+63=64 because 65+1+8=74 pads to 128; 3+57+1=61; 4+61=65) and SpongeStateViz (17 rate lanes =136 B, 8 capacity lanes =64 B, lane 0 = 0000000006636261, lane 16 = 8000000000000000, 4 output lanes = 32 B, 21 lanes not output).",
+"Left as is: in LengthExtensionViz scene 3 ('이어서 계산'), block 1 (abc + original padding) is still coloured even though the attacker never recomputes it and starts from the state T. The scene's note says this, so it is borderline and was not changed.",
+"Left as is: in SpongeStateViz the description says the row-major 5-wide layout is '14절의 5×5 좌표 배치와는 별개'. Under the FIPS 202 lane index x+5y, a row-major layout actually matches x and y, apart from FIPS drawing its figure with the origin at the centre. The hedge is not wrong, so I left it.",
+"audit:viz --strict: no ERROR lines, only 9 REVIEW lines for SVG text in CopyConstraintViz, cleared by the screenshots. viz-scene-shot at 390 and 1440 for halo2, streaming and sha3-pad: controlY and frameH constant on every scene, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r21/rv17/{halo2,hash-theory}; the pre-fix baselines are in the *-pre folders."
 ]
 }
 }

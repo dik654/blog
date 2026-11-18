@@ -1,9 +1,12 @@
+import ParallelMergeViz from "./viz/ParallelMergeViz";
+
 export default function Parallel() {
   return (
     <section id="parallel" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Storage-root 병렬화는 account-root의 입력을 먼저 확정해야 한다
       </h2>
+      <ParallelMergeViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           서로 다른 contract의 storage tries는 독립적으로 계산할 수 있습니다.

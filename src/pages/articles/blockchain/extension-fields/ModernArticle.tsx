@@ -6,6 +6,9 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import TowerCaseViz from "./viz/TowerCaseViz";
+import Fp6FoldViz from "./viz/Fp6FoldViz";
+import VShiftViz from "./viz/VShiftViz";
+import ByteLayoutViz from "./viz/ByteLayoutViz";
 import { codeRefs, fileTrees } from "./codeRefs";
 
 export default function ModernArticle(){const sidebar=useCodeSidebar();return <article className="space-y-14">
@@ -67,12 +70,14 @@ assumptions={["덧셈·뺄셈과 β를 곱하는 비용은 세 번의 일반 곱
 </section>
 <section id="fp6" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">10. 가운데 곱에서는 v⁴가 v 자리로 돌아옵니다</h2>
 <p>바깥 곱셈이 호출할 두 가운데 값은 A₁=(1+u)v²와 B₁=(2+u)v²입니다. 이 둘의 곱은 (1+3u)v⁴이고 v⁴=(9+u)v이므로 (6+28u)v입니다. 이 단계에서는 아직 v²가 아닙니다. 바깥 w²를 처리할 때 v가 한 번 더 붙습니다.</p>
+<Fp6FoldViz />
 <p>일반적인 세 계수 곱에서는 차수 0부터 4까지 아홉 항이 생깁니다. v³ 항은 ξ를 곱해 상수항으로 보내고 v⁴ 항은 ξ를 곱해 v항으로 보냅니다. 이번 ξ는 9+u입니다. 항을 버리면 곱셈이 달라집니다.</p>
 <AlgorithmBlock title="같은 가운데 값에 원문의 여섯 곱을 대입하기" input={["왼쪽 계수 (d,e,f)=(0,0,1+u)","오른쪽 계수 (a,b,c)=(0,0,2+u)"]} steps={[{code:"ad=0; be=0; cf=1+3u",note:"대각선의 직접 곱 세 개입니다."},{code:"x=(e+f)(b+c)-be-cf=0",note:"v³에 모일 두 교차항을 복원합니다."},{code:"y=(d+e)(a+b)-ad-be=0",note:"v항의 교차항을 복원합니다."},{code:"z=(d+f)(a+c)-ad+be-cf=0",note:"v²항에는 가운데 직접 곱 be도 들어갑니다."},{code:"[ad+ξx, y+ξcf, z]=[0,6+28u,0]",note:"v⁴를 낮춘 항은 가운데 계수에 들어갑니다."}]} output="A₁B₁=(6+28u)v이며 여섯 곱은 Fq2 값 사이의 곱입니다." />
 <p>세 직접 곱과 세 합의 곱을 사용하므로 일반 곱셈은 여섯 번입니다. 다만 이번 입력에는 0이 많습니다. 이를 보고 항상 같은 시간만큼 빨라진다고 말할 수는 없습니다. 이 글은 일반 연산의 코드 경로를 따라가며 특정 희소 곱셈 함수를 선택한 실행이 아닙니다.</p>
 </section>
 <section id="fp12" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">11. 마지막 w²가 v를 한 번 더 곱하게 합니다</h2>
 <p>바깥 값은 A=0+A₁w와 B=0+B₁w입니다. 이차 Karatsuba 식에 넣으면 z₀=0, z₁=A₁B₁=(6+28u)v입니다. w의 계수는 합의 곱에서 z₁을 빼므로 0이고 상수 쪽은 w²=v 때문에 v·z₁입니다.</p>
+<VShiftViz />
 <p>따라서 출력은 (6+28u)v²+0w입니다. v를 곱하는 일반 규칙은 [C₀,C₁,C₂]를 [ξC₂,C₀,C₁]로 바꾸는 것입니다. 이번에는 [0,6+28u,0]을 [0,0,6+28u]로 옮깁니다. 세 계수를 그냥 순환시키기만 하면 마지막 항의 ξ를 놓칠 수 있습니다.</p>
 <p>위층의 세 번 곱셈은 Fq6 곱셈 세 번입니다. 각 곱셈이 다시 Fq2 연산을 부릅니다. 원래 Fₚ의 곱 세 번으로 전체 Fq12 계산이 끝난다는 해석은 맞지 않습니다.</p>
 </section>
@@ -107,6 +112,7 @@ assumptions={["같은 소수·기저·기약식의 표를 사용합니다.","주
 <p>실제 검증에서는 12개 기저와 A·B·출력, 총 15개 값의 빠른 사상을 직접 pow(p)와 비교했습니다. A의 여섯 번 적용 결과와 열두 번 원복도 확인했습니다. u 계수만 부호를 바꾸는 잘못된 계산은 두 번이면 돌아오므로 열두 번 원복도 통과하지만 A의 실제 p제곱과는 달랐습니다.</p>
 </section>
 <section id="wire" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">14. 같은 6+28u도 전송 규칙에 따라 순서가 달라집니다</h2>
+<ByteLayoutViz />
 <p>이번 출력은 논리 계수의 0번부터 세었을 때 4번에 6, 5번에 28이 있습니다. 실제 ark 직렬화는 아래 계수 c0부터 c1 순서로 쓰며 각 Fq는 32바이트입니다. 실행 결과의 길이는 384바이트이고 128번 바이트가 6, 160번 바이트가 28입니다. 이 작은 값들이 각 묶음 첫 바이트에 있는 것은 작은 쪽부터 쓰는 형식이기 때문입니다.</p>
 <CodeViewButton label="원본 두 계수의 직렬화 순서 · 689–700행" onClick={()=>sidebar.open("bytes",codeRefs.bytes)} />
 <p>반면 EIP-197은 Fₚ²의 a·i+b를 (a,b) 순서로 보내며 각 숫자는 32바이트의 큰 쪽부터 쓰는 형식입니다. 따라서 같은 6+28u를 그 규칙으로 적으면 28의 32바이트가 먼저, 6의 32바이트가 다음입니다. 첫 묶음의 마지막 바이트가 28이고 다음 묶음의 마지막 바이트가 6입니다.</p>

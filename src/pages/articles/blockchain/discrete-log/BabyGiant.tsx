@@ -2,11 +2,13 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import CryptoFoundationsViz from "../crypto-foundations-viz";
+import SquareMultiplyViz from "./viz/SquareMultiplyViz";
 
 export default function BabyGiant() {
   return <div className="space-y-12 [&_section]:space-y-5 [&_p]:leading-8 [&_h2]:text-2xl [&_h2]:font-bold">
     <section id="forward-cost" data-teach-level="5">
       <h2>8. 만드는 쪽은 반복 횟수의 자릿수만 따라갈 수 있습니다</h2>
+      <SquareMultiplyViz />
       <p>비밀 지수 5를 아는 사람은 3을 다섯 번 곱하지 않아도 됩니다. 5=4+1이므로 3²=9, 3⁴=13을 차례로 계산한 뒤 13×3 mod 17=5를 얻습니다. 제곱을 반복해 필요한 자릿수만 곱하면 됩니다. 다만 실제 비밀을 다루는 구현은 지수의 비트에 따라 처리 시간이나 메모리 접근이 달라지지 않게 만들어야 합니다.</p>
       <ExplainedFormula question="왜 지수의 크기보다 이진수 자릿수가 정방향 비용을 정할까요?" idea="x를 2의 거듭제곱들의 합으로 나누면 g의 연속된 제곱을 한 번씩 만들고 필요한 항만 곱할 수 있습니다." formula={String.raw`x=\sum_{i=0}^{\ell-1}b_i2^i\quad\Rightarrow\quad g^x=\prod_{i:b_i=1}g^{2^i}`} annotatedFormula={String.raw`x=\underbrace{\sum_{i=0}^{\ell-1}b_i2^i}_{\text{지수를 이진수로 분해}}\quad\Rightarrow\quad g^x=\underbrace{\prod_{i:b_i=1}g^{2^i}}_{\text{필요한 제곱만 곱함}}`} operations={[{expression:String.raw`\sum_{i=0}^{\ell-1}b_i2^i`,annotation:["지수의 각 자릿수가 기여하는 반복 횟수를 더합니다."]},{expression:String.raw`\prod_{i:b_i=1}g^{2^i}`,annotation:["1인 자릿수에 해당하는 값을 곱해 같은 결과를 만듭니다."]}]} terms={[{symbol:"bᵢ",name:"이진수 자릿값",description:"0 또는 1입니다."},{symbol:"ℓ",name:"지수의 비트 길이",description:"x가 양수일 때 floor(log₂x)+1입니다."},{symbol:"g^(2^i)",name:"연속 제곱",description:"직전 값을 제곱해 다음 값을 만듭니다."}]} assumptions={["군 연산과 같은 원소인지 비교하는 연산이 정확합니다.","비밀 지수 구현에서는 부채널 방어를 별도로 검토합니다."]} interpretation="같은 예의 x=5=101₂에서는 g와 g⁴만 곱합니다. x=13=1101₂라면 g·g⁴·g⁸입니다. 계산이 빠르다는 사실만으로 역방향의 어려움이 증명되지는 않습니다." />
       <CitationBlock source="Handbook of Applied Cryptography §3.6, pp.103–105" href="https://cacr.uwaterloo.ca/hac/about/chap3.pdf" citeKey={3}><p>이산로그의 원문 관계는 β=αˣ입니다. 여기서 α=3, β=5, x=5를 대입하면 3⁵ mod 17=5가 됩니다. 위의 이진수 분해는 같은 관계를 빠르게 계산하는 항등식입니다. 원문의 표기 α·β와 이 글의 g·Y는 각각 같은 역할입니다.</p></CitationBlock>

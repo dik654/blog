@@ -4,6 +4,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BulletproofsFlowViz from "./BulletproofsFlowViz";
+import BitRangeViz from "./viz/BitRangeViz";
+import IpaFoldViz from "./viz/IpaFoldViz";
+import ProofSizeVsWorkViz from "./viz/ProofSizeVsWorkViz";
 import { codeRefs } from "./codeRefs";
 import { bulletproofsTree } from "./fileTree";
 
@@ -91,6 +94,8 @@ export default function ModernBulletproofsArticle() {
             </h2>
           </header>
 
+          <BitRangeViz />
+
           <p>
             4의 3-bit little-endian 표현은 <code>(0,0,1)</code>입니다. 각 원소가
             정말 0 또는 1인지 확인하고, 자릿값 1·2·4를 곱해 더한 결과가 같은
@@ -101,7 +106,8 @@ export default function ModernBulletproofsArticle() {
           <ExplainedFormula
             question="3개의 secret field element가 어떻게 0부터 7까지의 integer가 되나요?"
             idea="각 원소를 bit로 제한한 뒤, 1·2·4 자릿값으로 같은 w를 복원합니다."
-            formula={String.raw`a_i(a_i-1)=0,qquad w=langlemathbf a_L,(1,2,4)angle`}
+            formula={String.raw`a_i(a_i-1)=0,qquad w=langlemathbf a_L,(1,2,4)
+angle`}
             annotatedFormula={String.raw`\underbrace{a_i(a_i-1)=0}_{\text{각 }a_i\text{는 0 또는 1}},\qquad \underbrace{w}_{\text{commitment의 같은 값}}=\underbrace{\langle\mathbf a_L,(1,2,4)\rangle}_{\text{bit에 자릿값을 곱해 합침}}`}
             operations={[
               {
@@ -171,6 +177,8 @@ export default function ModernBulletproofsArticle() {
               L과 R을 먼저 고정한 뒤 challenge로 vector 길이를 절반으로 줄입니다
             </h2>
           </header>
+
+          <IpaFoldViz />
 
           <p>
             Range proof가 만든 긴 vector relation을 그대로 보내면 proof도 길어집니다.
@@ -280,6 +288,8 @@ export default function ModernBulletproofsArticle() {
               }
             />
           </div>
+
+          <ProofSizeVsWorkViz />
 
           <p>
             논문 abstract는 n-bit range proof가 <code>2log₂(n)+9</code>개의 group과

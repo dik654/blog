@@ -6,6 +6,10 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ModernKaratsubaViz from "./viz/ModernKaratsubaViz";
+import CarryRegroupViz from "./viz/CarryRegroupViz";
+import LimbCombineViz from "./viz/LimbCombineViz";
+import RecursionLevelsViz from "./viz/RecursionLevelsViz";
+import CrossoverRatioViz from "./viz/CrossoverRatioViz";
 import { codeRefs, fileTrees } from "./codeRefs";
 
 export default function ModernKaratsubaArticle() {
@@ -73,6 +77,7 @@ interpretation="이 등식은 모든 크기의 정수에 맞습니다. 덧셈과
 {code:"z1=6164-672-2652=2840",note:"같은 자리로 들어갈 두 교차항의 합을 얻습니다."},
 {code:"result=672*10000+2840*100+2652=7006652",note:"자리 위치를 복원하고 올림을 포함해 합칩니다."}
 ]} output="7,006,652. 네 곱으로 얻은 기준 결과와 같습니다." />
+<CarryRegroupViz />
 <p>100진 자리 묶음으로도 올림을 확인할 수 있습니다. 2652에서 낮은 자리 52를 남기고 26을 가운데로 보냅니다. 가운데는 2840+26=2866이므로 66을 남기고 28을 위로 보냅니다. 위쪽 672+28=700을 다시 나누면 7과 00입니다. 높은 쪽부터 7 | 00 | 66 | 52를 읽으면 같은 답입니다.</p>
 <p>만약 56+78=134를 두 자리 34로 잘라 버리면 세 번째 곱은 46×34=1564가 됩니다. 잘못된 교차항은 1564−672−2652=−1760이고 최종 값은 6,546,652입니다. 올바른 교차항이 음수가 된 것이 아니라 중간 합의 올림을 버린 버그입니다.</p>
 </section>
@@ -98,6 +103,7 @@ interpretation="합 134는 B=100을 넘지만 차의 크기 22는 넘지 않습�
 <CodeViewButton label="원본 절댓값과 부호 · 119–171행" onClick={()=>sidebar.open("difference",codeRefs.difference)} />
 <p>179행은 두 차를 곱해 vm1=484를 만듭니다. 181–182행은 높은 곱 vinf=672, 185행은 낮은 곱 v0=2652를 계산합니다. 세 작은 곱이 각각 충분히 작으면 재귀 대신 기본 곱셈으로 끝납니다.</p>
 <CodeViewButton label="원본 세 곱 호출 · 173–185행" onClick={()=>sidebar.open("products",codeRefs.products)} />
+<LimbCombineViz />
 <p>188행부터는 결과 배열의 겹치는 자리를 합칩니다. 이 사례에서는 188행의 위쪽 자리에 672가 있고 191행에서 가운데 자리 672+2652=3324를 만듭니다. 199행은 부호가 0이므로 484를 빼 가운데를 2840으로 바꿉니다. 각 값이 2⁶⁴보다 작아 이 사례의 cy와 cy2는 0이며 결과는 낮은 순서 [2652,2840,672,0]입니다.</p>
 <CodeViewButton label="원본 합산·뺄셈·올림 · 187–221행" onClick={()=>sidebar.open("combine",codeRefs.combine)} />
 <p>이 배열의 값은 672×(2⁶⁴)²+2840×2⁶⁴+2652입니다. 십진 기준에서 올림으로 묶음이 바뀌었던 9절과 달리 여기서는 각 계수가 한 limb에 들어갑니다. 같은 네 조각과 세 곱을 유지하면서 자리의 크기만 바꾼 것입니다. 본문 검증은 독립 정수 계산과 원문 분기 대조이며 이 C 함수를 컴파일해 실행한 결과는 아닙니다.</p>
@@ -106,6 +112,7 @@ interpretation="합 134는 B=100을 넘지만 차의 크기 22는 넘지 않습�
 </section>
 <section id="recursive" data-teach-level="7" className="space-y-5">
 <h2 className="text-2xl font-bold">12. 깊이는 두 배 기준으로, 작은 곱은 세 배씩 늘어납니다</h2>
+<RecursionLevelsViz />
 <p>크기가 같은 n자리 두 수에서 차의 곱을 쓰면 세 하위 곱의 입력은 절반 크기 안에 들어갑니다. n=2ᵏ이고 한 자리까지 모두 분할하는 계산 모형을 생각합니다(가정). 8자리는 4자리, 2자리, 1자리로 세 번 줄어듭니다. 각 문제를 항상 세 개로 펼친 전체 나무의 마지막 곱은 3³=27개입니다. 학교식의 자리 쌍 8²=64개와 비교할 수 있습니다.</p>
 <p>실제 구현은 0을 빠르게 처리하거나 여러 자리에서 재귀를 멈출 수 있습니다. 또 합을 쓰는 방식은 중간 합이 한 자리 커질 수 있습니다. 따라서 27은 위에서 정한 균형 잡힌 전체 재귀 나무의 값이며 임의 구현을 실행한 호출 수가 아닙니다.</p>
 <ExplainedFormula question="덧셈 비용을 포함해도 왜 지수가 약 1.585인가요?" idea="깊이 j에는 3ʲ개 문제가 있고 각 문제의 크기는 n/2ʲ입니다. 각 층의 선형 합산 비용과 마지막 작은 곱들을 모두 더합니다."
@@ -119,6 +126,7 @@ interpretation="마지막 곱의 비용과 중간 합산 비용이 같은 차수
 </section>
 <section id="cost-comparison" data-teach-level="7" className="space-y-5">
 <h2 className="text-2xl font-bold">13. 전환 크기는 절약한 곱과 추가 비용이 만나는 곳입니다</h2>
+<CrossoverRatioViz />
 <p>간단한 비교 모형으로 학교식 비용을 n², 한 단계 Karatsuba 비용을 3(n/2)²+4n으로 둡니다(가정). 여기서 4n은 추가 합산 비용이며 실제 CPU의 측정값이 아닙니다. n=8에서는 각각 64와 80이므로 Karatsuba가 더 비쌉니다. n=16에서는 둘 다 256이고 n=32에서는 1024와 896으로 순서가 바뀝니다.</p>
 <p>이 모형의 전환점 16을 실제 라이브러리 설정에 복사하면 안 됩니다. 기본 곱셈이 더 빨라지면 절약할 수 있는 곱의 비용도 달라집니다. 덧셈, 올림, 함수 호출과 임시 공간의 비용은 CPU와 컴파일러, 메모리 배치에 따라 바뀝니다.</p>
 <p>

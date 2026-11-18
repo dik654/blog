@@ -3,6 +3,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CopyConstraintViz from "./CopyConstraintViz";
 import Halo2RowViz from "./Halo2RowViz";
 import { codeRefs } from "./codeRefs";
 import { halo2Tree } from "./fileTree";
@@ -214,6 +215,8 @@ export default function ModernHalo2Article() {
               Copy constraint와 instance constraint가 cell의 의미를 이어 줍니다
             </h2>
           </header>
+
+          <CopyConstraintViz />
 
           <p>
             입력 a와 b가 다른 region에서 이미 만들어졌다면 multiplication region에
