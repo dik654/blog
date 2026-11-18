@@ -2,6 +2,7 @@ import CloudCertificationArticle from "./CloudCertificationArticle";
 import CkaInteractiveLab from "./CkaInteractiveLab";
 import CkaResourceMap from "./CkaResourceMap";
 import { kubernetesRequestPathAndCkaData } from "./kubernetesData";
+import FirstRedLightViz from "./kubernetes-request-path-and-cka/viz/FirstRedLightViz";
 import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const practiceSectionIds = new Set(["overview", "case", "picture", "mechanism", "source", "comparison", "limits"]);
@@ -19,7 +20,7 @@ export default function KubernetesRequestPathAndCkaArticle() {
   return (
     <>
       <KubernetesSeriesLocator current="request" />
-      <CloudCertificationArticle data={requestPracticeData} visualFirst />
+      <CloudCertificationArticle data={requestPracticeData} visualFirst sectionLead={{ picture: <FirstRedLightViz /> }} />
       <div className="mt-16 space-y-16">
         <CkaResourceMap />
         <CkaInteractiveLab />

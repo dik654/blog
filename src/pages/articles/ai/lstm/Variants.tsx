@@ -4,6 +4,8 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import GRUFlowViz from "./viz/GRUFlowViz";
+import ParamCellCountViz from "../gru/viz/ParamCellCountViz";
+import ResetPlacementViz from "../gru/viz/ResetPlacementViz";
 
 export default function Variants({
   onCodeRef,
@@ -94,7 +96,11 @@ h_t
         />
       )}
 
+      <ResetPlacementViz />
+
       <ContentBoundary article="gru" />
+
+      <ParamCellCountViz />
 
       <ExplainedFormula
         question="같은 input·hidden 크기에서 GRU와 LSTM의 parameter·state 예산은 어떻게 다를까?"

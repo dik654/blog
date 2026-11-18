@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BranchFoldViz from "./viz/BranchFoldViz";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
@@ -17,6 +18,7 @@ export default function CommitteeBranch({ title, onCodeRef }: Props & { title: s
           state root와 같은지 확인합니다. Generalized index 자체의 정본은 <Link to="/cs/blockchain/prysm-ssz">Prysm SSZ</Link>에서 다룹니다.
         </p>
       </div>
+      <BranchFoldViz />
       <ExplainedFormula
         question="Committee leaf와 Merkle branch가 header의 state root에 실제로 묶였는지 어떻게 확인할까요?"
         idea="Generalized index의 각 bit가 현재 hash를 sibling의 왼쪽에 둘지 오른쪽에 둘지 정합니다. Branch를 모두 접은 최종 root만 비교합니다."

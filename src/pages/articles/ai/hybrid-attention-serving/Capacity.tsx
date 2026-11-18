@@ -1,7 +1,9 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import BudgetTimesShapeViz from "../llm-serving-capacity/viz/BudgetTimesShapeViz";
 import PoolToRequestViz from "../llm-serving-capacity/viz/PoolToRequestViz";
+import SlidingWindowAllocViz from "../llm-serving-capacity/viz/SlidingWindowAllocViz";
 
 const CAPACITY_TERMS = [
   {
@@ -87,6 +89,7 @@ export default function Capacity() {
         </p>
       </div>
       <PoolToRequestViz />
+      <BudgetTimesShapeViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           다만 “토큰당 attention KV가 Qwen의 81.25%”라는 이론값과 “총 cache token이 Qwen의
@@ -106,6 +109,9 @@ export default function Capacity() {
         <h3 id="capacity-sliding" className="scroll-mt-20">
           이번 Gemma 결과에서는 sliding-window 절감이 보이지 않았습니다
         </h3>
+      </div>
+      <SlidingWindowAllocViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Gemma의 50개 local layer가 window 1,024까지만 KV를 보존했다면 context 65,536에서 full allocation보다 훨씬 작은 증가율을 보여야
           합니다. 그러나 실측에서는 local KV head 16개와 head_dim 256의 넓은 shape가 먼저 드러났고 concurrency는 1.36×에 머물렀습니다.

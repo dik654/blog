@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
+import CapacityScaleViz from "./viz/CapacityScaleViz";
 import GateViz from "./viz/GateViz";
 
 const SNAPSHOT = [
@@ -58,6 +59,11 @@ export default function SnapshotGate() {
           이 표만으로 성능 우열을 정하지 않고, 고정한 70B 사례가 한 장에 들어갈 가능성과
           실제 조달 경계를 먼저 가릅니다.
         </p>
+      </div>
+
+      <CapacityScaleViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           앞에서 계산한 210.4GiB는 runtime 여유를 넣기 전 최소선입니다. 따라서
           192GiB·144GB·128GB 후보는 한 장 경로에서 탈락합니다. 288GB와 432GB 후보도

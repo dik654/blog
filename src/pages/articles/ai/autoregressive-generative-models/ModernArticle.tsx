@@ -6,6 +6,8 @@ import {
   GenerativeFamilyLocator,
   GenerativeFamilyMapReturn,
 } from "../shared/GenerativeFamilyLocator";
+import ProbabilityPathViz from "./viz/ProbabilityPathViz";
+import TrainVsSampleViz from "./viz/TrainVsSampleViz";
 
 export default function AutoregressiveGenerativeModelsArticle() {
   return (
@@ -58,6 +60,7 @@ export default function AutoregressiveGenerativeModelsArticle() {
           곱하는 이유는 conditional을 이어 joint probability를 만들기
           위해서입니다
         </h2>
+        <ProbabilityPathViz />
         <ExplainedFormula
           question="왜 sequence probability가 prefix conditional의 곱이 되나요?"
           idea={
@@ -120,6 +123,7 @@ export default function AutoregressiveGenerativeModelsArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Training은 정답 prefix를 알고, sampling은 앞 결과를 기다립니다
         </h2>
+        <TrainVsSampleViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <strong>Teacher forcing</strong>에서는 dataset의 모든 target token이

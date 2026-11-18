@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EccPathViz from "./viz/EccPathViz";
+import HammingBoundViz from "./viz/HammingBoundViz";
 
 const operations = [
   [
@@ -33,6 +34,7 @@ export default function ECC() {
           </p>
         </div>
         <div id="ecc-syndrome-secded" className="scroll-mt-24">
+          <HammingBoundViz />
           <ExplainedFormula
             question="m개의 data bit 위치에서 single-bit 오류를 식별하려면 Hamming check bit가 최소 몇 개 필요한가?"
             idea={

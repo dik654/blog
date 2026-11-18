@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import ParallelPatternViz from "./viz/ParallelPatternViz";
+import TpCollectiveViz from "./viz/TpCollectiveViz";
 
 export default function LinkAxis() {
   return (
@@ -16,6 +18,11 @@ export default function LinkAxis() {
           통신이 촘촘한 scale-up 범위 안에서 끝나는지 rack 사이 scale-out network를
           건너는지를 먼저 봐야 합니다.
         </p>
+      </div>
+
+      <TpCollectiveViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           예를 들어 tensor parallel 2로 weight를 두 장에 나누면 각 가속기는 자신의
           조각을 계산한 뒤 다음 layer로 가기 전에 결과를 합쳐야 합니다. 이 collective가
@@ -53,6 +60,9 @@ export default function LinkAxis() {
       <h3 id="collective-path" className="mt-10 mb-3 scroll-mt-24 break-keep text-xl font-semibold">
         같은 70B 요청이 병렬화 방식에 따라 다른 통신을 만듭니다
       </h3>
+
+      <ParallelPatternViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           Tensor parallel은 한 layer를 여러 장이 함께 계산하므로 짧고 잦은 collective에

@@ -1,2 +1,3 @@
 import PlatformTeeArticle from "../platform-tee-article";
-export default function ModernOpTeeArticle(){return <PlatformTeeArticle platform="op-tee"/>;}
+import OpteeRequestPathViz from "./viz/OpteeRequestPathViz";
+export default function ModernOpTeeArticle(){return <PlatformTeeArticle platform="op-tee" slots={{ beforeSequence: <OpteeRequestPathViz /> }}/>;}

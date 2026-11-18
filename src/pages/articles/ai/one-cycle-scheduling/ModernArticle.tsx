@@ -10,6 +10,8 @@ import {
   LearningRateFamilyLocator,
   LearningRateFamilyMapReturn,
 } from "../shared/LearningRateFamilyLocator";
+import PhaseClockViz from "./viz/PhaseClockViz";
+import RangeTestLogScaleViz from "./viz/RangeTestLogScaleViz";
 
 export default function OneCycleSchedulingArticle() {
   return (
@@ -98,6 +100,7 @@ export default function OneCycleSchedulingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Range test는 LR를 log scale로 올리는 진단 run입니다
         </h2>
+        <RangeTestLogScaleViz />
         <ExplainedFormula
           question="ηstart에서 ηend까지 R updates 동안 같은 비율로 올리려면 각 LR를 어떻게 계산하나요?"
           idea={
@@ -165,6 +168,7 @@ export default function OneCycleSchedulingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Total budget 안에 rise와 decay local clock을 만듭니다
         </h2>
+        <PhaseClockViz />
         <ExplainedFormula
           question="T=1000, p=.3인 OneCycle에서 두 phase의 길이와 local progress는 무엇인가요?"
           idea={

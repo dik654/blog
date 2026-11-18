@@ -1,6 +1,9 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import TemplateFillViz from "../prompt-few-shot/viz/TemplateFillViz";
+import ExampleSelectionViz from "../prompt-few-shot/viz/ExampleSelectionViz";
+import OrderSensitivityViz from "../prompt-few-shot/viz/OrderSensitivityViz";
 
 export default function FewShot() {
   return (
@@ -24,6 +27,9 @@ export default function FewShot() {
         <h3 id="prompt-template" className="scroll-mt-20">
           Prompt template은 변수 치환으로 이 두 역할을 채워 넣습니다
         </h3>
+      </div>
+      <TemplateFillViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Prompt template은 <code>{"{{query}}"}</code>·<code>{"{{examples}}"}</code>처럼
           이름 붙은 자리표시자가 있는 고정 문자열입니다. 요청마다 그 자리에
@@ -96,6 +102,9 @@ export default function FewShot() {
         <h3 id="example-selection" className="scroll-mt-20">
           예시는 무작위로 뽑을 수도, 유사도로 고를 수도 있습니다
         </h3>
+      </div>
+      <ExampleSelectionViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Demonstration을 고르는 방법은 크게 둘로 나뉩니다. 무작위 선택은 고정된 example 집합에서 매번 같은 것을 재사용해 비용이 가장 싸고 재현이 쉽지만 현재 입력과
           관련 없는 예시가 섞여 있어도 그대로 나갑니다.
@@ -114,6 +123,9 @@ export default function FewShot() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Example order와 label prior를 흔들어 본다</h3>
+      </div>
+      <OrderSensitivityViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Few-shot prediction은 마지막 example, label frequency, prompt format에 민감할 수 있습니다. 그래서 zero-shot
           baseline을 먼저 저장합니다. example subset과 순서를 여러 번 바꾸며 class별 accuracy·prediction variance를 측정합니다. 한

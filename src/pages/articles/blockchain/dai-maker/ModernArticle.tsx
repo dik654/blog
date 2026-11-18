@@ -2,6 +2,9 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import DaiVaultViz from "./viz/DaiVaultViz";
+import LiquidationLineViz from "./viz/LiquidationLineViz";
+import PsmPathsViz from "./viz/PsmPathsViz";
+import VatLedgerViz from "./viz/VatLedgerViz";
 
 export default function ModernDaiArticle() {
   return (
@@ -82,6 +85,7 @@ export default function ModernDaiArticle() {
           <code>ilk</code>라고 합니다. Oracle 가격을 곱해야 현재 담보 가치를 알
           수 있으므로 token 수량과 달러 가치는 같은 숫자가 아닙니다.
         </p>
+        <VatLedgerViz />
         <p>
           사용자가 직접 늘리거나 줄이는 빚의 기준값은 <code>art</code>입니다.
           여기에 담보 종류 전체에 공통으로 누적된 <code>rate</code>를 곱해야
@@ -160,12 +164,14 @@ export default function ModernDaiArticle() {
           liquidation module이 금고를 unsafe로 판정할 수 있습니다. 이때 Dog가
           빚과 담보를 떼어 Clipper 경매로 넘깁니다.
         </p>
+        <LiquidationLineViz />
         <p>
           Unsafe 판정, 경매 시작, 담보 낙찰과 bad debt 해소는 서로 다른
           단계입니다. 시장 혼잡, oracle과 실제 가격의 차이, keeper 실패 때문에
           경매가 늦어질 수 있습니다. Stability fee는 빚을 늘리는 장치이고,
           savings rate는 보유자에게 주는 별도 유인입니다.
         </p>
+        <PsmPathsViz />
         <p>
           Peg Stability Module, 즉 PSM은 승인된 stablecoin과 DAI를 정해진 fee
           조건으로 직접 교환하게 합니다. 시장 가격이 1달러에서 벗어났을 때 차익

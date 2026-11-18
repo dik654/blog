@@ -4,6 +4,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertPackingViz } from "../bert/viz/ModernBertViz";
 import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
+import AlignedSlotsViz from "./viz/AlignedSlotsViz";
 
 export default function BertInputPackingArticle() {
   return (
@@ -80,6 +81,7 @@ export default function BertInputPackingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           세 embedding row를 더한 뒤 padding은 attention logit에서 제거합니다
         </h2>
+        <AlignedSlotsViz />
         <ExplainedFormula
           question="각 slot의 encoder input vector는 어떻게 만들어지나요?"
           idea={

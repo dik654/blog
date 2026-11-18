@@ -8,6 +8,8 @@ import {
   TabularModelFamilyLocator,
   TabularModelFamilyMapReturn,
 } from "../shared/TabularModelFamilyLocator";
+import LeakagePathsViz from "./viz/LeakagePathsViz";
+import ObliviousTreeViz from "./viz/ObliviousTreeViz";
 export default function CatBoostOrderedLearningArticle() {
   return (
     <article id="overview" className="space-y-16">
@@ -125,6 +127,7 @@ export default function CatBoostOrderedLearningArticle() {
           Ordered boosting이 target path를 제어한다면 symmetric tree는 function
           shape를 제한합니다. 두 장치를 한 개념으로 합치지 않습니다.
         </LessonHeader>
+        <ObliviousTreeViz />
         <TermLesson
           name="Oblivious · symmetric decision tree"
           oneLine="같은 depth의 모든 node가 동일 feature·threshold split을 사용해 root-to-leaf path를 규칙적인 bit code로 만드는 tree 구조입니다."
@@ -143,6 +146,7 @@ export default function CatBoostOrderedLearningArticle() {
           현재 row를 보지 않는 것은 다른 경계입니다. 둘 다 별도 test가
           필요합니다.
         </LessonHeader>
+        <LeakagePathsViz />
         <div id="paper-catboost" className="scroll-mt-24">
           <CitationBlock
             source="CatBoost"

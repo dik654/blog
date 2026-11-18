@@ -1,5 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
 import DimmTypeViz from "./viz/DimmTypeViz";
+import DimmLoadViz from "./viz/DimmLoadViz";
 
 const types = [
   ["UDIMM", "Controller가 DRAM load를 직접 구동", "소수 module의 단순한 구성"],
@@ -29,6 +30,7 @@ export default function RDIMM() {
       <DimmTypeViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <div id="dimm-electrical-load" className="scroll-mt-24">
+          <DimmLoadViz />
           <p>
             DIMM type은 memory controller와 DRAM 사이의 electrical load와 data path 계약이지 단순한 성능 등급이 아닙니다. UDIMM은
             buffer 없이 직접 연결하고 RDIMM은 RCD(Registering Clock Driver)가 command/address를 받아 다시 구동해 controller가 보는

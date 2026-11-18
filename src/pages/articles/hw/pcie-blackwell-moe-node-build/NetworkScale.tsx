@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import { CitationBlock } from "@/components/ui/citation";
 import NetworkNeedViz from "./viz/NetworkNeedViz";
+import KubePlacementViz from "./viz/KubePlacementViz";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -126,6 +127,7 @@ export default function NetworkScale() {
         <pre className="not-prose my-6 overflow-x-auto rounded-lg border border-border bg-muted/30 p-4 text-xs leading-5">
           <code>{MULTINODE_EXCERPT}</code>
         </pre>
+        <KubePlacementViz />
         <div className={prose}>
           <p>
             승인과 배치는 Kueue v0.20.4의 LWS 통합과 토폴로지 인지 배치(TAS)로 합니다. 쿠버네티스 1.34에서는 LWS 자체의 gang 기능이 1.37을 요구해 쓸 수

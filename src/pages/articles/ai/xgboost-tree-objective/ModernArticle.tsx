@@ -4,6 +4,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { XGBoostGainViz } from "../gbm-viz";
+import HistogramGainScanViz from "./viz/HistogramGainScanViz";
+import LeafWeightCurveViz from "./viz/LeafWeightCurveViz";
 import {
   TabularModelFamilyLocator,
   TabularModelFamilyMapReturn,
@@ -45,6 +47,7 @@ export default function XGBoostTreeObjectiveArticle() {
           example="G=−6,H=2,λ=1이면 leaf update는 2입니다."
           boundary="현재 score 주변의 local quadratic approximation이며 validation improvement를 자동 보장하지 않습니다."
         />
+        <LeafWeightCurveViz />
         <ExplainedFormula
           question="왜 leaf weight는 −G를 H+λ로 나눌까요?"
           idea="G의 반대 부호가 loss 감소 방향이고, curvature H와 penalty λ가 그 방향으로 얼마나 멀리 움직일지 제한합니다."
@@ -165,6 +168,7 @@ export default function XGBoostTreeObjectiveArticle() {
           고유값마다 threshold를 시험하지 않고 가까운 값을 같은 bin에 넣어 누적
           통계를 prefix scan합니다.
         </LessonHeader>
+        <HistogramGainScanViz />
         <TermLesson
           name="Histogram split approximation"
           oneLine="연속 feature 값을 유한 bin으로 묶고 bin별 derivative statistics를 누적해 threshold 수와 row scan 비용을 줄이는 builder입니다."

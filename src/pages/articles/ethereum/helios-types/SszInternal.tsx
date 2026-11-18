@@ -3,6 +3,8 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefsReal } from "./codeRefsReal";
+import MerkleFoldViz from "./viz/MerkleFoldViz";
+import VerifyGatesViz from "./viz/VerifyGatesViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -13,6 +15,8 @@ export default function SszInternal({ onCodeRef }: Props) {
     <>
       <section id="proof-context" className="mb-16 scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">타입이 정한 길이로 root를 다시 만듭니다</h2>
+
+        <MerkleFoldViz />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -99,6 +103,11 @@ export default function SszInternal({ onCodeRef }: Props) {
             next committee와 finalized header는 “없어도 되는 field”가 아니라,
             실제 update 종류가 제공한 증거만 공통 경로에 표현한 것입니다.
           </p>
+        </div>
+
+        <VerifyGatesViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             검증 함수는 참여 0, 잘못된 execution proof, 시간 순서, committee
             period, finality branch, next committee branch, participant key와 BLS

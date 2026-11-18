@@ -118,7 +118,7 @@
       "score": 29
     },
     "blockchain/lotus-state": {
-      "fingerprint": "c52e8beff29a6833",
+      "fingerprint": "0491c86c2bad1afc",
       "score": 6
     },
     "blockchain/reth-chainspec": {
@@ -326,7 +326,7 @@
       "score": 20
     },
     "ai/supervised-fine-tuning": {
-      "fingerprint": "472e12ce245a3af5",
+      "fingerprint": "315c9fd2ec447743",
       "score": 20
     },
     "blockchain/commonware-crypto-p2p": {

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import CoolingTypeViz from "./viz/CoolingTypeViz";
+import AisleAirflowViz from "./viz/AisleAirflowViz";
 
 export default function CoolingType() {
   return (
@@ -68,6 +69,7 @@ export default function CoolingType() {
       <h3 id="airflow-direction" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         섀시 기류 방향이 랙 배치와 맞아야 합니다
       </h3>
+      <AisleAirflowViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           전산실은 보통 찬 통로와 더운 통로를 나눠 배치합니다. 서버는 앞에서 찬 공기를 마시고 뒤로 더운 공기를

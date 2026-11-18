@@ -6,6 +6,7 @@ import HardwareFieldLab from "./HardwareFieldLab";
 import HardwareTeachOpening, { HardwareTeachMechanism } from "./HardwareTeachOpening";
 import { memoryFieldLab } from "./hardwareFieldLabs";
 import { hardwareTeachCases } from "./hardwareTeachCases";
+import ChannelPopulationViz from "./memory/viz/ChannelPopulationViz";
 
 export default function MemoryArticle() {
   return (
@@ -15,7 +16,7 @@ export default function MemoryArticle() {
         담고 모든 채널로 제때 공급하며 오류가 난 물리 위치를 찾아 격리할 수 있는
         구성으로 고릅니다.
       </p>
-      <HardwareTeachOpening data={hardwareTeachCases.memory} />
+      <HardwareTeachOpening data={hardwareTeachCases.memory} numbersVisual={<ChannelPopulationViz />} />
       <HardwareTeachMechanism data={hardwareTeachCases.memory}>
         <Overview />
         <DDR />

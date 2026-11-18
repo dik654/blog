@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import LessonSection from "@/components/articles/lesson-section";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock, { type AlgorithmStep } from "@/components/ui/algorithm-block";
@@ -267,9 +267,12 @@ function SectionVisuals({
 export default function CloudCertificationArticle({
   data,
   visualFirst = false,
+  sectionLead,
 }: {
   data: CloudCertificationArticleData;
   visualFirst?: boolean;
+  /** 선택: 절 본문 문단 바로 앞에 둘 Viz. 넘기지 않으면 기존 렌더와 같습니다. */
+  sectionLead?: Partial<Record<SectionId, ReactNode>>;
 }) {
   return (
     <div className="space-y-16">
@@ -282,6 +285,7 @@ export default function CloudCertificationArticle({
           bridge={section.bridge}
         >
           {visualFirst ? <SectionVisuals data={data} section={section} overviewFlowFirst /> : null}
+          {sectionLead?.[section.id] ?? null}
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             {section.paragraphs.map((paragraph) => (
               <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>

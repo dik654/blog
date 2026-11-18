@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { AdversarialRatioViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
+import RealShareViz from "./viz/RealShareViz";
 import {
   GenerativeFamilyLocator,
   GenerativeFamilyMapReturn,
@@ -58,6 +59,7 @@ export default function AdversarialDensityRatiosArticle() {
           두 density의 합으로 나누는 이유는 source 확률로 정규화하기
           위해서입니다
         </h2>
+        <RealShareViz />
         <ExplainedFormula
           question="왜 optimal discriminator는 p_data를 p_data+p_g로 나누나요?"
           idea={

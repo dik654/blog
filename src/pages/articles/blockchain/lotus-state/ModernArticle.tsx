@@ -7,6 +7,8 @@ import ModernStateRootViz, {
   SnapshotStackViz,
   StateFailureBoundaryViz,
 } from "./viz/ModernStateRootViz";
+import AmtIndexSliceViz from "./viz/AmtIndexSliceViz";
+import StructuralSharingViz from "./viz/StructuralSharingViz";
 
 const STATE_SPEC = "https://spec.filecoin.io/systems/filecoin_vm/state_tree/";
 const ACTORS = "https://docs.filecoin.io/basics/the-blockchain/actors";
@@ -142,6 +144,7 @@ export default function ModernLotusStateArticle() {
           ]}
           interpretation="52는 실제 모든 lookup이 52 nodes를 읽는다는 뜻이 아닙니다. Entries와 bucket policy에 따라 더 일찍 끝나며 실제 parameters는 actor schema와 library generation에서 확인합니다."
         />
+        <AmtIndexSliceViz />
         <ExplainedFormula
           question="AMT index 42를 bit width 3의 path digits로 어떻게 나눌까?"
           idea={<>3 bits는 base 8의 한 자리입니다. Index를 낮은 자리부터 mask하고 오른쪽으로 이동합니다.</>}
@@ -163,6 +166,7 @@ export default function ModernLotusStateArticle() {
           ]}
           interpretation="42의 digits가 2·5라는 계산만으로 value가 존재한다고 말할 수 없습니다. Bitfield에서 branch 존재 여부와 child/value encoding을 검증해야 합니다."
         />
+        <StructuralSharingViz />
         <div className="grid gap-3 sm:grid-cols-2">
           <article className="rounded-lg border border-border p-4">
             <h3 className="font-semibold">Structural sharing</h3>

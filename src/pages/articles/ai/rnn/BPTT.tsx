@@ -4,6 +4,9 @@ import M from "@/components/ui/math";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import BPTTLearningFlowViz from "./viz/BPTTLearningFlowViz";
+import StateGradientRecursionViz from "../bptt/viz/StateGradientRecursionViz";
+import JacobianDirectionViz from "../bptt/viz/JacobianDirectionViz";
+import GradientClippingViz from "../bptt/viz/GradientClippingViz";
 
 export default function BPTT() {
   return (
@@ -40,6 +43,8 @@ export default function BPTT() {
         </p>
       </div>
 
+      <StateGradientRecursionViz />
+
       <ExplainedFormula
         question="시점 t의 state는 현재 loss와 미래 loss를 동시에 어떻게 받는가?"
         idea={<>현재 output에서 직접 오는 gradient에, 다음 state를 거쳐 되돌아온 gradient를 더합니다. 이 재귀가 sequence 끝에서 시작해 시간 역방향으로 진행됩니다.</>}
@@ -61,6 +66,8 @@ export default function BPTT() {
         ]}
         interpretation="현재 state의 update는 현재 token만의 오차가 아닙니다. 그 state가 영향을 준 모든 미래 loss가 Jacobian chain을 통해 합쳐집니다."
       />
+
+      <JacobianDirectionViz />
 
       <ExplainedFormula
         question="k시점 전의 state까지 학습 신호가 가는 동안 왜 크기가 불안정해질까?"
@@ -100,6 +107,8 @@ J_j&=\underbrace{D_j}_{\text{channel별 축소}}\\[-1pt]
           학습 가능성을 판정할 수 있다는 뜻은 아닙니다.
         </p>
       </div>
+
+      <GradientClippingViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Gradient clipping은 explosion을 다루는 안전장치다</h3>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import WsTimelineViz from "./viz/WsTimelineViz";
 
 export default function WeakSubjectivity({ title }: { title: string }) {
   return (
@@ -35,6 +36,7 @@ export default function WeakSubjectivity({ title }: { title: string }) {
         ]}
         interpretation="예를 들어 12초 slot에서 86,400 slots가 지났다면 12일입니다. 이 값이 14일보다 작다는 이유만으로 출처가 악의적이지 않다는 보장은 없고, 14일을 넘었다는 이유만으로 모든 network에서 같은 공격 조건이 성립한다고 일반화해서도 안 됩니다."
       />
+      <WsTimelineViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Sync committee는 mainnet preset에서 256 epochs, 즉 8,192 slots마다 바뀝니다. 이 약 27.3시간이 committee rotation

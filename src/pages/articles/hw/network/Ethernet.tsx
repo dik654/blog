@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EthernetFabricViz from "./viz/EthernetFabricViz";
+import LeafSpinePathViz from "./viz/LeafSpinePathViz";
 
 const layers = [
   {
@@ -85,6 +86,7 @@ export default function Ethernet() {
         <h3 id="fabric-oversubscription" className="scroll-mt-24 text-xl font-semibold mt-8 mb-3">
           leaf-spine의 실제 capacity
         </h3>
+        <LeafSpinePathViz />
         <p className="leading-7">
           host-facing port의 합을 leaf uplink 합으로 나눈 oversubscription은 출발점이다. 실제 결과는 동시에 통신하는 source·destination이
           어느 leaf에 있는지와 ECMP hash가 path를 얼마나 고르게 쓰는지에 달린다.

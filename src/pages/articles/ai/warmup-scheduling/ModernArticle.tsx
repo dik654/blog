@@ -10,6 +10,7 @@ import {
   LearningRateFamilyLocator,
   LearningRateFamilyMapReturn,
 } from "../shared/LearningRateFamilyLocator";
+import WarmupClockSplitViz from "./viz/WarmupClockSplitViz";
 
 export default function WarmupSchedulingArticle() {
   return (
@@ -94,6 +95,7 @@ export default function WarmupSchedulingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Global clock을 warmup과 main local clock으로 나눕니다
         </h2>
+        <WarmupClockSplitViz />
         <ExplainedFormula
           question="T=1000, W=100이면 왜 cosine main length가 900인가요?"
           idea={

@@ -3,6 +3,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ContentBoundary from "@/components/articles/content-boundary";
 import NetworkLearningFlowViz from "./viz/NetworkLearningFlowViz";
 import NetworkBudgetViz from "./viz/NetworkBudgetViz";
+import TrafficMatrixViz from "./viz/TrafficMatrixViz";
 
 const axes = [
   {
@@ -63,6 +64,7 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="workload-contract" className="scroll-mt-24">
+          <TrafficMatrixViz />
           <p className="leading-7">
             서버 네트워크는 케이블 속도를 고르는 문제처럼 보이지만, 실제로는
             <strong> 어떤 endpoint가 누구에게 얼마를 언제 보내는지</strong>를

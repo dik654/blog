@@ -12,6 +12,7 @@ import {
   ProofBoundaryViz,
   StorageLifecycleViz,
 } from "./viz/ModernCommonwareStorageViz";
+import MmrAppendPositionViz from "./viz/MmrAppendPositionViz";
 
 export default function ModernCommonwareStorageArticle() {
   const sidebar = useCodeSidebar();
@@ -53,6 +54,7 @@ export default function ModernCommonwareStorageArticle() {
 
       <section id="proof-layout" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">MMR은 append해도 기존 node position을 바꾸지 않습니다</h2>
+        <MmrAppendPositionViz />
         <p>
           Merkle Mountain Range(MMR)는 높이가 큰 순서로 완전 이진트리를 나열합니다. Leaf의 삽입 순서가 <code>location</code>이고, leaves와 internal nodes를 post-order로 늘어놓은 전체 index가 <code>position</code>입니다. Append-only 구조이므로 이미 생긴 position은 이후 append에도 그대로 남습니다.
         </p>

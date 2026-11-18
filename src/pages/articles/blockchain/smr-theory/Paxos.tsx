@@ -1,4 +1,5 @@
 import PaxosViz from "./viz/PaxosViz";
+import PaxosAdoptViz from "./viz/PaxosAdoptViz";
 
 export default function Paxos() {
   return (
@@ -12,6 +13,7 @@ export default function Paxos() {
           Accept request가 quorum에 기록되면 value가 chosen됩니다.
         </p>
       </div>
+      <PaxosAdoptViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>왜 가장 높은 accepted value를 이어받나</h3>
         <p>

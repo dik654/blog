@@ -3,6 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import RepairTailLatencyViz from "../prompt-structured-output/viz/RepairTailLatencyViz";
 
 const OUTPUT_PATHS = [
   [
@@ -163,6 +164,8 @@ export default function StructuredOutput() {
           둬야 합니다.
         </p>
       </div>
+
+      <RepairTailLatencyViz />
 
       <div id="output-measurement" className="scroll-mt-24">
       <ExplainedFormula

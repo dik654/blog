@@ -1,11 +1,15 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LogReplicationViz from "./viz/LogReplicationViz";
+import RaftLogRepairViz from "./viz/RaftLogRepairViz";
+import QuorumOverlapViz from "./viz/QuorumOverlapViz";
+import RaftCommitViz from "./viz/RaftCommitViz";
 
 export default function LogReplication() {
   return (
     <section id="log-replication" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Raft는 log prefix와 leader epoch를 함께 지킨다</h2>
       <LogReplicationViz />
+      <RaftLogRepairViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Raft의 term은 leader epoch를 나타내는 logical number입니다. Candidate는 majority vote를 얻어 leader가 되고 leader는
@@ -13,6 +17,7 @@ export default function LogReplication() {
           suffix를 갖고 있으면 그 지점부터 고쳐 같은 prefix를 만듭니다.
         </p>
       </div>
+      <QuorumOverlapViz />
       <ExplainedFormula
         question="n개 replica에서 crash f개 뒤에도 majority quorum을 만들고 두 quorum을 겹치게 하려면?"
         idea="Majority q=floor(n/2)+1은 두 집합이 반드시 겹치며, n=2f+1이면 f개 crash 뒤에도 q개가 남습니다."
@@ -30,6 +35,7 @@ export default function LogReplication() {
         assumptions={["Crash-fault fixed membership을 가정합니다.", "교집합 process의 protocol state와 Raft election restriction이 safety에 추가로 필요합니다."]}
         interpretation="n=5이면 q=3, 최소 교집합은 1입니다. Replica 2개가 멈춰도 3개로 진행할 수 있지만 network partition 배치에 따라 liveness는 멈출 수 있습니다."
       />
+      <RaftCommitViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Commit rule을 ‘과반 복제’ 한 문장으로 줄이면 안 됩니다</h3>
         <p>

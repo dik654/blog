@@ -10,6 +10,9 @@ import {
   LearningRateFamilyLocator,
   LearningRateFamilyMapReturn,
 } from "../shared/LearningRateFamilyLocator";
+import CosineMappingViz from "./viz/CosineMappingViz";
+import GlobalLocalClockViz from "./viz/GlobalLocalClockViz";
+import SameBudgetViz from "./viz/SameBudgetViz";
 
 export default function CosineRestartSchedulingArticle() {
   return (
@@ -103,6 +106,7 @@ export default function CosineRestartSchedulingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           반 주기의 시작·중간·끝을 계산합니다
         </h2>
+        <CosineMappingViz />
         <ExplainedFormula
           question="ηmax=.1, ηmin=.001에서 cycle 중간 LR가 왜 .0505인가요?"
           idea={
@@ -175,6 +179,7 @@ export default function CosineRestartSchedulingArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Restart되는 state와 보존되는 state를 나눕니다
         </h2>
+        <GlobalLocalClockViz />
         <ExplainedFormula
           question="Cycle 길이가 Tᵢ이고 다음 cycle이 m배 길어질 때 무엇을 갱신하나요?"
           idea={
@@ -247,6 +252,7 @@ export default function CosineRestartSchedulingArticle() {
           Single cosine과 restart를 같은 compute로 비교합니다
         </h2>
         <CosineComparisonReceiptViz />
+        <SameBudgetViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             동일 initialization·optimizer·data order·total updates에서 single

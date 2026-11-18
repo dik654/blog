@@ -2,6 +2,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import VoteTallyViz from "../prompt-reasoning/viz/VoteTallyViz";
+import FaithfulnessProbeViz from "../prompt-reasoning/viz/FaithfulnessProbeViz";
 
 export default function ChainOfThought() {
   return (
@@ -65,6 +67,8 @@ export default function ChainOfThought() {
         </div>
       </div>
 
+      <VoteTallyViz />
+
       <ExplainedFormula
         question="여러 reasoning path가 서로 다른 최종 답을 낼 때 self-consistency는 무엇을 계산할까요?"
         idea={<p>
@@ -115,6 +119,8 @@ c(y)&=\underbrace{\sum_{k=1}^{K}v_k(y)}_{\text{K개 path의 표를 합산}}\\[3p
           </CitationBlock>
         </div>
       </div>
+
+      <FaithfulnessProbeViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <div id="paper-cot-faithfulness" className="not-prose scroll-mt-24">

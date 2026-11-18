@@ -6,6 +6,8 @@ import {
   DecayPolicyViz,
   DecayStoppingOrderViz,
 } from "../lr-scheduling/viz/ModernLrScheduleViz";
+import PlateauCounterViz from "./viz/PlateauCounterViz";
+import StepVsExponentialViz from "./viz/StepVsExponentialViz";
 import {
   LearningRateFamilyLocator,
   LearningRateFamilyMapReturn,
@@ -91,6 +93,7 @@ export default function LrDecayPoliciesArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Step과 exponential은 validation 없이 clock으로 결정됩니다
         </h2>
+        <StepVsExponentialViz />
         <ExplainedFormula
           question="η₀=.1, γ=.5, K=100이면 t=250의 Step LR가 왜 .025인가요?"
           idea={
@@ -157,6 +160,7 @@ export default function LrDecayPoliciesArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Plateau policy는 improvement를 event 단위로 판정합니다
         </h2>
+        <PlateauCounterViz />
         <ExplainedFormula
           question="Min-mode에서 현재 metric이 best보다 얼마나 좋아야 bad-count를 reset하나요?"
           idea={

@@ -1,5 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ResponseMaskViz from "./viz/ResponseMaskViz";
+import ReductionWeightViz from "./viz/ReductionWeightViz";
 
 export default function Objective() {
   return (
@@ -30,6 +31,7 @@ export default function Objective() {
         interpretation="Mask 0인 prompt도 context에는 남아 response probability에 영향을 줍니다. Attention mask와 loss mask를 같은 것으로 보면 안 됩니다."
       />
       <ResponseMaskViz />
+      <ReductionWeightViz />
 
       <ExplainedFormula
         question="길이가 다른 response를 batch에서 평균낼 때 긴 답 하나가 objective를 지배하지 않게 하려면?"

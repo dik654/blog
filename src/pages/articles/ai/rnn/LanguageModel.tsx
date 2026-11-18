@@ -4,6 +4,9 @@ import M from "@/components/ui/math";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import RNNLanguageFlowViz from "./viz/RNNLanguageFlowViz";
+import LogitSoftmaxViz from "../rnn-language-model/viz/LogitSoftmaxViz";
+import MaskedNllAverageViz from "../rnn-language-model/viz/MaskedNllAverageViz";
+import TeacherForcingDriftViz from "../rnn-language-model/viz/TeacherForcingDriftViz";
 
 export default function LanguageModel() {
   return (
@@ -52,6 +55,8 @@ export default function LanguageModel() {
         </p>
       </div>
 
+      <LogitSoftmaxViz />
+
       <ExplainedFormula
         question="고정 크기 hidden state를 vocabulary 전체의 다음-token probability로 어떻게 바꿀까?"
         idea={<>output projection이 state를 token별 score인 logit으로 바꾸고, softmax가 score의 상대적 차이를 합이 1인 distribution으로 정규화합니다.</>}
@@ -76,6 +81,8 @@ p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{score를 합 1의 probabili
         interpretation="모델은 원문 context에 직접 attention하지 않습니다. vocabulary distribution은 과거가 압축된 ht만으로 만들어집니다."
       />
 
+      <MaskedNllAverageViz />
+
       <ExplainedFormula
         question="한 문장에서 어느 시점의 예측을 학습 신호로 사용할까?"
         idea={<>각 시점에서 실제 다음 token의 negative log-probability를 구해 평균냅니다. 한 문장으로 여러 shifted training pair가 생깁니다.</>}
@@ -97,6 +104,8 @@ p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{score를 합 1의 probabili
         assumptions={["training 입력에는 실제 이전 token을 넣는 teacher forcing을 기준으로 합니다.", "BOS/EOS 처리와 padding mask는 dataset contract에 따라 달라집니다."]}
         interpretation="한 token의 오차는 해당 시점 output뿐 아니라 BPTT를 통해 그 state를 만든 과거 transition의 공유 weight에도 기여합니다."
       />
+
+      <TeacherForcingDriftViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>training과 generation의 입력 분포가 달라진다</h3>

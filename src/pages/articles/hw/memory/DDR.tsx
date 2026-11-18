@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DdrArchitectureViz from "./viz/DdrArchitectureViz";
+import CasCycleTimeViz from "./viz/CasCycleTimeViz";
 
 export default function DDR() {
   return (
@@ -66,6 +67,7 @@ export default function DDR() {
             ]}
             interpretation="DDR5-6400의 64-bit channel 하나는 6400×8=51.2GB/s 상한입니다. 8 channels라면 409.6GB/s지만, 이는 애플리케이션이 언제나 그 값을 얻는다는 보장이 아닙니다."
           />
+          <CasCycleTimeViz />
           <ExplainedFormula
             question="CL 숫자가 큰 DDR5의 CAS 구간이 반드시 더 오래 걸리는가?"
             idea={

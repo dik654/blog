@@ -17,7 +17,14 @@ export interface HardwareTeachCase {
  * 레거시 HW 글이 사양표나 약어에서 시작하지 않도록 실제 사건→이름 없는 경로→작은 수치까지
  * 먼저 여는 수업 본문입니다. 뒤의 기존 본문은 이 사례에 표준 이름과 구현을 붙입니다.
  */
-export default function HardwareTeachOpening({ data }: { data: HardwareTeachCase }) {
+export default function HardwareTeachOpening({
+  data,
+  numbersVisual,
+}: {
+  data: HardwareTeachCase;
+  /** 선택: 숫자 절 제목 바로 아래, 문단 앞에 놓을 Viz. 없으면 기존과 같게 렌더합니다. */
+  numbersVisual?: ReactNode;
+}) {
   return (
     <div className="mb-16 space-y-14">
       <section data-teach-level="S" className="scroll-mt-20" aria-labelledby="case-first-incident">
@@ -45,6 +52,7 @@ export default function HardwareTeachOpening({ data }: { data: HardwareTeachCase
         <h2 id="case-first-number" className="mt-2 text-2xl font-bold tracking-tight">
           {data.numberTitle}
         </h2>
+        {numbersVisual}
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           {data.numbers.map((paragraph) => <p key={paragraph} className="leading-8">{paragraph}</p>)}
         </div>

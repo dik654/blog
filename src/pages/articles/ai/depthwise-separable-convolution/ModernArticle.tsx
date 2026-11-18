@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { DepthwiseViz } from "../cnn/viz/ModernCnnViz";
+import ChannelReadMapViz from "./viz/ChannelReadMapViz";
 import {
   VisionFoundationLocator,
   VisionMapReturn,
@@ -61,6 +62,7 @@ export default function DepthwiseArticle() {
         <h2 className="mb-5 text-2xl font-bold">
           Dense의 k²CinCout을 k²Cin과 CinCout 두 항으로 분리합니다
         </h2>
+        <ChannelReadMapViz />
         <ExplainedFormula
           question="왜 depthwise separable convolution의 MAC가 작아지나요?"
           idea={

@@ -1,6 +1,7 @@
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
+import StoreSwapViz from "./viz/StoreSwapViz";
 
 interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 
@@ -8,6 +9,7 @@ export default function StoreInit({ title, onCodeRef }: Props & { title: string 
   return (
     <section id="store-init" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
+      <StoreSwapViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           검증이 모두 끝난 뒤에만 첫 store S1을 만듭니다. Finalized header와 optimistic header는 bootstrap header H로 시작하고,

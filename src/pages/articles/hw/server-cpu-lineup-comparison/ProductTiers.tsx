@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import TierViz from "./viz/TierViz";
+import TwoSocketLaneViz from "./viz/TwoSocketLaneViz";
 
 export default function ProductTiers() {
   return (
@@ -12,7 +13,11 @@ export default function ProductTiers() {
           겹치므로 이름이나 코어 수만으로 경계를 잡으면 안 됩니다. 소켓 수, 실제 사용 가능한 레인, 메모리 채널,
           원격 관리와 부품 이중화가 플랫폼의 성격과 가격을 가릅니다.
         </p>
+      </div>
 
+      <TwoSocketLaneViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
           서버 계열은 1소켓 또는 2소켓 보드로 구성할 수 있습니다. 예를 들어 EPYC 9005는 1소켓에서 최대 128개
           PCIe 5.0 레인과 12개 메모리 채널을 제공합니다. 2소켓이라고 외부 장치용 레인이 단순히 256개가 되는
