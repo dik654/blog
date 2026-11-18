@@ -4,6 +4,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LibiopOracleViz from "./LibiopOracleViz";
+import BcsOrderViz from "./viz/BcsOrderViz";
+import TamperCheckViz from "./viz/TamperCheckViz";
 import { codeRefs } from "./codeRefs";
 import { libiopTree } from "./fileTree";
 
@@ -263,6 +265,8 @@ export default function ModernLibiopArticle() {
             </h2>
           </header>
 
+          <TamperCheckViz />
+
           <p>
             정상 표에서 한 칸만 몰래 바꾸면 더는 3차 이하 평가표가 아닐 수 있습니다.
             이것은 표의 모양이 틀린 경우입니다. 반면 c를 11로 바꾸고 표 전체를 다시
@@ -338,6 +342,8 @@ export default function ModernLibiopArticle() {
             ]}
             output="proof = round roots + prover messages + opened values + Merkle multiproofs + optional PoW"
           />
+
+          <BcsOrderViz />
 
           <p>
             반대 순서를 생각해 보면 이유가 선명합니다. Prover가 query 위치를 먼저 안다면

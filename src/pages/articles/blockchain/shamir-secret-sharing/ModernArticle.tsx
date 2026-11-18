@@ -4,6 +4,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ContentBoundary from "@/components/articles/content-boundary";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import ShareLineViz from "./viz/ShareLineViz";
+import CandidateCoefficientViz from "./viz/CandidateCoefficientViz";
+import ShareGenerationViz from "./viz/ShareGenerationViz";
 
 export default function ModernShamir(){return <article className="space-y-14">
  <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 세 사람 중 두 사람이 모여야 비밀을 복원하려면</h2>
@@ -20,6 +23,7 @@ export default function ModernShamir(){return <article className="space-y-14">
             비밀 5를 더합니다.
           </p>
   <p>1번은 5+3×1=8, 2번은 5+3×2=11, 3번은 5+3×3=14를 받습니다. 기록은 각각 (1,8), (2,11), (3,14)입니다. 값만 주면 어느 번호에서 계산했는지 알 수 없으므로 번호도 함께 보관합니다.</p>
+  <ShareLineViz />
   <p>1번과 2번이 모이면 8의 두 배에서 11을 빼 5를 얻습니다. 2×8−11=5입니다. 반면 1번만 가진 8은 비밀 5에 3을 더한 결과일 수도, 비밀 0에 8을 더한 결과일 수도 있습니다. 두 기록의 복원과 한 기록의 비밀성을 따로 확인하겠습니다.</p>
  </section>
  <section id="picture" data-teach-level="1" className="space-y-5"><h2 className="text-2xl font-bold">4. 보관자는 결과를 받고 복원자는 두 기록을 합칩니다</h2>
@@ -55,6 +59,7 @@ export default function ModernShamir(){return <article className="space-y-14">
   <div id="paper-shamir"><CitationBlock source="Shamir (1979) · How to Share a Secret, §2" citeKey={1} href="https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf">MIT 강의 자료에 보존된 원 논문 전문에서 k·n·D·q(i)를 같은 숫자 사례에 대응했습니다. 원 논문 DOI는 10.1145/359168.359176입니다.</CitationBlock></div>
  </section>
  <section id="privacy-boundary" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">10. 한 조각 8은 비밀 0·5·10 모두와 맞습니다</h2>
+  <CandidateCoefficientViz />
   <p>1번 조각이 8일 때 비밀이 0이면 계수는 8, 비밀이 5이면 계수는 3, 비밀이 10이면 계수는 15입니다. 마지막 경우도 10+15=25의 나머지가 8입니다. 비밀 후보 0~16 각각에 정확히 하나의 계수가 대응합니다.</p>
   <p>계수가 17개 값에서 균등하다면 어느 비밀을 고정해도 이 조각을 볼 확률은 1/17입니다. 관찰 분포가 비밀에 따라 달라지지 않으므로 조각 하나는 기존에 알던 것에 새 정보를 더하지 않습니다. 비밀을 고르기 전부터 어떤 값이 더 유력하다는 정보가 있었다면 그 사전 정보까지 없애는 것은 아닙니다.</p>
   <p>계수 0을 금지하면 문제가 생깁니다. 조각 (1,8)에 비밀 8을 대응하려면 계수 0이 필요하므로 그 후보가 배제됩니다. “0 계수는 약해 보인다”는 이유로 선택 범위를 바꾸면 원문의 완전한 비밀성 논리가 깨집니다.</p>
@@ -62,6 +67,7 @@ export default function ModernShamir(){return <article className="space-y-14">
   <p>예를 들어 비밀 5와 9를 같은 계수 3으로 나누면 1번 조각은 8과 12입니다. 두 조각의 차이 4가 비밀의 차이와 같아서 먼저 비밀 5를 안 사람은 다른 비밀이 9임을 구합니다. 각각 한 조각뿐이라는 사실로 반복 사용의 위험을 피할 수는 없습니다.</p>
  </section>
  <section id="active-boundary" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">11. 거짓 조각 12를 내면 비밀 4도 계산됩니다</h2>
+  <ShareGenerationViz />
   <p>2번 보관자가 원래 11 대신 12를 제출하면 복원자는 2×8−12=4를 얻습니다. (1,8)·(2,12)를 지나는 다른 규칙 4+4x가 실제로 있으므로 단순 보간만으로는 어느 조각이 거짓인지 알 수 없습니다. 처음 나누는 사람이 서로 맞지 않는 값을 줬을 때도 같은 문제가 생깁니다.</p>
   <p>이런 상황에는 조각이 같은 약속에 맞는지 확인하는 검증 가능한 비밀 분산, VSS가 필요합니다. 공개 약속과 증명, 잘못된 조각에 대한 이의 제기, 보관자 신원 인증과 비밀 전달 경로를 별도로 설계해야 합니다. 조각 둘을 한곳에 모아 원래 키로 서명하는 방식과 원래 키를 모으지 않는 임계 서명도 서로 다릅니다.</p>
   <p>비밀을 유지하며 조각만 바꾸려면 상수항이 0인 새 규칙을 더할 수 있습니다. 사례에서 4x를 더하면 5+7x가 되어 새 조각은 (1,12)·(2,2)·(3,9)입니다. 새 1·2번으로 2×12−2=22 mod 17=5를 복원합니다.</p>

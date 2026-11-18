@@ -10,6 +10,8 @@ import {
 } from "./currentCodeRefs";
 import { currentScrollTree } from "./currentFileTree";
 import { ScrollProofViz } from "./ScrollProofViz";
+import BatchChecksViz from "./viz/BatchChecksViz";
+import BundleScopeViz from "./viz/BundleScopeViz";
 
 const SOURCE = `https://github.com/scroll-tech/zkvm-prover/tree/${SCROLL_ZKVM_COMMIT}`;
 const CHUNK_SOURCE = `https://github.com/scroll-tech/zkvm-prover/blob/${SCROLL_ZKVM_COMMIT}/crates/types/chunk/src/scroll/execute.rs`;
@@ -294,6 +296,8 @@ export default function ModernArticle() {
             </h2>
           </header>
 
+          <BatchChecksViz />
+
           <p>
             Child proof A와 B가 각각 유효해도 A가 chain X의 chunk이고 B가 chain Y의 chunk이거나,
             A의 post-state와 B의 pre-state가 다르면 같은 batch가 될 수 없습니다.
@@ -368,6 +372,8 @@ export default function ModernArticle() {
               Bundle은 여러 batch의 첫 시작과 마지막 결과를 L1 최종화 단위로 압축합니다
             </h2>
           </header>
+
+          <BundleScopeViz />
 
           <p>
             Batch는 여러 chunk와 하나의 DA blob을 묶는 단위입니다. Bundle은 여러 batch proof를 다시

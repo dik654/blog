@@ -4,6 +4,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProofSQLFlowViz from "./ProofSQLFlowViz";
+import RowCubeSumcheckViz from "./viz/RowCubeSumcheckViz";
 import { codeRefs } from "./codeRefs";
 import { proofOfSqlTree } from "./fileTrees";
 
@@ -195,6 +196,8 @@ export default function ModernProofSQLArticle() {
               5를 표현하려면 세 변수가 필요하므로 8칸 중 뒤 3칸은 padding입니다
             </h2>
           </header>
+
+          <RowCubeSumcheckViz />
 
           <ExplainedFormula
             question="행은 5개인데 왜 sumcheck를 세 라운드 실행하나요?"

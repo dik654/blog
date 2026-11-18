@@ -5,6 +5,9 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import FlowRail from "../../world-systems/FlowRail";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import EncodeRecoverViz from "./viz/EncodeRecoverViz";
+import RedundancyBudgetViz from "./viz/RedundancyBudgetViz";
+import MisdecodeViz from "./viz/MisdecodeViz";
 
 export default function ModernReedSolomon() { return <article className="space-y-14">
  <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 기록 두 개가 사라져도 원본을 되찾으려면</h2>
@@ -16,6 +19,7 @@ export default function ModernReedSolomon() { return <article className="space-y
   <p>복원된 후보가 보낸 사람이 의도한 원본인지는 추가 확인이 필요합니다. 충분히 많은 값이 바뀌면 다른 원본의 정상 기록처럼 보일 수 있기 때문입니다. 계산 규칙과 원본을 확인할 신뢰할 수 있는 근거도 함께 전달해야 합니다.</p>
  </section>
  <section id="case" data-teach-level="0" className="space-y-5"><h2 className="text-2xl font-bold">3. 원본 2·3을 네 기록 2·5·1·4로 바꿉니다</h2>
+  <EncodeRecoverViz />
   <p>작은 사례에서는 모든 계산을 7로 나눈 나머지로 정합니다(가정). 원본의 첫 숫자를 시작값, 둘째 숫자를 증가량으로 두어 p(x)=2+3x라는 규칙을 만듭니다. 위치 0·1·2·3을 넣으면 2·5·8·11이고 나머지는 2·5·1·4입니다.</p>
   <p>위치 0·2의 기록이 없어지면 (1,5)와 (3,4)가 남습니다. 두 위치 사이에서 값은 4−5=−1, 위치는 3−1=2만큼 달라졌습니다. 이 범위에서 2의 역원은 4이므로 증가량은 −1×4 mod7=3입니다. 시작값은 5−3×1=2입니다.</p>
  </section>
@@ -50,6 +54,7 @@ export default function ModernReedSolomon() { return <article className="space-y
  </section>
  <section id="error-correction" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">10. 위치를 모르는 오류는 여유를 두 칸씩 씁니다</h2>
   <p>서로 다른 두 원본의 규칙을 빼면 0 아닌 차수 k 미만의 다항식입니다. 그 식의 근은 많아야 k−1개이므로 두 정상 목록이 같은 위치도 많아야 k−1개입니다. 따라서 적어도 n−k+1곳에서 다릅니다. k−1개 평가점에서 0이 되는 식을 택하면 이 차이를 실제로 달성하므로 최소 거리는 정확히 n−k+1입니다.</p>
+  <RedundancyBudgetViz />
   <ExplainedFormula question="네 기록에서는 오류와 소실을 몇 개까지 함께 복원하나요?" idea="소실 s곳을 제외하면 서로 다른 정상 목록은 적어도 d−s곳에서 다릅니다. 받은 목록과 각각 e곳 이내인 두 후보가 있다면 둘 사이의 차이는 많아야 2e곳이므로 2e가 d−s보다 작을 때 두 후보가 공존할 수 없습니다." formula={String.raw`d_{\min}=n-k+1,\qquad2e+s\le n-k`} annotatedFormula={String.raw`\begin{gathered}d_{\min}=4-2+1=3\\\underbrace{2e+s}_{\text{필요한 여유}}\le\underbrace{4-2}_{\text{가진 여유 2}}\end{gathered}`} operations={[{expression:String.raw`(e,s)=(0,2)\quad\text{or}\quad(1,0)`,annotation:["소실 두 개 또는 위치를 모르는 오류 한 개를 복원할 수 있습니다.","오류 한 개와 소실 한 개를 함께 보장하려면 여유 세 칸이 필요합니다."]}]} terms={[{symbol:"e",name:"오류 수",description:"위치와 값을 함께 찾아야 하는 잘못된 기록 수입니다."},{symbol:"s",name:"소실 수",description:"위치는 알지만 값이 없는 기록 수입니다."},{symbol:"dₘᵢₙ",name:"최소 거리",description:"서로 다른 정상 목록 사이에서 값이 다른 위치의 최소 개수입니다."}]} assumptions={["같은 체와 서로 다른 평가점으로 만든 같은 부호입니다.","이 경계는 하나의 정답 복원을 보장하는 범위입니다. 범위 밖에서 항상 오류를 탐지한다는 뜻은 아닙니다."]} interpretation="(10,6)의 여유는 4입니다. 오류 1개와 소실 2개는 2×1+2=4로 경계 안입니다. 오류 2개와 소실 1개는 5가 되어 원본의 유일한 복원을 보장하지 않습니다." />
  </section>
  <section id="berlekamp-welch" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">11. 틀린 위치에서 0이 되는 식을 함께 찾습니다</h2>
@@ -60,6 +65,7 @@ export default function ModernReedSolomon() { return <article className="space-y
   <p>일반적으로 오류가 e≤t개이면 올바른 위치 n−e곳에서 N−Ep가 0입니다. 이 식의 차수는 k+t 미만인데 n−e≥k+t개의 근이 있으므로 영다항식입니다. 따라서 N=Ep이고 나누면 같은 p가 나옵니다. 실제 오류가 t보다 적으면 E의 선택은 여러 개일 수 있습니다. 모든 보조 계수가 유일해야 원본이 유일한 것은 아닙니다.</p>
  </section>
  <section id="misdecode" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">12. 복원기가 성공해도 다른 원본일 수 있습니다</h2>
+  <MisdecodeViz />
   <p>원래 목록 [2,5,1,4]에서 두 값이 바뀌어 [2,6,3,4]를 받았다고 합시다. 다른 정상 규칙 2+4x의 목록은 [2,6,3,0]입니다. 받은 목록은 실제 원본과 두 곳, 이 다른 정상 목록과 한 곳만 다릅니다.</p>
   <p>오류 한 개를 고치는 복원기는 정상적으로 동작해도 원본을 2·4로 반환할 수 있습니다. 받은 목록만으로는 2·3에서 두 오류가 났는지, 2·4에서 한 오류가 났는지 알 수 없습니다. 경계를 넘으면 반드시 TooManyErrors가 나온다고 약속할 수 없는 이유입니다.</p>
   <p>실패 상태는 확인한 사실을 표현해야 합니다. 서로 다른 유효 위치가 k개 미만이면 InsufficientSymbols, 규칙 식별자가 다르면 ProfileMismatch, 길이나 값 표현이 잘못되면 MalformedSymbol로 구분할 수 있습니다. 복원 후보를 찾지 못한 상태도 따로 낼 수 있지만 모든 초과 오류의 탐지를 보장하지는 않습니다.</p>

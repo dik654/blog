@@ -4,6 +4,11 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PairingTraceViz from "./viz/PairingTraceViz";
+import CurveOrbitViz from "./viz/CurveOrbitViz";
+import DivisorCancelViz from "./viz/DivisorCancelViz";
+import RootRingViz from "./viz/RootRingViz";
+import AteLineCountViz from "./viz/AteLineCountViz";
+import FinalExpPathsViz from "./viz/FinalExpPathsViz";
 import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 const LYNN="https://crypto.stanford.edu/pbc/thesis.pdf";
 const MILLER="https://crypto.stanford.edu/miller/miller.pdf";
@@ -25,7 +30,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">두 종류의 상태를 분리하면 계산을 잃어버리지 않습니다. R은 곡선 위에서 어디까지 더했는지 나타냅니다. f는 그 이동에 대응하는 함수 값을 모읍니다. R이 항등원 O에 도착해도 f가 0이 되는 것은 아닙니다. 이번 예에서는 R=O일 때 f=15+14u입니다.</p>
 <p className="leading-8">이 구조가 제공하는 것은 곱셈 관계를 확인하는 수단입니다. 입력 점만으로 숨은 배수를 쉽게 복원해 주는 장치는 아닙니다. 서명이나 증명에서는 어떤 점을 허용하고 어떤 관계를 검사할지 별도의 규칙을 정합니다.</p>
 </div></section>
-<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 19로 나누는 곡선과 다섯 번 더하면 돌아오는 점</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 19로 나누는 곡선과 다섯 번 더하면 돌아오는 점</h2><CurveOrbitViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">작은 곡선은 y²=x³+x입니다. P=(5,4)를 넣으면 왼쪽 16과 오른쪽 130의 나머지가 모두 16입니다. 곡선은 유한 좌표의 점 19개와 O를 합쳐 20개입니다. P를 반복해 더하면 (5,4) → (9,15) → (9,4) → (5,15) → O가 됩니다. 따라서 P의 위수는 5입니다.</p>
 <p className="leading-8">
             19로 나누는 세계에서 −1은 제곱수가 아니므로 u²=−1인 기호를 붙여도 나눗셈 가능한 체를 만들 수 있습니다. 그 원소는 a+bu로 적고 곱한 뒤 u²을 −1로 바꿉니다.
@@ -70,6 +75,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </div></section>
 <section id="divisor" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 점의 이동과 함수의 영점·극점이 같은 식을 유지합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">함수가 어디서 몇 번 0이 되거나 무한대로 커지는지를 기록한 형식적 합을 divisor라고 합니다. 여기서 괄호 (P)는 좌표나 곱셈이 아니라 그 위치의 표식입니다. 누적 함수 fₙ의 기록은 n(P)−(nP)−(n−1)(O)로 유지됩니다.</p>
+</div><DivisorCancelViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">선과 수직선의 비 ℓᵤ,ᵥ/vᵤ₊ᵥ에는 (U)+(V)−(U+V)−(O)가 남습니다. fₘ과 fₙ을 곱하고 U=mP, V=nP인 이 비를 곱해 보세요. 기존의 −(mP)와 −(nP)가 새로 생긴 +(mP)와 +(nP)에 각각 상쇄됩니다. 결과는 (m+n)(P)−((m+n)P)−(m+n−1)(O)입니다.</p>
 <p className="leading-8">두 배에서는 m=n이므로 fₙ²에 선의 비를 곱합니다. P를 더하는 단계에서는 f₁=1이므로 이미 쌓인 fₙ에 선의 비만 더 곱합니다. 이 상쇄가 점 R과 누적 함수 f를 함께 갱신하는 이유입니다.</p>
 <p className="leading-8">
@@ -85,7 +91,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">원문은 바로 다음 절에서 중간 영점·극점의 문제를 다룹니다. 이 조건을 빼고 반복식만 복사하면 나눗셈 실패를 놓칠 수 있습니다. 원문의 별도 수치 예제는 59로 나누는 곡선을 사용합니다. 여기의 19와 P=(5,4)는 같은 알고리즘을 적용하려고 따로 정한 예입니다.</p>
 <p className="leading-8">Miller의 저자 공개 PDF는 1986년의 Short Programs for functions on Curves입니다. 그 2절에서 작은 함수들을 조합하는 절차를 읽을 수 있습니다. 이 초기 원문만으로 현대 BN254의 매개변수나 최적화 지수가 정해지는 것은 아닙니다.</p>
 </div><CitationBlock source="Ben Lynn (2007) · 3.9.2–3.9.3절, PDF 51–52쪽" href={LYNN} citeKey={1}>반복 순서와 중간 평가 조건을 같은 101 사례에 적용합니다.</CitationBlock><CitationBlock source="Victor S. Miller (1986) · Short Programs for functions on Curves" href={MILLER} citeKey={2}>공개 PDF의 실제 제목과 2절의 함수 조합을 대조했습니다.</CitationBlock></section>
-<section id="final-exponent" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 72제곱으로 다섯제곱하면 1인 값에 들어갑니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="final-exponent" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 72제곱으로 다섯제곱하면 1인 값에 들어갑니다</h2><RootRingViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">
             0 아닌 f에 대해 f³⁶⁰=1입니다. 따라서 g=f⁷²라 놓으면 g⁵=f³⁶⁰=1입니다. 실제 f₅=15+14u를 72제곱하면 7+3u를 얻으며 이 값은 1이 아니고
             다섯제곱은 1입니다. 5가 소수이므로 이 출력의 위수는 정확히 5입니다.
@@ -111,12 +117,12 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
           </p>
 <p className="leading-8">BN254의 설정은 D형 twist입니다. 실제 ell 함수는 첫 계수에 평가점의 y, 둘째 계수에 x를 곱하고 mul_by_034를 부릅니다. 희소 확장체 곱으로 생략할 칸은 이 타입과 배치에서 결정됩니다. <Link to="/cs/crypto/sparse-multiplication#in-miller">희소 곱셈 글</Link>에서 이 호출과 여섯 계수의 대응을 이어 볼 수 있습니다.</p>
 </div><CodeViewButton label="실제 BN254 매개변수" onClick={()=>sidebar.open("config",codeRefs["config"])}/><CodeViewButton label="점을 따라 선 계수를 모으는 원문" onClick={()=>sidebar.open("prepare",codeRefs["prepare"])}/><CodeViewButton label="같은 계수를 평가하는 D형 분기" onClick={()=>sidebar.open("ell",codeRefs["ell"])}/></section>
-<section id="source-loop" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 큰 r 대신 6z+2의 부호 있는 표현을 반복합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="source-loop" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 큰 r 대신 6z+2의 부호 있는 표현을 반복합니다</h2><AteLineCountViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">고정 설정의 z는 4965661367192848881입니다. ATE_LOOP_COUNT에는 6z+2=29793968203157093288을 나타내는 65개의 −1·0·1 숫자가 낮은 자리부터 들어 있습니다. 처음 자리 뒤의 각 숫자에서 두 배를 하고, 1이면 원래 점을, −1이면 반대 점을 더하는 선 계수를 만듭니다.</p>
 <p className="leading-8">이 설정의 단일 입력쌍에서는 두 배 선 64개와 추가 선 21개가 필요합니다. 끝에는 Frobenius로 옮긴 점을 사용하는 선 두 개가 더 붙어 총 87개의 선 평가를 합니다. 누적값은 처음 1이어서 첫 제곱을 건너뛰므로 코드의 square 호출은 63회입니다. 두 배 선 수와 제곱 함수 호출 수는 다릅니다.</p>
 <p className="leading-8">원문의 준비 함수가 끝의 두 점을 만들고, Miller 함수가 그 계수 두 개를 마지막에 사용합니다. 이 마무리를 작은 5=101 반복의 비트로 오해하면 안 됩니다. 여기의 수는 고정 버전·한 쌍·양의 z에 대한 코드 경로 수이며 CPU 명령 수나 GPU 시간 측정값이 아닙니다.</p>
 </div><CodeViewButton label="65자리 반복과 마지막 두 선" onClick={()=>sidebar.open("loop",codeRefs["loop"])}/><CitationBlock source="arkworks algebra · 고정 commit의 BN 구현" href={ARK} citeKey={3}>준비 계수의 순서, 반복의 63회 제곱 호출, 87개 선 평가를 실제 실행과 대조했습니다.</CitationBlock></section>
-<section id="source-final" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 이 버전의 마지막 지수는 일반식에 배수가 더 붙습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="source-final" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 이 버전의 마지막 지수는 일반식에 배수가 더 붙습니다</h2><FinalExpPathsViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">일반 지수 E=(p¹²−1)/r는 (p⁶−1)(p²+1)과 H=(p⁴−p²+1)/r로 나눌 수 있습니다. 실제 원문의 앞부분은 켤레·역원·Frobenius를 사용해 먼저 (p⁶−1)(p²+1)승을 계산합니다. 0에는 역원이 없으므로 이 단계의 반환값은 None입니다.</p>
 <p className="leading-8">하지만 뒤의 최적화 코드를 단순히 H승과 정확히 같은 값이라고 설명하면 이 버전에서는 틀립니다. 원문 주석이 정리한 지수는 cH이고 c=2z(6z²+3z+1)입니다. 앞부분까지 합친 출력은 일반 E승에 다시 c를 거듭제곱한 Mᶜᴱ입니다.</p>
 <p className="leading-8">이 z에서 c는 1469306990098747947464455738335385361638823152381947992820이고 gcd(c,r)=1입니다. 출력 군에서 c제곱은 되돌릴 수 있는 변환입니다. 그래서 쌍선형성과 비퇴화, 여러 출력의 곱이 1인지 보는 판정은 유지됩니다. 그러나 출력 원소나 그 바이트가 일반 E승과 같다고 보장하지는 않습니다.</p>

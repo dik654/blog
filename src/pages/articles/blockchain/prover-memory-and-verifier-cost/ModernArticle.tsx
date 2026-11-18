@@ -3,6 +3,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import LiveBufferPeakViz from "./viz/LiveBufferPeakViz";
+import MsmWindowPeakViz from "./viz/MsmWindowPeakViz";
+import PairingGasStackViz from "./viz/PairingGasStackViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -52,6 +55,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="mechanism" data-teach-level="4" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">7. 평가표와 해시 자료의 최고점을 계산합니다</h2>
 <p className="leading-8">8배 평가표의 행은L=8,388,608개입니다. 한 행을 하나의 32바이트 해시 잎으로 묶고 모든 잎과 내부 노드를 보관하는 완전 이진트리를 가정하면 노드수는 2L−1입니다. 해시 자료는 536,870,880바이트로 512MiB보다 32바이트 작습니다.</p>
+<LiveBufferPeakViz />
 <p className="leading-8">원본 256MiB, 평가 버퍼 두 개 4GiB, 이 해시 자료가 모두 같은 순간에 남으면 약 4.75GiB입니다. 한쪽 평가표를 먼저 해제하면 약 2.75GiB로 내려갑니다. 이 두 숫자의 차이는 증명 방식의 이름이 아니라 자료의 생존 시점에서 나옵니다.</p>
 <p className="leading-8">변환을 여러 번 왕복하며 읽고 쓰는 총바이트는 이 최고점보다 클 수 있습니다. 반대로 작업을 나누거나 일부만 재계산하면 최고점을 낮추고 추가 연산을 지불할 수 있습니다. 실제 장치에서는 할당기 여유, 실행 중 라이브러리 공간, 전송용 버퍼도 확인합니다.</p>
 <ExplainedFormula question="최대 메모리는 어떻게 계산하나요?" idea="각 시점에 살아 있는 버퍼의 크기를 더하고, 시간에 따른 합의 최댓값을 고릅니다." formula={String.raw`M_{\mathrm{peak}}=\max_t\sum_{b\in\mathrm{live}(t)}\mathrm{bytes}(b)`} annotatedFormula={String.raw`M_{\mathrm{peak}}=\max_t\sum_{b\in\mathrm{live}(t)}\mathrm{bytes}(b)`} operations={[{"expression": "\\mathrm{live}(t)", "annotation": ["시각t에 아직 해제되지 않은 버퍼만 셉니다."]}, {"expression": "\\max_t", "annotation": ["모든 순간의 합 중 장치가 감당해야 할 가장 큰 합입니다."]}]} terms={[{"symbol": "b", "name": "버퍼", "description": "원본·평가값·해시·작업공간 등입니다."}, {"symbol": "t", "name": "실행 시점", "description": "같이 살아 있는지 판정합니다."}, {"symbol": "bytes", "name": "크기", "description": "같은 바이트 단위로 더합니다."}]} interpretation="가정한 최고점은 256MiB+4GiB+(512MiB−32B)입니다." assumptions={["각 버퍼의 실제 원소 크기와 패딩을 사용합니다.", "서로 다른 장치의 용량은 한 장치의 자유 공간처럼 합치지 않습니다."]} /><AlgorithmBlock title="메모리 최고점 산정 (의사코드)" input={["버퍼별 바이트 수와 할당·해제 시점"]} steps={[{"code": "각 시점의 할당은 live 집합에 넣고 해제는 제거", "note": "동일 공간 재사용은 중복 합산하지 않습니다."}, {"code": "현재합←Σ bytes(live); peak←max(peak,현재합)", "note": "장치별로 따로 계산합니다."}, {"code": "측정한 할당기·런타임 여유를 추가해 계산값과 실측 최고점 비교", "note": "논리 배열 크기와 프로세스 사용량을 구분합니다."}]} output="장치별 예상 최고점과 남는 여유" />
@@ -60,6 +64,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="source" data-calculation-explained data-teach-level="5" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">8. MSM은 순차적으로 바뀌는 작업공간의 최댓값을 셉니다</h2>
 <p className="leading-8">ICICLE2.8.0 공식 문서는 스칼라와 인덱스가 살아 있는 단계, 스칼라·점·버킷이 살아 있는 단계의 최댓값으로 메모리를 추정합니다. 해당 버전 알고리즘의 생존 시점 사례이며 현재 최신판에 보편적으로 적용되는 공식이라는 뜻은 아닙니다.</p>
+<MsmWindowPeakViz />
 <p className="leading-8">같은 2²⁰개 항에 스칼라 32바이트, 점 64바이트, 버킷점 96바이트, 스칼라 256비트, 창 16비트, 사전계산배수 1, 배치 1을 가정합니다. 창 묶음은 16개입니다. 스칼라 32MiB, 인덱스약 384MiB, 점 64MiB, 버킷 96MiB여서 max(32+384,32+64+96)=416MiB입니다.</p>
 <p className="leading-8">창을 18비트로 바꾸면 묶음은 15개로 줄지만 버킷은 점마다 96바이트 × 15묶음 × 묶음마다 2¹⁸개 = 377,487,360바이트, 곧 360MiB로 늘어납니다. 인덱스 360MiB와 스칼라 32MiB인 단계는 392MiB, 점과 버킷 단계는 456MiB이므로 새 최고점은 456MiB입니다. 연산 묶음이 줄어도 메모리가 늘어나는 반례입니다.</p>
 <div id="source-icicle"><CitationBlock source="ICICLE2.8.0 · MSM / Memory usage estimation" citeKey={1} href="https://dev.ingonyama.com/2.8.0/icicle/primitives/msm"><p className="leading-8">원문: <q>max(scalars + scalarIndices, scalars + points + buckets)</q></p><p className="leading-8">창 16에서는 max(416,192)=416MiB, 창 18에서는 max(392,456)=456MiB입니다. 구체적인 값은 자료형과 파라미터 가정에서 나왔으며 전체 증명기의 실측값은 아닙니다.</p></CitationBlock></div>
@@ -67,6 +72,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="comparison" data-teach-level="6" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">9. 페어링쌍 4개와 공개입력 3개의 가스를 따로 계산합니다</h2>
+<PairingGasStackViz />
 <p className="leading-8">EIP1108의 BN254 연산표에서 페어링 검사는 34,000k+45,000gas입니다. k=4이면 181,000gas입니다. 공개입력 하나마다 스칼라곱 1회와 점덧셈 1회를 하는 검증기 구성을 가정하면 입력 3개는 3×(6,000+150)=18,450gas입니다. 두 원시 연산의 합은 199,450gas입니다.</p>
 <p className="leading-8">이는 전체 거래 가스의 실측값이 아닙니다. 호출·메모리·입력검사·ABI·calldata·기본 거래 비용과 구현상의 추가 연산이 남습니다. EIP197에서 한 페어링쌍의 인코딩은 192바이트이므로 4쌍은 768바이트입니다. 이 내부 호출 입력을 전송한 증거의 크기와 동일하다고 보지 않습니다.</p>
 <p className="leading-8">같은 형태에서 공개 입력만 8개로 늘리면 181,000+8×6,150=230,200gas로 30,750gas가 추가됩니다. 최종 증거의 군 원소 개수가 같아도 공개 입력의 선형결합 비용은 늘 수 있습니다. 가스 요율은 2026-10-04 확인한 EIP1108의 표를 적용했습니다. 다른 체인·곡선·추후 요율에는 그대로 쓰지 않습니다.</p>

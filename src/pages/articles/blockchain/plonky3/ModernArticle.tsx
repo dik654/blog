@@ -4,6 +4,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Plonky3ProofViz from "./Plonky3ProofViz";
+import ConstraintCoverageViz from "./viz/ConstraintCoverageViz";
+import QuotientPointsViz from "./viz/QuotientPointsViz";
 import { codeRefs } from "./codeRefs";
 import { plonky3Tree } from "./fileTrees";
 
@@ -180,6 +182,8 @@ export default function ModernPlonky3Article() {
             <CodeViewButton label="Fibonacci AIR·trace 원문" onClick={() => openSource("p3-fib-air")} />
           </div>
 
+          <ConstraintCoverageViz />
+
           <p>
             전이 조건만 남기면 <code>(2,7)</code>에서 시작하는 다른 피보나치 표도 통과할
             수 있습니다. 마지막 조건만 남기면 중간 계산을 마음대로 만들 수 있습니다.
@@ -250,6 +254,8 @@ export default function ModernPlonky3Article() {
             Transcript는 이 commitment와 공개값을 흡수해 challenge <code>α</code>를
             정합니다. α는 여러 제약을 하나로 섞는 계수입니다.
           </p>
+
+          <QuotientPointsViz />
 
           <ExplainedFormula
             question="여러 AIR 제약을 왜 quotient 하나로 바꿀 수 있나요?"

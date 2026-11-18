@@ -3,6 +3,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import CrossTermAreaViz from "./viz/CrossTermAreaViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -52,6 +53,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="relaxed-r1cs" data-teach-level="4" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">7. 곱을 전개하면 교차항이 왜 필요한지 드러납니다</h2>
 <p className="leading-8">두 원본 조건의 배율은u₁=u₂=1, 오차는 E₁=E₂=0입니다. 교차항 T는 3×5+2×4−1×10−1×12=1입니다. 섞는 숫자 r=2를 넣으면 u′=1+2=3, E′=0+2×1+4×0=2입니다. 입력 7과 14, 결과 15에 적용하면 13=13이 됩니다.</p>
+<CrossTermAreaViz />
 <p className="leading-8">일반적으로 왼쪽 곱을 전개하면 원본 첫 곱, r배의 두 교차 곱, r²배의 둘째 곱이 나옵니다. 오른쪽 배율과 결과를 함께 전개했을 때의 교차항을 빼면 T가 남습니다. 따라서 E′=E₁+rT+r²E₂가 되어야 같은 형식이 유지됩니다.</p>
 <p className="leading-8">E′를 검증 없이 자유롭게 바꾸면 어떤 틀린 곱도 맞출 수 있습니다. 원래 값과 T의 commitment를 먼저 고정하고 그 뒤 r을 정해 새 commitment까지 같은 선형 조합으로 묶어야 합니다.</p>
 <ExplainedFormula question="두 완화된 조건을 어떤 오차로 합쳐야 하나요?" idea="곱을 r의 차수별로 정리합니다. 상수항은 E₁, 일차 교차항은 T, 이차항은 E₂가 맡습니다." formula={String.raw`E^{\prime}=E_1+rT+r^2E_2,\quad T=AZ_1\circ BZ_2+AZ_2\circ BZ_1-u_1CZ_2-u_2CZ_1`} annotatedFormula={String.raw`E^{\prime}=E_1+rT+r^2E_2,\quad T=AZ_1\circ BZ_2+AZ_2\circ BZ_1-u_1CZ_2-u_2CZ_1`} operations={[{"expression": "rT", "annotation": ["서로 다른 원본에서 온 두 곱의 차이를 보존합니다."]}, {"expression": "r^2E_2", "annotation": ["두 번째 입력끼리의 곱에서 r이 두 번 나오므로 제곱합니다."]}]} terms={[{"symbol": "A,B,C", "name": "공통 선형 변환", "description": "두 원본은 같은 계수표를 사용합니다."}, {"symbol": "Z_1,Z_2", "name": "두 값 벡터", "description": "개인·공개값과 배율을 담습니다."}, {"symbol": "T", "name": "교차항", "description": "작은 예에서는 1입니다."}, {"symbol": "r", "name": "나중에 정한 숫자", "description": "작은 예에서는 2입니다."}, {"symbol": "E_1,E_2", "name": "원본 오차", "description": "작은 예에서는 둘 다 0입니다."}]} interpretation="E′=0+2×1+4×0=2이므로 7×14≡3×15+2가 맞습니다." assumptions={["같은 체와 계수표를 사용합니다.", "원본과 교차항 고정 뒤 r을 정해야 합니다."]} /><AlgorithmBlock title="완화된 R1CS 폴딩 (의사코드)" input={["공통 A,B,C, 두 Z,u,E와 그 commitment"]} steps={[{"code": "T ← AZ₁∘BZ₂ + AZ₂∘BZ₁ − u₁CZ₂ − u₂CZ₁", "note": "원본에서 교차항을 계산해 먼저 commit합니다."}, {"code": "r ← transcript_challenge(규칙, 두 원본, T의 commitment)", "note": "일치하는 직렬화와 맥락을 포함합니다."}, {"code": "Z′←Z₁+rZ₂; u′←u₁+ru₂; E′←E₁+rT+r²E₂", "note": "commitment도 대응하는 선형결합으로 갱신합니다."}]} output="새 완화된 조건과 이를 만족시키는 증인" />

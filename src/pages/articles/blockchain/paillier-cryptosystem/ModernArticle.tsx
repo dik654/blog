@@ -3,6 +3,10 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaillierJourneyViz from "./viz/PaillierJourneyViz";
+import CrtDecryptViz from "./viz/CrtDecryptViz";
+import SignedRingViz from "./viz/SignedRingViz";
+import NonceReuseViz from "./viz/NonceReuseViz";
+import EncZeroCollapseViz from "./viz/EncZeroCollapseViz";
 import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 export default function ModernArticle(){const sidebar=useCodeSidebar();return <div className="space-y-16 [overflow-wrap:anywhere]">
 <section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 개별 수를 열어 보지 않고 4와 3을 합칩니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">두 부서가 이번 주 처리한 건수 4와 3을 집계 서버에 보냅니다. 서버에는 각 숫자를 그대로 주지 않고 암호화한 값만 보냅니다. 서버가 이 두 암호문을 곱하면 복호 담당자는 결과에서 합계 7을 얻을 수 있습니다. 이것이 Paillier의 덧셈 동형 성질입니다.</p>
@@ -58,7 +62,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <CitationBlock source="CSIRO Data61 · phe 1.5.0 고정 원문" citeKey={2} href="https://github.com/data61/python-paillier/tree/7d9911eb03c3c2d64399bc15405feb5e628379d1"><p className="leading-8">원문 파일을 변경 없이 보존하고 CPython 3.12.13에서 핵심 모듈을 가져와 같은 입력과 경계 사례를 실행했습니다. GMP·Crypto 선택 의존성 없이 기본 Python 연산 경로를 사용했습니다.</p>
 </CitationBlock></section>
 <section id="source-decrypt" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 원문은 9와 25에서 나눠 복호한 뒤 합칩니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">선택한 원문의 raw_decrypt는 앞의 λ 식을 직접 계산하지 않습니다. p²=9와 q²=25에서 각각 복호한 다음 중국인의 나머지 정리, CRT로 합칩니다. 이 경로도 원논문 12쪽에 설명되어 있습니다.</p>
-<p className="leading-8">미리 계산한 hp=1,hq=3과 p의 mod q 역원 2를 씁니다. 합산 암호문 92에서는 92² mod9=4이므로 Lp(4)=1이고 mp=1입니다. 92⁴ mod25=21이므로 Lq(21)=4이고 mq=4×3 mod5=2입니다.</p>
+</div><CrtDecryptViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">미리 계산한 hp=1,hq=3과 p의 mod q 역원 2를 씁니다. 합산 암호문 92에서는 92² mod9=4이므로 Lp(4)=1이고 mp=1입니다. 92⁴ mod25=21이므로 Lq(21)=4이고 mq=4×3 mod5=2입니다.</p>
 <p className="leading-8">이제 mod3에서 1이고 mod5에서 2인 값을 찾습니다. 원문은 u=(mq−mp)×2 mod5=2를 계산하고 mp+u×p=1+2×3=7을 반환합니다. 첫 암호문 173에는 mp=1,mq=4,u=1이어서 4를 반환합니다.</p>
 </div><CodeViewButton onClick={()=>sidebar.open("private",codeRefs["private"])} label="원문의 CRT 준비값"/>
 <CodeViewButton onClick={()=>sidebar.open("decrypt",codeRefs["decrypt"])} label="원문 raw_decrypt와 CRT"/>
@@ -71,13 +75,13 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <CodeViewButton onClick={()=>sidebar.open("run",codeRefs["run"])} label="같은 4와 3을 실행한 호출 예제"/>
 </section>
 <section id="encoding" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 수학적 나머지 7과 signed 정수 7의 허용 범위는 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">이번 구현의 max_int는 n//3−1입니다. n=15에서는 0부터 4를 양수로, 11부터 14를 −4부터 −1로 읽습니다. 가운데 5부터 10은 넘침을 발견하는 구간으로 남겨 둡니다.</p>
-<p className="leading-8">그래서 encrypt(4)+encrypt(3)의 raw 복호는 정상적으로 7이지만 signed decode는 OverflowError를 냅니다. 암호화의 덧셈이 틀린 것이 아니라 이 작은 키에서 정수 표현의 허용 범위를 넘은 것입니다.</p>
+</div><SignedRingViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">그래서 encrypt(4)+encrypt(3)의 raw 복호는 정상적으로 7이지만 signed decode는 OverflowError를 냅니다. 암호화의 덧셈이 틀린 것이 아니라 이 작은 키에서 정수 표현의 허용 범위를 넘은 것입니다.</p>
 <p className="leading-8">이 감지가 모든 넘침을 잡는 것은 아닙니다. 암호화한 4를 네 번 더하면 정수 합은 16인데 mod15 결과는 1입니다. 1은 정상 양수 구간이라 decode는 경고 없이 1을 돌려줍니다. 최댓값과 합산 횟수로 전체 범위를 미리 계산해야 합니다.</p>
 <p className="leading-8">실수는 정수 계수와 공개된 16진 지수로 표현합니다. 별도로 명시한 n=323의 작은 키에서는 정밀도 1/16으로 1.5를 계수 24·지수 −1, 0.25를 계수 4·지수 −1로 넣었습니다. 합 계수 28을 16으로 나눠 1.75를 얻었습니다. 이 지수는 암호화되지 않으므로 표현 정밀도도 프로토콜의 공개 정보입니다.</p>
 </div><CodeViewButton onClick={()=>sidebar.open("encode",codeRefs["encode"])} label="원문의 정수·실수 인코딩"/>
 <CodeViewButton onClick={()=>sidebar.open("decode",codeRefs["decode"])} label="원문의 signed 범위와 decode"/>
 </section>
-<section id="randomness" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 난수를 재사용하면 두 평문의 차이가 드러납니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">같은 난수 2를 다시 써서 3을 암호화하면 53입니다. 앞의 4에 대한 암호문 173을 53의 mod225 역원과 곱하면 16입니다. 같은 난수 성분이 나눗셈에서 사라졌기 때문입니다.</p>
+<section id="randomness" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 난수를 재사용하면 두 평문의 차이가 드러납니다</h2><NonceReuseViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">같은 난수 2를 다시 써서 3을 암호화하면 53입니다. 앞의 4에 대한 암호문 173을 53의 mod225 역원과 곱하면 16입니다. 같은 난수 성분이 나눗셈에서 사라졌기 때문입니다.</p>
 <p className="leading-8">g=n+1이므로 이 비율은 1+n×(4−3) mod n²입니다. 공개적으로 L(16)=1을 계산하면 두 평문의 차이 1 mod15가 드러납니다. 그중 하나를 알면 다른 값의 나머지도 알 수 있습니다.</p>
 <p className="leading-8">따라서 난수는 독립적이고 예측하기 어려운 분포에서 새로 뽑아야 합니다. 계산 검산용 r=2나 재무작위화 시험용 getter=7을 실제 암호화 설정으로 가져가면 안 됩니다.</p>
 </div></section>
@@ -89,7 +93,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </section>
 <section id="key-boundary" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. 왕복 복호 성공만으로 키 설정을 검증할 수 없습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">별도 작은 반례로 p=3,q=7,n=21을 고릅니다. λ=6이고 gcd(6,21)=3이므로 λ의 mod21 역원이 없습니다. 앞에서 선택한 g=n+1의 λ 복호 설정을 만족하지 않습니다.</p>
 <p className="leading-8">그런데 실제 라이브러리 생성자는 이 값을 받아들이고 CRT 경로는 21개 메시지와 12개 unit 난수의 252개 조합을 모두 올바르게 복호했습니다. 따라서 “λ의 역원이 없으니 이 구현의 CRT 복호도 항상 실패한다”고 말하면 틀립니다.</p>
-<p className="leading-8">차이는 난수 분포에서 보입니다. 12개 unit으로 0을 암호화했는데 서로 다른 출력은 1,197,244,440의 네 개뿐입니다. 처음의 n=15에서는 15×8개 메시지·난수 쌍이 120개 서로 다른 unit 암호문으로 이어졌습니다. 정상 왕복 검사와 선택한 전단사·보안 설정 검사는 구별해야 합니다.</p>
+</div><EncZeroCollapseViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">차이는 난수 분포에서 보입니다. 12개 unit으로 0을 암호화했는데 서로 다른 출력은 1,197,244,440의 네 개뿐입니다. 처음의 n=15에서는 15×8개 메시지·난수 쌍이 120개 서로 다른 unit 암호문으로 이어졌습니다. 정상 왕복 검사와 선택한 전단사·보안 설정 검사는 구별해야 합니다.</p>
 </div></section>
 <section id="security" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">20. 더할 수 있다는 기능은 변조를 막아 주지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">공개된 g=16을 암호문 173에 곱하면 68이 됩니다. 이 값은 5로 복호됩니다. 비밀키를 몰라도 평문에 1을 더하는 변조가 가능하며, 이는 집계에 쓰는 바로 그 동형성입니다.</p>
 <p className="leading-8">이 성질 때문에 기본 Paillier를 그대로 쓰는 API는 임의 변조 암호문의 복호까지 허용하는 공격 모델에서 안전하지 않습니다. 도전 암호문에 g를 곱해 복호를 요청할 수 있으면 결과에서 1을 빼 원래 평문을 얻기 때문입니다. 허용 연산과 복호 권한을 제한하고 필요한 관계·범위 증명을 별도 설계해야 합니다.</p>

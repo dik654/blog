@@ -3,6 +3,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import QuotientDivisionViz from "./viz/QuotientDivisionViz";
+import TauForgeryViz from "./viz/TauForgeryViz";
+import IpaFoldViz from "./viz/IpaFoldViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -23,6 +26,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="case" data-teach-level="0" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">3. 제곱하고 두 배를 더한 뒤 3을 더하면</h2>
 <p className="leading-8">17로 나눈 나머지에서 f(X)=X²+2X+3으로 계산한다고 합시다. 위치 4에서는 16+8+3=27의 나머지 10입니다. 이 숫자들은 설명용 가정입니다. 만드는 쪽은 계수(3,2,1)를 먼저 고정하고 나중에 4에서의 값 10을 엽니다.</p>
+<QuotientDivisionViz />
 <p className="leading-8">답을 11로 바꾸면 처음 함수와 맞지 않습니다. 그 차이를 드러내는 방법은 f(X)−10을 X−4로 나누어보는 것입니다. 실제 곱셈 (X−4)(X+6)은 X²+2X−24로,17에서 X²+2X−7과 같으므로 f(X)−10입니다.</p>
 
 <p data-stage-bridge="case" className="text-sm leading-7 text-muted-foreground">10일 때 나머지가 0이 되는 구조를 확인했습니다. 자료의 각 부분이 맡는 일을 그립니다.</p>
@@ -53,6 +57,7 @@ export default function Article() { return <article className="space-y-16">
 <h2 className="text-2xl font-bold">7. 10을 11로 바꾸면 정확한 나눗셈이 깨집니다</h2>
 <p className="leading-8">정상 답 10에서는 몫 q=X+6입니다. 답 11을 주장하면 f(X)−11=X²+2X−8이고 X−4로 나눈 나머지는 f(4)−11=−1≡16입니다. 따라서 다항식 몫만으로 항등식을 만족시킬 수 없습니다.</p>
 <p className="leading-8">KZG에서는 C=[f(τ)]₁, π=[q(τ)]₁을 만들고 페어링으로 f(τ)−y=q(τ)(τ−z)를 검사합니다. [a]는 지수 a를 직접 공개하지 않는 군 원소라는 표기입니다. 이 식이 정상 입력을 받아들이는 이유는 앞의 다항식 항등식입니다. 거짓 답을 만들기 어렵다고 말하려면 별도의 암호 가정과 차수 제한이 필요합니다.</p>
+<TauForgeryViz />
 <p className="leading-8">τ=7을 모두 알고 있는 장난감 경우를 보겠습니다. f(7)=66≡15입니다. 거짓 답 11에 대해 (15−11)/(7−4)=4/3≡7을 구할 수 있어 π=[7]로 평가점의 등식을 맞춥니다. 이 예는 비밀 준비값 노출의 문제이며 안전한 SRS에서는 τ를 알려 주지 않습니다.</p>
 <ExplainedFormula question="몫이 존재하는 조건은 왜 평가값의 정확성을 뜻하나요?" idea="다항식 나눗셈의 나머지는 X=z를 넣었을 때 f(z)−y입니다. 나머지가 0이면 X−z가 인수입니다." formula={String.raw`f(X)-y=(X-z)q(X),\qquad q(X)=X+6`} annotatedFormula={String.raw`f(X)-y=(X-z)q(X),\qquad q(X)=X+6`} operations={[{"expression": "f(X)-y", "annotation": ["같은 함수에서 주장한 답 10을 뺍니다."]}, {"expression": "(X-z)q(X)", "annotation": ["X−4와 X+6의 곱이 그 차이와 같아야 합니다."]}]} terms={[{"symbol": "f", "name": "고정한 다항식", "description": "X²+2X+3입니다."}, {"symbol": "z,y", "name": "질문 위치와 답", "description": "4와 10입니다."}, {"symbol": "q", "name": "몫 다항식", "description": "정확한 나눗셈에서 얻은X+6입니다."}]} interpretation="y=11이면 나머지가 16이므로 같은 조건을 만족하는 다항식 q가 없습니다." assumptions={["차수 제한과 동일한 체를 사용합니다.", "이 항등식은 correctness이며 KZG의 binding 보안 증명 자체가 아닙니다."]} /><AlgorithmBlock title="평가 증명의 몫 계산 (의사코드)" input={["계수 f, 위치 z, 주장 y, 체 연산"]} steps={[{"code": "g ← f; g[0] ← g[0] − y", "note": "상수항에서 주장값을 뺍니다."}, {"code": "(q,remainder) ← divide_polynomial(g, X−z)", "note": "계수별 정확한 나눗셈입니다."}, {"code": "remainder ≠ 0이면 거절; 아니면 q를 증명에 사용", "note": "군 커밋먼트 방식은 별도로 선택합니다."}]} output="y=10이면 q=X+6, y=11이면 나머지 16" />
 <p data-stage-bridge="commit-open" className="text-sm leading-7 text-muted-foreground">정상 몫과 준비값 노출 시 위조를 나눴습니다. 원문의 실제 검증 식에 값을 대응합니다.</p>
@@ -67,6 +72,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="schemes" data-teach-level="6" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">9. 같은 10을 벡터 내적으로 쓰고 절반으로 접습니다</h2>
 <p className="leading-8">계수를 a=(3,2,1,0), 질문의 거듭제곱을 b=(1,4,16,0)으로 놓으면 내적은 27≡10입니다. 마지막 0은 길이를 4로 맞추기 위한 패딩입니다. 앞 절의 몫과 같은 평가값을 다른 연산 구조로 썼습니다.</p>
+<IpaFoldViz />
 <p className="leading-8">원문의 접기 규칙처럼 a′=x aL+x⁻¹aR, b′=x⁻¹bL+x bR로 둡니다. 가정한 질문 x=2, 역수 9를 넣으면 a′=(15,4), b′=(7,2)입니다. 새 내적은 113≡11로, 원래 10과 같지 않습니다. 교차 내적 L=14,R=1을 함께 반영해야 10+2²×14+2⁻²×1≡11이 됩니다.</p>
 <p className="leading-8">이 교차항을 연결하는 군 자료와 최종 내적 검사가 IPA의 일부입니다. 단순히 숫자 벡터를 절반으로 줄였다는 것만으로 증명이 되지는 않습니다. 원소 관계를 모르는 생성자와 올바른 질문 순서도 필요합니다.</p>
 <div id="source-ipa"><CitationBlock source="Bulletproofs (2017/1066) · §3, PDF p.13, inner-product argument" citeKey={1} href="https://eprint.iacr.org/2017/1066.pdf"><p className="leading-8">원문: <q>inner product argument</q></p><p className="leading-8">논문의 양쪽 벡터 접기에서 x=2를 넣으면(15,4)와(7,2), 교차항을 포함한 새 내적 11을 얻습니다.</p></CitationBlock></div><div id="paper-bulletproofs-ipa"><CitationBlock source="Bulletproofs · Inner-product argument, §3" citeKey={3} href="https://eprint.iacr.org/2017/1066.pdf"><p className="leading-8"><strong>문제:</strong> 두 긴 벡터의 내적 주장을 짧은 자료로 확인합니다.</p><p className="leading-8"><strong>기여:</strong> 교차항을 공개 자료에 묶고 질문으로 벡터 길이를 절반씩 줄입니다.</p><p className="leading-8"><strong>전제:</strong> 소수 차수 군과 이산로그 가정, 올바른 질문 순서를 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 이 글은 논문의 내적 논증 한 단계를 4개 항에서 2개 항으로 계산했습니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 한 단계의 산술이 전체 범위 증명이나 숨김 성질을 대신하지는 않습니다.</p></CitationBlock></div><div id="paper-halo-ipa"><CitationBlock source="Halo: Recursive Proof Composition without a Trusted Setup" citeKey={2} href="https://eprint.iacr.org/2019/1021.pdf"><p className="leading-8"><strong>문제:</strong> 재귀 검증에서 커밋먼트 검사의 비용과 준비 가정을 다룹니다.</p><p className="leading-8"><strong>기여:</strong> 내적 기반 커밋먼트와 검증 누적을 연결합니다.</p><p className="leading-8"><strong>전제:</strong> 곡선과 이산로그, 논문의 누적 검증 조건을 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 해당 Halo 구성의 내적 기반 커밋먼트와 재귀 검증 누적 범위입니다. 모든 IPA 구현의 성능 비교를 제공하는 근거는 아닙니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 모든 IPA 방식의 비용이나 양자 내성이 같다는 뜻은 아닙니다.</p></CitationBlock></div>

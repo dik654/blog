@@ -3,6 +3,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import WitnessSearchViz from "./viz/WitnessSearchViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -51,6 +52,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="security" data-teach-level="4" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">7. 참인 명제·거짓 명제·잘못된 증인을 구별합니다</h2>
+<WitnessSearchViz />
 <p className="leading-8">완전성은 정상 증인 4로 만든 증거가 통과해야 한다는 요구입니다. 건전성은 증인이 하나도 없는 명제 (0,1)를 공격자가 통과시키기 어려워야 한다는 요구입니다. (3,12)에 5를 넣는 것은 잘못된 증인 입력이지만 공개 명제는 여전히 참입니다. 증명 생성 함수가 입력을 거절하는 검사와 거짓 명제에 관한 보안 정의를 섞지 않습니다.</p>
 <p className="leading-8">지식 건전성은 통과하는 증거를 만드는 공격자로부터 해당 명제의 증인을 얻는 추출기를 논할 수 있어야 한다는 더 강한 요구입니다. 영지식은 증거를 보아도 공개 명제에서 이미 알 수 있는 것에 더해 증인 정보가 새로 늘지 않는다는 성질입니다. 이번 예에서 4를 알아낼 수 있는 이유는 공개값 3과 12에 있으며 영지식이 공개 정보의 수학적 결과를 지울 수는 없습니다.</p>
 <p className="leading-8">비대화형 검사 번호를 해시로 만들 때는 문제, 규칙 식별자와 앞선 메시지를 함께 넣습니다. 이를 Fiat–Shamir 변환이라고 합니다. 먼저 검사 번호를 알려 주면 그 번호에서만 맞는 답을 만들 여지가 생기므로 자료를 고정한 다음 번호를 정하는 순서가 필요합니다.</p>

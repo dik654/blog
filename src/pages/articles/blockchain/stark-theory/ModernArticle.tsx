@@ -3,6 +3,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import ConstraintRowsViz from "./viz/ConstraintRowsViz";
+import LdeCountViz from "./viz/LdeCountViz";
+import MaskingViz from "./viz/MaskingViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -52,6 +55,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="trace-air" data-teach-level="4" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">7. 세 상태를 잇는 다항식에서 전이 몫 10이 나옵니다</h2>
 <p className="leading-8">시간을 T로 적으면 상태(1,6,10)을 잇는 다항식은 v(T)=8T²+14T+1입니다. T=0,1,2를 넣어 1,23≡6,61≡10을 확인합니다. 각 단계에서 더할 수는 a(T)=T+2로 표현할 수 있습니다.</p>
+<ConstraintRowsViz />
 <p className="leading-8">전이 차이 N(T)=v(T+1)−4v(T)−(T+2)를 전개하면 10T²+7T=10T(T−1)입니다. 실제 전이가 적용되는 시간 0과 1에서 0이어야 하므로 T(T−1)로 나누며 몫은 10입니다. 마지막 행 2에는 다음 실행이 없으므로 전이 조건을 무조건 적용하지 않습니다.</p>
 <p className="leading-8">첫 경계의 몫은(v(T)−1)/T=8T+14, 마지막 경계의 몫은(v(T)−10)/(T−2)=8T+13입니다. 세 몫에 가정한 가중치 1,2,3을 주면 10+2(8T+14)+3(8T+13)=6T+9가 됩니다. 실제 가중치는 표 고정 뒤 정합니다.</p>
 <ExplainedFormula question="전이 조건을 왜 다항식의 정확한 나눗셈으로 쓰나요?" idea="전이가 필요한 T=0,1에서 차이가 0이면 T와 T−1이 모두 인수입니다." formula={String.raw`Q(T)=\frac{v(T+1)-4v(T)-(T+2)}{T(T-1)}=10`} annotatedFormula={String.raw`Q(T)=\frac{v(T+1)-4v(T)-(T+2)}{T(T-1)}=10`} operations={[{"expression": "v(T+1)-4v(T)-(T+2)", "annotation": ["다음 상태에서 규칙대로 계산한 값을 뺍니다."]}, {"expression": "T(T-1)", "annotation": ["전이가 실제로 필요한 두 행에서 0인 인수입니다."]}]} terms={[{"symbol": "T", "name": "시간 좌표", "description": "다항식을 평가하는 변수입니다."}, {"symbol": "v", "name": "상태 다항식", "description": "세 행을 보간한 8T²+14T+1입니다."}, {"symbol": "Q", "name": "전이 몫", "description": "분수의 비율이 아니라 정확한 다항식 몫입니다."}]} interpretation="분자가 10T(T−1)이므로 몫 10이 존재합니다." assumptions={["17로 나눈 나머지에서 계산합니다.", "이 장난감 예는 연속 시간좌표를 사용하며 실제 곱셈 부분군 기반 구현의 인덱스와 구별합니다."]} /><AlgorithmBlock title="작은 실행의 AIR 검사 (의사코드)" input={["상태[1,6,10], 입력 4, 단계계수[2,3], 공개답 10"]} steps={[{"code": "state[0]=1, state[2]=10인지 확인", "note": "시작과 공개 끝점을 묶습니다."}, {"code": "t=0,1 각각에서 (state[t+1]−4×state[t]−coeff[t]) mod17=0 확인", "note": "마지막 행 이후에는 전이를 만들지 않습니다."}, {"code": "실패가 있으면 거절; 통과한 표를 약정한 보간 형식으로 변환", "note": "이 계산은 전체 암호 프로토콜의 입력 조건입니다."}]} output="경계 2개와 전이 2개를 만족한 실행표" />
@@ -60,6 +64,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="lde-fri" data-teach-level="5" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">8. 원문은 이웃 행과 지정된 끝점을 따로 적습니다</h2>
 <p className="leading-8">STARK 원문의 AIR 관계는 지정한 행·열의 값과 인접 시간의 조건을 따로 둡니다. 원문의 wⱼ(i)=α에 처음 행의 1과 마지막 행의 10을 넣으면 경계 조건입니다. P(w[t],w[t+1])=0에는 앞 절의 두 전이 차이를 넣습니다.</p>
+<LdeCountViz />
 <p className="leading-8">이 표를 세 점에서만 보간하면 어떤 세 값에도 차수 2 이하 다항식이 존재합니다. 같은 함수를 8개의 다른 점에서 다시 평가하면 허용된 함수들이 임의의 8칸 표보다 적어집니다. 예를 들어 T=3에서 v(3)=115≡13입니다. 단순히 기존 세 값을 복사해 길이만 늘리는 것이 아닙니다.</p>
 <p className="leading-8">평가표의 고정값과 필요한 위치의 값을 연결하고 조건의 몫과 FRI 검사를 함께 확인해야 합니다. FRI만 통과했다고 특정 공개 출력 10까지 확인한 것은 아닙니다.</p>
 <div id="source-air"><CitationBlock source="Scalable, transparent, and post-quantum secure computational integrity · AIR 정의, PDF p.36" citeKey={1} href="https://eprint.iacr.org/2018/046.pdf"><p className="leading-8">원문: <q>wj(i) = α</q></p><p className="leading-8">시간 0의 상태를 1, 시간 2의 상태를 10에 묶습니다. 전이 조건 두 개와 별도인 경계입니다.</p></CitationBlock></div>
@@ -68,6 +73,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="source" data-teach-level="6" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">9. 표를 열어 주면 감춘 값도 새로 드러날 수 있습니다</h2>
 <p className="leading-8">원 논문은 계산 무결성 증명과 영지식 구성을 구분해서 다룹니다. 작은 예의 표를 그대로 열면 상태 1·6·10을 보게 됩니다. 이 값들이 공개 정보로부터 이미 결정된다면 새로운 비밀은 없지만 비공개 계수가 포함된 실제 작업에서는 열어 준 값이 추가 정보를 줄 수 있습니다.</p>
+<MaskingViz />
 <p className="leading-8">상태를 숨겨야 하는 경우에는 원래 행에서 0이 되는 다항식 Z(T)=T(T−1)(T−2)에 무작위 다항식 r(T)를 곱해 v(T)+Z(T)r(T)로 가리는 아이디어를 사용할 수 있습니다. 원래 0·1·2행의 값은 보존됩니다. 예제로 r=1이면 T=3의 값은 13+6=19≡2로 바뀝니다.</p>
 <p className="leading-8">무작위 상수 하나가 전체 영지식을 보장한다는 뜻은 아닙니다. 열어 주는 평가 수와 결합 관계에 비해 충분한 무작위 자유도가 남아야 하고 증가한 차수와 모든 검증 조건을 함께 바꿔야 합니다. 원문의 영지식 분석이 필요한 이유입니다.</p>
 <div id="source-stark-zk"><CitationBlock source="STARK 원 논문 · Abstract, zero-knowledge 구성" citeKey={1} href="https://eprint.iacr.org/2018/046.pdf"><p className="leading-8">원문: <q>zero knowledge</q></p><p className="leading-8">v+Zr에서 r=1인 작은 계산은 원래(1,6,10)을 보존하고 T=3의 13을 2로 바꿉니다. 이 한 번의 가리기는 전체 영지식 증명이 아닙니다.</p></CitationBlock></div><div id="paper-stark"><CitationBlock source="Scalable, transparent, and post-quantum secure computational integrity (2018)" citeKey={2} href="https://eprint.iacr.org/2018/046.pdf"><p className="leading-8"><strong>문제:</strong> 비밀 준비값 없이 큰 계산의 정확성을 효율적으로 확인합니다.</p><p className="leading-8"><strong>기여:</strong> 실행 관계·대수 검사·표의 고정과 근접성 검사를 연결합니다.</p><p className="leading-8"><strong>전제:</strong> 논문이 지정한 체·해시·무작위 오라클과 오류 분석을 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 원 논문의 구성과 저자 구현 평가입니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 모든 STARK 매개변수나 하위 암호를 포함한 전체 서비스의 영지식·양자 안전성을 보장하지 않습니다.</p></CitationBlock></div>

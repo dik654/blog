@@ -4,6 +4,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PoseidonJourneyViz from "./viz/PoseidonJourneyViz";
+import ProjectionPreimageViz from "./viz/ProjectionPreimageViz";
+import RoundScheduleCostViz from "./viz/RoundScheduleCostViz";
+import MissingConstraintViz from "./viz/MissingConstraintViz";
 import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 const PIN="https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3";
 export default function ModernArticle(){const sidebar=useCodeSidebar();return <div className="space-y-16 [overflow-wrap:anywhere]">
@@ -68,7 +71,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">일반적인 MDS 판정은 모든 정사각 부분행렬이 가역인지 보는 것과 같습니다. 이번 2×2 표에서는 네 개의 원소와 전체 행렬식 1이 모두 0이 아닙니다. 전체 행렬식 하나만 확인하는 검사보다 강한 조건입니다.</p>
 <p className="leading-8">그래도 안전한 반복 설계가 자동으로 얻어지지는 않습니다. 일부 차이들의 집합이 여러 라운드에 걸쳐 비선형 칸을 피하는 경로가 생길 수 있습니다. 2021년 원문도 MDS 행렬에 추가적인 부분공간 경로 검사를 요구합니다. 작은 예의 분기 수를 실제 모든 공격에 대한 안전성으로 확대할 수 없습니다.</p>
 </div><ExplainedFormula question="가역인 행렬은 모두 같은 정도로 잘 섞을까요?" idea={<>입력 차이의 0이 아닌 칸 수와 출력 차이의 0이 아닌 칸 수를 더해 가장 작은 경우를 봅니다.</>} formula={String.raw`B(M)=\min_{v\ne0}\{\operatorname{wt}(v)+\operatorname{wt}(Mv)\}`} annotatedFormula={String.raw`\begin{gathered}B(M)=\min_{v\ne0}\bigl(\operatorname{wt}(v)+\operatorname{wt}(Mv)\bigr)\\M=\begin{pmatrix}1&1\\1&2\end{pmatrix}:B(M)=3\\I=\begin{pmatrix}1&0\\0&1\end{pmatrix}:B(I)=2\end{gathered}`} operations={[{expression:String.raw`\begin{gathered}M(1,0)^T=(1,1)^T\\1+2=3\end{gathered}`,annotation:["한 칸의 차이가 두 출력 칸에 퍼집니다."]},{expression:String.raw`\begin{gathered}M(1,-1)^T=(0,-1)^T\\2+1=3\end{gathered}`,annotation:["서로 상쇄되는 차이도 합계가 3 아래로 내려가지 않습니다."]}]} terms={[{symbol:"v",name:"입력 차이",description:"0벡터를 제외한 두 입력 사이의 차이입니다."},{symbol:"\\operatorname{wt}",name:"0이 아닌 칸 수",description:"값의 크기가 아니라 차이가 존재하는 칸을 셉니다."},{symbol:"B",name:"분기 수",description:"모든 비영 차이 중 입력·출력 칸 수 합의 최솟값입니다."}]} assumptions={["이번 행렬과 연산은 F₁₇의 두 칸입니다.","MDS 조건은 t칸에서 분기 수 t+1이며 다중 라운드 보안과는 별도입니다."]} interpretation="항등행렬은 행렬식 1로 가역이지만 한 칸 차이를 한 칸에만 남겨 분기 수가 2입니다."/><CitationBlock source="Grassi 외 · USENIX Security 2021, 인쇄 524쪽" href="https://www.usenix.org/system/files/sec21-grassi.pdf" citeKey={1}>각주 7의 분기 수·소행렬 조건과 Avoiding Insecure Matrices의 추가 검사를 본문 및 페이지 이미지에서 대조했습니다.</CitationBlock></section>
-<section id="projection" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 전체 상태의 역과 한 칸짜리 해시의 역은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="projection" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 전체 상태의 역과 한 칸짜리 해시의 역은 다릅니다</h2><ProjectionPreimageViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">전체 두 칸은 17×17=289가지입니다. 방금 확인한 라운드는 이 289가지 상태를 중복 없이 다른 289가지 상태로 옮기는 순열입니다. 출력 두 칸을 모두 알면 역변환으로 입력을 찾을 수 있습니다.</p>
 <p className="leading-8">이제 첫 출력 칸만 읽는다고 해 봅시다. 첫 칸이 11인 출력은 둘째 칸에 0부터 16까지 들어갈 수 있어 17가지입니다. 각 전체 출력마다 원래 입력이 하나씩 있으므로 첫 칸 11을 만드는 입력도 정확히 17개입니다. 계산해 보아도 모든 첫 칸 값에 입력이 17개씩 대응합니다.</p>
 <p className="leading-8">실제 해시는 큰 내부 상태와 충분한 라운드, 어떤 칸을 읽을지 정한 규칙을 사용해 원하는 공격을 어렵게 만듭니다. 입력 후보가 적거나 너무 적은 칸·비트를 비교하면 그 보장은 줄어듭니다. 이 작은 전수 계산은 순열과 해시의 차이를 보여 주며 안전한 해시를 제공하지 않습니다.</p>
@@ -95,13 +98,13 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">같은 [3,4,0]을 넣은 Poseidon2의 첫 출력 칸은 <code>0f2021db8d04204e74cec23e5bd3fe4562e2cac46ab33fe7310325c5b0d0b1eb</code>입니다. 원래 Poseidon의 출력과 다르므로 이름 뒤에 2가 붙은 구현을 기존 루트 계산에 그대로 교체할 수 없습니다.</p>
 <p className="leading-8">이 선형 계산의 변경은 실제 CPU 연산과 증명 형식에 따라 다른 비용 차이를 만듭니다. 이번에는 결과와 경로를 확인했으며 속도 향상률이나 증명 크기를 측정하지 않았습니다.</p>
 </div><CodeViewButton label="원문의 초기 혼합과 full·partial 경로" onClick={()=>sidebar.open("poseidon2",codeRefs["poseidon2"])}/><CodeViewButton label="세 칸에서 외부·내부 행렬을 계산하는 원문" onClick={()=>sidebar.open("mix2",codeRefs["mix2"])}/></section>
-<section id="constraints" data-calculation-explained data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 같은 설정의 240을 전체 증명 비용과 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="constraints" data-calculation-explained data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 같은 설정의 240을 전체 증명 비용과 구분합니다</h2><RoundScheduleCostViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">일반적인 이차 곱셈 제약으로 다섯제곱 하나를 세 식으로 표현한다고 합시다. 폭 3에서 full round 8개는 S-box 8×3=24개이고 partial round 56개는 56개입니다. 합계 80개에 제약 세 개씩 쓰므로 비선형 곱셈 제약은 240개입니다.</p>
 <p className="leading-8">비교를 위해 같은 64라운드를 모두 full round로 바꾸었다고 가정하겠습니다. 라운드마다 세 칸에 S-box를 적용하고 S-box 하나를 곱셈 제약 3개로 나타내므로 64라운드 × 라운드마다 3개 S-box × S-box마다 3개 제약 = 576개입니다. 이는 비용을 설명하는 가상 비교이며 그렇게 고친 설정의 보안을 인정한 것이 아닙니다. 원 논문의 partial round 57개 예에서는 full round 8개가 S-box 8×3=24개를, partial round가 첫 칸의 S-box 57개를 만듭니다. 합계 81개 S-box × S-box마다 제약 3개 = 243개입니다.</p>
 <p className="leading-8">상수 덧셈과 상수배는 R1CS의 선형 결합에 들어갈 수 있어서 이 비선형 곱셈 수에 더하지 않았습니다. 그렇다고 CPU의 덧셈·메모리 접근·증명 작성 시간이 0이라는 뜻은 아닙니다. 특수 gate, lookup, 여러 연산을 묶는 최적화와 입력 검사 비용도 별도로 고려해야 합니다.</p>
 <p className="leading-8">R1CS는 두 선형 결합의 곱이 다른 선형 결합과 같다는 식으로 제약을 쓰는 형식입니다. 이번 240은 그 형식으로 직접 전개한 비선형 부분의 계산값입니다. 실제 회로를 컴파일하거나 증명을 생성해 측정한 숫자는 아닙니다.</p>
 </div></section>
-<section id="constraint-failure" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 마지막 곱셈 조건 하나를 빼면 잘못된 결과가 통과합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="constraint-failure" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 마지막 곱셈 조건 하나를 빼면 잘못된 결과가 통과합니다</h2><MissingConstraintViz/><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">첫 칸 4의 다섯제곱을 다시 봅시다. 올바른 중간값은 u=16, v=1, y=4입니다. 만약 회로에 u=a×a와 v=u×u만 쓰고 마지막 y=v×a 조건을 빼면 y는 앞의 계산과 연결되지 않습니다.</p>
 <p className="leading-8">이 잘못된 회로에서는 y=5라고 제출해도 앞의 두 식을 만족합니다. 둘째 칸의 올바른 결과 7과 섞으면 (5+7,5+2×7)=(12,2)가 됩니다. 원래 출력 (11,1)과 다르지만 빠진 조건을 검사하지 않으면 거부할 근거가 없습니다.</p>
 <p className="leading-8">이 사례는 Poseidon을 해독한 공격이 아닙니다. 구현한 증명 관계가 의도한 계산과 달라진 것입니다. 네이티브 해시의 알려진 출력만 맞추는 검사에 더해 실제 회로에서 중간값·입력 범위·공개 출력의 연결을 확인해야 합니다.</p>

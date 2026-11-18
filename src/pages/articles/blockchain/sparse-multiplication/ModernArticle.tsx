@@ -5,6 +5,9 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ModernSparseViz from "./viz/ModernSparseViz";
+import CodeSlotOrderViz from "./viz/CodeSlotOrderViz";
+import { GroupProductElevenViz, GroupProductZeroViz } from "./viz/GroupProductViz";
+import CallLedgerViz from "./viz/CallLedgerViz";
 import { codeRefs, fileTrees } from "./codeRefs";
 export default function ModernSparseMultiplicationArticle(){const sidebar=useCodeSidebar();return <article className="space-y-14">
 <section id="overview" data-teach-level="S" className="space-y-5"><h2 className="text-2xl font-bold">1. 네 칸 중 두 칸이 0이면 그 열의 곱셈을 생략합니다</h2>
@@ -43,12 +46,14 @@ assumptions={["계수의 0 여부가 정확하고 두 배열이 같은 지수 �
 </section>
 <section id="how-sparse" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">8. 같은 다항식을 실제 여섯 칸의 순서로 옮깁니다</h2>
 <p>이제 실제 BN254의 체에서 같은 A와 B를 계산합니다. 규칙은 u²=−1, v³=9+u, w²=v입니다. 각 칸은 a+bu인 Fq2 원소이고 이번 작은 정수 계수는 b=0인 특별한 경우입니다. 큰 바탕 소수는 앞의 확장체 구현 글과 같습니다.</p>
+<CodeSlotOrderViz />
 <p>코드의 여섯 칸 순서는 1,v,v²,w,vw,v²w입니다. w만으로 쓰면 지수 순서는 0·2·4·1·3·5입니다. 따라서 A의 코드 배열은 [1,3,0,2,4,0]입니다. B=5+7w²=5+7v는 [5,7,0,0,0,0]이 됩니다.</p>
 <p>같은 출력도 w의 순서로는 [5,10,22,34,21,28]이지만 코드 순서로는 [5,22,21,10,34,28]입니다. 숫자를 바꾼 것이 아니라 같은 값의 계수 위치를 바꾼 것입니다. 아직 w⁶ 이상의 항이 없어서 축약이 결과를 섞지는 않습니다.</p>
 </section>
 <section id="source" data-teach-level="6" className="space-y-5"><h2 className="text-2xl font-bold">9. 원본 014 함수에 같은 5·7·0을 넣습니다</h2>
 <p>arkworks algebra의 commit 7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c를 고정합니다. ark-ff와 ark-ec는 0.5.0이고 별도 curves workspace의 ark-bn254는 0.5.0-alpha.0입니다. 함수 mul_by_014는 여섯 칸 중 0·1·4번의 계수를 인자로 받습니다.</p>
 <CodeViewButton label="원본 mul_by_014 · 93–112행" onClick={()=>sidebar.open("014",codeRefs["014"])} />
+<GroupProductZeroViz />
 <p>같은 A를 두 묶음 A0=[1,3,0], A1=[2,4,0]으로 나눕니다. 이번 인자는 c0=5, c1=7, c4=0입니다. 원문의 aa는 A0(5+7v)=[5,22,21]이고 bb는 A1·0v=0입니다.</p>
 <p>다음 합의 곱은 (A0+A1)(5+7v)=[3,7,0](5+7v)=[15,56,49]입니다. 여기서 aa와 bb를 빼면 위 묶음 [10,34,28]을 얻습니다. 아래 묶음은 aa 그대로입니다. 따라서 여덟 손계산과 같은 [5,22,21,10,34,28]이 나옵니다.</p>
 <CodeViewButton label="원본 아래층 mul_by_01 · 111–152행" onClick={()=>sidebar.open("01",codeRefs["01"])} />
@@ -64,6 +69,7 @@ annotatedFormula={String.raw`\begin{gathered}w^2=v,\quad v^3=\xi=9+u\\44w^6=44(9
 operations={[{expression:String.raw`(34+11)w^3=45w^3`,annotation:["원래 출력과 새 부분 곱의 같은 지수를 더합니다."]},{expression:String.raw`(21+22)w^4+(28+33)w^5`,annotation:["나머지 두 계수는 43과 61이 됩니다."]}]}
 terms={[{symbol:"ξ",name:"v³을 되돌리는 값",description:"이 고정 BN254 구성에서는 9+u입니다."}]}
 assumptions={["같은 u·v·w와 계수 순서를 유지합니다.","11이 생긴 입력을 예전 c4=0으로 계산하면 다른 값을 곱한 것입니다."]} interpretation="새 출력의 코드 배열은 [401+44u,22,43,10,45,61]입니다. 실수 부분만 있던 입력에서도 축약 뒤 u 계수가 생겼습니다." />
+<GroupProductElevenViz />
 <p>원문에서도 aa=[5,22,21]은 그대로입니다. bb=A1·11v=[0,22,44]이고 합의 곱은 [3,7,0](5+18v)=[15,89,126]입니다. 이 합에서 aa와 bb를 빼 위 묶음 [10,45,61]을 얻습니다.</p>
 <p>아래 묶음은 aa에 v·bb를 더합니다. v를 곱하면 [C0,C1,C2]는 [ξC2,C0,C1]이 됩니다. 이번 v·bb는 [44ξ,0,22]라서 아래 묶음이 [401+44u,22,43]으로 완성됩니다.</p>
 <CodeViewButton label="원본 한 자리 곱 mul_by_1 · 83–109행" onClick={()=>sidebar.open("1",codeRefs["1"])} />
@@ -96,6 +102,7 @@ assumptions={["실제 곡선·기저·계수 순서와 선 계산이 같은 구�
 <div id="paper-efficient-bilinear-pairings"><CitationBlock source="Grewal et al. · Efficient Implementation of Bilinear Pairings on ARM Processors · Algorithms 5·6" citeKey={2} href="https://eprint.iacr.org/2012/408">공식 PDF의 3.1절과 Algorithms 5·6을 읽고 같은 034 입력의 중간 곱을 대응시켰습니다. 이 글의 계수 순서와 알고리즘의 입력을 대응했으며 논문의 기기별 시간 측정을 재현한 것은 아닙니다.</CitationBlock></div>
 </section>
 <section id="cost-saving" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">14. 여덟 부분 곱, 열세 함수 호출, 전체 시간은 다른 장부입니다</h2>
+<CallLedgerViz />
 <p>첫 사례의 8은 다항식의 0 아닌 위치 쌍입니다. 고정 원문의 014는 mul_by_01 두 번과 mul_by_1 한 번을 사용합니다. 아래 함수에 적힌 일반 Fq2 곱은 각각 5회와 3회이므로 합은 5+3+5=13회입니다. 034도 직접 세 곱과 아래 함수 두 번으로 3+5+5=13회입니다.</p>
 <p>일반 Fq12 곱은 위층의 세 Fq6 곱과 각 Fq6의 여섯 Fq2 곱으로 18회를 호출합니다. 이는 여섯 칸을 모두 곱한 36쌍과도 다른 알고리즘입니다. 전용 함수의 인자가 우연히 0이라고 이 호출 장부에서 해당 곱을 자동으로 지우지는 않습니다.</p>
 <p>이 장부에는 ξ 같은 상수 곱과 덧셈·축약·메모리 접근 비용이 따로 남습니다. 컴파일된 명령이나 실제 시간은 또 확인해야 합니다. 이 글에서는 속도를 측정하지 않았습니다.</p>

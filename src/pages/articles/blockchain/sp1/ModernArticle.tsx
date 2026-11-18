@@ -6,6 +6,9 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefsReal, SP1_COMMIT, SP1_VERSION } from "./codeRefsReal";
 import { sp1RealTree } from "./fileTreeReal";
 import { Sp1ReceiptViz } from "./Sp1ReceiptViz";
+import ShardContinuityViz from "./viz/ShardContinuityViz";
+import TensorShapeViz from "./viz/TensorShapeViz";
+import VerifyOrderViz from "./viz/VerifyOrderViz";
 
 const SOURCE = `https://github.com/succinctlabs/sp1/tree/${SP1_COMMIT}`;
 const PROGRAM = `https://github.com/succinctlabs/sp1/blob/${SP1_COMMIT}/crates/core/executor/src/program.rs`;
@@ -238,6 +241,7 @@ export default function ModernSp1() {
             ExecutionRecord는 instruction count 하나가 아닙니다. CPU·ALU·memory·branch event와
             syscall·precompile event를 담습니다. Memory 초기화·종료와 public values도 같은 record에 남습니다.
           </p>
+          <ShardContinuityViz />
           <p>
             긴 record는 여러 shard로 나눌 수 있습니다. 그러나 유효한 proof들을 아무 순서로 붙인다고 한 실행이
             되지는 않습니다.
@@ -335,6 +339,8 @@ export default function ModernSp1() {
             </h2>
           </header>
 
+          <VerifyOrderViz />
+
           <p>
             SDK verifier는 먼저 proof bundle의 SP1 version이 현재 circuit version과 같은지 확인합니다. Core와
             Compressed에서는 proof 안의 committed-value digest가 public values hash와 같은지 봅니다.
@@ -375,6 +381,8 @@ export default function ModernSp1() {
               검증기 자체도 release gate로 막습니다
             </h2>
           </header>
+
+          <TensorShapeViz />
 
           <p>
             SP1 v6.0.0부터 v6.8.0까지의 native Rust verifier에는 proof tensor의 선언 dimensions와 실제 storage

@@ -3,6 +3,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import ZkCaseDiagram from "../ZkCaseDiagram";
+import ExponentWheelViz from "./viz/ExponentWheelViz";
+import NonceReuseViz from "./viz/NonceReuseViz";
+import SimulationOrderViz from "./viz/SimulationOrderViz";
+import PedersenGridViz from "./viz/PedersenGridViz";
 
 /** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
 export default function Article() { return <article className="space-y-16">
@@ -22,6 +26,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="case" data-teach-level="0" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">3. 12를 보낸 뒤 질문 2에 답 7을 보냅니다</h2>
+<ExponentWheelViz />
 <p className="leading-8">2를 거듭제곱한 뒤 23으로 나눈 나머지를 사용합니다. 지수는 11마다 되돌아오므로 지수 계산은 11로 나눈 나머지로 합니다. 비밀 4에서 공개값은 2⁴=16입니다. 이번 대화용 숫자 10을 골라 2¹⁰의 나머지 12를 먼저 보냅니다. 모두 가정입니다.</p>
 <p className="leading-8">질문 2를 받으면 10+2×4=18을 11로 나눈 7을 답합니다. 확인하는 사람은 2⁷의 나머지 13과 12×16²의 나머지 13이 같은지 봅니다. 실제 비밀 4를 직접 받지 않아도 등식은 맞습니다.</p>
 
@@ -36,6 +41,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="need" data-teach-level="2" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">5. 새 질문마다 처음 고른 수를 새로 써야 합니다</h2>
+<NonceReuseViz />
 <p className="leading-8">질문이 2일 때 답 7을 보냈는데 같은 처음 값 12로 질문 5에도 답한다고 합시다. 답은 10+5×4=30의 나머지 8입니다. 두 답을 빼면 처음 고른 10이 없어지고 비밀 4만 남습니다.</p>
 <p className="leading-8">정상 대화 하나가 비밀을 더 알려 주지 않는다는 성질과, 서로 다른 두 질문에 답할 수 있는 사람에게서 비밀을 추출할 수 있다는 성질이 함께 작동합니다. 전자는 개인정보 보호를, 후자는 알고 있다는 주장을 뒷받침합니다.</p>
 
@@ -58,6 +64,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="simulation" data-teach-level="5" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">8. 역순 계산은 실제 대화의 순서와 다릅니다</h2>
+<SimulationOrderViz />
 <p className="leading-8">비밀 4를 쓰지 않고 질문 2와 답 7을 먼저 고르면 처음 값을 2⁷×16⁻²로 계산할 수 있습니다. 16²≡3이고 3의 역수는 8이므로 13×8≡12입니다. 실제 대화와 같은 (12,2,7)이 나옵니다. 균일한 질문과 응답을 고르는 이 구성은 정직한 검증자에 대한 시뮬레이션을 설명합니다.</p>
 <p className="leading-8">실제 대화에서는 처음 값 12를 보낸 뒤 상대가 질문을 정합니다. 시뮬레이터는 보안 정의 속 가상 알고리즘이므로 질문을 먼저 고를 수 있습니다. 악의적 검증자 전체나 비대화형 변환의 보장은 이 한 계산만으로 증명되지 않습니다.</p>
 <p className="leading-8">RFC8235는 부호가 반대인 응답 표기를 씁니다. 원문에서 a=4, v=10, c=2를 넣으면 r=2이며 V=2²×16²≡12입니다. 이 글의 더하기 응답 7과 원문의 빼기 응답 2는 각각의 검증 식에 맞춰 사용해야 합니다.</p>
@@ -66,6 +73,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="source" data-teach-level="6" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">9. 숨겨도 바꿀 수 있으면 약속이 되지 않습니다</h2>
+<PedersenGridViz />
 <p className="leading-8">Pedersen 방식에서 C=gᵐhʳ을 사용합니다. 같은 작은 군에서 g=2,h=8,m=4,r=10이면 C=2입니다. 이 예에서는 h=2³인 관계를 모두 알고 있으므로 (m,r)를 (7,9)로 바꾸어도 2⁷×8⁹≡2가 됩니다. 숨김과 별개로 약속을 바꿀 수 있는 경우입니다.</p>
 <p className="leading-8">서로 다른 두 열림이 같다면 m+ar=m′+ar′이므로 a=(m−m′)/(r′−r)입니다. 위 값은 (4−7)/(9−10)=3을 줍니다. 여기서 a=log_g h는 군의 지수를 찾는 이산로그이며 일반 실수 로그나 계산 비용의 로그 변환을 뜻하지 않습니다.</p>
 <p className="leading-8">실제 생성자에서는 이 관계를 아무도 알지 못하도록 정하고 각 r을 균일하게 새로 뽑습니다. r이 균일하면 모든 m에 대해 C가 같은 균일 분포여서 hiding이 성립합니다. binding은 생성자 사이 이산로그를 구하기 어렵다는 계산 가정에 기댑니다.</p>

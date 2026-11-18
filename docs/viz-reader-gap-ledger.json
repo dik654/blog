@@ -7832,202 +7832,344 @@
 {
 "route": "crypto/libiop",
 "publicPath": "cs/crypto/libiop",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "crypto/mpc",
 "publicPath": "cs/crypto/mpc",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "crypto/nova",
 "publicPath": "cs/crypto/nova",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 1,
+"articleIssues": [
+"The served route crypto/nova renders src/pages/articles/blockchain/nova.tsx → nova/ModernArticle.tsx. No file exists under src/pages/articles/crypto/. Overview.tsx, NIFS.tsx and NovaFoldingViz.tsx in that folder are not rendered by the current article.",
+"Missing spaces in the prose: §7 '배율은u₁=u₂=1', §8 'E₂에(0,0,1,2)' and 'u₂에는(1,1,2)', §9 '얻은u′=3,E′=2'. All are typography only; the numbers check out."
+]
 },
 {
 "route": "crypto/paillier-cryptosystem",
 "publicPath": "cs/crypto/paillier-cryptosystem",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 4,
+"articleIssues": [
+"The served route crypto/paillier-cryptosystem renders src/pages/articles/blockchain/paillier-cryptosystem.tsx → ModernArticle.tsx. No file exists under src/pages/articles/crypto/.",
+"I found no numeric errors. I recomputed 2¹⁵, 4¹⁵, 16³, 16⁴ mod 225, the CRT values for 92 and 173, 173×53⁻¹ ≡ 16 mod 225, and r²¹ mod 441 for every unit; all match the article."
+]
 },
 {
 "route": "crypto/pairing",
 "publicPath": "cs/crypto/pairing",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 6,
+"articleIssues": [
+"§16 paragraph 2 uses M and Mᶜᴱ ('앞부분까지 합친 출력은 … Mᶜᴱ') before M is defined as the raw Miller value in §17. The new Viz defines M in its description, but the prose order is unchanged."
+]
 },
 {
 "route": "crypto/plonk",
 "publicPath": "cs/crypto/plonk",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 6,
+"articleIssues": [
+"§14 ExplainedFormula terms use symbol \"\\rho\" inside a normal double-quoted JS string, so \\r becomes a carriage return and the symbol likely renders as 'ho' rather than ρ. Not edited.",
+"§16–§17 say the gnark run uses 8 rows. In §17, positions 18 (O row 2) and 11 (R row 3) assume L·R·O are concatenated as 0–7, 8–15, 16–23. That is consistent, but I did not verify it against the source."
+]
 },
 {
 "route": "crypto/plonky3",
 "publicPath": "cs/crypto/plonky3",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "crypto/polycommit",
 "publicPath": "cs/crypto/polycommit",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"#case paragraph 2: missing space after the comma in 'X²+2X−24로,17에서'. Same kind of spacing slips in the ExplainedFormula term '얻은X+6' and in the source-ipa citation '넣으면(15,4)와(7,2)'. These are typography only; the arithmetic was rechecked and is correct."
+]
 },
 {
 "route": "crypto/poseidon-hash",
 "publicPath": "cs/crypto/poseidon-hash",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 4,
+"articleIssues": [
+"The task route key is crypto/poseidon-hash, but the source lives at src/pages/articles/blockchain/poseidon-hash (ModernArticle.tsx). The legacy section files there (HADES.tsx with '585 제약, 58% 절감', Poseidon2.tsx with '~30% 향상', Sponge.tsx and others) are not rendered by ModernArticle. Their numbers (585) disagree with the rendered article's 576. I left them untouched."
+]
 },
 {
 "route": "crypto/proofofsql",
 "publicPath": "cs/crypto/proofofsql",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2,
+"articleIssues": [
+"The task route key is crypto/proofofsql, but the source is src/pages/articles/blockchain/proofofsql/ModernArticle.tsx. I found no factual errors in the prose."
+]
 },
 {
 "route": "crypto/prover-memory-and-verifier-cost",
 "publicPath": "cs/crypto/prover-memory-and-verifier-cost",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"§7 / bridge text / ReviewPrompt 1: the article uses M_peak = max_t Σ live(t), and §3–4 assume input and output are held together during the transform (4.25GiB). By that formula, freeing the input table before hashing lowers the hash-moment sum to ≈2.75GiB, but the peak becomes the transform moment at 4.25GiB, not 2.75GiB. So the bridge sentence '동시 유지와 먼저 해제의 2GiB 차이' and the phrase '약 2.75GiB로 내려갑니다' read as a 2GiB drop in peak, when the peak by the article's own formula drops only 0.5GiB (4.75→4.25). The only exception is an in-place transform. The Viz shows the hash-moment sum as 2.75 and marks ③ 4.25GiB as the peak in that scenario.",
+"Location note: the task named src/pages/articles/crypto/…, but this article's source is src/pages/articles/blockchain/prover-memory-and-verifier-cost/ (public path /cs/crypto/prover-memory-and-verifier-cost). I edited it there."
+]
 },
 {
 "route": "crypto/reed-solomon",
 "publicPath": "cs/crypto/reed-solomon",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"Location note: the source is src/pages/articles/blockchain/reed-solomon/ModernArticle.tsx (public path /cs/crypto/reed-solomon), not src/pages/articles/crypto/. That directory also holds older section files (Overview/Encoding/ErrorCorrection/ZKConnection.tsx) that index.tsx does not render. I read them only for their imports and did not edit them."
+]
 },
 {
 "route": "crypto/risc0",
 "publicPath": "cs/crypto/risc0",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"#verify-path step 5 says a journal mismatch yields ClaimDigestMismatch. The #integrity-boundary table says verify_integrity (step 2) already checks journal↔output digest, so a tampered journal (390) might fail at the integrity step before the claim comparison. The prose does not resolve which error is raised. The Viz therefore says only 'digest 불일치 → 거절' without naming the error."
+]
 },
 {
 "route": "crypto/scroll-zkevm",
 "publicPath": "cs/crypto/scroll-zkevm",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "crypto/shamir-secret-sharing",
 "publicPath": "cs/crypto/shamir-secret-sharing",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "crypto/snark-overview",
 "publicPath": "cs/crypto/snark-overview",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 1,
+"articleIssues": [
+"§9 first paragraph has a double space in '사례에서는  4를', and §9 second paragraph has one in '관계에서는  공개값에서'.",
+"Overview.tsx, Landscape.tsx, VerifyFlow.tsx, Components.tsx and viz/SNARKInterfaceViz.tsx in snark-overview are not imported by index.tsx/ModernArticle.tsx, so they do not render. Overview.tsx states that most SNARKs need a trusted setup, which ModernArticle §6 explicitly warns against assuming."
+]
 },
 {
 "route": "crypto/sp1",
 "publicPath": "cs/crypto/sp1",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "crypto/sparse-multiplication",
 "publicPath": "cs/crypto/sparse-multiplication",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 4
 },
 {
 "route": "crypto/stark-theory",
 "publicPath": "cs/crypto/stark-theory",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"§8 says '같은 함수를 8개의 다른 점에서 다시 평가하면'. It is unclear whether the 8 points include the original rows 0·1·2. The Viz assumes T=0…7 and marks this (가정).",
+"Some sentences are missing a space before a minus sign or a parenthesis, for example '조건과−1인', '상태는(1,6,10)입니다', '몫은(v(T)−1)/T' and the review prompt 'v에T(T−1)(T−2)'. This is typography only; I recomputed all the numbers and they are correct."
+]
 },
 {
 "route": "crypto/zk-theory",
 "publicPath": "cs/crypto/zk-theory",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 4,
+"articleIssues": [
+"No numeric errors found. I rechecked 2^10≡12, 2⁷≡13=12×16², 18 mod 11=7, 30 mod 11=8, 8×7≡1 mod 11, 16²≡3, 3⁻¹≡8, 13×8≡12, the RFC values r=2 and V=12, Pedersen C=2 for (4,10) and (7,9), and a=3.",
+"§9 '(4−7)/(9−10)=3' uses ordinary division of integers. It equals the mod-11 result, but the article does not say the division is mod 11."
+]
 },
 {
 "route": "economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence",
 "publicPath": "history/economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"§1 counts the cash crop as '현금작물 20자루' (20 sacks), while §3, §7 and numericCase treat the same 20 as 판매액/매출 (a money amount). The prose never says that one sack equals one unit of money.",
+"§7 '외채 상환이 함께 줄 수 있습니다' is ambiguous. It reads as if less debt is repaid, which might be meant as reduced ability to repay. The Viz keeps the wording."
+]
 },
 {
 "route": "economic-history/central-asia-pastoralism-irrigation-planning-and-corridors",
 "publicPath": "history/economic-history/central-asia-pastoralism-irrigation-planning-and-corridors",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "economic-history/china-since-1800-households-markets-and-reform",
 "publicPath": "history/economic-history/china-since-1800-households-markets-and-reform",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/commercial-law-limited-liability-and-insolvency",
 "publicPath": "history/economic-history/commercial-law-limited-liability-and-insolvency",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"#comparison: the article says an impaired class needs '허용 청구액의 3분의 2 이상과 인원 과반'. The US rule (11 U.S.C. §1126(c)) counts only creditors who voted, so 'of those voting' may be missing from the article. I did not check this against the cited uscourts page. The Viz follows the article's wording and does not add the qualifier."
+]
 },
 {
 "route": "economic-history/containers-value-chains-platforms-and-climate-transition",
 "publicPath": "history/economic-history/containers-value-chains-platforms-and-climate-transition",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "economic-history/cooperatives-member-governance-and-surplus",
 "publicPath": "history/economic-history/cooperatives-member-governance-and-surplus",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/demography-family-economy-and-care",
 "publicPath": "history/economic-history/demography-family-economy-and-care",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/development-banks-mandates-credit-and-governance",
 "publicPath": "history/economic-history/development-banks-mandates-credit-and-governance",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/europe-serfdom-states-industrialization-and-integration",
 "publicPath": "history/economic-history/europe-serfdom-states-industrialization-and-integration",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2,
+"articleIssues": [
+"#picture: '브라운슈바이크·룩셈부르크(1842)' is ambiguous about whether 1842 applies to both states or only to Luxembourg. The Viz keeps the article's grouping and says the article groups them under 1842, but the prose should be checked against Ploeckl 2010."
+]
 },
 {
 "route": "economic-history/firms-banks-insurance-and-institutional-investors",
 "publicPath": "history/economic-history/firms-banks-insurance-and-institutional-investors",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/great-inflation-disinflation-and-financialization",
 "publicPath": "history/economic-history/great-inflation-disinflation-and-financialization",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 4
 },
 {
 "route": "economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring",
 "publicPath": "history/economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 4
 },
 {
 "route": "economic-history/japan-money-banks-industry-and-catchup",
 "publicPath": "history/economic-history/japan-money-banks-industry-and-catchup",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "economic-history/labor-bargaining-social-insurance-and-welfare-state",
 "publicPath": "history/economic-history/labor-bargaining-social-insurance-and-welfare-state",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"Section 3 computes accident-month disposable income as 60+25=85 with no premium deducted that month, but never says whether a premium is paid in the accident month. This is not necessarily an error, but a reader may wonder. The figure follows the article's arithmetic as written."
+]
 },
 {
 "route": "economic-history/land-rights-enclosure-rent-and-urbanization",
 "publicPath": "history/economic-history/land-rights-enclosure-rent-and-urbanization",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/latin-america-exports-import-substitution-and-debt",
 "publicPath": "history/economic-history/latin-america-exports-import-substitution-and-debt",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3
 },
 {
 "route": "economic-history/mena-land-debt-oil-and-diversification",
 "publicPath": "history/economic-history/mena-land-debt-oil-and-diversification",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 3,
+"articleIssues": [
+"§7 mechanism says the 1974 borrowing was from '산유국 일곱 곳', then lists six oil producers and writes that Canada's 258 million SDR '더해졌습니다'. That wording leaves it unclear whether Canada counts as one of the seven. The sum 2,808 ≈ 28억 includes Canada. The Viz labels them '일곱 곳' without calling all seven oil producers."
+]
 },
 {
 "route": "economic-history/north-america-land-slavery-railroads-and-mass-production",
 "publicPath": "history/economic-history/north-america-land-slavery-railroads-and-mass-production",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/oceania-indigenous-land-settler-exports-and-island-economies",
 "publicPath": "history/economic-history/oceania-indigenous-land-settler-exports-and-island-economies",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance",
 "publicPath": "history/economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance",
-"status": "todo"
+"status": "done",
+"round": 22,
+"vizAdded": 2
 },
 {
 "route": "economic-history/regional-gdp-household-income-and-within-country-inequality",
@@ -9948,6 +10090,76 @@
 "Left as is: in LengthExtensionViz scene 3 ('이어서 계산'), block 1 (abc + original padding) is still coloured even though the attacker never recomputes it and starts from the state T. The scene's note says this, so it is borderline and was not changed.",
 "Left as is: in SpongeStateViz the description says the row-major 5-wide layout is '14절의 5×5 좌표 배치와는 별개'. Under the FIPS 202 lane index x+5y, a row-major layout actually matches x and y, apart from FIPS drawing its figure with the origin at the centre. The hedge is not wrong, so I left it.",
 "audit:viz --strict: no ERROR lines, only 9 REVIEW lines for SVG text in CopyConstraintViz, cleared by the screenshots. viz-scene-shot at 390 and 1440 for halo2, streaming and sha3-pad: controlY and frameH constant on every scene, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r21/rv17/{halo2,hash-theory}; the pre-fix baselines are in the *-pre folders."
+],
+"22": [
+"prover-memory §7 prose vs LiveBufferPeakViz scene 5. I recomputed every number in this Viz and they are correct. Moment ③ is 256+2048+2048 = 4,352MiB = 4.25GiB. Moment ④ with the input table released is 256+2048+512 = 2,816MiB ≈ 2.75GiB. So under the article's own ordering in §4 (\"변환 동안 출력용 2GiB가 추가될 수 있습니다. 변환이 끝난 뒤 입력표를 해제하면\"), releasing early moves the peak from about 4.75GiB to 4.25GiB, a drop of 0.5GiB. The article reads otherwise. §7 says \"한쪽 평가표를 먼저 해제하면 약 2.75GiB로 내려갑니다\", the stage bridge says \"동시 유지와 먼저 해제의 2GiB 차이\", and the review prompt asks why \"가정한 최고점\" changes. All three suggest the peak falls to 2.75GiB. The Viz states the correct answer (\"이 가정의 최고점은 ③\"). The fix is in the prose: say that the 2.75GiB is the total at moment ④, not the new peak. Fixing it needs a prose edit, which is outside this task's scope.",
+"No Viz problems in MsmWindowPeakViz, MisdecodeViz or RedundancyBudgetViz. All numbers recomputed and match: 96B×16×2^16 = 96MiB; 96B×15×2^18 = 377,487,360B = 360MiB; max(416,192) and max(392,456); 2+4x mod 7 = [2,6,3,0]; Hamming distances 2, 1 and 3; 2e+s against n−k in all five scenes. Unchanged files were not audited or screenshotted.",
+"Screenshot note: in both articles the SceneShell canvas scrolls inside itself, so a scene note can be clipped above or under the control row (for example the 390px s3 shot of PairingGasStackViz). The scene-shot script reported overflow 0 and stable controls and frame across all scenes. This comes from the shared SceneShell/StableSceneStack layout, not these Viz files, so I left it alone.",
+"Arithmetic I rechecked and found correct: ShareLineViz (5+3x gives 8·11·14, 2×8−11=5, 5+3·1=0+8·1=8, the rule 0+8x stays below 17 at x=2 (16)). ShareGenerationViz (2×8−12=4, 4+4x passes (1,8)·(2,12), 5+7x gives 12·19→2·26→9, 2×12−2=22→5, 2×8−2=14). CandidateCoefficientViz ((8−s) mod 17: 0→8, 5→3, 10→15, 8→0). WitnessSearchViz (3w≡12 only at w=4, 3×5=15, 0·w=0). Nothing to fix in ShareLineViz or ShareGenerationViz.",
+"At 390px, the internal stage scroll in CandidateCoefficientViz and WitnessSearchViz puts the legend or note lines under the control row until the reader scrolls inside the stage. This follows the existing SceneShell mobile design (fixed frame with internal scroll), and the original notes already did it. The shot script reports overflow 0 and stable controlY/frameH. I did not change the shared SceneShell.",
+"All numbers in the four Viz files match the article. F17: p(t)=[1,3,4,12,1,13,5,2] and p′(t)=[1,3,4,11,14,3,2,1]. Integer shares: 112/231/392 ≡ 45/30/57 (mod 67); 2·112−231=−7≡60; 3·112−3·231+392=35. Fan: each s+a=6 line passes through (1,6); 5−6=7−8=9−10=−1. No numeric changes were needed.",
+"TamperCheckViz says the tampered table '더는 … 평가표가 아닙니다' (definite), while the article hedges ('아닐 수 있습니다'). I left it: changing one cell of a length-8, dimension-4 RS code always breaks the codeword, because the minimum distance is 5. The hedge in the prose is the softer of the two, and the Viz verdict judges the table itself, not whether a sampled test catches it.",
+"The BcsOrderViz title '열린 칸이 표 전체를 대표합니다' leaves out the probabilistic qualifier: opened cells stand in for the table only as an unpredictable sample. The title comes from the task list, so I did not change it. A reviewer may want '…확률적으로 대표' instead.",
+"Both SceneShell.tsx copies are identical to the shared shell. No issues found.",
+"Verification: audit:viz --strict found 0 ERROR lines (only SVG-text REVIEW notes). viz-scene-shot at 390 and 1440: controlY and frameH constant across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r22/rv0/libiop and /tmp/viz-rounds/r22/rv0/mpc. At 390px TamperCheckViz's long scenes scroll inside the canvas, as section 2 of docs/viz-design-standard.md allows.",
+"Numbers I recomputed and found correct: 40−35=5, 40−15=25, 18−8=10 (18 is under half of 40); 42.1−13.0=29.1, 15.5−5.7=9.8, 4.6−6.7=−2.1; 100+30=130, 75+45=120, −25+15=−10; and 75+30=105 in the hypothetical where the development bank stays at 30. Bar heights use a 0–45 axis that includes the largest value (42.1).",
+"I did not check the UN WPP 2024 Korea figures (42.1/13.0, 15.5/5.7, 4.6/6.7) against the source. That would need an outside lookup. The Viz matches the article text.",
+"Polish only, left as is: in CreditBufferViz at 390px, the '+15' segment is about 15/130 of the bar width, so its label nearly touches the edge but still reads.",
+"Polish only, left as is: in LoanCycleViz at 390px, the long scene 4 note continues inside the fixed-height stage (inner scroll, as the standard allows for mobile). Overflow measured 0 and the controls stayed in place.",
+"Checks: audit:viz --strict gave no ERROR lines, only REVIEW items for SVG text. Screenshots at 390px and 1440px: every scene had the same controlY and frameH, overflow 0, console errors 0, and docScrollW equal to the viewport width. Screenshots are in /tmp/viz-rounds/r22/rv13/demography and /tmp/viz-rounds/r22/rv13/devbanks.",
+"Checked by hand and found nothing wrong, so not changed: ConstraintRowsViz (N(T)=10T²+7T=10T(T−1); (v−10)=(T−2)(8T+13) since −26≡−9≡8; 40T+77≡6T+9), MaskingViz (Z=0,0,0,6,7,9,1,6; masked 1,6,10,2,5,8,0,4), ExponentWheelViz (POW 1,2,4,8,16,9,18,13,3,6,12; 12×16≡8, 8×16≡13=2⁷), NonceReuseViz (18≡7, 30≡8, −3≡8, 8×7≡1, −7≡4), SimulationOrderViz (2⁷≡13, 16²≡3, 3⁻¹≡8, 13×8≡12). PedersenGridViz's C=2 cells satisfy m+3r≡1 with one per column; columns 4 and 7 have the same value set. LdeCountViz: 17³=4,913, 17⁸=6,975,757,441, 17⁵=1,419,857, v(5)=16.",
+"Minor, not fixed: in ExponentWheelViz's last scene, '(4절)' is attached to '실제 보안에는 훨씬 큰 수가 필요합니다', but that sentence is from §1. §4 holds only the 11-candidate brute-force point. I left it because a reader is unlikely to be confused.",
+"Checks run: audit:viz --strict on both changed files passed with no ERROR lines. viz-scene-shot ran at 390 and 1440 px for both changed Viz. Controls and frame did not move in any scene, overflow was 0 and there were 0 console errors. The stark run first failed because the browser timed out at launch (machine under load), then passed on retry. I looked at the 390 px screenshots. Unchanged Viz were not screenshotted.",
+"SegmentChainViz (risc0): no fact errors found. Every scene matches the article's checks: post→pre linking, exit SystemSplit, output None, and rejection for reordering or a missing segment. In the reorder and missing-segment scenes the second link shows '—' (not checked), which makes sense because verification stops at the first failed link. I left it unchanged.",
+"BundleScopeViz (scroll-zkevm): the fields match the article (\"첫 batch의 parent_state_root와 parent_batch_hash, 마지막 batch의 state_root와 batch_hash, 마지막 withdrawal·message queue root\"). The gloss for DA blob, 'L1에 올리는 transaction data 묶음', is not stated word for word in this section. The article only links tx data to the batch/blob relation (line 487). I left it as a minor gloss. The note also says 가정 twice ('설명용 가정입니다(가정)'), which is cosmetic and was left as is.",
+"SceneShell.tsx is identical in both articles (checked with diff). No issues.",
+"Checks run: npm run -s audit:viz -- --strict on both changed files passed with no ERROR lines. viz-scene-shot for all four Viz at 390 and 1440 px gave a stable controlY/frameH in every scene, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r22/rv6/{risc0,scroll-zkevm}.",
+"No wrong facts found; every number was recomputed. ConstraintCoverageViz: the (2,7) seed table 7,9,16,25,41,66,107,173 is correct. In the changed table (row 3 = (2,4)), the step into row 3 gives 4−1−2=1 and the step out gives 3−4=−1 and 5−2−4=−1. This matches the article: '전이 조건만 남기면 (2,7)…도 통과', '마지막 조건만 남기면 중간 계산을 마음대로'. QuotientPointsViz: C_α(h2)=α²·1 and C_α(h3)=−α−α², using the mixing order marked as assumed. QuotientDivisionViz: −7+24=17≡0 gives q=X+6, and −8+24=16 matches '나머지는 f(4)−11=−1≡16'. TauForgeryViz: 66≡15, 13×3=39≡5, 3×6≡1, 4×6=24≡7, 7×3=21≡4, which matches '4/3≡7을 구할 수 있어 π=[7]'. IpaFoldViz: 27≡10, a′=(15,4), b′=(41,36)≡(7,2), 113≡11, L=48≡14, R=1, 2⁻²≡13, and 10+56+13=79≡11.",
+"Not fixed, my judgement: TauForgeryViz scene 2 shows one sample forged value (q(7)=13, marked 가정) failing. The fact that without τ the prover cannot compute which value is needed is only made in scene 3 and in the prose, so I left it.",
+"Not fixed, minor: on 390px the SVG text in QuotientPointsViz is small. The '잔차 순서' line has fontSize 9.5 in a 330-unit viewBox and renders at about 9px. It can still be read in the screenshot and no audit ERROR was reported.",
+"Screenshot runs for all 5 Viz at 390 and 1440: control and frame positions are the same in every scene, overflow 0, console errors 0, and docScrollW equals the viewport width. Shots are in /tmp/viz-rounds/r22/rv3/plonky3 and /tmp/viz-rounds/r22/rv3/polycommit.",
+"PriceHalvingLedgerViz: arithmetic checks out (20−4−10=6; 10−4−10=−4; 14 owed against 10). I left the '작물 판매' chip in scene 3 as it is because it quotes section 1. A reader may still wonder what crop is left to sell after the cash crop has already been sold. Clearing that up would take a prose explanation (for example the food reserve of 20 from section 2), so it is a prose decision.",
+"CocoaBoardGateViz: the title uses the past tense '지나야 했습니다', while the article calls the 1984 law '지금의 근거법'. Not changed, since the scene 2 exception explains the change over time. The editor may want the present tense.",
+"CocoaBoardGateViz: the line defining FOB ('수출항에서 배에 실을 때까지를 포함한 값') is the standard definition and does not come from the article. It is correct, but it is an outside fact. '생활소득차액' is not explained in either the article or the Viz.",
+"Mobile (390px): in long scenes the note text is cut off at the bottom of the stable stage and continues in the stage's internal scroll area. The script reported overflow 0 and stable controls/frame in all scenes. This comes from the shared SceneShell/StableSceneStack and is outside my files.",
+"No problems found in WaterPriorityCellsViz (60+25+15=100; 55+10+5=70; −5/−15/−10, total −30), UpstreamDownstreamSeasonViz or CorridorDirectionViz (compass directions, order of periods and hedges all match sections 2, 3, 4, 7, 8 and 9). audit:viz --strict: 0 ERROR lines on the changed files (only REVIEW notes about SVG text). viz-scene-shot: controls and frame unchanged across scenes, overflow 0, console errors 0 for all six Viz at 390 and 1440; screenshots are in /tmp/viz-rounds/r22/rv10/<slug>/.",
+"I checked the other four Viz and found no wrong facts. HouseholdShareSplitViz: 100−25+20=95 and 120−35−10=75. The farm-only share is 75 in both years. The extra 20 of output goes +10 to rent and +10 to fencing/drainage. RicardoRentLadderViz: margins 100→90→80 give rents 0, 10, then 20/10/0, and the bars are drawn to scale from 0. ForexLedgerShockViz: 10 → −10 (price change only, which is the article's own numericCase order) → −18, a fall of 28 = 20 from price + 8 from interest. OriginalSinGridViz: the blocked peso-long cell and the three mismatch cells match the Eichengreen–Hausmann paragraph.",
+"Polish I chose not to fix: in HouseholdShareSplitViz's 'after' row, the lost commons value is drawn as an empty dashed box 20 wide with the label 0. A reader could take it for a value of 20. The scene note explains it as an empty slot ('공동 이용 가치 20이 들어갈 자리는 비었습니다'), so I left it.",
+"Checks: audit:viz --strict passed on the changed file. viz-scene-shot at 390px and 1440px: controls and frame identical across all scenes, overflow 0, console errors 0 for all 5 Viz. Screenshots are in /tmp/viz-rounds/r22/rv17/land-rights and /tmp/viz-rounds/r22/rv17/latin.",
+"ValueLedgerViz.tsx: the colour legend lists '외국 부가가치' from scene 0, but scene 1's note is where 부가가치 is first explained. The legend is static on purpose, so I left it. It is minor, because article sections 1–2 have already used the term before this figure.",
+"RateShockChainViz.tsx: '정책금리' and '만기' are used without being explained in the Viz, and the article prose does not define them either. A definition would need an outside fact or a prose change, so I left it for the author.",
+"ExportPathViz.tsx scene 6 (stop): the boxes downstream of the stopped foreign supplier stay lit in normal blue. That could suggest production carries on while the supply is stopped. The article only says shock analysis looks at '어느 단계가 멈추고 대체 공급자가 얼마나 빨리...' and does not say what happens downstream, so I did not change it.",
+"Checks: npm run audit:viz --strict passed on all 4 changed files with no ERROR lines. viz-scene-shot ran on both routes at 390 and 1440 px: controlY and frameH were constant across every scene, overflow was 0, docScrollW equalled the viewport width, and there were 0 console errors. Screenshots are in /tmp/viz-rounds/r22/rv15/<slug>/. I re-checked every number in all 6 Viz against the article text and found no factual errors: 108÷114=0.947, 100÷1.14=87.7, 114−108=6, 40+20+40=100, 40+100=140, 30+20+50=100, the TiVA codes and values 20+40+0=60 and 60+40=100, and the timeline positions (1979.10.6≈1979.77, Jul 1981–Nov 1982 → 1981.5–1982.9).",
+"Checked and correct, no change needed. Island ledger: 35+25+30+10=100 and 35+20+10+10=75; the drop of 25 splits 20:5, matching the 80% label and the 4fr:1fr box ratio. VDS: 44,033+1,000=45,033 days, Tokelau share 2.2% ('약 2%'), and 6+24+6=36 hours over 3 calendar days (the sailing times are marked as assumptions). PAYG rectangles: drawn areas match at 150×30=37.5×120, 120×30=48×75 and 120×48=48×120. Payroll: 80×100×19.2%=1,536=32×48. Dependency ratios 32.6/55.2/67.7 and 29.3/122.0 match section 9.",
+"Leftover risk I did not fix. In VesselDayViz scene 3, countries C and D are drawn partly filled with no '남음' label, so they also seem to have days left. The note says the fill levels are illustrative, so I left it.",
+"After the edits: audit:viz --strict shows no ERROR lines, only SVG-text REVIEW items. viz-scene-shot at 390 and 1440 for all 4 Viz: control position and frame height stay the same across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r22/rv19/{oceania,payg}. On mobile, the long notes in SceneShell continue in the inner scroll area below the visible stage; the tool reports no overflow.",
+"Checked and left as is. IncomeLedger: 100−5=95, 100−40=60, 60+25=85, 40−25=15, 95−85=10, 15−10=5 all match 3절. SocialInsuranceTimeline: 1927−1883=44, 1935−1883=52, 1942−1883=59, and the axis is proportional to years. MoneyToGrowth: order and the 7.6% average with its hedge match 4/8/9절. FactoryLoop: 80=20+60 and the loop matches 7절.",
+"FactoryLoop scene 5 (polish, not changed): the shock arrow points at the '임금·재료·세금·이자' box, but 7절 says shocks shook '대출 상환과 산업 구성'. Principal repayment is not drawn anywhere. The shock box's own text states the correct effect, so I left it.",
+"Shared mobile behaviour, not changed because it is outside these Viz files. At 390px, MoneyToGrowthTimelineViz scene 2 (1947~1948 / 1949) and IncidenceViz scene 3 (ledger) put part of the active rows below the visible stage, so the reader must scroll inside the canvas. In the MoneyToGrowth 390px screenshot, the text '시장경제로, 달러당 360엔' also appears below the control row. This comes from the common SceneShell/VizFrame internal-scroll layout. The script reported overflow 0 and stable controls/frame.",
+"Verification: audit:viz --strict on the 2 changed files gave REVIEW lines only, no ERROR. viz-scene-shot ran on all 6 Viz before the fixes and on the 2 changed ones after: controlY and frameH stayed constant on every scene at 390 and 1440, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r22/rv16/{japan,labor,japan-after,labor-after}.",
+"PetrodollarRecyclingViz: the article says \"산유국 일곱 곳과 맺은 약 28억 SDR\", then lists six oil exporters and adds \"에 캐나다 2억 5,800만 SDR이 더해졌습니다\". The six exporters sum to 2,550; adding Canada gives 2,808 ≈ 28억. So '일곱 곳' only works if Canada counts, but the prose reads as if Canada is extra. The Viz says '일곱 곳' and draws all lenders, Canada included, on the 산유국→IMF arrow. Settling this means rewording the prose or checking the IMF 1975 report, so it was left unchanged.",
+"DebtControlTimelineViz: the 1876 April and May Egypt dots are about 4 viewBox units apart and overlap. Each has its own label, so this is left as polish, not fixed.",
+"OilShockGapViz, RailroadCounterfactualViz, LandToCollateralViz: every number was recomputed and matches the article: 100−30−10=60, 70−30−10=30, gap 30, −30% vs −50%, 3% 미만, 연 15%, 160에이커, 1862.5.20 and 1862.7.1. Direction, order and hedges also match. No defects found.",
+"CopyCycleViz (polish, not changed): in the 22↔31 and 94↔75 scenes the curved arrows run behind cell 95, and close to 53 and 44. The cell grid leaves no route that avoids every cell, so I did not reroute them. Highlighting the endpoints makes the pairs readable, but a reader might briefly think 95 is linked.",
+"RootRingViz (polish, not changed): in the \"0은 고리 밖\" scene, the box \"0 → 0 (밖)\" is drawn at the center of the ring. It is not on the ring, and the label says 밖 (outside).",
+"Everything else checked out. I recomputed: the curve points (19 + O) and the orbit (5,4)→(9,15)→(9,4)→(5,15)→O; the 72nd-power counts (72 for each of 1, 7+3u, 2+4u, 2+15u, 7+16u) and g⁷²=2+4u; the divisor sums; 22⁴≡1 and Z 1,50,67,76 → 76·64/14=1 and 76·67/14=45; the quotient pieces (36,74,76)→(57,79,69), both 85 mod 97 with 5⁴=43; the copy-permutation positions and values; the transcript order γ→β→α→ζ; the byte count 288+224+8=520; and the arrow directions in FinalExpPaths.",
+"Checks: audit:viz --strict gave 0 ERROR lines (REVIEW lines only, for SVG text). viz-scene-shot ran on all 10 Viz at 390px and 1440px: control and frame positions stable in every scene, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r22/rv2/pairing and /tmp/viz-rounds/r22/rv2/plonk.",
+"I recomputed every number and found no errors. CodeSlotOrderViz maps code slot to w exponent as 0,2,4,1,3,5, which gives A→[1,3,0,2,4,0], B→[5,7,0,0,0,0] and output→[5,22,21,10,34,28]. GroupProductViz checks out: aa=[5,22,21], sum=(3+7v)(5+7v)=[15,56,49], upper=[10,34,28]; with c4=11, bb=[0,22,44], sum=(3+7v)(5+18v)=[15,89,126], upper=[10,45,61], v·bb=[44ξ,0,22], lower=[401+44u,22,43]. CallLedgerViz counts 4×2=8, 5+3+5=13, 3+5+5=13 (matches mul_by_034 source lines 76-86), 3×6=18 and 6×6=36. The sp1 scene orders and failure points match the article text and its negative-fixture table.",
+"VerifyOrderViz, 390px, scene 5: the note text runs below the visible stage and is reached by the shared VizFrame's inner scroll. The shot script reported overflow 0 and controls stable. If this needs changing, it belongs in src/components, which is outside this task's scope.",
+"ShardContinuityViz and VerifyOrderViz at 390px: the SVG labels scale down to roughly 7–9px on screen. They are legible but small. I left them unchanged because no reader confusion was demonstrated.",
+"Checks: audit:viz --strict on the changed files gave REVIEW lines only and no ERROR. viz-scene-shot at 390 and 1440 for all 7 Viz showed controlY and frameH constant across scenes, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r22/rv8/sparse-multiplication and /tmp/viz-rounds/r22/rv8/sp1.",
+"VoteThresholdViz: §9 of the article says '허용 청구액의 3분의 2 이상과 인원 과반의 동의' (two-thirds of allowed claim amount and a majority by number). It does not say whether the denominator is every creditor in the class or only those who voted. Under the US rule I recall, it is only the creditors who voted (an outside fact, not verified here). The Viz now states 'all five voted' as an assumption, so it is correct either way. If the article should spell out the denominator, that is a prose change, which this step does not allow.",
+"VoteThresholdViz: the description defines '손상된 채권 등급' (impaired class) as '계획이 원래 지급 조건을 바꾸는 등급' (a class whose original payment terms the plan changes). The article uses the term without defining it, so this definition comes from outside the article. It is correct as far as I know, but it should be backed by a definition in the article prose.",
+"ResidualChainViz: the scene-2 note defines 향진기업 (township-and-village enterprises) as '향·진(읍·면급 행정 단위)이나 마을이 세운 기업' (enterprises set up by townships, towns or villages). The article never defines the term, so this definition is outside knowledge. It is standard and correct, but it is not sourced in the article.",
+"ReformTimelineViz: the audit:viz --strict REVIEW lines 58, 64 and 80 are SVG text marked 'check overflow in browser'. The scene-shot run reports overflow 0 at both widths, and the screenshots show no clipping. There are no ERROR lines.",
+"Unchanged and checked: RecoveryWaterfallViz. All segment sums match §3: 5+65=70, 5+40+10+15=70 and 10+40+10+35=95 on a 0–100 scale, with 15÷50=30% and 35÷50=70%. Also checked: InsolvencyPathViz, whose order matches §7, and ReformTimelineViz, whose years and lanes match §8. Scene shots for all five: controls and frame stable, overflow 0, console errors 0 at 390 and 1440. The first batch's run for VoteThresholdViz timed out while launching the browser; the re-run passed.",
+"Checked and left alone: every number matches the article (35+8+15+12+20+10=100, 108 after the shock; 140−110=30, 12+3+15=30, 12/120=10%, 15×10%=1.5, remainder 13.5). Arrow directions also match: goods supplier→port→consumer, money consumer→four parties, information reversed. `audit:viz --strict` reports 0 ERROR lines; the REVIEW lines only ask to check SVG text in the browser, and the screenshots show no SVG text overflow. viz-scene-shot results at 390 and 1440: control row Y and frame height are the same in every scene, overflow 0, console errors 0. The containers article was re-shot after the last edits; the cooperatives article was shot once, after its edits. Screenshots are in /tmp/viz-rounds/r22/rv12/{containers,cooperatives}.",
+"At 390px, MemberCycleViz scene 6 and some of the longer notes go past the stable stage and are reached by scrolling inside it. Standard section 2 allows this for multi-scene Viz on mobile, and I did not change it.",
+"No defects found that needed a fix. Every number checks out against the article text: HarvestLedger 100-30-10-40=20, 110-25-15-20-35=15, cash costs 25+15+20=60, output +10, remainder -5. Zollverein 1833.3 agreement, 1834-01-01 in force, '2년 뒤' = 1836, then 1842 and 1854, 1854-1834=20. FireLoss 30+60+10=100, 100-40=60, 60+30=90, net loss 10, 90-60=30. BankLiability 1826, 1857, 1862, 1875 (52+82=134), 1878, 1879.",
+"Not changed: FireLossClaimsViz title says '대출 60은 먼저 갚습니다' without the article's '단순화하면' hedge. The hedge is still in the scene-4 note ('단순화하면 ... 이자·감가상각·세금·자기부담은 뺐습니다'), and section 1 says '은행은 약정한 원리금을 먼저 받습니다', so I left it.",
+"Not changed: BankLiabilityTimelineViz title '반세기' covers 1826 to 1879, which is 53 years. The timeline starts at 1826 because that is the article's first date, not because unlimited liability began then. The scene-0 box ('널리 쓰임') matches the article's '무한책임이 널리 쓰였고'.",
+"Not changed: on the 390px Zollverein screenshot the 1833 and 1834 dots sit about 10px apart because the axis is in proportion to years. Their labels go on separate rows (above and below), so the scene still reads correctly.",
+"Checks: audit:viz --strict printed no ERROR lines, only 2 REVIEW notes about SVG text, and the screenshots show no overflow there. viz-scene-shot at 390px and 1440px: control Y and frame height did not change across scenes, canvas overflow was 0, console errors were 0, and docScrollW equalled the viewport width. Screenshots are in /tmp/viz-rounds/r22/rv14/europe-serfdom-states-industrialization-and-integration and /tmp/viz-rounds/r22/rv14/firms-banks-insurance-and-institutional-investors. The first attempt timed out on page load and a retry worked."
 ]
 }
 }

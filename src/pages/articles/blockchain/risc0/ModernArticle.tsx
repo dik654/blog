@@ -6,6 +6,8 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { currentCodeRefs, RISC0_COMMIT } from "./currentCodeRefs";
 import { currentRisc0Tree } from "./currentFileTree";
 import { Risc0ReceiptViz } from "./Risc0ReceiptViz";
+import ClaimDigestViz from "./viz/ClaimDigestViz";
+import SegmentChainViz from "./viz/SegmentChainViz";
 
 const HELLO = `https://github.com/risc0/risc0/tree/${RISC0_COMMIT}/examples/hello-world`;
 const RECEIPT = `https://github.com/risc0/risc0/blob/${RISC0_COMMIT}/risc0/zkvm/src/receipt.rs`;
@@ -257,6 +259,8 @@ export default function ModernRisc0() {
             tagged struct로 네 field digest와 exit pair를 함께 hash합니다.
           </p>
 
+          <ClaimDigestViz />
+
           <ExplainedFormula
             question="verify(MULTIPLY_ID)가 실제 claim과 비교하는 한 값은 어떻게 만들어지나요?"
             idea="호출자가 고정한 ImageID와 receipt의 journal digest로 성공 실행 claim을 만든 뒤, 실제 inner claim digest와 같은지 봅니다."
@@ -368,6 +372,8 @@ export default function ModernRisc0() {
             <code>SystemSplit</code>로 끝나고 output이 비어 있는지 확인한 뒤, 그 post-state digest를
             다음 segment의 expected pre-state digest로 사용합니다.
           </p>
+
+          <SegmentChainViz />
 
           <ExplainedFormula
             question="Segment A와 B가 같은 한 실행의 앞뒤라는 조건은 무엇인가요?"
