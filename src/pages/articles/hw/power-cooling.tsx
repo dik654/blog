@@ -3,4 +3,5 @@ import HardwareFieldLab from "./HardwareFieldLab";
 import HardwareTeachOpening, { HardwareTeachMechanism } from "./HardwareTeachOpening";
 import { powerCoolingFieldLab } from "./hardwareFieldLabs";
 import { hardwareTeachCases } from "./hardwareTeachCases";
-export default function PowerCoolingArticle() { return <><HardwareTeachOpening data={hardwareTeachCases.powerCooling} /><HardwareTeachMechanism data={hardwareTeachCases.powerCooling}><ModernArticle /></HardwareTeachMechanism><HardwareFieldLab data={powerCoolingFieldLab} /></>; }
+import FeedFailoverViz from "./power-cooling/viz/FeedFailoverViz";
+export default function PowerCoolingArticle() { return <><HardwareTeachOpening data={hardwareTeachCases.powerCooling} numbersVisual={<FeedFailoverViz />} /><HardwareTeachMechanism data={hardwareTeachCases.powerCooling}><ModernArticle /></HardwareTeachMechanism><HardwareFieldLab data={powerCoolingFieldLab} /></>; }

@@ -1,4 +1,5 @@
-import type { ComponentProps } from "react";
+import { Fragment } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import LessonSection from "@/components/articles/lesson-section";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
@@ -19,14 +20,28 @@ export interface DerivativeDeepArticleData extends WorldHistoryArticleData {
   formulas?: readonly DerivativeArticleFormula[];
 }
 
-export default function DerivativeDeepArticle({ data }: { data: DerivativeDeepArticleData }) {
+/** 절 id → 문단 번호 → 그 문단 바로 앞에 놓을 Viz. 없으면 기존과 똑같이 문단 묶음 하나로 렌더합니다. */
+export type DerivativeVizBefore = Readonly<Record<string, Readonly<Record<number, ReactNode>>>>;
+
+function paragraphGroups(paragraphs: readonly string[], viz?: Readonly<Record<number, ReactNode>>) {
+  if (!viz) return [{ start: 0, viz: null as ReactNode, paragraphs }];
+  const starts = paragraphs.map((_, index) => index).filter((index) => index === 0 || viz[index] !== undefined);
+  return starts.map((start, n) => ({ start, viz: viz[start] ?? null, paragraphs: paragraphs.slice(start, starts[n + 1] ?? paragraphs.length) }));
+}
+
+export default function DerivativeDeepArticle({ data, vizBefore }: { data: DerivativeDeepArticleData; vizBefore?: DerivativeVizBefore }) {
   return (
     <div className="space-y-16">
       {data.sections.map((section) => (
         <LessonSection key={section.id} id={section.id} level={section.level} title={section.title} bridge={section.bridge}>
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
-            {section.paragraphs.map((paragraph) => <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>{paragraph}</p>)}
-          </div>
+          {paragraphGroups(section.paragraphs, vizBefore?.[section.id]).map((group) => (
+            <Fragment key={group.start}>
+              {group.viz}
+              <div className="prose prose-neutral max-w-none dark:prose-invert">
+                {group.paragraphs.map((paragraph) => <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>{paragraph}</p>)}
+              </div>
+            </Fragment>
+          ))}
           {data.formulas
             ?.filter((formula) => formula.section === section.id)
             .map((formula, index) => (

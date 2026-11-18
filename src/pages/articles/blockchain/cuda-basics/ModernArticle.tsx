@@ -5,6 +5,8 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs, fileTrees } from "@/pages/articles/gpu/gpu-execution-sources/codeRefs";
+import WarpSectorViz from "./viz/WarpSectorViz";
+import TransferTimelineViz from "./viz/TransferTimelineViz";
 
 /** teach-system S→B→0…7. Same 64-element trace; official source snapshots pinned. */
 export default function Article() {
@@ -82,11 +84,15 @@ export default function Article() {
       <span id="memory" className="scroll-mt-20" />
       <span id="paper-cuda-best-practices" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">7 · 37번 thread가 읽고 더하고 쓸 때 두 종류의 경로를 지납니다</h2>
+      <WarpSectorViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Host는 두 입력 512바이트를 device에 복사하고 block 1개 × 64 threads를 제출합니다. Block은 실행 자원에 여유가 있는 SM에 배치되며 32개씩 warp 2개로 진행합니다. 37번은 두 번째 warp의 lane 5입니다. Block 내부 번호 32 + 5 = 37을 주소 계산에 씁니다.</p>
         <p className="leading-8">Load 명령은 각 lane의 주소를 모아 memory 요청을 만듭니다. Cache에서 찾지 못한 요청이 아래 계층으로 내려갑니다. 데이터가 돌아오면 register에 놓이고 덧셈 명령이 결과를 만든 뒤 store 명령이 C의 148바이트 위치에 씁니다. 요청·계산·저장은 서로 다른 명령이며 C++ 한 줄과 기계 명령 한 개가 대응하지 않습니다.</p>
         <p className="leading-8">첫 warp의 입력 한 개는 32×4 = 128바이트입니다. 시작 주소가 128바이트 경계에 맞고 compute capability 6.0 이상 NVIDIA GPU의 32바이트 sector 규칙을 적용하면 4 sectors에 걸칩니다. 두 warps의 두 입력은 총 16 sectors, 출력은 8 sectors에 걸쳐 유효 768바이트를 다룹니다. 이것은 요청의 주소 범위 계산입니다. Cache 적중과 쓰기 정책이 개입하므로 곧바로 HBM 실측 768바이트라고 부르지 않습니다.</p>
         <p className="leading-8">Compiler는 register 수를 배정합니다. 값이 많아 register에서 넘치면 thread 전용 주소 공간인 local memory로 일부를 보낼 수 있습니다. 이것이 spill이며 cache를 거쳐 장치 메모리를 사용할 수 있습니다. 반대로 shared memory에 올린다고 자동으로 register 부족이 해결되지는 않습니다.</p>
+      </div>
+      <TransferTimelineViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">계산이 끝난 뒤 host가 결과 256바이트를 회수합니다. 예를 들어 H2D 0.3ms, kernel 0.1ms, D2H 0.2ms, 추가 완료 대기 0.1ms라면 겹치지 않는 전체 시간은 0.7ms입니다(시간은 가정). CPU가 0.5ms에 끝냈다면 kernel만 0.1ms라는 이유로 GPU를 채택할 수 없습니다. 구간이 겹치면 합이 아니라 실제 완료 경로의 시간을 잽니다.</p>
       </div>
       <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">37번의 주소와 64개 전체의 이동량이 이어졌습니다. 실제 CUDA 샘플에서 같은 계산을 확인합니다.</p>

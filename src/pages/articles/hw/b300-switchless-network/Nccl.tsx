@@ -4,6 +4,7 @@ import {
 } from "@/content/b300-switchless-network";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import GidPrefixViz from "./viz/GidPrefixViz";
 
 export default function Nccl() {
   return (
@@ -33,6 +34,9 @@ export default function Nccl() {
             </div>
           ))}
         </div>
+        </div>
+        <div className="not-prose my-6">
+          <GidPrefixViz />
         </div>
         <p className="leading-7">
           공개 Sionic patch는 `NCCL_IB_SWITCHLESS=1`일 때 이 peer-aware 재선택을

@@ -5,6 +5,7 @@ import FlowRail from "../../world-systems/FlowRail";
 import NumericPath from "../../world-systems/NumericPath";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
 import SourceApplication from "../../world-systems/SourceApplication";
+import JurisdictionBranchViz from "./canada-hong-kong-switzerland-retail-derivatives-and-market-rules/viz/JurisdictionBranchViz";
 import { canadaHongKongSwitzerlandData as data } from "./derivative-operations-and-governance-data";
 
 export default function CanadaHongKongSwitzerlandDerivativesArticle() {
@@ -12,6 +13,7 @@ export default function CanadaHongKongSwitzerlandDerivativesArticle() {
     <div className="space-y-16">
       {data.sections.map((section) => (
         <LessonSection key={section.id} id={section.id} level={section.level} title={section.title} bridge={section.bridge}>
+          {section.id === "picture" ? <JurisdictionBranchViz /> : null}
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             {section.paragraphs.map((paragraph) => (
               <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>{paragraph}</p>

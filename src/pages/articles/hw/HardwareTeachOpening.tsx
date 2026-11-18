@@ -20,8 +20,11 @@ export interface HardwareTeachCase {
 export default function HardwareTeachOpening({
   data,
   numbersVisual,
+  pathVisual,
 }: {
   data: HardwareTeachCase;
+  /** 선택: 경로 절 제목 바로 아래, 문단 앞에 놓을 Viz. 없으면 기존과 같게 렌더합니다. */
+  pathVisual?: ReactNode;
   /** 선택: 숫자 절 제목 바로 아래, 문단 앞에 놓을 Viz. 없으면 기존과 같게 렌더합니다. */
   numbersVisual?: ReactNode;
 }) {
@@ -42,6 +45,7 @@ export default function HardwareTeachOpening({
         <h2 id="case-first-path" className="mt-2 text-2xl font-bold tracking-tight">
           {data.pathTitle}
         </h2>
+        {pathVisual}
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           {data.path.map((paragraph) => <p key={paragraph} className="leading-8">{paragraph}</p>)}
         </div>

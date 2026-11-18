@@ -2,6 +2,10 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { MsmNttWorkloadViz } from "./viz/ModernMsmNttViz";
+import MsmWindowDigitsViz from "./viz/MsmWindowDigitsViz";
+import BucketRunningSumViz from "./viz/BucketRunningSumViz";
+import NttBlockBoundaryViz from "./viz/NttBlockBoundaryViz";
+import ChunkTimelineViz from "./viz/ChunkTimelineViz";
 
 const ICICLE = "https://github.com/ingonyama-zk/icicle/tree/6c77775961b0e4dc2be359feec1ac11536c18043";
 const SPPARK = "https://github.com/supranational/sppark/tree/17278d74295392f9813f009300b257a688422b7a";
@@ -27,6 +31,7 @@ export default function ModernMsmNttArticle() {
         <p>측정 단위는 “한 proof”처럼 모호하면 안 됩니다. Curve·field·domain size <code>N</code>, MSM 항 수 <code>m</code>, scalar bit length와 point coordinate format을 고정합니다.</p>
         <p>Batch 수, input seed, SRS와 backend revision도 receipt에 남깁니다. Affine point를 GPU에서 Jacobian으로 바꾸거나 field 값을 Montgomery domain으로 바꾸는 비용이 어느 구간에 들어가는지도 밝힙니다.</p>
       </div>
+      <MsmWindowDigitsViz />
       <ExplainedFormula question="MSM이 계산하는 값과 window 분해는 GPU 작업을 어떻게 만든다고 볼 수 있을까?" idea={<>각 scalar를 w-bit digits로 나누면 같은 digit을 가진 points를 bucket에 모을 수 있습니다. Window들은 부분적으로 병렬화할 수 있지만 같은 bucket update와 마지막 weighted reduction은 dependency를 갖습니다.</>} formula={String.raw`\begin{aligned}Q&=\sum_{i=0}^{m-1}[s_i]P_i\\s_i&=\sum_{j=0}^{J-1}d_{i,j}2^{jw}\\J&=\lceil b/w\rceil\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}\underbrace{Q}_{\text{MSM 결과 점}}&=\sum_{i=0}^{m-1}\underbrace{[s_i]P_i}_{\text{scalar배 point}}\\s_i&=\sum_{j=0}^{J-1}\underbrace{d_{i,j}}_{\text{w-bit digit}}\underbrace{2^{jw}}_{\text{window 자리값}}\\\underbrace{J}_{\text{window 수}}&=\lceil b/w\rceil\end{aligned}`}
       operations={[
@@ -50,8 +55,12 @@ export default function ModernMsmNttArticle() {
       <header><p className="text-sm font-semibold text-primary">02 · Parallel frontier</p><h2 className="mt-2 text-2xl font-bold">MSM은 bucket ownership, NTT는 stage boundary가 병렬화의 경계다</h2></header>
       <div className="space-y-3">
         <p>MSM에서 thread마다 point를 처리하면 여러 thread가 같은 bucket을 갱신할 수 있습니다. Atomic update, thread-local buckets 뒤 merge, sort·segmented reduction은 충돌·workspace·추가 pass를 서로 맞바꿉니다.</p>
+      </div>
+      <BucketRunningSumViz />
+      <div className="space-y-3">
         <p>Bucket 합을 만든 뒤에는 큰 digit부터 running sum을 누적하는 weighted reduction이 필요합니다. 그러므로 “point가 독립”이라는 설명만으로 전체 MSM이 완전히 독립적인 계산이라고 할 수 없습니다.</p>
       </div>
+      <NttBlockBoundaryViz />
       <p>Radix-2 NTT의 한 stage에서는 서로 겹치지 않는 pair가 동시에 butterfly를 수행하지만, stage <code>k+1</code>의 입력은 stage <code>k</code>의 output입니다. Block 안에서 끝나는 작은 stage는 shared memory와 block barrier로 묶을 수 있지만 여러 blocks가 참여하는 경계는 kernel launch를 나누거나 cooperative 조건을 검증해야 합니다.</p>
       <ExplainedFormula question="한 NTT butterfly가 어떤 두 값을 만들며 왜 stage 사이에 synchronization이 필요할까?" idea={<>Pair의 두 input에서 하나는 그대로, 다른 하나는 stage별 twiddle로 곱한 뒤 합과 차를 만듭니다. 다음 stage가 이 두 output을 다시 섞으므로 이전 stage 완료가 선행되어야 합니다.</>} formula={String.raw`u'=u+\omega^k v,\qquad v'=u-\omega^k v`}
       annotatedFormula={String.raw`\underbrace{u'}_{\text{합 출력}}=u+\underbrace{\omega^k v}_{\text{twiddle 곱한 짝}},\qquad \underbrace{v'}_{\text{차 출력}}=u-\omega^k v`}
@@ -75,6 +84,7 @@ export default function ModernMsmNttArticle() {
         <p>NTT에는 coefficients가 들어오고 twiddles와 workspace가 함께 살아 있습니다. 두 작업의 최대 live set이 VRAM을 넘으면 chunking이 필요합니다.</p>
         <p>하지만 chunk마다 바뀌지 않는 bases나 twiddles를 다시 보내면 PCIe traffic이 kernel 이득을 삼킬 수 있습니다. 반대로 다음 chunk transfer와 현재 kernel이 서로 다른 copy engine과 stream에서 실제로 겹치면 단순 합이 아니라 timeline의 가장 긴 경로를 봅니다.</p>
       </div>
+      <ChunkTimelineViz />
       <ExplainedFormula question="Proof workload의 device resident byte와 겹친 실행 시간을 어떻게 상한으로 잡을까?" idea={<>동시에 살아 있는 allocations만 합하고, 겹치지 않는 dependency 경로는 더하되 transfer와 compute가 실제로 겹치는 구간은 더 큰 쪽을 critical path로 둡니다.</>} formula={String.raw`\begin{aligned}B_{live}&=B_P+B_s+B_{poly}\\&\quad+B_{tw}+B_{work}\\T_{chunk}&\approx\max(T_{H2D},T_{kernel})\\&\quad+T_{barrier}\end{aligned}`}
       annotatedFormula={String.raw`\begin{aligned}\underbrace{B_{live}}_{\text{동시 생존 bytes}}&=\underbrace{B_P+B_s+B_{poly}}_{\text{point·scalar·poly}}\\&\quad+\underbrace{B_{tw}+B_{work}}_{\text{twiddle·scratch}}\\T_{chunk}&\approx\underbrace{\max(T_{H2D},T_{kernel})}_{\text{겹친 전송·연산}}\\&\quad+\underbrace{T_{barrier}}_{\text{직렬 경계}}\end{aligned}`}
       operations={[

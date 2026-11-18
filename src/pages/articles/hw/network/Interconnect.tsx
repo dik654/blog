@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import InterconnectPathViz from "./viz/InterconnectPathViz";
+import InterconnectStagingViz from "./viz/InterconnectStagingViz";
+import PcieLaneRateViz from "./viz/PcieLaneRateViz";
+import PcieTopologyPathViz from "./viz/PcieTopologyPathViz";
 
 export default function Interconnect() {
   return (
@@ -30,6 +33,7 @@ export default function Interconnect() {
             <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs font-black text-primary">2 · 좁은 구간</p><p className="mt-2 text-sm font-bold">400 Gb/s ÷ 8 = 50 GB/s</p><p className="mt-1 text-xs leading-5 text-muted-foreground">63.0 GB/s PCIe보다 작은 raw 상한입니다.</p></div>
             <div className="rounded-xl border border-border bg-card p-4"><p className="text-xs font-black text-primary">3 · 이상적 하한</p><p className="mt-2 text-sm font-bold">1.0737 ÷ 50 ≈ 21.5 ms</p><p className="mt-1 text-xs leading-5 text-muted-foreground">Header·queue·retry를 넣기 전이라 실제 시간은 더 깁니다.</p></div>
           </div>
+          <InterconnectStagingViz />
           <p>
             이 21.5 ms는 예측값이 아니라 <strong>그보다 빨라질 수 없는 이상적 하한</strong>입니다. 긴 streaming transfer는 여러 구간이 pipeline처럼 동시에 일하므로 보통 가장 좁은 구간이 속도를 정합니다. 반대로 host staging처럼 전체 buffer를 끝까지 복사한 뒤 다음 copy를 시작하면 두 copy의 시간이 따로 더해집니다.
           </p>
@@ -39,6 +43,7 @@ export default function Interconnect() {
           <p>
             PCIe는 GPU, NIC와 CPU root complex를 잇는 범용 transaction fabric입니다. GPU kernel이 끝났더라도 결과가 다른 device로 가려면 이 경로의 lane·switch·root를 통과해야 합니다.
           </p>
+          <PcieLaneRateViz />
           <p>
             사양의 GT/s는 초당 byte가 아닙니다. Lane 수와 encoding 효율을 적용해 한 방향 raw byte/s로 바꾼 다음, 실제 payload 완료량은 별도로 측정합니다.
           </p>
@@ -97,6 +102,7 @@ export default function Interconnect() {
         </div>
         <div id="pcie-topology-peer-path" className="scroll-mt-24">
           <h3>같은 x16이라도 topology가 다르면 peer path가 달라집니다</h3>
+          <PcieTopologyPathViz />
           <p>
             두 GPU가 같은 PCIe switch 아래 있으면 peer transaction이 그 switch에서 전달될 수 있습니다. 서로 다른 CPU root complex에 있으면 host bridge나 inter-socket 경계를 더 지나며, platform에 따라 peer access가 제한될 수도 있습니다.
           </p>

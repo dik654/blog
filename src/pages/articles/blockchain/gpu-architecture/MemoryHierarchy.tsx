@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MemoryHierarchyViz from "./viz/MemoryHierarchyViz";
+import RooflineBoundViz from "./viz/RooflineBoundViz";
 
 export default function MemoryHierarchy() {
   return (
@@ -31,6 +32,9 @@ export default function MemoryHierarchy() {
             <Link to="/cs/gpu/cuda-shared-memory">공유 메모리 정본 글</Link>에서 계산합니다.
           </p>
         </div>
+      </div>
+      <RooflineBoundViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <ExplainedFormula
           question="Kernel이 HBM bandwidth 상한에 가까워질 수 있는지 계산량과 memory traffic으로 어떻게 가늠하는가?"
           idea={

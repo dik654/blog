@@ -3,6 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ContextViz from "./viz/ContextViz";
 import CpuGpuCompareViz from "./viz/CpuGpuCompareViz";
+import SaxpyTraceViz from "./viz/SaxpyTraceViz";
 
 export default function Overview() {
   return (
@@ -49,6 +50,9 @@ export default function Overview() {
           Kernel launch가 만드는 grid와 block은 software가 표현한 작업 단위입니다. 반면 SM(Streaming Multiprocessor), warp
           scheduler와 execution unit은 그 작업을 실행하는 hardware입니다.
         </p>
+      </div>
+      <SaxpyTraceViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Block은 실행되는 동안 한 SM에 머물지만 어느 SM에 언제 배치될지는 보장되지 않습니다. Thread 하나가 CUDA core 하나를 계속 소유하지도 않습니다.
           SM은 block의 thread를 32-lane warp로 묶어 ready instruction을 발행합니다.

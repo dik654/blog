@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { FeedFailureViz, HeatPathViz } from "./viz/ModernPowerCoolingViz";
+import AirHeatFlowViz from "./viz/AirHeatFlowViz";
 const ENERGY="https://www.energystar.gov/products/spec/energy_star_computer_servers_version_4_0_pd";
 const PUE="https://www.thegreengrid.org/node/372";
 export default function ModernArticle(){return <article className="space-y-14">
@@ -25,7 +26,7 @@ operations={[
   { expression: String.raw`P_{remaining,allowed}`, annotation: ["남은 feed·PDU·UPS·냉각 경로 중","가장 작은 허용 capacity를 씁니다","예: 12kW"] },
   { expression: String.raw`-P_{rack,p95}`, annotation: ["정상 합계가 아니라 p95 실측 부하를 빼","12 − 10.5 = 1.5kW headroom","양수여도 transient trip은 별도 검증"] },
 ]} terms={[{symbol:"H_{N-1}",name:"N−1 headroom",description:"한 전원 경로 상실 뒤 남는 허용 W입니다."},{symbol:"P_{remaining,allowed}",name:"남은 허용 capacity",description:"Breaker·PDU·UPS·cable·cooling limit 중 최소값입니다."},{symbol:"P_{rack,p95}",name:"Rack p95 부하",description:"고정 workload trace에서 측정한 95백분위 active power입니다."}]} assumptions={["A/B upstream failure domain과 보호장치 규칙을 실제 single-line diagram으로 확인합니다.","Failover transient와 phase imbalance를 별도 시험합니다."]} interpretation="남은 허용 capacity 12kW, p95 10.5kW면 headroom은 1.5kW입니다. 양수라는 사실만으로 transient trip이나 cooling 지속을 보장하지 않습니다."/></section>
-<section id="cooling-path" className="space-y-6"><header><p className="text-sm font-semibold text-primary">03 · Cooling path</p><h2 className="mt-2 text-2xl font-bold">Chip junction에서 facility heat rejection까지 막힌 구간을 찾는다</h2></header><p>공랭은 heatsink와 fan이 열을 room air로, direct liquid cooling은 cold plate와 coolant loop로 옮깁니다. 침지 역시 열교환기와 facility water/air 경계가 필요합니다. 방법 이름보다 chip temperature, inlet 상태, flow, pressure, leak detection, fan/pump failure와 facility-side capacity를 같은 trace에서 확인합니다.</p><ExplainedFormula question="주어진 온도 상승으로 heat를 운반하려면 유체가 얼마나 흘러야 할까?" idea={<>유체가 단위 시간에 운반하는 질량에 비열과 inlet/outlet 온도차를 곱해 heat rate와 맞춥니다.</>} formula={String.raw`\dot Q=\dot m\,c_p\,\Delta T`}
+<section id="cooling-path" className="space-y-6"><header><p className="text-sm font-semibold text-primary">03 · Cooling path</p><h2 className="mt-2 text-2xl font-bold">Chip junction에서 facility heat rejection까지 막힌 구간을 찾는다</h2></header><p>공랭은 heatsink와 fan이 열을 room air로, direct liquid cooling은 cold plate와 coolant loop로 옮깁니다. 침지 역시 열교환기와 facility water/air 경계가 필요합니다. 방법 이름보다 chip temperature, inlet 상태, flow, pressure, leak detection, fan/pump failure와 facility-side capacity를 같은 trace에서 확인합니다.</p><AirHeatFlowViz/><ExplainedFormula question="주어진 온도 상승으로 heat를 운반하려면 유체가 얼마나 흘러야 할까?" idea={<>유체가 단위 시간에 운반하는 질량에 비열과 inlet/outlet 온도차를 곱해 heat rate와 맞춥니다.</>} formula={String.raw`\dot Q=\dot m\,c_p\,\Delta T`}
 annotatedFormula={String.raw`\underbrace{\dot Q}_{\text{운반할 열}}=\underbrace{\dot m}_{\text{질량 유량}}\,\underbrace{c_p}_{\text{유체 비열}}\,\underbrace{\Delta T}_{\text{inlet→outlet 상승}}`}
 operations={[
   { expression: String.raw`\dot m\,c_p\,\Delta T`, annotation: ["초당 흐르는 질량이 1K당 담는 열에","허용 온도 상승을 곱해 heat rate와 맞춤","2kW / (1005·10) ≈ 0.199 kg/s 공기"] },

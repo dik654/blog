@@ -1,6 +1,8 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RdmaPathViz from "./viz/RdmaPathViz";
+import GdrReadPathViz from "../rdma-roce/viz/GdrReadPathViz";
+import SubnetPrefixMaskViz from "../rdma-roce/viz/SubnetPrefixMaskViz";
 
 const paths = [
   {
@@ -109,6 +111,7 @@ export default function RDMA() {
           한 HCA에 여러 subnet이 있으면 실제 peer로 갈 수 있는 netdev, address와 RoCE type을 함께 골라야 한다.
           “아무 GID나 하나”를 고르면 안 된다.
         </p>
+        <SubnetPrefixMaskViz />
         <ExplainedFormula
           question="여러 local IP 가운데 remote peer와 같은 IPv4 subnet에 있는 주소는 어떻게 판정하는가?"
           idea={
@@ -164,6 +167,7 @@ export default function RDMA() {
           complex, IOMMU·ACS, BAR와 driver 지원이 경로 성능을 좌우하므로 GPU별 NIC affinity를 확인하고 host-staged path와 실제
           collective 결과를 비교해야 한다.
         </p>
+        <GdrReadPathViz />
         <p className="leading-7">
           NVLink가 없는 PCIe 카드로 노드를 짜면 두 가지를 더 확인한다. 하나는 지원 여부다. RTX PRO 6000처럼 NVIDIA 문서가 GPUDirect RDMA 지원을 제품명으로 적지 않은 카드는 지원을 가정하지 않는다. 노드마다 <code>ib_write_bw --use_cuda</code>로 GPU 메모리를 직접 등록해 보내 보고 대역폭이 host 메모리로 보낸 값과 비슷하게 나오는지부터 본다.
         </p>

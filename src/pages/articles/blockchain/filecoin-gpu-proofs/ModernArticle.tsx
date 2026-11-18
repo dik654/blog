@@ -2,6 +2,8 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { FilecoinProofFlowViz } from "./FilecoinProofFlowViz";
+import AmdahlSplitViz from "./viz/AmdahlSplitViz";
+import DeadlineSlackViz from "./viz/DeadlineSlackViz";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { bellpersonTree } from "./fileTrees";
@@ -81,6 +83,7 @@ export default function ModernFilecoinGpuProofsArticle() {
         <CodeViewButton label="CpuGpuMultiexpKernel" onClick={() => sidebar.open("bp-gpu-multiexp", codeRefs["bp-gpu-multiexp"])} />
         <CodeViewButton label="create_proof_batch_priority_inner" onClick={() => sidebar.open("bp-groth16-prover", codeRefs["bp-groth16-prover"])} />
       </div>
+      <AmdahlSplitViz />
       <ExplainedFormula question="일부만 가속한 Filecoin proof의 최대 speedup을 어떻게 제한할까?" idea={<>가속하지 못한 전체 시간 비율은 GPU kernel을 아무리 빠르게 해도 남습니다.</>} formula={String.raw`S\le\frac{1}{(1-f)+f/s}`}
       annotatedFormula={String.raw`\underbrace{S}_{\text{전체 speedup}}\le\frac{1}{\underbrace{(1-f)}_{\text{가속 못 한 비율}}+\underbrace{f/s}_{\text{가속 구간 남은 시간}}}`}
       operations={[
@@ -106,6 +109,7 @@ export default function ModernFilecoinGpuProofsArticle() {
         <CodeViewButton label="verify_proof()" onClick={() => sidebar.open("bp-verifier", codeRefs["bp-verifier"])} />
         <CodeViewButton label="Proof<E> struct" onClick={() => sidebar.open("bp-proof", codeRefs["bp-proof"])} />
       </div>
+      <DeadlineSlackViz />
       <ExplainedFormula question="한 job이 운영 deadline 안에 retry 여유까지 갖는지 어떻게 판단할까?" idea={<>Deadline에서 queue·p95 execution·검증과 최소 retry/운영 reserve를 모두 빼고 남은 slack을 봅니다.</>} formula={String.raw`\Delta=D-(T_{queue}+T_{p95}+T_{verify}+B_{retry}+B_{ops})`}
       annotatedFormula={String.raw`\underbrace{\Delta}_{\text{남는 slack}}=\underbrace{D}_{\text{deadline}}-(\underbrace{T_{queue}+T_{p95}+T_{verify}}_{\text{대기·실행·검증}}+\underbrace{B_{retry}+B_{ops}}_{\text{retry·운영 reserve}})`}
       operations={[

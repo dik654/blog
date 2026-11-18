@@ -1,6 +1,7 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CollectiveFabricViz from "./viz/CollectiveFabricViz";
+import RingVsSwitchReduceViz from "./viz/RingVsSwitchReduceViz";
 
 const components = [
   {
@@ -208,6 +209,9 @@ export default function InfiniBand() {
           그렇다면 GPU 사이의 switch가 더하기를 대신할 때 GPU 한 대가 link에 실제로 싣는 byte는 얼마나 줄까? 그때 nccl-tests의 busbw는 어떻게 읽어야
           할까?
         </p>
+      </div>
+      <RingVsSwitchReduceViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           (가정) 한 node의 GPU 8개가 각자 1GB gradient를 all-reduce한다. Ring에서는 각 GPU가 reduce-scatter 단계에서 자기 몫을 뺀 7/8GB를 보내고, all-gather 단계에서 다시 7/8GB를 보낸다. 그래서 GPU 한 대가 보내는 양은 1.75GB이고, 받는 양도 1.75GB다.
         </p>

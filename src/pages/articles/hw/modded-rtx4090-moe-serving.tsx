@@ -8,11 +8,12 @@ import HardwareFieldLab from "./HardwareFieldLab";
 import HardwareTeachOpening, { HardwareTeachMechanism } from "./HardwareTeachOpening";
 import { modded4090FieldLab } from "./hardwareFieldLabs";
 import { hardwareTeachCases } from "./hardwareTeachCases";
+import SplitFitViz from "./modded-rtx4090-moe-serving/viz/SplitFitViz";
 
 export default function ModdedRtx4090MoeServingArticle() {
   return (
     <div className="space-y-12">
-      <HardwareTeachOpening data={hardwareTeachCases.modded4090} />
+      <HardwareTeachOpening data={hardwareTeachCases.modded4090} numbersVisual={<SplitFitViz />} />
       <HardwareTeachMechanism data={hardwareTeachCases.modded4090}>
         <Overview />
         <CapacityMod />

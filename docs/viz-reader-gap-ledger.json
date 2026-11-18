@@ -8174,202 +8174,346 @@
 {
 "route": "economic-history/regional-gdp-household-income-and-within-country-inequality",
 "publicPath": "history/economic-history/regional-gdp-household-income-and-within-country-inequality",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "economic-history/south-asia-markets-colonial-railways-and-development-state",
 "publicPath": "history/economic-history/south-asia-markets-colonial-railways-and-development-state",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3
 },
 {
 "route": "economic-history/southeast-asia-ports-plantations-and-export-industrialization",
 "publicPath": "history/economic-history/southeast-asia-ports-plantations-and-export-industrialization",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3,
+"articleIssues": [
+"7절 둘째 문단의 '환율이 떨어지고 ... 현지 통화 부채가 급증'은 한국어 관행(1달러당 현지 통화 표기)으로 읽으면 방향이 반대입니다. 부채가 늘려면 현지 통화 가치가 떨어져야 하고, 그때 환율 숫자는 오릅니다. Viz에서는 '현지 통화의 값이 떨어지면'으로 풀고, 1달러당 현지 통화가 10에서 20으로 오른다고 적었습니다.",
+"2절은 하야미를 인용해 19세기 교역이 세금 등을 통한 열대 상품의 강제 수집을 '대체했다'고 쓰는데, 같은 문단은 자바의 강제재배제도를 1830~70년, 곧 19세기로 적습니다. 지역별로 나눠 설명하지 않으면 서로 어긋나 보일 수 있습니다."
+]
 },
 {
 "route": "economic-history/war-finance-public-debt-and-welfare-state-capacity",
 "publicPath": "history/economic-history/war-finance-public-debt-and-welfare-state-capacity",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 5,
+"articleIssues": [
+"뚜렷한 사실 오류는 찾지 못했습니다. 3절이 부채 55와 전후 이자 20을 이어 쓰지만 금리와 상환 기간은 정하지 않습니다. 55에 대한 20을 연이율로 읽으면 약 36%여서 비현실적이므로 Viz에서는 두 숫자를 계산으로 잇지 않았다고 밝혔습니다. 글에 '두 숫자는 별개의 가정'이라는 말을 더하면 덜 헷갈릴 수 있습니다."
+]
 },
 {
 "route": "global-history/agriculture-settlement-and-neolithic-tradeoffs",
 "publicPath": "history/global-history/agriculture-settlement-and-neolithic-tradeoffs",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "global-history/cities-writing-rations-and-early-law",
 "publicPath": "history/global-history/cities-writing-rations-and-early-law",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "global-history/human-dispersal-foraging-and-social-networks",
 "publicPath": "history/global-history/human-dispersal-foraging-and-social-networks",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2,
+"articleIssues": [
+"3절 2문단은 남은 15를 '저장, 식단 변경, 이동 시점 조정, 다른 집단의 도움'으로 메운다고 하고, 7절 1문단은 '저장물·섭취량 조정·추가 이동'이라고 합니다. 목록이 서로 조금 다릅니다. Viz는 7절의 목록을 따랐습니다."
+]
 },
 {
 "route": "global-history/monasteries-schools-manuscripts-and-knowledge-transmission",
 "publicPath": "history/global-history/monasteries-schools-manuscripts-and-knowledge-transmission",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "global-history/open-web-platform-curation-and-digital-divides",
 "publicPath": "history/global-history/open-web-platform-curation-and-digital-divides",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3
 },
 {
 "route": "global-history/pastoral-mobility-steppe-empires-and-settled-frontiers",
 "publicPath": "history/global-history/pastoral-mobility-steppe-empires-and-settled-frontiers",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3
 },
 {
 "route": "gpu/ai-cluster-software-compatibility",
 "publicPath": "cs/gpu/ai-cluster-software-compatibility",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "gpu/ai-cluster-storage-io",
 "publicPath": "cs/gpu/ai-cluster-storage-io",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 6,
+"articleIssues": [
+"The algorithm step 'pread64(path, offset, 4MiB)' passes a path, but the #mechanism prose correctly writes pread64(fd, buffer, 4MiB, offset). pread64 takes a file descriptor, so the algorithm line looks inconsistent. I did not edit it."
+]
 },
 {
 "route": "gpu/ai-infrastructure-b300-128-blueprint",
 "publicPath": "cs/gpu/ai-infrastructure-b300-128-blueprint",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3
 },
 {
 "route": "gpu/ai-infrastructure-commissioning-acceptance",
 "publicPath": "cs/gpu/ai-infrastructure-commissioning-acceptance",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "gpu/b300-rack-power-cooling",
 "publicPath": "cs/gpu/b300-rack-power-cooling",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 5,
+"articleIssues": [
+"Section 7 prose uses a specific heat of about 4.18kJ/kg·K, while the formula block and the depth ledger use 4.186kJ/(kg·K). The rounded results (about 5.0 / 4.99kg/s) agree, but the constant is written two ways."
+]
 },
 {
 "route": "gpu/b300-switchless-network",
 "publicPath": "cs/gpu/b300-switchless-network",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 1
 },
 {
 "route": "gpu/cuda-basics",
 "publicPath": "cs/gpu/cuda-basics",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "gpu/filecoin-gpu-proofs",
 "publicPath": "cs/gpu/filecoin-gpu-proofs",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "gpu/gpu-architecture",
 "publicPath": "cs/gpu/gpu-architecture",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 4,
+"articleIssues": [
+"기존 ContextViz/ContextVizData.ts(Overview의 첫 Viz)는 RTX 4090 사양과 '레지스터(1) → 공유(~5) → L2(~30) → GDDR(~400 cycle)' 같은 고정 latency, ZK 연산 매핑을 보여 준다. 이는 본문의 '\"항상 몇 cycle\"이라는 표는 정본이 될 수 없습니다'와 충돌하고, 본문의 SAXPY 고정 trace와도 무관하다. 본문에 없는 수치이기도 하다(수정하지 않음)."
+]
 },
 {
 "route": "gpu/gpu-collective-network",
 "publicPath": "cs/gpu/gpu-collective-network",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2,
+"articleIssues": [
+"InfiniBand.tsx NVLS 문단의 '그래서 2.29에서 1과 같은 동작으로 되돌렸다'는 무엇이 NCCL_NVLS_ENABLE=1과 같아졌는지 모호하다. 부분 실패 시 초기화 실패로 바뀐 것인지 독자가 판단하기 어렵다. 이 분기는 Viz로 그리지 않았다.",
+"도입 numberTitle '16개 중 한 개가 2초 늦으면 완료도 최소 2초 늦습니다'와 본문 수치(0.2초 대 2.2초)는 일치한다(차이 2초). 문제는 없고 확인만 했다."
+]
 },
 {
 "route": "gpu/gpu-interconnects",
 "publicPath": "cs/gpu/gpu-interconnects",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 4,
+"articleIssues": [
+"The task gave the source as src/pages/articles/gpu/gpu-interconnects.tsx, but the article actually renders from src/pages/articles/hw/gpu-interconnects.tsx plus hw/network/NetworkRouteIntro.tsx, hw/network/Interconnect.tsx, and the hardwareTeachCases/hardwareFieldLabs data. I edited Interconnect.tsx only to add imports and Viz elements; only this article uses it.",
+"Opening numbers paragraph: '여덟 전송' and '일곱 쌍/한 쌍' mix 'transfer' and 'pair' as if they were the same thing. Not edited."
+]
 },
 {
 "route": "gpu/hw-gpu-comparison",
 "publicPath": "cs/gpu/hw-gpu-comparison",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 1,
+"articleIssues": [
+"The article renders from src/pages/articles/hw/gpu-comparison.tsx and ModernArticle.tsx, not from gpu/hw-gpu-comparison.tsx. gpu-comparison/Overview.tsx, Consumer.tsx, Datacenter.tsx and Blockchain.tsx, and their viz, are not imported by the rendered article, so they appear to be dead files.",
+"The opening teach case (22 + 0.4×8 = 25.2 GB > 24 GB) and the workload-envelope example (22 + 0.5×2 + 1 + 1 = 25 GB vs 23 usable) use two different per-request state sizes and counts for what reads like the same 24 GB scenario. Both are arithmetically correct. I visualized only the envelope case, to avoid a second near-identical chart."
+]
 },
 {
 "route": "gpu/hw-nvme-storage",
 "publicPath": "cs/gpu/hw-nvme-storage",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 4,
+"articleIssues": [
+"The task gave the article location as src/pages/articles/gpu/hw-nvme-storage. The rendered article is actually at src/pages/articles/hw/nvme-storage.tsx, which assembles HardwareTeachOpening (hardwareTeachCases.nvme), nvme-storage/ModernArticle.tsx and HardwareFieldLab (nvmeFieldLab). Overview/M2/U2/E1S.tsx are not imported."
+]
 },
 {
 "route": "gpu/hw-power-cooling",
 "publicPath": "cs/gpu/hw-power-cooling",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3,
+"articleIssues": [
+"The powerCooling incident in hardwareTeachCases.ts says 'Rack의 평균 부하는 10.5kW', while the numbers paragraph and the N−1 formula use 'rack p95 10.5kW'. Average and p95 are different quantities. The Viz follows the p95 wording of the paragraph it precedes.",
+"The task gave the article location as src/pages/articles/gpu/hw-power-cooling. The rendered article is src/pages/articles/hw/power-cooling.tsx, which assembles HardwareTeachOpening (hardwareTeachCases.powerCooling), power-cooling/ModernArticle.tsx and HardwareFieldLab (powerCoolingFieldLab). Overview/Rack/TDP/Cooling.tsx are not imported."
+]
 },
 {
 "route": "gpu/hw-server-vs-desktop",
 "publicPath": "cs/gpu/hw-server-vs-desktop",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "gpu/hw-storage-comparison",
 "publicPath": "cs/gpu/hw-storage-comparison",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2,
+"articleIssues": [
+"The overview's StorageStackViz lists SATA as 'ATA/AHCI·NCQ', but the prose never mentions AHCI. This is not an error, but the term is never explained."
+]
 },
 {
 "route": "gpu/kubernetes-vs-slurm-gpu-scheduling",
 "publicPath": "cs/gpu/kubernetes-vs-slurm-gpu-scheduling",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2,
+"articleIssues": [
+"1절 첫 문단: '작업마다 노드 두 대씩 먼저 잡게 했지만 ... GPU 16대가 할당된 채로 기다렸습니다'의 숫자가 맞지 않습니다. 작업 네 개가 두 대씩 잡으면 노드 8대이고, 노드당 GPU 8개 기준으로 GPU 64개입니다. 의도는 '노드 16대'였을 수 있습니다. 3절은 '노드 하나씩 흩어 주면'이라고 다르게 씁니다. Viz는 돌림 배분 (가정)으로 두 서술을 모두 담았습니다(2바퀴 = 작업마다 2대, 4바퀴 = 16대)."
+]
 },
 {
 "route": "gpu/modded-rtx4090-moe-serving",
 "publicPath": "cs/gpu/modded-rtx4090-moe-serving",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 1,
+"articleIssues": [
+"기존 MoeCommunicationSensitivityVizSteps.tsx의 EP dispatch 장면에 '≈60 tokens'와 '≈15 tokens'가 나오는데, 이 숫자는 글에 없고 (가정) 표시도 없습니다(이번에 만든 것이 아니며 고치지 않았습니다)."
+]
 },
 {
 "route": "gpu/msm-ntt",
 "publicPath": "cs/gpu/msm-ntt",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 4,
+"articleIssues": [
+"The route's actual file is src/pages/articles/blockchain/msm-ntt.tsx → msm-ntt/ModernArticle.tsx, not gpu/msm-ntt. Overview.tsx, Pippenger.tsx, NTT.tsx and GPUAccel.tsx (and their older Vizes) are not imported by ModernArticle, so they do not render.",
+"Existing ModernMsmNttViz scene 4 (not edited): the barrier bar starts at x=0, as wide as 1ms, instead of after the 7ms kernel, so as a timeline it does not show '7+1'."
+]
 },
 {
 "route": "gpu/nvidia-nca-aiio-study-guide",
 "publicPath": "cs/gpu/nvidia-nca-aiio-study-guide",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 1,
+"articleIssues": [
+"The route's actual files are src/pages/articles/hw/nvidia-nca-aiio-study-guide.tsx and hw/ai-infrastructure-study/ncaAiioData.ts and ncaAiioDepth.ts, not gpu/.",
+"The article already names a company (엘리스) in the need section and the comparison ledger; the Viz does not repeat it."
+]
 },
 {
 "route": "gpu/rdma-roce",
 "publicPath": "cs/gpu/rdma-roce",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "markets/bank-irrbb-alm-and-derivatives-hedging",
 "publicPath": "finance/markets/bank-irrbb-alm-and-derivatives-hedging",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 5,
+"articleIssues": [
+"Not an error in the prose: §3 and §7 assume the deposit rate and the swap's floating reference rate rise by the same 1%p, but the text never states this. The Viz marks it as (가정)."
+]
 },
 {
 "route": "markets/binomial-black-scholes-and-early-exercise",
 "publicPath": "finance/markets/binomial-black-scholes-and-early-exercise",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "markets/black-scholes-pde-finite-difference-and-numerical-error",
 "publicPath": "finance/markets/black-scholes-pde-finite-difference-and-numerical-error",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3,
+"articleIssues": [
+"Minor notation inconsistency: numericCase writes the second difference as (10−0+0)÷100, while section 3 writes (10−2×0+0)÷10². The formula operations line also writes 0.02×(10−0+0). The value 0.1 / 0.2 is the same either way. Prose not edited."
+]
 },
 {
 "route": "markets/brownian-motion-ito-and-risk-neutral-pricing",
 "publicPath": "finance/markets/brownian-motion-ito-and-risk-neutral-pricing",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3
 },
 {
 "route": "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
 "publicPath": "finance/markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 1
 },
 {
 "route": "markets/ccp-default-management-hedging-auction-and-porting",
 "publicPath": "finance/markets/ccp-default-management-hedging-auction-and-porting",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2
 },
 {
 "route": "markets/clearing-margin-and-default-waterfall",
 "publicPath": "finance/markets/clearing-margin-and-default-waterfall",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3
 },
 {
 "route": "markets/collateral-operations-margin-calls-disputes-and-substitution",
 "publicPath": "finance/markets/collateral-operations-margin-calls-disputes-and-substitution",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 3
 },
 {
 "route": "markets/collateral-optimization-eligibility-haircuts-and-liquidity",
 "publicPath": "finance/markets/collateral-optimization-eligibility-haircuts-and-liquidity",
-"status": "todo"
+"status": "done",
+"round": 23,
+"vizAdded": 2,
+"articleIssues": [
+"#overview·#case·numericCase: 10÷0.85=11.7647…는 소수 둘째 자리 반올림이면 11.76인데 글은 '약 11.77'로 적음. 7절은 '소수 셋째 자리에서 반올림'이라고 밝히므로 같은 규칙이면 11.76이 됨(올림이라면 11.77이 맞음). Viz는 글의 11.77을 그대로 씀"
+]
 },
 {
 "route": "markets/commodity-carry-convenience-yield-and-roll",
@@ -10160,6 +10304,70 @@
 "Not changed: BankLiabilityTimelineViz title '반세기' covers 1826 to 1879, which is 53 years. The timeline starts at 1826 because that is the article's first date, not because unlimited liability began then. The scene-0 box ('널리 쓰임') matches the article's '무한책임이 널리 쓰였고'.",
 "Not changed: on the 390px Zollverein screenshot the 1833 and 1834 dots sit about 10px apart because the axis is in proportion to years. Their labels go on separate rows (above and below), so the scene still reads correctly.",
 "Checks: audit:viz --strict printed no ERROR lines, only 2 REVIEW notes about SVG text, and the screenshots show no overflow there. viz-scene-shot at 390px and 1440px: control Y and frame height did not change across scenes, canvas overflow was 0, console errors were 0, and docScrollW equalled the viewport width. Screenshots are in /tmp/viz-rounds/r22/rv14/europe-serfdom-states-industrialization-and-integration and /tmp/viz-rounds/r22/rv14/firms-banks-insurance-and-institutional-investors. The first attempt timed out on page load and a retry worked."
+],
+"23": [
+"DeadlineSlackViz scene 3 at 390px: the 'ops' label under the bar sits on the D = 100 line, which runs through the over-budget segment. It is still readable, so I left it.",
+"AmdahlSplitViz: rechecked every number and found nothing to fix. f=0.4 and s=4 give 0.6 + 0.1 = 0.7, so S ≤ 1.43. The 1/0.6 ≈ 1.67 limit is not in the article but follows from its formula, and the Viz labels it as illustrative.",
+"Audit and screenshots: audit:viz --strict printed REVIEW lines only and no ERROR lines; AmdahlSplitViz was unchanged, so it was screenshotted but not re-audited. In the screenshots at both 390 and 1440px, control row and frame stay stable across scenes, overflow is 0 and console errors are 0.",
+"Checks: npm run -s audit:viz -- --strict on both changed files gives no ERROR lines, only 6 REVIEW notes about SVG text, which I checked in screenshots. viz-scene-shot for both articles at 390 and 1440 gives a stable controlY and frameH in every scene, overflow 0 and console errors 0.",
+"RationSplitViz at 390px, last scene: the boxes '장부에서 남은 것처럼 보임 10' and '노동자에게 부족 10' sit below the visible stage and are only reached by scrolling inside the canvas. The standard allows inner scroll on mobile and overflow is 0, so I did not change it. Fitting them in view would mean redesigning the mobile layout.",
+"Checked and found correct: Granary 15+65+20 = 100, 50+20 = 70, 70−15 = 55, 15+20 = 35. Catalhoyuk: 18 layers, 7400–6200 BCE, roof entry, the equality caveat, and house count and walls marked as assumed. RationSplit: 40+20+15+10+15 = 100, and the 10 dashed cells are indices 30–39 of the 40 labourer cells. MissingTenTrace: the steps follow the order in section 7 of the article.",
+"Prose, not Viz: the two sections of the human-dispersal article list different ways to cover the remaining 15. #case says '부족한 15는 저장, 식단 변경, 이동 시점 조정, 다른 집단의 도움으로 메워야 합니다'. #mechanism says '저장물·섭취량 조정·추가 이동'. Also, '다른 집단의 도움' is already counted in the exchange going 15→20. DroughtResponseViz follows #mechanism. Making the two sections agree needs a prose edit.",
+"Checked and found correct: in PatronageCutViz, 70−45=25, 45+20+15+15+5=100, the plan of 55 is 30 over budget, and after cutting 필사 and 여행 the plan of 80 is 10 over. In DroughtResponseViz, the totals are 100, 70, 80 and 85, with shortfalls of 30, 20, 15 and 15. In ShellEvidenceViz, the scenes keep the article's limits on what one shell can show: who carried it, how many hands it passed through, and gift versus trade. No rule violations: all four are 2D, terms are explained in the scene notes, and controls and frames stay put. Audit: no ERROR lines. Screenshots at 390 and 1440: overflow 0 and 0 console errors on both pages; controlY and frameH are the same in every scene.",
+"No wrong-fact errors found. Every number was recomputed and matches the article: 180/100=1.8, 120/200=0.6, ratio 3; 120/100=1.2, 180/200=0.9, ratio ≈1.33; national average 300/300=1; bar segment shares 100/200, 180/120, 120/180 of 300. For the price gap: 10+2+1+1=14, 16−14=2; with rail, 10+1+1+1=13, room 3. The bar widths match the price axis. Timeline years 1600/1700/1757/1765/1947/1948/1950/1968/1971/1985/1991/1992/1993 all appear in the article text. Donaldson figures (about +16% for the average district, more than 40,000 km of unbuilt lines) match, and the Viz states that the article gives no numeric result for the placebo comparison.",
+"The schematic unbuilt line in UnbuiltLinePlaceboViz starts at a cell next to the built line rather than branching from it. This was left as is because the description says the layout is an assumed schematic, not a real map.",
+"Checks run: audit:viz --strict gave 0 ERROR lines across both viz directories. viz-scene-shot at 390 and 1440 for all 5 Viz showed stable controlY and frameH in every scene, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r23/rv0/regional-gdp-household-income-and-within-country-inequality and /tmp/viz-rounds/r23/rv0/south-asia-markets-colonial-railways-and-development-state.",
+"SupplyAirBandViz: the row '권장 밖 허용 27–30°C' shows only the band above the recommended range. ASHRAE A2 also allows temperatures below 18°C, but the article gives no lower allowable number ('30°C까지는 허용 구간', '28–30°C는 권장 밖 허용 구간'). So I left the label as it is. Adding the lower part would need a source fact from outside the article.",
+"SupplyAirBandViz / article: the 26°C mark treats SS 697's '운영 온도 26°C 이상' as supply-air temperature. The article prose makes the same reading ('26°C 공급은 권장 상한 27°C 바로 아래'). Whether SS 697's operating temperature means server supply/inlet air needs a check against the source, and any change would be a prose change.",
+"Checked and found correct, no change: SuPowerStackViz (820+104+24+27=975, 1228+105+70+47=1450, cooling 51/117), RackDensityViz (4×14.5=58, 4×19=76, 2×15=30, 2×19.7=39.4, 30–40kW band from section 4), GidPrefixViz (o2=100+30+7=137, /30 blocks 10.137.1.0 and 10.137.2.0, /16 gives 2 candidates and /30 gives 1, the 30-bit fill covers 6/8 of the 4th octet, and the link-1-first ordering is marked (가정)). audit:viz --strict gives 0 ERROR lines. Scene shots at 390 and 1440 for all 6 Viz: control Y and frame height are stable in every scene, overflow is 0, console errors are 0. Screenshots are in /tmp/viz-rounds/r23/rv7/b300-rack-power-cooling and /tmp/viz-rounds/r23/rv7/b300-switchless-network.",
+"The new glosses (leaf/spine, plane B, NET/IB, endpoint/fabric) use general networking definitions, not text from the article. The article prose never defines these terms, so a better fix may be a definition sentence in the prose. That is a prose change and is left to the author.",
+"Possible inconsistency with an assumed rank layout: if ranks are numbered in order at 8 GPUs per node, 'rank 29' in a 4-node group falls on the group's 4th node (29 // 8 = 3), which would be dgx-08 in this Viz's ordering. The Viz instead picks dgx-07 for the swap. Both the swap and the ordering are labeled assumptions and the article only says 'group containing dgx-07', so I left it unchanged. The author may want a different swap node.",
+"ExpansionBoundaryViz scenes 1 and 2 show 240kW and 480kW, computed as DGX B300 system max 15kW × node count (the article states only 16×15kW=240kW; 32×15=480 is arithmetic). Both are labeled '장비 상한만', so no change.",
+"Arithmetic checked and correct: 128/8=16; 8×288=2,304GB; 128×288=36,864GB; 16×2TB=32TB; DGX 16×2=32 DPUs; 16/4=4 and 16/2=8 racks; 32/4=8 and 32/2=16 racks. audit:viz --strict gives 0 ERROR (2 REVIEW notes on SVG text, which the screenshots show is fine). In the scene-shot run, controlY/frameH were the same in every scene, overflow 0 and console errors 0 at both 390 and 1440.",
+"FlashRewriteViz: I recomputed it and found no change needed. User writes go 4, 6, 6, 6 and flash writes go 4, 6, 8, 8, the address map matches the cell positions, stale cells are struck through as well as greyed, and the claims match the article's '새 위치에 쓰고, 나중에 살아 있는 data를 옮긴 뒤 큰 block을 지웁니다'.",
+"LaneFunnelViz: I found no change needed. Demand is 4, 8 and 16 lanes against a cap of 8, the 16 drive-side lanes all fit inside the switch box, the 2-lane average per drive is labeled (가정), and the hedge about p99 is kept from the article's interpretation.",
+"The article itself is inconsistent: the power-cooling opening calls 10.5kW the rack's '평균 부하' in the incident text but 'p95' in the numbers text. The Viz follows the formula section (p95). Making the article consistent needs a prose edit, which is outside my scope.",
+"Checks on the 4 changed files passed. audit:viz --strict printed no ERROR lines, only REVIEW notes for SVG text, which I checked in the screenshots. At 390 and 1440 the controls and frame stayed put in every scene, overflow was 0 and there were no console errors. Screenshots are in /tmp/viz-rounds/r23/rv11/hw-nvme-storage and /tmp/viz-rounds/r23/rv11/hw-power-cooling.",
+"UkDebtCellsViz: the 1688 to 1800 pound figures (1 → 15 → 500 cells) are presumably nominal, not adjusted for inflation, so the '약 500배' growth mixes price change with real debt growth. Neither the article nor the Viz says whether the figures are nominal. Adding a hedge needs the House of Commons Library source or a prose change, so I left it alone.",
+"BondClaimFlowViz scene 3: the '국채 보유' arrow goes straight from 정부 to 중앙은행, which suggests the central bank buys directly from the government. The article only says '중앙은행이 채권을 보유하면', which also covers buying from existing holders. This is a small risk of misreading and I made no change. Rewording the arrow (for example drawing it from the holders as well) is up to the author.",
+"TradeTimelineViz scene 4: the scene title names both '1869' and '1870~1900', but the text under the axis shows only '1869'. The 1870~1900 bar is identified only by the scene title. This is cosmetic and I made no change.",
+"Checks: audit:viz --strict on the changed WarLedgerTimeViz.tsx printed no ERROR lines, only 5 REVIEW notes about SVG text. Scene shots for all 8 Viz at 390px and 1440px showed the control row and frame unchanged in every scene, overflow 0 and console errors 0. Shots are in /tmp/viz-rounds/r23/rv1/war-finance and /tmp/viz-rounds/r23/rv1/southeast-asia. I recomputed the numbers in the other 7 Viz against the article and found nothing wrong: 100−30−15−35=20; 45+15+10+5+25=100; 230만 ÷ 345 ≈ 6,667; 100×10=1,000 and 100×20=2,000; 100 ÷ 1.25 = 80; 103 ÷ 1.05 ≈ 98.1; and 1, 15 and 500 cells for 100만, 1,500만 and 5억 파운드.",
+"TransportTopologyViz SATA scene: the note and drawing say SATA is a point-to-point link with host and drive 1:1 ('선 하나가 host port와 drive 하나를 잇는 point-to-point 모양'). The article only says 'SATA는 ATA command와 SATA link를 사용합니다'. The claim is true at the link level, but it is an outside fact the article does not state. The SAS explanation 'expander는 한 연결을 여러 drive로 가르고' is in the same position. Either add a sentence to the article or accept the claims as they are; I did not change prose.",
+"TransportTopologyViz NVMe scene: the queue blocks float in the middle of the PCIe link, attached to neither the host nor the drive. This is not wrong given the article, but a reader may not see where the queues live. Placing them properly needs an outside fact (submission and completion queues sit in host memory), so I left it.",
+"Checks: audit:viz --strict found 0 ERROR lines, only REVIEW notes about SVG text. viz-scene-shot ran for all 4 Viz at 390px and 1440px: controlY and frameH stayed the same across every scene, overflow was 0 and console errors were 0. I read the screenshots in /tmp/viz-rounds/r23/rv12/{server-vs-desktop-lane,server-vs-desktop-oob,storage-checkpoint,storage-transport}. The SVG text is small at 390px, about 8px in LaneBudgetViz scene 4, but still readable, so I did not change it.",
+"GangAllocationViz: the title says flatly '아무 작업도 시작하지 못합니다', but the article hedges in 3절: '모두 시작하지 못할 수 있습니다'. I left it because the hedge survives in scene 3's note, and in the round-robin case the Viz assumes (4 nodes per job, nothing released) the outcome really is certain. Change it if the title should carry the hedge too.",
+"Article prose, 1절 (not fixable in the Viz): '작업마다 노드 두 대씩 먼저 잡게 했지만 ... GPU 16대가 할당된 채로 기다렸습니다'. At 8 GPUs per node (numericCase: 16노드 = GPU 128개), 4 jobs x 2 nodes = 8 nodes = 64 GPUs, not 16. The sentence probably means 16 nodes, or it is mixing the 2-round state with the full-allocation state. The Viz follows 3절: 2 rounds = 8 nodes held, 4 rounds = 16/16 nodes held.",
+"Checks with no findings. GangAllocationViz: 32 nodes requested vs 16 available, 2 jobs run at once, round-robin gives 2/8 and then 4/8 per job, the 8시간 timing, and 1 node = 8 GPUs all match the article. ReconcileGenerationViz: 7/8 match the example output in 실물 4, and the wrong-implementation and safe-boundary rows match the 'Operator가 같은 객체를 안전하게 되돌리는 원장' table. SplitFitViz: 96-90=6 and 48-45=3 recompute correctly, both bar sets use one GB scale (3.5px/GB), and runtime/buffer sizes are left undrawn as the article gives no figures.",
+"Verification: audit:viz --strict printed no ERROR lines, only 3 REVIEW notes on SVG text in SplitFitViz, and the screenshots show those labels fit. viz-scene-shot at 390 and 1440 for all three Vizzes: control Y and frame height constant across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r23/rv13/{k8s-gang,k8s-reconcile,rtx-split}.",
+"CentralClearingViz (/Users/dylan/code/projects/blog-moe-serving/src/pages/articles/markets/derivatives/clearing-margin-and-default-waterfall/viz/CentralClearingViz.tsx): no change. The novation scenes and the three ledgers match 2절, and amounts the article does not give are labelled '금액 본문에 없음'. One simplification is left: 중개사 and 청산회원 share one row ('중개사 · 청산회원'), while 2절 treats them as separate roles. I judged that acceptable because the article gives the customer and the clearing member separate ledgers, not the broker.",
+"DefaultWaterfallViz: no change. The order of the five layers matches 9절 (CFTC 2016 example). The description says box heights are not amounts. Status is shown in text (소진/손실 도달/대기), not by colour alone.",
+"ResidualSensitivityViz: 'bp' is used without being defined. The article (1·3절) does not define it either, so defining it (0.01%p) would bring in a fact from outside the article. Left for the author.",
+"Mobile (390px): in ResidualSensitivity scene 3 and DefaultTracks scene 5, the note text runs past the stage and scrolls inside the canvas. That is allowed under standard §2 (long scenes scroll inside the canvas). The script measured overflow 0, the frame and controls did not move between scenes, and there were 0 console errors at both 390 and 1440. audit:viz --strict on the 3 changed files gave only REVIEW lines and no ERROR lines.",
+"I rechecked the numbers in every file and found no wrong facts. SAXPY: 1,048,576/256 = 4,096 blocks and 256/32 = 8 warps. Roofline: 2×3 = 6 and 60/3 = 20. Occupancy: ceil(130/32) = 5 with 2 lanes in the last warp, min(16,8,6,3,5) = 3, and min(16,8,6,4,5) = 4. Slowest rank: (15×0.2+2.2)/16 = 0.325. Ring vs switch: 14/8 = 1.75, 9/8 = 1.125, 1/1.125 = 0.889 (algbw ≈ 0.89L), ×1.75 = 1.556 (busbw ≈ 1.56L), and at n = 4, 8, 16 the ratios are 1.5/1.25, 1.75/1.125, 1.875/1.0625. All match the article text.",
+"In DivergenceMaskViz, scene 4 is titled '다시 합쳐집니다' and states reconvergence flatly. The article's divergence paragraph only says the paths '나누어 실행할 수 있어' and never says reconvergence is guaranteed. Whether to hedge this (independent thread scheduling on newer architectures) depends on an outside fact, so I left it as is.",
+"Audit: npm run audit:viz --strict printed 0 ERROR lines (REVIEW items only). Scene shots for all 6 Viz at 390px and 1440px: control Y and frame height stable in every scene, overflow 0, console errors 0, document scrollWidth equal to the viewport. Screenshots are in /tmp/viz-rounds/r23/rv9/gpu-architecture and /tmp/viz-rounds/r23/rv9/gpu-collective-network.",
+"PcieTopologyPathViz shows PHB as a path through two root ports of the same CPU (SW 1 and SW 4 both hang off CPU 0). In real nvidia-smi topo -m output, a path between separate host bridges inside one NUMA node is usually labeled NODE, and PHB means a single host bridge. The article lists only PIX, PXB, PHB and SYS, so I did not change the Viz. Fixing this needs a fact from outside the article and probably new prose (add NODE, or redraw PHB under one host bridge).",
+"Every other number I recomputed is consistent: 1.0737/63.0 = 17.0 ms, 1.0737/50 = 21.5 ms, sum 38.5 ms; 32×16×128/130 = 504.1 Gb/s, ÷8 = 63.0 GB/s, two directions = 126.0; barrier mean (7×20+100)/8 = 30 µs, 100/20 = 5×, wait 100−20 = 80 µs. audit:viz --strict reported no ERROR lines, only REVIEW lines for SVG text. Scene shots at 390 and 1440 px kept controls and frame stable, with 0 overflow and 0 console errors.",
+"SeasonalRouteViz scene 2 '통행도 협상': the article backs negotiation over pasture use (section 4) and over 'paths and negotiation' (section 4 title), but no sentence says passage itself is negotiated. Kept as a reasonable reading of the section title. Removing it would be safer if a stricter reading is wanted.",
+"LayerControlViz puts '국가·통신사 접속 제한' on the 인터넷 layer and '앱 마켓' on the 검색·플랫폼 layer. The article names these control points but does not say which layer each sits on. These are inferences, not stated facts. Left as is.",
+"TributeCycleViz draws the market and tribute shares with equal arrows, because the article gives no split of the 20 head. The note says so. No change needed.",
+"LayerControlViz, FeedbackLoopViz: reviewed against the article (sections 2 and 7, plus the brake from section 3). No wrong facts or dropped hedges found. Not edited.",
+"Checks after the edits: the strict audit found 0 ERROR lines. The scene-shot runs showed stable control and frame positions, overflow 0 and 0 console errors at 390px and 1440px for both articles. After the last edits I re-shot only the three pastoral Viz and ExposureFunnelViz. LayerControlViz and FeedbackLoopViz are unchanged and come from the first run.",
+"Verified with no change needed: MsmWindowDigitsViz (179 = 10110011₂ gives digits 2,3,0,3, and 2·64+3·16+0·4+3·1 = 179; J = ⌈8/2⌉ = 4; three nonzero buckets as in the article), BucketRunningSumViz (R = B3 → B3+B2 → B3+B2+B1, running total = B3 → 2B3+B2 → 3B3+2B2+B1, which equals the target 1·B1+2·B2+3·B3), NttBlockBoundaryViz geometry (with 4 elements per block, pair distances 1 and 2 stay inside a block and distance 4 crosses blocks, same order as the overview Viz; the kernel line at y=120 sits between the stage 1 and stage 2 curves) and ChunkTimelineViz (4+7+1 = 12 ms serial, max(4,7)+1 = 8 ms overlapped; the overlap is hedged as something to confirm on a profiler timeline, as the article says).",
+"Left alone, a reader is unlikely to be confused: ChunkTimelineViz shows the 11 and 12 tick marks in the overlap scene too. They come from the shared axis and are dimmed.",
+"audit:viz shows REVIEW items only (SVG text overflow check at NttBlockBoundaryViz.tsx:84, already there before this pass) and no ERROR lines. In scene-shot runs at 390 and 1440 px, controls and frame stayed fixed in every scene, with overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r23/rv14/{nca,msm-ntt}.",
+"Article prose (derivative-curriculum-gaps-data.ts, collateral optimization sections 1 and 3 and numericCase) says '약 11.77' and '10÷85%=11.77'. The correct rounding of 10/0.85 = 11.7647 is 11.76. I could not change the prose, so the Viz shows 11.764…, the exact value the article itself gives in section 3.",
+"At 390px, the scene note under the stage is cut off, for example in the first scene of ConcentrationMixViz and the fourth scene of SubstitutionOrderViz. The note sits in the shared VizFrame/SceneShell scroll area, which is outside these Viz files. The scene-shot script reported overflow 0 and stable controls and frame, so I left it.",
+"No problems found in MarginCallWaterfallViz (12−2−5=5 ≥ MTA 1, drawn on one 12-unit axis), ResponseDeadlineViz (16−1 = 17−2 = 15, labeled as an assumption) or ConcentrationMixViz (5/0.85≈5.88, 5/0.95≈5.26, mixed cost 0.0294+0.1053≈0.13, flagged as not in the article).",
+"OfedLineageViz description defines RDMA as moving data to another node's memory 'CPU를 거의 거치지 않고'. That wording is not in the article, which only says '다른 노드의 메모리와 통신'. It is a standard definition, so I left it; tying it to a source or to the article's wording is a prose decision.",
+"JurisdictionBranchViz description defines 적합성 (suitability) as a check against the client's goals and financial situation, and 적정성 (appropriateness) as a check of knowledge and experience. The article never defines these terms, and the definition needs an outside source (FinSA). It matches the article's Swiss sentence ('지식·경험이나 재무상황·목표'). Section 9 says FINMA advisers check financial situation and knowledge before '추천 전 적정성', which is looser than this split. I left it because the terms have to be explained before they are used. If you need it exact, check FinSA arts. 11-12.",
+"Checked with no change needed: ConvexGapViz (101.26²−100²=253.5876, 98.74²−100²=−250.4124, line ±252, gap +1.5876=1.26² both ways; bar and curve scaling consistent); HedgeCancelViz (the hedge cancels the slope×price-change term, which carries both the average and random parts, so the actual expected return drops out, as the article says; it shows no option slope or curvature numbers the article does not give); JurisdictionBranchViz (20×5=100, 100×12%=12, 12−10=2; each branch's condition and result traced to article sections 4, 6, 8 and 9). audit:viz --strict gave 0 ERROR on SplitDayViz. Scene shots at 390 and 1440 for all four Viz: control and frame positions stable across scenes, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r23/rv17/.",
+"I checked every number and found no wrong fact. SubnetPrefixMaskViz: /16 gives 10.20.0.0 for all three addresses; /30 gives 10.20.30.0, 10.20.30.0 and 10.20.31.0; 30=00011110 and 31=00011111 differ only at bit 24. SwapOffsetViz: 5−1.6=3.4, 5−2.4=2.6, 80×1%=0.8. OverHedgeViz: −0.6+0.8=+0.2 and +0.6−0.8=−0.2. RepricingGapViz: 60/3=20 deposit periods. SupervisoryShockViz: all six curve directions match SRP31.90 as the article states it (steepener: short rates down, long rates up; flattener: the reverse). GdrReadPathViz's paths and NCCL_NET_GDR_READ default/hedge wording match the #gpudirect-topology prose.",
+"At 390px, all seven Viz cut off the long scene note under the control row, where it continues in a scroll area inside the stage. The screenshots show this; the harness reports overflow 0. The cause is the shared SceneShell/StableSceneStack/VizFrame mobile stage layout, not any one Viz. Making notes fully visible on mobile would mean changing the shell or src/components, which is outside these files.",
+"I recomputed every number and found no wrong facts. In Python, CRR N=2/10/100/1000 gives 5.418/6.424/6.674/6.699, Black-Scholes put gives 6.702, and u gives 1.2214/1.0936/1.0287/1.0090. The tree: 1.4286, 15.238, American 7.993, European 6.2925, gap 1.70. The grid: one step back 0.2; two steps back 10.0048, 0.392, 0.0032. The weights: λ=0.02/0.5/0.6/0.0242/0.08, caps 0.25/0.207/0.0625.",
+"GridSpreadViz is unchanged. The cells feeding the calculation are marked only by an orange border; the cell being computed also has bold blue text, and the description explains both. I left this alone as minor.",
+"CrrConvergenceViz shows N=1000 as \"블랙숄즈와 같음\" with a gap of \"0.00\". The actual gap is 6.702−6.699≈0.003. This matches the article's own rounding (\"1,000단계 값 6.70과 일치\"), and the scene note already hedges it with \"소수 둘째 자리까지\", so I did not change it.",
+"At 390px, longer notes are reached by scrolling inside the fixed stage. This is shared SceneShell/StableSceneStack behavior that the standard allows, and the shot script reported overflow 0 for every scene. The script measured controls and frame as identical across scenes at 390px and 1440px, with 0 console errors on both pages. Audit:viz --strict found 0 ERROR lines in all changed files."
 ]
 }
 }
