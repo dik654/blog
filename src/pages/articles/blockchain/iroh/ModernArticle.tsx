@@ -4,6 +4,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { IrohBoundaryViz, IrohPathViz } from "./viz/ModernIrohViz";
+import FailureBoundaryViz from "./viz/FailureBoundaryViz";
 
 export default function ModernIrohArticle() {
   return (
@@ -187,6 +188,7 @@ export default function ModernIrohArticle() {
             연결 실패, 프로토콜 거절, payload 불일치를 한 번의 “다운로드 실패”로 뭉치지 않습니다
           </h2>
         </header>
+        <FailureBoundaryViz />
         <p>
           현재 source의 local path 상태는 <code>Open</code>·<code>Inactive</code>·
           <code>Unusable</code>·<code>Unknown</code>입니다. 열렸던 path가 사라지면 Inactive,

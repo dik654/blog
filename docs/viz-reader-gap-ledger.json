@@ -8837,182 +8837,289 @@
 {
 "route": "markets/portfolio-compression-risk-tolerances-and-records",
 "publicPath": "finance/markets/portfolio-compression-risk-tolerances-and-records",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2,
+"articleIssues": [
+"7절 제목은 '네 장부'라고 하지만 본문은 거래 장부와 평가액·담보 호출·회계·거래보고 다섯 가지를 들고, 4절은 평가·담보·규제보고 세 가지를 듭니다. Viz에서는 본문에 나온 다섯 칸을 그대로 표시했습니다."
+]
 },
 {
 "route": "markets/short-rate-hjm-and-interest-rate-model-risk",
 "publicPath": "finance/markets/short-rate-hjm-and-interest-rate-model-risk",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3,
+"articleIssues": [
+"3절은 '앞선 금리', 6·8절과 수식은 '선도금리'라고 같은 대상을 다른 이름으로 부릅니다. HjmDriftViz 설명문에 '앞선(선도) 금리'로 둘을 함께 적었습니다."
+]
 },
 {
 "route": "markets/singapore-derivatives-records-complaints-and-tax-ledger",
 "publicPath": "finance/markets/singapore-derivatives-records-complaints-and-tax-ledger",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2,
+"articleIssues": [
+"1절은 순실현손익이 GST 면세 공급가액으로 '보고될 수 있습니다'라고 조건부로 씁니다. 반면 7절과 9절은 '보고합니다'로 단정합니다. 7절에는 (가정)이 붙어 있지만, 두 절의 단정 정도가 서로 다릅니다."
+]
 },
 {
 "route": "markets/swaption-annuity-volatility-quotes-and-cube",
 "publicPath": "finance/markets/swaption-annuity-volatility-quotes-and-cube",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3
 },
 {
 "route": "markets/uncleared-initial-margin-simm-and-model-governance",
 "publicPath": "finance/markets/uncleared-initial-margin-simm-and-model-governance",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 5
 },
 {
 "route": "markets/us-derivatives-regulatory-map-and-customer-segregation",
 "publicPath": "finance/markets/us-derivatives-regulatory-map-and-customer-segregation",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3
 },
 {
 "route": "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
 "publicPath": "finance/markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "markets/var-expected-shortfall-stress-and-model-risk",
 "publicPath": "finance/markets/var-expected-shortfall-stress-and-model-risk",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3
 },
 {
 "route": "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",
 "publicPath": "finance/markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3,
+"articleIssues": [
+"#picture para 2 describes two transfer methods: moving oil to another tank, or changing only the book owner within the same system. #source para 1 lists three distinct methods (inter-facility transfer, in-system transfer, in-tank title transfer). This is not a contradiction, but the method count differs between sections."
+]
 },
 {
 "route": "markets/xva-funding-margin-and-wrong-way-risk",
 "publicPath": "finance/markets/xva-funding-margin-and-wrong-way-risk",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3
 },
 {
 "route": "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging",
 "publicPath": "finance/markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3
 },
 {
 "route": "p2p/iroh",
 "publicPath": "cs/p2p/iroh",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1,
+"articleIssues": [
+"Route key p2p/iroh resolves to src/pages/articles/blockchain/iroh.tsx → blockchain/iroh/ModernArticle.tsx, not src/pages/articles/p2p/iroh. The Viz was added there.",
+"The article lists the path state Unknown but never says when it applies. The Viz therefore leaves Unknown out instead of inventing a condition."
+]
 },
 {
 "route": "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control",
 "publicPath": "philosophy/philosophy-history/ancient-mediterranean-inquiry-virtue-and-control",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "philosophy-history/classical-india-pramana-self-and-liberation",
 "publicPath": "philosophy/philosophy-history/classical-india-pramana-self-and-liberation",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3
 },
 {
 "route": "philosophy-history/colonial-modernity-race-and-decolonization",
 "publicPath": "philosophy/philosophy-history/colonial-modernity-race-and-decolonization",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1,
+"articleIssues": [
+"In section 10, '이 글은 보편 규칙이 역사적 배제를 숨기는 한 경로만 소유합니다' uses '소유합니다', which looks like a wrong word for '다룹니다'. The prose was not changed."
+]
 },
 {
 "route": "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation",
 "publicPath": "philosophy/philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-history/early-modern-europe-doubt-experience-and-causality",
 "publicPath": "philosophy/philosophy-history/early-modern-europe-doubt-experience-and-causality",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-history/early-modern-india-new-nyaya-analysis-and-language",
 "publicPath": "philosophy/philosophy-history/early-modern-india-new-nyaya-analysis-and-language",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "philosophy-history/existentialism-facticity-freedom-and-bad-faith",
 "publicPath": "philosophy/philosophy-history/existentialism-facticity-freedom-and-bad-faith",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 5
 },
 {
 "route": "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality",
 "publicPath": "philosophy/philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 3,
+"articleIssues": [
+"Section 3's title promises '평균 아래 네 집단을 다시 엽니다', but the prose never defines which four groups. It only says the 40 women and 60 men are split again by race, department and care responsibility.",
+"Section 9 says Black women had to show they were treated the same as Black men (race claim) or white women (sex claim). The phrasing is compressed and could be misread as requiring identical treatment rather than being measured against those comparison groups. The Viz kept the article's wording."
+]
 },
 {
 "route": "philosophy-history/german-idealism-self-consciousness-recognition-and-history",
 "publicPath": "philosophy/philosophy-history/german-idealism-self-consciousness-recognition-and-history",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding",
 "publicPath": "philosophy/philosophy-history/hermeneutics-part-whole-prejudice-and-understanding",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1,
+"articleIssues": [
+"1·2·7절과 overviewFlow, numericCase, review에서 '내일 회의 그대로'를 '네 단어'라고 부르지만, 띄어쓰기로 세면 세 어절(내일/회의/그대로)입니다. Viz에서는 단어 수를 쓰지 않았습니다."
+]
 },
 {
 "route": "philosophy-history/indigenous-land-and-latin-american-liberation",
 "publicPath": "philosophy/philosophy-history/indigenous-land-and-latin-american-liberation",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-history/islamic-philosophy-translation-illumination-and-being",
 "publicPath": "philosophy/philosophy-history/islamic-philosophy-translation-illumination-and-being",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1,
+"articleIssues": [
+"10절 복습 질문 1은 '9·11·12·17세기의 네 정거장'이라고 하지만, 3절 본문과 numericCase는 첫 정거장을 '8~10세기(절정 9세기)'로 적습니다. 서로 조금 어긋납니다."
+]
 },
 {
 "route": "philosophy-history/logical-empiricism-observation-confirmation-and-theory-language",
 "publicPath": "philosophy/philosophy-history/logical-empiricism-observation-confirmation-and-theory-language",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "philosophy-history/medieval-translation-reason-and-revelation",
 "publicPath": "philosophy/philosophy-history/medieval-translation-reason-and-revelation",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2,
+"articleIssues": [
+"numericCase (NumericPath) lists the four records as a straight line (Greek, Arabic, Hebrew, Latin), while the #case prose says Arabic splits into Hebrew and Latin. The data block makes the branching look linear. The data was not edited."
+]
 },
 {
 "route": "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology",
 "publicPath": "philosophy/philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-history/ordinary-language-use-context-and-speech-acts",
 "publicPath": "philosophy/philosophy-history/ordinary-language-use-context-and-speech-acts",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action",
 "publicPath": "philosophy/philosophy-history/song-ming-confucianism-pattern-heartmind-and-action",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-history/warring-states-china-care-ritual-and-standards",
 "publicPath": "philosophy/philosophy-history/warring-states-china-care-ritual-and-standards",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "philosophy-topics/aesthetic-taste-judgment-and-context",
 "publicPath": "philosophy/philosophy-topics/aesthetic-taste-judgment-and-context",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "philosophy-topics/consciousness-pain-and-other-minds",
 "publicPath": "philosophy/philosophy-topics/consciousness-pain-and-other-minds",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 1
 },
 {
 "route": "philosophy-topics/free-will-control-and-responsibility",
 "publicPath": "philosophy/philosophy-topics/free-will-control-and-responsibility",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "philosophy-topics/identity-through-change",
 "publicPath": "philosophy/philosophy-topics/identity-through-change",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2,
+"articleIssues": [
+"§3 '왜 4대 6과 5대 5가 본질적으로 다른지' does not say which number is old and which is new parts, so it is ambiguous whether this means year 4 or year 6. The Viz avoids depicting a 4:6 state."
+]
 },
 {
 "route": "philosophy-topics/meaning-in-life-attraction-worth-and-commitment",
 "publicPath": "philosophy/philosophy-topics/meaning-in-life-attraction-worth-and-commitment",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 },
 {
 "route": "philosophy-topics/reference-context-and-speech-acts",
 "publicPath": "philosophy/philosophy-topics/reference-context-and-speech-acts",
-"status": "todo"
+"status": "done",
+"round": 25,
+"vizAdded": 2
 }
 ],
 "openReviewNotes": {
@@ -10539,6 +10646,57 @@
 "CallSpreadLegsViz.tsx: the legend draws 산 콜 and 판 콜 as solid lines, but in scene 3 they are dashed and the '산 100 콜' and '판 120 콜' labels sit on top of the lines. The colours still match the legend, so the reading is not wrong. Left unchanged. The numbers check out: 90→0, 110→10, 130→30−10=20.",
 "ArbitrageCashflowViz.tsx: the scene 4 figure '10−7=3' is the Viz's own arithmetic. The article only says '콜이 7이면 콜을 사고 비싼 복제 조합을 파는 방향을 생각할 수 있습니다' and gives no number. The Viz already marks it as an assumption ('(가정)') and says what the article does and does not say, so I left it.",
 "All 7 Viz files: npm run audit:viz --strict reported 0 ERROR lines; the REVIEW items are SVG text overflow checks, which I looked at in the screenshots. viz-scene-shot at 390 and 1440: controlY and frameH constant in every scene, overflow 0, console errors 0. At 390px, long notes scroll inside the canvas, which the standard allows for mobile."
+],
+"25": [
+"BonusSplitViz.tsx: I checked every number and found nothing to fix. 100/10=10 and 100/6≈16.7. Each regular employee gets 16.7−10≈+6.7, and each contract worker gets −10. 4×10=40 equals 6×6.67, so both splits total 100. The scenes follow §3 ('공개된 약속대로 ... 100÷10=10', '약 16.7 ... 0', the hedge '평가 점수와 노동시간, 임금 격차, 의사 결정권'), and the '(가정)' tag matches '설명용 배분표'. The legend line describing the dashed box also appears in scenes that have no dashed box. This is minor and I left it.",
+"Checks: audit:viz --strict printed no ERROR lines, only 4 REVIEW notes about SVG text, and the screenshots showed no overflow. viz-scene-shot ran on both Viz at 390 and 1440 px: control position and frame height stayed the same in every scene, overflow was 0, and console errors were 0. Screenshots are in /tmp/viz-rounds/r25/rv7/colonial and /tmp/viz-rounds/r25/rv7/critical.",
+"Not a defect, just checked: all three Viz match the article. PlotMap places A and C (x 16-146) west of the line at the pond's east edge (x=200) and B and D (x 214-344) east of it. The road R runs at y 104-126, with A and B north of it and C and D south. So P-east gives 4 -> {B, D}, and adding T-inside plus R-north leaves only B. The middle count of 2 is labelled '(그림 배치 기준)' and the description says the layout is assumed. In MarkerMismatch, with the tree moved to D, B still satisfies 'P 동쪽' and 'R 북쪽' and fails only 'T 포함', which is correct. Scene 3 lists the checks from section 7: '지도 작성 시점, 표식 이동, 기록자의 지각과 증언'.",
+"In the 390px screenshots of the long notes (Kant scene, PlotNarrowing scene 4), the note text is clipped inside a fixed 754px frame and scrolls inside it. In one capture a line ('함께 적습니다.') shows under the control row. This comes from the shared SceneShell, VizFrame and StableSceneStack mobile scroll behavior, not from these Viz files. The script still reported overflow 0 and stable controls and frame (controlY 667 and frameH 754 on every scene). I could not change it because src/components is out of scope.",
+"audit:viz --strict printed only 2 REVIEW lines and no ERROR lines (SVG text in the Balls glyph, which fit in the screenshots). Scene shots: controls and frame stable across all scenes at 390 and 1440, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv8/early-modern-europe-doubt-experience-and-causality and /tmp/viz-rounds/r25/rv8/early-modern-india-new-nyaya-analysis-and-language.",
+"HjmDriftViz last scene ('만기가 길면'): the values 1년 연 1bp and 5년 연 5bp do not appear in the article. They are derived with the article's own formula μ=σ·∫σ ds under its assumptions (σ=1%: 1%×1%=1bp, 1%×5%=5bp), and the scene says they are only plugged in to read the formula. I kept them as correct arithmetic. If 'numbers must come from the article' is read strictly, drop this scene or have the prose name these values. Also, the shaded area there covers 0–5 years, which is the integral only for T=5, not for the 1-year and 2-year marks.",
+"NetGrossWalkViz, LedgerSyncViz, HjmDriftViz: I recomputed every number and found no errors: 100−60−40=0, 100+60+40=200, 2%×1%=2bp, 2/252=0.0079bp, 1/√252=6.30bp. The walk 0→100→40→0 is correct, and the assumption that the 담보 호출 ledger is the stale one is labeled as an assumption.",
+"Checks: audit:viz --strict found no ERROR lines (REVIEW items only). viz-scene-shot ran for all 5 Viz at 390 and 1440. Control row and frame stayed stable, overflow was 0 and console errors were 0. Screenshots are in /tmp/viz-rounds/r25/rv0/{portfolio-compression-risk-tolerances-and-records,short-rate-hjm-and-interest-rate-model-risk}/.",
+"Nothing to fix. I checked both Viz against the case-section prose in /Users/dylan/code/projects/blog-moe-serving/src/pages/articles/philosophy-history/philosophy-history-modern-expansion-data.ts. DeskRuleViz: the minutes match the article ('가가 60분을 쓰고 나는 0분', '30분씩 쓰거나 … 번갈아 40분과 20분'). Each row adds up to 60 (60+0, 0+60, 30+30, 40+20), and bar widths are minutes/60. The 0:60 row follows from '나도 같은 원칙을 내세우면 … 충돌이 다시 생깁니다' and the mechanism line '60 대 0의 규칙이 둘에게 함께 적용될 수 없음'. Who gets the 40 minutes is marked '(가정)'. ReadingTwiceViz: the six cells are 4 자료 수정, 1 참석자 변경 and 1 시간 확인, the same split as '6개 가운데 4개가 자료 수정, 1개가 참석자 변경, 1개가 시간 확인'. The before reading is '모두 유지' and the after reading is '시간은 유지하되 자료와 참석자는 바뀔 수 있다', both as in the article. The last scene keeps the article's caveat ('자동으로 확정되는 것은 아닙니다') and the 확인 질문 1개. '해석학적 순환' is defined right where it first appears.",
+"One borderline reading in DeskRuleViz, left as it is: the article says '번갈아 40분과 20분', but the Viz shows a single day with 가 40 · 나 20. The '(가정)' row label and the scene note ('누가 40분 쪽인지는 그림을 위한 가정입니다') hedge it, so I did not change it.",
+"At 390px, the note text in ReadingTwiceViz scenes 2 to 4 runs past the bottom edge and continues under the controls. This is the shared SceneShell/StableSceneStack inner-scroll behaviour, which the standard allows for long scenes ('긴 장면만 canvas 안에서 세로로 스크롤'). The scene-shot reported overflow 0, steady controls (controlY 667/710) and steady frame height (754/864) in every scene. src/components is off-limits, so I did not touch it.",
+"Checks: audit:viz --strict passed for both files with no ERROR lines. I ran viz-scene-shot on both articles at 390px and 1440px: 0 console errors and no document-level horizontal overflow. Screenshots are in /tmp/viz-rounds/r25/rv10/german-idealism and /tmp/viz-rounds/r25/rv10/hermeneutics.",
+"RepriceVsLinearViz: the option curve is the convex shape of a long option (0.5s+0.45s², above the tangent on both sides; the code comment says '콜옵션 매수처럼'), but the legend says only '옵션 실제 가치(가정 모양)'. A reader could conclude that the straight-line approximation always overstates loss, which is the conservative direction. For a sold option the error goes the other way. The article does not state the direction, so labelling it 'long' or adding the short-option case needs an outside fact and was left for the author.",
+"Checked numbers with no change needed. LossTailViz: 8 of 10 losses are 4 or less, so VaR is 4; ES is (6+10)/2 = 8; the stress loss of 18 sits apart from the sample and the axis max of 20 fits it. TwoLedgerPathViz: the 6:4 bar widths are 60%/40%, and the UK '± 세법 조정(크기 미정)' box is dashed with no size given. HedgeTimingViz: year 1 is +10 and year 2 is −10, and the year split is labelled as an assumption.",
+"Check runs: audit:viz --strict showed no ERROR lines, only SVG-text REVIEW notes. Scene shots at 390px and 1440px held the controls and frame steady in every scene, with overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv3/us-uk and /tmp/viz-rounds/r25/rv3/var.",
+"Mobile at 390px: in the longer scenes of FailureBoundaryViz (scene 1, scene 6) and BootstrapDiscountViz (scene 3), the scene note is cut off at the bottom of the fixed-height frame. The screenshot script reported overflow 0, and the clipping comes from the shared SceneShell/StableSceneStack frame used by these Viz, not from any Viz file. I could not confirm from screenshots alone that the internal scroll reaches the last line. If it does not, the fix belongs in src/components, which this task may not edit.",
+"FailureBoundaryViz uses the word 'receipt' in its description before the prose explains it, because the Viz sits right under the section header. The article already introduces the same idea earlier as '영수증' in the overview, so I left it. Adding a '(영수증)' gloss is optional polish.",
+"'hole punching' has no explanation either in the Viz or in the article prose that follows it (ModernArticle.tsx line 195). Defining it is a prose change, so I did not edit it.",
+"All other checks passed. FourRecordsSortViz (4 records → Nyāya 4 channels; Buddhist 지각 / 추론+증언, with 비교 left blank) matches §3. TextTransmissionViz's dates (1.1.3, 1913, 4세기, 540년 직전, 1.2ab, 2005) and its three source materials match §6. TenHourThreeToolsViz has 6+2+2=10 cells and its scene order follows §7. No outside facts are needed.",
+"The audit command `npm run -s audit:viz -- --strict` on both viz directories found no ERROR lines. It flagged 3 REVIEW items, all for SVG text in IndependenceCheckViz; the screenshots show those labels fit inside their boxes.",
+"viz-scene-shot ran at 390px and 1440px for all 5 Viz: control and frame positions were identical across scenes, overflow 0, docScrollW equal to the viewport width, console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv6/ancient and /tmp/viz-rounds/r25/rv6/india.",
+"RegulatorRouteViz uses '적격계약참가자' (eligible contract participant) without explaining it. Section 4 of the article does not define it either, and a definition would need an outside fact, so I left it alone.",
+"Checked and found correct: CorrelationAggregation arithmetic (b=(1.0, 3.873), tip (7, 3.873), length √(49+15)=8, arccos 0.25≈75.5°, √100=10). VmImFlow says who each segregated IM is for and whose assets it protects; this matches section 4, 'protects the provider's assets'. The order of dates in SimmVersionTimeline matches section 9 and the ISDA source. SegregatedHundred has 100 cells with 20 used and 80 left. LegalEntity labels its contract-to-entity mapping as an assumption.",
+"Checks run: audit:viz --strict on the 3 changed files gave no ERROR lines, only REVIEW notes about SVG text. viz-scene-shot at 390 and 1440 px kept controlY and frameH constant in every scene, with overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv2/{uncleared-initial-margin-simm-and-model-governance,us-derivatives-regulatory-map-and-customer-segregation}/.",
+"XvaInputMapViz, last scene: it shows only 조달곡선 (shared by FVA and MVA) as the overlap example. §10 names FVA–DVA as the known double-counting dispute (\"FVA와 DVA를 어떻게 함께 둘지 ... 같은 신용·자금 효과를 두 번 셀 수 있습니다\"). The note already hedges with \"조달곡선처럼\", so I left it unchanged. An editor could add DVA–FVA as a second example.",
+"TransferMethodsViz: §4 (\"같은 시스템 안에서 장부상 소유권만 바꿀\") merges the in-system transfer and the in-tank ownership transfer that §8 lists as separate methods. The Viz follows §4. Separating the two would need a prose change or an outside rule fact.",
+"No changes to WrongWayAreaViz or DeliveryTimelineViz. I recomputed every number: 0.2×0.6=0.12, 0.36×0.6=0.216, 0.9×0.6=0.54, 1.8×2.5=4.5, 70×1000=70,000, 0.12×1000=120. The T+1, T+2 and T+3 steps and the 20th-of-next-month payment date match §7 and §8.",
+"Checks: audit:viz --strict printed no ERROR lines (10 REVIEW items about SVG text). In the scene shots at 390px and 1440px, controlY/frameH stayed fixed across all scenes, overflow was 0 and console errors were 0. Screenshots are in /tmp/viz-rounds/r25/rv4/{wti-crude-oil-cushing-storage-pipeline-and-delivery,xva-funding-margin-and-wrong-way-risk}/.",
+"HundredHectareLedgerViz.tsx: I checked every figure and claim against sections 1 and 3 and the numericCase. 60+20+20=100, and the 10x10 grid colors 60, 20 and 20 cells in order. '건물과 고정 경작만 센 지도', the four conditions (법적 지위·조약과 헌법·내부 동의·생태 조사) and '첫 반례' all match the article. The grid caption says the cell positions are an assumed layout, so I made no change. audit:viz was not rerun on this file because it was not changed. The scene shots were stable: overflow 0, console errors 0.",
+"TwoBranchesViz: the '알가잘리 비판 ↔ 이븐 루시드 반론' node sits in the top row to the right of 이븐 시나, which could suggest that both branches start after the debate. Scenes 1-4 dim that node while the branches stay lit, and the node itself says '연대는 이 글에 없음', so I left it. Giving it a date would need an outside fact.",
+"At 390px both Viz scroll inside a fixed-height stage, so the lower nodes and the note sit under the control row until the reader scrolls. This is SceneShell behavior shared across articles: frame and control positions are stable across scenes and overflow is 0. I did not change it because src/components and the shell are outside scope.",
+"VoteAndReasonViz: it interprets \"두 번째 반복\" as the segment after 반복 1 (주제 / 반복 1 / 반복 2), and \"앞의 주제\" as the 주제 segment that 반복 2 makes sound unstable. The article does not fix either reading. The drawing is a reasonable reading and the note marks the segment lengths as assumptions, so I left it unchanged.",
+"ListeningPassesViz: the title \"세 번의 감상이 한 덩어리 반복을 나눕니다\" states as fact what the article hedges (\"차이를 찾을 수 있습니다\"). The scene 4 summary and note keep the hedge \"찾을 수 있음\", so I did not change the given title.",
+"Checks I ran with no issue found: 60/40 grid (60 filled cells, 40 empty), 75 marked cells with no liking colour, +20회/분, 평소의 50%, 작은 손상, 8→5, and the pass order 1·2·3. All match sections 3 and 7 of the articles. audit:viz --strict passed. In scene shots at 390 and 1440 px, control position and frame height were constant across all scenes, overflow was 0 and console errors were 0.",
+"CalibrationLedgerViz keeps '맞음 8' after the correction. The article checked only the 2 failures ('실패 2회 모두 표시 온도가 실제보다 1.5도 높았다'), so it never says whether the 8 hits still hold once corrected. This is a small assumption and I left it as is, because changing it would need a claim the article does not make.",
+"PremiseBundleViz, CalibrationLedgerViz and FirstCauseDisputeViz had no errors. Their numbers check out: 21.0−1.5=19.5 ≤ 20.0, 8/10=80%, and the thermometer x-scale puts 19.5 at 113.1 and 21 at 246.9. Their labels and hedges match §2, §3, §7 and the term example. They were not changed, so I did not take screenshots of them.",
+"MethodLoopViz, last scene (loop): the diagram outlines all three method boxes in blue, but the record panel outlines only the hypothesis and standard rows. This mismatch did not look confusing, so I left it.",
+"FourLineTraceViz, line 3: the note says a promise can be '무성의한 약속처럼 잘못 수행' when conditions are missing, quoting section 6. Section 6 ties that kind of failure to a list that includes 진지함 (sincerity). The Viz checklist follows section 7 instead (담당 권한·실행 가능성·상대의 이해) and does not include sincerity. The wording is hedged ('6절의 말로는', '수 있습니다'), so I left it. Adding sincerity to the checklist would go beyond what section 7 lists.",
+"DebateNetworkViz uses arrows in two senses. A critique arrow points from the critic to its target (묵가→유가 '장례·음악은 낭비'). A borrowing arrow points from the source to the borrower (유가/도가→한비자). The caption says '화살표는 … 비판·반박·차용의 방향' and edge labels name each relation, so I left it. The caption could say this outright.",
+"DebateNetworkViz marks the edge new in each scene only by color (blue against gray). Each scene's note names the new relation, so the reader is not left guessing, but under the standard's '색만으로 상태를 구분하지 않는다' rule a dash or label marker could be added. Not changed.",
+"Checked and found correct: BudgetShiftViz arithmetic (50+20+20+10=100; 35+20+10+10+pool 25=100; 35+40+10+15=100; −15−10=25=+20+5), its question tags matched to the article's #case text, and its '설명용' hedge. SampleBagsViz counts (2+8+90=100, 2/10×100=20 not asserted) and its hedges on the assumed layout. DebateNetworkViz edges against the #picture prose. audit:viz --strict shows 0 ERROR lines (only REVIEW notes on SVG text). Scene shots at 390px and 1440px show stable controls and frame, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv14/{song-ming,warring-budget,warring-debate}.",
+"Each figure was recomputed and nothing else was found wrong. Days counted from 2026-01-01 = 0: Jan 15 = 14, Jan 31 = 30, Jul 15 = 195, Aug 1 = 212. 2031-01-31 = 5 + 30/365 years. The two clocks start 16 days apart, and the gap from Jul 15 2026 to Jan 31 2031 is about 4.5 years. Bachelier: d = -10/35 = -0.2857, Φ(d) = 0.3875, φ(d) = 0.3830. -10 × 0.3875 = -3.88bp and 35 × 0.3830 = 13.40bp, which sum to 9.53bp. With 1억 × 8.5, these become about -33만, +114만 and 81만 원. The plotted density uses SD 35bp with the shaded tail from +10bp up, and bar lengths are proportional to the bp values. On the CME chart, moneyness = ATM − strike puts the 4.10% strike at −10bp, left of ATM, which matches the axis label.",
+"audit:viz --strict printed 0 ERROR lines; the remaining items are REVIEW notes about SVG text. viz-scene-shot ran at 390px and 1440px for all 5 Viz. Controls and frame stayed stable within each Viz, overflow was 0 and console errors were 0. IdLinkMapViz and CmeSurfaceViz were not changed, and their screenshots showed no visual problems.",
+"Polish only, not changed: at 390px the SVG labels in BachelierSpreadViz scenes 3–4 and in TwoClocksViz come out small (about 8–9px on screen) but remain legible. Making them larger would mean a separate mobile layout, which is beyond this review.",
+"ResponsibilityStagesViz puts the threatened person's '압력' in the '이유 비교' column. Section 3 instead says the threatened employee loses the '위협·조종이 없는 상태' condition, and §7 does not name a stage. I kept the placement because §4 ('선택 비용과 이유 체계를 꺾는') and §2 ('거부 비용을 ... 키워') support it, and the cell text quotes §7. Saying exactly which stage threat affects would need a prose decision.",
+"Other checks with no defect found: PartsReplacementViz counts (1y 9/1, 5y 5/5, 10y 0/10, the spare-parts pile equals the number replaced, B rebuilt from 10 old parts), PersistenceViewsViz axis geometry (the year-n segment spans [n-1,n], and the view 1 box centres line up with the view 2 segment centres at 53.5/161.5/296.5), and the ResponsibilityStagesViz cell texts against §3/§7. audit:viz --strict gave no ERROR lines, only REVIEW notes on SVG text. The scene-shot runs at 390 and 1440 had stable controls and frame, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv16/{free-will-control-and-responsibility,identity-through-change}/.",
+"CommitmentLoopViz: the '고치는 일도 참여입니다' scene draws the 행동 box in red/alert dashed styling. 7절 calls revision '의미 있는 참여의 일부', so red may suggest failure. I left it because the trigger (소진) is a real problem state. A reader would not get a wrong fact from it. Hours 45/20/20/15 and the 3h = 3/15 of the 15% block were rechecked against 3절 and 7절 and are correct.",
+"AttractionWorthMapViz: no problems found. Subjectivism counts the attraction row with 끌림O·가치X as the counterexample, objectivism counts the value column with 끌림X·가치O as the counterexample, and the combined view counts one cell. All three match 5·6·9절, and the binary cut is labeled as a simplification.",
+"Checks after the fixes: audit:viz --strict passed for both changed files. viz-scene-shot ran for all four Viz at 390 and 1440: controlY and frameH stable, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv17/."
 ]
 }
 }
