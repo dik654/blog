@@ -6,6 +6,9 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmFinalityLocator, { PrysmFinalityMapReturn } from "./PrysmFinalityLocator";
 import PrysmFinalityFlowViz from "./viz/PrysmFinalityFlowViz";
+import ForkchoicePruneViz from "./viz/ForkchoicePruneViz";
+import JustificationBitsViz from "./viz/JustificationBitsViz";
+import QuorumOverlapViz from "./viz/QuorumOverlapViz";
 
 const fixture = [
   ["Current epoch", "11", "이번 transition이 처리하는 epoch"],
@@ -104,6 +107,7 @@ export default function ModernArticle() {
 
       <section id="bits" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Bits</h2>
+        <JustificationBitsViz />
         <p>
           Prysm의 <code>processJustificationBits</code>는 기존 four-bit history를 한 칸 옮깁니다. 이 사례에서는 <code>0001</code>이 <code>0010</code>이 됩니다. Current target 64/96이 경계를 통과했으므로 오른쪽 끝인 bit 0을 켜 최종 <code>0011</code>을 만듭니다.
         </p>
@@ -160,6 +164,7 @@ state.finalized = new_finalized`}</code></pre>
         <p>
           Finalized는 “절대로 바뀌지 않는 오래된 head”라는 저장 등급이 아닙니다. 같은 validator set에서 충돌하는 두 finality quorum을 만들려면 두 집합에 들어간 stake가 slashable vote를 남긴다는 accountable-safety 경계입니다.
         </p>
+        <QuorumOverlapViz />
         <ExplainedFormula
           question="전체 96에서 충돌하는 두 quorum이 각각 64라면 최소 얼마가 양쪽에 겹칩니까?"
           idea="두 집합의 크기를 더한 뒤 전체 집합을 빼면 반드시 겹치는 하한이 남습니다."
@@ -182,6 +187,7 @@ state.finalized = new_finalized`}</code></pre>
         />
 
         <h3 className="break-keep text-xl font-bold">Prune</h3>
+        <ForkchoicePruneViz />
         <p>
           BeaconState를 처리한 block이 fork-choice에 들어오면 Prysm의 <code>updateCheckpoints</code>가 더 높은 finalized epoch를 store에 반영하고 <code>prune</code>을 호출합니다. Store는 finalized root를 찾지 못하면 오류를 내고, 찾으면 그 node를 새 tree root로 만든 뒤 같은 checkpoint slot 이하에서 양립하지 않는 child를 제거합니다.
         </p>

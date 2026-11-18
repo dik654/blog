@@ -5,6 +5,8 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import RethNetworkLocator, { RethNetworkMapReturn } from "../reth-net/RethNetworkLocator";
 import { rethNetworkV281Tree } from "../reth-net/fileTree";
 import { RETH_NETWORK_PROJECT_META, rethNetworkCodeRefs } from "../reth-net/modernCodeRefs";
+import CleanupCountersViz from "./viz/CleanupCountersViz";
+import FirstDivergenceViz from "./viz/FirstDivergenceViz";
 import RethNetworkValidationViz from "./viz/RethNetworkValidationViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
@@ -109,6 +111,7 @@ export default function ModernArticle() {
             ].map((row) => <tr key={row[0]} className="border-t border-border">{row.map((cell) => <td key={cell} className="px-3 py-3">{cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
+        <FirstDivergenceViz />
         <p>
           각 run은 한 경계만 바꿉니다. Discovery 알고리즘, handshake 구현, queue 설정과 NIC 조건을 한꺼번에 바꾸면 첫 divergence를 찾을 수 없습니다.
         </p>
@@ -119,6 +122,7 @@ export default function ModernArticle() {
         <p>
           Candidate가 연결을 더 빨리 끝내더라도 wrong genesis를 active로 올리거나 identity mismatch를 다른 peer의 평판에 기록하면 기각합니다. 오류율 하나보다 <strong>어느 상태에서 어떤 이유로 끝났고 무엇이 남았는지</strong>가 우선입니다.
         </p>
+        <CleanupCountersViz />
         <ul className="space-y-3 pl-5 text-sm leading-7">
           <li>Base와 candidate의 selected ETH version, Status outcome과 accepted message trace가 다르면 correctness 실패입니다.</li>
           <li>종료 뒤 pending·active count, inflight request, queue bytes와 timer가 기준선으로 돌아오지 않으면 cleanup 실패입니다.</li>

@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import StatusHandshakeViz from "./viz/StatusHandshakeViz";
 
 export default function ConnectionGating({
   onCodeRef,
@@ -37,7 +38,9 @@ export default function ConnectionGating({
           관점에서 아직
           <strong> Connecting</strong>입니다.
         </p>
-
+      </div>
+      <StatusHandshakeViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Outbound와 inbound는 누가 먼저 Status를 보냅니까?</h3>
         <p>
           우리가 먼저 건 outbound 연결에서는 Prysm이 N42에게 Status request를

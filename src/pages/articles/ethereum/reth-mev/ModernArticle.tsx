@@ -7,6 +7,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { rethMevTree, rbuilderTree } from "./fileTree";
 import RethMevLocator, { RethMevMapReturn } from "./RethMevLocator";
+import BlindedCommitViz from "./viz/BlindedCommitViz";
 import RethMevFlowViz from "./viz/RethMevFlowViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
@@ -114,6 +115,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
+        <BlindedCommitViz />
         <p>
           Header bid를 받았다는 것은 full body를 받은 것이 아닙니다. Proposer가 blinded block에 서명한 다음 relay가 payload body를 돌려주고, 그 body의 block hash와 fork-specific 내용이 앞서 서명한 header와 맞아야 합니다. 따라서 header selection과 payload delivery는 서로 다른 성공 단계입니다.
         </p>

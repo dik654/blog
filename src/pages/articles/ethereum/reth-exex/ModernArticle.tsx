@@ -7,6 +7,10 @@ import ExecutionClientLocator from "../shared/ExecutionClientLocator";
 import { rethExExCodeRefs, RETH_EXEX_PROJECT_META } from "./modernCodeRefs";
 import { rethExExV281Tree } from "./modernFileTree";
 import RethExExLocator, { RethExExMapReturn } from "./RethExExLocator";
+import ExExBackpressureViz from "./viz/ExExBackpressureViz";
+import ExExCommitAtomicityViz from "./viz/ExExCommitAtomicityViz";
+import ExExReorgBranchViz from "./viz/ExExReorgBranchViz";
+import ExExRestartHandoffViz from "./viz/ExExRestartHandoffViz";
 import RethExExFlowViz from "./viz/RethExExFlowViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
@@ -60,6 +64,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
+        <ExExReorgBranchViz />
         <p>
           A가 높이 105만 저장했다면 old 105와 new 105′를 구분할 수 없습니다. 이 사례의 처리 위치는 항상 <code>(block number, block hash)</code>로 보겠습니다. Extension A는 old 103~105에서 만든 행을 지운 뒤 new 103′~105′의 행을 써야 합니다. Extension B는 102 다음부터 새 branch를 이어서 처리하면 됩니다.
         </p>
@@ -114,6 +119,7 @@ export default function ModernArticle() {
         <p>
           Reth의 <code>ExExHead</code>는 extension 내부 상태에 완전히 반영한 마지막 host block입니다. 이 값은 node가 자동으로 채워 주는 파생 DB checkpoint가 아닙니다. Extension이 자신의 저장소에 파생 행과 block identity를 함께 기록하고, 재시작 때 그 위치를 Reth의 with-head stream에 제시해야 합니다.
         </p>
+        <ExExCommitAtomicityViz />
         <p>
           이번 reorg에서 A의 안전한 순서는 old 105→103 rollback, head 102, new 103′→105′ apply, head 105′ commit입니다. 파생 행은 commit됐는데 head가 102에 남으면 같은 구간을 다시 적용할 수 있습니다.
         </p>
@@ -181,6 +187,7 @@ export default function ModernArticle() {
 
       <section id="backpressure" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">느린 ExEx는 자신의 channel에서 시작해 upstream까지 멈춥니다</h2>
+        <ExExBackpressureViz />
         <p>
           B가 notification을 읽지 않으면 capacity-1 channel이 먼저 찹니다. Manager는 B에 보내지 못한 notification을 공용 buffer에서 제거할 수 없습니다. Buffer가 최대 크기에 도달하면 current capacity가 0이 되고 <code>send_async</code>는 manager가 다시 ready가 될 때까지 기다립니다.
         </p>
@@ -206,6 +213,7 @@ export default function ModernArticle() {
 
       <section id="restart" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">재시작은 저장한 ExExHead의 branch부터 다시 확인합니다</h2>
+        <ExExRestartHandoffViz />
         <p>
           B가 head 102를 저장하고 재시작하면 <code>ExExNotificationsWithHead</code>가 먼저 그 hash가 현재 canonical chain에 있는지 확인합니다. 저장한 head가 비canonical이면 WAL에서 해당 block을 포함한 notification을 찾아 뒤집은 notification을 반환합니다. Head가 canonical이지만 node head보다 뒤라면 빠진 구간을 node DB에서 backfill합니다.
         </p>

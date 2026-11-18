@@ -2,6 +2,7 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import BitOffsetViz from "./viz/BitOffsetViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -13,6 +14,7 @@ export default function Contribution({ onCodeRef }: Props) {
       <h2 className="mb-6 break-keep text-2xl font-bold">
         Subnet에서 먼저 줄이고, 다음 block에 네 구간을 합칩니다
       </h2>
+      <BitOffsetViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           V37의 position 261은 mainnet의 네 subcommittee 중 세 번째인 subnet 2에

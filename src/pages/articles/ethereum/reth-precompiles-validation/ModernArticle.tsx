@@ -6,6 +6,7 @@ import RethPrecompilesLocator, { RethPrecompilesMapReturn } from "../reth-precom
 import { rethPrecompilesV281Tree } from "../reth-precompiles/fileTree";
 import { RETH_PRECOMPILES_PROJECT_META, rethPrecompilesCodeRefs } from "../reth-precompiles/modernCodeRefs";
 import RethPrecompilesValidationViz from "./viz/RethPrecompilesValidationViz";
+import GasBoundaryProbeViz from "./viz/GasBoundaryProbeViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -59,6 +60,7 @@ export default function ModernArticle() {
 
       <section id="experiment" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">실험 순서</h2>
+        <GasBoundaryProbeViz />
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-2">{[
           ["01 · Registry", "각 fork의 직전·활성 block에서 address set과 implementation identity를 비교합니다."],
           ["02 · Gas", "각 vector를 exact cost−1, exact cost, exact cost+1에서 실행해 status와 사용 gas를 대조합니다."],

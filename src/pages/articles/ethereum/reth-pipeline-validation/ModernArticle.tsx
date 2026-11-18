@@ -5,6 +5,7 @@ import { rethPipelineTree } from "../reth-pipeline/fileTree";
 import { RETH_PIPELINE_PROJECT_META, rethPipelineCodeRefs } from "../reth-pipeline/modernCodeRefs";
 import RethPipelineLocator, { RethPipelineMapReturn } from "../reth-pipeline/RethPipelineLocator";
 import RethPipelineValidationViz from "./viz/RethPipelineValidationViz";
+import RangeParityViz from "./viz/RangeParityViz";
 
 const LABEL = ({ children }: { children: ReactNode }) => <span className="mr-2 inline-block border border-primary/40 px-1.5 py-0.5 align-middle text-[9px] font-black text-primary">{children}</span>;
 
@@ -69,6 +70,7 @@ export default function ModernArticle() {
 
       <section id="recovery" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Checkpoint와 output 범위가 다르면 sync를 격리합니다</h2>
+        <RangeParityViz />
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-5">{[
           ["발견", "range·root parity fail"], ["격리", "candidate sync 중지"], ["보존", "DB·checkpoint·logs"], ["복구", "snapshot 또는 이전 binary"], ["재진입", "전체 stage parity"],
         ].map(([title, body]) => <div key={title} className="bg-background p-3"><strong className="text-xs">{title}</strong><p className="mt-2 text-[10px] leading-4 text-muted-foreground">{body}</p></div>)}</div>

@@ -8,7 +8,9 @@ import {
   RETH_PAYLOAD_BUILDER_PROJECT_META,
   rethPayloadBuilderCodeRefs,
 } from "../reth-payload-builder/modernCodeRefs";
+import IsolatedPairViz from "./viz/IsolatedPairViz";
 import RethPayloadBuilderValidationViz from "./viz/RethPayloadBuilderValidationViz";
+import SameHashBundleViz from "./viz/SameHashBundleViz";
 
 const Label = ({ children }: { children: React.ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -63,6 +65,7 @@ export default function ModernArticle() {
           ["Canonical block", "Consensus acceptance 뒤 chain state", "candidate를 임의로 canonical 처리하지 않음"],
           ["배포 상태", "ADR와 배포 파이프라인", "collector는 rollback을 직접 실행하지 않음"],
         ].map((row) => <tr key={row[0]} className="border-t border-border">{row.map((cell) => <td key={cell} className="px-3 py-3">{cell}</td>)}</tr>)}</tbody></table></div>
+        <IsolatedPairViz />
         <p><Label>A</Label>Base와 candidate가 같은 txpool이나 payload registry를 함께 수정하면 비교가 오염됩니다. 독립 process와 독립 data directory를 사용하고 fixture 공급자만 공유합니다.</p>
       </section>
 
@@ -74,6 +77,7 @@ export default function ModernArticle() {
           ["Candidate", "tx order · block · roots · receipts · fees"],
           ["Resource", "gas · blobs · RLP bytes · build timing"],
         ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}</div>
+        <SameHashBundleViz />
         <p><Label>A</Label>Hash만 같다고 충분하지 않습니다. 실패한 build가 우연히 이전 best를 반환할 수 있으므로 attempt outcome, typed error와 fallback 여부도 함께 저장해야 합니다.</p>
       </section>
 

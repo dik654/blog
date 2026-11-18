@@ -6,6 +6,7 @@ import RethPrecompilesLocator, { RethPrecompilesMapReturn } from "./RethPrecompi
 import { rethPrecompilesV281Tree } from "./fileTree";
 import { RETH_PRECOMPILES_PROJECT_META, rethPrecompilesCodeRefs } from "./modernCodeRefs";
 import RethPrecompileCallViz from "./viz/RethPrecompileCallViz";
+import PrecompileOutcomeBranchViz from "./viz/PrecompileOutcomeBranchViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -124,6 +125,7 @@ export default function ModernArticle() {
             ].map((row) => <tr key={row[0]} className="border-t border-border">{row.map((cell) => <td key={cell} className="px-3 py-3">{cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
+        <PrecompileOutcomeBranchViz />
         <p>
           빈 output만 보고 실패 종류를 합칠 수 없습니다. Gas 부족은 halt이고, ecRecover의 일부 malformed input은 gas를 사용한 성공 결과로 빈 bytes를 냅니다. 미등록 주소는 precompile을 실행하지도 않습니다.
         </p>

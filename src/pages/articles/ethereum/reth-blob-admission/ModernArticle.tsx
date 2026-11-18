@@ -8,6 +8,7 @@ import RethEip4844Locator, {
   RethEip4844MapReturn,
 } from "../reth-eip4844/RethEip4844Locator";
 import AdmissionTraceViz from "./AdmissionTraceViz";
+import PoolCapacityViz from "./PoolCapacityViz";
 import { codeRefs } from "./codeRefs";
 import { rethBlobAdmissionTree } from "./fileTree";
 
@@ -220,6 +221,7 @@ export default function ModernRethBlobAdmission() {
           graph, duplicate와 replacement 같은 Pool 자체 규칙이 있으므로 validator의
           <code>Valid</code>가 곧 삽입 성공을 뜻하지 않습니다.
         </p>
+        <PoolCapacityViz />
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-3">
           {[
             ["01 · Insert", "Valid transaction을 account metadata와 함께 내부 Pool graph에 넣습니다."],

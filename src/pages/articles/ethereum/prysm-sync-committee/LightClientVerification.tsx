@@ -2,6 +2,8 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import LightClientTrustViz from "./viz/LightClientTrustViz";
+import ParticipationThresholdViz from "./viz/ParticipationThresholdViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -21,6 +23,11 @@ export default function LightClientVerification({ onCodeRef }: Props) {
           질문은 “서명이 맞는가?”가 아니라 <strong>“이 위원회가 내가 신뢰한 chain
           state에 실제로 들어 있었는가?”</strong>입니다.
         </p>
+      </div>
+
+      <LightClientTrustViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
 
         <h3>1. Bootstrap은 위원회의 출처를 고정합니다</h3>
         <p>
@@ -77,6 +84,11 @@ export default function LightClientVerification({ onCodeRef }: Props) {
         </div>
 
         <h3>3. Optimistic와 finalized는 같은 문턱이 아닙니다</h3>
+      </div>
+
+      <ParticipationThresholdViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           유효한 update는 우선 best candidate로 보관됩니다. Optimistic header는 최근
           두 period에서 관찰한 최대 참여 수의 절반인 dynamic safety threshold를

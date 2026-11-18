@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import SnappyBoundsViz from "./viz/SnappyBoundsViz";
 
 export default function SnappyEncoding({
   onCodeRef,
@@ -91,6 +92,8 @@ export default function SnappyEncoding({
         ]}
         interpretation="12,233,418 bytes는 valid block의 보통 크기가 아니라, 10 MiB raw payload를 Snappy block으로 받을 때 허용할 compressed data의 절대 상한입니다."
       />
+
+      <SnappyBoundsViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>상한 두 개가 각각 막는 공격</h3>

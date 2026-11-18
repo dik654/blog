@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import VoteConflictViz from "./viz/VoteConflictViz";
 
 export default function SlashingProtection({
   onCodeRef,
@@ -25,6 +26,11 @@ export default function SlashingProtection({
           source·target·RA를 저장합니다. 그 호출이 성공한 뒤에만 attestation을
           제출합니다.
         </p>
+      </div>
+
+      <VoteConflictViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           예를 들어 DB에 target epoch 3의 root RB가 있는데 새 vote도 target
           epoch 3이면서 root RA라면 double vote입니다. Source·target이 같아도

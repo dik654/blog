@@ -10,6 +10,7 @@ import {
   rethEip1559CodeRefs,
 } from "./modernCodeRefs";
 import RethEip1559FlowViz from "./viz/RethEip1559FlowViz";
+import BaseFeeChangeRangeViz from "./viz/BaseFeeChangeRangeViz";
 
 export default function ModernArticle() {
   const sidebar = useCodeSidebar();
@@ -112,6 +113,7 @@ export default function ModernArticle() {
             </tbody>
           </table>
         </div>
+        <BaseFeeChangeRangeViz />
         <p>
           Mainnet에서 gas used가 최대 2T일 때 비율상 상승폭은 12.5%이고,
           사용량이 0일 때 감소폭도 12.5%입니다. 다만 작은 base fee에서는 증가

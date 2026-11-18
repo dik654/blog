@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import BloomBitsViz from "./viz/BloomBitsViz";
 
 export default function BytesAndBloom({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -29,6 +30,7 @@ export default function BytesAndBloom({ onCodeRef }: { onCodeRef: (key: string, 
         assumptions={["Hash-derived 위치가 독립적이고 균등하다는 근사를 사용합니다.", "단위는 모두 count 또는 무차원 확률이며 실제 Ethereum 위치 선택은 protocol code를 따릅니다.", "Bloom positive 뒤에는 receipt/log 원문을 반드시 확인합니다."]}
         interpretation="m=2048, k=3, n=100이면 약 0.25%의 false positive가 예상됩니다. Negative는 항목 부재를 뜻하지만 positive는 실제 log 존재를 뜻하지 않습니다."
       />
+      <BloomBitsViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           CREATE 주소에서는 digest의 마지막 20바이트를 썼지만, log bloom에서는 address나 topic의 Keccak-256 digest에서 세 개의

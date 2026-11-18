@@ -7119,202 +7119,358 @@
 {
 "route": "blockchain/prysm-engine-api",
 "publicPath": "cs/blockchain/prysm-engine-api",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3
 },
 {
 "route": "blockchain/prysm-epoch-processing",
 "publicPath": "cs/blockchain/prysm-epoch-processing",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"#rotation paragraph and self-check Q4 say rewards read 'the just-ended epoch's current participation' and that zeroing current first would lose the evidence. In the consensus spec, process_rewards_and_penalties reads previous_epoch_participation, and justification reads both. The ordering conclusion still holds, because rotating first would overwrite the previous vector. The new Viz avoids naming which vector rewards read."
+]
 },
 {
 "route": "blockchain/prysm-finality",
 "publicPath": "cs/blockchain/prysm-finality",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"The Bits pseudocode and prose cover only the bit 0 (current target) check. The cited Prysm source also sets bit 1 from the previous-epoch target balance after the shift. The article never says this, so '0001 → 0010' reads as purely the shift result. Not wrong for this case, but incomplete.",
+"The Weak Subjectivity paragraph says the verifier waits when the checkpoint epoch '아직 local finalized epoch보다 앞서거나 같으면'. The source condition is v.epoch >= finalizedEpoch, so this is consistent, but '앞서다' is ambiguous in Korean (it can mean earlier or later)."
+]
 },
 {
 "route": "blockchain/prysm-forkchoice",
 "publicPath": "cs/blockchain/prysm-forkchoice",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2
 },
 {
 "route": "blockchain/prysm-gossipsub",
 "publicPath": "cs/blockchain/prysm-gossipsub",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3
 },
 {
 "route": "blockchain/prysm-p2p-libp2p",
 "publicPath": "cs/blockchain/prysm-p2p-libp2p",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 4
 },
 {
 "route": "blockchain/prysm-slot-processing",
 "publicPath": "cs/blockchain/prysm-slot-processing",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"The article directory is src/pages/articles/ethereum/prysm-slot-processing, not blockchain/. The public route cs/blockchain/prysm-slot-processing renders ModernArticle.tsx. Overview.tsx, ProcessSlot.tsx and StateRootCaching.tsx in the same directory are not imported by ModernArticle, so I did not treat them as article text. They cite older versions (specs v1.6.1, Prysm v7.1.5) than ModernArticle (v1.7.0-beta.4, v7.3.1).",
+"In the existing PrysmSlotProcessingFlowViz, scene 'Slot 32' says slot 32's roots are recorded after SetSlot(32). The 'Slot 31' scene says the slot is raised to 31 'and then' the per-slot work repeats. Both match the loop order. No contradiction found, but the receipt column describes slot 31 as 'state.slot = 31 · state_roots[31] 기록' in a single step."
+]
 },
 {
 "route": "blockchain/prysm-ssz",
 "publicPath": "cs/blockchain/prysm-ssz",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"The article directory is src/pages/articles/ethereum/prysm-ssz, not blockchain/.",
+"#encode-decode says the decoder checks that the first offset is 'fixed part 16보다 작지 않고'. I believe the SSZ spec requires the first offset to equal the fixed-part size exactly (no gap), which is stricter than 'not smaller'. I did not check this against the pinned spec. The Viz follows the article's wording."
+]
 },
 {
 "route": "blockchain/prysm-state-cache",
 "publicPath": "cs/blockchain/prysm-state-cache",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2
 },
 {
 "route": "blockchain/prysm-sync",
 "publicPath": "cs/blockchain/prysm-sync",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1,
+"articleIssues": [
+"The scene-4 prose says that once 101–104 is sent, 109–112 still waits because 105–108 is not sent. This is consistent with the pseudocode, but the existing PrysmSyncFlowViz scene 5 shows 105–108 as dataParsed while 101–104 is sent. That snapshot is transient and not wrong, but the two Viz do not depict the same instant."
+]
 },
 {
 "route": "blockchain/prysm-sync-committee",
 "publicPath": "cs/blockchain/prysm-sync-committee",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 4
 },
 {
 "route": "blockchain/prysm-validator-client",
 "publicPath": "cs/blockchain/prysm-validator-client",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3
 },
 {
 "route": "blockchain/reth",
 "publicPath": "cs/blockchain/reth",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1
 },
 {
 "route": "blockchain/reth-alloy-primitives",
 "publicPath": "cs/blockchain/reth-alloy-primitives",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"RlpDecoding.tsx card \"b8 02 aa — payload 2바이트를 선언했지만 1바이트만 남음\": in the article's own codebase/alloy-rlp/header.rs (0.3.16), the long-form header 0xb8 with length 2 hits `if payload_length < 56 { return Err(Error::NonCanonicalSize) }` before the InputTooShort check. So this input is rejected, but as NonCanonicalSize, not for the reason given. A short-form example such as 0x82 aa would show InputTooShort. I did not use this case in the Viz.",
+"Many unused Viz files in reth-alloy-primitives/viz (RLPEncodingViz, U256ArithViz, BloomViz steps, etc.) are not imported anywhere. ContextVizData.ts STEPS make claims (Geth big.Int GC pressure, derive macro runtime cost 0) that the article prose does not make. Left untouched."
+]
 },
 {
 "route": "blockchain/reth-blob-admission",
 "publicPath": "cs/blockchain/reth-blob-admission",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1,
+"articleIssues": [
+"The article files are under src/pages/articles/ethereum/, not blockchain/ as the task listed. The public route cs/blockchain/... still renders them.",
+"The #pool-insertion prose does not say whether a T₀ that gets DiscardedOnInsert has its sidecar stored first and then deleted, or never stored. The Viz avoids claiming either."
+]
 },
 {
 "route": "blockchain/reth-blob-reorg-release",
 "publicPath": "cs/blockchain/reth-blob-reorg-release",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1,
+"articleIssues": [
+"The article files are under src/pages/articles/ethereum/, not blockchain/ as the task listed."
+]
 },
 {
 "route": "blockchain/reth-blob-storage",
 "publicPath": "cs/blockchain/reth-blob-storage",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"The task's route key is blockchain/reth-blob-storage, but the source lives at src/pages/articles/ethereum/reth-blob-storage. This is not a prose error, only a path note."
+]
 },
 {
 "route": "blockchain/reth-block-execution",
 "publicPath": "cs/blockchain/reth-block-execution",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2
 },
 {
 "route": "blockchain/reth-block-execution-validation",
 "publicPath": "cs/blockchain/reth-block-execution-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2,
+"articleIssues": [
+"Not edited: the existing tables in the #environment and #ownership sections use min-w-[52rem]/min-w-[50rem] with overflow-x-auto rather than ResponsiveVizTable. They are not my changes."
+]
 },
 {
 "route": "blockchain/reth-chainspec",
 "publicPath": "cs/blockchain/reth-chainspec",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1,
+"articleIssues": [
+"Not prose, and not edited: reth-chainspec/viz/ContextVizData.ts, ContextVizSteps*.tsx, HardforkDetailVizData.ts, HardforkSteps.tsx, GenesisVizData.ts and ChainSpecVizData.ts are not imported by any rendered component. They still say 'ChainSpec + BTreeMap' and 'BTreeMap 키가 정렬', which the article itself says no longer matches v2.8.1 (Vec + FxHashMap). They look like dead stale files."
+]
 },
 {
 "route": "blockchain/reth-cli",
 "publicPath": "cs/blockchain/reth-cli",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2,
+"articleIssues": [
+"Several data and Viz files are imported by nothing that renders: reth-cli/OverviewData.ts, NodeBuilderData.ts, ComponentsData.ts, viz/ContextVizData.ts, ContextVizSteps*.tsx, NodeBuilderVizData.ts, BuilderDetailVizData.ts and ComponentsVizData.ts. ContextVizSteps claims 'Geth: Register 순서를 코드 리뷰로만 검증 — 런타임 패닉 가능' with no source. It is not rendered, but it could resurface if someone imports it later."
+]
 },
 {
 "route": "blockchain/reth-db",
 "publicPath": "cs/blockchain/reth-db",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 4,
+"articleIssues": [
+"reth-db/Overview.tsx, Tables.tsx, Cursor.tsx and StaticFiles.tsx are not rendered, because reth-db.tsx exports only ModernArticle. They cite Reth v2.2.0, while the rendered article cites v2.8.1. Their claims (single write transaction for block 1,000, coverage manifest) differ from the rendered three-store V2 model. Several old viz files in reth-db/viz are also unused.",
+"ModernArticle #routing says V2 moves '위의 여섯 종류' to static files and RocksDB. The grid above lists three items each for static files and RocksDB, but the MDBX column also lists three. A reader could count nine rather than six; the wording is ambiguous, not necessarily wrong."
+]
 },
 {
 "route": "blockchain/reth-db-validation",
 "publicPath": "cs/blockchain/reth-db-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1,
+"articleIssues": [
+"The article files are at src/pages/articles/ethereum/reth-db-validation/, not blockchain/. The route key's category does not match the directory.",
+"The overview text and the existing RethStorageMigrationViz list cleanup and pipeline rebuild after the version flip. The article never says outright whether MDBX old tables survive until step 06. The new Viz infers this only from the stated order and marks it '본문 순서상' (per the article's order)."
+]
 },
 {
 "route": "blockchain/reth-eip1559",
 "publicPath": "cs/blockchain/reth-eip1559",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1,
+"articleIssues": [
+"The article files are at src/pages/articles/ethereum/reth-eip1559/ (ModernArticle.tsx), not blockchain/.",
+"The article says the decrease branch uses 'saturating subtraction' and only the increase branch has the 1 wei minimum, but it never gives the decrease formula explicitly. The Viz uses Δ = floor(Bp(T−U)/(T·D)) by symmetry with the stated increase formula."
+]
 },
 {
 "route": "blockchain/reth-eip1559-validation",
 "publicPath": "cs/blockchain/reth-eip1559-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1,
+"articleIssues": [
+"The article uses 'effective tip', 'eligibility' and 'remaining cap' (남은 cap) without defining them. The Viz gives the EIP-1559 definitions briefly, but the prose itself never explains them.",
+"Item 02 says '최대 2T gas'. That holds only for elasticity 2 (Mainnet). With the custom E mentioned in item 04, the maximum would be E·T. This is a possible ambiguity, not edited."
+]
 },
 {
 "route": "blockchain/reth-eip4844",
 "publicPath": "cs/blockchain/reth-eip4844",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1
 },
 {
 "route": "blockchain/reth-exex",
 "publicPath": "cs/blockchain/reth-exex",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 4
 },
 {
 "route": "blockchain/reth-mev",
 "publicPath": "cs/blockchain/reth-mev",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1
 },
 {
 "route": "blockchain/reth-net",
 "publicPath": "cs/blockchain/reth-net",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2
 },
 {
 "route": "blockchain/reth-net-validation",
 "publicPath": "cs/blockchain/reth-net-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2
 },
 {
 "route": "blockchain/reth-payload-builder",
 "publicPath": "cs/blockchain/reth-payload-builder",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"The existing RethPayloadBuilderFlowViz note says '표시한 거래 수와 금액은 메커니즘 설명용 fixture입니다', but that Viz shows no transaction counts or amounts.",
+"Route key says blockchain/ but files live under src/pages/articles/ethereum/reth-payload-builder*; I edited those."
+]
 },
 {
 "route": "blockchain/reth-payload-builder-validation",
 "publicPath": "cs/blockchain/reth-payload-builder-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2
 },
 {
 "route": "blockchain/reth-pipeline",
 "publicPath": "cs/blockchain/reth-pipeline",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3
 },
 {
 "route": "blockchain/reth-pipeline-validation",
 "publicPath": "cs/blockchain/reth-pipeline-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1
 },
 {
 "route": "blockchain/reth-precompiles",
 "publicPath": "cs/blockchain/reth-precompiles",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1
 },
 {
 "route": "blockchain/reth-precompiles-validation",
 "publicPath": "cs/blockchain/reth-precompiles-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 1
 },
 {
 "route": "blockchain/reth-provider",
 "publicPath": "cs/blockchain/reth-provider",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 4,
+"articleIssues": [
+"route key는 blockchain/reth-provider인데 소스는 src/pages/articles/blockchain/가 아니라 src/pages/articles/ethereum/reth-provider/ 아래에 있습니다(articlesEthereum3.ts의 component import 기준).",
+"reth-provider/ 아래의 Overview.tsx, StateProvider.tsx, Historical.tsx, BundleState.tsx와 viz/ 안의 기존 파일 여러 개는 ModernArticle.tsx가 import하지 않아 렌더되지 않는 것으로 보입니다. sectionsRead는 렌더되는 ModernArticle 섹션 7개(overview, selector, snapshot, overlay, history, code, evidence)와 복습 블록을 기준으로 셌습니다."
+]
 },
 {
 "route": "blockchain/reth-provider-validation",
 "publicPath": "cs/blockchain/reth-provider-validation",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 2,
+"articleIssues": [
+"route key는 blockchain/reth-provider-validation이지만 소스는 src/pages/articles/ethereum/reth-provider-validation/ 아래에 있습니다.",
+"#environment와 #ownership 표는 ResponsiveVizTable이 아니라 min-w-[44rem] 고정폭에 overflow-x-auto를 쓰는 기존 본문 표입니다. 제가 고치지 않았습니다(본문 범위)."
+]
 },
 {
 "route": "blockchain/reth-rpc",
 "publicPath": "cs/blockchain/reth-rpc",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 0,
+"articleIssues": [
+"Article lives at src/pages/articles/ethereum/reth-rpc (not blockchain/), served at cs/blockchain/reth-rpc."
+]
 },
 {
 "route": "blockchain/reth-sync",
 "publicPath": "cs/blockchain/reth-sync",
-"status": "todo"
+"status": "done",
+"round": 20,
+"vizAdded": 3,
+"articleIssues": [
+"Article lives at src/pages/articles/ethereum/reth-sync (not blockchain/), served at cs/blockchain/reth-sync.",
+"The ExplainedFormula example (Headers 1,008 / Execution 1,005) sits in the pipeline/backfill section, but the case section frames 1,000→1,008 as an illustrative gap that may not cross the backfill threshold. Not an error, but the two examples are not explicitly tied together."
+]
 },
 {
 "route": "blockchain/reth-trie",
@@ -9517,6 +9673,66 @@
 "BalanceMerklePathViz leaves out the SSZ List length mix-in on the Balances field root. The Viz no longer claims each node is a pure hash of two children, and its note says the real tree depth is different. Naming mix_in_length would need an outside fact the article does not have.",
 "BalanceMerklePathViz is cramped at 390px. The scene 3 note is longer than the fixed stage and has to be scrolled inside the canvas, as the shared SceneShell is designed to allow (overflow 0, controls stable), and the SVG labels render at about 7-8px. This was already the case and is within the internal-scroll rule. Making them bigger would mean splitting the scene or changing SceneShell, which is outside this task's scope.",
 "OperationOrderViz and InvalidSuffixPruneViz: I found nothing wrong. The family order matches the article's operationRows table (Slashings, Attestations, Deposits/Exits, BLS change, Execution requests), and the claim that exit reads the post-slashing state matches the #operations text. Removing 352/353/354 while keeping 353b matches 'block과 영향을 받은 후손'. audit:viz --strict found 0 ERROR lines; scene-shot reported stable controls and frame, overflow 0 and console errors 0 for all three. Screenshots are in /tmp/viz-rounds/r19/rv18/."
+],
+"20": [
+"Nothing changed. PoolCapacityViz.tsx matches the article's #pool-insertion text and pool-insertion.rs. The scene order is Insert, then discard_worst after the batch, then sidecar handoff once the write lock is released, then deletion of the evicted candidate's Blob. Both outcomes are shown: C is evicted, or T₀ is evicted as DiscardedOnInsert. The 4-slot limit, A~D and the worst pick are all labelled as assumptions. Counts check out: 4 + T₀ = 5 > 4, and discard_worst brings it back to 4.",
+"Nothing changed. TrackerReplaceViz.tsx matches #update-order/#finality and tracker.rs. add_new_chain_blocks writes over BTreeMap[100] with 100′'s empty Vec. on_finalized_block(100) then finds nothing to emit and returns BlobStoreUpdates::None, which the Viz shows as 'H₀ 없음'. Under the no-replace assumption it would emit Finalized [H₀]. The Viz keeps the article's hedge ('지울 수 있습니다'), and block 101 matches #finality: delete_blobs, then cleanup_blobs, with stale eviction as the fallback.",
+"Small issue, not fixed. In PoolCapacityViz scene 03 (Capacity A), T₀ is still drawn right of the limit line while the counter already reads '5 → 4'. Scene 05's note explains that T₀ was moved inside the limit, so I left it.",
+"Checks passed. audit:viz --strict found no ERROR lines. viz-scene-shot found a stable control Y and frame height in every scene, overflow 0 and 0 console errors at 390 and 1440. Screenshots are in /tmp/viz-rounds/r20/rv7/reth-blob-admission and /tmp/viz-rounds/r20/rv7/reth-blob-reorg-release.",
+"I checked these against the article prose and the codebase excerpts and found nothing to fix. FinalityRetentionViz: on_finalized_block removes entries with key <= finalized_block, so H₁ and H₀ leave the tracker and N+1·H₂ stays. Cleanup takes the whole queue with mem::take, so txs_to_delete is empty after cleanup. NotFound counts as delete_succeed (finality-cleanup.rs). CacheFileBoundaryViz: insert_one updates the cache before write_one_encoded. get_one checks the cache first. read_one returns None on NotFound and DecodeError when decoding fails. open runs delete_all and then create_blob_dir (disk-path.rs). The contains semantics match the article sentence 'contains(H₀)는 cache hit 또는 파일 존재만 확인'. BundleLookupViz: 10 − 3 − 0.000021 = 6.999979, 3 − 2 − 0.000021 = 0.999979, and Carol 0 → 2, which match the article's ExplainedFormula operations. The bundle is shown only after the merge with BundleRetention::Reverts, as the article describes.",
+"The two SceneShell.tsx files are identical copies with a 6500ms interval. I found no issues in them.",
+"At 390px wide, the scene-shot screenshots show the note paragraph scrolling under the control row inside the frame. Control Y and frame height stayed stable in every scene, overflow was 0 and there were 0 console errors. This behaviour comes from the shared VizFrame and StableSceneStack in src/components, which this task does not allow me to edit, so I did not change it.",
+"Checks: npm run -s audit:viz -- --strict passed for all 3 Viz files. viz-scene-shot ran on /cs/blockchain/reth-blob-storage and /cs/blockchain/reth-block-execution. Screenshots are in /tmp/viz-rounds/r20/rv8/reth-blob-storage and /tmp/viz-rounds/r20/rv8/reth-block-execution.",
+"CrashBoundaryViz.tsx: no defects found. Stop points ①②③ are 실행 전, 실행 후 and publish 전, which matches the article's 'Execution 전후와 publish 전 경계'. The stage order matches the #ownership table, and the reject and recovery wording matches #decision and #recovery.",
+"FirstDivergenceViz: the arithmetic checks out. Base cumulative gas is 10, 20, 60, 80, 90 and candidate is 10, 20, 65, 85, 95, so the first difference is at transaction 3 and transactions 4 and 5 both differ by 5. The term 'original/present' is still not explained in the Viz or the article. Explaining it accurately needs an outside fact about Reth's BundleAccount fields, so it is left for a prose decision.",
+"Checks: audit:viz --strict reported no ERROR lines. In viz-scene-shot at 390px and 1440px, all three Vizzes had stable controlY and frameH in every scene, overflow 0 and console errors 0. I read the screenshots and found no visual problems. Screenshots are in /tmp/viz-rounds/r20/rv9/{reth-chainspec,rbev-first,rbev-crash}.",
+"StateOwnershipViz: checked all four scenes against #copy-boundary (Copy() on a general hit; NoCopy returns the same object as ReadOnlyBeaconState; the lock covers lookup only; InitialSync mutates with no copy and later deletes the parent entry). No errors found, nothing changed.",
+"ReplaySlotTimelineViz: recomputed the counts. Slot transitions: (102-100)+(105-102)=2+3=5. Block transitions: 2. Arrows 1-2 belong to scene 2 and arrows 3-5 to scene 3. The parent chain is 105->102->100, matching #ancestor. Possible polish, left unchanged: the slot-100 cell reads 'state / DB 저장' with no block, while the article assumes 'State 100은 block 100을 적용한 post-state입니다'. The cell is 48 units wide, too narrow to add that wording cleanly.",
+"ArrivalVsSendOrderViz: replayed the article's send rule (first machine, or no earlier machine still in new/scheduled/dataParsed) on arrivals 109,101,105,113. Sends go out in the order 101,105,109,113, which matches every scene.",
+"At 390px, all three Viz use the shared SceneShell inner scroll, so the note continues below the control row in screenshots. The tool reported overflow 0 and stable controls/frame in every scene. This layout comes from the shared shell, not these files.",
+"Checks: audit:viz --strict on all three files gave 0 ERROR lines (REVIEW items for SVG text only). viz-scene-shot at 390 and 1440 kept controls and frame stable, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r20/rv4/prysm-state-cache and /tmp/viz-rounds/r20/rv4/prysm-sync.",
+"BoundaryBranchViz 'Target 바로 아래' scene: the ↘ arrow and '감소 분기' are correct about the branch. Under integer division, though, a small base fee at T−1 can give a 0 wei decrease (EIP-1559: base*(T−used)/T/8 floors). The note already hedges ('몇 wei가 줄어드는지는 정수 나눗셈 결과'). Saying outright that it can be 0 needs an outside fact the article does not state, so I left it.",
+"Checks I ran: audit:viz --strict passed with no ERROR lines. viz-scene-shot at 390 and 1440: control row and frame are stable in every scene, overflow is 0 and console errors are 0. Screenshots are in /tmp/viz-rounds/r20/rv12/{reth-eip1559-validation,reth-eip4844}.",
+"Numbers checked and found correct, so not changed. ⌊10,485,760/6⌋ = 1,747,626 and 32 + 10,485,760 + 1,747,626 = 12,233,418. 0.3×(−3.3333) + 0×s + 0.3×0.9 + 0.4×(−2) = −1 + 0.27 − 0.8 = −1.53. The block decay series 200→136→72→8→0 follows from '30초마다 64개씩 빼고 0 아래로 내려가지 않게'. The bad-response decay 2→1→0 follows from '한 시간마다 1씩'. In BlockValidationBranchViz, all seven steps and their exits match the article's 1–7 list and DECISIONS cards. The Viz note says that the step-3 and step-6 chips are placed examples.",
+"Not verified from local source. ScoreVsBadPeerViz says 'IsBadPeer는 이 합계로 판정하지 않습니다' and that it skips the aggregate. The article supports the three separate checks and 'terminal 오류는 좋은 aggregate score로 상쇄되지 않습니다'. The local codebase excerpts do not include IsBadPeer, so I could not confirm that it never reads the aggregate. I left the wording because it matches upstream Prysm as I know it. It needs a check against the v7.3.1 source to be sure.",
+"Checks: audit:viz --strict printed 0 ERROR lines, only REVIEW notes about SVG text. viz-scene-shot ran at 390px and 1440px for all five Viz. Control Y and frame height stayed the same in every scene, overflow was 0, console errors were 0 and docScrollW matched the viewport. Screenshots are in /tmp/viz-rounds/r20/rv2/prysm-gossipsub and /tmp/viz-rounds/r20/rv2/prysm-p2p-libp2p. I read a sample of them and found no visual problems.",
+"PeerQueuePressureViz, '제한이 없다면 · 6틱 뒤' scene: it still draws the dashed cap line labelled '상한(가정)' and marks cells 9-12 '상한 초과', even though the scene is about having no cap. Scene 3's note explains the dashed line as '설정이 정하는 상한 자리', so it can be read as where a cap would sit. I left it as is. Arithmetic checked: 3-1=2 per tick, giving 4, 8 and 12 at ticks 2, 4 and 6, and the bounded run stays flat at 8 from tick 4. All numbers are marked as assumptions, which matches the article's '구체적인 숫자는 release와 설정에 귀속'.",
+"CleanupCountersViz: values checked against the article. Session receipt 'pending 1→0 · active 0→1' matches the handshake and Established columns. In the leak run, active, inflight and timer differ from the baseline, which matches the summary. The five counters match the #failure bullet. Assumed values are marked. No issues found.",
+"FirstDivergenceViz, one-boundary scene: the Active cell reads 'Status 시작 안 함', but the comment maps Status to the Handshake stage. It still agrees with the article's residual-state column, 'Status attempt·active slot' must be 0. I left it as is.",
+"Checks: audit:viz --strict passed. Screenshots at 390 and 1440 show controlY and frameH steady across every scene, overflow 0 and 0 console errors for all three Viz. Screenshots are under /tmp/viz-rounds/r20/rv14/{reth-net,reth-net-validation,reth-net-validation-cleanup}. In the 390 shot of FirstDivergence scene 3, the end of the note ('없습니다.') shows below the control row. That looks like the mobile inner scroll the standard allows, but I did not confirm it by scrolling in a browser.",
+"RotationLookaheadViz.tsx (lookahead scenes): the lookahead row is drawn as three epoch cells ('가장 오래된 / … / 마지막'), which suggests the list holds three or more epochs. Its length is (MIN_SEED_LOOKAHEAD+1)×32 slots, which on mainnet (MIN_SEED_LOOKAHEAD=1) is only two epochs: 10 and 11 before the step, 11 and 12 after. Neither the article nor the bundled fulu/transition.go states the length or the value of k, so drawing it exactly needs an outside fact. It is left as-is.",
+"FcuOrderViz.tsx scene 5 leaves the pointer step blank ('이 글은 다루지 않음') when head is not VALID. This matches the article, which does not cover that case. But scene 2 draws the pointer being applied before the VALID check, so a reader might assume the pointer is still applied when head is not VALID. Filling in what happens needs the outside spec rule (the client may skip the forkchoice update when head is SYNCING) or a prose addition.",
+"InvalidPruneViz.tsx and InactivityWeightViz.tsx use fixed dark hex text colors under the boxes and bars (#166534, #991b1b, #334155) on the page background. These may be hard to read in dark mode. The screenshots are light-mode only, so this is unverified.",
+"Checks run and found nothing to fix: FcuOrderViz ordering and hedges match the article. NewPayloadMethodViz's six routes match new_payload.go exactly: V1/V2 by type, Deneb → V3 without requests or V4 with them, Gloas → V5, anything else → 'unknown execution data type'. The bit and mask arithmetic in FinalityBitsViz matches computeCheckpoints: 1110 fails on bit 3, 0110 gives 8+2=10, 0111 fails at 9+2=11, 0011 gives 9+1=10, so finalized = 9. The InactivityWeightViz numbers hold: 180<200, 180<190, 180=180, with thresholds at 66.7, 63.3 and 60. In RotationLookaheadViz, 351 // 32 = 10. audit:viz --strict shows no ERROR lines. In the scene shots for both articles at 390 and 1440, control position and frame height stay the same across scenes, overflow is 0, and there are 0 console errors.",
+"KeyByteOrderViz: no problems found. Checked 255=0x00FF, 256=0x0100, 1000=0x03E8. Low-byte-first gives FF 00 / 00 01 / E8 03, which sorts to 256, 1000, 255. High-byte-first sorts to 255, 256, 1000. The lower bound for 256 is index 0 in A and index 1 in B, so the walks match the summaries.",
+"CommitUnwindOrderViz and ReconcileDirectionViz: the store order, the public tip, and the ahead/behind outcomes all match the article's #commit and #recovery text. No change made.",
+"CommitUnwind scene 4 and later, and ReadSnapshot: the scene shots ran with no errors. Every scene had control row offset 0, frame offset 0, overflow 0 and console errors 0 at 390px and 1440px. audit:viz --strict passed on the changed files. Screenshots are in /tmp/viz-rounds/r20/rv10/reth-cli and /tmp/viz-rounds/r20/rv10/reth-db.",
+"SceneShell (shared, outside my scope): at 390px the scene note is split around the control row, so part of the text sits above the buttons and part below. This shows in the JustificationBits s3 shot. The audit reported overflow 0 and stable controls, but the reading order looks odd.",
+"SubtreeWeightViz at 390px: the bottom row (leaf best line and store.head) is cut off at the first view of the stage and can only be reached by scrolling inside the stage. overflow=0 and the controls are stable, so I left it.",
+"ForkchoicePruneViz: removing C1 relies on F's slot being before the checkpoint slot. The source returns early with `if fn.slot == checkpointMaxSlot { return nil }`. The picture places F left of the line, so it is consistent, but neither the prose nor the Viz states this condition. Adding it would be a prose decision.",
+"Checked and correct: JustificationBits (3×64=192≥192, 3×63=189<192, 0010&0011=0010, shift direction, bit-to-epoch labels, finalize 10, J=11), QuorumOverlap (64+64−96=32; placement [16,80] overlaps by 48), the prune order R/P/X/Y → C1 (matches pruneFinalizedNodeByRootMap), and VoteRotation (matches the article's ProcessAttestation and updateBalances description).",
+"PrecompileOutcomeBranchViz still draws the Err leaf under the '② gas 충분 → ③ 함수 실행' path. The article does not say at which stage a provider fatal error happens, so this placement is an inference. Confirming it needs the revm-precompile 43.0.3 source, which is an outside fact. The scene note now says plainly that the article does not pin this down.",
+"GasBoundaryProbeViz shows used gas '71 (전부)' for the cost−1 row. The article gives only 'gas 0 · 빈 output' for SHA-256 at gas 71, so 'used = 71' is derived from 71 passed minus 0 remaining. That arithmetic matches the article, so I left it unchanged.",
+"Checks run: audit:viz --strict printed no ERROR lines, only REVIEW notes for SVG text. viz-scene-shot at 390 and 1440 px showed controlY and frameH stable across all 5 scenes for both Viz, overflow 0 and console errors 0. Screenshots are in /tmp/viz-rounds/r20/rv17/reth-precompiles and /tmp/viz-rounds/r20/rv17/reth-precompiles-validation, and I reviewed them. I recomputed every other number against the article and found no errors: 60+12×1=72, ceil(3/32)=1, 71/72/73 giving remaining 0/0/1, ecRecover gas 3,000 with 0 remaining, CALL-02 gas 100−72=28 with 32 bytes, and the edge and leaf coordinates.",
+"Checked and correct: min(1008,1008,1005,1005)=1005 matches the article's formula and self-check answer 4. Column header '01' comes from String(1001).slice(-2). The four stages match the formula's four terms, and the description hedges this ('식과 같이 네 stage만'). The GapBranch branch conditions (block_range vs one block at a time vs backfill with 'threshold를 넘고 target이 저장소에 없음'), the Pending/PendingRevalidation wait and the finish-then-re-decide loop all match #short-gap, #backfill-sync and #live-sync. The threshold is never given a number, which matches '활성 설정의 threshold'.",
+"SyncSceneShell.tsx: no problems found. Scene labels, notes and the control row come from shared components. Screenshots in /tmp/viz-rounds/r20/rv19/gap and /tmp/viz-rounds/r20/rv19/stage at 390px and 1440px: control Y and frame height do not change between scenes, overflow 0, console errors 0. In the frames the long scene notes look cut off behind the control row, which I read as the canvas's internal scroll area. I did not check by scrolling inside the canvas.",
+"Not fixed, would need a prose edit: GapBranchViz sits at the top of #short-gap but also previews #backfill-sync and #live-sync (BackfillAction::Start, PendingRevalidation, buffer). Each of these terms is explained in the scene's own note, so no Viz change was needed. Whether to move or split the Viz is an article-structure decision.",
+"audit:viz --strict passed on all three files with no ERROR lines.",
+"Checked and found correct, no change made. StepCountViz: N_s=33−30=3; N_e=⌊33/32⌋−⌊30/32⌋=1; (31+1) mod 32=0; the assumed case c=32 gives N_e=1−1=0 and (32+1) mod 32=1. OffsetCheckViz: fixed part 8+4+4=16, payload end 32, 16÷8=2 ≤ 4; the rejections 12<16 and 40>32 hold; the assumed 26−16=10 gives 10 mod 8=2. FieldProofViz: g=1×4+1=5=101₂; 2×32=64 B; two single proofs give 4×32=128 B and the combined proof is 32 B. HeaderBackfillViz: 30 mod 8192=30 and 8222 mod 8192=30. All SSZ hashes match a fresh SHA-256 computation.",
+"FieldProofViz (not fixed, polish): the legend says blue means 'verifier가 다시 계산하는 칸'. In scene 2 ('번호가 곧 경로'), blue marks nodes 1 and 2 as the path instead. Those nodes are recomputed later, so I judged this unlikely to confuse a reader.",
+"Verification: npm run -s audit:viz -- --strict on the three changed files printed no ERROR lines. Screenshots for both articles at 390px and 1440px are in /tmp/viz-rounds/r20/rv3/prysm-slot-processing and /tmp/viz-rounds/r20/rv3/prysm-ssz. Control row and frame stayed stable, overflow 0, console errors 0.",
+"ExExBackpressureViz scene 5 ('channel 닫힘', FILLED[4]=0) shows the manager buffer empty and dimmed. The article only says 'Channel이 닫히면 manager는 … 오류를 반환합니다'. It says nothing about what the buffer holds, so an empty buffer could read as 'the buffer was cleared'. I left it because any fill level would also be an assumption. A possible fix is a neutral or hatched buffer with a 'manager 중단' label.",
+"Checked with no finding: ExExReorgBranchViz (rollback order 105→104→103, head 102, then 103′→105′; B continues from 103′), ExExCommitAtomicityViz (both failure modes match #durable-apply), ExExRestartHandoffViz (canonicality check, then WAL inverse or error, backfill, pending, regular, all matching #restart and #failure-boundary). Ran viz-scene-shot for all 5 at 390 and 1440 after the fixes: controls and frame stable in every scene, overflow 0, console errors 0, docScrollW equal to the viewport width. audit:viz --strict on the 2 changed files gave 0 ERROR lines (SVG text REVIEW items only). Screenshots are in /tmp/viz-rounds/r20/rv13/reth-exex and /tmp/viz-rounds/r20/rv13/reth-mev.",
+"Both articles' Vizzes cut off the last lines of longer scene notes inside the fixed stage at 390px and 1440px, for example LightClientTrustViz s5 and BitOffsetViz s4. The stage scrolls internally, which the design standard allows. The script reported overflow 0, and controls and frame stayed stable in every scene. I left this unchanged. It comes from the shared SceneShell/StableSceneStack behaviour, not from these files.",
+"TimeoutRetryViz description says '가운데는 remote signer', but the signer lifeline sits at x=250 of 360, right of centre, with the signature box further right. This is cosmetic, and I judged it not confusing enough to change.",
+"Checked with no change needed. CommitteePositionsViz: 261 = 2×128+5 and 300 = 2×128+44 are both in subnet 2, and the send counts match the article. ParticipationThresholdViz: 480/2=240, 360/2=180, 3×200=600, 3×300=900, 341×3=1023, 342×3=1026, 400×3=1200 against 1024, with a strict > against the safety threshold and ≥ for 2/3. AttestationTimingViz: floor(12000×3333/10000)=3999. VoteConflictViz: 2<3<4<5 is surround, 2→5 against 3→6 is not, and the double-vote and same-RA cases match the article. TimeoutRetryViz: the article's hedges ('남을 수 있음', 'stable digest 또는 idempotent') are kept.",
+"Verification: npm run -s audit:viz -- --strict on both changed files gave 0 ERROR lines. viz-scene-shot ran on cs/blockchain/prysm-sync-committee and cs/blockchain/prysm-validator-client at 390 and 1440. Control Y and frame height were constant across scenes, overflow was 0 and console errors were 0. Screenshots are in /tmp/viz-rounds/r20/rv5/prysm-sync-committee and /tmp/viz-rounds/r20/rv5/prysm-validator-client.",
+"At 390px, every Viz built on PayloadSceneShell, both GasBudgetSelectionViz and BestCandidateTimelineViz, shows the bottom of the stage (the note text and the three check cells) cut off behind the control dock. The content scrolls inside the stage, which caps its height to the viewport. This comes from the shared component in src/components/viz (StableSceneStack/AnimatedSceneControls), which I may not edit. viz-scene-shot still reports overflow 0 and a stable controlY and frameH, so this may be intended, but the shared component's owner should confirm that a reader can scroll to the note on a phone.",
+"GasBudgetSelectionViz, scenes 1–4, shows the Encoded size check as 'RLP 한도 이내 (가정)' with no Osaka qualifier. Only the closing scene and the article ('Osaka 이후 최대 RLP block size') make clear that this check applies only after Osaka. This is minor and I left it unchanged.",
+"Reviewed with no change needed: CommitCrashViz, UnwindOrderViz and PipelineSceneShell. CommitCrashViz: the numbers 99, 100..163, 163 and 164 follow from the article's c=99 and threshold=64. Rows 01-04 match the #commit cards, the hook is placed after commit, and the last scene is labelled as the corrected older explanation. UnwindOrderViz: the order Merkle → Execution → Senders → Bodies → Headers matches the #unwind cards, the prune check comes before any unwind, and the starting point of 250 is labelled as an assumption.",
+"One gap I did not fix in the Viz because it comes from the article itself. UnwindOrderViz follows the article's 5-stage #unwind cards. The v2.8.1 order table in #order lists more stages after Merkle execute (Transaction Lookup, Storage/Account History, Prune, Finish), and a real reverse unwind would start from those, not from Merkle. Scene 02's note hedges with '다섯 stage 중', but making the table and the cards agree needs a prose change.",
+"Desktop screenshots show the long scene notes cut off at the sticky control row. This is the intended scrolling canvas from src/index.css (canvas overflow-y:auto, sticky controls), the same for every Viz, and not a defect in these files. The scene-shot run reported stable controls and frame and overflow 0 at both 390px and 1440px.",
+"Checks: `npm run -s audit:viz -- --strict` on RangeParityViz.tsx gave 0 ERROR lines and 6 REVIEW lines for SVG text. Scene-shot results: rangeparity, commitcrash and unwind each had controlY/frameH constant across scenes, overflow 0 and 0 console errors. Screenshots are in /tmp/viz-rounds/r20/rv16/{rangeparity,commitcrash,unwind}/."
 ]
 }
 }

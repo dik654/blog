@@ -1,6 +1,10 @@
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import RethStorageV2Viz from "./viz/RethStorageV2Viz";
+import KeyByteOrderViz from "./viz/KeyByteOrderViz";
+import CommitUnwindOrderViz from "./viz/CommitUnwindOrderViz";
+import ReconcileDirectionViz from "./viz/ReconcileDirectionViz";
+import ReadSnapshotOrderViz from "./viz/ReadSnapshotOrderViz";
 
 export default function ModernArticle() {
   return (
@@ -43,6 +47,7 @@ export default function ModernArticle() {
             <div className="border border-primary p-3"><span className="text-[9px] font-bold text-muted-foreground">PERSISTED ORDER</span><strong className="mt-2 block font-mono text-sm">key bytes · value bytes</strong><p className="mt-1 text-[10px] text-muted-foreground">NAME · DUPSORT · Key · Value · codec</p></div>
           </div>
         </div>
+        <KeyByteOrderViz />
         <p><code>Table</code>은 이름, 중복 정렬 여부, key와 value 타입을 선언하고 각 타입의 <code>Encode</code>와 <code>Decode</code>가 실제 bytes를 정합니다. Cursor가 lower bound와 range를 올바르게 걷으려면 byte 정렬이 논리적인 key 순서와 같아야 합니다.</p>
         <p>Compile-time 타입만으로 이미 디스크에 기록된 bytes의 호환성이 생기지는 않습니다. Codec이나 정렬을 바꾸면 기존 자료를 어떤 순서로 읽고 옮길지 별도의 migration과 검증이 필요합니다.</p>
       </section>
@@ -54,6 +59,7 @@ export default function ModernArticle() {
           <li className="bg-background p-4"><strong className="text-primary">02 · RocksDB</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">History와 lookup index의 pending write batches를 commit합니다.</p></li>
           <li className="bg-background p-4"><strong className="text-primary">03 · MDBX</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">Canonical state와 stage checkpoint가 든 transaction을 마지막에 commit합니다.</p></li>
         </ol>
+        <CommitUnwindOrderViz />
         <p>이 순서는 앞선 저장소가 MDBX보다 잠시 앞서는 것을 허용하지만, MDBX만 앞서는 정상 경로는 만들지 않습니다. Unwind에서는 반대로 MDBX를 먼저 되돌리고 RocksDB와 static files를 뒤따르게 해 독자가 이전 canonical frontier보다 새로운 과거 자료를 보지 않게 합니다.</p>
         <p>따라서 “블록 1,000이 저장됐다”는 말은 저장소별 write가 시작됐다는 뜻이 아니라, 마지막 MDBX commit으로 그 지점이 독자에게 보이게 됐다는 뜻으로 구분해야 합니다. Stable-media 내구성은 각 backend의 sync 설정과 장치 계약을 별도로 확인합니다.</p>
       </section>
@@ -67,12 +73,14 @@ export default function ModernArticle() {
             ["Static files가 뒤처짐", "필요한 immutable history가 없으므로 정상으로 가장하지 않고 오류로 중단합니다."],
           ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{body}</p></div>)}
         </div>
+        <ReconcileDirectionViz />
         <p>예를 들어 static files와 RocksDB에 블록 1,000 자료가 반영된 뒤 MDBX commit 전에 process가 종료되면, 재시작 시 공개 지점은 여전히 999입니다. 1,000 자료는 새 canonical state로 공개되지 않고 ahead data로 판정되어 잘라 내거나 재구축합니다.</p>
         <p>반대로 RocksDB가 MDBX checkpoint보다 뒤라면 단순 prune으로 채울 수 없습니다. Pipeline unwind와 rebuild가 필요합니다. Ahead와 behind는 같은 “불일치”가 아니므로 복구 방향도 달라집니다.</p>
       </section>
 
       <section id="read" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">독자는 memory head를 먼저 고정한 뒤 disk snapshot을 엽니다</h2>
+        <ReadSnapshotOrderViz />
         <p>Reth의 consistent provider는 먼저 in-memory canonical head를 capture하고 그다음 database provider snapshot을 만듭니다. 순서를 바꾸면 DB snapshot을 연 직후 memory state가 flush되어 두 범위 사이에 빈 구간이 생길 수 있습니다.</p>
         <p>조회할 때는 겹치는 최신 범위를 memory가 우선하고, persistent 범위는 MDBX가 보이는 tip 안에서 static files와 RocksDB를 함께 사용합니다. Storage route가 세 갈래여도 한 query가 서로 다른 chain frontier를 섞지 않도록 snapshot 순서와 visible tip을 고정하는 이유입니다.</p>
       </section>

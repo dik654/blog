@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import RethStorageMigrationViz from "./viz/RethStorageMigrationViz";
+import RethRollbackLocationViz from "./viz/RethRollbackLocationViz";
 
 const LABEL = ({ children }: { children: ReactNode }) => <span className="mr-2 inline-block border border-primary/40 px-1.5 py-0.5 align-middle text-[9px] font-black text-primary">{children}</span>;
 
@@ -64,6 +65,7 @@ export default function ModernArticle() {
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-5">{[
           ["발견", "version·range·checkpoint 불일치"], ["격리", "node write·serving 중지"], ["보존", "세 backend와 logs 복사"], ["복구", "동일 snapshot 복원 또는 rebuild"], ["재진입", "전체 parity 뒤 승인"],
         ].map(([title, body]) => <div key={title} className="bg-background p-3"><strong className="text-xs">{title}</strong><p className="mt-2 text-[10px] leading-4 text-muted-foreground">{body}</p></div>)}</div>
+        <RethRollbackLocationViz />
         <p><LABEL>A</LABEL>Rollback은 binary만 낮추는 작업이 아닙니다. V2 route가 이미 일부 자료를 static files와 RocksDB로 옮기고 MDBX table을 지웠다면, migration 전 MDBX snapshot과 해당 시점의 static/RocksDB directories를 함께 복원하거나 검증된 chain source에서 재구축해야 합니다.</p>
       </section>
 

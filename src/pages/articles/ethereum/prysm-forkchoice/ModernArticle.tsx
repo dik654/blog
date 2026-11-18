@@ -6,6 +6,8 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmForkchoiceLocator, { PrysmForkchoiceMapReturn } from "./PrysmForkchoiceLocator";
 import PrysmForkchoiceFlowViz from "./viz/PrysmForkchoiceFlowViz";
+import SubtreeWeightViz from "./viz/SubtreeWeightViz";
+import VoteRotationViz from "./viz/VoteRotationViz";
 
 const inputs = [
   ["Anchor", "J320", "현재 justified checkpoint root"],
@@ -90,6 +92,7 @@ export default function ModernArticle() {
 
       <section id="vote" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Vote</h2>
+        <VoteRotationViz />
         <p>
           Network에서 attestation bytes를 받자마자 이 배열을 바꾸는 것은 아닙니다. Target state와 signature를 검증하고 attesting indices를 얻은 뒤 <code>ProcessAttestation</code>에 들어옵니다. 이 함수는 validator의 첫 vote이거나 기존 <code>nextSlot</code>보다 target epoch가 더 새로운 경우에만 <code>nextRoot</code>와 <code>nextSlot</code>을 바꿉니다.
         </p>
@@ -159,6 +162,7 @@ vote.currentRoot = vote.nextRoot`}</code></pre>
 
       <section id="weight" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Weight</h2>
+        <SubtreeWeightViz />
         <p>
           Direct balance를 옮기고 boost를 더한 뒤 Prysm은 leaf부터 위로 weight를 다시 계산합니다. 현재 구현은 Gloas를 수용할 empty/full payload node도 함께 갖지만, 이 Fulu 사례에서는 같은 consensus block의 full path가 이어집니다.
         </p>

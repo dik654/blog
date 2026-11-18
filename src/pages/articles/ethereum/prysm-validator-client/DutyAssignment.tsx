@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import AttestationTimingViz from "./viz/AttestationTimingViz";
 
 export default function DutyAssignment({
   onCodeRef,
@@ -44,6 +45,11 @@ export default function DutyAssignment({
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Attester는 왜 slot 시작 즉시 head를 고정하지 않을까요?</h3>
+      </div>
+
+      <AttestationTimingViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           너무 빨리 head를 고르면 이번 slot의 정상 block이 도착하기 전에 이전
           head에 투표할 수 있습니다. 반대로 block을 무한정 기다리면 attestation

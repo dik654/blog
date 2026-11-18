@@ -2,6 +2,8 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import ScoreDecayViz from "./viz/ScoreDecayViz";
+import ScoreVsBadPeerViz from "./viz/ScoreVsBadPeerViz";
 
 export default function PeerScoring({
   onCodeRef,
@@ -95,6 +97,7 @@ export default function PeerScoring({
         ]}
         interpretation="예시 N42의 aggregate score는 -1.53입니다. 이 숫자는 합의 투표 가중치가 아니라 피어 운영 판단용 신호이며, 어떤 하위 원인이 만들었는지 함께 봐야 합니다."
       />
+      <ScoreDecayViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>감쇠도 하나의 λ 공식이 아닙니다</h3>
         <p>
@@ -105,7 +108,9 @@ export default function PeerScoring({
           그래서 “λ=0.8로 전체 score를 감쇠한다”는 식은 이 source의 동작을
           설명하지 못합니다.
         </p>
-
+      </div>
+      <ScoreVsBadPeerViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>합계와 bad 판정이 따로 있는 이유</h3>
         <p>
           평균만 보면 치명적 오류가 다른 좋은 행동에 가려질 수 있습니다. Prysm의{" "}

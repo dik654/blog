@@ -7,6 +7,7 @@ import RethEip4844Locator, {
   RethEip4844MapReturn,
 } from "../reth-eip4844/RethEip4844Locator";
 import BlobReorgTraceViz from "./BlobReorgTraceViz";
+import TrackerReplaceViz from "./TrackerReplaceViz";
 import { codeRefs } from "./codeRefs";
 import { rethBlobReorgReleaseTree } from "./fileTree";
 
@@ -179,6 +180,7 @@ export default function ModernBlobReorgRelease() {
             ))}
           </ol>
         </div>
+        <TrackerReplaceViz />
         <p>
           Tracker도 같은 높이 100의 old 기록 <code>[H₀]</code>를 new block 100′의 빈
           목록으로 교체합니다. 그렇지 않으면 block 100′이 finalized될 때 아직 Pool에서 다시

@@ -9,6 +9,8 @@ import {
   RETH_PAYLOAD_BUILDER_PROJECT_META,
   rethPayloadBuilderCodeRefs,
 } from "./modernCodeRefs";
+import BestCandidateTimelineViz from "./viz/BestCandidateTimelineViz";
+import GasBudgetSelectionViz from "./viz/GasBudgetSelectionViz";
 import RethPayloadBuilderFlowViz from "./viz/RethPayloadBuilderFlowViz";
 
 export default function ModernArticle() {
@@ -130,6 +132,7 @@ export default function ModernArticle() {
             ["Encoded size", "Osaka 이후 최대 RLP block size"],
           ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}
         </div>
+        <GasBudgetSelectionViz />
         <p>
           Pool ordering은 탐색 순서이지 포함 보장이 아닙니다. 거래가 남은 gas에
           들어가지 않으면 해당 거래와 dependent 거래를 iterator에서 제외합니다.
@@ -196,6 +199,7 @@ export default function ModernArticle() {
             ].map((row) => <tr key={row[0]} className="border-t border-border">{row.map((cell) => <td key={cell} className="px-3 py-3">{cell}</td>)}</tr>)}</tbody>
           </table>
         </div>
+        <BestCandidateTimelineViz />
         <p>
           중요한 점은 “한 job = 한 번의 pool snapshot”이 아니라는 것입니다.
           같은 parent와 attributes를 유지한 채 매 build 시도에서 현재 pool의 best

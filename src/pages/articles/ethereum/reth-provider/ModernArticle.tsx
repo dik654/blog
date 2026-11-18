@@ -1,6 +1,9 @@
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import RethProviderReadViz from "./viz/RethProviderReadViz";
+import ParentStateViz from "./viz/ParentStateViz";
+import SnapshotOrderViz from "./viz/SnapshotOrderViz";
+import LookupPathViz from "./viz/LookupPathViz";
 
 export default function ModernArticle() {
   return (
@@ -25,6 +28,7 @@ export default function ModernArticle() {
             ["pending", "canonical chain을 한 블록 연장한 상태", "Pending state가 없으면 pending()은 latest로 되돌아갑니다."],
           ].map(([title, role, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm text-primary">{title}</strong><p className="mt-2 text-xs font-bold">{role}</p><p className="mt-2 break-keep text-[11px] leading-5 text-muted-foreground">{body}</p></div>)}
         </div>
+        <ParentStateViz />
         <p>이 상태들은 모두 선택한 블록의 실행이 끝난 뒤 상태를 뜻합니다. 따라서 블록 1,000 자체를 다시 실행하려면 999 실행 뒤의 상태를 선택해야 합니다. ‘블록 번호 1,000’과 ‘블록 1,000을 실행할 부모 상태’를 같은 것으로 보면 한 블록만큼 어긋납니다.</p>
       </section>
 
@@ -35,6 +39,7 @@ export default function ModernArticle() {
           <span className="hidden font-black text-primary sm:block">→</span>
           <div className="border border-primary p-4"><span className="text-[9px] font-bold text-muted-foreground">02 · DATABASE</span><strong className="mt-2 block text-sm">database_provider_ro()</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">같은 순간 이후의 read transaction을 엽니다.</p></div>
         </div>
+        <SnapshotOrderViz />
         <p>순서를 바꾸면 오래된 DB snapshot을 연 직후 memory block이 DB로 flush되고 memory에서 지워질 수 있습니다. 그러면 두 snapshot 사이에 어느 쪽에도 없는 구간이 생깁니다. Reth v2.8.1의 <code>ConsistentProvider::new</code>가 memory를 먼저 읽는 이유입니다.</p>
         <p>단, safe·finalized·pending 표시는 provider를 들고 있는 동안에도 바뀔 수 있다고 소스가 경고합니다. ‘consistent’라는 이름을 모든 mutable marker의 영구 고정으로 확대하면 안 됩니다.</p>
       </section>
@@ -60,6 +65,7 @@ export default function ModernArticle() {
             ["InPlainState", "현재 plain 또는 hashed state table에서 읽습니다."],
           ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{body}</p></div>)}
         </div>
+        <LookupPathViz />
         <p>필요한 account 또는 storage history가 pruning 경계보다 오래됐다면 <code>StateAtBlockPruned</code>로 중단합니다. Changeset이 있어야 할 위치에서 행을 찾지 못해도 별도 오류입니다. 정상적인 값 부재와 보관하지 않아 읽을 수 없는 상태를 같은 <code>None</code>으로 만들지 않는 경계입니다.</p>
       </section>
 

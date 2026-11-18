@@ -2,6 +2,7 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import CommitteePositionsViz from "./viz/CommitteePositionsViz";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -41,6 +42,11 @@ export default function Participation({ onCodeRef }: Props) {
           validator는 더 높은 확률로 뽑히고, 같은 validator가 둘 이상의 position을
           차지할 수도 있습니다.
         </p>
+      </div>
+
+      <CommitteePositionsViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           예를 들어 V37이 position 5와 261에 두 번 들어갔다면 public key도 두
           자리에 나타납니다. V37이 한 signature를 만들더라도 그 signature는

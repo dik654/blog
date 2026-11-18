@@ -8,6 +8,9 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmEpochProcessingLocator, { PrysmEpochProcessingMapReturn } from "./PrysmEpochProcessingLocator";
 import PrysmEpochProcessingFlowViz from "./viz/PrysmEpochProcessingFlowViz";
+import FinalityBitsViz from "./viz/FinalityBitsViz";
+import InactivityWeightViz from "./viz/InactivityWeightViz";
+import RotationLookaheadViz from "./viz/RotationLookaheadViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -109,6 +112,7 @@ if CanProcessEpoch(state) {
           <CodeViewButton onClick={() => sidebar.open("process-justification", codeRefs["process-justification"])} />
           <span className="text-xs text-muted-foreground">Target balance 비교, bit shift, checkpoint pattern의 실제 구현</span>
         </div>
+        <FinalityBitsViz />
         <p>
           Prysm은 기존 4-bit history를 한 칸 이동하고 이전·현재 epoch가 threshold를 넘었는지 bit 1·0에 기록합니다. 그다음 <code>0011</code>, <code>0110</code>, <code>0111</code>, <code>1110</code>에 해당하는 mask와 old checkpoint의 epoch 거리를 함께 검사합니다. 따라서 “이번 epoch가 2/3이면 바로 finalized”라는 설명은 틀립니다.
         </p>
@@ -140,6 +144,7 @@ if CanProcessEpoch(state) {
           <CodeViewButton onClick={() => sidebar.open("process-rewards", codeRefs["process-rewards"])} />
           <span className="text-xs text-muted-foreground">Prysm의 validator별 delta와 integer 계산 순서</span>
         </div>
+        <InactivityWeightViz />
         <p>
           Finality가 오래 지연되면 inactivity score가 별도로 작동합니다. Timely target에 참여한 validator의 score는 회복되고, 참여하지 않았거나 slashed된 validator는 추가 penalty를 받습니다. 이는 한 번 결석한 validator를 즉시 퇴출하는 timer가 아니라, 참여하지 않는 weight의 비중을 줄여 남은 정상 참여가 다시 threshold를 만들 수 있게 하는 feedback입니다.
         </p>
@@ -168,6 +173,7 @@ if CanProcessEpoch(state) {
 
       <section id="rotation" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">다음 Epoch 준비</h2>
+        <RotationLookaheadViz />
         <p>
           Balance와 queue를 처리한 뒤 effective balance를 갱신하고 slashings·RANDAO·historical summary ring을 전진시킵니다. 그다음 <code>current_epoch_participation</code>을 <code>previous_epoch_participation</code>으로 옮기고, 새 current vector를 validator 수만큼 0으로 만듭니다. 이 rotation을 보상·패널티 계산보다 먼저 실행하면 방금 정산해야 할 participation evidence를 잃습니다.
         </p>

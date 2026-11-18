@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import BlockValidationBranchViz from "./viz/BlockValidationBranchViz";
 
 const DECISIONS = [
   {
@@ -76,6 +77,8 @@ export default function MessageValidation({
           Block 규칙과 timeout·score 보고를 감싸는 wrapper는 별도 경계입니다
         </span>
       </div>
+
+      <BlockValidationBranchViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>실제 v7.3.1의 B352 경로</h3>

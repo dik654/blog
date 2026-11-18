@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import RlpCursorViz from "./viz/RlpCursorViz";
 
 export default function RlpDecoding({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -27,6 +28,7 @@ export default function RlpDecoding({ onCodeRef }: { onCodeRef: (key: string, re
         ))}
       </div>
 
+      <RlpCursorViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           alloy-rlp 0.3.16의 <code>Header::decode</code>는 첫 바이트에서 문자열인지 목록인지와 payload 길이를 읽습니다. 남은 입력이

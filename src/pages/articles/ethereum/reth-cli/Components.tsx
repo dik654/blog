@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ComponentsViz from "./viz/ComponentsViz";
+import RollbackPairViz from "./viz/RollbackPairViz";
 import { codeRefs } from "./codeRefs";
 import { RethCliMapReturn } from "./RethCliLocator";
 
@@ -55,6 +56,11 @@ export default function Components({
           설정 결과·서비스 상태·정본 해시·상태 루트가 같은지 먼저
           확인한 뒤 시작 시간과 자원 사용량을 비교합니다.
         </p>
+      </div>
+
+      <RollbackPairViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           되돌리기에는 이전 바이너리, 설정 요약값, 호환되는 저장소 복사본, 저장 형식 변경 기록이 필요합니다. 새 바이너리가 저장소를
           되돌릴 수 없게 바꾼 뒤 실행 파일만 예전 것으로 바꾸는 방식은 복구가 아닙니다.{" "}

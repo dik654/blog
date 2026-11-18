@@ -4,6 +4,7 @@ import SeriesReadingMap from "@/components/articles/series-reading-map";
 import { SERIES_READING_PATHS } from "@/content/series-reading-paths";
 import RethArchitectureLocator from "./RethArchitectureLocator";
 import RethArchitectureViz, { RethReorgViz, RethTwoPathViz } from "./viz/RethArchitectureViz";
+import RethViewPinViz from "./viz/RethViewPinViz";
 
 const OWNERS = [
   ["합의 클라이언트", "어느 분기를 현재 정본의 끝(head)으로 볼지 정하고 안전(safe)·확정(finalized) 지점을 관리합니다."],
@@ -87,6 +88,8 @@ export default function Overview() {
           </div>
         ))}
       </div>
+
+      <RethViewPinViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h2>조회 계층(Provider)은 저장소를 감추는 데서 그치지 않고 일관된 조회 시점을 제공합니다</h2>

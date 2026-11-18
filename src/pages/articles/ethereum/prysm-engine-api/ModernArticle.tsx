@@ -5,6 +5,9 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmEngineAPILocator, { PrysmEngineAPIMapReturn } from "./PrysmEngineAPILocator";
 import PrysmEngineAPIFlowViz from "./viz/PrysmEngineAPIFlowViz";
+import FcuOrderViz from "./viz/FcuOrderViz";
+import NewPayloadMethodViz from "./viz/NewPayloadMethodViz";
+import InvalidPruneViz from "./viz/InvalidPruneViz";
 
 const fixture = [
   ["PARENT", "E₀", "Execution client가 이미 아는 parent payload"],
@@ -88,6 +91,7 @@ export default function ModernArticle() {
           <div className="flex items-center justify-center bg-background px-2 text-primary" aria-hidden>→</div>
           <div className="min-w-0 bg-background p-4 ring-2 ring-inset ring-primary"><span className="text-[9px] font-bold text-primary">RESPONSE</span><strong className="mt-2 block text-sm">VALID + P₁</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">E₀를 받아들이고 build 시작</p></div>
         </div>
+        <FcuOrderViz />
         <p>
           Execution APIs v1.0.0-beta.7은 fork-choice state를 먼저 적용하고, head가 VALID일 때만 attributes를 처리하도록 정합니다. Attributes가 잘못돼 build가 시작되지 않아도 앞에서 성공한 pointer update를 없던 일로 되돌린다고 규정하지 않습니다.
         </p>
@@ -120,6 +124,7 @@ export default function ModernArticle() {
         <p>
           <code>B₁</code>을 처리하는 Prysm은 body에서 <code>E₁</code>을 꺼내 <code>engine_newPayloadVn</code>에 보냅니다. Deneb 이후에는 blob versioned hashes와 parent beacon block root가, Electra 이후에는 execution requests가 추가됩니다. Execution client는 transaction 실행뿐 아니라 이 fork 문맥과 payload block hash도 확인합니다.
         </p>
+        <NewPayloadMethodViz />
         <p>
           Prysm v7.3.1의 method 선택은 하나의 숫자 비교가 아닙니다. Concrete payload type이 V1·V2·V3을 가르고, Deneb payload에 execution requests가 있으면 V4를 사용합니다. Gloas payload는 V5로 갑니다. 지원하지 않는 data type을 더 낮은 version으로 조용히 보내지 않고 error로 끝냅니다.
         </p>
@@ -139,6 +144,7 @@ export default function ModernArticle() {
         <p>
           Prysm의 JSON-RPC client는 <code>VALID</code>이면 latest valid hash와 nil error를 돌려줍니다. <code>SYNCING</code>과 <code>ACCEPTED</code>는 같은 미완료 error로 바꾸고, block-processing 쪽은 <code>false, nil</code>을 반환해 optimistic 후보로 남깁니다. <code>INVALID</code>는 latest valid hash를 담은 <code>invalidBlock</code>으로 바뀝니다.
         </p>
+        <InvalidPruneViz />
         <p>
           <code>E₀ → E₁ → E₂</code> branch에서 <code>E₂</code>가 INVALID이고 latestValidHash가 <code>E₀</code>라면 <code>E₁</code>과 <code>E₂</code>를 valid로 계속 취급할 수 없습니다. Prysm은 fork-choice store에서 invalid root와 descendant를 찾고 연결된 block·state를 제거합니다. Null이나 zero hash의 fork별 의미를 임의 parent로 바꾸지 않습니다.
         </p>

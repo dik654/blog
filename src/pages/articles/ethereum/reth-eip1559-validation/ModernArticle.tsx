@@ -8,6 +8,7 @@ import {
   RETH_EIP1559_PROJECT_META,
   rethEip1559CodeRefs,
 } from "../reth-eip1559/modernCodeRefs";
+import BoundaryBranchViz from "./viz/BoundaryBranchViz";
 import RethEip1559ValidationViz from "./viz/RethEip1559ValidationViz";
 
 const LABEL = ({ children }: { children: React.ReactNode }) => (
@@ -83,6 +84,7 @@ export default function ModernArticle() {
 
       <section id="experiment" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">정수·fork·경로 경계를 같은 순서로 재생합니다</h2>
+        <BoundaryBranchViz />
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-2">{[
           ["01 · Target 경계", "gas used를 target−1, target, target+1로 바꿔 감소·유지·최소 증가 분기와 exact wei를 확인합니다."],
           ["02 · 변화폭 경계", "0 gas와 최대 2T gas, 작은 base fee 0·1·2와 큰 중간 곱에서 rounding·overflow·saturation을 대조합니다."],

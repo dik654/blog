@@ -6,6 +6,8 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmStateCacheLocator, { PrysmStateCacheMapReturn } from "./PrysmStateCacheLocator";
 import PrysmStateCacheFlowViz from "./viz/PrysmStateCacheFlowViz";
+import ReplaySlotTimelineViz from "./viz/ReplaySlotTimelineViz";
+import StateOwnershipViz from "./viz/StateOwnershipViz";
 
 const fixture = [
   ["요청", "block root 0x105…", "slot 105 block의 post-state"],
@@ -97,6 +99,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
+        <StateOwnershipViz />
         <p>
           Hot cache의 일반 <code>get</code>과 epoch-boundary cache의 일반 조회는 모두 <code>Copy()</code>를 호출합니다. 반면 NoCopy API는 같은 cached object를 <code>ReadOnlyBeaconState</code>로 반환합니다. Lock은 lookup 동안 map을 보호할 뿐, 반환 뒤 underlying state를 임의로 바꾸는 행위까지 안전하게 만들지는 않습니다.
         </p>
@@ -163,6 +166,7 @@ export default function ModernArticle() {
 
       <section id="replay" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Replay</h2>
+        <ReplaySlotTimelineViz />
         <p>
           Replay는 block만 연달아 적용하지 않습니다. 먼저 state 100을 block 102의 slot까지 <code>ReplayProcessSlots</code>로 전진시키고 block 102를 적용합니다. 다음에는 state 102를 slot 105까지 전진시키고 block 105를 적용합니다. 빈 slot 101·103·104도 per-slot transition에 포함됩니다.
         </p>

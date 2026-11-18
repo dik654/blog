@@ -5,6 +5,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmSyncLocator, { PrysmSyncMapReturn } from "./PrysmSyncLocator";
+import ArrivalVsSendOrderViz from "./viz/ArrivalVsSendOrderViz";
 import PrysmSyncFlowViz from "./viz/PrysmSyncFlowViz";
 
 const fixture = [
@@ -145,6 +146,7 @@ export default function ModernArticle() {
         />
 
         <h3 className="break-keep text-xl font-bold">Lookahead</h3>
+        <ArrivalVsSendOrderViz />
         <p>
           Prysm의 <code>blocksQueue</code>는 기본 코드에서 네 개의 lookahead state machine을 둡니다. 각 machine은 <code>new → scheduled → dataParsed → sent</code> 또는 <code>skipped</code>로 움직입니다. Fetcher가 109–112를 먼저 받아도 해당 machine은 response를 보관할 뿐입니다.
         </p>

@@ -8,6 +8,9 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmSszLocator, { PrysmSszMapReturn } from "./PrysmSszLocator";
 import PrysmSszFlowViz from "./viz/PrysmSszFlowViz";
+import OffsetCheckViz from "./viz/OffsetCheckViz";
+import MerkleBuildViz from "./viz/MerkleBuildViz";
+import FieldProofViz from "./viz/FieldProofViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -109,6 +112,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
+        <OffsetCheckViz />
         <p>
           Decoder는 첫 offset이 fixed part 16보다 작지 않고 payload 끝 32를 넘지 않는지 먼저 검사합니다. Validators slice 길이 16이 uint64 폭 8의 배수인지, 원소 수 2가 limit 4 이하인지 확인한 뒤에 할당합니다. Offset 12, offset 40, 길이 10인 slice는 각각 fixed part 침범, payload 범위 초과, element 정렬 실패로 거부해야 합니다.
         </p>
@@ -134,6 +138,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
+        <MerkleBuildViz />
         <ExplainedFormula
           question="Validators list와 세 field container의 최종 root는 어떻게 연결됩니까?"
           idea="두 uint64를 한 data chunk에 pack하고 실제 길이 2를 mix합니다. 그 list root를 slot·epoch root와 함께 폭 4의 container tree에 놓습니다."
@@ -159,6 +164,7 @@ export default function ModernArticle() {
 
       <section id="multiproof" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Validators Field는 Gindex 5와 Sibling 두 개로 증명합니다</h2>
+        <FieldProofViz />
         <ExplainedFormula
           question="세 field 중 두 번째 validators의 generalized index와 proof payload는 얼마입니까?"
           idea="Container field 셋은 다음 2의 거듭제곱인 폭 4에 놓입니다. Root 1에 폭 4를 곱하고 0-based field 위치 1을 더합니다."

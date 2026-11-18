@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { codeRefs } from "./codeRefs";
+import U256LimbOrderViz from "./viz/U256LimbOrderViz";
 
 export default function U256Arithmetic({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
@@ -29,6 +30,7 @@ export default function U256Arithmetic({ onCodeRef }: { onCodeRef: (key: string,
         assumptions={["정확히 네 개의 64비트 조각을 사용합니다.", "이 식은 숫자의 값을 설명하며 메모리 바이트 순서나 RLP 인코딩을 직접 정하지 않습니다.", "덧셈 결과가 2²⁵⁶ 이상이면 API가 오류·순환·최댓값 고정 중 어떤 동작을 택하는지 확인해야 합니다."]}
         interpretation="[5,1,0,0]이면 x=5+2⁶⁴입니다. MAX+1은 표현 범위를 벗어나므로 checked_add는 실패하고 wrapping_add는 0이 됩니다. 호출부는 오류와 순환 중 어느 동작이 필요한지 명시해야 합니다."
       />
+      <U256LimbOrderViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           ruint 1.18.0의 덧셈은 낮은 조각에서 생긴 carry를 다음 조각으로 전달합니다. EVM 연산처럼 2²⁵⁶에서 순환하는 값이

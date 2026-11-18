@@ -2,6 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import HardforkDetailViz from "./viz/HardforkDetailViz";
+import ForkIdChecksumViz from "./viz/ForkIdChecksumViz";
 import { codeRefs } from "./codeRefs";
 
 export default function Hardfork({
@@ -83,6 +84,9 @@ export default function Hardfork({
         </p>
 
         <h3>Fork ID는 빠른 호환성 검사입니다</h3>
+      </div>
+      <ForkIdChecksumViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Fork ID는 제네시스 해시에서 시작해 이미 지난 블록 번호와 시각을 CRC32에 차례로 넣고, 다음 변경 시점을 함께 보냅니다.
           상대 피어의 일정이 명백히 다르면 블록 본문을 받기 전에 연결을 끊을 수 있습니다.

@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import RethNetworkLocator, { RethNetworkMapReturn } from "./RethNetworkLocator";
 import { rethNetworkV281Tree } from "./fileTree";
 import { RETH_NETWORK_PROJECT_META, rethNetworkCodeRefs } from "./modernCodeRefs";
+import PeerQueuePressureViz from "./viz/PeerQueuePressureViz";
 import RethPeerSessionViz from "./viz/RethPeerSessionViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
@@ -156,6 +157,7 @@ export default function ModernArticle() {
         <p>
           Announcement는 새 자료의 존재를 알려 주는 bounded push입니다. 수신 노드는 이미 아는 hash를 거르고 필요한 bytes만 request/response로 가져옵니다. 응답을 받았다는 사실은 TxPool admission이나 block validity를 뜻하지 않습니다.
         </p>
+        <PeerQueuePressureViz />
         <p>
           Reth는 command channel, inflight request와 outgoing queue를 따로 관리합니다. 느린 peer가 소비하는 속도보다 메시지가 빨리 쌓이면 drop, timeout 또는 disconnect 같은 정책으로 자원을 제한해야 하며, 구체적인 숫자는 release와 설정에 귀속합니다.
         </p>

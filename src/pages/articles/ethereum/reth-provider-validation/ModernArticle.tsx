@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CitationBlock } from "@/components/ui/citation-block";
 import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
 import RethProviderValidationViz from "./viz/RethProviderValidationViz";
+import ReorgQueryViz from "./viz/ReorgQueryViz";
 
 const LABEL = ({ children }: { children: ReactNode }) => <span className="mr-2 inline-block border border-primary/40 px-1.5 py-0.5 align-middle text-[9px] font-black text-primary">{children}</span>;
 
@@ -57,6 +58,7 @@ export default function ModernArticle() {
           ["05 · Missing evidence", "Changeset·index 불일치를 격리된 사본에서 만들어 조용한 None/zero 변환이 없는지 봅니다."],
           ["06 · Restart", "각 상태에서 process를 다시 열고 cache 없이도 같은 logical 결과로 수렴하는지 검사합니다."],
         ].map(([title, body]) => <li key={title} className="bg-background p-4"><strong>{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></li>)}</ol>
+        <ReorgQueryViz />
         <p><LABEL>?</LABEL>반복 횟수, 허용 가능한 query 지연과 test fixture 크기는 대상 환경에서 정해야 합니다. 격리된 자료 사본에서만 fault를 만들며 운영 node에는 적용하지 않습니다.</p>
       </section>
 

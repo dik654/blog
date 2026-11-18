@@ -8,6 +8,9 @@ import { codeRefs } from "./codeRefs";
 import { prysmTree } from "./fileTrees";
 import PrysmSlotProcessingLocator, { PrysmSlotProcessingMapReturn } from "./PrysmSlotProcessingLocator";
 import PrysmSlotProcessingFlowViz from "./viz/PrysmSlotProcessingFlowViz";
+import HeaderBackfillViz from "./viz/HeaderBackfillViz";
+import StepCountViz from "./viz/StepCountViz";
+import SkipSlotCacheViz from "./viz/SkipSlotCacheViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -99,6 +102,7 @@ export default function ModernArticle() {
           <div className="flex items-center justify-center bg-background px-2 text-muted-foreground" aria-hidden>→</div>
           <div className="min-w-0 bg-background p-4"><span className="text-[9px] font-bold text-muted-foreground">HISTORY</span><strong className="mt-1 block text-xs">State root · Block root</strong><p className="mt-2 text-[10px] leading-4 text-muted-foreground">같은 ring index에 기록</p></div>
         </div>
+        <HeaderBackfillViz />
         <p>
           먼저 현재 state의 root를 계산해 <code>state_roots[index]</code>에 씁니다. Latest block header의 <code>state_root</code>가 zero라면 방금 계산한 root로 채운 뒤 header root를 계산합니다. 완성된 header root를 <code>block_roots[index]</code>에 기록하므로, backfill과 header hash의 순서를 바꾸면 다른 block root가 됩니다.
         </p>
@@ -139,6 +143,7 @@ export default function ModernArticle() {
 
       <section id="cost" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Step 수</h2>
+        <StepCountViz />
         <ExplainedFormula
           question="Current slot c에서 target t까지 몇 번의 per-slot step과 epoch transition을 실행합니까?"
           idea="각 current slot을 한 번씩 처리하므로 per-slot step은 차이와 같습니다. Epoch transition은 열린 구간 (c, t] 안에 있는 epoch 시작점의 개수입니다."
@@ -174,6 +179,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
+        <SkipSlotCacheViz />
         <p>
           Prysm은 긴 empty-slot 구간을 같은 시작점에서 여러 번 계산할 때 중간 state를 재사용합니다. Cache key는 시작 state의 slot과 latest block header root를 섞어 만듭니다. 같은 slot이라도 fork가 다르면 latest header root가 달라지므로 cache entry가 섞이지 않아야 합니다.
         </p>

@@ -4,6 +4,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import RethBlockExecutionLocator, { RethBlockExecutionMapReturn } from "./RethBlockExecutionLocator";
 import { rethBlockExecutionV281Tree } from "./fileTree";
 import { RETH_BLOCK_EXECUTION_PROJECT_META, rethBlockExecutionCodeRefs } from "./modernCodeRefs";
+import BundleLookupViz from "./viz/BundleLookupViz";
 import RethBlockExecutionFlowViz from "./viz/RethBlockExecutionFlowViz";
 
 export default function ModernArticle() {
@@ -131,6 +132,7 @@ export default function ModernArticle() {
           <div className="bg-background p-5"><strong className="text-sm">BlockExecutionResult</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">본문 순서의 receipts 2건 · requests · gas used 42,000 · blob gas</p></div>
           <div className="bg-background p-5"><strong className="text-sm">BundleState</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">Alice, Bob, Carol의 original/present 값과 storage, bytecode, reverts</p></div>
         </div>
+        <BundleLookupViz />
         <p>
           여기서 <code>BundleState</code>가 있다는 말은 실행 중 database를 읽지 않는다는
           뜻이 아닙니다. revm state가 account를 bundle이나 cache에서 찾지 못하면

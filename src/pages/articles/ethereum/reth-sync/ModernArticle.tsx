@@ -9,6 +9,8 @@ import { rethSyncCodeRefs, RETH_SYNC_PROJECT_META } from "./modernCodeRefs";
 import { rethSyncV281Tree } from "./modernFileTree";
 import RethSyncLocator, { RethSyncMapReturn } from "./RethSyncLocator";
 import RethSyncFlowViz from "./viz/RethSyncFlowViz";
+import GapBranchViz from "./viz/GapBranchViz";
+import StageCheckpointViz from "./viz/StageCheckpointViz";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>
@@ -92,6 +94,7 @@ export default function ModernArticle() {
 
       <section id="short-gap" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">짧은 누락 구간은 downloader와 engine tree가 이어 붙입니다</h2>
+        <GapBranchViz />
         <p>
           Downloader가 target block을 받았는데 부모가 비어 있으면 engine tree는 missing parent와 현재 canonical tip 사이의 거리를 계산합니다. Backfill 기준보다 짧으면 <code>DownloadRequest::block_range</code>로 연속 부모를 가져옵니다. Side branch처럼 높이만으로 연속 범위를 정할 수 없으면 한 block씩 요청합니다.
         </p>
@@ -164,6 +167,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
+        <StageCheckpointViz />
         <ExplainedFormula
           question="Stage가 서로 다른 block까지 끝났다면 전체 동기화 진척은 어디까지입니까?"
           idea="필수 stage가 모두 연속해서 끝난 가장 낮은 checkpoint까지만 다음 경로가 신뢰할 수 있습니다."

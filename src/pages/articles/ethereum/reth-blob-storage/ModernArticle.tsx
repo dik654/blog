@@ -7,6 +7,8 @@ import RethEip4844Locator, {
   RethEip4844MapReturn,
 } from "../reth-eip4844/RethEip4844Locator";
 import BlobStoreTraceViz from "./BlobStoreTraceViz";
+import CacheFileBoundaryViz from "./viz/CacheFileBoundaryViz";
+import FinalityRetentionViz from "./viz/FinalityRetentionViz";
 import { codeRefs } from "./codeRefs";
 import { rethBlobStorageTree } from "./fileTree";
 
@@ -171,6 +173,7 @@ export default function ModernRethBlobStorage() {
             </div>
           </div>
         </div>
+        <FinalityRetentionViz />
         <p>
           새로운 finalized height가 들어오면 tracker는 그 높이 이하 block의 hash를
           <code>Finalized</code> update로 내보냅니다. Disk backend의
@@ -192,6 +195,7 @@ export default function ModernRethBlobStorage() {
           바뀌지는 않습니다. 실제 구현에서 확인되는 경계를 그대로 놓고 보면 어떤 metric과
           복구 기대가 필요한지 알 수 있습니다.
         </p>
+        <CacheFileBoundaryViz />
         <TermBreakdown
           title="실제 구현이 만드는 다섯 경계"
           items={[

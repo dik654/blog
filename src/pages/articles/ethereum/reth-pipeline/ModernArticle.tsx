@@ -4,6 +4,8 @@ import RethPipelineLocator, { RethPipelineMapReturn } from "./RethPipelineLocato
 import { rethPipelineTree } from "./fileTree";
 import { RETH_PIPELINE_PROJECT_META, rethPipelineCodeRefs } from "./modernCodeRefs";
 import RethPipelineViz from "./viz/RethPipelineViz";
+import CommitCrashViz from "./viz/CommitCrashViz";
+import UnwindOrderViz from "./viz/UnwindOrderViz";
 
 export default function ModernArticle() {
   const sidebar = useCodeSidebar();
@@ -51,6 +53,7 @@ range = 100..=163`}</code></pre>
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-4">{[
           ["01", "RW provider 열기", "아직 외부에 공개되지 않은 transaction"], ["02", "stage.execute", "선택한 batch output 작성"], ["03", "save_stage_checkpoint", "실제 완료 block 기록"], ["04", "provider.commit", "Output과 checkpoint 함께 공개"],
         ].map(([step, title, body]) => <div key={step} className="bg-background p-4"><span className="text-[9px] font-bold text-primary">{step}</span><strong className="mt-2 block text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}</div>
+        <CommitCrashViz />
         <p>기존 글은 output을 먼저 commit하고 checkpoint marker를 나중에 쓰는 두 단계처럼 설명했습니다. 현재 pipeline runner는 stage output과 checkpoint를 같은 read-write provider transaction에 넣은 뒤 commit합니다. 따라서 정상 contract에서 둘 사이의 독립적인 공개 틈을 전제로 설명하면 안 됩니다.</p>
         <p><code>post_execute_commit</code>은 commit 뒤 호출되는 hook입니다. 이것을 durable checkpoint의 대체 owner로 사용하거나, hook 성공 여부가 이미 commit된 DB transaction을 되돌린다고 해석하지 않습니다.</p>
         <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open("execute-commit", rethPipelineCodeRefs["execute-commit"])} /><span className="text-xs text-muted-foreground">pipeline/mod.rs L486–554 · target·execute·checkpoint·commit</span></div>
@@ -78,6 +81,7 @@ range = 100..=163`}</code></pre>
       <section id="unwind" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">되돌릴 때는 실행 순서의 반대로 140 이후를 지웁니다</h2>
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-5">{["Merkle", "Execution", "Senders", "Bodies", "Headers"].map((stage, index) => <div key={stage} className="bg-background p-3"><span className="text-[9px] font-bold text-primary">{String(index + 1).padStart(2, "0")}</span><strong className="mt-2 block text-xs">{stage}</strong><p className="mt-2 text-[10px] leading-4 text-muted-foreground">checkpoint → 140</p></div>)}</div>
+        <UnwindOrderViz />
         <p>예를 들어 공통 조상이 140이면 먼저 derived state와 index를 소비하는 뒤 stage를 되돌립니다. Pipeline은 stage 목록을 역순으로 순회하고 각 stage의 <code>unwind</code> 결과를 저장한 뒤 provider transaction을 commit합니다. 한 번에 target까지 못 가는 stage는 같은 과정을 반복합니다.</p>
         <p>Prune 설정이 필요한 되감기 자료를 이미 제거했다면 무조건 140까지 내려갈 수 있는 것은 아닙니다. Pipeline은 unwind target을 prune checkpoint와 대조합니다. 이 한계는 별도 실무 글에서 fixture와 설정을 고정해 검증해야 합니다.</p>
         <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open("unwind-order", rethPipelineCodeRefs["unwind-order"])} /><span className="text-xs text-muted-foreground">pipeline/mod.rs L365–420 · prune 확인과 역순 unwind</span><CodeViewButton onClick={() => sidebar.open("unwind-commit", rethPipelineCodeRefs["unwind-commit"])} /><span className="text-xs text-muted-foreground">pipeline/mod.rs L420–463 · checkpoint commit</span></div>

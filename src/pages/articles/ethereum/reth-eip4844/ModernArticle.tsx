@@ -12,6 +12,7 @@ import {
 } from "./modernFileTree";
 import { modernCodeRefs } from "./modernCodeRefs";
 import { BlobBoundaryViz } from "./viz/ModernEip4844Viz";
+import TamperCheckViz from "./viz/TamperCheckViz";
 
 const PROJECT_META: Record<string, ProjectMeta> = {
   reth: {
@@ -176,6 +177,7 @@ export default function ModernRethEip4844() {
             </li>
           ))}
         </ol>
+        <TamperCheckViz />
         <p>
           검사는 순서대로 서로 다른 공격을 막습니다. 개수가 다르면 같은 index의
           짝을 정할 수 없습니다. 개수만 같고 C₀가 다른 commitment라면 다시 계산한

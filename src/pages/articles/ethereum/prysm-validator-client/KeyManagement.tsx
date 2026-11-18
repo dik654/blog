@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import TimeoutRetryViz from "./viz/TimeoutRetryViz";
 
 const BACKENDS = [
   {
@@ -100,6 +101,11 @@ export default function KeyManagement({
         </p>
 
         <h3>Timeout 뒤 root를 바꾸어 재시도하면 왜 위험할까요?</h3>
+      </div>
+
+      <TimeoutRetryViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           RA 요청의 응답만 잃었더라도 remote signer에는 σA가 남아 있을 수
           있습니다. 이때 같은 duty에 대해 다른 head로 만든 RB를 보내면 두

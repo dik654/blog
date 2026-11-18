@@ -6,6 +6,8 @@ import RethBlockExecutionLocator, { RethBlockExecutionMapReturn } from "../reth-
 import { rethBlockExecutionV281Tree } from "../reth-block-execution/fileTree";
 import { RETH_BLOCK_EXECUTION_PROJECT_META, rethBlockExecutionCodeRefs } from "../reth-block-execution/modernCodeRefs";
 import RethBlockExecutionValidationViz from "./viz/RethBlockExecutionValidationViz";
+import FirstDivergenceViz from "./viz/FirstDivergenceViz";
+import CrashBoundaryViz from "./viz/CrashBoundaryViz";
 
 const Label = ({ children }: { children: ReactNode }) => <span className="mr-2 inline-flex border border-primary/40 px-1.5 py-0.5 font-mono text-[9px] font-black text-primary">{children}</span>;
 
@@ -55,12 +57,14 @@ export default function ModernArticle() {
           ["State", "BundleState·post-state root"],
           ["Acceptance", "validation result·canonical update·restart"],
         ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}</div>
+        <FirstDivergenceViz />
         <p><Label>A</Label>Final block hash 하나만 저장하면 첫 차이를 찾기 어렵습니다. 거래별 receipt와 cumulative gas, BundleAccount의 original/present 값, fork별 requests와 각 검증 항목을 같은 run ID에 묶습니다.</p>
         <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open("execution-output", rethBlockExecutionCodeRefs["execution-output"])} /><span className="text-xs text-muted-foreground">저장할 실행 결과 필드</span><CodeViewButton onClick={() => sidebar.open("post-execution-validation", rethBlockExecutionCodeRefs["post-execution-validation"])} /><span className="text-xs text-muted-foreground">대조할 commitment</span></div>
       </section>
 
       <section id="experiment" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">실험 순서</h2>
+        <CrashBoundaryViz />
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-2">{[
           ["01 · 정상", "두 단순 송금과 정상 contract call에서 result·bundle·validation·root를 base와 candidate가 같게 만드는지 확인합니다."],
           ["02 · REVERT", "유효한 REVERT가 failed receipt·gas·nonce를 남기되 내부 state를 되돌리는지 대조합니다."],

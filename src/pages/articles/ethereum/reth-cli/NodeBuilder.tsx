@@ -1,6 +1,7 @@
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import BuilderDetailViz from "./viz/BuilderDetailViz";
+import StartupRecordViz from "./viz/StartupRecordViz";
 import { codeRefs } from "./codeRefs";
 
 export default function NodeBuilder({
@@ -48,6 +49,11 @@ export default function NodeBuilder({
         <p>
           형식이 맞아도 데이터베이스 열기, 저장 형식 변경, 소켓 연결, 피어 네트워크 시작과 RPC 훅은 실행 중에 실패할 수 있습니다.
         </p>
+      </div>
+
+      <StartupRecordViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           따라서 시작 기록은 최소한{" "}
           <code>
