@@ -97,8 +97,8 @@ export default function Training({
         <p>
           Context를 이어붙이기만 하면{" "}
           <Link to="/cs/ai/yarn-rope-extension#rope-foundation">RoPE</Link>
-          는 reference와 target을 같은 시간축 위의 서로 다른 위치로
-          해석합니다. 이 위치 순서가 뒤섞이지 않도록, ID-LoRA는 reference
+          는 reference와 target을 같은 함수로 0부터 매긴 같은 위치에
+          겹쳐 읽습니다. 두 block이 겹치지 않고 순서가 드러나도록, ID-LoRA는 reference
           block 전체를 target(<code>t=0</code>에서 시작)보다 확실히 이전
           시점으로 밀어 넣는 negative position을 부여합니다.
         </p>
@@ -110,15 +110,15 @@ export default function Training({
         idea={
           <>
             Reference에 target과 같은 방식으로 우선 '보통' 위치를 계산한 뒤,
-            그 구간의 전체 길이(<code>duration</code>)와 한 latent frame의
+            그 구간의 마지막 위치(<code>duration</code>)와 한 latent frame의
             시간 간격(<code>Δt</code>)만큼을 빼서 block 전체를 과거로 밀어
             넣습니다.
           </>
         }
         formula={String.raw`p'_{\text{ref}} = p_{\text{ref}} - \text{duration}_{\text{ref}} - \Delta t`}
-        annotatedFormula={String.raw`p'_{\text{ref}} = \underbrace{p_{\text{ref}}}_{\text{target과 같은 계산}} - \underbrace{\text{duration}_{\text{ref}}}_{\text{reference 길이}} - \underbrace{\Delta t}_{\text{한 frame 간격}}`}
+        annotatedFormula={String.raw`p'_{\text{ref}} = \underbrace{p_{\text{ref}}}_{\text{target과 같은 계산}} - \underbrace{\text{duration}_{\text{ref}}}_{\text{reference 마지막 위치}} - \underbrace{\Delta t}_{\text{한 frame 간격}}`}
         operations={[
-          { expression: String.raw`p_{\text{ref}} - \text{duration}_{\text{ref}} - \Delta t`, annotation: ["보통 위치에서 구간 길이와 Δt를 빼", "reference block 전체를 t=0인 target보다", "확실히 이전 시점으로 밉니다"] },
+          { expression: String.raw`p_{\text{ref}} - \text{duration}_{\text{ref}} - \Delta t`, annotation: ["보통 위치에서 마지막 위치와 Δt를 빼", "reference block 전체를 t=0인 target보다", "확실히 이전 시점으로 밉니다"] },
         ]}
         terms={[
           {
@@ -129,7 +129,7 @@ export default function Training({
           },
           {
             symbol: String.raw`\text{duration}_{\text{ref}}`,
-            name: "reference 구간 길이",
+            name: "reference 구간의 마지막 위치",
             description: "Reference 구간의 마지막 위치(끝나는 시각)입니다.",
           },
           {

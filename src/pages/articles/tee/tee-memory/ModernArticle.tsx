@@ -20,11 +20,11 @@ export default function ModernTeeMemoryArticle() {
         <header><p className="text-sm font-semibold text-primary">01 · Private와 shared</p><h2 className="mt-2 text-2xl font-bold">I/O 경계에서는 host가 준 bytes를 다시 untrusted input으로 취급한다</h2></header>
         <p>Private page는 특정 enclave, VM 또는 realm에 귀속됩니다. 접근할 때 memory controller가 key를 고르고 CPU가 소유자와 주소 변환을 확인합니다. Shared page는 host나 device와 통신하려고 명시적으로 공개한 영역입니다.</p>
         <PayrollPacketBoundaryViz />
-        <p>Payroll packet은 shared buffer에서 길이와 형식을 검사한 뒤 private buffer로 복사합니다. 결과를 내보낼 때도 private state를 직접 가리키는 pointer 대신 새 protocol message를 만듭니다.</p>
+        <p>Payroll packet은 host가 검사 뒤에 bytes를 바꾸지 못하도록 먼저 private buffer로 복사한 뒤 그 복사본에서 길이와 형식을 검사합니다. 결과를 내보낼 때도 private state를 직접 가리키는 pointer 대신 새 protocol message를 만듭니다.</p>
         <div className="grid gap-3 md:grid-cols-2">
           {[
             ["Private → shared", "Secret·pointer·padding·error detail을 제거하고 protocol message만 복사합니다."],
-            ["Shared → private", "Length·offset·integer overflow·schema·sequence counter를 검증한 뒤 복사합니다."],
+            ["Shared → private", "먼저 private로 복사한 뒤 복사본에서 length·offset·integer overflow·schema·sequence counter를 검증합니다."],
             ["Page conversion", "Old mapping·TLB·DMA·owner 상태가 정리됐다는 platform-specific receipt가 필요합니다."],
             ["Failure", "Validation 전 private state를 갱신하지 않고 timeout·duplicate에는 operation ID를 사용합니다."],
           ].map(([title, body]) => <div key={title} className="rounded-lg border border-border p-4"><p className="text-sm font-semibold">{title}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p></div>)}

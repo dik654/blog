@@ -71,12 +71,12 @@ const FLOWS: Record<Mode, Flow> = {
         now: "$1,000×85%−$900=−$50이므로 isLiquidatable이 참이 됩니다.",
         evidence: "누구나 absorb를 호출할 수 있는 조건이 생깁니다.",
         pending: "판정만 끝났습니다. 담보와 부채는 absorb 거래가 실행되기 전까지 Alice 장부에 남습니다.",
-        account: { stored: "principal < 0", base: "debt $900", collateral: "WETH 1 · credit $850", protocol: "absorb 가능" },
+        account: { stored: "principal < 0", base: "debt $900", collateral: "WETH 1 · CF_l 기준 $850", protocol: "absorb 가능" },
       },
       {
         label: "프로토콜 흡수",
         title: "Absorb가 Alice의 부채와 담보를 프로토콜 장부로 함께 옮깁니다.",
-        now: "Alice의 debt와 collateral은 0이 되고, protocol은 base reserves로 $900 debt를 정리한 뒤 WETH inventory와 $50의 가치 차이를 함께 떠안습니다.",
+        now: "Alice의 debt와 collateral은 0이 되고, protocol은 base reserves로 $900 debt를 정리한 뒤 WETH inventory와, 담보 가치×LF로 계산한 credit과 부채의 차이를 함께 떠안습니다.",
         evidence: "Alice 포지션이 닫히고 protocol balance sheet에 담보와 손익이 기록됩니다.",
         pending: "Absorb 호출자가 WETH를 즉시 받는 것은 아닙니다. 별도 buyer 거래가 남습니다.",
         account: { stored: "principal 0", base: "debt 0", collateral: "WETH 0", protocol: "WETH 1 · debt $900 정리" },
@@ -183,7 +183,7 @@ const FLOWS: Record<Mode, Flow> = {
         now: "$1,000×85%−$900=−$50을 계산합니다.",
         evidence: "isLiquidatable(account)가 참이 됩니다.",
         pending: "아직 담보 이전이나 부채 정리는 실행되지 않았습니다.",
-        account: { stored: "principal < 0", base: "debt $900", collateral: "WETH credit $850", protocol: "판정만 완료" },
+        account: { stored: "principal < 0", base: "debt $900", collateral: "WETH CF_l 기준 $850", protocol: "판정만 완료" },
       },
       {
         label: "Absorb 실행",

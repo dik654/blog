@@ -80,7 +80,7 @@ export default function Capacity() {
         <p>
           두 모델은 각각 <code>88,824÷65,536≈1.36</code>,{" "}
           <code>352,736÷65,536≈5.38</code>로 startup log가 직접 맞아떨어집니다.
-          Muse가 실제로 약 3.6배 많은 cache token을 확보한 결과는 KV head 2개와
+          Muse가 실제로 Gemma보다 약 3.97배(352,736÷88,824) 많은 cache token을 확보한 결과는 KV head 2개와
           head_dim 128이라는 작은 shape가 서빙에 유리하다는 결론과 일치합니다.
         </p>
         <p>
@@ -93,8 +93,8 @@ export default function Capacity() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           다만 “토큰당 attention KV가 Qwen의 81.25%”라는 이론값과 “총 cache token이 Qwen의
-          3.63배”라는 실측값은 같은 비율일 필요가 없습니다. 총 capacity는{" "}
-          <code>남은 KV 예산 ÷ 토큰당 KV byte</code>이기 때문입니다. Weight
+          3.63배”라는 단순 나눗셈은 같은 비율일 필요가 없습니다. 총 capacity는{" "}
+          <code>남은 KV 예산 ÷ 토큰당 KV byte</code>이기 때문입니다. 게다가 아래 절에서 보듯 Qwen의 97,216은 Gemma·Muse의 cache token과 같은 단위인지 아직 확인되지 않았으므로, 3.63배는 단위를 확인하기 전까지 잠정값입니다. Weight
           quantization은 토큰당 KV byte를 바꾸지 않더라도 weight를 올린 뒤 남는
           KV 예산을 바꿀 수 있습니다.
         </p>

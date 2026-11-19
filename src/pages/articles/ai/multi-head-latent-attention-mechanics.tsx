@@ -92,7 +92,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         <LatentBottleneckViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            KV down projection은 W^DKV라는 하나의 행렬로 h_t를 d_c 차원 latent로 내립니다. K와 V를 따로 내리지 않고 같은 latent를 공유하는 것이
+            KV down projection은 W^DKV라는 하나의 행렬로 h_t를 d_c 차원 latent로 내립니다. K와 V를 따로 내리지 않고 같은 latent를 공유하며, 그 latent가 head별이 아니라 token당 하나라는 것이
             핵심이라 압축률이 head 수만큼 곱으로 커집니다.
           </p>
           <p>
@@ -163,13 +163,13 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         <PositionPathViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            해법은 위치 항을 latent를 거치지 않는 별도 경로로 빼는 것입니다. query 쪽은 head마다 다른 작은 벡터를, key 쪽은 모든 head가 공유하는 벡터 하나를
+            해법은 위치 항을 KV latent를 거치지 않는 별도 경로로 빼는 것입니다. query 쪽은 query latent c_t^Q에서 head마다 다른 작은 벡터를, key 쪽은 모든 head가 공유하는 벡터 하나를
             hidden state에서 직접 만들고 여기에만 RoPE를 적용합니다.
           </p>
         </div>
         <ExplainedFormula
           question="위치 정보는 어디서 따로 만들어져 어떻게 RoPE 를 적용받나요?"
-          idea="Query 의 위치 벡터는 head 별로, key 의 위치 벡터는 모든 head 가 공유하는 하나로 hidden state 에서 직접 만들고, 이 작은 벡터에만 회전을 적용합니다."
+          idea="Query 의 위치 벡터는 query latent c_t^Q 에서 head 별로, key 의 위치 벡터는 모든 head 가 공유하는 하나로 hidden state 에서 직접 만들고, 이 작은 벡터에만 회전을 적용합니다."
           formula={String.raw`\mathbf{q}_t^{R}=\operatorname{RoPE}\!\big(W^{QR}\mathbf{c}_t^{Q}\big),\qquad \mathbf{k}_t^{R}=\operatorname{RoPE}\!\big(W^{KR}\mathbf{h}_t\big)`}
           annotatedFormula={String.raw`\underbrace{\mathbf{q}_t^{R}=\operatorname{RoPE}\!\big(W^{QR}\mathbf{c}_t^{Q}\big)}_{\text{head 별 위치 query, 회전 적용}},\qquad \underbrace{\mathbf{k}_t^{R}=\operatorname{RoPE}\!\big(W^{KR}\mathbf{h}_t\big)}_{\text{head 공유 위치 key, }h_t\text{에서 직접}}`}
           operations={[
@@ -252,7 +252,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         <ExplainedFormula
           question="decode 에서 과거 latent 를 다시 펼치지 않고 어떻게 점수와 출력을 계산하나요?"
           idea="내적과 가중합은 결합법칙을 따르므로 W^UK 는 query 쪽으로, W^UV 는 W^O 쪽으로 미리 옮겨 곱해 두면 계산 순서만 바뀌고 값은 같습니다."
-          formula={String.raw`\text{score}^{C}_{t,j}=(W^{UK}\mathbf{c}_t^{Q\!\to\!K})^{\!\top}\!\mathbf{c}_j^{KV}=\big((W^{UK})^{\!\top}\mathbf{q}_t^{C}\big)^{\!\top}\mathbf{c}_j^{KV},\qquad \mathbf{o}_t=(W^{O}W^{UV})\sum_j p_{t,j}\,\mathbf{c}_j^{KV}`}
+          formula={String.raw`\text{score}^{C}_{t,j}=(\mathbf{q}_t^{C})^{\!\top}W^{UK}\mathbf{c}_j^{KV}=\big((W^{UK})^{\!\top}\mathbf{q}_t^{C}\big)^{\!\top}\mathbf{c}_j^{KV},\qquad \mathbf{o}_t=(W^{O}W^{UV})\sum_j p_{t,j}\,\mathbf{c}_j^{KV}`}
           annotatedFormula={String.raw`\underbrace{(W^{UK})^{\!\top}\mathbf{q}_t^{C}}_{\text{query-side absorption, 새 토큰마다 한 번}}\!{}^{\top}\underbrace{\mathbf{c}_j^{KV}}_{\text{캐시된 latent, 복원 없이 그대로}},\qquad \mathbf{o}_t=\underbrace{(W^{O}W^{UV})}_{\text{value-side absorption, 미리 접어 둔 상수}}\underbrace{\sum_j p_{t,j}\,\mathbf{c}_j^{KV}}_{\text{latent 공간에서의 가중합}}`}
           operations={[
             { expression: String.raw`(W^{UK})^{\!\top}\mathbf{q}_t^{C}`, annotation: ["현재 query 를 head 별 up-projection 의 전치로 접어", "512차원 latent 공간의 벡터로 바꿈 — 새 token 마다 head당 한 번"] },
@@ -265,7 +265,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             { symbol: String.raw`W^{O}W^{UV}`, name: "흡수된 output 쪽 행렬", description: "학습 후 고정된 두 행렬의 곱으로, 추론 내내 상수입니다." },
           ]}
           assumptions={["W^UK, W^UV, W^O 사이에 비선형이 없어야 결합법칙으로 순서를 바꿀 수 있습니다.", "content 부분에만 적용됩니다. 위치 부분은 RoPE 회전이 t 마다 달라 같은 방식으로 접을 수 없습니다."]}
-          interpretation="Content 점수의 내적 차원이 128에서 512로 늘어 head당 곱셈은 늘지만, 캐시에서 읽는 바이트는 head 차원과 무관한 latent 576개 원소로 고정됩니다. Decode 는 메모리 대역폭에 묶여 있어 이 교환이 순이익이 됩니다."
+          interpretation="Content 점수의 내적 차원이 128에서 512로 늘어 head당 곱셈은 늘지만, 캐시에서 읽는 바이트는 head 차원과 무관한 latent 512개와 위치 key 64개, 합쳐 576개 원소로 고정됩니다. Decode 는 메모리 대역폭에 묶여 있어 이 교환이 순이익이 됩니다."
         />
         <AlgorithmBlock
           title="MLA decode: 새 token 하나가 흡수된 weight 로 latent 캐시와 만나는 한 step"

@@ -23,7 +23,7 @@ const SCENES = [
 const NOTES = [
   "첫 라운드는 사람이 쓴 seed task pool에서 시작합니다(Self-Instruct 기준 175개). 두 번째 라운드부터는 이전 라운드가 모은 trajectory가 이 자리를 채웁니다.",
   "각 seed 문제마다 teacher-generated 또는 self-generated 방식으로 N개의 후보를 만듭니다(RFT 예시에서는 문제당 k=100개).",
-  "Verifier·model이 채점한 점수의 상위 몇 퍼센트만 남기고(quality thresholding), 남은 후보 중 pass rate 0%·100%인 문제는 curriculum에서 제외합니다.",
+  "Verifier·model이 채점한 점수의 상위 몇 퍼센트만 남기고(quality thresholding), 채점된 후보 전체로 잰 pass rate가 0%·100%인 문제는 curriculum에서 제외합니다.",
   "남은 curriculum 데이터로 모델을 SFT/RL로 학습합니다. 이 단계까지는 한 라운드 안에서 끝나는 직선 절차입니다.",
   "갱신된 모델을 다시 채점해 hard-example·failure trajectory와 success trajectory를 나눠 모으고, 이 결과가 다음 라운드의 seed pool로 되돌아가 loop가 닫힙니다.",
 ] as const;

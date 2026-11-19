@@ -309,7 +309,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             { code: "candidates ← generate(seed_pool, N)", note: "Self-Instruct·Evol-Instruct처럼 teacher-generated 또는 self-generated 방식으로 문제당 N개 후보를 만듭니다." },
             { code: "scored ← verify_or_judge(candidates)", note: "Verifier(규칙 판정) 또는 model(judge 점수)로 각 후보를 채점합니다." },
             { code: "kept ← quality_threshold(scored, top_k_percent)", note: "채점 상위 몇 퍼센트만 남겨 verifier-filtered·model-filtered 데이터를 확정합니다." },
-            { code: "p̂ ← pass_rate(kept); curriculum ← curriculum_sample(kept, p̂)", note: "Difficulty filtering으로 p̂∈{0,1} 문제를 빼고, 남은 문제를 난이도 가중치로 뽑습니다." },
+            { code: "p̂ ← pass_rate(scored); curriculum ← curriculum_sample(kept, p̂)", note: "p̂는 거르기 전 채점된 후보 전체로 잰 c/n입니다. Difficulty filtering으로 p̂∈{0,1} 문제를 빼고, 남은 문제를 난이도 가중치로 뽑습니다." },
             { code: "model ← train(model, curriculum)", note: "SFT 또는 RL로 curriculum 데이터를 학습에 반영합니다." },
             { code: "failures, successes ← mine_trajectories(model, eval_pool)", note: "갱신된 model을 다시 채점해 hard-example·failure trajectory와 success trajectory를 나눠 수집합니다." },
             { code: "seed_pool ← failures ∪ successes", note: "수집된 trajectory가 다음 라운드의 seed_pool이 되어 loop가 한 바퀴 닫힙니다." },

@@ -149,8 +149,8 @@ export default function SettlementAndAccessArticle() {
         <NoOverlapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            M이 새 증거를 보고 승소 가능성을 90%로 올려 보는데 V는 여전히 30%로
-            본다고 해 보겠습니다. M의 최저선은 올라가고 V의 최고선은 내려갑니다.
+            M이 새 증거를 보고 승소 가능성을 90%로 올려 보는데 V는 오히려 60%에서
+            30%로 낮춰 본다고 해 보겠습니다. M의 최저선은 올라가고 V의 최고선은 내려갑니다.
             두 선이 교차하면 같은 금액을 동시에 받아들일 수 없습니다.
           </p>
           <p className="leading-7">

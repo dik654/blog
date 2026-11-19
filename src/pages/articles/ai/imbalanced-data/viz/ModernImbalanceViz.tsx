@@ -784,8 +784,8 @@ export function ImbalanceEvaluationViz() {
               stroke={border}
               strokeWidth="1.25"
             />
-            <rect x="270" y="80" width="38" height="93" fill={accent} />
-            <rect x="340" y="146" width="38" height="27" fill={accent} />
+            <rect x="270" y="53" width="38" height="120" fill={accent} />
+            <rect x="340" y="163" width="38" height="10" fill={accent} />
             <text
               x="289"
               y="193"

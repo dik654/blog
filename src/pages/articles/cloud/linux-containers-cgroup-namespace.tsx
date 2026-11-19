@@ -248,7 +248,7 @@ export default function LinuxContainersCgroupNamespaceArticle() {
           <div className={prose}>
             <p>
               Kubernetes 문서의 기본 컨테이너 예제는 CapEff 00000000a80425fb를 보여 줍니다. 아래에서 이 숫자를 풀면 14개 비트가 켜져 있고 그 안에 10번이 들어 있습니다. 그래서 root로 도는 기본 컨테이너는 80번 포트에 bind할 수 있습니다.</p>
-            <p>1절의 컨테이너는 runAsUser 1000으로 돌았기 때문에 실패했습니다. UID가 0이 아니면 execve 때 Permitted·Effective가 비워지므로, 필요한 비트 하나만 capabilities.add로 돌려주면 됩니다.</p>
+            <p>(가정) 1절의 옆 컨테이너는 runAsUser 1000으로 돌았기 때문에 실패했습니다. UID가 0이 아니면 execve 때 Permitted·Effective가 비워지고, Kubernetes는 Ambient 집합을 채우지 않아 capabilities.add만으로는 Effective에 비트가 남지 않습니다. capabilities.add로 Bounding에 10번을 남기고 실행 파일에 setcap으로 파일 capability를 붙여야 execve 때 그 비트를 다시 얻습니다.</p>
           </div>
           <CalculationWalkthrough
             title="CapEff 00000000a80425fb 읽기"
@@ -262,7 +262,7 @@ export default function LinuxContainersCgroupNamespaceArticle() {
               { label: "a8", expression: "1010 1000", result: "27,29,31", reason: "MKNOD·AUDIT_WRITE·SETFCAP." },
               { label: "합계", expression: "7 + 3 + 1 + 3", result: "14개", reason: "containerd·Docker의 기본 집합입니다. 41개 가운데 27개는 Bounding set에서도 빠져 있어 setuid 바이너리를 실행해도 얻지 못합니다." },
             ]}
-            conclusion="기본 컨테이너는 NET_BIND_SERVICE를 갖지만 runAsUser를 0이 아닌 값으로 두면 execve 때 집합이 비워집니다. 80·443을 쓰려면 capabilities.add: [NET_BIND_SERVICE] 하나를 주고, 나머지는 drop: [ALL]로 비우는 것이 가장 좁은 설정입니다."
+            conclusion="기본 컨테이너는 NET_BIND_SERVICE를 갖지만 runAsUser를 0이 아닌 값으로 두면 execve 때 집합이 비워집니다. 80·443을 쓰려면 drop: [ALL]과 capabilities.add: [NET_BIND_SERVICE]로 Bounding에 10번만 남기고, 실행 파일에 파일 capability(setcap cap_net_bind_service=+ep)를 붙이는 것이 가장 좁은 설정입니다. Ambient를 채우지 않는 Kubernetes에서는 add만으로 Effective에 남지 않습니다."
             caveats={["ns_capable은 그 네트워크 namespace를 소유한 user namespace 기준으로 확인합니다. user namespace를 쓰는 rootless 컨테이너는 안에서 root처럼 보여도 호스트 자원에는 권한이 없습니다.", "allowPrivilegeEscalation: false는 커널의 no_new_privs 비트를 켜 setuid와 파일 capability로 권한이 늘어나는 길을 막습니다. 기본값은 true입니다."]}
           />
           {code("cap-numbers", "capability 번호표")}
@@ -287,7 +287,7 @@ export default function LinuxContainersCgroupNamespaceArticle() {
           <div className={prose}>
             <p>
               실행 중인 스레드가 CPU를 쓸 때마다 스케줄러는 __account_cfs_rq_runtime(5812행)으로 그 CPU의 run queue가 가진 runtime_remaining에서 delta_exec를 뺍니다.</p>
-            <p>0 이하가 되면 assign_cfs_rq_runtime이 cgroup 공용 통 cfs_b-&gt;runtime에서 slice 5ms를 꺼내 옵니다(5800–5808행). 통까지 비어 있으면 resched_curr로 현재 스레드를 내리고, 다음 스케줄 결정에서 check_cfs_rq_runtime(6488행)이 throttle_cfs_rq(5915행)를 불러 이 cgroup의 run queue 전체를 dequeue합니다. 1절의 네 스레드가 내려오는 순간입니다.</p>
+            <p>0 이하가 되면 assign_cfs_rq_runtime이 cgroup 공용 통 cfs_b-&gt;runtime에서 slice 5ms를 꺼내 옵니다(5800–5808행). 통까지 비어 있으면 resched_curr로 현재 스레드를 내리고, 다음 스케줄 결정에서 check_cfs_rq_runtime(6488행)이 throttle_cfs_rq(5915행)를 불러 이 cgroup의 run queue 전체를 dequeue합니다. 3절의 네 스레드가 내려오는 순간입니다.</p>
             <p>
               100ms마다 hrtimer가 sched_cfs_period_timer → do_sched_cfs_period_timer(6279행)를 부릅니다. nr_periods를 올리고 __refill_cfs_bandwidth_runtime(5748행)으로 통에 quota를 더하되 quota + burst로 자릅니다.</p>
             <p>멈춘 run queue가 있었으면 nr_throttled을 올리고 distribute_cfs_runtime으로 runtime을 나눠 주며 unthrottle합니다. cpu.stat을 읽으면 core.c의 cpu_cfs_stat_show(9583행)가 이 카운터들을 그대로 출력합니다.</p>
@@ -297,8 +297,8 @@ export default function LinuxContainersCgroupNamespaceArticle() {
             input={["quota = 50,000µs, period = 100,000µs, burst = 0 (cpu.max \"50000 100000\")", "runtime(통) = 50,000µs, 각 CPU run queue의 runtime_remaining = 0", "네 스레드가 네 CPU에서 동시에 시작, 각각 15,000µs 일"]}
             steps={[
               { code: "on tick: rq.runtime_remaining -= delta_exec", note: "1ms마다 네 run queue에서 각각 1,000µs가 빠집니다. 처음에는 0 이하라 바로 다음 줄로 갑니다." },
-              { code: "if rq.runtime_remaining <= 0: amount = min(slice 5000, 통.runtime); 통.runtime -= amount; rq.runtime_remaining += amount", note: "네 run queue가 각각 5,000µs를 받아 통은 50,000 → 30,000. 5ms 뒤 다시 받아 10,000, 10ms 뒤 마지막 10,000을 넷이 2,500씩 나눠 받아 통은 0입니다." },
-              { code: "if amount == 0: resched_curr(rq)", note: "12.5ms 시점, 통이 비어 amount 0. 현재 스레드를 내려 다음 스케줄 결정을 강제합니다." },
+              { code: "if rq.runtime_remaining <= 0: amount = min(slice 5000, 통.runtime); 통.runtime -= amount; rq.runtime_remaining += amount", note: "네 run queue가 각각 5,000µs를 받아 통은 50,000 → 30,000. 5ms 뒤 다시 받아 10,000. 10ms 뒤에는 먼저 요청한 두 run queue가 5,000씩 가져가 통은 0이 되고, 나머지 둘은 0을 받습니다. 3절의 12.5ms는 이 마지막 10,000을 넷이 2,500씩 고르게 나눈다고 단순화한 값입니다." },
+              { code: "if amount == 0: resched_curr(rq)", note: "3절의 단순화로는 12.5ms 시점(실제로는 몫을 못 받은 두 run queue가 10ms 시점), 통이 비어 amount 0. 현재 스레드를 내려 다음 스케줄 결정을 강제합니다." },
               { code: "check_cfs_rq_runtime → throttle_cfs_rq: if !__assign(cfs_b, rq, 1ns): dequeue whole rq; list_add(throttled_cfs_rq)", note: "1ns도 못 받으므로 네 run queue 모두 dequeue. 스레드들은 runnable이지만 돌지 않습니다. 이 시간이 throttled_time에 쌓입니다." },
               { code: "at 100ms: period_timer → nr_periods++; 통.runtime = min(통.runtime + quota, quota + burst)", note: "통이 다시 50,000µs. burst가 0이라 지난 주기에 안 쓴 몫은 넘어오지 않습니다." },
               { code: "if throttled list not empty: nr_throttled++; distribute_cfs_runtime(); unthrottle", note: "nr_throttled이 1이 되고 네 run queue가 runtime을 받아 다시 돕니다. 남은 2,500µs × 4를 쓰고 요청이 끝납니다." },

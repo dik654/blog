@@ -11,7 +11,7 @@ const NOTES = [
   "SaveROBlocks의 한 db.Update 안에서 root→encoded block을 blocks bucket에 쓰고 같은 root를 slot·parent index에 추가합니다. 둘 중 하나가 오류를 반환하면 transaction 전체가 commit되지 않습니다. State와 checkpoint는 이 transaction에 포함되지 않습니다.",
   "Root 조회는 primary record를 바로 찾고, slot 조회는 한 db.View 안에서 slot index의 root 목록을 읽습니다. Slot 64는 두 경쟁 root를 반환할 수 있습니다. 이 목록은 canonical head 한 개를 고르는 fork-choice 결과가 아닙니다.",
   "SaveStates는 state bytes와 state slot index를 자체 db.Update에서 저장합니다. SaveFinalizedCheckpoint도 state/summary 존재를 확인한 뒤 checkpoint와 finalized-root index를 자체 db.Update에서 저장합니다. 호출 순서와 실패 복구는 상위 service가 다뤄야 합니다.",
-  "Block cache 갱신은 db.Update 호출이 돌아온 뒤 실행됩니다. 다만 현재 v7.3.1 함수는 err가 있어도 cache loop에 들어갈 수 있으므로 ‘commit 성공 뒤에만 cache를 갱신한다’고 소스보다 강하게 단정하지 않습니다. updated 표시는 callback 안에서 Put과 index 갱신 뒤 설정됩니다.",
+  "Block cache 갱신은 cache 인자가 true일 때 db.Update 호출이 돌아온 뒤 실행됩니다. 다만 현재 v7.3.1 함수는 그 경우 err가 있어도 cache loop에 들어갈 수 있으므로 ‘commit 성공 뒤에만 cache를 갱신한다’고 소스보다 강하게 단정하지 않습니다. updated 표시는 callback 안에서 Put과 index 갱신 뒤 설정됩니다.",
   "DeleteHistoricalDataBeforeSlot은 먼저 지울 slot/root를 읽고, 한 write transaction에서 block·state·summary·관련 index를 지웁니다. Gloas execution payload envelope는 beacon block root가 아닌 payload block hash를 key로 쓰므로 이 loop에서 지울 수 없고 별도 pruning이 필요하다는 TODO가 남아 있습니다.",
 ] as const;
 

@@ -716,7 +716,7 @@ export function QuantizedDeploymentViz() {
   const notes = [
     "27B라는 숫자는 parameter 수입니다. BF16이면 대략 54 GB, FP8이면 약 27 GB부터 시작하지만 mixed dtype과 metadata를 다시 읽어야 합니다.",
     "Weight-only quantization은 activation·KV를 자동으로 줄이지 않습니다. Hybrid model은 token-growing KV와 fixed recurrent state까지 분리합니다.",
-    "48 GiB 카드에서는 계산한 known floor가 들어가도 workspace·allocator·CUDA graph 여유가 없으면 기동에 실패할 수 있습니다.",
+    "48 GB 카드에서는 계산한 known floor가 들어가도 workspace·allocator·CUDA graph 여유가 없으면 기동에 실패할 수 있습니다.",
     "파일이 작다는 사실과 request가 빨라진다는 사실은 다릅니다. 실제 low-bit kernel 비율·fallback·p95·peak를 같은 trace에서 확인합니다.",
   ] as const;
   const bars = [
@@ -742,7 +742,7 @@ export function QuantizedDeploymentViz() {
           className="block h-auto w-full"
         >
           <text x="24" y="25" className="fill-foreground text-[10px] font-bold">
-            48 GiB device capacity
+            48 GB device capacity
           </text>
           <rect
             x="24"

@@ -352,7 +352,7 @@ export const azureAi200Data: CloudCertificationArticleData = {
     { name: "Secure, monitor, troubleshoot", weight: "20–25%", focus: "Key Vault·App Configuration, OpenTelemetry와 KQL로 보호하고 진단합니다." },
   ] },
   sources: [
-    { source: "Microsoft Learn · AI-200 Study Guide", excerpt: "Develop AI solutions by using Azure data management services", application: "네 영역의 비중과 컨테이너·벡터 자료·메시징·보안·관측 세부 항목을 학습표에 그대로 대응합니다.", citation: "Microsoft Learn, Study guide for Exam AI-200", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-200", note: "AI-200의 대상 역할, 합격 기준과 2026년 10월 7일 기준 기술 범위를 밝힌 공식 가이드입니다." },
+    { source: "Microsoft Learn · AI-200 Study Guide", excerpt: "Develop AI solutions by using Azure data management services", application: "네 영역의 비중과 컨테이너·벡터 자료·메시징·보안·관측 세부 항목을 학습표에 그대로 대응합니다.", citation: "Microsoft Learn, Study guide for Exam AI-200", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200", note: "AI-200의 대상 역할, 합격 기준과 2026년 10월 7일 기준 기술 범위를 밝힌 공식 가이드입니다." },
     { source: "Microsoft Learn · Azure AI Cloud Developer Associate", excerpt: "back-end services, scalable architectures, and the full development lifecycle", application: "모델 호출 한 부분보다 요구·개발·배포·보안·관측까지 이어지는 포트폴리오를 만드는 근거로 씁니다.", citation: "Microsoft Learn, Azure AI Cloud Developer Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-cloud-developer-associate/", note: "현행 자격 이름, 역할, 시험 시간·언어와 공식 AI-200 연결을 안내하는 자격 페이지입니다." },
   ],
   review: [

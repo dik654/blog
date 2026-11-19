@@ -72,8 +72,8 @@ g_t&=\underbrace{\tanh(a_g)}_{\text{부호 있는 후보값}}
         <p className="text-xs font-bold text-primary">논문 해설 · LSTM: A Search Space Odyssey</p>
         <h3 className="mt-2 text-base font-bold">Component 이름의 직관보다 같은 실험 조건에서의 ablation을 봐야 한다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Jozefowicz 등은 여러 task와 수천 개 architecture configuration에서 gate·activation·bias 변형을 비교했고 forget-gate
-          bias가 강한 baseline에 중요함을 관찰했습니다. 논문의 task·search space·budget 안에서 나온 empirical result입니다. 변형 하나의 보편적인
+          Greff 등은 세 task와 5,400번의 실험 run에서 LSTM의 gate·activation·peephole 변형 여덟 가지를 비교했고 forget
+          gate와 output activation이 가장 중요한 component임을 관찰했습니다. 논문의 task·search space·budget 안에서 나온 empirical result입니다. 변형 하나의 보편적인
           순위나 특정 framework default까지 보장하지는 않습니다.
         </p>
       </div>

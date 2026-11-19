@@ -148,7 +148,7 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
             { symbol: String.raw`\bar{c}^{(t)}`, name: "평균 부하", description: "이번 step 전체 배정을 expert 수로 나눈 값입니다." },
           ]}
           assumptions={["Combine 단계의 가중치는 bias 없는 원래 확률을 쓰므로 bias를 키워도 mixture weight 자체는 바뀌지 않습니다.", "매 step 관측한 부하만 보는 갱신이라 이전 step의 gradient 계산과 독립적입니다."]}
-          interpretation="γ=0.001일 때 과부하 expert 0은 0 → −0.001 → −0.002로 두 step 내려가다가, 세 번째 step에 부하가 평균 아래로 떨어지면 그 step은 갱신을 멈춥니다. 부족한 expert 5는 0 → 0.001 → 0.002 → 0.003으로 세 step 모두 오릅니다."
+          interpretation="γ=0.001일 때 과부하 expert 0은 0 → −0.001 → −0.002로 두 step 내려가다가, 세 번째 step에 부하가 평균과 정확히 같아지면 sign이 0이라 그 step은 갱신을 멈춥니다. 부족한 expert 5는 0 → 0.001 → 0.002 → 0.003으로 세 step 모두 오릅니다."
         />
         <TermBreakdown
           title="Load balancing loss와 auxiliary-loss-free bias가 개입하는 지점"
@@ -206,8 +206,8 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
           preview="φ=1.0은 평균만큼만 받아 초과 전부를 버리고, φ=2.0은 거의 안 버리지만 buffer 절반이 빈 자리로 GEMM을 함께 태웁니다. Drop과 padding 사이에 공짜 지점은 없습니다."
         >
           <p>
-            같은 예시에서 φ=1.0이면 capacity는 256이라 614 가운데 358이 drop되고 φ=2.0이면 capacity가 512라 drop은 102로 줄지만 다른 여섯
-            expert는 각각 256 안팎만 받아 512 buffer의 절반 가까이가 빈 slot으로 GEMM에 그대로 들어갑니다. DeepSeek-V3는 학습에서 token을 아예
+            같은 예시에서 φ=1.0이면 capacity는 256이라 614 가운데 358이 drop되고 φ=2.0이면 capacity가 512라 drop은 102로 줄지만 다른 일곱
+            expert는 각각 205 안팎만 받아 512 buffer의 절반 이상이 빈 slot으로 GEMM에 그대로 들어갑니다. DeepSeek-V3는 학습에서 token을 아예
             버리지 않는 대신 bias 갱신만으로 균형을 잡아 이 맞바꿈 자체를 피했습니다.
           </p>
         </ProgressiveDetail>

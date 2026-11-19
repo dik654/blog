@@ -244,8 +244,11 @@ export default function KadLookupArticle() {
           <p>
             Context가 취소되면 <code>shutdown</code>은 이미 시작한 query의
             channel send를 모두 받아 낸 뒤 query function을 비웁니다. 이는 새
-            탐색을 계속하지 않게 하면서 goroutine이 막힌 채 남는 일을 피하는
-            종료 순서입니다. discv4와 discv5는 같은 lookup pump에 서로 다른 wire
+            탐색을 계속하지 않게 하면서, 이미 시작한 query goroutine이
+            <code>queryfunc</code>를 읽고 응답을 보내기 전에 그 함수를 지우지
+            않으려는 종료 순서입니다. <code>replyCh</code>는 alpha 크기로
+            buffer되어 있고 <code>queries</code>는 alpha를 넘지 않으므로 send
+            자체가 막히지는 않습니다. discv4와 discv5는 같은 lookup pump에 서로 다른 wire
             query function을 연결하므로, record 검증과 timeout 세부 동작은
             transport source까지 함께 봐야 합니다.
           </p>

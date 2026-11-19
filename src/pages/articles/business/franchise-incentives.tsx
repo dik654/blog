@@ -48,7 +48,7 @@ export default function FranchiseIncentivesArticle() {
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 손님에게 받은 돈과 본부가 받는 돈의 기준을 그린다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-7">점포의 월매출과 본부의 월 수입을 같은 금액으로 읽지 않습니다. 고객이 점포에 내는 3천만 원 중 계약으로 본부에 이동하는 150만 원을 별도 화살표로 표시합니다.</p>
+          <p className="leading-7">점포의 월매출과 본부의 월 수입을 같은 금액으로 읽지 않습니다. 고객이 점포에 내는 3천만 원 중 계약으로 본부에 이동하는 150만 원을 점포 카드와 본부 카드에 따로 적습니다.</p>
         </div>
         <FlowRail
           title="(가정) 월 3천만 원에서 본부 150만 원, 재료 1천만 원, 월세 300만 원"

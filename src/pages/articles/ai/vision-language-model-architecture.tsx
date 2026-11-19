@@ -189,7 +189,7 @@ export default function VisionLanguageModelArchitectureArticle() {
         </div>
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
-            LLaVA는 visual token을 text token 앞뒤에 이어 붙이므로 LLM 구조를 크게 바꾸지 않습니다.
+            LLaVA는 visual token을 질문의 text token 앞에 이어 붙이므로 LLM 구조를 크게 바꾸지 않습니다.
             반면 Flamingo는 Perceiver Resampler가 visual feature를 64개로 줄이고, frozen LLM 층
             사이에 넣은 gated cross-attention이 필요할 때 그 정보를 읽습니다.
           </p>

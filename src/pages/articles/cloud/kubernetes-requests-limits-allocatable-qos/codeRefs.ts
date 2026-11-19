@@ -99,7 +99,7 @@ export const codeRefs: Record<string, CodeRef> = {
     desc: "공식 문서가 두 limit의 집행 방식을 나눠 적은 부분입니다. CPU는 throttling, 메모리는 OOM kill입니다.",
     annotations: [
       { lines: [43, 46], color: "sky", note: "CPU limit은 커널이 그 이상을 못 쓰게 막는 hard limit입니다. 넘어서려는 순간 멈출 뿐 죽이지 않습니다." },
-      { lines: [48, 53], color: "amber", note: "메모리 limit은 커널이 메모리 압력을 감지했을 때 OOM kill로 집행합니다. 'reactively'라는 단어가 핵심이며, limit을 조금 넘어도 바로 죽지 않을 수 있습니다." },
+      { lines: [48, 53], color: "amber", note: "메모리 limit은 커널이 메모리 압력을 감지했을 때 OOM kill로 집행합니다. 'reactively'라는 단어가 핵심이며, limit에 닿아도 바로 죽지 않을 수 있습니다." },
     ],
     code: resourcesDoc,
     lang: "python",

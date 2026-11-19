@@ -27,7 +27,7 @@ const SCENES: readonly Scene[] = [
   {
     label: "평상시",
     minute: "T+0",
-    sli: 99.95,
+    sli: 99.0,
     p99: "180 ms",
     page: false,
     causes: [
@@ -36,12 +36,12 @@ const SCENES: readonly Scene[] = [
       { name: "OOM kill", value: "0", hot: false },
       { name: "재시작 수", value: "0", hot: false },
     ],
-    note: "SLI는 성공한 요청의 비율과 p99 지연입니다. SLO가 30일 99.9%라면 지금은 budget을 거의 쓰지 않는 상태입니다. 원인 지표 네 개는 대시보드에만 있고 아무것도 호출하지 않습니다.",
+    note: "SLI는 성공한 요청의 비율과 p99 지연입니다. 3절의 가정대로 평소 오류율 1%가 깔린 상태라 성공률은 99.0%입니다. 원인 지표 네 개는 대시보드에만 있고 아무것도 호출하지 않습니다.",
   },
   {
     label: "원인만 움직임",
     minute: "T+5분",
-    sli: 99.94,
+    sli: 99.0,
     p99: "190 ms",
     page: false,
     causes: [
@@ -54,7 +54,7 @@ const SCENES: readonly Scene[] = [
   },
   {
     label: "증상이 나타남 · 호출",
-    minute: "T+40분",
+    minute: "T+4시간 5분",
     sli: 98.5,
     p99: "2,400 ms",
     page: true,
@@ -68,7 +68,7 @@ const SCENES: readonly Scene[] = [
   },
   {
     label: "호출받은 사람이 원인 보드로",
-    minute: "T+42분",
+    minute: "T+4시간 7분",
     sli: 98.5,
     p99: "2,400 ms",
     page: true,
@@ -82,8 +82,8 @@ const SCENES: readonly Scene[] = [
   },
   {
     label: "한 층의 증상은 다른 층의 원인",
-    minute: "T+60분",
-    sli: 99.91,
+    minute: "T+4시간 45분",
+    sli: 99.0,
     p99: "210 ms",
     page: false,
     causes: [
@@ -99,7 +99,7 @@ const SCENES: readonly Scene[] = [
 export default function SymptomCauseViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5600);
   const scene = SCENES[scenes.active];
-  const sliColor = scene.sli < 99.9 ? "#dc2626" : "#16a34a";
+  const sliColor = scene.page ? "#dc2626" : "#16a34a";
 
   return (
     <VizFrame

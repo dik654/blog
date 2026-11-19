@@ -388,7 +388,7 @@ export const awsDeveloperCloudOpsDepth = lab({
   failure: 'StackStatus=UPDATE_COMPLETE\nAlarm=ALARM: 5xx_rate\nDriftStatus=DRIFTED',
   failureReading: "UPDATE_COMPLETE만으로 배포 성공을 확정할 수 없습니다. 경보가 바뀐 시각과 수정한 자원을 대조하고, 되돌리거나 계속 고칩니다.",
   sources: [
-    { label: "AWS Developer Associate exam guide", href: "https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html", claim: "development·security·deployment·troubleshooting 평가 범위를 확인했습니다.", checkedAt },
+    { label: "AWS Developer Associate exam guide (DVA-C03)", href: "https://docs.aws.amazon.com/aws-certification/latest/developer-associate-03/developer-associate-03.html", claim: "development·security·testing·deployment·troubleshooting 평가 범위를 확인했습니다.", checkedAt: "2026-11-19" },
     { label: "AWS CloudOps Engineer exam guide", href: "https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html", claim: "monitoring·performance, reliability, deployment·automation, security·compliance, networking·content delivery 다섯 영역을 확인했습니다. 비용·TCO 분석은 가이드가 범위 밖으로 명시합니다.", checkedAt },
     { label: "AWS CloudFormation · Stack events", href: "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-monitor-stack.html", claim: "resource별 update event와 failure reason을 추적하는 절차를 확인했습니다.", checkedAt },
     ...reliabilitySources,

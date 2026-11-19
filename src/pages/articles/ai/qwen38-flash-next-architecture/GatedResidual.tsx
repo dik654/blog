@@ -72,7 +72,7 @@ export default function GatedResidual({ onCodeRef }: { onCodeRef: (key: string, 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           이 배선은 층마다 두 벌 필요합니다. attention 앞에서 한 번, MoE 앞에서 한 번 같은 절차를 반복하기
-          때문입니다. 두 벌을 합치면 층당 1,319만 개, 48개 층이면 6억 3천만 개가 됩니다. 토큰당 활성
+          때문입니다. 두 벌을 합치면 층당 1,321만 개, 48개 층이면 6억 3천만 개가 됩니다. 토큰당 활성
           파라미터 6B 가운데 10분의 1이 통로를 배선하는 데 쓰이는 셈입니다.
         </p>
 

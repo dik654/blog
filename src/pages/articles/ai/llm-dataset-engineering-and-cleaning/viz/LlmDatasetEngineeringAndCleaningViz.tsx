@@ -13,15 +13,15 @@ const SCENES = ["원본 CommonCrawl", "언어 식별 후", "품질 필터 후", 
 const NOTES = [
   "RefinedWeb 파이프라인은 CommonCrawl에서 뽑은 원본 문서 전체를 100%로 두고 시작합니다.",
   "영어가 아니거나 언어 판별 confidence가 낮은 문서를 걷어내면 남는 문서는 약 48%입니다.",
-  "줄 단위·문서 단위 품질 휴리스틱을 적용하면 그중 다시 약 23%만 최종 후보로 남습니다.",
-  "MinHash 기반 near-duplicate 제거와 exact substring dedup까지 마치면 원본의 10% 미만만 학습 corpus로 남습니다.",
+  "줄 단위·문서 단위 품질 휴리스틱을 적용하면 원본 대비 약 23%만 최종 후보로 남습니다.",
+  "MinHash 기반 near-duplicate 제거와 exact substring dedup까지 마치면 원본의 약 12%만 학습 corpus로 남습니다.",
 ] as const;
 
 const STAGES = [
-  { label: "원본 CommonCrawl", pct: 100, detail: "45TB 압축 텍스트 (필터링 전)" },
+  { label: "원본 CommonCrawl", pct: 100, detail: "CommonCrawl 원본 문서 전체 (필터링 전)" },
   { label: "언어 식별 후", pct: 48, detail: "영어 판별 confidence 미달 제거" },
   { label: "품질 필터 후", pct: 23, detail: "line·document 휴리스틱 통과분만" },
-  { label: "Dedup 완료", pct: 9, detail: "MinHash near-dup + exact substring 제거" },
+  { label: "Dedup 완료", pct: 12, detail: "MinHash near-dup + exact substring 제거" },
 ] as const;
 
 function FunnelScene({ upTo }: { upTo: number }) {

@@ -206,7 +206,7 @@ export const hardwareTeachCases = {
     ],
     numberTitle: "8채널에 16개 module이면 채널당 두 개입니다",
     numbers: [
-      "(가정) 8채널에 16개 module을 균등하게 놓으면 채널당 두 개입니다. 한 채널만 비우고 다른 채널에 세 개를 넣으면 총용량은 같아도 bandwidth와 지원 속도 조건이 달라집니다.",
+      "(가정) 8채널에 16개 module을 균등하게 놓으면 채널당 두 개입니다. 한 채널만 비우고 다른 두 채널에 세 개씩 넣으면 총용량은 같아도 bandwidth와 지원 속도 조건이 달라집니다.",
       "다음 본문은 이 물리 배치에 DDR, ECC, RDIMM과 rank라는 이름을 붙이고 inventory·EDAC·BMC 오류를 연결합니다.",
     ],
     steps: [
@@ -228,7 +228,7 @@ export const hardwareTeachCases = {
   powerCooling: {
     incidentTitle: "정상 때는 버텼지만 feed 하나를 끊자 rack이 함께 꺼졌습니다",
     incident: [
-      "(가정) Rack의 평균 부하는 10.5kW였고 A/B 두 경로 합계는 넉넉했습니다. 그러나 한 feed를 끊자 남은 경로의 허용치 12kW에 순간 부하가 몰려 보호 장치가 동작했습니다.",
+      "(가정) Rack의 p95 부하는 10.5kW였고 A/B 두 경로 합계는 넉넉했습니다. 그러나 한 feed를 끊자 남은 경로의 허용치 12kW에 순간 부하가 몰려 보호 장치가 동작했습니다.",
       "전력 이중화는 케이블 두 개를 꽂는 일이 아닙니다. 한 경로가 사라진 뒤 남은 breaker·PDU·UPS와 냉각 경로가 같은 workload의 피크를 계속 받을 수 있어야 합니다.",
     ],
     pathTitle: "전기는 서버로 들어가고 같은 속도의 열로 빠져나갑니다",

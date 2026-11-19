@@ -8,7 +8,7 @@ const NOTES = [
   "하나의 typed value에서 두 출력이 갈라집니다. Serialization은 전송·저장할 32 bytes를 만들고, hash-tree-root는 같은 값의 32-byte commitment를 만듭니다. Proof는 그 root 안의 validators field를 가리킵니다.",
   "DemoRecord는 slot:uint64, validators:List[uint64,4], epoch:uint32 순서입니다. Schema가 field 순서, 고정·가변 구분과 list limit을 정하므로 payload에 type 이름을 반복해 넣지 않습니다.",
   "Fixed part는 slot 8 bytes, validators offset 4 bytes, epoch 4 bytes로 총 16 bytes입니다. Offset 16 뒤 variable part에 10과 20을 각각 uint64 little-endian으로 붙여 전체 32 bytes가 됩니다.",
-  "Decoder는 offset 16이 fixed part보다 작지 않고 payload 끝을 넘지 않는지 먼저 봅니다. 남은 16 bytes가 uint64 폭 8의 배수이고 list limit 4를 넘지 않아야 값을 할당합니다.",
+  "Decoder는 offset 16이 fixed part 길이와 정확히 같고 payload 끝을 넘지 않는지 먼저 봅니다. 남은 16 bytes가 uint64 폭 8의 배수이고 list limit 4를 넘지 않아야 값을 할당합니다.",
   "slot과 epoch는 각각 32-byte chunk 하나가 됩니다. Validators 10과 20은 16 bytes라 한 data chunk에 함께 pack되고, 실제 길이 2는 별도 length chunk가 됩니다.",
   "Validators root는 H(data chunk || length chunk)입니다. Container field root 셋을 폭 4의 tree에 놓고 빈 네 번째 leaf를 zero로 채우면 최종 root는 9dfd…32cc가 됩니다.",
   "Container의 두 번째 field validators는 gindex 5=101₂입니다. Leaf에서 root까지 sibling 두 개, 즉 slot root와 오른쪽 subtree root 64 bytes로 포함을 검증합니다.",

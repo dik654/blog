@@ -147,7 +147,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
           <p>
             70B FP16 을 8 × 80 GB node 두 대, 즉 16 GPU 에 놓는 후보 셋을 decode batch 64, hidden 8192
             의 all-reduce 1 MB 기준으로 비교합니다. 후보 A 는 TP 16 으로 all-reduce 의 ring 이 node
-            경계를 두 번 지나 한 번에 약 52 μs, token 당 160 번이면 8.4 ms 입니다. weight 읽기 2.6 ms
+            경계를 두 번 지나 한 번에 약 52.5 μs, token 당 160 번이면 8.4 ms 입니다. weight 읽기 2.6 ms
             에 더해 TPOT 은 11 ms 이고 통신이 계산의 3 배입니다.
           </p>
         </div>
@@ -156,7 +156,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
           <p>
             후보 B 는 TP 8 × PP 2 입니다. all-reduce 는 NVSwitch 안에서 한 번에 7 μs, token 당 1.1 ms 입니다. node 경계는 stage 사이
             activation 1 MB 가 한 번 지나 35 μs 입니다. 대신 한 token 이 두 stage 를 직렬로 지나 weight 읽기가 5.2 ms 씩 두 번이라 TPOT 은
-            약 11.6 ms 로 A 와 비슷합니다. 다만 microbatch 둘을 겹치면 throughput 은 두 배입니다.
+            약 11.5 ms 로 A 와 비슷합니다. 다만 microbatch 둘을 겹치면 throughput 은 두 배입니다.
           </p>
           <p>
             후보 C 는 TP 8 × DP 2 입니다. replica 하나가 node 하나에 들어가므로 node 경계 통신은 0 이고 TPOT 은 5.2 + 1.1 = 6.3 ms,
@@ -164,7 +164,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
             을 감당하므로 C 가 답입니다. B 는 replica 가 node 에 들어가지 않는 405B 급에서 답이 됩니다.
           </p>
           <p>
-            같은 mesh 라도 placement 를 틀리면 C 가 A 가 됩니다. TP 그룹이 두 node 에 걸치게 rank 를 배정하면 통신량은 후보 A 와 같아집니다. runtime
+            같은 mesh 라도 placement 를 틀리면 C 가 A 가 됩니다. TP 그룹이 두 node 에 걸치게 rank 를 배정하면 통신량은 후보 A 와 거의 같아집니다(50 μs 대 52.5 μs). runtime
             이 rank 를 node 순서로 채우는 기본값은 믿지 않습니다. 기동 log 의 rank 와 GPU·host 대응을 확인하는 것이 placement 점검의 전부입니다.
           </p>
         </div>
@@ -173,7 +173,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
           description="decode batch 64, hidden 8192, 80 layer, NVSwitch 900 GB/s · α 5 μs, InfiniBand 50 GB/s · α 15 μs 의 계산 예시입니다."
           items={[
             { term: "A · TP 16", description: "all-reduce ring 이 node 경계를 지나 매 layer 두 번씩 InfiniBand 를 탑니다.", example: "통신 8.4 ms + weight 2.6 ms = TPOT 11 ms, 비율 3.2", boundary: "GPU 당 weight 가 가장 작지만 통신이 이득을 다 먹습니다." },
-            { term: "B · TP 8 × PP 2", description: "all-reduce 는 node 안, node 경계는 stage 당 activation 1 MB 한 번입니다.", example: "통신 1.1 ms + 경계 0.035 ms, TPOT 약 11.6 ms, throughput 2 배", boundary: "한 요청의 latency 는 줄지 않고 microbatch 가 찰 때만 이득입니다." },
+            { term: "B · TP 8 × PP 2", description: "all-reduce 는 node 안, node 경계는 stage 당 activation 1 MB 한 번입니다.", example: "통신 1.1 ms + 경계 0.035 ms, TPOT 약 11.5 ms, throughput 2 배", boundary: "한 요청의 latency 는 줄지 않고 microbatch 가 찰 때만 이득입니다." },
             { term: "C · TP 8 × DP 2", description: "replica 하나가 node 하나에 들어가 node 경계 통신이 없습니다.", example: "통신 1.1 ms + weight 5.2 ms = TPOT 6.3 ms, throughput 2 배", boundary: "replica 가 node 하나에 들어갈 때만 가능합니다." },
           ]}
         />
@@ -362,7 +362,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
             { code: "T_comm ← L·2·(α_in + 2(TP−1)/TP · T·h·2 / B_in) + (PP−1)·(α_out + T·h·2 / B_out)", note: "앞 글의 α + n/B 로 token 당 통신 시간을 셉니다. TP 가 node 를 넘으면 α_in·B_in 대신 α_out·B_out 이 들어가 이 항이 급증합니다." },
             { code: "T_comp ← (W_model / TP) / HBM 대역폭 (decode 기준); R ← T_comm / T_comp", note: "R 이 1 을 넘으면 TP 를 낮추고 PP 나 DP 로 축을 옮깁니다. TPOT ≈ PP·T_comp + T_comm 이 목표를 넘으면 TP 를 올려 T_comp 를 줄입니다." },
             { code: "DP ← floor(g·n / (TP·PP))", note: "남는 GPU 는 모두 replica 로 만들어 throughput 을 곱합니다. 초당 token 이 목표에 못 미치면 node 를 늘려 DP 를 키우는 것이 TP 를 올리는 것보다 쌉니다. PCIe node 라면 node 마다 replica 하나가 기본입니다." },
-            { code: "placement: TP 그룹의 rank 를 같은 host 의 연속 GPU 에, PP stage 를 host 순서로 배정; 기동 log 에서 rank↔host 대응 확인", note: "mesh 가 맞아도 rank 가 node 에 걸치면 후보 A 의 통신량이 됩니다." },
+            { code: "placement: TP 그룹의 rank 를 같은 host 의 연속 GPU 에, PP stage 를 host 순서로 배정; 기동 log 에서 rank↔host 대응 확인", note: "mesh 가 맞아도 rank 가 node 에 걸치면 후보 A 에 가까운 통신량이 됩니다." },
           ]}
           output="TP·PP·DP degree 와 rank↔GPU 배치, 그 배치의 예상 TPOT 과 통신 비율 R"
           repeatUntil="TPOT 이 목표 안이고 R < 1 이며 초당 token 이 목표 이상일 때까지 TP·PP·DP 를 조정"

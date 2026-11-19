@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #residual-stream — 각 layer update가 gradient를 0.9배로 줄인다는 본문 가정.
  * F만 곱하면 0.9^k: 1층 0.9, 8층 0.430, 16층 0.185, 32층 0.034.
- * Identity 항이 있는 경로는 본문 설명대로 각 layer에서 최소 1배를 보존한다.
+ * Identity 항 경로는 각 layer에서 gradient를 1배로 그대로 넘긴다(전체 Jacobian 크기의 하한은 아님).
  */
 const LAYERS = 32;
 const RATE = 0.9;
@@ -29,7 +29,7 @@ const SCENES = [
   {
     label: "Identity 항이 있을 때",
     summary: "∂y/∂x = I + ∂F/∂x",
-    note: "y = x + F(x)에서는 Jacobian에 항등 항 I가 그대로 남습니다. 본문 설명대로 이 경로는 각 layer에서 최소 1배를 보존해 32층을 지나도 처음 크기를 유지합니다. F가 작아도 gradient가 완전히 사라지지 않는 이유입니다.",
+    note: "y = x + F(x)에서는 Jacobian에 항등 항 I가 그대로 남습니다. 이 항등 경로로 오는 몫은 각 layer에서 1배로 그대로 넘어가 32층을 지나도 줄지 않습니다. 전체 Jacobian 크기가 늘 1 이상이라는 뜻은 아니지만, F가 작아도 gradient가 완전히 사라지지 않는 이유입니다.",
   },
 ] as const;
 

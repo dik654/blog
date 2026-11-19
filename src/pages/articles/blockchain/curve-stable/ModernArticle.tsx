@@ -62,7 +62,7 @@ export default function ModernCurveStableArticle() {
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-4">
           {[
             ["POOL BALANCE", "1,500,000 / 1,500,000", "Plain token 둘의 균형 상태"],
-            ["AMPLIFICATION", "A = 2,000", "Fixture의 사용자 표시값"],
+            ["AMPLIFICATION", "A = 2,000", "Fixture의 사용자 표시값 · 아래 식의 A로는 1,000"],
             ["SWAP FEE", "0.01%", "1e10 분모에서 fee 1,000,000"],
             ["REQUEST", "token0 1,000", "Bob → pool → token1 receiver"],
           ].map(([label, value, detail]) => (
@@ -150,7 +150,7 @@ export default function ModernCurveStableArticle() {
           terms={[
             { symbol: String.raw`x_i`, name: "normalized balance", description: "앞 절에서 rate를 반영한 공통 단위 잔액입니다." },
             { symbol: "n", name: "coin count", description: "Pool에 들어 있는 자산 수입니다. 이 fixture에서는 2입니다." },
-            { symbol: "A", name: "amplification", description: "균형 부근의 곡선 모양을 정하는 parameter입니다." },
+            { symbol: "A", name: "amplification", description: "균형 부근의 곡선 모양을 정하는 parameter입니다. Contract는 Ann = A·n을 쓰므로 이 식의 A n^n에 맞추면 표시값 A=2,000은 A=1,000에 해당합니다." },
             { symbol: "D", name: "invariant", description: "현재 xp와 A를 만족하는 pool의 불변량입니다." },
           ]}
           assumptions={[

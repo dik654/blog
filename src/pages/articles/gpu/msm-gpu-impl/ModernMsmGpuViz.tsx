@@ -151,8 +151,8 @@ function Scene({ step }: { step: number }) {
       </div>
       <div className="grid gap-2 text-center text-xs sm:grid-cols-3">
         <div className="rounded-lg border border-border p-3"><strong>kernel 2ms</strong><span className="mt-1 block text-muted-foreground">digit→reduction</span></div>
-        <div className="rounded-lg border border-border p-3"><strong>전송 3ms</strong><span className="mt-1 block text-muted-foreground">host↔device</span></div>
-        <div className="rounded-lg border border-border p-3"><strong>검증 2ms</strong><span className="mt-1 block text-muted-foreground">정답·직렬화</span></div>
+        <div className="rounded-lg border border-border p-3"><strong>전송 3ms</strong><span className="mt-1 block text-muted-foreground">host→device</span></div>
+        <div className="rounded-lg border border-border p-3"><strong>D2H·검증 2ms</strong><span className="mt-1 block text-muted-foreground">device→host·정답·직렬화</span></div>
       </div>
       <p className="rounded-lg border border-dashed border-primary/40 p-3 text-center text-sm font-bold text-primary">채택 speedup = 10 ÷ 7 ≈ 1.43배</p>
     </div>

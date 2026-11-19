@@ -114,7 +114,7 @@ export default function MegakernelDesignTradeoffsArticle() {
             { expression: String.raw`t_{\mathrm{res}}`, annotation: ["Register 상한·shared memory·code 크기를 함께 쓰며", "느려진 task 시간을 하나의 항으로 뺌"] },
           ]}
           terms={[
-            { symbol: String.raw`N_K`, name: "없앤 kernel 경계 수", description: "Kernel-per-operator 실행에서 kernel 수 빼기 1 입니다. Llama-1B 는 약 100, Qwen3-8B 는 293 입니다." },
+            { symbol: String.raw`N_K`, name: "없앤 kernel 경계 수", description: "Kernel-per-operator 실행에서 kernel 수 빼기 1 입니다. Kernel 이 Llama-1B 는 약 100개, Qwen3-8B 는 293개이므로 N_K 는 약 99, 292 입니다." },
             { symbol: String.raw`t_{\mathrm{launch},k}`, name: "Kernel k 의 launch 비용", description: "CPU 가 launch 를 내고 GPU 가 첫 block 을 올리기까지의 시간으로 H100 stream 약 2.1 µs, CUDA graph 약 1.3 µs 입니다." },
             { symbol: String.raw`t_{\mathrm{tail},k}`, name: "Kernel k 의 tail", description: "마지막 wave 에서 일부 SM 만 일하는 시간과 다음 kernel 이 올라오기까지의 빈 시간입니다." },
             { symbol: String.raw`t_{\mathrm{sync},j}`, name: "의존 j 의 counter 대기", description: "Task 가 필요한 event counter 를 polling 하며 SM 을 붙잡고 있는 시간입니다." },
@@ -285,7 +285,7 @@ export default function MegakernelDesignTradeoffsArticle() {
           description="같은 kernel 에 들어온 순간 세 자원의 예산이 하나로 합쳐집니다. 나누는 방식이 자원마다 달라 비용의 모양도 다릅니다."
           items={[
             { term: "Register", description: "Thread 당 배정이 launch 때 고정되므로 kernel 값은 task 별 요구의 최대값입니다.", example: "GEMM 128·norm 40 이면 kernel 128 로 norm task 의 warp 가 51개에서 16개로 줍니다.", boundary: "한 task 안에 stage 를 이어 붙이면 최대값이 아니라 합이 되어 255 를 넘길 수 있습니다." },
-            { term: "Shared memory", description: "주소만 있으면 어느 task 가 써도 되므로 page 로 나눠 시간에 따라 재사용합니다.", example: "H100 213 kB 를 16 KiB page 13개(Hazy) 또는 32 KB page 7개(MPK)로 나눕니다.", boundary: "Page 를 다 쓴 task 는 다른 task 가 돌려줄 때까지 기다리며 이 대기도 t_sync 에 들어갑니다." },
+            { term: "Shared memory", description: "주소만 있으면 어느 task 가 써도 되므로 page 로 나눠 시간에 따라 재사용합니다.", example: "H100 shared memory 를 16 KiB page 13개(213 kB, Hazy) 또는 32 KB page 7개(MPK)로 나눕니다.", boundary: "Page 를 다 쓴 task 는 다른 task 가 돌려줄 때까지 기다리며 이 대기도 t_sync 에 들어갑니다." },
             { term: "Instruction cache", description: "모든 operator 의 code 가 한 kernel 에 있어 task 가 바뀔 때 working set 이 바뀝니다.", example: "L0 약 12 KiB 는 instruction 768개이며 unroll 된 GEMM mainloop 하나로 넘습니다.", boundary: "Miss 비용은 task 전환 빈도에 비례하므로 같은 종류의 task 를 SM 에 이어 붙이면 줄어듭니다." },
             { term: "Issue slot", description: "Counter 를 기다리는 polling 과 task dispatch 의 분기가 계산과 같은 scheduler 를 씁니다.", example: "Worker 가 counter 를 spin 하는 동안 그 SM 의 issue slot 은 계산에 쓰이지 않습니다.", boundary: "Scheduler 를 별도 SM 에 두는 MPK 구조는 이 비용을 worker 에서 떼어 낸 대신 SM 4개를 계산에서 뺍니다." },
           ]}

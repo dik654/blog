@@ -1022,8 +1022,8 @@ export function CosineComparisonReceiptViz() {
         className="grid min-w-0 gap-px bg-border p-px sm:grid-cols-[1fr_1fr]"
       >
         {[
-          ["단일 cosine", "0→900", "마지막 checkpoint와 중간 평가를 기록"],
-          ["warm restart", "900→1,800", "cycle 경계와 보존 state를 기록"],
+          ["단일 cosine", "0→2,700", "마지막 checkpoint와 중간 평가를 기록"],
+          ["warm restart", "0→900, 900→2,700", "cycle 경계와 보존 state를 기록"],
         ].map(([title, clock, detail]) => (
           <div key={title} className="min-w-0 bg-background p-4 sm:p-5">
             <p className="text-[10px] font-black text-primary">

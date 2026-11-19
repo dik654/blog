@@ -2,7 +2,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #encode-decode — fixed part 16 B(slot 8 · offset 4 · epoch 4) 뒤 variable part 16 B, 전체 32 B.
- * Decoder 검사: offset이 16보다 작지 않고 32를 넘지 않는가 → slice 길이가 8의 배수인가 → 원소 수 ≤ limit 4.
+ * Decoder 검사: offset이 16과 같고 32를 넘지 않는가 → slice 길이가 8의 배수인가 → 원소 수 ≤ limit 4.
  * 본문의 거부 예: offset 12(fixed part 침범), offset 40(payload 범위 초과), 길이 10 slice(정렬 실패).
  * 길이 10 장면은 payload 끝을 26 B로 둔 가정이다: 26 − 16 = 10, 10 mod 8 = 2.
  */
@@ -33,7 +33,7 @@ const SCENES: readonly OffsetScene[] = [
     offset: 16,
     end: 32,
     verdict: "ok",
-    checks: ["16 ≥ 16 ✓", "16 ≤ 32 ✓", "아직 확인 전"],
+    checks: ["16 = 16 ✓", "16 ≤ 32 ✓", "아직 확인 전"],
   },
   {
     label: "길이와 원소 수",
@@ -42,7 +42,7 @@ const SCENES: readonly OffsetScene[] = [
     offset: 16,
     end: 32,
     verdict: "ok",
-    checks: ["16 ≥ 16 ✓", "16 ≤ 32 ✓", "16 mod 8 = 0 · 2 ≤ 4 ✓"],
+    checks: ["16 = 16 ✓", "16 ≤ 32 ✓", "16 mod 8 = 0 · 2 ≤ 4 ✓"],
   },
   {
     label: "Offset 12",
@@ -51,7 +51,7 @@ const SCENES: readonly OffsetScene[] = [
     offset: 12,
     end: 32,
     verdict: "bad",
-    checks: ["12 < 16 ✗", "검사 안 함", "검사 안 함"],
+    checks: ["12 ≠ 16 ✗", "검사 안 함", "검사 안 함"],
   },
   {
     label: "Offset 40",
@@ -60,7 +60,7 @@ const SCENES: readonly OffsetScene[] = [
     offset: 40,
     end: 32,
     verdict: "bad",
-    checks: ["40 ≥ 16 ✓", "40 > 32 ✗", "검사 안 함"],
+    checks: ["40 ≠ 16 ✗", "40 > 32 ✗", "검사 안 함"],
   },
   {
     label: "(가정) 길이 10 slice",
@@ -69,7 +69,7 @@ const SCENES: readonly OffsetScene[] = [
     offset: 16,
     end: 26,
     verdict: "bad",
-    checks: ["16 ≥ 16 ✓", "16 ≤ 26 ✓", "10 mod 8 = 2 ✗"],
+    checks: ["16 = 16 ✓", "16 ≤ 26 ✓", "10 mod 8 = 2 ✗"],
   },
 ];
 
@@ -81,7 +81,7 @@ const FIELDS = [
   { name: "20", from: 24, to: 32, color: "#60a5fa" },
 ] as const;
 
-const CHECK_NAMES = ["① offset ≥ fixed 16", "② offset ≤ payload 끝", "③ 8의 배수 · ≤ limit 4"] as const;
+const CHECK_NAMES = ["① offset = fixed 16", "② offset ≤ payload 끝", "③ 8의 배수 · ≤ limit 4"] as const;
 
 export default function OffsetCheckViz() {
   return (

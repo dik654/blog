@@ -5,7 +5,7 @@ export const linearCodeRefs: Record<string, CodeRef> = {
     path: "src/lib.rs — Linear struct + forward",
     lang: "rust",
     highlight: [1, 38],
-    desc: "Linear 레이어: y = x @ W + b.\nW는 lazy init — 첫 forward 호출 시 입력 크기를 감지해 Xavier 초기화.",
+    desc: "Linear 레이어: y = x @ W + b.\nW는 lazy init — 첫 forward 호출 시 입력 크기를 감지해 LeCun(fan-in) 초기화.",
     code: `pub struct Linear {
     out_size: usize,
     // 첫 forward 호출 전까지 None (lazy init)
@@ -19,7 +19,7 @@ impl Linear {
     pub fn forward(&self, x: &Variable) -> Variable {
         if self.w.borrow().is_none() {
             let in_size = x.shape()[1];
-            let scale = (1.0 / in_size as f64).sqrt(); // Xavier
+            let scale = (1.0 / in_size as f64).sqrt(); // LeCun (fan-in)
             let w_data: Vec<f64> = (0..in_size * self.out_size)
                 .map(|_| self.next_normal() * scale)
                 .collect();
@@ -58,7 +58,7 @@ impl Linear {
       {
         lines: [14, 14],
         color: "emerald",
-        note: "Xavier 초기화: sqrt(1/in_size) — 층마다 분산이 일정하게 유지",
+        note: "LeCun(fan-in) 초기화: sqrt(1/in_size) — 층마다 분산이 일정하게 유지 (Xavier는 sqrt(2/(in+out)))",
       },
       {
         lines: [29, 34],

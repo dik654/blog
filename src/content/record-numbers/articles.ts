@@ -8,7 +8,7 @@ export const recordNumbersArticles: Article[] = [
     sections: [
       {
         id: "overview",
-        title: "보병이 170만이라고 적은 다음 줄에 세는 방법이 적혀 있습니다",
+        title: "육군 전체가 170만이라고 적은 다음 줄에 세는 방법이 적혀 있습니다",
       },
       {
         id: "two-numbers",

@@ -2,7 +2,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #vln-taxonomy — 같은 약 10m 경로(R2R 평균 길이)를
- * discrete graph(평균 4~6 edge), VLN-CE 고정 0.25m 전진, waypoint(0.25~4m)로 각각 걷는다.
+ * discrete graph(경로당 4~6 edge), VLN-CE 고정 0.25m 전진, waypoint(0.25~4m)로 각각 걷는다.
  * 복도 7m + 방 안 3m 배치와 graph node 위치는 가정이다.
  * 10m ÷ 0.25m = 40번 전진, 10m ÷ 4m = 2.5 → waypoint 최소 3번.
  */
@@ -46,7 +46,7 @@ const SCENES = [
   {
     label: "Discrete graph (R2R)",
     summary: "edge 5개를 골라 이동 (가정)",
-    note: "R2R은 미리 만든 navigation graph 위에서 움직입니다. 점(viewpoint)은 사진을 찍어 둔 위치이고, 매 step 연결된 viewpoint 중 하나를 고릅니다. 위치와 연결을 미리 안다고 가정하며 경로 하나는 평균 4~6개 edge, 약 10m입니다.",
+    note: "R2R은 미리 만든 navigation graph 위에서 움직입니다. 점(viewpoint)은 사진을 찍어 둔 위치이고, 매 step 연결된 viewpoint 중 하나를 고릅니다. 위치와 연결을 미리 안다고 가정하며 경로 하나는 4~6개 edge, 평균 약 10m입니다.",
   },
   {
     label: "VLN-CE 저수준 action",

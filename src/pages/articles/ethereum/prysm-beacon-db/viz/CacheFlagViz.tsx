@@ -67,7 +67,7 @@ const SCENES = [
   {
     label: "Cache loop",
     summary: "err 확인 전 → A가 cache에 들어갈 수 있음",
-    note: "v7.3.1 코드는 err가 nil인지 확인하기 전에 updated가 true인 entry를 block cache에 넣습니다. 그러면 DB에 없는 A가 cache에만 있을 수 있습니다. 실제로 cache-only read가 일어나는지는 별도 fault-injection test가 필요합니다.",
+    note: "cache 인자가 true인 호출이라면 v7.3.1 코드는 err가 nil인지 확인하기 전에 updated가 true인 entry를 block cache에 넣습니다. 그러면 DB에 없는 A가 cache에만 있을 수 있습니다. 실제로 cache-only read가 일어나는지는 별도 fault-injection test가 필요합니다.",
     rows: [
       { updated: WARN("true 남음"), tx: NONE("버려짐"), db: NONE("없음"), cache: WARN("A 들어갈 수 있음") },
       { updated: NONE("false"), tx: NONE("버려짐"), db: NONE("없음"), cache: NONE("없음") },

@@ -751,7 +751,7 @@ export const marketsArticles: Article[] = [
     },
     {
       "id": "mechanism",
-      "title": "7. 세 거래를 종료하고 네 장부를 다시 맞춥니다"
+      "title": "7. 세 거래를 종료하고 다섯 장부를 다시 맞춥니다"
     },
     {
       "id": "source",
@@ -1408,7 +1408,7 @@ export const marketsArticles: Article[] = [
       },
       {
             "id": "case",
-            "title": "3. 25.3톤은 허용 범위 안이고 20일 보관·출고비는 1,500달러입니다"
+            "title": "3. 25.3톤은 허용 범위 안이고 20일 보관·출고비는 1,518달러입니다"
       },
       {
             "id": "picture",
@@ -1424,7 +1424,7 @@ export const marketsArticles: Article[] = [
       },
       {
             "id": "mechanism",
-            "title": "7. 25.3톤의 전자 권리에서 1,500달러 비용까지 따라갑니다"
+            "title": "7. 25.3톤의 전자 권리에서 1,518달러 비용까지 따라갑니다"
       },
       {
             "id": "source",

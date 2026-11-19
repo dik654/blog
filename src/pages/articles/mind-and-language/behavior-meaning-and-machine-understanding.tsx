@@ -26,7 +26,7 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
           <p className="leading-8">입력은 중국어 질문 문자열입니다. 처리는 모양을 찾아 규칙표의 다음 쪽으로 이동하는 일입니다. 출력은 중국어 답 문자열입니다. 내부에는 규칙표, 메모, 작업자의 상태가 있고, 바깥에는 질문자와 실제 중국어 사용 환경이 있습니다.</p>
           <p className="leading-8">시험은 입력과 출력의 관계를 잘 잴 수 있습니다. 그러나 내부 표현이 무엇을 가리키는지, 새 상황에서 스스로 고칠 수 있는지, 답에 대한 경험이 있는지는 시험 설계에 따라 보이지 않을 수 있습니다.</p>
         </div>
-        <FlowRail title="대화 행동을 만드는 다섯 자리" steps={[
+        <FlowRail title="대화 행동을 만드는 세 자리" steps={[
           { actor: "질문과 환경", movement: "상황이 있는 문장을 입력합니다.", receives: "문자열과 맥락" },
           { actor: "처리 시스템", movement: "규칙·기억·학습된 표현으로 다음 출력을 고릅니다.", receives: "내부 상태 변화" },
           { actor: "판정자", movement: "정확성·일관성·새 상황 대응을 관찰합니다.", receives: "능력에 대한 증거" },
@@ -37,7 +37,7 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
         <ScoreGridViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">질문 100개 가운데 규칙표에 익숙한 형태가 80개이고 새로운 조합이 20개라고 합시다. 규칙실은 익숙한 질문 78개와 새 질문 12개, 모두 90개를 맞힙니다. 숫자는 논점을 드러내기 위한 가정입니다.</p>
-          <p className="leading-8">작업자는 중국어 뜻을 모른 채 기호 모양만 바꿉니다. 그러나 규칙표를 만든 사람, 메모장, 입출력 장치까지 묶은 시스템은 중국어 질문에 안정적으로 답합니다. 작업자 개인의 무이해가 시스템 전체의 무이해를 곧장 증명하는지는 별도 논증이 필요합니다.</p>
+          <p className="leading-8">작업자는 중국어 뜻을 모른 채 기호 모양만 바꿉니다. 그러나 작업자와 규칙표, 메모장, 입출력 장치까지 묶은 시스템은 중국어 질문에 안정적으로 답합니다. 작업자 개인의 무이해가 시스템 전체의 무이해를 곧장 증명하는지는 별도 논증이 필요합니다.</p>
         </div>
         <NumericPath title="90점 안에 서로 다른 성공이 들어 있습니다" steps={[
           { label: "전체 질문", value: "100개", detail: "익숙한 80 + 새 조합 20" },
@@ -71,7 +71,7 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
 
       <LessonSection id="mechanism" level="4" title="7. 같은 90점이 사람·규칙실·학습 시스템에서 무엇을 뜻하는지 봅니다" bridge="점수는 같아도 오류·학습·환경 연결이 다른 세 시스템을 비교했습니다. 튜링이 질문을 바꾼 이유를 원문에서 확인합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">사람은 뜻을 물어 설명하고 실제 물건을 가리키며, 오해를 지적받으면 규칙을 고칠 수 있습니다. 고정 규칙실은 표에 없는 질문에서 멈추고, 오류 이유를 자기 경험으로 설명하지 못합니다. 학습 시스템은 새 조합 20개 중 12개를 맞히지만 학습 자료의 비슷한 패턴 때문일 수 있습니다.</p>
+          <p className="leading-8">사람은 뜻을 물어 설명하고 실제 물건을 가리키며, 오해를 지적받으면 규칙을 고칠 수 있습니다. 고정 규칙실은 새 조합 20개 중 표가 닿지 않는 8개에서 멈추고, 오류 이유를 자기 경험으로 설명하지 못합니다. 학습 시스템은 새 조합 20개 중 12개를 맞히지만 학습 자료의 비슷한 패턴 때문일 수 있습니다.</p>
           <p className="leading-8">세 시스템의 90점만 보면 같지만, 질문을 바꿔 가리키기·행동·장기 기억·반사실·자기 수정까지 시험하면 능력의 모양이 달라집니다. 이해라는 넓은 말을 한 점수로 줄이지 않고 여러 공개 능력으로 나누면 실제 비교가 가능해집니다.</p>
           <p className="leading-8">그렇다고 능력 목록을 모두 통과하면 주관적 경험까지 증명된다는 결론도 바로 나오지 않습니다. 기능에 관한 주장과 의식에 관한 주장은 필요한 증거가 다릅니다.</p>
         </div>

@@ -221,7 +221,7 @@ export default function ModernArticle() {
           <QuotientGridViz />
 
           <ExplainedFormula
-            question="Verifier는 2^T번의 제곱 대신 무엇을 확인하는가?"
+            question="Verifier는 T번의 제곱 대신 무엇을 확인하는가?"
             idea={
               <>
                 큰 지수 2^T를 소수 ℓ에 대한 몫과 나머지로 나누고, 몫 부분을 증명

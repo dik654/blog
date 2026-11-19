@@ -153,7 +153,7 @@ export default function ModernArticle() {
         <h2 className="break-keep text-2xl font-bold">Cache 경계</h2>
         <CacheFlagViz />
         <p>
-          <code>SaveROBlocks</code>는 <code>db.Update</code> 호출이 돌아온 뒤 <code>updated</code>가 true인 entry를 block cache에 넣습니다. 그러나 현재 v7.3.1 코드는 <code>err</code>가 nil인지 확인하기 전에 cache loop로 들어갑니다. Batch 앞쪽 entry가 <code>updated=true</code>가 된 뒤 뒤쪽 entry에서 오류가 나면 bbolt transaction은 rollback되지만 앞쪽 entry의 flag는 남을 수 있습니다.
+          <code>SaveROBlocks</code>는 <code>cache</code> 인자가 true일 때만 <code>db.Update</code> 호출이 돌아온 뒤 <code>updated</code>가 true인 entry를 block cache에 넣습니다. <code>cache</code>가 false면 그 자리에서 <code>err</code>를 그대로 반환하므로 아래 위험은 cache를 요청한 호출에만 해당합니다. 그러나 현재 v7.3.1 코드는 cache를 요청한 경우 <code>err</code>가 nil인지 확인하기 전에 cache loop로 들어갑니다. Batch 앞쪽 entry가 <code>updated=true</code>가 된 뒤 뒤쪽 entry에서 오류가 나면 bbolt transaction은 rollback되지만 앞쪽 entry의 flag는 남을 수 있습니다.
         </p>
         <div className="not-prose border-l-2 border-amber-500/70 bg-amber-500/5 p-4">
           <p className="text-xs font-bold text-amber-700 dark:text-amber-300">소스에서 확인한 위험 경계</p>
@@ -228,7 +228,7 @@ export default function ModernArticle() {
         <ol className="space-y-4 pl-5 text-sm leading-7">
           <li>Slot 64 index가 A와 B 중 하나만 저장하면 안 되는 이유는 무엇입니까? <strong>(답: Slot은 canonical identity가 아니라 같은 slot의 후보를 찾는 조회 축이며, competing block 두 개가 서로 다른 root 원본을 가질 수 있기 때문입니다.)</strong></li>
           <li><code>SaveROBlocks</code>에서 한 번에 commit되는 범위는 어디까지입니까? <strong>(답: Block primary bytes와 slot·parent index입니다. State와 checkpoint는 다른 transaction입니다.)</strong></li>
-          <li>현재 source만 보고 cache가 DB보다 먼저 보이지 않는다고 단정할 수 없는 이유는 무엇입니까? <strong>(답: Batch entry의 updated flag가 callback 안에서 설정되고, db.Update가 error를 반환해도 cache loop 전에 err를 검사하지 않기 때문입니다.)</strong></li>
+          <li>현재 source만 보고 cache가 DB보다 먼저 보이지 않는다고 단정할 수 없는 이유는 무엇입니까? <strong>(답: Batch entry의 updated flag가 callback 안에서 설정되고, cache 인자가 true인 호출에서는 db.Update가 error를 반환해도 cache loop 전에 err를 검사하지 않기 때문입니다.)</strong></li>
           <li>Historical pruning이 모든 관련 data를 정리한다고 말할 수 없는 이유는 무엇입니까? <strong>(답: Gloas payload envelope는 다른 key를 사용해 현재 loop에서 제외되고, context 취소 경로의 부분 commit·index cleanup도 실험으로 확인해야 하기 때문입니다.)</strong></li>
         </ol>
       </section>

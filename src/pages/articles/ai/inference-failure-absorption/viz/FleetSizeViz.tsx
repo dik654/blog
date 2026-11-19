@@ -48,7 +48,7 @@ export default function FleetSizeViz() {
 
   const NOTES = [
     `두 대를 각각 ${Math.round(BASE_LOAD * 100)}퍼센트로 돌리다 한 대가 죽으면 남은 한 대가 ${pct(loadAfterLoss(2))}퍼센트를 받습니다. 장애는 평균 ${fmtInterval(interval(2))}에 한 번으로 드물지만 올 때마다 감당이 안 됩니다. 안전하게 팔 수 있는 것은 절반뿐입니다.`,
-    `여덟 대면 한 대가 빠져도 남은 일곱이 ${pct(loadAfterLoss(8))}퍼센트로 버팁니다. 안전 가동률이 ${pct(safeUtil(8))}퍼센트까지 올라갔습니다. 대신 장애 간격이 ${fmtInterval(interval(8))}로 줄어 여덟 달에 한 번쯤 겪게 됩니다.`,
+    `여덟 대면 한 대가 빠져도 남은 일곱이 ${pct(loadAfterLoss(8))}퍼센트로 버팁니다. 안전 가동률이 ${pct(safeUtil(8))}퍼센트까지 올라갔습니다. 대신 장애 간격이 ${fmtInterval(interval(8))}로 줄어 아홉 달에 한 번쯤 겪게 됩니다.`,
     `예순네 대에서는 한 대가 빠져도 ${pct(loadAfterLoss(64))}퍼센트라 표가 거의 안 납니다. 안전 가동률은 ${pct(safeUtil(64))}퍼센트입니다. 그 대가로 장애는 ${fmtInterval(interval(64))}에 한 번, 한 달에 한 번꼴로 옵니다. 이 규모부터는 장애 처리가 사건이 아니라 일과가 됩니다.`,
     `만 육천 장 규모에서는 장애가 ${fmtInterval(interval(16384))}에 한 번 옵니다. 그런데도 돌아가는 이유는 안전 가동률이 ${pct(safeUtil(16384))}퍼센트라 한 장이 빠져도 아무 표가 안 나기 때문입니다. 잦음과 감당은 반대로 움직입니다.`,
   ] as const;

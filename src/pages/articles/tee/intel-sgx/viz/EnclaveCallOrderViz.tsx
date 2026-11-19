@@ -1,7 +1,7 @@
 import SceneShell from "./SceneShell";
 
 /**
- * 본문 대응: #memory-lifecycle — input copy → bounds/schema 검증 → protected computation → private commit → 최소 output copy.
+ * 본문 대응: #memory-lifecycle — (복사 전 length·pointer 범위 검사) input copy → bounds/schema 검증 → protected computation → private commit → 최소 output copy.
  * SGX 설정의 ENTER(ECALL)·LEAVE(OCALL)와 failure 표의 "Oversized ECALL length"(복사 전 거부, commit 0회),
  * "Host가 OCALL response 변조"(schema·operation ID 검증 실패로 rollback)를 같은 다섯 칸 위에 놓는다.
  * 마지막 두 장면은 operation ID·result digest 기록 유무에 따른 재시작. op#7은 설명용 가정이다.
@@ -36,7 +36,7 @@ const SCENES: readonly Scene[] = [
     ocall: "none",
     ledger: ["op#7", "commit 완료 · result digest"],
     counter: 1,
-    note: "밖에서 온 parameter를 먼저 안쪽으로 복사해 size·range·alias·integer overflow를 다시 검사합니다. 출력은 commit 뒤에 최소만 내보냅니다.",
+    note: "밖에서 온 pointer·length의 size·range·alias·integer overflow를 복사 전에 검사하고, 안쪽 복사본을 다시 검사합니다. 출력은 commit 뒤에 최소만 내보냅니다.",
   },
   {
     label: "length가 너무 큰 ECALL",

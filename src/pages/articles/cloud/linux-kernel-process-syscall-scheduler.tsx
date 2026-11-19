@@ -27,7 +27,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
           <h2 className="mb-6 text-2xl font-bold">1. CPU 사용률은 40%인데 왜 배치 작업은 느리고 load는 3인가요?</h2>
           <div className={prose}>
             <p>
-              (가정) CPU 2개짜리 서버에 스레드 네 개짜리 웹 서버와 nice 5로 돌린 로그 압축 작업이 함께 있습니다. top은 CPU 사용률 40%를 보이지만 압축은 예상보다 세 배
+              (가정) CPU 2개짜리 서버에 스레드 네 개짜리 웹 서버와 nice 5로 돌린 로그 압축 작업이 함께 있습니다. top은 CPU 사용률 40%를 보이지만 압축은 예상보다 네 배
               느리며, load average는 3을 넘습니다. 서로 모순처럼 보이는 세 숫자는 하나의 질문으로 모입니다. 커널은 실행할 것을 어떻게 고르고, 실행하지 못하는 것을 어디에 세어
               두나요?
             </p>
@@ -37,7 +37,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
             </p>
             <p>
               CPU에 올라가는 것은 R 가운데 스케줄러가 고른 것이며, 고르는 규칙은 nice 값을 가중치로 바꿔 "평균보다 덜 받은 작업 중 가상 마감이 가장 이른
-              것"을 뽑는 EEVDF입니다. nice 5의 가중치는 335라 nice 0의 1024와 겨루면 24.6%만 받습니다. load는 R뿐 아니라 디스크를 기다리는 D까지 세기 때문에 CPU가 놀아도
+              것"을 뽑는 EEVDF입니다. nice 5의 가중치는 335라 nice 0의 1024와 겨루면 24.7%만 받습니다. load는 R뿐 아니라 디스크를 기다리는 D까지 세기 때문에 CPU가 놀아도
               오릅니다.
             </p>
             <p>
@@ -145,7 +145,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
           <h2 className="mb-6 text-2xl font-bold">5. 상태는 R, S, D, Z 넷이고 load는 R과 D를 셉니다</h2>
           <div className={prose}>
             <p>
-              앞 절의 다섯 task에 상태를 붙입니다. CPU에서 돌고 있거나 run queue에서 차례를 기다리는 task는 R(TASK_RUNNING, 비트 값 0)입니다. 새 연결을 기다리는 T2처럼 어떤
+              앞 절의 스레드 네 개(T1~T4)와 fork한 자식 하나, 이 다섯 task에 상태를 붙입니다. CPU에서 돌고 있거나 run queue에서 차례를 기다리는 task는 R(TASK_RUNNING, 비트 값 0)입니다. 새 연결을 기다리는 T2처럼 어떤
               사건을 기다리며 잠들어 있되 시그널로 깨울 수 있으면 S(TASK_INTERRUPTIBLE, 1)입니다.
             </p>
             <p>
@@ -174,7 +174,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
         </section>
 
         <section id="weights" data-teach-level="3" data-calculation-explained className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">6. nice 한 단계는 가중치 1.25배이고, nice 5는 nice 0의 24.6%를 받습니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">6. nice 한 단계는 가중치 1.25배이고, nice 5는 nice 0의 24.7%를 받습니다</h2>
           <div className={prose}>
             <p>
               R인 task가 CPU 수보다 많으면 누가 먼저 도는지 정해야 합니다. 기본 정책 SCHED_OTHER에서 사용자가 줄 수 있는 손잡이는 nice 하나뿐이며 범위는 −20(높음)부터 +19(낮음)입니다.
@@ -188,7 +188,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
           <WeightShareViz />
           <div className={prose}>
             <p>
-              CPU 하나를 두고 두 작업이 쉬지 않고 겨루면 각자의 몫은 자기 가중치를 가중치 합으로 나눈 값입니다. 1절의 압축 작업(nice 5)이 웹 서버 스레드(nice 0) 하나와 같은 CPU에서 겨룰 때 335 ÷ 1359 = 24.6%를 받습니다. 압축이 세 배 느리게 느껴진 이유가 이 비율입니다.
+              CPU 하나를 두고 두 작업이 쉬지 않고 겨루면 각자의 몫은 자기 가중치를 가중치 합으로 나눈 값입니다. 1절의 압축 작업(nice 5)이 웹 서버 스레드(nice 0) 하나와 같은 CPU에서 겨룰 때 335 ÷ 1359 = 24.7%를 받습니다. 압축이 네 배 느리게 느껴진 이유가 이 비율입니다.
             </p>
           </div>
           <CalculationWalkthrough
@@ -199,8 +199,8 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
               { label: "nice 0 가중치", expression: "sched_prio_to_weight[20]", result: "1024", reason: "표의 인덱스는 nice + 20입니다. nice 0이 기준값 NICE_0_LOAD입니다." },
               { label: "nice 5 가중치", expression: "sched_prio_to_weight[25]", result: "335", reason: "1024 ÷ 1.25⁵ ≈ 335.5를 정수로 적은 값입니다." },
               { label: "가중치 합", expression: "1024 + 335", result: "1359", reason: "run queue 전체 가중치입니다. 세 번째 작업이 들어오면 분모가 늘어 둘 다 몫이 줄어듭니다." },
-              { label: "nice 0 몫", expression: "1024 ÷ 1359", result: "75.4%", reason: "가중치 비례 몫입니다." },
-              { label: "nice 5 몫", expression: "335 ÷ 1359", result: "24.6%", reason: "압축 작업이 혼자 돌 때보다 약 4배 오래 걸립니다." },
+              { label: "nice 0 몫", expression: "1024 ÷ 1359", result: "75.3%", reason: "가중치 비례 몫입니다." },
+              { label: "nice 5 몫", expression: "335 ÷ 1359", result: "24.7%", reason: "압축 작업이 혼자 돌 때보다 약 4배 오래 걸립니다." },
               { label: "nice 19였다면", expression: "15 ÷ (1024 + 15)", result: "1.4%", reason: "nice 19는 거의 '남는 시간에만'이라는 뜻이 됩니다." },
             ]}
             conclusion="nice는 CPU 시간을 보장하지 않고 겨룰 때의 비율만 정합니다. 상대가 없으면 nice 19도 CPU 100%를 씁니다."
@@ -238,7 +238,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
             question="다음에 CPU에 올릴 작업은 어떻게 정해집니까?"
             idea="받을 몫이 남은 작업(lag ≥ 0)만 후보로 두고, 그중 가상 마감이 가장 이른 작업을 고릅니다."
             formula={"\\text{lag}_i = w_i\\,(V - v_i) \\ge 0,\\qquad vd_i = ve_i + \\frac{r_i}{w_i}"}
-            annotatedFormula={"\\underbrace{\\text{lag}_i = w_i\\,(V - v_i)}_{\\text{평균 }V\\text{보다 덜 받았으면 양수}} \\ge 0,\\qquad \\underbrace{vd_i}_{\\text{가상 마감}} = \\underbrace{ve_i}_{\\text{현재 vruntime}} + \\underbrace{\\frac{r_i}{w_i}}_{\\text{slice 0.75 ms를 가중치로 나눔}}"}
+            annotatedFormula={"\\underbrace{\\text{lag}_i = w_i\\,(V - v_i)}_{\\text{평균 }V\\text{보다 덜 받았으면 양수}} \\ge 0,\\qquad \\underbrace{vd_i}_{\\text{가상 마감}} = \\underbrace{ve_i}_{\\text{현재 vruntime}} + \\underbrace{\\frac{r_i}{w_i}}_{\\text{slice 0.75 ms × 1024를 가중치로 나눔}}"}
             operations={[
               { expression: "V = \\frac{\\sum w_i v_i}{\\sum w_i}", annotation: ["A가 0.75 ms, B가 0을 썼으면 V = 1024 × 0.75 ÷ 1359 = 0.57 ms입니다.", "A(0.75)는 V보다 커서 lag가 음수, B(0)는 양수입니다."] },
               { expression: "vd_B = 0 + 0.75 \\times \\frac{1024}{335}", annotation: ["B의 마감은 2.29 ms입니다. A의 0.75 ms보다 멀어 둘 다 자격이 있을 때는 A가 먼저입니다."] },
@@ -268,7 +268,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
               { code: "context_switch(curr, next); ctxt += 1", note: "A의 레지스터를 저장하고 B의 것을 복원합니다. /proc/stat의 ctxt가 1 오릅니다." },
             ]}
             repeatUntil="틱마다 1~3번 줄을, 재스케줄 표시가 설 때마다 4~7번 줄을 반복합니다."
-            output="3.75 ms 뒤 A는 3.0 ms, B는 0.75 ms를 받습니다(80 : 20). 오래 돌리면 1024 : 335 = 75.4 : 24.6으로 수렴합니다."
+            output="3.75 ms 뒤 A는 3.0 ms, B는 0.75 ms를 받습니다(80 : 20). 오래 돌리면 1024 : 335 = 75.3 : 24.7로 수렴합니다."
           />
           <EevdfPickViz />
           {code("eevdf-doc", "EEVDF 문서: lag와 가상 마감")}
@@ -363,7 +363,7 @@ export default function LinuxKernelProcessSyscallSchedulerArticle() {
               기다리는 D거나, 두 CPU 가운데 한쪽 run queue에만 몰린 R입니다.
             </p>
             <p>
-              압축이 느린 것은 nice 5의 가중치 335가 웹 서버 스레드의 1024와 겨뤄 24.6%만 받기 때문으로, 웹 서버가 한가한
+              압축이 느린 것은 nice 5의 가중치 335가 웹 서버 스레드의 1024와 겨뤄 24.7%만 받기 때문으로, 웹 서버가 한가한
               순간에는 100%를 씁니다. 세 숫자는 모순이 아니라 같은 run queue를 다른 각도에서 본 것입니다.
             </p>
             <p>

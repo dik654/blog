@@ -16,7 +16,7 @@ export default function RlpDecoding({ onCodeRef }: { onCodeRef: (key: string, re
         {[
           ["d6 94…01", "성공", "목록 길이와 두 필드가 맞고 남은 바이트가 0"],
           ["81 01", "거절", "01 한 바이트로 쓸 수 있어 더 긴 표현은 비표준"],
-          ["b8 02 aa", "거절", "payload 2바이트를 선언했지만 1바이트만 남음"],
+          ["82 aa", "거절", "payload 2바이트를 선언했지만 1바이트만 남음"],
         ].map(([bytes, result, reason], index) => (
           <article key={bytes} className="min-w-0 bg-background p-4">
             <div className="flex items-baseline justify-between gap-2">

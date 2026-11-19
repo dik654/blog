@@ -201,7 +201,7 @@ export default function NamingThePastArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
-            이 글에서 조항을 가리킬 때마다 196조, 209조, 273조 같은 번호를
+            이 시리즈에서 조항을 가리킬 때마다 196조, 209조, 273조 같은 번호를
             썼습니다. 번호가 있으면 찾기 쉽고 서로 대어 보기도 쉽습니다.
             그런데 그 번호는 돌에 새겨진 것이 아닙니다. 앞 글에서 본 100조가
             그 증거입니다. 사라진 분량의 추정에 따라 번호가 정해졌다면 번호

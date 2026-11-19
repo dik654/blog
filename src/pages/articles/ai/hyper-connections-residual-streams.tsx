@@ -189,7 +189,7 @@ export default function HyperConnectionsResidualStreamsArticle() {
           operations={[
             { expression: String.raw`\exp(\tilde H_{res})`, annotation: ["학습된 원 행렬의 모든 원소를 지수화해", "Sinkhorn 반복이 시작할 양수 행렬을 만듦"] },
             { expression: String.raw`\mathrm{Sinkhorn}(\cdot)`, annotation: ["행 합으로 나누고 열 합으로 나누는 과정을 20회 반복해", "행·열 합이 모두 1인 행렬로 수렴시킴"] },
-            { expression: String.raw`H_{res}\mathbf 1_n=\mathbf 1_n`, annotation: ["행 합이 1이 되어", "spectral norm이 1을 넘지 않게 제한"] },
+            { expression: String.raw`H_{res}\mathbf 1_n=\mathbf 1_n,\ \mathbf 1_n^\top H_{res}=\mathbf 1_n^\top`, annotation: ["행 합과 열 합이 함께 1이 되어", "spectral norm이 1을 넘지 않게 제한"] },
           ]}
           terms={[
             { symbol: String.raw`\tilde H_{res}`, name: "투영 전 행렬", description: "학습된 R^(n×n) 원 행렬로, 아직 doubly-stochastic 이 아닙니다." },

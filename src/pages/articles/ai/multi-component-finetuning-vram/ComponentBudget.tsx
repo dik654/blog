@@ -106,8 +106,8 @@ export default function ComponentBudget() {
         </p>
 
         <p className="leading-7">
-          두 번째 항은 어댑터에만 붙습니다. 1,000만 개 파라미터에 gradient 2바이트, FP32 master weight 4바이트,
-          Adam 계열 상태 8바이트를 더하면 약 0.14 GB입니다. 전체 대비 1%도 되지 않습니다.
+          두 번째 항은 어댑터에만 붙습니다. 1,000만 개 파라미터에 gradient 2바이트, BF16 master weight 2바이트,
+          Adam 계열 상태 8바이트를 더하면 약 0.12 GB입니다. 전체 대비 1%도 되지 않습니다.
         </p>
 
         <p className="leading-7">
@@ -118,8 +118,8 @@ export default function ComponentBudget() {
 
         <p className="leading-7">
           합쳐 보면 그림이 나옵니다. 어댑터 학습이라 두 번째 항은 거의 0에 가깝지만 첫 번째 항 14.8 GB가
-          그대로 남고, 여기에 activation이 얹힙니다. 24 GB 장치라면 activation에 쓸 수 있는 여유가 채 9 GB가
-          되지 않는 셈입니다.
+          그대로 남고, 여기에 activation이 얹힙니다. 24 GB 장치라면 activation에 쓸 수 있는 여유가 9 GB 남짓인
+          셈입니다.
         </p>
       </div>
 

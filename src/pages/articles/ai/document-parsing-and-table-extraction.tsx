@@ -165,10 +165,10 @@ export default function DocumentParsingAndTableExtractionArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             rowspan은 한 셀이 아래로 여러 행에 걸치는 병합, colspan은 옆으로 여러 열에 걸치는 병합을 나타내는 속성입니다. 예를 들어 헤더 1행이 "지표"와
-            colspan=2인 "2024" 두 셀뿐이고 2행은 빈칸·"Q1"·"Q2" 세 셀이며 데이터 행은 "매출·120·150" 세 칸이라고 합시다.
+            colspan=2인 "2024" 두 셀뿐이고 "지표"가 rowspan=2로 2행까지 걸쳐 2행은 "Q1"·"Q2" 두 셀이며 데이터 행은 "매출·120·150" 세 칸이라고 합시다.
           </p>
           <p>
-            colspan을 무시하고 셀 개수 그대로 두면 1행은 2칸, 2행과 데이터 행은 3칸으로 열 개수 자체가 어긋납니다. "2024"를 colspan만큼 두 칸으로 펼쳐야 1행도
+            병합을 무시하고 셀 개수 그대로 두면 1행과 2행은 2칸, 데이터 행은 3칸으로 열 개수 자체가 어긋납니다. "2024"를 colspan만큼 두 칸으로, "지표"를 rowspan만큼 2행까지 펼쳐야 두 헤더 행도
             3칸이 되어 "2024"가 "Q1"·"Q2" 두 칸 모두와 짝지어지고 그제서야 "매출" 행의 120·150이 각각 맞는 열에 놓입니다.
           </p>
           <p>
@@ -291,7 +291,7 @@ export default function DocumentParsingAndTableExtractionArticle() {
             문서를 근거로 삼았습니다.
           </p>
           <p>
-            표 구조 인식과 linearization의 정확도 수치는 PubTables-1M(Table Transformer)과
+            표 구조 인식의 정확도 수치는 PubTables-1M(Table Transformer)과
             TableFormer 논문에서 가져왔습니다.
           </p>
           <p>

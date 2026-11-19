@@ -73,7 +73,7 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
         </section>
 
         <section id="small-case" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">3. 30일 99.9%의 예산은 43.2분이고, 노드 하나의 40분 장애가 그중 1.4%를 썼습니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">3. 30일 99.9%의 예산은 43.2분이고, 노드 하나가 장애 난 40분 동안 그중 1.4%가 나갔습니다</h2>
           <div className={prose}>
             <p>
               (가정) 서버 100대 위에서 초당 1,000 요청을 받는 API가 있습니다. SLI는 "성공한 요청 ÷ 전체 요청"이고 SLO는 30일 동안 99.9%입니다. 허용되는 실패는 0.1%입니다. 이것을
@@ -105,11 +105,11 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
               <text x="12" y="100" fontSize="9" fill="#dc2626" fontWeight="700">40분 × 15 ÷ 43,200분 = 1.39% (0.6분, 36,000건)</text>
               <text x="478" y="100" fontSize="9" textAnchor="end" className="fill-muted-foreground">남은 98.61%</text>
             </svg>
-            <figcaption className="mt-2 text-xs text-muted-foreground">위 두 막대의 길이 비가 소진율 15입니다. 아래 막대는 한 달 예산 전체이고 빨간 조각이 40분 장애가 쓴 1.39%입니다. 같은 조각이 70개 모이면 막대가 끝납니다.</figcaption>
+            <figcaption className="mt-2 text-xs text-muted-foreground">위 두 막대의 길이 비가 소진율 15입니다. 아래 막대는 한 달 예산 전체이고 빨간 조각이 40분 장애 동안 쓴 1.39%입니다. 같은 조각이 70개 모이면 막대가 끝납니다.</figcaption>
           </figure>
           <CalculationWalkthrough
             title="오류 예산 43.2분과 40분 장애의 소진"
-            question="30일 SLO 99.9%인 API에서 한 노드의 40분 장애가 예산의 몇 %를 쓸까요?"
+            question="30일 SLO 99.9%인 API에서 한 노드의 40분 장애 동안 예산의 몇 %가 나갈까요?"
             scope="초당 1,000 요청, 서버 100대, 장애 노드 1대의 요청 절반 실패로 가정합니다. 소진율 정의는 SRE workbook 5장(오류율 ÷ 허용 오류율)을 따릅니다."
             steps={[
               { label: "허용 오류율", expression: "1 − 0.999", result: "0.1%", reason: "SLO의 나머지가 예산입니다." },
@@ -118,8 +118,8 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
               { label: "소진율", expression: "1.5% ÷ 0.1%", result: "15", reason: "허용 속도의 15배로 예산을 씁니다. workbook의 1시간 창 호출 임계 14.4를 넘습니다." },
               { label: "40분 동안 쓴 예산", expression: "15 × (40 ÷ 60) ÷ 720", result: "1.39%", reason: "소진율 × 창 길이 ÷ SLO 기간(720시간). 요청 수로는 40 × 60 × 1,000 × 1.5% = 36,000건 = 2,592,000의 1.39%입니다." },
             ]}
-            conclusion="40분짜리 한 노드 장애가 한 달 예산의 1.4%를 썼습니다. 같은 일이 한 달에 70번 나면 예산이 바닥나므로, 호출은 이 속도(소진율)에 걸고 디스크 사용률 94%는 ticket으로 보냅니다."
-            caveats={["평소 오류율 1%는 설명을 위해 높게 잡았습니다. 평소 오류율이 예산의 상당 부분을 늘 쓰고 있다면 SLO 자체를 다시 봐야 합니다.", "요청 기반 SLI는 트래픽이 적은 새벽에 몇 건의 실패로도 소진율이 튑니다. workbook은 저트래픽 서비스에 최소 요청 수 조건이나 합성 트래픽을 권합니다."]}
+            conclusion="40분짜리 한 노드 장애 동안 한 달 예산의 1.4%가 나갔습니다. 그중 장애 노드가 더한 몫(오류율 0.5%, 소진율 5)은 5 × (40 ÷ 60) ÷ 720 ≈ 0.46%이고 나머지는 평소 오류입니다. 호출은 이 속도(소진율)에 걸고 디스크 사용률 94%는 ticket으로 보냅니다."
+            caveats={["평소 오류율 1%는 설명을 위해 높게 잡았습니다. 실제로는 평소 오류율 1%만으로도 소진율 10이라 한 달 예산을 넘으므로, 이런 서비스라면 SLO 자체를 다시 봐야 합니다.", "요청 기반 SLI는 트래픽이 적은 새벽에 몇 건의 실패로도 소진율이 튑니다. workbook은 저트래픽 서비스에 최소 요청 수 조건이나 합성 트래픽을 권합니다."]}
           />
         </section>
 
@@ -127,7 +127,7 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
           <h2 className="mb-6 text-2xl font-bold">4. 디스크 94%는 호출하지 않고, 성공률 98.5%는 호출합니다</h2>
           <div className={prose}>
             <p>
-              3절의 장애를 시간순으로 다시 봅니다. T+5분에 한 노드의 디스크가 94%입니다. 사용자는 아무것도 느끼지 못합니다. T+40분에 디스크가 100%가 되고 앱이 로그를 못 써 죽기 시작하자
+              3절의 장애를 시간순으로 다시 봅니다. T+5분에 한 노드의 디스크가 94%입니다. 사용자는 아무것도 느끼지 못합니다. T+4시간 5분에 디스크가 100%가 되고 앱이 로그를 못 써 죽기 시작하자
               성공률이 98.5%로 떨어집니다. 이때 호출이 울리며, 호출받은 사람은 원인 대시보드에서 디스크와 재시작 수가 빨간 것을 보고 디스크 글의 진단으로 갑니다.
             </p>
             <p>

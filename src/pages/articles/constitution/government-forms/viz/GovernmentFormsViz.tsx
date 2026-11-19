@@ -3,7 +3,7 @@ import StepViz from "@/components/ui/step-viz";
 const STEPS = [
   {
     label: "같은 의석과 같은 예산안에서 시작",
-    body: "300석 의회에 가당 140석·나당 140석·다당 20석이 있습니다. 가당 출신 행정부가 예산안 P를 냈고 151표가 필요합니다. 다당이 어느 편에 서느냐가 첫 갈림길입니다.",
+    body: "300석 의회에 가당 140석·나당 140석·다당 20석이 있습니다. 가당 출신 행정부가 예산안 P를 냈고 151표가 필요합니다. 나당이 반대하면 다당이 어느 편에 서느냐가 첫 갈림길입니다.",
   },
   {
     label: "대통령제: 예산이 져도 대통령은 남음",
@@ -66,7 +66,7 @@ function MobileDiagram({ step }: { step: number }) {
       </g>
       <rect x="80" y="80" width="200" height="44" rx="10" fill="#2563eb14" stroke="#2563eb" strokeWidth="1.2" />
       <text x="180" y="99" textAnchor="middle" fontSize="10.5" fontWeight="700" fill="#2563eb">가당 행정부의 예산안 P</text>
-      <text x="180" y="115" textAnchor="middle" fontSize="9" fill="currentColor" opacity="0.65">다당 20석의 선택이 통과를 가름</text>
+      <text x="180" y="115" textAnchor="middle" fontSize="9" fill="currentColor" opacity="0.65">나당 반대 시 다당 20석이 가름</text>
       {rows.map((row, index) => {
         const y = 145 + index * 86;
         const active = step === 0 || step === index + 1;
@@ -119,7 +119,7 @@ export default function GovernmentFormsViz() {
 
           <rect x="225" y="88" width="130" height="42" rx="10" fill="#2563eb14" stroke="#2563eb" strokeWidth="1.2" />
           <text x="290" y="106" textAnchor="middle" fontSize="10" fontWeight="700" fill="#2563eb">가당 행정부의 예산안 P</text>
-          <text x="290" y="121" textAnchor="middle" fontSize="8.5" fill="currentColor" opacity="0.62">다당 20석의 선택이 통과를 가름</text>
+          <text x="290" y="121" textAnchor="middle" fontSize="8.5" fill="currentColor" opacity="0.62">나당 반대 시 다당 20석이 가름</text>
 
           {SYSTEMS.map((system, index) => {
             const active = step === 0 || step === index + 1;

@@ -213,7 +213,7 @@ export default function Article() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Anthropic의 Building effective agents는 Where to use agents에서 경로를 미리 고정하기 어려운 작업에 자율적 선택을 쓰고 관측과 종료
+            Anthropic의 Building effective agents는 When to use agents에서 경로를 미리 고정하기 어려운 작업에 자율적 선택을 쓰고 관측과 종료
             조건으로 실행을 통제하도록 설명합니다. 다음 짧은 원문은 경로 선택의 기준을 압축합니다.
           </p>
         </div>

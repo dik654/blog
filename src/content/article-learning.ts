@@ -11923,7 +11923,7 @@ export const ARTICLE_LEARNING: Readonly<
         contribution:
           "여러 task와 architecture configuration의 대규모 empirical comparison",
         assumptions: "논문의 task·search space·optimizer budget",
-        evidenceScope: "보고된 ablation과 forget-bias 관찰",
+        evidenceScope: "보고된 ablation과 forget gate·output activation 관찰",
         notClaim: "현재 hardware·모든 task의 보편 순위가 아님",
         sectionId: "paper-lstm-odyssey",
       },
@@ -29813,7 +29813,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "Expert를 지우기 전에 실제로 얼마나 쓰이는지 routing 빈도나 제거 시 loss 증가로 미리 잽니다.",
         workedExample:
-          "8개 expert 중 2개가 token의 40% 이상을 가져간다면 나머지 6개는 각각 10% 미만이라 pruning 후보 우선순위가 됩니다.",
+          "8개 expert 중 2개가 각각 token의 40% 이상을 가져간다면 나머지 6개는 합쳐도 20% 이하(평균 3.3% 남짓)라 pruning 후보 우선순위가 됩니다.",
         boundary:
           "빈도·loss·유사도 중 어느 신호를 쓰느냐에 따라 우선순위가 달라지고, 학습 domain이 바뀌면 추정이 다시 필요합니다.",
       },
@@ -38406,7 +38406,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "매우 유용한 문서를 위에 둘수록 큰 gain을 주고 같은 답안 목록의 최고 순서와 비교합니다.",
         workedExample:
-          "D=3을 추가 판정하면 IDCG는 약 12.916이며 기존 [A3,B0,C2]는 .658, 후보 [D3,A3,C2]는 1.000입니다.",
+          "D=3을 추가 판정하면 IDCG는 약 12.917이며 기존 [A3,B0,C2]는 .658, 후보 [D3,A3,C2]는 1.000입니다.",
         boundary:
           "Gain·discount·k는 사용자 행동 가정이며 diversity·freshness·latency를 측정하지 않습니다.",
       },
@@ -38496,7 +38496,7 @@ export const ARTICLE_LEARNING: Readonly<
         question: "D=3을 판정한 뒤 기존과 후보의 NDCG@3을 계산하세요.",
         answerChecklist: [
           "ideal [3,3,2]",
-          "IDCG 12.916",
+          "IDCG 12.917",
           "baseline .658",
           "candidate 1.000",
         ],
@@ -38567,7 +38567,7 @@ export const ARTICLE_LEARNING: Readonly<
           "D as 0",
           "candidate .665",
           "judge D=3",
-          "new IDCG 12.916",
+          "new IDCG 12.917",
           "baseline .658",
           "candidate 1.000",
         ],
@@ -88763,7 +88763,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "봉투가 선언한 크기가 실제 입력 안에 있는지 확인하고 객체 하나가 입력 전체를 정확히 소비했는지 검사합니다.",
         workedExample:
-          "b8 02 aa는 2바이트 payload를 선언했지만 1바이트만 남아 InputTooShort이고, 올바른 객체 뒤의 00은 decode_exact에서 UnexpectedLength가 됩니다.",
+          "82 aa는 2바이트 payload를 선언했지만 1바이트만 남아 InputTooShort이고, 올바른 객체 뒤의 00은 decode_exact에서 UnexpectedLength가 됩니다.",
         boundary:
           "객체 하나의 prefix 복원 성공을 전체 입력과 상위 객체의 유효성으로 확대하지 않습니다.",
       },
@@ -88856,9 +88856,9 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "b8 02 aa와 올바른 RLP 뒤에 붙은 00을 decode_exact가 각각 어떻게 처리하는지 설명하세요.",
+          "82 aa와 올바른 RLP 뒤에 붙은 00을 decode_exact가 각각 어떻게 처리하는지 설명하세요.",
         answerChecklist: [
-          "긴 문자열 header",
+          "짧은 문자열 header",
           "선언 길이 2",
           "실제 payload 1",
           "InputTooShort",
@@ -147510,7 +147510,7 @@ export const ARTICLE_LEARNING: Readonly<
         problem: "목적·보유·파기·권리와 예외를 현행 조문에서 확인합니다.",
         contribution:
           "대한민국 개인정보 보호법의 원문과 시행 이력을 제공합니다.",
-        assumptions: "2026-08-14 효력과 다른 법률의 보존 의무를 확인합니다.",
+        assumptions: "2026-11-02 효력과 다른 법률의 보존 의무를 확인합니다.",
         evidenceScope: "국내 개인정보 처리·파기 상위 법률입니다.",
         notClaim:
           "30일 예시가 공통 법정 기간이거나 분리보관이 파기를 대신하지 않습니다.",
@@ -180437,7 +180437,7 @@ export const ARTICLE_LEARNING: Readonly<
           "5.2 → 2.6 ms",
           "α × 160 불변",
           "ring 단계 증가",
-          "비율 16% → 28%",
+          "비율 16% → 30%",
         ],
         requiredConcepts: [
           "tp-allreduce-per-layer",
@@ -201632,7 +201632,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "선택기가 요청마다 한 번, 엔진이 출력 token마다 고르는 이유를 쓰고, 선택기와 엔진의 tokenizer가 앞부분 10번째 token에서 갈릴 때 300 token 요청의 예상 cache 적중이 어떻게 되는지 설명하세요.",
+          "선택기가 요청마다 한 번, 엔진이 출력 token마다 고르는 이유를 쓰고, 새 요청이 pod A가 받았던 요청과 앞부분 10번째 token에서 갈릴 때 300 token 요청의 예상 cache 적중이 어떻게 되는지, 선택기와 엔진의 tokenizer 어긋남은 어떻게 막는지 설명하세요.",
         answerChecklist: [
           "block table과 free 목록은 엔진 process 안",
           "30ms마다 network 왕복은 출력 속도를 늦춤",
@@ -254582,7 +254582,7 @@ export const ARTICLE_LEARNING: Readonly<
   "philosophy-history/islamic-philosophy-translation-illumination-and-being": {
     entryLevel: true,
     entryNote:
-      "9·11·12·17세기의 네 정거장에서 번역된 개념이 반박과 종합을 거쳐 바뀌는 사례에서 시작합니다.",
+      "8~10세기·11세기·12세기·17세기의 네 정거장에서 번역된 개념이 반박과 종합을 거쳐 바뀌는 사례에서 시작합니다.",
     coreIdea:
       "이슬람 철학사는 그리스어 문헌의 아랍어 번역에 머물지 않고 이븐 시나의 체계, 수흐라와르디의 조명 철학, 물라 사드라의 존재론처럼 논증·직관·경전 해석을 새로 결합한 장기 논쟁입니다.",
     assumedKnowledge: [],
@@ -260772,7 +260772,7 @@ export const ARTICLE_LEARNING: Readonly<
   "markets/lme-metals-warrants-quality-storage-and-load-out":
     appliedDerivativeLearning({
       entryNote:
-        "LME 아연 25.3톤이 계약 허용 범위 24.5~25.5톤에 드는지 확인합니다. 설명용 20일 보관료 250달러와 출고비 1,250달러를 더합니다.",
+        "LME 아연 25.3톤이 계약 허용 범위 24.5~25.5톤에 드는지 확인합니다. 설명용 20일 보관료 253달러와 출고비 1,265달러를 더합니다.",
       coreIdea:
         "LME 금속 선물은 승인 브랜드·순도·중량을 충족한 금속의 전자 워런트를 넘깁니다. 실제 출고에는 워런트 취소 뒤에도 보관일수·출고 순번·운송과 FOT 비용이 남습니다.",
       assumed: {
@@ -260806,16 +260806,16 @@ export const ARTICLE_LEARNING: Readonly<
           intuition:
             "전자 권리의 가격과 금속을 창고 밖으로 옮기는 비용은 다른 청구입니다.",
           workedExample:
-            "톤당 하루 0.50달러×25톤×20일=250달러 보관료와 톤당 50달러×25톤=1,250달러 출고비를 합쳐 1,500달러로 둡니다(가정).",
+            "톤당 하루 0.50달러×25.3톤×20일=253달러 보관료와 톤당 50달러×25.3톤=1,265달러 출고비를 합쳐 1,518달러로 둡니다(가정).",
           boundary: "실제 창고·지역·날짜의 공표 요율을 대신하지 않습니다.",
         },
       ],
       numericQuestion:
-        "25톤의 ±2% 허용 범위를 구하고 25.3톤이 드는지 확인한 뒤 250+1,250달러를 계산하세요.",
+        "25톤의 ±2% 허용 범위를 구하고 25.3톤이 드는지 확인한 뒤 253+1,265달러를 계산하세요.",
       numericAnswers: [
         "허용 범위 24.5~25.5톤",
         "25.3톤은 범위 안",
-        "비용 합계 1,500달러",
+        "비용 합계 1,518달러",
         "금속 가치와 별도",
       ],
       changedCaseQuestion:
@@ -260823,7 +260823,7 @@ export const ARTICLE_LEARNING: Readonly<
       changedCaseAnswers: [
         "25.6톤은 상한 25.5톤 초과",
         "계약 조정·분할 확인",
-        "보관료+출고비=1,200+1,250=2,450달러",
+        "보관료+출고비=1,200+1,280=2,480달러",
         "현행 창고 요율 확인",
       ],
       sources: [
@@ -261478,7 +261478,7 @@ export const ARTICLE_LEARNING: Readonly<
   "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding": {
     entryLevel: true,
     entryNote:
-      "‘내일 회의 그대로’라는 네 단어를 앞뒤 메시지 6개와 두 번 읽는 사례에서 시작합니다.",
+      "‘내일 회의 그대로’라는 세 단어를 앞뒤 메시지 6개와 두 번 읽는 사례에서 시작합니다.",
     coreIdea:
       "해석학은 부분과 전체를 왕복하고 독자의 선이해를 자료와 대화에서 고치며, 낯선 과거와 현재 질문이 모두 달라지는 새 이해의 문맥을 만드는 과정입니다.",
     assumedKnowledge: [],
@@ -261502,7 +261502,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "names",
         intuition:
           "부분을 전체로 읽고 달라진 전체 이해로 부분을 다시 읽습니다.",
-        workedExample: "네 단어를 메시지 6개와 대조한 뒤 다시 읽습니다.",
+        workedExample: "세 단어를 메시지 6개와 대조한 뒤 다시 읽습니다.",
         boundary: "근거 없이 같은 주장을 반복하는 순환논증과 다릅니다.",
       },
       {
@@ -261544,7 +261544,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "네 단어의 첫 해석을 메시지 6개가 어떻게 바꾸는지 설명하세요.",
+          "세 단어의 첫 해석을 메시지 6개가 어떻게 바꾸는지 설명하세요.",
         answerChecklist: [
           "첫 가정",
           "자료 4·참석자 1·시간 1",
@@ -266729,7 +266729,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "AWS DVA-C02 Exam Guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+          "AWS DVA-C03 Exam Guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
         answerChecklist: [
           "개발·보안·배포·문제 해결 영역 비중을 확인합니다.",
           "공식 문서의 현재 범위",
@@ -266828,8 +266828,8 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       {
-        title: "AWS DVA-C02 Exam Guide",
-        href: "https://docs.aws.amazon.com/pdfs/aws-certification/latest/developer-associate-02/developer-associate-02.pdf",
+        title: "AWS DVA-C03 Exam Guide",
+        href: "https://docs.aws.amazon.com/pdfs/aws-certification/latest/developer-associate-03/developer-associate-03.pdf",
         problem:
           "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
         contribution: "개발·보안·배포·문제 해결 영역 비중을 확인합니다.",
@@ -272177,7 +272177,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "linux-user-kernel-boundary-syscall", role: "read(3, buf, 4096)의 레지스터 규약, entry_SYSCALL_64의 세 단계, −11 → EAGAIN을 설명합니다." },
       { id: "linux-thread-vs-process-clone-flags", role: "CLONE_VM·FILES·SIGHAND·THREAD 네 비트와 copy_mm·copy_files의 공유/복제 분기를 설명합니다." },
       { id: "linux-task-states-rsdz", role: "네 상태의 비트 값·글자표·전이와 load·procs_running·procs_blocked의 관계를 다섯 task 사례로 설명합니다." },
-      { id: "linux-nice-weight-table", role: "sched_prio_to_weight 표와 1.25배 설계, nice 0 대 nice 5의 75.4 : 24.6을 계산합니다." },
+      { id: "linux-nice-weight-table", role: "sched_prio_to_weight 표와 1.25배 설계, nice 0 대 nice 5의 75.3 : 24.7을 계산합니다." },
       { id: "linux-eevdf-scheduler-pick", role: "vruntime 환산·lag 자격·가상 마감을 두 작업 여섯 장면으로 손 계산하고 pick_eevdf를 추적합니다." },
       { id: "linux-strace-syscall-observation", role: "strace -T/-c, /proc/PID/status·sched, vmstat r·b·cs로 각 절의 수치를 실제 서버에서 읽는 법을 설명합니다." },
     ],
@@ -272207,7 +272207,7 @@ export const ARTICLE_LEARNING: Readonly<
         id: "linux-nice-weight-table",
         sectionId: "weights",
         intuition: "nice는 timeslice 길이가 아니라 가중치이고, 한 단계는 1.25배라 몇 단계만 내려가도 몫이 급격히 줄어듭니다.",
-        workedExample: "nice 0 = 1024, nice 5 = 335. 같은 CPU에서 겨루면 1024 ÷ 1359 = 75.4%, 335 ÷ 1359 = 24.6%입니다. nice 19(15)는 15 ÷ 1039 = 1.4%입니다.",
+        workedExample: "nice 0 = 1024, nice 5 = 335. 같은 CPU에서 겨루면 1024 ÷ 1359 = 75.3%, 335 ÷ 1359 = 24.7%입니다. nice 19(15)는 15 ÷ 1039 = 1.4%입니다.",
         boundary: "비율은 같은 run queue 안에서만 뜻이 있고 상대가 없으면 nice 19도 100%를 씁니다. 상한이 필요하면 cgroup cpu.max를 써야 합니다.",
       },
       {
@@ -272594,7 +272594,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "basic", question: "search 3개·ndots:5인 Pod에서 api.example.com은 질의를 몇 개 보내고 그중 몇 개가 NXDOMAIN인가요?", answerChecklist: ["점 2 < 5", "search 3 + 그대로 1 = 4 이름", "× A/AAAA = 8", "6개 NXDOMAIN"], requiredConcepts: ["linux-resolv-search-ndots"], sectionId: "small-case" },
       { level: "basic", question: "veth 한쪽에 보낸 프레임은 커널 안에서 어디로 가고, bridge는 그 프레임을 어떻게 다음 포트로 보내나요?", answerChecklist: ["veth_xmit → peer의 netif_rx", "br_handle_frame_finish", "FDB에서 목적지 MAC 조회", "없으면 flood, 자기 주소면 IP 계층"], requiredConcepts: ["linux-veth-bridge-fdb"], sectionId: "veth-bridge" },
       { level: "basic", question: "ip rule 기본 세 줄의 우선순위와 표를 적고, 10.244.1.9가 /24·/16·/0 가운데 /24를 고르는 이유를 말하세요.", answerChecklist: ["0 local · 32766 main · 32767 default", "longest prefix match", "fib_table_lookup LC-trie", "맞는 것 없으면 -ENETUNREACH"], requiredConcepts: ["linux-routing-rules-lpm-trie"], sectionId: "routing" },
-      { level: "basic", question: "포워딩되는 Pod 패킷과 노드가 직접 만든 패킷은 각각 다섯 훅 가운데 어느 셋을 지나나요?", answerChecklist: ["포워딩: PRE_ROUTING → FORWARD → POST_ROUTING", "로컬 송신: LOCAL_OUT → POST_ROUTING", "로컬 수신: PRE_ROUTING → LOCAL_IN", "DNAT는 라우팅 결정 앞"], requiredConcepts: ["linux-netfilter-five-hooks"], sectionId: "netfilter-hooks" },
+      { level: "basic", question: "포워딩되는 Pod 패킷과 노드가 직접 만든 패킷은 각각 다섯 훅 가운데 어느 것을 지나나요?", answerChecklist: ["포워딩: PRE_ROUTING → FORWARD → POST_ROUTING", "로컬 송신: LOCAL_OUT → POST_ROUTING", "로컬 수신: PRE_ROUTING → LOCAL_IN", "DNAT는 라우팅 결정 앞"], requiredConcepts: ["linux-netfilter-five-hooks"], sectionId: "netfilter-hooks" },
       { level: "basic", question: "16 GiB 노드의 nf_conntrack_buckets와 nf_conntrack_max 기본값은 얼마이고 왜 그 값인가요?", answerChecklist: ["16 GiB ÷ 16384 = 1,048,576", "상한 262,144로 잘림", "max = buckets = 262,144", "4 GiB 초과 노드는 모두 같음"], requiredConcepts: ["linux-conntrack-table-full"], sectionId: "conntrack" },
       { level: "basic", question: "kubelet이 ClusterFirst Pod의 resolv.conf에 쓰는 nameserver·search·options는 각각 무엇인가요?", answerChecklist: ["클러스터 DNS IP 하나", "<ns>.svc.<domain> · svc.<domain> · <domain>", "호스트 search 뒤에 이어 붙임", "ndots:5"], requiredConcepts: ["kubelet-pod-resolv-conf-ndots5"], sectionId: "resolver-trace" },
       { level: "advanced", question: "dnsConfig로 ndots를 2로 낮추면 api.example.com과 data(같은 네임스페이스), data.prod(다른 네임스페이스)의 질의 수는 각각 어떻게 되나요?", answerChecklist: ["api.example.com: 점 2 ≥ 2 → 그대로 먼저 → 2", "data: 점 0 → search → 2", "data.prod: 점 1 < 2 → search → 4(첫 항목 NXDOMAIN)", "ndots 1이면 data.prod는 바깥 먼저"], requiredConcepts: ["linux-resolv-search-ndots", "kubelet-pod-resolv-conf-ndots5"], sectionId: "small-case" },
@@ -273250,7 +273250,7 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote:
       "kubectl get pods와 describe를 써 봤고 CrashLoopBackOff·Pending·OOMKilled를 본 적이 있는 독자를 가정합니다. 2초 만에 죽는 컨테이너 하나의 시계와 replica 3개·DB 30초 장애 사례를 끝까지 따라가며 상태 단어·backoff·probe·Event를 kubelet 원문으로 확인합니다.",
     coreIdea:
-      "STATUS 열의 단어들은 phase가 아니라 kubelet이 컨테이너를 어느 단계에서 멈춰 세웠는지의 reason입니다. CrashLoopBackOff는 10→20→40→80→160→300초로 늘어나는 대기(10분 생존 시 초기화) 중이라는 표시라 여섯 번 죽은 컨테이너는 12초를 돌고 610초를 기다립니다. 기본값 probe(1·10·1·3)는 30초 안 세 번 실패로 재시작을 만들고 liveness가 공용 의존성을 보면 전 replica 재시작 폭풍이 되며, 그 이유를 적는 Event는 1시간 뒤 사라지고 묶이고 걸러집니다.",
+      "STATUS 열의 단어들은 phase가 아니라 kubelet이 컨테이너를 어느 단계에서 멈춰 세웠는지의 reason입니다. CrashLoopBackOff는 10→20→40→80→160→300초로 늘어나는 대기(10분 생존 시 초기화) 중이라는 표시라 일곱 번 죽은 컨테이너는 14초를 돌고 610초를 기다립니다. 기본값 probe(1·10·1·3)는 30초 안 세 번 실패로 재시작을 만들고 liveness가 공용 의존성을 보면 전 replica 재시작 폭풍이 되며, 그 이유를 적는 Event는 1시간 뒤 사라지고 묶이고 걸러집니다.",
     assumedKnowledge: [
       { id: "kubernetes-probe-semantics", role: "startup·readiness·liveness가 각각 무엇을 묻고 무엇을 하는지의 계약을 기본값 계산의 전제로 씁니다." },
       { id: "kubernetes-first-failed-transition-diagnosis", role: "전환 순서대로 첫 실패를 찾는 방법을 Pending 두 갈래와 Event 읽기 순서의 틀로 씁니다." },

@@ -3,18 +3,18 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #decode-impact — 70B·80 layer decode 의 token 당 시간(TPOT).
  * TP 8: weight 5.2 ms + 통신 약 1 ms(α 몫 80 × 2 × 5 μs = 0.8 ms 포함) = 6.2 ms, 통신 16%.
- * TP 16(α 5 μs 그대로라면): 2.6 ms + 1 ms 남짓 = 3.7 ms, 통신 28%.
+ * TP 16(α 5 μs 그대로라면): 2.6 ms + 1 ms 남짓 = 3.7 ms, 통신 30%.
  * TP 16 이 node 를 넘어 α 15 μs: 통신 2.4 ms(160 × 15 μs) → 5 ms, TP 8 대비 약 20% 감소.
  */
 const ROWS = [
   { name: "TP 8 · α 5 μs", weight: 5.2, comm: 1.0, commLabel: "약 1", total: "6.2 ms · 통신 16%" },
-  { name: "TP 16 · α 5 μs 그대로라면", weight: 2.6, comm: 1.1, commLabel: "1 남짓", total: "3.7 ms · 통신 28%" },
+  { name: "TP 16 · α 5 μs 그대로라면", weight: 2.6, comm: 1.1, commLabel: "1 남짓", total: "3.7 ms · 통신 30%" },
   { name: "TP 16 · node 를 넘어 α 15 μs", weight: 2.6, comm: 2.4, commLabel: "2.4", total: "5 ms · TP 8 대비 20%↓" },
 ] as const;
 
 const SCENES = [
   { label: "TP 8", summary: "5.2 + 약 1 = 6.2 ms", note: "통신 약 1 ms 가운데 0.8 ms 는 byte 와 무관한 고정 비용입니다. 80 layer × layer 마다 2 회 × 회마다 5 μs = 800 μs 이고, 나머지가 byte 에 비례하는 전송 시간입니다. 막대 전체가 TPOT 입니다." },
-  { label: "TP 16 으로 올리면", summary: "weight 절반, 통신은 줄지 않음", note: "GPU 당 weight 가 8.75 GB 로 줄어 읽기는 2.6 ms 가 됩니다. 통신은 참여 rank 가 늘어 오히려 조금 늘어나므로 TPOT 은 41% 만 줄고 통신 비율은 28% 로 오릅니다." },
+  { label: "TP 16 으로 올리면", summary: "weight 절반, 통신은 줄지 않음", note: "GPU 당 weight 가 8.75 GB 로 줄어 읽기는 2.6 ms 가 됩니다. 통신은 참여 rank 가 늘어 오히려 조금 늘어나므로 TPOT 은 40% 만 줄고 통신 비율은 30% 로 오릅니다." },
   { label: "TP 16 이 node 를 넘으면", summary: "160 × 15 μs = 2.4 ms", note: "TP 16 은 한 node 의 8 GPU 를 넘으므로 all-reduce 의 한 hop 이 NVLink 가 아니라 InfiniBand 를 지납니다. α 가 15 μs 로 오르면 통신이 2.4 ms 가 되어 weight 절감분을 먹고, TPOT 은 TP 8 대비 20% 밖에 줄지 않습니다." },
 ] as const;
 

@@ -10,7 +10,7 @@ export default function ByzantineModelViz() {
     >
       <Ledger columns={2} items={[
         { label: "crash", title: "침묵하거나 멈춤", body: "Protocol state를 더 진행하지 않지만 서로 다른 recipient에게 모순된 value를 보내지는 않습니다.", example: "no reply ≠ malicious proof" },
-        { label: "Byzantine", title: "임의 행동·equivocation", body: "Recipient별 conflicting message, selective omission, invalid proposal과 protocol deviation을 허용합니다.", example: "A←vote(x), B←vote(y)" },
+        { label: "Byzantine", title: "임의 행동·equivocation", body: "Recipient별 conflicting message, selective omission, invalid proposal과 protocol deviation을 허용합니다.", example: "D→A: vote(7, X), D→C: vote(7, Y)" },
         { label: "authentication", title: "출처와 무결성", body: "Signature는 signer와 bytes를 묶지만 그 내용의 honesty·availability를 보장하지 않습니다.", example: "valid signature ∧ dishonest vote 가능" },
         { label: "partial synchrony", title: "GST 뒤 progress", body: "Safety rule은 지연 중에도 유지하고 liveness는 unknown GST 뒤 delay bound에서 얻습니다.", example: "before GST: halt 가능 · after GST: view advances" },
       ]} />

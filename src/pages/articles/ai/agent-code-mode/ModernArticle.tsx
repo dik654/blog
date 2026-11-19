@@ -86,7 +86,7 @@ export default function AgentCodeModeArticle() {
         <TermLesson
           name="Tool discovery · selective schema loading"
           oneLine="Name·description index에서 후보 tool을 찾고 선택된 signature·policy만 current context와 program API에 넣는 방법입니다."
-          shape="tool index → 후보 3개 → signature·scope load"
+          shape="tool index → 후보 2개 → signature·scope load"
           example="GitHub read 분석이면 listIssues·getIssue와 target organization scope만 펼칩니다."
           boundary="Discovery miss·악성 description·authorization 문제는 schema token 절감만으로 해결되지 않습니다."
         />

@@ -5,15 +5,15 @@ const labels = ["질문 고정", "기록 선택", "특성 계산", "과거 재�
 
 const notes = [
   "매장 A·cutoff 8월 1일 00:00·horizon 7일을 하나의 예측 질문으로 고정합니다.",
-  "같은 매장의 기록 중 available time이 cutoff 이하인 세 건만 남깁니다. 7월 27일 기록은 8월 5일에 도착하므로 제외합니다.",
-  "선택된 세 건으로 lag-1=15, 7일 window count=3, mean=10을 계산합니다. 모든 값은 같은 cutoff에서 재현돼야 합니다.",
+  "같은 매장의 기록 중 available time이 cutoff 이하인 두 건만 남깁니다. 7월 27일 기록은 8월 5일에 도착하므로 제외합니다.",
+  "선택된 두 건으로 lag-1=15, 7일 window count=1, mean=15를 계산합니다. 모든 값은 같은 cutoff에서 재현돼야 합니다.",
   "이 계약을 과거 origin마다 다시 실행하고 다음 7일의 실제 매출과 비교합니다. 마지막 test 기간은 선택이 끝날 때까지 열지 않습니다.",
 ] as const;
 
 const stages = [
   ["질문", "매장 A · 08-01 00:00 · 다음 7일"],
-  ["과거 원장", "cutoff까지 도착한 기록 3건"],
-  ["입력 행", "lag 15 · count 3 · mean 10"],
+  ["과거 원장", "cutoff까지 도착한 기록 2건"],
+  ["입력 행", "lag 15 · count 1 · mean 15"],
   ["평가", "rolling-origin · 미래 7일"],
 ] as const;
 

@@ -85,7 +85,7 @@ export default function AgentServingSloAndCapacityArticle() {
             여기서는 합계와 몫의 관계를 보는 데만 씁니다.
           </p>
           <p className="leading-7">
-            합계를 동시 요청 수로 나누면 요청 하나의 평균 몫이 나옵니다. 86.7이던 몫이 8개에서 34.8, 16개에서 25.0, 32개에서 15.6, 64개에서 11.6으로 내려갑니다. 합계가 8.6배 커지는 동안 요청 하나의 몫은 7분의 1 남짓으로 줄었습니다.
+            합계를 동시 요청 수로 나누면 요청 하나의 평균 몫이 나옵니다. 86.7이던 몫이 8개에서 34.8, 16개에서 25.0, 32개에서 15.6, 64개에서 11.6으로 내려갑니다. 합계가 8.6배 커지는 동안 요청 하나의 몫은 약 7.5분의 1로 줄었습니다.
           </p>
         </div>
 
@@ -346,7 +346,7 @@ export default function AgentServingSloAndCapacityArticle() {
             },
           ]}
           terms={[
-            { symbol: String.raw`K_{\text{pool}}`, name: "KV 풀 크기", description: "가중치와 작업 공간을 빼고 남은 메모리에 담을 수 있는 토큰 수입니다. KV 저장 형식과 문맥을 장치에 나누는 설정에 따라 수십 배 달라집니다." },
+            { symbol: String.raw`K_{\text{pool}}`, name: "KV 풀 크기", description: "가중치와 작업 공간을 빼고 남은 메모리에 담을 수 있는 토큰 수입니다. KV 저장 형식과 문맥을 장치에 나누는 설정에 따라 약 19배 달라집니다." },
             { symbol: String.raw`L`, name: "세션 문맥 길이", description: "살아 있는 세션 하나가 다음 턴을 위해 남겨 둬야 하는 토큰 수입니다. 세션이 진행될수록 커집니다." },
             { symbol: String.raw`C_{\text{speed}}`, name: "속도 상한", description: "속도 약속만으로 정해지는 최대 동시 수입니다." },
           ]}

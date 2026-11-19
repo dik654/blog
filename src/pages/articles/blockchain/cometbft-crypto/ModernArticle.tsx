@@ -189,9 +189,9 @@ export default function ModernCometBFTCryptoArticle() {
             <ul>
               <li>Vote address가 public key와 다르면 signer lookup 경계에서 <code>ErrVoteInvalidValidatorAddress</code>입니다.</li>
               <li>Address는 같지만 signature가 다르면 exact canonical vote 승인에 실패합니다.</li>
+              <li>Proof root가 다른 block의 root라면 <code>TxProof.Validate(header.DataHash)</code>의 첫 비교에서 중단합니다.</li>
               <li>T1 bytes가 바뀌면 재계산한 LeafHash가 proof의 LeafHash와 달라집니다.</li>
               <li>Index·Total·Aunts가 맞지 않으면 같은 hashes가 있어도 expected D41을 복원하지 못합니다.</li>
-              <li>Proof root가 다른 block의 root라면 <code>TxProof.Validate(header.DataHash)</code>의 첫 비교에서 중단합니다.</li>
               <li>모든 crypto 검증이 성공해도 application이 T1을 invalid로 처리할 수 있습니다.</li>
             </ul>
             <h3>이 글만으로 확인할 질문</h3>

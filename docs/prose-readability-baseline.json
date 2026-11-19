@@ -14,7 +14,7 @@
       "score": 72
     },
     "ai/claw-overview": {
-      "fingerprint": "6490a39780efc293",
+      "fingerprint": "a5ab1813d80736aa",
       "score": 69
     },
     "ai/openclaw-assistant": {
@@ -38,7 +38,7 @@
       "score": 40
     },
     "gpu/ec-gpu-gen": {
-      "fingerprint": "2b0eea172a93e0c7",
+      "fingerprint": "d2d3835a1d2f2c4d",
       "score": 6
     },
     "blockchain/prysm": {
@@ -242,8 +242,8 @@
       "score": 24
     },
     "blockchain/prysm-beacon-db": {
-      "fingerprint": "ea9d9b39f1719dbb",
-      "score": 24
+      "fingerprint": "f92377f27d3a1b53",
+      "score": 6
     },
     "blockchain/prysm-beacon-state": {
       "fingerprint": "b0a5be8be6f93bea",
@@ -418,7 +418,7 @@
       "score": 18
     },
     "blockchain/lotus-chain": {
-      "fingerprint": "12309cd6b76345f7",
+      "fingerprint": "01aea11d8c8a3dc0",
       "score": 6
     },
     "blockchain/omni-octane": {
@@ -454,7 +454,7 @@
       "score": 16
     },
     "ai/rlhf": {
-      "fingerprint": "15e8848343b5c728",
+      "fingerprint": "c60b7a68975504ec",
       "score": 16
     },
     "ai/vae": {
@@ -562,7 +562,7 @@
       "score": 14
     },
     "ai/claw-policy-engine": {
-      "fingerprint": "58616ea68d628538",
+      "fingerprint": "972b18438297330f",
       "score": 12
     },
     "ai/claw-recovery": {
@@ -630,7 +630,7 @@
       "score": 10
     },
     "ai/claw-task-team": {
-      "fingerprint": "b8ecfe267282b113",
+      "fingerprint": "e8c099490822926c",
       "score": 10
     },
     "ai/knowledge-distillation": {
@@ -938,7 +938,7 @@
       "score": 6
     },
     "isms-aml/isms-backup-recovery": {
-      "fingerprint": "70c8c53b3db09828",
+      "fingerprint": "71ff355388d1ab09",
       "score": 6
     }
   }

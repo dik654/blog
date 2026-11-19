@@ -184,7 +184,7 @@ export function FormalLanguageViz() {
           aria-label={labels[active]}
           className="block h-auto w-full"
         >
-          <Box x={18} y={68} w={78} label="Σ" sub="[, ], 0, 1" on />
+          <Box x={18} y={68} w={78} label="Σ" sub="[ ] 0 1 ," on />
           <Arrow x1={98} y1={97} x2={126} y2={97} on={active >= 1} id="fg-1" />
           <Box
             x={130}

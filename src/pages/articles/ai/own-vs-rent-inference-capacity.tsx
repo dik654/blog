@@ -458,7 +458,8 @@ export default function OwnVsRentInferenceCapacityArticle() {
           <p className="leading-7">
             전력은 토큰당 원가의 5에서 15퍼센트입니다. 하드웨어 상각이 60에서
             75퍼센트이고 나머지가 상면과 네트워크와 운영입니다. 전기요금이
-            지역마다 두 배 차이 나도 전체로는 한 자릿수 퍼센트입니다.
+            지역마다 두 배 차이 나도 비싼 쪽을 기준으로 보면 전체로는 한 자릿수
+            퍼센트입니다.
           </p>
 
           <p className="leading-7">

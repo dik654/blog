@@ -314,7 +314,7 @@ export default function LinuxDiskFullArticle() {
           </div>
           <SparseTruncateViz />
           <div className={prose}>
-            <p>자르기에는 대가가 있습니다. 파일이 O_APPEND로 열려 있지 않다면 프로세스는 다음 쓰기를 원래 위치인 30GiB 지점에 합니다. (가정) 그러면 앞부분이 비어 있는 sparse 파일이 되어 실제 블록은 적지만 ls에 보이는 크기는 다시 30GiB가 됩니다. du와 du --apparent-size가 다른 값을 보이는 이유입니다.</p>
+            <p>자르기에는 대가가 있습니다. 파일이 O_APPEND로 열려 있지 않다면 프로세스는 다음 쓰기를 원래 위치인 30GiB 지점에 합니다. (가정) 그러면 앞부분이 비어 있는 sparse 파일이 되어 실제 블록은 적지만 겉보기 크기(이름이 없으니 ls 대신 stat -L /proc/812/fd/7로 봅니다)는 다시 30GiB가 됩니다. du와 du --apparent-size가 다른 값을 보이는 이유입니다.</p>
           </div>
           <MountHiddenViz />
           <div className={prose}>

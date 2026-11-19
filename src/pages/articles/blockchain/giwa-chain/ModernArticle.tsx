@@ -416,7 +416,7 @@ export default function ModernGiwaChainArticle() {
                 symbol: "\\preceq",
                 name: "Ancestor relation",
                 description:
-                  "왼쪽 block이 오른쪽 block의 canonical ancestor라는 뜻입니다.",
+                  "왼쪽 block이 오른쪽 block의 canonical ancestor이거나 같은 block이라는 뜻입니다.",
               },
             ]}
             assumptions={[

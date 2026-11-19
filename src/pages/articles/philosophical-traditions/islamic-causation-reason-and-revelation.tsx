@@ -61,7 +61,7 @@ const data: TraditionArticleData = {
     { actor: "자연 철학", movement: "열·가연성·산소를 가까운 원인으로 설명합니다.", receives: "예측과 자연 지식" },
     { actor: "인과 논쟁", movement: "자연의 힘과 신의 행위, 필연성의 관계를 묻습니다.", receives: "서로 다른 형이상학적 모형" },
   ] },
-  numericCase: { title: "불과 솜의 11번 실험", steps: [
+  numericCase: { title: "불과 솜의 10번 관찰과 11번째 예측", steps: [
     { label: "관찰", value: "10회", detail: "같은 듯한 조건에서 모두 연소" },
     { label: "실패", value: "0회", detail: "기록된 반례 없음" },
     { label: "예측", value: "11번째", detail: "탈 가능성이 높다고 기대" },

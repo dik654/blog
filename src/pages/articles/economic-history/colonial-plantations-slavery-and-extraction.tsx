@@ -40,7 +40,7 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">이 장부에서 노예로 만든 사람의 임금 청구는 0입니다. 이동의 자유, 가족 분리, 폭력, 조기 사망도 비용 항목으로 잡히지 않습니다. 소유주의 45는 생산성이 높아서만 생긴 잔여가 아니라 어떤 청구권을 인정하지 않았는지에 따라 커졌습니다.</p>
         </div>
-        <NumericPath title="판매액 100에 잡히지 않은 비용" steps={[
+        <NumericPath title="판매액 100 중 장부에 잡힌 몫" steps={[
           { label: "설탕 판매", value: "100", detail: "시장에 기록된 금액" },
           { label: "기록된 비용·세금", value: "55", detail: "운송 35 + 도구·식량 10 + 세금 10" },
           { label: "소유주 잔여", value: "45", detail: "무임금 강제 노동과 권리 손실은 별도" },

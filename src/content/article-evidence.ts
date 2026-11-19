@@ -10782,7 +10782,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "개인정보 보호법",
       href: "https://www.law.go.kr/법령/개인정보보호법",
-      note: "2026-08-14 현행 처리·보유·파기 상위 법률이며 30일 예시는 법정 공통 기간이 아님",
+      note: "2026-11-02 현행 처리·보유·파기 상위 법률이며 30일 예시는 법정 공통 기간이 아님",
     },
     {
       kind: "공식 가이드",
@@ -21579,8 +21579,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "cloud/aws-developer-cloudops-paths": [
     {
       kind: "공식 가이드",
-      label: "AWS DVA-C02 Exam Guide",
-      href: "https://docs.aws.amazon.com/pdfs/aws-certification/latest/developer-associate-02/developer-associate-02.pdf",
+      label: "AWS DVA-C03 Exam Guide",
+      href: "https://docs.aws.amazon.com/pdfs/aws-certification/latest/developer-associate-03/developer-associate-03.pdf",
       note: "개발·보안·배포·문제 해결 영역 비중을 확인합니다.",
     },
     {

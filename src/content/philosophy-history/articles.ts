@@ -463,9 +463,9 @@ export const philosophyHistoryArticles: Article[] = [
     title: "해석학은 문장과 전체, 과거와 현재가 서로 고치는 과정을 봅니다",
     subcategory: "philosophy-history-hermeneutics",
     sections: [
-      { id: "overview", title: "1. ‘내일 회의 그대로’라는 네 단어는 앞뒤 대화 없이 결정되지 않습니다" },
+      { id: "overview", title: "1. ‘내일 회의 그대로’라는 세 단어는 앞뒤 대화 없이 결정되지 않습니다" },
       { id: "black-box", title: "2. 문장·대화 전체·독자의 예상·새 질문을 차례로 엽니다" },
-      { id: "case", title: "3. 네 단어와 앞뒤 여섯 메시지를 두 번 읽습니다" },
+      { id: "case", title: "3. 세 단어와 앞뒤 여섯 메시지를 두 번 읽습니다" },
       { id: "picture", title: "4. 해석학은 저자의 마음 복원에서 역사적 대화로 넓어졌습니다" },
       { id: "need", title: "5. 선이해를 인정한다고 아무 해석이나 맞는 것은 아닙니다" },
       { id: "names", title: "6. 부분과 전체의 순환·선이해·지평 융합에 이름을 붙입니다" },

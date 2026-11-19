@@ -181,7 +181,7 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
         <TermBreakdown
           title="Functional Correctness 와 Semantic Similarity"
           items={[
-            { term: "Functional Correctness", description: "실행 또는 채점 규칙으로 통과·실패를 정하는 이진 판정입니다.", example: "unit test 5개 중 3개 통과 → pass@1 근사 0.6", boundary: "표현이 정답과 달라도 동작이 맞으면 만점이라 부분 점수가 없습니다." },
+            { term: "Functional Correctness", description: "실행 또는 채점 규칙으로 통과·실패를 정하는 이진 판정입니다.", example: "출력 5개 중 3개가 unit test 통과 → pass@1 근사 0.6", boundary: "표현이 정답과 달라도 동작이 맞으면 만점이라 부분 점수가 없습니다." },
             { term: "Semantic Similarity Evaluation", description: "embedding 거리로 연속값 유사도를 매기는 판정입니다.", example: "BERTScore F1 0.0~1.0 사이 실수", boundary: "문장이 비슷해도 실제 동작이나 사실이 맞다고 보장하지 않습니다." },
           ]}
         />

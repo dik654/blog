@@ -10698,5 +10698,2716 @@
 "AttractionWorthMapViz: no problems found. Subjectivism counts the attraction row with 끌림O·가치X as the counterexample, objectivism counts the value column with 끌림X·가치O as the counterexample, and the combined view counts one cell. All three match 5·6·9절, and the binary cut is labeled as a simplification.",
 "Checks after the fixes: audit:viz --strict passed for both changed files. viz-scene-shot ran for all four Viz at 390 and 1440: controlY and frameH stable, overflow 0, console errors 0. Screenshots are in /tmp/viz-rounds/r25/rv17/."
 ]
+},
+"factFixPass": {
+"date": "2026-11-19",
+"classified": 971,
+"targets": 314,
+"articles": 236,
+"fixed": 301,
+"reviewerCorrections": 51,
+"verdicts": {
+"economic-history/colonial-plantations-slavery-and-extraction": [
+{
+"id": 4,
+"verdict": "fixed"
+}
+],
+"philosophical-traditions/islamic-causation-reason-and-revelation": [
+{
+"id": 32,
+"verdict": "fixed"
+}
+],
+"philosophical-traditions/gita-action-results-and-release": [
+{
+"id": 41,
+"verdict": "fixed"
+}
+],
+"business/franchise-incentives": [
+{
+"id": 10,
+"verdict": "fixed"
+}
+],
+"ai/word2vec-prediction-objectives": [
+{
+"id": 9,
+"verdict": "not-an-error"
+}
+],
+"philosophical-traditions/akan-personhood-community-and-agency": [
+{
+"id": 25,
+"verdict": "fixed"
+}
+],
+"philosophical-traditions/confucian-ritual-role-and-humane-rule": [
+{
+"id": 51,
+"verdict": "not-an-error"
+}
+],
+"global-history/cold-war-decolonization-and-globalization": [
+{
+"id": 39,
+"verdict": "fixed"
+},
+{
+"id": 40,
+"verdict": "fixed"
+}
+],
+"economic-history/agrarian-surplus-and-state": [
+{
+"id": 12,
+"verdict": "fixed"
+},
+{
+"id": 13,
+"verdict": "fixed"
+}
+],
+"ai/agent-serving-slo-and-capacity": [
+{
+"id": 35,
+"verdict": "not-an-error"
+},
+{
+"id": 36,
+"verdict": "fixed"
+},
+{
+"id": 37,
+"verdict": "fixed"
+}
+],
+"crypto/post-quantum-signatures": [
+{
+"id": 63,
+"verdict": "not-an-error"
+}
+],
+"global-history/world-wars-depression-and-mass-states": [
+{
+"id": 45,
+"verdict": "fixed"
+}
+],
+"philosophy-of-science/evidence-models-and-causal-explanation": [
+{
+"id": 60,
+"verdict": "fixed"
+}
+],
+"philosophical-traditions/buddhist-aggregates-impermanence-and-not-self": [
+{
+"id": 67,
+"verdict": "fixed"
+}
+],
+"political-philosophy/consent-liberty-and-legitimate-power": [
+{
+"id": 66,
+"verdict": "fixed"
+}
+],
+"banking/bank-balance-sheet-and-deposit-creation": [
+{
+"id": 69,
+"verdict": "fixed"
+}
+],
+"ai/yarn-rope-extension": [
+{
+"id": 75,
+"verdict": "fixed"
+}
+],
+"economic-history/decolonization-oil-shocks-and-debt": [
+{
+"id": 22,
+"verdict": "fixed"
+},
+{
+"id": 23,
+"verdict": "fixed"
+}
+],
+"cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": [
+{
+"id": 55,
+"verdict": "fixed"
+},
+{
+"id": 56,
+"verdict": "fixed"
+}
+],
+"global-history/conquest-disease-silver-and-oceanic-exchange": [
+{
+"id": 95,
+"verdict": "fixed"
+}
+],
+"ai/speculative-decoding-variants": [
+{
+"id": 99,
+"verdict": "fixed"
+}
+],
+"ai/rate-limiting-and-reliability-patterns": [
+{
+"id": 77,
+"verdict": "fixed"
+},
+{
+"id": 78,
+"verdict": "fixed"
+},
+{
+"id": 79,
+"verdict": "fixed"
+}
+],
+"global-history/revolutions-citizenship-and-industrial-empires": [
+{
+"id": 96,
+"verdict": "fixed"
+},
+{
+"id": 97,
+"verdict": "fixed"
+}
+],
+"mind-and-language/behavior-meaning-and-machine-understanding": [
+{
+"id": 70,
+"verdict": "fixed"
+},
+{
+"id": 71,
+"verdict": "fixed"
+},
+{
+"id": 72,
+"verdict": "fixed"
+}
+],
+"institutions/media-attention-and-public-belief": [
+{
+"id": 102,
+"verdict": "fixed"
+}
+],
+"infrastructure/housing-land-and-supply": [
+{
+"id": 104,
+"verdict": "fixed"
+}
+],
+"cloud/linux-observability-proc-psi-perf-ebpf": [
+{
+"id": 83,
+"verdict": "fixed"
+},
+{
+"id": 85,
+"verdict": "fixed"
+},
+{
+"id": 86,
+"verdict": "fixed"
+}
+],
+"global-history/empires-roads-taxes-and-law": [
+{
+"id": 118,
+"verdict": "fixed"
+},
+{
+"id": 119,
+"verdict": "fixed"
+}
+],
+"global-history/trade-religion-and-translation-networks": [
+{
+"id": 122,
+"verdict": "fixed"
+},
+{
+"id": 123,
+"verdict": "fixed"
+}
+],
+"ai/retrieval-ranking-funnel": [
+{
+"id": 148,
+"verdict": "fixed"
+}
+],
+"cloud/linux-memory-page-cache-oom": [
+{
+"id": 132,
+"verdict": "fixed"
+}
+],
+"business/shop-daily-operations": [
+{
+"id": 137,
+"verdict": "fixed"
+},
+{
+"id": 138,
+"verdict": "fixed"
+}
+],
+"cloud/linux-vfs-mount-page-cache-fsync": [
+{
+"id": 134,
+"verdict": "fixed"
+},
+{
+"id": 136,
+"verdict": "fixed"
+}
+],
+"blockchain/giwa-chain": [
+{
+"id": 170,
+"verdict": "fixed"
+}
+],
+"cloud/linux-network-interface-route-netfilter-dns": [
+{
+"id": 164,
+"verdict": "fixed"
+}
+],
+"cloud/linux-sre-metrics-slo-safe-change": [
+{
+"id": 109,
+"verdict": "fixed"
+},
+{
+"id": 110,
+"verdict": "fixed"
+},
+{
+"id": 111,
+"verdict": "fixed"
+},
+{
+"id": 112,
+"verdict": "fixed"
+}
+],
+"ai/llm-monitoring-observability-and-drift": [
+{
+"id": 167,
+"verdict": "fixed"
+},
+{
+"id": 168,
+"verdict": "fixed"
+}
+],
+"cloud/linux-kernel-process-syscall-scheduler": [
+{
+"id": 128,
+"verdict": "fixed"
+},
+{
+"id": 129,
+"verdict": "fixed"
+},
+{
+"id": 130,
+"verdict": "fixed"
+},
+{
+"id": 131,
+"verdict": "fixed"
+}
+],
+"ai/llm-dataset-engineering-and-cleaning": [
+{
+"id": 142,
+"verdict": "fixed"
+},
+{
+"id": 143,
+"verdict": "fixed"
+},
+{
+"id": 144,
+"verdict": "fixed"
+},
+{
+"id": 145,
+"verdict": "fixed"
+},
+{
+"id": 146,
+"verdict": "fixed"
+}
+],
+"cloud/linux-tcp-time-wait-ports-backlog": [
+{
+"id": 194,
+"verdict": "fixed"
+}
+],
+"constitution/government-forms": [
+{
+"id": 195,
+"verdict": "fixed"
+}
+],
+"ai/synthetic-data-and-data-flywheel": [
+{
+"id": 179,
+"verdict": "fixed"
+},
+{
+"id": 184,
+"verdict": "fixed"
+}
+],
+"market-failure/public-goods-and-commons": [
+{
+"id": 202,
+"verdict": "fixed"
+}
+],
+"gpu/triton-kernel-programming-and-compiler": [
+{
+"id": 206,
+"verdict": "fixed"
+}
+],
+"gpu/warp-stall-reasons-and-issue-utilization": [
+{
+"id": 209,
+"verdict": "fixed"
+}
+],
+"ai/parallelism-strategy-and-placement": [
+{
+"id": 185,
+"verdict": "fixed"
+},
+{
+"id": 186,
+"verdict": "fixed"
+},
+{
+"id": 187,
+"verdict": "fixed"
+},
+{
+"id": 188,
+"verdict": "fixed"
+}
+],
+"cloud/kubernetes-pod-states-crashloop-probes-events": [
+{
+"id": 153,
+"verdict": "fixed"
+}
+],
+"cloud/linux-containers-cgroup-namespace": [
+{
+"id": 160,
+"verdict": "fixed"
+},
+{
+"id": 161,
+"verdict": "fixed"
+},
+{
+"id": 162,
+"verdict": "fixed"
+},
+{
+"id": 163,
+"verdict": "fixed"
+}
+],
+"ai/cross-entropy": [
+{
+"id": 236,
+"verdict": "fixed"
+},
+{
+"id": 237,
+"verdict": "fixed"
+}
+],
+"cloud/linux-disk-full-inode-deleted-files": [
+{
+"id": 212,
+"verdict": "fixed"
+}
+],
+"gpu/megakernel-design-tradeoffs": [
+{
+"id": 196,
+"verdict": "fixed"
+},
+{
+"id": 198,
+"verdict": "fixed"
+},
+{
+"id": 199,
+"verdict": "fixed"
+}
+],
+"ai/continuous-batching-step-anatomy": [
+{
+"id": 244,
+"verdict": "fixed"
+}
+],
+"ai/llm-application-caching": [
+{
+"id": 239,
+"verdict": "fixed"
+},
+{
+"id": 240,
+"verdict": "fixed"
+},
+{
+"id": 241,
+"verdict": "fixed"
+}
+],
+"ai/evaluation-datasets-and-pipelines": [
+{
+"id": 222,
+"verdict": "fixed"
+},
+{
+"id": 223,
+"verdict": "fixed"
+}
+],
+"ai/tool-calling-lifecycle-and-costs": [
+{
+"id": 233,
+"verdict": "fixed"
+},
+{
+"id": 234,
+"verdict": "fixed"
+}
+],
+"cloud/kubernetes-sre-slo-burn-rate-upgrades": [
+{
+"id": 226,
+"verdict": "fixed"
+},
+{
+"id": 227,
+"verdict": "fixed"
+},
+{
+"id": 228,
+"verdict": "unverifiable"
+},
+{
+"id": 229,
+"verdict": "fixed"
+}
+],
+"money/time-value-and-discounting": [
+{
+"id": 256,
+"verdict": "fixed"
+}
+],
+"elections/electoral-systems": [
+{
+"id": 255,
+"verdict": "fixed"
+}
+],
+"market-failure/information-asymmetry": [
+{
+"id": 265,
+"verdict": "fixed"
+},
+{
+"id": 266,
+"verdict": "fixed"
+}
+],
+"p2p/kad-lookup": [
+{
+"id": 263,
+"verdict": "fixed"
+}
+],
+"blockchain/cometbft-consensus": [
+{
+"id": 267,
+"verdict": "fixed"
+}
+],
+"ai/document-parsing-and-table-extraction": [
+{
+"id": 252,
+"verdict": "fixed"
+},
+{
+"id": 254,
+"verdict": "fixed"
+}
+],
+"devices/mosfet-regions-and-transfer": [
+{
+"id": 270,
+"verdict": "fixed"
+}
+],
+"ai/fine-tuning-tradeoffs-forgetting-and-merging": [
+{
+"id": 288,
+"verdict": "fixed"
+}
+],
+"gpu/ec-gpu-gen": [
+{
+"id": 296,
+"verdict": "fixed"
+}
+],
+"blockchain/vdf": [
+{
+"id": 298,
+"verdict": "fixed"
+}
+],
+"risk/risk-diversification-and-pricing": [
+{
+"id": 300,
+"verdict": "fixed"
+}
+],
+"ai/diffusion-models": [
+{
+"id": 247,
+"verdict": "fixed"
+},
+{
+"id": 248,
+"verdict": "fixed"
+},
+{
+"id": 249,
+"verdict": "fixed"
+},
+{
+"id": 250,
+"verdict": "fixed"
+}
+],
+"ai/inference-failure-absorption": [
+{
+"id": 277,
+"verdict": "fixed"
+},
+{
+"id": 278,
+"verdict": "fixed"
+}
+],
+"ai/linear-attention-and-state-space-models": [
+{
+"id": 317,
+"verdict": "fixed"
+}
+],
+"ai/multi-head-latent-attention-mechanics": [
+{
+"id": 280,
+"verdict": "fixed"
+},
+{
+"id": 281,
+"verdict": "fixed"
+},
+{
+"id": 282,
+"verdict": "fixed"
+},
+{
+"id": 283,
+"verdict": "fixed"
+}
+],
+"ai/fast-weight-memory-and-chunkwise-recurrence": [
+{
+"id": 309,
+"verdict": "not-an-error"
+}
+],
+"ai/agent-failure-modes-and-recovery": [
+{
+"id": 295,
+"verdict": "fixed"
+}
+],
+"circuits/steady-state-and-impedance": [
+{
+"id": 319,
+"verdict": "not-an-error"
+}
+],
+"dispute-resolution/settlement-and-access": [
+{
+"id": 322,
+"verdict": "fixed"
+}
+],
+"ai/sliding-window-kv-and-attention-sinks": [
+{
+"id": 336,
+"verdict": "fixed"
+}
+],
+"business/shop-site-selection": [
+{
+"id": 321,
+"verdict": "fixed"
+}
+],
+"ai/llm-evaluation-criteria-and-methods": [
+{
+"id": 335,
+"verdict": "fixed"
+}
+],
+"ai/sparse-windowed-attention-patterns": [
+{
+"id": 339,
+"verdict": "fixed"
+}
+],
+"circuits/frequency-shaping-and-bode": [
+{
+"id": 320,
+"verdict": "fixed"
+}
+],
+"ai/multi-fidelity-pruning": [
+{
+"id": 344,
+"verdict": "fixed"
+}
+],
+"ai/ranking-metrics": [
+{
+"id": 338,
+"verdict": "fixed"
+}
+],
+"ai/search-based-reasoning-and-test-time-compute": [
+{
+"id": 346,
+"verdict": "fixed"
+}
+],
+"ai/moe-routing-and-load-balancing": [
+{
+"id": 332,
+"verdict": "fixed"
+},
+{
+"id": 333,
+"verdict": "fixed"
+},
+{
+"id": 334,
+"verdict": "fixed"
+}
+],
+"ai/tensor-and-pipeline-parallel-inference": [
+{
+"id": 341,
+"verdict": "fixed"
+},
+{
+"id": 342,
+"verdict": "fixed"
+}
+],
+"scarcity/scarcity-and-opportunity-cost": [
+{
+"id": 370,
+"verdict": "fixed"
+}
+],
+"ai/in-context-lora": [
+{
+"id": 361,
+"verdict": "fixed"
+},
+{
+"id": 362,
+"verdict": "fixed"
+},
+{
+"id": 363,
+"verdict": "fixed"
+}
+],
+"macro/who-counts-as-unemployed": [
+{
+"id": 372,
+"verdict": "fixed"
+}
+],
+"ai/own-vs-rent-inference-capacity": [
+{
+"id": 376,
+"verdict": "fixed"
+}
+],
+"ai/hyperparameter-tuning": [
+{
+"id": 381,
+"verdict": "fixed"
+}
+],
+"ai/serving-architecture-matrix": [
+{
+"id": 364,
+"verdict": "fixed"
+}
+],
+"gpu/msm-gpu-impl": [
+{
+"id": 395,
+"verdict": "fixed"
+}
+],
+"market-failure/externalities-and-social-cost": [
+{
+"id": 348,
+"verdict": "fixed"
+},
+{
+"id": 349,
+"verdict": "fixed"
+}
+],
+"ai/inference-cost-and-capacity-planning": [
+{
+"id": 357,
+"verdict": "fixed"
+}
+],
+"gpu/warp-specialization-and-async-pipelines": [
+{
+"id": 391,
+"verdict": "fixed"
+}
+],
+"testimony/the-writer-was-there": [
+{
+"id": 402,
+"verdict": "fixed"
+}
+],
+"ai/hyper-connections-residual-streams": [
+{
+"id": 401,
+"verdict": "fixed"
+}
+],
+"ai/multi-adapter-serving": [
+{
+"id": 406,
+"verdict": "fixed"
+}
+],
+"money/money-as-a-claim": [
+{
+"id": 397,
+"verdict": "fixed"
+}
+],
+"ai/structured-pruning": [
+{
+"id": 407,
+"verdict": "fixed"
+}
+],
+"ai/llm-guardrails-and-output-validation": [
+{
+"id": 415,
+"verdict": "fixed"
+}
+],
+"ai/competition-baseline": [
+{
+"id": 424,
+"verdict": "fixed"
+}
+],
+"ai/differential-attention": [
+{
+"id": 408,
+"verdict": "fixed"
+}
+],
+"ai/vector-search-and-ann-indexes": [
+{
+"id": 417,
+"verdict": "fixed"
+}
+],
+"ai/architecture-decision-records": [
+{
+"id": 422,
+"verdict": "fixed"
+}
+],
+"ai/multimodal-serving-pipeline": [
+{
+"id": 447,
+"verdict": "fixed"
+}
+],
+"ai/sandbox-deployment-controls": [
+{
+"id": 456,
+"verdict": "fixed"
+}
+],
+"ai/agent-run-contract": [
+{
+"id": 434,
+"verdict": "fixed"
+}
+],
+"blockchain/bft-theory": [
+{
+"id": 464,
+"verdict": "fixed"
+},
+{
+"id": 465,
+"verdict": "fixed"
+}
+],
+"isms-aml/isms-backup-recovery": [
+{
+"id": 439,
+"verdict": "fixed"
+}
+],
+"inference-from-sources/naming-the-past": [
+{
+"id": 432,
+"verdict": "fixed"
+}
+],
+"ai/vllm-paged-attention": [
+{
+"id": 459,
+"verdict": "fixed"
+}
+],
+"ai/qwen38-flash-next-architecture": [
+{
+"id": 445,
+"verdict": "fixed"
+},
+{
+"id": 446,
+"verdict": "fixed"
+}
+],
+"ai/agent-control-boundaries": [
+{
+"id": 470,
+"verdict": "fixed"
+}
+],
+"ai/lstm": [
+{
+"id": 458,
+"verdict": "fixed"
+}
+],
+"p2p/libp2p-noise": [
+{
+"id": 480,
+"verdict": "fixed"
+}
+],
+"ai/onprem-k8s-inference-platform": [
+{
+"id": 463,
+"verdict": "fixed"
+}
+],
+"cloud/kubernetes-rollout-termination-pdb-drain-hpa": [
+{
+"id": 485,
+"verdict": "fixed"
+}
+],
+"ai/autoencoder": [
+{
+"id": 487,
+"verdict": "fixed"
+}
+],
+"cloud/kubernetes-requests-limits-allocatable-qos": [
+{
+"id": 479,
+"verdict": "fixed"
+}
+],
+"ai/spiking-neural-networks": [
+{
+"id": 488,
+"verdict": "fixed"
+}
+],
+"ai/robot-action-representations": [
+{
+"id": 483,
+"verdict": "fixed"
+},
+{
+"id": 484,
+"verdict": "fixed"
+}
+],
+"ai/model-vram-budgeting": [
+{
+"id": 496,
+"verdict": "fixed"
+},
+{
+"id": 497,
+"verdict": "fixed"
+}
+],
+"record-numbers/how-the-army-was-counted": [
+{
+"id": 475,
+"verdict": "fixed"
+},
+{
+"id": 476,
+"verdict": "fixed"
+}
+],
+"ai/vllm-scheduler": [
+{
+"id": 504,
+"verdict": "fixed"
+}
+],
+"ai/sam3-promptable-concept-segmentation": [
+{
+"id": 503,
+"verdict": "fixed"
+}
+],
+"ai/mixture-of-experts": [
+{
+"id": 509,
+"verdict": "fixed"
+}
+],
+"ai/vision-language-navigation": [
+{
+"id": 495,
+"verdict": "fixed"
+}
+],
+"ai/generative-measurement-controls": [
+{
+"id": 513,
+"verdict": "fixed"
+},
+{
+"id": 514,
+"verdict": "fixed"
+}
+],
+"ai/image-text-contrastive-pretraining": [
+{
+"id": 489,
+"verdict": "fixed"
+},
+{
+"id": 490,
+"verdict": "fixed"
+}
+],
+"p2p/libp2p-gossipsub": [
+{
+"id": 467,
+"verdict": "not-an-error"
+}
+],
+"ai/vision-language-model-architecture": [
+{
+"id": 518,
+"verdict": "fixed"
+}
+],
+"ai/sionic-glm-b300": [
+{
+"id": 519,
+"verdict": "fixed"
+}
+],
+"ai/grammar-constrained-generation": [
+{
+"id": 529,
+"verdict": "fixed"
+},
+{
+"id": 530,
+"verdict": "fixed"
+}
+],
+"ai/generative-identity-diversity": [
+{
+"id": 544,
+"verdict": "fixed"
+},
+{
+"id": 545,
+"verdict": "fixed"
+}
+],
+"ai/cfg-pushdown-automata": [
+{
+"id": 550,
+"verdict": "fixed"
+}
+],
+"p2p/discv5": [
+{
+"id": 474,
+"verdict": "fixed"
+}
+],
+"ai/kv-cache-fundamentals": [
+{
+"id": 555,
+"verdict": "fixed"
+}
+],
+"ai/transformer-architecture": [
+{
+"id": 535,
+"verdict": "fixed"
+},
+{
+"id": 536,
+"verdict": "fixed"
+}
+],
+"ai/multi-component-finetuning-vram": [
+{
+"id": 548,
+"verdict": "fixed"
+},
+{
+"id": 549,
+"verdict": "fixed"
+}
+],
+"ai/evaluation-metrics": [
+{
+"id": 560,
+"verdict": "fixed"
+}
+],
+"ai/rlhf": [
+{
+"id": 573,
+"verdict": "fixed"
+}
+],
+"ai/imitation-learning-and-policy-generalization": [
+{
+"id": 561,
+"verdict": "fixed"
+}
+],
+"ai/claw-policy-engine": [
+{
+"id": 557,
+"verdict": "fixed"
+}
+],
+"ai/claw-task-team": [
+{
+"id": 571,
+"verdict": "fixed"
+}
+],
+"blockchain/omni-octane": [
+{
+"id": 580,
+"verdict": "fixed"
+}
+],
+"ai/quantization-formats-and-granularity": [
+{
+"id": 566,
+"verdict": "fixed"
+}
+],
+"ai/claw-overview": [
+{
+"id": 576,
+"verdict": "fixed"
+}
+],
+"tee/tee-tcb": [
+{
+"id": 582,
+"verdict": "not-an-error"
+}
+],
+"tee/tee-memory": [
+{
+"id": 538,
+"verdict": "fixed"
+}
+],
+"ai/mcp-server-operations": [
+{
+"id": 584,
+"verdict": "fixed"
+}
+],
+"ai/roi-resolution-identity-budget": [
+{
+"id": 585,
+"verdict": "fixed"
+}
+],
+"ai/ecod": [
+{
+"id": 608,
+"verdict": "fixed"
+}
+],
+"ai/time-features": [
+{
+"id": 609,
+"verdict": "fixed"
+}
+],
+"ai/pruning-recovery-deployment": [
+{
+"id": 595,
+"verdict": "fixed"
+}
+],
+"p2p/rqbit": [
+{
+"id": 623,
+"verdict": "fixed"
+}
+],
+"ai/diffusion-continuous-time": [
+{
+"id": 633,
+"verdict": "fixed"
+}
+],
+"ai/cost-sensitive-thresholding": [
+{
+"id": 640,
+"verdict": "fixed"
+}
+],
+"isms-aml/vasp-custody-management": [
+{
+"id": 617,
+"verdict": "not-an-error"
+}
+],
+"blockchain/proofs-snark": [
+{
+"id": 619,
+"verdict": "fixed"
+}
+],
+"blockchain/erasure-coding": [
+{
+"id": 634,
+"verdict": "fixed"
+}
+],
+"ai/dezero-nn": [
+{
+"id": 635,
+"verdict": "fixed"
+}
+],
+"gpu/cuda-kernel-fusion": [
+{
+"id": 652,
+"verdict": "fixed"
+}
+],
+"gpu/cutlass-collectives-and-tile-schedulers": [
+{
+"id": 626,
+"verdict": "fixed"
+},
+{
+"id": 627,
+"verdict": "fixed"
+},
+{
+"id": 628,
+"verdict": "fixed"
+}
+],
+"ai/image-classification-pipeline": [
+{
+"id": 653,
+"verdict": "fixed"
+}
+],
+"ai/imbalanced-classification-evaluation": [
+{
+"id": 644,
+"verdict": "fixed"
+}
+],
+"ai/agent-code-mode": [
+{
+"id": 655,
+"verdict": "fixed"
+}
+],
+"ai/sparse-autoencoder": [
+{
+"id": 638,
+"verdict": "fixed"
+}
+],
+"ai/tokenizer": [
+{
+"id": 681,
+"verdict": "fixed"
+}
+],
+"blockchain/cometbft-crypto": [
+{
+"id": 660,
+"verdict": "fixed"
+}
+],
+"isms-aml/isms-audit-checklist": [
+{
+"id": 667,
+"verdict": "fixed"
+}
+],
+"ai/graphrag-community-and-multihop-search": [
+{
+"id": 687,
+"verdict": "fixed"
+}
+],
+"ai/distributional-semantics": [
+{
+"id": 682,
+"verdict": "fixed"
+}
+],
+"ai/quantized-model-deployment": [
+{
+"id": 685,
+"verdict": "fixed"
+}
+],
+"blockchain/lotus-chain": [
+{
+"id": 698,
+"verdict": "fixed"
+}
+],
+"ai/label-smoothing": [
+{
+"id": 715,
+"verdict": "fixed"
+}
+],
+"blockchain/curve-stable": [
+{
+"id": 678,
+"verdict": "fixed"
+}
+],
+"ai/deepfake-frequency-evidence": [
+{
+"id": 716,
+"verdict": "fixed"
+}
+],
+"p2p/gossip-fundamentals": [
+{
+"id": 734,
+"verdict": "fixed"
+}
+],
+"ai/early-stopping": [
+{
+"id": 692,
+"verdict": "fixed"
+}
+],
+"ai/lightgbm-efficient-trees": [
+{
+"id": 739,
+"verdict": "fixed"
+}
+],
+"p2p/nat-traversal": [
+{
+"id": 728,
+"verdict": "fixed"
+}
+],
+"ai/claude-code-permissions": [
+{
+"id": 720,
+"verdict": "fixed"
+}
+],
+"blockchain/compound-v3": [
+{
+"id": 718,
+"verdict": "fixed"
+}
+],
+"cloud/kubernetes-request-path-and-cka": [
+{
+"id": 742,
+"verdict": "fixed"
+}
+],
+"ai/depthwise-separable-convolution": [
+{
+"id": 751,
+"verdict": "fixed"
+}
+],
+"ai/deepfake-preprocessing-lineage": [
+{
+"id": 747,
+"verdict": "fixed"
+}
+],
+"ai/cosine-restart-scheduling": [
+{
+"id": 750,
+"verdict": "fixed"
+}
+],
+"isms-aml/isms-privacy-lifecycle": [
+{
+"id": 663,
+"verdict": "fixed"
+},
+{
+"id": 664,
+"verdict": "not-an-error"
+}
+],
+"gpu/hw-memory": [
+{
+"id": 761,
+"verdict": "fixed"
+}
+],
+"ai/prompt-reasoning": [
+{
+"id": 768,
+"verdict": "fixed"
+}
+],
+"gpu/server-cpu-lineup-comparison": [
+{
+"id": 773,
+"verdict": "fixed"
+}
+],
+"ai/llm-serving-capacity": [
+{
+"id": 759,
+"verdict": "fixed"
+},
+{
+"id": 760,
+"verdict": "fixed"
+}
+],
+"blockchain/prysm-bls": [
+{
+"id": 821,
+"verdict": "not-an-error"
+}
+],
+"blockchain/prysm-beacon-db": [
+{
+"id": 810,
+"verdict": "fixed"
+}
+],
+"ai/prompt-few-shot": [
+{
+"id": 765,
+"verdict": "fixed"
+},
+{
+"id": 766,
+"verdict": "fixed"
+}
+],
+"ai/agent-delegation-contracts": [
+{
+"id": 784,
+"verdict": "fixed"
+}
+],
+"gpu/pcie-blackwell-moe-node-build": [
+{
+"id": 775,
+"verdict": "fixed"
+}
+],
+"blockchain/fork-id": [
+{
+"id": 801,
+"verdict": "fixed"
+}
+],
+"blockchain/prysm-attestation": [
+{
+"id": 808,
+"verdict": "fixed"
+},
+{
+"id": 809,
+"verdict": "fixed"
+}
+],
+"blockchain/reth-payload-builder": [
+{
+"id": 847,
+"verdict": "fixed"
+}
+],
+"blockchain/reth-alloy-primitives": [
+{
+"id": 830,
+"verdict": "fixed"
+}
+],
+"cloud/azure-ai200-fast-study": [
+{
+"id": 868,
+"verdict": "fixed"
+}
+],
+"crypto/elliptic-curves": [
+{
+"id": 880,
+"verdict": "fixed"
+}
+],
+"cloud/cloud-certification-roadmap-2026": [
+{
+"id": 870,
+"verdict": "fixed"
+}
+],
+"blockchain/prysm-epoch-processing": [
+{
+"id": 822,
+"verdict": "fixed"
+}
+],
+"blockchain/reth-txpool": [
+{
+"id": 858,
+"verdict": "fixed"
+}
+],
+"cloud/aws-developer-cloudops-paths": [
+{
+"id": 864,
+"verdict": "fixed"
+}
+],
+"crypto/prover-memory-and-verifier-cost": [
+{
+"id": 901,
+"verdict": "fixed"
+}
+],
+"gpu/b300-rack-power-cooling": [
+{
+"id": 922,
+"verdict": "fixed"
+}
+],
+"economic-history/commercial-law-limited-liability-and-insolvency": [
+{
+"id": 913,
+"verdict": "fixed"
+}
+],
+"crypto/risc0": [
+{
+"id": 904,
+"verdict": "fixed"
+}
+],
+"economic-history/mena-land-debt-oil-and-diversification": [
+{
+"id": 916,
+"verdict": "fixed"
+}
+],
+"blockchain/prysm-ssz": [
+{
+"id": 828,
+"verdict": "fixed"
+}
+],
+"gpu/ai-cluster-storage-io": [
+{
+"id": 921,
+"verdict": "fixed"
+}
+],
+"tee/intel-sgx": [
+{
+"id": 753,
+"verdict": "fixed"
+}
+],
+"gpu/hw-power-cooling": [
+{
+"id": 931,
+"verdict": "fixed"
+}
+],
+"gpu/gpu-architecture": [
+{
+"id": 923,
+"verdict": "already-fixed"
+}
+],
+"economic-history/southeast-asia-ports-plantations-and-export-industrialization": [
+{
+"id": 917,
+"verdict": "fixed"
+},
+{
+"id": 918,
+"verdict": "fixed"
+}
+],
+"gpu/msm-ntt": [
+{
+"id": 937,
+"verdict": "fixed"
+}
+],
+"gpu/kubernetes-vs-slurm-gpu-scheduling": [
+{
+"id": 934,
+"verdict": "fixed"
+}
+],
+"markets/fractional-investment-trust-beneficiary-certificates": [
+{
+"id": 947,
+"verdict": "fixed"
+}
+],
+"markets/derivatives-investigation-audit-trail-and-legal-hold": [
+{
+"id": 944,
+"verdict": "fixed"
+}
+],
+"markets/collateral-optimization-eligibility-haircuts-and-liquidity": [
+{
+"id": 942,
+"verdict": "fixed"
+}
+],
+"markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": [
+{
+"id": 945,
+"verdict": "fixed"
+}
+],
+"markets/black-scholes-pde-finite-difference-and-numerical-error": [
+{
+"id": 941,
+"verdict": "fixed"
+}
+],
+"markets/no-arbitrage-cost-of-carry-and-basis": [
+{
+"id": 955,
+"verdict": "fixed"
+}
+],
+"markets/minimum-variance-hedge-ratio-and-basis-risk": [
+{
+"id": 953,
+"verdict": "fixed"
+}
+],
+"markets/hedge-accounting-designation-effectiveness-and-rebalancing": [
+{
+"id": 949,
+"verdict": "fixed"
+}
+],
+"philosophy-history/islamic-philosophy-translation-illumination-and-being": [
+{
+"id": 968,
+"verdict": "fixed"
+}
+],
+"markets/local-stochastic-volatility-jumps-and-calibration": [
+{
+"id": 952,
+"verdict": "fixed"
+}
+],
+"markets/portfolio-compression-risk-tolerances-and-records": [
+{
+"id": 958,
+"verdict": "fixed"
+}
+],
+"markets/currency-hedging-forward-points-and-cross-currency-basis": [
+{
+"id": 943,
+"verdict": "fixed"
+}
+],
+"philosophy-history/hermeneutics-part-whole-prejudice-and-understanding": [
+{
+"id": 967,
+"verdict": "fixed"
+}
+],
+"markets/lme-metals-warrants-quality-storage-and-load-out": [
+{
+"id": 951,
+"verdict": "fixed"
+}
+],
+"philosophy-history/medieval-translation-reason-and-revelation": [
+{
+"id": 969,
+"verdict": "fixed"
+}
+]
+},
+"categories": {
+"390": "dead-code",
+"391": "internal-contradiction",
+"392": "readability-or-placement",
+"393": "dead-code",
+"394": "readability-or-placement",
+"395": "internal-contradiction",
+"396": "readability-or-placement",
+"397": "internal-contradiction",
+"398": "readability-or-placement",
+"399": "not-an-error",
+"400": "readability-or-placement",
+"401": "numeric-or-fact-error",
+"402": "internal-contradiction",
+"403": "typography",
+"404": "typography",
+"405": "typography",
+"406": "internal-contradiction",
+"407": "numeric-or-fact-error",
+"408": "internal-contradiction",
+"409": "readability-or-placement",
+"410": "readability-or-placement",
+"411": "not-an-error",
+"412": "typography",
+"413": "typography",
+"414": "typography",
+"415": "internal-contradiction",
+"416": "readability-or-placement",
+"417": "internal-contradiction",
+"418": "not-an-error",
+"419": "readability-or-placement",
+"420": "dead-code",
+"421": "dead-code",
+"422": "internal-contradiction",
+"423": "readability-or-placement",
+"424": "internal-contradiction",
+"425": "not-an-error",
+"426": "readability-or-placement",
+"427": "readability-or-placement",
+"428": "dead-code",
+"429": "dead-code",
+"430": "not-an-error",
+"431": "not-an-error",
+"432": "numeric-or-fact-error",
+"433": "readability-or-placement",
+"434": "internal-contradiction",
+"435": "readability-or-placement",
+"436": "readability-or-placement",
+"437": "not-an-error",
+"438": "not-an-error",
+"439": "internal-contradiction",
+"440": "readability-or-placement",
+"441": "readability-or-placement",
+"442": "dead-code",
+"443": "dead-code",
+"444": "readability-or-placement",
+"445": "internal-contradiction",
+"446": "numeric-or-fact-error",
+"447": "numeric-or-fact-error",
+"448": "dead-code",
+"449": "readability-or-placement",
+"450": "readability-or-placement",
+"451": "readability-or-placement",
+"452": "not-an-error",
+"453": "not-an-error",
+"454": "readability-or-placement",
+"455": "dead-code",
+"456": "internal-contradiction",
+"457": "dead-code",
+"458": "numeric-or-fact-error",
+"459": "internal-contradiction",
+"460": "not-an-error",
+"461": "not-an-error",
+"462": "readability-or-placement",
+"463": "numeric-or-fact-error",
+"464": "internal-contradiction",
+"465": "internal-contradiction",
+"466": "dead-code",
+"467": "numeric-or-fact-error",
+"468": "readability-or-placement",
+"469": "typography",
+"470": "internal-contradiction",
+"471": "readability-or-placement",
+"472": "readability-or-placement",
+"473": "readability-or-placement",
+"474": "internal-contradiction",
+"475": "internal-contradiction",
+"476": "numeric-or-fact-error",
+"477": "readability-or-placement",
+"478": "readability-or-placement",
+"479": "numeric-or-fact-error",
+"480": "numeric-or-fact-error",
+"481": "dead-code",
+"482": "typography",
+"483": "internal-contradiction",
+"484": "internal-contradiction",
+"485": "internal-contradiction",
+"486": "dead-code",
+"487": "numeric-or-fact-error",
+"488": "numeric-or-fact-error",
+"489": "numeric-or-fact-error",
+"490": "numeric-or-fact-error",
+"491": "dead-code",
+"492": "readability-or-placement",
+"493": "typography",
+"494": "typography",
+"495": "numeric-or-fact-error",
+"496": "numeric-or-fact-error",
+"497": "numeric-or-fact-error",
+"498": "readability-or-placement",
+"499": "dead-code",
+"500": "dead-code",
+"501": "not-an-error",
+"502": "readability-or-placement",
+"503": "numeric-or-fact-error",
+"504": "internal-contradiction",
+"505": "typography",
+"506": "not-an-error",
+"507": "dead-code",
+"508": "dead-code",
+"509": "numeric-or-fact-error",
+"510": "readability-or-placement",
+"511": "not-an-error",
+"512": "dead-code",
+"513": "internal-contradiction",
+"514": "numeric-or-fact-error",
+"515": "dead-code",
+"516": "typography",
+"517": "readability-or-placement",
+"518": "internal-contradiction",
+"519": "internal-contradiction",
+"520": "typography",
+"521": "readability-or-placement",
+"522": "typography",
+"523": "typography",
+"524": "readability-or-placement",
+"525": "readability-or-placement",
+"526": "not-an-error",
+"527": "typography",
+"528": "readability-or-placement",
+"529": "internal-contradiction",
+"530": "internal-contradiction",
+"531": "not-an-error",
+"532": "readability-or-placement",
+"533": "readability-or-placement",
+"534": "dead-code",
+"535": "numeric-or-fact-error",
+"536": "internal-contradiction",
+"537": "dead-code",
+"538": "numeric-or-fact-error",
+"539": "readability-or-placement",
+"540": "dead-code",
+"541": "readability-or-placement",
+"542": "readability-or-placement",
+"543": "typography",
+"544": "numeric-or-fact-error",
+"545": "internal-contradiction",
+"546": "readability-or-placement",
+"547": "not-an-error",
+"548": "internal-contradiction",
+"549": "numeric-or-fact-error",
+"550": "numeric-or-fact-error",
+"551": "readability-or-placement",
+"552": "dead-code",
+"553": "readability-or-placement",
+"554": "dead-code",
+"555": "numeric-or-fact-error",
+"556": "readability-or-placement",
+"557": "internal-contradiction",
+"558": "readability-or-placement",
+"559": "dead-code",
+"560": "internal-contradiction",
+"561": "numeric-or-fact-error",
+"562": "not-an-error",
+"563": "dead-code",
+"564": "readability-or-placement",
+"565": "readability-or-placement",
+"566": "internal-contradiction",
+"567": "not-an-error",
+"568": "not-an-error",
+"569": "dead-code",
+"570": "readability-or-placement",
+"571": "internal-contradiction",
+"572": "readability-or-placement",
+"573": "internal-contradiction",
+"574": "dead-code",
+"575": "dead-code",
+"576": "internal-contradiction",
+"577": "not-an-error",
+"578": "readability-or-placement",
+"579": "readability-or-placement",
+"580": "internal-contradiction",
+"581": "readability-or-placement",
+"582": "internal-contradiction",
+"583": "dead-code",
+"584": "internal-contradiction",
+"780": "readability-or-placement",
+"781": "readability-or-placement",
+"782": "readability-or-placement",
+"783": "readability-or-placement",
+"784": "internal-contradiction",
+"785": "readability-or-placement",
+"786": "not-an-error",
+"787": "readability-or-placement",
+"788": "readability-or-placement",
+"789": "readability-or-placement",
+"790": "readability-or-placement",
+"791": "typography",
+"792": "readability-or-placement",
+"793": "readability-or-placement",
+"794": "readability-or-placement",
+"795": "readability-or-placement",
+"796": "dead-code",
+"797": "not-an-error",
+"798": "readability-or-placement",
+"799": "not-an-error",
+"800": "not-an-error",
+"801": "numeric-or-fact-error",
+"802": "dead-code",
+"803": "not-an-error",
+"804": "not-an-error",
+"805": "not-an-error",
+"806": "dead-code",
+"807": "readability-or-placement",
+"808": "numeric-or-fact-error",
+"809": "numeric-or-fact-error",
+"810": "numeric-or-fact-error",
+"811": "readability-or-placement",
+"812": "not-an-error",
+"813": "not-an-error",
+"814": "not-an-error",
+"815": "readability-or-placement",
+"816": "not-an-error",
+"817": "not-an-error",
+"818": "readability-or-placement",
+"819": "not-an-error",
+"820": "dead-code",
+"821": "internal-contradiction",
+"822": "numeric-or-fact-error",
+"823": "readability-or-placement",
+"824": "readability-or-placement",
+"825": "dead-code",
+"826": "not-an-error",
+"827": "not-an-error",
+"828": "numeric-or-fact-error",
+"829": "not-an-error",
+"830": "numeric-or-fact-error",
+"831": "dead-code",
+"832": "not-an-error",
+"833": "readability-or-placement",
+"834": "not-an-error",
+"835": "not-an-error",
+"836": "readability-or-placement",
+"837": "dead-code",
+"838": "dead-code",
+"839": "dead-code",
+"840": "readability-or-placement",
+"841": "not-an-error",
+"842": "readability-or-placement",
+"843": "not-an-error",
+"844": "readability-or-placement",
+"845": "readability-or-placement",
+"846": "readability-or-placement",
+"847": "internal-contradiction",
+"848": "not-an-error",
+"849": "not-an-error",
+"850": "dead-code",
+"851": "not-an-error",
+"852": "readability-or-placement",
+"853": "not-an-error",
+"854": "not-an-error",
+"855": "readability-or-placement",
+"856": "dead-code",
+"857": "readability-or-placement",
+"858": "internal-contradiction",
+"859": "dead-code",
+"860": "readability-or-placement",
+"861": "readability-or-placement",
+"862": "not-an-error",
+"863": "readability-or-placement",
+"864": "numeric-or-fact-error",
+"865": "readability-or-placement",
+"866": "readability-or-placement",
+"867": "readability-or-placement",
+"868": "numeric-or-fact-error",
+"869": "not-an-error",
+"870": "numeric-or-fact-error",
+"871": "readability-or-placement",
+"872": "readability-or-placement",
+"873": "readability-or-placement",
+"874": "readability-or-placement",
+"875": "readability-or-placement",
+"876": "dead-code",
+"877": "typography",
+"878": "not-an-error",
+"879": "readability-or-placement",
+"880": "internal-contradiction",
+"881": "not-an-error",
+"882": "not-an-error",
+"883": "not-an-error",
+"884": "not-an-error",
+"885": "not-an-error",
+"886": "dead-code",
+"887": "readability-or-placement",
+"888": "dead-code",
+"889": "typography",
+"890": "typography",
+"891": "not-an-error",
+"892": "typography",
+"893": "not-an-error",
+"894": "not-an-error",
+"895": "readability-or-placement",
+"896": "typography",
+"897": "not-an-error",
+"898": "typography",
+"899": "dead-code",
+"900": "not-an-error",
+"901": "numeric-or-fact-error",
+"902": "not-an-error",
+"903": "not-an-error",
+"904": "internal-contradiction",
+"905": "typography",
+"906": "dead-code",
+"907": "readability-or-placement",
+"908": "typography",
+"909": "not-an-error",
+"910": "readability-or-placement",
+"911": "readability-or-placement",
+"912": "readability-or-placement",
+"913": "numeric-or-fact-error",
+"914": "readability-or-placement",
+"915": "readability-or-placement",
+"916": "internal-contradiction",
+"917": "numeric-or-fact-error",
+"918": "internal-contradiction",
+"919": "readability-or-placement",
+"920": "readability-or-placement",
+"921": "internal-contradiction",
+"922": "internal-contradiction",
+"923": "internal-contradiction",
+"924": "readability-or-placement",
+"925": "not-an-error",
+"926": "not-an-error",
+"927": "readability-or-placement",
+"928": "dead-code",
+"929": "readability-or-placement",
+"930": "not-an-error",
+"931": "internal-contradiction",
+"932": "not-an-error",
+"933": "readability-or-placement",
+"934": "numeric-or-fact-error",
+"935": "readability-or-placement",
+"936": "dead-code",
+"937": "internal-contradiction",
+"938": "not-an-error",
+"939": "not-an-error",
+"940": "readability-or-placement",
+"941": "internal-contradiction",
+"942": "numeric-or-fact-error",
+"943": "internal-contradiction",
+"944": "numeric-or-fact-error",
+"945": "internal-contradiction",
+"946": "readability-or-placement",
+"947": "internal-contradiction",
+"948": "readability-or-placement",
+"949": "internal-contradiction",
+"950": "typography",
+"951": "numeric-or-fact-error",
+"952": "numeric-or-fact-error",
+"953": "internal-contradiction",
+"954": "readability-or-placement",
+"955": "internal-contradiction",
+"956": "not-an-error",
+"957": "not-an-error",
+"958": "internal-contradiction",
+"959": "readability-or-placement",
+"960": "readability-or-placement",
+"961": "readability-or-placement",
+"962": "not-an-error",
+"963": "readability-or-placement",
+"964": "typography",
+"965": "readability-or-placement",
+"966": "readability-or-placement",
+"967": "numeric-or-fact-error",
+"968": "internal-contradiction",
+"969": "internal-contradiction",
+"970": "readability-or-placement",
+"585": "internal-contradiction",
+"586": "readability-or-placement",
+"587": "not-an-error",
+"588": "not-an-error",
+"589": "dead-code",
+"590": "typography",
+"591": "readability-or-placement",
+"592": "dead-code",
+"593": "not-an-error",
+"594": "readability-or-placement",
+"595": "internal-contradiction",
+"596": "readability-or-placement",
+"597": "dead-code",
+"598": "readability-or-placement",
+"599": "readability-or-placement",
+"600": "readability-or-placement",
+"601": "readability-or-placement",
+"602": "not-an-error",
+"603": "readability-or-placement",
+"604": "readability-or-placement",
+"605": "readability-or-placement",
+"606": "dead-code",
+"607": "not-an-error",
+"608": "numeric-or-fact-error",
+"609": "internal-contradiction",
+"610": "not-an-error",
+"611": "dead-code",
+"612": "readability-or-placement",
+"613": "not-an-error",
+"614": "dead-code",
+"615": "dead-code",
+"616": "dead-code",
+"617": "internal-contradiction",
+"618": "not-an-error",
+"619": "internal-contradiction",
+"620": "readability-or-placement",
+"621": "readability-or-placement",
+"622": "not-an-error",
+"623": "internal-contradiction",
+"624": "dead-code",
+"625": "readability-or-placement",
+"626": "numeric-or-fact-error",
+"627": "internal-contradiction",
+"628": "internal-contradiction",
+"629": "not-an-error",
+"630": "dead-code",
+"631": "readability-or-placement",
+"632": "readability-or-placement",
+"633": "numeric-or-fact-error",
+"634": "internal-contradiction",
+"635": "numeric-or-fact-error",
+"636": "readability-or-placement",
+"637": "readability-or-placement",
+"638": "internal-contradiction",
+"639": "dead-code",
+"640": "internal-contradiction",
+"641": "typography",
+"642": "typography",
+"643": "typography",
+"644": "internal-contradiction",
+"645": "not-an-error",
+"646": "dead-code",
+"647": "not-an-error",
+"648": "dead-code",
+"649": "not-an-error",
+"650": "typography",
+"651": "readability-or-placement",
+"652": "internal-contradiction",
+"653": "numeric-or-fact-error",
+"654": "readability-or-placement",
+"655": "internal-contradiction",
+"656": "readability-or-placement",
+"657": "readability-or-placement",
+"658": "readability-or-placement",
+"659": "readability-or-placement",
+"660": "numeric-or-fact-error",
+"661": "dead-code",
+"662": "dead-code",
+"663": "internal-contradiction",
+"664": "internal-contradiction",
+"665": "readability-or-placement",
+"666": "dead-code",
+"667": "internal-contradiction",
+"668": "dead-code",
+"669": "readability-or-placement",
+"670": "dead-code",
+"671": "not-an-error",
+"672": "dead-code",
+"673": "not-an-error",
+"674": "dead-code",
+"675": "not-an-error",
+"676": "readability-or-placement",
+"677": "dead-code",
+"678": "internal-contradiction",
+"679": "not-an-error",
+"680": "dead-code",
+"681": "numeric-or-fact-error",
+"682": "numeric-or-fact-error",
+"683": "dead-code",
+"684": "readability-or-placement",
+"685": "internal-contradiction",
+"686": "readability-or-placement",
+"687": "internal-contradiction",
+"688": "dead-code",
+"689": "readability-or-placement",
+"690": "readability-or-placement",
+"691": "readability-or-placement",
+"692": "internal-contradiction",
+"693": "readability-or-placement",
+"694": "dead-code",
+"695": "dead-code",
+"696": "readability-or-placement",
+"697": "not-an-error",
+"698": "internal-contradiction",
+"699": "dead-code",
+"700": "typography",
+"701": "dead-code",
+"702": "dead-code",
+"703": "readability-or-placement",
+"704": "dead-code",
+"705": "readability-or-placement",
+"706": "readability-or-placement",
+"707": "not-an-error",
+"708": "not-an-error",
+"709": "not-an-error",
+"710": "dead-code",
+"711": "readability-or-placement",
+"712": "dead-code",
+"713": "readability-or-placement",
+"714": "readability-or-placement",
+"715": "numeric-or-fact-error",
+"716": "numeric-or-fact-error",
+"717": "not-an-error",
+"718": "numeric-or-fact-error",
+"719": "readability-or-placement",
+"720": "internal-contradiction",
+"721": "readability-or-placement",
+"722": "dead-code",
+"723": "readability-or-placement",
+"724": "not-an-error",
+"725": "readability-or-placement",
+"726": "typography",
+"727": "readability-or-placement",
+"728": "numeric-or-fact-error",
+"729": "not-an-error",
+"730": "not-an-error",
+"731": "readability-or-placement",
+"732": "dead-code",
+"733": "typography",
+"734": "numeric-or-fact-error",
+"735": "readability-or-placement",
+"736": "dead-code",
+"737": "readability-or-placement",
+"738": "dead-code",
+"739": "numeric-or-fact-error",
+"740": "dead-code",
+"741": "readability-or-placement",
+"742": "internal-contradiction",
+"743": "readability-or-placement",
+"744": "dead-code",
+"745": "not-an-error",
+"746": "typography",
+"747": "internal-contradiction",
+"748": "not-an-error",
+"749": "readability-or-placement",
+"750": "internal-contradiction",
+"751": "numeric-or-fact-error",
+"752": "readability-or-placement",
+"753": "internal-contradiction",
+"754": "dead-code",
+"755": "readability-or-placement",
+"756": "dead-code",
+"757": "readability-or-placement",
+"758": "readability-or-placement",
+"759": "internal-contradiction",
+"760": "numeric-or-fact-error",
+"761": "numeric-or-fact-error",
+"762": "not-an-error",
+"763": "readability-or-placement",
+"764": "not-an-error",
+"765": "numeric-or-fact-error",
+"766": "numeric-or-fact-error",
+"767": "not-an-error",
+"768": "numeric-or-fact-error",
+"769": "not-an-error",
+"770": "readability-or-placement",
+"771": "readability-or-placement",
+"772": "dead-code",
+"773": "numeric-or-fact-error",
+"774": "readability-or-placement",
+"775": "numeric-or-fact-error",
+"776": "not-an-error",
+"777": "dead-code",
+"778": "not-an-error",
+"779": "readability-or-placement",
+"195": "internal-contradiction",
+"196": "numeric-or-fact-error",
+"197": "readability-or-placement",
+"198": "numeric-or-fact-error",
+"199": "internal-contradiction",
+"200": "typography",
+"201": "readability-or-placement",
+"202": "numeric-or-fact-error",
+"203": "readability-or-placement",
+"204": "typography",
+"205": "readability-or-placement",
+"206": "internal-contradiction",
+"207": "not-an-error",
+"208": "dead-code",
+"209": "numeric-or-fact-error",
+"210": "readability-or-placement",
+"211": "readability-or-placement",
+"212": "numeric-or-fact-error",
+"213": "readability-or-placement",
+"214": "readability-or-placement",
+"215": "typography",
+"216": "not-an-error",
+"217": "dead-code",
+"218": "not-an-error",
+"219": "not-an-error",
+"220": "readability-or-placement",
+"221": "not-an-error",
+"222": "numeric-or-fact-error",
+"223": "internal-contradiction",
+"224": "readability-or-placement",
+"225": "readability-or-placement",
+"226": "internal-contradiction",
+"227": "numeric-or-fact-error",
+"228": "internal-contradiction",
+"229": "internal-contradiction",
+"230": "readability-or-placement",
+"231": "readability-or-placement",
+"232": "readability-or-placement",
+"233": "internal-contradiction",
+"234": "numeric-or-fact-error",
+"235": "readability-or-placement",
+"236": "internal-contradiction",
+"237": "internal-contradiction",
+"238": "readability-or-placement",
+"239": "numeric-or-fact-error",
+"240": "numeric-or-fact-error",
+"241": "internal-contradiction",
+"242": "readability-or-placement",
+"243": "readability-or-placement",
+"244": "numeric-or-fact-error",
+"245": "readability-or-placement",
+"246": "readability-or-placement",
+"247": "numeric-or-fact-error",
+"248": "numeric-or-fact-error",
+"249": "internal-contradiction",
+"250": "numeric-or-fact-error",
+"251": "readability-or-placement",
+"252": "internal-contradiction",
+"253": "readability-or-placement",
+"254": "numeric-or-fact-error",
+"255": "internal-contradiction",
+"256": "numeric-or-fact-error",
+"257": "not-an-error",
+"258": "dead-code",
+"259": "readability-or-placement",
+"260": "readability-or-placement",
+"261": "readability-or-placement",
+"262": "readability-or-placement",
+"263": "numeric-or-fact-error",
+"264": "readability-or-placement",
+"265": "numeric-or-fact-error",
+"266": "numeric-or-fact-error",
+"267": "numeric-or-fact-error",
+"268": "readability-or-placement",
+"269": "dead-code",
+"270": "internal-contradiction",
+"271": "readability-or-placement",
+"272": "typography",
+"273": "readability-or-placement",
+"274": "dead-code",
+"275": "readability-or-placement",
+"276": "not-an-error",
+"277": "internal-contradiction",
+"278": "numeric-or-fact-error",
+"279": "readability-or-placement",
+"280": "numeric-or-fact-error",
+"281": "internal-contradiction",
+"282": "numeric-or-fact-error",
+"283": "numeric-or-fact-error",
+"284": "dead-code",
+"285": "readability-or-placement",
+"286": "readability-or-placement",
+"287": "dead-code",
+"288": "numeric-or-fact-error",
+"289": "readability-or-placement",
+"290": "readability-or-placement",
+"291": "readability-or-placement",
+"292": "dead-code",
+"293": "not-an-error",
+"294": "readability-or-placement",
+"295": "internal-contradiction",
+"296": "internal-contradiction",
+"297": "dead-code",
+"298": "numeric-or-fact-error",
+"299": "typography",
+"300": "numeric-or-fact-error",
+"301": "dead-code",
+"302": "not-an-error",
+"303": "dead-code",
+"304": "not-an-error",
+"305": "not-an-error",
+"306": "readability-or-placement",
+"307": "not-an-error",
+"308": "readability-or-placement",
+"309": "internal-contradiction",
+"310": "readability-or-placement",
+"311": "readability-or-placement",
+"312": "readability-or-placement",
+"313": "dead-code",
+"314": "readability-or-placement",
+"315": "dead-code",
+"316": "readability-or-placement",
+"317": "numeric-or-fact-error",
+"318": "readability-or-placement",
+"319": "numeric-or-fact-error",
+"320": "numeric-or-fact-error",
+"321": "numeric-or-fact-error",
+"322": "internal-contradiction",
+"323": "readability-or-placement",
+"324": "dead-code",
+"325": "not-an-error",
+"326": "readability-or-placement",
+"327": "typography",
+"328": "dead-code",
+"329": "typography",
+"330": "typography",
+"331": "not-an-error",
+"332": "numeric-or-fact-error",
+"333": "numeric-or-fact-error",
+"334": "numeric-or-fact-error",
+"335": "internal-contradiction",
+"336": "numeric-or-fact-error",
+"337": "not-an-error",
+"338": "numeric-or-fact-error",
+"339": "internal-contradiction",
+"340": "readability-or-placement",
+"341": "numeric-or-fact-error",
+"342": "numeric-or-fact-error",
+"343": "readability-or-placement",
+"344": "internal-contradiction",
+"345": "typography",
+"346": "internal-contradiction",
+"347": "not-an-error",
+"348": "numeric-or-fact-error",
+"349": "internal-contradiction",
+"350": "not-an-error",
+"351": "readability-or-placement",
+"352": "readability-or-placement",
+"353": "not-an-error",
+"354": "not-an-error",
+"355": "readability-or-placement",
+"356": "typography",
+"357": "numeric-or-fact-error",
+"358": "typography",
+"359": "readability-or-placement",
+"360": "not-an-error",
+"361": "numeric-or-fact-error",
+"362": "internal-contradiction",
+"363": "internal-contradiction",
+"364": "numeric-or-fact-error",
+"365": "readability-or-placement",
+"366": "readability-or-placement",
+"367": "typography",
+"368": "typography",
+"369": "readability-or-placement",
+"370": "numeric-or-fact-error",
+"371": "readability-or-placement",
+"372": "numeric-or-fact-error",
+"373": "readability-or-placement",
+"374": "dead-code",
+"375": "readability-or-placement",
+"376": "numeric-or-fact-error",
+"377": "readability-or-placement",
+"378": "dead-code",
+"379": "typography",
+"380": "typography",
+"381": "internal-contradiction",
+"382": "readability-or-placement",
+"383": "dead-code",
+"384": "readability-or-placement",
+"385": "readability-or-placement",
+"386": "typography",
+"387": "readability-or-placement",
+"388": "readability-or-placement",
+"389": "readability-or-placement",
+"0": "readability-or-placement",
+"1": "dead-code",
+"2": "dead-code",
+"3": "typography",
+"4": "internal-contradiction",
+"5": "readability-or-placement",
+"6": "readability-or-placement",
+"7": "readability-or-placement",
+"8": "readability-or-placement",
+"9": "numeric-or-fact-error",
+"10": "internal-contradiction",
+"11": "not-an-error",
+"12": "internal-contradiction",
+"13": "numeric-or-fact-error",
+"14": "readability-or-placement",
+"15": "readability-or-placement",
+"16": "typography",
+"17": "readability-or-placement",
+"18": "readability-or-placement",
+"19": "readability-or-placement",
+"20": "readability-or-placement",
+"21": "dead-code",
+"22": "internal-contradiction",
+"23": "internal-contradiction",
+"24": "readability-or-placement",
+"25": "internal-contradiction",
+"26": "readability-or-placement",
+"27": "readability-or-placement",
+"28": "not-an-error",
+"29": "readability-or-placement",
+"30": "not-an-error",
+"31": "readability-or-placement",
+"32": "internal-contradiction",
+"33": "readability-or-placement",
+"34": "not-an-error",
+"35": "numeric-or-fact-error",
+"36": "numeric-or-fact-error",
+"37": "numeric-or-fact-error",
+"38": "readability-or-placement",
+"39": "internal-contradiction",
+"40": "internal-contradiction",
+"41": "internal-contradiction",
+"42": "readability-or-placement",
+"43": "readability-or-placement",
+"44": "readability-or-placement",
+"45": "numeric-or-fact-error",
+"46": "readability-or-placement",
+"47": "not-an-error",
+"48": "dead-code",
+"49": "typography",
+"50": "not-an-error",
+"51": "internal-contradiction",
+"52": "typography",
+"53": "dead-code",
+"54": "readability-or-placement",
+"55": "numeric-or-fact-error",
+"56": "numeric-or-fact-error",
+"57": "readability-or-placement",
+"58": "typography",
+"59": "readability-or-placement",
+"60": "internal-contradiction",
+"61": "typography",
+"62": "readability-or-placement",
+"63": "internal-contradiction",
+"64": "readability-or-placement",
+"65": "readability-or-placement",
+"66": "internal-contradiction",
+"67": "internal-contradiction",
+"68": "dead-code",
+"69": "internal-contradiction",
+"70": "internal-contradiction",
+"71": "internal-contradiction",
+"72": "internal-contradiction",
+"73": "readability-or-placement",
+"74": "dead-code",
+"75": "internal-contradiction",
+"76": "readability-or-placement",
+"77": "numeric-or-fact-error",
+"78": "numeric-or-fact-error",
+"79": "internal-contradiction",
+"80": "readability-or-placement",
+"81": "not-an-error",
+"82": "dead-code",
+"83": "numeric-or-fact-error",
+"84": "readability-or-placement",
+"85": "internal-contradiction",
+"86": "internal-contradiction",
+"87": "typography",
+"88": "readability-or-placement",
+"89": "readability-or-placement",
+"90": "readability-or-placement",
+"91": "not-an-error",
+"92": "dead-code",
+"93": "not-an-error",
+"94": "readability-or-placement",
+"95": "internal-contradiction",
+"96": "internal-contradiction",
+"97": "internal-contradiction",
+"98": "readability-or-placement",
+"99": "numeric-or-fact-error",
+"100": "readability-or-placement",
+"101": "readability-or-placement",
+"102": "internal-contradiction",
+"103": "readability-or-placement",
+"104": "internal-contradiction",
+"105": "readability-or-placement",
+"106": "not-an-error",
+"107": "readability-or-placement",
+"108": "readability-or-placement",
+"109": "numeric-or-fact-error",
+"110": "internal-contradiction",
+"111": "internal-contradiction",
+"112": "internal-contradiction",
+"113": "readability-or-placement",
+"114": "not-an-error",
+"115": "dead-code",
+"116": "not-an-error",
+"117": "not-an-error",
+"118": "internal-contradiction",
+"119": "internal-contradiction",
+"120": "readability-or-placement",
+"121": "typography",
+"122": "internal-contradiction",
+"123": "internal-contradiction",
+"124": "typography",
+"125": "readability-or-placement",
+"126": "readability-or-placement",
+"127": "readability-or-placement",
+"128": "numeric-or-fact-error",
+"129": "internal-contradiction",
+"130": "internal-contradiction",
+"131": "internal-contradiction",
+"132": "numeric-or-fact-error",
+"133": "readability-or-placement",
+"134": "numeric-or-fact-error",
+"135": "readability-or-placement",
+"136": "internal-contradiction",
+"137": "internal-contradiction",
+"138": "numeric-or-fact-error",
+"139": "readability-or-placement",
+"140": "not-an-error",
+"141": "not-an-error",
+"142": "numeric-or-fact-error",
+"143": "numeric-or-fact-error",
+"144": "numeric-or-fact-error",
+"145": "internal-contradiction",
+"146": "internal-contradiction",
+"147": "readability-or-placement",
+"148": "internal-contradiction",
+"149": "not-an-error",
+"150": "readability-or-placement",
+"151": "readability-or-placement",
+"152": "readability-or-placement",
+"153": "numeric-or-fact-error",
+"154": "readability-or-placement",
+"155": "readability-or-placement",
+"156": "typography",
+"157": "readability-or-placement",
+"158": "readability-or-placement",
+"159": "readability-or-placement",
+"160": "numeric-or-fact-error",
+"161": "internal-contradiction",
+"162": "numeric-or-fact-error",
+"163": "internal-contradiction",
+"164": "numeric-or-fact-error",
+"165": "readability-or-placement",
+"166": "typography",
+"167": "numeric-or-fact-error",
+"168": "numeric-or-fact-error",
+"169": "readability-or-placement",
+"170": "numeric-or-fact-error",
+"171": "readability-or-placement",
+"172": "readability-or-placement",
+"173": "not-an-error",
+"174": "typography",
+"175": "dead-code",
+"176": "readability-or-placement",
+"177": "readability-or-placement",
+"178": "readability-or-placement",
+"179": "numeric-or-fact-error",
+"180": "readability-or-placement",
+"181": "readability-or-placement",
+"182": "readability-or-placement",
+"183": "readability-or-placement",
+"184": "internal-contradiction",
+"185": "internal-contradiction",
+"186": "numeric-or-fact-error",
+"187": "numeric-or-fact-error",
+"188": "numeric-or-fact-error",
+"189": "readability-or-placement",
+"190": "readability-or-placement",
+"191": "readability-or-placement",
+"192": "typography",
+"193": "typography",
+"194": "internal-contradiction"
+}
 }
 }

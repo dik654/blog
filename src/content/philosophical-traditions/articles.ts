@@ -66,7 +66,7 @@ export const philosophicalTraditionsArticles: Article[] = [
       { id: "picture", title: "결과를 놓는 것과 결과를 무시하는 것을 구분합니다" },
       { id: "need", title: "행위가 결과와 업의 사슬을 만들 때 포기 외의 길이 필요합니다" },
       { id: "names", title: "다르마·카르마 요가·결과 집착에 이름을 붙입니다" },
-      { id: "mechanism", title: "100의 결과를 준비·행위·외부 조건·태도로 나눠 봅니다" },
+      { id: "mechanism", title: "100의 결과를 준비·행위·외부 조건으로 나누고 태도는 따로 봅니다" },
       { id: "source", title: "『바가바드 기타』 2.47의 행위와 결과를 함께 읽습니다" },
       { id: "comparison", title: "3.19는 집착 없는 행위가 무행동과 다르다고 다시 말합니다" },
       { id: "limits", title: "결과에 집착하지 말라는 말을 책임 회피나 신분 의무의 무조건 복종으로 쓰지 않습니다" },

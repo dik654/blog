@@ -18,7 +18,7 @@ const INK = "#475569";
 const MUTED = "#94a3b8";
 
 const SCENES = [
-  { label: "세 커서의 시작 위치", summary: "115 ⪯ 118 ⪯ 120", finalized: 115, safe: 118, bracket: false, note: "Unsafe는 sequencer의 최신 head, safe는 L1 batch에서 재구성된 head, finalized는 L1 origin까지 finalized된 head입니다. ⪯는 왼쪽이 조상이라는 표시로, 세 이름은 점수가 아닙니다." },
+  { label: "세 커서의 시작 위치", summary: "115 ⪯ 118 ⪯ 120", finalized: 115, safe: 118, bracket: false, note: "Unsafe는 sequencer의 최신 head, safe는 L1 batch에서 재구성된 head, finalized는 L1 origin까지 finalized된 head입니다. ⪯는 왼쪽이 조상이거나 같은 block이라는 표시로, 세 이름은 점수가 아닙니다." },
   { label: "높이 차이를 시간으로 읽지 않습니다", summary: "차이 5 ≠ 5초", finalized: 115, safe: 118, bracket: true, note: "높이 차이 5가 5초를 뜻하지는 않습니다. Finalized 115가 거래 T까지 확정했다는 뜻도 아니고, T가 든 120은 아직 safe도 아닙니다." },
   { label: "T가 safe에 닿습니다", summary: "safe 120 · ancestry 일치", finalized: 115, safe: 120, bracket: false, note: "block 120이 canonical L1 batch에서 재구성되어 safe head가 120 이상이 되고 ancestry가 일치할 때 비로소 T를 safe라고 부를 수 있습니다." },
   { label: "L1 origin의 finality까지", summary: "finalized 120", finalized: 120, safe: 120, bracket: false, note: "그 L1 origin이 finalized되면 finalized head도 T의 block까지 옵니다. 이 표시가 withdrawal 절차 종료나 앱 수준 finality까지 자동 보장하지는 않습니다." },

@@ -20,7 +20,7 @@ export default function HandshakeFlow() {
           hash와 chaining key에서 두 방향 CipherState를 나눕니다.
         </p>
         <p>
-          메시지 2 payload에는 forward secrecy가 있어도 sender가 아직 responder를
+          메시지 2 payload에는 forward secrecy가 있어도 sender가 아직 initiator를
           인증하기 전이라는 spec의 경계가 있습니다. 따라서 민감한 application early
           data를 임의로 싣지 않습니다.
         </p>

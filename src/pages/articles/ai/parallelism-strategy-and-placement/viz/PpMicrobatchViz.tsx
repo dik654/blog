@@ -10,7 +10,7 @@ const ONE = { s0: ["a", "", "a", "", "a", ""], s1: ["", "a", "", "a", "", "a"] }
 const TWO = { s0: ["a", "b", "a", "b", "a", "b"], s1: ["", "a", "b", "a", "b", "a"] };
 
 const SCENES = [
-  { label: "요청 묶음이 하나일 때", summary: "10.4 ms마다 a의 token", note: "microbatch는 함께 처리하는 요청 묶음입니다. 묶음 a가 stage 0을 지나는 동안 stage 1은 놀고, 그다음은 반대입니다. token 하나에 5.2 ms가 두 번 들고, 통신까지 더하면 글의 TPOT 약 11.6 ms입니다.", lanes: ONE, dim: false },
+  { label: "요청 묶음이 하나일 때", summary: "10.4 ms마다 a의 token", note: "microbatch는 함께 처리하는 요청 묶음입니다. 묶음 a가 stage 0을 지나는 동안 stage 1은 놀고, 그다음은 반대입니다. token 하나에 5.2 ms가 두 번 들고, 통신까지 더하면 글의 TPOT 약 11.5 ms입니다.", lanes: ONE, dim: false },
   { label: "묶음 둘을 겹치면", summary: "5.2 ms마다 한 묶음의 token", note: "a가 stage 1로 넘어간 자리에 b가 들어옵니다. 맨 앞 빈칸을 채운 뒤에는 두 stage가 쉬지 않아 나오는 token이 두 배입니다.", lanes: TWO, dim: false },
   { label: "그래도 a는 빨라지지 않습니다", summary: "a의 간격 10.4 ms 그대로", note: "a만 보면 token 간격이 첫 장면과 같습니다. throughput만 늘고 한 요청의 latency는 줄지 않으며, microbatch가 찰 때만 이득입니다.", lanes: TWO, dim: true },
 ] as const;

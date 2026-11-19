@@ -89,7 +89,7 @@ ec_gpu_gen::generate(&source_builder);`}</code></pre>
       operations={[
   { expression: String.raw`\frac{T_{build}}{D}`, annotation: ["source 생성·compile 시간을","그 artifact로 돈 실행 수로 나눕니다","60s / 600 runs = 100ms"] },
   { expression: String.raw`\frac{T_{startup}}{R}`, annotation: ["device 탐색·program load 시간을","process 하나의 실행 수로 나눕니다","2s / 100 runs = 20ms"] },
-  { expression: String.raw`+T_{steady}`, annotation: ["warm 상태 transfer·kernel·sync 시간","30ms를 더하면 run당 150ms","kernel 30ms만 보면 운영 latency 과소평가"] },
+  { expression: String.raw`+T_{steady}`, annotation: ["warm 상태 transfer·kernel·sync 시간","30ms를 더하면 run당 150ms","steady 30ms만 보면 운영 latency 과소평가"] },
 ]} terms={[
         {symbol:"T_{amort}",name:"Amortized per-run time",description:"배포와 process 재시작 비용을 평균해 한 workload 실행에 배분한 값입니다."},
         {symbol:"T_{build}",name:"Build cost",description:"Source generation과 backend compilation 시간입니다."},
@@ -97,7 +97,7 @@ ec_gpu_gen::generate(&source_builder);`}</code></pre>
         {symbol:"T_{startup}",name:"Runtime initialization",description:"Device discovery, OpenCL compile 또는 program/module load 시간입니다."},
         {symbol:"R",name:"Runs per process",description:"동일 initialized process에서 수행하는 실행 수입니다."},
         {symbol:"T_{steady}",name:"Steady-state execution",description:"Warm 상태에서 transfer·kernel·sync의 target workload 시간입니다."},
-      ]} assumptions={["Build와 startup cache hit/miss policy를 명시하고 동일한 artifact를 재사용합니다.","D와 R은 실제 deployment lifecycle에서 관찰한 값이며 임의의 큰 수로 startup을 숨기지 않습니다."]} interpretation="Build 60s를 600 runs에, startup 2s를 100 runs에 나누고 steady 30ms라면 run당 150ms입니다. Kernel 30ms만 보고 운영 latency를 주장하면 안 됩니다." />
+      ]} assumptions={["Build와 startup cache hit/miss policy를 명시하고 동일한 artifact를 재사용합니다.","D와 R은 실제 deployment lifecycle에서 관찰한 값이며 임의의 큰 수로 startup을 숨기지 않습니다."]} interpretation="Build 60s를 600 runs에, startup 2s를 100 runs에 나누고 steady 30ms라면 run당 150ms입니다. Steady 30ms만 보고 운영 latency를 주장하면 안 됩니다." />
       <div id="paper-ec-gpu-artifact-lifecycle"><CitationBlock type="code" citeKey={3} source="ec-gpu artifact generation · commit 16d38ef" href={`${ECGPU}/ec-gpu-gen/src/source.rs`}><p><strong>문제:</strong> Generated sources를 reproducible CUDA/OpenCL build outputs로 전달해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned path는 CUDA source→nvcc fatbin과 OpenCL source embedding, digest·environment handoff를 구현합니다.</p><p><strong>중요 가정:</strong> Feature set, nvcc arguments, compiler와 target architecture를 고정합니다.</p><p><strong>근거 범위:</strong> 링크 revision의 artifact lifecycle입니다.</p><p><strong>일반화 금지:</strong> 새로운 SM 지원, runtime cache hit 또는 빠른 startup을 보장하지 않습니다.</p></CitationBlock></div>
     </section>
 

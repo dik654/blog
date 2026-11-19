@@ -96,7 +96,7 @@ export default function LinearAttentionAndStateSpaceModelsViz() {
                 ))}
               </div>
               <p className="mt-2 break-keep text-[10px] leading-4 text-muted-foreground sm:text-[11px]">
-                {active < 2 ? "d×d = 16,384 칸 · 크기 고정" : active === 2 ? "n과 무관 · 64 KiB" : "7층 × 64 KiB ≈ 1.75 MiB"}
+                {active < 2 ? "d×d = 16,384 칸 · 크기 고정" : active === 2 ? "n과 무관 · 64 KiB" : "7층 × 64 KiB = 448 KiB"}
               </p>
             </div>
           </div>

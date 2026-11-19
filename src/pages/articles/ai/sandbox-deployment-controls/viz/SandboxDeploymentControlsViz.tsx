@@ -5,7 +5,7 @@ import VizFrame from "@/components/viz/VizFrame";
 const SCENES = ["Pod 시작", "API 허용", "API 거절", "외부 전송", "임시 저장", "Pod 삭제"] as const;
 const NOTES = [
   "img-job-91 Pod는 agent-reader ServiceAccount를 쓰고, kubelet은 audience와 만료 시간이 있는 projected token을 마운트합니다. 토큰을 넣는 일과 API 권한을 주는 일은 별개입니다.",
-  "프로세스가 자기 Job을 GET하면 API server가 토큰을 인증한 뒤 RBAC의 verb·resource·namespace를 확인합니다. 네 조건이 맞아서 200 응답이 돌아옵니다.",
+  "프로세스가 자기 Job을 GET하면 API server가 토큰을 인증한 뒤 RBAC의 API group·verb·resource·namespace를 확인합니다. 토큰 인증까지 다섯 조건이 맞아서 200 응답이 돌아옵니다.",
   "같은 토큰으로 Secret을 GET해도 secrets.get 권한이 없으므로 403입니다. 인증 성공은 요청한 동작까지 허용됐다는 뜻이 아닙니다.",
   "결과 업로드는 Kubernetes API가 아니라 egress 정책을 지납니다. object gateway는 허용하지만 metadata IP는 차단합니다. 표준 NetworkPolicy와 FQDN 확장은 같은 기능이 아닙니다.",
   "root filesystem은 읽기 전용이고 /work만 크기가 제한된 emptyDir입니다. 컨테이너가 종료돼도 같은 Pod가 남아 있는 동안 emptyDir 데이터는 남습니다.",
@@ -31,7 +31,7 @@ function StartScene() {
 }
 
 function ApiScene({ denied = false }: { denied?: boolean }) {
-  return <svg viewBox="0 0 400 240" className={svgClass} role="img" aria-label={denied ? "유효한 토큰을 가진 Pod의 Secret 조회가 RBAC에서 거절되는 과정" : "Pod의 Job 조회가 인증과 RBAC을 거쳐 허용되는 과정"}><Defs /><Box x={8} y={71} w={90} title="Pod" detail={denied ? "GET Secret" : "GET Job"} /><Arrow x1={98} y1={98} x2={123} y2={98} /><Box x={128} y={71} w={105} title="인증" detail="서명·aud·만료" active /><Arrow x1={233} y1={98} x2={258} y2={98} /><Box x={263} y={71} w={129} title="RBAC" detail={denied ? "secrets.get 없음" : "jobs.get 있음"} active /><path d="M327 125V157H201" fill="none" className={denied ? "stroke-destructive" : "stroke-foreground"} markerEnd="url(#deploy-control-arrow)" /><Box x={142} y={161} w={118} h={48} title={denied ? "403 Forbidden" : "200 Job 상태"} detail={denied ? "인증 성공·권한 없음" : "네 조건 모두 일치"} active /><text x="200" y="31" textAnchor="middle" className="fill-muted-foreground text-[9px]">같은 token · 다른 verb와 resource</text></svg>;
+  return <svg viewBox="0 0 400 240" className={svgClass} role="img" aria-label={denied ? "유효한 토큰을 가진 Pod의 Secret 조회가 RBAC에서 거절되는 과정" : "Pod의 Job 조회가 인증과 RBAC을 거쳐 허용되는 과정"}><Defs /><Box x={8} y={71} w={90} title="Pod" detail={denied ? "GET Secret" : "GET Job"} /><Arrow x1={98} y1={98} x2={123} y2={98} /><Box x={128} y={71} w={105} title="인증" detail="서명·aud·만료" active /><Arrow x1={233} y1={98} x2={258} y2={98} /><Box x={263} y={71} w={129} title="RBAC" detail={denied ? "secrets.get 없음" : "jobs.get 있음"} active /><path d="M327 125V157H201" fill="none" className={denied ? "stroke-destructive" : "stroke-foreground"} markerEnd="url(#deploy-control-arrow)" /><Box x={142} y={161} w={118} h={48} title={denied ? "403 Forbidden" : "200 Job 상태"} detail={denied ? "인증 성공·권한 없음" : "다섯 조건 모두 일치"} active /><text x="200" y="31" textAnchor="middle" className="fill-muted-foreground text-[9px]">같은 token · 다른 verb와 resource</text></svg>;
 }
 
 function EgressScene() {

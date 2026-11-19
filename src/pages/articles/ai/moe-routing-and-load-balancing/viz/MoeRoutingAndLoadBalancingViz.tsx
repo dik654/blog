@@ -16,7 +16,7 @@ const NOTES = [
   "초기 편차가 되먹임을 만들어 expert 0이 614 slot(이상 비율의 2.4배)을 받고 나머지는 평균 아래로 내려갑니다. Capacity 320은 아직 표시만 됩니다.",
   "φ=1.25의 capacity 320을 넘은 294 slot(짙은 표시)은 계산되지 않고 버려집니다. Expert 0 수요의 약 48%가 token dropping입니다.",
   "Auxiliary-loss-free bias가 3 step 갱신됩니다. 과부하 expert 0은 bias가 −0.002로 내려가고 가장 부족한 expert 5는 +0.003으로 올라 다음 선택 점수를 바꿉니다.",
-  "Bias가 선택 점수를 눌러 부하가 다시 평균 256 근처로 모입니다. Drop은 사라지고 bias는 이 수준에서 갱신을 멈춥니다.",
+  "Bias가 선택 점수를 눌러 부하가 다시 평균 256 근처로 모입니다. Drop은 사라지고, 부하가 평균과 정확히 같지 않은 expert의 bias는 매 step γ씩 오르내리며 이 근처에 머뭅니다.",
 ] as const;
 const MOBILE_NOTES = [
   "2,048개 slot을 expert당 256개씩 받습니다.",
@@ -52,7 +52,7 @@ const SCENE_DATA: readonly Scene[] = [
   { counts: COLLAPSED, bias: BIAS_ZERO, showCapacity: true, showDrop: false, verdict: "expert 0 → 614 slot (2.4×) · rest below average" },
   { counts: COLLAPSED, bias: BIAS_ZERO, showCapacity: true, showDrop: true, verdict: "capacity 320 · overflow 294 dropped" },
   { counts: CORRECTING, bias: BIAS_STEP3, showCapacity: true, showDrop: false, verdict: "bias step 3 · e0 −0.002 · e5 +0.003" },
-  { counts: REBALANCED, bias: BIAS_HOLD, showCapacity: false, showDrop: false, verdict: "back near 256 / expert · bias holds" },
+  { counts: REBALANCED, bias: BIAS_HOLD, showCapacity: false, showDrop: false, verdict: "back near 256 / expert · bias hovers ±γ" },
 ];
 
 const CHART_X = 24;

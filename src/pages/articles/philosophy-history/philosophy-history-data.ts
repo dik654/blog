@@ -250,7 +250,7 @@ export const islamicPhilosophyDevelopmentData: PhilosophyHistoryArticleData = {
     ] },
     { id: "limits", level: "7", title: "10. 이슬람 철학을 한 종교·한 언어·한 문명 블록으로 만들지 않습니다", bridge: "지역·종파·장르·번역의 차이를 남깁니다.", paragraphs: [
       "무슬림뿐 아니라 기독교·유대교 학자와 번역가가 아랍어 지식권에 참여했고 아랍어·페르시아어·라틴어 등 여러 언어가 쓰였습니다. 팔사파·칼람·수피 사상·법학의 경계도 시대마다 달랐습니다.",
-      "이 글은 9~17세기의 몇 정거장을 연결한 입구입니다. 오스만·무굴·아프리카와 동남아시아의 철학, 근현대 개혁 사상과 식민 지식 질서는 별도 글로 확장해야 합니다.",
+      "이 글은 8~17세기의 몇 정거장을 연결한 입구입니다. 오스만·무굴·아프리카와 동남아시아의 철학, 근현대 개혁 사상과 식민 지식 질서는 별도 글로 확장해야 합니다.",
     ] },
   ],
   overviewFlow: { title: "문헌이 새 철학으로 바뀌는 길", steps: [
@@ -274,7 +274,7 @@ export const islamicPhilosophyDevelopmentData: PhilosophyHistoryArticleData = {
     { source: "Stanford Encyclopedia of Philosophy · Mysticism in Arabic and Islamic Philosophy", excerpt: "School of Isfahan and Mulla Sadra", application: "수흐라와르디에서 이스파한 학파와 물라 사드라로 이어진 후기 전개를 읽습니다.", citation: "Stanford Encyclopedia of Philosophy, Mysticism in Arabic and Islamic Philosophy", href: "https://plato.stanford.edu/entries/arabic-islamic-mysticism/", note: "조명철학·신비 사상·존재론의 후대 종합을 다루는 대학 편집 참고문헌입니다." },
   ],
   review: [
-    "9·11·12·17세기의 네 정거장에서 철학 작업이 어떻게 달라졌나요? (답: 3·7절)",
+    "8~10세기·11세기·12세기·17세기의 네 정거장에서 철학 작업이 어떻게 달라졌나요? (답: 3·7절)",
     "번역·주석 사슬, 조명적 앎, 존재의 우위는 각각 어느 층을 설명하나요? (답: 6절)",
     "알가잘리 이후 철학이 끝났다는 이야기가 왜 부족한가요? (답: 5·9·10절)",
   ],

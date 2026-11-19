@@ -70,7 +70,7 @@ export const noArbitrageData: DerivativeDeepArticleData = {
       "또한 선물은 매일 정산되므로 만기 지급만 같은 선도와도 자금 시점이 다릅니다. 가격 식을 적용하기 전에 인도 대상, 날짜, 수입과 비용, 자금조달 가능성, 중간 정산을 확인해야 합니다. 다음 글에서는 이 중간 정산이 현금을 어떻게 움직이는지 봅니다.",
     ] },
   ],
-  overviewFlow: { title: "현물을 미래 인도로 바꾸는 네 걸음", steps: [
+  overviewFlow: { title: "현물을 미래 인도로 바꾸는 세 걸음", steps: [
     { actor: "차입", movement: "오늘 100을 마련하고 1년 뒤 105를 갚습니다.", receives: "자금비용 5" },
     { actor: "현물 보유", movement: "지수를 사고 1년 동안 들고 갑니다.", receives: "배당 2" },
     { actor: "선물 매도", movement: "만기에 지수를 넘기고 약정 가격을 받습니다.", receives: "비교 가능한 미래 지급" },

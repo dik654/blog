@@ -118,7 +118,7 @@ export default function GossipFundamentalsArticle() {
               <code>e^(−2×0.125)=e^(−0.25)≈0.7788</code>입니다.
             </li>
             <li>
-              <code>i₁≈1−0.875×0.7788≈0.3186</code>, 즉 평균적으로 약 2.55개
+              <code>i₁≈1−0.875×0.7788≈0.3185</code>, 즉 평균적으로 약 2.55개
               node가 아는 상태입니다.
             </li>
             <li>

@@ -52,7 +52,7 @@ export default function MoeVramServingTradeoff() {
           "Residency(storage)는 여전히 P_total×B를 요구하며 이 식은 read traffic만 다룹니다.",
           "Batch가 2 이상이면 MoE 쪽 식은 아래 합집합 식으로 바뀝니다.",
         ]}
-        interpretation="80B total·약 3B active MoE를 BF16으로 두면 batch 1의 decode 한 step은 약 3B×2byte=6GiB를 읽습니다. 같은 dtype의 80B dense라면 80B×2byte=160GiB를 읽어야 해, 약 26배 차이가 납니다."
+        interpretation="80B total·약 3B active MoE를 BF16으로 두면 batch 1의 decode 한 step은 약 3B×2byte=6GB를 읽습니다. 같은 dtype의 80B dense라면 80B×2byte=160GB를 읽어야 해, 약 26배 차이가 납니다."
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">

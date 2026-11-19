@@ -122,7 +122,7 @@ export default function WhereItCanSlipViz() {
                     적힌 규모의 자릿수를 읽는다
                   </text>
                   <text x={32} y={72} fontSize={7.5} fill={INK}>
-                    170회 채웠다는 서술을 읽는다
+                    170만을 1만 눈금 170번으로 풀어 읽는다
                   </text>
                   <text x={32} y={84} fontSize={7.5} fill={MUTED}>
                     1만은 표기 단위입니다

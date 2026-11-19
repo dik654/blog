@@ -149,7 +149,7 @@ export default function Article() { return <div className="space-y-16"><section 
             {
               expression: String.raw`N_{\rm missed}/\sum_iP_i`,
               annotation: [
-                "놓친 finalist 수를 전체 중단 수로 나눠",
+                "놓친 finalist 수를 감사 표본의 중단 수로 나눠",
                 "pruning miss rate 계산",
               ],
             },

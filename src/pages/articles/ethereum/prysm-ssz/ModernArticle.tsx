@@ -114,7 +114,7 @@ export default function ModernArticle() {
         </div>
         <OffsetCheckViz />
         <p>
-          Decoder는 첫 offset이 fixed part 16보다 작지 않고 payload 끝 32를 넘지 않는지 먼저 검사합니다. Validators slice 길이 16이 uint64 폭 8의 배수인지, 원소 수 2가 limit 4 이하인지 확인한 뒤에 할당합니다. Offset 12, offset 40, 길이 10인 slice는 각각 fixed part 침범, payload 범위 초과, element 정렬 실패로 거부해야 합니다.
+          Decoder는 첫 offset이 fixed part 16과 정확히 같고 payload 끝 32를 넘지 않는지 먼저 검사합니다. Validators slice 길이 16이 uint64 폭 8의 배수인지, 원소 수 2가 limit 4 이하인지 확인한 뒤에 할당합니다. Offset 12, offset 40, 길이 10인 slice는 각각 fixed part 침범, payload 범위 초과, element 정렬 실패로 거부해야 합니다.
         </p>
         <div className="not-prose flex flex-wrap items-center gap-2">
           <CodeViewButton onClick={() => sidebar.open("ssz-offset", codeRefs["ssz-offset"])} />

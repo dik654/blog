@@ -5,7 +5,7 @@ const CASES = {
   cutoff: { label: "게이트 0.4 V", gate: "0.4 V", drain: "1.0 V", current: "이상값 0 mA", region: "차단", channel: "강한 전자 길이 없습니다", dotX: 190, dotY: 125 },
   linear: { label: "양끝 0.2 V", gate: "1.5 V", drain: "0.2 V", current: "0.18 mA", region: "선형 영역", channel: "드레인 끝에도 전자 길이 남습니다", dotX: 62, dotY: 89 },
   edge: { label: "양끝 1.0 V", gate: "1.5 V", drain: "1.0 V", current: "0.5 mA", region: "핀치오프 경계", channel: "드레인 끝의 전자 길이가 잘록합니다", dotX: 190, dotY: 25 },
-  saturation: { label: "양끝 1.5 V", gate: "1.5 V", drain: "1.5 V", current: "이상값 0.5 mA", region: "포화 영역", channel: "여분 전압은 잘록한 끝에 주로 걸립니다", dotX: 270, dotY: 25 },
+  saturation: { label: "양끝 1.5 V", gate: "1.5 V", drain: "1.5 V", current: "이상값 0.5 mA", region: "포화 영역", channel: "1.0 V를 넘는 0.5 V는 잘록한 끝에 주로 걸립니다", dotX: 270, dotY: 25 },
 } as const;
 
 type CaseKey = keyof typeof CASES;

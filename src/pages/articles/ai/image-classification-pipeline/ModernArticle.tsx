@@ -254,7 +254,7 @@ for train_index, valid_index in splitter.split(files, labels, groups):
             {
               symbol: "q",
               name: "Quality metric",
-              description: "사전에 고정한 macro recall·NLL 등 품질 지표입니다.",
+              description: "사전에 고정한 macro recall 등 높을수록 좋은 품질 지표입니다. NLL처럼 낮을수록 좋은 지표는 −NLL로 부호를 뒤집어 넣습니다.",
             },
             {
               symbol: String.raw`L_{95}`,

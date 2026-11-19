@@ -62,7 +62,7 @@ export const globalHistoryArticles: Article[] = [
     sections: [
       { id: "overview", title: "지도에서 한 색으로 보이는 제국도 안쪽은 하나가 아니었습니다" },
       { id: "black-box", title: "명령·세금·병력·정보의 네 흐름을 나눕니다" },
-      { id: "case", title: "곡물 100자루를 수도와 변경에 나눠 보냅니다" },
+      { id: "case", title: "곡물 100자루를 지방과 변경에 나눠 씁니다" },
       { id: "picture", title: "도로는 시장과 군대를 함께 움직였습니다" },
       { id: "need", title: "먼 지방을 다스리려면 현지 권력과 번역이 필요했습니다" },
       { id: "names", title: "제국 물류·재정 가시성·법의 중첩에 이름을 붙입니다" },

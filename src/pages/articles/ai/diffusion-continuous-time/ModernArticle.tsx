@@ -37,7 +37,7 @@ export default function ContinuousDiffusionArticle() {
           name="Reverse-time SDE"
           shape="forward drift − diffusion²×score + reverse Brownian increment"
           meaning="Terminal noise에서 data distribution 쪽으로 돌아오도록 forward drift를 score로 교정한 stochastic dynamics입니다."
-          example="f=0, g=1, score=−2라면 reverse drift correction은 +2 방향입니다."
+          example="f=0, g=1, score=−2라면 reverse drift 계수 f−g²·score는 +2지만, 시간을 거꾸로(dt&lt;0) 적분하므로 sample은 score가 가리키는 −x 방향(density가 높은 쪽)으로 움직입니다."
           boundary="True score와 continuous integration의 이론입니다. Neural score와 finite steps에서는 exact sample 보장이 사라집니다."
         />
         <ExplainedFormula

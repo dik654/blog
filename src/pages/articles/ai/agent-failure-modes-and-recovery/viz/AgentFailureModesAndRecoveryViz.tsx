@@ -3,22 +3,22 @@ import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 /**
- * 한 실행 경로가 실패 신호에서 세 failure mode 로 갈라지고, 각 mode 가 idempotent 여부에 따라
- * retry 또는 human escalation 으로 수렴하는 장면. Node/edge 는 장면이 지나도 사라지지 않고
+ * 한 실행 경로가 실패 신호에서 세 failure mode 로 갈라지고, 각 mode 가 재시도 조건 충족 여부에 따라
+ * (서버 보장·키 유효 기간·남은 횟수) retry 또는 human escalation 으로 수렴하는 장면. Node/edge 는 장면이 지나도 사라지지 않고
  * "seen" 상태로 남아, stage 크기가 장면 사이에 바뀌지 않는다(stable stage).
  */
 const SCENES = [
   "정상 실행 경로",
   "세 failure mode 로 갈라짐",
-  "Idempotent 여부 확인",
+  "재시도 조건 확인",
   "Retry 또는 escalation 으로 수렴",
 ] as const;
 
 const NOTES = [
   "1→2→3 단계는 순서대로 실행되고, 아직 실패 신호는 없습니다.",
   "3 단계에서 실패 신호가 나오면 infra timeout·tool misuse·goal/context drift 세 갈래로 분류됩니다.",
-  "Infra timeout 만 idempotent 여부를 확인할 대상입니다. 나머지 둘은 재시도로 고쳐지지 않습니다.",
-  "Idempotent 이면 retry, 아니면 나머지 둘과 함께 checkpoint 를 남긴 human escalation 으로 수렴합니다.",
+  "Infra timeout 만 재시도 조건을 확인할 대상입니다. 서버의 중복 실행 방지 보장, 키 유효 기간, 남은 재시도 횟수를 모두 봅니다. 나머지 둘은 재시도로 고쳐지지 않습니다.",
+  "세 조건이 모두 확인되면 같은 키로 retry, 하나라도 확인할 수 없으면 나머지 둘과 함께 checkpoint 를 남긴 human escalation 으로 수렴합니다. 키가 있다는 사실만으로는 retry 가 안전해지지 않습니다.",
 ] as const;
 
 type NodeSpec = { id: string; x: number; y: number; w: number; label: string; unlock: number; sub?: string };
@@ -31,7 +31,7 @@ const NODES: NodeSpec[] = [
   { id: "infra", x: 20, y: 78, w: 96, label: "Infra timeout", unlock: 1 },
   { id: "tool", x: 182, y: 78, w: 96, label: "Tool misuse", unlock: 1 },
   { id: "goal", x: 344, y: 78, w: 116, label: "Goal/context drift", unlock: 1 },
-  { id: "check", x: 20, y: 138, w: 96, label: "Idempotent?", unlock: 2 },
+  { id: "check", x: 20, y: 138, w: 96, label: "재시도 조건 충족?", unlock: 2 },
   { id: "retry", x: 20, y: 198, w: 96, label: "Retry", unlock: 3 },
   { id: "escalate", x: 210, y: 198, w: 130, label: "Escalation → human", unlock: 3 },
 ];
@@ -69,8 +69,8 @@ export default function AgentFailureModesAndRecoveryViz() {
   return (
     <VizFrame
       eyebrow="Agent failure mode · recovery"
-      title="같은 실행 경로가 실패 신호에서 갈라지고, idempotent 여부로 다시 모입니다"
-      description="Failure mode 마다 다른 갈래로 나뉘지만, 자동으로 안전한 것은 retry뿐이고 나머지는 escalation으로 모입니다."
+      title="같은 실행 경로가 실패 신호에서 갈라지고, 재시도 조건 충족 여부로 다시 모입니다"
+      description="Failure mode 마다 다른 갈래로 나뉘지만, 자동 retry는 서버 보장·키 유효 기간·남은 횟수가 확인된 경우에만 허용되고 나머지는 escalation으로 모입니다."
       note="실제 taxonomy는 더 세분화되지만, 이 장면은 retry 대 escalation 판정 축 하나만 단순화해 보여줍니다."
     >
       <div
@@ -78,7 +78,7 @@ export default function AgentFailureModesAndRecoveryViz() {
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="복구는 idempotent 여부로 retry 나 escalation 으로 갈립니다"
+        aria-label="복구는 재시도 조건 충족 여부로 retry 나 escalation 으로 갈립니다"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >

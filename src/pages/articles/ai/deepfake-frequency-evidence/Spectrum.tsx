@@ -41,7 +41,7 @@ x_nb_{4,n}&=\underbrace{[1,1,1,1,1,1,1,1]}_{\text{위치별 곱}},\\
         ]}
         terms={[
           { symbol: "n", name: "위치 번호", description: "왼쪽부터 0에서 7까지 붙인 밝기 칸의 번호입니다." },
-          { symbol: "k", name: "주파수 번호", description: "여덟 칸 안에서 기준 무늬가 몇 번 방향을 바꾸는지 나타냅니다." },
+          { symbol: "k", name: "주파수 번호", description: "여덟 칸 안에서 기준 무늬가 몇 번 반복되는지(완전한 주기 수) 나타냅니다." },
           { symbol: "X₄", name: "k=4 계수", description: "입력과 k=4 기준이 얼마나 같은 방향인지 모은 값입니다." },
         ]}
         assumptions={[

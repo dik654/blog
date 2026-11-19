@@ -459,13 +459,13 @@ export default function Discv5Article() {
                 "record bytes + RLP + request ID + total + header + tag ≤ 1280",
               result: "record 크기에 따라 4개보다 더 필요할 수 있음",
               reason:
-                "geth v1.17.8은 record 묶음에 별도 1000-byte budget을 두므로 정확한 packet 수는 ENR 크기 분포에 따라 달라집니다.",
+                "geth v1.17.8은 record 묶음에 별도 1000-byte budget을 두므로 정확한 packet 수는 ENR 크기 분포에 따라 달라집니다. 모두 300B라면 packet당 3개(900B)만 들어가 ceil(16 ÷ 3) = 6 packets가 되고, 이는 수신 쪽 local total 상한 5보다 많습니다.",
             },
           ]}
           conclusion="최악의 ENR 16개는 record bytes만 4800B여서 NODES를 반드시 나눠야 합니다. total은 이 분할 수를 알려주지만, 수신자는 total을 무제한 신뢰해서 memory를 예약하면 안 됩니다."
           caveats={[
             "모든 ENR가 실제로 300B인 것은 아닙니다. 따라서 언제나 정확히 4개 또는 6개 packet이라는 결론은 틀립니다.",
-            "geth의 1000-byte record budget과 response total 상한 5는 v1.17.8 구현 정책이지 wire 규격 전체의 고정 상수가 아닙니다.",
+            "geth의 1000-byte record budget과 response total 상한 5는 v1.17.8 구현 정책이지 wire 규격 전체의 고정 상수가 아닙니다. 두 값이 만나면 최악의 6-packet 응답에서 geth 수신자는 5개를 받는 순간 끝내므로, 나머지 1개 packet의 record는 이번 결과에 들어가지 않습니다.",
           ]}
         />
 

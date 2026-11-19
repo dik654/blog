@@ -159,7 +159,7 @@ export function TuningContractViz() {
   ] as const;
   const notes = [
     "Split·metric·training resource·seed policy가 같아야 configuration 차이만 비교할 수 있습니다.",
-    "Search algorithm보다 먼저 trial 한 건의 비용과 전체 wall-clock 상한을 정합니다.",
+    "Search algorithm보다 먼저 trial 한 건의 비용과 GPU분처럼 합산하는 전체 예산 상한을 정합니다.",
     "Validation은 후보를 고르는 데이터입니다. 가장 좋은 validation 숫자를 최종 성능처럼 말하지 않습니다.",
     "Outer data는 선택이 끝난 procedure를 한 번 평가합니다. 결과를 보고 다시 고치면 새 outer data가 필요합니다.",
   ] as const;

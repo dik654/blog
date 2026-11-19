@@ -189,17 +189,17 @@ export default function RankingMetricsArticle() {
               이 글에서는 관련도 <code>r</code>을 <code>2ʳ−1</code>의 이득으로
               바꾸고, 아래 결과일수록 로그로 할인합니다. 현재 DCG를 같은 판정
               집합으로 만들 수 있는 가장 높은 DCG로 나누면 NDCG가 됩니다. D가
-              추가되면 기존 목록은 그대로여도 이상적인 DCG가 8.893에서 12.916으로
+              추가되면 기존 목록은 그대로여도 이상적인 DCG가 8.893에서 12.917로
               커지므로 기존 시스템의 점수도 0.956에서 0.658로 내려갑니다.
             </p>
           }
           formula={String.raw`g(r)=2^r-1,\quad \mathrm{DCG}@k=\sum_{j=1}^k\frac{g(r_j)}{\log_2(j+1)},\quad \mathrm{NDCG}@k=\frac{\mathrm{DCG}@k}{\mathrm{IDCG}@k}`}
-          annotatedFormula={String.raw`\begin{aligned}\mathrm{IDCG}@3&=\underbrace{7+7/\log_2 3+3/2}_{\text{D3·A3·C2의 이상적 순서}}\approx12.916\\\mathrm{NDCG}_{\rm 기존}&=\underbrace{(7+0+3/2)/12.916}_{\text{A3·B0·C2}}\approx0.658\\\mathrm{NDCG}_{\rm 후보}&=\underbrace{(7+7/\log_2 3+3/2)/12.916}_{\text{D3·A3·C2}}=1\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\mathrm{IDCG}@3&=\underbrace{7+7/\log_2 3+3/2}_{\text{D3·A3·C2의 이상적 순서}}\approx12.917\\\mathrm{NDCG}_{\rm 기존}&=\underbrace{(7+0+3/2)/12.917}_{\text{A3·B0·C2}}\approx0.658\\\mathrm{NDCG}_{\rm 후보}&=\underbrace{(7+7/\log_2 3+3/2)/12.917}_{\text{D3·A3·C2}}=1\end{aligned}`}
           operations={[
             { expression: String.raw`2^{r_j}-1`, annotation: ["관련도 3·3·2를 지수에 넣어", "이득 7·7·3으로 변환"] },
-            { expression: String.raw`7+7/\log_2 3+3/2`, annotation: ["D·A·C의 이득을 위치별로 할인해 더해", "IDCG@3 약 12.916을 계산"] },
-            { expression: String.raw`8.5/12.916`, annotation: ["기존 목록의 DCG 8.5를 새 이상적 DCG로 나눠", "기존 시스템 NDCG 약 0.658을 계산"] },
-            { expression: String.raw`12.916/12.916`, annotation: ["후보 목록의 DCG를 같은 이상적 DCG로 나눠", "후보 시스템 NDCG 1을 계산"] },
+            { expression: String.raw`7+7/\log_2 3+3/2`, annotation: ["D·A·C의 이득을 위치별로 할인해 더해", "IDCG@3 약 12.917을 계산"] },
+            { expression: String.raw`8.5/12.917`, annotation: ["기존 목록의 DCG 8.5를 새 이상적 DCG로 나눠", "기존 시스템 NDCG 약 0.658을 계산"] },
+            { expression: String.raw`12.917/12.917`, annotation: ["후보 목록의 DCG를 같은 이상적 DCG로 나눠", "후보 시스템 NDCG 1을 계산"] },
           ]}
           terms={[
             { symbol: "j", name: "결과 위치", description: "1부터 시작하는 목록 안의 순서입니다." },

@@ -59,7 +59,7 @@ export default function RobotActionRepresentationsArticle() {
             표현하지 못합니다.
           </p>
           <p>
-            예를 들어 값의 범위를 256개 bin으로 균등하게 나누면 bin 하나의 폭은 범위의 1/256입니다. 범위가 20cm인 축이라면 bin 하나는 약 0.8mm입니다. 많은
+            예를 들어 값의 범위를 256개 bin으로 균등하게 나누면 아래 식 기준으로 bin 하나의 폭은 범위의 1/255(=1/(B−1))입니다. 범위가 20cm인 축이라면 bin 하나는 약 0.78mm입니다. 많은
             manipulation task에는 충분하지만 정교한 force control에는 거칠 수 있습니다.
           </p>
         </div>
@@ -84,8 +84,8 @@ export default function RobotActionRepresentationsArticle() {
             RT-2는 이 pose 값과 gripper 상태를 <strong>coordinate-as-text</strong> 방식으로
             예측합니다. 각 차원을 256개 bin으로 균등 discretize한 뒤 정수 하나로 바꾸고, 그 정수들을
             공백으로 이어 하나의 문자열 token sequence로 만듭니다. 6-DoF delta pose와 gripper,
-            episode 종료 신호를 더한 8차원 action은 "1 128 91 241 5 101 127"처럼 정수 문자열로
-            표현됩니다.
+            episode 종료 신호를 더한 8차원 action은 정수 8개를 공백으로 이은 문자열로 표현됩니다.
+            논문이 든 예시 "1 128 91 241 5 101 127"에는 정수가 7개만 적혀 있어 8차원 형식과 개수가 맞지 않습니다.
           </p>
           <p>
             이 방식은 VLM의 기존 tokenizer와 vocabulary를 그대로 재사용한다는 게 장점입니다. PaLI-X처럼 숫자 token을 이미 갖는 tokenizer는 bin
@@ -137,7 +137,7 @@ b&=\underbrace{\left\lfloor r\,(B-1) \right\rfloor}_{\text{bin 개수를 곱하�
             <p><strong>문제:</strong> Web-scale visual-language knowledge를 robot control에 이전합니다.</p>
             <p><strong>핵심 기여:</strong> 8차원 action(6-DoF delta pose + gripper + episode 종료)을 차원별 256 bin discretization으로 정수 문자열 token으로 표현하고, VLM tokenizer의 기존 vocabulary를 재사용합니다.</p>
             <p><strong>전제:</strong> 논문에 포함된 robot embodiments·tasks·action representation입니다.</p>
-            <p><strong>근거 범위:</strong> Coordinate-as-text action prediction의 discretization 방식과 정수 문자열 예시("1 128 91 241 5 101 127")의 근거입니다.</p>
+            <p><strong>근거 범위:</strong> Coordinate-as-text action prediction의 discretization 방식과 정수 문자열 예시("1 128 91 241 5 101 127", 논문 원문에도 정수 7개만 적힘)의 근거입니다.</p>
             <p><strong>비주장:</strong> 임의 robot·contact-rich task로 zero-shot control이 일반화된다는 뜻은 아닙니다.</p>
           </CitationBlock>
         </div>

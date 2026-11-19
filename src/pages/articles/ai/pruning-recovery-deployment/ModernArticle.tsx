@@ -138,13 +138,13 @@ export default function PruningRecoveryDeploymentArticle() {
               모두에 fixed mask를 projection처럼 적용합니다.
             </p>
           }
-          formula={String.raw`\widetilde W_{t+1}=W_t-\eta g_t,\quad W_{t+1}=M\odot\widetilde W_{t+1},\quad U_{t+1}=M\odot\widetilde U_{t+1}`}
-          annotatedFormula={String.raw`\begin{aligned}\widetilde W_{t+1}&=\underbrace{W_t-\eta g_t}_{\text{일반 optimizer 후보 weight 계산}}\\W_{t+1}&=\underbrace{M\odot\widetilde W_{t+1}}_{\text{제거 위치를 다시 0으로 projection}}\\\widetilde U_{t+1}&=\underbrace{\operatorname{OptUpdate}(U_t,g_t)}_{\text{momentum·moment 후보 갱신}}\\U_{t+1}&=\underbrace{M\odot\widetilde U_{t+1}}_{\text{state의 제거 위치도 0으로 봉인}}\end{aligned}`}
+          formula={String.raw`\widetilde U_{t+1}=\operatorname{OptUpdate}(U_t,g_t),\quad \widetilde W_{t+1}=W_t-\eta\,\Delta(\widetilde U_{t+1}),\quad W_{t+1}=M\odot\widetilde W_{t+1},\quad U_{t+1}=M\odot\widetilde U_{t+1}`}
+          annotatedFormula={String.raw`\begin{aligned}\widetilde U_{t+1}&=\underbrace{\operatorname{OptUpdate}(U_t,g_t)}_{\text{momentum·moment 후보 갱신}}\\\widetilde W_{t+1}&=\underbrace{W_t-\eta\,\Delta(\widetilde U_{t+1})}_{\text{state 후보로 만든 일반 optimizer 후보 weight}}\\W_{t+1}&=\underbrace{M\odot\widetilde W_{t+1}}_{\text{제거 위치를 다시 0으로 projection}}\\U_{t+1}&=\underbrace{M\odot\widetilde U_{t+1}}_{\text{state의 제거 위치도 0으로 봉인}}\end{aligned}`}
           operations={[
             {
-              expression: String.raw`W_t-\eta g_t`,
+              expression: String.raw`W_t-\eta\,\Delta(\widetilde U)`,
               annotation: [
-                "gradient에 learning rate를 곱해",
+                "state 후보로 만든 update 방향에 learning rate를 곱해",
                 "일반 weight 후보 계산",
               ],
             },
@@ -173,6 +173,11 @@ export default function PruningRecoveryDeploymentArticle() {
               symbol: "U",
               name: "Optimizer state",
               description: "Momentum·Adam moments입니다.",
+            },
+            {
+              symbol: String.raw`\Delta`,
+              name: "Update 방향",
+              description: "State 후보로 만든 update 방향입니다. Momentum SGD에서는 후보 U 그대로입니다.",
             },
             {
               symbol: String.raw`\eta`,

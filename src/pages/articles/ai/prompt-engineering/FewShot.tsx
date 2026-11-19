@@ -39,8 +39,8 @@ export default function FewShot() {
         <p>
           이 치환 단계 덕분에 instruction 뼈대는 그대로 두고 example 개수나
           순서만 바꾸는 A/B 비교가 가능합니다. 예컨대 <code>{"{{examples}}"}</code> 자리에
-          예시 3개를 이어 붙이면 template 코드를 고치지 않고도 few-shot 조건을
-          4개로 늘릴 수 있습니다.
+          예시 3개를 더 이어 붙이면 template 코드를 고치지 않고도 few-shot 조건을
+          1개에서 4개로 늘릴 수 있습니다.
         </p>
 
         <h3 className="scroll-mt-20">
@@ -73,7 +73,7 @@ export default function FewShot() {
           {
             term: "Selection · order sensitivity",
             description: "어떤 예시를 고르고 어느 순서로 놓느냐에 따라 prediction이 달라지는 현상입니다.",
-            example: "같은 세 예시의 permutation 10개에서 class별 accuracy와 prediction variance를 비교합니다.",
+            example: "같은 세 예시의 permutation 6개에서 class별 accuracy와 prediction variance를 비교합니다.",
             boundary: "한 ordering의 최고 점수만 보고 task rule을 배웠다고 결론내리지 않습니다.",
           },
           {

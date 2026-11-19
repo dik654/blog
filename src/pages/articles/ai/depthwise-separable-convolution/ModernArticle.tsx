@@ -122,7 +122,7 @@ export default function DepthwiseArticle() {
       </section>
       <section id="runtime" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          MAC 0.119가 latency 0.119를 보장하지 않습니다
+          MAC 0.127이 latency 0.127을 보장하지 않습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>

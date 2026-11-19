@@ -375,7 +375,7 @@ export default function TimeValueAndDiscountingArticle() {
           <p className="leading-7">
             원리금 균등 상환 대출은 이 식을 반대로 읽은 것입니다. 빌린 금액을
             PV 자리에 놓고 C를 구하면 월 납입액이 나옵니다. 같은 원금이라도
-            금리가 오르면 대괄호 값이 작아져 같은 PV를 채우기 위해 C가
+            금리가 오르면 대괄호를 r로 나눈 값이 작아져 같은 PV를 채우기 위해 C가
             커집니다.
           </p>
         </ProgressiveDetail>

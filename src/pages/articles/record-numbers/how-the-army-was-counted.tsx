@@ -21,7 +21,7 @@ export default function HowTheArmyWasCountedArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          보병이 170만이라고 적은 다음 줄에 세는 방법이 적혀 있습니다
+          육군 전체가 170만이라고 적은 다음 줄에 세는 방법이 적혀 있습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">

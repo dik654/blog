@@ -288,7 +288,7 @@ export default function SparseWindowedAttentionPatternsArticle() {
         <NsaBranchesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            NSA 가 함께 돌리는 branch 는 셋입니다. 첫째는 block 32개를 stride 16으로 묶는 압축 branch입니다. 둘째는 압축 단계의 attention score로 중요도를
+            NSA 가 함께 돌리는 branch 는 셋입니다. 첫째는 길이 32 token 짜리 block을 stride 16으로 묶는 압축 branch입니다. 둘째는 압축 단계의 attention score로 중요도를
             매겨 크기 64인 block 16개를 고르는 선택 branch입니다. 셋째는 최근 512 token을 보는 sliding-window branch입니다.
           </p>
           <p>

@@ -79,7 +79,7 @@ export default function LinuxObservabilityProcPsiPerfEbpfArticle() {
             </p>
             <p>
               같은 파일 아래쪽의 procs_running은 "지금 실행 중이거나 실행을 기다리는 스레드 수"입니다. 이 값은 누적이 아니라 순간값이라 뺄셈 없이 그대로 읽습니다. vmstat의 r 열이 이
-              줄입니다. 사용률 40%를 계산한 10초 동안 이 값이 1·2 사이를 오가다가 1초쯤 12를 찍었다면, 평균은 평평했지만 그 1초 동안 4개 CPU에 12개 스레드가 몰린 것입니다.
+              줄입니다. 사용률 40%를 계산한 10초 동안 이 값이 1·2 사이를 오가다가 4초마다 1초쯤 12를 찍었다면, 평균은 평평했지만 그 1초마다 4개 CPU에 12개 스레드가 몰린 것입니다.
             </p>
           </div>
           <figure className="not-prose my-6">
@@ -363,7 +363,7 @@ export default function LinuxObservabilityProcPsiPerfEbpfArticle() {
               { code: "for resource in [CPU, 메모리, 디스크, 네트워크]: read U, S, E", note: "열두 칸을 모두 읽습니다. 사용률 한 칸으로 자원을 지우지 않습니다. 결과: CPU S만 빨강(PSI some 25%, r 12)." },
               { code: "confirm with total: Δtotal / Δt == 25%", note: "/proc/pressure/cpu의 total을 10초 간격으로 빼 avg10의 EMA 지연 없이 확인합니다." },
               { code: "perf top -F 99   # 10초", note: "표본의 60%가 report-gen의 함수에 몰립니다(가정). '어느 코드가'에 대한 답입니다." },
-              { code: "bpftrace -e 'profile:hz:99 { @[comm] = count(); }'", note: "같은 질문을 bpftrace로. 99 Hz × 10초 × 4 CPU = 3,960 표본 가운데 report-gen이 약 2,400(가정)." },
+              { code: "bpftrace -e 'profile:hz:99 { @[comm] = count(); }'", note: "같은 질문을 bpftrace로. 99 Hz × 10초 × 4 CPU = 3,960 표본 가운데 report-gen이 약 990(가정, 폭주 2.5초 × 4 CPU × 99 Hz)." },
               { code: "bpftrace -e 'tracepoint:syscalls:sys_enter_openat /comm == \"report-gen\"/ { @[str(args.filename)] = count(); }'", note: "폭주 1초마다 같은 CSV 파일 수십 개를 다시 엽니다(가정). '어떤 이벤트가'에 대한 답이자 수정 방향(결과 캐시·주기 분산)입니다." },
               { code: "fix; re-read grid", note: "고친 뒤 격자를 다시 읽어 CPU S 칸이 내려갔는지, 다른 칸이 올라오지 않았는지 확인합니다." },
             ]}

@@ -18,7 +18,7 @@ export default function TaskStatusViz() {
           },
           {
             label: "02",
-            title: "Leased",
+            title: "Assigned",
             body: "w-3·attempt 2·lease version 7과 만료 시각을 함께 기록합니다.",
             tone: "violet",
           },

@@ -239,7 +239,7 @@ export function GlobalAndDriftViz() {
 
 const HOP_LABELS = ["질문", "관계 자료", "LLM 합성", "실패", "별도 traversal"] as const;
 const HOP_NOTES = [
-  "q-882는 tenant-a→U-42→E401→모바일 앱의 세 관계를 이어야 답할 수 있습니다.",
+  "q-882는 tenant-a←U-42→E401→모바일 앱의 세 관계를 이어야 답할 수 있습니다.",
   "Local context builder가 관계 record와 연결 원문을 문맥에 넣으면 LLM이 그 연결을 읽을 수 있습니다.",
   "이 사례의 답은 세 관계를 합성해 얻습니다. 하지만 기본 API가 정확히 3-hop을 모두 탐색했다고 보장하는 것은 아닙니다.",
   "시작 entity나 중간 relationship이 top-k·token 예산에서 빠지면 경로가 끊깁니다. 생성 모델이 관계 방향을 잘못 합성할 수도 있습니다.",

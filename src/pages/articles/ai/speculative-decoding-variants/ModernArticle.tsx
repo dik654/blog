@@ -173,7 +173,7 @@ export default function ModernArticle() {
         <span id="greedy" />
         <GreedyCumprodViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">evaluate_posterior의 temperature 0 분기는 candidates의 둘째 칸부터 부모 위치의 argmax와 비교합니다. RAY 행의 비교 결과는 [1,1]이고 RAX는 [1,0]입니다. 처음이 B인 두 행은 [0,1]이어도 첫 실패 뒤를 확정할 수 없습니다.</p>
+<p className="leading-8">evaluate_posterior의 temperature 0 분기는 candidates의 둘째 칸부터 부모 위치의 argmax와 비교합니다. RAY 행의 비교 결과는 [1,1]이고 RAX는 [1,0]입니다. 처음이 B인 행은 RBY처럼 [0,1]이어도 첫 실패 뒤를 확정할 수 없습니다.</p>
 <p className="leading-8">각 행의 비교값을 앞에서부터 곱하는 cumprod를 적용하면 [0,1]은 [0,0]이 되고 이후 합으로 연속 일치 길이를 구합니다. RAY의 2가 최대이므로 원문 순서의 행 번호 2를 선택합니다.</p>
 <p className="leading-8">이 검산은 가정한 점수를 넣어 실제 함수의 greedy 분기를 실행한 것입니다. PyTorch 대신 작은 Python 배열 대역을 사용했으며 모델 forward나 GPU를 실행하지 않았습니다. 이 결과는 함수 제어와 인덱스를 확인한 것이고 실제 언어 모델의 성능을 재현한 것은 아닙니다.</p>
 </div>

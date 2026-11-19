@@ -14924,7 +14924,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "국내 보유·파기 의무는 2026-08-14 현행 개인정보 보호법·KISA 안내서에 귀속한다.",
+        rule: "국내 보유·파기 의무는 2026-11-02 현행 개인정보 보호법·KISA 안내서에 귀속한다.",
       },
       {
         kind: "project-measurement",
@@ -28633,7 +28633,7 @@ export const EDITORIAL_BOUNDARIES = {
   "hermeneutics-part-whole-prejudice-and-understanding": {
     title: "해석학의 부분·전체·선이해·지평 융합 글이 소유하는 범위",
     owns: [
-      "네 단어와 메시지 6개를 두 번 읽는 해석 장부",
+      "세 단어와 메시지 6개를 두 번 읽는 해석 장부",
       "해석학적 순환·선이해·지평 융합의 역할",
       "상대주의와 권력 없는 대화로 만들지 않는 경계",
     ],

@@ -85,12 +85,12 @@ export default function LinearSoftmax() {
           <>
             One-hot target은 정답에 확률 1, 나머지 모든 token에 0을 요구해
             모델이 정답 logit을 무한히 키우도록 유도합니다. Label smoothing은
-            정답에는 1보다 살짝 작은 확률만, 나머지 K-1개 token에는 남은 확률을
+            정답에는 1보다 살짝 작은 확률만 남기고, 덜어낸 ε을 정답을 포함한 K개 token 전체에
             균등하게 나눠줘 모델이 유한한 확신에서 멈추게 만듭니다.
           </>
         }
         formula={String.raw`q'(k)=(1-\epsilon)\cdot\mathbf 1[k=y^*]+\frac{\epsilon}{K},\qquad \mathcal L_{\mathrm{ls}}=-\sum_k q'(k)\log p(k)`}
-        annotatedFormula={String.raw`q'(k)=\underbrace{(1-\epsilon)\cdot\mathbf 1[k=y^*]}_{\text{정답 token에 1보다 살짝 작은 확률}}+\underbrace{\frac{\epsilon}{K}}_{\text{나머지 모든 token에 균등 분산}}`}
+        annotatedFormula={String.raw`q'(k)=\underbrace{(1-\epsilon)\cdot\mathbf 1[k=y^*]}_{\text{정답 token에 1보다 살짝 작은 확률}}+\underbrace{\frac{\epsilon}{K}}_{\text{정답 포함 모든 token에 균등 분산}}`}
         operations={[
           {
             expression: String.raw`(1-\epsilon)\cdot\mathbf 1[k=y^*]`,
@@ -113,7 +113,7 @@ export default function LinearSoftmax() {
             symbol: String.raw`\epsilon`,
             name: "smoothing 강도",
             description:
-              "정답 확률에서 덜어내 나머지 token에 나눠줄 양입니다. 원 논문은 0.1을 씁니다.",
+              "정답 확률에서 덜어내 정답을 포함한 전체 token에 나눠줄 양입니다. 원 논문은 0.1을 씁니다.",
           },
           {
             symbol: "K",

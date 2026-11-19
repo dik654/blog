@@ -844,7 +844,7 @@ export const embeddingArticles: Article[] = [
       {
         id: "sigmoid-loss",
         title: "정규화를 없애면 쌍마다 독립이 됩니다",
-        subsections: [{ id: "logit-bias", title: "음성 쌍이 N배 많다는 사실을 편향이 흡수합니다" }],
+        subsections: [{ id: "logit-bias", title: "음성 쌍이 N−1배 많다는 사실을 편향이 흡수합니다" }],
       },
       { id: "batch-and-negatives", title: "배치 크기가 곧 음성 쌍의 개수입니다" },
       { id: "zero-shot", title: "범주 이름을 문장으로 바꾸면 분류기가 됩니다" },

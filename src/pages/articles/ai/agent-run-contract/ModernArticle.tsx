@@ -155,9 +155,19 @@ export default function Article() {
               boundary: "현재 파일과 다른 버전의 검사 결과를 섞지 않습니다.",
             },
             {
-              term: "Verifier and recovery",
-              description: "완료 판정과 실패 뒤 재시도·복구·인계 방법입니다.",
+              term: "Verifier",
+              description: "완료 판정 방법입니다.",
               boundary: "그럴듯한 완료 문장은 검사 결과가 아닙니다.",
+            },
+            {
+              term: "Recovery",
+              description: "실패 뒤 재시도·복구 방법입니다.",
+              boundary: "실패한 실행을 완료로 기록하지 않습니다.",
+            },
+            {
+              term: "Handoff",
+              description: "다음 실행에 넘기는 인계 방법입니다.",
+              boundary: "다음 실행은 넘겨받은 결과를 다시 확인한 뒤 이어갑니다.",
             },
           ]}
         />

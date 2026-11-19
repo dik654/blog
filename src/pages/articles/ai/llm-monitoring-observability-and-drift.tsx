@@ -308,7 +308,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             "T_ITL은 요청 하나 안에서 token마다 크게 다르지 않다고 가정한 평균값입니다.",
             "Model latency breakdown은 이 식에서 queue·network를 뺀 GPU 계산 시간만을 가리키므로, application latency breakdown과는 같은 요청에서도 값이 다릅니다.",
           ]}
-          interpretation="Output 256 token, TTFT 0.4초, 전체 3.6초라면 생성 구간은 3.2초이고 throughput은 초당 80 token입니다. 이 숫자가 낮아졌을 때 model latency breakdown이 그대로라면 원인은 GPU가 아니라 queue·network 쪽 application 오버헤드에 있습니다."
+          interpretation="Output 256 token, TTFT 0.4초, 전체 3.6초라면 생성 구간은 3.2초이고 throughput은 초당 80 token입니다. 이 숫자가 낮아졌을 때 model latency breakdown이 그대로라면 원인은 GPU가 아니라 생성 구간 안의 network 쪽 application 오버헤드에 있습니다. Queue 대기는 TTFT에 들어가므로 이 분모에는 없습니다."
         />
         <ProgressiveDetail
           title="Input token count는 왜 latency보다 비용·context budget에 먼저 영향을 주나요"
@@ -398,7 +398,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
           ]}
           assumptions={[
             "각 요청의 실패 여부와 sampling 선택이 독립이라고 가정합니다.",
-            "실제 sampling은 균일 무작위가 아니라 error·latency 기반 tail sampling을 섞는 경우가 많아 이 식은 균일 sampling의 하한 추정치입니다.",
+            "실제 sampling은 균일 무작위가 아니라 error·latency 기반 tail sampling을 섞는 경우가 많아 이 식은 균일 sampling일 때의 놓침 확률이고, tail sampling이 섞이면 실제 놓침 확률은 이보다 낮으므로 상한으로 읽어야 합니다.",
           ]}
           interpretation="실패율 0.1%, sampling rate 5%, 요청 2,000건이면 그 실패를 한 번도 못 볼 확률은 약 90%입니다. 드문 실패를 확실히 잡으려면 균일 sampling만으로는 부족하고, error 발생 시 100% 강제 export하는 tail sampling을 함께 둬야 합니다."
         />

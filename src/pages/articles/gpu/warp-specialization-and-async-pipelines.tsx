@@ -340,8 +340,8 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
           </p>
           <p>
             효과는 latency amortization 으로 읽힙니다. Tile T 개를 순서대로 처리하면 시간은 T×(L + C) 이지만 pipeline 이 차면 첫 tile 의 L 만
-            드러나고 나머지는 max(L, C) 씩 갑니다. T = 64, L = 1.2 µs, C = 0.3 µs 면 96 µs 가 1.2 + 64×1.2 ≈ 78 µs 로 줄어듭니다.
-            여기서 남은 병목은 L 이므로 HBM traffic 을 줄이는 쪽으로 넘어가야 합니다.
+            드러나고, stage 가 ⌈L/C⌉ + 1 이상이면 나머지는 C 씩 갑니다. T = 64, L = 1.2 µs, C = 0.3 µs 면 96 µs 가 1.2 + 64×0.3 ≈ 20 µs 로 줄어듭니다.
+            이때 남은 시간은 계산이고, HBM 대역폭이 포화돼 tile 이 C 보다 늦게 도착할 때에만 HBM traffic 을 줄이는 쪽으로 넘어가야 합니다.
           </p>
         </div>
         <PingPongViz />
@@ -371,7 +371,7 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
           description="모두 서로 다른 반복 또는 서로 다른 warp 의 일을 한 시점에 겹치는 장치이며, 겹치는 대상이 다릅니다."
           items={[
             { term: "Software pipelining", description: "반복 i 의 load 와 반복 i−1 의 계산을 같은 시점에 놓는 loop 변환입니다.", example: "Ampere GEMM: 다음 k-tile 의 cp.async 를 낸 뒤 현재 k-tile 의 mma.sync 를 냅니다.", boundary: "Load 와 계산이 같은 warp 에 있으면 warp 가 wait 에서 멈추는 순간 둘 다 멈춥니다." },
-            { term: "Latency amortization", description: "L 을 tile 마다 내지 않고 pipeline 을 채우는 첫 한 번만 내는 효과입니다.", example: "T 64: 64×(1.2+0.3) = 96 µs → 1.2 + 64×1.2 ≈ 78 µs.", boundary: "T 가 S 보다 작으면 채우는 비용이 전체와 비슷해 amortize 되지 않습니다." },
+            { term: "Latency amortization", description: "L 을 tile 마다 내지 않고 pipeline 을 채우는 첫 한 번만 내는 효과입니다.", example: "T 64, S 5: 64×(1.2+0.3) = 96 µs → 1.2 + 64×0.3 ≈ 20 µs.", boundary: "T 가 S 보다 작으면 채우는 비용이 전체와 비슷해 amortize 되지 않습니다." },
             { term: "Warp specialization", description: "Load 를 내는 warp 와 계산하는 warp 를 나눠 한쪽의 wait 가 다른 쪽을 멈추지 않게 하는 구조입니다.", example: "Hopper GEMM: warpgroup 0 이 TMA, 1·2 가 wgmma. Ping-pong 은 1·2 의 mainloop 과 epilogue 까지 엇갈립니다.", boundary: "역할을 나누면 producer 가 쓰지 않는 register 를 반납해야 consumer 예산이 나옵니다." },
           ]}
         />

@@ -29,7 +29,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
               (가정) 네임스페이스 test의 Pod에서 curl https://api.example.com을 실행하면 가끔 첫 바이트까지 5초가 걸립니다. 패킷을 잡아 보니 연결 전에 DNS 질의가 여덟 개 나가고 그중 여섯 개는 NXDOMAIN입니다.</p>
             <p>같은 노드의 dmesg에는 "nf_conntrack: table full, dropping packet"이 찍혀 있으며, 어떤 Pod는 자기 Service IP로 보낸 요청의 응답을 못 받습니다. 세 증상은 패킷이 프로세스에 닿기까지 지나는 계층이 서로 다릅니다.</p>
             <p>
-              답을 먼저 적겠습니다. 패킷은 인터페이스에서 들어와 라우팅 결정을 거치고 netfilter 훅 다섯 자리 가운데 세 개를 지나 소켓에 닿습니다. conntrack은 그 훅에 붙어 연결마다 항목 하나를 유지하며, 표가 가득 차면 새 연결의 첫 패킷을 버립니다.</p>
+              답을 먼저 적겠습니다. 패킷은 인터페이스에서 들어와 라우팅 결정을 거치고 netfilter 훅 다섯 자리 가운데 두세 개를 지나 소켓에 닿습니다. conntrack은 그 훅에 붙어 연결마다 항목 하나를 유지하며, 표가 가득 차면 새 연결의 첫 패킷을 버립니다.</p>
             <p>그 앞 단계인 이름 풀기는 resolv.conf의 search와 ndots 규칙을 따르는데, Kubernetes가 ndots를 5로 두기 때문에 점이 둘뿐인 외부 이름은 search 세 개를 붙여 먼저 묻고 그 다음에야 그대로 묻습니다. 이름마다 A·AAAA 두 질의이니 4 × 2 = 8입니다.</p>
             <p>
               이 글은 <a href="/cs/cloud/kubernetes-network-packet-path#overview">Kubernetes 패킷 경로</a>가 kube-proxy 규칙과 CNI를 설명할 때 전제로 삼는 리눅스 쪽 바닥입니다. TCP 소켓 상태와 TIME_WAIT는 <a href="/cs/cloud/linux-tcp-time-wait-ports-backlog#overview">TCP 글</a>에, 컨테이너가 자기만의 네트워크 세계를 갖는 namespace는 <a href="/cs/cloud/linux-containers-cgroup-namespace#namespaces">컨테이너 글 8절</a>에 있습니다. 근거는 Linux v6.12, glibc 2.40, Kubernetes v1.37.1, CNI plugins v1.6.2 원문입니다.
@@ -162,7 +162,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
         </section>
 
         <section id="netfilter-hooks" data-teach-level="4" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">7. 패킷 하나는 다섯 훅 가운데 세 개를 지나고, 어느 셋인지는 라우팅 결정이 정합니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">7. 패킷 하나는 다섯 훅 가운데 두세 개만 지나고, 어느 것인지는 라우팅 결정이 정합니다</h2>
           <div className={prose}>
             <p>
               netfilter 훅은 enum nf_inet_hooks의 다섯 값입니다. 수신 패킷은 ip_rcv에서 PRE_ROUTING(0)을 지난 뒤, 6절의 라우팅 결정이 '내 주소'면 ip_local_deliver에서 LOCAL_IN(1)을 지나 소켓으로, '다른 곳'이면 ip_forward에서 FORWARD(2)를 지나 ip_output의 POST_ROUTING(4)으로 갑니다.</p>

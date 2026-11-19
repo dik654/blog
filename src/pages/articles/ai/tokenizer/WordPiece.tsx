@@ -18,7 +18,7 @@ export default function WordPiece() {
         <p>
           <code>##</code> prefix는 형태소 label이 아니라 “현재 word의 시작이
           아니다”라는 vocabulary 관례입니다. 예를 들어 <code>unhappiness</code>가
-          <code>un · ##happy · ##ness</code>로 나뉘었다고 해서 세 조각이 언제나
+          <code>un · ##happi · ##ness</code>로 나뉘었다고 해서 세 조각이 언제나
           언어학적 형태소라는 뜻은 아닙니다. Vocabulary와 pre-tokenizer가 달라지면
           같은 문자열의 결과도 달라집니다.
         </p>

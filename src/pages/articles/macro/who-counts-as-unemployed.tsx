@@ -394,7 +394,7 @@ export default function WhoCountsAsUnemployedArticle() {
               description:
                 "실업자였던 사람이 둘째 조건에서 빠져 분자와 분모에서 동시에 사라집니다.",
               example:
-                "LU1은 내려가는데 잠재 노동력까지 세는 넓은 지표는 그대로이거나 올라갑니다.",
+                "LU1은 내려가는데 잠재 노동력까지 세는 넓은 지표는 그대로이거나 일을 구한 경우보다 덜 내려갑니다.",
               boundary:
                 "그 사람은 통계에서 사라진 것이지 일자리를 얻은 것이 아닙니다.",
             },

@@ -45,7 +45,7 @@ export default function SourcesLimits() {
             citeKey={4}
             href="https://docs.nvidia.com/enterprise-reference-architectures/rtx-pro-ai-factory/latest/appendix.html"
           >
-            노드마다 RTX PRO 6000 Server Edition 8장, 2소켓, 시스템 메모리는 GPU당 128GB 이상(1TB 이상)을 권합니다. 컴퓨트 패브릭은 400G BlueField-3 SuperNIC 넷입니다. 이 레퍼런스도 카드 둘에 NIC 하나라는 비율을 지킵니다. 7절의 1.5TB는 이 하한 위에 3절의 기억 오프로드 몫을 더한 값입니다.
+            노드마다 RTX PRO 6000 Server Edition 8장, 2소켓, 시스템 메모리는 GPU당 128GB 이상(1TB 이상)을 권합니다. 컴퓨트 패브릭은 400G BlueField-3 SuperNIC 넷입니다. 이 레퍼런스도 카드 둘에 NIC 하나라는 비율을 지킵니다. 7절의 2TB는 이 하한 위에 3절의 기억 오프로드 몫을 더한 값입니다.
           </CitationBlock>
         </div>
 

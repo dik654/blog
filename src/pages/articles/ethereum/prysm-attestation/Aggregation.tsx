@@ -275,7 +275,7 @@ h&=\underbrace{\operatorname{u64}\!\left(H(\sigma)_{0:8}\right)}_{\text{proof ha
             {
               symbol: "A",
               name: "target aggregators",
-              description: "v1.6.1에서 committee당 목표 16명입니다.",
+              description: "v1.7.0-beta.4에서 committee당 목표 16명입니다.",
             },
             {
               symbol: "m",

@@ -48,7 +48,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
           </p>
           <p>
             <Link to="/cs/ai/llm-training-stages#pretraining">Pretraining objective</Link> 글은
-            다음 token 확률을 낮추는 loss 자체를 다루고, 그 loss가 보는 데이터 분포가 어떻게
+            다음 token 확률을 높이는 loss 자체를 다루고, 그 loss가 보는 데이터 분포가 어떻게
             만들어지는지는 이 글에 넘겨 둡니다. 이 글은 그 분포, 즉 corpus 자체를 만드는 공학에만
             집중합니다.
           </p>
@@ -187,7 +187,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
         <OverlapThresholdViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            임계값이 짧을수록(8-gram) 우연한 일치까지 contamination으로 잡아 false positive가 늘고 길수록(50자 substring) 놓치는 진짜 유출이 늘 수
+            임계값이 짧을수록(8-gram) 우연한 일치까지 contamination으로 잡아 false positive가 늘고 길수록(13-gram) 놓치는 진짜 유출이 늘 수
             있습니다. 어느 임계값을 써도 문장을 바꿔 쓴 rephrasing 유출은 정확 일치 방식으로는 잡히지 않는다는 한계가 남습니다.
           </p>
         </div>
@@ -286,7 +286,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
           title="구성 결정과 그 결정을 평가하는 기준"
           description="Mixture·curriculum은 코퍼스를 만드는 결정이고, diversity·coverage·balance는 그 결정을 사후에 재는 기준입니다."
           items={[
-            { term: "Data Mixture", description: "domain별 데이터를 섞는 비율을 정하는 결정입니다.", example: "GPT-3의 Common Crawl 60%·WebText2 22%·Books 16%·Wikipedia 3% weight.", boundary: "원본 토큰 비중과 mixture weight는 다른 수이며 서로 바꿔 읽으면 안 됩니다." },
+            { term: "Data Mixture", description: "domain별 데이터를 섞는 비율을 정하는 결정입니다.", example: "GPT-3의 Common Crawl 60%·WebText2 22%·Books 16%·Wikipedia 3% weight(논문 표의 반올림 값이라 합이 101%).", boundary: "원본 토큰 비중과 mixture weight는 다른 수이며 서로 바꿔 읽으면 안 됩니다." },
             { term: "Data Curriculum", description: "정해진 mixture를 어떤 순서로 보여줄지 정하는 결정입니다.", example: "쉬운 문장부터 긴 문서 순서로 학습 step에 배치.", boundary: "쉬움·어려움의 정의가 명시적이지 않으면 curriculum 효과를 재현하기 어렵습니다." },
             { term: "Data Diversity", description: "코퍼스 안에 존재하는 주제·문체·난이도의 폭입니다.", example: "같은 뜻이라도 격식체·구어체·코드 주석처럼 서로 다른 문체를 함께 포함.", boundary: "다양성이 높아도 목표 domain을 놓치면 coverage 문제는 따로 남습니다." },
             { term: "Data Coverage", description: "목표로 하는 domain·언어·task 분포를 얼마나 빠짐없이 담았는지입니다.", example: "저자원 언어·희귀 프로그래밍 언어가 최소 비율 이상 포함됐는지 확인.", boundary: "coverage를 채워도 각 영역 안의 balance가 깨지면 특정 하위 주제에 쏠릴 수 있습니다." },

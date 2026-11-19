@@ -524,8 +524,8 @@ export default function MultiAdapterServingArticle() {
               block을 찾습니다. 531–555행은 prompt_embeds가 있으면 그 block 범위의 embedding 값을 SHA-256으로 묶어 같은 key에 넣습니다.
             </p>
             <p>
-              soft prompt에는 함정이 하나 더 있습니다. TensorRT-LLM의 p-tuning 경로는 가상 token을 vocabulary 크기보다 큰 가짜 ID로 표시합니다. 다른 고객의 표도
-              같은 가짜 ID 100, 101, …을 쓰므로 ID만 보면 같은 입력으로 보입니다. 문서는 그래서 표마다 다른 extra id를 함께 넘겨야 올바르게 재사용된다고 설명합니다.
+              soft prompt에는 함정이 하나 더 있습니다. TensorRT-LLM의 p-tuning 경로는 가상 token을 vocabulary 크기(V) 이상의 가짜 ID로 표시합니다. 다른 고객의 표도
+              같은 가짜 ID V, V+1, …을 쓰므로 ID만 보면 같은 입력으로 보입니다. 문서는 그래서 표마다 다른 extra id를 함께 넘겨야 올바르게 재사용된다고 설명합니다.
             </p>
             <p>
               이 조건을 지키면 12절의 250 MiB가 2.5 MiB로 줄어듭니다. 같은 표를 쓰는 요청은 앞 20칸의 KV를 한 벌만 남기고, 다른 표를 쓰는 요청은 key가 달라 섞이지

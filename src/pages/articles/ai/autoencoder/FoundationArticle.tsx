@@ -53,8 +53,8 @@ export default function FoundationArticle() {
       <TermBreakdown title="Encoder·decoder weight를 묶을지(tied) 따로 둘지(untied)" items={[
         {
           term: "Tied weights (W_d = W_e^T)",
-          description: "Linear encoder z=W_e x+b_e, decoder x̂=W_d z+b_d에서 decoder weight를 따로 학습하지 않고 encoder weight의 transpose로 고정합니다. Parameter 수가 절반으로 줄고, PCA의 orthogonal basis와 비슷한 정규화 효과를 냅니다.",
-          example: "n=784, k=32이면 untied는 W_e·W_d를 각각 학습해 총 2×784×32개 parameter가 필요하지만, tied는 W_e 하나만 학습하고 W_d=W_e^T로 재사용합니다.",
+          description: "Linear encoder z=W_e x+b_e, decoder x̂=W_d z+b_d에서 decoder weight를 따로 학습하지 않고 encoder weight의 transpose로 고정합니다. Weight parameter 수가 절반으로 줄고(bias b_e, b_d는 그대로 따로 학습), PCA의 orthogonal basis와 비슷한 정규화 효과를 냅니다.",
+          example: "n=784, k=32이면 untied는 W_e·W_d를 각각 학습해 총 2×784×32개 weight가 필요하지만, tied는 W_e 하나만 학습하고 W_d=W_e^T로 재사용합니다.",
           boundary: "Encoder·decoder 사이에 nonlinear activation이 있으면 tied weight가 정확한 inverse를 보장하지 않습니다 — 여전히 근사적인 정규화 효과일 뿐입니다.",
         },
         {

@@ -41,7 +41,7 @@ export default function NeuralApproach() {
         operations={[
           { expression: String.raw`u_w^\top v_c`, annotation: ["target row와 context row의 내적이","SGNS optimum에서 가까워지는 값"] },
           { expression: String.raw`\operatorname{PMI}(w,c)`, annotation: ["pair가 독립 baseline보다","얼마나 자주 함께 나오는지"] },
-          { expression: String.raw`-\log k`, annotation: ["negative를 k개 뽑을수록 아래로 이동","고양이–반려 PMI=.439, k=5이면 .439−log 5≈−1.170"] },
+          { expression: String.raw`-\log k`, annotation: ["negative를 k개 뽑을수록 아래로 이동","고양이–반려 PMI=.439, k=5이면 .439−log 5≈−1.171"] },
         ]}
         terms={[
           {
@@ -88,7 +88,7 @@ export default function NeuralApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          고양이–반려 PMI≈0.439에 k=5를 대입하면 0.439−log 5≈−1.170입니다.
+          고양이–반려 PMI≈0.439에 k=5를 대입하면 0.439−log 5≈−1.171입니다.
           양의 PMI pair도 negative class prior를 반영한 최적 score에서는 음수가
           될 수 있습니다.
         </p>

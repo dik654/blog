@@ -166,7 +166,7 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
             <p>출발 포트를 정하지 않은 connect()는 커널의 __inet_hash_connect로 들어갑니다. 함수는 출발 IP·목적 IP·목적 포트의 hash로 table_perturb라는 칸 하나를 고르고, 그 칸의 값에 hash를 더해 범위 안의 시작 위치를 정합니다. 짝수 포트를 한 바퀴 돈 뒤 홀수 포트를 돕니다. 칸의 값은 연결이 성공할 때마다 훑은 거리만큼 앞으로 밀리므로 같은 목적지라도 다음 연결은 조금 뒤에서 찾기 시작합니다.</p>
             <p>후보 포트마다 두 번 묻습니다. 먼저 그 포트에 bind()나 listen()한 소켓이 있으면 건너뜁니다. 없으면 후보 포트로 만든 4-tuple이 이미 연결 table에 있는지 확인합니다. 같은 4-tuple의 TIME_WAIT 소켓이 있으면 tcp_tw_reuse 판정을 통과할 때만 그 자리를 넘겨받습니다.</p>
             <p>
-            3절의 48번째 초에는 28,232개 후보가 모두 '같은 4-tuple의 TIME_WAIT가 있음'으로 떨어집니다. 함수는 -EADDRNOTAVAIL을 돌려줍니다.
+            3절의 48번째 초에 남은 32칸이 나간 뒤에는 28,232개 후보가 모두 '같은 4-tuple의 TIME_WAIT가 있음'으로 떨어집니다. 함수는 -EADDRNOTAVAIL을 돌려줍니다.
           </p>
             <p>
             코드 구조상 이 실패는 후보 포트마다 lock을 잡고 table을 확인한 뒤에야 나옵니다. 비용은 거의 찼을 때가 아니라 절반이 찼을 때부터 커집니다. 짝수 포트 14,116개가 먼저 차므로 약 23.5초부터는 connect()마다 짝수 후보 14,116개를 모두 확인한 뒤에야 홀수 포트에 닿습니다.

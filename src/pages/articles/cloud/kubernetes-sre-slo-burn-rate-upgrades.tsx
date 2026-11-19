@@ -125,7 +125,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
               <text x="0" y="84" fontSize="9" className="fill-muted-foreground">같은 속도면 2,592,000 ÷ 90,000 × 10분 ≈ 4.8시간 뒤 바닥</text>
               <text x="478" y="84" fontSize="9" textAnchor="end" className="fill-muted-foreground">한 칸 = 90,000개</text>
             </svg>
-            <figcaption className="mt-2 text-xs text-muted-foreground">회색 막대가 한 달 budget 전체, 빨간 조각이 10분 장애가 쓴 몫입니다. 빨간 조각 하나가 한 칸이라 같은 장애가 29번 더 나면 막대가 끝납니다.</figcaption>
+            <figcaption className="mt-2 text-xs text-muted-foreground">회색 막대가 한 달 budget 전체, 빨간 조각이 10분 장애가 쓴 몫입니다. 빨간 조각 하나가 한 칸이라 같은 장애가 28번 더 나면 막대가 끝납니다.</figcaption>
           </figure>
           <div className={prose}>
             <p>
@@ -147,7 +147,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
               { label: "시간으로 센 budget", expression: "30일 × 24 × 60 × 0.001", result: "43.2분", reason: "모든 요청이 실패하는 완전 중단으로 환산한 양입니다. 트래픽이 일정하다는 가정이 여기 숨어 있습니다." },
               { label: "요청 수로 센 budget", expression: "1,000 × 2,592,000 × 0.001", result: "2,592,000개", reason: "30일은 2,592,000초입니다. 일부만 실패하는 장애는 이 단위로 세야 합니다." },
               { label: "장애의 실패 요청", expression: "0.15 × 1,000 × 600", result: "90,000개", reason: "오류율 15%가 600초 이어졌습니다. 성공한 85%는 budget을 쓰지 않습니다." },
-              { label: "소비한 budget", expression: "90,000 ÷ 2,592,000", result: "3.47%", reason: "10분짜리 장애 하나가 한 달 허용량의 3.5%입니다. 같은 장애가 29번 더 나면 budget이 끝납니다." },
+              { label: "소비한 budget", expression: "90,000 ÷ 2,592,000", result: "3.47%", reason: "10분짜리 장애 하나가 한 달 허용량의 3.5%입니다. 같은 장애가 28번 더 나면 budget이 끝납니다." },
             ]}
             conclusion="budget은 43.2분 또는 259만 개이고 이 장애는 그중 3.47%를 썼습니다. 다음 절은 이 소비가 평소 허용 속도의 몇 배인지를 세어 깨울지 결정합니다."
             caveats={["트래픽이 시간대마다 다르면 분 단위 budget은 맞지 않습니다. Workbook은 그래서 요청 수 기반 SLI를 권합니다.", "지연 SLO(예: 99%가 300ms 안)는 느린 요청을 실패로 세는 식으로 같은 틀에 넣습니다."]}
@@ -185,7 +185,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
           <BurnSlopeViz />
           <div className={prose}>
             <p>
-              세 숫자 14.4·6·1은 서로 다른 급함을 나타냅니다. 14.4배는 몇 시간 안에 budget이 끝나는 속도라 Page, 6배는 닷새 안이라 역시 Page, 1배는 정확히 한 달이라 다음 근무일에 볼 Ticket입니다. 우리 장애의 25배는 첫 줄을 넘습니다.
+              세 숫자 14.4·6·1은 서로 다른 급함을 나타냅니다. 14.4배는 약 이틀 만에 budget이 끝나는 속도라 Page, 6배는 닷새 안이라 역시 Page, 1배는 정확히 한 달이라 다음 근무일에 볼 Ticket입니다. 우리 장애의 25배는 첫 줄을 넘습니다.
             </p>
           </div>
           <ExplainedFormula
@@ -258,7 +258,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
           <div className={prose}>
             <p>
               1시간 창 하나로만 경보를 걸면 두 가지가 어긋납니다. 첫째, 15% 오류가 시작된 뒤 1시간 평균이 1.44%를 넘기까지 15% × t ÷ 60 ≥ 1.44%, 곧 약 5.8분이 걸립니다. 이건 받아들일 만합니다. 둘째, 오류가 멎은 뒤에도 사건이
-              1시간 창 밖으로 완전히 밀려날 때까지 평균이 임계값 위에 머뭅니다. 10분짜리 사건이면 끝난 뒤 약 50분을 더 울립니다. 이미 복구된 서비스 때문에 당직자가 한 시간 가까이 경보를 끌 수 없는 셈입니다.
+              1시간 창 밖으로 완전히 밀려날 때까지 평균이 임계값 위에 머뭅니다. 10분짜리 사건이면 끝난 뒤 약 55분을 더 울립니다. 이미 복구된 서비스 때문에 당직자가 한 시간 가까이 경보를 끌 수 없는 셈입니다.
             </p>
             <p>
               Workbook의 해법은 창을 하나 더 두는 것입니다. 긴 창(1시간)은 "충분히 큰 소진인가"를, 그 1/12인 짧은 창(5분)은 "지금도 진행 중인가"를 보증합니다. 둘 다 임계값을 넘을 때만 울리면 시작은 긴 창이 넘는 순간,

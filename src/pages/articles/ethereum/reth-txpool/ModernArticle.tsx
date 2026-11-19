@@ -83,7 +83,7 @@ export default function ModernArticle() {
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-4">
           {[
             ["01", "Sender chain", "Alice T7 → T8 · Bob T4"],
-            ["02", "Independent heads", "Alice T7 · Bob T4만 노출"],
+            ["02", "Independent heads", "base fee가 40 이하로 내려간 뒤(가정) Alice T7 · Bob T4만 노출"],
             ["03", "Priority", "기본은 effective tip으로 비교"],
             ["04", "Unlock", "T7을 내보낸 뒤 T8 활성"],
           ].map(([step, title, body]) => <div key={step} className="bg-background p-4"><span className="text-[9px] font-bold text-primary">{step}</span><strong className="mt-2 block text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}

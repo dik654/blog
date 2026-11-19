@@ -27,7 +27,7 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
         <FlowRail title="결정이 정당한 규칙이 되는 경로" steps={[
           { actor: "구성원", movement: "이유를 듣고 찬반을 표시합니다.", receives: "참여와 대표" },
           { actor: "집행 기관", movement: "공개된 기준으로 같은 사례를 처리합니다.", receives: "제한된 강제력" },
-          { actor: "이의 제기 절차", movement: "오류·차별·과도한 부담을 다시 심사합니다.", receives: "수정 가능한 결정" },
+          { actor: "이의 제기·수정 절차", movement: "오류·차별·과도한 부담을 다시 심사하고, 잘못이 확인되면 규칙이나 적용을 고칩니다.", receives: "수정 가능한 결정" },
         ]} />
       </LessonSection>
 

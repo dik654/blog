@@ -97,7 +97,7 @@ export default function QsaIndex({ onCodeRef }: { onCodeRef: (key: string, ref: 
         <p className="leading-7">
           문맥이 예산보다 짧으면 선택은 아무것도 버리지 않습니다. 8,000 토큰 문맥이라면 완전한 블록이
           2,000개라 512개만 남지만, 2,000 토큰 문맥에서는 블록이 500개뿐이라 전부 선택됩니다. 희소해지는
-          시점이 문맥 길이 약 8K 부근이라는 뜻입니다.
+          시점이 완전한 블록이 512개를 넘는 문맥 길이 약 2K(2,048 토큰) 부근이라는 뜻입니다.
         </p>
 
         <p className="leading-7">

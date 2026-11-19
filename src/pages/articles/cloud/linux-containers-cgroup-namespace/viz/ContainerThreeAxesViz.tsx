@@ -41,7 +41,7 @@ const SCENES: readonly Scene[] = [
   { label: "Pod spec 한 장", axis: 3, note: "왼쪽은 운영자가 쓰는 spec 줄입니다. 컨테이너 런타임은 이 줄들을 세 종류의 커널 설정으로 나눠 씁니다. 세 축은 서로 독립이라 하나를 바꿔도 다른 축은 그대로입니다." },
   { label: "cgroup v2 · 얼마나", axis: 0, note: "requests와 limits는 cgroup 디렉터리의 파일 세 개로 떨어집니다. 500m request는 shares 512를 거쳐 cpu.weight 20, 500m limit은 cpu.max \"50000 100000\", 2Gi limit은 memory.max 2,147,483,648 byte입니다." },
   { label: "namespace · 무엇이 보이나", axis: 1, note: "네트워크·호스트 이름·IPC namespace는 Pod 단위라 한 Pod 안의 컨테이너들이 localhost와 hostname을 공유합니다. mount와 PID namespace는 컨테이너마다 따로라 각 컨테이너의 첫 프로세스가 PID 1입니다." },
-  { label: "capability · 무엇을 할 수 있나", axis: 2, note: "runAsUser 1000이면 root 권한 전체가 사라지고, 필요한 능력만 capabilities.add로 돌려줍니다. CAP_NET_BIND_SERVICE는 번호 10이라 bitmap의 0x400 비트이고, 이 비트가 있어야 80번 포트에 bind할 수 있습니다." },
+  { label: "capability · 무엇을 할 수 있나", axis: 2, note: "runAsUser 1000이면 root 권한 전체가 사라지고, 필요한 능력만 capabilities.add와 실행 파일의 파일 capability로 돌려줍니다. CAP_NET_BIND_SERVICE는 번호 10이라 bitmap의 0x400 비트이고, 이 비트가 있어야 80번 포트에 bind할 수 있습니다." },
 ];
 
 export default function ContainerThreeAxesViz() {

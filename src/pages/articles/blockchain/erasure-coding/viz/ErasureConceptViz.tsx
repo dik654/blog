@@ -14,10 +14,10 @@ const FLOW = [
 ] as const;
 
 const RS_POINTS = [
-  [0, 2, "source"],
-  [1, 5, "source"],
-  [2, 1, "repair"],
-  [3, 4, "repair"],
+  [0, 2, "lost"],
+  [1, 5, "kept"],
+  [2, 1, "lost"],
+  [3, 4, "kept"],
 ] as const;
 
 const SCHEMES = [

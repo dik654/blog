@@ -145,7 +145,7 @@ export default function DifferentialAttentionArticle() {
             { symbol: "V", name: "value", description: "R^{N×2d} 로, 두 map 이 같은 value 에 곱해집니다." },
             { symbol: String.raw`\lambda`, name: "differential attention coefficient", description: "층 안에서 모든 head 가 공유하는 학습된 스칼라입니다." },
           ]}
-          assumptions={["Q1,K1 과 Q2,K2 는 서로 다른 학습된 projection에서 나온 독립 값입니다.", "λ 는 0 근처에서 시작해 학습 중 값이 바뀝니다."]}
+          assumptions={["Q1,K1 과 Q2,K2 는 서로 다른 학습된 projection에서 나온 독립 값입니다.", "λ 는 층별 상수 λinit 근처에서 시작해 학습 중 값이 바뀝니다."]}
           interpretation="D 의 각 원소는 두 확률의 차이라 음수가 될 수 있습니다. 이는 계산 오류가 아니라 noise 로 추정된 성분을 실제로 뺀 결과입니다."
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -173,7 +173,7 @@ export default function DifferentialAttentionArticle() {
             { symbol: String.raw`\lambda_{q1},\lambda_{k1},\lambda_{q2},\lambda_{k2}`, name: "학습 벡터", description: "head 마다 갖는 R^d 벡터로 λ 를 다시 매개변수화합니다." },
             { symbol: String.raw`\lambda_{\text{init}}`, name: "층별 초기값", description: "층 번호 l 로 정해지는 상수이며 학습되지 않습니다." },
           ]}
-          assumptions={["λ 는 같은 층의 모든 head 가 공유합니다.", "λinit 은 (0,1) 구간이며 층이 깊어질수록 1에 가까워지는 형태로 저자가 정했습니다."]}
+          assumptions={["λ 는 같은 층의 모든 head 가 공유합니다.", "λinit 은 (0,1) 구간이며 층이 깊어질수록 0.8에 가까워지는 형태로 저자가 정했습니다."]}
           interpretation="layer 1 은 λinit=0.2 로 시작해 noise 를 약하게 지우고, layer 6 은 λinit≈0.67 로 더 적극적으로 지웁니다. 깊은 층일수록 초기값이 0.8 에 가까워집니다."
         />
         <LambdaInitViz />

@@ -88,8 +88,8 @@ export default function HybridDepth() {
           첫 검색 깊이와 재정렬 범위는 서로 다른 예산입니다
         </h3>
         <p>
-          First-stage retriever가 후보로 인정하는 깊이를 top-k retrieval이라고 합니다. reranker가 그 후보 가운데 실제로 다시 채점하는 깊이는 그보다
-          얕습니다. 이쪽을 rerank depth라고 합니다. 흔한 조합은 top-k retrieval k1=100으로 넓게 모은 뒤 rerank depth k2=10만 cross-
+          First-stage retriever가 후보로 인정하는 깊이를 top-k retrieval이라고 합니다. reranker가 그 후보 가운데 실제로 다시 채점하는 깊이는 그와 같거나
+          더 얕습니다. 이쪽을 rerank depth라고 합니다. 흔한 조합은 top-k retrieval k1=100으로 넓게 모은 뒤 rerank depth k2=10만 cross-
           encoder에 넣는 방식입니다.
         </p>
       </div>
@@ -105,7 +105,7 @@ export default function HybridDepth() {
         ]}
         terms={[
           { symbol: "k_1", name: "top-k retrieval", description: "First-stage retriever가 후보로 인정하는 깊이입니다." },
-          { symbol: "k_2", name: "rerank depth", description: "Reranker가 실제로 다시 채점하는 더 얕은 깊이입니다(k2 ≤ k1)." },
+          { symbol: "k_2", name: "rerank depth", description: "Reranker가 실제로 다시 채점하는, 같거나 더 얕은 깊이입니다(k2 ≤ k1)." },
           { symbol: "C_q^{(k_2)}", name: "rerank window", description: "Fusion 순서 상위 k2개로 자른 candidate 부분집합입니다." },
         ]}
         assumptions={["Fusion(RRF 등)이 candidate 안의 순서를 이미 정했다고 가정합니다.", "Rerank depth를 늘리면 비용은 늘고 상한은 top-k retrieval 상한에 가까워집니다.", "k2=k1이면 이 식은 위 candidate recall ceiling과 같아집니다."]}

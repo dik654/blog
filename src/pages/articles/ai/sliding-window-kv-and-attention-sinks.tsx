@@ -122,7 +122,7 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
           <h2 className="mb-6 text-2xl font-bold">7. gpt-oss 요청 하나에서 창 층은 token마다 block 경계를 확인합니다</h2>
           <div className={prose}>
             <p>gpt-oss-20b 요청이 vLLM에서 32,767 token까지 계산했다고 합시다. 창 층의 관리자는 다음 step 전에 건너뛸 token 수를 32,767 − 128 + 1 = 32,640으로 셉니다. 16으로 나누면 정확히 2,040이라 앞쪽 block 2,040개가 이미 null block으로 바뀌어 있습니다.</p>
-            <p>token 하나를 더 계산해 32,768이 되면 건너뛸 token은 32,641입니다. 2,040 block을 넘는 1 token은 다음 block의 첫 칸이라 아직 돌려줄 block이 없습니다. 16개를 더 계산해 건너뛸 token이 32,656이 되어야 2,041번째 block을 돌려줍니다. block을 하나씩 돌려주는 주기가 block 크기 16 token입니다.</p>
+            <p>token 하나를 더 계산해 32,768이 되면 건너뛸 token은 32,641입니다. 2,040 block을 넘는 1 token은 다음 block의 첫 칸이라 아직 돌려줄 block이 없습니다. 15개를 더 계산해 건너뛸 token이 32,656이 되어야 2,041번째 block을 돌려줍니다. block을 하나씩 돌려주는 주기가 block 크기 16 token입니다.</p>
             <p>
             같은 요청의 full 층은 이 계산을 하지 않습니다. 기본 구현이 건너뛸 token을 0으로 돌려주므로 요청이 끝날 때까지 2,048개 block을 모두 쥡니다. 이 요청이
             비슷한 prompt를 쓰는 다른 요청과 앞부분을 공유하더라도 창 층의 앞 block은 이미 null block이라 공유할 것이 남아 있지 않습니다.

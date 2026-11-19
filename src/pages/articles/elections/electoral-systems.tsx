@@ -155,6 +155,11 @@ export default function ElectoralSystemsArticle() {
               boundary:
                 "정당이 너무 잘게 쪼개지는 것을 막는 장치입니다. 하지만 문턱 바로 아래의 표는 통째로 빠지므로 불비례를 오히려 키울 수 있습니다.",
             },
+            {
+              term: "투표 방식",
+              description:
+                "유권자가 투표용지에서 후보와 정당 가운데 무엇을 고르는지 정하는 규칙입니다.",
+            },
           ]}
         />
 

@@ -83,7 +83,7 @@ export default function CostSensitiveThresholdingArticle() {
             },
             {
               term: "Capacity",
-              description: "시간당 처리 가능한 positive action의 상한입니다.",
+              description: "정해진 기간(이 글에서는 하루) 안에 처리 가능한 positive action의 상한입니다.",
               example:
                 "이 사례에서는 analyst가 하루 200 alerts를 검토할 수 있습니다.",
               boundary:

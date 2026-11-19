@@ -160,7 +160,7 @@ export const codeRefs: Record<string, CodeRef> = {
     desc: "nice 값 40단계를 가중치로 바꾸는 표입니다. nice 0 = 1024이고 한 단계마다 약 1.25배씩 차이 납니다.",
     annotations: [
       { lines: [10000, 10011], color: "sky", note: "nice 한 단계는 CPU 몫 약 10% 차이로 설계됐습니다. 두 작업이 서로 한 단계씩 벌어지면 상대 거리는 약 25%, 그래서 곱수가 1.25입니다." },
-      { lines: [10017, 10018], color: "amber", note: "nice 0은 1024, nice 5는 335입니다. 둘이 한 CPU를 두고 겨루면 1024 ÷ (1024 + 335) = 75.4% 대 24.6%입니다." },
+      { lines: [10017, 10018], color: "amber", note: "nice 0은 1024, nice 5는 335입니다. 둘이 한 CPU를 두고 겨루면 1024 ÷ (1024 + 335) = 75.3% 대 24.7%입니다." },
       { lines: [10020, 10020], color: "violet", note: "nice 19는 15입니다. nice 0과 겨루면 15 ÷ 1039 = 1.4%만 받습니다." },
     ],
     code: coreC,

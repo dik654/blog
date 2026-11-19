@@ -3,7 +3,7 @@ import StepViz from "@/components/ui/step-viz";
 const trace = [
   { t: 1, before: "1.180000", distance: "0.180000", spike: 1, slope: 0.277008 },
   { t: 2, before: "0.244000", distance: "−0.756000", spike: 0, slope: 0.04377 },
-  { t: 3, before: "1.095200", distance: "0.095200", spike: 1, slope: 0.45899 },
+  { t: 3, before: "1.095200", distance: "0.095200", spike: 1, slope: 0.45902 },
   { t: 4, before: "0.376160", distance: "−0.623840", spike: 0, slope: 0.05893 },
   { t: 5, before: "1.000928", distance: "0.000928", spike: 1, slope: 0.990784 },
 ] as const;

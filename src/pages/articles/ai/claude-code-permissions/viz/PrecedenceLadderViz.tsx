@@ -4,7 +4,7 @@ import SceneShell from "./SceneShell";
  * 본문 대응: #precedence — D(c)의 세 행을 위에서부터 차례로 검사하는 판정.
  * 첫 절의 rule 세 개(deny: Bash(rm *), ask: Bash(git push *), allow: Bash(npm test *))에
  * call 하나씩을 넣고, 처음 맞은 칸에서 결과가 정해지면 뒤 칸은 보지 않는다는 점을 보인다.
- * 마지막 장면은 공식 해석 문장의 Bash(*) deny + Bash(npm test:*) allow 경우다.
+ * 마지막 장면은 공식 해석 문장의 Bash(*) deny + Bash(npm test *) allow 경우다.
  */
 type Gate = "deny" | "ask" | "allow";
 type Outcome = Gate | "none";
@@ -61,7 +61,7 @@ const SCENES: readonly LadderScene[] = [
     label: "Bash(*) deny와 npm test allow",
     summary: "deny ✓ · allow는 보지 않음",
     call: "npm test",
-    rules: { deny: "Bash(*)", ask: "—", allow: "Bash(npm test:*)" },
+    rules: { deny: "Bash(*)", ask: "—", allow: "Bash(npm test *)" },
     hit: "deny",
     note: "rule 집합을 아래 D(c) 식의 해석 문장대로 바꿨습니다. npm test는 allow와도 맞지만 넓은 Bash(*) deny가 첫 칸에서 먼저 맞으므로 test도 deny됩니다.",
   },

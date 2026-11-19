@@ -3,11 +3,11 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #kubelet-watch — "Pod가 노드에 있다"의 두 뜻. API server의 기록과 노드 안 실제가 어떻게 맞아 가고 어떻게 어긋나는지 봅니다.
  */
-const STEPS = ["sandbox", "CNI 네트워크", "CSI 볼륨", "컨테이너"] as const;
+const STEPS = ["CSI 볼륨", "sandbox", "CNI 네트워크", "컨테이너"] as const;
 
 const SCENES = [
   { label: "Binding 직후", summary: "기록만 있습니다", note: "3절의 Binding이 nodeName을 채우면 worker-2 kubelet의 watch에 web-x가 나타납니다. 노드 안에는 아직 아무것도 없습니다.", phase: "Pending", kubelet: "web-x를 읽음", built: 0, match: "아직 다름", tone: "#b45309" },
-  { label: "kubelet이 만듭니다", summary: "노드 안에서 준비합니다", note: "kubelet은 런타임에 sandbox(Pod의 컨테이너가 들어갈 실행 환경) 생성을 요청하고 CNI(네트워크 플러그인)로 네트워크를, CSI(볼륨 플러그인)로 볼륨을 붙여 컨테이너를 시작합니다.", phase: "Pending", kubelet: "만드는 중", built: 4, match: "아직 다름", tone: "#b45309" },
+  { label: "kubelet이 만듭니다", summary: "노드 안에서 준비합니다", note: "kubelet은 CSI(볼륨 플러그인)로 볼륨이 붙기를 기다린 뒤 런타임에 sandbox(Pod의 컨테이너가 들어갈 실행 환경) 생성을 요청하고, 이때 CNI(네트워크 플러그인)가 네트워크를 붙이면 컨테이너를 시작합니다.", phase: "Pending", kubelet: "만드는 중", built: 4, match: "아직 다름", tone: "#b45309" },
   { label: "결과를 다시 적습니다", summary: "두 쪽이 같아집니다", note: "결과는 Pod의 status에 다시 씁니다. 기록과 실제는 보통 몇 초 차이로 같아집니다.", phase: "Running", kubelet: "status를 씀", built: 4, match: "같음", tone: "#15803d" },
   { label: "노드가 죽으면", summary: "기록은 남고 실제는 없습니다", note: "노드가 죽으면 둘은 영영 어긋납니다. nodeName은 worker-2인데 컨테이너를 돌릴 kubelet이 없습니다. 이 상태가 1절의 'Running으로 보이는 5분'입니다.", phase: "Running(마지막 보고)", kubelet: "없음", built: -1, match: "어긋남", tone: "#b91c1c" },
 ] as const;

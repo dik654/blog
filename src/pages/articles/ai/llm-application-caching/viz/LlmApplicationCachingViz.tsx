@@ -3,29 +3,29 @@ import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 /**
- * 한 mechanism: 요청 하나가 cache key를 만든 뒤 exact-match → semantic → retrieval
- * 순서로 캐시 계층을 통과하다가, semantic 층에서 hit하면 그 자리에서 멈추고
- * retrieval 층은 아예 조회하지 않는다는 것을 보여 준다. 4 장면 모두 같은 3개
- * 계층(Exact-match·Semantic·Retrieval) 박스를 기준으로 두고, stage 높이는
+ * 한 mechanism: 요청 하나가 cache key를 만든 뒤 exact-match → semantic 캐시를
+ * 순서대로 조회하다가, semantic에서 hit하면 그 자리에서 멈추고 뒤의 실제 실행
+ * (retrieval·LLM 호출)은 하지 않는다는 것을 보여 준다(본문 AlgorithmBlock 순서와 같다).
+ * 4 장면 모두 같은 3개 박스(Exact-match·Semantic·Retrieval·LLM 실행)를 기준으로 두고, stage 높이는
  * 마지막 장면(결과 반환 화살표 포함)의 콘텐츠 기준으로 고정한다.
  */
 const SCENES = [
   "요청 도착 · cache key 생성",
   "Exact-match 조회 → miss",
   "Semantic 조회 → hit(0.97 ≥ 0.95)",
-  "Retrieval은 건너뛰고 hit 결과 반환",
+  "Retrieval·LLM 실행은 건너뛰고 hit 결과 반환",
 ] as const;
 
 const NOTES = [
   "prompt·model·옵션을 묶어 cache key를 만듭니다. 아직 어느 계층도 조회하지 않았습니다.",
   "Exact-match는 문자열이 완전히 같은 항목을 찾습니다. 이번 요청과 같은 문자열이 없어 miss입니다.",
   "Semantic은 요청 embedding의 유사도를 비교합니다. 가장 가까운 후보 0.97이 threshold 0.95를 넘어 hit입니다.",
-  "Semantic에서 hit했으므로 retrieval은 조회하지 않고 결과를 반환합니다. 처음 hit한 계층에서 탐색이 끝납니다.",
+  "Semantic에서 hit했으므로 retrieval·LLM 호출은 실행하지 않고 결과를 반환합니다. 처음 hit한 캐시에서 탐색이 끝납니다.",
 ] as const;
 
 type LayerState = "pending" | "checking" | "miss" | "hit" | "skipped";
 
-const LAYER_LABELS = ["Exact-match", "Semantic", "Retrieval"] as const;
+const LAYER_LABELS = ["Exact-match", "Semantic", "Retrieval·LLM 실행"] as const;
 
 function layerStatesForScene(scene: number): LayerState[] {
   if (scene === 0) return ["pending", "pending", "pending"];
@@ -111,7 +111,7 @@ export default function LlmApplicationCachingViz() {
     <VizFrame
       eyebrow="Cache lookup 순서"
       title="요청은 cache 계층을 순서대로 통과하다가 hit한 자리에서 멈춥니다"
-      description="같은 3개 계층(Exact-match·Semantic·Retrieval)이 각 장면에서 대기 → 조회 중 → miss/hit/건너뜀 상태로 바뀝니다."
+      description="같은 3개 단계(Exact-match·Semantic 캐시와 Retrieval·LLM 실행)가 각 장면에서 대기 → 조회 중 → miss/hit/건너뜀 상태로 바뀝니다."
       note="0.97·0.95 같은 유사도 값은 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이 아닙니다."
     >
       <div
@@ -121,7 +121,7 @@ export default function LlmApplicationCachingViz() {
         data-story-index={scenes.active}
         tabIndex={0}
         role="group"
-        aria-label="요청이 cache key를 만들고 exact-match, semantic, retrieval 계층을 순서대로 조회하다가 hit한 계층에서 멈추고 나머지는 건너뛰는 과정"
+        aria-label="요청이 cache key를 만들고 exact-match, semantic 캐시를 순서대로 조회하다가 hit한 캐시에서 멈추고 retrieval·LLM 실행은 건너뛰는 과정"
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-[24rem] min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >

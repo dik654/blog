@@ -42,7 +42,7 @@ export default function GrammarConstrainedGenerationArticle() {
               term: "Alphabet Σ",
               description:
                 "이번 언어에서 사용할 수 있는 symbol의 유한 집합입니다.",
-              example: "Σ={ [, ], 0, 1 }로 고정합니다.",
+              example: "Σ={ [, ], 0, 1, 쉼표(,) }로 고정합니다.",
               boundary: "Alphabet은 순서가 있는 문장이 아니라 재료 목록입니다.",
             },
             {
@@ -84,7 +84,7 @@ export default function GrammarConstrainedGenerationArticle() {
               <code>][</code>: 첫 symbol부터 닫으므로 reject합니다.
             </li>
             <li>
-              <code>[01</code>: 끝까지 읽어도 열린 구조가 남아 reject합니다.
+              <code>[01</code>: 0 뒤에는 ]나 ,만 올 수 있어 1에서 reject합니다.
             </li>
           </ul>
         </div>
@@ -100,7 +100,7 @@ export default function GrammarConstrainedGenerationArticle() {
             {
               term: "Terminal",
               description: "전개가 끝난 출력에 그대로 남는 symbol입니다.",
-              example: "[, ], 0, 1이 terminal입니다.",
+              example: "[, ], 0, 1, 쉼표(,)가 terminal입니다.",
             },
             {
               term: "Nonterminal",

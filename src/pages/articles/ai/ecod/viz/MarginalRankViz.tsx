@@ -32,7 +32,7 @@ export default function MarginalRankViz() {
           </div>
         ))}
         <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
-          Row 4는 두 feature 모두 min(F_L,F_R)=1/4입니다. 이는 tail evidence이며 fraud 확정값이 아닙니다.
+          Row 4는 두 feature 모두 min(F_L,F_R)=1/4입니다. Row 1도 왼쪽 tail에서 같은 1/4이라 score가 같습니다. 이는 tail evidence이며 fraud 확정값이 아닙니다.
         </p>
       </div>
     </VizFrame>

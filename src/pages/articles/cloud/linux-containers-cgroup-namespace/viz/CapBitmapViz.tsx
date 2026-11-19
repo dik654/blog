@@ -3,7 +3,7 @@ import SceneShell, { type ShellScene } from "./SceneShell";
 /**
  * 본문 대응: #capabilities — CapEff 00000000a80425fb를 비트 칸에 펼친다. capability는 0~40번 41개.
  * fb = 0,1,3,4,5,6,7 / 25 = 8,10,13 / 04 = 18 / a8 = 27,29,31 → 7 + 3 + 1 + 3 = 14개.
- * runAsUser가 0이 아니면 execve 때 비워지고, capabilities.add로 10번만 돌려준다.
+ * runAsUser가 0이 아니면 execve 때 비워지고, capabilities.add로 Bounding에 10번만 남긴 뒤 파일 capability로 돌려준다.
  */
 interface Scene extends ShellScene {
   lit: readonly number[];
@@ -31,7 +31,7 @@ const SCENES: readonly Scene[] = [
   { label: "남은 04와 a8", summary: "18 · 27 · 29 · 31", lit: ALL, warn: [12, 21], list: "SYS_CHROOT(18) · MKNOD(27) · AUDIT_WRITE(29) · SETFCAP(31)", note: "점선은 꺼져 있는 12번 NET_ADMIN과 21번 SYS_ADMIN입니다. 그래서 라우팅 표를 바꾸거나 mount할 수 없습니다." },
   { label: "켜진 칸 세기", summary: "7 + 3 + 1 + 3 = 14 / 41", lit: ALL, warn: [], list: "켜짐 14개 · 꺼짐 27개", note: "32번 위쪽은 00000000이라 모두 꺼져 있습니다. 41칸 가운데 14칸이 켜져 있으며, Kubernetes 문서의 기본 컨테이너 예제 값입니다." },
   { label: "runAsUser 1000", summary: "CapEff 비워짐 → bind EACCES", lit: [], warn: [BIND], list: "켜진 칸 없음", note: "UID가 0이 아니면 execve 때 Permitted·Effective가 비워집니다. 10번이 없어 bind()가 EACCES를 돌려주는 것이 1절의 실패입니다." },
-  { label: "10번 돌려주기", summary: "10번 하나만 → bind 가능", lit: [BIND], warn: [], list: "NET_BIND_SERVICE(10)", note: "capabilities.add로 필요한 비트 하나만 돌려줍니다. 나머지는 drop: [ALL]로 비우는 것이 가장 좁은 설정입니다." },
+  { label: "10번 돌려주기", summary: "10번 하나만 → bind 가능", lit: [BIND], warn: [], list: "NET_BIND_SERVICE(10)", note: "drop: [ALL]과 capabilities.add로 Bounding에 10번만 남기고, 실행 파일에 setcap으로 파일 capability를 붙이면 execve 때 10번 하나만 돌아옵니다. Kubernetes는 Ambient를 채우지 않아 add만으로는 Effective에 남지 않습니다." },
 ];
 
 export default function CapBitmapViz() {

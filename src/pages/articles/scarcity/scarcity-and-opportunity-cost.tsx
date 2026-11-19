@@ -182,7 +182,7 @@ export default function ScarcityAndOpportunityCostArticle() {
               description:
                 "하지 못하게 된 모든 선택지의 값을 더합니다. 흔한 오해입니다.",
               example:
-                "일할 기회 600만 원과 여행 200만 원을 더해 800만 원으로 칩니다.",
+                "교재값 30만 원에 일할 기회 600만 원과 여행 200만 원을 더해 830만 원으로 칩니다.",
               boundary:
                 "둘을 동시에 할 수 없었으므로 실제로 잃은 것은 하나뿐입니다. 더하면 값이 부풀어 어떤 선택도 밑지는 것으로 보입니다.",
             },

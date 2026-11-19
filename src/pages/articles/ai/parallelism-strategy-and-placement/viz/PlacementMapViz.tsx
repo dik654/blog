@@ -17,7 +17,7 @@ const LAYOUTS = {
 const SCENES = [
   { label: "mesh는 좌표일 뿐입니다", summary: "TP 그룹 둘 × 8 rank", note: "격자에는 어느 GPU인지가 적혀 있지 않습니다. 좌표마다 물리 GPU를 정하는 일이 shard placement입니다.", layout: "unknown", link: "아직 정하지 않음" },
   { label: "한 node에 모으면", summary: "all-reduce는 NVSwitch 안", note: "all-reduce는 그룹 안 GPU가 tensor를 합쳐 나눠 갖는 통신입니다. 그룹마다 한 node에 있으면 이 통신이 node 안에서 끝납니다.", layout: "gathered", link: "all-reduce 안 건넘" },
-  { label: "네 장씩 흩어지면", summary: "all-reduce가 InfiniBand로", note: "layer마다의 all-reduce가 InfiniBand를 건넙니다. node마다 replica를 두는 후보 C(TP 8 × DP 2)도 이렇게 걸치면 통신량이 후보 A(TP 16)와 같아집니다.", layout: "scattered", link: "all-reduce가 건넘" },
+  { label: "네 장씩 흩어지면", summary: "all-reduce가 InfiniBand로", note: "layer마다의 all-reduce가 InfiniBand를 건넙니다. node마다 replica를 두는 후보 C(TP 8 × DP 2)도 이렇게 걸치면 통신량이 후보 A(TP 16)와 거의 같아집니다(50 μs 대 52.5 μs).", layout: "scattered", link: "all-reduce가 건넘" },
 ] as const;
 
 function Cell({ label }: { label: string }) {

@@ -84,14 +84,14 @@ export default function DecolonizationOilShocksAndDebtArticle() {
         </div>
       </LessonSection>
 
-      <LessonSection id="source" level="5" title="8. 1945년 탈식민에서 1970년대 석유 충격까지 순서를 잇습니다" bridge="독립 확대와 세계 가격·금융 충격이 겹친 시간을 확인했습니다. 국가별 차이를 비교합니다.">
+      <LessonSection id="source" level="5" title="8. 1945년 탈식민에서 1990년대 채무 대응까지 순서를 잇습니다" bridge="독립 확대와 세계 가격·금융 충격이 겹친 시간을 확인했습니다. 국가별 차이를 비교합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">유엔이 창설된 1945년에는 약 7억5천만 명이 식민 통치에 의존한 영토에 살았습니다. 1960년 유엔 총회 결의 1514는 식민지 민족의 자결과 독립을 선언했습니다. 정치적 독립이 빠르게 늘어난 시기와 새 국가가 산업·교육·보건 투자를 확대하려던 시기가 겹칩니다.</p>
           <p className="leading-8">1973~74년 석유 가격 급등은 비산유 개발도상국의 외화 부족을 키웠습니다. 산유국 달러가 국제 은행을 거쳐 대출로 재순환되며 당장의 조정을 늦췄지만 외채가 쌓였습니다. 1979년 뒤 두 번째 석유 충격과 높은 세계 금리, 수출 수요 둔화가 상환 조건을 바꿨습니다.</p>
         </div>
         <DebtCrisisTimelineViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">7절의 '금리 5%→12%' 가정을 실제 사건에 대 보면 순서가 이렇습니다. IMF의 1980년대 부채위기 장에 따르면 국제 은행의 순대출은 1977년 680억 달러에서 1980년 1,600억 달러로 늘었고, 그 가운데 3분의 1 가까이가 비산유 개발도상국으로 갔습니다. 1979년 10월 6일 폴 볼커 의장의 연방준비제도가 통화 긴축으로 방향을 바꿨고, 연방기금금리는 1980년 말 사상 최고인 20%에 이르렀습니다. IMF 장은 미국 금리가 1981년 6월 20%로 정점에 올랐다고 적습니다. 1982년 8월 멕시코 재무장관 헤수스 실바 에르소그가 당시 800억 달러에 이른 외채를 더는 갚을 수 없다고 통보하면서 위기가 본격화했습니다. 채권국의 대응은 1985년 제임스 베이커 미 재무장관의 '베이커 플랜'과 1989년 3월 니컬러스 브래디 재무장관의 '브래디 플랜'으로 이어졌고, IMF와 세계은행은 1996년 최빈 채무국 대상의 과다채무빈곤국(HIPC) 이니셔티브를 시작했습니다. 연도와 금리는 연방준비제도 역사 자료(Fed History의 'Anti-Inflation Measures'·'Latin American Debt Crisis')와 IMF HIPC 안내에서 확인했습니다(확인일 2026-10-09).</p>
+          <p className="leading-8">7절의 '금리 5%→12%' 가정을 실제 사건에 대 보면 순서가 이렇습니다. IMF의 1980년대 부채위기 장에 따르면 국제 은행의 순대출은 1977년 680억 달러에서 1980년 1,600억 달러로 늘었고, 그 가운데 3분의 1 가까이가 비산유 개발도상국으로 갔습니다. 1979년 10월 6일 폴 볼커 의장의 연방준비제도가 통화 긴축으로 방향을 바꿨고, 연방기금금리는 1980년 말 사상 최고인 20%에 이르렀습니다. 금리는 잠시 내렸다가 다시 올랐고, IMF 장은 1981년 6월을 20% 정점으로 적습니다. 두 날짜는 20% 안팎의 고점이 두 번 나타난 것입니다. 1982년 8월 멕시코 재무장관 헤수스 실바 에르소그가 당시 800억 달러에 이른 외채를 더는 갚을 수 없다고 통보하면서 위기가 본격화했습니다. 채권국의 대응은 1985년 제임스 베이커 미 재무장관의 '베이커 플랜'과 1989년 3월 니컬러스 브래디 재무장관의 '브래디 플랜'으로 이어졌고, IMF와 세계은행은 1996년 최빈 채무국 대상의 과다채무빈곤국(HIPC) 이니셔티브를 시작했습니다. 연도와 금리는 연방준비제도 역사 자료(Fed History의 'Anti-Inflation Measures'·'Latin American Debt Crisis')와 IMF HIPC 안내에서 확인했습니다(확인일 2026-10-09).</p>
         </div>
         <SourceApplication source="United Nations · Decolonization" excerpt="some 750 million people" application="1945년의 정치적 출발점을 확인하되, 독립한 여러 국가의 경제 구조가 같았다고 보지 않습니다." />
         <CitationBlock source="United Nations, Decolonization" citeKey={1} href="https://www.un.org/en/global-issues/decolonization/">1945년 비자치 영토 인구, 1960년 독립 부여 선언과 이후 제도 경로를 정리한 공식 자료입니다.</CitationBlock>

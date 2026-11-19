@@ -91,7 +91,7 @@ export const hedgeAccountingData: DerivativeDeepArticleData = {
     ] },
     { id: "need", level: "2", title: "5. 차입금이 줄면 스왑을 그대로 두지 않고 관계를 다시 맞춥니다", bridge: "처음의 80%가 나중에도 같은 의미인지 확인합니다.", paragraphs: [
       "차입금이 조기상환되어 50억 원으로 줄었는데 스왑은 80억 원이면 단순 비율은 160%가 됩니다. 실제 위험보다 큰 스왑은 헤지 대상 밖의 금리 방향을 새로 만들 수 있습니다.",
-      "위험관리 목적이 그대로이고 경제적 관계가 이어진다면 지정 수량을 50억 원에 맞추는 재조정을 검토합니다. 위험관리 목적 자체가 끝났거나 대상 거래가 더는 예상되지 않으면 헤지회계 중단 문제를 따로 판단합니다.",
+      "위험관리 목적이 그대로이고 경제적 관계가 이어진다면 지정 스왑을 차입 50억 원의 80%인 40억 원에 맞추는 재조정을 검토합니다. 위험관리 목적 자체가 끝났거나 대상 거래가 더는 예상되지 않으면 헤지회계 중단 문제를 따로 판단합니다.",
     ] },
     { id: "names", level: "3", title: "6. 지정·효과·재조정에 이름을 붙입니다", bridge: "헤지회계의 시작, 유지, 변경을 구분합니다.", paragraphs: [
       "헤지 지정은 헤지대상과 위험, 헤지수단, 비율과 효과 평가 방법을 시작 시점에 공식 문서로 연결하는 일입니다. 헤지 효과는 두 가치가 완벽히 같다는 뜻이 아니라 IFRS 9의 경제적 관계와 신용위험, 헤지비율 요건을 충족하는지 보는 판단입니다.",
@@ -128,7 +128,7 @@ export const hedgeAccountingData: DerivativeDeepArticleData = {
   terms: { title: "헤지회계의 세 판단", items: [
     { term: "헤지 지정", description: "헤지대상·위험·수단·비율과 평가 방법을 시작할 때 공식 문서로 묶는 일입니다.", example: "차입 100억의 기준금리 위험 중 80%를 스왑 80억과 연결합니다.", boundary: "거래 뒤에 결과를 보고 거꾸로 만들지 않습니다." },
     { term: "헤지 효과", description: "경제적 관계, 신용위험과 헤지비율이 회계 요건에 맞는지 보는 판단입니다.", example: "기준금리와 지급일의 차이가 상쇄를 얼마나 어긋나게 했는지 봅니다.", boundary: "가치 변화가 완벽히 같아야 한다는 뜻은 아닙니다." },
-    { term: "재조정", description: "위험관리 목적을 유지하면서 지정 수량의 비율을 다시 맞추는 절차입니다.", example: "차입이 50억으로 줄면 지정 스왑도 50억에 맞춥니다.", boundary: "목적이 끝난 관계를 억지로 이어 가지 않습니다." },
+    { term: "재조정", description: "위험관리 목적을 유지하면서 지정 수량의 비율을 다시 맞추는 절차입니다.", example: "차입이 50억으로 줄면 지정 스왑도 그 80%인 40억에 맞춥니다.", boundary: "목적이 끝난 관계를 억지로 이어 가지 않습니다." },
   ] },
   sources: [
     { source: "IFRS 9 · 6.4.1(b) 헤지 지정 요건", excerpt: "at the inception of the hedging relationship there is formal designation and documentation of the hedging relationship and the entity’s risk management objective and strategy", application: "헤지 시작일의 지정 항목과 효과 요건을 100억 차입 사례에 적용합니다.", citation: "IFRS 9 paragraph 6.4.1(b) (AASB 9 compiled, December 2022)", href: "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=26", note: "IFRS 재단 표준 소개 페이지에는 이 문장이 없고 전문 PDF는 유료 구독 벽이어서, IFRS 9 문안을 그대로 담은 호주 회계기준위원회의 공개 편집본(AASB 9)으로 조문을 확인했습니다(2026-10-09)." },

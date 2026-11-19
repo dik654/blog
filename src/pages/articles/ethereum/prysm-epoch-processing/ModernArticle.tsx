@@ -175,7 +175,7 @@ if CanProcessEpoch(state) {
         <h2 className="break-keep text-2xl font-bold">다음 Epoch 준비</h2>
         <RotationLookaheadViz />
         <p>
-          Balance와 queue를 처리한 뒤 effective balance를 갱신하고 slashings·RANDAO·historical summary ring을 전진시킵니다. 그다음 <code>current_epoch_participation</code>을 <code>previous_epoch_participation</code>으로 옮기고, 새 current vector를 validator 수만큼 0으로 만듭니다. 이 rotation을 보상·패널티 계산보다 먼저 실행하면 방금 정산해야 할 participation evidence를 잃습니다.
+          Balance와 queue를 처리한 뒤 effective balance를 갱신하고 slashings·RANDAO·historical summary ring을 전진시킵니다. 그다음 <code>current_epoch_participation</code>을 <code>previous_epoch_participation</code>으로 옮기고, 새 current vector를 validator 수만큼 0으로 만듭니다. 이 rotation을 보상·패널티 계산보다 먼저 실행하면 보상·패널티가 읽는 <code>previous_epoch_participation</code>이 덮어써져 정산해야 할 participation evidence를 잃습니다.
         </p>
         <p>
           Sync committee는 period 경계에서만 교체됩니다. Fulu는 마지막에 proposer lookahead에서 가장 오래된 epoch의 32개 proposer를 밀어내고, <code>current epoch + MIN_SEED_LOOKAHEAD + 1</code>에 해당하는 proposer indices를 끝에 채웁니다. 모든 epoch field가 매번 같은 방식으로 바뀌는 것은 아닙니다.
@@ -234,7 +234,7 @@ if CanProcessEpoch(state) {
           <li>Fulu <code>ProcessEpoch</code>가 Electra pipeline을 먼저 실행하는 이유는 무엇입니까? <strong>(답: Fulu가 Electra의 기존 ordered transition을 재사용하고 proposer lookahead만 마지막에 추가하기 때문입니다.)</strong></li>
           <li>Target 참여 64, active 96이 finalization을 즉시 보장하지 않는 이유는 무엇입니까? <strong>(답: 2/3 비교는 justification bit를 만들며, finalization에는 이전 bit pattern과 checkpoint epoch 간격도 필요하기 때문입니다.)</strong></li>
           <li>Pending deposit 40 뒤에 32가 남는 이유는 무엇입니까? <strong>(답: Churn budget 64에서 40을 쓰고 남은 24보다 32가 크므로 loop가 멈추고 queue에 유지되기 때문입니다.)</strong></li>
-          <li>Participation rotation이 rewards보다 뒤에 있어야 하는 이유는 무엇입니까? <strong>(답: Rewards는 방금 끝난 epoch의 current participation을 읽어야 하며, 먼저 0으로 초기화하면 보상·패널티의 근거를 잃기 때문입니다.)</strong></li>
+          <li>Participation rotation이 rewards보다 뒤에 있어야 하는 이유는 무엇입니까? <strong>(답: Rewards는 <code>previous_epoch_participation</code>을 읽는데, rotation이 먼저 실행되면 그 vector가 current 기록으로 덮어써져 보상·패널티의 근거를 잃기 때문입니다.)</strong></li>
         </ol>
       </section>
 

@@ -84,15 +84,15 @@ const STATES: readonly {
   {
     call: "FilterLogs → event별 CacheMultiStore branch",
     consensus: "B101 order는 바뀌지 않음",
-    adapter: "L0 성공→Write · L1 panic→버림 · L2 성공→Write",
+    adapter: "L0·L1 성공→Write · L2 panic→버림 · L3·L4 성공→Write",
     execution: "EP101 logs는 그대로 보존",
-    receipt: "2/3 event branches 적용 · block 전체 all-or-nothing이 아님",
+    receipt: "4/5 event branches 적용 · block 전체 all-or-nothing이 아님",
     changed: ["adapter", "receipt"],
   },
   {
     call: "execution head 저장 → withdrawals 삭제 → app commit",
     consensus: "B101 commit receipt",
-    adapter: "Keeper head=EP101 · 성공한 L0/L2 state만 parent branch에 합침",
+    adapter: "Keeper head=EP101 · 성공한 L0·L1·L3·L4 state만 parent branch에 합침",
     execution: "canonical EP101 receipt",
     receipt: "합의·EVM head·event 적용을 따로 확인 · 외부 cross-chain 성공은 미확인",
     changed: ["consensus", "adapter", "execution", "receipt"],

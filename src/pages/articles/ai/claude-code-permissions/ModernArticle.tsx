@@ -134,7 +134,7 @@ export default function ClaudeCodePermissionsArticle() {
             "Current identity와 managed policy가 이미 선택돼 있습니다.",
             "Permission allow 뒤에도 blocking hook과 executor failure가 남습니다.",
           ]}
-          interpretation="Bash(*) deny와 Bash(npm test:*) allow가 동시에 맞으면 첫 행이 선택되어 test도 deny됩니다."
+          interpretation="Bash(*) deny와 Bash(npm test *) allow가 동시에 맞으면 첫 행이 선택되어 test도 deny됩니다."
         />
       </section>
       <section id="sandbox-boundary" className="scroll-mt-20">

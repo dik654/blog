@@ -55,8 +55,8 @@ export default function ImitationLearningAndPolicyGeneralizationArticle() {
           </p>
           <p>
             1989년 ALVINN은 도로 주행 image를 input으로, 사람 운전자의 steering 방향을 output으로
-            삼아 이 방식을 이미 썼습니다. Input은 30×32 camera grid와 8×32 range-finder grid를
-            합친 1,217개 unit이고, output은 45개 steering 방향 unit 중 가장 활성화된 것을 고르는
+            삼아 이 방식을 이미 썼습니다. Input은 30×32 camera grid와 8×32 range-finder grid에
+            road intensity feedback unit 1개를 더한 1,217개 unit이고, output은 45개 steering 방향 unit 중 가장 활성화된 것을 고르는
             discrete 표현이었습니다.
           </p>
           <p>

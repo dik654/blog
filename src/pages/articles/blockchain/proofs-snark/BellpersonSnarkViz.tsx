@@ -58,7 +58,7 @@ const SCENES = [
   },
   {
     title:
-      "SupraSeal은 같은 constraint 길이의 assignments를 하나의 C++ GPU 호출로 넘깁니다",
+      "SupraSeal은 같은 A vector 길이의 assignments를 하나의 C++ GPU 호출로 넘깁니다",
     detail:
       "현재 adapter는 각 assignment의 A 길이가 첫 항목과 같은지 확인하고, pinned SRS를 얻은 뒤 batch를 호출합니다. 조건이 깨지면 native로 자동 전환하지 않습니다.",
     input: "equal-length assignments",

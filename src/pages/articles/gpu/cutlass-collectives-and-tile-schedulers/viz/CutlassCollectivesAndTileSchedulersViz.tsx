@@ -118,7 +118,7 @@ const STREAM_K=[
   {tabLabel:"80 iterations",label:"20 tiles에 K 반복이 4회씩 있으므로 전체 일은 20×4=80입니다",body:"Data-parallel은 tile을 쪼개지 않지만 Stream-K는 이 K-iteration 전체를 worker에 나눕니다."},
   {tabLabel:"10 each",label:"80 iterations를 8 workers에 나누면 각 worker가 정확히 10회씩 맡습니다",body:"스케줄링만 보면 종료점이 12회에서 10회로 줄어 이상적인 개선폭은 16.7%입니다."},
   {tabLabel:"4 split tiles",label:"10은 tile당 4의 배수가 아니어서 경계 tile 2·7·12·17이 두 worker에 걸립니다",body:"각 worker 구간 [0,10), [10,20)…이 4의 배수 경계를 가로지를 때 split tile이 생깁니다."},
-  {tabLabel:"Fixup",label:"Split tile마다 partial accumulator를 저장하고 최종 합치는 fixup이 필요합니다",body:"원자 연산·workspace·동기화 비용은 kernel과 hardware 구현에 따라 달라집니다."},
+  {tabLabel:"Fixup",label:"Split tile마다 partial accumulator를 저장하고 최종 합치는 fixup이 필요합니다",body:"Global workspace 쓰기·읽기와 barrier 대기 비용은 kernel과 hardware 구현에 따라 달라집니다."},
   {tabLabel:"선택 기준",label:"빈 wave 절약이 fixup 비용보다 클 때만 Stream-K가 이깁니다",body:"따라서 tile 수가 이미 worker 수의 배수이거나 K가 짧으면 data-parallel이 더 단순하고 빠를 수 있습니다."},
 ] as const;
 

@@ -1,13 +1,13 @@
 import SceneShell from "./SceneShell";
 
 /**
- * 본문 대응: #private-shared — payroll packet은 shared buffer에서 길이·형식을 검사한 뒤 private buffer로 복사한다.
+ * 본문 대응: #private-shared — payroll packet은 먼저 private buffer로 복사한 뒤 그 복사본에서 길이·형식을 검사한다(검사 뒤 host가 shared bytes를 바꾸는 TOCTOU 방지).
  * 검사 실패 시 private state를 갱신하지 않는다. 결과는 private state를 가리키는 pointer 대신 새 protocol message로 내보낸다.
  */
 const SCENES = [
   { label: "packet 도착", summary: "host → shared buffer", note: "Network packet은 host가 볼 수 있는 shared buffer로 들어옵니다. 이 bytes는 host가 쓰고 바꿀 수 있으므로 TEE 입장에서는 아직 믿을 수 없는 입력입니다." },
-  { label: "검사 실패", summary: "거부 · private state 그대로", note: "길이·형식·counter 중 하나라도 맞지 않으면 복사하지 않고 거부합니다. 검증 전에는 private state를 바꾸지 않으므로 급여 state는 이전 그대로입니다." },
-  { label: "검사 통과", summary: "private buffer로 복사 → 한 번 갱신", note: "검사를 통과한 bytes만 private buffer로 복사합니다. Private state는 이 성공 뒤에 한 번만 갱신합니다." },
+  { label: "검사 실패", summary: "거부 · private state 그대로", note: "Private buffer로 복사한 복사본에서 길이·형식·counter 중 하나라도 맞지 않으면 거부합니다. 검증 전에는 private state를 바꾸지 않으므로 급여 state는 이전 그대로입니다." },
+  { label: "검사 통과", summary: "복사본 검사 통과 → 한 번 갱신", note: "host가 바꿀 수 없는 private 복사본에서 검사를 통과해야 합니다. Private state는 이 성공 뒤에 한 번만 갱신합니다." },
   { label: "결과 내보내기", summary: "새 message만 shared로", note: "내보낼 때는 private state를 직접 가리키는 pointer를 넘기지 않습니다. Secret·pointer·padding·error detail을 뺀 새 protocol message를 만들어 shared buffer에 복사합니다." },
 ] as const;
 
@@ -58,9 +58,9 @@ export default function PayrollPacketBoundaryViz() {
   return (
     <SceneShell
       eyebrow="Shared → private 경계"
-      title="Payroll packet은 검사를 통과해야 private buffer로 들어갑니다"
-      description="왼쪽부터 host, host가 볼 수 있는 shared buffer, TEE 안의 private buffer입니다. 세로 선이 검사 지점이고, 오른쪽 아래 상자는 급여 처리 상태(private state)입니다."
-      ariaLabel="payroll packet이 shared buffer에서 검사를 거쳐 private buffer로 들어가고 결과가 새 message로 나가는 과정"
+      title="Payroll packet은 private buffer로 복사한 뒤 검사합니다"
+      description="왼쪽부터 host, host가 볼 수 있는 shared buffer, TEE 안의 private buffer입니다. 세로 선이 복사 경계이고, 오른쪽 아래 상자는 급여 처리 상태(private state)입니다."
+      ariaLabel="payroll packet이 private buffer로 복사된 뒤 그 복사본에서 검사를 거치고 결과가 새 message로 나가는 과정"
       scenes={SCENES}
       render={(active) => {
         const committed = active >= 2;
@@ -81,9 +81,11 @@ export default function PayrollPacketBoundaryViz() {
 
             {active === 1 && (
               <g>
-                <Chip x={SHARED + 8} y={46} label="길이 초과" color={RED} />
-                <text x={SHARED + 47} y={88} textAnchor="middle" fontSize={10} fill={RED}>길이·형식·counter</text>
-                <text x={SHARED + 47} y={101} textAnchor="middle" fontSize={10} fontWeight={700} fill={RED}>✕ 검사 실패</text>
+                <Chip x={SHARED + 8} y={46} label="packet bytes" color="#b45309" />
+                <Arrow x1={SHARED + 86} x2={PRIVATE + 6} y={57} color={MUTED} />
+                <Chip x={PRIVATE + 8} y={46} label="길이 초과" color={RED} />
+                <text x={PRIVATE + 47} y={88} textAnchor="middle" fontSize={10} fill={RED}>길이·형식·counter</text>
+                <text x={PRIVATE + 47} y={101} textAnchor="middle" fontSize={10} fontWeight={700} fill={RED}>✕ 검사 실패</text>
                 <Arrow x1={SHARED - 2} x2={HOST + ZONE_W - 6} y={120} color={RED} />
                 <text x={HOST + ZONE_W / 2} y={124} textAnchor="middle" fontSize={10} fontWeight={700} fill={RED}>거부</text>
               </g>
@@ -92,10 +94,10 @@ export default function PayrollPacketBoundaryViz() {
             {active === 2 && (
               <g>
                 <Chip x={SHARED + 8} y={46} label="packet bytes" color="#b45309" />
-                <text x={SHARED + 47} y={88} textAnchor="middle" fontSize={10} fill={GREEN}>길이·형식·counter</text>
-                <text x={SHARED + 47} y={101} textAnchor="middle" fontSize={10} fontWeight={700} fill={GREEN}>✓ 통과</text>
                 <Arrow x1={SHARED + 86} x2={PRIVATE + 6} y={57} color={GREEN} />
-                <Chip x={PRIVATE + 8} y={74} label="복사본" color={BLUE} />
+                <Chip x={PRIVATE + 8} y={46} label="복사본" color={BLUE} />
+                <text x={PRIVATE + 47} y={88} textAnchor="middle" fontSize={10} fill={GREEN}>길이·형식·counter</text>
+                <text x={PRIVATE + 47} y={101} textAnchor="middle" fontSize={10} fontWeight={700} fill={GREEN}>✓ 통과</text>
               </g>
             )}
 

@@ -221,9 +221,12 @@ export function LightGBMEfficiencyViz() {
         </div>
         <div className="flex min-w-0 items-start justify-center pt-2">
           <div className="w-full max-w-sm space-y-2">
-            <div className="border border-primary bg-primary/10 px-5 py-3 text-center text-sm font-black">
-              루트
+            <div className="border border-dashed border-primary bg-primary/10 px-5 py-3 text-center text-sm font-black">
+              루트 · 위쪽 분할 생략
             </div>
+            <p className="text-center text-xs text-muted-foreground">
+              이진 트리의 현재 말단 잎 세 개만 표시
+            </p>
             <div className="grid grid-cols-3 gap-2">
               <div className="border border-border p-3 text-center text-xs">
                 잎 A<br />

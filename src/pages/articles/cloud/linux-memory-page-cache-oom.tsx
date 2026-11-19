@@ -252,7 +252,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
               { code: "victim = argmax(points); send SIGKILL to victim; events.oom_kill += 1", note: "A가 SIGKILL(9)을 받습니다. A가 컨테이너의 주 프로세스라면 런타임은 128 + 9 = 137을 종료 코드로, OOMKilled를 이유로 기록합니다. 자식 프로세스만 죽었다면 컨테이너는 계속 돕니다." },
             ]}
             repeatUntil="희생자가 죽어 page가 돌아오면 재시도 횟수를 16으로 되돌리고 1번 줄부터 다시 청구합니다."
-            output="oom.group이 0이면 A만 종료되고 B는 계속 돕니다(Kubernetes cgroup v2 기본값에서는 아래처럼 둘 다 죽습니다). memory.events에 max·oom·oom_kill이 하나씩 늘어 있고, dmesg에는 'Memory cgroup out of memory: Killed process … (A)' 줄이 남습니다."
+            output="oom.group이 0이면 A만 종료되고 B는 계속 돕니다(Kubernetes cgroup v2 기본값에서는 아래처럼 둘 다 죽습니다). memory.events의 max는 처음 한 번 오른 뒤 1번 줄로 돌아갈 때마다 다시 올라 여러 번 늘어 있고 oom·oom_kill은 하나씩 늘어 있으며, dmesg에는 'Memory cgroup out of memory: Killed process … (A)' 줄이 남습니다."
           />
           <div className={prose}>
             <p>Kubernetes에서는 결과가 하나 달라집니다. v1.35.0의 kubelet은 cgroup v2 노드에서 설정 singleProcessOOMKill이 비어 있으면 false로 둡니다(pkg/kubelet/kubelet.go 738–749행). 그러면 컨테이너마다 memory.oom.group에 1을 씁니다(kuberuntime/kuberuntime_container_linux.go 314–320행).</p>

@@ -4,7 +4,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #prompt-template — 고정 template의 두 자리표시자를 요청마다 채워 최종 prompt를 만든다.
  * 장면 0 = 빈 template, 1 = 예시 1개로 채운 요청, 2 = 같은 뼈대에 예시 3개를 이어 붙여 4개로 늘린 요청.
- * 1개 → 4개는 본문 "예시 3개를 이어 붙이면 ... few-shot 조건을 4개로 늘릴 수 있습니다"를 따른다.
+ * 1개 → 4개는 본문 "예시 3개를 더 이어 붙이면 ... few-shot 조건을 1개에서 4개로 늘릴 수 있습니다"를 따른다.
  * 예시 세 개와 query 문장은 이 글 첫 Viz의 sentiment 예시이고, 넷째 예시는 내용을 정하지 않은 자리다.
  */
 const SCENES = [

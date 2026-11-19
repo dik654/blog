@@ -221,9 +221,9 @@ export const lmeMetalWarrantData: DerivativeDeepArticleData = {
       "생산자의 브랜드와 분석 자료가 인도 가능한 금속인지 정합니다. 승인 창고는 무게와 로트를 확인하고 특정 금속을 가리키는 전자 권리를 발행합니다.",
       "권리가 살아 있는 동안 보관료가 날마다 쌓입니다. 금속을 꺼내려면 권리를 취소하고 차량·시간을 정한 뒤 적재 비용과 이동 위험을 맡아야 합니다.",
     ] },
-    { id: "case", level: "0", title: "3. 25.3톤은 허용 범위 안이고 20일 보관·출고비는 1,500달러입니다", bridge: "무게와 비용을 같은 로트 장부에서 계산합니다.", paragraphs: [
+    { id: "case", level: "0", title: "3. 25.3톤은 허용 범위 안이고 20일 보관·출고비는 1,518달러입니다", bridge: "무게와 비용을 같은 로트 장부에서 계산합니다.", paragraphs: [
       "아연의 증서 단위는 25톤이며 허용 오차 ±2%이면 24.5~25.5톤입니다. 실제 무게가 25.3톤이라면 범위 안이고, 톤당 2,800달러를 곱한 설명용 가치는 7만840달러입니다.",
-      "보관료를 톤당 하루 0.50달러로 놓으면 20일 비용은 250달러입니다. 출고비를 톤당 50달러로 놓으면 1,250달러입니다(가정). 합계 1,500달러는 거래소가 정한 현재 요금이 아니라 계산 구조를 보여 줍니다.",
+      "보관료를 톤당 하루 0.50달러로 놓으면 25.3톤의 20일 비용은 253달러입니다. 출고비를 톤당 50달러로 놓으면 1,265달러입니다(가정). 합계 1,518달러는 거래소가 정한 현재 요금이 아니라 계산 구조를 보여 줍니다.",
     ] },
     { id: "picture", level: "1", title: "4. 제련소의 금속이 분석과 창고를 지나 트럭에 실립니다", bridge: "물건과 전자 권리가 함께 움직이는 경로를 그립니다.", paragraphs: [
       "생산된 아연은 승인 브랜드와 순도·형태 조건을 확인받고 창고에서 무게를 잽니다. 조건이 맞으면 특정 로트를 가리키는 전자 권리가 계정에 기록됩니다.",
@@ -237,9 +237,9 @@ export const lmeMetalWarrantData: DerivativeDeepArticleData = {
       "승인 창고의 특정 금속 로트를 가리키는 전자 문서를 워런트라고 부릅니다. 실물을 꺼내려고 그 권리를 유통 상태에서 없애는 일을 워런트 취소라고 부릅니다.",
       "보관료와 트럭에 싣는 비용, 다시 워런트를 만드는 비용을 묶어 출고 비용 장부로 봅니다. 금속 가격과 별도로 계산해야 장소 간 차이를 비교할 수 있습니다.",
     ] },
-    { id: "mechanism", level: "4", title: "7. 25.3톤의 전자 권리에서 1,500달러 비용까지 따라갑니다", bridge: "처음의 무게와 가정 비용을 실제 순서에 다시 넣습니다.", paragraphs: [
+    { id: "mechanism", level: "4", title: "7. 25.3톤의 전자 권리에서 1,518달러 비용까지 따라갑니다", bridge: "처음의 무게와 가정 비용을 실제 순서에 다시 넣습니다.", paragraphs: [
       "승인된 25.3톤 로트가 24.5~25.5톤 범위와 99.995% 순도를 충족하는지 확인합니다. 창고가 무게와 서류를 맞춘 뒤 워런트를 계정에 올립니다. 매수자는 설명용 금속가치 7만840달러를 기준으로 계약을 정산합니다.",
-      "20일 뒤 실물을 꺼내면 보관료 250달러와 출고비 1,250달러를 별도 장부에 붙입니다(가정). 워런트를 취소하고 차량 시간을 잡은 뒤 실제 로트와 서류가 일치하는지 확인해 출고를 끝냅니다.",
+      "20일 뒤 실물을 꺼내면 보관료 253달러와 출고비 1,265달러를 별도 장부에 붙입니다(가정). 워런트를 취소하고 차량 시간을 잡은 뒤 실제 로트와 서류가 일치하는지 확인해 출고를 끝냅니다.",
     ] },
     { id: "source", level: "5", title: "8. LME 아연 규격은 순도·25톤·승인 브랜드와 창고를 함께 요구합니다", bridge: "숫자 사례를 현행 상품 규격에 대조합니다.", paragraphs: [
       "LME 아연 규격은 최소 순도 99.995%와 25톤 로트를 정합니다. 워런트 오차 ±2%, 승인 브랜드와 승인 창고도 명시합니다. 순도는 BS EN 1179·ISO 752·ASTM B6·GB/T 470 가운데 한 표준의 화학 조성을 맞춰야 합니다. 25.3톤은 무게 범위 안이지만 순도와 브랜드가 틀리면 인도할 수 없습니다.",
@@ -257,22 +257,22 @@ export const lmeMetalWarrantData: DerivativeDeepArticleData = {
   overviewFlow: { title: "아연 로트가 선물 인도와 공장 출고가 되는 길", steps: [
     { actor: "품질 검사", movement: "순도·브랜드·무게를 확인합니다.", receives: "25.3 t" },
     { actor: "전자 권리", movement: "승인 창고의 특정 로트를 기록합니다.", receives: "$70,840(가정)" },
-    { actor: "취소와 출고", movement: "보관료와 적재비를 내고 금속을 꺼냅니다.", receives: "$1,500(가정)" },
+    { actor: "취소와 출고", movement: "보관료와 적재비를 내고 금속을 꺼냅니다.", receives: "$1,518(가정)" },
   ] },
   numericCase: { title: "25.3톤 로트의 허용 범위와 출고비", steps: [
     { label: "허용 무게", value: "24.5~25.5 t", detail: "25톤의 ±2%입니다." },
     { label: "실제 로트", value: "25.3 t", detail: "설명 사례이며 허용 범위 안입니다." },
-    { label: "20일 보관", value: "$250", detail: "$0.50×25×20의 가정입니다." },
-    { label: "출고", value: "$1,250", detail: "$50×25의 가정입니다." },
+    { label: "20일 보관", value: "$253", detail: "$0.50×25.3×20의 가정입니다." },
+    { label: "출고", value: "$1,265", detail: "$50×25.3의 가정입니다." },
   ] },
   terms: { title: "금속 인도를 읽는 세 도구", items: [
     { term: "워런트", description: "승인 창고의 특정 금속 로트를 가리키는 전자 권리입니다.", example: "25.3톤 아연 로트를 계정에 기록합니다.", boundary: "공장까지 운송이 끝났다는 뜻은 아닙니다." },
     { term: "워런트 취소", description: "실물을 꺼내려고 워런트를 유통 상태에서 없애는 절차입니다.", example: "취소 뒤 창고와 트럭 시간을 잡습니다.", boundary: "취소 순간 금속이 자동 출고되지는 않습니다." },
-    { term: "출고 비용 장부", description: "보관료·트럭 적재·재워런트 비용을 금속값과 나눈 기록입니다.", example: "가정한 보관·출고비 합계는 1,500달러입니다.", boundary: "창고·지역·금속마다 실제 요금이 다릅니다." },
+    { term: "출고 비용 장부", description: "보관료·트럭 적재·재워런트 비용을 금속값과 나눈 기록입니다.", example: "가정한 보관·출고비 합계는 1,518달러입니다.", boundary: "창고·지역·금속마다 실제 요금이 다릅니다." },
   ] },
   sources: [
     { source: "LME · Zinc Contract Specifications", excerpt: "Special high-grade zinc of 99.995% purity (minimum)", application: "25.3톤이 ±2% 범위에 드는지와 순도·브랜드·창고 조건을 함께 확인합니다.", citation: "London Metal Exchange, LME Zinc contract specifications", href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications", note: "아연 상품 규격 페이지입니다. lme.com은 2026-10-09 자동 조회 403(봇 차단)이라 2026-09-08 웹 아카이브 사본으로 원문을 대조했습니다. 같은 페이지에 'Warrant 25 tonnes (with a tolerance of +/-2%)', 승인 브랜드·승인 창고 요건과 네 가지 화학 조성 표준이 있습니다. 세부 조항은 페이지가 안내하는 LME Rulebook이 우선합니다." },
-    { source: "LME · Warehouse Agreement 2026", excerpt: "rent must accrue on a daily basis", application: "워런트 취소 기록, 일별 보관료와 합의한 출고 일정을 1,500달러 비용 장부에 연결합니다.", citation: "LME Warehouse Agreement", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", note: "2026년 개정 자료의 창고 운영 규칙이며 본문 요율은 설명용 가정입니다." },
+    { source: "LME · Warehouse Agreement 2026", excerpt: "rent must accrue on a daily basis", application: "워런트 취소 기록, 일별 보관료와 합의한 출고 일정을 1,518달러 비용 장부에 연결합니다.", citation: "LME Warehouse Agreement", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", note: "2026년 개정 자료의 창고 운영 규칙이며 본문 요율은 설명용 가정입니다." },
   ],
   review: [
     "25톤의 ±2% 범위와 25.3톤의 설명용 금속가치를 계산해 보세요. (답: 3·7절)",

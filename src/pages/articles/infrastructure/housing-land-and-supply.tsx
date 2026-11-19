@@ -101,7 +101,7 @@ export default function HousingLandAndSupplyArticle() {
         <TenureTimelineViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">팔기 전에 직접 살아야 하는 기간을 최소 거주 기간(MOP)이라고 부릅니다. HDB의 주택 안내 사이트 <a className="text-sky-700 underline dark:text-sky-300" href="https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/">MyNiceHome</a>은 Standard 주택에 MOP 5년, 그 뒤 집 전체 임대 허용, 되팔 때 보조금 환수 없음을 적습니다. Plus·Prime 주택에는 MOP 10년, 집 전체 임대 불가, 되팔 때 보조금 환수가 붙습니다.</p>
-          <p className="leading-8">Standard 주택은 5년을 살면 팔 수 있지만 Plus 주택은 10년을 살아야 하고, 팔 때 받은 추가 보조금을 반영해 매각가의 일정 비율을 내야 합니다. 같은 99년 주택이라도 같은 값을 주고 산 권리의 내용이 달라지는 이유입니다. 같은 페이지는 2024년 10월 분양 이전에 공급된 주택에는 이 구분이 적용되지 않는다고 적습니다.</p>
+          <p className="leading-8">Standard 주택은 5년을 살면 팔 수 있지만 Plus·Prime 주택은 10년을 살아야 하고, 팔 때 받은 추가 보조금을 반영해 매각가의 일정 비율을 내야 합니다. 같은 99년 주택이라도 같은 값을 주고 산 권리의 내용이 달라지는 이유입니다. 같은 페이지는 2024년 10월 분양 이전에 공급된 주택에는 이 구분이 적용되지 않는다고 적습니다.</p>
           <p className="leading-8">hdb.gov.sg 원 페이지는 2026-10-09에도 자동 조회를 막아(403) 같은 정부 도메인의 MyNiceHome 안내(2026-06-24 갱신)로 확인했습니다.</p>
           <p className="leading-8">2026-10-04 확인 기준으로 다른 나라 주택은 등기·토지 임차권·용도 규정·대출 계약을 각각 확인해야 합니다. 국가 평균 자가보유율 하나로 권리의 내용까지 같다고 볼 수 없습니다.</p>
         </div>

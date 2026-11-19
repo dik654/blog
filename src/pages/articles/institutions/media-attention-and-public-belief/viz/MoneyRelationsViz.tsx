@@ -23,7 +23,7 @@ export default function MoneyRelationsViz() {
     <SceneShell
       eyebrow="관계 분리"
       title="돈이 어디로 갔는지에 따라 확인할 관계가 다릅니다"
-      description="1만 원과 유료 후기 한 건은 가정 사례입니다. EU·미국 설명은 2026-10-04 확인 기준입니다."
+      description="1만 원과 유료 후기 한 건은 가정 사례입니다. EU 제27조·미국 설명은 2026-10-04, EU 제33·38조는 2026-10-09 확인 기준입니다."
       ariaLabel="광고 거래와 제작자 지급 관계, 추천 기준 공개의 구별"
       scenes={SCENES}
       render={(active) => (

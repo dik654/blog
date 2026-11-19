@@ -280,7 +280,7 @@ export function MetricContractViz() {
             width={79}
             height={53}
             label="patient A"
-            detail="unit loss .4"
+            detail="unit loss 1"
             active={active >= 2}
           />
           <Arrow

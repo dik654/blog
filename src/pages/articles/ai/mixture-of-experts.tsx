@@ -620,7 +620,7 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
             있어 두 축이 갈라집니다.
           </p>
           <p className="leading-8">
-            Shared 10B, expert당 2B, n=16이면 dense 대비 parameter는 8배지만 k=2를 유지하는 한 token별 expert FLOP은 2배에 그칩니다.
+            Shared 10B, expert당 2B, n=16이면 dense(12B) 대비 parameter는 42B로 3.5배지만 k=2를 유지하는 한 token별 expert FLOP은 2배에 그칩니다.
           </p>
         </div>
 

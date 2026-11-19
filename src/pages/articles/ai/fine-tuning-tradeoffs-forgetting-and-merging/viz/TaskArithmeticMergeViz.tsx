@@ -16,7 +16,7 @@ const SCENES = [
 const NOTES = [
   "같은 base θ_pre에서 domain 데이터로 학습한 checkpoint와 style 데이터로 학습한 checkpoint가 서로 다른 방향으로 이동합니다.",
   "각 checkpoint에서 base를 빼면 그 checkpoint만의 이동 방향(task vector) τ_domain, τ_style만 남습니다.",
-  "두 task vector를 좌표별로 더하고 λ=1을 곱합니다. 평균과 달리 두 방향이 서로를 무디게 하지 않고 그대로 보존됩니다.",
+  "두 task vector를 좌표별로 더하고 λ=1을 곱합니다. 두 checkpoint 평균 (0.25, 0.15)은 λ=0.5와 같은 점이라 방향은 같고, λ=1은 그 두 배 길이입니다.",
   "θ_new = θ_pre + λ(τ_domain + τ_style) = (0.5, 0.3). 한 checkpoint가 domain 지식과 style 변화를 동시에 갖습니다.",
 ] as const;
 

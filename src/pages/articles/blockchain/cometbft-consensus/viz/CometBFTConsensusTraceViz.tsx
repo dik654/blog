@@ -33,7 +33,7 @@ const STATES = [
   { hrs: "41 / 1 / Propose", input: "Proposal + BlockParts", proposer: "B", proposal: "B41 · ProcessProposal OK", prevote: "준비", precommit: "—", lock: "없음", result: "B41 완성" },
   { hrs: "41 / 1 / Precommit", input: "prevote B41 · 75/100", proposer: "B", proposal: "B41", prevote: "A+B · 75/100", precommit: "B41 서명", lock: "B41 · round 1", result: "POL + lock" },
   { hrs: "41 / 1 / Commit", input: "precommit B41 · 75/100", proposer: "B", proposal: "B41 + parts 보유", prevote: "A+B · 75/100", precommit: "A+B · 75/100", lock: "B41", result: "B41 결정" },
-  { hrs: "41 / 1 / Commit", input: "A의 상충 precommit", proposer: "B", proposal: "B41", prevote: "Commit 유지", precommit: "HB41 ↔ 다른 BlockID", lock: "B41", result: "Evidence로 분리" },
+  { hrs: "41 / 1 / Commit", input: "A의 상충 precommit", proposer: "B", proposal: "B41", prevote: "A+B · 75/100", precommit: "B41 ↔ 다른 BlockID", lock: "B41", result: "Evidence로 분리" },
 ] as const;
 
 function Fact({ label, value, active = false }: { label: string; value: string; active?: boolean }) {

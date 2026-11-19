@@ -6,7 +6,7 @@ import VizFrame from "@/components/viz/VizFrame";
 const SCENES = ["부품별 가중치", "학습 대상 항", "activation", "24GB 장치에 놓기"] as const;
 const NOTES = [
   "예시 구성에서 가중치 합은 약 14.8 GB이고 text encoder 하나가 60%를 넘습니다.",
-  "어댑터에만 붙는 gradient·master·optimizer state는 약 0.14 GB로 1%가 되지 않습니다.",
+  "어댑터에만 붙는 gradient·master·optimizer state는 약 0.12 GB로 1%가 되지 않습니다.",
   "activation은 배치·해상도·프레임에 따라 달라져 계산보다 측정이 빠릅니다.",
   "가중치가 먼저 자리를 차지하므로 activation에 남는 여유가 생각보다 적습니다.",
 ] as const;
@@ -70,9 +70,9 @@ export default function BudgetViz() {
                     <text x={20} y={174} fontSize={9} fill={AD}>
                       학습 대상 항
                     </text>
-                    <rect x={132} y={160} width={Math.max(2, 0.14 * scale)} height={20} fill={AD} fillOpacity={0.4} stroke={AD} strokeWidth={1} />
+                    <rect x={132} y={160} width={Math.max(2, 0.12 * scale)} height={20} fill={AD} fillOpacity={0.4} stroke={AD} strokeWidth={1} />
                     <text x={144} y={174} fontSize={8} fill={AD}>
-                      0.14 GB (gradient + master + state)
+                      0.12 GB (gradient + master + state)
                     </text>
                   </g>
                 )}

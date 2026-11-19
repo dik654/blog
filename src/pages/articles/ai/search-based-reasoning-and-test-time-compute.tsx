@@ -55,7 +55,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
           description="언제 후보를 만들고, 언제 평가하고, 언제 좁히는지가 다릅니다."
           items={[
             { term: "사전 병렬 생성", description: "Best-of-N 은 N 개 후보를 동시에 만들고 사후에 verifier 로 하나를 고릅니다.", example: "N=8 후보를 한 번에 생성", boundary: "후보끼리 정보를 주고받지 않아 중간에 방향을 바꾸지 못합니다." },
-            { term: "단계별 분기·가지치기", description: "Tree search 는 매 단계마다 후보를 넓히고 평가해 유망한 것만 남깁니다.", example: "Branching b=5, depth d=3", boundary: "평가 호출 수가 b·d 에 비례해 늘어납니다." },
+            { term: "단계별 분기·가지치기", description: "Tree search 는 매 단계마다 후보를 넓히고 평가해 유망한 것만 남깁니다.", example: "Branching b=5, depth d=3", boundary: "평가 호출 수가 b·k·d 에 비례해 늘어납니다." },
             { term: "사후 재검토", description: "Self-correction 은 이미 낸 답을 model 스스로 다시 비평하고 고칩니다.", example: "Self-Refine 은 외부 verifier 없이 자기 피드백만 씁니다.", boundary: "외부 신호가 없으면 개선이 보장되지 않고 오히려 나빠질 수 있습니다." },
           ]}
         />

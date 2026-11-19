@@ -307,7 +307,7 @@ export default function ModernRisc0() {
             input={["Receipt { inner, journal=391, metadata }", "trusted expected image: MULTIPLY_ID", "trusted VerifierContext"]}
             steps={[
               { code: "require inner.verifier_parameters == metadata.verifier_parameters", note: "Receipt struct 내부가 서로 모순되면 형식 오류로 거절합니다. metadata 자체를 신뢰 기준으로 삼는 단계는 아닙니다." },
-              { code: "inner.verify_integrity_with_context(ctx)", note: "선택된 proof system으로 seal과 inner claim의 암호학적 무결성을 확인합니다." },
+              { code: "inner.verify_integrity_with_context(ctx)", note: "선택된 proof system으로 seal과 inner claim의 암호학적 무결성을 확인합니다. Receipt::verify_integrity의 journal↔output 대조는 이 경로에서 부르지 않으므로, 바뀐 journal은 5단계에서 걸립니다." },
               { code: "expected ← ReceiptClaim::ok(MULTIPLY_ID, Pruned(H(journal)))", note: "호출자가 고정한 method, Halted(0), 현재 journal digest, 빈 assumptions로 기대 claim을 만듭니다." },
               { code: "actual ← inner.claim().digest()", note: "Seal이 인증한 실제 execution claim digest를 읽습니다." },
               { code: "require expected.digest() == actual", note: "ImageID·exit·journal·assumptions 중 하나라도 다르면 ClaimDigestMismatch입니다." },
@@ -336,7 +336,7 @@ export default function ModernRisc0() {
               <tbody>
                 {[
                   ["verify_integrity", "seal↔claim, journal↔output digest", "성공 exit, expected ImageID"],
-                  ["verify(MULTIPLY_ID)", "위 무결성 + Halted(0) + ImageID + journal + 빈 assumptions", "입력 출처, freshness, 업무 권한"],
+                  ["verify(MULTIPLY_ID)", "inner seal 무결성 + Halted(0) + ImageID + journal + 빈 assumptions", "입력 출처, freshness, 업무 권한"],
                 ].map((row) => (
                   <tr key={row[0]} className="border-t border-border align-top">
                     {row.map((cell, index) => <td key={`${row[0]}-${index}`} className="break-keep p-3">{cell}</td>)}

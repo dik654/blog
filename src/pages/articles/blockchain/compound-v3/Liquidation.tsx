@@ -32,7 +32,7 @@ export default function Liquidation() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>청산 영수증에서 무엇을 함께 봐야 할까요?</h3>
-        <p>부채가 $900이고 담보 credit이 $850이면 protocol은 base reserves로 부채를 정리하고, 담보 inventory와 가치 기준 $50 부족분을 함께 떠안습니다. 반대로 credit이 부채보다 크면 계정에 양수 base supply가 남을 수 있습니다.</p>
+        <p>부채가 $900이고 담보 가치에 LF를 곱한 credit이 $850이면 protocol은 base reserves로 부채를 정리하고, 담보 inventory와 가치 기준 $50 부족분을 함께 떠안습니다. 반대로 credit이 부채보다 크면 계정에 양수 base supply가 남을 수 있습니다.</p>
         <p>가격·factor·반올림·asset membership 오류를 숨기지 않으려면 이전과 이후의 principal, basePaidOut, 압류한 자산 수량, totalSupplyBase·totalBorrowBase와 reserves를 한 receipt에서 비교해야 합니다.</p>
       </div>
       <div id="compound-v3-release-gate" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">

@@ -87,7 +87,7 @@ export default function PacketHookPathViz() {
   return (
     <VizFrame
       eyebrow="netfilter hooks"
-      title="패킷은 다섯 훅 가운데 세 개를 지나고, 어느 셋인지는 라우팅 결정이 고릅니다"
+      title="패킷은 다섯 훅 가운데 두세 개만 지나고, 어느 것인지는 라우팅 결정이 고릅니다"
       description="파란 상자가 netfilter 훅, 주황 상자가 라우팅 결정, 회색이 장치와 소켓입니다. 켜진 경로가 이번 장면의 패킷이 지나는 길입니다."
       note="Linux v6.12 include/uapi/linux/netfilter.h의 enum과 net/ipv4/ip_input.c·ip_output.c의 NF_HOOK 호출 위치를 그대로 옮겼습니다. INGRESS 훅과 bridge 계층은 생략했습니다."
     >

@@ -292,7 +292,7 @@ export default function NatTraversalArticle() {
             },
           ]}
           assumptions={[
-            "G와 D는 RFC 8445 candidate priority 규칙으로 계산한 2^32 미만 정수입니다.",
+            "G와 D는 RFC 8445 candidate priority 규칙으로 계산한 1 이상 2^31−1 이하 정수입니다.",
             "Controlling·controlled role이 정해져 있어야 합니다.",
             "Priority는 검사 순서일 뿐 success probability·RTT가 아닙니다.",
           ]}

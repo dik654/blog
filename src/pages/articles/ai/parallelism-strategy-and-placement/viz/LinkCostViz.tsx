@@ -14,7 +14,7 @@ const BYTE_IB = MB / 50e9 * 1e6;
 const ROWS = [
   { name: "NVSwitch all-reduce (TP 8)", alpha: 5, bytes: 1.75 * BYTE_NV, shown: "약 7 μs" },
   { name: "InfiniBand 1회 전송", alpha: 15, bytes: BYTE_IB, shown: "35 μs" },
-  { name: "InfiniBand all-reduce (TP 16)", alpha: 15, bytes: 1.875 * BYTE_IB, shown: "약 52 μs" },
+  { name: "InfiniBand all-reduce (TP 16)", alpha: 15, bytes: 1.875 * BYTE_IB, shown: "약 52.5 μs" },
 ] as const;
 
 const MAX_US = 60;
@@ -23,7 +23,7 @@ const SCENES = [
   { label: "1 MB는 어디서 나오나", summary: "64 × 8192 × 2 byte ≈ 1 MB", note: "decode batch 64, hidden 8192, FP16은 값 하나에 2 byte입니다. layer를 지나는 tensor 하나가 약 1 MB입니다.", visible: 0 },
   { label: "node 안에서 한 번", summary: "5 + 1.75 × 1.1 ≈ 7 μs", note: "시간은 α(크기와 무관한 고정 latency)와 byte 항의 합입니다. all-reduce는 byte를 2(TP−1)/TP배 옮기므로 TP 8이면 1.75배입니다.", visible: 1 },
   { label: "node 경계를 한 번", summary: "15 + 1 × 20 = 35 μs", note: "같은 1 MB가 InfiniBand에서는 20 μs가 걸립니다. stage 사이 activation을 한 번 보내는 후보 B(TP 8 × PP 2)의 값입니다.", visible: 2 },
-  { label: "ring이 node를 건너면", summary: "15 + 1.875 × 20 = 52.5 μs", note: "ring은 rank들이 고리처럼 이어 값을 돌리는 all-reduce 경로입니다. TP 16의 ring은 node 경계를 두 번 지나므로 InfiniBand로 셉니다. 글은 이를 약 52 μs로 적습니다.", visible: 3 },
+  { label: "ring이 node를 건너면", summary: "15 + 1.875 × 20 = 52.5 μs", note: "ring은 rank들이 고리처럼 이어 값을 돌리는 all-reduce 경로입니다. TP 16의 ring은 node 경계를 두 번 지나므로 InfiniBand로 셉니다. 글은 이를 약 52.5 μs로 적습니다.", visible: 3 },
   { label: "token 하나로 곱하면", summary: "× 160 = 1.1 ms vs 8.4 ms", note: "layer 80개마다 all-reduce가 두 번이라 token당 160번입니다. 한 번의 차이가 8.4 ms와 1.1 ms로 벌어집니다. α·B는 계산 예시이며 실제 값은 nccl-tests로 잽니다.", visible: 3 },
 ] as const;
 

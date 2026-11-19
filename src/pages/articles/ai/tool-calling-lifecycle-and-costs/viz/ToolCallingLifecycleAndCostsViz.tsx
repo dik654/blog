@@ -13,7 +13,7 @@ const SCENES = ["Tool 선택", "인자 생성", "순차 vs 병렬 호출", "결�
 const NOTES = [
   "\"서울 날씨 알려줘\" 라는 요청에 model 이 등록된 tool 이름·설명을 보고 get_weather 를 고릅니다. send_email 은 후보에서 제외됩니다.",
   "get_weather 의 JSON schema(location: string, unit: enum)에 맞춰 model 이 {\"location\": \"Seoul\", \"unit\": \"celsius\"} 를 채웁니다.",
-  "독립된 tool 3개를 실행 1회 400ms 로 가정하면, 순차 호출은 3×RTT ≈ 1,200ms 가 걸리지만 한 턴에 함께 반환해 동시에 돌리면 1×RTT ≈ 400ms 로 줄어듭니다.",
+  "독립된 tool 3개를 실행 1회 400ms 로 가정하면, 순차 호출은 조회 시간 합이 3×400ms = 1,200ms 지만 한 턴에 함께 반환해 동시에 돌리면 가장 늦은 조회가 끝나는 약 400ms 로 줄어듭니다.",
   "결과가 성공이면 다음 tool 선택의 입력이 되고, 실패면 재시도 횟수를 늘려 backoff 뒤 다시 부르거나 최대 횟수를 넘기면 typed error 로 확정합니다.",
 ] as const;
 
@@ -74,7 +74,7 @@ function TimingScene() {
   return (
     <div className="mt-6 space-y-4">
       <div>
-        <p className="mb-1 text-[11px] font-bold text-muted-foreground">순차 호출 · 3×RTT ≈ 1,200ms</p>
+        <p className="mb-1 text-[11px] font-bold text-muted-foreground">순차 호출 · 조회 3×400ms = 1,200ms</p>
         <div className="flex gap-1">
           {["tool A", "tool B", "tool C"].map((name) => (
             <div key={name} className="flex h-8 flex-1 items-center justify-center border border-border bg-muted/30 text-[11px] font-bold text-muted-foreground">
@@ -84,10 +84,10 @@ function TimingScene() {
         </div>
       </div>
       <div>
-        <p className="mb-1 text-[11px] font-bold text-muted-foreground">병렬 호출 · 1×RTT ≈ 400ms</p>
-        <div className="flex h-8 items-stretch gap-1">
+        <p className="mb-1 text-[11px] font-bold text-muted-foreground">병렬 호출 · 가장 늦은 조회 ≈ 400ms</p>
+        <div className="flex w-1/3 flex-col gap-1">
           {["tool A", "tool B", "tool C"].map((name) => (
-            <div key={name} className="flex flex-1 items-center justify-center border border-primary/55 bg-primary/10 text-[11px] font-bold text-foreground">
+            <div key={name} className="flex h-6 items-center justify-center border border-primary/55 bg-primary/10 text-[11px] font-bold text-foreground">
               {name}
             </div>
           ))}

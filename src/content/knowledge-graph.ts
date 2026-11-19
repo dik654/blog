@@ -41885,7 +41885,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Linux nice → weight table",
     aliases: ["sched_prio_to_weight", "NICE_0_LOAD", "nice", "renice", "SCHED_OTHER", "가중치 1024", "weight 335"],
     definition:
-      "nice −20~+19의 40단계를 sched_prio_to_weight 표로 가중치에 대응시킵니다. nice 0 = 1024, nice 5 = 335, nice 19 = 15이고 한 단계는 약 1.25배입니다. 같은 run queue에서 겨루는 작업의 CPU 몫은 자기 가중치를 가중치 합으로 나눈 값이라 nice 0과 nice 5는 75.4 : 24.6입니다. nice는 겨룰 때의 비율만 정하고 보장이나 상한은 아닙니다.",
+      "nice −20~+19의 40단계를 sched_prio_to_weight 표로 가중치에 대응시킵니다. nice 0 = 1024, nice 5 = 335, nice 19 = 15이고 한 단계는 약 1.25배입니다. 같은 run queue에서 겨루는 작업의 CPU 몫은 자기 가중치를 가중치 합으로 나눈 값이라 nice 0과 nice 5는 75.3 : 24.7입니다. nice는 겨룰 때의 비율만 정하고 보장이나 상한은 아닙니다.",
     canonicalHref: "/cs/cloud/linux-kernel-process-syscall-scheduler#weights",
   },
   "linux-eevdf-scheduler-pick": {
@@ -42494,7 +42494,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "CrashLoopBackOff 시계 · 10→300초 · 600초 만료",
     aliases: ["CrashLoopBackOff", "Back-off restarting failed container", "doBackOff", "flowcontrol.Backoff", "maxContainerRestartPeriod", "KubeletCrashLoopBackOffMax"],
     definition:
-      "kubelet이 컨테이너를 다시 띄우기 직전에 대기를 10·20·40·80·160·300초로 두 배씩 늘려 적어 두고 FinishedAt부터 세며, 10분(600초) 넘게 살아남으면 10초로 되돌리는 재시작 지연입니다. 여섯 번 죽은 컨테이너는 12초를 돌고 610초를 기다리므로 CrashLoopBackOff는 '재시작 중'이 아니라 '대기 중'의 표시이며, 1.35부터 kubelet 설정으로 노드별 상한을 바꿀 수 있습니다.",
+      "kubelet이 컨테이너를 다시 띄우기 직전에 대기를 10·20·40·80·160·300초로 두 배씩 늘려 적어 두고 FinishedAt부터 세며, 10분(600초) 넘게 살아남으면 10초로 되돌리는 재시작 지연입니다. 일곱 번 죽은 컨테이너는 14초를 돌고 610초를 기다리므로 CrashLoopBackOff는 '재시작 중'이 아니라 '대기 중'의 표시이며, 1.35부터 kubelet 설정으로 노드별 상한을 바꿀 수 있습니다.",
     canonicalHref: "/cs/cloud/kubernetes-pod-states-crashloop-probes-events#backoff-clock",
   },
   "kubelet-probe-defaults-restart-window": {
@@ -76995,7 +76995,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "negative-prior-logit-bias",
     relation: "produces",
     reason:
-      "정규화가 사라지면 음성 칸이 N배 많다는 불균형이 그대로 드러나 보정 항이 필요해집니다.",
+      "정규화가 사라지면 음성 칸이 N−1배 많다는 불균형이 그대로 드러나 보정 항이 필요해집니다.",
   },
   {
     from: "batch-softmax-contrastive-objective",
@@ -87817,7 +87817,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "linux-dirty-page-writeback-thresholds", to: "disk-write-stall-signals", relation: "extends", reason: "디스크 글의 '공간이 남는데 쓰기가 멈춤' 신호 가운데 dirty_ratio 도달이 한 원인입니다." },
   { from: "linux-namespaces-eight-kinds", to: "linux-veth-bridge-fdb", relation: "prerequisite", reason: "veth 두 끝을 서로 다른 network namespace에 두는 것이 Pod 네트워크의 출발점입니다." },
   { from: "linux-veth-bridge-fdb", to: "linux-routing-rules-lpm-trie", relation: "produces", reason: "bridge가 자기 주소로 올린 프레임이 호스트 라우팅 결정의 입력이 됩니다." },
-  { from: "linux-routing-rules-lpm-trie", to: "linux-netfilter-five-hooks", relation: "constrains", reason: "라우팅 결정 결과가 패킷이 다섯 훅 가운데 어느 셋을 지나는지 정합니다." },
+  { from: "linux-routing-rules-lpm-trie", to: "linux-netfilter-five-hooks", relation: "constrains", reason: "라우팅 결정 결과가 패킷이 다섯 훅 가운데 어느 두세 개를 지나는지 정합니다." },
   { from: "linux-netfilter-five-hooks", to: "linux-conntrack-table-full", relation: "prerequisite", reason: "conntrack은 PRE_ROUTING·LOCAL_OUT 훅에 붙은 모듈이라 훅 자리를 알아야 동작 시점이 보입니다." },
   { from: "linux-conntrack-table-full", to: "conntrack-table-capacity", relation: "extends", reason: "TCP 글의 NAT 장부 설명에 버킷·상한 기본값, early_drop, 5일 timeout 계산을 더합니다." },
   { from: "linux-netfilter-five-hooks", to: "kubernetes-service-backend-translation", relation: "prerequisite", reason: "kube-proxy의 Service DNAT가 PRE_ROUTING·LOCAL_OUT에 걸린다는 자리 지식이 Service 경로 이해의 바닥입니다." },

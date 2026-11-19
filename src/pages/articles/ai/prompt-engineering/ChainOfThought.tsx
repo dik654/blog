@@ -35,7 +35,7 @@ export default function ChainOfThought() {
           {
             term: "Answer marginalization",
             description: "여러 path의 문장을 섞지 않고 path마다 추출한 최종 answer의 빈도를 합치는 추정입니다.",
-            example: "42가 4표, 40이 2표, 41이 1표라면 tie rule에 따라 42를 선택합니다.",
+            example: "42가 4표, 40이 2표, 41이 1표라면 동률이 없으므로 tie rule 없이 최다 득표인 42를 선택합니다.",
             boundary: "같은 잘못된 전제를 공유하면 agreement가 커도 모두 틀릴 수 있습니다.",
           },
           {

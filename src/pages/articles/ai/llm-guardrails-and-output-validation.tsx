@@ -174,7 +174,7 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
             "같은 test set 안에서 threshold만 바꾼다고 가정합니다.",
             "TP+FN(실제 위험 요청 수)은 threshold와 무관하게 고정됩니다.",
           ]}
-          interpretation="정상 요청 1,000건과 위험 요청 50건을 섞은 집합에서, threshold A(느슨함)는 TP=40·FP=30·FN=10으로 precision 0.57·recall 0.80을 내고, threshold B(엄격함)는 TP=30·FP=5·FN=20으로 precision 0.86·recall 0.60을 냅니다. Recall을 올리면 precision이 떨어진다는 트레이드오프를 보여줄 뿐, 특정 threshold가 항상 옳다는 결론은 아닙니다."
+          interpretation="정상 요청 1,000건과 위험 요청 50건을 섞은 집합에서, threshold A(낮음, 70건 차단)는 TP=40·FP=30·FN=10으로 precision 0.57·recall 0.80을 내고, threshold B(높음, 35건 차단)는 TP=30·FP=5·FN=20으로 precision 0.86·recall 0.60을 냅니다. Recall을 올리면 precision이 떨어진다는 트레이드오프를 보여줄 뿐, 특정 threshold가 항상 옳다는 결론은 아닙니다."
         />
         <ProgressiveDetail
           title="Threshold를 한쪽으로 계속 움직이면 왜 안 되는가"

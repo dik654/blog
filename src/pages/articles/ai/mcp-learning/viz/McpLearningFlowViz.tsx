@@ -50,14 +50,14 @@ const FLOWS: Record<Mode, { id: string; eyebrow: string; title: string; descript
   },
   operations: {
     id: "mcp-operation-receipt-viz",
-    eyebrow: "WRITE TOOL · OPERATION TENANT7:TICKET:42",
+    eyebrow: "WRITE TOOL · OPERATION CREATE-TICKET:TENANT7:REQUEST42",
     title: "Timeout 뒤에는 새 티켓보다 기존 영수증을 먼저 찾습니다",
     description: "제안→권한 검사→한 번 실행→영수증 확인으로 중복 효과를 막습니다.",
     labels: ["실행 제안", "권한 검사", "한 번 실행", "영수증 확인"],
     notes: [
       "모델의 tickets.create 호출은 후보입니다. Host는 사용자 의도와 위험도에 맞춰 확인 여부를 결정합니다.",
       "Server는 token issuer·audience·scope·tenant와 project ACL을 실행 직전에 다시 검사합니다.",
-      "operationId tenant7:ticket:42로 effect와 receipt를 함께 기록합니다. 첫 응답이 유실돼도 티켓은 이미 만들어졌을 수 있습니다.",
+      "operationId create-ticket:tenant7:request42로 effect와 receipt를 함께 기록합니다. 첫 응답이 유실돼도 티켓은 이미 만들어졌을 수 있습니다.",
       "재시도는 같은 operationId의 receipt를 조회해 ticketId 91을 돌려줍니다. Network attempt는 2번이어도 실제 티켓은 1건입니다.",
     ],
   },

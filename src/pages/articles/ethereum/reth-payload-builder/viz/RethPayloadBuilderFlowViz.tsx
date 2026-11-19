@@ -90,7 +90,7 @@ export default function RethPayloadBuilderFlowViz() {
       eyebrow="개념 경로 · 한 Engine API 요청"
       title="요청은 job이 되고, job은 pool을 반복해서 읽어 후보를 개선합니다"
       description="forkchoiceUpdated 한 건이 getPayload 응답이 되기까지 실제 상태 소유권과 데이터 변화를 일곱 장면으로 따라갑니다."
-      note="표시한 거래 수와 금액은 메커니즘 설명용 fixture입니다. Reth v2.8.1의 기본 timeout이나 mainnet 성능 측정값이 아닙니다."
+      note="거래 수나 금액 같은 수치 없이 상태 소유권과 데이터 흐름만 보여 주는 개념 경로입니다. Reth v2.8.1의 기본 timeout이나 mainnet 성능 측정값을 나타내지 않습니다."
       canvasClassName="flex flex-col justify-center px-2 py-0 sm:px-5 sm:py-0"
     >
       <div

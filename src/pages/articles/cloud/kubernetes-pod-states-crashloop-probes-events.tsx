@@ -70,27 +70,27 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
         </section>
 
         <section id="backoff-clock" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">3. 여섯 번 죽은 컨테이너는 12초를 돌고 610초를 기다렸습니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">3. 일곱 번 죽은 컨테이너는 14초를 돌고 610초를 기다렸습니다</h2>
           <BackoffClockViz />
           <div className={prose}>
-            <p>(가정) 설정 파일이 없어서 뜨자마자 2초 만에 exit 1로 죽는 컨테이너가 있습니다. 첫 크래시 뒤 kubelet은 10초를 기다렸다가 다시 띄웁니다. 또 2초 만에 죽으면 이번에는 20초, 그다음 40초, 80초, 160초를 기다립니다. 여섯 번째 크래시 뒤에는 320초가 아니라 상한 300초를 기다리고 그 뒤로는 죽을 때마다 300초입니다.</p>
-            <p>여섯 번 죽기까지 컨테이너가 실제로 돈 시간은 6 × 2 = 12초이고 기다린 시간은 10 + 20 + 40 + 80 + 160 + 300 = 610초입니다. 전체 622초 가운데 98%가 대기입니다. 그래서 1절의 "지금 무엇을 하는 중인가"의 답은 "다음 재시작을 기다리는 중"이며, kubectl describe의 State는 Waiting, Reason은 CrashLoopBackOff, Last State는 Terminated·Exit Code 1입니다.</p>
+            <p>(가정) 설정 파일이 없어서 뜨자마자 2초 만에 exit 1로 죽는 컨테이너가 있습니다. 첫 크래시 뒤 kubelet은 장부에 10초만 적어 두고 바로 다시 띄웁니다. 또 2초 만에 죽으면 이번에는 10초, 그다음 20초, 40초, 80초, 160초를 기다립니다. 일곱 번째 크래시 뒤에는 320초가 아니라 상한 300초를 기다리고 그 뒤로는 죽을 때마다 300초입니다.</p>
+            <p>일곱 번 죽기까지 컨테이너가 실제로 돈 시간은 7 × 2 = 14초이고 기다린 시간은 0 + 10 + 20 + 40 + 80 + 160 + 300 = 610초입니다. 전체 624초 가운데 98%가 대기입니다. 그래서 1절의 "지금 무엇을 하는 중인가"의 답은 "다음 재시작을 기다리는 중"이며, kubectl describe의 State는 Waiting, Reason은 CrashLoopBackOff, Last State는 Terminated·Exit Code 1입니다.</p>
             <p>이 시계에는 초기화 규칙이 하나 있습니다. 어느 재시작에서 컨테이너가 10분(600초) 넘게 살아남으면 kubelet은 장부를 지우고 그 뒤의 크래시를 첫 크래시처럼 10초부터 셉니다.
             </p>
             <p>
               1절의 RESTARTS 200·AGE 2d9h를 이 규칙으로 읽으면, 200번이 모두 300초 대기였다면 약 17시간이라 57시간을 채우지 못하므로 그 사이에 10분 넘게 살아남았다가 다시 죽은 구간이 여러 번 섞여 있었다는 뜻입니다. 단순한 설정 오류가 아니라 간헐적으로 죽는 원인을 찾아야 한다는 첫 단서가 이 네 숫자에서 나옵니다.</p>
           </div>
           <CalculationWalkthrough
-            title="크래시 여섯 번의 시계와 RESTARTS 200의 역산"
-            question="2초 만에 죽는 컨테이너는 여섯 번째 크래시까지 얼마를 돌고 얼마를 기다리며, RESTARTS 200·AGE 2d9h는 무엇을 말해 주나요?"
+            title="크래시 일곱 번의 시계와 RESTARTS 200의 역산"
+            question="2초 만에 죽는 컨테이너는 일곱 번째 크래시까지 얼마를 돌고 얼마를 기다리며, RESTARTS 200·AGE 2d9h는 무엇을 말해 주나요?"
             scope="kubelet.go의 initialCrashLoopBackOff 10초·MaxCrashLoopBackOff 300초·HasExpiredFunc 600초를 씁니다. 실행 2초와 '즉시 다시 죽는다'는 가정입니다. jitter는 없습니다."
             steps={[
-              { label: "대기 수열", expression: "10 → 20 → 40 → 80 → 160 → min(320, 300)", result: "10·20·40·80·160·300초", reason: "Next가 재시작 직전에 두 배로 늘리고 상한에서 자릅니다. 여섯 번째부터 상한입니다." },
-              { label: "여섯 번의 실행", expression: "6 × 2", result: "12초", reason: "컨테이너가 실제로 프로세스를 돌린 시간입니다. 로그는 이 12초 안에서만 나옵니다." },
-              { label: "여섯 번의 대기", expression: "10 + 20 + 40 + 80 + 160 + 300", result: "610초", reason: "이 동안 STATUS는 CrashLoopBackOff, event는 'Back-off restarting failed container'입니다." },
-              { label: "대기 비율", expression: "610 ÷ (12 + 610)", result: "98%", reason: "'계속 재시작 중'이 아니라 '거의 항상 기다리는 중'입니다. 재시작 횟수가 늘수록 비율은 100%에 가까워집니다." },
+              { label: "대기 수열", expression: "0 → 10 → 20 → 40 → 80 → 160 → min(320, 300)", result: "0·10·20·40·80·160·300초", reason: "첫 크래시는 장부가 비어 바로 띄우고 Next가 10초를 적습니다. 그 뒤로는 Next가 재시작 직전에 두 배로 늘리고 상한에서 자릅니다. 일곱 번째 크래시 뒤부터 상한입니다." },
+              { label: "일곱 번의 실행", expression: "7 × 2", result: "14초", reason: "컨테이너가 실제로 프로세스를 돌린 시간입니다. 로그는 이 14초 안에서만 나옵니다." },
+              { label: "일곱 번의 대기", expression: "0 + 10 + 20 + 40 + 80 + 160 + 300", result: "610초", reason: "이 동안 STATUS는 CrashLoopBackOff, event는 'Back-off restarting failed container'입니다." },
+              { label: "대기 비율", expression: "610 ÷ (14 + 610)", result: "98%", reason: "'계속 재시작 중'이 아니라 '거의 항상 기다리는 중'입니다. 재시작 횟수가 늘수록 비율은 100%에 가까워집니다." },
               { label: "200번이 전부 상한이었다면", expression: "200 × (300 + 2)", result: "≈ 16.8시간", reason: "AGE 2d9h ≈ 57시간보다 훨씬 짧습니다." },
-              { label: "남는 40시간의 뜻", expression: "57 − 16.8", result: "≈ 40시간의 '살아남은' 구간", reason: "10분 넘게 살아남으면 장부가 초기화되고 다음 크래시는 10초부터입니다. 그런 초기화가 여러 번 섞여야 57시간이 채워집니다. 간헐적 원인(의존성·메모리·probe)을 의심할 근거입니다." },
+              { label: "남는 40시간의 뜻", expression: "57 − 16.8", result: "≈ 40시간의 '살아남은' 구간", reason: "10분 넘게 살아남으면 장부가 초기화되고 다음 크래시는 첫 크래시처럼 다시 셉니다. 그런 초기화가 여러 번 섞여야 57시간이 채워집니다. 간헐적 원인(의존성·메모리·probe)을 의심할 근거입니다." },
             ]}
             conclusion="CrashLoopBackOff는 상태라기보다 대기 중이라는 표시이고, RESTARTS와 AGE의 비율은 '항상 죽는가, 가끔 죽는가'를 가르는 첫 숫자입니다."
             caveats={["대기 시각의 기준은 kubelet이 확인한 시각이 아니라 컨테이너의 FinishedAt입니다. kubelet이 늦게 확인해도 대기가 그만큼 길어지지 않습니다.", "ReduceDefaultCrashLoopBackOffDecay(alpha)를 켜면 1·2·4·8·16·32·60초가 되고, 1.35부터 beta인 KubeletCrashLoopBackOffMax로 노드별 상한을 1~300초에서 바꿀 수 있습니다(11절)."]}
@@ -170,13 +170,13 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             steps={[
               { code: "cStatus = 마지막 Exited 컨테이너 상태; if none: return (바로 띄움)", note: "첫 시작이거나 Terminated 기록이 없으면 backoff 대상이 아닙니다." },
               { code: "ts = cStatus.FinishedAt; key = GetBackoffKey(pod, container)", note: "기준 시각은 kubelet이 확인한 시각이 아니라 컨테이너가 끝난 시각입니다." },
-              { code: "if backOff.IsInBackOffSince(key, ts):   # now − ts < 현재 대기 ?", note: "첫 크래시 직후 장부에는 항목이 없어 false입니다. 두 번째 sync부터 10초가 지나기 전까지는 true입니다." },
+              { code: "if backOff.IsInBackOffSince(key, ts):   # now − ts < 현재 대기 ?", note: "첫 크래시 직후 장부에는 항목이 없어 false입니다. 두 번째 크래시부터 FinishedAt 뒤 장부의 대기가 지나기 전까지는 true입니다." },
               { code: "    event(Warning, BackOff, 'Back-off restarting failed container'); return ErrCrashLoopBackOff", note: "이 오류 이름이 containerStatuses[].state.waiting.reason = CrashLoopBackOff가 됩니다. event는 9절의 spam filter 때문에 25개 뒤에는 5분에 하나만 새로 기록됩니다." },
               { code: "backOff.Next(key, ts)   # 없거나 만료면 10s로 새로, 있으면 ×2, 300s에서 자름", note: "첫 크래시: 10s 기록. 둘째: 20s. … 여섯째: min(320, 300) = 300s. FinishedAt − lastUpdate > 600s면 만료라 다시 10s입니다." },
               { code: "return false   # 컨테이너를 띄움, restartCount += 1", note: "띄운 컨테이너가 또 2초 만에 죽으면 다음 sync에서 3번 줄이 true가 되어 방금 적은 대기만큼 기다립니다." },
             ]}
             repeatUntil="컨테이너가 600초 넘게 살아남아 장부가 만료되거나, restartPolicy가 Never여서 재시작하지 않거나, Pod가 삭제될 때까지 반복합니다."
-            output="3절 시계: 실행 2초 → 대기 10 → 2 → 20 → 2 → 40 → 2 → 80 → 2 → 160 → 2 → 300 → 2 → 300 → …. STATUS는 대기 중 CrashLoopBackOff, 실행 중 Running(2초)이 번갈아 보입니다."
+            output="3절 시계: 실행 2초 → 즉시 재시작 → 2 → 대기 10 → 2 → 20 → 2 → 40 → 2 → 80 → 2 → 160 → 2 → 300 → 2 → 300 → …. STATUS는 대기 중 CrashLoopBackOff, 실행 중 Running(2초)이 번갈아 보입니다."
           />
           {code("do-backoff", "doBackOff 원문")}
           {code("backoff-next", "Next · IsInBackOffSince 원문")}
@@ -325,7 +325,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
         <section id="review-questions" data-teach-level="review" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">12. 같은 컨테이너로 다음 시계를 예상해 보세요</h2>
           <div className={prose}>
-            <p>kubelet 설정으로 maxContainerRestartPeriod를 100초로 두면 3절의 컨테이너가 여섯 번 죽기까지의 대기 수열과 총 대기 시간은 어떻게 바뀌고, 만료 600초는 바뀌나요? (답: 3·6·11절)</p>
+            <p>kubelet 설정으로 maxContainerRestartPeriod를 100초로 두면 3절의 컨테이너가 일곱 번 죽기까지의 대기 수열과 총 대기 시간은 어떻게 바뀌고, 만료 600초는 바뀌나요? (답: 3·6·11절)</p>
             <p>livenessProbe에 periodSeconds 5, failureThreshold 6을 적으면 응답이 멈춘 컨테이너는 최대 몇 초 만에 재시작되며, 기본값과 비교해 무엇이 같으며 무엇이 다른가요? (답: 7절)</p>
             <p>두 시간째 CrashLoopBackOff인 Pod의 describe에 BackOff event가 <code>x37 over 2h</code>로만 보입니다. 왜 재시작 횟수보다 적게 보이고, 어제의 첫 크래시 원인을 보려면 어디를 봐야 하나요? (답: 9절)</p>
           </div>

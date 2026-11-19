@@ -26,7 +26,7 @@ export const codeRefs: Record<string, CodeRef> = {
       { lines: [519, 523], color: "emerald", note: "배치 차원으로 펼쳐 디코더 레이어에 함께 넣습니다. 예시 상자로 특정 인스턴스를 지목한 경우에는 쓰지 않습니다" },
       { lines: [132, 145], color: "violet", note: "레이어 안에서 presence token을 query 앞에 이어 붙여 self-attention을 함께 받게 합니다" },
       { lines: [171, 178], color: "amber", note: "cross-attention mask에서는 presence token 자리를 열어 둡니다. 특정 영역에 묶이지 않고 이미지 전체를 봅니다" },
-      { lines: [616, 630], color: "rose", note: "레이어마다 presence logit을 뽑아 쌓고 수치 안정을 위해 범위를 제한합니다. 최종 점수는 이 값과 query 점수를 곱해 만듭니다" },
+      { lines: [616, 630], color: "rose", note: "레이어마다 presence logit을 뽑아 쌓습니다. clamp(...)는 in-place가 아니고 결과를 버려 실제로는 범위를 제한하지 않습니다. 최종 점수는 이 값과 query 점수를 곱해 만듭니다" },
     ],
   },
 };

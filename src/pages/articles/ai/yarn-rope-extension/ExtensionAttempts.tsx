@@ -38,7 +38,7 @@ export default function ExtensionAttempts() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          PI, NTK-aware scaling, YaRN은 모두 RoPE scaling이라 부르는 방법군에 속한다. 공통 목표는 checkpoint를 다시 학습하지 않고 position
+          PI, NTK-aware scaling, YaRN은 모두 RoPE scaling이라 부르는 방법군에 속한다. 공통 목표는 checkpoint를 처음부터 다시 사전학습하지 않고 짧은 fine-tuning 이하의 비용으로 position
           index나 frequency base를 조정해 학습 밖 길이에서도 동작하게 만드는 것이다.
         </p>
         <p className="leading-7">

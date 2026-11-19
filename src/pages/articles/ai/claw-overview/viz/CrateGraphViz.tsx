@@ -42,7 +42,8 @@ export default function CrateGraphViz() {
         ]}
       />
       <OverviewRule>
-        의존 방향은 CLI / harness → runtime → provider / tools입니다. Telemetry는
+        호출 방향은 CLI / harness → runtime → provider / tools이지만 compile-time
+        의존은 provider / tools가 runtime contract를 가리키는 반대 방향입니다. Telemetry는
         이 경로를 관찰하되 상태 전이를 결정하지 않습니다.
       </OverviewRule>
     </OverviewFrame>

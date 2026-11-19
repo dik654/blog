@@ -5,12 +5,12 @@ import VizFrame from "@/components/viz/VizFrame";
 
 /**
  * 뜨자마자 2초 만에 죽는 컨테이너 하나의 시계를 그린다.
- * 한 mechanism: kubelet은 재시작 직전에 대기 시간을 두 배로 늘려 적어 두고(10→20→40→80→160→300초),
+ * 한 mechanism: 첫 크래시는 장부가 비어 바로 다시 띄우고, 그 뒤로 kubelet은 재시작 직전에 대기 시간을 두 배로 늘려 적어 두고(10→20→40→80→160→300초),
  * 컨테이너는 대부분의 시간을 "도는 중"이 아니라 "다음 재시작을 기다리는 중"으로 보낸다.
  * 상수는 kubelet.go(initial 10s, max 300s)와 HasExpiredFunc 600s에서 왔다. 2초 실행은 가정이다.
  */
 const RUN = 2;
-const WAITS = [10, 20, 40, 80, 160, 300] as const;
+const WAITS: readonly number[] = [0, 10, 20, 40, 80, 160, 300]; // 크래시 k 뒤의 대기. 첫 크래시는 장부가 비어 대기 0초
 
 interface Scene {
   label: string;
@@ -21,17 +21,17 @@ interface Scene {
 }
 
 const SCENES: readonly Scene[] = [
-  { label: "첫 크래시 → 10초 대기", crashes: 1, reset: false, status: "back-off 10s", note: "컨테이너가 2초 만에 exit 1로 죽었습니다. kubelet은 FinishedAt부터 10초가 지나기 전에는 다시 띄우지 않고, 그동안 STATUS 열에 CrashLoopBackOff를 보입니다." },
-  { label: "둘째 크래시 → 20초", crashes: 2, reset: false, status: "back-off 20s · RESTARTS 1", note: "10초 뒤 다시 띄웠고 또 2초 만에 죽었습니다. 재시작 직전에 Next가 대기를 두 배로 적어 뒀으므로 이번 대기는 20초입니다. 실행 4초, 대기 30초입니다." },
-  { label: "넷째 크래시 → 80초", crashes: 4, reset: false, status: "back-off 1m20s · RESTARTS 3", note: "40초, 80초로 늘어납니다. 여기까지 실행은 8초뿐이고 대기는 150초입니다. 재시작 횟수가 늘수록 '도는 시간'의 비율은 급격히 줄어듭니다." },
-  { label: "여섯째 크래시 → 300초 상한", crashes: 6, reset: false, status: "back-off 5m0s · RESTARTS 5", note: "160초 다음은 320초가 아니라 상한 300초입니다. 이 뒤로는 크래시마다 5분씩 기다리므로 RESTARTS 200은 대략 200 × 5분 = 17시간 가까이 '기다린' 기록입니다." },
-  { label: "10분 정상 실행 → 초기화", crashes: 6, reset: true, status: "backoff 만료 · 다음은 10s", note: "어느 재시작에서 컨테이너가 10분(600초) 넘게 살아남으면 장부가 만료됩니다. 그 뒤 다시 죽으면 300초가 아니라 첫 크래시처럼 10초부터 셉니다. 1절의 RESTARTS 200·AGE 2d9h는 이런 초기화가 섞인 기록입니다." },
+  { label: "첫 크래시 → 바로 재시작", crashes: 1, reset: false, status: "장부에 10s 기록", note: "컨테이너가 2초 만에 exit 1로 죽었습니다. 장부에 아직 항목이 없어 IsInBackOffSince가 false이므로 kubelet은 Next로 10초를 적어 두고 바로 다시 띄웁니다." },
+  { label: "둘째 크래시 → 10초 대기", crashes: 2, reset: false, status: "back-off 10s · RESTARTS 1", note: "또 2초 만에 죽었습니다. 이번에는 장부의 10초 창 안이라 FinishedAt부터 10초가 지나기 전에는 다시 띄우지 않고, 그동안 STATUS 열에 CrashLoopBackOff를 보입니다. 실행 4초, 대기 10초입니다." },
+  { label: "다섯째 크래시 → 80초", crashes: 5, reset: false, status: "back-off 1m20s · RESTARTS 4", note: "재시작 직전마다 Next가 대기를 두 배로 적어 두므로 20초, 40초, 80초로 늘어납니다. 여기까지 실행은 10초뿐이고 대기는 150초입니다. 재시작 횟수가 늘수록 '도는 시간'의 비율은 급격히 줄어듭니다." },
+  { label: "일곱째 크래시 → 300초 상한", crashes: 7, reset: false, status: "back-off 5m0s · RESTARTS 6", note: "160초 다음은 320초가 아니라 상한 300초입니다. 이 뒤로는 크래시마다 5분씩 기다리므로 RESTARTS 200은 대략 200 × 5분 = 17시간 가까이 '기다린' 기록입니다." },
+  { label: "10분 정상 실행 → 초기화", crashes: 7, reset: true, status: "backoff 만료 · 장부 10s부터", note: "어느 재시작에서 컨테이너가 10분(600초) 넘게 살아남으면 장부가 만료됩니다. 그 뒤 다시 죽으면 300초를 기다리지 않고 첫 크래시처럼 바로 다시 띄우며 장부를 10초부터 다시 셉니다. 1절의 RESTARTS 200·AGE 2d9h는 이런 초기화가 섞인 기록입니다." },
 ];
 
 const W = 480;
 const X0 = 16;
 const TRACK_W = W - 32;
-const TOTAL = WAITS.reduce((a, b) => a + b, 0) + RUN * WAITS.length; // 622초
+const TOTAL = WAITS.reduce((a, b) => a + b, 0) + RUN * WAITS.length; // 624초
 const sx = (sec: number) => X0 + (sec / TOTAL) * TRACK_W;
 
 export default function BackoffClockViz() {
@@ -46,7 +46,7 @@ export default function BackoffClockViz() {
   for (let i = 0; i < scene.crashes; i++) {
     segments.push({ kind: "run", from: t, to: t + RUN, label: "" });
     t += RUN;
-    segments.push({ kind: "wait", from: t, to: t + WAITS[i], label: `${WAITS[i]}s` });
+    if (WAITS[i] > 0) segments.push({ kind: "wait", from: t, to: t + WAITS[i], label: `${WAITS[i]}s` });
     t += WAITS[i];
   }
   const ranSec = scene.crashes * RUN;
@@ -56,8 +56,8 @@ export default function BackoffClockViz() {
     <VizFrame
       eyebrow="CrashLoopBackOff clock"
       title="CrashLoopBackOff의 대부분은 재시작이 아니라 다음 재시작을 기다리는 시간입니다"
-      description="가로 한 줄이 622초입니다. 파란 조각은 컨테이너가 실제로 돈 2초, 주황 조각은 kubelet이 다시 띄우기 전에 기다린 시간입니다."
-      note="실행 2초는 가정이고 대기 10·20·40·80·160·300초와 만료 600초는 kubelet.go 원문의 값입니다. jitter가 없어 정확히 두 배씩 늘어납니다."
+      description="가로 한 줄이 624초입니다. 파란 조각은 컨테이너가 실제로 돈 2초, 주황 조각은 kubelet이 다시 띄우기 전에 기다린 시간입니다."
+      note="실행 2초는 가정이고 첫 크래시 뒤 즉시 재시작, 그 뒤 대기 10·20·40·80·160·300초와 만료 600초는 kubelet.go 원문의 값입니다. jitter가 없어 정확히 두 배씩 늘어납니다."
     >
       <div
         id={scenes.playbackId}
@@ -102,7 +102,7 @@ export default function BackoffClockViz() {
               <g>
                 <rect x={X0} y={64} width={TRACK_W} height={14} rx={3} fill="#dcfce7" stroke="#16a34a" />
                 <text x={X0 + TRACK_W / 2} y={75} fontSize={10} fontWeight={700} textAnchor="middle" fill="#166534">
-                  600초 넘게 살아남음 → 장부 만료, 다음 대기 10초
+                  600초 넘게 살아남음 → 장부 만료, 10초부터 다시
                 </text>
               </g>
             ) : (

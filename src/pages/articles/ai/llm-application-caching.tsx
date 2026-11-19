@@ -115,7 +115,7 @@ export default function LlmApplicationCachingArticle() {
             {
               term: "Semantic Cache",
               description: "요청을 embedding으로 바꾼 뒤 저장된 요청들과 similarity를 비교해, 문자열이 달라도 의미가 비슷하면 hit으로 인정하는 캐시입니다.",
-              example: "GPTCache는 이 방식으로 “파리의 수도는?”과 “프랑스 수도가 어디야?”를 같은 hit으로 묶을 수 있습니다.",
+              example: "GPTCache는 이 방식으로 “프랑스의 수도는?”과 “프랑스 수도가 어디야?”를 같은 hit으로 묶을 수 있습니다.",
               boundary: "Similarity 판정이 틀리면 다른 질문에 엉뚱한 답을 캐시로 돌려줄 위험이 있습니다(다음 절).",
             },
             {
@@ -169,7 +169,7 @@ export default function LlmApplicationCachingArticle() {
           annotatedFormula={String.raw`\mathrm{sim}(q,c)=\underbrace{\dfrac{\vec q\cdot\vec c}{\lVert\vec q\rVert\,\lVert\vec c\rVert}}_{\text{두 embedding 사이 각도 기반 유사도}},\quad \underbrace{\text{hit} \iff \mathrm{sim}(q,c)\ge\tau}_{\text{threshold 비교}}`}
           operations={[
             { expression: String.raw`\vec q\cdot\vec c`, annotation: ["새 요청 embedding과 저장된 요청 embedding의", "내적을 계산해 방향이 얼마나 겹치는지 봅니다."] },
-            { expression: String.raw`\lVert\vec q\rVert\,\lVert\vec c\rVert`, annotation: ["두 vector의 크기를 곱해 내적을", "0~1 범위의 각도 유사도로 정규화합니다."] },
+            { expression: String.raw`\lVert\vec q\rVert\,\lVert\vec c\rVert`, annotation: ["두 vector의 크기를 곱해 내적을", "-1~1 범위(보통 0과 1 사이)의 각도 유사도로 정규화합니다."] },
             { expression: String.raw`\mathrm{sim}(q,c)\ge\tau`, annotation: ["정규화한 유사도가", "미리 정한 threshold \\tau 이상인지 비교합니다."] },
           ]}
           terms={[

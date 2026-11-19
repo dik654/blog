@@ -51,7 +51,7 @@ export default function VisionLanguageNavigationArticle() {
           <p>
             원래 VLN은 Room-to-Room(R2R) benchmark처럼 미리 만들어 둔 navigation graph 위에서 정의됐습니다. 매 step "다음으로 갈 수 있는
             viewpoint" 중 하나를 고르는 discrete action space를 agent가 씁니다. R2R은 90개 건물, 7,189개 경로, 평균 29단어짜리
-            instruction 21,567개로 구성되고 경로 하나는 평균 4~6개의 graph edge, 약 10m 길이입니다.
+            instruction 21,567개로 구성되고 경로 하나는 4~6개의 graph edge로 이루어지고 평균 길이는 약 10m입니다.
           </p>
           <p>
             이 graph는 각 viewpoint 사이의 연결과 agent의 정확한 위치를 미리 안다고 가정합니다. VLN-CE(VLN in Continuous Environments)는

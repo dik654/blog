@@ -7,7 +7,7 @@ type Scene = {
   label: string;
   title: string;
   note: string;
-  nodes: readonly { label: string; sub: string; shape: "circle" | "box" | "bar" }[];
+  nodes: readonly { label: string; sub: string; shape: "circle" | "box" | "bar"; fill?: number }[];
 };
 
 function ConceptViz({
@@ -122,9 +122,9 @@ function ConceptViz({
                       />
                       <rect
                         x={x - 24}
-                        y={128 - index * 10}
+                        y={node.fill === undefined ? 128 - index * 10 : 140 - Math.round(node.fill * 64)}
                         width="48"
-                        height={12 + index * 10}
+                        height={node.fill === undefined ? 12 + index * 10 : Math.round(node.fill * 64)}
                         fill="var(--primary)"
                         fillOpacity=".22"
                       />
@@ -236,9 +236,9 @@ export function WeightDecayMechanismViz() {
 
 export function EarlyStoppingMechanismViz() {
   return <ConceptViz id="early-stopping-mechanism-viz" eyebrow="δ=0 · P=2 · stop when c>P" title=".42→.38→.39→.40→.41에서 eval 5에 멈추고 eval 2를 돌려줍니다" description="관측 metric, best 저장, bad counter, restore artifact를 한 trajectory로 봅니다." scenes={[
-    { label: "다섯 loss", title: "Validation loss는 .42, .38, .39, .40, .41입니다", note: "같은 cadence에서 loss를 minimize하며 δ=0으로 비교합니다.", nodes: [{ label: "e1", sub: ".42", shape: "bar" }, { label: "e2", sub: ".38", shape: "bar" }, { label: "e3", sub: ".39", shape: "bar" }, { label: "e4·e5", sub: ".40·.41", shape: "bar" }] },
-    { label: "Best=e2", title: "Eval 2의 .38에서 best snapshot을 저장합니다", note: "이후 .39·.40·.41은 .38보다 낮지 않으므로 best가 아닙니다.", nodes: [{ label: "e1", sub: ".42", shape: "bar" }, { label: "e2", sub: ".38 best", shape: "bar" }, { label: "Save", sub: "j*=2", shape: "box" }] },
-    { label: "c=1·2·3", title: "Eval 3·4·5에서 bad counter가 1·2·3이 됩니다", note: "P=2이고 stop 조건이 c>P이므로 c=2인 eval 4가 아니라 c=3인 eval 5에서 멈춥니다.", nodes: [{ label: "Eval 3", sub: "bad 1", shape: "bar" }, { label: "Eval 4", sub: "bad 2", shape: "bar" }, { label: "Eval 5", sub: "bad 3", shape: "bar" }] },
+    { label: "다섯 loss", title: "Validation loss는 .42, .38, .39, .40, .41입니다", note: "같은 cadence에서 loss를 minimize하며 δ=0으로 비교합니다.", nodes: [{ label: "e1", sub: ".42", shape: "bar", fill: 1 }, { label: "e2", sub: ".38", shape: "bar", fill: 0.38 / 0.42 }, { label: "e3", sub: ".39", shape: "bar", fill: 0.39 / 0.42 }, { label: "e4·e5", sub: ".40·.41", shape: "bar", fill: 0.41 / 0.42 }] },
+    { label: "Best=e2", title: "Eval 2의 .38에서 best snapshot을 저장합니다", note: "이후 .39·.40·.41은 .38보다 낮지 않으므로 best가 아닙니다.", nodes: [{ label: "e1", sub: ".42", shape: "bar", fill: 1 }, { label: "e2", sub: ".38 best", shape: "bar", fill: 0.38 / 0.42 }, { label: "Save", sub: "j*=2", shape: "box" }] },
+    { label: "c=1·2·3", title: "Eval 3·4·5에서 bad counter가 1·2·3이 됩니다", note: "P=2이고 stop 조건이 c>P이므로 c=2인 eval 4가 아니라 c=3인 eval 5에서 멈춥니다.", nodes: [{ label: "Eval 3", sub: "bad 1", shape: "bar", fill: 1 / 3 }, { label: "Eval 4", sub: "bad 2", shape: "bar", fill: 2 / 3 }, { label: "Eval 5", sub: "bad 3", shape: "bar", fill: 1 }] },
     { label: "Stop5→Best2", title: "Stop index 5와 return index 2를 분리합니다", note: "Eval 5에서 학습을 멈춘 뒤 immutable eval 2 artifact와 그 재현 state를 복원합니다.", nodes: [{ label: "Last", sub: "eval 5", shape: "box" }, { label: "Stop", sub: "c=3>P", shape: "circle" }, { label: "Return", sub: "eval 2", shape: "box" }] },
   ]} />;
 }

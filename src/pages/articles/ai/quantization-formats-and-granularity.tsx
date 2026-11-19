@@ -178,7 +178,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
           question="같은 quantize·dequantize 식에서 symmetric과 asymmetric은 어디가 다른가요?"
           idea={
             <p>
-              Zero-point z가 정확히 0이면 code 범위는 원점을 중심으로 대칭입니다. z가 0이 아니면 code 범위는 실수 range의 한쪽으로 치우친 구간을 덮습니다.
+              부호 있는 code 범위(−127…127)에서 zero-point z가 정확히 0이면 code 범위는 원점을 중심으로 대칭입니다. z가 0이 아니면 code 범위는 실수 range의 한쪽으로 치우친 구간을 덮습니다. 다만 unsigned code [0, 255]에서는 [0, 6]처럼 최솟값이 정확히 0인 asymmetric range도 z=0이 되므로, 이 규칙은 부호 있는 code 기준입니다.
             </p>
           }
           formula={String.raw`q=\mathrm{clip}\!\left(\mathrm{round}\left(\frac{x}{s}\right)+z,\,q_{\min},q_{\max}\right),\quad \hat{x}=s\,(q-z)`}
@@ -218,7 +218,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
             "s>0이며 하나의 tensor·channel·group 안에서 고정됩니다.",
             "z=0이 항상 더 정확하다는 뜻은 아닙니다.",
           ]}
-          interpretation="Weight처럼 원점 대칭 분포는 symmetric(z=0)이 code space를 낭비 없이 쓰지만, ReLU 이후 activation처럼 값이 [0, 6] 같은 한쪽으로 치우친 range면 asymmetric(z≠0)이 같은 bit 수로 더 촘촘한 step을 만듭니다."
+          interpretation="Weight처럼 원점 대칭 분포는 symmetric(z=0)이 code space를 낭비 없이 쓰지만, ReLU 이후 activation처럼 값이 [0, 6] 같은 한쪽으로 치우친 range면 asymmetric(min·max를 code 양 끝에 맞춤)이 같은 bit 수로 더 촘촘한 step을 만듭니다."
         />
         <ZeroPointMappingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">

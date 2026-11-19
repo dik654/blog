@@ -165,8 +165,8 @@ export default function FeedForward() {
         <p className="leading-8">
           예를 들어 32개 layer 각각의 update가 gradient를 0.9배로 줄인다면,
           residual 없이 F만 곱했을 때는 0.9³²≈0.034로 3.4%만 남습니다.
-          Identity 항이 있는 residual 경로는 각 layer가 최소 1배를 보존해
-          32개 layer를 지나도 최초 gradient 크기가 유지됩니다.
+          Identity 항이 있는 residual 경로는 각 layer에서 gradient를 1배로 그대로 넘겨
+          32개 layer를 지나도 이 경로로 오는 몫은 줄지 않습니다. 다만 전체 Jacobian I+∂F/∂x의 크기가 늘 1 이상이라는 보장은 아닙니다.
         </p>
         <p className="leading-8">
           Pre-norm은 F 앞에 normalization을 둡니다. Sublayer는 늘 정규화된 입력을 보게 되고 update 자체의 초기 크기도 작게 유지됩니다. 그래서 깊은

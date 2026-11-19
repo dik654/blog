@@ -551,7 +551,7 @@ export default function ModernCudaKernelFusionArticle() {
         <div id="paper-cuda-fusion-measurement">
           <CitationBlock
             type="code"
-            citeKey={2}
+            citeKey={5}
             source="NVIDIA CUDA C++ Best Practices Guide 13.4"
             href={PRACTICES}
           >

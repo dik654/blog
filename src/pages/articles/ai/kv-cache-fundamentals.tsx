@@ -220,7 +220,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
  caveats={["FP8 KV는 숫자당 1byte라 절반이 되지만 scale과 정렬 공간이 붙을 수 있습니다.","decode context parallel을 켜면 token 축으로 나뉘어 이 결론이 바뀝니다."]}
 />
 <DcpCapacitySpeedViz />
-<div className="prose prose-neutral max-w-none dark:prose-invert"><p>8×RTX PRO 6000에서 Kimi K2.5를 돌린 커뮤니티 기록(rtx6kpro 위키, 현장 경험)도 이 모양입니다. BF16 KV에 DCP 없이 잡히는 용량은 약 19만 token이라 200K 요청 하나를 겨우 담습니다.</p>
+<div className="prose prose-neutral max-w-none dark:prose-invert"><p>8×RTX PRO 6000에서 Kimi K2.5를 돌린 커뮤니티 기록(rtx6kpro 위키, 현장 경험)도 이 모양입니다. BF16 KV에 DCP 없이 잡히는 용량은 약 19만 token이라 200K 요청 하나도 다 담지 못합니다(19만 ÷ 20만 = 0.95개).</p>
 <p>FP8 KV로 바꾸면 DCP 없이 약 44.9만 token입니다. 같은 FP8 KV에 DCP 8을 켜고 gpu-util을 0.93으로 두면 3,621,504 token입니다. 200K 문맥 에이전트로 치면 약 18개를 동시에 담는 크기입니다. (계산)</p>
 <p>여기서 gpu-util은 vLLM의 <code>--gpu-memory-utilization</code>을 줄여 쓴 말로, GPU 메모리 가운데 vLLM이 쓸 상한 비율입니다. 이 예산에서 가중치와 계산 중 최대 사용량을 뺀 나머지가 KV 자리이므로 값을 올리면 token을 더 담지만 예상 밖의 메모리 사용을 받아 줄 여유는 줄어듭니다. 계산식과 숫자 예는 <Link to="/cs/ai/inference-runtime-anatomy#memory-plan">추론 런타임 글의 메모리 계획 절</Link>에 있습니다.</p>
 <p>여기서 DCP(decode context parallel)는 같은 latent를 든 rank들이 token 축을 나눠 갖게 하는 설정입니다. 각 rank가 자기 몫의 token으로 부분 attention을 계산하고 층마다 그 결과를 합칩니다. 부분 결과를 합치는 원리는 <Link to="/cs/ai/tensor-and-pipeline-parallel-inference#sequence-context-parallel">context parallel</Link>과 같습니다.</p>

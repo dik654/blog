@@ -18,7 +18,7 @@ const SCENES = [
   { label: "CPU 사용률 40%", summary: "2개 × 40% = 평균 0.8개", note: "(가정) 1절의 서버입니다. CPU 2개 가운데 평균 0.8개가 바빴다는 뜻입니다." },
   { label: "load 3", summary: "R과 D가 평균 3개", note: "load는 평균 3개로 CPU 칸 2개보다 깁니다. CPU에서 도는 작업만 세지 않고 R과 D를 함께 세기 때문입니다." },
   { label: "차이 2.2개", summary: "3 − 0.8 = 2.2", note: "차이 2.2개는 D이거나 한쪽 run queue에만 몰린 R입니다. 두 숫자만으로는 몇 개씩인지 나눌 수 없어 한 덩어리로 그렸습니다." },
-  { label: "느린 압축", summary: "겨루면 24.6% · 한가하면 100%", note: "압축이 느린 것은 가중치 335가 웹 서버 스레드의 1024와 겨루기 때문입니다. 세 숫자는 같은 run queue를 다른 각도에서 본 것입니다." },
+  { label: "느린 압축", summary: "겨루면 24.7% · 한가하면 100%", note: "압축이 느린 것은 가중치 335가 웹 서버 스레드의 1024와 겨루기 때문입니다. 세 숫자는 같은 run queue를 다른 각도에서 본 것입니다." },
 ] as const;
 
 function Units({ color, filled, dashed }: { color: string; filled: number; dashed: number }) {
@@ -87,7 +87,7 @@ export default function LoadGapViz() {
             </div>
           </div>
           <div className="space-y-1.5">
-            <ShareMini label="웹 서버와 겨룰 때" value={24.6} dim={active !== 3} />
+            <ShareMini label="웹 서버와 겨룰 때" value={24.7} dim={active !== 3} />
             <ShareMini label="웹 서버가 한가할 때" value={100} dim={active !== 3} />
           </div>
         </div>

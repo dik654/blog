@@ -375,7 +375,7 @@ export default function PublicGoodsAndCommonsArticle() {
 
         <ExplainedFormula
           question="빼놓을 수 없는데 줄어들기까지 하면 몇이 들어옵니까?"
-          idea="한 척이 더 들어올 때 호수 전체가 더 건지는 양과 그 한 척이 자기 손에 쥐는 양은 다릅니다. 앞의 것은 남들의 몫이 준 것을 빼고 남은 것이고 뒤의 것은 빼지 않은 것이므로, 뒤의 것이 언제나 큽니다. 들어오기는 뒤의 것이 0이 될 때까지 계속되고 그 자리는 앞의 것이 0이 되는 자리보다 한참 뒤입니다."
+          idea="한 척이 더 들어올 때 호수 전체가 더 건지는 양과 그 한 척이 자기 손에 쥐는 양은 다릅니다. 앞의 것은 남들의 몫이 준 것을 빼고 남은 것이고 뒤의 것은 빼지 않은 것이므로, 첫 척은 뺄 남이 없어 둘이 같지만 둘째 척부터는 뒤의 것이 언제나 큽니다. 들어오기는 뒤의 것이 0이 될 때까지 계속되고 그 자리는 앞의 것이 0이 되는 자리보다 한참 뒤입니다."
           formula={String.raw`\Delta^{\text{전체}}(B) = T(B) - T(B-1) - k, \qquad \Delta^{\text{한 척}}(B) = \frac{T(B)}{B} - k, \qquad T(B) = B\,(a - B)`}
           annotatedFormula={String.raw`\underbrace{\Delta^{\text{전체}}(B) = T(B) - T(B-1) - k}_{\text{호수 전체가 더 남기는 것}}, \qquad \underbrace{\Delta^{\text{한 척}}(B) = \tfrac{T(B)}{B} - k}_{\text{들어오는 배가 보는 것}}`}
           operations={[

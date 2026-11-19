@@ -12,7 +12,7 @@ const PIPELINE_STEPS = [
   },
   {
     label: "PieceTracker가 piece 1의 owner를 정함",
-    body: "Streaming 우선 piece, 일반 queue, 느린 owner의 steal 순으로 한 peer에게 piece를 예약합니다.",
+    body: "아주 느린 owner의 10× steal, Streaming 우선 piece, 일반 queue, 느린 owner의 3× steal 순으로 한 peer에게 piece를 예약합니다.",
   },
   {
     label: "16 KiB chunk를 disk에 쓰고 piece를 완성",

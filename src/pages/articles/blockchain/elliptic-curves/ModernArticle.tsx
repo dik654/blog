@@ -118,7 +118,7 @@ export default function ModernEllipticCurves(){const sidebar=useCodeSidebar();re
 <p>실제 배포를 평가할 때는 선택한 곡선과 입력 형식, 정확한 라이브러리 버전부터 고정해야 합니다. 그 계약에 맞는 잘못된 길이와 좌표, 항등원, 다른 부분군을 확인한 뒤 독립 구현이나 해당 환경의 검증 벡터와 비교합니다. 비밀 스칼라의 시간·메모리 접근, 예외 처리와 자원 한도는 이 글의 산술 검사가 대신해 주지 않습니다.</p>
 </section>
 <section id="release" data-teach-level="7" className="space-y-5"><h2 className="text-2xl font-bold">18. 한 조건을 바꾼 뒤 같은 결론이 남는지 예상합니다</h2>
-<ReviewPrompts questions={["(3,8,2)와 (5,1,1)은 서로 다른 점일까요? 원시 숫자 비교와 좌표 복원을 나누어 답해 보세요. (답: 10절)","두 번째 곡선의 T=(0,0)은 곡선 검사만 통과하면 충분할까요? [5]T 검사와 [4]T 변환 뒤에 남는 조건을 비교하세요. (답: 12절)","64바이트의 G1 점만 받은 호출은 무조건 길이 오류일까요? EIP-196 덧셈과 EIP-197 페어링의 규칙으로 각각 예상해 보세요. (답: 16절)"]}/>
+<ReviewPrompts questions={["(3,8,2)와 (5,1,1)은 서로 다른 점일까요? 원시 숫자 비교와 좌표 복원을 나누어 답해 보세요. (답: 9절)","두 번째 곡선의 T=(0,0)은 곡선 검사만 통과하면 충분할까요? [5]T 검사와 [4]T 변환 뒤에 남는 조건을 비교하세요. (답: 12절)","64바이트의 G1 점만 받은 호출은 무조건 길이 오류일까요? EIP-196 덧셈과 EIP-197 페어링의 규칙으로 각각 예상해 보세요. (답: 16절)"]}/>
 </section>
 <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={{ark:{id:"ark",label:"arkworks · 고정 원문",badgeClass:"bg-sky-50 border-sky-300 text-sky-800"},check:{id:"check",label:"본문의 실제 실행",badgeClass:"bg-emerald-50 border-emerald-300 text-emerald-800"}}}/>
 </article>}

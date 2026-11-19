@@ -473,7 +473,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             남는 조각이 어느 요청에도 맞지 않아 버려지는 상태이며,{" "}
             <Link to="/cs/ai/vllm-paged-attention#fragmentation-kinds">KV cache fragmentation</Link>
             과는 다른 층입니다. MIG 로 80 GB GPU 를 3g.40gb 와 2g.20gb 로 나누면 남는 slice 는
-            1g.10gb 두 개뿐이라 4g.40gb 요청은 합이 맞아도 들어가지 못합니다.
+            1g.10gb 두 개(20 GB)뿐이라, 대기 중인 요청이 4g.40gb 뿐이면 이 20 GB 는 어느 요청에도 맞지 않아 버려집니다.
           </p>
           <p>
             Cluster 층에서도 같은 일이 생깁니다. 8 장 node 두 대에 각각 2 장씩 비어 있으면 합은 4 장이지만 TP 4 replica 는 한 node 에 4 장이 붙어

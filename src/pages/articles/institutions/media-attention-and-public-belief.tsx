@@ -104,7 +104,7 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <MoneyRelationsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사례의 1만 원이 광고주가 플랫폼에 낸 돈인지, 제작자에게 따로 지급한 대가인지에 따라 확인할 관계가 다릅니다. 10개 중 한 게시물이 유료 후기라면 그 관계와 화면의 광고 거래를 분리해 읽습니다.</p>
-          <p className="leading-8">EU와 미국 설명은 2026-10-04 확인 기준입니다. 한국이나 다른 나라에는 현지 광고·소비자보호 규정과 언론 소유, 공개 제도를 확인해야 합니다. 어느 나라에서도 공개 여부와 사실 검증은 별도의 작업입니다.</p>
+          <p className="leading-8">EU 제27조와 미국 설명은 2026-10-04, EU 제33·38조는 2026-10-09 확인 기준입니다. 한국이나 다른 나라에는 현지 광고·소비자보호 규정과 언론 소유, 공개 제도를 확인해야 합니다. 어느 나라에서도 공개 여부와 사실 검증은 별도의 작업입니다.</p>
         </div>
         <SourceApplication source="US FTC · Endorsement Guides update, June 2023" excerpt="a platform’s built-in disclosure tool might not be an adequate disclosure" application="광고1천 회의 대가1만 원과 제작자의 별도 협찬 관계를 나눕니다. 표시 버튼만 보고 모든 관계가 충분히 공개됐다고 가정하지 않습니다." />
         <CitationBlock source="US FTC · Endorsement Guides update, June 2023" citeKey={2} href="https://www.ftc.gov/news-events/news/press-releases/2023/06/federal-trade-commission-announces-updated-advertising-guides-combat-deceptive-reviews-endorsements">미국 FTC 추천·후기 광고 가이드의 공개 판단. 2026-10-04 확인.</CitationBlock>

@@ -65,7 +65,7 @@ export default function SigmoidLoss({ onCodeRef }: { onCodeRef: (key: string, re
           "비대각 쌍이 모두 진짜 음성이라는 가정은 여기서도 그대로입니다.",
           "편향과 온도는 모두 학습 파라미터이며 초기값 선택이 학습 초반 안정성에 영향을 줍니다.",
         ]}
-        interpretation="정규화가 사라지면 손실이 배치 구성에 덜 묶입니다. 다만 음성 칸이 N배 많아 그대로 두면 손실이 음성 쪽으로 기울기 때문에 편향 항이 필요합니다."
+        interpretation="정규화가 사라지면 손실이 배치 구성에 덜 묶입니다. 다만 음성 칸이 N−1배 많아 그대로 두면 손실이 음성 쪽으로 기울기 때문에 편향 항이 필요합니다."
       />
 
       <SigmoidViz />
@@ -76,7 +76,7 @@ export default function SigmoidLoss({ onCodeRef }: { onCodeRef: (key: string, re
       </div>
 
       <h3 id="logit-bias" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
-        음성 쌍이 N배 많다는 사실을 편향이 흡수합니다
+        음성 쌍이 N−1배 많다는 사실을 편향이 흡수합니다
       </h3>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">

@@ -71,11 +71,11 @@ export default function EvidenceModelsAndCausalExplanationArticle() {
 
       <LessonSection id="mechanism" level="4" title="7. 우산 판매를 줄이는 개입과 비를 막는 개입을 비교합니다" bridge="같은 상관에서 서로 다른 개입 결과를 예측했습니다. 법칙에 맞는 설명도 방향을 놓칠 수 있는 반례를 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">우산 판매가 많은 날 사고 확률은 18/42≈43%, 적은 날은 7/58≈12%입니다. 이 차이는 경보에는 유용합니다. 하지만 판매를 42일 모두 0으로 만드는 개입을 해도 비 오는 40일과 젖은 노면은 남으므로 사고 25건이 같은 비율로 줄어든다는 근거는 없습니다.</p>
+          <p className="leading-8">우산 판매가 많은 날 사고 확률은 18/42≈43%, 적은 날은 7/58≈12%입니다. 이 차이는 경보에는 유용합니다. 하지만 판매를 42일 모두 0으로 만드는 개입을 해도 비 오는 40일과 젖은 노면은 남으므로 사고 난 25일이 같은 비율로 줄어든다는 근거는 없습니다.</p>
         </div>
         <DrainageEstimateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">반대로 비 오는 날의 20건 가운데 절반이 미끄러운 노면 경로를 거친다는 추가 증거가 있고, 배수 개선이 그 경로를 절반 줄인다면 기대 감소는 약 5건입니다. 이 계산도 개입이 운전량을 바꾸지 않는다는 가정을 둡니다.</p>
+          <p className="leading-8">반대로 비 오는 날 사고가 난 20일 가운데 절반이 미끄러운 노면 경로를 거친다는 추가 증거가 있고, 배수 개선이 그 경로를 절반 줄인다면 사고 난 날의 기대 감소는 약 5일입니다. 이 계산도 개입이 운전량을 바꾸지 않는다는 가정을 둡니다.</p>
           <p className="leading-8">따라서 인과 계산은 상관표보다 더 많은 가정을 요구합니다. 그 대신 어떤 조치가 왜 효과를 낼지, 효과가 없을 때 노면 경로·운전량·측정 오류 가운데 무엇을 다시 볼지 알려 줍니다.</p>
         </div>
       </LessonSection>
@@ -108,7 +108,7 @@ export default function EvidenceModelsAndCausalExplanationArticle() {
         <ReviewPrompts questions={[
           "우산 판매가 많은 날의 사고 확률 43%가 판매 금지 정책의 효과를 뜻하지 않는 이유는 무엇인가요? (답: 7절)",
           "참이고 예측력 있는 법칙도 설명이 아닐 수 있다는 비대칭 문제는 무엇인가요? (답: 8절)",
-          "배수 개선이 사고를 약 5건 줄인다는 계산에는 어떤 추가 가정이 들어가나요? (답: 7절)",
+          "배수 개선이 사고 난 날을 약 5일 줄인다는 계산에는 어떤 추가 가정이 들어가나요? (답: 7절)",
         ]} />
       </LessonSection>
     </div>

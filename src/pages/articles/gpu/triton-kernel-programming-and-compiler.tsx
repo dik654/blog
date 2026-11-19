@@ -222,7 +222,8 @@ m &= (o<N)
           </p>
           <p>
             비용은 variant 수입니다. 같은 dtype이라도 runtime 속성이 달라지면 새 specialization이
-            생길 수 있고, block shape와 num_warps 같은 config option이 달라져도 별도 code가 됩니다.
+            생길 수 있고, block shape 같은 constexpr 값이나 key의 넷째 부분인 num_warps 같은 launch
+            option이 달라져도 별도 code가 됩니다.
             따라서 variant 수는 “autotune key 수 × config 수”로 고정되지 않고, 실제 JIT cache
             key가 몇 종류로 갈렸는지로 세어야 합니다.
           </p>

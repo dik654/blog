@@ -47,7 +47,7 @@ export default function AgrarianSurplusAndStateArticle() {
       <LessonSection id="picture" level="1" title="4. 창고 안의 양과 장부 위의 청구권을 나눕니다" bridge="실물 재고, 기록된 몫, 그것을 바꿀 권한을 세 층으로 나눴습니다. 규모가 커질 때 왜 장치가 필요한지 봅니다.">
         <ThreeCountsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">창고에 있는 1180자루는 물리적인 재고입니다. 장부의 1200자루는 과거 거래를 기록한 숫자입니다. 종자 100자루를 받을 권리와 노동 대가 1000자루를 받을 권리는 미래 배분에 대한 사회적 약속입니다. 세 숫자가 같아야 하지만 같은 종류의 대상은 아닙니다.</p>
+          <p className="leading-8">창고에 있는 1180자루는 물리적인 재고입니다. 장부의 1200자루는 과거 거래를 기록한 숫자입니다. 종자 100자루, 비상 50자루, 노동 대가 1000자루를 받을 권리는 미래 배분에 대한 사회적 약속이고, 합계 1150에 배정하지 않은 장부 잔량 50을 더해야 장부 1200과 맞습니다. 세 층은 서로 맞아야 하지만 같은 종류의 대상은 아닙니다.</p>
           <p className="leading-8">누가 장부를 읽을 수 있고, 누가 새 항목을 쓰며, 차이가 생겼을 때 누구의 몫부터 줄이는지도 권력의 문제입니다. 곡물이 남았다는 자연 조건만으로 이 결정 규칙은 나오지 않습니다.</p>
         </div>
       </LessonSection>
@@ -89,7 +89,7 @@ export default function AgrarianSurplusAndStateArticle() {
       <LessonSection id="comparison" level="6" title="9. 장부는 국가의 존재를 혼자 증명하지 못합니다" bridge="여러 점토판의 계산 형식은 행정 능력을 보여 주지만 권력의 정당성과 범위는 별도 증거가 필요함을 확인했습니다. 단선적인 인과를 정리합니다.">
         <TabletFacesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">Cuneiform Digital Library Initiative가 분석한 여러 원시 설형문자 장부는 앞면에 거래별 곡물 양을 적고 뒷면에 합계를 두는 관행을 보여 줍니다. 같은 논문이 다루는 에머밀 배급 장부(MSVO 3, 75)에서는 뒷면 한 칸이 1과 2/5 '바리그'(곡물 부피 단위)를 기준값으로 줍니다. 저자는 이 기준값으로 가중평균을 내면 장부에 적힌 다른 값들이 설명된다고 보고, 이 칸을 장부를 푸는 열쇠라고 부릅니다. 다만 같은 방식을 쓴 장부가 달리 확인되지 않아, 이 점토판은 정규 행정 문서가 아니라 비정규 서기 연습으로 분류됩니다.</p>
+          <p className="leading-8">Salvatore F. Monaco가 Cuneiform Digital Library Journal 논문에서 분석한 여러 원시 설형문자 장부는 앞면에 거래별 곡물 양을 적고 뒷면에 합계를 두는 관행을 보여 줍니다. 같은 논문이 다루는 에머밀 배급 장부(MSVO 3, 75)에서는 뒷면 한 칸이 1과 2/5 '바리그'(곡물 부피 단위)를 기준값으로 줍니다. 저자는 이 기준값으로 가중평균을 내면 장부에 적힌 다른 값들이 설명된다고 보고, 이 칸을 장부를 푸는 열쇠라고 부릅니다. 다만 같은 방식을 쓴 장부가 달리 확인되지 않아, 이 점토판은 정규 행정 문서가 아니라 비정규 서기 연습으로 분류됩니다.</p>
           <p className="leading-8">이 자료들은 측정 단위, 합계, 항목 분류, 기록자의 훈련이 있었다는 증거입니다. 그러나 기록 조직이 마을 공동체인지, 사원인지, 궁정인지, 얼마나 강제할 수 있었는지는 출토 맥락과 건축·인장·묘지·토지 자료를 함께 보아야 합니다. 출처를 알 수 없는 점토판은 비교 가치가 있어도 공간과 조직을 복원하는 힘이 약합니다.</p>
           <p className="leading-8">장부의 종류와 배급 단위는 더 넓은 자료에서 확인됩니다. 원시 설형문자를 오래 편집한 로버트 잉글런드(Robert K. Englund)는 우루크의 초기 문서고가 무엇보다 행정 문서로 이루어져 있고, 한 변 8cm 안팎의 작은 점토판은 영수증·청구·단순 이전 같은 1차 문서, 두세 배 크고 칸이 복잡한 점토판은 많은 항목을 모은 2차 문서라고 나눕니다. 그는 수 기호 N1이 고대기 노동자 한 사람의 한 달 배급을 나타낸다고 보고, 성별과 나이로 나눈 노동자 집단을 적은 장부가 50건 안팎 확인된다고 씁니다(Englund, 'Accounting in Proto-Cuneiform', The Oxford Handbook of Cuneiform Culture, 2011, CDLI 공개 PDF, 확인일 2026-10-10).</p>
           <p className="leading-8">N1이 왜 한 달 배급인지는 그릇 하나에서 시작합니다. 우루크기 유적에서 흔히 나오는 비스듬한 테두리 그릇(beveled-rim bowl)은 평균 약 0.8리터를 담습니다. 잉글런드는 1998년의 긴 장에서 이 그릇이 그림 문자 GAR(뒤의 수메르어 ninda)의 모델이며, 대체로 노동자 한 사람의 하루 곡물 배급을 나타냈다고 봅니다.</p>

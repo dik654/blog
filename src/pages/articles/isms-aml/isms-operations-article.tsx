@@ -71,7 +71,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     secondTitle: "격리 환경에서 복구하고 기술적 완료와 업무상 정상화를 따로 판정한다",
     secondBody: [
       "Restore는 깨끗한 infrastructure와 pinned runbook에서 시작합니다. Backup catalog의 hash·generation·보존 상태를 확인하고 DB base snapshot 뒤 ordered log를 적용합니다. Object·queue·search index는 authoritative source에서 재생하거나 같은 consistency point로 되돌립니다. 어느 component가 authoritative인지 모른 채 최신 timestamp만 고르면 서로 다른 세대가 섞입니다.",
-      "기술 oracle은 row count, schema migration, checksum, key unwrap, queue offset와 referential integrity를 검사합니다. 업무 oracle은 고정 payroll fixture의 금액·수취인·중복 지급 0, 권한·감사 log, external reconciliation을 확인합니다. 이후 security owner와 service owner가 acceptance receipt에 서명하고, 제한된 canary traffic을 거쳐 DNS·route를 전환합니다.",
+      "기술 oracle은 row count, schema migration, checksum, key unwrap, queue offset와 referential integrity를 검사합니다. 업무 oracle은 고정 payroll fixture의 금액·수취인·중복 지급 0, 권한·감사 log, external reconciliation을 확인합니다. 이후 제한된 canary traffic을 거쳐 security owner와 service owner가 acceptance receipt에 서명하고 DNS·route를 전환합니다.",
       "복구 훈련은 문서 낭독이 아니라 삭제·손상·region outage·KMS 거부를 하나씩 주입하는 paired exercise입니다. 실제 RPO/RTO, manual step, missing credential, 실패 지점과 owner를 기록하고 runbook·automation을 고칩니다. 성공한 demo 하나를 다음 분기의 복구 가능성으로 일반화하지 않습니다.",
     ],
     releaseId: "recovery-release",

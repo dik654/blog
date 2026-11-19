@@ -220,7 +220,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
               3절의 숫자대로 새 ReplicaSet이 자라고 옛 것이 줄어드는 동안 Deployment는 Progressing 조건을 갱신합니다. 새 Pod가 Ready가 되지 못해 progressDeadlineSeconds(기본 600초) 동안 진전이 없으면 Progressing=False, reason ProgressDeadlineExceeded가 붙습니다.</p>
             <p>문서가 못 박듯 Kubernetes는 이 조건을 다는 것 말고는 아무것도 하지 않습니다. 롤백은 사람이나 상위 도구가 kubectl rollout undo로 합니다.</p>
             <p>
-              이때 상태는 "새 Pod 몇 개가 CrashLoopBackOff, 옛 Pod는 maxUnavailable만큼만 줄어든 채 멈춤"입니다. replicas 4라면 새 1개가 실패하고 옛 3개가 살아 있어 서비스는 75%로 돕니다. 자동 롤백이 없다는 사실이 maxUnavailable을 작게 두는 이유이고, 롤백할 revision이 있으려면 revisionHistoryLimit(기본 10)이 0이 아니어야 합니다.
+              이때 상태는 "새 Pod 몇 개가 CrashLoopBackOff, 옛 Pod는 maxUnavailable만큼만 줄어든 채 멈춤"입니다. replicas 4라면 새 2개가 실패하고 옛 3개가 살아 있어 서비스는 75%로 돕니다. 자동 롤백이 없다는 사실이 maxUnavailable을 작게 두는 이유이고, 롤백할 revision이 있으려면 revisionHistoryLimit(기본 10)이 0이 아니어야 합니다.
             </p>
             <p>
               새 revision은 .spec.template이 바뀔 때만 생깁니다. ConfigMap을 고쳐도 Pod는 재시작되지 않고 template의 환경변수·볼륨 정의가 그대로라 rollout도 없습니다. 설정 변경을 배포로 만들려면 template 주석에 설정 해시를 넣거나 kubectl rollout restart로 template을 건드려야 합니다. 이 글이 다루는 종료 경쟁은 그 restart에서도 똑같이 일어납니다.

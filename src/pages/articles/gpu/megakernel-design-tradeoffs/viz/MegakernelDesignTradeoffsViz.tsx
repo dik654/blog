@@ -21,7 +21,7 @@ const NOTES = [
   "같은 task 를 kernel 하나 안에 넣으면 scheduler 가 A 의 tail 자리에 B 의 task 를 바로 놓습니다. B_k 는 A_k 의 chunk 만 기다리므로 12 µs 에 시작할 수 있고 전체는 32 µs 로 끝납니다.",
   "20 µs 에 SM2 가 비어 B4 를 받았지만 B4 가 기다리는 A4 는 24 µs 에 끝납니다. SM2 는 counter 가 1 이 될 때까지 spin 하며 issue slot 을 씁니다. 이 4 µs 가 식의 t_sync 입니다.",
   "Kernel 의 register 는 task type 의 최대값 128 로 고정됩니다. Thread 당 40 이면 충분한 B task 도 128 을 잡아 SM 당 warp 가 51개에서 16개로 줄고, latency 를 덜 숨겨 B task 하나가 8 µs 에서 11 µs 로 늘어납니다.",
-  "같은 계산을 세 방식으로 끝낸 시각입니다. Kernel 경계 43 µs, 이상적 megakernel 32 µs, counter 대기와 register 상한을 반영한 megakernel 36 µs. 이득은 launch·tail 의 합에서 sync·자원 손실을 뺀 만큼입니다.",
+  "같은 계산을 세 방식으로 끝낸 시각입니다. Kernel 경계 43 µs, 이상적 megakernel 32 µs, counter 대기와 register 상한을 반영한 megakernel 35 µs. 이득은 launch·tail 의 합에서 sync·자원 손실을 뺀 만큼입니다.",
 ] as const;
 
 type Kind = "A" | "B" | "idle" | "wait" | "launch";
@@ -101,7 +101,7 @@ const END_TIME = [43, 32, 32, 35, 0] as const;
 const RESULT_BARS = [
   { label: "kernel 경계", t: 43 },
   { label: "megakernel (이상)", t: 32 },
-  { label: "megakernel (sync+reg)", t: 36 },
+  { label: "megakernel (sync+reg)", t: 35 },
 ] as const;
 
 function barClass(kind: Kind) {
@@ -293,7 +293,7 @@ export default function MegakernelDesignTradeoffsViz() {
                       이상: 43 − 32 = 11 µs 이득
                     </text>
                     <text x={X0 + 10} y={222} className="fill-muted-foreground font-mono text-[9px]">
-                      sync 1 + reg 3 을 빼면 43 − 36 = 7 µs 이득
+                      sync 대기는 끝 시각에 숨고 reg 3 을 빼면 43 − 35 = 8 µs 이득
                     </text>
                   </>
                 )}

@@ -44,7 +44,7 @@ export default function Applications({
         operations={[
           { expression: String.raw`\hat u_{\text{tgt}}^{\,\text{pos}}`, annotation: ["text 조건까지 CFG로 보정된","target 위치 velocity 예측에서 출발"] },
           { expression: String.raw`\left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)`, annotation: ["reference를 context에 넣은 예측과","뺀 예측의 차이 = identity 방향"] },
-          { expression: String.raw`w_{\text{id}}`, annotation: ["delta를 얼마나 더할지 정하는 scale","0이면 꺼지고, 올리면 identity가 강해짐","대신 매 step forward pass가 늘어남"] },
+          { expression: String.raw`w_{\text{id}}`, annotation: ["delta를 얼마나 더할지 정하는 scale","0이면 꺼지고, 올리면 identity가 강해짐","0이 아니면 매 step forward pass가 한 번 더 필요"] },
         ]}
         terms={[
           {
@@ -76,7 +76,7 @@ export default function Applications({
           "Reference를 context에서 제거해도 model이 여전히 유효한 예측을 낼 수 있다고 가정합니다.",
           "Delta는 target 위치에만 적용하며, reference 자체 위치는 조건이므로 guidance 대상이 아닙니다.",
         ]}
-        interpretation="이 식은 CFG의 '조건 있음-없음' 구조를 재사용한 것이지, 완전히 새로운 guidance 이론이 아닙니다. Scale을 올리면 identity는 강해지지만 매 step 추가 forward pass 비용이 함께 늘어납니다."
+        interpretation="이 식은 CFG의 '조건 있음-없음' 구조를 재사용한 것이지, 완전히 새로운 guidance 이론이 아닙니다. Scale을 올리면 identity는 강해지고, 0이 아닌 scale을 쓰는 동안에는 크기와 무관하게 매 step 추가 forward pass 한 번의 비용이 듭니다."
       />
       <CodeViewButton
         onClick={() =>

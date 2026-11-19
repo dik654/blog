@@ -283,9 +283,9 @@ export default function VectorSearchAndAnnIndexesArticle() {
         <h2 className="mb-6 text-2xl font-bold">검색 경로를 다시 예측해 봅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>q-17과 문서를 서로 다른 모델로 임베딩했지만 둘 다 768차원입니다. 거리를 비교해도 될까요? (답: 3절)</p>
-          <p>nprobe를 10에서 30으로 늘리면 비교량과 doc-104를 포함할 가능성은 어느 방향으로 움직일까요? (답: 6절 IVF)</p>
-          <p>IVF가 doc-104의 구역을 열었더라도 PQ 때문에 1위가 바뀔 수 있을까요? (답: 9절)</p>
-          <p>3,072바이트가 8바이트가 됐으니 전체 데이터베이스 저장 공간도 정확히 384분의 1일까요? (답: 6절 PQ)</p>
+          <p>nprobe를 10에서 30으로 늘리면 비교량과 doc-104를 포함할 가능성은 어느 방향으로 움직일까요? (답: 5절 IVF)</p>
+          <p>IVF가 doc-104의 구역을 열었더라도 PQ 때문에 1위가 바뀔 수 있을까요? (답: 8절)</p>
+          <p>3,072바이트가 8바이트가 됐으니 전체 데이터베이스 저장 공간도 정확히 384분의 1일까요? (답: 5절 PQ)</p>
         </div>
       </section>
     </div>

@@ -194,7 +194,7 @@ x_t&=\underbrace{s_t+n_t}_{\text{두 항을 합성}}
           name="Diffusion prediction target"
           shape="ε prediction · x₀ prediction · v prediction · score prediction"
           meaning="Network output이 어떤 물리량을 직접 근사할지와 noise level별 loss weighting을 함께 고정하는 training contract입니다."
-          example="ε̂를 얻으면 x̂₀=(xₜ−σₜε̂)/αₜ로 바꿀 수 있지만 αₜ가 작으면 prediction error도 1/αₜ만큼 증폭됩니다."
+          example="ε̂를 얻으면 x̂₀=(xₜ−σₜε̂)/αₜ(여기서 αₜ는 1−βₜ가 아니라 √ᾱₜ, σₜ는 √(1−ᾱₜ))로 바꿀 수 있지만 αₜ가 작으면 ε̂의 prediction error도 σₜ/αₜ만큼 증폭됩니다."
           boundary="두 target이 algebraically convertible해도 finite precision, weighting, network capacity에서 같은 학습 문제가 되지는 않습니다."
         />
         <BackboneContractViz />
@@ -274,7 +274,7 @@ e&=\underbrace{\lVert r\rVert_2^2}_{\text{residual square magnitude}}\\
         <ElboChainViz />
         <ExplainedFormula
           question="log p_θ(x₀)를 직접 최적화하지 못하면 어떤 대안을 쓰나요?"
-          idea="고정된 forward q를 importance distribution으로 써서 log p_θ(x₀)의 lower bound를 만듭니다. Bayes rule로 q(xₜ|x_{t-1})을 q(x_{t-1}|xₜ,x₀)로 바꿔치면 곱이 telescoping되어 T개의 독립 항으로 쪼개집니다."
+          idea="고정된 forward q를 importance distribution으로 써서 log p_θ(x₀)의 lower bound를 만듭니다. Bayes rule로 q(xₜ|x_{t-1})을 q(x_{t-1}|xₜ,x₀)로 바꿔치면 곱이 telescoping되어 T+1개의 독립 항으로 쪼개집니다."
           formula={String.raw`L_{\mathrm{vlb}}=D_{\mathrm{KL}}(q(x_T\mid x_0)\Vert p(x_T))+\sum_{t=2}^{T}D_{\mathrm{KL}}(q(x_{t-1}\mid x_t,x_0)\Vert p_\theta(x_{t-1}\mid x_t))-\log p_\theta(x_0\mid x_1)`}
           annotatedFormula={String.raw`\begin{aligned}
 L_T&=\underbrace{D_{\mathrm{KL}}(q(x_T\mid x_0)\Vert p(x_T))}_{\text{학습 parameter가 없는 prior-matching 항}}\\
@@ -392,7 +392,7 @@ L_{t-1}&=\underbrace{w_t\,\mathbb E\big[\lVert\epsilon-\epsilon_\theta(x_t,t)\rV
             "p_θ(x_{t-1}|xₜ)의 분산을 학습하지 않고 상수로 고정합니다.",
             "x₀=(xₜ−√(1−ᾱₜ)ε)/√ᾱₜ로 posterior mean 안의 x₀를 xₜ,ε로 치환합니다.",
           ]}
-          interpretation="L_ε(=L_simple)은 이 유도에서 자동으로 나온 결과가 아니라 w_t를 전부 1로 둔 재가중치 버전입니다. Ho et al.은 이 재가중이 낮은 noise level의 기여를 늘려 sample quality를 실제로 개선한다는 것을 실험으로 보였습니다."
+          interpretation="L_ε(=L_simple)은 이 유도에서 자동으로 나온 결과가 아니라 w_t를 전부 1로 둔 재가중치 버전입니다. Ho et al.은 이 재가중이 낮은 noise level(작은 t)의 기여를 줄이고 더 어려운 큰 t에 집중하게 해 sample quality를 실제로 개선한다는 것을 실험으로 보였습니다."
         />
         <p className="text-sm leading-7 text-muted-foreground">
           여기까지가 "왜 이 loss가 맞는가"입니다. 아래 두 알고리즘은 지금까지의
@@ -530,6 +530,7 @@ s_t&=\underbrace{-\frac{d_t}{\sigma_t^2}}_{\substack{\text{방향을 뒤집고}\
           assumptions={[
             "Conditional perturbation이 Gaussian입니다.",
             "σₜ>0이며 x₀를 조건으로 고정합니다.",
+            "이 절의 αₜ는 1−βₜ가 아니라 √ᾱₜ, σₜ는 √(1−ᾱₜ)입니다.",
           ]}
           interpretation="Noise predictor는 known scale 변환을 통해 score field를 제공하지만, finite network error와 marginal averaging은 별도입니다."
         />

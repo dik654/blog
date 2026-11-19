@@ -114,7 +114,7 @@ export default function CutlassCollectivesAndTileSchedulersArticle() {
           description="인자 하나가 바뀌면 shared memory 사용량과 kernel schedule 이 함께 바뀝니다."
           items={[
             { term: "DispatchPolicy", description: "Mainloop 의 종류와 그 안의 stage 수·cluster 모양·kernel schedule 입니다.", example: "MainloopSm90TmaGmmaWarpSpecialized<4, Shape<_2,_1,_1>, KernelTmaWarpSpecializedCooperative>", boundary: "Policy 마다 지원하는 architecture 와 schedule 이 정해져 있어 임의 조합은 컴파일되지 않습니다." },
-            { term: "TileShape", description: "Collective 하나가 맡는 M×N×K tile 입니다.", example: "Shape<_128,_128,_64>: bf16 이면 stage 당 A 16 KB + B 16 KB.", boundary: "TiledMMA 의 명령 모양과 warp 수로 나눠떨어져야 합니다." },
+            { term: "TileShape", description: "Collective 하나가 맡는 M×N×K tile 입니다.", example: "Shape<_128,_128,_64>: bf16 이면 stage 당 A 16 KiB + B 16 KiB.", boundary: "TiledMMA 의 명령 모양과 warp 수로 나눠떨어져야 합니다." },
             { term: "SmemLayoutAtom · CopyAtom", description: "Shared memory tile 의 swizzled layout atom 과 global→smem, smem→register copy atom 입니다.", example: "Swizzle<3,3,3> 8×64 atom 과 SM90_TMA_LOAD, wgmma 는 smem 을 descriptor 로 직접 읽습니다.", boundary: "TMA 를 쓰면 descriptor 의 swizzle 모드가 layout atom 과 일치해야 합니다." },
             { term: "CollectiveBuilder", description: "Architecture·dtype·layout·tile·cluster·StageCount·schedule 을 받아 위 인자를 대신 채우는 helper 입니다.", example: "StageCountAuto 와 KernelScheduleAuto 를 주면 builder 가 shared memory 예산에서 stage 수를 계산합니다.", boundary: "Auto 는 예산 계산이지 성능 탐색이 아니며, 어떤 tile 이 빠른지는 profiler 가 답합니다." },
           ]}
@@ -133,9 +133,9 @@ export default function CutlassCollectivesAndTileSchedulersArticle() {
             <Link to="/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy">latency hiding 과 occupancy</Link> 에 있습니다.
           </p>
           <p>
-            비용은 shared memory 입니다. 128×128×64 bf16 tile 은 A 가 128×64×2 B = 16 KB, B 도
-            16 KB 라 stage 한 벌이 32 KB 입니다. Stage 3 은 96 KB, stage 4 는 128 KB 를 씁니다.
-            H100 은 threadblock 당 최대 227 KB 를 허용하지만 그 전부를 mainloop가 쓰는 것은
+            비용은 shared memory 입니다. 128×128×64 bf16 tile 은 A 가 128×64×2 B = 16 KiB, B 도
+            16 KiB 라 stage 한 벌이 32 KiB 입니다. Stage 3 은 96 KiB, stage 4 는 128 KiB 를 씁니다.
+            H100 은 threadblock 당 최대 227 KiB 를 허용하지만 그 전부를 mainloop가 쓰는 것은
             아닙니다. Epilogue carveout, barrier, 정렬 여유를 먼저 빼야 합니다.
           </p>
           <p>
@@ -167,7 +167,7 @@ B_{stage} &= \mathrm{align}(B_A + B_B) + \underbrace{B_{bar}}_{\text{stage 당 b
 S &= \Bigl\lfloor \frac{\underbrace{C_{smem} - C_{carve}}_{\text{epilogue 등을 뺀 용량}}}{B_{stage}} \Bigr\rfloor
 \end{aligned}`}
           operations={[
-            { expression: String.raw`bM\cdot bK\cdot e_A`, annotation: ["Tile 모양과 원소 크기를 곱해 A tile bytes 를 내고", "B 도 같은 식: 128×64×2 + 128×64×2 = 32 KB"] },
+            { expression: String.raw`bM\cdot bK\cdot e_A`, annotation: ["Tile 모양과 원소 크기를 곱해 A tile bytes 를 내고", "B 도 같은 식: 128×64×2 + 128×64×2 = 32 KiB"] },
             { expression: String.raw`\mathrm{align}(B_A + B_B) + B_{bar}`, annotation: ["정렬 단위로 올리고 barrier bytes 를 더해", "stage 한 벌의 실제 크기를 만듭니다"] },
             { expression: String.raw`\left\lfloor (C_{smem} - C_{carve}) / B_{stage} \right\rfloor`, annotation: ["Carveout 을 뺀 용량을 한 벌 크기로 나눠", "내림한 몫이 stage 수"] },
           ]}
@@ -175,7 +175,7 @@ S &= \Bigl\lfloor \frac{\underbrace{C_{smem} - C_{carve}}_{\text{epilogue 등을
             { symbol: String.raw`bM, bN, bK`, name: "Tile shape", description: "Collective 의 M·N·K tile 크기입니다." },
             { symbol: String.raw`e_A, e_B`, name: "원소 크기", description: "A·B 원소의 bytes 입니다. bf16 은 2." },
             { symbol: String.raw`B_{bar}`, name: "Barrier bytes", description: "Stage 마다 producer·consumer 가 phase 를 주고받는 mbarrier 의 크기입니다." },
-            { symbol: String.raw`C_{smem}, C_{carve}`, name: "용량과 carveout", description: "Threadblock 당 shared memory 상한(H100 227 KB)과 epilogue·tensor map·scheduler 가 미리 가져가는 몫입니다." },
+            { symbol: String.raw`C_{smem}, C_{carve}`, name: "용량과 carveout", description: "Threadblock 당 shared memory 상한(H100 227 KiB)과 epilogue·tensor map·scheduler 가 미리 가져가는 몫입니다." },
           ]}
           assumptions={["sm90_gmma_builder 의 compute_stage_count_or_override 를 단순화한 식이며 architecture 마다 carveout 과 정렬 단위가 다릅니다.", "이 사례의 k-iteration은 4회입니다. Stage 수가 반복 수에 가까워지면 pipeline의 채움·비움 비용도 함께 재야 합니다."]}
           interpretation="Stage 수는 tile 이 클수록 줄어들고, 같은 stage 수라도 tile 이 크면 SM 에 머무는 threadblock 이 줄어듭니다. 식은 들어가는 벌 수를 말할 뿐 몇 벌이 가장 빠른지는 말하지 않습니다."
@@ -283,8 +283,9 @@ S &= \Bigl\lfloor \frac{\underbrace{C_{smem} - C_{carve}}_{\text{epilogue 등을
             epilogue 를 한 번만 실행합니다.
           </p>
           <p>
-            잘리는 tile 수를 줄이기 위해 hybrid 방식은 꽉 찬 wave는 data-parallel로 두고 마지막
-            불완전 wave에만 Stream-K를 적용할 수 있습니다. 핵심은 이상적인 16.7% 절약과 partial
+            Hybrid 방식은 꽉 찬 wave는 data-parallel로 두고 마지막
+            불완전 wave에만 Stream-K를 적용할 수 있습니다. 다만 이 사례에서는 남은 4 tile×4=16
+            iteration을 worker 8개가 2회씩 나누므로 4 tile이 모두 잘려 split 수는 4 그대로입니다. 핵심은 이상적인 16.7% 절약과 partial
             store·load, barrier, final reduction 비용을 비교하는 것입니다.
           </p>
           <p>
@@ -461,7 +462,7 @@ I_{cta} &= \underbrace{\lceil I/g \rceil}_{\text{threadblock 당 몫}},\qquad \e
             CUDA Programming Guide의 Cluster Launch Control과 CUTLASS 문서에서 확인했습니다.
           </p>
           <p>
-            Cluster 크기 상한 8·16, threadblock 당 shared memory 227 KB, TMA multicast 는 NVIDIA Hopper tuning guide
+            Cluster 크기 상한 8·16, threadblock 당 shared memory 227 KiB, TMA multicast 는 NVIDIA Hopper tuning guide
             의 값입니다. Profiler flag 는 CUTLASS profiler 문서의 것이며 실측 없이 어떤 구성이 빠르다고 말한 곳은 이 글에 없습니다.
           </p>
         </div>
@@ -506,7 +507,7 @@ I_{cta} &= \underbrace{\lceil I/g \rceil}_{\text{threadblock 당 몫}},\qquad \e
             citeKey={4}
             href="https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html"
           >
-            Cluster 크기 8(이식)·16(H100 옵션), SM 당 228 KB 와 threadblock 당 227 KB 의 shared
+            Cluster 크기 8(이식)·16(H100 옵션), SM 당 228 KiB 와 threadblock 당 227 KiB 의 shared
             memory, TMA 의 cluster 내 multicast 와 DSM 접근 권고를 가져왔습니다.
           </CitationBlock>
         </div>

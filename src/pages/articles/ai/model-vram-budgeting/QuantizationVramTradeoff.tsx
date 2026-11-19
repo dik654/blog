@@ -23,7 +23,7 @@ export default function QuantizationVramTradeoff() {
           1개를 더해 평균 4.5bit/parameter가 됩니다.
         </p>
         <p className="leading-8">
-          27.781B parameter에 이 두 값을 적용하면 Q8은 약 27.48GiB, NVFP4는 약 14.55GiB입니다. Q8은 이미 계산한 mixed FP8
+          27.781B parameter에 이 두 값을 적용하면 Q8은 약 27.49GiB, NVFP4는 약 14.55GiB입니다. Q8은 이미 계산한 mixed FP8
           checkpoint의 28.75GiB와 거의 같은 자리이고 NVFP4는 그 절반에 가깝습니다.
         </p>
       </div>
@@ -34,7 +34,7 @@ export default function QuantizationVramTradeoff() {
           {
             term: "Q8 (Q8_0 계열)",
             description: "8bit payload와 block당 scale로 평균 8.5bit/parameter입니다.",
-            example: "27.781B에 적용하면 약 27.48GiB입니다.",
+            example: "27.781B에 적용하면 약 27.49GiB입니다.",
             boundary: "INT8 W8A8은 Turing·Ampere·Ada·Hopper 세대에서 실행됩니다.",
           },
           {

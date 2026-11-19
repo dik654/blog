@@ -71,7 +71,7 @@ export default function DistillationBottleneck() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           같은 파이프라인을 훨씬 큰 규모로 돌린 공개 연구가 비교 기준을 줍니다. 비증류 가중치로 14,889개를 생성해 6,641명을 남겼으니 보존율이 44.6퍼센트입니다. 증류 가중치를
-          쓴 제 보존율은 26.9퍼센트로 그보다 낮고 비증류로 바꾼 뒤에는 그 범위에 들어옵니다.
+          쓴 제 보존율은 26.9퍼센트로 그보다 낮고 비증류로 바꾼 뒤에는 61÷66 = 92.4퍼센트로 오히려 그보다 높아집니다.
         </p>
 
         <p className="leading-7">

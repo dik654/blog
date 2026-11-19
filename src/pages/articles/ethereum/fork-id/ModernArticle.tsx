@@ -91,7 +91,7 @@ export default function ModernForkIdArticle() {
         <h2>같은 값인지 보지 않고 어느 쪽이 뒤처졌는지 설명합니다</h2>
         <ForkIdMatrixViz />
         <p>
-          두 노드의 hash가 같아도 원격이 알린 다음 fork가 이미 로컬 head를 지났다면 원격 소프트웨어가 낡았을 수 있으므로 거절합니다. 반대로 다음 fork가 아직 오지 않았다면 미래 일정이 달라도 지금은 갈라졌다고 단정하지 않습니다.
+          두 노드의 hash가 같아도 원격이 알린 다음 fork가 이미 로컬 head를 지났다면 로컬은 그 fork를 적용하지 않은 채 지나온 것이므로 두 체인이 호환되지 않는다고 보고 거절합니다. 반대로 다음 fork가 아직 오지 않았다면 미래 일정이 달라도 지금은 갈라졌다고 단정하지 않습니다.
         </p>
         <ForkIdPlacementViz />
         <p>
@@ -111,7 +111,7 @@ export default function ModernForkIdArticle() {
             },
             {
               code: "if remote.hash = local.currentHash: remote.next가 0이거나 local head보다 미래인지 확인",
-              note: "같은 과거 이력이어도 이미 지났어야 할 remote next를 놓친 stale peer는 거절합니다.",
+              note: "같은 과거 이력이어도 원격이 알린 next를 로컬 head가 적용 없이 이미 지났다면 호환되지 않는 체인으로 보고 거절합니다.",
             },
             {
               code: "else if remote.hash가 local 과거 hash이고 remote.next가 바로 다음 local fork이면 accept",

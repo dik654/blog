@@ -56,7 +56,7 @@ export default function PruningGranularity() {
           pruning 우선순위가 나옵니다. expert importance estimation이 하는 계산이 이것입니다.
         </p>
         <p>
-          예를 들어 8개 expert 중 2개가 router로부터 token의 40% 이상을 받는다면 나머지 6개는 각각 10% 미만만 받습니다. 먼저 pruning 후보에 오르는 쪽은 이
+          예를 들어 8개 expert 중 2개가 router로부터 각각 token의 40% 이상을 받는다면 나머지 6개는 합쳐도 20% 이하, 평균 3.3% 남짓만 받습니다. 먼저 pruning 후보에 오르는 쪽은 이
           6개이고 그중에서도 다른 expert 출력과 겹치는 expert가 우선순위 상위로 갑니다.
         </p>
         <p>

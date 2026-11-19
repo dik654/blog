@@ -35,8 +35,8 @@ export function SpatialRangeViz() {
 
 export function BandwidthLaneViz() {
   const lanes = [
-    { label: "가정한 통로", bandwidth: "8,000 GB/s", time: "0.831 ms", width: "100%" },
-    { label: "관측 통로", bandwidth: "4,800 GB/s", time: "1.385 ms", width: "60%" },
+    { label: "가정한 통로", bandwidth: "8,000 GB/s", time: "0.83 ms", width: "100%" },
+    { label: "peak의 60% 가정", bandwidth: "4,800 GB/s", time: "1.39 ms", width: "60%" },
   ] as const;
   return (
     <VizFrame eyebrow="6.65GB가 통로를 지나는 시간" title="같은 payload도 통로가 좁아지면 최소 이동 시간이 늘어납니다" description="맨 위 막대가 한 decode step에서 옮길 6.65GB입니다. 아래 두 줄은 서로 다른 지속 대역폭 가정입니다." note="나눗셈은 payload와 bandwidth만으로 구한 전송 하한입니다. Kernel 시작, 동기화, 통신과 계산 겹침은 추가로 측정해야 합니다.">

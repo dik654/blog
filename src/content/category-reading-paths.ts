@@ -133,7 +133,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "12 · 19세기 말~20세기", title: "식민 근대의 시선과 탈식민", description: "같은 시험을 보는 100명의 서로 다른 조건에서 뒤부아와 파농이 인종 질서·자기 인식·해방을 연결한 방식을 봅니다.", subcategories: ["philosophy-history-colonial-modernity"] },
       { eyebrow: "13 · 1780년대~1830년대", title: "독일 관념론의 자기 활동과 인정", description: "책상 60분을 60 대 0과 30 대 30으로 나누며 경험 조건·자기 활동·상호 인정과 역사적 자유를 구분합니다.", subcategories: ["philosophy-history-german-idealism"] },
       { eyebrow: "14 · 19세기~20세기", title: "실존주의의 사실성과 자유", description: "하루 24시간 중 묶인 22시간과 고를 수 있는 2시간에서 조건·가능성·나쁜 믿음·타인의 자유를 함께 봅니다.", subcategories: ["philosophy-history-existentialism"] },
-      { eyebrow: "15 · 19세기~현재", title: "해석학의 부분·전체·역사적 대화", description: "네 단어와 앞뒤 메시지 6개를 두 번 읽으며 선이해를 자료와 대화에서 고치는 과정을 따라갑니다.", subcategories: ["philosophy-history-hermeneutics"] },
+      { eyebrow: "15 · 19세기~현재", title: "해석학의 부분·전체·역사적 대화", description: "세 단어와 앞뒤 메시지 6개를 두 번 읽으며 선이해를 자료와 대화에서 고치는 과정을 따라갑니다.", subcategories: ["philosophy-history-hermeneutics"] },
       { eyebrow: "16 · 1920년대~1960년대", title: "논리경험주의의 관찰·확인·이론 언어", description: "센서 시험 10회와 보정 오차를 놓고 관찰 문장, 보조 가정과 보편 법칙의 확인을 나눕니다.", subcategories: ["philosophy-history-logical-empiricism"] },
       { eyebrow: "17 · 1930년대~현재", title: "비판이론의 모순·이데올로기·해방", description: "보너스 예산 100의 평등 약속과 4명 배제를 대조해 제도의 모순과 이를 고칠 힘을 찾습니다.", subcategories: ["philosophy-history-critical-theory"] },
       { eyebrow: "18 · 1930년대~1960년대", title: "일상언어의 쓰임과 발화행위", description: "‘내일 할게’라는 한 문장이 세 상황에서 약속·예측·거절이 되는 조건과 권한을 구분합니다.", subcategories: ["philosophy-history-ordinary-language"] },

@@ -12,10 +12,10 @@ const SCENES = ["Mesh 와 두 node", "A · TP 16", "B · TP 8 × PP 2", "C · TP
 
 const NOTES = [
   "8 × 80 GB GPU node 두 대입니다. node 안은 NVSwitch 900 GB/s, node 사이는 InfiniBand 50 GB/s 로 대역폭이 18 배 다릅니다. 70B FP16 140 GB 를 이 16 장에 놓습니다.",
-  "TP 16 은 layer 마다 all-reduce 두 번이 16 rank 의 ring 을 돌고, 그 ring 이 node 경계를 지납니다. decode 1 MB 기준 한 번 52 μs, token 당 160 번이면 8.4 ms 가 InfiniBand 에 묶입니다.",
+  "TP 16 은 layer 마다 all-reduce 두 번이 16 rank 의 ring 을 돌고, 그 ring 이 node 경계를 지납니다. decode 1 MB 기준 한 번 52.5 μs, token 당 160 번이면 8.4 ms 가 InfiniBand 에 묶입니다.",
   "TP 8 은 node 안에서 끝나고 node 경계는 stage 사이 activation 1 MB 가 한 번만 지납니다(35 μs). 대신 한 token 이 두 stage 를 직렬로 지나 latency 는 줄지 않고 microbatch 로 throughput 만 늡니다.",
   "replica 하나가 node 하나에 들어가 node 경계 통신이 0 입니다. TP 8 의 all-reduce 1.1 ms 만 남아 TPOT 6.3 ms, replica 둘이라 throughput 은 두 배입니다.",
-  "같은 16 GPU 인데 A 는 11 ms, B 는 11.6 ms, C 는 6.3 ms 입니다. 통신 대 계산 비율은 A 3.2, B 0.22, C 0.21 이며 1 을 넘는 A 는 GPU 를 늘려도 빨라지지 않습니다.",
+  "같은 16 GPU 인데 A 는 11 ms, B 는 11.5 ms, C 는 6.3 ms 입니다. 통신 대 계산 비율은 A 3.2, B 0.11, C 0.21 이며 1 을 넘는 A 는 GPU 를 늘려도 빨라지지 않습니다.",
 ] as const;
 
 const NODE_X = [16, 336] as const;

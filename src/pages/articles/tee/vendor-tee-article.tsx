@@ -46,7 +46,7 @@ const CONFIG: Record<VendorKey, VendorConfig> = {
     ],
     lifecycle: [
       ["BUILD", "ECREATE → EADD → EEXTEND", "Page 내용과 위치가 enclave measurement에 들어가며 initialization 전·후 변경 규칙을 구분합니다."],
-      ["ENTER", "ECALL", "Host가 EDL entry와 copied input을 제시합니다. Enclave는 size·range·alias·integer overflow를 다시 검사합니다."],
+      ["ENTER", "ECALL", "Host가 EDL entry와 pointer·length를 제시합니다. Enclave는 복사 전에 size·range·alias·integer overflow를 검사하고, 안쪽 복사본을 다시 검사합니다."],
       ["LEAVE", "OCALL / exit", "I/O request는 최소 message로 복사하고 enclave pointer·secret·오류 세부를 host-visible buffer에 노출하지 않습니다."],
       ["PROVE", "Report → quote", "MRENCLAVE·attribute·TCB·fresh report data를 reference policy와 비교한 뒤 channel-bound secret을 지급합니다."],
     ],

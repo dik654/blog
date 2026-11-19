@@ -499,7 +499,9 @@ export default function InferenceFailureAbsorptionArticle() {
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
               중앙 상태를 합의로 지키는 저장소는 과반이 살아 있어야 씁니다. 두
-              사이트에 나누면 어느 쪽이든 한 사이트에 과반이 몰립니다.
+              사이트에 나누면 멤버 수가 홀수일 때는 어느 쪽이든 한 사이트에
+              과반이 몰리고, 짝수를 반반 나누면 어느 사이트에도 과반이 없어
+              어느 쪽을 잃어도 쓰기가 멈춥니다.
             </p>
 
           </div>
@@ -508,7 +510,7 @@ export default function InferenceFailureAbsorptionArticle() {
 
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
-              그러면 과반이 없는 쪽이 사라지는 경우는 견디지만, 과반이 있는 쪽이
+              홀수로 나누면 과반이 없는 쪽이 사라지는 경우는 견디지만, 과반이 있는 쪽이
               사라지면 쓰기가 멈춥니다. 두 리전을 두었다고 두 리전 장애를 모두
               견디게 되지는 않습니다.
             </p>

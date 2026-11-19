@@ -107,7 +107,7 @@ w_r &= \underbrace{m_rB-n_r}_{\text{마지막 block의 빈 slot}}, \qquad \under
         operations={[
           { expression: String.raw`\left\lceil\frac{n_r}{B}\right\rceil`, annotation: ["token 수를 block size로 나눠 올림하면 request가","차지할 block 수입니다. B=16, n=35면 ⌈35/16⌉=3"] },
           { expression: String.raw`m_rB-n_r`, annotation: ["할당한 slot 수에서 실제 token 수를 뺀","빈 slot입니다. 3×16−35=13 slot이 마지막","block에만 남고, B=16보다 작습니다"] },
-          { expression: String.raw`0\le w_r < B`, annotation: ["빈 slot은 항상 한 block 미만이라 최대 context","8,192 slot을 미리 잡는 방식보다 낭비가 작지만","0은 아닙니다"] },
+          { expression: String.raw`0\le w_r < B`, annotation: ["빈 slot은 항상 한 block 미만이라 최대 context","2,048 slot을 미리 잡는 방식보다 낭비가 작지만","0은 아닙니다"] },
         ]}
         terms={BLOCK_TERMS}
         assumptions={[
@@ -115,6 +115,6 @@ w_r &= \underbrace{m_rB-n_r}_{\text{마지막 block의 빈 slot}}, \qquad \under
           "식은 token slot의 내부 fragmentation만 셉니다. KV tensor byte·metadata·alignment·workspace는 별도입니다.",
           "Block sharing이 있다면 physical capacity 계산에서 request별 m_r을 단순 합산하면 중복 계산됩니다.",
         ]}
-        interpretation="B=16, n=35이면 3개 block에 48 slot을 할당하고 마지막 13 slot이 비어 있습니다. 최대 context 8,192 slot을 미리 잡는 방식보다 request 길이에 가깝게 늘어나지만 낭비가 0이라는 뜻은 아닙니다."
+        interpretation="B=16, n=35이면 3개 block에 48 slot을 할당하고 마지막 13 slot이 비어 있습니다. 최대 context 2,048 slot을 미리 잡는 방식보다 request 길이에 가깝게 늘어나지만 낭비가 0이라는 뜻은 아닙니다."
         title="Block allocation과 내부 fragmentation 상한"
       /></section></div>; }

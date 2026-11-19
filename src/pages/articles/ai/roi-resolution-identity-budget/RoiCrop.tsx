@@ -33,8 +33,8 @@ export default function RoiCrop() {
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
-          규칙은 두 단계입니다. 먼저 대상 주변으로 맥락이 들어갈 만큼 여유를 두고 자릅니다. 그다음 그 크롭이 모델의 예산을 넘지 않는지 확인합니다. 넘으면 크롭을 줄이는 것이 아니라
-          크롭 안에서 대상이 차지하는 비율을 유지한 채 예산에 맞춥니다.
+          규칙은 두 단계입니다. 먼저 대상 주변으로 맥락이 들어갈 만큼 여유를 두고 자릅니다. 그다음 그 크롭이 모델의 예산을 넘지 않는지 확인합니다. 넘으면 크롭 전체를 축소하는 것이 아니라
+          대상 주변 여유를 줄여 다시 잘라, 대상의 픽셀 수를 유지한 채 예산에 맞춥니다.
         </p>
 
         <p className="leading-7">

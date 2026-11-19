@@ -114,22 +114,22 @@ export default function TwoLevelScheduling() {
 
       <CalculationWalkthrough
         title="한 token 차이가 예상 적중을 지우는 경로"
-        question="선택기와 엔진의 tokenizer가 앞부분의 10번째 token에서 갈리면 pod A의 예상 적중은 몇 token일까요?"
+        question="새 요청이 pod A가 받았던 요청과 앞부분의 10번째 token에서 갈리면 pod A의 예상 적중은 몇 token일까요?"
         scope="위의 300 token 요청과 64 token block만 봅니다. 엔진 안 prefix cache의 실제 적중은 엔진 자신의 tokenization으로 따로 정해집니다."
         steps={[
           { label: "갈리는 block", expression: "10번째 token은 0~63 사이", result: "block 0", reason: "첫 block의 내용 hash가 달라집니다." },
           { label: "사슬 전파", expression: "h1 = H(내용1, h0), h2 = H(내용2, h1), …", result: "block 0~4 hash가 모두 다름", reason: "뒤 block 내용이 같아도 앞 hash를 넣어 만들기 때문입니다." },
-          { label: "예상 적중", expression: "일치 block 0개 × 64", result: "0 token", reason: "pod A가 실제로 256 token을 갖고 있어도 선택기는 모릅니다." },
+          { label: "예상 적중", expression: "일치 block 0개 × 64", result: "0 token", reason: "뒤 block 내용이 같아도 처음부터 이어진 앞부분이 아니므로 일치로 세지 않습니다." },
         ]}
-        conclusion="선택기가 엔진과 다른 token ID로 hash를 만들면 캐시가 있는 pod를 찾지 못합니다."
+        conclusion="앞부분 한 token만 달라도 사슬 hash 때문에 그 뒤 block은 하나도 일치로 잡히지 않습니다."
         caveats={["10번째 token에서 갈린다는 조건은 설명용 가정입니다.", "llm-d는 tokenizer 없이 길이를 어림하는 estimate backend를 기본으로 만들므로, 기본 설정의 예상은 처음부터 근사값입니다."]}
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          이 사슬 구조 때문에 tokenizer가 맞지 않으면 손해가 큽니다. 같은 문장을 선택기는 이전 tokenizer로, 엔진은 새 tokenizer로
-          나누면 앞부분 어딘가에서 token ID가 갈립니다. 갈린 block부터 뒤의 hash가 모두 달라져 선택기는 캐시가 있는 pod를 찾지
-          못하고, 요청은 대기열만 보고 흩어집니다.
+          tokenizer가 맞지 않으면 이 예상이 실제와 어긋납니다. 같은 문장을 선택기는 이전 tokenizer로, 엔진은 새 tokenizer로
+          나누면 앞부분 어딘가에서 token ID가 갈립니다. 선택기는 scheduling 뒤 자기 hash로 index를 쓰고 같은 hash로 찾으므로 pod A를
+          여전히 고르지만, 그 예상 적중 token 수는 엔진의 실제 캐시와 맞지 않아 대기열과 저울질하는 근거가 흔들립니다.
         </p>
         <p>
           llm-d 문서는 token producer를 따로 두지 않으면 tokenizer 없이 길이를 어림하는 estimate backend를 자동으로 만든다고

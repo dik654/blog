@@ -103,7 +103,7 @@ export const economicHistoryArticles: Article[] = [
       { id: "need", title: "개발 투자는 필요했지만 빌린 통화와 금리가 위험을 만들었습니다" },
       { id: "names", title: "탈식민·교역조건·페트로달러 재순환·외채에 이름을 붙입니다" },
       { id: "mechanism", title: "싼 대출이 금리 상승 뒤 부채 위기로 바뀌는 경로를 계산합니다" },
-      { id: "source", title: "1945년 탈식민에서 1970년대 석유 충격까지 순서를 잇습니다" },
+      { id: "source", title: "1945년 탈식민에서 1990년대 채무 대응까지 순서를 잇습니다" },
       { id: "comparison", title: "산유국·비산유국과 지역별 정책 선택은 같은 결과를 내지 않았습니다" },
       { id: "limits", title: "부채 위기를 국내 실책이나 외부 충격 하나로만 설명하지 않습니다" },
     ],

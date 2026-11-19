@@ -455,7 +455,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
           <p>
             전송 byte에 비례하는 시간까지 더하면 통신 시간은 약 1ms입니다. Weight 읽기 5.2ms에 더하면 TPOT은 6ms대이고 통신이
             그 중 약 16% 입니다. TP 를 16 으로 올려 weight 읽기를 2.6 ms 로 줄여도 통신은 줄지 않아
-            비율은 28% 로 오릅니다.
+            비율은 30% 로 오릅니다.
           </p>
           <p>
             이 비율이 TP degree 의 실질 상한을 정합니다. α 가 15 μs 인 inter-node link 로 TP 를
@@ -480,8 +480,8 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         >
           <p>
             TP 8 에서 TP 16 으로 올리면 GPU 당 weight 는 17.5 GB 에서 8.75 GB 로, 읽기 시간은 5.2 ms 에서 2.6 ms 로 줍니다. 통신은 all-
-            reduce 참여 rank 가 16 으로 늘어 ring 단계가 두 배가 되므로 오히려 조금 늘어납니다. TPOT 은 6.2 ms 에서 3.7 ms 로 41% 만 줄고 통신
-            비율은 28% 로 오릅니다.
+            reduce 참여 rank 가 16 으로 늘어 ring 단계가 두 배가 되므로 오히려 조금 늘어납니다. TPOT 은 6.2 ms 에서 3.7 ms 로 40% 만 줄고 통신
+            비율은 30% 로 오릅니다.
           </p>
           <p>
             게다가 TP 16 은 한 node 의 8 GPU 를 넘으므로 all-reduce 의 한 hop 이 NVLink 가 아니라

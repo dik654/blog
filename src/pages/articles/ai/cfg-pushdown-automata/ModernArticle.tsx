@@ -87,7 +87,7 @@ export default function CfgPushdownAutomataArticle() {
           <p>
             Chomsky hierarchy에서 정규언어는 CFG가 만드는 언어의 진부분집합
             한 단계 아래입니다. <code>a*b*</code> 같은 regular expression은
-            유한 상태만으로 판정되지만, 짝을 맞춰야 하는 <code>(()())</code>
+            유한 상태만으로 판정되지만, 짝을 맞춰야 하는 <code>(())</code>
             같은 언어는 상한 없는 깊이를 세야 해 정규표현식으로 쓸 수 없고
             <code>S → ( S ) | ε</code> 같은 CFG 재귀가 필요합니다.
           </p>

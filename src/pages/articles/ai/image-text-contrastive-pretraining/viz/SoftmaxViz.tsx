@@ -23,7 +23,8 @@ export default function SoftmaxViz() {
   const step = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   const t = step >= 1 ? 14 : 1;
   const value = (i: number, j: number) => {
-    if (step < 2) return raw(i, j);
+    if (step === 0) return raw(i, j);
+    if (step === 1) return t * raw(i, j);
     const row = Array.from({ length: N }, (_, k) => Math.exp(t * raw(i, k)));
     const sum = row.reduce((a, b) => a + b, 0);
     return Math.exp(t * raw(i, j)) / sum;
@@ -56,6 +57,7 @@ export default function SoftmaxViz() {
             {Array.from({ length: N }, (_, i) => i).map((i) =>
               Array.from({ length: N }, (_, j) => j).map((j) => {
                 const v = value(i, j);
+                const shade = step === 1 ? raw(i, j) : v;
                 const isDiag = i === j;
                 const color = step >= 3 && isDiag ? DIAG : CELL;
                 return (
@@ -66,7 +68,7 @@ export default function SoftmaxViz() {
                       width={28}
                       height={28}
                       fill={color}
-                      fillOpacity={Math.min(0.85, v * (step >= 2 ? 0.9 : 1.1))}
+                      fillOpacity={Math.min(0.85, shade * (step >= 2 ? 0.9 : 1.1))}
                       stroke={color}
                       strokeWidth={step >= 3 && isDiag ? 1.25 : 0.5}
                     />
@@ -75,7 +77,7 @@ export default function SoftmaxViz() {
                       y={58 + i * 30}
                       textAnchor="middle"
                       fontSize={7}
-                      fill={v > 0.5 ? "#ffffff" : color}
+                      fill={shade > 0.5 ? "#ffffff" : color}
                     >
                       {v.toFixed(2)}
                     </text>

@@ -93,7 +93,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [42, 50],
     desc: "netfilter 훅 다섯 자리의 번호표입니다. iptables 체인 PREROUTING·INPUT·FORWARD·OUTPUT·POSTROUTING과 nftables 체인의 hook 이름이 이 enum에 대응합니다.",
     annotations: [
-      { lines: [43, 47], color: "sky", note: "0 PRE_ROUTING, 1 LOCAL_IN, 2 FORWARD, 3 LOCAL_OUT, 4 POST_ROUTING. 패킷 하나는 이 가운데 세 개(수신 1·2·4 또는 3·4, 로컬 수신 0·1)를 지납니다." },
+      { lines: [43, 47], color: "sky", note: "0 PRE_ROUTING, 1 LOCAL_IN, 2 FORWARD, 3 LOCAL_OUT, 4 POST_ROUTING. 패킷 하나는 이 가운데 두세 개(전달 0·2·4, 로컬 수신 0·1, 로컬 송신 3·4)를 지납니다." },
     ],
     code: netfilterH,
     lang: "c",

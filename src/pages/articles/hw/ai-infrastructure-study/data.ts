@@ -297,7 +297,7 @@ export const schedulerChoiceData: AiInfrastructureArticleData = {
   engineeringDepth: schedulerChoiceDepth,
   sections: [
     { id: "overview", level: "S", title: "1. GPU는 남아 있는데 네 학습 작업이 하나도 시작하지 못했습니다", bridge: "자원을 잘게 나눠 준 결과 모든 작업이 기다립니다. 작업이 태어나고 끝나는 순서부터 다시 봅니다.", paragraphs: [
-      "(가정) 16노드 클러스터에 각각 8노드를 동시에 요구하는 학습 작업 네 개가 들어왔습니다. 잘못 만든 정책이 공평하게 나눈다는 이유로 작업마다 노드 두 대씩 먼저 잡게 했지만, 어느 작업도 필요한 여덟 대를 한꺼번에 얻지 못해 GPU 16대가 할당된 채로 기다렸습니다.",
+      "(가정) 16노드 클러스터에 각각 8노드를 동시에 요구하는 학습 작업 네 개가 들어왔습니다. 잘못 만든 정책이 공평하게 나눈다는 이유로 작업마다 노드 두 대씩 먼저 잡게 했지만, 어느 작업도 필요한 여덟 대를 한꺼번에 얻지 못해 노드 8대(GPU 64개)가 할당된 채로 기다렸습니다.",
       "반대편에는 항상 떠 있어야 하는 추론 API도 있습니다. 이 서비스는 여덟 노드의 동시 시작보다 죽은 복제본 교체와 점진 배포가 중요합니다. 같은 GPU와 컨테이너를 쓴다는 이유만으로 두 작업을 같은 방식으로 관리할 수 있는지부터 따져야 합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 요청·대기·할당·실행·회수를 추적합니다", bridge: "작업 형태가 선택을 바꾼다는 결론을 얻었습니다. 두 도구를 비교하기 전에 공통 생애를 그립니다.", paragraphs: [
@@ -521,7 +521,7 @@ export const storageIoData: AiInfrastructureArticleData = {
     { term: "꼬리 지연(tail latency)", description: "요청 분포에서 가장 느린 쪽의 응답 시간입니다.", example: "128 ranks 중 가장 느린 rank의 p99 read가 다음 training step을 늦춥니다.", boundary: "평균 latency와 aggregate 처리량만으로는 tail을 알 수 없습니다." },
   ] },
   algorithm: { title: "4MiB read와 checkpoint 한 세대의 완료 경로", input: ["path", "offset", "4MiB buffer", "8TB checkpoint", "120초 deadline"], steps: [
-    { code: "pread64(path, offset, 4MiB)", note: "Page cache hit인지 miss인지와 syscall 시간을 기록합니다." },
+    { code: "pread64(fd, buffer, 4MiB, offset)", note: "Page cache hit인지 miss인지와 syscall 시간을 기록합니다." },
     { code: "file_offset→data_location→request_queue", note: "Local NVMe면 block queue를, shared filesystem이면 client·network·server queue를 표시합니다." },
     { code: "4MiB→decode→host_to_device→GPU", note: "Storage 응답과 GPU가 batch를 받은 시각을 나눕니다." },
     { code: "write(tmp_shard)→fsync(file)→rename(final_shard)", note: "Rank 하나의 shard를 임시 이름에서 최종 이름으로 바꿉니다." },
@@ -594,7 +594,7 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
     ] },
     { id: "mechanism", level: "4", title: "7. 전력과 냉각 예산을 같은 원장으로 만듭니다", bridge: "각 장치의 경계를 찾았습니다. 이제 rack 한 행에서 전력과 열 제거를 함께 검산합니다.", paragraphs: [
       "rack마다 서버 수, 평균·피크 kW, A/B feed와 upstream UPS, PDU connector·phase, 한 feed 상실 뒤 허용 용량을 적습니다. 같은 행에 air heat와 water-captured heat, 요구 inlet 조건, facility supply/return 온도와 flow, N+1 장치 상태를 붙입니다.",
-      "(가정) DC 고밀도안의 평균 232kW 중 90%를 RDHx가 물로 옮기고 공급·환수 온도차를 10°C로 유지하면 물이 운반할 열은 208.8kW입니다. 물의 비열을 약 4.18kJ/kg·K로 두면 필요한 질량 유량은 약 5.0kg/s입니다. 피크 304kW에 같은 가정을 적용하면 약 6.5kg/s가 필요합니다. 잔여 공기열과 pump·fan 열은 시설 경로에서 따로 제거합니다.",
+      "(가정) DC 고밀도안의 평균 232kW 중 90%를 RDHx가 물로 옮기고 공급·환수 온도차를 10°C로 유지하면 물이 운반할 열은 208.8kW입니다. 물의 비열을 약 4.186kJ/(kg·K)로 두면 필요한 질량 유량은 약 5.0kg/s입니다. 피크 304kW에 같은 가정을 적용하면 약 6.5kg/s가 필요합니다. 잔여 공기열과 pump·fan 열은 시설 경로에서 따로 제거합니다.",
     ] },
     { id: "source", level: "5", title: "8. B300 공개 평균·피크를 랙 수에 적용합니다", bridge: "같은 원장에 전력과 유량을 넣었습니다. NVIDIA의 두 deployment pattern을 현 사례에 대입합니다.", paragraphs: [
       "NVIDIA guide는 48U MGX rack에 공랭 B300 4대와 active RDHx를 쓰는 고밀도안, 전통 공랭 rack에 2대를 넣는 저밀도안을 제시합니다. 16대 사례는 각각 compute rack 4개와 8개입니다.",

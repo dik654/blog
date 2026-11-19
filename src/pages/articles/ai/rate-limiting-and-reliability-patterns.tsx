@@ -135,10 +135,10 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
           input={["요청", "실패율 임계값", "open 유지 시간", "half-open 시험 요청 결과"]}
           steps={[
             { code: "state ← closed", note: "평소에는 요청을 backend로 그대로 통과시킵니다." },
-            { code: "on request: if state == open: return fail_fast()", note: "Open 상태면 backend를 부르지 않고 즉시 실패를 반환합니다." },
+            { code: "on request: if state == open and now() - opened_at >= cooldown: state ← half_open", note: "일정 시간이 지나면 half-open으로 바꿔 시험을 준비합니다." },
+            { code: "if state == open: return fail_fast()", note: "Open 상태면 backend를 부르지 않고 즉시 실패를 반환합니다." },
             { code: "if state == closed: result ← call(backend); update_failure_rate(result)", note: "Closed 상태에서는 실제로 호출하고 실패율을 갱신합니다." },
             { code: "if failure_rate >= threshold: state ← open; opened_at ← now()", note: "실패율이 임계값을 넘으면 open으로 전환합니다." },
-            { code: "if state == open and now() - opened_at >= cooldown: state ← half_open", note: "일정 시간이 지나면 half-open으로 바꿔 시험을 준비합니다." },
             { code: "if state == half_open: probe ← call(backend)", note: "half-open에서는 시험 요청 하나만 통과시킵니다." },
             { code: "if probe.success: state ← closed else: state ← open; opened_at ← now()", note: "시험이 성공하면 closed로 복귀하고, 실패하면 다시 open으로 돌아갑니다." },
           ]}
@@ -210,7 +210,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             "요청 비용 c가 요청마다 고정이거나 미리 계산 가능하다고 가정합니다. LLM에서는 실제 token 수를 요청 전에 정확히 모를 수 있어 추정치를 씁니다.",
             "통이 비어 있으면 요청을 막는다고 가정하지만, 막는 대신 대기시키는 변형(leaky bucket에 가까운 동작)도 가능합니다.",
           ]}
-          interpretation="r=10, B_max=30이면 평소에는 초당 10개까지 허용하지만, 통이 가득 찬 상태에서는 순간적으로 30개까지 burst를 허용합니다. r만 있고 B_max가 0이면 순간적인 몰림을 전혀 허용하지 않는 엄격한 rate limiting이 됩니다."
+          interpretation="r=10, B_max=30이면 평소에는 초당 10개까지 허용하지만, 통이 가득 찬 상태에서는 순간적으로 30개까지 burst를 허용합니다. B_max를 r과 같게 두면(통에 한 주기 분량만 담기면) 순간적인 몰림을 전혀 허용하지 않는 엄격한 rate limiting이 됩니다."
         />
         <div id="paper-rfc2697-token-bucket" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
@@ -440,7 +440,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
           items={[
             { term: "Reliability", description: "시스템이 요구된 조건에서 계속 올바르게 동작하는 정도를 가리키는 최상위 목표입니다.", example: "1년 중 서비스가 정상 응답한 시간의 비율로 측정.", boundary: "Reliability 자체는 측정 대상이지 하나의 구현 기법이 아니어서, 아래 개념들이 이를 달성하는 구체적 수단입니다." },
             { term: "High Availability (HA)", description: "중복 구성으로 한 구성 요소가 죽어도 서비스 전체가 계속 응답하게 만드는 목표입니다.", example: "같은 역할의 서버 3대를 다른 가용 영역에 배치.", boundary: "중복만으로는 장애 발생 시 실제로 트래픽을 옮기는 절차(failover)가 없으면 자동으로 복구되지 않습니다." },
-            { term: "Fault Tolerance", description: "구성 요소 일부에 장애가 발생해도 시스템이 계속 정상적으로 동작하는 능력입니다.", example: "GPU 한 대가 죽어도 나머지 GPU로 요청을 계속 처리.", boundary: "장애를 견디는 것과, 그 상태에서도 품질을 낮추지 않고 계속 응답하는 것은 별개이며 후자는 graceful degradation의 영역입니다." },
+            { term: "Fault Tolerance", description: "구성 요소 일부에 장애가 발생해도 시스템이 계속 정상적으로 동작하는 능력입니다.", example: "GPU 한 대가 죽어도 나머지 GPU로 요청을 계속 처리.", boundary: "장애를 견디는 것과, 그 상태에서 품질을 낮춰서라도 계속 응답하는 것은 별개이며 후자는 graceful degradation의 영역입니다." },
             { term: "Failover", description: "주 구성 요소가 죽으면 대기 중이던 예비 구성 요소로 트래픽을 옮기는 절차입니다.", example: "주 데이터센터 장애 시 대기 데이터센터로 트래픽 전환.", boundary: "전환 자체에도 시간이 걸리므로(전환 지연) 그 사이 요청은 여전히 실패할 수 있습니다." },
             { term: "Graceful Degradation", description: "전체 기능을 유지할 수 없을 때 일부 기능을 줄여서라도 서비스를 완전히 멈추지 않는 방식입니다.", example: "개인화 추천이 죽으면 인기 항목 목록으로 대체.", boundary: "무엇을 줄일지 미리 정해 두지 않으면 장애 시점에 임기응변으로 대응하게 되어 예측 가능한 저하가 되지 않습니다." },
           ]}

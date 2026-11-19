@@ -12,7 +12,8 @@ export default function Overview() {
         <p className="text-lg leading-8">
           네 거래의 금액이 ₩12K, ₩18K, ₩24K, ₩910K이고 접속 시간이 2초,
           4초, 5초, 39초라고 합시다. 넷째 row는 두 feature 모두 오른쪽
-          tail 비율이 1/4이라 먼저 검토할 후보가 됩니다. 이 수치는 드문 정도이지
+          tail 비율이 1/4이고, 첫째 row도 두 feature 모두 왼쪽 tail 비율이
+          1/4이라 두 row가 같은 점수로 먼저 검토할 후보가 됩니다. 이 수치는 드문 정도이지
           fraud label은 아닙니다.
         </p>
         <h3>그림을 보기 전에 결과를 예상해 보세요</h3>

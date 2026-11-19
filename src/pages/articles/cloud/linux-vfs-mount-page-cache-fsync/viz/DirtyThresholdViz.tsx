@@ -3,7 +3,7 @@ import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 /**
- * (가정) dirtyable 메모리 12,288 MiB인 서버에서 앱이 2 GiB를 계속 쓸 때 dirty 합계가 세 선을 차례로 넘는 장면.
+ * (가정) dirtyable 메모리 12,288 MiB인 서버에서 앱이 4 GiB를 계속 쓸 때 dirty 합계가 세 선을 차례로 넘는 장면.
  * 한 mechanism: bg_thresh(10%)에서 flusher가 쓰기 시작하고, freerun 상한((bg+thresh)/2)부터 쓰는 쪽이 속도 제한을 받고,
  * thresh(20%)에서 쓰는 쪽이 balance_dirty_pages 안에서 멈춘다(mm/page-writeback.c domain_dirty_limits).
  */

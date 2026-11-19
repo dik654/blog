@@ -173,7 +173,7 @@ assumptions={["자연로그, 클래스 가중치 없음, 정답 비중의 합 1�
 <p>같은 commit의 CPU LogSoftmaxKernelImpl.h는 각 행의 최댓값을 찾고, 이를 뺀 값의 지수를 합한 뒤 로그를 취합니다. 83–95행의 주석과 실제 식은 x−max−log(sum) 순서를 유지하라고 말합니다. 큰 max에 작은 log(sum)을 먼저 더하면 작은 차이가 사라질 수 있기 때문입니다.</p>
 <ExplainedFormula question="정답 확률을 먼저 만들지 않고 비용을 어떻게 계산하나요?" idea="최댓값을 먼저 빼 지수의 입력을 0 이하로 만들고, 작은 값들의 로그 합에서 정답의 이동된 로짓을 뺍니다." formula={String.raw`L=\log\sum_j e^{z_j-m}-(z_y-m),\quad m=\max_j z_j`}
 annotatedFormula={String.raw`\begin{gathered}m=\max_j z_j,\quad S=\sum_j e^{z_j-m}\\\log Q_j=(z_j-m)-\log S,\qquad L=\log S-(z_y-m)\\z=(0,0,\ln2):\quad S=\tfrac12+\tfrac12+1=2\\L_A=\ln2-(-\ln2)=\ln4\end{gathered}`}
-operations={[{expression:String.raw`z=(1000,999),\ y=1:\quad L=\ln(1+e^{-1})\approx0.313262`,annotation:["첫 클래스를 정답으로 두는 별도 예입니다. 최댓값을 빼면 0과 −1이 되어 직접 exp(1000)을 계산하지 않습니다."]}]}
+operations={[{expression:String.raw`z=(1000,999),\ y=0:\quad L=\ln(1+e^{-1})\approx0.313262`,annotation:["첫 클래스를 정답으로 두는 별도 예입니다. 최댓값을 빼면 0과 −1이 되어 직접 exp(1000)을 계산하지 않습니다."]}]}
 terms={[{symbol:"S",name:"이동한 지수의 합",description:"우리 세 글자에서는 2이며 단위가 없습니다."}]}
 assumptions={["유한한 로짓과 명시한 계산 형식을 가정합니다.","NaN, 무한대 입력이나 합산 자체의 범위·반올림 문제까지 모두 해결하는 보장은 아닙니다."]} interpretation="실수 수학에서는 LSE(z)−z_y와 같지만 유한 정밀도에서는 큰 LSE를 먼저 조립한 뒤 빼는 순서가 다른 결과를 낼 수 있습니다." />
 <StableOrderViz />
@@ -208,7 +208,7 @@ assumptions={["연속값 식은 Gaussian 관측 모형입니다.","우리 세 �
 <h2 className="text-2xl font-bold">18 · 실제로 나오는 글자에 확률 0을 주면 어떻게 될까</h2>
 <p>주 사례의 Q를 (0,1/2,1/2)로 바꾸면 P가 A에 1/2를 주므로 −P(A)logQ(A)는 무한대입니다. CE와 이 방향의 KL이 발산합니다. 유한한 글자 집합에서는 P가 양수인 모든 곳에 Q도 양수인 조건으로 이 문제를 피할 수 있습니다.</p>
 <SupportZeroViz />
-<p>반대 방향은 다릅니다. Q가 A에 0을 줬다면 Q를 기준으로 평균할 때 그 A 항은 세지 않습니다. 예를 들어 P=(1/2,1/2), Q=(1,0)이면 D_KL(P‖Q)는 무한대지만 D_KL(Q‖P)=ln2입니다. 어느 분포에서 사건을 뽑아 평가하는지 생략하면 이 차이를 놓칩니다.</p>
+<p>반대 방향은 다릅니다. Q가 어떤 사건에 0을 줬다면 Q를 기준으로 평균할 때 그 사건의 항은 세지 않습니다. 예를 들어 P=(1/2,1/2), Q=(1,0)이면 D_KL(P‖Q)는 무한대지만 D_KL(Q‖P)=ln2입니다. 어느 분포에서 사건을 뽑아 평가하는지 생략하면 이 차이를 놓칩니다.</p>
 <ProgressiveDetail title="가능한 사건이 무한히 많을 때는 양수 조건만으로 충분할까" preview="모든 항이 유한해도 무한합은 발산할 수 있습니다."><p>n≥1에서 Pₙ=2⁻ⁿ, Qₙ=c exp(−2ⁿ)라고 합시다. c는 Q의 합을 1로 만드는 유한한 양의 상수입니다. 모든 Qₙ은 양수지만 −ΣPₙlnQₙ에는 Σ2⁻ⁿ2ⁿ=Σ1이 들어가 무한대입니다. 반면 H(P)=2ln2는 유한합니다. 가산무한의 유한 CE에는 로그 비용의 적분 가능성까지 확인해야 합니다.</p></ProgressiveDetail>
 <p>Forward KL이 실제 분포의 여러 봉우리를 덮거나 reverse KL이 한 봉우리에 집중하는 경향은 제한된 모델군과 최적화 조건에 따라 나타납니다. 방향의 수식만으로 모든 학습의 모양을 보장하지 않습니다. 다른 비교가 필요하면 혼합 분포를 쓰는 Jensen–Shannon 발산이나 질량 이동 비용을 쓰는 Wasserstein 거리도 검토할 수 있지만 같은 목적 함수는 아닙니다.</p>
 </section>

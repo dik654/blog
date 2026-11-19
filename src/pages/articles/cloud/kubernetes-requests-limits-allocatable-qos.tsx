@@ -205,7 +205,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
               주 프로세스가 죽으면 컨테이너는 exit code 137, reason OOMKilled로 끝나고 restartPolicy에 따라 다시 뜹니다.
             </p>
             <p>
-              공식 문서는 이 집행을 "reactively"라고 적습니다. 커널이 메모리 압력을 감지했을 때만 죽이므로 limit을 조금 넘은 컨테이너가 당장 죽지 않을 수 있고, 반대로 노드 전체가 모자라면 limit 안에 있어도 전역 OOM의 후보가 됩니다. CPU limit과의 차이가 여기 있습니다. CPU는 넘는 순간 멈추고 끝나지만 메모리는 넘어도 잠깐 살다가 죽습니다.
+              공식 문서는 이 집행을 "reactively"라고 적습니다. 커널이 메모리 압력을 감지했을 때만 죽이므로 limit에 닿은 컨테이너가 당장 죽지 않을 수 있고, 반대로 노드 전체가 모자라면 limit 안에 있어도 전역 OOM의 후보가 됩니다. CPU limit과의 차이가 여기 있습니다. CPU는 넘는 순간 멈추고 끝나지만 메모리는 선에 닿아도 회수를 거치는 동안 잠깐 살다가 죽습니다.
             </p>
             <p>137이 OOM이었다는 증거는 세 곳에서 확인합니다. 컨테이너 상태의 lastState.terminated.reason이 OOMKilled인지, cgroup의 memory.events에서 oom_kill이 늘었는지, dmesg에 "Memory cgroup out of memory" 줄이 있는지입니다.
             </p>

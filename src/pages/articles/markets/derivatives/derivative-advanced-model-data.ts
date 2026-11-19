@@ -155,7 +155,7 @@ export const finiteDifferenceData: DerivativeDeepArticleData = {
           { expression: String.raw`(\Delta S)^2=10^2=100`, annotation: "주가 칸 10을 제곱합니다." },
           { expression: String.raw`\sigma^2S^2=0.2^2\times100^2=400`, annotation: "주가 100에서 1년 동안 쌓이는 가격 분산 속도입니다." },
           { expression: String.raw`\Delta t_{\max}=\frac{100}{400}=0.25\text{년}`, annotation: "주가 100 칸에서 허용되는 시간 칸 상한입니다." },
-          { expression: String.raw`\lambda=\frac{0.5\times400\times0.01}{100}=0.02,\quad 1-2\lambda=0.96`, annotation: "Δt=0.01이면 가중치가 모두 양수이고, 0+0.02×(10−0+0)=0.2로 3절 값과 같습니다." },
+          { expression: String.raw`\lambda=\frac{0.5\times400\times0.01}{100}=0.02,\quad 1-2\lambda=0.96`, annotation: "Δt=0.01이면 가중치가 모두 양수이고, 0+0.02×(10−2×0+0)=0.2로 3절 값과 같습니다." },
           { expression: String.raw`\frac{100}{0.2^2\times110^2}=0.207\text{년}`, annotation: "격자의 가장 높은 주가 칸에서 상한이 가장 빡빡하므로 그 칸으로 다시 확인합니다." },
         ],
         terms: [
@@ -220,7 +220,7 @@ export const finiteDifferenceData: DerivativeDeepArticleData = {
   ] },
   numericCase: { title: "주가 100의 한 칸 역진", steps: [
     { label: "만기값", value: "0·0·10", detail: "행사가 100 콜의 90·100·110 지급입니다." },
-    { label: "두 번째 차분", value: "(10−0+0)÷100=0.1", detail: "가운데 지점의 굽음 근사입니다." },
+    { label: "두 번째 차분", value: "(10−2×0+0)÷10²=0.1", detail: "가운데 지점의 굽음 근사입니다." },
     { label: "연간 굽음 몫", value: "0.5×0.2²×100²×0.1=20", detail: "금리 0인 설명용 입력입니다." },
     { label: "한 칸 전 값", value: "20×0.01=0.2", detail: "시간 간격을 줄여 수렴을 다시 봐야 합니다." },
   ] },
@@ -251,9 +251,9 @@ export const volatilityModelsData: DerivativeDeepArticleData = {
         formula: String.raw`\sigma_{loc}^2(K,T)=\frac{2\,\partial_T P}{K^2\,\partial_{KK} P}`,
         annotatedFormula: String.raw`\sigma_{loc}^2(K,T)=\frac{2\,\overbrace{\partial_T P}^{\text{만기를 늘릴 때 가격이 오르는 속도}}}{\underbrace{K^2}_{\text{행사가 크기 보정}}\;\underbrace{\partial_{KK} P}_{\text{행사가 방향의 휘어짐}}}`,
         operations: [
-          { expression: String.raw`\partial_T P\approx\frac{P(100,\tfrac{13}{12})-P(100,1)}{1/12}=\frac{8.290-7.966}{1/12}\approx3.889`, annotation: "같은 행사가 100의 풋을 1년과 13개월 만기로 비교해 만기 방향의 기울기를 잽니다." },
-          { expression: String.raw`\partial_{KK}P\approx\frac{P(90)-2P(100)+P(110)}{10^2}=\frac{3.589-15.931+14.292}{100}=0.0195`, annotation: "90·100·110 풋으로 만든 나비 묶음의 값 1.950을 행사가 간격의 제곱 100으로 나눠 휘어짐을 잽니다." },
-          { expression: String.raw`\sigma_{loc}^2\approx\frac{2\times3.889}{100^2\times0.0195}=\frac{7.779}{195.0}\approx0.0399,\quad\sigma_{loc}\approx19.97\%`, annotation: "모든 풋을 흔들림 20% 하나로 만든 표이므로 식이 20%에 가까운 값을 돌려주는지 검산합니다." },
+          { expression: String.raw`\partial_T P\approx\frac{P(100,\tfrac{13}{12})-P(100,1)}{1/12}=\frac{8.2897-7.9656}{1/12}\approx3.889`, annotation: "같은 행사가 100의 풋을 1년과 13개월 만기로 비교해 만기 방향의 기울기를 잽니다." },
+          { expression: String.raw`\partial_{KK}P\approx\frac{P(90)-2P(100)+P(110)}{10^2}=\frac{3.5891-2\times7.9656+14.2920}{100}\approx0.0195`, annotation: "90·100·110 풋으로 만든 나비 묶음의 값 1.950을 행사가 간격의 제곱 100으로 나눠 휘어짐을 잽니다." },
+          { expression: String.raw`\sigma_{loc}^2\approx\frac{2\times3.889}{100^2\times0.0195}=\frac{7.778}{195.0}\approx0.0399,\quad\sigma_{loc}\approx19.97\%`, annotation: "모든 풋을 흔들림 20% 하나로 만든 표이므로 식이 20%에 가까운 값을 돌려주는지 검산합니다." },
         ],
         terms: [
           { symbol: String.raw`P(K,T)`, name: "풋 가격", description: "행사가 K·만기 T의 유럽형 풋 시장가격입니다. 사례 값은 주가 100·흔들림 20%의 블랙숄즈 풋입니다." },

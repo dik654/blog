@@ -18,7 +18,7 @@ const SCENES = [
     note: "Reference에도 target과 같은 함수를 쓰면 두 구간이 모두 0부터 매겨져 같은 칸에 겹칩니다. 위치만 보아서는 어느 쪽이 먼저인지 드러나지 않습니다.",
   },
   {
-    label: "구간 길이만큼 빼면",
+    label: "마지막 위치만큼 빼면",
     summary: `− duration_ref (= ${DURATION}Δt)`,
     shift: DURATION,
     note: "duration_ref는 reference 구간의 마지막 위치입니다. 이만큼 빼면 reference 전체가 앞으로 밀리지만 마지막 frame이 0에 닿아 target의 첫 frame과 같은 자리에 섭니다.",
@@ -50,7 +50,7 @@ export default function NegativePositionViz() {
       title="Reference block을 통째로 target 앞으로 옮깁니다"
       description="가로축은 RoPE(위치를 회전 각도로 넣는 position embedding)가 읽는 시간 위치이고 한 칸이 한 latent frame 간격(Δt)입니다. 두 구간을 각각 4 frame으로 줄여 그렸습니다(가정)."
       note="RoPE는 위치를 상대 회전으로 encode하므로 음수 위치도 유효한 상대 관계가 된다는 것이 글의 가정입니다."
-      ariaLabel="reference 위치에서 구간 길이와 한 frame 간격을 빼 target보다 앞으로 옮기는 세 장면"
+      ariaLabel="reference 위치에서 마지막 위치와 한 frame 간격을 빼 target보다 앞으로 옮기는 세 장면"
       scenes={SCENES}
       render={(active) => {
         const scene = SCENES[active];

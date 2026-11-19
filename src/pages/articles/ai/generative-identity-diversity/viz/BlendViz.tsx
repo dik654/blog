@@ -141,7 +141,7 @@ export default function BlendViz() {
                   전 구간 정체성 0.89 ~ 0.93 · 처음부터 끝까지 같은 사람
                 </text>
                 <text x={24} y={140} fontSize={8} fill={MUTED}>
-                  추정 나이가 51에서 41로 움직이고 얼굴 폭은 변하지 않습니다.
+                  추정 나이가 51에서 41로 움직이고 골격은 변하지 않습니다.
                 </text>
                 <text x={24} y={166} fontSize={8} fontWeight={700} fill={MEAN}>
                   골격이 아니라 피부·화장·나이의 리터치 다이얼입니다.

@@ -168,7 +168,7 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
           </p>
           <p>
             Regression test 는 이전 버전에서 쟀던 같은 slice 를 다시 재서 품질이 되돌아가지 않았는지 확인합니다. Slice 별 절대 기준(예: 오차 5 % 미만)과
-            이전 대비 상대 기준(예: 1 % 이상 하락 금지)을 함께 두는 것이 ML Test Score 논문의 권고입니다.
+            이전 대비 상대 기준(예: 오차 증가 1 %p 미만)을 함께 두는 것이 ML Test Score 논문의 권고입니다.
           </p>
           <p>
             Prompt 버전만 바꾸는 좁은 범위에서는 이미 실패 trace 를 고정해 두고 한 축씩 바꾸는{" "}
@@ -242,8 +242,8 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             새 model 을 실 트래픽 일부에 A/B 분할 없이 붙여 관찰하는 방법이 shadow evaluation 입니다. 트래픽 10 % 에 candidate 를 붙이되 사용자에게는
-            기존 model 응답을 그대로 보내고 candidate 의 지표만 기록하며 문제가 없으면 그 비율을 점점 늘립니다. ML Test Score 가 말하는 canary 가 이
-            방식입니다.
+            기존 model 응답을 그대로 보내고 candidate 의 지표만 기록하며 문제가 없으면 그 비율을 점점 늘립니다. ML Test Score 가 말하는 canary 는 이와 달리
+            candidate 가 트래픽 일부에 실제로 응답하게 하고 그 비율을 점점 늘리는 방식입니다.
           </p>
           <p>
             A/B testing 은 트래픽을 candidate 와 control 로 무작위 분할해 사용자가 실제로 candidate 응답을 받게 한 뒤 목표 지표의 차이가 우연보다 큰지
@@ -321,7 +321,7 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             CheckList, OOD·distribution shift 는 WILDS 의 결과를 근거로 삼았습니다.
           </p>
           <p>
-            Slice-based evaluation, regression test, shadow(canary), offline·online 상관은 Google
+            Slice-based evaluation, regression test, canary, offline·online 상관은 Google
             의 ML Test Score 논문에서, A/B testing 의 표본 크기 관계는 Kohavi 등의 대규모 실험
             연구에서 가져왔습니다.
           </p>

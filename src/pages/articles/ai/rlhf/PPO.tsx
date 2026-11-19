@@ -102,7 +102,7 @@ L^{CLIP}
           { expression: String.raw`\sum_{l=0}^{\infty}(\gamma\lambda)^l\delta_{t+l}`, annotation: ["재귀를 풀어쓰면", "먼 미래 residual일수록 작은 weight로 반영"] },
         ]}
         terms={[
-          { symbol: "r_t", name: "step reward", description: "LLM RLHF에서는 마지막 token에서만 0이 아니고 중간 step은 보통 KL penalty만 있습니다." },
+          { symbol: "r_t", name: "step reward", description: "LLM RLHF에서는 reward model 점수가 마지막 token에만 붙고, 중간 step은 보통 token별 KL penalty만 있습니다." },
           { symbol: "V(s_t)", name: "value baseline", description: "별도로 학습한 value head가 예측한 state의 기대 return입니다." },
           { symbol: String.raw`\gamma`, name: "discount factor", description: "LLM 생성은 episode가 짧아 보통 γ=1을 씁니다." },
           { symbol: String.raw`\lambda`, name: "GAE parameter", description: "λ=1이면 Monte Carlo advantage, λ=0이면 1-step TD만 쓰는 두 극단을 잇습니다." },

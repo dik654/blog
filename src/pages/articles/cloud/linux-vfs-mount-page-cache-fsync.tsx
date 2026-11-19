@@ -35,8 +35,8 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               프로그램이 쓴 바이트는 어떤 길을 지나 디스크에 닿고, 그 길의 어디에서 멈추나요?
             </p>
             <p>
-              답을 먼저 적겠습니다. write()는 디스크가 아니라 page cache에 적은 뒤 돌아옵니다. 디스크로 가는 때는 flusher가 30초 넘은 dirty page를 쓰거나, dirty 합계가 가용 메모리의
-              10%를 넘거나, 앱이 fsync()를 부를 때뿐입니다.
+              답을 먼저 적겠습니다. write()는 디스크가 아니라 page cache에 적은 뒤 돌아옵니다. 디스크로 가는 주된 때는 flusher가 30초 넘은 dirty page를 쓰거나, dirty 합계가 가용 메모리의
+              10%를 넘거나, 앱이 fsync()를 부를 때입니다.
             </p>
             <p>
               fsync()는 데이터 writeback과 저널 commit과 장치 캐시 flush를 모두 기다린 뒤 돌아옵니다. 그 앞에는 경로 이름을 inode로
@@ -227,7 +227,7 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
               { label: "freerun 상한", expression: "(1,227 + 2,457) ÷ 2", result: "1,842 MiB", reason: "dirty_freerun_ceiling입니다. 이 선부터 쓰는 쪽이 장치 속도에 맞춰 짧게 멈추기 시작합니다." },
               { label: "100 MiB 로그", expression: "100 < 1,227", result: "아무 일도 안 일어남", reason: "두 선 아래라 30초 만료가 유일한 계기입니다. 그 사이 정전이 나면 전부 사라집니다." },
             ]}
-            conclusion="100 MiB 한 번은 30~35초 뒤에, 2 GiB 연속 쓰기는 1,227 MiB에서 flusher가, 2,457 MiB에서 앱이 멈춥니다. 멈춤을 줄이려면 dirty_bytes를 장치가 1~2초에 쓸 수 있는 양으로 낮춰 자주 조금씩 내려보내게 합니다."
+            conclusion="100 MiB 한 번은 30~35초 뒤에, 4 GiB 연속 쓰기는 1,227 MiB에서 flusher가, 2,457 MiB에서 앱이 멈춥니다. 멈춤을 줄이려면 dirty_bytes를 장치가 1~2초에 쓸 수 있는 양으로 낮춰 자주 조금씩 내려보내게 합니다."
             caveats={["분모 12,288 MiB는 가정이며 실제로는 page cache가 커지고 줄어듦에 따라 초 단위로 움직입니다.", "cgroup v2에서는 memcg마다 같은 식을 그 cgroup의 가용 메모리에 적용한 한계선이 따로 있습니다(domain_dirty_limits의 memcg 분기).", "실시간(rt/dl) 작업은 두 선을 1/4 + 전역 한도/32만큼 더 높게 받습니다."]}
           />
           <DirtyThresholdViz />

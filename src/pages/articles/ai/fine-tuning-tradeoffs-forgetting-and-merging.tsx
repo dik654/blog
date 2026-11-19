@@ -276,8 +276,8 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </CitationBlock>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Task arithmetic은 각 fine-tuned 모델이 base에서 이동한 방향(task vector)만 따로 뽑아 더하고 뺍니다. 평균이 방향을 무디게 섞는 데 비해
-            task arithmetic은 방향을 그대로 보존한 채 합치므로 여러 능력을 동시에 편집할 수 있습니다.
+            Task arithmetic은 각 fine-tuned 모델이 base에서 이동한 방향(task vector)만 따로 뽑아 더하고 뺍니다. 같은 base에서 나온 checkpoint의 평균은 합친 이동을 1/T 길이로 줄인 점(λ=1/T)과 같아 방향은 같고 길이만 짧은 데 비해
+            task arithmetic은 합친 이동의 길이를 λ로 따로 정하므로 여러 능력을 동시에 편집할 수 있습니다.
           </p>
         </div>
         <ExplainedFormula

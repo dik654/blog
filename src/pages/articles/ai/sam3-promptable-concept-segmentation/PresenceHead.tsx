@@ -80,7 +80,7 @@ export default function PresenceHead({ onCodeRef }: { onCodeRef: (key: string, r
         </p>
 
         <p className="leading-7">
-          레이어마다 이 토큰에서 logit을 하나씩 뽑아 쌓고, 수치가 튀지 않도록 범위를 제한합니다. 깊이마다 같은
+          레이어마다 이 토큰에서 logit을 하나씩 뽑아 쌓습니다. 범위 제한(clamp) 코드도 있지만 결과를 버려 실제로는 값이 바뀌지 않습니다. 깊이마다 같은
           감독을 받으므로 마지막 레이어에만 의존하지 않는 구조입니다.
         </p>
       </div>

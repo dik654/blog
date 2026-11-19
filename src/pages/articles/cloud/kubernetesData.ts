@@ -238,8 +238,8 @@ export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
     { source: "Linux Foundation CKA", excerpt: "performance-based test", application: "공식 비중을 장애 lab 시간과 산출물로 바꾸되 합격 문제 수로 해석하지 않습니다.", citation: "Linux Foundation · Certified Kubernetes Administrator", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", note: "확인일 현재 v1.37, 2시간과 다섯 영역 비중을 밝히는 공식 시험 안내입니다." },
   ],
   review: [
-    "Pod가 Pending이고 nodeName이 없을 때 container log보다 condition과 event를 먼저 확인해야 하는 이유는 무엇입니까? (답: 4·7절)",
-    "API server readiness가 통과해도 사용자 요청이 실패할 수 있는 이유를 경로로 설명해 보세요. (답: 7·8절)",
-    "CKA 30% Troubleshooting을 12시간 읽기로 끝내지 않고 어떤 증거로 남겨야 합니까? (답: 9절)",
+    "Pod가 Pending이고 nodeName이 없을 때 container log보다 condition과 event를 먼저 확인해야 하는 이유는 무엇입니까? (답: 3·4절)",
+    "API server readiness가 통과해도 사용자 요청이 실패할 수 있는 이유를 경로로 설명해 보세요. (답: 4·5절)",
+    "CKA 30% Troubleshooting을 12시간 읽기로 끝내지 않고 어떤 증거로 남겨야 합니까? (답: 6절)",
   ],
 };

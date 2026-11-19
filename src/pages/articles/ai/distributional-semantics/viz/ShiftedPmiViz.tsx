@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #neural-approach — u_wᵀv_c ≈ PMI(w,c) − log k.
  * 고양이–반려 PMI 0.439에서 negative sample 수 k가 커질수록 같은 pair의 최적 score가 내려갑니다.
- * k=5는 본문 값(0.439 − 1.609 = −1.170). k=1·2는 내려가는 방향을 보이려는 가정입니다.
+ * k=5는 본문 값(log(76/49) − log 5 = 0.43892 − 1.60944 ≈ −1.171). k=1·2는 내려가는 방향을 보이려는 가정입니다.
  */
 const PMI = 0.439;
 const KS = [1, 2, 5] as const;
@@ -31,8 +31,8 @@ const SCENES = [
   },
   {
     label: "k = 5 (본문)",
-    summary: `0.439 − ${Math.log(5).toFixed(3)} = −1.170`,
-    note: "본문의 k=5에서는 0.439−log 5≈−1.170입니다. 양의 PMI pair도 negative class prior를 반영한 최적 score에서는 음수가 될 수 있습니다.",
+    summary: `0.43892 − ${Math.log(5).toFixed(5)} ≈ −1.171`,
+    note: "본문의 k=5에서는 0.439−log 5≈−1.171입니다. 양의 PMI pair도 negative class prior를 반영한 최적 score에서는 음수가 될 수 있습니다.",
   },
 ] as const;
 
@@ -76,7 +76,7 @@ export default function ShiftedPmiViz() {
             <text x={x(PMI)} y={AXIS_Y + 36} fontSize={12} textAnchor="middle" fill="#64748b">PMI 0.439</text>
             <circle cx={x(score)} cy={AXIS_Y} r={active === 0 ? 3.5 : 6} fill="#2563eb" />
             <text x={x(score)} y={AXIS_Y + 36 + (active === 0 ? 14 : 0)} fontSize={13} fontWeight={700} textAnchor="middle" fill="#2563eb">
-              {active === 2 ? "−1.170" : fmt(score)}
+              {active === 2 ? "−1.171" : fmt(score)}
             </text>
           </svg>
         );

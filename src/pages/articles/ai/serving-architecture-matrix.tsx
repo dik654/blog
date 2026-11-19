@@ -355,8 +355,8 @@ export default function ServingArchitectureMatrixArticle() {
             token으로 무너진다는 보고도 있습니다(현장 경험).
           </p>
           <p>
-            Qwen3.6-35B-A3B는 FP8 가중치 37.5GB가 한 장에 들어가 장마다 48.9GB가 남습니다. 2.75GB짜리 에이전트를 장당 17개씩, 노드에 약 142개
-            둡니다. gpt-oss-120b도 MXFP4 65.2GB가 한 장에 들어가 장당 4개, 노드에 약 35개입니다. 두 모델 모두 장 사이 통신이 없고 병목은 장 하나의 메모리
+            Qwen3.6-35B-A3B는 FP8 가중치 37.5GB가 한 장에 들어가 장마다 48.9GB가 남습니다. 2.75GB짜리 에이전트를 장당 17개씩, 노드에 136개
+            둡니다. gpt-oss-120b도 MXFP4 65.2GB가 한 장에 들어가 장당 4개, 노드에 32개입니다. 두 모델 모두 장 사이 통신이 없고 병목은 장 하나의 메모리
             대역폭입니다.
           </p>
         </div>
@@ -369,10 +369,10 @@ export default function ServingArchitectureMatrixArticle() {
             { label: "Qwen3-235B-A22B, TP8", expression: "(691.2 − 239.0) GB ÷ (2 × 25.2 GB)", result: "9.0개, FP8 기록 17.9개", reason: "KV head 4개라 두 벌입니다." },
             { label: "Kimi K2.5, TP8", expression: "12.0 GB ÷ 9.2 GB · (96 GB ÷ 4.6 GB)", result: "1.3개 · DCP8 + FP8 20.8개", reason: "장마다 한 벌이던 것을 token 축 8조각과 FP8로 줄입니다." },
             { label: "Kimi K3", expression: "1,561 GB > 821 GB", result: "올라가지 않음", reason: "16장 TP16·DCP16으로 가동한 보고가 있습니다(현장 경험)." },
-            { label: "Qwen3.6-35B-A3B, 장마다", expression: "8 × (86.4 − 37.5) GB ÷ 2.75 GB", result: "142개", reason: "가중치가 한 장에 들어가 복제본 8개가 독립으로 받습니다." },
-            { label: "gpt-oss-120b, 장마다", expression: "8 × (86.4 − 65.2) GB ÷ 4.8 GB", result: "35개", reason: "창 층의 block을 돌려줄 때입니다. 돌려주지 않으면 17개입니다." },
+            { label: "Qwen3.6-35B-A3B, 장마다", expression: "8 × ⌊(86.4 − 37.5) GB ÷ 2.75 GB⌋", result: "136개", reason: "가중치가 한 장에 들어가 복제본 8개가 독립으로 받습니다." },
+            { label: "gpt-oss-120b, 장마다", expression: "8 × ⌊(86.4 − 65.2) GB ÷ 4.8 GB⌋", result: "32개", reason: "창 층의 block을 돌려줄 때입니다. 돌려주지 않으면 16개입니다." },
           ]}
-          conclusion="같은 노드에서 상주 가능한 128K 에이전트는 1개에서 142개까지 벌어지고, K2.5처럼 배치 하나로 20배가 바뀌는 행도 있습니다. 장비를 정하기 전에 모델의 구조를 먼저 읽어야 하는 이유입니다."
+          conclusion="같은 노드에서 상주 가능한 128K 에이전트는 1개에서 136개까지 벌어지고, K2.5처럼 배치 하나로 20배가 바뀌는 행도 있습니다. 장비를 정하기 전에 모델의 구조를 먼저 읽어야 하는 이유입니다."
           caveats={["상주 가능 수는 위쪽 경계입니다. 요청당 속도 기준을 지키는 동시 처리 수는 측정해야 압니다.", "prefix 공유로 여러 에이전트가 같은 앞부분을 쓰면 실제 자리는 더 남습니다."]}
         />
         <TwoNodePpViz />

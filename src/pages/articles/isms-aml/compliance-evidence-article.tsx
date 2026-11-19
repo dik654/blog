@@ -144,11 +144,11 @@ const CONFIG: Record<ArticleKey, Config> = {
     formula: String.raw`C=\frac{N_{\mathrm{traceable}}}{N_{\mathrm{population}}}`,
     annotatedFormula: String.raw`C=\frac{\underbrace{N_{\mathrm{traceable}}}_{\text{증거 사슬 완결 건}}}{\underbrace{N_{\mathrm{population}}}_{\text{같은 기간 전체 건}}}`,
     operations: [
-      { expression: String.raw`\frac{N_{\mathrm{traceable}}}{N_{\mathrm{population}}}`, annotation: ["request→approval→artifact→receipt가","모두 연결된 건의 비율","배포 200건 중 184건 → C=0.92"] },
+      { expression: String.raw`\frac{N_{\mathrm{traceable}}}{N_{\mathrm{population}}}`, annotation: ["request→approval→enforcement→log→outcome이","모두 연결된 건의 비율","배포 200건 중 184건 → C=0.92"] },
     ],
     terms: [{ symbol: "N_{\\mathrm{traceable}}", name: "Traceable records", description: "필수 단계·ID·source receipt가 모두 연결된 항목 수입니다." }, { symbol: "N_{\\mathrm{population}}", name: "Population size", description: "명시 기간·source·query로 재현한 전체 항목 수입니다." }, { symbol: "C", name: "Trace coverage", description: "0~1 범위의 증거 연결 비율입니다." }],
     assumptions: ["분자와 분모가 같은 기간·scope·dedupe rule을 씁니다.", "Traceable은 통제 결과가 합격했다는 뜻이 아니라 검증 가능한 상태라는 뜻입니다.", "C=1도 sampling과 evidence 진실성·통제 설계 적정성을 대신하지 않습니다."],
-    interpretation: "배포 200건 중 184건만 request·approval·artifact·production receipt가 연결되면 C=0.92입니다. 나머지 16건의 공통 source와 영향범위를 조사한 뒤 표본 결과를 해석합니다.",
+    interpretation: "배포 200건 중 184건만 request·approval·enforcement·log·outcome이 연결되면 C=0.92입니다. 나머지 16건의 공통 source와 영향범위를 조사한 뒤 표본 결과를 해석합니다.",
     citations: [
       { id: "paper-kisa-isms-audit", title: "KISA · ISMS-P 인증기준 안내서 2023.11", href: KISA_ISMS, problem: "인증기준을 실제 운영 증거·결함사례와 연결해야 합니다.", contribution: "관리체계·보호대책·개인정보 단계별 기준에 확인사항, 증거자료와 결함사례를 제시합니다.", assumptions: "2024-01-02 이후 적용 세부점검항목과 2026-11-02 현행 법령·조직 scope를 함께 확인합니다.", scope: "국내 ISMS-P 심사의 공식 해설과 증거 예시에 한정합니다.", notClaim: "예시 문서 목록을 모두 모으면 인증되거나 한 표본이 모집단 전체를 증명한다는 뜻은 아닙니다." },
       { id: "paper-kisa-isms-site", title: "KISA · ISMS-P 인증 제도·자료실", href: "https://pims.kisa.or.kr/", problem: "안내서·세부점검항목·적용일의 최신 게시본을 확인해야 합니다.", contribution: "KISA의 인증제도와 최신 공지·자료의 공식 진입점을 제공합니다.", assumptions: "심사 신청일과 적용 공지, 인증기관 요구를 release마다 확인합니다.", scope: "ISMS-P 현행 자료 탐색의 공식 출발점입니다.", notClaim: "이 글의 checklist가 실제 심사 범위·표본·판정을 고정한다는 뜻은 아닙니다." },

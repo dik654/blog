@@ -159,8 +159,8 @@ export default function AttestationCreation({ onCodeRef }: Props) {
               </p>
               <p>
                 3. <span className="font-semibold">Surrounded vote 체크</span> —
-                past가 현재를 감쌈 &rarr; <code>ErrSurroundingVote</code> /
-                현재가 past를 감쌈 &rarr; <code>ErrSurroundedVote</code>
+                past가 현재를 감쌈 &rarr; <code>ErrSurroundedVote</code> /
+                현재가 past를 감쌈 &rarr; <code>ErrSurroundingVote</code>
               </p>
               <p>
                 4. 모두 통과 &rarr; <code>nil</code> (안전)

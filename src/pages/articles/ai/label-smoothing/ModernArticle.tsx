@@ -66,7 +66,7 @@ export default function LabelSmoothingArticle() {
         { symbol: "z_k", name: "Class logit", description: "Softmax 전 model score입니다." },
         { symbol: "p_k", name: "Model probability", description: "Softmax 뒤 class k에 할당한 probability입니다." },
         { symbol: "L", name: "Soft-target cross-entropy", description: "Smoothed target과 model distribution의 mismatch입니다." },
-      ]} assumptions={["Target probability의 합이 1이고 음수가 없습니다.", "Ignore index·class weight·reduction은 별도 API 계약입니다."]} interpretation="Off-target class에도 작은 gradient가 생깁니다. 이것이 calibration 개선을 자동 보장하지는 않습니다." />
+      ]} assumptions={["Target probability의 합이 1이고 음수가 없습니다.", "Ignore index·class weight·reduction은 별도 API 계약입니다."]} interpretation="Off-target class의 -log p_k 항에도 작은 target 가중치(ε/K)가 붙습니다. Logit gradient p_k−ỹ_k는 one-hot에서도 off-target에 p_k로 이미 있고, smoothing은 그 목표값을 0에서 ε/K로 옮깁니다. 이것이 calibration 개선을 자동 보장하지는 않습니다." />
     </section>
     <section id="composition" data-teach-level="failure" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Mixup과 함께 쓰면 이름이 아니라 최종 target을 계산합니다</h2>

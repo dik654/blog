@@ -101,9 +101,9 @@ function Scene({ step }: { step: number }) {
           </div>
         </div>
         <div className="space-y-2 text-xs font-semibold">
-          <div className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-2"><span>H2D</span><span className="w-[57%] rounded-md bg-sky-500/20 px-3 py-2">4ms</span></div>
-          <div className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-2"><span>kernel</span><span className="w-full rounded-md bg-violet-500/20 px-3 py-2">7ms · transfer와 overlap</span></div>
-          <div className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-2"><span>barrier</span><span className="w-[14%] min-w-12 rounded-md bg-rose-500/20 px-3 py-2">1ms</span></div>
+          <div className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-2"><span>H2D</span><span className="w-[50%] rounded-md bg-sky-500/20 px-3 py-2">4ms</span></div>
+          <div className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-2"><span>kernel</span><span className="w-[87.5%] rounded-md bg-violet-500/20 px-3 py-2">7ms · transfer와 overlap</span></div>
+          <div className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-2"><span>barrier</span><span className="ml-[87.5%] w-[12.5%] rounded-md bg-rose-500/20 px-0.5 py-2 text-center">1ms</span></div>
         </div>
         <p className="text-center text-sm font-black text-primary">critical path ≈ max(4, 7) + 1 = 8ms</p>
       </div>

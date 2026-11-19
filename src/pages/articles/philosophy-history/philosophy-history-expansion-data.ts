@@ -48,11 +48,11 @@ export const medievalTranslationData: PhilosophyHistoryArticleData = {
     { actor: "번역·주석", movement: "낱말과 전제가 바뀐 지점을 기록합니다.", receives: "네 기록" },
     { actor: "문답", movement: "권위·증명·말의 한계를 나눕니다.", receives: "범위가 표시된 결론" },
   ] },
-  numericCase: { title: "한 질문이 이동한 네 언어 기록", steps: [
+  numericCase: { title: "한 질문이 이동한 네 언어 기록 (아랍어에서 히브리어·라틴어로 갈라짐)", steps: [
     { label: "그리스어", value: "기록 1", detail: "고대 문헌의 질문을 확인합니다." },
     { label: "아랍어", value: "기록 2", detail: "번역과 독자적 주석이 붙습니다." },
-    { label: "히브리어", value: "기록 3", detail: "유대 공동체의 해석 논쟁으로 이어집니다." },
-    { label: "라틴어", value: "기록 4", detail: "대학 문답과 신학 논쟁에서 다시 읽힙니다." },
+    { label: "히브리어", value: "기록 3", detail: "아랍어 기록에서 갈라진 한 갈래로, 유대 공동체의 해석 논쟁으로 이어집니다." },
+    { label: "라틴어", value: "기록 4", detail: "히브리어 기록을 거치지 않고 아랍어 기록에서 갈라진 다른 갈래로, 대학 문답과 신학 논쟁에서 다시 읽힙니다." },
   ] },
   terms: { title: "중세 철학의 지식 이동을 보는 세 개념", items: [
     { term: "번역·주석망", description: "원문이 번역·요약·주석·반박·재번역되며 새 질문을 만드는 관계입니다.", example: "유대아랍어 저작이 히브리어와 라틴어 독자에게 다른 논쟁을 엽니다.", boundary: "뜻이 손실 없이 한 방향으로 복사되는 전달선은 아닙니다." },

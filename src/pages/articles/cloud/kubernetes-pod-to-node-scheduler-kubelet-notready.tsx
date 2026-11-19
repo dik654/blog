@@ -111,7 +111,7 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
               worker-2의 kubelet은 시작할 때 API server에 "모든 namespace의 Pod 가운데 <code>spec.nodeName=worker-2</code>인 것"을 list/watch로 걸어 둡니다. 3절의 Binding이 nodeName을 채우는 순간 이 watch에 web-x가 나타납니다.
             </p>
             <p>
-              kubelet은 Pod spec을 읽어 컨테이너 런타임에 sandbox 생성을 요청한 다음 CNI로 네트워크를, CSI로 볼륨을 붙인 뒤 컨테이너를 시작합니다. 결과는 Pod의 <code>status</code>(phase, containerStatuses, conditions)에 다시 씁니다.
+              kubelet은 Pod spec을 읽어 CSI로 볼륨이 붙기를 기다린 다음 컨테이너 런타임에 sandbox 생성을 요청하고, 그 과정에서 CNI가 네트워크를 붙인 뒤 컨테이너를 시작합니다. 결과는 Pod의 <code>status</code>(phase, containerStatuses, conditions)에 다시 씁니다.
             </p>
           </div>
           <PodOnNodeViz />
@@ -219,7 +219,7 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
           <NotReadyBranchViz />
           <div className={prose}>
             <p>
-              <code>kubectl get nodes</code>의 STATUS 열 NotReady는 Ready 조건이 True가 아니라는 뜻 하나로 두 경우를 묶습니다. 첫째는 kubelet이 살아서 스스로 False를 보고한 경우입니다. 컨테이너 런타임이 죽었거나, CNI 플러그인이 준비되지 않았거나, 디스크·PID가 위험 수준인 노드가 여기 해당하고 reason도 kubelet이 적은 값입니다.
+              <code>kubectl get nodes</code>의 STATUS 열 NotReady는 Ready 조건이 True가 아니라는 뜻 하나로 두 경우를 묶습니다. 첫째는 kubelet이 살아서 스스로 False를 보고한 경우입니다. 컨테이너 런타임이 죽었거나 CNI 플러그인이 준비되지 않은 노드가 여기 해당하고 reason도 kubelet이 적은 값입니다.
             </p>
             <p>
               둘째는 kubelet의 보고 자체가 끊겨 컨트롤러가 Unknown을 적은 경우로 reason이 <code>NodeStatusUnknown</code>, message가 "Kubelet stopped posting node status."입니다.
