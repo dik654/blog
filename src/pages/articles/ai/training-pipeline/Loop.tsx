@@ -17,7 +17,7 @@ export default function Loop() {
           Training phase에서는 <code>model.train()</code> 뒤
           forward·loss·backward를 수행하고, 정해진 accumulation이 끝났을 때
           optimizer를 update합니다. Validation phase에서는{" "}
-          <code>model.eval()</code>과<code>torch.inference_mode()</code> 또는{" "}
+          <code>model.eval()</code>과 <code>torch.inference_mode()</code> 또는{" "}
           <code>no_grad()</code> 안에서 prediction과 metric만 계산합니다.
         </p>
         <p>
@@ -108,7 +108,7 @@ export default function Loop() {
           <code>torch.amp.autocast(&quot;cuda&quot;, ...)</code>와
           <code>torch.amp.GradScaler(&quot;cuda&quot;, ...)</code>입니다.
           Autocast는 연산별로 낮은 precision 또는 FP32를 선택하며 model 전체를
-          무조건
+          무조건{" "}
           <code>half()</code>로 바꾸는 기능이 아닙니다. FP16의 작은 gradient가
           0으로 사라지는 문제를 줄이기 위해 loss scaling을 사용할 수 있습니다.
         </p>

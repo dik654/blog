@@ -9475,13 +9475,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   "crypto/jolt": [
     {
       kind: "공식 코드",
-      label: "a16z/jolt · ADD LookupQuery, commit47130f3",
+      label: "a16z/jolt · ADD LookupQuery, commit 47130f3",
       href: "https://github.com/a16z/jolt/blob/47130f3dc9a51a7ac2754a98ff0aa31981a6b810/crates/jolt-lookup-tables/src/instructions/riscv/add.rs",
       note: "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다.",
     },
     {
       kind: "공식 코드",
-      label: "a16z/jolt · read_write_checking_input, commit47130f3",
+      label: "a16z/jolt · read_write_checking_input, commit 47130f3",
       href: "https://github.com/a16z/jolt/blob/47130f3dc9a51a7ac2754a98ff0aa31981a6b810/crates/jolt-claims/src/twist/memory_checking.rs",
       note: "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다.",
     },

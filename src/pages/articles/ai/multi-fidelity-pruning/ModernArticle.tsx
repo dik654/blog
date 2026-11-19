@@ -27,7 +27,7 @@ export default function Article() { return <div className="space-y-16"><section 
             중 무엇을 같게 비교하려는지 먼저 정합니다.
           </p><p>이 사례는 갱신 수를 공통 좌표로 삼았습니다. 같은 갱신 수가 모든 후보의 계산 비용까지 같다는 뜻은 아닙니다. 학습 방법과 배치가 달라진다면 선택한 좌표가 목적에 맞는지 다시 검사합니다.</p></div></section>
 
-<section id="pruning-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 평가 깊이와 비교 지점과 중단 정책에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보를 얼마나 깊게 평가했는지가 fidelity입니다. 비교하는 사전 자원 지점은 rung이고 다음 자원을 주지 않고 멈추는 정책은 pruning입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Successive halving", "description": "같은 지점에서 일부 후보만 남기며 다음 자원을 늘리는 절차입니다.", "boundary": "halving이라는 이름이어도 여기서는3배 축소·확대를 사용합니다."}, {"term": "Survivor", "description": "현재 비교를 통과해 다음 자원을 받는 후보입니다.", "boundary": "최종 최적 후보라고 증명된 것은 아닙니다."}, {"term": "False prune", "description": "중단했을 후보가 정한 최종 예산에서는 채택 가능했을 사건입니다.", "boundary": "끝까지 확인하지 않은 후보의 결과는 알 수 없습니다."}]} /><p className="mt-6 text-base text-muted-foreground">
+<section id="pruning-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 평가 깊이와 비교 지점과 중단 정책에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보를 얼마나 깊게 평가했는지가 fidelity입니다. 비교하는 사전 자원 지점은 rung이고 다음 자원을 주지 않고 멈추는 정책은 pruning입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Successive halving", "description": "같은 지점에서 일부 후보만 남기며 다음 자원을 늘리는 절차입니다.", "boundary": "halving이라는 이름이어도 여기서는 3배 축소·확대를 사용합니다."}, {"term": "Survivor", "description": "현재 비교를 통과해 다음 자원을 받는 후보입니다.", "boundary": "최종 최적 후보라고 증명된 것은 아닙니다."}, {"term": "False prune", "description": "중단했을 후보가 정한 최종 예산에서는 채택 가능했을 사건입니다.", "boundary": "끝까지 확인하지 않은 후보의 결과는 알 수 없습니다."}]} /><p className="mt-6 text-base text-muted-foreground">
             아래 개념도는 같은 규칙을 27개에서 시작한 더 큰 가정 사례입니다. 본문의 9개 계산과 후보 수를 구별합니다.
           </p></section>
 
@@ -97,7 +97,7 @@ export default function Article() { return <div className="space-y-16"><section 
             "Early rank가 final rank와 어느 정도 연결됩니다.",
             "Checkpoint resume가 training semantics를 바꾸지 않습니다.","j는 살아 있는 후보가 남고 정한 최대 자원을 넘지 않는 단계까지입니다. 동점 처리도 미리 정합니다.",
           ]}
-          interpretation="9개를1단위에서 시작하고 η=3이면9@1 →3@3 →1@9입니다. n_jr_j는 각 단계 후보의 누적 목표량 합이고 재개 시 새로 쓰는 비용의 합이 아닙니다."
+          interpretation="9개를1단위에서 시작하고 η=3이면 9@1 → 3@3 → 1@9입니다. n_jr_j는 각 단계 후보의 누적 목표량 합이고 재개 시 새로 쓰는 비용의 합이 아닙니다."
         /></section>
 
 <section id="resource-accounting" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 누적 목표 9와 새로 쓰는 6을 구분합니다</h2><ResourceGridViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
@@ -175,9 +175,9 @@ export default function Article() { return <div className="space-y-16"><section 
           assumptions={[
             "Audit cohort 일부는 full budget까지 실행해 counterfactual outcome을 관측합니다.",
             "Finalist criterion은 pruning 결과를 보기 전에 고정합니다.",
-            "Model family·schedule별 miss rate도 함께 확인합니다.","C는 끝까지 확인한 감사 cohort이고 분모 N_p>0이어야 합니다. c_i는 필수 조건을 통과하면1, 아니면0인 지시자입니다.","전체 중단 집단으로 확장하려면 표본 추출 방식과 불확실성을 확인합니다. 이 분모는 실제 양성 수인 일반 FNR과 다릅니다.",
+            "Model family·schedule별 miss rate도 함께 확인합니다.","C는 끝까지 확인한 감사 cohort이고 분모 N_p>0이어야 합니다. c_i는 필수 조건을 통과하면 1, 아니면 0인 지시자입니다.","전체 중단 집단으로 확장하려면 표본 추출 방식과 불확실성을 확인합니다. 이 분모는 실제 양성 수인 일반 FNR과 다릅니다.",
           ]}
-          interpretation="중단100개 중 무작위20개를 끝까지 조사해4개가 채택 가능했다면 관측 비율은4/20=20%입니다. 4/100이 아니며 나머지80개의 결과를 안다는 뜻도 아닙니다."
+          interpretation="중단 100개 중 무작위 20개를 끝까지 조사해 4개가 채택 가능했다면 관측 비율은4/20=20%입니다. 4/100이 아니며 나머지80개의 결과를 안다는 뜻도 아닙니다."
         /><div id="source-prune-envelope" className="mt-8 scroll-mt-20"><CitationBlock source="Hyperband — §3.1, PDF p.7" citeKey={1} href="https://jmlr.org/papers/volume18/16-558/16-558.pdf"><q>more resources are needed to differentiate between the two configurations</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             원문은 중간값과 최종값의 차이를 감싸는 범위가 넓거나 최종 후보의 차이가 작으면 구별에 더 많은 자원이 든다고 설명합니다. B의 3단위 0.63만 보고 9단위 결과를 안다고 할
             수 없는 이유입니다. 여기의 20개 표본 감사는 그 위험을 확인하기 위한 별도 운영 설계이며 논문이 20%라는 값을 보장하거나 이 감사 비율을 제안했다는 뜻은 아닙니다.

@@ -4646,7 +4646,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/text-unicode-encoding": "633c03458947d5d9",
   "ai/subword-static-embeddings": "bd341b6a0de2fd22",
   "ai/word2vec-negative-sampling": "8c352950cfeef1c3",
-  "ai/cuda-graph-capture": "12dddf5114240d67",
+  "ai/cuda-graph-capture": "f8cb1c76eaefdabc",
   "ai/word2vec-prediction-objectives": "b307f1b4c462f19f",
   "crypto/binary-field-proving": "c54785ee5eae8071",
   "crypto/groth16": "9063e90905b760fa",

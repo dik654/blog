@@ -138,7 +138,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             와 performance per watt 가 됩니다. 두 값이 높을수록 같은 token 을 더 싸게, 더 적은 전력으로 냅니다.
           </p>
           <p>
-            $2/GPU-h 에서 1,000 tokens/s 면 500 tokens/s 당 $/h, 다르게 말하면 $1 에 1,800,000 token 입니다. tokens/s 를 시간당
+            $2/GPU-h 에서 1,000 tokens/s 면 500 (tokens/s)/($/h), 다르게 말하면 $1 에 1,800,000 token 입니다. tokens/s 를 시간당
             비용으로 나눈 이 값이 throughput per dollar 입니다. $3/GPU-h 인 더 큰 GPU 가 1,800 tokens/s 를 낸다면 600 이라 장당 가격은
             비싸도 효율은 20 % 높습니다.
           </p>

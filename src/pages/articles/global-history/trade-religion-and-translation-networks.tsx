@@ -59,7 +59,7 @@ const data: WorldHistoryArticleData = {
   ] },
   numericCase: { title: "향신료 100묶음의 구간별 이동", steps: [
     { label: "출발 항구", value: "100묶음", detail: "생산지에서 선적" },
-    { label: "인도 항구", value: "80묶음", detail: "20은 세금·현지 판매" },
+    { label: "인도 항구", value: "80묶음", detail: "20은 현지 소비와 세금" },
     { label: "서아시아 항구", value: "50묶음", detail: "30은 중간 시장 판매" },
   ] },
   terms: { title: "상품과 지식을 잇는 세 장치", items: [

@@ -115,7 +115,7 @@ export default function AutoregressiveGenerativeModelsArticle() {
             "각 conditional은 vocabulary에서 normalized됩니다.",
             "Factorization은 exact하지만 learned conditional의 정확도는 보장하지 않습니다.",
           ]}
-          interpretation="p(x₁=1)=.6, p(x₂=0|x₁=1)=.5이면 sequence (1,0)의 joint probability는 .3입니다. 두 event가 같은 경로에서 모두 일어나야 하므로 더합니다가 아니라 곱합니다."
+          interpretation="p(x₁=1)=.6, p(x₂=0|x₁=1)=.5이면 sequence (1,0)의 joint probability는 .3입니다. 두 event가 같은 경로에서 모두 일어나야 하므로 더하는 것이 아니라 곱합니다."
         />
       </section>
 

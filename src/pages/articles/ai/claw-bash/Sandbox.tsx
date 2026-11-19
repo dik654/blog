@@ -44,7 +44,7 @@ export default function Sandbox() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>같은 shell effect를 여러 문자열로 표현할 수 있어서 validation과 intent 분류만으로는 안전을 보장하기 어렵습니다. sandbox는 command가 착한 의도인지 맞히기보다 실제 process가 볼 수 있는 filesystem·network·다른 process와 사용할 resource를 제한합니다. permission이 “이 action을 허용할지”를 결정한다면 sandbox는 허용 뒤에도 넘지 못할 바깥 경계입니다.</p>
-        <p>고정된 Claw snapshot이 제공하는 것은 bubblewrap이나 VM이 아닙니다.<strong> PINNED:</strong> Linux에서 작동 가능한 <code>unshare</code>user-namespace mapping을 probe하고 mount·IPC·PID·UTS namespace와 선택적 network namespace를 만든 뒤 그 안에서 <code>sh -lc</code>를 호출하는 launcher입니다. 요청값·지원 여부·활성 상태를 <code>SandboxStatus</code>로 돌려주지만 이 상태값이 모든 isolation property를 증명하지는 않습니다.</p>
+        <p>고정된 Claw snapshot이 제공하는 것은 bubblewrap이나 VM이 아닙니다.<strong> PINNED:</strong> Linux에서 작동 가능한 <code>unshare</code> user-namespace mapping을 probe하고 mount·IPC·PID·UTS namespace와 선택적 network namespace를 만든 뒤 그 안에서 <code>sh -lc</code>를 호출하는 launcher입니다. 요청값·지원 여부·활성 상태를 <code>SandboxStatus</code>로 돌려주지만 이 상태값이 모든 isolation property를 증명하지는 않습니다.</p>
       </div>
 
       <div className="not-prose my-8">
@@ -196,7 +196,7 @@ export default function Sandbox() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release executor는 process tree와 resource를 하나의 lifecycle로 닫습니다</h3>
-        <p><strong>HARDENING:</strong> Spawn 전에 새 process group 또는 platform별 job object를 만들고 attempt ID와 leader identity를 기록합니다. Timeout·cancel· session 종료에는 group 전체에 graceful signal을 보낸 뒤 짧은 deadline을 두고 강제 종료하며 descendant가 0이 될 때까지 reap합니다. CPU·memory·PID· file size와 wall-clock limit은 단일 parent에 걸지 않고 cgroup 또는 동등한 backend로 전체 tree에 적용합니다.</p>
+        <p><strong>HARDENING:</strong> Spawn 전에 새 process group 또는 platform별 job object를 만들고 attempt ID와 leader identity를 기록합니다. Timeout·cancel·session 종료에는 group 전체에 graceful signal을 보낸 뒤 짧은 deadline을 두고 강제 종료하며 descendant가 0이 될 때까지 reap합니다. CPU·memory·PID·file size와 wall-clock limit은 단일 parent에 걸지 않고 cgroup 또는 동등한 backend로 전체 tree에 적용합니다.</p>
         <p>observation은 process created, timeout signaled, force killed, descendants remaining을 각각 구분하고 final exit/signal과 output truncation도 별도 항목으로 둡니다. cleanup 중 host가 crash하면 stable task identity로 다시 조회해 종료를 이어 가되 effect 완료 여부를 모른 채 login test나 edit를 곧바로 중복 실행하지는 않습니다.</p>
 
         <h3>Crash 뒤에는 먼저 effect를 reconciliation하고 같은 command를 재실행합니다</h3>

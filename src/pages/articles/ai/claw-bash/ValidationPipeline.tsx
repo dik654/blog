@@ -176,7 +176,7 @@ export default function ValidationPipeline() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Canonical path를 한 번 계산해도 TOCTOU는 남습니다</h3>
-        <p>요청 시점의 cwd와 target을 문자열 prefix로 비교하면 <code>..</code>,<code>/work/app-old</code>처럼 비슷한 prefix와 symlink 때문에 workspace를 벗어날 수 있습니다. Existing path는 canonical component 단위로 비교하고 아직 없는 output은 가장 가까운 existing parent와 새 component를 나눠 검증해야 합니다. 실행 파일도 <code>PATH</code>에서 실제로 resolve된 identity를 판정에 묶어야 합니다.</p>
+        <p>요청 시점의 cwd와 target을 문자열 prefix로 비교하면 <code>..</code>, <code>/work/app-old</code>처럼 비슷한 prefix와 symlink 때문에 workspace를 벗어날 수 있습니다. Existing path는 canonical component 단위로 비교하고 아직 없는 output은 가장 가까운 existing parent와 새 component를 나눠 검증해야 합니다. 실행 파일도 <code>PATH</code>에서 실제로 resolve된 identity를 판정에 묶어야 합니다.</p>
       </div>
 
       <ToctouRaceViz />
@@ -227,7 +227,7 @@ export default function ValidationPipeline() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Release gate는 연결 여부와 effect 부재를 함께 검사합니다</h3>
         <p><strong>HARDENING:</strong> Release composition은 validated input, shell program, canonical cwd·target, executable resolution, environment·policy digest와 effect summary를 하나의 decision에 묶어야 합니다. Path는 가능한 경우 dirfd·handle 기반 API와 OS sandbox로 다시 제한하고 해석하지 못한 expansion이나 target은 fail-closed 또는 더 좁은 sandbox로 보냅니다.</p>
-        <p>로그인 edit에서는 canonical root와 target을 check 시점에 기록한 뒤 parent directory handle을 기준으로 descriptor- relative open을 수행하고 symlink를 따라가지 않는 no-follow resolution을 씁니다. 새 파일은 가능한 경우 같은 directory에서 atomic create·rename으로 반영합니다. decision의 resource identity와 실제 handle identity, policy generation과 before/after effect는 같은 receipt에 넣습니다. 이 절차도 platform별 API와 동시 attacker를 사용한 negative test 없이는 완전하다고 주장할 수 없습니다.</p>
+        <p>로그인 edit에서는 canonical root와 target을 check 시점에 기록한 뒤 parent directory handle을 기준으로 descriptor-relative open을 수행하고 symlink를 따라가지 않는 no-follow resolution을 씁니다. 새 파일은 가능한 경우 같은 directory에서 atomic create·rename으로 반영합니다. decision의 resource identity와 실제 handle identity, policy generation과 before/after effect는 같은 receipt에 넣습니다. 이 절차도 platform별 API와 동시 attacker를 사용한 negative test 없이는 완전하다고 주장할 수 없습니다.</p>
         <p>
           다음 negative fixture는 단순히 error string을 확인하는 test가 아닙니다. Deny·malformed·Unknown 뒤 child process와
           workspace diff가 없고 허용한 로그인 search만 같은 cwd에서 실행됐다는 evidence까지 확인합니다.

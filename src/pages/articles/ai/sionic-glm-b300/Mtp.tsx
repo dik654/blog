@@ -41,7 +41,7 @@ export default function Mtp() {
           latency를 함께 측정해야 한다.</p>
         <p className="leading-7">batch가 여러 request가 weight를
           공유한다면 MTP는 한 request의 future positions가 같은 효과를 일부
-          만든다는 비유는 가능하지만, scheduling과 attention shape가 같으므로
+          만든다는 비유는 가능하지만, scheduling과 attention shape가 다르므로
           진짜 batch와 동일하다고 말할 수는 없다.
         </p>
         <ExplainedFormula

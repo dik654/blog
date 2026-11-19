@@ -83,7 +83,7 @@ export default function HyperliquidArticle() {
    <SourceApplication source="공식 SDK · exchange.py order()" excerpt="return self.bulk_orders([order], builder)" application="0.1개 주문은 이 줄에서 batch 경로로 전달됩니다. 반환된 응답을 보고 0.04 체결·0.06 대기를 확인한 뒤 fill과 잔액을 별도로 조회해야 사례의 998.65를 대조할 수 있습니다." />
    <div className="flex flex-wrap gap-3"><CodeViewButton label="order → bulk_orders 원본" onClick={()=>sidebar.open("order",codeRefs.order)} /><CodeViewButton label="가격·수량의 wire 변환" onClick={()=>sidebar.open("wire",codeRefs.wire)} /><CodeViewButton label="ok 뒤 resting·oid 조회" onClick={()=>sidebar.open("status",codeRefs.status)} /></div>
    <CitationBlock source="Hyperliquid Python SDK · pinned 2fdb18f" citeKey={6} href="https://github.com/hyperliquid-dex/hyperliquid-python-sdk/tree/2fdb18f9517675ea03695a0962bd19eece9c83f0">원본 파일과 MIT 라이선스를 보존했습니다. 예제 ETH 0.2·1100은 testnet이며 이 글의 BTC 사례와 구분합니다.</CitationBlock>
-   <div id="hyperevm-bridge" className="scroll-mt-20 space-y-5"><p>EVM 계약에서 주문하면 CoreWriter가 중간에 들어갑니다. 버전 1, action ID1로 주문을 나타내고 자산과 매수 방향, 가격과 수량, 주문 방식을 ABI 형식으로 보냅니다. 문서의 가격·수량 단위는 10⁸ 배이므로 사례 값은 5,000,000,000,000과 10,000,000입니다.</p><p>EVM 영수증의 성공 뒤에도 주문 action은 지연 처리될 수 있습니다. 따라서 영수증만 보고 BTC 0.1개가 모두 체결됐다고 판단하지 않고 Core의 최종 체결을 다시 읽습니다.</p></div>
+   <div id="hyperevm-bridge" className="scroll-mt-20 space-y-5"><p>EVM 계약에서 주문하면 CoreWriter가 중간에 들어갑니다. 버전 1, action ID 1로 주문을 나타내고 자산과 매수 방향, 가격과 수량, 주문 방식을 ABI 형식으로 보냅니다. 문서의 가격·수량 단위는 10⁸ 배이므로 사례 값은 5,000,000,000,000과 10,000,000입니다.</p><p>EVM 영수증의 성공 뒤에도 주문 action은 지연 처리될 수 있습니다. 따라서 영수증만 보고 BTC 0.1개가 모두 체결됐다고 판단하지 않고 Core의 최종 체결을 다시 읽습니다.</p></div>
    <HyperCoreEvmViz />
    <CitationBlock source="Hyperliquid · Interacting with HyperCore" citeKey={7} href={`${DOCS}/for-developers/hyperevm/interacting-with-hypercore`}>CoreWriter 인코딩·지연·별도 Core 실행 기록. read precompile 설명에는 testnet 문구가 남아 있으므로 실제 네트워크·시스템 주소 지원을 별도 확인합니다.</CitationBlock>
    <p data-stage-bridge="source" className="text-sm text-muted-foreground">SDK의 반환과 Core의 결과가 다른 단계임을 확인했습니다. 같은 담보로 만기형 상품을 거래하면 무엇이 달라지는지 비교합니다.</p>
@@ -91,7 +91,7 @@ export default function HyperliquidArticle() {
   <section id="comparison" data-teach-level="6" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">9. HIP-4는 같은 주문장 위에서도 지급 구조가 다르다</h2>
    <Hip4PayoffViz />
-   <p>1,000 USDC 중 60을 써 Yes 100개를 개당 0.60에 산다고 합시다. 결과가 Yes면 100, No면 0을 받아 수수료 전 손익은+40 또는−60입니다. 나머지 940은 이 단순 사례에서 사용하지 않았습니다. 이는 BTC 0.1 무기한 계약의 5,000달러 노출과 다른 지급 구조입니다.</p>
+   <p>1,000 USDC 중 60을 써 Yes 100개를 개당 0.60에 산다고 합시다. 결과가 Yes면 100, No면 0을 받아 수수료 전 손익은 +40 또는 −60입니다. 나머지 940은 이 단순 사례에서 사용하지 않았습니다. 이는 BTC 0.1 무기한 계약의 5,000달러 노출과 다른 지급 구조입니다.</p>
    <SourceApplication source="Hyperliquid · HIP-4, Overview" excerpt="does not involve leverage or liquidations" application="Yes 100개를 60에 산 사례는 정한 범위의 결과 지급을 미리 담보합니다. 앞의 BTC 계약처럼 가격 손실이 유지 요구액을 넘겨 포지션을 청산하는 경로와 구별합니다. 담보가 충분하다는 사실은 Yes가 나올 가능성이나 60 회수를 보장하지 않습니다." />
    <p>HIP-4 문서는 Yes가 settleFraction, No가 1−settleFraction을 받는 구조와 둘을 합친 주문장을 설명합니다. 따라서 Yes 0.60 매수는 No 0.40 매도와 대응합니다. 이진 결과의 0·1 정산 외에 일반 범위 정산도 있으므로 상품의 실제 조건을 읽습니다.</p>
    <p>확인일 공식 개요에는 초기 메인넷 출시와 단계적 확대가 있고, 별도 deployer API에는 Testnet-only가 남아 있습니다. 수수료 개요의 초기 0 문구와 후속 수수료 문서도 구별해야 합니다. 이 글은 거래 원리를 설명하며 모든 배포 기능이 메인넷에서 활성화됐거나 계속 무료라고 단정하지 않습니다.</p>
@@ -106,7 +106,7 @@ export default function HyperliquidArticle() {
    <p>현금 회수에는 또 다른 절차가 남습니다. 출금 요청 뒤 발행자 인증과 도착지 처리가 끝났는지 확인해야 합니다. 주문 하나의 성공만으로 거래 화면의 잔액을 이미 회수한 돈으로 셀 수는 없습니다.</p>
    <p>공식 문서가 충돌하는 기능 상태는 확정된 하나의 결론으로 합치지 않았습니다. 위 링크의 확인일·네트워크와 실제 API 지원을 맞춰야 합니다. 더 일반적인 담보·청산 구조는 <Link className="underline" to="/finance/markets/forwards-and-futures">선물과 증거금</Link>에서 이어 읽을 수 있습니다.</p>
    <p data-stage-bridge="risk-checklist" className="text-sm text-muted-foreground">서명·체결·위험·자금 이동을 같은 주문의 기록으로 연결하면 어느 성공이 아직 남았는지 판단할 수 있습니다.</p>
-   <ReviewPrompts questions={["0.04를 taker, 0.06을 maker로 같은 50,000에 체결했다면 총수수료와 손익 전 잔액은 얼마인가요? (답: 3절)","유지 요구액 300일 때 계정 가치 278.65와200은 청산 과정에서 각각 무엇을 뜻하나요? (답: 7절)"]} />
+   <ReviewPrompts questions={["0.04를 taker, 0.06을 maker로 같은 50,000에 체결했다면 총수수료와 손익 전 잔액은 얼마인가요? (답: 3절)","유지 요구액 300일 때 계정 가치 278.65와 200은 청산 과정에서 각각 무엇을 뜻하나요? (답: 7절)"]} />
   </section>
  </article><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}} projectMetas={{"hyperliquid-python-sdk":{id:"hyperliquid-python-sdk",label:"공식 Python SDK · 2fdb18f",badgeClass:"border-sky-500 bg-sky-500/10 text-sky-700"}}} /></>;
 }

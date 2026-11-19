@@ -61,7 +61,7 @@ const data: WorldHistoryArticleData = {
   numericCase: { title: "곡물 100자루의 가정 장부", steps: [
     { label: "지방 행정", value: "30자루", detail: "창고와 관리 급료" },
     { label: "군사·도로·구휼", value: "60자루", detail: "25 + 20 + 15" },
-    { label: "손실", value: "10자루", detail: "운송·부패·누락" },
+    { label: "손실", value: "10자루", detail: "운송 중 손실·부패" },
   ] },
   terms: { title: "넓은 영토를 묶는 세 장치", items: [
     { term: "제국 물류", description: "명령·병력·세금·물자를 먼 거리에서 정한 시간 안에 옮기는 능력입니다.", example: "곡물 25자루를 변경 수비대로 보냅니다.", boundary: "도로가 있다는 사실만으로 실제 전달 속도를 알 수 없습니다." },

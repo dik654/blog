@@ -180,7 +180,7 @@ T_i&\in\underbrace{\mathbb R^{(k+1)\times d}}_{\text{Transformer 입력}}.
         </p>
         <p>
           고 cardinality embedding은 parameter와 unknown category 정책도
-          필요합니다. cutoff를 지키는 aggregation과 leakage- free encoding도
+          필요합니다. cutoff를 지키는 aggregation과 leakage-free encoding도
           모델 밖에 남습니다. “attention이 interaction을 알아서 찾는다”는 이유로
           미래 정보가 섞인 column을 허용할 수는 없습니다.
         </p>
@@ -197,8 +197,8 @@ T_i&\in\underbrace{\mathbb R^{(k+1)\times d}}_{\text{Transformer 입력}}.
           </p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Gorishniy 등은 논문마다 dataset과 protocol이 달라 비교가 불분명했던
-            문제를 제기했습니다. 그러고는 강한 ResNet baseline과 FT-
-            Transformer를 같은 benchmark에서 비교했습니다. 저자들의 결론 역시
+            문제를 제기했습니다. 그러고는 강한 ResNet baseline과
+            FT-Transformer를 같은 benchmark에서 비교했습니다. 저자들의 결론 역시
             GBDT와 딥러닝 중 보편적으로 우월한 해법은 없다는 것입니다.
             FT-Transformer가 보인 경쟁력도 모든 dataset·예산·serving 조건의
             승리를 뜻하지는 않습니다.

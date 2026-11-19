@@ -113,7 +113,7 @@ export default function SupplyDemandAndEquilibriumArticle() {
           </p>
 
           <p className="leading-7">
-            여섯을 드는 값이 작은 순서로 세우면 4, 5, 6, 7, 8, 9가 됩니다. 값이 7이면 4부터 7까지 네 개가 나오고 값이 6이면 세 개가 나옵니다.
+            여섯 개를 드는 값이 작은 순서로 세우면 4, 5, 6, 7, 8, 9가 됩니다. 값이 7이면 4부터 7까지 네 개가 나오고 값이 6이면 세 개가 나옵니다.
           </p>
 
           <p className="leading-7">

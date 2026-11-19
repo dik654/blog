@@ -173,7 +173,7 @@ insertLeaves(commitments);`}</code></pre>
 
       <section id="visibility" className="space-y-5 scroll-mt-20">
         <p className="text-xs font-bold text-primary">숨겨지는 것과 남는 것</p>
-        <h2 className="break-keep text-2xl font-bold">Proof의 zero knowledge와 전체 사용자의 익명성은 같은 주장 아닙니다</h2>
+        <h2 className="break-keep text-2xl font-bold">Proof의 zero knowledge와 전체 사용자의 익명성은 같은 주장이 아닙니다</h2>
         <RailgunVisibilityViz />
         <p>
           Private transfer는 token·amount·sender·recipient를 note와 ciphertext 안에 감추는 것이 목표입니다. 그러나 chain observer는 transaction 시각, gas와 calldata 크기를 볼 수 있습니다. Root·nullifiers·commitments와 제출한 Broadcaster 주소도 남습니다.

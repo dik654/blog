@@ -32,7 +32,7 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
         ]} />
       </LessonSection>
 
-      <LessonSection id="case" level="0" title="3. 사탕 100단위의 판매액을 네 몫으로 나눕니다" bridge="시장 장부에 보이는 100과 보이지 않는 손실을 분리했습니다. 가격이 비용을 모두 담는다는 가정을 깨 봅니다.">
+      <LessonSection id="case" level="0" title="3. 설탕 100단위의 판매액을 네 몫으로 나눕니다" bridge="시장 장부에 보이는 100과 보이지 않는 손실을 분리했습니다. 가격이 비용을 모두 담는다는 가정을 깨 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">설탕 판매액이 100이라고 합시다. 운송·정제·보험에 35, 도구와 최소한의 식량에 10, 제국 세금에 10이 들고 소유주의 잔여가 45라고 놓습니다. 실제 역사 평균이 아니라 장부 경계를 보기 위한 가정입니다.</p>
         </div>

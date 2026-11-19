@@ -63,7 +63,7 @@ export default function GatedActivationsArticle(){return <article className="spa
 <section id="gated-ffn" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">9. 원문 식 (6)의 세 행렬에 같은 숫자를 대응합니다</h2>
 <p>
             Hidden state x는 gate projection Wg와 value projection Wv로 갈라집니다. Gate branch에는 SiLU를 적용하고 value
-            branch와 coordinate-wise로 곱은 뒤 Wo로 model dimension에 되돌립니다. 곱셈은 같은 feature 위치의 두 부호 있는 값을 결합합니다. Gate branch의 SiLU 출력 자체는 0–1 확률이 아닙니다.
+            branch와 coordinate-wise로 곱한 뒤 Wo로 model dimension에 되돌립니다. 곱셈은 같은 feature 위치의 두 부호 있는 값을 결합합니다. Gate branch의 SiLU 출력 자체는 0–1 확률이 아닙니다.
           </p>
       <ExplainedFormula
         question="SwiGLU의 세 projection과 element-wise 곱은 각각 무슨 역할인가?"

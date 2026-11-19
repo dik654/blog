@@ -16,7 +16,7 @@ export default function Article() { return <div className="space-y-16"><section 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 값에 진행 좌표를 붙이고 가까운 관측을 대응시킵니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>모델을 갱신한 횟수, 처리한 양, 경과 시간을 따로 기록합니다. 평가값에 그 좌표와 계산법을 붙인 뒤 정한 목표량 근처의 관측을 고릅니다. 마지막에는 평가 자료와 모델 상태가 맞는지 확인합니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>진행 좌표를 따로 센다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>관측값과 평가 정의를 붙인다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>같은 목표량 근처를 고른다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>실제 위치 차이와 실행 근거를 보고한다</span></li></ol></section>
 
 <section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 100만토큰까지 필요한 갱신은 1000회와 250회입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            A는 한 번 갱신할 때 1,000토큰, B는 4,000토큰을 처리한다고 합시다.100만토큰에는 각각 1,000회와 250회가 필요합니다. 여기 토큰은 정해진 규칙으로 센 실제
+            A는 한 번 갱신할 때 1,000토큰, B는 4,000토큰을 처리한다고 합시다. 100만 토큰에는 각각 1,000회와 250회가 필요합니다. 여기 토큰은 정해진 규칙으로 센 실제
             학습 토큰이며 매 갱신의 양이 일정하다고 가정합니다. (가정)
           </p><p>
             하지만 정확히 100만에서 기록한 값은 없었습니다. A는 102만토큰·1,020회·120초에서 손실 0.42, B는 98만토큰·245회·150초에서 0.39를 남겼습니다.
@@ -102,13 +102,13 @@ export default function Article() { return <div className="space-y-16"><section 
           assumptions={[
             "하나의 이어지는 실행 경로에서 관측 순서와 좌표 의미를 보존합니다. 같은 update에 여러 평가가 있을 수 있습니다.",
             "Budget과 processed units는 같은 단위를 사용합니다.",
-            "복구로 과거 상태에서 다시 출발하면 실행 분기와 소비 자원을 별도로 기록합니다. 모델 진척과 실제 누적 소비량을 섞지 않습니다.","n_budget>0이며 p를0~1로 읽으려면0≤n_k≤n_budget이어야 합니다. 예산 초과는 감추지 않습니다.",
+            "복구로 과거 상태에서 다시 출발하면 실행 분기와 소비 자원을 별도로 기록합니다. 모델 진척과 실제 누적 소비량을 섞지 않습니다.","n_budget>0이며 p를 0~1로 읽으려면 0≤n_k≤n_budget이어야 합니다. 예산 초과는 감추지 않습니다.",
           ]}
-          interpretation="예산200만토큰이라면 A의102만은진행률0.51, B의98만은0.49입니다. A의갱신1020과 B의245, 시간120초와150초, 손실0.42와0.39를 각각 원래 좌표와 보존합니다."
+          interpretation="예산 200만 토큰이라면 A의 102만은 진행률 0.51, B의 98만은 0.49입니다. A의 갱신 1020과 B의 245, 시간 120초와 150초, 손실 0.42와 0.39를 각각 원래 좌표와 보존합니다."
         /></section>
 
 <section id="comparison-boundary" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 가장 가까운 점을 골라도 허용폭 검사는 남습니다</h2><ToleranceWindowViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            A에 90만의 0.43과 102만의 0.42가 있고 B에 98만의 0.39와 110만의 0.38이 있다고 합시다.100만과의 거리는 A에서 10만·2만, B에서
+            A에 90만의 0.43과 102만의 0.42가 있고 B에 98만의 0.39와 110만의 0.38이 있다고 합시다. 100만과의 거리는 A에서 10만·2만, B에서
             2만·10만이므로 102만과 98만을 고릅니다. 둘 다 허용 3만 안이고 관측 차이는 0.03입니다. (가정)
           </p><p>
             두 관측이 같은 거리이면 더 이른 점을 고르기로 미리 정할 수 있습니다. 목표에서 10만 떨어진 점밖에 없다면 가장 가깝더라도 이번 허용폭을 넘으므로 비교를 보류합니다. 선으로
@@ -168,7 +168,7 @@ export default function Article() { return <div className="space-y-16"><section 
             "관측 간격이 너무 크면 비교를 보류하거나 보간 가정을 명시합니다. 보간값은 실제 측정값이 아닙니다.","같은 거리이면 이른 관측을 고른다는 규칙을 미리 정합니다. 하드 자원 상한을 넘는 관측은 비교 집합에서 먼저 제외합니다.",
             "Evaluation dataset·checkpoint timing·metric reducer가 동일합니다.",
           ]}
-          interpretation="목표100만에서 A102만과B98만은 각각2만 차이로 허용3만 안입니다. 관측 손실 차이는0.42−0.39=0.03이며 정확히100만에서의 차이라고 단정하지 않습니다."
+          interpretation="목표 100만에서 A 102만과 B 98만은 각각 2만 차이로 허용 3만 안입니다. 관측 손실 차이는 0.42−0.39=0.03이며 정확히 100만에서의 차이라고 단정하지 않습니다."
         /></section>
 
 <section id="standard-wandb-tracking" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 실제 API는 사용할 가로축의 이름을 받습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>

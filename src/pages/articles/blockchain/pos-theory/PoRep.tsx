@@ -117,7 +117,7 @@ export default function PoRep() {
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           decentralized storage market에서 claimed storage를 공개 검증하는 것이
-          문제입니다. Proof-of-Replication과 Proof-of- Spacetime, market·power
+          문제입니다. Proof-of-Replication과 Proof-of-Spacetime, market·power
           accounting의 초기 설계를 제시할 뿐 현재 production proof
           constants·actors·penalties의 최종 규격으로 읽으면 안 됩니다.
         </p>

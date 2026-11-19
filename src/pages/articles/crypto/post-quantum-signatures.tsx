@@ -78,7 +78,7 @@ export default function Article() {
       <section id="names" data-teach-level="3" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">6 · ML-DSA는 다항식의 응답을 검증합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">FIPS204의 ML-DSA는 CRYSTALS-Dilithium 계열에서 표준화한 서명입니다. 성분은 계수가256개인 다항식(차수255 이하)이고 계수는 8380417로 나눈 값입니다. 공개 표와 비밀, 마스크, challenge는 서로 다른 분포와 범위를 갖습니다.</p>
+          <p className="leading-8">FIPS204의 ML-DSA는 CRYSTALS-Dilithium 계열에서 표준화한 서명입니다. 성분은 계수가 256개인 다항식(차수 255 이하)이고 계수는 8380417로 나눈 값입니다. 공개 표와 비밀, 마스크, challenge는 서로 다른 분포와 범위를 갖습니다.</p>
           <p className="leading-8">ML-DSA의 challenge는 작은 예의 정수1과 달리 제한된 개수의 ±1 계수를 가진 다항식입니다. 공개 키는 표를 복원할 씨앗과 반올림한 벡터를 담습니다. 서명은 challenge 요약·응답·힌트를 담습니다.</p>
           <p className="leading-8">서명자가 먼저 만든 약속의 높은 부분과 메시지 요약을 해시해 challenge를 만듭니다. 검증자는 서명으로 그 높은 부분을 재구성합니다. 원 논문에서 유래한 이름과 표준의 정확한 파라미터·인코딩을 함께 확인해야 합니다.</p>
         </div>
@@ -94,7 +94,7 @@ export default function Article() {
         </div>
         <BinBoundaryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">설명용으로4 단위 구간의 번호만 읽으면 [7,9]와 [6,9]는 모두 [1,2]입니다. 하지만 8이7로 바뀌면 구간2가1로 변합니다. 실제 표준의 분해·반올림·힌트는 이러한 경계 차이를 정해진 규칙으로 처리합니다. 이 임의의4 단위 규칙이 FIPS 알고리즘은 아닙니다.</p>
+          <p className="leading-8">설명용으로 4 단위 구간의 번호만 읽으면 [7,9]와 [6,9]는 모두 [1,2]입니다. 하지만 8이 7로 바뀌면 구간 2가 1로 변합니다. 실제 표준의 분해·반올림·힌트는 이러한 경계 차이를 정해진 규칙으로 처리합니다. 이 임의의 4 단위 규칙이 FIPS 알고리즘은 아닙니다.</p>
           <p className="leading-8">실제 검증은 응답 크기와 힌트를 먼저 확인하고 재구성한 높은 부분과 메시지에서 challenge를 다시 만듭니다. 단순히 Az−ct를 계산했다는 사실만으로 서명 검증이 끝나지 않습니다.</p>
         </div>
 
@@ -105,14 +105,14 @@ export default function Article() {
         <SignLoopViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">PQClean 고정본의 sign.c 135행은 새 y를 뽑고 140행은 Ay를 계산합니다. 높은 부분과 메시지 요약을 해시해 challenge를 만들고 158–162행에서 z=y+cs1을 구성합니다.</p>
-          <p className="leading-8">163행의 크기 검사에 걸리면 rej로 돌아갑니다. 작은 예에서 각 성분의 절댓값이4 미만이어야 한다고 가정하면 [3,3]은 통과하고 [4,3]은 실패합니다. 실제 코드는 GAMMA1−BETA와 다른 표준 상수를 사용합니다.</p>
+          <p className="leading-8">163행의 크기 검사에 걸리면 rej로 돌아갑니다. 작은 예에서 각 성분의 절댓값이 4 미만이어야 한다고 가정하면 [3,3]은 통과하고 [4,3]은 실패합니다. 실제 코드는 GAMMA1−BETA와 다른 표준 상수를 사용합니다.</p>
           <p className="leading-8">검증 함수는 266행부터 context 길이·서명 길이·인코딩·응답 크기를 확인합니다. 공개 키·context·메시지로 같은 요약을 만들고 303행의 뺄셈과 309행의 힌트 적용으로 높은 부분을 재구성합니다. 마지막에 challenge를 다시 계산해 비교합니다.</p>
           <p className="leading-8">원문의 곱셈과 뺄셈은 NTT 표현과 역변환 사이에 있습니다. 수학의 한 곱셈과 C 함수 호출 하나를 무조건 일대일로 읽지 않습니다. 이 글은 코드 경로를 확인했으며 해당 C 전체를 제품 환경에서 실행·인증한 결과가 아닙니다.</p>
         </div>
 <div className="flex flex-wrap gap-3"><CodeViewButton label="마스크·응답·거절·힌트 원문" onClick={() => sidebar.open("sign", codeRefs.sign)} /><CodeViewButton label="문맥·크기·challenge 검증 원문" onClick={() => sidebar.open("verify", codeRefs.verify)} /></div>
         <SourceApplication source="FIPS 204 · Algorithms 7–8, Table 2" excerpt="rejection sampling loop" application="작은 사례의 [4,3] 거절은 응답 크기 검사 역할을 보여 줍니다. 실제 임계값은 FIPS 파라미터와 코드의 GAMMA1−BETA입니다." />
         <CitationBlock source="FIPS 204 · Algorithms 7–8, Table 2" citeKey={1} href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf">ML-DSA 최종 표준. 서명·검증, domain context와 key/signature 크기를 대조합니다.</CitationBlock>
-        <CitationBlock source="PQClean · ML-DSA-44 sign.c · 0586a824" citeKey={2} href="https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_sign/ml-dsa-44/clean/sign.c">135–194행 생성과265–328행 검증을 보존했습니다. 난수·인코딩·일치 검사의 실제 순서를 읽습니다.</CitationBlock>
+        <CitationBlock source="PQClean · ML-DSA-44 sign.c · 0586a824" citeKey={2} href="https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_sign/ml-dsa-44/clean/sign.c">135–194행 생성과 265–328행 검증을 보존했습니다. 난수·인코딩·일치 검사의 실제 순서를 읽습니다.</CitationBlock>
         <AlgorithmBlock title="ML-DSA 서명 검증의 순서 (의사코드)" input={["메시지 M, context, 공개 키 pk, 서명 σ; 선택한 표준 파라미터"]} steps={[{"code": "길이·형식·응답 크기·힌트 형식을 검사", "note": "허용하지 않는 인코딩은 거절합니다."}, {"code": "μ ← 공개 키·context·M을 결속한 요약", "note": "다른 문맥이나 메시지로 바뀌면 같은 승인이 아닙니다."}, {"code": "w′ ← A·z − c·2^d·t1; hint로 높은 부분 재구성", "note": "mod17 사례에서는 [15,15]−[9,6]=[6,9]에 대응하는 역할입니다."}, {"code": "재구성한 높은 부분과 μ로 challenge를 다시 만들고 비교", "note": "응답 관계와 메시지 결속을 모두 만족해야 합니다."}]} output="서명 통과 또는 거절; 메시지 내용의 진위나 설치 정책은 별도" />
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">다른 수학적 가정에 기대는 해시 기반 서명과 비교합니다.</p>
       </section>
@@ -140,7 +140,7 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 마스크를 다른 challenge에 재사용하면 두 응답의 차이에서 마스크가 사라집니다. 장난감 식의 차이는 (c1−c2)s입니다. 실제 구현에서도 난수·내부 nonce·재시도 규칙을 임의로 바꾸지 않습니다.</p>
           <p className="leading-8">문서 서명은 내용이 사실이라는 증거가 아닙니다. 펌웨어는 올바르게 서명된 구버전일 수도 있으므로 하향 설치 방지와 키 폐기를 함께 검사합니다. 인증서·계정 복구·관리자 업그레이드가 예전 서명에 의존한다면 그 경로도 옮겨야 합니다.</p>
-          <p className="leading-8">2026-10-04 기준 FIPS204·205는 최종 표준입니다. Falcon 기반 FN-DSA와 HQC는 후속 표준화 중이며 최종 FIPS와 같은 상태로 나열하지 않습니다. FIPS204에는2026-07-31 정정 예정 안내가 있어 구현자는 최신 문서를 대조해야 합니다.</p>
+          <p className="leading-8">2026-10-04 기준 FIPS204·205는 최종 표준입니다. Falcon 기반 FN-DSA와 HQC는 후속 표준화 중이며 최종 FIPS와 같은 상태로 나열하지 않습니다. FIPS204에는 2026-07-31 정정 예정 안내가 있어 구현자는 최신 문서를 대조해야 합니다.</p>
           <p className="leading-8">일반 CPU에서 동작하는 양자내성 서명과 광학 장비로 비밀을 나누는 QKD는 역할이 다릅니다. 블록체인에서는 이 서명을 실제로 검증할 코드·비용·전송 한도와 복구 권한까지 확인해야 합니다.</p>
         </div>
 <p className="mt-4 leading-8"><Link className="underline" to="/cs/blockchain/pq-account">실제 ERC-4337 계정에서 검증·nonce·복구 권한 옮기기</Link></p>

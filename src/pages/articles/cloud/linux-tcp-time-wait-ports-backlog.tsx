@@ -224,7 +224,7 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
           <div className={prose}>
             <p>handshake 중인 연결이 서는 SYN 대기열도 있습니다. v6.12에서는 이 줄도 같은 backlog 값과 비교합니다. 차면 syncookies(기본 1)가 켜져 있으므로 연결 상태를 저장하지 않고 순서 번호에 정보를 담은 SYN-ACK로 답합니다. 이때 dmesg에 'Possible SYN flooding on port'가 찍힙니다.</p>
             <p>커널 문서는 cookie가 공격 대비책이지 정상 요청이 많은 서버를 버티게 하는 수단이 아니라고 적습니다. 공격이 아닌데 이 경고가 보이면 backlog와 accept 속도를 고치라는 뜻입니다. tcp_max_syn_backlog는 cookie를 끈 경우 마지막 4분의 1을 이미 아는 상대에게 남기는 데 쓰입니다.</p>
-            <p>handshake의 마지막 ACK가 도착한 순간 줄이 차 있으면 그 ACK가 버려집니다. 서버의 요청 소켓은 SYN 대기열에 남지만 클라이언트는 연결이 됐다고 믿지만 서버에는 소켓이 없는, 짧은 half-open 상태입니다. tcp_abort_on_overflow가 기본값 0이면 서버는 남아 있는 요청 소켓으로 SYN-ACK를 다시 보내 회복할 기회를 줍니다.</p>
+            <p>handshake의 마지막 ACK가 도착한 순간 줄이 차 있으면 그 ACK가 버려집니다. 서버의 요청 소켓은 SYN 대기열에 남고, 클라이언트는 연결이 됐다고 믿지만 서버에는 완성된 소켓이 없는, 짧은 half-open 상태입니다. tcp_abort_on_overflow가 기본값 0이면 서버는 남아 있는 요청 소켓으로 SYN-ACK를 다시 보내 회복할 기회를 줍니다.</p>
           </div>
           <AlgorithmBlock
             title="listener가 SYN을 받았을 때 (tcp_conn_request 앞부분의 의사코드)"

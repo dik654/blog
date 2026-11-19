@@ -158,7 +158,7 @@ export default function CompactPipeline() {
 [tool]      ToolResult(id="edit-7", output="written")
 [assistant] "이제 login test를 실행하겠습니다"
 
-guard 결과: boundary를 한 칸 앞당겨 ToolUse부터 보존`}
+guard 결과: boundary를 한 칸 뒤로 물려 ToolUse부터 보존`}
         </pre>
         <p>
           현재 guard가 보는 범위는 preserved 첫 message의 첫 block과 바로 앞

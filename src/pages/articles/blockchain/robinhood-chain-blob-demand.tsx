@@ -27,7 +27,7 @@ export default function RobinhoodChainBlobDemandArticle(){
 <p data-stage-bridge="case" className="text-sm text-muted-foreground">피크 18, 평균 10, 기간 기여 50%가 서로 다른 수라는 것을 같은 그림으로 확인합니다.</p></section>
 <section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">4. 네 블록을 같은 시간 창으로 묶는다</h2>
 <p>각 블록의 전체 개수와 A의 개수를 같은 행에 둡니다. A와 나머지를 더한 값이 전체와 같아야 하며, 네 행을 합친 분모 40을 유지해야 합니다. 한 블록의 비율과 네 블록 합계의 비율을 섞으면 기여가 과장됩니다.</p>
-<div className="overflow-x-auto"><table className="w-full min-w-[480px] text-sm"><caption className="mb-3 text-left">(가정) 전체 40개 중 A20개, 목표는 블록당 14</caption><thead><tr><th className="p-3 text-left">블록</th><th className="p-3">전체</th><th className="p-3">A</th><th className="p-3">나머지</th></tr></thead><tbody>{[[1,18,14,4],[2,10,2,8],[3,6,2,4],[4,6,2,4]].map(row=><tr key={row[0]} className="border-t">{row.map((n,j)=><td key={j} className="p-3 text-center">{n}</td>)}</tr>)}</tbody></table></div>
+<div className="overflow-x-auto"><table className="w-full min-w-[480px] text-sm"><caption className="mb-3 text-left">(가정) 전체 40개 중 A 20개, 목표는 블록당 14</caption><thead><tr><th className="p-3 text-left">블록</th><th className="p-3">전체</th><th className="p-3">A</th><th className="p-3">나머지</th></tr></thead><tbody>{[[1,18,14,4],[2,10,2,8],[3,6,2,4],[4,6,2,4]].map(row=><tr key={row[0]} className="border-t">{row.map((n,j)=><td key={j} className="p-3 text-center">{n}</td>)}</tr>)}</tbody></table></div>
 <p data-stage-bridge="picture" className="text-sm text-muted-foreground">개수와 분모가 보였습니다. 이제 순간 최고치가 왜 지속적인 부족을 뜻하지 않는지 살펴봅니다.</p></section>
 <section id="need" data-teach-level="2" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">5. 많이 사용한 순간만으로 공급 부족을 판단할 수 없다</h2>
 <p>18개가 든 뒤 10개가 든 블록에서는 목표보다 4개 적게 사용합니다. 일반적인 목표 차감 계산에서는 앞 블록의 초과 4개가 뒤 블록의 부족 4개로 상쇄됩니다. 네 블록의 평균 10은 목표 14보다 낮으므로 이 사례를 지속적인 초과 사용이라고 설명할 수 없습니다. 실제 비용이 떨어지는지는 실행 비용에 연동된 하한 조건까지 봐야 합니다.</p>
@@ -64,19 +64,19 @@ export default function RobinhoodChainBlobDemandArticle(){
 <p>EIP-8070은 2026-10-18 현재 Last Call 상태이며 검토 마감은 2026-11-01입니다. Glamsterdam의 meta EIP에서는 여전히 별도 Networking 목록에 있고 메인넷 적용 시각은 확정돼 있지 않습니다. 따라서 최종 표준이나 메인넷 배포로 읽으면 안 됩니다. 이 제안은 블록에 들어가기 전 자료를 모두 복제하던 부담을 일부 전체 제공자와 샘플을 받는 노드로 나눕니다.</p>
 <SparseAreaViz />
 <p>제안의 단순 모델에서 15% 확률로 전체를 받고 나머지 85%에서는 1/8을 받으면 평균은 0.15+0.85/8=0.25625입니다. 같은 18개 분량을 전체 수신 18 단위로 놓으면 평균 4.6125 단위입니다. 이는 확률적 payload 모델의 약 74.4% 감소이며, 개별 노드가 매번 그 양만 받거나 실제 전체 대역폭이 정확히 그만큼 감소한다는 측정 결과가 아닙니다.</p>
-<p>전체 제공자가 부족하거나 이웃 선택이 편향되면 자료를 얻는 가정이 깨집니다. 추가 표본·재요청·메시지·증명과 공격 방어 비용도 있습니다. BPO로max를 높여도 이 전송 최적화가 저절로 생기지 않고, 전송이 줄어도 target 상향 일정이 자동으로 결정되지는 않습니다.</p>
-<SourceApplication source="EIP-8070 · Abstract" excerpt="0.15 + 0.85/8 ~ 0.25" application="가정한 18개 분량에 0.25625를 곱해 4.6125를 얻습니다. 제안 모델의 평균 전송량이며 네 블록의 사용 개수 18·10·6·6 자체나 target14를 줄이는 식은 아닙니다." />
+<p>전체 제공자가 부족하거나 이웃 선택이 편향되면 자료를 얻는 가정이 깨집니다. 추가 표본·재요청·메시지·증명과 공격 방어 비용도 있습니다. BPO로 max를 높여도 이 전송 최적화가 저절로 생기지 않고, 전송이 줄어도 target 상향 일정이 자동으로 결정되지는 않습니다.</p>
+<SourceApplication source="EIP-8070 · Abstract" excerpt="0.15 + 0.85/8 ~ 0.25" application="가정한 18개 분량에 0.25625를 곱해 4.6125를 얻습니다. 제안 모델의 평균 전송량이며 네 블록의 사용 개수 18·10·6·6 자체나 target 14를 줄이는 식은 아닙니다." />
 <CitationBlock source="EIP-8070 · Sparse Blobpool" citeKey={4} href="https://eips.ethereum.org/EIPS/eip-8070">Last Call 상태와 2026-11-01 마감, 전체 제공 확률·custody 표본·공격 가정의 원문입니다.</CitationBlock>
 <CitationBlock source="EIP-7773 · Glamsterdam meta" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7773">2026-10-18 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.</CitationBlock>
 <p data-stage-bridge="bpo-sparse-blobpool" className="text-sm text-muted-foreground">18개 게시와 18개 분량의 전송 비용을 나눴습니다. 마지막으로 성장률과 시장 해석의 한계를 확인합니다.</p></section>
 <section id="reading-checklist" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 측정한 범위보다 큰 결론을 내리지 않는다</h2>
-<p>평균을 올린 체인이 확인돼도 그 수요가 유료 사용자·경제적 거래·지속 가능한 수익에서 나왔는지는 추가 자료가 필요합니다. 작은blob을 자주 올리는 방식과 충분히 채운blob을 드물게 올리는 방식도 개수만으로 같다고 평가할 수 없습니다.</p>
+<p>평균을 올린 체인이 확인돼도 그 수요가 유료 사용자·경제적 거래·지속 가능한 수익에서 나왔는지는 추가 자료가 필요합니다. 작은 blob을 자주 올리는 방식과 충분히 채운 blob을 드물게 올리는 방식도 개수만으로 같다고 평가할 수 없습니다.</p>
 <GrowthPathViz />
 <p>시작 평균 5에서 다섯 달 뒤 10이 됐다고 가정하면 월평균 복리 변화는 2의 5제곱근−1, 약 14.9%입니다. 이것은 가정한 두 끝점의 환산값입니다. 중간 변동이나 다음 다섯 달의 수요를 예측하지 않습니다.</p>
 <p>실제 사용량·활성 공급 설정·게시자 분류·측정 기간을 함께 제시해야 기여와 가격 압력을 검증할 수 있습니다. 본문 네 블록은 그 검증법을 익히는 예제이며 특정 날짜의 시장 기록을 대신하지 않습니다.</p>
 <div id="growth-rate" className="scroll-mt-20"><p>성장률은 같은 정의와 시간 간격의 두 집계값에만 적용합니다. 날짜별 원자료가 없으면 14.9%도 관측 결과로 인용하지 않습니다.</p></div>
 <p data-stage-bridge="reading-checklist" className="text-sm text-muted-foreground">피크·평균·기여를 같은 원자료에 묶어야 수요 변화와 일시적 변동을 구분할 수 있습니다.</p>
-<ReviewPrompts questions={["18·10·6·6의 평균은 얼마이며, 첫 블록 뒤 초과분4에는 어떤 하한 조건이 붙나요? (답: 3절·7절)","A가 14·2·2·2개를 올렸을 때 첫 블록의 비율과 기간 전체 비율이 다른 이유는 무엇인가요? (답: 3절·4절)"]}/>
+<ReviewPrompts questions={["18·10·6·6의 평균은 얼마이며, 첫 블록 뒤 초과분 4에는 어떤 하한 조건이 붙나요? (답: 3절·7절)","A가 14·2·2·2개를 올렸을 때 첫 블록의 비율과 기간 전체 비율이 다른 이유는 무엇인가요? (답: 3절·4절)"]}/>
 </section>
 </article><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}} projectMetas={{"go-ethereum":{id:"go-ethereum",label:"go-ethereum · c9a2bc7",badgeClass:"border-sky-500 bg-sky-500/10 text-sky-700"}}}/></>;
 }

@@ -42,7 +42,7 @@ export default function Article() {
 <p className="leading-8">원금 환산액은 1000억 원에서 1200억 원으로 200억 원 늘어납니다. 4%일 때 이자 400만 달러는 40억 원이지만 바뀐 조건의 600만 달러는 72억 원입니다. 원금 환산 증가와 매년 이자 증가를 따로 적어야 합니다.</p>
         </div>
 
-        <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">원금 부담 200억 원과 연 이자 증가 32억 원이 나왔습니다. 이 어떤 계약 조건이 두 변화를 만드는지 살핍니다.</p>
+        <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">원금 부담 200억 원과 연 이자 증가 32억 원이 나왔습니다. 어떤 계약 조건이 두 변화를 만드는지 살핍니다.</p>
       </section>
       <section id="picture" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 통화·만기·다시 정하는 날짜가 민감도를 만듭니다</h2>

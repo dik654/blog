@@ -264,7 +264,7 @@ export default function PtqCalibrationArticle() {
             "NaN·fallback은 saturation과 별도 집계합니다.",
             "낮은 saturation이 task quality를 보장하지 않습니다.",
           ]}
-          interpretation="전체 .01%여도 긴 한국어 slice의 layer 20이 4%라면 해당 표본 보강·higher precision bypass를 같은 validation에서 비교합니다."
+          interpretation="전체 0.01%여도 긴 한국어 slice의 layer 20이 4%라면 해당 표본 보강·higher precision bypass를 같은 validation에서 비교합니다."
         />
       </section>
       <section id="release" className="scroll-mt-20">

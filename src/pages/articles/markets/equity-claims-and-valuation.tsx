@@ -281,7 +281,7 @@ export default function EquityClaimsAndValuationArticle() {
           </p>
 
           <p className="leading-7">
-            닫힌 식은 편하지만 위험합니다. 분모가 &ldquo;요구 수익률 빼기 성장 률&rdquo;이라는 작은 수라서 두 숫자 중 하나만 조금 바꿔도 결과가 크게 달라지기 때문입니다.
+            닫힌 식은 편하지만 위험합니다. 분모가 &ldquo;요구 수익률 빼기 성장률&rdquo;이라는 작은 수라서 두 숫자 중 하나만 조금 바꿔도 결과가 크게 달라지기 때문입니다.
             이 민감도가 주식 가치평가를 어렵게 만드는 실질적인 이유입니다.
           </p>
         </div>

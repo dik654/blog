@@ -2,7 +2,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #coverage — ρ = (range 밖 원소 수) / (원소 수), ρ_worst = max over layer·slice.
- * 본문 해석: 전체 .01%여도 긴 한국어 slice의 layer 20이 4%.
+ * 본문 해석: 전체 0.01%여도 긴 한국어 slice의 layer 20이 4%.
  * 25개 중 1개(가정) = 4%. 두 숫자가 함께 성립하려면 그 칸의 원소는 전체의 0.01% / 4% = 0.25% 이하.
  */
 const CELL_N = 25;

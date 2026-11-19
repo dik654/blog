@@ -44,7 +44,7 @@ export const economicHistoryArticles: Article[] = [
     sections: [
       { id: "overview", title: "수출액이 늘었다는 말과 주민이 더 잘 살았다는 말은 다릅니다" },
       { id: "black-box", title: "토지·노동·상품·금융·권력의 흐름을 한 장부에 놓습니다" },
-      { id: "case", title: "사탕 100단위의 판매액을 네 몫으로 나눕니다" },
+      { id: "case", title: "설탕 100단위의 판매액을 네 몫으로 나눕니다" },
       { id: "picture", title: "시장 가격에 잡힌 비용과 강제로 떠넘긴 손실을 구분합니다" },
       { id: "need", title: "강제력은 싼 원료와 높은 이윤을 가능하게 한 생산 조건이었습니다" },
       { id: "names", title: "플랜테이션·노예제·수탈·상품망에 이름을 붙입니다" },

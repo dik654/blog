@@ -187,7 +187,7 @@ export default function ServingBenchmarkMethodologyArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Offered load 는 client 가 서버에 보내려는 요청의 도착률 λ 입니다. 서버가 실제로 처리한 throughput 과는 다른 양입니다. vLLM serving
+            Offered load 는 client 가 서버에 보내려는 요청의 도착률 λ 입니다. 서버가 실제로 처리한 throughput 과는 다른 양입니다.
             vLLM과 AIPerf의 request-rate 옵션이 이 값을 정합니다. 동시성으로 부하를 거는 닫힌
             방식은 요청이 끝나야 다음 요청을 보내므로 실제 도착률이 서버 속도에 묶입니다.
           </p>

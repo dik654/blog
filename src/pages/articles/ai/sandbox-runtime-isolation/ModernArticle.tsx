@@ -210,7 +210,7 @@ export default function SandboxRuntimeIsolationArticle() {
               ],
             },
             {
-              expression: String.raw`G_s\land G_c\land G_o`,
+              expression: String.raw`G_{\mathrm{security}}\land G_{\mathrm{compat}}\land G_{\mathrm{cost}}`,
               annotation: [
                 "독립 조건을 AND로 묶어",
                 "한 조건이라도 실패하면 후보에서 제외",

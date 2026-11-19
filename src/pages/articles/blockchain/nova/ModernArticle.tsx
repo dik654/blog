@@ -52,7 +52,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="relaxed-r1cs" data-teach-level="4" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">7. 곱을 전개하면 교차항이 왜 필요한지 드러납니다</h2>
-<p className="leading-8">두 원본 조건의 배율은u₁=u₂=1, 오차는 E₁=E₂=0입니다. 교차항 T는 3×5+2×4−1×10−1×12=1입니다. 섞는 숫자 r=2를 넣으면 u′=1+2=3, E′=0+2×1+4×0=2입니다. 입력 7과 14, 결과 15에 적용하면 13=13이 됩니다.</p>
+<p className="leading-8">두 원본 조건의 배율은 u₁=u₂=1, 오차는 E₁=E₂=0입니다. 교차항 T는 3×5+2×4−1×10−1×12=1입니다. 섞는 숫자 r=2를 넣으면 u′=1+2=3, E′=0+2×1+4×0=2입니다. 입력 7과 14, 결과 15에 적용하면 13=13이 됩니다.</p>
 <CrossTermAreaViz />
 <p className="leading-8">일반적으로 왼쪽 곱을 전개하면 원본 첫 곱, r배의 두 교차 곱, r²배의 둘째 곱이 나옵니다. 오른쪽 배율과 결과를 함께 전개했을 때의 교차항을 빼면 T가 남습니다. 따라서 E′=E₁+rT+r²E₂가 되어야 같은 형식이 유지됩니다.</p>
 <p className="leading-8">E′를 검증 없이 자유롭게 바꾸면 어떤 틀린 곱도 맞출 수 있습니다. 원래 값과 T의 commitment를 먼저 고정하고 그 뒤 r을 정해 새 commitment까지 같은 선형 조합으로 묶어야 합니다.</p>
@@ -61,7 +61,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="source" data-teach-level="5" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">8. 원문의 배율·오차 갱신이 같은 숫자를 보존합니다</h2>
-<p className="leading-8">Nova Construction1은 교차항을 먼저 commit하고 검증자의 r을 받은 뒤 새 u와 E를 계산합니다. 원문의 E←E₁+r·T+r²·E₂에(0,0,1,2)를 넣으면 2입니다. 원문의 u←u₁+r·u₂에는(1,1,2)를 넣어 3을 얻습니다.</p>
+<p className="leading-8">Nova Construction1은 교차항을 먼저 commit하고 검증자의 r을 받은 뒤 새 u와 E를 계산합니다. 원문의 E←E₁+r·T+r²·E₂에 (0,0,1,2)를 넣으면 2입니다. 원문의 u←u₁+r·u₂에는 (1,1,2)를 넣어 3을 얻습니다.</p>
 <p className="leading-8">정상 입력이 정상 출력으로 이어지는 완전성은 앞 절의 전개로 검산할 수 있습니다. 거짓 원본이 우연히 통과하는 위험을 제한하는 보안 분석에는 commitment의 binding과 무작위 질문 모델이 추가로 필요합니다. 이 작은 체 17은 실제 보안에 충분하지 않습니다.</p>
 <p className="leading-8">예를 들어 고정된 거짓 차이가 r의 차수 2 이하 다항식이라면 우연히 0이 되는 단순 상한은 2/17입니다. 처음부터 r=0만 쓰면 두 번째 원본이 아예 사라질 수 있습니다. 이 예는 질문의 필요성을 설명하며 Nova 전체 보안 정리의 대체물이 아닙니다.</p>
 <div id="paper-nova-source"><CitationBlock source="Nova §4.1, Construction1, PDF p.15" citeKey={1} href="https://eprint.iacr.org/2021/370.pdf"><p className="leading-8">원문: <q>E ← E₁ + r · T + r² · E₂</q></p><p className="leading-8">E₁=E₂=0,T=1,r=2이면 E=2이며 동시에 u=3으로 갱신해야 등식이 유지됩니다.</p></CitationBlock></div>
@@ -69,7 +69,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="compression-security" data-teach-level="6" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">9. 폴딩 후 남은 확인 과제를 마지막 증거로 만듭니다</h2>
-<p className="leading-8">원 논문은 누적 조건의 만족을 더 짧은 영지식 증명으로 압축하는 별도 구성을 둡니다. 앞 절에서 얻은u′=3,E′=2는 “이미 검사가 끝난 증거”가 아니라 계속 유지할 관계의 일부입니다. 마지막 검증자는 그 누적 관계가 올바른 증인으로 만족됨을 확인해야 합니다.</p>
+<p className="leading-8">원 논문은 누적 조건의 만족을 더 짧은 영지식 증명으로 압축하는 별도 구성을 둡니다. 앞 절에서 얻은 u′=3, E′=2는 “이미 검사가 끝난 증거”가 아니라 계속 유지할 관계의 일부입니다. 마지막 검증자는 그 누적 관계가 올바른 증인으로 만족됨을 확인해야 합니다.</p>
 <p className="leading-8">논문의 복잡도에서 반복 횟수와 한 단계 크기는 서로 다른 변수입니다. 반복을 많이 해도 최종 크기가 단계 수에 비례해 늘지 않는다는 주장이, 각 단계가 큰 경우의 생성 메모리까지 작다는 뜻은 아닙니다. 폴딩 시간과 마지막 압축 시간·증거 크기·검증 시간을 따로 봅니다.</p>
 <p className="leading-8">원 논문에는 hiding commitment와 가정 아래 영지식인 폴딩 구성이 있지만 값만 선형 결합한 산술 예 자체가 영지식은 아닙니다. 전체 IVC와 마지막 공개 증거의 개인정보 보장은 사용하는 구성과 무작위화에 맞춰 확인해야 합니다.</p>
 <div id="source-nova-compression"><CitationBlock source="Nova §1.2, Theorem2, PDF p.4" citeKey={1} href="https://eprint.iacr.org/2021/370.pdf"><p className="leading-8">원문: <q>Succinct zero-knowledge proofs of valid IVC proofs</q></p><p className="leading-8">앞의 u′=3,E′=2가 속한 누적 관계를 만족하는 증인이 있다는 증명을 압축하는 단계입니다. 폴딩의 숫자 계산만으로 최종 proof가 완성되지는 않습니다.</p></CitationBlock></div><div id="paper-nova"><CitationBlock source="Nova: Recursive Zero-Knowledge Arguments from Folding Schemes" citeKey={2} href="https://eprint.iacr.org/2021/370.pdf"><p className="leading-8"><strong>문제:</strong> 오래 이어지는 계산을 매 단계 효율적으로 갱신하며 검증합니다.</p><p className="leading-8"><strong>기여:</strong> 완화된 R1CS의 폴딩으로 IVC를 구성하고 압축을 별도로 연결합니다.</p><p className="leading-8"><strong>전제:</strong> 동형 commitment·곡선·무작위 오라클 등 원문의 조건을 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 원 논문의 구성과 저자 실험 환경에서의 평가입니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 특정 구현의 모든 회로·재시작 기능·양자 안전성을 보장하지는 않습니다.</p></CitationBlock></div>

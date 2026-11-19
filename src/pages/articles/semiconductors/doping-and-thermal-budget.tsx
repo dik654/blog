@@ -30,7 +30,7 @@ return <div className="space-y-16">
 
 <section id="picture" data-teach-level="1" className="scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">4. 같은 원자 수가 더 넓은 깊이에 나뉩니다</h2>
-<NumericPath title="같은 양을 두 번 가열하기" steps={[{"label": "시작", "value": "표면 근처에 모임", "detail": "아직 깊은 곳에는 적습니다."}, {"label": "첫 가열", "value": "폭 척도120 nm", "detail": "표면의 꼭대기가 낮아지고 안쪽 농도가 늘어납니다."}, {"label": "둘째 가열", "value": "폭 척도약208 nm", "detail": "새 원자 없이도 분포가 더 넓어집니다."}]} /><ProfileSpreadViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+<NumericPath title="같은 양을 두 번 가열하기" steps={[{"label": "시작", "value": "표면 근처에 모임", "detail": "아직 깊은 곳에는 적습니다."}, {"label": "첫 가열", "value": "폭 척도 120 nm", "detail": "표면의 꼭대기가 낮아지고 안쪽 농도가 늘어납니다."}, {"label": "둘째 가열", "value": "폭 척도 약 208 nm", "detail": "새 원자 없이도 분포가 더 넓어집니다."}]} /><ProfileSpreadViz /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             깊이를 가로축으로 두고 그 깊이의 농도를 세로축으로 그리면 곡선 아래 넓이가 넣은 총량에 대응합니다. 같은 양을 더 깊게 나누면 표면의 높이가 내려갑니다. 낮아진 꼭대기만 보고
             원자가 사라졌다고 판단하지 않습니다.
           </p><p className="leading-7">특정한 깊이를 고정해서 보면 변화가 다를 수 있습니다. 처음에는 거의 도달하지 못했던 곳으로 원자가 들어오면 그곳의 농도는 올라갑니다. 표면과 깊은 곳의 농도를 함께 읽어야 합니다.</p></div>

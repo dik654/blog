@@ -7,20 +7,20 @@ const flows:Record<Mode,{title:string;scenes:{label:string;input:string;calculat
     "scenes": [
       {
         "label": "풀 전체",
-        "input": "공급10000 / 총부채8000",
-        "calculation": "남은 자금2000",
+        "input": "공급 10000 / 총부채 8000",
+        "calculation": "남은 자금 2000",
         "result": "총부채에는C의 7000과 다른 계정의 1000이 포함됩니다."
       },
       {
         "label": "C의 담보",
-        "input": "100개 × 가격100달러",
-        "calculation": "담보10000 / 부채7000",
-        "result": "이 담보는 빌려주는 풀에 남은 현금2000과 다른 자산입니다."
+        "input": "100개 × 가격 100달러",
+        "calculation": "담보 10000 / 부채 7000",
+        "result": "이 담보는 빌려주는 풀에 남은 현금 2000과 다른 자산입니다."
       },
       {
         "label": "가격 하락",
-        "input": "100개 × 가격80달러",
-        "calculation": "담보8000 / 부채7000",
+        "input": "100개 × 가격 80달러",
+        "calculation": "담보 8000 / 부채 7000",
         "result": "이자가 붙지 않은 시점으로 고정하면 청산 기준 가치 6400이 부채보다 작습니다."
       }
     ]
@@ -30,36 +30,36 @@ const flows:Record<Mode,{title:string;scenes:{label:string;input:string;calculat
     "scenes": [
       {
         "label": "저장",
-        "input": "공급 단위1000 / 부채 단위7000",
+        "input": "공급 단위 1000 / 부채 단위 7000",
         "calculation": "각자 자신의 계수 사용",
         "result": "사용자별 저장단위에 reserve의 공통 계수를 적용합니다."
       },
       {
         "label": "공급 조회",
-        "input": "공급 계수1.05",
+        "input": "공급 계수 1.05",
         "calculation": "1000 × 1.05 = 1050",
         "result": "원문의 getATokenBalance는 최소 단위에서 내립니다."
       },
       {
         "label": "부채 조회",
-        "input": "차입 계수1.08",
+        "input": "차입 계수 1.08",
         "calculation": "7000 × 1.08 = 7560",
         "result": "부채 조회는 올립니다. 이 예에서는 두 곱이 모두 정확히 나누어떨어집니다."
       }
     ]
   },
   "rate": {
-    "title": "사용률80%의 두 이율",
+    "title": "사용률 80%의 두 이율",
     "scenes": [
       {
         "label": "사용률",
-        "input": "가용2000 / 부채8000",
+        "input": "가용 2000 / 부채 8000",
         "calculation": "8000 / 10000 = 80%",
         "result": "설명용 같은 설정에서 부채가 늘수록 남은 자금이 줄어듭니다."
       },
       {
         "label": "차입 이율",
-        "input": "기본2% + 첫 구간4%",
+        "input": "기본 2% + 첫 구간 4%",
         "calculation": "6%",
         "result": "정확히 기준 80%에서는 else 분기를 씁니다."
       },
@@ -76,19 +76,19 @@ const flows:Record<Mode,{title:string;scenes:{label:string;input:string;calculat
     "scenes": [
       {
         "label": "하락 전",
-        "input": "담보10000 × 80%",
+        "input": "담보 10000 × 80%",
         "calculation": "8000 / 7000 ≈ 1.143",
         "result": "새 차입 한도 75%와 청산 판단 80%를 구분합니다."
       },
       {
         "label": "하락 후",
-        "input": "담보8000 × 80%",
+        "input": "담보 8000 × 80%",
         "calculation": "6400 / 7000 ≈ 0.914",
         "result": "HF가 1 미만이지만 실제 청산 호출의 나머지 조건도 확인합니다."
       },
       {
         "label": "1000 상환",
-        "input": "담보차감1050 / 부채감소1000",
+        "input": "담보차감 1050 / 부채감소 1000",
         "calculation": "6950 × 80% / 6000 ≈ 0.927",
         "result": "보상 5%의 예입니다. 일부 청산이 끝나도 HF가 1보다 작을 수 있습니다."
       }
@@ -99,8 +99,8 @@ const flows:Record<Mode,{title:string;scenes:{label:string;input:string;calculat
     "scenes": [
       {
         "label": "일반 설정",
-        "input": "담보10000 / LTV75%",
-        "calculation": "차입 후보7000 ≤ 7500",
+        "input": "담보 10000 / LTV75%",
+        "calculation": "차입 후보 7000 ≤ 7500",
         "result": "현재 자산과 계정에 이 기본 설정이 적용된다고 가정했습니다."
       },
       {

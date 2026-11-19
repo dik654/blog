@@ -22,7 +22,7 @@ export default function WhenDLWins() {
         </p>
         <p>
           반대로 stable vocabulary의 고 cardinality category에서 embedding을
-          재사용하거나, image·text·event sequence와 end- to-end로 결합하거나,
+          재사용하거나, image·text·event sequence와 end-to-end로 결합하거나,
           같은 schema의 많은 unlabeled row로 pretraining할 수 있다면 neural
           representation을 시험할 이유가 생깁니다. 다만 그렇게 얻는 것은 시험해
           볼 후보 하나입니다. 승리는 그다음 문제입니다.

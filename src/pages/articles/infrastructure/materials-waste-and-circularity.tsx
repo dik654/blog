@@ -68,7 +68,7 @@ export default function Article() {
         <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">회수량에 품질과 수요 조건을 더했습니다. 세 비율과 책임에 이름을 붙입니다.</p>
       </section>
       <section id="names" data-teach-level="3" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">수거율·회수 수율·생산자 책임을 구분합니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">수거율·처리 수율·생산자 책임을 구분합니다</h2>
         <RatioDenominatorViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">

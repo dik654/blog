@@ -127,7 +127,7 @@ export default function Checkpoint() {
           atomic rename합니다. Distributed run에서는 저장 owner와 barrier를
           정합니다. 신뢰할 수 없는 pickle checkpoint는 임의 code 실행 위험이
           있으므로 받지 않으며, 가능한 경우 <code>weights_only=True</code>와
-          명시적인
+          명시적인{" "}
           <code>state_dict</code> schema를 사용합니다.
         </p>
       </div>

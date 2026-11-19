@@ -28401,7 +28401,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "연습 표본으로 만든 자가 실제 traffic에서도 넘치지 않는지 구간별로 봅니다.",
         workedExample:
-          "전체 .01%여도 긴 한국어 layer 20이 4%면 worst slice는 실패 후보입니다.",
+          "전체 0.01%여도 긴 한국어 layer 20이 4%면 worst slice는 실패 후보입니다.",
         boundary: "낮은 saturation만으로 task quality를 보장하지 않습니다.",
       },
       {
@@ -28554,7 +28554,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         level: "basic",
-        question: "전체 .01%·특정 slice 4%를 어떻게 해석할지 설명하세요.",
+        question: "전체 0.01%·특정 slice 4%를 어떻게 해석할지 설명하세요.",
         answerChecklist: [
           "average hides",
           "worst slice",

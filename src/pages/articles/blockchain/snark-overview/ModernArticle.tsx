@@ -68,8 +68,8 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="comparison" data-teach-level="6" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">9. 증거가 새로 주는 정보와 이미 공개된 정보를 나눕니다</h2>
-<p className="leading-8">같은 논문은 영지식에서 명제의 참이라는 사실 외의 추가 정보가 새지 않는다고 정의합니다. 3과 12로부터 4가 결정되는 사례에서는  4를 알 수 있다는 것 자체가 증거의 정보 유출은 아닙니다. 공개 입력을 어떻게 정할지는 애플리케이션이 먼저 결정해야 합니다.</p>
-<p className="leading-8">개인 값이 비밀이어야 한다면 공개값만으로 그 값이 바로 결정되는 문제를 쓰지 않아야 합니다. 예를 들어 특정 공개 암호값의 생성에 쓰인 비밀 수를 안다는 관계에서는  공개값에서 그 수를 찾기 어렵다는 별도 가정이 필요합니다. 그 구조는 <a href="/cs/crypto/zk-theory#sigma">작은 군의 응답 예제</a>에서 계산합니다.</p>
+<p className="leading-8">같은 논문은 영지식에서 명제의 참이라는 사실 외의 추가 정보가 새지 않는다고 정의합니다. 3과 12로부터 4가 결정되는 사례에서는 4를 알 수 있다는 것 자체가 증거의 정보 유출은 아닙니다. 공개 입력을 어떻게 정할지는 애플리케이션이 먼저 결정해야 합니다.</p>
+<p className="leading-8">개인 값이 비밀이어야 한다면 공개값만으로 그 값이 바로 결정되는 문제를 쓰지 않아야 합니다. 예를 들어 특정 공개 암호값의 생성에 쓰인 비밀 수를 안다는 관계에서는 공개값에서 그 수를 찾기 어렵다는 별도 가정이 필요합니다. 그 구조는 <a href="/cs/crypto/zk-theory#sigma">작은 군의 응답 예제</a>에서 계산합니다.</p>
 <div id="source-groth16-zk"><CitationBlock source="Groth · §2.2, PDF p.8 · Perfect zero-knowledge" citeKey={1} href="https://eprint.iacr.org/2016/260.pdf"><p className="leading-8">원문: <q>besides the truth of the statement</q></p><p className="leading-8">공개 (3,12)가 이미 알려 주는 4와 proof가 추가로 누설하는 정보를 구분합니다.</p></CitationBlock></div><div id="paper-snarks-for-c"><CitationBlock source="Ben-Sasson et al. · SNARKs for C (2013)" citeKey={2} href="https://eprint.iacr.org/2013/507"><p className="leading-8"><strong>문제:</strong> 일반 프로그램 실행을 짧게 공개 검증하려는 문제입니다.</p><p className="leading-8"><strong>기여:</strong> TinyRAM 실행을 대수 조건과 짧은 증명으로 연결합니다.</p><p className="leading-8"><strong>전제:</strong> 유계 실행과 컴파일러, 해당 setup·암호 가정을 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 당시 구현과 논문의 프로그램 평가 범위입니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 현재 모든 SNARK의 동일 비용이나 임의 프로그램의 올바른 제약 생성을 보장하지 않습니다.</p></CitationBlock></div>
 <p data-stage-bridge="comparison" className="text-sm leading-7 text-muted-foreground">비밀성을 공개 정보와 비교해 읽었습니다. 마지막으로 비용과 보안 가정을 함께 선택합니다.</p>
 </section>

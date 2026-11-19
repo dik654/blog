@@ -386,7 +386,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
           question="Sampling rate를 낮추면 드문 실패를 놓칠 위험은 얼마나 커지나요?"
           idea="실패율이 낮은 사건일수록 표본에 한 번도 걸리지 않을 확률이 커집니다. 요청 N개 중 sampling rate r로 뽑았을 때, 발생률 p인 실패가 표본에 한 번도 안 걸릴 확률은 기하적으로 줄어듭니다."
           formula={String.raw`P(\text{놓침})=(1-p\,r)^{N}`}
-          annotatedFormula={String.raw`P(\text{놓침})=\underbrace{(1-\underbrace{p\,r}_{\text{한 요청이 실패이면서 표본에 걸힐 확률}})^{N}}_{\text{N개 요청 모두에서 놓칠 확률}}`}
+          annotatedFormula={String.raw`P(\text{놓침})=\underbrace{(1-\underbrace{p\,r}_{\text{한 요청이 실패이면서 표본에 걸릴 확률}})^{N}}_{\text{N개 요청 모두에서 놓칠 확률}}`}
           operations={[
             { expression: String.raw`p\,r`, annotation: ["실패 발생률 p와 sampling rate r을 곱해", "한 요청이 표본에 걸리는 실패일 확률을 만듭니다."] },
             { expression: String.raw`(1-p\,r)^{N}`, annotation: ["한 번도 안 걸릴 확률을", "N개 요청에 걸쳐 반복 곱합니다."] },

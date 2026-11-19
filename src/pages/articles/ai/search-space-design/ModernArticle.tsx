@@ -12,12 +12,12 @@ export default function Article() { return <div className="space-y-16"><section 
             학습률 범위를 0.00001부터 0.1까지 놓습니다. 두 끝의 숫자를 보통 평균내면 0.050005입니다. 그러나 10배 커지는 구간 네 개를 같은 비중으로 보고 중간 위치를
             고르면 0.001입니다. 두 값 모두 범위 안이지만 시험을 배분하는 방식이 다릅니다. (가정)
           </p><p>
-            같은 규칙으로 만든 후보 P는 SGD와 momentum0.9를 쓰며 예상 메모리는 18GB입니다. 후보 Q는 예상 22GB입니다. 허용 상한 20GB에서 P는 사전 검사를
+            같은 규칙으로 만든 후보 P는 SGD와 momentum 0.9를 쓰며 예상 메모리는 18GB입니다. 후보 Q는 예상 22GB입니다. 허용 상한 20GB에서 P는 사전 검사를
             통과하고 Q는 제외합니다. 이 예상값은 실제 측정치가 아닙니다. (가정)
           </p></div></section>
 
 <section id="inside-space" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 한 숫자에도 형태·범위·비중·조건을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>학습률은 양의 실수, 깊이는 정수, 학습 방법은 정해진 목록 중 선택이라고 적습니다. 깊이의 실수를 뽑아 단순 반올림하면 끝값의 확률이 달라질 수 있으므로 정수 생성 규칙을 따로 둡니다.</p><p>
-            SGD를 고를 때만 momentum을 생성하도록 정했다면 다른 분기에는 그 항목이 없습니다. 존재하지 않는 값을 0으로 채우면 실제 momentum0을 선택한 경우와 구별하기
+            SGD를 고를 때만 momentum을 생성하도록 정했다면 다른 분기에는 그 항목이 없습니다. 존재하지 않는 값을 0으로 채우면 실제 momentum 0을 선택한 경우와 구별하기
             어렵습니다. (가정)
           </p></div></section>
 
@@ -29,7 +29,7 @@ export default function Article() { return <div className="space-y-16"><section 
 <section id="space-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 값의 형태와 좌표와 존재 조건에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>값이 정수·실수·목록 중 어느 것인지가 type입니다. 곱셈 비율을 고르게 보려고 로그 좌표를 쓰는 것이 log scale이고 상위 선택에 따라 하위 값을 여는 규칙이 conditional space입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Log-uniform", "description": "로그 좌표에서 같은 길이 구간에 같은 확률을 주는 분포입니다.", "boundary": "로그 축을 쓰는 모든 탐색기가 균등 추첨을 하는 것은 아닙니다."}, {"term": "Hard constraint", "description": "반드시 만족해야 하는 조합·자원 규칙입니다.", "boundary": "예상 메모리의 통과와 실제 실행 중 한도 준수는 구별합니다."}, {"term": "Search-space revision", "description": "값의 형태·범위·분기·제약을 고정한 개정 번호입니다.", "boundary": "범위를 바꾸면 이전 후보들이 나온 분포도 함께 기록합니다."}]} /></section>
 
 <section id="scale" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 로그 좌표의 절반을 원래 크기로 돌립니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            10을 밑으로 쓰면 두 끝의 좌표는−5와−1입니다. 상대 위치u=0.5를 넣으면−5+0.5×4=−3이고 원래 단위로 돌아온 값은 10⁻³=0.001입니다. 자연로그와 exp를
+            10을 밑으로 쓰면 두 끝의 좌표는 −5와 −1입니다. 상대 위치u=0.5를 넣으면 −5+0.5×4=−3이고 원래 단위로 돌아온 값은 10⁻³=0.001입니다. 자연로그와 exp를
             써도 같은 값을 얻습니다. (가정)
           </p><p>
             네 자릿수 구간은 모두 같은 로그 길이이므로 균등 추첨에서 각각 25%입니다. 이 계산은 양의 범위와 균등 로그 추첨이라는 가정에 의존합니다. 0과 음수에는 같은 로그 변환을
@@ -95,7 +95,7 @@ export default function Article() { return <div className="space-y-16"><section 
         /></section>
 
 <section id="conditional-space" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 활성 분기와 예상 메모리를 모두 통과해야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            P는 SGD에 필요한 momentum이 있으므로 분기 검사 1,18≤20이므로 자원 검사 1입니다. 두 값을 곱하면 1입니다. Q의 분기 구성이 맞아도 22≤20은 거짓이므로
+            P는 SGD에 필요한 momentum이 있으므로 분기 검사가 1이고, 18≤20이므로 자원 검사도 1입니다. 두 값을 곱하면 1입니다. Q의 분기 구성이 맞아도 22≤20은 거짓이므로
             1×0=0으로 제외됩니다. (가정)
           </p><p>AdamW를 고르는 분기라면 이 예에서는 beta 값처럼 그 방법이 사용하는 항목만 생성합니다. 라이브러리가 허용하는 전체 인자와 이번 탐색에서 바꿀 인자는 다를 수 있으므로 실제 실행 설정도 따로 보존합니다.</p></div><ExplainedFormula
           question="Branch와 memory limit을 모두 만족하는 후보 집합은 어떻게 만드나요?"

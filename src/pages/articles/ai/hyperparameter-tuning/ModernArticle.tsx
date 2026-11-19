@@ -97,14 +97,14 @@ export default function Article() { return <div className="space-y-16"><section 
             "Candidate 수가 늘면 best validation score의 우연한 낙관도 커질 수 있습니다.",
             "Outer score를 본 뒤 변경하면 새 독립 평가가 필요합니다.","A_T는 비용을 쓴 전체 실행이고 S_T는 그중 동일 계약의 유효 점수가 있는 후보 집합입니다. 재시도 비용도 합산합니다.","GPU분처럼 합할 수 있는 자원 예산 T를 사용합니다. 벽시계 한도와 후보별 학습량은 별도 제약입니다.",
           ]}
-          interpretation="A/B/C를 각10 GPU분으로 유효하게 평가하면 누적30이고 S_T={A,B,C}입니다. 손실0.24·0.20·0.22에서 B를 고른 뒤 별도 독립 평가0.23을 보고합니다."
+          interpretation="A/B/C를 각 10 GPU분으로 유효하게 평가하면 누적30이고 S_T={A,B,C}입니다. 손실 0.24·0.20·0.22에서 B를 고른 뒤 별도 독립 평가 0.23을 보고합니다."
         /></section>
 
 <section id="trial-budget" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 좋은 영역을 놓칠 확률에서 탐색 횟수를 계산합니다</h2><HitProbabilityViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             각 무작위 추첨이 목표를 만족하는 영역에 들어갈 확률을 0.05라고 가정합니다. 한 번 놓칠 확률은 0.95입니다. 같은 분포에서 독립적으로 세 번 뽑으면 모두 놓칠 확률은
             0.95³이고 한 번 이상 맞힐 확률은 1−0.95³=0.142625입니다. (가정)
           </p><p>
-            같은 가정으로 20회면 약 64.15%,60회면 약 95.39%입니다. 실제 좋은 영역의 크기를 알고 있다는 뜻은 아닙니다. 앞 결과에 따라 다음 후보를 바꾸는 탐색에는 고정된
+            같은 가정으로 20회면 약 64.15%, 60회면 약 95.39%입니다. 실제 좋은 영역의 크기를 알고 있다는 뜻은 아닙니다. 앞 결과에 따라 다음 후보를 바꾸는 탐색에는 고정된
             0.05와 독립성 가정을 그대로 적용할 수 없습니다.
           </p></div><ExplainedFormula
           question="한 trial이 좋은 영역을 만날 확률이 p일 때 N회 중 한 번 이상 성공할 확률은 얼마인가요?"
