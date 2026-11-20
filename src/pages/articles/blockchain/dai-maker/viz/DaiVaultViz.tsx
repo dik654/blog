@@ -48,7 +48,8 @@ const SCENES = [
     state: "수수료만으로 여유 감소",
   },
   {
-    title: "Oracle 가치가 120달러로 내려가면 같은 금고의 여유가 더 줄어듭니다",
+    title:
+      "Oracle 가치가 120달러(가정)로 내려가면 같은 금고의 여유가 더 줄어듭니다",
     detail:
       "현재 비율은 약 114.29%입니다. 청산 여부는 이 숫자 하나가 아니라 해당 ilk의 spot·liquidation parameter와 최신 oracle 상태로 판단합니다.",
     collateral: "$120",
@@ -61,7 +62,7 @@ const SCENES = [
     title:
       "Unsafe 판정이 나면 Dog가 debt와 담보를 떼어 Clipper 경매로 넘깁니다",
     detail:
-      "판정, 경매 시작, 담보 판매와 bad debt 해소는 서로 다른 상태입니다. 경매가 시작됐다고 부채가 모두 회수됐다고 기록하지 않습니다.",
+      "판정, 경매 시작, 담보 판매와 bad debt 해소는 서로 다른 상태입니다. 경매가 시작됐다고 부채가 모두 회수됐다고 기록하지 않습니다. 시장 혼잡이나 keeper 실패로 경매가 늦어지면 이 대기 상태가 길어집니다.",
     collateral: "auction lot",
     art: "Vault에서 감소",
     debt: "auction target",
@@ -104,7 +105,7 @@ export default function DaiVaultViz() {
       eyebrow="담보 150달러 · DAI 부채 100의 시간 흐름"
       title="DAI는 담보를 잠그고 꺼낸 부채이며, 시간이 지나면 담보와 빚이 서로 다르게 움직입니다"
       description="한 Vault가 담보를 넣고 DAI를 만든 뒤, 수수료와 가격 하락을 거쳐 청산 판단에 도달하는 과정을 따라갑니다. PSM은 이 금고와 다른 peg 통로로 마지막에 분리합니다."
-      note="150달러·100 DAI·rate 1.05는 계산을 위한 예시입니다. 실제 liquidation ratio, oracle, fee와 debt ceiling은 collateral type과 배포 시점에서 읽어야 합니다."
+      note="150달러·100 DAI·rate 1.05는 계산을 위한 예시이고, oracle 가치 120달러는 가격 하락을 보이기 위한 가정입니다. 실제 liquidation ratio, oracle, fee와 debt ceiling은 collateral type과 배포 시점에서 읽어야 합니다."
       documentFlow
       canvasClassName="p-3 sm:p-6"
     >

@@ -108,8 +108,8 @@ return <div className="space-y-16">
 <h2 className="mb-6 text-2xl font-bold">9. 원문의 국소 전하를 적분해 0.18 mA를 얻습니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
-            앞 절에서 드레인 끝의 전자 층이 잘록해지는 상태를
-            <strong>핀치오프</strong>라고 부릅니다. 이름 그대로 채널 끝이
+            앞 절에서 본, 드레인 끝의 전자 층이 잘록해지는 상태를
+            이제부터 <strong>핀치오프</strong>라고 부릅니다. 이름 그대로 채널 끝이
             좁아지지만 전자가 드레인에 닿는 길이 완전히 막힌 것은 아닙니다.
           </p>
           <p className="leading-7">

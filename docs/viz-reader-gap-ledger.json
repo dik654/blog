@@ -13409,5 +13409,2227 @@
 "193": "typography",
 "194": "internal-contradiction"
 }
+},
+"readabilityPass": {
+"date": "2026-11-21",
+"articles": 270,
+"notes": 334,
+"verdicts": {
+"institutions/how-to-read-a-country": [
+{
+"id": 29,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"philosophical-traditions/akan-personhood-community-and-agency": [
+{
+"id": 26,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 27,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/math-differential-equations-numerical-solvers": [
+{
+"id": 0,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/word2vec-prediction-objectives": [
+{
+"id": 7,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 8,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/disaggregated-prefill-decode-serving": [
+{
+"id": 14,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 15,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/inference-optimization-layers": [
+{
+"id": 19,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 20,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"infrastructure/materials-waste-and-circularity": [
+{
+"id": 17,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 18,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"philosophical-traditions/islamic-causation-reason-and-revelation": [
+{
+"id": 31,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 33,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"philosophical-traditions/gita-action-results-and-release": [
+{
+"id": 42,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"economic-history/colonial-plantations-slavery-and-extraction": [
+{
+"id": 5,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 6,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/robinhood-chain-blob-demand": [
+{
+"id": 54,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"crypto/post-quantum-signatures": [
+{
+"id": 62,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-serving-slo-and-capacity": [
+{
+"id": 38,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/glamsterdam-block-execution": [
+{
+"id": 46,
+"verdict": "needs-author",
+"reason": "1절(ModernArticle.tsx 19행)과 각주 citeKey 2(54행)는 '2026-10-09 기준'이라고 시점을 밝히고 있습니다. 그래서 틀린 문장은 아니지만, 독자는 이의 제기 마감(2026-11-01)이 지난 뒤의 상태를 궁금해할 수 있습니다. 2026-11-21에 원문을 확인했더니 eips.ethereum.org의 EIP-7732와 EIP-7928은 여전히 'Last Call'이고 마감일도 '2026-11-01'로 그대로입니다. 다만 기준 날짜를 바꾸려면 EIP-7773(Review, 메인넷 활성화 칸 비어 있음)도 다시 확인해야 합니다. 1절과 각주 문장도 함께 고쳐야 합니다. 둘 다 새로운 사실 주장이자 편집 판단이라 작성자에게 넘깁니다."
+}
+],
+"economic-history/decolonization-oil-shocks-and-debt": [
+{
+"id": 24,
+"verdict": "needs-author",
+"reason": "The note points to a real problem. In section 8 (src/pages/articles/economic-history/decolonization-oil-shocks-and-debt.tsx:94) and on the 1980 row of the Viz (viz/DebtCrisisTimelineViz.tsx:24), '그 가운데 3분의 1 가까이' can mean the 1980 figure of $160B or all lending from 1977 to 1980. Choosing one would add a fact claim, and I could not confirm it. The article cites only 'IMF의 1980년대 부채위기 장'. The text I could pull from IMF 2001 history ch06 has no $68B/$160B/one-third sentence, and web searches found no primary sentence either. One secondary figure points the other way: Brookings 1981 (Solomon/Sachs, BPEA) puts bank lending to non-oil developing countries at $38B in 1980, which is about 24% of $160B, not about a third. Different measures may explain this, but the base needs checking. Author: find the exact IMF sentence and say what the share is of (for example '1980년 순대출 1,600억 달러 가운데' or '1977~80년 순대출 증가분 가운데'). Then fix both the paragraph and the 1980 Viz row, and add a slice to the Viz if you want one."
+}
+],
+"philosophical-traditions/daoist-names-noncoercive-action-and-change": [
+{
+"id": 64,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"global-history/world-wars-depression-and-mass-states": [
+{
+"id": 43,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 44,
+"verdict": "needs-author",
+"reason": "7절 제목은 '100가구의 동원과 전후 약속'인데, 본문은 직접 동원 25가구, 할당 생산 35가구, 피란·상실 가구만 다룹니다. 돌봄·필수 서비스 25가구의 전후 요구는 빠져 있어 제목과 본문이 맞지 않습니다. 이를 채우려면 이 가구들이 무엇을 요구했는지 새로 주장해야 합니다. 4절의 여성 참정권·노동권 문장과 연결할 수도 있지만, 돌봄 가구를 여성 노동과 같다고 보는 것은 본문에 없는 가정입니다. 그래서 작성자 판단이 필요합니다."
+}
+],
+"economic-history/trade-credit-and-long-distance-networks": [
+{
+"id": 57,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 58,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 59,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"political-philosophy/consent-liberty-and-legitimate-power": [
+{
+"id": 65,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/rate-limiting-and-reliability-patterns": [
+{
+"id": 80,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/linux-observability-proc-psi-perf-ebpf": [
+{
+"id": 84,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"global-history/conquest-disease-silver-and-oceanic-exchange": [
+{
+"id": 94,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/yarn-rope-extension": [
+{
+"id": 73,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 76,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"global-history/empires-roads-taxes-and-law": [
+{
+"id": 120,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"global-history/trade-religion-and-translation-networks": [
+{
+"id": 125,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"institutions/media-attention-and-public-belief": [
+{
+"id": 100,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 101,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"macro/global-capital-and-policy": [
+{
+"id": 88,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 89,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 90,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"risk/margin-collateral-and-leverage": [
+{
+"id": 107,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/linux-sre-metrics-slo-safe-change": [
+{
+"id": 108,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 113,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"global-history/revolutions-citizenship-and-industrial-empires": [
+{
+"id": 98,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"infrastructure/housing-land-and-supply": [
+{
+"id": 103,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 105,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/word2vec": [
+{
+"id": 133,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/subword-static-embeddings": [
+{
+"id": 139,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"infrastructure/transport-access-and-land-value": [
+{
+"id": 150,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"institutions/education-skills-and-signals": [
+{
+"id": 126,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 127,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/llm-dataset-engineering-and-cleaning": [
+{
+"id": 147,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/linux-vfs-mount-page-cache-fsync": [
+{
+"id": 135,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"infrastructure/electricity-grid-and-power": [
+{
+"id": 165,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/cuda-graph-capture": [
+{
+"id": 157,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/llm-monitoring-observability-and-drift": [
+{
+"id": 169,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"banking/payment-clearing-settlement": [
+{
+"id": 176,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"infrastructure/water-utility-and-tariffs": [
+{
+"id": 171,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/linux-containers-cgroup-namespace": [
+{
+"id": 158,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 159,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/kubernetes-pod-states-crashloop-probes-events": [
+{
+"id": 154,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 155,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/prefix-caching-radix-attention": [
+{
+"id": 172,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"embedded/firmware-update-and-recovery": [
+{
+"id": 151,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 152,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/parallelism-strategy-and-placement": [
+{
+"id": 189,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/megakernel-design-tradeoffs": [
+{
+"id": 197,
+"verdict": "needs-author",
+"reason": "The note points to a real problem. An average should be one number, and the article's own figures give 13,867 ÷ 293 ≈ 47.3. Nothing in the article, its viz text or the editorial rules explains where the lower bound of 32 comes from. It might be a source figure that leaves some operators out, but that cannot be checked here. Fixing it means changing a number, which the rules forbid without author confirmation."
+}
+],
+"gpu/warp-stall-reasons-and-issue-utilization": [
+{
+"id": 210,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/triton-kernel-programming-and-compiler": [
+{
+"id": 205,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/reward-design-for-verifiable-rl": [
+{
+"id": 201,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"market-failure/public-goods-and-commons": [
+{
+"id": 203,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/linux-disk-full-inode-deleted-files": [
+{
+"id": 211,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 213,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/metric-selection-protocol": [
+{
+"id": 190,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 191,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/backprop-optimization": [
+{
+"id": 214,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/world-model-latent-planning": [
+{
+"id": 220,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/synthetic-data-and-data-flywheel": [
+{
+"id": 180,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 181,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 182,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 183,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/prompt-engineering": [
+{
+"id": 243,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/evaluation-datasets-and-pipelines": [
+{
+"id": 224,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 225,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/continuous-batching-step-anatomy": [
+{
+"id": 245,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 246,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/tool-calling-lifecycle-and-costs": [
+{
+"id": 231,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 232,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 235,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/llm-application-caching": [
+{
+"id": 238,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 242,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/diffusion-models": [
+{
+"id": 251,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/document-parsing-and-table-extraction": [
+{
+"id": 253,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/optimizers": [
+{
+"id": 177,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 178,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"devices/pn-junction-and-rectification": [
+{
+"id": 259,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 260,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"devices/mosfet-regions-and-transfer": [
+{
+"id": 271,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/kubernetes-sre-slo-burn-rate-upgrades": [
+{
+"id": 230,
+"verdict": "needs-author",
+"reason": "The note points to a real gap. In §7 (src/pages/articles/cloud/kubernetes-sre-slo-burn-rate-upgrades.tsx, line 309) the Reddit paragraph sets up symptom → OPA webhook timeout → label as \"두 층\", but never says how the removed label led to the webhook timeouts. The reader has to assume the causal step. I could not confirm that step. The author's research notes (docs/k8s-sre-series-research/04-sre-incidents-interviews.md §2-1) record only the sequence of events. Write timeouts turned out to be admission webhook timeouts. Deleting the OPA webhook made the timeouts stop at once, but the cluster did not recover. Separately, the master label was removed, the route reflector selector matched 0 nodes, and Pod route propagation stopped. The notes give no mechanism joining the two. The obvious candidate is that the API server could no longer reach the webhook Pods once Pod routing stopped. That is my own inference, and it would be a new factual claim. I could not check it against the primary source either: both reddit.com and web.archive.org were blocked from this session. SelectorMatchViz draws only the selector/label part, so it cannot carry the link either."
+}
+],
+"gpu/gpu-data-movement-optimization": [
+{
+"id": 261,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 262,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"p2p/kad-lookup": [
+{
+"id": 264,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/fine-tuning-tradeoffs-forgetting-and-merging": [
+{
+"id": 289,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/hyperliquid": [
+{
+"id": 273,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/inference-failure-absorption": [
+{
+"id": 279,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/hbm-stack-and-memory-requests": [
+{
+"id": 275,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"constitution/constitutionalism-and-separation": [
+{
+"id": 290,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/cometbft-consensus": [
+{
+"id": 268,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/vdf": [
+{
+"id": 299,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-failure-modes-and-recovery": [
+{
+"id": 294,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/vllm-spec-decode": [
+{
+"id": 291,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/kubernetes-controllers-reconcile-deployment-job": [
+{
+"id": 306,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/fast-weight-memory-and-chunkwise-recurrence": [
+{
+"id": 310,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/math-functions-composition": [
+{
+"id": 308,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/cuda-register-pressure": [
+{
+"id": 285,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 286,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/attention-kernel-anatomy-and-backends": [
+{
+"id": 316,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/ec-gpu-ops": [
+{
+"id": 314,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/prefill-decode-phase-dynamics": [
+{
+"id": 311,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 312,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/math-probability-expectation-variance": [
+{
+"id": 329,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/linear-attention-and-state-space-models": [
+{
+"id": 318,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/sparse-windowed-attention-patterns": [
+{
+"id": 340,
+"verdict": "not-found",
+"reason": ""
+}
+],
+"ai/multi-fidelity-pruning": [
+{
+"id": 343,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"dispute-resolution/settlement-and-access": [
+{
+"id": 323,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/inference-stack-standard-levels": [
+{
+"id": 326,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-approval-and-sandbox": [
+{
+"id": 351,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/continual-learning-foundations": [
+{
+"id": 352,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-memory-lifecycle": [
+{
+"id": 355,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 356,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/kubernetes-pvc-pv-storageclass-csi": [
+{
+"id": 371,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/inference-cost-and-capacity-planning": [
+{
+"id": 359,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"macro/who-counts-as-unemployed": [
+{
+"id": 373,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"macro/why-per-head-stalls": [
+{
+"id": 365,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 366,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/own-vs-rent-inference-capacity": [
+{
+"id": 377,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/learning-curve-tracking": [
+{
+"id": 369,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/kzg-gpu": [
+{
+"id": 375,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/filecoin-pdp": [
+{
+"id": 384,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"private-law/tort-and-accident-cost": [
+{
+"id": 382,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/warp-specialization-and-async-pipelines": [
+{
+"id": 392,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/multi-objective-hpo": [
+{
+"id": 385,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 387,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"devices/mos-capacitor-and-inversion": [
+{
+"id": 394,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"money/money-as-a-claim": [
+{
+"id": 396,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/cross-review-error-classes": [
+{
+"id": 389,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/training-memory-budget": [
+{
+"id": 388,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"polity/state-and-legitimacy": [
+{
+"id": 398,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/context-instruction-boundaries": [
+{
+"id": 416,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/hyper-connections-residual-streams": [
+{
+"id": 400,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/competition-workflow": [
+{
+"id": 423,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/differential-attention": [
+{
+"id": 409,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 410,
+"verdict": "needs-author",
+"reason": "'정확도가 76% 개선'은 상대 개선률인지 %p 차이인지 기준이 모호해서 실제 독자에게 걸림돌이 됩니다. 바로 앞 문장은 30%p를 명시하는 만큼 더 눈에 띕니다. 다만 원 논문도 'improves the accuracy by 76%'라고만 쓰고 있습니다. 이 글과 그 codebase/, 저장소 문서 어디에서도 64K·깊이 25% 지점의 원래 두 정확도 값을 확인할 수 없었습니다. 그래서 상대값인지 %p인지 정할 수 없고 숫자도 바꿀 수 없습니다."
+}
+],
+"gpu/gpu-arch-hopper": [
+{
+"id": 441,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/validation-feedback-audit": [
+{
+"id": 440,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/tensorrt-llm-kv-cache-and-kernels": [
+{
+"id": 419,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/llm-as-a-judge": [
+{
+"id": 435,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 436,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"inference-from-sources/naming-the-past": [
+{
+"id": 433,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/perceptron": [
+{
+"id": 462,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/gpu-memory-hierarchy-and-roofline": [
+{
+"id": 444,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/competition-submission-control": [
+{
+"id": 450,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 451,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/rapidsnark-gpu": [
+{
+"id": 426,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 427,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/motif-3-architecture": [
+{
+"id": 454,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"record-numbers/how-the-army-was-counted": [
+{
+"id": 477,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/dinov3-self-supervised-backbone": [
+{
+"id": 472,
+"verdict": "no-change-needed",
+"reason": ""
+},
+{
+"id": 473,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/sandbox-runtime-isolation": [
+{
+"id": 468,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/neural-network": [
+{
+"id": 502,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"inference-from-sources/the-gap-was-made": [
+{
+"id": 449,
+"verdict": "needs-author",
+"reason": "ThreeFiltersViz said the editor gave the three returned sections a different symbol instead of a number. That is more specific than the body, which only says they were left out of the numbered sequence, and the repo's fact audit excerpt does not support it, so I aligned the Viz with the body. In ErasedColumnsViz, the repo's primary-source excerpt (docs/fact-audit-2026-10-09/B1, Johns preface: 'sixteen columns of writing with 1114 lines') confirms '16단 · 1,114행', so that label stays. I could not confirm '28단' (reverse face) or '샤마시' (the sun god in the relief) from the article, the audit excerpt or the primary source: Project Gutenberg was down for maintenance. The author needs to check them against the Johns preface."
+}
+],
+"saas/private-access-inbound-closure": [
+{
+"id": 517,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-control-boundaries": [
+{
+"id": 471,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/cuda-perf-analysis": [
+{
+"id": 498,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/vision-backbone-selection": [
+{
+"id": 510,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-bash": [
+{
+"id": 492,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/kubernetes-requests-limits-allocatable-qos": [
+{
+"id": 478,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"tee/tee-memory": [
+{
+"id": 539,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/claw-mcp": [
+{
+"id": 541,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/image-embedding-pipeline": [
+{
+"id": 527,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/open-r1": [
+{
+"id": 528,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-compaction": [
+{
+"id": 524,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/sionic-glm-b300": [
+{
+"id": 521,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-api-client": [
+{
+"id": 525,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/claw-hooks": [
+{
+"id": 564,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/pq-account": [
+{
+"id": 553,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/quantization-formats-and-granularity": [
+{
+"id": 565,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/cfg-pushdown-automata": [
+{
+"id": 551,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/generative-identity-diversity": [
+{
+"id": 546,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/kv-cache-fundamentals": [
+{
+"id": 556,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/masked-edit-verb-routing": [
+{
+"id": 532,
+"verdict": "no-change-needed",
+"reason": ""
+},
+{
+"id": 533,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/vllm-serving": [
+{
+"id": 542,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 543,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"p2p/libp2p-quic": [
+{
+"id": 570,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/ensemble-methods": [
+{
+"id": 581,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-task-team": [
+{
+"id": 572,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-file-ops": [
+{
+"id": 578,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/qwen36-hybrid-architecture": [
+{
+"id": 579,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/roi-resolution-identity-budget": [
+{
+"id": 586,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/code-mode-runtime-contracts": [
+{
+"id": 594,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/ptq-calibration": [
+{
+"id": 591,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-telemetry": [
+{
+"id": 600,
+"verdict": "no-change-needed",
+"reason": ""
+},
+{
+"id": 601,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/compression-pipeline": [
+{
+"id": 598,
+"verdict": "no-change-needed",
+"reason": ""
+},
+{
+"id": 599,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/stablecoin-overview": [
+{
+"id": 612,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/negative-result-3d-face-control": [
+{
+"id": 604,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 605,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/hotstuff-deep": [
+{
+"id": 620,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/arima": [
+{
+"id": 621,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/consensus-mechanisms": [
+{
+"id": 596,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"p2p/bittorrent": [
+{
+"id": 603,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-policy-engine": [
+{
+"id": 558,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/sparse-autoencoder": [
+{
+"id": 637,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/kohaku-provider-validation": [
+{
+"id": 631,
+"verdict": "no-change-needed",
+"reason": ""
+},
+{
+"id": 632,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claw-worker-boot": [
+{
+"id": 625,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/dezero-nn": [
+{
+"id": 636,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/gan-wasserstein-critics": [
+{
+"id": 654,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/embedding-serving-contract": [
+{
+"id": 658,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/cometbft-crypto": [
+{
+"id": 659,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/structured-generation-serving": [
+{
+"id": 669,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/regularization-practice": [
+{
+"id": 665,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/proofs-porep": [
+{
+"id": 676,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-code-mode": [
+{
+"id": 656,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/seq2seq": [
+{
+"id": 650,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 651,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/dpo": [
+{
+"id": 700,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/commonware-deep-dive": [
+{
+"id": 689,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/quantized-model-deployment": [
+{
+"id": 686,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"isms-aml/aml-cdd-deep": [
+{
+"id": 684,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/early-stopping": [
+{
+"id": 690,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 691,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/cometbft-state": [
+{
+"id": 696,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/filecoin-f3": [
+{
+"id": 705,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/constitutional-ai": [
+{
+"id": 693,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"tee/intel-tdx": [
+{
+"id": 703,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/xml-prompting": [
+{
+"id": 706,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/cnn-receptive-fields": [
+{
+"id": 713,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 714,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/gradient-boosting": [
+{
+"id": 719,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/kohaku-provider": [
+{
+"id": 711,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"tee/hw-security": [
+{
+"id": 723,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/commonware-simplex": [
+{
+"id": 657,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/commonware-crypto-p2p": [
+{
+"id": 725,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/lr-scheduling": [
+{
+"id": 749,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/cnn-translation-equivariance": [
+{
+"id": 731,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/railgun": [
+{
+"id": 727,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claude-code-permissions": [
+{
+"id": 721,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/kubernetes-request-path-and-cka": [
+{
+"id": 743,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/claude-code-checkpointing": [
+{
+"id": 737,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/catboost-ordered-learning": [
+{
+"id": 752,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"tee/oasis": [
+{
+"id": 735,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/helios-config": [
+{
+"id": 780,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"gpu/hw-network": [
+{
+"id": 763,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/dai-maker": [
+{
+"id": 757,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 758,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/ai-accelerator-vendor-comparison": [
+{
+"id": 770,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 771,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/server-cpu-lineup-comparison": [
+{
+"id": 774,
+"verdict": "needs-author",
+"reason": "The note is correct that readers will be confused. The text just before TierViz gives concrete platforms: EPYC 9005 1-socket with 128 lanes and 12 channels, Threadripper PRO+WRX90 with 128 PCIe 5.0 lanes and 8 channels, and Threadripper+TRX50 with 80 lanes and 4 channels. The figure then says its bars are not specific models. Simply relabeling the bars as 'relative to the server 1-socket platform in the text' would not fix this, because not every value matches the text. The lane ratios do (1.0, 1.0, 80/128=0.625) and so does the workstation channel ratio (8/12=0.67). But the high-end desktop channel bar is 0.5, while the text's 4/12 gives 0.33. The core-count values (0.9/0.75/0.7) have no source in the text. Fixing this means changing numbers or deciding which platform each bar stands for, and only the author can make that call."
+}
+],
+"blockchain/helios-update": [
+{
+"id": 779,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-extension-boundaries": [
+{
+"id": 785,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"tee/op-tee": [
+{
+"id": 755,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/agent-delegation-contracts": [
+{
+"id": 783,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/lora-training-and-release": [
+{
+"id": 793,
+"verdict": "no-change-needed",
+"reason": ""
+},
+{
+"id": 794,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/agent-plan-replanning": [
+{
+"id": 787,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 788,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/helios": [
+{
+"id": 781,
+"verdict": "no-change-needed",
+"reason": ""
+},
+{
+"id": 782,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/gated-activations": [
+{
+"id": 792,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/bplus-index-validation": [
+{
+"id": 798,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/prysm-block-proposal": [
+{
+"id": 818,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/prysm-attestation": [
+{
+"id": 807,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"ai/on-policy-distillation": [
+{
+"id": 795,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/prysm-beacon-db": [
+{
+"id": 811,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-block-execution-validation": [
+{
+"id": 836,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/prysm-block-processing": [
+{
+"id": 815,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"ai/agent-runtime-selection": [
+{
+"id": 789,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 790,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-db": [
+{
+"id": 840,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-db-validation": [
+{
+"id": 842,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/reth-provider-validation": [
+{
+"id": 852,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"blockchain/reth-eip1559": [
+{
+"id": 844,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-txpool": [
+{
+"id": 857,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/prysm-finality": [
+{
+"id": 823,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 824,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-eip1559-validation": [
+{
+"id": 845,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 846,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-sync": [
+{
+"id": 855,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/lotus-state": [
+{
+"id": 741,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/aws-saa-c03-fast-study": [
+{
+"id": 866,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-txpool-validation": [
+{
+"id": 860,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 861,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/aws-clf-c02-fast-study": [
+{
+"id": 863,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/aws-developer-cloudops-paths": [
+{
+"id": 865,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/cloud-identity-access-hierarchy": [
+{
+"id": 872,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/azure-ai200-fast-study": [
+{
+"id": 867,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/cloud-foundations-responsibility-regions": [
+{
+"id": 871,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"crypto/csprng": [
+{
+"id": 877,
+"verdict": "no-change-needed",
+"reason": ""
+}
+],
+"cloud/cloud-networking-request-path": [
+{
+"id": 873,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 874,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"cloud/cloud-reliability-observability-iac": [
+{
+"id": 875,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"crypto/hyperplonk": [
+{
+"id": 887,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"crypto/pairing": [
+{
+"id": 895,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"crypto/stark-theory": [
+{
+"id": 907,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"crypto/discrete-log": [
+{
+"id": 879,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"blockchain/reth-blob-admission": [
+{
+"id": 833,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"crypto/zk-theory": [
+{
+"id": 910,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"global-history/human-dispersal-foraging-and-social-networks": [
+{
+"id": 920,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"economic-history/war-finance-public-debt-and-welfare-state-capacity": [
+{
+"id": 919,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence": [
+{
+"id": 911,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 912,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"economic-history/labor-bargaining-social-insurance-and-welfare-state": [
+{
+"id": 915,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/gpu-interconnects": [
+{
+"id": 927,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/modded-rtx4090-moe-serving": [
+{
+"id": 935,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/hw-gpu-comparison": [
+{
+"id": 929,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/gpu-collective-network": [
+{
+"id": 924,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"economic-history/europe-serfdom-states-industrialization-and-integration": [
+{
+"id": 914,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": [
+{
+"id": 946,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"markets/bank-irrbb-alm-and-derivatives-hedging": [
+{
+"id": 940,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"gpu/hw-storage-comparison": [
+{
+"id": 933,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"markets/minimum-variance-hedge-ratio-and-basis-risk": [
+{
+"id": 954,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"markets/fractional-investment-trust-beneficiary-certificates": [
+{
+"id": 948,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"markets/short-rate-hjm-and-interest-rate-model-risk": [
+{
+"id": 959,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"markets/singapore-derivatives-records-complaints-and-tax-ledger": [
+{
+"id": 960,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"p2p/iroh": [
+{
+"id": 963,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"philosophy-topics/identity-through-change": [
+{
+"id": 970,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"markets/wti-crude-oil-cushing-storage-pipeline-and-delivery": [
+{
+"id": 961,
+"verdict": "fixed",
+"reason": ""
+}
+],
+"philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality": [
+{
+"id": 965,
+"verdict": "fixed",
+"reason": ""
+},
+{
+"id": 966,
+"verdict": "fixed",
+"reason": ""
+}
+]
+},
+"reviewOpen": {
+"blockchain/reth-db: src/pages/articles/ethereum/reth-db/ModernArticle.tsx #routing": [
+"needs-author (#840 '여섯'): the Static files and RocksDB grid cells do not add up to six. Counting each '·'-separated entry as one item gives 3 + 2 = 5 (receipts, transaction senders, account/storage changesets; transaction hash numbers, account/storage history). Splitting the account/storage pairs gives 4 + 3 = 7. The article's codebase/ folder has no StorageSettings source to check against. The author should confirm against Reth v2.8.1 StorageSettings::base()/V2 how many tables move, then fix either the number or the grid labels so a reader who counts gets the same answer."
+]
+}
 }
 }

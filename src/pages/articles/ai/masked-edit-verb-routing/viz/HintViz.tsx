@@ -107,13 +107,13 @@ export default function HintViz() {
                 })}
                 {step === 1 && (
                   <text x={24} y={192} fontSize={8} fontWeight={700} fill={HERO}>
-                    klein만 +1.87로 뚜렷합니다. 그림에서도 그은 선이 흉터 모양을 따라갑니다.
+                    절제형 모델(klein)만 +1.87로 뚜렷합니다. 그림에서도 그은 선이 흉터 모양을 따라갑니다.
                   </text>
                 )}
                 {step === 2 && (
                   <g>
                     <text x={24} y={186} fontSize={8} fontWeight={700} fill={MID}>
-                      qwen이 +1.05 — 원본 기록의 "나머지 ±0.2"는 틀렸습니다.
+                      보수형 모델(qwen)이 +1.05 — 원본 기록의 "나머지 ±0.2"는 틀렸습니다.
                     </text>
                     <text x={24} y={200} fontSize={8} fill={MUTED}>
                       다만 4.46과 5.51은 둘 다 그 모델의 무동작 범위라 성격이 다릅니다.

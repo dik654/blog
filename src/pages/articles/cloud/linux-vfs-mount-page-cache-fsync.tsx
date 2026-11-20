@@ -74,11 +74,12 @@ export default function LinuxVfsMountPageCacheFsyncArticle() {
         </section>
 
         <section id="vfs-objects" data-teach-level="0" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">3. 경로 하나가 dentry 넷, inode 하나, file 하나가 됩니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">3. 경로 하나가 dentry 넷, 파일 inode 하나, file 하나가 됩니다</h2>
           <div className={prose}>
             <p>
               open("/var/log/app.log")이 들어오면 커널은 경로를 "/", "var", "log", "app.log" 네 조각으로 나눠 조각마다 dentry(directory entry)를 찾습니다. dentry는 이름 하나와 그
-              이름이 가리키는 inode의 쌍으로, RAM에만 있습니다. 디스크에 저장되지 않으며 오직 다음 조회를 빠르게 하려고 존재합니다. 이 dentry들의 모음이 dcache입니다.
+              이름이 가리키는 inode의 쌍으로, RAM에만 있습니다. 디스크에 저장되지 않으며 오직 다음 조회를 빠르게 하려고 존재합니다. 이 dentry들의 모음이 dcache입니다. "/", "var", "log"의 dentry도 각자 디렉터리 inode를 가리키지만, 아래 그림과 이 절은
+              app.log 파일의 inode만 따라갑니다.
             </p>
           </div>
           <VfsObjectsViz />

@@ -67,7 +67,7 @@ export default function ModernPolicyArticle() {
       <section id="green-contract" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">03 · Green contract</p><h2 className="mt-2 text-2xl font-bold">Test가 통과했다는 말에 level·command·base·recovery·flake 근거를 붙인다</h2></header>
         <p>
-          별도 <code>green_contract.rs</code>는 TargetedTests, Package, Workspace, MergeReady level과 evidence를 정의합니다. Merge-ready contract는 요구 level뿐 아니라 exit 0인 비어 있지 않은 test command, fresh base branch, recovery attempt context를 요구하고 blocking known flake가 없어야 만족합니다. Test command string과 exit code가 있다는 사실은 유용하지만 runner identity·artifact digest·commit SHA까지 포함한 완전한 provenance는 아닙니다.
+          별도 <code>green_contract.rs</code>는 TargetedTests, Package, Workspace, MergeReady level과 evidence를 정의합니다. Merge-ready contract는 호출자가 넘긴 요구 level(아래 그림과 저장소 테스트에서는 Workspace) 이상뿐 아니라 exit 0인 비어 있지 않은 test command, fresh base branch, recovery attempt context를 요구하고 blocking known flake가 없어야 만족합니다. Test command string과 exit code가 있다는 사실은 유용하지만 runner identity·artifact digest·commit SHA까지 포함한 완전한 provenance는 아닙니다.
         </p>
         <GreenContractViz />
         <ExplainedFormula

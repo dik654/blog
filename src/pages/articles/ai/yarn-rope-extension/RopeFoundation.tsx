@@ -126,6 +126,9 @@ export default function RopeFoundation() {
         <figcaption className="mb-5 text-sm font-semibold">
           RoPE dimension마다 다른 회전 속도
         </figcaption>
+        <p className="-mt-3 mb-5 text-xs leading-5 text-muted-foreground">
+          막대 길이는 회전 속도 θ의 상대적인 크기를 보여 주는 개념도입니다. 수식에서 계산한 실제 비율은 아닙니다.
+        </p>
         <div className="space-y-4">
           {bands.map((band) => (
             <div key={band.label} className="grid gap-2 sm:grid-cols-[8rem_1fr] sm:items-center">

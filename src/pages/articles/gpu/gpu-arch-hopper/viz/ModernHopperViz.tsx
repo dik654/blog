@@ -19,7 +19,7 @@ const PIPELINE_STEPS = [
   {
     label: "네 warp의 warpgroup이 WGMMA를 발행한다",
     tabLabel: "WGMMA",
-    body: "128개 thread가 함께 shared-memory descriptor가 가리키는 operand를 읽고 비동기 행렬곱을 시작합니다. B는 shared memory에서 오며 A도 보통 이 예시처럼 shared memory에서 옵니다.",
+    body: "128개 thread가 함께 shared-memory descriptor가 가리키는 operand를 읽고 비동기 행렬곱을 시작합니다. B는 shared memory에서 오며 A는 이 예시처럼 shared memory에서 오거나 registers에서 올 수 있습니다.",
   },
   {
     label: "결과는 warpgroup의 register accumulator에 쌓인다",

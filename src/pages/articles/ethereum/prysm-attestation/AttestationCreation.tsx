@@ -107,7 +107,7 @@ export default function AttestationCreation({ onCodeRef }: Props) {
           Dependent root D1에서 validator 17이 slot 352, committee 2, position
           17 duty를 받았다고 합시다. 서명 전에 dependent root가 D2로 바뀌면 D1의
           duty와 bit position을 폐기하고 D2에서 assignment와
-          head·source·target을 다시 구합니다. 같은 epoch라는 이유로 A의 cache를
+          head·source·target을 다시 구합니다. 같은 epoch라는 이유로 D1 기준 cache를
           재사용하면 안 됩니다.
         </p>
         <p className="leading-7">

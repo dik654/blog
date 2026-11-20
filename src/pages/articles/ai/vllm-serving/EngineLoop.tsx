@@ -202,25 +202,22 @@ M_{KV}^{need} &\le \underbrace{M_{KV}^{free}}_{\text{동시에 만족할 상한}
               {
                 expression: String.raw`B_{tok}`,
                 annotation: [
-                  "이번 선택량이 상한 이하여야 합니다.",
-                  "계산할 token 수, 동시에 진행할 sequence 수, 새",
-                  "state를 남길 KV memory를 각각 상한과 비교합니다.",
+                  "이번 실행에서 계산할 token 수 n_tok의 상한입니다.",
+                  "n_tok가 이 값 이하여야 합니다.",
                 ],
               },
               {
                 expression: String.raw`B_{seq}`,
                 annotation: [
-                  "이번 선택량이 상한 이하여야 합니다.",
-                  "계산할 token 수, 동시에 진행할 sequence 수, 새",
-                  "state를 남길 KV memory를 각각 상한과 비교합니다.",
+                  "동시에 진행할 sequence 수 n_seq의 상한입니다.",
+                  "n_seq가 이 값 이하여야 합니다.",
                 ],
               },
               {
                 expression: String.raw`M_{KV}^{free}`,
                 annotation: [
-                  "이번 선택량이 상한 이하여야 합니다.",
-                  "계산할 token 수, 동시에 진행할 sequence 수, 새",
-                  "state를 남길 KV memory를 각각 상한과 비교합니다.",
+                  "새 state를 남길 KV memory의 남은 여유입니다.",
+                  "필요한 KV memory가 이 값 이하여야 합니다.",
                 ],
               },
             ]}
@@ -248,15 +245,18 @@ M_{KV}^{need} &\le \underbrace{M_{KV}^{free}}_{\text{동시에 만족할 상한}
             vLLM v0.27.1의 고정 commit
             6e448d0ea9bf3d88d898b65449ca6dc2aec170ac을 확인했습니다. 코드 패널은
             scheduler.py 전체 원문이며 설명을 위해 주석이나 조건을 바꾸지
-            않았습니다. 516–523행에서 아직 계산하지 않은 token 수를 구하고 남은
-            token_budget으로 제한합니다.
+            않았습니다. 516–520행에서 아직 계산하지 않은 token 수를
+            num_tokens_with_spec + num_output_placeholders − num_computed_tokens로
+            구합니다. 521–522행은 long_prefill_token_threshold가 0보다 크고 남은
+            token 수가 이 값을 넘으면 그 값으로 자르고, 523행은 남은 token_budget으로 다시
+            제한합니다.
           </p>
         </div>
         <SchedulerStepViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             사례의 두 번째 실행에서 A는 num_tokens_with_spec=6,
-            num_computed_tokens=4, num_output_placeholders=0입니다. 차이는 2이고
+            num_computed_tokens=4, num_output_placeholders=0이므로 6 + 0 − 4 = 2이고
             남은 예산 4와 min을 취해 2를 고릅니다. 추가 조건이 모두 통과한다면
             637행에서 예산이 2로 줄어 B에 남은 2를 쓸 수 있습니다. (가정)
           </p>

@@ -31,7 +31,7 @@ export default function Article() {
         <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">국가를 읽는 목적은 정해졌습니다. 먼저 나라 안팎에서 오가는 것만 살펴봅니다.</p>
       </section>
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">사람·물건·돈·결정이 국경을 오갑니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">사람·물건·돈이 국경을 오가고 결정이 그 흐름을 바꿉니다</h2>
         <BorderFlowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">안쪽에는 일하는 사람과 물건을 만드는 곳, 공동 서비스를 정하는 곳이 있습니다. 바깥에는 물건을 사는 고객과 부품을 파는 곳, 돈을 빌려주는 상대가 있습니다. 사람도 안팎으로 이동합니다. 이 흐름 중 하나가 막히면 나머지가 어떻게 달라질지가 첫 질문입니다.</p>

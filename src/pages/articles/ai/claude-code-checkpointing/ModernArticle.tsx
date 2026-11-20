@@ -126,11 +126,23 @@ export default function ClaudeCodeCheckpointingArticle() {
           ]}
           assumptions={[
             "현재 session에서 direct edit snapshot이 존재합니다.",
-            "Symlink·hardlink·외부 editor 경계는 별도 시험합니다.",
+            "Symlink·hard link path는 restore가 건너뛰고, 외부 editor 경계는 별도 시험합니다.",
             "Remote system은 operation receipt와 rollback 방법을 제공합니다.",
           ]}
           interpretation="Bash formatter가 만든 file이나 API deployment는 E_file 또는 E_remote에 있어도 T_direct와 겹치지 않으므로 R에 들어가지 않습니다."
         />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            처음의 두 번째 질문에 답하면, 두 선택은 결과가 다릅니다. Rewind menu의 Restore conversation은 그 message로
+            대화만 되돌리고 현재 code는 그대로 두며, Restore code는 대화를 둔 채 추적된 file 변경만 되돌립니다. 둘 다 원하면
+            Restore code and conversation을 고릅니다.
+          </p>
+          <p>
+            세 번째 질문의 답은 &quot;같다고 가정하면 안 된다&quot;입니다. 공식 문서에 따르면 code restore는 symlink나 hard link인
+            tracked path를 건너뛰고 <code>Restored the code, but skipped N files</code> 경고를 띄우므로, 이런 file은 T_direct에
+            기록돼 있어도 R에서 빠집니다. 건너뛴 file은 현재 content를 그대로 유지하므로, Claude에게 edit를 거꾸로 적용하게 하거나 직접 고쳐야 합니다.
+          </p>
+        </div>
       </section>
       <section id="recovery-plan" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

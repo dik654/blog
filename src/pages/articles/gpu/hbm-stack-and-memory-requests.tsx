@@ -90,9 +90,9 @@ export default function Article() {
         <p className="leading-8">필요한 행이 이미 열려 있으면 그 행의 열을 읽을 수 있습니다. 다른 행이 열렸다면 기존 행을 닫는 precharge와 새 행을 여는 activate가 필요합니다. 읽기 명령 뒤 데이터가 통로를 지나 돌아옵니다. Refresh가 필요한 구역은 정해진 타이밍을 지켜야 합니다. 다른 bank의 작업과 겹칠 수 있는 정도는 제품과 controller에 달려 있습니다.</p>
         <p className="leading-8">Refresh를 넣는 단위도 하나가 아닙니다. Synopsys의 공개 HBM3 controller 설명은 “Autonomous per-bank/all-bank refresh”를 기능으로 적습니다. Controller가 bank 하나 단위의 refresh와 모든 bank를 함께 다루는 refresh를 스스로 넣는다는 뜻입니다. 어느 방식을 언제 고르는지와 그동안 대기하는 요청 수는 공개 페이지에 없으므로 10절처럼 측정 항목으로 남깁니다.</p>
         <p className="leading-8">시작 주소가 128바이트 경계에 맞고 NVIDIA compute capability 6.0 이상의 32바이트 sector 규칙을 적용한다고 놓습니다. 이때 4바이트 원소 32개의 연속 읽기는 요청 단계에서 4 sectors에 걸칩니다. 32바이트 간격 읽기는 32 sectors에 걸칩니다. 전자가 가까운 주소를 합치기 좋다는 것은 계산할 수 있습니다. 그러나 4 sectors가 HBM 명령 4개라는 결론은 아닙니다. 아래 계층의 cache hit, 요청 병합, burst 크기와 쓰기 정책이 물리 전송량을 바꿉니다.</p>
-        <p className="leading-8">주소 bit →channel·bank 대응은 GPU별 공개 자료가 있어야 정할 수 있습니다. 자료가 없다면 추측해 그리지 않습니다. 큰 stride가 항상 같은 channel에 몰린다고 단정할 수는 없습니다. 접근 간격을 바꿔 지연과 실제 DRAM byte counter를 측정합니다. 이번 원소 번호 37은 논리 주소의 148바이트 offset까지만 확정할 수 있습니다.</p>
+        <p className="leading-8">주소 bit →channel·bank 대응은 GPU별 공개 자료가 있어야 정할 수 있습니다. 자료가 없다면 추측해 그리지 않습니다. 큰 stride가 항상 같은 channel에 몰린다고 단정할 수는 없습니다. 접근 간격을 바꿔 지연과 실제 DRAM byte counter를 측정합니다. 예를 들어 64개 원소 중 0부터 세어 37번 원소는 시작 주소에서 37 × 4바이트 = 148바이트 떨어져 있습니다. 공개 자료로 확정할 수 있는 것은 이 논리 주소 offset까지입니다.</p>
       </div>
-      <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">논리 주소 148바이트와 물리 행·열 사이에 남는 정보를 확인했습니다. 공식 인터페이스 수치로 넓은 통로를 계산합니다.</p>
+      <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">37번 원소의 논리 주소 148바이트와 물리 행·열 사이에 남는 정보를 확인했습니다. 공식 인터페이스 수치로 넓은 통로를 계산합니다.</p>
     </section>
     <section id="source" data-calculation-explained data-teach-level="5" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">8 · HBM3의 1024비트 폭에 가정한 속도를 곱합니다</h2>

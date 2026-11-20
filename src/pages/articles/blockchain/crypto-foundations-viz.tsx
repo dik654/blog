@@ -59,7 +59,7 @@ function PowerCycle() {
         </div>
       </div>
       <p className="mt-5 border-l border-border pl-4 text-xs leading-5 text-muted-foreground">
-        3의 order가 16이라 결과가 1…16을 정확히 한 번씩 방문합니다. y=5의 위치는 x=5이지만 큰 군에서는 이 표 전체를 만들 수 없습니다.
+        3의 위수가 16이라 결과가 1…16을 정확히 한 번씩 방문합니다. Y=5의 위치는 x=5이지만 큰 군에서는 이 표 전체를 만들 수 없습니다.
       </p>
     </div>
   );
@@ -88,7 +88,7 @@ function BsgsGrid() {
       </div>
       <ol className="min-w-0 space-y-5 border-l border-border pl-5 text-xs leading-5">
         <li><strong>1. 저장</strong><p className="mt-1 text-muted-foreground">baby table: 1→0, 3→1, 9→2, 10→3</p></li>
-        <li><strong>2. 이동</strong><p className="mt-1 text-muted-foreground">m=4, g⁻ᵐ=3⁻⁴≡4. y=5에서 5·4≡3으로 이동합니다.</p></li>
+        <li><strong>2. 이동</strong><p className="mt-1 text-muted-foreground">m=4, g⁻ᵐ=3⁻⁴≡4. Y=5에서 5·4≡3으로 이동합니다.</p></li>
         <li><strong>3. 만남</strong><p className="mt-1 text-muted-foreground">3은 baby j=1에 있으므로 i=1, j=1입니다.</p></li>
         <li><strong>4. 복원</strong><p className="mt-1 font-mono text-primary">x=im+j=1·4+1=5</p></li>
       </ol>
@@ -106,11 +106,11 @@ export default function CryptoFoundationsViz({ mode }: { mode: CryptoFoundationV
   }
 
   if (mode === "power-cycle") {
-    return <VizFrame eyebrow="작은 군의 전체 관찰" title="거듭제곱 표는 순환부분군과 이산로그를 동시에 보여 준다" description="g=3, mod 17의 작은 예를 모두 펼쳐 generator의 의미와 역방향 탐색을 눈으로 확인합니다." note="큰 parameter에서 이 표를 만들 수 없다는 사실이 핵심입니다. 작은 예의 뒤섞임 자체는 난이도 증명이 아닙니다."><PowerCycle /></VizFrame>;
+    return <VizFrame eyebrow="작은 군의 전체 관찰" title="거듭제곱 표는 순환부분군과 이산로그를 동시에 보여 준다" description="g=3, mod 17의 작은 예를 모두 펼쳐 생성원의 의미와 역방향 탐색을 눈으로 확인합니다." note="큰 parameter에서 이 표를 만들 수 없다는 사실이 핵심입니다. 작은 예의 뒤섞임 자체는 난이도 증명이 아닙니다."><PowerCycle /></VizFrame>;
   }
 
   if (mode === "bsgs-grid") {
-    return <VizFrame eyebrow="Meet-in-the-middle" title="q개 지수를 √q×√q 격자로 나눠 두 탐색이 만나게 한다" description="첫 행을 저장한 뒤 y에 g⁻ᵐ을 반복 곱해 저장한 값과 만나는 지점을 찾습니다." note="시간 O(√q), 메모리 O(√q)입니다. Pollard rho는 비슷한 기대 시간에 메모리를 줄이지만 확률적 collision 탐색을 사용합니다."><BsgsGrid /></VizFrame>;
+    return <VizFrame eyebrow="Meet-in-the-middle" title="q개 지수를 √q×√q 격자로 나눠 두 탐색이 만나게 한다" description="첫 행을 저장한 뒤 Y에 g⁻ᵐ을 반복 곱해 저장한 값과 만나는 지점을 찾습니다." note="시간 O(√q), 메모리 O(√q)입니다. Pollard rho는 비슷한 기대 시간에 메모리를 줄이지만 확률적 collision 탐색을 사용합니다."><BsgsGrid /></VizFrame>;
   }
 
   if (mode === "jacobian-affine") {

@@ -416,21 +416,21 @@ export function FailureAblationViz() {
 export function ControlBoundaryViz() {
   const labels = [
     "경로가 고정된 구간은 workflow로 둡니다",
-    "의미 탐색 구간은 agent loop가 고릅니다",
-    "위험한 state transition 앞에 checkpoint를 둡니다",
-    "Run loop와 production 개선 loop의 권한을 나눕니다",
+    "원인 탐색 구간은 agent loop가 고릅니다",
+    "반영 직전에 checkpoint를 둡니다",
+    "이번 작업의 반복과 전체 규칙 개선을 나눕니다",
   ] as const;
   const notes = [
-    "Build·test처럼 순서와 판정이 고정된 일은 model에게 매번 묻지 않습니다.",
-    "조사·디버깅처럼 다음 경로가 observation에 따라 달라지는 구간만 model이 선택합니다.",
-    "Deploy·delete·payment는 diff·approval·rollback receipt 없이는 진행하지 않습니다.",
-    "한 run의 feedback이 review·canary 없이 global harness를 즉시 바꾸지 못하게 합니다.",
+    "검사 2개처럼 순서와 판정이 정해진 일은 모델에게 매번 묻지 않습니다.",
+    "원인 파일 찾기처럼 다음 경로가 관측에 따라 달라지는 구간만 모델이 선택합니다.",
+    "반영 대상과 변경 버전이 허용 범위인지, 이전 버전과 되돌리는 방법이 있는지 확인한 뒤에만 반영합니다.",
+    "한 번의 작업 결과로 공통 규칙을 바로 넓히지 않고 별도 검토와 비교 실행을 거칩니다.",
   ] as const;
   return (
     <Scene
       id="control-boundary-viz"
       title="Workflow·agent·checkpoint의 조합"
-      description="경로 불확실성과 effect 위험을 서로 다른 축으로 나눕니다."
+      description="경로 불확실성과 실패 영향을 서로 다른 축으로 나눕니다."
       labels={labels}
       notes={notes}
     >
@@ -457,7 +457,7 @@ export function ControlBoundaryViz() {
             y={80}
             w={104}
             label="checkpoint"
-            sub="approve effect"
+            sub="target·revision"
             active={a >= 2}
           />
           <Link x1={300} y1={109} x2={334} y2={109} active={a >= 3} id="cb3" />
@@ -465,8 +465,8 @@ export function ControlBoundaryViz() {
             x={338}
             y={80}
             w={84}
-            label="canary"
-            sub="change harness"
+            label="검토"
+            sub="비교 실행"
             active={a >= 3}
           />
         </svg>

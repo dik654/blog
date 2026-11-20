@@ -61,7 +61,8 @@ export default function PerRequestDecision() {
         </p>
 
         <p className="leading-7">
-          비용은 갱신 경로가 가용성의 일부가 된다는 점입니다. 판정 지점이 멈추면 새 요청이 통과하지 못하고 수명이 짧을수록 그 영향이 빨리 도달합니다. 앞 글에서 다룬 감지와 이동의
+          비용은 갱신 경로가 가용성의 일부가 된다는 점입니다. 판정 지점이 멈추면 새 요청이 통과하지 못하고 수명이 짧을수록 그 영향이 빨리 도달합니다.{" "}
+          <Link to="/cs/saas/anycast-delivery-continuity">무중단 전달</Link>에서 다룬 고장 감지와 트래픽 이동의
           시간이 여기서도 그대로 문제가 됩니다.
         </p>
 

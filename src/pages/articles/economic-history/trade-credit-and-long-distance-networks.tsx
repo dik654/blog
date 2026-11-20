@@ -36,7 +36,7 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
       <LessonSection id="case" level="0" title="3. 은 6미나 대출과 두 번의 상환을 따라갑니다" bridge="빚의 양과 시간을 두 칸으로 나눴습니다. 실물과 청구권이 서로 다른 속도로 움직이는 모습을 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">기원전 20~19세기 무렵 카네시 출토로 추정되는 점토판 하나는 두 사람이 상인 아슈르이디에게 은 6미나, 약 3kg을 빚졌다고 적습니다. 그중 3분의 1은 다음 수확 때, 나머지는 뒤에 갚도록 했습니다. 6미나를 단순히 나누면 첫 상환 2미나, 뒤 상환 4미나입니다.</p>
-          <p className="leading-8">이 기록은 오늘날 은행 대출 계약과 같지 않습니다. 다만 기한까지 갚지 못하면 달마다 이자가 붙는다는 조항과 증인 명단은 이미 들어 있었습니다(8절). 그래도 누가 누구에게 얼마를 언제 갚는지, 한 번에 갚지 못하는 시간을 어떻게 약속으로 바꿨는지 보여 줍니다. 수확 시점은 채무자의 현금 흐름과 상환일을 연결합니다.</p>
+          <p className="leading-8">이 기록은 오늘날 은행 대출 계약과 같지 않습니다. 그래도 누가 누구에게 얼마를 언제 갚는지, 한 번에 갚지 못하는 시간을 어떻게 약속으로 바꿨는지 보여 줍니다. 기한까지 갚지 못하면 달마다 이자가 붙는다는 조항과 증인 명단도 이미 들어 있었습니다(8절). 수확 시점은 채무자의 현금 흐름과 상환일을 연결합니다.</p>
         </div>
         <NumericPath title="6미나를 시간으로 나눈 약속" steps={[
           { label: "전체 채무", value: "6미나", detail: "약 3kg의 은" },
@@ -71,7 +71,7 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
 
       <LessonSection id="mechanism" level="4" title="7. 6미나가 주석·직물·은으로 돌아오는 경로를 추적합니다" bridge="상품 이익보다 먼저 자금·시간·위험의 분배를 봤습니다. 실제 점토판의 물성과 문구를 확인합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">출발지의 가족이 직물과 주석을 제공하고 상인이 이를 카네시에서 팝니다. 구매자가 즉시 은을 다 내지 못하면 6미나 채무가 생깁니다. 다음 수확에서 2미나가 들어오고, 남은 4미나는 뒤 거래나 수확에서 결제됩니다.</p>
+          <p className="leading-8">출발지의 가족이 직물과 주석을 제공하고 상인이 이를 카네시에서 팝니다. 여기서는 점토판의 6미나 채무가 이런 판매에서 구매자가 즉시 은을 다 내지 못해 생겼다고 보고 따라갑니다(가정). 다음 수확에서 2미나가 들어오고, 남은 4미나는 뒤 거래나 수확에서 결제됩니다.</p>
         </div>
         <RepaymentDelayViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -82,7 +82,7 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
 
       <LessonSection id="source" level="5" title="8. 기원전 20~19세기 은 대출 점토판을 읽습니다" bridge="한 계약이 장거리 교역의 신용과 가족망을 보여 주는 범위를 확인했습니다. 더 넓은 교역망과 비교합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">메트로폴리탄 미술관의 점토판은 카네시(오늘날 튀르키예의 퀼테페) 출토로 추정됩니다. 발굴 기록 없이 1966년에 기증된 유물이라 미술관도 출토지를 'probably'로만 적습니다. 점토판은 은 채무의 양과 두 상환 시점을 기록하고, 그 시점까지 갚지 못하면 월 단위 이자가 붙는다고 정합니다. 증인 이름도 본문에 적혀 있고, 증인들의 인장은 점토판을 감쌌던 점토 봉투(접근번호 66.245.17b)에 찍혀 있습니다. 4절에서 말한 기록·증인·평판이라는 집행 장치가 이 한 점의 유물 안에 함께 들어 있는 셈입니다. 같은 지역의 편지와 계약은 아슈르 상인들이 당나귀 대상으로 주석과 직물을 가져와 금·은과 바꾸고 가족·동업자와 거래를 관리했음을 보여 줍니다.</p>
+          <p className="leading-8">메트로폴리탄 미술관의 점토판은 카네시(오늘날 튀르키예의 퀼테페) 출토로 추정됩니다. 발굴 기록 없이 1966년에 기증된 유물이라 미술관도 출토지를 'probably'로만 적습니다. 점토판은 은 채무의 양과 두 상환 시점을 기록하고, 그 시점까지 갚지 못하면 월 단위 이자가 붙는다고 정합니다. 증인 이름도 본문에 적혀 있고, 증인들의 인장은 점토판을 감쌌던 점토 봉투(접근번호 66.245.17b)에 찍혀 있습니다. 4절에서 말한 집행 장치 가운데 기록·증인·평판이 이 한 점의 유물 안에 함께 들어 있는 셈입니다. 같은 지역의 편지와 계약은 아슈르 상인들이 당나귀 대상으로 주석과 직물을 가져와 금·은과 바꾸고 가족·동업자와 거래를 관리했음을 보여 줍니다.</p>
           <p className="leading-8">다만 이자 조항이 있다는 사실과 이자율이 얼마였는지는 다른 문제입니다. 점토판 하나는 당시 모든 거래의 평균 이자율이나 사회 전체의 신용 접근성을 말해 주지 않습니다. 특정 상인 관계의 실재와 기록 방식을 보여 주는 1차 물증으로 쓰고, 시장 규모는 여러 문서와 발굴 맥락으로 확인해야 합니다.</p>
         </div>
         <SourceApplication source="The Met · Cuneiform tablet: loan of silver" excerpt="6 minas ... one third ... by the next harvest" application="전체 6미나를 2미나와 4미나로 나누면 상품 판매와 수확의 시간에 맞춘 단계 상환을 눈으로 볼 수 있습니다." />

@@ -108,7 +108,7 @@ export default function ControlViz() {
             {step >= 2 && (
               <g>
                 <text x={24} y={22} fontSize={9} fill={MUTED}>
-                  강도 0.85 · 무엇을 바꿨을 때의 분리인가
+                  강도 0.85 · 무엇을 바꿨을 때의 쌍 평균 유사도인가 (낮을수록 더 갈라짐)
                 </text>
                 {CMP.map((r, i) => {
                   const on = step === 3 || i === 0;

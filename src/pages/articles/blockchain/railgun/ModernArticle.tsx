@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
 import { CitationBlock } from "@/components/ui/citation-block";
 import RailgunLocator, { RailgunMapReturn } from "./RailgunLocator";
 import RailgunStateTraceViz, { RailgunVisibilityViz } from "./viz/RailgunStateTraceViz";
@@ -189,19 +190,19 @@ insertLeaves(commitments);`}</code></pre>
       <section id="failure-boundaries" className="space-y-5 scroll-mt-20">
         <p className="text-xs font-bold text-primary">실패 경계</p>
         <h2 className="break-keep text-2xl font-bold">어느 검사가 어떤 잘못을 막는지 분리해서 기억합니다</h2>
-        <div className="not-prose overflow-x-auto border-y border-border">
-          <table className="w-full min-w-[52rem] border-collapse text-left text-xs leading-5">
-            <thead><tr className="text-muted-foreground"><th className="px-3 py-3">잘못된 입력</th><th className="px-3 py-3">거절할 위치</th><th className="px-3 py-3">막는 문제</th></tr></thead>
-            <tbody>{[
-              ["C₁₀이 R100의 leaf가 아님", "Merkle proof constraint", "존재하지 않는 note 지출"],
-              ["note 소유 key와 서명이 다름", "EdDSA·mpk relation", "다른 사람 note 지출"],
-              ["10 → 6 + 5", "JoinSplit balance constraint", "새 token 1 생성"],
-              ["N₂₃ 재사용", "contract nullifier mapping", "같은 note 이중 지출"],
-              ["chain·ciphertext 바꿔 붙이기", "boundParams hash + proof", "다른 domain·수신 자료로 치환"],
-              ["wallet sync 중 event 누락", "wallet event replay·balance rebuild", "phantom balance·새 note 누락"],
-            ].map((row) => <tr key={row[0]} className="border-t border-border">{row.map((cell) => <td key={cell} className="px-3 py-3">{cell}</td>)}</tr>)}</tbody>
-          </table>
-        </div>
+        <ResponsiveVizTable
+          className="not-prose"
+          columns={["잘못된 입력", "거절할 위치", "막는 문제"]}
+          rows={[
+            ["C₁₀이 R100의 leaf가 아님", "Merkle proof constraint", "존재하지 않는 note 지출"],
+            ["note 소유 key와 서명이 다름", "EdDSA·mpk relation", "다른 사람 note 지출"],
+            ["10 → 6 + 5", "JoinSplit balance constraint", "새 token 1 생성"],
+            ["N₂₃ 재사용", "contract nullifier mapping", "같은 note 이중 지출"],
+            ["chain·ciphertext 바꿔 붙이기", "boundParams hash + proof", "다른 domain·수신 자료로 치환"],
+            ["wallet sync 중 event 누락", "wallet event replay·balance rebuild", "phantom balance·새 note 누락"],
+          ]}
+          desktopMinWidthClassName="min-w-[40rem]"
+        />
       </section>
 
       <section id="sources" className="space-y-5 scroll-mt-20">

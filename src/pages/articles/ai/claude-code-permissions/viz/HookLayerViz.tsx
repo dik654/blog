@@ -47,7 +47,7 @@ const SCENES: readonly HookScene[] = [
     rule: "allow 맞음",
     final: "멈춤 · rule상 허용이어도",
     stopped: true,
-    note: "방향은 한쪽만 열려 있습니다. allow를 돌려주는 hook는 deny·ask를 풀지 못하지만, exit 2 같은 blocking hook는 permission상 허용된 call도 먼저 멈출 수 있습니다.",
+    note: "방향은 한쪽만 열려 있습니다. allow를 돌려주는 hook는 deny·ask를 풀지 못하지만, exit 2 같은 blocking hook는 rule을 평가하기 전에 call을 멈추므로 allow rule이 맞는 call도 실행되지 않습니다.",
   },
   {
     label: "permission 밖에 남는 층",

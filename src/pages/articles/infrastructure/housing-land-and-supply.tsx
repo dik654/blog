@@ -62,7 +62,7 @@ export default function HousingLandAndSupplyArticle() {
         </div>
         <SupplyPipelineViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">권리 확인과 인허가, 기반 시설, 시공 때문에 수요 증가가 입주로 이어지는 데 걸리는 시간이 공급의 허가 시간입니다. 허가 건수가 늘었다는 통계와 완공 물량은 다릅니다.</p>
+          <p className="leading-8">권리 확인과 인허가, 기반 시설, 시공 때문에 수요 증가가 입주로 이어지는 데 걸리는 시간을 이 글은 공급의 허가 시간이라고 부릅니다. 이름과 달리 허가 단계만이 아니라 기반 시설과 시공 기간까지 포함합니다. 허가 건수가 늘었다는 통계와 완공 물량은 다릅니다.</p>
           <p className="leading-8">가구가 실제 감당하는 주거비는 매매가나 월세 외에도 대출 이자, 관리비, 교통비에 걸칩니다. 주거비 부담의 분배를 보려면 가구 소득과 거주 권리도 함께 봅니다.</p>
         </div>
         <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">사업자 계산과 가구 부담을 구별했습니다. 같은 10억 사업에 지연을 넣습니다.</p>
@@ -102,8 +102,8 @@ export default function HousingLandAndSupplyArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">팔기 전에 직접 살아야 하는 기간을 최소 거주 기간(MOP)이라고 부릅니다. HDB의 주택 안내 사이트 <a className="text-sky-700 underline dark:text-sky-300" href="https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/">MyNiceHome</a>은 Standard 주택에 MOP 5년, 그 뒤 집 전체 임대 허용, 되팔 때 보조금 환수 없음을 적습니다. Plus·Prime 주택에는 MOP 10년, 집 전체 임대 불가, 되팔 때 보조금 환수가 붙습니다.</p>
           <p className="leading-8">Standard 주택은 5년을 살면 팔 수 있지만 Plus·Prime 주택은 10년을 살아야 하고, 팔 때 받은 추가 보조금을 반영해 매각가의 일정 비율을 내야 합니다. 같은 99년 주택이라도 같은 값을 주고 산 권리의 내용이 달라지는 이유입니다. 같은 페이지는 2024년 10월 분양 이전에 공급된 주택에는 이 구분이 적용되지 않는다고 적습니다.</p>
-          <p className="leading-8">hdb.gov.sg 원 페이지는 2026-10-09에도 자동 조회를 막아(403) 같은 정부 도메인의 MyNiceHome 안내(2026-06-24 갱신)로 확인했습니다.</p>
-          <p className="leading-8">2026-10-04 확인 기준으로 다른 나라 주택은 등기·토지 임차권·용도 규정·대출 계약을 각각 확인해야 합니다. 국가 평균 자가보유율 하나로 권리의 내용까지 같다고 볼 수 없습니다.</p>
+          <p className="leading-8">99년 권리에 대한 정부 설명은 2026-10-04에 재확인했습니다. Standard·Plus·Prime 구분과 MOP는 같은 정부 도메인의 MyNiceHome 안내(2026-06-24 갱신)로 확인했습니다. hdb.gov.sg 원 페이지가 2026-10-09에도 자동 조회를 막았기(403) 때문입니다.</p>
+          <p className="leading-8">다른 나라 주택도 등기·토지 임차권·용도 규정·대출 계약을 각각 확인해야 합니다. 국가 평균 자가보유율 하나로 권리의 내용까지 같다고 볼 수 없습니다.</p>
         </div>
         <SourceApplication source="Singapore Government · Do HDB flat buyers own their flat?" excerpt="own the rights to their flats for 99 years" application="같은 10억이라도 기간이 정해진 권리인지 먼저 확인합니다. 사례의 3억 토지 여력 계산에는 판매하는 권리의 기간과 조건이 이미 반영돼야 합니다." />
         <CitationBlock source="Singapore Government · Do HDB flat buyers own their flat?" citeKey={2} href="https://www.gov.sg/explainers/do-hdb-flat-buyers-own-their-flat/">싱가포르 HDB 권리의 기간에 대한 정부 설명. 페이지에 &ldquo;accurate as of March 2023&rdquo;로 적힌 설명을 2026-10-04 재확인했으며, 2024년 10월 도입된 Standard·Plus·Prime 구분보다 앞선 자료입니다.</CitationBlock>

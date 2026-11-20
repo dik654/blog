@@ -203,7 +203,7 @@ export default function LlmApplicationCachingArticle() {
 
       <section id="cache-key-ttl-staleness" data-teach-level="boundary" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Cache key가 넓으면 staleness가, 좁으면 hit rate가 줄어듭니다
+          Cache key에서 조건이 빠지면 다른 조건의 응답이, TTL이 길면 오래된 응답이 돌아옵니다
         </h2>
         <CacheKeySlotViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -299,7 +299,7 @@ export default function LlmApplicationCachingArticle() {
             "Hit과 miss를 같은 시간 창(예: 하루, 한 시간)에서 집계한다고 가정합니다.",
             "여러 캐시 종류(exact-match·semantic·retrieval)를 합쳐서 셀 수도, 따로 셀 수도 있으며 어느 쪽인지 명시해야 비교가 가능합니다.",
           ]}
-          interpretation="Hit rate 62%는 “요청 10건 중 6건은 계산 없이 응답했다”는 뜻입니다. Threshold를 낮추거나 TTL을 늘리면 이 숫자는 오르지만, 앞 절들이 보여 준 오답률·staleness 위험이 함께 오르므로 hit rate 하나만 보고 설정을 판단하면 안 됩니다."
+          interpretation="Hit rate 62%는 “요청 100건 중 62건은 계산 없이 응답했다”는 뜻입니다. Threshold를 낮추거나 TTL을 늘리면 이 숫자는 오르지만, 앞 절들이 보여 준 오답률·staleness 위험이 함께 오르므로 hit rate 하나만 보고 설정을 판단하면 안 됩니다."
         />
         <ProgressiveDetail
           title="실제 서비스의 hit rate는 왜 캐시 종류마다 크게 다른가요"

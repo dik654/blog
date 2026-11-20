@@ -124,7 +124,7 @@ export const cloudArticles: Article[] = [
     sections: [
       { id: "overview", title: "1. write()가 성공을 돌려줬는데 정전 뒤 파일은 왜 비어 있었나요?" },
       { id: "black-box", title: "2. 이름이 inode, mount, page cache, writeback을 지나 장치에 닿습니다" },
-      { id: "vfs-objects", title: "3. 경로 하나가 dentry 넷, inode 하나, file 하나가 됩니다" },
+      { id: "vfs-objects", title: "3. 경로 하나가 dentry 넷, 파일 inode 하나, file 하나가 됩니다" },
       { id: "mount", title: "4. mount 표가 어느 dentry 위에 어느 파일시스템이 얹혔는지 정합니다" },
       { id: "overlayfs", title: "5. 이미지 layer는 overlayfs의 lower이고, 첫 쓰기는 파일을 통째로 복사합니다" },
       { id: "dirty-pages", title: "6. dirty page는 30초 또는 가용 메모리 10%에서 내려가고, 20%에서 앱이 멈춥니다" },

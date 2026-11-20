@@ -284,7 +284,7 @@ export function HotstuffSafeVoteViz() {
 
 const FAILURE_ROWS = [
   ["더 높은 view 숫자만 있음", "유효한 QC 서명과 블록 조상 관계가 없음", "투표하지 않음"],
-  ["B13이 B11을 건너뜀", "QC가 바로 앞 부모를 가리키지 않음", "three-chain으로 세지 않음"],
+  ["B12가 QC10을 들고 B11을 건너뜀", "QC가 바로 앞 부모를 가리키지 않음", "three-chain으로 세지 않음"],
   ["주 노드 연속 장애", "GST 전 view만 계속 바뀜", "충돌 commit은 0 · 처리는 멈출 수 있음"],
   ["재시작 뒤 블록 본문 없음", "QC만 있고 payload와 부모 블록이 없음", "상태 동기화 전 실행 금지"],
 ];

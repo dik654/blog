@@ -26,28 +26,8 @@ export default function Kernel() {
           SM이 memory request를 내지 못한다. 이때 Split-K는 reduction 비용을
           추가하는 대신 K축을 여러 CTA로 나눠 occupancy와 memory-level
           parallelism을 늘린다. 항상 유리한 기법이 아니라 shape별로 split 수와
-          reduction overhead를 튜닝해야 한다.
-        </p>
-        <div className="not-prose my-6 grid grid-cols-3 gap-3 text-center text-sm">
-          <div className="rounded-xl border p-4">
-            <p className="text-xs text-muted-foreground">비융합 baseline</p>
-            <strong className="mt-1 block">{q.unfusedUs}µs</strong>
-          </div>
-          <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-4">
-            <p className="text-xs text-muted-foreground">
-              naive live-quant fusion
-            </p>
-            <strong className="mt-1 block">{q.naiveFusedUs}µs</strong>
-          </div>
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-            <p className="text-xs text-muted-foreground">Split-K fused</p>
-            <strong className="mt-1 block">{q.splitKFusedUs}µs</strong>
-          </div>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          프로젝트 실측. “fusion이면 빠르다”가 아니라 live activation
-          quantization이 weight load와 직렬화된 {q.naiveFusedUs}µs 경로를
-          shape-specific 병렬화로 다시 설계한 결과다.
+          reduction overhead를 튜닝해야 한다. 이 기법이 실제로 얼마나
+          줄였는지는 3절의 PQ-GEMM 실측에서 본다.
         </p>
 
         <h3 className="mt-8 mb-3 text-xl font-semibold">
@@ -79,6 +59,27 @@ export default function Kernel() {
           프로젝트에서 PQ-GEMM이라 부른 경로는 activation quantization과 GEMM을
           같은 pipeline에 넣어 중간 activation의 HBM write/read와 kernel
           launch를 줄인다.</p>
+        <div className="not-prose my-6 grid grid-cols-3 gap-3 text-center text-sm">
+          <div className="rounded-xl border p-4">
+            <p className="text-xs text-muted-foreground">비융합 baseline</p>
+            <strong className="mt-1 block">{q.unfusedUs}µs</strong>
+          </div>
+          <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-4">
+            <p className="text-xs text-muted-foreground">
+              naive live-quant fusion
+            </p>
+            <strong className="mt-1 block">{q.naiveFusedUs}µs</strong>
+          </div>
+          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <p className="text-xs text-muted-foreground">Split-K fused</p>
+            <strong className="mt-1 block">{q.splitKFusedUs}µs</strong>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          프로젝트 실측. “fusion이면 빠르다”가 아니라 live activation
+          quantization이 weight load와 직렬화된 {q.naiveFusedUs}µs 경로를
+          1절의 Split-K 같은 shape-specific 병렬화로 다시 설계한 결과다.
+        </p>
         <p className="leading-7">DeepGEMM 같은 범용 library가 “구현할 수 없다”는 뜻은
           아니다. 빠르게 변하는 범용 kernel set과 특정 model·shape·SM에 고정한
           bespoke kernel의 최적화 범위가 다르다는 뜻으로 제한해서 읽어야 한다.

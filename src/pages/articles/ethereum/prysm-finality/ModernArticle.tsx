@@ -109,10 +109,14 @@ export default function ModernArticle() {
         <h2 className="break-keep text-2xl font-bold">Bits</h2>
         <JustificationBitsViz />
         <p>
-          Prysm의 <code>processJustificationBits</code>는 기존 four-bit history를 한 칸 옮깁니다. 이 사례에서는 <code>0001</code>이 <code>0010</code>이 됩니다. Current target 64/96이 경계를 통과했으므로 오른쪽 끝인 bit 0을 켜 최종 <code>0011</code>을 만듭니다.
+          Prysm의 <code>processJustificationBits</code>는 기존 four-bit history를 한 칸 옮깁니다. 이 사례에서는 <code>0001</code>이 <code>0010</code>이 됩니다. 그다음 previous epoch target balance가 2/3를 넘으면 bit 1을 켜는데, 여기서는 shift로 bit 1이 이미 켜져 있어 값이 바뀌지 않습니다. Current target 64/96이 경계를 통과했으므로 오른쪽 끝인 bit 0을 켜 최종 <code>0011</code>을 만듭니다.
         </p>
         <pre className="not-prose overflow-x-auto border border-border bg-muted/20 p-4 text-[12px] font-normal leading-6"><code>{`// 최근 justification 결과를 한 epoch 뒤로 옮깁니다.
 bits = shift_left(old_bits, 1)       // 0001 → 0010
+
+// 이전 epoch target도 정수 2/3를 넘으면 bit 1을 켭니다.
+if 3 * previous_target_balance >= 2 * active_balance:
+    bits[1] = true                   // 이 사례는 이미 true
 
 // 현재 target의 unique balance가 정수 2/3를 넘는지 확인합니다.
 if 3 * current_target_balance >= 2 * active_balance:
@@ -220,7 +224,7 @@ state.finalized = new_finalized`}</code></pre>
           ))}
         </div>
         <p>
-          Prysm v7.3.1 verifier는 checkpoint epoch가 아직 local finalized epoch보다 앞서거나 같으면 기다립니다. Finality가 그 지점을 지난 뒤에는 root가 DB에 존재하고 canonical finalized block이며 지정한 epoch의 slot 범위에 들어가는지 확인합니다. 세 조건을 모두 통과한 뒤에만 <code>verified=true</code>가 됩니다.
+          Prysm v7.3.1 verifier는 checkpoint epoch가 아직 local finalized epoch 이상이면, 즉 finality가 아직 그 epoch를 지나지 않았으면 기다립니다. Finality가 그 지점을 지난 뒤에는 root가 DB에 존재하고 canonical finalized block이며 지정한 epoch의 slot 범위에 들어가는지 확인합니다. 세 조건을 모두 통과한 뒤에만 <code>verified=true</code>가 됩니다.
         </p>
         <div className="not-prose flex flex-wrap items-center gap-2">
           <CodeViewButton label="Weak-subjectivity 검증" onClick={() => sidebar.open("weak-subjectivity-verifier", codeRefs["weak-subjectivity-verifier"])} />

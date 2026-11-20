@@ -306,7 +306,8 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
           </p>
           <p>
             State가 아무리 압축되어 있어도 나머지 attention layer는 여전히 token 전체를 정확히 조회할 수 있습니다. 이것이 attention layer를 8분의 1만
-            남겨도 검색 성능 대부분을 지킬 수 있는 이유입니다. 나머지 7/8이 얻는 시간과 메모리 이득은 그대로 남습니다.
+            남겨도 정확한 검색 통로가 사라지지 않는다고 기대하는 구조적 근거입니다. 검색 성능이
+            실제로 얼마나 유지되는지는 이 글에서 측정하지 않았고, model과 과제마다 다릅니다. 나머지 7/8이 얻는 시간과 메모리 이득은 그대로 남습니다.
           </p>
           <p>
             정확한 비율과 어느 depth에 attention을 배치할지는 model마다 다르고, 이 글은 그

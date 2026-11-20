@@ -149,19 +149,19 @@ export default function ModernLotusStateArticle() {
           question="AMT index 42를 bit width 3의 path digits로 어떻게 나눌까?"
           idea={<>3 bits는 base 8의 한 자리입니다. Index를 낮은 자리부터 mask하고 오른쪽으로 이동합니다.</>}
           formula={"q_i=(42\\gg 3i)\\ \\&\\ (2^3-1),\\qquad(q_0,q_1)=(2,5)"}
-          annotatedFormula={String.raw`\underbrace{q_i}_{\text{level i branch}}=(\underbrace{42\gg 3i}_{\text{쓴 하위 bit 제거}})\ \&\ \underbrace{(2^3-1)}_{\text{하위 3bit mask}},\qquad(q_0,q_1)=(2,5)`}
+          annotatedFormula={String.raw`\underbrace{q_i}_{\text{자리 i branch}}=(\underbrace{42\gg 3i}_{\text{쓴 하위 bit 제거}})\ \&\ \underbrace{(2^3-1)}_{\text{하위 3bit mask}},\qquad(q_0,q_1)=(2,5)`}
           operations={[
           { expression: String.raw`42\gg 3i`, annotation: ["42는 8진수 52","i=1이면 3 bit 밀어 42≫3=5"] },
           { expression: String.raw`(2^3-1)`, annotation: ["mask 7로 base 8 한 자리만 남김","42&7=2, 5&7=5 → (2,5)"] },
         ]}
           terms={[
             { symbol: "42", name: "Array index", description: "조회할 integer slot입니다. 8진수로 52입니다." },
-            { symbol: "i", name: "Level", description: "Root 쪽 낮은 3-bit digit부터 세는 level입니다." },
+            { symbol: "i", name: "Digit position", description: "낮은 3-bit 자리부터 세는 번호입니다. q_0이 leaf 쪽 자리입니다." },
             { symbol: "\\gg", name: "Right shift", description: "이미 사용한 낮은 bits를 제거합니다." },
-            { symbol: "q_i", name: "Path digit", description: "Level i에서 선택할 branch이며 예제는 2 다음 5입니다." },
+            { symbol: "q_i", name: "Path digit", description: "자리 i의 branch 번호입니다. Root에서 높은 자리 q_1=5를 먼저 쓰고, leaf에서 q_0=2를 씁니다." },
           ]}
           assumptions={[
-            "예제의 AMT traversal이 낮은 bits부터 3 bits씩 소비한다고 둡니다.",
+            "예제 AMT는 두 층(height 1)이라고 둡니다(가정). Pinned go-amt-ipld v4.4.0의 get()은 root에서 i / 8로 높은 자리를 고르고 i % 8을 child로 넘기므로 root→leaf 경로는 5 → 2입니다.",
             "Tree height와 root encoding, absent slot 처리는 exact AMT version을 따릅니다.",
           ]}
           interpretation="42의 digits가 2·5라는 계산만으로 value가 존재한다고 말할 수 없습니다. Bitfield에서 branch 존재 여부와 child/value encoding을 검증해야 합니다."

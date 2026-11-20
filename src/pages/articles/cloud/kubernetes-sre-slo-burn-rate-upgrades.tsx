@@ -306,7 +306,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
               limit이 CFS quota로 바뀌는 과정은{" "} <a href="/cs/cloud/kubernetes-requests-limits-allocatable-qos#overview">requests와 limits</a>와 <a href="/cs/cloud/linux-containers-cgroup-namespace#overview">cgroup과 namespace</a>에 있습니다.
             </p>
             <p>
-              Reddit의 2023년 3월 14일 장애에서 API server 로그는 쓰기 요청의 타임아웃을 보였습니다. 원인은 그 쓰기 자체가 아니라 모든 리소스를 검사하던 OPA admission webhook 호출의 타임아웃이었습니다. 그 webhook을 지워도 cluster는 회복되지 않았습니다. 진짜 원인은 더 아래, 9절의 label에 있었습니다. 증상에서 원인까지 두 층을 내려간 사례입니다.
+              Reddit의 2023년 3월 14일 장애에서 API server 로그는 쓰기 요청의 타임아웃을 보였습니다. 원인은 그 쓰기 자체가 아니라 모든 리소스를 검사하던 OPA admission webhook 호출의 타임아웃이었습니다. 그 webhook을 지우자 타임아웃은 곧바로 사라졌지만 cluster는 회복되지 않았습니다. 진짜 원인은 더 아래, 9절의 label에 있었습니다. 증상에서 원인까지 두 층을 내려간 사례입니다.
             </p>
             <p>
               webhook이 API 쓰기를 통째로 막을 수 있는 이유는 Kubernetes v1.37.1의 타입 정의에 있습니다. failurePolicy는 Ignore와 Fail 두 값 중 하나이며 비워 두면 Fail입니다. timeoutSeconds는 기본 10초, 최대 30초입니다. Fail 정책의

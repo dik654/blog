@@ -7,7 +7,7 @@ import {
 export default function MergeSummaryViz() {
   return (
     <CompactFrame
-      label="FIELD-AWARE MERGE"
+      label="DESIRED · FIELD-AWARE MERGE"
       title="각 필드의 의미에 맞춰 prior state와 새 fact를 합친다"
       description="이전 summary를 다시 자유 요약하지 않고 로그인 수정 상태의 최신값, 집합, 사건과 순서를 field별 규칙으로 병합합니다."
       note="자연어 유사도만으로 dedup하면 다른 실패를 합칠 수 있습니다. task ID, canonical path, tool call ID, error code와 receipt digest 같은 안정적인 key를 우선합니다."

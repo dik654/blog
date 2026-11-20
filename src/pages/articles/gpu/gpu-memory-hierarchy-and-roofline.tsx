@@ -91,6 +91,7 @@ export default function Article() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">같은 64개 덧셈에서 계산량은 64 FLOP이고 유효 읽기·쓰기는 768바이트입니다. 따라서 연산 강도는 64 FLOP ÷ 768바이트 = 1/12 FLOP/B입니다. 이 유효량이 실제 DRAM 이동량과 같다고 가정하겠습니다.</p>
       </div>
+      <RooflineArithmeticViz mode="intensity" />
       <RooflineCeilingViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">대역폭 상한 1TB/s는 초당 10¹²바이트입니다. 여기에 바이트마다 1/12 FLOP를 곱하면 초당 계산 상한은 10¹² byte/s × 1/12 FLOP/byte = 약 83.3GFLOP/s입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
@@ -106,7 +107,6 @@ export default function Article() {
         <p className="leading-8">실측 유효 768바이트를 1μs에 처리했다면 유효 대역폭은 0.768GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.</p>
       </div>
       <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">83.3GFLOP/s 상한과 64개 작업의 실제 완료 시간을 구별했습니다. 공식 문서의 바이트 정의에 대입합니다.</p>
-    <RooflineArithmeticViz mode="intensity" />
 </section>
     <section id="source" data-teach-level="5" className="scroll-mt-20">
       <span id="paper-cuda-best-practices-memory" className="scroll-mt-20" />
@@ -129,11 +129,13 @@ export default function Article() {
         <p className="leading-8">계산 상한에 가까운지 보려면 실제로 사용한 실행 pipe의 throughput과 명령 구성을 확인합니다. Scalar FP32 덧셈에 FP16 Tensor peak를 대입하면 다른 계산기의 능력을 비교하게 됩니다. 어느 pipe가 80%를 넘었다는 임의 문턱만으로 compute-bound를 확정하지 않습니다.</p>
         <p className="leading-8">DRAM throughput이 높다고 놓습니다. Byte를 줄였을 때 시간도 줄면 메모리 대역폭이 병목이라는 증거가 쌓입니다. DRAM과 계산 pipe가 둘 다 낮다면 ready warp 부족이나 직렬 의존, 작은 grid, launch 사이 공백을 더 확인합니다. Profiler의 eligible warp는 실행 가능한 warp를 보는 지표입니다. 한 counter가 모든 원인을 대표하지는 않습니다.</p>
         <p className="leading-8">Roofline 원논문 3절은 cache를 거친 뒤 DRAM과 오간 바이트당 연산 수를 operational intensity라고 정의합니다. 본문의 1/12 FLOP/B를 그 식에 넣으려면 실제 DRAM 전송량도 768바이트라는 가정이 필요합니다. 원문의 대역폭도 메모리 핀의 명목 수치가 아니라 지속 가능한 전송량을 기준으로 합니다.</p>
+      </div>
+      <RooflineArithmeticViz mode="boundary" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">실제 측정점이 선 아래에 있다는 사실만으로 어느 동기화나 주소 의존이 원인인지는 설명하지 않습니다. <Link to="/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard">SM의 준비된 명령과 scoreboard</Link>가 그다음 질문을 다룹니다.</p>
       </div>
       <CodeViewButton label="vectorAdd의 실제 읽기 2회·쓰기 1회" onClick={() => sidebar.open("cuda-kernel", codeRefs["cuda-kernel"])} /><SourceApplication source="NVIDIA vectorAdd · 3f1c509 · 52행" excerpt="C[i] = A[i] + B[i] + 0.0f;" application="Compiler가 추가 0.0f를 제거한 64개 덧셈 모델에서 64FLOP·유효 768B입니다. Tensor 행렬 peak를 이 scalar 계산 상한으로 쓰지 않습니다." /><CitationBlock source="NVIDIA vectorAdd · 3f1c509 · 52행" citeKey={2} href="https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu">NVIDIA vectorAdd · 3f1c509 · 52행</CitationBlock><CitationBlock source="Williams 외 ·Roofline(2009)" citeKey={3} href="https://escholarship.org/uc/item/78h8v7mr">연산 강도와 대역폭·계산 상한을 결합하는 모델. 실제 병목 원인의 완전한 진단은 아닙니다.</CitationBlock><CitationBlock source="NVIDIA Nsight Compute ·2026-10-04 확인 ·Profiling Guide" citeKey={4} href="https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html">메모리 계층·실행 pipe·scheduler counter의 정의를 함께 확인합니다.</CitationBlock>
       <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">상한과 counter를 같은 연산 종류에 맞췄습니다. 서로 다른 병목을 개선하는 방법을 마지막으로 나눕니다.</p>
-    <RooflineArithmeticViz mode="boundary" />
 </section>
     <section id="limits" data-teach-level="7" className="scroll-mt-20">
       <span id="latency-launch-bound" className="scroll-mt-20" />

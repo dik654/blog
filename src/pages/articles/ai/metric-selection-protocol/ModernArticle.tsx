@@ -41,6 +41,8 @@ export default function MetricSelectionProtocolArticle() {
             않습니다.
           </p>
           <p>
+            여기서 recall은 실제 긴급 문의(positive) 가운데 모델이 긴급으로 잡아낸
+            비율이고, latency는 요청 하나에 응답하기까지 걸린 시간입니다.
             이 글의 자료 이름, 후보 ID, 손실, 비용, recall과 latency는 모두 계산
             흐름을 설명하기 위한 가정입니다. 특정 서비스에서 측정한 결과가 아닙니다.
           </p>
@@ -207,8 +209,8 @@ export default function MetricSelectionProtocolArticle() {
         <GuardrailPlaneViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            P24-H는 비용 31로 가장 낮지만 최저 집단 recall이 0.74라서 사전 하한
-            0.80을 넘지 못합니다. P29는 recall 0.83이지만 p95 121ms로 100ms
+            P24-H는 비용 31로 가장 낮고 p95도 91ms지만 최저 집단 recall이 0.74라서 사전 하한
+            0.80을 넘지 못합니다. P29는 비용 35, recall 0.83이지만 p95 121ms로 100ms
             상한을 넘습니다. 3회 평균 실행으로 정확도를 높이는 대신 지연이
             길어진 경우입니다.
           </p>

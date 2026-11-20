@@ -33,7 +33,7 @@ const SCENES: readonly {
     summary: "D1 duty 폐기 → D2에서 다시 구함",
     root: "d2",
     marks: [],
-    note: "서명 전에 dependent root가 D2로 바뀌면 D1의 duty와 bit position을 버리고 D2에서 assignment와 head·source·target을 다시 구합니다. 같은 epoch라는 이유로 앞의 cache를 재사용하지 않습니다.",
+    note: "서명 전에 dependent root가 D2로 바뀌면 D1의 duty와 bit position을 버리고 D2에서 assignment와 head·source·target을 다시 구합니다. 같은 epoch라는 이유로 D1 기준 cache를 재사용하지 않습니다.",
   },
   {
     label: "block이 제때 도착",

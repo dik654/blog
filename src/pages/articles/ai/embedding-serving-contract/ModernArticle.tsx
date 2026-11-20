@@ -51,7 +51,7 @@ export default function EmbeddingServingContractArticle() {
         { symbol: String.raw`L_{\max}`, name: "Encoder limit", description: "Runtime가 허용하는 전체 input token 수입니다." },
         { symbol: String.raw`L_{\rm instruction}`, name: "Instruction length", description: "Role·task prompt가 차지하는 token 수입니다." },
         { symbol: String.raw`\kappa_i`, name: "Content retention", description: "문서 i 원문 중 encoder가 실제로 본 token 비율입니다." },
-      ]} assumptions={["Checkpoint와 같은 tokenizer·normalizer·special-token insertion을 사용합니다.", "Truncation side와 chunking rule을 고정합니다.", "Token 보존 비율이 answer evidence 보존 확률과 같다고 가정하지 않습니다."]} interpretation="Limit 512, special 2, instruction 30이면 content budget은 480입니다. 800-token 문서의 retention은 .6이지만 정답이 뒤쪽에 있으면 head truncation으로 핵심 evidence를 전부 잃을 수 있습니다." />
+      ]} assumptions={["Checkpoint와 같은 tokenizer·normalizer·special-token insertion을 사용합니다.", "Truncation side와 chunking rule을 고정합니다.", "Token 보존 비율이 answer evidence 보존 확률과 같다고 가정하지 않습니다."]} interpretation="Limit 512, special 2, instruction 30이면 content budget은 480입니다. 800-token 문서의 retention은 .6이지만 정답이 뒤쪽에 있으면 앞부분 480 token만 남기고 뒤를 잘라 내는 head truncation으로 핵심 evidence를 전부 잃을 수 있습니다." />
     </section>
 
     <section id="index-artifact" className="scroll-mt-20">

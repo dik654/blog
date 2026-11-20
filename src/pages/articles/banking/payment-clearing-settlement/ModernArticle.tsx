@@ -82,7 +82,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 <BalanceLadderViz/>
 <p className="leading-8">이제 여섯 건을 ①→②→③→④→⑤→⑥ 순서로 하나씩 처리합니다. 처음 A 100·B 20·C 0을 놓으면 잔액은 (0,120,0)→(90,30,0)→(90,0,30)→(90,20,10)→(80,20,20)→(90,20,10)이 됩니다. 음수인 은행이 없으므로 모두 처리됩니다. 처음 준비한 합은 120입니다.</p>
 <p className="leading-8">같은 지시를 ①→③→④→②→⑤→⑥ 순서로 바꾸면 A 100·B 0·C 0으로 시작할 수 있습니다. A의 100을 받은 B가 먼저 C에게 30을 보내고 C가 20을 돌려주면 B는 다시 90을 갖습니다. 그때 A에게 90을 보낼 수 있습니다. 마지막 잔액은 A 90·B 0·C 10입니다.</p>
-<p className="leading-8">순서만 바꿨는데 최초 필요한 합이 120에서 100으로 줄었습니다. 총액 260은 그대로입니다. 추가 신용도 분할도 허용하지 않는 이 모형에서는 100 지시를 실행할 순간 어느 은행이 100을 가지고 있어야 하므로 전체 최초 잔액은 최소 100입니다. 위 순서가 그 하한을 실제로 달성합니다.</p>
+<p className="leading-8">순서만 바꿨는데 최초 필요한 합이 120에서 100으로 줄었습니다. 총액 260은 그대로입니다. 추가 신용도 분할도 허용하지 않는 이 모형에서는 A→B 100 지시를 실행할 순간 보내는 A가 100을 가지고 있어야 하므로 전체 최초 잔액은 최소 100입니다. 위 순서가 그 하한을 실제로 달성합니다.</p>
 <p className="leading-8">RTGS의 빠른 최종 처리는 미결제 상태를 줄이는 데 도움이 됩니다. 그래도 처리 전 대기, 자금 부족, 전산 장애, 자금을 빌려준 쪽의 신용 위험까지 모두 없어지지는 않습니다. 실제 운영에서는 시간 제약과 우선순위, 일중 신용 및 담보 조건도 계산에 들어갑니다.</p>
 </div><LiquidityOrderViz/></section>
 <section id="hybrid-design" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 대기 지시를 묶어 처리할 조건을 실제 계산으로 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">

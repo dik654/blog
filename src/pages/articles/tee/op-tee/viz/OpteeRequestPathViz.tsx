@@ -53,7 +53,7 @@ const SCENES: readonly PathScene[] = [
   {
     label: "InvokeCommand",
     summary: "command ID + shared buffer 검증",
-    note: "같은 session으로 command ID와 shared buffer를 보냅니다. Shared buffer는 client가 Secure World와 함께 쓰도록 넘긴 메모리라 untrusted input이므로 size·direction·offset·alias를 검증한 복사본만 TA state에 씁니다. 허용된 command면 C, buffer 검증을 통과하면 M이 1입니다.",
+    note: "같은 session으로 command ID와 shared buffer를 보냅니다. Shared buffer는 client가 Secure World와 함께 쓰도록 넘긴 메모리라 untrusted input이므로, OP-TEE Core가 TA를 부르기 전에 이 buffer를 복사하며 size·direction·offset·alias를 검증하고(copy/bounds 단계) 그 복사본만 TA에 넘깁니다. 허용된 command면 C, buffer 검증을 통과하면 M이 1입니다.",
     lit: ["client", "driver", "smc", "core", "ta"],
     fail: [],
     carries: "command ID · shared buffer(size · direction · offset · alias)",
@@ -75,9 +75,9 @@ const SCENES: readonly PathScene[] = [
   {
     label: "실패: buffer 방향 변조",
     summary: "Secure World 진입 성공, A = 0",
-    note: "올바른 TA session이어도 output 전용 buffer를 input인 것처럼 속이면 M = 0이라 effect를 만들지 않습니다(03절 표: copy/bounds 단계의 typed error). 요청이 SMC를 지나 Secure World에 들어왔어도 A = 1은 아닙니다. – 칸은 이 예가 정하지 않은 조건입니다.",
+    note: "올바른 TA session이어도 output 전용 buffer를 input인 것처럼 속이면 TA를 부르기 전 OP-TEE Core의 copy/bounds 단계에서 M = 0이 되어 typed error로 끝나고 effect를 만들지 않습니다(03절 표). 요청이 SMC를 지나 Secure World에 들어왔어도 A = 1은 아닙니다. – 칸은 이 예가 정하지 않은 조건입니다.",
     lit: ["client", "driver", "smc", "core"],
-    fail: [],
+    fail: ["core"],
     carries: "output 전용 buffer를 input으로 표시",
     bits: ["1", "-", "0", "-"],
     effect: "A = 0 → typed error, effect 없음",

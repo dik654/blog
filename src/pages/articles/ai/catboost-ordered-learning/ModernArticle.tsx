@@ -143,8 +143,10 @@ export default function CatBoostOrderedLearningArticle() {
           title="Ordered target statistic과 ordered boosting은 각각 category value와 gradient prediction을 보호한다"
         >
           Categorical encoding이 자기 target을 보지 않는 것과 gradient model이
-          현재 row를 보지 않는 것은 다른 경계입니다. 둘 다 별도 test가
-          필요합니다.
+          현재 row를 보지 않는 것은 다른 경계입니다. Ordered target
+          statistic은 같은 permutation에서 현재 row보다 앞선, 같은 category
+          값을 가진 rows의 label만으로 그 category 값을 숫자로 바꿉니다. 두 경계
+          모두 별도 test가 필요합니다.
         </LessonHeader>
         <LeakagePathsViz />
         <div id="paper-catboost" className="scroll-mt-24">

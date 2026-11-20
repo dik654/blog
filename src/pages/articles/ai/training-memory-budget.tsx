@@ -342,8 +342,11 @@ export default function TrainingMemoryBudgetArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             간격을 <code>k</code>로 두면 계속 보관할 기준점은 대략
-            <code>n/k</code>개입니다. 현재 구간을 복원하는 동안에는 최대
-            <code>k</code>개가 더 필요합니다. 두 수의 합<code>n/k+k</code>는{" "}
+            <code>n/k</code>개입니다. 이 기준점에는 입력 <code>x₀</code>도
+            들어갑니다. 현재 구간을 복원하는 동안에는 최대
+            <code>k</code>개가 더 필요합니다. 그래서 <code>k=1</code>이면{" "}
+            <code>9+1=10</code>개로, 아홉 출력을 모두 저장할 때보다 오히려 하나
+            많습니다. 두 수의 합<code>n/k+k</code>는{" "}
             <code>k≈√n</code>에서 균형을 이루므로 저장 슬롯은 <code>O(√n)</code>
             이 됩니다. 모든 구간을 한 번씩 복원하므로 단순한 연쇄 구조에서는
             전체적으로 순방향 계산 약 한 번을 더 합니다.

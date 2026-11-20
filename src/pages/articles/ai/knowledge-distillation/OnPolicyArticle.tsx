@@ -107,9 +107,11 @@ export default function OnPolicyDistillationArticle() {
           interpretation="λ=0은 fixed response, λ=1은 student rollout입니다. λ=.5는 두 source를 섞지만 teacher confidence를 절반으로 낮춘다는 뜻은 아닙니다."
         />
         <p>
-          λ=1에서 student가 자기 rollout 분포(student rollout distribution,
-          위 식의 d_{"{π_s}"})로 배우는 것과 λ=0에서 teacher distribution(또는
-          고정 데이터)만 그대로 모방하는 것은{" "}
+          두 경우 모두 target은 teacher가 주고, 달라지는 것은 그 target을 받는
+          prefix입니다. λ=1에서 student가 자기 rollout이 방문한 prefix(student
+          rollout distribution, 위 식의 d_{"{π_s}"}) 위에서 배우는 것과 λ=0에서
+          dataset·teacher response가 만든 고정 prefix(d_{"{fixed}"}) 위에서만
+          배우는 것은{" "}
           <Link
             className="text-primary hover:underline"
             to="/cs/ai/rl-foundations-for-llm-post-training#on-vs-off-policy"

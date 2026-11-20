@@ -226,7 +226,7 @@ export default function ModernRethBlobAdmission() {
           {[
             ["01 · Insert", "Valid transaction을 account metadata와 함께 내부 Pool graph에 넣습니다."],
             ["02 · Capacity", "Batch 뒤 size limit을 넘으면 discard_worst가 후보를 제거하고 방금 넣은 T₀도 DiscardedOnInsert가 될 수 있습니다."],
-            ["03 · Sidecar", "Pool write lock을 놓은 뒤 새 삽입 metadata의 sidecar를 BlobStore와 listener에 전달하고, capacity에서 탈락한 후보의 Blob은 이어서 지웁니다."],
+            ["03 · Sidecar", "Pool write lock을 놓은 뒤 새 삽입 metadata의 sidecar를 BlobStore와 listener에 전달하고, capacity에서 탈락한 후보의 Blob은 이어서 지웁니다. 방금 넣은 T₀가 DiscardedOnInsert가 되면 그 sidecar도 일단 저장된 뒤 곧바로 삭제됩니다."],
           ].map(([title, body]) => (
             <li key={title} className="bg-background p-4">
               <strong className="block text-xs text-primary">{title}</strong>

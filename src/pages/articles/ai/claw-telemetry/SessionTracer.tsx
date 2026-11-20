@@ -76,7 +76,7 @@ export default function SessionTracer() {
           metric label에는 고유 ID를 넣지 않는다
         </h3>
         <p>
-          session ID나 파일 경로, prompt hash를 metric label로 쓰면 시계열 수가 요청마다 늘어납니다. high-cardinality 문제입니다. 고유 값은
+          metric 저장소는 label 값의 조합마다 시계열(시간에 따라 쌓이는 값의 열)을 하나씩 따로 만듭니다. 그래서 session ID나 파일 경로, prompt hash를 metric label로 쓰면 시계열 수가 요청마다 늘어납니다. 이를 high-cardinality(label 값의 종류가 너무 많은 상태) 문제라고 합니다. 고유 값은
           trace와 log에 두고 metric은 provider, model, operation, status처럼 가능한 값이 제한된 차원만 사용합니다. 평균 latency 하나보다
           histogram을 기록해야 p50·p95·p99와 timeout 근처의 긴 꼬리가 보입니다.
         </p>

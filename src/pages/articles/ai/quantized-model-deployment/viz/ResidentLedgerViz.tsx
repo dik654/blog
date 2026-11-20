@@ -21,7 +21,7 @@ const SCENES = [
   {
     label: "양자화 전 peak",
     summary: `14 + 7 + 3 = ${BEFORE_TOTAL} GB`,
-    note: "본문의 설명용 예시입니다. Weight 14 GB 위에 실행 중 tensor와 요청 상태(activation + KV·recurrent state) 7 GB, kernel scratch와 안전 여유(workspace + headroom) 3 GB가 더해져 peak가 24 GB입니다.",
+    note: "본문의 설명용 예시이며, 앞 절의 27B가 아닌 더 작은 model을 가정합니다. Weight 14 GB 위에 실행 중 tensor와 요청 상태(activation + KV·recurrent state) 7 GB, kernel scratch와 안전 여유(workspace + headroom) 3 GB가 더해져 peak가 24 GB입니다.",
   },
   {
     label: "Weight 항만 4분의 1",

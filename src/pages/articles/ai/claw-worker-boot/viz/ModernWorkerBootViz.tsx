@@ -89,7 +89,7 @@ export function WorkerEvidenceViz() {
           </section>
           <section className="rounded-lg border border-rose-500/35 bg-rose-500/5 p-4">
             <p className="text-sm font-semibold">실패·재조사</p>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">근거가 부족하면 StartupNoEvidence로 남기고 자동 성공 처리하지 않습니다.</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">Startup timeout이면 아래 본문의 StartupEvidenceBundle로 근거를 묶어 재조사하고, 자동 성공 처리하지 않습니다.</p>
           </section>
         </div>
       </div>

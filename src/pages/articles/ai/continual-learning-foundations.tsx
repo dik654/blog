@@ -284,7 +284,8 @@ export default function ContinualLearningFoundationsArticle() {
             이 조정을 한 배치로 끝내지 않고 배포 기간 내내 계속 반영하면
             online adaptation이라고 부릅니다. 예를 들어 이미지 손상으로
             정확도가 76%에서 61%까지 떨어진 상황에서, test-time adaptation을
-            몇 배치만 적용해도 70% 안팎까지 회복되는 경우가 보고됩니다.
+            몇 배치만 적용해 70% 안팎까지 회복하는 식입니다. 이 수치도
+            크기를 가늠하기 위한 예시이며 특정 논문의 실측치가 아닙니다.
           </p>
         </div>
         <AlgorithmBlock

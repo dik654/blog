@@ -102,7 +102,7 @@ export default function ModernArticle() {
               {[
                 ["Uₚ > T", "증가", "계산값과 1 wei 중 큰 값", "Bₚ + Δ"],
                 ["Uₚ = T", "유지", "추가 연산 없음", "Bₚ"],
-                ["Uₚ < T", "감소", "버림 뒤 saturating subtraction", "Bₚ − Δ"],
+                ["Uₚ < T", "감소", "Δ = ⌊Bₚ(T − Uₚ)/(T·D)⌋, 최소 1 wei 없이 saturating subtraction(0 아래로 내려가지 않는 뺄셈)", "Bₚ − Δ"],
               ].map((row) => (
                 <tr key={row[0]} className="border-t border-border">
                   {row.map((cell) => (

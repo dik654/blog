@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { commonwareTree } from "./fileTrees";
@@ -154,20 +155,13 @@ export default function ModernArticle() {
 
       <section id="failure" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">실패한 경계만 말한다</h2>
-        <div className="not-prose overflow-x-auto">
-          <table className="w-full min-w-[760px] border-collapse text-left text-sm">
-            <thead><tr className="border-b border-border"><th className="p-3">관찰값</th><th className="p-3">확인한 실패</th><th className="p-3">다음 동작 또는 한계</th></tr></thead>
-            <tbody>
-              {failures.map(([observation, boundary, consequence]) => (
-                <tr key={observation} className="border-b border-border/70">
-                  <td className="p-3 font-mono text-xs text-primary">{observation}</td>
-                  <td className="p-3">{boundary}</td>
-                  <td className="p-3 text-muted-foreground">{consequence}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ResponsiveVizTable
+          className="not-prose"
+          columns={["관찰값", "확인한 실패", "다음 동작 또는 한계"]}
+          rows={failures}
+          desktopMinWidthClassName="min-w-[760px]"
+          firstColumnClassName="font-mono text-xs text-primary"
+        />
         <p>
           이 글은 장애 복구 설계나 제품 채택을 결정하지 않습니다. 실제 운영 글에서는 indexer가 응답 전에 보장하는 저장 수준, stream 재연결, proposal 재시도, certificate 기록 재조정, key 보관과 version migration을 별도 실험으로 확인해야 합니다.
         </p>

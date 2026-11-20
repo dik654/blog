@@ -91,7 +91,7 @@ export default function TransportAccessAndLandValueArticle() {
       <section id="comparison" data-teaching-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">6 · 잉글랜드의 평가 원칙은 이익을 두 번 세지 말라고 요구합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">MHCLG의 사업 평가 안내는 토지가치 변화와 다른 편익을 합칠 때 중복을 확인하도록 합니다. 이 안내는 머리말에 &ldquo;Applies to England&rdquo;라고 적힌 잉글랜드의 주택·재생 사업 평가 지침입니다(2026-02-18 갱신). 이 원칙을 사례에 적용하면 1,000분 절약의 가치와 월세 상승 10만 원이 같은 접근성 개선을 반영하는지부터 봅니다.</p>
+          <p className="leading-8">MHCLG의 사업 평가 안내는 토지가치 변화와 다른 편익을 합칠 때 중복을 확인하도록 합니다. 이 안내는 머리말에 &ldquo;Applies to England&rdquo;라고 적힌 잉글랜드의 주택·재생 사업 평가 지침입니다(2026-02-18 갱신). 월세와 토지가치는 같은 값이 아니지만, 여기서는 3절의 지대 이동처럼 월세 상승을 좋아진 위치의 가치가 매달 임대료로 드러난 몫으로 봅니다(가정). 이 원칙을 사례에 적용하면 1,000분 절약의 가치와 월세 상승 10만 원이 같은 접근성 개선을 반영하는지부터 봅니다.</p>
           <p className="leading-8">교통 사업에는 교통부(DfT)의 평가 지침 TAG가 따로 있습니다. TAG Unit A2.2(2025년 5월판)는 토지가치 상승에 토지로 자본화된 모든 영향이 담기므로 광역 경제 효과나 함께 시행한 다른 사업의 효과까지 섞여 중복 계산이나 편익의 잘못된 귀속이 생길 수 있다고 경고합니다.</p>
         </div>
         <OverlapViz />

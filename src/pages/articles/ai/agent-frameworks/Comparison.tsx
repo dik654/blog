@@ -34,15 +34,15 @@ const RUNTIME_BOUNDARIES = [
 export default function Comparison() {
   return (
     <section id="comparison" className="mb-16 scroll-mt-20">
-      <div className="not-prose my-8">
-        <ComparisonDetailViz />
-      </div>
-
       <header className="mb-6 space-y-3">
         <p className="text-xs font-black tracking-[0.18em] text-primary">00 · 후보 비교</p>
         <h2 className="text-2xl font-black leading-tight sm:text-3xl">A-104의 상태 소유권으로 Runtime을 고릅니다</h2>
         <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">직접 구현과 네 후보에 같은 환불·장애 조건을 넣고, 복구 결과와 이관 비용을 함께 비교합니다.</p>
       </header>
+
+      <div className="not-prose my-8">
+        <ComparisonDetailViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -198,8 +198,8 @@ export default function Comparison() {
           중심으로 control flow를 명시합니다. Flow의 한 step 안에서 Crew를 호출할 수도 있습니다.
         </p>
         <p>
-          환불 승인과 API 호출처럼 audit 가능한 순서는 Flow나 일반 workflow에 둡니다. 해석이
-          필요한 좁은 단계에만 Crew를 넣으면 자율성과 결정적 전이의 경계를 나눌 수 있습니다.
+          환불 승인과 API 호출처럼 audit 가능한 순서는 Flow나 일반 workflow에 둡니다. 고객 요청을
+          요청 당시의 환불 정책과 맞춰 읽는 단계처럼 해석이 필요한 좁은 단계에만 Crew를 넣으면 자율성과 결정적 전이의 경계를 나눌 수 있습니다.
         </p>
         <p>
           2026년 10월 25일 CrewAI v1.15.30 문서에는 Crew execution checkpoint와 Flow의 persistence,

@@ -35,7 +35,7 @@ export default function ExecutionNestingViz() {
       note="색칠한 칸의 위치는 설명용입니다(가정). 실제 칸 번호를 뜻하지 않습니다."
     >
       <div className="space-y-3">
-        <Tier name="SM · 처리 구역" detail="전체 register 칸(register file) 65,536개. 네모 하나는 칸이 아니라 warp 자리이고, 최대 64 warps 중 표시한 4자리가 block 하나입니다">
+        <Tier name="SM · 작업장" detail="전체 register 칸(register file) 65,536개. 네모 하나는 칸이 아니라 warp 자리이고, 최대 64 warps 중 표시한 4자리가 block 하나입니다">
           <div className="grid grid-cols-[repeat(16,minmax(0,1fr))] gap-[3px]" aria-label="warp 자리 64개 중 block 하나가 4자리 차지">
             {Array.from({ length: WARP_SEATS }, (_, seat) => (
               <span key={seat} className={`h-3 border ${seat < BLOCK_WARPS ? "border-primary bg-primary/40" : "border-border bg-background"}`} />

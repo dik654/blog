@@ -14,7 +14,7 @@ const NOTES = [
   "\"서울 날씨 알려줘\" 라는 요청에 model 이 등록된 tool 이름·설명을 보고 get_weather 를 고릅니다. send_email 은 후보에서 제외됩니다.",
   "get_weather 의 JSON schema(location: string, unit: enum)에 맞춰 model 이 {\"location\": \"Seoul\", \"unit\": \"celsius\"} 를 채웁니다.",
   "독립된 tool 3개를 실행 1회 400ms 로 가정하면, 순차 호출은 조회 시간 합이 3×400ms = 1,200ms 지만 한 턴에 함께 반환해 동시에 돌리면 가장 늦은 조회가 끝나는 약 400ms 로 줄어듭니다.",
-  "결과가 성공이면 다음 tool 선택의 입력이 되고, 실패면 재시도 횟수를 늘려 backoff 뒤 다시 부르거나 최대 횟수를 넘기면 typed error 로 확정합니다.",
+  "결과가 성공이면 다음 tool 선택의 입력이 되고, 실패면 먼저 실패 종류와 반복해도 안전한지 확인합니다. 일시적이고 안전한 실패만 재시도 횟수를 늘려 backoff 뒤 다시 부르고, 그렇지 않거나 최대 횟수를 넘기면 typed error 로 확정합니다.",
 ] as const;
 
 const TOOL_CANDIDATES = ["get_weather", "search_flights", "send_email"] as const;
@@ -109,7 +109,7 @@ function ValidationScene() {
       <div className="border border-border p-3 text-xs">
         <p className="text-[11px] font-black text-foreground">실패 → retry 또는 error</p>
         <p className="mt-2 leading-6 text-muted-foreground">
-          최대 횟수 안이면 backoff 뒤 재시도하고, 넘으면 typed error 로 확정합니다.
+          일시적이고 반복해도 안전한 실패만 최대 횟수 안에서 backoff 뒤 재시도합니다. 그 밖의 실패나 횟수 초과는 typed error 로 확정합니다.
         </p>
       </div>
     </div>

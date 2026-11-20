@@ -22,13 +22,13 @@ export default function Overview() {
         </p>
         <p>
           2014년 LSTM Seq2Seq는 encoder가 source를 fixed-dimensional vector로 압축하고 decoder가 그 vector를 초기 조건으로
-          target을 autoregressive하게 생성했다.
+          target을 autoregressive하게 생성했습니다.
         </p>
         <p>
           이후 attention과 Transformer가 내부 operator를 바꿨지만 source X를 읽어
           target sequence Y의 조건부 probability를 모델링한다는 문제 정의는 남아
-          있다. BERT 같은 encoder-only model과 GPT 같은 decoder-only model은 모두
-          Transformer를 사용하더라도 이 encoder–decoder contract와는 다르다.
+          있습니다. BERT 같은 encoder-only model과 GPT 같은 decoder-only model은 모두
+          Transformer를 사용하더라도 이 encoder–decoder contract와는 다릅니다.
         </p>
         <p>
           아래 식의 vertical bar와 product가 낯설다면 먼저
@@ -76,8 +76,8 @@ export default function Overview() {
         </div>
         <p>
           Recurrent state와 LSTM gate는 <Link to="/cs/ai/rnn">RNN 글</Link>과
-          <Link to="/cs/ai/lstm">LSTM 글</Link>이 소유한다. 여기서는 두 network 사이의
-          interface와 조건부 generation에서 생기는 training·search 문제에 집중한다.
+          <Link to="/cs/ai/lstm">LSTM 글</Link>이 다룹니다. 여기서는 두 network 사이의
+          interface와 조건부 generation에서 생기는 training·search 문제에 집중합니다.
         </p>
       </div>
     </section>

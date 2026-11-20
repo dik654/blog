@@ -3,7 +3,6 @@ import LessonSection from "@/components/articles/lesson-section";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import FlowRail from "../world-systems/FlowRail";
-import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import type { WorldHistoryArticleData } from "./WorldHistoryArticle";
@@ -39,7 +38,7 @@ const data: WorldHistoryArticleData = {
       "위임통치는 패전국이 잃은 식민지와 영토를 국제연맹의 감독 아래 승전국이 맡는 제도였습니다. 규약은 주민의 복지를 내세웠지만 사회를 발전 단계로 줄 세우고 외부 통치를 계속 허용했습니다. 독립 약속과 제국 지배가 같은 문서 안에 공존한 구조입니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 100가구의 동원과 전후 약속이 정치 요구로 바뀌는 길을 봅니다", bridge: "세 개념을 외우는 대신 사람의 이동과 약속을 따라갑니다. 국제연맹 규약이 전쟁 방지와 식민 통치를 어떻게 함께 적었는지 확인합니다.", paragraphs: [
-      "25가구의 병사와 군수 노동자는 전후 연금·고용·대표를 요구하고, 배급을 견딘 35가구는 물가 안정과 생활 보장을 요구합니다. 피란과 상실을 겪은 가구는 귀환·국적·재산 회복을 요구하지만 새 국경과 소수자 규칙이 이를 막을 수 있습니다.",
+      "25가구의 병사와 군수 노동자는 전후 연금·고용·대표를 요구하고, 배급을 견딘 35가구는 물가 안정과 생활 보장을 요구합니다. 피란과 상실을 겪은 가구는 귀환·국적·재산 회복을 요구하지만 새 국경과 소수자 규칙이 이를 막을 수 있습니다. 돌봄·필수 서비스를 맡은 25가구의 요구는 이 절에서 따로 따라가지 않습니다.",
       "식민지 병사와 노동자도 희생을 근거로 자치와 독립을 요구했습니다. 제국은 전쟁 때에는 동등한 충성을 요청하면서 평화 때에는 정치적 동등성을 미뤘습니다. 이 약속과 대우의 차이가 파업·봉기·독립운동의 자원이 됐습니다.",
     ] },
     { id: "source", level: "5", title: "8. 국제연맹 규약의 평화 약속과 위임통치를 함께 읽습니다", bridge: "전후 약속이 왜 식민지에서는 다른 뜻을 가졌는지 원문 구조로 봤습니다. 미국 자료에서는 불황과 국가 확대라는 한 지역의 경로를 따로 봅니다.", paragraphs: [
@@ -105,7 +104,7 @@ export default function WorldWarsDepressionAndMassStatesArticle() {
             ))}
           </div>
           {section.id === "black-box" ? <FlowRail title={data.overviewFlow.title} steps={[...data.overviewFlow.steps]} /> : null}
-          {section.id === "case" ? <NumericPath title={data.numericCase.title} steps={[...data.numericCase.steps]} /> : null}
+          {/* #case의 네 칸은 겹칠 수 있는 병렬 칸이라, 화살표로 잇는 공용 NumericPath 대신 위 HouseholdLedgerViz만 둡니다. */}
           {section.id === "names" ? <TermBreakdown title={data.terms.title} items={[...data.terms.items]} /> : null}
           {section.id === "source" ? (
             <>

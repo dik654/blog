@@ -44,7 +44,7 @@ const v=(id:string,eyebrow:string,title:string,description:string,scenes:Scene[]
 export const EvaluationContractViz=()=>v("evaluation-contract-modern","Evaluation contract","Prediction 한 행이 평가를 통과하는 경계를 먼저 고정합니다","Row→cutoff→target→metric→evaluation role을 장면별로 봅니다",[
   {label:"Row",title:"Prediction 한 번의 identity를 고정합니다",note:"Patient visit인지 image인지부터 정해야 target과 metric denominator가 안정됩니다.",items:[{label:"row",note:"entity·ID",shape:"document",accent:true},{label:"question",note:"one output",shape:"target"}]},
   {label:"Cutoff",title:"Model이 볼 수 있는 마지막 시각을 세웁니다",note:"Cutoff 뒤 도착한 feature와 label은 input에 들어갈 수 없습니다.",items:[{label:"row",note:"identity",shape:"document"},{label:"cutoff",note:"available by",shape:"clock",accent:true}]},
-  {label:"Target",title:"무엇을 언제까지 예측하는지 target horizon을 붙입니다",note:"같은 row도 24시간 재입원과 30일 재입원은 다른 prediction task입니다.",items:[{label:"cutoff",note:"now",shape:"clock"},{label:"target",note:"future event",shape:"target",accent:true}]},
+  {label:"Target",title:"무엇을 언제까지 예측하는지 target horizon을 붙입니다",note:"같은 row도 24시간 안의 사건과 30일 안의 사건은 다른 prediction task입니다.",items:[{label:"cutoff",note:"now",shape:"clock"},{label:"target",note:"future event",shape:"target",accent:true}]},
   {label:"Roles",title:"Local은 선택, public은 제한된 feedback, private는 최종 보고입니다",note:"한 평가 결과가 어느 결정을 바꿀 수 있는지 역할을 미리 제한합니다.",items:[{label:"local",note:"select",shape:"compare"},{label:"public",note:"feedback",shape:"gate"},{label:"private",note:"final",shape:"seal",accent:true}]},
 ]);
 

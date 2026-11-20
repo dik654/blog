@@ -50,7 +50,7 @@ export default function Overview({ title: _title }: { title: string }) {
         </div>
         <HeliosTrustTraceViz />
         <p className="text-lg leading-8 text-foreground/90">
-          Helios는 잔액 요청이 올 때마다 checkpoint부터 다시 시작하지 않습니다. 먼저 trusted checkpoint에서 consensus update를 검증해 optimistic·finalized block을 유지합니다. 그 뒤 요청 <code>q-7</code>이 들어오면 현재 검증된 block hash <code>H</code>에 account proof를 요청하고, proof가 그 block의 execution state root <code>R</code>과 맞는지 확인합니다.
+          Helios는 잔액 요청이 올 때마다 checkpoint부터 다시 시작하지 않습니다. 먼저 trusted checkpoint에서 시작해 Ethereum slot 간격인 12초마다 consensus update를 검증하고 optimistic·finalized block을 유지합니다. 그 뒤 요청 <code>q-7</code>이 들어오면 현재 검증된 block hash <code>H</code>에 account proof를 요청하고, proof가 그 block의 execution state root <code>R</code>과 맞는지 확인합니다.
         </p>
         <p>
           두 검사가 모두 통과해야 balance 7 ETH를 반환합니다. Consensus 서명만 맞으면 account 값의 진위가 남고, account proof만 맞으면 그 state root가 선택한 Ethereum history에 속하는지가 남습니다. 그래서 두 경로를 같은 block identity에서 결합해야 합니다.

@@ -306,6 +306,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
           ]}
           assumptions={[
             "T_ITL은 요청 하나 안에서 token마다 크게 다르지 않다고 가정한 평균값입니다.",
+            "R_tok 분자는 token 수 N_out이고 생성 구간 안의 간격은 N_out−1개라서, R_tok은 1/T_ITL과 정확히 같지 않습니다. 예시에서 1/T_ITL은 255/3.2≈79.7이고 R_tok은 256/3.2=80이며, N_out이 클수록 차이는 무시할 만해집니다.",
             "Model latency breakdown은 이 식에서 queue·network를 뺀 GPU 계산 시간만을 가리키므로, application latency breakdown과는 같은 요청에서도 값이 다릅니다.",
           ]}
           interpretation="Output 256 token, TTFT 0.4초, 전체 3.6초라면 생성 구간은 3.2초이고 throughput은 초당 80 token입니다. 이 숫자가 낮아졌을 때 model latency breakdown이 그대로라면 원인은 GPU가 아니라 생성 구간 안의 network 쪽 application 오버헤드에 있습니다. Queue 대기는 TTFT에 들어가므로 이 분모에는 없습니다."

@@ -135,7 +135,7 @@ function ShadowAbScene() {
           유의성 검정으로 판정합니다.
         </p>
         <p className="mt-2 text-[10px] leading-5 text-muted-foreground sm:hidden">트래픽 50/50<br />후보 응답 노출<br />차이 검정</p>
-        <p className="mt-2 font-mono text-[9px] text-foreground sm:text-[11px]">split 50/50 · p &lt; 0.001</p>
+        <p className="mt-2 font-mono text-[9px] text-foreground sm:text-[11px]">split 50/50 · 차이 검정</p>
       </div>
     </div>
   );

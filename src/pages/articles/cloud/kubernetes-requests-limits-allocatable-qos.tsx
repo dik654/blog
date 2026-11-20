@@ -171,7 +171,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
             <p>
               50ms는 벽시계 시간이 아니라 CPU 시간입니다. 스레드 하나가 쉬지 않고 돌면 1ms마다 1ms를 써서 50ms 시점에 quota가 끝나고 남은 50ms 동안 멈춥니다. 스레드 네 개가 동시에 돌면 1ms마다 4ms를 써서 12.5ms 만에 끝나고 87.5ms를 멈춥니다. 두 경우 모두 주기당 사용량은 50ms ÷ 100ms = 0.5 CPU라 사용률 그래프는 같은데 요청 하나가 겪는 지연은 50ms와 87.5ms로 다릅니다.
             </p>
-            <p>이것이 1절의 "사용률 50%인데 p99가 두 배" 사건입니다. 멀티스레드 런타임(Go·JVM·Node 워커)은 limit의 몇 배 되는 스레드를 띄우기 쉽습니다. 짧게 몰아서 CPU를 쓰는 요청일수록 주기 초반에 quota를 비운 채 주기 끝까지 기다리게 됩니다. 공식 문서도 CPU limit은 커널이 집행하는 hard limit이며 넘을 수 없다고만 적고 그 대가가 지연이라는 사실은 운영에서 배웁니다.</p>
+            <p>이것이 1절의 "사용률 50%인데 p99가 두 배" 사건입니다. 멀티스레드 런타임(Go·JVM·Node 워커)은 limit의 몇 배 되는 스레드를 띄우기 쉽습니다. 짧게 몰아서 CPU를 쓰는 요청일수록 주기 초반에 quota를 비운 채 주기 끝까지 기다리게 됩니다. 공식 문서도 CPU limit은 커널이 집행하는 hard limit이며 넘을 수 없다고만 적고 그 대가가 지연이라는 사실은 운영에서 배웁니다. 이 멈춤이 liveness probe의 기본 1초 timeout과 만나 재시작으로 번지는 경로는 <a href="/cs/cloud/kubernetes-pod-states-crashloop-probes-events#probes">Pod 상태와 Event 글</a>에서 이어집니다.</p>
             <p>requests 쪽은 다른 값이 됩니다. request 500m은 shares 512(= 500 × 1024 ÷ 1000)가 되고 cgroup v2 노드에서는 다시 cpu.weight 20으로 변환됩니다. weight는 CPU가 모자랄 때 형제 cgroup 사이의 나눔 비율일 뿐 상한이 아니라서 노드가 놀면 request보다 얼마든지 더 씁니다. request는 노드가 바쁠 때의 최소 몫, limit은 노드가 놀 때도 넘을 수 없는 상한입니다.</p>
           </div>
           <CalculationWalkthrough

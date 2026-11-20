@@ -155,7 +155,7 @@ export default function CnnReceptiveArticle() {
               term: "Tap count",
               description: "학습하는 한 축 tap은 여전히 3개입니다.",
             },
-            { term: "Effective span", description: "2×(3−1)+1=5칸입니다." },
+            { term: "Theoretical span", description: "2×(3−1)+1=5칸입니다." },
             {
               term: "Read coordinates",
               description:

@@ -331,7 +331,7 @@ export default function Article() {
         <div id="paper-long-running-harness" className="mt-8 scroll-mt-20">
           <CitationBlock
             source="Anthropic — Effective harnesses for long-running agents, Progress tracking"
-            citeKey={1}
+            citeKey={2}
             href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
           >
             <q>incremental progress</q>
@@ -470,7 +470,7 @@ export default function Article() {
         <div id="paper-agent-error-taxonomy" className="mt-8 scroll-mt-20">
           <CitationBlock
             source="Where LLM Agents Fail and How They can Learn From Failures, arXiv:2509.25370v1"
-            citeKey={1}
+            citeKey={3}
             href="https://arxiv.org/html/2509.25370v1"
           >
             <q>AgentErrorTaxonomy</q>
@@ -487,7 +487,7 @@ export default function Article() {
         <div id="paper-human-in-loop" className="mt-8 scroll-mt-20">
           <CitationBlock
             source="LangChain — Human-in-the-loop, 2026-10-04 확인"
-            citeKey={1}
+            citeKey={4}
             href="https://docs.langchain.com/oss/python/langchain/human-in-the-loop"
           >
             <q>approve</q>

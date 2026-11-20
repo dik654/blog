@@ -227,7 +227,7 @@ export default function CfgPushdownAutomataArticle() {
             병렬로 진행하다가, 뒤의 입력과 모순되는 branch만 버립니다.
           </p>
           <p>
-            예를 들어 충돌이 2개 나면 GLR은 stack을 2개로 늘려 각각 shift·reduce를 이어가고 몇 토큰 뒤 하나만 유효하게 남으면 그 stack만 채택합니다. 여러
+            예를 들어 한 충돌 지점에서 가능한 action이 2개면 GLR은 stack을 2개로 늘려 각각 shift·reduce를 이어가고 몇 토큰 뒤 하나만 유효하게 남으면 그 stack만 채택합니다. 여러
             stack을 동시에 유지하는 만큼 LR보다 메모리·시간 비용이 커서 충돌이 드문 대부분의 프로그래밍 언어 문법에는 LR 계열이 더 흔히 쓰입니다.
           </p>
         </div>

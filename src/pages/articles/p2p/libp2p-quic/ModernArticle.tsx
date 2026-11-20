@@ -116,7 +116,7 @@ export default function ModernLibp2pQuicArticle() {
         <HolePunchRaceViz />
         <p>
           Source의 puncher는 64 random bytes를 UDP로 보내고 10~200ms 사이의 random delay 뒤
-          반복합니다. Default handshake timeout은 5초입니다. 그 사이 matching inbound QUIC
+          반복합니다. 이 반복의 상한은 별도 punch timeout이 아니라 default handshake timeout 5초입니다. 그 사이 matching inbound QUIC
           connection이 poll에 들어오면 attempt receiver로 넘기고, 먼저 timeout이 나면
           direct path가 실패합니다. 이것은 NAT mapping을 만들 기회이지 성공 보장이 아닙니다.
         </p>
@@ -142,7 +142,7 @@ export default function ModernLibp2pQuicArticle() {
               note: "양쪽 NAT mapping을 열기 위한 packet이며 QUIC connection success 자체가 아닙니다.",
             },
             {
-              code: "race matching inbound connection vs 5s punch timeout",
+              code: "race matching inbound connection vs handshake timeout 5s",
               note: "Transport poll이 같은 remote address의 inbound upgrade를 receiver로 전달합니다.",
             },
             {

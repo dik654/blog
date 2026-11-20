@@ -157,7 +157,7 @@ export default function ModernCommonwareCryptoP2PArticle() {
         <CommonwareP2PBoundaryViz />
         <CommonwareFailureStopViz />
         <p>
-          Wrong identity, 오래된 timestamp, signature·confirmation 불일치와 AEAD 오류는 session 실패입니다. Alice의 rate limit과 router mailbox overflow는 local submission 실패입니다.
+          Wrong identity, 오래된 timestamp, signature·confirmation 불일치는 handshake 단계의 session 실패입니다. AEAD 오류는 connection이 열린 뒤 frame 복호화에서 생기지만, 앞 절처럼 그 connection을 끝내고 새 handshake를 요구하므로 같은 session 실패로 묶습니다. Alice의 rate limit과 router mailbox overflow는 local submission 실패입니다.
         </p>
         <p>
           Offline recipient와 relay queue overflow는 그 뒤의 delivery 실패지만 caller가 remote acknowledgement로 확인하는 구조는 아닙니다. Bob의 미등록 channel과 decode 오류는 peer actor를 끝낼 수 있고, full inbound inbox는 새 message만 drop합니다.

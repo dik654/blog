@@ -157,9 +157,9 @@ export default function ModernKohakuProviderArticle({ onCodeRef }: Props) {
       <section id="self-check" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">확인 질문</h2>
         <ol className="space-y-3 pl-5 text-sm leading-6">
-          <li>EthereumProvider가 통일하는 것과 통일하지 않는 것은 무엇입니까? <strong>(답: 공통 interface)</strong></li>
-          <li>bypassLogs=true일 때 getLogs와 다른 method의 경로는 어떻게 달라집니까? <strong>(답: getLogs 경로)</strong></li>
-          <li>두 backend가 같은 TxLog[]를 돌려줘도 verified-only 정책을 통과했다고 말할 수 없는 이유는 무엇입니까? <strong>(답: 정규화)</strong></li>
+          <li>EthereumProvider가 통일하는 것과 통일하지 않는 것은 무엇입니까? <strong>(답: 메서드 이름과 반환 타입은 통일하지만, backend별 지원 범위와 속도는 통일하지 않습니다.)</strong></li>
+          <li>bypassLogs=true일 때 getLogs와 다른 method의 경로는 어떻게 달라집니까? <strong>(답: <code>eth_getLogs</code>만 execution RPC로 직접 가고, 다른 메서드는 계속 Helios client를 지납니다.)</strong></li>
+          <li>두 backend가 같은 TxLog[]를 돌려줘도 verified-only 정책을 통과했다고 말할 수 없는 이유는 무엇입니까? <strong>(답: 정규화는 값의 모양만 맞출 뿐, 어느 backend와 검증 절차를 거쳤는지는 <code>TxLog</code>에 남기지 않습니다.)</strong></li>
         </ol>
       </section>
 

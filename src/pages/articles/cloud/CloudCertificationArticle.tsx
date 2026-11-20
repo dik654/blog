@@ -58,6 +58,8 @@ export interface CloudCertificationArticleData {
     title: string;
     question: string;
     options: readonly { signal: string; choose: string; why: string }[];
+    /** 선택: 결정표를 둘 절. 넘기지 않으면 기존처럼 "picture" 절에 둡니다. */
+    section?: SectionId;
   };
   terms: {
     title: string;
@@ -246,7 +248,7 @@ function SectionVisuals({
       {section.id === "case" ? (
         <NumericPath title={data.numericCase.title} steps={[...data.numericCase.steps]} />
       ) : null}
-      {section.id === "picture" ? <DecisionMatrix data={data.decision} /> : null}
+      {section.id === (data.decision.section ?? "picture") ? <DecisionMatrix data={data.decision} /> : null}
       {section.id === "names" ? <TermBreakdown title={data.terms.title} items={[...data.terms.items]} /> : null}
       {section.id === "mechanism" ? (
         <>

@@ -80,9 +80,10 @@ export default function BitTorrentArticle() {
           수준의 식별 표식입니다.
         </p>
         <p>
-          DHT의 token도 payload 신뢰 표가 아닙니다. 최근 <code>get_peers</code>를 한 IP가
-          다른 주소를 임의로 등록하기 어렵게 <code>announce_peer</code> 쓰기를 제한하는
-          값입니다. 이후 peer가 보내는 byte의 무결성은 여전히 piece hash로 검사해야 합니다.
+          DHT의 token도 payload 신뢰 표가 아닙니다. DHT node는 <code>get_peers</code>
+          응답에 요청자 IP에 묶인 token을 넣어 주고, <code>announce_peer</code>는 최근 그
+          token을 받은 같은 IP가 보낼 때만 받아들입니다. 그래서 아무 host나 다른 주소를 임의로
+          등록하기 어렵습니다. 이후 peer가 보내는 byte의 무결성은 여전히 piece hash로 검사해야 합니다.
         </p>
         <div id="paper-bep5">
           <CitationBlock

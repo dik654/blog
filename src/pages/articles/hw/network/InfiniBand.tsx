@@ -291,7 +291,7 @@ asm volatile("multimem.ld_reduce.relaxed.sys.global.add" PtxAcc_for_##ptx_ty "."
           남는 비용도 있다. NVLS는 channel마다 별도 buffer를 잡으므로 GPU memory를 더 쓴다. 같은 GPU에 rank 여러 개를 올리면 쓸 수 없다. 기본값 <code>NCCL_NVLS_ENABLE=2</code>에서는 알리지 않고 꺼지고, 1로 강제하면 communicator 초기화가 실패한다.
         </p>
         <p className="leading-7">
-          2.27과 2.28은 일부 rank에서만 NVLS 자원 할당이 실패해도 조용히 다른 transport로 넘어가다 hang이 날 수 있었다. 그래서 2.29에서 1과 같은 동작으로 되돌렸다. Node 여러 대를 NVLink로 묶는 시스템은 모든 node에 IMEX domain이 구성돼 있어야 하고, 3세대 NVSwitch 시스템에서는 Fabric Manager가 GPU 사이 memory fabric을 구성한다.
+          2.27과 2.28은 일부 rank에서만 NVLS 자원 할당이 실패해도 조용히 다른 transport로 넘어가다 hang이 날 수 있었다. 그래서 2.29부터는 기본값 2도 2.27 이전처럼 1과 같이 동작한다. NVLS를 지원하지 않는 시스템에서는 조용히 넘어가지만, 지원하는데 자원 할당이 실패하면 초기화가 실패한다. Node 여러 대를 NVLink로 묶는 시스템은 모든 node에 IMEX domain이 구성돼 있어야 하고, 3세대 NVSwitch 시스템에서는 Fabric Manager가 GPU 사이 memory fabric을 구성한다.
         </p>
         <p className="leading-7">
           그래서 선택 기준은 이렇다. 같은 rank placement에서 message size를 훑으며 <code>NCCL_ALGO=Ring</code>과 <code>NCCL_ALGO=NVLS</code>의 operation time을 비교하고 더 짧은 쪽을 고른다. busbw를 link 사용률로 나누지 않는다. NVLS 측정에서 busbw가 NVLink 속도를 넘으면 offload가 일한 흔적으로 읽고, 실제 link 부하는 switch와 NIC counter로 따로 확인한다.

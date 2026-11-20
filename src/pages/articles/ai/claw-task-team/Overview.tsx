@@ -40,10 +40,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <div className="not-prose my-8 min-w-0">
-        <TaskStatusViz />
-      </div>
-
       <ContentBoundary article="claw-task-team" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -86,6 +82,10 @@ export default function Overview() {
             </p>
           </CitationBlock>
         </div>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <TaskStatusViz />
       </div>
 
       <div className="not-prose my-6 grid gap-3 lg:grid-cols-5">

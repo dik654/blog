@@ -147,7 +147,7 @@ export default function Article() {
         <CitationBlock source="NIST PQC · 최신 표준화 상태" citeKey={4} href="https://csrc.nist.gov/Projects/Post-Quantum-Cryptography">2026-10-04 확인. FIPS203·204·205와 후속 Falcon·HQC 표준화 상태를 구분합니다.</CitationBlock>
         <CitationBlock source="FIPS 204 · 최신 정정 안내" citeKey={5} href="https://csrc.nist.gov/pubs/fips/204/final">2026-07-31 정정 예정 항목 안내가 추가됐습니다. 정정표 파일은 접근 제한으로 직접 열지 못했으며 구체 정정 내용을 추정하지 않습니다.</CitationBlock>
         <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">서명 수학의 통과와 실제 서비스의 권한 이전을 따로 확인해 보세요.</p>
-        <ReviewPrompts questions={["응답에 마스크를 더했는데도 후보를 버리는 이유는 무엇일까요? (답: 8절)", "공개 키가 작으면 서명도 작다고 볼 수 있을까요? (답: 9절)", "정상 서명된 구버전 펌웨어를 무조건 설치해도 될까요? (답: 10절)"]} />
+        <ReviewPrompts questions={["응답에 마스크를 더했는데도 후보를 버리는 이유는 무엇일까요? (답: 5절, 코드의 거절 경로는 8절)", "공개 키가 작으면 서명도 작다고 볼 수 있을까요? (답: 9절)", "정상 서명된 구버전 펌웨어를 무조건 설치해도 될까요? (답: 10절)"]} />
       </section>
       <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} />
     </div>

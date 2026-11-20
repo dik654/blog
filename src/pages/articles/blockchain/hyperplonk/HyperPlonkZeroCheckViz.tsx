@@ -37,7 +37,7 @@ const SCENES = [
   {
     question: "어느 값이 행의 잘못을 드러낼까요?",
     answer:
-      "각 Boolean corner에서 f(x)=q·X(x)⁵−Y(x)를 계산합니다. 정상 표는 [0,0,0,0]이고 row 10의 y를 31로 바꾸면 그 자리 오차가 1입니다.",
+      "각 Boolean corner에서 f(x)=q·X(x)⁵−Y(x)를 계산합니다. q는 gate를 켜는 selector, X·Y는 x·y column을 다항식으로 확장한 것이고, 이 f는 본문 식의 q_L·W_1⁵−W_2와 같습니다. 정상 표는 [0,0,0,0]이고 row 10의 y를 31로 바꾸면 그 자리 오차가 1입니다.",
     state: "f(00,01,10,11) = [0,0,0,0] · bad y10=31 → [0,0,1,0]",
     confirmed: "Gate 전체를 하나의 error polynomial f로 표현",
     unknown: "오차 네 개의 합만 0이면 충분한지",

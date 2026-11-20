@@ -174,7 +174,7 @@ export default function ModernArticle() {
           formula={String.raw`c_{\mathrm{sync}}=\min(c_{\mathrm{headers}},c_{\mathrm{bodies}},c_{\mathrm{execution}},c_{\mathrm{finish}})`}
           annotatedFormula={String.raw`c_{\mathrm{sync}}=\underbrace{\min(c_{\mathrm{headers}},c_{\mathrm{bodies}},c_{\mathrm{execution}},c_{\mathrm{finish}})}_{\text{필수 stage의 가장 낮은 연속 checkpoint}}`}
           operations={[
-            { expression: String.raw`\min(1008,1008,1005,1005)=1005`, annotation: ["Headers와 bodies가 1,008까지 있어도", "실행과 finish가 1,005라면", "전체 검증 진척은 1,005입니다."] },
+            { expression: String.raw`\min(1008,1008,1005,1005)=1005`, annotation: ["앞 사례의 1,000→1,008 구간이 threshold를 넘어 backfill로 갔다고 하면(가정)", "Headers와 bodies가 1,008까지 있어도", "실행과 finish가 1,005라면", "전체 검증 진척은 1,005입니다."] },
           ]}
           terms={[
             { symbol: "c_stage", name: "stage checkpoint", description: "해당 stage가 같은 chain generation에서 결과와 함께 durable commit한 마지막 연속 block입니다." },

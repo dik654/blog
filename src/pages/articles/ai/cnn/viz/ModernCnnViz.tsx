@@ -186,7 +186,7 @@ export const EquivarianceViz = () => (
         label: "반례",
         title: "Stride 2에서는 한 pixel 이동이 sampling 위상을 바꿉니다",
         input: "shift=1 pixel · sample indices 0,2,4",
-        operation: "이동 뒤 indices 1,3,5를 읽어 서로 다른 값을 선택합니다.",
+        operation: "sampling grid는 그대로 0,2,4지만 pattern이 한 칸 밀려서 원래 입력의 홀수 위치를 읽게 되므로 서로 다른 값을 선택합니다.",
         output: "단순한 output 1칸 이동과 다름",
         note: "Zero padding·crop·pooling도 경계와 sampling 규칙 때문에 같은 등식을 깰 수 있습니다.",
       },
@@ -239,7 +239,7 @@ export const ReceptiveFieldViz = () => (
         input: "k=3 · d=2 · taps=3",
         operation: "span = d(k−1)+1 = 5",
         output: "읽음 {0,2,4} · 건너뜀 {1,3}",
-        note: "Parameter 수 없이 범위는 넓지만 연속 다섯 좌표를 모두 읽는 dense kernel은 아닙니다.",
+        note: "Parameter 수를 늘리지 않고 범위를 넓히지만 연속 다섯 좌표를 모두 읽는 dense kernel은 아닙니다.",
       },
     ]}
   />

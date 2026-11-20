@@ -15,7 +15,7 @@ import ScaleCountViz from "./quantization-formats-and-granularity/viz/ScaleCount
  */
 export default function QuantizationFormatsAndGranularityArticle() {
   return (
-    <div id="overview" className="space-y-16">
+    <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <QuantizationPathLocator current="formats-granularity" />
         <h2 className="mb-6 text-2xl font-bold">

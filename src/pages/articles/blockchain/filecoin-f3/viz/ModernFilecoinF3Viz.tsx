@@ -17,7 +17,7 @@ const TRACE_NOTES = TRACE_SCENES.map((scene, index) => `${TRACE_LABELS[index]}. 
 export function FilecoinF3TraceViz() {
   const scenes = useAnimatedScenes(TRACE_SCENES.length, 8200, { loop: false });
   const scene = TRACE_SCENES[scenes.active];
-  return <VizFrame eyebrow="Alice의 송금 M5 · EC head T101 · GPBFT instance 42" title="F3는 현재 head를 그대로 믿지 않고, 과거 committee의 결정 증거를 검증 가능한 인증서로 바꿉니다" description="EC 후보가 instance 입력에 결속되고, 79는 실패·80은 통과한 뒤, 인증서와 다음 power table을 검증해 finalized-prefix fence가 되는 과정을 따라갑니다." note="T98·T101·T104와 instance 42는 경계를 설명하기 위한 예시입니다. Strong quorum 계산은 FIP-0086과 go-f3 v0.8.15의 ceil(2W/3) 규칙을 따릅니다." documentFlow canvasClassName="p-3 sm:p-6">
+  return <VizFrame eyebrow="Alice의 송금 M5 · EC head T101 · GPBFT instance 42" title="F3는 현재 head를 그대로 믿지 않고, 과거 committee의 결정 증거를 검증 가능한 인증서로 바꿉니다" description="EC 후보가 instance 입력에 결속되고, 79는 실패·80은 통과한 뒤, 인증서와 다음 power table을 검증해 finalized-prefix fence가 되는 과정을 따라갑니다." note="T98·T101·T104와 instance 42는 경계를 설명하기 위한 예시입니다. 본문 기호로 옮기면 T98이 base B, T98 → T100 → T101이 proposal B→C→D입니다. Strong quorum 계산은 FIP-0086과 go-f3 v0.8.15의 ceil(2W/3) 규칙을 따릅니다." documentFlow canvasClassName="p-3 sm:p-6">
     <div id={scenes.playbackId} tabIndex={0} onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Filecoin F3 인증서 생성 장면 탐색기">
       <div data-viz-live-only className="space-y-4">
         <div data-viz-scene-stage className="min-h-[38rem] space-y-4 sm:min-h-[27rem] xl:min-h-[24rem]">

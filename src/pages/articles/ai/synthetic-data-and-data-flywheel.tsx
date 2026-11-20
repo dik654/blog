@@ -137,12 +137,12 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         <RftFunnelViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Yuan 등의 rejection sampling fine-tuning(RFT)은 이 절차의 구체적인 수치를 보여 줍니다. 문제 하나당 온도 0.7로 k=100개의
-            reasoning path를 생성합니다. 그중 정답과 어긋나거나 계산이 틀린 경로는 verifier로 제거하고 같은 방정식 리스트를 쓰는 중복 경로는 하나만 남깁니다. 이렇게
+            Yuan 등의 rejection sampling fine-tuning(RFT)은 이 절차의 구체적인 수치를 보여 줍니다. 문제 하나당 온도 0.7로 n=100개의
+            reasoning path를 생성합니다(논문은 이 값을 k로 적지만, 이 글은 아래 pass@k 식에 맞춰 생성 개수를 n으로 씁니다). 그중 정답과 어긋나거나 계산이 틀린 경로는 verifier로 제거하고 같은 방정식 리스트를 쓰는 중복 경로는 하나만 남깁니다. 이렇게
             필터링한 약 10만 개 샘플로 다시 학습한 LLaMA-7B는 GSM8K 정확도가 35.9%에서 49.3%로 올라갔습니다.
           </p>
           <p>
-            verifier·model 점수에 상위 몇 퍼센트만 남길지 정하는 기준선이 quality thresholding입니다. 문제당 100개 후보 중 verifier를 통과한 상위
+            verifier·model 점수에 상위 몇 퍼센트만 남길지 정하는 기준선이 quality thresholding입니다. 문제당 100개 후보 중 verifier를 통과하고 중복을 뺀 후보만 놓고, 그 안에서 점수 상위
             20%만 남기는 식으로 기준을 조이면 남는 데이터 양은 줄어도 평균 품질은 올라갑니다.
           </p>
           <p>
@@ -158,12 +158,12 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </div>
         <PassAtKViz />
         <ExplainedFormula
-          question="문제당 후보를 N개 생성하면 그중 하나가 verifier를 통과할 확률은 어떻게 커지나요?"
+          question="문제당 생성한 n개 후보 중 k개를 뽑으면, 그중 하나라도 verifier를 통과할 확률은 k에 따라 어떻게 커지나요?"
           idea="문제마다 정답 후보 c개를 이미 알고 있다면, n개 중 k개를 뽑았을 때 전부 오답일 경우의 수를 1에서 빼면 적어도 하나가 정답일 확률이 됩니다."
           formula={String.raw`\text{pass@}k := \mathbb{E}_{\text{Problems}}\!\left[\,1-\dfrac{\binom{n-c}{k}}{\binom{n}{k}}\,\right]`}
           annotatedFormula={String.raw`\text{pass@}k := \mathbb{E}_{\text{Problems}}\!\left[\,1-\underbrace{\dfrac{\binom{n-c}{k}}{\binom{n}{k}}}_{\text{k개 모두 오답일 확률}}\,\right]`}
           operations={[
-            { expression: String.raw`n`, annotation: ["문제 하나당 실제로 생성한 후보 총 개수로", "RFT 실험에서는 k=100까지 씀"] },
+            { expression: String.raw`n`, annotation: ["문제 하나당 실제로 생성한 후보 총 개수로", "RFT 실험에서는 n=100까지 씀"] },
             { expression: String.raw`c`, annotation: ["n개 후보 중 verifier가 정답으로 확인한 개수로", "difficulty estimation의 pass rate 계산과 같은 값"] },
             { expression: String.raw`\binom{n-c}{k}/\binom{n}{k}`, annotation: ["오답 (n-c)개 중에서만 k개를 뽑을 경우의 수를", "전체 n개 중 k개를 뽑는 경우의 수로 나눈 비율"] },
           ]}
@@ -173,12 +173,12 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             { symbol: "k", name: "채점·보존 예산", description: "실제로 채점하거나 남길 후보 수(k ≤ n)" },
           ]}
           assumptions={["Verifier가 각 후보의 정답 여부를 오류 없이 판정한다고 가정합니다.", "n개 후보는 서로 독립적으로 생성됐다고 가정합니다."]}
-          interpretation="N을 키우면 적어도 하나가 verifier를 통과할 확률은 단조 증가하지만, 그만큼 채점·저장 비용도 커지므로 이 식은 필터링 후 남는 데이터 양이 아니라 통과 확률만 알려 줍니다."
+          interpretation="n과 c를 고정한 채 k를 키우면 적어도 하나가 verifier를 통과할 확률은 단조 증가하지만, 그만큼 채점·저장 비용도 커지므로 이 식은 필터링 후 남는 데이터 양이 아니라 통과 확률만 알려 줍니다."
         />
         <TermBreakdown
           title="Best-of-N 생성과 필터링을 이루는 네 개념"
           items={[
-            { term: "Best-of-N Data Generation", description: "같은 문제에서 N개 후보를 만들어 채점 대상 pool을 만듭니다.", example: "GSM8K 문제당 k=100개 reasoning path 생성.", boundary: "N을 키울수록 통과 확률은 오르지만 채점 비용도 같이 오릅니다." },
+            { term: "Best-of-N Data Generation", description: "같은 문제에서 N개 후보를 만들어 채점 대상 pool을 만듭니다.", example: "GSM8K 문제당 n=100개 reasoning path 생성.", boundary: "N을 키울수록 통과 확률은 오르지만 채점 비용도 같이 오릅니다." },
             { term: "Verifier-Filtered Data", description: "정답 규칙으로 후보를 판정해 거른 데이터입니다.", example: "계산 결과 불일치·방정식 중복을 규칙으로 제거.", boundary: "규칙을 만들 수 없는 열린 작업에는 쓸 수 없습니다." },
             { term: "Model-Filtered Data", description: "다른 LLM을 judge로 세워 점수를 매겨 거른 데이터입니다.", example: "정답 규칙이 없는 대화 응답을 judge model 점수로 채점.", boundary: "judge model 자체의 편향·오차를 그대로 물려받습니다." },
             { term: "Quality Thresholding", description: "verifier·model 점수의 상위 몇 퍼센트만 남길지 정하는 기준선입니다.", example: "채점 통과 후보 중 상위 20%만 학습 데이터로 유지.", boundary: "기준을 너무 조이면 남는 데이터가 줄어 다양성이 떨어집니다." },
@@ -199,7 +199,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         <DifficultyRouteViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            문제당 k=8개를 생성한 경우를 보겠습니다. 8개 모두 정답인 문제(pass rate 100%)는 지금 모델에게 이미 쉬운 문제입니다. 0개만 정답인 문제(pass rate
+            문제당 n=8개를 생성한 경우를 보겠습니다. 8개 모두 정답인 문제(pass rate 100%)는 지금 모델에게 이미 쉬운 문제입니다. 0개만 정답인 문제(pass rate
             0%)는 verifier 신호 자체가 없어 어느 후보를 남겨도 학습에 쓸 근거가 없습니다. 3개만 정답인 문제(pass rate 37.5%)는 정답과 오답이 함께 있어 두
             부류의 차이를 학습에 담을 수 있는 중간 난이도입니다.
           </p>
@@ -208,8 +208,8 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             curriculum sampling이 적용됩니다. 중간 난이도 문제일수록 더 자주 뽑히도록 가중치를 주고 학습 순서를 정합니다.
           </p>
           <p>
-            문제당 pass rate를 재려면 매 라운드 checkpoint로 다시 k개를 굴려야 하므로,
-            difficulty estimation은 데이터 생성 자체보다 추론 비용이 더 듭니다.{" "}
+            첫 라운드의 pass rate는 best-of-N 채점 결과를 그대로 쓰지만, 모델이 바뀐 다음 라운드부터는
+            새 checkpoint로 다시 n개를 굴려야 하므로 difficulty estimation에도 라운드마다 추론 비용이 따로 듭니다.{" "}
             <Link to="/cs/ai/train-validation-test#overview">
               평가용 held-out set
             </Link>
@@ -363,7 +363,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             citeKey={3}
             href="https://arxiv.org/abs/2308.01825"
           >
-            문제당 k=100개 reasoning path를 생성해 정답 불일치·계산 오류를 verifier로 제거하고
+            문제당 n=100개(논문 표기 k=100) reasoning path를 생성해 정답 불일치·계산 오류를 verifier로 제거하고
             방정식 리스트 기준 중복을 제거하는 rejection sampling fine-tuning을 제안하며,
             LLaMA-7B의 GSM8K 정확도를 35.9%에서 49.3%로 끌어올렸다고 보고합니다.
           </CitationBlock>

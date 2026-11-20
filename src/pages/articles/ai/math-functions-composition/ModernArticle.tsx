@@ -105,7 +105,7 @@ export default function MathFunctionsCompositionArticle() {
           interpretation="함수 합성은 식을 붙이는 문법이 아니라 output 계약과 input 계약을 연결하는 실행입니다."
         />
         <AlgorithmBlock title="합성을 계산하는 순서 (의사코드)" input={['x=2, g(x)=3x+1, f(u)=u²']} steps={[{code:'x가 g의 정의역에 속하는지 확인한다',note:'2는 허용한 실수입니다.'},{code:'u ← g(x)',note:'3×2+1=7'},{code:'u가 f의 정의역에 속하는지 확인한다',note:'7도 허용한 실수입니다.'},{code:'y ← f(u)',note:'7²=49'}]} output="y=49" />
-        <p>그림의 1·2·3은 허용 입력 중 고른 값이고, 16·49·100도 가능한 출력 중 일부입니다. 집합 전체를 열거한 그림은 아닙니다. 같은 전달 규칙이 교재 원문에는 어떻게 적혀 있는지 확인하겠습니다.</p>
+        <p>1절 그림(앞 출력이 다음 입력이 되는 순서)의 1·2·3은 허용 입력 중 고른 값이고, 16·49·100도 가능한 출력 중 일부입니다. 집합 전체를 열거한 그림은 아닙니다. 같은 전달 규칙이 교재 원문에는 어떻게 적혀 있는지 확인하겠습니다.</p>
       </section>
       <section id="source" data-teach-level="5-6" className="space-y-6">
         <h2 className="text-2xl font-bold">9 · 교재의 합성 정의에 같은 2를 넣는다</h2>

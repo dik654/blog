@@ -27,7 +27,7 @@ export default function ModernEcGpuOpsArticle() {
       annotatedFormula={String.raw`x=\sum_{\ell=0}^{L-1}\underbrace{x_\ell}_{\text{limb ℓ의 digit}}\underbrace{2^{w\ell}}_{\text{자리값}},\qquad \underbrace{0\le x_\ell<2^w}_{\text{한 word에 들어감}}`}
       operations={[
   { expression: String.raw`\sum_{\ell=0}^{L-1}x_\ell 2^{w\ell}`, annotation: ["limb ℓ은 radix 2^w의 ℓ번째 자리 계수","little-endian 순서로 L개를 더하면 x","w=8, [1,2,0,0] → 1+2·256 = 513"] },
-  { expression: String.raw`0\le x_\ell<2^w`, annotation: ["각 limb는 w-bit word 하나에 담깁니다","CUDA는 w=32라 BN254 8 limbs","endian을 뒤집으면 다른 field 값"] },
+  { expression: String.raw`0\le x_\ell<2^w`, annotation: ["각 limb는 w-bit word 하나에 담깁니다","CUDA는 w=32라 위 BLS12-381 Fp는 12 limbs","endian을 뒤집으면 다른 field 값"] },
 ]} terms={[
         {symbol:"x",name:"Field representative",description:"Decode 뒤 0≤x<p인 canonical residue 또는 명시한 Montgomery-domain value입니다."},
         {symbol:"L",name:"Limb count",description:"Field 값을 저장하는 machine words 개수입니다."},

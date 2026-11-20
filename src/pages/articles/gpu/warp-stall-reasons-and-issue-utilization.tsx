@@ -282,7 +282,7 @@ R_{\mathrm{issue\ cycle}} &= \underbrace{\frac{C_{\mathrm{issued\ cycle}}}{C_{\m
           </p>
           <UtilizationProductViz />
           <p>
-            세 숫자는 곱으로 이어집니다. SM 이 elapsed 의 50% 만 active 였고 그 안에서 issue
+            이 가운데 SM utilization 과 issue active 는 곱으로 이어집니다. SM 이 elapsed 의 50% 만 active 였고 그 안에서 issue
             active 가 80% 였다면 elapsed 기준 issue 비율은 40% 입니다. Nsight Compute 의
             throughput metric 이 active 기준과 elapsed 기준을 따로 두는 이유가 이것입니다.
           </p>

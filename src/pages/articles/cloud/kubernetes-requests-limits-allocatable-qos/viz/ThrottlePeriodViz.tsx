@@ -24,7 +24,7 @@ const SCENES: readonly Scene[] = [
   { label: "주기 100ms · quota 50ms", threads: 1, busyUntil: 0, throttled: false, metric: "cpu.max = 50000 100000", note: "limit 500m은 kubelet이 cpu.max에 '50000 100000'으로 씁니다. 100,000μs마다 50,000μs의 CPU 시간을 쓸 수 있다는 뜻이고 그림의 한 줄이 그 100ms입니다." },
   { label: "스레드 1개 · 50ms에 소진", threads: 1, busyUntil: 50, throttled: true, metric: "멈춤 50ms · 평균 0.5 CPU", note: "스레드 하나가 쉬지 않고 돌면 1ms마다 CPU 시간 1ms를 써서 50ms 시점에 quota가 끝납니다. 남은 50ms 동안 커널은 이 cgroup의 모든 스레드를 run queue에서 내립니다." },
   { label: "스레드 4개 · 12.5ms에 소진", threads: 4, busyUntil: 12.5, throttled: true, metric: "멈춤 87.5ms · 평균 0.5 CPU", note: "스레드 4개가 동시에 돌면 1ms마다 CPU 시간 4ms를 씁니다. 12.5ms 만에 50ms quota가 끝나고 87.5ms를 멈춥니다. 평균 사용량은 여전히 0.5 CPU라 사용률 그래프로는 1번 장면과 구별되지 않습니다." },
-  { label: "요청 하나의 지연", threads: 4, busyUntil: 12.5, throttled: true, metric: "p99에 +87.5ms", note: "주기 시작 직후 들어온 요청은 12.5ms 안에 끝나지만, 소진 직후 들어온 요청은 다음 주기까지 87.5ms를 기다립니다. liveness probe의 timeoutSeconds 기본 1초는 이 멈춤 몇 개가 겹치면 넘길 수 있습니다." },
+  { label: "요청 하나의 지연", threads: 4, busyUntil: 12.5, throttled: true, metric: "p99에 +87.5ms", note: "주기 시작 직후 들어온 요청은 12.5ms 안에 끝나지만, 소진 직후 들어온 요청은 다음 주기까지 87.5ms를 기다립니다. kubelet이 컨테이너가 살아 있는지 묻는 liveness probe는 기본으로 1초(timeoutSeconds)까지만 답을 기다리므로, 이 멈춤 몇 개가 겹치면 그 1초를 넘길 수 있습니다." },
 ];
 
 const W = 480;

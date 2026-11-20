@@ -93,7 +93,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
               { label: "남는 40시간의 뜻", expression: "57 − 16.8", result: "≈ 40시간의 '살아남은' 구간", reason: "10분 넘게 살아남으면 장부가 초기화되고 다음 크래시는 첫 크래시처럼 다시 셉니다. 그런 초기화가 여러 번 섞여야 57시간이 채워집니다. 간헐적 원인(의존성·메모리·probe)을 의심할 근거입니다." },
             ]}
             conclusion="CrashLoopBackOff는 상태라기보다 대기 중이라는 표시이고, RESTARTS와 AGE의 비율은 '항상 죽는가, 가끔 죽는가'를 가르는 첫 숫자입니다."
-            caveats={["대기 시각의 기준은 kubelet이 확인한 시각이 아니라 컨테이너의 FinishedAt입니다. kubelet이 늦게 확인해도 대기가 그만큼 길어지지 않습니다.", "ReduceDefaultCrashLoopBackOffDecay(alpha)를 켜면 1·2·4·8·16·32·60초가 되고, 1.35부터 beta인 KubeletCrashLoopBackOffMax로 노드별 상한을 1~300초에서 바꿀 수 있습니다(11절)."]}
+            caveats={["대기 시각의 기준은 kubelet이 확인한 시각이 아니라 컨테이너의 FinishedAt입니다. kubelet이 늦게 확인해도 대기가 그만큼 길어지지 않습니다.", "ReduceDefaultCrashLoopBackOffDecay(alpha)를 켜면 1·2·4·8·16·32·60초가 되고, 1.35부터 beta인 KubeletCrashLoopBackOffMax로 노드별 상한을 1~300초에서 바꿀 수 있습니다(10절)."]}
           />
           {code("crashloop-constants", "10초·300초 상수")}
           {code("restart-backoff-doc", "문서의 10s, 20s, 40s… 설명")}
@@ -193,7 +193,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
           <ProbeWindowViz />
           <div className={prose}>
             <p>
-              그러니 아무 숫자도 적지 않은 liveness는 10초마다 한 번씩 검사해 1초 안에 답이 없으면 실패로 세고, 연속 세 번 실패하면(최대 약 30초) 컨테이너를 죽여 재시작시킵니다.
+              그러니 아무 숫자도 적지 않은 liveness는 10초마다 한 번씩 검사해 1초 안에 답이 없으면 실패로 세고, 연속 세 번 실패하면 컨테이너를 죽여 재시작시킵니다. 응답이 멈춘 순간부터 재면 최대 약 30초입니다. 첫 실패 검사가 이미 진행 중이면 그 뒤 두 번(20초)과 timeout 1초면 되지만, 직전 검사가 성공한 바로 뒤에 멈추면 첫 실패 검사까지 최대 10초를 더 기다리기 때문입니다.
             </p>
             <p>
               readinessProbe는 같은 기본값으로 같은 검사를 하지만 결과가 다릅니다. 실패하면 죽이지 않고 Pod의 Ready 조건을 false로 바꿔 Service의 EndpointSlice에서 뺍니다. 성공하면 한 번(successThreshold 1)에 돌아옵니다. 공식 문서는 두 probe가 서로 의존하지 않는다고 caution으로 적습니다. readiness가 실패해 트래픽을 안 받는 중이어도 liveness는 따로 돌며, 실패하면 재시작됩니다.
@@ -210,7 +210,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             scope="pkg/apis/core/v1/defaults.go의 SetDefaults_Probe 값(1·10·1·3)과 공식 probe 문서의 startupProbe 예시(failureThreshold 30, periodSeconds 10)를 씁니다. 첫 검사가 컨테이너 시작 직후에 바로 돈다고 봅니다."
             steps={[
               { label: "한 회차의 실패 판정", expression: "응답 > timeoutSeconds 1초", result: "실패 1회", reason: "HTTP면 2xx·3xx가 아니거나 1초 안에 답이 없을 때, exec면 종료 코드가 0이 아닐 때입니다." },
-              { label: "연속 실패 창", expression: "failureThreshold 3 × periodSeconds 10", result: "최대 약 30초", reason: "t = 0·10·20초의 세 검사가 모두 실패하면 20초 시점(+ timeout 1초)에 재시작이 결정됩니다. 그 사이 한 번이라도 성공하면 카운터는 0으로 돌아갑니다." },
+              { label: "연속 실패 창", expression: "failureThreshold 3 × periodSeconds 10", result: "최대 약 30초", reason: "t = 0·10·20초의 세 검사가 모두 실패하면 20초 시점(+ timeout 1초)에 재시작이 결정됩니다. 응답이 t = 0 검사 직후에 멈췄다면 실패 검사가 10·20·30초가 되어 약 30초가 최대입니다. 그 사이 한 번이라도 성공하면 카운터는 0으로 돌아갑니다." },
               { label: "readiness의 같은 창", expression: "3 × 10", result: "최대 약 30초 뒤 endpoint 제거", reason: "죽이지는 않습니다. 성공 한 번(successThreshold 1)에 복귀하므로 복구는 최대 10초입니다." },
               { label: "startupProbe 창", expression: "30 × 10", result: "300초", reason: "이 동안 liveness와 readiness는 돌지 않습니다. 한 번 성공하면 즉시 liveness가 시작됩니다." },
               { label: "startup 실패의 결과", expression: "300초 동안 성공 0회", result: "컨테이너 종료 → restartPolicy", reason: "재시작이면 3절의 backoff가 그대로 적용됩니다. 뜨는 데 6분 걸리는 앱은 영원히 뜨지 못합니다." },
@@ -325,7 +325,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
         <section id="review-questions" data-teach-level="review" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">12. 같은 컨테이너로 다음 시계를 예상해 보세요</h2>
           <div className={prose}>
-            <p>kubelet 설정으로 maxContainerRestartPeriod를 100초로 두면 3절의 컨테이너가 일곱 번 죽기까지의 대기 수열과 총 대기 시간은 어떻게 바뀌고, 만료 600초는 바뀌나요? (답: 3·6·11절)</p>
+            <p>kubelet 설정으로 maxContainerRestartPeriod를 100초로 두면 3절의 컨테이너가 일곱 번 죽기까지의 대기 수열과 총 대기 시간은 어떻게 바뀌고, 만료 600초는 바뀌나요? (답: 3·6·10절)</p>
             <p>livenessProbe에 periodSeconds 5, failureThreshold 6을 적으면 응답이 멈춘 컨테이너는 최대 몇 초 만에 재시작되며, 기본값과 비교해 무엇이 같으며 무엇이 다른가요? (답: 7절)</p>
             <p>두 시간째 CrashLoopBackOff인 Pod의 describe에 BackOff event가 <code>x37 over 2h</code>로만 보입니다. 왜 재시작 횟수보다 적게 보이고, 어제의 첫 크래시 원인을 보려면 어디를 봐야 하나요? (답: 9절)</p>
           </div>

@@ -143,7 +143,7 @@ export default function ModernCommonwareSimplexArticle() {
         </p>
         <CrashRecoveryViz />
         <p>
-          하지만 certification result channel이 끊겨 <code>RecvError</code>가 나면 코드는 이를 <code>false</code>로 바꾸지 않습니다. 주석이 밝히듯 실패로 가정하면 notarization은 있지만 certification이 영원히 없어 view를 빠져나오지 못할 수 있습니다. Sync된 결과는 journal에서 replay하고, 기록되지 않은 결과는 restart 뒤 다시 요청합니다.
+          하지만 certification result channel이 끊겨 <code>RecvError</code>가 나면 코드는 이를 <code>false</code>로 바꾸지 않습니다. 주석이 그 이유를 밝힙니다. Propose나 verify 실패는 timeout 뒤 nullification으로 넘어가지만, certification은 다릅니다. View는 notarization과 certification이 함께 있어야 빠져나갈 수 있으므로, 일시적인 오류를 certification 실패로 굳히면 view가 멈출 수 있습니다. 그래서 코드는 실패로 가정하지 않습니다. Sync된 결과는 journal에서 replay하고, 기록되지 않은 결과는 restart 뒤 다시 요청합니다.
         </p>
         <div className="not-prose flex flex-wrap gap-2">
           <CodeViewButton label="오류와 false 분기 코드" onClick={() => sidebar.open("certification-error", codeRefs["certification-error"])} />
@@ -178,7 +178,7 @@ export default function ModernCommonwareSimplexArticle() {
         <ol className="space-y-4 pl-5 text-sm leading-7">
           <li>Notarization이 있는데도 곧바로 finalization이라고 부를 수 없는 이유는 무엇입니까? <strong>(답: 각 validator의 successful certification과 별도의 finalize quorum이 아직 없기 때문입니다.)</strong></li>
           <li>Certification이 중앙 판정 한 번이 아닌 이유는 무엇입니까? <strong>(답: 각 validator가 자신의 automaton에 같은 round와 payload를 certify하기 때문입니다.)</strong></li>
-          <li><code>RecvError</code>를 <code>false</code>로 처리하면 왜 위험합니까? <strong>(답: 실제 영구 거절이 아닌 통신 오류가 nullify 판단으로 굳어 liveness를 멈출 수 있기 때문입니다.)</strong></li>
+          <li><code>RecvError</code>를 <code>false</code>로 처리하면 왜 위험합니까? <strong>(답: 실제 영구 거절이 아닌 통신 오류가 certification 실패로 굳으면, view를 빠져나가는 데 필요한 certification을 얻지 못해 liveness가 멈출 수 있기 때문입니다.)</strong></li>
           <li>Finalization certificate가 생겼을 때 아직 말할 수 없는 것은 무엇입니까? <strong>(답: Application state 실행, 외부 저장 성공, client success는 별도 경계입니다.)</strong></li>
         </ol>
         <p className="text-sm text-muted-foreground">

@@ -163,8 +163,8 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             장당 약 $0.11/GPU-h입니다.
           </p>
           <p>
-            이 $1/GPU-h 는 GPU 가 4 년 내내 차 있을 때의 값입니다. 평균 utilization 이 40 % 면 token 당 실제 비용은 2.5 배가 되어 $2/GPU-h
-            의 임대와 비슷해집니다. 소유와 임대를 견줄 때 갈리는 것은 단가가 아닙니다. utilization 을 얼마나 높게 유지할 수 있느냐가 가릅니다.
+            이 $1/GPU-h 는 GPU 가 4 년 내내 차 있을 때의 값입니다. 평균 utilization 이 40 % 면 token 당 실제 비용은 2.5 배가 되어, 쓰는 시간에만 값을 내는
+            $2/GPU-h 임대(가정)와 비슷해집니다. 소유와 임대를 견줄 때 갈리는 것은 단가가 아닙니다. utilization 을 얼마나 높게 유지할 수 있느냐가 가릅니다.
           </p>
         </div>
         <TermBreakdown

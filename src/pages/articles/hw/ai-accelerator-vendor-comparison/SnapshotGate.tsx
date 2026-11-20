@@ -68,7 +68,7 @@ export default function SnapshotGate() {
           앞에서 계산한 210.4GiB는 runtime 여유를 넣기 전 최소선입니다. 따라서
           192GiB·144GB·128GB 후보는 한 장 경로에서 탈락합니다. 288GB와 432GB 후보도
           “합격”이 아니라 실행 시험으로 넘어갈 뿐입니다. Decimal 288GB는 약 268.2GiB라
-          allocator·workspace·fragmentation에 남는 폭이 표의 차이보다 작습니다.
+          최소선 210.4GiB를 빼면 allocator·workspace·fragmentation에 남는 폭은 약 57.8GiB뿐입니다.
         </p>
       </div>
 

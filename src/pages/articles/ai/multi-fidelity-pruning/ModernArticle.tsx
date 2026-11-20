@@ -28,7 +28,7 @@ export default function Article() { return <div className="space-y-16"><section 
           </p><p>이 사례는 갱신 수를 공통 좌표로 삼았습니다. 같은 갱신 수가 모든 후보의 계산 비용까지 같다는 뜻은 아닙니다. 학습 방법과 배치가 달라진다면 선택한 좌표가 목적에 맞는지 다시 검사합니다.</p></div></section>
 
 <section id="pruning-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 평가 깊이와 비교 지점과 중단 정책에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보를 얼마나 깊게 평가했는지가 fidelity입니다. 비교하는 사전 자원 지점은 rung이고 다음 자원을 주지 않고 멈추는 정책은 pruning입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Successive halving", "description": "같은 지점에서 일부 후보만 남기며 다음 자원을 늘리는 절차입니다.", "boundary": "halving이라는 이름이어도 여기서는 3배 축소·확대를 사용합니다."}, {"term": "Survivor", "description": "현재 비교를 통과해 다음 자원을 받는 후보입니다.", "boundary": "최종 최적 후보라고 증명된 것은 아닙니다."}, {"term": "False prune", "description": "중단했을 후보가 정한 최종 예산에서는 채택 가능했을 사건입니다.", "boundary": "끝까지 확인하지 않은 후보의 결과는 알 수 없습니다."}]} /><p className="mt-6 text-base text-muted-foreground">
-            아래 개념도는 같은 규칙을 27개에서 시작한 더 큰 가정 사례입니다. 본문의 9개 계산과 후보 수를 구별합니다.
+            다음 절은 같은 규칙을 27개에서 시작한 더 큰 가정 사례에도 적용합니다. 그 사례의 후보 수는 본문의 9개 계산과 구별합니다.
           </p></section>
 
 <section id="successive-halving" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 후보 수는 3으로 나누고 목표 깊이는 3배 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>

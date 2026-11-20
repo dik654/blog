@@ -92,7 +92,6 @@ export default function SeedViz() {
                 </text>
                 {[
                   { n: "얼굴 세로 / 가로", t: 15.6, n1: 3.7, n2: 2.5, good: true },
-                  { n: "얼굴 폭", t: 3.5, n1: 4.6, n2: 4.6, good: false },
                   { n: "광대폭 / 턱폭", t: 3.8, n1: 3.1, n2: 4.0, good: false },
                 ].map((r, i) => (
                   <g key={r.n}>

@@ -194,11 +194,11 @@ const TRIE_SCENES = [
     verdict: "실제 node I/O 횟수 아님",
   },
   {
-    title: "AMT는 정수 index 자체를 낮은 bit부터 나눕니다",
-    detail: "42는 8진수 52입니다. Bit width 3이면 첫 갈래는 2, 다음 갈래는 5입니다. 이 path만으로 slot이 실제로 존재한다고 말할 수는 없습니다.",
+    title: "AMT는 정수 index 자체를 3 bit 자리로 나눕니다",
+    detail: "42는 8진수 52입니다. Bit width 3이면 root에서 높은 자리 5, 다음 node에서 낮은 자리 2를 고릅니다. 이 path만으로 slot이 실제로 존재한다고 말할 수는 없습니다.",
     hamt: "hash path 유지",
     amt: "42 = (52)₈",
-    path: "AMT: 2 → 5",
+    path: "AMT: 5 → 2",
     verdict: "bitfield 존재 여부 확인 필요",
   },
   {

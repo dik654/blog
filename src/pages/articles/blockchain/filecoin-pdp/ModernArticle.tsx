@@ -320,10 +320,11 @@ export default function ModernFilecoinPdp() {
           <DetectionCurveViz />
 
           <ExplainedFormula
-            question="데이터의 10%를 잃은 제공자를 한 period에 찾을 가능성은?"
+            question="데이터의 10%를 잃은 제공자를 T period 안에 찾을 가능성은? 먼저 한 period(T=1)로 계산하면?"
             idea={
               <>
-                K번 모두 손실 구간을 피할 확률을 먼저 구하고, 이를 1에서 뺍니다.
+                KT번 모두 손실 구간을 피할 확률을 먼저 구하고, 이를 1에서
+                뺍니다. 아래 계산은 T=1이라 K번만 봅니다.
               </>
             }
             formula={String.raw`P_{detect}=1-(1-\alpha)^{KT}`}

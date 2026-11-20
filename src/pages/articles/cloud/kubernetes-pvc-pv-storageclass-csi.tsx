@@ -191,7 +191,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
             <p>338행이 StorageClass에서 WaitForFirstConsumer 여부를 읽고, 344행이 이미 있는 Available PV 가운데 용량·접근 모드·클래스가 맞는 것을 찾습니다. 3절의 Immediate 사례는 여기서 PV를 못 찾아 아래로 내려갑니다.</p>
             <p>
               354~363행은 PVC에 storageClassName이 없으면 기본 클래스를 채우고 sync를 다시 시작합니다. 그다음 switch가 세 갈래입니다.</p>
-            <p>366~370행은 WaitForFirstConsumer이고 노드 주석이 없으면 이벤트만 남기고, 371~380행은 클래스가 있으면 provisionClaim으로 비동기 프로비저닝을 시작하며, 381~382행은 둘 다 아니면 FailedBinding "no persistent volumes available for this claim and no storage class is set"을 남깁니다. 4절의 세 가지 Pending 이유가 이 세 줄입니다.</p>
+            <p>366~370행은 WaitForFirstConsumer이고 노드 주석이 없으면 이벤트만 남기고, 371~380행은 클래스가 있으면 provisionClaim으로 비동기 프로비저닝을 시작하며, 381~382행은 둘 다 아니면 FailedBinding "no persistent volumes available for this claim and no storage class is set"을 남깁니다. PVC가 Pending에 머무는 세 가지 이유가 이 세 줄로, 차례로 5절의 설계된 대기, 3절의 동적 프로비저닝, 4절의 기본 클래스 없는 PVC에 대응합니다.</p>
           </div>
           <BindWritesViz />
           <div className={prose}>

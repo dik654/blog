@@ -359,7 +359,7 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <div className={prose}>
             <p>
               하한의 기본값에는 문서와 코드의 차이가 있습니다. 공식 문서는 기본값이 35이고 35보다 낮으면 내리지 않는다고 적습니다. 고정 원문의 evictionPolicy.cpp
-              34행은 C++ 기본값을 30으로 두고 155–156행은 우선순위가 하한 이상이면 내릴 수 있다고 판정합니다. Python 설정 설명은 하한보다 커야 한다고 적습니다.
+              34행은 C++ 기본값을 30으로 두고 155–156행은 우선순위가 하한 이상이면 내릴 수 있다고 판정합니다. Python 설정 설명은 하한보다 커야 한다고 적는데, 이 설정의 기본값은 비어 있어(None) 값을 주지 않으면 C++ 기본값 30이 그대로 쓰입니다.
             </p>
           </div>
           <OffloadThresholdViz />

@@ -55,10 +55,10 @@ const data: TraditionArticleData = {
     { actor: "사물의 변화", movement: "흙·물·논의 반응으로 다음 행동을 되돌립니다.", receives: "스스로 변할 여지 또는 더 큰 강제" },
   ] },
   numericCase: { title: "물 100을 보내는 두 방식", steps: [
-    { label: "한 번에 개방", value: "100", detail: "정한 속도를 그대로 강요" },
-    { label: "넘침·고임", value: "40 손실", detail: "25 넘침 + 15 앞 논 고임" },
-    { label: "실제 도달", value: "60", detail: "첫 선택의 작물 도달량" },
-    { label: "나눠 조정", value: "85 도달", detail: "40·30·30과 단계별 되먹임" },
+    { label: "첫 선택: 한 번에 개방", value: "100", detail: "정한 속도를 그대로 강요" },
+    { label: "첫 선택: 넘침·고임", value: "40 손실", detail: "25 넘침 + 15 앞 논 고임" },
+    { label: "첫 선택: 실제 도달", value: "60", detail: "첫 선택의 작물 도달량" },
+    { label: "둘째 선택: 나눠 조정", value: "85 도달", detail: "60에서 이어지는 값이 아니라 같은 물 100을 40·30·30으로 나눠 보내며 매번 수문을 조정한 결과(손실 15)" },
   ] },
   terms: { title: "도가의 개입 문제를 읽는 네 개념", items: [
     { term: "도(道)", description: "만물이 생기고 변하는 길과 흐름을 가리키며 하나의 고정된 대상 이름으로 다 담기 어려운 개념입니다.", example: "물·흙·논이 서로 반응하는 실제 흐름을 먼저 봅니다.", boundary: "서양 철학의 실체나 자연 법칙 하나와 바로 같은 말로 놓을 수 없습니다." },

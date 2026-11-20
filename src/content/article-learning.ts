@@ -59064,7 +59064,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "LR은 lookahead로 다음 action을 하나로 정해 stack 하나를 쓰고, GLR은 여러 action이 가능하면 stack을 늘려 병렬로 추적합니다.",
         workedExample:
-          "충돌이 2개면 GLR은 stack을 2개로 fork해 각각 진행하다가 몇 토큰 뒤 하나만 남은 stack을 채택합니다.",
+          "한 충돌 지점에서 가능한 action이 2개면 GLR은 stack을 2개로 fork해 각각 진행하다가 몇 토큰 뒤 하나만 남은 stack을 채택합니다.",
         boundary:
           "GLR은 여러 stack을 유지하는 만큼 LR보다 메모리·시간 비용이 커서 충돌이 드문 문법에는 LR이 더 흔히 쓰입니다.",
       },
@@ -272403,7 +272403,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "inode-link-count", role: "inode·링크·열린 참조 회계를 알고 있다고 보고 dentry→inode→file 관계로 연결합니다." },
     ],
     introducedHere: [
-      { id: "linux-vfs-dentry-inode-file", role: "/var/log/app.log가 dentry 넷·inode 하나·file 하나가 되는 과정과 lookup_fast/slow를 설명합니다." },
+      { id: "linux-vfs-dentry-inode-file", role: "/var/log/app.log가 dentry 넷·파일 inode 하나·file 하나가 되는 과정과 lookup_fast/slow를 설명합니다." },
       { id: "linux-mount-table-bind-propagation", role: "mount 표, bind mount(do_loopback), MS_REC, shared/private/slave 전파와 컨테이너 볼륨의 관계를 설명합니다." },
       { id: "linux-overlayfs-copy-up", role: "lower 여러 장·upper·workdir 구조와 copy_up 순서를 이미지 layer 사례로 설명합니다." },
       { id: "linux-dirty-page-writeback-thresholds", role: "세 계기와 두 한계선을 가용 12,288 MiB 사례로 정수화까지 계산합니다." },
@@ -272461,7 +272461,7 @@ export const ARTICLE_LEARNING: Readonly<
       { label: "04 장치 관측", relation: "블록 층 큐와 iostat 열로 각 단계의 시간을 읽습니다.", concepts: ["linux-iostat-block-layer-columns"] },
     ],
     exercises: [
-      { level: "basic", question: "open(\"/var/log/app.log\")에서 dentry·inode·file 구조는 각각 몇 개 만들어지거나 쓰이고, 어느 파일시스템의 write가 불릴지는 언제 정해지나요?", answerChecklist: ["dentry 넷(/, var, log, app.log)", "inode 하나", "file 하나(fd 표에 들어감)", "open() 때 file_operations가 채워지며 정해짐"], requiredConcepts: ["linux-vfs-dentry-inode-file"], sectionId: "vfs-objects" },
+      { level: "basic", question: "open(\"/var/log/app.log\")에서 dentry·inode·file 구조는 각각 몇 개 만들어지거나 쓰이고, 어느 파일시스템의 write가 불릴지는 언제 정해지나요?", answerChecklist: ["dentry 넷(/, var, log, app.log)", "파일 inode 하나(디렉터리 조각의 dentry는 각자 디렉터리 inode를 가리킴)", "file 하나(fd 표에 들어감)", "open() 때 file_operations가 채워지며 정해짐"], requiredConcepts: ["linux-vfs-dentry-inode-file"], sectionId: "vfs-objects" },
       { level: "basic", question: "mount --bind /data/logs /srv/app/logs를 하면 커널은 무엇을 만들고 무엇을 만들지 않나요? 호스트에서 /data/logs 아래에 새 디스크를 마운트하면 컨테이너에 보일까요(private일 때)?", answerChecklist: ["mount 구조를 clone_mnt로 복제해 graft_tree로 접붙임", "새 superblock·데이터 복사 없음", "서브마운트는 MS_REC 없이는 안 따라옴", "private이면 새 마운트가 전파되지 않음"], requiredConcepts: ["linux-mount-table-bind-propagation"], sectionId: "mount" },
       { level: "basic", question: "lowerdir=/l1:/l2:/l3에서 가장 아래 layer는 어느 것이고, /l3에 있는 100 MiB 파일에 한 줄을 덧붙이면 무슨 일이 먼저 일어나나요?", answerChecklist: ["오른쪽 /l3가 가장 아래", "copy_up: 부모 디렉터리 → 빈 파일 → 100 MiB 데이터 복사 → xattr", "복사 뒤 한 줄 쓰기", "이후 접근은 upper 파일로 직행"], requiredConcepts: ["linux-overlayfs-copy-up"], sectionId: "overlayfs" },
       { level: "basic", question: "가용 메모리 12,288 MiB, dirty_background_ratio 10, dirty_ratio 20일 때 두 한계선을 page 단위 정수화를 포함해 계산하세요.", answerChecklist: ["3,145,728 page", "⌊409.6⌋ = 409 → 409 × 768 = 314,112 page ≈ 1,227 MiB", "⌊819.2⌋ = 819 → 628,992 page ≈ 2,457 MiB", "정확히 10%·20%보다 조금 낮음"], requiredConcepts: ["linux-dirty-page-writeback-thresholds"], sectionId: "dirty-pages" },

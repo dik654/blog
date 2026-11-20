@@ -30,7 +30,7 @@ const SCENES = [
   { label: "레코드 한 장", summary: "w₃ × 3 = 15 → a[2]", note: "zkey의 계수 레코드 한 장은 '어느 slot(제약 c)에, 어느 signal s의 witness 값을, 어떤 계수로 곱해 더할지'를 적습니다. 대부분의 칸은 0이라 값이 있는 칸만 레코드로 둡니다(sparse). 숫자는 보통 정수로 바꾼 설명용 예입니다(가정)." },
   { label: "두 thread가 나눠 처리", summary: "slot 2에 두 thread가 동시에", note: "레코드를 thread 두 개(파랑·보라)에 나눠 주면 서로 다른 thread가 같은 slot 2를 갱신하게 됩니다. 두 덧셈 2와 15가 모두 남아야 a[2] = 17입니다. 보호 없이 동시에 읽고 쓰면 한쪽 덧셈이 덮여 사라질 수 있습니다." },
   { label: "누가 slot을 맡는지 정함", summary: "a = [8, 0, 17, 7]", note: "현재 source는 공유 slot에 striped mutex를 써서 한 번에 한 thread만 더하게 합니다. GPU로 옮길 때도 atomic, sort-reduce, segmented reduction 중 무엇으로 같은 slot의 덧셈을 모을지 명시해야 합니다." },
-  { label: "B도 같은 방식, 그다음 곱", summary: "a·b = [8, 0, 17, 28]", note: "위 카드가 B 계수 레코드 네 장으로 바뀝니다. 같은 방식으로 b 배열에 모읍니다. 그다음 slot마다 a와 b를 곱해 c = a·b 배열을 만듭니다. 본문의 다음 단계(FFT quotient)가 이 세 배열을 입력으로 받습니다." },
+  { label: "B도 같은 방식, 그다음 곱", summary: "a·b = [8, 0, 17, 28]", note: "위 카드가 B 계수 레코드 네 장으로 바뀝니다. 같은 방식으로 b 배열에 모읍니다. 그다음 slot마다 a와 b를 곱해 곱 배열 a·b(본문의 c 배열, slot 번호 c와는 다름)를 만듭니다. 본문의 다음 단계(FFT quotient)가 이 세 배열을 입력으로 받습니다." },
 ] as const;
 
 function Cell({ value, tone, sub }: { value: string; tone: "plain" | "hit" | "done" | "muted"; sub?: string }) {

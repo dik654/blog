@@ -268,8 +268,9 @@ export default function DifferentialAttentionArticle() {
             설계한 결과이며, 이 글이 새로 만든 mechanism 은 아닙니다.
           </p>
           <p>
-            연산 비용도 공짜가 아닙니다. Head 수는 절반이 되지만 head 마다 두 번의 QKᵀ·softmax·PV
-            를 계산하므로 전체 FLOPs 는 표준 attention 과 비슷하게 맞춰질 뿐 줄지 않습니다. 또한
+            연산 비용도 공짜가 아닙니다. 식의 (A₁ − λA₂)V 는 A₁V − λA₂V 와 같아서, 실제 계산은
+            두 확률 분포에 각각 V 를 곱한 뒤 빼는 형태가 됩니다. Head 수는 절반이 되지만 head 마다
+            두 번의 QKᵀ·softmax·PV 를 계산하므로 전체 FLOPs 는 표준 attention 과 비슷하게 맞춰질 뿐 줄지 않습니다. 또한
             <Link to="/cs/ai/flash-attention-io-aware-kernel#tiling">FlashAttention</Link> 커널
             하나로 바로 감싸지지 않아, 저자들은 두 번의 FlashAttention 호출 결과를 조합하는 방식을
             부록에서 제시합니다.

@@ -117,8 +117,8 @@ export default function LlmAsAJudgeArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             MT-Bench 논문은 같은 답변 쌍의 순서를 바꿔 두 번 판정했을 때 GPT-4 가 두 판정에서
-            같은 답을 고른 비율(consistency)이 65.0%, 먼저 제시된 쪽을 고른 비율이 30.0% 라고
-            보고했습니다. GPT-3.5 는 일관성 46.2%·첫 위치 편향 50.0%, Claude-v1 은 일관성
+            같은 답을 고른 비율(consistency)이 65.0%, 두 순서 모두에서 먼저 제시된 쪽을 고른
+            비율(첫 위치 편향)이 30.0% 라고 보고했습니다. 두 비율은 서로 겹치지 않는 경우를 셉니다. GPT-3.5 는 일관성 46.2%·첫 위치 편향 50.0%, Claude-v1 은 일관성
             23.8%·첫 위치 편향 75.0% 로 더 심했습니다.
           </p>
           <p>
@@ -217,8 +217,8 @@ export default function LlmAsAJudgeArticle() {
           </p>
           <p>
             앞서 본 숫자들이 이 calibration 의 결과입니다. GPT-4 judge 는 MT-Bench 에서 사람과 85%, Chatbot Arena 에서 87%(단일 답변 채점은
-            95%) 일치했고, G-Eval 은 요약에서 사람과 Spearman 0.514 를 기록했습니다. 이 숫자가 사람-사람 일치율(81%)보다 높으니 judge 는 적어도 사람 두
-            명이 서로 다투는 정도로는 신뢰할 만합니다. 물론 언제나 옳다는 보장은 여기 없습니다.
+            95%) 일치했고, G-Eval 은 요약에서 사람과 Spearman 0.514 를 기록했습니다. 같은 MT-Bench 조건에서 잰 사람-사람 일치율(81%)보다 85% 가 높으니 judge 는 적어도 사람 두
+            명이 서로 다투는 정도로는 신뢰할 만합니다. 87%·95% 는 데이터나 채점 방식이 달라 이 81% 와 바로 견줄 수 없습니다. 물론 언제나 옳다는 보장은 여기 없습니다.
           </p>
           <p>
             Calibration 은 세 가지를 조합합니다. Rubric 으로 볼 기준을 고정하고 순서를 두 번 돌려 position bias 를 상쇄한 뒤, 사람 labeled

@@ -158,8 +158,8 @@ export default function DocumentParsingAndTableExtractionArticle() {
           </p>
           <p>
             Microsoft의 Table Transformer는 표 100만 개로 만든 PubTables-1M 데이터셋에서 구조를 인식합니다. 셀 위치만 맞히는 GriTS_Top 점수는
-            0.9849로 거의 완벽하지만 셀 내용까지 정확히 일치해야 하는 AccCon 점수는 0.8243으로 떨어집니다. 병합 셀·헤더가 섞인 표는 위치를 맞혀도 내용까지 맞히기가
-            그만큼 더 어렵습니다.
+            0.9849로 거의 완벽하지만 셀 내용까지 정확히 일치해야 하는 AccCon 점수는 0.8243으로 떨어집니다. 두 점수는 PubTables-1M 전체 기준이라 병합 셀 표만 따로 잰 값은 아니지만, 셀 위치를 맞히는 것보다
+            내용까지 맞히는 것이 더 어렵다는 점은 보여 줍니다.
           </p>
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -181,7 +181,7 @@ export default function DocumentParsingAndTableExtractionArticle() {
           description="영역을 찾는 것과 그 안의 셀·병합·헤더 구조를 복원하는 것은 다른 난이도의 작업입니다."
           items={[
             { term: "Table Extraction", description: "문서에서 표가 있는 영역을 찾습니다.", example: "페이지에서 표 bounding box 1개를 검출.", boundary: "영역만 찾고 셀 구조까지 복원하지는 않습니다." },
-            { term: "Table Structure Recognition", description: "표 영역 안 행·열·헤더 위치를 복원합니다.", example: "GriTS_Top 0.9849, AccCon 0.8243(PubTables-1M 기준).", boundary: "위치 정확도가 높아도 병합 셀 내용까지 맞히는 정확도는 더 낮습니다." },
+            { term: "Table Structure Recognition", description: "표 영역 안 행·열·헤더 위치를 복원합니다.", example: "GriTS_Top 0.9849, AccCon 0.8243(PubTables-1M 기준).", boundary: "위치 정확도가 높아도 셀 내용까지 맞히는 정확도는 더 낮습니다." },
             { term: "rowspan", description: "한 셀이 아래로 여러 행에 걸치는 병합입니다.", example: "'지표' 헤더 셀이 2개 행에 걸쳐 표시.", boundary: "펼치지 않으면 아래 행의 열 개수가 줄어든 것처럼 보입니다." },
             { term: "colspan", description: "한 셀이 옆으로 여러 열에 걸치는 병합입니다.", example: "'2024' 헤더 셀이 'Q1'·'Q2' 두 열에 걸쳐 표시.", boundary: "펼치지 않으면 데이터 행과 헤더 행의 열 개수가 어긋납니다." },
             { term: "Multi-Level Header", description: "여러 행에 걸쳐 쌓인 헤더 구조입니다.", example: "1행 '2024', 2행 'Q1'·'Q2'로 이뤄진 2단 헤더.", boundary: "행을 그대로 이어 붙이면 헤더가 아니라 데이터처럼 취급될 수 있습니다." },

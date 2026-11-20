@@ -56,10 +56,10 @@ const data: WorldHistoryArticleData = {
     { actor: "시민 명부와 국가", movement: "투표·세금·병역의 대상자를 분류합니다.", receives: "세입·병력·행정 정보" },
     { actor: "식민 회사와 제국", movement: "외부 영토의 자원과 노동을 통제합니다.", receives: "상품·시장·전략 거점" },
   ] },
-  numericCase: { title: "주민 100명의 권리 장부", steps: [
-    { label: "정치 시민", value: "30명", detail: "투표와 공직 참여" },
-    { label: "의무만 큰 주민", value: "40명", detail: "납세·노동, 투표권 없음" },
-    { label: "법적 비시민", value: "30명", detail: "노예·식민 신민·배제 집단" },
+  numericCase: { title: "주민 100명이 선거 명부로 좁혀지는 과정", steps: [
+    { label: "선언이 말하는 주민", value: "100명", detail: "‘모든 사람’의 문장" },
+    { label: "법적 비시민을 뺀 주민", value: "70명", detail: "노예·식민 신민·배제 집단 30명 제외" },
+    { label: "선거 명부의 정치 시민", value: "30명", detail: "납세·노동 의무만 지는 40명 제외, 투표와 공직 참여" },
   ] },
   terms: { title: "혁명과 제국을 함께 읽는 세 개념", items: [
     { term: "혁명적 국민 주권", description: "왕조나 신분이 아니라 국민이 정치 권력의 근원이라는 주장입니다.", example: "의회가 왕의 특권보다 국민의 일반 의지를 앞세웁니다.", boundary: "국민의 범위와 대표 방식은 선언만으로 정해지지 않습니다." },

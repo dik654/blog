@@ -59,7 +59,7 @@ export default function MemoryAxis() {
           "210.4GiB에는 runtime 예약, activation, kernel workspace, 통신 buffer와 fragmentation 여유가 들어 있지 않습니다.",
           "제품 문서의 GB와 이 계산의 GiB를 섞지 않습니다. 예를 들어 decimal 288GB는 약 268.2GiB입니다.",
         ]}
-        interpretation="192GB·180GB·144GB·128GB급 후보는 이 사례의 한 장 경로에서 계산 전에 탈락합니다. 288GB급도 남는 약 57.8GiB 안에 runtime 여유가 실제로 들어가는지 실행으로 확인해야 합니다."
+        interpretation="192GB·144GB·128GB급 후보는 이 사례의 한 장 경로에서 계산 전에 탈락합니다. 288GB급도 남는 약 57.8GiB 안에 runtime 여유가 실제로 들어가는지 실행으로 확인해야 합니다."
       />
 
       <MemoryViz />

@@ -67,7 +67,7 @@ export default function ModernKzgGpuArticle() {
     <section id="opening-dag" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Opening DAG</p><h2 className="mt-2 text-2xl font-bold">Evaluation에서 verifier까지 한 generation으로 잇는다</h2></header>
       <p>Claim y=f(z)를 계산하고 q=(f−y)/(X−z)의 remainder가 0인지 확인한 뒤 q coefficients와 SRS prefix를 MSM해 proof π를 만듭니다.</p>
-      <p>Batch opening은 transcript challenge와 aggregation equation을 특정 protocol·version에 고정해야 합니다. 여러 commitments를 무조건 하나의 MSM으로 이어 붙인 뒤 group 결과를 임의로 분리할 수는 없습니다.</p>
+      <p>Batch opening은 transcript challenge와 aggregation equation을 특정 protocol·version에 고정해야 합니다. 여러 commitments를 무조건 하나의 MSM으로 이어 붙인 뒤 group 결과를 임의로 분리할 수는 없습니다. MSM 결과는 모든 항을 더한 점 하나라서, 이어 붙이면 commitment들의 합만 남고 개별 commitment로 되돌릴 방법이 없기 때문입니다.</p>
       <ExplainedFormula question="KZG artifact가 같은 입력 generation에서 만들어졌는지 어떻게 봉인할까?" idea={<>Polynomial, SRS, claim, backend와 output digests를 하나의 receipt identity에 묶어 verifier 결과와 함께 저장합니다.</>} formula={String.raw`R=H(A_f\|A_{SRS}\|z\|y\|H(C)\|H(\pi)\|v\|b)`}
       annotatedFormula={String.raw`R=H(\underbrace{A_f\|A_{SRS}}_{\text{다항식·setup}}\|\underbrace{z\|y}_{\text{opening claim}}\|\underbrace{H(C)\|H(\pi)}_{\text{결과 encoding}}\|\underbrace{v\|b}_{\text{verifier·backend}})`}
       operations={[

@@ -334,7 +334,7 @@ export const hardwareTeachCases = {
     ],
     numberTitle: "일곱 쌍이 20µs여도 한 쌍이 100µs면 barrier는 그 쌍을 기다립니다",
     numbers: [
-      "(가정) 동시에 끝나야 하는 여덟 전송 가운데 일곱 개가 20µs, 하나가 100µs라면 해당 단계는 약 100µs보다 빨리 끝날 수 없습니다.",
+      "(가정) 동시에 끝나야 하는 여덟 전송(GPU 한 쌍마다 전송 하나) 가운데 일곱 개가 20µs, 하나가 100µs라면 해당 단계는 약 100µs보다 빨리 끝날 수 없습니다.",
       "평균 pair latency 30µs는 이 병목을 숨깁니다. 다음 본문은 경로에 PCIe, NVLink·NVSwitch, NUMA와 GPU–NIC locality라는 이름을 붙입니다.",
     ],
     steps: [

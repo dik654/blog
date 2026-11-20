@@ -43,7 +43,7 @@ export default function VfsObjectsViz() {
   return (
     <SceneShell
       eyebrow="open() 한 번"
-      title="경로 하나가 dentry 넷, inode 하나, file 하나가 됩니다"
+      title="경로 하나가 dentry 넷, 파일 inode 하나, file 하나가 됩니다"
       description="위에서 아래로 open()이 지나는 순서입니다. 네 칸이 경로 조각이고, 맨 아래 줄이 write(fd)가 함수를 찾는 길입니다."
       ariaLabel="경로 조각별 dentry 조회와 inode, file, fd의 연결"
       scenes={SCENES}
@@ -68,7 +68,7 @@ export default function VfsObjectsViz() {
             <Down label="app.log의 dentry가 가리킴" show={s.inode} />
             <div className="grid grid-cols-2 gap-1.5">
               <div className={`rounded-lg border px-2 py-1.5 ${s.inode ? "border-primary bg-primary/5" : "border-dashed border-border"}`}>
-                <span className={`block text-xs font-bold ${s.inode ? "" : "text-muted-foreground"}`}>inode 하나</span>
+                <span className={`block text-xs font-bold ${s.inode ? "" : "text-muted-foreground"}`}>app.log의 inode</span>
                 <span className="block text-[11px] leading-4 text-muted-foreground">{s.link ? "크기·권한·시각·블록 위치 / 하드 링크의 다른 dentry도 여기로" : "크기·권한·시각·블록 위치"}</span>
               </div>
               <div className={`rounded-lg border px-2 py-1.5 ${s.diskUsed ? "border-amber-600" : "border-dashed border-border"}`}>

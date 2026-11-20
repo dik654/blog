@@ -52,7 +52,7 @@ return <div className="space-y-16">
 <h2 className="mb-6 text-2xl font-bold">6. 퍼짐·빈 경계·내부 전위차에 이름을 붙입니다</h2>
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
-            두 영역을 붙이기 전에는 왼쪽에 정공, 오른쪽에 전자가 훨씬 많다고 둡니다. 앞 글의 가정인 각 영역 10¹⁶ cm⁻³ 도핑과 300 K의 평형 농도를 다시 씁니다. 오른쪽
+            두 영역을 붙이기 전에는 왼쪽에 정공, 오른쪽에 전자가 훨씬 많다고 둡니다. 3절에서 가정한 각 영역 10¹⁶ cm⁻³ 도핑과 300 K의 평형 농도를 다시 씁니다. 오른쪽
             전자는 왼쪽으로, 왼쪽 정공은 오른쪽으로 퍼집니다. 사람이 붐비는 공간에서 빈 공간 쪽으로 이동하는 것과 비슷하지만 여기서는 전하를 띤 입자의 농도 차이입니다.
           </p>
           <p className="leading-7">
@@ -128,12 +128,12 @@ return <div className="space-y-16">
         </div>
         <ExplainedFormula
           question="전압을 0.5 V에서 0.6 V로 올리면 이상 접합의 전류는 얼마가 됩니까?"
-          idea="열전압 25.85 mV마다 지수의 입력이 1씩 늘어납니다. 포화 전류를 곱한 뒤 역방향 기준 항을 뺍니다."
+          idea="열전압 25.85 mV마다 지수의 입력이 1씩 늘어납니다. 지수 값에서 1을 뺀 뒤 포화 전류를 곱합니다."
           formula={String.raw`I=I_s\left(e^{V/V_T}-1\right),\qquad V_T=\frac{kT}{q}`}
           annotatedFormula={String.raw`\underbrace{I}_{\text{접합 전류}}=\underbrace{I_s}_{\text{포화 전류}}\left(e^{\overbrace{V/V_T}^{\text{전압÷열전압}}}-1\right)`}
           operations={[
             { expression: String.raw`0.5/0.02585\approx19.34`, annotation: "0.5 V를 열전압으로 나눈 지수의 입력입니다." },
-            { expression: String.raw`I(0.5\,\mathrm V)\approx0.251\,\mathrm{mA}`, annotation: "지수식에 가정한 1 pA를 곱하고 1을 뺍니다." },
+            { expression: String.raw`I(0.5\,\mathrm V)\approx0.251\,\mathrm{mA}`, annotation: "괄호 안의 지수 값에서 1을 뺀 뒤 가정한 1 pA를 곱합니다." },
             { expression: String.raw`0.6/0.02585\approx23.21`, annotation: "0.1 V 증가가 지수 입력을 약 3.87 키웁니다." },
             { expression: String.raw`I(0.6\,\mathrm V)\approx12.03\,\mathrm{mA}`, annotation: "같은 가정에서 전류는 약 47.9배가 됩니다." },
           ]}

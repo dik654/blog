@@ -103,7 +103,7 @@ export default function ModernYarnRopeArticle() {
       <LlmArchitectureLocator
         current="yarn"
         question="학습 때 보지 못한 위치를 기존 RoPE checkpoint가 어떻게 해석하게 만들까요?"
-        fixture="32K에서 학습한 checkpoint를 128K까지 늘리는 factor 4 사례를 따라갑니다."
+        fixture="원리는 4K checkpoint를 32K로 늘리는 factor 8 예시로 계산하고, 배포 설정은 32K checkpoint를 128K로 늘리는 factor 4 사례로 확인합니다."
         parentHref="/cs/ai/transformer-architecture#position-information"
         parentLabel="Transformer 입력에 위치 정보를 넣는 자리"
       />

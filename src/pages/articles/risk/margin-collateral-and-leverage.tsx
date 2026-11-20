@@ -113,7 +113,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">10. 모두의 매각이 다른 사람의 담보 부족을 만듭니다</h2>
         <FundingLoopViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">여러 사람이 40억 원씩 팔려 하면 충분한 매수자가 없는 가격대까지 내려갈 수 있습니다. 그러면 아직 팔지 않은 투자자도 담보 가치 하락으로 추가 지급을 요구받습니다. 자금 부족과 거래 가격 하락이 서로를 키우는 고리입니다.</p>
+<p className="leading-8">여러 사람이 40억 원씩 팔려 하면 그 물량을 받아 줄 매수자가 부족해 가격이 더 내려갈 수 있습니다. 그러면 아직 팔지 않은 투자자도 담보 가치 하락으로 추가 지급을 요구받습니다. 자금 부족과 거래 가격 하락이 서로를 키우는 고리입니다.</p>
 <p className="leading-8">반대로 만기와 통화가 맞는 현금 여유를 확보하면 강제 매각을 피할 시간이 생깁니다. 장부상 이익·집·장기채를 갖고 있다는 사실과 오늘 납부할 현금이 있다는 사실을 구분해야 합니다. 스트레스 계산에는 가격 하락과 인정 비율 하락을 동시에 넣습니다.</p>
         </div>
 <CitationBlock source="BIS · Market and funding liquidity, overview" citeKey={4} href="https://www.bis.org/speeches/20160502-market-and-funding-liquidity-overview">BIS · Market and funding liquidity, overview</CitationBlock>

@@ -9,7 +9,7 @@ const STEPS: readonly StepDef[] = [
   {
     label: "WTNS와 zkey가 같은 증명 작업인지 입구에서 확인한다",
     tabLabel: "입력 승인",
-    body: "설명용 요청에서 두 artifact는 BN254 scalar field와 변수 8개를 공유하고, zkey는 Groth16·public 2개·domain 8을 선언합니다. Header뿐 아니라 승인된 exact digest까지 맞아야 계산을 시작합니다.",
+    body: "설명용 요청(가정)에서 두 artifact는 BN254 scalar field와 변수 8개를 공유하고, zkey는 Groth16·public 2개·domain 8을 선언합니다. Header뿐 아니라 승인된 exact digest까지 맞아야 계산을 시작합니다.",
   },
   {
     label: "현재 CPU 경로가 proof를 만드는 순서를 따라간다",
@@ -24,12 +24,12 @@ const STEPS: readonly StepDef[] = [
   {
     label: "Kernel 시간이 아니라 왕복 시간을 비교해 경로를 고른다",
     tabLabel: "경로 선택",
-    body: "CPU 18ms에 비해 GPU upload 3+queue 4+kernel 5+download 1+sync 1=14ms이면 4ms를 절약합니다. Queue가 10ms로 늘면 GPU 전체가 20ms가 되어 같은 요청도 CPU가 낫습니다.",
+    body: "이 단계의 ms 값은 측정값이 아닌 설명용 예입니다(가정). CPU 18ms에 비해 GPU upload 3+queue 4+kernel 5+download 1+sync 1=14ms이면 4ms를 절약합니다. Queue가 10ms로 늘면 GPU 전체가 20ms가 되어 같은 요청도 CPU가 낫습니다.",
   },
   {
     label: "최종 검증과 실제 선택 경로를 따로 보고한다",
     tabLabel: "release receipt",
-    body: "100건 중 GPU 90건, CPU fallback 10건, 실패 0건이 모두 verifier를 통과했다면 서비스 성공은 100건입니다. 그러나 GPU가 전체 100건을 성공시켰다고 말할 수는 없습니다.",
+    body: "설명용 예로(가정) 100건 중 GPU 90건, CPU fallback 10건, 실패 0건이 모두 verifier를 통과했다면 서비스 성공은 100건입니다. 그러나 GPU가 전체 100건을 성공시켰다고 말할 수는 없습니다.",
   },
 ] as const;
 
@@ -134,6 +134,7 @@ function Scene({ step }: { step: number }) {
   if (step === 4) {
     return (
       <div className="grid w-full max-w-2xl gap-3 sm:grid-cols-2">
+        <p className="text-center text-xs font-semibold text-primary sm:col-span-2">설명용 가정 시간(ms) · 측정값 아님</p>
         <div className="rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4 dark:border-emerald-800 dark:bg-emerald-950/30">
           <p className="text-xs font-bold text-emerald-700 dark:text-emerald-200">Queue 4ms일 때</p>
           <p className="mt-3 text-sm font-semibold">GPU = 3 + 4 + 5 + 1 + 1</p>

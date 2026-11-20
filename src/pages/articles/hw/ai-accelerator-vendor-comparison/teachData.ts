@@ -15,7 +15,7 @@ export const acceleratorVendorTeachCase: HardwareTeachCase = {
   numberTitle: "130.4GiB weight에 KV cache 80GiB를 더하면 이미 210.4GiB입니다",
   numbers: [
     "BF16 weight는 70×10^9×2 byte÷2^30≈130.4GiB입니다. Llama 계열을 단순화해 80 layer·KV head 8·head dimension 128로 두면 KV는 token당 2(K,V)×80×8×128×2 byte=0.3125MiB입니다. 32,768 token×8개 요청이면 80GiB입니다.",
-    "합계 210.4GiB에는 allocator 여유와 kernel workspace도 아직 없습니다. 따라서 nominal 192GB·180GB·144GB·128GB 후보는 한 장 경로에서 먼저 탈락합니다. 288GB 이상도 실제 usable memory와 기능을 실행해 확인해야 합니다.",
+    "합계 210.4GiB에는 allocator 여유와 kernel workspace도 아직 없습니다. 따라서 nominal 192GB·144GB·128GB 후보는 한 장 경로에서 먼저 탈락합니다. 288GB 이상도 실제 usable memory와 기능을 실행해 확인해야 합니다.",
   ],
   steps: [
     { role: "배치할 수 있는 후보만 남깁니다", result: "자체 데이터센터 구매와 특정 cloud service를 같은 조달 후보처럼 섞지 않습니다." },

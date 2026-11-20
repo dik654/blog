@@ -1161,7 +1161,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "External effect partial success·idempotency·compensation",
-        href: "/cs/ai/agent-code-mode#effect-atomicity",
+        href: "/cs/ai/code-mode-runtime-contracts#effects",
       },
       {
         label: "Context compaction fidelity",
@@ -1250,7 +1250,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "여러 external effect의 partial success·idempotency",
-        href: "/cs/ai/agent-code-mode#effect-atomicity",
+        href: "/cs/ai/code-mode-runtime-contracts#effects",
       },
       {
         label: "Pinned Claw repository 전체 architecture와 parity test",
@@ -1317,7 +1317,7 @@ export const EDITORIAL_BOUNDARIES = {
       {
         label:
           "External effect partial success·receipt·idempotency·compensation",
-        href: "/cs/ai/agent-code-mode#effect-atomicity",
+        href: "/cs/ai/code-mode-runtime-contracts#effects",
       },
       {
         label: "Run·artifact·command·verifier receipt provenance",
@@ -12308,7 +12308,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         label: "Replay·external effect 경계",
-        href: "/cs/ai/agent-code-mode#effect-atomicity",
+        href: "/cs/ai/code-mode-runtime-contracts#effects",
       },
     ],
     evidence: [

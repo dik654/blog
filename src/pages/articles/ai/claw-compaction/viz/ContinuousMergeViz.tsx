@@ -7,7 +7,7 @@ import {
 export default function ContinuousMergeViz() {
   return (
     <CompactFrame
-      label="REPEATED COMPACTION"
+      label="DESIRED · REPEATED COMPACTION"
       title="prior state를 parse하고 새 fact만 field별로 병합한다"
       description="각 cycle은 versioned state를 복원하고 새 로그인-debug 구간의 fact와 receipt를 병합한 뒤 budget을 넘을 때만 2차 압축합니다."
       note="포맷 migration이나 parse가 실패하면 기존 state를 보존합니다. 일반 message로 간주해 다시 자유 요약하면 누락을 정상 상태처럼 굳힐 수 있습니다."

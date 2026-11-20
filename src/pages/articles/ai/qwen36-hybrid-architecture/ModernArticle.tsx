@@ -497,8 +497,8 @@ M_\Delta
               token마다의 key와 value를 그대로 나열해 둔 기록입니다.
             </p>
             <p className="leading-8">
-              역할 분담은 이 차이에서 나옵니다. Attention layer 16개는 explicit token memory를 그대로 남겨 두므로 어떤 token이든 정확히 다시 찾아
-              올 수 있습니다. DeltaNet layer 48개 쪽은 compressed state로 대부분의 문맥을 요약해 memory와 연산을 아낍니다. 한쪽이 정확한 조회를 맡고
+              역할 분담은 이 차이에서 나옵니다. Attention layer 16개는 explicit token memory를 그대로 남겨 두므로 어떤 token이든 압축되지 않은 원본으로
+              다시 참조할 수 있습니다. 다만 원본이 남아 있다는 뜻이지, 모델이 필요한 token을 늘 골라낸다는 보장은 아닙니다. DeltaNet layer 48개 쪽은 compressed state로 대부분의 문맥을 요약해 memory와 연산을 아낍니다. 한쪽이 정확한 조회를 맡고
               다른 쪽이 압축을 맡습니다. 두 state를 합쳐야 request 하나가 실제로 쓰는 memory가 됩니다.
             </p>
           </div>
@@ -509,7 +509,7 @@ M_\Delta
               {
                 term: "Explicit token memory (attention)",
                 description:
-                  "Token마다의 key와 value를 그대로 남겨 정확한 조회를 보장합니다.",
+                  "Token마다의 key와 value를 그대로 남겨 압축 없이 다시 조회할 수 있게 합니다.",
                 example: "16개 layer, context에 비례해 계속 자람",
                 boundary:
                   "정확하지만 context가 길수록 저장·조회 비용이 함께 늘어납니다.",

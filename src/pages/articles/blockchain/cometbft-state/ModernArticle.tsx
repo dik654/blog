@@ -186,7 +186,7 @@ export default function ModernCometBFTStateArticle() {
             <ol>
               <li>F42가 State Store와 별도 서버에 있는 것이 아닌데도 별도 receipt로 구분하는 이유를 설명할 수 있습니까?</li>
               <li>B42·S41·A42에서 실제 application 대신 mock application을 쓰는 이유를 말할 수 있습니까?</li>
-              <li>B42·S41·A41과 B42·S42·A41의 replay 경로 차이를 설명할 수 있습니까?</li>
+              <li>B42·S41·A41과 B42·S42·A40의 replay 경로 차이를 설명할 수 있습니까?</li>
               <li>Height가 모두 42여도 AppHash 비교가 필요한 반례를 만들 수 있습니까?</li>
               <li>State sync에서 h·h+1·h+2 header를 각각 어디에 쓰는지 설명할 수 있습니까?</li>
             </ol>

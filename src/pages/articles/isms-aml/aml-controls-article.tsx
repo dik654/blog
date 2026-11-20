@@ -178,7 +178,7 @@ const CONFIG: Record<ArticleKey, Config> = {
       "한울무역에는 국내 급여·매입, 월 5천만 원, 주 거래 상대와 지역을 expected behavior로 기록합니다. Source of funds는 이번 관계·거래에 들어오는 자금의 출처이고 source of wealth는 고객의 전체 자산 형성 배경입니다. 모든 고객에게 같은 깊이를 요구하지 않고 상품·고객·지역·채널·소유구조의 위험 근거에 따라 범위를 정합니다.",
       "EDD는 복잡한 소유구조, 고위험 지역, PEP 관련성, 설명되지 않는 대규모·비정상 거래 같은 위험 원인별로 추가 source, senior approval, 목적·자금 원천 증명, 강화 monitoring을 붙입니다. Risk label만 높이고 어떤 의문을 어떤 evidence로 줄였는지 기록하지 않으면 EDD가 아닙니다.",
       "CDD는 onboarding 한 번으로 끝나지 않습니다. 위험에 따른 주기와 함께 주소·대표·실제소유자·상품·거래 패턴 변화, 기존 자료의 정확성 의심 같은 trigger가 생기면 refresh합니다. Raw document와 extracted field, normalization rule, verifier version, reviewer와 effective time을 분리해 과거 판단도 재현합니다.",
-      "Travel Rule은 VASP 사이 가상자산 이전에 송·수신인 정보를 거래와 함께 전달·보존하는 별도 information-sharing control입니다. On-chain address만으로 자연인 identity가 증명되는 것은 아니므로 originator·beneficiary identity, VASP·wallet type, transfer ID와 message receipt를 묶고 최소 정보·암호화·access·retention을 적용합니다.",
+      "Travel Rule은 VASP(가상자산사업자) 사이 가상자산 이전에 송·수신인 정보를 거래와 함께 전달·보존하는 별도 information-sharing control입니다. On-chain address만으로 자연인 identity가 증명되는 것은 아니므로 originator·beneficiary identity, VASP·wallet type, transfer ID와 message receipt를 묶고 최소 정보·암호화·access·retention을 적용합니다.",
       "2022년 최초 시행 안내에는 100만 원 기준이 있었습니다. 2026년 8월 11일 의결된 시행령 개정안은 이 기준 폐지와 해외 VASP·개인지갑 거래 통제를 예고했지만, 조항별 시행일이 같지 않습니다. 2026-11-02 현재에는 의결 내용과 실제 시행 조문을 구분하고, 거래 시점에 효력이 있는 법령·감독규정을 release마다 확인합니다.",
     ],
     secondBodyViz: { beforeParagraph: 3, node: <TravelRuleChannelViz /> },

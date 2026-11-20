@@ -239,7 +239,7 @@ export const ValidationFeedbackViz = () => (
     description="Local/public parity→후보 쌍 방향→변경 receipt→frozen holdout으로 닫습니다."
     scenes={[
       { label: "Parity", title: "먼저 metric·row·preprocess가 같은지 확인합니다", note: "계산 계약이 다르면 score mismatch를 distribution shift로 해석하기 전에 구현부터 맞춰야 합니다.", items: [{ label: "local", note: "metric", shape: "score" }, { label: "public", note: "same rows?", shape: "score", accent: true }] },
-      { label: "Rank", title: "절대 score와 후보 우열 방향을 분리합니다", note: "후보 쌍 10개 중 방향이 8개 같으면 pairwise agreement는 .8입니다.", items: [{ label: "pairs", note: "10", shape: "rows" }, { label: "agree", note: "8/10", shape: "score", accent: true }] },
+      { label: "Rank", title: "절대 score와 후보 우열 방향을 분리합니다", note: "후보 쌍 10개 모두 동점이 아니어서 분모가 10이고, 그중 방향이 8개 같으면 pairwise agreement는 .8입니다. 한쪽이라도 동점인 쌍은 분모에서 뺍니다.", items: [{ label: "pairs", note: "10", shape: "rows" }, { label: "agree", note: "8/10", shape: "score", accent: true }] },
       { label: "Adapt", title: "Feedback 뒤 바꾼 split·metric·feature를 기록합니다", note: "합리적인 bug fix라도 public score를 본 뒤라면 해당 holdout에 적응한 변경입니다.", items: [{ label: "feedback", note: "observed", shape: "score" }, { label: "protocol", note: "changed", shape: "model", accent: true }] },
       { label: "Freeze", title: "선택에 쓰지 않은 holdout에서 마지막으로 확인합니다", note: "Audit는 편향을 지우지 않습니다. 새 독립 data와 종료 조건이 평가 분리를 회복합니다.", items: [{ label: "chosen", note: "frozen", shape: "model" }, { label: "holdout", note: "unused", shape: "target", accent: true }] },
     ]}

@@ -88,7 +88,7 @@ export default function LinuxDiskFullArticle() {
           <h2 className="mb-6 text-2xl font-bold">4. 30GiB 로그를 지워도 df는 그대로 95GiB를 셉니다</h2>
           <div className={prose}>
             <p>
-            사례 A로 돌아갑니다. 이름 있는 파일이 65GiB이고 java 프로세스가 쓰는 app.log가 30GiB까지 자라 모두 95GiB가 찼습니다. 남은 5GiB는 전부 예약
+            1절의 새벽 장애로 돌아가 이를 사례 A라 부르겠습니다. 이름 있는 파일이 65GiB이고 java 프로세스가 쓰는 app.log가 30GiB까지 자라 모두 95GiB가 찼습니다. 남은 5GiB는 전부 예약
             블록이라 일반 사용자 몫은 0이고 그래서 애플리케이션이 ENOSPC를 받았습니다.
           </p>
             <p>당직자가 rm app.log를 실행하면 du는 곧바로 65GiB로 줄어듭니다. 디렉터리에서 이름이 사라졌기 때문입니다. 그런데 df는 여전히 Used 95G, Avail 0입니다. java가 그 파일을 fd 7로 열어 둔 채 쥐고 있어 블록 30GiB가 그대로 묶여 있습니다.</p>
@@ -326,7 +326,7 @@ export default function LinuxDiskFullArticle() {
             사례 A가 생긴 근본 원인은 대개 로그 회전 설정입니다. logrotate의 create 방식은 로그 파일 이름을 바꾸고 같은 이름으로 새 파일을 만듭니다. 애플리케이션이
             postrotate의 신호를 받아 새 파일을 다시 열지 않으면 계속 옛 inode에 쓰고 보관 개수를 넘은 옛 파일이 지워지는 순간 열린 채 지워진 파일이 됩니다.
           </p>
-            <p>copytruncate 방식은 복사본을 만든 뒤 원래 파일을 제자리에서 0으로 자릅니다. 애플리케이션이 같은 inode를 계속 써도 되므로 지운 파일이 블록을 붙잡는 문제는 생기지 않습니다. 다만 O_APPEND 없이 연 로그라면 앞 절과 같은 sparse 파일이 생깁니다.</p>
+            <p>copytruncate 방식은 복사본을 만든 뒤 원래 파일을 제자리에서 0으로 자릅니다. 애플리케이션이 같은 inode를 계속 써도 되므로 지운 파일이 블록을 붙잡는 문제는 생기지 않습니다. 다만 O_APPEND 없이 연 로그라면 앞의 자르기 문단과 같은 sparse 파일이 생깁니다.</p>
             <p>대신 logrotate 문서는 복사와 자르기 사이의 아주 짧은 틈에 쓴 로그가 사라질 수 있다고 경고합니다. 다시 열기를 지원하는 애플리케이션은 create와 신호를, 지원하지 않는 애플리케이션은 copytruncate를 고릅니다.</p>
           </div>
           <div id="paper-lsof" className="not-prose my-8 scroll-mt-24">

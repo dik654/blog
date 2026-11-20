@@ -35,7 +35,7 @@ const SCENES = [
     label: "DCP 8까지 켜기",
     summary: "3,621,504 token ≈ 18칸 · 65 tok/s",
     shown: 3,
-    note: "DCP는 같은 latent를 든 rank들이 token 축을 나눠 갖게 하는 설정입니다. 이 조건에서는 vLLM이 쓸 GPU 메모리 상한 비율인 gpu-util도 0.93으로 두었습니다. 칸은 약 18.1개로 늘고, 속도의 DCP 몫은 79에서 65 tok/s입니다.",
+    note: "DCP는 같은 latent를 든 rank들이 token 축을 나눠 갖게 하는 설정입니다. 이 조건에서는 vLLM이 쓸 GPU 메모리 상한 비율인 gpu-util도 0.93으로 두었습니다. 칸은 약 18.1개로 늘지만 두 설정이 함께 바뀌어 이 증가가 모두 DCP 몫은 아닐 수 있습니다. 속도 쪽 DCP 몫은 79에서 65 tok/s입니다.",
   },
   {
     label: "DCP 없는 긴 문맥 보고",

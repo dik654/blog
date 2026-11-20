@@ -217,7 +217,7 @@ m &= (o<N)
             묶이므로 “모든 정수는 항상 16의 배수 여부로 갈린다”는 고정 규칙으로 외우면 안 됩니다.
           </p>
           <p>
-            Compiler 가 이 성질을 원하는 이유는 vectorization 때문입니다. 정렬된 pointer 와 16 의 배수 길이를 알면 lane 여러 개를 128-bit load
+            Compiler 가 이 성질을 원하는 이유는 vectorization 때문입니다. 예를 들어 backend 가 pointer 정렬과 길이가 16 의 배수라는 속성을 넘겨 주었다면 lane 여러 개를 128-bit load
             하나로 묶을 수 있고 stride 가 1 이면 곱셈을 없앨 수 있습니다. 성질을 모르는 채 컴파일하면 이 최적화를 포기해야 합니다.
           </p>
           <p>
@@ -304,7 +304,7 @@ m &= (o<N)
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Automatic vectorization 은 이 흐름의 결과물입니다. Layout 이 한 thread 에 연속 원소
-            여러 개를 배정하고 pointer 정렬과 16 배수 specialization 이 보장되면, LLVM 으로 낮출
+            여러 개를 배정하고 pointer 정렬과 16 배수 같은 속성이 specialization 으로 보장되면, LLVM 으로 낮출
             때 그 원소들의 load 가 128-bit 명령 하나로 합쳐집니다. Warp 안의 thread 들이 연속
             주소를 받으므로 <Link to="/cs/gpu/cuda-shared-memory#coalescing">coalescing</Link> 도 함께
             얻습니다.

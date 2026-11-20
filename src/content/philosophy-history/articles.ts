@@ -331,7 +331,7 @@ export const philosophyHistoryArticles: Article[] = [
       },
       {
         id: "case",
-        title: "3. 여성 20%와 남성 30%라는 평균 아래 네 집단을 다시 엽니다",
+        title: "3. 여성 20%와 남성 30%라는 평균 아래 집단을 다시 엽니다",
       },
       {
         id: "picture",

@@ -84,7 +84,7 @@ export default function DistillViz() {
                 </text>
                 {step === 1 && (
                   <text x={200} y={26} fontSize={7} fontWeight={700} fill={RAW}>
-                    비증류 28단계
+                    비증류
                   </text>
                 )}
                 <text x={24} y={186} fontSize={8} fontWeight={700} fill={step === 1 ? RAW : TURBO}>

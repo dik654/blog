@@ -284,7 +284,7 @@ export const azureAi200Data: CloudCertificationArticleData = {
       "Functions는 사건에 반응합니다. Key Vault와 App Configuration은 비밀과 설정을 나눠 관리합니다. OpenTelemetry 추적과 로그·지표를 함께 남겨 어느 경계에서 늦거나 실패했는지 찾습니다.",
     ] },
     { id: "case", level: "0", title: "3. 분당 요청 100건을 캐시·검색·작업 큐로 나눕니다", bridge: "한 요청의 전체 길을 봤습니다. 작은 숫자로 병목과 운영 판단을 고정합니다.", paragraphs: [
-      "(가정) 문서 검색 API에 분당 100건이 들어옵니다. Redis에서 60건을 바로 찾고, 나머지 40건은 PostgreSQL의 pgvector나 Cosmos DB 벡터 검색으로 보냅니다. 이 가운데 문서 갱신 5건은 큐에 넣어 응답 경로와 분리합니다.",
+      "(가정) 문서 검색 API에 분당 100건이 들어옵니다. Redis에서 60건을 바로 찾고, 나머지 40건은 PostgreSQL의 pgvector나 Cosmos DB 벡터 검색으로 보냅니다. 이 40건 가운데 문서 갱신 5건은 큐에 넣어 응답 경로와 분리합니다.",
       "캐시 적중 60건만 보고 성공이라 말할 수는 없습니다. 벡터 검색 40건의 지연, 큐 5건의 재시도와 실패 보관, 전체 요청의 추적 연결, 비밀 노출 여부까지 같은 실행 기록에서 확인합니다.",
     ] },
     { id: "picture", level: "1", title: "4. 시험 보기는 제품명이 아니라 요청의 막힌 칸으로 줄입니다", bridge: "숫자 사례의 네 갈래를 정했습니다. 비슷한 서비스를 어느 신호로 구분하는지 봅니다.", paragraphs: [

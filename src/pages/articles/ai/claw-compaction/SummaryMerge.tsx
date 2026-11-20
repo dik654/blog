@@ -57,10 +57,6 @@ export default function SummaryMerge() {
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <MergeSummaryViz />
-      </div>
-
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Pinned source가 이전 summary를 알아보는 방법</h3>
         <p>
@@ -149,6 +145,10 @@ merged
           로그인 상태를 typed record로 올리면 각 field가 latest value인지,
           append-only event인지, identity 기반 set인지 명시할 수 있습니다.
         </p>
+      </div>
+
+      <div className="not-prose my-8">
+        <MergeSummaryViz />
       </div>
 
       <div className="not-prose my-7 divide-y divide-border rounded-lg border border-border">

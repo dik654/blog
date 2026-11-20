@@ -12,7 +12,7 @@ interface LayoutScene extends ShellScene {
 
 const SCENES: readonly LayoutScene[] = [
   { label: "연속 원소 배정", summary: "thread 0 · 원소 0~3", note: "Layout이 한 thread에 연속 원소 여러 개를 배정했습니다. 아직 원소마다 load 하나로 그렸습니다.", mode: "lanes", loads: "load 4개" },
-  { label: "128-bit 하나로", summary: "load 4개 → 1개", note: "Pointer 정렬과 16 배수 specialization이 보장되면 LLVM으로 낮출 때 load가 128-bit 명령 하나로 합쳐집니다.", mode: "merged", loads: "128-bit load 1개" },
+  { label: "128-bit 하나로", summary: "load 4개 → 1개", note: "Pointer 정렬과 16 배수 같은 속성이 specialization으로 보장되면 LLVM으로 낮출 때 load가 128-bit 명령 하나로 합쳐집니다.", mode: "merged", loads: "128-bit load 1개" },
   { label: "이웃 thread도 연속", summary: "coalescing도 함께", note: "Warp 안의 thread들이 연속 주소를 받아 coalescing도 얻습니다. 이웃 thread들의 메모리 요청을 하나로 합치는 일입니다.", mode: "coalesced", loads: "thread 네 개의 연속 구간" },
   { label: "Stride로 띄엄띄엄", summary: "vectorization 사라짐", note: "Offset이 띄엄띄엄이면 연속 배정을 못 해 vectorization이 사라지고, 성능이 몇 배 떨어져도 코드는 그대로 컴파일됩니다.", mode: "stride", loads: "load 4개 · 컴파일 오류 없음" },
 ];

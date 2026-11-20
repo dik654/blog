@@ -151,7 +151,7 @@ const kubernetesCkaDepth: EngineeringDepthData = {
 export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
   engineeringDepth: kubernetesCkaDepth,
   sections: [
-    { id: "overview", level: "S", title: "1. 세 개를 요청했는데 두 개만 준비되어 지연이 두 배로 뛰었습니다", bridge: "먼저 Pod 하나가 어떤 전환을 거쳐 요청을 받게 되는지 여섯 단계로 나눕니다.", paragraphs: [
+    { id: "overview", level: "S", title: "1. 세 개를 요청했는데 두 개만 준비되어 지연이 두 배로 뛰었습니다", bridge: "먼저 세 번째 Pod가 빠지면 용량이 얼마나 비는지 숫자로 잡습니다.", paragraphs: [
       "(가정) checkout 서버를 세 개 띄우도록 Deployment를 바꾼 뒤 화면에는 3 desired, 2 ready가 보였습니다. 요청은 초당 90건 들어오고 Pod 하나는 초당 35건을 안정적으로 처리하므로 두 개로는 초당 70건까지만 받습니다. 남는 초당 20건이 큐에 쌓이면서 p95 지연이 900ms에서 2.1초로 늘었습니다.",
       "답부터 적으면 이렇습니다. Kubernetes 장애는 화면의 상태 이름을 외워서 푸는 문제가 아닙니다. 요청 저장, 실행할 node 선택, container 시작, 준비 확인, 요청 대상 등록이 차례로 성공했는지 보고 마지막 초록불 바로 다음을 조사합니다. 이 글은 준비되지 않은 세 번째 Pod 하나를 그 순서대로 따라갑니다.",
       "Pod 하나가 API에 저장되어 사용자 요청을 받기까지의 전체 경로는 [Kubernetes 개념 지도](/cs/cloud/kubernetes-concept-map#map)에 한 장으로 그려 두었습니다. 이 글은 그 지도에서 Pending 진단의 전체 순서를 맡습니다.",
@@ -160,11 +160,11 @@ export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
       "replicas: 3이라는 요청을 보내면 첫 담당자가 형식과 권한을 검사해 저장합니다. 다음 담당자는 부족한 Pod를 만들고, 배치 담당자는 실행할 node를 고릅니다. 선택된 node의 담당자는 image를 받아 container를 만들며, 네트워크와 저장장치 담당자가 주소와 volume을 붙입니다.",
       "container가 시작됐다는 사실과 요청을 받을 준비가 됐다는 사실은 다릅니다. 준비 확인을 통과한 Pod 주소만 실제 요청 대상 목록에 들어갑니다. 따라서 각 전환에서 담당자, 성공 조건, 확인할 기록을 따로 봐야 합니다.",
     ] },
-    { id: "case", level: "0", title: "3. 계획 105 req/s가 현실 70 req/s로 줄었습니다", bridge: "용량이 빈 것은 알았으니 세 번째 Pod가 여섯 전환 중 어디서 멈췄는지 찾는 순서를 정합니다.", paragraphs: [
+    { id: "case", level: "0", title: "3. 계획 105 req/s가 현실 70 req/s로 줄었습니다", bridge: "용량이 빈 것은 알았으니 세 번째 Pod가 요청 저장부터 요청 대상 등록까지 이어지는 전환(단계) 중 어디서 멈췄는지 찾는 순서를 정합니다.", paragraphs: [
       "(가정) Pod 하나가 초당 35건을 처리한다고 측정했으면 세 개가 다 Ready일 때 계획 용량은 3×35=105건입니다. Ready가 둘이면 2×35=70건이고, 들어오는 90건 가운데 20건은 바로 처리되지 못해 큐나 거절로 밀립니다.",
       "이 셈은 요청이 고르게 나뉘고 세 Pod가 같다는 가정 위의 첫 점검일 뿐 대기열 모형은 아닙니다. 그래도 ‘두 개는 살아 있다’와 ‘현재 부하를 감당한다’가 다른 주장이라는 것은 이 세 줄로 충분히 드러납니다.",
     ] },
-    { id: "picture", level: "1", title: "4. 마지막 초록불 다음의 첫 빨간불을 찾습니다", bridge: "왜 이 일을 한 프로그램이 다 하지 않고 여러 담당자로 나눴는지 알아야 ‘잠시 다른 상태’와 ‘더 이상 진행되지 않는 실패’를 구분할 수 있습니다.", paragraphs: [
+    { id: "picture", level: "1", title: "4. 마지막 초록불 다음의 첫 빨간불을 찾습니다", bridge: "이제 세 번째 checkout Pod를 실제 명령으로 전환 하나씩 좁혀 갑니다.", paragraphs: [
       "Pod에 node 이름이 없으면 아직 실행할 자리를 고르지 못한 것이므로 container log를 볼 때가 아닙니다. node는 정해졌는데 container 실행 공간이 없으면 node 안의 실행 담당자를 봅니다. container는 돌지만 준비 확인이 실패하면 애플리케이션과 그 의존 서비스를 봅니다.",
       "Pod가 Ready인데 사용자 요청만 실패하면 요청 대상 목록, 이름 해석, Service 경로, 통신 허용 규칙을 차례로 봅니다. 이 순서는 모든 장애의 정답표가 아니라 조사 범위를 먼저 줄이는 지도입니다.",
     ] },

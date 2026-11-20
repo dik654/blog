@@ -96,7 +96,9 @@ export default function CrossReviewErrorClassesArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             한 표에서는 한쪽만 가동률로 나누고 다른 쪽은 정가를 그대로 두었습니다.
-            차이가 8퍼센트로 보였는데 같은 자로 나누면 81퍼센트였습니다.
+            소유 쪽은 60퍼센트 가동률로 나눈 시간당 4.24, 임대 쪽은 나누지 않은
+            시간당 정가 4.60이었습니다. 차이가 8퍼센트로 보였는데 임대 쪽도 같은
+            60퍼센트로 나누면(4.60÷0.6≈7.67) 81퍼센트였습니다.
           </p>
 
           <p className="leading-7">

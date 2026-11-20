@@ -214,33 +214,32 @@ export function SgdUpdateViz() {
             detail="displacement"
             active={active === 1}
           />
-          {[0, 1, 2, 3].map((index) => (
+          {[
+            { x: 34, width: 60, label: "2개 · 합 4" },
+            { x: 106, width: 156, label: "6개 · 합 28" },
+          ].map((batch, index) => (
             <motion.g
               key={index}
               initial={false}
               animate={{ opacity: active >= 2 ? 1 : 0.12 }}
             >
               <rect
-                x={34 + index * 58}
+                x={batch.x}
                 y={112}
-                width="46"
-                height={28 + index * 5}
+                width={batch.width}
+                height="40"
                 rx="6"
-                fill={
-                  index === 3
-                    ? "color-mix(in srgb, var(--primary) 18%, transparent)"
-                    : "var(--muted)"
-                }
-                stroke={index === 3 ? accent : border}
+                fill="var(--muted)"
+                stroke={border}
                 strokeWidth="1.25"
               />
               <text
-                x={57 + index * 58}
+                x={batch.x + batch.width / 2}
                 y={174}
                 textAnchor="middle"
                 className="fill-muted-foreground text-[9px]"
               >
-                micro {index + 1}
+                {batch.label}
               </text>
             </motion.g>
           ))}
@@ -265,9 +264,9 @@ export function SgdUpdateViz() {
             animate={{ opacity: active === 3 ? 1 : 0.12 }}
           >
             <rect
-              x="108"
+              x="92"
               y="202"
-              width="184"
+              width="216"
               height="28"
               rx="6"
               fill="var(--background)"
@@ -280,7 +279,7 @@ export function SgdUpdateViz() {
               textAnchor="middle"
               className="fill-foreground text-[10px] font-bold"
             >
-              update #42 · batch 32 · η=.1
+              update 1회 · 자료 8개 · η=.1 · 3→2.6
             </text>
           </motion.g>
         </svg>

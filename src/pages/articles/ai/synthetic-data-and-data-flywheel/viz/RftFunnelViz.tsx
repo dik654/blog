@@ -16,7 +16,7 @@ const passOrder = Array.from({ length: TOTAL }, (_, cell) => cell)
 const rankOf = new Map(passOrder.map((cell, rank) => [cell, rank]));
 
 const SCENES = [
-  { label: "문제 하나에 후보 100개", summary: "k = 100, 온도 0.7", note: "RFT(rejection sampling fine-tuning)는 문제 하나당 추론 경로(reasoning path) 100개를 온도 0.7로 만듭니다. 온도는 답변의 무작위성을 정하는 값입니다." },
+  { label: "문제 하나에 후보 100개", summary: "n = 100, 온도 0.7", note: "RFT(rejection sampling fine-tuning)는 문제 하나당 추론 경로(reasoning path) 100개를 온도 0.7로 만듭니다. 온도는 답변의 무작위성을 정하는 값입니다." },
   { label: "verifier가 틀린 경로를 지웁니다", summary: "100 → 40 (가정)", note: "정답과 어긋나거나 계산이 틀린 경로를 제거합니다. 40은 그림을 위한 가정이며, 지워진 칸은 점선으로 남겼습니다." },
   { label: "같은 풀이는 하나만", summary: "40 → 25 (가정)", note: "같은 방정식 리스트를 쓰는 경로는 하나만 남깁니다. = 표시가 중복으로 빠지는 칸입니다. 25도 가정입니다." },
   { label: "모아서 다시 학습한 결과", summary: "35.9% → 49.3%", note: "문제들에서 거른 약 10만 개 샘플로 다시 학습한 LLaMA-7B의 정확도입니다. GSM8K는 수학 문제 벤치마크입니다. 13.4%p 차이입니다." },

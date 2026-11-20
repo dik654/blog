@@ -102,7 +102,12 @@ export default function CommandIntentSection() {
           pipe·semicolon·redirection 문자 주변을 다시 자르고 basename을 제한된
           read-only 목록과 비교합니다. 그 뒤 whitespace token에서 absolute path,
           home·environment reference와 parent traversal처럼 보이는 신호를 찾습니다.
-          이 구현은 작고 예측 가능하지만 quote-aware parser가 아니며 pipeline의
+          목록에 있고 workspace 밖 path 신호가 없으면 <code>WorkspaceWrite</code>를,
+          그 밖에는 모두 <code>DangerFullAccess</code>를 required mode로 정합니다.
+          <code>PermissionMode</code> enum에 <code>ReadOnly</code>가 있어도 이 함수는
+          그 값을 반환하지 않으므로 read-only 목록에 맞은 command도
+          <code>WorkspaceWrite</code>가 됩니다. 이 구현은 작고 예측 가능하지만
+          quote-aware parser가 아니며 pipeline의
           모든 command를 순회하지도 않습니다.
         </p>
         <p>

@@ -171,7 +171,7 @@ export default function CodeModeRuntimeContractsArticle() {
               ],
             },
             {
-              expression: String.raw`E_{\mathrm{known}}\cup E_{\mathrm{unknown}}`,
+              expression: String.raw`K\cup U`,
               annotation: [
                 "완료와 미확정 outcome을 합쳐",
                 "blind retry에서 제외",
@@ -193,7 +193,7 @@ export default function CodeModeRuntimeContractsArticle() {
                 "결제·write·삭제처럼 외부 service에 남는 한 동작입니다.",
             },
             {
-              symbol: String.raw`E_{\mathrm{unknown}}`,
+              symbol: "U",
               name: "Unknown outcomes",
               description:
                 "Timeout 때문에 성공 여부를 아직 확정하지 못한 effects입니다.",

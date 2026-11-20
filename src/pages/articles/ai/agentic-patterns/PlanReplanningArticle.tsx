@@ -98,6 +98,7 @@ export default function Article() {
       </section>
 
       <section id="why-plan" data-teach-level="2" className="scroll-mt-20">
+        <span id="plan-validation" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           5. 끝났다는 표시가 낡은 근거를 숨기지 않게 합니다
         </h2>
@@ -210,7 +211,6 @@ export default function Article() {
       </section>
 
       <section id="reflection" data-teach-level="5" className="scroll-mt-20">
-        <span id="plan-validation" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           8. 실패 설명을 다음 시도의 입력으로 넣습니다
         </h2>

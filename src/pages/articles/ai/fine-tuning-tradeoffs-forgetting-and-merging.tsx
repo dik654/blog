@@ -197,7 +197,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
           </p>
           <p>
             Forgetting evaluation은 그 측정 방법입니다. 목표 task와 무관한 held-out general benchmark 점수를 fine-tuning 전후로 비교해
-            하락폭을 숫자 하나로 남깁니다. 이 절 앞부분에서 68%가 61%로 떨어진 폭이 바로 그 값입니다.
+            하락폭을 숫자 하나로 남깁니다. 앞 절의 법률 예에서 68%가 61%로 떨어진 폭이 바로 그 값입니다.
           </p>
           <ReplayBatchViz />
           <p>

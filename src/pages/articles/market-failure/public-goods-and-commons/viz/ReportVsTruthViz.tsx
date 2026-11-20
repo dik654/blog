@@ -28,7 +28,7 @@ const SCENES: readonly Scene[] = [
   {
     label: "신고한 만큼 걷기 · 참말",
     summary: "신고 합 10 ≥ 9 → 세워짐",
-    note: "둘째 가로등입니다. 참값 합이 10이라 세우는 것이 맞고 참말하면 세워집니다. 다만 각자 말한 만큼 내고 그만큼 받으므로 남는 것이 정확히 0입니다.",
+    note: "둘째 가로등입니다. 참값 합이 10이라 세우는 것이 맞고 참말하면 세워집니다. 다만 각자 말한 만큼 내고 그만큼 받으므로 남는 것이 정확히 0입니다. 걷힌 10 중 9를 넘는 1은 돌려주지 않는다고 둡니다(가정).",
     scheme: "신고한 값이 곧 자기 부담",
     truth: [5, 3, 2],
     report: [5, 3, 2],
@@ -159,7 +159,7 @@ export default function ReportVsTruthViz() {
               {[0, 1, 2].map((index) => (
                 <Cell key={index}>{pays ? pays[index] : "−"}</Cell>
               ))}
-              <Cell>{" "}</Cell>
+              <Cell>{pays ? sumOf(pays) : "−"}</Cell>
 
               <RowName>{item.gainLabel}</RowName>
               {[0, 1, 2].map((index) => (

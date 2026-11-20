@@ -25,7 +25,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
       <LlmTrainingLocator
         current="data"
         question="웹 문서 하나가 어떤 검사와 혼합을 거쳐 실제 pretraining batch가 될까요?"
-        fixture="중복되고 평가 문항이 섞인 저품질 문서 하나를 source 선택·filtering·dedup·contamination 검사·mixture 순서로 추적합니다."
+        fixture="저품질·중복·평가 문항이 섞인 가상의 문서 여덟 개를 source 선택·filtering·dedup·contamination 검사·mixture 순서로 추적합니다."
         parentHref="/cs/ai/llm-training-stages#pretraining"
         parentLabel="Pretraining이 소비하는 데이터 분포"
       />
@@ -42,7 +42,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             engineering 파이프라인으로 다시 만들어집니다.
           </p>
           <p>
-            이 글은 그 파이프라인을 따라갑니다. 원본 문서 하나가 각 단계를 지나며 무엇이 왜 걸러지는지 순서대로 봅니다. Source를 고르고 filtering·정규화로 품질을
+            이 글은 그 파이프라인을 따라갑니다. 원본 문서가 각 단계를 지나며 무엇이 왜 걸러지는지 순서대로 봅니다. 다음 절의 그림은 가상의 문서 여덟 개로 이 과정을 추적합니다. Source를 고르고 filtering·정규화로 품질을
             만듭니다. 이어서 dedup·contamination 검사로 겹치는 문서와 평가 유출을 걷어내고 annotation으로 label을 붙인 다음
             mixture·curriculum으로 학습 배치를 정합니다. 이렇게 다섯 단계입니다.
           </p>

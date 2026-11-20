@@ -44,7 +44,7 @@ export default function ConstitutionalAI() {
           },
           {
             code: "sl_cai_model = finetune(pretrained_model, pairs=(prompt, final_revision))",
-            note: "최종 수정본과 원래 prompt를 pair로 삼아, 아직 harmlessness가 없는 pretrained model을 supervised fine-tuning합니다.",
+            note: "최종 수정본과 원래 prompt를 pair로 삼아, 초안을 쓴 초기 model이 아니라 아직 harmlessness가 없는 pretrained model을 supervised fine-tuning합니다.",
           },
         ]}
         output="SL-CAI model — critique·revise 데이터로 harmlessness를 어느 정도 학습한 policy"

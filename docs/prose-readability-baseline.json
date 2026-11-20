@@ -2,7 +2,7 @@
   "description": "Known legacy prose-compression inventory keyed by route and source fingerprint. New or changed findings must be rewritten or explicitly re-reviewed; an entry is not a claim that prose quality is complete.",
   "findings": {
     "ai/claw-bash": {
-      "fingerprint": "d3e27b5b960e10e4",
+      "fingerprint": "f26431eac11ffad6",
       "score": 138
     },
     "ai/claw-tool-system": {
@@ -22,7 +22,7 @@
       "score": 43
     },
     "ai/claw-compaction": {
-      "fingerprint": "1a11c4166dfc1f54",
+      "fingerprint": "e9c01b9e3be0ca1d",
       "score": 42
     },
     "ai/claw-permissions": {
@@ -118,7 +118,7 @@
       "score": 29
     },
     "blockchain/lotus-state": {
-      "fingerprint": "0491c86c2bad1afc",
+      "fingerprint": "6a3fac27b22d7d5a",
       "score": 6
     },
     "blockchain/reth-chainspec": {
@@ -130,8 +130,8 @@
       "score": 5
     },
     "ai/claw-file-ops": {
-      "fingerprint": "ac31ad71cb5c1c51",
-      "score": 28
+      "fingerprint": "ad85c48606a61d3b",
+      "score": 30
     },
     "ai/llm-serving-ops": {
       "fingerprint": "64d9823dc07f6785",
@@ -222,7 +222,7 @@
       "score": 25
     },
     "ai/arima": {
-      "fingerprint": "f3e0c2da7fae3090",
+      "fingerprint": "32fae150059cb6e7",
       "score": 24
     },
     "blockchain/cometbft-abci": {
@@ -242,8 +242,8 @@
       "score": 24
     },
     "blockchain/prysm-beacon-db": {
-      "fingerprint": "f92377f27d3a1b53",
-      "score": 6
+      "fingerprint": "c6a6983858b3bef1",
+      "score": 8
     },
     "blockchain/prysm-beacon-state": {
       "fingerprint": "b0a5be8be6f93bea",
@@ -310,8 +310,8 @@
       "score": 21
     },
     "blockchain/proofs-porep": {
-      "fingerprint": "445cc2ac346689a0",
-      "score": 21
+      "fingerprint": "13eb9d718f866443",
+      "score": 6
     },
     "blockchain/proofs-snark": {
       "fingerprint": "188c156b84a7bc63",
@@ -378,8 +378,8 @@
       "score": 18
     },
     "ai/claw-telemetry": {
-      "fingerprint": "81cb43203034d605",
-      "score": 18
+      "fingerprint": "12fdaf6c2e1534cf",
+      "score": 20
     },
     "ai/training-pipeline": {
       "fingerprint": "0b9c7c9363010760",
@@ -474,7 +474,7 @@
       "score": 16
     },
     "ai/claw-worker-boot": {
-      "fingerprint": "53da0c891973cc3d",
+      "fingerprint": "a45e21990004f5a1",
       "score": 15
     },
     "ai/compression-pipeline": {
@@ -562,7 +562,7 @@
       "score": 14
     },
     "ai/claw-policy-engine": {
-      "fingerprint": "972b18438297330f",
+      "fingerprint": "c2936cb540c81d01",
       "score": 12
     },
     "ai/claw-recovery": {
@@ -630,7 +630,7 @@
       "score": 10
     },
     "ai/claw-task-team": {
-      "fingerprint": "e8c099490822926c",
+      "fingerprint": "194d05dc1b0797ee",
       "score": 10
     },
     "ai/knowledge-distillation": {
@@ -934,11 +934,31 @@
       "score": 6
     },
     "p2p/iroh": {
-      "fingerprint": "dbf712adacd64e9d",
+      "fingerprint": "132e49a38861bbd5",
       "score": 6
     },
     "isms-aml/isms-backup-recovery": {
       "fingerprint": "71ff355388d1ab09",
+      "score": 6
+    },
+    "ai/llm-as-a-judge": {
+      "fingerprint": "846aca06b4334ef5",
+      "score": 6
+    },
+    "gpu/cuda-perf-analysis": {
+      "fingerprint": "fc706f8f2ca2eae1",
+      "score": 6
+    },
+    "gpu/gpu-data-movement-optimization": {
+      "fingerprint": "523aee12ea77319b",
+      "score": 6
+    },
+    "gpu/hbm-stack-and-memory-requests": {
+      "fingerprint": "7d43d3d3d7027b2b",
+      "score": 6
+    },
+    "infrastructure/transport-access-and-land-value": {
+      "fingerprint": "1ee36a6b12a7499d",
       "score": 6
     }
   }

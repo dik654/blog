@@ -34,7 +34,7 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             Golden set 200개를 fact QA 60개, 요약 40개, code 50개,
             안전 거절 30개, multi-turn 20개로 채웠다고 합시다. 운영 트래픽의
             code 비중은 35%인데 이 표본에서는 25%입니다. 전체 정확도가 90%여도
-            기타 언어 slice가 72%라면 평균만으로는 그 실패를 볼 수 없습니다.
+            기타 언어(자원이 적은 언어) slice가 72%라면 평균만으로는 그 실패를 볼 수 없습니다.
           </p>
           <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
           <ol>

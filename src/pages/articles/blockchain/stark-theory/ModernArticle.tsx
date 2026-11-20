@@ -65,7 +65,7 @@ export default function Article() { return <article className="space-y-16">
 <h2 className="text-2xl font-bold">8. 원문은 이웃 행과 지정된 끝점을 따로 적습니다</h2>
 <p className="leading-8">STARK 원문의 AIR 관계는 지정한 행·열의 값과 인접 시간의 조건을 따로 둡니다. 원문의 wⱼ(i)=α에 처음 행의 1과 마지막 행의 10을 넣으면 경계 조건입니다. P(w[t],w[t+1])=0에는 앞 절의 두 전이 차이를 넣습니다.</p>
 <LdeCountViz />
-<p className="leading-8">이 표를 세 점에서만 보간하면 어떤 세 값에도 차수 2 이하 다항식이 존재합니다. 같은 함수를 8개의 다른 점에서 다시 평가하면 허용된 함수들이 임의의 8칸 표보다 적어집니다. 예를 들어 T=3에서 v(3)=115≡13입니다. 단순히 기존 세 값을 복사해 길이만 늘리는 것이 아닙니다.</p>
+<p className="leading-8">이 표를 세 점에서만 보간하면 어떤 세 값에도 차수 2 이하 다항식이 존재합니다. 같은 함수를 원래 행 0·1·2를 포함한 T=0~7의 8개 점(가정)에서 다시 평가하면 허용된 함수들이 임의의 8칸 표보다 적어집니다. 예를 들어 T=3에서 v(3)=115≡13입니다. 단순히 기존 세 값을 복사해 길이만 늘리는 것이 아닙니다.</p>
 <p className="leading-8">평가표의 고정값과 필요한 위치의 값을 연결하고 조건의 몫과 FRI 검사를 함께 확인해야 합니다. FRI만 통과했다고 특정 공개 출력 10까지 확인한 것은 아닙니다.</p>
 <div id="source-air"><CitationBlock source="Scalable, transparent, and post-quantum secure computational integrity · AIR 정의, PDF p.36" citeKey={1} href="https://eprint.iacr.org/2018/046.pdf"><p className="leading-8">원문: <q>wj(i) = α</q></p><p className="leading-8">시간 0의 상태를 1, 시간 2의 상태를 10에 묶습니다. 전이 조건 두 개와 별도인 경계입니다.</p></CitationBlock></div>
 <p data-stage-bridge="lde-fri" className="text-sm leading-7 text-muted-foreground">원문의 조건과 더 넓은 평가표를 연결했습니다. 영지식에 필요한 별도 가리기를 봅니다.</p>

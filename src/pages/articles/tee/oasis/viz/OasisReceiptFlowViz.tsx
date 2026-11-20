@@ -17,7 +17,7 @@ const SCENES = [
   { label: "ORDER", summary: "consensus가 순서를 고정", note: "Consensus가 round·runtime ID·input root(R_in, 실행 전 state 요약)·transaction 묶음을 고정해 compute committee에 넘깁니다. Confidential execution의 plaintext는 consensus가 직접 계산하지 않습니다." },
   { label: "EXECUTE", summary: "R_in → R_out, messages M", note: "Compute committee는 같은 input과 runtime version에서 deterministic transition을 실행해 output root(R_out)와 consensus로 보낼 messages M을 계산합니다." },
   { label: "COMMIT", summary: "commitment + storage receipt", note: "Executor commitment와 storage node의 signed receipt가 consensus 쪽 roothash service로 모입니다. Roothash가 둘과 discrepancy 여부를 검증합니다. Storage receipt가 없으면 root data availability가 확인되기 전이므로 commit을 보류합니다." },
-  { label: "RELEASE", summary: "조건이 맞을 때만 key", note: "Key manager는 attested runtime identity·epoch·policy가 맞을 때만 private state key를 제공합니다. Consensus 순서나 state root가 맞았다는 사실이 이 조건을 대신하지 않습니다." },
+  { label: "RELEASE", summary: "조건이 맞을 때만 key", note: "Key manager는 attested runtime identity·epoch·policy가 맞을 때만 private state key를 제공합니다. Consensus 순서나 state root가 맞았다는 사실이 이 조건을 대신하지 않습니다. 이 key는 runtime이 state를 복호화하는 데 쓰므로 시간상으로는 COMMIT 뒤가 아니며, 별도 receipt라서 마지막 줄에 따로 그렸습니다." },
   { label: "RELEASE 실패", summary: "identity 불일치 → key 0", note: "03절 실패 주입 표의 'Wrong runtime enclave identity' 행입니다. Runtime enclave identity가 policy와 다르면 key manager의 key 지급은 0건이어야 하므로 점선은 보내지 않은 key를 뜻합니다." },
 ] as const;
 
@@ -66,7 +66,7 @@ export default function OasisReceiptFlowViz() {
     <SceneShell
       eyebrow="한 payroll transaction"
       title="네 주체가 서로 다른 receipt를 남깁니다"
-      description="열은 책임 주체, 줄은 아래 네 단계의 순서입니다. 지난 단계의 상자는 흐리게 남습니다."
+      description="열은 책임 주체, 줄은 아래 네 receipt입니다. 지난 단계의 상자는 흐리게 남습니다."
       ariaLabel="Oasis에서 consensus, ParaTime, storage, key manager가 단계별로 남기는 receipt"
       scenes={SCENES}
       render={(active) => {

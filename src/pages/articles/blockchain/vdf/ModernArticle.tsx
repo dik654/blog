@@ -309,7 +309,7 @@ export default function ModernArticle() {
                 note: "거대한 몫 q를 정수로 저장하지 않고 군의 지수 안에서 g^q를 누적합니다.",
               },
             ]}
-            repeatUntil="2^T의 T개 bit를 모두 처리할 때까지 2–4번 줄을 반복합니다. T=4, ℓ=5이면 마지막에 r=1, π=g³이 됩니다."
+            repeatUntil="2^T의 맨 앞 1(초기값 r=1) 뒤에 오는 T개 bit를 모두 처리할 때까지, 즉 2–4번 줄을 T번 반복합니다. T=4, ℓ=5이면 마지막에 r=1, π=g³이 됩니다."
             output="proof element π와 검증에 사용할 remainder r"
           />
 

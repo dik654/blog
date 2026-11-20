@@ -112,7 +112,7 @@ export default function Motif3ArchitectureArticle() {
         <LessonHeader number="02" eyebrow="Depth information flow" title="Modified mHC는 residual 하나를 네 stream의 token-dependent mixing으로 바꾼다">
           일반 residual은 직전 state와 sublayer update를 더합니다. mHC는 네 residual stream을 하나의 sublayer input으로 줄이고, sublayer output을 다시 네 stream에 배분하면서 기존 stream끼리도 doubly-stochastic matrix로 섞습니다.
         </LessonHeader>
-        <TermLesson name="Modified manifold-constrained hyper-connections" oneLine="네 parallel residual stream의 pre·residual·post mapping을 token마다 만들되 residual matrix의 모든 행·열 합을 1로 제한하는 연결 구조입니다." shape="4 streams → Hpre reduction → F → Hpost broadcast + Hres stream mixing" example="Motif 3는 post multiplier st를 training 중 2에서 1로 낮춰 반복 amplification 범위를 (0,2)에서 (0,1)로 옮깁니다." boundary="Doubly-stochastic constraint가 loss convergence나 모든 depth의 안정성을 자동 증명하지 않으며 mapping 계산·memory 비용이 추가됩니다." />
+        <TermLesson name="Modified manifold-constrained hyper-connections" oneLine="네 parallel residual stream의 pre·residual·post mapping을 token마다 만들되 residual matrix의 모든 행·열 합을 1로 제한하는 연결 구조입니다." shape="4 streams → Hpre reduction → F → Hpost broadcast + Hres stream mixing" example="Motif 3는 post multiplier st를 training 중 2에서 1로 낮춰 post mapping H_post의 각 weight가 가질 수 있는 범위, 곧 layer마다 update를 몇 배까지 키울 수 있는지를 (0,2)에서 (0,1)로 옮깁니다." boundary="Doubly-stochastic constraint가 loss convergence나 모든 depth의 안정성을 자동 증명하지 않으며 mapping 계산·memory 비용이 추가됩니다." />
         <MhcFlowViz />
         <ExplainedFormula
           question="한 sublayer 뒤 네 residual stream은 어떤 두 경로를 합칠까요?"

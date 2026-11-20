@@ -46,10 +46,11 @@ export default function RegularizationDiagnosisArticle() {
       <OverfitTrajectoryViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          네 원인을 배제하고 training error도 낮은 채 gap만 계속 커진다면 그
+          아래 네 원인(split leakage·pipeline mismatch·label noise·distribution
+          shift)을 배제하고 training error도 낮은 채 gap만 계속 커진다면 그
           패턴이 곧 <strong>overfitting</strong>입니다. Overfitting은 model이
           train data의 noise·특수성까지 외워 training error는 계속 줄지만
-          unseen data error는 오히려 커지는 현상이며, 아래 네 원인이 모두
+          unseen data error는 오히려 커지는 현상이며, 이 네 원인이 모두
           배제된 뒤에만 이 이름을 붙일 수 있습니다.
         </p>
       </div>

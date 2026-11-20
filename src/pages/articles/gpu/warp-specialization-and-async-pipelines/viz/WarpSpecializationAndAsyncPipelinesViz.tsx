@@ -16,7 +16,7 @@ const SCENES = [
 
 const NOTES = [
   "Empty barrier 는 초기 상태라 producer 는 멈추지 않고 k=0..3 의 TMA 를 연달아 냅니다. Consumer 는 full[0] 의 phase 0 을 기다리며 아직 계산이 없습니다.",
-  "k=0 의 32 KB 가 도착해 full[0] 이 phase 0 으로 뒤집히면 consumer 가 stage 0 에서 wgmma 를 냅니다. Producer 는 빈 stage 가 없어 empty[0] 에서 기다립니다.",
+  "k=0 의 32 KB 가 도착해 full[0] 의 phase 0 이 완료되면 consumer 가 stage 0 에서 wgmma 를 냅니다. Producer 는 빈 stage 가 없어 empty[0] 에서 기다립니다.",
   "Consumer 가 stage 0 을 다 읽고 empty[0] 에 도착하면 producer 가 같은 자리에 k=4 를 넣습니다. Stage 0 의 phase 는 1 로 바뀌고 consumer 는 stage 1 로 넘어갑니다.",
   "이후 producer 는 consumer 보다 늘 3 stage 앞서 갑니다. Load 지연 L 이 3 tile 의 계산 안에 들어오면 consumer 는 full barrier 에서 멈추지 않습니다.",
 ] as const;

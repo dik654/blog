@@ -32,7 +32,7 @@ export default function Training({
         operations={[
           { expression: String.raw`P_\theta(y_t^*\mid y_{<t}^*,X)`, annotation: ["model prefix가 아니라 정답 prefix를 조건으로","t번째 정답 token에 준 확률","예: 두 token에 0.8, 0.5"] },
           { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["padding은 m_t=0, 실제 token은 1","mask (1,1,0)이면 유효 token 수 N=2"] },
-          { expression: String.raw`-\frac{1}{N}\sum_{t=1}^{T}m_t\log p_t^*`, annotation: ["mask된 token의 −log p만 더해 N으로 나눔","−(log 0.8+log 0.5)/2≈0.458","padding 확률은 합·분모 어디에도 안 들어감"] },
+          { expression: String.raw`-\frac{1}{N}\sum_{t=1}^{T}m_t\log p_t^*`, annotation: ["mask된 token의 −log p만 더해 N으로 나눔","−(ln 0.8+ln 0.5)/2≈0.458 (자연로그)","padding 확률은 합·분모 어디에도 안 들어감"] },
         ]}
         terms={[
           { symbol: "y_t^*", name: "gold target", description: "Dataset이 제공한 timestep t의 정답 token입니다." },
@@ -41,7 +41,7 @@ export default function Training({
           { symbol: "\\sum_t m_t", name: "normalizer", description: "Batch마다 실제 token 수가 달라도 token 평균을 맞춥니다." },
         ]}
         assumptions={["Cross-entropy reduction을 token 평균으로 정의한 예입니다.", "Label smoothing·class weight를 적용하면 target distribution과 가중합이 달라집니다."]}
-        interpretation="낮은 teacher-forced loss는 정답 prefix에서의 conditional modeling을 측정한다. Model이 만든 prefix에서의 recovery와 search quality를 자동으로 보장하지 않습니다."
+        interpretation="낮은 teacher-forced loss는 정답 prefix에서의 conditional modeling을 측정합니다. Model이 만든 prefix에서의 recovery와 search quality를 자동으로 보장하지 않습니다."
       />
       <CodeViewButton
         onClick={() => onCodeRef("training-loop", codeRefs["training-loop"])}
@@ -50,7 +50,7 @@ export default function Training({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           작은 계산으로 mask의 역할을 확인할 수 있다. 정답 probability가 0.8, 0.5인 두 token 뒤에 padding 하나가 있다면 mask는 (1,1,0), 유효
-          token 수는 2다. Token-average NLL은 −(log 0.8+log 0.5)/2≈0.458이며 padding의 probability는 합과 분모에 모두 들어가지
+          token 수는 2다. Token-average NLL은 자연로그 기준으로 −(ln 0.8+ln 0.5)/2≈0.458이며 padding의 probability는 합과 분모에 모두 들어가지
           않는다.
         </p>
         <h3>Exposure bias는 진단할 현상이지 단일 원인으로 단정할 수 없다</h3>

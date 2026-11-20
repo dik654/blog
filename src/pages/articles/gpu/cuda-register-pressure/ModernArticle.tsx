@@ -40,26 +40,26 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
             때문입니다.
           </p>
 </div><NumericPath title="함께 배치할 수 있는 일을 구하는 과정" steps={[{label:"필요한 칸",value:"한 사람의 보존할 값"},{label:"예약",value:"정해진 단위로 묶음 확보"},{label:"입장 가능",value:"통째로 들어가는 묶음 수"}]}/></section>
-<section id="case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 한 사람당 37칸을 쓰는 같은 일을 128명 또는 320명씩 묶습니다</h2><ReservationRoundingViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">한 작업 구역에 저장칸 65,536개가 있고 한 사람당 37칸을 쓴다고 놓습니다. 32명분을 예약할 때는 37×32=1,184칸이 필요하지만, 공간을 256칸 단위로 내어 주므로 1,280칸을 예약합니다. 96칸은 배정 단위 때문에 남습니다.</p>
+<section id="case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 한 사람당 37칸을 쓰는 같은 일을 128명 또는 320명씩 묶습니다</h2><ReservationRoundingViz/><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">한 작업장에 저장칸 65,536개가 있고 한 사람당 37칸을 쓴다고 놓습니다. 32명분을 예약할 때는 37×32=1,184칸이 필요하지만, 공간을 256칸 단위로 내어 주므로 1,280칸을 예약합니다. 96칸은 배정 단위 때문에 남습니다.</p>
 <p className="leading-8">
             같은 일을 128명씩 묶으면 32명분이 4개이고 320명씩 묶으면 10개입니다. 함께 움직이는 한 묶음의 사람을 둘로 나눠 빈 공간에 넣지는 못합니다. 이 숫자는 공식 문서의
             계산 사례이며 실제 프로그램의 속도 측정값은 아닙니다. 정확한 대상과 원문은 8절에서 확인합니다.
           </p>
 </div></section>
-<section id="picture" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 작은 묶음은 빈자리에 들어가지만 큰 묶음은 통째로 기다립니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">저장 공간은 안쪽의 네 공간으로 나뉘어 있습니다. 각 공간의 16,384칸에는 1,280칸 예약을 12개까지 넣습니다. 따라서 32명분의 자리는 총 48개입니다.</p>
+<section id="picture" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 작은 묶음은 빈자리에 들어가지만 큰 묶음은 통째로 기다립니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">작업장의 저장 공간은 안쪽의 네 구역으로 나뉘어 있습니다. 각 구역의 16,384칸에는 1,280칸 예약을 12개까지 넣습니다. 따라서 32명분의 자리는 총 48개입니다.</p>
 <p className="leading-8">4자리씩 묶은 일은 12묶음이 들어갑니다. 10자리씩 묶은 일은 4묶음을 넣고 나면 8자리만 남습니다. 다음 10자리 묶음을 들일 수 없어 그 자리는 비어 있습니다. 그림의 마지막 장면에서는 사람당 필요한 칸을 늘려 같은 원리로 비교합니다.</p>
 </div><AllocationPackingViz/></section>
 <section id="why" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 같이 실행할 사람들의 값도 함께 보관해야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">한 사람의 계산 결과를 기다리는 동안 다른 사람의 일을 진행하려면 기다리는 사람의 값도 보존해야 합니다. 대기한다고 저장 공간까지 바로 반납하면 돌아왔을 때 계산을 이어 갈 수 없습니다.</p>
 <p className="leading-8">묶음은 함께 쓰는 공간과 서로 기다리는 규칙을 가집니다. 그래서 빈자리 수를 모두 더한 값만으로 입장 여부를 정하지 않습니다. 한 묶음을 함께 놓을 수 있는지가 필요합니다. 이제 저장칸과 작업 묶음을 실제 GPU 용어로 부릅니다.</p>
 </div></section>
-<section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 저장칸과 작업 묶음에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">계산을 따라가는 최소 작업 단위를 thread라고 합니다. NVIDIA GPU는 32개 thread를 warp로 묶고, 여러 warp를 포함하는 block을 한 SM에 배치합니다. SM은 이 작업들을 실행하며 저장 자원을 제공하는 처리 구역입니다.</p>
+<section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 저장칸과 작업 묶음에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">계산을 따라가는 최소 작업 단위를 thread라고 합니다. NVIDIA GPU는 32개 thread를 warp로 묶고, 여러 warp를 포함하는 block을 한 SM에 배치합니다. SM은 이 작업들을 실행하며 저장 자원을 제공하는 작업장입니다.</p>
 <ExecutionNestingViz/>
 <p className="leading-8">
             한 thread의 값을 가까이 보관하는 32-bit 저장칸이 register이고 SM이 제공하는 전체 칸이 register file입니다. 한 값을 만든 뒤 마지막으로 사용할
             때까지 보존해야 하는 구간을 live range라고 합니다. 다음 표에서 앞서 본 역할과 이름을 짝지어 봅니다.
           </p>
 </div><TermBreakdown title="역할에서 이름으로" items={[
-{term:"Thread · warp · block · SM",description:"한 사람·32명 묶음·함께 배치할 일·처리 구역에 대응하는 NVIDIA 실행 단위입니다.",example:"128-thread block은 4 warps이며 같은 SM에 놓입니다.",boundary:"Warp의 32와 배치 규칙을 AMD의 다른 세대에 그대로 옮기지 않습니다."},
+{term:"Thread · warp · block · SM",description:"한 사람·32명 묶음·함께 배치할 일·작업장에 대응하는 NVIDIA 실행 단위입니다.",example:"128-thread block은 4 warps이며 같은 SM에 놓입니다.",boundary:"Warp의 32와 배치 규칙을 AMD의 다른 세대에 그대로 옮기지 않습니다."},
 {term:"Register · register file",description:"계산값을 두는32-bit 칸과SM의 전체 저장 공간입니다.",example:"64-bit double이 register에 놓이면 표현에 최소 2칸이 필요합니다.",boundary:"소스 변수 하나가 언제나 물리 register 하나가 되는 것은 아닙니다."},
 {term:"Live range · register pressure",description:"마지막 사용까지 값을 보존하는 구간과, 겹치는 구간이 만드는 저장 수요입니다.",example:"일찍 만든 중간값을 나중에 쓰는 동안 다른 중간값이 생기면 함께 보존해야 합니다.",boundary:"실제 배정에는 최적화·주소 계산·대상 제약이 함께 들어갑니다."}]}/><ContentBoundary article="cuda-register-pressure"/></section>
 <section id="trace" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 같은 37개에서 묶음 크기만 바꿔 끝까지 계산합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">처음의 37 registers/thread로 돌아갑니다. 한 warp의 원래 요구량은 1,184개이고 예약량은 1,280개입니다. 네 구역 각각에 12 warps 분량이 들어가 register 한도는 48 warps입니다.</p>
@@ -75,8 +75,8 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
 <ZoneRemainderViz/>
 <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             64 registers/thread는 warp당 2048개라 32 warps, 128개는 4096개라 16 warps의 단순 register 상한입니다. 96개는 warp당
-            3072개이고 구역별 5개씩 총 20 warps입니다. 이를 256-thread block의 8 warps씩 묶으면 2 blocks·16 warps, 25%가 됩니다. 반올림을
-            생략한 21 warps를 실제 배치 수로 쓰면 안 됩니다.
+            3072개이고 구역별 5개씩 총 20 warps입니다. 이를 256-thread block의 8 warps씩 묶으면 2 blocks·16 warps, 25%가 됩니다. 구역별 내림을
+            건너뛰고 전체를 한 번에 나눈 21 warps를 실제 배치 수로 쓰면 안 됩니다.
           </p></div></section>
 <section id="live-range" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 값을 언제까지 보존하느냐가 자리 재사용을 바꿉니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
             실제 물리 register 수를 변수 선언문에서 그대로 세기는 어렵습니다. 값을 다 읽었다면 같은 칸에 다음 값을 놓을 수 있고 상수나 짧은 계산은 보관 대신 다시 계산할 수도

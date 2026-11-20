@@ -11,7 +11,7 @@ const PATHS = [
     from: "B의 category 값을 숫자로 바꾸는 target statistic",
     guard: "Ordered target statistic",
     open: "B 자신의 label이 B의 category 통계에 섞임",
-    closed: "B의 통계에서 B 자신의 label을 뺌",
+    closed: "B보다 앞선 A·C 중 B와 같은 category인 rows의 label로만 통계를 만듦",
   },
   {
     name: "Gradient prediction",
@@ -32,7 +32,7 @@ const SCENES = [
   {
     label: "Category 경로만 막으면",
     summary: "1개 닫힘 · 1개 열림",
-    note: "Category 통계에서 자기 label을 빼도 gradient prediction 쪽 길은 그대로입니다. Full model로 B를 예측하면 B의 label은 여전히 B의 prediction에 새어듭니다.",
+    note: "Category 통계를 앞선 rows의 label로만 만들어도 gradient prediction 쪽 길은 그대로입니다. Full model로 B를 예측하면 B의 label은 여전히 B의 prediction에 새어듭니다.",
     closed: [true, false],
   },
   {

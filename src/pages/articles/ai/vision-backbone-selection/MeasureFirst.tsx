@@ -91,8 +91,9 @@ export default function MeasureFirst() {
         <p className="leading-7">
           Seed 1의 A와 seed 1의 B처럼 같은 조건끼리 차이를 먼저 구합니다. 위
           예시는 차이의 평균이 0.8 point이고, 표본 표준편차를 √5로 나눈
-          standard error는 약 0.21 point입니다. Candidate별 평균만 따로 내면
-          seed마다 달랐던 난이도가 차이에 섞입니다.
+          standard error는 약 0.21 point입니다. 이 표는 seed마다 난이도 차이가 작아서 candidate별
+          평균을 따로 내도 standard error가 거의 같게(약 0.21) 나옵니다. 짝짓기가 효과를 내는 경우는 seed마다
+          난이도가 크게 다를 때이고, 그때 candidate별 평균만 따로 내면 그 난이도 차이가 비교에 섞입니다.
         </p>
         <p className="leading-7">
           이 값은 실제 모델 측정값이 아니라 짝지은 비교 계산을 보여 주기 위한 가정입니다. 후보를 확정하려면

@@ -355,7 +355,7 @@ export default function AgentApprovalAndSandboxArticle() {
             사례에 <code>cat ~/.ssh/id_rsa</code>를 여섯 번째 명령으로 더하면, 벽만 켠 Claude Code 기본값에서 읽기는 성공할까요? 외부로 나갈 수 있을까요? (답: 7절)
           </p>
           <p className="leading-7">
-            Codex 구성에서 <code>network_access = true</code>로 바꾸면 앞 표의 피해 건수는 어떻게 달라질까요? (답: 3절, 6절)
+            6절의 Codex 구성에서 꺼져 있던 벽 안의 네트워크를 설정 <code>network_access = true</code>로 열면 앞 표의 피해 건수는 어떻게 달라질까요? (답: 3절, 6절)
           </p>
           <p className="leading-7">
             사람 없이 밤새 돌리는 작업에서 승인 정책만 엄격하게 올리면 무엇이 달라지고 무엇이 그대로일까요? (답: 4절, 9절)

@@ -56,7 +56,7 @@ export default function LrSchedulingArticle() {
               term: "Optimizer update",
               description: "Parameter가 실제로 한 번 바뀐 사건입니다.",
               example:
-                "Gradient를 8회 누적한 뒤 optimizer.step 한 번이 update 1회입니다.",
+                "앞 예처럼 rank마다 gradient를 4회 누적한 뒤 optimizer.step 한 번이 update 1회입니다.",
               boundary: "Micro-batch·backward·epoch와 같은 단위가 아닙니다.",
             },
             {

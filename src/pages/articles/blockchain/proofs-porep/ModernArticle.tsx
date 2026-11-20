@@ -202,6 +202,7 @@ export default function ModernPoRep() {
         </header>
         <LabelDependencyViz />
         <p>
+          PC2로 넘어가기 전에 PC1이 labels를 어떻게 만들었는지 먼저 짚습니다.
           SDR label은 한 node의 이전-layer와 graph parents에 순차 의존합니다.
           PC2는 이 labels로 data를 encoding한 뒤 TreeC와 TreeRLast를 만들고
           CommR을 계산합니다. Artifact에는 replica file digest/size,

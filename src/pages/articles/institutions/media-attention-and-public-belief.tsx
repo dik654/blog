@@ -15,7 +15,7 @@ export default function MediaAttentionAndPublicBeliefArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" data-teaching-level="S" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">S · 사람들이 보는 정보의 순서도 시장을 움직입니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">S · 사람들이 보는 정보의 순서도 시장을 움직일 수 있습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">같은 사실이 있어도 사람들이 어떤 화면에서 얼마나 자주 보느냐에 따라 체감이 달라질 수 있습니다. 주목을 얻은 이야기가 주문이나 투표로 이어지는지 보려면 정보가 만들어지고 배치되고 행동으로 옮겨지는 경로를 따로 살펴야 합니다.</p>
           <p className="leading-8">이 글은 제한된 화면에 무엇이 올라오는지, 그 과정에서 누가 돈을 내고 받는지 추적합니다. 많이 보였다는 사실과 믿게 됐다는 사실을 구별하는 것이 출발점입니다.</p>
@@ -51,7 +51,6 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">반대 의견이 적게 보이는 이유는 실제 작성량이 적어서일 수도, 배치 기준 때문일 수도 있습니다. 화면만 보고 전체 게시물의 분포를 역으로 확정할 수 없습니다.</p>
         </div>
-        <NumericPath title="(가정) 광고 노출에서 기록된 행동까지" steps={[{"label": "광고 노출", "value": "1천 회"}, {"label": "기록된 클릭", "value": "20번"}, {"label": "기록된 구매", "value": "2건"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">보이는 표본과 전체 정보를 구별했습니다. 선택 기준에 돈이 연결되는 이유를 봅니다.</p>
       </section>
       <section id="need" data-teaching-level="2" className="scroll-mt-20">
@@ -79,6 +78,7 @@ export default function MediaAttentionAndPublicBeliefArticle() {
           <p className="leading-8">매출을 알더라도 제품 원가와 광고비를 빼야 이익을 계산합니다. 더 나아가 2건 모두 광고가 없었으면 일어나지 않았을 구매인지 확인해야 광고의 추가 효과를 알 수 있습니다.</p>
           <p className="leading-8">시장 이야기 역시 같은 순서로 읽습니다. 게시물 증가, 노출, 믿음의 변화, 실제 주문과 자금 유입을 각각 관측해야 합니다. 주가가 오른 뒤 사람들이 글을 더 찾는 반대 방향도 가능합니다.</p>
         </div>
+        <NumericPath title="(가정) 광고 노출에서 기록된 행동까지" steps={[{"label": "광고 노출", "value": "1천 회"}, {"label": "기록된 클릭", "value": "20번"}, {"label": "기록된 구매", "value": "2건"}]} />
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">노출과 구매의 분모, 추가 효과의 조건을 구별했습니다. 공개 의무가 무엇을 보여 주는지 봅니다.</p>
       </section>
       <section id="source" data-teaching-level="5" className="scroll-mt-20">

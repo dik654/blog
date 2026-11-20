@@ -75,7 +75,7 @@ export default function WaterUtilityAndTariffsArticle() {
         <TariffShapeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사용량과 무관하게 받는 기본 금액을 늘리면 수입은 안정되지만 적게 쓰는 집의 부담이 커질 수 있습니다. 사용량별 가격을 높이면 절수를 유도할 수 있지만 가구원 수가 많은 저소득 가구가 불리할 수 있습니다.</p>
-          <p className="leading-8">어떤 요금표든 수도 서비스의 전체 비용을 사라지게 하지는 않습니다. 요금·세금·차입 중 누가 언제 부담할지를 바꾸므로 차입을 쓰면 뒤의 상환 재원도 적습니다.</p>
+          <p className="leading-8">어떤 요금표든 수도 서비스의 전체 비용을 사라지게 하지는 않습니다. 요금·세금·차입 중 누가 언제 부담할지를 바꿀 뿐입니다. 차입은 부담을 뒤로 미루므로, 차입을 쓰면 나중에 갚을 재원도 함께 정해 두어야 합니다.</p>
         </div>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">부족액 20의 조달 선택이 드러났습니다. 비용 회수의 공식 정의와 대조합니다.</p>
       </section>

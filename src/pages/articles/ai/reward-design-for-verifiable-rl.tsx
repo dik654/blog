@@ -30,7 +30,6 @@ export default function Article(){
     />
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1 · 채점기가 통과시킨 답과 실제 정답을 나눠 센다</h2>
-      <RewardDesignForVerifiableRlViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">정답 여부를 별도로 확인한 답 100개가 있습니다 (가정). 실제 정답 40개 중 채점기는 38개를 통과시켰고 오답 60개 중에서도 12개를 통과시켰습니다. 점수 1인 답은 50개이지만 모두 정답은 아닙니다.</p>
         <p className="leading-8">이 글은 이 채점 결과가 학습 신호로 바뀌는 길을 추적합니다. 최종 답과 중간 과정을 어디서 확인하는지, 보상을 자주 주는 선택이 왜 도움이 되거나 실패하는지, 2026년 과정 검증 논문이 어떤 범위에서 성립하는지 살펴봅니다.</p>
@@ -75,6 +74,7 @@ export default function Article(){
         <p className="leading-8">여섯 번의 행동 끝에 작업이 실패했다고 합시다 (가정). 마지막 보상 점수 0만으로는 첫 다섯 행동이 옳았는지, 중간에 잘못된 행동이 있었는지 알 수 없습니다. 올바른 중간 행동을 확인할 수 있다면 더 가까운 학습 신호를 줄 수 있습니다.</p>
         <p className="leading-8">그러나 단지 중간 점수를 많이 주는 것은 해결책이 아닙니다. 예를 들어 같은 칸을 방문할 때마다 점수를 주면 목표에 가지 않고 순환할 수 있습니다. 중간 점수가 최종 목표와 어떤 관계를 갖는지 먼저 정의해야 합니다.</p>
       </div>
+      <RewardDesignForVerifiableRlViz />
 
       <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">희소 신호의 문제와 잘못된 중간 신호의 대가를 함께 확인했습니다. 용어를 구분합니다.</p>
     </section>

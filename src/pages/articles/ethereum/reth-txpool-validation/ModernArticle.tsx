@@ -57,7 +57,7 @@ export default function ModernArticle() {
           ["소비", "builder yield index·mined/reorg event"],
         ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}</div>
         <SameSizeReceiptViz />
-        <p><LABEL>A</LABEL>최종 pool 크기만 비교하지 않습니다. 같은 크기라도 T7이 BaseFee 대신 Pending에 들어갔거나 T8이 선행 거래보다 먼저 builder에 보였다면 동작이 다릅니다. Event 순서와 reason, sender dependency를 transaction hash에 연결해야 첫 차이를 찾을 수 있습니다.</p>
+        <p><LABEL>A</LABEL>최종 pool 크기만 비교하지 않습니다. Pool은 거래를 subpool이라는 칸으로 나눠 두는데, Pending은 바로 블록에 넣을 수 있는 거래, BaseFee는 nonce 순서는 맞지만 수수료가 현재 base fee에 못 미쳐 기다리는 거래의 칸입니다. T7·T8은 Alice라는 한 계정의 nonce 7·8 거래로, 아래 실험 02·05에서 다시 씁니다. 같은 크기라도 T7이 BaseFee 대신 Pending에 들어갔거나 T8이 선행 거래보다 먼저 builder에 보였다면 동작이 다릅니다. Event 순서와 reason, sender dependency를 transaction hash에 연결해야 첫 차이를 찾을 수 있습니다.</p>
       </section>
 
       <section id="experiment" className="space-y-5 scroll-mt-20">
@@ -67,7 +67,7 @@ export default function ModernArticle() {
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-2">{[
           ["01 · Admission 분기", "잘못된 signature·chain ID·oversize는 Invalid, provider 장애는 Error가 되며 어느 것도 pool에 남지 않는지 확인합니다."],
           ["02 · Nonce dependency", "Alice T8을 먼저 보내고 T7을 나중에 보내 T8이 Queued에서 정확히 승격되는지 확인합니다."],
-          ["03 · Replacement flood", "같은 sender·nonce 후보를 bump 경계 아래·같음·위로 반복해 하나만 남고 메모리 한도를 지키는지 봅니다."],
+          ["03 · Replacement flood", "같은 sender·nonce 후보를 bump 경계 아래·같음·위로 반복해 하나만 남고 메모리 한도를 지키는지 봅니다. 경계와 딱 같은 후보의 수락 여부는 이 글이 정하지 않고, 기준 구현의 결과를 기대값으로 삼아 대조합니다."],
           ["04 · Fee repricing", "Base/blob fee를 위아래로 바꿔 Pending·BaseFee·Blob 이동과 builder heads를 대조합니다."],
           ["05 · Commit과 reorg", "T7 mined 뒤 nonce 8로 갱신하고, reorg에서 old-only T7을 새 state로 재검증해 T8과의 순서를 다시 만듭니다."],
           ["06 · Restart·drift", "Pool process 재시작과 유지 범위를 넘는 head 점프 뒤 changed accounts를 다시 읽어 stale transaction을 제거하는지 확인합니다."],

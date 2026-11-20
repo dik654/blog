@@ -238,7 +238,7 @@ export default function GpuDataMovementOptimizationArticle() {
           <p>
             Shared-memory software prefetch의 GPU 형태는 다음 tile의 load를 현재 tile의 계산보다 먼저
             내는 것입니다. Tile 하나의 계산 C 동안 load L 을 숨기려면 ⌈L/C⌉ 개 tile 앞서 요청해야
-            하며, 그 요청을 register 에 받는 것이 Ampere 의 fragment double buffering, shared
+            하며(load 요청끼리는 겹쳐 진행된다고 가정합니다), 그 요청을 register 에 받는 것이 Ampere 의 fragment double buffering, shared
             memory 에 받는 것이{" "}
             <Link to="/cs/gpu/warp-specialization-and-async-pipelines#stage-pipeline">multi-stage pipeline</Link> 입니다.
           </p>
@@ -319,8 +319,8 @@ export default function GpuDataMovementOptimizationArticle() {
           </p>
           <p>
             Overlap 이 성립하려면 이동과 계산이 서로 다른 자원을 써야 합니다. TMA 와 tensor core, copy engine 과 SM 은 다른 자원이라 겹치지만 일반
-            load 명령은 warp 의 issue slot 을 계산과 나눠 쓰므로 그만큼 덜 겹칩니다. 아래 Viz 는 세 층 사이를 tile 이 흐르며 겹침이 생기는 순서를 보여
-            줍니다. 앞에서 본 Viz의 마지막 장면이 이 시작·정상 구간·마지막
+            load 명령은 warp 의 issue slot 을 계산과 나눠 쓰므로 그만큼 덜 겹칩니다. 글 첫 절의 세 층 Viz 가 tile 이 흐르며 겹침이 생기는 순서를
+            보여 주었고, 그 마지막 장면이 이 시작·정상 구간·마지막
             drain을 한 숫자로 합칩니다.
           </p>
         </div>

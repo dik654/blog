@@ -2,7 +2,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #qc-chain 마지막 문단 — B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모에
- * 연결되면 B10 commit. B11을 건너뛰거나 형제 블록의 QC를 들고 오면 번호가 이어져도 three-chain이 아님.
+ * 연결되면 B10 commit. B12가 B11을 건너뛰거나 B13이 형제 블록의 QC를 들고 오면 번호가 이어져도 three-chain이 아님.
  */
 type Block = { id: string; x: number; y: number; faded?: boolean; note?: string };
 type Link = { from: string; to: string; label: string; ok: boolean; parentOnly?: boolean };

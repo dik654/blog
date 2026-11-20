@@ -91,7 +91,7 @@ d_f&\le b_x
           name="Wasserstein-1 critic dual"
           shape="sup over 1-Lipschitz f"
           meaning="직접 transport plan을 모두 찾는 대신, 허용된 critic이 real과 generated distribution 사이에서 만들 수 있는 최대 expectation gap을 구합니다."
-          example="Point mass δ₀와 δ₂에서는 f(x)=−x가 gap 2를 만들어 이동 거리 2에 도달합니다."
+          example="Real이 점 0에 모인 point mass δ₀이고 generated가 점 2에 모인 δ₂이면, f(x)=−x가 real에 0점, generated에 −2점을 줘 gap 2를 만들어 이동 거리 2에 도달합니다."
           boundary="Constraint가 없으면 cf로 scale을 키워 supremum이 발산합니다. Critic output은 sigmoid probability가 아닙니다."
         />
         <CriticGapViz />

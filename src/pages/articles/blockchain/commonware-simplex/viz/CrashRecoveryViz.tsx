@@ -26,7 +26,7 @@ const SCENES = [
     stopAfter: -1,
     journal: "기록 없음",
     outcome: "certify 다시 요청",
-    note: "결과를 받는 channel이 끊겨 RecvError가 나면 코드는 이를 false로 바꾸지 않습니다. 실제 거절이 아닌 통신 오류가 nullify 판단으로 굳으면 liveness를 멈출 수 있기 때문입니다. 여기서는 멈춘 지점이 아니라 결과가 오지 않은 경우이며, journal에 결과가 없으므로 restart 뒤에는 다시 요청합니다.",
+    note: "결과를 받는 channel이 끊겨 RecvError가 나면 코드는 이를 false로 바꾸지 않습니다. 실제 거절이 아닌 통신 오류가 certification 실패로 굳으면 view를 빠져나가지 못해 liveness가 멈출 수 있기 때문입니다. 여기서는 멈춘 지점이 아니라 결과가 오지 않은 경우이며, journal에 결과가 없으므로 restart 뒤에는 다시 요청합니다.",
   },
   {
     label: "sync 전에 멈춤 (가정)",

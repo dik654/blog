@@ -26,7 +26,8 @@ export default function ForkChoice({ title, onCodeRef }: Props) {
           검증된 update가 여러 개 쌓이면 Helios는 먼저 2/3 여부를 비교합니다.
           둘 다 2/3 아래라면 참여가 많은 쪽을 고릅니다. 그다음 relevant next
           committee, finality 유무, 같은 committee period의 finality, 참여 수를
-          차례로 비교합니다.
+          차례로 비교합니다. 앞의 세 항목은 한쪽만 그것을 갖고 있으면 가진
+          쪽이 이기고, 참여 수는 많은 쪽이 이깁니다.
         </p>
         <p>
           여기까지 같을 때는 더 오래된 attested slot과 더 이른 signature slot을

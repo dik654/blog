@@ -83,7 +83,7 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceViz() {
       eyebrow="Delta rule · chunkwise scan"
       title="같은 기억 쓰기를 한 step씩 기다리거나, chunk 안에서 한꺼번에 계산합니다"
       description="4개 token 짜리 chunk 하나가 순차 recurrence 형태(왼쪽 장면)와 chunkwise 병렬 형태(오른쪽 장면들)로 같은 결과를 만드는 과정입니다."
-      note="실제 상태는 d×d(수십~수백 차원) 행렬이고 chunk 는 보통 C=64~128 입니다. 그림은 상태를 라벨 하나로, chunk 를 4 step 으로 줄였습니다."
+      note="실제 상태는 d×d(수십~수백 차원) 행렬이고 본문 예시는 chunk 를 C=64 로 둡니다 (가정). 그림은 상태를 라벨 하나로, chunk 를 4 step 으로 줄였습니다."
     >
       <div
         id={scenes.playbackId}

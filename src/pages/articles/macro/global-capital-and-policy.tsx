@@ -68,9 +68,11 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">수입과 부채의 통화가 다른 상태를 통화 불일치라고 합니다. 만기 빚을 새 빚으로 바꾸는 것은 차환이며 이를 못 하는 위험이 차환 위험입니다. 외환보유액은 통화당국이 가진 사용 가능한 대외 자산의 주요 완충 장치입니다.</p>
         </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<p className="leading-8">해외와 오간 거래를 묶은 장부가 국제수지입니다. 경상수지는 상품·서비스·소득 등의 거래를, 금융계정은 대외 금융자산과 부채의 거래를 기록합니다. 환율 변동에 따른 기존 자산·부채의 평가 차이는 거래 흐름과 구분합니다.</p>
+        </div>
         <BalanceOfPaymentsSortViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">해외와 오간 거래를 묶은 장부가 국제수지입니다. 경상수지는 상품·서비스·소득 등의 거래를, 금융계정은 대외 금융자산과 부채의 거래를 기록합니다. 환율 변동에 따른 기존 자산 평가 차이는 거래 흐름과 구분합니다.</p>
 <p className="leading-8">외화를 장래 정한 가격에 사는 계약의 원리는 <Link to="/finance/markets/forwards-and-futures">선도와 선물</Link>에서, 기준금리 전달은 <Link to="/finance/banking/central-bank-and-policy-transmission">중앙은행 글</Link>에서 이어집니다.</p>
         </div>
 
@@ -80,7 +82,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">7. 은행의 조건 변화가 회사의 투자 예산에 닿습니다</h2>
         <RolloverGapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">은행이 다음 해 1억 달러 중 8000만 달러만 연장하겠다고 합시다. 회사는 나머지 2000만 달러를 구해야 하고 환율 1200원에서는 240억 원이 필요합니다. 여기에 연 이자 72억 원의 지급 일정도 맞춰야 합니다.</p>
+<p className="leading-8">은행이 다음 해 1억 달러 중 8000만 달러만 연장하겠다고 합시다. 회사는 나머지 2000만 달러를 구해야 하고 환율 1200원에서는 240억 원이 필요합니다. 여기에 1억 달러 전액 기준 연 이자 72억 원의 지급 일정도 맞춰야 합니다.</p>
 <p className="leading-8">회사의 사용 가능한 현금이 200억 원이면 원금 차환 공백만으로 40억 원이 부족합니다. 설비투자를 미루거나 자산을 팔 수 있고, 여러 회사가 동시에 움직이면 관련 산업의 수요와 자산가격이 변할 수 있습니다. 이는 가능한 전달 경로이며 모든 금리 인상의 실제 결과를 단정한 것은 아닙니다.</p>
 <p className="leading-8">반대로 확실한 달러 수입 2000만 달러가 같은 날 들어온다면 원금 공백을 메울 수 있습니다. 국가 전체의 외화 부채 합계만으로 각 회사의 순위험을 알 수 없는 이유입니다.</p>
         </div>

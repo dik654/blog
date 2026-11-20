@@ -59,7 +59,7 @@ export default function ModernHotstuffArticle() {
         </p>
         <ThreeChainLinkViz />
         <p>
-          Chained HotStuff는 연속된 블록이 앞선 QC를 운반하게 해 여러 논리 단계를 겹쳐 처리합니다. B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모에 연결되면 B10이 commit됩니다. B13이 B11을 건너뛰거나 형제 블록의 QC를 들고 오면 높이가 연속이어도 three-chain이 아닙니다.
+          Chained HotStuff는 연속된 블록이 앞선 QC를 운반하게 해 여러 논리 단계를 겹쳐 처리합니다. B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모에 연결되면 B10이 commit됩니다. B12가 B11을 건너뛰고 QC10을 들고 오거나 B13이 형제 블록의 QC를 들고 오면 높이가 연속이어도 three-chain이 아닙니다.
         </p>
         <div id="paper-hotstuff-chain">
           <CitationBlock source="HotStuff v6 §4–5 — safeNode and Chained HotStuff" citeKey={1} href="https://arxiv.org/html/1803.05069v6#S4">

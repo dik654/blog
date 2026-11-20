@@ -107,7 +107,7 @@ c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{verifier 통과면 1}}\
         annotatedFormula={String.raw`\underbrace{\operatorname{SE}(\widehat p)}_{\text{accuracy 흔들림}}\approx\sqrt{\frac{\overbrace{\widehat p(1-\widehat p)}^{\text{한 문제 성패 분산}}}{\underbrace{N_{\mathrm{eff}}}_{\text{독립 관측 수}}}}`}
         operations={[
           { expression: String.raw`\widehat p(1-\widehat p)`, annotation: ["맞음/틀림 Bernoulli 하나의 분산", "accuracy가 0.5 근처일 때 가장 큼"] },
-          { expression: String.raw`N_{\mathrm{eff}}`, annotation: ["같은 문제의 K개 sample은 서로 닮아", "독립 관측으로 세면 과대평가", "AIME라면 사실상 문항 30개 수준"] },
+          { expression: String.raw`N_{\mathrm{eff}}`, annotation: ["같은 문제의 K개 sample은 서로 닮아", "독립 관측으로 세면 과대평가", "AIME라면 30×K개가 아니라 문항 30개 쪽에 가까움"] },
           { expression: String.raw`\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}`, annotation: ["p̂=0.5, N_eff=30이면 √(0.25/30)≈0.09", "몇 문제 차이가 오차 안에 들 수 있음"] },
         ]}
         terms={[

@@ -43,7 +43,9 @@ export default function HyperConnectionsResidualStreamsArticle() {
           </p>
           <p>
             그 차이는 실제로 학습이 되는지를 가릅니다. IWSLT14 번역 실험에서 warm-up 없이 학습한 Post-LN Transformer 는 BLEU 8.45 에 그쳤지만
-            warm-up 을 쓴 모델은 34 근처까지 올라갔습니다. Hyper-connection 은 이 단일 stream 을 여러 개로 늘려 같은 문제를 다른 축에서 다룹니다.
+            warm-up 을 쓴 모델은 34 근처까지 올라갔습니다. 이 결과는 층을 지나는 신호가 하나뿐인 residual stream 에 어떻게 실리느냐가 학습
+            성패를 가른다는 뜻입니다. Pre-LN 이 stream 을 하나로 둔 채 normalization 위치를 옮겼다면, hyper-connection 은 stream 의 개수 자체를
+            늘린다는 점에서 다른 축을 건드립니다.
           </p>
           <p>
             이 글은 stream 을 늘리는 hyper-connection 의 구조, 층마다 stream 을 읽고 섞고 쓰는

@@ -178,7 +178,7 @@ x_t&=\underbrace{s_t+n_t}_{\text{두 항을 합성}}
         <LearningTerm
           name="Schedule 모양 선택 - linear vs cosine"
           shape="linear: beta_t가 t에 비례해 균등 증가 / cosine: 누적 signal이 cos^2 곡선을 따름"
-          meaning="beta_t의 절대값이 아니라 모양이 학습 난이도 분포를 정합니다. Original DDPM의 linear schedule은 마지막 몇 step에서 신호를 너무 빨리 없애 그 구간의 학습 신호를 낭비합니다."
+          meaning="beta_t의 절대값이 아니라 모양이 학습 난이도 분포를 정합니다. Original DDPM의 linear schedule은 T에 닿기 전에 신호를 거의 다 없애, 신호가 거의 남지 않은 끝 구간의 step들이 학습 신호를 낭비합니다."
           example="Linear schedule은 t가 T의 20%만 지나도 누적 signal이 이미 크게 떨어지지만, cosine schedule은 앞뒤 구간에서 더 완만하게 줄어 모든 noise level이 고르게 학습됩니다."
           boundary="Cosine schedule은 작은 offset을 둬 t가 0에 가까울 때 beta_t가 0에 너무 붙는 것도 막습니다. Nichol과 Dhariwal(Improved DDPM)의 실험 결과이며 모든 데이터/해상도에 최적이라는 보장은 아닙니다."
         />

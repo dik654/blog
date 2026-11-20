@@ -4,7 +4,7 @@ import SceneShell from "./SceneShell";
  * 본문 대응: #retention 하한 문단 — 공식 문서(하한 35, 35보다 낮으면 내리지 않음)와
  * 고정 원문 C++(하한 30, 하한 이상이면 내림)를 같은 우선순위 축에 놓는다.
  * 기본 우선순위 35는 두 규칙 모두 내리고, 30~34는 두 규칙이 갈린다. 32는 그 구간의 설명용 예시.
- * Python 설정 설명(하한보다 커야)은 본문에 하한값이 없어 축에 놓지 않는다.
+ * Python 설정(하한보다 커야)은 기본값 None이라 C++ 기본값 30을 그대로 써서 축에 따로 놓지 않는다.
  */
 const W = 480;
 const L = 8;
@@ -27,7 +27,7 @@ export default function OffloadThresholdViz() {
       eyebrow="offload 하한"
       title="문서의 35와 코드의 30 사이에서 결과가 갈립니다"
       description="가로축은 block 우선순위 0~100입니다. 초록 구간이 호스트로 내리는 우선순위이고, 주황 세로선이 지금 보는 block의 우선순위입니다."
-      note="host_cache_size(기본 0)를 정해 호스트 offload를 켠 경우의 판정이며, '내림'은 GPU에서 꺼낼 때 호스트로 내릴 수 있다는 뜻입니다. Python 설정 설명은 '하한보다 커야 한다'고 적지만 본문이 그 하한값을 적지 않아 축에 놓지 않았습니다."
+      note="host_cache_size(기본 0)를 정해 호스트 offload를 켠 경우의 판정이며, '내림'은 GPU에서 꺼낼 때 호스트로 내릴 수 있다는 뜻입니다. Python 설정은 값을 주지 않으면 C++ 기본값 30을 그대로 쓰고 '하한보다 커야 한다'는 설명만 다르므로 따로 축에 놓지 않았습니다."
       ariaLabel="공식 문서와 C++ 원문의 offload 하한 비교"
       scenes={SCENES}
       render={(active) => {

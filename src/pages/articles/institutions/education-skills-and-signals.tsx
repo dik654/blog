@@ -44,7 +44,6 @@ export default function EducationSkillsAndSignalsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">수업 전에는 못 풀던 작업을 수업 뒤에 풀면 실제 능력의 변화를 볼 단서가 됩니다. 하지만 학교에 들어오기 전부터 능력이 높은 사람이 더 많이 선발됐다면 졸업자와 비졸업자의 평균 임금 차이에는 그 차이도 섞입니다.</p>
         </div>
-        <NumericPath title="(가정) 교육의 단순 비용 회수 계산" steps={[{"label": "학비·포기 소득", "value": "1천+2천만 원"}, {"label": "매년 추가 임금", "value": "÷200만 원"}, {"label": "단순 회수 기간", "value": "15년"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">학습과 선발이 다른 경로임을 보았습니다. 평가와 자격이 왜 있는지 살핍니다.</p>
       </section>
       <section id="need" data-teaching-level="2" className="scroll-mt-20">
@@ -74,6 +73,9 @@ export default function EducationSkillsAndSignalsArticle() {
         <PaybackCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">학비 1천만 원과 포기 소득 2천만 원을 합한 3천만 원을 연 추가 임금 200만 원으로 나누면 단순 회수 기간은 15년입니다. 학비만 나눈 5년보다 길어졌습니다. 세금과 할인, 임금 성장과 실업을 생략한 계산입니다.</p>
+        </div>
+        <NumericPath title="(가정) 교육의 단순 비용 회수 계산" steps={[{"label": "학비·포기 소득", "value": "1천+2천만 원"}, {"label": "매년 추가 임금", "value": "÷200만 원"}, {"label": "단순 회수 기간", "value": "15년"}]} />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">추가 임금 200만 원이 매년 계속되고 교육을 받지 않았을 대안도 그대로라는 전제가 필요합니다. 교육 과정 중 퇴학하거나 다른 산업으로 이동하면 실제 경로가 달라집니다.</p>
           <p className="leading-8">임금 상승이 능력 축적에서 왔는지 보려면 이전 능력과 배경, 같은 시기의 노동 수요를 맞춰 비교해야 합니다. 자격의 신호 효과를 살피려면 실제 능력과 수행은 비슷한데 자격 표시만 달라지는 상황이 도움이 됩니다. 단순 졸업자 평균만으로 두 효과를 분리할 수 없습니다.</p>
         </div>
@@ -89,7 +91,7 @@ export default function EducationSkillsAndSignalsArticle() {
           <p className="leading-8">학비 중 정부 장학금이 400만 원이고 가계 자금이 600만 원이라고 추가로 놓습니다(가정). 학교 수입은 1천만 원으로 같고 초기 재원은 정부 400·가계 600으로 나뉩니다. 개인의 직접 부담 계산도 그만큼 바뀝니다.</p>
         </div>
         <SourceApplication source="OECD Education at a Glance 2026 · C1, Distribution by source of funds" excerpt="before government transfers to the private sector" application="학비1천만 원 중 정부 장학금400만 원·가계600만 원이면 학교의 수입과 초기 재원을 나눠 기록합니다. 포기한 소득2천만 원은 학교 수입이 아닙니다." />
-        <CitationBlock source="OECD Education at a Glance 2026 · C1, Distribution by source of funds" citeKey={1} href="https://www.oecd.org/en/publications/education-at-a-glance-2026_b4968bbc-en/full-report/key-system-level-indicators-of-education-finance_d143f855.html">교육 지출의 초기 재원과 최종 지급 구분. 본문 2023 관측자료를 포함하는 2026 보고서.</CitationBlock>
+        <CitationBlock source="OECD Education at a Glance 2026 · C1, Distribution by source of funds" citeKey={1} href="https://www.oecd.org/en/publications/education-at-a-glance-2026_b4968bbc-en/full-report/key-system-level-indicators-of-education-finance_d143f855.html">교육 지출의 초기 재원과 최종 지급 구분. 2023 관측자료를 포함하는 2026 보고서.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">학교 수입과 가계 부담을 원문 분류에 맞췄습니다. 국가별 상환 조건을 비교합니다.</p>
       </section>
       <section id="comparison" data-teaching-level="6" className="scroll-mt-20">

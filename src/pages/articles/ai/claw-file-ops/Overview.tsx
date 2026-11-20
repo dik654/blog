@@ -39,6 +39,15 @@ export default function Overview() {
           <li>Expected digest만 추가하면 temporary file·atomic rename과 path race 문제까지 함께 해결될까요?</li>
         </ol>
         <StaleEditViz />
+        <p>
+          답을 정리하면 이렇습니다. Pinned <code>edit_file</code>은 expected
+          digest를 받지 않으므로 h1과 h2를 비교하지 않고,{" "}
+          <code>replace_all=false</code>여도 match가 둘이면 거부하지 않고 첫
+          occurrence를 바꿔 바로 씁니다. Expected digest를 추가하면 낡은 edit는
+          거부할 수 있지만, temporary file·atomic rename과 검사·사용 사이 path
+          race는 해결되지 않으므로 따로 설계해야 합니다. 자세한 근거는{" "}
+          <strong>Version을 확인하는 읽기·쓰기·수정</strong> 섹션에서 다룹니다.
+        </p>
         <ReadWriteViz />
 
         <div id="paper-claw-file-ops-source" className="scroll-mt-24">

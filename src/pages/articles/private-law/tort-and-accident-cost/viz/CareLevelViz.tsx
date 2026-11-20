@@ -47,7 +47,7 @@ export default function CareLevelViz() {
     `사고가 나면 손해가 ${LOSS}입니다. 아무 조치도 하지 않으면 예방 비용은 0이지만 사고 확률이 ${pct(LEVELS[0].prob)}퍼센트라 기대 손해가 ${fmt(expected(0))}이고, 합은 ${fmt(total(0))}입니다.`,
     `기본 조치에 ${LEVELS[1].burden}을 쓰면 확률이 ${pct(LEVELS[1].prob)}퍼센트로 내려가 기대 손해가 ${fmt(expected(1))}이 됩니다. 합이 ${fmt(total(1))}으로 줄었으므로 이 조치는 해야 합니다.`,
     `한 단계 더 올려 ${LEVELS[2].burden}을 쓰면 기대 손해가 ${fmt(expected(2))}까지 내려가지만 합은 ${fmt(total(2))}으로 다시 올라갑니다. 줄인 손해보다 더 많은 비용을 쓴 것입니다.`,
-    `멈출 지점은 한계로 보면 바로 나옵니다. 조치 없음에서 기본 조치로 갈 때 ${LEVELS[1].burden - LEVELS[0].burden}을 써서 ${fmt(expected(0) - expected(1))}을 줄였으니 남는 장사이고, 한 단계 더 갈 때는 ${LEVELS[2].burden - LEVELS[1].burden}을 써서 ${fmt(expected(1) - expected(2))}밖에 못 줄이니 손해입니다.`,
+    `멈출 지점은 한계로 보면 바로 나옵니다. 조치 없음에서 기본 조치로 갈 때 ${LEVELS[1].burden - LEVELS[0].burden}을 써서 ${fmt(expected(0) - expected(1))}을 줄였으니 남는 장사이고, 한 단계 더 갈 때는 ${LEVELS[2].burden - LEVELS[1].burden}을 써서 ${fmt(expected(1) - expected(2))}밖에 못 줄이니 손해입니다. 맨 아래 과한 조치는 비교를 위해 덧붙인 단계로, ${LEVELS[3].burden}을 쓰면 합이 ${fmt(total(3))}까지 더 올라갑니다.`,
   ] as const;
 
   return (

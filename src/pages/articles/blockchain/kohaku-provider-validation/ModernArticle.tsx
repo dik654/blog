@@ -123,7 +123,7 @@ export default function KohakuProviderValidationArticle({ onCodeRef }: Props) {
           <MARK>O</MARK>alpha.13의 raw·Helios·Colibri 기본값은 100ms polling과 10초 timeout입니다. Shared loop는 한 RPC가 끝난 뒤 다음 interval을 기다리므로 poll이 겹치지 않습니다.
         </p>
         <p>
-          전체 timeout에는 stalled RPC 시간이 들어갑니다. Timeout 뒤 helper timer와 후속 poll은 멈추지만, 이미 진행 중인 RPC 자체는 취소하지 못합니다.{" "}
+          10초 timeout은 대기를 시작한 시점부터 재는 전체 시간이라 stalled RPC 시간도 들어갑니다. Timeout 뒤 helper timer와 후속 poll은 멈추지만, 이미 진행 중인 RPC 자체는 취소하지 못합니다.{" "}
           <CodeViewButton
             label="receipt polling source"
             onClick={() => onCodeRef("kohaku-receipt-wait", kohakuProviderCodeRefs["kohaku-receipt-wait"])}

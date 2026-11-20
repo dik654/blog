@@ -353,8 +353,8 @@ export function Step2() {
         color={C.ep}
       />
 
-      <DataBox x={215} y={38} w={92} h={28} label="≈60 tokens" sub="GPU 0행" color={C.epHot} />
-      <DataBox x={215} y={132} w={92} h={28} label="≈15 tokens" sub="GPU 1행" color={C.ep} />
+      <DataBox x={215} y={38} w={92} h={28} label="≈60 tokens" sub="GPU 0행 (가정)" color={C.epHot} />
+      <DataBox x={215} y={132} w={92} h={28} label="≈15 tokens" sub="GPU 1행 (가정)" color={C.ep} />
     </g>
   );
 }

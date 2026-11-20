@@ -46,7 +46,7 @@ export default function TwoModelsViz() {
               <text x={14} y={90} fontSize={11} fill={MUTED}>이 질서와 존재</text>
               <Box x={14} y={98} w={124} h={32} lines={["불의 열"]} />
               <Box x={14} y={138} w={124} h={32} lines={["솜의 가연성"]} />
-              <Box x={14} y={178} w={124} h={32} lines={["적절한 산소 조건"]} />
+              <Box x={14} y={178} w={124} h={32} lines={["적절한 조건(예: 산소)"]} />
               <Box x={258} y={136} w={86} h={36} lines={["연소"]} color={ACCENT} bold />
               <Arrow x1={138} y1={114} x2={258} y2={146} color={ACCENT} />
               <Arrow x1={138} y1={154} x2={258} y2={154} color={ACCENT} />

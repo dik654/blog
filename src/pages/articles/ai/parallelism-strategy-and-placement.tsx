@@ -156,7 +156,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
           <p>
             후보 B 는 TP 8 × PP 2 입니다. all-reduce 는 NVSwitch 안에서 한 번에 7 μs, token 당 1.1 ms 입니다. node 경계는 stage 사이
             activation 1 MB 가 한 번 지나 35 μs 입니다. 대신 한 token 이 두 stage 를 직렬로 지나 weight 읽기가 5.2 ms 씩 두 번이라 TPOT 은
-            약 11.5 ms 로 A 와 비슷합니다. 다만 microbatch 둘을 겹치면 throughput 은 두 배입니다.
+            약 11.5 ms 로 A 와 비슷합니다. 다만 microbatch 둘을 겹치면 맨 앞 빈칸을 채운 뒤의 정상 상태에서 throughput 은 두 배입니다.
           </p>
           <p>
             후보 C 는 TP 8 × DP 2 입니다. replica 하나가 node 하나에 들어가므로 node 경계 통신은 0 이고 TPOT 은 5.2 + 1.1 = 6.3 ms,

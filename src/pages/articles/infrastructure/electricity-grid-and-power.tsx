@@ -107,7 +107,7 @@ export default function ElectricityGridAndPowerArticle() {
         <h2 className="mb-6 text-2xl font-bold">7 · 싼 평균 요금이 필요한 순간의 공급을 보장하지 않습니다</h2>
         <StorageRateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">저장 설비가 20MWh를 담을 수 있어도 한 시간에 5MW만 낼 수 있다면 그 시간의 부족 20MWh를 모두 채우지 못합니다(가정). 저장량과 방전 속도를 함께 확인해야 합니다.</p>
+          <p className="leading-8">저장 설비가 20MWh를 담을 수 있어도 최대 출력이 5MW라면 한 시간 동안 5MWh만 내보냅니다(가정). 그 시간의 부족 20MWh를 모두 채우지 못합니다. 저장량과 방전 속도를 함께 확인해야 합니다.</p>
           <p className="leading-8">전력 가격과 공급 안정성의 경계는 계약상 받을 권리, 실제 연결 용량, 정전 때의 대체 수단에 있습니다. 낮은 평균 요금과 연간 발전량만으로 공장의 생산 손실을 추정할 수 없습니다.</p>
           <p className="leading-8">실제 투자에서는 최대 사용량의 시간표와 접속일을 맞춥니다. 공급 지연과 정전 때 손실을 계산합니다. 100·80·20 모델은 이 질문을 열어 주지만 복잡한 전력 흐름이나 고장 확률을 대신 계산하지는 않습니다.</p>
         </div>

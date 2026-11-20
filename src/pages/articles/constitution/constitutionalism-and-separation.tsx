@@ -250,7 +250,7 @@ export default function ConstitutionalismAndSeparationArticle() {
               expression: String.raw`\bigcap_{i=1}^{n}`,
               annotation: [
                 "한 사람이라도 반대하면 통과되지 않으므로 합집합이 아니라 교집합입니다.",
-                "거부권자를 한 명 늘릴 때마다 구간이 더 좁아지기만 하고 넓어지지는 않습니다.",
+                "거부권자를 한 명 늘릴 때마다 구간은 좁아지거나 그대로이고, 넓어지지는 않습니다.",
               ],
             },
           ]}

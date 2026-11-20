@@ -76,7 +76,9 @@ export default function ClaudeCodePermissionsArticle() {
           idea={
             <p>
               Deny match를 먼저 보고, 없을 때 ask, 그마저 없을 때 allow를
-              적용하며 어느 것도 맞지 않으면 기본 decision으로 보냅니다.
+              적용하며 어느 것도 맞지 않으면 기본 decision으로 보냅니다. 기본
+              decision은 rule 없이 tool 종류와 permission mode가 정하는 동작으로,
+              Manual mode에서는 읽기 전용 명령이 아닌 Bash를 실행하기 전에 사용자에게 묻습니다.
             </p>
           }
           formula={String.raw`D(c)=\begin{cases}\mathrm{deny}&m_d(c)\\\mathrm{ask}&\neg m_d(c)\land m_q(c)\\\mathrm{allow}&\neg m_d(c)\land\neg m_q(c)\land m_a(c)\end{cases}`}
@@ -132,7 +134,7 @@ export default function ClaudeCodePermissionsArticle() {
           assumptions={[
             "Rule category precedence는 현재 공식 문서를 기준으로 합니다.",
             "Current identity와 managed policy가 이미 선택돼 있습니다.",
-            "Permission allow 뒤에도 blocking hook과 executor failure가 남습니다.",
+            "Rule 결과가 allow여도 call은 멈출 수 있습니다. Blocking hook은 rule 평가 전에 실행되고, executor failure는 실행 중에 남습니다.",
           ]}
           interpretation="Bash(*) deny와 Bash(npm test *) allow가 동시에 맞으면 첫 행이 선택되어 test도 deny됩니다."
         />
@@ -148,8 +150,8 @@ export default function ClaudeCodePermissionsArticle() {
             policy·external service authorization을 별도 층으로 둡니다.
           </p>
           <p>
-            PreToolUse hook가 allow를 반환해도 matching deny·ask를 우회하지 못합니다. 반대로 exit 2 같은 blocking hook는 permission상 허용된
-            call도 먼저 멈출 수 있습니다. 제품 version과 조직 설정에 따라 mod가 뒤에서 일부 결정을 바꿀 수 있으므로, managed policy와 실제
+            PreToolUse hook은 permission rule보다 먼저 실행됩니다. 그래도 hook가 allow를 반환하면 matching deny·ask를 우회하지 못합니다. 반대로 exit 2 같은
+            blocking hook는 rule을 평가하기 전에 call을 멈추므로, allow rule이 맞는 call도 실행되지 않습니다. 제품 version과 조직 설정에 따라 mod가 뒤에서 일부 결정을 바꿀 수 있으므로, managed policy와 실제
             runtime 구성을 함께 고정합니다.
           </p>
         </div>

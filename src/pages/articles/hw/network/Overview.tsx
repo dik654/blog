@@ -168,7 +168,7 @@ export default function Overview() {
               "Payload와 측정 시작·종료 경계를 모든 실험에서 동일하게 정의합니다.",
               "단방향·양방향, 한 flow·aggregate 값을 서로 다른 열에 기록합니다.",
             ]}
-            interpretation="Line rate는 상한이지 완료 성능이 아닙니다. 800 Gb/s는 단위만 바꾸면 100 GB/s이지만, 실제 goodput은 protocol overhead와 queue·copy·contention 때문에 더 낮습니다."
+            interpretation="Line rate는 상한이지 완료 성능이 아닙니다. 800 Gb/s는 단위만 바꾸면 100 GB/s이지만, 실제 goodput은 protocol overhead와 queue·copy·contention 때문에 더 낮습니다. 위 그림의 첫 줄 사례(가정)처럼 payload 80 GB를 1.1초에 완료했다면 goodput은 80 ÷ 1.1 = 72.7 GB/s로, 100 GB/s 상한에 못 미칩니다."
           />
         </div>
 

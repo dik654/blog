@@ -42,7 +42,7 @@ export default function EarlyStoppingArticle() {
       <TermBreakdown title="상태 기계의 다섯 값" items={[
         { term: "Validation event", description: "정해진 cadence에서 checkpoint 하나를 평가한 사건입니다.", example: "매 1000 update마다 val loss를 계산합니다." },
         { term: "Best metric b", description: "지금까지 선택 방향에서 가장 좋았던 값입니다.", example: "Loss를 최소화한다면 b=.38입니다." },
-        { term: "Minimum improvement δ", description: "Noise를 개선으로 오인하지 않게 요구하는 최소 차이입니다.", example: "δ=.01이면 .375는 .38보다 충분히 좋지 않을 수 있습니다." },
+        { term: "Minimum improvement δ", description: "Noise를 개선으로 오인하지 않게 요구하는 최소 차이입니다.", example: "δ=.01이면 .375는 .38−.01=.37보다 낮지 않으므로 개선으로 세지 않습니다." },
         { term: "Bad-event counter c", description: "충분한 개선이 없었던 연속 evaluation 횟수입니다.", example: ".39,.40이면 c=2입니다." },
         { term: "Patience P", description: "Stop 전에 허용하는 bad event 수입니다.", example: "P=2이고 c=3이면 stop합니다.", boundary: "Update 수가 아니라 evaluation 횟수입니다." },
       ]} />
@@ -60,7 +60,7 @@ export default function EarlyStoppingArticle() {
         { symbol: "m_j", name: "Current validation metric", description: "j번째 evaluation에서 관측한 loss입니다." },
         { symbol: "b_j", name: "Best metric", description: "j번째 event까지의 선택 기준 최적값입니다." },
         { symbol: "c_j", name: "Bad-event counter", description: "연속 비개선 evaluation 횟수입니다." },
-      ]} assumptions={["Loss를 minimize하는 방향입니다.", "Evaluation cadence와 metric definition이 고정됩니다."]} interpretation=".42,.38,.39,.40,.41에서 δ=0이면 eval2가 best이고 이후 counter가 1,2,3으로 증가합니다." />
+      ]} assumptions={["Loss를 minimize하는 방향입니다.", "Evaluation cadence와 metric definition이 고정됩니다.", "첫 evaluation은 비교할 이전 best가 없으므로 그 값을 그대로 best b로 두고 counter는 0에서 시작합니다(가정)."]} interpretation=".42,.38,.39,.40,.41에서 δ=0이면 eval2가 best이고 이후 counter가 1,2,3으로 증가합니다." />
     </section>
     <section id="stop-and-restore" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Stop event는 last를 버리고 best artifact를 복원하라는 신호입니다</h2>

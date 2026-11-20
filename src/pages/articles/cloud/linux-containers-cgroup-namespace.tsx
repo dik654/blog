@@ -194,7 +194,7 @@ export default function LinuxContainersCgroupNamespaceArticle() {
           <h2 className="mb-6 text-2xl font-bold">7. 사용률은 쓴 양을 세고, PSI는 자원 때문에 멈춘 시간을 셉니다</h2>
           <div className={prose}>
             <p>
-              3절의 12%와 6절의 느려짐은 사용률 지표에 나타나지 않습니다. 사용률은 쓴 양을 세고, 두 증상은 못 쓰고 기다린 시간이기 때문입니다. 그 시간을 세는 지표가 PSI(Pressure Stall Information)입니다. /proc/pressure/cpu·memory·io 세 파일이 시스템 전체를, cgroup 디렉터리의 cpu.pressure·memory.pressure·io.pressure가 그 cgroup을 보여 줍니다.
+              3절의 quota 멈춤과 6절의 느려짐은 사용률 지표에 나타나지 않습니다. 사용률은 쓴 양을 세고, 두 증상은 못 쓰고 기다린 시간이기 때문입니다. 그 시간을 세는 지표가 PSI(Pressure Stall Information)입니다. /proc/pressure/cpu·memory·io 세 파일이 시스템 전체를, cgroup 디렉터리의 cpu.pressure·memory.pressure·io.pressure가 그 cgroup을 보여 줍니다.
             </p>
           </div>
           <PsiSomeFullViz />
@@ -224,7 +224,7 @@ export default function LinuxContainersCgroupNamespaceArticle() {
               커널 안에서 프로세스는 struct nsproxy 하나를 가리키고 그 안에 uts, ipc, mnt, pid, net, time, cgroup 일곱 namespace의 포인터가 들어 있습니다(user namespace는 자격 증명 쪽에 따로 있습니다). 컨테이너의 첫 프로세스는 clone 때 CLONE_NEWNS·CLONE_NEWPID 같은 플래그로 이 포인터들 가운데 몇 개를 새 객체로 바꾼 프로세스입니다.</p>
             <p>바꾸지 않은 포인터는 호스트와 같은 객체를 가리킵니다. 그래서 Kubernetes Pod 안의 컨테이너들은 network·UTS·IPC를 공유하고(같은 sandbox에서 만든 포인터를 물려받음) mount·PID는 각자 새로 받습니다.</p>
             <p>
-              표의 마지막 열이 중요합니다. 어느 namespace도 CPU 시간이나 메모리 양을 격리하지 않습니다. 컨테이너 안에서 /proc/meminfo를 읽으면 노드 전체 메모리가 보이고, nproc은 노드의 CPU 수를 돌려줍니다.</p>
+              여덟 종류 목록에 없는 것이 중요합니다. 어느 namespace도 CPU 시간이나 메모리 양을 격리하지 않습니다. 컨테이너 안에서 /proc/meminfo를 읽으면 노드 전체 메모리가 보이고, nproc은 노드의 CPU 수를 돌려줍니다.</p>
             <p>한도는 cgroup 파일에만 있어 JVM이나 Go 런타임은 cgroup 파일을 직접 읽어 자기 한도를 알아냅니다. PID namespace의 PID 1 규칙과 좀비 수거는 <a href="/cs/cloud/linux-process-signals-pid1-fds#paper-pid-namespaces">프로세스·신호 글</a>에, network namespace에 veth를 꽂아 Pod IP를 주는 과정은 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#overview">패킷 경로 글</a>에 있습니다.</p>
           </div>
           {code("namespaces-man", "namespaces(7) 여덟 종류")}

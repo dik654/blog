@@ -65,7 +65,7 @@ export default function AntiPatterns() {
         </h3>
         <p>
           뜻이 같은 지시를 다른 문장으로 바꿔 썼을 뿐인데 완료율이나 형식 준수율이 달라집니다. 이것이 prompt sensitivity입니다. 예를 들어 “표를 만들어라”와 “표
-          형식으로 정리해라”가 같은 model에서 성공률 92%와 71%로 갈릴 수 있습니다.
+          형식으로 정리해라”가 같은 model에서 성공률 92%와 71%로 갈릴 수 있습니다. 이 두 값은 설명을 위한 예이고 측정값이 아닙니다.
         </p>
         <PhrasingRobustnessViz />
         <p>

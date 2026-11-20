@@ -47,7 +47,7 @@ export default function ModernGpuComparisonArticle(){return <article className="
       {symbol:"M_{usable}",name:"실사용 가능 capacity",description:"제품 표기 capacity에서 runtime·display/OS·reserved allocation을 고려한 값입니다."},
     ]} assumptions={["동일 model/runtime revision과 실제 allocator behavior를 사용합니다.", "State가 길이·batch에 비례하지 않거나 shared되는 경우에는 profile별 실제 allocation으로 바꿉니다."]} interpretation="Weight만 fit해도 C가 늘면 OOM이 날 수 있습니다. 이 부등식은 latency SLA나 memory bandwidth가 충분하다는 뜻은 아닙니다." />
     <MemoryBudgetFitViz />
-    <div className="rounded-xl border border-border bg-card p-5 text-sm leading-6"><strong>가상 계산을 따라가면:</strong> usable memory를 24 GB board는 23 GB, 32 GB board는 31 GB라고 가정합니다. Weight 22 GB, request state 0.5 GB×2개, workspace 1 GB, headroom 1 GB이면 필요량은 25 GB입니다. 첫 후보는 탈락하고 둘째 후보만 benchmark로 넘어갑니다. 이 usable 값은 설명용이며 실제 후보에서는 runtime 측정값으로 바꿉니다.</div>
+    <div className="rounded-xl border border-border bg-card p-5 text-sm leading-6"><strong>가상 계산을 따라가면:</strong> 도입부의 요청 여덟 개 사례와는 별개로, 동시 요청을 두 개로 줄인 예입니다. usable memory를 24 GB board는 23 GB, 32 GB board는 31 GB라고 가정합니다. Weight 22 GB, request state 0.5 GB×2개, workspace 1 GB, headroom 1 GB이면 필요량은 25 GB입니다. 첫 후보는 탈락하고 둘째 후보만 benchmark로 넘어갑니다. 이 usable 값은 설명용이며 실제 후보에서는 runtime 측정값으로 바꿉니다.</div>
     <FitAxesViz />
   </section>
 

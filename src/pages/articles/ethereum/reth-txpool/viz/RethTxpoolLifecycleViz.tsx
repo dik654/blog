@@ -26,7 +26,7 @@ export default function RethTxpoolLifecycleViz() {
       eyebrow="개념 경로 · Alice T7·T8과 Bob T4"
       title="한 거래가 검증에서 서브풀, builder와 reorg를 거칩니다"
       description="입구 검사만 떼어 보지 않고 같은 거래가 canonical head 변화에 따라 어떻게 다시 분류되는지 추적합니다."
-      note="Nonce 7, base fee 42→20.5 gwei와 fee 값은 설명용 가정입니다. 상태 전이와 구현 경계는 Reth v2.8.1 source에 귀속합니다."
+      note="Nonce 7, base fee가 42 gwei에서 40 gwei 이하로 내려가는 장면, fee 값은 설명용 가정입니다. 상태 전이와 구현 경계는 Reth v2.8.1 source에 귀속합니다."
       canvasClassName="px-2 py-2 sm:p-5"
     >
       <div

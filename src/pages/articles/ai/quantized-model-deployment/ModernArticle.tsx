@@ -210,7 +210,7 @@ export default function QuantizedModelDeploymentArticle() {
             "Offload가 있으면 host/device resident와 transfer를 분리합니다.",
             "Startup 이후 measured peak로 계산을 교정합니다.",
           ]}
-          interpretation="Weights 14→3.5 GB여도 metadata .3, activation+state 7, workspace+headroom 3 GB이면 peak는 24→13.8 GB입니다."
+          interpretation="(가정) 앞 절의 27B가 아니라 BF16 weight가 약 14 GB인 더 작은 설명용 model입니다. Weights 14→3.5 GB여도 metadata .3, activation+state 7, workspace+headroom 3 GB이면 peak는 24→13.8 GB입니다."
         />
       </section>
       <section id="runtime-release" className="scroll-mt-20">

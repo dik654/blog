@@ -90,7 +90,7 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <p>입력 버퍼를 만들고 새 값을 복사하는 일은 이 wrapper 밖의 책임입니다. 따라서 A 대신 B를 인수로 넘기면 알아서 A로 복사해 준다고 해석할 수 없습니다. 이 버전의 주소 비교는 <code>VLLM_LOGGING_LEVEL=DEBUG</code>일 때 수행됩니다. 검사하지 않는 모드가 주소 변경을 올바르게 만들어 주는 것은 아닙니다.</p></div>
 {code("wrapper-capture","vLLM · 첫 조건의 주소와 기록 저장")}{code("wrapper-replay","vLLM · DEBUG 주소 검사와 재생")}
 <WrapperBranchViz /><div className={prose}><p>원문 함수 몸체를 그대로 추출해 CPU에서 제어 분기를 실행했습니다. tensor와 graph는 대역 객체이며 GPU 호출은 하지 않았습니다. 같은 주소로 캡처 한 번과 재생 두 번을 요청하자 원래 함수 호출은 한 번, 재생 호출은 두 번이었습니다. 다른 주소는 DEBUG에서 거부됐고 검사를 끄면 재생 분기로 들어갔습니다. 이 관찰은 Python 분기만 확인하며 실제 장치의 메모리 안전성을 검증한 실행은 아닙니다.</p>
-<p>실행 모드가 NONE이거나 wrapper의 모드와 다르면 원래 함수를 호출합니다. 기록할 조건 자체는 다음의 선택기가 정합니다. wrapper가 임의의 모양을 보고 항상 새 graph를 만들어 주는 구조로 읽으면 안 됩니다.</p></div>
+<p>실행 모드가 NONE(graph를 쓰지 않음)이거나 wrapper의 모드와 다르면 원래 함수를 호출합니다. 기록할 조건 자체는 다음의 선택기가 정합니다. wrapper가 임의의 모양을 보고 항상 새 graph를 만들어 주는 구조로 읽으면 안 됩니다.</p></div>
 {code("wrapper-bypass","vLLM · 캡처 경로를 통과하지 않는 조건")}{code("observation","원문 분기 CPU 관찰 · 대역 객체와 실제 실행 범위")}</section>
 <section id="shape-padding" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">13. 다섯 토큰은 여덟 자리로 맞춥니다</h2><div className={prose}>
 <p>모든 입력 크기의 graph를 따로 준비하면 준비 시간과 메모리가 늘어납니다. (가정) 허용할 토큰 수를 [1, 2, 4, 8, 16, 24, 32]로 정해 보겠습니다. 5토큰은 8자리 graph를 사용하고 남는 3자리는 실제 요청에 속하지 않는 자리로 처리합니다. 이런 크기 맞추기를 padding이라고 부릅니다.</p>
@@ -103,6 +103,7 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 {code("capture-config","vLLM · 캡처 크기의 설정 문서")}{code("padding-map","vLLM · 각 토큰 수를 준비된 크기로 대응")}</section>
 <section id="implementation" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. 크기 외의 조건도 함께 맞춥니다</h2><div className={prose}>
 <p>선택기는 토큰 수와 함께 요청 수, 모든 요청이 같은 길이인지 등의 조건을 <code>BatchDescriptor</code>로 묶습니다. 같은 5토큰이라도 한 요청의 긴 입력인지 여러 요청의 한 토큰씩인지에 따라 전체를 재생할 조건이 달라집니다. 선택기의 키에는 추가 어댑터 사용 조건도 포함됩니다.</p>
+<p>키는 기록 방식별로 따로 준비됩니다. <code>FULL</code>은 전체를 하나로 묶은 graph, <code>PIECEWISE</code>는 호환되는 일부만 묶은 graph이고, <code>NONE</code>은 이 선택 범위의 graph를 쓰지 않는다는 뜻입니다.</p>
 </div><KeySelectViz /><div className={prose}><p>관찰 설정은 <code>FULL_AND_PIECEWISE</code>, 최대 요청 32개, 요청당 새 토큰 1개, 추가 어댑터 없음입니다. 입력과 생성이 섞일 수 있는 5토큰은 <code>PIECEWISE</code>의 토큰 8·요청 수 미지정 키를 찾았습니다. 길이가 균일한 생성 요청 5개는 <code>FULL</code>의 토큰 8·요청 8·균일함 키를 찾았습니다. 두 경로를 같은 5라는 숫자만으로 구분할 수 없습니다.</p></div>
 {code("descriptor","vLLM · 실행 조건을 담는 실제 구조")}{code("dispatch-keys","vLLM · 전체와 부분 그래프의 키 준비")}{code("dispatch","vLLM · 허용 모드와 키를 차례로 검사")}
 <div className={prose}><p>FULL을 제외하고 같은 균일 입력을 보내면 요청 수와 균일 조건을 완화한 PIECEWISE 키를 찾습니다. 33토큰은 최대 32보다 크므로 그 전에 NONE을 돌려줍니다. 최대 32 graph에 33을 넣는 경로는 아닙니다. 여기서 NONE은 이 선택 범위의 graph를 사용하지 않는다는 뜻입니다.</p>

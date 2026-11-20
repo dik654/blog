@@ -369,7 +369,7 @@ export default function WhoCountsAsUnemployedArticle() {
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             기준 문서 자신이 답을 하나 내놓습니다. 넷 중 둘 이상을
-            보라는 것입니다. 실업률만 내려가고 더 넓은 지표가 그대로이면 사람이
+            보라는 것입니다. 실업률만 내려가고 잠재 노동력까지 세는 LU3·LU4가 그대로이면 사람이
             세 문 중 하나에서 빠져나간 것이고 넷이 함께 내려갔으면 일자리가
             실제로 늘어난 것입니다. 한 숫자로는 가를 수 없고 두 숫자면 가를 수
             있습니다.

@@ -166,7 +166,7 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
               "Deployment가 관리하는 Pod를 직접 고치면 컨트롤러가 즉시 되돌린다"는 말은 반만 맞습니다. ReplicaSet 컨트롤러가 비교하는 것은 개수뿐입니다. 기존 Pod의 spec을 template과 대조하지 않으며, 다르다고 지우지도 않습니다.
             </p>
             <p>
-              그래서 Pod의 image를 <code>kubectl edit</code>로 바꾸면 그 Pod는 바뀐 채로 남아 있다가, 나중에 지워져 다시 만들어질 때 template대로 돌아옵니다. 애초에 Pod spec은 대부분 불변이라 바꿀 수 있는 필드도 image, activeDeadlineSeconds, terminationGracePeriodSeconds, tolerations 추가 정도입니다.
+              그래서 Pod의 image를 <code>kubectl edit</code>로 바꾸면 그 Pod는 바뀐 채로 남아 있다가, 나중에 지워져 다시 만들어질 때 template대로 돌아옵니다. 애초에 Pod spec은 대부분 불변이라 바꿀 수 있는 필드도 image, activeDeadlineSeconds, terminationGracePeriodSeconds, tolerations 추가, schedulingGates뿐입니다.
             </p>
           </div>
           <ClaimPodsViz />

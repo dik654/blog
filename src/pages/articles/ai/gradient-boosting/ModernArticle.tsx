@@ -46,7 +46,7 @@ export default function GradientBoostingArticle() {
           name="Decision tree as a piecewise-constant function"
           oneLine="Feature split로 input 공간을 겹치지 않는 terminal region으로 나누고, sample이 도착한 leaf의 상수 값을 출력하는 함수입니다."
           shape="x → split path → exactly one leaf Rⱼ → value wⱼ"
-          example="면적 60㎡ 이하는 3억, 초과는 6억을 출력하면 두 구간을 가진 regression tree입니다."
+          example="앞의 2.4를 낸 tree와는 별개의 예로, 면적 60㎡ 이하는 3억, 초과는 6억을 출력하면 두 구간을 가진 regression tree입니다."
           boundary="Leaf value는 probability가 아니라 additive logit일 수 있고 missing·category routing은 구현마다 다릅니다."
         />
         <LeafStepViz />

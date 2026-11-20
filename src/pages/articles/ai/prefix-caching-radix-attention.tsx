@@ -201,7 +201,7 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
           </p></div><ContentBoundary article="prefix-caching-radix-attention" /></section>
 
 <section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">23. 같은 입력에서 다음 경계를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            R1과 R2의 앞 6이 같지만 page 크기를 4로 바꾸면 hit은 어디서 끊기나요? 전체 8이 똑같은 경우 마지막 점수를 다시 계산한다면 왜 같은 설명만으로 부족할까요?
+            R1과 R2의 앞 6이 같지만 page 크기를 4로 바꾸면 hit은 어디서 끊기나요? (답: 9·10절) 전체 8이 똑같은 경우 마지막 점수를 다시 계산한다면 왜 같은 설명만으로 부족할까요?
             (답: 11절)
           </p><p>
             R3 경로 8이 보호되고 다른 두 끝 구간이 2씩 남았습니다. 5자리를 비워 달라는 요청에 실제 원문은 몇 자리를 돌려줄 수 있나요? (답: 13절)

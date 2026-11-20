@@ -167,7 +167,7 @@ export default function ModernArticle() {
       <section id="pruning" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">Prune</h2>
         <p>
-          <code>DeleteHistoricalDataBeforeSlot</code>은 cutoff 이전 slot/root 쌍을 먼저 읽고, 한 write transaction에서 선택한 block·finalized-root index·state·state summary·validator hashes를 지웁니다. 이어서 block/state slot index와 process-local cache를 정리합니다.
+          <code>DeleteHistoricalDataBeforeSlot</code>은 cutoff 이전 slot/root 쌍을 먼저 읽고, 한 write transaction에서 선택한 block·finalized-root index·state·state summary·validator hashes를 지웁니다. 같은 <code>db.Update</code> callback 안에서 이어서 block/state slot index와 process-local cache도 정리하므로, slot index 삭제는 앞의 삭제와 같은 transaction으로 commit됩니다.
         </p>
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3" aria-label="Historical pruning의 삭제 범위와 남은 경계">
           <div className="min-w-0 bg-background p-4"><span className="text-[9px] font-bold text-muted-foreground">선택</span><strong className="mt-2 block text-sm">slot/root pairs</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">별도 read 경로에서 batch를 정합니다.</p></div>

@@ -41,7 +41,9 @@ export default function ModernCudaPerfAnalysisArticle() {
         </p>
         <p>
           이 글은 설명용 요청 하나를 끝까지 사용합니다. Baseline은 100ms이고,
-          그중 kernel이 60ms입니다. Kernel은 120GFLOPs의 유효 일을 하며 L2에
+          그중 kernel이 60ms입니다. 나머지 40ms는 host 준비 10ms, CPU→GPU
+          복사(H2D) 10ms, 제출·대기 15ms, GPU→CPU 복사(D2H)와 출력 5ms로
+          나눠 둡니다. Kernel은 120GFLOPs의 유효 일을 하며 L2에
           200GB를 요청합니다. L2 hit가 20%라고 단순화하면 HBM으로 내려가는 양은
           160GB입니다. 이 숫자가 실제 장비의 측정값은 아니며, 계산과 판단 순서를
           한 줄로 잇기 위한 고정 fixture입니다.

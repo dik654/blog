@@ -55,6 +55,7 @@ export default function ModernArticle() {
           </table>
         </div>
         <p><LABEL>O</LABEL>Reth v2.8.1 tag가 가리키는 source commit은 <code>d763342fa185e4e90ee79dc65f6a5706168b0bcb</code>이며 Cargo.lock은 Alloy EIPs·Consensus v2.5.0을 고정합니다. 예전 합성 <code>reth-primitives-traits</code> snippet이나 moving main을 기준선으로 사용하지 않습니다.</p>
+        <p>이 글의 transaction 용어는 EIP-1559 정의를 따릅니다. Eligibility는 max fee(거래가 gas당 낼 수 있는 상한)가 현재 header base fee 이상이어서 포함될 수 있는지를 가르는 판정입니다. 남은 cap은 max fee − base fee이고, effective tip은 priority cap(tip으로 줄 수 있는 상한)과 남은 cap 중 작은 값입니다.</p>
       </section>
 
       <section id="ownership" className="space-y-5 scroll-mt-20">
@@ -87,7 +88,7 @@ export default function ModernArticle() {
         <BoundaryBranchViz />
         <ol className="not-prose grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-2">{[
           ["01 · Target 경계", "gas used를 target−1, target, target+1로 바꿔 감소·유지·최소 증가 분기와 exact wei를 확인합니다."],
-          ["02 · 변화폭 경계", "0 gas와 최대 2T gas, 작은 base fee 0·1·2와 큰 중간 곱에서 rounding·overflow·saturation을 대조합니다."],
+          ["02 · 변화폭 경계", "0 gas와 최대 E·T gas(Mainnet elasticity 2에서는 2T), 작은 base fee 0·1·2와 큰 중간 곱에서 rounding·overflow·saturation을 대조합니다."],
           ["03 · Fork 경계", "London 직전과 activation block, 그다음 block에서 initial base fee와 parent-derived 값이 정확히 전환되는지 봅니다."],
           ["04 · Chain parameter", "Mainnet 2·8과 별도 custom E·D, 잘못된 0 parameter 방어를 분리해 expected behavior를 기록합니다."],
           ["05 · Transaction cap", "Max fee가 base fee보다 작음·같음·큼, priority cap이 남은 cap보다 작거나 큰 경우를 재생합니다."],

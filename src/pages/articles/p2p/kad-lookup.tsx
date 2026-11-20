@@ -35,9 +35,9 @@ export default function KadLookupArticle() {
           <p>
             A는 <code>D=11</code>, <code>E=65</code>, 이미 아는
             <code>B=52</code>를 돌려줍니다. C는 나중에 <code>F=18</code>을, D는{" "}
-            <code>G=3</code>을 알려 줍니다. B는 timeout이고 E·F·G의 답에는 새
-            후보가 없다고 가정합니다. 이 응답 순서가 아래 다섯 장면의 고정
-            fixture입니다.
+            <code>G=3</code>을 알려 줍니다. B는 A의 답 다음, C의 답보다 먼저
+            timeout된다고 가정합니다. E·F·G의 답에는 새 후보가 없다고도
+            가정합니다. 이 응답 순서가 아래 다섯 장면의 고정 fixture입니다.
           </p>
         </div>
         <div className="not-prose my-8">
@@ -169,7 +169,7 @@ export default function KadLookupArticle() {
             },
             {
               code: "fill_open_slots_with_closest_unasked(result)",
-              note: "A가 끝나면 D를, C와 D가 끝나면 F와 G를 바로 묻습니다.",
+              note: "A가 끝나면 D를, B가 timeout되면 E를, C와 D가 끝나면 F와 G를 바로 묻습니다.",
             },
             {
               code: "stop if in_flight == 0 and no_unasked_candidate(result)",

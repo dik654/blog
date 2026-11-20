@@ -14,7 +14,7 @@ export default function PracticeViz() {
         <div className="grid gap-2 border-b border-border/60 bg-muted/25 px-4 py-3 text-xs font-semibold text-muted-foreground sm:grid-cols-[1.2fr_.7fr_.7fr_.7fr_.7fr] sm:gap-4"><span>Ensemble</span><span>OOF loss</span><span>Δ gain</span><span>p95</span><span>결정</span></div>
         {rows.map((row) => <div key={row[0]} className="grid gap-2 border-b border-border/50 px-4 py-4 last:border-b-0 sm:grid-cols-[1.2fr_.7fr_.7fr_.7fr_.7fr] sm:gap-4 sm:py-3">{row.map((cell,index)=><p key={`${index}-${cell}`} className={index===0?"text-sm font-semibold":"font-mono text-xs text-muted-foreground"}>{cell}</p>)}</div>)}
       </div>
-      <p className="mt-4 text-xs leading-5 text-muted-foreground">예시 숫자는 선택 규칙을 설명하기 위한 값입니다. 실제 채택에는 fold·seed·slice 반복성과 hard SLA를 함께 적용합니다.</p>
+      <p className="mt-4 text-xs leading-5 text-muted-foreground">예시 숫자는 선택 규칙을 설명하기 위한 값입니다. 이 표는 위 해석의 12ms hard SLA를 두지 않은 경우입니다(가정). 12ms SLA를 적용하면 A + C도 제외됩니다. 실제 채택에는 fold·seed·slice 반복성과 hard SLA를 함께 적용합니다.</p>
     </div>
   );
 }

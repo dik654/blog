@@ -5,7 +5,7 @@ import VizFrame from "@/components/viz/VizFrame";
 const SCENES = ["호출", "Seccomp", "gVisor", "Kata", "경계 비교"] as const;
 const NOTES = [
   "같은 작업을 비교하기 위해 생성 코드가 openat(AT_FDCWD, \"/workspace/report-91.md\", O_RDONLY)를 호출한다고 고정합니다.",
-  "Seccomp가 openat을 허용하면 호출은 공유 호스트 커널로 들어갑니다. 필터는 경로 문자열의 의미나 파일 권한을 대신 판정하지 않습니다.",
+  "Seccomp가 openat을 허용하면 호출은 공유 호스트 커널로 들어갑니다. 필터는 경로 문자열의 의미나 파일 권한을 대신 판정하지 않습니다. 그 판정은 mount(프로세스에 보이는 파일시스템 배치)·DAC(파일 소유자와 권한 비트)·LSM(커널 보안 모듈의 정책)이 따로 맡습니다.",
   "gVisor에서는 Sentry가 애플리케이션의 Linux 시스템 API를 구현합니다. 호스트 파일이 필요하면 구성에 따라 Gofer 같은 제한된 경로를 사용합니다.",
   "Kata에서는 워크로드의 openat을 VM 안 게스트 커널이 처리합니다. 호스트 파일과 장치는 VMM의 가상화 경계를 통과합니다.",
   "세 경로는 한 줄의 보안 등급이 아닙니다. 어느 커널이 처리하는지와 별개로 파일·통신·자격증명·자원 정책을 다시 확인해야 합니다.",

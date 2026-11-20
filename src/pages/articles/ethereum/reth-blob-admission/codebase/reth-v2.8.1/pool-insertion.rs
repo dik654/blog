@@ -47,6 +47,8 @@ let discarded = if results.iter().any(Result::is_ok) {
 };
 
 // [학습 주석] Pool write lock을 놓은 뒤 새 삽입 metadata의 sidecar를 BlobStore로 넘깁니다.
+// 본문 대응: discard_worst가 방금 넣은 T₀를 골랐어도 그 sidecar는 여기서 먼저 저장되고,
+// 이어지는 delete_discarded_blobs(upstream 716–718행)에서 지워진 뒤 결과가 DiscardedOnInsert로 바뀝니다.
 fn on_added_transaction(&self, meta: AddedTransactionMeta<T::Transaction>) {
     if let Some(sidecar) = meta.blob_sidecar {
         let hash = *meta.added.hash();

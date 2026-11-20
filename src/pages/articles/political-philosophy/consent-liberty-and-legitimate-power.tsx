@@ -40,7 +40,7 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
         <NumericPath title="찬성표와 부담받는 사람을 함께 셉니다" steps={[
           { label: "전체", value: "100가구", detail: "같은 규칙의 적용 대상" },
           { label: "찬성", value: "60가구", detail: "소음 감소를 기대" },
-          { label: "야간 생활 의존", value: "15가구", detail: "필요한 예외와 대안 검토" },
+          { label: "반대 40가구 중 야간 생활 의존", value: "15가구", detail: "필요한 예외와 대안 검토" },
         ]} />
       </LessonSection>
 

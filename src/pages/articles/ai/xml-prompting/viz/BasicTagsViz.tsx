@@ -2,7 +2,7 @@ import VizFrame from "@/components/viz/VizFrame";
 
 const syntax = [
   ["One root", "<request> … </request>", "문서 전체를 하나의 root로 감쌉니다."],
-  ["Balanced tags", "<task>요약</task>", "시작 태그와 종료 태그를 짝지습니다."],
+  ["Balanced tags", "<task>요약</task>", "시작 태그와 종료 태그를 짝짓습니다."],
   ["Valid nesting", "<docs><doc>…</doc></docs>", "나중에 연 태그부터 먼저 닫습니다."],
   ["Escaping", "A &amp; B · x &lt; 10", "데이터 속 <, >, &를 markup과 구분합니다."],
 ] as const;

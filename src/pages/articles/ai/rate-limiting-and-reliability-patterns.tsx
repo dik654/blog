@@ -82,7 +82,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
           </p>
         </div>
         <ExplainedFormula
-          question="N번째 재시도까지 얼마나 기다려야 backend를 덜 몰리게 하나요?"
+          question="이미 n번 재시도한 뒤, 다음 재시도까지 얼마나 기다려야 backend를 덜 몰리게 하나요?"
           idea="기본 대기 시간을 시도 횟수만큼 두 배씩 늘리되 상한을 두고, 그 값에 무작위 jitter를 곱해 여러 client의 재시도 시점을 흩어 놓습니다."
           formula={String.raw`t_n=\min(t_{\max},\,t_0\cdot 2^{n})\cdot U(0,1)`}
           annotatedFormula={String.raw`t_n=\underbrace{\min(t_{\max},\,\overbrace{t_0\cdot 2^{n}}^{\text{시도마다 두 배씩 증가}})}_{\text{상한으로 자른 exponential backoff}}\cdot\underbrace{U(0,1)}_{\text{jitter}}`}
@@ -93,7 +93,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
           ]}
           terms={[
             { symbol: "t_0", name: "기본 대기 시간", description: "첫 재시도 전에 기다리는 기준 시간입니다." },
-            { symbol: "n", name: "재시도 횟수", description: "지금까지 실패하고 다시 시도한 횟수입니다." },
+            { symbol: "n", name: "재시도 횟수", description: "지금까지 실패하고 다시 시도한 횟수입니다. 첫 재시도 전에는 n=0입니다." },
             { symbol: "t_{\\max}", name: "대기 시간 상한", description: "n이 커져도 더 늘지 않게 자르는 최대값입니다." },
             { symbol: "U(0,1)", name: "Jitter", description: "0과 1 사이에서 매번 새로 뽑는 무작위 값입니다." },
           ]}
@@ -101,7 +101,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             "재시도할 가치가 있는 idempotent 요청이라고 가정합니다. 이미 부수 효과가 발생했을 수 있는 요청은 별도 확인이 필요합니다.",
             "상한 t_max 없이 2^n만 계속 키우면 소수의 요청이 지나치게 오래 기다리게 되므로 실무에서는 상한을 둡니다.",
           ]}
-          interpretation="t0=200ms, n=3이면 jitter 전 대기 시간은 1.6초입니다. Jitter를 곱하면 같은 시각 실패한 여러 client의 재시도가 0~1.6초 사이로 흩어져 한 순간에 다시 몰리는 상황을 피합니다. 이 값은 이후 절의 circuit breaker가 재시도 자체를 막기 전까지만 유효합니다."
+          interpretation="t0=200ms, n=3(세 번 재시도한 뒤 네 번째 재시도 전)이면 jitter 전 대기 시간은 1.6초입니다. Jitter를 곱하면 같은 시각 실패한 여러 client의 재시도가 0~1.6초 사이로 흩어져 한 순간에 다시 몰리는 상황을 피합니다. 이 값은 이후 절의 circuit breaker가 재시도 자체를 막기 전까지만 유효합니다."
         />
         <TermBreakdown
           title="다시 보낸다는 것과 언제 다시 보낼지"

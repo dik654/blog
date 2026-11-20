@@ -35,7 +35,7 @@ export default function ModernArticle() {
             </div>
           ))}
         </div>
-        <p>Reth v2.8.1의 기본 <code>StorageSettings::base()</code>는 V2입니다. V1은 모든 자료를 MDBX에 두지만, V2는 위의 여섯 종류를 static files와 RocksDB로 옮깁니다. 이것은 “큰 자료는 파일, 작은 자료는 DB” 같은 크기 규칙이 아니라 쓰기 방식, 순차 범위, 과거 조회와 복구 책임을 나눈 결과입니다.</p>
+        <p>Reth v2.8.1의 기본 <code>StorageSettings::base()</code>는 V2입니다. V1은 모든 자료를 MDBX에 두지만, V2는 위 Static files 칸과 RocksDB 칸에 적힌 여섯 종류를 각각 그 저장소로 옮깁니다. 이것은 “큰 자료는 파일, 작은 자료는 DB” 같은 크기 규칙이 아니라 쓰기 방식, 순차 범위, 과거 조회와 복구 책임을 나눈 결과입니다.</p>
       </section>
 
       <section id="schema" className="space-y-5 scroll-mt-20">
