@@ -43,7 +43,7 @@ export const azureAz900Data: CloudCertificationArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. 시험 직전에는 가까운 개념을 한 축에서 비교합니다", bridge: "공식 범위의 갱신 방식까지 확인했습니다. 자주 헷갈리는 쌍을 선택 규칙으로 묶습니다.", paragraphs: [
       "리소스 그룹은 자원의 수명과 관리를 묶고, 구독은 청구·할당량·권한 범위의 큰 경계이며, 관리 그룹은 여러 구독에 거버넌스를 적용합니다. Availability Set과 Availability Zone도 같은 말이 아닙니다.",
-      "Public Endpoint는 인터넷 주소에서 서비스에 닿게 합니다. Private Endpoint는 VNet 안에 사설 주소를 만듭니다. VPN Gateway는 암호화된 터널, ExpressRoute는 통신사 기반 사설 연결입니다.",
+      "Public Endpoint는 인터넷 주소에서 서비스에 닿게 합니다. Private Endpoint는 VNet 안에 사설 주소를 만듭니다. VPN Gateway는 공용 인터넷 위의 암호화된 터널, ExpressRoute는 공용 인터넷을 거치지 않는 통신사 기반 사설 연결입니다.",
     ] },
     { id: "limits", level: "7", title: "10. AZ-900 합격 뒤에는 AZ-104 실습으로 넘어갑니다", bridge: "기초 비교 규칙을 닫았습니다. 취업용 증거로 바꾸는 다음 단계를 정합니다.", paragraphs: [
       "AZ-900은 설명 능력을 확인하는 기초 시험이므로 포털에서 한 번 눌러 본 경험만으로 운영 역량을 증명하기 어렵습니다. 가상망·사설 서브넷·관리 ID·저장소·경보를 Bicep이나 CLI로 만들고 삭제·복구를 기록합니다.",
@@ -130,7 +130,7 @@ export const azureAz104Data: CloudCertificationArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. 시험 직전에는 설정 쌍을 실제 결과로 비교합니다", bridge: "공식 과제가 요구하는 깊이를 확인했습니다. 오답이 많은 설정 쌍을 결과로 묶습니다.", paragraphs: [
       "SAS는 저장소 데이터에 제한된 위임 접근을 주고, 액세스 키는 저장소 계정 전체에 강한 비밀입니다. Service Endpoint는 서비스에 가는 경로를 Azure 백본으로 최적화하면서 공개 끝점을 쓰고, Private Endpoint는 VNet 안의 사설 IP를 만듭니다.",
-      "Availability Set은 한 데이터센터 안의 장애·업데이트 도메인 분산이고 Availability Zone은 리전 안의 물리적으로 분리된 위치입니다. Azure Backup은 복원 사본, Site Recovery는 워크로드 복제와 장애 조치에 무게가 있습니다.",
+      "Availability Set은 한 데이터센터 안의 장애 도메인(전원과 네트워크 스위치를 함께 쓰는 하드웨어 묶음)과 업데이트 도메인(계획된 유지 관리 때 함께 재시작되는 묶음)에 VM을 나누는 분산이고 Availability Zone은 리전 안의 물리적으로 분리된 위치입니다. Azure Backup은 복원 사본, Site Recovery는 워크로드 복제와 장애 조치에 무게가 있습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 4주 압축 학습은 구축·파괴·복구를 한 묶음으로 돌립니다", bridge: "비교 규칙까지 잡았습니다. 시험 직전 반복할 최소 실습을 정합니다.", paragraphs: [
       "1주에는 신원·구독·Policy와 저장소, 2주에는 VM·App Service·Bicep, 3주에는 VNet·NSG·사설 끝점·DNS, 4주에는 Monitor·Backup·Site Recovery와 모의 문제를 돌립니다. 매주 일부 설정을 끊고 복구합니다.",

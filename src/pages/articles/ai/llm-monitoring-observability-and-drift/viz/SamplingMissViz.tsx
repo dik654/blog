@@ -36,7 +36,7 @@ export default function SamplingMissViz() {
     <SceneShell
       eyebrow="드문 실패 놓치기"
       title="요청 2,000건에서 드문 실패와 5% 표본은 대부분 비껴갑니다"
-      description="실패율 p 0.1%, sampling rate r 5%, 요청 N 2,000건은 본문 아래 식의 예이고, 각 요청의 실패와 표본 선택이 독립이라고 가정합니다."
+      description="실패율 p 0.1%, sampling rate r 5%, 요청 N 2,000건은 본문 놓침 확률 식의 예이고, 각 요청의 실패와 표본 선택이 독립이라고 가정합니다."
       ariaLabel="2,000개 요청 칸에서 실패 칸과 표본 칸이 겹칠 확률, 그리고 sampling rate에 따른 놓침 확률 곡선"
       scenes={SCENES}
       render={(active) =>

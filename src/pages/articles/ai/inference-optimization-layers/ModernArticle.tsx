@@ -162,7 +162,7 @@ interpretation="원문 ROI 식의 퍼센트 표기에는 마지막에 100을 곱
 <CitationBlock source="FinOps Foundation · Unit Economics, Value for AI Initiatives" citeKey={5} href="https://www.finops.org/framework/capabilities/unit-economics/">2026-10-05 원문 식과 자원·업무 단위의 구별을 확인했습니다. 예시 금액은 원문의 성능·가격 주장이 아니라 이 글의 가정입니다.</CitationBlock></section>
 <section id="regression-gate" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 허용한 악화와 측정 불확실성을 따로 봅니다</h2><div className={prose}>
 <p>변경 뒤 성능이 나빠지는 일을 regression이라고 부릅니다. 허용할 악화의 크기는 제품의 요구로 정하고 실제 차이를 얼마나 정확히 알 수 있는지는 반복 측정으로 판단합니다. 두 기준을 ‘잡음의 두 배’라는 한 숫자로 합칠 보편 규칙은 없습니다.</p>
-<p>(가정) 다섯 조건을 짝지어 같은 요청 집합의 평균 완료시간을 비교했습니다. 기준은 98·100·102·99·101 ms, 변경 후는 100·103·104·102·103 ms입니다. 각 짝에서 변경 후−기준을 빼면 2·3·2·3·2 ms이며 평균 차이는 2.4 ms입니다. 이 다섯 값은 개별 요청의 꼬리 지연 표본이라고 바꾸어 부르지 않습니다.</p>
+<p>(가정) 다섯 조건을 짝지어 같은 요청 집합의 평균 완료시간을 비교했습니다. 기준은 98·100·102·99·101 ms, 변경 후는 100·103·104·102·103 ms입니다. 각 짝에서 변경 후−기준을 빼면 2·3·2·3·2 ms이며 평균 차이는 2.4 ms입니다. 이 다섯 값은 개별 요청의 꼬리 지연(p99처럼 가장 느린 소수 요청이 겪는 지연) 표본이라고 바꾸어 부르지 않습니다.</p>
 </div><RegressionIntervalViz /><div className={prose}>
 <p>NIST e-Handbook 7.3.1.2의 paired observations 식은 짝차이의 평균에서 t값×차이 표준편차/√N만큼 더하고 뺍니다. 서로 독립인 정규 분포의 짝차이를 가정하고 N=5를 넣으면 표본분산 0.3, 표준오차√0.06≈0.24495 ms입니다. 자유도 4의 95% 양측 구간은 약 1.72–3.08 ms입니다.</p>
 </div><ExplainedFormula question="평균 2.4 ms 악화라는 추정에는 어느 범위의 불확실성이 있나요?" idea="같은 조건 안의 차이를 먼저 구한 뒤 그 차이들의 퍼짐으로 평균 차이의 불확실성을 계산합니다."

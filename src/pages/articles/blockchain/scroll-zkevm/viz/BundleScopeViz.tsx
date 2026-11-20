@@ -29,7 +29,7 @@ export default function BundleScopeViz() {
     <SceneShell
       eyebrow="bundle 범위"
       title="bundle은 첫 batch의 시작과 마지막 batch의 끝을 묶습니다"
-      description="줄 하나가 batch 하나이고, 작은 칸은 그 batch에 묶인 chunk proof와 DA blob(L1에 올리는 transaction data 묶음)입니다. 맨 위 상자가 L1에서 한 번에 최종화하는 단위인 bundle입니다."
+      description="줄 하나가 batch 하나이고, 작은 칸은 그 batch에 묶인 chunk proof와 DA blob입니다. 맨 위 상자가 L1에서 한 번에 최종화하는 단위인 bundle입니다."
       note="batch 3개와 batch당 chunk 2개는 설명용 가정입니다(가정). 실제 개수는 이 그림이 나타내지 않습니다."
       ariaLabel="chunk에서 batch, batch에서 bundle로 집계하는 계층과 BundleInfo가 첫·마지막 batch에서 가져오는 필드"
       scenes={SCENES}

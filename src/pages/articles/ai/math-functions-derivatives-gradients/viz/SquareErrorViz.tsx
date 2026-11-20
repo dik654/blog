@@ -21,12 +21,14 @@ function Square({ dx }: { dx: number }) {
   const d = dx * K;
   const cx = X0 + SIDE + d / 2;
   const cy = Y0 + SIDE + d / 2;
+  // 띠·모서리 폭이 선 두께보다 얇으면 테두리를 빼서 실제 비율보다 굵게 보이지 않게 한다.
+  const edge = d < 10 ? 0 : 1;
   return (
     <svg viewBox="0 0 272 236" className="mx-auto h-auto w-full max-w-[272px]" role="img" aria-label={`한 변 3에 ${dx}를 더한 정사각형의 넓이 분해`}>
       <rect x={X0} y={Y0} width={SIDE} height={SIDE} fill="#94a3b8" fillOpacity="0.28" stroke="#64748b" strokeWidth="1" />
-      <rect x={X0 + SIDE} y={Y0} width={d} height={SIDE} fill="#2563eb" fillOpacity="0.45" stroke="#2563eb" strokeWidth="1" />
-      <rect x={X0} y={Y0 + SIDE} width={SIDE} height={d} fill="#2563eb" fillOpacity="0.45" stroke="#2563eb" strokeWidth="1" />
-      <rect x={X0 + SIDE} y={Y0 + SIDE} width={d} height={d} fill="#d97706" stroke="#d97706" strokeWidth="1" />
+      <rect x={X0 + SIDE} y={Y0} width={d} height={SIDE} fill="#2563eb" fillOpacity="0.45" stroke="#2563eb" strokeWidth={edge} />
+      <rect x={X0} y={Y0 + SIDE} width={SIDE} height={d} fill="#2563eb" fillOpacity="0.45" stroke="#2563eb" strokeWidth={edge} />
+      <rect x={X0 + SIDE} y={Y0 + SIDE} width={d} height={d} fill="#d97706" stroke="#d97706" strokeWidth={edge} />
       {dx < 0.5 && <circle cx={cx} cy={cy} r="9" fill="none" stroke="#d97706" strokeWidth="1.25" />}
       <text x={X0 + SIDE / 2} y={Y0 + SIDE / 2 + 5} textAnchor="middle" fontSize="16" fill="currentColor">3×3 = 9</text>
       <text x={X0 + SIDE / 2} y={Y0 - 5} textAnchor="middle" fontSize="14" fill="currentColor">3</text>

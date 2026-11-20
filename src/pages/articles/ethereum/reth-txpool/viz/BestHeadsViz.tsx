@@ -29,7 +29,7 @@ const SCENES = [
   {
     label: "priority가 높은 head를 내보냄",
     summary: "T7 tip > T4 tip (가정)",
-    note: "기본 CoinbaseTipOrdering은 현재 base fee를 기준으로 계산한 effective tip(블록 생산자에게 돌아가는 거래당 몫)으로 비교합니다. 여기서는 T7이 더 높다고 가정해 T7을 먼저 내보냅니다.",
+    note: "기본 CoinbaseTipOrdering은 현재 base fee를 기준으로 계산한 effective tip(블록 생산자에게 돌아가는 가스당 몫)으로 비교합니다. 여기서는 T7이 더 높다고 가정해 T7을 먼저 내보냅니다.",
   },
   {
     label: "T8을 해제",

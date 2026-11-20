@@ -154,8 +154,9 @@ export default function ClassicDistillationArticle() {
             Hinton et al.(2015)
           </a>{" "}
           원 논문의 MNIST 실험이 보여줍니다. Dropout을 쓴 큰 net은 test error
-          67개, 정규화 없는 작은 net은 146개를 냈습니다. 같은 작은 net을 정답
-          label 없이 T=20 soft target만으로 학습하자 오류가 74개로 줄었습니다.
+          67개, 정규화 없는 작은 net은 146개를 냈습니다. 같은 작은 net에 다른
+          정규화 없이 T=20 soft target을 맞추는 과제만 정답 label 학습에 더하자
+          오류가 74개로 줄었습니다.
         </p>
         <p>
           Baseline 146개보다 훨씬 적은 74개까지 내려간 셈이라, class 순서만

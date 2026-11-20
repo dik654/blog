@@ -129,7 +129,7 @@ export default function HyperConnectionsResidualStreamsArticle() {
             write 단계가 B 로 다시 n개 stream 에 나눠 씁니다. 그 사이 residual mixing 이 기존 stream 끼리를 Ar 로 섞습니다.
           </p>
           <p>
-            Residual mixing 은 이 세 단계 중 유일하게 층 T 를 거치지 않는 부분입니다. Stream 이 서로 정보를 교환하는 것은 오직 이 Ar 행렬을 통해서이고 다음
+            Residual mixing 은 이 세 단계 중 유일하게 층 T 를 거치지 않는 부분입니다. Read 가 모든 stream 을 합쳐 write 가 다시 모든 stream 에 쓰므로 T 를 거치는 경로로도 정보가 오가지만, T 를 건너뛰고 stream 끼리 직접 정보를 교환하는 길은 이 Ar 행렬뿐이고 다음
             절에서 보듯 이 행렬에 제약이 없으면 층을 쌓을수록 문제가 생깁니다.
           </p>
         </div>

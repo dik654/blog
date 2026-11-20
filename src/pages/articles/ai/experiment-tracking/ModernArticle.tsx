@@ -179,7 +179,7 @@ registered = quality_v2.register(experiment_id=experiment_id)
 traces = mlflow.search_traces(run_id=generation_run_id)
 result = mlflow.genai.evaluate(data=traces, scorers=[registered])`}</code></pre>
   <div className="prose prose-neutral max-w-none dark:prose-invert">
-    <p>위 코드는 현재 공식 API의 역할을 드러내는 최소 예입니다. Regression gate에는 “latest”를 암묵적으로 읽지 않고 scorer version을 고정합니다. 새 judge가 더 낫다고 판단되면 사람 평가와의 일치, 보호 slice, 비용과 parsing failure를 비교한 뒤 기준선을 새로 만듭니다.</p>
+    <p>위 코드는 현재 공식 API의 역할을 드러내는 최소 예입니다. Regression gate에는 “latest”를 암묵적으로 읽지 않고 scorer version을 고정합니다. 새 judge가 더 낫다고 판단되면 사람 평가와의 일치, 보호 slice(점수가 떨어지면 안 되는 중요한 질문 부분집합)의 점수, 비용과 parsing failure를 비교한 뒤 기준선을 새로 만듭니다.</p>
     <p>코드 기반 scorer는 저장된 trace를 빠르게 다시 평가하는 데 유용하지만, 현재 공식 문서에서 자동 production 평가와 같은 범위는 아닙니다. Offline benchmark의 통과율을 실시간 품질·latency·안전 monitoring의 대체물로 쓰지 않습니다.</p>
   </div>
   <CitationBlock source="MLflow · Registering and Versioning Scorers" citeKey={3} href="https://mlflow.org/docs/latest/genai/eval-monitor/scorers/versioning/">현재 문서는 scorer 이름 아래 version history를 만들고, 재현 가능한 regression test에는 특정 version을 고정하도록 안내합니다. 지원 scorer 종류도 서로 다르므로 prompt registry와 scorer registry의 역할을 구분합니다.</CitationBlock>

@@ -88,7 +88,9 @@ export default function PeerQueuePressureViz() {
         const count = queueAt(scene.mode, scene.tick);
         const inRate = scene.mode === "balanced" ? 2 : SLOW_IN;
         const outRate = scene.mode === "balanced" ? 2 : SLOW_OUT;
-        const over = count > CAP;
+        // 제한이 없는 장면에는 상한 점선·초과 표시를 그리지 않는다.
+        const showCap = scene.mode !== "unbounded";
+        const over = showCap && count > CAP;
         const ticks = Array.from({ length: scene.tick + 1 }, (_, tick) => tick);
         const path = ticks.map((tick, index) => `${index === 0 ? "M" : "L"}${tx(tick)},${qy(queueAt(scene.mode, tick))}`).join(" ");
         return (
@@ -98,7 +100,7 @@ export default function PeerQueuePressureViz() {
             <text x={W / 2} y={22} fontSize={11} fill="#64748b" textAnchor="middle">{`${scene.tick}틱 · ${count}개`}</text>
             {Array.from({ length: CELLS }, (_, index) => {
               const filled = index < count;
-              const beyond = index >= CAP;
+              const beyond = showCap && index >= CAP;
               return (
                 <rect
                   key={index}
@@ -114,8 +116,12 @@ export default function PeerQueuePressureViz() {
                 />
               );
             })}
-            <line x1={CAP_X} x2={CAP_X} y1={CELL_Y - 8} y2={CELL_Y + CELL_H + 8} stroke="#d97706" strokeWidth={1.25} strokeDasharray="3 3" />
-            <text x={CAP_X} y={CELL_Y + CELL_H + 22} fontSize={10} fill="#b45309" textAnchor="middle">상한(가정)</text>
+            {showCap && (
+              <>
+                <line x1={CAP_X} x2={CAP_X} y1={CELL_Y - 8} y2={CELL_Y + CELL_H + 8} stroke="#d97706" strokeWidth={1.25} strokeDasharray="3 3" />
+                <text x={CAP_X} y={CELL_Y + CELL_H + 22} fontSize={10} fill="#b45309" textAnchor="middle">상한(가정)</text>
+              </>
+            )}
             {over && (
               <text x={cellX(CELLS - 1) + CELL_W} y={CELL_Y + CELL_H + 22} fontSize={10} fontWeight={700} fill="#dc2626" textAnchor="end">상한 초과</text>
             )}
@@ -125,7 +131,7 @@ export default function PeerQueuePressureViz() {
 
             <line x1={CH_LEFT} x2={CH_RIGHT} y1={CH_BOTTOM} y2={CH_BOTTOM} stroke="#94a3b8" strokeWidth={1} />
             <line x1={CH_LEFT} x2={CH_LEFT} y1={CH_TOP} y2={CH_BOTTOM} stroke="#94a3b8" strokeWidth={1} />
-            <line x1={CH_LEFT} x2={CH_RIGHT} y1={qy(CAP)} y2={qy(CAP)} stroke="#d97706" strokeWidth={1} strokeDasharray="3 3" />
+            {showCap && <line x1={CH_LEFT} x2={CH_RIGHT} y1={qy(CAP)} y2={qy(CAP)} stroke="#d97706" strokeWidth={1} strokeDasharray="3 3" />}
             {[0, CAP, CELLS].map((value) => (
               <text key={value} x={CH_LEFT - 6} y={qy(value) + 4} fontSize={10} fill="#64748b" textAnchor="end">{value}</text>
             ))}
@@ -137,7 +143,7 @@ export default function PeerQueuePressureViz() {
             <path d={path} fill="none" stroke={over ? "#dc2626" : "#2563eb"} strokeWidth={1.25} />
             {ticks.map((tick) => {
               const value = queueAt(scene.mode, tick);
-              return <circle key={tick} cx={tx(tick)} cy={qy(value)} r={3} fill={value > CAP ? "#dc2626" : "#2563eb"} />;
+              return <circle key={tick} cx={tx(tick)} cy={qy(value)} r={3} fill={showCap && value > CAP ? "#dc2626" : "#2563eb"} />;
             })}
           </svg>
         );

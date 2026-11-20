@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #names(6절)와 #comparison(9절), #picture(4절).
  * AWS: CLF-C02 입구 → SAA-C03(설계)·DVA-C02(개발, 2026-11-30까지, 그 뒤 DVA-C03)·SOA-C03(운영).
- * Azure: AZ-900 입구 → AZ-104(관리) / AI-200(AI 백엔드 개발) / AZ-104 자격 + AZ-305 = Solutions Architect Expert / AZ-400(DevOps).
+ * Azure: AZ-900 입구 → AZ-104(관리) / AI-200(AI 백엔드 개발) / AZ-104 자격 + AZ-305 = Solutions Architect Expert / AZ-400(DevOps, Expert 자격은 Associate 선행).
  * 9절: AZ-204는 2026년 10월 기준 폐지, AZ-305만으로는 Expert가 아님. 4절: 경험이 있으면 관리·설계 시험으로 바로 갈 수 있음.
  */
 type Focus = "aws" | "azure" | "expert" | "dates";
@@ -25,7 +25,7 @@ const SCENES = [
     label: "설계 Expert에는 시험 두 개가 필요합니다",
     summary: "AZ-104 자격 + AZ-305",
     focus: "expert",
-    note: "AZ-305에 합격해도 그것만으로 Solutions Architect Expert가 되지 않습니다. 공식 자격 페이지는 Azure Administrator Associate(AZ-104로 얻는 자격)를 선행 자격, 즉 먼저 갖고 있어야 하는 자격으로 요구합니다. 시험 코드와 자격 취득 조건을 따로 확인해야 하는 이유입니다.",
+    note: "AZ-305에 합격해도 그것만으로 Solutions Architect Expert가 되지 않습니다. 공식 자격 페이지는 Azure Administrator Associate(AZ-104로 얻는 자격)를 선행 자격, 즉 먼저 갖고 있어야 하는 자격으로 요구합니다. DevOps Engineer Expert도 AZ-400만으로는 나오지 않고 Associate 자격(현재는 AZ-104가 현실적)이 선행 자격입니다. 시험 코드와 자격 취득 조건을 따로 확인해야 하는 이유입니다.",
   },
   {
     label: "날짜에 따라 바뀌는 칸",
@@ -137,7 +137,13 @@ export default function ExamPathViz() {
                   tone={expert ? "ok" : "base"}
                   extra={expert ? "AZ-305만으론 안 됨" : undefined}
                 />
-                <Exam role="DevOps" code="AZ-400" lit={azure} />
+                <Exam
+                  role="DevOps"
+                  code="AZ-400"
+                  lit={azure || expert}
+                  tone={expert ? "ok" : "base"}
+                  extra={expert ? "Expert엔 선행 자격 필요" : undefined}
+                />
               </div>
               <div
                 className={`mt-2 rounded-lg border border-dashed px-2 py-1 text-center text-[11px] leading-4 transition-opacity duration-300 motion-reduce:transition-none ${dates ? "border-amber-600 opacity-100" : "border-border/50 opacity-40"}`}

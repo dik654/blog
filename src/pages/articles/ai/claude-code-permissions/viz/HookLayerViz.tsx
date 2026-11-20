@@ -123,7 +123,7 @@ export default function HookLayerViz() {
       eyebrow="hook와 sandbox"
       title="hook allow는 rule을 풀지 못하고, permission은 격리 전체가 아닙니다"
       description="앞의 세 장면은 같은 call에서 hook 출력과 rule 결과가 만날 때 무엇이 남는지, 마지막 장면은 permission 판정 밖에 따로 두는 층을 보여 줍니다."
-      note="제품 version과 조직 설정에 따라 mod가 뒤에서 일부 결정을 바꿀 수 있어, managed policy와 실제 runtime 구성을 함께 고정합니다."
+      note="제품 version과 조직 설정에 따라 mod(tool call에 hook을 거는 등 Claude Code 동작을 바꾸는 확장)가 뒤에서 일부 결정을 바꿀 수 있어, managed policy와 실제 runtime 구성을 함께 고정합니다."
       ariaLabel="hook 출력과 permission rule이 만나는 세 경우와 permission 밖의 격리 층"
       scenes={SCENES}
       render={(active) => (

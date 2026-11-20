@@ -52,7 +52,7 @@ export default function SubnetGridViz() {
   return (
     <SceneShell
       eyebrow="Subnet 계산 · committee 2"
-      title="Epoch 안 committee에 차례 번호를 매기고, 64를 넘으면 subnet 번호가 처음으로 돌아갑니다"
+      title="Epoch 안 committee에 차례 번호를 매기고, 64에 이르면 subnet 번호가 처음으로 돌아갑니다"
       description="칸 하나가 epoch 11(slot 352~383)의 committee 하나이고, 4칸 묶음이 한 slot입니다. 옅은 칸은 지나간 committee, 진한 칸이 지금 committee 2입니다. u는 epoch 첫 칸부터 0으로 센 차례 번호이고, 64로 나눈 나머지가 subnet 번호입니다."
       note="글의 예시처럼 slot당 committee 4개(c=4), epoch당 32 slot, subnet 64개를 가정합니다. 활성 fork가 mapping을 바꾸면 그 함수를 따릅니다."
       ariaLabel="Epoch 11의 committee 128개를 차례로 세어 64개 subnet에 나누는 과정"

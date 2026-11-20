@@ -62,7 +62,7 @@ export default function RepriceVsLinearViz() {
               <line x1={14} x2={34} y1={H - 12} y2={H - 12} stroke="#64748b" strokeWidth={1.25} strokeDasharray="5 4" />
               <text x={38} y={H - 8} fill="#475569">민감도 직선 근사</text>
               <line x1={170} x2={190} y1={H - 12} y2={H - 12} stroke={scene.option ? "#b45309" : "#2563eb"} strokeWidth={1.25} />
-              <text x={194} y={H - 8} fill="#475569">{scene.option ? "옵션 실제 가치(가정 모양)" : "선형 채권 실제 가치"}</text>
+              <text x={194} y={H - 8} fill="#475569">{scene.option ? "매수 옵션 가치(가정 모양)" : "선형 채권 실제 가치"}</text>
             </g>
           </svg>
         );

@@ -2,15 +2,15 @@
   "description": "Known legacy prose-compression inventory keyed by route and source fingerprint. New or changed findings must be rewritten or explicitly re-reviewed; an entry is not a claim that prose quality is complete.",
   "findings": {
     "ai/claw-bash": {
-      "fingerprint": "f26431eac11ffad6",
-      "score": 138
+      "fingerprint": "1bd835e7af9be9a7",
+      "score": 140
     },
     "ai/claw-tool-system": {
       "fingerprint": "a28ba96018ebcfcc",
       "score": 81
     },
     "ai/claw-session": {
-      "fingerprint": "2d3a3ad0b5121d0f",
+      "fingerprint": "7dbd8e81d87c320d",
       "score": 72
     },
     "ai/claw-overview": {
@@ -22,7 +22,7 @@
       "score": 43
     },
     "ai/claw-compaction": {
-      "fingerprint": "e9c01b9e3be0ca1d",
+      "fingerprint": "9a9d41c7988048d3",
       "score": 42
     },
     "ai/claw-permissions": {
@@ -134,7 +134,7 @@
       "score": 30
     },
     "ai/llm-serving-ops": {
-      "fingerprint": "64d9823dc07f6785",
+      "fingerprint": "d63bef3eb5de0d9e",
       "score": 28
     },
     "blockchain/cometbft-consensus": {
@@ -658,8 +658,8 @@
       "score": 10
     },
     "blockchain/helios-types": {
-      "fingerprint": "002fd0cd737cc4dc",
-      "score": 10
+      "fingerprint": "8d1e50fd39116107",
+      "score": 6
     },
     "blockchain/prysm-state-cache": {
       "fingerprint": "659b9a78e32690a8",
@@ -934,11 +934,11 @@
       "score": 6
     },
     "p2p/iroh": {
-      "fingerprint": "132e49a38861bbd5",
+      "fingerprint": "d57738f028bd0397",
       "score": 6
     },
     "isms-aml/isms-backup-recovery": {
-      "fingerprint": "71ff355388d1ab09",
+      "fingerprint": "37bfe6b96cfc99a9",
       "score": 6
     },
     "ai/llm-as-a-judge": {
@@ -959,6 +959,10 @@
     },
     "infrastructure/transport-access-and-land-value": {
       "fingerprint": "1ee36a6b12a7499d",
+      "score": 6
+    },
+    "blockchain/reth-txpool": {
+      "fingerprint": "956d7de83c652640",
       "score": 6
     }
   }

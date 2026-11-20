@@ -12,7 +12,7 @@ const ACTUAL_STEPS = [
   [
     "2 · 최근 구간 계산",
     "preserve_recent_messages",
-    "기본 snapshot은 최근 4개 message를 남기지만, ToolResult부터 시작하면 대응하는 ToolUse가 함께 남도록 경계를 뒤로 옮깁니다.",
+    "기본 snapshot은 최근 4개 message를 남기지만, ToolResult부터 시작하면 대응하는 ToolUse가 함께 남도록 경계를 앞당깁니다.",
   ],
   [
     "3 · 규칙 기반 추출",
@@ -144,8 +144,8 @@ export default function CompactPipeline() {
           <code>ToolResult</code>일 수 있습니다. 그러면 provider는 앞선 assistant
           <code>ToolUse</code>가 없는 orphan result를 받아 요청을 거부합니다. Pinned
           함수는 첫 preserved message가 ToolResult인지 보고, 바로 앞에 ToolUse가
-          있으면 경계를 한 칸 뒤로 물려 두 message를 함께 남깁니다. 이미 orphan인
-          배열이라면 더 뒤로 걸어가 안전한 시작점을 찾습니다.
+          있으면 경계를 한 칸 앞당겨 두 message를 함께 남깁니다. 이미 orphan인
+          배열이라면 더 앞쪽으로 거슬러 올라가 안전한 시작점을 찾습니다.
         </p>
         <p>
           다만 이 guard는 형식적 adjacency를 지키는 장치입니다. tool ID가 정말 일치하는지, edit result에 operation digest가 있는지, 여러 tool
@@ -158,7 +158,7 @@ export default function CompactPipeline() {
 [tool]      ToolResult(id="edit-7", output="written")
 [assistant] "이제 login test를 실행하겠습니다"
 
-guard 결과: boundary를 한 칸 뒤로 물려 ToolUse부터 보존`}
+guard 결과: boundary를 한 칸 앞당겨 ToolUse부터 보존`}
         </pre>
         <p>
           현재 guard가 보는 범위는 preserved 첫 message의 첫 block과 바로 앞

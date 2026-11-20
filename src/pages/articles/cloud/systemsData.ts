@@ -208,7 +208,7 @@ export const storageDatabaseSelectionData: CloudCertificationArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. Azure에서도 저장 종류와 중복 옵션을 따로 고릅니다", bridge: "AWS 선택을 역할로 분해했습니다. Azure에서 같은 요구와 복구 목표를 맞춥니다.", paragraphs: [
       "사진은 Blob Storage, VM 디스크는 Managed Disks, 공유 경로는 Azure Files가 후보입니다. 주문 관계와 거래에는 Azure SQL Database, 전 세계 분산 문서와 키 접근에는 Cosmos DB의 분할·일관성·처리량 모델을 검토합니다.",
-      "Azure Storage의 중복 옵션은 같은 데이터센터, 가용 영역, 다른 지역 중 어느 장애를 견딜지에 따라 다릅니다. 복제 범위가 넓을수록 무조건 좋은 것이 아니라 비용과 쓰기·전환 조건을 함께 봅니다.",
+      "Azure Storage의 중복 옵션은 같은 데이터센터, 가용 영역(한 지역 안에서 전원·냉각·네트워크를 따로 쓰는 데이터센터 묶음), 다른 지역 중 어느 장애를 견딜지에 따라 다릅니다. 복제 범위가 넓을수록 무조건 좋은 것이 아니라 비용과 쓰기·전환 조건을 함께 봅니다.",
     ] },
     { id: "limits", level: "7", title: "10. 이름이 같은 내구성 수치도 복구 가능성을 모두 말하지 않습니다", bridge: "서비스와 복제 범위를 골랐습니다. 마지막으로 수치가 가리는 운영 조건을 확인합니다.", paragraphs: [
       "높은 내구성 수치는 설계된 장기 데이터 손실 가능성을 말하지만 잘못된 권한, 애플리케이션 버그, 보존 정책 오류까지 자동으로 막지는 않습니다. 독립된 복구 경로와 삭제 보호를 둡니다.",

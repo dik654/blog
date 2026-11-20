@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #model-shape — d_model=4096, layer 32, vocabulary 128,000, d_ff=4d_model 가정.
  * 칸 하나 = d×d = 4096² = 16,777,216개 parameter.
- * layer 하나: attention 4칸 + FFN 8칸 = 12칸 ≈ 2억 130만. 32 layer = 384칸 ≈ 64.4억.
+ * layer 하나: attention 4칸 + FFN 8칸 = 12칸 ≈ 2억 133만. 32 layer = 384칸 ≈ 64.4억.
  * embedding 128,000×4096 = 524,288,000 = 31.25칸 ≈ 5.24억. 합계 415.25칸 ≈ 69.7억 → 7B급.
  */
 const D = 4096;
@@ -20,7 +20,7 @@ function eok(value: number) {
 const SCENES = [
   {
     label: "Layer 하나 = 12칸",
-    summary: "4d² + 8d² = 12d² ≈ 2억 130만",
+    summary: "4d² + 8d² = 12d² ≈ 2억 133만",
     note: "칸 하나가 d×d = 4096² ≈ 1,678만 개 parameter입니다. Attention의 W_Q·W_K·W_V·W_O가 4칸, d_ff = 4d_model인 FFN의 두 행렬이 각각 d×4d라서 8칸입니다. FFN이 attention의 두 배를 차지합니다.",
   },
   {
@@ -100,7 +100,7 @@ export default function ParamBudgetViz() {
                   ≈ 1억 3,420만
                 </text>
                 <text x={X0} y={Y0 + 112} fontSize={12} fontWeight={700} fill="#0f172a">
-                  layer 하나 12d² ≈ 2억 130만
+                  layer 하나 12d² ≈ 2억 133만
                 </text>
               </>
             )}

@@ -29,7 +29,7 @@ const SCENES = [
   {
     label: "storage 전체 삭제",
     summary: "key 하나가 아니라 하위 경로 전체",
-    note: "account 삭제나 storage 전체 삭제는 key 하나를 바꾸는 작업과 다릅니다. 기존 하위 경로가 통째로 사라지므로 Reth는 별도 marker와 전체 하위 트리 처리 경계를 씁니다. 그림의 storage 전체 삭제도 account leaf의 storage root 값을 바꾸므로 account leaf를 거쳐 state root까지 다시 계산합니다.",
+    note: "account 삭제나 storage 전체 삭제는 key 하나를 바꾸는 작업과 다릅니다. 기존 하위 경로가 통째로 사라지므로 Reth는 별도 marker와 전체 하위 트리 처리 경계를 씁니다. 그림은 account 삭제는 그리지 않고 storage 전체 삭제만 보여 줍니다. 이 경우 account leaf의 storage root 값을 바꾸므로 account leaf를 거쳐 state root까지 다시 계산합니다.",
   },
 ] as const;
 

@@ -58,7 +58,7 @@ export default function MiddleBlockReleaseViz() {
     <SceneShell
       eyebrow="가운데만 돌려주기"
       title="R-SWA 관리자는 prompt와 창을 남기고 그 사이 block만 돌려줍니다"
-      description="칸 하나가 token 16개를 담는 block 하나이고, 11절의 예(prompt 100, 창 64, 계산 500)를 씁니다. 맨 윗줄에 이름을 적은 대로 주황은 prompt가 든 block, 파랑은 다음 token의 창이 닿는 block, 회색은 그 사이 block입니다. 점선 빈 칸은 돌려준 block입니다. R-SWA 관리자는 vLLM의 RSWAManager입니다."
+      description="칸 하나가 token 16개를 담는 block 하나이고, 11절의 예(prompt 100, 창 64, 계산 500)를 씁니다. 맨 윗줄에 이름을 적은 대로 주황은 prompt가 든 block, 파랑은 다음 token의 창이 닿는 block, 회색은 그 사이 block입니다. 점선 빈 칸은 돌려준 block입니다. R-SWA(Reference Sliding Window Attention) 관리자는 vLLM의 RSWAManager입니다."
       ariaLabel="token 500개를 계산한 요청에서 창 층과 R-SWA 관리자가 쥐는 block 비교"
       scenes={SCENES}
       render={(active) => (

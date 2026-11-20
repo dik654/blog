@@ -140,7 +140,7 @@ m &= (o<N)
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             num_stages = 3 이면 K 루프의 A tile(128 × 32)과 B tile(32 × 128)을 3단계 분량 보관합니다.
-            A와 B tile은 단계마다 각각 128×32와 32×128, 합계 8,192개 값을 가집니다. FP16 값마다 2바이트이고 3단계를 보관하므로 3단계 × 단계마다 8,192개 × 값마다 2바이트 = 49,152바이트, 곧 48KiB를 shared memory에 미리 올려 둡니다. 단계를 늘릴수록
+            한 단계에는 A tile 4,096개(128 × 32)와 B tile 4,096개(32 × 128), 합계 8,192개 값이 들어갑니다. FP16 값마다 2바이트이고 3단계를 보관하므로 3단계 × 단계마다 8,192개 × 값마다 2바이트 = 49,152바이트, 곧 48KiB를 shared memory에 미리 올려 둡니다. 단계를 늘릴수록
             load 지연이 가려지지만 shared memory 가 그만큼 늘어 SM 에 함께 놓일 수 있는
             instance 수가 줄어듭니다. 이 자원 계산은 <Link to="/cs/gpu/cuda-shared-memory#overview">shared memory</Link> 글의
             규칙을 그대로 따릅니다.

@@ -9,7 +9,7 @@ const SCENES = [
   {
     label: "실패 하나를 잘라 냅니다",
     summary: "failure slice",
-    note: "출발점은 성능 곡선 전체가 아니라 특정 실패 묶음입니다. 글의 예인 long-horizon drift를 둡니다. Soft limit·hard limit은 편리한 대화 표현이지 합의된 학술 분류가 아닙니다.",
+    note: "출발점은 성능 곡선 전체가 아니라 특정 실패 묶음입니다. 글의 예인 long-horizon drift(긴 작업을 여러 단계 이어 갈수록 처음 목표에서 점점 벗어나는 실패)를 둡니다. Soft limit·hard limit은 편리한 대화 표현이지 합의된 학술 분류가 아닙니다.",
   },
   {
     label: "먼저 data·harness 쪽 개입",

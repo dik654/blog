@@ -31,7 +31,7 @@ const SCENES = [
   {
     label: "칸마다 device point 96B",
     summary: `64 × 96B = ${TOTAL_BYTES.toLocaleString("en-US")}B`,
-    note: "(가정) 칸 하나에 device 내부 point 크기 s_P=96B를 넣으면 6,144B입니다. 외부 compressed point 크기를 넣으면 과소계산하며, sort·digit·scratch bytes와 alignment는 이 상한에 따로 더합니다.",
+    note: "(가정) 칸 하나에 device 내부 point 크기 s_P=96B를 넣으면 6,144B입니다. 외부 compressed point 크기를 넣으면 과소계산하며, sort·digit·scratch bytes와 allocation 경계 padding은 이 상한에 따로 더합니다.",
   },
 ] as const;
 

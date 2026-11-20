@@ -30,7 +30,7 @@ const SCENES = [
     gateText: "아직 판정 전",
     buildText: "아직 처리 전",
     reply: "응답 대기",
-    note: "Execution APIs v1.0.0-beta.7은 fork-choice state를 먼저 적용하도록 정합니다. 이 단계에서는 attributes를 아직 보지 않습니다.",
+    note: "Execution APIs v1.0.0-beta.7은 fork-choice state를 먼저 적용하도록 정합니다. 이 단계에서는 attributes를 아직 보지 않습니다. 이 장면부터 넷째 장면까지는 head가 VALID인 경로이고, VALID가 아닐 때는 마지막 장면에서 따로 봅니다.",
   },
   {
     label: "② head VALID → build",
@@ -66,7 +66,7 @@ const SCENES = [
     gateText: "VALID 아님",
     buildText: "처리하지 않음",
     reply: "P₁ 없음",
-    note: "Attributes 처리는 head가 VALID일 때로 한정됩니다. 그래서 head가 VALID로 판정되지 않으면 build도 시작되지 않습니다. 이 경우의 pointer 처리는 이 글이 다루지 않으므로 비워 두었습니다.",
+    note: "Attributes 처리는 head가 VALID일 때로 한정됩니다. 그래서 head가 VALID로 판정되지 않으면 build도 시작되지 않습니다. 이 경우에도 ①처럼 pointer가 적용된다고 단정할 수 없습니다. 이 글이 다루지 않으므로 비워 두었습니다.",
   },
 ] as const satisfies readonly {
   label: string;

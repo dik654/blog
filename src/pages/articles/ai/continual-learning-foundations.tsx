@@ -220,7 +220,6 @@ export default function ContinualLearningFoundationsArticle() {
           task 수가 크게 늘어난 경우까지 같은 정도로 일반화한다는 주장은
           아닙니다.
         </CitationBlock>
-        <ProgressiveColumnsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Parameter isolation은 아예 간섭을 없애려는 전략입니다. Task마다 서로 다른 parameter 부분집합을 쓰게 하거나, dynamic architecture
@@ -228,6 +227,7 @@ export default function ContinualLearningFoundationsArticle() {
             새 column을 추가하고 lateral connection으로만 이전 column의 feature를 참조하게 했습니다.
           </p>
         </div>
+        <ProgressiveColumnsViz />
         <CitationBlock
           source="Rusu, A. A. et al. · Progressive Neural Networks (arXiv:1606.04671, 2016)"
           citeKey={3}

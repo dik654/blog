@@ -16,7 +16,7 @@ const SCENES = [
   { label: "0 V 열평형", summary: "단자 순전류 0 A", height: 58, half: 50, flow: 0, widthWord: "기준", note: "바깥 전압이 없습니다. 언덕을 넘는 흐름과 되돌리는 흐름이 맞아 단자 순전류가 0입니다." },
   { label: "+0.5 V: 왼쪽을 높임", summary: "장벽 낮아짐 → 약 0.251 mA", height: 36, half: 40, flow: 1, widthWord: "좁아짐", note: "장벽이 낮아져 더 많은 전자와 정공이 경계를 넘습니다. 넘어간 쪽에서 이들은 수가 적은 소수 캐리어가 됩니다." },
   { label: "+0.6 V: 더 높임", summary: "장벽 더 낮아짐 → 약 12.03 mA", height: 26, half: 33, flow: 3, widthWord: "더 좁아짐", note: "건너가는 전하가 크게 늘어납니다. 0.1 V 차이가 왜 이렇게 큰지는 다음 절의 식으로 셉니다." },
-  { label: "−0.5 V: 왼쪽을 낮춤", summary: "장벽 높아짐 → 약 −1 pA", height: 84, half: 74, flow: -1, widthWord: "넓어짐", note: "많은 쪽 전하가 건너기 어려워집니다. 0은 아니어서 작은 반대 전류가 남습니다. 이 방향의 전압이 크면 항복도 일어날 수 있습니다." },
+  { label: "−0.5 V: 왼쪽을 낮춤", summary: "장벽 높아짐 → 약 −1 pA", height: 84, half: 74, flow: -1, widthWord: "넓어짐", note: "많은 쪽 전하가 건너기 어려워집니다. 0은 아니어서 작은 반대 전류가 남습니다. 이 방향의 전압이 크면 반대 전류가 갑자기 크게 늘어나는 항복도 일어날 수 있습니다." },
 ] as const;
 
 function Horizontal({ x1, x2, y, color, dashed = false }: { x1: number; x2: number; y: number; color: string; dashed?: boolean }) {

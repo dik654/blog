@@ -267,7 +267,7 @@ e&=\underbrace{\lVert r\rVert_2^2}_{\text{residual square magnitude}}\\
         <p className="text-lg leading-8">
           앞 section의 <code>L_ε</code>는 직관으로 고른 objective가 아닙니다.
           Log-likelihood를 직접 최적화할 수 없어 evidence lower bound(ELBO)를
-          대신 최소화하고, 그 bound를 reverse step마다의 Gaussian
+          대신 최대화하고(곧 부호를 뒤집은 L_vlb를 최소화), 그 bound를 reverse step마다의 Gaussian
           mean-matching 문제로 바꾼 뒤 model이 mean 대신 noise를 예측하도록
           reparameterize한 결과가 바로 <code>L_ε</code>입니다.
         </p>

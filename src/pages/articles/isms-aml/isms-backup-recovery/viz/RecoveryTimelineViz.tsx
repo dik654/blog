@@ -107,7 +107,7 @@ export default function RecoveryTimelineViz() {
     <SceneShell
       eyebrow="실제 RPO · RTO"
       title="잃은 데이터는 사고에서 뒤로, 복구 시간은 사고에서 앞으로 잽니다"
-      description="가로축은 시각입니다. RPO(복구 시점 목표)는 얼마나 과거까지 되돌아가도 되는지, RTO(복구 시간 목표)는 중단 뒤 언제까지 업무를 승인받아야 하는지에 대한 사전 목표입니다. 점선 칸이 목표, 채운 막대가 이번 사고에서 관측한 값입니다."
+      description="가로축은 시각입니다. RPO(복구 시점 목표)는 얼마나 과거까지 되돌아가도 되는지, RTO(복구 시간 목표)는 중단 뒤 언제까지 업무를 승인받아야 하는지에 대한 사전 목표입니다. 점선 칸이 목표, 채운 막대가 실제 값입니다(3장면은 아래 문단의 별도 30분 예, 나머지는 이번 사고의 관측값)."
       ariaLabel="12시 장애를 기준으로 실제 RPO와 RTO를 목표와 비교하는 시간축"
       scenes={SCENES}
       render={(active) => {

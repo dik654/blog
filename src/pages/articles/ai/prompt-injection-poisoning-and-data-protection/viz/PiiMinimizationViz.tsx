@@ -20,7 +20,7 @@ const NEEDED = FIELDS.filter((field) => field.detect === "need").length;
 
 const SCENES = [
   { label: "전체 레코드를 넣으면", summary: `context에 ${FIELDS.length}필드`, note: "주문 상태만 묻는 요청인데 고객 레코드 전체를 model context에 넣었습니다. 이름·주소·결제수단까지 모두 들어갑니다." },
-  { label: "탐지로 거르면", summary: "찾기 쉬운 값 · 피할 수 있는 값", note: "이메일처럼 형식이 일정한 값은 정규식으로 찾기 쉽지만, 문장으로 풀어 쓴 전화번호는 같은 규칙을 피할 수 있습니다. NER model을 더해도 오탐이 생길 수 있어, 나머지 필드가 걸러질지는 탐지 성능에 달립니다." },
+  { label: "탐지로 거르면", summary: "찾기 쉬운 값 · 피할 수 있는 값", note: "이메일처럼 형식이 일정한 값은 정규식으로 찾기 쉽지만, 문장으로 풀어 쓴 전화번호는 같은 규칙을 피할 수 있습니다. NER model을 더해도 놓치는 값이 남을 수 있어, 나머지 필드가 걸러질지는 탐지 성능에 달립니다." },
   { label: "애초에 두 필드만 넣으면", summary: `${FIELDS.length}필드 → ${NEEDED}필드`, note: `order_id와 status만 context에 넣으면 나머지 ${FIELDS.length - NEEDED}필드는 들어가지 않습니다. 탐지가 무엇을 놓치든 노출될 필드 수 자체가 줄어듭니다.` },
 ] as const;
 

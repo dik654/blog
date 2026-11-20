@@ -30,11 +30,11 @@ const SCENES = [
   },
 ] as const satisfies readonly { label: string; summary: string; states: readonly NodeState[]; note: string }[];
 
-const STYLE: Record<NodeState, { stroke: string; fill: string; text: string; dash?: string; tag: string }> = {
-  valid: { stroke: "#16a34a", fill: "#f0fdf4", text: "#166534", tag: "VALID" },
-  optimistic: { stroke: "#64748b", fill: "#f8fafc", text: "#334155", dash: "4 3", tag: "optimistic" },
-  invalid: { stroke: "#dc2626", fill: "#fef2f2", text: "#991b1b", tag: "INVALID 구간" },
-  removed: { stroke: "#cbd5e1", fill: "#ffffff", text: "#94a3b8", dash: "2 3", tag: "제거" },
+const STYLE: Record<NodeState, { stroke: string; fill: string; text: string; tagColor: string; dash?: string; tag: string }> = {
+  valid: { stroke: "#16a34a", fill: "#f0fdf4", text: "#166534", tagColor: "#16a34a", tag: "VALID" },
+  optimistic: { stroke: "#64748b", fill: "#f8fafc", text: "#334155", tagColor: "#64748b", dash: "4 3", tag: "optimistic" },
+  invalid: { stroke: "#dc2626", fill: "#fef2f2", text: "#991b1b", tagColor: "#dc2626", tag: "INVALID 구간" },
+  removed: { stroke: "#cbd5e1", fill: "#ffffff", text: "#94a3b8", tagColor: "#94a3b8", dash: "2 3", tag: "제거" },
 };
 
 const W = 360;
@@ -70,7 +70,7 @@ export default function InvalidPruneViz() {
                 <g key={name}>
                   <rect x={xAt(index)} y={Y} width={BOX_W} height={BOX_H} rx={8} fill={style.fill} stroke={style.stroke} strokeWidth={1.25} strokeDasharray={style.dash} />
                   <text x={xAt(index) + BOX_W / 2} y={Y + 25} textAnchor="middle" fontSize={14} fontWeight={700} fill={style.text}>{name}</text>
-                  <text x={xAt(index) + BOX_W / 2} y={Y + BOX_H + 16} textAnchor="middle" fontSize={11} fill={style.text}>{style.tag}</text>
+                  <text x={xAt(index) + BOX_W / 2} y={Y + BOX_H + 16} textAnchor="middle" fontSize={11} fill={style.tagColor}>{style.tag}</text>
                   {index === 3 && <text x={xAt(index) + BOX_W / 2} y={Y + BOX_H + 30} textAnchor="middle" fontSize={10} fill="#64748b">(가정)</text>}
                 </g>
               );
@@ -78,9 +78,9 @@ export default function InvalidPruneViz() {
             {active >= 1 && (
               <g>
                 <line x1={xAt(0) + BOX_W / 2} x2={xAt(0) + BOX_W / 2} y1={22} y2={Y - 2} stroke="#16a34a" strokeWidth={1} />
-                <text x={xAt(0) + 2} y={16} fontSize={11} fill="#166534">LVH = E₀</text>
+                <text x={xAt(0) + 2} y={16} fontSize={11} fill="#16a34a">LVH = E₀</text>
                 <line x1={xAt(2) + BOX_W / 2} x2={xAt(2) + BOX_W / 2} y1={22} y2={Y - 2} stroke="#dc2626" strokeWidth={1} />
-                <text x={xAt(2) + BOX_W / 2} y={16} textAnchor="middle" fontSize={11} fill="#991b1b">INVALID</text>
+                <text x={xAt(2) + BOX_W / 2} y={16} textAnchor="middle" fontSize={11} fill="#dc2626">INVALID</text>
               </g>
             )}
           </svg>

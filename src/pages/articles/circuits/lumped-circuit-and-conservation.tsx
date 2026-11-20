@@ -185,8 +185,8 @@ return <div className="space-y-16">
         <PlateBoundaryViz />
         <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
-            Kirchhoff가 1845년에 다룬 대상은 이 세 저항이 아닙니다. 정상 상태의
-            얇은 금속판에서 닫힌 곡선을 그린 뒤, 곡선 안에 전류를 따로 넣지
+            Kirchhoff가 1845년에 다룬 대상은 이 세 저항이 아닙니다. 정상 상태(흐름이
+            시간에 따라 변하지 않는 상태)의 얇은 금속판에서 닫힌 곡선을 그린 뒤, 곡선 안에 전류를 따로 넣지
             않으면 경계로 드나드는 흐름의 합이 0이라고 적었습니다. 금속판의
             연속적인 흐름을 여기서는 갈림길의 세 도선으로 줄여 같은 보존
             조건을 씁니다.
@@ -200,7 +200,7 @@ return <div className="space-y-16">
         >
           원문 499쪽은 닫힌 곡선 전체에 대해 <span className="font-mono">∫ ds · du/dN = 0</span>을 적습니다.
           u는 금속판의 전위, N은 경계의 수직 방향, ds는 경계의 작은 길이입니다.
-          12 V 저항망에는 금속판의 공간 좌표나 전도율을 주지 않았으므로 이
+          12 V 저항망에는 금속판의 공간 좌표나 전도율(전기가 통하는 정도)을 주지 않았으므로 이
           적분식에 숫자를 직접 대입할 수 없습니다. 경계의 순유입이 0이라는
           원문의 보존 조건을 세 도선의 6−3−3=0 mA로 옮겼습니다.
         </CitationBlock><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 6.002 강의안 23쪽의 원문은 “The sum of the currents into a node is 0.”입니다. 여기서 into를 부호에 반영하면 들어오는 6 mA는 양수, 나가는 두 3 mA는 음수입니다. 원문 문장이 이 회로에서 6−3−3=0으로 바뀌는 지점입니다. <a href="https://live.ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/f6ad70417c73f585b7ca065153d25d25_6002_l1.pdf#page=23" target="_blank" rel="noopener noreferrer">강의안 23쪽</a>에서 부호가 붙은 합을 대조할 수 있습니다.</p></div>

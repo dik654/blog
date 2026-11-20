@@ -191,7 +191,7 @@ export default function ModernIrohArticle() {
         <FailureBoundaryViz />
         <p>
           현재 source의 local path 상태는 <code>Open</code>·<code>Inactive</code>·
-          <code>Unusable</code>·<code>Unknown</code>입니다. 새로 알게 된 주소는 hole punching을 아직
+          <code>Unusable</code>·<code>Unknown</code>입니다. 새로 알게 된 주소는 hole punching(양쪽이 서로의 공인 주소로 동시에 UDP 패킷을 보내 NAT에 구멍을 열고 direct 경로를 만드는 기법)을 아직
           시도하지 않았거나 시도하는 중이라 Unknown에서 시작합니다. 열렸던 path가 사라지면 Inactive,
           hole punching을 시도했지만 한 번도 쓸 수 없었다면 Unusable이 됩니다. 오래된 inactive와
           unusable non-relay path는 제한된 장부를 유지하도록 pruning 대상이 될 수 있습니다.

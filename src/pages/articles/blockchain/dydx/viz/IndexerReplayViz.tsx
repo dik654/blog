@@ -24,7 +24,7 @@ const SCENES: readonly {
   {
     label: "event에 좌표 붙이기",
     summary: "block 41 · transient store",
-    note: "Block 41(가정)을 실행하는 동안 transaction event마다 subtype, version, bytes와 block 안의 순서(tx index, event index)가 붙고 transient store에 모입니다.",
+    note: "Block 41(가정)을 실행하는 동안 transaction event마다 subtype, version, bytes와 block 안의 순서(tx index, event index)가 붙고 transient store(block을 commit할 때 비워지는 임시 저장소)에 모입니다.",
     protocol: [L("tx 0 · ev 0 · 주문 · v1", "active"), L("tx 0 · ev 1 · 체결 · v1", "active"), L("tx 1 · ev 0 · 계정 · v1", "active")],
     wire: [L("—"), L(""), L("")],
     indexer: [L("—"), L(""), L("")],

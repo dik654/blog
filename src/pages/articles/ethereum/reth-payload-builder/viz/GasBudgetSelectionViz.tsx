@@ -178,7 +178,7 @@ export default function GasBudgetSelectionViz() {
             <p className="text-[10px] text-muted-foreground">← pool이 내준 탐색 순서 (가정)</p>
             <GasBar scene={scene} />
             <div className="grid grid-cols-3 gap-px bg-border p-px text-center text-[10px] leading-4 sm:text-xs">
-              {(["Execution gas", "Blob 수·sidecar", "Encoded size"] as const).map((title, k) => {
+              {(["Execution gas", "Blob 수·sidecar", "Encoded size (Osaka 이후)"] as const).map((title, k) => {
                 const check = scene.checks[k];
                 return (
                   <div key={title} className="min-w-0 bg-background px-1 py-2">

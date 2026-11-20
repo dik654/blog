@@ -75,7 +75,7 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
         </div>
         <RepaymentDelayViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">첫 상환이 늦어지면 상인은 귀환 대금을 마련하지 못하고 투자자도 다음 대상을 꾸리기 어렵습니다. 따라서 수익률만큼 상환 순서와 현금 시점이 중요합니다. 한 채무자의 실패가 동업자와 다음 거래로 번질 수 있습니다.</p>
+          <p className="leading-8">첫 상환이 늦어지면 상인은 귀환 대금(상인이 돌아갈 때 가져갈 대금)을 마련하지 못하고 투자자도 다음 대상을 꾸리기 어렵습니다. 따라서 수익률만큼 상환 순서와 현금 시점이 중요합니다. 한 채무자의 실패가 동업자와 다음 거래로 번질 수 있습니다.</p>
           <p className="leading-8">반대로 여러 상인과 도시를 쓰면 한 길의 폐쇄를 우회할 수 있습니다. 교역망은 위험을 없애지 않고 누구에게, 어느 시점에 남길지 바꾸는 구조입니다.</p>
         </div>
       </LessonSection>

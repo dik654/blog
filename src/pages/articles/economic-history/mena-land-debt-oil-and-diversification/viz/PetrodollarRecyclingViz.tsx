@@ -40,7 +40,7 @@ const EDGES = [
 
 const SCENES = [
   { label: "유가 충격", summary: "산유국 흑자 · 수입국 적자", edges: [0], nodes: ["exporter", "importer"], note: "석유값이 오르자 수입국이 내는 돈이 산유국으로 몰렸습니다. 경상수지는 한 나라가 외국과 상품·서비스·소득을 주고받은 결과입니다. 연준 역사 자료는 이 충격이 산유국에는 흑자를, 라틴아메리카 여러 나라에는 적자를 만들었다고 씁니다." },
-  { label: "공적 경로", summary: `일곱 곳 약정 ${TOTAL.toLocaleString("en-US")}백만 SDR`, edges: [1, 2], nodes: ["exporter", "imf", "importer"], note: "IMF는 1974년 6월 석유값 상승으로 국제수지 문제를 겪는 회원국을 위한 석유 융자를 만들고, 8월 일곱 곳과의 차입 약정(합 약 28억 SDR)으로 재원을 댔습니다. SDR(특별인출권)은 IMF의 회계 단위입니다." },
+  { label: "공적 경로", summary: `산유국 6곳+캐나다 ${TOTAL.toLocaleString("en-US")}백만 SDR`, edges: [1, 2], nodes: ["exporter", "imf", "importer"], note: "IMF는 1974년 6월 석유값 상승으로 국제수지 문제를 겪는 회원국을 위한 석유 융자를 만들고, 8월 산유국 여섯 곳과 캐나다, 모두 일곱 곳과의 차입 약정(합 약 28억 SDR)으로 재원을 댔습니다. SDR(특별인출권)은 IMF의 회계 단위입니다." },
   { label: "은행 경로", summary: "예치받은 돈을 다시 대출", edges: [3, 4], nodes: ["exporter", "bank", "importer"], note: "공적 경로 옆에는 은행 경로가 있었습니다. 미국 정부의 권장 아래 대형 미국 은행들이 산유국 자금을 예치받아 라틴아메리카에 다시 빌려 주는 중개자가 됐습니다." },
   { label: "한 바퀴", summary: "해외자산 = 다른 나라의 부채", edges: [0, 1, 2, 3, 4], nodes: ["exporter", "imf", "bank", "importer"], note: "석유값으로 나간 달러가 IMF와 은행을 거쳐 수입국 대출로 돌아오는 고리가 페트로달러 재순환입니다. 산유국 장부의 해외자산 몫이 다른 나라 장부에서는 부채가 됩니다. 이 대출이 1980년대에 어떻게 위기가 됐는지는 라틴아메리카 글에서 이어집니다." },
 ] as const;

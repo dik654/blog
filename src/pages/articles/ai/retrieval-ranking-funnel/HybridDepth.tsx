@@ -95,7 +95,7 @@ export default function HybridDepth() {
       </div>
       <RerankDepthViz />
       <ExplainedFormula
-        question="Rerank depth를 top-k retrieval보다 작게 자르면 candidate recall 상한이 왜 한 번 더 줄어드나요?"
+        question="Rerank depth를 top-k retrieval보다 작게 자르면 candidate recall 상한이 왜 한 번 더 줄어들 수 있나요?"
         idea={<>위에서 본 candidate recall 상한은 candidate set 전체 크기를 기준으로 했습니다. Reranker가 실제로 읽는 범위를 그보다 작은 rerank depth로 자르면, 그 창 밖에 있던 정답은 reranker 품질과 무관하게 이미 제외된 상태입니다.</>}
         formula={String.raw`C_q^{(k_2)}=\operatorname{front}_{k_2}(C_q),\qquad |O_q\cap R_q|\le|C_q^{(k_2)}\cap R_q|\le|C_q\cap R_q|`}
         annotatedFormula={String.raw`\underbrace{C_q^{(k_2)}=\operatorname{front}_{k_2}(C_q)}_{\text{reranker가 실제로 읽는 상위 }k_2\text{개}},\qquad |O_q\cap R_q|\le \underbrace{|C_q^{(k_2)}\cap R_q|}_{\text{그 창 안의 정답 수}}\le|C_q\cap R_q|`}

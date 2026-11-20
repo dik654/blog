@@ -54,7 +54,7 @@ export default function QueryWeightingViz() {
   return (
     <SceneShell
       eyebrow="질의별 점수를 합치는 방식"
-      title="같은 질의별 점수가 어떻게 합치느냐에 따라 다른 승자를 냅니다"
+      title="같은 질의별 점수라도 어떻게 합치느냐에 따라 승자가 달라집니다"
       description="두 검색어의 NDCG@k는 본문의 설명용 예시이고 99회·1회도 본문의 가정입니다. 칸의 폭은 비중, 칠한 높이는 점수입니다."
       ariaLabel="질의 종류별 평균과 요청 횟수별 평균에서 기존과 후보 시스템 비교"
       scenes={SCENES}

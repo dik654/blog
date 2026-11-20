@@ -76,7 +76,7 @@ function Line({ active }: { active: number }) {
           <text x={fx(cand)} y={116} textAnchor="middle" fontSize={10} fontWeight={700} fill={candColor}>새 후보 {cand}</text>
         </>
       ) : null}
-      <text x={X1} y={102} textAnchor="end" fontSize={9} fill="#94a3b8">수수료(가정 단위)</text>
+      <text x={X1} y={102} textAnchor="end" fontSize={9} fill="#94a3b8">수수료(단순화·가정 단위)</text>
     </svg>
   );
 }
@@ -86,7 +86,7 @@ export default function ReplacementBumpViz() {
     <SceneShell
       eyebrow="실험 03 · 교체 경계"
       title="같은 nonce 후보는 bump 경계를 넘을 때만 자리를 바꿉니다"
-      description="가로축은 수수료입니다. 기존 수수료 10과 bump 10%는 그림을 위한 가정이며, 실제 비율은 실험에서 고정한 PriceBumpConfig를 따릅니다."
+      description="가로축은 수수료 하나로 단순화한 축입니다. 기존 수수료 10과 bump 10%는 그림을 위한 가정이며, 실제 비율은 실험에서 고정한 PriceBumpConfig를 따릅니다."
       ariaLabel="기존 수수료 10과 교체 경계 11을 기준으로 새 후보 10.5, 11, 12의 교체 여부"
       scenes={SCENES}
       render={(active) => (

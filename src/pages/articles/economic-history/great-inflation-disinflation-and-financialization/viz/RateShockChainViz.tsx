@@ -20,8 +20,8 @@ const NODES: Record<NodeId, { who: string; what: string }> = {
 
 const SCENES = [
   { label: "물가 기대가 금리 요구로", summary: "기대 ↑ → 요구 금리 ↑", lit: ["expect"], loop: false, note: "명목금리는 물가를 빼지 않은 금리 숫자 그대로입니다. 다음 물가가 높을 것으로 보면 대출자와 채권 투자자는 더 높은 명목금리를 요구할 수 있습니다." },
-  { label: "정책금리가 두 갈래로 퍼집니다", summary: "새 대출 ↑ · 기존 채권 ↓", lit: ["expect", "policy", "loan", "bond"], loop: false, note: "중앙은행이 정책금리를 올리면 새 대출 비용은 커지고, 이미 발행된 고정금리 채권의 시장가격은 내려갑니다. 같은 인상이 빌리는 쪽과 들고 있는 쪽에 다른 방향으로 닿습니다." },
-  { label: "금융기관이 장부를 맞춥니다", summary: "은행 · 펀드·보험사", lit: ["expect", "policy", "loan", "bond", "bank", "fund"], loop: false, note: "은행은 예금과 대출의 금리·만기 차이를 관리하고, 펀드와 보험사는 보유 채권의 가격과 환매 요구를 맞춰야 합니다. 환매는 투자자가 펀드에 돈을 돌려 달라고 하는 것입니다." },
+  { label: "정책금리가 두 갈래로 퍼집니다", summary: "새 대출 ↑ · 기존 채권 ↓", lit: ["expect", "policy", "loan", "bond"], loop: false, note: "정책금리는 중앙은행이 정해 시중 금리의 기준으로 삼는 단기 금리입니다. 중앙은행이 정책금리를 올리면 새 대출 비용은 커지고, 이미 발행된 고정금리 채권의 시장가격은 내려갑니다. 같은 인상이 빌리는 쪽과 들고 있는 쪽에 다른 방향으로 닿습니다." },
+  { label: "금융기관이 장부를 맞춥니다", summary: "은행 · 펀드·보험사", lit: ["expect", "policy", "loan", "bond", "bank", "fund"], loop: false, note: "만기는 빌린 돈을 갚기로 한 날까지의 기간입니다. 은행은 예금과 대출의 금리·만기 차이를 관리하고, 펀드와 보험사는 보유 채권의 가격과 환매 요구를 맞춰야 합니다. 환매는 투자자가 펀드에 돈을 돌려 달라고 하는 것입니다." },
   { label: "담보가 줄면 현금이 필요합니다", summary: "담보 ↓ → 현금 → 매각", lit: ["expect", "policy", "loan", "bond", "bank", "fund", "collateral", "sale"], loop: false, note: "담보는 빌린 돈을 못 갚을 때를 대비해 맡긴 자산입니다. 담보가치가 떨어져 추가 현금이 필요해지면 자산을 팔게 됩니다." },
   { label: "매각이 하락을 다시 키울 수 있습니다", summary: "매각 ↺ 가격 하락", lit: ["expect", "policy", "loan", "bond", "bank", "fund", "collateral", "sale"], loop: true, note: "자산 매각이 가격 하락을 더 키울 수 있습니다. 떨어진 가격이 담보로 맡긴 자산에도 미치면 담보가치가 다시 줄어드는 고리가 될 수 있습니다. 이 고리는 반드시 생기는 것이 아니며, 그 크기는 이 글이 다루지 않습니다." },
 ] as const;

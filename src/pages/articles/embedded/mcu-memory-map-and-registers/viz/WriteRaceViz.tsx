@@ -87,7 +87,7 @@ export default function WriteRaceViz() {
     <SceneShell
       eyebrow="두 코어가 함께 쓰는 출력"
       title="전체 값을 덮어쓰면 비트를 잃을 수 있고, SET은 그 자리만 바꿉니다"
-      description="칸 하나가 한 비트이고 왼쪽이 7번, 오른쪽이 0번입니다. 윗자리는 모두 0이라 생략했습니다."
+      description="코어는 명령을 따로 실행하는 처리 장치이며 RP2040에는 둘이 있습니다. 칸 하나가 한 비트이고 왼쪽이 7번, 오른쪽이 0번입니다. 윗자리는 모두 0이라 생략했습니다."
       ariaLabel="읽고 고쳐 쓰기와 SET 쓰기에서 두 코어의 비트 결과 비교"
       scenes={SCENES}
       render={(active) => (

@@ -26,7 +26,7 @@ const SCENES = [
     label: "Cost Explorer",
     short: "Explorer",
     summary: "쌓인 기록 → 서비스별 추세",
-    zones: ["past"] as Zone[],
+    zones: ["past", "now"] as Zone[],
     note: "이미 생긴 비용과 사용 기록을 뒤돌아보며 분석합니다. 4절 선택 문제의 예처럼 지난 3개월 서비스별 추세를 묻는 문제가 여기에 해당합니다.",
   },
   {
@@ -96,7 +96,7 @@ function Flow({ input, output }: { input: string; output: string }) {
 
 const PLACEMENT = [
   ["Pricing Calculator", "배포 전 칸"],
-  ["Cost Explorer", "지난 달 기록 칸"],
+  ["Cost Explorer", "기록 칸(이번 달 포함)"],
   ["Budgets", "이번 달 칸 + 정한 한도"],
 ] as const;
 

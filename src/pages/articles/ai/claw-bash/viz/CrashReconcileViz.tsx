@@ -1,7 +1,7 @@
 import BashSceneShell from "./BashSceneShell";
 
 /**
- * 본문 대응: #sandbox "Crash 뒤에는 먼저 effect를 reconciliation하고 같은 command를 재실행합니다".
+ * 본문 대응: #sandbox "Crash 뒤에는 먼저 effect를 reconciliation하고 필요한 단계만 새 attempt로 실행합니다".
  * 위 줄 = crash까지 실제로 일어난 일(본문 가정 사례), 아래 칸 = 복구가 그 사실을 어떻게 읽는지.
  */
 

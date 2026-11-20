@@ -300,7 +300,7 @@ export default function LinuxSreMetricsSloSafeChangeArticle() {
               Debian apt 저장소의 debian/apt-daily-upgrade.timer는 열두 줄입니다. OnCalendar=*-*-* 6:00, RandomizedDelaySec=60m, Persistent=true. Datadog 글이 인용한 파일이 이것이고, 이 세 줄이 "모든 노드가 06:00~07:00"을 만듭니다. 무작위 지연 60분은 한 서버 안에서는 분산이지만 fleet로 보면 한 시간 창에 전부가 들어옵니다.
             </p>
             <p>
-              지역 사이의 상관관계를 끊으려면 지연이 아니라 서버마다 다른 OnCalendar이 필요한데, 그것이 곧 단계적 롤아웃입니다.
+              지역 사이의 상관관계를 끊으려면 지연이 아니라 노드 묶음마다 다른 OnCalendar이 필요한데, 그것이 곧 단계적 롤아웃입니다.
             </p>
           </div>
           <DownloadCutoffViz />

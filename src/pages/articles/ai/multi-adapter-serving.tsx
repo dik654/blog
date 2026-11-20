@@ -282,7 +282,7 @@ export default function MultiAdapterServingArticle() {
           <ExpandIoViz />
           <div className={prose}>
             <p>
-              token마다 따로 계산하면 같은 A를 두 번 읽어 n 자리에 4가 들어갑니다. 원소는 16,448 + 262,144 = 278,592개, 557,184 byte입니다. 구간으로 묶은 426,112
+              token마다 따로 계산하면 adapter A의 B 행렬을 두 번 읽어 n 자리에 4가 들어갑니다. 원소는 16,448 + 262,144 = 278,592개, 557,184 byte입니다. 구간으로 묶은 426,112
               byte보다 31% 많습니다.
             </p>
             <p>

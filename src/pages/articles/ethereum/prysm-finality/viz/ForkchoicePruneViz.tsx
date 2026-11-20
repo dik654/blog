@@ -71,7 +71,7 @@ const SCENES: readonly PruneScene[] = [
   {
     label: "checkpoint slot 이하 child",
     summary: "C1 제거 · C2 유지",
-    note: "F의 child 가운데 checkpoint slot 이하에 있는 C1은 finalized checkpoint와 양립하지 않는 child로 제거됩니다. Checkpoint slot 뒤의 C2는 남습니다.",
+    note: "이 단계는 F의 slot이 checkpoint slot보다 앞설 때만 돕니다(F가 바로 그 slot이면 건너뜀). F의 child 가운데 checkpoint slot 이하에 있는 C1은 finalized checkpoint와 양립하지 않는 child로 제거됩니다. Checkpoint slot 뒤의 C2는 남습니다.",
     states: { R: "gone", P: "gone", X: "gone", Y: "gone", C1: "removing" },
     root: "F",
     focus: "C1",

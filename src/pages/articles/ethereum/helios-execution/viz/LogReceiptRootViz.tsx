@@ -175,7 +175,7 @@ export default function LogReceiptRootViz() {
             )}
             {active === 5 && (
               <text x={180} y={182} textAnchor="middle" fontSize={12} fill={TEXT}>
-                일반 경로: receipt 전체 · Verifiable API: receipt별 proof
+                일반 경로: receipt 전체 · Verifiable API: proof도 가능
               </text>
             )}
           </svg>

@@ -35,7 +35,7 @@ export default function SceneShell({
   const labels = items.map((item) => item.label);
 
   return (
-    <VizFrame eyebrow={eyebrow} title={title} description={description} note={note}>
+    <VizFrame documentFlow className="!h-auto !max-h-none" eyebrow={eyebrow} title={title} description={description} note={note}>
       <div
         id={scenes.playbackId}
         data-viz-canvas

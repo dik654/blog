@@ -130,7 +130,7 @@ export default function FeedForward() {
           128)인 decoder-only model을 생각해 봅시다. Attention 한 layer의
           W_Q·W_K·W_V·W_O 네 d×d 행렬은 4d²≈6,710만 개이고, d_ff=4d_model인
           FFN의 두 행렬은 8d²≈1억 3,420만 개이므로 layer 하나가 12d²≈2억
-          130만 개를 씁니다.
+          133만 개를 씁니다.
         </p>
         <p className="leading-8">
           32개 layer를 쌓으면 약 64.4억 개, 여기에 vocabulary 128,000개 ×

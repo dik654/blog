@@ -43,6 +43,7 @@ export default function StallDefaultsViz() {
             <strong className="text-sm">Write buffer</strong>
             <span className="font-mono text-xs text-muted-foreground">64MiB × 최대 2개</span>
           </div>
+          <p className="mt-1 text-[11px] text-muted-foreground">참고용 소스 기본값입니다. 이 줄에는 stall 경계를 표시하지 않았습니다.</p>
           <div className="mt-2 grid max-w-xs grid-cols-2 gap-2">
             {[0, 1].map((slot) => (
               <div key={slot} className="rounded-md border border-primary/60 bg-background px-2 py-2 text-center font-mono text-xs">64MiB</div>

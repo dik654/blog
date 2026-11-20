@@ -13,7 +13,7 @@ const LEAF_Y = 122;
 const LEAF_H = 36;
 const LEAF_W = 104;
 const LEAF_XS = [8, 128, 248] as const;
-const BRANCH_LABELS = ["≤ 20", "20…40", "> 40"] as const;
+const BRANCH_LABELS = ["≤ 20", "> 20, ≤ 40", "> 40"] as const;
 const LEAF_VALUES: readonly (readonly number[])[] = [
   [4, 12, 20],
   [21, 35, 39],

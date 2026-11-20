@@ -75,8 +75,6 @@ export default function HealthAndDrain() {
         </p>
       </div>
 
-      <FlapViz />
-
       <div className="mt-6">
         <ProgressiveDetail
           title="검사 주기와 실패 판정 횟수는 어떻게 정합니까"
@@ -94,6 +92,8 @@ export default function HealthAndDrain() {
           </p>
         </ProgressiveDetail>
       </div>
+
+      <FlapViz />
     </section>
   );
 }

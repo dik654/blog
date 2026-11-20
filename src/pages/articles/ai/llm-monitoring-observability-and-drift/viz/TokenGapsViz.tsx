@@ -36,7 +36,7 @@ export default function TokenGapsViz() {
     <SceneShell
       eyebrow="256 token의 시간표"
       title="첫 token 전 0.4초와 이후 3.2초를 갈라야 식이 읽힙니다"
-      description="가로축은 요청 도착부터의 초입니다(길이 비례). ITL은 연속된 두 token 사이의 평균 간격이고, 숫자는 본문 아래 식의 예입니다."
+      description="가로축은 요청 도착부터의 초입니다(길이 비례). ITL은 연속된 두 token 사이의 평균 간격이고, 숫자는 본문 TTFT·throughput 식의 예입니다."
       ariaLabel="TTFT 0.4초 뒤 256개 token이 3.2초에 걸쳐 나와 초당 80 token이 되는 시간축"
       scenes={SCENES}
       render={(active) => (

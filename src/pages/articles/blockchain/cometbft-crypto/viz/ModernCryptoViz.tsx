@@ -69,7 +69,7 @@ const STATES: readonly {
     call: "innerHash(0x01 || left || right)",
     owner: "types.Txs.Hash",
     tx: "T1 · T2 · T3 순서 유지",
-    tree: "P12=f26d10…55cf → D41=8b7610…f65f",
+    tree: "P12=f26d10…5cf5 → D41=8b7610…f65f",
     header: "Header.DataHash = D41",
     vote: "A의 precommit 미서명",
     identity: "DataHash = 32 bytes",

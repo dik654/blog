@@ -91,7 +91,7 @@ export default function Bm25SaturationViz() {
                 <text key={f} x={xOf(f)} y={Y0 + 16} textAnchor="middle" fontSize={11} fill="#64748b">{f}</text>
               ))}
               <line x1={X0} x2={X1} y1={Y0} y2={Y0} stroke="#94a3b8" strokeWidth={1} />
-              <text x={(X0 + X1) / 2} y={H - 2} textAnchor="middle" fontSize={11} fill="#64748b">문서 안 반복 횟수 TF</text>
+              <text x={(X0 + X1) / 2} y={H - 5} textAnchor="middle" fontSize={11} fill="#64748b">문서 안 반복 횟수 TF</text>
             </svg>
           </div>
         );

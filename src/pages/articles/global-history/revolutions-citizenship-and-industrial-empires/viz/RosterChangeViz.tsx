@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #mechanism — 명부 30이 유지되거나 50·70으로 늘 수 있고(30 + 20, 30 + 40), 식민지의 30은 다른 길에 있습니다.
- * 어느 20명이 먼저 들어오는지는 본문에 없어 칸 위치는 예시입니다. 위 7줄은 본국 쪽 70칸, 아래 3줄은 식민지의 30칸입니다.
+ * 어느 20명이 먼저 들어오는지는 본문에 없어 칸 위치는 예시입니다. 위 7줄은 시민·명부 밖 70칸, 아래 3줄은 3절과 같은 노예·식민지 신민·비시민 30칸입니다.
  */
 const SCENES = [
   { label: "명부가 유지되는 길", summary: "30칸 그대로", cit: 30, note: "처음 투표권이 있는 30명이 법을 만들면 자신들의 재산과 신분을 기준으로 명부를 유지할 수 있습니다." },
@@ -45,7 +45,7 @@ export default function RosterChangeViz() {
       eyebrow="30명의 명부"
       title="명부는 유지되거나 넓어질 수 있고, 식민지에서는 다른 길로 닫힐 수 있습니다"
       description="네모 하나가 주민 한 사람입니다(가정). 시 = 투표 명부 안, 요 = 납세·병역을 근거로 요구하는 명부 밖 주민, 식 = 3절의 노예·식민지 신민·비시민 30명, 빈칸 = 그 장면에서 보지 않는 주민."
-      ariaLabel="시민 명부 30칸이 유지되거나 50칸, 70칸으로 늘어나는 경우와 식민지의 30칸이 대표 없이 남는 경우"
+      ariaLabel="시민 명부 30칸이 유지되거나 50칸, 70칸으로 늘어나는 경우와 3절의 노예·식민지 신민·비시민 30칸이 대표 없이 남는 경우"
       scenes={SCENES}
       render={(active) => {
         const scene = SCENES[active];
@@ -54,8 +54,8 @@ export default function RosterChangeViz() {
             <div className="min-w-0 space-y-2">
               <PeopleGrid cells={homeCells(active)} label={`${scene.label}: ${scene.summary}`} />
               <div className="space-y-1.5 border-t border-dashed border-border pt-1.5">
-                <p className="flex justify-between gap-1 whitespace-nowrap text-xs leading-4 text-muted-foreground"><span>↑ 본국 70칸</span><span>↓ 식민지 30칸</span></p>
-                <PeopleGrid cells={colonyCells(active)} label="식민지의 30칸" />
+                <p className="flex justify-between gap-1 whitespace-nowrap text-xs leading-4 text-muted-foreground"><span>↑ 70칸</span><span>↓ 3절의 30칸</span></p>
+                <PeopleGrid cells={colonyCells(active)} label="3절의 노예·식민지 신민·비시민 30칸" />
               </div>
             </div>
             <div className="min-w-0 space-y-2 text-xs sm:text-sm">

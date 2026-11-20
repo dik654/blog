@@ -48,7 +48,7 @@ export default function RuleLookupViz() {
                       </span>
                       <span className={scene.hits[index] ? "font-semibold" : "text-muted-foreground"}>
                         {condition} {RANGES[index]}
-                        <span className="ml-1 text-xs font-normal">{scene.hits[index] ? "3등급 범위 안" : "범위 밖"}</span>
+                        <span className="ml-1 text-xs font-normal">{scene.hits[index] ? "3등급 범위 안" : "범위 하한 미만"}</span>
                       </span>
                     </li>
                   ))}

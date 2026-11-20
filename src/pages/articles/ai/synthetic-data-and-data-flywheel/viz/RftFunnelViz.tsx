@@ -20,7 +20,7 @@ const SCENES = [
   { label: "verifier가 틀린 경로를 지웁니다", summary: "100 → 40 (가정)", note: "정답과 어긋나거나 계산이 틀린 경로를 제거합니다. 40은 그림을 위한 가정이며, 지워진 칸은 점선으로 남겼습니다." },
   { label: "같은 풀이는 하나만", summary: "40 → 25 (가정)", note: "같은 방정식 리스트를 쓰는 경로는 하나만 남깁니다. = 표시가 중복으로 빠지는 칸입니다. 25도 가정입니다." },
   { label: "모아서 다시 학습한 결과", summary: "35.9% → 49.3%", note: "문제들에서 거른 약 10만 개 샘플로 다시 학습한 LLaMA-7B의 정확도입니다. GSM8K는 수학 문제 벤치마크입니다. 13.4%p 차이입니다." },
-  { label: "기준선을 조이면", summary: `25 × 20% = ${TOP}개`, note: "quality thresholding은 상위 몇 퍼센트만 남길지 정하는 기준선입니다. 테두리만 남은 칸이 빠지고, 남는 양은 줄어도 평균 품질은 올라갑니다. RFT 수치와는 별개의 예시입니다." },
+  { label: "기준선을 조이면", summary: `25 × 20% = ${TOP}개`, note: "quality thresholding은 점수 상위 몇 퍼센트만 남길지 정하는 기준선입니다. 중복을 뺀 25개를 점수순으로 놓고 상위 20%만 남기면 테두리만 남은 칸이 빠집니다. 남는 양은 줄어도 평균 품질은 올라갑니다. RFT 수치와는 별개의 예시입니다." },
 ] as const;
 
 function Cell({ cell, scene }: { cell: number; scene: number }) {
@@ -71,7 +71,7 @@ export default function RftFunnelViz() {
             <CountRow label="생성" value={String(TOTAL)} on />
             <CountRow label="verifier 통과" value={`${PASSED} (가정)`} on={index >= 1} />
             <CountRow label="중복 제거 후" value={`${UNIQUE} (가정)`} on={index >= 2} />
-            <CountRow label="상위 20% 기준선" value={`${TOP} (가정)`} on={index === 4} />
+            <CountRow label="점수 상위 20%" value={`${TOP} (가정)`} on={index === 4} />
           </div>
           <div className={`col-span-2 space-y-1 ${index === 3 ? "" : "invisible"}`}>
             <AccuracyBar label="이전" value={35.9} />

@@ -76,7 +76,7 @@ export default function ElectricityGridAndPowerArticle() {
         <CostAreaViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">먼 발전의 단가를 MWh당 5만 원, 공장 근처 대체 공급을 10만 원으로 둡니다(가정). 먼 곳에서 80MWh를 받아 400만 원, 가까운 곳에서 20MWh를 받아 200만 원을 냅니다. 에너지 조달비는 합계 600만 원입니다.</p>
-          <p className="leading-8">길의 제약이 없어서 먼 곳에서 100MWh를 모두 살 수 있었다면 500만 원입니다. 두 조건의 차이 100만 원은 이 한 시간의 추가 조달비입니다. 이것만으로 송전선 건설비를 회수할 수 있는지는 아직 모릅니다. 연간 혼잡 시간과 공사비를 더 알아야 합니다.</p>
+          <p className="leading-8">길의 제약이 없어서 먼 곳에서 100MWh를 모두 살 수 있었다면 500만 원입니다. 두 조건의 차이 100만 원은 이 한 시간의 추가 조달비입니다. 이것만으로 송전선 건설비를 회수할 수 있는지는 아직 모릅니다. 송전선이 한도에 막히는 혼잡 시간이 1년에 얼마인지와 공사비를 더 알아야 합니다.</p>
           <p className="leading-8">최종 전력 시스템 비용에는 망 유지, 운영, 고장 대비와 저장 비용도 들어갑니다. 600만 원은 최종 청구서의 일부입니다. 실제 도매시장에서는 단가 결정과 혼잡 비용의 배분 방식도 계약에 따라 달라집니다.</p>
         </div>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">공급 100MWh와 에너지 비용 600만 원이 이어졌습니다. 국제 자료가 설명하는 병목을 같은 숫자에 적용합니다.</p>

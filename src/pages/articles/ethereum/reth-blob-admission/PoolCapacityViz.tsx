@@ -56,9 +56,9 @@ const SCENES: readonly Scene[] = [
     slots: [
       { name: "A", state: "kept" },
       { name: "B", state: "kept" },
-      { name: "C", state: "worst" },
-      { name: "D", state: "kept" },
       { name: "T₀", state: "new" },
+      { name: "D", state: "kept" },
+      { name: "C", state: "worst" },
     ],
     sidecar: ["Sidecar", "T₀는 남음 · 다음 단계에서 전달"],
     note: "Batch를 넣은 뒤 size limit을 넘었으므로 discard_worst가 Pool 기준으로 가장 나쁜 후보를 지웁니다. 이 경우에는 C가 골라졌다고 가정합니다. T₀는 Pool에 남습니다.",

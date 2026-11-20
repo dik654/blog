@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #comparison 둘째 문단 — Public Endpoint · Private Endpoint · VPN Gateway · ExpressRoute.
  * 각 장면의 출발점(인터넷의 사용자, VNet 안 VM, 회사 망)은 설명을 위한 가정이다.
- * "공용 인터넷 위 터널"(VPN Gateway)과 "공용 인터넷을 거치지 않음"(ExpressRoute)은 두 용어의 짧은 정의다.
+ * "공용 인터넷 위 터널"(VPN Gateway)과 "공용 인터넷을 거치지 않음"(ExpressRoute)은 본문 둘째 문단의 정의와 같다.
  */
 type Lane = "public" | "private";
 
@@ -82,7 +82,7 @@ export default function ConnectionPathViz() {
   return (
     <SceneShell
       eyebrow="연결 경로"
-      title="네 연결은 출발점과 지나는 길이 다릅니다"
+      title="네 연결은 지나는 길이 다릅니다"
       description="가운데 두 줄 중 파란 줄이 요청이 지나는 길입니다. 위는 누구나 쓰는 공용 인터넷, 아래는 공용 인터넷을 거치지 않는 사설 구간입니다. 출발점은 설명을 위한 가정입니다."
       ariaLabel="Public Endpoint, Private Endpoint, VPN Gateway, ExpressRoute의 출발점, 경로, 도착점"
       scenes={SCENES}

@@ -82,7 +82,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Scheduler 가 어느 clock 에 warp 하나를 보면 그 warp 는 issue 됐거나(selected), 준비됐지만 다른 warp 에 밀렸거나(not
+            Scheduler 가 어느 clock 에 warp 하나를 보면 그 warp 는 issue 됐거나(selected), 다음 instruction 을 낼 준비가 됐지만(eligible) 다른 warp 에 밀렸거나(not
             selected), 무언가를 기다리는 중입니다. 기다림의 종류를 stall reason 이라고 부릅니다. Nsight Compute 는 기다리는 대상이 무엇인지로 스무 가지
             가까이 나눕니다.
           </p>
@@ -101,7 +101,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             수치로 읽어 보겠습니다. 한 scheduler가 관리한 active warp 표본 100개가 long
             scoreboard 60, short scoreboard 15, barrier 10, not selected 10, selected 5로
             나뉘었다고 합시다. 평균적으로 issue 한 번 사이에 warp 상태 표본이 20개 있었고,
-            그중 12개가량이 L1TEX 경로의 결과를 기다리는 표본입니다.
+            그중 12개가량이 global·local·texture memory 의 결과를 기다리는 표본입니다.
           </p>
           <p>
             단, 여기서 곧바로 “100 clock 중 60 clock을 HBM에서 기다렸다”라고 말하면 안 됩니다.
@@ -121,7 +121,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
           items={[
             { term: "Long scoreboard", description: "L1TEX 경로(global·local·surface·texture) 의 결과를 기다립니다.", example: "L2 miss 뒤 HBM 왕복 수백 clock 동안 이 상태로 잡힙니다.", boundary: "Access pattern 과 cache hit 를 고치는 문제이며 warp 수만 늘려서는 한계가 있습니다." },
             { term: "Short scoreboard", description: "MIO 경로(shared memory·MUFU·dynamic branch) 의 결과를 기다립니다.", example: "Bank conflict 로 shared load 가 여러 차례로 나뉘면 표본이 늘어납니다.", boundary: "수십 clock 단위라 ready warp 가 몇 개만 있어도 대부분 숨겨집니다." },
-            { term: "Barrier", description: "같은 block 의 형제 warp 가 CTA barrier 에 도착하기를 기다립니다.", example: "Warp 하나만 긴 branch 를 돌면 나머지 7개가 barrier 에서 멈춥니다.", boundary: "Block 을 작게 나누면 줄지만 shared memory 가 새 occupancy 한도가 될 수 있습니다." },
+            { term: "Barrier", description: "같은 block 의 형제 warp 가 CTA barrier 에 도착하기를 기다립니다.", example: "Warp 하나만 긴 branch 를 돌면 나머지 7개가 barrier 에서 멈춥니다.", boundary: "Block 을 작게 나누면 줄지만 shared memory 가 새 occupancy(SM 에 동시에 상주할 수 있는 warp 수) 한도가 될 수 있습니다." },
             { term: "Not selected", description: "준비됐지만 같은 clock 에 다른 eligible warp 가 선택됐습니다.", example: "warp 8개에서 표본의 30% 가 not selected 면 매 clock 선택된 warp 말고도 평균 2.4개(0.3×8)가 더 대기했으니 후보가 평균 둘 이상입니다.", boundary: "이 비율이 높으면 warp 가 부족한 것이 아니라 충분한 것입니다." },
             { term: "Wait", description: "산술 instruction 의 고정 latency 를 기다립니다.", example: "FFMA 결과를 바로 쓰는 chain 에서 약 4 clock 씩 쌓입니다.", boundary: "이미 잘 최적화된 kernel 에서만 상위 원인으로 올라옵니다." },
             { term: "Math pipe throttle", description: "다음 instruction 을 보낼 실행 pipe 가 이미 차 있습니다.", example: "모든 warp 가 FP64 pipe 만 쓰면 pipe 폭이 상한이 됩니다.", boundary: "Warp 를 늘려도 issue 가 늘지 않고 instruction mix 를 바꿔야 합니다." },

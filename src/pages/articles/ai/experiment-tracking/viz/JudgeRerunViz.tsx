@@ -16,7 +16,7 @@ const SCENES = [
   { label: "생성 실행이 답변 100개를 남깁니다", summary: "trace 100개 고정", note: "생성 실행은 어떤 prompt와 model이 어떤 trace를 만들었는지 남깁니다. trace는 질문·답변을 포함한 생성 기록입니다. 이 답변 100개가 뒤의 두 평가에 똑같이 들어갑니다." },
   { label: "평가 실행 1: 78%", summary: "100개 중 78개 통과", note: "평가 실행은 고정된 trace 묶음에 어떤 기대값, scorer 코드, judge 지침과 judge model(채점하는 model)을 적용했는지 남깁니다. 생성은 다시 돌리지 않습니다." },
   { label: "평가 실행 2: 86%", summary: "같은 답변 · 다른 자", note: "두 번째 평가에서 지침에 간결성을 추가하고 judge model도 바꿨습니다. 답변 bytes가 같아도 78%와 86%는 같은 자로 잰 결과가 아닙니다. 답변은 그대로이므로 8%p 차이를 답변이 좋아진 것으로 읽을 수 없습니다." },
-  { label: "회귀 비교는 채점자를 고정합니다", summary: "scorer version 고정", note: "점수 하락을 걸러 내는 회귀 비교(regression gate)에서는 \"latest\"를 암묵적으로 읽지 않고 채점자(scorer)의 version을 고정합니다. 새 judge를 기준으로 삼으려면 사람 평가와의 일치, 보호 slice, 비용과 parsing failure(judge 응답을 판정값으로 읽지 못한 경우)를 비교한 뒤 기준선을 새로 만듭니다." },
+  { label: "회귀 비교는 채점자를 고정합니다", summary: "scorer version 고정", note: "점수 하락을 걸러 내는 회귀 비교(regression gate)에서는 \"latest\"를 암묵적으로 읽지 않고 채점자(scorer)의 version을 고정합니다. 새 judge를 기준으로 삼으려면 사람 평가와의 일치, 보호 slice(점수가 떨어지면 안 되는 중요한 질문 부분집합)의 점수, 비용과 parsing failure(judge 응답을 판정값으로 읽지 못한 경우)를 비교한 뒤 기준선을 새로 만듭니다." },
 ] as const;
 
 function Box({ x, y, w, title, sub, color, on, dashed = false }: { x: number; y: number; w: number; title: string; sub: string; color: string; on: boolean; dashed?: boolean }) {

@@ -1,8 +1,8 @@
 import SceneShell from "./SceneShell";
 
 /**
- * 본문 대응: rectifier-activations #negative-slope — 음수 구간의 출력 a·y에서
- * 뒤 변화율 4가 두 갈래로 돌아간다. 입력 쪽은 4×a=0.04, a 쪽은 4×y=−8(원문 식 (3)).
+ * 본문 대응: rectifier-activations #negative-slope — 음수 구간의 출력 a·z에서
+ * 뒤 변화율 4가 두 갈래로 돌아간다. 입력 쪽은 4×a=0.04, a 쪽은 4×z=−8(원문 식 (3)).
  * 양수 입력 3은 a를 쓰지 않아 a 쪽 기여 0. a를 공유하면(가정) 합은 −8+0=−8.
  */
 const FWD = "#2563eb";
@@ -23,19 +23,19 @@ const SCENES: readonly Scene[] = [
   {
     label: "앞으로: 음수 입력에 a를 곱함",
     summary: "0.01 × (−2) = −0.02",
-    note: "음수 구간에서는 출력이 a×y입니다. a=0.01, y=−2를 넣으면 −0.02가 나갑니다(가정). 출력 하나에 y와 a 두 값이 함께 들어갔습니다.",
+    note: "음수 구간에서는 출력이 a×z입니다. a=0.01, z=−2를 넣으면 −0.02가 나갑니다(가정). 출력 하나에 z와 a 두 값이 함께 들어갔습니다.",
     phase: "forward",
   },
   {
     label: "입력 쪽으로 돌아가는 값",
     summary: "4 × 0.01 = 0.04",
-    note: "뒤에서 변화율 4가 옵니다. 입력 y를 조금 바꾸면 출력은 a배만큼 움직이므로 4에 a를 곱한 0.04가 입력 쪽으로 갑니다. 7절에서 본 0.04와 같은 값이고, 입력 y(위 식의 z)를 만든 앞 계산을 고칠 때 씁니다.",
+    note: "뒤에서 변화율 4가 옵니다. 입력 z를 조금 바꾸면 출력은 a배만큼 움직이므로 4에 a를 곱한 0.04가 입력 쪽으로 갑니다. 7절에서 본 0.04와 같은 값이고, 입력 z를 만든 앞 계산을 고칠 때 씁니다.",
     phase: "toInput",
   },
   {
     label: "a 쪽으로 돌아가는 값",
     summary: "4 × (−2) = −8",
-    note: "원문 식 (3)은 음수 구간에서 출력의 a에 대한 변화율이 y 자체라고 씁니다. 그래서 a 쪽에는 4에 y=−2를 곱한 −8이 갑니다. 같은 4에서 나왔어도 0.04는 z를, −8은 a를 고칠 때 쓰는 다른 값입니다.",
+    note: "원문 식 (3)은 음수 구간에서 출력의 a에 대한 변화율이 입력 z 자체라고 씁니다. 그래서 a 쪽에는 4에 z=−2를 곱한 −8이 갑니다. 같은 4에서 나왔어도 0.04는 z를, −8은 a를 고칠 때 쓰는 다른 값입니다.",
     phase: "toSlope",
   },
   {
@@ -80,7 +80,7 @@ export default function TwoGradientsViz() {
     <SceneShell
       eyebrow="두 갈래의 변화율"
       title="같은 뒤 변화율 4가 입력 쪽과 a 쪽으로 다르게 돌아갑니다"
-      description="파란 화살표는 앞으로 가는 값, 주황 화살표는 뒤로 돌아가는 변화율(그 값을 조금 바꿀 때 결과가 바뀌는 비율)입니다. a는 음수 구간의 기울기이고, PReLU에서는 이 a도 학습합니다. y는 원문 식에서 쓰는 입력 이름으로, 위 식의 z와 같은 값입니다."
+      description="파란 화살표는 앞으로 가는 값, 주황 화살표는 뒤로 돌아가는 변화율(그 값을 조금 바꿀 때 결과가 바뀌는 비율)입니다. a는 음수 구간의 기울기이고, PReLU에서는 이 a도 학습합니다. z는 위 식의 입력이고, 원문 식은 같은 값을 y로 씁니다."
       ariaLabel="음수 입력 −2와 기울기 a=0.01에서 뒤 변화율 4가 입력 쪽 0.04, a 쪽 −8로 갈라지는 네 장면"
       scenes={SCENES}
       render={(active) => {
@@ -91,7 +91,7 @@ export default function TwoGradientsViz() {
         const slopeBack = phase === "toSlope";
         return (
           <svg viewBox="0 0 360 200" className="mx-auto w-full max-w-lg" role="img" aria-label={SCENES[active].summary}>
-            <Node x={6} y={30} title="입력 y (= z)" value={positive ? "3" : "−2"} color={inputBack ? BACK : FWD} />
+            <Node x={6} y={30} title="입력 z" value={positive ? "3" : "−2"} color={inputBack ? BACK : FWD} />
             <Node x={6} y={132} title="음수 기울기 a" value="0.01" color={positive ? IDLE : slopeBack ? BACK : FWD} />
             <circle cx="186" cy="100" r="20" fill="none" stroke={positive ? IDLE : FWD} strokeWidth="1" />
             <text x="186" y="105" textAnchor="middle" fontSize={positive ? "10" : "16"} fill={INK}>

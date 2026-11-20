@@ -143,8 +143,6 @@ export default function Observability() {
         </p>
       </div>
 
-      <DiffInDiffViz />
-
       <ExplainedFormula
         question="한 번의 운영 변경이 실제로 사용자 SLI를 개선했다고 언제 말할 수 있는가?"
         idea={
@@ -207,6 +205,8 @@ export default function Observability() {
         ]}
         interpretation="변경 직후 TTFT가 낮아졌다는 사실만으로 성공이라 결론 내리지 않습니다. Control도 같은 폭으로 좋아졌다면 traffic이 가벼워진 결과일 수 있습니다."
       />
+
+      <DiffInDiffViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>자율 운영은 권한보다 검증 범위를 먼저 늘린다</h3>

@@ -241,7 +241,15 @@ figure[data-viz="modern"]:has([data-viz-controls])
 figure[data-viz="modern"]:not([data-viz-document-flow]):has([data-viz-controls]) > [data-viz-canvas] [data-viz-controls] {
   position: sticky;
   bottom: 0;
+  padding-bottom: 1.25rem;
   background: var(--background);
+}
+
+/* sticky의 bottom: 0은 scrollport의 padding 안쪽 기준이라, canvas에 아래 padding이
+   있으면 조작부 아래로 그만큼 틈이 생기고 스크롤된 본문 한 줄이 그 틈에 비친다.
+   아래 여백은 조작부의 padding이 대신 맡는다. 조작부를 숨기는 정적 본문은 제외한다. */
+html.js-enabled figure[data-viz="modern"]:not([data-viz-document-flow]):has([data-viz-controls]) > [data-viz-canvas]:has([data-viz-controls]) {
+  padding-bottom: 0;
 }
 
 /* 내부 wrapper가 별도 scrollport가 되면 sticky 조작부가 장면 높이를 따라

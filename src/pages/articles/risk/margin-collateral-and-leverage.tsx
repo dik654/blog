@@ -110,7 +110,7 @@ export default function Article() {
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">대출 비율과 선물 잔액의 서로 다른 계산을 비교했습니다. 마지막으로 시장 전체로 번지는 경로를 살핍니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">10. 모두의 매각이 다른 사람의 담보 부족을 만듭니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">10. 모두의 매각이 다른 사람의 담보 부족을 키울 수 있습니다</h2>
         <FundingLoopViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">여러 사람이 40억 원씩 팔려 하면 그 물량을 받아 줄 매수자가 부족해 가격이 더 내려갈 수 있습니다. 그러면 아직 팔지 않은 투자자도 담보 가치 하락으로 추가 지급을 요구받습니다. 자금 부족과 거래 가격 하락이 서로를 키우는 고리입니다.</p>

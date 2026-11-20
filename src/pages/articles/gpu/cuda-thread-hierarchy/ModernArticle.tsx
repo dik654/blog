@@ -167,8 +167,8 @@ export default function Article(){const sidebar=useCodeSidebar();return <div cla
         </div>
       <ClusterPlacementViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">Compute capability 9.0부터는 선택적인 thread block cluster 계층도 있습니다. 같은 cluster의 block들은 같은 GPC에 함께 배치되도록 보장되지만 한 SM에 모두 놓인다는 뜻은 아닙니다. GridDim은 여전히 block 수를 나타냅니다.</p>
-        <p className="leading-8">공식 문서의 portable cluster 크기는 최대 block 8개이며 작은 장치나 분할 설정은 더 작을 수 있습니다. 장치와 해당 kernel에서 가능한 크기를 조회해야 합니다. Cluster의 distributed shared memory를 사용할 때는 cluster 동기화로 다른 block의 공유 공간 수명과 접근 순서를 맞춰야 합니다. 이 기능을 모든 CUDA GPU의 기본 능력으로 가정하지 않습니다.</p>
+        <p className="leading-8">Compute capability 9.0부터는 선택적인 thread block cluster 계층도 있습니다. 같은 cluster의 block들은 SM 여러 개를 묶은 상위 처리 구역인 같은 GPC(GPU Processing Cluster)에 함께 배치되도록 보장되지만 한 SM에 모두 놓인다는 뜻은 아닙니다. GridDim은 여전히 block 수를 나타냅니다.</p>
+        <p className="leading-8">공식 문서의 portable cluster 크기(더 큰 non-portable 크기와 달리 별도 opt-in 속성 없이 요청할 수 있는 크기)는 최대 block 8개이며 작은 장치나 분할 설정은 더 작을 수 있습니다. 장치와 해당 kernel에서 가능한 크기를 조회해야 합니다. Cluster의 distributed shared memory를 사용할 때는 cluster 동기화로 다른 block의 공유 공간 수명과 접근 순서를 맞춰야 합니다. 이 기능을 모든 CUDA GPU의 기본 능력으로 가정하지 않습니다.</p>
       </div>
 <CitationBlock source="CUDA C++ Programming Guide 13.0.2 · Thread Hierarchy·SIMT·Thread Block Clusters" citeKey={2} href="https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html">Block별 독립 배치와 warp의 구성, cluster 지원·크기·공유 공간 조건을 확인합니다.</CitationBlock>
     </section>

@@ -57,7 +57,7 @@ const SCENES = [
     gate: "수락",
     rows: ["miss", "miss", "miss"],
     result: "AGENT_SELECTION_REQUIRED",
-    note: "Agent가 여럿인데 일치하는 binding도 소유자 기본값도 없으면 Agent를 고르지 못한 상태로 끝납니다. 다른 Agent로 조용히 우회하지 않습니다.",
+    note: "Agent가 여럿인데 일치하는 binding도 소유자 기본값도 없으면 Agent를 고르지 못한 상태로 끝납니다.",
   },
 ] as const satisfies readonly { label: string; summary: string; message: string; gate: string; rows: readonly RowState[]; result: string; note: string }[];
 

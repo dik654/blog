@@ -257102,7 +257102,7 @@ export const ARTICLE_LEARNING: Readonly<
   "markets/collateral-optimization-eligibility-haircuts-and-liquidity": {
     entryLevel: false,
     entryNote:
-      "인정가치 10을 채우기 위해 5% 할인 채권 A 10.53과 15% 할인 채권 B 11.77을 비교하는 사례에서 시작합니다.",
+      "인정가치 10을 채우기 위해 5% 할인 채권 A 10.53과 15% 할인 채권 B 11.76을 비교하는 사례에서 시작합니다.",
     coreIdea:
       "담보 최적화는 적격성·집중·통화·결제 제약을 먼저 적용하고 할인 후 가치당 조달·기회·운영 비용을 비교해 자산을 배정하되, 다음 증거금 충격을 견딜 현금과 고유동성자산 완충을 남기는 문제입니다.",
     assumedKnowledge: [
@@ -257191,7 +257191,7 @@ export const ARTICLE_LEARNING: Readonly<
         level: "basic",
         question: "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
         answerChecklist: [
-          "10÷95%=10.53과 10÷85%=11.77을 계산하고 B의 인정가치 한도 5 때문에 B 5와 A 5를 섞습니다.",
+          "10÷95%=10.53과 10÷85%=11.76을 계산하고 B의 인정가치 한도 5 때문에 B 5와 A 5를 섞습니다.",
           "입력과 단위",
           "계산 뒤 행동",
         ],

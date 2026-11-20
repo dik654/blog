@@ -97,7 +97,7 @@ let proof = self.provider
     .block_id(block.header().hash().into())
     .await?;
 
-// 5. Account와 storage proof를 그 header의 root에 대조합니다.
+// 5. Account proof는 header의 state root에, storage proof는 account의 storage root에 대조합니다.
 verify_account_proof(&proof, block.header().state_root())?;
 verify_storage_proof(&proof)?;
 

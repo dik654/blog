@@ -30,7 +30,7 @@ const SCENES = [
     property: 1,
     rows: [
       { label: "주소 a 원래", bits: C_A, tone: "plain", verdict: "C_a" },
-      { label: "주소 a 변조", bits: C_A_FLIPPED, tone: "tampered", verdict: "탐지·차단" },
+      { label: "주소 a 변조 (탐지: 무결성 구조)", bits: C_A_FLIPPED, tone: "tampered", verdict: "탐지·차단" },
     ],
     note: "공격자가 암호문 일부를 바꾸는 경우입니다. 암호화는 평문을 숨길 뿐이고, 허가받지 않은 변경을 탐지하거나 차단하는 일은 무결성 구조가 맡습니다.",
   },

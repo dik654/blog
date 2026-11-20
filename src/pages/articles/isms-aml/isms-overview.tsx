@@ -61,8 +61,6 @@ export default function IsmsOverview() {
           </p>
         </div>
 
-        <ScopeBoundaryViz />
-
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             인증범위(scope)는 회사 이름과 같은 말이 아닙니다. 대상 서비스와 이를 운영하는
@@ -74,6 +72,8 @@ export default function IsmsOverview() {
             근거를 설명해야 합니다.
           </p>
         </div>
+
+        <ScopeBoundaryViz />
 
         <div id="paper-isms-legal-basis" className="scroll-mt-24">
           <CitationBlock citeKey={1} source="정보통신망법 제47조 · 2026-07-07 시행" href={NETWORK_ACT}>
@@ -190,8 +190,6 @@ export default function IsmsOverview() {
           </p>
         </div>
 
-        <RemediationReachViz />
-
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             결함이 나오면 증상만 수정하지 않습니다. 요구사항과 직접 원인, 근본 원인을 찾고
@@ -204,6 +202,11 @@ export default function IsmsOverview() {
             HR event 누락 원인을 고쳐 전체 퇴직자 모집단과 API key, VPN certificate까지
             다시 대조해야 합니다.
           </p>
+        </div>
+
+        <RemediationReachViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             법상 인증 유효기간은 3년이고 연 1회 이상 사후관리가 수행됩니다. 그러나 그 기간 동안 시스템이 안전하다는 보증은 아닙니다. 인증은 정해진 범위와 심사시점·표본에서 관리체계가
             기준에 적합했음을 보여주는 evidence입니다. 범위 밖 서비스, 이후 변경, 발견되지 않은 취약점과 실제 공격 성공 가능성은 별도 운영 관리가 필요합니다.

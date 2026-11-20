@@ -75,7 +75,7 @@ export default function RooflineShapeViz() {
               </>
             )}
             <text x={X1} y={PEAK_Y - 6} textAnchor="end" fontSize={11} fill="#2563eb">P_peak · 연산 장치 상한</text>
-            <text x={X0 + 14} y={slopeY(X0 + 14) - 8} fontSize={11} fill="#2563eb" transform={`rotate(-36.9 ${X0 + 14} ${slopeY(X0 + 14) - 8})`}>I × B_mem · HBM 상한</text>
+            <text x={X0 + 14} y={slopeY(X0 + 14) - 14} fontSize={11} fill="#2563eb" transform={`rotate(-36.9 ${X0 + 14} ${slopeY(X0 + 14) - 14})`}>I × B_mem · HBM 상한</text>
 
             <line x1={ridge} y1={PEAK_Y} x2={ridge} y2={Y_BOTTOM} stroke="#94a3b8" strokeWidth={1} strokeDasharray="2 3" />
             <text x={(X0 + ridge) / 2} y={Y_BOTTOM - 6} textAnchor="middle" fontSize={11} fill="#64748b">memory-bound</text>

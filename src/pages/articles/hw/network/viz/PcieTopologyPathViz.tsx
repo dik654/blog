@@ -64,7 +64,7 @@ const SCENES = [
     edges: ["sw1-A", "top-sw1", "c0-top", "c0-sw3", "sw3-D"],
     nodes: ["sw1", "swTop", "cpu0", "sw3"],
     socket: false,
-    note: "공통 switch가 없어 CPU 0의 host bridge(CPU 쪽 PCIe 출입구, root complex)를 거쳐 내려갑니다. Platform에 따라 이런 peer access가 제한될 수도 있습니다.",
+    note: "공통 switch가 없어 CPU 0의 한 host bridge(CPU 쪽 PCIe 출입구, root complex)를 거쳐 내려갑니다. Platform에 따라 이런 peer access가 제한될 수도 있습니다.",
   },
   {
     label: "SYS · CPU 사이 연결",

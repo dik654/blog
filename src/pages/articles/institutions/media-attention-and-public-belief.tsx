@@ -40,7 +40,7 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">광고 1천 회 노출은 1천 명이 봤다는 뜻이 아닙니다. 같은 사람에게 여러 번 나갈 수 있습니다. 게시물 10개의 비중과 광고 노출 수 역시 서로 다른 분모입니다.</p>
         </div>
-        <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">100·10·1천 회의 단위를 구별했습니다. 화면의 선택 과정을 엽니다.</p>
+        <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">게시물 수와 광고 노출 횟수, 사람 수를 구별했습니다. 화면의 선택 과정을 엽니다.</p>
       </section>
       <section id="picture" data-teaching-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1 · 순서가 바뀌면 보지 못한 정보도 생깁니다</h2>

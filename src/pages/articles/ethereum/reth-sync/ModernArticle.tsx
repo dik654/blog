@@ -94,7 +94,6 @@ export default function ModernArticle() {
 
       <section id="short-gap" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">짧은 누락 구간은 downloader와 engine tree가 이어 붙입니다</h2>
-        <GapBranchViz />
         <p>
           Downloader가 target block을 받았는데 부모가 비어 있으면 engine tree는 missing parent와 현재 canonical tip 사이의 거리를 계산합니다. Backfill 기준보다 짧으면 <code>DownloadRequest::block_range</code>로 연속 부모를 가져옵니다. Side branch처럼 높이만으로 연속 범위를 정할 수 없으면 한 block씩 요청합니다.
         </p>
@@ -146,6 +145,7 @@ export default function ModernArticle() {
         <p>
           Pipeline이 active인 동안 새 <code>forkchoiceUpdated</code>에는 <code>SYNCING</code>으로 답하고 최신 target·finalized hash만 전달합니다. 새 <code>newPayload</code>는 실행하지 않고 메모리 buffer에 둡니다. 두 경로가 같은 canonical state를 동시에 쓰지 않게 하는 제어입니다.
         </p>
+        <GapBranchViz />
       </section>
 
       <section id="full-sync" className="space-y-6 scroll-mt-20">

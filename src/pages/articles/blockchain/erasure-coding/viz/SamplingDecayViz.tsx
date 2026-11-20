@@ -45,7 +45,7 @@ export default function SamplingDecayViz() {
   return (
     <SceneShell
       eyebrow="Data availability sampling"
-      title="Sample을 하나 늘릴 때마다 숨김을 놓칠 확률이 절반으로 줄어듭니다"
+      title="Cell 절반을 숨기면(β=1/2) sample을 하나 늘릴 때마다 놓칠 확률이 절반으로 줄어듭니다"
       description="Cell 절반이 숨겨졌다고 둔 본문 예시(β=1/2)입니다. 막대 하나는 sample s번이 모두 공개 cell만 고를 확률 (1−β)^s입니다."
       ariaLabel="sample 수 1부터 10까지 숨김을 모두 놓칠 확률이 절반씩 줄어드는 막대"
       scenes={SCENES}

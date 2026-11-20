@@ -55,7 +55,7 @@ export default function ModernMsmGpuArticle() {
   { expression: String.raw`(2^{c-1})`, annotation: ["signed digit이라 절댓값 bucket만","c=4면 8개"] },
   { expression: String.raw`s_P`, annotation: ["compressed 크기가 아닌 device","point 크기 96B → 4×2×8×96 = 6,144B"] },
 ]} terms={[
-        {symbol:"B_{bucket}",name:"Bucket bytes",description:"Alignment와 sort workspace를 제외한 bucket point storage 상한입니다."},
+        {symbol:"B_{bucket}",name:"Bucket bytes",description:"Point 단위 alignment는 s_P에 포함하고, allocation 경계 padding과 sort workspace는 제외한 bucket point storage 상한입니다."},
         {symbol:"W",name:"Window count",description:"Scalar decomposition의 window 수입니다."},
         {symbol:"G",name:"Partition count",description:"충돌을 피하려고 복제한 독립 bucket groups 수입니다."},
         {symbol:"c",name:"Window bits",description:"Booth signed representation에서 magnitude bucket index 폭을 정합니다."},

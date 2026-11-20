@@ -42,7 +42,7 @@ const SCENES: readonly Scene[] = [
   },
 ];
 
-const LEWM_NOTE = "9절에서 볼 LeWM 논문 부록 D의 Planning solver 설정은 H=5개 행동 block 전체를 실행합니다. 한 block이 환경 행동 5개여서 5×5 = 25 환경 timestep입니다. 이 글의 H=2·K=1 가정과 다르며, 본문 사례의 수를 그대로 옮길 수 없습니다.";
+const LEWM_NOTE = "9절에서 볼 LeWM(LeWorldModel, 픽셀 관측의 표현을 예측해 계획하는 JEPA 계열 세계 모델) 논문 부록 D의 Planning solver 설정은 H=5개 행동 block 전체를 실행합니다. 한 block이 환경 행동 5개여서 5×5 = 25 환경 timestep입니다. 이 글의 H=2·K=1 가정과 다르며, 본문 사례의 수를 그대로 옮길 수 없습니다.";
 
 const ALL = [
   ...SCENES,

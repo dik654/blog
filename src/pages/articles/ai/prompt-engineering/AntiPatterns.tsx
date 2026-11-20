@@ -53,7 +53,7 @@ export default function AntiPatterns() {
         <p>
           Vague instruction은 objective와 completion criteria를 고칩니다. 근거 부족에는 RAG나 tool을 붙이고 syntax 실패에는 schema와
           constrained decoding을 적용합니다. 권한 오류나 data exfiltration 위험은 prompt 문장을 늘리는 대신 runtime policy에서 차단해야
-          합니다. 원인이 다른데 prompt만 계속 길게 만들면 context pollution과 충돌이 늘어납니다.
+          합니다. 원인이 다른데 prompt만 계속 길게 만들면 context pollution, 즉 불필요한 문장이 문맥을 채우는 일과 충돌이 늘어납니다.
         </p>
       </div>
 
@@ -90,7 +90,7 @@ export default function AntiPatterns() {
         </p>
         <p>
           새 model로 옮길 때는 같은 regression suite와 production canary를 통과한 뒤 traffic을 늘립니다. quality나 constraint
-          violation, p95 latency, token cost 중 하나라도 guardrail을 넘으면 rollback합니다.
+          violation, p95 latency, token cost 중 하나라도 미리 정한 허용 기준선인 guardrail을 넘으면 이전 구성으로 되돌리는 rollback을 합니다.
         </p>
         <p>
           이 과정을 거치면 prompt engineering은 input contract와 evaluator를 함께 관리하는 engineering loop가 됩니다. 모델과 말씨를 맞추는

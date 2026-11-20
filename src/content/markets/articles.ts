@@ -783,7 +783,7 @@ export const marketsArticles: Article[] = [
     },
     {
       "id": "case",
-      "title": "3. 할인율 5%와 15%는 필요한 시장가를 10.53과 11.77로 바꿉니다"
+      "title": "3. 할인율 5%와 15%는 필요한 시장가를 10.53과 11.76으로 바꿉니다"
     },
     {
       "id": "picture",

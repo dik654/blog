@@ -22,7 +22,7 @@ const SCENES = [
   { label: "세관은 100만 봅니다", summary: "수출 기록 100", lit: ["foreign", "domestic", "assembly", "customs"], trace: false, stop: false, note: "완제품 100이 수출되면 세관은 100을 기록합니다. 그 안에 외국 몫이 얼마인지는 이 기록에 따로 적히지 않습니다." },
   { label: "투입산출표가 앞단을 거슬러 갑니다", summary: "외국 40 · 국내 60", lit: ["foreign", "domestic", "assembly", "customs"], trace: true, stop: false, note: "투입산출표는 업종 사이에 무엇을 얼마나 사고팔았는지 적은 표입니다. 이 표로 앞단 거래를 추적하면 100을 외국 40과 국내 60으로 분리합니다." },
   { label: "뒷단에서 길이 갈라집니다", summary: "소비 또는 다시 수출", lit: ["foreign", "domestic", "assembly", "customs", "consume", "reexport"], trace: true, stop: false, note: "구매국이 완제품을 소비하면 가치가 최종수요에 닿습니다. 다시 가공해 제3국에 수출하면 국내 60도 다음 나라의 수출 안에 들어갑니다." },
-  { label: "한 단계가 멈추면", summary: "대체 공급자는 얼마나 빨리?", lit: ["domestic", "assembly", "customs", "consume", "reexport"], trace: false, stop: true, note: "충격 분석에서는 어느 단계가 멈추는지, 대체 공급자가 얼마나 빨리 품질·규격을 맞출 수 있는지 봅니다. 여기서는 외국 공급이 멈춘 경우를 예로 들었습니다(가정)." },
+  { label: "한 단계가 멈추면", summary: "대체 공급자는 얼마나 빨리?", lit: ["domestic"], trace: false, stop: true, note: "충격 분석에서는 어느 단계가 멈추는지, 대체 공급자가 얼마나 빨리 품질·규격을 맞출 수 있는지 봅니다. 여기서는 외국 공급이 멈춘 경우를 예로 들었습니다(가정)." },
 ] as const;
 
 function Box({ id, lit, stop = false, tag }: { id: NodeId; lit: boolean; stop?: boolean; tag?: string }) {

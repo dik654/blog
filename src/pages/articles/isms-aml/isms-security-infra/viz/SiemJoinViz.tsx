@@ -6,17 +6,17 @@ import SceneShell from "./SceneShell";
  * parsing failure·late arrival·duplicate를 관측하고 raw event→alert→case→response action provenance를 재생한다.
  * 40분 지연은 release 표의 "SIEM collector backlog로 40분 지연" 행이다. 시각·ID·각 event 내용은 예(가정)이다.
  */
-type Row = { source: string; time: string; event: string; state: "ok" | "late" | "parse" | "dup"; key?: string };
+type Row = { source: string; time: string; event: string; state: "ok" | "late" | "parse" | "dup"; key?: string; join?: string };
 
-/** 모든 줄이 함께 가진 공통 키(가정). 해석에 실패한 줄은 이 키가 비어 묶이지 않는다. */
+/** 공통 키(가정). request ID를 보지 못하는 네트워크 장비 줄은 자산과 시각(join)으로 잇는다. 해석에 실패한 줄은 키가 비어 묶이지 않는다. */
 const KEY = "u-3/h-9/req-17";
 
 const BASE: readonly Row[] = [
   { source: "VPN", time: "09:00:00", event: "session 시작", state: "ok" },
   { source: "Identity", time: "09:00:01", event: "인증 성공", state: "ok" },
-  { source: "Firewall", time: "09:00:02", event: "flow 허용", state: "ok" },
+  { source: "Firewall", time: "09:00:02", event: "flow 허용", state: "ok", join: "h-9 + 시각" },
   { source: "WAF", time: "09:00:02", event: "request 검사", state: "ok" },
-  { source: "IDS/IPS", time: "09:00:03", event: "signal", state: "ok" },
+  { source: "IDS/IPS", time: "09:00:03", event: "signal", state: "ok", join: "h-9 + 시각" },
   { source: "Application", time: "09:00:03", event: "403 응답", state: "ok" },
 ];
 
@@ -24,7 +24,7 @@ const LATE: readonly Row[] = BASE.map((row): Row => (row.source === "IDS/IPS" ? 
 
 const BROKEN: readonly Row[] = [
   ...BASE.map((row): Row => (row.source === "WAF" ? { ...row, event: "필드 해석 실패", state: "parse", key: "비어 있음" } : row)),
-  { source: "Firewall", time: "09:00:02", event: "flow 허용 (같은 event)", state: "dup" },
+  { source: "Firewall", time: "09:00:02", event: "flow 허용 (같은 event)", state: "dup", join: "h-9 + 시각" },
 ];
 
 const SCENES = [
@@ -86,9 +86,9 @@ function Table({ rows }: { rows: readonly Row[] }) {
                   <span className="hidden sm:inline"> · 09:40:03에 도착</span>
                 </>
               )}
-              <span className={`block whitespace-nowrap text-[11px] sm:hidden ${row.key ? "text-red-700 dark:text-red-400" : ""}`}>{row.key ?? KEY}</span>
+              <span className={`block whitespace-nowrap text-[11px] sm:hidden ${row.key ? "text-red-700 dark:text-red-400" : ""}`}>{row.key ?? row.join ?? KEY}</span>
             </span>
-            <span className={`hidden whitespace-nowrap font-mono text-xs sm:block ${row.key ? "text-red-700 dark:text-red-400" : "text-muted-foreground"}`}>{row.key ?? KEY}</span>
+            <span className={`hidden whitespace-nowrap font-mono text-xs sm:block ${row.key ? "text-red-700 dark:text-red-400" : "text-muted-foreground"}`}>{row.key ?? row.join ?? KEY}</span>
             <span className={`text-right font-semibold ${bad ? "text-red-700 dark:text-red-400" : "text-blue-700 dark:text-blue-400"}`}>{STATE_TEXT[row.state]}</span>
           </div>
         );
@@ -104,7 +104,7 @@ export default function SiemJoinViz() {
     <SceneShell
       eyebrow="SIEM 상관"
       title="흩어진 log를 같은 키로 묶어야 한 사건이 됩니다"
-      description="한 사용자의 급여 조회 한 건이 여섯 곳에 남긴 log입니다. 공통 키 u-3/h-9/req-17은 사용자·자산·request ID입니다(모두 가정)."
+      description="한 사용자의 급여 조회 한 건이 여섯 곳에 남긴 log입니다. 공통 키 u-3/h-9/req-17은 사용자·자산·request ID이고, request ID를 보지 못하는 firewall·IDS/IPS 줄은 자산과 시각으로 잇습니다(모두 가정)."
       note="40분 지연은 이 글 release 표의 ‘SIEM collector backlog로 40분 지연’ 행에서 왔고, 나머지 시각과 event 내용은 예(가정)입니다."
       ariaLabel="SIEM이 여러 log를 공통 키로 묶는 과정과 지연, 해석 실패, 중복, provenance"
       scenes={SCENES}

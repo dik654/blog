@@ -2,7 +2,7 @@ import SceneShell, { type ShellScene } from "./SceneShell";
 
 /**
  * 본문 대응: #roundtrip — E(D(b))=b, D(E(N(s)))=N(s), N(N(s))=N(s), 전체 경로 11 ≠ 10,
- * 그리고 개수만 비교하면 A와 B가 같아 보이는 자소군 검사.
+ * 그리고 개수만 비교하면 서로 다른 X와 Y가 같아 보이는 자소군 검사.
  */
 interface TripScene extends ShellScene {
   start: string;
@@ -19,7 +19,7 @@ const SCENES: readonly TripScene[] = [
   { label: "정규형 보존", summary: "D(E(N(s))) = N(s)", note: "기준이 원시 byte가 아니라 정규화한 문자열입니다. 저장했다 읽어도 정규형이 그대로인지 확인합니다.", start: "N(s) · 번호 4개", stepA: "부호화 E", middle: "10 byte", stepB: "해독 D", end: "N(s) · 번호 4개", check: "처음과 끝의 정규형이 같은지", fails: false },
   { label: "다시 정규화", summary: "N(N(s)) = N(s)", note: "같은 정규화를 다시 해도 더 바뀌지 않는지 확인합니다.", start: "N(s)", stepA: "정규화 N", middle: "N(N(s))", stepB: "비교", end: "N(s)", check: "한 번 더 해도 그대로인지", fails: false },
   { label: "전체 경로", summary: "11 byte ≠ 10 byte", note: "원시 byte 11개를 NFC의 10개로 바꾸는 전체 경로는 첫 등식의 변환 없음 전제와 다릅니다. 정규형을 기준으로 한 나머지 계약과 모순되지는 않습니다.", start: "b_raw · 11 byte", stepA: "NFC", middle: "N(s)", stepB: "부호화 E", end: "b_NFC · 10 byte", check: "첫 등식으로 검사할 경로가 아님", fails: true },
-  { label: "자소군 검사", summary: "개수만 비교하면 부족", note: "A와 B는 둘 다 자소군 한 개지만 내용은 다릅니다. 고정한 분할 버전에서 기대값을 정하고 묶음의 내용과 경계를 함께 대조해야 합니다.", start: "A", stepA: "개수 1", middle: "개수가 같음", stepB: "개수 1", end: "B", check: "내용과 경계까지 대조해야 함", fails: true },
+  { label: "자소군 검사", summary: "개수만 비교하면 부족", note: "서로 다른 두 문자열 X와 Y는 둘 다 자소군 한 개지만 내용은 다릅니다. 고정한 분할 버전에서 기대값을 정하고 묶음의 내용과 경계를 함께 대조해야 합니다.", start: "X", stepA: "개수 1", middle: "개수가 같음", stepB: "개수 1", end: "Y", check: "내용과 경계까지 대조해야 함", fails: true },
 ];
 
 function Node({ text, tone }: { text: string; tone: "plain" | "end" }) {

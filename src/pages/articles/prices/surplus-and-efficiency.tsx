@@ -328,7 +328,7 @@ export default function SurplusAndEfficiencyArticle() {
             <p className="leading-7">
               반반이 되는 이유는 두 줄의 기울기가 같기 때문입니다. 앞 글에서 낼
               수 있는 금액이 1씩 내려가고 드는 값이 1씩 올라가게 잡았습니다. 한쪽
-              줄이 더 가파르면 그쪽이 덜 부담합니다.
+              줄이 더 가파르면 그쪽이 더 부담합니다.
             </p>
 
             <p className="leading-7">

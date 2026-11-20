@@ -32,7 +32,8 @@ export default function RoundState({
         </p>
         <h3>+2/3 prevote가 생긴 BlockID에 따라 lock 동작이 달라집니다</h3>
         <p>
-          Majority가 없으면 nil에 precommit합니다. +2/3 nil이면 기존 lock을 해제하고 nil에 precommit합니다. +2/3가 현재 B41을 가리키면
+          Majority가 없으면 nil에 precommit합니다. +2/3 nil이면 기존 lock을 해제하고 nil에 precommit합니다. +2/3가 이미 lock한 block이면 LockedRound만 갱신해 relock하고,
+          현재 proposal도 locked block도 아닌 block이면 lock을 해제하고 nil에 precommit합니다. +2/3가 현재 B41을 가리키면
           LockedRound와 LockedBlock과 BlockParts를 함께 저장하고 B41에 precommit합니다. 단순히 round 번호가 커졌다는 이유만으로 lock을 버리지
           않는 이유는 <Link to="/cs/blockchain/bft-theory#safety-liveness">BFT lock과 view change</Link>에서 이어서 설명합니다.
         </p>

@@ -16,7 +16,7 @@ const SCENES = [
   { label: "해시 하나만 저장", summary: "H_base ≠ H_cand", note: "두 실행기가 만든 최종 블록 해시만 남겼다고 해 보겠습니다. 해시가 다르다는 사실은 알 수 있지만, 다섯 거래 중 어디에서 갈라졌는지는 해시 두 개만으로 알 수 없습니다." },
   { label: "거래별 영수증", summary: "거래마다 누적 가스 기록", note: "거래마다 영수증(receipt)을 남기면 각 거래의 성공 여부와 지금까지 쓴 가스 합계(cumulative gas)를 나란히 놓을 수 있습니다. 가스 숫자는 설명용 가정입니다." },
   { label: "첫 차이", summary: `${FIRST_DIFF + 1}번째 거래: ${BASE_CUM[FIRST_DIFF]} vs ${CAND_CUM[FIRST_DIFF]}`, note: `위에서부터 비교하면 1·2번째는 같고 ${FIRST_DIFF + 1}번째에서 처음 갈라집니다. 누적 값이라 4·5번째도 모두 5씩 다르게 보이지만 그 둘은 앞의 차이를 물려받은 것입니다. 그래서 '다른 곳'이 아니라 '처음 다른 곳'을 찾습니다.` },
-  { label: "같은 run ID로 묶기", summary: "run ID 하나에 모든 증거", note: `run ID는 실험 한 번의 기록을 묶는 이름입니다. ${FIRST_DIFF + 1}번째 거래를 찾았으면 같은 run ID에 묶인 그 거래의 receipt와 함께, 블록 단위로 남는 BundleAccount의 original/present 값, fork별 requests, 각 검증 항목을 꺼내 base와 candidate의 같은 기록끼리 대조합니다.` },
+  { label: "같은 run ID로 묶기", summary: "run ID 하나에 모든 증거", note: `run ID는 실험 한 번의 기록을 묶는 이름입니다. ${FIRST_DIFF + 1}번째 거래를 찾았으면 같은 run ID에 묶인 그 거래의 receipt와 함께, 블록 단위로 남는 BundleAccount의 original/present 값(바뀐 계정의 블록 실행 전 값과 실행 후 현재 값), fork별 requests, 각 검증 항목을 꺼내 base와 candidate의 같은 기록끼리 대조합니다.` },
 ] as const;
 
 const EVIDENCE = ["거래 3 receipt · cumulative gas", "블록 · BundleAccount original/present", "블록 · fork별 requests", "블록 · 각 검증 항목"] as const;

@@ -24,7 +24,7 @@ export default function CctpDepositViz() {
       eyebrow="(가정) 담보 1,000 USDC의 이동"
       title="1,000 USDC는 어떤 네 단계를 지나야 담보가 될까요"
       description="CCTP는 공식 USDC 문서가 권장하는 경로입니다(2026-10-18 확인). 전송 수수료는 넣지 않았습니다(가정)."
-      note="기존 Arbitrum Bridge2는 공식 문서에서 deprecated로 표시됩니다. 예전 bridge의 입금 시간과 최소액을 CCTP에 적용하지 않습니다."
+      note="기존 Arbitrum Bridge2는 공식 문서에서 deprecated(더 이상 권장하지 않는 사용 중단 경로)로 표시됩니다. 예전 bridge의 입금 시간과 최소액을 CCTP에 적용하지 않습니다."
       ariaLabel="출발지 소각, 발행자 인증, 도착지 발행, HyperCore 반영의 네 단계"
       scenes={SCENES}
       render={(active) => (

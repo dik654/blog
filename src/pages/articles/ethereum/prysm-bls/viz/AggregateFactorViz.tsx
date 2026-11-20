@@ -58,14 +58,14 @@ function SigCard({ sig }: { sig: Sig }) {
   );
 }
 
-function SizeBar({ label, bytes, color }: { label: string; bytes: number | null; color: string }) {
+function SizeBar({ label, bytes, color, empty = "−" }: { label: string; bytes: number | null; color: string; empty?: string }) {
   return (
     <div className="grid grid-cols-[5.5rem_minmax(0,1fr)_3.5rem] items-center gap-2 text-xs">
       <span className="text-muted-foreground">{label}</span>
       <div className="h-3 min-w-0 rounded-sm bg-muted/40">
         <div className="h-full rounded-sm" style={{ width: `${((bytes ?? 0) / SEPARATE) * 100}%`, backgroundColor: color }} />
       </div>
-      <span className="text-right font-mono">{bytes === null ? "−" : `${bytes} B`}</span>
+      <span className="text-right font-mono">{bytes === null ? empty : `${bytes} B`}</span>
     </div>
   );
 }
@@ -107,7 +107,12 @@ export default function AggregateFactorViz() {
             </div>
             <div className="space-y-1.5">
               <SizeBar label="따로 보내면" bytes={SEPARATE} color="#64748b" />
-              <SizeBar label="aggregate" bytes={active === 1 ? SIG_BYTES : null} color="#2563eb" />
+              <SizeBar
+                label={active === 2 ? "1-point 합" : "aggregate"}
+                bytes={active === 1 ? SIG_BYTES : null}
+                color="#2563eb"
+                empty={active === 2 ? "불가" : "−"}
+              />
             </div>
           </div>
         );

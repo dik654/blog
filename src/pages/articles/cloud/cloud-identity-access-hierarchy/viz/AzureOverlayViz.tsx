@@ -101,7 +101,20 @@ export default function AzureOverlayViz() {
                 </div>
               </div>
             </div>
-            <p className="mt-3 flex min-h-[2.75rem] items-center justify-center rounded-md border border-border px-3 text-center text-sm font-semibold">
+            <div className="mt-3 flex min-h-[3.25rem] flex-wrap content-center items-center justify-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+              {active === 0 && (
+                <>
+                  <span className="inline-flex items-center gap-1"><Chip on>구독 A</Chip>→<Chip on>Entra 테넌트</Chip></span>
+                  <span className="inline-flex items-center gap-1"><Chip on>구독 B</Chip>→<Chip on>Entra 테넌트</Chip></span>
+                </>
+              )}
+              {scope && (
+                <span className="inline-flex flex-wrap items-center justify-center gap-1">
+                  <Chip on>그룹</Chip>+<Chip on>역할 정의</Chip>+<Chip on>범위 ①–④ 중 하나</Chip>
+                </span>
+              )}
+            </div>
+            <p className="mt-2 flex min-h-[2.75rem] items-center justify-center rounded-md border border-border px-3 text-center text-sm font-semibold">
               {SCENES[active].link}
             </p>
           </div>

@@ -26,7 +26,7 @@ const STAGES = [
 
 function FunnelScene({ upTo }: { upTo: number }) {
   return (
-    <div className="mt-6 space-y-2.5">
+    <div className="mt-2 space-y-1.5">
       {STAGES.map((stage, index) => {
         const shown = index <= upTo;
         return (
@@ -35,13 +35,13 @@ function FunnelScene({ upTo }: { upTo: number }) {
               <span className="font-bold text-foreground">{stage.label}</span>
               <span className="font-mono font-bold text-primary">{shown ? `${stage.pct}%` : "—"}</span>
             </div>
-            <div className="mt-1 h-5 w-full border border-border bg-muted/30">
+            <div className="mt-0.5 h-2.5 w-full border border-border bg-muted/30">
               <div
                 className={`h-full ${shown ? "bg-primary/45" : "bg-transparent"}`}
                 style={{ width: `${shown ? stage.pct : 0}%` }}
               />
             </div>
-            <p className="mt-1 text-[11px] leading-5 text-muted-foreground">{stage.detail}</p>
+            <p className="text-[11px] leading-4 text-muted-foreground">{stage.detail}</p>
           </div>
         );
       })}
@@ -69,14 +69,16 @@ export default function LlmDatasetEngineeringAndCleaningViz() {
         className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
+          <h4 className="flex items-baseline gap-2 text-base font-bold">
+            <span className="text-[11px] font-black text-primary">
+              Scene · {String(scenes.active + 1).padStart(2, "0")}
+            </span>
+            {SCENES[scenes.active]}
+          </h4>
 
           <FunnelScene upTo={scenes.active} />
 
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-2 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
             {NOTES[scenes.active]}
           </p>
         </div>

@@ -10,8 +10,8 @@ const VALIDATORS = ["V0", "V1", "V2"] as const;
 const SCENES = [
   { label: "rotation 전", summary: "previous = epoch 9 · current = epoch 10", note: "Finality와 보상·패널티가 이 두 participation vector를 쓰는 동안에는 바꾸지 않습니다. 칸 하나가 validator 한 명의 participation 기록입니다." },
   { label: "rotation 후", summary: "current → previous · current = 0", note: "current 기록을 previous로 옮기고 새 current를 validator 수인 3칸만큼 0으로 만듭니다. 원래 previous에 있던 epoch 9 기록은 덮입니다. 이 단계가 보상·패널티보다 먼저 오면 방금 정산해야 할 participation evidence를 잃습니다." },
-  { label: "lookahead 전", summary: "가장 오래된 epoch … 마지막 epoch", note: "Proposer lookahead는 미래 slot의 proposer index를 epoch 단위(32개씩)로 미리 적어 둔 목록입니다. 맨 앞이 가장 오래된 epoch입니다." },
-  { label: "lookahead 후", summary: "앞 32개 밀어냄 · 끝에 epoch 10+k+1", note: "가장 오래된 epoch의 32개를 밀어내고 나머지를 앞으로 당긴 뒤, 끝에 epoch 10 + MIN_SEED_LOOKAHEAD + 1의 proposer를 계산해 채웁니다. 여기서 10은 state.slot 351의 epoch입니다." },
+  { label: "lookahead 전", summary: "epoch 10 · epoch 11 (mainnet k = 1)", note: "Proposer lookahead는 미래 slot의 proposer index를 epoch 단위(32개씩)로 미리 적어 둔 목록입니다. 맨 앞이 가장 오래된 epoch입니다." },
+  { label: "lookahead 후", summary: "epoch 10 밀어냄 · 끝에 epoch 12 = 10+k+1", note: "가장 오래된 epoch의 32개를 밀어내고 나머지를 앞으로 당긴 뒤, 끝에 epoch 10 + MIN_SEED_LOOKAHEAD + 1의 proposer를 계산해 채웁니다. 여기서 10은 state.slot 351의 epoch입니다." },
 ] as const;
 
 function Cell({ text, tone }: { text: string; tone: "old" | "new" | "zero" | "gone" }) {
@@ -43,27 +43,26 @@ function Participation({ after }: { after: boolean }) {
 
 function Lookahead({ after }: { after: boolean }) {
   const before = [
-    { text: "가장 오래된", tone: "old" as const },
-    { text: "…", tone: "old" as const },
-    { text: "마지막", tone: "old" as const },
+    { text: "epoch 10", tone: "old" as const },
+    { text: "epoch 11", tone: "old" as const },
   ];
   const shifted = [
-    { text: "…", tone: "old" as const },
-    { text: "이전 마지막", tone: "old" as const },
-    { text: "10+k+1", tone: "new" as const },
+    { text: "epoch 11", tone: "old" as const },
+    { text: "epoch 12", tone: "new" as const },
   ];
   return (
     <div className="grid gap-2">
       <div className="grid grid-cols-[4.5rem_repeat(3,minmax(0,1fr))] items-center gap-1.5">
         <span className="font-mono text-[11px] text-muted-foreground">밀려남</span>
-        <Cell text={after ? "가장 오래된" : "—"} tone={after ? "gone" : "zero"} />
+        <Cell text={after ? "epoch 10" : "—"} tone={after ? "gone" : "zero"} />
         <span className="col-span-2" />
       </div>
       <div className="grid grid-cols-[4.5rem_repeat(3,minmax(0,1fr))] items-center gap-1.5">
         <span className="font-mono text-[11px] text-muted-foreground">lookahead</span>
         {(after ? shifted : before).map((cell, index) => <Cell key={index} text={cell.text} tone={cell.tone} />)}
+        <span />
       </div>
-      <p className="min-h-5 text-[11px] text-muted-foreground">칸 하나 = 한 epoch의 proposer 32개 · k = MIN_SEED_LOOKAHEAD</p>
+      <p className="min-h-5 text-[11px] text-muted-foreground">칸 하나 = 한 epoch의 proposer 32개 · 길이 (k+1)×32 · k = MIN_SEED_LOOKAHEAD</p>
     </div>
   );
 }

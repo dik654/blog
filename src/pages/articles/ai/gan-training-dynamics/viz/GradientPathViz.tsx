@@ -22,7 +22,7 @@ const SCENES = [
     summary: "G(z).detach() → D만 갱신",
     note: "detach는 값은 그대로 쓰되 그 지점에서 뒤로 가는 기울기를 끊는 연산입니다. 생성된 x̃의 값만 D에 넣고 G 쪽 계산 그래프는 끊었으므로, 역전파는 φ까지만 가고 θ에는 닿지 않습니다.",
     cutBetween: 1,
-    stopRow: 2,
+    stopRow: 3,
     g: { text: "변화 없음", sub: "기울기 안 옴", tone: "none" },
     d: { text: "갱신", sub: "D optimizer", tone: "update" },
   },

@@ -24,7 +24,7 @@ interface Scene {
 
 const SCENES: readonly Scene[] = [
   { label: "22분 시간줄", summary: "14:10 → 14:32 = 22분", info: true, rec: true, order: true, gap: "none", doc: "ok", bound: false, note: "14시10분 고객정보 확정, 14시12분부터 18분 설명 녹취, 14시32분 주문입니다. 같은 사건의 자료가 22분 사이에 흩어져 생깁니다." },
-  { label: "녹취만 남으면", summary: "18분 녹취 · 나머지는 빈칸", info: false, rec: true, order: false, gap: "empty", doc: "missing", bound: false, note: "음성 파일 하나만 남고 당시 고객정보·설명서 버전·주문 화면이 없으면, 왜 그 주문을 받았는지 재구성하기 어렵습니다(1절)." },
+  { label: "녹취만 남으면", summary: "18분 녹취 · 나머지는 빈칸", info: false, rec: true, order: false, gap: "empty", doc: "missing", bound: false, note: "음성 파일 하나만 남고 당시 고객정보·설명서 버전·손실 계산·주문 화면이 없으면, 왜 그 주문을 받았는지 재구성하기 어렵습니다(1절)." },
   { label: "2분의 빈칸", summary: "14:30 녹취 끝 → 14:32 주문", info: true, rec: true, order: true, gap: "focus", doc: "ok", bound: false, note: "18분 녹취는 14시30분에 끝납니다. 주문까지 남은 2분 동안의 질문·변경·확인도 따로 기록해야 시간줄이 끊기지 않습니다." },
   { label: "4판만 남으면", summary: "설명에 쓴 판 = 3판 · 저장소 = 4판", info: true, rec: true, order: true, gap: "none", doc: "wrong", bound: false, note: "설명할 때 쓴 설명서는 3판인데 저장소에 최신 4판만 남았다면, 당시 무엇을 설명했는지 증명할 수 없습니다." },
   { label: "버전으로 묶기", summary: "사건번호 ← 3판 해시·버전 식별자", info: true, rec: true, order: true, gap: "none", doc: "bound", bound: true, note: "파일 해시(내용이 한 글자만 바뀌어도 달라지는 지문 값)나 버전 식별자로 주문 시점의 3판을 사건에 묶습니다. 이후 4판이 나와도 이 사건은 3판을 가리킵니다." },

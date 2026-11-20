@@ -66,7 +66,7 @@ function Shares({ trade }: { trade: boolean }) {
             <div className="relative h-16 overflow-hidden rounded-md border" style={{ borderColor: "#2563eb" }}>
               <div className="absolute inset-x-0 bottom-0 transition-[height] duration-300 motion-reduce:transition-none" style={{ height: `${fill[index] * 100}%`, backgroundColor: "#93c5fd" }} />
               <span className="relative block pt-1 text-[11px] font-semibold leading-4">
-                {trade ? (index === 0 ? "다 씀" : index === 1 ? "남음" : "") : "몫"}
+                {trade ? (fill[index] >= 1 ? "다 씀" : "남음") : "몫"}
               </span>
             </div>
             <span className="block text-xs">{name}</span>

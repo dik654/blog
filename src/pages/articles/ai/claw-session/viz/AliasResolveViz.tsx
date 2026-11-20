@@ -99,11 +99,11 @@ export default function AliasResolveViz() {
             {alias && (
               <g>
                 <line x1={140} y1={60} x2={240} y2={96} stroke={BLUE} strokeWidth={1} strokeDasharray="3 2" />
-                <text x={186} y={176} fontSize={10} fill={BLUE}>
+                <text x={10} y={174} fontSize={10} fill={BLUE}>
                   ① 현재 namespace 먼저: 없음
                 </text>
                 <line x1={186} y1={126} x2={160} y2={126} stroke={AMBER} strokeWidth={1.25} />
-                <text x={10} y={176} fontSize={10} fill={AMBER}>
+                <text x={10} y={188} fontSize={10} fill={AMBER}>
                   ② 다른 workspace까지 검색
                 </text>
               </g>

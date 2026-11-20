@@ -46,7 +46,7 @@ export default function BcsOrderViz() {
   return (
     <SceneShell
       eyebrow="BCS의 메시지 순서"
-      title="질문보다 root가 먼저 와야 열린 칸이 표 전체를 대표합니다"
+      title="질문보다 root가 먼저 와야 열린 칸이 표 전체를 확률적으로 대표합니다"
       description="위 줄은 메시지가 정해지는 순서, 아래 칸은 prover가 만든 표입니다. 8칸 표와 질문 두 칸은 설명용 가정입니다. 강조한 칸이 질문받아 열리는 칸입니다."
       ariaLabel="root를 먼저 고정한 순서, 표를 고친 경우, 순서를 뒤집은 경우의 비교"
       scenes={SCENES}

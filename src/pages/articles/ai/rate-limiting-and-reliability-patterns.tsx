@@ -77,7 +77,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         <RetryScatterViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            대기 시간을 매번 두 배로 늘리는 exponential backoff가 널리 쓰입니다. 여기에 무작위 값(jitter)을 더해 여러 client의 재시도 시점이 정확히 겹치지
+            대기 시간을 매번 두 배로 늘리는 exponential backoff가 널리 쓰입니다. 여기에 무작위 값(jitter)을 곱해 여러 client의 재시도 시점이 정확히 겹치지
             않게 흩어 놓습니다.
           </p>
         </div>

@@ -47,7 +47,7 @@ export default function BusinessModelCashflowArticle() {
 
         <GoodsMoneyRouteViz />
         <p className="mt-4 border-l border-border pl-4 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
-          첫 그림의 D−7에서는 재고와 선지출이, D0에서는 매출과 정산받을 권리가, D+14에서는 실제 입금이 바뀌었습니다. 같은 묶음이라도 세 상태는 한날에 바뀌지 않습니다.
+          1절 그림의 D−7에서는 재고와 선지출이, D0에서는 매출과 정산받을 권리가, D+14에서는 실제 입금이 바뀌었습니다. 같은 묶음이라도 세 상태는 한날에 바뀌지 않습니다.
         </p>
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">두 화살표의 날짜가 다르다는 점을 보면 왜 기다리는 돈을 따로 세는지 이해할 수 있습니다.</p>
       </section>

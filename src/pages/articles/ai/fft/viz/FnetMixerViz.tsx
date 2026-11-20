@@ -30,7 +30,7 @@ export default function FnetMixerViz() {
     <SceneShell
       eyebrow="두 축과 실수 부분"
       title="FNet의 섞기는 두 축을 변환한 뒤 허수 부분을 버립니다"
-      description="가로가 위치, 세로가 숨은 차원입니다. 앞 세 장면의 격자 크기(위치 4·숨은 3)는 그림을 위한 가정입니다."
+      description="가로가 위치, 세로가 숨은 차원(한 위치의 토큰을 나타내는 벡터의 성분 축)입니다. 앞 세 장면의 격자 크기(위치 4·숨은 3)는 그림을 위한 가정입니다."
       ariaLabel="FNet 섞기의 두 축 변환과 실수 부분 선택, 네 값 사례"
       scenes={SCENES}
       render={(active) => {

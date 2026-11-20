@@ -199,7 +199,7 @@ export default function Sandbox() {
         <p><strong>HARDENING:</strong> Spawn 전에 새 process group 또는 platform별 job object를 만들고 attempt ID와 leader identity를 기록합니다. Timeout·cancel·session 종료에는 group 전체에 graceful signal을 보낸 뒤 짧은 deadline을 두고 강제 종료하며 descendant가 0이 될 때까지 reap합니다. CPU·memory·PID·file size와 wall-clock limit은 단일 parent에 걸지 않고 cgroup 또는 동등한 backend로 전체 tree에 적용합니다.</p>
         <p>observation은 process created, timeout signaled, force killed, descendants remaining을 각각 구분하고 final exit/signal과 output truncation도 별도 항목으로 둡니다. cleanup 중 host가 crash하면 stable task identity로 다시 조회해 종료를 이어 가되 effect 완료 여부를 모른 채 login test나 edit를 곧바로 중복 실행하지는 않습니다.</p>
 
-        <h3>Crash 뒤에는 먼저 effect를 reconciliation하고 같은 command를 재실행합니다</h3>
+        <h3>Crash 뒤에는 먼저 effect를 reconciliation하고 필요한 단계만 새 attempt로 실행합니다</h3>
       </div>
 
       <CrashReconcileViz />

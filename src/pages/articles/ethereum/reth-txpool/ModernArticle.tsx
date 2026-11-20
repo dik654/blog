@@ -89,7 +89,7 @@ export default function ModernArticle() {
           ].map(([step, title, body]) => <div key={step} className="bg-background p-4"><span className="text-[9px] font-bold text-primary">{step}</span><strong className="mt-2 block text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}
         </div>
         <BestHeadsViz />
-        <p><code>TransactionOrdering</code>은 거래 하나의 priority를 계산합니다. 기본 <code>CoinbaseTipOrdering</code>은 현재 base fee를 기준으로 계산한 effective tip을 사용합니다. 그러나 이 trait이 nonce 순서를 보장하는 것은 아닙니다. <code>BestTransactions</code> iterator가 sender별 independent head만 후보 집합에 넣고, nonce N을 내보낸 뒤 N+1을 해제합니다.</p>
+        <p><code>TransactionOrdering</code>은 거래 하나의 priority를 계산합니다. 기본 <code>CoinbaseTipOrdering</code>은 현재 base fee를 기준으로 계산한 effective tip(base fee를 넘는 부분 중 블록 생산자에게 돌아가는 가스당 몫)을 사용합니다. 그러나 이 trait이 nonce 순서를 보장하는 것은 아닙니다. <code>BestTransactions</code> iterator가 sender별 independent head만 후보 집합에 넣고, nonce N을 내보낸 뒤 N+1을 해제합니다.</p>
         <p>Payload builder는 이 iterator가 준 순서를 그대로 무조건 포함하지 않습니다. Block gas, blob gas, 실행 실패와 builder 정책을 적용하며, 어떤 sender의 head를 invalid로 표시하면 그 descendants도 건너뜁니다. Pool ordering은 후보 제공 계약이고 canonical inclusion 보장이 아닙니다.</p>
         <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open("ordering-policy", rethTxpoolCodeRefs["ordering-policy"])} /><span className="text-xs text-muted-foreground">ordering.rs L39–85 · priority 정책</span><CodeViewButton onClick={() => sidebar.open("sender-head-order", rethTxpoolCodeRefs["sender-head-order"])} /><span className="text-xs text-muted-foreground">best.rs L87–120·L206–248 · nonce-safe iterator</span></div>
       </section>

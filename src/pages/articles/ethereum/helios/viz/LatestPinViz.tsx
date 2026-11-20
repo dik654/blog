@@ -72,7 +72,7 @@ const SCENES: readonly Scene[] = [
     call2: { request: "eth_getProof · block ID = H", target: "P (H)", tone: "ok" },
     verdict: "호출 없이 로컬에서 P를 R에 대조해 통과하면 balance 7 ETH를 반환합니다",
     verdictTone: "ok",
-    note: "Account·storage proof를 그 header의 state root R에 대조하고, 모두 통과한 account에서 balance를 반환합니다. 7 ETH는 본문의 설명 사례 값입니다.",
+    note: "Account proof는 그 header의 state root R에, storage proof는 그 account의 storage root에 대조하고, 모두 통과한 account에서 balance를 반환합니다. 7 ETH는 본문의 설명 사례 값입니다.",
   },
 ];
 

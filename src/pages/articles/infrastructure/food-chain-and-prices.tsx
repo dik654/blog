@@ -48,7 +48,7 @@ export default function FoodChainAndPricesArticle() {
         <h2 className="mb-6 text-2xl font-bold">1 · 같은 물건이 100에서 150을 거쳐 200이 됩니다</h2>
         <DoubleCountViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">선별·저장과 운송을 합치면 다음 가게에 도착하기까지 100+30+20=150원이 됩니다. 가게가 여기에 50원을 더해 받습니다. 각 단계의 구매액을 또 합산하면 앞 단계 돈을 중복해서 세므로 추가된 금액만 잇습니다.</p>
+          <p className="leading-8">선별·저장과 운송을 합치면 다음 가게에 도착하기까지 100+30+20=150원이 됩니다. 가게가 여기에 50원을 더해 받습니다. 각 단계의 구매액을 또 합산하면 이전 단계 돈을 중복해서 세므로 추가된 금액만 잇습니다.</p>
         </div>
         <NumericPath title="(가정) 같은 한 단위에 추가된 금액만 연결" steps={[{"label": "농가 출하", "value": "100원"}, {"label": "선별·저장·운송 뒤", "value": "150원"}, {"label": "소매 판매", "value": "200원"}]} />
         <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">중복 없이 더한 가격 경로가 잡혔습니다. 시간과 폐기가 왜 거래 조건에 들어가는지 봅니다.</p>
@@ -116,7 +116,7 @@ export default function FoodChainAndPricesArticle() {
         </div>
         <MarginCheckViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">같은 품질·수량·기간으로 맞췄는데 비용은 그대로이고 특정 단계의 순마진만 커졌다면 계약과 구매자 집중도를 조사할 이유가 생깁니다. 가격 차이 자체만으로 누가 폭리를 취했는지는 확정되지 않습니다.</p>
+          <p className="leading-8">같은 품질·수량·기간으로 맞췄는데 비용은 그대로이고 특정 단계의 순마진(판매액에서 비용을 뺀 몫)만 커졌다면 계약과 구매자 집중도를 조사할 이유가 생깁니다. 가격 차이 자체만으로 누가 폭리를 취했는지는 확정되지 않습니다.</p>
           <p className="leading-8">실제 자료를 읽을 때는 출하량, 판매량, 폐기량의 세 수량과 각 단계의 원가·지급일을 함께 적습니다. 이를 맞춰야 250원이 손실 보전인지 협상력 변화인지 구분할 수 있습니다.</p>
         </div>
         <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">수량이 줄면서 생기는 단가 변화와 이익 증가를 구분했습니다. 숫자를 바꿔 결과를 예상해 봅니다.</p>

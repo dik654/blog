@@ -257,7 +257,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
             입니다. 1 을 넘으면 GPU 가 계산보다 기다리는 시간이 깁니다. 후보 C 는 1.1 / 5.2 = 0.21, 후보 A 는 8.4 / 2.6 = 3.2 입니다.
           </p>
           <p>
-            Distributed inference bottleneck 은 이 비율이 정합니다. 비율이 작으면 병목은 여전히 각 GPU 의 weight 읽기이고 TP 를 더 올리면
+            Distributed inference bottleneck 은 이 비율이 정합니다. 비율이 작으면 병목은 여전히 각 GPU 의 weight 읽기이고 같은 link 등급 안에서 TP 를 더 올리면
             빨라집니다. 비율이 1 근처를 넘으면 병목이 link 로 옮겨 가 GPU 를 더 넣어도 token 당 시간이 줄지 않습니다. 후보 A 가 후보 C 보다 GPU 는 두 배인데
             느린 이유가 그것입니다.
           </p>

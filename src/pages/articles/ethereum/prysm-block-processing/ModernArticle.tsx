@@ -228,7 +228,7 @@ return postState, isValidPayload`}</code></pre>
         </p>
         <InvalidSuffixPruneViz />
         <p>
-          나중에 EL이 INVALID를 반환하면 Prysm은 <code>latestValidHash</code>를 기준으로 invalid suffix를 찾고 block과 영향을 받은 후손의 state·fork-choice entry를 제거합니다.
+          나중에 EL이 INVALID를 반환하면 Prysm은 EL이 함께 돌려주는 <code>latestValidHash</code>(EL이 아직 유효하다고 보는 가장 최근 조상의 payload hash)를 기준으로 invalid suffix를 찾고 block과 영향을 받은 후손의 state·fork-choice entry를 제거합니다.
         </p>
         <p>
           반대로 consensus root나 signature, data availability가 실패하면 처음부터 후보 등록 단계로 가지 않습니다. Working state의 중간 mutation을 완성된 post-state로 저장하지 않는 것이 호출 경계의 책임입니다.

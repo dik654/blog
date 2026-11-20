@@ -57,7 +57,7 @@ return <div className="space-y-16">
 <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
    <p className="leading-7">RP2040 공식 표에서 SIO의 기준 주소는 <code>0xD0000000</code>입니다. 출력 비트를 세우는 <code>GPIO_OUT_SET</code>의 오프셋은 <code>0x014</code>이므로 주소는 <code>0xD0000014</code>입니다. 끄는 <code>GPIO_OUT_CLR</code>는 오프셋 <code>0x018</code>, 주소 <code>0xD0000018</code>입니다. 출력 방향을 켜는 <code>GPIO_OE_SET</code>는 <code>0xD0000024</code>입니다.</p>
    <p className="leading-7">이 주소의 값은 보통 RAM에 저장된 일반 변수와 의미가 다릅니다. <code>OUT_SET</code>에 쓴 1비트는 출력 래치의 해당 자리만 세우라는 명령이고, 0으로 쓴 자리는 건드리지 않습니다. 같은 32비트 쓰기라도 어느 주소인지에 따라 하드웨어 동작이 달라집니다.</p>
-   <p className="leading-7"><em>주소는 어느 장치의 어느 동작인지, 값의 비트는 어느 핀인지 고릅니다.</em></p>
+   <p className="leading-7"><em>SIO에서는 주소가 어느 장치의 어느 동작인지, 값의 비트가 어느 핀인지 고릅니다.</em></p>
   </div><CitationBlock source="RP2040 Datasheet · build 3184e62-clean · §2.2·§2.3.1 주소 및 SIO 레지스터 표" citeKey={1} href="https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf">공식 데이터시트는 SIO 기준 주소와 GPIO_OUT_SET/CLR, GPIO_OE_SET 오프셋 및 원자적 비트 동작을 제시합니다. GPIO5의 외부 표시등은 본문 가정입니다.</CitationBlock>
 </section>
 

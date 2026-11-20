@@ -184,7 +184,6 @@ p_\theta(x)&=\underbrace{\int p_\theta(x,z)\,dz}_{\text{직접 계산 불가능�
           ]}
           interpretation="이 부등식은 q가 무엇이든 항상 성립합니다 — q가 true posterior에 가까울수록 bound가 tight해질 뿐입니다. 아래 식은 이 bound와 log evidence의 정확한 차이를 보여줍니다."
         />
-        <ElboGapViz />
         <ExplainedFormula
           question="ELBO는 왜 log evidence보다 작고, 그 차이는 무엇인가요?"
           idea={
@@ -244,6 +243,7 @@ p_\theta(x)&=\underbrace{\int p_\theta(x,z)\,dz}_{\text{직접 계산 불가능�
           ]}
           interpretation="q가 true posterior와 같으면 gap=0이라 ELBO=log p(x)입니다. q가 중요한 mode를 놓치면 reconstruction이 좋아 보여도 bound가 느슨할 수 있습니다."
         />
+        <ElboGapViz />
       </section>
 
       <section id="paper-aevb" className="scroll-mt-20">

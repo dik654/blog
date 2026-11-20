@@ -9,7 +9,7 @@ const cases=[
 ];
 export default function SpanCaseViz(){const a=useAnimatedScenes(3);const c=cases[a.active];return <VizFrame eyebrow="같은 가의 위치 대응" title="내용은 같아도 시작 위치는 이동합니다" description="강조한 칸의 실제 저장값을 함께 확인합니다." note="범위는 0부터 세며 시작을 포함하고 끝을 제외합니다.">
 <div id={a.playbackId} data-viz-canvas tabIndex={0} role="group" aria-label="원문과 NFC의 byte 범위" onKeyDown={a.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
-<svg viewBox="0 0 320 272" className="mx-auto block w-full max-w-[460px]" role="img" aria-label={c.detail}>
+<svg viewBox="0 0 320 272" className="mx-auto block w-full max-w-[360px]" role="img" aria-label={c.detail}>
 <text x="160" y="25" textAnchor="middle" fontSize="18" fill="currentColor">{c.title}</text>
 {c.bytes.map((v,i)=>{const x=8+(i%6)*52,y=55+Math.floor(i/6)*78;return <g key={i}><rect x={x} y={y} width="44" height="43" rx="4" fill="currentColor" fillOpacity={i>=c.span[0]&&i<c.span[1]?.2:.025} stroke="currentColor"/><text x={x+22} y={y+27} textAnchor="middle" fontSize="17" fill="currentColor">{v}</text><text x={x+22} y={y+62} textAnchor="middle" fontSize="13" fill="currentColor">{i}</text></g>;})}
 <text x="160" y="226" textAnchor="middle" fontSize="20" fill="currentColor">[{c.span[0]},{c.span[1]}) → {c.bytes.slice(c.span[0],c.span[1]).join(" ")}</text>

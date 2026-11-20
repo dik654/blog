@@ -13,7 +13,7 @@ const TAX = 10;
 const SCENES = [
   { label: "가격 그대로: 매출 20", summary: "20 − 4 − 10 = 6", sales: 20, ways: false, note: "설명용 사례입니다. 매출 20에서 항구까지의 운송·중개 4를 내고 현금세 10을 현금으로 내면 농가 손에 현금 6이 남습니다. 식량과 무급 노동의 가치는 이 장부 밖에 있습니다." },
   { label: "가격이 반으로: 매출 10", summary: "10 − 4 − 10 = −4", sales: 10, ways: false, note: "운송·중개 4와 세금 10은 그대로 둡니다. 매출 10으로는 둘을 합한 14를 낼 수 없어 4가 모자랍니다. 실제 식민지별 세율과 작물 가격이 아니라 가격 충격이 생활을 흔드는 구조를 보는 가정입니다." },
-  { label: "모자란 4는 장부 밖에서", summary: "판매·임금·가축 중 가능한 길", sales: 10, ways: true, note: "1절은 현금으로만 내는 세금이 생기면 농가가 작물 판매·임금 노동·가축 처분 가운데 가능한 방법을 찾아야 한다고 씁니다. 어느 길로 얼마를 메웠는지는 글에 없어 크기로 그리지 않았습니다." },
+  { label: "모자란 4는 장부 밖에서", summary: "판매·임금·가축 중 가능한 길", sales: 10, ways: true, note: "1절은 농가가 작물 판매·임금 노동·가축 처분 가운데 가능한 방법을 찾아야 한다고 씁니다. 현금작물은 이미 다 팔았으므로 여기서 작물 판매는 '식량 여분 판매', 곧 2절이 저장·교환 몫일 수 있다고 한 식량 20의 일부를 내다 파는 길로 그렸습니다(가정). 어느 길로 얼마를 메웠는지는 글에 없어 크기로 그리지 않았습니다." },
 ] as const;
 
 const pct = (value: number) => ((value - MIN) / (MAX - MIN)) * 100;
@@ -65,7 +65,7 @@ export default function PriceHalvingLedgerViz() {
               <span />
             </div>
             <ul className={`grid grid-cols-3 gap-2 pt-2 text-center text-xs ${scene.ways ? "" : "invisible"}`} aria-hidden={!scene.ways}>
-              {["작물 판매", "임금 노동", "가축 처분"].map((way) => (
+              {["식량 여분 판매", "임금 노동", "가축 처분"].map((way) => (
                 <li key={way} className="rounded-lg border border-dashed border-red-600/70 px-1 py-2 leading-5">{way}</li>
               ))}
             </ul>

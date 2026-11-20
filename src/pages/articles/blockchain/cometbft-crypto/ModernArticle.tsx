@@ -91,7 +91,7 @@ export default function ModernCometBFTCryptoArticle() {
             operations={[
               { expression: String.raw`H_1=5c41bd\ldots4a06`, annotation: ["ASCII alice>bob:10의", "SHA-256 32-byte digest"] },
               { expression: String.raw`L_1=642302\ldots60e2`, annotation: ["0x00 || H1을 다시 해시", "raw T1이 바로 leaf가 아님"] },
-              { expression: String.raw`P_{12}=f26d10\ldots55cf`, annotation: ["0x01 || L1 || L2", "T1과 T2 순서 고정"] },
+              { expression: String.raw`P_{12}=f26d10\ldots5cf5`, annotation: ["0x01 || L1 || L2", "T1과 T2 순서 고정"] },
               { expression: String.raw`D_{41}=8b7610\ldots f65f`, annotation: ["0x01 || P12 || L3", "Header.DataHash에 저장"] },
             ]}
             terms={[

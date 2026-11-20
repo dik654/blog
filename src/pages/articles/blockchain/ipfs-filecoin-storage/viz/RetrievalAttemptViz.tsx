@@ -40,7 +40,7 @@ const SCENES = [
   {
     label: "후보 목록을 받습니다",
     summary: "filter 통과 ≠ 전송 보장",
-    note: "Delegated routing이나 DHT는 이 CID를 제공한다고 광고한 peer 후보를 돌려줍니다. 주소·transfer protocol filter를 통과했어도 연결·전송·무결성은 아직 아무것도 확인되지 않았습니다.",
+    note: "Delegated routing(HTTP Routing V1 API 서버에 조회를 맡기는 방식)이나 DHT(peer들이 provider record를 나눠 저장하는 분산 해시 테이블)는 이 CID를 제공한다고 광고한 peer 후보를 돌려줍니다. 주소·transfer protocol filter를 통과했어도 연결·전송·무결성은 아직 아무것도 확인되지 않았습니다.",
   },
   {
     label: "첫 경로: local blockstore",

@@ -270,7 +270,7 @@ export default function LinuxNetworkInterfaceRouteNetfilterDnsArticle() {
             <p>통과하면 ip_rcv_finish(435행)의 ip_route_input_noref가 __fib_lookup(fib_rules.c 82행) → fib_table_lookup(fib_trie.c 1445행)으로 default 경로를 얻고 dst_input이 ip_forward를 부릅니다.</p>
             <p>
               ip_forward는 FORWARD 훅을 지나 ip_output으로 넘기며, POST_ROUTING에서 MASQUERADE 규칙이 conntrack 항목에 변환을 기록하며 출발 주소를 노드 IP로 바꿉니다.</p>
-            <p>응답은 eth0으로 들어와 PRE_ROUTING에서 conntrack이 reply 방향 tuple로 같은 항목을 찾아 목적지를 Pod IP로 되돌린 뒤, 라우팅 결정이 10.244.1.0/24 dev cni0를 골라 bridge → veth 짝 → Pod의 eth0 → 소켓에 닿습니다. 아래 버튼이 이 순서의 원문입니다.</p>
+            <p>응답은 eth0으로 들어와 PRE_ROUTING에서 conntrack이 reply 방향 tuple로 같은 항목을 찾아 목적지를 Pod IP로 되돌린 뒤, 라우팅 결정이 10.244.1.0/24 dev cni0를 골라 FORWARD·POST_ROUTING을 지나 bridge → veth 짝 → Pod의 eth0 → 소켓에 닿습니다. 아래 버튼이 이 순서의 원문입니다.</p>
           </div>
           {code("ip-local-out", "① __ip_local_out")}
           {code("veth-xmit", "② veth_xmit → 짝")}

@@ -110,7 +110,7 @@ export default function SparseWindowedAttentionPatternsArticle() {
           input={["새 token 위치 i 의 K_i, V_i", "고정 크기 W 인 순환 buffer K_buf, V_buf"]}
           steps={[
             { code: "idx ← i mod W", note: "위치 i 를 버퍼 크기로 나눈 나머지가 덮어쓸 slot 입니다." },
-            { code: "K_buf[idx] ← K_i;  V_buf[idx] ← V_i", note: "i > W 이면 그 slot 에 있던 오래된 값이 그대로 사라집니다. Shift 연산이 없습니다." },
+            { code: "K_buf[idx] ← K_i;  V_buf[idx] ← V_i", note: "i ≥ W 이면 그 slot 에 있던 오래된 값이 그대로 사라집니다. Shift 연산이 없습니다." },
             { code: "valid ← min(i + 1, W)", note: "버퍼가 아직 다 차지 않은 초반에는 실제로 쓰인 slot 수만 셉니다." },
             { code: "for j in (i − valid + 1) … i:  S_j ← Q_i · K_buf[j mod W] / √d", note: "causal 이므로 자신보다 앞선 valid 개 slot 만 봅니다." },
             { code: "O_i ← softmax(S) · V_buf[해당 slot]", note: "다음 step 도 같은 크기 W 의 K_buf, V_buf 를 그대로 재사용합니다." },

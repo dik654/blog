@@ -14,7 +14,7 @@ const SCENES = [
   { label: "Alice에게 10을 보냅니다", summary: "10⁶ = 8³ = 6", note: "Bob의 19를 막고 자기 비밀 3으로 만든 10=5³을 Alice에게 보냅니다. Alice는 10⁶으로, Mallory는 Alice의 8로 8³을 계산해 나머지 6을 함께 얻습니다." },
   { label: "Bob에게 17을 보냅니다", summary: "17¹⁵ = 19⁷ = 15", note: "Alice의 8 대신 자기 비밀 7로 만든 17=5⁷을 Bob에게 보냅니다. Bob의 17¹⁵와 Mallory의 19⁷은 나머지 15로 같습니다." },
   { label: "두 구간, 두 공유값", summary: "Alice 6 · Bob 15", note: "등식은 어디서도 깨지지 않았고 공유값만 둘로 갈라졌습니다. Mallory는 둘을 모두 알며, 각 구간에서 같은 열쇠를 가졌는지 확인하는 절차까지 성공할 수 있습니다. 이 6·15는 Alice·Bob의 비밀 지수 6·15와 숫자만 같습니다." },
-  { label: "기록을 인증하면", summary: "19를 10으로 바꾼 기록은 탈락", note: "신뢰할 수 있는 인증 키로 A·B가 들어간 대화 기록을 서명하거나 MAC으로 확인합니다. Alice가 본 기록의 B는 10, Bob이 보낸 B는 19이므로 같은 승인을 통과하지 못합니다." },
+  { label: "기록을 인증하면", summary: "19를 10으로 바꾼 기록은 탈락", note: "신뢰할 수 있는 인증 키로 A·B가 들어간 대화 기록을 서명하거나 MAC(공유 비밀 키로 계산해 내용이 바뀌지 않았음을 확인하는 메시지 인증 코드)으로 확인합니다. Alice가 본 기록의 B는 10, Bob이 보낸 B는 19이므로 같은 승인을 통과하지 못합니다." },
 ] as const;
 
 function Box({ x, y, title, sub, color, dashed = false }: { x: number; y: number; title: string; sub: string; color: string; dashed?: boolean }) {

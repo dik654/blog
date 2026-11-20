@@ -20,7 +20,7 @@ const SCENES = [
   {
     label: "restart 뒤 재조회",
     summary: "pending · included · reorged",
-    note: "Node가 restart되면 chain inclusion을 다시 조회해 세 상태 중 하나로 맞춥니다. Chain state와 local job state를 맞춰야 중복 제출과 누락된 fault recovery를 막을 수 있습니다.",
+    note: "Node가 restart되면 chain inclusion을 다시 조회해 세 상태 중 하나로 맞춥니다. reorged는 체인이 다른 갈래로 바뀌는 reorg 때문에 포함됐던 제출이 빠진 상태입니다. Chain state와 local job state를 맞춰야 중복 제출과 누락된 fault recovery를 막을 수 있습니다.",
   },
   {
     label: "같은 ID 재제출",

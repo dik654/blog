@@ -60,6 +60,7 @@ export default function ExExBackpressureViz() {
             <defs>
               <marker id="exex-bp-ok" viewBox="0 0 8 8" refX={7} refY={4} markerWidth={6} markerHeight={6} orient="auto"><path d="M0 0 L8 4 L0 8 z" fill={OK} /></marker>
               <marker id="exex-bp-line" viewBox="0 0 8 8" refX={7} refY={4} markerWidth={6} markerHeight={6} orient="auto"><path d="M0 0 L8 4 L0 8 z" fill={LINE} /></marker>
+              <pattern id="exex-bp-hatch" width={6} height={6} patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1={0} y1={0} x2={0} y2={6} stroke="#94a3b8" strokeWidth={1.5} /></pattern>
               <marker id="exex-bp-bad" viewBox="0 0 8 8" refX={7} refY={4} markerWidth={6} markerHeight={6} orient="auto"><path d="M0 0 L8 4 L0 8 z" fill={BAD} /></marker>
             </defs>
 
@@ -75,12 +76,12 @@ export default function ExExBackpressureViz() {
             <rect x={20} y={74} width={300} height={62} rx={6} fill="none" stroke={full ? BAD : LINE} strokeWidth={full ? 1.25 : 1} opacity={bClosed ? 0.4 : 1} />
             <text x={30} y={92} fontSize={13} fontWeight={700} fill={INK} opacity={bClosed ? 0.4 : 1}>manager buffer</text>
             <text x={310} y={92} textAnchor="end" fontSize={12} fill={full ? BAD : LINE}>
-              {active === 0 ? "모두 받으면 제거" : active === 1 ? "B 미전달분 보존" : full ? "가득 참 · capacity 0" : ""}
+              {active === 0 ? "모두 받으면 제거" : active === 1 ? "B 미전달분 보존" : full ? "가득 참 · capacity 0" : "manager 오류"}
             </text>
             {SLOT_X.map((x, index) => {
               const on = index < filled;
               const color = active === 0 ? OK : STUCK;
-              return <rect key={x} x={x} y={100} width={30} height={28} rx={3} fill={on ? color : "none"} fillOpacity={on ? 0.8 : 0} stroke={on ? color : "#cbd5e1"} strokeWidth={1} opacity={bClosed ? 0.4 : 1} />;
+              return <rect key={x} x={x} y={100} width={30} height={28} rx={3} fill={bClosed ? "url(#exex-bp-hatch)" : on ? color : "none"} fillOpacity={bClosed ? 1 : on ? 0.8 : 0} stroke={on ? color : "#cbd5e1"} strokeWidth={1} opacity={bClosed ? 0.4 : 1} />;
             })}
 
             {/* fan-out */}

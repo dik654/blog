@@ -72,7 +72,7 @@ export default function EducationSkillsAndSignalsArticle() {
         <h2 className="mb-6 text-2xl font-bold">4 · 3천만 원을 연 200만 원으로 나누면 15년입니다</h2>
         <PaybackCellsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">학비 1천만 원과 포기 소득 2천만 원을 합한 3천만 원을 연 추가 임금 200만 원으로 나누면 단순 회수 기간은 15년입니다. 학비만 나눈 5년보다 길어졌습니다. 세금과 할인, 임금 성장과 실업을 생략한 계산입니다.</p>
+          <p className="leading-8">학비 1천만 원과 포기 소득 2천만 원을 합한 3천만 원을 연 추가 임금 200만 원으로 나누면 단순 회수 기간은 15년입니다. 학비만 나눈 5년보다 길어졌습니다. 세금과 할인(미래의 돈을 지금 가치로 낮춰 세는 일), 임금 성장과 실업을 생략한 계산입니다.</p>
         </div>
         <NumericPath title="(가정) 교육의 단순 비용 회수 계산" steps={[{"label": "학비·포기 소득", "value": "1천+2천만 원"}, {"label": "매년 추가 임금", "value": "÷200만 원"}, {"label": "단순 회수 기간", "value": "15년"}]} />
         <div className="prose prose-neutral max-w-none dark:prose-invert">

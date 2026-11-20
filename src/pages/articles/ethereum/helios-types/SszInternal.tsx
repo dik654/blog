@@ -22,7 +22,7 @@ export default function SszInternal({ onCodeRef }: Props) {
           <p>
             JSON decode가 끝나도 U1422의 내용은 아직 믿을 수 없습니다. Helios는
             leaf 객체의 SSZ <code>tree_hash_root</code>를 만들고, branch의 sibling을
-            generalized index 방향에 따라 하나씩 결합합니다. 마지막 값이 attested
+            index bit 방향에 따라 하나씩 결합합니다. 이 index는 generalized index에서 맨 앞 1 bit를 뗀 depth 아래 위치 번호입니다(next committee 87 → 23). 마지막 값이 attested
             header의 <code>state_root</code> 또는 <code>body_root</code>와 같아야
             포함 증명이 성립합니다.
           </p>
@@ -44,7 +44,7 @@ export default function SszInternal({ onCodeRef }: Props) {
             {
               expression: String.raw`r_{i+1}=H(s_i\|r_i)\;or\;H(r_i\|s_i)`,
               annotation: [
-                "Generalized index의 bit가 sibling 방향을 정합니다",
+                "Index(depth 아래 위치 번호)의 bit가 sibling 방향을 정합니다",
                 "같은 hash 목록도 순서를 바꾸면 다른 root가 됩니다",
               ],
             },
@@ -59,11 +59,11 @@ export default function SszInternal({ onCodeRef }: Props) {
           terms={[
             { symbol: "HTR", name: "Hash-tree-root", description: "Fork별 SSZ schema로 만든 leaf 객체의 32-byte commitment입니다." },
             { symbol: "s_i", name: "Sibling", description: "Merkle branch의 i번째 32-byte hash입니다." },
-            { symbol: "bit_i", name: "Path bit", description: "Generalized index에서 현재 node가 왼쪽인지 오른쪽인지 나타냅니다." },
+            { symbol: "bit_i", name: "Path bit", description: "Index(generalized index에서 맨 앞 1 bit를 뗀 값)에서 현재 node가 왼쪽인지 오른쪽인지 나타냅니다." },
             { symbol: "R", name: "Trusted root", description: "Attested beacon header가 이미 결속한 state_root 또는 body_root입니다." },
           ]}
           assumptions={[
-            "Branch 길이와 generalized index는 같은 활성 fork의 consensus schema에서 가져옵니다.",
+            "Branch 길이(depth)와 index는 같은 활성 fork의 consensus schema에서 가져옵니다.",
             "Hash 함수와 SSZ tree shape는 Ethereum consensus-specs v1.6.1을 따릅니다.",
           ]}
           interpretation="U1422의 배열 길이가 Electra 타입에 맞는 것은 첫 관문입니다. 각 leaf의 SSZ root, sibling 순서와 최종 trusted root 비교까지 맞아야 증거가 됩니다."
@@ -94,7 +94,7 @@ export default function SszInternal({ onCodeRef }: Props) {
       </section>
 
       <section id="validation-boundary" className="mb-16 scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">검증 성공은 Store 변경이 아니라 후보 반환입니다</h2>
+        <h2 className="mb-5 text-2xl font-bold">검증 성공은 Store 변경이 아니라 통과 확인입니다</h2>
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -139,7 +139,7 @@ export default function SszInternal({ onCodeRef }: Props) {
           <div className="bg-background p-4">
             <p className="text-xs font-bold text-muted-foreground">Verify 성공</p>
             <p className="mt-2 font-bold">후보가 유효함</p>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">GenericUpdate를 다음 단계로 전달</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">Ok(())만 반환, Store는 그대로</p>
           </div>
           <div className="bg-background p-4">
             <p className="text-xs font-bold text-muted-foreground">Apply 성공</p>

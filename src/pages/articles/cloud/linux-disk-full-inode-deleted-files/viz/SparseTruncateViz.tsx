@@ -21,7 +21,7 @@ const STATES: readonly { part: Part; piece: "none" | "start" | "end"; pointer: n
 const SCENES = [
   { label: "자르기 전", summary: "크기 30GiB · 블록 30GiB", note: "fd 7은 파일 끝인 30GiB 지점에서 다음 쓰기를 기다립니다. 자르려는 파일입니다." },
   { label: "0 byte로 자름", summary: "크기 0 · 쓰기 위치 30GiB", note: "/proc/812/fd/7을 열어 크기를 0으로 자르면 블록은 돌아옵니다. 그러나 프로세스가 쥔 fd의 쓰기 위치는 잘린 것과 무관하게 30GiB에 남습니다." },
-  { label: "O_APPEND 없이 다음 쓰기", summary: "겉보기 30GiB · 블록 쓴 만큼", note: "(가정) 다음 쓰기가 원래 위치인 30GiB 지점에 떨어지면 앞부분은 블록이 없는 구멍이 됩니다. 이런 파일이 sparse 파일입니다. 겉보기 크기(stat -L /proc/812/fd/7)는 다시 30GiB지만 실제 블록은 적어서 du와 du --apparent-size가 다른 값을 보입니다." },
+  { label: "O_APPEND 없이 다음 쓰기", summary: "겉보기 30GiB + 쓴 만큼 · 블록 쓴 만큼", note: "(가정) 다음 쓰기가 원래 위치인 30GiB 지점에 떨어지면 앞부분은 블록이 없는 구멍이 됩니다. 이런 파일이 sparse 파일입니다. 겉보기 크기(stat -L /proc/812/fd/7)는 다시 30GiB에 쓴 만큼을 더한 값이지만 실제 블록은 적어서 du와 du --apparent-size가 다른 값을 보입니다." },
   { label: "O_APPEND로 열었다면", summary: "크기·블록 모두 쓴 만큼", note: "O_APPEND는 쓸 때마다 파일 끝으로 가서 쓰게 하는 열기 옵션입니다. 잘린 파일의 끝은 0이므로 앞에서부터 다시 쌓이고 구멍이 생기지 않습니다." },
 ];
 

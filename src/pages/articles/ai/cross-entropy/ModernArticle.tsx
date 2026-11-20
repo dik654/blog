@@ -143,7 +143,7 @@ assumptions={["여기서는 유한 집합이며 P가 양수인 곳에 Q도 양�
 annotatedFormula={String.raw`\begin{gathered}Q_i=\frac{e^{z_i}}{\sum_k e^{z_k}},\quad L=-\sum_i y_i\ln Q_i\\\frac{\partial Q_i}{\partial z_j}=Q_i(\delta_{ij}-Q_j)\\\frac{\partial L}{\partial z_j}=-\sum_i y_i(\delta_{ij}-Q_j)=Q_j-y_j\\\text{정답 A}:\quad \nabla_zL=(-3/4,1/4,1/2)\end{gathered}`}
 operations={[{expression:String.raw`\tfrac14\sum_{t=1}^4(Q-y^{(t)})=Q-P=(-1/4,0,1/4)`,annotation:["네 관측에 같은 로짓을 공유한다는 가정입니다. 각 행의 로짓이 별도 변수라면 행별 기울기에 1/4가 붙습니다."]}]}
 terms={[{symbol:"δᵢⱼ",name:"같은 좌표 표시",description:"i=j이면 1, 다르면 0입니다."},{symbol:"y",name:"정답 비중",description:"한 정답만 1인 one-hot 또는 합이 1인 확률 배열입니다."}]}
-assumptions={["자연로그, 클래스 가중치 없음, 정답 비중의 합 1입니다.","로짓을 직접 갱신할 때의 방향과 실제 모델 매개변수의 갱신을 구별합니다."]} interpretation="로짓을 직접 경사하강하면 A의 음수 기울기는 A 로짓을 올립니다. 공유 신경망 가중치를 바꿀 때는 그 가중치에서 로짓으로 이어지는 미분도 곱해야 합니다." />
+assumptions={["자연로그, 클래스 가중치 없음, 정답 비중의 합 1입니다.","로짓을 직접 갱신할 때의 방향과 실제 모델 매개변수의 갱신을 구별합니다."]} interpretation="로짓을 기울기 반대쪽으로 조금씩 직접 고치면(경사하강) A의 음수 기울기는 A 로짓을 올립니다. 공유 신경망 가중치를 바꿀 때는 그 가중치에서 로짓으로 이어지는 미분도 곱해야 합니다." />
 <p>다른 예측 Q=(0.7,0.2,0.1), 정답 A의 기울기는 (−0.3,0.2,0.1)입니다. 모든 좌표의 합은 0이며 모든 로짓에 같은 상수를 더해도 확률이 같다는 성질과 맞습니다. 계산 그래프의 역방향 추적은 <a className="underline" href="/cs/ai/backprop-optimization#tensor-backward">역전파 글의 유도</a>에서 이어집니다.</p>
 <CostVsGradientViz />
 <p>정답 확률이 0.01이면 NLL은 약 4.605지만 정답 로짓 기울기는 −0.99입니다. 확률에 대한 미분 −1/Q는 커지더라도 softmax와 합성한 로짓 기울기 Q−y의 각 좌표는 −1과 1 사이입니다. 큰 손실을 모든 변수에 대한 무한한 교정으로 해석하지 않습니다.</p>

@@ -115,13 +115,13 @@ const SCENES: readonly WeightScene[] = [
 ];
 
 const BOX_W = 128;
-const BOX_H = 66;
+const BOX_H = 58;
 const POS: Record<NodeId, { x: number; y: number }> = {
   J320: { x: 96, y: 4 },
-  A352: { x: 4, y: 100 },
-  A353: { x: 4, y: 192 },
-  B352: { x: 188, y: 100 },
-  B353: { x: 188, y: 192 },
+  A352: { x: 4, y: 86 },
+  A353: { x: 4, y: 168 },
+  B352: { x: 188, y: 86 },
+  B353: { x: 188, y: 168 },
 };
 const EDGES: readonly (readonly [NodeId, NodeId])[] = [
   ["J320", "A352"],
@@ -149,7 +149,7 @@ export default function SubtreeWeightViz() {
         const onPath = (id: NodeId) => scene.path.includes(id);
         return (
           <div className="min-w-0">
-            <svg viewBox="0 0 320 284" className="mx-auto h-auto w-full max-w-[300px]" role="img" aria-label={`${scene.label}: ${scene.summary}`}>
+            <svg viewBox="0 0 320 230" className="mx-auto h-auto w-full max-w-[300px]" role="img" aria-label={`${scene.label}: ${scene.summary}`}>
               {EDGES.map(([a, b]) => (
                 <line
                   key={`${a}-${b}`}
@@ -168,23 +168,24 @@ export default function SubtreeWeightViz() {
                 return (
                   <g key={id}>
                     <rect x={x} y={y} width={BOX_W} height={BOX_H} rx={8} fill="#ffffff" stroke={lit ? ACCENT : LINE} strokeWidth={lit ? 1.25 : 1} />
-                    <text x={x + 10} y={y + 19} fontSize={14} fontWeight={700} fill={lit ? ACCENT : TEXT}>
+                    <text x={x + 10} y={y + 17} fontSize={14} fontWeight={700} fill={lit ? ACCENT : TEXT}>
                       {id}
                     </text>
-                    <text x={x + 10} y={y + 38} fontSize={13} fill={MUTED}>
+                    <text x={x + 10} y={y + 35} fontSize={13} fill={MUTED}>
                       b {cell.b}
                     </text>
-                    <text x={x + BOX_W - 10} y={y + 38} textAnchor="end" fontSize={13} fontWeight={700} fill={cell.w === Q ? MUTED : TEXT}>
+                    <text x={x + BOX_W - 10} y={y + 35} textAnchor="end" fontSize={13} fontWeight={700} fill={cell.w === Q ? MUTED : TEXT}>
                       W {cell.w}
                     </text>
-                    <text x={x + 10} y={y + 57} fontSize={13} fill={cell.best === Q || cell.best === "nil" ? MUTED : ACCENT}>
+                    <text x={x + 10} y={y + 52} fontSize={13} fill={cell.best === Q || cell.best === "nil" ? MUTED : ACCENT}>
                       best {cell.best}
                     </text>
                   </g>
                 );
               })}
-              <text x={160} y={280} textAnchor="middle" fontSize={14} fontWeight={700} fill={scene.head === "계산 전" ? MUTED : ACCENT}>
-                store.head = {scene.head}
+              <text x={316} textAnchor="end" fontSize={14} fontWeight={700} fill={scene.head === "계산 전" ? MUTED : ACCENT}>
+                <tspan x={316} y={20}>store.head</tspan>
+                <tspan x={316} y={40}>= {scene.head}</tspan>
               </text>
             </svg>
           </div>

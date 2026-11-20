@@ -86,7 +86,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             MLA는 압축을 두 단계로 나눕니다. token의 hidden state h_t를 작은 latent c_t^KV로 내리는 단계는 down-projection입니다. 그
-            latent에서 head별 key·value를 다시 만드는 단계는 up-projection입니다. 캐시에 남는 것은 첫 단계의 결과 하나뿐입니다.
+            latent에서 head별 key·value를 다시 만드는 단계는 up-projection입니다. 이 content 경로에서 캐시에 남는 것은 첫 단계의 결과 하나뿐이고, 위치 전용 64개는 다음 절에서 더합니다.
           </p>
         </div>
         <LatentBottleneckViz />
@@ -112,7 +112,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           ]}
           terms={[
             { symbol: String.raw`\mathbf{h}_t`, name: "token hidden state", description: "d_model 차원 벡터입니다. DeepSeek-V2 는 5120." },
-            { symbol: String.raw`\mathbf{c}_t^{KV}`, name: "KV latent", description: "d_c 차원으로 압축된 벡터로 캐시에 남는 유일한 것입니다. DeepSeek-V2 는 512." },
+            { symbol: String.raw`\mathbf{c}_t^{KV}`, name: "KV latent", description: "d_c 차원으로 압축된 벡터로 content 경로에서 캐시에 남는 유일한 것입니다. DeepSeek-V2 는 512." },
             { symbol: String.raw`W^{UK},\,W^{UV}`, name: "up-projection", description: "d_c 를 n_h·d_h 차원으로 넓히는 head 별 복원 행렬입니다." },
           ]}
           assumptions={["K와 V는 서로 다른 up-projection 을 쓰지만 입력 latent 는 같은 c_t^KV 하나입니다.", "Query 쪽도 같은 모양의 down/up 쌍(W^DQ, W^UQ)을 따로 두지만 latent 를 캐시하지는 않습니다."]}
@@ -261,7 +261,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           ]}
           terms={[
             { symbol: String.raw`p_{t,j}`, name: "attention 가중치", description: "content 점수와 위치 점수를 더한 score 에 softmax 를 적용한 값입니다." },
-            { symbol: String.raw`(W^{UK})^{\!\top}`, name: "흡수된 query 쪽 행렬", description: "d_h×d_c 행렬의 전치로, 미리 한 번 곱해 두면 매 decode step 재사용합니다." },
+            { symbol: String.raw`(W^{UK})^{\!\top}`, name: "흡수된 query 쪽 행렬", description: "d_h×d_c 행렬의 전치로, 행렬 자체는 고정이고 새 token 마다 head 별로 q_t^C 에 한 번 곱합니다." },
             { symbol: String.raw`W^{O}W^{UV}`, name: "흡수된 output 쪽 행렬", description: "학습 후 고정된 두 행렬의 곱으로, 추론 내내 상수입니다." },
           ]}
           assumptions={["W^UK, W^UV, W^O 사이에 비선형이 없어야 결합법칙으로 순서를 바꿀 수 있습니다.", "content 부분에만 적용됩니다. 위치 부분은 RoPE 회전이 t 마다 달라 같은 방식으로 접을 수 없습니다."]}

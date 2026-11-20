@@ -114,7 +114,7 @@ function PriceGap() {
       <p className="rounded-lg border border-dashed border-red-600/70 px-3 py-2 text-sm leading-6">
         빨간 점선 칸: 운송·가공·보드 운영비와 안정화기금이 나오는 자리입니다. 연도와 환산 시점이 달라 이 칸의 길이를 보드 몫으로 읽지 않습니다.
       </p>
-      <p className="text-xs leading-5 text-muted-foreground">생산자가격은 생산자가격심의위원회가 정합니다. 선적가격(FOB)은 수출항에서 배에 실을 때까지를 포함한 값입니다.</p>
+      <p className="text-xs leading-5 text-muted-foreground">생산자가격은 생산자가격심의위원회가 정합니다. 선적가격(FOB)은 수출항에서 배에 실을 때까지를 포함한 값이고, 생활소득차액(Living Income Differential)은 가나·코트디부아르가 농가 소득을 높이려고 코코아 판매가에 얹는 웃돈입니다.</p>
     </div>
   );
 }
@@ -123,7 +123,7 @@ export default function CocoaBoardGateViz() {
   return (
     <SceneShell
       eyebrow="가나 코코아보드"
-      title="코코아가 수출되려면 보드의 관문을 지나야 했습니다"
+      title="코코아가 수출되려면 보드의 관문을 지나야 합니다"
       description="법 조문의 길을 상자와 화살표로, 두 가격을 같은 축의 막대로 그렸습니다. 마지막 장면의 축 단위는 톤당 달러입니다."
       ariaLabel="가나 코코아보드법의 수출 관문, 2000년 이후 민간 구매회사의 일부 직접 수출, 세계가격과 생산자가격"
       scenes={SCENES}

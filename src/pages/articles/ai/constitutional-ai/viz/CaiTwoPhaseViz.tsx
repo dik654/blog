@@ -68,7 +68,7 @@ const SCENES = [
   {
     label: "Reward model과 RL",
     summary: "SL-CAI model이 policy 초기값",
-    note: "AI가 labeling한 preference data로 reward model을 학습하고, SL-CAI model을 출발점으로 그 reward를 보상 삼아 PPO 등 RL로 더 학습해 최종 policy를 얻습니다.",
+    note: "AI가 labeling한 preference data로 reward model을 학습하고, SL-CAI model을 출발점으로 그 reward를 보상 삼아 PPO(update마다 policy 변화 폭을 제한하는 RL 알고리즘) 등 RL로 더 학습해 최종 policy를 얻습니다.",
     on: ["sl2", "pref", "rm", "rl", "policy"],
     loop: 0,
   },

@@ -25,7 +25,7 @@ const PLANS: readonly Plan[] = [
 const SCENES = [
   { label: "warp 4개 · warp당 일 1개", summary: "빈 clock 없음", note: "네 warp가 돌아가며 발행해 A가 다시 준비될 때까지 자리를 메웁니다. Clock 4부터 eligible은 1이지만 매 clock 발행합니다. 채우기가 끝난 뒤 진행 중인 일은 L×r = 4×1 = 4입니다." },
   { label: "warp 3개 · warp당 일 1개", summary: "clock 4와 8이 빔", note: "같은 지연과 목표 발행률에서 warp를 하나 뺀 비교입니다(가정). 진행 중인 일이 3에 머물러 네 번째 자리마다 빕니다. Warp당 일이 하나일 때 하한이 ⌈4/1⌉ = 4인 이유입니다." },
-  { label: "warp 2개 · warp당 일 2개", summary: "⌈4/2⌉ = warp 2개", note: "Warp 두 개가 독립된 일 두 개씩을 갖는 ILP 쪽 방법입니다. 줄은 그대로 넷이고 진행 중인 일도 4입니다. Eligible은 warp 단위로 세므로 네 줄이 모두 시작 전이어도 clock 1은 2입니다. 번갈아 고르는 순서는 가정이며 실제 명령 배치와 자원이 이 겹침을 허용해야 합니다." },
+  { label: "warp 2개 · warp당 일 2개", summary: "4/2 = warp 2개", note: "Warp 두 개가 독립된 일 두 개씩을 갖는 ILP 쪽 방법입니다. 줄은 그대로 넷이고 진행 중인 일도 4입니다. Eligible은 warp 단위로 세므로 네 줄이 모두 시작 전이어도 clock 1은 2입니다. 번갈아 고르는 순서는 가정이며 실제 명령 배치와 자원이 이 겹침을 허용해야 합니다." },
   { label: "warp 4개 · B 첫 대기 8", summary: "하한을 채워도 clock 6이 빔", note: "본문의 B처럼 지연이 달라지면 같은 네 warp가 있어도 빈자리가 생깁니다. 진행 중인 일은 4로 같지만 B의 일이 더 오래 자리를 차지합니다. 충분한 배치 수만으로 발행 성공을 보장하지 않습니다." },
 ] as const;
 

@@ -52,7 +52,7 @@ function WideDiagram({ active }: { active: number }) {
           <Arrow x1={96} y1={90} x2={150} y2={90} />
           <rect x={150} y={56} width={150} height={68} rx={6} fill="none" stroke={BLUE} strokeWidth={1.25} />
           <text x={225} y={48} textAnchor="middle" fontSize={12} fontWeight={700} fill={BLUE}>SQS 큐 · 보관</text>
-          {["1", "2", "3"].map((label, index) => <Chip key={label} x={166 + index * 42} y={79} label={label} />)}
+          {["3", "2", "1"].map((label, index) => <Chip key={label} x={166 + index * 42} y={79} label={label} />)}
           <Arrow x1={300} y1={90} x2={370} y2={90} />
           <text x={335} y={80} textAnchor="middle" fontSize={11} fill={TEXT}>가져감</text>
           <Box x={370} y={70} w={100} h={40} label="소비자" strong />
@@ -98,7 +98,7 @@ function NarrowDiagram({ active }: { active: number }) {
           <Arrow x1={150} y1={40} x2={150} y2={68} />
           <rect x={60} y={68} width={180} height={60} rx={6} fill="none" stroke={BLUE} strokeWidth={1.25} />
           <text x={150} y={86} textAnchor="middle" fontSize={12} fontWeight={700} fill={BLUE}>SQS 큐 · 보관</text>
-          {["1", "2", "3"].map((label, index) => <Chip key={label} x={96 + index * 40} y={96} label={label} />)}
+          {["3", "2", "1"].map((label, index) => <Chip key={label} x={96 + index * 40} y={96} label={label} />)}
           <Arrow x1={150} y1={128} x2={150} y2={170} />
           <text x={160} y={154} fontSize={12} fill={TEXT}>가져감</text>
           <Box x={100} y={170} w={100} h={36} label="소비자" strong />

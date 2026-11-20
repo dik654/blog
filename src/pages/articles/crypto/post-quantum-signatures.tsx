@@ -94,7 +94,7 @@ export default function Article() {
         </div>
         <BinBoundaryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">설명용으로 4 단위 구간의 번호만 읽으면 [7,9]와 [6,9]는 모두 [1,2]입니다. 하지만 8이 7로 바뀌면 구간 2가 1로 변합니다. 실제 표준의 분해·반올림·힌트는 이러한 경계 차이를 정해진 규칙으로 처리합니다. 이 임의의 4 단위 규칙이 FIPS 알고리즘은 아닙니다.</p>
+          <p className="leading-8">설명용으로 4 단위 구간의 번호만 읽으면 [7,9]와 [6,9]는 모두 구간 번호 [1,2]입니다(비밀 s=[1,2]와는 숫자만 같습니다). 하지만 8이 7로 바뀌면 구간 2가 1로 변합니다. 실제 표준의 분해·반올림·힌트는 이러한 경계 차이를 정해진 규칙으로 처리합니다. 이 임의의 4 단위 규칙이 FIPS 알고리즘은 아닙니다.</p>
           <p className="leading-8">실제 검증은 응답 크기와 힌트를 먼저 확인하고 재구성한 높은 부분과 메시지에서 challenge를 다시 만듭니다. 단순히 Az−ct를 계산했다는 사실만으로 서명 검증이 끝나지 않습니다.</p>
         </div>
 

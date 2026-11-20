@@ -65,22 +65,6 @@ export default function VAELoss() {
         interpretation="Gaussian variance s²가 작아지면 같은 squared error의 계수 1/(2s²)가 커집니다. 또한 pixel sum을 mean으로 바꾸면 reconstruction과 KL의 상대 scale이 달라지므로 likelihood·reduction·차원을 함께 기록해야 합니다."
       />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Diagonal Gaussian의 KL은 closed form으로 계산한다</h3>
-        <p>
-          Prior가 <code>N(0,I)</code>이고 encoder posterior가 diagonal Gaussian이면
-          KL term은 sampling 없이 직접 계산할 수 있다. Reconstruction expectation만
-          reparameterized sample로 근사한다.
-        </p>
-        <p>
-          유도할 때는
-          <code>Eq[log q(z|x)−log p(z)]</code>를 dimension별로 전개한 뒤
-          <code>Eq[(z−μ)²]=σ²</code>와 <code>Eq[z²]=μ²+σ²</code>를 대입하면
-          아래 식을 얻습니다. Posterior가 mixture이거나 full covariance라면 이
-          dimension별 전개를 그대로 적용할 수 없습니다.
-        </p>
-      </div>
-
       <ElboGapViz />
 
       <ExplainedFormula
@@ -115,7 +99,22 @@ export default function VAELoss() {
         assumptions={["qφ의 support가 posterior 계산에 필요한 영역을 덮고 Jensen inequality를 적용합니다.", "training code가 loss를 최소화한다면 보통 −ELBO를 구현합니다."]}
         interpretation="ELBO와 log evidence의 차이는 KL(qφ(z|x)‖pθ(z|x))입니다. 따라서 encoder family가 true posterior를 잘 근사할수록 bound가 tight해집니다."
       />
-      <KlShapeViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>Diagonal Gaussian의 KL은 closed form으로 계산한다</h3>
+        <p>
+          Prior가 <code>N(0,I)</code>이고 encoder posterior가 diagonal Gaussian이면
+          KL term은 sampling 없이 직접 계산할 수 있다. Reconstruction expectation만
+          reparameterized sample로 근사한다.
+        </p>
+        <p>
+          유도할 때는
+          <code>Eq[log q(z|x)−log p(z)]</code>를 dimension별로 전개한 뒤
+          <code>Eq[(z−μ)²]=σ²</code>와 <code>Eq[z²]=μ²+σ²</code>를 대입하면
+          아래 식을 얻습니다. Posterior가 mixture이거나 full covariance라면 이
+          dimension별 전개를 그대로 적용할 수 없습니다.
+        </p>
+      </div>
 
       <ExplainedFormula
         question="standard normal prior와 diagonal Gaussian posterior의 KL을 sampling 없이 어떻게 계산할까?"
@@ -146,6 +145,7 @@ export default function VAELoss() {
         assumptions={["p(z)=N(0,I), q(z|x)=N(μ,diag(σ²))입니다."]}
         interpretation="μ=0이고 σ²=1인 dimension의 KL contribution은 0입니다. 모든 dimension이 그렇게 되면 latent가 input 정보를 담지 않는 posterior collapse와 연결될 수 있지만, KL=0 하나만으로 원인을 확정하지는 않습니다."
       />
+      <KlShapeViz />
 
       <figure className="not-prose my-8 grid gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-2 sm:p-6">
         <div className="rounded-xl border bg-emerald-500/5 p-4">

@@ -56,7 +56,7 @@ export default function BalanceMerklePathViz() {
       eyebrow="B의 Merkle path"
       title="바뀐 balance 하나에서 State Root까지 한 줄만 다시 계산합니다"
       description="chunk는 아래 balance 네 칸을 이어 붙인 32 bytes이고, 선은 아래 값이 위 node 계산의 입력이 된다는 뜻입니다. 파란 선과 칸은 B에서 다시 계산하는 path, 회색 점선은 A와 공유해 재사용하는 부분입니다. Field 넷과 balance 여덟 칸으로 줄여 그렸습니다(가정)."
-      note="32 ETH→31 ETH는 글의 설명용 입력이고, 실제 BeaconState의 field 수와 tree 깊이는 이 그림과 다릅니다. 다른 balance 칸의 값은 정하지 않았습니다."
+      note="32 ETH→31 ETH는 글의 설명용 입력이고, 실제 BeaconState의 field 수와 tree 깊이는 이 그림과 다릅니다. SSZ List인 Balances의 field root는 chunk tree root에 list 길이를 한 번 더 섞어(mix_in_length) 얻지만, 그림에서는 이 단계를 생략했습니다. 다른 balance 칸의 값은 정하지 않았습니다."
       ariaLabel="validator 5의 balance 변경이 chunk 1, Balances field root, BeaconState root로 올라가는 네 장면"
       scenes={SCENES}
       render={(active) => {

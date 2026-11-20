@@ -55,9 +55,9 @@ const SCENES = [
     gas: null,
   },
   {
-    label: "결과 B · message 실패",
+    label: "결과 B · post에서 gas 초과",
     summary: "30 + 50 + 5 = 85 > 80",
-    note: "설명용 gas 가정값으로 ante 30, message 50, post-handler 5를 누적하면 85가 되어 limit 80을 넘습니다. message child는 버리고, ante 단계에서 이미 parent에 합친 fee 1 · seq 8만 parent에 남습니다.",
+    note: "설명용 gas 가정값으로 ante 30 + message 50 = 80까지는 limit 안이고, post-handler 5를 더한 85에서 limit 80을 넘습니다. post-handler도 message child 안에서 돌므로 message child를 버리고, ante 단계에서 이미 parent에 합친 fee 1 · seq 8만 parent에 남습니다.",
     parent: "Alice 99 · Bob 20 · seq 8",
     ante: { state: "Alice 99 · seq 8", tag: "parent에 합침", tone: "merged" },
     msg: { state: "Alice 89 · Bob 30", tag: "버림", tone: "dropped" },
