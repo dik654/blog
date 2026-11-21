@@ -68,7 +68,7 @@ export default function FastResumeSampleViz() {
   return (
     <SceneShell
       eyebrow="fast-resume"
-      title="Restart는 저장된 HAVE를 전부가 아니라 몇 칸만 다시 hash합니다"
+      title="fast-resume을 켜면 Restart는 저장된 HAVE를 전부가 아니라 몇 칸만 다시 hash합니다"
       description="칸 하나가 저장된 bitfield에서 HAVE로 적힌 piece 하나입니다. 두 file과 칸 수는 그림을 위한 가정입니다."
       ariaLabel="restart 때 file마다 일부 piece만 hash 검사하고, 하나라도 깨지면 저장된 bitfield를 지우는 과정"
       scenes={SCENES}

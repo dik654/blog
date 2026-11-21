@@ -118,7 +118,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
           </div>
           <PendingBranchViz />
           <div className={prose}>
-            <p>그러니 Pending을 보면 먼저 <code>kubectl get pod -o wide</code>로 NODE 열이 비었는지 봅니다. 비었으면 scheduler의 event를, 채워졌으면 그 노드 kubelet이 남긴 event를 읽습니다. 같은 Pending이라도 고칠 곳이 scheduler 쪽(requests·affinity·taint)인지 노드 쪽(CNI·스토리지·레지스트리 인증)인지가 이 한 열에서 갈립니다.</p>
+            <p>그러니 Pending을 보면 먼저 <code>kubectl get pod -o wide</code>로 NODE 열이 비었는지 봅니다. 비었으면 scheduler의 event를, 채워졌으면 그 노드 kubelet이 남긴 event를 읽습니다. 같은 Pending이라도 고칠 곳이 scheduler 쪽(requests·affinity·taint)인지 노드 쪽(CNI·스토리지·레지스트리 인증)인지가 이 한 열에서 갈립니다. 다만 노드 쪽 갈래에 남은 InvalidImageName과 ErrImageNeverPull은 CNI·스토리지·레지스트리 인증이 아니라 Pod spec의 이미지 이름이나 imagePullPolicy를 고쳐야 합니다.</p>
           </div>
           {code("pending-waiting-doc", "Pending과 Waiting을 나눈 문서")}
           {code("image-pull-errors", "ErrImagePull · ImagePullBackOff 정의")}

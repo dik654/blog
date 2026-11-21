@@ -20,7 +20,7 @@ const SCENES = [
   { label: "Lease 갱신", summary: "10초마다, 5분에 30번", note: "kube-node-lease namespace의 자기 이름 Lease에 renewTime을 10초마다 갱신합니다. 이것이 가벼운 심장박동입니다.", writes: null },
   { label: "status 계산", summary: "역시 10초마다", note: "Node 객체의 status에 적을 조건(Ready, MemoryPressure, DiskPressure, PIDPressure)과 Allocatable 같은 값도 10초마다 계산합니다. 계산은 아직 쓰기가 아닙니다.", writes: null },
   { label: "status 쓰기", summary: "변화 없으면 5분에 한 번", note: "계산 결과가 바뀌지 않았다면 API server에 쓰는 것은 5분에 한 번입니다. t = 0의 빈 칸은 앞선 쓰기이고 이 5분 안의 쓰기는 t = 300의 한 번입니다. status는 무거운 보고서이고, 5분 동안 30번 갱신되는 가벼운 심장박동은 Lease입니다.", writes: [300] },
-  { label: "값이 바뀌면", summary: "(가정) t = 120에 변화", note: "(가정) t = 120에 조건이 바뀌었다면 5분을 기다리지 않고 씁니다. 변화가 없는 구간에는 다시 5분 주기가 적용되어 그다음 쓰기는 이 축 밖에 있습니다.", writes: [120] },
+  { label: "값이 바뀌면", summary: "(가정) t = 120에 변화", note: "(가정) t = 120에 조건이 바뀌었다면 5분을 기다리지 않고 씁니다. 쓰고 나면 5분 타이머가 그 시점부터 다시 시작되는데, 변화 직후에는 노드들의 보고가 한꺼번에 몰리지 않도록 −2.5분~+2.5분의 무작위 지연이 더해집니다. 그래서 그다음 쓰기는 t = 270~570 사이 어딘가이며 이 축 안에 들어올 수도 있습니다.", writes: [120] },
 ] as const;
 
 function Lane({ y, title, on, children }: { y: number; title: string; on: boolean; children: ReactNode }) {

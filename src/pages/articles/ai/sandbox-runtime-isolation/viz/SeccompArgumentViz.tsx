@@ -23,7 +23,7 @@ const SCENES = [
   {
     label: "판정과 그 뒤",
     summary: "허용 → 공유 호스트 커널",
-    note: "필터는 실행·오류 반환·로그·프로세스 종료 같은 동작을 고릅니다. RuntimeDefault 프로필이 ptrace 같은 일부 호출을 막아도 허용된 openat은 호스트 커널로 들어가고, 어느 경로를 열 수 있는지는 Mount·DAC·LSM 같은 경계가 따로 정합니다.",
+    note: "필터는 실행·오류 반환·로그·프로세스 종료 같은 동작을 고릅니다. RuntimeDefault 프로필이 mount·kexec_load 같은 일부 호출을 막아도 허용된 openat은 호스트 커널로 들어가고, 어느 경로를 열 수 있는지는 Mount·DAC·LSM 같은 경계가 따로 정합니다.",
   },
 ] as const;
 
@@ -97,11 +97,11 @@ function Verdict() {
         ))}
       </div>
       <div className="grid min-w-0 gap-2 text-xs leading-5 sm:text-sm">
-        <div className="grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-2">
-          <span className="font-mono text-muted-foreground">ptrace</span>
+        <div className="grid grid-cols-[6rem_minmax(0,1fr)] items-center gap-2">
+          <span className="font-mono text-muted-foreground">kexec_load</span>
           <span className="min-w-0 rounded border border-dashed border-[#dc2626] px-2 py-1">RuntimeDefault(Kubernetes가 고르는 런타임 기본 프로필)가 막는 호출의 예 · 실행되지 않음</span>
         </div>
-        <div className="grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-2">
+        <div className="grid grid-cols-[6rem_minmax(0,1fr)] items-center gap-2">
           <span className="font-mono font-bold">openat</span>
           <span className="min-w-0 rounded border border-[#2563eb] px-2 py-1 font-bold">허용 → 공유 호스트 커널이 실제로 처리</span>
         </div>

@@ -62,7 +62,7 @@ const SCENES = [
     title:
       "Unsafe 판정이 나면 Dog가 debt와 담보를 떼어 Clipper 경매로 넘깁니다",
     detail:
-      "판정, 경매 시작, 담보 판매와 bad debt 해소는 서로 다른 상태입니다. 경매가 시작됐다고 부채가 모두 회수됐다고 기록하지 않습니다. 시장 혼잡이나 keeper 실패로 경매가 늦어지면 이 대기 상태가 길어집니다.",
+      "판정은 따로 저장되지 않고 bark 호출 때 확인되며, 경매 시작, 담보 판매와 bad debt 해소는 서로 다른 상태입니다. 경매가 시작됐다고 부채가 모두 회수됐다고 기록하지 않습니다. 시장 혼잡이나 keeper 실패로 경매가 늦어지면 이 대기 상태가 길어집니다.",
     collateral: "auction lot",
     art: "Vault에서 감소",
     debt: "auction target",

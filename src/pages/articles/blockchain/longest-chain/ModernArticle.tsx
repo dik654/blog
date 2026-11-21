@@ -135,7 +135,7 @@ export default function ModernLongestChainArticle() {
         <ConfirmationDeficitViz />
 
         <p>
-          Bitcoin whitepaper는 수신자가 z개의 새 block을 기다리는 동안 공격자가 얼마나 전진했는지를 Poisson 분포로 평균낸 뒤, 남은 deficit에서의 catch-up 확률을 합합니다. 따라서 UI의 “6 confirmations”와 위 식의 “현재 deficit 6”은 자동으로 같은 입력이 아닙니다. 공격자 share, 전파 조건과 계산 시작 시점을 고정하지 않은 확인 숫자만으로 위험을 말할 수 없습니다.
+          Bitcoin whitepaper는 수신자가 z개의 새 block을 기다리는 동안 공격자가 얼마나 전진했는지를 Poisson 분포로 평균낸 뒤, 남은 deficit에서의 catch-up 확률을 합합니다. 따라서 UI의 “6 confirmations”와 위 식의 “현재 deficit 6”은 자동으로 같은 입력이 아닙니다. 세는 기준부터 다릅니다. 지갑의 N confirmations는 거래를 담은 block을 포함해 세므로, 백서의 z(그 block 뒤에 이어진 block 수)로는 N−1에 해당합니다. 공격자 share, 전파 조건과 계산 시작 시점을 고정하지 않은 확인 숫자만으로 위험을 말할 수 없습니다.
         </p>
 
         <div id="paper-bitcoin-whitepaper">

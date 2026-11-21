@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #comparison 둘째 문단 (확인일 2026-11-02).
  * B300 사양표 operating temperature 10–35°C, 공급 공기는 ASHRAE Class A2를 따르되 최대 30°C.
- * ASHRAE 권장 범위 18–27°C(A 등급 공통), 30°C까지 허용, 30°C 운전은 해발 1000ft 이하.
+ * ASHRAE 권장 범위 18–27°C(A 등급 공통), A2 허용 10–35°C에 B300 상한을 적용해 10–30°C, 30°C 운전은 해발 1000ft 이하.
  * 3절 14.5kW·19kW는 25°C 공급 공기 기준. 싱가포르 SS 697은 26°C 이상으로 단계적 상향.
  */
 const MIN = 8;
@@ -15,7 +15,7 @@ const ROWS = [
   { key: "spec", label: "B300 사양표 operating", from: 10, to: 35, color: "#64748b", text: "10–35°C", scene: 0 },
   { key: "cap", label: "공급 공기 상한", from: 30, to: 30, color: "#dc2626", text: "최대 30°C", scene: 0 },
   { key: "rec", label: "ASHRAE 권장", from: 18, to: 27, color: "#0f766e", text: "18–27°C", scene: 1 },
-  { key: "allow", label: "권장 밖 허용", from: 27, to: 30, color: "#d97706", text: "27–30°C · 30°C는 1000ft 이하", scene: 1 },
+  { key: "allow", label: "A2 허용(NVIDIA 상한 적용)", from: 10, to: 30, color: "#d97706", text: "10–30°C · 30°C는 1000ft 이하", scene: 1 },
 ] as const;
 
 const MARKS = [
@@ -31,8 +31,8 @@ const SCENES = [
   },
   {
     label: "권장 구간과 허용 구간",
-    summary: "권장 18–27 · 27–30은 허용",
-    note: "ASHRAE 표의 권장(recommended) 범위는 모든 A 등급 공통 18–27°C이고, 30°C까지는 허용(allowable) 구간입니다. 30°C 운전은 해발 1000ft 이하에서만 열립니다.",
+    summary: "권장 18–27 · 허용 10–30",
+    note: "ASHRAE 표의 권장(recommended) 범위는 모든 A 등급 공통 18–27°C이고, A2 허용(allowable) 범위 10–35°C에 B300의 30°C 상한을 적용하면 허용 구간은 10–30°C입니다. 30°C 운전은 해발 1000ft 이하에서만 열립니다.",
   },
   {
     label: "26°C 운영을 같은 축에 놓으면",
@@ -47,7 +47,7 @@ export default function SupplyAirBandViz() {
       eyebrow="온도 숫자를 한 축에"
       title="공급 공기 온도의 권장·허용·상한을 한 축에 놓습니다"
       description="가로축은 서버로 들어가는 공급 공기 온도(°C)입니다. NVIDIA DGX B300 guide와 그 guide가 따르는 ASHRAE(미국 공조 학회) 장비 등급표의 숫자만 옮겼습니다(확인일 2026-11-02)."
-      ariaLabel="B300 사양표 온도 범위, 공급 공기 상한 30도, ASHRAE 권장 18에서 27도, 허용 30도, 25도와 26도 기준점을 한 축에 비교"
+      ariaLabel="B300 사양표 온도 범위, 공급 공기 상한 30도, ASHRAE 권장 18에서 27도, 허용 10에서 30도, 25도와 26도 기준점을 한 축에 비교"
       scenes={SCENES}
       render={(active) => (
         <div className="min-w-0 space-y-2.5">

@@ -62,8 +62,8 @@ export default function ModernArticle() {
         <ExplainedFormula
           question="Retired page를 언제 새 transaction에 다시 쓸 수 있을까요?"
           idea="그 page를 볼 수 있는 가장 오래된 active reader가 끝난 뒤에만 재사용 후보가 됩니다."
-          formula={String.raw`\operatorname{reuse}(p)\ \text{only after}\ \operatorname{retiredTx}(p)<\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)`}
-          annotatedFormula={String.raw`\operatorname{reuse}(p)\ \text{only after}\ \underbrace{\operatorname{retiredTx}(p)}_{\text{page가 current graph에서 빠진 세대}}<\underbrace{\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)}_{\text{가장 오래된 열린 snapshot}}`}
+          formula={String.raw`\operatorname{reuse}(p)\ \text{only after}\ \operatorname{retiredTx}(p)\le\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)`}
+          annotatedFormula={String.raw`\operatorname{reuse}(p)\ \text{only after}\ \underbrace{\operatorname{retiredTx}(p)}_{\text{page가 current graph에서 빠진 세대}}\le\underbrace{\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)}_{\text{가장 오래된 열린 snapshot}}`}
           operations={[
             { expression: String.raw`R_{\mathrm{active}}=\{100,103\}`, annotation: ["두 reader가 txid 100과 103을 고정", "oldest reader는 100", "100이 볼 수 있는 page는 유지"] },
             { expression: String.raw`\min(100,103)=100`, annotation: ["회수 horizon은 100", "새 commit 105가 있어도 바뀌지 않음", "R1 종료 뒤 horizon이 전진"] },
@@ -74,7 +74,7 @@ export default function ModernArticle() {
             { symbol: "R_active", name: "Active readers", description: "아직 snapshot을 닫지 않은 read transactions입니다." },
             { symbol: "readerTx", name: "Pinned generation", description: "각 reader가 시작할 때 선택한 transaction ID입니다." },
           ]}
-          assumptions={["이 식은 page 수명 경계를 설명하는 모형입니다.", "Reader slot·process liveness와 정확한 GC 비교 규칙은 고정한 libmdbx release의 구현에 따릅니다.", "Page 재사용 가능 여부와 stable-media durability를 같은 의미로 쓰지 않습니다."]}
+          assumptions={["이 식은 page 수명 경계를 설명하는 모형입니다.", "libmdbx v0.14.3은 GC record의 txnid가 가장 오래된 reader txnid 이하일 때 재사용합니다. Reader slot·process liveness 처리는 고정한 release의 구현에 따릅니다.", "Page 재사용 가능 여부와 stable-media durability를 같은 의미로 쓰지 않습니다."]}
           interpretation="Active reader가 100과 103이면 가장 오래된 snapshot은 100입니다. Writer가 105까지 진행해도 txid 100이 볼 수 있는 page는 R1이 끝나기 전 재사용하지 않습니다. 오래 열린 reader는 free-page 회수를 늦춰 map과 working set을 키울 수 있습니다."
         />
         <ReaderHorizonViz />

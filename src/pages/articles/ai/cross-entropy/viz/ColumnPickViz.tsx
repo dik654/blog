@@ -11,7 +11,7 @@ const RUNNING = ["2ln2", "4ln2", "6ln2", "7ln2"] as const;
 const SCENES = [
   { label: "log_softmax 배열", summary: "4행 × 3열", note: "같은 z를 네 행에 반복한 입력에 class_dim=1 방향으로 log_softmax를 구합니다. softmax 확률에 로그를 취한 값이 행마다 세 열씩 있습니다." },
   { label: "정답 열 고르기", summary: "정답 [0, 0, 1, 2]", note: "정답 번호는 이 행에서 읽을 열입니다. 0, 1, 2가 각각 A, B, C 열입니다. 다른 열은 이 행의 비용에 쓰이지 않습니다." },
-  { label: "빼서 더하기", summary: "ln4 + ln4 + ln4 + ln2 = 7ln2", note: "CPU NLL 265행이 정답 열을 읽고 273행이 그 로그값을 빼서 비용에 더합니다. 음수인 로그값을 빼므로 비용은 양수입니다." },
+  { label: "빼서 더하기", summary: "ln4 + ln4 + ln4 + ln2 = 7ln2", note: "CPU NLL 265행이 정답 열을 읽고 271행이 그 로그값을 빼서 비용에 더합니다. 음수인 로그값을 빼므로 비용은 양수입니다." },
   { label: "관측 수로 나누기", summary: "7ln2 / 4 ≈ 1.213008 nat", note: "288–299행에서 유효 관측 수 4로 나눕니다. label_smoothing=0, 가중치 없음, 제외 정답 없음, mean을 가정한 손 계산이며 PyTorch를 실행한 결과는 아닙니다." },
 ] as const;
 

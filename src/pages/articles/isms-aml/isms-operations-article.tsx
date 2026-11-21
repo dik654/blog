@@ -152,7 +152,7 @@ const CONFIG: Record<ArticleKey, Config> = {
     firstBody: [
       "Triage는 alert source, detection rule/version, asset·identity·data, 첫 관측과 마지막 정상 시각을 기록해 사실과 추정을 나눕니다. Severity는 제품이 준 숫자를 복사하지 않고 confidentiality·integrity·availability 영향, 확산 가능성, 규제·고객 영향과 time criticality를 근거로 정합니다. Incident commander, investigation, containment, communications와 business owner를 명시합니다.",
       "Containment는 무조건 host 전원을 끄는 행동이 아닙니다. Token revoke, account disable, network isolation, route deny, vulnerable feature flag off 중 evidence와 업무 영향에 맞는 수단을 고릅니다. Memory가 핵심 증거라면 승인된 capture 뒤 격리할 수 있고, active exfiltration이면 증거 수집을 기다리느라 차단을 늦추지 않습니다. 모든 조치는 actor·time·reason·target·result receipt를 남깁니다.",
-      "원본 log·disk image·cloud audit record는 hash, 수집 시각, source, tool version, custodian과 접근 이력을 붙여 보존합니다. 조사용 사본과 원본을 분리하고 timezone·clock drift를 기록합니다. Chain of custody는 파일이 진실이라는 보장이 아니라 누가 어떻게 취급했는지 재현하는 기록입니다.",
+      "원본 log·disk image·cloud audit record는 hash, 수집 시각, source, tool version, custodian과 접근 이력을 붙여 보존합니다. 조사용 사본과 원본을 분리하고, 사본을 만들면 hash를 원본과 대조합니다. timezone·clock drift도 기록합니다. Chain of custody는 파일이 진실이라는 보장이 아니라 누가 어떻게 취급했는지 재현하는 기록입니다.",
     ],
     secondId: "evidence-recovery",
     secondTitle: "원인을 제거한 뒤 credential·data·service를 독립 oracle로 검증한다",

@@ -117,7 +117,7 @@ export default function LlmAsAJudgeArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             MT-Bench 논문은 같은 답변 쌍의 순서를 바꿔 두 번 판정했을 때 GPT-4 가 두 판정에서
-            같은 답을 고른 비율(consistency)이 65.0%, 두 순서 모두에서 먼저 제시된 쪽을 고른
+            같은 답을 고른 비율(consistency)이 65.0%, 판정이 먼저 제시된 답을 선호한
             비율(첫 위치 편향)이 30.0% 라고 보고했습니다. 두 비율은 서로 겹치지 않는 경우를 셉니다. GPT-3.5 는 일관성 46.2%·첫 위치 편향 50.0%, Claude-v1 은 일관성
             23.8%·첫 위치 편향 75.0% 로 더 심했습니다.
           </p>

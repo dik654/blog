@@ -25,6 +25,9 @@ export default function PeerScoring({
         <CodeViewButton
           onClick={() => onCodeRef("score-decay", codeRefs["score-decay"])}
         />
+        <CodeViewButton
+          onClick={() => onCodeRef("is-bad-peer", codeRefs["is-bad-peer"])}
+        />
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>

@@ -62,7 +62,7 @@ const SCENES: readonly BranchScene[] = [
     d2: "통과",
     edges: ["callD1", "d1D2", "d2Exec", "execErr"],
     leaves: ["Err"],
-    note: "등록된 precompile을 실행하던 provider가 fatal error를 내면 결과는 Err입니다. Return이나 halt 같은 완전한 성공 결과가 없고, 처리는 호출자 오류 경계로 넘어갑니다. 본문은 이 오류가 어떤 입력·gas에서 나는지 정하지 않았으므로 이 갈래에는 숫자를 붙이지 않았습니다.",
+    note: "등록된 precompile을 실행하던 provider가 fatal error를 내면 결과는 Err입니다. 함수 실행 중 반환됨(revm 소스): run()은 precompile.execute(...)가 돌려준 오류를 map_err로 그대로 넘깁니다. Return이나 halt 같은 완전한 성공 결과가 없고, 처리는 호출자 오류 경계로 넘어갑니다. 본문은 이 오류가 어떤 입력·gas에서 나는지 정하지 않았으므로 숫자를 붙이지 않았습니다.",
   },
   {
     label: "output 칸만 보면",

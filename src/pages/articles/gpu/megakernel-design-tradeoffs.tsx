@@ -93,7 +93,7 @@ export default function MegakernelDesignTradeoffsArticle() {
           </p>
           <p>
             MPK 는 이 배치를 SM 단위 task graph 로 만듭니다. Operator 293개를 task
-            13,867개로 쪼개고(operator 당 평균 32~47개), H100 SM 132개 가운데 128개를
+            13,867개로 쪼개고(Qwen3-8B 는 operator 당 평균 약 47개, 논문이 잰 세 모델에서는 모델에 따라 32~47개), H100 SM 132개 가운데 128개를
             worker 로, 나머지 4개에 scheduler warp 16개를 둡니다. Worker 마다 자기 queue
             가 있어 중앙 lock 없이 task 를 꺼냅니다.
           </p>

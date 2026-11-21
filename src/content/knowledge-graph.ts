@@ -25076,7 +25076,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Exact Retrieval vs Compression",
     ],
     definition:
-      "d×d처럼 크기가 고정된 state는 표현할 수 있는 독립적인 key-value 연관의 수도 대략 d²로 고정되므로, 문맥에 담긴 사실 수가 그 용량을 넘으면 서로 다른 연관이 같은 state 좌표에서 겹쳐 쓰여 손실되고, 문맥 전체를 그대로 보존하는 explicit attention과 정확히 이 지점에서 갈립니다.",
+      "d×d처럼 크기가 고정된 state는 간섭 없이 꺼낼 수 있는 독립적인 key-value 연관의 수도 서로 직교할 수 있는 key 수인 대략 d로 고정되므로, 문맥에 담긴 사실 수가 그 용량을 넘으면 서로 다른 연관이 같은 state에 겹쳐 쓰여 손실되고, 문맥 전체를 그대로 보존하는 explicit attention과 정확히 이 지점에서 갈립니다.",
     canonicalHref: "/cs/ai/linear-attention-and-state-space-models#tradeoff",
   },
   "hybrid-sequence-architecture": {
@@ -72092,7 +72092,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "retrieval-compression-tradeoff",
     relation: "produces",
     reason:
-      "State 크기를 문맥 길이와 무관하게 고정한 대가로 표현 용량이 d²로 제한되는 trade-off가 생깁니다.",
+      "State 크기를 문맥 길이와 무관하게 고정한 대가로 간섭 없는 연관 용량이 직교 key 수 d로 제한되는 trade-off가 생깁니다.",
   },
   {
     from: "retrieval-compression-tradeoff",
@@ -72609,7 +72609,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "qwen36-gated-deltanet-state",
     relation: "prerequisite",
     reason:
-      "d² 용량 한계라는 일반 개념이 있어야 DeltaNet의 128×128 state에서 생기는 구체적 겹침 위험을 이해할 수 있습니다.",
+      "직교 key 수 d로 정해지는 용량 한계라는 일반 개념이 있어야 DeltaNet의 128×128 state에서 생기는 구체적 겹침 위험을 이해할 수 있습니다.",
   },
   {
     from: "linear-attention-kernel-feature-map",

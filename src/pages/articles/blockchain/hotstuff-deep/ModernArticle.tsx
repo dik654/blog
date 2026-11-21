@@ -59,14 +59,14 @@ export default function ModernHotstuffArticle() {
         </p>
         <ThreeChainLinkViz />
         <p>
-          Chained HotStuff는 연속된 블록이 앞선 QC를 운반하게 해 여러 논리 단계를 겹쳐 처리합니다. B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모에 연결되면 B10이 commit됩니다. B12가 B11을 건너뛰고 QC10을 들고 오거나 B13이 형제 블록의 QC를 들고 오면 높이가 연속이어도 three-chain이 아닙니다.
+          Chained HotStuff는 연속된 블록이 앞선 QC를 운반하게 해 여러 논리 단계를 겹쳐 처리합니다. B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모에 연결되면 B10이 commit됩니다. B12가 B11을 건너뛰고 QC10을 들고 오면 높이가 연속이어도 three-chain이 아닙니다. B13이 부모 B12가 아니라 형제 블록의 QC를 들고 오는 경우는 b*.parent = b″까지 확인하는 Algorithm 3(Chained HotStuff) 기준으로 commit이 막힙니다. event-driven인 Algorithm 4의 commit 조건은 b″.parent = b′와 b′.parent = b만 보므로, 형제 블록 쪽 사슬이 바로 앞 부모로 이어져 있으면 그 사슬로 B10이 commit될 수 있습니다.
         </p>
         <div id="paper-hotstuff-chain">
           <CitationBlock source="HotStuff v6 §4–5 — safeNode and Chained HotStuff" citeKey={1} href="https://arxiv.org/html/1803.05069v6#S4">
             <p><strong>문제:</strong> Lock의 안전성을 지키면서 주 노드 교체와 여러 합의 단계를 단순한 사슬로 표현해야 합니다.</p>
             <p><strong>기여:</strong> safeNode 판정, QC, one/two/three-chain과 chained commit 규칙을 정의합니다.</p>
             <p><strong>전제:</strong> 인증된 복제본 3f+1대, threshold signature, 유효한 QC와 블록 조상 관계를 사용합니다.</p>
-            <p><strong>근거 범위:</strong> arXiv v6의 Basic HotStuff와 Chained HotStuff 알고리즘입니다.</p>
+            <p><strong>근거 범위:</strong> arXiv v6의 Basic HotStuff와 Chained HotStuff 알고리즘(Algorithm 3)입니다. 형제 블록 QC 사례는 Algorithm 3의 decide 조건 기준이며, §6 event-driven Algorithm 4의 commit 조건과는 다릅니다.</p>
             <p><strong>말하지 않는 것:</strong> 높이가 연속인 블록 세 개만 보았다고 commit할 수 있다는 뜻은 아닙니다.</p>
           </CitationBlock>
         </div>

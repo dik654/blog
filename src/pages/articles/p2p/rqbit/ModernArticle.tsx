@@ -319,7 +319,9 @@ export default function ModernRqbitArticle() {
         <FastResumeSampleViz />
         <p>
           Runtime에서 새로 받은 piece는 이 hash gate를 통과합니다. 다만 process restart의
-          fast-resume은 모든 HAVE piece를 매번 전부 다시 hash하지 않습니다. v9.0.1은 file마다
+          fast-resume은 모든 HAVE piece를 매번 전부 다시 hash하지 않습니다. fast-resume은
+          옵션이며 기본값은 꺼짐입니다(<code>SessionOptions.fastresume: false</code>, CLI는
+          [Experimental] <code>--fastresume</code> flag). 켜면 v9.0.1은 file마다
           적어도 한 piece를 고르고 나머지는 감소하는 확률로 sampling해 검사합니다.
         </p>
         <p>

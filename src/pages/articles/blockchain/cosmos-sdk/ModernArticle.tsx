@@ -58,7 +58,9 @@ export default function ModernCosmosSDKArticle() {
         <CheckStateCarryViz />
         <p>
           BaseApp의 <code>stateManager</code>는 CheckTx와 FinalizeBlock이 같은 root를 직접 고치지 않게
-          mode별 state를 나눕니다. 중요한 점은 CheckTx를 곧바로 버리는 simulation으로 보면 안 된다는 것입니다.
+          mode별 state를 나눕니다. CheckTx에서도 <code>runTx</code>는 ante를 통과한 뒤 <code>runMsgs</code>를 부르지만,
+          <code>runMsgs</code>는 FinalizeBlock이나 simulate mode가 아니면 첫 message 앞에서 멈춥니다. 그래서 송금 10을 옮기는
+          bank MsgSend handler는 CheckTx에서 실행되지 않습니다. 중요한 점은 CheckTx를 곧바로 버리는 simulation으로 보면 안 된다는 것입니다.
           성공한 ante 변경은 node-local check state에 누적되어 다음 CheckTx가 sequence 충돌을 판단할 때 읽습니다.
           다만 committed query에는 보이지 않고 block Commit 뒤 최신 root에서 다시 만들어집니다.
         </p>

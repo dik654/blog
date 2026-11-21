@@ -31,7 +31,7 @@ export default function StallBranchViz() {
     <SceneShell
       eyebrow="명령을 내지 못한 warp"
       title="같은 '발행 안 됨'도 어디서 멈췄는지에 따라 이름이 갈립니다"
-      description="굵은 글자가 멈춘 이유, 고정폭 이름이 Profiler 항목입니다. L1TEX는 L1 cache·texture 경로, MIO는 그와 다른 메모리 입출력 계열 경로입니다."
+      description="굵은 글자가 멈춘 이유, 고정폭 이름이 Profiler 항목입니다. L1TEX는 L1/Texture cache 장치, MIO는 memory input/output의 줄임말로 shared memory·특수 수학·동적 분기 명령을 맡는 pipeline 묶음입니다."
       ariaLabel="명령을 내지 못한 warp의 네 갈래와 각 Profiler 항목"
       scenes={SCENES}
       render={(index) => (

@@ -19,7 +19,7 @@ const SCENES = [
   {
     label: "GPT-4",
     summary: "일치 65.0% · 첫 위치 30.0%",
-    note: "같은 답변 쌍을 두 순서로 판정했을 때 GPT-4는 65.0%에서 같은 답을 골랐습니다. 30.0%는 두 번 모두 먼저 제시된 답을 골랐고, 이 경우 승자가 A에서 B로 바뀝니다.",
+    note: "같은 답변 쌍을 두 순서로 판정했을 때 GPT-4는 65.0%에서 같은 답을 골랐습니다. 30.0%는 판정이 먼저 제시된 답을 선호했습니다.",
   },
   {
     label: "GPT-3.5",
@@ -29,7 +29,7 @@ const SCENES = [
   {
     label: "Claude-v1",
     summary: "일치 23.8% · 첫 위치 75.0%",
-    note: "Claude-v1은 네 쌍 중 세 쌍꼴로 먼저 제시된 답을 골랐습니다. 같은 답을 고른 비율은 23.8%에 그칩니다.",
+    note: "Claude-v1은 네 쌍 중 세 쌍꼴로 먼저 제시된 답을 선호했습니다. 같은 답을 고른 비율은 23.8%에 그칩니다.",
   },
   {
     label: "두 순서 규칙 적용",
@@ -84,7 +84,7 @@ function Legend({ applyRule }: { applyRule: boolean }) {
       ]
     : [
         { color: COLORS.consistent, text: "일치: 두 순서에서 같은 답" },
-        { color: COLORS.first, text: "첫 위치: 두 번 다 앞자리 답" },
+        { color: COLORS.first, text: "첫 위치: 앞자리 답 선호" },
         { color: COLORS.rest, text: "나머지(본문이 더 나누지 않음)" },
       ];
   return (
@@ -106,7 +106,7 @@ export default function PositionConsistencyViz() {
     <VizFrame
       eyebrow="Position bias · MT-Bench 측정"
       title="순서를 바꿔 두 번 물었을 때 같은 답이 나온 몫"
-      description="막대 하나가 한 judge가 판정한 답변 쌍 전체(100%)입니다. 첫 위치 편향은 두 순서 모두에서 먼저 제시된 답을 고른 경우라, 순서 1은 A·순서 2는 B가 되어 두 판정이 엇갈립니다."
+      description="막대 하나가 한 judge가 판정한 답변 쌍 전체(100%)입니다. 첫 위치 편향은 순서를 바꿔 판정했을 때 먼저 제시된 답을 선호한 경우입니다."
       note="수치는 MT-Bench 논문이 보고한 값입니다. 나머지 몫의 내역은 이 글에서 다루지 않습니다."
     >
       <div

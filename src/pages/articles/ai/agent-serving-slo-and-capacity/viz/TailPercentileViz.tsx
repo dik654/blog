@@ -3,6 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: names 절의 P25 출력 속도·P95 TTFT — 평균과 분포 지점의 차이, 기록이 지워진 턴의 비율에 따른 움직임.
  * 요청 20개의 속도는 그림용 가정: 합 500, 평균 25.0(3절의 동시 16개 평균과 맞춤), 느린 순 6번째 = 17.
+ * AA는 백분위 계산 규칙을 밝히지 않으므로 P25는 규칙에 따라 15(nearest-rank)~17(느린 순 6번째)이며, 어느 쪽이든 20 미만.
  * TTFT: 기록이 남은 턴은 1.0 + 0.13i초(가정), 지워진 턴은 128K ÷ 4,700 = 약 27초(4절 계산).
  */
 const SPEEDS = [8, 10, 12, 13, 15, 17, 18, 19, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 52];
@@ -14,7 +15,7 @@ const P95_ONE = hitTurns(19)[18];
 
 const SCENES = [
   { label: "평균으로 재면", summary: `평균 ${MEAN.toFixed(1)} ≥ 20`, note: "요청 20개의 속도를 느린 순으로 세웠습니다(가정). 평균선은 하한 20 위에 있어 평균으로만 보면 약속을 지킨 것처럼 보입니다." },
-  { label: "느린 4분의 1로 재면", summary: `P25 ${P25} < 20`, note: "느린 쪽 다섯 개(20개의 4분의 1)를 뺀 나머지 중 가장 느린 값 17이 하위 25퍼센트 지점, 곧 P25입니다. 이 값이 하한 20에 못 미치므로 같은 요청들인데 판정이 뒤집힙니다." },
+  { label: "느린 4분의 1로 재면", summary: `P25 15~${P25} < 20`, note: "느린 쪽 다섯 개(20개의 4분의 1)를 뺀 나머지 중 가장 느린 값 17을 하위 25퍼센트 지점, 곧 P25로 잡았습니다. AA는 백분위 계산 규칙을 밝히지 않아 계산법에 따라 15~17이 나오지만, 어느 쪽이든 하한 20에 못 미치므로 같은 요청들인데 판정이 뒤집힙니다." },
   { label: "지워진 턴 1번", summary: `P95 약 ${P95_ONE.toFixed(1)}초 ≤ 10초`, note: "이번에는 첫 토큰까지의 기다림(TTFT)입니다. 길수록 나쁘므로 위쪽 지점을 봅니다. 긴 쪽에서 한 칸을 뺀 19번째가 상위 95퍼센트 지점, 곧 P95이고, 20번 중 한 번만 앞부분 기록이 지워져 27초를 기다렸다면 P95는 그대로 낮습니다." },
   { label: "지워진 턴 2번", summary: "P95 약 27초 > 10초", note: "지워진 턴이 한 번 늘었을 뿐인데 19번째가 27초로 뛰어 상한 10초를 넘습니다. 기록이 남은 턴과 지워진 턴의 비율이 바뀌면 같은 서버에서도 P95가 크게 움직입니다." },
 ] as const;
@@ -77,7 +78,7 @@ export default function TailPercentileViz() {
               </>
             )}
             {active === 1 && (
-              <text x={LEFT + 5.5 * SLOT} y={y(limit) - 7} textAnchor="middle" fontSize={11} fontWeight={700} fill="#b45309">P25 = 17</text>
+              <text x={LEFT + 5.5 * SLOT} y={y(limit) - 7} textAnchor="middle" fontSize={11} fontWeight={700} fill="#b45309">P25 15~17</text>
             )}
             {active >= 2 && (
               <text x={LEFT + 18.5 * SLOT - 12} y={active === 2 ? y(limit) - 7 : TOP + 4} textAnchor="end" fontSize={11} fontWeight={700} fill={failed ? "#b45309" : "#2563eb"}>

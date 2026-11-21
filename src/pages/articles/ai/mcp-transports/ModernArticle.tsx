@@ -54,7 +54,8 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>수명을 나눕니다</h2></div>
         <LifetimeLanesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
-            Request-scoped SSE는 한 request의 여러 response event를 운반합니다. 그 stream을 닫아 cancellation 의사를 알릴 수 있지만 이미
+            Request-scoped SSE는 한 request의 여러 response event를 운반합니다. 그 stream을 닫아 cancellation 의사를 알릴 수 있습니다.
+            Streamable HTTP 명세의 Cancellation 절은 server가 이 close를 그 request의 취소로 처리해야(MUST) 한다고 정합니다. 그러나 이미
             외부 system에 생긴 effect까지 되돌리지는 않습니다. Resource update를 계속 받는 subscription은 별도 장기 channel이며 request
             response와 같은 수명으로 묶지 않습니다.
           </p></div>

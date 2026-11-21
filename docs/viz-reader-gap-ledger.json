@@ -17913,5 +17913,508 @@
 "why": "No change made. I checked the rendered VALID scene: B353(가정) keeps its dashed (optimistic) border after B352 turns VALID, and nothing on screen explains why. The reason is only in a source comment, and the prose (Overview.tsx lines 199-200) only says '나중에 VALID가 오면 표시를 풀고' about B352. What the Viz shows is technically correct: in optimistic sync, a VALID verdict clears the mark on the block and its ancestors, not its descendants, so B353 stays unvalidated until it gets its own verdict. Neither in-Viz fix stays within the rules. Making B353 solid would show something false. Adding an on-screen caption would make the Viz say even more than the prose. Hiding B353 outside the INVALID scene would change the scene structure. The right fix is one prose sentence, which counts as a new claim and is the author's call, for example after line 200: '그 위에 이어진 block은 자기 payload가 따로 VALID를 받을 때까지 optimistic 표시가 남습니다.'"
 }
 ]
+},
+"sourceCheckPass": {
+"date": "2026-11-21",
+"items": [
+{
+"n": 54,
+"route": "cs/cloud/linux-kernel-process-syscall-scheduler",
+"verdict": "fixed",
+"evidence": "Article's pinned snapshot is Linux v6.12 (codebase/PROVENANCE.md). src/pages/articles/cloud/linux-kernel-process-syscall-scheduler/codebase/linux/kernel/sched/core.c:10017: \"/*   0 */      1024,       820,       655,       526,       423,\" (inside `const int sched_prio_to_weight[40]` at line 10012). So nice 1-4 = 820/655/526/423, not the computed 819/655/524/419. Upstream: https://raw.githubusercontent.com/torvalds/linux/v6.12/kernel/sched/core.c"
+},
+{
+"n": 44,
+"route": "cs/crypto/post-quantum-signatures",
+"verdict": "fixed",
+"evidence": "I checked the upstream file https://raw.githubusercontent.com/PQClean/PQClean/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_sign/ml-dsa-44/clean/sign.c and it matches the article's saved copy at src/pages/articles/crypto/pq-sources/codebase/PQClean/crypto_sign/ml-dsa-44/clean/sign.c line for line. The hashing that makes the challenge is lines 149–155: 149 `shake256_inc_init(&state);`, 150 `shake256_inc_absorb(&state, mu, CRHBYTES);`, 151 `shake256_inc_absorb(&state, sig, K * POLYW1_PACKEDBYTES);`, 152 `shake256_inc_finalize(&state);`, 153 `shake256_inc_squeeze(sig, CTILDEBYTES, &state);`, 15"
+},
+{
+"n": 51,
+"route": "cs/gpu/sm-warp-scheduling-and-issue",
+"verdict": "fixed",
+"evidence": "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html (fetched 2026-11-21). Memory chart, Physical Units: \"L1/TEX Cache: The L1/Texture cache. The underlying physical memory is split between this cache and the user-managed Shared Memory.\" Warp Stall Reasons, long_scoreboard: \"Warp was stalled waiting for a scoreboard dependency on a L1TEX (local, global, surface, texture) operation.\" mio_throttle: \"waiting for the MIO (memory input/output) instruction queue to be not full. This stall reason is high in cases of extreme utilization of the MIO pipelines, which include special math inst"
+},
+{
+"n": 62,
+"route": "cs/cloud/linux-containers-cgroup-namespace",
+"verdict": "fixed",
+"evidence": "I checked the systemd source at v257, fetched from raw.githubusercontent.com. systemd-oomd does not register a PSI trigger. It reads memory.pressure on a fixed timer.\n(1) src/oom/oomd-util.c:420-424: `cg_get_path(..., \"memory.pressure\", &p)` and then `read_resource_pressure(p, PRESSURE_TYPE_FULL, &ctx->memory_pressure)`. It reads the file and parses the full line.\n(2) oomd-util.c:86-93: `if (ctx->memory_pressure.avg10 > ctx->mem_pressure_limit)`. It only acts once `diff >= ctx->mem_pressure_duration_usec`.\n(3) oomd-manager.c:615: `sd_event_add_time(... monitor_memory_pressure_contexts_handler "
+},
+{
+"n": 42,
+"route": "cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready",
+"verdict": "fixed",
+"evidence": "Pinned upstream source https://raw.githubusercontent.com/kubernetes/kubernetes/v1.37.1/pkg/kubelet/kubelet_node_status.go (the article's snapshot is v1.37.1 but does not include this file). The source confirms the timer reset but also shows a random delay, so neither option fits and the scene needed exact wording. (1) Timer reset: L599 in patchNodeStatus, after a successful patch: `kl.lastStatusReportTime = kl.clock.Now()`. (2) After a change: L528-529 `if changed || kl.lastStatusReportTime.IsZero() { kl.delayAfterNodeStatusChange = kl.calculateDelay() }`. (3) Delay range, L545: `time.Duration"
+},
+{
+"n": 58,
+"route": "cs/cloud/kubernetes-pod-states-crashloop-probes-events",
+"verdict": "fixed",
+"evidence": "Pinned snapshot of Kubernetes v1.37.1, at codebase/kubernetes/pkg/kubelet/images/types.go:37-41: \"// ErrImageNeverPull - Required Image is absent on host and PullPolicy is NeverPullImage\" and \"// ErrInvalidImageName - Unable to parse the image name.\" So one error comes from a Pod spec image name that cannot be parsed, and the other from the Pod spec pull policy. Neither is a problem with CNI, storage or registry auth. Kubernetes website at commit 2f85f280, content/en/docs/concepts/containers/images.md:104-106: \"`Never`: the kubelet does not try fetching the image. If the image is somehow alrea"
+},
+{
+"n": 55,
+"route": "finance/markets/swaps-and-credit-risk",
+"verdict": "fixed",
+"evidence": "https://www.bis.org/publ/otc_hy2105.htm (BIS, OTC derivatives statistics at end-December 2020): \"Gross credit exposure – which adjusts the gross market value for legally enforceable bilateral netting agreements (but not for collateral) – rose in H2 2020 by $160 billion, to reach $3.4 trillion.\" The same page also says \"The gross market value is the sum of the absolute values of all open contracts\". BIS defines the figure as gross market value after legally enforceable bilateral netting, with collateral not deducted. The Viz wording \"상대가 지급하지 못할 때 잃을 수 있는 금액\" is not BIS's definition, so option "
+},
+{
+"n": 47,
+"route": "cs/blockchain/robinhood-chain-settlement",
+"verdict": "fixed",
+"evidence": "The primary sources confirm all four glosses in the figures. (1) Issuer and RHJ: https://docs.robinhood.com/chain/stock-tokens/ says \"issued by Robinhood Assets (Jersey) Limited (\"RHJ\")\". (2) uiMultiplier: the same page says the multiplier \"adjusts the shares-per-token ratio while keeping your raw balance static until redemption\", that it is read through `uiMultiplier()`, and that it is \"defined by ERC-8056 (Scaled UI Amount Extension)\". In the ERC-8056 spec (https://eips.ethereum.org/EIPS/eip-8056), the reference toUIAmount computes \"return (rawAmount * _uiMultiplier) / MULTIPLIER_DECIMALS;\" "
+},
+{
+"n": 57,
+"route": "economics/business/shop-daily-operations",
+"verdict": "fixed",
+"evidence": "The source is 국가법령정보센터 근로기준법 [시행 2026. 10. 8.] [법률 제21533호, 2026. 4. 7., 일부개정], fetched at https://www.law.go.kr/LSW/lsInfoR.do?lsiSeq=285279&chrClsCd=010202&urlMode=lsInfoP&efYd=20261008. 제55조(휴일) ① reads: \"사용자는 근로자에게 1주에 평균 1회 이상의 유급휴일을 보장하여야 한다. <개정 2018. 3. 20.>\""
+},
+{
+"n": 67,
+"route": "cs/ai/llama-cpp-local-inference",
+"verdict": "fixed",
+"evidence": "I checked the article's pinned codebase snapshot, src/pages/articles/ai/llama-cpp-local-inference/codebase/llama.cpp/ggml/src/ggml-cuda/fattn-common.cuh, lines 669-724, which is the template<int ncols1> flash_attn_mask_to_KV_max function. Line 681 is `mask += sequence*s33 + jt*ncols1*s31;`. Lines 695-697 are `for (int j = 0; j < ncols1; ++j) { ... all_inf = all_inf && int(isinf(tmp.x)) && int(isinf(tmp.y)); }`. Lines 709-711 are `if (!all_inf) { break; }`. So a tile is cut from the end only when every one of the ncols1 query rows in the block (blockIdx.x = jt) is −∞ across that tile. The kerne"
+},
+{
+"n": 60,
+"route": "electronics/embedded/serial-buses-and-tradeoffs",
+"verdict": "fixed",
+"evidence": "NXP UM10204 Rev. 7.0 (1 October 2021). nxp.com returned an error page, so I used the archived copy https://web.archive.org/web/2024id_/https://www.nxp.com/docs/en/user-guide/UM10204.pdf (62 pages, header \"Rev. 7.0 — 1 October 2021\"). §3.1.1 \"SDA and SCL signals\": \"Both SDA and SCL are bidirectional lines, connected to a positive supply voltage via a current-source or pull-up resistor ... When the bus is free, both lines are HIGH. The output stages of devices connected to the bus must have an open-drain or open-collector to perform the wired-AND function.\" §3.1.8 Arbitration: \"The first time a "
+},
+{
+"n": 68,
+"route": "cs/isms-aml/isms-incident-response",
+"verdict": "fixed",
+"evidence": "NIST SP 800-86, https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-86.pdf. In §3.1.2 Acquiring the Data, step 3 says: \"Data integrity verification typically consists of using tools to compute the message digest of the original and copied data, then comparing the digests to make sure that they are the same.\" The digest section says: \"After the imaging, the message digest of the copied media should be computed and compared with the original message digest to verify that data integrity has been preserved.\" It also says \"Message digests should be used to ensure the integrity of "
+},
+{
+"n": 71,
+"route": "cs/blockchain/cosmos-sdk",
+"verdict": "fixed",
+"evidence": "Article snapshot src/pages/articles/blockchain/cosmos-sdk/codebase/cosmos-sdk/baseapp/baseapp.go (Cosmos SDK v0.55.0, the version the article cites). Line 965: runTx calls `result, err = app.runMsgs(runMsgCtx, msgs, msgsV2, mode)` in every mode, after the ante step and, for execModeCheck, `app.mempool.Insert` (l.942-946). Lines 1013-1016 (doc comment on runMsgs): \"Messages will only be executed during simulation and DeliverTx.\" Lines 1027-1029, inside the message loop: `if mode != execModeFinalize && mode != execModeSimulate { break }`, so in check mode the loop stops before the first `msgServ"
+},
+{
+"n": 72,
+"route": "cs/blockchain/lotus-miner",
+"verdict": "fixed",
+"evidence": "Filecoin Spec, https://spec.filecoin.io/systems/filecoin_mining/sector/sealing/ : \"UnsealedCID (CommD): The root hash of the Unsealed Sector's merkle tree. Also called CommD, or \"data commitment.\"\" and \"SealedCID (CommR): The root hash of the Sealed Sector's merkle tree. Also called CommR, or \"replica commitment.\"\". Filecoin Spec (miner actor, https://spec.filecoin.io/): \"ProveCommitments must happen AFTER the InteractiveEpoch (150 blocks after Sector PreCommit), as the randomness included at that epoch is used in the PoRep.\" and code \"svInfoInteractiveRandomness := rt.GetRandomnessFromBeacon("
+},
+{
+"n": 73,
+"route": "cs/tee/arm-cca",
+"verdict": "fixed",
+"evidence": "Arm RMM Specification DEN0137 1.0-rel0-rc1 (https://developer.arm.com/-/cdn-downloads/permalink/Architectures/Armv9/DEN0137_1.0-rel0-rc1_rmm-arch_external.pdf), section A2.3 Realm Execution Context: \"A Realm Execution Context (REC) is an R-EL0&1 execution context which is associated with a Realm VPE. A REC object is an RMM data structure which is used to store the register state of a REC.\" The granule-state table in the same spec also gives \"REC ... Realm Execution Context.\" So the Viz's expansion is correct. In the article body, REC first appears without an expansion in the arm-cca lifecycle "
+},
+{
+"n": 63,
+"route": "cs/ai/parallelism-strategy-and-placement",
+"verdict": "fixed",
+"evidence": "Source: the PCI Express Base Specification Revision 3.1a, read from an unofficial third-party copy at https://pdfcoffee.com/pci-express-base-specification-revision-31a-pdf-free.html. The official spec is members-only at PCI-SIG. Two quotes from that copy settle the question. Section 1.3.1 Root Complex says: \"A Root Complex (RC) denotes the root of an I/O hierarchy that connects the CPU/memory subsystem to the I/O.\" The Terms and Acronyms entry \"Root Complex, RC\" says: \"A defined System Element that includes zero or more Host Bridges, zero or more Root Complex Integrated Endpoints, zero or more"
+},
+{
+"n": 2,
+"route": "cs/ai/sandbox-runtime-isolation",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/moby/profiles/main/seccomp/default.json: \"defaultAction\": \"SCMP_ACT_ERRNO\". Lines 427-435 put \"ptrace\" (with process_vm_readv/writev) under \"action\": \"SCMP_ACT_ALLOW\", \"includes\": {\"minKernel\": \"4.8\"}. Lines 1157-1162 also allow ptrace when the container has CAP_SYS_PTRACE. \"mount\" is allowed only with \"includes\": {\"caps\": [\"CAP_SYS_ADMIN\"]}. \"kexec_load\" does not appear anywhere in the file, so the default ERRNO action blocks it. https://raw.githubusercontent.com/containerd/containerd/main/contrib/seccomp/seccomp_default.go:600-618: DefaultAction: specs.ActEr"
+},
+{
+"n": 1,
+"route": "cs/ai/llm-as-a-judge",
+"verdict": "fixed",
+"evidence": "https://arxiv.org/pdf/2306.05685v4 의 Table 2 캡션(pdftotext 249-251행): \"Consistency is the percentage of cases where a judge gives consistent results when swapping the order of two assistants. “Biased toward first” is the percentage of cases when a judge favors the first answer.\" GPT-4 default 행: 65.0% / 30.0% / 5.0% / Error 0.0%. 각 행의 합은 100%여서(예: 23.8+75.0+0.0+1.2) 서로 겹치지 않는 범주라는 점은 맞습니다. 다만 논문은 \"두 순서 모두에서\"라고 쓰지 않았고 tie 처리도 말하지 않습니다. 그래서 엄격한 정의(선택지 1)도, tie를 포함하는 정의(선택지 2)도 출처와 맞지 않습니다. 논문 문구인 \"favors the first answer\"를 그대로 따랐습니다."
+},
+{
+"n": 66,
+"route": "finance/money/money-as-a-claim",
+"verdict": "article-already-correct",
+"evidence": "IMF MFSMCG (2016). Chapter 3 is at https://www.imf.org/external/pubs/ft/mfsmcg/c3.pdf. Box 3.1 \"Main Sectors and Subsectors of the Domestic Economy\" lists \"Financial corporations (FCs) > Depository corporations (DCs) > Central Bank / Other Depository corporations (ODCs)\". Para 3.101 says: \"the central bank constitutes a separate category within the DC subsector\". Para 3.116 says: \"all FCs (other than the central bank) that incur liabilities included in broad money are classified as ODCs.\" Chapter 6 is the c6.pdf the article cites. Para 6.4 says the instruments in broad money decide \"which unit"
+},
+{
+"n": 6,
+"route": "cs/ai/competition-submission-control",
+"verdict": "fixed",
+"evidence": "https://proceedings.mlr.press/v37/blum15.pdf, p.4, Algorithm 1 \"Ladder mechanism\": \"Input: Data set S, step size η > 0 / Assign initial estimate R0 ← ∞. / for round t = 1, 2, . . . do / Receive function ft : X → Y / if RS(ft) < Rt−1 − η then / Assign Rt ← [RS(ft)]η. / else / Assign Rt ← Rt−1.\" Since R0 = ∞, the first loss always falls below R0 − η, so the first score is always published, rounded to the η grid ([0.26]η = 0.26 when η = 0.01). This is a rule of the algorithm, not an assumption. Option 1 applied."
+},
+{
+"n": 77,
+"route": "cs/tee/phala",
+"verdict": "fixed",
+"evidence": "Pinned legacy spec, the snapshot the article itself cites (f6496099). (1) https://raw.githubusercontent.com/Phala-Network/phala-docs/f64960997c1dbcf912e1d5295f75eeb151add2ba/tech-specs/blockchain/README.md:9: \"the blockchain is only used as the canonical (encrypted) message queue, and the attested secure workers fetch requests (i.e., transactions) from the chain, verify and execute them, and then write the computation results back.\" Same file, line 31: \"Only submitted transactions can be accepted by `pRuntime`, and they will be processed in the same order as they are on the blockchain.\" (2) .."
+},
+{
+"n": 5,
+"route": "cs/ai/motif-3-architecture",
+"verdict": "fixed",
+"evidence": "https://arxiv.org/html/2608.09119, Table 1 (Sec 2.1): \"Total parameters: Approximately 314B\"; \"Activated parameters: Approximately 13.2B per token\"; \"Transformer layers: 53 (2 dense and 51 MoE)\"; \"Hidden dimension: 4,096\"; \"FFN dimension (dense / expert): 12,288 / 1,280\"; \"Routed experts: 384, with top-8 routing\"; \"Shared experts: 1\". Sec 2.4: \"Each sparse MoE layer contains 384 routed experts and one shared expert, with eight routed experts selected for each token.\" Routing applies only to the experts inside the sparse layers. Attention, the 2 dense FFN layers and the embedding sit outside th"
+},
+{
+"n": 10,
+"route": "cs/ai/inference-engine-design-axes",
+"verdict": "article-already-correct",
+"evidence": "https://raw.githubusercontent.com/vllm-project/vllm/v0.27.1/vllm/v1/attention/backends/flash_attn.py:143-144 — \"# K and V are packed into the content dim: logical (B, H, N, 2*D).\\n        return (num_blocks, num_kv_heads, block_size, 2 * head_size)\". Stride order at :157-165 keeps num_blocks outermost for both layouts (\"NHD\": \"(num_blocks, block_size, num_kv_heads, 2*head_size)\"; \"HND\": \"(num_blocks, num_kv_heads, block_size, 2*head_size)\"), and the K/V split happens only at read time (:905 \"key_cache, value_cache = kv_cache.transpose(1, 2).split(self.head_size, dim=-1)\"). So at v0.27.1 the ca"
+},
+{
+"n": 19,
+"route": "cs/ai/claw-compaction",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/ultraworkers/claw-code/b71afdd/rust/crates/rusty-claude-cli/src/main.rs:7855-7875 — `let preserve_schedule = [4, 2, 1, 0]; for round in 0..max_compact_rounds { ... let removed = result.removed_message_count; if removed == 0 && round > 0 { // No more messages to compact — further rounds won't help ... break; }`. round는 0부터 세므로 `round > 0`은 두 번째 round(preserve 2)부터 검사한다는 뜻이고, Viz의 기존 패턴 [없음, 있음, 있음, 있음]과 맞습니다(옵션 1)."
+},
+{
+"n": 7,
+"route": "cs/ai/claw-permissions",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/ultraworkers/claw-code/b71afdd/rust/crates/runtime/src/approval_tokens.rs:270-312. `fn validate_grant` 하나를 verify(247행)와 consume(262행)이 함께 씁니다. 이 함수는 검사마다 조기 반환합니다. 순서는 (1) `match grant.status { ... Consumed => return Err(ApprovalTokenError::ApprovalAlreadyConsumed) ... }`, (2) `expires_at_epoch_seconds.is_some_and(|expires_at| now_epoch_seconds > expires_at) => return Err(ApprovalExpired)`, (3) `if grant.uses >= grant.max_uses { return Err(ApprovalAlreadyConsumed) }`, (4) `if grant.scope != *scope { return Err(ScopeMismatch ...) }`, (5) `if grant.approved_exe"
+},
+{
+"n": 18,
+"route": "cs/ai/open-r1",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/huggingface/trl/7bd0d61/trl/trainer/grpo_trainer.py:3225-3226 (글이 고정한 커밋 7bd0d61과 같은 버전): `elif self.loss_type == \"dr_grpo\":` / `loss = (per_token_loss * mask).sum() / (per_token_loss.size(0) * self.max_completion_length)`. 글의 스냅샷 src/pages/articles/ai/open-r1/codebase/trl/trl/trainer/grpo_trainer.py:77에도 같은 줄이 있습니다. per_token_loss.size(0)은 batch 안의 completion 수이므로 분모는 completion 수 × max_completion_length입니다. 글이 가정한 예(G=2, L_max=200)에서는 400이 되고, token 무게는 1/400 = 0.0025입니다."
+},
+{
+"n": 14,
+"route": "cs/p2p/dht-security",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/ethereum/go-ethereum/v1.17.10/p2p/discover/table.go:643-668 (deleteInBucket). Line 652 `b.entries = slices.Delete(b.entries, index, index+1)` (the dead node is removed and the entries after it move up). Line 661 `rindex := tab.rand.Intn(len(b.replacements))`. Line 664 `b.entries = append(b.entries, rep)` (the replacement is added at the end of the bucket). Line 665 `tab.nodeAdded(b, rep)`. Line 620 nodeAdded calls `tab.revalidation.nodeAdded(tab, n)`. https://raw.githubusercontent.com/ethereum/go-ethereum/v1.17.10/p2p/discover/table_reval.go:58-59 `func (tr *t"
+},
+{
+"n": 20,
+"route": "cs/blockchain/cometbft",
+"verdict": "fixed",
+"evidence": "The article pins commit 0880b4d378f347ab16e54ec677ff50d803f37d62 (tag v0.40.0). At that commit the file is consensus/replay.go, not internal/consensus/replay.go (that path returns 404). Source: https://raw.githubusercontent.com/cometbft/cometbft/0880b4d378f347ab16e54ec677ff50d803f37d62/consensus/replay.go\n\nThe case in question is store = state+1 and app = store, so app is h41 and State is h40. Lines 434-450 handle it: \"case appBlockHeight == storeBlockHeight: // We ran Commit, but didn't save the state, so replayBlock with mock app.\" The handshake then calls finalizeBlockResponse, err := h.sta"
+},
+{
+"n": 11,
+"route": "cs/ai/vision-language-navigation",
+"verdict": "fixed",
+"evidence": "https://arxiv.org/html/2110.02207 (Krantz et al. 2021, ICCV). §4.1 Waypoint Prediction Network, Action Prediction: the model makes \"a coarse heading prediction sampled from a distribution over the 12 frames and a STOP action\". The offset is predicted \"conditioned on the chosen coarse heading\", with \"the range of Offset(i) is [−15°,15°]\" and \"the range of Dist(i) is [0.25m, 4.0m]\". The waypoint is \"specified by the polar coordinates\" (r, θ^D + θ^offset). §3 Observation Space: \"Each panorama is captured as twelve frames angled in 30° increments\". So ±15° is measured from the chosen discrete pano"
+},
+{
+"n": 29,
+"route": "history/economic-history/demography-family-economy-and-care",
+"verdict": "article-already-correct",
+"evidence": "UN DESA WPP 2024 공식 CSV https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz, ISO3_code=KOR \"Republic of Korea\" 행(열 CBR, CDR, NatChangeRT): 1960 → CBR 42.073, CDR 12.967, NatChangeRT 29.106; 1990 → 15.525, 5.724, 9.801; 2023 → 4.568, 6.677, -2.109. 소수 첫째 자리로 반올림하면 42.1/13.0/29.1, 15.5/5.7/9.8, 4.6/6.7/−2.1로 글과 Viz의 값이 모두 맞습니다. 2023년 출생률은 통계청 값 4.5가 아니라 WPP 값 4.6이 맞습니다."
+},
+{
+"n": 25,
+"route": "cs/blockchain/prysm-p2p-libp2p",
+"verdict": "article-already-correct",
+"evidence": "Source: https://raw.githubusercontent.com/OffchainLabs/prysm/v7.3.1/beacon-chain/p2p/peers/scorers/service.go, lines 134-151. `IsBadPeerNoLock` makes only three checks: `s.scorers.badResponsesScorer.isBadPeerNoLock(pid)`, `s.scorers.peerStatusScorer.isBadPeerNoLock(pid)`, and `if features.Get().EnablePeerScorer { s.scorers.gossipScorer.isBadPeerNoLock(pid) }`, then `return nil`. It never calls `ScoreNoLock` (lines 115-125, the weighted sum). In the same release, peers/status.go:361-375 `isBad` checks the trusted peer, then `isfromBadIP`, then `p.scorers.IsBadPeerNoLock(pid)`. It does not read "
+},
+{
+"n": 9,
+"route": "cs/ai/spiking-neural-networks",
+"verdict": "fixed",
+"evidence": "Pinned commit 37c56cc, which resolves to 37c56ccd0c8eac61b629819c2cc2a2b13261b8cf.\n\n1. snntorch/_neurons/neurons.py:198-202 (raw.githubusercontent.com/jeshraghian/snntorch/37c56cc). `mem_reset` is detached: \"reset = self.spike_grad(mem_shift).clone().detach()\". But this is only the carried-over reset from the previous mem.\n\n2. neurons.py:165-178. `fire()` returns \"spk = self.spike_grad(mem_shift)\" with no detach, so it has a surrogate gradient.\n\n3. snntorch/_neurons/leaky.py:223-229. When reset_delay=False (the setting the article uses): \"do_reset = (spk / self.graded_spikes_factor - self.rese"
+},
+{
+"n": 26,
+"route": "cs/blockchain/reth-precompiles",
+"verdict": "fixed",
+"evidence": "revm-handler 43.0.3 crate (https://static.crates.io/crates/revm-handler/revm-handler-43.0.3.crate) src/precompile_provider.rs:141-156, the `fn run`: `let Some(precompile) = self.precompiles.get(&inputs.bytecode_address) else { return Ok(None); }; let output = precompile.execute(&inputs.input.as_bytes(context), inputs.gas_limit, inputs.reservoir).map_err(|e| e.to_string())?;`. So the Err comes out of the precompile function call. It happens after the address lookup and before the Ok-only post-check `precompile_output_to_interpreter_result`. The article's own snapshot matches: codebase/revm-43.0"
+},
+{
+"n": 33,
+"route": "cs/blockchain/robinhood-chain-blob-demand",
+"verdict": "fixed",
+"evidence": "EIP-8070 source: https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8070.md. Line 17 (Abstract): \"For every new type 3 (blob-carrying) transaction, an EL node fetches full blob payloads only with probability p = 0.15, and otherwise it merely samples the blobs\". Line 64 (Specification): \"Upon receiving a `NewPooledTransactionHashes` announcement containing a previously unknown type 3 transaction hash, the node makes a probabilistic decision about fetching the blob payload: it decides to fetch the full blob payload with probability p = 0.15 (provider role), or simply sample otherwis"
+},
+{
+"n": 32,
+"route": "cs/ai/agent-serving-slo-and-capacity",
+"verdict": "fixed",
+"evidence": "I checked both AA pages and neither says how the percentile is calculated. That means option 1 can't be done, and option 2 is the claim the source supports.\n- https://artificialanalysis.ai/methodology/agentperf: the only percentile text is \"Because agentic workloads contain many small-OSL requests, charts default to P25 output speed\" and \"with percentiles computed over all requests sent during a phase\". It names no rule: not nearest-rank, interpolation or numpy.\n- https://artificialanalysis.ai/articles/aa-agentperf: \"P25 output speed and P95 time to first token, computed across all requests in"
+},
+{
+"n": 34,
+"route": "cs/blockchain/robinhood-chain-blob-demand",
+"verdict": "fixed",
+"evidence": "EIP-8070 is still in Last Call. Checked three ways. (1) https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8070.md front matter: \"status: Last Call\" / \"last-call-deadline: 2026-11-01\". (2) The live page https://eips.ethereum.org/EIPS/eip-8070 still shows \"Last Call\" and \"Last Call Deadline\". (3) GitHub API commits for EIPS/eip-8070.md: the latest commit is dated 2026-10-06T21:57:47Z, so nothing has changed since. EIP-7773 (https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-7773.md) still lists EIP-8070 at line 49 under \"#### Networking EIPs\", line 49: \"* [EIP-8070](./"
+},
+{
+"n": 78,
+"route": "cs/tee/amd-sev",
+"verdict": "article-already-correct",
+"evidence": "AMD SEV-SNP Firmware ABI Spec, Pub. 56860 Rev 1.58 (May 2025), https://www.amd.com/content/dam/amd/en/documents/developer/56860.pdf. §2.3: \"The Versioned Chip Endorsement Key (VCEK) is an attestation signing key derived from chip-unique secrets and a TCB_VERSION.\" §3.7: \"A Versioned Loaded Endorsement Key (VLEK) is a versioned ... ECDSA P-384 signing key certified by AMD and used by SNP firmware to sign attestation reports as an alternative to the VCEK. While the VCEK is derived from a chip-unique seed, the VLEK is derived from a seed maintained by the AMD Key Derivation Service (KDS). Each Cl"
+},
+{
+"n": 128,
+"route": "cs/cloud/kubernetes-sre-slo-burn-rate-upgrades",
+"verdict": "article-already-correct",
+"evidence": "https://raw.githubusercontent.com/zalando-incubator/kubernetes-on-aws/dev/docs/postmortems/jan-2019-dns-outage.md, Timeline: \"As a side effect of the DNS outage our internal monitoring for the cluster was also completely down as it needs to talk to external services to trigger alerts and push metrics. The missing monitoring meant that it took longer than expected to notify the on-call Kubernetes engineer\". Lessons Learned: \"most alerting is run inside the cluster itself. In this case it meant our On-call engineer wasn't automatically paged when the DNS infrastructure crashed\". Contributing Fac"
+},
+{
+"n": 30,
+"route": "philosophy/philosophical-traditions/gita-action-results-and-release",
+"verdict": "fixed",
+"evidence": "I opened the article's cited IIT Kanpur source. The gitasupersite.in/read/srimad/2/47 page is a client-rendered app, so I read the IIT Kanpur heritage page it moved to: https://heritage.iitk.ac.in/gitasupersite/srimad?language=dv&field_chapter_value=2&field_nsutra_value=47&etsiva=1&etgb=1 (the canonical URL is https://heritage.iitk.ac.in/SBG/2.47).\n- Verse: \"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन। मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि।।2.47।।\"\n- Sivananda's translation: \"Thy right is to work only, but never with its fruits; let not the fruits of action be thy motive, nor let thy attachment be"
+},
+{
+"n": 22,
+"route": "cs/blockchain/mdbx-internals",
+"verdict": "fixed",
+"evidence": "The source is libmdbx v0.14.3, commit f7a3a9323cacacfa9dc6137ae7a7252a67744ff0, read from the amalgamated file https://raw.githubusercontent.com/Mithril-mine/libmdbx/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0/mdbx.c. That release has no src/gc-get.c, so this one file holds the code.\n\n1. How the reclaim limit is set. mdbx.c:41779-41784 `txn_gc_detent`: `const txnid_t detent = mvcc_snapshot_oldest_rw(txn).oldest_txnid; ... txn->env->gc.detent = detent;`. mdbx.c:28769ff `mvcc_snapshot_oldest_rw` computes the minimum txnid over the live reader slots (`if (reader_txnid < result.oldest_txnid) result.o"
+},
+{
+"n": 38,
+"route": "philosophy/political-philosophy/consent-liberty-and-legitimate-power",
+"verdict": "fixed",
+"evidence": "The Locke text is Second Treatise ch. VIII at https://www.constitution.org/jl/2ndtr08.htm. Gutenberg was down for maintenance, so I fetched it with curl and searched it locally. §119: \"every man, that hath any possessions, or enjoyment, of any part of the dominions of any government, doth thereby give his tacit consent, and is as far forth obliged to obedience to the laws of that government, during such enjoyment, as any one under it; ... or whether it be barely travelling freely on the highway\". §122: \"But submitting to the laws of any country, living quietly, and enjoying privileges and prot"
+},
+{
+"n": 126,
+"route": "cs/ai/backprop-optimization",
+"verdict": "fixed",
+"evidence": "I read the authors' own scan at https://www.cs.toronto.edu/~hinton/absps/naturebp.pdf, which is Nature 323, pp. 533–536. It has no text layer, so I rendered the pages to images and read them. All three places write the weight as w_ji, not w_ij:\n- p.533, eq (1): \"The total input, x_j, to unit j is a linear function of the outputs, y_i, of the units that are connected to j and of the weights, w_ji ... x_j = Σ_i y_i w_ji\".\n- p.534, eq (6): \"For a weight w_ji, from i to j the derivative is ∂E/∂w_ji = ∂E/∂x_j·∂x_j/∂w_ji = ∂E/∂x_j·y_i\".\n- p.535, eq (7): \"∂E/∂y_i = Σ_j ∂E/∂x_j·w_ji\"."
+},
+{
+"n": 122,
+"route": "finance/markets/monte-carlo-path-dependent-pricing-and-variance-reduction",
+"verdict": "fixed",
+"evidence": "Longstaff & Schwartz (2001), RFS 14(1). Full text PDF: https://people.math.ethz.ch/~hjfurrer/teaching/LongstaffSchwartzAmericanOptionsLeastSquareMonteCarlo.pdf, extracted with pdftotext. Section 1 numerical example (txt lines 197-203): \"there are only five paths for which the option is in the money at time 2. Let X denote the stock prices at time 2 for these five paths ... We use only in-the-money paths since it allows us to better estimate the conditional expectation function in the region where exercise is relevant and significantly improves the efficiency of the algorithm.\" General algorith"
+},
+{
+"n": 130,
+"route": "cs/gpu/triton-kernel-programming-and-compiler",
+"verdict": "fixed",
+"evidence": "NVIDIA CUDA C++ Programming Guide 12.6, Hardware Implementation chapter (https://docs.nvidia.com/cuda/archive/12.6.0/cuda-c-programming-guide/index.html): \"The NVIDIA GPU architecture is built around a scalable array of multithreaded Streaming Multiprocessors (SMs). When a CUDA program on the host CPU invokes a kernel grid, the blocks of the grid are enumerated and distributed to multiprocessors with available execution capacity. The threads of a thread block execute concurrently on one multiprocessor...\" The Memory Hierarchy section (2.3) of the same guide says: \"Each thread block has shared "
+},
+{
+"n": 132,
+"route": "electronics/embedded/mcu-memory-map-and-registers",
+"verdict": "article-already-correct",
+"evidence": "Checked the pico-sdk register headers at the commit the article pins (a1438dff, Pico SDK 2.2.0). These headers are generated from the same register tables as the datasheet's IO_BANK0 list. https://raw.githubusercontent.com/raspberrypi/pico-sdk/a1438dff/src/rp2040/hardware_regs/include/hardware/regs/io_bank0.h shows each GPIO has its own STATUS/CTRL pair: line 686 \"#define IO_BANK0_GPIO4_STATUS_OFFSET _u(0x00000020)\", line 758 \"IO_BANK0_GPIO4_CTRL_OFFSET _u(0x00000024)\", line 851 \"IO_BANK0_GPIO5_STATUS_OFFSET _u(0x00000028)\", lines 921-923 \"// Register    : IO_BANK0_GPIO5_CTRL / // Description "
+},
+{
+"n": 40,
+"route": "history/economic-history/colonial-plantations-slavery-and-extraction",
+"verdict": "fixed",
+"evidence": "The New York Times Haiti double-debt data set, README at https://raw.githubusercontent.com/nytimes/haiti-debt/main/README.md lines 61 and 63: \"In 1878, Haiti's government made the last payment on the indemnity. Then in 1887, it said that it had paid off the loan — though a final, small amount of interest and late fees was paid the next year. ... in 1893, Caisse des Dépôts et Consignations acknowledged its error and closed the chapter on the double debt.\" and \"The double debt was therefore paid off in 1888.\" Line 43 also confirms the 1838 cut to 60 million francs. So 1838 + about 50 years = 188"
+},
+{
+"n": 123,
+"route": "finance/markets/us-derivatives-regulatory-map-and-customer-segregation",
+"verdict": "fixed",
+"evidence": "https://www.law.cornell.edu/uscode/text/7/1a §1a(18): \"The term 'eligible contract participant' means— (A) acting for its own account— (i) a financial institution; ... (v) a corporation, partnership, ... (I) that has total assets exceeding $10,000,000; ... (xi) an individual who has amounts invested on a discretionary basis, the aggregate of which is in excess of— (I) $10,000,000; or (II) $5,000,000 and who enters into the agreement ... in order to manage the risk ...\" | https://www.law.cornell.edu/uscode/text/7/2 §2(e) Limitation on participation: \"It shall be unlawful for any person, other t"
+},
+{
+"n": 134,
+"route": "cs/blockchain/usdc-circle",
+"verdict": "fixed",
+"evidence": "I checked the source at https://raw.githubusercontent.com/circlefin/evm-cctp-contracts/a92a2b4/src/v2/MessageTransmitterV2.sol. a92a2b4 is the commit the article pins, and the article's codebase/evm-cctp/validate_message.sol snapshot matches it.\n\nInside `_validateReceivedMessage` (line 271), the checks run in this order:\n- line 287: `_verifyAttestationSignatures(_message, _attestation);`\n- line 297: `require(_msg._getDestinationDomain() == localDomain, \"Invalid destination domain\")`\n- line 304: `require(_msg._getDestinationCaller() == msg.sender.toBytes32(), \"Invalid caller for message\")`. Thi"
+},
+{
+"n": 129,
+"route": "cs/ai/evaluation-datasets-and-pipelines",
+"verdict": "fixed",
+"evidence": "This is a reproduction of Cohen's table, not the book itself: University of Navarra, \"Table 1.- Necessary Sample Size for one & two samples (a = .05, two-tailed test)\", https://www.unav.edu/documents/10162/36020227/Tablastamanomuestral.pdf (I extracted the text with pdftotext). Its footnote says \"These tables are based on power estimates given by Cohen, J. (1977). Statistical power analysis for the behavioral sciences (2nd edition)\". In the section \"t test for Two Independent Samples\", the row reads \".80  394 176 100 64 45 34 26 21 17 15 12 11 10 9\" against the columns d = .20 … 1.50. That put"
+},
+{
+"n": 133,
+"route": "cs/ai/cross-entropy",
+"verdict": "fixed",
+"evidence": "I fetched https://raw.githubusercontent.com/pytorch/pytorch/v2.14.0/aten/src/ATen/native/LossNLL.cpp. Its sha256 is dda800fd...ee4b, the same as the article's codebase/ snapshot and PROVENANCE.json (commit 2b3ec348). Line by line:\n- L265 `const auto data = input_data[b * n_classes + cur_target];` reads the target column. The article is right.\n- L268 `loss_partial_sums[0] -= data * weight_val;` is the weighted subtraction.\n- L271 `loss_partial_sums[0] -= data;` is the unweighted subtraction, which is the case the article computes.\n- L273 is a blank line, so the article's \"273행이 빼서 더한다\" is wrong"
+},
+{
+"n": 131,
+"route": "cs/blockchain/hyperliquid",
+"verdict": "article-already-correct",
+"evidence": "Source: https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-3-builder-deployed-perpetuals (HIP-3 page, fetched 2026-11-21). Spec: \"each perp dex features independent margining, order books, and deployer settings.\" Cross margin section: \"IMPORTANT: Enabling cross margin on an asset is irreversible.\" and \"users still take greater risk when using cross margin across DEXs with different deployers.\" It also says system-level protections exist but do not remove this risk. The page never says which part is shared between DEXs once cross margin is on. It does not"
+},
+{
+"n": 154,
+"route": "cs/gpu/megakernel-design-tradeoffs",
+"verdict": "fixed",
+"evidence": "https://arxiv.org/pdf/2512.22219 (MPK, §7 operator decomposition + Table 2), pdftotext lines 2567-2569: \"each operator is split into 32–47 tasks on average. For example, in Qwen3-8B, 293 operators are decomposed into 13,867 tasks.\" Table 2 Tasks/op: Qwen3-1.7B 35.6, Qwen3-8B 47.3, Qwen3-30B-A3B 32.2. Question 56 asked whether the range is wrong. It is not: the paper gives 32–47, but as a spread across three models. Qwen3-8B on its own is 47.3. So option 2 applies (the range depends on the model, with the source named), and the Qwen3-8B figure is now stated too."
+},
+{
+"n": 144,
+"route": "cs/gpu/ec-gpu-gen",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/filecoin-project/ec-gpu/16d38ef/ec-gpu-gen/Cargo.toml:24 `rust-gpu-tools = { version = \"0.7.0\", ... }`. https://raw.githubusercontent.com/filecoin-project/ec-gpu/16d38ef/ec-gpu-gen/src/program.rs: the program! macro calls `rust_gpu_tools::opencl::Program::from_opencl(opencl_device, source)` and passes no build options. https://raw.githubusercontent.com/filecoin-project/rust-gpu-tools/v0.7.0/src/opencl/mod.rs:152 (also the same in v0.7.2, the latest 0.7.x tag): `program.build(context.devices(), \"\")`, so the OpenCL build options are an empty string. The binary p"
+},
+{
+"n": 150,
+"route": "cs/blockchain/prysm",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/ethereum/consensus-specs/master/specs/bellatrix/optimistic-sync.md:192-195 (sync/optimistic.md now lives at specs/bellatrix/optimistic-sync.md): \"When a block transitions from `NOT_VALIDATED` -> `VALID`, all *ancestors* of the block MUST also transition from `NOT_VALIDATED` -> `VALID`. Such a block and any previously `NOT_VALIDATED` ancestors are no longer considered \\\"optimistically imported\\\".\" The same file at lines 197-199 says only INVALIDATED spreads to *descendants*. So VALID clears the mark on the block and its ancestors only, and a descendant such as "
+},
+{
+"n": 121,
+"route": "finance/markets/credit-event-auction-orders-and-base-correlation-history",
+"verdict": "fixed",
+"evidence": "I could not get the full text of the named JPMorgan note (McGinty et al. 2004). The Scribd copy shows only the abstract (\"We introduce JPMorgan's framework for calculating correlations embedded in tranche prices, or 'Base Correlations'\"), and the GlobalCapital copy is paywalled. I settled the question with two other sources instead. (1) O'Kane & Livesey, \"Base Correlation Explained\", Lehman Brothers QCR Quarterly 2004-Q3/4, https://www.sfu.ca/~rjones/bus864/readings/OkaneLivesey_Lehman_2004_BaseCorr.pdf, pp.7-8: \"we value any tranche as the difference between two base tranches\"; \"We solve for "
+},
+{
+"n": 156,
+"route": "cs/ai/differential-attention",
+"verdict": "fixed",
+"evidence": "arXiv 2410.05258v2 PDF (https://arxiv.org/pdf/2410.05258v2): Figure 5 \"Multi-needle retrieval results in 64k length\", N = 8, R = 1. At Depth 25, 64K column: (a) Transformer row \"25 0.92 0.58 0.66 0.16 0.12 0.58 0.66 0.12\", so 0.12. (b) DIFF Transformer row \"25 1.00 0.86 0.66 0.80 0.52 0.80 0.64 0.88\", so 0.88. §3.4 text: \"when needles are placed at the 25% depth in a 64K context, DIFF Transformer achieves 76% accuracy improvement over Transformer.\" 0.88 − 0.12 = 0.76, so the paper's \"76%\" is an absolute difference (%p), not a relative gain. The relative gain would be about 633%. Option 1's \"(상"
+},
+{
+"n": 81,
+"route": "cs/blockchain/dai-maker",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/makerdao/dss/master/src/dog.sol:170-181. In `function bark(bytes32 ilk, address urn, address kpr) external returns (uint256 id)`, the code reads `(,rate, spot,, dust) = vat.ilks(ilk); require(spot > 0 && mul(ink, spot) < mul(art, rate), \"Dog/not-unsafe\");`. The unsafe condition is checked once, inside the bark call, and nothing about it is written to storage. After the check the same call goes on to vat.grab and to starting the Clipper auction."
+},
+{
+"n": 85,
+"route": "cs/blockchain/pq-account",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/eth-infinitism/account-abstraction/1c6b669d0eea734e09a87e095ba15e076151718a/contracts/accounts/SimpleAccount.sol (it lives under contracts/accounts/, not contracts/samples/; byte-identical to the local snapshot src/pages/articles/crypto/pq-sources/codebase/account-abstraction/contracts/accounts/SimpleAccount.sol). The whole contract is 126 lines. Its only members are: owner (L23), entryPoint (L38), receive (L43), initialize/_initialize (L68-75, an initializer that runs once), _requireForExecute (L78-87, \"msg.sender == address(entryPoint()) || msg.sender == own"
+},
+{
+"n": 157,
+"route": "history/inference-from-sources/the-gap-was-made",
+"verdict": "article-already-correct",
+"evidence": "C. H. W. Johns 영역본(1903) 머리말을 Project Gutenberg eBook 17150 미러에서 직접 열어 읽었습니다(gutenberg.org 본 사이트는 점검 중). URL: https://gutenberg.pglaf.org/1/7/1/5/17150/17150.txt (aleph.gutenberg.org 사본과 같은 파일), 158~166행: \"It contains on the obverse a very interesting representation of the King Hammurabi, receiving his laws from the seated sun-god Samas, 'the judge of heaven and earth.' Then follow, on the obverse, sixteen columns of writing with 1114 lines. There were five more columns on this side, but they have been erased and the stone repolished ... On the reverse side are twenty-eight columns with more t"
+},
+{
+"n": 84,
+"route": "cs/ai/vision-language-model-architecture",
+"verdict": "fixed",
+"evidence": "I read arXiv 2301.12597v3 (BLIP-2, the PDF converted to text with pdftotext), §3.3 \"Bootstrap Vision-to-Language Generative Learning from a Frozen LLM\". It says: \"we use a fully-connected (FC) layer to linearly project the output query embeddings Z into the same dimension as the text embedding of the LLM. The projected query embeddings are then prepended to the input text embeddings. They function as soft visual prompts that condition the LLM on visual representation extracted by the Q-Former.\" This supports option 1."
+},
+{
+"n": 88,
+"route": "cs/ai/claw-worker-boot",
+"verdict": "fixed",
+"evidence": "Commit b71afdd 시점의 원본 파일(raw.githubusercontent.com/ultraworkers/claw-code/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/...)을 직접 열어 확인함.\n(1) trust_resolver.rs:347-362: \"// Check denylist first ... .denied.iter().find(|root| path_matches(cwd, root)) ... return TrustDecision::Required { policy: TrustPolicy::Deny, events }\". deny 분기는 trust_resolver에만 있음.\n(2) worker_boot.rs:307-319: `pub fn create(&self, cwd: &str, trusted_roots: &[String], ...)`와 `let trust_auto_resolve = trusted_roots.iter().any(|root| path_matches_allowlist(cwd, root));`.\n(3) worker_boot.rs:432: `if worker.tr"
+},
+{
+"n": 155,
+"route": "cs/cloud/kubernetes-sre-slo-burn-rate-upgrades",
+"verdict": "fixed",
+"evidence": "Source: the Reddit Engineering post \"You Broke Reddit: The Pi-Day Outage\" (https://www.reddit.com/r/RedditEng/comments/11xx5o0/you_broke_reddit_the_piday_outage/). Reddit blocked direct fetches, so I read the Wayback Machine copy (web.archive.org/web/2024id_/...). The post never says how losing the route reflectors caused the OPA webhook timeouts. It gives only these points:\n- \"it was timeouts calling the admission controllers on the cluster ... Open Policy Agent (OPA). ... we took this opportunity to delete its webhook configurations. The timeouts disappeared instantly… But the cluster didn't"
+},
+{
+"n": 136,
+"route": "cs/ai/linear-attention-and-state-space-models",
+"verdict": "fixed",
+"evidence": "Source: Schlag, Irie & Schmidhuber, \"Linear Transformers Are Secretly Fast Weight Programmers\", arXiv 2102.11174, §4.1 \"Capacity Limitation\". I downloaded the PDF from https://arxiv.org/pdf/2102.11174 and read it with pdftotext. Exact quote: \"to prevent associations from interfering with each other upon retrieval, the respective keys need to be orthogonal. Otherwise, the dot product will attend to more than one key and return a linear combination of values. With keys embedded in a ddot space, there cannot be more than ddot orthogonal vectors. That is, storing more than ddot associations will r"
+},
+{
+"n": 152,
+"route": "history/economic-history/decolonization-oil-shocks-and-debt",
+"verdict": "fixed",
+"evidence": "The IMF eLibrary page (https://www.elibrary.imf.org/display/book/9781484371329/ch001.xml) returned HTTP 403, so I used the IMF's own institutional history, which contains the same sentence: James Boughton, Silent Revolution: The IMF 1979–1989, Chapter 1, p. 16 (https://www.imf.org/external/pubs/ft/history/2001/chapter1.pdf). I extracted the text with pdftotext; the passage is at line 1855 of that output. Exact quote: \"From 1977 to 1980, net international bank lending ballooned from $68 billion to $160 billion, of which $49 billion went to non-oil developing countries.\" In this sentence, \"of wh"
+},
+{
+"n": 83,
+"route": "cs/ai/sionic-glm-b300",
+"verdict": "fixed",
+"evidence": "Leviathan et al. 2023, arXiv:2211.17192 (https://arxiv.org/pdf/2211.17192), Algorithm 1 SpeculativeDecodingStep. Quoted text: \"p'(x) ← p_{n+1}(x); if n < γ then p'(x) ← norm(max(0, p_{n+1}(x) − q_{n+1}(x))) ... ▷ Return one token from Mp, and n tokens from Mq. t ∼ p'(x); return prefix + [x1, …, xn, t]\". Section 2.3 adds \"Algorithm 1 generalizes this idea to sample between 1 and γ + 1 tokens at once.\" With γ=4 and n=3, the cycle commits 3 draft tokens plus one token from Mp, so 4 tokens. When all candidates match (n=γ), t is drawn from p_{γ+1}, which is the extra token. I settled this from the "
+},
+{
+"n": 91,
+"route": "cs/p2p/rqbit",
+"verdict": "fixed",
+"evidence": "Upstream source at the pinned commit, https://raw.githubusercontent.com/ikatson/rqbit/a499d2f/crates/librqbit/src/session.rs, sets the library default to off: `impl Default for SessionOptions` starts at line 484 and line 490 has `fastresume: false,`. The field is defined at line 431 as `pub fastresume: bool` with the doc comment \"Enable fastresume, to restore state quickly after restart.\" The CLI file, https://raw.githubusercontent.com/ikatson/rqbit/a499d2f/crates/rqbit/src/main.rs, also defaults to off. Lines 320-322 are `/// [Experimental] if set, will try to resume quickly after restart and"
+},
+{
+"n": 93,
+"route": "cs/ai/mcp-transports",
+"verdict": "article-already-correct",
+"evidence": "The 2026-07-28 spec counts closing the stream as the cancel signal on Streamable HTTP, so option 1 applies. The older rule (send notifications/cancelled; a dropped connection is not a cancel) now covers only stdio.\n- https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http.md, \"## Cancellation\" section, lines 231-238: \"Closing the SSE response stream **MUST** be treated by the server as cancellation of that request. Because each request has its own response stream, the transport-level disconnect is unambiguous. The server **SHOULD** stop work on the cancelled r"
+},
+{
+"n": 100,
+"route": "cs/blockchain/longest-chain",
+"verdict": "fixed",
+"evidence": "Bitcoin Core v28.0 src/wallet/wallet.cpp:3436 (CWallet::GetTxDepthInMainChain): \"return GetLastBlockHeight() - conf->confirmed_block_height + 1;\" and src/rpc/rawtransaction.cpp:75: entry.pushKV(\"confirmations\", 1 + active_chainstate.m_chain.Height() - pindex->nHeight) -> the containing block counts as 1. Nakamoto whitepaper https://bitcoin.org/bitcoin.pdf §11: \"The recipient waits until the transaction has been added to a block and z blocks have been linked after it.\" -> z excludes the containing block, so N confirmations = z of N-1."
+},
+{
+"n": 92,
+"route": "cs/blockchain/hotstuff-deep",
+"verdict": "fixed",
+"evidence": "https://arxiv.org/pdf/1803.05069v6 (pdftotext로 추출해 직접 읽음). Algorithm 3(Chained HotStuff) 14행: \"b∗ ← m.node; b'' ← b∗.justify.node; b' ← b''.justify.node; b ← b'.justify.node\", 21행: \"if (b∗.parent = b'') ∧ (b''.parent = b') ∧ (b'.parent = b) then execute new commands through b\". Algorithm 4(Event-driven HotStuff) update(b∗) 10–11행: \"if (b''.parent = b') ∧ (b'.parent = b) then onCommit(b)\". 이 조건에는 b∗.parent = b''가 없습니다. 따라서 Algorithm 4에서는 B13이 형제 블록 B12′의 QC를 들고 와도 B10←B11←B12′ 사슬로 B10이 commit될 수 있습니다. 질문이 지적한 차이가 논문과 맞으므로 1안을 적용했습니다."
+},
+{
+"n": 98,
+"route": "cs/blockchain/impl-plonk",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/dusk-network/plonk/v0.22.1/src/proof_system/proof.rs, inside verify(). Line 352: \"// Compute r_0\". Lines 353-366: \"let r_0_eval = pi_eval - l1_eval * alpha.square() - alpha * (self.evaluations.a_eval + beta * self.evaluations.s_sigma_1_eval + gamma) * ... * (self.evaluations.d_eval + gamma) * self.evaluations.z_eval;\". Line 410: \"// Compute E = (-r_0 + (v)a + (v^2)b + ...\". Line 418: \"E_scalar += -r_0_eval + (u_challenge * self.evaluations.z_eval);\". So the verifier computes r₀ itself from the public-input evaluation, L1(ζ), α, β, γ and the evaluations in the "
+},
+{
+"n": 97,
+"route": "cs/blockchain/impl-plonk",
+"verdict": "fixed",
+"evidence": "https://raw.githubusercontent.com/dusk-network/plonk/v0.22.1/src/compiler/prover.rs:420-445 (the file sits under src/compiler/, not src/proof_system/). Line 420: \"// split quotient polynomial into 4 degree `n` polynomials\". Lines 423-426: t_low_vec = t_poly[0..domain_size], t_mid_vec = t_poly[domain_size..2*domain_size], t_high_vec = t_poly[2*domain_size..3*domain_size], t_fourth_vec = t_poly[3*domain_size..]. Lines 433-445: \"t_low'(X) + b_12*X^n\" (t_low_vec.push(b_12)), \"t_mid'(X) - b_12 + b_13*X^n\", \"t_high'(X) - b_13 + b_14*X^n\", \"t_fourth'(X) - b_14\". So the code first cuts n coefficients "
+},
+{
+"n": 101,
+"route": "cs/blockchain/evm-fundamentals",
+"verdict": "fixed",
+"evidence": "codebase/execution-specs/src/ethereum/forks/shanghai/vm/interpreter.py:240-241 \"# take snapshot of state before processing the message / snapshot = copy_tx_state(tx_state)\" (the snapshot is taken before the frame's code runs, so before any child call it makes), and :278-279 \"if evm.error: restore_tx_state(tx_state, snapshot)\". So when the parent frame fails, the state goes back to what it was before the parent ran. That always wipes out the child's changes, even when the child finished normally. Option 1 applies."
+},
+{
+"n": 89,
+"route": "cs/gpu/cutlass-collectives-and-tile-schedulers",
+"verdict": "fixed",
+"evidence": "I checked the CUTLASS v4.8.1 source, the version the article cites (4.8.1 in article-evidence).\n(1) https://raw.githubusercontent.com/NVIDIA/cutlass/v4.8.1/include/cutlass/gemm/kernel/sm90_tile_scheduler.hpp:92-133 (PersistentTileSchedulerSm90::get_work_idx_m_and_n): \"offset = cluster_id & ((1 << log_swizzle_size) - 1); extra = cluster_id >> log_swizzle_size; divmod_cluster_blk_major(cluster_idx_minor_div_swizzle, cluster_idx_major, extra); cluster_idx_minor = cluster_idx_minor_div_swizzle * (1 << log_swizzle_size) + offset; ... if (raster_order == RasterOrder::AlongN) { return {minor_work_idx"
+},
+{
+"n": 107,
+"route": "history/economic-history/commercial-law-limited-liability-and-insolvency",
+"verdict": "fixed",
+"evidence": "https://www.law.cornell.edu/uscode/text/11/1124 — \"a class of claims or interests is impaired under a plan unless, ... the plan— (1) leaves unaltered the legal, equitable, and contractual rights to which such claim or interest entitles the holder of such claim or interest; or (2) ...\" The statute also includes \"equitable\" rights. Option 1 left that word out, so I used the statute's full three-part wording. The figure's paraphrase \"원래 지급 조건을 바꾸는\" was narrower than the statute, so I rewrote it to match."
+},
+{
+"n": 109,
+"route": "cs/gpu/b300-rack-power-cooling",
+"verdict": "fixed",
+"evidence": "NVIDIA 문서 \"Data Center Best Practices with DGX B300\" (https://docs.nvidia.com/dgx-pdf/data-center-best-practices-with-dgx-b300-v1.pdf), \"Environmental Parameters\" 쪽에 실린 ASHRAE specifications 표를 근거로 삼았습니다. 표의 Recommended 행은 \"All A 18–27 °C\"이고, A2 행은 \"10–35 °C\"이며, 허용 열 라벨은 \"Allowable up to 30 °C for DGX B300 Systems\"입니다. 본문 쪽 문구도 같습니다: \"Supply air should generally comply with ASHRAE Class A2 specifications, but with a maximum supply air temperature of 30°C (86°F).\" 사양표에는 \"10° to 30°C: altitude 0 – 1000 ft\"가 있습니다. 따라서 A2의 허용 하한은 10°C이고, 여기에 B300 상한을 적용하면 허용 구간은 10–30°C가 됩니다. 이는 1안을 뒷받침합니다. 근거로 쓴 "
+},
+{
+"n": 110,
+"route": "cs/gpu/b300-rack-power-cooling",
+"verdict": "source-unavailable",
+"evidence": "The primary sources I could reach don't settle where SS 697 measures its operating temperature.\n(1) The IMDA page (https://www.imda.gov.sg/how-we-can-help/green-dc-roadmap/tropical-dc-standard) gave no measurement-point text in my fetch; its collapsed sections didn't come through.\n(2) The official SS 697:2023 preview PDF (singaporestandardseshop.sg /Product/GetPdf?fileName=230530170319SS%20697-2023%20Preview.pdf) ends after clause 2 (Normative references). Clause 3, \"Terms and definitions\", is not in the preview, and the full standard is paywalled.\nWhat the preview does show: the Table 1 title"
+},
+{
+"n": 115,
+"route": "cs/gpu/hw-storage-comparison",
+"verdict": "fixed",
+"evidence": "NVM Express Base Specification 2.0c (https://nvmexpress.org/wp-content/uploads/NVM-Express-Base-Specification-2.0c-2022.10.04-Ratified.pdf). Text extracted with pdftotext; line numbers are in that text. §2.1 Memory-Based Transport Model (l.1778): \"In the memory-based model, Submission and Completion Queues are allocated in memory.\" l.2607-2609: \"When using a memory-based transport implementation (e.g. PCIe), host software submits commands to a controller through pre-allocated Submission Queues. A controller is alerted to newly submitted commands through SQ Tail Doorbell register writes.\" l.186"
+},
+{
+"n": 117,
+"route": "cs/gpu/gpu-architecture",
+"verdict": "fixed",
+"evidence": "NVIDIA CUDA C++ Programming Guide 12.4 (https://docs.nvidia.com/cuda/archive/12.4.0/cuda-c-programming-guide/index.html). The SIMT Architecture section says: \"Prior to NVIDIA Volta, warps used a single program counter shared amongst all 32 threads in the warp together with an active mask\". It then says that starting with Volta, Independent Thread Scheduling keeps a program counter and call stack per thread, and \"threads can now diverge and reconverge at sub-warp granularity\". It also says \"any warp-synchronous code ... should be revisited to ensure compatibility with NVIDIA Volta and beyond.\" "
+},
+{
+"n": 113,
+"route": "history/economic-history/war-finance-public-debt-and-welfare-state-capacity",
+"verdict": "fixed",
+"evidence": "The live PDF returns 403, so I read the Wayback copy: http://web.archive.org/web/20241210065857id_/https://researchbriefings.files.parliament.uk/documents/CBP-8265/CBP-8265.pdf (Brien & Keep, CBP-8265, 20 March 2018), section 3.2 Debt, p.18.\n\nWhat the source says: \"a huge expansion of the national debt, from around £1 million in 1688 to £15 million a decade later, around £50 million in 1715, and closer to £500 million by 1800.\" These figures carry no price-adjustment label.\n\nHow I concluded they are nominal: wherever the briefing adjusts for prices, it labels the figure, e.g. \"£ millions, 2013"
+},
+{
+"n": 120,
+"route": "finance/markets/fractional-investment-trust-beneficiary-certificates",
+"verdict": "fixed",
+"evidence": "자본시장법 제4조 제6항 조문 원문. 출처는 https://ko.wikisource.org/wiki/대한민국_자본시장과_금융투자업에_관한_법률 (위키문헌 사본)이고, law.go.kr 페이지에는 조문 본문이 실려 있지 않아 이 사본을 썼다. WebSearch 결과에 나온 조문 인용(lawtimes idxno=207467)과 같다. 원문: \"⑥ 이 법에서 \"투자계약증권\"이란 특정 투자자가 그 투자자와 타인(다른 투자자를 포함한다. 이하 이 항에서 같다) 간의 공동사업에 금전등을 투자하고 주로 타인이 수행한 공동사업의 결과에 따른 손익을 귀속받는 계약상의 권리가 표시된 것을 말한다.\" 그림의 쉬운 풀이 '돈을 대고 남이 운영한 공동사업의 결과로 손익을 받는 권리'는 이 조문의 요지와 맞다. 그래서 2안(풀이는 그대로 두고 출처만 붙임)을 적용했다. 주의: 이 위키문헌 사본은 개정 이전 판일 수 있다. 다만 검색 결과로 확인한 2026년 개정 내용은 제4조 제1항 단서를 지우는 것이고, 제6항 정의를 바꾼다는 언급은 없었다."
+},
+{
+"n": 104,
+"route": "cs/blockchain/proofs-porep",
+"verdict": "fixed",
+"evidence": "The source settles it in favour of option 1. I read the upstream code at the pinned commit (the article's codebase/ snapshot does not include create_label).\n\n1. https://raw.githubusercontent.com/filecoin-project/rust-fil-proofs/d451d23ba6dcabd107e66b2f9c6531887b17fd3d/storage-proofs-porep/src/stacked/vanilla/create_label/single.rs\n   - L42-43: `let mut layer_labels = vec![0u8; layer_size]; // Buffer for labels of the current layer` and `let mut exp_labels = vec![0u8; layer_size]; // Buffer for labels of the previous layer, needed for expander parents`\n   - L58-76: when `layer == 1`, it calls `"
+},
+{
+"n": 114,
+"route": "cs/gpu/hw-storage-comparison",
+"verdict": "fixed",
+"evidence": "SATA: https://sata-io.org/node/108 (SATA-IO, Port Multipliers) says \"Typically, Serial ATA (SATA) connectivity consists of a single drive connected to a single controller port via a single cable\" and \"Port multipliers are devices that allow a single Serial ATA port to communicate with multiple drives.\" SAS: https://www.t10.org/ftp/t10/document.08/08-273r1.pdf (T10/08-273r1, SAS-1.1 ISO FCD review draft). §3.1 defines \"expander device: A device that is part of the service delivery subsystem and facilitates communication between SAS devices.\" §4.1.5 says \"Expander devices are part of the service"
+},
+{
+"n": 119,
+"route": "finance/markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
+"verdict": "fixed",
+"evidence": "FinSA SR 950.1 (English text, mirror of the Federal Chancellery compilation at droit-bilingue.ch/en-fr/9/95/950.1-11-14.html, -12-15, -13-16; fedlex.admin.ch itself only serves a JS shell). Art. 11: \"A financial service provider that provides investment advice for individual transactions without taking account of the entire client portfolio must enquire about its clients' knowledge and experience and must check whether financial instruments are appropriate for its clients before recommending them.\" Art. 12: \"A financial service provider that provides investment advice taking account of the cli"
+}
+]
 }
 }

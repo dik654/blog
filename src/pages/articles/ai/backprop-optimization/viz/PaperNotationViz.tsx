@@ -17,7 +17,7 @@ const STATES: readonly State[] = [
   {
     input: "yᵢ",
     inputSub: "이 글의 입력 X",
-    edges: [{ to: 0, label: "wᵢⱼ = W", on: false }, { to: 1, label: "wᵢⱼ = W", on: false }],
+    edges: [{ to: 0, label: "wⱼᵢ = W", on: false }, { to: 1, label: "wⱼᵢ = W", on: false }],
     outs: [
       { top: "xⱼ · 이 글의 점수 Z", value: "뒤 기여 ∂E/∂xⱼ = G", on: false },
       { top: "xⱼ · 이 글의 점수 Z", value: "뒤 기여 ∂E/∂xⱼ = G", on: false },
@@ -45,8 +45,8 @@ const STATES: readonly State[] = [
 
 const SCENES = [
   { label: "같은 문자, 다른 자리", summary: "원문 y = 입력 · 원문 x = 점수", note: "원문의 yᵢ는 이전 단위의 출력이라 이 글의 입력 X에, xⱼ는 다음 단위의 합산 점수라 이 글의 Z에 해당합니다. 원문의 x를 이 글의 X로 읽으면 안 됩니다." },
-  { label: "식 (6) · 선 하나", summary: "(−2/3) × 2 = −4/3", note: "∂E/∂wᵢⱼ = (∂E/∂xⱼ)yᵢ입니다. 선의 뒤쪽 기여에 앞쪽 값을 곱합니다. 8절 dW 둘째 행의 둘째 칸과 같은 값입니다." },
-  { label: "식 (7) · 선을 모아 합", summary: "(2/3)ln2 + (−2/3)×0 ≈ 0.462098", note: "입력 쪽 기여는 Σⱼ(∂E/∂xⱼ)wᵢⱼ로 그 입력에서 나간 선을 모두 더합니다. 8절의 dX₁과 같은 값입니다. 원문은 sigmoid와 제곱 오차로 신호를 유도하고, 여기서는 softmax–cross-entropy의 G를 넣었습니다." },
+  { label: "식 (6) · 선 하나", summary: "(−2/3) × 2 = −4/3", note: "∂E/∂wⱼᵢ = (∂E/∂xⱼ)yᵢ입니다. 원문은 받는 단위 j를 먼저 씁니다. 선의 뒤쪽 기여에 앞쪽 값을 곱합니다. 8절 dW 둘째 행의 둘째 칸과 같은 값입니다." },
+  { label: "식 (7) · 선을 모아 합", summary: "(2/3)ln2 + (−2/3)×0 ≈ 0.462098", note: "입력 쪽 기여는 Σⱼ(∂E/∂xⱼ)wⱼᵢ로 그 입력에서 나간 선을 모두 더합니다. 8절의 dX₁과 같은 값입니다. 원문은 sigmoid와 제곱 오차로 신호를 유도하고, 여기서는 softmax–cross-entropy의 G를 넣었습니다." },
 ];
 
 export default function PaperNotationViz() {

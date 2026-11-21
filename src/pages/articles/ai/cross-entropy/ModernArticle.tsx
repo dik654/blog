@@ -163,7 +163,7 @@ assumptions={["자연로그, 클래스 가중치 없음, 정답 비중의 합 1�
 <h2 className="text-2xl font-bold">14 · 실제 PyTorch는 네 행의 정답 열을 고른다</h2>
 <p>PyTorch v2.14.0의 고정 commit 2b3ec348을 읽습니다. LossNLL.cpp의 cross_entropy_loss_symint는 입력과 정답의 shape를 비교합니다. 우리 입력은 같은 z를 네 행에 반복한 4×3 배열이고, 정답은 클래스 번호 [0,0,1,2]인 길이 4 배열입니다. label_smoothing=0, 가중치 없음, 제외 정답 없음, mean을 가정합니다.</p>
 <ColumnPickViz />
-<p>632–668행의 이 분기는 class_dim=1에서 log_softmax를 구해 nll_loss_nd_symint에 넘깁니다. CPU NLL의 265행은 각 행의 정답 열을 읽고, 273행은 그 로그값을 빼서 비용을 더합니다. 네 비용은 ln4, ln4, ln4, ln2입니다. 288–299행에서 유효 관측 수 4로 나누면 7ln2/4≈1.213008 nat입니다.</p>
+<p>632–668행의 이 분기는 class_dim=1에서 log_softmax를 구해 nll_loss_nd_symint에 넘깁니다. CPU NLL의 265행은 각 행의 정답 열을 읽고, 271행은 그 로그값을 빼서 비용을 더합니다. 네 비용은 ln4, ln4, ln4, ln2입니다. 288–299행에서 유효 관측 수 4로 나누면 7ln2/4≈1.213008 nat입니다.</p>
 <div className="flex flex-wrap gap-2"><CodeViewButton onClick={()=>sidebar.open("entry",ceCodeRefs.entry)} label="실제 입력 분기"/><CodeViewButton onClick={()=>sidebar.open("reduce",ceCodeRefs.reduce)} label="정답 선택과 평균 분모"/></div>
 <CitationBlock source="PyTorch v2.14.0 · LossNLL.cpp" citeKey={2} type="code" href={SOURCE}><p>원문의 입력 분기와 CPU NLL 누적 경로에 같은 가정 데이터를 손으로 대입했습니다. 원문 전체와 고정 revision을 코드 패널에 보존했습니다. 이 글에서 PyTorch 바이너리나 GPU 커널을 실행한 결과라고 주장하지 않습니다.</p></CitationBlock>
 <p>이 API는 이미 정규화한 Q가 아니라 로짓 z를 받습니다. Q를 먼저 넣으면 함수 안에서 다시 softmax를 적용한 다른 분포를 평가합니다. 또한 이 원문은 log_softmax와 NLL을 연결합니다. API 한 번을 호출했다는 이유로 모든 장치와 실행 모드에서 단일 커널이거나 중간 메모리가 없다고 단정할 수 없습니다.</p>

@@ -97,7 +97,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [671, 724],
     desc: "CUDA FlashAttention은 mask의 끝에서부터 모두 −∞인 256칸 tile만 건너뜁니다.",
     annotations: [
-      { lines: [690, 712], color: "sky", note: "뒤쪽 tile부터 보며 모든 칸이 −∞인 동안 KV_max를 줄입니다. 중간에 낀 다른 sequence의 cell은 건너뛰지 않습니다." },
+      { lines: [690, 712], color: "sky", note: "뒤쪽 tile부터 보며 query 블록 ncols1개 행의 모든 칸이 −∞인 동안 KV_max를 줄입니다. 중간에 낀 다른 sequence의 cell은 건너뛰지 않습니다." },
     ],
   },
   "fattn-scan-condition": {

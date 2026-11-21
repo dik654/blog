@@ -3,7 +3,7 @@ import PqSceneShell from "./PqSceneShell";
 /**
  * 본문 대응: #ml-dsa-signature-boundary, #migration-release — SimpleAccount의 _validateSignature는 ECDSA.recover,
  * owner는 execute를 직접 호출할 수 있고 업그레이드도 owner 권한에 연결된다.
- * 서명 함수만 ML-DSA로 바꿔도 옛 owner 직접 실행·복구·업그레이드 경로가 남으면 계정 전체가 바뀐 것이 아니다.
+ * 서명 함수만 ML-DSA로 바꿔도 옛 owner 직접 실행·업그레이드 경로가 남으면 계정 전체가 바뀐 것이 아니다.
  */
 type PathState = "old" | "new" | "review";
 
@@ -11,7 +11,7 @@ const PATHS = [
   { id: "userop", name: "UserOperation 검증", via: "EntryPoint → validateUserOp → _validateSignature" },
   { id: "direct", name: "owner의 직접 execute", via: "owner가 계정을 직접 호출" },
   { id: "upgrade", name: "업그레이드", via: "owner 권한에 연결" },
-  { id: "recovery", name: "복구 (기존 키로 할 수 있다면)", via: "잃어버린 키를 대신하는 권한" },
+  { id: "recovery", name: "복구 모듈을 붙였다면 (SimpleAccount 기본엔 없음)", via: "잃어버린 키를 대신하는 권한" },
 ] as const;
 
 const STATE_STYLE: Record<PathState, { tag: string; border: string; color: string }> = {
@@ -31,7 +31,7 @@ const SCENES = [
   {
     label: "서명 함수만 교체",
     summary: "한 문만 ML-DSA",
-    note: "_validateSignature만 ML-DSA로 바꾸면 UserOperation 경로는 새 서명을 요구합니다. 그래도 owner 직접 실행·업그레이드·복구 경로가 기존 키에 남아 있으면 계정 전체가 양자내성으로 바뀐 것이 아닙니다.",
+    note: "_validateSignature만 ML-DSA로 바꾸면 UserOperation 경로는 새 서명을 요구합니다. 그래도 owner 직접 실행·업그레이드 경로(복구 모듈을 붙였다면 그 경로도)가 기존 키에 남아 있으면 계정 전체가 양자내성으로 바뀐 것이 아닙니다.",
     states: ["new", "old", "old", "old"] as PathState[],
     verdict: "남은 기존 경로로 여전히 돈을 움직일 수 있음",
   },

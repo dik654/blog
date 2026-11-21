@@ -215,7 +215,7 @@ export default function ModernPlonkImplementationArticle() {
           operations={[
             { expression: String.raw`N(\omega^i)=0`, annotation: ["모든 행이 만족되면 결합한 분자 N은 domain 각 점에서 0입니다."] },
             { expression: String.raw`N(X)=T(X)Z_H(X)`, annotation: ["따라서 vanishing polynomial로 나누어떨어져야 합니다."] },
-            { expression: String.raw`T=T_0+X^nT_1+X^{2n}T_2+X^{3n}T_3`, annotation: ["v0.22.1은 quotient를 degree-n 네 조각으로 나눠 약정합니다."] },
+            { expression: String.raw`T=T_0+X^nT_1+X^{2n}T_2+X^{3n}T_3`, annotation: ["v0.22.1은 T의 계수를 n개씩 끊은 뒤, 앞 세 조각에 blinding 항 bXⁿ을 더하고 다음 조각 상수항에서 같은 b를 빼 degree-n 네 조각으로 약정합니다. 더하고 뺀 b는 서로 상쇄되므로 위 합은 그대로 T입니다."] },
           ]}
           terms={[
             { symbol: "G(X)", name: "Gate identity", description: "Arithmetic·range·logic·curve widgets가 만든 행 관계입니다." },
@@ -270,7 +270,7 @@ export default function ModernPlonkImplementationArticle() {
           operations={[
             { expression: String.raw`PI(\zeta)`, annotation: ["공개 입력 12를 sparse Lagrange polynomial로 ζ에서 평가합니다."] },
             { expression: String.raw`F=D+v[a]+v^2[b]+\cdots`, annotation: ["Verifier key와 proof commitments를 같은 batch 계수로 결합합니다."] },
-            { expression: String.raw`E=r_0+v\,a(\zeta)+v^2b(\zeta)+\cdots`, annotation: ["Proof가 제공한 evaluations를 같은 순서로 결합합니다."] },
+            { expression: String.raw`E=-r_0+v\,a(\zeta)+v^2b(\zeta)+\cdots`, annotation: ["r₀는 proof에 담긴 값이 아니라 verifier가 PI(ζ), L₁(ζ), α·β·γ와 proof evaluations로 직접 계산한 상수항입니다.", "여기에 proof가 제공한 evaluations를 F와 같은 순서로 결합합니다."] },
             { expression: String.raw`pairing=1_{GT}`, annotation: ["두 KZG openings가 같은 committed polynomials의 값일 때 Ok(())를 반환합니다."] },
           ]}
           terms={[

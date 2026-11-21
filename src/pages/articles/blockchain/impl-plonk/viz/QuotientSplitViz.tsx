@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #prover-rounds quotient ExplainedFormula —
- * 모든 행이 만족되면 결합한 분자 N은 domain 각 점에서 0 → N = T·Z_H. v0.22.1은 T를 degree-n 네 조각으로 약정.
+ * 모든 행이 만족되면 결합한 분자 N은 domain 각 점에서 0 → N = T·Z_H. v0.22.1은 T의 계수를 n개씩 끊고 blinding bXⁿ을 더해(다음 조각에서 b를 빼 상쇄) degree-n 네 조각으로 약정.
  * 실패 예는 #circuit-composer의 z=11 fixture: 세 번째 행이 12−11=1을 남기고, 재현 실행에서 prove가
  * PolynomialDegreeTooLarge를 반환했다(오류 이름의 원인 해석은 하지 않음).
  */
@@ -16,7 +16,7 @@ const ROWS = [
 const SCENES = [
   { label: "행마다 N = 0", summary: "모든 domain 점에서 0 → Z_H로 나누어떨어짐", mode: "ok", note: "Gate·permutation·public-input 관계를 challenge로 결합한 분자 N은, 모든 행이 만족되면 domain의 각 점에서 0입니다. Z_H는 바로 그 점들에서 0인 polynomial이므로 N = T·Z_H로 나누어떨어집니다." },
   { label: "공개 z = 11이면", summary: "같음 행이 1을 남김 → 나누어떨어지지 않음", mode: "bad", note: "같은 fixture에 공개 z=11을 넣으면 세 번째 행이 12−11=1을 남깁니다. Z_H는 그 점에서 0인데 N은 0이 아니므로 N을 Z_H로 나눈 몫은 polynomial이 되지 않습니다. v0.22.1 재현 실행에서 prove는 PolynomialDegreeTooLarge를 반환했습니다. 이 오류 이름을 일반적인 '회로 불만족' 오류로 읽지는 않습니다." },
-  { label: "T를 네 조각으로", summary: "T = T₀ + XⁿT₁ + X²ⁿT₂ + X³ⁿT₃", mode: "split", note: "나누어떨어진 몫 T의 계수를 n개씩 끊어 네 조각 T₀~T₃로 만들고, 조각마다 하나씩 약정합니다. Xⁿ, X²ⁿ, X³ⁿ은 각 조각을 원래 자리로 밀어 놓는 자리 이동입니다." },
+  { label: "T를 네 조각으로", summary: "T = T₀ + XⁿT₁ + X²ⁿT₂ + X³ⁿT₃", mode: "split", note: "나누어떨어진 몫 T의 계수를 n개씩 끊어 네 조각 T₀~T₃로 만들고, 조각마다 하나씩 약정합니다. v0.22.1은 앞 세 조각 끝에 무작위 blinding 계수 b를 하나씩 붙이고(bXⁿ) 다음 조각 상수항에서 같은 b를 빼므로, 조각은 degree n이 되고 합은 그대로 T입니다. Xⁿ, X²ⁿ, X³ⁿ은 각 조각을 원래 자리로 밀어 놓는 자리 이동입니다." },
 ] as const;
 
 const PIECES = ["T₀", "T₁", "T₂", "T₃"] as const;

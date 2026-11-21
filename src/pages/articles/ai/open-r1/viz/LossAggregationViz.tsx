@@ -5,7 +5,7 @@ import SceneShell from "./SceneShell";
  * 가정: 같은 group의 completion 2개, 길이 10 token과 100 token. 고정 최대 길이 L_max = 200.
  * sample-level: 각자 길이로 나눈 뒤 2개 평균 → token 무게 1/20 = 0.05, 1/200 = 0.005, completion 몫 0.5 · 0.5
  * group active token(DAPO): 110으로 나눔 → token 무게 1/110 ≈ 0.0091, 몫 10/110 ≈ 9% · 100/110 ≈ 91%
- * 고정 최대 길이(Dr. GRPO): 200으로 나눔 → token 무게 0.005, 몫 0.05 · 0.5
+ * 고정 최대 길이(Dr. GRPO, TRL dr_grpo): completion 수 × L_max = 2 × 200 = 400으로 나눔 → token 무게 0.0025, 몫 0.025 · 0.25
  * 막대: 가로 = token 수, 세로 = token 하나의 무게, 넓이 = completion 전체가 받는 몫.
  */
 const SHORT = 10;
@@ -29,11 +29,11 @@ const SCENES = [
     note: "DAPO처럼 group 전체 active token(padding을 뺀 실제 completion token) 110개로 나누면 token 무게가 모두 같고, 긴 completion이 약 91%를 차지합니다. 분모는 이번 group의 길이에 따라 바뀝니다.",
   },
   {
-    label: "고정 최대 길이로 나눔",
-    short: 1 / L_MAX,
-    long: 1 / L_MAX,
-    summary: "모든 token 1/200 = 0.005",
-    note: "Dr. GRPO처럼 고정된 최대 길이로 나눠도 token 무게는 같습니다. 긴 답이 50 token이었다면 앞 방식의 분모는 60이 되지만 이 방식은 200 그대로입니다.",
+    label: "completion 수 × 고정 최대 길이로 나눔",
+    short: 1 / (G * L_MAX),
+    long: 1 / (G * L_MAX),
+    summary: "모든 token 1/400 = 0.0025",
+    note: "Dr. GRPO처럼 고정된 최대 길이로 나눠도 token 무게는 같습니다. TRL의 dr_grpo는 completion 수(2)에 최대 길이(200)를 곱한 400으로 나눕니다. 긴 답이 50 token이었다면 앞 방식의 분모는 60이 되지만 이 방식은 400 그대로입니다.",
   },
 ] as const;
 
@@ -54,7 +54,7 @@ function Row({ y, tokens, weight, label, color }: { y: number; tokens: number; w
       <line x1={X0} x2={X0 + BAR_W} y1={y} y2={y} stroke="#cbd5e1" strokeWidth={1} />
       <rect x={X0} y={y - h} width={tokens * PX_PER_TOKEN} height={h} fill={color} />
       <text x={X0} y={y - h - 6} fontSize={12} fill="#334155">
-        token당 {weight.toFixed(4)} · 몫 {(weight * tokens).toFixed(2)}
+        token당 {weight.toFixed(4)} · 몫 {(weight * tokens).toFixed(3)}
       </text>
     </g>
   );

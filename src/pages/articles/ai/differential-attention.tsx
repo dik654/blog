@@ -210,8 +210,9 @@ export default function DifferentialAttentionArticle() {
           </p>
           <p>
             검색 정확도로도 나타납니다. 4K 길이에서 needle 6개·질의 2개(N=6, R=2) 조건은
-            표준 0.55, differential 0.85 로 정확도 차이가 30%p 였습니다. 64K 로 늘린 조건에서는
-            정답이 depth 25% 에 있을 때 정확도가 76% 개선됐습니다.
+            표준 0.55, differential 0.85 로 정확도 차이가 30%p 였습니다. 64K 로 늘린 조건(N=8, R=1)에서
+            정답이 depth 25% 에 있을 때는 표준 0.12, differential 0.88 로 차이가 76%p 였습니다.
+            논문 본문이 "76% 개선"이라 적은 값이 이 차이입니다.
           </p>
           <p>
             Attention robustness 는 in-context 예시의 순서를 바꿔도 정확도가 크게 흔들리지

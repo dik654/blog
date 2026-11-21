@@ -2,8 +2,8 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #mtp — draft path가 future token 후보를 만들고 main model이 한 번에 검증,
- * 앞에서부터 일치한 token만 확정. 마지막 장면은 글의 예: 6.65GB/cycle ÷ 평균 3.5 ≈ 1.9GB/token.
- * 후보 4개, 이번 cycle 3개 일치는 모양을 보이려는 가정이다.
+ * 앞에서부터 일치한 token과 처음 어긋난 자리의 main token 1개를 확정. 마지막 장면은 글의 예: 6.65GB/cycle ÷ 평균 3.5 ≈ 1.9GB/token.
+ * 후보 4개, 이번 cycle 3개 일치(+main 보정 1개 = 4개 확정)는 모양을 보이려는 가정이다.
  */
 const CANDIDATES = 4;
 const MATCHED = 3;
@@ -32,8 +32,8 @@ const SCENES = [
   },
   {
     label: "앞에서부터 확정",
-    summary: "이번 cycle: 3개 확정 (가정)",
-    note: "앞에서부터 일치한 token만 받아들이고, 처음 어긋난 자리부터는 버립니다. 그래서 한 verification iteration에서 하나보다 많은 token을 확정할 수 있습니다.",
+    summary: "3개 일치 + main 보정 1개 = 4개 확정 (가정)",
+    note: "앞에서부터 일치한 후보를 받아들이고, 처음 어긋난 자리의 후보와 그 뒤는 버립니다. 그 자리에는 검증 forward가 낸 main model의 token 하나를 받습니다(모두 일치하면 다음 자리 token 하나를 더 받습니다). 그래서 한 verification iteration에서 하나보다 많은 token을 확정할 수 있습니다.",
   },
   {
     label: "weight read를 나눠 쓰기",
@@ -42,14 +42,14 @@ const SCENES = [
   },
 ] as const;
 
-function TokenBox({ i, state }: { i: number; state: "none" | "draft" | "ok" | "bad" | "plain" }) {
+function TokenBox({ i, state }: { i: number; state: "none" | "draft" | "ok" | "bad" | "plain" | "fix" }) {
   if (state === "none") return null;
-  const color = state === "ok" || state === "plain" ? "#16a34a" : state === "bad" ? "#94a3b8" : "#d97706";
+  const color = state === "ok" || state === "plain" ? "#16a34a" : state === "fix" ? "#2563eb" : state === "bad" ? "#94a3b8" : "#d97706";
   return (
     <g>
       <rect x={boxX(i)} y={96} width={BOX} height={30} rx={4} fill={color} fillOpacity={state === "bad" ? 0.06 : 0.16} stroke={color} strokeWidth={1} strokeDasharray={state === "draft" ? "4 3" : undefined} />
       <text x={boxX(i) + BOX / 2} y={115} textAnchor="middle" fontSize={11} fontWeight={700} fill={color}>
-        {state === "plain" ? `token ${i + 1}` : `후보 ${i + 1}`}
+        {state === "plain" ? `token ${i + 1}` : state === "fix" ? `보정 ${i + 1}` : `후보 ${i + 1}`}
       </text>
       {state === "bad" && <line x1={boxX(i) + 6} y1={122} x2={boxX(i) + BOX - 6} y2={100} stroke="#dc2626" strokeWidth={1.25} />}
     </g>
@@ -61,7 +61,7 @@ export default function MtpCycleViz() {
     <SceneShell
       eyebrow="MTP verification cycle"
       title="main weight를 한 번 읽고 여러 token을 확정합니다"
-      description="위 띠는 main model forward, 아래 칸은 token 자리입니다. 후보 4개와 이번 cycle의 일치 위치는 가정이고, 6.65GB와 평균 3.5개는 글의 계산 예입니다."
+      description="위 띠는 main model forward, 아래 칸은 token 자리입니다. 처음 어긋난 자리에는 main model의 token을 받습니다. 후보 4개와 이번 cycle의 일치 위치는 가정이고, 6.65GB와 평균 3.5개는 글의 계산 예입니다."
       ariaLabel="draft 후보 생성, main model 일괄 검증, 앞에서부터 확정, token당 weight traffic 계산 순서"
       scenes={SCENES}
       render={(active) => {
@@ -69,7 +69,7 @@ export default function MtpCycleViz() {
           if (active === 0) return "plain" as const;
           if (active === 1) return "draft" as const;
           if (active === 2) return "draft" as const;
-          return i < MATCHED ? ("ok" as const) : ("bad" as const);
+          return i < MATCHED ? ("ok" as const) : ("fix" as const);
         });
         const rowW = CANDIDATES * BOX + (CANDIDATES - 1) * GAP;
         const share = rowW / AVG_COMMIT;
@@ -105,10 +105,10 @@ export default function MtpCycleViz() {
               <TokenBox key={`t-${i}`} i={i} state={state} />
             ))}
             {active === 3 && (
-              <text x={boxX(MATCHED) + BOX / 2} y={142} textAnchor="middle" fontSize={11} fill="#64748b">버림</text>
+              <text x={boxX(MATCHED) + BOX / 2} y={142} textAnchor="middle" fontSize={11} fill="#64748b">후보 버림 · main token</text>
             )}
             <text x={X0} y={162} fontSize={11} fontWeight={700} fill="#64748b">
-              {active === 0 ? "main weight 읽기 4회 → token 4개" : active === 4 ? "막대 전체 6.65GB를 cycle 평균 3.5개가 나눔" : active === 3 ? "main weight 읽기 1회 → token 3개" : active === 1 ? "아직 main forward 전" : "main weight 읽기 1회"}
+              {active === 0 ? "main weight 읽기 4회 → token 4개" : active === 4 ? "막대 전체 6.65GB를 cycle 평균 3.5개가 나눔" : active === 3 ? "main weight 읽기 1회 → token 4개(3 일치+1 보정)" : active === 1 ? "아직 main forward 전" : "main weight 읽기 1회"}
             </text>
             {active === 4 && (
               <g>

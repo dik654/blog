@@ -69,8 +69,8 @@ const SCENES = [
     label: "같은 message 다시",
     summary: "Base는 50이 아니라 25",
     base: 25,
-    status: ["none", "none", "none", "none", "blocked", "skip", "skip", "skip"],
-    note: "같은 nonce를 다시 내면 그 nonce는 이미 사용 처리돼 있어 두 번째 mint가 막힙니다. Base supply는 25에 머물고, 두 chain의 native supply 합은 75 + 25 = 100입니다.",
+    status: ["pass", "pass", "pass", "pass", "blocked", "skip", "skip", "skip"],
+    note: "같은 message를 다시 내면 signature·domain·caller·version 확인은 처음처럼 다시 통과하지만, 그 nonce는 이미 사용 처리돼 있어 거절되고 두 번째 mint가 막힙니다. Base supply는 25에 머물고, 두 chain의 native supply 합은 75 + 25 = 100입니다.",
   },
 ] as const satisfies readonly { label: string; summary: string; base: number; status: readonly Status[]; note: string }[];
 

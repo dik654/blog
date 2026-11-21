@@ -20,7 +20,7 @@ const BOX_W = 50;
 const SCENES = [
   { label: "NVSwitch node", summary: "모든 쌍이 같은 속도", note: "GPU 8장이 모두 NVSwitch에 붙어 있어 어떤 두 장을 골라도 같은 속도로 통신합니다. 900 GB/s는 switch 전체가 아니라 GPU 한 장의 NVLink 대역폭입니다.", mode: "nv" },
   { label: "PCIe · 같은 switch 아래 (PIX)", summary: "GPU → switch → GPU", note: "NVLink가 없으면 GPU끼리 PCIe로 이어집니다. 그림의 같은 switch 아래 두 장은 switch 하나만 거칩니다.", mode: "pix" },
-  { label: "PCIe · socket을 넘음 (SYS)", summary: "CPU 두 개를 지남", note: "다른 socket의 GPU로 가면 경로가 CPU root complex(CPU 쪽 PCIe 연결부)를 지나 길어집니다. 경로가 다르므로 고정 latency α와 대역폭 B도 달라집니다.", mode: "sys" },
+  { label: "PCIe · socket을 넘음 (SYS)", summary: "CPU 두 개를 지남", note: "다른 socket의 GPU로 가면 경로가 CPU와 PCIe 장치를 잇는 최상위 연결부(root complex)를 지나 길어집니다. 경로가 다르므로 고정 latency α와 대역폭 B도 달라집니다.", mode: "sys" },
   { label: "PCIe · P2P가 꺼진 경우", summary: "host memory 경유", note: "GPU끼리 직접 보내는 P2P가 꺼지면 데이터가 host memory를 거칩니다. nvidia-smi topo로 경로를, NCCL 로그로 실제 transport를 확인합니다.", mode: "host" },
 ] as const;
 

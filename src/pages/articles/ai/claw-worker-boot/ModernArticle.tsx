@@ -72,7 +72,7 @@ export default function ModernWorkerBootArticle() {
         <div id="paper-claw-trust-resolver-source">
           <CitationBlock type="code" citeKey={1} source="Claw Code · pinned trust_resolver.rs" href={TRUST_SOURCE}>
             <p><strong>문제:</strong> terminal에서 workspace trust prompt를 발견하고 allow·manual approval·deny 정책으로 연결해야 합니다.</p>
-            <p><strong>핵심 아이디어:</strong> 문구 cue와 path allowlist·denylist를 사용해 typed TrustEvent와 TrustDecision을 만듭니다.</p>
+            <p><strong>핵심 아이디어:</strong> 문구 cue와 path allowlist·denylist를 사용해 typed TrustEvent와 TrustDecision을 만듭니다. 다만 deny는 trust_resolver 정책에만 있고, worker_boot 흐름은 trusted root 목록만 받아 <code>trust_auto_resolve</code>를 정하므로 deny 갈래와 연결되지 않습니다.</p>
             <p><strong>중요 가정:</strong> commit b71afdd…의 문자열 matcher와 caller가 전달한 cwd·worktree 값을 기준으로 합니다.</p>
             <p><strong>근거 범위:</strong> 해당 source의 pattern matching, policy, event data model과 unit test에 한정합니다.</p>
             <p><strong>일반화 금지:</strong> Symlink-safe identity, signed repository, sandbox 또는 capability별 승인까지 구현됐다고 결론 내릴 수 없습니다.</p>

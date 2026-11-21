@@ -2,7 +2,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #io-path — SATA(ATA command·SATA link·NCQ, point-to-point), SAS(SCSI command, dual-port·expander를
- * 제공할 수 있음), NVMe(queue 중심 protocol, PCIe·fabric transport). drive 수·queue 수는 예시.
+ * 제공할 수 있음), NVMe(queue 중심 protocol, PCIe·fabric transport; PCIe에서 SQ·CQ는 host 메모리, doorbell로 알림). drive 수·queue 수는 예시.
  */
 const SCENES = [
   {
@@ -18,7 +18,7 @@ const SCENES = [
   {
     label: "NVMe",
     summary: "queue 중심 · PCIe 또는 fabric",
-    note: "NVMe는 queue 중심 protocol이며 PCIe에 직접 붙거나 fabric transport로 network 너머에 닿습니다. 칸 수는 예시입니다. 오른쪽 장치가 모두 SSD여도 이 차이는 그대로입니다.",
+    note: "NVMe는 queue 중심 protocol이며 PCIe에 직접 붙거나 fabric transport로 network 너머에 닿습니다. PCIe에서는 submission·completion queue가 host 메모리에 있고, host가 doorbell register에 써서 알리면 drive가 명령을 가져갑니다(controller 메모리에 queue를 두는 선택지도 있습니다). 칸 수는 예시입니다. 오른쪽 장치가 모두 SSD여도 이 차이는 그대로입니다.",
   },
 ] as const;
 
@@ -91,18 +91,21 @@ function Sas() {
 function Nvme() {
   return (
     <g>
-      <Box x={12} y={40} w={84} h={44} label="host" sub="CPU 쪽" />
-      <line x1={96} y1={62} x2={262} y2={62} stroke={BLUE} strokeWidth={1.25} />
-      <text x={179} y={54} textAnchor="middle" fontSize={10.5} fill="currentColor">PCIe에 직접</text>
-      <Box x={262} y={40} w={86} h={44} label="NVMe drive" sub="NVM subsystem" stroke={BLUE} />
+      <rect x={12} y={14} width={100} height={110} rx={6} fill="none" stroke={LINE} strokeWidth={1} />
+      <text x={62} y={30} textAnchor="middle" fontSize={10.5} fontWeight={600} fill="currentColor">host</text>
+      <text x={62} y={43} textAnchor="middle" fontSize={9.5} fill={SLATE}>메모리</text>
       <g>
         {[0, 1, 2].map((r) => (
-          <Queue key={r} x={140} y={72 + r * 18} slots={3} />
+          <Queue key={r} x={22} y={54 + r * 18} slots={3} />
         ))}
-        <text x={180} y={88} fontSize={10} fill={AMBER}>queue들</text>
-        <text x={180} y={102} fontSize={9.5} fill={AMBER}>(개수 예시)</text>
+        <text x={58} y={66} fontSize={10} fill={AMBER}>SQ·CQ</text>
+        <text x={58} y={80} fontSize={9} fill={AMBER}>(개수 예시)</text>
       </g>
-      <path d="M54 84 V164 H130" fill="none" stroke={BLUE} strokeWidth={1} strokeDasharray="4 3" />
+      <line x1={112} y1={62} x2={262} y2={62} stroke={BLUE} strokeWidth={1.25} />
+      <text x={187} y={54} textAnchor="middle" fontSize={10.5} fill="currentColor">PCIe에 직접</text>
+      <text x={187} y={78} textAnchor="middle" fontSize={9.5} fill={SLATE}>doorbell → drive가 가져감</text>
+      <Box x={262} y={40} w={86} h={44} label="NVMe drive" sub="NVM subsystem" stroke={BLUE} />
+      <path d="M54 124 V164 H130" fill="none" stroke={BLUE} strokeWidth={1} strokeDasharray="4 3" />
       <line x1={204} y1={164} x2={262} y2={164} stroke={BLUE} strokeWidth={1} strokeDasharray="4 3" />
       <rect x={130} y={152} width={74} height={24} rx={12} fill="none" stroke={LINE} strokeWidth={1} />
       <text x={167} y={168} textAnchor="middle" fontSize={10} fill="currentColor">network</text>
@@ -118,7 +121,7 @@ export default function TransportTopologyViz() {
       eyebrow="command · transport · 연결 모양"
       title="SATA, SAS, NVMe는 선이 이어지는 모양부터 다릅니다"
       description="왼쪽은 명령을 보내는 host, 오른쪽은 저장 장치이며, 선은 명령이 지나는 길입니다. 세 장면을 같은 자리에 두고 넘겨 보며 비교합니다."
-      ariaLabel="SATA의 1대1 link와 NCQ, SAS의 expander와 dual-port, NVMe의 queue와 PCIe 또는 fabric 연결"
+      ariaLabel="SATA의 1대1 link와 NCQ, SAS의 expander와 dual-port, NVMe의 host 메모리 queue와 PCIe 또는 fabric 연결"
       scenes={SCENES}
       render={(active) => (
         <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto h-auto w-full max-w-[560px]" role="img" aria-label={`${SCENES[active].label}: ${SCENES[active].summary}`}>

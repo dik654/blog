@@ -203,7 +203,7 @@ export default function LinuxContainersCgroupNamespaceArticle() {
               형식은 두 줄입니다. some 줄은 적어도 한 작업이 그 자원 때문에 멈춰 있던 시간의 비율이고, full 줄은 일할 수 있는 작업 전부가 동시에 멈춘 비율입니다. avg10·avg60·avg300은 최근 10·60·300초의 비율이고 total은 누적 µs입니다. 메모리 글 4절의 서버가 자주 읽는 파일 page까지 비우며 버벅일 때 오르는 것이 memory의 full이고, 노드 CPU가 모자라 run queue에서 기다리는 시간이 cpu의 some입니다.
             </p>
             <p>
-              PSI 파일에 "some 150000 1000000"을 쓰면 1초 창에서 150ms 이상 멈출 때 poll()이 깨어나는 트리거가 됩니다. systemd-oomd가 커널 OOM 전에 cgroup을 정리하는 근거가 이 트리거입니다.</p>
+              PSI 파일에 "some 150000 1000000"을 쓰면 1초 창에서 150ms 이상 멈출 때 poll()이 깨어나는 트리거가 됩니다. systemd-oomd는 이 트리거를 쓰지 않습니다. 같은 memory.pressure 파일의 full avg10 값을 1초마다 읽어, 설정한 한도를 정해진 시간 넘게 웃돌면 커널 OOM 전에 cgroup을 정리합니다.</p>
             <p>3절의 quota 멈춤은 cpu.stat의 throttled_usec으로 직접 세는 쪽이 정확하므로, 컨테이너 CPU 진단은 cpu.stat을 먼저 보고 노드 전체 경합은 cpu.pressure를 봅니다. 노드 수준 도구는 <a href="/cs/cloud/linux-observability-proc-psi-perf-ebpf#overview">서버를 관측하는 도구</a>에서 이어집니다.</p>
           </div>
           {code("psi-doc", "PSI some·full 정의")}

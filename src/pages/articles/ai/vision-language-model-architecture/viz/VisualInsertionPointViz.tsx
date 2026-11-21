@@ -3,7 +3,7 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #connectors — LLaVA는 visual token을 text token과 이어 붙여 LLM 입력에 넣고,
  * Flamingo는 Perceiver Resampler로 64개로 줄인 뒤 frozen LLM 층 사이의 gated cross-attention이 읽으며,
- * BLIP-2는 Q-Former의 learnable query 32개와 projection을 거쳐 frozen LLM에 연결한다.
+ * BLIP-2는 Q-Former의 learnable query 32개 출력을 projection해 frozen LLM의 text 입력 embedding 앞에 붙인다(BLIP-2 §3.3).
  * LLM 층을 세 개만 그린 것은 모양을 보이려는 가정이다.
  */
 const LEFT_X = 12;
@@ -43,7 +43,7 @@ const SCENES = [
   {
     label: "BLIP-2",
     summary: "query 32개가 병목",
-    note: "Q-Former는 learnable query 32개로 frozen image encoder의 많은 feature 가운데 언어 모델에 넘길 정보를 뽑습니다. 그 출력이 projection을 거쳐 frozen LLM에 연결됩니다. 그림의 화살표는 연결 관계만 나타냅니다.",
+    note: "Q-Former는 learnable query 32개로 frozen image encoder의 많은 feature 가운데 언어 모델에 넘길 정보를 뽑습니다. 32개 query 출력을 projection해 frozen LLM의 텍스트 입력 embedding 앞에 붙입니다(soft visual prompt). LLaVA처럼 입력 단계에서 이어 붙이는 방식입니다.",
   },
 ] as const;
 
@@ -97,10 +97,10 @@ export default function VisualInsertionPointViz() {
 
             {/* 입력 sequence */}
             <line x1={STACK_X + STACK_W / 2} x2={STACK_X + STACK_W / 2} y1={INPUT_Y} y2={layerY[0] + LAYER_H} stroke={LINE} strokeWidth={1} />
-            {active === 0 ? (
+            {active !== 1 ? (
               <>
                 <rect x={STACK_X} y={INPUT_Y} width={92} height={22} rx={3} fill={ACCENT} fillOpacity={0.2} stroke={ACCENT} strokeWidth={1} />
-                <text x={STACK_X + 46} y={INPUT_Y + 15} textAnchor="middle" fontSize={11} fontWeight={700} fill={ACCENT}>visual 256</text>
+                <text x={STACK_X + 46} y={INPUT_Y + 15} textAnchor="middle" fontSize={11} fontWeight={700} fill={ACCENT}>{active === 0 ? "visual 256" : "query 32"}</text>
                 <rect x={STACK_X + 96} y={INPUT_Y} width={STACK_W - 96} height={22} rx={3} fill={MUTED} fillOpacity={0.12} stroke={MUTED} strokeWidth={1} />
                 <text x={STACK_X + 96 + (STACK_W - 96) / 2} y={INPUT_Y + 15} textAnchor="middle" fontSize={11} fontWeight={700} fill={MUTED}>text</text>
                 <path d={`M${LEFT_X + LEFT_W / 2} ${leftY[2] + 24} V${INPUT_Y + 11} H${STACK_X - 2}`} fill="none" stroke={ACCENT} strokeWidth={1.25} />
@@ -109,15 +109,7 @@ export default function VisualInsertionPointViz() {
             ) : (
               <>
                 <rect x={STACK_X} y={INPUT_Y} width={STACK_W} height={22} rx={3} fill={MUTED} fillOpacity={0.12} stroke={MUTED} strokeWidth={1} />
-                <text x={STACK_X + STACK_W / 2} y={INPUT_Y + 15} textAnchor="middle" fontSize={11} fontWeight={700} fill={MUTED}>{active === 1 ? "text token만" : "text token"}</text>
-              </>
-            )}
-            {active === 2 && (
-              <>
-                <rect x={STACK_X - 6} y={layerY[2] - 6} width={STACK_W + 12} height={layerY[0] + LAYER_H - layerY[2] + 12} rx={6} fill="none" stroke={ACCENT} strokeWidth={1} strokeDasharray="4 3" />
-                <path d={`M${LEFT_X + LEFT_W} ${leftY[2] + 12} H${STACK_X - 8}`} fill="none" stroke={ACCENT} strokeWidth={1.25} />
-                <path d={`M${STACK_X - 14} ${leftY[2] + 7} l6 5 l-6 5`} fill="none" stroke={ACCENT} strokeWidth={1.25} />
-                <text x={STACK_X - 12} y={leftY[2] - 4} textAnchor="end" fontSize={10.5} fill={ACCENT}>frozen LLM에 연결</text>
+                <text x={STACK_X + STACK_W / 2} y={INPUT_Y + 15} textAnchor="middle" fontSize={11} fontWeight={700} fill={MUTED}>text token만</text>
               </>
             )}
             <text x={LEFT_X} y={232} fontSize={10.5} fill={MUTED}>{active === 0 ? "층 사이 새 부품 없음" : active === 1 ? "점선: cross-attn이 64개를 읽음" : "많은 feature → 32개로 좁힘"}</text>

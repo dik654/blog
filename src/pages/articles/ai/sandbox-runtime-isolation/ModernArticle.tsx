@@ -67,7 +67,7 @@ export default function SandboxRuntimeIsolationArticle() {
           name="시스템 호출 필터"
           oneLine="Seccomp BPF는 호출 번호와 인자를 보고 실행·오류 반환·로그·프로세스 종료 같은 동작을 고릅니다."
           shape="시스템 호출 요청 → 허용·거부 판정 → 공유 호스트 커널"
-          example="RuntimeDefault가 ptrace 같은 일부 호출을 막아도 허용된 read·write·network 호출은 호스트 커널로 들어갑니다."
+          example="RuntimeDefault가 mount·kexec_load 같은 일부 호출을 막아도 허용된 read·write·network 호출은 호스트 커널로 들어갑니다."
           boundary="openat의 경로 인자는 포인터 값이므로 Seccomp가 파일 경로 정책을 대신하지 않습니다. Mount(보이는 파일시스템 배치)·DAC(소유자·권한 비트)·LSM(커널 보안 모듈 정책) 같은 경계를 따로 둡니다."
         />
         <div id="paper-linux-seccomp" className="scroll-mt-24">

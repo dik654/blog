@@ -3,12 +3,13 @@ import SceneShell from "./SceneShell";
 /**
  * 본문 대응: #paper-submission-control — Ladder의 공개값 갱신 규칙.
  * 손실 = 1 − 정확도(본문 가정): A 0.74 → 0.26, B 0.76 → 0.24. 공개 간격 η = 0.01.
+ * A: 알고리즘 1의 초기값 R₀ = ∞이므로 첫 손실 0.26은 [0.26]η = 0.26으로 공개.
  * B: 0.24 < 0.26 − 0.01 = 0.25 → 0.24 공개. B 재전송: 0.24 < 0.24 − 0.01 = 0.23 아님 → 0.24 유지.
  */
 const ETA = 0.01;
 
 const SCENES = [
-  { label: "A의 손실 0.26", summary: "공개값 0.26", loss: 0.26, prev: null, published: 0.26, note: "정확도 0.74를 손실로 바꾸면 1 − 0.74 = 0.26입니다. 이 값을 다음 비교의 직전 공개값으로 둡니다(가정)." },
+  { label: "A의 손실 0.26", summary: "공개값 0.26", loss: 0.26, prev: null, published: 0.26, note: "정확도 0.74를 손실로 바꾸면 1 − 0.74 = 0.26입니다. 알고리즘 1은 초기 공개값을 R₀ = ∞로 두므로 첫 손실은 항상 문턱 아래이고, η 단위로 반올림한 0.26이 그대로 공개됩니다. 이 값이 다음 비교의 직전 공개값입니다." },
   { label: "B의 손실 0.24", summary: "0.24 < 0.25 → 0.24 공개", loss: 0.24, prev: 0.26, published: 0.24, note: "문턱은 직전 공개값에서 η를 뺀 0.26 − 0.01 = 0.25입니다. B의 0.24가 문턱보다 작으므로 평가자는 새 값 0.24를 공개합니다." },
   { label: "같은 B를 다시", summary: "0.24 ≥ 0.23 → 0.24 유지", loss: 0.24, prev: 0.24, published: 0.24, note: "이번 문턱은 0.24 − 0.01 = 0.23입니다. 손실 0.24가 문턱보다 작지 않으므로 새 숫자를 내지 않고 이전 공개값 0.24를 다시 내놓습니다." },
 ] as const;
@@ -58,7 +59,7 @@ export default function LadderViz() {
             <circle cx={x(scene.loss)} cy={AXIS_Y - 20} r={5} fill="none" stroke="#d97706" strokeWidth={1.25} />
             <text x={x(scene.loss)} y={AXIS_Y - 28} textAnchor="middle" fontSize={11} fontWeight={700} fill="#b45309">새 손실 {scene.loss.toFixed(2)}</text>
             <text x={RIGHT} y={18} textAnchor="end" fontSize={11} fontWeight={700} fill={threshold === null ? "#475569" : updates ? "#15803d" : "#475569"}>
-              {threshold === null ? "직전 공개값으로 둠(가정)" : updates ? "문턱 아래 → 새 값 공개" : "문턱 아래 아님 → 이전 값 유지"}
+              {threshold === null ? "R₀ = ∞ → 첫 손실 공개(알고리즘 1)" : updates ? "문턱 아래 → 새 값 공개" : "문턱 아래 아님 → 이전 값 유지"}
             </text>
           </svg>
         );

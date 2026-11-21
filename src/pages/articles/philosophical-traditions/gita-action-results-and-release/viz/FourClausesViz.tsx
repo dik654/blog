@@ -6,7 +6,7 @@ import SceneShell from "./SceneShell";
  */
 const CLAUSES = [
   { id: 1, text: "행위에 대한 권한", term: "adhikāra" },
-  { id: 2, text: "그것과 구분되는 열매에 대한 권한", term: "phala" },
+  { id: 2, text: "열매에는 권한 없음", term: "phala" },
   { id: 3, text: "열매를 행위의 동기로 삼지 말 것", term: "hetu" },
   { id: 4, text: "무행동에 대한 집착도 두지 말 것", term: "akarman · saṅga" },
 ] as const;

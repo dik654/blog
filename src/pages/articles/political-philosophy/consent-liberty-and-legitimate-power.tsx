@@ -100,7 +100,7 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
         </div>
         <TacitConsentViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">이 비판이 겨냥하는 넓은 기준은 로크 자신의 것입니다. 『통치론』 둘째 논고 §119는 명시적 동의와 묵시적 동의를 나눈 뒤, 그 정부 영토의 어느 부분이든 소유하거나 누리는 사람은 묵시적 동의를 한 것이라고 답합니다. 일주일 묵는 숙소나 큰길을 자유롭게 지나가는 일까지 포함되고, 로크의 표현으로는 “the very being of any one within the territories of that government”까지 닿습니다. 100가구 사례로 옮기면 동네 길을 한 번 지나간 방문자도 영업시간 규칙에 동의한 사람으로 세어지는 셈이라, 동의가 권력을 제한하는 힘을 잃습니다.</p>
+          <p className="leading-8">이 비판이 겨냥하는 넓은 기준은 로크 자신의 것입니다. 『통치론』 둘째 논고 §119는 명시적 동의와 묵시적 동의를 나눈 뒤, 그 정부 영토의 어느 부분이든 소유하거나 누리는 사람은 묵시적 동의를 한 것이라고 답합니다. 일주일 묵는 숙소나 큰길을 자유롭게 지나가는 일까지 포함되고, 로크의 표현으로는 “the very being of any one within the territories of that government”까지 닿습니다. 100가구 사례로 옮기면 동네 길을 한 번 지나간 방문자도 지나가는 동안에는 영업시간 규칙을 따를 의무가 생기는 셈입니다(구성원이 되지는 않음, §122). 이렇게 넓으면 동의가 권력을 제한하는 힘을 잃습니다.</p>
           <p className="leading-8">돈과 시간의 차이는 참여의 질도 바꿉니다. 표는 한 사람에 하나여도 변호사, 언론, 로비, 자료에 접근하는 능력은 다릅니다. 그래서 정당성은 선거뿐 아니라 기본권, 행정 이유, 독립 심사, 정보 공개, 실제로 쓸 수 있는 이의 절차에서 반복해 확인해야 합니다.</p>
         </div>
         <ReviewPrompts questions={[

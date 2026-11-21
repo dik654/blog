@@ -19,7 +19,7 @@ const SHORT = ["시작", "Bytes", "Check", "Ante", "Send", "Merge", "Hash", "Com
 const NOTES = [
   "높이 40의 정본은 Alice 100, Bob 20, sequence 7입니다. Query는 이 durable root만 읽고 임시 branch는 아직 없습니다.",
   "Alice가 Bob에게 10을 보내고 fee 1을 내는 bytes에 서명합니다. CometBFT는 순서만 정하고 SDK가 MsgSend 규칙을 해석합니다.",
-  "CheckTx는 ante만 실행해 fee 1·sequence 8을 node-local check state에 남깁니다. MsgSend와 committed query는 바뀌지 않습니다.",
+  "CheckTx는 ante를 실행하고 message handler는 실행하지 않아 fee 1·sequence 8을 node-local check state에 남깁니다. MsgSend와 committed query는 바뀌지 않습니다.",
   "같은 bytes를 FinalizeBlock에서 다시 실행합니다. Ante가 성공하면 fee 1·sequence 8을 finalize parent에 먼저 합칩니다.",
   "MsgServiceRouter가 MsgSend를 bank MsgServer로 연결합니다. Bank는 정책·잔액을 검사한 뒤 message child에서 Alice −10, Bob +10을 계산합니다.",
   "MsgSend와 post-handler가 성공하면 child를 finalize parent에 합칩니다. ExecTxResult OK는 얻었지만 아직 durable version은 아닙니다.",

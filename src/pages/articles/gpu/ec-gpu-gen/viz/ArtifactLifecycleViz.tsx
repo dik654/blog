@@ -2,18 +2,18 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #artifact-lifecycle — CUDA는 build 때 fatbin, OpenCL은 runtime compile.
- * Rust binary 기록으로 재현 못 하는 것: OpenCL driver가 만든 binary, 선택된 device, runtime options.
+ * Rust binary 기록으로 재현 못 하는 것: OpenCL driver가 만든 binary, 선택된 device.
  * 기록 항목은 Build log·Runtime log 두 문단 그대로.
  */
 const SCENES = [
   { label: "CUDA 경로", summary: "compile은 build 때", note: "build 과정에서 nvcc가 fatbin을 만듭니다. runtime에는 program! macro가 이 결과물로 device별 program을 만듭니다." },
   { label: "OpenCL 경로", summary: "compile은 runtime 때", note: "build에서는 source를 생성하기만 합니다. runtime에 선택된 device에서 driver가 compile하므로 binary는 그때 생깁니다." },
-  { label: "Rust binary만 기록하면", summary: "빠지는 항목 3개", note: "“같은 Rust binary”만 기록하면 점선으로 표시한 세 항목을 재현할 수 없습니다. 세 항목은 모두 runtime에 정해지므로 build가 끝난 binary에는 담기지 않습니다." },
+  { label: "Rust binary만 기록하면", summary: "빠지는 항목 2개", note: "“같은 Rust binary”만 기록하면 점선으로 표시한 두 항목을 재현할 수 없습니다. 두 항목은 모두 runtime에 정해지므로 build가 끝난 binary에는 담기지 않습니다." },
   { label: "기록은 시점별로 둘로 나눕니다", summary: "Build log · Runtime log", note: "두 기록을 시점에 맞춰 남깁니다. Build 실패는 빈 source나 오래된 cache로 숨기지 않고, 실패시키거나 승인된 CPU 경로로 전환합니다." },
 ] as const;
 
 const BUILD_LOG = ["field/curve type", "ec-gpu commit", "Cargo feature set", "source digest", "compiler command·stderr", "artifact digest"];
-const RUNTIME_LOG = ["backend", "device UUID/name", "driver", "loaded artifact key", "kernel entry", "fallback 이유"];
+const RUNTIME_LOG = ["backend", "device UUID/name", "driver", "driver binary digest", "loaded artifact key", "kernel entry", "fallback 이유"];
 
 function Step({ text, on, missing = false }: { text: string; on: boolean; missing?: boolean }) {
   return (
@@ -70,7 +70,6 @@ export default function ArtifactLifecycleViz() {
             build={["OpenCL source 생성"]}
             runtime={[
               { text: "선택된 device", missing: active === 2 },
-              { text: "runtime options", missing: active === 2 },
               { text: "driver가 만든 binary", missing: active === 2 },
               { text: "device별 program" },
             ]}

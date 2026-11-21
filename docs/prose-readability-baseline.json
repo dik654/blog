@@ -22,11 +22,11 @@
       "score": 43
     },
     "ai/claw-compaction": {
-      "fingerprint": "9a9d41c7988048d3",
+      "fingerprint": "a84bcf709f9b7492",
       "score": 42
     },
     "ai/claw-permissions": {
-      "fingerprint": "174ab5ba777f641a",
+      "fingerprint": "1887f38994106f0e",
       "score": 42
     },
     "blockchain/filecoin-storacha": {
@@ -38,7 +38,7 @@
       "score": 40
     },
     "gpu/ec-gpu-gen": {
-      "fingerprint": "d2d3835a1d2f2c4d",
+      "fingerprint": "7139df8a3837653c",
       "score": 6
     },
     "blockchain/prysm": {
@@ -206,7 +206,7 @@
       "score": 26
     },
     "blockchain/impl-plonk": {
-      "fingerprint": "19a0dcb7b181d718",
+      "fingerprint": "c432ffdd91277c2c",
       "score": 6
     },
     "blockchain/pos-theory": {
@@ -310,7 +310,7 @@
       "score": 21
     },
     "blockchain/proofs-porep": {
-      "fingerprint": "13eb9d718f866443",
+      "fingerprint": "a4ebdc309e964d5a",
       "score": 6
     },
     "blockchain/proofs-snark": {
@@ -474,7 +474,7 @@
       "score": 16
     },
     "ai/claw-worker-boot": {
-      "fingerprint": "a45e21990004f5a1",
+      "fingerprint": "95716c213678fece",
       "score": 15
     },
     "ai/compression-pipeline": {
@@ -518,8 +518,8 @@
       "score": 14
     },
     "blockchain/longest-chain": {
-      "fingerprint": "09e2ac7a657761bc",
-      "score": 8
+      "fingerprint": "a103cc0feef57a26",
+      "score": 10
     },
     "blockchain/merkle-patricia-trie": {
       "fingerprint": "e4a4d5f708a602ec",
@@ -938,11 +938,11 @@
       "score": 6
     },
     "isms-aml/isms-backup-recovery": {
-      "fingerprint": "37bfe6b96cfc99a9",
+      "fingerprint": "52400ad1e92ea50b",
       "score": 6
     },
     "ai/llm-as-a-judge": {
-      "fingerprint": "846aca06b4334ef5",
+      "fingerprint": "12feaded3ca5495f",
       "score": 6
     },
     "gpu/cuda-perf-analysis": {
@@ -963,6 +963,22 @@
     },
     "blockchain/reth-txpool": {
       "fingerprint": "956d7de83c652640",
+      "score": 6
+    },
+    "ai/spiking-neural-networks": {
+      "fingerprint": "5577b0b0e67cc950",
+      "score": 6
+    },
+    "blockchain/robinhood-chain-settlement": {
+      "fingerprint": "b1c3a4f55d1302e9",
+      "score": 6
+    },
+    "cloud/kubernetes-pod-states-crashloop-probes-events": {
+      "fingerprint": "301b85141b00ec84",
+      "score": 6
+    },
+    "economic-history/colonial-plantations-slavery-and-extraction": {
+      "fingerprint": "466c81953f759046",
       "score": 6
     }
   }

@@ -1,9 +1,9 @@
 import MdbxSceneShell from "./MdbxSceneShell";
 
 /**
- * 본문 대응: #reclaim — reuse(p)는 retiredTx(p) < min(active readerTx)일 때만.
+ * 본문 대응: #reclaim — reuse(p)는 retiredTx(p) ≤ min(active readerTx)일 때만.
  * R1=100, R2=103 → horizon 100. Writer가 105까지 가도 100. R1 종료 → min(103)=103.
- * 103에서 retiredTx 101·102만 < 103 → 재사용 후보, 103·104·105는 보존.
+ * 103에서 retiredTx 101·102·103이 ≤ 103 → 재사용 후보, 104·105는 보존.
  * 매 commit마다 빠진 page 묶음이 있다는 것은 설명용 가정입니다.
  */
 const GENS = [100, 101, 102, 103, 104, 105] as const;
@@ -16,7 +16,7 @@ const SCENES = [
     now: 103,
     r1Open: true,
     horizon: 100,
-    note: "R1은 txid 100, R2는 103을 고정했습니다. 회수 horizon은 열린 snapshot 중 가장 오래된 100입니다. 101~103에 current graph에서 빠진 page는 retiredTx가 100보다 작지 않으므로 모두 보존합니다.",
+    note: "R1은 txid 100, R2는 103을 고정했습니다. 회수 horizon은 열린 snapshot 중 가장 오래된 100입니다. 101~103에 current graph에서 빠진 page는 retiredTx가 100보다 크므로 모두 보존합니다.",
   },
   {
     label: "Writer가 105까지 진행",
@@ -32,7 +32,7 @@ const SCENES = [
     now: 105,
     r1Open: false,
     horizon: 103,
-    note: "R1이 끝나면 열린 reader는 R2(103)만 남아 horizon이 103으로 전진합니다. retiredTx가 103보다 작은 101·102의 page가 재사용 후보가 되고, R2가 열려 있는 동안 103~105에 빠진 page는 계속 보존합니다.",
+    note: "R1이 끝나면 열린 reader는 R2(103)만 남아 horizon이 103으로 전진합니다. retiredTx가 103 이하인 101·102·103의 page가 재사용 후보가 되고, R2가 열려 있는 동안 104·105에 빠진 page는 계속 보존합니다.",
   },
 ] as const;
 
@@ -53,7 +53,7 @@ export default function ReaderHorizonViz() {
       eyebrow="회수 horizon"
       title="가장 오래된 reader가 끝나야 retired page가 돌아옵니다"
       description="가로축은 transaction generation입니다. 회수 horizon은 열린 reader가 고정한 txid 중 가장 작은 값이고, 맨 아래 칸은 그 세대에 current graph에서 빠진 page 묶음입니다. 매 commit마다 빠지는 page가 있다고 두었고 칸 크기는 page 수가 아닙니다(가정)."
-      note="본문의 식을 그대로 따른 모형입니다. Reader slot·process liveness와 정확한 GC 비교 규칙은 고정한 libmdbx release의 구현에 따릅니다."
+      note="본문의 식을 그대로 따른 모형입니다. 경계 비교(≤)는 libmdbx v0.14.3의 GC 재사용 조건을 따랐고, reader slot·process liveness 처리는 고정한 release의 구현에 따릅니다."
       ariaLabel="두 reader가 txid 100과 103을 고정한 동안 writer가 105까지 진행하고, R1 종료 뒤 회수 horizon이 103으로 전진하는 과정"
       scenes={SCENES}
       render={(active) => {
@@ -92,7 +92,7 @@ export default function ReaderHorizonViz() {
 
             {RETIRED.map((gen) => {
               if (gen > scene.now) return null;
-              const reusable = gen < scene.horizon;
+              const reusable = gen <= scene.horizon;
               return (
                 <g key={`r${gen}`}>
                   <rect
@@ -115,8 +115,8 @@ export default function ReaderHorizonViz() {
             })}
 
             <line x1={hx} x2={hx} y1={20} y2={Y_COMMIT + 10} stroke="#dc2626" strokeWidth={1.25} strokeDasharray="5 3" />
-            <line x1={hx - STEP / 2} x2={hx - STEP / 2} y1={Y_RET - 20} y2={Y_RET + 22} stroke="#dc2626" strokeWidth={1.25} />
-            <text x={hx - STEP / 2} y={Y_RET + 34} textAnchor="middle" fontSize={11} fill="#dc2626">&lt; {scene.horizon}</text>
+            <line x1={hx + STEP / 2} x2={hx + STEP / 2} y1={Y_RET - 20} y2={Y_RET + 22} stroke="#dc2626" strokeWidth={1.25} />
+            <text x={hx + STEP / 2} y={Y_RET + 34} textAnchor="middle" fontSize={11} fill="#dc2626">≤ {scene.horizon}</text>
             <text x={hx} y={14} textAnchor="middle" fontSize={12} fontWeight={700} fill="#dc2626">horizon {scene.horizon}</text>
 
             <line x1={x(100) - 14} x2={x(105) + 14} y1={Y_AXIS - 12} y2={Y_AXIS - 12} stroke="#94a3b8" strokeWidth={1} />

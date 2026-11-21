@@ -30,7 +30,7 @@ const SCENES = [
   {
     label: "terminal 오류는 따로",
     summary: "aggregate가 좋아도 IsBadPeer = bad",
-    note: "이번에는 aggregate가 좋은 값이라고 가정한 다른 상황입니다. IsBadPeer는 합계를 보지 않고 세 검사를 따로 확인하므로, Status가 wrong fork를 보냈다면 좋은 합계로 상쇄되지 않고 bad가 됩니다.",
+    note: "이번에는 aggregate가 좋은 값이라고 가정한 다른 상황입니다. IsBadPeer는 합계를 보지 않고 세 검사를 따로 확인하므로(scorers/service.go의 IsBadPeerNoLock은 ScoreNoLock을 호출하지 않습니다), Status가 wrong fork를 보냈다면 좋은 합계로 상쇄되지 않고 bad가 됩니다.",
   },
 ] as const;
 

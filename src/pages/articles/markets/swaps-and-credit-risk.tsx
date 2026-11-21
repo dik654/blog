@@ -113,7 +113,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">10. 명목원금도 현재 시가도 최악의 손실과 같지 않습니다</h2>
         <ThreeAmountsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">10억 원은 이자 계산 기준이고 당기 순수취액은 2000만 원입니다. 계약을 오늘 대체하는 비용은 앞으로 남은 지급들의 현재가치로 계산하므로 이 두 금액과 다시 다릅니다. BIS가 명목원금·총시가·상계 후 신용노출을 따로 집계하는 이유입니다.</p>
+<p className="leading-8">10억 원은 이자 계산 기준이고 당기 순수취액은 2000만 원입니다. 계약을 오늘 대체하는 비용은 앞으로 남은 지급들의 현재가치로 계산하므로 이 두 금액과 다시 다릅니다. BIS가 명목원금·총시가·상계 후 신용노출을 따로 집계하는 이유입니다. 여기서 신용노출은 총시가에 법적으로 유효한 양자 상계 계약을 반영한 값이며, 담보는 빼지 않습니다.</p>
 <p className="leading-8">CDS 매도자가 지급하지 못하면 6억 원 보호는 약정에만 남습니다. 담보가 있어도 처분 가격·지급 지연·상계의 법적 효력을 확인해야 합니다. 채권 부도와 보호 매도자 부도가 함께 발생할 수도 있습니다. 두 위험을 따로 더한 계산으로는 이때의 손실을 놓칠 수 있습니다.</p>
         </div>
 <CitationBlock source="BIS · OTC derivatives statistics" citeKey={3} href="https://data.bis.org/topics/OTC_DER">BIS · OTC derivatives statistics</CitationBlock>

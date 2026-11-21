@@ -60,7 +60,7 @@ export default function ModernEvmFundamentalsArticle() {
  <p>STOP과 RETURN은 현재 호출을 정상 종료합니다. REVERT는 해당 호출의 상태 변경을 취소하면서 반환 데이터를 남기는 명시적 실패입니다. gas 부족·알 수 없는 명령·꺼낼 값 부족은 예외 종료로 처리됩니다. 고정한 구현은 예외 종료에서 남은 gas를 0으로 만들고 REVERT에서는 그 줄을 실행하지 않습니다. 두 실패 모두 해당 호출의 변경을 복구합니다.</p>
  <CodeViewButton label="예외·REVERT·상태 복구 원문" onClick={()=>sidebar.open("failure",teachCodeRefs.failure)} />
  <NestedRevertViz />
- <p>하위 호출이 실패해도 상위 호출이 실패 표시를 확인하고 계속할 수 있습니다. 반대로 상위 호출까지 실패하면 앞서 성공한 하위 호출의 변경도 취소될 수 있습니다. 자세한 생성·중첩 호출은 <Link to="/cs/blockchain/evm-advanced">EVM 심화</Link>에서 같은 책임을 확장합니다.</p>
+ <p>하위 호출이 실패해도 상위 호출이 실패 표시를 확인하고 계속할 수 있습니다. 반대로 상위 호출이 실패하면 앞서 성공한 하위 호출의 변경도 함께 취소됩니다. 자세한 생성·중첩 호출은 <Link to="/cs/blockchain/evm-advanced">EVM 심화</Link>에서 같은 책임을 확장합니다.</p>
  <p>새 실행기를 검증할 때는 2+3, 256비트 넘침, 스택 부족, memory 확장, storage 쓰기 뒤 REVERT, 하위 호출 gas 부족을 같은 fork의 시험 입력으로 비교합니다. 종료 상태·사용 gas·로그·최종 상태 루트가 모두 맞아야 합니다. 두 클라이언트의 시험을 이 글에서 실제 실행했다고 주장하지 않습니다.</p>
  <ul className="list-disc space-y-3 pl-6"><li>ADD 뒤 스택에 5가 남으면 storage와 반환 데이터에도 5가 기록될까요? (답: 7절)</li><li>같은 프로그램의 시작 예산이 8이면 어느 명령에서 실패할까요? (답: 10절)</li><li>하위 호출의 REVERT가 항상 거래 전체를 실패시킬까요? (답: 11절)</li></ul>
  <EvmMapReturn current="machine" />

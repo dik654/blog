@@ -203,7 +203,8 @@ export default function ModernPoRep() {
         <LabelDependencyViz />
         <p>
           PC2로 넘어가기 전에 PC1이 labels를 어떻게 만들었는지 먼저 짚습니다.
-          SDR label은 한 node의 이전-layer와 graph parents에 순차 의존합니다.
+          SDR label은 같은 layer의 base(DRG) parents와 이전 layer의 expander
+          parents에 순차 의존합니다.
           PC2는 이 labels로 data를 encoding한 뒤 TreeC와 TreeRLast를 만들고
           CommR을 계산합니다. Artifact에는 replica file digest/size,
           TreeC·TreeRLast store manifests, CommC·CommRLast·CommR, upstream PC1
@@ -217,8 +218,8 @@ export default function ModernPoRep() {
               흡수하기 때문입니다.
             </>
           }
-          formula={String.raw`\ell_{k,v}=H(RID\|k\|v\|\ell_{k-1,v}\|\{\ell_{k,p}:p\in Parents(v)\})`}
-          annotatedFormula={String.raw`\ell_{k,v}=H(\underbrace{RID\|k\|v}_{\text{replica·layer·node}}\|\underbrace{\ell_{k-1,v}}_{\text{직전 layer 같은 node}}\|\underbrace{\{\ell_{k,p}:p\in Parents(v)\}}_{\text{같은 layer의 parents}})`}
+          formula={String.raw`\ell_{k,v}=H(RID\|k\|v\|\{\ell_{k,p}:p\in DRG(v)\}\|\{\ell_{k-1,p}:p\in Exp(v)\})`}
+          annotatedFormula={String.raw`\ell_{k,v}=H(\underbrace{RID\|k\|v}_{\text{replica·layer·node}}\|\underbrace{\{\ell_{k,p}:p\in DRG(v)\}}_{\text{같은 layer의 base parents}}\|\underbrace{\{\ell_{k-1,p}:p\in Exp(v)\}}_{\text{이전 layer의 expander parents}})`}
           operations={[
             {
               expression: String.raw`RID\|k\|v`,
@@ -229,19 +230,19 @@ export default function ModernPoRep() {
               ],
             },
             {
-              expression: String.raw`\ell_{k-1,v}`,
+              expression: String.raw`\{\ell_{k,p}:p\in DRG(v)\}`,
               annotation: [
-                "같은 node의 직전 layer label.",
-                "layer를 건너뛰고 병렬 계산할 수 없는",
-                "첫 번째 순차 의존",
+                "base(DRG) parents의 현재 layer label.",
+                "앞 node labels가 확정돼야 하는",
+                "같은 layer 안의 순차 의존",
               ],
             },
             {
-              expression: String.raw`\{\ell_{k,p}:p\in Parents(v)\}`,
+              expression: String.raw`\{\ell_{k-1,p}:p\in Exp(v)\}`,
               annotation: [
-                "DRG/expander parents의 현재 layer",
-                "label. parent 하나가 stale이면 뒤의",
-                "dependent labels·commitment가 연쇄 변경",
+                "expander parents의 이전 layer label.",
+                "layer를 건너뛸 수 없고, parent 하나가",
+                "stale이면 다음 layer까지 연쇄 변경",
               ],
             },
           ]}
@@ -268,14 +269,14 @@ export default function ModernPoRep() {
               description: "Sector graph node index입니다.",
             },
             {
-              symbol: String.raw`\ell_{k-1,v}`,
-              name: "Previous-layer label",
-              description: "같은 node의 직전 layer label입니다.",
+              symbol: "DRG(v)",
+              name: "Base parents",
+              description: "DRG rule이 정한 parent node 집합입니다. 같은 layer label을 읽습니다.",
             },
             {
-              symbol: "Parents(v)",
-              name: "Graph parents",
-              description: "DRG/expander rule이 정한 parent node 집합입니다.",
+              symbol: "Exp(v)",
+              name: "Expander parents",
+              description: "Expander rule이 정한 parent node 집합입니다. 이전 layer label을 읽으며, 첫 layer(k=1)에는 이 항이 없습니다.",
             },
           ]}
           assumptions={[

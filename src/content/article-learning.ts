@@ -184276,7 +184276,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "retrieval-compression-tradeoff",
-        role: "고정 state가 용량 d²를 넘는 문맥에서 겪는 압축 손실과 exact retrieval의 경계를 정의합니다.",
+        role: "고정 state가 용량(직교 key 수 d)을 넘는 문맥에서 겪는 압축 손실과 exact retrieval의 경계를 정의합니다.",
       },
       {
         id: "hybrid-sequence-architecture",
@@ -184330,7 +184330,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "메모지 한 장에 너무 많은 메모를 적으면 나중 메모가 이전 메모 위에 겹쳐 써져 둘 다 알아보기 어려워지는 것과 같습니다.",
         workedExample:
-          "d=128이면 용량은 16,384 근처이고, 문맥에 담긴 서로 다른 사실 수가 이 수를 넘으면 좌표 겹침이 생겨 검색이 부정확해집니다.",
+          "d=128이면 용량은 128 근처이고(16,384는 state의 값 개수), 문맥에 담긴 서로 다른 사실 수가 이 수를 넘으면 key끼리 직교할 수 없어 value가 섞이고 검색이 부정확해집니다.",
         boundary:
           "정보량이 용량보다 훨씬 작은 일반적인 문맥에서는 겹침이 드물어 압축이 거의 손실 없이 동작합니다.",
       },
@@ -184444,8 +184444,8 @@ export const ARTICLE_LEARNING: Readonly<
         question:
           "d×d state의 대략적인 표현 용량을 d의 함수로 쓰고, 문맥의 사실 수가 그 용량을 넘으면 무슨 일이 일어나는지 설명하세요.",
         answerChecklist: [
-          "약 d²",
-          "좌표 겹침",
+          "약 d (직교 key 수)",
+          "key끼리 직교 불가로 value 섞임",
           "서로 다른 연관 손실",
           "부정확한 검색",
         ],
@@ -196204,7 +196204,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "지도 위 정거장만 고르는 것과, 실제 도로에서 몇 미터를 어느 방향으로 갈지 직접 정하는 것은 다른 문제입니다.",
         workedExample:
-          "R2R은 90개 건물·7,189개 경로의 discrete graph이고, waypoint prediction은 거리 0.25~4m·방향 ±15˚ 범위까지 연속적으로 확장합니다.",
+          "R2R은 90개 건물·7,189개 경로의 discrete graph이고, waypoint prediction은 파노라마 방향 하나를 고른 뒤 거리 0.25~4m·그 방향 기준 오프셋 ±15˚ 범위까지 연속적으로 확장합니다.",
         boundary:
           "Waypoint 표현력이 커도 그 값을 3D로 바꾸고 실행하는 별도 interface·controller가 없으면 실행할 수 없습니다.",
       },
@@ -196295,7 +196295,7 @@ export const ARTICLE_LEARNING: Readonly<
         answerChecklist: [
           "고정 0.25m",
           "연속 0.25~4m",
-          "방향 ±15˚",
+          "파노라마 방향 기준 오프셋 ±15˚",
           "표현력과 경로 효율성",
         ],
         requiredConcepts: ["vln-taxonomy"],
@@ -196431,7 +196431,7 @@ export const ARTICLE_LEARNING: Readonly<
         problem:
           "Low-level action과 완전 continuous waypoint 사이 표현력·실행 비용의 trade-off를 탐색합니다.",
         contribution:
-          "12개 panoramic RGB-D observation을 입력으로, 거리 0.25~4m·방향 ±15˚ 범위의 waypoint를 예측하는 network를 제안하고 더 표현력 있는 예측이 더 짧고 빠른 경로를 만든다고 보고합니다.",
+          "12개 panoramic RGB-D observation을 입력으로, 고른 파노라마 방향 기준 거리 0.25~4m·오프셋 ±15˚ 범위의 waypoint를 예측하는 network를 제안하고 더 표현력 있는 예측이 더 짧고 빠른 경로를 만든다고 보고합니다.",
         assumptions:
           "저자 simulator·panoramic sensor 구성·waypoint 범위 설정입니다.",
         evidenceScope:

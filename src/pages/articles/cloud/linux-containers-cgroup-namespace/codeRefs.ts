@@ -86,7 +86,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [83, 88],
     desc: "PSI 트리거 형식입니다. \"some 150000 1000000\"은 1초 창에서 150ms 이상 멈추면 깨워 달라는 뜻입니다.",
     annotations: [
-      { lines: [85, 86], color: "sky", note: "메모리 some 150ms/1s 예시. systemd-oomd 같은 사용자 공간 도구가 커널 OOM보다 먼저 움직이는 근거가 이 트리거입니다." },
+      { lines: [85, 86], color: "sky", note: "메모리 some 150ms/1s 예시. systemd-oomd는 이 트리거를 쓰지 않고 memory.pressure의 full avg10 값을 주기적으로 읽어 판단합니다." },
     ],
     code: psiRst,
     lang: "python",

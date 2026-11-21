@@ -3,7 +3,7 @@ import CompactionSceneShell from "./CompactionSceneShell";
 /**
  * 본문 대응: #compact-pipeline "Recovery retry는 줄어드는 payload와 같은 요청 identity를 함께 지켜야 합니다".
  * 오류 문자열이 context overflow 계열이면 최근 보존량 4→2→1→0으로 최대 4 round 재시도.
- * Source: 두 번째 round 이후 제거할 message가 0이면 멈춤. 더 안전한 구현: 어느 round에서든 0이면 중단.
+ * Source: 두 번째 round부터 제거할 message가 0이면 멈춤. 더 안전한 구현: 어느 round에서든 0이면 중단.
  */
 const ROUNDS = [4, 2, 1, 0] as const;
 
@@ -24,7 +24,7 @@ const SCENES = [
     label: "Round 2",
     summary: "최근 2개 보존",
     round: 1,
-    note: "보존량이 2개로 줄어듭니다. Source는 두 번째 round 이후 제거할 message가 0이면 멈춥니다. 더 줄일 것이 없으면 같은 payload를 다시 보내는 셈이기 때문입니다.",
+    note: "보존량이 2개로 줄어듭니다. Source는 두 번째 round부터 제거할 message가 0이면 멈춥니다. 더 줄일 것이 없으면 같은 payload를 다시 보내는 셈이기 때문입니다.",
   },
   {
     label: "Round 3",
@@ -92,7 +92,7 @@ export default function RecoveryRetryViz() {
             </div>
             <div className="space-y-2 text-xs">
               {[
-                { name: "Source", checks: [false, true, true, true], tail: "두 번째 round 이후" },
+                { name: "Source", checks: [false, true, true, true], tail: "두 번째 round부터" },
                 { name: "더 안전한 구현", checks: [true, true, true, true], tail: "어느 round에서든" },
               ].map((row) => (
                 <div key={row.name} className="grid min-w-0 grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-2">

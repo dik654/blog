@@ -66,7 +66,7 @@ export default function VisionLanguageNavigationArticle() {
           <p>
             Waypoint prediction은 이 low-level action과 완전히 연속적인 이동 사이의 spectrum을
             메웁니다. 한쪽 끝은 고정 거리(0.25m)·고정 방향으로만 움직이는 VLN-CE 표준 action을
-            모사하고, 다른 쪽 끝은 거리 0.25~4m, 방향 오프셋 ±15˚까지 자유로운 waypoint를
+            모사하고, 다른 쪽 끝은 파노라마 12방향 중 하나를 고른 뒤 거리 0.25~4m, 그 방향 기준 오프셋 ±15˚까지 자유로운 waypoint를
             예측합니다. 표현력이 큰 예측일수록 더 짧고 실행이 빠른 경로를 만들었습니다.
           </p>
           <p>
@@ -113,7 +113,7 @@ export default function VisionLanguageNavigationArticle() {
             href="https://arxiv.org/abs/2110.02207"
           >
             <p><strong>문제:</strong> Low-level action과 완전 continuous waypoint 사이 표현력·실행 비용의 trade-off를 탐색합니다.</p>
-            <p><strong>핵심 기여:</strong> 12개 panoramic RGB-D observation을 입력으로, 거리 0.25~4m·방향 ±15˚ 범위의 waypoint를 예측하는 network를 제안하고 더 표현력 있는 예측이 더 짧고 빠른 경로를 만든다고 보고합니다.</p>
+            <p><strong>핵심 기여:</strong> 12개 panoramic RGB-D observation을 입력으로, 고른 파노라마 방향 기준 거리 0.25~4m·오프셋 ±15˚ 범위의 waypoint를 예측하는 network를 제안하고 더 표현력 있는 예측이 더 짧고 빠른 경로를 만든다고 보고합니다.</p>
             <p><strong>전제:</strong> 저자 simulator·panoramic sensor 구성·waypoint 범위 설정입니다.</p>
             <p><strong>근거 범위:</strong> Waypoint prediction의 표현력 spectrum과 경로 효율성 근거입니다.</p>
             <p><strong>비주장:</strong> 이 범위가 모든 robot embodiment의 이동 한계를 대표한다는 뜻은 아닙니다.</p>
@@ -269,7 +269,7 @@ L(\theta)&=\underbrace{-\lambda_o R_{\text{outcome}}-\lambda_p\sum_t R_{\text{pr
             {
               term: "VLN taxonomy(action space)",
               description: "Discrete graph인지 continuous waypoint인지에 따라 실행 가능한 이동의 표현력이 정해집니다.",
-              example: "Waypoint 거리 0.25~4m·방향 ±15˚ 범위가 넓을수록 더 짧은 경로를 낼 수 있습니다.",
+              example: "Waypoint 거리 0.25~4m·방향(고른 파노라마 방향 기준) 오프셋 ±15˚ 범위가 넓을수록 더 짧은 경로를 낼 수 있습니다.",
               boundary: "표현력이 커도 그 waypoint를 3D로 바꾸는 pixel-to-3D interface와 SLAM이 없으면 실행할 수 없습니다.",
             },
             {

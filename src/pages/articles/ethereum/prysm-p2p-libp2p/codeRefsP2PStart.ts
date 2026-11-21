@@ -6,6 +6,7 @@ import statusValidationRaw from "./codebase/prysm/excerpts/status_validation_v7.
 import scoreWeightsRaw from "./codebase/prysm/excerpts/score_weights_v7.go?raw";
 import scoreAggregateRaw from "./codebase/prysm/excerpts/score_aggregate_v7.go?raw";
 import scorerDecayRaw from "./codebase/prysm/excerpts/scorer_decay_v7.go?raw";
+import isBadPeerRaw from "./codebase/prysm/excerpts/is_bad_peer_v7.go?raw";
 
 export const p2pStartCodeRefs: Record<string, CodeRef> = {
   "discovery-filter": {
@@ -128,6 +129,22 @@ export const p2pStartCodeRefs: Record<string, CodeRef> = {
         lines: [11, 11],
         color: "violet",
         note: "ScoreRoundingFactor=10000으로 반올림",
+      },
+    ],
+  },
+  "is-bad-peer": {
+    path: "beacon-chain/p2p/peers/scorers/service.go — IsBadPeerNoLock() · v7.3.1",
+    lang: "go",
+    code: isBadPeerRaw,
+    highlight: [2, 17],
+    desc: "bad 판정은 ScoreNoLock 합계를 읽지 않고 세 scorer의 isBadPeerNoLock을 차례로 확인",
+    annotations: [
+      { lines: [3, 5], color: "rose", note: "bad response threshold" },
+      { lines: [7, 9], color: "emerald", note: "peer status 오류" },
+      {
+        lines: [11, 15],
+        color: "violet",
+        note: "EnablePeerScorer가 켜졌을 때만 gossip threshold",
       },
     ],
   },

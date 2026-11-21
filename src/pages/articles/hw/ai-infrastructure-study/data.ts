@@ -602,7 +602,7 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. 싱가포르의 고온 운영 기준을 별도로 확인합니다", bridge: "장비 쪽 deployment 기준을 적용했습니다. 이제 설치 지역의 facility 운영 기준을 별도 축으로 확인합니다.", paragraphs: [
       "싱가포르 IMDA는 SS 697:2023을 tropical climate에서 data center 운영 온도를 26°C 이상으로 단계적으로 높이는 방법과 지침으로 설명합니다. 이 기준을 이유로 장비 inlet 한계를 임의로 올리면 안 됩니다. server vendor 환경 범위와 facility risk assessment를 함께 만족해야 합니다.",
-      "B300 쪽 숫자는 NVIDIA guide에 있습니다. 사양표의 operating temperature는 10–35°C이지만, 공급 공기는 ASHRAE Class A2를 따르되 최대 30°C로 제한하라고 적습니다. ASHRAE 표의 권장(recommended) 범위는 모든 A 등급 공통 18–27°C이고, 30°C까지는 허용(allowable) 구간입니다. 고도 조건도 붙어서 30°C 운전은 해발 1000ft 이하에서만 열립니다. 따라서 26°C 공급은 권장 상한 27°C 바로 아래, 28–30°C는 권장 밖 허용 구간이 됩니다. 3절의 14.5kW·19kW는 25°C 공급 공기 기준 추정치라 26°C 이상에서는 그대로 쓰지 말고 현장 측정값으로 바꿉니다(확인일 2026-11-02).",
+      "B300 쪽 숫자는 NVIDIA guide에 있습니다. 사양표의 operating temperature는 10–35°C이지만, 공급 공기는 ASHRAE Class A2를 따르되 최대 30°C로 제한하라고 적습니다. ASHRAE 표의 권장(recommended) 범위는 모든 A 등급 공통 18–27°C이고, A2의 허용(allowable) 범위는 10–35°C인데 B300에는 30°C 상한이 붙어 10–30°C가 허용 구간입니다. 고도 조건도 붙어서 30°C 운전은 해발 1000ft 이하에서만 열립니다. 따라서 26°C 공급은 권장 상한 27°C 바로 아래, 28–30°C는 권장 밖 허용 구간이 됩니다. 3절의 14.5kW·19kW는 25°C 공급 공기 기준 추정치라 26°C 이상에서는 그대로 쓰지 말고 현장 측정값으로 바꿉니다(확인일 2026-11-02).",
       "높은 공급 온도는 냉각 에너지를 줄일 수 있지만 고밀도 rack의 실제 inlet 분포와 습도·hotspot을 측정해야 합니다. 평균 room temperature 하나로 모든 server inlet이 안전하다고 결론내리지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 유량 계산은 설비 승인 도면이 아닙니다", bridge: "지역 기준까지 대조했습니다. 마지막으로 빠른 sizing과 전문 설계의 경계를 남깁니다.", paragraphs: [

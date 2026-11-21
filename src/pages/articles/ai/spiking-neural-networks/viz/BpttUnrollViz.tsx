@@ -2,7 +2,8 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #bptt — 목표 [1,0,0,0,1], 예측 [1,0,1,0,1]. 셋째 발화의 오차가
- * 대체 기울기(z=1.0952−1, α=5)를 지나 셋째 전압으로, ×0.8로 둘째 전압으로, 다시 첫 시점까지 간다.
+ * 대체 기울기(z=1.0952−1, α=5)를 지나 셋째 전압으로, ×0.8·(1−σ′)로 둘째·첫째 전압으로, ×0.8로 u₀까지 간다.
+ * 리셋 항 u=v−s·θ의 s에도 대체 기울기가 흐른다(snnTorch reset_delay=False는 같은 시점 리셋에 detach하지 않은 spk를 쓴다).
  * 같은 W를 쓴 시점의 기여는 하나의 기울기에 더한다. 마지막 장면은 truncated BPTT의 경계(위치는 가정).
  */
 const W = 400;
@@ -54,12 +55,12 @@ const SCENES = [
   {
     label: "한 시점 앞 전압으로 넘어갑니다",
     summary: "1.0952 = 0.8×0.244 + 0.9",
-    note: "셋째 전압은 둘째 전압 0.244의 0.8배와 입력 0.9를 더한 값입니다. 그래서 셋째 전압에 온 기울기에 0.8을 곱한 몫이 둘째 시점으로 갑니다.",
+    note: "셋째 전압은 둘째 리셋 후 전압 0.244의 0.8배와 입력 0.9를 더한 값입니다. 리셋 식 u=v−s·θ의 발화 s도 대체 기울기 σ′를 거치므로, 둘째 리셋 전 전압에는 0.8×(1−σ′)를 곱한 몫이 갑니다. 고정한 snnTorch는 reset_delay=False일 때 이 리셋 항의 기울기를 끊지 않습니다.",
   },
   {
     label: "첫 시점의 상태까지 이어 갑니다",
     summary: "t3 → t2 → t1 → u₀",
-    note: "같은 방식으로 LIF 상태식의 미분을 따라 첫 시점까지 거슬러 갑니다. 넷째·다섯째 시점은 셋째 전압을 만드는 데 쓰이지 않았으므로 이 오차가 지나가지 않습니다.",
+    note: "같은 방식으로 LIF 상태식의 미분을 따라 첫 시점까지 거슬러 갑니다. 시작 상태 u₀에는 리셋 판정이 없으므로 마지막 칸은 0.8만 곱합니다. 넷째·다섯째 시점은 셋째 전압을 만드는 데 쓰이지 않았으므로 이 오차가 지나가지 않습니다.",
   },
   {
     label: "공유 가중치에 시점별 몫을 더합니다",
@@ -91,7 +92,7 @@ export default function BpttUnrollViz() {
       eyebrow="시간축 역전파"
       title="셋째 발화의 오차가 펼친 시점을 거꾸로 지나갑니다"
       description="시간축 역전파(BPTT)는 시간 상태를 시점별로 펼친 뒤 마지막에서 처음으로 미분을 보내는 방법입니다. 상자는 리셋 전 전압 v, 원은 발화, '목표' 줄은 이 절에서 가정한 목표 발화열입니다."
-      ariaLabel="다섯 시점으로 펼친 LIF 뉴런에서 셋째 발화의 오차가 대체 기울기와 0.8 배율을 거쳐 이전 시점으로 전달되고 공유 가중치에 합산되는 과정"
+      ariaLabel="다섯 시점으로 펼친 LIF 뉴런에서 셋째 발화의 오차가 대체 기울기와 0.8·(1−σ′) 배율을 거쳐 이전 시점으로 전달되고 공유 가중치에 합산되는 과정"
       scenes={SCENES}
       render={(active) => {
         const reached = REACHED[active];
@@ -157,11 +158,21 @@ export default function BpttUnrollViz() {
             {reached.includes(2) && !truncated && (
               <g>
                 <BackArc from={3} to={2} />
-                <text x={(COL(2) + COL(3)) / 2} y={V_TOP - 16} textAnchor="middle" fontSize={12} fontWeight={700} fill={RED}>×0.8</text>
+                <text x={(COL(2) + COL(3)) / 2} y={V_TOP - 16} textAnchor="middle" fontSize={11} fontWeight={700} fill={RED}>×0.8(1−σ′)</text>
               </g>
             )}
-            {reached.includes(1) && <BackArc from={2} to={1} />}
-            {reached.includes(0) && <BackArc from={1} to={0} />}
+            {reached.includes(1) && (
+              <g>
+                <BackArc from={2} to={1} />
+                <text x={(COL(1) + COL(2)) / 2} y={V_TOP - 16} textAnchor="middle" fontSize={11} fontWeight={700} fill={RED}>×0.8(1−σ′)</text>
+              </g>
+            )}
+            {reached.includes(0) && (
+              <g>
+                <BackArc from={1} to={0} />
+                <text x={(COL(0) + COL(1)) / 2} y={V_TOP - 16} textAnchor="middle" fontSize={11} fontWeight={700} fill={RED}>×0.8</text>
+              </g>
+            )}
 
             {truncated && (
               <g>

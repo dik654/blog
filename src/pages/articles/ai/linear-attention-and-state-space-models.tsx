@@ -256,12 +256,12 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         <CapacityOverlapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            d×d state가 표현할 수 있는 독립적인 key-value 연관의 수는 대략 d²개로 제한됩니다. 문맥에 담긴 사실 수가 이 용량을 넘어서면 서로 다른 연관이 같은
-            state 좌표에 겹쳐 쓰이고 나중에 읽을 때 둘 중 하나 또는 둘 다 부정확하게 나옵니다.
+            d×d state에서 간섭 없이 꺼낼 수 있는 독립적인 key-value 연관의 수는 대략 d개, 즉 서로 직교할 수 있는 key의 수로 제한됩니다. 문맥에 담긴 사실 수가 이 용량을 넘어서면
+            key끼리 모두 직교할 수 없어 서로 다른 연관이 같은 state에 겹쳐 쓰이고, 나중에 읽을 때 value가 섞여 둘 중 하나 또는 둘 다 부정확하게 나옵니다.
           </p>
           <p>
-            d=128이면 용량은 16,384 근처입니다. 문맥에 있는 서로 다른 사실이 이 수를 크게 밑돌면 state는 거의 손실 없이 요약하지만 문맥이 수만 token을 넘는 긴
-            문서에서 사실 하나를 정확히 다시 꺼내야 하는 질의는 이 한계를 직접 건드립니다.
+            d=128이면 용량은 128 근처입니다. 16,384는 state가 담는 값의 개수이지 간섭 없이 꺼낼 수 있는 연관의 수가 아닙니다. 문맥에 있는 서로 다른 사실이 이 수를 크게
+            밑돌면 state는 거의 손실 없이 요약하지만 긴 문서에서 사실 하나를 정확히 다시 꺼내야 하는 질의는 이 한계를 직접 건드립니다.
           </p>
           <p>
             Full attention은 token별 key와 value를 그대로 두므로 이런 겹침이 없습니다. 대신 그 대가로 기록이 문맥 길이만큼 자랍니다. 그래서 두 계열 사이의

@@ -3,6 +3,7 @@ import VizFrame from "@/components/viz/VizFrame";
 /**
  * 본문 대응: #overview — 희소층마다 routed expert 384개 중 top-8 + shared expert 1개.
  * 전체 약 314B 중 token당 활성 약 13.2B → 13.2 / 314 ≈ 4.2%.
+ * expert 비율 9/385 ≈ 2.3%보다 큰 이유: attention·dense 2층·embedding은 routing 없이 모든 token이 사용.
  * 어느 8칸이 켜지는지는 router가 정하며 그림의 위치는 예시(가정)입니다.
  */
 const ROUTED = 384;
@@ -54,7 +55,7 @@ export default function ExpertRoutingViz() {
             </div>
           </div>
           <p className="mt-3 text-xs leading-5 text-muted-foreground">
-            두 숫자는 가중치 상주량과 활성 parameter라는 서로 다른 장부이며, 어느 쪽도 VRAM·latency·품질과 같지 않습니다. 53층 중 이런 희소 MoE층은 51개이고 나머지 2개는 dense층입니다.
+            두 숫자는 가중치 상주량과 활성 parameter라는 서로 다른 장부이며, 어느 쪽도 VRAM·latency·품질과 같지 않습니다. 53층 중 이런 희소 MoE층은 51개이고 나머지 2개는 dense층입니다. attention·dense 2층·embedding은 router를 거치지 않고 모든 token이 쓰므로, 활성 비율(약 {ACTIVE_PCT.toFixed(1)}%)이 expert 비율(9/385 ≈ 2.3%)보다 큽니다.
           </p>
         </div>
       </div>

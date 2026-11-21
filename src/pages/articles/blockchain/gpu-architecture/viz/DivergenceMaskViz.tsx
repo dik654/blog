@@ -27,10 +27,10 @@ const SCENES = [
     note: "이어서 mask를 뒤집어 B로 가는 lane만 실행합니다. 두 경로를 차례로 지나는 동안 쉬는 lane이 생겨 lane utilization이 줄어듭니다.",
   },
   {
-    label: "4. 다시 합쳐집니다",
+    label: "4. 다시 합쳐질 수 있습니다",
     summary: "divergence ≠ 틀린 결과",
     mode: "all",
-    note: "각 lane은 자기 경로의 결과를 가지므로 divergence가 틀린 결과를 뜻하지는 않습니다. 짧은 branch를 억지로 없애 instruction을 늘리는 것도 항상 이득은 아니어서, eligible warps·stall reason·branch efficiency·kernel time을 함께 봅니다.",
+    note: "각 lane은 자기 경로의 결과를 가지므로 divergence가 틀린 결과를 뜻하지는 않습니다. 짧은 branch를 억지로 없애 instruction을 늘리는 것도 항상 이득은 아니어서, eligible warps·stall reason·branch efficiency·kernel time을 함께 봅니다. Volta 이후에는 재수렴 시점이 보장되지 않아, 필요하면 __syncwarp()로 맞춥니다.",
   },
 ] as const;
 
@@ -66,7 +66,7 @@ export default function DivergenceMaskViz() {
               {(["all", "a", "b", "all"] as const).map((step, index) => (
                 <div key={index} className="contents">
                   <span className={`font-mono ${index === active ? "font-bold text-foreground" : "text-muted-foreground"}`}>
-                    {index === 0 ? "branch 전" : index === 3 ? "합류" : step === "a" ? "A 경로" : "B 경로"}
+                    {index === 0 ? "branch 전" : index === 3 ? "합류 가능" : step === "a" ? "A 경로" : "B 경로"}
                   </span>
                   <div className="flex h-3.5 min-w-0 overflow-hidden rounded-sm bg-muted/40">
                     <span

@@ -39,7 +39,7 @@ export const codeRefs: Record<string, CodeRef> = {
       { lines: [49, 57], color: "sky", note: "article의 ρ_{i,t} — 새 policy와 old(rollout) policy log-prob 비율" },
       { lines: [59, 66], color: "emerald", note: "article의 u_{i,t}, c_{i,t}, ℓ_{i,t}=min(u,c) — 부호 반전은 최대화를 최소화 loss로 바꾸기 위함" },
       { lines: [71, 73], color: "amber", note: "article의 원 GRPO — sample-level(completion마다 평균 후 batch 평균)" },
-      { lines: [74, 77], color: "violet", note: "article의 Dr. GRPO — 고정 max_completion_length로 나눠 길이 normalization 자체를 제거" },
+      { lines: [74, 77], color: "violet", note: "article의 Dr. GRPO — completion 수 × 고정 max_completion_length로 나눠 길이 normalization 자체를 제거" },
       { lines: [78, 83], color: "rose", note: "article의 DAPO — batch 전체 active token 수로 나누는 token-level aggregation" },
     ],
   },

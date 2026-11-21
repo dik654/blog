@@ -197,7 +197,9 @@ export default function Overview() {
           못했다”는 뜻입니다. Consensus transition과 data availability가
           통과했다면 Prysm은 이 상태를 optimistic 표시가 붙은 후보로 보존할 수
           있습니다. 나중에 VALID가 오면 표시를 풀고, INVALID가 오면 관련
-          branch를 제거합니다.
+          branch를 제거합니다. VALID는 그 block과 조상의 표시만 풉니다. 그
+          위에 이어진 block은 자기 자신이나 그 위의 block이 VALID를 받을
+          때까지 optimistic 표시가 남습니다.
         </p>
         <p>
           이 구분 덕분에 execution client의 일시적인 동기화 지연과 실제 규칙

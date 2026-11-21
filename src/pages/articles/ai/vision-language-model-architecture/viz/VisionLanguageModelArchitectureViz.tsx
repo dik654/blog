@@ -214,7 +214,7 @@ const CONNECTORS = [
     name: "BLIP-2",
     visual: "Q-Former query 32개",
     connector: "query bottleneck",
-    language: "projection 뒤 frozen LLM 연결",
+    language: "projection 뒤 text embedding 앞에 붙임",
     learn: "image encoder·LLM 고정 · Q-Former 중심 학습",
   },
 ] as const;

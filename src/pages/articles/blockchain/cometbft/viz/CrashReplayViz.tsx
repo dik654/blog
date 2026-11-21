@@ -59,7 +59,7 @@ const SCENES: readonly { label: string; summary: string; cells: readonly Cell[];
       { text: "h41 · AppHash A41", tone: "new" },
       { text: "h41 · A41", tone: "fixed" },
     ],
-    note: "Deterministic replay와 state save를 조정해 빠진 단계를 채우면 네 기록이 다시 h41에 맞습니다. 이 재생에서 email이나 결제 API 같은 외부 효과를 FinalizeBlock 안에서 무조건 다시 호출하면 중복될 수 있습니다.",
+    note: "저장된 FinalizeBlock response를 돌려주는 mock app에 B41을 재생해 State만 저장하면 네 기록이 다시 h41에 맞습니다. 실제 application의 FinalizeBlock은 다시 부르지 않습니다. 외부 효과 중복 위험은 application이 BlockStore보다 뒤처진 재생에서 생깁니다.",
   },
 ];
 

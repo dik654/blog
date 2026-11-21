@@ -131,8 +131,10 @@ export default function Overview() {
           저장된 FinalizeBlock response, application height·AppHash, CometBFT State를 비교해 빠진 단계를 재생합니다.
         </p>
         <p>
-          이때 email이나 결제 API 같은 외부 효과를 FinalizeBlock 안에서 무조건 다시 호출하면 중복될 수 있습니다. 합의 state의
-          outbox와 stable transaction ID를 이용해 별도로 조정해야 합니다.
+          이 경우 handshake는 저장된 FinalizeBlock response를 돌려주는 mock app에 block을 재생해 State만 맞추므로, 실제
+          application의 FinalizeBlock을 다시 부르지 않습니다. 중복 위험은 application이 BlockStore보다 뒤처져 실제 app에 block을
+          재생할 때 생깁니다. 그때 email이나 결제 API 같은 외부 효과를 FinalizeBlock 안에서 무조건 다시 호출하면 중복될 수 있으므로,
+          합의 state의 outbox와 stable transaction ID를 이용해 별도로 조정해야 합니다.
         </p>
 
         <div className="not-prose overflow-x-auto">
@@ -141,7 +143,7 @@ export default function Overview() {
             <tbody>
               <tr className="border-b border-border"><td className="p-3 font-bold">CheckTx OK</td><td className="p-3">h40 unchanged</td><td className="p-3 text-muted-foreground">재전파·재제출 가능, inclusion을 다시 확인합니다.</td></tr>
               <tr className="border-b border-border"><td className="p-3 font-bold">+2/3 precommit, block 없음</td><td className="p-3">B41 order decided</td><td className="p-3 text-muted-foreground">같은 BlockID의 parts를 받아 hash를 확인합니다.</td></tr>
-              <tr className="border-b border-border"><td className="p-3 font-bold">Application h41, State h40</td><td className="p-3">app가 한 단계 앞섬</td><td className="p-3 text-muted-foreground">height·AppHash를 대조해 deterministic replay와 state save를 조정합니다.</td></tr>
+              <tr className="border-b border-border"><td className="p-3 font-bold">Application h41, State h40</td><td className="p-3">app가 한 단계 앞섬</td><td className="p-3 text-muted-foreground">height·AppHash를 대조해 저장된 FinalizeBlock response로 mock app에 재생하고 State를 저장합니다.</td></tr>
             </tbody>
           </table>
         </div>

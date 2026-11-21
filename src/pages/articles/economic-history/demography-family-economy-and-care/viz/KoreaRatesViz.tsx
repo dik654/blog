@@ -2,7 +2,7 @@ import RateBars from "./RateBars";
 import SceneShell from "./SceneShell";
 
 /**
- * 본문 대응: #source 둘째 문단 — UN 『세계인구전망 2024』 한국 추정치(확인일 2026-10-09).
+ * 본문 대응: #source 둘째 문단 — UN 『세계인구전망 2024』 한국 추정치(확인일 2026-11-21).
  * 1960 42.1−13.0=+29.1, 1990 15.5−5.7=+9.8, 2023 4.6−6.7=−2.1.
  */
 const GROUPS = [
@@ -22,7 +22,7 @@ export default function KoreaRatesViz() {
     <SceneShell
       eyebrow="실제 추정치와 대조"
       title="한국의 출생·사망 막대는 틈이 좁아지다가 뒤집힙니다"
-      description="UN 『세계인구전망 2024』의 한국 추정치로, 인구 1,000명당 한 해의 출생과 사망입니다(확인일 2026-10-09). 자연증가는 출생에서 사망을 뺀 값이라 이주는 들어 있지 않습니다."
+      description="UN 『세계인구전망 2024』의 한국 추정치로, 인구 1,000명당 한 해의 출생과 사망입니다(확인일 2026-11-21). 자연증가는 출생에서 사망을 뺀 값이라 이주는 들어 있지 않습니다."
       ariaLabel="한국의 1960년, 1990년, 2023년 1,000명당 출생과 사망, 자연증가가 29.1에서 9.8, 마이너스 2.1로 바뀌는 모습"
       scenes={SCENES}
       render={(active) => <RateBars groups={GROUPS} shown={active} decimals={1} ariaLabel={`${SCENES[active].label}: ${SCENES[active].summary}`} />}

@@ -6,17 +6,21 @@ import SceneShell from "./SceneShell";
  * 첫 wave(worker 8개 → tile 0~7)가 동시에 쓰는 서로 다른 조각 수를 센다.
  *   AlongN: 행 0 전체 + 행 1의 n 0~2 → A 2 + B 5 = 7
  *   AlongM: 열 0·1 전체 → A 4 + B 2 = 6
- *   swizzle k=2(가정) + AlongN: 행 0~1 × 열 0~3 → A 2 + B 4 = 6
+ *   swizzle k=2(가정, log_swizzle_size=1) + AlongN: 행 0~1 × 열 0~3 → A 2 + B 4 = 6
+ *   swizzle 번호는 CUTLASS v4.8.1 PersistentTileSchedulerSm90::get_work_idx_m_and_n 의 decode를 cluster 1×1로 따른다.
+ *   initialize()가 열 수 5를 2의 배수 6으로 올리므로 번호 10·11·22·23은 격자 밖 열 n=5로 풀린다.
  */
 const ROWS = 4;
 const COLS = 5;
+/** log_swizzle_size=1 일 때 initialize()가 round_up(5, 2)로 올린 N 방향 tile 수 */
+const SWIZZLE_COLS = 6;
 const WAVE = 8;
 
 type Order = (m: number, n: number) => number;
 
 const alongN: Order = (m, n) => m * COLS + n;
 const alongM: Order = (m, n) => n * ROWS + m;
-const swizzled: Order = (m, n) => Math.floor(m / 2) * 2 * COLS + n * 2 + (m % 2);
+const swizzled: Order = (m, n) => Math.floor(m / 2) * 2 * SWIZZLE_COLS + n * 2 + (m % 2);
 
 const SCENES = [
   {
@@ -41,7 +45,7 @@ const SCENES = [
     label: "Swizzle k=2 (가정)",
     summary: "첫 wave: A 2 + B 4 = 6조각",
     order: swizzled,
-    note: "AlongN 위에서 번호를 2개씩 묶어 두 행을 함께 훑는 한 예입니다(가정). 첫 wave가 2×4 덩어리에 모여 AlongN의 7조각이 6조각으로 줄어, 같은 시간에 L2에 있는 A·B 조각을 더 많이 다시 씁니다. AlongM도 첫 wave가 6조각이라 이 작은 격자에서는 조각 수만으로 둘의 우열이 갈리지 않습니다. 실제 묶음 모양은 scheduler의 swizzle 크기 인자(log_swizzle_size)와 raster 방향이 정합니다.",
+    note: "AlongN에 log_swizzle_size=1을 주면 CUTLASS의 get_work_idx_m_and_n이 번호를 2개씩 묶어 두 행을 함께 훑습니다. 열 수 5를 2의 배수 6으로 올리므로 10·11은 격자 밖 열로 풀리고 셋째 행은 12부터 시작합니다. 첫 wave가 2×4 덩어리에 모여 AlongN의 7조각이 6조각으로 줄어, 같은 시간에 L2에 있는 A·B 조각을 더 많이 다시 씁니다. AlongM도 첫 wave가 6조각이라 이 작은 격자에서는 조각 수만으로 둘의 우열이 갈리지 않습니다.",
   },
 ] as const;
 

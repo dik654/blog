@@ -8,10 +8,10 @@ import SceneShell from "./SceneShell";
  */
 const LADDER = [
   { nice: 0, weight: 1024, tag: "표" },
-  { nice: 1, weight: 819, tag: "계산" },
-  { nice: 2, weight: 655, tag: "계산" },
-  { nice: 3, weight: 524, tag: "계산" },
-  { nice: 4, weight: 419, tag: "계산" },
+  { nice: 1, weight: 820, tag: "표" },
+  { nice: 2, weight: 655, tag: "표" },
+  { nice: 3, weight: 526, tag: "표" },
+  { nice: 4, weight: 423, tag: "표" },
   { nice: 5, weight: 335, tag: "표" },
   { nice: 19, weight: 15, tag: "표" },
 ] as const;
@@ -28,7 +28,7 @@ const GZIP: Task = { name: "압축 (nice 5)", weight: 335, color: "#d97706" };
 const NICE19: Task = { name: "압축 (nice 19였다면)", weight: 15, color: "#d97706" };
 
 const SCENES = [
-  { label: "nice 한 단계마다 ÷ 1.25", summary: "1024 → 335 (nice 5)", tasks: [] as readonly Task[], shares: [] as readonly string[], note: "1024를 1.25로 다섯 번 나누면 335.5이고 표에는 335로 적혀 있습니다. nice 1~4는 같은 나눗셈의 계산값이라 표와 조금 다를 수 있습니다. nice 6~18은 줄을 생략했습니다." },
+  { label: "nice 한 단계마다 ÷ 1.25", summary: "1024 → 335 (nice 5)", tasks: [] as readonly Task[], shares: [] as readonly string[], note: "1024를 1.25로 다섯 번 나누면 335.5이고 표에는 335로 적혀 있습니다. nice 1~4도 표에 적힌 값(820·655·526·423)입니다. nice 6~18은 줄을 생략했습니다." },
   { label: "nice 0과 nice 5가 겨룰 때", summary: "335 ÷ 1359 = 24.7%", tasks: [WEB, GZIP], shares: ["75.3", "24.7"], note: "막대 전체가 CPU 하나입니다. 가중치 합 1359를 가중치대로 나눕니다. 압축은 혼자 돌 때보다 약 4배 오래 걸립니다." },
   { label: "압축이 nice 19였다면", summary: "15 ÷ 1039 = 1.4%", tasks: [WEB, NICE19], shares: ["98.6", "1.4"], note: "압축을 nice 19로 내리면 거의 남는 시간에만 돈다는 뜻이 됩니다. 조각이 너무 얇아 막대에서 겨우 보입니다." },
   { label: "셋째 작업이 같은 줄에 들어오면", summary: "분모 1359 → 2383", tasks: [WEB, THIRD, GZIP], shares: ["43.0", "43.0", "14.1"], note: "(가정) nice 0 작업 하나가 더 들어온 경우입니다. 분모가 늘어 웹 서버도 압축도 몫이 줄어듭니다. 반올림 때문에 합이 100.1%로 보입니다." },

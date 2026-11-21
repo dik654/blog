@@ -30,7 +30,7 @@ export default function StageMemoryViz() {
     <SceneShell
       eyebrow="num_stages의 비용"
       title="미리 읽는 단계 수만큼 A·B tile이 shared memory에 쌓입니다"
-      description="칸은 단계별로 미리 올려 두는 A·B tile, 막대는 올린 바이트입니다. SM은 GPU의 계산 코어 단위이고 shared memory는 그 안의 thread들이 함께 쓰는 메모리입니다."
+      description="칸은 단계별로 미리 올려 두는 A·B tile, 막대는 올린 바이트입니다. SM(Streaming Multiprocessor)은 thread block을 받아 실행하는 GPU 안의 처리 단위이고, shared memory는 같은 thread block의 thread들이 함께 쓰는 메모리입니다."
       note="SM의 shared memory 총량은 본문이 정하지 않아 그리지 않았습니다."
       ariaLabel="num_stages 1, 2, 3에서 shared memory에 올리는 바이트 수"
       scenes={SCENES}

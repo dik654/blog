@@ -61,13 +61,13 @@ export default function RobinhoodChainBlobDemandArticle(){
 <CitationBlock source="EIP-7892 · BPO" citeKey={3} href="https://eips.ethereum.org/EIPS/eip-7892">BPO 메커니즘. EIP의 예시 timestamp는 실제 메인넷 일정으로 쓰지 않습니다.</CitationBlock>
 <p data-stage-bridge="source" className="text-sm text-muted-foreground">실제 설정과 활성화 조건을 확인했습니다. 같은 18개를 노드가 받는 비용은 어떻게 줄이려는지 비교합니다.</p></section>
 <section id="bpo-sparse-blobpool" data-teach-level="6" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">9. 목표 상향과 전송 절감은 서로 다른 계산이다</h2>
-<p>EIP-8070은 2026-10-18 현재 Last Call 상태이며 검토 마감은 2026-11-01입니다. Glamsterdam의 meta EIP에서는 여전히 별도 Networking 목록에 있고 메인넷 적용 시각은 확정돼 있지 않습니다. 따라서 최종 표준이나 메인넷 배포로 읽으면 안 됩니다. 이 제안은 블록에 들어가기 전 자료를 모두 복제하던 부담을 일부 전체 제공자와 샘플을 받는 노드로 나눕니다.</p>
+<p>EIP-8070은 2026-11-21 현재 Last Call 상태입니다. 검토 마감 2026-11-01이 지났지만 Final로 바뀌지 않았습니다. Glamsterdam의 meta EIP에서는 여전히 별도 Networking 목록에 있고 메인넷 적용 시각은 확정돼 있지 않습니다. 따라서 최종 표준이나 메인넷 배포로 읽으면 안 됩니다. 이 제안은 블록에 들어가기 전 자료를 모두 복제하던 부담을 일부 전체 제공자와 샘플을 받는 노드로 나눕니다.</p>
 <SparseAreaViz />
-<p>제안의 단순 모델에서 15% 확률로 전체를 받고 나머지 85%에서는 1/8을 받으면 평균은 0.15+0.85/8=0.25625입니다. 같은 18개 분량을 전체 수신 18 단위로 놓으면 평균 4.6125 단위입니다. 이는 확률적 payload 모델의 약 74.4% 감소이며, 개별 노드가 매번 그 양만 받거나 실제 전체 대역폭이 정확히 그만큼 감소한다는 측정 결과가 아닙니다.</p>
+<p>제안의 단순 모델에서 노드는 새 blob 트랜잭션마다 15% 확률로 전체를 받고 나머지 85%에서는 1/8을 받으므로 평균은 0.15+0.85/8=0.25625입니다. 같은 18개 분량을 전체 수신 18 단위로 놓으면 평균 4.6125 단위입니다. 18개가 여러 트랜잭션에 나뉘어 있으면 한 노드가 받는 양은 18이나 2.25 중 하나가 아니라 그 사이에서 섞이고, 트랜잭션이 많을수록 평균 근처로 모입니다. 이는 확률적 payload 모델의 약 74.4% 감소이며, 실제 전체 대역폭이 정확히 그만큼 감소한다는 측정 결과가 아닙니다.</p>
 <p>전체 제공자가 부족하거나 이웃 선택이 편향되면 자료를 얻는 가정이 깨집니다. 추가 표본·재요청·메시지·증명과 공격 방어 비용도 있습니다. BPO로 max를 높여도 이 전송 최적화가 저절로 생기지 않고, 전송이 줄어도 target 상향 일정이 자동으로 결정되지는 않습니다.</p>
 <SourceApplication source="EIP-8070 · Abstract" excerpt="0.15 + 0.85/8 ~ 0.25" application="가정한 18개 분량에 0.25625를 곱해 4.6125를 얻습니다. 제안 모델의 평균 전송량이며 네 블록의 사용 개수 18·10·6·6 자체나 target 14를 줄이는 식은 아닙니다." />
-<CitationBlock source="EIP-8070 · Sparse Blobpool" citeKey={4} href="https://eips.ethereum.org/EIPS/eip-8070">Last Call 상태와 2026-11-01 마감, 전체 제공 확률·custody 표본·공격 가정의 원문입니다.</CitationBlock>
-<CitationBlock source="EIP-7773 · Glamsterdam meta" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7773">2026-10-18 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.</CitationBlock>
+<CitationBlock source="EIP-8070 · Sparse Blobpool" citeKey={4} href="https://eips.ethereum.org/EIPS/eip-8070">2026-11-21 기준 Last Call 상태와 지난 2026-11-01 마감, 전체 제공 확률·custody 표본·공격 가정의 원문입니다.</CitationBlock>
+<CitationBlock source="EIP-7773 · Glamsterdam meta" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7773">2026-11-21 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.</CitationBlock>
 <p data-stage-bridge="bpo-sparse-blobpool" className="text-sm text-muted-foreground">18개 게시와 18개 분량의 전송 비용을 나눴습니다. 마지막으로 성장률과 시장 해석의 한계를 확인합니다.</p></section>
 <section id="reading-checklist" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 측정한 범위보다 큰 결론을 내리지 않는다</h2>
 <p>평균을 올린 체인이 확인돼도 그 수요가 유료 사용자·경제적 거래·지속 가능한 수익에서 나왔는지는 추가 자료가 필요합니다. 작은 blob을 자주 올리는 방식과 충분히 채운 blob을 드물게 올리는 방식도 개수만으로 같다고 평가할 수 없습니다.</p>

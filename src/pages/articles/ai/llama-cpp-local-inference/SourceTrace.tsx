@@ -78,7 +78,7 @@ export default function SourceTrace({ code }: Props) {
         <FaTileSkipViz />
         <div className={prose}>
           <p>
-            지운 칸을 kernel이 건너뛰는지도 확인했습니다. CUDA FlashAttention 경로는 mask를 끝에서부터 256칸 tile 단위로 보며 모두 −∞인 tile만 계산 범위에서
+            지운 칸을 kernel이 건너뛰는지도 확인했습니다. CUDA FlashAttention 경로는 mask를 끝에서부터 256칸 tile 단위로 보며 한 query 블록(ncols1행)이 모두 −∞인 tile만 계산 범위에서
             뺍니다. 중간에 낀 다른 sequence의 cell은 건너뛰지 않고 점수까지 계산한 뒤 버립니다.
           </p>
           <p>

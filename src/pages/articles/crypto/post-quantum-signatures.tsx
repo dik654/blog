@@ -104,7 +104,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">8 · 실제 코드는 후보를 여러 조건으로 걸러 냅니다</h2>
         <SignLoopViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">PQClean 고정본의 sign.c 135행은 새 y를 뽑고 140행은 Ay를 계산합니다. 높은 부분과 메시지 요약을 해시해 challenge를 만들고 158–162행에서 z=y+cs1을 구성합니다.</p>
+          <p className="leading-8">PQClean 고정본의 sign.c 135행은 새 y를 뽑고 140행은 Ay를 계산합니다. 높은 부분과 메시지 요약을 149–155행에서 해시해 challenge를 만들고 158–162행에서 z=y+cs1을 구성합니다.</p>
           <p className="leading-8">163행의 크기 검사에 걸리면 rej로 돌아갑니다. 작은 예에서 각 성분의 절댓값이 4 미만이어야 한다고 가정하면 [3,3]은 통과하고 [4,3]은 실패합니다. 실제 코드는 GAMMA1−BETA와 다른 표준 상수를 사용합니다.</p>
           <p className="leading-8">검증 함수는 266행부터 context 길이·서명 길이·인코딩·응답 크기를 확인합니다. 공개 키·context·메시지로 같은 요약을 만들고 303행의 뺄셈과 309행의 힌트 적용으로 높은 부분을 재구성합니다. 마지막에 challenge를 다시 계산해 비교합니다.</p>
           <p className="leading-8">원문의 곱셈과 뺄셈은 NTT 표현과 역변환 사이에 있습니다. 수학의 한 곱셈과 C 함수 호출 하나를 무조건 일대일로 읽지 않습니다. 이 글은 코드 경로를 확인했으며 해당 C 전체를 제품 환경에서 실행·인증한 결과가 아닙니다.</p>

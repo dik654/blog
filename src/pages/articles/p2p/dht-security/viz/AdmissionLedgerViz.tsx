@@ -42,7 +42,7 @@ interface Scene {
 const BASE_LIVE = ["H", "H", "M·P", "H", "H", "H", "H", "H", "M·P", "H", "H", "H", "H", "", "", ""] as const;
 const WITH_Q = [...BASE_LIVE.slice(0, 13), "H·Q", "", ""];
 const FULL = [...BASE_LIVE.slice(0, 13), "H·Q", "H", "H"];
-const PROMOTED = [...FULL.slice(0, 4), "M", ...FULL.slice(5)];
+const PROMOTED = [...FULL.slice(0, 4), ...FULL.slice(5), "M"];
 
 const SCENES: readonly Scene[] = [
   {
@@ -100,14 +100,14 @@ const SCENES: readonly Scene[] = [
   {
     label: "탈락 → 무작위 승격",
     summary: "탈락 1 → replacement 중 무작위 1개 승격",
-    note: "다섯 번째 자리의 H가 재검증에서 탈락하면 replacement 중 하나를 무작위로 골라 그 자리에 올립니다. 이 장면에서는 M이 뽑혔다고 가정했습니다. 즉시 퇴출은 막지만, 대기실 자체가 Mallory 후보로 채워질 가능성까지 없애지는 않습니다.",
+    note: "다섯 번째 자리의 H가 재검증에서 탈락하면 그 H가 빠지고 뒤 entry가 한 칸씩 당겨집니다. 그다음 replacement 중 하나를 무작위로 골라 버킷 끝에 추가하고 빠른 재검증 대상으로 둡니다. 이 장면에서는 M이 뽑혔다고 가정했습니다. 즉시 퇴출은 막지만, 대기실 자체가 Mallory 후보로 채워질 가능성까지 없애지는 않습니다.",
     live: PROMOTED,
     replacement: ["M", "H", "M·R"],
-    highlightLive: 4,
+    highlightLive: 15,
     highlightReplacement: -1,
-    removedLive: 4,
+    removedLive: 15,
     candidate: "재검증 탈락",
-    outcome: "H 탈락 → M 무작위 승격",
+    outcome: "H 탈락 → M 끝자리 승격",
     ledger: null,
   },
 ];

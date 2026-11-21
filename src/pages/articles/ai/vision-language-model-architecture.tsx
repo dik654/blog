@@ -195,8 +195,9 @@ export default function VisionLanguageModelArchitectureArticle() {
           </p>
           <p>
             BLIP-2는 32개의 learnable query를 가진 Q-Former를 병목으로 둡니다. Q-Former가 frozen
-            image encoder의 많은 feature 중 언어 모델에 넘길 정보를 뽑고, projection을 거쳐 frozen
-            LLM에 연결합니다.
+            image encoder의 많은 feature 중 언어 모델에 넘길 정보를 뽑고, 32개 query 출력을 projection해
+            frozen LLM의 텍스트 입력 embedding 앞에 붙입니다(soft visual prompt). Flamingo처럼 층 사이에서
+            읽는 것이 아니라 LLaVA처럼 입력 단계에서 이어 붙이는 방식입니다.
           </p>
           <p>
             세 방법은 “무엇이 가장 좋은가”보다 “어느 기존 parameter를 고정하고, 새로 학습할

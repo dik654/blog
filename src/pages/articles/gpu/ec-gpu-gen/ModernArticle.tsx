@@ -80,9 +80,9 @@ ec_gpu_gen::generate(&source_builder);`}</code></pre>
     <section id="artifact-lifecycle" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Artifact 생애주기</p><h2 className="mt-2 text-2xl font-bold">생성 소스와 컴파일 결과를 함께 보존한다</h2></header>
       <ArtifactLifecycleViz />
-      <p>공식 integration에서 CUDA는 build 과정에 fatbin을 만들고, OpenCL은 source를 생성해 runtime에 compile합니다. 생성 경로는 내부 환경 변수로 artifact 위치를 전달하고 <code>program!</code> macro가 device별 program을 만듭니다. 그러므로 “같은 Rust binary”만 기록하면 OpenCL driver가 만든 binary, 선택된 device와 runtime options를 재현할 수 없습니다.</p>
+      <p>공식 integration에서 CUDA는 build 과정에 fatbin을 만들고, OpenCL은 source를 생성해 runtime에 compile합니다. 생성 경로는 내부 환경 변수로 artifact 위치를 전달하고 <code>program!</code> macro가 device별 program을 만듭니다. 그러므로 “같은 Rust binary”만 기록하면 OpenCL driver가 만든 binary와 선택된 device를 재현할 수 없습니다.</p>
       <p>Build log에는 field/curve type, ec-gpu commit, Cargo feature set을 남깁니다. 생성한 source digest, compiler command·stderr, artifact digest도 같은 기록에 묶습니다.</p>
-      <p>Runtime log에는 backend, device UUID/name, driver, loaded artifact key를 남깁니다. Kernel entry와 fallback 이유도 기록합니다. Build 실패를 빈 source나 오래된 cache로 숨기지 않고, 실패시키거나 승인된 CPU 경로로 전환합니다.</p>
+      <p>Runtime log에는 backend, device UUID/name, driver, driver가 만든 binary의 digest, loaded artifact key를 남깁니다. Kernel entry와 fallback 이유도 기록합니다. Build 실패를 빈 source나 오래된 cache로 숨기지 않고, 실패시키거나 승인된 CPU 경로로 전환합니다.</p>
       <AmortizedTimeViz />
       <ExplainedFormula question="Codegen 변경이 전체 실행 시간에 이득인지 build·startup·steady-state를 어떻게 나눌까?" idea={<>Build-time compile, 첫 program creation, 반복 kernel 실행은 서로 다른 사용자가 지불합니다. 배포 빈도와 process lifetime을 고정해 amortized cost를 계산합니다.</>} formula={String.raw`T_{amort}=\frac{T_{build}}{D}+\frac{T_{startup}}{R}+T_{steady}`}
       annotatedFormula={String.raw`T_{amort}=\underbrace{\frac{T_{build}}{D}}_{\text{build 비용 분담}}+\underbrace{\frac{T_{startup}}{R}}_{\text{초기화 비용 분담}}+\underbrace{T_{steady}}_{\text{warm 실행}}`}

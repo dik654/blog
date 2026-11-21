@@ -3,15 +3,14 @@ import SceneShell from "./EvmSceneShell";
 /**
  * 본문 대응: #gas-state·#release — 실행 중 변경은 따로 기록했다가 종료 결과에 따라 반영하거나 되돌린다.
  * 하위 호출이 실패해도 상위 호출이 실패 표시를 확인하고 계속할 수 있고,
- * 상위 호출까지 실패하면 앞서 성공한 하위 호출의 변경도 취소될 수 있다.
+ * 상위 호출까지 실패하면 앞서 성공한 하위 호출의 변경도 함께 취소된다.
  */
-type Status = "pending" | "kept" | "undone" | "mayUndo" | "mayKeep";
+type Status = "pending" | "kept" | "undone" | "mayKeep";
 
 const STATUS: Record<Status, { text: string; color: string; dashed: boolean }> = {
   pending: { text: "… 임시 기록", color: "#64748b", dashed: true },
   kept: { text: "✓ 남음", color: "#15803d", dashed: false },
   undone: { text: "✕ 취소", color: "#dc2626", dashed: true },
-  mayUndo: { text: "✕ 취소될 수 있음", color: "#dc2626", dashed: true },
   mayKeep: { text: "✓ 상위가 성공하면 남음", color: "#15803d", dashed: false },
 };
 
@@ -26,7 +25,7 @@ const FRAMES: readonly Frame[] = [
   { parentEnd: "실행 중", childEnd: "실행 중", a: "pending", b: "pending" },
   { parentEnd: "정상 종료", childEnd: "정상 종료", a: "kept", b: "kept" },
   { parentEnd: "실패 표시 확인 뒤 계속", childEnd: "REVERT", a: "mayKeep", b: "undone" },
-  { parentEnd: "실패", childEnd: "정상 종료", a: "undone", b: "mayUndo" },
+  { parentEnd: "실패", childEnd: "정상 종료", a: "undone", b: "undone" },
 ];
 
 const SCENES = [
@@ -47,8 +46,8 @@ const SCENES = [
   },
   {
     label: "상위가 실패",
-    summary: "A 취소 · B도 취소될 수 있음",
-    note: "하위 호출이 먼저 정상 종료했어도 상위 호출까지 실패하면, 앞서 성공한 하위 호출의 변경 B도 함께 취소될 수 있습니다.",
+    summary: "A 취소 · B도 취소",
+    note: "하위 호출이 먼저 정상 종료했어도 상위 호출까지 실패하면, 앞서 성공한 하위 호출의 변경 B도 함께 취소됩니다.",
   },
 ] as const;
 
@@ -71,7 +70,7 @@ export default function NestedRevertViz() {
   return (
     <SceneShell
       eyebrow="중첩 호출의 되돌림"
-      title="실패한 호출의 변경만 지우고, 바깥이 실패하면 안쪽 성공도 지워질 수 있습니다"
+      title="실패한 호출의 변경만 지우고, 바깥이 실패하면 안쪽 성공도 지워집니다"
       description="바깥 상자가 안쪽 상자를 부른 호출입니다. A와 B는 각 호출이 storage에 쓴 변경 하나씩이며 설명용 예입니다(가정)."
       ariaLabel="상위 호출과 하위 호출의 종료 결과에 따라 변경 A와 B가 남거나 취소되는 네 경우"
       scenes={SCENES}

@@ -2,6 +2,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #i2c — 두 컨트롤러가 거의 동시에 START를 내면 SCL이 HIGH인 동안 비트마다 SDA를 자기가 보낸 값과 비교한다.
+ * SDA는 오픈 드레인(wired-AND)이라 한 장치라도 LOW로 끌어내리면 선 전체가 LOW다(UM10204 §3.1.1).
  * 0x48 = 1001000, 0x20 = 0100000(가정). 첫 비트에서 우리 쪽 1, 상대 0, SDA는 LOW로 보이므로 우리 쪽이 진다.
  */
 const OURS = [1, 0, 0, 1, 0, 0, 0] as const;
@@ -10,7 +11,7 @@ const SLOTS = [0, 1, 2, 3, 4, 5, 6];
 
 const SCENES = [
   { label: "거의 동시에 START", summary: "둘 다 주소를 보내기 시작", shown: 0, ours: 7, note: "두 컨트롤러 모두 버스가 비어 있을 때 시작했습니다. 이제 SCL이 HIGH인 동안 비트마다 SDA를 자기가 보낸 값과 비교합니다." },
-  { label: "첫 비트 비교", summary: "우리 1, 상대 0, SDA는 LOW", shown: 1, ours: 1, note: "우리 쪽은 HIGH(1)를 보냈는데 SDA가 LOW(0)로 보입니다. 보낸 값과 다르므로 우리 쪽이 집니다. 상대는 LOW를 보내고 LOW를 봤으니 그대로 이어 갑니다." },
+  { label: "첫 비트 비교", summary: "우리 1, 상대 0, SDA는 LOW", shown: 1, ours: 1, note: "SDA는 오픈 드레인이라 한 장치라도 LOW로 끌어내리면 선 전체가 LOW가 됩니다. 우리 쪽은 HIGH(1)를 보냈는데 SDA가 LOW(0)로 보입니다. 보낸 값과 다르므로 우리 쪽이 집니다. 상대는 LOW를 보내고 LOW를 봤으니 그대로 이어 갑니다." },
   { label: "진 쪽은 손을 뗍니다", summary: "상대의 주소는 그대로 이어짐", shown: 7, ours: 1, note: "우리 쪽은 SDA 출력을 끕니다. SDA에는 상대의 비트만 남으므로 이긴 쪽의 거래는 손상되지 않습니다." },
   { label: "버스가 빈 뒤 처음부터", summary: "상대 거래 전체 + 157.5 µs", shown: 7, ours: 1, note: "우리 쪽은 버스가 빈 뒤 거래를 처음부터 다시 시작합니다. 157.5 µs 앞에 상대 거래 전체가 더해집니다. 상대 거래의 길이는 글에서 정하지 않았고, 아래 칸의 길이는 크기가 아닙니다." },
 ] as const;

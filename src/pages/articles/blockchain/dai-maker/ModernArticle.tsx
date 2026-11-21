@@ -163,7 +163,8 @@ export default function ModernDaiArticle() {
           아닙니다. 위험 조정 담보 가치는 oracle 가치를 담보 종류의 청산 비율로
           나눈 값입니다. Oracle update 뒤 이 값이 빚보다 작아지면
           liquidation module이 금고를 unsafe로 판정할 수 있습니다. 이때 Dog가
-          빚과 담보를 떼어 Clipper 경매로 넘깁니다.
+          빚과 담보를 떼어 Clipper 경매로 넘깁니다. 판정은 따로 저장되지 않고
+          Dog의 bark 호출 때 확인됩니다.
         </p>
         <LiquidationLineViz />
         <p>

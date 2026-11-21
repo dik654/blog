@@ -75,7 +75,7 @@ const CONFIG: Record<VendorKey, VendorConfig> = {
       ["LAUNCH", "Guest context + pages", "Firmware command·RMP state·launch digest를 같은 guest identity에 연결합니다."],
       ["VALIDATE", "PVALIDATE", "Guest가 private page의 현재 mapping을 수락합니다. Hypervisor mapping과 guest validation을 한 동작으로 뭉개지 않습니다."],
       ["SHARE", "C-bit / GHCB boundary", "Host-visible I/O bytes와 guest private bytes를 분리하고 exit protocol field를 untrusted input으로 검사합니다."],
-      ["REPORT", "SNP guest request", "REPORT_DATA·measurement·policy·reported TCB를 VCEK/VLEK collateral과 함께 평가합니다."],
+      ["REPORT", "SNP guest request", "REPORT_DATA·measurement·policy·reported TCB를 VCEK/VLEK collateral과 함께 평가합니다. VCEK/VLEK는 SNP firmware가 attestation report에 서명하는 key로, verifier는 AMD 인증서로 확인합니다. VCEK는 chip 고유 secret과 TCB_VERSION에서, VLEK는 AMD KDS가 관리하는 cloud provider별 seed에서 유도됩니다. TCB_VERSION은 bootloader·PSP OS·SNP firmware의 보안 버전 번호(SVN)와 microcode patch level을 담은 값입니다(Turin 계열은 FMC SVN도 포함)."],
     ],
     identity: "Launch measurement와 RMP-backed guest page state",
     identityBoundary: "Report measurement는 launch identity를 뒷받침하지만 이후 application data, device path, availability와 모든 firmware mitigation 적용 여부를 대신하지 않습니다.",
@@ -127,7 +127,7 @@ const CONFIG: Record<VendorKey, VendorConfig> = {
     ],
     lifecycle: [
       ["DELEGATE", "NS → Realm granule", "Host mapping·cache·device access를 정리한 뒤 granule을 Realm ownership으로 전환합니다."],
-      ["CREATE", "RMI lifecycle", "Realm descriptor·translation·REC를 구성하고 measured content를 고정합니다."],
+      ["CREATE", "RMI lifecycle", "Realm descriptor·translation·REC(Realm Execution Context)를 구성하고 measured content를 고정합니다."],
       ["RUN", "REC entry / RSI", "Realm execution과 host service request를 구분하고 shared buffer를 untrusted protocol로 검증합니다."],
       ["TOKEN", "CCA attestation", "Realm token과 platform token의 challenge·public-key binding을 함께 appraisal합니다."],
     ],

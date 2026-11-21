@@ -1,7 +1,7 @@
 import SceneShell from "./SceneShell";
 
 /**
- * 본문 대응: #source — sign.c 135행 새 y, 140행 Ay, 해시로 challenge, 158–162행 z=y+cs1, 163행 크기 검사, 걸리면 rej.
+ * 본문 대응: #source — sign.c 135행 새 y, 140행 Ay, 149–155행 해시로 challenge, 158–162행 z=y+cs1, 163행 크기 검사, 걸리면 rej.
  * 시도 1: y=[3,1](가정) → Ay=[2·3+3·1, 4·3+1·1]=[9,13], c=1(가정), z=[3,1]+[1,2]=[4,3] → 4는 |성분|<4 실패.
  * 시도 2: y=[2,1] → Ay=[7,9], z=[3,3] → 통과.
  */
@@ -14,7 +14,7 @@ const H = 232;
 const STEPS = [
   { where: "135행", what: "새 마스크 y" },
   { where: "140행", what: "약속 Ay" },
-  { where: "해시", what: "challenge c" },
+  { where: "149–155행", what: "challenge c" },
   { where: "158–162행", what: "응답 z = y + cs" },
   { where: "163행", what: "크기 검사 (예: |성분| < 4)" },
 ];

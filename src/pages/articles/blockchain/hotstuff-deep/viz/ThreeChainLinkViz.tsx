@@ -2,7 +2,8 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #qc-chain 마지막 문단 — B11이 QC10을, B12가 QC11을, B13이 QC12를 들고 바로 앞 부모에
- * 연결되면 B10 commit. B12가 B11을 건너뛰거나 B13이 형제 블록의 QC를 들고 오면 번호가 이어져도 three-chain이 아님.
+ * 연결되면 B10 commit. B12가 B11을 건너뛰면 번호가 이어져도 three-chain이 아님. B13이 형제 블록의 QC를 들고 오는
+ * 장면은 b*.parent = b″를 요구하는 논문 Algorithm 3 기준(event-driven Algorithm 4는 이 조건을 보지 않음).
  */
 type Block = { id: string; x: number; y: number; faded?: boolean; note?: string };
 type Link = { from: string; to: string; label: string; ok: boolean; parentOnly?: boolean };
@@ -50,7 +51,7 @@ const SCENES = [
   {
     label: "형제 블록의 QC",
     summary: "three-chain 아님",
-    note: "B12와 B12′는 같은 B11에서 갈라진 형제 블록입니다. B13이 부모 B12가 아니라 형제 B12′의 QC를 들고 오면 B13의 QC는 바로 앞 부모를 증명하지 못하므로 B10을 commit할 수 없습니다.",
+    note: "B12와 B12′는 같은 B11에서 갈라진 형제 블록입니다. B13이 부모 B12가 아니라 형제 B12′의 QC를 들고 오면 B13의 QC는 바로 앞 부모를 증명하지 못하므로, b*.parent = b″를 확인하는 Algorithm 3(Chained HotStuff) 기준으로 B10을 commit할 수 없습니다. event-driven Algorithm 4는 이 조건 없이 B10←B11←B12′ 연결만 봅니다.",
     blocks: [
       { id: "B10", x: COL[0], y: ROW },
       { id: "B11", x: COL[1], y: ROW },

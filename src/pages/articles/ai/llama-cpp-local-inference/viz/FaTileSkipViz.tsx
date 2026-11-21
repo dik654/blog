@@ -2,7 +2,7 @@ import SceneShell from "./SceneShell";
 
 /**
  * 본문 대응: #mask-source — CUDA FlashAttention은 mask를 끝에서부터 256칸 tile 단위로 보며
- * 모두 −∞인 tile만 계산 범위에서 뺀다. 중간에 낀 −∞ 칸은 계산한 뒤 버린다.
+ * query 블록의 ncols1개 행이 모두 −∞인 tile만 계산 범위에서 뺀다(그림은 ncols1=1). 중간에 낀 −∞ 칸은 계산한 뒤 버린다.
  * 이 훑기는 query 1,024개 이상 또는 stream 여럿일 때만 켠다.
  * n_kv 1,536(tile 6개)과 칸 무늬는 설명용 가정이다. 작은 사각형 하나 = cell 16개.
  */
@@ -43,7 +43,7 @@ export default function FaTileSkipViz() {
     <SceneShell
       eyebrow="FlashAttention 끝 tile 생략"
       title="mask 끝에 붙은 −∞ tile만 계산에서 빠집니다"
-      description="한 query의 mask 행입니다. 작은 사각형 하나가 cell 16개이고, 파랑은 남길 칸(0), 회색은 지울 칸(−∞)입니다. tile 6개와 칸 무늬는 설명용 가정입니다."
+      description="한 query 블록(ncols1행)이 모두 −∞인 tile만 건너뜁니다. 그림은 ncols1=1인 경우라 mask 행 하나만 그렸습니다. 작은 사각형 하나가 cell 16개이고, 파랑은 남길 칸(0), 회색은 지울 칸(−∞)입니다. tile 6개와 칸 무늬는 설명용 가정입니다."
       ariaLabel="mask 행을 256칸 tile로 나눠 끝에서부터 모두 −∞인 tile을 생략하는 과정"
       scenes={SCENES}
       render={(active) => {

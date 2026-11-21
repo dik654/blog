@@ -16,7 +16,8 @@ export default function Mtp() {
         <p className="leading-7">
           일반 decode는 main model forward마다 다음 token 하나를 확정한다. MTP 기반 speculative decoding은 model-native draft
           path가 future token 후보를 만들고 main model이 여러 위치를 한 번에 검증한다.</p>
-        <p className="leading-7">앞에서부터 일치한 token을 받아들여 한 verification
+        <p className="leading-7">앞에서부터 일치한 token을 받아들이고, 처음 어긋난 자리에는 검증 forward가 낸 main model의 token을
+          받는다(모두 일치하면 다음 자리 token 하나를 더 받는다). 그래서 한 verification
           iteration에서 하나보다 많은 token을 확정한다. GLM-5.2 공식 config에는 next-token-prediction layer가 1개이며, 별도 독립 draft
           model이 반드시 있다는 뜻은 아니다.
         </p>

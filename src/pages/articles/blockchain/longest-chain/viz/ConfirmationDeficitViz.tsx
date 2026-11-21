@@ -19,7 +19,7 @@ export default function ConfirmationDeficitViz() {
       description="위 식의 z는 계산을 시작하는 순간 공격 분기가 뒤처진 칸 수입니다. 두 분기의 block work가 같다고 놓은 단순화입니다."
       documentFlow
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto h-auto w-full max-w-[560px]" role="img" aria-label="정직한 분기에 확인 6개가 붙는 동안 공격 분기가 k개를 만들면 남은 deficit은 6 빼기 k">
+      <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto h-auto w-full max-w-[560px]" role="img" aria-label="정직한 분기에서 x 뒤에 새 block 6개가 붙는 동안 공격 분기가 k개를 만들면 남은 deficit은 6 빼기 k">
         <text x={8} y={40} fontSize={11} fontWeight={700} fill="#475569">정직</text>
         <rect x={BX - 2} y={22} width={BW + 4} height={30} rx={3} fill="#94a3b8" fillOpacity={0.25} stroke="#475569" strokeWidth={1} />
         <text x={BX + BW / 2} y={41} textAnchor="middle" fontSize={11} fontWeight={700} fill="#334155">송금 x</text>

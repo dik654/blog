@@ -18,8 +18,8 @@ interface FlowScene {
   check: string;
   fail: boolean;
   toLabel?: string;
-  /** from/to 밖에서 이번 단계 기록을 남기는 노드(본문 CHAIN 역할: encrypted message와 nonce 기록) */
-  also?: { id: NodeId; label: string };
+  /** from과 to 사이에서 요청이 거쳐 가는 노드(본문 CHAIN 역할: encrypted message와 nonce 기록) */
+  via?: { id: NodeId; label: string };
   records: readonly [Mark, Mark, Mark, Mark, Mark];
 }
 
@@ -58,14 +58,14 @@ const SCENES: readonly FlowScene[] = [
   },
   {
     label: "INVOKE",
-    summary: "client → worker: from/to/nonce/input",
-    note: "요청에는 보낸 사람(from), 대상 contract(to), nonce, 암호화된 input이 들어갑니다. Nonce는 같은 요청을 두 번 쓰지 못하게 붙이는 일회용 번호입니다. Client signature·target contract·nonce·ciphertext를 검증한 뒤 한 worker의 실행 한 번에 묶습니다. Encrypted message와 nonce는 chain에 기록됩니다.",
+    summary: "client → chain → worker: from/to/nonce/input",
+    note: "요청에는 보낸 사람(from), 대상 contract(to), nonce, 암호화된 input이 들어갑니다. Nonce는 같은 요청을 두 번 쓰지 못하게 붙이는 일회용 번호입니다. 요청은 worker로 바로 가지 않고 먼저 chain에 올라가 encrypted message와 nonce로 기록되고, worker는 chain에서 그 요청을 가져옵니다. Chain이 암호화된 message queue 역할을 하는 셈입니다. Worker는 client signature·target contract·nonce·ciphertext를 검증한 뒤 한 worker의 실행 한 번에 묶습니다.",
     from: "client",
     to: "worker",
     payload: ["from", "to", "nonce", "ciphertext input", "signature"],
     check: "signature · target · nonce 확인 → 실행 한 번에 결속",
     fail: false,
-    also: { id: "chain", label: "nonce 기록" },
+    via: { id: "chain", label: "기록 · 전달" },
     records: ["ok", "ok", "ok", "wait", "wait"],
   },
   {
@@ -98,6 +98,7 @@ const SCENES: readonly FlowScene[] = [
     from: "client",
     to: "worker",
     payload: ["from", "to", "nonce(이미 사용)", "ciphertext input"],
+    via: { id: "chain", label: "거쳐 감" },
     check: "nonce 재사용 → invocation 전 거부",
     fail: true,
     toLabel: "거부",
@@ -131,7 +132,7 @@ export default function PhalaInvokeFlowViz() {
           <div className="mx-auto min-w-0 max-w-3xl">
             <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-5 sm:gap-2">
               {NODES.map((node) => {
-                const role = node.id === scene.from ? "보냄" : node.id === scene.to ? (scene.toLabel ?? "받음") : node.id === scene.also?.id ? scene.also.label : "";
+                const role = node.id === scene.from ? "보냄" : node.id === scene.to ? (scene.toLabel ?? "받음") : node.id === scene.via?.id ? scene.via.label : "";
                 return (
                   <div
                     key={node.id}
@@ -151,7 +152,7 @@ export default function PhalaInvokeFlowViz() {
             </div>
             <div className="mt-3 rounded-lg border px-3 py-2 text-xs leading-5" style={{ borderColor: tone }}>
               <p className="font-mono font-bold" style={{ color: tone }}>
-                {tagOf(scene.from)} → {tagOf(scene.to)}
+                {tagOf(scene.from)} → {scene.via ? `${tagOf(scene.via.id)} → ` : ""}{tagOf(scene.to)}
               </p>
               <div className="mt-1 flex flex-wrap gap-1">
                 {scene.payload.map((item) => (

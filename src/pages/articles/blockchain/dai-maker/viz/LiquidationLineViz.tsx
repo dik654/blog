@@ -40,7 +40,7 @@ const SCENES = [
   {
     label: "경매 시작",
     summary: "Dog → Clipper",
-    note: "판정 뒤 Dog가 금고에서 빚과 담보를 떼어 Clipper 경매로 넘깁니다. 이것은 경매가 시작됐다는 기록일 뿐, 담보가 팔렸다는 뜻이 아닙니다.",
+    note: "unsafe 판정은 따로 저장되지 않고, Dog의 bark 호출 안에서 확인됩니다. 확인이 통과하면 같은 호출에서 Dog가 금고에서 빚과 담보를 떼어 Clipper 경매로 넘깁니다. 이것은 경매가 시작됐다는 기록일 뿐, 담보가 팔렸다는 뜻이 아닙니다.",
   },
   {
     label: "경매가 늦어질 때",
@@ -49,7 +49,7 @@ const SCENES = [
   },
   {
     label: "낙찰과 해소는 따로",
-    summary: "네 단계 · 네 기록",
+    summary: "네 단계",
     note: "담보 낙찰과 bad debt 해소도 같은 단계가 아닙니다. 경매에서 얼마가 회수되는지는 본문이 정하지 않으므로 금액은 그리지 않았습니다.",
   },
 ] as const;
@@ -68,7 +68,7 @@ function StageTrack({ done, waiting }: { done: number; waiting: number | null })
             }`}
           >
             {index + 1}. {stage}
-            <span className="block text-[11px] font-normal">{isDone ? "기록됨" : isWaiting ? "늦어질 수 있음" : "아직"}</span>
+            <span className="block text-[11px] font-normal">{isDone ? (index === 0 ? "조건 충족(bark 때 검사)" : "기록됨") : isWaiting ? "늦어질 수 있음" : "아직"}</span>
           </li>
         );
       })}

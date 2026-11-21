@@ -20,7 +20,7 @@ const SCENES: readonly ShellScene[] = [
   { label: "두 작업이 멈춘 구간", summary: "A 300ms · B 300ms", note: "옅은 칸은 도는 시간, 진한 칸은 자원 때문에 멈춘 시간입니다. 숫자는 설명을 위한 가정이고, 두 작업 모두 1초 내내 일할 거리가 있다고 놓았습니다." },
   { label: "some · 적어도 하나", summary: "500ms ÷ 1,000ms = 50%", note: "some은 적어도 한 작업이 멈춰 있던 시간의 비율입니다. A와 B 가운데 하나라도 멈춘 200~700ms를 세어 50%입니다. 겹친 구간을 두 번 세지 않습니다." },
   { label: "full · 전부 동시에", summary: "100ms ÷ 1,000ms = 10%", note: "full은 일할 수 있는 작업 전부가 동시에 멈춘 비율입니다. 둘 다 멈춘 400~500ms만 세어 10%입니다. avg10·avg60·avg300은 이런 비율을 최근 10·60·300초 창에서 낸 값입니다." },
-  { label: "트리거", summary: "some 150000 1000000 → 350ms", note: "PSI 파일에 이 값을 쓰면 1초 창에서 some이 150ms에 닿을 때 poll()이 깨어납니다. 멈춤이 200ms에 시작했으니 이 가정에서는 350ms입니다. systemd-oomd가 커널 OOM 전에 cgroup을 정리하는 근거가 이 트리거입니다." },
+  { label: "트리거", summary: "some 150000 1000000 → 350ms", note: "PSI 파일에 이 값을 쓰면 1초 창에서 some이 150ms에 닿을 때 poll()이 깨어납니다. 멈춤이 200ms에 시작했으니 이 가정에서는 350ms입니다. systemd-oomd는 이 트리거 대신 같은 파일의 full avg10 값을 주기적으로 읽어 판단합니다." },
 ];
 
 function Lane({ y, label, span, color, on }: { y: number; label: string; span: { from: number; to: number }; color: string; on: boolean }) {

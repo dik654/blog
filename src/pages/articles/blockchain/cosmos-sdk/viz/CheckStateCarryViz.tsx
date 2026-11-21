@@ -80,7 +80,7 @@ export default function CheckStateCarryViz() {
             <div className="grid gap-3 sm:grid-cols-3">
               <Box title="DURABLE ROOT" sub="committed query 정본" lines={scene.root} highlight={active === 3} />
               <Box title="CHECK STATE" sub="이 node의 mempool 판단용" lines={scene.check} highlight={scene.checkChanged} />
-              <Box title="CHECKTX 요청" sub="ante만 실행" lines={scene.request} highlight={active === 1 || active === 2} />
+              <Box title="CHECKTX 요청" sub="ante 실행 · message handler 미실행" lines={scene.request} highlight={active === 1 || active === 2} />
             </div>
             <div className="mt-3 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-2 rounded-lg border border-border bg-background p-3 text-xs leading-5">
               <span className="text-muted-foreground">이 장면의 결과</span>

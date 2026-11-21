@@ -205,7 +205,7 @@ guard 결과: boundary를 한 칸 앞당겨 ToolUse부터 보존`}
           CLI recovery는 <code>context_window</code>, “no parseable body”, decode
           failure 같은 문자열도 context overflow 후보로 분류합니다. 그 뒤 최근
           message 보존량을 4, 2, 1, 0 순서로 줄이며 최대 네 번 다시 실행합니다.
-          Source는 두 번째 round 이후 제거할 message가 0이면 멈춥니다. 더 안전한
+          Source는 두 번째 round부터 제거할 message가 0이면 멈춥니다. 더 안전한
           구현은 어느 round에서든 removed count가 0이면 추가 compaction이 payload를
           바꾸지 못한다고 보고 즉시 중단해야 합니다.
         </p>

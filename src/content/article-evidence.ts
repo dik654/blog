@@ -6997,13 +6997,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "EIP-8070 · Sparse Blobpool",
       href: "https://eips.ethereum.org/EIPS/eip-8070",
-      note: "Last Call 상태와 2026-11-01 마감을 2026-10-18 확인했습니다. 전체 제공 확률·custody 표본·공격 가정도 원문과 대조했습니다.",
+      note: "Last Call 상태를 2026-11-21 다시 확인했습니다. 2026-11-01 마감이 지났지만 Final로 바뀌지 않았습니다. 전체 제공 확률·custody 표본·공격 가정도 원문과 대조했습니다.",
     },
     {
       kind: "공식 문서",
       label: "EIP-7773 · Glamsterdam meta",
       href: "https://eips.ethereum.org/EIPS/eip-7773",
-      note: "2026-10-18 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.",
+      note: "2026-11-21 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.",
     },
     {
       kind: "공식 규격",

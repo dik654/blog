@@ -160,7 +160,8 @@ export default function Enforcer() {
         </p>
         <p>
           Verify와 consume은 token 존재, Pending·Consumed·Expired·Revoked 상태,
-          현재 시각, exact scope와 exact executor를 검사합니다. 따라서
+          현재 시각, exact scope와 exact executor를 이 순서로 검사하고, 처음
+          실패한 검사에서 바로 오류를 돌려줍니다. 따라서
           <code>edit_file(auth.ts)</code> 승인을 다른 branch나 다른 executor가
           가져다 쓰면 scope mismatch 또는 unauthorized delegate로 실패해야
           합니다.

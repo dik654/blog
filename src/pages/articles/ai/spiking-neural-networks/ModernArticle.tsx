@@ -378,7 +378,11 @@ export default function SpikingNeuralNetworksArticle() {
             미분을 보내는 방법이{" "}
             <strong>시간축 역전파(Backpropagation Through Time, BPTT)</strong>
             입니다. 발화 노드에서는 앞 절의 대체 기울기를 쓰고, 전압 연결에서는
-            LIF 상태식의 미분을 씁니다. 여러 시점이 같은 가중치를 사용하므로 각
+            LIF 상태식의 미분을 씁니다. 리셋 식 <code>u=v−s×θ</code>의 발화
+            s에도 대체 기울기 σ′가 흐르므로, 리셋 전 전압에서 이전 시점으로 갈
+            때는 <code>0.8×(1−σ′)</code>를 곱합니다. 고정한 snnTorch에서{" "}
+            <code>mem_reset</code>은 detach되지만 <code>reset_delay=False</code>의
+            같은 시점 리셋은 detach하지 않은 발화를 그대로 뺍니다. 여러 시점이 같은 가중치를 사용하므로 각
             시점의 기여를 마지막에 더합니다.
           </p>
         </div>

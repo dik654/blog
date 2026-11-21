@@ -5,8 +5,9 @@ import SceneShell from "./ClawSceneShell";
  * 본문 대응: #enforcer "Approval token은 범위·실행자·수명을 가진 예외 record입니다".
  * 기본 최대 사용 횟수 1, consume 때 uses 증가 → 한도면 Consumed.
  * Verify·consume 검사 항목: token 존재, Pending·Consumed·Expired·Revoked 상태, 현재 시각, exact scope, exact executor.
+ * validate_grant는 이 순서로 검사하다 첫 실패에서 바로 Err를 반환하므로 뒤 칸은 검사하지 않습니다(–).
  * 다른 branch → scope mismatch, 다른 executor → unauthorized delegate.
- * branch 이름·actor 이름은 설명용 가정입니다.
+ * branch 이름·actor 이름(approver 포함)은 설명용 가정입니다.
  */
 type Check = "ok" | "fail" | "none";
 
@@ -41,10 +42,10 @@ const SCENES = [
     status: "Consumed",
     uses: 1,
     request: "agent A · fix-login · edit_file(auth.ts)",
-    checks: ["fail", "ok", "ok", "ok"] as readonly Check[],
+    checks: ["fail", "none", "none", "none"] as readonly Check[],
     result: "실패 · 이미 Consumed",
     tone: "fail",
-    note: "시각·scope·executor가 모두 앞과 똑같아도 상태가 Consumed라 막힙니다. 한 번 쓴 승인을 다시 쓰는 replay를 이렇게 거릅니다.",
+    note: "시각·scope·executor가 모두 앞과 똑같아도 첫 검사인 상태가 Consumed라 바로 막히고, 뒤 검사는 돌지 않습니다. 한 번 쓴 승인을 다시 쓰는 replay를 이렇게 거릅니다.",
   },
   {
     label: "사용 전, 다른 branch",
@@ -52,10 +53,10 @@ const SCENES = [
     status: "Granted",
     uses: 0,
     request: "agent A · main · edit_file(auth.ts)",
-    checks: ["ok", "ok", "fail", "ok"] as readonly Check[],
+    checks: ["ok", "ok", "fail", "none"] as readonly Check[],
     result: "실패 · scope mismatch",
     tone: "fail",
-    note: "1장면의 아직 쓰지 않은 token이라고 다시 가정합니다. action이 같아도 branch가 다르면 exact scope 검사에서 실패하고 uses는 0 그대로입니다.",
+    note: "1장면의 아직 쓰지 않은 token이라고 다시 가정합니다. action이 같아도 branch가 다르면 exact scope 검사에서 실패해 executor 검사까지 가지 않고, uses는 0 그대로입니다.",
   },
   {
     label: "사용 전, 다른 executor",
@@ -81,7 +82,7 @@ export default function TokenLifecycleViz() {
     <SceneShell
       eyebrow="승인 token 한 장"
       title="한 번 쓴 승인, 다른 branch, 다른 executor는 같은 검사에서 막힙니다"
-      description="왼쪽은 ledger에 저장된 token, 오른쪽은 그 token을 쓰려는 요청입니다. agent A·B와 branch fix-login·main은 설명용 이름입니다(가정)."
+      description="왼쪽은 ledger에 저장된 token, 오른쪽은 그 token을 쓰려는 요청입니다. agent A·B, branch fix-login·main, approver 사용자는 설명용 이름입니다(가정)."
       note="이 ledger는 pinned 시점에 PermissionPolicy·dispatch와 연결된 소비 경로가 확인되지 않은 in-memory 모듈입니다. 그림은 ledger 단독의 검사 규칙입니다."
       ariaLabel="approval token의 uses와 상태가 consume, replay, scope mismatch, executor mismatch에서 어떻게 판정되는지"
       scenes={SCENES}

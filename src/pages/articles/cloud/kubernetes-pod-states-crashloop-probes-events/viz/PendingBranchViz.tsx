@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 import SceneShell from "./SceneShell";
 
 /**
- * 본문 대응: #pending-two-kinds — NODE 열 하나로 갈리는 두 Pending과, 노드 쪽 갈래 안의 이미지 실패 단어.
+ * 본문 대응: #pending-two-kinds — NODE 열 하나로 갈리는 두 Pending과, 노드 쪽 갈래 안의 이미지 실패 단어와 그중 Pod spec을 고쳐야 하는 두 단어.
  * 칸은 항상 그대로 두고 지금 읽는 갈래만 진하게 표시해 높이가 변하지 않는다.
  */
 const SCENES = [
   { label: "NODE가 비어 있습니다", summary: "scheduler 쪽", focus: "empty", note: "spec.nodeName이 비어 있어 kubectl get pod -o wide의 NODE 열도 비어 있습니다. scheduler가 노드를 못 골랐고 kubelet은 이 Pod를 아직 모르니 노드 쪽을 봐도 아무것도 없습니다." },
   { label: "NODE가 채워져 있습니다", summary: "그 노드의 kubelet 쪽", focus: "filled", note: "노드는 정해졌고 kubelet이 sandbox(네트워크 namespace와 pause 컨테이너)를 만들고 볼륨을 붙이고 이미지를 받는 중입니다. 막히면 어느 준비에서 막혔는지가 그 노드 kubelet이 남긴 event에 있습니다." },
-  { label: "이미지 실패는 더 갈립니다", summary: "기다려서 낫는가", focus: "image", note: "방금 실패한 순간은 ErrImagePull, 재시도를 미루는 동안은 ImagePullBackOff이고 간격은 10초에서 300초까지 두 배씩 늘어납니다. 이미지 이름이 틀렸거나 imagePullPolicy가 Never인데 이미지가 없으면 기다려도 낫지 않습니다." },
+  { label: "이미지 실패는 더 갈립니다", summary: "기다려서 낫는가", focus: "image", note: "방금 실패한 순간은 ErrImagePull, 재시도를 미루는 동안은 ImagePullBackOff이고 간격은 10초에서 300초까지 두 배씩 늘어납니다. 이미지 이름이 틀렸거나 imagePullPolicy가 Never인데 이미지가 없으면 기다려도 낫지 않고, 고칠 곳은 Pod spec의 이미지 이름이나 imagePullPolicy입니다." },
 ] as const;
 
 function Branch({ on, title, who, children, fix }: { on: boolean; title: string; who: string; children: ReactNode; fix: string }) {
@@ -63,6 +63,7 @@ export default function PendingBranchViz() {
                 <p className="font-bold">기다려도 낫지 않습니다</p>
                 <p className="font-mono text-[11px] leading-4 [overflow-wrap:anywhere] sm:text-xs">InvalidImageName</p>
                 <p className="font-mono text-[11px] leading-4 [overflow-wrap:anywhere] sm:text-xs">ErrImageNeverPull</p>
+                <p className="mt-1 font-semibold">고칠 곳: Pod spec (이미지 이름 · imagePullPolicy)</p>
               </div>
             </div>
           </div>
